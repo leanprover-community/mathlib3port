@@ -19,15 +19,15 @@ open Set
 
 namespace AffineSubspace
 
-variable {k : Type _} [Ringₓ k]
+variable {k : Type _} [Ring k]
 
 variable {V P V₁ P₁ V₂ P₂ : Type _}
 
-variable [AddCommGroupₓ V] [Module k V] [affine_space V P]
+variable [AddCommGroup V] [Module k V] [affine_space V P]
 
-variable [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
+variable [AddCommGroup V₁] [Module k V₁] [AddTorsor V₁ P₁]
 
-variable [AddCommGroupₓ V₂] [Module k V₂] [AddTorsor V₂ P₂]
+variable [AddCommGroup V₂] [Module k V₂] [AddTorsor V₂ P₂]
 
 include V
 
@@ -35,9 +35,9 @@ include V
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseAddAction : AddAction V (AffineSubspace k P) where
-  vadd := fun x S => S.map (AffineEquiv.constVadd k P x)
-  zero_vadd := fun p => ((congr_arg fun f => p.map f) <| AffineMap.ext <| zero_vadd _).trans p.map_id
-  add_vadd := fun x y p => ((congr_arg fun f => p.map f) <| AffineMap.ext <| add_vadd _ _).trans (p.map_map _ _).symm
+  vadd x S := S.map (AffineEquiv.constVadd k P x)
+  zero_vadd p := ((congr_arg fun f => p.map f) <| AffineMap.ext <| zero_vadd _).trans p.map_id
+  add_vadd x y p := ((congr_arg fun f => p.map f) <| AffineMap.ext <| add_vadd _ _).trans (p.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AffineSubspace.pointwiseAddAction
 

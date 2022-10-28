@@ -91,7 +91,7 @@ def Equiv (p q : Preform) : Prop :=
 
 theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by
   intro h1 h2
-  apply exists_imp_exists h1 h2
+  apply Exists.imp h1 h2
 
 theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
   constructor <;> intro h1
@@ -105,14 +105,14 @@ theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
 def Unsat (p : Preform) : Prop :=
   ¬Sat p
 
-def repr : Preform → Stringₓ
+def repr : Preform → String
   | t =* s => "(" ++ t.repr ++ " = " ++ s.repr ++ ")"
   | t ≤* s => "(" ++ t.repr ++ " ≤ " ++ s.repr ++ ")"
   | ¬* p => "¬" ++ p.repr
   | p ∨* q => "(" ++ p.repr ++ " ∨ " ++ q.repr ++ ")"
   | p ∧* q => "(" ++ p.repr ++ " ∧ " ++ q.repr ++ ")"
 
-instance hasRepr : HasRepr Preform :=
+instance hasRepr : Repr Preform :=
   ⟨repr⟩
 
 unsafe instance has_to_format : has_to_format Preform :=
@@ -130,7 +130,7 @@ theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
   intro h
   assumption
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

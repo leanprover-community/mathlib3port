@@ -23,7 +23,7 @@ affine space, slope
 
 open AffineMap
 
-variable {k E PE : Type _} [Field k] [AddCommGroupₓ E] [Module k E] [AddTorsor E PE]
+variable {k E PE : Type _} [Field k] [AddCommGroup E] [Module k E] [AddTorsor E PE]
 
 include E
 
@@ -38,6 +38,9 @@ theorem slope_fun_def (f : k → PE) : slope f = fun a b => (b - a)⁻¹ • (f 
 omit E
 
 theorem slope_def_field (f : k → k) (a b : k) : slope f a b = (f b - f a) / (b - a) :=
+  (div_eq_inv_mul _ _).symm
+
+theorem slope_fun_def_field (f : k → k) (a : k) : slope f a = fun b => (f b - f a) / (b - a) :=
   (div_eq_inv_mul _ _).symm
 
 @[simp]
@@ -71,11 +74,11 @@ theorem slope_sub_smul (f : k → E) {a b : k} (h : a ≠ b) : slope (fun x => (
 theorem eq_of_slope_eq_zero {f : k → PE} {a b : k} (h : slope f a b = (0 : E)) : f a = f b := by
   rw [← sub_smul_slope_vadd f a b, h, smul_zero, zero_vadd]
 
-theorem AffineMap.slope_comp {F PF : Type _} [AddCommGroupₓ F] [Module k F] [AddTorsor F PF] (f : PE →ᵃ[k] PF)
+theorem AffineMap.slope_comp {F PF : Type _} [AddCommGroup F] [Module k F] [AddTorsor F PF] (f : PE →ᵃ[k] PF)
     (g : k → PE) (a b : k) : slope (f ∘ g) a b = f.linear (slope g a b) := by
   simp only [slope, (· ∘ ·), f.linear.map_smul, f.linear_map_vsub]
 
-theorem LinearMap.slope_comp {F : Type _} [AddCommGroupₓ F] [Module k F] (f : E →ₗ[k] F) (g : k → E) (a b : k) :
+theorem LinearMap.slope_comp {F : Type _} [AddCommGroup F] [Module k F] (f : E →ₗ[k] F) (g : k → E) (a b : k) :
     slope (f ∘ g) a b = f (slope g a b) :=
   f.toAffineMap.slope_comp g a b
 
@@ -89,7 +92,7 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
     ((b - a) / (c - a)) • slope f a b + ((c - b) / (c - a)) • slope f b c = slope f a c := by
   by_cases hab:a = b
   · subst hab
-    rw [sub_self, zero_div, zero_smul, zero_addₓ]
+    rw [sub_self, zero_div, zero_smul, zero_add]
     by_cases hac:a = c
     · simp [hac]
       
@@ -100,7 +103,7 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
   · subst hbc
     simp [sub_ne_zero.2 (Ne.symm hab)]
     
-  rw [add_commₓ]
+  rw [add_comm]
   simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add, smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab),
     smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc), vsub_add_vsub_cancel]
 
@@ -119,5 +122,5 @@ theorem line_map_slope_line_map_slope_line_map (f : k → PE) (a b r : k) :
     
   rw [slope_comm _ a, slope_comm _ a, slope_comm _ _ b]
   convert line_map_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
-  rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mulₓ, mul_sub, ← sub_sub, sub_sub_cancel]
+  rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub, sub_sub_cancel]
 

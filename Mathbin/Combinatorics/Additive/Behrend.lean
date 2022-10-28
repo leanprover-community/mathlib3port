@@ -43,13 +43,13 @@ Salem-Spencer, Behrend construction, arithmetic progression, sphere, strictly co
 -/
 
 
-open Finsetₓ Nat Real
+open Finset Nat Real
 
 open BigOperators Pointwise
 
 namespace Behrend
 
-variable {α β : Type _} {n d k N : ℕ} {x : Finₓ n → ℕ}
+variable {α β : Type _} {n d k N : ℕ} {x : Fin n → ℕ}
 
 /-!
 ### Turning the sphere into a Salem-Spencer set
@@ -63,10 +63,10 @@ an additive monoid homomorphism.
 
 
 /-- The box `{0, ..., d - 1}^n` as a finset. -/
-def box (n d : ℕ) : Finsetₓ (Finₓ n → ℕ) :=
-  Fintypeₓ.piFinset fun _ => range d
+def box (n d : ℕ) : Finset (Fin n → ℕ) :=
+  Fintype.piFinset fun _ => range d
 
-theorem mem_box : x ∈ box n d ↔ ∀ i, x i < d := by simp only [box, Fintypeₓ.mem_pi_finset, mem_range]
+theorem mem_box : x ∈ box n d ↔ ∀ i, x i < d := by simp only [box, Fintype.mem_pi_finset, mem_range]
 
 @[simp]
 theorem card_box : (box n d).card = d ^ n := by simp [box]
@@ -76,7 +76,7 @@ theorem box_zero : box (n + 1) 0 = ∅ := by simp [box]
 
 /-- The intersection of the sphere of radius `sqrt k` with the integer points in the positive
 quadrant. -/
-def sphere (n d k : ℕ) : Finsetₓ (Finₓ n → ℕ) :=
+def sphere (n d k : ℕ) : Finset (Fin n → ℕ) :=
   (box n d).filter fun x => (∑ i, x i ^ 2) = k
 
 theorem sphere_zero_subset : sphere n d 0 ⊆ 0 := fun x => by
@@ -88,65 +88,65 @@ theorem sphere_zero_right (n k : ℕ) : sphere (n + 1) 0 k = ∅ := by simp [sph
 theorem sphere_subset_box : sphere n d k ⊆ box n d :=
   filter_subset _ _
 
-theorem norm_of_mem_sphere {x : Finₓ n → ℕ} (hx : x ∈ sphere n d k) :
-    ∥(PiLp.equiv 2 _).symm (coe ∘ x : Finₓ n → ℝ)∥ = sqrt k := by
+theorem norm_of_mem_sphere {x : Fin n → ℕ} (hx : x ∈ sphere n d k) :
+    ∥(PiLp.equiv 2 _).symm (coe ∘ x : Fin n → ℝ)∥ = sqrt k := by
   rw [EuclideanSpace.norm_eq]
   dsimp
   simp_rw [abs_cast, ← cast_pow, ← cast_sum, (mem_filter.1 hx).2]
 
 theorem sphere_subset_preimage_metric_sphere :
-    (sphere n d k : Set (Finₓ n → ℕ)) ⊆
-      (fun x : Finₓ n → ℕ => (PiLp.equiv 2 _).symm (coe ∘ x : Finₓ n → ℝ)) ⁻¹'
-        Metric.Sphere (0 : PiLp 2 fun _ : Finₓ n => ℝ) (sqrt k) :=
+    (sphere n d k : Set (Fin n → ℕ)) ⊆
+      (fun x : Fin n → ℕ => (PiLp.equiv 2 _).symm (coe ∘ x : Fin n → ℝ)) ⁻¹'
+        Metric.Sphere (0 : PiLp 2 fun _ : Fin n => ℝ) (sqrt k) :=
   fun x hx => by rw [Set.mem_preimage, mem_sphere_zero_iff_norm, norm_of_mem_sphere hx]
 
 /-- The map that appears in Behrend's bound on Roth numbers. -/
 @[simps]
-def map (d : ℕ) : (Finₓ n → ℕ) →+ ℕ where
-  toFun := fun a => ∑ i, a i * d ^ (i : ℕ)
+def map (d : ℕ) : (Fin n → ℕ) →+ ℕ where
+  toFun a := ∑ i, a i * d ^ (i : ℕ)
   map_zero' := by simp_rw [Pi.zero_apply, zero_mul, sum_const_zero]
-  map_add' := fun a b => by simp_rw [Pi.add_apply, add_mulₓ, sum_add_distrib]
+  map_add' a b := by simp_rw [Pi.add_apply, add_mul, sum_add_distrib]
 
 @[simp]
-theorem map_zero (d : ℕ) (a : Finₓ 0 → ℕ) : map d a = 0 := by simp [map]
+theorem map_zero (d : ℕ) (a : Fin 0 → ℕ) : map d a = 0 := by simp [map]
 
-theorem map_succ (a : Finₓ (n + 1) → ℕ) : map d a = a 0 + (∑ x : Finₓ n, a x.succ * d ^ (x : ℕ)) * d := by
-  simp [map, Finₓ.sum_univ_succ, pow_succ'ₓ, ← mul_assoc, ← sum_mul]
+theorem map_succ (a : Fin (n + 1) → ℕ) : map d a = a 0 + (∑ x : Fin n, a x.succ * d ^ (x : ℕ)) * d := by
+  simp [map, Fin.sum_univ_succ, pow_succ', ← mul_assoc, ← sum_mul]
 
-theorem map_succ' (a : Finₓ (n + 1) → ℕ) : map d a = a 0 + map d (a ∘ Finₓ.succ) * d :=
+theorem map_succ' (a : Fin (n + 1) → ℕ) : map d a = a 0 + map d (a ∘ Fin.succ) * d :=
   map_succ _
 
-theorem map_monotone (d : ℕ) : Monotoneₓ (map d : (Finₓ n → ℕ) → ℕ) := fun x y h => by
+theorem map_monotone (d : ℕ) : Monotone (map d : (Fin n → ℕ) → ℕ) := fun x y h => by
   dsimp
-  exact sum_le_sum fun i _ => Nat.mul_le_mul_rightₓ _ <| h i
+  exact sum_le_sum fun i _ => Nat.mul_le_mul_right _ <| h i
 
-theorem map_mod (a : Finₓ n.succ → ℕ) : map d a % d = a 0 % d := by rw [map_succ, Nat.add_mul_mod_self_rightₓ]
+theorem map_mod (a : Fin n.succ → ℕ) : map d a % d = a 0 % d := by rw [map_succ, Nat.add_mul_mod_self_right]
 
-theorem map_eq_iff {x₁ x₂ : Finₓ n.succ → ℕ} (hx₁ : ∀ i, x₁ i < d) (hx₂ : ∀ i, x₂ i < d) :
-    map d x₁ = map d x₂ ↔ x₁ 0 = x₂ 0 ∧ map d (x₁ ∘ Finₓ.succ) = map d (x₂ ∘ Finₓ.succ) := by
+theorem map_eq_iff {x₁ x₂ : Fin n.succ → ℕ} (hx₁ : ∀ i, x₁ i < d) (hx₂ : ∀ i, x₂ i < d) :
+    map d x₁ = map d x₂ ↔ x₁ 0 = x₂ 0 ∧ map d (x₁ ∘ Fin.succ) = map d (x₂ ∘ Fin.succ) := by
   refine' ⟨fun h => _, fun h => by rw [map_succ', map_succ', h.1, h.2]⟩
   have : x₁ 0 = x₂ 0 := by rw [← mod_eq_of_lt (hx₁ _), ← map_mod, ← mod_eq_of_lt (hx₂ _), ← map_mod, h]
-  rw [map_succ, map_succ, this, add_right_injₓ, mul_eq_mul_right_iff] at h
+  rw [map_succ, map_succ, this, add_right_inj, mul_eq_mul_right_iff] at h
   exact ⟨this, h.resolve_right (pos_of_gt (hx₁ 0)).ne'⟩
 
-theorem map_inj_on : { x : Finₓ n → ℕ | ∀ i, x i < d }.InjOn (map d) := by
+theorem map_inj_on : { x : Fin n → ℕ | ∀ i, x i < d }.InjOn (map d) := by
   intro x₁ hx₁ x₂ hx₂ h
   induction' n with n ih
   · simp
     
   ext i
   have x := (map_eq_iff hx₁ hx₂).1 h
-  refine' Finₓ.cases x.1 (congr_fun <| ih (fun _ => _) (fun _ => _) x.2) i
+  refine' Fin.cases x.1 (congr_fun <| ih (fun _ => _) (fun _ => _) x.2) i
   · exact hx₁ _
     
   · exact hx₂ _
     
 
-theorem map_le_of_mem_box (hx : x ∈ box n d) : map (2 * d - 1) x ≤ ∑ i : Finₓ n, (d - 1) * (2 * d - 1) ^ (i : ℕ) :=
-  (map_monotone (2 * d - 1)) fun _ => Nat.le_pred_of_ltₓ <| mem_box.1 hx _
+theorem map_le_of_mem_box (hx : x ∈ box n d) : map (2 * d - 1) x ≤ ∑ i : Fin n, (d - 1) * (2 * d - 1) ^ (i : ℕ) :=
+  (map_monotone (2 * d - 1)) fun _ => Nat.le_pred_of_lt <| mem_box.1 hx _
 
-theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Finₓ n → ℕ)) := by
-  set f : (Finₓ n → ℕ) →+ EuclideanSpace ℝ (Finₓ n) :=
+theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → ℕ)) := by
+  set f : (Fin n → ℕ) →+ EuclideanSpace ℝ (Fin n) :=
     { toFun := fun f => (coe : ℕ → ℝ) ∘ f, map_zero' := funext fun _ => cast_zero,
       map_add' := fun _ _ => funext fun _ => cast_add _ _ }
   refine' AddSalemSpencer.of_image (f.to_add_freiman_hom (sphere n d k) 2) _ _
@@ -159,33 +159,33 @@ theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Finₓ n
 theorem add_salem_spencer_image_sphere : AddSalemSpencer ((sphere n d k).Image (map (2 * d - 1)) : Set ℕ) := by
   rw [coe_image]
   refine'
-    @AddSalemSpencer.image _ (Finₓ n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1)) (map_inj_on.mono _)
+    @AddSalemSpencer.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1)) (map_inj_on.mono _)
       add_salem_spencer_sphere
   rw [Set.add_subset_iff]
   rintro a ha b hb i
   have hai := mem_box.1 (sphere_subset_box ha) i
   have hbi := mem_box.1 (sphere_subset_box hb) i
   rw [lt_tsub_iff_right, ← succ_le_iff, two_mul]
-  exact (add_add_add_commₓ _ _ 1 1).trans_le (add_le_add hai hbi)
+  exact (add_add_add_comm _ _ 1 1).trans_le (add_le_add hai hbi)
 
-theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Finₓ n, x i ^ 2) ≤ n * (d - 1) ^ 2 := by
+theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤ n * (d - 1) ^ 2 := by
   rw [mem_box] at hx
-  have : ∀ i, x i ^ 2 ≤ (d - 1) ^ 2 := fun i => Nat.pow_le_pow_of_le_leftₓ (Nat.le_pred_of_ltₓ (hx i)) _
+  have : ∀ i, x i ^ 2 ≤ (d - 1) ^ 2 := fun i => Nat.pow_le_pow_of_le_left (Nat.le_pred_of_lt (hx i)) _
   exact ((sum_le_card_nsmul univ _ _) fun i _ => this i).trans (by rw [card_fin, smul_eq_mul])
 
-theorem sum_eq : (∑ i : Finₓ n, d * (2 * d + 1) ^ (i : ℕ)) = ((2 * d + 1) ^ n - 1) / 2 := by
-  refine' (Nat.div_eq_of_eq_mul_leftₓ zero_lt_two _).symm
-  rw [← sum_range fun i => d * (2 * d + 1) ^ (i : ℕ), ← mul_sum, mul_right_commₓ, mul_comm d, ← geom_sum_mul_add,
+theorem sum_eq : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) = ((2 * d + 1) ^ n - 1) / 2 := by
+  refine' (Nat.div_eq_of_eq_mul_left zero_lt_two _).symm
+  rw [← sum_range fun i => d * (2 * d + 1) ^ (i : ℕ), ← mul_sum, mul_right_comm, mul_comm d, ← geom_sum_mul_add,
     add_tsub_cancel_right, mul_comm]
 
-theorem sum_lt : (∑ i : Finₓ n, d * (2 * d + 1) ^ (i : ℕ)) < (2 * d + 1) ^ n :=
-  sum_eq.trans_lt <| (Nat.div_le_selfₓ _ 2).trans_lt <| pred_ltₓ (pow_pos (succ_posₓ _) _).ne'
+theorem sum_lt : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) < (2 * d + 1) ^ n :=
+  sum_eq.trans_lt <| (Nat.div_le_self _ 2).trans_lt <| pred_lt (pow_pos (succ_pos _) _).ne'
 
 theorem card_sphere_le_roth_number_nat (n d k : ℕ) : (sphere n d k).card ≤ rothNumberNat ((2 * d - 1) ^ n) := by
   cases n
   · refine' (card_le_univ _).trans_eq _
-    rw [pow_zeroₓ]
-    exact Fintypeₓ.card_unique
+    rw [pow_zero]
+    exact Fintype.card_unique
     
   cases d
   · simp
@@ -235,7 +235,7 @@ theorem exists_large_sphere (n d : ℕ) : ∃ k, (d ^ n / ↑(n * d ^ 2) : ℝ) 
     
   · exact cast_add_one_pos _
     
-  simp only [← le_sub_iff_add_le', cast_mul, ← mul_sub, cast_pow, cast_sub hd, sub_sq, one_pow, cast_one, mul_oneₓ,
+  simp only [← le_sub_iff_add_le', cast_mul, ← mul_sub, cast_pow, cast_sub hd, sub_sq, one_pow, cast_one, mul_one,
     sub_add, sub_sub_self]
   apply one_le_mul_of_one_le_of_one_le
   · rwa [one_le_cast]
@@ -262,14 +262,14 @@ section NumericalBounds
 theorem log_two_mul_two_le_sqrt_log_eight : log 2 * 2 ≤ sqrt (log 8) := by
   rw [show (8 : ℝ) = 2 ^ ((3 : ℕ) : ℝ) by norm_num1, log_rpow zero_lt_two (3 : ℕ)]
   apply le_sqrt_of_sq_le
-  rw [mul_powₓ, sq (log 2), mul_assoc, mul_comm]
+  rw [mul_pow, sq (log 2), mul_assoc, mul_comm]
   refine' mul_le_mul_of_nonneg_right _ (log_nonneg one_le_two)
   rw [← le_div_iff]
   apply log_two_lt_d9.le.trans
   all_goals norm_num1
 
 theorem two_div_one_sub_two_div_e_le_eight : 2 / (1 - 2 / exp 1) ≤ 8 := by
-  rw [div_le_iff, mul_sub, mul_oneₓ, mul_div_assoc', le_sub, div_le_iff (exp_pos _)]
+  rw [div_le_iff, mul_sub, mul_one, mul_div_assoc', le_sub, div_le_iff (exp_pos _)]
   · linarith [exp_one_gt_d9]
     
   rw [sub_pos, div_lt_one] <;> exact exp_one_gt_d9.trans' (by norm_num)
@@ -296,9 +296,9 @@ theorem le_sqrt_log (hN : 4096 ≤ N) : log (2 / (1 - 2 / exp 1)) * (69 / 50) �
     rw [← log_rpow zero_lt_two, rpow_nat_cast]
     norm_num
   rw [l8, cast_bit1, cast_one]
-  apply le_sqrt_of_sq_le (le_transₓ _ this)
+  apply le_sqrt_of_sq_le (le_trans _ this)
   simp only [cast_bit0, cast_bit1, cast_one]
-  rw [mul_right_commₓ, mul_powₓ, sq (log 2), ← mul_assoc]
+  rw [mul_right_comm, mul_pow, sq (log 2), ← mul_assoc]
   apply mul_le_mul_of_nonneg_right _ (log_nonneg one_le_two)
   rw [← le_div_iff']
   · exact log_two_lt_d9.le.trans (by norm_num1)
@@ -310,25 +310,25 @@ theorem exp_neg_two_mul_le {x : ℝ} (hx : 0 < x) : exp (-2 * x) < exp (2 - ⌈x
   have h₂ : 1 - x ≤ 2 - ⌈x⌉₊ := by
     rw [le_sub_iff_add_le]
     apply (add_le_add_left h₁.le _).trans_eq
-    rw [← add_assocₓ, sub_add_cancel]
+    rw [← add_assoc, sub_add_cancel]
     rfl
   have h₃ : exp (-(x + 1)) ≤ 1 / (x + 1) := by
     rw [exp_neg, inv_eq_one_div]
     refine' one_div_le_one_div_of_le (add_pos hx zero_lt_one) _
-    apply le_transₓ _ (add_one_le_exp_of_nonneg <| add_nonneg hx.le zero_le_one)
+    apply le_trans _ (add_one_le_exp_of_nonneg <| add_nonneg hx.le zero_le_one)
     exact le_add_of_nonneg_right zero_le_one
-  refine' lt_of_le_of_ltₓ _ (div_lt_div_of_lt_left (exp_pos _) (cast_pos.2 <| ceil_pos.2 hx) h₁)
-  refine' le_transₓ _ (div_le_div_of_le_of_nonneg (exp_le_exp.2 h₂) <| add_nonneg hx.le zero_le_one)
+  refine' lt_of_le_of_lt _ (div_lt_div_of_lt_left (exp_pos _) (cast_pos.2 <| ceil_pos.2 hx) h₁)
+  refine' le_trans _ (div_le_div_of_le_of_nonneg (exp_le_exp.2 h₂) <| add_nonneg hx.le zero_le_one)
   rw [le_div_iff (add_pos hx zero_lt_one), ← le_div_iff' (exp_pos _), ← exp_sub, neg_mul, sub_neg_eq_add, two_mul,
-    sub_add_add_cancel, add_commₓ _ x]
-  refine' le_transₓ _ (add_one_le_exp_of_nonneg <| add_nonneg hx.le zero_le_one)
+    sub_add_add_cancel, add_comm _ x]
+  refine' le_trans _ (add_one_le_exp_of_nonneg <| add_nonneg hx.le zero_le_one)
   exact le_add_of_nonneg_right zero_le_one
 
 theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (⌊x / 2⌋₊ : ℝ) := by
-  apply lt_of_le_of_ltₓ _ (sub_one_lt_floor _)
+  apply lt_of_le_of_lt _ (sub_one_lt_floor _)
   have : 0 < 1 - 2 / exp 1 := by
     rw [sub_pos, div_lt_one (exp_pos _)]
-    exact lt_of_le_of_ltₓ (by norm_num) exp_one_gt_d9
+    exact lt_of_le_of_lt (by norm_num) exp_one_gt_d9
   rwa [le_sub, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ← div_eq_mul_one_div, mul_div_assoc',
     one_le_div, ← div_le_iff this]
   · exact zero_lt_two
@@ -358,7 +358,7 @@ theorem n_value_pos (hN : 2 ≤ N) : 0 < nValue N :=
 theorem two_le_n_value (hN : 3 ≤ N) : 2 ≤ nValue N := by
   refine' succ_le_of_lt (lt_ceil.2 <| lt_sqrt_of_sq_lt _)
   rw [cast_one, one_pow, lt_log_iff_exp_lt]
-  refine' lt_of_lt_of_leₓ _ (cast_le.2 hN)
+  refine' lt_of_lt_of_le _ (cast_le.2 hN)
   · exact exp_one_lt_d9.trans_le (by norm_num)
     
   rw [cast_pos]
@@ -370,7 +370,7 @@ theorem three_le_n_value (hN : 64 ≤ N) : 3 ≤ nValue N := by
   have : (2 : ℝ) ^ ((6 : ℕ) : ℝ) ≤ N := by
     rw [rpow_nat_cast]
     exact (cast_le.2 hN).trans' (by norm_num1)
-  apply lt_of_lt_of_leₓ _ ((log_le_log (rpow_pos_of_pos zero_lt_two _) _).2 this)
+  apply lt_of_lt_of_le _ ((log_le_log (rpow_pos_of_pos zero_lt_two _) _).2 this)
   rw [log_rpow zero_lt_two, cast_bit0, cast_bit1, cast_one, ← div_lt_iff']
   · exact log_two_gt_d9.trans_le' (by norm_num1)
     
@@ -382,7 +382,7 @@ theorem three_le_n_value (hN : 64 ≤ N) : 3 ≤ nValue N := by
 theorem d_value_pos (hN₃ : 8 ≤ N) : 0 < dValue N := by
   have hN₀ : 0 < (N : ℝ) := cast_pos.2 (succ_pos'.trans_le hN₃)
   rw [d_value, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_ne_zero, log_rpow hN₀, div_mul_eq_mul_div,
-    one_mulₓ, sub_nonneg, le_div_iff]
+    one_mul, sub_nonneg, le_div_iff]
   · have : (n_value N : ℝ) ≤ 2 * sqrt (log N) := by
       apply (ceil_lt_add_one <| sqrt_nonneg _).le.trans
       rw [two_mul, add_le_add_iff_left]
@@ -409,7 +409,7 @@ theorem d_value_pos (hN₃ : 8 ≤ N) : 0 < dValue N := by
     
 
 theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N := by
-  have : (2 * d_value N - 1) ^ n_value N ≤ (2 * d_value N) ^ n_value N := Nat.pow_le_pow_of_le_leftₓ (Nat.sub_leₓ _ _) _
+  have : (2 * d_value N - 1) ^ n_value N ≤ (2 * d_value N) ^ n_value N := Nat.pow_le_pow_of_le_left (Nat.sub_le _ _) _
   apply this.trans
   suffices ((2 * d_value N) ^ n_value N : ℝ) ≤ N by exact_mod_cast this
   rw [← rpow_nat_cast]
@@ -427,7 +427,7 @@ theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N := by
 theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dValue N := by
   apply div_lt_floor _
   rw [← log_le_log, log_rpow, mul_comm, ← div_eq_mul_one_div]
-  · apply le_transₓ _ (div_le_div_of_le_left _ _ (ceil_lt_mul _).le)
+  · apply le_trans _ (div_le_div_of_le_left _ _ (ceil_lt_mul _).le)
     rw [mul_comm, ← div_div, div_sqrt, le_div_iff]
     · exact le_sqrt_log hN
       
@@ -452,7 +452,7 @@ theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dVa
         
       rw [cast_pos]
       exact hN.trans_lt' (by norm_num1)
-    refine' le_transₓ _ this
+    refine' le_trans _ this
     simp only [cast_bit0, cast_bit1, cast_one]
     rw [← div_le_iff']
     · exact log_two_gt_d9.le.trans' (by norm_num1)
@@ -465,7 +465,7 @@ theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dVa
     
   · refine' div_pos zero_lt_two _
     rw [sub_pos, div_lt_one (exp_pos _)]
-    exact lt_of_le_of_ltₓ (by norm_num1) exp_one_gt_d9
+    exact lt_of_le_of_lt (by norm_num1) exp_one_gt_d9
     
   apply rpow_pos_of_pos
   rw [cast_pos]
@@ -490,7 +490,7 @@ theorem roth_lower_bound_explicit (hN : 4096 ≤ N) : (N : ℝ) * exp (-4 * sqrt
   refine' mul_le_mul_of_nonneg_left _ (cast_nonneg _)
   rw [mul_inv, mul_inv, ← exp_neg, ← rpow_neg (cast_nonneg _), neg_sub, ← div_eq_mul_inv]
   have : exp (-4 * sqrt (log N)) = exp (-2 * sqrt (log N)) * exp (-2 * sqrt (log N)) := by
-    rw [← exp_add, ← add_mulₓ]
+    rw [← exp_add, ← add_mul]
     norm_num
   rw [this]
   refine'
@@ -525,7 +525,7 @@ theorem lower_bound_le_one' (hN : 2 ≤ N) (hN' : N ≤ 4096) : (N : ℝ) * exp 
     ← div_le_iff (Real.sqrt_pos.2 <| log_pos <| one_lt_cast.2 <| one_lt_two.trans_le hN), div_sqrt,
     sqrt_le_left (zero_le_bit0.2 zero_le_two), log_le_iff_le_exp (cast_pos.2 (zero_lt_two.trans_le hN))]
   norm_num1
-  apply le_transₓ _ four_zero_nine_six_lt_exp_sixteen.le
+  apply le_trans _ four_zero_nine_six_lt_exp_sixteen.le
   exact_mod_cast hN'
 
 theorem lower_bound_le_one (hN : 1 ≤ N) (hN' : N ≤ 4096) : (N : ℝ) * exp (-4 * sqrt (log N)) ≤ 1 := by
@@ -536,10 +536,10 @@ theorem lower_bound_le_one (hN : 1 ≤ N) (hN' : N ≤ 4096) : (N : ℝ) * exp (
     
 
 theorem roth_lower_bound : (N : ℝ) * exp (-4 * sqrt (log N)) ≤ rothNumberNat N := by
-  obtain rfl | hN := Nat.eq_zero_or_posₓ N
+  obtain rfl | hN := Nat.eq_zero_or_pos N
   · norm_num
     
-  obtain h₁ | h₁ := le_or_ltₓ 4096 N
+  obtain h₁ | h₁ := le_or_lt 4096 N
   · exact (roth_lower_bound_explicit h₁).le
     
   · apply (lower_bound_le_one hN h₁.le).trans

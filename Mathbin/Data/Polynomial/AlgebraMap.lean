@@ -16,7 +16,7 @@ We promote `eval₂` to an algebra hom in `aeval`.
 
 noncomputable section
 
-open Finsetₓ
+open Finset
 
 open BigOperators Polynomial
 
@@ -26,22 +26,22 @@ universe u v w z
 
 variable {R : Type u} {S : Type v} {T : Type w} {A : Type z} {A' B' : Type _} {a b : R} {n : ℕ}
 
-variable [CommSemiringₓ A'] [Semiringₓ B']
+variable [CommSemiring A'] [Semiring B']
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R] {p q r : R[X]}
+variable [CommSemiring R] {p q r : R[X]}
 
-variable [Semiringₓ A] [Algebra R A]
+variable [Semiring A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R R[X]`. -/
 instance algebraOfAlgebra : Algebra R (Polynomial A) where
-  smul_def' := fun r p =>
+  smul_def' r p :=
     to_finsupp_injective <| by
       dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
       rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
       exact Algebra.smul_def' _ _
-  commutes' := fun r p =>
+  commutes' r p :=
     to_finsupp_injective <| by
       dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
@@ -95,21 +95,22 @@ instance [Nontrivial A] : Nontrivial (Subalgebra R (Polynomial A)) :=
   ⟨⟨⊥, ⊤, by
       rw [Ne.def, SetLike.ext_iff, not_forall]
       refine' ⟨X, _⟩
-      simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_trueₓ, Algebra.mem_top, algebra_map_apply, not_forall]
+      simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top, algebra_map_apply,
+        not_forall]
       intro x
       rw [ext_iff, not_forall]
       refine' ⟨1, _⟩
       simp [coeff_C]⟩⟩
 
 @[simp]
-theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
+theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A]
     [Algebra R B] (p : R[X]) (f : A →ₐ[R] B) (a : A) :
     f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p := by
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_int_cast, map_int_cast, AlgHom.commutes]
 
 @[simp]
-theorem eval₂_algebra_map_X {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] (p : R[X]) (f : R[X] →ₐ[R] A) :
+theorem eval₂_algebra_map_X {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (p : R[X]) (f : R[X] →ₐ[R] A) :
     eval₂ (algebraMap R A) (f x) p = f p := by
   conv_rhs => rw [← Polynomial.sum_C_mul_X_eq p]
   dsimp [eval₂, Sum]
@@ -118,24 +119,24 @@ theorem eval₂_algebra_map_X {R A : Type _} [CommSemiringₓ R] [Semiringₓ A]
 
 -- these used to be about `algebra_map ℤ R`, but now the simp-normal form is `int.cast_ring_hom R`.
 @[simp]
-theorem ring_hom_eval₂_cast_int_ring_hom {R S : Type _} [Ringₓ R] [Ringₓ S] (p : ℤ[X]) (f : R →+* S) (r : R) :
+theorem ring_hom_eval₂_cast_int_ring_hom {R S : Type _} [Ring R] [Ring S] (p : ℤ[X]) (f : R →+* S) (r : R) :
     f (eval₂ (Int.castRingHom R) r p) = eval₂ (Int.castRingHom S) (f r) p :=
   alg_hom_eval₂_algebra_map p f.toIntAlgHom r
 
 @[simp]
-theorem eval₂_int_cast_ring_hom_X {R : Type _} [Ringₓ R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
+theorem eval₂_int_cast_ring_hom_X {R : Type _} [Ring R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
     eval₂ (Int.castRingHom R) (f x) p = f p :=
   eval₂_algebra_map_X p f.toIntAlgHom
 
-end CommSemiringₓ
+end CommSemiring
 
 section Aeval
 
-variable [CommSemiringₓ R] {p q : R[X]}
+variable [CommSemiring R] {p q : R[X]}
 
-variable [Semiringₓ A] [Algebra R A]
+variable [Semiring A] [Algebra R A]
 
-variable {B : Type _} [Semiringₓ B] [Algebra R B]
+variable {B : Type _} [Semiring B] [Algebra R B]
 
 variable (x : A)
 
@@ -206,7 +207,7 @@ theorem aeval_nat_cast (n : ℕ) : aeval x (n : R[X]) = n :=
 theorem aeval_mul : aeval x (p * q) = aeval x p * aeval x q :=
   AlgHom.map_mul _ _ _
 
-theorem aeval_comp {A : Type _} [CommSemiringₓ A] [Algebra R A] (x : A) : aeval x (p.comp q) = aeval (aeval x q) p :=
+theorem aeval_comp {A : Type _} [CommSemiring A] [Algebra R A] (x : A) : aeval x (p.comp q) = aeval (aeval x q) p :=
   eval₂_comp (algebraMap R A)
 
 theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
@@ -222,14 +223,13 @@ theorem aeval_X_left_apply (p : R[X]) : aeval x p = p :=
 theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ x) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
 
-theorem aeval_alg_hom_apply (f : A →ₐ[R] B) (x : A) (p : R[X]) : aeval (f x) p = f (aeval x p) :=
-  AlgHom.ext_iff.1 (aeval_alg_hom f x) p
+theorem aeval_alg_hom_apply {F : Type _} [AlgHomClass F R A B] (f : F) (x : A) (p : R[X]) :
+    aeval (f x) p = f (aeval x p) := by
+  refine' Polynomial.induction_on p (by simp) (fun p q hp hq => _) (by simp)
+  rw [map_add, hp, hq, ← map_add, ← map_add]
 
 theorem aeval_alg_equiv (f : A ≃ₐ[R] B) (x : A) : aeval (f x) = (f : A →ₐ[R] B).comp (aeval x) :=
   aeval_alg_hom (f : A →ₐ[R] B) x
-
-theorem aeval_alg_equiv_apply (f : A ≃ₐ[R] B) (x : A) (p : R[X]) : aeval (f x) p = f (aeval x p) :=
-  aeval_alg_hom_apply (f : A →ₐ[R] B) x p
 
 theorem aeval_algebra_map_apply_eq_algebra_map_eval (x : R) (p : R[X]) :
     aeval (algebraMap R A x) p = algebraMap R A (p.eval x) :=
@@ -241,10 +241,10 @@ theorem coe_aeval_eq_eval (r : R) : (aeval r : R[X] → R) = eval r :=
 
 @[simp]
 theorem aeval_fn_apply {X : Type _} (g : R[X]) (f : X → R) (x : X) : ((aeval f) g) x = aeval (f x) g :=
-  (aeval_alg_hom_apply (Pi.evalAlgHom _ _ x) f g).symm
+  (aeval_alg_hom_apply (Pi.evalAlgHom R (fun _ => R) x) f g).symm
 
 @[norm_cast]
-theorem aeval_subalgebra_coe (g : R[X]) {A : Type _} [Semiringₓ A] [Algebra R A] (s : Subalgebra R A) (f : s) :
+theorem aeval_subalgebra_coe (g : R[X]) {A : Type _} [Semiring A] [Algebra R A] (s : Subalgebra R A) (f : s) :
     (aeval f g : A) = aeval (f : A) g :=
   (aeval_alg_hom_apply s.val f g).symm
 
@@ -259,17 +259,17 @@ theorem _root_.algebra.adjoin_singleton_eq_range_aeval (x : A) : Algebra.adjoin 
 
 variable {R}
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ S] {f : R →+* S}
+variable [CommSemiring S] {f : R →+* S}
 
 theorem aeval_eq_sum_range [Algebra R S] {p : R[X]} (x : S) :
-    aeval x p = ∑ i in Finsetₓ.range (p.natDegree + 1), p.coeff i • x ^ i := by
+    aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i := by
   simp_rw [Algebra.smul_def]
   exact eval₂_eq_sum_range (algebraMap R S) x
 
 theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree < n) (x : S) :
-    aeval x p = ∑ i in Finsetₓ.range n, p.coeff i • x ^ i := by
+    aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i := by
   simp_rw [Algebra.smul_def]
   exact eval₂_eq_sum_range' (algebraMap R S) hn x
 
@@ -332,40 +332,40 @@ theorem aeval_tower_of_id : aevalTower (Algebra.ofId S A') = aeval := by
 
 end AevalTower
 
-end CommSemiringₓ
+end CommSemiring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ S] {f : R →+* S}
+variable [CommRing S] {f : R →+* S}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases hi:i ∈ f.support
   · rw [eval, eval₂, Sum] at dvd_eval
-    rw [← Finsetₓ.insert_erase hi, Finsetₓ.sum_insert (Finsetₓ.not_mem_erase _ _)] at dvd_eval
+    rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
     refine' (dvd_add_left _).mp dvd_eval
-    apply Finsetₓ.dvd_sum
+    apply Finset.dvd_sum
     intro j hj
-    exact dvd_terms j (Finsetₓ.ne_of_mem_erase hj)
+    exact dvd_terms j (Finset.ne_of_mem_erase hj)
     
   · convert dvd_zero p
     rw [not_mem_support_iff] at hi
     simp [hi]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h
 
-end CommRingₓ
+end CommRing
 
 end Aeval
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R]
+variable [Ring R]
 
 /-- The evaluation map is not generally multiplicative when the coefficient ring is noncommutative,
 but nevertheless any polynomial of the form `p * (X - monomial 0 r)` is sent to zero
@@ -390,16 +390,16 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 := by
   congr
   apply_congr
   skip
-  rw [coeff_mul_X_sub_C, sub_mul, mul_assoc, ← pow_succₓ]
+  rw [coeff_mul_X_sub_C, sub_mul, mul_assoc, ← pow_succ]
   simp [sum_range_sub', coeff_monomial]
 
 theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - c r) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
   @zero_ne_one R _ _ <| by erw [← eval_mul_X_sub_C, hgf, eval_one]
 
-end Ringₓ
+end Ring
 
-theorem aeval_endomorphism {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (f : M →ₗ[R] M) (v : M)
-    (p : R[X]) : aeval f p v = p.Sum fun n b => b • (f ^ n) v := by
+theorem aeval_endomorphism {M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (f : M →ₗ[R] M) (v : M) (p : R[X]) :
+    aeval f p v = p.Sum fun n b => b • (f ^ n) v := by
   rw [aeval_def, eval₂]
   exact (LinearMap.applyₗ v).map_sum
 

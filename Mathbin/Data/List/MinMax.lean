@@ -91,9 +91,9 @@ theorem not_of_mem_foldl_arg_aux (hr₀ : Irreflexive r) (hr₁ : Transitive r) 
 
 end ArgAux
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ β] [@DecidableRel β (· < ·)] {f : α → β} {l : List α} {o : Option α} {a m : α}
+variable [Preorder β] [@DecidableRel β (· < ·)] {f : α → β} {l : List α} {o : Option α} {a m : α}
 
 /-- `argmax f l` returns `some a`, where `f a` is maximal among the elements of `l`, in the sense
 that there is no `b ∈ l` with `f a < f b`. If `a`, `b` are such that `f a = f b`, it returns
@@ -124,10 +124,10 @@ theorem argmin_singleton {f : α → β} {a : α} : argmin f [a] = a :=
   rfl
 
 theorem not_lt_of_mem_argmax : a ∈ l → m ∈ argmax f l → ¬f m < f a :=
-  (not_of_mem_foldl_arg_aux _ fun _ => lt_irreflₓ _) fun _ _ _ => gt_transₓ
+  (not_of_mem_foldl_arg_aux _ fun _ => lt_irrefl _) fun _ _ _ => gt_trans
 
 theorem not_lt_of_mem_argmin : a ∈ l → m ∈ argmin f l → ¬f a < f m :=
-  (not_of_mem_foldl_arg_aux _ fun _ => lt_irreflₓ _) fun _ _ _ => lt_transₓ
+  (not_of_mem_foldl_arg_aux _ fun _ => lt_irrefl _) fun _ _ _ => lt_trans
 
 theorem argmax_concat (f : α → β) (a : α) (l : List α) :
     argmax f (l ++ [a]) = Option.casesOn (argmax f l) (some a) fun c => if f c < f a then some a else some c := by
@@ -151,14 +151,13 @@ theorem argmax_eq_none : l.argmax f = none ↔ l = [] := by simp [argmax]
 theorem argmin_eq_none : l.argmin f = none ↔ l = [] :=
   @argmax_eq_none _ βᵒᵈ _ _ _ _
 
-end Preorderₓ
+end Preorder
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [LinearOrderₓ β] {f : α → β} {l : List α} {o : Option α} {a m : α}
+variable [LinearOrder β] {f : α → β} {l : List α} {o : Option α} {a m : α}
 
-theorem le_of_mem_argmax : a ∈ l → m ∈ argmax f l → f a ≤ f m := fun ha hm =>
-  le_of_not_ltₓ <| not_lt_of_mem_argmax ha hm
+theorem le_of_mem_argmax : a ∈ l → m ∈ argmax f l → f a ≤ f m := fun ha hm => le_of_not_lt <| not_lt_of_mem_argmax ha hm
 
 theorem le_of_mem_argmin : a ∈ l → m ∈ argmin f l → f m ≤ f a :=
   @le_of_mem_argmax _ βᵒᵈ _ _ _ _ _
@@ -171,10 +170,10 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     · simp [h]
       
     dsimp
-    rw [← apply_iteₓ, ← apply_iteₓ]
+    rw [← apply_ite, ← apply_ite]
     dsimp
     split_ifs <;> try rfl
-    · exact absurd (lt_transₓ ‹f a < f m› ‹_›) ‹_›
+    · exact absurd (lt_trans ‹f a < f m› ‹_›) ‹_›
       
     · cases (‹f a < f tl›.lt_or_lt _).elim ‹_› ‹_›
       
@@ -196,11 +195,11 @@ theorem index_of_argmax : ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {
     rw [h] at hm
     dsimp only at hm
     obtain rfl | ha := ha <;> split_ifs  at hm <;> subst hm
-    · cases not_le_of_ltₓ ‹_› ‹_›
+    · cases not_le_of_lt ‹_› ‹_›
       
     · rw [if_neg, if_neg]
-      exact Nat.succ_le_succₓ (index_of_argmax h ha ham)
-      · exact ne_of_apply_ne f (lt_of_lt_of_leₓ ‹_› ‹_›).ne'
+      exact Nat.succ_le_succ (index_of_argmax h ha ham)
+      · exact ne_of_apply_ne f (lt_of_lt_of_le ‹_› ‹_›).ne'
         
       · exact ne_of_apply_ne _ ‹f hd < f val›.ne'
         
@@ -221,7 +220,7 @@ theorem mem_argmax_iff :
     · simp_all
       
     · have :=
-        le_antisymmₓ (hma n (argmax_mem harg) (le_of_mem_argmax hml harg))
+        le_antisymm (hma n (argmax_mem harg) (le_of_mem_argmax hml harg))
           (index_of_argmax harg hml (ham _ (argmax_mem harg)))
       rw [(index_of_inj hml (argmax_mem harg)).1 this, Option.mem_def]
       ⟩
@@ -238,13 +237,13 @@ theorem argmin_eq_some_iff :
     argmin f l = some m ↔ m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   mem_argmin_iff
 
-end LinearOrderₓ
+end LinearOrder
 
 section MaximumMinimum
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [@DecidableRel α (· < ·)] {l : List α} {a m : α}
+variable [Preorder α] [@DecidableRel α (· < ·)] {l : List α} {a m : α}
 
 /-- `maximum l` returns an `with_bot α`, the largest element of `l` for nonempty lists, and `⊥` for
 `[]`  -/
@@ -302,18 +301,18 @@ theorem not_lt_maximum_of_mem' (ha : a ∈ l) : ¬maximum l < (a : WithBot α) :
 theorem not_lt_minimum_of_mem' (ha : a ∈ l) : ¬(a : WithTop α) < minimum l :=
   @not_lt_maximum_of_mem' αᵒᵈ _ _ _ _ ha
 
-end Preorderₓ
+end Preorder
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [LinearOrderₓ α] {l : List α} {a m : α}
+variable [LinearOrder α] {l : List α} {a m : α}
 
 theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximum l) a := by
   simp only [maximum, argmax_concat, id]
   cases h : argmax id l
-  · exact (max_eq_rightₓ bot_le).symm
+  · exact (max_eq_right bot_le).symm
     
-  · simp [Option.coe_def, max_def, ← not_ltₓ]
+  · simp [Option.coe_def, max_def, ← not_lt]
     
 
 theorem le_maximum_of_mem : a ∈ l → (maximum l : WithBot α) = m → a ≤ m :=
@@ -323,7 +322,7 @@ theorem minimum_le_of_mem : a ∈ l → (minimum l : WithTop α) = m → m ≤ a
   le_of_mem_argmin
 
 theorem le_maximum_of_mem' (ha : a ∈ l) : (a : WithBot α) ≤ maximum l :=
-  le_of_not_ltₓ <| not_lt_maximum_of_mem' ha
+  le_of_not_lt <| not_lt_maximum_of_mem' ha
 
 theorem le_minimum_of_mem' (ha : a ∈ l) : minimum l ≤ (a : WithTop α) :=
   @le_maximum_of_mem' αᵒᵈ _ _ _ ha
@@ -332,8 +331,8 @@ theorem minimum_concat (a : α) (l : List α) : minimum (l ++ [a]) = min (minimu
   @maximum_concat αᵒᵈ _ _ _
 
 theorem maximum_cons (a : α) (l : List α) : maximum (a :: l) = max a (maximum l) :=
-  List.reverseRecOn l (by simp [@max_eq_leftₓ (WithBot α) _ _ _ bot_le]) fun tl hd ih => by
-    rw [← cons_append, maximum_concat, ih, maximum_concat, max_assocₓ]
+  List.reverseRecOn l (by simp [@max_eq_left (WithBot α) _ _ _ bot_le]) fun tl hd ih => by
+    rw [← cons_append, maximum_concat, ih, maximum_concat, max_assoc]
 
 theorem minimum_cons (a : α) (l : List α) : minimum (a :: l) = min a (minimum l) :=
   @maximum_cons αᵒᵈ _ _ _
@@ -342,23 +341,23 @@ theorem maximum_eq_coe_iff : maximum l = m ↔ m ∈ l ∧ ∀ a ∈ l, a ≤ m 
   unfold_coes
   simp only [maximum, argmax_eq_some_iff, id]
   constructor
-  · simp (config := { contextual := true }) only [true_andₓ, forall_true_iff]
+  · simp (config := { contextual := true }) only [true_and_iff, forall_true_iff]
     
-  · simp (config := { contextual := true }) only [true_andₓ, forall_true_iff]
+  · simp (config := { contextual := true }) only [true_and_iff, forall_true_iff]
     intro h a hal hma
-    rw [le_antisymmₓ hma (h.2 a hal)]
+    rw [le_antisymm hma (h.2 a hal)]
     
 
 theorem minimum_eq_coe_iff : minimum l = m ↔ m ∈ l ∧ ∀ a ∈ l, m ≤ a :=
   @maximum_eq_coe_iff αᵒᵈ _ _ _
 
-end LinearOrderₓ
+end LinearOrder
 
 end MaximumMinimum
 
 section Fold
 
-variable [LinearOrderₓ α]
+variable [LinearOrder α]
 
 section OrderBot
 

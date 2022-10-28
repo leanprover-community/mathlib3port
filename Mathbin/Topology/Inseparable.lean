@@ -80,7 +80,7 @@ theorem specializes_tfae (x y : X) :
   tfae_have 3 → 4
   exact fun h s hsc hx => of_not_not fun hy => h (sᶜ) hsc.is_open_compl hy hx
   tfae_have 4 → 5
-  exact fun h => h _ is_closed_closure (subset_closure <| mem_singleton _)
+  exact fun h => h _ isClosedClosure (subset_closure <| mem_singleton _)
   tfae_have 6 ↔ 5
   exact is_closed_closure.closure_subset_iff.trans singleton_subset_iff
   tfae_have 5 ↔ 7
@@ -136,7 +136,7 @@ theorem Filter.HasBasis.specializes_iff {ι} {p : ι → Prop} {s : ι → Set X
   specializes_iff_pure.trans h.ge_iff
 
 theorem specializes_rfl : x ⤳ x :=
-  le_rflₓ
+  le_rfl
 
 @[refl]
 theorem specializes_refl (x : X) : x ⤳ x :=
@@ -144,7 +144,7 @@ theorem specializes_refl (x : X) : x ⤳ x :=
 
 @[trans]
 theorem Specializes.trans : x ⤳ y → y ⤳ z → x ⤳ z :=
-  le_transₓ
+  le_trans
 
 theorem specializes_of_nhds_within (h₁ : 𝓝[s] x ≤ 𝓝[s] y) (h₂ : x ∈ s) : x ⤳ y :=
   specializes_iff_pure.2 <|
@@ -189,15 +189,15 @@ theorem not_specializes_iff_exists_closed : ¬x ⤳ y ↔ ∃ S : Set X, IsClose
 variable (X)
 
 /-- Specialization forms a preorder on the topological space. -/
-def specializationPreorder : Preorderₓ X :=
-  { Preorderₓ.lift (OrderDual.toDual ∘ 𝓝) with le := fun x y => y ⤳ x, lt := fun x y => y ⤳ x ∧ ¬x ⤳ y }
+def specializationPreorder : Preorder X :=
+  { Preorder.lift (OrderDual.toDual ∘ 𝓝) with le := fun x y => y ⤳ x, lt := fun x y => y ⤳ x ∧ ¬x ⤳ y }
 
 variable {X}
 
 /-- A continuous function is monotone with respect to the specialization preorders on the domain and
 the codomain. -/
 theorem Continuous.specialization_monotone (hf : Continuous f) :
-    @Monotoneₓ _ _ (specializationPreorder X) (specializationPreorder Y) f := fun x y h => h.map hf
+    @Monotone _ _ (specializationPreorder X) (specializationPreorder Y) f := fun x y h => h.map hf
 
 /-!
 ### `inseparable` relation
@@ -223,34 +223,34 @@ theorem inseparable_def : (x ~ y) ↔ 𝓝 x = 𝓝 y :=
   Iff.rfl
 
 theorem inseparable_iff_specializes_and : (x ~ y) ↔ x ⤳ y ∧ y ⤳ x :=
-  le_antisymm_iffₓ
+  le_antisymm_iff
 
 theorem Inseparable.specializes (h : x ~ y) : x ⤳ y :=
   h.le
 
 theorem Inseparable.specializes' (h : x ~ y) : y ⤳ x :=
-  h.Ge
+  h.ge
 
 theorem Specializes.antisymm (h₁ : x ⤳ y) (h₂ : y ⤳ x) : x ~ y :=
-  le_antisymmₓ h₁ h₂
+  le_antisymm h₁ h₂
 
 theorem inseparable_iff_forall_open : (x ~ y) ↔ ∀ s : Set X, IsOpen s → (x ∈ s ↔ y ∈ s) := by
   simp only [inseparable_iff_specializes_and, specializes_iff_forall_open, ← forall_and_distrib, ← iff_def, Iff.comm]
 
-theorem not_inseparable_iff_exists_open : ¬(x ~ y) ↔ ∃ s : Set X, IsOpen s ∧ Xorₓ (x ∈ s) (y ∈ s) := by
+theorem not_inseparable_iff_exists_open : ¬(x ~ y) ↔ ∃ s : Set X, IsOpen s ∧ Xor' (x ∈ s) (y ∈ s) := by
   simp [inseparable_iff_forall_open, ← xor_iff_not_iff]
 
 theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s → (x ∈ s ↔ y ∈ s) := by
   simp only [inseparable_iff_specializes_and, specializes_iff_forall_closed, ← forall_and_distrib, ← iff_def]
 
 theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ Closure ({y} : Set X) ∧ y ∈ Closure ({x} : Set X) :=
-  inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm]
+  inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm']
 
 theorem inseparable_iff_closure_eq : (x ~ y) ↔ Closure ({x} : Set X) = Closure {y} := by
   simp only [inseparable_iff_specializes_and, specializes_iff_closure_subset, ← subset_antisymm_iff, eq_comm]
 
 theorem inseparable_of_nhds_within_eq (hx : x ∈ s) (hy : y ∈ s) (h : 𝓝[s] x = 𝓝[s] y) : x ~ y :=
-  (specializes_of_nhds_within h.le hx).antisymm (specializes_of_nhds_within h.Ge hy)
+  (specializes_of_nhds_within h.le hx).antisymm (specializes_of_nhds_within h.ge hy)
 
 theorem Inducing.inseparable_iff (hf : Inducing f) : (f x ~ f y) ↔ (x ~ y) := by
   simp only [inseparable_iff_specializes_and, hf.specializes_iff]
@@ -319,21 +319,21 @@ In this section we define the quotient of a topological space by the `inseparabl
 variable (X)
 
 /-- A `setoid` version of `inseparable`, used to define the `separation_quotient`. -/
-def inseparableSetoid : Setoidₓ X :=
-  { Setoidₓ.comap 𝓝 ⊥ with R := (· ~ ·) }
+def inseparableSetoid : Setoid X :=
+  { Setoid.comap 𝓝 ⊥ with R := (· ~ ·) }
 
 /-- The quotient of a topological space by its `inseparable_setoid`. This quotient is guaranteed to
 be a T₀ space. -/
 def SeparationQuotient :=
-  Quotientₓ (inseparableSetoid X)deriving TopologicalSpace
+  Quotient (inseparableSetoid X)deriving TopologicalSpace
 
-variable {X}
+variable {X} {t : Set (SeparationQuotient X)}
 
 namespace SeparationQuotient
 
 /-- The natural map from a topological space to its separation quotient. -/
 def mk : X → SeparationQuotient X :=
-  Quotientₓ.mk'
+  Quotient.mk'
 
 theorem quotient_map_mk : QuotientMap (mk : X → SeparationQuotient X) :=
   quotient_map_quot_mk
@@ -343,7 +343,7 @@ theorem continuous_mk : Continuous (mk : X → SeparationQuotient X) :=
 
 @[simp]
 theorem mk_eq_mk : mk x = mk y ↔ (x ~ y) :=
-  Quotientₓ.eq'
+  Quotient.eq'
 
 theorem surjective_mk : Surjective (mk : X → SeparationQuotient X) :=
   surjective_quot_mk _
@@ -353,7 +353,7 @@ theorem range_mk : Range (mk : X → SeparationQuotient X) = univ :=
   surjective_mk.range_eq
 
 instance [Nonempty X] : Nonempty (SeparationQuotient X) :=
-  Nonempty.mapₓ mk ‹_›
+  Nonempty.map mk ‹_›
 
 instance [Inhabited X] : Inhabited (SeparationQuotient X) :=
   ⟨mk default⟩
@@ -375,16 +375,41 @@ theorem preimage_image_mk_closed (hs : IsClosed s) : mk ⁻¹' (mk '' s) = s := 
   exact ((mk_eq_mk.1 hxy).mem_closed_iff hs).1 hys
 
 theorem inducing_mk : Inducing (mk : X → SeparationQuotient X) :=
-  ⟨le_antisymmₓ (continuous_iff_le_induced.1 continuous_mk) fun s hs =>
+  ⟨le_antisymm (continuous_iff_le_induced.1 continuous_mk) fun s hs =>
       ⟨mk '' s, is_open_map_mk s hs, preimage_image_mk_open hs⟩⟩
 
 theorem is_closed_map_mk : IsClosedMap (mk : X → SeparationQuotient X) :=
   inducing_mk.IsClosedMap <| by
     rw [range_mk]
-    exact is_closed_univ
+    exact isClosedUniv
 
-theorem map_mk_nhds : map mk (𝓝 x) = 𝓝 (mk x) := by
-  rw [inducing_mk.nhds_eq_comap, map_comap_of_surjective surjective_mk]
+@[simp]
+theorem comap_mk_nhds_mk : comap mk (𝓝 (mk x)) = 𝓝 x :=
+  (inducing_mk.nhds_eq_comap _).symm
+
+@[simp]
+theorem comap_mk_nhds_set_image : comap mk (𝓝ˢ (mk '' s)) = 𝓝ˢ s :=
+  (inducing_mk.nhds_set_eq_comap _).symm
+
+theorem map_mk_nhds : map mk (𝓝 x) = 𝓝 (mk x) := by rw [← comap_mk_nhds_mk, map_comap_of_surjective surjective_mk]
+
+theorem map_mk_nhds_set : map mk (𝓝ˢ s) = 𝓝ˢ (mk '' s) := by
+  rw [← comap_mk_nhds_set_image, map_comap_of_surjective surjective_mk]
+
+theorem comap_mk_nhds_set : comap mk (𝓝ˢ t) = 𝓝ˢ (mk ⁻¹' t) := by
+  conv_lhs => rw [← image_preimage_eq t surjective_mk, comap_mk_nhds_set_image]
+
+theorem preimage_mk_closure : mk ⁻¹' Closure t = Closure (mk ⁻¹' t) :=
+  is_open_map_mk.preimage_closure_eq_closure_preimage continuous_mk t
+
+theorem preimage_mk_interior : mk ⁻¹' Interior t = Interior (mk ⁻¹' t) :=
+  is_open_map_mk.preimage_interior_eq_interior_preimage continuous_mk t
+
+theorem preimage_mk_frontier : mk ⁻¹' Frontier t = Frontier (mk ⁻¹' t) :=
+  is_open_map_mk.preimage_frontier_eq_frontier_preimage continuous_mk t
+
+theorem image_mk_closure : mk '' Closure s = Closure (mk '' s) :=
+  (image_closure_subset_closure_image continuous_mk).antisymm <| is_closed_map_mk.closure_image_subset _
 
 end SeparationQuotient
 

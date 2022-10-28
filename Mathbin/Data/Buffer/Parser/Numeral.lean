@@ -51,9 +51,9 @@ def numeral : Parser α :=
 which has a `[fintype α]` constraint. The parser ensures that the numeral parsed in
 is within the cardinality of the type `α`.
 -/
-def numeral.ofFintype [Fintypeₓ α] : Parser α := do
+def numeral.ofFintype [Fintype α] : Parser α := do
   let c ← nat
-  decorate_error (s! "<numeral less than {toString (Fintypeₓ.card α)}>") (guardₓ (c < Fintypeₓ.card α))
+  decorate_error (s! "<numeral less than {toString (Fintype.card α)}>") (guard (c < Fintype.card α))
   pure <| Nat.binCast c deriving Mono, Bounded, Prog
 
 /-- Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
@@ -61,7 +61,7 @@ at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser cau
 -/
 def numeral.fromOne : Parser α := do
   let c ← nat
-  decorate_error "<positive numeral>" (guardₓ (0 < c))
+  decorate_error "<positive numeral>" (guard (0 < c))
   pure <| Nat.binCast (c - 1)deriving Mono, Bounded, Prog
 
 /-- Parse a string of digits as a numeral while casting it to target type `α`,
@@ -69,17 +69,17 @@ which has a `[fintype α]` constraint. The parser ensures that the numeral parse
 is within the cardinality of the type `α`. The parsing starts
 at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser causes a failure.
 -/
-def numeral.fromOne.ofFintype [Fintypeₓ α] : Parser α := do
+def numeral.fromOne.ofFintype [Fintype α] : Parser α := do
   let c ← nat
-  decorate_error (s! "<positive numeral less than or equal to {toString (Fintypeₓ.card α)}>")
-      (guardₓ (0 < c ∧ c ≤ Fintypeₓ.card α))
+  decorate_error (s! "<positive numeral less than or equal to {toString (Fintype.card α)}>")
+      (guard (0 < c ∧ c ≤ Fintype.card α))
   pure <| Nat.binCast (c - 1)deriving Mono, Bounded, Prog
 
 /-- Parse a character as a numeral while casting it to target type `α`,
 The parser ensures that the character parsed in is within the bounds set by `fromc` and `toc`,
 and subtracts the value of `fromc` from the parsed in character.
 -/
-def numeral.char (fromc toc : Charₓ) : Parser α := do
+def numeral.char (fromc toc : Char) : Parser α := do
   let c ←
     decorateError (s! "<char between '{fromc.toString }' to '{toc.toString}' inclusively>")
         (sat fun c => fromc ≤ c ∧ c ≤ toc)
@@ -91,12 +91,12 @@ The parser ensures that the character parsed in is greater or equal to `fromc` a
 and subtracts the value of `fromc` from the parsed in character. There is also a check
 that the resulting value is within the cardinality of the type `α`.
 -/
-def numeral.char.ofFintype [Fintypeₓ α] (fromc : Charₓ) : Parser α := do
+def numeral.char.ofFintype [Fintype α] (fromc : Char) : Parser α := do
   let c ←
     decorateError
         (s! "<char from '{fromc.toString}' to '
-              {(Charₓ.ofNat (fromc.toNat + Fintypeₓ.card α - 1)).toString}' inclusively>")
-        (sat fun c => fromc ≤ c ∧ c.toNat - Fintypeₓ.card α < fromc.toNat)
+              {(Char.ofNat (fromc.toNat + Fintype.card α - 1)).toString}' inclusively>")
+        (sat fun c => fromc ≤ c ∧ c.toNat - Fintype.card α < fromc.toNat)
   pure <| Nat.binCast (c - fromc)deriving Mono, Bounded, ErrStatic, Step
 
 /-! ## Specific numeral types -/
@@ -113,7 +113,7 @@ Requires that the negation is in the numerator,
 and that both a numerator and denominator are provided (e.g. will not match `43`).
 Large numbers may cause performance issues, so don't run this parser on untrusted input.
 -/
-def rat : Parser Ratₓ :=
+def rat : Parser Rat :=
   (fun x y => ↑x / ↑y) <$> Int <*> (ch '/' >> Nat)
 
 end Parser

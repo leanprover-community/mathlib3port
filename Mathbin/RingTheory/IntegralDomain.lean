@@ -30,7 +30,7 @@ integral domain, finite integral domain, finite field
 
 section
 
-open Finsetₓ Polynomial Function
+open Finset Polynomial Function
 
 open BigOperators Nat
 
@@ -46,49 +46,49 @@ theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b
   Finite.injective_iff_bijective.1 <| mul_left_injective₀ ha
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
-def Fintypeₓ.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintypeₓ M] [Nontrivial M] :
-    GroupWithZeroₓ M :=
+def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M] [Nontrivial M] :
+    GroupWithZero M :=
   { ‹Nontrivial M›, ‹CancelMonoidWithZero M› with
-    inv := fun a => if h : a = 0 then 0 else Fintypeₓ.bijInv (mul_right_bijective_of_finite₀ h) 1,
+    inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1,
     mul_inv_cancel := fun a ha => by
       simp [Inv.inv, dif_neg ha]
-      exact Fintypeₓ.right_inverse_bij_inv _ _,
+      exact Fintype.right_inverse_bij_inv _ _,
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
 
 end CancelMonoidWithZero
 
 variable {R : Type _} {G : Type _}
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] [IsDomain R] [Fintypeₓ R]
+variable [Ring R] [IsDomain R] [Fintype R]
 
 /-- Every finite domain is a division ring.
 
 TODO: Prove Wedderburn's little theorem,
 which shows a finite domain is in fact commutative, hence a field. -/
-def Fintypeₓ.divisionRingOfIsDomain (R : Type _) [Ringₓ R] [IsDomain R] [DecidableEq R] [Fintypeₓ R] : DivisionRing R :=
-  { show GroupWithZeroₓ R from Fintypeₓ.groupWithZeroOfCancel R, ‹Ringₓ R› with }
+def Fintype.divisionRingOfIsDomain (R : Type _) [Ring R] [IsDomain R] [DecidableEq R] [Fintype R] : DivisionRing R :=
+  { show GroupWithZero R from Fintype.groupWithZeroOfCancel R, ‹Ring R› with }
 
 /-- Every finite commutative domain is a field.
 
 TODO: Prove Wedderburn's little theorem, which shows a finite domain is automatically commutative,
 dropping one assumption from this theorem. -/
-def Fintypeₓ.fieldOfDomain (R) [CommRingₓ R] [IsDomain R] [DecidableEq R] [Fintypeₓ R] : Field R :=
-  { Fintypeₓ.groupWithZeroOfCancel R, ‹CommRingₓ R› with }
+def Fintype.fieldOfDomain (R) [CommRing R] [IsDomain R] [DecidableEq R] [Fintype R] : Field R :=
+  { Fintype.groupWithZeroOfCancel R, ‹CommRing R› with }
 
-theorem Finite.is_field_of_domain (R) [CommRingₓ R] [IsDomain R] [Finite R] : IsField R := by
+theorem Finite.isFieldOfDomain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R := by
   cases nonempty_fintype R
-  exact @Field.to_is_field R (@Fintypeₓ.fieldOfDomain R _ _ (Classical.decEq R) _)
+  exact @Field.toIsField R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
 
-end Ringₓ
+end Ring
 
-variable [CommRingₓ R] [IsDomain R] [Groupₓ G]
+variable [CommRing R] [IsDomain R] [Group G]
 
-theorem card_nth_roots_subgroup_units [Fintypeₓ G] (f : G →* R) (hf : Injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
-    ({ g ∈ univ | g ^ n = g₀ } : Finsetₓ G).card ≤ (nthRoots n (f g₀)).card := by
+theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
+    ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card := by
   haveI : DecidableEq R := Classical.decEq _
-  refine' le_transₓ _ (nth_roots n (f g₀)).to_finset_card_le
+  refine' le_trans _ (nth_roots n (f g₀)).to_finset_card_le
   apply card_le_card_of_inj_on f
   · intro g hg
     rw [sep_def, mem_filter] at hg
@@ -105,7 +105,7 @@ theorem is_cyclic_of_subgroup_is_domain [Finite G] (f : G →* R) (hf : Injectiv
   cases nonempty_fintype G
   apply is_cyclic_of_card_pow_eq_one_le
   intro n hn
-  convert le_transₓ (card_nth_roots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
+  convert le_trans (card_nth_roots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
 
 /-- The unit group of a finite integral domain is cyclic.
 
@@ -129,21 +129,21 @@ instance subgroup_units_cyclic : IsCyclic S := by
 
 end
 
-variable [Fintypeₓ G]
+variable [Fintype G]
 
-theorem card_fiber_eq_of_mem_range {H : Type _} [Groupₓ H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.Range f)
+theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.Range f)
     (hy : y ∈ Set.Range f) : (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩
   refine' card_congr (fun g _ => g * x⁻¹ * y) _ _ fun g hg => ⟨g * y⁻¹ * x, _⟩
-  · simp (config := { contextual := true }) only [mem_filter, one_mulₓ, MonoidHom.map_mul, mem_univ, mul_right_invₓ,
-      eq_self_iff_true, MonoidHom.map_mul_inv, and_selfₓ, forall_true_iff]
+  · simp (config := { contextual := true }) only [mem_filter, one_mul, MonoidHom.map_mul, mem_univ, mul_right_inv,
+      eq_self_iff_true, MonoidHom.map_mul_inv, and_self_iff, forall_true_iff]
     
-  · simp only [mul_left_injₓ, imp_self, forall_2_true_iff]
+  · simp only [mul_left_inj, imp_self, forall_2_true_iff]
     
-  · simp only [true_andₓ, mem_filter, mem_univ] at hg
-    simp only [hg, mem_filter, one_mulₓ, MonoidHom.map_mul, mem_univ, mul_right_invₓ, eq_self_iff_true,
-      exists_prop_of_true, MonoidHom.map_mul_inv, and_selfₓ, mul_inv_cancel_rightₓ, inv_mul_cancel_right]
+  · simp only [true_and_iff, mem_filter, mem_univ] at hg
+    simp only [hg, mem_filter, one_mul, MonoidHom.map_mul, mem_univ, mul_right_inv, eq_self_iff_true,
+      exists_prop_of_true, MonoidHom.map_mul_inv, and_self_iff, mul_inv_cancel_right, inv_mul_cancel_right]
     
 
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
@@ -166,13 +166,13 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
     (∑ g : G, f g) = ∑ g : G, f.to_hom_units g := rfl
     _ = ∑ u : Rˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
       sum_comp (coe : Rˣ → R) f.to_hom_units
-    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u := sum_congr rfl fun u hu => congr_arg2ₓ _ _ rfl
+    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u := sum_congr rfl fun u hu => congr_arg2 _ _ rfl
     -- remaining goal 1, proven below
         _ =
         ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
-      Finsetₓ.sum_subtype _ (by simp) _
+      Finset.sum_subtype _ (by simp) _
     _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) := smul_sum.symm
-    _ = c • 0 := congr_arg2ₓ _ rfl _
+    _ = c • 0 := congr_arg2 _ rfl _
     -- remaining goal 2, proven below
         _ =
         0 :=
@@ -192,12 +192,12 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
     (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
       Eq.symm <|
         sum_bij (fun n _ => x ^ n) (by simp only [mem_univ, forall_true_iff])
-          (by simp only [implies_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.coe_pow, coe_coe])
+          (by simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.coe_pow, coe_coe])
           (fun m n hm hn =>
             pow_injective_of_lt_order_of _ (by simpa only [mem_range] using hm) (by simpa only [mem_range] using hn))
           fun b hb =>
           let ⟨n, hn⟩ := hx b
-          ⟨n % orderOf x, mem_range.2 (Nat.mod_ltₓ _ (order_of_pos _)), by rw [← pow_eq_mod_order_of, hn]⟩
+          ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (order_of_pos _)), by rw [← pow_eq_mod_order_of, hn]⟩
     _ = 0 := _
     
   rw [← mul_left_inj' hx1, zero_mul, geom_sum_mul, coe_coe]
@@ -207,7 +207,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
 /-- In an integral domain, a sum indexed by a homomorphism from a finite group is zero,
 unless the homomorphism is trivial, in which case the sum is equal to the cardinality of the group.
 -/
-theorem sum_hom_units (f : G →* R) [Decidable (f = 1)] : (∑ g : G, f g) = if f = 1 then Fintypeₓ.card G else 0 := by
+theorem sum_hom_units (f : G →* R) [Decidable (f = 1)] : (∑ g : G, f g) = if f = 1 then Fintype.card G else 0 := by
   split_ifs with h h
   · simp [h, card_univ]
     

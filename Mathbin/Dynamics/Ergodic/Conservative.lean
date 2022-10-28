@@ -38,17 +38,17 @@ conservative dynamical system, Poincare recurrence theorem
 
 noncomputable section
 
-open Classical Set Filter MeasureTheory Finsetₓ Function TopologicalSpace
+open Classical Set Filter MeasureTheory Finset Function TopologicalSpace
 
 open Classical TopologicalSpace
 
-variable {ι : Type _} {α : Type _} [MeasurableSpace α] {f : α → α} {s : Set α} {μ : Measureₓ α}
+variable {ι : Type _} {α : Type _} [MeasurableSpace α] {f : α → α} {s : Set α} {μ : Measure α}
 
 namespace MeasureTheory
 
-open Measureₓ
+open Measure
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ≠ » 0)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ≠ » 0) -/
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
@@ -64,7 +64,7 @@ namespace Conservative
 
 /-- The identity map is conservative w.r.t. any measure. -/
 protected theorem id (μ : Measure α) : Conservative id μ :=
-  { to_quasi_measure_preserving := QuasiMeasurePreserving.id μ,
+  { toQuasiMeasurePreserving := QuasiMeasurePreserving.id μ,
     exists_mem_image_mem := fun s hs h0 =>
       let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
       ⟨x, hx, 1, one_ne_zero, hx⟩ }
@@ -79,7 +79,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
   rcases H with ⟨N, hN⟩
   induction' N with N ihN
   · apply h0
-    simpa using hN 0 le_rflₓ
+    simpa using hN 0 le_rfl
     
   rw [imp_false] at ihN
   push_neg  at ihN
@@ -145,7 +145,7 @@ theorem ae_forall_image_mem_imp_frequently_image_mem (hf : Conservative f μ) (h
   refine' (hf.ae_mem_imp_frequently_image_mem (hf.measurable.iterate k hs)).mono fun x hx hk => _
   rw [← map_add_at_top_eq_nat k, frequently_map]
   refine' (hx hk).mono fun n hn => _
-  rwa [add_commₓ, iterate_add_apply]
+  rwa [add_comm, iterate_add_apply]
 
 /-- If `f` is a conservative self-map and `s` is a measurable set of positive measure, then
 `μ.ae`-frequently we have `x ∈ s` and `s` returns to `s` under infinitely many iterations of `f`. -/
@@ -180,7 +180,7 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   rcases Nat.exists_lt_modeq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
   set m := (l - k) / (n + 1)
   have : (n + 1) * m = l - k := by
-    apply Nat.mul_div_cancel'ₓ
+    apply Nat.mul_div_cancel'
     exact (Nat.modeq_iff_dvd' hkl.le).1 hn
   refine' ⟨(f^[k]) x, hk, m, _, _⟩
   · intro hm

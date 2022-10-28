@@ -137,13 +137,15 @@ instance is_iso_left [IsIso sq] :
     IsIso
       sq.left where out :=
     ⟨(inv sq).left, by
-      simp only [← comma.comp_left, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_left, eq_self_iff_true, and_selfₓ]⟩
+      simp only [← comma.comp_left, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_left, eq_self_iff_true,
+        and_self_iff]⟩
 
 instance is_iso_right [IsIso sq] :
     IsIso
       sq.right where out :=
     ⟨(inv sq).right, by
-      simp only [← comma.comp_right, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_right, eq_self_iff_true, and_selfₓ]⟩
+      simp only [← comma.comp_right, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_right, eq_self_iff_true,
+        and_self_iff]⟩
 
 @[simp]
 theorem inv_left [IsIso sq] : (inv sq).left = inv sq.left :=
@@ -161,7 +163,7 @@ theorem left_hom_inv_right [IsIso sq] : sq.left ≫ g.Hom ≫ inv sq.right = f.H
 theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.Hom := by simp only [w, is_iso.inv_comp_eq]
 
 instance mono_left [Mono sq] :
-    Mono sq.left where right_cancellation := fun Z φ ψ h => by
+    Mono sq.left where right_cancellation Z φ ψ h := by
     let aux : (Z ⟶ f.left) → (arrow.mk (𝟙 Z) ⟶ f) := fun φ => { left := φ, right := φ ≫ f.hom }
     show (aux φ).left = (aux ψ).left
     congr 1
@@ -174,7 +176,7 @@ instance mono_left [Mono sq] :
       
 
 instance epi_right [Epi sq] :
-    Epi sq.right where left_cancellation := fun Z φ ψ h => by
+    Epi sq.right where left_cancellation Z φ ψ h := by
     let aux : (g.right ⟶ Z) → (g ⟶ arrow.mk (𝟙 Z)) := fun φ => { right := φ, left := g.hom ≫ φ }
     show (aux φ).right = (aux ψ).right
     congr 1
@@ -226,7 +228,7 @@ def rightFunc : Arrow C ⥤ C :=
 
 /-- The natural transformation from `left_func` to `right_func`, given by the arrow itself. -/
 @[simps]
-def leftToRight : (leftFunc : Arrow C ⥤ C) ⟶ right_func where app := fun f => f.Hom
+def leftToRight : (leftFunc : Arrow C ⥤ C) ⟶ right_func where app f := f.Hom
 
 end Arrow
 
@@ -239,8 +241,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 /-- A functor `C ⥤ D` induces a functor between the corresponding arrow categories. -/
 @[simps]
 def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
-  obj := fun a => { left := F.obj a.left, right := F.obj a.right, Hom := F.map a.Hom }
-  map := fun a b f =>
+  obj a := { left := F.obj a.left, right := F.obj a.right, Hom := F.map a.Hom }
+  map a b f :=
     { left := F.map f.left, right := F.map f.right,
       w' := by
         have w := f.w

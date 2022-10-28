@@ -23,8 +23,8 @@ inductive Color
 open Color Nat
 
 instance Color.decidableEq : DecidableEq Color := fun a b =>
-  Color.casesOn a (Color.casesOn b (isTrue rfl) (isFalse fun h => Color.noConfusionₓ h))
-    (Color.casesOn b (isFalse fun h => Color.noConfusionₓ h) (isTrue rfl))
+  Color.casesOn a (Color.casesOn b (isTrue rfl) (isFalse fun h => Color.noConfusion h))
+    (Color.casesOn b (isFalse fun h => Color.noConfusion h) (isTrue rfl))
 
 def depth (f : Nat → Nat → Nat) : Rbnode α → Nat
   | leaf => 0
@@ -146,10 +146,10 @@ end Rbnode
 
 open Rbnode
 
--- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def Rbtree (α : Type u)
     (lt : α → α → Prop := by
       run_tac
@@ -157,7 +157,7 @@ def Rbtree (α : Type u)
     Type u :=
   { t : Rbnode α // t.WellFormed lt }
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def mkRbtree (α : Type u)
     (lt : α → α → Prop := by
       run_tac
@@ -200,8 +200,8 @@ protected def min : Rbtree α lt → Option α
 protected def max : Rbtree α lt → Option α
   | ⟨t, _⟩ => t.max
 
-instance [HasRepr α] : HasRepr (Rbtree α lt) :=
-  ⟨fun t => "rbtree_of " ++ reprₓ t.toList⟩
+instance [Repr α] : Repr (Rbtree α lt) :=
+  ⟨fun t => "rbtree_of " ++ repr t.toList⟩
 
 variable [DecidableRel lt]
 
@@ -214,7 +214,7 @@ def find : Rbtree α lt → α → Option α
 def contains (t : Rbtree α lt) (a : α) : Bool :=
   (t.find a).isSome
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def fromList (l : List α)
     (lt : α → α → Prop := by
       run_tac
@@ -224,7 +224,7 @@ def fromList (l : List α)
 
 end Rbtree
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def rbtreeOf {α : Type u} (l : List α)
     (lt : α → α → Prop := by
       run_tac

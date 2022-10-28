@@ -37,11 +37,11 @@ def limitCone (F : J ⥤ Type max v u) : Cone F where
   x := F.sections
   π := { app := fun j u => u.val j }
 
-attribute [local elabWithoutExpectedType] congr_fun
+attribute [local elab_without_expected_type] congr_fun
 
 /-- (internal implementation) the fact that the proposed limit cone is the limit -/
 def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F) where
-  lift := fun s v => ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
+  lift s v := ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
   uniq' := by
     intros
     ext x j
@@ -55,7 +55,7 @@ instance has_limits_of_size :
     HasLimitsOfSize.{v}
       (Type
         max v
-          u) where HasLimitsOfShape := fun J 𝒥 =>
+          u) where HasLimitsOfShape J 𝒥 :=
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
 instance : HasLimits (Type u) :=
@@ -199,7 +199,7 @@ attribute [local elab_with_expected_type] Quot.lift
 def colimitCoconeIsColimit (F : J ⥤ Type max v u) :
     IsColimit
       (colimitCocone
-        F) where desc := fun s =>
+        F) where desc s :=
     Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2) fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ => by
       rw [hf] <;> exact (congr_fun (cocone.w s f) x).symm
 
@@ -211,7 +211,7 @@ instance has_colimits_of_size :
     HasColimitsOfSize.{v}
       (Type
         max v
-          u) where HasColimitsOfShape := fun J 𝒥 =>
+          u) where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 
 instance : HasColimits (Type u) :=
@@ -285,11 +285,11 @@ theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimi
     have := congr_fun this x
     have H := congr_arg ULift.down this
     dsimp at H
-    rwa [eq_trueₓ] at H
+    rwa [eq_true_iff] at H
   refine' h.hom_ext _
   intro j
   ext y
-  erw [iff_trueₓ]
+  erw [iff_true_iff]
   exact ⟨j, y, rfl⟩
 
 /-- A variant of `jointly_surjective` for `x : colimit F`. -/
@@ -320,7 +320,7 @@ theorem eqv_gen_quot_rel_of_rel (x y : Σj, F.obj j) : FilteredColimit.Rel F x y
   fun ⟨k, f, g, h⟩ =>
   EqvGen.trans _ ⟨k, F.map f x.2⟩ _ (EqvGen.rel _ _ ⟨f, rfl⟩) (EqvGen.symm _ _ (EqvGen.rel _ _ ⟨g, h⟩))
 
-attribute [local elabWithoutExpectedType] nat_trans.app
+attribute [local elab_without_expected_type] nat_trans.app
 
 /-- Recognizing filtered colimits of types. -/
 noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.x, ∃ i xi, x = t.ι.app i xi)
@@ -329,7 +329,7 @@ noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.x, ∃ i xi, x =
   -- Strategy: Prove that the map from "the" colimit of F (defined above) to t.X
   -- is a bijection.
   apply is_colimit.of_iso_colimit (colimit.is_colimit F)
-  refine' cocones.ext (Equivₓ.toIso (Equivₓ.ofBijective _ _)) _
+  refine' cocones.ext (Equiv.toIso (Equiv.ofBijective _ _)) _
   · exact colimit.desc F t
     
   · constructor
@@ -358,7 +358,7 @@ noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.x, ∃ i xi, x =
 
 variable [IsFilteredOrEmpty J]
 
-protected theorem rel_equiv : Equivalenceₓ (FilteredColimit.Rel F) :=
+protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
   ⟨fun x => ⟨x.1, 𝟙 x.1, 𝟙 x.1, rfl⟩, fun x y ⟨k, f, g, h⟩ => ⟨k, g, f, h.symm⟩,
     fun x y z ⟨k, f, g, h⟩ ⟨k', f', g', h'⟩ =>
     let ⟨l, fl, gl, _⟩ := IsFilteredOrEmpty.cocone_objs k k'
@@ -423,8 +423,8 @@ instance : Mono (Image.ι f) :=
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def Image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.i :=
-  (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : Image f → F'.i)
+noncomputable def Image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.I :=
+  (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : Image f → F'.I)
 
 theorem Image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Image.ι f := by
   ext x
@@ -436,7 +436,7 @@ end
 
 /-- the factorisation of any morphism in Type through a mono. -/
 def monoFactorisation : MonoFactorisation f where
-  i := Image f
+  I := Image f
   m := Image.ι f
   e := Set.rangeFactorization f
 
@@ -453,7 +453,7 @@ instance : HasImages (Type u) where HasImage := by infer_instance
 instance :
     HasImageMaps
       (Type
-        u) where HasImageMap := fun f g st =>
+        u) where HasImageMap f g st :=
     HasImageMap.transport st (monoFactorisation f.Hom) (isImage g.Hom)
       (fun x =>
         ⟨st.right x.1,

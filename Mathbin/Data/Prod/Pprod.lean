@@ -40,5 +40,5 @@ theorem Function.Injective.pprod_map {f : α → β} {g : γ → δ} (hf : Injec
     Injective (fun x => ⟨f x.1, g x.2⟩ : PProd α γ → PProd β δ) := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ h =>
   have A := congr_arg PProd.fst h
   have B := congr_arg PProd.snd h
-  congr_arg2ₓ PProd.mk (hf A) (hg B)
+  congr_arg2 PProd.mk (hf A) (hg B)
 

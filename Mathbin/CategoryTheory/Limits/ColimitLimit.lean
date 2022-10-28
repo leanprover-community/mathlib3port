@@ -99,7 +99,7 @@ noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G
   Hom :=
     colim.map (limitIsoSwapCompLim G).Hom ≫
       colimitLimitToLimitColimit (uncurry.obj G : _) ≫ lim.map (whiskerRight (currying.unitIso.app G).inv colim)
-  w' := fun j => by
+  w' j := by
     ext1 k
     simp only [limit_obj_iso_limit_comp_evaluation_hom_π_assoc, iso.app_inv, ι_colimit_limit_to_limit_colimit_π_assoc,
       whisker_right_app, colimit.ι_map, functor.map_cone_π_app, category.id_comp, eq_to_hom_refl, eq_to_hom_app,

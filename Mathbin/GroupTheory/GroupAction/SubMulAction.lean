@@ -90,7 +90,7 @@ variable {r : R} {x : M}
 theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
 
-instance : HasSmul R p where smul := fun c x => ⟨c • x.1, smul_mem _ c x.2⟩
+instance : HasSmul R p where smul c x := ⟨c • x.1, smul_mem _ c x.2⟩
 
 variable {p}
 
@@ -118,7 +118,7 @@ end HasSmul
 
 section MulActionMonoid
 
-variable [Monoidₓ R] [MulAction R M]
+variable [Monoid R] [MulAction R M]
 
 section
 
@@ -130,38 +130,38 @@ theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p := by
   rw [← one_smul R x, ← smul_assoc]
   exact p.smul_mem _ h
 
-instance hasSmul' : HasSmul S p where smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
+instance hasSmul' : HasSmul S p where smul c x := ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
 
-instance : IsScalarTower S R p where smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
+instance : IsScalarTower S R p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 
 instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M] [IsScalarTower S' R M]
-    [IsScalarTower S' S M] : IsScalarTower S' S p where smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
+    [IsScalarTower S' S M] : IsScalarTower S' S p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 
 @[simp, norm_cast]
 theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
   rfl
 
 @[simp]
-theorem smul_mem_iff' {G} [Groupₓ G] [HasSmul G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
+theorem smul_mem_iff' {G} [Group G] [HasSmul G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
     g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 
 instance [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
-    IsCentralScalar S p where op_smul_eq_smul := fun r x => Subtype.ext <| op_smul_eq_smul r x
+    IsCentralScalar S p where op_smul_eq_smul r x := Subtype.ext <| op_smul_eq_smul r x
 
 end
 
 section
 
-variable [Monoidₓ S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
+variable [Monoid S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M)
 
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
 instance mulAction' : MulAction S p where
   smul := (· • ·)
-  one_smul := fun x => Subtype.ext <| one_smul _ x
-  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul c₁ c₂ x
+  one_smul x := Subtype.ext <| one_smul _ x
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul c₁ c₂ x
 
 instance : MulAction R p :=
   p.mulAction'
@@ -186,7 +186,7 @@ end MulActionMonoid
 
 section MulActionGroup
 
-variable [Groupₓ R] [MulAction R M]
+variable [Group R] [MulAction R M]
 
 /-- Stabilizers in group sub_mul_action coincide with stabilizers in the ambient space -/
 theorem stabilizer_of_sub_mul {p : SubMulAction R M} (m : p) :
@@ -198,7 +198,7 @@ end MulActionGroup
 
 section Module
 
-variable [Semiringₓ R] [AddCommMonoidₓ M]
+variable [Semiring R] [AddCommMonoid M]
 
 variable [Module R M]
 
@@ -214,9 +214,9 @@ instance [n_empty : Nonempty p] : Zero p where zero := ⟨0, n_empty.elim fun x 
 
 end Module
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [Ringₓ R] [AddCommGroupₓ M]
+variable [Ring R] [AddCommGroup M]
 
 variable [Module R M]
 
@@ -231,7 +231,7 @@ theorem neg_mem (hx : x ∈ p) : -x ∈ p := by
 @[simp]
 theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
   ⟨fun h => by
-    rw [← neg_negₓ x]
+    rw [← neg_neg x]
     exact neg_mem _ h, neg_mem _⟩
 
 instance : Neg p :=
@@ -241,13 +241,13 @@ instance : Neg p :=
 theorem coe_neg (x : p) : ((-x : p) : M) = -x :=
   rfl
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end SubMulAction
 
 namespace SubMulAction
 
-variable [GroupWithZeroₓ S] [Monoidₓ R] [MulAction R M]
+variable [GroupWithZero S] [Monoid R] [MulAction R M]
 
 variable [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
 

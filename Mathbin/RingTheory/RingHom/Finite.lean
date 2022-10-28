@@ -18,16 +18,16 @@ open TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 
-theorem finite_stable_under_composition : StableUnderComposition @Finite := by
+theorem finiteStableUnderComposition : StableUnderComposition @Finite := by
   introv R hf hg
   exact hg.comp hf
 
-theorem finite_respects_iso : RespectsIso @Finite := by
+theorem finiteRespectsIso : RespectsIso @Finite := by
   apply finite_stable_under_composition.respects_iso
   intros
   exact Finite.of_surjective _ e.to_equiv.surjective
 
-theorem finite_stable_under_base_change : StableUnderBaseChange @Finite := by
+theorem finiteStableUnderBaseChange : StableUnderBaseChange @Finite := by
   classical
   introv R h
   skip

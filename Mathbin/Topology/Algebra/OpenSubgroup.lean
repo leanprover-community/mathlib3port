@@ -36,28 +36,30 @@ open TopologicalSpace
 open TopologicalSpace
 
 /-- The type of open subgroups of a topological additive group. -/
-structure OpenAddSubgroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] extends AddSubgroup G where
+structure OpenAddSubgroup (G : Type _) [AddGroup G] [TopologicalSpace G] extends AddSubgroup G where
   is_open' : IsOpen carrier
 
 /-- The type of open subgroups of a topological group. -/
 @[to_additive]
-structure OpenSubgroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends Subgroup G where
+structure OpenSubgroup (G : Type _) [Group G] [TopologicalSpace G] extends Subgroup G where
   is_open' : IsOpen carrier
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident open_subgroup.to_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident open_add_subgroup.to_add_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret an `open_subgroup` as a `subgroup`. -/
+add_decl_doc OpenSubgroup.toSubgroup
+
+/-- Reinterpret an `open_add_subgroup` as an `add_subgroup`. -/
+add_decl_doc OpenAddSubgroup.toAddSubgroup
+
 namespace OpenSubgroup
 
 open Function TopologicalSpace
 
-variable {G : Type _} [Groupₓ G] [TopologicalSpace G]
+variable {G : Type _} [Group G] [TopologicalSpace G]
 
 variable {U V : OpenSubgroup G} {g : G}
 
 @[to_additive]
-instance hasCoeSet : CoeTₓ (OpenSubgroup G) (Set G) :=
+instance hasCoeSet : CoeT (OpenSubgroup G) (Set G) :=
   ⟨fun U => U.1⟩
 
 @[to_additive]
@@ -65,11 +67,11 @@ instance : Membership G (OpenSubgroup G) :=
   ⟨fun g U => g ∈ (U : Set G)⟩
 
 @[to_additive]
-instance hasCoeSubgroup : CoeTₓ (OpenSubgroup G) (Subgroup G) :=
+instance hasCoeSubgroup : CoeT (OpenSubgroup G) (Subgroup G) :=
   ⟨toSubgroup⟩
 
 @[to_additive]
-instance hasCoeOpens : CoeTₓ (OpenSubgroup G) (Opens G) :=
+instance hasCoeOpens : CoeT (OpenSubgroup G) (Opens G) :=
   ⟨fun U => ⟨U, U.is_open'⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -130,7 +132,7 @@ instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[to_additive]
-theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
+theorem isClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
   apply is_open_compl_iff.1
   refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · intro u hux
@@ -146,9 +148,9 @@ theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set 
 
 section
 
-variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
+variable {H : Type _} [Group H] [TopologicalSpace H]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
@@ -157,8 +159,8 @@ def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
 end
 
 @[to_additive]
-instance : PartialOrderₓ (OpenSubgroup G) :=
-  { PartialOrderₓ.lift (coe : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
+instance : PartialOrder (OpenSubgroup G) :=
+  { PartialOrder.lift (coe : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
 
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=
@@ -170,7 +172,7 @@ instance : SemilatticeInf (OpenSubgroup G) :=
 @[to_additive]
 instance : OrderTop (OpenSubgroup G) where
   top := ⊤
-  le_top := fun U => Set.subset_univ _
+  le_top U := Set.subset_univ _
 
 @[simp, norm_cast, to_additive]
 theorem coe_inf : (↑(U ⊓ V) : Set G) = (U : Set G) ∩ V :=
@@ -184,7 +186,7 @@ theorem coe_subset : (U : Set G) ⊆ V ↔ U ≤ V :=
 theorem coe_subgroup_le : (U : Subgroup G) ≤ (V : Subgroup G) ↔ U ≤ V :=
   Iff.rfl
 
-variable {N : Type _} [Groupₓ N] [TopologicalSpace N]
+variable {N : Type _} [Group N] [TopologicalSpace N]
 
 /-- The preimage of an `open_subgroup` along a continuous `monoid` homomorphism
   is an `open_subgroup`. -/
@@ -202,16 +204,15 @@ theorem mem_comap {H : OpenSubgroup N} {f : G →* N} {hf : Continuous f} {x : G
   Iff.rfl
 
 @[to_additive]
-theorem comap_comap {P : Type _} [Groupₓ P] [TopologicalSpace P] (K : OpenSubgroup P) (f₂ : N →* P)
-    (hf₂ : Continuous f₂) (f₁ : G →* N) (hf₁ : Continuous f₁) :
-    (K.comap f₂ hf₂).comap f₁ hf₁ = K.comap (f₂.comp f₁) (hf₂.comp hf₁) :=
+theorem comap_comap {P : Type _} [Group P] [TopologicalSpace P] (K : OpenSubgroup P) (f₂ : N →* P) (hf₂ : Continuous f₂)
+    (f₁ : G →* N) (hf₁ : Continuous f₁) : (K.comap f₂ hf₂).comap f₁ hf₁ = K.comap (f₂.comp f₁) (hf₂.comp hf₁) :=
   rfl
 
 end OpenSubgroup
 
 namespace Subgroup
 
-variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G] (H : Subgroup G)
+variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G] (H : Subgroup G)
 
 @[to_additive]
 theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) := by
@@ -231,7 +232,7 @@ theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (
 
 /-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
 @[to_additive "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
-theorem is_open_of_one_mem_interior {G : Type _} [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G] {H : Subgroup G}
+theorem is_open_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G] {H : Subgroup G}
     (h_1_int : (1 : G) ∈ Interior (H : Set G)) : IsOpen (H : Set G) := by
   have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
     nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
@@ -251,7 +252,7 @@ end Subgroup
 
 namespace OpenSubgroup
 
-variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G]
+variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G]
 
 @[to_additive]
 instance : SemilatticeSup (OpenSubgroup G) :=
@@ -273,9 +274,9 @@ namespace Submodule
 
 open OpenAddSubgroup
 
-variable {R : Type _} {M : Type _} [CommRingₓ R]
+variable {R : Type _} {M : Type _} [CommRing R]
 
-variable [AddCommGroupₓ M] [TopologicalSpace M] [TopologicalAddGroup M] [Module R M]
+variable [AddCommGroup M] [TopologicalSpace M] [TopologicalAddGroup M] [Module R M]
 
 theorem is_open_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) : IsOpen (P : Set M) :=
   @AddSubgroup.is_open_mono M _ _ _ U.toAddSubgroup P.toAddSubgroup h hU
@@ -284,7 +285,7 @@ end Submodule
 
 namespace Ideal
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
 variable [TopologicalSpace R] [TopologicalRing R]
 

@@ -29,11 +29,11 @@ open TopologicalSpace
 
 variable {C : Type u₁} [Category.{v} C]
 
-variable {X Y : Top.{v}} (f : X ⟶ Y)
+variable {X Y : TopCat.{v}} (f : X ⟶ Y)
 
 variable ⦃ι : Type v⦄ {U : ι → Opens Y}
 
-namespace Top
+namespace TopCat
 
 namespace Presheaf.SheafConditionPairwiseIntersections
 
@@ -84,10 +84,10 @@ theorem pushforward_sheaf_of_sheaf {F : X.Presheaf C} (h : F.IsSheaf) : (f _* F)
 /-- The pushforward functor.
 -/
 def pushforward (f : X ⟶ Y) : X.Sheaf C ⥤ Y.Sheaf C where
-  obj := fun ℱ => ⟨f _* ℱ.1, pushforward_sheaf_of_sheaf f ℱ.2⟩
-  map := fun _ _ g => ⟨pushforwardMap f g.1⟩
+  obj ℱ := ⟨f _* ℱ.1, pushforward_sheaf_of_sheaf f ℱ.2⟩
+  map _ _ g := ⟨pushforwardMap f g.1⟩
 
 end Sheaf
 
-end Top
+end TopCat
 

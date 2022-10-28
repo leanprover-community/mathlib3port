@@ -36,48 +36,48 @@ open _Root_.Nat
 /-- The greatest common divisor (gcd) of two positive natural numbers,
   viewed as positive natural number. -/
 def gcd (n m : ℕ+) : ℕ+ :=
-  ⟨Nat.gcdₓ (n : ℕ) (m : ℕ), Nat.gcd_pos_of_pos_leftₓ (m : ℕ) n.Pos⟩
+  ⟨Nat.gcd (n : ℕ) (m : ℕ), Nat.gcd_pos_of_pos_left (m : ℕ) n.Pos⟩
 
 /-- The least common multiple (lcm) of two positive natural numbers,
   viewed as positive natural number. -/
 def lcm (n m : ℕ+) : ℕ+ :=
-  ⟨Nat.lcmₓ (n : ℕ) (m : ℕ), by
+  ⟨Nat.lcm (n : ℕ) (m : ℕ), by
     let h := mul_pos n.pos m.pos
     rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_comm] at h
-    exact pos_of_dvd_of_pos (Dvd.intro (Nat.gcdₓ (n : ℕ) (m : ℕ)) rfl) h⟩
+    exact pos_of_dvd_of_pos (Dvd.intro (Nat.gcd (n : ℕ) (m : ℕ)) rfl) h⟩
 
 @[simp]
-theorem gcd_coe (n m : ℕ+) : (gcd n m : ℕ) = Nat.gcdₓ n m :=
+theorem gcd_coe (n m : ℕ+) : (gcd n m : ℕ) = Nat.gcd n m :=
   rfl
 
 @[simp]
-theorem lcm_coe (n m : ℕ+) : (lcm n m : ℕ) = Nat.lcmₓ n m :=
+theorem lcm_coe (n m : ℕ+) : (lcm n m : ℕ) = Nat.lcm n m :=
   rfl
 
 theorem gcd_dvd_left (n m : ℕ+) : gcd n m ∣ n :=
-  dvd_iff.2 (Nat.gcd_dvd_leftₓ (n : ℕ) (m : ℕ))
+  dvd_iff.2 (Nat.gcd_dvd_left (n : ℕ) (m : ℕ))
 
 theorem gcd_dvd_right (n m : ℕ+) : gcd n m ∣ m :=
-  dvd_iff.2 (Nat.gcd_dvd_rightₓ (n : ℕ) (m : ℕ))
+  dvd_iff.2 (Nat.gcd_dvd_right (n : ℕ) (m : ℕ))
 
 theorem dvd_gcd {m n k : ℕ+} (hm : k ∣ m) (hn : k ∣ n) : k ∣ gcd m n :=
-  dvd_iff.2 (@Nat.dvd_gcdₓ (m : ℕ) (n : ℕ) (k : ℕ) (dvd_iff.1 hm) (dvd_iff.1 hn))
+  dvd_iff.2 (@Nat.dvd_gcd (m : ℕ) (n : ℕ) (k : ℕ) (dvd_iff.1 hm) (dvd_iff.1 hn))
 
 theorem dvd_lcm_left (n m : ℕ+) : n ∣ lcm n m :=
-  dvd_iff.2 (Nat.dvd_lcm_leftₓ (n : ℕ) (m : ℕ))
+  dvd_iff.2 (Nat.dvd_lcm_left (n : ℕ) (m : ℕ))
 
 theorem dvd_lcm_right (n m : ℕ+) : m ∣ lcm n m :=
-  dvd_iff.2 (Nat.dvd_lcm_rightₓ (n : ℕ) (m : ℕ))
+  dvd_iff.2 (Nat.dvd_lcm_right (n : ℕ) (m : ℕ))
 
 theorem lcm_dvd {m n k : ℕ+} (hm : m ∣ k) (hn : n ∣ k) : lcm m n ∣ k :=
-  dvd_iff.2 (@Nat.lcm_dvdₓ (m : ℕ) (n : ℕ) (k : ℕ) (dvd_iff.1 hm) (dvd_iff.1 hn))
+  dvd_iff.2 (@Nat.lcm_dvd (m : ℕ) (n : ℕ) (k : ℕ) (dvd_iff.1 hm) (dvd_iff.1 hn))
 
 theorem gcd_mul_lcm (n m : ℕ+) : gcd n m * lcm n m = n * m :=
-  Subtype.eq (Nat.gcd_mul_lcmₓ (n : ℕ) (m : ℕ))
+  Subtype.eq (Nat.gcd_mul_lcm (n : ℕ) (m : ℕ))
 
 theorem eq_one_of_lt_two {n : ℕ+} : n < 2 → n = 1 := by
   intro h
-  apply le_antisymmₓ
+  apply le_antisymm
   swap
   apply Pnat.one_le
   change n < 1 + 1 at h
@@ -156,11 +156,11 @@ theorem Coprime.mul_right {k m n : ℕ+} : k.Coprime m → k.Coprime n → k.Cop
 theorem gcd_comm {m n : ℕ+} : m.gcd n = n.gcd m := by
   apply Eq
   simp only [gcd_coe]
-  apply Nat.gcd_commₓ
+  apply Nat.gcd_comm
 
 theorem gcd_eq_left_iff_dvd {m n : ℕ+} : m ∣ n ↔ m.gcd n = m := by
   rw [dvd_iff]
-  rw [Nat.gcd_eq_left_iff_dvdₓ]
+  rw [Nat.gcd_eq_left_iff_dvd]
   rw [← coe_inj]
   simp
 
@@ -253,7 +253,7 @@ theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m := by
   intro h
   apply Eq
   simp only [gcd_coe]
-  apply Nat.gcd_eq_leftₓ h
+  apply Nat.gcd_eq_left h
 
 theorem Coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.Coprime n) : (m ^ k).Coprime (n ^ l) := by
   rw [← coprime_coe] at *

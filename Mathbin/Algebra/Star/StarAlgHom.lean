@@ -46,8 +46,8 @@ non-unital, algebra, morphism, star
 /-- A *non-unital ⋆-algebra homomorphism* is a non-unital algebra homomorphism between
 non-unital `R`-algebras `A` and `B` equipped with a `star` operation, and this homomorphism is
 also `star`-preserving. -/
-structure NonUnitalStarAlgHom (R A B : Type _) [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A]
-  [HasStar A] [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] [HasStar B] extends A →ₙₐ[R] B where
+structure NonUnitalStarAlgHom (R A B : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
+  [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B] extends A →ₙₐ[R] B where
   map_star' : ∀ a : A, to_fun (star a) = star (to_fun a)
 
 -- mathport name: «expr →⋆ₙₐ »
@@ -56,13 +56,15 @@ infixr:25 " →⋆ₙₐ " => NonUnitalStarAlgHom _
 -- mathport name: «expr →⋆ₙₐ[ ] »
 notation:25 A " →⋆ₙₐ[" R "] " B => NonUnitalStarAlgHom R A B
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident non_unital_star_alg_hom.to_non_unital_alg_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret a non-unital star algebra homomorphism as a non-unital algebra homomorphism
+by forgetting the interaction with the star operation. -/
+add_decl_doc NonUnitalStarAlgHom.toNonUnitalAlgHom
+
 /-- `non_unital_star_alg_hom_class F R A B` asserts `F` is a type of bundled non-unital ⋆-algebra
 homomorphisms from `A` to `B`. -/
 class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
-  [Monoidₓ R] [HasStar A] [HasStar B] [NonUnitalNonAssocSemiringₓ A] [NonUnitalNonAssocSemiringₓ B]
-  [DistribMulAction R A] [DistribMulAction R B] extends NonUnitalAlgHomClass F R A B, StarHomClass F A B
+  [Monoid R] [HasStar A] [HasStar B] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B] [DistribMulAction R A]
+  [DistribMulAction R B] extends NonUnitalAlgHomClass F R A B, StarHomClass F A B
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] NonUnitalStarAlgHomClass.toStarHomClass
@@ -71,24 +73,24 @@ namespace NonUnitalStarAlgHom
 
 section Basic
 
-variable {R A B C D : Type _} [Monoidₓ R]
+variable {R A B C D : Type _} [Monoid R]
 
-variable [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [HasStar A]
+variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [HasStar A]
 
-variable [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] [HasStar B]
+variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B]
 
-variable [NonUnitalNonAssocSemiringₓ C] [DistribMulAction R C] [HasStar C]
+variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C] [HasStar C]
 
-variable [NonUnitalNonAssocSemiringₓ D] [DistribMulAction R D] [HasStar D]
+variable [NonUnitalNonAssocSemiring D] [DistribMulAction R D] [HasStar D]
 
 instance : NonUnitalStarAlgHomClass (A →⋆ₙₐ[R] B) R A B where
   coe := toFun
   coe_injective' := by rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
-  map_smul := fun f => f.map_smul'
-  map_add := fun f => f.map_add'
-  map_zero := fun f => f.map_zero'
-  map_mul := fun f => f.map_mul'
-  map_star := fun f => f.map_star'
+  map_smul f := f.map_smul'
+  map_add f := f.map_add'
+  map_zero f := f.map_zero'
+  map_mul f := f.map_mul'
+  map_star f := f.map_star'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -166,7 +168,7 @@ theorem id_comp (f : A →⋆ₙₐ[R] B) : (NonUnitalStarAlgHom.id _ _).comp f 
 theorem comp_id (f : A →⋆ₙₐ[R] B) : f.comp (NonUnitalStarAlgHom.id _ _) = f :=
   ext fun _ => rfl
 
-instance : Monoidₓ (A →⋆ₙₐ[R] A) where
+instance : Monoid (A →⋆ₙₐ[R] A) where
   mul := comp
   mul_assoc := comp_assoc
   one := NonUnitalStarAlgHom.id R A
@@ -185,11 +187,11 @@ end Basic
 section Zero
 
 -- the `zero` requires extra type class assumptions because we need `star_zero`
-variable {R A B C D : Type _} [Monoidₓ R]
+variable {R A B C D : Type _} [Monoid R]
 
-variable [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [StarAddMonoid A]
+variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [StarAddMonoid A]
 
-variable [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] [StarAddMonoid B]
+variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [StarAddMonoid B]
 
 instance : Zero (A →⋆ₙₐ[R] B) :=
   ⟨{ (0 : NonUnitalAlgHom R A B) with map_star' := by simp }⟩
@@ -197,7 +199,7 @@ instance : Zero (A →⋆ₙₐ[R] B) :=
 instance : Inhabited (A →⋆ₙₐ[R] B) :=
   ⟨0⟩
 
-instance : MonoidWithZeroₓ (A →⋆ₙₐ[R] A) :=
+instance : MonoidWithZero (A →⋆ₙₐ[R] A) :=
   { NonUnitalStarAlgHom.monoid, NonUnitalStarAlgHom.hasZero with zero_mul := fun f => ext fun x => rfl,
     mul_zero := fun f => ext fun x => map_zero f }
 
@@ -219,8 +221,8 @@ section Unital
 
 /-- A *⋆-algebra homomorphism* is an algebra homomorphism between `R`-algebras `A` and `B`
 equipped with a `star` operation, and this homomorphism is also `star`-preserving. -/
-structure StarAlgHom (R A B : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [HasStar A] [Semiringₓ B]
-  [Algebra R B] [HasStar B] extends AlgHom R A B where
+structure StarAlgHom (R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B]
+  [HasStar B] extends AlgHom R A B where
   map_star' : ∀ x : A, to_fun (star x) = star (to_fun x)
 
 -- mathport name: «expr →⋆ₐ »
@@ -229,32 +231,34 @@ infixr:25 " →⋆ₐ " => StarAlgHom _
 -- mathport name: «expr →⋆ₐ[ ] »
 notation:25 A " →⋆ₐ[" R "] " B => StarAlgHom R A B
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident star_alg_hom.to_alg_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret a unital star algebra homomorphism as a unital algebra homomorphism
+by forgetting the interaction with the star operation. -/
+add_decl_doc StarAlgHom.toAlgHom
+
 /-- `star_alg_hom_class F R A B` states that `F` is a type of ⋆-algebra homomorphisms.
 
 You should also extend this typeclass when you extend `star_alg_hom`. -/
 class StarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
-  [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [HasStar A] [Semiringₓ B] [Algebra R B] [HasStar B] extends
+  [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B] [HasStar B] extends
   AlgHomClass F R A B, StarHomClass F A B
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgHomClass.toStarHomClass
 
 -- See note [lower instance priority]
-instance (priority := 100) StarAlgHomClass.toNonUnitalStarAlgHomClass (F R A B : Type _) [CommSemiringₓ R] [Semiringₓ A]
-    [Algebra R A] [HasStar A] [Semiringₓ B] [Algebra R B] [HasStar B] [StarAlgHomClass F R A B] :
+instance (priority := 100) StarAlgHomClass.toNonUnitalStarAlgHomClass (F R A B : Type _) [CommSemiring R] [Semiring A]
+    [Algebra R A] [HasStar A] [Semiring B] [Algebra R B] [HasStar B] [StarAlgHomClass F R A B] :
     NonUnitalStarAlgHomClass F R A B :=
   { StarAlgHomClass.toAlgHomClass F R A B, StarAlgHomClass.toStarHomClass F R A B with map_smul := map_smul }
 
 namespace StarAlgHom
 
-variable {F R A B C D : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [HasStar A] [Semiringₓ B] [Algebra R B]
-  [HasStar B] [Semiringₓ C] [Algebra R C] [HasStar C] [Semiringₓ D] [Algebra R D] [HasStar D]
+variable {F R A B C D : Type _} [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B]
+  [HasStar B] [Semiring C] [Algebra R C] [HasStar C] [Semiring D] [Algebra R D] [HasStar D]
 
 instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
   map_mul := map_mul'
   map_one := map_one'
   map_add := map_add'
@@ -339,7 +343,7 @@ theorem id_comp (f : A →⋆ₐ[R] B) : (StarAlgHom.id _ _).comp f = f :=
 theorem comp_id (f : A →⋆ₐ[R] B) : f.comp (StarAlgHom.id _ _) = f :=
   ext fun _ => rfl
 
-instance : Monoidₓ (A →⋆ₐ[R] A) where
+instance : Monoid (A →⋆ₐ[R] A) where
   mul := comp
   mul_assoc := comp_assoc
   one := StarAlgHom.id R A
@@ -367,9 +371,9 @@ namespace NonUnitalStarAlgHom
 
 section Prod
 
-variable (R A B C : Type _) [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [HasStar A]
-  [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] [HasStar B] [NonUnitalNonAssocSemiringₓ C]
-  [DistribMulAction R C] [HasStar C]
+variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [HasStar A]
+  [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B] [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
+  [HasStar C]
 
 /-- The first projection of a product is a non-unital ⋆-algebra homomoprhism. -/
 @[simps]
@@ -405,17 +409,17 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 their codomains. -/
 @[simps]
 def prodEquiv : (A →⋆ₙₐ[R] B) × (A →⋆ₙₐ[R] C) ≃ (A →⋆ₙₐ[R] B × C) where
-  toFun := fun f => f.1.Prod f.2
-  invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by ext <;> rfl
-  right_inv := fun f => by ext <;> rfl
+  toFun f := f.1.Prod f.2
+  invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
+  left_inv f := by ext <;> rfl
+  right_inv f := by ext <;> rfl
 
 end Prod
 
 section InlInr
 
-variable (R A B C : Type _) [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [StarAddMonoid A]
-  [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] [StarAddMonoid B] [NonUnitalNonAssocSemiringₓ C]
+variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [StarAddMonoid A]
+  [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [StarAddMonoid B] [NonUnitalNonAssocSemiring C]
   [DistribMulAction R C] [StarAddMonoid C]
 
 /-- The left injection into a product is a non-unital algebra homomorphism. -/
@@ -448,8 +452,8 @@ end NonUnitalStarAlgHom
 
 namespace StarAlgHom
 
-variable (R A B C : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [HasStar A] [Semiringₓ B] [Algebra R B]
-  [HasStar B] [Semiringₓ C] [Algebra R C] [HasStar C]
+variable (R A B C : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B]
+  [HasStar B] [Semiring C] [Algebra R C] [HasStar C]
 
 /-- The first projection of a product is a ⋆-algebra homomoprhism. -/
 @[simps]
@@ -485,10 +489,10 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 their codomains. -/
 @[simps]
 def prodEquiv : (A →⋆ₐ[R] B) × (A →⋆ₐ[R] C) ≃ (A →⋆ₐ[R] B × C) where
-  toFun := fun f => f.1.Prod f.2
-  invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by ext <;> rfl
-  right_inv := fun f => by ext <;> rfl
+  toFun f := f.1.Prod f.2
+  invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
+  left_inv f := by ext <;> rfl
+  right_inv f := by ext <;> rfl
 
 end StarAlgHom
 

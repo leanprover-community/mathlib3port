@@ -61,7 +61,7 @@ theorem norm_sq_eq_of_mem_circle (z : circle) : normSq z = 1 := by simp [norm_sq
 theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
   ne_zero_of_mem_unit_sphere z
 
-instance : CommGroupₓ circle :=
+instance : CommGroup circle :=
   Metric.Sphere.commGroup
 
 @[simp]
@@ -69,7 +69,7 @@ theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ :=
   rfl
 
 theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) := by
-  rw [coe_inv_circle, inv_def, norm_sq_eq_of_mem_circle, inv_one, of_real_one, mul_oneₓ]
+  rw [coe_inv_circle, inv_def, norm_sq_eq_of_mem_circle, inv_one, of_real_one, mul_one]
 
 @[simp]
 theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
@@ -92,7 +92,7 @@ def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
   ⟨conj z / z, mem_circle_iff_abs.2 <| by rw [map_div₀, abs_conj, div_self (complex.abs.ne_zero hz)]⟩
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
-def expMapCircle : C(ℝ, circle) where toFun := fun t => ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
+def expMapCircle : C(ℝ, circle) where toFun t := ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 
 @[simp]
 theorem exp_map_circle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
@@ -104,7 +104,7 @@ theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
 
 @[simp]
 theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
-  Subtype.ext <| by simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mulₓ, Complex.exp_add]
+  Subtype.ext <| by simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/

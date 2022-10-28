@@ -35,8 +35,8 @@ local infixr:25 " →ₛ " => SimpleFunc
 
 variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup G] {f : α → G}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr G]]
-theorem Memℒp.fin_strongly_measurable_of_strongly_measurable (hf : Memℒp f p μ) (hf_meas : StronglyMeasurable f)
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr G]] -/
+theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ) (hf_meas : StronglyMeasurable f)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr G]]"
   haveI : separable_space (Set.Range f ∪ {0} : Set G) := hf_meas.separable_space_range_union_singleton
@@ -51,19 +51,18 @@ theorem Memℒp.fin_strongly_measurable_of_strongly_measurable (hf : Memℒp f p
     simp
     
 
-theorem Memℒp.ae_fin_strongly_measurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AeFinStronglyMeasurable f μ :=
   ⟨hf.AeStronglyMeasurable.mk f,
-    ((mem_ℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp hf).fin_strongly_measurable_of_strongly_measurable
-      hf.AeStronglyMeasurable.strongly_measurable_mk hp_ne_zero hp_ne_top,
+    ((mem_ℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp hf).finStronglyMeasurableOfStronglyMeasurable
+      hf.AeStronglyMeasurable.stronglyMeasurableMk hp_ne_zero hp_ne_top,
     hf.AeStronglyMeasurable.ae_eq_mk⟩
 
-theorem Integrable.ae_fin_strongly_measurable (hf : Integrable f μ) : AeFinStronglyMeasurable f μ :=
+theorem Integrable.aeFinStronglyMeasurable (hf : Integrable f μ) : AeFinStronglyMeasurable f μ :=
   (mem_ℒp_one_iff_integrable.mpr hf).AeFinStronglyMeasurable one_ne_zero Ennreal.coe_ne_top
 
-theorem lp.fin_strongly_measurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
-    FinStronglyMeasurable f μ :=
-  (lp.mem_ℒp f).fin_strongly_measurable_of_strongly_measurable (lp.strongly_measurable f) hp_ne_zero hp_ne_top
+theorem lp.finStronglyMeasurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ :=
+  (lp.memℒp f).finStronglyMeasurableOfStronglyMeasurable (lp.stronglyMeasurable f) hp_ne_zero hp_ne_top
 
 end MeasureTheory
 

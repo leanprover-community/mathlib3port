@@ -42,7 +42,7 @@ Instances of these typeclasses mostly involving `ring_hom.id` are also provided:
 
 variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 
-variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
+variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
 
 /-- Class that expresses the fact that three ring homomorphisms form a composition triple. This is
 used to handle composition of semilinear maps. -/
@@ -104,7 +104,7 @@ would be `ring_hom_inv_pair e e`. Indeed, this declaration is not currently used
 See note [reducible non-instances].
 -/
 @[reducible]
-theorem of_ring_equiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
+theorem ofRingEquiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
   ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
 
 /-- Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
@@ -126,7 +126,7 @@ instance ids : RingHomCompTriple (RingHom.id R₁) σ₁₂ σ₁₂ :=
     ext
     simp⟩
 
-instance right_ids : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
+instance rightIds : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
   ⟨by
     ext
     simp⟩
@@ -145,7 +145,7 @@ namespace RingHomSurjective
 
 -- The linter gives a false positive, since `σ₂` is an out_param
 @[nolint dangerous_instance]
-instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
+instance (priority := 100) invPair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
   ⟨fun x => ⟨σ₂ x, RingHomInvPair.comp_apply_eq₂⟩⟩
 
 instance ids : RingHomSurjective (RingHom.id R₁) :=

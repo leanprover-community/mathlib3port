@@ -163,14 +163,14 @@ variable (C)
 @[simps]
 def rotate : Triangle C ⥤ Triangle C where
   obj := Triangle.rotate
-  map := fun _ _ f => f.rotate
+  map _ _ f := f.rotate
 
 /-- The inverse rotation of triangles gives an endofunctor on the category of triangles in `C`.
 -/
 @[simps]
 def invRotate : Triangle C ⥤ Triangle C where
   obj := Triangle.invRotate
-  map := fun _ _ f => f.invRotate
+  map _ _ f := f.invRotate
 
 variable {C}
 
@@ -253,7 +253,7 @@ def fromRotateInvRotate (T : Triangle C) : (rotate C).obj ((invRotate C).obj T) 
   comm₃' := by
     dsimp
     simp only [discrete.functor_map_id, nat_trans.id_app, id_comp, functor.map_neg, functor.map_comp, obj_μ_app,
-      obj_ε_inv_app, comp_id, assoc, μ_naturality_assoc, neg_negₓ, CategoryTheory.Functor.map_id,
+      obj_ε_inv_app, comp_id, assoc, μ_naturality_assoc, neg_neg, CategoryTheory.Functor.map_id,
       add_neg_equiv_counit_iso_hom, eq_to_hom_refl, nat_trans.comp_app]
     erw [μ_inv_hom_app, category.comp_id, obj_zero_map_μ_app]
     rw [discrete.functor_map_id, nat_trans.id_app, comp_id]
@@ -275,7 +275,7 @@ def toRotateInvRotate (T : Triangle C) : T ⟶ (rotate C).obj ((invRotate C).obj
     rw [CategoryTheory.Functor.map_id]
     simp only [comp_id, add_neg_equiv_counit_iso_inv, eq_to_hom_refl, id_comp, nat_trans.comp_app,
       discrete.functor_map_id, nat_trans.id_app, functor.map_neg, functor.map_comp, obj_μ_app, obj_ε_inv_app, assoc,
-      μ_naturality_assoc, neg_negₓ, μ_inv_hom_app_assoc]
+      μ_naturality_assoc, neg_neg, μ_inv_hom_app_assoc]
     erw [μ_inv_hom_app, category.comp_id, obj_zero_map_μ_app]
     simp only [discrete.functor_map_id, nat_trans.id_app, comp_id, ε_hom_inv_app_assoc]
 
@@ -314,7 +314,7 @@ variable (C)
 /-- Rotating triangles gives an auto-equivalence on the category of triangles in `C`.
 -/
 @[simps]
-def triangleRotation : Equivalenceₓ (Triangle C) (Triangle C) where
+def triangleRotation : Equivalence (Triangle C) (Triangle C) where
   Functor := rotate C
   inverse := invRotate C
   unitIso := rotCompInvRot

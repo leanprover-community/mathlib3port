@@ -24,7 +24,7 @@ universe u v w x
 variable {α : Type u} {β : Type v} {ι : Sort w}
 
 theorem Finite.Set.finite_of_finite_image (s : Set α) {f : α → β} (h : s.InjOn f) [Finite (f '' s)] : Finite s :=
-  Finite.of_equiv _ (Equivₓ.ofBijective _ h.bij_on_image.Bijective).symm
+  Finite.of_equiv _ (Equiv.ofBijective _ h.bij_on_image.Bijective).symm
 
 theorem Finite.of_injective_finite_range {f : ι → α} (hf : Function.Injective f) [Finite (Range f)] : Finite ι :=
   Finite.of_injective (Set.rangeFactorization f) (hf.codRestrict _)

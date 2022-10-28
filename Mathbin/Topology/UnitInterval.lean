@@ -23,14 +23,14 @@ noncomputable section
 
 open Classical TopologicalSpace Filter
 
-open Set Int Set.Icc
+open Set Int Set.IccCat
 
 /-! ### The unit interval -/
 
 
 /-- The unit interval `[0,1]` in ℝ. -/
 abbrev UnitInterval : Set ℝ :=
-  Set.Icc 0 1
+  Set.IccCat 0 1
 
 -- mathport name: unit_interval
 localized [UnitInterval] notation "I" => UnitInterval
@@ -38,13 +38,13 @@ localized [UnitInterval] notation "I" => UnitInterval
 namespace UnitInterval
 
 theorem zero_mem : (0 : ℝ) ∈ I :=
-  ⟨le_rflₓ, zero_le_one⟩
+  ⟨le_rfl, zero_le_one⟩
 
 theorem one_mem : (1 : ℝ) ∈ I :=
-  ⟨zero_le_one, le_rflₓ⟩
+  ⟨zero_le_one, le_rfl⟩
 
 theorem mul_mem {x y : ℝ} (hx : x ∈ I) (hy : y ∈ I) : x * y ∈ I :=
-  ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq <| one_mulₓ 1⟩
+  ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq <| one_mul 1⟩
 
 theorem div_mem {x y : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hxy : x ≤ y) : x / y ∈ I :=
   ⟨div_nonneg hx hy, div_le_one_of_le hxy hy⟩
@@ -76,10 +76,10 @@ instance : Mul I :=
 
 -- todo: we could set up a `linear_ordered_comm_monoid_with_zero I` instance
 theorem mul_le_left {x y : I} : x * y ≤ x :=
-  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq <| mul_oneₓ x
+  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq <| mul_one x
 
 theorem mul_le_right {x y : I} : x * y ≤ y :=
-  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq <| one_mulₓ y
+  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq <| one_mul y
 
 /-- Unit interval central symmetry. -/
 def symm : I → I := fun t => ⟨1 - t, mem_iff_one_sub_mem.mp t.Prop⟩
@@ -133,7 +133,7 @@ theorem nonneg' {t : I} : 0 ≤ t :=
 theorem le_one' {t : I} : t ≤ 1 :=
   t.2.2
 
-theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc (0 : ℝ) (1 / a) := by
+theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.IccCat (0 : ℝ) (1 / a) := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor
   · exact nonneg_of_mul_nonneg_right h₁ ha
     
@@ -144,7 +144,7 @@ theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc
   · rwa [le_div_iff ha, mul_comm] at h₂
     
 
-theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.Icc (1 / 2 : ℝ) 1 := by
+theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.IccCat (1 / 2 : ℝ) 1 := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 
 end UnitInterval
@@ -159,10 +159,10 @@ theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 
 
 namespace Tactic.Interactive
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def unit_interval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry
@@ -178,22 +178,23 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-    affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by simp [h]
+    affineHomeomorph a b h.Ne.symm '' Set.IccCat 0 1 = Set.IccCat b (a + b) := by simp [h]
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
-def iccHomeoI (a b : 𝕜) (h : a < b) : Set.Icc a b ≃ₜ Set.Icc (0 : 𝕜) (1 : 𝕜) := by
-  let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.Icc 0 1)
+def iccHomeoI (a b : 𝕜) (h : a < b) : Set.IccCat a b ≃ₜ Set.IccCat (0 : 𝕜) (1 : 𝕜) := by
+  let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.IccCat 0 1)
   refine' (e.trans _).symm
   apply Homeomorph.setCongr
   simp [sub_pos.mpr h]
 
 @[simp]
-theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) : ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
+theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.IccCat a b) :
+    ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
   rfl
 
 @[simp]
-theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc (0 : 𝕜) (1 : 𝕜)) :
+theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.IccCat (0 : 𝕜) (1 : 𝕜)) :
     ((iccHomeoI a b h).symm x : 𝕜) = (b - a) * x + a :=
   rfl
 

@@ -28,12 +28,12 @@ Further development can be found on the branch `von_neumann_v2`.
 
 universe u
 
-variable {x y z : Setₓ.{u}}
+variable {x y z : SetCat.{u}}
 
-namespace Setₓ
+namespace SetCat
 
 /-- A transitive set is one where every element is a subset. -/
-def IsTransitive (x : Setₓ) : Prop :=
+def IsTransitive (x : SetCat) : Prop :=
   ∀ y ∈ x, y ⊆ x
 
 @[simp]
@@ -42,7 +42,7 @@ theorem empty_is_transitive : IsTransitive ∅ := fun y hy => (mem_empty y hy).e
 theorem IsTransitive.subset_of_mem (h : x.IsTransitive) : y ∈ x → y ⊆ x :=
   h y
 
-theorem is_transitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : Setₓ}, x ∈ y → y ∈ z → x ∈ z :=
+theorem is_transitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : SetCat}, x ∈ y → y ∈ z → x ∈ z :=
   ⟨fun h x y hx hy => h.subset_of_mem hy hx, fun H x hx y hy => H hy hx⟩
 
 alias is_transitive_iff_mem_trans ↔ is_transitive.mem_trans _
@@ -52,17 +52,17 @@ protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive)
   rw [mem_inter] at hz⊢
   exact ⟨hx.mem_trans hw hz.1, hy.mem_trans hw hz.2⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀ x).IsTransitive := fun y hy z hz => by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem hz (h.mem_trans hw' hw)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTransitive := fun y hy z hz => by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem ((H w hw).mem_trans hz hw') hw
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_transitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
   ⟨fun h y hy => by
     rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩
@@ -75,5 +75,5 @@ theorem is_transitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x 
 
 alias is_transitive_iff_subset_powerset ↔ is_transitive.subset_powerset _
 
-end Setₓ
+end SetCat
 

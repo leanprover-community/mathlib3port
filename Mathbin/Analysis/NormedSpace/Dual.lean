@@ -50,7 +50,7 @@ variable (E : Type _) [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler normed_space[normed_space] 𝕜
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler normed_space[normed_space] 𝕜 -/
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SeminormedAddCommGroup,
@@ -66,7 +66,7 @@ instance : NormedAddCommGroup (Dual 𝕜 F) :=
   ContinuousLinearMap.toNormedAddCommGroup
 
 instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (Dual 𝕜 E) :=
-  ContinuousLinearMap.finite_dimensional
+  ContinuousLinearMap.finiteDimensional
 
 /-- The inclusion of a normed space in its double (topological) dual, considered
    as a bounded linear map. -/
@@ -95,7 +95,7 @@ def dualPairing : Dual 𝕜 E →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
 theorem dual_pairing_apply {v : Dual 𝕜 E} {x : E} : dualPairing 𝕜 E v x = v x :=
   rfl
 
-theorem dual_pairing_separating_left : (dualPairing 𝕜 E).SeparatingLeft := by
+theorem dualPairingSeparatingLeft : (dualPairing 𝕜 E).SeparatingLeft := by
   rw [LinearMap.separating_left_iff_ker_eq_bot, LinearMap.ker_eq_bot]
   exact ContinuousLinearMap.coe_injective
 
@@ -117,12 +117,12 @@ theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 
       ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm
       _ = ∥f x∥ := by rw [hfx]
       _ ≤ M * ∥f∥ := hM f
-      _ = M := by rw [hf₁, mul_oneₓ]
+      _ = M := by rw [hf₁, mul_one]
       
     
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
-  norm_le_zero_iff.mp (norm_le_dual_bound 𝕜 x le_rflₓ fun f => by simp [h f])
+  norm_le_zero_iff.mp (norm_le_dual_bound 𝕜 x le_rfl fun f => by simp [h f])
 
 theorem eq_zero_iff_forall_dual_eq_zero (x : E) : x = 0 ↔ ∀ g : Dual 𝕜 E, g x = 0 :=
   ⟨fun hx => by simp [hx], fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
@@ -137,7 +137,7 @@ def inclusionInDoubleDualLi : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
   { inclusionInDoubleDual 𝕜 E with
     norm_map' := by
       intro x
-      apply le_antisymmₓ
+      apply le_antisymm
       · exact double_dual_bound 𝕜 E x
         
       rw [ContinuousLinearMap.norm_def]
@@ -167,12 +167,12 @@ theorem mem_polar_iff {x' : Dual 𝕜 E} (s : Set E) : x' ∈ Polar 𝕜 s ↔ �
 
 @[simp]
 theorem polar_univ : Polar 𝕜 (Univ : Set E) = {(0 : dual 𝕜 E)} :=
-  (dualPairing 𝕜 E).flip.polar_univ (LinearMap.flip_separating_right.mpr (dual_pairing_separating_left 𝕜 E))
+  (dualPairing 𝕜 E).flip.polar_univ (LinearMap.flip_separating_right.mpr (dualPairingSeparatingLeft 𝕜 E))
 
-theorem is_closed_polar (s : Set E) : IsClosed (Polar 𝕜 s) := by
+theorem isClosedPolar (s : Set E) : IsClosed (Polar 𝕜 s) := by
   dsimp only [NormedSpace.Polar]
   simp only [LinearMap.polar_eq_Inter, LinearMap.flip_apply]
-  refine' is_closed_bInter fun z hz => _
+  refine' isClosedBInter fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
 
 @[simp]
@@ -195,7 +195,7 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
   have le : ∀ z, z ∈ s → ∥c⁻¹ • x' z∥ ≤ ∥c⁻¹∥ * ∥c∥ := by
     intro z hzs
     rw [Eq z]
-    apply mul_le_mul (le_of_eqₓ rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
+    apply mul_le_mul (le_of_eq rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
   have cancel : ∥c⁻¹∥ * ∥c∥ = 1 := by simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
   rwa [cancel] at le
 
@@ -236,7 +236,7 @@ theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E]
 
 /-- Given a neighborhood `s` of the origin in a normed space `E`, the dual norms
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/
-theorem bounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (Polar 𝕜 s) := by
+theorem boundedPolarOfMemNhdsZero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (Polar 𝕜 s) := by
   obtain ⟨a, ha⟩ : ∃ a : 𝕜, 1 < ∥a∥ := NormedField.exists_one_lt_norm 𝕜
   obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ)(hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
   exact

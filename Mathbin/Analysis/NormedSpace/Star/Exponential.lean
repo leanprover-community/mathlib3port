@@ -33,7 +33,7 @@ theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) : exp �
   simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_I, neg_smul]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_right]
-  simpa only [add_right_negₓ, add_left_negₓ, and_selfₓ] using (exp_zero : exp ℂ (0 : A) = 1)
+  simpa only [add_right_neg, add_left_neg, and_self_iff] using (exp_zero : exp ℂ (0 : A) = 1)
 
 /-- The map from the selfadjoint real subspace to the unitary group. This map only makes sense
 over ℂ. -/
@@ -56,7 +56,7 @@ theorem Commute.exp_unitary {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) 
     Commute (expUnitary a) (expUnitary b) :=
   calc
     expUnitary a * expUnitary b = expUnitary b * expUnitary a := by
-      rw [← h.exp_unitary_add, ← h.symm.exp_unitary_add, add_commₓ]
+      rw [← h.exp_unitary_add, ← h.symm.exp_unitary_add, add_comm]
     
 
 end Star

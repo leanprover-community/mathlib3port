@@ -29,7 +29,7 @@ structure EeState where
 
 @[reducible]
 unsafe def eqelim :=
-  StateTₓ EeState tactic
+  StateT EeState tactic
 
 unsafe def abort {α : Type} : eqelim α :=
   ⟨fun x => failed⟩
@@ -51,22 +51,22 @@ unsafe def get_ees : eqelim (List Ee) :=
 
 /-- Update the list of equality constraints. -/
 unsafe def set_eqs (eqs : List Term) : eqelim Unit :=
-  modifyₓ fun s => { s with eqs }
+  modify fun s => { s with eqs }
 
 /-- Update the list of inequality constraints. -/
 unsafe def set_les (les : List Term) : eqelim Unit :=
-  modifyₓ fun s => { s with les }
+  modify fun s => { s with les }
 
 /-- Update the sequence of equality elimiation steps. -/
 unsafe def set_ees (es : List Ee) : eqelim Unit :=
-  modifyₓ fun s => { s with ees := es }
+  modify fun s => { s with ees := es }
 
 /-- Add a new step to the sequence of equality elimination steps. -/
 unsafe def add_ee (e : Ee) : eqelim Unit := do
   let es ← get_ees
   set_ees (es ++ [e])
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Return the first equality constraint in the current list of
     equality constraints. The returned constraint is 'popped' and
     no longer available in the state. -/
@@ -92,13 +92,13 @@ unsafe def ee_commit (t1 : eqelim α) (t2 : eqelim β) (t3 : α → eqelim β) :
 local notation t1 " !>>= " t2 "; " t3 => ee_commit t1 t2 t3
 
 private unsafe def of_tactic {α : Type} : tactic α → eqelim α :=
-  StateTₓ.lift
+  StateT.lift
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- GCD of all elements of the list. -/
 def gcd : List Int → Nat
   | [] => 0
-  | i::is => Nat.gcdₓ i.natAbs (gcd is)
+  | i::is => Nat.gcd i.natAbs (gcd is)
 
 /-- GCD of all coefficients in a term. -/
 unsafe def get_gcd (t : Term) : eqelim Int :=
@@ -110,7 +110,7 @@ unsafe def get_gcd (t : Term) : eqelim Int :=
 unsafe def factor (i : Int) (t : Term) : eqelim Term :=
   if i ∣ t.fst then add_ee (Ee.factor i) >> pure (t.div i) else abort
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- If list has a nonzero element, return the minimum element
 (by absolute value) with its index. Otherwise, return none. -/
 unsafe def find_min_coeff_core : List Int → eqelim (Int × Nat)
@@ -129,7 +129,7 @@ unsafe def find_min_coeff (t : Term) : eqelim (Int × Nat × term) := do
   let (i, n) ← find_min_coeff_core t.snd
   if 0 < i then pure (i, n, t) else add_ee ee.neg >> pure (-i, n, t)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Find an appropriate equality elimination step for the
     current state and apply it. -/
 unsafe def elim_eq : eqelim Unit := do

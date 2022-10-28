@@ -18,8 +18,8 @@ variable {C D : Type _} [Category C] [Category D] [MonoidalCategory C] [Monoidal
 
 variable (F : MonoidalFunctor C D)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given candidate data for an exact pairing,
 which is sent by a faithful monoidal functor to an exact pairing,
 the equations holds automatically. -/
@@ -39,7 +39,7 @@ def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y :
   exactPairingOfFaithful F (F.toFunctor.preimage (inv (F.μ _ _) ≫ ε_ _ _ ≫ F.ε))
     (F.toFunctor.preimage (inv F.ε ≫ η_ _ _ ≫ F.μ _ _)) (by simp) (by simp)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Pull back a left dual along an equivalence. -/
 def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F.obj X)] : HasLeftDual X where
   leftDual := F.toFunctor.inv.obj (ᘁF.obj X)
@@ -49,7 +49,7 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
     dsimp
     infer_instance
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Pull back a right dual along an equivalence. -/
 def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual (F.obj X)] : HasRightDual X where
   rightDual := F.toFunctor.inv.obj (F.obj Xᘁ)
@@ -61,16 +61,16 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
 
 /-- Pull back a left rigid structure along an equivalence. -/
 def leftRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [LeftRigidCategory D] :
-    LeftRigidCategory C where leftDual := fun X => hasLeftDualOfEquivalence F X
+    LeftRigidCategory C where leftDual X := hasLeftDualOfEquivalence F X
 
 /-- Pull back a right rigid structure along an equivalence. -/
 def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCategory D] :
-    RightRigidCategory C where rightDual := fun X => hasRightDualOfEquivalence F X
+    RightRigidCategory C where rightDual X := hasRightDualOfEquivalence F X
 
 /-- Pull back a rigid structure along an equivalence. -/
 def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] : RigidCategory C where
-  leftDual := fun X => hasLeftDualOfEquivalence F X
-  rightDual := fun X => hasRightDualOfEquivalence F X
+  leftDual X := hasLeftDualOfEquivalence F X
+  rightDual X := hasRightDualOfEquivalence F X
 
 end CategoryTheory
 

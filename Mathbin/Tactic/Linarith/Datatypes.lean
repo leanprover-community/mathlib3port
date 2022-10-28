@@ -30,7 +30,7 @@ unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit 
 /-- A shorthand for tracing the types of a list of proof terms
 when the `trace.linarith` option is set to true.
 -/
-unsafe def linarith_trace_proofs (s : Stringₓ := "") (l : List expr) : tactic Unit :=
+unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Unit :=
   tactic.when_tracing `linarith <| do
     tactic.trace s
     l tactic.infer_type >>= tactic.trace
@@ -51,13 +51,13 @@ def Linexp : Type :=
 
 namespace Linexp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Add two `linexp`s together componentwise.
 Preserves sorting and uniqueness of the first argument.
 -/
@@ -76,7 +76,7 @@ unsafe def add : Linexp → Linexp → Linexp
 def scale (c : ℤ) (l : Linexp) : Linexp :=
   if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `l.get n` returns the value in `l` associated with key `n`, if it exists, and `none` otherwise.
 This function assumes that `l` is sorted in decreasing order of the first argument,
 that is, it will return `none` as soon as it finds a key smaller than `n`.
@@ -101,8 +101,8 @@ def zfind (n : ℕ) (l : Linexp) : ℤ :=
 def vars (l : Linexp) : List ℕ :=
   l.map Prod.fst
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Defines a lex ordering on `linexp`. This function is performance critical.
 -/
 def cmp : Linexp → Linexp → Ordering
@@ -148,7 +148,7 @@ def cmp : Ineq → Ineq → Ordering
   | _, _ => Ordering.gt
 
 /-- Prints an `ineq` as the corresponding infix symbol. -/
-def toString : Ineq → Stringₓ
+def toString : Ineq → String
   | Eq => "="
   | le => "≤"
   | lt => "<"
@@ -159,7 +159,7 @@ unsafe def to_const_mul_nm : Ineq → Name
   | le => `` mul_nonpos
   | Eq => `` mul_eq
 
-instance : HasToString Ineq :=
+instance : ToString Ineq :=
   ⟨Ineq.toString⟩
 
 unsafe instance : has_to_format Ineq :=
@@ -229,7 +229,7 @@ and some may remove a hypothesis from the list.
 A "no-op" preprocessor should return its input as a singleton list.
 -/
 unsafe structure preprocessor : Type where
-  Name : Stringₓ
+  Name : String
   transform : expr → tactic (List expr)
 
 /-- Some preprocessors need to examine the full list of hypotheses instead of working item by item.
@@ -237,7 +237,7 @@ As with `preprocessor`, the input to a `global_preprocessor` is replaced by, not
 output.
 -/
 unsafe structure global_preprocessor : Type where
-  Name : Stringₓ
+  Name : String
   transform : List expr → tactic (List expr)
 
 /-- Some preprocessors perform branching case splits. A `branch` is used to track one of these case
@@ -256,7 +256,7 @@ The preprocessor is responsible for making sure that each branch contains the co
 metavariable.
 -/
 unsafe structure global_branching_preprocessor : Type where
-  Name : Stringₓ
+  Name : String
   transform : List expr → tactic (List branch)
 
 /-- A `preprocessor` lifts to a `global_preprocessor` by folding it over the input list.
@@ -274,7 +274,7 @@ unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor wher
 -/
 unsafe def global_preprocessor.branching (pp : global_preprocessor) : global_branching_preprocessor where
   Name := pp.Name
-  transform := fun l => do
+  transform l := do
     let g ← tactic.get_goal
     singleton <$> Prod.mk g <$> pp l
 
@@ -306,7 +306,7 @@ The default `certificate_oracle` used by `linarith` is
 unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
@@ -319,7 +319,7 @@ unsafe structure linarith_config : Type where
   preprocessors : Option (List global_branching_preprocessor) := none
   oracle : Option certificate_oracle := none
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -358,7 +358,7 @@ unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
   | quote.1 ((%%ₓe) = 0) => (Ineq.eq, e)
   | _ => none
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
 It produces a pair `(R', h')`, where `h'` is a proof of `c*t R' 0`.
 Typically `R` and `R'` will be the same, except when `c = 0`, in which case `R'` is `=`.

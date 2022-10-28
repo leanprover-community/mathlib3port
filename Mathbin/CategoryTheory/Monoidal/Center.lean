@@ -42,13 +42,13 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A half-braiding on `X : C` is a family of isomorphisms `X ⊗ U ≅ U ⊗ X`,
 monoidally natural in `U : C`.
 
@@ -88,8 +88,8 @@ namespace Center
 
 variable {C}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A morphism in the Drinfeld center of `C`. -/
 @[ext, nolint has_nonempty_instance]
 structure Hom (X Y : Center C) where
@@ -102,8 +102,8 @@ attribute [simp, reassoc] hom.comm
 
 instance : Category (Center C) where
   Hom := Hom
-  id := fun X => { f := 𝟙 X.1 }
-  comp := fun X Y Z f g => { f := f.f ≫ g.f }
+  id X := { f := 𝟙 X.1 }
+  comp X Y Z f g := { f := f.f ≫ g.f }
 
 @[simp]
 theorem id_f (X : Center C) : Hom.f (𝟙 X) = 𝟙 X.1 :=
@@ -120,7 +120,7 @@ theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
   congr
   exact w
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Construct an isomorphism in the Drinfeld center from
 a morphism whose underlying morphism is an isomorphism.
 -/
@@ -133,10 +133,10 @@ instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f
   change is_iso (iso_mk f).Hom
   infer_instance
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensorObj (X Y : Center C) : Center C :=
@@ -165,12 +165,12 @@ def tensorObj (X Y : Center C) : Center C :=
           id_tensor_comp_assoc, half_braiding.naturality, id_tensor_comp_assoc, associator_inv_naturality_assoc, ←
           comp_tensor_id_assoc, half_braiding.naturality, comp_tensor_id_assoc, associator_naturality, ← tensor_id] }⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensorHom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensorObj X₁ X₂ ⟶ tensorObj Y₁ Y₂ where
   f := f.f ⊗ g.f
-  comm' := fun U => by
+  comm' U := by
     dsimp
     rw [category.assoc, category.assoc, category.assoc, category.assoc, associator_naturality_assoc, ←
       tensor_id_comp_id_tensor, category.assoc, ← id_tensor_comp_assoc, g.comm, id_tensor_comp_assoc,
@@ -188,7 +188,7 @@ def tensorUnit : Center C :=
         dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
   isoMk
@@ -223,29 +223,29 @@ attribute [local simp] associator_naturality left_unitor_naturality right_unitor
 attribute [local simp] center.associator center.left_unitor center.right_unitor
 
 instance : MonoidalCategory (Center C) where
-  tensorObj := fun X Y => tensorObj X Y
-  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => tensorHom f g
+  tensorObj X Y := tensorObj X Y
+  tensorHom X₁ Y₁ X₂ Y₂ f g := tensorHom f g
   tensorUnit := tensorUnit
   associator := associator
   leftUnitor := leftUnitor
   rightUnitor := rightUnitor
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_fst (X Y : Center C) : (X ⊗ Y).1 = X.1 ⊗ Y.1 :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_β (X Y : Center C) (U : C) :
     (X ⊗ Y).2.β U = α_ _ _ _ ≪≫ (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_f {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : (f ⊗ g).f = f.f ⊗ g.f :=
   rfl
@@ -290,17 +290,17 @@ section
 
 variable (C)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The forgetful monoidal functor from the Drinfeld center to the original category. -/
 @[simps]
 def forget : MonoidalFunctor (Center C) C where
-  obj := fun X => X.1
-  map := fun X Y f => f.f
+  obj X := X.1
+  map X Y f := f.f
   ε := 𝟙 (𝟙_ C)
-  μ := fun X Y => 𝟙 (X.1 ⊗ Y.1)
+  μ X Y := 𝟙 (X.1 ⊗ Y.1)
 
 instance :
-    ReflectsIsomorphisms (forget C).toFunctor where reflects := fun A B f i => by
+    ReflectsIsomorphisms (forget C).toFunctor where reflects A B f i := by
     dsimp at i
     skip
     change is_iso (iso_mk f).Hom
@@ -308,8 +308,8 @@ instance :
 
 end
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for the `braided_category` instance on `center C`. -/
 @[simps]
 def braiding (X Y : Center C) : X ⊗ Y ≅ Y ⊗ X :=
@@ -323,7 +323,7 @@ def braiding (X Y : Center C) : X ⊗ Y ≅ Y ⊗ X :=
 
 instance braidedCategoryCenter : BraidedCategory (Center C) where
   braiding := braiding
-  braiding_naturality' := fun X Y X' Y' f g => by
+  braiding_naturality' X Y X' Y' f g := by
     ext
     dsimp
     rw [← tensor_id_comp_id_tensor, category.assoc, half_braiding.naturality, f.comm_assoc, id_tensor_comp_tensor_id]
@@ -351,14 +351,14 @@ variable (C)
 @[simps]
 def ofBraided : MonoidalFunctor C (Center C) where
   obj := ofBraidedObj
-  map := fun X X' f => { f, comm' := fun U => braiding_naturality _ _ }
+  map X X' f := { f, comm' := fun U => braiding_naturality _ _ }
   ε :=
     { f := 𝟙 _,
       comm' := fun U => by
         dsimp
         rw [tensor_id, category.id_comp, tensor_id, category.comp_id, ← braiding_right_unitor, category.assoc,
           iso.hom_inv_id, category.comp_id] }
-  μ := fun X Y =>
+  μ X Y :=
     { f := 𝟙 _,
       comm' := fun U => by
         dsimp

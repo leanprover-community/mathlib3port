@@ -8,15 +8,15 @@ import Mathbin.Tactic.Simpa
 
 setup_tactic_parser
 
-private unsafe def loc.to_string_aux : Option Name → Stringₓ
+private unsafe def loc.to_string_aux : Option Name → String
   | none => "⊢"
   | some x => toString x
 
 /-- pretty print a `loc` -/
-unsafe def loc.to_string : Loc → Stringₓ
+unsafe def loc.to_string : Loc → String
   | loc.ns [] => ""
   | loc.ns [none] => ""
-  | loc.ns ls => Stringₓ.join <| List.intersperse " " (" at" :: ls.map loc.to_string_aux)
+  | loc.ns ls => String.join <| List.intersperse " " (" at" :: ls.map loc.to_string_aux)
   | loc.wildcard => " at *"
 
 /-- shift `pos` `n` columns to the left -/
@@ -29,7 +29,7 @@ namespace Tactic
 deriving instance DecidableEq for simp_arg_type
 
 /-- Turn a `simp_arg_type` into a string. -/
-unsafe instance simp_arg_type.has_to_string : HasToString simp_arg_type :=
+unsafe instance simp_arg_type.has_to_string : ToString simp_arg_type :=
   ⟨fun a =>
     match a with
     | simp_arg_type.all_hyps => "*"
@@ -47,7 +47,7 @@ unsafe def struct_inst : lean.parser pexpr :=
       sep_by (skip_info (tk ","))
           (Sum.inl <$> (tk ".." *> texpr) <|> Sum.inr <$> (Prod.mk <$> ident <* tk ":=" <*> texpr))
     tk "}"
-    let (srcs, fields) := partitionMapₓ id ls
+    let (srcs, fields) := partitionMap id ls
     let (names, values) := unzip fields
     pure <| pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
 
@@ -67,7 +67,7 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
 /-- Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
 @[user_attribute]
 private unsafe def squeeze_loc_attr :
-    user_attribute Unit (Option (List (Pos × Stringₓ × List simp_arg_type × Stringₓ))) where
+    user_attribute Unit (Option (List (Pos × String × List simp_arg_type × String))) where
   Name := `_squeeze_loc
   parser := fail "this attribute should not be used"
   descr := "table to accumulate multiple `squeeze_simp` suggestions"
@@ -93,8 +93,7 @@ the suggestions emitted through `mk_suggestion` will be aggregated so that
 every tactic that makes a suggestion can consider multiple execution of the
 same invocation.
 If `at_pos` is true, make the suggestion at `p` instead of the current position. -/
-unsafe def mk_suggestion (p : Pos) (pre post : Stringₓ) (args : List simp_arg_type) (at_pos := false) : tactic Unit :=
-  do
+unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_type) (at_pos := false) : tactic Unit := do
   let xs ← squeeze_loc_attr.get_param `` squeeze_loc_attr_carrier
   match xs with
     | none => do
@@ -237,12 +236,12 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
       m fun ⟨p, suggs⟩ => do
           let ⟨pre, _, post⟩ := suggs
           let suggs : List (List simp_arg_type) := suggs <| Prod.fst ∘ Prod.snd
-          mk_suggestion p pre post (suggs List.unionₓ []) tt
+          mk_suggestion p pre post (suggs List.union []) tt
           pure ()
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `squeeze_simp`, `squeeze_simpa` and `squeeze_dsimp` perform the same
 task with the difference that `squeeze_simp` relates to `simp` while
 `squeeze_simpa` relates to `simpa` and `squeeze_dsimp` relates to
@@ -305,14 +304,14 @@ unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse (parser
   squeeze_simp_core slow_and_accurate no_dflt hs
       (fun l_no_dft l_args => simp use_iota_eqn none l_no_dft l_args attr_names locat cfg') fun args =>
       let use_iota_eqn := if use_iota_eqn then "!" else ""
-      let attrs := if attr_names then "" else Stringₓ.join (List.intersperse " " (" with" :: attr_names toString))
+      let attrs := if attr_names then "" else String.join (List.intersperse " " (" with" :: attr_names toString))
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: simp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- see `squeeze_simp` -/
 unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
     (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
@@ -328,13 +327,13 @@ unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (parse
   squeeze_simp_core slow_and_accurate no_dflt hs
       (fun l_no_dft l_args => simpa use_iota_eqn none l_no_dft l_args attr_names tgt cfg') fun args =>
       let use_iota_eqn := if use_iota_eqn then "!" else ""
-      let attrs := if attr_names then "" else Stringₓ.join (List.intersperse " " (" with" :: attr_names toString))
+      let attrs := if attr_names then "" else String.join (List.intersperse " " (" with" :: attr_names toString))
       let tgt' := tgt' ""
       mk_suggestion (key 1) (s! "Try this: simpa{use_iota_eqn} only") (s! "{attrs }{tgt' }{c}") args
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `squeeze_dsimp` behaves like `dsimp` (including all its arguments)
 and prints a `dsimp only` invocation to skip the search through the
 `simp` lemma list. See the doc string of `squeeze_simp` for examples.
@@ -347,7 +346,7 @@ unsafe def squeeze_dsimp (key : parse cur_pos) (slow_and_accurate : parse (parse
   squeeze_simp_core slow_and_accurate no_dflt hs (fun l_no_dft l_args => dsimp l_no_dft l_args attr_names locat cfg')
       fun args =>
       let use_iota_eqn := if use_iota_eqn then "!" else ""
-      let attrs := if attr_names then "" else Stringₓ.join (List.intersperse " " (" with" :: attr_names toString))
+      let attrs := if attr_names then "" else String.join (List.intersperse " " (" with" :: attr_names toString))
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: dsimp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 

@@ -17,14 +17,14 @@ namespace Nat
 open BigOperators
 
 /-- See `is_coprime.prod_left` for the corresponding lemma about `is_coprime` -/
-theorem coprime_prod_left {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finsetₓ ι} :
+theorem coprime_prod_left {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finset ι} :
     (∀ i : ι, i ∈ t → Coprime (s i) x) → Coprime (∏ i : ι in t, s i) x :=
-  Finsetₓ.prod_induction s (fun y => y.Coprime x) (fun a b => Coprime.mul) (by simp)
+  Finset.prod_induction s (fun y => y.Coprime x) (fun a b => Coprime.mul) (by simp)
 
 /-- See `is_coprime.prod_right` for the corresponding lemma about `is_coprime` -/
-theorem coprime_prod_right {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finsetₓ ι} :
+theorem coprime_prod_right {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finset ι} :
     (∀ i : ι, i ∈ t → Coprime x (s i)) → Coprime x (∏ i : ι in t, s i) :=
-  Finsetₓ.prod_induction s (fun y => x.Coprime y) (fun a b => Coprime.mul_right) (by simp)
+  Finset.prod_induction s (fun y => x.Coprime y) (fun a b => Coprime.mul_right) (by simp)
 
 end Nat
 

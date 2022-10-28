@@ -29,11 +29,11 @@ def disjSum : Multiset (Sum α β) :=
 
 @[simp]
 theorem zero_disj_sum : (0 : Multiset α).disjSum t = t.map inr :=
-  zero_addₓ _
+  zero_add _
 
 @[simp]
 theorem disj_sum_zero : s.disjSum (0 : Multiset β) = s.map inl :=
-  add_zeroₓ _
+  add_zero _
 
 @[simp]
 theorem card_disj_sum : (s.disjSum t).card = s.card + t.card := by rw [disj_sum, card_add, card_map, card_map]
@@ -45,7 +45,7 @@ theorem mem_disj_sum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ 
 
 @[simp]
 theorem inl_mem_disj_sum : inl a ∈ s.disjSum t ↔ a ∈ s := by
-  rw [mem_disj_sum, or_iff_leftₓ]
+  rw [mem_disj_sum, or_iff_left]
   simp only [exists_eq_right]
   rintro ⟨b, _, hb⟩
   exact inr_ne_inl hb
@@ -60,11 +60,11 @@ theorem inr_mem_disj_sum : inr b ∈ s.disjSum t ↔ b ∈ t := by
 theorem disj_sum_mono (hs : s₁ ≤ s₂) (ht : t₁ ≤ t₂) : s₁.disjSum t₁ ≤ s₂.disjSum t₂ :=
   add_le_add (map_le_map hs) (map_le_map ht)
 
-theorem disj_sum_mono_left (t : Multiset β) : Monotoneₓ fun s : Multiset α => s.disjSum t := fun s₁ s₂ hs =>
+theorem disj_sum_mono_left (t : Multiset β) : Monotone fun s : Multiset α => s.disjSum t := fun s₁ s₂ hs =>
   add_le_add_right (map_le_map hs) _
 
-theorem disj_sum_mono_right (s : Multiset α) : Monotoneₓ (s.disjSum : Multiset β → Multiset (Sum α β)) :=
-  fun t₁ t₂ ht => add_le_add_left (map_le_map ht) _
+theorem disj_sum_mono_right (s : Multiset α) : Monotone (s.disjSum : Multiset β → Multiset (Sum α β)) := fun t₁ t₂ ht =>
+  add_le_add_left (map_le_map ht) _
 
 theorem disj_sum_lt_disj_sum_of_lt_of_le (hs : s₁ < s₂) (ht : t₁ ≤ t₂) : s₁.disjSum t₁ < s₂.disjSum t₂ :=
   add_lt_add_of_lt_of_le (map_lt_map hs) (map_le_map ht)
@@ -72,13 +72,13 @@ theorem disj_sum_lt_disj_sum_of_lt_of_le (hs : s₁ < s₂) (ht : t₁ ≤ t₂)
 theorem disj_sum_lt_disj_sum_of_le_of_lt (hs : s₁ ≤ s₂) (ht : t₁ < t₂) : s₁.disjSum t₁ < s₂.disjSum t₂ :=
   add_lt_add_of_le_of_lt (map_le_map hs) (map_lt_map ht)
 
-theorem disj_sum_strict_mono_left (t : Multiset β) : StrictMonoₓ fun s : Multiset α => s.disjSum t := fun s₁ s₂ hs =>
-  disj_sum_lt_disj_sum_of_lt_of_le hs le_rflₓ
+theorem disj_sum_strict_mono_left (t : Multiset β) : StrictMono fun s : Multiset α => s.disjSum t := fun s₁ s₂ hs =>
+  disj_sum_lt_disj_sum_of_lt_of_le hs le_rfl
 
-theorem disj_sum_strict_mono_right (s : Multiset α) : StrictMonoₓ (s.disjSum : Multiset β → Multiset (Sum α β)) :=
-  fun s₁ s₂ => disj_sum_lt_disj_sum_of_le_of_lt le_rflₓ
+theorem disj_sum_strict_mono_right (s : Multiset α) : StrictMono (s.disjSum : Multiset β → Multiset (Sum α β)) :=
+  fun s₁ s₂ => disj_sum_lt_disj_sum_of_le_of_lt le_rfl
 
-protected theorem Nodupₓ.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
+protected theorem Nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
   refine' ((hs.map inl_injective).add_iff <| ht.map inr_injective).2 fun x hs ht => _
   rw [Multiset.mem_map] at hs ht
   obtain ⟨a, _, rfl⟩ := hs

@@ -34,7 +34,7 @@ open AffineMap
 theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
     IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) := by
   rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩)
-  · simp [is_closed_singleton]
+  · simp [isClosedSingleton]
     
   rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image, AffineSubspace.coe_direction_eq_vsub_set_right hx]
   rfl
@@ -55,8 +55,8 @@ theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
   rw [dist_comm p₁ p₂]
   simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul, vsub_eq_sub]
 
-theorem lipschitz_with_line_map (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
-  LipschitzWith.of_dist_le_mul fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
+theorem lipschitzWithLineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
+  LipschitzWith.ofDistLeMul fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
 
 @[simp]
 theorem dist_line_map_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ∥c∥ * dist p₁ p₂ := by
@@ -114,11 +114,11 @@ omit V
 
 include W
 
-theorem antilipschitz_with_line_map {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
+theorem antilipschitzWithLineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
     AntilipschitzWith (nndist p₁ p₂)⁻¹ (lineMap p₁ p₂ : 𝕜 → Q) :=
-  AntilipschitzWith.of_le_mul_dist fun c₁ c₂ => by
-    rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_commₓ, inv_mul_cancel (dist_ne_zero.2 h),
-      mul_oneₓ]
+  AntilipschitzWith.ofLeMulDist fun c₁ c₂ => by
+    rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_comm, inv_mul_cancel (dist_ne_zero.2 h),
+      mul_one]
 
 variable (𝕜)
 
@@ -154,7 +154,7 @@ theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
 
 include V W
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 /-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :

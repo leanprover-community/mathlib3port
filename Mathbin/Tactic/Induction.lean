@@ -48,13 +48,13 @@ initialize
 /-- `trace_eliminate_hyp msg` traces `msg` if the option `trace.eliminate_hyp` is
 `true`.
 -/
-unsafe def trace_eliminate_hyp {α} [has_to_format α] (msg : Thunkₓ α) : tactic Unit :=
+unsafe def trace_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit :=
   when_tracing `eliminate_hyp <| trace <| to_fmt "eliminate_hyp: " ++ to_fmt (msg ())
 
 /-- `trace_state_eliminate_hyp msg` traces `msg` followed by the tactic state if the
 option `trace.eliminate_hyp` is `true`.
 -/
-unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunkₓ α) : tactic Unit := do
+unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit := do
   let state ← read
   trace_eliminate_hyp <| format.join [to_fmt (msg ()), "\n-----\n", to_fmt State, "\n-----"]
 
@@ -251,9 +251,9 @@ unsafe def get_constructor_argument_info (inductive_name : Name) (num_params : �
       let recursive_leading_pis ← match_recursive_constructor_arg inductive_name type
       pure ⟨c, type, dep, occs, recursive_leading_pis⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Get information about a constructor `C` of an inductive type `I`.
 
 Input:
@@ -276,9 +276,9 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) : t
   let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
   pure { cname := decl, non_param_args, num_non_param_args := non_param_args, rec_args, num_rec_args := rec_args }
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Get information about an inductive type `I`, given `I`'s name.
 -/
 unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
@@ -498,9 +498,9 @@ unsafe def clear_dependent_if_exists (h : Name) : tactic Unit := do
   let some h ← try_core <| get_local h | pure ()
   clear' tt [h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Rename the new hypotheses in the goal for a minor premise.
 
 Input:
@@ -778,12 +778,12 @@ understandable induction hypotheses in many practical cases.
 -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Process one index equation for `simplify_ih`.
 
 Input: a local constant `h : x = y` or `h : x == y`.
@@ -854,9 +854,9 @@ newly created local constants.
 unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × BinderInfo)) : tactic (List expr) :=
   mvars.mmapFilter fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-
 TODO `simplify_ih` currently uses Lean's builtin unification procedure to
 process the index equations. This procedure has some limitations. For example,
@@ -979,15 +979,15 @@ non-interactive variant `eliminate_hyp.`
 
 open Eliminate
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- `eliminate_hyp generate_ihs h gm with_patterns` performs induction or case
 analysis on the hypothesis `h`. If `generate_ihs` is true, the tactic performs
 induction, otherwise case analysis.

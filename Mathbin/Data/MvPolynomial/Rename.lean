@@ -44,7 +44,7 @@ open Set Function Finsupp AddMonoidAlgebra
 
 open BigOperators
 
-variable {σ τ α R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S]
+variable {σ τ α R S : Type _} [CommSemiring R] [CommSemiring S]
 
 namespace MvPolynomial
 
@@ -84,9 +84,9 @@ theorem rename_monomial (f : σ → τ) (d : σ →₀ ℕ) (r : R) : rename f (
   rw [rename, aeval_monomial, monomial_eq, Finsupp.prod_map_domain_index]
   · rfl
     
-  · exact fun n => pow_zeroₓ _
+  · exact fun n => pow_zero _
     
-  · exact fun n i₁ i₂ => pow_addₓ _ _ _
+  · exact fun n i₁ i₂ => pow_add _ _ _
     
 
 theorem rename_eq (f : σ → τ) (p : MvPolynomial σ R) : rename f p = Finsupp.mapDomain (Finsupp.mapDomain f) p := by
@@ -111,12 +111,12 @@ open Classical
   `kill_compl hf` is the `alg_hom` from `R[τ]` to `R[σ]` that is left inverse to
   `rename f : R[σ] → R[τ]` and sends the variables in the complement of the range of `f` to `0`. -/
 def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
-  aeval fun i => if h : i ∈ Set.Range f then X <| (Equivₓ.ofInjective f hf).symm ⟨i, h⟩ else 0
+  aeval fun i => if h : i ∈ Set.Range f then X <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
 
 theorem kill_compl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
   alg_hom_ext fun i => by
     dsimp
-    rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equivₓ.of_injective_symm_apply]
+    rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equiv.of_injective_symm_apply]
 
 @[simp]
 theorem kill_compl_rename_app (p : MvPolynomial σ R) : killCompl hf (rename f p) = p :=
@@ -136,7 +136,7 @@ def renameEquiv (f : σ ≃ τ) : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R 
     right_inv := fun p => by rw [rename_rename, f.self_comp_symm, rename_id] }
 
 @[simp]
-theorem rename_equiv_refl : renameEquiv R (Equivₓ.refl σ) = AlgEquiv.refl :=
+theorem rename_equiv_refl : renameEquiv R (Equiv.refl σ) = AlgEquiv.refl :=
   AlgEquiv.ext rename_id
 
 @[simp]
@@ -195,7 +195,7 @@ end
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_finset_rename (p : MvPolynomial σ R) :
-    ∃ (s : Finsetₓ σ)(q : MvPolynomial { x // x ∈ s } R), p = rename coe q := by
+    ∃ (s : Finset σ)(q : MvPolynomial { x // x ∈ s } R), p = rename coe q := by
   apply induction_on p
   · intro r
     exact ⟨∅, C r, by rw [rename_C]⟩
@@ -203,7 +203,8 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
   · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
     refine' ⟨s ∪ t, ⟨_, _⟩⟩
     · refine' rename (Subtype.map id _) p + rename (Subtype.map id _) q <;>
-        simp (config := { contextual := true }) only [id.def, true_orₓ, or_trueₓ, Finsetₓ.mem_union, forall_true_iff]
+        simp (config := { contextual := true }) only [id.def, true_or_iff, or_true_iff, Finset.mem_union,
+          forall_true_iff]
       
     · simp only [rename_rename, AlgHom.map_add]
       rfl
@@ -212,7 +213,7 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
   · rintro p n ⟨s, p, rfl⟩
     refine' ⟨insert n s, ⟨_, _⟩⟩
     · refine' rename (Subtype.map id _) p * X ⟨n, s.mem_insert_self n⟩
-      simp (config := { contextual := true }) only [id.def, or_trueₓ, Finsetₓ.mem_insert, forall_true_iff]
+      simp (config := { contextual := true }) only [id.def, or_true_iff, Finset.mem_insert, forall_true_iff]
       
     · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]
       rfl
@@ -224,7 +225,7 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
   a finite subset `s` of `σ` such that both `p₁` and `p₂` are contained in the polynomial semiring
   `R[s]` of finitely many variables. -/
 theorem exists_finset_rename₂ (p₁ p₂ : MvPolynomial σ R) :
-    ∃ (s : Finsetₓ σ)(q₁ q₂ : MvPolynomial s R), p₁ = rename coe q₁ ∧ p₂ = rename coe q₂ := by
+    ∃ (s : Finset σ)(q₁ q₂ : MvPolynomial s R), p₁ = rename coe q₁ ∧ p₂ = rename coe q₂ := by
   obtain ⟨s₁, q₁, rfl⟩ := exists_finset_rename p₁
   obtain ⟨s₂, q₂, rfl⟩ := exists_finset_rename p₂
   classical
@@ -235,13 +236,13 @@ theorem exists_finset_rename₂ (p₁ p₂ : MvPolynomial σ R) :
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_fin_rename (p : MvPolynomial σ R) :
-    ∃ (n : ℕ)(f : Finₓ n → σ)(hf : Injective f)(q : MvPolynomial (Finₓ n) R), p = rename f q := by
+    ∃ (n : ℕ)(f : Fin n → σ)(hf : Injective f)(q : MvPolynomial (Fin n) R), p = rename f q := by
   obtain ⟨s, q, rfl⟩ := exists_finset_rename p
-  let n := Fintypeₓ.card { x // x ∈ s }
-  let e := Fintypeₓ.equivFin { x // x ∈ s }
+  let n := Fintype.card { x // x ∈ s }
+  let e := Fintype.equivFin { x // x ∈ s }
   refine' ⟨n, coe ∘ e.symm, subtype.val_injective.comp e.symm.injective, rename e q, _⟩
   rw [← rename_rename, rename_rename e]
-  simp only [Function.comp, Equivₓ.symm_apply_apply, rename_rename]
+  simp only [Function.comp, Equiv.symm_apply_apply, rename_rename]
 
 end Rename
 
@@ -270,7 +271,7 @@ theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ �
   rw [rename_eq, ← not_mem_support_iff]
   intro H
   replace H := map_domain_support H
-  rw [Finsetₓ.mem_image] at H
+  rw [Finset.mem_image] at H
   obtain ⟨u, hu, rfl⟩ := H
   specialize h u rfl
   simp at h hu
@@ -300,7 +301,7 @@ end Coeff
 section Support
 
 theorem support_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f) :
-    (rename f p).support = Finsetₓ.image (mapDomain f) p.support := by
+    (rename f p).support = Finset.image (mapDomain f) p.support := by
   rw [rename_eq]
   exact Finsupp.map_domain_support_of_injective (map_domain_injective h) _
 

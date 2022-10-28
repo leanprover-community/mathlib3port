@@ -41,7 +41,7 @@ universe v₁ v₂ u₁ u₂
 
 namespace CategoryTheory
 
-namespace Monadₓ
+namespace Monad
 
 open Limits
 
@@ -351,7 +351,7 @@ def monadicOfHasPreservesReflexiveCoequalizersOfReflectsIsomorphisms : MonadicRi
 
 end ReflexiveMonadicity
 
-end Monadₓ
+end Monad
 
 end CategoryTheory
 

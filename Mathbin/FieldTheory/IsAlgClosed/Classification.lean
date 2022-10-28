@@ -35,7 +35,7 @@ section AlgebraicClosure
 
 namespace Algebra.IsAlgebraic
 
-variable (R L : Type u) [CommRingₓ R] [CommRingₓ L] [IsDomain L] [Algebra R L]
+variable (R L : Type u) [CommRing R] [CommRing L] [IsDomain L] [Algebra R L]
 
 variable [NoZeroSmulDivisors R L] (halg : Algebra.IsAlgebraic R L)
 
@@ -55,7 +55,7 @@ theorem cardinal_mk_le_sigma_polynomial : (#L) ≤ (#Σp : R[X], { x : L // x �
     intro h
     simp only at h
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
-    simp only [h.1, iff_selfₓ, forall_true_iff]
+    simp only [h.1, iff_self_iff, forall_true_iff]
 
 /-- The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ℵ₀` -/
@@ -66,8 +66,8 @@ theorem cardinal_mk_le_max : (#L) ≤ max (#R) ℵ₀ :=
     _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ := (sum_le_sum _ _) fun p => (Multiset.finite_to_set _).lt_aleph_0.le
     _ = (#R[X]) * ℵ₀ := sum_const' _ _
     _ ≤ max (max (#R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
-    _ ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rflₓ) le_rflₓ
-    _ = max (#R) ℵ₀ := by simp only [max_assocₓ, max_commₓ ℵ₀, max_left_commₓ ℵ₀, max_selfₓ]
+    _ ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rfl) le_rfl
+    _ = max (#R) ℵ₀ := by simp only [max_assoc, max_comm ℵ₀, max_left_comm ℵ₀, max_self]
     
 
 end Algebra.IsAlgebraic
@@ -80,7 +80,7 @@ section Classification
 
 noncomputable section
 
-variable {R L K : Type _} [CommRingₓ R]
+variable {R L K : Type _} [CommRing R]
 
 variable [Field K] [Algebra R K]
 
@@ -92,10 +92,10 @@ variable {κ : Type _} (w : κ → L)
 
 variable (hv : AlgebraicIndependent R v)
 
-theorem is_alg_closure_of_transcendence_basis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
+theorem isAlgClosureOfTranscendenceBasis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
     IsAlgClosure (Algebra.adjoin R (Set.Range v)) K :=
   letI := RingHom.domain_nontrivial (algebraMap R K)
-  { alg_closed := by infer_instance, algebraic := hv.is_algebraic }
+  { algClosed := by infer_instance, algebraic := hv.is_algebraic }
 
 variable (hw : AlgebraicIndependent R w)
 
@@ -123,7 +123,7 @@ end Classification
 
 section Cardinal
 
-variable {R L K : Type u} [CommRingₓ R]
+variable {R L K : Type u} [CommRing R]
 
 variable [Field K] [Algebra R K] [IsAlgClosed K]
 
@@ -137,8 +137,8 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) : (#
       letI := is_alg_closure_of_transcendence_basis v hv
       Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
     _ = max (#MvPolynomial ι R) ℵ₀ := by rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
-    _ ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rflₓ
-    _ = _ := by simp [max_assocₓ]
+    _ ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rfl
+    _ = _ := by simp [max_assoc]
     
 
 /-- If `K` is an uncountable algebraically closed field, then its
@@ -146,18 +146,18 @@ cardinality is the same as that of a transcendence basis. -/
 theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R] (hv : IsTranscendenceBasis R v)
     (hR : (#R) ≤ ℵ₀) (hK : ℵ₀ < (#K)) : (#K) = (#ι) :=
   have : ℵ₀ ≤ (#ι) :=
-    le_of_not_ltₓ fun h =>
-      not_le_of_gtₓ hK <|
+    le_of_not_lt fun h =>
+      not_le_of_gt hK <|
         calc
           (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
-          _ ≤ _ := max_leₓ (max_leₓ hR (le_of_ltₓ h)) le_rflₓ
+          _ ≤ _ := max_le (max_le hR (le_of_lt h)) le_rfl
           
-  le_antisymmₓ
+  le_antisymm
     (calc
       (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
       _ = (#ι) := by
-        rw [max_eq_leftₓ, max_eq_rightₓ]
-        · exact le_transₓ hR this
+        rw [max_eq_left, max_eq_right]
+        · exact le_trans hR this
           
         · exact le_max_of_le_right this
           
@@ -176,8 +176,8 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
   cases' exists_is_transcendence_basis ℤ (show Function.Injective (algebraMap ℤ K) from Int.cast_injective) with s hs
   cases' exists_is_transcendence_basis ℤ (show Function.Injective (algebraMap ℤ L) from Int.cast_injective) with t ht
   have : (#s) = (#t) := by
-    rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (le_of_eqₓ mk_int) hK, ←
-      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (le_of_eqₓ mk_int), hKL]
+    rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (le_of_eq mk_int) hK, ←
+      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (le_of_eq mk_int), hKL]
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
   exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩

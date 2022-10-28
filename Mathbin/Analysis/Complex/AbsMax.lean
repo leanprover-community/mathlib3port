@@ -107,9 +107,9 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ} (hd : Diff
     (hz : IsMaxOn (norm ∘ f) (ClosedBall z (dist w z)) z) : ∥f w∥ = ∥f z∥ := by
   -- Consider a circle of radius `r = dist w z`.
   set r : ℝ := dist w z
-  have hw : w ∈ closed_ball z r := mem_closed_ball.2 le_rflₓ
+  have hw : w ∈ closed_ball z r := mem_closed_ball.2 le_rfl
   -- Assume the converse. Since `∥f w∥ ≤ ∥f z∥`, we have `∥f w∥ < ∥f z∥`.
-  refine' (is_max_on_iff.1 hz _ hw).antisymm (not_ltₓ.1 _)
+  refine' (is_max_on_iff.1 hz _ hw).antisymm (not_lt.1 _)
   rintro hw_lt : ∥f w∥ < ∥f z∥
   have hr : 0 < r := dist_pos.2 (ne_of_apply_ne (norm ∘ f) hw_lt.ne)
   -- Due to Cauchy integral formula, it suffices to prove the following inequality.
@@ -195,8 +195,8 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ} (hd 
   suffices ∥(f ∘ e) (1 : ℂ)∥ = ∥(f ∘ e) (0 : ℂ)∥ by simpa [e]
   have hr : dist (1 : ℂ) 0 = 1 := by simp
   have hball : maps_to e (ball 0 1) (ball z r) := by
-    refine' ((lipschitz_with_line_map z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
-    simpa only [line_map_apply_zero, mul_oneₓ, coe_nndist] using ball_subset_ball hw
+    refine' ((lipschitzWithLineMap z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
+    simpa only [line_map_apply_zero, mul_one, coe_nndist] using ball_subset_ball hw
   exact norm_max_aux₃ hr (hd.comp hde.diff_cont_on_cl hball) (hz.comp_maps_to hball (line_map_apply_zero z w))
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable on a set `s`, the norm
@@ -204,7 +204,7 @@ of `f` takes it maximum on `s` at `z`, and `w` is a point such that the closed b
 and radius `dist w z` is included in `s`, then `∥f w∥ = ∥f z∥`. -/
 theorem norm_eq_norm_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w : E} (hd : DiffContOnCl ℂ f s)
     (hz : IsMaxOn (norm ∘ f) s z) (hsub : Ball z (dist w z) ⊆ s) : ∥f w∥ = ∥f z∥ :=
-  norm_eq_on_closed_ball_of_is_max_on (hd.mono hsub) (hz.on_subset hsub) (mem_closed_ball.2 le_rflₓ)
+  norm_eq_on_closed_ball_of_is_max_on (hd.mono hsub) (hz.on_subset hsub) (mem_closed_ball.2 le_rfl)
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable in a neighborhood of `c`
 and the norm `∥f z∥` has a local maximum at `c`, then `∥f z∥` is locally constant in a neighborhood
@@ -216,7 +216,7 @@ theorem norm_eventually_eq_of_is_local_max {f : E → F} {c : E} (hd : ∀ᶠ z 
     nhds_basis_closed_ball.eventually_iff.2
       ⟨r, hr₀,
         norm_eq_on_closed_ball_of_is_max_on
-          (DifferentiableOn.diff_cont_on_cl fun x hx =>
+          (DifferentiableOn.diffContOnCl fun x hx =>
             (hr <| closure_ball_subset_closed_ball hx).1.DifferentiableWithinAt)
           fun x hx => (hr <| ball_subset_closed_ball hx).2⟩
 
@@ -225,7 +225,7 @@ theorem is_open_set_of_mem_nhds_and_is_max_on_norm {f : E → F} {s : Set E} (hd
   refine' is_open_iff_mem_nhds.2 fun z hz => (eventually_eventually_nhds.2 hz.1).And _
   replace hd : ∀ᶠ w in 𝓝 z, DifferentiableAt ℂ f w
   exact hd.eventually_differentiable_at hz.1
-  exact (norm_eventually_eq_of_is_local_max hd <| hz.2.IsLocalMax hz.1).mono fun x hx y hy => le_transₓ (hz.2 hy) hx.Ge
+  exact (norm_eventually_eq_of_is_local_max hd <| hz.2.IsLocalMax hz.1).mono fun x hx y hy => le_trans (hz.2 hy) hx.ge
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space. Let `f : E → F` be a function that is complex differentiable on `U`. Suppose
@@ -234,7 +234,7 @@ theorem norm_eq_on_of_is_preconnected_of_is_max_on {f : E → F} {U : Set E} {c 
     (ho : IsOpen U) (hd : DifferentiableOn ℂ f U) (hcU : c ∈ U) (hm : IsMaxOn (norm ∘ f) U c) :
     EqOn (norm ∘ f) (const E ∥f c∥) U := by
   set V := U ∩ { z | IsMaxOn (norm ∘ f) U z }
-  have hV : ∀ x ∈ V, ∥f x∥ = ∥f c∥ := fun x hx => le_antisymmₓ (hm hx.1) (hx.2 hcU)
+  have hV : ∀ x ∈ V, ∥f x∥ = ∥f c∥ := fun x hx => le_antisymm (hm hx.1) (hx.2 hcU)
   suffices : U ⊆ V
   exact fun x hx => hV x (this hx)
   have hVo : IsOpen V := by
@@ -330,9 +330,18 @@ theorem eventually_eq_of_is_local_max_norm {f : E → F} {c : E} (hd : ∀ᶠ z 
     nhds_basis_closed_ball.eventually_iff.2
       ⟨r, hr₀,
         eq_on_closed_ball_of_is_max_on_norm
-          (DifferentiableOn.diff_cont_on_cl fun x hx =>
+          (DifferentiableOn.diffContOnCl fun x hx =>
             (hr <| closure_ball_subset_closed_ball hx).1.DifferentiableWithinAt)
           fun x hx => (hr <| ball_subset_closed_ball hx).2⟩
+
+theorem eventually_eq_or_eq_zero_of_is_local_min_norm {f : E → ℂ} {c : E} (hf : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f z)
+    (hc : IsLocalMin (norm ∘ f) c) : (∀ᶠ z in 𝓝 c, f z = f c) ∨ f c = 0 := by
+  refine' or_iff_not_imp_right.mpr fun h => _
+  have h1 : ∀ᶠ z in 𝓝 c, f z ≠ 0 := hf.self_of_nhds.continuous_at.eventually_ne h
+  have h2 : IsLocalMax (norm ∘ f)⁻¹ c := hc.inv (h1.mono fun z => norm_pos_iff.mpr)
+  have h3 : IsLocalMax (norm ∘ f⁻¹) c := by refine' h2.congr (eventually_of_forall _) <;> simp
+  have h4 : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z := by filter_upwards [hf, h1] with z h using h.inv
+  filter_upwards [eventually_eq_of_is_local_max_norm h4 h3] with z using inv_inj.mp
 
 end StrictConvex
 
@@ -380,7 +389,7 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
   rcases exists_ne z with ⟨w, hne⟩
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
-  have hL : AntilipschitzWith (nndist z w)⁻¹ e := antilipschitz_with_line_map hne.symm
+  have hL : AntilipschitzWith (nndist z w)⁻¹ e := antilipschitzWithLineMap hne.symm
   replace hd : DiffContOnCl ℂ (f ∘ e) (e ⁻¹' U)
   exact hd.comp hde.diff_cont_on_cl (maps_to_preimage _ _)
   have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by simpa only [e, mem_preimage, line_map_apply_zero]

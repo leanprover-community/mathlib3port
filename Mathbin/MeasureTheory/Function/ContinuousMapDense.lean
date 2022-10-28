@@ -50,7 +50,7 @@ variable {α : Type _} [MeasurableSpace α] [TopologicalSpace α] [NormalSpace �
 
 variable (E : Type _) [NormedAddCommGroup E] [SecondCountableTopologyEither α E]
 
-variable {p : ℝ≥0∞} [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) (μ : Measureₓ α)
+variable {p : ℝ≥0∞} [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) (μ : Measure α)
 
 include _i hp
 
@@ -58,12 +58,12 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (u «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (F «expr ⊆ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
-  have hp₀ : 0 < p := lt_of_lt_of_leₓ Ennreal.zero_lt_one _i.elim
+  have hp₀ : 0 < p := lt_of_lt_of_le Ennreal.zero_lt_one _i.elim
   have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one Ennreal.to_real_nonneg
   have hp₀'' : 0 < p.to_real := by simpa [← Ennreal.to_real_lt_to_real Ennreal.zero_ne_top hp] using hp₀
   -- It suffices to prove that scalar multiples of the indicator function of a finite-measure
@@ -78,7 +78,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
       
     · exact fun f g hf hg hfg' => AddSubgroup.add_mem _
       
-    · exact AddSubgroup.is_closed_topological_closure _
+    · exact AddSubgroup.isClosedTopologicalClosure _
       
   -- Let `s` be a finite-measure measurable set, let's approximate `c` times its indicator function
   intro c s hs hsμ
@@ -106,16 +106,16 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
   obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
-  have : Disjoint (uᶜ) F := (Fs.trans su).disjoint_compl_left
+  have : Disjoint (uᶜ) F := (Fs.trans su).disjointComplLeft
   have h_μ_sdiff : μ (u \ F) ≤ 2 * η := by
     have hFμ : μ F < ⊤ := (measure_mono Fs).trans_lt hsμ
     refine' Ennreal.le_of_add_le_add_left hFμ.ne _
     have : μ u < μ F + ↑η + ↑η := μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
     convert this.le using 1
-    · rw [add_commₓ, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
-      exacts[disjoint_sdiff_self_left, F_closed.measurable_set]
+    · rw [add_comm, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
+      exacts[disjointSdiffSelfLeft, F_closed.measurable_set]
       
-    have : (2 : ℝ≥0∞) * η = η + η := by simpa using add_mulₓ (1 : ℝ≥0∞) 1 η
+    have : (2 : ℝ≥0∞) * η = η + η := by simpa using add_mul (1 : ℝ≥0∞) 1 η
     rw [this]
     abel
   -- Apply Urysohn's lemma to get a continuous approximation to the characteristic function of
@@ -132,7 +132,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
       · refine' (norm_sub_le _ _).trans _
         refine' (add_le_add_left (norm_indicator_le_norm_self (fun x => c) x) _).trans _
         have h₀ : g x * ∥c∥ + ∥c∥ ≤ 2 * ∥c∥ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
-        have h₁ : (2 : ℝ) * ∥c∥ = bit0 ∥c∥ := by simpa using add_mulₓ (1 : ℝ) 1 ∥c∥
+        have h₁ : (2 : ℝ) * ∥c∥ = bit0 ∥c∥ := by simpa using add_mul (1 : ℝ) 1 ∥c∥
         simp [hFu, norm_smul, h₀, ← h₁, g_norm x]
         
       · simp [hgF hF, Fs hF]
@@ -156,7 +156,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     simpa using this.add (mem_ℒp_indicator_const p hs c (Or.inr hsμ.ne))
   refine' ⟨gc_mem_ℒp.to_Lp _, _, _⟩
   · rw [mem_closed_ball_iff_norm]
-    refine' le_transₓ _ hη_le
+    refine' le_trans _ hη_le
     rw [simple_func.coe_indicator_const, indicator_const_Lp, ← mem_ℒp.to_Lp_sub, Lp.norm_to_Lp]
     exact Ennreal.to_real_le_coe_of_le_coe gc_snorm
     

@@ -88,7 +88,7 @@ theorem adjoint_aux_adjoint_aux (A : E →L[𝕜] F) : adjointAux (adjointAux A)
 
 @[simp]
 theorem adjoint_aux_norm (A : E →L[𝕜] F) : ∥adjointAux A∥ = ∥A∥ := by
-  refine' le_antisymmₓ _ _
+  refine' le_antisymm _ _
   · refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
@@ -197,7 +197,7 @@ instance : CstarRing (E →L[𝕜] E) :=
   ⟨by
     intro A
     rw [star_eq_adjoint]
-    refine' le_antisymmₓ _ _
+    refine' le_antisymm _ _
     · calc
         ∥A† * A∥ ≤ ∥A†∥ * ∥A∥ := op_norm_comp_le _ _
         _ = ∥A∥ * ∥A∥ := by rw [LinearIsometryEquiv.norm_map]
@@ -225,7 +225,7 @@ variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpa
 variable [CompleteSpace E'] [CompleteSpace F']
 
 -- Todo: Generalize this to `is_R_or_C`.
-theorem is_adjoint_pair_inner (A : E' →L[ℝ] F') :
+theorem isAdjointPairInner (A : E' →L[ℝ] F') :
     LinearMap.IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A (A†) :=
   fun x y => by simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
 
@@ -246,7 +246,7 @@ theorem adjoint_eq {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : A.adjoint = A :
   hA
 
 /-- Every self-adjoint operator on an inner product space is symmetric. -/
-theorem is_symmetric {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : (A : E →ₗ[𝕜] E).IsSymmetric := fun x y => by
+theorem isSymmetric {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : (A : E →ₗ[𝕜] E).IsSymmetric := fun x y => by
   rw_mod_cast [← A.adjoint_inner_right, hA.adjoint_eq]
 
 /-- Conjugating preserves self-adjointness -/
@@ -272,7 +272,7 @@ theorem _root_.linear_map.is_symmetric.is_self_adjoint {A : E →L[𝕜] E} (hA 
 /-- The orthogonal projection is self-adjoint. -/
 theorem _root_.orthogonal_projection_is_self_adjoint (U : Submodule 𝕜 E) [CompleteSpace U] :
     IsSelfAdjoint (U.subtypeL ∘L orthogonalProjection U) :=
-  (orthogonal_projection_is_symmetric U).IsSelfAdjoint
+  (orthogonalProjectionIsSymmetric U).IsSelfAdjoint
 
 theorem conj_orthogonal_projection {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (U : Submodule 𝕜 E) [CompleteSpace U] :
     IsSelfAdjoint (U.subtypeL ∘L orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U) := by
@@ -406,14 +406,14 @@ variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpa
 variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 
 -- Todo: Generalize this to `is_R_or_C`.
-theorem is_adjoint_pair_inner (A : E' →ₗ[ℝ] F') :
+theorem isAdjointPairInner (A : E' →ₗ[ℝ] F') :
     IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A A.adjoint :=
   fun x y => by simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left]
 
 end Real
 
 /-- The Gram operator T†T is symmetric. -/
-theorem is_symmetric_adjoint_mul_self (T : E →ₗ[𝕜] E) : IsSymmetric (T.adjoint * T) := fun x y => by
+theorem isSymmetricAdjointMulSelf (T : E →ₗ[𝕜] E) : IsSymmetric (T.adjoint * T) := fun x y => by
   simp only [mul_apply, adjoint_inner_left, adjoint_inner_right]
 
 /-- The Gram operator T†T is a positive operator. -/
@@ -431,7 +431,7 @@ end LinearMap
 
 namespace Matrix
 
-variable {m n : Type _} [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n]
+variable {m n : Type _} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 
 open ComplexConjugate
 

@@ -32,7 +32,7 @@ variable [∀ a b : C, HasCoproductsOfShape (a ⟶ b) D]
 /-- The left adjoint of evaluation. -/
 @[simps]
 def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
-  obj := fun d =>
+  obj d :=
     { obj := fun t => ∐ fun i : c ⟶ t => d, map := fun u v f => sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f,
       map_id' := by
         intros
@@ -46,7 +46,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
         simp only [cofan.mk_ι_app, colimit.ι_desc_assoc, colimit.ι_desc]
         congr 1
         rw [category.assoc] }
-  map := fun d₁ d₂ f =>
+  map d₁ d₂ f :=
     { app := fun e => sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h,
       naturality' := by
         intros
@@ -119,7 +119,7 @@ variable [∀ a b : C, HasProductsOfShape (a ⟶ b) D]
 /-- The right adjoint of evaluation. -/
 @[simps]
 def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
-  obj := fun d =>
+  obj d :=
     { obj := fun t => ∏ fun i : t ⟶ c => d, map := fun u v f => pi.lift fun g => Pi.π _ <| f ≫ g,
       map_id' := by
         intros
@@ -135,7 +135,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
         simp only [limit.lift_π, fan.mk_π_app, category.assoc]
         congr 1
         simp }
-  map := fun d₁ d₂ f =>
+  map d₁ d₂ f :=
     { app := fun t => pi.lift fun g => Pi.π _ g ≫ f,
       naturality' := by
         intros

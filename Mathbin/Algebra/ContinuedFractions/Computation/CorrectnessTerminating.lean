@@ -219,14 +219,14 @@ exactly `v`.
 -/
 theorem of_correctness_of_terminated_at (terminated_at_n : (of v).TerminatedAt n) : v = (of v).convergents n :=
   have : IntFractPair.stream v (n + 1) = none :=
-    of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_left terminated_at_n
+    of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elimLeft terminated_at_n
   of_correctness_of_nth_stream_eq_none this
 
 /-- If `generalized_continued_fraction.of v` terminates, then there is `n : ℕ` such that the `n`th
 convergent is exactly `v`.
 -/
 theorem of_correctness_of_terminates (terminates : (of v).Terminates) : ∃ n : ℕ, v = (of v).convergents n :=
-  Exists.elim terminates fun n terminated_at_n => Exists.introₓ n (of_correctness_of_terminated_at terminated_at_n)
+  Exists.elim terminates fun n terminated_at_n => Exists.intro n (of_correctness_of_terminated_at terminated_at_n)
 
 open Filter
 

@@ -5,6 +5,7 @@ Authors: Patrick Massot
 -/
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.DocCommands
+import Mathbin.Algebra.Group.Commutator
 
 /-!
 # `group`
@@ -25,20 +26,20 @@ group_theory
 -- The next four lemmas are not general purpose lemmas, they are intended for use only by
 -- the `group` tactic.
 @[to_additive]
-theorem Tactic.Group.zpow_trick {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
+theorem Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
   rw [mul_assoc, ← zpow_add]
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one {G : Type _} [Groupₓ G] (a b : G) (m : ℤ) : a * b * b ^ m = a * b ^ (m + 1) := by
+theorem Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) : a * b * b ^ m = a * b ^ (m + 1) := by
   rw [mul_assoc, mul_self_zpow]
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one' {G : Type _} [Groupₓ G] (a b : G) (n : ℤ) : a * b ^ n * b = a * b ^ (n + 1) := by
+theorem Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) : a * b ^ n * b = a * b ^ (n + 1) := by
   rw [mul_assoc, mul_zpow_self]
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_sub {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) :
-    a * b ^ n * b ^ -m = a * b ^ (n - m) := by rw [mul_assoc, ← zpow_add] <;> rfl
+theorem Tactic.Group.zpow_trick_sub {G : Type _} [Group G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ -m = a * b ^ (n - m) :=
+  by rw [mul_assoc, ← zpow_add] <;> rfl
 
 namespace Tactic
 
@@ -49,9 +50,9 @@ open Tactic.SimpArgType Interactive Tactic.Group
 /-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
 unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
   simp_core { failIfUnchanged := false } skip true
-      [expr (pquote.1 commutator_element_def), expr (pquote.1 mul_oneₓ), expr (pquote.1 one_mulₓ),
-        expr (pquote.1 one_pow), expr (pquote.1 one_zpow), expr (pquote.1 sub_self), expr (pquote.1 add_neg_selfₓ),
-        expr (pquote.1 neg_add_selfₓ), expr (pquote.1 neg_negₓ), expr (pquote.1 tsub_self),
+      [expr (pquote.1 commutator_element_def), expr (pquote.1 mul_one), expr (pquote.1 one_mul),
+        expr (pquote.1 one_pow), expr (pquote.1 one_zpow), expr (pquote.1 sub_self), expr (pquote.1 add_neg_self),
+        expr (pquote.1 neg_add_self), expr (pquote.1 neg_neg), expr (pquote.1 tsub_self),
         expr (pquote.1 Int.coe_nat_add), expr (pquote.1 Int.coe_nat_mul), expr (pquote.1 Int.coe_nat_zero),
         expr (pquote.1 Int.coe_nat_one), expr (pquote.1 Int.coe_nat_bit0), expr (pquote.1 Int.coe_nat_bit1),
         expr (pquote.1 Int.mul_neg_eq_neg_mul_symm), expr (pquote.1 Int.neg_mul_eq_neg_mul_symm),
@@ -59,7 +60,7 @@ unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
         symm_expr (pquote.1 zpow_add_one), symm_expr (pquote.1 zpow_one_add), symm_expr (pquote.1 zpow_add),
         expr (pquote.1 mul_zpow_neg_one), expr (pquote.1 zpow_zero), expr (pquote.1 mul_zpow),
         symm_expr (pquote.1 mul_assoc), expr (pquote.1 zpow_trick), expr (pquote.1 zpow_trick_one),
-        expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub), expr (pquote.1 Tactic.Ring.hornerₓ)]
+        expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub), expr (pquote.1 Tactic.Ring.horner)]
       [] locat >>
     skip
 
@@ -75,7 +76,7 @@ setup_tactic_parser
 
 open Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.

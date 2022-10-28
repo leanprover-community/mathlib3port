@@ -72,7 +72,7 @@ variable (n) {A : Type u} {α β : Typevec.{u} n}
 
 /-- Constructor for the constant functor -/
 def const.mk (x : A) {α} : (const n A).Obj α :=
-  ⟨x, fun i a => Pempty.elimₓ a⟩
+  ⟨x, fun i a => Pempty.elim a⟩
 
 variable {n A}
 
@@ -99,7 +99,7 @@ end Const
 /-- Functor composition on polynomial functors -/
 def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m where
   A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
-  B := fun a => fun i => Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
+  B a i := Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 
 variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
 
@@ -220,15 +220,15 @@ variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 from a `n+1`-ary functor -/
 def drop : Mvpfunctor n where
   A := P.A
-  B := fun a => (P.B a).drop
+  B a := (P.B a).drop
 
 /-- Split polynomial functor, get a univariate functor
 from a `n+1`-ary functor -/
 def last : Pfunctor where
   A := P.A
-  B := fun a => (P.B a).last
+  B a := (P.B a).last
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- append arrows of a polynomial functor application -/
 @[reducible]
 def appendContents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :

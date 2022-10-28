@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Linear.Default
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
+import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.LinearAlgebra.Matrix.InvariantBasisNumber
 
 /-!
@@ -69,10 +69,10 @@ are equivalent to block diagonal matrices,
 with blocks indexed by `ι`,
 and matrix entries in `i`-th block living in the endomorphisms of `s i`. -/
 @[simps]
-noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fintypeₓ α] [Fintypeₓ β] {f : α → ι}
+noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β] {f : α → ι}
     {g : β → ι} :
-    ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) where
-  toFun := fun z i j k =>
+    ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) where
+  toFun z i j k :=
     eqToHom
         (by
           rcases k with ⟨k, ⟨⟩⟩
@@ -82,10 +82,10 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
           (by
             rcases j with ⟨j, ⟨⟩⟩
             simp)
-  invFun := fun z =>
+  invFun z :=
     biproduct.matrix fun j k =>
       if h : f j = g k then z (f j) ⟨k, by simp [h]⟩ ⟨j, by simp⟩ ≫ eqToHom (by simp [h]) else 0
-  left_inv := fun z => by
+  left_inv z := by
     ext j k
     simp only [category.assoc, biproduct.lift_π, biproduct.ι_matrix]
     split_ifs
@@ -95,7 +95,7 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
     · symm
       apply o.eq_zero h
       
-  right_inv := fun z => by
+  right_inv z := by
     ext i ⟨j, w⟩ ⟨k, ⟨⟩⟩
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
     simp [w.symm]
@@ -109,8 +109,9 @@ variable [Preadditive C] [HasFiniteBiproducts C]
 
 /-- `hom_orthogonal.matrix_decomposition` as an additive equivalence. -/
 @[simps]
-noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Type} [Fintypeₓ α] [Fintypeₓ β] {f : α → ι}
-    {g : β → ι} : ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃+ ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
+noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β] {f : α → ι}
+    {g : β → ι} :
+    ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃+ ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) :=
   { o.matrixDecomposition with
     map_add' := fun w z => by
       ext
@@ -118,7 +119,7 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
       simp }
 
 @[simp]
-theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintypeₓ α] {f : α → ι} (i : ι) :
+theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
     o.matrixDecomposition (𝟙 (⨁ fun a => s (f a))) i = 1 := by
   ext ⟨b, ⟨⟩⟩ ⟨a⟩
   simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
@@ -132,17 +133,17 @@ theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintypeₓ α
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
     
 
-theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintypeₓ α] [Fintypeₓ β] [Fintypeₓ γ]
-    {f : α → ι} {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
+theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β] [Fintype γ] {f : α → ι}
+    {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
     (w : (⨁ fun b => s (g b)) ⟶ ⨁ fun c => s (h c)) (i : ι) :
     o.matrixDecomposition (z ≫ w) i = o.matrixDecomposition w i ⬝ o.matrixDecomposition z i := by
   ext ⟨c, ⟨⟩⟩ ⟨a⟩
   simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
   simp only [Matrix.mul_apply, limits.biproduct.components, hom_orthogonal.matrix_decomposition_apply, category.comp_id,
-    category.id_comp, category.assoc, End.mul_def, eq_to_hom_refl, eq_to_hom_trans_assoc, Finsetₓ.sum_congr]
+    category.id_comp, category.assoc, End.mul_def, eq_to_hom_refl, eq_to_hom_trans_assoc, Finset.sum_congr]
   conv_lhs => rw [← category.id_comp w, ← biproduct.total]
   simp only [preadditive.sum_comp, preadditive.comp_sum]
-  apply Finsetₓ.sum_congr_set
+  apply Finset.sum_congr_set
   · intros
     simp
     rfl
@@ -159,13 +160,13 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
 
 section
 
-variable {R : Type _} [Semiringₓ R] [Linear R C]
+variable {R : Type _} [Semiring R] [Linear R C]
 
 /-- `hom_orthogonal.matrix_decomposition` as an `R`-linear equivalence. -/
 @[simps]
-noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : Type} [Fintypeₓ α] [Fintypeₓ β]
-    {f : α → ι} {g : β → ι} :
-    ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ₗ[R] ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
+noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β] {f : α → ι}
+    {g : β → ι} :
+    ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ₗ[R] ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) :=
   { o.matrixDecompositionAddEquiv with
     map_smul' := fun w z => by
       ext
@@ -180,15 +181,15 @@ if `s i` is simple (as then `End (s i)` is a division ring).
 -/
 
 
-variable [∀ i, InvariantBasisNumber (End (s i))]
+variable [∀ i, InvariantBasisNumber (EndCat (s i))]
 
 /-- Given a hom orthogonal family `s : ι → C`
 for which each `End (s i)` is a ring with invariant basis number (e.g. if each `s i` is simple),
 if two direct sums over `s` are isomorphic, then they have the same multiplicities.
 -/
-theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintypeₓ α] [Fintypeₓ β] {f : α → ι} {g : β → ι}
+theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β] {f : α → ι} {g : β → ι}
     (i : (⨁ fun a => s (f a)) ≅ ⨁ fun b => s (g b)) : ∃ e : α ≃ β, ∀ a, g (e a) = f a := by
-  refine' ⟨Equivₓ.ofPreimageEquiv _, fun a => Equivₓ.of_preimage_equiv_map _ _⟩
+  refine' ⟨Equiv.ofPreimageEquiv _, fun a => Equiv.of_preimage_equiv_map _ _⟩
   intro c
   apply Nonempty.some
   apply Cardinal.eq.1

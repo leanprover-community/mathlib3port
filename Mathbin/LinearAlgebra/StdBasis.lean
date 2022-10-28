@@ -41,7 +41,7 @@ open BigOperators
 
 namespace LinearMap
 
-variable (R : Type _) {ι : Type _} [Semiringₓ R] (φ : ι → Type _) [∀ i, AddCommMonoidₓ (φ i)] [∀ i, Module R (φ i)]
+variable (R : Type _) {ι : Type _} [Semiring R] (φ : ι → Type _) [∀ i, AddCommMonoid (φ i)] [∀ i, Module R (φ i)]
   [DecidableEq ι]
 
 /-- The standard basis of the product of `φ`. -/
@@ -53,7 +53,7 @@ theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :
 
 @[simp]
 theorem std_basis_apply' (i i' : ι) : (stdBasis R (fun _x : ι => R) i) 1 i' = ite (i = i') 1 0 := by
-  rw [LinearMap.std_basis_apply, Function.update_applyₓ, Pi.zero_apply]
+  rw [LinearMap.std_basis_apply, Function.update_apply, Pi.zero_apply]
   congr 1
   rw [eq_iff_iff, eq_comm]
 
@@ -93,7 +93,7 @@ theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) 
   rintro rfl
   exact h ⟨hi, hj⟩
 
-theorem infi_ker_proj_le_supr_range_std_basis {I : Finsetₓ ι} {J : Set ι} (hu : Set.Univ ⊆ ↑I ∪ J) :
+theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.Univ ⊆ ↑I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i)) ≤ ⨆ i ∈ I, range (stdBasis R φ i) :=
   SetLike.le_def.2
     (by
@@ -102,34 +102,34 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finsetₓ ι} {J : Set ι} (h
       rw [←
         show (∑ i in I, std_basis R φ i (b i)) = b by
           ext i
-          rw [Finsetₓ.sum_apply, ← std_basis_same R φ i (b i)]
-          refine' Finsetₓ.sum_eq_single i (fun j hjI ne => std_basis_ne _ _ _ _ Ne.symm _) _
+          rw [Finset.sum_apply, ← std_basis_same R φ i (b i)]
+          refine' Finset.sum_eq_single i (fun j hjI ne => std_basis_ne _ _ _ _ Ne.symm _) _
           intro hiI
           rw [std_basis_same]
-          exact hb _ ((hu trivialₓ).resolve_left hiI)]
+          exact hb _ ((hu trivial).resolve_left hiI)]
       exact sum_mem_bsupr fun i hi => mem_range_self (std_basis R φ i) (b i))
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
     (hI : Set.Finite I) : (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
-  refine' le_antisymmₓ (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
+  refine' le_antisymm (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.Univ ⊆ ↑hI.to_finset ∪ J := by rwa [hI.coe_to_finset]
-  refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono fun i => _)
+  refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono fun i => _)
   rw [Set.Finite.mem_to_finset]
-  exact le_rflₓ
+  exact le_rfl
 
 theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = ⊤ := by
   cases nonempty_fintype ι
   convert top_unique (infi_emptyset.ge.trans <| infi_ker_proj_le_supr_range_std_basis R φ _)
-  · exact funext fun i => ((@supr_pos _ _ _ fun h => range <| std_basis R φ i) <| Finsetₓ.mem_univ i).symm
+  · exact funext fun i => ((@supr_pos _ _ _ fun h => range <| std_basis R φ i) <| Finset.mem_univ i).symm
     
-  · rw [Finsetₓ.coe_univ, Set.union_empty]
+  · rw [Finset.coe_univ, Set.union_empty]
     
 
-theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
+theorem disjointStdBasisStdBasis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
   refine'
-    Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right)
-      (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right) _
+    Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjointComplRight)
+      (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjointComplRight) _
   simp only [Disjoint, SetLike.le_def, mem_infi, mem_inf, mem_ker, mem_bot, proj_apply, funext_iff]
   rintro b ⟨hI, hJ⟩ i
   classical
@@ -161,7 +161,7 @@ section Module
 
 variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
-theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)] [∀ i, Module R (Ms i)] [DecidableEq η]
+theorem linear_independent_std_basis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ i, Module R (Ms i)] [DecidableEq η]
     (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
     LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
   have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) := by
@@ -169,7 +169,7 @@ theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)]
     exact (hs j).map' _ (ker_std_basis _ _ _)
   apply linear_independent_Union_finite hs'
   · intro j J _ hiJ
-    simp [(Set.Union.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
+    simp [(Set.UnionCat.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
     have h₀ : ∀ j, span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ range (std_basis R Ms j) := by
       intro j
       rw [span_le, LinearMap.range_coe]
@@ -185,9 +185,9 @@ theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)]
     exact (disjoint_std_basis_std_basis _ _ _ _ h₃).mono h₁ h₂
     
 
-variable [Semiringₓ R] [∀ i, AddCommMonoidₓ (Ms i)] [∀ i, Module R (Ms i)]
+variable [Semiring R] [∀ i, AddCommMonoid (Ms i)] [∀ i, Module R (Ms i)]
 
-variable [Fintypeₓ η]
+variable [Fintype η]
 
 section
 
@@ -260,11 +260,11 @@ end Pi
 
 namespace Matrix
 
-variable (R : Type _) (m n : Type _) [Fintypeₓ m] [Fintypeₓ n] [Semiringₓ R]
+variable (R : Type _) (m n : Type _) [Fintype m] [Fintype n] [Semiring R]
 
 /-- The standard basis of `matrix m n R`. -/
 noncomputable def stdBasis : Basis (m × n) R (Matrix m n R) :=
-  Basis.reindex (Pi.basis fun i : m => Pi.basisFun R n) (Equivₓ.sigmaEquivProd _ _)
+  Basis.reindex (Pi.basis fun i : m => Pi.basisFun R n) (Equiv.sigmaEquivProd _ _)
 
 variable {n m}
 

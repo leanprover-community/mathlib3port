@@ -48,7 +48,7 @@ variable {α β G₀ : Type _}
 
 section DivConst
 
-variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousMul G₀] {f : α → G₀} {s : Set α} {l : Filter α}
+variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousMul G₀] {f : α → G₀} {s : Set α} {l : Filter α}
 
 theorem Filter.Tendsto.div_const {x y : G₀} (hf : Tendsto f l (𝓝 x)) : Tendsto (fun a => f a / y) l (𝓝 (x / y)) := by
   simpa only [div_eq_mul_inv] using hf.mul tendsto_const_nhds
@@ -131,7 +131,7 @@ division `(/)` is continuous at any point where the denominator is continuous.
 
 section Div
 
-variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀] {f g : α → G₀}
+variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀] {f g : α → G₀}
 
 theorem Filter.Tendsto.div {l : Filter α} {a b : G₀} (hf : Tendsto f l (𝓝 a)) (hg : Tendsto g l (𝓝 b)) (hy : b ≠ 0) :
     Tendsto (f / g) l (𝓝 (a / b)) := by simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
@@ -189,17 +189,17 @@ end Div
 
 namespace Homeomorph
 
-variable [TopologicalSpace α] [GroupWithZeroₓ α] [HasContinuousMul α]
+variable [TopologicalSpace α] [GroupWithZero α] [HasContinuousMul α]
 
 /-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulLeft₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equivₓ.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _, continuous_inv_fun := continuous_mul_left _ }
+  { Equiv.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _, continuous_inv_fun := continuous_mul_left _ }
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equivₓ.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
+  { Equiv.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
     continuous_inv_fun := continuous_mul_right _ }
 
 @[simp]
@@ -222,7 +222,7 @@ end Homeomorph
 
 section Zpow
 
-variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
+variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
 
 theorem continuous_at_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x := by
   cases m

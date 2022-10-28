@@ -32,9 +32,9 @@ variable {k G : Type u} [Field k]
 
 namespace FdRep
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ G]
+variable [Monoid G]
 
 /-- The character of a representation `V : fdRep k G` is the function associating to `g : G` the
 trace of the linear map `V.ρ g`.-/
@@ -48,7 +48,7 @@ theorem char_mul_comm (V : FdRep k G) (g : G) (h : G) : V.character (h * g) = V.
 theorem char_one (V : FdRep k G) : V.character 1 = FiniteDimensional.finrank k V := by
   simp only [character, map_one, trace_one]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The character is multiplicative under the tensor product. -/
 @[simp]
 theorem char_tensor (V W : FdRep k G) : (V ⊗ W).character = V.character * W.character := by
@@ -61,16 +61,16 @@ theorem char_iso {V W : FdRep k G} (i : V ≅ W) : V.character = W.character := 
   simp only [character, FdRep.Iso.conj_ρ i]
   exact (trace_conj' (V.ρ g) _).symm
 
-end Monoidₓ
+end Monoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ G]
+variable [Group G]
 
 /-- The character of a representation is constant on conjugacy classes. -/
 @[simp]
 theorem char_conj (V : FdRep k G) (g : G) (h : G) : V.character (h * g * h⁻¹) = V.character g := by
-  rw [char_mul_comm, inv_mul_cancel_leftₓ]
+  rw [char_mul_comm, inv_mul_cancel_left]
 
 @[simp]
 theorem char_dual (V : FdRep k G) (g : G) : (of (dual V.ρ)).character g = V.character g⁻¹ :=
@@ -82,14 +82,14 @@ theorem char_lin_hom (V W : FdRep k G) (g : G) : (of (linHom V.ρ W.ρ)).charact
   rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
   rfl
 
-variable [Fintypeₓ G] [Invertible (Fintypeₓ.card G : k)]
+variable [Fintype G] [Invertible (Fintype.card G : k)]
 
 theorem average_char_eq_finrank_invariants (V : FdRep k G) :
-    (⅟ (Fintypeₓ.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
+    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
   rw [← (is_proj_average_map V.ρ).trace]
   simp [character, GroupAlgebra.average, _root_.map_sum]
 
-end Groupₓ
+end Group
 
 end FdRep
 

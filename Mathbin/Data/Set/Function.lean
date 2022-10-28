@@ -69,13 +69,13 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (s.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (sᶜ.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => g a a.2 :=
@@ -102,13 +102,13 @@ theorem restrict_piecewise_compl (f g : α → β) (s : Set α) [∀ x, Decidabl
   restrict_ite_compl _ _ _
 
 theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    (Range f).restrict (extendₓ f g g') = fun x => g x.coe_prop.some := by convert restrict_dite _ _
+    (Range f).restrict (extend f g g') = fun x => g x.coe_prop.some := by convert restrict_dite _ _
 
 @[simp]
 theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    Range fᶜ.restrict (extendₓ f g g') = g' ∘ coe := by convert restrict_dite_compl _ _
+    Range fᶜ.restrict (extend f g g') = g' ∘ coe := by convert restrict_dite_compl _ _
 
-theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extendₓ f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
+theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extend f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
   by
   classical
   rintro _ ⟨y, rfl⟩
@@ -117,7 +117,7 @@ theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : R
   exacts[Or.inl (mem_range_self _), Or.inr (mem_image_of_mem _ h)]
 
 theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β → γ) :
-    Range (extendₓ f g g') = Range g ∪ g' '' Range fᶜ := by
+    Range (extend f g g') = Range g ∪ g' '' Range fᶜ := by
   refine' (range_extend_subset _ _ _).antisymm _
   rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
   exacts[⟨f x, extend_apply hf _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
@@ -179,44 +179,54 @@ theorem EqOn.inter_preimage_eq (heq : EqOn f₁ f₂ s) (t : Set β) : s ∩ f�
 
 theorem EqOn.mono (hs : s₁ ⊆ s₂) (hf : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ s₁ := fun x hx => hf (hs hx)
 
+@[simp]
+theorem eq_on_union : EqOn f₁ f₂ (s₁ ∪ s₂) ↔ EqOn f₁ f₂ s₁ ∧ EqOn f₁ f₂ s₂ :=
+  ball_or_left_distrib
+
+theorem EqOn.union (h₁ : EqOn f₁ f₂ s₁) (h₂ : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ (s₁ ∪ s₂) :=
+  eq_on_union.2 ⟨h₁, h₂⟩
+
 theorem EqOn.comp_left (h : s.EqOn f₁ f₂) : s.EqOn (g ∘ f₁) (g ∘ f₂) := fun a ha => congr_arg _ <| h ha
 
-theorem comp_eq_of_eq_on_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} (h : EqOn g₁ g₂ (Range f)) : g₁ ∘ f = g₂ ∘ f :=
-  funext fun x => h <| mem_range_self _
+@[simp]
+theorem eq_on_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} : EqOn g₁ g₂ (Range f) ↔ g₁ ∘ f = g₂ ∘ f :=
+  forall_range_iff.trans <| funext_iff.symm
+
+alias eq_on_range ↔ eq_on.comp_eq _
 
 /-! ### Congruence lemmas -/
 
 
 section Order
 
-variable [Preorderₓ α] [Preorderₓ β]
+variable [Preorder α] [Preorder β]
 
-theorem _root_.monotone_on.congr (h₁ : MonotoneOnₓ f₁ s) (h : s.EqOn f₁ f₂) : MonotoneOnₓ f₂ s := by
+theorem _root_.monotone_on.congr (h₁ : MonotoneOn f₁ s) (h : s.EqOn f₁ f₂) : MonotoneOn f₂ s := by
   intro a ha b hb hab
   rw [← h ha, ← h hb]
   exact h₁ ha hb hab
 
-theorem _root_.antitone_on.congr (h₁ : AntitoneOnₓ f₁ s) (h : s.EqOn f₁ f₂) : AntitoneOnₓ f₂ s :=
+theorem _root_.antitone_on.congr (h₁ : AntitoneOn f₁ s) (h : s.EqOn f₁ f₂) : AntitoneOn f₂ s :=
   h₁.dual_right.congr h
 
-theorem _root_.strict_mono_on.congr (h₁ : StrictMonoOnₓ f₁ s) (h : s.EqOn f₁ f₂) : StrictMonoOnₓ f₂ s := by
+theorem _root_.strict_mono_on.congr (h₁ : StrictMonoOn f₁ s) (h : s.EqOn f₁ f₂) : StrictMonoOn f₂ s := by
   intro a ha b hb hab
   rw [← h ha, ← h hb]
   exact h₁ ha hb hab
 
-theorem _root_.strict_anti_on.congr (h₁ : StrictAntiOnₓ f₁ s) (h : s.EqOn f₁ f₂) : StrictAntiOnₓ f₂ s :=
+theorem _root_.strict_anti_on.congr (h₁ : StrictAntiOn f₁ s) (h : s.EqOn f₁ f₂) : StrictAntiOn f₂ s :=
   h₁.dual_right.congr h
 
-theorem EqOn.congr_monotone_on (h : s.EqOn f₁ f₂) : MonotoneOnₓ f₁ s ↔ MonotoneOnₓ f₂ s :=
+theorem EqOn.congr_monotone_on (h : s.EqOn f₁ f₂) : MonotoneOn f₁ s ↔ MonotoneOn f₂ s :=
   ⟨fun h₁ => h₁.congr h, fun h₂ => h₂.congr h.symm⟩
 
-theorem EqOn.congr_antitone_on (h : s.EqOn f₁ f₂) : AntitoneOnₓ f₁ s ↔ AntitoneOnₓ f₂ s :=
+theorem EqOn.congr_antitone_on (h : s.EqOn f₁ f₂) : AntitoneOn f₁ s ↔ AntitoneOn f₂ s :=
   ⟨fun h₁ => h₁.congr h, fun h₂ => h₂.congr h.symm⟩
 
-theorem EqOn.congr_strict_mono_on (h : s.EqOn f₁ f₂) : StrictMonoOnₓ f₁ s ↔ StrictMonoOnₓ f₂ s :=
+theorem EqOn.congr_strict_mono_on (h : s.EqOn f₁ f₂) : StrictMonoOn f₁ s ↔ StrictMonoOn f₂ s :=
   ⟨fun h₁ => h₁.congr h, fun h₂ => h₂.congr h.symm⟩
 
-theorem EqOn.congr_strict_anti_on (h : s.EqOn f₁ f₂) : StrictAntiOnₓ f₁ s ↔ StrictAntiOnₓ f₂ s :=
+theorem EqOn.congr_strict_anti_on (h : s.EqOn f₁ f₂) : StrictAntiOn f₁ s ↔ StrictAntiOn f₂ s :=
   ⟨fun h₁ => h₁.congr h, fun h₂ => h₂.congr h.symm⟩
 
 end Order
@@ -226,30 +236,30 @@ end Order
 
 section Mono
 
-variable [Preorderₓ α] [Preorderₓ β]
+variable [Preorder α] [Preorder β]
 
-theorem _root_.monotone_on.mono (h : MonotoneOnₓ f s) (h' : s₂ ⊆ s) : MonotoneOnₓ f s₂ := fun x hx y hy =>
+theorem _root_.monotone_on.mono (h : MonotoneOn f s) (h' : s₂ ⊆ s) : MonotoneOn f s₂ := fun x hx y hy =>
   h (h' hx) (h' hy)
 
-theorem _root_.antitone_on.mono (h : AntitoneOnₓ f s) (h' : s₂ ⊆ s) : AntitoneOnₓ f s₂ := fun x hx y hy =>
+theorem _root_.antitone_on.mono (h : AntitoneOn f s) (h' : s₂ ⊆ s) : AntitoneOn f s₂ := fun x hx y hy =>
   h (h' hx) (h' hy)
 
-theorem _root_.strict_mono_on.mono (h : StrictMonoOnₓ f s) (h' : s₂ ⊆ s) : StrictMonoOnₓ f s₂ := fun x hx y hy =>
+theorem _root_.strict_mono_on.mono (h : StrictMonoOn f s) (h' : s₂ ⊆ s) : StrictMonoOn f s₂ := fun x hx y hy =>
   h (h' hx) (h' hy)
 
-theorem _root_.strict_anti_on.mono (h : StrictAntiOnₓ f s) (h' : s₂ ⊆ s) : StrictAntiOnₓ f s₂ := fun x hx y hy =>
+theorem _root_.strict_anti_on.mono (h : StrictAntiOn f s) (h' : s₂ ⊆ s) : StrictAntiOn f s₂ := fun x hx y hy =>
   h (h' hx) (h' hy)
 
-protected theorem _root_.monotone_on.monotone (h : MonotoneOnₓ f s) : Monotoneₓ (f ∘ coe : s → β) := fun x y hle =>
+protected theorem _root_.monotone_on.monotone (h : MonotoneOn f s) : Monotone (f ∘ coe : s → β) := fun x y hle =>
   h x.coe_prop y.coe_prop hle
 
-protected theorem _root_.antitone_on.monotone (h : AntitoneOnₓ f s) : Antitoneₓ (f ∘ coe : s → β) := fun x y hle =>
+protected theorem _root_.antitone_on.monotone (h : AntitoneOn f s) : Antitone (f ∘ coe : s → β) := fun x y hle =>
   h x.coe_prop y.coe_prop hle
 
-protected theorem _root_.strict_mono_on.strict_mono (h : StrictMonoOnₓ f s) : StrictMonoₓ (f ∘ coe : s → β) :=
+protected theorem _root_.strict_mono_on.strict_mono (h : StrictMonoOn f s) : StrictMono (f ∘ coe : s → β) :=
   fun x y hlt => h x.coe_prop y.coe_prop hlt
 
-protected theorem _root_.strict_anti_on.strict_anti (h : StrictAntiOnₓ f s) : StrictAntiₓ (f ∘ coe : s → β) :=
+protected theorem _root_.strict_anti_on.strict_anti (h : StrictAntiOn f s) : StrictAnti (f ∘ coe : s → β) :=
   fun x y hlt => h x.coe_prop y.coe_prop hlt
 
 end Mono
@@ -270,6 +280,17 @@ def MapsTo.restrict (f : α → β) (s : Set α) (t : Set β) (h : MapsTo f s t)
 theorem MapsTo.coe_restrict_apply (h : MapsTo f s t) (x : s) : (h.restrict f s t x : β) = f x :=
   rfl
 
+/-- Restricting the domain and then the codomain is the same as `maps_to.restrict`. -/
+@[simp]
+theorem cod_restrict_restrict (h : ∀ x : s, f x ∈ t) :
+    codRestrict (s.restrict f) t h = MapsTo.restrict f s t fun x hx => h ⟨x, hx⟩ :=
+  rfl
+
+/-- Reverse of `set.cod_restrict_restrict`. -/
+theorem MapsTo.restrict_eq_cod_restrict (h : MapsTo f s t) :
+    h.restrict f s t = codRestrict (s.restrict f) t fun x => h x.2 :=
+  rfl
+
 theorem MapsTo.coe_restrict (h : Set.MapsTo f s t) : coe ∘ h.restrict f s t = s.restrict f :=
   rfl
 
@@ -284,6 +305,9 @@ theorem maps_to_iff_exists_map_subtype : MapsTo f s t ↔ ∃ g : s → t, ∀ x
 
 theorem maps_to' : MapsTo f s t ↔ f '' s ⊆ t :=
   image_subset_iff.symm
+
+theorem MapsTo.subset_preimage {f : α → β} {s : Set α} {t : Set β} (hf : MapsTo f s t) : s ⊆ f ⁻¹' t :=
+  hf
 
 @[simp]
 theorem maps_to_singleton {x : α} : MapsTo f {x} t ↔ f x ∈ t :=
@@ -347,7 +371,7 @@ theorem maps_to_inter : MapsTo f s (t₁ ∩ t₂) ↔ MapsTo f s t₁ ∧ MapsT
   ⟨fun h => ⟨h.mono (Subset.refl s) (inter_subset_left t₁ t₂), h.mono (Subset.refl s) (inter_subset_right t₁ t₂)⟩,
     fun h => h.1.inter h.2⟩
 
-theorem maps_to_univ (f : α → β) (s : Set α) : MapsTo f s Univ := fun x h => trivialₓ
+theorem maps_to_univ (f : α → β) (s : Set α) : MapsTo f s Univ := fun x h => trivial
 
 theorem maps_to_image (f : α → β) (s : Set α) : MapsTo f s (f '' s) := by rw [maps_to']
 
@@ -446,7 +470,7 @@ theorem inj_on_insert {f : α → β} {s : Set α} {a : α} (has : a ∉ s) :
   simp
 
 theorem injective_iff_inj_on_univ : Injective f ↔ InjOn f Univ :=
-  ⟨fun h x hx y hy hxy => h hxy, fun h _ _ heq => h trivialₓ trivialₓ HEq⟩
+  ⟨fun h x hx y hy hxy => h hxy, fun h _ _ heq => h trivial trivial HEq⟩
 
 theorem inj_on_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x hx y hy hxy => h hxy
 
@@ -455,14 +479,21 @@ alias inj_on_of_injective ← _root_.function.injective.inj_on
 theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn (g ∘ f) s := fun x hx y hy heq =>
   hf hx hy <| hg (h hx) (h hy) HEq
 
+theorem _root_.function.injective.inj_on_range (h : Injective (g ∘ f)) : InjOn g (Range f) := by
+  rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ H
+  exact congr_arg f (h H)
+
 theorem inj_on_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
   ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_arg Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 
 alias inj_on_iff_injective ↔ inj_on.injective _
 
+theorem MapsTo.restrict_inj (h : MapsTo f s t) : Injective (h.restrict f s t) ↔ InjOn f s := by
+  rw [h.restrict_eq_cod_restrict, injective_cod_restrict, inj_on_iff_injective]
+
 theorem exists_inj_on_iff_injective [Nonempty β] : (∃ f : α → β, InjOn f s) ↔ ∃ f : s → β, Injective f :=
   ⟨fun ⟨f, hf⟩ => ⟨_, hf.Injective⟩, fun ⟨f, hf⟩ => by
-    lift f to α → β using trivialₓ
+    lift f to α → β using trivial
     exact ⟨f, inj_on_iff_injective.2 hf⟩⟩
 
 theorem inj_on_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 Range f) : InjOn (Preimage f) B := fun s hs t ht hst =>
@@ -543,7 +574,7 @@ theorem surjective_iff_surj_on_univ : Surjective f ↔ SurjOn f Univ Univ := by 
 
 theorem surj_on_iff_surjective : SurjOn f s Univ ↔ Surjective (s.restrict f) :=
   ⟨fun H b =>
-    let ⟨a, as, e⟩ := @H b trivialₓ
+    let ⟨a, as, e⟩ := @H b trivial
     ⟨⟨a, as⟩, e⟩,
     fun H b _ =>
     let ⟨⟨a, as⟩, e⟩ := H b
@@ -787,29 +818,53 @@ on `f '' s`. For a computable version, see `function.injective.inv_of_mem_range`
 noncomputable def invFunOn (f : α → β) (s : Set α) (b : β) : α :=
   if h : ∃ a, a ∈ s ∧ f a = b then Classical.choose h else Classical.choice ‹Nonempty α›
 
-theorem inv_fun_on_posₓ (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s ∧ f (invFunOn f s b) = b := by
+/- warning: function.inv_fun_on_pos -> Function.inv_fun_on_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b))) -> (And (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) (Function.invFunOn.{u v} α β _inst_1 f s b) s) (Eq.{succ v} β (f (Function.invFunOn.{u v} α β _inst_1 f s b)) b))
+but is expected to have type
+  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b))) -> (And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) (Function.inv_fun_on.{u v} α n β f s b) s) (Eq.{v} β (f (Function.inv_fun_on.{u v} α n β f s b)) b))
+Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_pos Function.inv_fun_on_posₓ'. -/
+theorem inv_fun_on_pos (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s ∧ f (invFunOn f s b) = b := by
   rw [bex_def] at h <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.choose_spec h
 
-theorem inv_fun_on_memₓ (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s :=
-  (inv_fun_on_posₓ h).left
+/- warning: function.inv_fun_on_mem -> Function.inv_fun_on_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b))) -> (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) (Function.invFunOn.{u v} α β _inst_1 f s b) s)
+but is expected to have type
+  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b))) -> (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) (Function.inv_fun_on.{u v} α n β f s b) s)
+Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_mem Function.inv_fun_on_memₓ'. -/
+theorem inv_fun_on_mem (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s :=
+  (inv_fun_on_pos h).left
 
-theorem inv_fun_on_eqₓ (h : ∃ a ∈ s, f a = b) : f (invFunOn f s b) = b :=
-  (inv_fun_on_posₓ h).right
+/- warning: function.inv_fun_on_eq -> Function.inv_fun_on_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b))) -> (Eq.{succ v} β (f (Function.invFunOn.{u v} α β _inst_1 f s b)) b)
+but is expected to have type
+  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b))) -> (Eq.{v} β (f (Function.inv_fun_on.{u v} α n β f s b)) b)
+Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_eq Function.inv_fun_on_eqₓ'. -/
+theorem inv_fun_on_eq (h : ∃ a ∈ s, f a = b) : f (invFunOn f s b) = b :=
+  (inv_fun_on_pos h).right
 
-theorem inv_fun_on_negₓ (h : ¬∃ a ∈ s, f a = b) : invFunOn f s b = Classical.choice ‹Nonempty α› := by
+/- warning: function.inv_fun_on_neg -> Function.inv_fun_on_neg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Not (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b)))) -> (Eq.{succ u} α (Function.invFunOn.{u v} α β _inst_1 f s b) (Classical.choice.{succ u} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Not (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b)))) -> (Eq.{succ u} α (Function.inv_fun_on.{u v} α n β f s b) (Classical.choice.{succ u} α n))
+Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_neg Function.inv_fun_on_negₓ'. -/
+theorem inv_fun_on_neg (h : ¬∃ a ∈ s, f a = b) : invFunOn f s b = Classical.choice ‹Nonempty α› := by
   rw [bex_def] at h <;> rw [inv_fun_on, dif_neg h]
 
 end Function
 
-namespace Set
-
 open Function
+
+namespace Set
 
 variable {s s₁ s₂ : Set α} {t : Set β} {f : α → β}
 
 theorem InjOn.left_inv_on_inv_fun_on [Nonempty α] (h : InjOn f s) : LeftInvOn (invFunOn f s) f s := fun a ha =>
   have : ∃ a' ∈ s, f a' = f a := ⟨a, ha, rfl⟩
-  h (inv_fun_on_memₓ this) ha (inv_fun_on_eqₓ this)
+  h (inv_fun_on_mem this) ha (inv_fun_on_eq this)
 
 theorem InjOn.inv_fun_on_image [Nonempty α] (h : InjOn f s₂) (ht : s₁ ⊆ s₂) : invFunOn f s₂ '' (f '' s₁) = s₁ :=
   h.left_inv_on_inv_fun_on.image_image' ht
@@ -833,7 +888,7 @@ theorem SurjOn.bij_on_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunO
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s' «expr ⊆ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
 theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
@@ -872,19 +927,19 @@ end Set
 /-! ### Monotone -/
 
 
-namespace Monotoneₓ
+namespace Monotone
 
-variable [Preorderₓ α] [Preorderₓ β] {f : α → β}
+variable [Preorder α] [Preorder β] {f : α → β}
 
-protected theorem restrict (h : Monotoneₓ f) (s : Set α) : Monotoneₓ (s.restrict f) := fun x y hxy => h hxy
+protected theorem restrict (h : Monotone f) (s : Set α) : Monotone (s.restrict f) := fun x y hxy => h hxy
 
-protected theorem cod_restrict (h : Monotoneₓ f) {s : Set β} (hs : ∀ x, f x ∈ s) : Monotoneₓ (s.codRestrict f hs) :=
+protected theorem cod_restrict (h : Monotone f) {s : Set β} (hs : ∀ x, f x ∈ s) : Monotone (s.codRestrict f hs) :=
   h
 
-protected theorem range_factorization (h : Monotoneₓ f) : Monotoneₓ (Set.rangeFactorization f) :=
+protected theorem range_factorization (h : Monotone f) : Monotone (Set.rangeFactorization f) :=
   h
 
-end Monotoneₓ
+end Monotone
 
 /-! ### Piecewise defined function -/
 
@@ -945,18 +1000,18 @@ theorem piecewise_eq_on (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ 
 
 theorem piecewise_eq_on_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s)
-theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+theorem piecewise_le {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀ i ∈ s, f₁ i ≤ g i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by simp [*] else by simp [*]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s)
-theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+theorem le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀ i ∈ s, g i ≤ f₁ i) (h₂ : ∀ (i) (_ : i ∉ s), g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s)
-theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i ∈ s, f₁ i ≤ g₁ i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by apply piecewise_le <;> intros <;> simp [*]
 
@@ -971,7 +1026,7 @@ theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s
 @[simp]
 theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ Range f)] (g₁ g₂ : α → β) :
     (Range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
-  comp_eq_of_eq_on_range <| piecewise_eq_on _ _ _
+  eq_on.comp_eq <| piecewise_eq_on _ _ _
 
 theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁ f₂ : α → β} [∀ i, Decidable (i ∈ s)]
     (h₁ : MapsTo f₁ (s₁ ∩ s) (t₁ ∩ t)) (h₂ : MapsTo f₂ (s₂ ∩ sᶜ) (t₂ ∩ tᶜ)) :
@@ -982,7 +1037,7 @@ theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁
 
 theorem eq_on_piecewise {f f' g : α → β} {t} : EqOn (s.piecewise f f') g t ↔ EqOn f g (t ∩ s) ∧ EqOn f' g (t ∩ sᶜ) := by
   simp only [eq_on, ← forall_and_distrib]
-  refine' forall_congrₓ fun a => _
+  refine' forall_congr fun a => _
   by_cases a ∈ s <;> simp [*]
 
 theorem EqOn.piecewise_ite' {f f' g : α → β} {t t'} (h : EqOn f g (t ∩ s)) (h' : EqOn f' g (t' ∩ sᶜ)) :
@@ -1027,12 +1082,12 @@ theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » s) -/
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y := by
-  rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ _ s),
+  rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjointComplRight _ _ s),
     (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]
-  refine' and_congrₓ Iff.rfl (and_congrₓ Iff.rfl <| forall₄_congrₓ fun x hx y hy => _)
+  refine' and_congr Iff.rfl (and_congr Iff.rfl <| forall₄_congr fun x hx y hy => _)
   rw [piecewise_eq_of_mem s f g hx, piecewise_eq_of_not_mem s f g hy]
 
 theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Pi t t')
@@ -1045,7 +1100,7 @@ theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : 
     Pi s (s'.piecewise t t') = Pi (s ∩ s') t ∩ Pi (s \ s') t' := by
   ext x
   simp only [mem_pi, mem_inter_iff, ← forall_and_distrib]
-  refine' forall_congrₓ fun i => _
+  refine' forall_congr fun i => _
   by_cases hi:i ∈ s' <;> simp [*]
 
 theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s)] :
@@ -1053,31 +1108,30 @@ theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : �
 
 end Set
 
-theorem StrictMonoOnₓ.inj_on [LinearOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α} (H : StrictMonoOnₓ f s) :
-    s.InjOn f := fun x hx y hy hxy => show Ordering.eq.Compares x y from (H.Compares hx hy).1 hxy
+theorem StrictMonoOn.inj_on [LinearOrder α] [Preorder β] {f : α → β} {s : Set α} (H : StrictMonoOn f s) : s.InjOn f :=
+  fun x hx y hy hxy => show Ordering.eq.Compares x y from (H.Compares hx hy).1 hxy
 
-theorem StrictAntiOnₓ.inj_on [LinearOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α} (H : StrictAntiOnₓ f s) :
-    s.InjOn f :=
-  @StrictMonoOnₓ.inj_on α βᵒᵈ _ _ f s H
+theorem StrictAntiOn.inj_on [LinearOrder α] [Preorder β] {f : α → β} {s : Set α} (H : StrictAntiOn f s) : s.InjOn f :=
+  @StrictMonoOn.inj_on α βᵒᵈ _ _ f s H
 
-theorem StrictMonoOnₓ.comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
-    (hg : StrictMonoOnₓ g t) (hf : StrictMonoOnₓ f s) (hs : Set.MapsTo f s t) : StrictMonoOnₓ (g ∘ f) s :=
+theorem StrictMonoOn.comp [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
+    (hg : StrictMonoOn g t) (hf : StrictMonoOn f s) (hs : Set.MapsTo f s t) : StrictMonoOn (g ∘ f) s :=
   fun x hx y hy hxy => hg (hs hx) (hs hy) <| hf hx hy hxy
 
-theorem StrictMonoOnₓ.comp_strict_anti_on [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α}
-    {t : Set β} (hg : StrictMonoOnₓ g t) (hf : StrictAntiOnₓ f s) (hs : Set.MapsTo f s t) : StrictAntiOnₓ (g ∘ f) s :=
+theorem StrictMonoOn.comp_strict_anti_on [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β} {s : Set α}
+    {t : Set β} (hg : StrictMonoOn g t) (hf : StrictAntiOn f s) (hs : Set.MapsTo f s t) : StrictAntiOn (g ∘ f) s :=
   fun x hx y hy hxy => hg (hs hy) (hs hx) <| hf hx hy hxy
 
-theorem StrictAntiOnₓ.comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
-    (hg : StrictAntiOnₓ g t) (hf : StrictAntiOnₓ f s) (hs : Set.MapsTo f s t) : StrictMonoOnₓ (g ∘ f) s :=
+theorem StrictAntiOn.comp [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
+    (hg : StrictAntiOn g t) (hf : StrictAntiOn f s) (hs : Set.MapsTo f s t) : StrictMonoOn (g ∘ f) s :=
   fun x hx y hy hxy => hg (hs hy) (hs hx) <| hf hx hy hxy
 
-theorem StrictAntiOnₓ.comp_strict_mono_on [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α}
-    {t : Set β} (hg : StrictAntiOnₓ g t) (hf : StrictMonoOnₓ f s) (hs : Set.MapsTo f s t) : StrictAntiOnₓ (g ∘ f) s :=
+theorem StrictAntiOn.comp_strict_mono_on [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β} {s : Set α}
+    {t : Set β} (hg : StrictAntiOn g t) (hf : StrictMonoOn f s) (hs : Set.MapsTo f s t) : StrictAntiOn (g ∘ f) s :=
   fun x hx y hy hxy => hg (hs hx) (hs hy) <| hf hx hy hxy
 
-theorem StrictMonoₓ.cod_restrict [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : StrictMonoₓ f) {s : Set β}
-    (hs : ∀ x, f x ∈ s) : StrictMonoₓ (Set.codRestrict f s hs) :=
+theorem StrictMono.cod_restrict [Preorder α] [Preorder β] {f : α → β} (hf : StrictMono f) {s : Set β}
+    (hs : ∀ x, f x ∈ s) : StrictMono (Set.codRestrict f s hs) :=
   hf
 
 namespace Function
@@ -1146,7 +1200,7 @@ end Semiconj
 
 theorem update_comp_eq_of_not_mem_range' {α β : Sort _} {γ : β → Sort _} [DecidableEq β] (g : ∀ b, γ b) {f : α → β}
     {i : β} (a : γ i) (h : i ∉ Set.Range f) : (fun j => (Function.update g i a) (f j)) = fun j => g (f j) :=
-  (update_comp_eq_of_forall_ne'ₓ _ _) fun x hx => h ⟨x, hx⟩
+  (update_comp_eq_of_forall_ne' _ _) fun x hx => h ⟨x, hx⟩
 
 /-- Non-dependent version of `function.update_comp_eq_of_not_mem_range'` -/
 theorem update_comp_eq_of_not_mem_range {α β γ : Sort _} [DecidableEq β] (g : β → γ) {f : α → β} {i : β} (a : γ)

@@ -127,7 +127,7 @@ theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
 theorem Set.Subsingleton.is_Gδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
   hs.Finite.is_Gδ_compl
 
-theorem Finsetₓ.is_Gδ_compl (s : Finsetₓ α) : IsGδ (sᶜ : Set α) :=
+theorem Finset.is_Gδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
   s.finite_to_set.is_Gδ_compl
 
 open TopologicalSpace

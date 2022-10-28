@@ -40,7 +40,7 @@ class HasIntCast (R : Type u) where
 It also contains data for the unique homomorphisms `ℕ → R` and `ℤ → R`.
 -/
 @[protect_proj]
-class AddGroupWithOneₓ (R : Type u) extends HasIntCast R, AddGroupₓ R, AddMonoidWithOneₓ R where
+class AddGroupWithOne (R : Type u) extends HasIntCast R, AddGroup R, AddMonoidWithOne R where
   intCast := Int.castDef
   int_cast_of_nat : ∀ n : ℕ, int_cast n = (n : R) := by
     intros
@@ -51,19 +51,25 @@ class AddGroupWithOneₓ (R : Type u) extends HasIntCast R, AddGroupₓ R, AddMo
 
 /-- An `add_comm_group_with_one` is an `add_group_with_one` satisfying `a + b = b + a`. -/
 @[protect_proj]
-class AddCommGroupWithOne (R : Type u) extends AddCommGroupₓ R, AddGroupWithOneₓ R
+class AddCommGroupWithOne (R : Type u) extends AddCommGroup R, AddGroupWithOne R
 
+/- warning: int.cast -> Int.cast is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u}} [_inst_1 : HasIntCast.{u} R], Int -> R
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.730 : AddGroupWithOne.{u_1} R], Int -> R
+Case conversion may be inaccurate. Consider using '#align int.cast Int.castₓ'. -/
 /-- Canonical homomorphism from the integers to any ring(-like) structure `R` -/
-protected def Int.castₓ {R : Type u} [HasIntCast R] (i : ℤ) : R :=
+protected def Int.cast {R : Type u} [HasIntCast R] (i : ℤ) : R :=
   HasIntCast.intCast i
 
 namespace Nat
 
-variable {R : Type u} [AddGroupWithOneₓ R]
+variable {R : Type u} [AddGroupWithOne R]
 
 @[simp, norm_cast]
 theorem cast_sub {m n} (h : m ≤ n) : ((n - m : ℕ) : R) = n - m :=
-  eq_sub_of_add_eq <| by rw [← cast_add, Nat.sub_add_cancelₓ h]
+  eq_sub_of_add_eq <| by rw [← cast_add, Nat.sub_add_cancel h]
 
 @[simp, norm_cast]
 theorem cast_pred : ∀ {n}, 0 < n → ((n - 1 : ℕ) : R) = n - 1
@@ -76,46 +82,58 @@ open Nat
 
 namespace Int
 
-variable {R : Type u} [AddGroupWithOneₓ R]
+variable {R : Type u} [AddGroupWithOne R]
 
 -- see Note [coercion into rings]
-instance (priority := 900) castCoe {R} [HasIntCast R] : CoeTₓ ℤ R :=
-  ⟨Int.castₓ⟩
+instance (priority := 900) castCoe {R} [HasIntCast R] : CoeT ℤ R :=
+  ⟨Int.cast⟩
 
 theorem cast_of_nat (n : ℕ) : (ofNat n : R) = n :=
-  AddGroupWithOneₓ.int_cast_of_nat n
+  AddGroupWithOne.int_cast_of_nat n
 
 @[simp]
 theorem cast_neg_succ_of_nat (n : ℕ) : (-[1 + n] : R) = -(n + 1 : ℕ) :=
-  AddGroupWithOneₓ.int_cast_neg_succ_of_nat n
+  AddGroupWithOne.int_cast_neg_succ_of_nat n
 
+/- warning: int.cast_zero -> Int.cast_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (Zero.zero.{0} Int Int.hasZero)) (Zero.zero.{u} R (AddZeroClass.toHasZero.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.870 : AddGroupWithOne.{u_1} R], Eq.{succ u_1} R (Int.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.870 (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (AddRightCancelMonoid.toZero.{u_1} R (AddCancelMonoid.toAddRightCancelMonoid.{u_1} R (AddGroup.toAddCancelMonoid.{u_1} R (AddGroupWithOne.toAddGroup.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.870))))))
+Case conversion may be inaccurate. Consider using '#align int.cast_zero Int.cast_zeroₓ'. -/
 @[simp, norm_cast]
-theorem cast_zeroₓ : ((0 : ℤ) : R) = 0 :=
-  (cast_of_nat 0).trans Nat.cast_zeroₓ
+theorem cast_zero : ((0 : ℤ) : R) = 0 :=
+  (cast_of_nat 0).trans Nat.cast_zero
 
 @[simp, norm_cast]
 theorem cast_coe_nat (n : ℕ) : ((n : ℤ) : R) = n :=
   cast_of_nat _
 
+/- warning: int.cast_one -> Int.cast_one is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (One.one.{0} Int Int.hasOne)) (One.one.{u} R (AddMonoidWithOne.toHasOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.934 : AddGroupWithOne.{u_1} R], Eq.{succ u_1} R (Int.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.934 (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (AddMonoidWithOne.toOne.{u_1} R (AddGroupWithOne.toAddMonoidWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.934))))
+Case conversion may be inaccurate. Consider using '#align int.cast_one Int.cast_oneₓ'. -/
 @[simp, norm_cast]
-theorem cast_oneₓ : ((1 : ℤ) : R) = 1 :=
+theorem cast_one : ((1 : ℤ) : R) = 1 :=
   show (((1 : ℕ) : ℤ) : R) = 1 by simp
 
 @[simp, norm_cast]
 theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
   | (0 : ℕ) => by erw [cast_zero, neg_zero]
   | (n + 1 : ℕ) => by erw [cast_of_nat, cast_neg_succ_of_nat] <;> rfl
-  | -[1 + n] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_negₓ]
+  | -[1 + n] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
 
 @[simp]
 theorem cast_sub_nat_nat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   unfold sub_nat_nat
   cases e : n - m
   · simp only [sub_nat_nat, cast_of_nat]
-    simp [e, Nat.le_of_sub_eq_zeroₓ e]
+    simp [e, Nat.le_of_sub_eq_zero e]
     
-  · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e,
-      Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succₓ e, neg_sub]
+  · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e, Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e,
+      neg_sub]
     
 
 theorem neg_of_nat_eq (n : ℕ) : negOfNat n = -(n : ℤ) := by cases n <;> rfl
@@ -128,11 +146,11 @@ theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
   | (m : ℕ), (n : ℕ) => by simp [← Int.coe_nat_add]
   | (m : ℕ), -[1 + n] => by erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
   | -[1 + m], (n : ℕ) => by
-    erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_iff_eq_add, add_assocₓ, eq_neg_add_iff_add_eq, ←
-      Nat.cast_addₓ, ← Nat.cast_addₓ, Nat.add_comm]
+    erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_iff_eq_add, add_assoc, eq_neg_add_iff_add_eq, ←
+      Nat.cast_add, ← Nat.cast_add, Nat.add_comm]
   | -[1 + m], -[1 + n] =>
     show (-[1 + (m + n + 1)] : R) = _ by
-      rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ← Nat.cast_addₓ,
+      rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ← Nat.cast_add,
         Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
 
 @[simp, norm_cast]

@@ -42,11 +42,11 @@ open Opposite
 
 open TopologicalSpace.Opens
 
-namespace Top
+namespace TopCat
 
 variable {C : Type u} [Category.{v} C]
 
-variable {X : Top.{w}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -113,12 +113,12 @@ variable (C X)
 satisfying the sheaf condition.
 -/
 def Sheaf : Type max u v w :=
-  Sheaf (Opens.grothendieckTopology X) C deriving Category
+  SheafCat (Opens.grothendieckTopology X) C deriving Category
 
 variable {C X}
 
 /-- The underlying presheaf of a sheaf -/
-abbrev Sheaf.presheaf (F : X.Sheaf C) : Top.Presheaf C X :=
+abbrev Sheaf.presheaf (F : X.Sheaf C) : TopCat.Presheaf C X :=
   F.1
 
 variable (C X)
@@ -131,7 +131,7 @@ namespace Sheaf
 
 /-- The forgetful functor from sheaves to presheaves.
 -/
-def forget : Top.Sheaf C X ⥤ Top.Presheaf C X :=
+def forget : TopCat.Sheaf C X ⥤ TopCat.Presheaf C X :=
   sheafToPresheaf _ _ deriving Full, Faithful
 
 -- Note: These can be proved by simp.
@@ -143,5 +143,5 @@ theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) (t) : (f ≫ g)
 
 end Sheaf
 
-end Top
+end TopCat
 

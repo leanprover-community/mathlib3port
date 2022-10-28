@@ -54,9 +54,9 @@ then defined as `bernoulli := (-1)^n * bernoulli'`.
 
 open Nat BigOperators
 
-open Finsetₓ Nat Finsetₓ.Nat PowerSeries
+open Finset Nat Finset.Nat PowerSeries
 
-variable (A : Type _) [CommRingₓ A] [Algebra ℚ A]
+variable (A : Type _) [CommRing A] [Algebra ℚ A]
 
 /-! ### Definitions -/
 
@@ -65,19 +65,19 @@ variable (A : Type _) [CommRingₓ A] [Algebra ℚ A]
 the $n$-th Bernoulli number $B_n$ is defined recursively via
 $$B_n = 1 - \sum_{k < n} \binom{n}{k}\frac{B_k}{n+1-k}$$ -/
 def bernoulli' : ℕ → ℚ :=
-  (WellFounded.fix lt_wf) fun n bernoulli' => 1 - ∑ k : Finₓ n, n.choose k / (n - k + 1) * bernoulli' k k.2
+  (WellFounded.fix lt_wf) fun n bernoulli' => 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k k.2
 
-theorem bernoulli'_def' (n : ℕ) : bernoulli' n = 1 - ∑ k : Finₓ n, n.choose k / (n - k + 1) * bernoulli' k :=
+theorem bernoulli'_def' (n : ℕ) : bernoulli' n = 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k :=
   WellFounded.fix_eq _ _ _
 
 theorem bernoulli'_def (n : ℕ) : bernoulli' n = 1 - ∑ k in range n, n.choose k / (n - k + 1) * bernoulli' k := by
-  rw [bernoulli'_def', ← Finₓ.sum_univ_eq_sum_range]
+  rw [bernoulli'_def', ← Fin.sum_univ_eq_sum_range]
   rfl
 
 theorem bernoulli'_spec (n : ℕ) : (∑ k in range n.succ, (n.choose (n - k) : ℚ) / (n - k + 1) * bernoulli' k) = 1 := by
   rw [sum_range_succ_comm, bernoulli'_def n, tsub_self]
   conv in n.choose (_ - _) => rw [choose_symm (mem_range.1 H).le]
-  simp only [one_mulₓ, cast_one, sub_self, sub_add_cancel, choose_zero_right, zero_addₓ, div_one]
+  simp only [one_mul, cast_one, sub_self, sub_add_cancel, choose_zero_right, zero_add, div_one]
 
 theorem bernoulli'_spec' (n : ℕ) :
     (∑ k in antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli' k.1) = 1 := by
@@ -163,7 +163,7 @@ theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp
   rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
   rw [cast_mul, cast_mul, mul_div_mul_right, cast_div_char_zero, cast_mul]
   assumption
-  rwa [Nat.cast_succₓ]
+  rwa [Nat.cast_succ]
 
 /-- Odd Bernoulli numbers (greater than 1) are zero. -/
 theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoulli' n = 0 := by
@@ -188,7 +188,7 @@ def bernoulli (n : ℕ) : ℚ :=
   -1 ^ n * bernoulli' n
 
 theorem bernoulli'_eq_bernoulli (n : ℕ) : bernoulli' n = -1 ^ n * bernoulli n := by
-  simp [bernoulli, ← mul_assoc, ← sq, ← pow_mulₓ, mul_comm n 2, pow_mulₓ]
+  simp [bernoulli, ← mul_assoc, ← sq, ← pow_mul, mul_comm n 2, pow_mul]
 
 @[simp]
 theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
@@ -215,8 +215,8 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * bernou
   · simp
     
   suffices (∑ i in range n, ↑((n + 2).choose (i + 2)) * bernoulli (i + 2)) = n / 2 by
-    simp only [this, sum_range_succ', cast_succ, bernoulli_one, bernoulli_zero, choose_one_right, mul_oneₓ,
-      choose_zero_right, cast_zero, if_false, zero_addₓ, succ_succ_ne_one]
+    simp only [this, sum_range_succ', cast_succ, bernoulli_one, bernoulli_zero, choose_one_right, mul_one,
+      choose_zero_right, cast_zero, if_false, zero_add, succ_succ_ne_one]
     ring
   have f := sum_bernoulli' n.succ.succ
   simp_rw [sum_range_succ', bernoulli'_one, choose_one_right, cast_succ, ← eq_sub_iff_add_eq] at f
@@ -224,7 +224,7 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * bernou
   · funext x
     rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
     
-  · simp only [one_div, mul_oneₓ, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel]
+  · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel]
     ring
     
 
@@ -235,9 +235,9 @@ theorem bernoulli_spec' (n : ℕ) :
     
   rw [if_neg (succ_ne_zero _)]
   -- algebra facts
-  have h₁ : (1, n) ∈ antidiagonal n.succ := by simp [mem_antidiagonal, add_commₓ]
+  have h₁ : (1, n) ∈ antidiagonal n.succ := by simp [mem_antidiagonal, add_comm]
   have h₂ : (n : ℚ) + 1 ≠ 0 := by apply_mod_cast succ_ne_zero
-  have h₃ : (1 + n).choose n = n + 1 := by simp [add_commₓ]
+  have h₃ : (1 + n).choose n = n + 1 := by simp [add_comm]
   -- key equation: the corresponding fact for `bernoulli'`
   have H := bernoulli'_spec' n.succ
   -- massage it to match the structure of the goal, then convert piece by piece
@@ -264,7 +264,7 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
     
   simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk, coeff_one, coeff_exp,
     LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul, sub_zero, RingHom.map_one, add_eq_zero_iff,
-    if_false, _root_.inv_one, zero_addₓ, one_ne_zero, mul_zero, and_falseₓ, sub_self, ← RingHom.map_mul, ←
+    if_false, _root_.inv_one, zero_add, one_ne_zero, mul_zero, and_false_iff, sub_self, ← RingHom.map_mul, ←
     RingHom.map_sum]
   cases n
   · simp
@@ -296,11 +296,11 @@ theorem sum_range_pow (n p : ℕ) :
       mk fun p => ∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)! :=
     by
     ext q : 1
-    let f := fun a b => bernoulli a / a ! * coeff ℚ (b + 1) (exp ℚ ^ n)
+    let f a b := bernoulli a / a ! * coeff ℚ (b + 1) (exp ℚ ^ n)
     -- key step: use `power_series.coeff_mul` and then rewrite sums
     simp only [coeff_mul, coeff_mk, cast_mul, sum_antidiagonal_eq_sum_range_succ f]
     apply sum_congr rfl
-    simp_intro m h only [Finsetₓ.mem_range]
+    simp_intro m h only [Finset.mem_range]
     simp only [f, exp_pow_eq_rescale_exp, rescale, one_div, coeff_mk, RingHom.coe_mk, coeff_exp, RingHom.id_apply,
       cast_mul, algebra_map_rat_rat]
     -- manipulate factorials and binomial coefficients
@@ -336,12 +336,12 @@ theorem sum_range_pow (n p : ℕ) :
       rw [← h_const, sub_const_eq_X_mul_shift]
     -- key step: a chain of equalities of power series
     rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, geom_sum_mul, h_r, ← bernoulli_power_series_mul_exp_sub_one,
-      bernoulliPowerSeries, mul_right_commₓ]
+      bernoulliPowerSeries, mul_right_comm]
     simp [h_cauchy, mul_comm]
   -- massage `hps` into our goal
   rw [hps, sum_mul]
   refine' sum_congr rfl fun x hx => _
-  field_simp [mul_right_commₓ _ ↑p !, ← mul_assoc _ _ ↑p !, cast_add_one_ne_zero, hne]
+  field_simp [mul_right_comm _ ↑p !, ← mul_assoc _ _ ↑p !, cast_add_one_ne_zero, hne]
 
 /-- Alternate form of **Faulhaber's theorem**, relating the sum of p-th powers to the Bernoulli
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
@@ -350,16 +350,16 @@ theorem sum_Ico_pow (n p : ℕ) :
     (∑ k in ico 1 (n + 1), (k : ℚ) ^ p) =
       ∑ i in range (p + 1), bernoulli' i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1) :=
   by
-  rw [← Nat.cast_succₓ]
+  rw [← Nat.cast_succ]
   -- dispose of the trivial case
   cases p
   · simp
     
-  let f := fun i => bernoulli i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
-  let f' := fun i => bernoulli' i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
+  let f i := bernoulli i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
+  let f' i := bernoulli' i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
   suffices (∑ k in Ico 1 n.succ, ↑k ^ p.succ) = ∑ i in range p.succ.succ, f' i by convert this
   -- prove some algebraic facts that will make things easier for us later on
-  have hle := Nat.le_add_leftₓ 1 n
+  have hle := Nat.le_add_left 1 n
   have hne : (p + 1 + 1 : ℚ) ≠ 0 := by exact_mod_cast succ_ne_zero p.succ
   have h1 : ∀ r : ℚ, r * (p + 1 + 1) * n ^ p.succ / (p + 1 + 1 : ℚ) = r * n ^ p.succ := fun r => by
     rw [mul_div_right_comm, mul_div_cancel _ hne]

@@ -27,7 +27,7 @@ rectangular box, induction
 -/
 
 
-open Set Finsetₓ Function Filter Metric
+open Set Finset Function Filter Metric
 
 open Classical TopologicalSpace Filter Ennreal
 
@@ -45,23 +45,23 @@ variable {ι : Type _} {I J : Box ι}
 def splitCenterBox (I : Box ι) (s : Set ι) : Box ι where
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
-  lower_lt_upper := fun i => by
+  lower_lt_upper i := by
     dsimp only [Set.piecewise]
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 
 theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
     y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s := by
   simp only [split_center_box, mem_def, ← forall_and_distrib]
-  refine' forall_congrₓ fun i => _
+  refine' forall_congr fun i => _
   dsimp only [Set.piecewise]
-  split_ifs with hs <;> simp only [hs, iff_trueₓ, iff_falseₓ, not_ltₓ]
+  split_ifs with hs <;> simp only [hs, iff_true_iff, iff_false_iff, not_lt]
   exacts[⟨fun H => ⟨⟨(left_lt_add_div_two.2 (I.lower_lt_upper i)).trans H.1, H.2⟩, H.1⟩, fun H => ⟨H.2, H.1.2⟩⟩,
     ⟨fun H => ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, fun H => ⟨H.1.1, H.2⟩⟩]
 
 theorem split_center_box_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I := fun x hx =>
   (mem_split_center_box.1 hx).1
 
-theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
+theorem disjointSplitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
     Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) := by
   rintro y ⟨hs, ht⟩
   apply h
@@ -70,7 +70,7 @@ theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
   rw [← hs.2, ← ht.2]
 
 theorem injective_split_center_box (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
-  by_contra fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
+  by_contra fun Hne => (I.disjointSplitCenterBox Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
 
 @[simp]
 theorem exists_mem_split_center_box {I : Box ι} {x : ι → ℝ} : (∃ s, x ∈ I.splitCenterBox s) ↔ x ∈ I :=
@@ -107,13 +107,14 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on` for a versio
 
 The proof still works if we assume `H_ind` only for subboxes `J ≤ I` that are homothetic to `I` with
 a coefficient of the form `2⁻ᵐ` but we do not need this generalization yet. -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J ≤ I, (∀ s, p (splitCenterBox J s)) → p J)
     (H_nhds :
-      ∀ z ∈ I.Icc,
-        ∃ U ∈ 𝓝[I.Icc] z,
+      ∀ z ∈ I.IccCat,
+        ∃ U ∈ 𝓝[I.IccCat] z,
           ∀ J ≤ I,
-            ∀ (m : ℕ), z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+            ∀ (m : ℕ),
+              z ∈ J.IccCat → J.IccCat ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   by_contra hpI
   -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
@@ -123,7 +124,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
   set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
   have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m => iterate_succ_apply' _ _ _
   -- Now we prove some properties of `J`
-  have hJmono : Antitoneₓ J := antitone_nat_of_succ_le fun n => by simpa [J_succ] using split_center_box_le _ _
+  have hJmono : Antitone J := antitone_nat_of_succ_le fun n => by simpa [J_succ] using split_center_box_le _ _
   have hJle : ∀ m, J m ≤ I := fun m => hJmono (zero_le m)
   have hJp : ∀ m, ¬p (J m) := fun m => Nat.recOn m hpI fun m => by simpa only [J_succ] using hs (J m) (hJle m)
   have hJsub : ∀ m i, (J m).upper i - (J m).lower i = (I.upper i - I.lower i) / 2 ^ m := by
@@ -131,7 +132,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
     induction' m with m ihm
     · simp [J]
       
-    simp only [pow_succ'ₓ, J_succ, upper_sub_lower_split_center_box, ihm, div_div]
+    simp only [pow_succ', J_succ, upper_sub_lower_split_center_box, ihm, div_div]
   have h0 : J 0 = I := rfl
   -- Now we clear unneeded assumptions
   clear_value J
@@ -139,7 +140,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
   -- Let `z` be the unique common point of all `(J m).Icc`. Then `H_nhds` proves `p (J m)` for
   -- sufficiently large `m`. This contradicts `hJp`.
   set z : ι → ℝ := ⨆ m, (J m).lower
-  have hzJ : ∀ m, z ∈ (J m).Icc :=
+  have hzJ : ∀ m, z ∈ (J m).IccCat :=
     mem_Inter.1
       (csupr_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m => (J m).lower_le_upper)
   have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc

@@ -41,25 +41,25 @@ variable (P : Cᵒᵖ ⥤ D)
 /-- The diagram whose colimit defines the values of `plus`. -/
 @[simps]
 def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D where
-  obj := fun S => multiequalizer (S.unop.index P)
-  map := fun S T f =>
+  obj S := multiequalizer (S.unop.index P)
+  map S T f :=
     (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
       multiequalizer.condition (S.unop.index P) (I.map f.unop)
-  map_id' := fun S => by
+  map_id' S := by
     ext I
     cases I
     simpa
-  map_comp' := fun S T W f g => by
+  map_comp' S T W f g := by
     ext I
     simpa
 
 /-- A helper definition used to define the morphisms for `plus`. -/
 @[simps]
 def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X where
-  app := fun S =>
+  app S :=
     (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) I.base) fun I =>
       multiequalizer.condition (S.unop.index P) I.base
-  naturality' := fun S T f => by
+  naturality' S T f := by
     ext
     dsimp
     simpa
@@ -68,14 +68,14 @@ def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).o
 between diagrams whose colimits define the values of `plus`. -/
 @[simps]
 def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X ⟶ J.diagram Q X where
-  app := fun W =>
+  app W :=
     multiequalizer.lift _ _ (fun i => multiequalizer.ι _ i ≫ η.app _)
       (by
         intro i
         erw [category.assoc, category.assoc, ← η.naturality, ← η.naturality, ← category.assoc, ← category.assoc,
           multiequalizer.condition]
         rfl)
-  naturality' := fun _ _ _ => by
+  naturality' _ _ _ := by
     dsimp
     ext
     simpa
@@ -105,10 +105,10 @@ variable (D)
 /-- `J.diagram P`, as a functor in `P`. -/
 @[simps]
 def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D where
-  obj := fun P => J.diagram P X
-  map := fun P Q η => J.diagramNatTrans η X
-  map_id' := fun P => J.diagram_nat_trans_id _ _
-  map_comp' := fun P Q R η γ => J.diagram_nat_trans_comp _ _ _
+  obj P := J.diagram P X
+  map P Q η := J.diagramNatTrans η X
+  map_id' P := J.diagram_nat_trans_id _ _
+  map_comp' P Q R η γ := J.diagram_nat_trans_comp _ _ _
 
 variable {D}
 
@@ -117,8 +117,8 @@ variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus_functor` below for a functorial version. -/
 def plusObj : Cᵒᵖ ⥤ D where
-  obj := fun X => colimit (J.diagram P X.unop)
-  map := fun X Y f => colimMap (J.diagramPullback P f.unop) ≫ colimit.pre _ _
+  obj X := colimit (J.diagram P X.unop)
+  map X Y f := colimMap (J.diagramPullback P f.unop) ≫ colimit.pre _ _
   map_id' := by
     intro X
     ext S
@@ -154,7 +154,7 @@ def plusObj : Cᵒᵖ ⥤ D where
 
 /-- An auxiliary definition used in `plus` below. -/
 def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q where
-  app := fun X => colimMap (J.diagramNatTrans η X.unop)
+  app X := colimMap (J.diagramNatTrans η X.unop)
   naturality' := by
     intro X Y f
     dsimp [plus_obj]
@@ -194,17 +194,17 @@ variable (D)
 /-- The plus construction, a functor sending `P` to `J.plus_obj P`. -/
 @[simps]
 def plusFunctor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D where
-  obj := fun P => J.plusObj P
-  map := fun P Q η => J.plusMap η
-  map_id' := fun _ => plus_map_id _ _
-  map_comp' := fun _ _ _ _ _ => plus_map_comp _ _ _
+  obj P := J.plusObj P
+  map P Q η := J.plusMap η
+  map_id' _ := plus_map_id _ _
+  map_comp' _ _ _ _ _ := plus_map_comp _ _ _
 
 variable {D}
 
 /-- The canonical map from `P` to `J.plus.obj P`.
 See `to_plus` for a functorial version. -/
 def toPlus : P ⟶ J.plusObj P where
-  app := fun X => Cover.toMultiequalizer (⊤ : J.cover X.unop) P ≫ colimit.ι (J.diagram P X.unop) (op ⊤)
+  app X := Cover.toMultiequalizer (⊤ : J.cover X.unop) P ≫ colimit.ι (J.diagram P X.unop) (op ⊤)
   naturality' := by
     intro X Y f
     dsimp [plus_obj]
@@ -237,8 +237,8 @@ variable (D)
 /-- The natural transformation from the identity functor to `plus`. -/
 @[simps]
 def toPlusNatTrans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D where
-  app := fun P => J.toPlus P
-  naturality' := fun _ _ _ => to_plus_naturality _ _
+  app P := J.toPlus P
+  naturality' _ _ _ := to_plus_naturality _ _
 
 variable {D}
 
@@ -274,9 +274,9 @@ theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
     rfl
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr ∀ X, is_iso ((J.to_plus P).app X)]]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))]]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr ∀ (S T : «expr ᵒᵖ»(J.cover X.unop)) (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr ∀ X, is_iso ((J.to_plus P).app X)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr ∀ (S T : «expr ᵒᵖ»(J.cover X.unop)) (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)]] -/
 theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P) := by
   rw [presheaf.is_sheaf_iff_multiequalizer] at hP
   trace
@@ -353,7 +353,7 @@ theorem plus_map_plus_lift {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R)
   rw [← category.assoc, ← J.to_plus_naturality, category.assoc, J.to_plus_plus_lift]
 
 instance plus_functor_preserves_zero_morphisms [Preadditive D] :
-    (plusFunctor J D).PreservesZeroMorphisms where map_zero' := fun F G => by
+    (plusFunctor J D).PreservesZeroMorphisms where map_zero' F G := by
     ext
     dsimp
     rw [J.plus_map_zero, nat_trans.app_zero]

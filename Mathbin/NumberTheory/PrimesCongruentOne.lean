@@ -22,17 +22,17 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
   let b := 3 * (k * n.factorial)
   have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs := by
     have hkey : ∀ l : ℕ, 2 < 3 * (l.succ * n.factorial) := fun l =>
-      lt_mul_of_lt_of_one_le (2 : ℕ).lt_succ_self (le_mul_of_le_of_one_le (Nat.succ_posₓ _) n.factorial_pos)
+      lt_mul_of_lt_of_one_le (2 : ℕ).lt_succ_self (le_mul_of_le_of_one_le (Nat.succ_pos _) n.factorial_pos)
     rcases k with (_ | _ | k)
     · simpa using hpos
       
-    · simp only [one_mulₓ, Int.coe_nat_mul, Int.coe_nat_succ, Int.coe_nat_zero, zero_addₓ, cyclotomic_one, eval_sub,
+    · simp only [one_mul, Int.coe_nat_mul, Int.coe_nat_succ, Int.coe_nat_zero, zero_add, cyclotomic_one, eval_sub,
         eval_X, eval_one]
       convert Int.nat_abs_lt_nat_abs_of_nonneg_of_lt Int.one_nonneg _
       rw [lt_sub_iff_add_lt]
       specialize hkey 0
       norm_cast
-      rwa [one_mulₓ] at hkey
+      rwa [one_mul] at hkey
       
     calc
       1 ≤ _ := by
@@ -41,7 +41,7 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
       _ < _ := sub_one_lt_nat_abs_cyclotomic_eval (one_lt_succ_succ k) (one_lt_two.trans (hkey k.succ)).Ne.symm
       
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
-  haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_ltₓ hgt).symm⟩
+  haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_lt hgt).symm⟩
   have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
     rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_coe_nat, ←
       Int.coe_cast_ring_hom, eval₂_hom, Int.coe_cast_ring_hom, Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
@@ -50,7 +50,7 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
   refine' ⟨p, hprime.1, _, _⟩
   · by_contra habs
     exact
-      (prime.dvd_iff_not_coprime hprime.1).1 (dvd_factorial (min_fac_pos _) (le_of_not_geₓ habs))
+      (prime.dvd_iff_not_coprime hprime.1).1 (dvd_factorial (min_fac_pos _) (le_of_not_ge habs))
         (coprime_of_root_cyclotomic hpos hroot).symm.coprime_mul_left_right.coprime_mul_left_right
     
   · have hdiv :=

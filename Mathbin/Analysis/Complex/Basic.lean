@@ -51,13 +51,13 @@ instance : NormedField ℂ :=
   { Complex.field, Complex.normedAddCommGroup with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := map_mul abs }
 
 instance :
-    DenselyNormedField ℂ where lt_norm_lt := fun r₁ r₂ h₀ hr =>
+    DenselyNormedField ℂ where lt_norm_lt r₁ r₂ h₀ hr :=
     let ⟨x, h⟩ := NormedField.exists_lt_norm_lt ℝ h₀ hr
     have this : ∥(∥x∥ : ℂ)∥ = ∥∥x∥∥ := by simp only [norm_eq_abs, abs_of_real, Real.norm_eq_abs]
     ⟨∥x∥, by rwa [this, norm_norm]⟩
 
 instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
-  norm_smul_le := fun r x => by
+  norm_smul_le r x := by
     rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, map_mul, ← norm_algebra_map' ℝ r,
       coe_algebra_map, abs_of_real]
     rfl
@@ -82,7 +82,7 @@ theorem dist_mk (x₁ y₁ x₂ y₂ : ℝ) : dist (mk x₁ y₁) (mk x₂ y₂)
   dist_eq_re_im _ _
 
 theorem dist_of_re_eq {z w : ℂ} (h : z.re = w.re) : dist z w = dist z.im w.im := by
-  rw [dist_eq_re_im, h, sub_self, zero_pow two_pos, zero_addₓ, Real.sqrt_sq_eq_abs, Real.dist_eq]
+  rw [dist_eq_re_im, h, sub_self, zero_pow two_pos, zero_add, Real.sqrt_sq_eq_abs, Real.dist_eq]
 
 theorem nndist_of_re_eq {z w : ℂ} (h : z.re = w.re) : nndist z w = nndist z.im w.im :=
   Nnreal.eq <| dist_of_re_eq h
@@ -91,7 +91,7 @@ theorem edist_of_re_eq {z w : ℂ} (h : z.re = w.re) : edist z w = edist z.im w.
   rw [edist_nndist, edist_nndist, nndist_of_re_eq h]
 
 theorem dist_of_im_eq {z w : ℂ} (h : z.im = w.im) : dist z w = dist z.re w.re := by
-  rw [dist_eq_re_im, h, sub_self, zero_pow two_pos, add_zeroₓ, Real.sqrt_sq_eq_abs, Real.dist_eq]
+  rw [dist_eq_re_im, h, sub_self, zero_pow two_pos, add_zero, Real.sqrt_sq_eq_abs, Real.dist_eq]
 
 theorem nndist_of_im_eq {z w : ℂ} (h : z.im = w.im) : nndist z w = nndist z.re w.re :=
   Nnreal.eq <| dist_of_im_eq h
@@ -127,7 +127,7 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
   abs_of_nat _
 
 @[simp]
-theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by simp (config := { singlePass := true }) [← Ratₓ.cast_coe_int]
+theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by simp (config := { singlePass := true }) [← Rat.cast_coe_int]
 
 theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by simp [hn]
 
@@ -185,7 +185,7 @@ theorem re_clm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
 
 @[simp]
 theorem re_clm_norm : ∥re_clm∥ = 1 :=
-  le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
+  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
       1 = ∥reClm 1∥ := by simp
       _ ≤ ∥re_clm∥ := unit_le_op_norm _ _ (by simp)
@@ -213,7 +213,7 @@ theorem im_clm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
 
 @[simp]
 theorem im_clm_norm : ∥im_clm∥ = 1 :=
-  le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
+  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
       1 = ∥imClm i∥ := by simp
       _ ≤ ∥im_clm∥ := unit_le_op_norm _ _ (by simp)
@@ -248,16 +248,16 @@ theorem conj_lie_apply (z : ℂ) : conjLie z = conj z :=
 theorem conj_lie_symm : conjLie.symm = conj_lie :=
   rfl
 
-theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
+theorem isometryConj : Isometry (conj : ℂ → ℂ) :=
   conjLie.Isometry
 
 @[simp]
 theorem dist_conj_conj (z w : ℂ) : dist (conj z) (conj w) = dist z w :=
-  isometry_conj.dist_eq z w
+  isometryConj.dist_eq z w
 
 @[simp]
 theorem nndist_conj_conj (z w : ℂ) : nndist (conj z) (conj w) = nndist z w :=
-  isometry_conj.nndist_eq z w
+  isometryConj.nndist_eq z w
 
 theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by rw [← dist_conj_conj, conj_conj]
 
@@ -318,7 +318,7 @@ theorem conj_cle_nnorm : ∥(conjCle : ℂ →L[ℝ] ℂ)∥₊ = 1 :=
 def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
   ⟨ofRealAm.toLinearMap, norm_real⟩
 
-theorem isometry_of_real : Isometry (coe : ℝ → ℂ) :=
+theorem isometryOfReal : Isometry (coe : ℝ → ℂ) :=
   ofRealLi.Isometry
 
 @[continuity]
@@ -348,24 +348,24 @@ theorem of_real_clm_nnnorm : ∥of_real_clm∥₊ = 1 :=
 noncomputable instance : IsROrC ℂ where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
-  i := Complex.i
+  I := Complex.i
   I_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.I_re]
-  I_mul_I_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_trueₓ]
-  re_add_im_ax := fun z => by
+  I_mul_I_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_true_iff]
+  re_add_im_ax z := by
     simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
-  of_real_re_ax := fun r => by
+  of_real_re_ax r := by
     simp only [AddMonoidHom.coe_mk, Complex.of_real_re, Complex.coe_algebra_map, Complex.of_real_eq_coe]
-  of_real_im_ax := fun r => by
+  of_real_im_ax r := by
     simp only [AddMonoidHom.coe_mk, Complex.of_real_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
-  mul_re_ax := fun z w => by simp only [Complex.mul_re, AddMonoidHom.coe_mk]
-  mul_im_ax := fun z w => by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
-  conj_re_ax := fun z => rfl
-  conj_im_ax := fun z => rfl
+  mul_re_ax z w := by simp only [Complex.mul_re, AddMonoidHom.coe_mk]
+  mul_im_ax z w := by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
+  conj_re_ax z := rfl
+  conj_im_ax z := rfl
   conj_I_ax := by simp only [Complex.conj_I, RingHom.coe_mk]
-  norm_sq_eq_def_ax := fun z => by
+  norm_sq_eq_def_ax z := by
     simp only [← Complex.norm_sq_eq_abs, ← Complex.norm_sq_apply, AddMonoidHom.coe_mk, Complex.norm_eq_abs]
-  mul_im_I_ax := fun z => by simp only [mul_oneₓ, AddMonoidHom.coe_mk, Complex.I_im]
-  inv_def_ax := fun z => by
+  mul_im_I_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.I_im]
+  inv_def_ax z := by
     simp only [Complex.inv_def, Complex.norm_sq_eq_abs, Complex.coe_algebra_map, Complex.of_real_eq_coe,
       Complex.norm_eq_abs]
   div_I_ax := Complex.div_I
@@ -378,7 +378,7 @@ theorem _root_.is_R_or_C.im_eq_complex_im : ⇑(IsROrC.im : ℂ →+ ℝ) = Comp
 
 section
 
-variable {α β γ : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] [AddCommMonoidₓ γ] [TopologicalSpace γ]
+variable {α β γ : Type _} [AddCommMonoid α] [TopologicalSpace α] [AddCommMonoid γ] [TopologicalSpace γ]
 
 /-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]

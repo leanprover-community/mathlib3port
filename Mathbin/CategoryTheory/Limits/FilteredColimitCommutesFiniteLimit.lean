@@ -74,7 +74,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   -- and they are equations in a filtered colimit,
   -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
   simp [colimit_eq_iff.{v, v}] at h
-  let k := fun j => (h j).some
+  let k j := (h j).some
   let f : ∀ j, kx ⟶ k j := fun j => (h j).some_spec.some
   let g : ∀ j, ky ⟶ k j := fun j => (h j).some_spec.some_spec.some
   -- where the images of the components of the representatives become equal:
@@ -85,19 +85,19 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
     fun j => (h j).some_spec.some_spec.some_spec
   -- We now use that `K` is filtered, picking some point to the right of all these
   -- morphisms `f j` and `g j`.
-  let O : Finsetₓ K := finset.univ.image k ∪ {kx, ky}
+  let O : Finset K := finset.univ.image k ∪ {kx, ky}
   have kxO : kx ∈ O := finset.mem_union.mpr (Or.inr (by simp))
   have kyO : ky ∈ O := finset.mem_union.mpr (Or.inr (by simp))
   have kjO : ∀ j, k j ∈ O := fun j => finset.mem_union.mpr (Or.inl (by simp))
-  let H : Finsetₓ (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
-    (Finsetₓ.univ.Image fun j : J => ⟨kx, k j, kxO, finset.mem_union.mpr (Or.inl (by simp)), f j⟩) ∪
-      Finsetₓ.univ.Image fun j : J => ⟨ky, k j, kyO, finset.mem_union.mpr (Or.inl (by simp)), g j⟩
+  let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    (Finset.univ.Image fun j : J => ⟨kx, k j, kxO, finset.mem_union.mpr (Or.inl (by simp)), f j⟩) ∪
+      Finset.univ.Image fun j : J => ⟨ky, k j, kyO, finset.mem_union.mpr (Or.inl (by simp)), g j⟩
   obtain ⟨S, T, W⟩ := is_filtered.sup_exists O H
   have fH : ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
     finset.mem_union.mpr
       (Or.inl
         (by
-          simp only [true_andₓ, Finsetₓ.mem_univ, eq_self_iff_true, exists_prop_of_true, Finsetₓ.mem_image, heq_iff_eq]
+          simp only [true_and_iff, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image, heq_iff_eq]
           refine' ⟨j, rfl, _⟩
           simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
@@ -105,7 +105,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
     finset.mem_union.mpr
       (Or.inr
         (by
-          simp only [true_andₓ, Finsetₓ.mem_univ, eq_self_iff_true, exists_prop_of_true, Finsetₓ.mem_image, heq_iff_eq]
+          simp only [true_and_iff, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image, heq_iff_eq]
           refine' ⟨j, rfl, _⟩
           simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
@@ -196,15 +196,15 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     finset.mem_union.mpr
       (Or.inl
         (by
-          rw [Finsetₓ.mem_bUnion]
-          refine' ⟨j, Finsetₓ.mem_univ j, _⟩
-          rw [Finsetₓ.mem_bUnion]
-          refine' ⟨j', Finsetₓ.mem_univ j', _⟩
-          rw [Finsetₓ.mem_image]
-          refine' ⟨f, Finsetₓ.mem_univ _, _⟩
+          rw [Finset.mem_bUnion]
+          refine' ⟨j, Finset.mem_univ j, _⟩
+          rw [Finset.mem_bUnion]
+          refine' ⟨j', Finset.mem_univ j', _⟩
+          rw [Finset.mem_image]
+          refine' ⟨f, Finset.mem_univ _, _⟩
           rfl))
   have k'O : k' ∈ O := finset.mem_union.mpr (Or.inr (finset.mem_singleton.mpr rfl))
-  let H : Finsetₓ (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun j : J =>
       finset.univ.bUnion fun j' : J =>
         finset.univ.bUnion fun f : j ⟶ j' => {⟨k', kf f, k'O, kfO f, gf f⟩, ⟨k', kf f, k'O, kfO f, hf f⟩}
@@ -218,21 +218,21 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     swap
     exact k'O
     swap
-    · rw [Finsetₓ.mem_bUnion]
-      refine' ⟨j₁, Finsetₓ.mem_univ _, _⟩
-      rw [Finsetₓ.mem_bUnion]
-      refine' ⟨j₂, Finsetₓ.mem_univ _, _⟩
-      rw [Finsetₓ.mem_bUnion]
-      refine' ⟨f, Finsetₓ.mem_univ _, _⟩
-      simp only [true_orₓ, eq_self_iff_true, and_selfₓ, Finsetₓ.mem_insert, heq_iff_eq]
+    · rw [Finset.mem_bUnion]
+      refine' ⟨j₁, Finset.mem_univ _, _⟩
+      rw [Finset.mem_bUnion]
+      refine' ⟨j₂, Finset.mem_univ _, _⟩
+      rw [Finset.mem_bUnion]
+      refine' ⟨f, Finset.mem_univ _, _⟩
+      simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, heq_iff_eq]
       
-    · rw [Finsetₓ.mem_bUnion]
-      refine' ⟨j₃, Finsetₓ.mem_univ _, _⟩
-      rw [Finsetₓ.mem_bUnion]
-      refine' ⟨j₄, Finsetₓ.mem_univ _, _⟩
-      rw [Finsetₓ.mem_bUnion]
-      refine' ⟨f', Finsetₓ.mem_univ _, _⟩
-      simp only [eq_self_iff_true, or_trueₓ, and_selfₓ, Finsetₓ.mem_insert, Finsetₓ.mem_singleton, heq_iff_eq]
+    · rw [Finset.mem_bUnion]
+      refine' ⟨j₃, Finset.mem_univ _, _⟩
+      rw [Finset.mem_bUnion]
+      refine' ⟨j₄, Finset.mem_univ _, _⟩
+      rw [Finset.mem_bUnion]
+      refine' ⟨f', Finset.mem_univ _, _⟩
+      simp only [eq_self_iff_true, or_true_iff, and_self_iff, Finset.mem_insert, Finset.mem_singleton, heq_iff_eq]
       
   clear_value i
   clear s' i' H kfO k'O O
@@ -292,6 +292,8 @@ instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) : IsIs
     infer_instance
   apply cones.cone_iso_of_hom_iso
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colim.map_cone (limit.cone F)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 noncomputable instance filteredColimPreservesFiniteLimitsOfTypes : PreservesFiniteLimits (colim : (K ⥤ Type v) ⥤ _) :=
   by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{v}
@@ -303,7 +305,8 @@ noncomputable instance filteredColimPreservesFiniteLimitsOfTypes : PreservesFini
   intro c hc
   apply is_limit.of_iso_limit (limit.is_limit _)
   symm
-  trans colim.map_cone (limit.cone F)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colim.map_cone (limit.cone F)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   exact functor.map_iso _ (hc.unique_up_to_iso (limit.is_limit F))
   exact as_iso (colimitLimitToLimitColimitCone.{v, v + 1} F)
 

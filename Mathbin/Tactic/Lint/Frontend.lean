@@ -82,7 +82,7 @@ The resulting list has one element for each linter, containing the linter as
 well as a map from declaration name to warning.
 -/
 unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : List (Name × linter)) :
-    tactic (List (Name × linter × rb_map Name Stringₓ)) := do
+    tactic (List (Name × linter × rb_map Name String)) := do
   checks fun ⟨linter_name, linter⟩ => do
       let test_decls := if linter then all_decls else non_auto_decls
       let test_decls ← test_decls fun decl => should_be_linted linter_name decl
@@ -95,7 +95,7 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
             | result.exception msg _ _ => some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => toString <| msg ()
       let results :=
         results
-          (fun (results : rb_map Name Stringₓ) warning =>
+          (fun (results : rb_map Name String) warning =>
             match warning with
             | (decl_name, some w) => results decl_name w
             | (_, none) => results)
@@ -111,10 +111,10 @@ unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List
           (((e.decl_pos decl).getOrElse ⟨0, 0⟩).line, (decl, linter_warning)) :: results
 
 /-- Formats a linter warning as `#check` command with comment. -/
-unsafe def print_warning (decl_name : Name) (warning : Stringₓ) : format :=
+unsafe def print_warning (decl_name : Name) (warning : String) : format :=
   "#check @" ++ to_fmt decl_name ++ " /- " ++ warning ++ " -/"
 
-private def workflow_command_replacements : Charₓ → Stringₓ
+private def workflow_command_replacements : Char → String
   | '%' => "%25"
   | '\n' => "%0A"
   | c => toString c
@@ -122,7 +122,7 @@ private def workflow_command_replacements : Charₓ → Stringₓ
 /-- Escape characters that may not be used in a workflow commands, following
 https://github.com/actions/toolkit/blob/7257597d731b34d14090db516d9ea53439300e98/packages/core/src/command.ts#L92-L105
 -/
-def escapeWorkflowCommand (s : Stringₓ) : Stringₓ :=
+def escapeWorkflowCommand (s : String) : String :=
   "".intercalate <| s.toList.map workflowCommandReplacements
 
 /-- Prints a workflow command to emit an error understood by github in an actions workflow.
@@ -130,8 +130,8 @@ This enables CI to tag the parts of the file where linting failed with annotatio
 easier for mathlib contributors to see what needs fixing.
 See https://docs.github.com/en/actions/learn-github-actions/workflow-commands-for-github-actions#setting-an-error-message
 -/
-unsafe def print_workflow_command (env : environment) (linter_name decl_name : Name) (warning : Stringₓ) :
-    Option Stringₓ := do
+unsafe def print_workflow_command (env : environment) (linter_name decl_name : Name) (warning : String) :
+    Option String := do
   let po ← env.decl_pos decl_name
   let ol ← env.decl_olean decl_name
   return <|
@@ -142,7 +142,7 @@ unsafe def print_workflow_command (env : environment) (linter_name decl_name : N
 
 /-- Formats a map of linter warnings using `print_warning`, sorted by line number. -/
 unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (linter_name : Name)
-    (results : rb_map Name Stringₓ) : format :=
+    (results : rb_map Name String) : format :=
   format.intercalate format.line <|
     (sort_results env results).map fun ⟨decl_name, warning⟩ =>
       let form := print_warning decl_name warning
@@ -152,10 +152,10 @@ unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (l
 /-- Formats a map of linter warnings grouped by filename with `-- filename` comments.
 The first `drop_fn_chars` characters are stripped from the filename.
 -/
-unsafe def grouped_by_filename (e : environment) (results : rb_map Name Stringₓ) (drop_fn_chars := 0)
-    (formatter : rb_map Name Stringₓ → format) : format :=
+unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) (drop_fn_chars := 0)
+    (formatter : rb_map Name String → format) : format :=
   let results :=
-    (results.fold (rb_map.mk Stringₓ (rb_map Name Stringₓ))) fun decl_name linter_warning results =>
+    (results.fold (rb_map.mk String (rb_map Name String))) fun decl_name linter_warning results =>
       let fn := (e.decl_olean decl_name).getOrElse ""
       results.insert fn (((results.find fn).getOrElse mk_rb_map).insert decl_name linter_warning)
   let l :=
@@ -165,8 +165,8 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String�
 
 /-- Formats the linter results as Lean code with comments and `#check` commands.
 -/
-unsafe def format_linter_results (env : environment) (results : List (Name × linter × rb_map Name Stringₓ))
-    (decls non_auto_decls : List declaration) (group_by_filename : Option ℕ) (where_desc : Stringₓ) (slow : Bool)
+unsafe def format_linter_results (env : environment) (results : List (Name × linter × rb_map Name String))
+    (decls non_auto_decls : List declaration) (group_by_filename : Option ℕ) (where_desc : String) (slow : Bool)
     (verbose : LintVerbosity) (num_linters : ℕ)
     -- whether to include codes understood by github to create file annotations
     (emit_workflow_commands : Bool := false) :
@@ -203,7 +203,7 @@ By setting `checks` you can customize which checks are performed.
 
 Returns a `name_set` containing the names of all declarations that fail any check in `check`,
 and a `format` object describing the failures. -/
-unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) (where_desc : Stringₓ) (slow : Bool)
+unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) (where_desc : String) (slow : Bool)
     (verbose : LintVerbosity) (checks : List (Name × linter)) : tactic (name_set × format) := do
   let e ← get_env
   let non_auto_decls := decls.filter fun d => ¬d.is_auto_or_internal e
@@ -224,7 +224,7 @@ unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.
   lint_aux l none "in the current file" slow verbose checks
 
 /-- Returns the declarations in the folder `proj_folder`. -/
-unsafe def lint_project_decls (proj_folder : Stringₓ) : tactic (List declaration) := do
+unsafe def lint_project_decls (proj_folder : String) : tactic (List declaration) := do
   let e ← get_env
   pure <| e fun d => e proj_folder d
 
@@ -242,7 +242,7 @@ the number of characters in the filename of `n` *after* the `src/` directory
 (so e.g. the number of characters in `tactic/lint/frontend.lean`).
 Warning: the linter will not work in the file where `n` is declared.
 -/
-unsafe def lint_project (proj_folder proj_name : Stringₓ) (slow : Bool := true)
+unsafe def lint_project (proj_folder proj_name : String) (slow : Bool := true)
     (verbose : LintVerbosity := LintVerbosity.medium) (extra : List Name := []) (use_only : Bool := false) :
     tactic (name_set × format) := do
   let checks ← get_checks slow extra use_only
@@ -258,7 +258,7 @@ unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbos
   let l := e.get_decls
   lint_aux l (some 0) "in all imported files (including this one)" slow verbose checks
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Parses an optional `only`, followed by a sequence of zero or more identifiers.
 Prepends `linter.` to each of these identifiers. -/
 unsafe def parse_lint_additions : parser (Bool × List Name) :=
@@ -274,7 +274,7 @@ unsafe def parse_verbosity : parser (Option LintVerbosity) :=
 unsafe def lint_cmd_aux (scope : Bool → LintVerbosity → List Name → Bool → tactic (name_set × format)) : parser Unit :=
   do
   let verbosity ← parse_verbosity
-  let fast_only ← optionalₓ (tk "*")
+  let fast_only ← optional (tk "*")
   let verbosity
     ←-- allow either order of *-
         if verbosity.isSome then return verbosity
@@ -337,7 +337,7 @@ output of `#lint`. On large files, it may take some time before the output appea
 unsafe def lint_hole_cmd : hole_command where
   Name := "Lint"
   descr := "Lint: Find common mistakes in current file."
-  action := fun es => do
+  action es := do
     let (_, s) ← lint
     return [(s, "")]
 

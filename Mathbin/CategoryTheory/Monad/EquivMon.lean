@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
 import Mathbin.CategoryTheory.Monad.Basic
-import Mathbin.CategoryTheory.Monoidal.End
+import Mathbin.CategoryTheory.Monoidal.EndCat
 import Mathbin.CategoryTheory.Monoidal.Mon_
-import Mathbin.CategoryTheory.Category.Cat
+import Mathbin.CategoryTheory.Category.CatCat
 
 /-!
 
@@ -33,7 +33,7 @@ universe v u
 -- morphism levels before object levels. See note [category_theory universes].
 variable {C : Type u} [Category.{v} C]
 
-namespace Monad
+namespace MonadCat
 
 attribute [local instance, local reducible] endofunctor_monoidal_category
 
@@ -58,7 +58,7 @@ variable (C)
 @[simps]
 def monadToMon : Monad C ⥤ Mon_ (C ⥤ C) where
   obj := toMon
-  map := fun _ _ f => { Hom := f.toNatTrans }
+  map _ _ f := { Hom := f.toNatTrans }
   map_id' := by
     intro X
     rfl
@@ -89,7 +89,7 @@ variable (C)
 @[simps]
 def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
   obj := ofMon
-  map := fun _ _ f =>
+  map _ _ f :=
     { -- `finish` closes this goal
         f.Hom with
       app_η' := by
@@ -120,11 +120,11 @@ def counitIso : monToMonad C ⋙ monadToMon C ≅ 𝟭 _ where
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
-def unitIsoHom : 𝟭 _ ⟶ monadToMon C ⋙ monToMonad C where app := fun _ => { app := fun _ => 𝟙 _ }
+def unitIsoHom : 𝟭 _ ⟶ monadToMon C ⋙ monToMonad C where app _ := { app := fun _ => 𝟙 _ }
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
-def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where app := fun _ => { app := fun _ => 𝟙 _ }
+def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where app _ := { app := fun _ => 𝟙 _ }
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps]
@@ -161,7 +161,7 @@ def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C) where
 example (A : Monad C) {X : C} : ((monadMonEquiv C).unitIso.app A).Hom.app X = 𝟙 _ :=
   rfl
 
-end Monad
+end MonadCat
 
 end CategoryTheory
 

@@ -19,12 +19,12 @@ open Filter
 
 open Filter Set Metric
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem set_of_liouville_eq_Inter_Union :
     { x | Liouville x } = ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) \ {a / b} := by
   ext x
-  simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_propₓ, mem_diff, mem_singleton_iff, mem_ball,
-    Real.dist_eq, and_comm]
+  simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff, mem_singleton_iff, mem_ball,
+    Real.dist_eq, and_comm']
 
 theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
   rw [set_of_liouville_eq_Inter_Union]
@@ -32,7 +32,7 @@ theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
   refine' is_open_Union fun a => is_open_Union fun b => is_open_Union fun hb => _
   exact is_open_ball.inter is_closed_singleton.is_open_compl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem set_of_liouville_eq_irrational_inter_Inter_Union :
     { x | Liouville x } = { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) := by
   refine' subset.antisymm _ _
@@ -59,7 +59,7 @@ theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
   · rintro _ ⟨r, rfl⟩
     simp only [mem_Inter, mem_Union]
     refine' fun n => ⟨r.num * 2, r.denom * 2, _, _⟩
-    · have := Int.coe_nat_leₓ.2 r.pos
+    · have := Int.coe_nat_le.2 r.pos
       rw [Int.coe_nat_one] at this
       linarith
       

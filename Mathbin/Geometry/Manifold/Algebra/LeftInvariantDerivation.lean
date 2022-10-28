@@ -24,7 +24,7 @@ noncomputable section
 open LieGroup Manifold Derivation
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
-  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoidₓ G]
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoid G]
   [HasSmoothMul I G] (g h : G)
 
 -- Generate trivial has_sizeof instance. It prevents weird type class inference timeout problems
@@ -123,12 +123,12 @@ instance : Inhabited (LeftInvariantDerivation I G) :=
 instance :
     Add
       (LeftInvariantDerivation I
-        G) where add := fun X Y =>
+        G) where add X Y :=
     ⟨X + Y, fun g => by simp only [LinearMap.map_add, Derivation.coe_add, left_invariant', Pi.add_apply]⟩
 
-instance : Neg (LeftInvariantDerivation I G) where neg := fun X => ⟨-X, fun g => by simp [left_invariant']⟩
+instance : Neg (LeftInvariantDerivation I G) where neg X := ⟨-X, fun g => by simp [left_invariant']⟩
 
-instance : Sub (LeftInvariantDerivation I G) where sub := fun X Y => ⟨X - Y, fun g => by simp [left_invariant']⟩
+instance : Sub (LeftInvariantDerivation I G) where sub X Y := ⟨X - Y, fun g => by simp [left_invariant']⟩
 
 @[simp]
 theorem coe_add : ⇑(X + Y) = X + Y :=
@@ -157,20 +157,19 @@ theorem lift_zero : (↑(0 : LeftInvariantDerivation I G) : Derivation 𝕜 C^�
 instance hasNatScalar :
     HasSmul ℕ
       (LeftInvariantDerivation I
-        G) where smul := fun r X => ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
+        G) where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 
 instance hasIntScalar :
     HasSmul ℤ
       (LeftInvariantDerivation I
-        G) where smul := fun r X => ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
+        G) where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 
-instance : AddCommGroupₓ (LeftInvariantDerivation I G) :=
+instance : AddCommGroup (LeftInvariantDerivation I G) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance :
     HasSmul 𝕜
-      (LeftInvariantDerivation I
-        G) where smul := fun r X => ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
+      (LeftInvariantDerivation I G) where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
 
 variable (r X)
 
@@ -197,9 +196,9 @@ instance : Module 𝕜 (LeftInvariantDerivation I G) :=
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
 def evalAt : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g where
-  toFun := fun X => Derivation.evalAt g ↑X
-  map_add' := fun X Y => rfl
-  map_smul' := fun k X => rfl
+  toFun X := Derivation.evalAt g ↑X
+  map_add' X Y := rfl
+  map_smul' k X := rfl
 
 theorem eval_at_apply : evalAt g X f = (X f) g :=
   rfl
@@ -222,9 +221,8 @@ theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by
       eval_at_apply]
 
 instance :
-    HasBracket (LeftInvariantDerivation I G)
-      (LeftInvariantDerivation I
-        G) where bracket := fun X Y =>
+    Bracket (LeftInvariantDerivation I G)
+      (LeftInvariantDerivation I G) where bracket X Y :=
     ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯), Y⁆, fun g => by
       ext f
       have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
@@ -245,25 +243,25 @@ theorem commutator_apply : ⁅X, Y⁆ f = X (Y f) - Y (X f) :=
   rfl
 
 instance : LieRing (LeftInvariantDerivation I G) where
-  add_lie := fun X Y Z => by
+  add_lie X Y Z := by
     ext1
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add, LeftInvariantDerivation.map_add]
     ring
-  lie_add := fun X Y Z => by
+  lie_add X Y Z := by
     ext1
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add, LeftInvariantDerivation.map_add]
     ring
-  lie_self := fun X => by
+  lie_self X := by
     ext1
     simp only [commutator_apply, sub_self]
     rfl
-  leibniz_lie := fun X Y Z => by
+  leibniz_lie X Y Z := by
     ext1
     simp only [commutator_apply, coe_add, coe_sub, map_sub, Pi.add_apply]
     ring
 
 instance :
-    LieAlgebra 𝕜 (LeftInvariantDerivation I G) where lie_smul := fun r Y Z => by
+    LieAlgebra 𝕜 (LeftInvariantDerivation I G) where lie_smul r Y Z := by
     ext1
     simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply]
 

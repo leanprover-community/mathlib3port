@@ -50,11 +50,17 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C] {X : SimplicialObject C}
 
+/- warning: algebraic_topology.dold_kan.P -> AlgebraicTopology.DoldKan.p is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u_1}} [_inst_1 : CategoryTheory.Category.{u_2 u_1} C] [_inst_2 : CategoryTheory.Preadditive.{u_2 u_1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u_2 u_1} C _inst_1}, Nat -> (Quiver.Hom.{succ u_2 (max u_1 u_2)} (ChainComplex.{u_2 u_1 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.CategoryStruct.toQuiver.{u_2 (max u_1 u_2)} (ChainComplex.{u_2 u_1 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.Category.toCategoryStruct.{u_2 (max u_1 u_2)} (ChainComplex.{u_2 u_1 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u_2 u_1 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)))) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u_1 u_2} C _inst_1 _inst_2 X) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u_1 u_2} C _inst_1 _inst_2 X))
+but is expected to have type
+  PUnit.{(max (succ (succ u_1)) (succ (succ u_2)))}
+Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.P AlgebraicTopology.DoldKan.pₓ'. -/
 /-- This is the inductive definition of the projections `P q : K[X] ⟶ K[X]`,
 with `P 0 := 𝟙 _` and `P (q+1) := P q ≫ (𝟙 _ + Hσ q)`. -/
 noncomputable def p : ℕ → (K[X] ⟶ K[X])
   | 0 => 𝟙 _
-  | q + 1 => P q ≫ (𝟙 _ + hσₓ q)
+  | q + 1 => P q ≫ (𝟙 _ + hσ q)
 
 /-- All the `P q` coincide with `𝟙 _` in degree 0. -/
 @[simp]
@@ -64,7 +70,7 @@ theorem P_f_0_eq (q : ℕ) : ((p q).f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ := by
     
   · unfold P
     simp only [HomologicalComplex.add_f_apply, HomologicalComplex.comp_f, HomologicalComplex.id_f, id_comp, hq,
-      Hσ_eq_zero, add_zeroₓ]
+      Hσ_eq_zero, add_zero]
     
 
 /-- `Q q` is the complement projection associated to `P q` -/
@@ -82,7 +88,7 @@ theorem P_add_Q_f (q n : ℕ) : (p q).f n + (q q).f n = 𝟙 (X _[n]) :=
 theorem Q_eq_zero : (q 0 : K[X] ⟶ _) = 0 :=
   sub_self _
 
-theorem Q_eq (q : ℕ) : (q (q + 1) : K[X] ⟶ _) = q q - p q ≫ hσₓ q := by
+theorem Q_eq (q : ℕ) : (q (q + 1) : K[X] ⟶ _) = q q - p q ≫ hσ q := by
   unfold Q P
   simp only [comp_add, comp_id]
   abel
@@ -99,7 +105,7 @@ namespace HigherFacesVanish
 theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1])
   | 0 => fun n j hj₁ => by
     exfalso
-    have hj₂ := Finₓ.is_lt j
+    have hj₂ := Fin.is_lt j
     linarith
   | q + 1 => fun n => by
     unfold P
@@ -114,15 +120,15 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
     
   · unfold P
     simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id, ← assoc, hq v.of_succ,
-      add_right_eq_selfₓ]
+      add_right_eq_self]
     by_cases hqn:n < q
     · exact v.of_succ.comp_Hσ_eq_zero hqn
       
-    · cases' Nat.Le.dest (not_lt.mp hqn) with a ha
+    · cases' Nat.le.dest (not_lt.mp hqn) with a ha
       have hnaq : n = a + q := by linarith
       simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
-      have eq := v ⟨a, by linarith⟩ (by simp only [hnaq, Finₓ.coe_mk, Nat.succ_eq_add_one, add_assocₓ])
-      simp only [Finₓ.succ_mk] at eq
+      have eq := v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.coe_mk, Nat.succ_eq_add_one, add_assoc])
+      simp only [Fin.succ_mk] at eq
       simp only [Eq, zero_comp]
       
     
@@ -155,8 +161,8 @@ theorem P_idem (q : ℕ) : (p q : K[X] ⟶ K[X]) ≫ p q = p q := by
 
 /-- For each `q`, `P q` is a natural transformation. -/
 def natTransP (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
-  app := fun X => p q
-  naturality' := fun X Y f => by
+  app X := p q
+  naturality' X Y f := by
     induction' q with q hq
     · unfold P
       dsimp only [alternating_face_map_complex]

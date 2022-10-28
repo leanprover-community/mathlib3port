@@ -25,14 +25,14 @@ namespace LinearMap
 
 section NonUnitalNonAssoc
 
-variable (R A : Type _) [CommSemiringₓ R] [NonUnitalNonAssocSemiringₓ A] [Module R A] [SmulCommClass R A A]
+variable (R A : Type _) [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A] [SmulCommClass R A A]
   [IsScalarTower R A A]
 
 /-- The multiplication in a non-unital non-associative algebra is a bilinear map.
 
 A weaker version of this for semirings exists as `add_monoid_hom.mul`. -/
 def mul : A →ₗ[R] A →ₗ[R] A :=
-  LinearMap.mk₂ R (· * ·) add_mulₓ smul_mul_assoc mul_addₓ mul_smul_comm
+  LinearMap.mk₂ R (· * ·) add_mul smul_mul_assoc mul_add mul_smul_comm
 
 /-- The multiplication map on a non-unital algebra, as an `R`-linear map from `A ⊗[R] A` to `A`. -/
 def mul' : A ⊗[R] A →ₗ[R] A :=
@@ -94,13 +94,12 @@ end NonUnitalNonAssoc
 
 section NonUnital
 
-variable (R A : Type _) [CommSemiringₓ R] [NonUnitalSemiringₓ A] [Module R A] [SmulCommClass R A A]
-  [IsScalarTower R A A]
+variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SmulCommClass R A A] [IsScalarTower R A A]
 
 /-- The multiplication in a non-unital algebra is a bilinear map.
 
 A weaker version of this for non-unital non-associative algebras exists as `linear_map.mul`. -/
-def _root_.non_unital_alg_hom.lmul : A →ₙₐ[R] End R A :=
+def _root_.non_unital_alg_hom.lmul : A →ₙₐ[R] EndCat R A :=
   { mul R A with
     map_mul' := by
       intro a b
@@ -132,19 +131,19 @@ theorem mul_right_mul (a b : A) : mulRight R (a * b) = (mulRight R b).comp (mulR
 
 end NonUnital
 
-section Semiringₓ
+section Semiring
 
-variable (R A : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable (R A : Type _) [CommSemiring R] [Semiring A] [Algebra R A]
 
 /-- The multiplication in an algebra is an algebra homomorphism into the endomorphisms on
 the algebra.
 
 A weaker version of this for non-unital algebras exists as `non_unital_alg_hom.mul`. -/
-def _root_.algebra.lmul : A →ₐ[R] End R A :=
+def _root_.algebra.lmul : A →ₐ[R] EndCat R A :=
   { LinearMap.mul R A with
     map_one' := by
       ext a
-      exact one_mulₓ a,
+      exact one_mul a,
     map_mul' := by
       intro a b
       ext c
@@ -166,7 +165,7 @@ theorem _root_.algebra.coe_lmul_eq_mul : ⇑(Algebra.lmul R A) = mul R A :=
 @[simp]
 theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
   constructor <;> intro h
-  · rw [← mul_oneₓ a, ← mul_left_apply a 1, h, LinearMap.zero_apply]
+  · rw [← mul_one a, ← mul_left_apply a 1, h, LinearMap.zero_apply]
     
   · rw [h]
     exact mul_left_zero_eq_zero
@@ -175,7 +174,7 @@ theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
 @[simp]
 theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
   constructor <;> intro h
-  · rw [← one_mulₓ a, ← mul_right_apply a 1, h, LinearMap.zero_apply]
+  · rw [← one_mul a, ← mul_right_apply a 1, h, LinearMap.zero_apply]
     
   · rw [h]
     exact mul_right_zero_eq_zero
@@ -184,12 +183,12 @@ theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
 @[simp]
 theorem mul_left_one : mulLeft R (1 : A) = LinearMap.id := by
   ext
-  simp only [LinearMap.id_coe, one_mulₓ, id.def, mul_left_apply]
+  simp only [LinearMap.id_coe, one_mul, id.def, mul_left_apply]
 
 @[simp]
 theorem mul_right_one : mulRight R (1 : A) = LinearMap.id := by
   ext
-  simp only [LinearMap.id_coe, mul_oneₓ, id.def, mul_right_apply]
+  simp only [LinearMap.id_coe, mul_one, id.def, mul_right_apply]
 
 @[simp]
 theorem pow_mul_left (a : A) (n : ℕ) : mulLeft R a ^ n = mulLeft R (a ^ n) := by
@@ -200,25 +199,25 @@ theorem pow_mul_right (a : A) (n : ℕ) : mulRight R a ^ n = mulRight R (a ^ n) 
   simp only [mul_right, ← Algebra.coe_lmul_eq_mul]
   exact LinearMap.coe_injective (((mul_right R a).coe_pow n).symm ▸ mul_right_iterate a n)
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable {R A : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
+variable {R A : Type _} [CommSemiring R] [Ring A] [Algebra R A]
 
 theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulLeft R x) :=
-  letI : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   mul_right_injective₀ hx
 
 theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulRight R x) :=
-  letI : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   mul_left_injective₀ hx
 
 theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) :=
-  letI : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   mul_right_injective₀ hx
 
-end Ringₓ
+end Ring
 
 end LinearMap
 

@@ -17,7 +17,7 @@ open Polynomial
 
 open Polynomial MulOpposite
 
-variable {R : Type _} [Semiringₓ R] {p q : R[X]}
+variable {R : Type _} [Semiring R] {p q : R[X]}
 
 noncomputable section
 
@@ -25,7 +25,7 @@ namespace Polynomial
 
 /-- Ring isomorphism between `R[X]ᵐᵒᵖ` and `Rᵐᵒᵖ[X]` sending each coefficient of a polynomial
 to the corresponding element of the opposite ring. -/
-def opRingEquiv (R : Type _) [Semiringₓ R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
+def opRingEquiv (R : Type _) [Semiring R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
   ((toFinsuppIso R).op.trans AddMonoidAlgebra.opRingEquiv).trans (toFinsuppIso _).symm
 
 /-!  Lemmas to get started, using `op_ring_equiv R` on the various expressions of

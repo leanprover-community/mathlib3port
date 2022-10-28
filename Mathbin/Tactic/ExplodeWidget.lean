@@ -17,7 +17,7 @@ occurring in the exploded proofs.
 
 open Widget Tactic Tactic.Explode
 
-unsafe instance widget.string_to_html {α} : Coe Stringₓ (html α) :=
+unsafe instance widget.string_to_html {α} : Coe String (html α) :=
   ⟨fun s => s⟩
 
 namespace Tactic
@@ -65,7 +65,7 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
     let click_attrs : List (attr (action γ)) ←
       if some new_address = click_address then do
           let content ← tc.to_html tooltip_component (e, new_address)
-          let efmt : Stringₓ ← format.to_string <$> tactic.pp e
+          let efmt : String ← format.to_string <$> tactic.pp e
           let gd_btn ← goto_def_button e
           let epld_btn ← insert_explode e
           pure
@@ -219,7 +219,7 @@ unsafe def assemble (es : entries) : entry → tactic (html Empty)
     let ir ← id_row l
     let rr ← rule_row t
     let el : List entry := List.map (lookup_lines es) ref
-    let ls ← Monadₓ.mapm assemble el
+    let ls ← Monad.mapm assemble el
     let pr := proof_row <| ls.intersperse (h "br" [] [])
     return <| assemble_table gr ir rr pr
 

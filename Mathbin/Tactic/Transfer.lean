@@ -10,7 +10,7 @@ import Leanbin.Init.Meta.MkDecEqInstance
 import Leanbin.Init.Data.List.Instances
 import Mathbin.Logic.Relator
 
-open Tactic Expr List Monadₓ
+open Tactic Expr List Monad
 
 namespace Transfer
 
@@ -98,7 +98,7 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let (params, app (app r f) g) ← mk_local_pis t
   let (arg_rels, R) ← get_lift_fun r
   let args ←
-    (enum arg_rels).mmap fun ⟨n, a⟩ => Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ reprₓ n)) a.in_type <*> pure a
+    (enum arg_rels).mmap fun ⟨n, a⟩ => Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ repr n)) a.in_type <*> pure a
   let a_vars ← return <| Prod.fst <$> args
   let p ← head_beta (app_of_list f a_vars)
   let p_data ← return <| mark_occurences (app R p) params
@@ -130,10 +130,10 @@ private unsafe def param_substitutions (ctxt : List expr) :
       match s with
         | some e => return (e, [])
         | none =>
-          let ctxt' := List.filterₓ (fun v => occurs v t) ctxt
+          let ctxt' := List.filter' (fun v => occurs v t) ctxt
           let ty := pis ctxt' t
           if bi = BinderInfo.inst_implicit then do
-            guardₓ (bi = BinderInfo.inst_implicit)
+            guard (bi = BinderInfo.inst_implicit)
             let e ← instantiate_mvars ty >>= mk_instance
             return (e, [])
           else do
@@ -156,7 +156,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
             (rds.map fun rd => do
               let (l, m) ← match_pattern rd.pat e semireducible
               let level_map ← rd.uparams.mmap fun l => Prod.mk l <$> mk_meta_univ
-              let inst_univ ← return fun e => instantiate_univ_params e (level_map ++ zipₓ rd.uargs l)
+              let inst_univ ← return fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
               let (ps, args) ← return <| split_params_args (rd.params.map (Prod.map inst_univ id)) m
               let (ps, ms) ← param_substitutions ctxt ps
               return (instantiate_locals ps ∘ inst_univ, ps, args, ms, rd)) <|>
@@ -166,7 +166,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
     let (bs, hs, mss) ←
       ((-- Argument has function type
                 -- Transfer argument
-                zipₓ
+                zip
                 rd.args args).mmap
             fun ⟨⟨_, d⟩, e⟩ => do
             let (args, r) ← get_lift_fun (i d.relation)
@@ -198,7 +198,7 @@ open Transfer
 unsafe def tactic.transfer (ds : List Name) : tactic Unit := do
   let rds ← analyse_decls ds
   let tgt ← target
-  guardₓ ¬tgt <|> fail "Target contains (universe) meta variables. This is not supported by transfer."
+  guard ¬tgt <|> fail "Target contains (universe) meta variables. This is not supported by transfer."
   let (new_tgt, pr, ms) ← compute_transfer rds [] ((const `iff [] : expr) tgt)
   let new_pr ← mk_meta_var new_tgt
   -- Setup final tactic state

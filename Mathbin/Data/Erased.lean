@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 
 /-!
 # A type for VM-erased data
@@ -64,10 +64,10 @@ theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by simpa u
 noncomputable def equiv (α) : Erased α ≃ α :=
   ⟨out, mk, mk_out, out_mk⟩
 
-instance (α : Type u) : HasRepr (Erased α) :=
+instance (α : Type u) : Repr (Erased α) :=
   ⟨fun _ => "erased"⟩
 
-instance (α : Type u) : HasToString (Erased α) :=
+instance (α : Type u) : ToString (Erased α) :=
   ⟨fun _ => "erased"⟩
 
 unsafe instance (α : Type u) : has_to_format (Erased α) :=
@@ -115,7 +115,7 @@ def map {α β} (f : α → β) (a : Erased α) : Erased β :=
 @[simp]
 theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by simp [map]
 
-instance : Monadₓ Erased where
+instance : Monad Erased where
   pure := @mk
   bind := @bind
   map := @map
@@ -132,7 +132,7 @@ theorem bind_def {α β} : ((· >>= ·) : Erased α → (α → Erased β) → E
 theorem map_def {α β} : ((· <$> ·) : (α → β) → Erased α → Erased β) = @map _ _ :=
   rfl
 
-instance : IsLawfulMonad Erased := by refine' { .. } <;> intros <;> ext <;> simp
+instance : LawfulMonad Erased := by refine' { .. } <;> intros <;> ext <;> simp
 
 end Erased
 

@@ -31,30 +31,30 @@ vector `(0,...,0,1)` gives `a₀`, contradiction.
 -/
 
 
-variable (R : Type _) [CommRingₓ R] [Nontrivial R]
+variable (R : Type _) [CommRing R] [Nontrivial R]
 
-open Polynomial Function Finₓ LinearMap
+open Polynomial Function Fin LinearMap
 
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
-instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition R := by
-  suffices ∀ n, ∀ f : (Finₓ (n + 1) → R) →ₗ[R] Finₓ n → R, ¬injective f by rwa [strong_rank_condition_iff_succ R]
+instance (priority := 100) commRingStrongRankCondition : StrongRankCondition R := by
+  suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬injective f by rwa [strong_rank_condition_iff_succ R]
   intro n f
   by_contra hf
   -- Lean is unable to find these instances without help, either via this `letI`, or via duplicate
   -- instances with unecessarily strong typeclasses on `R` and `M`.
-  letI : Module.Finite R (Finₓ n.succ → R) := Module.Finite.pi
-  letI : Module.Free R (Finₓ n.succ → R) := Module.Free.pi _ _
-  let g : (Finₓ (n + 1) → R) →ₗ[R] Finₓ (n + 1) → R := (extend_by_zero.linear_map R cast_succ).comp f
+  letI : Module.Finite R (Fin n.succ → R) := Module.Finite.pi
+  letI : Module.Free R (Fin n.succ → R) := Module.Free.pi _ _
+  let g : (Fin (n + 1) → R) →ₗ[R] Fin (n + 1) → R := (extend_by_zero.linear_map R cast_succ).comp f
   have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf
-  have hnex : ¬∃ i : Finₓ n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_ltₓ (cast_succ_lt_last i) hi
+  have hnex : ¬∃ i : Fin n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_lt (cast_succ_lt_last i) hi
   let a₀ := (minpoly R g).coeff 0
   have : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg
   have : a₀ = 0 := by
     -- Evaluate `(minpoly R g) g` at the vector `(0,...,0,1)`
-    have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Finₓ.last n) 1)
+    have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Fin.last n) 1)
     obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
     rw [← monomial_add_erase (minpoly R g) 0, hP] at heval
-    replace heval := congr_fun heval (Finₓ.last n)
+    replace heval := congr_fun heval (Fin.last n)
     simpa [hnex] using heval
   contradiction
 

@@ -64,7 +64,7 @@ include fF
 protected def map : (Comp F G) α → (Comp F G) β :=
   (map fun i => map f : (F fun i => G i α) → F fun i => G i β)
 
-instance : Mvfunctor (Comp F G) where map := fun α β => Comp.map
+instance : Mvfunctor (Comp F G) where map α β := Comp.map
 
 theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
   rfl
@@ -76,9 +76,8 @@ include q q'
 
 instance : Mvqpf (Comp F G) where
   p := Mvpfunctor.comp (p F) fun i => P <| G i
-  abs := fun α => comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
-  repr := fun α =>
-    Mvpfunctor.comp.mk ∘ reprₓ ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
+  abs α := comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
+  repr α := Mvpfunctor.comp.mk ∘ repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
   abs_repr := by
     intros
     simp [(· ∘ ·), Mvfunctor.map_map, (· ⊚ ·), abs_repr]

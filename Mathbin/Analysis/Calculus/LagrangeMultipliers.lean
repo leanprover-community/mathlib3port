@@ -82,7 +82,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → �
     simpa [hΛ.1] using Λ.map_smul x 1
     
   · ext x
-    have H₁ : Λ (f' x) = f' x * Λ 1 := by simpa only [mul_oneₓ, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
+    have H₁ : Λ (f' x) = f' x * Λ 1 := by simpa only [mul_one, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
     have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
     simpa [mul_comm] using H₂
     
@@ -95,7 +95,7 @@ there exist `Λ : ι → ℝ` and `Λ₀ : ℝ`, `(Λ, Λ₀) ≠ 0`, such that 
 
 See also `is_local_extr_on.linear_dependent_of_has_strict_fderiv_at` for a version that
 states `¬linear_independent ℝ _` instead of existence of `Λ` and `Λ₀`. -/
-theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [Fintypeₓ ι] {f : ι → E → ℝ}
+theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [Fintype ι] {f : ι → E → ℝ}
     {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
     ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
@@ -107,7 +107,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [
     ⟨Λ, Λ₀, h0, hsum⟩
   rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.Surjective Λ with ⟨Λ, rfl⟩
   refine' ⟨Λ, Λ₀, _, _⟩
-  · simpa only [Ne.def, Prod.ext_iffₓ, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
+  · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
     
   · ext x
     simpa [mul_comm] using hsum x
@@ -124,14 +124,14 @@ that states existence of Lagrange multipliers `Λ` and `Λ₀` instead of using
 theorem IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at {ι : Type _} [Finite ι] {f : ι → E → ℝ}
     {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
-    ¬LinearIndependent ℝ (Option.elimₓ φ' f' : Option ι → E →L[ℝ] ℝ) := by
+    ¬LinearIndependent ℝ (Option.elim φ' f' : Option ι → E →L[ℝ] ℝ) := by
   cases nonempty_fintype ι
-  rw [Fintypeₓ.linear_independent_iff]
+  rw [Fintype.linear_independent_iff]
   push_neg
   rcases hextr.exists_multipliers_of_has_strict_fderiv_at hf' hφ' with ⟨Λ, Λ₀, hΛ, hΛf⟩
-  refine' ⟨Option.elimₓ Λ₀ Λ, _, _⟩
-  · simpa [add_commₓ] using hΛf
+  refine' ⟨Option.elim Λ₀ Λ, _, _⟩
+  · simpa [add_comm] using hΛf
     
-  · simpa [Function.funext_iff, not_and_distrib, or_comm, Option.exists] using hΛ
+  · simpa [Function.funext_iff, not_and_distrib, or_comm', Option.exists] using hΛ
     
 

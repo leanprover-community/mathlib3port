@@ -233,24 +233,24 @@ open Lattice
 
 /-- The supremum of a collection of sieves: the union of them all. -/
 protected def sup (𝒮 : Set (Sieve X)) : Sieve X where
-  Arrows := fun Y => { f | ∃ S ∈ 𝒮, Sieve.Arrows S f }
-  downward_closed' := fun Y Z f => by
+  Arrows Y := { f | ∃ S ∈ 𝒮, Sieve.Arrows S f }
+  downward_closed' Y Z f := by
     rintro ⟨S, hS, hf⟩ g
     exact ⟨S, hS, S.downward_closed hf _⟩
 
 /-- The infimum of a collection of sieves: the intersection of them all. -/
 protected def inf (𝒮 : Set (Sieve X)) : Sieve X where
-  Arrows := fun Y => { f | ∀ S ∈ 𝒮, Sieve.Arrows S f }
-  downward_closed' := fun Y Z f hf g S H => S.downward_closed (hf S H) g
+  Arrows Y := { f | ∀ S ∈ 𝒮, Sieve.Arrows S f }
+  downward_closed' Y Z f hf g S H := S.downward_closed (hf S H) g
 
 /-- The union of two sieves is a sieve. -/
 protected def union (S R : Sieve X) : Sieve X where
-  Arrows := fun Y f => S f ∨ R f
+  Arrows Y f := S f ∨ R f
   downward_closed' := by rintro Y Z f (h | h) g <;> simp [h]
 
 /-- The intersection of two sieves is a sieve. -/
 protected def inter (S R : Sieve X) : Sieve X where
-  Arrows := fun Y f => S f ∧ R f
+  Arrows Y f := S f ∧ R f
   downward_closed' := by
     rintro Y Z f ⟨h₁, h₂⟩ g
     simp [h₁, h₂]
@@ -259,30 +259,30 @@ protected def inter (S R : Sieve X) : Sieve X where
 We generate this directly rather than using the galois insertion for nicer definitional properties.
 -/
 instance : CompleteLattice (Sieve X) where
-  le := fun S R => ∀ ⦃Y⦄ (f : Y ⟶ X), S f → R f
-  le_refl := fun S f q => id
-  le_trans := fun S₁ S₂ S₃ S₁₂ S₂₃ Y f h => S₂₃ _ (S₁₂ _ h)
-  le_antisymm := fun S R p q => Sieve.ext fun Y f => ⟨p _, q _⟩
+  le S R := ∀ ⦃Y⦄ (f : Y ⟶ X), S f → R f
+  le_refl S f q := id
+  le_trans S₁ S₂ S₃ S₁₂ S₂₃ Y f h := S₂₃ _ (S₁₂ _ h)
+  le_antisymm S R p q := Sieve.ext fun Y f => ⟨p _, q _⟩
   top := { Arrows := fun _ => Set.Univ, downward_closed' := fun Y Z f g h => ⟨⟩ }
   bot := { Arrows := fun _ => ∅, downward_closed' := fun _ _ _ p _ => False.elim p }
   sup := Sieve.union
   inf := Sieve.inter
   sup := Sieve.sup
   inf := Sieve.inf
-  le_Sup := fun 𝒮 S hS Y f hf => ⟨S, hS, hf⟩
-  Sup_le := fun ℰ S hS Y f => by
+  le_Sup 𝒮 S hS Y f hf := ⟨S, hS, hf⟩
+  Sup_le ℰ S hS Y f := by
     rintro ⟨R, hR, hf⟩
     apply hS R hR _ hf
-  Inf_le := fun _ _ hS _ _ h => h _ hS
-  le_Inf := fun _ _ hS _ _ hf _ hR => hS _ hR _ hf
-  le_sup_left := fun _ _ _ _ => Or.inl
-  le_sup_right := fun _ _ _ _ => Or.inr
-  sup_le := fun _ _ _ a b _ _ hf => hf.elim (a _) (b _)
-  inf_le_left := fun _ _ _ _ => And.left
-  inf_le_right := fun _ _ _ _ => And.right
-  le_inf := fun _ _ _ p q _ _ z => ⟨p _ z, q _ z⟩
-  le_top := fun _ _ _ _ => trivialₓ
-  bot_le := fun _ _ _ => False.elim
+  Inf_le _ _ hS _ _ h := h _ hS
+  le_Inf _ _ hS _ _ hf _ hR := hS _ hR _ hf
+  le_sup_left _ _ _ _ := Or.inl
+  le_sup_right _ _ _ _ := Or.inr
+  sup_le _ _ _ a b _ _ hf := hf.elim (a _) (b _)
+  inf_le_left _ _ _ _ := And.left
+  inf_le_right _ _ _ _ := And.right
+  le_inf _ _ _ p q _ _ z := ⟨p _ z, q _ z⟩
+  le_top _ _ _ _ := trivial
+  bot_le _ _ _ := False.elim
 
 /-- The maximal sieve always exists. -/
 instance sieveInhabited : Inhabited (Sieve X) :=
@@ -306,12 +306,12 @@ theorem union_apply {R S : Sieve X} {Y} (f : Y ⟶ X) : (R ⊔ S) f ↔ R f ∨ 
 
 @[simp]
 theorem top_apply (f : Y ⟶ X) : (⊤ : Sieve X) f :=
-  trivialₓ
+  trivial
 
 /-- Generate the smallest sieve containing the given set of arrows. -/
 @[simps]
 def generate (R : Presieve X) : Sieve X where
-  Arrows := fun Z f => ∃ (Y : _)(h : Z ⟶ Y)(g : Y ⟶ X), R g ∧ h ≫ g = f
+  Arrows Z f := ∃ (Y : _)(h : Z ⟶ Y)(g : Y ⟶ X), R g ∧ h ≫ g = f
   downward_closed' := by
     rintro Y Z _ ⟨W, g, f, hf, rfl⟩ h
     exact ⟨_, h ≫ g, _, hf, by simp⟩
@@ -336,9 +336,9 @@ theorem sets_iff_generate (R : Presieve X) (S : Sieve X) : generate R ≤ S ↔ 
 /-- Show that there is a galois insertion (generate, set_over). -/
 def giGenerate : GaloisInsertion (generate : Presieve X → Sieve X) Arrows where
   gc := sets_iff_generate
-  choice := fun 𝒢 _ => generate 𝒢
-  choice_eq := fun _ _ => rfl
-  le_l_u := fun S Y f hf => ⟨_, 𝟙 _, _, hf, id_comp _⟩
+  choice 𝒢 _ := generate 𝒢
+  choice_eq _ _ := rfl
+  le_l_u S Y f hf := ⟨_, 𝟙 _, _, hf, id_comp _⟩
 
 theorem le_generate (R : Presieve X) : R ≤ generate R :=
   giGenerate.gc.le_u_l R
@@ -349,7 +349,7 @@ theorem generate_sieve (S : Sieve X) : generate S = S :=
 
 /-- If the identity arrow is in a sieve, the sieve is maximal. -/
 theorem id_mem_iff_eq_top : S (𝟙 X) ↔ S = ⊤ :=
-  ⟨fun h => top_unique fun Y f _ => by simpa using downward_closed _ h f, fun h => h.symm ▸ trivialₓ⟩
+  ⟨fun h => top_unique fun Y f _ => by simpa using downward_closed _ h f, fun h => h.symm ▸ trivial⟩
 
 /-- If an arrow set contains a split epi, it generates the maximal sieve. -/
 theorem generate_of_contains_is_split_epi {R : Presieve X} (f : Y ⟶ X) [IsSplitEpi f] (hf : R f) : generate R = ⊤ := by
@@ -369,8 +369,8 @@ theorem generate_top : generate (⊤ : Presieve X) = ⊤ :=
     That is, `sieve.pullback S h := (≫ h) '⁻¹ S`. -/
 @[simps]
 def pullback (h : Y ⟶ X) (S : Sieve X) : Sieve Y where
-  Arrows := fun Y sl => S (sl ≫ h)
-  downward_closed' := fun Z W f g h => by simp [g]
+  Arrows Y sl := S (sl ≫ h)
+  downward_closed' Z W f g h := by simp [g]
 
 @[simp]
 theorem pullback_id : S.pullback (𝟙 _) = S := by simp [sieve.ext_iff]
@@ -397,7 +397,7 @@ factors through some `g : Z ⟶ Y` which is in `R`.
 -/
 @[simps]
 def pushforward (f : Y ⟶ X) (R : Sieve Y) : Sieve X where
-  Arrows := fun Z gf => ∃ g, g ≫ f = gf ∧ R g
+  Arrows Z gf := ∃ g, g ≫ f = gf ∧ R g
   downward_closed' := fun Z₁ Z₂ g ⟨j, k, z⟩ h => ⟨h ≫ j, by simp [k], by simp [z]⟩
 
 theorem pushforward_apply_comp {R : Sieve Y} {Z : C} {g : Z ⟶ Y} (hg : R g) (f : Y ⟶ X) : R.pushforward f (g ≫ f) :=
@@ -411,10 +411,10 @@ theorem pushforward_comp {f : Y ⟶ X} {g : Z ⟶ Y} (R : Sieve Z) :
 theorem galois_connection (f : Y ⟶ X) : GaloisConnection (Sieve.pushforward f) (Sieve.pullback f) := fun S R =>
   ⟨fun hR Z g hg => hR _ ⟨g, rfl, hg⟩, fun hS Z g ⟨h, hg, hh⟩ => hg ▸ hS h hh⟩
 
-theorem pullback_monotone (f : Y ⟶ X) : Monotoneₓ (Sieve.pullback f) :=
+theorem pullback_monotone (f : Y ⟶ X) : Monotone (Sieve.pullback f) :=
   (galois_connection f).monotone_u
 
-theorem pushforward_monotone (f : Y ⟶ X) : Monotoneₓ (Sieve.pushforward f) :=
+theorem pushforward_monotone (f : Y ⟶ X) : Monotone (Sieve.pushforward f) :=
   (galois_connection f).monotone_l
 
 theorem le_pushforward_pullback (f : Y ⟶ X) (R : Sieve Y) : R ≤ (R.pushforward f).pullback f :=
@@ -473,7 +473,7 @@ variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 @[simps]
 def functorPullback (R : Sieve (F.obj X)) : Sieve X where
   Arrows := Presieve.FunctorPullback F R
-  downward_closed' := fun _ _ f hf g => by
+  downward_closed' _ _ f hf g := by
     unfold presieve.functor_pullback
     rw [F.map_comp]
     exact R.downward_closed hf (F.map g)
@@ -507,7 +507,7 @@ theorem functor_pushforward_extend_eq {R : Presieve X} :
 @[simps]
 def functorPushforward (R : Sieve X) : Sieve (F.obj X) where
   Arrows := R.Arrows.FunctorPushforward F
-  downward_closed' := fun Y Z f h g => by
+  downward_closed' Y Z f h g := by
     obtain ⟨X, α, β, hα, rfl⟩ := h
     exact ⟨X, α, g ≫ β, hα, by simp⟩
 
@@ -542,10 +542,10 @@ theorem functor_galois_connection (X : C) :
     exact hle g hg
     
 
-theorem functor_pullback_monotone (X : C) : Monotoneₓ (Sieve.functorPullback F : Sieve (F.obj X) → Sieve X) :=
+theorem functor_pullback_monotone (X : C) : Monotone (Sieve.functorPullback F : Sieve (F.obj X) → Sieve X) :=
   (functor_galois_connection F X).monotone_u
 
-theorem functor_pushforward_monotone (X : C) : Monotoneₓ (Sieve.functorPushforward F : Sieve X → Sieve (F.obj X)) :=
+theorem functor_pushforward_monotone (X : C) : Monotone (Sieve.functorPushforward F : Sieve X → Sieve (F.obj X)) :=
   (functor_galois_connection F X).monotone_l
 
 theorem le_functor_pushforward_pullback (R : Sieve X) : R ≤ (R.FunctorPushforward F).FunctorPullback F :=
@@ -574,7 +574,7 @@ theorem functor_pushforward_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve X).FunctorP
 theorem functor_pushforward_top (F : C ⥤ D) (X : C) : (⊤ : Sieve X).FunctorPushforward F = ⊤ := by
   refine' (generate_sieve _).symm.trans _
   apply generate_of_contains_is_split_epi (𝟙 (F.obj X))
-  refine' ⟨X, 𝟙 _, 𝟙 _, trivialₓ, by simp⟩
+  refine' ⟨X, 𝟙 _, 𝟙 _, trivial, by simp⟩
 
 @[simp]
 theorem functor_pullback_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve (F.obj X)).FunctorPullback F = ⊥ :=
@@ -609,18 +609,18 @@ end Functor
 /-- A sieve induces a presheaf. -/
 @[simps]
 def functor (S : Sieve X) : Cᵒᵖ ⥤ Type v₁ where
-  obj := fun Y => { g : Y.unop ⟶ X // S g }
-  map := fun Y Z f g => ⟨f.unop ≫ g.1, downward_closed _ g.2 _⟩
+  obj Y := { g : Y.unop ⟶ X // S g }
+  map Y Z f g := ⟨f.unop ≫ g.1, downward_closed _ g.2 _⟩
 
 /-- If a sieve S is contained in a sieve T, then we have a morphism of presheaves on their induced
 presheaves.
 -/
 @[simps]
-def natTransOfLe {S T : Sieve X} (h : S ≤ T) : S.Functor ⟶ T.Functor where app := fun Y f => ⟨f.1, h _ f.2⟩
+def natTransOfLe {S T : Sieve X} (h : S ≤ T) : S.Functor ⟶ T.Functor where app Y f := ⟨f.1, h _ f.2⟩
 
 /-- The natural inclusion from the functor induced by a sieve to the yoneda embedding. -/
 @[simps]
-def functorInclusion (S : Sieve X) : S.Functor ⟶ yoneda.obj X where app := fun Y f => f.1
+def functorInclusion (S : Sieve X) : S.Functor ⟶ yoneda.obj X where app Y f := f.1
 
 theorem nat_trans_of_le_comm {S T : Sieve X} (h : S ≤ T) : natTransOfLe h ≫ functorInclusion _ = functorInclusion _ :=
   rfl
@@ -637,8 +637,8 @@ instance functor_inclusion_is_mono : Mono S.functorInclusion :=
 -/
 @[simps]
 def sieveOfSubfunctor {R} (f : R ⟶ yoneda.obj X) : Sieve X where
-  Arrows := fun Y g => ∃ t, f.app (Opposite.op Y) t = g
-  downward_closed' := fun Y Z _ => by
+  Arrows Y g := ∃ t, f.app (Opposite.op Y) t = g
+  downward_closed' Y Z _ := by
     rintro ⟨t, rfl⟩ g
     refine' ⟨R.map g.op t, _⟩
     rw [functor_to_types.naturality _ _ f]

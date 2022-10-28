@@ -37,19 +37,19 @@ universe u v w w₁ w₂
 
 section OfAssociative
 
-variable {A : Type v} [Ringₓ A]
+variable {A : Type v} [Ring A]
 
-namespace Ringₓ
+namespace Ring
 
 /-- The bracket operation for rings is the ring commutator, which captures the extent to which a
 ring is commutative. It is identically zero exactly when the ring is commutative. -/
-instance (priority := 100) : HasBracket A A :=
+instance (priority := 100) : Bracket A A :=
   ⟨fun x y => x * y - y * x⟩
 
 theorem lie_def (x y : A) : ⁅x, y⁆ = x * y - y * x :=
   rfl
 
-end Ringₓ
+end Ring
 
 theorem commute_iff_lie_eq {x y : A} : Commute x y ↔ ⁅x, y⁆ = 0 :=
   sub_eq_zero.symm
@@ -62,14 +62,14 @@ namespace LieRing
 /-- An associative ring gives rise to a Lie ring by taking the bracket to be the ring commutator. -/
 instance (priority := 100) ofAssociativeRing : LieRing A where
   add_lie := by
-    simp only [Ringₓ.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_commₓ, add_left_commₓ, forall_const,
+    simp only [Ring.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_comm, add_left_comm, forall_const,
       eq_self_iff_true, neg_add_rev]
   lie_add := by
-    simp only [Ringₓ.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_commₓ, add_left_commₓ, forall_const,
+    simp only [Ring.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_comm, add_left_comm, forall_const,
       eq_self_iff_true, neg_add_rev]
-  lie_self := by simp only [Ringₓ.lie_def, forall_const, sub_self]
-  leibniz_lie := fun x y z => by
-    repeat' rw [Ringₓ.lie_def]
+  lie_self := by simp only [Ring.lie_def, forall_const, sub_self]
+  leibniz_lie x y z := by
+    repeat' rw [Ring.lie_def]
     noncomm_ring
 
 theorem of_associative_ring_bracket (x y : A) : ⁅x, y⁆ = x * y - y * x :=
@@ -83,7 +83,7 @@ end LieRing
 
 section AssociativeModule
 
-variable {M : Type w} [AddCommGroupₓ M] [Module A M]
+variable {M : Type w} [AddCommGroup M] [Module A M]
 
 /-- We can regard a module over an associative ring `A` as a Lie ring module over `A` with Lie
 bracket equal to its ring commutator.
@@ -111,13 +111,13 @@ end AssociativeModule
 
 section LieAlgebra
 
-variable {R : Type u} [CommRingₓ R] [Algebra R A]
+variable {R : Type u} [CommRing R] [Algebra R A]
 
 /-- An associative algebra gives rise to a Lie algebra by taking the bracket to be the ring
 commutator. -/
 instance (priority := 100) LieAlgebra.ofAssociativeAlgebra :
     LieAlgebra R
-      A where lie_smul := fun t x y => by
+      A where lie_smul t x y := by
     rw [LieRing.of_associative_ring_bracket, LieRing.of_associative_ring_bracket, Algebra.mul_smul_comm,
       Algebra.smul_mul_assoc, smul_sub]
 
@@ -125,7 +125,7 @@ attribute [local instance] LieRingModule.ofAssociativeModule
 
 section AssociativeRepresentation
 
-variable {M : Type w} [AddCommGroupₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
+variable {M : Type w} [AddCommGroup M] [Module R M] [Module A M] [IsScalarTower R A M]
 
 /-- A representation of an associative algebra `A` is also a representation of `A`, regarded as a
 Lie algebra via the ring commutator.
@@ -136,17 +136,17 @@ def LieModule.ofAssociativeModule : LieModule R A M where
   smul_lie := smul_assoc
   lie_smul := smul_algebra_smul_comm
 
-instance Module.End.lieRingModule : LieRingModule (Module.End R M) M :=
+instance Module.EndCat.lieRingModule : LieRingModule (Module.EndCat R M) M :=
   LieRingModule.ofAssociativeModule
 
-instance Module.End.lieModule : LieModule R (Module.End R M) M :=
+instance Module.EndCat.lieModule : LieModule R (Module.EndCat R M) M :=
   LieModule.ofAssociativeModule
 
 end AssociativeRepresentation
 
 namespace AlgHom
 
-variable {B : Type w} {C : Type w₁} [Ringₓ B] [Ringₓ C] [Algebra R B] [Algebra R C]
+variable {B : Type w} {C : Type w₁} [Ring B] [Ring C] [Algebra R B] [Algebra R C]
 
 variable (f : A →ₐ[R] B) (g : B →ₐ[R] C)
 
@@ -193,7 +193,7 @@ section AdjointAction
 
 variable (R : Type u) (L : Type v) (M : Type w)
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
+variable [CommRing R] [LieRing L] [LieAlgebra R L] [AddCommGroup M] [Module R M]
 
 variable [LieRingModule L M] [LieModule R L M]
 
@@ -201,20 +201,20 @@ variable [LieRingModule L M] [LieModule R L M]
 
 See also `lie_module.to_module_hom`. -/
 @[simps]
-def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.End R M where
-  toFun := fun x => { toFun := fun m => ⁅x, m⁆, map_add' := lie_add x, map_smul' := fun t => lie_smul t x }
-  map_add' := fun x y => by
+def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.EndCat R M where
+  toFun x := { toFun := fun m => ⁅x, m⁆, map_add' := lie_add x, map_smul' := fun t => lie_smul t x }
+  map_add' x y := by
     ext m
     apply add_lie
-  map_smul' := fun t x => by
+  map_smul' t x := by
     ext m
     apply smul_lie
-  map_lie' := fun x y => by
+  map_lie' x y := by
     ext m
     apply lie_lie
 
 /-- The adjoint action of a Lie algebra on itself. -/
-def LieAlgebra.ad : L →ₗ⁅R⁆ Module.End R L :=
+def LieAlgebra.ad : L →ₗ⁅R⁆ Module.EndCat R L :=
   LieModule.toEndomorphism R L L
 
 @[simp]
@@ -222,7 +222,7 @@ theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
   rfl
 
 @[simp]
-theorem LieModule.to_endomorphism_module_End : LieModule.toEndomorphism R (Module.End R M) M = LieHom.id := by
+theorem LieModule.to_endomorphism_module_End : LieModule.toEndomorphism R (Module.EndCat R M) M = LieHom.id := by
   ext g m
   simp [lie_eq_smul]
 
@@ -262,8 +262,8 @@ end LieSubmodule
 
 open LieAlgebra
 
-theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ringₓ A] [Algebra R A] :
-    (ad R A : A → Module.End R A) = LinearMap.mulLeft R - LinearMap.mulRight R := by
+theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ring A] [Algebra R A] :
+    (ad R A : A → Module.EndCat R A) = LinearMap.mulLeft R - LinearMap.mulRight R := by
   ext a b
   simp [LieRing.of_associative_ring_bracket]
 
@@ -276,7 +276,7 @@ theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
 end AdjointAction
 
 /-- A subalgebra of an associative algebra is a Lie subalgebra of the associated Lie algebra. -/
-def lieSubalgebraOfSubalgebra (R : Type u) [CommRingₓ R] (A : Type v) [Ringₓ A] [Algebra R A] (A' : Subalgebra R A) :
+def lieSubalgebraOfSubalgebra (R : Type u) [CommRing R] (A : Type v) [Ring A] [Algebra R A] (A' : Subalgebra R A) :
     LieSubalgebra R A :=
   { A'.toSubmodule with
     lie_mem' := fun x y hx hy => by
@@ -292,19 +292,19 @@ namespace LinearEquiv
 
 variable {R : Type u} {M₁ : Type v} {M₂ : Type w}
 
-variable [CommRingₓ R] [AddCommGroupₓ M₁] [Module R M₁] [AddCommGroupₓ M₂] [Module R M₂]
+variable [CommRing R] [AddCommGroup M₁] [Module R M₁] [AddCommGroup M₂] [Module R M₂]
 
 variable (e : M₁ ≃ₗ[R] M₂)
 
 /-- A linear equivalence of two modules induces a Lie algebra equivalence of their endomorphisms. -/
-def lieConj : Module.End R M₁ ≃ₗ⁅R⁆ Module.End R M₂ :=
+def lieConj : Module.EndCat R M₁ ≃ₗ⁅R⁆ Module.EndCat R M₂ :=
   { e.conj with
     map_lie' := fun f g =>
       show e.conj ⁅f, g⁆ = ⁅e.conj f, e.conj g⁆ by
         simp only [LieRing.of_associative_ring_bracket, LinearMap.mul_eq_comp, e.conj_comp, LinearEquiv.map_sub] }
 
 @[simp]
-theorem lie_conj_apply (f : Module.End R M₁) : e.lieConj f = e.conj f :=
+theorem lie_conj_apply (f : Module.EndCat R M₁) : e.lieConj f = e.conj f :=
   rfl
 
 @[simp]
@@ -317,7 +317,7 @@ namespace AlgEquiv
 
 variable {R : Type u} {A₁ : Type v} {A₂ : Type w}
 
-variable [CommRingₓ R] [Ringₓ A₁] [Ringₓ A₂] [Algebra R A₁] [Algebra R A₂]
+variable [CommRing R] [Ring A₁] [Ring A₂] [Algebra R A₁] [Algebra R A₂]
 
 variable (e : A₁ ≃ₐ[R] A₂)
 

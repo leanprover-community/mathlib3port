@@ -133,7 +133,7 @@ theorem SplitMono.mono {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) : Mono f :=
 
 /-- Every split mono is a mono. -/
 instance (priority := 100) IsSplitMono.mono {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : Mono f :=
-  hf.exists_split_mono.some.mono
+  hf.exists_split_mono.some.Mono
 
 theorem SplitEpi.epi {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) : Epi f :=
   { left_cancellation := fun Z g h w => by

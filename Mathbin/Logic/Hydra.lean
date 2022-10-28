@@ -56,18 +56,18 @@ def CutExpand (r : α → α → Prop) (s' s : Multiset α) : Prop :=
 variable {r : α → α → Prop}
 
 theorem cut_expand_singleton {s x} (h : ∀ x' ∈ s, r x' x) : CutExpand r s {x} :=
-  ⟨s, x, h, add_commₓ s _⟩
+  ⟨s, x, h, add_comm s _⟩
 
 theorem cut_expand_singleton_singleton {x' x} (h : r x' x) : CutExpand r {x'} {x} :=
   cut_expand_singleton fun a h => by rwa [mem_singleton.1 h]
 
 theorem cut_expand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpand r t u :=
-  exists₂_congrₓ fun _ _ => and_congrₓ Iff.rfl <| by rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
+  exists₂_congr fun _ _ => and_congr Iff.rfl <| by rw [add_assoc, add_assoc, add_left_cancel_iff]
 
 theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
     CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t := by
   simp_rw [cut_expand, add_singleton_eq_iff]
-  refine' exists₂_congrₓ fun t a => ⟨_, _⟩
+  refine' exists₂_congr fun t a => ⟨_, _⟩
   · rintro ⟨ht, ha, rfl⟩
     obtain h | h := mem_add.1 ha
     exacts[⟨ht, h, t.erase_add_left_pos h⟩, (@irrefl α r _ a (ht a h)).elim]
@@ -89,18 +89,18 @@ theorem cut_expand_fibration (r : α → α → Prop) :
   dsimp at he⊢
   classical
   obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
-  rw [add_assocₓ, mem_add] at ha
+  rw [add_assoc, mem_add] at ha
   obtain h | h := ha
   · refine' ⟨(s₁.erase a + t, s₂), game_add.fst ⟨t, a, hr, _⟩, _⟩
-    · rw [add_commₓ, ← add_assocₓ, singleton_add, cons_erase h]
+    · rw [add_comm, ← add_assoc, singleton_add, cons_erase h]
       
-    · rw [add_assocₓ s₁, erase_add_left_pos _ h, add_right_commₓ, add_assocₓ]
+    · rw [add_assoc s₁, erase_add_left_pos _ h, add_right_comm, add_assoc]
       
     
   · refine' ⟨(s₁, (s₂ + t).erase a), game_add.snd ⟨t, a, hr, _⟩, _⟩
-    · rw [add_commₓ, singleton_add, cons_erase h]
+    · rw [add_comm, singleton_add, cons_erase h]
       
-    · rw [add_assocₓ, erase_add_right_pos _ h]
+    · rw [add_assoc, erase_add_right_pos _ h]
       
     
 
@@ -126,7 +126,7 @@ theorem _root_.acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (C
   rw [cut_expand_iff]
   rintro ⟨t, a, hr, rfl | ⟨⟨⟩⟩, rfl⟩
   refine' acc_of_singleton fun a' => _
-  rw [erase_singleton, zero_addₓ]
+  rw [erase_singleton, zero_add]
   exact ih a' ∘ hr a'
 
 /-- `cut_expand r` is well-founded when `r` is. -/

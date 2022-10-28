@@ -26,7 +26,7 @@ open Function
 
 universe u v w
 
-variable {α : Type u} {β : Type v} {ι : Sort w} (r s : α → α → Prop)
+variable {α : Type u} {β : Type v} {ι : Sort w} (r r' s : α → α → Prop)
 
 -- mathport name: «expr ≼ »
 local infixl:50 " ≼ " => r
@@ -41,7 +41,7 @@ def Directed (f : ι → α) :=
 def DirectedOn (s : Set α) :=
   ∀ x ∈ s, ∀ y ∈ s, ∃ z ∈ s, x ≼ z ∧ y ≼ z
 
-variable {r}
+variable {r r'}
 
 theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s → α) := by
   simp [Directed, DirectedOn] <;> refine' ball_congr fun x hx => by simp <;> rfl
@@ -51,10 +51,13 @@ alias directed_on_iff_directed ↔ DirectedOn.directed_coe _
 theorem directed_on_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
   simp only [DirectedOn, Set.ball_image_iff, Set.bex_image_iff, Order.Preimage]
 
-theorem DirectedOn.mono {s : Set α} (h : DirectedOn r s) {r' : α → α → Prop} (H : ∀ {a b}, r a b → r' a b) :
+theorem DirectedOn.mono' {s : Set α} (hs : DirectedOn r s) (h : ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b → r' a b) :
     DirectedOn r' s := fun x hx y hy =>
-  let ⟨z, zs, xz, yz⟩ := h x hx y hy
-  ⟨z, zs, H xz, H yz⟩
+  let ⟨z, hz, hxz, hyz⟩ := hs _ hx _ hy
+  ⟨z, hz, h hx hz hxz, h hy hz hyz⟩
+
+theorem DirectedOn.mono {s : Set α} (h : DirectedOn r s) (H : ∀ {a b}, r a b → r' a b) : DirectedOn r' s :=
+  h.mono' fun _ _ _ _ => H
 
 theorem directed_comp {ι} {f : ι → β} {g : β → α} : Directed r (g ∘ f) ↔ Directed (g ⁻¹'o r) f :=
   Iff.rfl
@@ -72,15 +75,18 @@ theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : �
 theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop} (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) :
     Directed r f := fun a b => ⟨a ⊔ b, H le_sup_left, H le_sup_right⟩
 
-theorem Monotoneₓ.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotoneₓ f → Directed (· ≤ ·) f :=
+theorem Monotone.directed_le [SemilatticeSup α] [Preorder β] {f : α → β} : Monotone f → Directed (· ≤ ·) f :=
   directed_of_sup
+
+theorem Antitone.directed_ge [SemilatticeSup α] [Preorder β] {f : α → β} (hf : Antitone f) : Directed (· ≥ ·) f :=
+  directed_of_sup hf
 
 /-- A set stable by supremum is `≤`-directed. -/
 theorem directed_on_of_sup_mem [SemilatticeSup α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊔ j ∈ S) :
     DirectedOn (· ≤ ·) S := fun a ha b hb => ⟨a ⊔ b, H ha hb, le_sup_left, le_sup_right⟩
 
-theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : ι → α} (hf : Directed (· ≤ ·) f)
-    (he : Function.Injective e) : Directed (· ≤ ·) (Function.extendₓ e f ⊥) := by
+theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι → α} (hf : Directed (· ≤ ·) f)
+    (he : Function.Injective e) : Directed (· ≤ ·) (Function.extend e f ⊥) := by
   intro a b
   rcases(em (∃ i, e i = a)).symm with (ha | ⟨i, rfl⟩)
   · use b
@@ -92,11 +98,17 @@ theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : 
     
   rcases hf i j with ⟨k, hi, hj⟩
   use e k
-  simp only [Function.extend_applyₓ he, *, true_andₓ]
+  simp only [Function.extend_apply he, *, true_and_iff]
 
 /-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β} (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) :
     Directed r f := fun x y => ⟨x ⊓ y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
+
+theorem Monotone.directed_ge [SemilatticeInf α] [Preorder β] {f : α → β} (hf : Monotone f) : Directed (· ≥ ·) f :=
+  directed_of_inf hf
+
+theorem Antitone.directed_le [SemilatticeInf α] [Preorder β] {f : α → β} (hf : Antitone f) : Directed (· ≤ ·) f :=
+  directed_of_inf hf
 
 /-- A set stable by infimum is `≥`-directed. -/
 theorem directed_on_of_inf_mem [SemilatticeInf α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊓ j ∈ S) :
@@ -117,12 +129,12 @@ theorem directed_id_iff : Directed r id ↔ IsDirected α r :=
 
 theorem directed_on_univ [IsDirected α r] : DirectedOn r Set.Univ := fun a _ b _ =>
   let ⟨c, hc⟩ := directed_of r a b
-  ⟨c, trivialₓ, hc⟩
+  ⟨c, trivial, hc⟩
 
 theorem directed_on_univ_iff : DirectedOn r Set.Univ ↔ IsDirected α r :=
   ⟨fun h =>
     ⟨fun a b =>
-      let ⟨c, _, hc⟩ := h a trivialₓ b trivialₓ
+      let ⟨c, _, hc⟩ := h a trivial b trivial
       ⟨c, hc⟩⟩,
     @directed_on_univ _ _⟩
 
@@ -145,9 +157,9 @@ instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirect
 
 instance OrderDual.is_directed_le [LE α] [IsDirected α (· ≥ ·)] : IsDirected αᵒᵈ (· ≤ ·) := by assumption
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] {a : α}
+variable [Preorder α] {a : α}
 
 protected theorem IsMin.is_bot [IsDirected α (· ≥ ·)] (h : IsMin a) : IsBot a := fun b =>
   let ⟨c, hca, hcb⟩ := exists_le_le a b
@@ -168,7 +180,7 @@ theorem is_bot_iff_is_min [IsDirected α (· ≥ ·)] : IsBot a ↔ IsMin a :=
 theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
   ⟨IsTop.is_max, IsMax.is_top⟩
 
-variable (β) [PartialOrderₓ β]
+variable (β) [PartialOrder β]
 
 theorem exists_lt_of_directed_ge [IsDirected β (· ≥ ·)] [Nontrivial β] : ∃ a b : β, a < b := by
   rcases exists_pair_ne β with ⟨a, b, hne⟩
@@ -179,7 +191,7 @@ theorem exists_lt_of_directed_le [IsDirected β (· ≤ ·)] [Nontrivial β] : �
   let ⟨a, b, h⟩ := exists_lt_of_directed_ge βᵒᵈ
   ⟨b, a, h⟩
 
-end Preorderₓ
+end Preorder
 
 -- see Note [lower instance priority]
 instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] : IsDirected α (· ≤ ·) :=

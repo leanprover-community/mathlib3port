@@ -5,6 +5,7 @@ Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudrya
 -/
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Functor.EpiMono
+import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 
 /-!
 # Concrete categories
@@ -39,7 +40,9 @@ universe w v v' u
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`forget] []
+open CategoryTheory.Limits
+
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -129,9 +132,25 @@ theorem ConcreteCategory.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x
 theorem ConcreteCategory.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function.Injective f) : Mono f :=
   (forget C).mono_of_mono_map ((mono_iff_injective f).2 i)
 
+theorem ConcreteCategory.injective_of_mono_of_preserves_pullback {X Y : C} (f : X ⟶ Y) [Mono f]
+    [PreservesLimitsOfShape WalkingCospan (forget C)] : Function.Injective f :=
+  (mono_iff_injective ((forget C).map f)).mp inferInstance
+
+theorem ConcreteCategory.mono_iff_injective_of_preserves_pullback {X Y : C} (f : X ⟶ Y)
+    [PreservesLimitsOfShape WalkingCospan (forget C)] : Mono f ↔ Function.Injective f :=
+  ((forget C).mono_map_iff_mono _).symm.trans (mono_iff_injective _)
+
 /-- In any concrete category, surjective morphisms are epimorphisms. -/
 theorem ConcreteCategory.epi_of_surjective {X Y : C} (f : X ⟶ Y) (s : Function.Surjective f) : Epi f :=
   (forget C).epi_of_epi_map ((epi_iff_surjective f).2 s)
+
+theorem ConcreteCategory.surjective_of_epi_of_preserves_pushout {X Y : C} (f : X ⟶ Y) [Epi f]
+    [PreservesColimitsOfShape WalkingSpan (forget C)] : Function.Surjective f :=
+  (epi_iff_surjective ((forget C).map f)).mp inferInstance
+
+theorem ConcreteCategory.epi_iff_surjective_of_preserves_pushout {X Y : C} (f : X ⟶ Y)
+    [PreservesColimitsOfShape WalkingSpan (forget C)] : Epi f ↔ Function.Surjective f :=
+  ((forget C).epi_map_iff_epi _).symm.trans (epi_iff_surjective _)
 
 theorem ConcreteCategory.bijective_of_is_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : Function.Bijective ((forget C).map f) :=
   by

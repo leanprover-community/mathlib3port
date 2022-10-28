@@ -3,7 +3,7 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Bicategory.End
+import Mathbin.CategoryTheory.Bicategory.EndCat
 import Mathbin.CategoryTheory.Monoidal.Functorial
 
 /-!
@@ -41,18 +41,18 @@ def MonoidalSingleObj (C : Type _) [Category C] [MonoidalCategory C] :=
 
 open MonoidalCategory
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : Bicategory (MonoidalSingleObj C) where
-  Hom := fun _ _ => C
-  id := fun _ => 𝟙_ C
-  comp := fun _ _ _ X Y => X ⊗ Y
-  whiskerLeft := fun _ _ _ X Y Z f => 𝟙 X ⊗ f
-  whiskerRight := fun _ _ _ X Y f Z => f ⊗ 𝟙 Z
-  associator := fun _ _ _ _ X Y Z => α_ X Y Z
-  leftUnitor := fun _ _ X => λ_ X
-  rightUnitor := fun _ _ X => ρ_ X
+  Hom _ _ := C
+  id _ := 𝟙_ C
+  comp _ _ _ X Y := X ⊗ Y
+  whiskerLeft _ _ _ X Y Z f := 𝟙 X ⊗ f
+  whiskerRight _ _ _ X Y f Z := f ⊗ 𝟙 Z
+  associator _ _ _ _ X Y Z := α_ X Y Z
+  leftUnitor _ _ X := λ_ X
+  rightUnitor _ _ X := ρ_ X
   comp_whisker_left' := by
     intros
     rw [associator_inv_naturality, iso.hom_inv_id_assoc, tensor_id]
@@ -87,11 +87,11 @@ We subsequently show this is an equivalence.
 -/
 @[simps]
 def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.star C)) C where
-  obj := fun X => X
-  map := fun X Y f => f
+  obj X := X
+  map X Y f := f
   ε := 𝟙 _
-  μ := fun X Y => 𝟙 _
-  μ_natural' := fun X Y X' Y' f g => by
+  μ X Y := 𝟙 _
+  μ_natural' X Y X' Y' f g := by
     dsimp
     simp only [category.id_comp, category.comp_id]
     -- Should we provide further simp lemmas so this goal becomes visible?

@@ -36,9 +36,9 @@ variable {R : Type u}
 
 namespace LaurentSeries
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 instance : Coe (PowerSeries R) (LaurentSeries R) :=
   ⟨HahnSeries.ofPowerSeries ℤ R⟩
@@ -84,7 +84,7 @@ theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 
 theorem single_order_mul_power_series_part (x : LaurentSeries R) :
     (single x.order 1 : LaurentSeries R) * x.powerSeriesPart = x := by
   ext n
-  rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mulₓ]
+  rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mul]
   by_cases h:x.order ≤ n
   · rw [Int.eq_nat_abs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series, power_series_part_coeff, ←
       Int.eq_nat_abs_of_zero_le (sub_nonneg_of_le h), add_sub_cancel'_right]
@@ -104,29 +104,29 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
 theorem of_power_series_power_series_part (x : LaurentSeries R) :
     ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x := by
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
-  rw [← mul_assoc, single_mul_single, neg_add_selfₓ, mul_oneₓ, ← C_apply, C_one, one_mulₓ, coe_power_series]
+  rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← C_apply, C_one, one_mul, coe_power_series]
 
-end Semiringₓ
+end Semiring
 
-instance [CommSemiringₓ R] : Algebra (PowerSeries R) (LaurentSeries R) :=
+instance [CommSemiring R] : Algebra (PowerSeries R) (LaurentSeries R) :=
   (HahnSeries.ofPowerSeries ℤ R).toAlgebra
 
 @[simp]
-theorem coe_algebra_map [CommSemiringₓ R] :
+theorem coe_algebra_map [CommSemiring R] :
     ⇑(algebraMap (PowerSeries R) (LaurentSeries R)) = HahnSeries.ofPowerSeries ℤ R :=
   rfl
 
 /-- The localization map from power series to Laurent series. -/
 @[simps]
-instance of_power_series_localization [CommRingₓ R] :
+instance ofPowerSeriesLocalization [CommRing R] :
     IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R)) (LaurentSeries R) where
   map_units := by
     rintro ⟨_, n, rfl⟩
     refine' ⟨⟨single (n : ℤ) 1, single (-n : ℤ) 1, _, _⟩, _⟩
-    · simp only [single_mul_single, mul_oneₓ, add_right_negₓ]
+    · simp only [single_mul_single, mul_one, add_right_neg]
       rfl
       
-    · simp only [single_mul_single, mul_oneₓ, add_left_negₓ]
+    · simp only [single_mul_single, mul_one, add_left_neg]
       rfl
       
     · simp
@@ -135,7 +135,7 @@ instance of_power_series_localization [CommRingₓ R] :
     intro z
     by_cases h:0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
-      simp only [RingHom.map_one, mul_oneₓ, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one]
+      simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one]
       rw [Int.nat_abs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
       
     · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
@@ -143,7 +143,7 @@ instance of_power_series_localization [CommRingₓ R] :
       rw [mul_comm _ z]
       refine' congr rfl _
       rw [Subtype.coe_mk, of_power_series_X_pow, Int.of_nat_nat_abs_of_nonpos]
-      exact le_of_not_geₓ h
+      exact le_of_not_ge h
       
   eq_iff_exists := by
     intro x y
@@ -158,12 +158,12 @@ instance of_power_series_localization [CommRingₓ R] :
       intro m
       have h := hc (m + n)
       rw [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.X_pow_eq, PowerSeries.monomial, PowerSeries.coeff,
-        Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_oneₓ] at h
+        Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_one] at h
       exact h
       
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
-  IsLocalization.of_le (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
+  IsLocalization.ofLe (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
     (powers_le_non_zero_divisors_of_no_zero_divisors PowerSeries.X_ne_zero) fun f hf =>
     is_unit_of_mem_non_zero_divisors <| map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
 
@@ -173,7 +173,7 @@ namespace PowerSeries
 
 open LaurentSeries
 
-variable {R' : Type _} [Semiringₓ R] [Ringₓ R'] (f g : PowerSeries R) (f' g' : PowerSeries R')
+variable {R' : Type _} [Semiring R] [Ring R'] (f g : PowerSeries R) (f' g' : PowerSeries R')
 
 @[simp, norm_cast]
 theorem coe_zero : ((0 : PowerSeries R) : LaurentSeries R) = 0 :=
@@ -206,7 +206,7 @@ theorem coeff_coe (i : ℤ) :
     
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support, if_pos (Int.neg_succ_lt_zero _)]
     simp only [not_exists, RelEmbedding.coe_fn_mk, Set.mem_image, not_and, Function.Embedding.coe_fn_mk, Ne.def,
-      to_power_series_symm_apply_coeff, mem_support, Int.coe_nat_eq, implies_true_iff, not_false_iff]
+      to_power_series_symm_apply_coeff, mem_support, Int.coe_nat_eq, imp_true_iff, not_false_iff]
     
 
 @[simp, norm_cast]
@@ -218,7 +218,7 @@ theorem coe_X : ((x : PowerSeries R) : LaurentSeries R) = single 1 1 :=
   of_power_series_X
 
 @[simp, norm_cast]
-theorem coe_smul {S : Type _} [Semiringₓ S] [Module R S] (r : R) (x : PowerSeries S) :
+theorem coe_smul {S : Type _} [Semiring S] [Module R S] (r : R) (x : PowerSeries S) :
     ((r • x : PowerSeries S) : LaurentSeries S) = r • x := by
   ext
   simp [coeff_coe, coeff_smul, smul_ite]

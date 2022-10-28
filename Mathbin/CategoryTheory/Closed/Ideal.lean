@@ -86,7 +86,7 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
 /-- Given a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, we can show `i`
 is an exponential ideal.
 -/
-theorem ExponentialIdeal.mk_of_iso [Reflective i] (h : ∀ A : C, i ⋙ exp A ⋙ leftAdjoint i ⋙ i ≅ i ⋙ exp A) :
+theorem ExponentialIdeal.mkOfIso [Reflective i] (h : ∀ A : C, i ⋙ exp A ⋙ leftAdjoint i ⋙ i ≅ i ⋙ exp A) :
     ExponentialIdeal i := by
   apply exponential_ideal.mk'
   intro B A
@@ -112,7 +112,7 @@ variable [HasFiniteProducts C] [Reflective i] [CartesianClosed C]
 /-- If the reflector preserves binary products, the subcategory is an exponential ideal.
 This is the converse of `preserves_binary_products_of_exponential_ideal`.
 -/
-instance (priority := 10) exponential_ideal_of_preserves_binary_products
+instance (priority := 10) exponentialIdealOfPreservesBinaryProducts
     [PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i)] : ExponentialIdeal i := by
   let ir := adjunction.of_right_adjoint i
   let L : C ⥤ D := left_adjoint i
@@ -139,7 +139,7 @@ variable [ExponentialIdeal i]
 itself cartesian closed.
 -/
 def cartesianClosedOfReflective :
-    CartesianClosed D where closed' := fun B =>
+    CartesianClosed D where closed' B :=
     { isAdj :=
         { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i,
           adj := by
@@ -224,9 +224,9 @@ is the forward map of the identity morphism.
 -/
 theorem prod_comparison_iso (A B : C) : IsIso (prodComparison (leftAdjoint i) A B) :=
   ⟨⟨bijection i _ _ _ (𝟙 _), by
-      rw [← (bijection i _ _ _).Injective.eq_iff, bijection_natural, ← bijection_symm_apply_id, Equivₓ.apply_symm_apply,
+      rw [← (bijection i _ _ _).Injective.eq_iff, bijection_natural, ← bijection_symm_apply_id, Equiv.apply_symm_apply,
         id_comp],
-      by rw [← bijection_natural, id_comp, ← bijection_symm_apply_id, Equivₓ.apply_symm_apply]⟩⟩
+      by rw [← bijection_natural, id_comp, ← bijection_symm_apply_id, Equiv.apply_symm_apply]⟩⟩
 
 attribute [local instance] prod_comparison_iso
 
@@ -234,13 +234,13 @@ attribute [local instance] prod_comparison_iso
 This is the converse of `exponential_ideal_of_preserves_binary_products`.
 -/
 noncomputable def preservesBinaryProductsOfExponentialIdeal :
-    PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i) where PreservesLimit := fun K => by
+    PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i) where PreservesLimit K := by
     apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm
     apply preserves_limit_pair.of_iso_prod_comparison
 
 /-- If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
 -/
-noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintypeₓ J] :
+noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) (leftAdjoint i) := by
   letI := preserves_binary_products_of_exponential_ideal i
   letI := leftAdjointPreservesTerminalOfReflective.{0} i

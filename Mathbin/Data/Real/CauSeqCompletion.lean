@@ -21,22 +21,22 @@ section
 
 parameter {α : Type _}[LinearOrderedField α]
 
-parameter {β : Type _}[CommRingₓ β]{abv : β → α}[IsAbsoluteValue abv]
+parameter {β : Type _}[CommRing β]{abv : β → α}[IsAbsoluteValue abv]
 
 /-- The Cauchy completion of a commutative ring with absolute value. -/
-def Cauchy :=
-  @Quotientₓ (CauSeq _ abv) CauSeq.equiv
+def CauchyCat :=
+  @Quotient (CauSeq _ abv) CauSeq.equiv
 
 /-- The map from Cauchy sequences into the Cauchy completion. -/
 def mk : CauSeq _ abv → Cauchy :=
-  Quotientₓ.mk
+  Quotient.mk
 
 @[simp]
 theorem mk_eq_mk (f) : @Eq Cauchy ⟦f⟧ (mk f) :=
   rfl
 
 theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
-  Quotientₓ.eq
+  Quotient.eq
 
 /-- The map from the original ring into the Cauchy completion. -/
 def ofRat (x : β) : Cauchy :=
@@ -59,31 +59,31 @@ theorem of_rat_one : of_rat 1 = 1 :=
 
 @[simp]
 theorem mk_eq_zero {f} : mk f = 0 ↔ LimZero f := by
-  have : mk f = 0 ↔ lim_zero (f - 0) := Quotientₓ.eq <;> rwa [sub_zero] at this
+  have : mk f = 0 ↔ lim_zero (f - 0) := Quotient.eq <;> rwa [sub_zero] at this
 
 instance : Add Cauchy :=
-  ⟨(Quotientₓ.map₂ (· + ·)) fun f₁ g₁ hf f₂ g₂ hg => add_equiv_add hf hg⟩
+  ⟨(Quotient.map₂ (· + ·)) fun f₁ g₁ hf f₂ g₂ hg => add_equiv_add hf hg⟩
 
 @[simp]
 theorem mk_add (f g : CauSeq β abv) : mk f + mk g = mk (f + g) :=
   rfl
 
 instance : Neg Cauchy :=
-  ⟨(Quotientₓ.map Neg.neg) fun f₁ f₂ hf => neg_equiv_neg hf⟩
+  ⟨(Quotient.map Neg.neg) fun f₁ f₂ hf => neg_equiv_neg hf⟩
 
 @[simp]
 theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
   rfl
 
 instance : Mul Cauchy :=
-  ⟨(Quotientₓ.map₂ (· * ·)) fun f₁ g₁ hf f₂ g₂ hg => mul_equiv_mul hf hg⟩
+  ⟨(Quotient.map₂ (· * ·)) fun f₁ g₁ hf f₂ g₂ hg => mul_equiv_mul hf hg⟩
 
 @[simp]
 theorem mk_mul (f g : CauSeq β abv) : mk f * mk g = mk (f * g) :=
   rfl
 
 instance : Sub Cauchy :=
-  ⟨(Quotientₓ.map₂ Sub.sub) fun f₁ g₁ hf f₂ g₂ hg => sub_equiv_sub hf hg⟩
+  ⟨(Quotient.map₂ Sub.sub) fun f₁ g₁ hf f₂ g₂ hg => sub_equiv_sub hf hg⟩
 
 @[simp]
 theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
@@ -104,18 +104,18 @@ private theorem zero_def : 0 = mk 0 :=
 private theorem one_def : 1 = mk 1 :=
   rfl
 
-instance : AddGroupₓ Cauchy := by
+instance : AddGroup Cauchy := by
   refine'
       { add := (· + ·), zero := (0 : Cauchy), sub := Sub.sub, neg := Neg.neg, sub_eq_add_neg := _, nsmul := nsmulRec,
         zsmul := zsmulRec.. } <;>
     try intros <;> rfl <;>
-      · repeat' refine' fun a => Quotientₓ.induction_on a fun _ => _
-        simp [zero_def, add_commₓ, add_left_commₓ, sub_eq_neg_add]
+      · repeat' refine' fun a => Quotient.induction_on a fun _ => _
+        simp [zero_def, add_comm, add_left_comm, sub_eq_neg_add]
         
 
-instance : AddGroupWithOneₓ Cauchy :=
-  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succₓ n), intCast := fun n => mk n,
+instance : AddGroupWithOne Cauchy :=
+  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zero,
+    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succ n), intCast := fun n => mk n,
     int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
     int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_neg_succ_of_nat n), one := 1 }
 
@@ -127,18 +127,18 @@ theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
 theorem of_rat_int_cast (z : ℤ) : of_rat z = z :=
   rfl
 
-instance : CommRingₓ Cauchy := by
+instance : CommRing Cauchy := by
   refine'
       { Cauchy.add_group_with_one with add := (· + ·), zero := (0 : Cauchy), mul := (· * ·), one := 1,
         npow := npowRec.. } <;>
     try intros <;> rfl <;>
-      · repeat' refine' fun a => Quotientₓ.induction_on a fun _ => _
-        simp [zero_def, one_def, mul_left_commₓ, mul_comm, mul_addₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+      · repeat' refine' fun a => Quotient.induction_on a fun _ => _
+        simp [zero_def, one_def, mul_left_comm, mul_comm, mul_add, add_comm, add_left_comm, sub_eq_add_neg]
         
 
 -- shortcut instance to ensure computability
-instance : Ringₓ Cauchy :=
-  CommRingₓ.toRing _
+instance : Ring Cauchy :=
+  CommRing.toRing _
 
 /-- `cau_seq.completion.of_rat` as a `ring_hom`  -/
 @[simps]
@@ -163,7 +163,7 @@ parameter {α : Type _}[LinearOrderedField α]
 parameter {β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
 
 -- mathport name: exprCauchy
-local notation "Cauchy" => @Cauchy _ _ _ _ abv _
+local notation "Cauchy" => @CauchyCat _ _ _ _ abv _
 
 instance : HasRatCast Cauchy :=
   ⟨fun q => ofRat q⟩
@@ -174,10 +174,10 @@ theorem of_rat_rat_cast (q : ℚ) : ofRat (↑q : β) = (q : Cauchy) :=
 
 noncomputable instance : Inv Cauchy :=
   ⟨fun x =>
-    (Quotientₓ.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg => by
+    (Quotient.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg => by
       have := lim_zero_congr fg
       by_cases hf:lim_zero f
-      · simp [hf, this.1 hf, Setoidₓ.refl]
+      · simp [hf, this.1 hf, Setoid.refl]
         
       · have hg := mt this.2 hf
         simp [hf, hg]
@@ -185,7 +185,7 @@ noncomputable instance : Inv Cauchy :=
         have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         rw [mk_eq.2 fg, ← Ig] at If
         rw [mul_comm] at Ig
-        rw [← mul_oneₓ (mk (inv f hf)), ← Ig, ← mul_assoc, If, mul_assoc, Ig, mul_oneₓ]
+        rw [← mul_one (mk (inv f hf)), ← Ig, ← mul_assoc, If, mul_assoc, Ig, mul_one]
         ⟩
 
 @[simp]
@@ -197,27 +197,27 @@ theorem inv_mk {f} (hf) : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
   congr_arg mk <| by rw [dif_neg]
 
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
-  have : LimZero (1 - 0) := Setoidₓ.symm h
+  have : LimZero (1 - 0) := Setoid.symm h
   have : LimZero 1 := by simpa
   one_ne_zero <| const_lim_zero.1 this
 
 theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one <| mk_eq.1 h
 
 protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
-  (Quotientₓ.induction_on x) fun f hf => by
+  (Quotient.induction_on x) fun f hf => by
     simp at hf
     simp [hf]
-    exact Quotientₓ.sound (CauSeq.inv_mul_cancel hf)
+    exact Quotient.sound (CauSeq.inv_mul_cancel hf)
 
 theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
   congr_arg mk <| by split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
 
 /-- The Cauchy completion forms a field. -/
 noncomputable instance : Field Cauchy :=
-  { Cauchy.commRing with inv := Inv.inv,
+  { CauchyCat.commRing with inv := Inv.inv,
     mul_inv_cancel := fun x x0 => by rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero, ratCast := fun q => ofRat q,
-    rat_cast_mk := fun n d hd hnd => by rw [Ratₓ.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
+    rat_cast_mk := fun n d hd hnd => by rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
 
 theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by
   simp only [div_eq_inv_mul, of_rat_inv, of_rat_mul]
@@ -227,11 +227,11 @@ theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := 
 The representative chosen is the one passed in the VM to `quot.mk`, so two cauchy sequences
 converging to the same number may be printed differently.
 -/
-unsafe instance [HasRepr β] :
-    HasRepr Cauchy where repr := fun r =>
+unsafe instance [Repr β] :
+    Repr Cauchy where repr r :=
     let N := 10
     let seq := r.unquot
-    "(sorry /- " ++ (", ".intercalate <| (List.range N).map <| reprₓ ∘ seq) ++ ", ... -/)"
+    "(sorry /- " ++ (", ".intercalate <| (List.range N).map <| repr ∘ seq) ++ ", ... -/)"
 
 end
 
@@ -243,7 +243,7 @@ namespace CauSeq
 
 section
 
-variable (β : Type _) [Ringₓ β] (abv : β → α) [IsAbsoluteValue abv]
+variable (β : Type _) [Ring β] (abv : β → α) [IsAbsoluteValue abv]
 
 /-- A class stating that a ring with an absolute value is complete, i.e. every Cauchy
 sequence has a limit. -/
@@ -254,7 +254,7 @@ end
 
 section
 
-variable {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv]
+variable {β : Type _} [Ring β] {abv : β → α} [IsAbsoluteValue abv]
 
 variable [IsComplete β abv]
 
@@ -269,40 +269,40 @@ theorem equiv_lim (s : CauSeq β abv) : s ≈ const abv (lim s) :=
   Classical.choose_spec (complete s)
 
 theorem eq_lim_of_const_equiv {f : CauSeq β abv} {x : β} (h : CauSeq.const abv x ≈ f) : x = lim f :=
-  const_equiv.mp <| Setoidₓ.trans h <| equiv_lim f
+  const_equiv.mp <| Setoid.trans h <| equiv_lim f
 
 theorem lim_eq_of_equiv_const {f : CauSeq β abv} {x : β} (h : f ≈ CauSeq.const abv x) : lim f = x :=
-  (eq_lim_of_const_equiv <| Setoidₓ.symm h).symm
+  (eq_lim_of_const_equiv <| Setoid.symm h).symm
 
 theorem lim_eq_lim_of_equiv {f g : CauSeq β abv} (h : f ≈ g) : lim f = lim g :=
-  lim_eq_of_equiv_const <| Setoidₓ.trans h <| equiv_lim g
+  lim_eq_of_equiv_const <| Setoid.trans h <| equiv_lim g
 
 @[simp]
 theorem lim_const (x : β) : lim (const abv x) = x :=
-  lim_eq_of_equiv_const <| Setoidₓ.refl _
+  lim_eq_of_equiv_const <| Setoid.refl _
 
 theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
   eq_lim_of_const_equiv <|
     show LimZero (const abv (lim f + lim g) - (f + g)) by
-      rw [const_add, add_sub_add_comm] <;> exact add_lim_zero (Setoidₓ.symm (equiv_lim f)) (Setoidₓ.symm (equiv_lim g))
+      rw [const_add, add_sub_add_comm] <;> exact add_lim_zero (Setoid.symm (equiv_lim f)) (Setoid.symm (equiv_lim g))
 
 theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
   eq_lim_of_const_equiv <|
     show LimZero (const abv (lim f * lim g) - f * g) by
       have h :
         const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
-        by simp [const_mul (lim f), mul_addₓ, add_mulₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ]
+        by simp [const_mul (lim f), mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm]
       rw [h] <;>
         exact
-          add_lim_zero (mul_lim_zero_left _ (Setoidₓ.symm (equiv_lim _)))
-            (mul_lim_zero_right _ (Setoidₓ.symm (equiv_lim _)))
+          add_lim_zero (mul_lim_zero_left _ (Setoid.symm (equiv_lim _)))
+            (mul_lim_zero_right _ (Setoid.symm (equiv_lim _)))
 
 theorem lim_mul (f : CauSeq β abv) (x : β) : lim f * x = lim (f * const abv x) := by rw [← lim_mul_lim, lim_const]
 
 theorem lim_neg (f : CauSeq β abv) : lim (-f) = -lim f :=
   lim_eq_of_equiv_const
     (show LimZero (-f - const abv (-lim f)) by
-      rw [const_neg, sub_neg_eq_add, add_commₓ, ← sub_eq_add_neg] <;> exact Setoidₓ.symm (equiv_lim f))
+      rw [const_neg, sub_neg_eq_add, add_comm, ← sub_eq_add_neg] <;> exact Setoid.symm (equiv_lim f))
 
 theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
   ⟨fun h => by have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
@@ -321,8 +321,8 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
   lim_eq_of_equiv_const <|
     show LimZero (inv f hf - const abv (lim f)⁻¹) from
       have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬LimZero f), LimZero (g - f * inv f hf * g) := fun g f hf => by
-        rw [← one_mulₓ g, ← mul_assoc, ← sub_mul, mul_oneₓ, mul_comm, mul_comm f] <;>
-          exact mul_lim_zero_right _ (Setoidₓ.symm (CauSeq.inv_mul_cancel _))
+        rw [← one_mul g, ← mul_assoc, ← sub_mul, mul_one, mul_comm, mul_comm f] <;>
+          exact mul_lim_zero_right _ (Setoid.symm (CauSeq.inv_mul_cancel _))
       have h₂ : LimZero (inv f hf - const abv (lim f)⁻¹ - (const abv (lim f) - f) * (inv f hf * const abv (lim f)⁻¹)) :=
         by
         rw [sub_mul, ← sub_add, sub_sub, sub_add_eq_sub_sub, sub_right_comm, sub_add] <;>
@@ -332,9 +332,9 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
                 (inv f hf - const abv (lim f) * (inv f hf * const abv (lim f)⁻¹) -
                   (const abv (lim f)⁻¹ - f * (inv f hf * const abv (lim f)⁻¹)))
               from
-              sub_lim_zero (by rw [← mul_assoc, mul_right_commₓ, const_inv hl] <;> exact h₁ _ _ _)
+              sub_lim_zero (by rw [← mul_assoc, mul_right_comm, const_inv hl] <;> exact h₁ _ _ _)
                 (by rw [← mul_assoc] <;> exact h₁ _ _ _)
-      (lim_zero_congr h₂).mpr <| mul_lim_zero_left _ (Setoidₓ.symm (equiv_lim f))
+      (lim_zero_congr h₂).mpr <| mulLimZeroLeft _ (Setoid.symm (equiv_lim f))
 
 end
 
@@ -343,7 +343,7 @@ section
 variable [IsComplete α abs]
 
 theorem lim_le {f : CauSeq α abs} {x : α} (h : f ≤ CauSeq.const abs x) : lim f ≤ x :=
-  CauSeq.const_le.1 <| CauSeq.le_of_eq_of_le (Setoidₓ.symm (equiv_lim f)) h
+  CauSeq.const_le.1 <| CauSeq.le_of_eq_of_le (Setoid.symm (equiv_lim f)) h
 
 theorem le_lim {f : CauSeq α abs} {x : α} (h : CauSeq.const abs x ≤ f) : x ≤ lim f :=
   CauSeq.const_le.1 <| CauSeq.le_of_le_of_eq h (equiv_lim f)
@@ -352,7 +352,7 @@ theorem lt_lim {f : CauSeq α abs} {x : α} (h : CauSeq.const abs x < f) : x < l
   CauSeq.const_lt.1 <| CauSeq.lt_of_lt_of_eq h (equiv_lim f)
 
 theorem lim_lt {f : CauSeq α abs} {x : α} (h : f < CauSeq.const abs x) : lim f < x :=
-  CauSeq.const_lt.1 <| CauSeq.lt_of_eq_of_lt (Setoidₓ.symm (equiv_lim f)) h
+  CauSeq.const_lt.1 <| CauSeq.lt_of_eq_of_lt (Setoid.symm (equiv_lim f)) h
 
 end
 

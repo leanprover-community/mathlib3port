@@ -38,7 +38,7 @@ variable {α β γ δ ε : Type _}
 
 namespace MeasureTheory
 
-namespace Measureₓ
+namespace Measure
 
 variable [MeasurableSpace α] [MeasurableSpace β]
 
@@ -46,33 +46,33 @@ variable [MeasurableSpace α] [MeasurableSpace β]
 instance : MeasurableSpace (Measure α) :=
   ⨆ (s : Set α) (hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
-theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measure α => μ s :=
-  Measurable.of_comap_le <| le_supr_of_le s <| le_supr_of_le hs <| le_rflₓ
+theorem measurableCoe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measure α => μ s :=
+  Measurable.ofComapLe <| le_supr_of_le s <| le_supr_of_le hs <| le_rfl
 
-theorem measurable_of_measurable_coe (f : β → Measure α)
+theorem measurableOfMeasurableCoe (f : β → Measure α)
     (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
-  Measurable.of_le_map <|
+  Measurable.ofLeMap <|
     supr₂_le fun s hs => MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
 
 theorem measurable_measure {μ : α → Measure β} :
     Measurable μ ↔ ∀ (s : Set β) (hs : MeasurableSet s), Measurable fun b => μ b s :=
-  ⟨fun hμ s hs => (measurable_coe hs).comp hμ, measurable_of_measurable_coe μ⟩
+  ⟨fun hμ s hs => (measurableCoe hs).comp hμ, measurableOfMeasurableCoe μ⟩
 
-theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
-  (measurable_of_measurable_coe _) fun s hs =>
+theorem measurableMap (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
+  (measurableOfMeasurableCoe _) fun s hs =>
     suffices Measurable fun μ : Measure α => μ (f ⁻¹' s) by simpa [map_apply, hs, hf]
-    measurable_coe (hf hs)
+    measurableCoe (hf hs)
 
-theorem measurable_dirac : Measurable (Measure.dirac : α → Measure α) :=
-  (measurable_of_measurable_coe _) fun s hs => by
+theorem measurableDirac : Measurable (Measure.dirac : α → Measure α) :=
+  (measurableOfMeasurableCoe _) fun s hs => by
     simp only [dirac_apply', hs]
     exact measurable_one.indicator hs
 
-theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) : Measurable fun μ : Measure α => ∫⁻ x, f x ∂μ := by
+theorem measurableLintegral {f : α → ℝ≥0∞} (hf : Measurable f) : Measurable fun μ : Measure α => ∫⁻ x, f x ∂μ := by
   simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
-  refine' measurable_supr fun n => Finsetₓ.measurable_sum _ fun i _ => _
-  refine' Measurable.const_mul _ _
-  exact measurable_coe ((simple_func.eapprox f n).measurable_set_preimage _)
+  refine' measurableSupr fun n => Finset.measurableSum _ fun i _ => _
+  refine' Measurable.constMul _ _
+  exact measurable_coe ((simple_func.eapprox f n).measurableSetPreimage _)
 
 /-- Monadic join on `measure` in the category of measurable spaces and measurable
 functions. -/
@@ -94,10 +94,16 @@ theorem join_zero : (0 : Measure (Measure α)).join = 0 := by
   ext1 s hs
   simp [hs]
 
-theorem measurable_join : Measurable (join : Measure (Measure α) → Measure α) :=
-  (measurable_of_measurable_coe _) fun s hs => by
+theorem measurableJoin : Measurable (join : Measure (Measure α) → Measure α) :=
+  (measurableOfMeasurableCoe _) fun s hs => by
     simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : Measurable f) :
     (∫⁻ x, f x ∂join m) = ∫⁻ μ, ∫⁻ x, f x ∂μ ∂m := by
   rw [lintegral_eq_supr_eapprox_lintegral hf]
@@ -107,24 +113,27 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
         ∫⁻ μ, μ (⇑(simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) ∂m :=
     fun n x => join_apply (simple_func.measurable_set_preimage _ _)
   simp only [simple_func.lintegral, this]
-  trans
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   have :
-    ∀ (s : ℕ → Finsetₓ ℝ≥0∞) (f : ℕ → ℝ≥0∞ → Measureₓ α → ℝ≥0∞) (hf : ∀ n r, Measurable (f n r))
-      (hm : Monotoneₓ fun n μ => ∑ r in s n, r * f n r μ),
+    ∀ (s : ℕ → Finset ℝ≥0∞) (f : ℕ → ℝ≥0∞ → Measure α → ℝ≥0∞) (hf : ∀ n r, Measurable (f n r))
+      (hm : Monotone fun n μ => ∑ r in s n, r * f n r μ),
       (⨆ n : ℕ, ∑ r in s n, r * ∫⁻ μ, f n r μ ∂m) = ∫⁻ μ, ⨆ n : ℕ, ∑ r in s n, r * f n r μ ∂m :=
     by
     intro s f hf hm
     symm
-    trans
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     apply lintegral_supr
     · intro n
-      exact Finsetₓ.measurable_sum _ fun r _ => (hf _ _).const_mul _
+      exact Finset.measurableSum _ fun r _ => (hf _ _).const_mul _
       
     · exact hm
       
     congr
     funext n
-    trans
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     apply lintegral_finset_sum
     · intro r _
       exact (hf _ _).const_mul _
@@ -140,9 +149,9 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
     apply measurable_coe
     exact simple_func.measurable_set_preimage _ _
     
-  · change Monotoneₓ fun n μ => (simple_func.eapprox f n).lintegral μ
+  · change Monotone fun n μ => (simple_func.eapprox f n).lintegral μ
     intro n m h μ
-    refine' simple_func.lintegral_mono _ le_rflₓ
+    refine' simple_func.lintegral_mono _ le_rfl
     apply simple_func.monotone_eapprox
     assumption
     
@@ -164,7 +173,7 @@ theorem bind_zero_left (f : α → Measure β) : bind 0 f = 0 := by simp [bind]
 theorem bind_zero_right (m : Measure α) : bind m (0 : α → Measure β) = 0 := by
   ext1 s hs
   simp only [bind, hs, join_apply, coe_zero, Pi.zero_apply]
-  rw [lintegral_map (measurable_coe hs) measurable_zero]
+  rw [lintegral_map (measurable_coe hs) measurableZero]
   simp
 
 @[simp]
@@ -175,12 +184,12 @@ theorem bind_zero_right' (m : Measure α) : bind m (fun _ => 0 : α → Measure 
 theorem bind_apply {m : Measure α} {f : α → Measure β} {s : Set β} (hs : MeasurableSet s) (hf : Measurable f) :
     bind m f s = ∫⁻ a, f a s ∂m := by rw [bind, join_apply hs, lintegral_map (measurable_coe hs) hf]
 
-theorem measurable_bind' {g : α → Measure β} (hg : Measurable g) : Measurable fun m => bind m g :=
-  measurable_join.comp (measurable_map _ hg)
+theorem measurableBind' {g : α → Measure β} (hg : Measurable g) : Measurable fun m => bind m g :=
+  measurableJoin.comp (measurableMap _ hg)
 
 theorem lintegral_bind {m : Measure α} {μ : α → Measure β} {f : β → ℝ≥0∞} (hμ : Measurable μ) (hf : Measurable f) :
     (∫⁻ x, f x ∂bind m μ) = ∫⁻ a, ∫⁻ x, f x ∂μ a ∂m :=
-  (lintegral_join hf).trans (lintegral_map (measurable_lintegral hf) hμ)
+  (lintegral_join hf).trans (lintegral_map (measurableLintegral hf) hμ)
 
 theorem bind_bind {γ} [MeasurableSpace γ] {m : Measure α} {f : α → Measure β} {g : β → Measure γ} (hf : Measurable f)
     (hg : Measurable g) : bind (bind m f) g = bind m fun a => bind (f a) g :=
@@ -212,7 +221,7 @@ theorem join_map_map {f : α → β} (hf : Measurable f) (μ : Measure (Measure 
 
 theorem join_map_join (μ : Measure (Measure (Measure α))) : join (map join μ) = join (join μ) := by
   show bind μ join = join (join μ)
-  rw [join_eq_bind, join_eq_bind, bind_bind measurable_id measurable_id]
+  rw [join_eq_bind, join_eq_bind, bind_bind measurableId measurableId]
   apply congr_arg (bind μ)
   funext ν
   exact join_eq_bind ν
@@ -221,9 +230,9 @@ theorem join_map_dirac (μ : Measure α) : join (map dirac μ) = μ :=
   dirac_bind
 
 theorem join_dirac (μ : Measure α) : join (dirac μ) = μ :=
-  Eq.trans (join_eq_bind (dirac μ)) (bind_dirac measurable_id _)
+  Eq.trans (join_eq_bind (dirac μ)) (bind_dirac measurableId _)
 
-end Measureₓ
+end Measure
 
 end MeasureTheory
 

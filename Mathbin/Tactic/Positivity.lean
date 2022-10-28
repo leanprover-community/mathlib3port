@@ -68,7 +68,7 @@ unsafe inductive positivity.strictness : Type
 
 export Positivity.Strictness (positive nonnegative nonzero)
 
-unsafe instance : HasToString strictness :=
+unsafe instance : ToString strictness :=
   ⟨fun s =>
     match s with
     | positive p => "strictness.positive (" ++ toString p ++ ")"
@@ -78,8 +78,8 @@ unsafe instance : HasToString strictness :=
 unsafe instance : has_to_format strictness :=
   ⟨fun s => toString s⟩
 
-private theorem lt_of_eq_of_lt'' {α} [Preorderₓ α] {b b' a : α} : b = b' → a < b' → a < b := fun h1 h2 =>
-  lt_of_lt_of_eqₓ h2 h1.symm
+private theorem lt_of_eq_of_lt'' {α} [Preorder α] {b b' a : α} : b = b' → a < b' → a < b := fun h1 h2 =>
+  lt_of_lt_of_eq h2 h1.symm
 
 /-- First base case of the `positivity` tactic.  We try `norm_num` to prove directly that an
 expression `e` is positive, nonnegative or non-zero. -/
@@ -92,7 +92,7 @@ unsafe def norm_num.positivity (e : expr) : tactic strictness := do
       let (ic, p₁) ← norm_num.prove_pos ic e'
       positive <$> mk_app `` lt_of_eq_of_lt'' [p, p₁]
     else
-      if e'' = 0 then nonnegative <$> mk_app `` ge_of_eqₓ [p]
+      if e'' = 0 then nonnegative <$> mk_app `` ge_of_eq [p]
       else do
         let (ic, p₁) ← norm_num.prove_ne_zero' ic e'
         nonzero <$> to_expr (pquote.1 (ne_of_eq_of_ne (%%ₓp) (%%ₓp₁)))
@@ -143,13 +143,13 @@ protected unsafe def orelse (tac1 tac2 : tactic strictness) : tactic strictness 
       let res2 ← try_core tac2
       match res2 with
         | some p2@(positive _) => pure p2
-        | some (nonzero e2) => positive <$> mk_app `` lt_of_le_of_ne'ₓ [e1, e2]
+        | some (nonzero e2) => positive <$> mk_app `` lt_of_le_of_ne' [e1, e2]
         | _ => pure (nonnegative e1)
     | some (nonzero e1) => do
       let res2 ← try_core tac2
       match res2 with
         | some p2@(positive _) => pure p2
-        | some (nonnegative e2) => positive <$> mk_app `` lt_of_le_of_ne'ₓ [e2, e1]
+        | some (nonnegative e2) => positive <$> mk_app `` lt_of_le_of_ne' [e2, e1]
         | _ => pure (nonzero e1)
 
 -- mathport name: «expr ≤|≥ »
@@ -180,8 +180,8 @@ unsafe def compare_hyp_le (e a b p₂ : expr) : tactic strictness := do
   is_def_eq e b
   let strict_a ← norm_num.positivity a
   match strict_a with
-    | positive p₁ => positive <$> mk_app `` lt_of_lt_of_leₓ [p₁, p₂]
-    | nonnegative p₁ => nonnegative <$> mk_app `` le_transₓ [p₁, p₂]
+    | positive p₁ => positive <$> mk_app `` lt_of_lt_of_le [p₁, p₂]
+    | nonnegative p₁ => nonnegative <$> mk_app `` le_trans [p₁, p₂]
     | _ => do
       let e' ← pp e
       let p₂' ← pp p₂
@@ -193,8 +193,8 @@ unsafe def compare_hyp_lt (e a b p₂ : expr) : tactic strictness := do
   is_def_eq e b
   let strict_a ← norm_num.positivity a
   match strict_a with
-    | positive p₁ => positive <$> mk_app `` lt_transₓ [p₁, p₂]
-    | nonnegative p₁ => positive <$> mk_app `` lt_of_le_of_ltₓ [p₁, p₂]
+    | positive p₁ => positive <$> mk_app `` lt_trans [p₁, p₂]
+    | nonnegative p₁ => positive <$> mk_app `` lt_of_le_of_lt [p₁, p₂]
     | _ => do
       let e' ← pp e
       let p₂' ← pp p₂
@@ -206,8 +206,8 @@ unsafe def compare_hyp_eq (e a b p₂ : expr) : tactic strictness := do
   is_def_eq e b
   let strict_a ← norm_num.positivity a
   match strict_a with
-    | positive p₁ => positive <$> mk_app `` lt_of_lt_of_eqₓ [p₁, p₂]
-    | nonnegative p₁ => nonnegative <$> mk_app `` le_of_le_of_eqₓ [p₁, p₂]
+    | positive p₁ => positive <$> mk_app `` lt_of_lt_of_eq [p₁, p₂]
+    | nonnegative p₁ => nonnegative <$> mk_app `` le_of_le_of_eq [p₁, p₂]
     | nonzero p₁ => nonzero <$> to_expr (pquote.1 (ne_of_ne_of_eq' (%%ₓp₁) (%%ₓp₂)))
 
 /-- Calls `norm_num` on `a` to prove nonzeroness of `e` assuming `b` is defeq to `e` and
@@ -329,15 +329,15 @@ unsafe def positivity : tactic Unit :=
           fail ("failed to prove strict positivity, but it would be " ++ "possible to prove nonnegativity if desired")
         | order_rel.lt, nonzero _ =>
           fail ("failed to prove strict positivity, but it would be " ++ "possible to prove nonzeroness if desired")
-        | order_rel.le, positive p => mk_app `` le_of_ltₓ [p]
+        | order_rel.le, positive p => mk_app `` le_of_lt [p]
         | order_rel.le, nonnegative p => pure p
         | order_rel.le, nonzero _ =>
           fail ("failed to prove nonnegativity, but it would be " ++ "possible to prove nonzeroness if desired")
-        | order_rel.ne, positive p => to_expr (pquote.1 (ne_of_gtₓ (%%ₓp)))
+        | order_rel.ne, positive p => to_expr (pquote.1 (ne_of_gt (%%ₓp)))
         | order_rel.ne, nonnegative _ =>
           fail ("failed to prove nonzeroness, but it would be " ++ "possible to prove nonnegativity if desired")
         | order_rel.ne, nonzero p => pure p
-        | order_rel.ne', positive p => to_expr (pquote.1 (ne_of_ltₓ (%%ₓp)))
+        | order_rel.ne', positive p => to_expr (pquote.1 (ne_of_lt (%%ₓp)))
         | order_rel.ne', nonnegative _ =>
           fail ("failed to prove nonzeroness, but it would be " ++ "possible to prove nonnegativity if desired")
         | order_rel.ne', nonzero p => to_expr (pquote.1 (Ne.symm (%%ₓp)))) >>=
@@ -354,15 +354,15 @@ variable {α R : Type _}
 /-! ### `positivity` extensions for particular arithmetic operations -/
 
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [LinearOrderₓ R] {a b c : R}
+variable [LinearOrder R] {a b c : R}
 
 private theorem le_min_of_lt_of_le (ha : a < b) (hb : a ≤ c) : a ≤ min b c :=
-  le_minₓ ha.le hb
+  le_min ha.le hb
 
 private theorem le_min_of_le_of_lt (ha : a ≤ b) (hb : a < c) : a ≤ min b c :=
-  le_minₓ ha hb.le
+  le_min ha hb.le
 
 private theorem min_ne (ha : a ≠ c) (hb : b ≠ c) : min a b ≠ c := by
   rw [min_def]
@@ -378,7 +378,7 @@ private theorem max_ne (ha : a ≠ c) (hb : b ≠ c) : max a b ≠ c := by
   rw [max_def]
   split_ifs <;> assumption
 
-end LinearOrderₓ
+end LinearOrder
 
 /-- Extension for the `positivity` tactic: the `min` of two numbers is nonnegative if both are
 nonnegative, and strictly positive if both are. -/
@@ -388,10 +388,10 @@ unsafe def positivity_min : expr → tactic strictness
     let strictness_a ← core a
     let strictness_b ← core b
     match strictness_a, strictness_b with
-      | positive pa, positive pb => positive <$> mk_app `` lt_minₓ [pa, pb]
+      | positive pa, positive pb => positive <$> mk_app `` lt_min [pa, pb]
       | positive pa, nonnegative pb => nonnegative <$> mk_app `` le_min_of_lt_of_le [pa, pb]
       | nonnegative pa, positive pb => nonnegative <$> mk_app `` le_min_of_le_of_lt [pa, pb]
-      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` le_minₓ [pa, pb]
+      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` le_min [pa, pb]
       | positive pa, nonzero pb => nonzero <$> to_expr (pquote.1 (min_ne_of_lt_of_ne (%%ₓpa) (%%ₓpb)))
       | nonzero pa, positive pb => nonzero <$> to_expr (pquote.1 (min_ne_of_ne_of_lt (%%ₓpa) (%%ₓpb)))
       | nonzero pa, nonzero pb => nonzero <$> to_expr (pquote.1 (min_ne (%%ₓpa) (%%ₓpb)))
@@ -492,17 +492,17 @@ private theorem div_ne_zero_of_ne_zero_of_pos (ha : a ≠ 0) (hb : 0 < b) : a / 
 end LinearOrderedSemifield
 
 private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a := by
-  rw [Int.div_selfₓ ha.ne']
+  rw [Int.div_self ha.ne']
   exact zero_lt_one
 
 private theorem int_div_nonneg_of_pos_of_nonneg {a b : ℤ} (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a / b :=
-  Int.div_nonnegₓ ha.le hb
+  Int.div_nonneg ha.le hb
 
 private theorem int_div_nonneg_of_nonneg_of_pos {a b : ℤ} (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a / b :=
-  Int.div_nonnegₓ ha hb.le
+  Int.div_nonneg ha hb.le
 
 private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < b) : 0 ≤ a / b :=
-  Int.div_nonnegₓ ha.le hb.le
+  Int.div_nonneg ha.le hb.le
 
 /-- Extension for the `positivity` tactic: division is nonnegative if both numerator and denominator
 are nonnegative, and strictly positive if both numerator and denominator are. -/
@@ -520,7 +520,7 @@ unsafe def positivity_div : expr → tactic strictness
         else nonnegative <$> mk_app `` int_div_nonneg_of_pos_of_pos [pa, pb]
       | positive pa, nonnegative pb => nonnegative <$> mk_app `` int_div_nonneg_of_pos_of_nonneg [pa, pb]
       | nonnegative pa, positive pb => nonnegative <$> mk_app `` int_div_nonneg_of_nonneg_of_pos [pa, pb]
-      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` Int.div_nonnegₓ [pa, pb]
+      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` Int.div_nonneg [pa, pb]
       | sa@_, sb@_ => positivity_fail e a b sa sb
   | e@(quote.1 ((%%ₓa) / %%ₓb)) => do
     let strictness_a ← core a
@@ -549,10 +549,10 @@ unsafe def positivity_inv : expr → tactic strictness
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a⁻¹`"
 
 private theorem pow_zero_pos [OrderedSemiring R] [Nontrivial R] (a : R) : 0 < a ^ 0 :=
-  zero_lt_one.trans_le (pow_zeroₓ a).Ge
+  zero_lt_one.trans_le (pow_zero a).ge
 
 private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : ℤ) :=
-  zero_lt_one.trans_le (zpow_zero a).Ge
+  zero_lt_one.trans_le (zpow_zero a).ge
 
 /-- Extension for the `positivity` tactic: raising a number `a` to a natural/integer power `n` is
 positive if `n = 0` (since `a ^ 0 = 1`) or if `0 < a`, and is nonnegative if `n` is even (squares
@@ -603,7 +603,7 @@ unsafe def positivity_pow : expr → tactic strictness
                   | nonzero p => nonzero <$> to_expr (pquote.1 (zpow_ne_zero (%%ₓn) (%%ₓp)))
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a ^ n`"
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:83:9: unsupported modifiers in user command
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:86:10: unsupported modifiers in user command -/
 alias abs_pos ↔ _ abs_pos_of_ne_zero
 
 /-- Extension for the `positivity` tactic: an absolute value is nonnegative, and is strictly
@@ -650,24 +650,24 @@ private theorem int_coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
 private theorem int_coe_nat_pos {n : ℕ} : 0 < n → 0 < (n : ℤ) :=
   Nat.cast_pos.2
 
-private theorem int_cast_ne_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : n ≠ 0 → (n : α) ≠ 0 :=
+private theorem int_cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : n ≠ 0 → (n : α) ≠ 0 :=
   Int.cast_ne_zero.2
 
 private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) := by
-  rw [← Int.cast_zeroₓ]
+  rw [← Int.cast_zero]
   exact Int.cast_mono hn
 
 private theorem int_cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : 0 < n → 0 < (n : α) :=
   Int.cast_pos.2
 
 private theorem rat_cast_ne_zero [DivisionRing α] [CharZero α] {q : ℚ} : q ≠ 0 → (q : α) ≠ 0 :=
-  Ratₓ.cast_ne_zero.2
+  Rat.cast_ne_zero.2
 
 private theorem rat_cast_nonneg [LinearOrderedField α] {q : ℚ} : 0 ≤ q → 0 ≤ (q : α) :=
-  Ratₓ.cast_nonneg.2
+  Rat.cast_nonneg.2
 
 private theorem rat_cast_pos [LinearOrderedField α] {q : ℚ} : 0 < q → 0 < (q : α) :=
-  Ratₓ.cast_pos.2
+  Rat.cast_pos.2
 
 /-- Extension for the `positivity` tactic: casts from `ℕ`, `ℤ`, `ℚ`. -/
 @[positivity]
@@ -690,11 +690,11 @@ unsafe def positivity_coe : expr → tactic strictness
           | quote.1 Int.castCoe, positive p => positive <$> mk_mapp `` int_cast_pos [typ, none, none, none, p]
           | quote.1 Int.castCoe, nonnegative p => nonnegative <$> mk_mapp `` int_cast_nonneg [typ, none, none, p]
           | quote.1 Int.castCoe, nonzero p => nonzero <$> mk_mapp `` int_cast_ne_zero [typ, none, none, none, p]
-          | quote.1 Ratₓ.castCoe, positive p => positive <$> mk_mapp `` rat_cast_pos [typ, none, none, p]
-          | quote.1 Ratₓ.castCoe, nonnegative p => nonnegative <$> mk_mapp `` rat_cast_nonneg [typ, none, none, p]
-          | quote.1 Ratₓ.castCoe, nonzero p => nonzero <$> mk_mapp `` rat_cast_ne_zero [typ, none, none, none, p]
-          | quote.1 (@coeBaseₓ _ _ Int.hasCoe), positive p => positive <$> mk_app `` int_coe_nat_pos [p]
-          | quote.1 (@coeBaseₓ _ _ Int.hasCoe), _ => nonnegative <$> mk_app `` int_coe_nat_nonneg [a]
+          | quote.1 Rat.castCoe, positive p => positive <$> mk_mapp `` rat_cast_pos [typ, none, none, p]
+          | quote.1 Rat.castCoe, nonnegative p => nonnegative <$> mk_mapp `` rat_cast_nonneg [typ, none, none, p]
+          | quote.1 Rat.castCoe, nonzero p => nonzero <$> mk_mapp `` rat_cast_ne_zero [typ, none, none, none, p]
+          | quote.1 (@coeBase _ _ Int.hasCoe), positive p => positive <$> mk_app `` int_coe_nat_pos [p]
+          | quote.1 (@coeBase _ _ Int.hasCoe), _ => nonnegative <$> mk_app `` int_coe_nat_nonneg [a]
           | _, _ => failed
       | _ => failed
   | _ => failed
@@ -717,20 +717,20 @@ unsafe def positivity_asc_factorial : expr → tactic strictness
   | quote.1 (Nat.ascFactorial (%%ₓa) (%%ₓb)) => positive <$> mk_app `` Nat.asc_factorial_pos [a, b]
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `nat.asc_factorial n k`"
 
-private theorem card_univ_pos (α : Type _) [Fintypeₓ α] [Nonempty α] : 0 < (Finsetₓ.univ : Finsetₓ α).card :=
-  Finsetₓ.univ_nonempty.card_pos
+private theorem card_univ_pos (α : Type _) [Fintype α] [Nonempty α] : 0 < (Finset.univ : Finset α).card :=
+  Finset.univ_nonempty.card_pos
 
 /-- Extension for the `positivity` tactic: `finset.card s` is positive if `s` is nonempty. -/
 @[positivity]
 unsafe def positivity_finset_card : expr → tactic strictness
-  | quote.1 (Finsetₓ.card (%%ₓs)) => do
+  | quote.1 (Finset.card (%%ₓs)) => do
     let p
       ←-- TODO: Partial decision procedure for `finset.nonempty`
             to_expr
-            (pquote.1 (Finsetₓ.Nonempty (%%ₓs))) >>=
+            (pquote.1 (Finset.Nonempty (%%ₓs))) >>=
           find_assumption
-    positive <$> mk_app `` Finsetₓ.Nonempty.card_pos [p]
-  | quote.1 (@Fintypeₓ.card (%%ₓα) (%%ₓi)) => positive <$> mk_mapp `` Fintypeₓ.card_pos [α, i, none]
+    positive <$> mk_app `` Finset.Nonempty.card_pos [p]
+  | quote.1 (@Fintype.card (%%ₓα) (%%ₓi)) => positive <$> mk_mapp `` Fintype.card_pos [α, i, none]
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `finset.card s` or `fintype.card α`"
 
 end Tactic

@@ -47,7 +47,7 @@ instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor :
 -- Because of the add_torsor.nonempty instance.
 /-- A nonempty affine subspace of a `normed_add_torsor` is itself a `normed_add_torsor`. -/
 @[nolint fails_quickly]
-instance AffineSubspace.toNormedAddTorsor {R : Type _} [Ringₓ R] [Module R V] (s : AffineSubspace R P) [Nonempty s] :
+instance AffineSubspace.toNormedAddTorsor {R : Type _} [Ring R] [Module R V] (s : AffineSubspace R P) [Nonempty s] :
     NormedAddTorsor s.direction s :=
   { AffineSubspace.toAddTorsor s with dist_eq_norm' := fun x y => NormedAddTorsor.dist_eq_norm' ↑x ↑y }
 
@@ -89,8 +89,8 @@ theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by rw [
 addition/subtraction of `x : P`. -/
 @[simps]
 def Isometric.vaddConst (x : P) : V ≃ᵢ P where
-  toEquiv := Equivₓ.vaddConst x
-  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_right _ _ _
+  toEquiv := Equiv.vaddConst x
+  isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_right _ _ _
 
 section
 
@@ -99,8 +99,8 @@ variable (P)
 /-- Self-isometry of a (semi)normed add torsor given by addition of a constant vector `x`. -/
 @[simps]
 def Isometric.constVadd (x : V) : P ≃ᵢ P where
-  toEquiv := Equivₓ.constVadd P x
-  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_left _ _ _
+  toEquiv := Equiv.constVadd P x
+  isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_left _ _ _
 
 end
 
@@ -112,8 +112,8 @@ theorem dist_vsub_cancel_left (x y z : P) : dist (x -ᵥ y) (x -ᵥ z) = dist y 
 subtraction from `x : P`. -/
 @[simps]
 def Isometric.constVsub (x : P) : P ≃ᵢ V where
-  toEquiv := Equivₓ.constVsub x
-  isometry_to_fun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
+  toEquiv := Equiv.constVsub x
+  isometryToFun := Isometry.ofDistEq fun y z => dist_vsub_cancel_left _ _ _
 
 @[simp]
 theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x y :=
@@ -165,9 +165,9 @@ is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V] [AddTorsor V P] :
     PseudoMetricSpace P where
-  dist := fun x y => ∥(x -ᵥ y : V)∥
-  dist_self := fun x => by simp
-  dist_comm := fun x y => by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+  dist x y := ∥(x -ᵥ y : V)∥
+  dist_self x := by simp
+  dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
@@ -179,10 +179,10 @@ is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V] [AddTorsor V P] :
     MetricSpace P where
-  dist := fun x y => ∥(x -ᵥ y : V)∥
-  dist_self := fun x => by simp
-  eq_of_dist_eq_zero := fun x y h => by simpa using h
-  dist_comm := fun x y => by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+  dist x y := ∥(x -ᵥ y : V)∥
+  dist_self x := by simp
+  eq_of_dist_eq_zero x y h := by simpa using h
+  dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
@@ -196,7 +196,7 @@ theorem LipschitzWith.vadd [PseudoEmetricSpace α] {f : α → V} {g : α → P}
   calc
     edist (f x +ᵥ g x) (f y +ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) := edist_vadd_vadd_le _ _ _ _
     _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
-    _ = (Kf + Kg) * edist x y := (add_mulₓ _ _ _).symm
+    _ = (Kf + Kg) * edist x y := (add_mul _ _ _).symm
     
 
 theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ≥0} (hf : LipschitzWith Kf f)
@@ -204,14 +204,14 @@ theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ
   calc
     edist (f x -ᵥ g x) (f y -ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) := edist_vsub_vsub_le _ _ _ _
     _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
-    _ = (Kf + Kg) * edist x y := (add_mulₓ _ _ _).symm
+    _ = (Kf + Kg) * edist x y := (add_mul _ _ _).symm
     
 
 theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
-  (LipschitzWith.prod_fst.vadd LipschitzWith.prod_snd).UniformContinuous
+  (LipschitzWith.prodFst.vadd LipschitzWith.prodSnd).UniformContinuous
 
 theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
-  (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
+  (LipschitzWith.prodFst.vsub LipschitzWith.prodSnd).UniformContinuous
 
 instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd :
     HasContinuousVadd V P where continuous_vadd := uniform_continuous_vadd.Continuous
@@ -242,7 +242,7 @@ end
 
 section
 
-variable {R : Type _} [Ringₓ R] [TopologicalSpace R] [Module R V] [HasContinuousSmul R V]
+variable {R : Type _} [Ring R] [TopologicalSpace R] [Module R V] [HasContinuousSmul R V]
 
 theorem Filter.Tendsto.line_map {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
     (h₁ : Tendsto f₁ l (𝓝 p₁)) (h₂ : Tendsto f₂ l (𝓝 p₂)) (hg : Tendsto g l (𝓝 c)) :

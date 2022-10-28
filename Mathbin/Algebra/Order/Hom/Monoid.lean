@@ -54,7 +54,7 @@ open Function
 
 variable {F α β γ δ : Type _}
 
-section AddMonoidₓ
+section AddMonoid
 
 /-- `α →+o β` is the type of monotone functions `α → β` that preserve the `ordered_add_comm_monoid`
 structure.
@@ -65,26 +65,30 @@ When possible, instead of parametrizing results over `(f : α →+o β)`,
 you should parametrize over `(F : Type*) [order_add_monoid_hom_class F α β] (f : F)`.
 
 When you extend this structure, make sure to extend `order_add_monoid_hom_class`. -/
-structure OrderAddMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClassₓ α] [AddZeroClassₓ β] extends
+structure OrderAddMonoidHom (α β : Type _) [Preorder α] [Preorder β] [AddZeroClass α] [AddZeroClass β] extends
   α →+ β where
-  monotone' : Monotoneₓ to_fun
+  monotone' : Monotone to_fun
 
 -- mathport name: «expr →+o »
 infixr:25 " →+o " => OrderAddMonoidHom
 
+section
+
 /-- `order_add_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
 
 You should also extend this typeclass when you extend `order_add_monoid_hom`. -/
-class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClassₓ α]
-  [AddZeroClassₓ β] extends AddMonoidHomClass F α β where
-  Monotone (f : F) : Monotoneₓ f
+class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] [AddZeroClass α]
+  [AddZeroClass β] extends AddMonoidHomClass F α β where
+  Monotone (f : F) : Monotone f
+
+end
 
 -- Instances and lemmas are defined below through `@[to_additive]`.
-end AddMonoidₓ
+end AddMonoid
 
-section Monoidₓ
+section Monoid
 
-variable [Preorderₓ α] [Preorderₓ β] [MulOneClassₓ α] [MulOneClassₓ β]
+variable [Preorder α] [Preorder β] [MulOneClass α] [MulOneClass β]
 
 /-- `α →*o β` is the type of functions `α → β` that preserve the `ordered_comm_monoid` structure.
 
@@ -95,35 +99,38 @@ you should parametrize over `(F : Type*) [order_monoid_hom_class F α β] (f : F
 
 When you extend this structure, make sure to extend `order_monoid_hom_class`. -/
 @[to_additive]
-structure OrderMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [MulOneClassₓ α] [MulOneClassₓ β] extends
-  α →* β where
-  monotone' : Monotoneₓ to_fun
+structure OrderMonoidHom (α β : Type _) [Preorder α] [Preorder β] [MulOneClass α] [MulOneClass β] extends α →* β where
+  monotone' : Monotone to_fun
 
 -- mathport name: «expr →*o »
 infixr:25 " →*o " => OrderMonoidHom
+
+section
 
 /-- `order_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
 
 You should also extend this typeclass when you extend `order_monoid_hom`. -/
 @[to_additive]
-class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [MulOneClassₓ α]
-  [MulOneClassₓ β] extends MonoidHomClass F α β where
-  Monotone (f : F) : Monotoneₓ f
+class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] [MulOneClass α]
+  [MulOneClass β] extends MonoidHomClass F α β where
+  Monotone (f : F) : Monotone f
+
+end
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] :
-    OrderHomClass F α β where map_rel := OrderMonoidHomClass.monotone
+instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] : OrderHomClass F α β :=
+  { ‹OrderMonoidHomClass F α β› with map_rel := OrderMonoidHomClass.monotone }
 
 @[to_additive]
-instance [OrderMonoidHomClass F α β] : CoeTₓ F (α →*o β) :=
+instance [OrderMonoidHomClass F α β] : CoeT F (α →*o β) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_mul' := map_mul f, monotone' := OrderMonoidHomClass.monotone _ }⟩
 
-end Monoidₓ
+end Monoid
 
-section MonoidWithZeroₓ
+section MonoidWithZero
 
-variable [Preorderₓ α] [Preorderₓ β] [MulZeroOneClassₓ α] [MulZeroOneClassₓ β]
+variable [Preorder α] [Preorder β] [MulZeroOneClass α] [MulZeroOneClass β]
 
 /-- `order_monoid_with_zero_hom α β` is the type of functions `α → β` that preserve
 the `monoid_with_zero` structure.
@@ -134,32 +141,36 @@ When possible, instead of parametrizing results over `(f : α →+ β)`,
 you should parametrize over `(F : Type*) [order_monoid_with_zero_hom_class F α β] (f : F)`.
 
 When you extend this structure, make sure to extend `order_monoid_with_zero_hom_class`. -/
-structure OrderMonoidWithZeroHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [MulZeroOneClassₓ α]
-  [MulZeroOneClassₓ β] extends α →*₀ β where
-  monotone' : Monotoneₓ to_fun
+structure OrderMonoidWithZeroHom (α β : Type _) [Preorder α] [Preorder β] [MulZeroOneClass α]
+  [MulZeroOneClass β] extends α →*₀ β where
+  monotone' : Monotone to_fun
 
 -- mathport name: «expr →*₀o »
 infixr:25 " →*₀o " => OrderMonoidWithZeroHom
+
+section
 
 /-- `order_monoid_with_zero_hom_class F α β` states that `F` is a type of
 ordered monoid with zero homomorphisms.
 
 You should also extend this typeclass when you extend `order_monoid_with_zero_hom`. -/
-class OrderMonoidWithZeroHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β]
-  [MulZeroOneClassₓ α] [MulZeroOneClassₓ β] extends MonoidWithZeroHomClass F α β where
-  Monotone (f : F) : Monotoneₓ f
+class OrderMonoidWithZeroHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] [MulZeroOneClass α]
+  [MulZeroOneClass β] extends MonoidWithZeroHomClass F α β where
+  Monotone (f : F) : Monotone f
+
+end
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass [OrderMonoidWithZeroHomClass F α β] :
     OrderMonoidHomClass F α β :=
   { ‹OrderMonoidWithZeroHomClass F α β› with }
 
-instance [OrderMonoidWithZeroHomClass F α β] : CoeTₓ F (α →*₀o β) :=
+instance [OrderMonoidWithZeroHomClass F α β] : CoeT F (α →*₀o β) :=
   ⟨fun f =>
     { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f,
       monotone' := OrderMonoidWithZeroHomClass.monotone _ }⟩
 
-end MonoidWithZeroₓ
+end MonoidWithZero
 
 section OrderedAddCommMonoid
 
@@ -181,59 +192,59 @@ section OrderedAddCommGroup
 
 variable [OrderedAddCommGroup α] [OrderedAddCommMonoid β] [AddMonoidHomClass F α β] (f : F)
 
-theorem monotone_iff_map_nonneg : Monotoneₓ (f : α → β) ↔ ∀ a, 0 ≤ a → 0 ≤ f a :=
+theorem monotone_iff_map_nonneg : Monotone (f : α → β) ↔ ∀ a, 0 ≤ a → 0 ≤ f a :=
   ⟨fun h a => by
     rw [← map_zero f]
     apply h, fun h a b hl => by
     rw [← sub_add_cancel b a, map_add f]
     exact le_add_of_nonneg_left (h _ <| sub_nonneg.2 hl)⟩
 
-theorem antitone_iff_map_nonpos : Antitoneₓ (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
+theorem antitone_iff_map_nonpos : Antitone (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
   monotone_to_dual_comp_iff.symm.trans <| monotone_iff_map_nonneg _
 
-theorem monotone_iff_map_nonpos : Monotoneₓ (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 :=
+theorem monotone_iff_map_nonpos : Monotone (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 :=
   antitone_comp_of_dual_iff.symm.trans <| antitone_iff_map_nonpos _
 
-theorem antitone_iff_map_nonneg : Antitoneₓ (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a :=
+theorem antitone_iff_map_nonneg : Antitone (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a :=
   monotone_comp_of_dual_iff.symm.trans <| monotone_iff_map_nonneg _
 
 variable [CovariantClass β β (· + ·) (· < ·)]
 
-theorem strict_mono_iff_map_pos : StrictMonoₓ (f : α → β) ↔ ∀ a, 0 < a → 0 < f a :=
+theorem strict_mono_iff_map_pos : StrictMono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a :=
   ⟨fun h a => by
     rw [← map_zero f]
     apply h, fun h a b hl => by
     rw [← sub_add_cancel b a, map_add f]
     exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)⟩
 
-theorem strict_anti_iff_map_neg : StrictAntiₓ (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
+theorem strict_anti_iff_map_neg : StrictAnti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
   strict_mono_to_dual_comp_iff.symm.trans <| strict_mono_iff_map_pos _
 
-theorem strict_mono_iff_map_neg : StrictMonoₓ (f : α → β) ↔ ∀ a < 0, f a < 0 :=
+theorem strict_mono_iff_map_neg : StrictMono (f : α → β) ↔ ∀ a < 0, f a < 0 :=
   strict_anti_comp_of_dual_iff.symm.trans <| strict_anti_iff_map_neg _
 
-theorem strict_anti_iff_map_pos : StrictAntiₓ (f : α → β) ↔ ∀ a < 0, 0 < f a :=
+theorem strict_anti_iff_map_pos : StrictAnti (f : α → β) ↔ ∀ a < 0, 0 < f a :=
   strict_mono_comp_of_dual_iff.symm.trans <| strict_mono_iff_map_pos _
 
 end OrderedAddCommGroup
 
 namespace OrderMonoidHom
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ] [MulOneClassₓ α] [MulOneClassₓ β] [MulOneClassₓ γ]
-  [MulOneClassₓ δ] {f g : α →*o β}
+variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] [MulOneClass α] [MulOneClass β] [MulOneClass γ]
+  [MulOneClass δ] {f g : α →*o β}
 
 @[to_additive]
 instance : OrderMonoidHomClass (α →*o β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_mul := fun f => f.map_mul'
-  map_one := fun f => f.map_one'
-  Monotone := fun f => f.monotone'
+  map_mul f := f.map_mul'
+  map_one f := f.map_one'
+  Monotone f := f.monotone'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -348,7 +359,7 @@ theorem cancel_left {g : β →*o γ} {f₁ f₂ : α →*o β} (hg : Function.I
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive "`1` is the homomorphism sending all elements to `1`."]
 instance : One (α →*o β) :=
-  ⟨{ (1 : α →* β) with monotone' := monotone_constₓ }⟩
+  ⟨{ (1 : α →* β) with monotone' := monotone_const }⟩
 
 @[simp, to_additive]
 theorem coe_one : ⇑(1 : α →*o β) = 1 :=
@@ -367,7 +378,7 @@ theorem comp_one (f : β →*o γ) : f.comp (1 : α →*o β) = 1 := by
   ext
   exact map_one f
 
-end Preorderₓ
+end Preorder
 
 section Mul
 
@@ -425,7 +436,7 @@ include hα hβ
 /-- Makes an ordered group homomorphism from a proof that the map preserves multiplication. -/
 @[to_additive "Makes an ordered additive group homomorphism from a proof that the map preserves\naddition.",
   simps (config := { fullyApplied := false })]
-def mk' (f : α → β) (hf : Monotoneₓ f) (map_mul : ∀ a b : α, f (a * b) = f a * f b) : α →*o β :=
+def mk' (f : α → β) (hf : Monotone f) (map_mul : ∀ a b : α, f (a * b) = f a * f b) : α →*o β :=
   { MonoidHom.mk' f map_mul with monotone' := hf }
 
 end OrderedCommGroup
@@ -434,21 +445,21 @@ end OrderMonoidHom
 
 namespace OrderMonoidWithZeroHom
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ] [MulZeroOneClassₓ α] [MulZeroOneClassₓ β]
-  [MulZeroOneClassₓ γ] [MulZeroOneClassₓ δ] {f g : α →*₀o β}
+variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] [MulZeroOneClass α] [MulZeroOneClass β] [MulZeroOneClass γ]
+  [MulZeroOneClass δ] {f g : α →*₀o β}
 
 instance : OrderMonoidWithZeroHomClass (α →*₀o β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_mul := fun f => f.map_mul'
-  map_one := fun f => f.map_one'
-  map_zero := fun f => f.map_zero'
-  Monotone := fun f => f.monotone'
+  map_mul f := f.map_mul'
+  map_one f := f.map_one'
+  map_zero f := f.map_zero'
+  Monotone f := f.monotone'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -548,7 +559,7 @@ theorem cancel_right {g₁ g₂ : β →*₀o γ} {f : α →*₀o β} (hf : Fun
 theorem cancel_left {g : β →*₀o γ} {f₁ f₂ : α →*₀o β} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
-end Preorderₓ
+end Preorder
 
 section Mul
 
@@ -577,7 +588,7 @@ end Mul
 
 section LinearOrderedCommMonoidWithZero
 
-variable {hα : Preorderₓ α} {hα' : MulZeroOneClassₓ α} {hβ : Preorderₓ β} {hβ' : MulZeroOneClassₓ β}
+variable {hα : Preorder α} {hα' : MulZeroOneClass α} {hβ : Preorder β} {hβ' : MulZeroOneClass β}
 
 include hα hα' hβ hβ'
 

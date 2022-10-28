@@ -93,7 +93,7 @@ theorem pow_half_succ_le_pow_half (n : ℕ) : powHalf (n + 1) ≤ powHalf n :=
 
 theorem pow_half_le_one (n : ℕ) : powHalf n ≤ 1 := by
   induction' n with n hn
-  · exact le_rflₓ
+  · exact le_rfl
     
   · exact (pow_half_succ_le_pow_half n).trans hn
     
@@ -109,7 +109,7 @@ theorem zero_le_pow_half (n : ℕ) : 0 ≤ powHalf n :=
   (pow_half_pos n).le
 
 theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n := by
-  induction' n using Nat.strong_induction_onₓ with n hn
+  induction' n using Nat.strong_induction_on with n hn
   · constructor <;> rw [le_iff_forall_lf] <;> constructor
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
       · calc
@@ -133,7 +133,7 @@ theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 
       calc
         pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
           add_le_add_left (pow_half_succ_le_pow_half _) _
-        _ ≈ pow_half n := hn _ (Nat.lt_succ_selfₓ n)
+        _ ≈ pow_half n := hn _ (Nat.lt_succ_self n)
         
       
     · simp only [pow_half_move_left, forall_const]
@@ -178,20 +178,20 @@ theorem pow_half_zero : powHalf 0 = 1 :=
 @[simp]
 theorem double_pow_half_succ_eq_pow_half (n : ℕ) : 2 • powHalf n.succ = powHalf n := by
   rw [two_nsmul]
-  exact Quotientₓ.sound (Pgame.add_pow_half_succ_self_eq_pow_half n)
+  exact Quotient.sound (Pgame.add_pow_half_succ_self_eq_pow_half n)
 
 @[simp]
 theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • powHalf n = 1 := by
   induction' n with n hn
-  · simp only [nsmul_one, pow_half_zero, Nat.cast_oneₓ, pow_zeroₓ]
+  · simp only [nsmul_one, pow_half_zero, Nat.cast_one, pow_zero]
     
-  · rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm, pow_succₓ]
+  · rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm, pow_succ]
     
 
 @[simp]
 theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHalf k := by
   induction' k with k hk
-  · simp only [add_zeroₓ, Surreal.nsmul_pow_two_pow_half, Nat.nat_zero_eq_zero, eq_self_iff_true, Surreal.pow_half_zero]
+  · simp only [add_zero, Surreal.nsmul_pow_two_pow_half, Nat.zero_eq, eq_self_iff_true, Surreal.pow_half_zero]
     
   · rw [← double_pow_half_succ_eq_pow_half (n + k), ← double_pow_half_succ_eq_pow_half k, smul_algebra_smul_comm] at hk
     rwa [← zsmul_eq_zsmul_iff' two_ne_zero]
@@ -208,9 +208,9 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
   wlog h : y₁ ≤ y₂
   intro m₁ m₂ h₂
   obtain ⟨c, rfl⟩ := le_iff_exists_add.mp h
-  rw [add_commₓ, pow_addₓ, ← mul_assoc, mul_eq_mul_right_iff] at h₂
+  rw [add_comm, pow_add, ← mul_assoc, mul_eq_mul_right_iff] at h₂
   cases h₂
-  · rw [h₂, add_commₓ, zsmul_pow_two_pow_half m₂ c y₁]
+  · rw [h₂, add_comm, zsmul_pow_two_pow_half m₂ c y₁]
     
   · have := Nat.one_le_pow y₁ 2 Nat.succ_pos'
     norm_cast  at h₂
@@ -219,7 +219,7 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
 
 /-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
 def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
-  toFun := fun x =>
+  toFun x :=
     (Localization.liftOn x fun x y => x • powHalf (Submonoid.log y)) <| by
       intro m₁ m₂ n₁ n₂ h₁
       obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
@@ -239,7 +239,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
         linarith
         
   map_zero' := Localization.lift_on_zero _ _
-  map_add' := fun x y =>
+  map_add' x y :=
     Localization.induction_on₂ x y <| by
       rintro ⟨a, ⟨b, ⟨b', rfl⟩⟩⟩ ⟨c, ⟨d, ⟨d', rfl⟩⟩⟩
       have h₂ : 1 < (2 : ℤ).natAbs := one_lt_two
@@ -250,9 +250,9 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
       calc
         (2 ^ b' * c + 2 ^ d' * a) • pow_half (b' + d') =
             (c * 2 ^ b') • pow_half (b' + d') + (a * 2 ^ d') • pow_half (d' + b') :=
-          by simp only [add_smul, mul_comm, add_commₓ]
+          by simp only [add_smul, mul_comm, add_comm]
         _ = c • pow_half d' + a • pow_half b' := by simp only [zsmul_pow_two_pow_half]
-        _ = a • pow_half b' + c • pow_half d' := add_commₓ _ _
+        _ = a • pow_half b' + c • pow_half d' := add_comm _ _
         
 
 @[simp]

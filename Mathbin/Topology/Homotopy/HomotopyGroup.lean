@@ -42,7 +42,7 @@ variable {n : ℕ} {x : X}
 /-- The `n`-dimensional cube.
 -/
 def Cube (n : ℕ) : Type :=
-  Finₓ n → I deriving Zero, One, TopologicalSpace
+  Fin n → I deriving Zero, One, TopologicalSpace
 
 -- mathport name: «exprI^»
 local notation "I^" => Cube
@@ -50,7 +50,7 @@ local notation "I^" => Cube
 namespace Cube
 
 @[continuity]
-theorem proj_continuous (i : Finₓ n) : Continuous fun f : I^ n => f i :=
+theorem proj_continuous (i : Fin n) : Continuous fun f : I^ n => f i :=
   continuous_apply i
 
 /-- The points of the `n`-dimensional cube with at least one projection equal to 0 or 1.
@@ -70,7 +70,7 @@ theorem head.continuous {n} : Continuous (@head n) :=
 /-- The projection to the last `n` coordinates from an `n+1` dimensional cube.
 -/
 @[simp]
-def tail {n} : I^ (n + 1) → I^ n := fun c => Finₓ.tail c
+def tail {n} : I^ (n + 1) → I^ n := fun c => Fin.tail c
 
 instance uniqueCube0 : Unique (I^ 0) :=
   Pi.uniqueOfIsEmpty _
@@ -87,7 +87,7 @@ structure GenLoop (n : ℕ) (x : X) extends C(I^ n, X) where
 namespace GenLoop
 
 instance funLike : FunLike (GenLoop n x) (I^ n) fun _ => X where
-  coe := fun f => f.1
+  coe f := f.1
   coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by
     congr
     exact h
@@ -130,10 +130,10 @@ theorem symm (H : f.Homotopic g) : g.Homotopic f :=
 theorem trans (H0 : f.Homotopic g) (H1 : g.Homotopic h) : f.Homotopic h :=
   H0.trans H1
 
-theorem equiv : Equivalenceₓ (@Homotopic X _ n x) :=
+theorem equiv : Equivalence (@Homotopic X _ n x) :=
   ⟨Homotopic.refl, fun _ _ => Homotopic.symm, fun _ _ _ => Homotopic.trans⟩
 
-instance setoid (n : ℕ) (x : X) : Setoidₓ (GenLoop n x) :=
+instance setoid (n : ℕ) (x : X) : Setoid (GenLoop n x) :=
   ⟨Homotopic, equiv⟩
 
 end
@@ -146,29 +146,29 @@ end GenLoop
 `homotopic` relation.
 -/
 def HomotopyGroup (n : ℕ) (x : X) : Type _ :=
-  Quotientₓ (GenLoop.Homotopic.setoid n x)deriving Inhabited
+  Quotient (GenLoop.Homotopic.setoid n x)deriving Inhabited
 
 -- mathport name: exprπ
 local notation "π" => HomotopyGroup
 
 /-- The 0-dimensional generalized loops based at `x` are in 1-1 correspondence with `X`. -/
 def genLoopZeroEquiv : GenLoop 0 x ≃ X where
-  toFun := fun f => f 0
-  invFun := fun x => ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0⟩
-  left_inv := fun f => by
+  toFun f := f 0
+  invFun x := ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0⟩
+  left_inv f := by
     ext1
     exact congr_arg f (Subsingleton.elim _ _)
-  right_inv := fun _ => rfl
+  right_inv _ := rfl
 
 /-- The 0th homotopy "group" is equivalent to the path components of `X`, aka the `zeroth_homotopy`.
 -/
 def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
-  Quotientₓ.congr genLoopZeroEquiv
+  Quotient.congr genLoopZeroEquiv
     (by
       -- joined iff homotopic
       intros
       constructor <;> rintro ⟨H⟩
-      exacts[⟨{ toFun := fun t => H ⟨t, Finₓ.elim0⟩,
+      exacts[⟨{ toFun := fun t => H ⟨t, Fin.elim0⟩,
             source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm),
             target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
         ⟨{ toFun := fun t0 => H t0.fst, map_zero_left' := fun _ => by convert H.source,
@@ -178,21 +178,21 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
   paths from `x` to itself. -/
 @[simps]
 def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x where
-  toFun := fun p =>
+  toFun p :=
     Path.mk
       ⟨fun t => p fun _ => t, by
         continuity
         exact p.1.2⟩
       (p.Boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.Boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
-  invFun := fun p =>
+  invFun p :=
     { toFun := fun c => p c.head,
       Boundary := by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
         exacts[p.source, p.target] }
-  left_inv := fun p => by
+  left_inv p := by
     ext1
     exact congr_arg p y.one_char.symm
-  right_inv := fun p => by
+  right_inv p := by
     ext
     rfl
 
@@ -200,8 +200,8 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x where
 i.e. the loops based at `x` up to homotopy.
 -/
 def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
-  refine' Equivₓ.trans _ (CategoryTheory.Groupoid.isoEquivHom _ _).symm
-  refine' Quotientₓ.congr genLoopOneEquivPathSelf _
+  refine' Equiv.trans _ (CategoryTheory.Groupoid.isoEquivHom _ _).symm
+  refine' Quotient.congr genLoopOneEquivPathSelf _
   -- homotopic iff homotopic
   intros
   constructor <;> rintro ⟨H⟩

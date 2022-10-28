@@ -44,7 +44,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 open Nnreal
 
-open Module.End Metric
+open Module.EndCat Metric
 
 namespace ContinuousLinearMap
 
@@ -102,7 +102,7 @@ variable {F : Type _} [InnerProductSpace ℝ F]
 theorem _root_.linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F}
     (hT : (T : F →ₗ[ℝ] F).IsSymmetric) (x₀ : F) :
     HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀) : F →L[ℝ] ℝ)) x₀ := by
-  convert T.has_strict_fderiv_at.inner (has_strict_fderiv_at_id x₀)
+  convert T.has_strict_fderiv_at.inner (hasStrictFderivAtId x₀)
   ext y
   simp [_root_.bit0, hT.apply_clm x₀ y, real_inner_comm x₀]
 
@@ -121,14 +121,14 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
   -- find Lagrange multipliers for the function `T.re_apply_inner_self` and the
   -- hypersurface-defining function `λ x, ∥x∥ ^ 2`
   obtain ⟨a, b, h₁, h₂⟩ :=
-    IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d H (has_strict_fderiv_at_norm_sq x₀)
+    IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d H (hasStrictFderivAtNormSq x₀)
       (hT.is_symmetric.has_strict_fderiv_at_re_apply_inner_self x₀)
   refine' ⟨a, b, h₁, _⟩
   apply (InnerProductSpace.toDualMap ℝ F).Injective
   simp only [LinearIsometry.map_add, LinearIsometry.map_smul, LinearIsometry.map_zero]
   change a • innerSL x₀ + b • innerSL (T x₀) = 0
   apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
-  simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zeroₓ] using h₂
+  simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zero] using h₂
 
 theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : F) ∥x₀∥) x₀) : T x₀ = rayleigh_quotient x₀ • x₀ := by
@@ -174,7 +174,7 @@ theorem has_eigenvector_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : E} (h
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) :
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(rayleigh_quotient x₀)) x₀ := by
   refine' ⟨_, hx₀⟩
-  rw [Module.End.mem_eigenspace_iff]
+  rw [Module.EndCat.mem_eigenspace_iff]
   exact hT.eq_smul_self_of_is_local_extr_on hextr
 
 /-- For a self-adjoint operator `T`, a maximum of the Rayleigh quotient of `T` on a sphere centred
@@ -229,7 +229,7 @@ include _i
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ∥(x : E)∥ ^ 2) := by
-  haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
+  haveI := FiniteDimensional.properIsROrC 𝕜 E
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ∥x∥) := is_compact_sphere _ _
@@ -247,7 +247,7 @@ theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ∥(x : E)∥ ^ 2) := by
-  haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
+  haveI := FiniteDimensional.properIsROrC 𝕜 E
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ∥x∥) := is_compact_sphere _ _
@@ -264,7 +264,7 @@ theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
 omit _i
 
 theorem subsingleton_of_no_eigenvalue_finite_dimensional (hT : T.IsSymmetric)
-    (hT' : ∀ μ : 𝕜, Module.End.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
+    (hT' : ∀ μ : 𝕜, Module.EndCat.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
   (subsingleton_or_nontrivial E).resolve_right fun h => absurd (hT' _) hT.has_eigenvalue_supr_of_finite_dimensional
 
 end IsSymmetric

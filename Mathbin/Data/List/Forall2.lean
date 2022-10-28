@@ -90,9 +90,9 @@ theorem forall₂_cons_right_iff {b l u} : Forall₂ R u (b :: l) ↔ ∃ a u', 
     | _, ⟨b, u', h₁, h₂, rfl⟩ => Forall₂.cons h₁ h₂
 
 theorem forall₂_and_left {p : α → Prop} : ∀ l u, Forall₂ (fun a b => p a ∧ R a b) l u ↔ (∀ a ∈ l, p a) ∧ Forall₂ R l u
-  | [], u => by simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff, true_andₓ]
+  | [], u => by simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff, true_and_iff]
   | a :: l, u => by
-    simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assocₓ, and_comm, And.left_comm,
+    simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assoc', and_comm', and_left_comm,
       exists_and_distrib_left.symm]
 
 @[simp]
@@ -138,18 +138,18 @@ theorem forall₂_of_length_eq_of_nth_le :
     ∀ {x : List α} {y : List β}, x.length = y.length → (∀ i h₁ h₂, R (x.nthLe i h₁) (y.nthLe i h₂)) → Forall₂ R x y
   | [], [], hl, h => Forall₂.nil
   | a₁ :: l₁, a₂ :: l₂, hl, h =>
-    Forall₂.cons (h 0 (Nat.zero_lt_succₓ _) (Nat.zero_lt_succₓ _))
-      (forall₂_of_length_eq_of_nth_le (succ.injₓ hl) fun i h₁ h₂ => h i.succ (succ_lt_succₓ h₁) (succ_lt_succₓ h₂))
+    Forall₂.cons (h 0 (Nat.zero_lt_succ _) (Nat.zero_lt_succ _))
+      (forall₂_of_length_eq_of_nth_le (succ.inj hl) fun i h₁ h₂ => h i.succ (succ_lt_succ h₁) (succ_lt_succ h₂))
 
 theorem forall₂_iff_nth_le {l₁ : List α} {l₂ : List β} :
     Forall₂ R l₁ l₂ ↔ l₁.length = l₂.length ∧ ∀ i h₁ h₂, R (l₁.nthLe i h₁) (l₂.nthLe i h₂) :=
   ⟨fun h => ⟨h.length_eq, h.nthLe⟩, And.ndrec forall₂_of_length_eq_of_nth_le⟩
 
-theorem forall₂_zip : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → ∀ {a b}, (a, b) ∈ zipₓ l₁ l₂ → R a b
+theorem forall₂_zip : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → ∀ {a b}, (a, b) ∈ zip l₁ l₂ → R a b
   | _, _, forall₂.cons h₁ h₂, x, y, Or.inl rfl => h₁
   | _, _, forall₂.cons h₁ h₂, x, y, Or.inr h₃ => forall₂_zip h₂ h₃
 
-theorem forall₂_iff_zip {l₁ l₂} : Forall₂ R l₁ l₂ ↔ length l₁ = length l₂ ∧ ∀ {a b}, (a, b) ∈ zipₓ l₁ l₂ → R a b :=
+theorem forall₂_iff_zip {l₁ l₂} : Forall₂ R l₁ l₂ ↔ length l₁ = length l₂ ∧ ∀ {a b}, (a, b) ∈ zip l₁ l₂ → R a b :=
   ⟨fun h => ⟨Forall₂.length_eq h, @forall₂_zip _ _ _ _ _ h⟩, fun h => by
     cases' h with h₁ h₂
     induction' l₁ with a l₁ IH generalizing l₂
@@ -160,24 +160,24 @@ theorem forall₂_iff_zip {l₁ l₂} : Forall₂ R l₁ l₂ ↔ length l₁ = 
       exact forall₂.cons (h₂ <| Or.inl rfl) ((IH h₁) fun a b h => h₂ <| Or.inr h)
       ⟩
 
-theorem forall₂_take : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (takeₓ n l₁) (takeₓ n l₂)
+theorem forall₂_take : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (take n l₁) (take n l₂)
   | 0, _, _, _ => by simp only [forall₂.nil, take]
   | n + 1, _, _, forall₂.nil => by simp only [forall₂.nil, take]
   | n + 1, _, _, forall₂.cons h₁ h₂ => by simp [And.intro h₁ h₂, forall₂_take n]
 
-theorem forall₂_drop : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (dropₓ n l₁) (dropₓ n l₂)
+theorem forall₂_drop : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (drop n l₁) (drop n l₂)
   | 0, _, _, h => by simp only [drop, h]
   | n + 1, _, _, forall₂.nil => by simp only [forall₂.nil, drop]
   | n + 1, _, _, forall₂.cons h₁ h₂ => by simp [And.intro h₁ h₂, forall₂_drop n]
 
 theorem forall₂_take_append (l : List α) (l₁ : List β) (l₂ : List β) (h : Forall₂ R l (l₁ ++ l₂)) :
-    Forall₂ R (List.takeₓ (length l₁) l) l₁ := by
-  have h' : Forall₂ R (takeₓ (length l₁) l) (takeₓ (length l₁) (l₁ ++ l₂)) := forall₂_take (length l₁) h
+    Forall₂ R (List.take (length l₁) l) l₁ := by
+  have h' : Forall₂ R (take (length l₁) l) (take (length l₁) (l₁ ++ l₂)) := forall₂_take (length l₁) h
   rwa [take_left] at h'
 
 theorem forall₂_drop_append (l : List α) (l₁ : List β) (l₂ : List β) (h : Forall₂ R l (l₁ ++ l₂)) :
-    Forall₂ R (List.dropₓ (length l₁) l) l₂ := by
-  have h' : Forall₂ R (dropₓ (length l₁) l) (dropₓ (length l₁) (l₁ ++ l₂)) := forall₂_drop (length l₁) h
+    Forall₂ R (List.drop (length l₁) l) l₂ := by
+  have h' : Forall₂ R (drop (length l₁) l) (drop (length l₁) (l₁ ++ l₂)) := forall₂_drop (length l₁) h
   rwa [drop_left] at h'
 
 theorem rel_mem (hr : BiUnique R) : (R ⇒ Forall₂ R ⇒ Iff) (· ∈ ·) (· ∈ ·)
@@ -222,12 +222,12 @@ theorem rel_foldr : ((R ⇒ P ⇒ P) ⇒ P ⇒ Forall₂ R ⇒ P) foldr foldr
   | f, g, hfg, x, y, hxy, _, _, forall₂.cons hab hs => hfg hab (rel_foldr (@hfg) hxy hs)
 
 theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [DecidablePred q] (hpq : (R ⇒ (· ↔ ·)) p q) :
-    (Forall₂ R ⇒ Forall₂ R) (filterₓ p) (filterₓ q)
+    (Forall₂ R ⇒ Forall₂ R) (filter' p) (filter' q)
   | _, _, forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => by
     by_cases p a
     · have : q b := by rwa [← hpq h₁]
-      simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, rel_filter h₂, and_trueₓ]
+      simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, rel_filter h₂, and_true_iff]
       
     · have : ¬q b := by rwa [← hpq h₁]
       simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter h₂]
@@ -243,7 +243,7 @@ theorem rel_filter_map : ((R ⇒ Option.Rel P) ⇒ Forall₂ R ⇒ Forall₂ P) 
         | _, _, Option.Rel.some h => forall₂.cons h (rel_filter_map (@hfg) h₂)
 
 @[to_additive]
-theorem rel_prod [Monoidₓ α] [Monoidₓ β] (h : R 1 1) (hf : (R ⇒ R ⇒ R) (· * ·) (· * ·)) : (Forall₂ R ⇒ R) prod prod :=
+theorem rel_prod [Monoid α] [Monoid β] (h : R 1 1) (hf : (R ⇒ R ⇒ R) (· * ·) (· * ·)) : (Forall₂ R ⇒ R) prod prod :=
   rel_foldl hf h
 
 /-- Given a relation `R`, `sublist_forall₂ r l₁ l₂` indicates that there is a sublist of `l₂` such

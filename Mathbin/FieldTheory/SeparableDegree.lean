@@ -41,9 +41,9 @@ noncomputable section
 
 open Classical Polynomial
 
-section CommSemiringₓ
+section CommSemiring
 
-variable {F : Type} [CommSemiringₓ F] (q : ℕ)
+variable {F : Type} [CommSemiring F] (q : ℕ)
 
 /-- A separable contraction of a polynomial `f` is a separable polynomial `g` such that
 `g(x^(q^m)) = f(x)` for some `m : ℕ`.-/
@@ -82,9 +82,9 @@ theorem HasSeparableContraction.dvd_degree : hf.degree ∣ f.natDegree :=
 /-- In exponential characteristic one, the separable degree equals the degree. -/
 theorem HasSeparableContraction.eq_degree {f : F[X]} (hf : HasSeparableContraction 1 f) : hf.degree = f.natDegree := by
   let ⟨a, ha⟩ := hf.dvd_degree'
-  rw [← ha, one_pow a, mul_oneₓ]
+  rw [← ha, one_pow a, mul_one]
 
-end CommSemiringₓ
+end CommSemiring
 
 section Field
 
@@ -97,7 +97,7 @@ https://stacks.math.columbia.edu/tag/09H0 -/
 theorem _root_.irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : F[X]) (irred : Irreducible f) :
     HasSeparableContraction q f := by
   cases hF
-  · exact ⟨f, irred.separable, ⟨0, by rw [pow_zeroₓ, expand_one]⟩⟩
+  · exact ⟨f, irred.separable, ⟨0, by rw [pow_zero, expand_one]⟩⟩
     
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.ne_zero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
@@ -109,7 +109,7 @@ theorem contraction_degree_eq_aux [hq : Fact q.Prime] [hF : CharP F q] (g g' : F
     (h_expand : expand F (q ^ m) g = expand F (q ^ m') g') (h : m < m') (hg : g.Separable) :
     g.natDegree = g'.natDegree := by
   obtain ⟨s, rfl⟩ := Nat.exists_eq_add_of_lt h
-  rw [add_assocₓ, pow_addₓ, expand_mul] at h_expand
+  rw [add_assoc, pow_add, expand_mul] at h_expand
   let aux := expand_injective (pow_pos hq.1.Pos m) h_expand
   rw [aux] at hg
   have := (is_unit_or_eq_zero_of_separable_expand q (s + 1) hq.out.pos hg).resolve_right s.succ_ne_zero
@@ -125,7 +125,7 @@ theorem contraction_degree_eq_or_insep [hq : Fact q.Prime] [CharP F q] (g g' : F
     rw [h] at h_expand
     have expand_deg : ((expand F (q ^ m')) g).natDegree = (expand F (q ^ m') g').natDegree := by rw [h_expand]
     rw [nat_degree_expand (q ^ m') g, nat_degree_expand (q ^ m') g'] at expand_deg
-    apply Nat.eq_of_mul_eq_mul_leftₓ (pow_pos hq.1.Pos m')
+    apply Nat.eq_of_mul_eq_mul_left (pow_pos hq.1.Pos m')
     rw [mul_comm] at expand_deg
     rw [expand_deg]
     rw [mul_comm]

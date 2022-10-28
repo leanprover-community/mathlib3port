@@ -42,7 +42,7 @@ open ContinuousMap
 
 open ContinuousMap
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] [] -/
 /-- A contractible space is one that is homotopy equivalent to `unit`. -/
 class ContractibleSpace (X : Type _) [TopologicalSpace X] : Prop where
   hequiv_unit : Nonempty (X ≃ₕ Unit)

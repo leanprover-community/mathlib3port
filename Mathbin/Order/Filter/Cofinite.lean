@@ -33,9 +33,8 @@ namespace Filter
 def cofinite : Filter α where
   Sets := { s | sᶜ.Finite }
   univ_sets := by simp only [compl_univ, finite_empty, mem_set_of_eq]
-  sets_of_superset := fun s t (hs : sᶜ.Finite) (st : s ⊆ t) => hs.Subset <| compl_subset_compl.2 st
-  inter_sets := fun s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) => by
-    simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
+  sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.Subset <| compl_subset_compl.2 st
+  inter_sets s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) := by simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
 
 @[simp]
 theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ sᶜ.Finite :=
@@ -48,7 +47,7 @@ theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ 
 theorem has_basis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
   ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.Subset <| compl_subset_comm.2 hts⟩⟩
 
-instance cofinite_ne_bot [Infinite α] : NeBot (@cofinite α) :=
+instance cofiniteNeBot [Infinite α] : NeBot (@cofinite α) :=
   has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
@@ -60,7 +59,7 @@ theorem _root_.set.finite.compl_mem_cofinite {s : Set α} (hs : s.Finite) : sᶜ
 theorem _root_.set.finite.eventually_cofinite_nmem {s : Set α} (hs : s.Finite) : ∀ᶠ x in cofinite, x ∉ s :=
   hs.compl_mem_cofinite
 
-theorem _root_.finset.eventually_cofinite_nmem (s : Finsetₓ α) : ∀ᶠ x in cofinite, x ∉ s :=
+theorem _root_.finset.eventually_cofinite_nmem (s : Finset α) : ∀ᶠ x in cofinite, x ∉ s :=
   s.finite_to_set.eventually_cofinite_nmem
 
 theorem _root_.set.infinite_iff_frequently_cofinite {s : Set α} : Set.Infinite s ↔ ∃ᶠ x in cofinite, x ∈ s :=
@@ -78,7 +77,7 @@ theorem le_cofinite_iff_eventually_ne : l ≤ cofinite ↔ ∀ x, ∀ᶠ y in l,
   le_cofinite_iff_compl_singleton_mem
 
 /-- If `α` is a preorder with no maximal element, then `at_top ≤ cofinite`. -/
-theorem at_top_le_cofinite [Preorderₓ α] [NoMaxOrder α] : (atTop : Filter α) ≤ cofinite :=
+theorem at_top_le_cofinite [Preorder α] [NoMaxOrder α] : (atTop : Filter α) ≤ cofinite :=
   le_cofinite_iff_eventually_ne.mpr eventually_ne_at_top
 
 theorem comap_cofinite_le (f : α → β) : comap f cofinite ≤ cofinite :=
@@ -90,7 +89,7 @@ theorem coprod_cofinite : (cofinite : Filter α).coprod (cofinite : Filter β) =
   Filter.coext fun s => by simp only [compl_mem_coprod, mem_cofinite, compl_compl, finite_image_fst_and_snd_iff]
 
 /-- Finite product of finite sets is finite -/
-theorem Coprod_cofinite {α : ι → Type _} [Finite ι] : (Filter.coprodₓ fun i => (cofinite : Filter (α i))) = cofinite :=
+theorem Coprod_cofinite {α : ι → Type _} [Finite ι] : (Filter.coprod fun i => (cofinite : Filter (α i))) = cofinite :=
   Filter.coext fun s => by simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
 
 @[simp]
@@ -108,21 +107,21 @@ open Filter
 
 /-- For natural numbers the filters `cofinite` and `at_top` coincide. -/
 theorem Nat.cofinite_eq_at_top : @cofinite ℕ = at_top := by
-  refine' le_antisymmₓ _ at_top_le_cofinite
+  refine' le_antisymm _ at_top_le_cofinite
   refine' at_top_basis.ge_iff.2 fun N hN => _
   simpa only [mem_cofinite, compl_Ici] using finite_lt_nat N
 
 theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} : (∃ᶠ n in at_top, p n) ↔ Set.Infinite { n | p n } := by
   rw [← Nat.cofinite_eq_at_top, frequently_cofinite_iff_infinite]
 
-theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.Nonempty) {f : α → β}
+theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrder β] {s : Set α} (hs : s.Nonempty) {f : α → β}
     (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) : ∃ a₀ ∈ s, ∀ a ∈ s, f a₀ ≤ f a := by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
   · -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
     have : { y | ¬x ≤ f y }.Finite := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
-    simp only [not_leₓ] at this
+    simp only [not_le] at this
     obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ := exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
-    refine' ⟨a₀, ha₀s, fun a has => (lt_or_leₓ (f a) x).elim _ (le_transₓ ha₀.le)⟩
+    refine' ⟨a₀, ha₀s, fun a has => (lt_or_le (f a) x).elim _ (le_trans ha₀.le)⟩
     exact fun h => others_bigger a ⟨h, has⟩
     
   · -- in this case, f is constant because all values are at top
@@ -131,16 +130,16 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ 
     exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
     
 
-theorem Filter.Tendsto.exists_forall_le [Nonempty α] [LinearOrderₓ β] {f : α → β} (hf : Tendsto f cofinite atTop) :
+theorem Filter.Tendsto.exists_forall_le [Nonempty α] [LinearOrder β] {f : α → β} (hf : Tendsto f cofinite atTop) :
     ∃ a₀, ∀ a, f a₀ ≤ f a :=
   let ⟨a₀, _, ha₀⟩ := hf.exists_within_forall_le univ_nonempty
   ⟨a₀, fun a => ha₀ a (mem_univ _)⟩
 
-theorem Filter.Tendsto.exists_within_forall_ge [LinearOrderₓ β] {s : Set α} (hs : s.Nonempty) {f : α → β}
+theorem Filter.Tendsto.exists_within_forall_ge [LinearOrder β] {s : Set α} (hs : s.Nonempty) {f : α → β}
     (hf : Filter.Tendsto f Filter.cofinite Filter.atBot) : ∃ a₀ ∈ s, ∀ a ∈ s, f a ≤ f a₀ :=
   @Filter.Tendsto.exists_within_forall_le _ βᵒᵈ _ _ hs _ hf
 
-theorem Filter.Tendsto.exists_forall_ge [Nonempty α] [LinearOrderₓ β] {f : α → β} (hf : Tendsto f cofinite atBot) :
+theorem Filter.Tendsto.exists_forall_ge [Nonempty α] [LinearOrder β] {f : α → β} (hf : Tendsto f cofinite atBot) :
     ∃ a₀, ∀ a, f a ≤ f a₀ :=
   @Filter.Tendsto.exists_forall_le _ βᵒᵈ _ _ _ hf
 

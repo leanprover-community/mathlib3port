@@ -40,8 +40,8 @@ theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n := by
 theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 
-theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℕ → ℝ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℕ → ℝ) :=
+  closedEmbeddingOfPairwiseLeDist zero_lt_one pairwise_one_le_dist
 
 instance : MetricSpace ℕ :=
   Nat.uniform_embedding_coe_real.comapMetricSpace _
@@ -52,14 +52,14 @@ theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x
 theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
   rfl
 
-theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
-  rcases le_or_ltₓ 0 r with (hr | hr)
+theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = IccCat ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
+  rcases le_or_lt 0 r with (hr | hr)
   · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
     
   · rw [closed_ball_eq_empty.2 hr]
     apply (Icc_eq_empty _).symm
-    rw [not_leₓ]
+    rw [not_le]
     calc
       ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
         apply floor_mono
@@ -77,7 +77,7 @@ instance : ProperSpace ℕ :=
     exact (Set.finite_Icc _ _).IsCompact⟩
 
 instance : NoncompactSpace ℕ :=
-  noncompact_space_of_ne_bot <| by simp [Filter.at_top_ne_bot]
+  noncompact_space_of_ne_bot <| by simp [Filter.atTopNeBot]
 
 end Nat
 

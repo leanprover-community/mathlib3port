@@ -50,8 +50,8 @@ section
 
 /-- A linear equivalence is an invertible linear map. -/
 @[nolint has_nonempty_instance]
-structure LinearEquiv {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) {σ' : S →+* R}
-  [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) (M₂ : Type _) [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+structure LinearEquiv {R : Type _} {S : Type _} [Semiring R] [Semiring S] (σ : R →+* S) {σ' : S →+* R}
+  [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) (M₂ : Type _) [AddCommMonoid M] [AddCommMonoid M₂]
   [Module R M] [Module S M₂] extends LinearMap σ M M₂, M ≃+ M₂
 
 attribute [nolint doc_blame] LinearEquiv.toLinearMap
@@ -75,9 +75,9 @@ See also `linear_equiv_class F R M M₂` for the case where `σ` is the identity
 A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
-class SemilinearEquivClass (F : Type _) {R S : outParam (Type _)} [Semiringₓ R] [Semiringₓ S] (σ : outParam <| R →+* S)
-  {σ' : outParam <| S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M M₂ : outParam (Type _)) [AddCommMonoidₓ M]
-  [AddCommMonoidₓ M₂] [Module R M] [Module S M₂] extends AddEquivClass F M M₂ where
+class SemilinearEquivClass (F : Type _) {R S : outParam (Type _)} [Semiring R] [Semiring S] (σ : outParam <| R →+* S)
+  {σ' : outParam <| S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M M₂ : outParam (Type _)) [AddCommMonoid M]
+  [AddCommMonoid M₂] [Module R M] [Module S M₂] extends AddEquivClass F M M₂ where
   map_smulₛₗ : ∀ (f : F) (r : R) (x : M), f (r • x) = σ r • f x
 
 -- `R, S, σ, σ'` become metavars, but it's OK since they are outparams.
@@ -86,7 +86,7 @@ attribute [nolint dangerous_instance] SemilinearEquivClass.toAddEquivClass
 /-- `linear_equiv_class F R M M₂` asserts `F` is a type of bundled `R`-linear equivs `M → M₂`.
 This is an abbreviation for `semilinear_equiv_class F (ring_hom.id R) M M₂`.
 -/
-abbrev LinearEquivClass (F : Type _) (R M M₂ : outParam (Type _)) [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+abbrev LinearEquivClass (F : Type _) (R M M₂ : outParam (Type _)) [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂]
     [Module R M] [Module R M₂] :=
   SemilinearEquivClass F (RingHom.id R) M M₂
 
@@ -94,9 +94,9 @@ end
 
 namespace SemilinearEquivClass
 
-variable (F : Type _) [Semiringₓ R] [Semiringₓ S]
+variable (F : Type _) [Semiring R] [Semiring S]
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
+variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂]
 
 variable [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R}
 
@@ -110,15 +110,15 @@ end SemilinearEquivClass
 
 namespace LinearEquiv
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
 variable {M₄ : Type _}
 
-variable [Semiringₓ R] [Semiringₓ S]
+variable [Semiring R] [Semiring S]
 
 section
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
+variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂]
 
 variable [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R}
 
@@ -145,14 +145,14 @@ theorem coe_mk {to_fun inv_fun map_add map_smul left_inv right_inv} :
 def toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ := fun f => f.toAddEquiv.toEquiv
 
 theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) :=
-  fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
+  fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equiv.mk.inj h)
 
 @[simp]
 theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.toEquiv = e₂.toEquiv ↔ e₁ = e₂ :=
   to_equiv_injective.eq_iff
 
 theorem to_linear_map_injective : Injective (coe : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
-  to_equiv_injective <| Equivₓ.ext <| LinearMap.congr_fun H
+  to_equiv_injective <| Equiv.ext <| LinearMap.congr_fun H
 
 @[simp, norm_cast]
 theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛₗ[σ] M₂) = e₂ ↔ e₁ = e₂ :=
@@ -161,7 +161,7 @@ theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛ�
 instance : SemilinearEquivClass (M ≃ₛₗ[σ] M₂) σ M M₂ where
   coe := LinearEquiv.toFun
   inv := LinearEquiv.invFun
-  coe_injective' := fun f g h₁ h₂ => by
+  coe_injective' f g h₁ h₂ := by
     cases f
     cases g
     congr
@@ -177,13 +177,13 @@ end
 
 section
 
-variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
+variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
+variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂]
 
-variable [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
+variable [AddCommMonoid M₃] [AddCommMonoid M₄]
 
-variable [AddCommMonoidₓ N₁] [AddCommMonoidₓ N₂]
+variable [AddCommMonoid N₁] [AddCommMonoid N₂]
 
 variable {module_M : Module R M} {module_S_M₂ : Module S M₂} {σ : R →+* S} {σ' : S →+* R}
 
@@ -236,7 +236,7 @@ variable (M R)
 /-- The identity map is a linear equivalence. -/
 @[refl]
 def refl [Module R M] : M ≃ₗ[R] M :=
-  { LinearMap.id, Equivₓ.refl M with }
+  { LinearMap.id, Equiv.refl M with }
 
 end
 
@@ -256,8 +256,8 @@ def symm (e : M ≃ₛₗ[σ] M₂) : M₂ ≃ₛₗ[σ'] M :=
 omit module_M module_S_M₂ re₁ re₂
 
 /-- See Note [custom simps projection] -/
-def Simps.symmApply {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] {σ : R →+* S} {σ' : S →+* R}
-    [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {M : Type _} {M₂ : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+def Simps.symmApply {R : Type _} {S : Type _} [Semiring R] [Semiring S] {σ : R →+* S} {σ' : S →+* R}
+    [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {M : Type _} {M₂ : Type _} [AddCommMonoid M] [AddCommMonoid M₂]
     [Module R M] [Module S M₂] (e : M ≃ₛₗ[σ] M₂) : M₂ → M :=
   e.symm
 
@@ -470,7 +470,7 @@ theorem map_smul (e : N₁ ≃ₗ[R₁] N₂) (c : R₁) (x : N₁) : e (c • x
 omit module_N₁ module_N₂
 
 @[simp]
-theorem map_sum {s : Finsetₓ ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
+theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
   e.toLinearMap.map_sum
 
 @[simp]
@@ -491,7 +491,7 @@ omit module_M module_S_M₂ re₁ re₂
 
 theorem symm_bijective [Module R M] [Module S M₂] [RingHomInvPair σ' σ] [RingHomInvPair σ σ'] :
     Function.Bijective (symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M) :=
-  Equivₓ.bijective ⟨(symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M), (symm : (M₂ ≃ₛₗ[σ'] M) → M ≃ₛₗ[σ] M₂), symm_symm, symm_symm⟩
+  Equiv.bijective ⟨(symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M), (symm : (M₂ ≃ₛₗ[σ'] M) → M ≃ₛₗ[σ] M₂), symm_symm, symm_symm⟩
 
 @[simp]
 theorem mk_coe' (f h₁ h₂ h₃ h₄) : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
@@ -528,13 +528,13 @@ end
 /-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
 @[simps]
 def _root_.ring_equiv.to_semilinear_equiv (f : R ≃+* S) : by
-    haveI := RingHomInvPair.of_ring_equiv f <;>
+    haveI := RingHomInvPair.ofRingEquiv f <;>
       haveI := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
   { f with toFun := f, map_smul' := f.map_mul }
 
-variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
+variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
+variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂]
 
 /-- An involutive linear map is a linear equivalence. -/
 def ofInvolutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M} (f : M →ₛₗ[σ] M)
@@ -573,14 +573,14 @@ section Automorphisms
 
 variable [Module R M]
 
-instance automorphismGroup : Groupₓ (M ≃ₗ[R] M) where
-  mul := fun f g => g.trans f
+instance automorphismGroup : Group (M ≃ₗ[R] M) where
+  mul f g := g.trans f
   one := LinearEquiv.refl R M
-  inv := fun f => f.symm
-  mul_assoc := fun f g h => rfl
-  mul_one := fun f => ext fun x => rfl
-  one_mul := fun f => ext fun x => rfl
-  mul_left_inv := fun f => ext <| f.left_inv
+  inv f := f.symm
+  mul_assoc f g h := rfl
+  mul_one f := ext fun x => rfl
+  one_mul f := ext fun x => rfl
+  mul_left_inv f := ext <| f.left_inv
 
 /-- Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
 promoted to a monoid hom. -/
@@ -588,7 +588,7 @@ promoted to a monoid hom. -/
 def automorphismGroup.toLinearMapMonoidHom : (M ≃ₗ[R] M) →* M →ₗ[R] M where
   toFun := coe
   map_one' := rfl
-  map_mul' := fun _ _ => rfl
+  map_mul' _ _ := rfl
 
 /-- The tautological action by `M ≃ₗ[R] M` on `M`.
 
@@ -597,8 +597,8 @@ instance applyDistribMulAction : DistribMulAction (M ≃ₗ[R] M) M where
   smul := (· <| ·)
   smul_zero := LinearEquiv.map_zero
   smul_add := LinearEquiv.map_add
-  one_smul := fun _ => rfl
-  mul_smul := fun _ _ _ => rfl
+  one_smul _ := rfl
+  mul_smul _ _ _ := rfl
 
 @[simp]
 protected theorem smul_def (f : M ≃ₗ[R] M) (a : M) : f • a = f a :=
@@ -608,13 +608,13 @@ protected theorem smul_def (f : M ≃ₗ[R] M) (a : M) : f • a = f a :=
 instance apply_has_faithful_smul : HasFaithfulSmul (M ≃ₗ[R] M) M :=
   ⟨fun _ _ => LinearEquiv.ext⟩
 
-instance apply_smul_comm_class : SmulCommClass R (M ≃ₗ[R] M) M where smul_comm := fun r e m => (e.map_smul r m).symm
+instance apply_smul_comm_class : SmulCommClass R (M ≃ₗ[R] M) M where smul_comm r e m := (e.map_smul r m).symm
 
 instance apply_smul_comm_class' : SmulCommClass (M ≃ₗ[R] M) R M where smul_comm := LinearEquiv.map_smul
 
 end Automorphisms
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
 end LinearEquiv
 
@@ -622,7 +622,7 @@ namespace Module
 
 /-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
-def compHom.toLinearEquiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
+def compHom.toLinearEquiv {R S : Type _} [Semiring R] [Semiring S] (g : R ≃+* S) :
     haveI := comp_hom S (↑g : R →+* S)
     R ≃ₗ[R] S :=
   { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
@@ -631,9 +631,9 @@ end Module
 
 namespace DistribMulAction
 
-variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable (R M) [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable [Groupₓ S] [DistribMulAction S M] [SmulCommClass S R M]
+variable [Group S] [DistribMulAction S M] [SmulCommClass S R M]
 
 /-- Each element of the group defines a linear equivalence.
 
@@ -649,15 +649,15 @@ This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 def toModuleAut : S →* M ≃ₗ[R] M where
   toFun := toLinearEquiv R M
   map_one' := LinearEquiv.ext <| one_smul _
-  map_mul' := fun a b => LinearEquiv.ext <| mul_smul _ _
+  map_mul' a b := LinearEquiv.ext <| mul_smul _ _
 
 end DistribMulAction
 
 namespace AddEquiv
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
+variable [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂] [AddCommMonoid M₃]
 
 variable [Module R M] [Module R M₂]
 
@@ -708,11 +708,11 @@ theorem to_nat_linear_equiv_trans (e₂ : M₂ ≃+ M₃) :
     e.toNatLinearEquiv.trans e₂.toNatLinearEquiv = (e.trans e₂).toNatLinearEquiv :=
   rfl
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
+variable [AddCommGroup M] [AddCommGroup M₂] [AddCommGroup M₃]
 
 variable (e : M ≃+ M₂)
 
@@ -747,7 +747,7 @@ theorem to_int_linear_equiv_trans (e₂ : M₂ ≃+ M₃) :
     e.toIntLinearEquiv.trans e₂.toIntLinearEquiv = (e.trans e₂).toIntLinearEquiv :=
   rfl
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end AddEquiv
 

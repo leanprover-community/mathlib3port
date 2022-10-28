@@ -40,11 +40,11 @@ open Opposite
 
 open TopologicalSpace.Opens
 
-namespace Top
+namespace TopCat
 
 variable {C : Type u} [Category.{v} C]
 
-variable {X : Top.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
+variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -106,7 +106,7 @@ the object level of `pairwise_to_opens_le_cover : pairwise ι ⥤ opens_le_cover
 -/
 @[simp]
 def pairwiseToOpensLeCoverObj : Pairwise ι → OpensLeCover U
-  | single i => ⟨U i, ⟨i, le_rflₓ⟩⟩
+  | single i => ⟨U i, ⟨i, le_rfl⟩⟩
   | pair i j => ⟨U i ⊓ U j, ⟨i, inf_le_left⟩⟩
 
 open CategoryTheory.Pairwise.Hom
@@ -127,7 +127,7 @@ of open sets below some `U i`.
 @[simps]
 def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U where
   obj := pairwiseToOpensLeCoverObj U
-  map := fun V W i => pairwiseToOpensLeCoverMap U i
+  map V W i := pairwiseToOpensLeCoverMap U i
 
 instance (V : OpensLeCover U) : Nonempty (StructuredArrow V (pairwiseToOpensLeCover U)) :=
   ⟨{ right := single V.index, Hom := V.homToIndex }⟩
@@ -203,10 +203,10 @@ in terms of a limit diagram over all `{ V : opens X // ∃ i, V ≤ U i }`
 is equivalent to the reformulation
 in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
-theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections {X : Top.{v}} (F : Presheaf C X) :
+theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections {X : TopCat.{v}} (F : Presheaf C X) :
     F.IsSheafOpensLeCover ↔ F.IsSheafPairwiseIntersections :=
-  forall₂_congrₓ fun ι U =>
-    Equivₓ.nonempty_congr <|
+  forall₂_congr fun ι U =>
+    Equiv.nonempty_congr <|
       calc
         IsLimit (F.mapCone (opensLeCoverCocone U).op) ≃
             IsLimit ((F.mapCone (opensLeCoverCocone U).op).whisker (pairwiseToOpensLeCover U).op) :=
@@ -350,5 +350,5 @@ end
 
 end Presheaf
 
-end Top
+end TopCat
 

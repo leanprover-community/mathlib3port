@@ -49,13 +49,13 @@ def EssImage.getIso {Y : D} (h : Y ∈ F.EssImage) : F.obj h.witness ≅ Y :=
 
 /-- Being in the essential image is a "hygenic" property: it is preserved under isomorphism. -/
 theorem EssImage.of_iso {Y Y' : D} (h : Y ≅ Y') (hY : Y ∈ EssImage F) : Y' ∈ EssImage F :=
-  hY.imp fun B => Nonempty.mapₓ (· ≪≫ h)
+  hY.imp fun B => Nonempty.map (· ≪≫ h)
 
 /-- If `Y` is in the essential image of `F` then it is in the essential image of `F'` as long as
 `F ≅ F'`.
 -/
 theorem EssImage.of_nat_iso {F' : C ⥤ D} (h : F ≅ F') {Y : D} (hY : Y ∈ EssImage F) : Y ∈ EssImage F' :=
-  hY.imp fun X => Nonempty.mapₓ fun t => h.symm.app X ≪≫ t
+  hY.imp fun X => Nonempty.map fun t => h.symm.app X ≪≫ t
 
 /-- Isomorphic functors have equal essential images. -/
 theorem ess_image_eq_of_nat_iso {F' : C ⥤ D} (h : F ≅ F') : EssImage F = EssImage F' :=
@@ -91,7 +91,7 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 
 end Functor
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] [] -/
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 

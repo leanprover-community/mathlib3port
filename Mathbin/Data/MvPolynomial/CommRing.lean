@@ -49,13 +49,13 @@ namespace MvPolynomial
 
 variable {σ : Type _} {a a' a₁ a₂ : R} {e : ℕ} {n m : σ} {s : σ →₀ ℕ}
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 variable {p q : MvPolynomial σ R}
 
-instance : CommRingₓ (MvPolynomial σ R) :=
+instance : CommRing (MvPolynomial σ R) :=
   AddMonoidAlgebra.commRing
 
 variable (σ a a')
@@ -90,7 +90,7 @@ section Degrees
 theorem degrees_neg (p : MvPolynomial σ R) : (-p).degrees = p.degrees := by rw [degrees, support_neg] <;> rfl
 
 theorem degrees_sub (p q : MvPolynomial σ R) : (p - q).degrees ≤ p.degrees ⊔ q.degrees := by
-  simpa only [sub_eq_add_neg] using le_transₓ (degrees_add p (-q)) (by rw [degrees_neg])
+  simpa only [sub_eq_add_neg] using le_trans (degrees_add p (-q)) (by rw [degrees_neg])
 
 end Degrees
 
@@ -115,7 +115,7 @@ end Vars
 
 section Eval₂
 
-variable [CommRingₓ S]
+variable [CommRing S]
 
 variable (f : R →+* S) (g : σ → S)
 
@@ -149,10 +149,10 @@ theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
 /-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
 def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
-  toFun := fun f => ⇑f ∘ X
-  invFun := fun f => eval₂Hom (Int.castRingHom S) f
-  left_inv := fun f => RingHom.ext <| eval₂_hom_X _ _
-  right_inv := fun f => funext fun x => by simp only [coe_eval₂_hom, Function.comp_app, eval₂_X]
+  toFun f := ⇑f ∘ X
+  invFun f := eval₂Hom (Int.castRingHom S) f
+  left_inv f := RingHom.ext <| eval₂_hom_X _ _
+  right_inv f := funext fun x => by simp only [coe_eval₂_hom, Function.comp_app, eval₂_X]
 
 end Eval₂
 
@@ -164,10 +164,10 @@ theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc
-  simp only [not_ltₓ] at hc
+  simp only [not_lt] at hc
   have h := support_sub σ f g hm
   simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm
-  cases' Finsetₓ.mem_union.1 h with cf cg
+  cases' Finset.mem_union.1 h with cf cg
   · exact hm (hf m cf hc)
     
   · exact hm (hg m cg hc)
@@ -190,7 +190,7 @@ theorem total_degree_sub (a b : MvPolynomial σ R) : (a - b).totalDegree ≤ max
 
 end TotalDegree
 
-end CommRingₓ
+end CommRing
 
 end MvPolynomial
 

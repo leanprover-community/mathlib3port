@@ -14,11 +14,11 @@ import Mathbin.CategoryTheory.SingleObj
 
 namespace CategoryTheory
 
-variable {α : Type _} [Ringₓ α]
+variable {α : Type _} [Ring α]
 
 instance : Preadditive (SingleObj α) where
-  add_comp' := fun _ _ _ f f' g => mul_addₓ g f f'
-  comp_add' := fun _ _ _ f g g' => add_mulₓ g g' f
+  add_comp' _ _ _ f f' g := mul_add g f f'
+  comp_add' _ _ _ f g g' := add_mul g g' f
 
 -- TODO define `PreAddCat` (with additive functors as morphisms), and `Ring ⥤ PreAddCat`.
 end CategoryTheory

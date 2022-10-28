@@ -27,9 +27,9 @@ namespace MvPolynomial
 
 variable {σ τ : Type _} {R : Type u} {S : Type v} {r : R} {e : ℕ} {n m : σ}
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R] {p q : MvPolynomial σ R}
+variable [CommSemiring R] {p q : MvPolynomial σ R}
 
 variable (R)
 
@@ -68,7 +68,7 @@ theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
   rw [supported_eq_range_rename, AlgHom.mem_range]
   constructor
   · rintro ⟨p, rfl⟩
-    refine' trans (Finsetₓ.coe_subset.2 (vars_rename _ _)) _
+    refine' trans (Finset.coe_subset.2 (vars_rename _ _)) _
     simp
     
   · intro hs
@@ -109,10 +109,10 @@ theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported 
   · exact supported_mono
     
 
-theorem supported_strict_mono [Nontrivial R] : StrictMonoₓ (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=
+theorem supported_strict_mono [Nontrivial R] : StrictMono (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=
   strict_mono_of_le_iff_le fun _ _ => supported_le_supported_iff.symm
 
-theorem exists_restrict_to_vars (R : Type _) [CommRingₓ R] {F : MvPolynomial σ ℤ} (hF : ↑F.vars ⊆ s) :
+theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ} (hF : ↑F.vars ⊆ s) :
     ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
   classical
   rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF
@@ -121,7 +121,7 @@ theorem exists_restrict_to_vars (R : Type _) [CommRingₓ R] {F : MvPolynomial �
   intro x
   simp only [← hF', aeval_rename]
 
-end CommSemiringₓ
+end CommSemiring
 
 end MvPolynomial
 

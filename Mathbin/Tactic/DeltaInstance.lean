@@ -22,7 +22,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- `delta_instance id₁ id₂ ...` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `idᵢ`.
 -/
@@ -35,7 +35,7 @@ end Interactive
 
 This is a poor-man's version of the C++ `heuristic_inst_name`, and tries much less hard to pick a
 good name. -/
-unsafe def delta_instance_name : pexpr → Stringₓ
+unsafe def delta_instance_name : pexpr → String
   | expr.app f _ => delta_instance_name f
   | expr.pi _ _ _ body => delta_instance_name body
   | expr.lam _ _ _ body => delta_instance_name body

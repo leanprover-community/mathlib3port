@@ -55,9 +55,9 @@ namespace MvPolynomial
 
 variable {σ : Type _} {a a' a₁ a₂ : R} {e : ℕ} {s : σ →₀ ℕ}
 
-section Equivₓ
+section Equiv
 
-variable (R) [CommSemiringₓ R]
+variable (R) [CommSemiring R]
 
 /-- The ring isomorphism between multivariable polynomials in a single variable and
 polynomials over the ground ring.
@@ -79,14 +79,14 @@ def punitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X] where
       dsimp
       rw [eval₂_X, Polynomial.eval₂_X]
       
-  right_inv := fun p =>
+  right_inv p :=
     Polynomial.induction_on p (fun a => by rw [Polynomial.eval₂_C, MvPolynomial.eval₂_C])
       (fun p q hp hq => by rw [Polynomial.eval₂_add, MvPolynomial.eval₂_add, hp, hq]) fun p n hp => by
       rw [Polynomial.eval₂_mul, Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_C, eval₂_mul, eval₂_C,
         eval₂_pow, eval₂_X]
-  map_mul' := fun _ _ => eval₂_mul _ _
-  map_add' := fun _ _ => eval₂_add _ _
-  commutes' := fun _ => eval₂_C _ _ _
+  map_mul' _ _ := eval₂_mul _ _
+  map_add' _ _ := eval₂_add _ _
+  commutes' _ := eval₂_C _ _ _
 
 section Map
 
@@ -94,7 +94,7 @@ variable {R} (σ)
 
 /-- If `e : A ≃+* B` is an isomorphism of rings, then so is `map e`. -/
 @[simps apply]
-def mapEquiv [CommSemiringₓ S₁] [CommSemiringₓ S₂] (e : S₁ ≃+* S₂) : MvPolynomial σ S₁ ≃+* MvPolynomial σ S₂ :=
+def mapEquiv [CommSemiring S₁] [CommSemiring S₂] (e : S₁ ≃+* S₂) : MvPolynomial σ S₁ ≃+* MvPolynomial σ S₂ :=
   { map (e : S₁ →+* S₂) with toFun := map (e : S₁ →+* S₂), invFun := map (e.symm : S₂ →+* S₁),
     left_inv := map_left_inverse e.left_inv, right_inv := map_right_inverse e.right_inv }
 
@@ -103,16 +103,15 @@ theorem map_equiv_refl : mapEquiv σ (RingEquiv.refl R) = RingEquiv.refl _ :=
   RingEquiv.ext map_id
 
 @[simp]
-theorem map_equiv_symm [CommSemiringₓ S₁] [CommSemiringₓ S₂] (e : S₁ ≃+* S₂) :
-    (mapEquiv σ e).symm = mapEquiv σ e.symm :=
+theorem map_equiv_symm [CommSemiring S₁] [CommSemiring S₂] (e : S₁ ≃+* S₂) : (mapEquiv σ e).symm = mapEquiv σ e.symm :=
   rfl
 
 @[simp]
-theorem map_equiv_trans [CommSemiringₓ S₁] [CommSemiringₓ S₂] [CommSemiringₓ S₃] (e : S₁ ≃+* S₂) (f : S₂ ≃+* S₃) :
+theorem map_equiv_trans [CommSemiring S₁] [CommSemiring S₂] [CommSemiring S₃] (e : S₁ ≃+* S₂) (f : S₂ ≃+* S₃) :
     (mapEquiv σ e).trans (mapEquiv σ f) = mapEquiv σ (e.trans f) :=
   RingEquiv.ext (map_map e f)
 
-variable {A₁ A₂ A₃ : Type _} [CommSemiringₓ A₁] [CommSemiringₓ A₂] [CommSemiringₓ A₃]
+variable {A₁ A₂ A₃ : Type _} [CommSemiring A₁] [CommSemiring A₂] [CommSemiring A₃]
 
 variable [Algebra R A₁] [Algebra R A₂] [Algebra R A₃]
 
@@ -203,7 +202,7 @@ variable {σ}
 
 /-- A helper function for `sum_ring_equiv`. -/
 @[simps]
-def mvPolynomialEquivMvPolynomial [CommSemiringₓ S₃] (f : MvPolynomial S₁ R →+* MvPolynomial S₂ S₃)
+def mvPolynomialEquivMvPolynomial [CommSemiring S₃] (f : MvPolynomial S₁ R →+* MvPolynomial S₂ S₃)
     (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp c = C) (hfgX : ∀ n, f (g (x n)) = x n)
     (hgfC : (g.comp f).comp c = C) (hgfX : ∀ n, g (f (x n)) = x n) : MvPolynomial S₁ R ≃+* MvPolynomial S₂ S₃ where
   toFun := f
@@ -282,12 +281,12 @@ def optionEquivRight : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ 
     (MvPolynomial.aevalTower (Polynomial.aeval (x none)) fun i => x (Option.some i))
     (by
       ext : 2 <;>
-        simp only [MvPolynomial.algebra_map_eq, Option.elimₓ, AlgHom.coe_comp, AlgHom.id_comp,
-          IsScalarTower.coe_to_alg_hom', comp_app, aeval_tower_C, Polynomial.aeval_X, aeval_X, Option.elimₓ,
-          aeval_tower_X, AlgHom.coe_id, id.def, eq_self_iff_true, implies_true_iff])
+        simp only [MvPolynomial.algebra_map_eq, Option.elim, AlgHom.coe_comp, AlgHom.id_comp,
+          IsScalarTower.coe_to_alg_hom', comp_app, aeval_tower_C, Polynomial.aeval_X, aeval_X, Option.elim,
+          aeval_tower_X, AlgHom.coe_id, id.def, eq_self_iff_true, imp_true_iff])
     (by
       ext ⟨i⟩ : 2 <;>
-        simp only [Option.elimₓ, AlgHom.coe_comp, comp_app, aeval_X, aeval_tower_C, Polynomial.aeval_X, AlgHom.coe_id,
+        simp only [Option.elim, AlgHom.coe_comp, comp_app, aeval_X, aeval_tower_C, Polynomial.aeval_X, AlgHom.coe_id,
           id.def, aeval_tower_X])
 
 variable (n : ℕ)
@@ -295,13 +294,13 @@ variable (n : ℕ)
 /-- The algebra isomorphism between multivariable polynomials in `fin (n + 1)` and
 polynomials over multivariable polynomials in `fin n`.
 -/
-def finSuccEquiv : MvPolynomial (Finₓ (n + 1)) R ≃ₐ[R] Polynomial (MvPolynomial (Finₓ n) R) :=
-  (renameEquiv R (finSuccEquiv n)).trans (optionEquivLeft R (Finₓ n))
+def finSuccEquiv : MvPolynomial (Fin (n + 1)) R ≃ₐ[R] Polynomial (MvPolynomial (Fin n) R) :=
+  (renameEquiv R (finSuccEquiv n)).trans (optionEquivLeft R (Fin n))
 
 theorem fin_succ_equiv_eq :
-    (finSuccEquiv R n : MvPolynomial (Finₓ (n + 1)) R →+* Polynomial (MvPolynomial (Finₓ n) R)) =
-      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Finₓ n) R)) fun i : Finₓ (n + 1) =>
-        Finₓ.cases Polynomial.x (fun k => Polynomial.c (x k)) i :=
+    (finSuccEquiv R n : MvPolynomial (Fin (n + 1)) R →+* Polynomial (MvPolynomial (Fin n) R)) =
+      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Fin n) R)) fun i : Fin (n + 1) =>
+        Fin.cases Polynomial.x (fun k => Polynomial.c (x k)) i :=
   by
   ext : 2
   · simp only [finSuccEquiv, option_equiv_left_apply, aeval_C, AlgEquiv.coe_trans, RingHom.coe_coe, coe_eval₂_hom,
@@ -309,22 +308,22 @@ theorem fin_succ_equiv_eq :
     rfl
     
   · intro i
-    refine' Finₓ.cases _ _ i <;> simp [finSuccEquiv]
+    refine' Fin.cases _ _ i <;> simp [finSuccEquiv]
     
 
 @[simp]
-theorem fin_succ_equiv_apply (p : MvPolynomial (Finₓ (n + 1)) R) :
+theorem fin_succ_equiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
     finSuccEquiv R n p =
-      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Finₓ n) R))
-        (fun i : Finₓ (n + 1) => Finₓ.cases Polynomial.x (fun k => Polynomial.c (x k)) i) p :=
+      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Fin n) R))
+        (fun i : Fin (n + 1) => Fin.cases Polynomial.x (fun k => Polynomial.c (x k)) i) p :=
   by
   rw [← fin_succ_equiv_eq]
   rfl
 
-theorem fin_succ_equiv_comp_C_eq_C {R : Type u} [CommSemiringₓ R] (n : ℕ) :
-    (↑(MvPolynomial.finSuccEquiv R n).symm : Polynomial (MvPolynomial (Finₓ n) R) →+* _).comp
+theorem fin_succ_equiv_comp_C_eq_C {R : Type u} [CommSemiring R] (n : ℕ) :
+    (↑(MvPolynomial.finSuccEquiv R n).symm : Polynomial (MvPolynomial (Fin n) R) →+* _).comp
         (Polynomial.c.comp MvPolynomial.c) =
-      (MvPolynomial.c : R →+* MvPolynomial (Finₓ n.succ) R) :=
+      (MvPolynomial.c : R →+* MvPolynomial (Fin n.succ) R) :=
   by
   refine' RingHom.ext fun x => _
   rw [RingHom.comp_apply]
@@ -335,23 +334,23 @@ variable {n} {R}
 
 theorem fin_succ_equiv_X_zero : finSuccEquiv R n (x 0) = Polynomial.x := by simp
 
-theorem fin_succ_equiv_X_succ {j : Finₓ n} : finSuccEquiv R n (x j.succ) = Polynomial.c (x j) := by simp
+theorem fin_succ_equiv_X_succ {j : Fin n} : finSuccEquiv R n (x j.succ) = Polynomial.c (x j) := by simp
 
 /-- The coefficient of `m` in the `i`-th coefficient of `fin_succ_equiv R n f` equals the
     coefficient of `finsupp.cons i m` in `f`. -/
-theorem fin_succ_equiv_coeff_coeff (m : Finₓ n →₀ ℕ) (f : MvPolynomial (Finₓ (n + 1)) R) (i : ℕ) :
+theorem fin_succ_equiv_coeff_coeff (m : Fin n →₀ ℕ) (f : MvPolynomial (Fin (n + 1)) R) (i : ℕ) :
     coeff m (Polynomial.coeff (finSuccEquiv R n f) i) = coeff (m.cons i) f := by
   induction' f using MvPolynomial.induction_on' with j r p q hp hq generalizing i m
   swap
   · simp only [(finSuccEquiv R n).map_add, Polynomial.coeff_add, coeff_add, hp, hq]
     
   simp only [fin_succ_equiv_apply, coe_eval₂_hom, eval₂_monomial, RingHom.coe_comp, prod_pow, Polynomial.coeff_C_mul,
-    coeff_C_mul, coeff_monomial, Finₓ.prod_univ_succ, Finₓ.cases_zero, Finₓ.cases_succ, ← RingHom.map_prod, ←
+    coeff_C_mul, coeff_monomial, Fin.prod_univ_succ, Fin.cases_zero, Fin.cases_succ, ← RingHom.map_prod, ←
     RingHom.map_pow]
   rw [← mul_boole, mul_comm (Polynomial.x ^ j 0), Polynomial.coeff_C_mul_X_pow]
   congr 1
   obtain rfl | hjmi := eq_or_ne j (m.cons i)
-  · simpa only [cons_zero, cons_succ, if_pos rfl, monomial_eq, C_1, one_mulₓ, prod_pow] using coeff_monomial m m (1 : R)
+  · simpa only [cons_zero, cons_succ, if_pos rfl, monomial_eq, C_1, one_mul, prod_pow] using coeff_monomial m m (1 : R)
     
   · simp only [hjmi, if_false]
     obtain hij | rfl := ne_or_eq i (j 0)
@@ -362,32 +361,32 @@ theorem fin_succ_equiv_coeff_coeff (m : Finₓ n →₀ ℕ) (f : MvPolynomial (
       rintro rfl
       rw [cons_tail] at hjmi
       contradiction
-    simpa only [monomial_eq, C_1, one_mulₓ, prod_pow, Finsupp.tail_apply, if_neg hmj.symm] using
+    simpa only [monomial_eq, C_1, one_mul, prod_pow, Finsupp.tail_apply, if_neg hmj.symm] using
       coeff_monomial m j.tail (1 : R)
     
 
-theorem eval_eq_eval_mv_eval' (s : Finₓ n → R) (y : R) (f : MvPolynomial (Finₓ (n + 1)) R) :
-    eval (Finₓ.cons y s : Finₓ (n + 1) → R) f = Polynomial.eval y (Polynomial.map (eval s) (finSuccEquiv R n f)) := by
+theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (n + 1)) R) :
+    eval (Fin.cons y s : Fin (n + 1) → R) f = Polynomial.eval y (Polynomial.map (eval s) (finSuccEquiv R n f)) := by
   -- turn this into a def `polynomial.map_alg_hom`
-  let φ : (MvPolynomial (Finₓ n) R)[X] →ₐ[R] R[X] :=
+  let φ : (MvPolynomial (Fin n) R)[X] →ₐ[R] R[X] :=
     { Polynomial.mapRingHom (eval s) with
       commutes' := fun r => by
         convert Polynomial.map_C _
         exact (eval_C _).symm }
-  show aeval (Finₓ.cons y s : Finₓ (n + 1) → R) f = (Polynomial.aeval y).comp (φ.comp (finSuccEquiv R n).toAlgHom) f
+  show aeval (Fin.cons y s : Fin (n + 1) → R) f = (Polynomial.aeval y).comp (φ.comp (finSuccEquiv R n).toAlgHom) f
   congr 2
   apply MvPolynomial.alg_hom_ext
-  rw [Finₓ.forall_fin_succ]
-  simp only [aeval_X, Finₓ.cons_zero, AlgEquiv.to_alg_hom_eq_coe, AlgHom.coe_comp, Polynomial.coe_aeval_eq_eval,
+  rw [Fin.forall_fin_succ]
+  simp only [aeval_X, Fin.cons_zero, AlgEquiv.to_alg_hom_eq_coe, AlgHom.coe_comp, Polynomial.coe_aeval_eq_eval,
     Polynomial.map_C, AlgHom.coe_mk, RingHom.to_fun_eq_coe, Polynomial.coe_map_ring_hom, AlgEquiv.coe_alg_hom, comp_app,
-    fin_succ_equiv_apply, eval₂_hom_X', Finₓ.cases_zero, Polynomial.map_X, Polynomial.eval_X, eq_self_iff_true,
-    Finₓ.cons_succ, Finₓ.cases_succ, eval_X, Polynomial.eval_C, implies_true_iff, and_selfₓ]
+    fin_succ_equiv_apply, eval₂_hom_X', Fin.cases_zero, Polynomial.map_X, Polynomial.eval_X, eq_self_iff_true,
+    Fin.cons_succ, Fin.cases_succ, eval_X, Polynomial.eval_C, imp_true_iff, and_self_iff]
 
-theorem coeff_eval_eq_eval_coeff (s' : Finₓ n → R) (f : Polynomial (MvPolynomial (Finₓ n) R)) (i : ℕ) :
+theorem coeff_eval_eq_eval_coeff (s' : Fin n → R) (f : Polynomial (MvPolynomial (Fin n) R)) (i : ℕ) :
     Polynomial.coeff (Polynomial.map (eval s') f) i = eval s' (Polynomial.coeff f i) := by
   simp only [Polynomial.coeff_map]
 
-theorem support_coeff_fin_succ_equiv {f : MvPolynomial (Finₓ (n + 1)) R} {i : ℕ} {m : Finₓ n →₀ ℕ} :
+theorem support_coeff_fin_succ_equiv {f : MvPolynomial (Fin (n + 1)) R} {i : ℕ} {m : Fin n →₀ ℕ} :
     m ∈ (Polynomial.coeff ((finSuccEquiv R n) f) i).support ↔ Finsupp.cons i m ∈ f.support := by
   apply Iff.intro
   · intro h
@@ -397,10 +396,10 @@ theorem support_coeff_fin_succ_equiv {f : MvPolynomial (Finₓ (n + 1)) R} {i : 
     simpa [mem_support_iff, ← fin_succ_equiv_coeff_coeff m f i] using h
     
 
-theorem fin_succ_equiv_support (f : MvPolynomial (Finₓ (n + 1)) R) :
-    (finSuccEquiv R n f).support = Finsetₓ.image (fun m : Finₓ (n + 1) →₀ ℕ => m 0) f.support := by
+theorem fin_succ_equiv_support (f : MvPolynomial (Fin (n + 1)) R) :
+    (finSuccEquiv R n f).support = Finset.image (fun m : Fin (n + 1) →₀ ℕ => m 0) f.support := by
   ext i
-  rw [Polynomial.mem_support_iff, Finsetₓ.mem_image, nonzero_iff_exists]
+  rw [Polynomial.mem_support_iff, Finset.mem_image, nonzero_iff_exists]
   constructor
   · rintro ⟨m, hm⟩
     refine' ⟨cons i m, _, cons_zero _ _⟩
@@ -412,12 +411,12 @@ theorem fin_succ_equiv_support (f : MvPolynomial (Finₓ (n + 1)) R) :
     rwa [← coeff, ← mem_support_iff, support_coeff_fin_succ_equiv, cons_tail]
     
 
-theorem fin_succ_equiv_support' {f : MvPolynomial (Finₓ (n + 1)) R} {i : ℕ} :
-    Finsetₓ.image (Finsupp.cons i) (Polynomial.coeff ((finSuccEquiv R n) f) i).support =
+theorem fin_succ_equiv_support' {f : MvPolynomial (Fin (n + 1)) R} {i : ℕ} :
+    Finset.image (Finsupp.cons i) (Polynomial.coeff ((finSuccEquiv R n) f) i).support =
       f.support.filter fun m => m 0 = i :=
   by
   ext m
-  rw [Finsetₓ.mem_filter, Finsetₓ.mem_image, mem_support_iff]
+  rw [Finset.mem_filter, Finset.mem_image, mem_support_iff]
   conv_lhs =>
   congr
   ext
@@ -433,10 +432,10 @@ theorem fin_succ_equiv_support' {f : MvPolynomial (Finₓ (n + 1)) R} {i : ℕ} 
     simp [h.1]
     
 
-theorem support_fin_succ_equiv_nonempty {f : MvPolynomial (Finₓ (n + 1)) R} (h : f ≠ 0) :
+theorem support_fin_succ_equiv_nonempty {f : MvPolynomial (Fin (n + 1)) R} (h : f ≠ 0) :
     (finSuccEquiv R n f).support.Nonempty := by
   by_contra c
-  simp only [Finsetₓ.not_nonempty_iff_eq_empty, Polynomial.support_eq_empty] at c
+  simp only [Finset.not_nonempty_iff_eq_empty, Polynomial.support_eq_empty] at c
   have t'' : finSuccEquiv R n f ≠ 0 := by
     let ii := (finSuccEquiv R n).symm
     have h' : f = 0 :=
@@ -449,13 +448,13 @@ theorem support_fin_succ_equiv_nonempty {f : MvPolynomial (Finₓ (n + 1)) R} (h
     simpa [h'] using h
   simpa [c] using h
 
-theorem degree_fin_succ_equiv {f : MvPolynomial (Finₓ (n + 1)) R} (h : f ≠ 0) :
+theorem degree_fin_succ_equiv {f : MvPolynomial (Fin (n + 1)) R} (h : f ≠ 0) :
     (finSuccEquiv R n f).degree = degreeOf 0 f := by
   have h' : ((finSuccEquiv R n f).support.sup fun x => x) = degree_of 0 f := by
-    rw [degree_of_eq_sup, fin_succ_equiv_support f, Finsetₓ.sup_image]
-  rw [Polynomial.degree, ← h', Finsetₓ.coe_sup_of_nonempty (support_fin_succ_equiv_nonempty h), Finsetₓ.max_eq_sup_coe]
+    rw [degree_of_eq_sup, fin_succ_equiv_support f, Finset.sup_image]
+  rw [Polynomial.degree, ← h', Finset.coe_sup_of_nonempty (support_fin_succ_equiv_nonempty h), Finset.max_eq_sup_coe]
 
-theorem nat_degree_fin_succ_equiv (f : MvPolynomial (Finₓ (n + 1)) R) : (finSuccEquiv R n f).natDegree = degreeOf 0 f :=
+theorem nat_degree_fin_succ_equiv (f : MvPolynomial (Fin (n + 1)) R) : (finSuccEquiv R n f).natDegree = degreeOf 0 f :=
   by
   by_cases c:f = 0
   · rw [c, (finSuccEquiv R n).map_zero, Polynomial.nat_degree_zero, degree_of_zero]
@@ -464,17 +463,17 @@ theorem nat_degree_fin_succ_equiv (f : MvPolynomial (Finₓ (n + 1)) R) : (finSu
     simp
     
 
-theorem degree_of_coeff_fin_succ_equiv (p : MvPolynomial (Finₓ (n + 1)) R) (j : Finₓ n) (i : ℕ) :
+theorem degree_of_coeff_fin_succ_equiv (p : MvPolynomial (Fin (n + 1)) R) (j : Fin n) (i : ℕ) :
     degreeOf j (Polynomial.coeff (finSuccEquiv R n p) i) ≤ degreeOf j.succ p := by
-  rw [degree_of_eq_sup, degree_of_eq_sup, Finsetₓ.sup_le_iff]
+  rw [degree_of_eq_sup, degree_of_eq_sup, Finset.sup_le_iff]
   intro m hm
   rw [← Finsupp.cons_succ j i m]
-  convert Finsetₓ.le_sup (support_coeff_fin_succ_equiv.1 hm)
+  convert Finset.le_sup (support_coeff_fin_succ_equiv.1 hm)
   rfl
 
 end
 
-end Equivₓ
+end Equiv
 
 end MvPolynomial
 

@@ -32,9 +32,9 @@ unsafe def mk_implication : ∀ (re : Arrow) (e₁ e₂ : expr), pexpr
   | arrow.left, e₁, e₂ => pquote.1 ((%%ₓe₂) → %%ₓe₁)
 
 unsafe def mk_name : ∀ (re : Arrow) (i₁ i₂ : Nat), Name
-  | arrow.right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_to_" ++ toString i₂ : Stringₓ)
-  | arrow.left_right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_iff_" ++ toString i₂ : Stringₓ)
-  | arrow.left, i₁, i₂ => ("tfae_" ++ toString i₂ ++ "_to_" ++ toString i₁ : Stringₓ)
+  | arrow.right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_to_" ++ toString i₂ : String)
+  | arrow.left_right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_iff_" ++ toString i₂ : String)
+  | arrow.left, i₁, i₂ => ("tfae_" ++ toString i₂ ++ "_to_" ++ toString i₁ : String)
 
 end Tfae
 
@@ -54,7 +54,7 @@ unsafe def parse_list : expr → Option (List expr)
 notations are `tfae_have : i ← j` and `tfae_have : i ↔ j`. The user can
 also provide a label for the assertion, as with `have`: `tfae_have h : i ↔ j`.
 -/
-unsafe def tfae_have (h : parse <| optionalₓ ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
+unsafe def tfae_have (h : parse <| optional ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
     (re :
       parse
         ((tk "→" <|> tk "->") *> return Arrow.right <|>

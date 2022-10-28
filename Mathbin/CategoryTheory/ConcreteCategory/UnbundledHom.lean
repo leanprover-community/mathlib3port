@@ -19,8 +19,8 @@ universe v u
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`hom_id] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`hom_comp] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`hom_id] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`hom_comp] [] -/
 /-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/
@@ -37,10 +37,10 @@ variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α �
 include 𝒞
 
 instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype (hom Iα Iβ) where
-  toFun := fun _ _ _ _ => Subtype.val
-  id := fun α Iα => ⟨id, hom_id hom Iα⟩
+  toFun _ _ _ _ := Subtype.val
+  id α Iα := ⟨id, hom_id hom Iα⟩
   id_to_fun := by intros <;> rfl
-  comp := fun _ _ _ _ _ _ g f => ⟨g.1 ∘ f.1, hom_comp c g.2 f.2⟩
+  comp _ _ _ _ _ _ g f := ⟨g.1 ∘ f.1, hom_comp c g.2 f.2⟩
   comp_to_fun := by intros <;> rfl
   hom_ext := by intros <;> apply Subtype.eq
 

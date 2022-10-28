@@ -56,13 +56,23 @@ initialize
 
 /-- Output a trace message if `trace.norm_cast` is enabled.
 -/
-unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : Stringₓ) (a : α) : tactic Unit :=
+unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : String) (a : α) : tactic Unit :=
   when_tracing `norm_cast <| do
     let a ← pp a
     trace ("[norm_cast] " ++ msg ++ a : format)
 
-mk_simp_attribute push_cast :=
-  "The `push_cast` simp attribute uses `norm_cast` lemmas\nto move casts toward the leaf nodes of the expression."
+/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
+     [(Command.docComment
+       "/--"
+       "The `push_cast` simp attribute uses `norm_cast` lemmas\nto move casts toward the leaf nodes of the expression. -/")]
+     "register_simp_attr"
+     `push_cast)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+/--
+    The `push_cast` simp attribute uses `norm_cast` lemmas
+    to move casts toward the leaf nodes of the expression. -/
+  register_simp_attr
+  push_cast
 
 /-- `label` is a type used to classify `norm_cast` lemmas.
 * elim lemma:   LHS has 0 head coes and ≥ 1 internal coe
@@ -78,22 +88,22 @@ inductive Label
 namespace Label
 
 /-- Convert `label` into `string`. -/
-protected def toString : Label → Stringₓ
+protected def toString : Label → String
   | elim => "elim"
   | move => "move"
   | squash => "squash"
 
-instance : HasToString Label :=
+instance : ToString Label :=
   ⟨Label.toString⟩
 
-instance : HasRepr Label :=
+instance : Repr Label :=
   ⟨Label.toString⟩
 
 unsafe instance : has_to_format Label :=
   ⟨fun l => l.toString⟩
 
 /-- Convert `string` into `label`. -/
-def ofString : Stringₓ → Option Label
+def ofString : String → Option Label
   | "elim" => some elim
   | "move" => some move
   | "squash" => some squash
@@ -226,7 +236,7 @@ private theorem ne_from_not_eq {α} : ∀ x y : α, x ≠ y ↔ ¬x = y := fun _
 /-- `mk_cache names` creates a `norm_cast_cache`. It infers the proper `norm_cast` attributes
 for names in `names`, and collects the lemmas attributed with specific `norm_cast` attributes.
 -/
-unsafe def mk_cache (attr : Thunkₓ norm_cast_attr_ty) (names : List Name) : tactic norm_cast_cache := do
+unsafe def mk_cache (attr : Thunk' norm_cast_attr_ty) (names : List Name) : tactic norm_cast_cache := do
   let cache
     ←-- names has the declarations in reverse order
           names.mfoldr
@@ -452,7 +462,7 @@ private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tacti
   ext_simplify_core a cfg simp_lemmas.mk (fun _ => failed)
     (fun a _ _ _ e => do
       let (new_a, new_e, pr) ← pre a e
-      guardₓ ¬expr.alpha_eqv new_e e
+      guard ¬expr.alpha_eqv new_e e
       return (new_a, new_e, some pr, ff))
     (fun _ _ _ _ _ => failed) `eq e
 
@@ -482,7 +492,7 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
     ← simplify_top_down' () (fun _ e => Prod.mk () <$> coe_to_numeral e) e3 cfg
   trace_norm_cast "after coe_to_numeral: " e4
   let new_e := e4
-  guardₓ ¬expr.alpha_eqv new_e e
+  guard ¬expr.alpha_eqv new_e e
   let pr ← mk_eq_trans pr1 pr2
   let pr ← mk_eq_trans pr pr3
   let pr ← mk_eq_trans pr pr4
@@ -563,7 +573,7 @@ unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Uni
     let cfg_norm : SimpConfig := {  }
     let cfg_rw : RewriteCfg := {  }
     let ns ← loc.get_locals
-    Monadₓ.mapm'
+    Monad.mapm'
         (fun r : rw_rule => do
           save_info r
           replace_at derive ns loc

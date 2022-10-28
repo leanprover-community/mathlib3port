@@ -35,7 +35,7 @@ variable {Ω E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpa
 /-- If `m₁, m₂` are independent σ-algebras and `f` is `m₁`-measurable, then `𝔼[f | m₂] = 𝔼[f]`
 almost everywhere. -/
 theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinite (μ.trim hle₂)] (hf : strongly_measurable[m₁] f)
-    (hindp : Indepₓ m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] := by
+    (hindp : Indep m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] := by
   by_cases hfint:integrable f μ
   swap
   · rw [condexp_undef hfint, integral_undef hfint]
@@ -67,7 +67,7 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
       refine' funext fun f => integral_congr_ae (ae_restrict_of_ae _)
       simp_rw [Submodule.coe_subtypeL', Submodule.coe_subtype, ← coe_fn_coe_base]
       exact eventually_of_forall fun _ => rfl
-    refine' is_closed_eq (Continuous.const_smul _ _) _
+    refine' isClosedEq (Continuous.const_smul _ _) _
     · rw [heq₁]
       exact continuous_integral.comp (ContinuousLinearMap.continuous _)
       

@@ -3,7 +3,7 @@ Copyright (c) 2020 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Johan Commelin
 -/
-import Mathbin.Topology.Category.Top.Default
+import Mathbin.Topology.Category.TopCat.Default
 import Mathbin.RingTheory.GradedAlgebra.HomogeneousIdeal
 
 /-!
@@ -39,11 +39,11 @@ noncomputable section
 
 open DirectSum BigOperators Pointwise
 
-open DirectSum SetLike Top TopologicalSpace CategoryTheory Opposite
+open DirectSum SetLike TopCat TopologicalSpace CategoryTheory Opposite
 
 variable {R A : Type _}
 
-variable [CommSemiringₓ R] [CommRingₓ A] [Algebra R A]
+variable [CommSemiring R] [CommRing A] [Algebra R A]
 
 variable (𝒜 : ℕ → Submodule R A) [GradedAlgebra 𝒜]
 
@@ -113,7 +113,7 @@ theorem coe_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) :
     (vanishingIdeal t : Set A) = { f | ∀ x : ProjectiveSpectrum 𝒜, x ∈ t → f ∈ x.asHomogeneousIdeal } := by
   ext f
   rw [vanishing_ideal, SetLike.mem_coe, ← HomogeneousIdeal.mem_iff, HomogeneousIdeal.to_ideal_infi, Submodule.mem_infi]
-  apply forall_congrₓ fun x => _
+  apply forall_congr fun x => _
   rw [HomogeneousIdeal.to_ideal_infi, Submodule.mem_infi, HomogeneousIdeal.mem_iff]
 
 theorem mem_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) (f : A) :
@@ -127,7 +127,7 @@ theorem vanishing_ideal_singleton (x : ProjectiveSpectrum 𝒜) :
 theorem subset_zero_locus_iff_le_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) (I : Ideal A) :
     t ⊆ ZeroLocus 𝒜 I ↔ I ≤ (vanishingIdeal t).toIdeal :=
   ⟨fun h f k => (mem_vanishing_ideal _ _).mpr fun x j => (mem_zero_locus _ _ _).mpr (h j) k, fun h => fun x j =>
-    (mem_zero_locus _ _ _).mpr (le_transₓ h fun f h => ((mem_vanishing_ideal _ _).mp h) x j)⟩
+    (mem_zero_locus _ _ _).mpr (le_trans h fun f h => ((mem_vanishing_ideal _ _).mp h) x j)⟩
 
 variable (𝒜)
 
@@ -293,8 +293,8 @@ instance zariskiTopology : TopologicalSpace (ProjectiveSpectrum 𝒜) :=
 
 /-- The underlying topology of `Proj` is the projective spectrum of graded ring `A`.
 -/
-def top : Top :=
-  Top.of (ProjectiveSpectrum 𝒜)
+def top : TopCat :=
+  TopCat.of (ProjectiveSpectrum 𝒜)
 
 theorem is_open_iff (U : Set (ProjectiveSpectrum 𝒜)) : IsOpen U ↔ ∃ s, Uᶜ = ZeroLocus 𝒜 s := by
   simp only [@eq_comm _ (Uᶜ)] <;> rfl
@@ -302,7 +302,7 @@ theorem is_open_iff (U : Set (ProjectiveSpectrum 𝒜)) : IsOpen U ↔ ∃ s, U�
 theorem is_closed_iff_zero_locus (Z : Set (ProjectiveSpectrum 𝒜)) : IsClosed Z ↔ ∃ s, Z = ZeroLocus 𝒜 s := by
   rw [← is_open_compl_iff, is_open_iff, compl_compl]
 
-theorem is_closed_zero_locus (s : Set A) : IsClosed (ZeroLocus 𝒜 s) := by
+theorem isClosedZeroLocus (s : Set A) : IsClosed (ZeroLocus 𝒜 s) := by
   rw [is_closed_iff_zero_locus]
   exact ⟨s, rfl⟩
 
@@ -413,7 +413,7 @@ where `x ≤ y` if and only if `y ∈ closure {x}`.
 -/
 
 
-instance : PartialOrderₓ (ProjectiveSpectrum 𝒜) :=
+instance : PartialOrder (ProjectiveSpectrum 𝒜) :=
   Subtype.partialOrder _
 
 @[simp]

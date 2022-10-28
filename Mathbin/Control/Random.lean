@@ -42,140 +42,140 @@ random monad io
 -/
 
 
-open List Io Applicativeₓ
+open List Io Applicative
 
 universe u v w
 
 /-- A monad to generate random objects using the generator type `g` -/
 @[reducible]
-def RandGₓ (g : Type) (α : Type u) : Type u :=
+def RandG (g : Type) (α : Type u) : Type u :=
   State (ULift.{u} g) α
 
 /-- A monad to generate random objects using the generator type `std_gen` -/
 @[reducible]
-def Randₓ :=
-  RandGₓ StdGen
+def Rand :=
+  RandG StdGen
 
-instance (g : Type) : Uliftable (RandGₓ.{u} g) (RandGₓ.{v} g) :=
-  @StateTₓ.uliftable' _ _ _ _ _ (Equivₓ.ulift.trans Equivₓ.ulift.symm)
+instance (g : Type) : Uliftable (RandG.{u} g) (RandG.{v} g) :=
+  @StateT.uliftable' _ _ _ _ _ (Equiv.ulift.trans Equiv.ulift.symm)
 
 open ULift hiding Inhabited
 
 /-- Generate one more `ℕ` -/
-def RandGₓ.next {g : Type} [RandomGen g] : RandGₓ g ℕ :=
+def RandG.next {g : Type} [RandomGen g] : RandG g ℕ :=
   ⟨Prod.map id up ∘ RandomGen.next ∘ down⟩
 
 -- mathport name: «expr .. »
-local infixl:41 " .. " => Set.Icc
+local infixl:41 " .. " => Set.IccCat
 
-open Streamₓ
+open Stream
 
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
-class BoundedRandomₓ (α : Type u) [Preorderₓ α] where
-  randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandGₓ g (x .. y)
+class BoundedRandom (α : Type u) [Preorder α] where
+  randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandG g (x .. y)
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`Random] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
 /-- `random α` gives us machinery to generate values of type `α` -/
-class Randomₓ (α : Type u) where
-  Random : ∀ (g : Type) [RandomGen g], RandGₓ g α
+class Random (α : Type u) where
+  Random : ∀ (g : Type) [RandomGen g], RandG g α
 
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it
 right by 31 bits -/
 def shift31Left : ℕ := by apply_normed 2 ^ 31
 
-namespace Randₓ
+namespace Rand
 
-open Streamₓ
+open Stream
 
 variable (α : Type u)
 
 variable (g : Type) [RandomGen g]
 
 /-- create a new random number generator distinct from the one stored in the state -/
-def split : RandGₓ g g :=
+def split : RandG g g :=
   ⟨Prod.map id up ∘ RandomGen.split ∘ down⟩
 
 variable {g}
 
-section Randomₓ
+section Random
 
-variable [Randomₓ α]
+variable [Random α]
 
-export Randomₓ (Random)
+export Random (Random)
 
 /-- Generate a random value of type `α`. -/
-def random : RandGₓ g α :=
-  Randomₓ.random α g
+def random : RandG g α :=
+  Random.random α g
 
 /-- generate an infinite series of random values of type `α` -/
-def randomSeries : RandGₓ g (Streamₓ α) := do
+def randomSeries : RandG g (Stream α) := do
   let gen ← Uliftable.up (split g)
-  pure <| Streamₓ.corecState (Randomₓ.random α g) gen
+  pure <| Stream.corecState (Random.random α g) gen
 
-end Randomₓ
+end Random
 
 variable {α}
 
 /-- Generate a random value between `x` and `y` inclusive. -/
-def randomR [Preorderₓ α] [BoundedRandomₓ α] (x y : α) (h : x ≤ y) : RandGₓ g (x .. y) :=
-  BoundedRandomₓ.randomR g x y h
+def randomR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (x .. y) :=
+  BoundedRandom.randomR g x y h
 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-def randomSeriesR [Preorderₓ α] [BoundedRandomₓ α] (x y : α) (h : x ≤ y) : RandGₓ g (Streamₓ (x .. y)) := do
+def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (Stream (x .. y)) := do
   let gen ← Uliftable.up (split g)
-  pure <| corec_state (BoundedRandomₓ.randomR g x y h) gen
+  pure <| corec_state (BoundedRandom.randomR g x y h) gen
 
-end Randₓ
+end Rand
 
 namespace Io
 
-private def accum_char (w : ℕ) (c : Charₓ) : ℕ :=
+private def accum_char (w : ℕ) (c : Char) : ℕ :=
   c.toNat + 256 * w
 
 /-- create and seed a random number generator -/
 def mkGenerator : Io StdGen := do
   let seed ← Io.rand 0 shift31Left
-  return <| mkStdGenₓ seed
+  return <| mkStdGen seed
 
 variable {α : Type}
 
 /-- Run `cmd` using a randomly seeded random number generator -/
-def runRand (cmd : Randₓ α) : Io α := do
+def runRand (cmd : Rand α) : Io α := do
   let g ← Io.mkGenerator
   return <| (cmd ⟨g⟩).1
 
 /-- Run `cmd` using the provided seed. -/
-def runRandWith (seed : ℕ) (cmd : Randₓ α) : Io α :=
-  return <| (cmd.run ⟨mkStdGenₓ seed⟩).1
+def runRandWith (seed : ℕ) (cmd : Rand α) : Io α :=
+  return <| (cmd.run ⟨mkStdGen seed⟩).1
 
-section Randomₓ
+section Random
 
-variable [Randomₓ α]
+variable [Random α]
 
 /-- randomly generate a value of type α -/
 def random : Io α :=
-  Io.runRand (Randₓ.random α)
+  Io.runRand (Rand.random α)
 
 /-- randomly generate an infinite series of value of type α -/
-def randomSeries : Io (Streamₓ α) :=
-  Io.runRand (Randₓ.randomSeries α)
+def randomSeries : Io (Stream α) :=
+  Io.runRand (Rand.randomSeries α)
 
-end Randomₓ
+end Random
 
-section BoundedRandomₓ
+section BoundedRandom
 
-variable [Preorderₓ α] [BoundedRandomₓ α]
+variable [Preorder α] [BoundedRandom α]
 
 /-- randomly generate a value of type α between `x` and `y` -/
 def randomR (x y : α) (p : x ≤ y) : Io (x .. y) :=
-  Io.runRand (BoundedRandomₓ.randomR _ x y p)
+  Io.runRand (BoundedRandom.randomR _ x y p)
 
 /-- randomly generate an infinite series of value of type α between `x` and `y` -/
-def randomSeriesR (x y : α) (h : x ≤ y) : Io (Streamₓ <| x .. y) :=
-  Io.runRand (Randₓ.randomSeriesR x y h)
+def randomSeriesR (x y : α) (h : x ≤ y) : Io (Stream <| x .. y) :=
+  Io.runRand (Rand.randomSeriesR x y h)
 
-end BoundedRandomₓ
+end BoundedRandom
 
 end Io
 
@@ -187,39 +187,39 @@ unsafe def mk_generator : tactic StdGen := do
 
 /-- run `cmd` using the a randomly seeded random number generator
 in the tactic monad -/
-unsafe def run_rand {α : Type u} (cmd : Randₓ α) : tactic α := do
+unsafe def run_rand {α : Type u} (cmd : Rand α) : tactic α := do
   let ⟨g⟩ ← tactic.up mk_generator
   return (cmd ⟨g⟩).1
 
 variable {α : Type u}
 
-section BoundedRandomₓ
+section BoundedRandom
 
-variable [Preorderₓ α] [BoundedRandomₓ α]
+variable [Preorder α] [BoundedRandom α]
 
 /-- Generate a random value between `x` and `y` inclusive. -/
 unsafe def random_r (x y : α) (h : x ≤ y) : tactic (x .. y) :=
-  run_rand (Randₓ.randomR x y h)
+  run_rand (Rand.randomR x y h)
 
 /-- Generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Streamₓ <| x .. y) :=
-  run_rand (Randₓ.randomSeriesR x y h)
+unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Stream <| x .. y) :=
+  run_rand (Rand.randomSeriesR x y h)
 
-end BoundedRandomₓ
+end BoundedRandom
 
-section Randomₓ
+section Random
 
-variable [Randomₓ α]
+variable [Random α]
 
 /-- randomly generate a value of type α -/
 unsafe def random : tactic α :=
-  run_rand (Randₓ.random α)
+  run_rand (Rand.random α)
 
 /-- randomly generate an infinite series of value of type α -/
-unsafe def random_series : tactic (Streamₓ α) :=
-  run_rand (Randₓ.randomSeries α)
+unsafe def random_series : tactic (Stream α) :=
+  run_rand (Rand.randomSeries α)
 
-end Randomₓ
+end Random
 
 end Tactic
 
@@ -229,47 +229,47 @@ variable {g : Type} [RandomGen g]
 
 open Nat
 
-namespace Finₓ
+namespace Fin
 
 variable {n : ℕ} [NeZero n]
 
 /-- generate a `fin` randomly -/
-protected def random : RandGₓ g (Finₓ n) :=
-  ⟨fun ⟨g⟩ => Prod.map ofNat' up <| randNatₓ g 0 n⟩
+protected def random : RandG g (Fin n) :=
+  ⟨fun ⟨g⟩ => Prod.map ofNat' up <| randNat g 0 n⟩
 
-end Finₓ
+end Fin
 
 open Nat
 
 instance natBoundedRandom :
-    BoundedRandomₓ ℕ where randomR := fun g inst x y hxy => do
-    let z ← @Finₓ.random g inst (succ <| y - x) _
-    pure ⟨z + x, Nat.le_add_leftₓ _ _, by rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
+    BoundedRandom ℕ where randomR g inst x y hxy := do
+    let z ← @Fin.random g inst (succ <| y - x) _
+    pure ⟨z + x, Nat.le_add_left _ _, by rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
 
 /-- This `bounded_random` interval generates integers between `x` and
 `y` by first generating a natural number between `0` and `y - x` and
 shifting the result appropriately. -/
 instance intBoundedRandom :
-    BoundedRandomₓ ℤ where randomR := fun g inst x y hxy => do
-    let ⟨z, h₀, h₁⟩ ← @BoundedRandomₓ.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
+    BoundedRandom ℤ where randomR g inst x y hxy := do
+    let ⟨z, h₀, h₁⟩ ← @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
     pure
-        ⟨z + x, Int.le_add_of_nonneg_leftₓ (Int.coe_nat_nonneg _),
-          Int.add_le_of_le_sub_rightₓ <|
-            le_transₓ (Int.coe_nat_le_coe_nat_of_le h₁)
-              (le_of_eqₓ <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_leₓ hxy))⟩
+        ⟨z + x, Int.le_add_of_nonneg_left (Int.coe_nat_nonneg _),
+          Int.add_le_of_le_sub_right <|
+            le_trans (Int.coe_nat_le_coe_nat_of_le h₁)
+              (le_of_eq <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
 
-instance finRandom (n : ℕ) [NeZero n] : Randomₓ (Finₓ n) where Random := fun g inst => @Finₓ.random g inst _ _
+instance finRandom (n : ℕ) [NeZero n] : Random (Fin n) where Random g inst := @Fin.random g inst _ _
 
 instance finBoundedRandom (n : ℕ) :
-    BoundedRandomₓ (Finₓ n) where randomR := fun g inst (x y : Finₓ n) p => do
-    let ⟨r, h, h'⟩ ← @Randₓ.randomR ℕ g inst _ _ x.val y.val p
-    pure ⟨⟨r, lt_of_le_of_ltₓ h' y⟩, h, h'⟩
+    BoundedRandom (Fin n) where randomR g inst (x y : Fin n) p := do
+    let ⟨r, h, h'⟩ ← @Rand.randomR ℕ g inst _ _ x.val y.val p
+    pure ⟨⟨r, lt_of_le_of_lt h' y⟩, h, h'⟩
 
 /-- A shortcut for creating a `random (fin n)` instance from
 a proof that `0 < n` rather than on matching on `fin (succ n)`  -/
-def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Randomₓ (Finₓ n)
+def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Random (Fin n)
   | succ n, _ => finRandom _
-  | 0, h => False.elim (Nat.not_lt_zeroₓ _ h)
+  | 0, h => False.elim (Nat.not_lt_zero _ h)
 
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) := by
@@ -279,35 +279,34 @@ theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
     rw [Bool.of_nat_to_nat] at h₂ <;> exact h₂
 
 instance :
-    Randomₓ
-      Bool where Random := fun g inst =>
-    (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandomₓ.randomR ℕ _ _ g inst 0 1 (Nat.zero_leₓ _)
+    Random
+      Bool where Random g inst := (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_le _)
 
 instance :
-    BoundedRandomₓ
-      Bool where randomR := fun g _inst x y p =>
+    BoundedRandom
+      Bool where randomR g _inst x y p :=
     Subtype.map Bool.ofNat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
-      @BoundedRandomₓ.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
+      @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
 
 /-- generate a random bit vector of length `n` -/
-def Bitvec.random (n : ℕ) : RandGₓ g (Bitvec n) :=
-  Bitvec.ofFin <$> Randₓ.random (Finₓ <| 2 ^ n)
+def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
+  Bitvec.ofFin <$> Rand.random (Fin <| 2 ^ n)
 
 /-- generate a random bit vector of length `n` -/
-def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandGₓ g (x .. y) :=
-  have h' : ∀ a : Finₓ (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
+def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=
+  have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
     simp only [and_imp, Set.mem_Icc]
     intro z h₀ h₁
     replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
     replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁
     rw [Bitvec.of_fin_to_fin] at h₀ h₁
     constructor <;> assumption
-  Subtype.map Bitvec.ofFin h' <$> Randₓ.randomR x.toFin y.toFin (Bitvec.to_fin_le_to_fin_of_le h)
+  Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.to_fin_le_to_fin_of_le h)
 
 open Nat
 
-instance randomBitvec (n : ℕ) : Randomₓ (Bitvec n) where Random := fun _ inst => @Bitvec.random _ inst n
+instance randomBitvec (n : ℕ) : Random (Bitvec n) where Random _ inst := @Bitvec.random _ inst n
 
 instance boundedRandomBitvec (n : ℕ) :
-    BoundedRandomₓ (Bitvec n) where randomR := fun _ inst x y p => @Bitvec.randomR _ inst _ _ _ p
+    BoundedRandom (Bitvec n) where randomR _ inst x y p := @Bitvec.randomR _ inst _ _ _ p
 

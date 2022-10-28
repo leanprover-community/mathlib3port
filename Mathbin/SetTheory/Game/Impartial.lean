@@ -98,7 +98,7 @@ instance impartial_neg : ∀ (G : Pgame) [G.Impartial], (-G).Impartial
     intro hG
     rw [impartial_def]
     refine' ⟨_, fun i => _, fun i => _⟩
-    · rw [neg_negₓ]
+    · rw [neg_neg]
       exact (neg_equiv_self G).symm
       
     · rw [move_left_neg']
@@ -149,12 +149,12 @@ theorem mk_add_self : ⟦G⟧ + ⟦G⟧ = 0 :=
 
 /-- This lemma doesn't require `H` to be impartial. -/
 theorem equiv_iff_add_equiv_zero (H : Pgame) : (H ≈ G) ↔ (H + G ≈ 0) := by
-  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_right_cancel_iffₓ _ _ (-⟦G⟧)]
+  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_right_cancel_iff _ _ (-⟦G⟧)]
   simpa
 
 /-- This lemma doesn't require `H` to be impartial. -/
 theorem equiv_iff_add_equiv_zero' (H : Pgame) : (G ≈ H) ↔ (G + H ≈ 0) := by
-  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_left_cancel_iffₓ _ _ (-⟦G⟧), eq_comm]
+  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_left_cancel_iff _ _ (-⟦G⟧), eq_comm]
   simpa
 
 theorem le_zero_iff {G : Pgame} [G.Impartial] : G ≤ 0 ↔ 0 ≤ G := by

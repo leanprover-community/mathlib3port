@@ -27,6 +27,6 @@ theorem mk_univ_complex : (#(Set.Univ : Set ℂ)) = 𝔠 := by rw [mk_univ, mk_c
 
 /-- The complex numbers are not countable. -/
 theorem not_countable_complex : ¬(Set.Univ : Set ℂ).Countable := by
-  rw [← le_aleph_0_iff_set_countable, not_leₓ, mk_univ_complex]
+  rw [← le_aleph_0_iff_set_countable, not_le, mk_univ_complex]
   apply cantor
 

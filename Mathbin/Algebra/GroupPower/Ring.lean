@@ -17,36 +17,36 @@ Further lemmas about ordered semirings and rings can be found in `algebra.group_
 
 variable {R S M : Type _}
 
-section MonoidWithZeroₓ
+section MonoidWithZero
 
-variable [MonoidWithZeroₓ M]
+variable [MonoidWithZero M]
 
 theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
-  | n + 1, _ => by rw [pow_succₓ, zero_mul]
+  | n + 1, _ => by rw [pow_succ, zero_mul]
 
 @[simp]
 theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
   | k + 1, h => by
-    rw [pow_succₓ]
+    rw [pow_succ]
     exact zero_mul _
 
 theorem zero_pow_eq (n : ℕ) : (0 : M) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
-  · rw [h, pow_zeroₓ]
+  · rw [h, pow_zero]
     
-  · rw [zero_pow (Nat.pos_of_ne_zeroₓ h)]
+  · rw [zero_pow (Nat.pos_of_ne_zero h)]
     
 
 theorem pow_eq_zero_of_le {x : M} {n m : ℕ} (hn : n ≤ m) (hx : x ^ n = 0) : x ^ m = 0 := by
-  rw [← tsub_add_cancel_of_le hn, pow_addₓ, hx, mul_zero]
+  rw [← tsub_add_cancel_of_le hn, pow_add, hx, mul_zero]
 
 theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0 := by
   induction' n with n ih
-  · rw [pow_zeroₓ] at H
-    rw [← mul_oneₓ x, H, mul_zero]
+  · rw [pow_zero] at H
+    rw [← mul_one x, H, mul_zero]
     
-  · rw [pow_succₓ] at H
+  · rw [pow_succ] at H
     exact Or.cases_on (mul_eq_zero.1 H) id ih
     
 
@@ -57,7 +57,7 @@ theorem pow_eq_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ 
   exact zero_pow hn
 
 theorem pow_eq_zero_iff' [NoZeroDivisors M] [Nontrivial M] {a : M} {n : ℕ} : a ^ n = 0 ↔ a = 0 ∧ n ≠ 0 := by
-  cases (zero_le n).eq_or_gt <;> simp [*, ne_of_gtₓ]
+  cases (zero_le n).eq_or_gt <;> simp [*, ne_of_gt]
 
 theorem pow_ne_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ n ≠ 0 ↔ a ≠ 0 :=
   (pow_eq_zero_iff hn).Not
@@ -84,11 +84,11 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   · exact zero_pow' n h.ne.symm
     
 
-theorem Ringₓ.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
-  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, Ring.inverse_one]
-  | n + 1 => by rw [pow_succₓ, pow_succ'ₓ, Ring.mul_inverse_rev' ((Commute.refl r).pow_left n), Ringₓ.inverse_pow]
+theorem Ring.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
+  | 0 => by rw [pow_zero, pow_zero, Ring.inverse_one]
+  | n + 1 => by rw [pow_succ, pow_succ', Ring.mul_inverse_rev' ((Commute.refl r).pow_left n), Ring.inverse_pow]
 
-end MonoidWithZeroₓ
+end MonoidWithZero
 
 section CommMonoidWithZero
 
@@ -114,56 +114,56 @@ theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x
     x ^ n ∣ x ^ m ↔ n ≤ m := by
   constructor
   · intro h
-    rw [← not_ltₓ]
+    rw [← not_lt]
     intro hmn
     apply h1
     have : x ^ m * x ∣ x ^ m * 1 := by
-      rw [← pow_succ'ₓ, mul_oneₓ]
-      exact (pow_dvd_pow _ (Nat.succ_le_of_ltₓ hmn)).trans h
+      rw [← pow_succ', mul_one]
+      exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
     rwa [mul_dvd_mul_iff_left, ← is_unit_iff_dvd_one] at this
     apply pow_ne_zero m h0
     
   · apply pow_dvd_pow
     
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R] [Semiringₓ S]
+variable [Semiring R] [Semiring S]
 
 protected theorem RingHom.map_pow (f : R →+* S) (a) : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
   map_pow f a
 
 theorem min_pow_dvd_add {n m : ℕ} {a b c : R} (ha : c ^ n ∣ a) (hb : c ^ m ∣ b) : c ^ min n m ∣ a + b := by
-  replace ha := (pow_dvd_pow c (min_le_leftₓ n m)).trans ha
-  replace hb := (pow_dvd_pow c (min_le_rightₓ n m)).trans hb
+  replace ha := (pow_dvd_pow c (min_le_left n m)).trans ha
+  replace hb := (pow_dvd_pow c (min_le_right n m)).trans hb
   exact dvd_add ha hb
 
-end Semiringₓ
+end Semiring
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R]
+variable [CommSemiring R]
 
 theorem add_sq (a b : R) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by simp only [sq, add_mul_self_eq]
 
 theorem add_sq' (a b : R) : (a + b) ^ 2 = a ^ 2 + b ^ 2 + 2 * a * b := by
-  rw [add_sq, add_assocₓ, add_commₓ _ (b ^ 2), add_assocₓ]
+  rw [add_sq, add_assoc, add_comm _ (b ^ 2), add_assoc]
 
 alias add_sq ← add_pow_two
 
-end CommSemiringₓ
+end CommSemiring
 
 section HasDistribNeg
 
-variable [Monoidₓ R] [HasDistribNeg R]
+variable [Monoid R] [HasDistribNeg R]
 
 variable (R)
 
 theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
-  | 0 => Or.inl (pow_zeroₓ _)
+  | 0 => Or.inl (pow_zero _)
   | n + 1 =>
-    (neg_one_pow_eq_or n).swap.imp (fun h => by rw [pow_succₓ, h, neg_one_mul, neg_negₓ]) fun h => by
-      rw [pow_succₓ, h, mul_oneₓ]
+    (neg_one_pow_eq_or n).swap.imp (fun h => by rw [pow_succ, h, neg_one_mul, neg_neg]) fun h => by
+      rw [pow_succ, h, mul_one]
 
 variable {R}
 
@@ -175,7 +175,7 @@ theorem neg_pow_bit0 (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by rw [pow_
 
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
-  simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mulₓ]
+  simp only [bit1, pow_succ, neg_pow_bit0, neg_mul_eq_neg_mul]
 
 @[simp]
 theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by simp [sq]
@@ -189,9 +189,9 @@ alias neg_one_sq ← neg_one_pow_two
 
 end HasDistribNeg
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] {a b : R}
+variable [Ring R] {a b : R}
 
 protected theorem Commute.sq_sub_sq (h : Commute a b) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
   rw [sq, sq, h.mul_self_sub_mul_self_eq]
@@ -207,7 +207,7 @@ theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0
 variable [NoZeroDivisors R]
 
 protected theorem Commute.sq_eq_sq_iff_eq_or_eq_neg (h : Commute a b) : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
-  rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm]
+  rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm']
 
 @[simp]
 theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by rw [← (Commute.one_right a).sq_eq_sq_iff_eq_or_eq_neg, one_pow]
@@ -215,11 +215,11 @@ theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by rw [← (Commute.on
 theorem sq_ne_one_iff : a ^ 2 ≠ 1 ↔ a ≠ 1 ∧ a ≠ -1 :=
   sq_eq_one_iff.Not.trans not_or_distrib
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 theorem sq_sub_sq (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) :=
   (Commute.all a b).sq_sub_sq
@@ -253,5 +253,5 @@ protected theorem eq_or_eq_neg_of_sq_eq_sq (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a =
 
 end Units
 
-end CommRingₓ
+end CommRing
 

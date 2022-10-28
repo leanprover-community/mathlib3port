@@ -72,12 +72,12 @@ then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
 @[simps]
 def inducedTopology : GrothendieckTopology C where
-  Sieves := fun X S => K _ (S.FunctorPushforward G)
-  top_mem' := fun X => by
+  Sieves X S := K _ (S.FunctorPushforward G)
+  top_mem' X := by
     change K _ _
     rw [sieve.functor_pushforward_top]
     exact K.top_mem _
-  pullback_stable' := fun X Y S f hS => by
+  pullback_stable' X Y S f hS := by
     have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).FunctorPullback G := by
       conv_lhs => rw [← (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S]
       ext
@@ -86,7 +86,7 @@ def inducedTopology : GrothendieckTopology C where
     rw [this]
     change K _ _
     apply Hld ⟨_, K.pullback_stable (G.map f) hS⟩
-  transitive' := fun X S hS S' H' => by
+  transitive' X S hS S' H' := by
     apply K.transitive hS
     rintro Y _ ⟨Z, g, i, hg, rfl⟩
     rw [sieve.pullback_comp]
@@ -96,16 +96,16 @@ def inducedTopology : GrothendieckTopology C where
     use ⟨Z', g' ≫ g, i', hg, by simp⟩
 
 /-- `G` is cover-lifting wrt the induced topology. -/
-theorem induced_topology_cover_lifting : CoverLifting Hld.inducedTopology K G :=
+theorem inducedTopologyCoverLifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
 
 /-- `G` is cover-preserving wrt the induced topology. -/
-theorem induced_topology_cover_preserving : CoverPreserving Hld.inducedTopology K G :=
+theorem inducedTopologyCoverPreserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
 
 end LocallyCoverDense
 
-theorem CoverDense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
+theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
   intro X T
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
   rintro Y _ ⟨Z, _, f, hf, ⟨W, g, f', rfl : _ = _⟩, rfl⟩
@@ -123,7 +123,7 @@ abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) : G
 
 variable (J)
 
-theorem over_forget_locally_cover_dense (X : C) : LocallyCoverDense J (Over.forget X) := by
+theorem overForgetLocallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X) := by
   intro Y T
   convert T.property
   ext Z f
@@ -151,9 +151,9 @@ This is known as the comparison lemma. It requires that the sites are small and 
 is complete.
 -/
 noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
-    Sheaf H.inducedTopology A ≌ Sheaf K A :=
-  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.induced_topology_cover_preserving
-    H.LocallyCoverDense.induced_topology_cover_lifting
+    SheafCat H.inducedTopology A ≌ SheafCat K A :=
+  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopologyCoverPreserving
+    H.LocallyCoverDense.inducedTopologyCoverLifting
 
 end SmallSite
 

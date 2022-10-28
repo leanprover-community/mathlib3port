@@ -41,9 +41,9 @@ variable {β : Type u}
 
 namespace Bitraversable
 
-open Functor IsLawfulApplicative
+open Functor LawfulApplicative
 
-variable {F G : Type u → Type u} [Applicativeₓ F] [Applicativeₓ G]
+variable {F G : Type u → Type u} [Applicative F] [Applicative G]
 
 /-- traverse on the first functor argument -/
 @[reducible]
@@ -55,7 +55,7 @@ def tfst {α α'} (f : α → F α') : t α β → F (t α' β) :=
 def tsnd {α α'} (f : α → F α') : t β α → F (t β α') :=
   bitraverse pure f
 
-variable [IsLawfulBitraversable t] [IsLawfulApplicative F] [IsLawfulApplicative G]
+variable [IsLawfulBitraversable t] [LawfulApplicative F] [LawfulApplicative G]
 
 @[higher_order tfst_id]
 theorem id_tfst : ∀ {α β} (x : t α β), tfst id.mk x = id.mk x :=

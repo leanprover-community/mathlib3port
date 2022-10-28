@@ -97,7 +97,7 @@ class HasSbtw (α : Type _) where
 
 export HasSbtw (Sbtw)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic order_laws_tac
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic order_laws_tac -/
 /-- A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive and cyclic. `sbtw` is transitive.
 -/
@@ -238,7 +238,7 @@ section CircularOrder
 variable {α : Type _} [CircularOrder α]
 
 theorem btw_refl_left_right (a b : α) : Btw a b a :=
-  (or_selfₓ _).1 (btw_total a b a)
+  (or_self_iff _).1 (btw_total a b a)
 
 theorem btw_rfl_left_right {a b : α} : Btw a b a :=
   btw_refl_left_right _ _
@@ -257,7 +257,7 @@ theorem btw_rfl_right {a b : α} : Btw a b b :=
 
 theorem sbtw_iff_not_btw {a b c : α} : Sbtw a b c ↔ ¬Btw c b a := by
   rw [sbtw_iff_btw_not_btw]
-  exact and_iff_right_of_impₓ (btw_total _ _ _).resolve_left
+  exact and_iff_right_of_imp (btw_total _ _ _).resolve_left
 
 theorem btw_iff_not_sbtw {a b c : α} : Btw a b c ↔ ¬Sbtw c b a :=
   iff_not_comm.1 sbtw_iff_not_btw
@@ -321,25 +321,24 @@ end Set
 /-- The betweenness relation obtained from "looping around" `≤`.
 See note [reducible non-instances]. -/
 @[reducible]
-def LE.toHasBtw (α : Type _) [LE α] : HasBtw α where Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
+def LE.toHasBtw (α : Type _) [LE α] : HasBtw α where Btw a b c := a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
 
 /-- The strict betweenness relation obtained from "looping around" `<`.
 See note [reducible non-instances]. -/
 @[reducible]
-def LT.toHasSbtw (α : Type _) [LT α] :
-    HasSbtw α where Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
+def LT.toHasSbtw (α : Type _) [LT α] : HasSbtw α where Sbtw a b c := a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
 
 /-- The circular preorder obtained from "looping around" a preorder.
 See note [reducible non-instances]. -/
 @[reducible]
-def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreorder α where
-  Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
-  Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
-  btw_refl := fun a => Or.inl ⟨le_rflₓ, le_rflₓ⟩
-  btw_cyclic_left := fun a b c h => by
+def Preorder.toCircularPreorder (α : Type _) [Preorder α] : CircularPreorder α where
+  Btw a b c := a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
+  Sbtw a b c := a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
+  btw_refl a := Or.inl ⟨le_rfl, le_rfl⟩
+  btw_cyclic_left a b c h := by
     unfold btw at h⊢
-    rwa [← Or.assoc, or_comm]
-  sbtw_trans_left := fun a b c d => by
+    rwa [← or_assoc, or_comm']
+  sbtw_trans_left a b c d := by
     rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hbd, hdc⟩ | ⟨hdc, hcb⟩ | ⟨hcb, hbd⟩)
     · exact Or.inl ⟨hab.trans hbd, hdc⟩
       
@@ -359,22 +358,22 @@ def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreo
       
     · exact Or.inr (Or.inr ⟨hca, hab.trans hbd⟩)
       
-  sbtw_iff_btw_not_btw := fun a b c => by
-    simp_rw [lt_iff_le_not_leₓ]
+  sbtw_iff_btw_not_btw a b c := by
+    simp_rw [lt_iff_le_not_le]
     set x₀ := a ≤ b
     set x₁ := b ≤ c
     set x₂ := c ≤ a
-    have : x₀ → x₁ → a ≤ c := le_transₓ
-    have : x₁ → x₂ → b ≤ a := le_transₓ
-    have : x₂ → x₀ → c ≤ b := le_transₓ
+    have : x₀ → x₁ → a ≤ c := le_trans
+    have : x₁ → x₂ → b ≤ a := le_trans
+    have : x₂ → x₀ → c ≤ b := le_trans
     clear_value x₀ x₁ x₂
     tauto!
 
 /-- The circular partial order obtained from "looping around" a partial order.
 See note [reducible non-instances]. -/
 @[reducible]
-def PartialOrderₓ.toCircularPartialOrder (α : Type _) [PartialOrderₓ α] : CircularPartialOrder α :=
-  { Preorderₓ.toCircularPreorder α with
+def PartialOrder.toCircularPartialOrder (α : Type _) [PartialOrder α] : CircularPartialOrder α :=
+  { Preorder.toCircularPreorder α with
     btw_antisymm := fun a b c => by
       rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hcb, hba⟩ | ⟨hba, hac⟩ | ⟨hac, hcb⟩)
       · exact Or.inl (hab.antisymm hba)
@@ -399,10 +398,10 @@ def PartialOrderₓ.toCircularPartialOrder (α : Type _) [PartialOrderₓ α] : 
 /-- The circular order obtained from "looping around" a linear order.
 See note [reducible non-instances]. -/
 @[reducible]
-def LinearOrderₓ.toCircularOrder (α : Type _) [LinearOrderₓ α] : CircularOrder α :=
-  { PartialOrderₓ.toCircularPartialOrder α with
+def LinearOrder.toCircularOrder (α : Type _) [LinearOrder α] : CircularOrder α :=
+  { PartialOrder.toCircularPartialOrder α with
     btw_total := fun a b c => by
-      cases' le_totalₓ a b with hab hba <;> cases' le_totalₓ b c with hbc hcb <;> cases' le_totalₓ c a with hca hac
+      cases' le_total a b with hab hba <;> cases' le_total b c with hbc hcb <;> cases' le_total c a with hca hac
       · exact Or.inl (Or.inl ⟨hab, hbc⟩)
         
       · exact Or.inl (Or.inl ⟨hab, hbc⟩)

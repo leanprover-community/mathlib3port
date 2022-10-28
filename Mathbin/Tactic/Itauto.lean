@@ -107,27 +107,27 @@ inductive Prop : Type
 
 -- p → q
 /-- Constructor for `p ∧ q`. -/
-@[matchPattern]
+@[match_pattern]
 def Prop.and : Prop → Prop → Prop :=
   Prop.and' AndKind.and
 
 /-- Constructor for `p ↔ q`. -/
-@[matchPattern]
+@[match_pattern]
 def Prop.iff : Prop → Prop → Prop :=
   Prop.and' AndKind.iff
 
 /-- Constructor for `p = q`. -/
-@[matchPattern]
+@[match_pattern]
 def Prop.eq : Prop → Prop → Prop :=
   Prop.and' AndKind.eq
 
 /-- Constructor for `¬ p`. -/
-@[matchPattern]
+@[match_pattern]
 def Prop.not (a : Prop) : Prop :=
   a.imp Prop.false
 
 /-- Constructor for `xor p q`. -/
-@[matchPattern]
+@[match_pattern]
 def Prop.xor (a b : Prop) : Prop :=
   (a.And b.Not).Or (b.And a.Not)
 
@@ -160,7 +160,7 @@ open Ordering
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
 def AndKind.cmp (p q : AndKind) : Ordering := by
   cases p <;> cases q
-  exacts[Eq, lt, lt, Gt, Eq, lt, Gt, Gt, Eq]
+  exacts[Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
 def Prop.cmp (p q : Prop) : Ordering := by
@@ -171,8 +171,8 @@ def Prop.cmp (p q : Prop) : Ordering := by
   case and'.and' aq q₁ q₂ => exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
   case or.or q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
   case imp.imp q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
-  exacts[lt, lt, lt, lt, lt, Gt, lt, lt, lt, lt, Gt, Gt, lt, lt, lt, Gt, Gt, Gt, lt, lt, Gt, Gt, Gt, Gt, lt, Gt, Gt, Gt,
-    Gt, Gt]
+  exacts[lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt, lt, lt, GT.gt, GT.gt,
+    GT.gt, GT.gt, lt, GT.gt, GT.gt, GT.gt, GT.gt, GT.gt]
 
 instance : LT Prop :=
   ⟨fun p q => p.cmp q = lt⟩
@@ -504,7 +504,7 @@ unsafe def reify (atoms : ref (Buffer expr)) : expr → tactic Prop
   | quote.1 ((%%ₓa) ∧ %%ₓb) => prop.and <$> reify a <*> reify b
   | quote.1 ((%%ₓa) ∨ %%ₓb) => prop.or <$> reify a <*> reify b
   | quote.1 ((%%ₓa) ↔ %%ₓb) => prop.iff <$> reify a <*> reify b
-  | quote.1 (Xorₓ (%%ₓa) (%%ₓb)) => prop.xor <$> reify a <*> reify b
+  | quote.1 (Xor' (%%ₓa) (%%ₓb)) => prop.xor <$> reify a <*> reify b
   | quote.1 (@Eq Prop (%%ₓa) (%%ₓb)) => prop.eq <$> reify a <*> reify b
   | quote.1 (@Ne Prop (%%ₓa) (%%ₓb)) => prop.not <$> (prop.eq <$> reify a <*> reify b)
   | quote.1 (Implies (%%ₓa) (%%ₓb)) => prop.imp <$> reify a <*> reify b
@@ -747,8 +747,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle (without the `!` option), and the proof search is
 tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is

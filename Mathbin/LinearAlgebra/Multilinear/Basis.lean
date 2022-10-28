@@ -21,15 +21,15 @@ This file proves lemmas about the action of multilinear maps on basis vectors.
 
 open MultilinearMap
 
-variable {R : Type _} {ι : Type _} {n : ℕ} {M : Finₓ n → Type _} {M₂ : Type _} {M₃ : Type _}
+variable {R : Type _} {ι : Type _} {n : ℕ} {M : Fin n → Type _} {M₂ : Type _} {M₃ : Type _}
 
-variable [CommSemiringₓ R] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [∀ i, AddCommMonoidₓ (M i)]
+variable [CommSemiring R] [AddCommMonoid M₂] [AddCommMonoid M₃] [∀ i, AddCommMonoid (M i)]
 
 variable [∀ i, Module R (M i)] [Module R M₂] [Module R M₃]
 
 /-- Two multilinear maps indexed by `fin n` are equal if they are equal when all arguments are
 basis vectors. -/
-theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Finₓ n → Type _} (e : ∀ i, Basis (ι₁ i) R (M i))
+theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n → Type _} (e : ∀ i, Basis (ι₁ i) R (M i))
     (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g := by
   induction' n with m hm
   · ext x
@@ -38,15 +38,15 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin�
   · apply Function.LeftInverse.injective uncurry_curry_left
     refine' Basis.ext (e 0) _
     intro i
-    apply hm (Finₓ.tail e)
+    apply hm (Fin.tail e)
     intro j
-    convert h (Finₓ.cons i j)
+    convert h (Fin.cons i j)
     iterate 2 
     rw [curry_left_apply]
     congr 1 with x
-    refine' Finₓ.cases rfl (fun x => _) x
-    dsimp [Finₓ.tail]
-    rw [Finₓ.cons_succ, Finₓ.cons_succ]
+    refine' Fin.cases rfl (fun x => _) x
+    dsimp [Fin.tail]
+    rw [Fin.cons_succ, Fin.cons_succ]
     
 
 /-- Two multilinear maps indexed by a `fintype` are equal if they are equal when all arguments
@@ -56,5 +56,5 @@ version of `dom_dom_congr`. -/
 theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
     (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
   cases nonempty_fintype ι
-  exact (dom_dom_congr_eq_iff (Fintypeₓ.equivFin ι) f g).mp ((Basis.ext_multilinear_fin fun i => e) fun i => h (i ∘ _))
+  exact (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp ((Basis.ext_multilinear_fin fun i => e) fun i => h (i ∘ _))
 

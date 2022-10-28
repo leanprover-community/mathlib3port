@@ -59,7 +59,7 @@ private unsafe def match_sig (p : pexpr) (e : expr) : tactic Unit := do
 
 private unsafe def trace_match (pat : pexpr) (ty : expr) (n : Name) : tactic Unit :=
   try <| do
-    guardₓ ¬n
+    guard ¬n
     match_sig pat ty
     let ty ← pp ty
     trace f! "{n }: {ty}"

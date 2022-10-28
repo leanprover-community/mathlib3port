@@ -54,9 +54,9 @@ unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := f
     tactic.ext_simplify_core false { zeta := false, beta := false, singlePass := true, eta := false, proj := false } s
         (fun u => return u)
         (fun found s r p e => do
-          guardₓ (Not found)
+          guard (Not found)
           let matched ← tactic.match_pattern pat e >> return true <|> return false
-          guardₓ matched
+          guard matched
           let ⟨u, new_e, pr⟩ ← c r e
           return (tt, new_e, pr, ff))
         (fun a s r p e => tactic.failed) r lhs
@@ -136,14 +136,14 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
   old_conv <| old_conv.interactive.find p c
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 unsafe def conv_lhs (loc : parse (parser.optional (tk "at" *> ident)))
     (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 unsafe def conv_rhs (loc : parse (parser.optional (tk "at" *> ident)))
     (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)

@@ -44,7 +44,7 @@ attribute [local instance] FiniteDimensional.complete
 theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (b.Coord i) :=
   (b.Coord i).IsOpenMap (continuous_barycentric_coord b i) (b.surjective_coord i)
 
-theorem smooth_barycentric_coord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
+theorem smoothBarycentricCoord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
   (⟨b.Coord i, continuous_barycentric_coord b i⟩ : E →A[𝕜] 𝕜).ContDiff
 
 end Barycentric
@@ -70,7 +70,7 @@ theorem interior_convex_hull_aff_basis {ι E : Type _} [Finite ι] [NormedAddCom
     have : FiniteDimensional ℝ E := by
       classical
       obtain ⟨i⟩ := (inferInstance : Nonempty ι)
-      exact FiniteDimensional.of_fintype_basis (b.basis_of i)
+      exact FiniteDimensional.ofFintypeBasis (b.basis_of i)
     have : convexHull ℝ (range b.points) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
       rw [convex_hull_affine_basis_eq_nonneg_barycentric b]
       ext
@@ -88,7 +88,7 @@ include V
 
 open AffineMap
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » s) -/
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)
@@ -109,12 +109,12 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
     calc
       abs (ε / 2 / ∥y -ᵥ q∥) * ∥y -ᵥ q∥ = ε / 2 / ∥y -ᵥ q∥ * ∥y -ᵥ q∥ := by
         rw [abs_div, abs_of_pos (half_pos hε), abs_of_pos hyq]
-      _ = ε / 2 := div_mul_cancel _ (ne_of_gtₓ hyq)
+      _ = ε / 2 := div_mul_cancel _ (ne_of_gt hyq)
       _ < ε := half_lt_self hε
       
   have hεyq : ∀ (y) (_ : y ∉ s), ε / 2 / dist y q ≠ 0 := by
-    simp only [Ne.def, div_eq_zero_iff, or_falseₓ, dist_eq_zero, bit0_eq_zero, one_ne_zero, not_or_distrib,
-      ne_of_gtₓ hε, true_andₓ, not_false_iff]
+    simp only [Ne.def, div_eq_zero_iff, or_false_iff, dist_eq_zero, bit0_eq_zero, one_ne_zero, not_or_distrib,
+      ne_of_gt hε, true_and_iff, not_false_iff]
     exact fun y h1 h2 => h1 (h2.symm ▸ hq)
   classical
   let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
@@ -155,17 +155,17 @@ theorem interior_convex_hull_nonempty_iff_aff_span_eq_top [FiniteDimensional ℝ
       rw [Subtype.range_coe_subtype, set_of_mem_eq] at this
       apply nonempty.mono _ this
       mono*
-    haveI : Fintypeₓ t := fintypeOfFinDimAffineIndependent ℝ h_ind
-    use Finsetₓ.centroid ℝ (Finsetₓ.univ : Finsetₓ t) (coe : t → V)
+    haveI : Fintype t := fintypeOfFinDimAffineIndependent ℝ h_ind
+    use Finset.centroid ℝ (Finset.univ : Finset t) (coe : t → V)
     rw [h, ← @set_of_mem_eq V t, ← Subtype.range_coe_subtype] at h_tot
     let b : AffineBasis t ℝ V := ⟨coe, h_ind, h_tot⟩
     rw [interior_convex_hull_aff_basis b]
-    have htne : (Finsetₓ.univ : Finsetₓ t).Nonempty := by
-      simpa [Finsetₓ.univ_nonempty_iff] using AffineSubspace.nonempty_of_affine_span_eq_top ℝ V V h_tot
-    simp [Finsetₓ.centroid_def,
-      b.coord_apply_combination_of_mem (Finsetₓ.mem_univ _)
-        (Finsetₓ.sum_centroid_weights_eq_one_of_nonempty ℝ (Finsetₓ.univ : Finsetₓ t) htne),
-      Finsetₓ.centroid_weights_apply, Nat.cast_pos, inv_pos, finset.card_pos.mpr htne]
+    have htne : (Finset.univ : Finset t).Nonempty := by
+      simpa [Finset.univ_nonempty_iff] using AffineSubspace.nonempty_of_affine_span_eq_top ℝ V V h_tot
+    simp [Finset.centroid_def,
+      b.coord_apply_combination_of_mem (Finset.mem_univ _)
+        (Finset.sum_centroid_weights_eq_one_of_nonempty ℝ (Finset.univ : Finset t) htne),
+      Finset.centroid_weights_apply, Nat.cast_pos, inv_pos, finset.card_pos.mpr htne]
     
 
 theorem Convex.interior_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V} (hs : Convex ℝ s) :

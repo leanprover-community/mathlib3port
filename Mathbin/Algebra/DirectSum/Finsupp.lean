@@ -22,7 +22,7 @@ open DirectSum
 
 open LinearMap Submodule
 
-variable {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R : Type u} {M : Type v} [Ring R] [AddCommGroup M] [Module R M]
 
 section finsuppLequivDirectSum
 

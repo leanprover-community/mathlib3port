@@ -29,7 +29,7 @@ namespace Complex
 
 /-- **Removable singularity** theorem, weak version. If `f : ℂ → E` is differentiable in a punctured
 neighborhood of a point and is continuous at this point, then it is analytic at this point. -/
-theorem analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at {f : ℂ → E} {c : ℂ}
+theorem analyticAtOfDifferentiableOnPuncturedNhdsOfContinuousAt {f : ℂ → E} {c : ℂ}
     (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (hc : ContinuousAt f c) : AnalyticAt ℂ f c := by
   rcases(nhds_within_has_basis nhds_basis_closed_ball _).mem_iff.1 hd with ⟨R, hR0, hRs⟩
   lift R to ℝ≥0 using hR0.le
@@ -65,9 +65,9 @@ theorem differentiable_on_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable on `s \ {c}`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to be
 equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
-theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+theorem differentiableOnUpdateLimOfIsO {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
     (hd : DifferentiableOn ℂ f (s \ {c})) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
-    DifferentiableOn ℂ (update f c (limₓ (𝓝[≠] c) f)) s := by
+    DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) s := by
   set F : ℂ → E := fun z => (z - c) • f z with hF
   suffices DifferentiableOn ℂ F (s \ {c}) ∧ ContinuousAt F c by
     rw [differentiable_on_compl_singleton_and_continuous_at_iff hc, ← differentiable_on_dslope hc, dslope_sub_smul] at
@@ -85,30 +85,30 @@ theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : 
 /-- **Removable singularity** theorem: if `s` is a punctured neighborhood of `c : ℂ`, a function
 `f : ℂ → E` is complex differentiable on `s`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to
 be equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `{c} ∪ s`. -/
-theorem differentiable_on_update_lim_insert_of_is_o {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝[≠] c)
+theorem differentiableOnUpdateLimInsertOfIsO {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝[≠] c)
     (hd : DifferentiableOn ℂ f s) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
-    DifferentiableOn ℂ (update f c (limₓ (𝓝[≠] c) f)) (insert c s) :=
-  differentiable_on_update_lim_of_is_o (insert_mem_nhds_iff.2 hc) (hd.mono fun z hz => hz.1.resolve_left hz.2) ho
+    DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) (insert c s) :=
+  differentiableOnUpdateLimOfIsO (insert_mem_nhds_iff.2 hc) (hd.mono fun z hz => hz.1.resolve_left hz.2) ho
 
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable and is bounded on `s \ {c}`, then `f` redefined to be equal to
 `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
-theorem differentiable_on_update_lim_of_bdd_above {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+theorem differentiableOnUpdateLimOfBddAbove {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
     (hd : DifferentiableOn ℂ f (s \ {c})) (hb : BddAbove (norm ∘ f '' (s \ {c}))) :
-    DifferentiableOn ℂ (update f c (limₓ (𝓝[≠] c) f)) s :=
-  differentiable_on_update_lim_of_is_o hc hd <|
+    DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) s :=
+  differentiableOnUpdateLimOfIsO hc hd <|
     is_bounded_under.is_o_sub_self_inv <|
       let ⟨C, hC⟩ := hb
       ⟨C + ∥f c∥,
         eventually_map.2 <|
           mem_nhds_within_iff_exists_mem_nhds_inter.2
-            ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rflₓ⟩⟩
+            ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rfl⟩⟩
 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
 punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/
 theorem tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o {f : ℂ → E} {c : ℂ}
     (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
-    Tendsto f (𝓝[≠] c) (𝓝 <| limₓ (𝓝[≠] c) f) := by
+    Tendsto f (𝓝[≠] c) (𝓝 <| lim (𝓝[≠] c) f) := by
   rw [eventually_nhds_within_iff] at hd
   have : DifferentiableOn ℂ f ({ z | z ≠ c → DifferentiableAt ℂ f z } \ {c}) := fun z hz =>
     (hz.1 hz.2).DifferentiableWithinAt
@@ -119,7 +119,7 @@ theorem tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o {f : ℂ → E} 
 bounded on a punctured neighborhood of `c`, then `f` has a limit at `c`. -/
 theorem tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under {f : ℂ → E} {c : ℂ}
     (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (hb : IsBoundedUnder (· ≤ ·) (𝓝[≠] c) fun z => ∥f z - f c∥) :
-    Tendsto f (𝓝[≠] c) (𝓝 <| limₓ (𝓝[≠] c) f) :=
+    Tendsto f (𝓝[≠] c) (𝓝 <| lim (𝓝[≠] c) f) :=
   tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o hd hb.is_o_sub_self_inv
 
 end Complex

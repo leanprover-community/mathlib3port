@@ -55,8 +55,8 @@ attribute [nolint unused_arguments] hom.decidable_eq
 
 instance struct : CategoryStruct (WidePullbackShape J) where
   Hom := Hom
-  id := fun j => Hom.id j
-  comp := fun j₁ j₂ j₃ f g => by
+  id j := Hom.id j
+  comp j₁ j₂ j₃ f g := by
     cases f
     exact g
     cases g
@@ -84,14 +84,14 @@ fixed object.
 -/
 @[simps]
 def wideCospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : WidePullbackShape J ⥤ C where
-  obj := fun j => Option.casesOn j B objs
-  map := fun X Y f => by
+  obj j := Option.casesOn j B objs
+  map X Y f := by
     cases' f with _ j
     · apply 𝟙 _
       
     · exact arrows j
       
-  map_comp' := fun _ _ _ f g => by
+  map_comp' _ _ _ f g := by
     cases f
     · simpa
       
@@ -126,7 +126,7 @@ def equivalenceOfEquiv (J' : Type w') (h : J ≃ J') : WidePullbackShape J ≌ W
 /-- Lifting universe and morphism levels preserves wide pullback diagrams. -/
 def uliftEquivalence : UliftHom.{w'} (ULift.{w'} (WidePullbackShape J)) ≌ WidePullbackShape (ULift J) :=
   (UliftHomUliftCategory.equiv.{w', w', w, w} (WidePullbackShape J)).symm.trans
-    (equivalenceOfEquiv _ (Equivₓ.ulift.{w', w}.symm : J ≃ ULift.{w'} J))
+    (equivalenceOfEquiv _ (Equiv.ulift.{w', w}.symm : J ≃ ULift.{w'} J))
 
 end WidePullbackShape
 
@@ -144,8 +144,8 @@ attribute [nolint unused_arguments] hom.decidable_eq
 
 instance struct : CategoryStruct (WidePushoutShape J) where
   Hom := Hom
-  id := fun j => Hom.id j
-  comp := fun j₁ j₂ j₃ f g => by
+  id j := Hom.id j
+  comp j₁ j₂ j₃ f g := by
     cases f
     exact g
     cases g
@@ -173,8 +173,8 @@ fixed object.
 -/
 @[simps]
 def wideSpan (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : WidePushoutShape J ⥤ C where
-  obj := fun j => Option.casesOn j B objs
-  map := fun X Y f => by
+  obj j := Option.casesOn j B objs
+  map X Y f := by
     cases' f with _ j
     · apply 𝟙 _
       
@@ -383,7 +383,7 @@ def widePullbackShapeOpMap :
 /-- The obvious functor `wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ` -/
 @[simps]
 def widePullbackShapeOp : WidePullbackShape J ⥤ (WidePushoutShape J)ᵒᵖ where
-  obj := fun X => op X
+  obj X := op X
   map := widePullbackShapeOpMap J
 
 /-- The action on morphisms of the obvious functor
@@ -396,7 +396,7 @@ def widePushoutShapeOpMap :
 /-- The obvious functor `wide_pushout_shape J ⥤ (wide_pullback_shape J)ᵒᵖ` -/
 @[simps]
 def widePushoutShapeOp : WidePushoutShape J ⥤ (WidePullbackShape J)ᵒᵖ where
-  obj := fun X => op X
+  obj X := op X
   map := widePushoutShapeOpMap J
 
 /-- The obvious functor `(wide_pullback_shape J)ᵒᵖ ⥤ wide_pushout_shape J`-/
@@ -448,7 +448,7 @@ def widePullbackShapeOpEquiv : (WidePullbackShape J)ᵒᵖ ≌ WidePushoutShape 
 /-- If a category has wide pullbacks on a higher universe level it also has wide pullbacks
 on a lower universe level. -/
 theorem has_wide_pullbacks_shrink [HasWidePullbacks.{max w w'} C] : HasWidePullbacks.{w} C := fun J =>
-  has_limits_of_shape_of_equivalence (WidePullbackShape.equivalenceOfEquiv _ Equivₓ.ulift.{w'})
+  has_limits_of_shape_of_equivalence (WidePullbackShape.equivalenceOfEquiv _ Equiv.ulift.{w'})
 
 end CategoryTheory.Limits
 

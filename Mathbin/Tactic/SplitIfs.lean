@@ -22,7 +22,7 @@ unsafe def find_if_cond : expr → Option expr
             | quote.1 (@ite _ (%%ₓc) (%%ₓ_) _ _) => some c
             | quote.1 (@dite _ (%%ₓc) (%%ₓ_) _ _) => some c
             | _ => none
-        guardₓ ¬c
+        guard ¬c
         find_if_cond c <|> return c
 
 unsafe def find_if_cond_at (at_ : Loc) : tactic (Option expr) := do

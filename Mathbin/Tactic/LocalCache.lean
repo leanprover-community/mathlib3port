@@ -97,19 +97,19 @@ def fNVPRIME :=
 
 def rADIX := by apply_normed 2 ^ 64
 
-def hashByte (seed : ℕ) (c : Charₓ) : ℕ :=
+def hashByte (seed : ℕ) (c : Char) : ℕ :=
   let n : ℕ := c.toNat
   seed.lxor n * FNV_PRIME % RADIX
 
-def hashString (s : Stringₓ) : ℕ :=
+def hashString (s : String) : ℕ :=
   s.toList.foldl hashByte fNVOFFSETBASIS
 
 end FnvA1
 
-unsafe def hash_context : tactic Stringₓ := do
+unsafe def hash_context : tactic String := do
   let ns ← open_namespaces
   let dn ← decl_name
-  let flat := ((List.cons dn ns).map toString).foldl Stringₓ.append ""
+  let flat := ((List.cons dn ns).map toString).foldl String.append ""
   return <| toString dn ++ toString (hash_string flat)
 
 unsafe def get_root_name (ns : Name) : tactic Name := do

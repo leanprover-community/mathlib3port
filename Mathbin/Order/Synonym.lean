@@ -3,7 +3,7 @@ Copyright (c) 2020 Johan Commelin, Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Damiano Testa, Yaël Dillies
 -/
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 import Mathbin.Logic.Nontrivial
 import Mathbin.Order.Basic
 
@@ -50,11 +50,11 @@ instance [h : Nontrivial α] : Nontrivial αᵒᵈ :=
 
 /-- `to_dual` is the identity function to the `order_dual` of a linear order.  -/
 def toDual : α ≃ αᵒᵈ :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 /-- `of_dual` is the identity function from the `order_dual` of a linear order.  -/
 def ofDual : αᵒᵈ ≃ α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 theorem to_dual_symm_eq : (@toDual α).symm = of_dual :=
@@ -109,7 +109,7 @@ theorem to_dual_lt [LT α] {a : α} {b : αᵒᵈ} : toDual a < b ↔ ofDual b <
   Iff.rfl
 
 /-- Recursor for `αᵒᵈ`. -/
-@[elabAsElim]
+@[elab_as_elim]
 protected def rec {C : αᵒᵈ → Sort _} (h₂ : ∀ a : α, C (toDual a)) : ∀ a : αᵒᵈ, C a :=
   h₂
 
@@ -139,14 +139,14 @@ def Lex (α : Type _) :=
   α
 
 /-- `to_lex` is the identity function to the `lex` of a type.  -/
-@[matchPattern]
+@[match_pattern]
 def toLex : α ≃ Lex α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 /-- `of_lex` is the identity function from the `lex` of a type.  -/
-@[matchPattern]
+@[match_pattern]
 def ofLex : Lex α ≃ α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 theorem to_lex_symm_eq : (@toLex α).symm = ofLex :=

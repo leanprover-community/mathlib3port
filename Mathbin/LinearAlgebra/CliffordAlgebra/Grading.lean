@@ -17,7 +17,7 @@ The main result is `clifford_algebra.graded_algebra`, which says that the cliffo
 
 namespace CliffordAlgebra
 
-variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable {Q : QuadraticForm R M}
 
@@ -31,12 +31,12 @@ def evenOdd (i : Zmod 2) : Submodule R (CliffordAlgebra Q) :=
   ⨆ j : { n : ℕ // ↑n = i }, (ι Q).range ^ (j : ℕ)
 
 theorem one_le_even_odd_zero : 1 ≤ evenOdd Q 0 := by
-  refine' le_transₓ _ (le_supr _ ⟨0, Nat.cast_zeroₓ⟩)
-  exact (pow_zeroₓ _).Ge
+  refine' le_trans _ (le_supr _ ⟨0, Nat.cast_zero⟩)
+  exact (pow_zero _).ge
 
 theorem range_ι_le_even_odd_one : (ι Q).range ≤ evenOdd Q 1 := by
-  refine' le_transₓ _ (le_supr _ ⟨1, Nat.cast_oneₓ⟩)
-  exact (pow_oneₓ _).Ge
+  refine' le_trans _ (le_supr _ ⟨1, Nat.cast_one⟩)
+  exact (pow_one _).ge
 
 theorem ι_mem_even_odd_one (m : M) : ι Q m ∈ evenOdd Q 1 :=
   range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m
@@ -54,13 +54,13 @@ theorem even_odd_mul_le (i j : Zmod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q
   obtain ⟨x, y, hx, hy, rfl⟩ := hz
   obtain ⟨xi, hx'⟩ := set.mem_Union.mp hx
   obtain ⟨yi, hy'⟩ := set.mem_Union.mp hy
-  refine' set.mem_Union.mpr ⟨⟨xi + yi, by simp only [Nat.cast_addₓ, xi.prop, yi.prop]⟩, _⟩
-  simp only [Subtype.coe_mk, Nat.cast_addₓ, pow_addₓ]
+  refine' set.mem_Union.mpr ⟨⟨xi + yi, by simp only [Nat.cast_add, xi.prop, yi.prop]⟩, _⟩
+  simp only [Subtype.coe_mk, Nat.cast_add, pow_add]
   exact Submodule.mul_mem_mul hx' hy'
 
 instance evenOdd.graded_monoid : SetLike.GradedMonoid (evenOdd Q) where
   one_mem := Submodule.one_le.mp (one_le_even_odd_zero Q)
-  mul_mem := fun i j p q hp hq => Submodule.mul_le.mp (even_odd_mul_le Q _ _) _ hp _ hq
+  mul_mem i j p q hp hq := Submodule.mul_le.mp (even_odd_mul_le Q _ _) _ hp _ hq
 
 /-- A version of `clifford_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `clifford_algebra.graded_algebra`. -/
@@ -83,7 +83,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
   refine' Submodule.supr_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
   · obtain ⟨i, rfl⟩ := i
     dsimp only [Subtype.coe_mk] at hx
-    refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
+    refine' Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
       
@@ -94,7 +94,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.of_mul_of]
       refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext _ _) <;>
         dsimp only [GradedMonoid.mk, Subtype.coe_mk]
-      · rw [Nat.succ_eq_add_one, add_commₓ, Nat.cast_addₓ, Nat.cast_oneₓ]
+      · rw [Nat.succ_eq_add_one, add_comm, Nat.cast_add, Nat.cast_one]
         
       rfl
       
@@ -132,49 +132,49 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
       Function.Surjective.supr_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl
     
 
-theorem even_odd_is_compl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
+theorem evenOddIsCompl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
   (DirectSum.Decomposition.is_internal (evenOdd Q)).IsCompl zero_ne_one <| by
-    have : (Finsetₓ.univ : Finsetₓ (Zmod 2)) = {0, 1} := rfl
-    simpa using congr_arg (coe : Finsetₓ (Zmod 2) → Set (Zmod 2)) this
+    have : (Finset.univ : Finset (Zmod 2)) = {0, 1} := rfl
+    simpa using congr_arg (coe : Finset (Zmod 2) → Set (Zmod 2)) this
 
 /-- To show a property is true on the even or odd part, it suffices to show it is true on the
 scalars or vectors (respectively), closed under addition, and under left-multiplication by a pair
 of vectors. -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem even_odd_induction (n : Zmod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     (hr : ∀ (v) (h : v ∈ (ι Q).range ^ n.val), P v (Submodule.mem_supr_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},
-        P x hx → P (ι Q m₁ * ι Q m₂ * x) (zero_addₓ n ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
+        P x hx → P (ι Q m₁ * ι Q m₂ * x) (zero_add n ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q n) : P x hx := by
   apply Submodule.supr_induction' _ _ (hr 0 (Submodule.zero_mem _)) @hadd
   refine' Subtype.rec _
-  simp_rw [Subtype.coe_mk, Zmod.nat_coe_zmod_eq_iff, add_commₓ n.val]
+  simp_rw [Subtype.coe_mk, Zmod.nat_coe_zmod_eq_iff, add_comm n.val]
   rintro n' ⟨k, rfl⟩ xv
-  simp_rw [pow_addₓ, pow_mulₓ]
-  refine' Submodule.mul_induction_on' _ _
+  simp_rw [pow_add, pow_mul]
+  refine' Submodule.mulInductionOn' _ _
   · intro a ha b hb
-    refine' Submodule.pow_induction_on_left' ((ι Q).range ^ 2) _ _ _ ha
+    refine' Submodule.powInductionOnLeft' ((ι Q).range ^ 2) _ _ _ ha
     · intro r
       simp_rw [← Algebra.smul_def]
       exact hr _ (Submodule.smul_mem _ _ hb)
       
     · intro x y n hx hy
-      simp_rw [add_mulₓ]
+      simp_rw [add_mul]
       apply hadd
       
     · intro x hx n y hy ihy
       revert hx
       simp_rw [pow_two]
-      refine' Submodule.mul_induction_on' _ _
+      refine' Submodule.mulInductionOn' _ _
       · simp_rw [LinearMap.mem_range]
         rintro _ ⟨m₁, rfl⟩ _ ⟨m₂, rfl⟩
         simp_rw [mul_assoc _ y b]
         refine' hιι_mul _ _ ihy
         
       · intro x hx y hy ihx ihy
-        simp_rw [add_mulₓ]
+        simp_rw [add_mul]
         apply hadd ihx ihy
         
       
@@ -185,32 +185,32 @@ theorem even_odd_induction (n : Zmod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
 
 /-- To show a property is true on the even parts, it suffices to show it is true on the
 scalars, closed under addition, and under left-multiplication by a pair of vectors. -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem even_induction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
     (hr : ∀ r : R, P (algebraMap _ _ r) (SetLike.algebra_map_mem_graded _ _))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},
-        P x hx → P (ι Q m₁ * ι Q m₂ * x) (zero_addₓ 0 ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
+        P x hx → P (ι Q m₁ * ι Q m₂ * x) (zero_add 0 ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q 0) : P x hx := by
   refine' even_odd_induction Q 0 (fun rx => _) (@hadd) hιι_mul x hx
-  simp_rw [Zmod.val_zero, pow_zeroₓ]
+  simp_rw [Zmod.val_zero, pow_zero]
   rintro ⟨r, rfl⟩
   exact hr r
 
 /-- To show a property is true on the odd parts, it suffices to show it is true on the
 vectors, closed under addition, and under left-multiplication by a pair of vectors. -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem odd_induction {P : ∀ x, x ∈ evenOdd Q 1 → Prop} (hι : ∀ v, P (ι Q v) (ι_mem_even_odd_one _ _))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},
         P x hx →
           P (ι Q m₁ * ι Q m₂ * x)
-            (zero_addₓ (1 : Zmod 2) ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
+            (zero_add (1 : Zmod 2) ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q 1) : P x hx := by
   refine' even_odd_induction Q 1 (fun ιv => _) (@hadd) hιι_mul x hx
-  simp_rw [Zmod.val_one, pow_oneₓ]
+  simp_rw [Zmod.val_one, pow_one]
   rintro ⟨v, rfl⟩
   exact hι v
 

@@ -16,10 +16,10 @@ universe u u' v w z
 whose rows are indexed by the fintype `m` and
 whose columns are indexed by the fintype `n`. -/
 @[nolint unused_arguments]
-def Dmatrix (m : Type u) (n : Type u') [Fintypeₓ m] [Fintypeₓ n] (α : m → n → Type v) : Type max u u' v :=
+def Dmatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n → Type v) : Type max u u' v :=
   ∀ i j, α i j
 
-variable {l m n o : Type _} [Fintypeₓ l] [Fintypeₓ m] [Fintypeₓ n] [Fintypeₓ o]
+variable {l m n o : Type _} [Fintype l] [Fintype m] [Fintype n] [Fintype o]
 
 variable {α : m → n → Type v}
 
@@ -52,19 +52,37 @@ theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n →
   ext
   simp
 
+/- warning: dmatrix.transpose -> Dmatrix.transpose is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2 u_3 v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3 u_2 v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
+but is expected to have type
+  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2 u_3 v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3 u_2 v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
+Case conversion may be inaccurate. Consider using '#align dmatrix.transpose Dmatrix.transposeₓ'. -/
 /-- The transpose of a dmatrix. -/
-def transposeₓ (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
+def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
   | x, y => M y x
 
 -- mathport name: dmatrix.transpose
-localized [Dmatrix] postfix:1024 "ᵀ" => Dmatrix.transposeₓ
+localized [Dmatrix] postfix:1024 "ᵀ" => Dmatrix.transpose
 
+/- warning: dmatrix.col -> Dmatrix.col is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2 0 v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
+but is expected to have type
+  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2 0 v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
+Case conversion may be inaccurate. Consider using '#align dmatrix.col Dmatrix.colₓ'. -/
 /-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
-def colₓ {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
+def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
   | x, y => w x
 
+/- warning: dmatrix.row -> Dmatrix.row is a dubious translation:
+lean 3 declaration is
+  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0 u_3 v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
+but is expected to have type
+  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0 u_3 v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
+Case conversion may be inaccurate. Consider using '#align dmatrix.row Dmatrix.rowₓ'. -/
 /-- `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
-def rowₓ {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
+def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
   | x, y => v y
 
 instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
@@ -73,19 +91,19 @@ instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
 instance [∀ i j, Add (α i j)] : Add (Dmatrix m n α) :=
   Pi.hasAdd
 
-instance [∀ i j, AddSemigroupₓ (α i j)] : AddSemigroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddSemigroup (α i j)] : AddSemigroup (Dmatrix m n α) :=
   Pi.addSemigroup
 
-instance [∀ i j, AddCommSemigroupₓ (α i j)] : AddCommSemigroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddCommSemigroup (α i j)] : AddCommSemigroup (Dmatrix m n α) :=
   Pi.addCommSemigroup
 
 instance [∀ i j, Zero (α i j)] : Zero (Dmatrix m n α) :=
   Pi.hasZero
 
-instance [∀ i j, AddMonoidₓ (α i j)] : AddMonoidₓ (Dmatrix m n α) :=
+instance [∀ i j, AddMonoid (α i j)] : AddMonoid (Dmatrix m n α) :=
   Pi.addMonoid
 
-instance [∀ i j, AddCommMonoidₓ (α i j)] : AddCommMonoidₓ (Dmatrix m n α) :=
+instance [∀ i j, AddCommMonoid (α i j)] : AddCommMonoid (Dmatrix m n α) :=
   Pi.addCommMonoid
 
 instance [∀ i j, Neg (α i j)] : Neg (Dmatrix m n α) :=
@@ -94,10 +112,10 @@ instance [∀ i j, Neg (α i j)] : Neg (Dmatrix m n α) :=
 instance [∀ i j, Sub (α i j)] : Sub (Dmatrix m n α) :=
   Pi.hasSub
 
-instance [∀ i j, AddGroupₓ (α i j)] : AddGroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddGroup (α i j)] : AddGroup (Dmatrix m n α) :=
   Pi.addGroup
 
-instance [∀ i j, AddCommGroupₓ (α i j)] : AddCommGroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddCommGroup (α i j)] : AddCommGroup (Dmatrix m n α) :=
   Pi.addCommGroup
 
 instance [∀ i j, Unique (α i j)] : Unique (Dmatrix m n α) :=
@@ -128,13 +146,12 @@ theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Ze
   ext
   simp [h]
 
-theorem map_add [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
-    (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
-    ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by
+theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
+    (M N : Dmatrix m n α) : ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by
   ext
   simp
 
-theorem map_sub [∀ i j, AddGroupₓ (α i j)] {β : m → n → Type w} [∀ i j, AddGroupₓ (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
+theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
     (M N : Dmatrix m n α) : ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by
   ext
   simp
@@ -153,14 +170,14 @@ end Dmatrix
 
 /-- The `add_monoid_hom` between spaces of dependently typed matrices
 induced by an `add_monoid_hom` between their coefficients. -/
-def AddMonoidHom.mapDmatrix [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
+def AddMonoidHom.mapDmatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β where
-  toFun := fun M => M.map fun i j => @f i j
+  toFun M := M.map fun i j => @f i j
   map_zero' := by simp
   map_add' := Dmatrix.map_add f
 
 @[simp]
-theorem AddMonoidHom.map_dmatrix_apply [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
+theorem AddMonoidHom.map_dmatrix_apply [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : Dmatrix m n α) : AddMonoidHom.mapDmatrix f M = M.map fun i j => @f i j :=
   rfl
 

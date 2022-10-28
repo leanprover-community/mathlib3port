@@ -32,6 +32,8 @@ the input expression). An `rcases` pattern has the following grammar:
   of nested conjunctions or existentials. For example if the active hypothesis is `a ∧ b ∧ c`,
   then the conjunction will be destructured, and `p1` will be matched against `a`, `p2` against `b`
   and so on.
+* A `@` before a tuple pattern as in `@⟨p1, p2, p3⟩` will bind all arguments in the constructor,
+  while leaving the `@` off will only use the patterns on the explicit arguments.
 * An alteration pattern `p1 | p2 | p3`, which matches an inductive type with multiple constructors,
   or a nested disjunction like `a ∨ b ∨ c`.
 
@@ -122,6 +124,7 @@ type with 3 constructors,  `p1 | (p2 | p3)` will act like `p1 | (p2 | p3) | _` i
 unsafe inductive rcases_patt : Type
   | one : Name → rcases_patt
   | clear : rcases_patt
+  | explicit : rcases_patt → rcases_patt
   | typed : rcases_patt → pexpr → rcases_patt
   | tuple : listΠ rcases_patt → rcases_patt
   | alts : listΣ rcases_patt → rcases_patt
@@ -136,15 +139,17 @@ unsafe def name : rcases_patt → Option Name
   | one `_ => none
   | one `rfl => none
   | one n => some n
+  | explicit p => p.Name
   | typed p _ => p.Name
   | alts [p] => p.Name
   | _ => none
 
 /-- Interpret an rcases pattern as a tuple, where `p` becomes `⟨p⟩`
 if `p` is not already a tuple. -/
-unsafe def as_tuple : rcases_patt → listΠ rcases_patt
-  | tuple ps => ps
-  | p => [p]
+unsafe def as_tuple : rcases_patt → Bool × listΠ rcases_patt
+  | explicit p => (true, (as_tuple p).2)
+  | tuple ps => (false, ps)
+  | p => (false, [p])
 
 /-- Interpret an rcases pattern as an alternation, where non-alternations are treated as one
 alternative. -/
@@ -207,6 +212,7 @@ unsafe def alts₁ : listΣ (listΠ rcases_patt) → rcases_patt
 unsafe instance has_reflect : has_reflect rcases_patt
   | one n => quote.1 _
   | clear => quote.1 _
+  | explicit l => (quote.1 explicit).subst (has_reflect l)
   | typed l e => ((quote.1 typed).subst (has_reflect l)).subst (reflect e)
   | tuple l =>
     (quote.1 fun l => tuple l).subst <|
@@ -223,6 +229,9 @@ or atomic name. -/
 protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.format
   | _, one n => pure <| to_fmt n
   | _, clear => pure "-"
+  | _, explicit p => do
+    let f ← format true p
+    pure <| "@" ++ f
   | _, tuple [] => pure "⟨⟩"
   | _, tuple ls => do
     let fs ← ls.mmap <| format false
@@ -251,19 +260,42 @@ end RcasesPatt
 constructor. The `name` is the name which will be used in the top-level `cases` tactic, and the
 `rcases_patt` is the pattern which the field will be matched against by subsequent `cases`
 tactics. -/
-unsafe def rcases.process_constructor : Nat → listΠ rcases_patt → listΠ Name × listΠ rcases_patt
-  | 0, ps => ([], [])
-  | 1, [] => ([`_], [default])
-  | 1, [p] => ([p.Name.getOrElse `_], [p])
-  |-- The interesting case: we matched the last field against multiple
-    -- patterns, so split off the remaining patterns into a subsequent
-    -- match. This handles matching `α × β × γ` against `⟨a, b, c⟩`.
-    1,
-    ps => ([`_], [rcases_patt.tuple ps])
-  | n + 1, ps =>
-    let hd := ps.head
-    let (ns, tl) := rcases.process_constructor n ps.tail
-    (hd.Name.getOrElse `_ :: ns, hd :: tl)
+unsafe def rcases.process_constructor : Bool → List BinderInfo → listΠ rcases_patt → listΠ Name × listΠ rcases_patt
+  | _, [], ps => ([], [])
+  | explicit, bi :: l, ps =>
+    if !explicit && bi ≠ BinderInfo.default then
+      let (ns, tl) := rcases.process_constructor explicit l ps
+      (`_ :: ns, default :: tl)
+    else
+      match l, ps with
+      | [], [] => ([`_], [default])
+      | [], [p] => ([p.Name.getOrElse `_], [p])
+      |-- The interesting case: we matched the last field against multiple
+        -- patterns, so split off the remaining patterns into a subsequent
+        -- match. This handles matching `α × β × γ` against `⟨a, b, c⟩`.
+        [],
+        ps => ([`_], [cond explicit (rcases_patt.tuple ps).explicit (rcases_patt.tuple ps)])
+      | l, ps =>
+        let hd := ps.head
+        let (ns, tl) := rcases.process_constructor explicit l ps.tail
+        (hd.Name.getOrElse `_ :: ns, hd :: tl)
+
+private unsafe def get_pi_arity_list_aux : expr → tactic (List BinderInfo)
+  | expr.pi n bi d b => do
+    let m ← mk_fresh_name
+    let l := expr.local_const m n bi d
+    let new_b ← whnf (expr.instantiate_var b l)
+    let r ← get_pi_arity_list_aux new_b
+    return (bi :: r)
+  | e => return []
+
+/-- Compute the arity of the given (Pi-)type -/
+unsafe def get_pi_arity_list (type : expr) : tactic (List BinderInfo) :=
+  whnf type >>= get_pi_arity_list_aux
+
+/-- Compute the arity of the given function -/
+unsafe def get_arity_list (fn : expr) : tactic (List BinderInfo) :=
+  infer_type fn >>= get_pi_arity_list
 
 /-- Takes a list of constructor names, and an (alternation) list of patterns, and matches each
 pattern against its constructor. It returns the list of names that will be passed to `cases`,
@@ -273,17 +305,17 @@ unsafe def rcases.process_constructors (params : Nat) :
     listΣ Name → listΣ rcases_patt → tactic (Dlist Name × listΣ (Name × listΠ rcases_patt))
   | [], ps => pure (Dlist.empty, [])
   | c :: cs, ps => do
-    let n ← mk_const c >>= get_arity
-    let (h, t) :=
+    let l ← mk_const c >>= get_arity_list
+    let ((explicit, h), t) :=
       (match cs, ps.tail with
       |-- We matched the last constructor against multiple patterns,
         -- so split off the remaining constructors. This handles matching
         -- `α ⊕ β ⊕ γ` against `a|b|c`.
         [],
-        _ :: _ => ([rcases_patt.alts ps], [])
+        _ :: _ => ((false, [rcases_patt.alts ps]), [])
       | _, _ => (ps.head.as_tuple, ps.tail) :
         _)
-    let (ns, ps) := rcases.process_constructor (n - params) h
+    let (ns, ps) := rcases.process_constructor explicit (l.drop params) h
     let (l, r) ← rcases.process_constructors cs t
     pure (Dlist.ofList ns ++ l, (c, ps) :: r)
 
@@ -442,7 +474,7 @@ unsafe def rcases (h : Option Name) (p : pexpr) (pat : rcases_patt) : tactic Uni
 name the arising new variables and assumptions.
 See the module comment for the syntax of `pat`. -/
 unsafe def rcases_many (ps : listΠ pexpr) (pat : rcases_patt) : tactic Unit := do
-  let (_, pats) := rcases.process_constructor ps.length pat.as_tuple
+  let (_, pats) := rcases.process_constructor false (ps.map fun _ => default) pat.as_tuple.2
   let pes ←
     (ps.zip pats).mmap fun ⟨p, pat⟩ => do
         let p :=
@@ -493,8 +525,10 @@ then we return `c` because we don't know that a case on `c` would be safe to do.
 unsafe def rcases_patt.merge : rcases_patt → rcases_patt → rcases_patt
   | rcases_patt.alts p₁, p₂ => rcases_patt.alts (mergeList rcases_patt.merge p₁ p₂.as_alts)
   | p₁, rcases_patt.alts p₂ => rcases_patt.alts (mergeList rcases_patt.merge p₁.as_alts p₂)
-  | rcases_patt.tuple p₁, p₂ => rcases_patt.tuple (mergeList rcases_patt.merge p₁ p₂.as_tuple)
-  | p₁, rcases_patt.tuple p₂ => rcases_patt.tuple (mergeList rcases_patt.merge p₁.as_tuple p₂)
+  | rcases_patt.explicit p₁, p₂ => rcases_patt.explicit (p₁.merge p₂)
+  | p₁, rcases_patt.explicit p₂ => rcases_patt.explicit (p₁.merge p₂)
+  | rcases_patt.tuple p₁, p₂ => rcases_patt.tuple (mergeList rcases_patt.merge p₁ p₂.as_tuple.2)
+  | p₁, rcases_patt.tuple p₂ => rcases_patt.tuple (mergeList rcases_patt.merge p₁.as_tuple.2 p₂)
   | rcases_patt.typed p₁ e, p₂ => rcases_patt.typed (p₁.merge p₂) e
   | p₁, rcases_patt.typed p₂ e => rcases_patt.typed (p₁.merge p₂) e
   | rcases_patt.one `rfl, rcases_patt.one `rfl => rcases_patt.one `rfl
@@ -519,29 +553,30 @@ mutual
     patterns `ps` are an output instead of an input, created by matching on everything to depth
     `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
   -/
-  unsafe def rcases_hint_core : ℕ → expr → tactic (rcases_patt × List expr)
-    | depth, e => do
+  unsafe def rcases_hint_core (explicit : Bool) : Bool → ℕ → expr → tactic (Option rcases_patt × List expr)
+    | force, depth, e => do
       let (t, e) ← get_local_and_type e
+      let tt ← pure (explicit || force || e.local_binding_info = BinderInfo.default) | Prod.mk none <$> get_goals
       let t ← whnf t
       let env ← get_env
       let I := t.get_app_fn.const_name
       (do
-            guardₓ (I = `` Eq)
+            guard (I = `` Eq)
             subst' e
-            Prod.mk (rcases_patt.one `rfl) <$> get_goals) <|>
+            Prod.mk (some (rcases_patt.one `rfl)) <$> get_goals) <|>
           do
           let c := env I
-          let some l ← try_core (guardₓ (depth ≠ 0) >> cases_core e) |
+          let some l ← try_core (guard (depth ≠ 0) >> cases_core e) |
             let n :=
                 match e with
                 | Name.anonymous => `_
                 | n => n
-              Prod.mk (rcases_patt.one n) <$> get_goals
+              Prod.mk (some (rcases_patt.one n)) <$> get_goals
           let gs ← get_goals
-          if gs then pure (rcases_patt.tuple [], [])
+          if gs then pure (some (rcases_patt.tuple []), [])
             else do
               let (ps, gs') ← rcases_hint.process_constructors (depth - 1) c (gs l)
-              pure (rcases_patt.alts₁ ps, gs')
+              pure (some (rcases_patt.alts₁ ps), gs')
   /-- * `rcases_hint_core depth e` does the same as `rcases p e`, except the pattern `p` is an output
     instead of an input, controlled only by the case depth argument `depth`. We use `cases` to depth
     `depth` and then reconstruct an `rcases` pattern `p` that would, if passed to `rcases`, perform
@@ -556,7 +591,7 @@ mutual
     patterns `ps` are an output instead of an input, created by matching on everything to depth
     `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
   -/
-  unsafe def rcases_hint.process_constructors :
+  unsafe def rcases_hint.process_constructors (explicit : Bool) :
       ℕ →
         listΣ Name →
           List (expr × Name × listΠ expr × List (Name × expr)) → tactic (listΣ (listΠ rcases_patt) × List expr)
@@ -584,17 +619,21 @@ mutual
     patterns `ps` are an output instead of an input, created by matching on everything to depth
     `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
   -/
-  unsafe def rcases_hint.continue : ℕ → listΠ expr → tactic (listΠ rcases_patt × List expr)
+  unsafe def rcases_hint.continue (explicit : Bool) : ℕ → listΠ expr → tactic (listΠ rcases_patt × List expr)
     | depth, [] => Prod.mk [] <$> get_goals
     | depth, e :: es => do
-      let (p, gs) ← rcases_hint_core depth e
+      let (p, gs) ← rcases_hint_core false depth e
       let (ps, gs') ←
         gs.mfoldl
             (fun (r : listΠ rcases_patt × List expr) g => do
               let (ps, gs') ← set_goals [g] >> rcases_hint.continue depth es
               pure (merge_list rcases_patt.merge r.1 ps, r.2 ++ gs'))
             ([], [])
-      pure (p :: ps, gs')
+      pure
+          (match p with
+          | none => ps
+          | some p => p :: ps,
+            gs')
 end
 
 /-- * `rcases? e` is like `rcases e with ...`, except it generates `...` by matching on everything it
@@ -605,9 +644,9 @@ unsafe def rcases_hint (p : pexpr) (depth : Nat) : tactic rcases_patt := do
   let e ← i_to_expr p
   if e then
       focus1 <| do
-        let (p, gs) ← rcases_hint_core depth e
+        let (p, gs) ← rcases_hint_core ff tt depth e
         set_goals gs
-        pure p
+        pure (p default)
     else do
       let x ← mk_fresh_name
       let n ← revert_kdependencies e semireducible
@@ -618,9 +657,9 @@ unsafe def rcases_hint (p : pexpr) (depth : Nat) : tactic rcases_patt := do
           pure ()
       let h ← tactic.intro1
       focus1 <| do
-          let (p, gs) ← rcases_hint_core depth h
+          let (p, gs) ← rcases_hint_core ff tt depth h
           set_goals gs
-          pure p
+          pure (p default)
 
 /-- * `rcases? ⟨e1, e2, e3⟩` is like `rcases ⟨e1, e2, e3⟩ with ...`, except it
   generates `...` by matching on everything it can, and it outputs an `rcases`
@@ -643,7 +682,7 @@ unsafe def rcases_hint_many (ps : List pexpr) (depth : Nat) : tactic (listΠ rca
                 pure ()
             tactic.intro1
   focus1 <| do
-      let (ps, gs) ← rcases_hint.continue depth es
+      let (ps, gs) ← rcases_hint.continue ff depth es
       set_goals gs
       pure ps
 
@@ -654,7 +693,7 @@ recursive types like `nat`, which can be cased as many times as you like). -/
 unsafe def rintro_hint (depth : Nat) : tactic (listΠ rcases_patt) := do
   let l ← intros
   focus1 <| do
-      let (p, gs) ← rcases_hint.continue depth l
+      let (p, gs) ← rcases_hint.continue ff depth l
       set_goals gs
       pure p
 
@@ -676,14 +715,15 @@ mutual
   ```lean
   patt ::= patt_med (":" expr)?
   patt_med ::= (patt_hi "|")* patt_hi
-  patt_hi ::= id | "rfl" | "_" | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
+  patt_hi ::= id | "rfl" | "_" | "@" patt_hi | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
   ```
   -/
   unsafe def rcases_patt_parse_hi' : parser rcases_patt
     | x =>
       (brackets "(" ")" rcases_patt_parse' <|>
           rcases_patt.tuple <$> brackets "⟨" "⟩" (sep_by (tk ",") rcases_patt_parse') <|>
-            tk "-" $> rcases_patt.clear <|> rcases_patt.one <$> ident_)
+            tk "-" $> rcases_patt.clear <|>
+              tk "@" *> rcases_patt.explicit <$> rcases_patt_parse_hi' <|> rcases_patt.one <$> ident_)
         x
   /-- * `rcases_patt_parse_hi` will parse a high precedence `rcases` pattern, `patt_hi`.
     This means only tuples and identifiers are allowed; alternations and type ascriptions
@@ -700,7 +740,7 @@ mutual
   ```lean
   patt ::= patt_med (":" expr)?
   patt_med ::= (patt_hi "|")* patt_hi
-  patt_hi ::= id | "rfl" | "_" | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
+  patt_hi ::= id | "rfl" | "_" | "@" patt_hi | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
   ```
   -/
   unsafe def rcases_patt_parse' : parser rcases_patt
@@ -724,7 +764,7 @@ mutual
   ```lean
   patt ::= patt_med (":" expr)?
   patt_med ::= (patt_hi "|")* patt_hi
-  patt_hi ::= id | "rfl" | "_" | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
+  patt_hi ::= id | "rfl" | "_" | "@" patt_hi | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
   ```
   -/
   unsafe def rcases_patt_parse_list' : parser (listΣ rcases_patt)
@@ -744,7 +784,7 @@ mutual
   ```lean
   patt ::= patt_med (":" expr)?
   patt_med ::= (patt_hi "|")* patt_hi
-  patt_hi ::= id | "rfl" | "_" | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
+  patt_hi ::= id | "rfl" | "_" | "@" patt_hi | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
   ```
   -/
   unsafe def rcases_patt_parse_list_rest : rcases_patt → parser (listΣ rcases_patt)
@@ -760,7 +800,7 @@ end
 This means only tuples and identifiers are allowed; alternations and type ascriptions
 require `(...)` instead, which switches to `patt`.
 ```lean
-patt_hi ::= id | "rfl" | "_" | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
+patt_hi ::= id | "rfl" | "_" | "@" patt_hi | "⟨" (patt ",")* patt "⟩" | "(" patt ")"
 ```
 -/
 unsafe def rcases_patt_parse_hi :=
@@ -787,7 +827,7 @@ patt_med ::= (patt_hi "|")* patt_hi
 unsafe def rcases_patt_parse_list :=
   with_desc "patt_med" rcases_patt_parse_list'
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← parser.optional (tk ":" *> small_nat)
@@ -805,8 +845,8 @@ unsafe inductive rcases_args
   | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)
   deriving has_reflect
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
@@ -832,7 +872,7 @@ unsafe def rcases_parse : parser rcases_args :=
         let depth ← rcases_parse_depth
         pure <| rcases_args.hint p depth
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 mutual
   /-- `rintro_patt_parse_hi` and `rintro_patt_parse` are like `rcases_patt_parse`, but is used for
   parsing top level `rintro` patterns, which allow sequences like `(x y : t)` in addition to simple
@@ -956,6 +996,8 @@ the input expression). An `rcases` pattern has the following grammar:
   of nested conjunctions or existentials. For example if the active hypothesis is `a ∧ b ∧ c`,
   then the conjunction will be destructured, and `p1` will be matched against `a`, `p2` against `b`
   and so on.
+* A `@` before a tuple pattern as in `@⟨p1, p2, p3⟩` will bind all arguments in the constructor,
+  while leaving the `@` off will only use the patterns on the explicit arguments.
 * An alteration pattern `p1 | p2 | p3`, which matches an inductive type with multiple constructors,
   or a nested disjunction like `a ∨ b ∨ c`.
 
@@ -1033,8 +1075,8 @@ add_tactic_doc
     declNames := [`tactic.interactive.rintro, `tactic.interactive.rintros], tags := ["induction"],
     inheritDescriptionFrom := `tactic.interactive.rintro }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/
@@ -1051,7 +1093,7 @@ unsafe def obtain_parse : parser ((Option rcases_patt × Option pexpr) × Option
     Prod.mk (pat, tp) <$>
         parser.optional do
           tk ":="
-          guardₓ tp >> Sum.inr <$> brackets "⟨" "⟩" (sep_by (tk ",") (parser.pexpr 0)) <|> Sum.inl <$> texpr
+          guard tp >> Sum.inr <$> brackets "⟨" "⟩" (sep_by (tk ",") (parser.pexpr 0)) <|> Sum.inl <$> texpr
 
 /-- The `obtain` tactic is a combination of `have` and `rcases`. See `rcases` for
 a description of supported patterns.

@@ -34,12 +34,12 @@ variable {ι₁ ι₂ : Type _}
 
 namespace LinearMap
 
-section Semiringₓ
+section Semiring
 
 -- the `ₗ` subscript variables are for special cases about linear (as opposed to semilinear) maps
-variable {R : Type _} [Semiringₓ R] {S : Type _} [Semiringₓ S]
+variable {R : Type _} [Semiring R] {S : Type _} [Semiring S]
 
-variable {R₂ : Type _} [Semiringₓ R₂] {S₂ : Type _} [Semiringₓ S₂]
+variable {R₂ : Type _} [Semiring R₂] {S₂ : Type _} [Semiring S₂]
 
 variable {M : Type _} {N : Type _} {P : Type _}
 
@@ -49,13 +49,13 @@ variable {Nₗ : Type _} {Pₗ : Type _}
 
 variable {M' : Type _} {N' : Type _} {P' : Type _}
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
+variable [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P]
 
-variable [AddCommMonoidₓ M₂] [AddCommMonoidₓ N₂] [AddCommMonoidₓ P₂]
+variable [AddCommMonoid M₂] [AddCommMonoid N₂] [AddCommMonoid P₂]
 
-variable [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ]
+variable [AddCommMonoid Nₗ] [AddCommMonoid Pₗ]
 
-variable [AddCommGroupₓ M'] [AddCommGroupₓ N'] [AddCommGroupₓ P']
+variable [AddCommGroup M'] [AddCommGroup N'] [AddCommGroup P']
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
@@ -78,9 +78,9 @@ See `mk₂'` and `mk₂` for the linear case. -/
 def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n)
     (H2 : ∀ (c : R) (m n), f (c • m) n = ρ₁₂ c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
     (H4 : ∀ (c : S) (m n), f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P where
-  toFun := fun m => { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
-  map_add' := fun m₁ m₂ => LinearMap.ext <| H1 m₁ m₂
-  map_smul' := fun c m => LinearMap.ext <| H2 c m
+  toFun m := { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
+  map_add' m₁ m₂ := LinearMap.ext <| H1 m₁ m₂
+  map_smul' c m := LinearMap.ext <| H2 c m
 
 variable {ρ₁₂ σ₁₂}
 
@@ -156,15 +156,15 @@ theorem map_smul₂ (f : M₂ →ₗ[R] N₂ →ₛₗ[σ₁₂] P₂) (r : R) (
 theorem map_smulₛₗ₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (r : R) (x y) : f (r • x) y = ρ₁₂ r • f x y :=
   (flip f y).map_smulₛₗ _ _
 
-theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (t : Finsetₓ ι) (x : ι → M) (y) :
+theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (t : Finset ι) (x : ι → M) (y) :
     f (∑ i in t, x i) y = ∑ i in t, f (x i) y :=
   (flip f y).map_sum
 
 /-- Restricting a bilinear map in the second entry -/
 def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) : M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P where
-  toFun := fun m => (f m).domRestrict q
-  map_add' := fun m₁ m₂ => LinearMap.ext fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
-  map_smul' := fun c m => LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
+  toFun m := (f m).domRestrict q
+  map_add' m₁ m₂ := LinearMap.ext fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
+  map_smul' c m := LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
 
 theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
     f.domRestrict₂ q x y = f x y :=
@@ -178,23 +178,23 @@ theorem dom_restrict₁₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂
     f.domRestrict₁₂ p q x y = f x y :=
   rfl
 
-end Semiringₓ
+end Semiring
 
-section CommSemiringₓ
+section CommSemiring
 
-variable {R : Type _} [CommSemiringₓ R] {R₂ : Type _} [CommSemiringₓ R₂]
+variable {R : Type _} [CommSemiring R] {R₂ : Type _} [CommSemiring R₂]
 
-variable {R₃ : Type _} [CommSemiringₓ R₃] {R₄ : Type _} [CommSemiringₓ R₄]
+variable {R₃ : Type _} [CommSemiring R₃] {R₄ : Type _} [CommSemiring R₄]
 
 variable {M : Type _} {N : Type _} {P : Type _} {Q : Type _}
 
 variable {Mₗ : Type _} {Nₗ : Type _} {Pₗ : Type _} {Qₗ Qₗ' : Type _}
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P] [AddCommMonoidₓ Q]
+variable [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
 
-variable [AddCommMonoidₓ Mₗ] [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ]
+variable [AddCommMonoid Mₗ] [AddCommMonoid Nₗ] [AddCommMonoid Pₗ]
 
-variable [AddCommMonoidₓ Qₗ] [AddCommMonoidₓ Qₗ']
+variable [AddCommMonoid Qₗ] [AddCommMonoid Qₗ']
 
 variable [Module R M] [Module R₂ N] [Module R₃ P] [Module R₄ Q]
 
@@ -227,8 +227,8 @@ variable (R M N P)
 change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
 def lflip : (M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P) →ₗ[R₃] N →ₛₗ[σ₂₃] M →ₛₗ[σ₁₃] P where
   toFun := flip
-  map_add' := fun _ _ => rfl
-  map_smul' := fun _ _ => rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 variable {R M N P}
 
@@ -361,21 +361,21 @@ variable {R M}
 theorem lsmul_apply (r : R) (m : M) : lsmul R M r m = r • m :=
   rfl
 
-end CommSemiringₓ
+end CommSemiring
 
-section CommRingₓ
+section CommRing
 
 variable {R R₂ S S₂ M N P : Type _}
 
 variable {Mₗ Nₗ Pₗ : Type _}
 
-variable [CommRingₓ R] [CommRingₓ S] [CommRingₓ R₂] [CommRingₓ S₂]
+variable [CommRing R] [CommRing S] [CommRing R₂] [CommRing S₂]
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
+variable [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P]
 
-variable [AddCommMonoidₓ Mₗ] [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ]
+variable [AddCommMonoid Mₗ] [AddCommMonoid Nₗ] [AddCommMonoid Pₗ]
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
@@ -407,11 +407,11 @@ theorem sum_repr_mul_repr_mul {B : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} (x y) :
   conv_rhs => rw [← b₁'.total_repr x, ← b₂'.total_repr y]
   simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smul₂, LinearMap.map_smul]
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P]
+variable [AddCommGroup M] [AddCommGroup N] [AddCommGroup P]
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
@@ -421,9 +421,9 @@ theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) : Functi
 theorem ker_lsmul [NoZeroSmulDivisors R M] {a : R} (ha : a ≠ 0) : (LinearMap.lsmul R M a).ker = ⊥ :=
   LinearMap.ker_eq_bot_of_injective (LinearMap.lsmul_injective ha)
 
-end AddCommGroupₓ
+end AddCommGroup
 
-end CommRingₓ
+end CommRing
 
 end LinearMap
 

@@ -21,7 +21,7 @@ namespace WittVector
 
 open MvPolynomial
 
-variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
+variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
@@ -52,17 +52,17 @@ include hp
 
 @[ghost_simps]
 theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) : ghostComponent 0 (verschiebungFun x) = 0 := by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finsetₓ.range_one, Finsetₓ.sum_singleton,
-    verschiebung_fun_coeff_zero, pow_zeroₓ, pow_zeroₓ, pow_oneₓ, one_mulₓ]
+  rw [ghost_component_apply, aeval_witt_polynomial, Finset.range_one, Finset.sum_singleton, verschiebung_fun_coeff_zero,
+    pow_zero, pow_zero, pow_one, one_mul]
 
 @[ghost_simps]
 theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
     ghostComponent (n + 1) (verschiebungFun x) = p * ghostComponent n x := by
   simp only [ghost_component_apply, aeval_witt_polynomial]
-  rw [Finsetₓ.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zeroₓ,
-    Finsetₓ.mul_sum, Finsetₓ.sum_congr rfl]
+  rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zero,
+    Finset.mul_sum, Finset.sum_congr rfl]
   rintro i -
-  simp only [pow_succₓ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i), Nat.succ_sub_succ, tsub_zero]
+  simp only [pow_succ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i), Nat.succ_sub_succ, tsub_zero]
 
 omit hp
 
@@ -90,7 +90,7 @@ variable (p)
 /-- `witt_vector.verschiebung` has polynomial structure given by `witt_vector.verschiebung_poly`.
 -/
 @[is_poly]
-theorem verschiebung_fun_is_poly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr := by
+theorem verschiebungFunIsPoly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr := by
   use verschiebung_poly
   simp only [aeval_verschiebung_poly', eq_self_iff_true, forall_3_true_iff]
 
@@ -114,8 +114,8 @@ omit hp
 
 /-- `witt_vector.verschiebung` is a polynomial function. -/
 @[is_poly]
-theorem verschiebung_is_poly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :=
-  verschiebung_fun_is_poly p
+theorem verschiebungIsPoly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :=
+  verschiebungFunIsPoly p
 
 include hp
 

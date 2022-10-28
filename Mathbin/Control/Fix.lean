@@ -42,13 +42,13 @@ variable (f : (∀ a, Part <| β a) → ∀ a, Part <| β a)
 
 /-- A series of successive, finite approximation of the fixed point of `f`, defined by
 `approx f n = f^[n] ⊥`. The limit of this chain is the fixed point of `f`. -/
-def Fix.approx : Streamₓ <| ∀ a, Part <| β a
+def Fix.approx : Stream <| ∀ a, Part <| β a
   | 0 => ⊥
   | Nat.succ i => f (fix.approx i)
 
 /-- loop body for finding the fixed point of `f` -/
 def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) : ∀ a, Part <| β a :=
-  f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_selfₓ _) x
+  f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_self _) x
 
 /-- The least fixed point of `f`.
 
@@ -62,11 +62,11 @@ protected def fix (x : α) : Part <| β x :=
   (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
 
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
-    Part.fix f x = Fix.approx f (Nat.succ <| Nat.findₓ h') x := by
+    Part.fix f x = Fix.approx f (Nat.succ <| Nat.find h') x := by
   let p := fun i : ℕ => (fix.approx f i x).Dom
-  have : p (Nat.findₓ h') := Nat.find_specₓ h'
-  generalize hk : Nat.findₓ h' = k
-  replace hk : Nat.findₓ h' = k + (@upto.zero p).val := hk
+  have : p (Nat.find h') := Nat.find_spec h'
+  generalize hk : Nat.find h' = k
+  replace hk : Nat.find h' = k + (@upto.zero p).val := hk
   rw [hk] at this
   revert hk
   dsimp [Part.fix]
@@ -89,10 +89,10 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     congr
     ext : 1
     have hh : ¬(fix.approx f z.val x).Dom := by
-      apply Nat.find_minₓ h'
+      apply Nat.find_min h'
       rw [hk, Nat.succ_add, ← Nat.add_succ]
-      apply Nat.lt_of_succ_leₓ
-      apply Nat.le_add_leftₓ
+      apply Nat.lt_of_succ_le
+      apply Nat.le_add_left
     rw [succ_add_eq_succ_add] at this hk
     rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
     

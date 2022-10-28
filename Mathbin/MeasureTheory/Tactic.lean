@@ -37,11 +37,11 @@ unsafe def measurability : user_attribute where
 /- Mark some measurability lemmas already defined in `measure_theory.measurable_space_def` and
 `measure_theory.measure_space_def` -/
 attribute [measurability]
-  measurable_id measurable_id' ae_measurable_id ae_measurable_id' measurable_const ae_measurable_const AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurable_set MeasurableSet.Union MeasurableSet.Inter MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symm_diff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurable_set_eq Finsetₓ.measurable_set MeasurableSpace.measurable_set_top
+  measurableId measurableId' aeMeasurableId aeMeasurableId' measurableConst aeMeasurableConst AeMeasurable.measurableMk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurableSet MeasurableSet.union MeasurableSet.inter MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symmDiff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurableSetEq Finset.measurableSet MeasurableSpace.measurableSetTop
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -61,7 +61,7 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -92,12 +92,12 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | quote.1 (MeasurableSet (%%ₓl)) => failed
     | _ => skip
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/
-unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic Stringₓ) :=
+unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic String) :=
   [(propositional_goal >> tactic.interactive.apply_assumption none { use_exfalso := false }) >>
       pure "apply_assumption {use_exfalso := ff}",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.toString),
@@ -113,7 +113,7 @@ setup_tactic_parser
 /-- Solve goals of the form `measurable f`, `ae_measurable f μ`, `ae_strongly_measurable f μ` or
 `measurable_set s`. `measurability?` reports back the proof term it found.
 -/
-unsafe def measurability (bang : parse <| optionalₓ (tk "!")) (trace : parse <| optionalₓ (tk "?"))
+unsafe def measurability (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }

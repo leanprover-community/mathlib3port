@@ -38,7 +38,7 @@ namespace IsAbsoluteValue
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 
-variable {R : Type _} [CommRingₓ R] (abv : R → 𝕜) [IsAbsoluteValue abv]
+variable {R : Type _} [CommRing R] (abv : R → 𝕜) [IsAbsoluteValue abv]
 
 /-- The uniformity coming from an absolute value. -/
 def uniformSpaceCore : UniformSpace.Core R where
@@ -60,7 +60,7 @@ def uniformSpaceCore : UniformSpace.Core R where
           have : ∀ a b c : R, abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε := fun a b c hac hcb =>
             calc
               abv (b - a) ≤ _ := abv_sub_le abv b c a
-              _ = abv (c - a) + abv (b - c) := add_commₓ _ _
+              _ = abv (c - a) + abv (b - c) := add_comm _ _
               _ < ε / 2 + ε / 2 := add_lt_add hac hcb
               _ = ε := by rw [div_add_div_same, add_self_div_two]
               
@@ -79,7 +79,7 @@ theorem mem_uniformity {s : Set (R × R)} :
   · simp [subset_def]
     
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
-    exact ⟨⟨min r p, lt_minₓ hr hp⟩, by simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]⟩
+    exact ⟨⟨min r p, lt_min hr hp⟩, by simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]⟩
     
 
 end IsAbsoluteValue

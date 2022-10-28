@@ -40,7 +40,7 @@ open MeasureTheory MeasureTheory.Measure Metric Set Filter TopologicalSpace Func
 open TopologicalSpace BigOperators Ennreal Convex
 
 variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measureₓ α} {s : Set E} {t : Set α} {f : α → E}
+  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measure α} {s : Set E} {t : Set α} {f : α → E}
   {g : E → ℝ} {C : ℝ}
 
 /-!
@@ -48,7 +48,7 @@ variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [Nor
 -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 /-- If `μ` is a probability measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the expected value of `f` belongs to `s`:
 `∫ x, f x ∂μ ∈ s`. See also `convex.sum_mem` for a finite sum version of this lemma. -/
@@ -104,12 +104,12 @@ function sending `μ`-a.e. points to `s`, then the average value of `f` belongs 
 `⨍ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version of this lemma. -/
 theorem Convex.set_average_mem_closure (hs : Convex ℝ s) (h0 : μ t ≠ 0) (ht : μ t ≠ ∞)
     (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) : (⨍ x in t, f x ∂μ) ∈ Closure s :=
-  hs.closure.set_average_mem is_closed_closure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
+  hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
 
 theorem ConvexOn.average_mem_epigraph [IsFiniteMeasure μ] (hg : ConvexOn ℝ s g) (hgc : ContinuousOn g s)
     (hsc : IsClosed s) (hμ : μ ≠ 0) (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (hgi : Integrable (g ∘ f) μ) :
     (⨍ x, f x ∂μ, ⨍ x, g (f x) ∂μ) ∈ { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 } := by
-  have ht_mem : ∀ᵐ x ∂μ, (f x, g (f x)) ∈ { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 } := hfs.mono fun x hx => ⟨hx, le_rflₓ⟩
+  have ht_mem : ∀ᵐ x ∂μ, (f x, g (f x)) ∈ { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 } := hfs.mono fun x hx => ⟨hx, le_rfl⟩
   simpa only [average_pair hfi hgi] using hg.convex_epigraph.average_mem (hsc.epigraph hgc) hμ ht_mem (hfi.prod_mk hgi)
 
 theorem ConcaveOn.average_mem_hypograph [IsFiniteMeasure μ] (hg : ConcaveOn ℝ s g) (hgc : ContinuousOn g s)
@@ -273,7 +273,7 @@ theorem StrictConvexOn.ae_eq_const_or_map_average_lt [IsFiniteMeasure μ] (hg : 
   rcases average_mem_open_segment_compl_self hm.null_measurable_set h₀ h₀' (hfi.prod_mk hgi) with
     ⟨a, b, ha, hb, hab, h_avg⟩
   simp only [average_pair hfi hgi, average_pair hfi.integrable_on hgi.integrable_on, Prod.smul_mk, Prod.mk_add_mk,
-    Prod.mk.inj_iffₓ, (· ∘ ·)] at h_avg
+    Prod.mk.inj_iff, (· ∘ ·)] at h_avg
   rw [← h_avg.1, ← h_avg.2]
   calc
     g ((a • ⨍ x in t, f x ∂μ) + b • ⨍ x in tᶜ, f x ∂μ) < a * g (⨍ x in t, f x ∂μ) + b * g (⨍ x in tᶜ, f x ∂μ) :=
@@ -296,7 +296,7 @@ a.e., then either this function is a.e. equal to its average value, or the norm 
 is strictly less than `C`. -/
 theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E] (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) :
     f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥⨍ x, f x ∂μ∥ < C := by
-  cases' le_or_ltₓ C 0 with hC0 hC0
+  cases' le_or_lt C 0 with hC0 hC0
   · have : f =ᵐ[μ] 0 := h_le.mono fun x hx => norm_le_zero_iff.1 (hx.trans hC0)
     simp only [average_congr this, Pi.zero_apply, average_zero]
     exact Or.inl this

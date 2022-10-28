@@ -27,11 +27,11 @@ variable [NormedAddCommGroup V] [NormedSpace 𝕜 V]
 variable [NormedAddCommGroup W] [NormedSpace 𝕜 W]
 
 /-- A continuous affine map between normed vector spaces is smooth. -/
-theorem cont_diff {n : ℕ∞} (f : V →A[𝕜] W) : ContDiff 𝕜 n f := by
+theorem contDiff {n : ℕ∞} (f : V →A[𝕜] W) : ContDiff 𝕜 n f := by
   rw [f.decomp]
   apply f.cont_linear.cont_diff.add
   simp only
-  exact cont_diff_const
+  exact contDiffConst
 
 end ContinuousAffineMap
 

@@ -26,7 +26,7 @@ Gauss's Lemma is one of a few results pertaining to irreducibility of primitive 
 
 open nonZeroDivisors Polynomial
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R]
+variable {R : Type _} [CommRing R] [IsDomain R]
 
 namespace Polynomial
 
@@ -36,7 +36,7 @@ variable [NormalizedGcdMonoid R]
 
 section
 
-variable {S : Type _} [CommRingₓ S] [IsDomain S] {φ : R →+* S} (hinj : Function.Injective φ)
+variable {S : Type _} [CommRing S] [IsDomain S] {φ : R →+* S} (hinj : Function.Injective φ)
 
 variable {f : R[X]} (hf : f.IsPrimitive)
 
@@ -108,7 +108,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   obtain ⟨u, hu⟩ : Associated (c * d) (content (integer_normalization R⁰ a) * content (integer_normalization R⁰ b)) :=
     by
     rw [← dvd_dvd_iff_associated, ← normalize_eq_normalize_iff, normalize.map_mul, normalize.map_mul, normalize_content,
-      normalize_content, ← mul_oneₓ (normalize c * normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
+      normalize_content, ← mul_one (normalize c * normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
       content_mul, ← content_mul, ← content_mul, h1]
   rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
     (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assoc, mul_comm _ (C _ * _), ← mul_assoc, ← mul_assoc,

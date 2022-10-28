@@ -24,14 +24,14 @@ noncomputable section
 
 universe v u
 
-variable {R : Type u} [Ringₓ R] {Γ₀ : Type v} [LinearOrderedCommGroupWithZero Γ₀]
+variable {R : Type u} [Ring R] {Γ₀ : Type v} [LinearOrderedCommGroupWithZero Γ₀]
 
 namespace Valuation
 
 variable (v : Valuation R Γ₀)
 
 /-- The basis of open subgroups for the topology on a ring determined by a valuation. -/
-theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup γ : AddSubgroup R) :=
+theorem subgroupsBasis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup γ : AddSubgroup R) :=
   { inter := by
       rintro γ₀ γ₁
       use min γ₀ γ₁
@@ -48,7 +48,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         ,
     leftMul := by
       rintro x γ
-      rcases GroupWithZeroₓ.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
+      rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
       · use (1 : Γ₀ˣ)
         rintro y (y_in : (v y : Γ₀) < 1)
         change v (x * y) < _
@@ -65,7 +65,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         ,
     rightMul := by
       rintro x γ
-      rcases GroupWithZeroₓ.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
+      rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
       · use 1
         rintro y (y_in : (v y : Γ₀) < 1)
         change v (y * x) < _
@@ -89,7 +89,7 @@ TODO: show that there always exists an equivalent valuation taking values in a t
 the same universe as the ring.
 
 See Note [forgetful inheritance] for why we extend `uniform_space`, `uniform_add_group`. -/
-class Valued (R : Type u) [Ringₓ R] (Γ₀ : outParam (Type v)) [LinearOrderedCommGroupWithZero Γ₀] extends UniformSpace R,
+class Valued (R : Type u) [Ring R] (Γ₀ : outParam (Type v)) [LinearOrderedCommGroupWithZero Γ₀] extends UniformSpace R,
   UniformAddGroup R where
   V : Valuation R Γ₀
   is_topological_valuation : ∀ s, s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x : R | v x < γ } ⊆ s
@@ -101,8 +101,8 @@ namespace Valued
 /-- Alternative `valued` constructor for use when there is no preferred `uniform_space`
 structure. -/
 def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
-  { V, toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _,
-    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroups_basis.topology _,
+  { V, toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _,
+    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroupsBasis.topology _,
     is_topological_valuation := by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
       intro s
@@ -121,8 +121,8 @@ theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀�
   rw [uniformity_eq_comap_nhds_zero]
   exact (has_basis_nhds_zero R Γ₀).comap _
 
-theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _ :=
-  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroups_basis.has_basis_nhds_zero.comap _)
+theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _ :=
+  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroupsBasis.has_basis_nhds_zero.comap _)
 
 variable {R Γ₀}
 
@@ -142,13 +142,13 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
   exact Valuation.map_eq_of_sub_lt _ y_in
 
 instance (priority := 100) : TopologicalRing R :=
-  (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
+  (to_uniform_space_eq R Γ₀).symm ▸ v.subgroupsBasis.toRingFilterBasis.isTopologicalRing
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » M)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
-  apply and_congrₓ Iff.rfl
+  apply and_congr Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]
   constructor
   · intro h γ

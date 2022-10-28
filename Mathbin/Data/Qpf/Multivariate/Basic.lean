@@ -84,7 +84,7 @@ class Mvqpf {n : ℕ} (F : Typevec.{u} n → Type _) [Mvfunctor F] where
   p : Mvpfunctor.{u} n
   abs : ∀ {α}, P.Obj α → F α
   repr : ∀ {α}, F α → P.Obj α
-  abs_repr : ∀ {α} (x : F α), abs (reprₓ x) = x
+  abs_repr : ∀ {α} (x : F α), abs (repr x) = x
   abs_map : ∀ {α β} (f : α ⟹ β) (p : P.Obj α), abs (f <$$> p) = f <$$> abs p
 
 namespace Mvqpf
@@ -102,14 +102,14 @@ open Mvfunctor (Liftp Liftr)
 
 protected theorem id_map {α : Typevec n} (x : F α) : Typevec.id <$$> x = x := by
   rw [← abs_repr x]
-  cases' reprₓ x with a f
+  cases' repr x with a f
   rw [← abs_map]
   rfl
 
 @[simp]
 theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) (x : F α) : (g ⊚ f) <$$> x = g <$$> f <$$> x := by
   rw [← abs_repr x]
-  cases' reprₓ x with a f
+  cases' repr x with a f
   rw [← abs_map, ← abs_map, ← abs_map]
   rfl
 
@@ -122,7 +122,7 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
     Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
   · rintro ⟨y, hy⟩
-    cases' h : reprₓ y with a f
+    cases' h : repr y with a f
     use a, fun i j => (f i j).val
     constructor
     · rw [← hy, ← abs_repr y, h, ← abs_map]
@@ -141,7 +141,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     Liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
-    cases' h : reprₓ u with a f
+    cases' h : repr u with a f
     use a, fun i j => (f i j).val.fst, fun i j => (f i j).val.snd
     constructor
     · rw [← xeq, ← abs_repr u, h, ← abs_map]
@@ -259,7 +259,7 @@ theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Typevec n} (a : q.p.A) (f 
 theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p : ∀ i, α i → Prop) :
     Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, p i u := by
   rw [liftp_iff, ← abs_repr x]
-  cases' reprₓ x with a f
+  cases' repr x with a f
   constructor
   · rintro ⟨a', f', abseq, hf⟩ u
     rw [supp_eq_of_is_uniform h, h _ _ _ _ abseq]
@@ -275,7 +275,7 @@ theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p
 theorem supp_map (h : q.IsUniform) {α β : Typevec n} (g : α ⟹ β) (x : F α) (i) : Supp (g <$$> x) i = g i '' Supp x i :=
   by
   rw [← abs_repr x]
-  cases' reprₓ x with a f
+  cases' repr x with a f
   rw [← abs_map, Mvpfunctor.map_eq]
   rw [supp_eq_of_is_uniform h, supp_eq_of_is_uniform h, ← image_comp]
   rfl

@@ -33,7 +33,7 @@ variable (c : ComplexShape ι)
 def Homotopic : HomRel (HomologicalComplex V c) := fun C D f g => Nonempty (Homotopy f g)
 
 instance homotopy_congruence : Congruence (Homotopic V c) where
-  IsEquiv := fun C D =>
+  IsEquiv C D :=
     { refl := fun C => ⟨Homotopy.refl C⟩, symm := fun f g ⟨w⟩ => ⟨w.symm⟩,
       trans := fun f g h ⟨w₁⟩ ⟨w₂⟩ => ⟨w₁.trans w₂⟩ }
   compLeft := fun E F G m₁ m₂ g ⟨i⟩ => ⟨i.compLeft _⟩
@@ -86,7 +86,7 @@ def homotopyOutMap {C D : HomologicalComplex V c} (f : C ⟶ D) : Homotopy ((quo
 @[simp]
 theorem quotient_map_out_comp_out {C D E : HomotopyCategory V c} (f : C ⟶ D) (g : D ⟶ E) :
     (quotient V c).map (Quot.out f ≫ Quot.out g) = f ≫ g := by
-  conv_rhs => erw [← quotient_map_out f, ← quotient_map_out g, ← (Quotientₓ V c).map_comp]
+  conv_rhs => erw [← quotient_map_out f, ← quotient_map_out g, ← (Quotient V c).map_comp]
 
 /-- Homotopy equivalent complexes become isomorphic in the homotopy category. -/
 @[simps]
@@ -95,10 +95,10 @@ def isoOfHomotopyEquiv {C D : HomologicalComplex V c} (f : HomotopyEquiv C D) :
   Hom := (quotient V c).map f.Hom
   inv := (quotient V c).map f.inv
   hom_inv_id' := by
-    rw [← (Quotientₓ V c).map_comp, ← (Quotientₓ V c).map_id]
+    rw [← (Quotient V c).map_comp, ← (Quotient V c).map_id]
     exact eq_of_homotopy _ _ f.homotopy_hom_inv_id
   inv_hom_id' := by
-    rw [← (Quotientₓ V c).map_comp, ← (Quotientₓ V c).map_id]
+    rw [← (Quotient V c).map_comp, ← (Quotient V c).map_id]
     exact eq_of_homotopy _ _ f.homotopy_inv_hom_id
 
 /-- If two complexes become isomorphic in the homotopy category,
@@ -150,16 +150,16 @@ variable {V} {W : Type _} [Category W] [Preadditive W]
 @[simps]
 def Functor.mapHomotopyCategory (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     HomotopyCategory V c ⥤ HomotopyCategory W c where
-  obj := fun C => (HomotopyCategory.quotient W c).obj ((F.mapHomologicalComplex c).obj C.as)
-  map := fun C D f => (HomotopyCategory.quotient W c).map ((F.mapHomologicalComplex c).map (Quot.out f))
-  map_id' := fun C => by
+  obj C := (HomotopyCategory.quotient W c).obj ((F.mapHomologicalComplex c).obj C.as)
+  map C D f := (HomotopyCategory.quotient W c).map ((F.mapHomologicalComplex c).map (Quot.out f))
+  map_id' C := by
     rw [← (HomotopyCategory.quotient W c).map_id]
     apply HomotopyCategory.eq_of_homotopy
     rw [← (F.map_homological_complex c).map_id]
     apply F.map_homotopy
     apply HomotopyCategory.homotopyOfEq
     exact Quot.out_eq _
-  map_comp' := fun C D E f g => by
+  map_comp' C D E f g := by
     rw [← (HomotopyCategory.quotient W c).map_comp]
     apply HomotopyCategory.eq_of_homotopy
     rw [← (F.map_homological_complex c).map_comp]
@@ -174,8 +174,8 @@ def Functor.mapHomotopyCategory (c : ComplexShape ι) (F : V ⥤ W) [F.Additive]
 @[simps]
 def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
     F.mapHomotopyCategory c ⟶ G.mapHomotopyCategory c where
-  app := fun C => (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
-  naturality' := fun C D f => by
+  app C := (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
+  naturality' C D f := by
     dsimp
     simp only [← functor.map_comp]
     congr 1

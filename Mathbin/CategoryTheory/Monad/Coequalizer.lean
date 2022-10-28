@@ -23,7 +23,7 @@ universe v₁ u₁
 
 namespace CategoryTheory
 
-namespace Monadₓ
+namespace Monad
 
 open Limits
 
@@ -121,7 +121,7 @@ theorem beck_coequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.A)) 
     (beckCoequalizer X).desc s = T.η.app _ ≫ s.π :=
   rfl
 
-end Monadₓ
+end Monad
 
 end CategoryTheory
 

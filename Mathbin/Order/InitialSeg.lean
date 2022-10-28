@@ -157,13 +157,13 @@ theorem antisymm_symm [IsWellOrder α r] [IsWellOrder β s] (f : r ≼i s) (g : 
 
 theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
   or_iff_not_imp_right.2 fun h b =>
-    (Acc.recOnₓ (IsWellFounded.wf.apply b : Acc s b)) fun x H IH =>
+    (Acc.recOn (IsWellFounded.wf.apply b : Acc s b)) fun x H IH =>
       not_forall_not.1 fun hn =>
         h
           ⟨x, fun y =>
             ⟨IH _, fun ⟨a, e⟩ => by
               rw [← e] <;>
-                exact (trichotomous _ _).resolve_right (not_orₓ (hn a) fun hl => not_exists.2 hn (f.init' hl))⟩⟩
+                exact (trichotomous _ _).resolve_right (not_or_of_not (hn a) fun hl => not_exists.2 hn (f.init' hl))⟩⟩
 
 /-- Restrict the codomain of an initial segment -/
 def codRestrict (p : Set β) (f : r ≼i s) (H : ∀ a, f a ∈ p) : r ≼i Subrel s p :=
@@ -181,7 +181,7 @@ def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r
 
 /-- Initial segment embedding of an order `r` into the disjoint union of `r` and `s`. -/
 def leAdd (r : α → α → Prop) (s : β → β → Prop) : r ≼i Sum.Lex r s :=
-  ⟨⟨⟨Sum.inl, fun _ _ => Sum.inl.injₓ⟩, fun a b => Sum.lex_inl_inl⟩, fun a b => by
+  ⟨⟨⟨Sum.inl, fun _ _ => Sum.inl.inj⟩, fun a b => Sum.lex_inl_inl⟩, fun a b => by
     cases b <;> [exact fun _ => ⟨_, rfl⟩, exact False.elim ∘ Sum.lex_inr_inl]⟩
 
 @[simp]
@@ -437,7 +437,7 @@ to fill the gaps. -/
 noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
   haveI := RelEmbedding.is_well_order f
   ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
-    Acc.recOnₓ (is_well_founded.wf.apply b : Acc s b)
+    Acc.recOn (is_well_founded.wf.apply b : Acc s b)
       (fun b H IH a h => by
         let S := { a | ¬s (collapse_F f a).1 b }
         have : S.nonempty := ⟨_, asymm h⟩

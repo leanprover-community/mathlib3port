@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 -/
 import Mathbin.Data.Set.Basic
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 
 /-!
 # Partial values of a type
@@ -122,7 +122,7 @@ def some (a : α) : Part α :=
 
 @[simp]
 theorem some_dom (a : α) : (some a).Dom :=
-  trivialₓ
+  trivial
 
 theorem mem_unique : ∀ {a b : α} {o : Part α}, a ∈ o → b ∈ o → a = b
   | _, _, ⟨p, f⟩, ⟨h₁, rfl⟩, ⟨h₂, rfl⟩ => rfl
@@ -139,11 +139,11 @@ theorem get_some {a : α} (ha : (some a).Dom) : get (some a) ha = a :=
   rfl
 
 theorem mem_some (a : α) : a ∈ some a :=
-  ⟨trivialₓ, rfl⟩
+  ⟨trivial, rfl⟩
 
 @[simp]
 theorem mem_some_iff {a b} : b ∈ (some a : Part α) ↔ b = a :=
-  ⟨fun ⟨h, e⟩ => e.symm, fun e => ⟨trivialₓ, e.symm⟩⟩
+  ⟨fun ⟨h, e⟩ => e.symm, fun e => ⟨trivial, e.symm⟩⟩
 
 theorem eq_some_iff {a : α} {o : Part α} : o = some a ↔ a ∈ o :=
   ⟨fun e => e.symm ▸ mem_some _, fun ⟨h, e⟩ => e ▸ ext' (iff_true_intro h) fun _ _ => rfl⟩
@@ -181,7 +181,7 @@ theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
   or_iff_not_imp_left.2 ne_none_iff.1
 
-theorem some_injective : Injective (@Part.some α) := fun a b h => congr_fun (eq_of_heq (Part.mk.inj h).2) trivialₓ
+theorem some_injective : Injective (@Part.some α) := fun a b h => congr_fun (eq_of_heq (Part.mk.inj h).2) trivial
 
 @[simp]
 theorem some_inj {a b : α} : Part.some a = some b ↔ a = b :=
@@ -210,7 +210,7 @@ theorem none_to_option [Decidable (@none α).Dom] : (none : Part α).toOption = 
 
 @[simp]
 theorem some_to_option (a : α) [Decidable (some a).Dom] : (some a).toOption = Option.some a :=
-  dif_pos trivialₓ
+  dif_pos trivial
 
 instance noneDecidable : Decidable (@none α).Dom :=
   Decidable.false
@@ -271,14 +271,14 @@ def ofOption : Option α → Part α
 @[simp]
 theorem mem_of_option {a : α} : ∀ {o : Option α}, a ∈ ofOption o ↔ a ∈ o
   | Option.none => ⟨fun h => h.fst.elim, fun h => Option.noConfusion h⟩
-  | Option.some b => ⟨fun h => congr_arg Option.some h.snd, fun h => ⟨trivialₓ, Option.some.injₓ h⟩⟩
+  | Option.some b => ⟨fun h => congr_arg Option.some h.snd, fun h => ⟨trivial, Option.some.inj h⟩⟩
 
 @[simp]
 theorem of_option_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
   | Option.none => by simp [of_option, none]
   | Option.some a => by simp [of_option]
 
-theorem of_option_eq_get {α} (o : Option α) : ofOption o = ⟨_, @Option.getₓ _ o⟩ :=
+theorem of_option_eq_get {α} (o : Option α) : ofOption o = ⟨_, @Option.get _ o⟩ :=
   (Part.ext' (of_option_dom o)) fun h₁ h₂ => by cases o <;> [cases h₁, rfl]
 
 instance : Coe (Option α) (Part α) :=
@@ -296,7 +296,7 @@ theorem coe_none : (@Option.none α : Part α) = none :=
 theorem coe_some (a : α) : (Option.some a : Part α) = some a :=
   rfl
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none) (hsome : ∀ a : α, P (some a)) : P a :=
   (Classical.em a.Dom).elim (fun h => Part.some_get h ▸ hsome _) fun h => (eq_none_iff'.2 h).symm ▸ hnone
 
@@ -317,11 +317,11 @@ noncomputable def equivOption : Part α ≃ Option α :=
   ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o => Eq.trans (by dsimp <;> congr ) (to_of_option o)⟩
 
 /-- We give `part α` the order where everything is greater than `none`. -/
-instance : PartialOrderₓ (Part α) where
-  le := fun x y => ∀ i, i ∈ x → i ∈ y
-  le_refl := fun x y => id
-  le_trans := fun x y z f g i => g _ ∘ f _
-  le_antisymm := fun x y f g => Part.ext fun z => ⟨f _, g _⟩
+instance : PartialOrder (Part α) where
+  le x y := ∀ i, i ∈ x → i ∈ y
+  le_refl x y := id
+  le_trans x y z f g i := g _ ∘ f _
+  le_antisymm x y f g := Part.ext fun z => ⟨f _, g _⟩
 
 instance : OrderBot (Part α) where
   bot := none
@@ -388,7 +388,7 @@ theorem mem_assert_iff {p : Prop} {f : p → Part α} {a} : a ∈ assert p f ↔
 theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := by
   dsimp [assert]
   cases h' : f h
-  simp only [h', h, true_andₓ, iff_selfₓ, exists_prop_of_true, eq_iff_iff]
+  simp only [h', h, true_and_iff, iff_self_iff, exists_prop_of_true, eq_iff_iff]
   apply Function.hfunext
   · simp only [h, h', exists_prop_of_true]
     
@@ -417,7 +417,7 @@ theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔
 
 protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) := by
   ext b
-  simp only [Part.mem_bind_iff, exists_propₓ]
+  simp only [Part.mem_bind_iff, exists_prop]
   refine' ⟨_, fun hb => ⟨o.get h, Part.get_mem _, hb⟩⟩
   rintro ⟨a, ha, hb⟩
   rwa [Part.get_eq_of_mem ha]
@@ -465,14 +465,14 @@ theorem map_bind {γ} (f : α → Part β) (x : Part α) (g : β → γ) : map g
 theorem map_map (g : β → γ) (f : α → β) (o : Part α) : map g (map f o) = map (g ∘ f) o := by
   rw [← bind_some_eq_map, bind_map, bind_some_eq_map]
 
-instance : Monadₓ Part where
+instance : Monad Part where
   pure := @some
   map := @map
   bind := @Part.bind
 
-instance : IsLawfulMonad Part where
+instance : LawfulMonad Part where
   bind_pure_comp_eq_map := @bind_some_eq_map
-  id_map := fun β f => by cases f <;> rfl
+  id_map β f := by cases f <;> rfl
   pure_bind := @bind_some
   bind_assoc := @bind_assoc
 
@@ -502,11 +502,11 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f 
   constructor <;> intro h
   · intro a h' b
     replace h := h b
-    simp only [and_imp, exists_propₓ, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
+    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
     apply h _ h'
     
   · intro b h'
-    simp only [exists_propₓ, bind_eq_bind, mem_bind_iff] at h'
+    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
     rcases h' with ⟨a, h₀, h₁⟩
     apply h _ h₀ _ h₁
     
@@ -534,7 +534,7 @@ unsafe def unwrap (o : Part α) : α :=
   o.get undefined
 
 theorem assert_defined {p : Prop} {f : p → Part α} : ∀ h : p, (f h).Dom → (assert p f).Dom :=
-  Exists.introₓ
+  Exists.intro
 
 theorem bind_defined {f : Part α} {g : α → Part β} : ∀ h : f.Dom, (g (f.get h)).Dom → (f.bind g).Dom :=
   assert_defined
@@ -550,27 +550,27 @@ section Instances
 instance [One α] : One (Part α) where one := pure 1
 
 @[to_additive]
-instance [Mul α] : Mul (Part α) where mul := fun a b => (· * ·) <$> a <*> b
+instance [Mul α] : Mul (Part α) where mul a b := (· * ·) <$> a <*> b
 
 @[to_additive]
 instance [Inv α] : Inv (Part α) where inv := map Inv.inv
 
 @[to_additive]
-instance [Div α] : Div (Part α) where div := fun a b => (· / ·) <$> a <*> b
+instance [Div α] : Div (Part α) where div a b := (· / ·) <$> a <*> b
 
-instance [Mod α] : Mod (Part α) where mod := fun a b => (· % ·) <$> a <*> b
+instance [Mod α] : Mod (Part α) where mod a b := (· % ·) <$> a <*> b
 
-instance [Append α] : Append (Part α) where append := fun a b => (· ++ ·) <$> a <*> b
+instance [Append α] : Append (Part α) where append a b := (· ++ ·) <$> a <*> b
 
-instance [Inter α] : Inter (Part α) where inter := fun a b => (· ∩ ·) <$> a <*> b
+instance [Inter α] : Inter (Part α) where inter a b := (· ∩ ·) <$> a <*> b
 
-instance [Union α] : Union (Part α) where union := fun a b => (· ∪ ·) <$> a <*> b
+instance [Union α] : Union (Part α) where union a b := (· ∪ ·) <$> a <*> b
 
-instance [Sdiff α] : Sdiff (Part α) where sdiff := fun a b => (· \ ·) <$> a <*> b
+instance [Sdiff α] : Sdiff (Part α) where sdiff a b := (· \ ·) <$> a <*> b
 
 @[to_additive]
 theorem one_mem_one [One α] : (1 : α) ∈ (1 : Part α) :=
-  ⟨trivialₓ, rfl⟩
+  ⟨trivial, rfl⟩
 
 @[to_additive]
 theorem mul_mem_mul [Mul α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma * mb ∈ a * b := by tidy

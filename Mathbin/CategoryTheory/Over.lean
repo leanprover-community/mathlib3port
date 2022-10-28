@@ -156,7 +156,7 @@ end
 instance forget_reflects_iso :
     ReflectsIsomorphisms
       (forget
-        X) where reflects := fun Y Z f t =>
+        X) where reflects Y Z f t :=
     ⟨⟨over.hom_mk (inv ((forget X).map f)) ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm), by tidy⟩⟩
 
 instance forget_faithful : Faithful (forget X) where
@@ -202,8 +202,8 @@ variable (f : Over X)
 /-- Given f : Y ⟶ X, this is the obvious functor from (T/X)/f to T/Y -/
 @[simps]
 def iteratedSliceForward : Over f ⥤ Over f.left where
-  obj := fun α => Over.mk α.Hom.left
-  map := fun α β κ =>
+  obj α := Over.mk α.Hom.left
+  map α β κ :=
     Over.homMk κ.left.left
       (by
         rw [auto_param_eq]
@@ -213,8 +213,8 @@ def iteratedSliceForward : Over f ⥤ Over f.left where
 /-- Given f : Y ⟶ X, this is the obvious functor from T/Y to (T/X)/f -/
 @[simps]
 def iteratedSliceBackward : Over f.left ⥤ Over f where
-  obj := fun g => mk (homMk g.Hom : mk (g.Hom ≫ f.Hom) ⟶ f)
-  map := fun g h α => homMk (homMk α.left (w_assoc α f.Hom)) (OverMorphism.ext (w α))
+  obj g := mk (homMk g.Hom : mk (g.Hom ≫ f.Hom) ⟶ f)
+  map g h α := homMk (homMk α.left (w_assoc α f.Hom)) (OverMorphism.ext (w α))
 
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
 @[simps]
@@ -247,8 +247,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
 def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X) where
-  obj := fun Y => mk <| F.map Y.Hom
-  map := fun Y₁ Y₂ f => { left := F.map f.left, w' := by tidy <;> erw [← F.map_comp, w] }
+  obj Y := mk <| F.map Y.Hom
+  map Y₁ Y₂ f := { left := F.map f.left, w' := by tidy <;> erw [← F.map_comp, w] }
 
 end
 
@@ -367,7 +367,7 @@ end
 instance forget_reflects_iso :
     ReflectsIsomorphisms
       (forget
-        X) where reflects := fun Y Z f t =>
+        X) where reflects Y Z f t :=
     ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by tidy⟩⟩
 
 instance forget_faithful : Faithful (forget X) where
@@ -413,8 +413,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]
 def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X) where
-  obj := fun Y => mk <| F.map Y.Hom
-  map := fun Y₁ Y₂ f => { right := F.map f.right, w' := by tidy <;> erw [← F.map_comp, w] }
+  obj Y := mk <| F.map Y.Hom
+  map Y₁ Y₂ f := { right := F.map f.right, w' := by tidy <;> erw [← F.map_comp, w] }
 
 end
 

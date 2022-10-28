@@ -48,7 +48,7 @@ open Classical Affine BigOperators
 open Set
 
 variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
-  {A B C : Set E} {X : Finsetₓ E} {x : E}
+  {A B C : Set E} {X : Finset E} {x : E}
 
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
@@ -62,9 +62,9 @@ inequality with a functional). -/
 def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
   { x ∈ A | ∀ y ∈ A, l y ≤ l x }
 
-theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.ToExposed A) := fun h => ⟨l, rfl⟩
+theorem ContinuousLinearMap.ToExposed.isExposed : IsExposed 𝕜 A (l.ToExposed A) := fun h => ⟨l, rfl⟩
 
-theorem is_exposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ => by
+theorem isExposedEmpty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ => by
   exfalso
   exact hx
 
@@ -77,7 +77,7 @@ protected theorem subset (hAB : IsExposed 𝕜 A B) : B ⊆ A := by
 
 @[refl]
 protected theorem refl (A : Set E) : IsExposed 𝕜 A A := fun ⟨w, hw⟩ =>
-  ⟨0, Subset.antisymm (fun x hx => ⟨hx, fun y hy => le_reflₓ 0⟩) fun x hx => hx.1⟩
+  ⟨0, Subset.antisymm (fun x hx => ⟨hx, fun y hy => le_refl 0⟩) fun x hx => hx.1⟩
 
 protected theorem antisymm (hB : IsExposed 𝕜 A B) (hA : IsExposed 𝕜 B A) : A = B :=
   hA.Subset.antisymm hB.Subset
@@ -122,25 +122,25 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
   refine' ⟨⟨hxA, fun y hy => _⟩, hxA, fun y hy => _⟩
   · exact (add_le_add_iff_right (l₂ x)).1 ((add_le_add (hwB.2 y hy) (hwC.2 x hxA)).trans (hx w hwB.1))
     
-  · exact (add_le_add_iff_left (l₁ x)).1 (le_transₓ (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
+  · exact (add_le_add_iff_left (l₁ x)).1 (le_trans (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
     
 
-theorem sInter {F : Finsetₓ (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) := by
+theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) := by
   revert hF F
-  refine' Finsetₓ.induction _ _
+  refine' Finset.induction _ _
   · rintro h
     exfalso
     exact empty_not_nonempty h
     
   rintro C F _ hF _ hCF
-  rw [Finsetₓ.coe_insert, sInter_insert]
+  rw [Finset.coe_insert, sInter_insert]
   obtain rfl | hFnemp := F.eq_empty_or_nonempty
-  · rw [Finsetₓ.coe_empty, sInter_empty, inter_univ]
-    exact hCF C (Finsetₓ.mem_singleton_self C)
+  · rw [Finset.coe_empty, sInter_empty, inter_univ]
+    exact hCF C (Finset.mem_singleton_self C)
     
-  exact (hCF C (Finsetₓ.mem_insert_self C F)).inter (hF hFnemp fun B hB => hCF B (Finsetₓ.mem_insert_of_mem hB))
+  exact (hCF C (Finset.mem_insert_self C F)).inter (hF hFnemp fun B hB => hCF B (Finset.mem_insert_of_mem hB))
 
-theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C := by
+theorem interLeft (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C := by
   rintro ⟨w, hw⟩
   obtain ⟨l, rfl⟩ := hC ⟨w, hw⟩
   exact
@@ -148,7 +148,7 @@ theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A
       subset.antisymm (fun x hx => ⟨⟨hx.1, hCB hx⟩, fun y hy => hx.2 y hy.1⟩) fun x ⟨⟨hxC, _⟩, hx⟩ =>
         ⟨hxC, fun y hy => (hw.2 y hy).trans (hx w ⟨hC.subset hw, hCB hw⟩)⟩⟩
 
-theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (A ∩ B) C := by
+theorem interRight (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (A ∩ B) C := by
   rw [inter_comm]
   exact hC.inter_left hCA
 
@@ -176,7 +176,7 @@ protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Conve
       ((l.to_linear_map.concave_on convex_univ).convex_ge _ ⟨mem_univ _, hx₁.2 y hy⟩ ⟨mem_univ _, hx₂.2 y hy⟩ ha hb
           hab).2⟩
 
-protected theorem is_closed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) : IsClosed B := by
+protected theorem isClosed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) : IsClosed B := by
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace
   exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
 

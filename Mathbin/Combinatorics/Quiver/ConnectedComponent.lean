@@ -58,11 +58,17 @@ instance : HasReverse (Symmetrify V) :=
 
 instance : HasInvolutiveReverse (Symmetrify V) where
   toHasReverse := ⟨fun a b e => e.swap⟩
-  inv' := fun a b e => congr_fun Sum.swap_swap_eq e
+  inv' a b e := congr_fun Sum.swap_swap_eq e
 
+/- warning: quiver.path.reverse -> Quiver.Path.reverse is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u}} [_inst_1 : Quiver.{succ v u} V] [_inst_2 : Quiver.HasReverse.{v u} V _inst_1] {a : V} {b : V}, (Quiver.Path.{succ v u} V _inst_1 a b) -> (Quiver.Path.{succ v u} V _inst_1 b a)
+but is expected to have type
+  forall {V : Type.{u}} [_inst_1 : Quiver.{succ v u} V] [_inst_2 : Quiver.HasReverse.{v u} V _inst_1] {a : V} {b : V}, (Quiver.Path.{succ v u} V _inst_1 a b) -> (Quiver.Path.{succ v u} V _inst_1 b a)
+Case conversion may be inaccurate. Consider using '#align quiver.path.reverse Quiver.Path.reverseₓ'. -/
 /-- Reverse the direction of a path. -/
 @[simp]
-def Path.reverseₓ [HasReverse V] {a : V} : ∀ {b}, Path a b → Path b a
+def Path.reverse [HasReverse V] {a : V} : ∀ {b}, Path a b → Path b a
   | a, path.nil => Path.nil
   | b, path.cons p e => (reverse e).toPath.comp p.reverse
 
@@ -91,13 +97,13 @@ theorem Path.reverse_reverse [h : HasInvolutiveReverse V] {a b : V} (p : Path a 
 /-- The inclusion of a quiver in its symmetrification -/
 def Symmetrify.of : Prefunctor V (Symmetrify V) where
   obj := id
-  map := fun X Y f => Sum.inl f
+  map X Y f := Sum.inl f
 
 /-- Given a quiver `V'` with reversible arrows, a prefunctor to `V'` can be lifted to one from
     `symmetrify V` to `V'` -/
 def Symmetrify.lift {V' : Type _} [Quiver V'] [HasReverse V'] (φ : Prefunctor V V') : Prefunctor (Symmetrify V) V' where
   obj := φ.obj
-  map := fun X Y f => Sum.rec (fun fwd => φ.map fwd) (fun bwd => reverse (φ.map bwd)) f
+  map X Y f := Sum.rec (fun fwd => φ.map fwd) (fun bwd => reverse (φ.map bwd)) f
 
 theorem Symmetrify.lift_spec (V' : Type _) [Quiver V'] [HasReverse V'] (φ : Prefunctor V V') :
     Symmetrify.of.comp (Symmetrify.lift φ) = φ := by
@@ -123,7 +129,7 @@ theorem Symmetrify.lift_reverse (V' : Type _) [Quiver V'] [h : HasInvolutiveReve
     
 
 /-- `lift φ` is the only prefunctor extending `φ` and preserving reverses. -/
-theorem Symmetrify.lift_spec_unique (V' : Type _) [Quiver V'] [HasReverse V'] (φ : Prefunctor V V')
+theorem Symmetrify.lift_unique (V' : Type _) [Quiver V'] [HasReverse V'] (φ : Prefunctor V V')
     (Φ : Prefunctor (Symmetrify V) V') (hΦ : Symmetrify.of.comp Φ = φ)
     (hΦinv : ∀ {X Y : V} (f : X ⟶ Y), Φ.map (reverse f) = reverse (Φ.map f)) : Φ = Symmetrify.lift φ := by
   subst_vars
@@ -144,7 +150,7 @@ variable (V)
 
 /-- Two vertices are related in the zigzag setoid if there is a
     zigzag of arrows from one to the other. -/
-def zigzagSetoid : Setoidₓ V :=
+def zigzagSetoid : Setoid V :=
   ⟨fun a b => Nonempty (@Path (Symmetrify V) _ a b), fun a => ⟨Path.nil⟩, fun a b ⟨p⟩ => ⟨p.reverse⟩,
     fun a b c ⟨p⟩ ⟨q⟩ => ⟨p.comp q⟩⟩
 
@@ -152,7 +158,7 @@ def zigzagSetoid : Setoidₓ V :=
     in the same weakly connected component if there is a zigzag of arrows from one
     to the other. -/
 def WeaklyConnectedComponent : Type _ :=
-  Quotientₓ (zigzagSetoid V)
+  Quotient (zigzagSetoid V)
 
 namespace WeaklyConnectedComponent
 
@@ -160,16 +166,16 @@ variable {V}
 
 /-- The weakly connected component corresponding to a vertex. -/
 protected def mk : V → WeaklyConnectedComponent V :=
-  Quotientₓ.mk'
+  Quotient.mk'
 
-instance : CoeTₓ V (WeaklyConnectedComponent V) :=
+instance : CoeT V (WeaklyConnectedComponent V) :=
   ⟨WeaklyConnectedComponent.mk⟩
 
 instance [Inhabited V] : Inhabited (WeaklyConnectedComponent V) :=
   ⟨show V from default⟩
 
 protected theorem eq (a b : V) : (a : WeaklyConnectedComponent V) = b ↔ Nonempty (@Path (Symmetrify V) _ a b) :=
-  Quotientₓ.eq'
+  Quotient.eq'
 
 end WeaklyConnectedComponent
 

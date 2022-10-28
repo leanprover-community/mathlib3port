@@ -31,7 +31,7 @@ unsafe def filter {key} (s : rb_set key) (P : key → Bool) : rb_set key :=
 
 /-- `mfilter s P` returns the subset of elements of `s` satisfying `P`,
 where the check `P` is monadic. -/
-unsafe def mfilter {m} [Monadₓ m] {key} (s : rb_set key) (P : key → m Bool) : m (rb_set key) :=
+unsafe def mfilter {m} [Monad m] {key} (s : rb_set key) (P : key → m Bool) : m (rb_set key) :=
   s.fold (pure s) fun a m => do
     let x ← m
     mcond (P a) (pure x) (pure <| x a)
@@ -98,7 +98,7 @@ unsafe def add {key value} [Add value] [Zero value] [DecidableEq value] (m1 m2 :
     let nv := v + m2.zfind n
     if nv = 0 then m.erase n else m.insert n nv
 
-variable {m : Type → Type _} [Monadₓ m]
+variable {m : Type → Type _} [Monad m]
 
 open Function
 
@@ -178,13 +178,13 @@ unsafe def filter (P : Name → Bool) (s : name_set) : name_set :=
 
 /-- `mfilter P s` returns the subset of elements of `s` satisfying `P`,
 where the check `P` is monadic. -/
-unsafe def mfilter {m} [Monadₓ m] (P : Name → m Bool) (s : name_set) : m name_set :=
+unsafe def mfilter {m} [Monad m] (P : Name → m Bool) (s : name_set) : m name_set :=
   s.fold (pure s) fun a m => do
     let x ← m
     mcond (P a) (pure x) (pure <| x a)
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
-unsafe def mmap {m} [Monadₓ m] (f : Name → m Name) (s : name_set) : m name_set :=
+unsafe def mmap {m} [Monad m] (f : Name → m Name) (s : name_set) : m name_set :=
   s.fold (pure mk_name_set) fun a m => do
     let x ← m
     let b ← f a

@@ -73,11 +73,11 @@ instance has_faithful_smul_right [HasFaithfulSmul M β] : HasFaithfulSmul M (Sum
 end HasSmul
 
 @[to_additive]
-instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (Sum α β) where
-  mul_smul := fun a b x => by
+instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (Sum α β) where
+  mul_smul a b x := by
     cases x
     exacts[congr_arg inl (mul_smul _ _ _), congr_arg inr (mul_smul _ _ _)]
-  one_smul := fun x => by
+  one_smul x := by
     cases x
     exacts[congr_arg inl (one_smul _ _), congr_arg inr (one_smul _ _)]
 

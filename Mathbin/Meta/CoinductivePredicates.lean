@@ -25,7 +25,7 @@ theorem Monotonicity.const (p : Prop) : Implies p p :=
   id
 
 @[monotonicity]
-theorem Monotonicity.true (p : Prop) : Implies p True := fun _ => trivialₓ
+theorem Monotonicity.true (p : Prop) : Implies p True := fun _ => trivial
 
 @[monotonicity]
 theorem Monotonicity.false (p : Prop) : Implies False p :=
@@ -34,15 +34,15 @@ theorem Monotonicity.false (p : Prop) : Implies False p :=
 @[monotonicity]
 theorem Monotonicity.exists {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) :
     Implies (∃ a, p a) (∃ a, q a) :=
-  exists_imp_exists h
+  imp h
 
 @[monotonicity]
 theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∧ q) (p' ∧ q') :=
-  And.impₓ hp hq
+  And.imp hp hq
 
 @[monotonicity]
 theorem Monotonicity.or {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∨ q) (p' ∨ q') :=
-  Or.impₓ hp hq
+  Or.imp hp hq
 
 @[monotonicity]
 theorem Monotonicity.not {p q : Prop} (h : Implies p q) : Implies (¬q) ¬p :=
@@ -73,7 +73,7 @@ private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit := d
                   eapply ((const `monotonicity.pi [u] : expr) pd p' q')
                   skip) <|>
                 do
-                guardₓ <| u = level.zero ∧ is_arrow p ∧ is_arrow q
+                guard <| u = level.zero ∧ is_arrow p ∧ is_arrow q
                 let p' := pb 0 1
                 let q' := qb 0 1
                 eapply ((const `monotonicity.imp [] : expr) pd p' qd q')
@@ -308,7 +308,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
               solve1 <| do
                 let bs ← intros
                 let ms ← apply_core ((const n u_params).app_of_list <| ps ++ fs Prod.fst) { NewGoals := new_goals.all }
-                let params ← (ms bs).enum.mfilter fun ⟨n, m, d⟩ => bnot <$> is_assigned m.2
+                let params ← (ms bs).enum.mfilter fun ⟨n, m, d⟩ => not <$> is_assigned m.2
                 params fun ⟨n, m, d⟩ =>
                     mono d (fs Prod.snd) <|>
                       fail f!"failed to prove montonoicity of {(n + 1)}. parameter of intro-rule {pp_n}"
@@ -461,7 +461,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       let some doc_string ← pure meta_info | skip
       add_doc_string d doc_string
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `hs
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `hs -/
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 
@@ -473,7 +473,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
     let mvars ← apply_core rule { approx := false, NewGoals := NewGoals.all }
     let g
       ←-- analyse relation
-          List.headₓ <$>
+          List.head' <$>
           get_goals
     let List.cons _ m_is ← return <| mvars.dropWhile fun v => v.2 ≠ g
     let tgt ← target
@@ -526,7 +526,7 @@ namespace Interactive
 open Interactive Interactive.Types Expr Lean.Parser
 
 -- mathport name: «expr ?»
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 -- mathport name: parser.many
 local postfix:1024 "*" => many

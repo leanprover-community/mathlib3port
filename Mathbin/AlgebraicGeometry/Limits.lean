@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.AlgebraicGeometry.Pullbacks
-import Mathbin.AlgebraicGeometry.AffineScheme
+import Mathbin.AlgebraicGeometry.AffineSchemeCat
 import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
 import Mathbin.CategoryTheory.Limits.Constructions.Equalizers
 
@@ -32,52 +32,52 @@ open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 namespace AlgebraicGeometry
 
 /-- `Spec ℤ` is the terminal object in the category of schemes. -/
-noncomputable def specZIsTerminal : IsTerminal (Scheme.spec.obj (op <| CommRingₓₓ.of ℤ)) :=
-  @IsTerminal.isTerminalObj _ _ Scheme.spec _ inferInstance (terminalOpOfInitial CommRingₓₓ.zIsInitial)
+noncomputable def specZIsTerminal : IsTerminal (SchemeCat.spec.obj (op <| CommRingCat.of ℤ)) :=
+  @IsTerminal.isTerminalObj _ _ SchemeCat.spec _ inferInstance (terminalOpOfInitial CommRingCat.zIsInitial)
 
-instance : HasTerminal Scheme :=
-  has_terminal_of_has_terminal_of_preserves_limit Scheme.spec
+instance : HasTerminal SchemeCat :=
+  has_terminal_of_has_terminal_of_preserves_limit SchemeCat.spec
 
 instance : IsAffine (⊤_ Scheme.{u}) :=
-  is_affine_of_iso (PreservesTerminal.iso Scheme.spec).inv
+  isAffineOfIso (PreservesTerminal.iso SchemeCat.spec).inv
 
-instance : HasFiniteLimits Scheme :=
+instance : HasFiniteLimits SchemeCat :=
   has_finite_limits_of_has_terminal_and_pullbacks
 
 section Initial
 
 /-- The map from the empty scheme. -/
 @[simps]
-def Scheme.emptyTo (X : Scheme.{u}) : ∅ ⟶ X :=
-  ⟨{ base := ⟨fun x => Pempty.elimₓ x, by continuity⟩, c := { app := fun U => CommRingₓₓ.punitIsTerminal.from _ } },
-    fun x => Pempty.elimₓ x⟩
+def SchemeCat.emptyTo (X : SchemeCat.{u}) : ∅ ⟶ X :=
+  ⟨{ base := ⟨fun x => Pempty.elim x, by continuity⟩, c := { app := fun U => CommRingCat.punitIsTerminal.from _ } },
+    fun x => Pempty.elim x⟩
 
 @[ext]
-theorem Scheme.empty_ext {X : Scheme.{u}} (f g : ∅ ⟶ X) : f = g := by
+theorem SchemeCat.empty_ext {X : SchemeCat.{u}} (f g : ∅ ⟶ X) : f = g := by
   ext a
-  exact Pempty.elimₓ a
+  exact Pempty.elim a
 
-theorem Scheme.eq_empty_to {X : Scheme.{u}} (f : ∅ ⟶ X) : f = Scheme.emptyTo X :=
-  Scheme.empty_ext f (Scheme.emptyTo X)
+theorem SchemeCat.eq_empty_to {X : SchemeCat.{u}} (f : ∅ ⟶ X) : f = SchemeCat.emptyTo X :=
+  SchemeCat.empty_ext f (SchemeCat.emptyTo X)
 
-instance (X : Scheme.{u}) : Unique (∅ ⟶ X) :=
-  ⟨⟨Scheme.emptyTo _⟩, fun _ => Scheme.empty_ext _ _⟩
+instance (X : SchemeCat.{u}) : Unique (∅ ⟶ X) :=
+  ⟨⟨SchemeCat.emptyTo _⟩, fun _ => SchemeCat.empty_ext _ _⟩
 
 /-- The empty scheme is the initial object in the category of schemes. -/
-def emptyIsInitial : IsInitial (∅ : Scheme.{u}) :=
+def emptyIsInitial : IsInitial (∅ : SchemeCat.{u}) :=
   IsInitial.ofUnique _
 
 @[simp]
 theorem empty_is_initial_to : emptyIsInitial.to = Scheme.empty_to :=
   rfl
 
-instance : IsEmpty Scheme.empty.Carrier :=
+instance : IsEmpty SchemeCat.empty.Carrier :=
   show IsEmpty Pempty by infer_instance
 
-instance Spec_punit_is_empty : IsEmpty (Scheme.spec.obj (op <| CommRingₓₓ.of PUnit)).Carrier :=
+instance Spec_punit_is_empty : IsEmpty (SchemeCat.spec.obj (op <| CommRingCat.of PUnit)).Carrier :=
   ⟨PrimeSpectrum.punit⟩
 
-instance (priority := 100) is_open_immersion_of_is_empty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty X.Carrier] :
+instance (priority := 100) is_open_immersion_of_is_empty {X Y : SchemeCat} (f : X ⟶ Y) [IsEmpty X.Carrier] :
     IsOpenImmersion f := by
   apply (config := { instances := false }) is_open_immersion.of_stalk_iso
   · apply open_embedding_of_continuous_injective_open
@@ -89,7 +89,7 @@ instance (priority := 100) is_open_immersion_of_is_empty {X Y : Scheme} (f : X �
     · intro U hU
       convert is_open_empty
       ext
-      apply (iff_falseₓ _).mpr
+      apply (iff_false_iff _).mpr
       exact fun x => isEmptyElim (show X.carrier from x.some)
       
     
@@ -97,37 +97,37 @@ instance (priority := 100) is_open_immersion_of_is_empty {X Y : Scheme} (f : X �
     exact isEmptyElim i
     
 
-instance (priority := 100) is_iso_of_is_empty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty Y.Carrier] : IsIso f := by
+instance (priority := 100) is_iso_of_is_empty {X Y : SchemeCat} (f : X ⟶ Y) [IsEmpty Y.Carrier] : IsIso f := by
   haveI : IsEmpty X.carrier := ⟨fun x => isEmptyElim (show Y.carrier from f.1.base x)⟩
   have : epi f.1.base := by
-    rw [Top.epi_iff_surjective]
+    rw [TopCat.epi_iff_surjective]
     rintro (x : Y.carrier)
     exact isEmptyElim x
   apply is_open_immersion.to_iso
 
 /-- A scheme is initial if its underlying space is empty . -/
-noncomputable def isInitialOfIsEmpty {X : Scheme} [IsEmpty X.Carrier] : IsInitial X :=
+noncomputable def isInitialOfIsEmpty {X : SchemeCat} [IsEmpty X.Carrier] : IsInitial X :=
   emptyIsInitial.of_iso (as_iso <| emptyIsInitial.to _)
 
 /-- `Spec 0` is the initial object in the category of schemes. -/
-noncomputable def specPunitIsInitial : IsInitial (Scheme.spec.obj (op <| CommRingₓₓ.of PUnit)) :=
+noncomputable def specPunitIsInitial : IsInitial (SchemeCat.spec.obj (op <| CommRingCat.of PUnit)) :=
   emptyIsInitial.of_iso (as_iso <| emptyIsInitial.to _)
 
-instance (priority := 100) is_affine_of_is_empty {X : Scheme} [IsEmpty X.Carrier] : IsAffine X :=
-  is_affine_of_iso (inv (emptyIsInitial.to X) ≫ emptyIsInitial.to (Scheme.spec.obj (op <| CommRingₓₓ.of PUnit)))
+instance (priority := 100) isAffineOfIsEmpty {X : SchemeCat} [IsEmpty X.Carrier] : IsAffine X :=
+  isAffineOfIso (inv (emptyIsInitial.to X) ≫ emptyIsInitial.to (SchemeCat.spec.obj (op <| CommRingCat.of PUnit)))
 
-instance : HasInitial Scheme :=
-  has_initial_of_unique Scheme.empty
+instance : HasInitial SchemeCat :=
+  has_initial_of_unique SchemeCat.empty
 
 instance initial_is_empty : IsEmpty (⊥_ Scheme).Carrier :=
-  ⟨fun x => ((initial.to Scheme.empty : _).1.base x).elim⟩
+  ⟨fun x => ((initial.to SchemeCat.empty : _).1.base x).elim⟩
 
-theorem bot_is_affine_open (X : Scheme) : IsAffineOpen (⊥ : Opens X.Carrier) := by
+theorem bot_is_affine_open (X : SchemeCat) : IsAffineOpen (⊥ : Opens X.Carrier) := by
   convert range_is_affine_open_of_open_immersion (initial.to X)
   ext
-  exact (false_iffₓ _).mpr fun x => isEmptyElim (show (⊥_ Scheme).Carrier from x.some)
+  exact (false_iff_iff _).mpr fun x => isEmptyElim (show (⊥_ Scheme).Carrier from x.some)
 
-instance : HasStrictInitialObjects Scheme :=
+instance : HasStrictInitialObjects SchemeCat :=
   has_strict_initial_objects_of_initial_is_strict fun A f => by infer_instance
 
 end Initial

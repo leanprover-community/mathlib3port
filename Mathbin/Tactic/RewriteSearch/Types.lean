@@ -28,7 +28,7 @@ unsafe def side.to_string : Side → format
   | side.R => "R"
 
 /-- Convert a side to the string "lhs" or "rhs", for use in tactic name generation. -/
-def Side.toXhs : Side → Stringₓ
+def Side.toXhs : Side → String
   | side.L => "lhs"
   | side.R => "rhs"
 

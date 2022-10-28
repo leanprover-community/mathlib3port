@@ -48,16 +48,17 @@ polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
 our proof of that relies on the fact that `abs` is in the closure of polynomials on `[-M, M]`,
 so we may as well get this done first.)
 -/
-theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ := by
+theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.IccCat a b)).topologicalClosure = ⊤ :=
+  by
   by_cases h:a < b
   -- (Otherwise it's easy; we'll deal with that later.)
   · -- We can pullback continuous functions on `[a,b]` to continuous functions on `[0,1]`,
     -- by precomposing with an affine map.
-    let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap
+    let W : C(Set.IccCat a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap
     -- This operation is itself a homeomorphism
     -- (with respect to the norm topologies on continuous functions).
-    let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
-    have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl
+    let W' : C(Set.IccCat a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
+    have w : (W : C(Set.IccCat a b, ℝ) → C(I, ℝ)) = W' := rfl
     -- Thus we take the statement of the Weierstrass approximation theorem for `[0,1]`,
     have p := polynomial_functions_closure_eq_top'
     -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
@@ -72,8 +73,8 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
     
   · -- Otherwise, `b ≤ a`, and the interval is a subsingleton,
     -- so all subalgebras are the same anyway.
-    haveI : Subsingleton (Set.Icc a b) :=
-      ⟨fun x y => le_antisymmₓ ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
+    haveI : Subsingleton (Set.IccCat a b) :=
+      ⟨fun x y => le_antisymm ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     apply Subsingleton.elim
     
 
@@ -81,8 +82,8 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
 
 Every real-valued continuous function on `[a,b]` is a uniform limit of polynomials.
 -/
-theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.Icc a b, ℝ)) :
-    f ∈ (polynomialFunctions (Set.Icc a b)).topologicalClosure := by
+theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.IccCat a b, ℝ)) :
+    f ∈ (polynomialFunctions (Set.IccCat a b)).topologicalClosure := by
   rw [polynomial_functions_closure_eq_top _ _]
   simp
 
@@ -91,7 +92,7 @@ for those who like their epsilons.
 
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
 -/
-theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.Icc a b, ℝ)) (ε : ℝ) (pos : 0 < ε) :
+theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.IccCat a b, ℝ)) (ε : ℝ) (pos : 0 < ε) :
     ∃ p : Polynomial ℝ, ∥p.toContinuousMapOn _ - f∥ < ε := by
   have w := mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
@@ -105,9 +106,9 @@ for those who like epsilons, but not bundled continuous functions.
 Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`
 can be approximated to within any `ε > 0` on `[a,b]` by some polynomial.
 -/
-theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ) (c : ContinuousOn f (Set.Icc a b)) (ε : ℝ)
-    (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀ x ∈ Set.Icc a b, abs (p.eval x - f x) < ε := by
-  let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
+theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ) (c : ContinuousOn f (Set.IccCat a b)) (ε : ℝ)
+    (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀ x ∈ Set.IccCat a b, abs (p.eval x - f x) < ε := by
+  let f' : C(Set.IccCat a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
   obtain ⟨p, b⟩ := exists_polynomial_near_continuous_map a b f' ε Pos
   use p
   rw [norm_lt_iff _ Pos] at b

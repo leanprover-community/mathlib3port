@@ -29,12 +29,12 @@ Ring involution
 variable (R : Type _)
 
 /-- A ring involution -/
-structure RingInvo [Semiringₓ R] extends R ≃+* Rᵐᵒᵖ where
+structure RingInvo [Semiring R] extends R ≃+* Rᵐᵒᵖ where
   involution' : ∀ x, (to_fun (to_fun x).unop).unop = x
 
 namespace RingInvo
 
-variable {R} [Semiringₓ R]
+variable {R} [Semiring R]
 
 /-- Construct a ring involution from a ring homomorphism. -/
 def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
@@ -67,9 +67,9 @@ end RingInvo
 
 open RingInvo
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 /-- The identity function of a `comm_ring` is a ring involution. -/
 protected def RingInvo.id : RingInvo R :=
@@ -78,5 +78,5 @@ protected def RingInvo.id : RingInvo R :=
 instance : Inhabited (RingInvo R) :=
   ⟨RingInvo.id _⟩
 
-end CommRingₓ
+end CommRing
 

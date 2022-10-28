@@ -63,7 +63,7 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
     exact (Set.inter_subset_left _ _).trans (hU.trans (Set.image_subset_range _ _))
     
   · intro x hx
-    rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivialₓ]
+    rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivial]
     exact hU hx
     
   · rw [h.is_compact_iff_is_compact_image]
@@ -72,7 +72,7 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
     exact hU.trans (Set.image_subset_range _ _)
     
   · intro x hx
-    rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivialₓ]
+    rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivial]
     exact hV hx
     
   · rw [h.is_compact_iff_is_compact_image]
@@ -106,7 +106,7 @@ instance (priority := 100) NoetherianSpace.to_quasi_separated_space [NoetherianS
   ⟨fun _ _ _ _ _ _ => NoetherianSpace.is_compact _⟩
 
 theorem IsQuasiSeparated.of_quasi_separated_space (s : Set α) [QuasiSeparatedSpace α] : IsQuasiSeparated s :=
-  is_quasi_separated_univ.of_subset (Set.subset_univ _)
+  is_quasi_separated_univ.ofSubset (Set.subset_univ _)
 
 theorem QuasiSeparatedSpace.of_open_embedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] : QuasiSeparatedSpace α :=
   is_quasi_separated_univ_iff.mp (h.is_quasi_separated_iff.mpr <| IsQuasiSeparated.of_quasi_separated_space _)

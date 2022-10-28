@@ -70,7 +70,7 @@ theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : Solution
   refine' ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
   intro B h
   refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
-  rw [← adjunction.hom_equiv_unit, Equivₓ.apply_symm_apply]
+  rw [← adjunction.hom_equiv_unit, Equiv.apply_symm_apply]
 
 /-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.

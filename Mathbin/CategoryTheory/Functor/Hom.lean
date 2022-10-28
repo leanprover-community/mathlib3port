@@ -25,8 +25,8 @@ variable (C : Type u) [Category.{v} C]
 covariant in `Y`. -/
 @[simps]
 def hom : Cᵒᵖ × C ⥤ Type v where
-  obj := fun p => unop p.1 ⟶ p.2
-  map := fun X Y f => fun h => f.1.unop ≫ h ≫ f.2
+  obj p := unop p.1 ⟶ p.2
+  map X Y f h := f.1.unop ≫ h ≫ f.2
 
 end CategoryTheory.Functor
 

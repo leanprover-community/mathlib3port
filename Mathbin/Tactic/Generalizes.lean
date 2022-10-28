@@ -72,9 +72,9 @@ unsafe def step1 (md : Transparency) (unify : Bool) (e : expr) (to_generalize : 
     pure (e, k :: ks)
   to_generalize go (e, [])
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Input: for each equation that should be generated: the equation name, the
 argument `jᵢ` and the corresponding local constant `kᵢ` from step 1.
 
@@ -98,9 +98,9 @@ unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr
     let eq ← mk_local' n BinderInfo.default eq_type
     pure (Eq, eq_proof)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Input: The `jᵢ`; the local constants `kᵢ` from step 1; the equations and their
 proofs from step 2.
 

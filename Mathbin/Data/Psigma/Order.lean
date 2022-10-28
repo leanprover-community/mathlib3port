@@ -48,12 +48,12 @@ instance Lex.hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where le := 
 /-- The lexicographical `<` on a sigma type. -/
 instance Lex.hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where lt := Lex (· < ·) fun i => (· < ·)
 
-instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ' i, α i) :=
-  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rflₓ,
+instance Lex.preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, α i) :=
+  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,
     le_trans := by
-      rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
+      rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁r⟩ ⟨h₂r⟩
       · left
-        apply lt_transₓ
+        apply lt_trans
         repeat' assumption
         
       · left
@@ -63,22 +63,22 @@ instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
         assumption
         
       · right
-        apply le_transₓ
+        apply le_trans
         repeat' assumption
         ,
     lt_iff_le_not_le := by
-      refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_ltₓ, _⟩, _⟩
-      · rintro (⟨j, i, b, a, hji⟩ | ⟨i, b, a, hba⟩) <;> obtain ⟨_, _, _, _, hij⟩ | ⟨_, _, _, hab⟩ := hab
+      refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
+      · rintro (⟨i, a, hji⟩ | ⟨i, hba⟩) <;> obtain ⟨_, _, hij⟩ | ⟨_, hab⟩ := hab
         · exact hij.not_lt hji
           
-        · exact lt_irreflₓ _ hji
+        · exact lt_irrefl _ hji
           
-        · exact lt_irreflₓ _ hij
+        · exact lt_irrefl _ hij
           
         · exact hab.not_le hba
           
         
-      · rintro ⟨⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩, hba⟩
+      · rintro ⟨⟨j, b, hij⟩ | ⟨i, hab⟩, hba⟩
         · exact lex.left _ _ hij
           
         · exact lex.right _ (hab.lt_of_not_le fun h => hba <| lex.right _ h)
@@ -86,28 +86,28 @@ instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
          }
 
 /-- Dictionary / lexicographic partial_order for dependent pairs. -/
-instance Lex.partialOrder [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ' i, α i) :=
+instance Lex.partialOrder [PartialOrder ι] [∀ i, PartialOrder (α i)] : PartialOrder (Σₗ' i, α i) :=
   { Lex.preorder with
     le_antisymm := by
-      rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
-      · exact (lt_irreflₓ a₁ <| hlt₁.trans hlt₂).elim
+      rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, hlt₁⟩ | ⟨_, hlt₁⟩) (⟨_, _, hlt₂⟩ | ⟨_, hlt₂⟩)
+      · exact (lt_irrefl a₁ <| hlt₁.trans hlt₂).elim
         
-      · exact (lt_irreflₓ a₁ hlt₁).elim
+      · exact (lt_irrefl a₁ hlt₁).elim
         
-      · exact (lt_irreflₓ a₁ hlt₂).elim
+      · exact (lt_irrefl a₁ hlt₂).elim
         
       · rw [hlt₁.antisymm hlt₂]
          }
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
-instance Lex.linearOrder [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ' i, α i) :=
+instance Lex.linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder (Σₗ' i, α i) :=
   { Lex.partialOrder with
     le_total := by
       rintro ⟨i, a⟩ ⟨j, b⟩
-      obtain hij | rfl | hji := lt_trichotomyₓ i j
+      obtain hij | rfl | hji := lt_trichotomy i j
       · exact Or.inl (lex.left _ _ hij)
         
-      · obtain hab | hba := le_totalₓ a b
+      · obtain hab | hba := le_total a b
         · exact Or.inl (lex.right _ hab)
           
         · exact Or.inr (lex.right _ hba)

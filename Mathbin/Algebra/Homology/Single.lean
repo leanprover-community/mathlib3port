@@ -46,8 +46,8 @@ if you are working with `ℕ`-indexed complexes.
 -/
 @[simps]
 def single (j : ι) : V ⥤ HomologicalComplex V c where
-  obj := fun A => { x := fun i => if i = j then A else 0, d := fun i j => 0 }
-  map := fun A B f =>
+  obj A := { x := fun i => if i = j then A else 0, d := fun i j => 0 }
+  map A B f :=
     { f := fun i =>
         if h : i = j then
           eqToHom
@@ -60,7 +60,7 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
                   dsimp
                   rw [if_pos h])
         else 0 }
-  map_id' := fun A => by
+  map_id' A := by
     ext
     dsimp
     split_ifs with h
@@ -70,7 +70,7 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
     · rw [if_neg h]
       simp
       
-  map_comp' := fun A B C f g => by
+  map_comp' A B C f g := by
     ext
     dsimp
     split_ifs with h
@@ -93,7 +93,7 @@ theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
   rfl
 
 instance (j : ι) :
-    Faithful (single V c j) where map_injective' := fun X Y f g w => by
+    Faithful (single V c j) where map_injective' X Y f g w := by
     have := congr_hom w j
     dsimp at this
     simp only [dif_pos] at this
@@ -102,8 +102,8 @@ instance (j : ι) :
     exact this
 
 instance (j : ι) : Full (single V c j) where
-  preimage := fun X Y f => eqToHom (by simp) ≫ f.f j ≫ eqToHom (by simp)
-  witness' := fun X Y f => by
+  preimage X Y f := eqToHom (by simp) ≫ f.f j ≫ eqToHom (by simp)
+  witness' X Y f := by
     ext i
     dsimp
     split_ifs
@@ -130,25 +130,25 @@ as chain complexes supported in degree 0.
 This is naturally isomorphic to `single V _ 0`, but has better definitional properties.
 -/
 def single₀ : V ⥤ ChainComplex V ℕ where
-  obj := fun X =>
+  obj X :=
     { x := fun n =>
         match n with
         | 0 => X
         | n + 1 => 0,
       d := fun i j => 0 }
-  map := fun X Y f =>
+  map X Y f :=
     { f := fun n =>
         match n with
         | 0 => f
         | n + 1 => 0 }
-  map_id' := fun X => by
+  map_id' X := by
     ext n
     cases n
     rfl
     dsimp
     unfold_aux
     simp
-  map_comp' := fun X Y Z f g => by
+  map_comp' X Y Z f g := by
     ext n
     cases n
     rfl
@@ -220,12 +220,13 @@ variable {V}
 to a single object chain complex with `X` concentrated in degree 0
 are the same as morphisms `f : C.X 0 ⟶ X` such that `C.d 1 0 ≫ f = 0`.
 -/
+@[simps]
 def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj X) ≃ { f : C.x 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
-  toFun := fun f =>
+  toFun f :=
     ⟨f.f 0, by
       rw [← f.comm 1 0]
       simp⟩
-  invFun := fun f =>
+  invFun f :=
     { f := fun i =>
         match i with
         | 0 => f.1
@@ -240,7 +241,7 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
         · rw [C.shape, zero_comp]
           simp [i.succ_succ_ne_one.symm]
            }
-  left_inv := fun f => by
+  left_inv f := by
     ext i
     rcases i with ⟨⟩
     · rfl
@@ -248,6 +249,39 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
     · ext
       
   right_inv := by tidy
+
+@[ext]
+theorem to_single₀_ext {C : ChainComplex V ℕ} {X : V} (f g : C ⟶ (single₀ V).obj X) (h : f.f 0 = g.f 0) : f = g :=
+  (toSingle₀Equiv C X).Injective
+    (by
+      ext
+      exact h)
+
+/-- Morphisms from a single object chain complex with `X` concentrated in degree 0
+to a `ℕ`-indexed chain complex `C` are the same as morphisms `f : X → C.X`.
+-/
+@[simps]
+def fromSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : ((single₀ V).obj X ⟶ C) ≃ (X ⟶ C.x 0) where
+  toFun f := f.f 0
+  invFun f :=
+    { f := fun i =>
+        match i with
+        | 0 => f
+        | n + 1 => 0,
+      comm' := fun i j h => by
+        cases i <;>
+          cases j <;>
+            unfold_aux <;>
+              simp only [shape, ComplexShape.down_rel, Nat.one_ne_zero, not_false_iff, comp_zero, zero_comp,
+                Nat.succ_ne_zero, single₀_obj_X_d] }
+  left_inv f := by
+    ext i
+    cases i
+    · rfl
+      
+    · ext
+      
+  right_inv g := rfl
 
 variable (V)
 
@@ -292,25 +326,25 @@ as cochain complexes supported in degree 0.
 This is naturally isomorphic to `single V _ 0`, but has better definitional properties.
 -/
 def single₀ : V ⥤ CochainComplex V ℕ where
-  obj := fun X =>
+  obj X :=
     { x := fun n =>
         match n with
         | 0 => X
         | n + 1 => 0,
       d := fun i j => 0 }
-  map := fun X Y f =>
+  map X Y f :=
     { f := fun n =>
         match n with
         | 0 => f
         | n + 1 => 0 }
-  map_id' := fun X => by
+  map_id' X := by
     ext n
     cases n
     rfl
     dsimp
     unfold_aux
     simp
-  map_comp' := fun X Y Z f g => by
+  map_comp' X Y Z f g := by
     ext n
     cases n
     rfl
@@ -384,11 +418,11 @@ are the same as morphisms `f : X ⟶ C.X 0` such that `f ≫ C.d 0 1 = 0`.
 -/
 def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
     ((single₀ V).obj X ⟶ C) ≃ { f : X ⟶ C.x 0 // f ≫ C.d 0 1 = 0 } where
-  toFun := fun f =>
+  toFun f :=
     ⟨f.f 0, by
       rw [f.comm 0 1]
       simp⟩
-  invFun := fun f =>
+  invFun f :=
     { f := fun i =>
         match i with
         | 0 => f.1
@@ -403,10 +437,10 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
           
         · convert comp_zero
           rw [C.shape]
-          simp only [ComplexShape.up_rel, zero_addₓ]
+          simp only [ComplexShape.up_rel, zero_add]
           exact (Nat.one_lt_succ_succ j).Ne
            }
-  left_inv := fun f => by
+  left_inv f := by
     ext i
     rcases i with ⟨⟩
     · rfl

@@ -3,6 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
+import Mathbin.Tactic.Protected
 import Mathbin.Tactic.SplitIfs
 
 /-!
@@ -17,6 +18,14 @@ We spell those lemmas out with `dite` and `ite` rather than the `if then else` n
 would result in less delta-reduced statements.
 -/
 
+
+alias heq_iff_eq ↔ HEq.eq Eq.heq
+
+attribute [protected] HEq.eq Eq.heq
+
+alias ne_of_eq_of_ne ← Eq.trans_ne
+
+alias ne_of_ne_of_eq ← Ne.trans_eq
 
 variable {α : Sort _} {p q r : Prop} [Decidable p] [Decidable q] {a b c : α}
 

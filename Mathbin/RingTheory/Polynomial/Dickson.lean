@@ -52,7 +52,7 @@ namespace Polynomial
 
 open Polynomial
 
-variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] (k : ℕ) (a : R)
+variable {R S : Type _} [CommRing R] [CommRing S] (k : ℕ) (a : R)
 
 /-- `dickson` is the `n`the (generalised) Dickson polynomial of the `k`-th kind associated to the
 element `a ∈ R`. -/
@@ -77,7 +77,7 @@ theorem dickson_add_two (n : ℕ) : dickson k a (n + 2) = X * dickson k a (n + 1
 theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
-  rw [add_commₓ]
+  rw [add_comm]
   exact dickson_add_two k a n
 
 variable {R S k a}
@@ -96,12 +96,12 @@ variable {R}
 @[simp]
 theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
   | 0 => by
-    simp only [dickson_zero, pow_zeroₓ]
+    simp only [dickson_zero, pow_zero]
     norm_num
-  | 1 => by simp only [dickson_one, pow_oneₓ]
+  | 1 => by simp only [dickson_one, pow_one]
   | n + 2 => by
     simp only [dickson_add_two, C_0, zero_mul, sub_zero]
-    rw [dickson_two_zero, pow_addₓ X (n + 1) 1, mul_comm, pow_oneₓ]
+    rw [dickson_two_zero, pow_add X (n + 1) 1, mul_comm, pow_one]
 
 section Dickson
 
@@ -121,12 +121,12 @@ variable {R}
 
 theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) : ∀ n, (dickson 1 (1 : R) n).eval (x + y) = x ^ n + y ^ n
   | 0 => by
-    simp only [bit0, eval_one, eval_add, pow_zeroₓ, dickson_zero]
+    simp only [bit0, eval_one, eval_add, pow_zero, dickson_zero]
     norm_num
-  | 1 => by simp only [eval_X, dickson_one, pow_oneₓ]
+  | 1 => by simp only [eval_X, dickson_one, pow_one]
   | n + 2 => by
     simp only [eval_sub, eval_mul, dickson_one_one_eval_add_inv, eval_X, dickson_add_two, C_1, eval_one]
-    conv_lhs => simp only [pow_succₓ, add_mulₓ, mul_addₓ, h, ← mul_assoc, mul_comm y x, one_mulₓ]
+    conv_lhs => simp only [pow_succ, add_mul, mul_add, h, ← mul_assoc, mul_comm y x, one_mul]
     ring_exp
 
 variable (R)
@@ -134,39 +134,39 @@ variable (R)
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * X)
   | 0 => by
-    simp only [chebyshev.T_zero, mul_oneₓ, one_comp, dickson_zero]
+    simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
     norm_num
   | 1 => by
-    rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, mul_inv_of_self, C_1, one_mulₓ]
+    rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, mul_inv_of_self, C_1, one_mul]
   | n + 2 => by
     simp only [dickson_add_two, chebyshev.T_add_two, dickson_one_one_eq_chebyshev_T (n + 1),
       dickson_one_one_eq_chebyshev_T n, sub_comp, mul_comp, add_comp, X_comp, bit0_comp, one_comp]
     simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_inv_of_self]
-    rw [C_1, one_mulₓ]
+    rw [C_1, one_mul]
     ring
 
 theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
-  rw [inv_of_mul_self, C_1, one_mulₓ, one_mulₓ, comp_X]
+  rw [inv_of_mul_self, C_1, one_mul, one_mul, comp_X]
 
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
 `n`-th. -/
 theorem dickson_one_one_mul (m n : ℕ) : dickson 1 (1 : R) (m * n) = (dickson 1 1 m).comp (dickson 1 1 n) := by
   have h : (1 : R) = Int.castRingHom R 1
-  simp only [eq_int_cast, Int.cast_oneₓ]
+  simp only [eq_int_cast, Int.cast_one]
   rw [h]
   simp only [← map_dickson (Int.castRingHom R), ← map_comp]
   congr 1
   apply map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [map_dickson, map_comp, eq_int_cast, Int.cast_oneₓ, dickson_one_one_eq_chebyshev_T, chebyshev.T_mul,
-    two_mul, ← add_comp]
+  simp only [map_dickson, map_comp, eq_int_cast, Int.cast_one, dickson_one_one_eq_chebyshev_T, chebyshev.T_mul, two_mul,
+    ← add_comp]
   simp only [← two_mul, ← comp_assoc]
   apply eval₂_congr rfl rfl
   rw [comp_assoc]
   apply eval₂_congr rfl _ rfl
-  rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, inv_of_mul_self, C_1, one_mulₓ]
+  rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, inv_of_mul_self, C_1, one_mul]
 
 theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
@@ -216,28 +216,28 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       have hφ : φ ≠ 0 := by
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
-        simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq, zero_addₓ, one_ne_zero]
+        simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq, zero_add, one_ne_zero]
       classical
       convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
       ext1 y
-      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finsetₓ.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
+      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
         eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
       by_cases hy:y = 0
-      · simp only [hy, eq_self_iff_true, or_trueₓ]
+      · simp only [hy, eq_self_iff_true, or_true_iff]
         
-      apply or_congrₓ _ Iff.rfl
-      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mulₓ, inv_mul_cancel hy]
+      apply or_congr _ Iff.rfl
+      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
       apply eq_iff_eq_cancel_right.mpr
       ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
-      simp only [exists_propₓ, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
+      simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
       by_cases hx:x = 0
-      · simp only [hx, and_trueₓ, eq_self_iff_true, inv_zero, or_trueₓ]
+      · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
         exact ⟨_, 1, rfl, one_ne_zero⟩
         
-      · simp only [hx, or_falseₓ, exists_eq_right]
+      · simp only [hx, or_false_iff, exists_eq_right]
         exact ⟨_, rfl, hx⟩
         
       

@@ -80,8 +80,9 @@ structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiv
   [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (a ⟶ b)] extends Prefunctor B C where
   map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident prelax_functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The prefunctor between the underlying quivers. -/
+add_decl_doc prelax_functor.to_prefunctor
+
 namespace PrelaxFunctor
 
 instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
@@ -198,8 +199,9 @@ attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
 
 section
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident oplax_functor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The prelax functor between the underlying quivers. -/
+add_decl_doc oplax_functor.to_prelax_functor
+
 instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 
@@ -224,8 +226,8 @@ theorem to_prelax_functor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) where
-  obj := fun f => F.map f
-  map := fun f g η => F.map₂ η
+  obj f := F.map f
+  map f g η := F.map₂ η
 
 /-- The identity oplax functor. -/
 @[simps]
@@ -355,8 +357,9 @@ section
 
 open Iso
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident pseudofunctor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The prelax functor between the underlying quivers. -/
+add_decl_doc pseudofunctor.to_prelax_functor
+
 instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 

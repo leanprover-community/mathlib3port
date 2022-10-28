@@ -57,12 +57,16 @@ structure SpectralMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace �
   toFun : α → β
   spectral' : IsSpectralMap to_fun
 
+section
+
 /-- `spectral_map_class F α β` states that `F` is a type of spectral maps.
 
 You should extend this class when you extend `spectral_map`. -/
 class SpectralMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   FunLike F α fun _ => β where
   map_spectral (f : F) : IsSpectralMap f
+
+end
 
 export SpectralMapClass (map_spectral)
 
@@ -73,7 +77,7 @@ instance (priority := 100) SpectralMapClass.toContinuousMapClass [TopologicalSpa
     [SpectralMapClass F α β] : ContinuousMapClass F α β :=
   { ‹SpectralMapClass F α β› with map_continuous := fun f => (map_spectral f).Continuous }
 
-instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] : CoeTₓ F (SpectralMap α β) :=
+instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] : CoeT F (SpectralMap α β) :=
   ⟨fun f => ⟨_, map_spectral f⟩⟩
 
 /-! ### Spectral maps -/
@@ -89,11 +93,11 @@ def toContinuousMap (f : SpectralMap α β) : ContinuousMap α β :=
 
 instance : SpectralMapClass (SpectralMap α β) α β where
   coe := SpectralMap.toFun
-  coe_injective' := fun f g h => by
+  coe_injective' f g h := by
     cases f
     cases g
     congr
-  map_spectral := fun f => f.spectral'
+  map_spectral f := f.spectral'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/

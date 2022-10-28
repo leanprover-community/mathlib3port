@@ -29,7 +29,7 @@ Instances constructed from this result:
 
 
 /-- If the algebra map `R →+* A` is injective then `A` has the same characteristic as `R`. -/
-theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) (p : ℕ) [CharP R p] : CharP A p :=
   { cast_eq_zero_iff := fun x => by
       rw [← CharP.cast_eq_zero_iff R p x]
@@ -38,12 +38,12 @@ theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semi
       refine' Iff.trans _ h.eq_iff
       rw [RingHom.map_zero] }
 
-theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiringₓ A] [Algebra R A] [Nontrivial A] (p : ℕ)
+theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiring A] [Algebra R A] [Nontrivial A] (p : ℕ)
     [CharP R p] : CharP A p :=
   char_p_of_injective_algebra_map (algebraMap R A).Injective p
 
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
-theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) [CharZero R] : CharZero A :=
   { cast_injective := fun x y hxy => by
       change algebraMap ℕ A x = algebraMap ℕ A y at hxy
@@ -68,7 +68,7 @@ This cannot be a (local) instance because it would immediately form a loop with 
 instance `algebra_rat`. It's probably easier to go the other way: prove `char_zero R` and
 automatically receive an `algebra ℚ R` instance.
 -/
-theorem algebraRat.char_p_zero [Semiringₓ R] [Algebra ℚ R] : CharP R 0 :=
+theorem algebraRat.char_p_zero [Semiring R] [Algebra ℚ R] : CharP R 0 :=
   char_p_of_injective_algebra_map (algebraMap ℚ R).Injective 0
 
 /-- A nontrivial `ℚ`-algebra has characteristic zero.
@@ -77,7 +77,7 @@ This cannot be a (local) instance because it would immediately form a loop with 
 instance `algebra_rat`. It's probably easier to go the other way: prove `char_zero R` and
 automatically receive an `algebra ℚ R` instance.
 -/
-theorem algebraRat.char_zero [Ringₓ R] [Algebra ℚ R] : CharZero R :=
+theorem algebraRat.char_zero [Ring R] [Algebra ℚ R] : CharZero R :=
   @CharP.char_p_to_char_zero R _ (algebraRat.char_p_zero R)
 
 end QAlgebra
@@ -89,7 +89,7 @@ An algebra over a field has the same characteristic as the field.
 
 section
 
-variable (K L : Type _) [Field K] [CommSemiringₓ L] [Nontrivial L] [Algebra K L]
+variable (K L : Type _) [Field K] [CommSemiring L] [Nontrivial L] [Algebra K L]
 
 theorem Algebra.char_p_iff (p : ℕ) : CharP K p ↔ CharP L p :=
   (algebraMap K L).char_p_iff_char_p p
@@ -102,7 +102,7 @@ end
 
 namespace FreeAlgebra
 
-variable {R X : Type _} [CommSemiringₓ R] (p : ℕ)
+variable {R X : Type _} [CommSemiring R] (p : ℕ)
 
 /-- If `R` has characteristic `p`, then so does `free_algebra R X`. -/
 instance char_p [CharP R p] : CharP (FreeAlgebra R X) p :=
@@ -116,7 +116,7 @@ end FreeAlgebra
 
 namespace IsFractionRing
 
-variable (R : Type _) {K : Type _} [CommRingₓ R] [Field K] [Algebra R K] [IsFractionRing R K]
+variable (R : Type _) {K : Type _} [CommRing R] [Field K] [Algebra R K] [IsFractionRing R K]
 
 variable (p : ℕ)
 

@@ -32,13 +32,13 @@ When elaborated, the coefficient will be a native numeral of the same type as `e
 unsafe def mul_expr (n : ℕ) (e : expr) : pexpr :=
   if n = 1 then pquote.1 (%%ₓe) else pquote.1 ((%%ₓnat.to_pexpr n) * %%ₓe)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private unsafe def add_exprs_aux : pexpr → List pexpr → pexpr
   | p, [] => p
   | p, [a] => pquote.1 ((%%ₓp) + %%ₓa)
   | p, h::t => add_exprs_aux (pquote.1 ((%%ₓp) + %%ₓh)) t
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `add_exprs l` creates a `pexpr` representing the sum of the elements of `l`, associated left.
 If `l` is empty, it will be the `pexpr` 0. Otherwise, it does not include 0 in the sum.
 -/
@@ -52,12 +52,12 @@ along with the name of a lemma to apply in order to conclude `t1 + t2 R 0`.
 -/
 unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
   | Eq, Eq => (`` eq_of_eq_of_eq, Eq)
-  | Eq, le => (`` le_of_eq_of_leₓ, le)
-  | Eq, lt => (`` lt_of_eq_of_ltₓ, lt)
-  | le, Eq => (`` le_of_le_of_eqₓ, le)
+  | Eq, le => (`` le_of_eq_of_le, le)
+  | Eq, lt => (`` lt_of_eq_of_lt, lt)
+  | le, Eq => (`` le_of_le_of_eq, le)
   | le, le => (`add_nonpos, le)
   | le, lt => (`add_lt_of_le_of_neg, lt)
-  | lt, Eq => (`` lt_of_lt_of_eqₓ, lt)
+  | lt, Eq => (`` lt_of_lt_of_eq, lt)
   | lt, le => (`add_lt_of_neg_of_le, lt)
   | lt, lt => (`left.add_neg, lt)
 
@@ -70,7 +70,7 @@ unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (
   let (nm, niq) := ineq_const_nm c iq
   Prod.mk niq <$> mk_app nm [pf, h']
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `mk_lt_zero_pf coeffs pfs` takes a list of proofs of the form `tᵢ Rᵢ 0`,
 paired with coefficients `cᵢ`.
 It produces a proof that `∑cᵢ * tᵢ R 0`, where `R` is as strong as possible.
@@ -108,9 +108,9 @@ unsafe def prove_eq_zero_using (tac : tactic Unit) (e : expr) : tactic expr := d
   let tgt ← to_expr (pquote.1 ((%%ₓe) = 0))
   Prod.snd <$> solve_aux tgt (tac >> done)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `add_neg_eq_pfs l` inspects the list of proofs `l` for proofs of the form `t = 0`. For each such
 proof, it adds a proof of `-t = 0` to the list.
 -/
@@ -128,8 +128,8 @@ unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
 /-! #### The main method -/
 
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `prove_false_by_linarith` is the main workhorse of `linarith`.
 Given a list `l` of proofs of `tᵢ Rᵢ 0`,
 it tries to derive a contradiction from `l` and use this to produce a proof of `false`.

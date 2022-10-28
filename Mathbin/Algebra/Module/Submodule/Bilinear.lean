@@ -35,7 +35,7 @@ namespace Submodule
 
 variable {ι : Sort uι} {R M N P : Type _}
 
-variable [CommSemiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
+variable [CommSemiring R] [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P]
 
 variable [Module R M] [Module R N] [Module R P]
 
@@ -58,7 +58,7 @@ variable (R)
 
 theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N) :
     map₂ f (span R s) (span R t) = span R (Set.Image2 (fun m n => f m n) s t) := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · rw [map₂_le]
     intro a ha b hb
     apply span_induction ha
@@ -104,15 +104,15 @@ theorem map₂_le_map₂ {f : M →ₗ[R] N →ₗ[R] P} {p₁ p₂ : Submodule 
 
 theorem map₂_le_map₂_left {f : M →ₗ[R] N →ₗ[R] P} {p₁ p₂ : Submodule R M} {q : Submodule R N} (h : p₁ ≤ p₂) :
     map₂ f p₁ q ≤ map₂ f p₂ q :=
-  map₂_le_map₂ h (le_reflₓ q)
+  map₂_le_map₂ h (le_refl q)
 
 theorem map₂_le_map₂_right {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q₁ q₂ : Submodule R N} (h : q₁ ≤ q₂) :
     map₂ f p q₁ ≤ map₂ f p q₂ :=
-  map₂_le_map₂ (le_reflₓ p) h
+  map₂_le_map₂ (le_refl p) h
 
 theorem map₂_sup_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q₁ q₂ : Submodule R N) :
     map₂ f p (q₁ ⊔ q₂) = map₂ f p q₁ ⊔ map₂ f p q₂ :=
-  le_antisymmₓ
+  le_antisymm
     (map₂_le.2 fun m hm np hnp =>
       let ⟨n, hn, p, hp, hnp⟩ := mem_sup.1 hnp
       mem_sup.2 ⟨_, apply_mem_map₂ _ hm hn, _, apply_mem_map₂ _ hm hp, hnp ▸ (map_add _ _ _).symm⟩)
@@ -120,7 +120,7 @@ theorem map₂_sup_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q�
 
 theorem map₂_sup_left (f : M →ₗ[R] N →ₗ[R] P) (p₁ p₂ : Submodule R M) (q : Submodule R N) :
     map₂ f (p₁ ⊔ p₂) q = map₂ f p₁ q ⊔ map₂ f p₂ q :=
-  le_antisymmₓ
+  le_antisymm
     (map₂_le.2 fun mn hmn p hp =>
       let ⟨m, hm, n, hn, hmn⟩ := mem_sup.1 hmn
       mem_sup.2 ⟨_, apply_mem_map₂ _ hm hp, _, apply_mem_map₂ _ hn hp, hmn ▸ (LinearMap.map_add₂ _ _ _ _).symm⟩)

@@ -35,11 +35,11 @@ lie algebra, centralizer, normalizer
 
 variable {R L M M' : Type _}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable [CommRing R] [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable [AddCommGroupₓ M'] [Module R M'] [LieRingModule L M'] [LieModule R L M']
+variable [AddCommGroup M'] [Module R M'] [LieRingModule L M'] [LieModule R L M']
 
 namespace LieSubmodule
 
@@ -48,14 +48,14 @@ variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 /-- The centralizer of a Lie submodule. -/
 def centralizer : LieSubmodule R L M where
   Carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
-  add_mem' := fun m₁ m₂ hm₁ hm₂ x => by
+  add_mem' m₁ m₂ hm₁ hm₂ x := by
     rw [lie_add]
     exact N.add_mem' (hm₁ x) (hm₂ x)
-  zero_mem' := fun x => by simp
-  smul_mem' := fun t m hm x => by
+  zero_mem' x := by simp
+  smul_mem' t m hm x := by
     rw [lie_smul]
     exact N.smul_mem' t (hm x)
-  lie_mem := fun x m hm y => by
+  lie_mem x m hm y := by
     rw [leibniz_lie]
     exact N.add_mem' (hm ⁅y, x⁆) (N.lie_mem (hm y))
 
@@ -73,7 +73,7 @@ theorem centralizer_inf : (N₁ ⊓ N₂).Centralizer = N₁.Centralizer ⊓ N�
   simp [← forall_and_distrib]
 
 @[mono]
-theorem monotone_centalizer : Monotoneₓ (centralizer : LieSubmodule R L M → LieSubmodule R L M) := by
+theorem monotone_centalizer : Monotone (centralizer : LieSubmodule R L M → LieSubmodule R L M) := by
   intro N₁ N₂ h m hm
   rw [mem_centralizer] at hm⊢
   exact fun x => h (hm x)
@@ -117,7 +117,7 @@ theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H 
 
 theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x, y⁆ ∈ H := by
   rw [mem_normalizer_iff']
-  refine' forall₂_congrₓ fun y hy => _
+  refine' forall₂_congr fun y hy => _
   rw [← lie_skew, neg_mem_iff]
 
 theorem le_normalizer : H ≤ H.normalizer :=
@@ -136,7 +136,7 @@ theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy 
   obtain ⟨t, rfl⟩ := submodule.mem_span_singleton.mp hu₁
   obtain ⟨s, rfl⟩ := submodule.mem_span_singleton.mp hu₂
   apply Submodule.mem_sup_right
-  simp only [LieSubalgebra.mem_coe_submodule, smul_lie, add_lie, zero_addₓ, lie_add, smul_zero, lie_smul, lie_self]
+  simp only [LieSubalgebra.mem_coe_submodule, smul_lie, add_lie, zero_add, lie_add, smul_zero, lie_smul, lie_self]
   refine' H.add_mem (H.smul_mem s _) (H.add_mem (H.smul_mem t _) (H.lie_mem hv hw))
   exacts[(H.mem_normalizer_iff' x).mp hx v hv, (H.mem_normalizer_iff x).mp hx w hw]
 
@@ -156,7 +156,7 @@ variable (H)
 
 theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.toLieSubmodule) = ⊥ := by
   rw [LieSubmodule.eq_bot_iff]
-  refine' ⟨fun h => _, fun h => le_antisymmₓ (fun x hx => _) H.le_normalizer⟩
+  refine' ⟨fun h => _, fun h => le_antisymm (fun x hx => _) H.le_normalizer⟩
   · rintro ⟨x⟩ hx
     suffices x ∈ H by simpa
     rw [← h, H.mem_normalizer_iff']

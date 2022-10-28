@@ -111,7 +111,7 @@ def Equiv.ofFreeGroupEquiv {α β : Type _} (e : FreeGroup α ≃* FreeGroup β)
 open IsFreeGroup
 
 /-- Isomorphic free groups have equivalent bases (`is_free_group` variant`). -/
-def Equiv.ofIsFreeGroupEquiv {G H : Type _} [Groupₓ G] [Groupₓ H] [IsFreeGroup G] [IsFreeGroup H] (e : G ≃* H) :
+def Equiv.ofIsFreeGroupEquiv {G H : Type _} [Group G] [Group H] [IsFreeGroup G] [IsFreeGroup H] (e : G ≃* H) :
     Generators G ≃ Generators H :=
   equiv.of_free_group_equiv <| MulEquiv.trans (toFreeGroup G).symm <| MulEquiv.trans e <| toFreeGroup H
 
@@ -124,7 +124,7 @@ def coeff (x : X) : FreeAbelianGroup X →+ ℤ :=
 
 /-- `support a` for `a : free_abelian_group X` is the finite set of `x : X`
 that occur in the formal sum `a`. -/
-def support (a : FreeAbelianGroup X) : Finsetₓ X :=
+def support (a : FreeAbelianGroup X) : Finset X :=
   a.toFinsupp.Support
 
 theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.Support ↔ coeff x a ≠ 0 := by
@@ -151,7 +151,7 @@ theorem support_neg (a : FreeAbelianGroup X) : support (-a) = support a := by
 theorem support_zsmul (k : ℤ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a := by
   ext x
   simp only [mem_support_iff, AddMonoidHom.map_zsmul]
-  simp only [h, zsmul_int_int, false_orₓ, Ne.def, mul_eq_zero]
+  simp only [h, zsmul_int_int, false_or_iff, Ne.def, mul_eq_zero]
 
 @[simp]
 theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a := by

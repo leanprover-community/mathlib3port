@@ -23,18 +23,18 @@ noncomputable section
 
 namespace Finsupp
 
-variable {n : ℕ} (i : Finₓ n) {M : Type _} [Zero M] (y : M) (t : Finₓ (n + 1) →₀ M) (s : Finₓ n →₀ M)
+variable {n : ℕ} (i : Fin n) {M : Type _} [Zero M] (y : M) (t : Fin (n + 1) →₀ M) (s : Fin n →₀ M)
 
 /-- `tail` for maps `fin (n + 1) →₀ M`. See `fin.tail` for more details. -/
-def tail (s : Finₓ (n + 1) →₀ M) : Finₓ n →₀ M :=
-  Finsupp.equivFunOnFintype.invFun (Finₓ.tail s.toFun)
+def tail (s : Fin (n + 1) →₀ M) : Fin n →₀ M :=
+  Finsupp.equivFunOnFintype.invFun (Fin.tail s.toFun)
 
 /-- `cons` for maps `fin n →₀ M`. See `fin.cons` for more details. -/
-def cons (y : M) (s : Finₓ n →₀ M) : Finₓ (n + 1) →₀ M :=
-  Finsupp.equivFunOnFintype.invFun (Finₓ.cons y s.toFun)
+def cons (y : M) (s : Fin n →₀ M) : Fin (n + 1) →₀ M :=
+  Finsupp.equivFunOnFintype.invFun (Fin.cons y s.toFun)
 
 theorem tail_apply : tail t i = t i.succ := by
-  simp only [tail, equiv_fun_on_fintype_symm_apply_to_fun, Equivₓ.inv_fun_as_coe]
+  simp only [tail, equiv_fun_on_fintype_symm_apply_to_fun, Equiv.inv_fun_as_coe]
   rfl
 
 @[simp]
@@ -42,14 +42,14 @@ theorem cons_zero : cons y s 0 = y := by simp [cons, Finsupp.equivFunOnFintype]
 
 @[simp]
 theorem cons_succ : cons y s i.succ = s i := by
-  simp only [Finsupp.cons, Finₓ.cons, Finsupp.equivFunOnFintype, Finₓ.cases_succ, Finsupp.coe_mk]
+  simp only [Finsupp.cons, Fin.cons, Finsupp.equivFunOnFintype, Fin.cases_succ, Finsupp.coe_mk]
   rfl
 
 @[simp]
 theorem tail_cons : tail (cons y s) = s := by
-  simp only [Finsupp.cons, Finₓ.cons, Finsupp.tail, Finₓ.tail]
+  simp only [Finsupp.cons, Fin.cons, Finsupp.tail, Fin.tail]
   ext
-  simp only [equiv_fun_on_fintype_symm_apply_to_fun, Equivₓ.inv_fun_as_coe, Finsupp.coe_mk, Finₓ.cases_succ,
+  simp only [equiv_fun_on_fintype_symm_apply_to_fun, Equiv.inv_fun_as_coe, Finsupp.coe_mk, Fin.cases_succ,
     equiv_fun_on_fintype]
   rfl
 
@@ -59,16 +59,16 @@ theorem cons_tail : cons (t 0) (tail t) = t := by
   by_cases c_a:a = 0
   · rw [c_a, cons_zero]
     
-  · rw [← Finₓ.succ_pred a c_a, cons_succ, ← tail_apply]
+  · rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
     
 
 @[simp]
-theorem cons_zero_zero : cons 0 (0 : Finₓ n →₀ M) = 0 := by
+theorem cons_zero_zero : cons 0 (0 : Fin n →₀ M) = 0 := by
   ext
   by_cases c:a = 0
   · simp [c]
     
-  · rw [← Finₓ.succ_pred a c, cons_succ]
+  · rw [← Fin.succ_pred a c, cons_succ]
     simp
     
 

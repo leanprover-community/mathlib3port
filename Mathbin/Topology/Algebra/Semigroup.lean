@@ -16,15 +16,15 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m m' «expr ∈ » N)
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident N, ",", "⟨", ident N_closed, ",", "⟨", ident m, ",", ident hm, "⟩", ",", ident N_mul, "⟩", ",", ident N_minimal, "⟩", ":", expr «expr∃ , »((N «expr ∈ » S),
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m m' «expr ∈ » N) -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident N, ",", "⟨", ident N_closed, ",", "⟨", ident m, ",", ident hm, "⟩", ",", ident N_mul, "⟩", ",", ident N_minimal, "⟩", ":", expr «expr∃ , »((N «expr ∈ » S),
     ∀ N' «expr ∈ » S,
-    «expr ⊆ »(N', N) → «expr = »(N', N))]]
+    «expr ⊆ »(N', N) → «expr = »(N', N))]] -/
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
 @[to_additive
       "Any nonempty compact Hausdorff additive semigroup where right-addition is continuous\ncontains an idempotent, i.e. an `m` such that `m + m = m`"]
-theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] [Semigroupₓ M] [TopologicalSpace M]
+theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] [Semigroup M] [TopologicalSpace M]
     [CompactSpace M] [T2Space M] (continuous_mul_left : ∀ r : M, Continuous (· * r)) : ∃ m : M, m * m = m := by
   /- We apply Zorn's lemma to the poset of nonempty closed subsemigroups of `M`. It will turn out that
   any minimal element is `{m}` for an idempotent `m : M`. -/
@@ -62,7 +62,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     
   refine' zorn_superset _ fun c hcs hc => _
   refine'
-    ⟨⋂₀ c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs => Set.sInter_subset_of_mem hs⟩
+    ⟨⋂₀ c, ⟨isClosedSInter fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs => Set.sInter_subset_of_mem hs⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
     · rw [Set.sInter_empty]
       apply Set.univ_nonempty
@@ -80,16 +80,16 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact fun t ht => (hcs ht).2.2 m (set.mem_sInter.mp hm t ht) m' (set.mem_sInter.mp hm' t ht)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/
 @[to_additive exists_idempotent_in_compact_add_subsemigroup
       "A version of\n`exists_idempotent_of_compact_t2_of_continuous_add_left` where the idempotent lies in some specified\nnonempty compact additive subsemigroup."]
-theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [TopologicalSpace M] [T2Space M]
+theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroup M] [TopologicalSpace M] [T2Space M]
     (continuous_mul_left : ∀ r : M, Continuous (· * r)) (s : Set M) (snemp : s.Nonempty) (s_compact : IsCompact s)
     (s_add : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x * y ∈ s) : ∃ m ∈ s, m * m = m := by
   let M' := { m // m ∈ s }
-  letI : Semigroupₓ M' :=
+  letI : Semigroup M' :=
     { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assoc _ _ _) }
   haveI : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
   haveI : Nonempty M' := nonempty_subtype.mpr snemp

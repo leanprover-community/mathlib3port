@@ -147,10 +147,10 @@ theorem iterate_succ' (n : ℕ) : f^[n.succ] = f ∘ f^[n] := by rw [iterate_suc
 theorem iterate_succ_apply' (n : ℕ) (x : α) : (f^[n.succ]) x = f ((f^[n]) x) := by rw [iterate_succ']
 
 theorem iterate_pred_comp_of_pos {n : ℕ} (hn : 0 < n) : f^[n.pred] ∘ f = f^[n] := by
-  rw [← iterate_succ, Nat.succ_pred_eq_of_posₓ hn]
+  rw [← iterate_succ, Nat.succ_pred_eq_of_pos hn]
 
 theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[n] := by
-  rw [← iterate_succ', Nat.succ_pred_eq_of_posₓ hn]
+  rw [← iterate_succ', Nat.succ_pred_eq_of_pos hn]
 
 /-- A recursor for the iterate of a function. -/
 def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) : p ((f^[n]) a) :=

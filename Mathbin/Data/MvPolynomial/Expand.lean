@@ -22,7 +22,7 @@ open BigOperators
 
 namespace MvPolynomial
 
-variable {σ τ R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S]
+variable {σ τ R S : Type _} [CommSemiring R] [CommSemiring S]
 
 /-- Expand the polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`.
 
@@ -45,7 +45,7 @@ theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
   simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.to_fun_eq_coe, eval₂_hom_C_left, AlgHom.coe_to_ring_hom,
-    pow_oneₓ, AlgHom.coe_mk]
+    pow_one, AlgHom.coe_mk]
 
 @[simp]
 theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) := by

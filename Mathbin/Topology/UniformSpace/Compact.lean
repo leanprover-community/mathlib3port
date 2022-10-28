@@ -43,7 +43,7 @@ variable {α β γ : Type _} [UniformSpace α] [UniformSpace β]
 -/
 
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
 theorem nhds_set_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (Diagonal α) = 𝓤 α := by
@@ -70,13 +70,13 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
   have : @CompactSpace γ u'.to_topological_space := by rwa [h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x)
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -85,8 +85,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     rintro V V_in ⟨x, _⟩ ⟨⟩
     exact mem_of_mem_nhds (V_in x)
   symm := by
-    refine' le_of_eqₓ _
-    rw [map_supr]
+    refine' le_of_eq _
+    rw [Filter.map_supr]
     congr with x : 1
     erw [nhds_prod_eq, ← prod_comm]
   comp := by
@@ -121,7 +121,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       apply diag_subset
       simp [h]
     -- Since γ is compact and Hausdorff, it is normal, hence T₃.
-    haveI : NormalSpace γ := normal_of_compact_t2
+    haveI : NormalSpace γ := normalOfCompactT2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
     -- U₁ and U₂.
     obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :=
@@ -189,7 +189,7 @@ theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α 
     UniformContinuous f :=
   calc
     map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by rw [compact_space_uniformity]
-    _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by rw [map_supr]
+    _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by rw [Filter.map_supr]
     _ ≤ ⨆ x, 𝓝 (f x, f x) := supr_mono fun x => (h.prod_map h).ContinuousAt
     _ ≤ ⨆ y, 𝓝 (y, y) := supr_comp_le (fun y => 𝓝 (y, y)) f
     _ ≤ 𝓤 β := supr_nhds_le_uniformity
@@ -205,8 +205,8 @@ theorem IsCompact.uniform_continuous_on_of_continuous {s : Set α} {f : α → �
   skip
   exact CompactSpace.uniform_continuous_of_continuous hf
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
 `β` is compact and `f` is continuous on `U × (univ : set β)` for some neighborhood `U` of `x`. -/
 theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ] {f : α → β → γ} {x : α}

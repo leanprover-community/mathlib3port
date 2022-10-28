@@ -22,7 +22,7 @@ reasons.
 
 open Nat
 
-open Finsetₓ
+open Finset
 
 open BigOperators
 
@@ -30,7 +30,7 @@ variable {R : Type _}
 
 namespace Commute
 
-variable [Semiringₓ R] {x y : R} (h : Commute x y) (n : ℕ)
+variable [Semiring R] {x y : R} (h : Commute x y) (n : ℕ)
 
 include h
 
@@ -40,48 +40,48 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
   change (x + y) ^ n = ∑ m in range (n + 1), t n m
   have h_first : ∀ n, t n 0 = y ^ n := fun n => by
     dsimp [t]
-    rw [choose_zero_right, pow_zeroₓ, Nat.cast_oneₓ, mul_oneₓ, one_mulₓ]
+    rw [choose_zero_right, pow_zero, Nat.cast_one, mul_one, one_mul]
   have h_last : ∀ n, t n n.succ = 0 := fun n => by
     dsimp [t]
-    rw [choose_succ_self, Nat.cast_zeroₓ, mul_zero]
+    rw [choose_succ_self, Nat.cast_zero, mul_zero]
   have h_middle : ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ := by
     intro n i h_mem
-    have h_le : i ≤ n := Nat.le_of_lt_succₓ (mem_range.mp h_mem)
+    have h_le : i ≤ n := Nat.le_of_lt_succ (mem_range.mp h_mem)
     dsimp [t]
-    rw [choose_succ_succ, Nat.cast_addₓ, mul_addₓ]
+    rw [choose_succ_succ, Nat.cast_add, mul_add]
     congr 1
-    · rw [pow_succₓ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
+    · rw [pow_succ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
       
     · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).Eq]
       by_cases h_eq:i = n
-      · rw [h_eq, choose_succ_self, Nat.cast_zeroₓ, mul_zero, mul_zero]
+      · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
         
-      · rw [succ_sub (lt_of_le_of_neₓ h_le h_eq)]
-        rw [pow_succₓ y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
+      · rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
+        rw [pow_succ y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
         
       
   induction' n with n ih
-  · rw [pow_zeroₓ, sum_range_succ, range_zero, sum_empty, zero_addₓ]
+  · rw [pow_zero, sum_range_succ, range_zero, sum_empty, zero_add]
     dsimp [t]
-    rw [pow_zeroₓ, pow_zeroₓ, choose_self, Nat.cast_oneₓ, mul_oneₓ, mul_oneₓ]
+    rw [pow_zero, pow_zero, choose_self, Nat.cast_one, mul_one, mul_one]
     
   · rw [sum_range_succ', h_first]
-    rw [sum_congr rfl (h_middle n), sum_add_distrib, add_assocₓ]
-    rw [pow_succₓ (x + y), ih, add_mulₓ, mul_sum, mul_sum]
+    rw [sum_congr rfl (h_middle n), sum_add_distrib, add_assoc]
+    rw [pow_succ (x + y), ih, add_mul, mul_sum, mul_sum]
     congr 1
-    rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zeroₓ, pow_succₓ]
+    rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zero, pow_succ]
     
 
 /-- A version of `commute.add_pow` that avoids ℕ-subtraction by summing over the antidiagonal and
 also with the binomial coefficient applied via scalar action of ℕ. -/
 theorem add_pow' : (x + y) ^ n = ∑ m in Nat.antidiagonal n, choose n m.fst • (x ^ m.fst * y ^ m.snd) := by
-  simp_rw [Finsetₓ.Nat.sum_antidiagonal_eq_sum_range_succ fun m p => choose n m • (x ^ m * y ^ p), _root_.nsmul_eq_mul,
+  simp_rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun m p => choose n m • (x ^ m * y ^ p), _root_.nsmul_eq_mul,
     cast_comm, h.add_pow]
 
 end Commute
 
 /-- The **binomial theorem** -/
-theorem add_pow [CommSemiringₓ R] (x y : R) (n : ℕ) :
+theorem add_pow [CommSemiring R] (x y : R) (n : ℕ) :
     (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m :=
   (Commute.all x y).add_pow n
 
@@ -102,7 +102,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
         rw [range_eq_Ico, sum_Ico_reflect]
         · congr
           have A : m + 1 ≤ 2 * m + 1 := by linarith
-          rw [add_commₓ, add_tsub_assoc_of_le A, ← add_commₓ]
+          rw [add_comm, add_tsub_assoc_of_le A, ← add_comm]
           congr
           rw [tsub_eq_iff_eq_add_of_le A]
           ring
@@ -112,7 +112,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
       _ = ∑ i in range (2 * m + 2), choose (2 * m + 1) i := sum_range_add_sum_Ico _ (by linarith)
       _ = 2 ^ (2 * m + 1) := sum_range_choose (2 * m + 1)
       _ = 2 * 4 ^ m := by
-        rw [pow_succₓ, pow_mulₓ]
+        rw [pow_succ, pow_mul]
         rfl
       
 
@@ -123,7 +123,7 @@ theorem choose_middle_le_pow (n : ℕ) : choose (2 * n + 1) n ≤ 4 ^ n := by
 
 theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) : 4 ^ n ≤ (2 * n + 1) * choose (2 * n) n :=
   calc
-    4 ^ n = (1 + 1) ^ (2 * n) := by norm_num [pow_mulₓ]
+    4 ^ n = (1 + 1) ^ (2 * n) := by norm_num [pow_mul]
     _ = ∑ m in range (2 * n + 1), choose (2 * n) m := by simp [add_pow]
     _ ≤ ∑ m in range (2 * n + 1), choose (2 * n) (2 * n / 2) := sum_le_sum fun i hi => choose_le_middle i (2 * n)
     _ = (2 * n + 1) * choose (2 * n) n := by simp
@@ -137,17 +137,22 @@ theorem Int.alternating_sum_range_choose {n : ℕ} :
   · simp
     
   have h := add_pow (-1 : ℤ) 1 n.succ
-  simp only [one_pow, mul_oneₓ, add_left_negₓ] at h
-  rw [← h, zero_pow (Nat.succ_posₓ n), if_neg (Nat.succ_ne_zero n)]
+  simp only [one_pow, mul_one, add_left_neg] at h
+  rw [← h, zero_pow (Nat.succ_pos n), if_neg (Nat.succ_ne_zero n)]
 
 theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
     (∑ m in range (n + 1), (-1 ^ m * ↑(choose n m) : ℤ)) = 0 := by rw [Int.alternating_sum_range_choose, if_neg h0]
 
-namespace Finsetₓ
+namespace Finset
 
-theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoidₓ α] (f : ℕ → α) {x : Finsetₓ β} :
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),
+    range «expr + »(x.card, 1),
+    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
     (∑ m in x.Powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m := by
-  trans ∑ m in range (x.card + 1), ∑ j in x.powerset.filter fun z => z.card = m, f j.card
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),\n    range «expr + »(x.card, 1),\n    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · refine' (sum_fiberwise_of_maps_to _ _).symm
     intro y hy
     rw [mem_range, Nat.lt_succ_iff]
@@ -160,17 +165,17 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoidₓ α] (f : ℕ 
     rw [(mem_powerset_len.1 hz).2]
     
 
-theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finsetₓ α} :
+theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 
-theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finsetₓ α} (h0 : x.Nonempty) :
+theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = 0 := by
   classical
   rw [sum_powerset_neg_one_pow_card, if_neg]
   rw [← Ne.def, ← nonempty_iff_ne_empty]
   apply h0
 
-end Finsetₓ
+end Finset
 

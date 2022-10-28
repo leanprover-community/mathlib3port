@@ -43,27 +43,27 @@ variable {P : Type _}
   - nonempty
   - downward directed
   - upward closed. -/
-structure Pfilter (P) [Preorderₓ P] where
+structure Pfilter (P) [Preorder P] where
   dual : Ideal Pᵒᵈ
 
 /-- A predicate for when a subset of `P` is a filter. -/
-def IsPfilter [Preorderₓ P] (F : Set P) : Prop :=
+def IsPfilter [Preorder P] (F : Set P) : Prop :=
   @IsIdeal Pᵒᵈ _ F
 
-theorem IsPfilter.of_def [Preorderₓ P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
+theorem IsPfilter.of_def [Preorder P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
     (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : IsPfilter F :=
   ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, Nonempty, Directed⟩
 
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
 `order.is_pfilter`. -/
-def IsPfilter.toPfilter [Preorderₓ P] {F : Set P} (h : IsPfilter F) : Pfilter P :=
+def IsPfilter.toPfilter [Preorder P] {F : Set P} (h : IsPfilter F) : Pfilter P :=
   ⟨h.toIdeal⟩
 
 namespace Pfilter
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ P] {x y : P} (F s t : Pfilter P)
+variable [Preorder P] {x y : P} (F s t : Pfilter P)
 
 instance [Inhabited P] : Inhabited (Pfilter P) :=
   ⟨⟨default⟩⟩
@@ -99,8 +99,8 @@ theorem ext (h : (s : Set P) = t) : s = t := by
   exact congr_arg _ (ideal.ext h)
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
-instance : PartialOrderₓ (Pfilter P) :=
-  PartialOrderₓ.lift coe ext
+instance : PartialOrder (Pfilter P) :=
+  PartialOrder.lift coe ext
 
 @[trans]
 theorem mem_of_mem_of_le {F G : Pfilter P} : x ∈ F → F ≤ G → x ∈ G :=
@@ -123,15 +123,15 @@ theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
   ideal.mem_principal
 
 -- defeq abuse
-theorem antitone_principal : Antitoneₓ (principal : P → Pfilter P) := by delta Antitoneₓ <;> simp
+theorem antitone_principal : Antitone (principal : P → Pfilter P) := by delta Antitone <;> simp
 
 theorem principal_le_principal_iff {p q : P} : principal q ≤ principal p ↔ p ≤ q := by simp
 
-end Preorderₓ
+end Preorder
 
 section OrderTop
 
-variable [Preorderₓ P] [OrderTop P] {F : Pfilter P}
+variable [Preorder P] [OrderTop P] {F : Pfilter P}
 
 /-- A specific witness of `pfilter.nonempty` when `P` has a top element. -/
 @[simp]
@@ -141,14 +141,14 @@ theorem top_mem : ⊤ ∈ F :=
 /-- There is a bottom filter when `P` has a top element. -/
 instance : OrderBot (Pfilter P) where
   bot := ⟨⊥⟩
-  bot_le := fun F => (bot_le : ⊥ ≤ F.dual)
+  bot_le F := (bot_le : ⊥ ≤ F.dual)
 
 end OrderTop
 
 /-- There is a top filter when `P` has a bottom element. -/
-instance {P} [Preorderₓ P] [OrderBot P] : OrderTop (Pfilter P) where
+instance {P} [Preorder P] [OrderBot P] : OrderTop (Pfilter P) where
   top := ⟨⊤⟩
-  le_top := fun F => (le_top : F.dual ≤ ⊤)
+  le_top F := (le_top : F.dual ≤ ⊤)
 
 section SemilatticeInf
 
@@ -177,10 +177,10 @@ theorem Inf_gc :
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
     GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F => inf (OrderDual.ofDual F : Pfilter P) where
-  choice := fun F _ => inf (id F : Pfilter P)
+  choice F _ := inf (id F : Pfilter P)
   gc := Inf_gc
-  u_l_le := fun s => Inf_le <| mem_principal.2 <| le_reflₓ s
-  choice_eq := fun _ _ => rfl
+  u_l_le s := Inf_le <| mem_principal.2 <| le_refl s
+  choice_eq _ _ := rfl
 
 end CompleteSemilatticeInf
 

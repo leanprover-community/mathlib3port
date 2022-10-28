@@ -67,20 +67,20 @@ namespace CliffordAlgebraRing
 
 open ComplexConjugate
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
 @[simp]
 theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
   Subsingleton.elim _ _
 
 /-- Since the vector space is empty the ring is commutative. -/
-instance : CommRingₓ (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
+instance : CommRing (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y => by
       induction x using CliffordAlgebra.induction
       case h_grade0 r => apply Algebra.commutes
       case h_grade1 x => simp
-      case h_add x₁ x₂ hx₁ hx₂ => rw [mul_addₓ, add_mulₓ, hx₁, hx₂]
+      case h_add x₁ x₂ hx₁ hx₂ => rw [mul_add, add_mul, hx₁, hx₂]
       case h_mul x₁ x₂ hx₁ hx₂ => rw [mul_assoc, hx₂, ← mul_assoc, hx₁, ← mul_assoc] }
 
 theorem reverse_apply (x : CliffordAlgebra (0 : QuadraticForm R Unit)) : x.reverse = x := by
@@ -135,7 +135,7 @@ def toComplex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
   CliffordAlgebra.lift q
     ⟨LinearMap.toSpanSingleton _ _ Complex.i, fun r => by
       dsimp [LinearMap.toSpanSingleton, LinearMap.id]
-      rw [mul_mul_mul_commₓ]
+      rw [mul_mul_mul_comm]
       simp⟩
 
 @[simp]
@@ -155,7 +155,7 @@ theorem to_complex_involute (c : CliffordAlgebra q) : toComplex c.involute = con
 `clifford_algebra_complex.Q` above can be converted to. -/
 def ofComplex : ℂ →ₐ[ℝ] CliffordAlgebra q :=
   Complex.lift
-    ⟨CliffordAlgebra.ι q 1, by rw [CliffordAlgebra.ι_sq_scalar, Q_apply, one_mulₓ, RingHom.map_neg, RingHom.map_one]⟩
+    ⟨CliffordAlgebra.ι q 1, by rw [CliffordAlgebra.ι_sq_scalar, Q_apply, one_mul, RingHom.map_neg, RingHom.map_one]⟩
 
 @[simp]
 theorem of_complex_I : ofComplex Complex.i = ι q 1 :=
@@ -190,7 +190,7 @@ protected def equiv : CliffordAlgebra q ≃ₐ[ℝ] ℂ :=
 /-- The clifford algebra is commutative since it is isomorphic to the complex numbers.
 
 TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector space. -/
-instance : CommRingₓ (CliffordAlgebra q) :=
+instance : CommRing (CliffordAlgebra q) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y =>
       CliffordAlgebraComplex.equiv.Injective <| by rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }
@@ -227,7 +227,7 @@ open Quaternion
 
 open QuaternionAlgebra
 
-variable {R : Type _} [CommRingₓ R] (c₁ c₂ : R)
+variable {R : Type _} [CommRing R] (c₁ c₂ : R)
 
 /-- `Q c₁ c₂` is a quadratic form over `R × R` such that `clifford_algebra (Q c₁ c₂)` is isomorphic
 as an `R`-algebra to `ℍ[R,c₁,c₂]`. -/
@@ -309,7 +309,7 @@ theorem of_quaternion_comp_to_quaternion : ofQuaternion.comp toQuaternion = AlgH
   dsimp
   rw [to_quaternion_ι]
   dsimp
-  simp only [to_quaternion_ι, zero_smul, one_smul, zero_addₓ, add_zeroₓ, RingHom.map_zero]
+  simp only [to_quaternion_ι, zero_smul, one_smul, zero_add, add_zero, RingHom.map_zero]
 
 @[simp]
 theorem of_quaternion_to_quaternion (c : CliffordAlgebra (q c₁ c₂)) : ofQuaternion (toQuaternion c) = c :=
@@ -350,10 +350,10 @@ open DualNumber
 
 open DualNumber TrivSqZeroExt
 
-variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
 theorem ι_mul_ι (r₁ r₂) : ι (0 : QuadraticForm R R) r₁ * ι (0 : QuadraticForm R R) r₂ = 0 := by
-  rw [← mul_oneₓ r₁, ← mul_oneₓ r₂, ← smul_eq_mul R, ← smul_eq_mul R, LinearMap.map_smul, LinearMap.map_smul,
+  rw [← mul_one r₁, ← mul_one r₂, ← smul_eq_mul R, ← smul_eq_mul R, LinearMap.map_smul, LinearMap.map_smul,
     smul_mul_smul, ι_sq_scalar, QuadraticForm.zero_apply, RingHom.map_zero, smul_zero]
 
 /-- The clifford algebra over a 1-dimensional vector space with 0 quadratic form is isomorphic to

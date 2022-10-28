@@ -56,13 +56,13 @@ theorem StrongEpi.mk' {f : P ⟶ Q} [Epi f]
 /-- A strong monomorphism `f` is a monomorphism which has the right lifting property
 with respect to epimorphisms. -/
 class StrongMono (f : P ⟶ Q) : Prop where
-  mono : Mono f
+  Mono : Mono f
   rlp : ∀ ⦃X Y : C⦄ (z : X ⟶ Y) [Epi z], HasLiftingProperty z f
 
 theorem StrongMono.mk' {f : P ⟶ Q} [Mono f]
     (hf : ∀ (X Y : C) (z : X ⟶ Y) (hz : Epi z) (u : X ⟶ P) (v : Y ⟶ Q) (sq : CommSq u z f v), sq.HasLift) :
     StrongMono f :=
-  { mono := inferInstance, rlp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
+  { Mono := inferInstance, rlp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
 
 attribute [instance] strong_epi.llp
 
@@ -87,7 +87,7 @@ theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
 
 /-- The composition of two strong monomorphisms is a strong monomorphism. -/
 theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
-  { mono := mono_comp _ _,
+  { Mono := mono_comp _ _,
     rlp := by
       intros
       infer_instance }
@@ -106,7 +106,7 @@ theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
 
 /-- If `f ≫ g` is a strong monomorphism, then so is `f`. -/
 theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
-  { mono := mono_of_mono f g,
+  { Mono := mono_of_mono f g,
     rlp := by
       intros
       constructor
@@ -117,12 +117,12 @@ theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
 /-- An isomorphism is in particular a strong epimorphism. -/
 instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f where
   Epi := by infer_instance
-  llp := fun X Y z hz => HasLiftingProperty.of_left_iso _ _
+  llp X Y z hz := HasLiftingProperty.of_left_iso _ _
 
 /-- An isomorphism is in particular a strong monomorphism. -/
 instance (priority := 100) strong_mono_of_is_iso [IsIso f] : StrongMono f where
-  mono := by infer_instance
-  rlp := fun X Y z hz => HasLiftingProperty.of_right_iso _ _
+  Mono := by infer_instance
+  rlp X Y z hz := HasLiftingProperty.of_right_iso _ _
 
 theorem StrongEpi.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'} (e : Arrow.mk f ≅ Arrow.mk g)
     [h : StrongEpi f] : StrongEpi g :=
@@ -136,7 +136,7 @@ theorem StrongEpi.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'} (e 
 
 theorem StrongMono.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'} (e : Arrow.mk f ≅ Arrow.mk g)
     [h : StrongMono f] : StrongMono g :=
-  { mono := by
+  { Mono := by
       rw [arrow.iso_w' e]
       haveI := mono_comp f e.hom.right
       apply mono_comp,
@@ -189,7 +189,7 @@ section
 attribute [local instance] strong_epi_of_epi
 
 instance (priority := 100) balanced_of_strong_epi_category [StrongEpiCategory C] :
-    Balanced C where is_iso_of_mono_of_epi := fun _ _ _ _ _ => is_iso_of_mono_of_strong_epi _
+    Balanced C where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_mono_of_strong_epi _
 
 end
 
@@ -198,7 +198,7 @@ section
 attribute [local instance] strong_mono_of_mono
 
 instance (priority := 100) balanced_of_strong_mono_category [StrongMonoCategory C] :
-    Balanced C where is_iso_of_mono_of_epi := fun _ _ _ _ _ => is_iso_of_epi_of_strong_mono _
+    Balanced C where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_epi_of_strong_mono _
 
 end
 

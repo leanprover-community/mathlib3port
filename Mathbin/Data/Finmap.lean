@@ -77,10 +77,10 @@ open Alist
 
 
 /-- Lift a permutation-respecting function on `alist` to `finmap`. -/
-@[elabAsElim]
+@[elab_as_elim]
 def liftOn {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ := by
   refine'
-    (Quotientₓ.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ)) fun l₁ l₂ p => Part.ext' (perm_nodupkeys p) _ :
+    (Quotient.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ)) fun l₁ l₂ p => Part.ext' (perm_nodupkeys p) _ :
           Part γ).get
       _
   · exact fun h₁ h₂ => H _ _ p
@@ -94,7 +94,7 @@ def liftOn {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a
 theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) (H) : liftOn ⟦s⟧ f H = f s := by cases s <;> rfl
 
 /-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
-@[elabAsElim]
+@[elab_as_elim]
 def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
     (H : ∀ a₁ b₁ a₂ b₂ : Alist β, a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) : γ :=
   liftOn s₁ (fun l₁ => liftOn s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (Perm.refl _) p) fun a₁ a₂ p => by
@@ -108,16 +108,16 @@ theorem lift_on₂_to_finmap {γ} (s₁ s₂ : Alist β) (f : Alist β → Alist
 /-! ### induction -/
 
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction_on {C : Finmap β → Prop} (s : Finmap β) (H : ∀ a : Alist β, C ⟦a⟧) : C s := by
   rcases s with ⟨⟨a⟩, h⟩ <;> exact H ⟨a, h⟩
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction_on₂ {C : Finmap β → Finmap β → Prop} (s₁ s₂ : Finmap β) (H : ∀ a₁ a₂ : Alist β, C ⟦a₁⟧ ⟦a₂⟧) :
     C s₁ s₂ :=
   (induction_on s₁) fun l₁ => (induction_on s₂) fun l₂ => H l₁ l₂
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction_on₃ {C : Finmap β → Finmap β → Finmap β → Prop} (s₁ s₂ s₃ : Finmap β)
     (H : ∀ a₁ a₂ a₃ : Alist β, C ⟦a₁⟧ ⟦a₂⟧ ⟦a₃⟧) : C s₁ s₂ s₃ :=
   (induction_on₂ s₁ s₂) fun l₁ l₂ => (induction_on s₃) fun l₃ => H l₁ l₂ l₃
@@ -151,7 +151,7 @@ theorem mem_to_finmap {a : α} {s : Alist β} : a ∈ ⟦s⟧ ↔ a ∈ s :=
 
 
 /-- The set of keys of a finite map. -/
-def keys (s : Finmap β) : Finsetₓ α :=
+def keys (s : Finmap β) : Finset α :=
   ⟨s.entries.keys, induction_on s keys_nodup⟩
 
 @[simp]
@@ -202,7 +202,7 @@ theorem keys_singleton (a : α) (b : β a) : (singleton a b).keys = {a} :=
 
 @[simp]
 theorem mem_singleton (x y : α) (b : β y) : x ∈ singleton y b ↔ x = y := by
-  simp only [singleton] <;> erw [mem_cons_eq, mem_nil_iff, or_falseₓ]
+  simp only [singleton] <;> erw [mem_cons_eq, mem_nil_iff, or_false_iff]
 
 section
 
@@ -318,7 +318,7 @@ theorem erase_to_finmap (a : α) (s : Alist β) : erase a ⟦s⟧ = ⟦s.erase a
 
 @[simp]
 theorem keys_erase_to_finset (a : α) (s : Alist β) : keys ⟦s.erase a⟧ = (keys ⟦s⟧).erase a := by
-  simp [Finsetₓ.erase, keys, Alist.erase, keys_kerase]
+  simp [Finset.erase, keys, Alist.erase, keys_kerase]
 
 @[simp]
 theorem keys_erase (a : α) (s : Finmap β) : (erase a s).keys = s.keys.erase a :=
@@ -395,14 +395,14 @@ theorem to_finmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 theorem mem_list_to_finmap (a : α) (xs : List (Sigma β)) : a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs := by
   induction' xs with x xs <;> [skip, cases x] <;>
     simp only [to_finmap_cons, *, not_mem_empty, exists_or_distrib, not_mem_nil, to_finmap_nil, exists_false,
-        mem_cons_iff, mem_insert, exists_and_distrib_leftₓ] <;>
-      apply or_congrₓ _ Iff.rfl
+        mem_cons_iff, mem_insert, exists_and_distrib_left] <;>
+      apply or_congr _ Iff.rfl
   conv =>
   lhs
-  rw [← and_trueₓ (a = x_fst)]
+  rw [← and_true_iff (a = x_fst)]
   apply and_congr_right
   rintro ⟨⟩
-  simp only [exists_eq, iff_selfₓ, heq_iff_eq]
+  simp only [exists_eq, iff_self_iff, heq_iff_eq]
 
 @[simp]
 theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b') = singleton a b := by
@@ -439,7 +439,7 @@ theorem mem_union {a} {s₁ s₂ : Finmap β} : a ∈ s₁ ∪ s₂ ↔ a ∈ s�
 theorem union_to_finmap (s₁ s₂ : Alist β) : ⟦s₁⟧ ∪ ⟦s₂⟧ = ⟦s₁ ∪ s₂⟧ := by simp [(· ∪ ·), union]
 
 theorem keys_union {s₁ s₂ : Finmap β} : (s₁ ∪ s₂).keys = s₁.keys ∪ s₂.keys :=
-  (induction_on₂ s₁ s₂) fun s₁ s₂ => Finsetₓ.ext <| by simp [keys]
+  (induction_on₂ s₁ s₂) fun s₁ s₂ => Finset.ext <| by simp [keys]
 
 @[simp]
 theorem lookup_union_left {a} {s₁ s₂ : Finmap β} : a ∈ s₁ → lookup a (s₁ ∪ s₂) = lookup a s₁ :=

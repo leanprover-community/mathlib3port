@@ -62,7 +62,7 @@ instance essentially_small_mono_over (X : C) : EssentiallySmall.{v} (MonoOver X)
 
 end
 
-section Equivalenceₓ
+section Equivalence
 
 variable {D : Type u₂} [Category.{v} D]
 
@@ -75,7 +75,7 @@ theorem well_powered_of_equiv (e : C ≌ D) [WellPowered C] : WellPowered D :=
 theorem well_powered_congr (e : C ≌ D) : WellPowered C ↔ WellPowered D :=
   ⟨fun i => well_powered_of_equiv e, fun i => well_powered_of_equiv e.symm⟩
 
-end Equivalenceₓ
+end Equivalence
 
 end CategoryTheory
 

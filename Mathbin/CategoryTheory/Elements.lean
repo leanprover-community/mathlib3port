@@ -49,15 +49,9 @@ def Functor.Elements (F : C ⥤ Type w) :=
     A morphism `(X, x) ⟶ (Y, y)` is a morphism `f : X ⟶ Y` in `C`, so `F.map f` takes `x` to `y`.
  -/
 instance categoryOfElements (F : C ⥤ Type w) : Category.{v} F.Elements where
-  Hom := fun p q => { f : p.1 ⟶ q.1 // (F.map f) p.2 = q.2 }
-  id := fun p =>
-    ⟨𝟙 p.1, by
-      run_tac
-        obviously⟩
-  comp := fun p q r f g =>
-    ⟨f.val ≫ g.val, by
-      run_tac
-        obviously⟩
+  Hom p q := { f : p.1 ⟶ q.1 // (F.map f) p.2 = q.2 }
+  id p := ⟨𝟙 p.1, by obviously⟩
+  comp p q r f g := ⟨f.val ≫ g.val, by obviously⟩
 
 namespace CategoryOfElements
 
@@ -76,7 +70,7 @@ theorem id_val {F : C ⥤ Type w} {p : F.Elements} : (𝟙 p : p ⟶ p).val = �
 end CategoryOfElements
 
 noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G ⥤ Type w) : Groupoid F.Elements where
-  inv := fun p q f =>
+  inv p q f :=
     ⟨inv f.val,
       calc
         F.map (inv f.val) q.2 = F.map (inv f.val) (F.map f.val p.2) := by rw [f.2]
@@ -85,10 +79,10 @@ noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G �
           rw [← F.map_comp]
           simp
         ⟩
-  inv_comp' := fun _ _ _ => by
+  inv_comp' _ _ _ := by
     ext
     simp
-  comp_inv' := fun _ _ _ => by
+  comp_inv' _ _ _ := by
     ext
     simp
 
@@ -99,15 +93,15 @@ variable (F : C ⥤ Type w)
 /-- The functor out of the category of elements which forgets the element. -/
 @[simps]
 def π : F.Elements ⥤ C where
-  obj := fun X => X.1
-  map := fun X Y f => f.val
+  obj X := X.1
+  map X Y f := f.val
 
 /-- A natural transformation between functors induces a functor between the categories of elements.
 -/
 @[simps]
 def map {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : F₁.Elements ⥤ F₂.Elements where
-  obj := fun t => ⟨t.1, α.app t.1 t.2⟩
-  map := fun t₁ t₂ k => ⟨k.1, by simpa [← k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
+  obj t := ⟨t.1, α.app t.1 t.2⟩
+  map t₁ t₂ k := ⟨k.1, by simpa [← k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
 
 @[simp]
 theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F₂ = π F₁ :=
@@ -115,8 +109,8 @@ theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F
 
 /-- The forward direction of the equivalence `F.elements ≅ (*, F)`. -/
 def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F where
-  obj := fun X => StructuredArrow.mk fun _ => X.2
-  map := fun X Y f => StructuredArrow.homMk f.val (by tidy)
+  obj X := StructuredArrow.mk fun _ => X.2
+  map X Y f := StructuredArrow.homMk f.val (by tidy)
 
 @[simp]
 theorem to_structured_arrow_obj (X) :
@@ -129,8 +123,8 @@ theorem to_comma_map_right {X Y} (f : X ⟶ Y) : ((toStructuredArrow F).map f).r
 
 /-- The reverse direction of the equivalence `F.elements ≅ (*, F)`. -/
 def fromStructuredArrow : StructuredArrow PUnit F ⥤ F.Elements where
-  obj := fun X => ⟨X.right, X.Hom PUnit.unit⟩
-  map := fun X Y f => ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩
+  obj X := ⟨X.right, X.Hom PUnit.unit⟩
+  map X Y f := ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩
 
 @[simp]
 theorem from_structured_arrow_obj (X) : (fromStructuredArrow F).obj X = ⟨X.right, X.Hom PUnit.unit⟩ :=
@@ -156,8 +150,8 @@ given by `category_theory.yoneda_sections`.
 -/
 @[simps]
 def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ CostructuredArrow yoneda F where
-  obj := fun X => CostructuredArrow.mk ((yonedaSections (unop (unop X).fst) F).inv (ULift.up (unop X).2))
-  map := fun X Y f => by
+  obj X := CostructuredArrow.mk ((yonedaSections (unop (unop X).fst) F).inv (ULift.up (unop X).2))
+  map X Y f := by
     fapply costructured_arrow.hom_mk
     exact f.unop.val.unop
     ext y
@@ -171,11 +165,11 @@ given by `category_theory.yoneda_equiv`.
 -/
 @[simps]
 def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F)ᵒᵖ ⥤ F.Elements where
-  obj := fun X => ⟨op (unop X).1, yonedaEquiv.1 (unop X).3⟩
-  map := fun X Y f =>
+  obj X := ⟨op (unop X).1, yonedaEquiv.1 (unop X).3⟩
+  map X Y f :=
     ⟨f.unop.1.op, by
       convert (congr_fun ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
-      simp only [Equivₓ.to_fun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply, category.comp_id,
+      simp only [Equiv.to_fun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply, category.comp_id,
         yoneda_obj_map]
       have : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom := by
         convert f.unop.3

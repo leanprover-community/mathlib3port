@@ -310,7 +310,7 @@ x = y ↔ x.x = y.x ∧ x.y = y.y ∧ x.z == y.z ∧ x.k = y.k
 unsafe def extensional_attribute : user_attribute Unit (Option Name) where
   Name := `ext
   descr := "lemmas usable by `ext` tactic"
-  parser := optionalₓ ident
+  parser := optional ident
   after_set :=
     some fun n _ b => do
       let add ← extensional_attribute.get_param n
@@ -340,9 +340,9 @@ defined later.
 
 
 -- We mark some existing extensionality lemmas.
-attribute [ext] Arrayₓ.ext propext Function.hfunext
+attribute [ext] Array'.ext propext Function.hfunext
 
--- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:17:36: unsupported: attribute [ext id]
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:18:19: unsupported: attribute [ext id] -/
 attribute [ext] _root_.funext
 
 -- This line is equivalent to:
@@ -355,16 +355,16 @@ run_cmd
 -- We create some extensionality lemmas for existing structures.
 attribute [ext] ULift
 
-namespace Plift
+namespace PLift
 
 -- This is stronger than the one generated automatically.
 @[ext]
-theorem ext {P : Prop} (a b : Plift P) : a = b := by
+theorem ext {P : Prop} (a b : PLift P) : a = b := by
   cases a
   cases b
   rfl
 
-end Plift
+end PLift
 
 -- Conservatively, we'll only add extensionality lemmas for `has_*` structures
 -- as they become useful.
@@ -388,41 +388,41 @@ namespace Tactic
   applied so far. -/
 unsafe structure ext_state : Type where
   patts : List rcases_patt := []
-  trace_msg : List Stringₓ := []
+  trace_msg : List String := []
   fuel : Option ℕ := none
 
 /-- Helper function for `try_intros`. Additionally populates the `trace_msg` field
   of `ext_state`. -/
-private unsafe def try_intros_core : StateTₓ ext_state tactic Unit := do
+private unsafe def try_intros_core : StateT ext_state tactic Unit := do
   let ⟨patts, trace_msg, fuel⟩ ← get
   match patts with
     | [] =>
       (do
-          let es ← StateTₓ.lift intros
+          let es ← StateT.lift intros
           when (es > 0) <| do
               let msg := "intros " ++ " ".intercalate (es fun e => e)
-              modifyₓ fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
+              modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
         pure ()
     | x :: xs => do
-      let tgt ← StateTₓ.lift (target >>= whnf)
+      let tgt ← StateT.lift (target >>= whnf)
       when tgt <| do
-          StateTₓ.lift (rintro [x])
-          let msg ← StateTₓ.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
-          modifyₓ fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
+          StateT.lift (rintro [x])
+          let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
+          modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
           try_intros_core
 
 /-- Try to introduce as many arguments as possible, using the given patterns to destruct the
   introduced variables. Returns the unused patterns. -/
 unsafe def try_intros (patts : List rcases_patt) : tactic (List rcases_patt) :=
   let σ := ext_state.mk patts [] none
-  (ext_state.patts ∘ Prod.snd) <$> StateTₓ.run try_intros_core σ
+  (ext_state.patts ∘ Prod.snd) <$> StateT.run try_intros_core σ
 
 /-- Apply one extensionality lemma, and destruct the arguments using the patterns
   in the ext_state. -/
-unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateTₓ ext_state tactic Unit := do
+unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := do
   let ⟨patts, trace_msg, _⟩ ← get
   let new_msgs ←
-    StateTₓ.lift <|
+    StateT.lift <|
         focus1 <| do
           let m ← get_ext_lemmas
           let tgt ← target
@@ -453,24 +453,24 @@ unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateTₓ ext_state tactic Unit 
                     pure ["apply " ++ rule]) <|>
                   fail f! "no applicable extensionality rule found for {subject}"
           pure new_trace_msg
-  modifyₓ fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ new_msgs, fuel⟩
+  modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ new_msgs, fuel⟩
   try_intros_core
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns. -/
-unsafe def ext_core (cfg : ApplyCfg := {  }) : StateTₓ ext_state tactic Unit := do
+unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := do
   let acc@⟨_, _, fuel⟩ ← get
   match fuel with
     | some 0 => pure ()
     | n => do
       ext1_core cfg
-      modifyₓ fun ⟨patts, lemmas, _⟩ => ⟨patts, lemmas, Nat.pred <$> n⟩
+      modify fun ⟨patts, lemmas, _⟩ => ⟨patts, lemmas, Nat.pred <$> n⟩
       ext_core <|> pure ()
 
 /-- Apply one extensionality lemma, and destruct the arguments using the given patterns.
   Returns the unused patterns. -/
 unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool := false) : tactic (List rcases_patt) :=
   do
-  let ⟨_, σ⟩ ← StateTₓ.run (ext1_core cfg) { patts := xs }
+  let ⟨_, σ⟩ ← StateT.run (ext1_core cfg) { patts := xs }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 
@@ -478,12 +478,12 @@ unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool :
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
 unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  }) (trace : Bool := false) :
     tactic (List rcases_patt) := do
-  let ⟨_, σ⟩ ← StateTₓ.run (ext_core cfg) { patts := xs, fuel }
+  let ⟨_, σ⟩ ← StateT.run (ext_core cfg) { patts := xs, fuel }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 -- mathport name: parser.many
 local postfix:1024 "*" => many

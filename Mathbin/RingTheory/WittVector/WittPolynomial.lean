@@ -58,7 +58,7 @@ In this file we use the following notation
 
 open MvPolynomial
 
-open Finsetₓ hiding map
+open Finset hiding map
 
 open Finsupp (single)
 
@@ -68,7 +68,7 @@ attribute [-simp] coe_eval₂_hom
 
 variable (p : ℕ)
 
-variable (R : Type _) [CommRingₓ R]
+variable (R : Type _) [CommRing R]
 
 /-- `witt_polynomial p R n` is the `n`-th Witt polynomial
 with respect to a prime `p` with coefficients in a commutative ring `R`.
@@ -83,7 +83,7 @@ theorem witt_polynomial_eq_sum_C_mul_X_pow (n : ℕ) :
   apply sum_congr rfl
   rintro i -
   rw [monomial_eq, Finsupp.prod_single_index]
-  rw [pow_zeroₓ]
+  rw [pow_zero]
 
 /-! We set up notation locally to this file, to keep statements short and comprehensible.
 This allows us to simply write `W n` or `W_ ℤ n`. -/
@@ -106,7 +106,7 @@ If we map the coefficients through a ring homomorphism, we obtain the correspond
 over the target ring. -/
 section
 
-variable {R} {S : Type _} [CommRingₓ S]
+variable {R} {S : Type _} [CommRing S]
 
 @[simp]
 theorem map_witt_polynomial (f : R →+* S) (n : ℕ) : map f (W n) = W n := by
@@ -123,18 +123,18 @@ theorem constant_coeff_witt_polynomial [hp : Fact p.Prime] (n : ℕ) : constantC
   rintro i hi
   rw [if_neg]
   rw [Finsupp.single_eq_zero]
-  exact ne_of_gtₓ (pow_pos hp.1.Pos _)
+  exact ne_of_gt (pow_pos hp.1.Pos _)
 
 @[simp]
 theorem witt_polynomial_zero : wittPolynomial p R 0 = x 0 := by
-  simp only [wittPolynomial, X, sum_singleton, range_one, pow_zeroₓ]
+  simp only [wittPolynomial, X, sum_singleton, range_one, pow_zero]
 
 @[simp]
 theorem witt_polynomial_one : wittPolynomial p R 1 = c ↑p * x 1 + x 0 ^ p := by
-  simp only [witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ_comm, range_one, sum_singleton, one_mulₓ, pow_oneₓ, C_1,
-    pow_zeroₓ]
+  simp only [witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ_comm, range_one, sum_singleton, one_mul, pow_one, C_1,
+    pow_zero]
 
-theorem aeval_witt_polynomial {A : Type _} [CommRingₓ A] [Algebra R A] (f : ℕ → A) (n : ℕ) :
+theorem aeval_witt_polynomial {A : Type _} [CommRing A] [Algebra R A] (f : ℕ → A) (n : ℕ) :
     aeval f (W_ R n) = ∑ i in range (n + 1), p ^ i * f i ^ p ^ (n - i) := by
   simp [wittPolynomial, AlgHom.map_sum, aeval_monomial, Finsupp.prod_single_index]
 
@@ -144,13 +144,13 @@ by expanding the `n`th Witt polynomial by `p`.
 @[simp]
 theorem witt_polynomial_zmod_self (n : ℕ) : W_ (Zmod (p ^ (n + 1))) (n + 1) = expand p (W_ (Zmod (p ^ (n + 1))) n) := by
   simp only [witt_polynomial_eq_sum_C_mul_X_pow]
-  rw [sum_range_succ, ← Nat.cast_powₓ, CharP.cast_eq_zero (Zmod (p ^ (n + 1))) (p ^ (n + 1)), C_0, zero_mul, add_zeroₓ,
+  rw [sum_range_succ, ← Nat.cast_pow, CharP.cast_eq_zero (Zmod (p ^ (n + 1))) (p ^ (n + 1)), C_0, zero_mul, add_zero,
     AlgHom.map_sum, sum_congr rfl]
   intro k hk
-  rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mulₓ, ← pow_succₓ]
+  rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mul, ← pow_succ]
   congr
   rw [mem_range] at hk
-  rw [add_commₓ, add_tsub_assoc_of_le (nat.lt_succ_iff.mp hk), ← add_commₓ]
+  rw [add_comm, add_tsub_assoc_of_le (nat.lt_succ_iff.mp hk), ← add_comm]
 
 section PPrime
 
@@ -162,7 +162,7 @@ theorem witt_polynomial_vars [CharZero R] (n : ℕ) : (wittPolynomial p R n).var
   have : ∀ i, (monomial (Finsupp.single i (p ^ (n - i))) (p ^ i : R)).vars = {i} := by
     intro i
     refine' vars_monomial_single i (pow_ne_zero _ hp.1) _
-    rw [← Nat.cast_powₓ, Nat.cast_ne_zero]
+    rw [← Nat.cast_pow, Nat.cast_ne_zero]
     exact pow_ne_zero i hp.1
   rw [wittPolynomial, vars_sum_of_disjoint]
   · simp only [this, bUnion_singleton_eq_self]
@@ -191,24 +191,30 @@ The polynomials `X_in_terms_of_W` give the coordinate transformation in the back
 -/
 
 
+/- warning: X_in_terms_of_W -> xInTermsOfW is a dubious translation:
+lean 3 declaration is
+  forall (p : Nat) (R : Type.{u_1}) [_inst_1 : CommRing.{u_1} R] [_inst_2 : Invertible.{u_1} R (Distrib.toHasMul.{u_1} R (Ring.toDistrib.{u_1} R (CommRing.toRing.{u_1} R _inst_1))) (AddMonoidWithOne.toHasOne.{u_1} R (AddGroupWithOne.toAddMonoidWithOne.{u_1} R (NonAssocRing.toAddGroupWithOne.{u_1} R (Ring.toNonAssocRing.{u_1} R (CommRing.toRing.{u_1} R _inst_1))))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R (AddGroupWithOne.toAddMonoidWithOne.{u_1} R (NonAssocRing.toAddGroupWithOne.{u_1} R (Ring.toNonAssocRing.{u_1} R (CommRing.toRing.{u_1} R _inst_1)))))))) p)], Nat -> (MvPolynomial.{0 u_1} Nat R (CommRing.toCommSemiring.{u_1} R _inst_1))
+but is expected to have type
+  PUnit.{succ (succ u_1)}
+Case conversion may be inaccurate. Consider using '#align X_in_terms_of_W xInTermsOfWₓ'. -/
 /-- The `X_in_terms_of_W p R n` is the polynomial on the basis of Witt polynomials
 that corresponds to the ordinary `X n`. -/
 noncomputable def xInTermsOfW [Invertible (p : R)] : ℕ → MvPolynomial ℕ R
   | n =>
     (x n -
-        ∑ i : Finₓ n,
+        ∑ i : Fin n,
           have := i.2
           c (p ^ (i : ℕ) : R) * xInTermsOfW i ^ p ^ (n - i)) *
       c (⅟ p ^ n : R)
 
 theorem X_in_terms_of_W_eq [Invertible (p : R)] {n : ℕ} :
     xInTermsOfW p R n = (x n - ∑ i in range n, c (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i)) * c (⅟ p ^ n : R) := by
-  rw [xInTermsOfW, ← Finₓ.sum_univ_eq_sum_range]
+  rw [xInTermsOfW, ← Fin.sum_univ_eq_sum_range]
 
 @[simp]
 theorem constant_coeff_X_in_terms_of_W [hp : Fact p.Prime] [Invertible (p : R)] (n : ℕ) :
     constantCoeff (xInTermsOfW p R n) = 0 := by
-  apply Nat.strong_induction_onₓ n <;> clear n
+  apply Nat.strong_induction_on n <;> clear n
   intro n IH
   rw [X_in_terms_of_W_eq, mul_comm, RingHom.map_mul, RingHom.map_sub, RingHom.map_sum, constant_coeff_C, sum_eq_zero]
   · simp only [constant_coeff_X, sub_zero, mul_zero]
@@ -222,7 +228,7 @@ theorem constant_coeff_X_in_terms_of_W [hp : Fact p.Prime] [Invertible (p : R)] 
 
 @[simp]
 theorem X_in_terms_of_W_zero [Invertible (p : R)] : xInTermsOfW p R 0 = x 0 := by
-  rw [X_in_terms_of_W_eq, range_zero, sum_empty, pow_zeroₓ, C_1, mul_oneₓ, sub_zero]
+  rw [X_in_terms_of_W_eq, range_zero, sum_empty, pow_zero, C_1, mul_one, sub_zero]
 
 section PPrime
 
@@ -231,7 +237,7 @@ variable [hp : Fact p.Prime]
 include hp
 
 theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars ∧ (xInTermsOfW p ℚ n).vars ⊆ range (n + 1) := by
-  apply Nat.strong_induction_onₓ n
+  apply Nat.strong_induction_on n
   clear n
   intro n ih
   rw [X_in_terms_of_W_eq, mul_comm, vars_C_mul, vars_sub_of_disjoint, vars_X, range_succ, insert_eq]
@@ -239,10 +245,10 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars �
   · apply nonzero_of_invertible
     
   on_goal 1 =>
-  simp only [true_andₓ, true_orₓ, eq_self_iff_true, mem_union, mem_singleton]
+  simp only [true_and_iff, true_or_iff, eq_self_iff_true, mem_union, mem_singleton]
   intro i
   rw [mem_union, mem_union]
-  apply Or.impₓ id
+  apply Or.imp id
   on_goal 2 => rw [vars_X, disjoint_singleton_left]
   all_goals
   intro H
@@ -258,9 +264,9 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars �
   replace H := (ih j hj).2 (vars_pow _ _ H)
   rw [mem_range] at H
   · rw [mem_range]
-    exact lt_of_lt_of_leₓ H hj
+    exact lt_of_lt_of_le H hj
     
-  · exact lt_irreflₓ n (lt_of_lt_of_leₓ H hj)
+  · exact lt_irrefl n (lt_of_lt_of_le H hj)
     
 
 theorem X_in_terms_of_W_vars_subset (n : ℕ) : (xInTermsOfW p ℚ n).vars ⊆ range (n + 1) :=
@@ -270,28 +276,28 @@ end PPrime
 
 theorem X_in_terms_of_W_aux [Invertible (p : R)] (n : ℕ) :
     xInTermsOfW p R n * c (p ^ n : R) = x n - ∑ i in range n, c (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i) := by
-  rw [X_in_terms_of_W_eq, mul_assoc, ← C_mul, ← mul_powₓ, inv_of_mul_self, one_pow, C_1, mul_oneₓ]
+  rw [X_in_terms_of_W_eq, mul_assoc, ← C_mul, ← mul_pow, inv_of_mul_self, one_pow, C_1, mul_one]
 
 @[simp]
 theorem bind₁_X_in_terms_of_W_witt_polynomial [Invertible (p : R)] (k : ℕ) : bind₁ (xInTermsOfW p R) (W_ R k) = x k :=
   by
   rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum]
   simp only [AlgHom.map_pow, C_pow, AlgHom.map_mul, alg_hom_C]
-  rw [sum_range_succ_comm, tsub_self, pow_zeroₓ, pow_oneₓ, bind₁_X_right, mul_comm, ← C_pow, X_in_terms_of_W_aux]
+  rw [sum_range_succ_comm, tsub_self, pow_zero, pow_one, bind₁_X_right, mul_comm, ← C_pow, X_in_terms_of_W_aux]
   simp only [C_pow, bind₁_X_right, sub_add_cancel]
 
 @[simp]
 theorem bind₁_witt_polynomial_X_in_terms_of_W [Invertible (p : R)] (n : ℕ) : bind₁ (W_ R) (xInTermsOfW p R n) = x n :=
   by
-  apply Nat.strong_induction_onₓ n
+  apply Nat.strong_induction_on n
   clear n
   intro n H
   rw [X_in_terms_of_W_eq, AlgHom.map_mul, AlgHom.map_sub, bind₁_X_right, alg_hom_C, AlgHom.map_sum]
   have : (W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i)) = C (p ^ n : R) * X n := by
-    simp only [witt_polynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_oneₓ, add_sub_cancel, pow_zeroₓ]
+    simp only [witt_polynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_one, add_sub_cancel, pow_zero]
   rw [sum_congr rfl, this]
   · -- this is really slow for some reason
-    rw [mul_right_commₓ, ← C_mul, ← mul_powₓ, mul_inv_of_self, one_pow, C_1, one_mulₓ]
+    rw [mul_right_comm, ← C_mul, ← mul_pow, mul_inv_of_self, one_pow, C_1, one_mul]
     
   · intro i h
     rw [mem_range] at h

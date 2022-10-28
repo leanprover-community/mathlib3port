@@ -19,17 +19,17 @@ noncomputable section
 
 open Set LinearMap Submodule
 
-section CommRingₓ
+section CommRing
 
 variable {R : Type _} {M : Type _} {N : Type _} {ι : Type _} {κ : Type _}
 
-variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
+variable [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
 
 /-- If b : ι → M and c : κ → N are bases then so is λ i, b i.1 ⊗ₜ c i.2 : ι × κ → M ⊗ N. -/
 def Basis.tensorProduct (b : Basis ι R M) (c : Basis κ R N) : Basis (ι × κ) R (TensorProduct R M N) :=
   Finsupp.basisSingleOne.map
     ((TensorProduct.congr b.repr c.repr).trans <|
-        (finsuppTensorFinsupp R _ _ _ _).trans <| Finsupp.lcongr (Equivₓ.refl _) (TensorProduct.lid R R)).symm
+        (finsuppTensorFinsupp R _ _ _ _).trans <| Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid R R)).symm
 
 @[simp]
 theorem Basis.tensor_product_apply (b : Basis ι R M) (c : Basis κ R N) (i : ι) (j : κ) :
@@ -38,5 +38,5 @@ theorem Basis.tensor_product_apply (b : Basis ι R M) (c : Basis κ R N) (i : ι
 theorem Basis.tensor_product_apply' (b : Basis ι R M) (c : Basis κ R N) (i : ι × κ) :
     Basis.tensorProduct b c i = b i.1 ⊗ₜ c i.2 := by simp [Basis.tensorProduct]
 
-end CommRingₓ
+end CommRing
 

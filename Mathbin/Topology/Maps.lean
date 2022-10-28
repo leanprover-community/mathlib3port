@@ -68,7 +68,7 @@ protected theorem Inducing.comp {g : β → γ} {f : α → β} (hg : Inducing g
 
 theorem inducing_of_inducing_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
     (hgf : Inducing (g ∘ f)) : Inducing f :=
-  ⟨le_antisymmₓ (by rwa [← continuous_iff_le_induced])
+  ⟨le_antisymm (by rwa [← continuous_iff_le_induced])
       (by
         rw [hgf.induced, ← continuous_iff_le_induced]
         apply hg.comp continuous_induced_dom)⟩
@@ -125,7 +125,7 @@ theorem Inducing.is_closed_iff {f : α → β} (hf : Inducing f) {s : Set α} : 
 theorem Inducing.is_closed_iff' {f : α → β} (hf : Inducing f) {s : Set α} :
     IsClosed s ↔ ∀ x, f x ∈ Closure (f '' s) → x ∈ s := by rw [hf.induced, is_closed_induced_iff']
 
-theorem Inducing.is_closed_preimage {f : α → β} (h : Inducing f) (s : Set β) (hs : IsClosed s) : IsClosed (f ⁻¹' s) :=
+theorem Inducing.isClosedPreimage {f : α → β} (h : Inducing f) (s : Set β) (hs : IsClosed s) : IsClosed (f ⁻¹' s) :=
   (Inducing.is_closed_iff h).mpr ⟨s, hs, rfl⟩
 
 theorem Inducing.is_open_iff {f : α → β} (hf : Inducing f) {s : Set α} : IsOpen s ↔ ∃ t, IsOpen t ∧ f ⁻¹' t = s := by
@@ -198,7 +198,7 @@ def QuotientMap {α : Type _} {β : Type _} [tα : TopologicalSpace α] [tβ : T
 
 theorem quotient_map_iff {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     QuotientMap f ↔ Surjective f ∧ ∀ s : Set β, IsOpen s ↔ IsOpen (f ⁻¹' s) :=
-  and_congrₓ Iff.rfl topological_space_eq_iff
+  and_congr Iff.rfl topological_space_eq_iff
 
 namespace QuotientMap
 
@@ -213,7 +213,7 @@ protected theorem comp (hg : QuotientMap g) (hf : QuotientMap f) : QuotientMap (
 protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g) (hgf : QuotientMap (g ∘ f)) :
     QuotientMap g :=
   ⟨hgf.1.of_comp,
-    le_antisymmₓ
+    le_antisymm
       (by
         rw [hgf.right, ← continuous_iff_coinduced_le]
         apply continuous_coinduced_rng.comp hf)
@@ -341,7 +341,7 @@ theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f 
 /-- An inducing map with an open range is an open map. -/
 protected theorem Inducing.is_open_map [TopologicalSpace α] [TopologicalSpace β] {f : α → β} (hi : Inducing f)
     (ho : IsOpen (Range f)) : IsOpenMap f :=
-  IsOpenMap.of_nhds_le fun x => (hi.map_nhds_of_mem _ <| IsOpen.mem_nhds ho <| mem_range_self _).Ge
+  IsOpenMap.of_nhds_le fun x => (hi.map_nhds_of_mem _ <| IsOpen.mem_nhds ho <| mem_range_self _).ge
 
 section IsClosedMap
 
@@ -368,7 +368,7 @@ protected theorem comp {g : β → γ} {f : α → β} (hg : IsClosedMap g) (hf 
   exact hg _ (hf _ hs)
 
 theorem closure_image_subset {f : α → β} (hf : IsClosedMap f) (s : Set α) : Closure (f '' s) ⊆ f '' Closure s :=
-  closure_minimal (image_subset _ subset_closure) (hf _ is_closed_closure)
+  closure_minimal (image_subset _ subset_closure) (hf _ isClosedClosure)
 
 theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : LeftInverse f f') (r_inv : RightInverse f f') :
     IsClosedMap f := fun s hs =>
@@ -378,13 +378,13 @@ theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv :
 theorem of_nonempty {f : α → β} (h : ∀ s, IsClosed s → s.Nonempty → IsClosed (f '' s)) : IsClosedMap f := by
   intro s hs
   cases' eq_empty_or_nonempty s with h2s h2s
-  · simp_rw [h2s, image_empty, is_closed_empty]
+  · simp_rw [h2s, image_empty, isClosedEmpty]
     
   · exact h s hs h2s
     
 
-theorem closed_range {f : α → β} (hf : IsClosedMap f) : IsClosed (Range f) :=
-  @image_univ _ _ f ▸ hf _ is_closed_univ
+theorem closedRange {f : α → β} (hf : IsClosedMap f) : IsClosed (Range f) :=
+  @image_univ _ _ f ▸ hf _ isClosedUniv
 
 end IsClosedMap
 
@@ -398,7 +398,7 @@ theorem Inducing.is_closed_map [TopologicalSpace α] [TopologicalSpace β] {f : 
 theorem is_closed_map_iff_closure_image [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     IsClosedMap f ↔ ∀ s, Closure (f '' s) ⊆ f '' Closure s :=
   ⟨IsClosedMap.closure_image_subset, fun hs c hc =>
-    is_closed_of_closure_subset <|
+    isClosedOfClosureSubset <|
       calc
         Closure (f '' c) ⊆ f '' Closure c := hs c
         _ = f '' c := by rw [hc.closure_eq]
@@ -444,8 +444,8 @@ theorem open_embedding_iff_embedding_open {f : α → β} : OpenEmbedding f ↔ 
 
 theorem open_embedding_of_continuous_injective_open {f : α → β} (h₁ : Continuous f) (h₂ : Injective f)
     (h₃ : IsOpenMap f) : OpenEmbedding f := by
-  simp only [open_embedding_iff_embedding_open, embedding_iff, inducing_iff_nhds, *, and_trueₓ]
-  exact fun a => le_antisymmₓ (h₁.tendsto _).le_comap (@comap_map _ _ (𝓝 a) _ h₂ ▸ comap_mono (h₃.nhds_le _))
+  simp only [open_embedding_iff_embedding_open, embedding_iff, inducing_iff_nhds, *, and_true_iff]
+  exact fun a => le_antisymm (h₁.tendsto _).le_comap (@comap_map _ _ (𝓝 a) _ h₂ ▸ comap_mono (h₃.nhds_le _))
 
 theorem open_embedding_iff_continuous_injective_open {f : α → β} :
     OpenEmbedding f ↔ Continuous f ∧ Injective f ∧ IsOpenMap f :=
@@ -480,7 +480,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 /-- A closed embedding is an embedding with closed image. -/
 @[mk_iff]
 structure ClosedEmbedding (f : α → β) extends Embedding f : Prop where
-  closed_range : IsClosed <| Range f
+  closedRange : IsClosed <| Range f
 
 variable {f : α → β}
 
@@ -492,7 +492,7 @@ theorem ClosedEmbedding.continuous (hf : ClosedEmbedding f) : Continuous f :=
   hf.toEmbedding.Continuous
 
 theorem ClosedEmbedding.is_closed_map (hf : ClosedEmbedding f) : IsClosedMap f :=
-  hf.toEmbedding.to_inducing.IsClosedMap hf.closed_range
+  hf.toEmbedding.to_inducing.IsClosedMap hf.closedRange
 
 theorem ClosedEmbedding.closed_iff_image_closed (hf : ClosedEmbedding f) {s : Set α} : IsClosed s ↔ IsClosed (f '' s) :=
   ⟨hf.IsClosedMap s, fun h => by
@@ -504,13 +504,13 @@ theorem ClosedEmbedding.closed_iff_preimage_closed (hf : ClosedEmbedding f) {s :
   convert ← hf.closed_iff_image_closed.symm
   rwa [image_preimage_eq_inter_range, inter_eq_self_of_subset_left]
 
-theorem closed_embedding_of_embedding_closed (h₁ : Embedding f) (h₂ : IsClosedMap f) : ClosedEmbedding f :=
-  ⟨h₁, by convert h₂ univ is_closed_univ <;> simp⟩
+theorem closedEmbeddingOfEmbeddingClosed (h₁ : Embedding f) (h₂ : IsClosedMap f) : ClosedEmbedding f :=
+  ⟨h₁, by convert h₂ univ isClosedUniv <;> simp⟩
 
-theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h₂ : Injective f) (h₃ : IsClosedMap f) :
+theorem closedEmbeddingOfContinuousInjectiveClosed (h₁ : Continuous f) (h₂ : Injective f) (h₃ : IsClosedMap f) :
     ClosedEmbedding f := by
-  refine' closed_embedding_of_embedding_closed ⟨⟨_⟩, h₂⟩ h₃
-  apply le_antisymmₓ (continuous_iff_le_induced.mp h₁) _
+  refine' closedEmbeddingOfEmbeddingClosed ⟨⟨_⟩, h₂⟩ h₃
+  apply le_antisymm (continuous_iff_le_induced.mp h₁) _
   intro s'
   change IsOpen _ ≤ IsOpen _
   rw [← is_closed_compl_iff, ← is_closed_compl_iff]
@@ -519,8 +519,8 @@ theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h
   refine' fun hs => ⟨f '' s, h₃ s hs, _⟩
   rw [preimage_image_eq _ h₂]
 
-theorem closed_embedding_id : ClosedEmbedding (@id α) :=
-  ⟨embedding_id, by convert is_closed_univ <;> apply range_id⟩
+theorem closedEmbeddingId : ClosedEmbedding (@id α) :=
+  ⟨embedding_id, by convert isClosedUniv <;> apply range_id⟩
 
 theorem ClosedEmbedding.comp {g : β → γ} {f : α → β} (hg : ClosedEmbedding g) (hf : ClosedEmbedding f) :
     ClosedEmbedding (g ∘ f) :=
@@ -529,7 +529,7 @@ theorem ClosedEmbedding.comp {g : β → γ} {f : α → β} (hg : ClosedEmbeddi
 
 theorem ClosedEmbedding.closure_image_eq {f : α → β} (hf : ClosedEmbedding f) (s : Set α) :
     Closure (f '' s) = f '' Closure s :=
-  le_antisymmₓ (is_closed_map_iff_closure_image.mp hf.IsClosedMap _) (image_closure_subset_closure_image hf.Continuous)
+  (hf.IsClosedMap.closure_image_subset _).antisymm (image_closure_subset_closure_image hf.Continuous)
 
 end ClosedEmbedding
 

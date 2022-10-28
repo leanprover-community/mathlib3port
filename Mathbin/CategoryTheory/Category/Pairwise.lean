@@ -80,7 +80,7 @@ attribute [local tidy] tactic.case_bash
 instance : Category (Pairwise ι) where
   Hom := Hom
   id := id
-  comp := fun X Y Z f g => comp f g
+  comp X Y Z f g := comp f g
 
 end
 
@@ -111,7 +111,7 @@ and the morphisms to the obvious inequalities.
 @[simps]
 def diagram : Pairwise ι ⥤ α where
   obj := diagramObj U
-  map := fun X Y f => diagramMap U f
+  map X Y f := diagramMap U f
 
 end
 
@@ -138,7 +138,7 @@ def cocone : Cocone (diagram U) where
 `infi U` provides a limit cone over `diagram U`.
 -/
 def coconeIsColimit :
-    IsColimit (cocone U) where desc := fun s =>
+    IsColimit (cocone U) where desc s :=
     homOfLe
       (by
         apply CompleteLattice.Sup_le

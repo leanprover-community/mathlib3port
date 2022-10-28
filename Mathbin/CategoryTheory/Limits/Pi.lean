@@ -46,7 +46,7 @@ def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i) where
 /-- Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
 -/
 def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F where
-  x := fun i => (c i).x
+  x i := (c i).x
   π :=
     { app := fun j i => (c i).π.app j,
       naturality' := fun j j' f => by
@@ -57,7 +57,7 @@ def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F where
 we can assemble these together as a `cocone F`.
 -/
 def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone F where
-  x := fun i => (c i).x
+  x i := (c i).x
   ι :=
     { app := fun j i => (c i).ι.app j,
       naturality' := fun j j' f => by
@@ -69,11 +69,11 @@ assembling them together as a `cone F` produces a limit cone.
 -/
 def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLimit (c i)) :
     IsLimit (coneOfConeCompEval c) where
-  lift := fun s i => (P i).lift (coneCompEval s i)
-  fac' := fun s j => by
+  lift s i := (P i).lift (coneCompEval s i)
+  fac' s j := by
     ext i
     exact (P i).fac (cone_comp_eval s i) j
-  uniq' := fun s m w => by
+  uniq' s m w := by
     ext i
     exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_fun (w j) i
 
@@ -82,11 +82,11 @@ assembling them together as a `cocone F` produces a colimit cocone.
 -/
 def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀ i, IsColimit (c i)) :
     IsColimit (coconeOfCoconeCompEval c) where
-  desc := fun s i => (P i).desc (coconeCompEval s i)
-  fac' := fun s j => by
+  desc s i := (P i).desc (coconeCompEval s i)
+  fac' s j := by
     ext i
     exact (P i).fac (cocone_comp_eval s i) j
-  uniq' := fun s m w => by
+  uniq' s m w := by
     ext i
     exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_fun (w j) i
 

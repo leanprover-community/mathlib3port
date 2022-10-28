@@ -28,8 +28,8 @@ open Classical Ennreal Nnreal
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
-theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α}
-    (μ : Measureₓ α) {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β] [TopologicalSpace β] [OrderTopology β]
+theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
+    {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β] [TopologicalSpace β] [OrderTopology β]
     [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : s.Countable)
     (s_dense : Dense s) (f : α → β)
     (h :
@@ -61,8 +61,8 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
     exact MeasurableSet.bInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x
   have f'_meas : Measurable f' := by
-    apply measurable_infi
-    exact fun i => Measurable.piecewise (u'_meas i) measurable_const measurable_const
+    apply measurableInfi
+    exact fun i => Measurable.piecewise (u'_meas i) measurableConst measurableConst
   let t := ⋃ (p : s) (q : s ∩ Ioi p), u' p ∩ v p q
   have μt : μ t ≤ 0 :=
     calc
@@ -85,11 +85,11 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
       
   have ff' : ∀ᵐ x ∂μ, f x = f' x := by
     have : ∀ᵐ x ∂μ, x ∉ t := by
-      have : μ t = 0 := le_antisymmₓ μt bot_le
+      have : μ t = 0 := le_antisymm μt bot_le
       change μ _ = 0
       convert this
       ext y
-      simp only [not_exists, exists_propₓ, mem_set_of_eq, mem_compl_iff, not_not_mem]
+      simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_iff, not_not_mem]
     filter_upwards [this] with x hx
     apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
@@ -118,7 +118,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
 `p < q`, then `f` is almost-everywhere measurable. -/
-theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α} (μ : Measureₓ α)
+theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
     (f : α → ℝ≥0∞)
     (h :
       ∀ (p : ℝ≥0) (q : ℝ≥0),
@@ -129,7 +129,7 @@ theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {
   obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
     Ennreal.exists_countable_dense_no_zero_top
   have I : ∀ x ∈ s, x ≠ ∞ := fun x xs hx => s_top (hx ▸ xs)
-  apply MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets μ s s_count s_dense _
+  apply MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets μ s s_count s_dense _
   rintro p hp q hq hpq
   lift p to ℝ≥0 using I p hp
   lift q to ℝ≥0 using I q hq

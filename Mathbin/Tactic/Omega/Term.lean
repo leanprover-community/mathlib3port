@@ -54,18 +54,18 @@ theorem val_neg {v : Nat → Int} {t : Term} : (neg t).val v = -t.val v := by
 theorem val_sub {v : Nat → Int} {t1 t2 : Term} : (sub t1 t2).val v = t1.val v - t2.val v := by
   cases t1
   cases t2
-  simp only [add_assocₓ, coeffs.val_sub, neg_add_rev, val, sub, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+  simp only [add_assoc, coeffs.val_sub, neg_add_rev, val, sub, add_comm, add_left_comm, sub_eq_add_neg]
 
 @[simp]
 theorem val_add {v : Nat → Int} {t1 t2 : Term} : (add t1 t2).val v = t1.val v + t2.val v := by
   cases t1
   cases t2
-  simp only [coeffs.val_add, add, val, add_commₓ, add_left_commₓ]
+  simp only [coeffs.val_add, add, val, add_comm, add_left_comm]
 
 @[simp]
 theorem val_mul {v : Nat → Int} {i : Int} {t : Term} : val v (mul i t) = i * val v t := by
   cases t
-  simp only [mul, mul_addₓ, add_mulₓ, List.length_mapₓ, coeffs.val, coeffs.val_between_map_mul, val, List.map]
+  simp only [mul, mul_add, add_mul, List.length_map, coeffs.val, coeffs.val_between_map_mul, val, List.map]
 
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
     i ∣ b → (∀ x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i := by
@@ -79,15 +79,15 @@ theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
 def freshIndex (t : Term) : Nat :=
   t.snd.length
 
-def toString (t : Term) : Stringₓ :=
+def toString (t : Term) : String :=
   t.2.enum.foldr (fun ⟨i, n⟩ r => toString n ++ " * x" ++ toString i ++ " + " ++ r) (toString t.1)
 
-instance : HasToString Term :=
+instance : ToString Term :=
   ⟨toString⟩
 
 end Term
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Fresh de Brujin index not used by any variable ocurring in the list of terms -/
 def Terms.freshIndex : List Term → Nat
   | [] => 0

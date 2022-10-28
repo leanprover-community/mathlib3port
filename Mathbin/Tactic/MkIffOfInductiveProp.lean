@@ -191,7 +191,7 @@ For example, `mk_iff_of_inductive_prop` on `list.chain` produces:
 -/
 unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
   let e ← get_env
-  guardₓ (e i)
+  guard (e i)
   let constrs := e.constructors_of i
   let params := e.inductive_num_params i
   let indices := e.inductive_num_indices i
@@ -251,7 +251,7 @@ add_tactic_doc
   { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
     tags := ["logic", "environment"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
 `r` with the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type parameters, `is` are
 the indices, `j` ranges over all possible constructors, the `cs` are the parameters for each of the

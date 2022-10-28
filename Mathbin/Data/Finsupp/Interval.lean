@@ -26,7 +26,7 @@ supported.
 
 noncomputable section
 
-open Finsetₓ Finsupp Function
+open Finset Finsupp Function
 
 open BigOperators Classical Pointwise
 
@@ -40,10 +40,10 @@ variable [Zero α] {f : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.singleton` bundled as a `finsupp`. -/
 @[simps]
-def rangeSingleton (f : ι →₀ α) : ι →₀ Finsetₓ α where
-  toFun := fun i => {f i}
+def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α where
+  toFun i := {f i}
   Support := f.Support
-  mem_support_to_fun := fun i => by
+  mem_support_to_fun i := by
     rw [← not_iff_not, not_mem_support_iff, not_ne_iff]
     exact singleton_injective.eq_iff.symm
 
@@ -54,14 +54,14 @@ end RangeSingleton
 
 section RangeIcc
 
-variable [Zero α] [PartialOrderₓ α] [LocallyFiniteOrder α] {f g : ι →₀ α} {i : ι} {a : α}
+variable [Zero α] [PartialOrder α] [LocallyFiniteOrder α] {f g : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.Icc` bundled as a `finsupp`. -/
 @[simps]
-def rangeIcc (f g : ι →₀ α) : ι →₀ Finsetₓ α where
-  toFun := fun i => icc (f i) (g i)
+def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
+  toFun i := icc (f i) (g i)
   Support := f.Support ∪ g.Support
-  mem_support_to_fun := fun i => by
+  mem_support_to_fun i := by
     rw [mem_union, ← not_iff_not, not_or_distrib, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
     exact Icc_eq_singleton_iff.symm
 
@@ -70,13 +70,16 @@ theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g
 
 end RangeIcc
 
-variable [PartialOrderₓ α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α)
+variable [PartialOrder α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α)
 
 instance : LocallyFiniteOrder (ι →₀ α) :=
   LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.Support ∪ g.Support).Finsupp <| f.rangeIcc g) fun f g x => by
     refine' (mem_finsupp_iff_of_support_subset <| subset.rfl).trans _
     simp_rw [mem_range_Icc_apply_iff]
     exact forall_and_distrib
+
+theorem Icc_eq : icc f g = (f.Support ∪ g.Support).Finsupp (f.rangeIcc g) :=
+  rfl
 
 theorem card_Icc : (icc f g).card = ∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card :=
   card_finsupp _ _

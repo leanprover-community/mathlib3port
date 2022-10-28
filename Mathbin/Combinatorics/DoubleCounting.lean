@@ -27,26 +27,26 @@ and `t`.
 -/
 
 
-open Finsetₓ Function
+open Finset Function
 
 open BigOperators
 
 /-! ### Bipartite graph -/
 
 
-namespace Finsetₓ
+namespace Finset
 
 section Bipartite
 
-variable {α β : Type _} (r : α → β → Prop) (s : Finsetₓ α) (t : Finsetₓ β) (a a' : α) (b b' : β) [DecidablePred (r a)]
+variable {α β : Type _} (r : α → β → Prop) (s : Finset α) (t : Finset β) (a a' : α) (b b' : β) [DecidablePred (r a)]
   [∀ a, Decidable (r a b)] {m n : ℕ}
 
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
-def bipartiteBelow : Finsetₓ α :=
+def bipartiteBelow : Finset α :=
   s.filter fun a => r a b
 
 /-- Elements of `t` which are "above" `a` according to relation `r`. -/
-def bipartiteAbove : Finsetₓ β :=
+def bipartiteAbove : Finset β :=
   t.filter (r a)
 
 theorem bipartite_below_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a :=
@@ -86,10 +86,10 @@ theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)] (hn : ∀ b ∈ t, n 
 
 theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card = m)
     (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
-  ((card_mul_le_card_mul _ fun a ha => (hm a ha).Ge) fun b hb => (hn b hb).le).antisymm <|
-    (card_mul_le_card_mul' _ fun a ha => (hn a ha).Ge) fun b hb => (hm b hb).le
+  ((card_mul_le_card_mul _ fun a ha => (hm a ha).ge) fun b hb => (hn b hb).le).antisymm <|
+    (card_mul_le_card_mul' _ fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
 
 end Bipartite
 
-end Finsetₓ
+end Finset
 

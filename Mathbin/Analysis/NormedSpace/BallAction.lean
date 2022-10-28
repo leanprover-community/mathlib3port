@@ -25,25 +25,25 @@ variable {𝕜 𝕜' E : Type _} [NormedField 𝕜] [NormedField 𝕜'] [Seminor
 section ClosedBall
 
 instance mulActionClosedBallBall : MulAction (ClosedBall (0 : 𝕜) 1) (Ball (0 : E) r) where
-  smul := fun c x =>
+  smul c x :=
     ⟨(c : 𝕜) • x,
       mem_ball_zero_iff.2 <| by
-        simpa only [norm_smul, one_mulₓ] using
+        simpa only [norm_smul, one_mul] using
           mul_lt_mul' (mem_closed_ball_zero_iff.1 c.2) (mem_ball_zero_iff.1 x.2) (norm_nonneg _) one_pos⟩
-  one_smul := fun x => Subtype.ext <| one_smul 𝕜 _
-  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
+  one_smul x := Subtype.ext <| one_smul 𝕜 _
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_closed_ball_ball : HasContinuousSmul (ClosedBall (0 : 𝕜) 1) (Ball (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 instance mulActionClosedBallClosedBall : MulAction (ClosedBall (0 : 𝕜) 1) (ClosedBall (0 : E) r) where
-  smul := fun c x =>
+  smul c x :=
     ⟨(c : 𝕜) • x,
       mem_closed_ball_zero_iff.2 <| by
-        simpa only [norm_smul, one_mulₓ] using
+        simpa only [norm_smul, one_mul] using
           mul_le_mul (mem_closed_ball_zero_iff.1 c.2) (mem_closed_ball_zero_iff.1 x.2) (norm_nonneg _) zero_le_one⟩
-  one_smul := fun x => Subtype.ext <| one_smul 𝕜 _
-  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
+  one_smul x := Subtype.ext <| one_smul 𝕜 _
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_closed_ball_closed_ball :
     HasContinuousSmul (ClosedBall (0 : 𝕜) 1) (ClosedBall (0 : E) r) :=
@@ -54,28 +54,28 @@ end ClosedBall
 section Sphere
 
 instance mulActionSphereBall : MulAction (Sphere (0 : 𝕜) 1) (Ball (0 : E) r) where
-  smul := fun c x => inclusion sphere_subset_closed_ball c • x
-  one_smul := fun x => Subtype.ext <| one_smul _ _
-  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
+  smul c x := inclusion sphere_subset_closed_ball c • x
+  one_smul x := Subtype.ext <| one_smul _ _
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_sphere_ball : HasContinuousSmul (Sphere (0 : 𝕜) 1) (Ball (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 instance mulActionSphereClosedBall : MulAction (Sphere (0 : 𝕜) 1) (ClosedBall (0 : E) r) where
-  smul := fun c x => inclusion sphere_subset_closed_ball c • x
-  one_smul := fun x => Subtype.ext <| one_smul _ _
-  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
+  smul c x := inclusion sphere_subset_closed_ball c • x
+  one_smul x := Subtype.ext <| one_smul _ _
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_sphere_closed_ball : HasContinuousSmul (Sphere (0 : 𝕜) 1) (ClosedBall (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 instance mulActionSphereSphere : MulAction (Sphere (0 : 𝕜) 1) (Sphere (0 : E) r) where
-  smul := fun c x =>
+  smul c x :=
     ⟨(c : 𝕜) • x,
       mem_sphere_zero_iff_norm.2 <| by
-        rw [norm_smul, mem_sphere_zero_iff_norm.1 c.coe_prop, mem_sphere_zero_iff_norm.1 x.coe_prop, one_mulₓ]⟩
-  one_smul := fun x => Subtype.ext <| one_smul _ _
-  mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
+        rw [norm_smul, mem_sphere_zero_iff_norm.1 c.coe_prop, mem_sphere_zero_iff_norm.1 x.coe_prop, one_mul]⟩
+  one_smul x := Subtype.ext <| one_smul _ _
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_sphere_sphere : HasContinuousSmul (Sphere (0 : 𝕜) 1) (Sphere (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩

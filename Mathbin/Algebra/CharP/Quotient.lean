@@ -15,7 +15,7 @@ universe u v
 
 namespace CharP
 
-theorem quotient (R : Type u) [CommRingₓ R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ Nonunits R) :
+theorem quotient (R : Type u) [CommRing R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ Nonunits R) :
     CharP (R ⧸ (Ideal.span {p} : Ideal R)) p :=
   have hp0 : (p : R ⧸ (Ideal.span {p} : Ideal R)) = 0 :=
     map_nat_cast (Ideal.Quotient.mk (Ideal.span {p} : Ideal R)) p ▸
@@ -29,8 +29,8 @@ theorem quotient (R : Type u) [CommRingₓ R] (p : ℕ) [hp1 : Fact p.Prime] (hp
 
 /-- If an ideal does not contain any coercions of natural numbers other than zero, then its quotient
 inherits the characteristic of the underlying ring. -/
-theorem quotient' {R : Type _} [CommRingₓ R] (p : ℕ) [CharP R p] (I : Ideal R)
-    (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) : CharP (R ⧸ I) p :=
+theorem quotient' {R : Type _} [CommRing R] (p : ℕ) [CharP R p] (I : Ideal R) (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) :
+    CharP (R ⧸ I) p :=
   ⟨fun x => by
     rw [← cast_eq_zero_iff R p x, ← map_nat_cast (Ideal.Quotient.mk I)]
     refine' ideal.quotient.eq.trans (_ : ↑x - 0 ∈ I ↔ _)

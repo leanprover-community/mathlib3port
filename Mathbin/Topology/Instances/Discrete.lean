@@ -34,57 +34,82 @@ instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodab
     { is_open_generated_countable := ⟨{univ}, countable_singleton _, by simp only [eq_iff_true_of_subsingleton]⟩ }
   second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd) (Union_of_singleton α)
 
-instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : DiscreteTopology α] [PartialOrderₓ α]
-    [PredOrder α] [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : OrderTopology α :=
-  ⟨by
-    rw [h.eq_bot]
-    refine' (eq_bot_of_singletons_open fun a => _).symm
-    have h_singleton_eq_inter : {a} = Iio (succ a) ∩ Ioi (pred a) := by
-      suffices h_singleton_eq_inter' : {a} = Iic a ∩ Ici a
-      · rw [h_singleton_eq_inter', ← Ioi_pred, ← Iio_succ]
-        
-      rw [inter_comm, Ici_inter_Iic, Icc_self a]
-    rw [h_singleton_eq_inter]
-    apply IsOpen.inter
-    · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
+theorem bot_topological_space_eq_generate_from_of_pred_succ_order {α} [PartialOrder α] [PredOrder α] [SuccOrder α]
+    [NoMinOrder α] [NoMaxOrder α] : (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = IoiCat a ∨ s = IioCat a } :=
+  by
+  refine' (eq_bot_of_singletons_open fun a => _).symm
+  have h_singleton_eq_inter : {a} = Iio (succ a) ∩ Ioi (pred a) := by
+    suffices h_singleton_eq_inter' : {a} = Iic a ∩ Ici a
+    · rw [h_singleton_eq_inter', ← Ioi_pred, ← Iio_succ]
       
-    · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-      ⟩
+    rw [inter_comm, Ici_inter_Iic, Icc_self a]
+  rw [h_singleton_eq_inter]
+  apply IsOpen.inter
+  · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
+    
+  · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
+    
 
-instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : DiscreteTopology α] [LinearOrderₓ α]
-    [PredOrder α] [SuccOrder α] : OrderTopology α :=
-  ⟨by
-    rw [h.eq_bot]
-    refine' (eq_bot_of_singletons_open fun a => _).symm
-    have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
-    by_cases ha_top:IsTop a
-    · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
-      by_cases ha_bot:IsBot a
-      · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
-        rw [h_singleton_eq_inter]
-        apply is_open_univ
+theorem discrete_topology_iff_order_topology_of_pred_succ' [PartialOrder α] [PredOrder α] [SuccOrder α] [NoMinOrder α]
+    [NoMaxOrder α] : DiscreteTopology α ↔ OrderTopology α := by
+  refine' ⟨fun h => ⟨_⟩, fun h => ⟨_⟩⟩
+  · rw [h.eq_bot]
+    exact bot_topological_space_eq_generate_from_of_pred_succ_order
+    
+  · rw [h.topology_eq_generate_intervals]
+    exact bot_topological_space_eq_generate_from_of_pred_succ_order.symm
+    
+
+instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : DiscreteTopology α] [PartialOrder α]
+    [PredOrder α] [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : OrderTopology α :=
+  discrete_topology_iff_order_topology_of_pred_succ'.1 h
+
+theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α] [PredOrder α] [SuccOrder α] :
+    (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = IoiCat a ∨ s = IioCat a } := by
+  refine' (eq_bot_of_singletons_open fun a => _).symm
+  have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
+  by_cases ha_top:IsTop a
+  · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
+    by_cases ha_bot:IsBot a
+    · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
+      rw [h_singleton_eq_inter]
+      apply is_open_univ
+      
+    · rw [is_bot_iff_is_min] at ha_bot
+      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
+      rw [h_singleton_eq_inter]
+      exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
+      
+    
+  · rw [is_top_iff_is_max] at ha_top
+    rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
+    by_cases ha_bot:IsBot a
+    · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
+      rw [h_singleton_eq_inter]
+      exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
+      
+    · rw [is_bot_iff_is_min] at ha_bot
+      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
+      rw [h_singleton_eq_inter]
+      apply IsOpen.inter
+      · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
         
-      · rw [is_bot_iff_is_min] at ha_bot
-        rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
-        rw [h_singleton_eq_inter]
-        exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
+      · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
         
       
-    · rw [is_top_iff_is_max] at ha_top
-      rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
-      by_cases ha_bot:IsBot a
-      · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
-        rw [h_singleton_eq_inter]
-        exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-        
-      · rw [is_bot_iff_is_min] at ha_bot
-        rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
-        rw [h_singleton_eq_inter]
-        apply IsOpen.inter
-        · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-          
-        · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-          
-        
-      ⟩
+    
+
+theorem discrete_topology_iff_order_topology_of_pred_succ [LinearOrder α] [PredOrder α] [SuccOrder α] :
+    DiscreteTopology α ↔ OrderTopology α := by
+  refine' ⟨fun h => ⟨_⟩, fun h => ⟨_⟩⟩
+  · rw [h.eq_bot]
+    exact LinearOrder.bot_topological_space_eq_generate_from
+    
+  · rw [h.topology_eq_generate_intervals]
+    exact linear_order.bot_topological_space_eq_generate_from.symm
+    
+
+instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : DiscreteTopology α] [LinearOrder α]
+    [PredOrder α] [SuccOrder α] : OrderTopology α :=
+  discrete_topology_iff_order_topology_of_pred_succ.mp h
 

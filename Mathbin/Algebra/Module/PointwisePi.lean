@@ -40,12 +40,12 @@ theorem smul_univ_pi [∀ i, HasSmul K (R i)] (r : K) (t : ∀ i, Set (R i)) :
       
 
 @[to_additive]
-theorem smul_pi [Groupₓ K] [∀ i, MulAction K (R i)] (r : K) (S : Set ι) (t : ∀ i, Set (R i)) :
+theorem smul_pi [Group K] [∀ i, MulAction K (R i)] (r : K) (S : Set ι) (t : ∀ i, Set (R i)) :
     r • S.pi t = S.pi (r • t) :=
   (Subset.antisymm (smul_pi_subset _ _ _)) fun x h =>
     ⟨r⁻¹ • x, fun i hiS => mem_smul_set_iff_inv_smul_mem.mp (h i hiS), smul_inv_smul _ _⟩
 
-theorem smul_pi₀ [GroupWithZeroₓ K] [∀ i, MulAction K (R i)] {r : K} (S : Set ι) (t : ∀ i, Set (R i)) (hr : r ≠ 0) :
+theorem smul_pi₀ [GroupWithZero K] [∀ i, MulAction K (R i)] {r : K} (S : Set ι) (t : ∀ i, Set (R i)) (hr : r ≠ 0) :
     r • S.pi t = S.pi (r • t) :=
   smul_pi (Units.mk0 r hr) S t
 

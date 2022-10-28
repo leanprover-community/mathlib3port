@@ -48,11 +48,11 @@ variable {ι σ R A : Type _}
 
 section HomogeneousDef
 
-variable [Semiringₓ A]
+variable [Semiring A]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
 
-variable [DecidableEq ι] [AddMonoidₓ ι] [GradedRing 𝒜]
+variable [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
 
 variable (I : Ideal A)
 
@@ -65,7 +65,7 @@ def Ideal.IsHomogeneous : Prop :=
 
 /-- For any `semiring A`, we collect the homogeneous ideals of `A` into a type. -/
 structure HomogeneousIdeal extends Submodule A A where
-  is_homogeneous' : Ideal.IsHomogeneous 𝒜 to_submodule
+  isHomogeneous' : Ideal.IsHomogeneous 𝒜 to_submodule
 
 variable {𝒜}
 
@@ -73,16 +73,16 @@ variable {𝒜}
 def HomogeneousIdeal.toIdeal (I : HomogeneousIdeal 𝒜) : Ideal A :=
   I.toSubmodule
 
-theorem HomogeneousIdeal.is_homogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.IsHomogeneous 𝒜 :=
-  I.is_homogeneous'
+theorem HomogeneousIdeal.isHomogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.IsHomogeneous 𝒜 :=
+  I.isHomogeneous'
 
 theorem HomogeneousIdeal.to_ideal_injective :
     Function.Injective (HomogeneousIdeal.toIdeal : HomogeneousIdeal 𝒜 → Ideal A) := fun ⟨x, hx⟩ ⟨y, hy⟩ (h : x = y) =>
   by simp [h]
 
 instance HomogeneousIdeal.setLike : SetLike (HomogeneousIdeal 𝒜) A where
-  coe := fun I => I.toIdeal
-  coe_injective' := fun I J h => HomogeneousIdeal.to_ideal_injective <| SetLike.coe_injective h
+  coe I := I.toIdeal
+  coe_injective' I J h := HomogeneousIdeal.to_ideal_injective <| SetLike.coe_injective h
 
 @[ext]
 theorem HomogeneousIdeal.ext {I J : HomogeneousIdeal 𝒜} (h : I.toIdeal = J.toIdeal) : I = J :=
@@ -96,7 +96,7 @@ end HomogeneousDef
 
 section HomogeneousCore
 
-variable [Semiringₓ A]
+variable [Semiring A]
 
 variable [SetLike σ A] (𝒜 : ι → σ)
 
@@ -109,7 +109,7 @@ is the largest homogeneous ideal of `A` contained in `I`, as an ideal. -/
 def Ideal.homogeneousCore' (I : Ideal A) : Ideal A :=
   Ideal.span (coe '' ((coe : Subtype (IsHomogeneous 𝒜) → A) ⁻¹' I))
 
-theorem Ideal.homogeneous_core'_mono : Monotoneₓ (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
+theorem Ideal.homogeneous_core'_mono : Monotone (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
   Ideal.span_mono <| (Set.image_subset _) fun x => @I_le_J _
 
 theorem Ideal.homogeneous_core'_le : I.homogeneousCore' 𝒜 ≤ I :=
@@ -119,11 +119,11 @@ end HomogeneousCore
 
 section IsHomogeneousIdealDefs
 
-variable [Semiringₓ A]
+variable [Semiring A]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
 
-variable [DecidableEq ι] [AddMonoidₓ ι] [GradedRing 𝒜]
+variable [DecidableEq ι] [AddMonoid ι] [GradedRing 𝒜]
 
 variable (I : Ideal A)
 
@@ -138,7 +138,7 @@ theorem Ideal.is_homogeneous_iff_subset_Inter : I.IsHomogeneous 𝒜 ↔ (I : Se
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : IsHomogeneous 𝒜 x) (hx₂ : x ∈ I)
     (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
   classical
-  rw [← DirectSum.sum_support_decompose 𝒜 r, Finsetₓ.sum_mul, map_sum]
+  rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
   apply Ideal.sum_mem
   intro k hk
   obtain ⟨i, hi⟩ := hx₁
@@ -150,7 +150,7 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
   · exact I.zero_mem
     
 
-theorem Ideal.is_homogeneous_span (s : Set A) (h : ∀ x ∈ s, IsHomogeneous 𝒜 x) : (Ideal.span s).IsHomogeneous 𝒜 := by
+theorem Ideal.isHomogeneousSpan (s : Set A) (h : ∀ x ∈ s, IsHomogeneous 𝒜 x) : (Ideal.span s).IsHomogeneous 𝒜 := by
   rintro i r hr
   rw [Ideal.span, Finsupp.span_eq_range_total] at hr
   rw [LinearMap.mem_range] at hr
@@ -170,11 +170,11 @@ theorem Ideal.is_homogeneous_span (s : Set A) (h : ∀ x ∈ s, IsHomogeneous �
 is the largest homogeneous ideal of `A` contained in `I`.-/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
-    Ideal.is_homogeneous_span _ _ fun x h => by
+    Ideal.isHomogeneousSpan _ _ fun x h => by
       rw [Subtype.image_preimage_coe] at h
       exact h.2⟩
 
-theorem Ideal.homogeneous_core_mono : Monotoneₓ (Ideal.homogeneousCore 𝒜) :=
+theorem Ideal.homogeneous_core_mono : Monotone (Ideal.homogeneousCore 𝒜) :=
   Ideal.homogeneous_core'_mono 𝒜
 
 theorem Ideal.to_ideal_homogeneous_core_le : (I.homogeneousCore 𝒜).toIdeal ≤ I :=
@@ -188,7 +188,7 @@ theorem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem {x : A} (h : SetLike
 
 theorem Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self (h : I.IsHomogeneous 𝒜) :
     (I.homogeneousCore 𝒜).toIdeal = I := by
-  apply le_antisymmₓ (I.homogeneous_core'_le 𝒜) _
+  apply le_antisymm (I.homogeneous_core'_le 𝒜) _
   intro x hx
   classical
   rw [← DirectSum.sum_support_decompose 𝒜 x]
@@ -218,9 +218,9 @@ these results to provide these notation typeclasses for `homogeneous_ideal`. -/
 
 section Operations
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ A] [DecidableEq ι] [AddMonoidₓ ι]
+variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜]
 
@@ -262,23 +262,15 @@ protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHo
   simp only [Ideal.mem_infi] at hx⊢
   exact fun j => h _ _ (hx j)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem supr₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨆ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.supr fun i => is_homogeneous.supr <| h i
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨅ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
-
-theorem Sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 := by
-  rw [Sup_eq_supr]
-  exact supr₂ h
-
-theorem Inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (inf ℐ).IsHomogeneous 𝒜 := by
-  rw [Inf_eq_infi]
-  exact infi₂ h
 
 end Ideal.IsHomogeneous
 
@@ -286,7 +278,7 @@ variable {𝒜}
 
 namespace HomogeneousIdeal
 
-instance : PartialOrderₓ (HomogeneousIdeal 𝒜) :=
+instance : PartialOrder (HomogeneousIdeal 𝒜) :=
   SetLike.partialOrder
 
 instance : HasTop (HomogeneousIdeal 𝒜) :=
@@ -301,10 +293,10 @@ instance : HasSup (HomogeneousIdeal 𝒜) :=
 instance : HasInf (HomogeneousIdeal 𝒜) :=
   ⟨fun I J => ⟨_, I.IsHomogeneous.inf J.IsHomogeneous⟩⟩
 
-instance : HasSupₓ (HomogeneousIdeal 𝒜) :=
+instance : HasSup (HomogeneousIdeal 𝒜) :=
   ⟨fun S => ⟨⨆ s ∈ S, toIdeal s, Ideal.IsHomogeneous.supr₂ fun s _ => s.IsHomogeneous⟩⟩
 
-instance : HasInfₓ (HomogeneousIdeal 𝒜) :=
+instance : HasInf (HomogeneousIdeal 𝒜) :=
   ⟨fun S => ⟨⨅ s ∈ S, toIdeal s, Ideal.IsHomogeneous.infi₂ fun s _ => s.IsHomogeneous⟩⟩
 
 @[simp]
@@ -355,14 +347,14 @@ theorem to_ideal_supr {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨆ i,
 theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by
   rw [infi, to_ideal_Inf, infi_range]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem to_ideal_supr₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by simp_rw [to_ideal_supr]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem to_ideal_infi₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by simp_rw [to_ideal_infi]
@@ -389,13 +381,13 @@ instance : Inhabited (HomogeneousIdeal 𝒜) where default := ⊥
 
 end HomogeneousIdeal
 
-end Semiringₓ
+end Semiring
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ A]
+variable [CommSemiring A]
 
-variable [DecidableEq ι] [AddMonoidₓ ι]
+variable [DecidableEq ι] [AddMonoid ι]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] {𝒜 : ι → σ} [GradedRing 𝒜]
 
@@ -412,13 +404,13 @@ theorem Ideal.IsHomogeneous.mul {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ 
 
 variable {𝒜}
 
-instance : Mul (HomogeneousIdeal 𝒜) where mul := fun I J => ⟨I.toIdeal * J.toIdeal, I.IsHomogeneous.mul J.IsHomogeneous⟩
+instance : Mul (HomogeneousIdeal 𝒜) where mul I J := ⟨I.toIdeal * J.toIdeal, I.IsHomogeneous.mul J.IsHomogeneous⟩
 
 @[simp]
 theorem HomogeneousIdeal.to_ideal_mul (I J : HomogeneousIdeal 𝒜) : (I * J).toIdeal = I.toIdeal * J.toIdeal :=
   rfl
 
-end CommSemiringₓ
+end CommSemiring
 
 end Operations
 
@@ -432,7 +424,7 @@ section HomogeneousCore
 
 open HomogeneousIdeal
 
-variable [Semiringₓ A] [DecidableEq ι] [AddMonoidₓ ι]
+variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜]
 
@@ -442,15 +434,15 @@ include A
 
 theorem Ideal.homogeneousCore.gc : GaloisConnection toIdeal (Ideal.homogeneousCore 𝒜) := fun I J =>
   ⟨fun H => I.to_ideal_homogeneous_core_eq_self ▸ Ideal.homogeneous_core_mono 𝒜 H, fun H =>
-    le_transₓ H (Ideal.homogeneous_core'_le _ _)⟩
+    le_trans H (Ideal.homogeneous_core'_le _ _)⟩
 
 /-- `to_ideal : homogeneous_ideal 𝒜 → ideal A` and `ideal.homogeneous_core 𝒜` forms a galois
 coinsertion-/
 def Ideal.homogeneousCore.gi : GaloisCoinsertion toIdeal (Ideal.homogeneousCore 𝒜) where
-  choice := fun I HI => ⟨I, le_antisymmₓ (I.to_ideal_homogeneous_core_le 𝒜) HI ▸ HomogeneousIdeal.is_homogeneous _⟩
+  choice I HI := ⟨I, le_antisymm (I.to_ideal_homogeneous_core_le 𝒜) HI ▸ HomogeneousIdeal.isHomogeneous _⟩
   gc := Ideal.homogeneousCore.gc 𝒜
-  u_l_le := fun I => Ideal.homogeneous_core'_le _ _
-  choice_eq := fun I H => le_antisymmₓ H (I.to_ideal_homogeneous_core_le _)
+  u_l_le I := Ideal.homogeneous_core'_le _ _
+  choice_eq I H := le_antisymm H (I.to_ideal_homogeneous_core_le _)
 
 theorem Ideal.homogeneous_core_eq_Sup : I.homogeneousCore 𝒜 = sup { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
   Eq.symm <| IsLub.Sup_eq <| (Ideal.homogeneousCore.gc 𝒜).is_greatest_u.IsLub
@@ -458,7 +450,7 @@ theorem Ideal.homogeneous_core_eq_Sup : I.homogeneousCore 𝒜 = sup { J : Homog
 theorem Ideal.homogeneous_core'_eq_Sup : I.homogeneousCore' 𝒜 = sup { J : Ideal A | J.IsHomogeneous 𝒜 ∧ J ≤ I } := by
   refine' (IsLub.Sup_eq _).symm
   apply IsGreatest.is_lub
-  have coe_mono : Monotoneₓ (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
+  have coe_mono : Monotone (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
   convert coe_mono.map_is_greatest (Ideal.homogeneousCore.gc 𝒜).is_greatest_u using 1
   ext
   rw [mem_image, mem_set_of_eq]
@@ -473,7 +465,7 @@ section HomogeneousHull
 
 open HomogeneousIdeal
 
-variable [Semiringₓ A] [DecidableEq ι] [AddMonoidₓ ι]
+variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜]
 
@@ -485,7 +477,7 @@ include A
 the smallest homogeneous ideal containing `I`. -/
 def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.span { r : A | ∃ (i : ι)(x : I), (DirectSum.decompose 𝒜 (x : A) i : A) = r }, by
-    refine' Ideal.is_homogeneous_span _ _ fun x hx => _
+    refine' Ideal.isHomogeneousSpan _ _ fun x hx => _
     obtain ⟨i, x, rfl⟩ := hx
     apply SetLike.is_homogeneous_coe⟩
 
@@ -500,7 +492,7 @@ theorem Ideal.le_to_ideal_homogeneous_hull : I ≤ (Ideal.homogeneousHull 𝒜 I
   use ⟨r, hr⟩
   rfl
 
-theorem Ideal.homogeneous_hull_mono : Monotoneₓ (Ideal.homogeneousHull 𝒜) := fun I J I_le_J => by
+theorem Ideal.homogeneous_hull_mono : Monotone (Ideal.homogeneousHull 𝒜) := fun I J I_le_J => by
   apply Ideal.span_mono
   rintro r ⟨hr1, ⟨x, hx⟩, rfl⟩
   refine' ⟨hr1, ⟨⟨x, I_le_J hx⟩, rfl⟩⟩
@@ -509,7 +501,7 @@ variable {I 𝒜}
 
 theorem Ideal.IsHomogeneous.to_ideal_homogeneous_hull_eq_self (h : I.IsHomogeneous 𝒜) :
     (Ideal.homogeneousHull 𝒜 I).toIdeal = I := by
-  apply le_antisymmₓ _ (Ideal.le_to_ideal_homogeneous_hull _ _)
+  apply le_antisymm _ (Ideal.le_to_ideal_homogeneous_hull _ _)
   apply Ideal.span_le.2
   rintro _ ⟨i, x, rfl⟩
   exact h _ x.prop
@@ -525,14 +517,14 @@ theorem Ideal.to_ideal_homogeneous_hull_eq_supr :
   rw [← Ideal.span_Union]
   apply congr_arg Ideal.span _
   ext1
-  simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_propₓ,
+  simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_prop,
     Subtype.coe_mk, SetLike.mem_coe]
 
 theorem Ideal.homogeneous_hull_eq_supr :
     I.homogeneousHull 𝒜 =
       ⨆ i,
         ⟨Ideal.span (GradedRing.proj 𝒜 i '' I),
-          Ideal.is_homogeneous_span 𝒜 _
+          Ideal.isHomogeneousSpan 𝒜 _
             (by
               rintro _ ⟨x, -, rfl⟩
               apply SetLike.is_homogeneous_coe)⟩ :=
@@ -547,23 +539,23 @@ section GaloisConnection
 
 open HomogeneousIdeal
 
-variable [Semiringₓ A] [DecidableEq ι] [AddMonoidₓ ι]
+variable [Semiring A] [DecidableEq ι] [AddMonoid ι]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜]
 
 include A
 
 theorem Ideal.homogeneousHull.gc : GaloisConnection (Ideal.homogeneousHull 𝒜) toIdeal := fun I J =>
-  ⟨le_transₓ (Ideal.le_to_ideal_homogeneous_hull _ _), fun H =>
+  ⟨le_trans (Ideal.le_to_ideal_homogeneous_hull _ _), fun H =>
     J.homogeneous_hull_to_ideal_eq_self ▸ Ideal.homogeneous_hull_mono 𝒜 H⟩
 
 /-- `ideal.homogeneous_hull 𝒜` and `to_ideal : homogeneous_ideal 𝒜 → ideal A` form a galois
 insertion-/
 def Ideal.homogeneousHull.gi : GaloisInsertion (Ideal.homogeneousHull 𝒜) toIdeal where
-  choice := fun I H => ⟨I, le_antisymmₓ H (I.le_to_ideal_homogeneous_hull 𝒜) ▸ is_homogeneous _⟩
+  choice I H := ⟨I, le_antisymm H (I.le_to_ideal_homogeneous_hull 𝒜) ▸ isHomogeneous _⟩
   gc := Ideal.homogeneousHull.gc 𝒜
-  le_l_u := fun I => Ideal.le_to_ideal_homogeneous_hull _ _
-  choice_eq := fun I H => le_antisymmₓ (I.le_to_ideal_homogeneous_hull 𝒜) H
+  le_l_u I := Ideal.le_to_ideal_homogeneous_hull _ _
+  choice_eq I H := le_antisymm (I.le_to_ideal_homogeneous_hull 𝒜) H
 
 theorem Ideal.homogeneous_hull_eq_Inf (I : Ideal A) :
     Ideal.homogeneousHull 𝒜 I = inf { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
@@ -573,7 +565,7 @@ end GaloisConnection
 
 section IrrelevantIdeal
 
-variable [Semiringₓ A]
+variable [Semiring A]
 
 variable [DecidableEq ι]
 

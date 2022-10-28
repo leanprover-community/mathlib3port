@@ -41,10 +41,10 @@ open Polynomial
 
 section TopologicalSemiring
 
-variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalSemiring R] (p : R[X])
+variable {R S : Type _} [Semiring R] [TopologicalSpace R] [TopologicalSemiring R] (p : R[X])
 
 @[continuity]
-protected theorem continuous_eval₂ [Semiringₓ S] (p : S[X]) (f : S →+* R) : Continuous fun x => p.eval₂ f x := by
+protected theorem continuous_eval₂ [Semiring S] (p : S[X]) (f : S →+* R) : Continuous fun x => p.eval₂ f x := by
   dsimp only [eval₂_eq_sum, Finsupp.sum]
   exact continuous_finset_sum _ fun c hc => continuous_const.mul (continuous_pow _)
 
@@ -65,7 +65,7 @@ end TopologicalSemiring
 
 section TopologicalAlgebra
 
-variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [TopologicalSpace A] [TopologicalSemiring A]
+variable {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] [TopologicalSpace A] [TopologicalSemiring A]
   (p : R[X])
 
 @[continuity]
@@ -83,7 +83,7 @@ protected theorem continuous_on_aeval {s} : ContinuousOn (fun x : A => aeval x p
 
 end TopologicalAlgebra
 
-theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiringₓ R] [Ringₓ S] [LinearOrderedField k] (f : R →+* S)
+theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiring R] [Ring S] [LinearOrderedField k] (f : R →+* S)
     (abv : S → k) [IsAbsoluteValue abv] (p : R[X]) (hd : 0 < degree p) (hf : f p.leadingCoeff ≠ 0) {l : Filter α}
     {z : α → S} (hz : Tendsto (abv ∘ z) l atTop) : Tendsto (fun x => abv (p.eval₂ f (z x))) l atTop := by
   revert hf
@@ -97,18 +97,18 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiringₓ R] [Ringₓ 
     simpa [abv_mul abv] using (ihp hf).at_top_mul_at_top hz
     
   · intro p a hd ihp hf
-    rw [add_commₓ, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
+    rw [add_comm, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
     refine' tendsto_at_top_of_add_const_right (abv (-f a)) _
     refine' tendsto_at_top_mono (fun _ => abv_add abv _ _) _
     simpa using ihp hf
     
 
-theorem tendsto_abv_at_top {R k α : Type _} [Ringₓ R] [LinearOrderedField k] (abv : R → k) [IsAbsoluteValue abv]
+theorem tendsto_abv_at_top {R k α : Type _} [Ring R] [LinearOrderedField k] (abv : R → k) [IsAbsoluteValue abv]
     (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R} (hz : Tendsto (abv ∘ z) l atTop) :
     Tendsto (fun x => abv (p.eval (z x))) l atTop :=
   tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 <| ne_zero_of_degree_gt h) hz
 
-theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A] [LinearOrderedField k]
+theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiring R] [Ring A] [Algebra R A] [LinearOrderedField k]
     (abv : A → k) [IsAbsoluteValue abv] (p : R[X]) (hd : 0 < degree p) (h₀ : algebraMap R A p.leadingCoeff ≠ 0)
     {l : Filter α} {z : α → A} (hz : Tendsto (abv ∘ z) l atTop) : Tendsto (fun x => abv (aeval (z x) p)) l atTop :=
   tendsto_abv_eval₂_at_top _ abv p hd h₀ hz
@@ -122,13 +122,13 @@ theorem tendsto_norm_at_top (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : �
 theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ∥p.eval x∥ ≤ ∥p.eval y∥ :=
   if hp0 : 0 < degree p then
     p.Continuous.norm.exists_forall_le <| p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
-  else ⟨p.coeff 0, by rw [eq_C_of_degree_le_zero (le_of_not_gtₓ hp0)] <;> simp⟩
+  else ⟨p.coeff 0, by rw [eq_C_of_degree_le_zero (le_of_not_gt hp0)] <;> simp⟩
 
 section Roots
 
 open Polynomial Nnreal
 
-variable {F K : Type _} [CommRingₓ F] [NormedField K]
+variable {F K : Type _} [CommRing F] [NormedField K]
 
 open Multiset
 
@@ -139,22 +139,22 @@ theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1
       contrapose! hB
       rw [← h1.nat_degree_map f, nat_degree_eq_card_roots' h2] at hB
       obtain ⟨z, hz⟩ := card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
-      exact le_transₓ (norm_nonneg _) (h3 z hz))
+      exact le_trans (norm_nonneg _) (h3 z hz))
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 : p.Monic) (h2 : Splits f p)
     (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : ∥(map f p).coeff i∥ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
-  obtain hB | hB := lt_or_leₓ B 0
-  · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, nat_degree_one, zero_tsub, pow_zeroₓ, one_mulₓ, coeff_one]
+  obtain hB | hB := lt_or_le B 0
+  · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, nat_degree_one, zero_tsub, pow_zero, one_mul, coeff_one]
     split_ifs <;> norm_num [h]
     
   rw [← h1.nat_degree_map f]
-  obtain hi | hi := lt_or_leₓ (map f p).natDegree i
+  obtain hi | hi := lt_or_le (map f p).natDegree i
   · rw [coeff_eq_zero_of_nat_degree_lt hi, norm_zero]
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
     
-  rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff, one_mulₓ, norm_mul,
-    norm_pow, norm_neg, norm_one, one_pow, one_mulₓ]
+  rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff, one_mul, norm_mul,
+    norm_pow, norm_neg, norm_one, one_pow, one_mul]
   apply ((norm_multiset_sum_le _).trans <| (sum_le_card_nsmul _ _) fun r hr => _).trans
   · rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2, Nat.choose_symm hi, mul_comm,
       nsmul_eq_mul]
@@ -169,26 +169,26 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx
   exact h3 z (mem_of_le hs.1 hz)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- The coefficients of the monic polynomials of bounded degree with bounded roots are
 uniformely bounded. -/
 theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1 : p.Monic) (h2 : Splits f p)
     (h3 : p.natDegree ≤ d) (h4 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) (i : ℕ) :
     ∥(map f p).coeff i∥ ≤ max B 1 ^ d * d.choose (d / 2) := by
-  obtain hB | hB := le_or_ltₓ 0 B
+  obtain hB | hB := le_or_lt 0 B
   · apply (coeff_le_of_roots_le i h1 h2 h4).trans
     calc
       _ ≤ max B 1 ^ (p.nat_degree - i) * p.nat_degree.choose i :=
-        mul_le_mul_of_nonneg_right (pow_le_pow_of_le_left hB (le_max_leftₓ _ _) _) _
+        mul_le_mul_of_nonneg_right (pow_le_pow_of_le_left hB (le_max_left _ _) _) _
       _ ≤ max B 1 ^ d * p.nat_degree.choose i :=
-        mul_le_mul_of_nonneg_right ((pow_mono (le_max_rightₓ _ _)) (le_transₓ (Nat.sub_leₓ _ _) h3)) _
+        mul_le_mul_of_nonneg_right ((pow_mono (le_max_right _ _)) (le_trans (Nat.sub_le _ _) h3)) _
       _ ≤ max B 1 ^ d * d.choose (d / 2) :=
         mul_le_mul_of_nonneg_left (nat.cast_le.mpr ((i.choose_mono h3).trans (i.choose_le_middle d))) _
       
     all_goals trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
     
   · rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
-    refine' trans _ (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_rightₓ B 1) d) _)
+    refine' trans _ (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_right B 1) d) _)
     · split_ifs <;> norm_num
       
     · exact_mod_cast nat.succ_le_iff.mpr (Nat.choose_pos (d.div_le_self 2))

@@ -70,10 +70,10 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
           IsScalarTower.algebra_map_apply]
   constructor <;> intro h <;> skip
   · let b := FiniteDimensional.finBasis (Ratfunc Fq) F
-    exact FiniteDimensional.of_fintype_basis (b.map_coeffs e this)
+    exact FiniteDimensional.ofFintypeBasis (b.map_coeffs e this)
     
   · let b := FiniteDimensional.finBasis Fqt F
-    refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
+    refine' FiniteDimensional.ofFintypeBasis (b.map_coeffs e.symm _)
     intro c x
     convert (this (e.symm c) x).symm
     simp only [e.apply_symm_apply]
@@ -103,7 +103,7 @@ instance : IsDomain (ringOfIntegers Fq F) :=
   (ringOfIntegers Fq F).IsDomain
 
 instance : IsIntegralClosure (ringOfIntegers Fq F) Fq[X] F :=
-  integralClosure.is_integral_closure _ _
+  integralClosure.isIntegralClosure _ _
 
 variable [Algebra (Ratfunc Fq) F] [IsScalarTower Fq[X] (Ratfunc Fq) F]
 
@@ -118,22 +118,22 @@ theorem algebra_map_injective : Function.Injective ⇑(algebraMap Fq[X] (ringOfI
   exact hinj p hp
 
 theorem not_is_field : ¬IsField (ringOfIntegers Fq F) := by
-  simpa [← (IsIntegralClosure.is_integral_algebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
+  simpa [← (IsIntegralClosure.isIntegralAlgebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
     Polynomial.not_is_field Fq
 
 variable [FunctionField Fq F]
 
 instance : IsFractionRing (ringOfIntegers Fq F) F :=
-  integralClosure.is_fraction_ring_of_finite_extension (Ratfunc Fq) F
+  integralClosure.isFractionRingOfFiniteExtension (Ratfunc Fq) F
 
 instance : IsIntegrallyClosed (ringOfIntegers Fq F) :=
-  integralClosure.is_integrally_closed_of_finite_extension (Ratfunc Fq)
+  integralClosure.isIntegrallyClosedOfFiniteExtension (Ratfunc Fq)
 
 instance [IsSeparable (Ratfunc Fq) F] : IsNoetherian Fq[X] (ringOfIntegers Fq F) :=
   IsIntegralClosure.is_noetherian _ (Ratfunc Fq) F _
 
 instance [IsSeparable (Ratfunc Fq) F] : IsDedekindDomain (ringOfIntegers Fq F) :=
-  IsIntegralClosure.is_dedekind_domain Fq[X] (Ratfunc Fq) F _
+  IsIntegralClosure.isDedekindDomain Fq[X] (Ratfunc Fq) F _
 
 end RingOfIntegers
 
@@ -173,16 +173,16 @@ theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
 theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
     inftyValuationDef Fq (x + y) ≤ max (inftyValuationDef Fq x) (inftyValuationDef Fq y) := by
   by_cases hx:x = 0
-  · rw [hx, zero_addₓ]
+  · rw [hx, zero_add]
     conv_rhs => rw [infty_valuation_def, if_pos (Eq.refl _)]
-    rw [max_eq_rightₓ (WithZero.zero_le (infty_valuation_def Fq y))]
-    exact le_reflₓ _
+    rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq y))]
+    exact le_refl _
     
   · by_cases hy:y = 0
-    · rw [hy, add_zeroₓ]
-      conv_rhs => rw [max_commₓ, infty_valuation_def, if_pos (Eq.refl _)]
-      rw [max_eq_rightₓ (WithZero.zero_le (infty_valuation_def Fq x))]
-      exact le_reflₓ _
+    · rw [hy, add_zero]
+      conv_rhs => rw [max_comm, infty_valuation_def, if_pos (Eq.refl _)]
+      rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq x))]
+      exact le_refl _
       
     · by_cases hxy:x + y = 0
       · rw [infty_valuation_def, if_pos hxy]

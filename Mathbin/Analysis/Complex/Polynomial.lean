@@ -29,9 +29,9 @@ namespace Complex
   has a root -/
 theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :=
   let ⟨z₀, hz₀⟩ := f.exists_forall_norm_le
-  Exists.introₓ z₀ <|
+  Exists.intro z₀ <|
     Classical.by_contradiction fun hf0 =>
-      have hfX : f - c (f.eval z₀) ≠ 0 := mt sub_eq_zero.1 fun h => not_le_of_gtₓ hf (h.symm ▸ degree_C_le)
+      have hfX : f - c (f.eval z₀) ≠ 0 := mt sub_eq_zero.1 fun h => not_le_of_gt hf (h.symm ▸ degree_C_le)
       let n := rootMultiplicity z₀ (f - c (f.eval z₀))
       let g := (f - c (f.eval z₀)) /ₘ (X - c z₀) ^ n
       have hg0 : g.eval z₀ ≠ 0 := eval_div_by_monic_pow_root_multiplicity_ne_zero _ hfX
@@ -42,26 +42,25 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
       have hf0' : 0 < (f.eval z₀).abs := abs.Pos hf0
       have hg0' : 0 < (eval z₀ g).abs := abs.Pos hg0
       have hfg0 : 0 < (f.eval z₀).abs / abs (eval z₀ g) := div_pos hf0' hg0'
-      have hδ0 : 0 < δ := lt_minₓ (lt_minₓ (half_pos hδ'₁) (by norm_num)) (half_pos hfg0)
+      have hδ0 : 0 < δ := lt_min (lt_min (half_pos hδ'₁) (by norm_num)) (half_pos hfg0)
       have hδ : ∀ z : ℂ, abs (z - z₀) = δ → abs (g.eval z - g.eval z₀) < (g.eval z₀).abs := fun z hz =>
         hδ'₂ z
           (by
-            rw [Complex.dist_eq, hz] <;>
-              exact ((min_le_leftₓ _ _).trans (min_le_leftₓ _ _)).trans_lt (half_lt_self hδ'₁))
-      have hδ1 : δ ≤ 1 := le_transₓ (min_le_leftₓ _ _) (min_le_rightₓ _ _)
+            rw [Complex.dist_eq, hz] <;> exact ((min_le_left _ _).trans (min_le_left _ _)).trans_lt (half_lt_self hδ'₁))
+      have hδ1 : δ ≤ 1 := le_trans (min_le_left _ _) (min_le_right _ _)
       let F : Polynomial ℂ := c (f.eval z₀) + c (g.eval z₀) * (X - c z₀) ^ n
       let z' := (-f.eval z₀ * (g.eval z₀).abs * δ ^ n / ((f.eval z₀).abs * g.eval z₀)) ^ (n⁻¹ : ℂ) + z₀
       have hF₁ : F.eval z' = f.eval z₀ - f.eval z₀ * (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs := by
         simp only [F, cpow_nat_inv_pow _ hn0, div_eq_mul_inv, eval_pow, mul_assoc, mul_comm (g.eval z₀),
-            mul_left_commₓ (g.eval z₀), mul_left_commₓ (g.eval z₀)⁻¹, mul_inv, inv_mul_cancel hg0, eval_C, eval_add,
-            eval_neg, sub_eq_add_neg, eval_mul, eval_X, add_neg_cancel_rightₓ, neg_mul, mul_oneₓ, div_eq_mul_inv] <;>
-          simp only [mul_comm, mul_left_commₓ, mul_assoc]
+            mul_left_comm (g.eval z₀), mul_left_comm (g.eval z₀)⁻¹, mul_inv, inv_mul_cancel hg0, eval_C, eval_add,
+            eval_neg, sub_eq_add_neg, eval_mul, eval_X, add_neg_cancel_right, neg_mul, mul_one, div_eq_mul_inv] <;>
+          simp only [mul_comm, mul_left_comm, mul_assoc]
       have hδs : (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs < 1 :=
         (div_lt_one hf0').2 <|
           (lt_div_iff' hg0').1 <|
             calc
-              δ ^ n ≤ δ := pow_le_of_le_one (le_of_ltₓ hδ0) hδ1 hn0
-              _ ≤ (f.eval z₀).abs / (g.eval z₀).abs / 2 := min_le_rightₓ _ _
+              δ ^ n ≤ δ := pow_le_of_le_one (le_of_lt hδ0) hδ1 hn0
+              _ ≤ (f.eval z₀).abs / (g.eval z₀).abs / 2 := min_le_right _ _
               _ < _ := half_lt_self (div_pos hf0' hg0')
               
       have hF₂ : (F.eval z').abs = (f.eval z₀).abs - (g.eval z₀).abs * δ ^ n :=
@@ -72,15 +71,15 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
               exact
                 congr_arg Complex.abs
                   (by
-                    simp only [mul_addₓ, mul_assoc, div_eq_mul_inv, sub_eq_add_neg, of_real_add, mul_oneₓ, of_real_one,
+                    simp only [mul_add, mul_assoc, div_eq_mul_inv, sub_eq_add_neg, of_real_add, mul_one, of_real_one,
                       of_real_neg, of_real_mul, of_real_pow, of_real_inv, mul_neg])
           _ = _ := by
-            rw [Complex.abs_of_nonneg (sub_nonneg.2 (le_of_ltₓ hδs)), mul_sub,
-              mul_div_cancel' _ (Ne.symm (ne_of_ltₓ hf0')), mul_oneₓ]
+            rw [Complex.abs_of_nonneg (sub_nonneg.2 (le_of_lt hδs)), mul_sub,
+              mul_div_cancel' _ (Ne.symm (ne_of_lt hf0')), mul_one]
           
       have hef0 : abs (eval z₀ g) * (eval z₀ f).abs ≠ 0 := mul_ne_zero (abs.ne_zero hg0) (abs.ne_zero hf0)
       have hz'z₀ : abs (z' - z₀) = δ := by
-        simp only [z', mul_assoc, mul_left_commₓ _ (_ ^ n), mul_comm _ (_ ^ n), mul_comm (eval _ f).abs,
+        simp only [z', mul_assoc, mul_left_comm _ (_ ^ n), mul_comm _ (_ ^ n), mul_comm (eval _ f).abs,
           _root_.mul_div_cancel _ hef0, of_real_mul, neg_mul, neg_div, map_pow, abs_of_real, add_sub_cancel,
           abs_cpow_inv_nat, AbsoluteValue.map_neg, map_div₀, map_mul, abs_abs, Complex.abs_of_nonneg hδ0.le,
           Real.pow_nat_rpow_nat_inv hδ0.le hn0]
@@ -88,12 +87,12 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
         calc
           (f.eval z' - F.eval z').abs = (g.eval z' - g.eval z₀).abs * (z' - z₀).abs ^ n := by
             rw [← eq_sub_iff_add_eq.1 hg, ← map_pow abs, ← map_mul, sub_mul] <;>
-              simp only [eval_pow, eval_add, eval_mul, eval_C, eval_X, eval_neg, sub_eq_add_neg, add_assocₓ,
-                neg_add_rev, add_neg_cancel_comm_assoc]
+              simp only [eval_pow, eval_add, eval_mul, eval_C, eval_X, eval_neg, sub_eq_add_neg, add_assoc, neg_add_rev,
+                add_neg_cancel_comm_assoc]
           _ = (g.eval z' - g.eval z₀).abs * δ ^ n := by rw [hz'z₀]
           _ < _ := (mul_lt_mul_right (pow_pos hδ0 _)).2 (hδ _ hz'z₀)
           
-      lt_irreflₓ (f.eval z₀).abs <|
+      lt_irrefl (f.eval z₀).abs <|
         calc
           (f.eval z₀).abs ≤ (f.eval z').abs := hz₀ _
           _ = (F.eval z' + (f.eval z' - F.eval z')).abs := by simp
@@ -103,8 +102,8 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
           _ = (f.eval z₀).abs := sub_add_cancel _ _
           
 
-instance is_alg_closed : IsAlgClosed ℂ :=
-  (IsAlgClosed.of_exists_root _) fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
+instance isAlgClosed : IsAlgClosed ℂ :=
+  (IsAlgClosed.ofExistsRoot _) fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
 
 end Complex
 

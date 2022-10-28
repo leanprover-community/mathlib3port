@@ -37,7 +37,7 @@ attribute [-instance] special_linear_group.has_coe_to_fun
 
 /-- `GL n R` is the group of `n` by `n` `R`-matrices with unit determinant.
 Defined as a subtype of matrices-/
-abbrev GeneralLinearGroup (n : Type u) (R : Type v) [DecidableEq n] [Fintypeₓ n] [CommRingₓ R] : Type _ :=
+abbrev GeneralLinearGroup (n : Type u) (R : Type v) [DecidableEq n] [Fintype n] [CommRing R] : Type _ :=
   (Matrix n n R)ˣ
 
 -- mathport name: exprGL
@@ -45,17 +45,17 @@ notation "GL" => GeneralLinearGroup
 
 namespace GeneralLinearGroup
 
-variable {n : Type u} [DecidableEq n] [Fintypeₓ n] {R : Type v} [CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
 
 /-- The determinant of a unit matrix is itself a unit. -/
 @[simps]
 def det : GL n R →* Rˣ where
-  toFun := fun A =>
+  toFun A :=
     { val := (↑A : Matrix n n R).det, inv := (↑A⁻¹ : Matrix n n R).det,
       val_inv := by rw [← det_mul, ← mul_eq_mul, A.mul_inv, det_one],
       inv_val := by rw [← det_mul, ← mul_eq_mul, A.inv_mul, det_one] }
   map_one' := Units.ext det_one
-  map_mul' := fun A B => Units.ext <| det_mul _ _
+  map_mul' A B := Units.ext <| det_mul _ _
 
 /-- The `GL n R` and `general_linear_group R n` groups are multiplicatively equivalent-/
 def toLin : GL n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
@@ -119,10 +119,10 @@ end GeneralLinearGroup
 
 namespace SpecialLinearGroup
 
-variable {n : Type u} [DecidableEq n] [Fintypeₓ n] {R : Type v} [CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
 
 instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
-  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_arg coe (mul_right_invₓ A), congr_arg coe (mul_left_invₓ A)⟩⟩
+  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_arg coe (mul_right_inv A), congr_arg coe (mul_left_inv A)⟩⟩
 
 @[simp]
 theorem coe_to_GL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=
@@ -132,7 +132,7 @@ end SpecialLinearGroup
 
 section
 
-variable {n : Type u} {R : Type v} [DecidableEq n] [Fintypeₓ n] [LinearOrderedCommRing R]
+variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R]
 
 section
 
@@ -153,8 +153,7 @@ end
 
 section Neg
 
-variable {n : Type u} {R : Type v} [DecidableEq n] [Fintypeₓ n] [LinearOrderedCommRing R]
-  [Fact (Even (Fintypeₓ.card n))]
+variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R] [Fact (Even (Fintype.card n))]
 
 /-- Formal operation of negation on general linear group on even cardinality `n` given by negating
 each element. -/
@@ -162,7 +161,7 @@ instance : Neg (gLPos n R) :=
   ⟨fun g =>
     ⟨-g, by
       rw [mem_GL_pos, general_linear_group.coe_det_apply, Units.coe_neg, det_neg,
-        (Fact.out <| Even <| Fintypeₓ.card n).neg_one_pow, one_mulₓ]
+        (Fact.out <| Even <| Fintype.card n).neg_one_pow, one_mul]
       exact g.prop⟩⟩
 
 @[simp]
@@ -184,13 +183,13 @@ end Neg
 
 namespace SpecialLinearGroup
 
-variable {n : Type u} [DecidableEq n] [Fintypeₓ n] {R : Type v} [LinearOrderedCommRing R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCommRing R]
 
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def toGLPos : SpecialLinearGroup n R →* gLPos n R where
-  toFun := fun A => ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.Prop.symm ▸ zero_lt_one⟩
+  toFun A := ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.Prop.symm ▸ zero_lt_one⟩
   map_one' := Subtype.ext <| Units.ext <| rfl
-  map_mul' := fun A₁ A₂ => Subtype.ext <| Units.ext <| rfl
+  map_mul' A₁ A₂ := Subtype.ext <| Units.ext <| rfl
 
 instance : Coe (SpecialLinearGroup n R) (gLPos n R) :=
   ⟨toGLPos⟩
@@ -212,7 +211,7 @@ theorem coe_GL_pos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
 theorem coe_to_GL_pos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
   Units.ext g.Prop
 
-variable [Fact (Even (Fintypeₓ.card n))]
+variable [Fact (Even (Fintype.card n))]
 
 @[norm_cast]
 theorem coe_GL_pos_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : gLPos n R) :=
@@ -222,12 +221,12 @@ end SpecialLinearGroup
 
 section Examples
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 /-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
-def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
+def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Fin 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
     («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")
     (by simpa [det_fin_two, sq] using hab)
@@ -239,13 +238,13 @@ end Examples
 
 namespace GeneralLinearGroup
 
-variable {n : Type u} [DecidableEq n] [Fintypeₓ n] {R : Type v} [CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
 
 -- this section should be last to ensure we do not use it in lemmas
 section CoeFnInstance
 
 /-- This instance is here for convenience, but is not the simp-normal form. -/
-instance : CoeFun (GL n R) fun _ => n → n → R where coe := fun A => A.val
+instance : CoeFun (GL n R) fun _ => n → n → R where coe A := A.val
 
 @[simp]
 theorem coe_fn_eq_coe (A : GL n R) : ⇑A = (↑A : Matrix n n R) :=

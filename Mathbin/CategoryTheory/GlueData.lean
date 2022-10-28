@@ -105,10 +105,13 @@ instance t_is_iso (i j : D.J) : IsIso (D.t i j) :=
 instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
   ⟨⟨D.t' j k i ≫ D.t' k i j, D.cocycle _ _ _, by simpa using D.cocycle _ _ _⟩⟩
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inv (D.t' i j k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[reassoc]
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     D.t' j k i ≫ D.t' k i j = (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom := by
-  trans inv (D.t' i j k)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inv (D.t' i j k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
     
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
@@ -220,20 +223,20 @@ instance (i j k : D.J) : HasPullback (F.map (D.f i j)) (F.map (D.f i k)) :=
 @[simps]
 def mapGlueData : GlueData C' where
   J := D.J
-  U := fun i => F.obj (D.U i)
-  V := fun i => F.obj (D.V i)
-  f := fun i j => F.map (D.f i j)
-  f_mono := fun i j => preserves_mono_of_preserves_limit _ _
-  f_id := fun i => inferInstance
-  t := fun i j => F.map (D.t i j)
-  t_id := fun i => by
+  U i := F.obj (D.U i)
+  V i := F.obj (D.V i)
+  f i j := F.map (D.f i j)
+  f_mono i j := preserves_mono_of_preserves_limit _ _
+  f_id i := inferInstance
+  t i j := F.map (D.t i j)
+  t_id i := by
     rw [D.t_id i]
     simp
-  t' := fun i j k =>
+  t' i j k :=
     (PreservesPullback.iso F (D.f i j) (D.f i k)).inv ≫
       F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
-  t_fac := fun i j k => by simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
-  cocycle := fun i j k => by
+  t_fac i j k := by simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
+  cocycle i j k := by
     simp only [category.assoc, iso.hom_inv_id_assoc, ← functor.map_comp_assoc, D.cocycle, iso.inv_hom_id,
       CategoryTheory.Functor.map_id, category.id_comp]
 

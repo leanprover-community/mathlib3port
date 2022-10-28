@@ -57,49 +57,67 @@ attribute [local tidy] tactic.case_bash
 
 variable {C}
 
+/- warning: category_theory.with_terminal.hom -> CategoryTheory.WithTerminal.Hom is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithTerminal.{v u} C _inst_1) -> (CategoryTheory.WithTerminal.{v u} C _inst_1) -> Type.{v}
+but is expected to have type
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithTerminal.{v u} C _inst_1) -> (CategoryTheory.WithTerminal.{v u} C _inst_1) -> Type.{v}
+Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.hom CategoryTheory.WithTerminal.Homₓ'. -/
 /-- Morphisms for `with_terminal C`. -/
 @[simp, nolint has_nonempty_instance]
-def Homₓ : WithTerminal C → WithTerminal C → Type v
+def Hom : WithTerminal C → WithTerminal C → Type v
   | of X, of Y => X ⟶ Y
   | star, of X => Pempty
   | _, star => PUnit
 
+/- warning: category_theory.with_terminal.id -> CategoryTheory.WithTerminal.id is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] (X : CategoryTheory.WithTerminal.{v u} C _inst_1), CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 X X
+but is expected to have type
+  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.id CategoryTheory.WithTerminal.idₓ'. -/
 /-- Identity morphisms for `with_terminal C`. -/
 @[simp]
-def idₓ : ∀ X : WithTerminal C, Homₓ X X
+def id : ∀ X : WithTerminal C, Hom X X
   | of X => 𝟙 _
   | star => PUnit.unit
 
+/- warning: category_theory.with_terminal.comp -> CategoryTheory.WithTerminal.comp is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] {X : CategoryTheory.WithTerminal.{v u} C _inst_1} {Y : CategoryTheory.WithTerminal.{v u} C _inst_1} {Z : CategoryTheory.WithTerminal.{v u} C _inst_1}, (CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 X Y) -> (CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 Y Z) -> (CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 X Z)
+but is expected to have type
+  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.comp CategoryTheory.WithTerminal.compₓ'. -/
 /-- Composition of morphisms for `with_terminal C`. -/
 @[simp]
-def compₓ : ∀ {X Y Z : WithTerminal C}, Homₓ X Y → Homₓ Y Z → Homₓ X Z
+def comp : ∀ {X Y Z : WithTerminal C}, Hom X Y → Hom Y Z → Hom X Z
   | of X, of Y, of Z => fun f g => f ≫ g
   | of X, _, star => fun f g => PUnit.unit
-  | star, of X, _ => fun f g => Pempty.elimₓ f
-  | _, star, of Y => fun f g => Pempty.elimₓ g
+  | star, of X, _ => fun f g => Pempty.elim f
+  | _, star, of Y => fun f g => Pempty.elim g
   | star, star, star => fun _ _ => PUnit.unit
 
 instance : Category.{v} (WithTerminal C) where
-  Hom := fun X Y => Homₓ X Y
-  id := fun X => idₓ _
-  comp := fun X Y Z f g => compₓ f g
+  Hom X Y := Hom X Y
+  id X := id _
+  comp X Y Z f g := comp f g
 
 /-- The inclusion from `C` into `with_terminal C`. -/
 def incl : C ⥤ WithTerminal C where
   obj := of
-  map := fun X Y f => f
+  map X Y f := f
 
-instance : Full (incl : C ⥤ _) where preimage := fun X Y f => f
+instance : Full (incl : C ⥤ _) where preimage X Y f := f
 
 instance : Faithful (incl : C ⥤ _) where
 
 /-- Map `with_terminal` with respect to a functor `F : C ⥤ D`. -/
 def map {D : Type _} [Category D] (F : C ⥤ D) : WithTerminal C ⥤ WithTerminal D where
-  obj := fun X =>
+  obj X :=
     match X with
     | of x => of <| F.obj x
     | star => star
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
     | of x, star, PUnit.unit => PUnit.unit
@@ -120,11 +138,11 @@ def starTerminal : Limits.IsTerminal (star : WithTerminal C) :=
 @[simps]
 def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : WithTerminal C ⥤ D where
-  obj := fun X =>
+  obj X :=
     match X with
     | of x => F.obj x
     | star => Z
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
     | of x, star, PUnit.unit => M x
@@ -206,49 +224,67 @@ attribute [local tidy] tactic.case_bash
 
 variable {C}
 
+/- warning: category_theory.with_initial.hom -> CategoryTheory.WithInitial.Hom is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithInitial.{v u} C _inst_1) -> (CategoryTheory.WithInitial.{v u} C _inst_1) -> Type.{v}
+but is expected to have type
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithInitial.{v u} C _inst_1) -> (CategoryTheory.WithInitial.{v u} C _inst_1) -> Type.{v}
+Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.hom CategoryTheory.WithInitial.Homₓ'. -/
 /-- Morphisms for `with_initial C`. -/
 @[simp, nolint has_nonempty_instance]
-def Homₓ : WithInitial C → WithInitial C → Type v
+def Hom : WithInitial C → WithInitial C → Type v
   | of X, of Y => X ⟶ Y
   | of X, _ => Pempty
   | star, _ => PUnit
 
+/- warning: category_theory.with_initial.id -> CategoryTheory.WithInitial.id is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] (X : CategoryTheory.WithInitial.{v u} C _inst_1), CategoryTheory.WithInitial.Hom.{v u} C _inst_1 X X
+but is expected to have type
+  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.id CategoryTheory.WithInitial.idₓ'. -/
 /-- Identity morphisms for `with_initial C`. -/
 @[simp]
-def idₓ : ∀ X : WithInitial C, Homₓ X X
+def id : ∀ X : WithInitial C, Hom X X
   | of X => 𝟙 _
   | star => PUnit.unit
 
+/- warning: category_theory.with_initial.comp -> CategoryTheory.WithInitial.comp is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] {X : CategoryTheory.WithInitial.{v u} C _inst_1} {Y : CategoryTheory.WithInitial.{v u} C _inst_1} {Z : CategoryTheory.WithInitial.{v u} C _inst_1}, (CategoryTheory.WithInitial.Hom.{v u} C _inst_1 X Y) -> (CategoryTheory.WithInitial.Hom.{v u} C _inst_1 Y Z) -> (CategoryTheory.WithInitial.Hom.{v u} C _inst_1 X Z)
+but is expected to have type
+  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.comp CategoryTheory.WithInitial.compₓ'. -/
 /-- Composition of morphisms for `with_initial C`. -/
 @[simp]
-def compₓ : ∀ {X Y Z : WithInitial C}, Homₓ X Y → Homₓ Y Z → Homₓ X Z
+def comp : ∀ {X Y Z : WithInitial C}, Hom X Y → Hom Y Z → Hom X Z
   | of X, of Y, of Z => fun f g => f ≫ g
   | star, _, of X => fun f g => PUnit.unit
-  | _, of X, star => fun f g => Pempty.elimₓ g
-  | of Y, star, _ => fun f g => Pempty.elimₓ f
+  | _, of X, star => fun f g => Pempty.elim g
+  | of Y, star, _ => fun f g => Pempty.elim f
   | star, star, star => fun _ _ => PUnit.unit
 
 instance : Category.{v} (WithInitial C) where
-  Hom := fun X Y => Homₓ X Y
-  id := fun X => idₓ _
-  comp := fun X Y Z f g => compₓ f g
+  Hom X Y := Hom X Y
+  id X := id _
+  comp X Y Z f g := comp f g
 
 /-- The inclusion of `C` into `with_initial C`. -/
 def incl : C ⥤ WithInitial C where
   obj := of
-  map := fun X Y f => f
+  map X Y f := f
 
-instance : Full (incl : C ⥤ _) where preimage := fun X Y f => f
+instance : Full (incl : C ⥤ _) where preimage X Y f := f
 
 instance : Faithful (incl : C ⥤ _) where
 
 /-- Map `with_initial` with respect to a functor `F : C ⥤ D`. -/
 def map {D : Type _} [Category D] (F : C ⥤ D) : WithInitial C ⥤ WithInitial D where
-  obj := fun X =>
+  obj X :=
     match X with
     | of x => of <| F.obj x
     | star => star
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
     | star, of x, PUnit.unit => PUnit.unit
@@ -269,11 +305,11 @@ def starInitial : Limits.IsInitial (star : WithInitial C) :=
 @[simps]
 def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : WithInitial C ⥤ D where
-  obj := fun X =>
+  obj X :=
     match X with
     | of x => F.obj x
     | star => Z
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
     | star, of x, PUnit.unit => M _

@@ -40,7 +40,7 @@ private unsafe def parse_name_list (e : expr) : List Name :=
 
 attribute [local instance] reflect_name_list
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
 unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
@@ -82,9 +82,9 @@ If `is_fast` is false, this test will be omitted from `#lint-`.
 If `auto_decls` is true, this test will also be executed on automatically generated declarations.
 -/
 unsafe structure linter where
-  test : declaration → tactic (Option Stringₓ)
-  no_errors_found : Stringₓ
-  errors_found : Stringₓ
+  test : declaration → tactic (Option String)
+  no_errors_found : String
+  errors_found : String
   is_fast : Bool := true
   auto_decls : Bool
 

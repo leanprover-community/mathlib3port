@@ -44,7 +44,7 @@ class Quiver (V : Type u) where
 -- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`obj] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
@@ -58,8 +58,8 @@ namespace Prefunctor
 @[ext]
 theorem ext {V : Type u} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] {F G : Prefunctor V W}
     (h_obj : ∀ X, F.obj X = G.obj X)
-    (h_map : ∀ (X Y : V) (f : X ⟶ Y), F.map f = Eq.recOnₓ (h_obj Y).symm (Eq.recOnₓ (h_obj X).symm (G.map f))) :
-    F = G := by
+    (h_map : ∀ (X Y : V) (f : X ⟶ Y), F.map f = Eq.recOn (h_obj Y).symm (Eq.recOn (h_obj X).symm (G.map f))) : F = G :=
+  by
   cases' F with F_obj _
   cases' G with G_obj _
   obtain rfl : F_obj = G_obj := by
@@ -74,7 +74,7 @@ theorem ext {V : Type u} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] {F 
 @[simps]
 def id (V : Type _) [Quiver V] : Prefunctor V V where
   obj := id
-  map := fun X Y f => f
+  map X Y f := f
 
 instance (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
   ⟨id V⟩
@@ -84,12 +84,12 @@ instance (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
 @[simps]
 def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W] (F : Prefunctor U V)
     (G : Prefunctor V W) : Prefunctor U W where
-  obj := fun X => G.obj (F.obj X)
-  map := fun X Y f => G.map (F.map f)
+  obj X := G.obj (F.obj X)
+  map X Y f := G.map (F.map f)
 
 @[simp]
-theorem comp_assoc {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W] {Z : Type _} [Quiver Z]
-    (F : Prefunctor U V) (G : Prefunctor V W) (H : Prefunctor W Z) : (F.comp G).comp H = F.comp (G.comp H) := by
+theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z] (F : Prefunctor U V)
+    (G : Prefunctor V W) (H : Prefunctor W Z) : (F.comp G).comp H = F.comp (G.comp H) := by
   apply Prefunctor.ext
   rotate_left
   · rintro X

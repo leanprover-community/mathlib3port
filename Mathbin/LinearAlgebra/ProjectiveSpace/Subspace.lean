@@ -30,7 +30,7 @@ also in the subset.
 -/
 
 
-variable (K V : Type _) [Field K] [AddCommGroupₓ V] [Module K V]
+variable (K V : Type _) [Field K] [AddCommGroup V] [Module K V]
 
 namespace Projectivization
 
@@ -49,7 +49,7 @@ variable {K V}
 
 instance : SetLike (Subspace K V) (ℙ K V) where
   coe := Carrier
-  coe_injective' := fun A B => by
+  coe_injective' A B := by
     cases A
     cases B
     simp
@@ -75,7 +75,7 @@ inductive SpanCarrier (S : Set (ℙ K V)) : Set (ℙ K V)
 /-- The span of a set of points in projective space is a subspace. -/
 def span (S : Set (ℙ K V)) : Subspace K V where
   Carrier := SpanCarrier S
-  mem_add' := fun v w hv hw hvw => SpanCarrier.mem_add v w hv hw hvw
+  mem_add' v w hv hw hvw := SpanCarrier.mem_add v w hv hw hvw
 
 /-- The span of a set of points contains the set of points. -/
 theorem subset_span (S : Set (ℙ K V)) : S ⊆ span S := fun x hx => SpanCarrier.of _ hx
@@ -83,9 +83,9 @@ theorem subset_span (S : Set (ℙ K V)) : S ⊆ span S := fun x hx => SpanCarrie
 /-- The span of a set of points is a Galois insertion between sets of points of a projective space
 and subspaces of the projective space. -/
 def gi : GaloisInsertion (span : Set (ℙ K V) → Subspace K V) coe where
-  choice := fun S hS => span S
-  gc := fun A B =>
-    ⟨fun h => le_transₓ (subset_span _) h, by
+  choice S hS := span S
+  gc A B :=
+    ⟨fun h => le_trans (subset_span _) h, by
       intro h x hx
       induction hx
       · apply h
@@ -94,8 +94,8 @@ def gi : GaloisInsertion (span : Set (ℙ K V) → Subspace K V) coe where
       · apply B.mem_add
         assumption'
         ⟩
-  le_l_u := fun S => subset_span _
-  choice_eq := fun _ _ => rfl
+  le_l_u S := subset_span _
+  choice_eq _ _ := rfl
 
 /-- The span of a subspace is the subspace. -/
 @[simp]
@@ -105,13 +105,6 @@ theorem span_coe (W : Subspace K V) : span ↑W = W :=
 /-- The infimum of two subspaces exists. -/
 instance hasInf : HasInf (Subspace K V) :=
   ⟨fun A B => ⟨A ⊓ B, fun v w hv hw hvw h1 h2 => ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
-
-/-- Infimums of arbitrary collections of subspaces exist. -/
-instance hasInfₓ : HasInfₓ (Subspace K V) :=
-  ⟨fun A =>
-    ⟨inf (coe '' A), fun v w hv hw hvw h1 h2 t => by
-      rintro ⟨s, hs, rfl⟩
-      exact s.mem_add v w hv hw _ (h1 s ⟨s, hs, rfl⟩) (h2 s ⟨s, hs, rfl⟩)⟩⟩
 
 /-- The subspaces of a projective space form a complete lattice. -/
 instance : CompleteLattice (Subspace K V) :=
@@ -146,7 +139,7 @@ theorem span_le_subspace_iff {S : Set (ℙ K V)} {W : Subspace K V} : span S ≤
 /-- If a set of points is a subset of another set of points, then its span will be contained in the
 span of that set. -/
 @[mono]
-theorem monotone_span : Monotoneₓ (span : Set (ℙ K V) → Subspace K V) :=
+theorem monotone_span : Monotone (span : Set (ℙ K V) → Subspace K V) :=
   gi.gc.monotone_l
 
 theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T ⊆ span U) : S ⊆ span U :=
@@ -171,7 +164,7 @@ theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S
 point is contained in all subspaces of the projective space which contain the set of points. -/
 theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Subspace K V, S ⊆ W → u ∈ W := by
   simp_rw [← span_le_subspace_iff]
-  exact ⟨fun hu W hW => hW hu, fun W => W (span S) (le_reflₓ _)⟩
+  exact ⟨fun hu W hW => hW hu, fun W => W (span S) (le_refl _)⟩
 
 /-- The span of a set of points in a projective space is equal to the infimum of the collection of
 subspaces which contain the set. -/
@@ -189,13 +182,13 @@ theorem span_eq_Inf {S : Set (ℙ K V)} : span S = inf { W | S ⊆ W } := by
 contained in the span of the set of points, then the span of the set of points is equal to
 the subspace. -/
 theorem span_eq_of_le {S : Set (ℙ K V)} {W : Subspace K V} (hS : S ⊆ W) (hW : W ≤ span S) : span S = W :=
-  le_antisymmₓ (span_le_subspace_iff.mpr hS) hW
+  le_antisymm (span_le_subspace_iff.mpr hS) hW
 
 /-- The spans of two sets of points in a projective space are equal if and only if each set of
 points is contained in the span of the other set. -/
 theorem span_eq_span_iff {S T : Set (ℙ K V)} : span S = span T ↔ S ⊆ span T ∧ T ⊆ span S :=
   ⟨fun h => ⟨h ▸ subset_span S, h.symm ▸ subset_span T⟩, fun h =>
-    le_antisymmₓ (span_le_subspace_iff.2 h.1) (span_le_subspace_iff.2 h.2)⟩
+    le_antisymm (span_le_subspace_iff.2 h.1) (span_le_subspace_iff.2 h.2)⟩
 
 end Subspace
 

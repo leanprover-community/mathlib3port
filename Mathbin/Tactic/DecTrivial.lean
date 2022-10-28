@@ -21,7 +21,7 @@ open Tactic.Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `dec_trivial` tries to use decidability to prove a goal
 (i.e., using `exact dec_trivial`).
 The variant `dec_trivial!` will revert all hypotheses on which the target depends,

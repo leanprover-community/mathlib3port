@@ -37,7 +37,7 @@ measurable, equivalence, group action
 
 namespace MeasurableEquiv
 
-variable {G G₀ α : Type _} [MeasurableSpace G] [MeasurableSpace G₀] [MeasurableSpace α] [Groupₓ G] [GroupWithZeroₓ G₀]
+variable {G G₀ α : Type _} [MeasurableSpace G] [MeasurableSpace G₀] [MeasurableSpace α] [Group G] [GroupWithZero G₀]
   [MulAction G α] [MulAction G₀ α] [HasMeasurableSmul G α] [HasMeasurableSmul G₀ α]
 
 /-- If a group `G` acts on `α` by measurable maps, then each element `c : G` defines a measurable
@@ -47,8 +47,8 @@ automorphism of `α`. -/
   simps (config := { fullyApplied := false }) toEquiv apply]
 def smul (c : G) : α ≃ᵐ α where
   toEquiv := MulAction.toPerm c
-  measurable_to_fun := measurable_const_smul c
-  measurable_inv_fun := measurable_const_smul c⁻¹
+  measurableToFun := measurableConstSmul c
+  measurableInvFun := measurableConstSmul c⁻¹
 
 @[to_additive]
 theorem _root_.measurable_embedding_const_smul (c : G) : MeasurableEmbedding ((· • ·) c : α → α) :=
@@ -94,7 +94,7 @@ theorem symm_mul_left (g : G) : (mulLeft g).symm = mulLeft g⁻¹ :=
   ext rfl
 
 @[simp, to_additive]
-theorem to_equiv_mul_left (g : G) : (mulLeft g).toEquiv = Equivₓ.mulLeft g :=
+theorem to_equiv_mul_left (g : G) : (mulLeft g).toEquiv = Equiv.mulLeft g :=
   rfl
 
 @[to_additive]
@@ -106,9 +106,9 @@ measurable automorphism of `G`. -/
 @[to_additive
       "If `G` is an additive group with measurable addition, then addition of `g : G`\non the right is a measurable automorphism of `G`."]
 def mulRight (g : G) : G ≃ᵐ G where
-  toEquiv := Equivₓ.mulRight g
-  measurable_to_fun := measurable_mul_const g
-  measurable_inv_fun := measurable_mul_const g⁻¹
+  toEquiv := Equiv.mulRight g
+  measurableToFun := measurableMulConst g
+  measurableInvFun := measurableMulConst g⁻¹
 
 @[to_additive]
 theorem _root_.measurable_embedding_mul_right (g : G) : MeasurableEmbedding fun x => x * g :=
@@ -123,7 +123,7 @@ theorem symm_mul_right (g : G) : (mulRight g).symm = mulRight g⁻¹ :=
   ext rfl
 
 @[simp, to_additive]
-theorem to_equiv_mul_right (g : G) : (mulRight g).toEquiv = Equivₓ.mulRight g :=
+theorem to_equiv_mul_right (g : G) : (mulRight g).toEquiv = Equiv.mulRight g :=
   rfl
 
 /-- If `G₀` is a group with zero with measurable multiplication, then left multiplication by a
@@ -143,15 +143,15 @@ theorem symm_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mulLeft₀ g hg).symm = mu
   ext rfl
 
 @[simp]
-theorem to_equiv_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mulLeft₀ g hg).toEquiv = Equivₓ.mulLeft₀ g hg :=
+theorem to_equiv_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mulLeft₀ g hg).toEquiv = Equiv.mulLeft₀ g hg :=
   rfl
 
 /-- If `G₀` is a group with zero with measurable multiplication, then right multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
 def mulRight₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ where
-  toEquiv := Equivₓ.mulRight₀ g hg
-  measurable_to_fun := measurable_mul_const g
-  measurable_inv_fun := measurable_mul_const g⁻¹
+  toEquiv := Equiv.mulRight₀ g hg
+  measurableToFun := measurableMulConst g
+  measurableInvFun := measurableMulConst g⁻¹
 
 theorem _root_.measurable_embedding_mul_right₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding fun x => x * g :=
   (mulRight₀ g hg).MeasurableEmbedding
@@ -165,7 +165,7 @@ theorem symm_mul_right₀ {g : G₀} (hg : g ≠ 0) : (mulRight₀ g hg).symm = 
   ext rfl
 
 @[simp]
-theorem to_equiv_mul_right₀ {g : G₀} (hg : g ≠ 0) : (mulRight₀ g hg).toEquiv = Equivₓ.mulRight₀ g hg :=
+theorem to_equiv_mul_right₀ {g : G₀} (hg : g ≠ 0) : (mulRight₀ g hg).toEquiv = Equiv.mulRight₀ g hg :=
   rfl
 
 end Mul
@@ -174,9 +174,9 @@ end Mul
 @[to_additive "Negation as a measurable automorphism of an additive group.",
   simps (config := { fullyApplied := false }) toEquiv apply]
 def inv (G) [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : G ≃ᵐ G where
-  toEquiv := Equivₓ.inv G
-  measurable_to_fun := measurable_inv
-  measurable_inv_fun := measurable_inv
+  toEquiv := Equiv.inv G
+  measurableToFun := measurableInv
+  measurableInvFun := measurableInv
 
 @[simp, to_additive]
 theorem symm_inv {G} [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : (inv G).symm = inv G :=
@@ -185,16 +185,16 @@ theorem symm_inv {G} [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv 
 /-- `equiv.div_right` as a `measurable_equiv`. -/
 @[to_additive " `equiv.sub_right` as a `measurable_equiv` "]
 def divRight [HasMeasurableMul G] (g : G) : G ≃ᵐ G where
-  toEquiv := Equivₓ.divRight g
-  measurable_to_fun := measurable_div_const' g
-  measurable_inv_fun := measurable_mul_const g
+  toEquiv := Equiv.divRight g
+  measurableToFun := measurableDivConst' g
+  measurableInvFun := measurableMulConst g
 
 /-- `equiv.div_left` as a `measurable_equiv` -/
 @[to_additive " `equiv.sub_left` as a `measurable_equiv` "]
 def divLeft [HasMeasurableMul G] [HasMeasurableInv G] (g : G) : G ≃ᵐ G where
-  toEquiv := Equivₓ.divLeft g
-  measurable_to_fun := measurable_id.const_div g
-  measurable_inv_fun := measurable_inv.mul_const g
+  toEquiv := Equiv.divLeft g
+  measurableToFun := measurableId.const_div g
+  measurableInvFun := measurableInv.mul_const g
 
 end MeasurableEquiv
 

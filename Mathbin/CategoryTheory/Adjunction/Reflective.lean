@@ -138,7 +138,7 @@ theorem unit_comp_partial_bijective_symm_natural [Reflective i] (A : C) {B B' : 
 theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.EssImage)
     (hB' : B' ∈ i.EssImage) (f : A ⟶ B) :
     (unitCompPartialBijective A hB') (f ≫ h) = unitCompPartialBijective A hB f ≫ h := by
-  rw [← Equivₓ.eq_symm_apply, unit_comp_partial_bijective_symm_natural A h, Equivₓ.symm_apply_apply]
+  rw [← Equiv.eq_symm_apply, unit_comp_partial_bijective_symm_natural A h, Equiv.symm_apply_apply]
 
 /-- If `i : D ⥤ C` is reflective, the inverse functor of `i ≌ F.ess_image` can be explicitly
 defined by the reflector. -/

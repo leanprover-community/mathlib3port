@@ -50,7 +50,7 @@ theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty (((· > �
       fun a ac => by
       induction' ac with a _ IH
       rintro n rfl
-      exact IH (f (n + 1)) (o.2 (Nat.lt_succ_selfₓ _)) _ rfl⟩,
+      exact IH (f (n + 1)) (o.2 (Nat.lt_succ_self _)) _ rfl⟩,
     fun E =>
     ⟨fun a =>
       Classical.by_contradiction fun na =>
@@ -122,7 +122,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
   let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
   by_cases hbad:Infinite bad
   · haveI := hbad
-    refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_rightₓ _ fun m n mn => _⟩
+    refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
     have h := Set.mem_range_self m
     rw [Nat.order_embedding_of_set_range bad] at h
     exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
@@ -132,24 +132,24 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
       by_cases he:hbad.to_finset.nonempty
       · refine'
           ⟨(hbad.to_finset.max' he).succ, fun n hn nbad =>
-            Nat.not_succ_le_selfₓ _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
+            Nat.not_succ_le_self _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
         
       · exact ⟨0, fun n hn nbad => he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩
         
     have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) := by
       intro n
       have h := hm _ (le_add_of_nonneg_left n.zero_le)
-      simp only [exists_propₓ, not_not, Set.mem_set_of_eq, not_forall] at h
+      simp only [exists_prop, not_not, Set.mem_set_of_eq, not_forall] at h
       obtain ⟨n', hn1, hn2⟩ := h
       obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
       refine' ⟨n + x, add_lt_add_left hpos n, _⟩
-      rw [add_assocₓ, add_commₓ x m, ← add_assocₓ]
+      rw [add_assoc, add_comm x m, ← add_assoc]
       exact hn2
-    let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.findₓ (h gn)
+    let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.find (h gn)
     exact
       ⟨(RelEmbedding.natLt (fun n => g' n + m) fun n =>
-            Nat.add_lt_add_rightₓ (Nat.find_specₓ (h (g' n))).1 m).orderEmbeddingOfLtEmbedding,
-        Or.intro_left _ fun n => (Nat.find_specₓ (h (g' n))).2⟩
+            Nat.add_lt_add_right (Nat.find_spec (h (g' n))).1 m).orderEmbeddingOfLtEmbedding,
+        Or.intro_left _ fun n => (Nat.find_spec (h (g' n))).2⟩
     
 
 /-- This is the infinitary Erdős–Szekeres theorem, and an important lemma in the usual proof of
@@ -163,13 +163,13 @@ theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTr
     · apply hr
       
     · apply IsTrans.trans _ _ _ _ (hr _)
-      exact ih (lt_of_lt_of_leₓ m.lt_succ_self (Nat.le_add_rightₓ _ _))
+      exact ih (lt_of_lt_of_le m.lt_succ_self (Nat.le_add_right _ _))
       
     
-  · exact ⟨g, Or.intro_rightₓ _ hnr⟩
+  · exact ⟨g, Or.intro_right _ hnr⟩
     
 
-theorem WellFounded.monotone_chain_condition' [Preorderₓ α] :
+theorem WellFounded.monotone_chain_condition' [Preorder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → ¬a n < a m := by
   refine' ⟨fun h a => _, fun h => _⟩
   · have hne : (Set.Range a).Nonempty := ⟨a 0, by simp⟩
@@ -181,37 +181,37 @@ theorem WellFounded.monotone_chain_condition' [Preorderₓ α] :
     exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]] -/
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
-theorem WellFounded.monotone_chain_condition [PartialOrderₓ α] :
+theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
   WellFounded.monotone_chain_condition'.trans <| by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
-    rw [lt_iff_le_and_neₓ]
+    rw [lt_iff_le_and_ne]
     simp [a.mono h]
 
 /-- Given an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a partially-ordered
 type, `monotonic_sequence_limit_index a` is the least natural number `n` for which `aₙ` reaches the
 constant value. For sequences that are not eventually constant, `monotonic_sequence_limit_index a`
 is defined, but is a junk value. -/
-noncomputable def monotonicSequenceLimitIndex [Preorderₓ α] (a : ℕ →o α) : ℕ :=
+noncomputable def monotonicSequenceLimitIndex [Preorder α] (a : ℕ →o α) : ℕ :=
   inf { n | ∀ m, n ≤ m → a n = a m }
 
 /-- The constant value of an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a
 partially-ordered type. -/
-noncomputable def monotonicSequenceLimit [Preorderₓ α] (a : ℕ →o α) :=
+noncomputable def monotonicSequenceLimit [Preorder α] (a : ℕ →o α) :=
   a (monotonicSequenceLimitIndex a)
 
 theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α] (h : WellFounded ((· > ·) : α → α → Prop))
     (a : ℕ →o α) : supr a = monotonicSequenceLimit a := by
-  suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymmₓ this (le_supr a _)
+  suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supr a _)
   apply supr_le
   intro m
   by_cases hm:m ≤ monotonicSequenceLimitIndex a
   · exact a.monotone hm
     
-  · replace hm := le_of_not_leₓ hm
+  · replace hm := le_of_not_le hm
     let S := { n | ∀ m, n ≤ m → a n = a m }
     have hInf : Inf S ∈ S := by
       refine' Nat.Inf_mem _

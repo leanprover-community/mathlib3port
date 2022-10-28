@@ -74,7 +74,7 @@ theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) : inversion
   rcases eq_or_ne x c with (rfl | hne)
   · rw [inversion_self, inversion_self]
     
-  · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_powₓ, div_mul_div_comm,
+  · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow, div_mul_div_comm,
       div_mul_cancel _ (dist_ne_zero.2 hne), ← sq, div_self, one_pow, one_smul, vsub_vadd]
     exact pow_ne_zero _ hR
     
@@ -98,7 +98,7 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
   simp_rw [dist_vadd_cancel_right, dist_eq_norm_vsub V _ c]
   simpa only [dist_vsub_cancel_right] using dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 /-- **Ptolemy's inequality**: in a quadrangle `ABCD`, `|AC| * |BD| ≤ |AB| * |CD| + |BC| * |AD|`. If
 `ABCD` is a convex cyclic polygon, then this inequality becomes an equality, see
 `euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical`.  -/
@@ -106,14 +106,14 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
     dist a c * dist b d ≤ dist a b * dist c d + dist b c * dist a d := by
   -- If one of the points `b`, `c`, `d` is equal to `a`, then the inequality is trivial.
   rcases eq_or_ne b a with (rfl | hb)
-  · rw [dist_self, zero_mul, zero_addₓ]
+  · rw [dist_self, zero_mul, zero_add]
     
   rcases eq_or_ne c a with (rfl | hc)
   · rw [dist_self, zero_mul]
     apply_rules [add_nonneg, mul_nonneg, dist_nonneg]
     
   rcases eq_or_ne d a with (rfl | hd)
-  · rw [dist_self, mul_zero, add_zeroₓ, dist_comm d, dist_comm d, mul_comm]
+  · rw [dist_self, mul_zero, add_zero, dist_comm d, dist_comm d, mul_comm]
     
   /- Otherwise, we apply the triangle inequality to `euclidean_geometry.inversion a 1 b`,
     `euclidean_geometry.inversion a 1 c`, and `euclidean_geometry.inversion a 1 d`. -/

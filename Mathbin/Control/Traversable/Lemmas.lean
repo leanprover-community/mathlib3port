@@ -38,9 +38,9 @@ variable [Traversable t] [IsLawfulTraversable t]
 
 variable (F G : Type u → Type u)
 
-variable [Applicativeₓ F] [IsLawfulApplicative F]
+variable [Applicative F] [LawfulApplicative F]
 
-variable [Applicativeₓ G] [IsLawfulApplicative G]
+variable [Applicative G] [LawfulApplicative G]
 
 variable {α β γ : Type u}
 
@@ -54,8 +54,8 @@ variable (f : β → γ)
 to `F`, defined by `pure : Π {α}, α → F α`. -/
 def pureTransformation : ApplicativeTransformation id F where
   app := @pure F _
-  preserves_pure' := fun α x => rfl
-  preserves_seq' := fun α β f x => by
+  preserves_pure' α x := rfl
+  preserves_seq' α β f x := by
     simp only [map_pure, seq_pure]
     rfl
 

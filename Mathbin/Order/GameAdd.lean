@@ -62,7 +62,7 @@ theorem Acc.prod_game_add {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.Ga
   induction' ha with a ha iha generalizing b
   induction' hb with b hb ihb
   refine' Acc.intro _ fun h => _
-  rintro (⟨_, _, _, ra⟩ | ⟨_, _, _, rb⟩)
+  rintro (⟨ra⟩ | ⟨rb⟩)
   exacts[iha _ ra (Acc.intro b hb), ihb _ rb]
 
 /-- The sum of two well-founded games is well-founded. -/

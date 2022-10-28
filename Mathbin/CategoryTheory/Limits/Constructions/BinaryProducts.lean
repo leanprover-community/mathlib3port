@@ -33,10 +33,10 @@ def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : 
         (PullbackCone.mk (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩ : _) <|
           hX.hom_ext (_ ≫ f) (_ ≫ g))) :
     IsLimit c where
-  lift := fun s => hc.lift (PullbackCone.mk (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
-  fac' := fun s j =>
+  lift s := hc.lift (PullbackCone.mk (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
+  fac' s j :=
     Discrete.casesOn j fun j => WalkingPair.casesOn j (hc.fac _ WalkingCospan.left) (hc.fac _ WalkingCospan.right)
-  uniq' := fun s m J => by
+  uniq' s m J := by
     let c' :=
       pullback_cone.mk (m ≫ c.π.app ⟨walking_pair.left⟩) (m ≫ c.π.app ⟨walking_pair.right⟩ : _)
         (hX.hom_ext (_ ≫ f) (_ ≫ g))
@@ -109,11 +109,9 @@ def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : 
         (PushoutCocone.mk (c.ι.app ⟨WalkingPair.left⟩) (c.ι.app ⟨WalkingPair.right⟩ : _) <|
           hX.hom_ext (f ≫ _) (g ≫ _))) :
     IsColimit c where
-  desc := fun s =>
-    hc.desc (PushoutCocone.mk (s.ι.app ⟨WalkingPair.left⟩) (s.ι.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
-  fac' := fun s j =>
-    Discrete.casesOn j fun j => WalkingPair.casesOn j (hc.fac _ WalkingSpan.left) (hc.fac _ WalkingSpan.right)
-  uniq' := fun s m J => by
+  desc s := hc.desc (PushoutCocone.mk (s.ι.app ⟨WalkingPair.left⟩) (s.ι.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
+  fac' s j := Discrete.casesOn j fun j => WalkingPair.casesOn j (hc.fac _ WalkingSpan.left) (hc.fac _ WalkingSpan.right)
+  uniq' s m J := by
     let c' :=
       pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩ ≫ m) (c.ι.app ⟨walking_pair.right⟩ ≫ m)
         (hX.hom_ext (f ≫ _) (g ≫ _))

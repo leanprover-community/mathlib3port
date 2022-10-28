@@ -41,7 +41,7 @@ unsafe instance : Membership Expr.Coord Expr.Address :=
 unsafe inductive sf : Type
   | tag_expr : Expr.Address → expr → sf → sf
   | compose : sf → sf → sf
-  | of_string : Stringₓ → sf
+  | of_string : String → sf
   | highlight : Format.Color → sf → sf
   | block : ℕ → sf → sf
 
@@ -52,17 +52,17 @@ unsafe def sf.repr : sf → format
       format.nest 2 <|
         "(tag_expr " ++ to_fmt addr ++ format.line ++ "`(" ++ to_fmt e ++ ")" ++ format.line ++ a.repr ++ ")"
   | sf.compose a b => a.repr ++ format.line ++ b.repr
-  | sf.of_string s => reprₓ s
+  | sf.of_string s => repr s
   | sf.block i a => "(block " ++ to_fmt i ++ format.line ++ a.repr ++ ")"
   | sf.highlight c a => "(highlight " ++ c.toString ++ a.repr ++ ")"
 
 unsafe instance : has_to_format sf :=
   ⟨sf.repr⟩
 
-unsafe instance : HasToString sf :=
+unsafe instance : ToString sf :=
   ⟨fun s => s.repr.toString⟩
 
-unsafe instance : HasRepr sf :=
+unsafe instance : Repr sf :=
   ⟨fun s => s.repr.toString⟩
 
 /-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
@@ -184,7 +184,7 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
     let click_attrs : List (attr (action γ)) ←
       if some new_address = click_address then do
           let content ← tc.to_html tooltip_component (e, new_address)
-          let efmt : Stringₓ ← format.to_string <$> tactic.pp e
+          let efmt : String ← format.to_string <$> tactic.pp e
           let gd_btn ← goto_def_button e
           pure
               [tooltip <|
@@ -287,7 +287,7 @@ unsafe def filter_local : filter_type → expr → tactic Bool
   | filter_type.none, e => pure true
   | filter_type.no_instances, e => do
     let t ← tactic.infer_type e
-    bnot <$> tactic.is_class t
+    not <$> tactic.is_class t
   | filter_type.only_props, e => do
     let t ← tactic.infer_type e
     tactic.is_prop t
@@ -319,7 +319,7 @@ unsafe def show_type_component : tc expr Empty :=
 
 /-- A group of local constants in the context that should be rendered as one line. -/
 unsafe structure local_collection where
-  key : Stringₓ
+  key : String
   locals : List expr
   type : expr
   value : Option expr
@@ -444,7 +444,7 @@ unsafe def term_goal_widget : component tactic_state Empty :=
 
 end WidgetOverride
 
-attribute [implementedBy widget_override.term_goal_widget] widget.term_goal_widget
+attribute [implemented_by widget_override.term_goal_widget] widget.term_goal_widget
 
-attribute [implementedBy widget_override.tactic_state_widget] widget.tactic_state_widget
+attribute [implemented_by widget_override.tactic_state_widget] widget.tactic_state_widget
 

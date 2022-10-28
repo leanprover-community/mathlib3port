@@ -69,9 +69,9 @@ universe u₁ u₂ u₃ u₄
 
 variable {R : Type u₁} {L : Type u₂} {L₂ : Type u₃} {M : Type u₄}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L₂] [LieAlgebra R L₂]
+variable [CommRing R] [LieRing L] [LieAlgebra R L] [LieRing L₂] [LieAlgebra R L₂]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 include R L
 
@@ -93,9 +93,9 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
     (↑⁅(⊤ : LieIdeal R L), N⁆ : Submodule R M) =
       (N : Submodule R M).map (toEndomorphism R L M x) ⊔ (↑⁅I, N⁆ : Submodule R M) :=
   by
-  simp only [lie_ideal_oper_eq_linear_span', Submodule.sup_span, mem_top, exists_propₓ, exists_true_left,
+  simp only [lie_ideal_oper_eq_linear_span', Submodule.sup_span, mem_top, exists_prop, exists_true_left,
     Submodule.map_coe, to_endomorphism_apply_apply]
-  refine' le_antisymmₓ (submodule.span_le.mpr _) (Submodule.span_mono fun z hz => _)
+  refine' le_antisymm (submodule.span_le.mpr _) (Submodule.span_mono fun z hz => _)
   · rintro z ⟨y, n, hn : n ∈ N, rfl⟩
     obtain ⟨t, z, hz, rfl⟩ := exists_smul_add_of_span_sup_eq_top hxI y
     simp only [SetLike.mem_coe, Submodule.span_union, Submodule.mem_sup]
@@ -116,15 +116,15 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEndomo
     by simpa only [bot_sup_eq, LieIdeal.incl_coe, Submodule.map_zero, hxn] using this n
   intro l
   induction' l with l ih
-  · simp only [add_zeroₓ, LieIdeal.lcs_succ, pow_zeroₓ, LinearMap.one_eq_id, Submodule.map_id]
+  · simp only [add_zero, LieIdeal.lcs_succ, pow_zero, LinearMap.one_eq_id, Submodule.map_id]
     exact le_sup_of_le_left hIM
     
   · simp only [LieIdeal.lcs_succ, i.add_succ l, lie_top_eq_of_span_sup_eq_top hxI, sup_le_iff]
     refine' ⟨(Submodule.map_mono ih).trans _, le_sup_of_le_right _⟩
-    · rw [Submodule.map_sup, ← Submodule.map_comp, ← LinearMap.mul_eq_comp, ← pow_succₓ, ← I.lcs_succ]
+    · rw [Submodule.map_sup, ← Submodule.map_comp, ← LinearMap.mul_eq_comp, ← pow_succ, ← I.lcs_succ]
       exact sup_le_sup_left coe_map_to_endomorphism_le _
       
-    · refine' le_transₓ (mono_lie_right _ _ I _) (mono_lie_right _ _ I hIM)
+    · refine' le_trans (mono_lie_right _ _ I _) (mono_lie_right _ _ I hIM)
       exact antitone_lower_central_series R L M le_self_add
       
     
@@ -158,7 +158,7 @@ be nilpotent is that the image of the map `L → End(M)` consists of nilpotent e
 Engel's theorem `lie_algebra.is_engelian_of_is_noetherian` states that any Noetherian Lie algebra is
 Engelian. -/
 def LieAlgebra.IsEngelian : Prop :=
-  ∀ (M : Type u₄) [AddCommGroupₓ M],
+  ∀ (M : Type u₄) [AddCommGroup M],
     ∀ [Module R M] [LieRingModule L M],
       ∀ [LieModule R L M], ∀ h : ∀ x : L, IsNilpotent (to_endomorphism R L M x), LieModule.IsNilpotent R L M
 
@@ -223,7 +223,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
   intro M _i1 _i2 _i3 _i4 h
   rw [← is_nilpotent_range_to_endomorphism_iff]
   let L' := (to_endomorphism R L M).range
-  replace h : ∀ y : L', IsNilpotent (y : Module.End R M)
+  replace h : ∀ y : L', IsNilpotent (y : Module.EndCat R M)
   · rintro ⟨-, ⟨y, rfl⟩⟩
     simp [h]
     
@@ -237,7 +237,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
   have : ∀ K ∈ s, K ≠ ⊤ → ∃ K' ∈ s, K < K' := by
     rintro K (hK₁ : LieAlgebra.IsEngelian R K) hK₂
     apply LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer hK₁
-    apply lt_of_le_of_neₓ K.le_normalizer
+    apply lt_of_le_of_ne K.le_normalizer
     rw [Ne.def, eq_comm, K.normalizer_eq_self_iff, ← Ne.def, ← LieSubmodule.nontrivial_iff_ne_bot R K]
     have : Nontrivial (L' ⧸ K.to_lie_submodule) := by
       replace hK₂ : K.to_lie_submodule ≠ ⊤ := by
@@ -247,7 +247,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
     have : LieModule.IsNilpotent R K (L' ⧸ K.to_lie_submodule) := by
       refine' hK₁ _ fun x => _
       have hx := LieAlgebra.is_nilpotent_ad_of_is_nilpotent (h x)
-      exact Module.End.IsNilpotent.mapq _ hx
+      exact Module.EndCat.IsNilpotent.mapq _ hx
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
   haveI _i5 : IsNoetherian R L' :=
     is_noetherian_of_surjective L _ (LinearMap.range_range_restrict (to_endomorphism R L M))
@@ -255,8 +255,8 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
   have hK₃ : K = ⊤ := by
     by_contra contra
     obtain ⟨K', hK'₁, hK'₂⟩ := this K hK₁ contra
-    specialize hK₂ K' hK'₁ (le_of_ltₓ hK'₂)
-    replace hK'₂ := (ne_of_ltₓ hK'₂).symm
+    specialize hK₂ K' hK'₁ (le_of_lt hK'₂)
+    replace hK'₂ := (ne_of_lt hK'₂).symm
     contradiction
   exact hK₃ ▸ hK₁
 

@@ -47,7 +47,7 @@ section Defs
 
 variable (R : Type u) {A : Type v}
 
-variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
+variable [CommSemiring R] [Ring A] [Algebra R A]
 
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
@@ -93,7 +93,7 @@ section ScalarSemiring
 
 variable {R : Type u} {A : Type v}
 
-variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
+variable [CommSemiring R] [Ring A] [Algebra R A]
 
 -- mathport name: exprσ
 local notation "σ" => Spectrum R
@@ -110,7 +110,7 @@ theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) := by
 
 theorem mem_resolvent_set_of_left_right_inverse {r : R} {a b c : A} (h₁ : (↑ₐ r - a) * b = 1)
     (h₂ : c * (↑ₐ r - a) = 1) : r ∈ ResolventSet R a :=
-  Units.is_unit ⟨↑ₐ r - a, b, h₁, by rwa [← left_inv_eq_right_invₓ h₂ h₁]⟩
+  Units.is_unit ⟨↑ₐ r - a, b, h₁, by rwa [← left_inv_eq_right_inv h₂ h₁]⟩
 
 theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUnit (↑ₐ r - a) :=
   Iff.rfl
@@ -153,9 +153,9 @@ theorem is_unit_resolvent {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUnit (r
 theorem inv_mem_resolvent_set {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ ResolventSet R (a : A)) :
     (↑r⁻¹ : R) ∈ ResolventSet R (↑a⁻¹ : A) := by
   rw [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one, ← Units.smul_def] at h⊢
-  rw [IsUnit.smul_sub_iff_sub_inv_smul, inv_invₓ, IsUnit.sub_iff]
-  have h₁ : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • 1 - a := by rw [mul_sub, mul_smul_comm, a.mul_inv, mul_oneₓ]
-  have h₂ : (r • (↑a⁻¹ : A) - 1) * a = r • 1 - a := by rw [sub_mul, smul_mul_assoc, a.inv_mul, one_mulₓ]
+  rw [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv, IsUnit.sub_iff]
+  have h₁ : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • 1 - a := by rw [mul_sub, mul_smul_comm, a.mul_inv, mul_one]
+  have h₂ : (r • (↑a⁻¹ : A) - 1) * a = r • 1 - a := by rw [sub_mul, smul_mul_assoc, a.inv_mul, one_mul]
   have hcomm : Commute (a : A) (r • (↑a⁻¹ : A) - 1) := by rwa [← h₂] at h₁
   exact (hcomm.is_unit_mul_iff.mp (h₁.symm ▸ h)).2
 
@@ -250,7 +250,7 @@ section ScalarRing
 
 variable {R : Type u} {A : Type v}
 
-variable [CommRingₓ R] [Ringₓ A] [Algebra R A]
+variable [CommRing R] [Ring A] [Algebra R A]
 
 -- mathport name: exprσ
 local notation "σ" => Spectrum R
@@ -269,7 +269,7 @@ theorem exists_mem_of_not_is_unit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp
     (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => X - c x) p.roots).Prod)) : ∃ k : R, k ∈ σ a ∧ eval k p = 0 := by
   rw [← Multiset.prod_to_list, AlgHom.map_list_prod] at h
   replace h := mt List.prod_is_unit h
-  simp only [not_forall, exists_propₓ, aeval_C, Multiset.mem_to_list, List.mem_mapₓ, aeval_X, exists_exists_and_eq_and,
+  simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_map, aeval_X, exists_exists_and_eq_and,
     Multiset.mem_map, AlgHom.map_sub] at h
   rcases h with ⟨r, r_mem, r_nu⟩
   exact ⟨r, by rwa [mem_iff, ← IsUnit.sub_iff], by rwa [← is_root.def, ← mem_roots hp]⟩
@@ -280,7 +280,7 @@ section ScalarField
 
 variable {𝕜 : Type u} {A : Type v}
 
-variable [Field 𝕜] [Ringₓ A] [Algebra 𝕜 A]
+variable [Field 𝕜] [Ring A] [Algebra 𝕜 A]
 
 -- mathport name: exprσ
 local notation "σ" => Spectrum 𝕜
@@ -348,7 +348,7 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
 protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := by
   refine' Set.eq_of_subset_of_subset (fun k hk => _) fun k hk => _
   · rw [Set.mem_inv] at hk
-    have : k ≠ 0 := by simpa only [inv_invₓ] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
+    have : k ≠ 0 := by simpa only [inv_inv] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
     lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr this
     rw [← Units.coe_inv k] at hk
     exact inv_mem_iff.mp hk
@@ -383,7 +383,7 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
   -- write `C k - p` product of linear factors and a constant; show `C k - p ≠ 0`.
   have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (C k - p))
   have h_ne : C k - p ≠ 0 :=
-    ne_zero_of_degree_gt (by rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_ltₓ degree_C_le hdeg)])
+    ne_zero_of_degree_gt (by rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_lt degree_C_le hdeg)])
   have lead_ne := leading_coeff_ne_zero.mpr h_ne
   have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).IsUnit
   /- leading coefficient is a unit so product of linear factors is not a unit;
@@ -399,7 +399,7 @@ is nonempty instead of assuming the degree of the polynomial is positive. Note: 
 assumption `[nontrivial A]` is necessary for the same reason as in `spectrum.zero_eq`. -/
 theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] [Nontrivial A] (a : A) (p : 𝕜[X]) (hnon : (σ a).Nonempty) :
     σ (aeval a p) = (fun k => eval k p) '' σ a := by
-  refine' Or.elim (le_or_gtₓ (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
+  refine' Or.elim (le_or_gt (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
   · rw [eq_C_of_degree_le_zero h]
     simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]
     
@@ -411,7 +411,7 @@ variable (𝕜)
 over an algebraically closed field `𝕜` has non-empty spectrum. -/
 theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A] [I : FiniteDimensional 𝕜 A]
     (a : A) : ∃ k : 𝕜, k ∈ σ a := by
-  obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a
+  obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := isIntegralOfNoetherian (IsNoetherian.iff_fg.2 I) a
   have nu : ¬IsUnit (aeval a p) := by
     rw [← aeval_def] at h_eval_p
     rw [h_eval_p]
@@ -426,9 +426,9 @@ end Spectrum
 
 namespace AlgHom
 
-section CommSemiringₓ
+section CommSemiring
 
-variable {F R A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
+variable {F R A B : Type _} [CommRing R] [Ring A] [Algebra R A] [Ring B] [Algebra R B]
 
 variable [AlgHomClass F R A B]
 
@@ -443,11 +443,11 @@ theorem mem_resolvent_set_apply (φ : F) {a : A} {r : R} (h : r ∈ ResolventSet
 
 theorem spectrum_apply_subset (φ : F) (a : A) : σ ((φ : A → B) a) ⊆ σ a := fun _ => mt (mem_resolvent_set_apply φ)
 
-end CommSemiringₓ
+end CommSemiring
 
-section CommRingₓ
+section CommRing
 
-variable {F R A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
+variable {F R A B : Type _} [CommRing R] [Ring A] [Algebra R A] [Ring B] [Algebra R B]
 
 variable [AlgHomClass F R A R]
 
@@ -463,7 +463,7 @@ theorem apply_mem_spectrum [Nontrivial R] (φ : F) (a : A) : φ a ∈ σ a := by
       sub_self]
   simp only [Spectrum.mem_iff, ← mem_nonunits_iff, coe_subset_nonunits (φ : A →+* R).ker_ne_top h]
 
-end CommRingₓ
+end CommRing
 
 end AlgHom
 

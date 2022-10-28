@@ -45,17 +45,17 @@ theorem IsSymm.ext {A : Matrix n n α} : (∀ i j, A j i = A i j) → A.IsSymm :
 theorem IsSymm.apply {A : Matrix n n α} (h : A.IsSymm) (i j : n) : A j i = A i j :=
   IsSymm.ext_iff.1 h i j
 
-theorem is_symm_mul_transpose_self [Fintypeₓ n] [CommSemiringₓ α] (A : Matrix n n α) : (A ⬝ Aᵀ).IsSymm :=
+theorem is_symm_mul_transpose_self [Fintype n] [CommSemiring α] (A : Matrix n n α) : (A ⬝ Aᵀ).IsSymm :=
   transpose_mul _ _
 
-theorem is_symm_transpose_mul_self [Fintypeₓ n] [CommSemiringₓ α] (A : Matrix n n α) : (Aᵀ ⬝ A).IsSymm :=
+theorem is_symm_transpose_mul_self [Fintype n] [CommSemiring α] (A : Matrix n n α) : (Aᵀ ⬝ A).IsSymm :=
   transpose_mul _ _
 
-theorem is_symm_add_transpose_self [AddCommSemigroupₓ α] (A : Matrix n n α) : (A + Aᵀ).IsSymm :=
-  add_commₓ _ _
+theorem is_symm_add_transpose_self [AddCommSemigroup α] (A : Matrix n n α) : (A + Aᵀ).IsSymm :=
+  add_comm _ _
 
-theorem is_symm_transpose_add_self [AddCommSemigroupₓ α] (A : Matrix n n α) : (Aᵀ + A).IsSymm :=
-  add_commₓ _ _
+theorem is_symm_transpose_add_self [AddCommSemigroup α] (A : Matrix n n α) : (Aᵀ + A).IsSymm :=
+  add_comm _ _
 
 @[simp]
 theorem is_symm_zero [Zero α] : (0 : Matrix n n α).IsSymm :=
@@ -99,7 +99,7 @@ theorem IsSymm.submatrix {A : Matrix n n α} (h : A.IsSymm) (f : m → n) : (A.s
 
 /-- The diagonal matrix `diagonal v` is symmetric. -/
 @[simp]
-theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonalₓ v).IsSymm :=
+theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonal v).IsSymm :=
   diagonal_transpose _
 
 /-- A block matrix `A.from_blocks B C D` is symmetric,

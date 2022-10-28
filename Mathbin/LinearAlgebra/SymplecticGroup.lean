@@ -28,7 +28,7 @@ variable {l R : Type _}
 
 namespace Matrix
 
-variable (l) [DecidableEq l] (R) [CommRingₓ R]
+variable (l) [DecidableEq l] (R) [CommRing R]
 
 section JMatrixLemmas
 
@@ -42,23 +42,23 @@ theorem J_transpose : (j l R)ᵀ = -j l R := by
     Matrix.transpose_one, transpose_neg]
   simp [from_blocks]
 
-variable [Fintypeₓ l]
+variable [Fintype l]
 
 theorem J_squared : j l R ⬝ j l R = -1 := by
   rw [J, from_blocks_multiply]
-  simp only [Matrix.zero_mul, Matrix.neg_mul, zero_addₓ, neg_zero, Matrix.one_mul, add_zeroₓ]
+  simp only [Matrix.zero_mul, Matrix.neg_mul, zero_add, neg_zero, Matrix.one_mul, add_zero]
   rw [← neg_zero, ← Matrix.from_blocks_neg, ← from_blocks_one]
 
 theorem J_inv : (j l R)⁻¹ = -j l R := by
   refine' Matrix.inv_eq_right_inv _
   rw [Matrix.mul_neg, J_squared]
-  exact neg_negₓ 1
+  exact neg_neg 1
 
 theorem J_det_mul_J_det : det (j l R) * det (j l R) = 1 := by
   rw [← det_mul, J_squared]
   rw [← one_smul R (-1 : Matrix _ _ R)]
   rw [smul_neg, ← neg_smul, det_smul]
-  simp only [Fintypeₓ.card_sum, det_one, mul_oneₓ]
+  simp only [Fintype.card_sum, det_one, mul_one]
   apply Even.neg_one_pow
   exact even_add_self _
 
@@ -67,7 +67,7 @@ theorem is_unit_det_J : IsUnit (det (j l R)) :=
 
 end JMatrixLemmas
 
-variable [Fintypeₓ l]
+variable [Fintype l]
 
 /-- The group of symplectic matrices over a ring `R`. -/
 def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R) where
@@ -83,7 +83,7 @@ end Matrix
 
 namespace SymplecticGroup
 
-variable {l} {R} [DecidableEq l] [Fintypeₓ l] [CommRingₓ R]
+variable {l} {R} [DecidableEq l] [Fintype l] [CommRing R]
 
 open Matrix
 
@@ -122,7 +122,7 @@ theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A := by
   rw [is_unit_iff_exists_inv]
   use A.det
   refine' (is_unit_det_J l R).mul_left_cancel _
-  rw [mul_oneₓ]
+  rw [mul_one]
   rw [mem_iff] at hA
   apply_fun det  at hA
   simp only [det_mul, det_transpose] at hA
@@ -156,7 +156,7 @@ theorem mem_iff' : A ∈ symplecticGroup l R ↔ Aᵀ ⬝ j l R ⬝ A = j l R :=
 instance :
     Inv
       (symplecticGroup l
-        R) where inv := fun A =>
+        R) where inv A :=
     ⟨-j l R ⬝ (A : Matrix (Sum l l) (Sum l l) R)ᵀ ⬝ j l R,
       mul_mem (mul_mem (neg_mem <| J_mem _ _) <| transpose_mem A.2) <| J_mem _ _⟩
 
@@ -182,7 +182,7 @@ theorem inv_eq_symplectic_inv (A : Matrix (Sum l l) (Sum l l) R) (hA : A ∈ sym
     A⁻¹ = -j l R ⬝ Aᵀ ⬝ j l R :=
   inv_eq_left_inv (by simp only [Matrix.neg_mul, inv_left_mul_aux hA])
 
-instance : Groupₓ (symplecticGroup l R) :=
+instance : Group (symplecticGroup l R) :=
   { SymplecticGroup.hasInv, Submonoid.toMonoid _ with
     mul_left_inv := fun A => by
       apply Subtype.ext

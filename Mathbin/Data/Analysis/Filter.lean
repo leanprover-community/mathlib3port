@@ -23,7 +23,7 @@ open Set Filter
 /-- A `cfilter α σ` is a realization of a filter (base) on `α`,
   represented by a type `σ` together with operations for the top element and
   the binary inf operation. -/
-structure Cfilter (α σ : Type _) [PartialOrderₓ α] where
+structure Cfilter (α σ : Type _) [PartialOrder α] where
   f : σ → α
   pt : σ
   inf : σ → σ → σ
@@ -40,7 +40,7 @@ namespace Cfilter
 
 section
 
-variable [PartialOrderₓ α] (F : Cfilter α σ)
+variable [PartialOrder α] (F : Cfilter α σ)
 
 instance : CoeFun (Cfilter α σ) fun _ => σ → α :=
   ⟨Cfilter.f⟩
@@ -120,8 +120,8 @@ theorem of_equiv_F {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) (s : τ) :
 /-- `unit` is a realizer for the principal filter -/
 protected def principal (s : Set α) : (principal s).Realizer :=
   ⟨Unit,
-    { f := fun _ => s, pt := (), inf := fun _ _ => (), inf_le_left := fun _ _ => le_rflₓ,
-      inf_le_right := fun _ _ => le_rflₓ },
+    { f := fun _ => s, pt := (), inf := fun _ _ => (), inf_le_left := fun _ _ => le_rfl,
+      inf_le_right := fun _ _ => le_rfl },
     filter_eq <| Set.ext fun x => ⟨fun ⟨_, s⟩ => s, fun h => ⟨(), h⟩⟩⟩
 
 @[simp]
@@ -230,9 +230,9 @@ protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g
 
 /-- Construct a realizer for the cofinite filter -/
 protected def cofinite [DecidableEq α] : (@cofinite α).Realizer :=
-  ⟨Finsetₓ α,
-    { f := fun s => { a | a ∉ s }, pt := ∅, inf := (· ∪ ·), inf_le_left := fun s t a => mt (Finsetₓ.mem_union_left _),
-      inf_le_right := fun s t a => mt (Finsetₓ.mem_union_right _) },
+  ⟨Finset α,
+    { f := fun s => { a | a ∉ s }, pt := ∅, inf := (· ∪ ·), inf_le_left := fun s t a => mt (Finset.mem_union_left _),
+      inf_le_right := fun s t a => mt (Finset.mem_union_right _) },
     filter_eq <|
       Set.ext fun x => ⟨fun ⟨s, h⟩ => s.finite_to_set.Subset (compl_subset_comm.1 h), fun h => ⟨h.toFinset, by simp⟩⟩⟩
 
@@ -261,15 +261,6 @@ protected def bind {f : Filter α} {m : α → Filter β} (F : f.Realizer) (G : 
                   let ⟨f', h'⟩ := Classical.axiom_of_choice fun i : F s => (G i).mem_sets.1 (f i (h i.2))
                   ⟨s, fun i h => f' ⟨i, h⟩, fun a ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, m⟩ => h' ⟨_, H⟩ m⟩⟩⟩
 
-/-- Construct a realizer for indexed supremum -/
-protected def supₓ {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=
-  let F' : (⨆ i, f i).Realizer :=
-    (Realizer.bind Realizer.top F).of_eq <|
-      filter_eq <| Set.ext <| by simp [Filter.bind, eq_univ_iff_forall, supr_sets_eq]
-  F'.of_equiv <|
-    show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
-      ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by dsimp <;> congr <;> simp, fun f => rfl⟩
-
 /-- Construct a realizer for the product of filters -/
 protected def prod {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f.Prod g).Realizer :=
   (F.comap _).inf (G.comap _)
@@ -283,14 +274,14 @@ theorem le_iff {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : f ≤ g ↔
 
 theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ : l₁.Realizer) (L₂ : l₂.Realizer) :
     Tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x ∈ L₁.f a, f x ∈ L₂.f b :=
-  (le_iff (L₁.map f) L₂).trans <| forall_congrₓ fun b => exists_congr fun a => image_subset_iff
+  (le_iff (L₁.map f) L₂).trans <| forall_congr fun b => exists_congr fun a => image_subset_iff
 
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
   classical
   rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]
   simp only [Set.not_nonempty_iff_eq_empty]
   exact
-    ⟨fun ⟨x, e⟩ _ => ⟨x, le_of_eqₓ e⟩, fun h =>
+    ⟨fun ⟨x, e⟩ _ => ⟨x, le_of_eq e⟩, fun h =>
       let ⟨x, h⟩ := h ()
       ⟨x, le_bot_iff.1 h⟩⟩
 

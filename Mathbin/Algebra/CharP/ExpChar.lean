@@ -31,12 +31,12 @@ universe u
 
 variable (R : Type u)
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 /-- The definition of the exponential characteristic of a semiring. -/
-class inductive ExpChar (R : Type u) [Semiringₓ R] : ℕ → Prop
+class inductive ExpChar (R : Type u) [Semiring R] : ℕ → Prop
   | zero [CharZero R] : ExpChar 1
   | Prime {q : ℕ} (hprime : q.Prime) [hchar : CharP R q] : ExpChar q
 
@@ -45,7 +45,7 @@ theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] 
   cases' hq with q hq_one hq_prime
   · rfl
     
-  · exact False.elim (lt_irreflₓ _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).Pos)
+  · exact False.elim (lt_irrefl _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).Pos)
     
 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
@@ -126,5 +126,5 @@ end NoZeroDivisors
 
 end Nontrivial
 
-end Semiringₓ
+end Semiring
 

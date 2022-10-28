@@ -89,8 +89,8 @@ theorem to_lower_set_injective : Injective (toLowerSet : Ideal P → LowerSet P)
   congr
 
 instance : SetLike (Ideal P) P where
-  coe := fun s => s.Carrier
-  coe_injective' := fun s t h => to_lower_set_injective <| SetLike.coe_injective h
+  coe s := s.Carrier
+  coe_injective' s t h := to_lower_set_injective <| SetLike.coe_injective h
 
 @[ext]
 theorem ext {s t : Ideal P} : (s : Set P) = t → s = t :=
@@ -119,8 +119,8 @@ protected theorem is_ideal (s : Ideal P) : IsIdeal (s : Set P) :=
 theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (I : Set P)ᶜ := fun h => mt <| I.lower h
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
-instance : PartialOrderₓ (Ideal P) :=
-  PartialOrderₓ.lift coe SetLike.coe_injective
+instance : PartialOrder (Ideal P) :=
+  PartialOrder.lift coe SetLike.coe_injective
 
 @[simp]
 theorem coe_subset_coe : (s : Set P) ⊆ t ↔ s ≤ t :=
@@ -169,7 +169,7 @@ variable [IsDirected P (· ≤ ·)] [Nonempty P] {I : Ideal P}
 /-- In a directed and nonempty order, the top ideal of a is `univ`. -/
 instance : OrderTop (Ideal P) where
   top := ⟨⊤, univ_nonempty, directed_on_univ⟩
-  le_top := fun I => le_top
+  le_top I := le_top
 
 @[simp]
 theorem top_to_lower_set : (⊤ : Ideal P).toLowerSet = ⊤ :=
@@ -220,7 +220,7 @@ variable [OrderTop P] {I : Ideal P}
 
 theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by
   ext
-  exact iff_of_true (I.lower le_top h) trivialₓ
+  exact iff_of_true (I.lower le_top h) trivial
 
 theorem IsProper.top_not_mem (hI : IsProper I) : ⊤ ∉ I := fun h => hI.ne_top <| top_of_top_mem h
 
@@ -228,9 +228,9 @@ end OrderTop
 
 end LE
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ P]
+variable [Preorder P]
 
 section
 
@@ -241,14 +241,14 @@ variable {I J : Ideal P} {x y : P}
 def principal (p : P) : Ideal P where
   toLowerSet := LowerSet.iic p
   nonempty' := nonempty_Iic
-  directed' := fun x hx y hy => ⟨p, le_rflₓ, hx, hy⟩
+  directed' x hx y hy := ⟨p, le_rfl, hx, hy⟩
 
 instance [Inhabited P] : Inhabited (Ideal P) :=
   ⟨Ideal.principal default⟩
 
 @[simp]
 theorem principal_le_iff : principal x ≤ I ↔ x ∈ I :=
-  ⟨fun h => h le_rflₓ, fun hx y hy => I.lower hy hx⟩
+  ⟨fun h => h le_rfl, fun hx y hy => I.lower hy hx⟩
 
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ x ≤ y :=
@@ -281,7 +281,7 @@ theorem principal_top : principal (⊤ : P) = ⊤ :=
 
 end OrderTop
 
-end Preorderₓ
+end Preorder
 
 section SemilatticeSup
 
@@ -331,8 +331,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∈ » I)
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ∈ » J)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∈ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (· ⊔ ·),
     le_sup_left := fun I J i (_ : i ∈ I) => by
@@ -371,7 +371,7 @@ section SemilatticeSupOrderBot
 
 variable [SemilatticeSup P] [OrderBot P] {x : P} {I J K : Ideal P}
 
-instance : HasInfₓ (Ideal P) :=
+instance : HasInf (Ideal P) :=
   ⟨fun S =>
     { toLowerSet := ⨅ s ∈ S, toLowerSet s,
       nonempty' :=
@@ -417,7 +417,7 @@ theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i
 
 theorem coe_sup_eq : ↑(I ⊔ J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j } :=
   Set.ext fun _ =>
-    ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ => ⟨i, ‹_›, j, ‹_›, le_of_eqₓ ‹_›⟩⟩
+    ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ => ⟨i, ‹_›, j, ‹_›, le_of_eq ‹_›⟩⟩
 
 end DistribLattice
 
@@ -442,16 +442,16 @@ end Ideal
 /-- For a preorder `P`, `cofinal P` is the type of subsets of `P`
   containing arbitrarily large elements. They are the dense sets in
   the topology whose open sets are terminal segments. -/
-structure Cofinal (P) [Preorderₓ P] where
+structure Cofinal (P) [Preorder P] where
   Carrier : Set P
   mem_gt : ∀ x : P, ∃ y ∈ carrier, x ≤ y
 
 namespace Cofinal
 
-variable [Preorderₓ P]
+variable [Preorder P]
 
 instance : Inhabited (Cofinal P) :=
-  ⟨{ Carrier := Univ, mem_gt := fun x => ⟨x, trivialₓ, le_rflₓ⟩ }⟩
+  ⟨{ Carrier := Univ, mem_gt := fun x => ⟨x, trivial, le_rfl⟩ }⟩
 
 instance : Membership P (Cofinal P) :=
   ⟨fun x D => x ∈ D.Carrier⟩
@@ -472,7 +472,7 @@ end Cofinal
 
 section IdealOfCofinals
 
-variable [Preorderₓ P] (p : P) {ι : Type _} [Encodable ι] (𝒟 : ι → Cofinal P)
+variable [Preorder P] (p : P) {ι : Type _} [Encodable ι] (𝒟 : ι → Cofinal P)
 
 /-- Given a starting point, and a countable family of cofinal sets,
   this is an increasing sequence that intersects each cofinal set. -/
@@ -483,7 +483,7 @@ noncomputable def sequenceOfCofinals : ℕ → P
     | none => sequence_of_cofinals n
     | some i => (𝒟 i).above (sequence_of_cofinals n)
 
-theorem sequenceOfCofinals.monotone : Monotoneₓ (sequenceOfCofinals p 𝒟) := by
+theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
   apply monotone_nat_of_le_succ
   intro n
   dsimp only [sequence_of_cofinals]
@@ -506,18 +506,18 @@ theorem sequenceOfCofinals.encode_mem (i : ι) : sequenceOfCofinals p 𝒟 (Enco
   This proves the Rasiowa–Sikorski lemma. -/
 def idealOfCofinals : Ideal P where
   Carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
-  lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_transₓ hxy hn⟩
-  nonempty' := ⟨p, 0, le_rflₓ⟩
+  lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_trans hxy hn⟩
+  nonempty' := ⟨p, 0, le_rfl⟩
   directed' := fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>
-    ⟨_, ⟨max n m, le_rflₓ⟩, le_transₓ hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_leftₓ _ _),
-      le_transₓ hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_rightₓ _ _)⟩
+    ⟨_, ⟨max n m, le_rfl⟩, le_trans hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_left _ _),
+      le_trans hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_right _ _)⟩
 
 theorem mem_ideal_of_cofinals : p ∈ idealOfCofinals p 𝒟 :=
-  ⟨0, le_rflₓ⟩
+  ⟨0, le_rfl⟩
 
 /-- `ideal_of_cofinals p 𝒟` is `𝒟`-generic. -/
 theorem cofinal_meets_ideal_of_cofinals (i : ι) : ∃ x : P, x ∈ 𝒟 i ∧ x ∈ idealOfCofinals p 𝒟 :=
-  ⟨_, sequenceOfCofinals.encode_mem p 𝒟 i, _, le_rflₓ⟩
+  ⟨_, sequenceOfCofinals.encode_mem p 𝒟 i, _, le_rfl⟩
 
 end IdealOfCofinals
 

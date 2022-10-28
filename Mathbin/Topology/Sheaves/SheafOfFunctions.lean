@@ -39,11 +39,11 @@ universe u
 
 noncomputable section
 
-variable (X : Top.{u})
+variable (X : TopCat.{u})
 
-open Top
+open TopCat
 
-namespace Top.Presheaf
+namespace TopCat.Presheaf
 
 /-- We show that the presheaf of functions to a type `T`
 (no continuity assumptions, just plain functions)
@@ -93,9 +93,9 @@ a target type `T` satsifies the sheaf condition.
 theorem to_Type_is_sheaf (T : Type u) : (presheafToType X T).IsSheaf :=
   to_Types_is_sheaf X fun _ => T
 
-end Top.Presheaf
+end TopCat.Presheaf
 
-namespace Top
+namespace TopCat
 
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in type family
 `T : X → Type u`.
@@ -108,5 +108,5 @@ def sheafToTypes (T : X → Type u) : Sheaf (Type u) X :=
 def sheafToType (T : Type u) : Sheaf (Type u) X :=
   ⟨presheafToType X T, Presheaf.to_Type_is_sheaf _ _⟩
 
-end Top
+end TopCat
 

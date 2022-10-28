@@ -74,11 +74,11 @@ namespace ProdPreservesConnectedLimits
 
 /-- (Impl). The obvious natural transformation from (X × K -) to K. -/
 @[simps]
-def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app := fun Y => Limits.prod.snd
+def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app Y := Limits.prod.snd
 
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
-def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app := fun Y => Limits.prod.fst
+def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app Y := Limits.prod.fst
 
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
@@ -99,7 +99,7 @@ Note that this functor does not preserve the two most obvious disconnected limit
 noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
     PreservesLimitsOfShape J
       (prod.functor.obj
-        X) where PreservesLimit := fun K =>
+        X) where PreservesLimit K :=
     { preserves := fun c l =>
         { lift := fun s => prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
           fac' := fun s j => by

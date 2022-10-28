@@ -47,7 +47,7 @@ theorem mersenne_pos {p : ℕ} (h : 0 < p) : 0 < mersenne p := by
   dsimp [mersenne]
   calc
     0 < 2 ^ 1 - 1 := by norm_num
-    _ ≤ 2 ^ p - 1 := Nat.pred_le_predₓ (Nat.pow_le_pow_of_le_rightₓ (Nat.succ_posₓ 1) h)
+    _ ≤ 2 ^ p - 1 := Nat.pred_le_pred (Nat.pow_le_pow_of_le_right (Nat.succ_pos 1) h)
     
 
 @[simp]
@@ -87,15 +87,15 @@ def sMod (p : ℕ) : ℕ → ℤ
   | i + 1 => (s_mod i ^ 2 - 2) % (2 ^ p - 1)
 
 theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := by
-  apply ne_of_gtₓ
-  simp only [gt_iff_ltₓ, sub_pos]
+  apply ne_of_gt
+  simp only [gt_iff_lt, sub_pos]
   exact_mod_cast Nat.one_lt_two_pow p w
 
 theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
   cases i <;> dsimp [s_mod]
   · exact sup_eq_left.mp rfl
     
-  · apply Int.mod_nonnegₓ
+  · apply Int.mod_nonneg
     exact mersenne_int_ne_zero p w
     
 
@@ -105,7 +105,7 @@ theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
   rw [← s_mod_mod]
   convert Int.mod_lt _ _
   · refine' (abs_of_nonneg _).symm
-    simp only [sub_nonneg, ge_iff_leₓ]
+    simp only [sub_nonneg, ge_iff_le]
     exact_mod_cast Nat.one_le_two_pow p
     
   · exact mersenne_int_ne_zero p w
@@ -143,8 +143,8 @@ theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucasLehmerRes
     intro h
     simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
-    apply s_mod_nonneg _ (Nat.lt_of_succ_ltₓ w)
-    exact s_mod_lt _ (Nat.lt_of_succ_ltₓ w) (p - 2)
+    apply s_mod_nonneg _ (Nat.lt_of_succ_lt w)
+    exact s_mod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
     
   · intro h
     rw [h]
@@ -168,7 +168,7 @@ def q (p : ℕ) : ℕ+ :=
 -- cardinality calculations would be somewhat more involved, too.
 /-- We construct the ring `X q` as ℤ/qℤ + √3 ℤ/qℤ. -/
 def X (q : ℕ+) : Type :=
-  Zmod q × Zmod q deriving AddCommGroupₓ, DecidableEq, Fintypeₓ, Inhabited
+  Zmod q × Zmod q deriving AddCommGroup, DecidableEq, Fintype, Inhabited
 
 namespace X
 
@@ -196,7 +196,7 @@ theorem neg_fst (x : X q) : (-x).1 = -x.1 :=
 theorem neg_snd (x : X q) : (-x).2 = -x.2 :=
   rfl
 
-instance : Mul (X q) where mul := fun x y => (x.1 * y.1 + 3 * x.2 * y.2, x.1 * y.2 + x.2 * y.1)
+instance : Mul (X q) where mul x y := (x.1 * y.1 + 3 * x.2 * y.2, x.1 * y.2 + x.2 * y.1)
 
 @[simp]
 theorem mul_fst (x y : X q) : (x * y).1 = x.1 * y.1 + 3 * x.2 * y.2 :=
@@ -233,7 +233,7 @@ theorem bit1_snd (x : X q) : (bit1 x).2 = bit0 x.2 := by
   dsimp [bit1]
   simp
 
-instance : Monoidₓ (X q) :=
+instance : Monoid (X q) :=
   { (inferInstance : Mul (X q)) with
     mul_assoc := fun x y z => by
       ext <;>
@@ -242,9 +242,9 @@ instance : Monoidₓ (X q) :=
           ,
     one := ⟨1, 0⟩, one_mul := fun x => by ext <;> simp, mul_one := fun x => by ext <;> simp }
 
-instance : AddGroupWithOneₓ (X q) :=
+instance : AddGroupWithOne (X q) :=
   { X.monoid, X.addCommGroup _ with natCast := fun n => ⟨n, 0⟩, nat_cast_zero := by simp,
-    nat_cast_succ := by simp [Nat.castₓ, Monoidₓ.one], intCast := fun n => ⟨n, 0⟩,
+    nat_cast_succ := by simp [Nat.cast, Monoid.one], intCast := fun n => ⟨n, 0⟩,
     int_cast_of_nat := fun n => by simp <;> rfl, int_cast_neg_succ_of_nat := fun n => by ext <;> simp <;> rfl }
 
 theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
@@ -259,12 +259,12 @@ theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by
       ring
       
 
-instance : Ringₓ (X q) :=
-  { X.addGroupWithOne, (inferInstance : AddCommGroupₓ (X q)), (inferInstance : Monoidₓ (X q)) with
+instance : Ring (X q) :=
+  { X.addGroupWithOne, (inferInstance : AddCommGroup (X q)), (inferInstance : Monoid (X q)) with
     left_distrib := left_distrib, right_distrib := right_distrib }
 
-instance : CommRingₓ (X q) :=
-  { (inferInstance : Ringₓ (X q)) with
+instance : CommRing (X q) :=
+  { (inferInstance : Ring (X q)) with
     mul_comm := fun x y => by
       ext <;>
         · dsimp
@@ -272,6 +272,52 @@ instance : CommRingₓ (X q) :=
            }
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      []
+      (Command.declSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app `Fact [(«term_<_» (num "1") "<" (Term.paren "(" [`q [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))])
+         "]")]
+       (Term.typeSpec ":" (Term.app `Nontrivial [(Term.app `X [`q])])))
+      (Command.declValSimple
+       ":="
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.anonymousCtor
+          "⟨"
+          [(num "0")
+           ","
+           (num "1")
+           ","
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`h]
+             []
+             "=>"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.injection "injection" `h ["with" [`h1 "_"]])
+                 []
+                 (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))])))))]
+          "⟩")]
+        "⟩")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
        "⟨"
@@ -339,10 +385,13 @@ instance : CommRingₓ (X q) :=
          [(Tactic.injection "injection" `h ["with" [`h1 "_"]])
           []
           (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `zero_ne_one [`h1])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h1
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -352,7 +401,17 @@ instance : CommRingₓ (X q) :=
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.injection "injection" `h ["with" [`h1 "_"]])-/-- failed to format: format: uncaught backtrack exception
+      (Tactic.injection "injection" `h ["with" [`h1 "_"]])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 instance
   [ Fact 1 < ( q : ℕ ) ] : Nontrivial X q
   := ⟨ ⟨ 0 , 1 , fun h => by injection h with h1 _ exact zero_ne_one h1 ⟩ ⟩
@@ -380,13 +439,13 @@ theorem coe_mul (n m : ℤ) : ((n * m : ℤ) : X q) = (n : X q) * (m : X q) := b
 theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by ext <;> simp
 
 /-- The cardinality of `X` is `q^2`. -/
-theorem X_card : Fintypeₓ.card (X q) = q ^ 2 := by
+theorem X_card : Fintype.card (X q) = q ^ 2 := by
   dsimp [X]
-  rw [Fintypeₓ.card_prod, Zmod.card q]
+  rw [Fintype.card_prod, Zmod.card q]
   ring
 
 /-- There are strictly fewer than `q^2` units, since `0` is not a unit. -/
-theorem units_card (w : 1 < q) : Fintypeₓ.card (X q)ˣ < q ^ 2 := by
+theorem units_card (w : 1 < q) : Fintype.card (X q)ˣ < q ^ 2 := by
   haveI : Fact (1 < (q : ℕ)) := ⟨w⟩
   convert card_units_lt (X q)
   rw [X_card]
@@ -420,8 +479,8 @@ theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^
       _ = (s i : X q) ^ 2 - 2 := by push_cast
       _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by rw [ih]
       _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by ring
-      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by rw [← mul_powₓ ωb ω, ωb_mul_ω, one_pow, mul_oneₓ, add_sub_cancel]
-      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mulₓ, ← pow_mulₓ, pow_succ'ₓ]
+      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel]
+      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, pow_succ']
       
     
 
@@ -445,18 +504,18 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
     clear h
     simp [mersenne] at h'
     exact
-      lt_irreflₓ 2
+      lt_irrefl 2
         (calc
-          2 ≤ p' + 2 := Nat.le_add_leftₓ _ _
+          2 ≤ p' + 2 := Nat.le_add_left _ _
           _ < 2 ^ (p' + 2) := Nat.lt_two_pow _
-          _ = 2 := Nat.pred_injₓ (Nat.one_le_two_pow _) (by decide) h'
+          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
           )
     
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
     dsimp [q] at h
     injection h with h'
     clear h
-    rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succₓ] at h'
+    rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succ] at h'
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
     
 
@@ -474,7 +533,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   replace h := congr_arg (fun x => ω ^ 2 ^ p' * x) h
   dsimp at h
   have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by ring_exp
-  rw [mul_addₓ, ← pow_addₓ ω, t, ← mul_powₓ ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h
+  rw [mul_add, ← pow_add ω, t, ← mul_pow ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h
   rw [mul_comm, coe_mul] at h
   rw [mul_comm _ (k : X (q (p' + 2)))] at h
   replace h := eq_sub_of_add_eq h
@@ -493,7 +552,7 @@ theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω
 
 theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = 1 :=
   calc
-    (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by rw [← pow_mulₓ, ← pow_succ'ₓ]
+    (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by rw [← pow_mul, ← pow_succ']
     _ = -1 ^ 2 := by rw [ω_pow_eq_neg_one p' h]
     _ = 1 := by simp
     
@@ -532,8 +591,8 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : orderOf (ωU
 theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : 2 ^ (p' + 2) < (q (p' + 2) : ℕ) ^ 2 :=
   calc
     2 ^ (p' + 2) = orderOf (ωUnit (p' + 2)) := (order_ω p' h).symm
-    _ ≤ Fintypeₓ.card (X _)ˣ := order_of_le_card_univ
-    _ < (q (p' + 2) : ℕ) ^ 2 := units_card (Nat.lt_of_succ_ltₓ (two_lt_q _))
+    _ ≤ Fintype.card (X _)ˣ := order_of_le_card_univ
+    _ < (q (p' + 2) : ℕ) ^ 2 := units_card (Nat.lt_of_succ_lt (two_lt_q _))
     
 
 end LucasLehmer
@@ -545,15 +604,15 @@ open LucasLehmer
 theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (mersenne p).Prime := by
   let p' := p - 2
   have z : p = p' + 2 := (tsub_eq_iff_eq_add_of_le w.nat_succ_le).mp rfl
-  have w : 1 < p' + 2 := Nat.lt_of_sub_eq_succₓ rfl
+  have w : 1 < p' + 2 := Nat.lt_of_sub_eq_succ rfl
   contrapose
   intro a t
   rw [z] at a
   rw [z] at t
   have h₁ := order_ineq p' t
-  have h₂ := Nat.min_fac_sq_le_self (mersenne_pos (Nat.lt_of_succ_ltₓ w)) a
-  have h := lt_of_lt_of_leₓ h₁ h₂
-  exact not_lt_of_geₓ (Nat.sub_leₓ _ _) h
+  have h₂ := Nat.min_fac_sq_le_self (mersenne_pos (Nat.lt_of_succ_lt w)) a
+  have h := lt_of_lt_of_le h₁ h₂
+  exact not_lt_of_ge (Nat.sub_le _ _) h
 
 -- Here we calculate the residue, very inefficiently, using `dec_trivial`. We can do much better.
 example : (mersenne 5).Prime :=
@@ -569,9 +628,9 @@ theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) 
   dsimp [s_mod, mersenne]
   rw [h1, h2, sq, h3]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/
@@ -602,6 +661,7 @@ unsafe def run_test : tactic Unit := do
 
 end LucasLehmer
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 /-- We verify that the tactic works to prove `127.prime`. -/
 example : (mersenne 7).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)
@@ -630,14 +690,14 @@ Someone should do this, too!
 
 theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] := by
   -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
-  conv in k => rw [← Nat.div_add_modₓ k (2 ^ n)]
+  conv in k => rw [← Nat.div_add_mod k (2 ^ n)]
   refine' Nat.Modeq.add_right _ _
   conv =>
   congr
   skip
   skip
-  rw [← one_mulₓ (k / 2 ^ n)]
-  exact (Nat.modeq_sub <| Nat.succ_le_of_ltₓ <| pow_pos zero_lt_two _).mul_right _
+  rw [← one_mul (k / 2 ^ n)]
+  exact (Nat.modeq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
 
 -- It's hard to know what the limiting factor for large Mersenne primes would be.
 -- In the purely computational world, I think it's the squaring operation in `s`.

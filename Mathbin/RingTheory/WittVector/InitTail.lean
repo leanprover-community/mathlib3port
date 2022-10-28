@@ -34,7 +34,7 @@ and shows how that polynomial interacts with `mv_polynomial.bind₁`.
 -/
 
 
-variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) {R : Type _} [CommRingₓ R]
+variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) {R : Type _} [CommRing R]
 
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
@@ -46,9 +46,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
 -/
 unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Unit := do
@@ -98,7 +98,7 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
     
 
 @[is_poly]
-theorem select_is_poly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x := by
+theorem selectIsPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x := by
   use select_poly P
   rintro R _Rcr x
   funext i
@@ -117,15 +117,15 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
   simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow, AlgHom.map_mul,
-    bind₁_X_right, bind₁_C_right, ← Finsetₓ.sum_add_distrib, ← mul_addₓ]
-  apply Finsetₓ.sum_congr rfl
+    bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_add]
+  apply Finset.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
   rw [ite_pow, ite_pow, zero_pow (pow_pos hp.out.pos _)]
   by_cases Pm:P m
-  · rw [if_pos Pm, if_neg _, add_zeroₓ]
+  · rw [if_pos Pm, if_neg _, add_zero]
     exact not_not.mpr Pm
     
-  · rwa [if_neg Pm, if_pos, zero_addₓ]
+  · rwa [if_neg Pm, if_pos, zero_add]
     
 
 theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
@@ -156,9 +156,9 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
   dsimp [z]
   split_ifs with hn
   · dsimp [P] at hn
-    rw [hn, add_zeroₓ]
+    rw [hn, add_zero]
     
-  · rw [(h n).resolve_right hn, zero_addₓ]
+  · rw [(h n).resolve_right hn, zero_add]
     
 
 end Select
@@ -180,7 +180,7 @@ include hp
 
 @[simp]
 theorem init_add_tail (x : 𝕎 R) (n : ℕ) : init n x + tail n x = x := by
-  simp only [init, tail, ← not_ltₓ, select_add_select_not]
+  simp only [init, tail, ← not_lt, select_add_select_not]
 
 end
 
@@ -213,8 +213,8 @@ variable (p)
 omit hp
 
 /-- `witt_vector.init n x` is polynomial in the coefficients of `x`. -/
-theorem init_is_poly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
-  select_is_poly fun i => i < n
+theorem initIsPoly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
+  selectIsPoly fun i => i < n
 
 end
 

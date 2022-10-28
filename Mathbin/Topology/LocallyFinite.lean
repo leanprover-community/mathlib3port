@@ -51,7 +51,7 @@ theorem comp_injective {g : ι' → ι} (hf : LocallyFinite f) (hg : Injective g
 
 theorem _root_.locally_finite_iff_small_sets :
     LocallyFinite f ↔ ∀ x, ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
-  forall_congrₓ fun x =>
+  forall_congr fun x =>
     Iff.symm <| eventually_small_sets' fun s t hst ht => ht.Subset fun i hi => hi.mono <| inter_subset_inter_right _ hst
 
 protected theorem eventually_small_sets (hf : LocallyFinite f) (x : X) :
@@ -67,9 +67,9 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => Closur
   intro x
   rcases hf x with ⟨s, hsx, hsf⟩
   refine' ⟨Interior s, interior_mem_nhds.2 hsx, hsf.subset fun i hi => _⟩
-  exact (hi.mono is_open_interior.closure_inter').of_closure.mono (inter_subset_inter_right _ interior_subset)
+  exact (hi.mono is_open_interior.closure_inter).of_closure.mono (inter_subset_inter_right _ interior_subset)
 
-theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) := by
+theorem isClosedUnion (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) := by
   simp only [← is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]
   intro a ha
   replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).is_open_compl.mem_nhds (ha i)
@@ -82,7 +82,7 @@ theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : Is
 
 theorem closure_Union (h : LocallyFinite f) : Closure (⋃ i, f i) = ⋃ i, Closure (f i) :=
   Subset.antisymm
-    (closure_minimal (Union_mono fun _ => subset_closure) <| h.closure.is_closed_Union fun _ => is_closed_closure)
+    (closure_minimal (Union_mono fun _ => subset_closure) <| h.closure.isClosedUnion fun _ => isClosedClosure)
     (Union_subset fun i => closure_mono <| subset_Union _ _)
 
 /-- If `f : β → set α` is a locally finite family of closed sets, then for any `x : α`, the
@@ -91,7 +91,7 @@ theorem Inter_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i))
     (⋂ (i) (hi : x ∉ f i), f iᶜ) ∈ 𝓝 x := by
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
   suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by rwa [← is_open_compl_iff, compl_Union, Inter_subtype] at this
-  exact (hf.comp_injective Subtype.coe_injective).is_closed_Union fun i => hc _
+  exact (hf.comp_injective Subtype.coe_injective).isClosedUnion fun i => hc _
 
 /-- Let `f : ℕ → Π a, β a` be a sequence of (dependent) functions on a topological space. Suppose
 that the family of sets `s n = {x | f (n + 1) x ≠ f n x}` is locally finite. Then there exists a
@@ -113,8 +113,8 @@ theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x 
   rintro ⟨n, y⟩ ⟨hn : N x < n, hy : y ∈ U x⟩
   calc
     f n y = f (N x + 1) y := hN _ _ hn _ hy
-    _ = f (max (N x + 1) (N y + 1)) y := (hN _ _ (le_max_leftₓ _ _) _ hy).symm
-    _ = f (N y + 1) y := hN _ _ (le_max_rightₓ _ _) _ (mem_of_mem_nhds <| hUx y)
+    _ = f (max (N x + 1) (N y + 1)) y := (hN _ _ (le_max_left _ _) _ hy).symm
+    _ = f (N y + 1) y := hN _ _ (le_max_right _ _) _ (mem_of_mem_nhds <| hUx y)
     
 
 /-- Let `f : ℕ → Π a, β a` be a sequence of (dependent) functions on a topological space. Suppose
@@ -142,7 +142,7 @@ theorem preimage_continuous {g : Y → X} (hf : LocallyFinite f) (hg : Continuou
 end LocallyFinite
 
 @[simp]
-theorem Equivₓ.locally_finite_comp_iff (e : ι' ≃ ι) : LocallyFinite (f ∘ e) ↔ LocallyFinite f :=
+theorem Equiv.locally_finite_comp_iff (e : ι' ≃ ι) : LocallyFinite (f ∘ e) ↔ LocallyFinite f :=
   ⟨fun h => by simpa only [(· ∘ ·), e.apply_symm_apply] using h.comp_injective e.symm.injective, fun h =>
     h.comp_injective e.Injective⟩
 
@@ -156,10 +156,10 @@ theorem LocallyFinite.sum_elim {g : ι' → Set X} (hf : LocallyFinite f) (hg : 
   locally_finite_sum.mpr ⟨hf, hg⟩
 
 theorem locally_finite_option {f : Option ι → Set X} : LocallyFinite f ↔ LocallyFinite (f ∘ some) := by
-  simp only [← (Equivₓ.optionEquivSumPunit.{u} ι).symm.locally_finite_comp_iff, locally_finite_sum,
-    locally_finite_of_finite, and_trueₓ]
+  simp only [← (Equiv.optionEquivSumPunit.{u} ι).symm.locally_finite_comp_iff, locally_finite_sum,
+    locally_finite_of_finite, and_true_iff]
   rfl
 
-theorem LocallyFinite.option_elim (hf : LocallyFinite f) (s : Set X) : LocallyFinite (Option.elimₓ s f) :=
+theorem LocallyFinite.option_elim (hf : LocallyFinite f) (s : Set X) : LocallyFinite (Option.elim s f) :=
   locally_finite_option.2 hf
 

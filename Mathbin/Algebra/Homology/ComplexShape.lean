@@ -72,17 +72,17 @@ This is mostly only useful so we can describe the relation of "related in `k` st
 -/
 @[simps]
 def refl (ι : Type _) : ComplexShape ι where
-  Rel := fun i j => i = j
-  next_eq := fun i j j' w w' => w.symm.trans w'
-  prev_eq := fun i i' j w w' => w.trans w'.symm
+  Rel i j := i = j
+  next_eq i j j' w w' := w.symm.trans w'
+  prev_eq i i' j w w' := w.trans w'.symm
 
 /-- The reverse of a `complex_shape`.
 -/
 @[simps]
 def symm (c : ComplexShape ι) : ComplexShape ι where
-  Rel := fun i j => c.Rel j i
-  next_eq := fun i j j' w w' => c.prev_eq w w'
-  prev_eq := fun i i' j w w' => c.next_eq w w'
+  Rel i j := c.Rel j i
+  next_eq i j j' w w' := c.prev_eq w w'
+  prev_eq i i' j w w' := c.next_eq w w'
 
 @[simp]
 theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c := by
@@ -96,12 +96,12 @@ We need this to define "related in k steps" later.
 @[simp]
 def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι where
   Rel := Relation.Comp c₁.Rel c₂.Rel
-  next_eq := fun i j j' w w' => by
+  next_eq i j j' w w' := by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
     rw [c₁.next_eq w₁ w₁'] at w₂
     exact c₂.next_eq w₂ w₂'
-  prev_eq := fun i i' j w w' => by
+  prev_eq i i' j w w' := by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
     rw [c₂.prev_eq w₂ w₂'] at w₁
@@ -135,31 +135,31 @@ theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j
   apply c.next_eq _ h
   dsimp only [next]
   rw [dif_pos]
-  exact Exists.some_spec ⟨j, h⟩
+  exact Exists.choose_spec ⟨j, h⟩
 
 theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i := by
   apply c.prev_eq _ h
   dsimp only [prev]
   rw [dif_pos]
-  exact Exists.some_spec ⟨i, h⟩
+  exact Exists.choose_spec ⟨i, h⟩
 
 /-- The `complex_shape` allowing differentials from `X i` to `X (i+a)`.
 (For example when `a = 1`, a cohomology theory indexed by `ℕ` or `ℤ`)
 -/
 @[simps]
 def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α where
-  Rel := fun i j => i + a = j
-  next_eq := fun i j k hi hj => hi.symm.trans hj
-  prev_eq := fun i j k hi hj => add_right_cancelₓ (hi.trans hj.symm)
+  Rel i j := i + a = j
+  next_eq i j k hi hj := hi.symm.trans hj
+  prev_eq i j k hi hj := add_right_cancel (hi.trans hj.symm)
 
 /-- The `complex_shape` allowing differentials from `X (j+a)` to `X j`.
 (For example when `a = 1`, a homology theory indexed by `ℕ` or `ℤ`)
 -/
 @[simps]
 def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α where
-  Rel := fun i j => j + a = i
-  next_eq := fun i j k hi hj => add_right_cancelₓ (hi.trans hj.symm)
-  prev_eq := fun i j k hi hj => hi.symm.trans hj
+  Rel i j := j + a = i
+  next_eq i j k hi hj := add_right_cancel (hi.trans hj.symm)
+  prev_eq i j k hi hj := hi.symm.trans hj
 
 theorem down'_mk {α : Type _} [AddRightCancelSemigroup α] (a : α) (i j : α) (h : j + a = i) : (down' a).Rel i j :=
   h

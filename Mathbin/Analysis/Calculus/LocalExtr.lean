@@ -81,7 +81,7 @@ def PosTangentConeAt (s : Set E) (x : E) : Set E :=
     ∃ (c : ℕ → ℝ)(d : ℕ → E),
       (∀ᶠ n in at_top, x + d n ∈ s) ∧ Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 
-theorem pos_tangent_cone_at_mono : Monotoneₓ fun s => PosTangentConeAt s a := by
+theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a := by
   rintro s t hst y ⟨c, d, hd, hc, hcd⟩
   exact ⟨c, d, (mem_of_superset hd) fun h hn => hst hn, hc, hcd⟩
 
@@ -118,7 +118,7 @@ theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f
   refine' le_of_tendsto (hf.lim at_top hd hc' hcd) _
   replace hd : tendsto (fun n => a + d n) at_top (𝓝[s] (a + 0))
   exact tendsto_inf.2 ⟨tendsto_const_nhds.add (TangentConeAt.lim_zero _ hc' hcd), by rwa [tendsto_principal]⟩
-  rw [add_zeroₓ] at hd
+  rw [add_zero] at hd
   replace h : ∀ᶠ n in at_top, f (a + d n) ≤ f a
   exact mem_map.1 (hd h)
   replace hc : ∀ᶠ n in at_top, 0 ≤ c n
@@ -141,7 +141,7 @@ theorem IsLocalMaxOn.fderiv_within_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {
 both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.has_fderiv_within_at_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
     {y} (hy : y ∈ PosTangentConeAt s a) (hy' : -y ∈ PosTangentConeAt s a) : f' y = 0 :=
-  le_antisymmₓ (h.has_fderiv_within_at_nonpos hf hy) <| by simpa using h.has_fderiv_within_at_nonpos hf hy'
+  le_antisymm (h.has_fderiv_within_at_nonpos hf hy) <| by simpa using h.has_fderiv_within_at_nonpos hf hy'
 
 /-- If `f` has a local max on `s` at `a` and both `y` and `-y` belong to the positive tangent cone
 of `s` at `a`, then `f' y = 0`. -/
@@ -241,15 +241,15 @@ theorem IsLocalExtr.deriv_eq_zero (h : IsLocalExtr f a) : deriv f a = 0 :=
 
 end Real
 
-section Rolle
+section RolleCat
 
 variable (f f' : ℝ → ℝ) {a b : ℝ}
 
 /-- A continuous function on a closed interval with `f a = f b` takes either its maximum
 or its minimum value at a point in the interior of the interval. -/
-theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
-    ∃ c ∈ Ioo a b, IsExtrOn f (Icc a b) c := by
-  have ne : (Icc a b).Nonempty := nonempty_Icc.2 (le_of_ltₓ hab)
+theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (IccCat a b)) (hfI : f a = f b) :
+    ∃ c ∈ IooCat a b, IsExtrOn f (IccCat a b) c := by
+  have ne : (Icc a b).Nonempty := nonempty_Icc.2 (le_of_lt hab)
   -- Consider absolute min and max points
   obtain ⟨c, cmem, cle⟩ : ∃ c ∈ Icc a b, ∀ x ∈ Icc a b, f c ≤ f x
   exact is_compact_Icc.exists_forall_le Ne hfc
@@ -257,38 +257,38 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
   exact is_compact_Icc.exists_forall_ge Ne hfc
   by_cases hc:f c = f a
   · by_cases hC:f C = f a
-    · have : ∀ x ∈ Icc a b, f x = f a := fun x hx => le_antisymmₓ (hC ▸ Cge x hx) (hc ▸ cle x hx)
+    · have : ∀ x ∈ Icc a b, f x = f a := fun x hx => le_antisymm (hC ▸ Cge x hx) (hc ▸ cle x hx)
       -- `f` is a constant, so we can take any point in `Ioo a b`
       rcases exists_between hab with ⟨c', hc'⟩
       refine' ⟨c', hc', Or.inl _⟩
       intro x hx
       rw [mem_set_of_eq, this x hx, ← hC]
-      exact Cge c' ⟨le_of_ltₓ hc'.1, le_of_ltₓ hc'.2⟩
+      exact Cge c' ⟨le_of_lt hc'.1, le_of_lt hc'.2⟩
       
-    · refine' ⟨C, ⟨lt_of_le_of_neₓ Cmem.1 <| mt _ hC, lt_of_le_of_neₓ Cmem.2 <| mt _ hC⟩, Or.inr Cge⟩
+    · refine' ⟨C, ⟨lt_of_le_of_ne Cmem.1 <| mt _ hC, lt_of_le_of_ne Cmem.2 <| mt _ hC⟩, Or.inr Cge⟩
       exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
       
     
-  · refine' ⟨c, ⟨lt_of_le_of_neₓ cmem.1 <| mt _ hc, lt_of_le_of_neₓ cmem.2 <| mt _ hc⟩, Or.inl cle⟩
+  · refine' ⟨c, ⟨lt_of_le_of_ne cmem.1 <| mt _ hc, lt_of_le_of_ne cmem.2 <| mt _ hc⟩, Or.inl cle⟩
     exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
     
 
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
 point of the corresponding open interval. -/
-theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
-    ∃ c ∈ Ioo a b, IsLocalExtr f c :=
+theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (IccCat a b)) (hfI : f a = f b) :
+    ∃ c ∈ IooCat a b, IsLocalExtr f c :=
   let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
   ⟨c, cmem, hc.IsLocalExtr <| Icc_mem_nhds cmem.1 cmem.2⟩
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
-theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
-    (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
+theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (IccCat a b)) (hfI : f a = f b)
+    (hff' : ∀ x ∈ IooCat a b, HasDerivAt f (f' x) x) : ∃ c ∈ IooCat a b, f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
 
 /-- **Rolle's Theorem** `deriv` version -/
-theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
-    ∃ c ∈ Ioo a b, deriv f c = 0 :=
+theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (IccCat a b)) (hfI : f a = f b) :
+    ∃ c ∈ IooCat a b, deriv f c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.deriv_eq_zero⟩
 
@@ -298,7 +298,7 @@ variable {f f'} {l : ℝ}
 on `(a, b)` and has the same limit `l` at `𝓝[>] a` and `𝓝[<] b`, then `f' c = 0`
 for some `c ∈ (a, b)`.  -/
 theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l)) (hfb : Tendsto f (𝓝[<] b) (𝓝 l))
-    (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 := by
+    (hff' : ∀ x ∈ IooCat a b, HasDerivAt f (f' x) x) : ∃ c ∈ IooCat a b, f' c = 0 := by
   have : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt
   have hcont := continuous_on_Icc_extend_from_Ioo hab.ne this hfa hfb
   obtain ⟨c, hc, hcextr⟩ : ∃ c ∈ Ioo a b, IsLocalExtr (extendFrom (Ioo a b) f) c := by
@@ -315,23 +315,24 @@ theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) 
 does not require differentiability of `f` because we define `deriv f c = 0` whenever `f` is not
 differentiable at `c`. -/
 theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l)) (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) :
-    ∃ c ∈ Ioo a b, deriv f c = 0 :=
+    ∃ c ∈ IooCat a b, deriv f c = 0 :=
   Classical.by_cases
-    (fun h : ∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-      show ∃ c ∈ Ioo a b, deriv f c = 0 from exists_has_deriv_at_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
-    fun h : ¬∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by
+    (fun h : ∀ x ∈ IooCat a b, DifferentiableAt ℝ f x =>
+      show ∃ c ∈ IooCat a b, deriv f c = 0 from
+        exists_has_deriv_at_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
+    fun h : ¬∀ x ∈ IooCat a b, DifferentiableAt ℝ f x =>
+    have h : ∃ x, x ∈ IooCat a b ∧ ¬DifferentiableAt ℝ f x := by
       push_neg  at h
       exact h
     let ⟨c, hc, hcdiff⟩ := h
     ⟨c, hc, deriv_zero_of_not_differentiable_at hcdiff⟩
 
-end Rolle
+end RolleCat
 
 namespace Polynomial
 
 theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : F[X]) :
-    Fintypeₓ.card (p.RootSet ℝ) ≤ Fintypeₓ.card (p.derivative.RootSet ℝ) + 1 := by
+    Fintype.card (p.RootSet ℝ) ≤ Fintype.card (p.derivative.RootSet ℝ) + 1 := by
   haveI : CharZero F := (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr (by infer_instance)
   by_cases hp:p = 0
   · simp_rw [hp, derivative_zero, root_set_zero, Set.empty_card', zero_le_one]
@@ -340,13 +341,13 @@ theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : 
   · rw [eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')]
     simp_rw [root_set_C, Set.empty_card', zero_le]
     
-  simp_rw [root_set_def, Finsetₓ.coe_sort_coe, Fintypeₓ.card_coe]
-  refine' Finsetₓ.card_le_of_interleaved fun x hx y hy hxy => _
-  rw [← Finsetₓ.mem_coe, ← root_set_def, mem_root_set hp] at hx hy
+  simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
+  refine' Finset.card_le_of_interleaved fun x hx y hy hxy => _
+  rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp] at hx hy
   obtain ⟨z, hz1, hz2⟩ :=
     exists_deriv_eq_zero (fun x : ℝ => aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)
   refine' ⟨z, _, hz1⟩
-  rw [← Finsetₓ.mem_coe, ← root_set_def, mem_root_set hp', ← hz2]
+  rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp', ← hz2]
   simp_rw [aeval_def, ← eval_map, Polynomial.deriv, derivative_map]
 
 end Polynomial

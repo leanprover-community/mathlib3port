@@ -29,9 +29,9 @@ section GeneralResultsAssumingSemilatticeSup
 
 variable [SemilatticeSup B] [OrderBot B] [SemilatticeInf T] [OrderTop T]
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 section ExplicitDegrees
 
@@ -45,7 +45,7 @@ a type with *b*ot or *t*op respectively.
 variable (degb : A → B) (degt : A → T) (f g : AddMonoidAlgebra R A)
 
 theorem sup_support_add_le : (f + g).Support.sup degb ≤ f.Support.sup degb ⊔ g.Support.sup degb :=
-  (Finsetₓ.sup_mono Finsupp.support_add).trans_eq Finsetₓ.sup_union
+  (Finset.sup_mono Finsupp.support_add).trans_eq Finset.sup_union
 
 theorem le_inf_support_add : f.Support.inf degt ⊓ g.Support.inf degt ≤ (f + g).Support.inf degt :=
   sup_support_add_le (fun a : A => OrderDual.toDual (degt a)) f g
@@ -60,10 +60,10 @@ variable [Add A] [Add B] [Add T] [CovariantClass B B (· + ·) (· ≤ ·)]
 
 theorem sup_support_mul_le {degb : A → B} (degbm : ∀ {a b}, degb (a + b) ≤ degb a + degb b)
     (f g : AddMonoidAlgebra R A) : (f * g).Support.sup degb ≤ f.Support.sup degb + g.Support.sup degb := by
-  refine' (Finsetₓ.sup_mono <| support_mul _ _).trans _
-  simp_rw [Finsetₓ.sup_bUnion, Finsetₓ.sup_singleton]
-  refine' Finsetₓ.sup_le fun fd fds => Finsetₓ.sup_le fun gd gds => degbm.trans <| add_le_add _ _ <;>
-    exact Finsetₓ.le_sup ‹_›
+  refine' (Finset.sup_mono <| support_mul _ _).trans _
+  simp_rw [Finset.sup_bUnion, Finset.sup_singleton]
+  refine' Finset.sup_le fun fd fds => Finset.sup_le fun gd gds => degbm.trans <| add_le_add _ _ <;>
+    exact Finset.le_sup ‹_›
 
 theorem le_inf_support_mul {degt : A → T} (degtm : ∀ {a b}, degt a + degt b ≤ degt (a + b))
     (f g : AddMonoidAlgebra R A) : f.Support.inf degt + g.Support.inf degt ≤ (f * g).Support.inf degt :=
@@ -73,19 +73,19 @@ end AddOnly
 
 section AddMonoids
 
-variable [AddMonoidₓ A] [AddMonoidₓ B] [CovariantClass B B (· + ·) (· ≤ ·)]
-  [CovariantClass B B (Function.swap (· + ·)) (· ≤ ·)] [AddMonoidₓ T] [CovariantClass T T (· + ·) (· ≤ ·)]
+variable [AddMonoid A] [AddMonoid B] [CovariantClass B B (· + ·) (· ≤ ·)]
+  [CovariantClass B B (Function.swap (· + ·)) (· ≤ ·)] [AddMonoid T] [CovariantClass T T (· + ·) (· ≤ ·)]
   [CovariantClass T T (Function.swap (· + ·)) (· ≤ ·)] {degb : A → B} {degt : A → T}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) :
     ∀ l : List (AddMonoidAlgebra R A),
       l.Prod.Support.sup degb ≤ (l.map fun f : AddMonoidAlgebra R A => f.Support.sup degb).Sum
   | [] => by
-    rw [List.map_nilₓ, Finsetₓ.sup_le_iff, List.prod_nil, List.sum_nil]
+    rw [List.map_nil, Finset.sup_le_iff, List.prod_nil, List.sum_nil]
     exact fun a ha => by rwa [finset.mem_singleton.mp (Finsupp.support_single_subset ha)]
   | f::fs => by
-    rw [List.prod_cons, List.map_consₓ, List.sum_cons]
+    rw [List.prod_cons, List.map_cons, List.sum_cons]
     exact (sup_support_mul_le degbm _ _).trans (add_le_add_left (sup_support_list_prod_le _) _)
 
 theorem le_inf_support_list_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b))
@@ -109,12 +109,12 @@ theorem le_inf_support_pow (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + deg
 
 end AddMonoids
 
-end Semiringₓ
+end Semiring
 
 section CommutativeLemmas
 
-variable [CommSemiringₓ R] [AddCommMonoidₓ A] [AddCommMonoidₓ B] [CovariantClass B B (· + ·) (· ≤ ·)]
-  [CovariantClass B B (Function.swap (· + ·)) (· ≤ ·)] [AddCommMonoidₓ T] [CovariantClass T T (· + ·) (· ≤ ·)]
+variable [CommSemiring R] [AddCommMonoid A] [AddCommMonoid B] [CovariantClass B B (· + ·) (· ≤ ·)]
+  [CovariantClass B B (Function.swap (· + ·)) (· ≤ ·)] [AddCommMonoid T] [CovariantClass T T (· + ·) (· ≤ ·)]
   [CovariantClass T T (Function.swap (· + ·)) (· ≤ ·)] {degb : A → B} {degt : A → T}
 
 theorem sup_support_multiset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b)
@@ -131,13 +131,13 @@ theorem le_inf_support_multiset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, de
     sup_support_multiset_prod_le (OrderDual.of_dual_le_of_dual.mp degt0)
       (fun a b => OrderDual.of_dual_le_of_dual.mp (degtm _ _)) m
 
-theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (s : Finsetₓ ι)
+theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∏ i in s, f i).Support.sup degb ≤ ∑ i in s, (f i).Support.sup degb :=
   (sup_support_multiset_prod_le degb0 degbm _).trans_eq <| congr_arg _ <| Multiset.map_map _ _ _
 
-theorem le_inf_support_finset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (s : Finsetₓ ι)
+theorem le_inf_support_finset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∑ i in s, (f i).Support.inf degt) ≤ (∏ i in s, f i).Support.inf degt :=
-  le_of_eq_of_leₓ (by rw [Multiset.map_map] <;> rfl) (le_inf_support_multiset_prod degt0 degtm _)
+  le_of_eq_of_le (by rw [Multiset.map_map] <;> rfl) (le_inf_support_multiset_prod degt0 degtm _)
 
 end CommutativeLemmas
 

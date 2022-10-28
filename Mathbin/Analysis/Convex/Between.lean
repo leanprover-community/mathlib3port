@@ -23,13 +23,13 @@ This file defines notions of a point in an affine space being between two given 
 
 variable (R : Type _) {V V' P P' : Type _}
 
-open AffineMap
+open AffineEquiv AffineMap
 
 section OrderedRing
 
-variable [OrderedRing R] [AddCommGroupₓ V] [Module R V] [AddTorsor V P]
+variable [OrderedRing R] [AddCommGroup V] [Module R V] [AddTorsor V P]
 
-variable [AddCommGroupₓ V'] [Module R V'] [AddTorsor V' P']
+variable [AddCommGroup V'] [Module R V'] [AddTorsor V' P']
 
 include V
 
@@ -38,7 +38,7 @@ abstract affine combination spaces, this will no longer need to be a separate de
 `segment`. However, lemmas involving `+ᵥ` or `-ᵥ` will still be relevant after such a
 refactoring, as distinct from versions involving `+` or `-` in a module. -/
 def AffineSegment (x y : P) :=
-  lineMap x y '' Set.Icc (0 : R) 1
+  lineMap x y '' Set.IccCat (0 : R) 1
 
 theorem affine_segment_eq_segment (x y : V) : AffineSegment R x y = Segment R x y := by
   rw [segment_eq_image_line_map, AffineSegment]
@@ -202,7 +202,7 @@ theorem Sbtw.ne_right {x y z : P} (h : Sbtw R x y z) : y ≠ z :=
 theorem Sbtw.right_ne {x y z : P} (h : Sbtw R x y z) : z ≠ y :=
   h.2.2.symm
 
-theorem Sbtw.mem_image_Ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z '' Set.Ioo (0 : R) 1 := by
+theorem Sbtw.mem_image_Ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z '' Set.IooCat (0 : R) 1 := by
   rcases h with ⟨⟨t, ht, rfl⟩, hyx, hyz⟩
   rcases Set.eq_endpoints_or_mem_Ioo_of_mem_Icc ht with (rfl | rfl | ho)
   · exfalso
@@ -219,7 +219,7 @@ theorem wbtw_comm {x y z : P} : Wbtw R x y z ↔ Wbtw R z y x := by rw [Wbtw, Wb
 alias wbtw_comm ↔ Wbtw.symm _
 
 theorem sbtw_comm {x y z : P} : Sbtw R x y z ↔ Sbtw R z y x := by
-  rw [Sbtw, Sbtw, wbtw_comm, ← and_assocₓ, ← and_assocₓ, And.right_comm]
+  rw [Sbtw, Sbtw, wbtw_comm, ← and_assoc', ← and_assoc', And.right_comm]
 
 alias sbtw_comm ↔ Sbtw.symm _
 
@@ -264,7 +264,7 @@ theorem Sbtw.left_ne_right {x y z : P} (h : Sbtw R x y z) : x ≠ z :=
   h.Wbtw.left_ne_right_of_ne_left h.2.1
 
 theorem sbtw_iff_mem_image_Ioo_and_ne [NoZeroSmulDivisors R V] {x y z : P} :
-    Sbtw R x y z ↔ y ∈ lineMap x z '' Set.Ioo (0 : R) 1 ∧ x ≠ z := by
+    Sbtw R x y z ↔ y ∈ lineMap x z '' Set.IooCat (0 : R) 1 ∧ x ≠ z := by
   refine' ⟨fun h => ⟨h.mem_image_Ioo, h.left_ne_right⟩, fun h => _⟩
   rcases h with ⟨⟨t, ht, rfl⟩, hxz⟩
   refine' ⟨⟨t, Set.mem_Icc_of_Ioo ht, rfl⟩, _⟩
@@ -286,10 +286,10 @@ theorem wbtw_swap_left_iff [NoZeroSmulDivisors R V] {x y : P} (z : P) : Wbtw R x
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub, vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul, ← add_smul,
       smul_eq_zero] at hx
     rcases hx with (h | h)
-    · nth_rw 0 [← mul_oneₓ tx]  at h
+    · nth_rw 0 [← mul_one tx]  at h
       rw [← mul_sub, add_eq_zero_iff_neg_eq] at h
       have h' : ty = 0 := by
-        refine' le_antisymmₓ _ hty.1
+        refine' le_antisymm _ hty.1
         rw [← h, Left.neg_nonpos_iff]
         exact mul_nonneg htx.1 (sub_nonneg.2 hty.2)
       simp [h']
@@ -362,15 +362,15 @@ theorem Sbtw.trans_right [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Sbtw R w
 
 end OrderedRing
 
-section OrderedCommRing
+section StrictOrderedCommRing
 
-variable [OrderedCommRing R] [AddCommGroupₓ V] [Module R V] [AddTorsor V P]
+variable [StrictOrderedCommRing R] [AddCommGroup V] [Module R V] [AddTorsor V P]
 
 include V
 
 variable {R}
 
-theorem Wbtw.same_ray_vsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ y) := by
+theorem Wbtw.sameRayVsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ y) := by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
   simp_rw [line_map_apply]
   rcases ht0.lt_or_eq with (ht0' | rfl)
@@ -385,19 +385,19 @@ theorem Wbtw.same_ray_vsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x)
   simp [vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul]
   ring_nf
 
-theorem Wbtw.same_ray_vsub_left {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ x) := by
+theorem Wbtw.sameRayVsubLeft {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ x) := by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
-  simpa [line_map_apply] using same_ray_nonneg_smul_left (z -ᵥ x) ht0
+  simpa [line_map_apply] using sameRayNonnegSmulLeft (z -ᵥ x) ht0
 
-theorem Wbtw.same_ray_vsub_right {x y z : P} (h : Wbtw R x y z) : SameRay R (z -ᵥ x) (z -ᵥ y) := by
+theorem Wbtw.sameRayVsubRight {x y z : P} (h : Wbtw R x y z) : SameRay R (z -ᵥ x) (z -ᵥ y) := by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
-  simpa [line_map_apply, vsub_vadd_eq_vsub_sub, sub_smul] using same_ray_nonneg_smul_right (z -ᵥ x) (sub_nonneg.2 ht1)
+  simpa [line_map_apply, vsub_vadd_eq_vsub_sub, sub_smul] using sameRayNonnegSmulRight (z -ᵥ x) (sub_nonneg.2 ht1)
 
-end OrderedCommRing
+end StrictOrderedCommRing
 
 section LinearOrderedField
 
-variable [LinearOrderedField R] [AddCommGroupₓ V] [Module R V] [AddTorsor V P]
+variable [LinearOrderedField R] [AddCommGroup V] [Module R V] [AddTorsor V P]
 
 include V
 
@@ -413,7 +413,7 @@ theorem wbtw_smul_vadd_smul_vadd_of_nonneg_of_le (x : P) (v : V) {r₁ r₂ : R}
 
 theorem wbtw_or_wbtw_smul_vadd_of_nonneg (x : P) (v : V) {r₁ r₂ : R} (hr₁ : 0 ≤ r₁) (hr₂ : 0 ≤ r₂) :
     Wbtw R x (r₁ • v +ᵥ x) (r₂ • v +ᵥ x) ∨ Wbtw R x (r₂ • v +ᵥ x) (r₁ • v +ᵥ x) := by
-  rcases le_totalₓ r₁ r₂ with (h | h)
+  rcases le_total r₁ r₂ with (h | h)
   · exact Or.inl (wbtw_smul_vadd_smul_vadd_of_nonneg_of_le x v hr₁ h)
     
   · exact Or.inr (wbtw_smul_vadd_smul_vadd_of_nonneg_of_le x v hr₂ h)
@@ -426,7 +426,7 @@ theorem wbtw_smul_vadd_smul_vadd_of_nonpos_of_le (x : P) (v : V) {r₁ r₂ : R}
 
 theorem wbtw_or_wbtw_smul_vadd_of_nonpos (x : P) (v : V) {r₁ r₂ : R} (hr₁ : r₁ ≤ 0) (hr₂ : r₂ ≤ 0) :
     Wbtw R x (r₁ • v +ᵥ x) (r₂ • v +ᵥ x) ∨ Wbtw R x (r₂ • v +ᵥ x) (r₁ • v +ᵥ x) := by
-  rcases le_totalₓ r₁ r₂ with (h | h)
+  rcases le_total r₁ r₂ with (h | h)
   · exact Or.inr (wbtw_smul_vadd_smul_vadd_of_nonpos_of_le x v hr₂ h)
     
   · exact Or.inl (wbtw_smul_vadd_smul_vadd_of_nonpos_of_le x v hr₁ h)
@@ -455,7 +455,7 @@ theorem Wbtw.trans_left_right {w x y z : P} (h₁ : Wbtw R w y z) (h₂ : Wbtw R
       _⟩
   simp only [line_map_apply, smul_smul, ← add_vadd, vsub_vadd_eq_vsub_sub, smul_sub, ← sub_smul, ← add_smul, vadd_vsub,
     vadd_right_cancel_iff, div_mul_eq_mul_div, div_sub_div_same]
-  nth_rw 0 [← mul_oneₓ (t₁ - t₂ * t₁)]
+  nth_rw 0 [← mul_one (t₁ - t₂ * t₁)]
   rw [← mul_sub, mul_div_assoc]
   by_cases h:1 - t₂ * t₁ = 0
   · rw [sub_eq_zero, eq_comm] at h
@@ -502,10 +502,10 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
   have hz := h z (Or.inr (Or.inr rfl))
   rcases hy with ⟨ty, rfl⟩
   rcases hz with ⟨tz, rfl⟩
-  rcases lt_trichotomyₓ ty 0 with (hy0 | rfl | hy0)
-  · rcases lt_trichotomyₓ tz 0 with (hz0 | rfl | hz0)
+  rcases lt_trichotomy ty 0 with (hy0 | rfl | hy0)
+  · rcases lt_trichotomy tz 0 with (hz0 | rfl | hz0)
     · nth_rw 1 [wbtw_comm]
-      rw [← or_assocₓ]
+      rw [← or_assoc']
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonpos _ _ hy0.le hz0.le)
       
     · simp
@@ -515,19 +515,19 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
     
   · simp
     
-  · rcases lt_trichotomyₓ tz 0 with (hz0 | rfl | hz0)
+  · rcases lt_trichotomy tz 0 with (hz0 | rfl | hz0)
     · refine' Or.inr (Or.inr (wbtw_smul_vadd_smul_vadd_of_nonpos_of_nonneg _ _ hz0.le hy0.le))
       
     · simp
       
     · nth_rw 1 [wbtw_comm]
-      rw [← or_assocₓ]
+      rw [← or_assoc']
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonneg _ _ hy0.le hz0.le)
       
     
 
 theorem wbtw_iff_same_ray_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x) (z -ᵥ y) := by
-  refine' ⟨Wbtw.same_ray_vsub, fun h => _⟩
+  refine' ⟨Wbtw.sameRayVsub, fun h => _⟩
   rcases h with (h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩)
   · rw [vsub_eq_zero_iff_eq] at h
     simp [h]
@@ -547,6 +547,18 @@ theorem wbtw_iff_same_ray_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ 
     field_simp [(add_pos hr₁ hr₂).ne', hr₂.ne']
     ring
     
+
+variable (R)
+
+theorem wbtw_point_reflection (x y : P) : Wbtw R y x (pointReflection R x y) := by
+  refine' ⟨2⁻¹, ⟨by norm_num, by norm_num⟩, _⟩
+  rw [line_map_apply, point_reflection_apply, vadd_vsub_assoc, ← two_smul R (x -ᵥ y)]
+  simp
+
+theorem sbtw_point_reflection_of_ne {x y : P} (h : x ≠ y) : Sbtw R y x (pointReflection R x y) := by
+  refine' ⟨wbtw_point_reflection _ _ _, h, _⟩
+  nth_rw 0 [← point_reflection_self R x]
+  exact (point_reflection_involutive R x).Injective.Ne h
 
 end LinearOrderedField
 

@@ -5,6 +5,7 @@ Authors: Patrick Massot, Scott Morrison
 -/
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.GroupWithZero
+import Mathbin.Topology.LocalExtr
 
 /-!
 # Topological fields
@@ -19,7 +20,7 @@ namespace TopologicalRing
 
 open TopologicalSpace Function
 
-variable (R : Type _) [Semiringₓ R]
+variable (R : Type _) [Semiring R]
 
 variable [TopologicalSpace R]
 
@@ -136,12 +137,23 @@ variable {𝕜 : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalRing �
 -/
 @[simps]
 def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜 where
-  toFun := fun x => a * x + b
-  invFun := fun y => (y - b) / a
-  left_inv := fun x => by
+  toFun x := a * x + b
+  invFun y := (y - b) / a
+  left_inv x := by
     simp only [add_sub_cancel]
     exact mul_div_cancel_left x h
-  right_inv := fun y => by simp [mul_div_cancel' _ h]
+  right_inv y := by simp [mul_div_cancel' _ h]
 
 end affineHomeomorph
+
+section LocalExtr
+
+variable {α β : Type _} [TopologicalSpace α] [LinearOrderedSemifield β] {a : α}
+
+open TopologicalSpace
+
+theorem IsLocalMin.inv {f : α → β} {a : α} (h1 : IsLocalMin f a) (h2 : ∀ᶠ z in 𝓝 a, 0 < f z) : IsLocalMax f⁻¹ a := by
+  filter_upwards [h1, h2] with z h3 h4 using(inv_le_inv h4 h2.self_of_nhds).mpr h3
+
+end LocalExtr
 

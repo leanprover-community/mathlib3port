@@ -42,36 +42,16 @@ open Function OrderDual Set
 
 variable {F α β γ δ : Type _} {ι : Sort _} {κ : ι → Sort _}
 
-/-- The type of `⨆`-preserving functions from `α` to `β`. -/
-structure SupHomₓ (α β : Type _) [HasSupₓ α] [HasSupₓ β] where
-  toFun : α → β
-  map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
-
-/-- The type of `⨅`-preserving functions from `α` to `β`. -/
-structure InfHomₓ (α β : Type _) [HasInfₓ α] [HasInfₓ β] where
-  toFun : α → β
-  map_Inf' (s : Set α) : to_fun (inf s) = inf (to_fun '' s)
-
 /-- The type of frame homomorphisms from `α` to `β`. They preserve finite meets and arbitrary joins.
 -/
 structure FrameHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends InfTopHom α β where
   map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
 
 /-- The type of complete lattice homomorphisms from `α` to `β`. -/
-structure CompleteLatticeHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends InfHomₓ α β where
+structure CompleteLatticeHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends InfHom α β where
   map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
 
-/-- `Sup_hom_class F α β` states that `F` is a type of `⨆`-preserving morphisms.
-
-You should extend this class when you extend `Sup_hom`. -/
-class SupHomClassₓ (F : Type _) (α β : outParam <| Type _) [HasSupₓ α] [HasSupₓ β] extends FunLike F α fun _ => β where
-  map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
-
-/-- `Inf_hom_class F α β` states that `F` is a type of `⨅`-preserving morphisms.
-
-You should extend this class when you extend `Inf_hom`. -/
-class InfHomClassₓ (F : Type _) (α β : outParam <| Type _) [HasInfₓ α] [HasInfₓ β] extends FunLike F α fun _ => β where
-  map_Inf (f : F) (s : Set α) : f (inf s) = inf (f '' s)
+section
 
 /-- `frame_hom_class F α β` states that `F` is a type of frame morphisms. They preserve `⊓` and `⨆`.
 
@@ -84,183 +64,120 @@ class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice �
 
 You should extend this class when you extend `complete_lattice_hom`. -/
 class CompleteLatticeHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α] [CompleteLattice β] extends
-  InfHomClassₓ F α β where
+  InfHomClass F α β where
   map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
 
-export SupHomClassₓ (map_Sup)
+end
 
-export InfHomClassₓ (map_Inf)
+export SupHomClass (map_Sup)
+
+export InfHomClass (map_Inf)
 
 attribute [simp] map_Sup map_Inf
 
-theorem map_supr [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
+theorem map_supr [HasSup α] [HasSup β] [SupHomClass F α β] (f : F) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   rw [supr, supr, map_Sup, Set.range_comp]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
-theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+theorem map_supr₂ [HasSup α] [HasSup β] [SupHomClass F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by simp_rw [map_supr]
 
-theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
+theorem map_infi [HasInf α] [HasInf β] [InfHomClass F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   rw [infi, infi, map_Inf, Set.range_comp]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
-theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+theorem map_infi₂ [HasInf α] [HasInf β] [InfHomClass F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by simp_rw [map_infi]
 
 -- See note [lower instance priority]
-instance (priority := 100) SupHomClassₓ.toSupBotHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
-    SupBotHomClass F α β where
-  map_sup := fun f a b => by rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair]
-  map_bot := fun f => by rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty]
+instance (priority := 100) SupHomClass.toSupBotHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClass F α β] :
+    SupBotHomClass F α β :=
+  { ‹SupHomClass F α β› with map_sup := fun f a b => by rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair],
+    map_bot := fun f => by rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty] }
 
 -- See note [lower instance priority]
-instance (priority := 100) InfHomClassₓ.toInfTopHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
-    InfTopHomClass F α β where
-  map_inf := fun f a b => by rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair]
-  map_top := fun f => by rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty]
+instance (priority := 100) InfHomClass.toInfTopHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClass F α β] :
+    InfTopHomClass F α β :=
+  { ‹InfHomClass F α β› with map_inf := fun f a b => by rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair],
+    map_top := fun f => by rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty] }
 
 -- See note [lower instance priority]
 instance (priority := 100) FrameHomClass.toSupHomClass [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] :
-    SupHomClassₓ F α β :=
+    SupHomClass F α β :=
   { ‹FrameHomClass F α β› with }
 
 -- See note [lower instance priority]
 instance (priority := 100) FrameHomClass.toBoundedLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [FrameHomClass F α β] : BoundedLatticeHomClass F α β :=
-  { ‹FrameHomClass F α β›, SupHomClassₓ.toSupBotHomClass with }
+  { ‹FrameHomClass F α β›, SupHomClass.toSupBotHomClass with }
 
 -- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toFrameHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : FrameHomClass F α β :=
-  { ‹CompleteLatticeHomClass F α β›, InfHomClassₓ.toInfTopHomClass with }
+  { ‹CompleteLatticeHomClass F α β›, InfHomClass.toInfTopHomClass with }
 
 -- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : BoundedLatticeHomClass F α β :=
-  { SupHomClassₓ.toSupBotHomClass, InfHomClassₓ.toInfTopHomClass with }
+  { SupHomClass.toSupBotHomClass, InfHomClass.toInfTopHomClass with }
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIsoClass.toSupHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
-    SupHomClassₓ F α β :=
-  ⟨fun f s => eq_of_forall_ge_iffₓ fun c => by simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff]⟩
-
 -- See note [lower instance priority]
-instance (priority := 100) OrderIsoClass.toInfHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
-    InfHomClassₓ F α β :=
-  ⟨fun f s => eq_of_forall_le_iffₓ fun c => by simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff]⟩
-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [OrderIsoClass F α β] : CompleteLatticeHomClass F α β :=
-  { OrderIsoClass.toSupHomClassₓ, OrderIsoClass.toLatticeHomClass with }
+  { OrderIsoClass.toSupHomClass, OrderIsoClass.toLatticeHomClass, show InfHomClass F α β from inferInstance with }
 
-instance [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] : CoeTₓ F (SupHomₓ α β) :=
+instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeT F (SupHom α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
 
-instance [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] : CoeTₓ F (InfHomₓ α β) :=
+instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeT F (InfHom α β) :=
   ⟨fun f => ⟨f, map_Inf f⟩⟩
 
-instance [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] : CoeTₓ F (FrameHom α β) :=
+instance [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] : CoeT F (FrameHom α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
 
-instance [CompleteLattice α] [CompleteLattice β] [CompleteLatticeHomClass F α β] : CoeTₓ F (CompleteLatticeHom α β) :=
+instance [CompleteLattice α] [CompleteLattice β] [CompleteLatticeHomClass F α β] : CoeT F (CompleteLatticeHom α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
 
 /-! ### Supremum homomorphisms -/
 
 
-namespace SupHomₓ
+namespace SupHom
 
-variable [HasSupₓ α]
+variable [HasSup α]
 
-section HasSupₓ
+section HasSup
 
-variable [HasSupₓ β] [HasSupₓ γ] [HasSupₓ δ]
+variable [HasSup β] [HasSup γ] [HasSup δ]
 
-instance : SupHomClassₓ (SupHomₓ α β) α β where
-  coe := SupHomₓ.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
-  map_Sup := SupHomₓ.map_Sup'
+instance : SupHomClass (SupHom α β) α β where
+  coe := SupHom.toFun
+  coe_injective' f g h := by cases f <;> cases g <;> congr
+  map_Sup := SupHom.map_Sup'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
-instance : CoeFun (SupHomₓ α β) fun _ => α → β :=
+instance : CoeFun (SupHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
-
-@[simp]
-theorem to_fun_eq_coe {f : SupHomₓ α β} : f.toFun = (f : α → β) :=
-  rfl
-
-@[ext]
-theorem ext {f g : SupHomₓ α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
-
-/-- Copy of a `Sup_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
-equalities. -/
-protected def copy (f : SupHomₓ α β) (f' : α → β) (h : f' = f) : SupHomₓ α β where
-  toFun := f'
-  map_Sup' := h.symm ▸ f.map_Sup'
 
 variable (α)
 
-/-- `id` as a `Sup_hom`. -/
-protected def id : SupHomₓ α α :=
-  ⟨id, fun s => by rw [id, Set.image_id]⟩
-
-instance : Inhabited (SupHomₓ α α) :=
-  ⟨SupHomₓ.id α⟩
-
-@[simp]
-theorem coe_id : ⇑(SupHomₓ.id α) = id :=
-  rfl
+instance : Inhabited (SupHom α α) :=
+  ⟨SupHom.id α⟩
 
 variable {α}
 
-@[simp]
-theorem id_apply (a : α) : SupHomₓ.id α a = a :=
-  rfl
-
-/-- Composition of `Sup_hom`s as a `Sup_hom`. -/
-def comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : SupHomₓ α γ where
-  toFun := f ∘ g
-  map_Sup' := fun s => by rw [comp_apply, map_Sup, map_Sup, Set.image_image]
-
-@[simp]
-theorem coe_comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : ⇑(f.comp g) = f ∘ g :=
-  rfl
-
-@[simp]
-theorem comp_apply (f : SupHomₓ β γ) (g : SupHomₓ α β) (a : α) : (f.comp g) a = f (g a) :=
-  rfl
-
-@[simp]
-theorem comp_assoc (f : SupHomₓ γ δ) (g : SupHomₓ β γ) (h : SupHomₓ α β) : (f.comp g).comp h = f.comp (g.comp h) :=
-  rfl
-
-@[simp]
-theorem comp_id (f : SupHomₓ α β) : f.comp (SupHomₓ.id α) = f :=
-  ext fun a => rfl
-
-@[simp]
-theorem id_comp (f : SupHomₓ α β) : (SupHomₓ.id β).comp f = f :=
-  ext fun a => rfl
-
-theorem cancel_right {g₁ g₂ : SupHomₓ β γ} {f : SupHomₓ α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
-
-theorem cancel_left {g : SupHomₓ β γ} {f₁ f₂ : SupHomₓ α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
-
-end HasSupₓ
+end HasSup
 
 variable [CompleteLattice β]
 
-instance : PartialOrderₓ (SupHomₓ α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance : PartialOrder (SupHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
-instance : HasBot (SupHomₓ α β) :=
+instance : HasBot (SupHom α β) :=
   ⟨⟨fun _ => ⊥, fun s => by
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [Set.image_empty, Sup_empty]
@@ -268,112 +185,47 @@ instance : HasBot (SupHomₓ α β) :=
       · rw [hs.image_const, Sup_singleton]
         ⟩⟩
 
-instance : OrderBot (SupHomₓ α β) :=
+instance : OrderBot (SupHom α β) :=
   ⟨⊥, fun f a => bot_le⟩
 
-@[simp]
-theorem coe_bot : ⇑(⊥ : SupHomₓ α β) = ⊥ :=
-  rfl
-
-@[simp]
-theorem bot_apply (a : α) : (⊥ : SupHomₓ α β) a = ⊥ :=
-  rfl
-
-end SupHomₓ
+end SupHom
 
 /-! ### Infimum homomorphisms -/
 
 
-namespace InfHomₓ
+namespace InfHom
 
-variable [HasInfₓ α]
+variable [HasInf α]
 
-section HasInfₓ
+section HasInf
 
-variable [HasInfₓ β] [HasInfₓ γ] [HasInfₓ δ]
+variable [HasInf β] [HasInf γ] [HasInf δ]
 
-instance : InfHomClassₓ (InfHomₓ α β) α β where
-  coe := InfHomₓ.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
-  map_Inf := InfHomₓ.map_Inf'
+instance : InfHomClass (InfHom α β) α β where
+  coe := InfHom.toFun
+  coe_injective' f g h := by cases f <;> cases g <;> congr
+  map_Inf := InfHom.map_Inf'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
-instance : CoeFun (InfHomₓ α β) fun _ => α → β :=
+instance : CoeFun (InfHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
-
-@[simp]
-theorem to_fun_eq_coe {f : InfHomₓ α β} : f.toFun = (f : α → β) :=
-  rfl
-
-@[ext]
-theorem ext {f g : InfHomₓ α β} (h : ∀ a, f a = g a) : f = g :=
-  FunLike.ext f g h
-
-/-- Copy of a `Inf_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
-equalities. -/
-protected def copy (f : InfHomₓ α β) (f' : α → β) (h : f' = f) : InfHomₓ α β where
-  toFun := f'
-  map_Inf' := h.symm ▸ f.map_Inf'
 
 variable (α)
 
-/-- `id` as an `Inf_hom`. -/
-protected def id : InfHomₓ α α :=
-  ⟨id, fun s => by rw [id, Set.image_id]⟩
-
-instance : Inhabited (InfHomₓ α α) :=
-  ⟨InfHomₓ.id α⟩
-
-@[simp]
-theorem coe_id : ⇑(InfHomₓ.id α) = id :=
-  rfl
+instance : Inhabited (InfHom α α) :=
+  ⟨InfHom.id α⟩
 
 variable {α}
 
-@[simp]
-theorem id_apply (a : α) : InfHomₓ.id α a = a :=
-  rfl
-
-/-- Composition of `Inf_hom`s as a `Inf_hom`. -/
-def comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : InfHomₓ α γ where
-  toFun := f ∘ g
-  map_Inf' := fun s => by rw [comp_apply, map_Inf, map_Inf, Set.image_image]
-
-@[simp]
-theorem coe_comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : ⇑(f.comp g) = f ∘ g :=
-  rfl
-
-@[simp]
-theorem comp_apply (f : InfHomₓ β γ) (g : InfHomₓ α β) (a : α) : (f.comp g) a = f (g a) :=
-  rfl
-
-@[simp]
-theorem comp_assoc (f : InfHomₓ γ δ) (g : InfHomₓ β γ) (h : InfHomₓ α β) : (f.comp g).comp h = f.comp (g.comp h) :=
-  rfl
-
-@[simp]
-theorem comp_id (f : InfHomₓ α β) : f.comp (InfHomₓ.id α) = f :=
-  ext fun a => rfl
-
-@[simp]
-theorem id_comp (f : InfHomₓ α β) : (InfHomₓ.id β).comp f = f :=
-  ext fun a => rfl
-
-theorem cancel_right {g₁ g₂ : InfHomₓ β γ} {f : InfHomₓ α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
-
-theorem cancel_left {g : InfHomₓ β γ} {f₁ f₂ : InfHomₓ α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
-
-end HasInfₓ
+end HasInf
 
 variable [CompleteLattice β]
 
-instance : PartialOrderₓ (InfHomₓ α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance : PartialOrder (InfHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
-instance : HasTop (InfHomₓ α β) :=
+instance : HasTop (InfHom α β) :=
   ⟨⟨fun _ => ⊤, fun s => by
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [Set.image_empty, Inf_empty]
@@ -381,18 +233,10 @@ instance : HasTop (InfHomₓ α β) :=
       · rw [hs.image_const, Inf_singleton]
         ⟩⟩
 
-instance : OrderTop (InfHomₓ α β) :=
+instance : OrderTop (InfHom α β) :=
   ⟨⊤, fun f a => le_top⟩
 
-@[simp]
-theorem coe_top : ⇑(⊤ : InfHomₓ α β) = ⊤ :=
-  rfl
-
-@[simp]
-theorem top_apply (a : α) : (⊤ : InfHomₓ α β) a = ⊤ :=
-  rfl
-
-end InfHomₓ
+end InfHom
 
 /-! ### Frame homomorphisms -/
 
@@ -402,14 +246,14 @@ namespace FrameHom
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [CompleteLattice δ]
 
 instance : FrameHomClass (FrameHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
-  map_Sup := fun f => f.map_Sup'
-  map_inf := fun f => f.map_inf'
-  map_top := fun f => f.map_top'
+  map_Sup f := f.map_Sup'
+  map_inf f := f.map_inf'
+  map_top f := f.map_top'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -431,13 +275,13 @@ theorem ext {f g : FrameHom α β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `frame_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (f : FrameHom α β) (f' : α → β) (h : f' = f) : FrameHom α β :=
-  { (f : SupHomₓ α β).copy f' h with toInfTopHom := f.toInfTopHom.copy f' h }
+  { (f : SupHom α β).copy f' h with toInfTopHom := f.toInfTopHom.copy f' h }
 
 variable (α)
 
 /-- `id` as a `frame_hom`. -/
 protected def id : FrameHom α α :=
-  { SupHomₓ.id α with toInfTopHom := InfTopHom.id α }
+  { SupHom.id α with toInfTopHom := InfTopHom.id α }
 
 instance : Inhabited (FrameHom α α) :=
   ⟨FrameHom.id α⟩
@@ -454,7 +298,7 @@ theorem id_apply (a : α) : FrameHom.id α a = a :=
 
 /-- Composition of `frame_hom`s as a `frame_hom`. -/
 def comp (f : FrameHom β γ) (g : FrameHom α β) : FrameHom α γ :=
-  { (f : SupHomₓ β γ).comp (g : SupHomₓ α β) with toInfTopHom := f.toInfTopHom.comp g.toInfTopHom }
+  { (f : SupHom β γ).comp (g : SupHom α β) with toInfTopHom := f.toInfTopHom.comp g.toInfTopHom }
 
 @[simp]
 theorem coe_comp (f : FrameHom β γ) (g : FrameHom α β) : ⇑(f.comp g) = f ∘ g :=
@@ -482,8 +326,8 @@ theorem cancel_right {g₁ g₂ : FrameHom β γ} {f : FrameHom α β} (hf : Sur
 theorem cancel_left {g : FrameHom β γ} {f₁ f₂ : FrameHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
-instance : PartialOrderₓ (FrameHom α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance : PartialOrder (FrameHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
 end FrameHom
 
@@ -495,13 +339,13 @@ namespace CompleteLatticeHom
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [CompleteLattice δ]
 
 instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
-  map_Sup := fun f => f.map_Sup'
-  map_Inf := fun f => f.map_Inf'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  map_Sup f := f.map_Sup'
+  map_Inf f := f.map_Inf'
 
 /-- Reinterpret a `complete_lattice_hom` as a `Sup_hom`. -/
-def toSupHom (f : CompleteLatticeHom α β) : SupHomₓ α β :=
+def toSupHom (f : CompleteLatticeHom α β) : SupHom α β :=
   f
 
 /-- Reinterpret a `complete_lattice_hom` as a `bounded_lattice_hom`. -/
@@ -530,7 +374,7 @@ variable (α)
 
 /-- `id` as a `complete_lattice_hom`. -/
 protected def id : CompleteLatticeHom α α :=
-  { SupHomₓ.id α, InfHomₓ.id α with toFun := id }
+  { SupHom.id α, InfHom.id α with toFun := id }
 
 instance : Inhabited (CompleteLatticeHom α α) :=
   ⟨CompleteLatticeHom.id α⟩
@@ -583,67 +427,107 @@ end CompleteLatticeHom
 /-! ### Dual homs -/
 
 
-namespace SupHomₓ
+namespace SupHom
 
-variable [HasSupₓ α] [HasSupₓ β] [HasSupₓ γ]
+variable [HasSup α] [HasSup β] [HasSup γ]
 
-/-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
-@[simps]
-protected def dual : SupHomₓ α β ≃ InfHomₓ αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
-  invFun := fun f => ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
-  left_inv := fun f => SupHomₓ.ext fun a => rfl
-  right_inv := fun f => InfHomₓ.ext fun a => rfl
-
+/- warning: Sup_hom.dual_id clashes with sup_hom.dual_id -> SupHom.dual_id
+warning: Sup_hom.dual_id -> SupHom.dual_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} [_inst_1 : HasSup.{u_2} α], Eq.{succ u_2} (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1)) (coeFn.{(max 1 (succ u_2)) succ u_2} (Equiv.{succ u_2 succ u_2} (SupHom.{u_2 u_2} α α _inst_1 _inst_1) (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1))) (fun (_x : Equiv.{succ u_2 succ u_2} (SupHom.{u_2 u_2} α α _inst_1 _inst_1) (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1))) => (SupHom.{u_2 u_2} α α _inst_1 _inst_1) -> (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1))) (Equiv.hasCoeToFun.{succ u_2 succ u_2} (SupHom.{u_2 u_2} α α _inst_1 _inst_1) (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1))) (SupHom.dual.{u_2 u_2} α α _inst_1 _inst_1) (SupHom.id.{u_2} α _inst_1)) (InfHom.id.{u_2} (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Sup_hom.dual_id SupHom.dual_idₓ'. -/
 @[simp]
-theorem dual_id : (SupHomₓ.id α).dual = InfHomₓ.id _ :=
+theorem dual_id : (SupHom.id α).dual = InfHom.id _ :=
   rfl
 
+/- warning: Sup_hom.dual_comp clashes with sup_hom.dual_comp -> SupHom.dual_comp
+warning: Sup_hom.dual_comp -> SupHom.dual_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} {γ : Type.{u_4}} [_inst_1 : HasSup.{u_2} α] [_inst_2 : HasSup.{u_3} β] [_inst_3 : HasSup.{u_4} γ] (g : SupHom.{u_3 u_4} β γ _inst_2 _inst_3) (f : SupHom.{u_2 u_3} α β _inst_1 _inst_2), Eq.{(max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3)) (coeFn.{(max 1 (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} α γ _inst_1 _inst_3) (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3))) (fun (_x : Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} α γ _inst_1 _inst_3) (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3))) => (SupHom.{u_2 u_4} α γ _inst_1 _inst_3) -> (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3))) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} α γ _inst_1 _inst_3) (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3))) (SupHom.dual.{u_2 u_4} α γ _inst_1 _inst_3) (SupHom.comp.{u_2 u_3 u_4} α β γ _inst_1 _inst_2 _inst_3 g f)) (InfHom.comp.{u_2 u_3 u_4} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3) (coeFn.{(max 1 (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} β γ _inst_2 _inst_3) (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3))) (fun (_x : Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} β γ _inst_2 _inst_3) (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3))) => (SupHom.{u_3 u_4} β γ _inst_2 _inst_3) -> (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3))) (Equiv.hasCoeToFun.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} β γ _inst_2 _inst_3) (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3))) (SupHom.dual.{u_3 u_4} β γ _inst_2 _inst_3) g) (coeFn.{(max 1 (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} α β _inst_1 _inst_2) (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2))) (fun (_x : Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} α β _inst_1 _inst_2) (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2))) => (SupHom.{u_2 u_3} α β _inst_1 _inst_2) -> (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2))) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} α β _inst_1 _inst_2) (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2))) (SupHom.dual.{u_2 u_3} α β _inst_1 _inst_2) f))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Sup_hom.dual_comp SupHom.dual_compₓ'. -/
 @[simp]
-theorem dual_comp (g : SupHomₓ β γ) (f : SupHomₓ α β) : (g.comp f).dual = g.dual.comp f.dual :=
+theorem dual_comp (g : SupHom β γ) (f : SupHom α β) : (g.comp f).dual = g.dual.comp f.dual :=
   rfl
 
+/- warning: Sup_hom.symm_dual_id clashes with sup_hom.symm_dual_id -> SupHom.symm_dual_id
+warning: Sup_hom.symm_dual_id -> SupHom.symm_dual_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} [_inst_1 : HasSup.{u_2} α], Eq.{succ u_2} (SupHom.{u_2 u_2} α α _inst_1 _inst_1) (coeFn.{(max 1 (succ u_2)) succ u_2} (Equiv.{succ u_2 succ u_2} (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1)) (SupHom.{u_2 u_2} α α _inst_1 _inst_1)) (fun (_x : Equiv.{succ u_2 succ u_2} (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1)) (SupHom.{u_2 u_2} α α _inst_1 _inst_1)) => (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1)) -> (SupHom.{u_2 u_2} α α _inst_1 _inst_1)) (Equiv.hasCoeToFun.{succ u_2 succ u_2} (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1)) (SupHom.{u_2 u_2} α α _inst_1 _inst_1)) (Equiv.symm.{succ u_2 succ u_2} (SupHom.{u_2 u_2} α α _inst_1 _inst_1) (InfHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_2} α _inst_1)) (SupHom.dual.{u_2 u_2} α α _inst_1 _inst_1)) (InfHom.id.{u_2} (OrderDual.{u_2} α) (OrderDual.hasInf.{u_2} α _inst_1))) (SupHom.id.{u_2} α _inst_1)
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Sup_hom.symm_dual_id SupHom.symm_dual_idₓ'. -/
 @[simp]
-theorem symm_dual_id : SupHomₓ.dual.symm (InfHomₓ.id _) = SupHomₓ.id α :=
+theorem symm_dual_id : SupHom.dual.symm (InfHom.id _) = SupHom.id α :=
   rfl
 
+/- warning: Sup_hom.symm_dual_comp clashes with sup_hom.symm_dual_comp -> SupHom.symm_dual_comp
+warning: Sup_hom.symm_dual_comp -> SupHom.symm_dual_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} {γ : Type.{u_4}} [_inst_1 : HasSup.{u_2} α] [_inst_2 : HasSup.{u_3} β] [_inst_3 : HasSup.{u_4} γ] (g : InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3)) (f : InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2)), Eq.{(max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} α γ _inst_1 _inst_3) (coeFn.{(max 1 (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.{u_2 u_4} α γ _inst_1 _inst_3)) (fun (_x : Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.{u_2 u_4} α γ _inst_1 _inst_3)) => (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3)) -> (SupHom.{u_2 u_4} α γ _inst_1 _inst_3)) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.{u_2 u_4} α γ _inst_1 _inst_3)) (Equiv.symm.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} α γ _inst_1 _inst_3) (InfHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.dual.{u_2 u_4} α γ _inst_1 _inst_3)) (InfHom.comp.{u_2 u_3 u_4} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3) g f)) (SupHom.comp.{u_2 u_3 u_4} α β γ _inst_1 _inst_2 _inst_3 (coeFn.{(max 1 (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.{u_3 u_4} β γ _inst_2 _inst_3)) (fun (_x : Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.{u_3 u_4} β γ _inst_2 _inst_3)) => (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3)) -> (SupHom.{u_3 u_4} β γ _inst_2 _inst_3)) (Equiv.hasCoeToFun.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.{u_3 u_4} β γ _inst_2 _inst_3)) (Equiv.symm.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} β γ _inst_2 _inst_3) (InfHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasInf.{u_3} β _inst_2) (OrderDual.hasInf.{u_4} γ _inst_3)) (SupHom.dual.{u_3 u_4} β γ _inst_2 _inst_3)) g) (coeFn.{(max 1 (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2)) (SupHom.{u_2 u_3} α β _inst_1 _inst_2)) (fun (_x : Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2)) (SupHom.{u_2 u_3} α β _inst_1 _inst_2)) => (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2)) -> (SupHom.{u_2 u_3} α β _inst_1 _inst_2)) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2)) (SupHom.{u_2 u_3} α β _inst_1 _inst_2)) (Equiv.symm.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} α β _inst_1 _inst_2) (InfHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasInf.{u_2} α _inst_1) (OrderDual.hasInf.{u_3} β _inst_2)) (SupHom.dual.{u_2 u_3} α β _inst_1 _inst_2)) f))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Sup_hom.symm_dual_comp SupHom.symm_dual_compₓ'. -/
 @[simp]
-theorem symm_dual_comp (g : InfHomₓ βᵒᵈ γᵒᵈ) (f : InfHomₓ αᵒᵈ βᵒᵈ) :
-    SupHomₓ.dual.symm (g.comp f) = (SupHomₓ.dual.symm g).comp (SupHomₓ.dual.symm f) :=
+theorem symm_dual_comp (g : InfHom βᵒᵈ γᵒᵈ) (f : InfHom αᵒᵈ βᵒᵈ) :
+    SupHom.dual.symm (g.comp f) = (SupHom.dual.symm g).comp (SupHom.dual.symm f) :=
   rfl
 
-end SupHomₓ
+end SupHom
 
-namespace InfHomₓ
+namespace InfHom
 
-variable [HasInfₓ α] [HasInfₓ β] [HasInfₓ γ]
+variable [HasInf α] [HasInf β] [HasInf γ]
 
-/-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
-@[simps]
-protected def dual : InfHomₓ α β ≃ SupHomₓ αᵒᵈ βᵒᵈ where
-  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_arg toDual (map_Inf f _) }
-  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_arg ofDual (map_Sup f _) }
-  left_inv := fun f => InfHomₓ.ext fun a => rfl
-  right_inv := fun f => SupHomₓ.ext fun a => rfl
-
+/- warning: Inf_hom.dual_id clashes with inf_hom.dual_id -> InfHom.dual_id
+warning: Inf_hom.dual_id -> InfHom.dual_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} [_inst_1 : HasInf.{u_2} α], Eq.{succ u_2} (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1)) (coeFn.{(max 1 (succ u_2)) succ u_2} (Equiv.{succ u_2 succ u_2} (InfHom.{u_2 u_2} α α _inst_1 _inst_1) (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1))) (fun (_x : Equiv.{succ u_2 succ u_2} (InfHom.{u_2 u_2} α α _inst_1 _inst_1) (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1))) => (InfHom.{u_2 u_2} α α _inst_1 _inst_1) -> (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1))) (Equiv.hasCoeToFun.{succ u_2 succ u_2} (InfHom.{u_2 u_2} α α _inst_1 _inst_1) (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1))) (InfHom.dual.{u_2 u_2} α α _inst_1 _inst_1) (InfHom.id.{u_2} α _inst_1)) (SupHom.id.{u_2} (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Inf_hom.dual_id InfHom.dual_idₓ'. -/
 @[simp]
-theorem dual_id : (InfHomₓ.id α).dual = SupHomₓ.id _ :=
+theorem dual_id : (InfHom.id α).dual = SupHom.id _ :=
   rfl
 
+/- warning: Inf_hom.dual_comp clashes with inf_hom.dual_comp -> InfHom.dual_comp
+warning: Inf_hom.dual_comp -> InfHom.dual_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} {γ : Type.{u_4}} [_inst_1 : HasInf.{u_2} α] [_inst_2 : HasInf.{u_3} β] [_inst_3 : HasInf.{u_4} γ] (g : InfHom.{u_3 u_4} β γ _inst_2 _inst_3) (f : InfHom.{u_2 u_3} α β _inst_1 _inst_2), Eq.{(max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3)) (coeFn.{(max 1 (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} α γ _inst_1 _inst_3) (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3))) (fun (_x : Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} α γ _inst_1 _inst_3) (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3))) => (InfHom.{u_2 u_4} α γ _inst_1 _inst_3) -> (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3))) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} α γ _inst_1 _inst_3) (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3))) (InfHom.dual.{u_2 u_4} α γ _inst_1 _inst_3) (InfHom.comp.{u_2 u_3 u_4} α β γ _inst_1 _inst_2 _inst_3 g f)) (SupHom.comp.{u_2 u_3 u_4} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3) (coeFn.{(max 1 (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} β γ _inst_2 _inst_3) (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3))) (fun (_x : Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} β γ _inst_2 _inst_3) (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3))) => (InfHom.{u_3 u_4} β γ _inst_2 _inst_3) -> (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3))) (Equiv.hasCoeToFun.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} β γ _inst_2 _inst_3) (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3))) (InfHom.dual.{u_3 u_4} β γ _inst_2 _inst_3) g) (coeFn.{(max 1 (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} α β _inst_1 _inst_2) (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2))) (fun (_x : Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} α β _inst_1 _inst_2) (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2))) => (InfHom.{u_2 u_3} α β _inst_1 _inst_2) -> (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2))) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} α β _inst_1 _inst_2) (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2))) (InfHom.dual.{u_2 u_3} α β _inst_1 _inst_2) f))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Inf_hom.dual_comp InfHom.dual_compₓ'. -/
 @[simp]
-theorem dual_comp (g : InfHomₓ β γ) (f : InfHomₓ α β) : (g.comp f).dual = g.dual.comp f.dual :=
+theorem dual_comp (g : InfHom β γ) (f : InfHom α β) : (g.comp f).dual = g.dual.comp f.dual :=
   rfl
 
+/- warning: Inf_hom.symm_dual_id clashes with inf_hom.symm_dual_id -> InfHom.symm_dual_id
+warning: Inf_hom.symm_dual_id -> InfHom.symm_dual_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} [_inst_1 : HasInf.{u_2} α], Eq.{succ u_2} (InfHom.{u_2 u_2} α α _inst_1 _inst_1) (coeFn.{(max 1 (succ u_2)) succ u_2} (Equiv.{succ u_2 succ u_2} (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1)) (InfHom.{u_2 u_2} α α _inst_1 _inst_1)) (fun (_x : Equiv.{succ u_2 succ u_2} (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1)) (InfHom.{u_2 u_2} α α _inst_1 _inst_1)) => (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1)) -> (InfHom.{u_2 u_2} α α _inst_1 _inst_1)) (Equiv.hasCoeToFun.{succ u_2 succ u_2} (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1)) (InfHom.{u_2 u_2} α α _inst_1 _inst_1)) (Equiv.symm.{succ u_2 succ u_2} (InfHom.{u_2 u_2} α α _inst_1 _inst_1) (SupHom.{u_2 u_2} (OrderDual.{u_2} α) (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_2} α _inst_1)) (InfHom.dual.{u_2 u_2} α α _inst_1 _inst_1)) (SupHom.id.{u_2} (OrderDual.{u_2} α) (OrderDual.hasSup.{u_2} α _inst_1))) (InfHom.id.{u_2} α _inst_1)
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Inf_hom.symm_dual_id InfHom.symm_dual_idₓ'. -/
 @[simp]
-theorem symm_dual_id : InfHomₓ.dual.symm (SupHomₓ.id _) = InfHomₓ.id α :=
+theorem symm_dual_id : InfHom.dual.symm (SupHom.id _) = InfHom.id α :=
   rfl
 
+/- warning: Inf_hom.symm_dual_comp clashes with inf_hom.symm_dual_comp -> InfHom.symm_dual_comp
+warning: Inf_hom.symm_dual_comp -> InfHom.symm_dual_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} {γ : Type.{u_4}} [_inst_1 : HasInf.{u_2} α] [_inst_2 : HasInf.{u_3} β] [_inst_3 : HasInf.{u_4} γ] (g : SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3)) (f : SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2)), Eq.{(max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} α γ _inst_1 _inst_3) (coeFn.{(max 1 (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.{u_2 u_4} α γ _inst_1 _inst_3)) (fun (_x : Equiv.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.{u_2 u_4} α γ _inst_1 _inst_3)) => (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3)) -> (InfHom.{u_2 u_4} α γ _inst_1 _inst_3)) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.{u_2 u_4} α γ _inst_1 _inst_3)) (Equiv.symm.{(max (succ u_2) (succ u_4)) (max (succ u_2) (succ u_4))} (InfHom.{u_2 u_4} α γ _inst_1 _inst_3) (SupHom.{u_2 u_4} (OrderDual.{u_2} α) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.dual.{u_2 u_4} α γ _inst_1 _inst_3)) (SupHom.comp.{u_2 u_3 u_4} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3) g f)) (InfHom.comp.{u_2 u_3 u_4} α β γ _inst_1 _inst_2 _inst_3 (coeFn.{(max 1 (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.{u_3 u_4} β γ _inst_2 _inst_3)) (fun (_x : Equiv.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.{u_3 u_4} β γ _inst_2 _inst_3)) => (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3)) -> (InfHom.{u_3 u_4} β γ _inst_2 _inst_3)) (Equiv.hasCoeToFun.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.{u_3 u_4} β γ _inst_2 _inst_3)) (Equiv.symm.{(max (succ u_3) (succ u_4)) (max (succ u_3) (succ u_4))} (InfHom.{u_3 u_4} β γ _inst_2 _inst_3) (SupHom.{u_3 u_4} (OrderDual.{u_3} β) (OrderDual.{u_4} γ) (OrderDual.hasSup.{u_3} β _inst_2) (OrderDual.hasSup.{u_4} γ _inst_3)) (InfHom.dual.{u_3 u_4} β γ _inst_2 _inst_3)) g) (coeFn.{(max 1 (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2)) (InfHom.{u_2 u_3} α β _inst_1 _inst_2)) (fun (_x : Equiv.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2)) (InfHom.{u_2 u_3} α β _inst_1 _inst_2)) => (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2)) -> (InfHom.{u_2 u_3} α β _inst_1 _inst_2)) (Equiv.hasCoeToFun.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2)) (InfHom.{u_2 u_3} α β _inst_1 _inst_2)) (Equiv.symm.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (InfHom.{u_2 u_3} α β _inst_1 _inst_2) (SupHom.{u_2 u_3} (OrderDual.{u_2} α) (OrderDual.{u_3} β) (OrderDual.hasSup.{u_2} α _inst_1) (OrderDual.hasSup.{u_3} β _inst_2)) (InfHom.dual.{u_2 u_3} α β _inst_1 _inst_2)) f))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align Inf_hom.symm_dual_comp InfHom.symm_dual_compₓ'. -/
 @[simp]
-theorem symm_dual_comp (g : SupHomₓ βᵒᵈ γᵒᵈ) (f : SupHomₓ αᵒᵈ βᵒᵈ) :
-    InfHomₓ.dual.symm (g.comp f) = (InfHomₓ.dual.symm g).comp (InfHomₓ.dual.symm f) :=
+theorem symm_dual_comp (g : SupHom βᵒᵈ γᵒᵈ) (f : SupHom αᵒᵈ βᵒᵈ) :
+    InfHom.dual.symm (g.comp f) = (InfHom.dual.symm g).comp (InfHom.dual.symm f) :=
   rfl
 
-end InfHomₓ
+end InfHom
 
 namespace CompleteLatticeHom
 
@@ -653,10 +537,10 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ]
 lattices. -/
 @[simps]
 protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f.toSupHom.dual, f.map_Inf'⟩
-  invFun := fun f => ⟨f.toSupHom.dual, f.map_Inf'⟩
-  left_inv := fun f => ext fun a => rfl
-  right_inv := fun f => ext fun a => rfl
+  toFun f := ⟨f.toSupHom.dual, f.map_Inf'⟩
+  invFun f := ⟨f.toSupHom.dual, f.map_Inf'⟩
+  left_inv f := ext fun a => rfl
+  right_inv f := ext fun a => rfl
 
 @[simp]
 theorem dual_id : (CompleteLatticeHom.id α).dual = CompleteLatticeHom.id _ :=
@@ -685,8 +569,8 @@ namespace CompleteLatticeHom
 /-- `set.preimage` as a complete lattice homomorphism. -/
 def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α) where
   toFun := Preimage f
-  map_Sup' := fun s => preimage_sUnion.trans <| by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
-  map_Inf' := fun s => preimage_sInter.trans <| by simp only [Set.Inf_eq_sInter, Set.sInter_image]
+  map_Sup' s := preimage_sUnion.trans <| by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
+  map_Inf' s := preimage_sInter.trans <| by simp only [Set.Inf_eq_sInter, Set.sInter_image]
 
 @[simp]
 theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = Preimage f :=

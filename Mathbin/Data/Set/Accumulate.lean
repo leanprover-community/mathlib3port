@@ -29,19 +29,19 @@ theorem accumulate_def [LE α] {x : α} : Accumulate s x = ⋃ y ≤ x, s y :=
 theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ y ≤ x, z ∈ s y :=
   mem_Union₂
 
-theorem subset_accumulate [Preorderₓ α] {x : α} : s x ⊆ Accumulate s x := fun z => mem_bUnion le_rflₓ
+theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ Accumulate s x := fun z => mem_bUnion le_rfl
 
-theorem monotone_accumulate [Preorderₓ α] : Monotoneₓ (Accumulate s) := fun x y hxy =>
-  bUnion_subset_bUnion_left fun z hz => le_transₓ hz hxy
+theorem monotone_accumulate [Preorder α] : Monotone (Accumulate s) := fun x y hxy =>
+  bUnion_subset_bUnion_left fun z hz => le_trans hz hxy
 
-theorem bUnion_accumulate [Preorderₓ α] (x : α) : (⋃ y ≤ x, Accumulate s y) = ⋃ y ≤ x, s y := by
+theorem bUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, Accumulate s y) = ⋃ y ≤ x, s y := by
   apply subset.antisymm
   · exact Union₂_subset fun y hy => monotone_accumulate hy
     
   · exact Union₂_mono fun y hy => subset_accumulate
     
 
-theorem Union_accumulate [Preorderₓ α] : (⋃ x, Accumulate s x) = ⋃ x, s x := by
+theorem Union_accumulate [Preorder α] : (⋃ x, Accumulate s x) = ⋃ x, s x := by
   apply subset.antisymm
   · simp only [subset_def, mem_Union, exists_imp_distrib, mem_accumulate]
     intro z x x' hx'x hz

@@ -22,7 +22,7 @@ universe u
 
 variable {R : Type u} {a b : R} {m n : ℕ}
 
-variable [Semiringₓ R] {p q r : R[X]}
+variable [Semiring R] {p q r : R[X]}
 
 theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) = monomial j 1 ↔ i = j := by
   simp_rw [← of_finsupp_single]
@@ -31,10 +31,10 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) =
 instance [Nontrivial R] : Infinite R[X] :=
   (Infinite.of_injective fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
 
-theorem card_support_le_one_iff_monomial {f : R[X]} : Finsetₓ.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
+theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
   · intro H
-    rw [Finsetₓ.card_le_one_iff_subset_singleton] at H
+    rw [Finset.card_le_one_iff_subset_singleton] at H
     rcases H with ⟨n, hn⟩
     refine' ⟨n, f.coeff n, _⟩
     ext i
@@ -43,17 +43,17 @@ theorem card_support_le_one_iff_monomial {f : R[X]} : Finsetₓ.card f.Support �
       
     · have : f.coeff i = 0 := by
         rw [← not_mem_support_iff]
-        exact fun hi' => hi (Finsetₓ.mem_singleton.1 (hn hi'))
+        exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
       simp [this, Ne.symm hi, coeff_monomial]
       
     
   · rintro ⟨n, a, rfl⟩
-    rw [← Finsetₓ.card_singleton n]
-    apply Finsetₓ.card_le_of_subset
+    rw [← Finset.card_singleton n]
+    apply Finset.card_le_of_subset
     exact support_monomial' _ _
     
 
-theorem ring_hom_ext {S} [Semiringₓ S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a) = g (c a)) (h₂ : f x = g x) : f = g := by
+theorem ring_hom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a) = g (c a)) (h₂ : f x = g x) : f = g := by
   set f' := f.comp (to_finsupp_iso R).symm.toRingHom with hf'
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
   have A : f' = g' := by
@@ -75,7 +75,7 @@ theorem ring_hom_ext {S} [Semiringₓ S] {f g : R[X] →+* S} (h₁ : ∀ a, f (
   rw [B, C, A]
 
 @[ext]
-theorem ring_hom_ext' {S} [Semiringₓ S] {f g : R[X] →+* S} (h₁ : f.comp c = g.comp c) (h₂ : f x = g x) : f = g :=
+theorem ring_hom_ext' {S} [Semiring S] {f g : R[X] →+* S} (h₁ : f.comp c = g.comp c) (h₂ : f x = g x) : f = g :=
   ring_hom_ext (RingHom.congr_fun h₁) h₂
 
 end Polynomial

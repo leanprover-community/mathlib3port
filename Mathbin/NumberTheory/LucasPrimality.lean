@@ -42,23 +42,23 @@ theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
     (hd : ∀ q : ℕ, q.Prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.Prime := by
   have h0 : p ≠ 0 := by
     rintro ⟨⟩
-    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
+    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
   have h1 : p ≠ 1 := by
     rintro ⟨⟩
-    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
-  have hp1 : 1 < p := lt_of_le_of_neₓ h0.bot_lt h1.symm
+    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
+  have hp1 : 1 < p := lt_of_le_of_ne h0.bot_lt h1.symm
   have order_of_a : orderOf a = p - 1 := by
     apply order_of_eq_of_pow_and_pow_div_prime _ ha hd
     exact tsub_pos_of_lt hp1
   haveI : NeZero p := ⟨h0⟩
   rw [Nat.prime_iff_card_units]
   -- Prove cardinality of `units` of `zmod p` is both `≤ p-1` and `≥ p-1`
-  refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _
+  refine' le_antisymm (Nat.card_units_zmod_lt_sub_one hp1) _
   have hp' : p - 2 + 1 = p - 1 := tsub_add_eq_add_tsub hp1
-  let a' : (Zmod p)ˣ := Units.mkOfMulEqOne a (a ^ (p - 2)) (by rw [← pow_succₓ, hp', ha])
+  let a' : (Zmod p)ˣ := Units.mkOfMulEqOne a (a ^ (p - 2)) (by rw [← pow_succ, hp', ha])
   calc
     p - 1 = orderOf a := order_of_a.symm
     _ = orderOf a' := order_of_injective (Units.coeHom (Zmod p)) Units.ext a'
-    _ ≤ Fintypeₓ.card (Zmod p)ˣ := order_of_le_card_univ
+    _ ≤ Fintype.card (Zmod p)ˣ := order_of_le_card_univ
     
 

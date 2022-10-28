@@ -44,12 +44,12 @@ want to use one of the auxiliary lemmas, use
 structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] where
   toFun : ℝ → E → E
   (tMin tMax : ℝ)
-  t₀ : Icc t_min t_max
+  t₀ : IccCat t_min t_max
   x₀ : E
   (c r l : ℝ≥0)
-  lipschitz' : ∀ t ∈ Icc t_min t_max, LipschitzOnWith L (to_fun t) (ClosedBall x₀ R)
-  cont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => to_fun t x) (Icc t_min t_max)
-  norm_le' : ∀ t ∈ Icc t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥to_fun t x∥ ≤ C
+  lipschitz' : ∀ t ∈ IccCat t_min t_max, LipschitzOnWith L (to_fun t) (ClosedBall x₀ R)
+  cont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => to_fun t x) (IccCat t_min t_max)
+  norm_le' : ∀ t ∈ IccCat t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥to_fun t x∥ ≤ C
   C_mul_le_R : (C : ℝ) * max (t_max - t₀) (t₀ - t_min) ≤ R
 
 namespace PicardLindelof
@@ -60,27 +60,27 @@ instance : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
   ⟨toFun⟩
 
 instance : Inhabited (PicardLindelof E) :=
-  ⟨⟨0, 0, 0, ⟨0, le_rflₓ, le_rflₓ⟩, 0, 0, 0, 0, fun t ht => (LipschitzWith.const 0).LipschitzOnWith _, fun _ _ => by
+  ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0, fun t ht => (LipschitzWith.const 0).LipschitzOnWith _, fun _ _ => by
       simpa only [Pi.zero_apply] using continuous_on_const, fun t ht x hx => norm_zero.le, (zero_mul _).le⟩⟩
 
 theorem t_min_le_t_max : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2
 
-protected theorem nonempty_Icc : (Icc v.tMin v.tMax).Nonempty :=
+protected theorem nonempty_Icc : (IccCat v.tMin v.tMax).Nonempty :=
   nonempty_Icc.2 v.t_min_le_t_max
 
-protected theorem lipschitz_on_with {t} (ht : t ∈ Icc v.tMin v.tMax) :
+protected theorem lipschitzOnWith {t} (ht : t ∈ IccCat v.tMin v.tMax) :
     LipschitzOnWith v.l (v t) (ClosedBall v.x₀ v.r) :=
   v.lipschitz' t ht
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-protected theorem continuous_on : ContinuousOn (uncurry v) (Icc v.tMin v.tMax ×ˢ ClosedBall v.x₀ v.r) :=
-  have : ContinuousOn (uncurry (flip v)) (ClosedBall v.x₀ v.r ×ˢ Icc v.tMin v.tMax) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+protected theorem continuous_on : ContinuousOn (uncurry v) (IccCat v.tMin v.tMax ×ˢ ClosedBall v.x₀ v.r) :=
+  have : ContinuousOn (uncurry (flip v)) (ClosedBall v.x₀ v.r ×ˢ IccCat v.tMin v.tMax) :=
     continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.cont v.lipschitz'
   this.comp continuous_swap.ContinuousOn preimage_swap_prod.symm.Subset
 
-theorem norm_le {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) {x : E} (hx : x ∈ ClosedBall v.x₀ v.r) : ∥v t x∥ ≤ v.c :=
+theorem norm_le {t : ℝ} (ht : t ∈ IccCat v.tMin v.tMax) {x : E} (hx : x ∈ ClosedBall v.x₀ v.r) : ∥v t x∥ ≤ v.c :=
   v.norm_le' _ ht _ hx
 
 /-- The maximum of distances from `t₀` to the endpoints of `[t_min, t_max]`. -/
@@ -90,25 +90,25 @@ def tDist : ℝ :=
 theorem t_dist_nonneg : 0 ≤ v.tDist :=
   le_max_iff.2 <| Or.inl <| sub_nonneg.2 v.t₀.2.2
 
-theorem dist_t₀_le (t : Icc v.tMin v.tMax) : dist t v.t₀ ≤ v.tDist := by
+theorem dist_t₀_le (t : IccCat v.tMin v.tMax) : dist t v.t₀ ≤ v.tDist := by
   rw [Subtype.dist_eq, Real.dist_eq]
-  cases' le_totalₓ t v.t₀ with ht ht
+  cases' le_total t v.t₀ with ht ht
   · rw [abs_of_nonpos (sub_nonpos.2 <| Subtype.coe_le_coe.2 ht), neg_sub]
-    exact (sub_le_sub_left t.2.1 _).trans (le_max_rightₓ _ _)
+    exact (sub_le_sub_left t.2.1 _).trans (le_max_right _ _)
     
   · rw [abs_of_nonneg (sub_nonneg.2 <| Subtype.coe_le_coe.2 ht)]
-    exact (sub_le_sub_right t.2.2 _).trans (le_max_leftₓ _ _)
+    exact (sub_le_sub_right t.2.2 _).trans (le_max_left _ _)
     
 
 /-- Projection $ℝ → [t_{\min}, t_{\max}]$ sending $(-∞, t_{\min}]$ to $t_{\min}$ and $[t_{\max}, ∞)$
 to $t_{\max}$. -/
-def proj : ℝ → Icc v.tMin v.tMax :=
+def proj : ℝ → IccCat v.tMin v.tMax :=
   projIcc v.tMin v.tMax v.t_min_le_t_max
 
-theorem proj_coe (t : Icc v.tMin v.tMax) : v.proj t = t :=
+theorem proj_coe (t : IccCat v.tMin v.tMax) : v.proj t = t :=
   proj_Icc_coe _ _
 
-theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) : ↑(v.proj t) = t := by
+theorem proj_of_mem {t : ℝ} (ht : t ∈ IccCat v.tMin v.tMax) : ↑(v.proj t) = t := by
   simp only [proj, proj_Icc_of_mem _ ht, Subtype.coe_mk]
 
 @[continuity]
@@ -120,7 +120,7 @@ Lipschitz continuous with constant $C$. The map sending $γ$ to
 $\mathbf Pγ(t)=x₀ + ∫_{t₀}^{t} v(τ, γ(τ))\,dτ$ is a contracting map on this space, and its fixed
 point is a solution of the ODE $\dot x=v(t, x)$. -/
 structure FunSpace where
-  toFun : Icc v.tMin v.tMax → E
+  toFun : IccCat v.tMin v.tMax → E
   map_t₀' : to_fun v.t₀ = v.x₀
   lipschitz' : LipschitzWith v.c to_fun
 
@@ -128,7 +128,7 @@ namespace FunSpace
 
 variable {v} (f : FunSpace v)
 
-instance : CoeFun (FunSpace v) fun _ => Icc v.tMin v.tMax → E :=
+instance : CoeFun (FunSpace v) fun _ => IccCat v.tMin v.tMax → E :=
   ⟨toFun⟩
 
 instance : Inhabited v.FunSpace :=
@@ -141,7 +141,7 @@ protected theorem continuous : Continuous f :=
   f.lipschitz.Continuous
 
 /-- Each curve in `picard_lindelof.fun_space` is continuous. -/
-def toContinuousMap : v.FunSpace ↪ C(Icc v.tMin v.tMax, E) :=
+def toContinuousMap : v.FunSpace ↪ C(IccCat v.tMin v.tMax, E) :=
   ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by
     cases f
     cases g
@@ -154,7 +154,7 @@ theorem uniform_inducing_to_continuous_map : UniformInducing (@toContinuousMap _
   ⟨rfl⟩
 
 theorem range_to_continuous_map :
-    Range toContinuousMap = { f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.c f } := by
+    Range toContinuousMap = { f : C(IccCat v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.c f } := by
   ext f
   constructor
   · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
@@ -168,7 +168,7 @@ theorem range_to_continuous_map :
 theorem map_t₀ : f v.t₀ = v.x₀ :=
   f.map_t₀'
 
-protected theorem mem_closed_ball (t : Icc v.tMin v.tMax) : f t ∈ ClosedBall v.x₀ v.r :=
+protected theorem mem_closed_ball (t : IccCat v.tMin v.tMax) : f t ∈ ClosedBall v.x₀ v.r :=
   calc
     dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by rw [f.map_t₀']
     _ ≤ v.c * dist t v.t₀ := f.lipschitz.dist_le_mul _ _
@@ -182,7 +182,7 @@ function is the image of `γ` under the contracting map we are going to define b
 def vComp (t : ℝ) : E :=
   v (v.proj t) (f (v.proj t))
 
-theorem v_comp_apply_coe (t : Icc v.tMin v.tMax) : f.vComp t = v t (f t) := by simp only [v_comp, proj_coe]
+theorem v_comp_apply_coe (t : IccCat v.tMin v.tMax) : f.vComp t = v t (f t) := by simp only [v_comp, proj_coe]
 
 theorem continuous_v_comp : Continuous f.vComp := by
   have := (continuous_subtype_coe.prod_mk f.continuous).comp v.continuous_proj
@@ -192,7 +192,7 @@ theorem continuous_v_comp : Continuous f.vComp := by
 theorem norm_v_comp_le (t : ℝ) : ∥f.vComp t∥ ≤ v.c :=
   v.norm_le (v.proj t).2 <| f.mem_closed_ball _
 
-theorem dist_apply_le_dist (f₁ f₂ : FunSpace v) (t : Icc v.tMin v.tMax) : dist (f₁ t) (f₂ t) ≤ dist f₁ f₂ :=
+theorem dist_apply_le_dist (f₁ f₂ : FunSpace v) (t : IccCat v.tMin v.tMax) : dist (f₁ t) (f₂ t) ≤ dist f₁ f₂ :=
   @ContinuousMap.dist_apply_le_dist _ _ _ _ _ f₁.toContinuousMap f₂.toContinuousMap _
 
 theorem dist_le_of_forall {f₁ f₂ : FunSpace v} {d : ℝ} (h : ∀ t, dist (f₁ t) (f₂ t) ≤ d) : dist f₁ f₂ ≤ d :=
@@ -202,11 +202,11 @@ theorem dist_le_of_forall {f₁ f₂ : FunSpace v} {d : ℝ} (h : ∀ t, dist (f
 instance [CompleteSpace E] : CompleteSpace v.FunSpace := by
   refine' (complete_space_iff_is_complete_range uniform_inducing_to_continuous_map).2 (IsClosed.is_complete _)
   rw [range_to_continuous_map, set_of_and]
-  refine' (is_closed_eq (ContinuousMap.continuous_eval_const _) continuous_const).inter _
-  have : IsClosed { f : Icc v.t_min v.t_max → E | LipschitzWith v.C f } := is_closed_set_of_lipschitz_with v.C
+  refine' (isClosedEq (ContinuousMap.continuous_eval_const _) continuous_const).inter _
+  have : IsClosed { f : Icc v.t_min v.t_max → E | LipschitzWith v.C f } := isClosedSetOfLipschitzWith v.C
   exact this.preimage ContinuousMap.continuous_coe
 
-theorem interval_integrable_v_comp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
+theorem intervalIntegrableVComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
   f.continuous_v_comp.IntervalIntegrable _ _
 
 variable [CompleteSpace E]
@@ -216,22 +216,22 @@ that the fixed point of this map is the solution of the corresponding ODE.
 
 More precisely, some iteration of this map is a contracting map. -/
 def next (f : FunSpace v) : FunSpace v where
-  toFun := fun t => v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ
-  map_t₀' := by rw [integral_same, add_zeroₓ]
+  toFun t := v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ
+  map_t₀' := by rw [integral_same, add_zero]
   lipschitz' :=
-    LipschitzWith.of_dist_le_mul fun t₁ t₂ => by
+    LipschitzWith.ofDistLeMul fun t₁ t₂ => by
       rw [dist_add_left, dist_eq_norm,
         integral_interval_sub_left (f.interval_integrable_v_comp _ _) (f.interval_integrable_v_comp _ _)]
       exact norm_integral_le_of_norm_le_const fun t ht => f.norm_v_comp_le _
 
-theorem next_apply (t : Icc v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ :=
+theorem next_apply (t : IccCat v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ :=
   rfl
 
-theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
-    HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.tMin v.tMax) t := by
+theorem hasDerivWithinAtNext (t : IccCat v.tMin v.tMax) :
+    HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (IccCat v.tMin v.tMax) t := by
   haveI : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
   simp only [(· ∘ ·), next_apply]
-  refine' HasDerivWithinAt.const_add _ _
+  refine' HasDerivWithinAt.constAdd _ _
   have : HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max) t :=
     integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _)
       (f.continuous_v_comp.strongly_measurable_at_filter _ _) f.continuous_v_comp.continuous_within_at
@@ -241,7 +241,7 @@ theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
   rw [v.proj_of_mem ht']
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
-    (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * d) (t : Icc v.tMin v.tMax) :
+    (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * d) (t : IccCat v.tMin v.tMax) :
     dist (next f₁ t) (next f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := by
   simp only [dist_eq_norm, next_apply, add_sub_add_left_eq_sub, ←
     intervalIntegral.integral_sub (interval_integrable_v_comp _ _ _) (interval_integrable_v_comp _ _ _),
@@ -250,10 +250,10 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     ∥∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ∥ ≤
         ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * abs (τ - v.t₀)) ^ n / n ! * d) :=
       by
-      refine' norm_integral_le_of_norm_le (Continuous.integrable_on_interval_oc _) _
+      refine' norm_integral_le_of_norm_le (Continuous.integrableOnIntervalOc _) _
       · continuity
         
-      · refine' (ae_restrict_mem measurable_set_Ioc).mono fun τ hτ => _
+      · refine' (ae_restrict_mem measurableSetIoc).mono fun τ hτ => _
         refine'
           (v.lipschitz_on_with (v.proj τ).2).norm_sub_le_of_le (f₁.mem_closed_ball _) (f₂.mem_closed_ball _)
             ((h _).trans_eq _)
@@ -262,14 +262,14 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
         
     _ = (v.L * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := _
     
-  simp_rw [mul_powₓ, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
-    integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succₓ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mulₓ,
-    Nat.cast_succₓ, mul_inv, mul_assoc]
+  simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
+    integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mul,
+    Nat.cast_succ, mul_inv, mul_assoc]
 
-theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : Icc v.tMin v.tMax) :
+theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : IccCat v.tMin v.tMax) :
     dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * dist f₁ f₂ := by
   induction' n with n ihn generalizing t
-  · rw [pow_zeroₓ, Nat.factorial_zero, Nat.cast_oneₓ, div_one, one_mulₓ]
+  · rw [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one, one_mul]
     exact dist_apply_le_dist f₁ f₂ t
     
   · rw [iterate_succ_apply', iterate_succ_apply']
@@ -295,7 +295,7 @@ theorem exists_contracting_iterate :
     ⟨N, hN⟩
   have : (0 : ℝ) ≤ (v.L * v.t_dist) ^ N / N ! :=
     div_nonneg (pow_nonneg (mul_nonneg v.L.2 v.t_dist_nonneg) _) (Nat.cast_nonneg _)
-  exact ⟨N, ⟨_, this⟩, hN, LipschitzWith.of_dist_le_mul fun f g => fun_space.dist_iterate_next_le f g N⟩
+  exact ⟨N, ⟨_, this⟩, hN, LipschitzWith.ofDistLeMul fun f g => fun_space.dist_iterate_next_le f g N⟩
 
 theorem exists_fixed : ∃ f : v.FunSpace, f.next = f :=
   let ⟨N, K, hK⟩ := exists_contracting_iterate v
@@ -305,7 +305,8 @@ end
 
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
 theorem exists_solution :
-    ∃ f : ℝ → E, f v.t₀ = v.x₀ ∧ ∀ t ∈ Icc v.tMin v.tMax, HasDerivWithinAt f (v t (f t)) (Icc v.tMin v.tMax) t := by
+    ∃ f : ℝ → E, f v.t₀ = v.x₀ ∧ ∀ t ∈ IccCat v.tMin v.tMax, HasDerivWithinAt f (v t (f t)) (IccCat v.tMin v.tMax) t :=
+  by
   rcases v.exists_fixed with ⟨f, hf⟩
   refine' ⟨f ∘ v.proj, _, fun t ht => _⟩
   · simp only [(· ∘ ·), proj_coe, f.map_t₀]
@@ -319,12 +320,12 @@ end PicardLindelof
 
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
 theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] {v : ℝ → E → E}
-    {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0}
-    (Hlip : ∀ t ∈ Icc t_min t_max, LipschitzOnWith L (v t) (ClosedBall x₀ R))
-    (Hcont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => v t x) (Icc t_min t_max))
-    (Hnorm : ∀ t ∈ Icc t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥v t x∥ ≤ C)
+    {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ IccCat t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0}
+    (Hlip : ∀ t ∈ IccCat t_min t_max, LipschitzOnWith L (v t) (ClosedBall x₀ R))
+    (Hcont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => v t x) (IccCat t_min t_max))
+    (Hnorm : ∀ t ∈ IccCat t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥v t x∥ ≤ C)
     (Hmul_le : C * max (t_max - t₀) (t₀ - t_min) ≤ R) :
-    ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Icc t_min t_max, HasDerivWithinAt f (v t (f t)) (Icc t_min t_max) t := by
+    ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ IccCat t_min t_max, HasDerivWithinAt f (v t (f t)) (IccCat t_min t_max) t := by
   lift C to ℝ≥0 using (norm_nonneg _).trans <| Hnorm t₀ ht₀ x₀ (mem_closed_ball_self hR)
   lift R to ℝ≥0 using hR
   lift t₀ to Icc t_min t_max using ht₀

@@ -22,7 +22,7 @@ open BigOperators
 
 noncomputable section
 
-variable {σ R A : Type _} [CommSemiringₓ R] [AddCommMonoidₓ A] [Module R A] [Module (MvPolynomial σ R) A]
+variable {σ R A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A] [Module (MvPolynomial σ R) A]
 
 section
 
@@ -87,19 +87,19 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
   have : ∀ p i, D (p * X i) = p • D (X i) + (X i : MvPolynomial σ R) • D p := by
     intro p i
     induction' p using MvPolynomial.induction_on' with s r p q hp hq
-    · rw [← mul_oneₓ r, ← C_mul_monomial, mul_assoc, C_mul', D.map_smul, H, C_mul', smul_assoc, smul_add, D.map_smul,
+    · rw [← mul_one r, ← C_mul_monomial, mul_assoc, C_mul', D.map_smul, H, C_mul', smul_assoc, smul_add, D.map_smul,
         smul_comm r (X i)]
       infer_instance
       
-    · rw [add_mulₓ, map_add, map_add, hp, hq, add_smul, smul_add, add_add_add_commₓ]
+    · rw [add_mul, map_add, map_add, hp, hq, add_smul, smul_add, add_add_add_comm]
       
   intro p q
   induction q using MvPolynomial.induction_on
-  case h_C c => rw [mul_comm, C_mul', hC, smul_zero, zero_addₓ, D.map_smul, C_eq_smul_one, smul_one_smul]
+  case h_C c => rw [mul_comm, C_mul', hC, smul_zero, zero_add, D.map_smul, C_eq_smul_one, smul_one_smul]
   case h_add q₁ q₂ h₁ h₂ =>
-  simp only [mul_addₓ, map_add, h₁, h₂, smul_add, add_smul]
+  simp only [mul_add, map_add, h₁, h₂, smul_add, add_smul]
   abel
-  case h_X q i hq => simp only [this, ← mul_assoc, hq, mul_smul, smul_add, smul_comm (X i), add_assocₓ]
+  case h_X q i hq => simp only [this, ← mul_assoc, hq, mul_smul, smul_add, smul_comm (X i), add_assoc]
 
 variable (R)
 
@@ -109,22 +109,22 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
   map_one_eq_zero' := mk_derivationₗ_C _ 1
   leibniz' :=
     (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 fun s i => by
-      simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mulₓ]
+      simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mul]
       rw [Finsupp.sum_add_index] <;> [skip,
         · simp
           ,
         · intros
-          simp only [Nat.cast_addₓ, (monomial _).map_add, add_smul]
+          simp only [Nat.cast_add, (monomial _).map_add, add_smul]
           ]
       rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip,
         · simp
           ,
         · simp
           ]
-      rw [tsub_self, add_tsub_cancel_right, Nat.cast_oneₓ, ← C_apply, C_1, one_smul, add_commₓ, Finsupp.smul_sum]
-      refine' congr_arg2ₓ (· + ·) rfl (Finsetₓ.sum_congr rfl fun j hj => _)
+      rw [tsub_self, add_tsub_cancel_right, Nat.cast_one, ← C_apply, C_1, one_smul, add_comm, Finsupp.smul_sum]
+      refine' congr_arg2 (· + ·) rfl (Finset.sum_congr rfl fun j hj => _)
       dsimp only
-      rw [smul_smul, monomial_mul, one_mulₓ, add_commₓ s, add_tsub_assoc_of_le]
+      rw [smul_smul, monomial_mul, one_mul, add_comm s, add_tsub_assoc_of_le]
       rwa [Finsupp.single_le_iff, Nat.succ_le_iff, pos_iff_ne_zero, ← Finsupp.mem_support_iff]
 
 @[simp]

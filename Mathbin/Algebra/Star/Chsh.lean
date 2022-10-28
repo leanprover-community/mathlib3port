@@ -80,7 +80,7 @@ The physical interpretation is that `A₀` and `A₁` are a pair of boolean obse
 are spacelike separated from another pair `B₀` and `B₁` of boolean observables.
 -/
 @[nolint has_nonempty_instance]
-structure IsCHSHTuple {R} [Monoidₓ R] [StarSemigroup R] (A₀ A₁ B₀ B₁ : R) where
+structure IsCHSHTuple {R} [Monoid R] [StarSemigroup R] (A₀ A₁ B₀ B₁ : R) where
   A₀_inv : A₀ ^ 2 = 1
   A₁_inv : A₁ ^ 2 = 1
   B₀_inv : B₀ ^ 2 = 1
@@ -96,7 +96,7 @@ structure IsCHSHTuple {R} [Monoidₓ R] [StarSemigroup R] (A₀ A₁ B₀ B₁ :
 
 variable {R : Type u}
 
-theorem CHSH_id [CommRingₓ R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1) (A₁_inv : A₁ ^ 2 = 1) (B₀_inv : B₀ ^ 2 = 1)
+theorem CHSH_id [CommRing R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1) (A₁_inv : A₁ ^ 2 = 1) (B₀_inv : B₀ ^ 2 = 1)
     (B₁_inv : B₁ ^ 2 = 1) :
     (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) * (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) =
       4 * (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) :=
@@ -106,9 +106,9 @@ theorem CHSH_id [CommRingₓ R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 =
   rw [← sub_eq_zero]
   repeat'
   ring_nf
-  simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mulₓ, mul_addₓ, sub_mul, mul_sub, add_assocₓ, neg_add, neg_sub,
-    sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mulₓ, mul_oneₓ, add_right_negₓ, add_zeroₓ,
-    sub_eq_add_neg, A₀_inv, mul_oneₓ, add_right_negₓ, zero_mul]
+  simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mul, mul_add, sub_mul, mul_sub, add_assoc, neg_add, neg_sub, sub_add,
+    sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mul, mul_one, add_right_neg, add_zero,
+    sub_eq_add_neg, A₀_inv, mul_one, add_right_neg, zero_mul]
 
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
@@ -166,7 +166,7 @@ we prepare some easy lemmas about √2.
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) := by
   ring_nf
   field_simp [(@Real.sqrt_pos 2).2 (by norm_num)]
-  convert congr_arg (· ^ 2) (@Real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mulₓ] <;> norm_num
+  convert congr_arg (· ^ 2) (@Real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mul] <;> norm_num
 
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by
   rw [← mul_inv]
@@ -195,7 +195,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
   have w : √2 ^ 3 • 1 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁ = √2⁻¹ • (P ^ 2 + Q ^ 2) := by
     dsimp [P, Q]
     -- distribute out all the powers and products appearing on the RHS
-    simp only [sq, sub_mul, mul_sub, add_mulₓ, mul_addₓ, smul_add, smul_sub]
+    simp only [sq, sub_mul, mul_sub, add_mul, mul_add, smul_add, smul_sub]
     -- pull all coefficients out to the front, and combine `√2`s where possible
     simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, ← mul_smul, sqrt_two_inv_mul_self]
     -- replace Aᵢ * Aᵢ = 1 and Bᵢ * Bᵢ = 1
@@ -206,8 +206,8 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     abel
     -- all terms coincide, but the last one. Simplify all other terms
     simp only [M]
-    simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_oneₓ, one_smul, Int.cast_neg,
-      add_right_injₓ, neg_smul, ← add_smul]
+    simp only [neg_mul, Int.cast_bit0, one_mul, mul_inv_cancel_of_invertible, Int.cast_one, one_smul, Int.cast_neg,
+      add_right_inj, neg_smul, ← add_smul]
     congr
     exact mul_left_cancel₀ (by norm_num) tsirelson_inequality_aux
   have pos : 0 ≤ √2⁻¹ • (P ^ 2 + Q ^ 2) := by
@@ -233,7 +233,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
       congr
       rw [← Q_sa]
       convert (star_mul_self_nonneg : 0 ≤ star Q * Q)
-    convert smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg) (le_of_ltₓ (show 0 < √2⁻¹ by norm_num))
+    convert smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg) (le_of_lt (show 0 < √2⁻¹ by norm_num))
     -- `norm_num` can't directly show `0 ≤ √2⁻¹`
     simp
   apply le_of_sub_nonneg

@@ -39,8 +39,8 @@ namespace Paths
 
 instance categoryPaths : Category.{max u₁ v₁} (Paths V) where
   Hom := fun X Y : V => Quiver.Path X Y
-  id := fun X => Quiver.Path.nil
-  comp := fun X Y Z f g => Quiver.Path.comp f g
+  id X := Quiver.Path.nil
+  comp X Y Z f g := Quiver.Path.comp f g
 
 variable {V}
 
@@ -48,18 +48,18 @@ variable {V}
 -/
 @[simps]
 def of : Prefunctor V (Paths V) where
-  obj := fun X => X
-  map := fun X Y f => f.toPath
+  obj X := X
+  map X Y f := f.toPath
 
 attribute [local ext] Functor.ext
 
 /-- Any prefunctor from `V` lifts to a functor from `paths V` -/
 def lift {C} [Category C] (φ : Prefunctor V C) : Paths V ⥤ C where
   obj := φ.obj
-  map := fun X Y f =>
+  map X Y f :=
     @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 <| φ.obj X) (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
-  map_id' := fun X => by rfl
-  map_comp' := fun X Y Z f g => by
+  map_id' X := by rfl
+  map_comp' X Y Z f g := by
     induction' g with _ _ g' p ih _ _ _
     · rw [category.comp_id]
       rfl
@@ -96,7 +96,7 @@ theorem lift_spec {C} [Category C] (φ : Prefunctor V C) : of.comp (lift φ).toP
     simp only [category.id_comp]
     
 
-theorem lift_spec_unique {C} [Category C] (φ : Prefunctor V C) (Φ : Paths V ⥤ C) (hΦ : of.comp Φ.toPrefunctor = φ) :
+theorem lift_unique {C} [Category C] (φ : Prefunctor V C) (Φ : Paths V ⥤ C) (hΦ : of.comp Φ.toPrefunctor = φ) :
     Φ = lift φ := by
   subst_vars
   apply Functor.ext
@@ -153,19 +153,25 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 open Quiver
 
+/- warning: category_theory.compose_path -> CategoryTheory.composePath is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y)
+but is expected to have type
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y)
+Case conversion may be inaccurate. Consider using '#align category_theory.compose_path CategoryTheory.composePathₓ'. -/
 /-- A path in a category can be composed to a single morphism. -/
 @[simp]
-def composePathₓ {X : C} : ∀ {Y : C} (p : Path X Y), X ⟶ Y
+def composePath {X : C} : ∀ {Y : C} (p : Path X Y), X ⟶ Y
   | _, path.nil => 𝟙 X
   | _, path.cons p e => compose_path p ≫ e
 
 @[simp]
-theorem compose_path_to_path {X Y : C} (f : X ⟶ Y) : composePathₓ f.toPath = f :=
+theorem compose_path_to_path {X Y : C} (f : X ⟶ Y) : composePath f.toPath = f :=
   Category.id_comp _
 
 @[simp]
 theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
-    composePathₓ (f.comp g) = composePathₓ f ≫ composePathₓ g := by
+    composePath (f.comp g) = composePath f ≫ composePath g := by
   induction' g with Y' Z' g e ih
   · simp
     
@@ -173,12 +179,12 @@ theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
     
 
 @[simp]
-theorem compose_path_id {X : Paths C} : composePathₓ (𝟙 X) = 𝟙 X :=
+theorem compose_path_id {X : Paths C} : composePath (𝟙 X) = 𝟙 X :=
   rfl
 
 @[simp]
 theorem compose_path_comp' {X Y Z : Paths C} (f : X ⟶ Y) (g : Y ⟶ Z) :
-    composePathₓ (f ≫ g) = composePathₓ f ≫ composePathₓ g :=
+    composePath (f ≫ g) = composePath f ≫ composePath g :=
   compose_path_comp f g
 
 variable (C)
@@ -186,8 +192,8 @@ variable (C)
 /-- Composition of paths as functor from the path category of a category to the category. -/
 @[simps]
 def pathComposition : Paths C ⥤ C where
-  obj := fun X => X
-  map := fun X Y f => composePathₓ f
+  obj X := X
+  map X Y f := composePath f
 
 -- TODO: This, and what follows, should be generalized to
 -- the `hom_rel` for the kernel of any functor.
@@ -201,10 +207,10 @@ def PathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p =
 /-- The functor from a category to the canonical quotient of its path category. -/
 @[simps]
 def toQuotientPaths : C ⥤ Quotient (PathsHomRel C) where
-  obj := fun X => Quotient.mk X
-  map := fun X Y f => Quot.mk _ f.toPath
-  map_id' := fun X => Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
-  map_comp' := fun X Y Z f g => Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
+  obj X := Quotient.mk X
+  map X Y f := Quot.mk _ f.toPath
+  map_id' X := Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
+  map_comp' X Y Z f g := Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
 
 /-- The functor from the canonical quotient of a path category of a category
 to the original category. -/

@@ -57,13 +57,13 @@ theorem not_eq (a b : α) : ¬a = b ↔ a ≠ b :=
 
 variable {β : Type u}
 
-variable [LinearOrderₓ β]
+variable [LinearOrder β]
 
 theorem not_le_eq (a b : β) : (¬a ≤ b) = (b < a) :=
-  propext not_leₓ
+  propext not_le
 
 theorem not_lt_eq (a b : β) : (¬a < b) = (b ≤ a) :=
-  propext not_ltₓ
+  propext not_lt
 
 end
 
@@ -163,15 +163,15 @@ open Lean.Parser (tk ident many)
 open Interactive.Loc
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 -- mathport name: parser.many
 local postfix:1024 "*" => many
 
 open PushNeg
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into

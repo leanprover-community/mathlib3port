@@ -30,8 +30,8 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 
 
 /-- A continuous map of affine spaces. -/
-structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ringₓ R] [AddCommGroupₓ V] [Module R V]
-  [TopologicalSpace P] [AddTorsor V P] [AddCommGroupₓ W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q] extends
+structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ring R] [AddCommGroup V] [Module R V]
+  [TopologicalSpace P] [AddTorsor V P] [AddCommGroup W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q] extends
   P →ᵃ[R] Q where
   cont : Continuous to_fun
 
@@ -40,11 +40,11 @@ notation:25 P " →A[" R "] " Q => ContinuousAffineMap R P Q
 
 namespace ContinuousAffineMap
 
-variable {R V W P Q : Type _} [Ringₓ R]
+variable {R V W P Q : Type _} [Ring R]
 
-variable [AddCommGroupₓ V] [Module R V] [TopologicalSpace P] [AddTorsor V P]
+variable [AddCommGroup V] [Module R V] [TopologicalSpace P] [AddTorsor V P]
 
-variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
+variable [AddCommGroup W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
 
 include V W
 
@@ -143,7 +143,7 @@ noncomputable instance : Inhabited (P →A[R] Q) :=
 
 variable {R P} {W₂ Q₂ : Type _}
 
-variable [AddCommGroupₓ W₂] [Module R W₂] [TopologicalSpace Q₂] [AddTorsor W₂ Q₂]
+variable [AddCommGroup W₂] [Module R W₂] [TopologicalSpace Q₂] [AddTorsor W₂ Q₂]
 
 include W₂
 
@@ -178,11 +178,11 @@ theorem zero_apply (x : P) : (0 : P →A[R] W) x = 0 :=
 
 section MulAction
 
-variable [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W]
+variable [Monoid S] [DistribMulAction S W] [SmulCommClass R S W]
 
 variable [HasContinuousConstSmul S W]
 
-instance : HasSmul S (P →A[R] W) where smul := fun t f => { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
+instance : HasSmul S (P →A[R] W) where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
 
 @[norm_cast, simp]
 theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
@@ -192,7 +192,7 @@ theorem smul_apply (t : S) (f : P →A[R] W) (x : P) : (t • f) x = t • f x :
   rfl
 
 instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] :
-    IsCentralScalar S (P →A[R] W) where op_smul_eq_smul := fun t f => ext fun _ => op_smul_eq_smul _ _
+    IsCentralScalar S (P →A[R] W) where op_smul_eq_smul t f := ext fun _ => op_smul_eq_smul _ _
 
 instance : MulAction S (P →A[R] W) :=
   Function.Injective.mulAction _ coe_injective coe_smul
@@ -202,9 +202,7 @@ end MulAction
 variable [TopologicalAddGroup W]
 
 instance :
-    Add
-      (P →A[R]
-        W) where add := fun f g => { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
+    Add (P →A[R] W) where add f g := { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_add (f g : P →A[R] W) : ⇑(f + g) = f + g :=
@@ -214,9 +212,7 @@ theorem add_apply (f g : P →A[R] W) (x : P) : (f + g) x = f x + g x :=
   rfl
 
 instance :
-    Sub
-      (P →A[R]
-        W) where sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
+    Sub (P →A[R] W) where sub f g := { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
@@ -225,7 +221,7 @@ theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
 theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
   rfl
 
-instance : Neg (P →A[R] W) where neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.Continuous.neg }
+instance : Neg (P →A[R] W) where neg f := { -(f : P →ᵃ[R] W) with cont := f.Continuous.neg }
 
 @[norm_cast, simp]
 theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=
@@ -234,14 +230,14 @@ theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=
 theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
   rfl
 
-instance : AddCommGroupₓ (P →A[R] W) :=
+instance : AddCommGroup (P →A[R] W) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ => coe_smul _ _
 
-instance [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
+instance [Monoid S] [DistribMulAction S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
     DistribMulAction S (P →A[R] W) :=
   Function.Injective.distribMulAction ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
 
-instance [Semiringₓ S] [Module S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] : Module S (P →A[R] W) :=
+instance [Semiring S] [Module S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] : Module S (P →A[R] W) :=
   Function.Injective.module S ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
 
 end ModuleValuedMaps
@@ -250,11 +246,11 @@ end ContinuousAffineMap
 
 namespace ContinuousLinearMap
 
-variable {R V W : Type _} [Ringₓ R]
+variable {R V W : Type _} [Ring R]
 
-variable [AddCommGroupₓ V] [Module R V] [TopologicalSpace V]
+variable [AddCommGroup V] [Module R V] [TopologicalSpace V]
 
-variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace W]
+variable [AddCommGroup W] [Module R W] [TopologicalSpace W]
 
 /-- A continuous linear map can be regarded as a continuous affine map. -/
 def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W where

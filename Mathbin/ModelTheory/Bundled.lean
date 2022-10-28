@@ -26,18 +26,18 @@ variable {L : FirstOrder.Language.{u, v}}
 
 @[protected]
 instance CategoryTheory.Bundled.structure {L : FirstOrder.Language.{u, v}}
-    (M : CategoryTheory.Bundled.{w} L.Structure) : L.Structure M :=
+    (M : CategoryTheory.Bundled.{w} L.StructureCat) : L.StructureCat M :=
   M.str
 
 open FirstOrder Cardinal
 
-namespace Equivₓ
+namespace Equiv
 
-variable (L) {M : Type w} [L.Structure M] {N : Type w'} (g : M ≃ N)
+variable (L) {M : Type w} [L.StructureCat M] {N : Type w'} (g : M ≃ N)
 
 /-- A type bundled with the structure induced by an equivalence. -/
 @[simps]
-def bundledInduced : CategoryTheory.Bundled.{w'} L.Structure :=
+def bundledInduced : CategoryTheory.Bundled.{w'} L.StructureCat :=
   ⟨N, g.inducedStructure⟩
 
 /-- An equivalence of types as a first-order equivalence to the bundled structure on the codomain.
@@ -46,60 +46,59 @@ def bundledInduced : CategoryTheory.Bundled.{w'} L.Structure :=
 def bundledInducedEquiv : M ≃[L] g.bundledInduced L :=
   g.inducedStructureEquiv
 
-end Equivₓ
+end Equiv
 
 namespace FirstOrder
 
 namespace Language
 
 /-- The equivalence relation on bundled `L.Structure`s indicating that they are isomorphic. -/
-instance equivSetoid : Setoidₓ (CategoryTheory.Bundled L.Structure) where
-  R := fun M N => Nonempty (M ≃[L] N)
+instance equivSetoid : Setoid (CategoryTheory.Bundled L.StructureCat) where
+  R M N := Nonempty (M ≃[L] N)
   iseqv :=
-    ⟨fun M => ⟨Equiv.refl L M⟩, fun M N => Nonempty.mapₓ Equiv.symm, fun M N P =>
-      Nonempty.map2ₓ fun MN NP => NP.comp MN⟩
+    ⟨fun M => ⟨Equiv.refl L M⟩, fun M N => Nonempty.map Equiv.symm, fun M N P => Nonempty.map2 fun MN NP => NP.comp MN⟩
 
-variable (T : L.Theory)
+variable (T : L.TheoryCat)
 
-namespace Theory
+namespace TheoryCat
 
 /-- The type of nonempty models of a first-order theory. -/
 structure ModelCat where
   Carrier : Type w
-  [struc : L.Structure carrier]
+  [struc : L.StructureCat carrier]
   [is_model : T.Model carrier]
   [nonempty' : Nonempty carrier]
 
 attribute [instance] Model.struc Model.is_model Model.nonempty'
 
-namespace Model
+namespace ModelCat
 
-instance : CoeSort T.Model (Type w) :=
+instance : CoeSort T.ModelCat (Type w) :=
   ⟨ModelCat.Carrier⟩
 
 @[simp]
-theorem carrier_eq_coe (M : T.Model) : M.Carrier = M :=
+theorem carrier_eq_coe (M : T.ModelCat) : M.Carrier = M :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
 typeclasses. -/
-def of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : T.Model :=
+def of (M : Type w) [L.StructureCat M] [M ⊨ T] [Nonempty M] : T.ModelCat :=
   ⟨M⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem coe_of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : (of T M : Type w) = M :=
+theorem coe_of (M : Type w) [L.StructureCat M] [M ⊨ T] [Nonempty M] : (of T M : Type w) = M :=
   rfl
 
-instance (M : T.Model) : Nonempty M :=
+instance (M : T.ModelCat) : Nonempty M :=
   inferInstance
 
 section Inhabited
 
 attribute [local instance] inhabited.trivial_structure
 
-instance : Inhabited (ModelCat.{u, v, w} (∅ : L.Theory)) :=
+instance : Inhabited (ModelCat.{u, v, w} (∅ : L.TheoryCat)) :=
   ⟨ModelCat.of _ PUnit⟩
 
 end Inhabited
@@ -113,8 +112,9 @@ def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelC
   is_model := @Equiv.Theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
   nonempty' := e.symm.Nonempty
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-instance of_small (M : Type w) [Nonempty M] [L.Structure M] [M ⊨ T] [h : Small.{w'} M] : Small.{w'} (ModelCat.of T M) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+instance of_small (M : Type w) [Nonempty M] [L.StructureCat M] [M ⊨ T] [h : Small.{w'} M] :
+    Small.{w'} (ModelCat.of T M) :=
   h
 
 /-- Shrinks a small model to a particular universe. -/
@@ -123,72 +123,73 @@ noncomputable def shrink (M : ModelCat.{u, v, w} T) [Small.{w'} M] : ModelCat.{u
 
 /-- Lifts a model to a particular universe. -/
 def ulift (M : ModelCat.{u, v, w} T) : ModelCat.{u, v, max w w'} T :=
-  equivInduced (Equivₓ.ulift.symm : M ≃ _)
+  equivInduced (Equiv.ulift.symm : M ≃ _)
 
 /-- The reduct of any model of `φ.on_Theory T` is a model of `T`. -/
 @[simps]
-def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.OnTheory T).Model) : T.Model where
+def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.OnTheory T).ModelCat) : T.ModelCat where
   Carrier := M
   struc := φ.reduct M
   nonempty' := M.nonempty'
-  is_model := (@Lhom.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
+  is_model := (@LhomCat.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
 
 /-- When `φ` is injective, `default_expansion` expands a model of `T` to a model of `φ.on_Theory T`
   arbitrarily. -/
 @[simps]
 noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.Injective)
     [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => φ.onFunction f)]
-    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => φ.onRelation r)] (M : T.Model)
-    [Inhabited M] : (φ.OnTheory T).Model where
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => φ.onRelation r)] (M : T.ModelCat)
+    [Inhabited M] : (φ.OnTheory T).ModelCat where
   Carrier := M
   struc := φ.defaultExpansion M
   nonempty' := M.nonempty'
-  is_model := (@Lhom.on_Theory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2 M.is_model
+  is_model := (@LhomCat.on_Theory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2 M.is_model
 
-instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L.Structure M :=
-  (Lhom.sumInl : L →ᴸ L.Sum L').reduct M
+instance leftStructure {L' : Language} {T : (L.Sum L').TheoryCat} (M : T.ModelCat) : L.StructureCat M :=
+  (LhomCat.sumInl : L →ᴸ L.Sum L').reduct M
 
-instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L'.Structure M :=
-  (Lhom.sumInr : L' →ᴸ L.Sum L').reduct M
+instance rightStructure {L' : Language} {T : (L.Sum L').TheoryCat} (M : T.ModelCat) : L'.StructureCat M :=
+  (LhomCat.sumInr : L' →ᴸ L.Sum L').reduct M
 
 /-- A model of a theory is also a model of any subtheory. -/
 @[simps]
-def subtheoryModel (M : T.Model) {T' : L.Theory} (h : T' ⊆ T) : T'.Model where
+def subtheoryModel (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) : T'.ModelCat where
   Carrier := M
   is_model := ⟨fun φ hφ => realize_sentence_of_mem T (h hφ)⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-instance subtheory_Model_models (M : T.Model) {T' : L.Theory} (h : T' ⊆ T) : M.subtheoryModel h ⊨ T :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+instance subtheory_Model_models (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) : M.subtheoryModel h ⊨ T :=
   M.is_model
 
-end Model
+end ModelCat
 
 variable {T}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Bundles `M ⊨ T` as a `T.Model`. -/
-def Model.bundled {M : Type w} [LM : L.Structure M] [ne : Nonempty M] (h : M ⊨ T) : T.Model :=
+def Model.bundled {M : Type w} [LM : L.StructureCat M] [ne : Nonempty M] (h : M ⊨ T) : T.ModelCat :=
   @ModelCat.of L T M LM h Ne
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem coe_of {M : Type w} [L.Structure M] [Nonempty M] (h : M ⊨ T) : (h.Bundled : Type w) = M :=
+theorem coe_of {M : Type w} [L.StructureCat M] [Nonempty M] (h : M ⊨ T) : (h.Bundled : Type w) = M :=
   rfl
 
-end Theory
+end TheoryCat
 
 /-- A structure that is elementarily equivalent to a model, bundled as a model. -/
-def ElementarilyEquivalent.toModel {M : T.Model} {N : Type _} [LN : L.Structure N] (h : M ≅[L] N) : T.Model where
+def ElementarilyEquivalent.toModel {M : T.ModelCat} {N : Type _} [LN : L.StructureCat N] (h : M ≅[L] N) :
+    T.ModelCat where
   Carrier := N
   struc := LN
   nonempty' := h.Nonempty
   is_model := h.Theory_model
 
 /-- An elementary substructure of a bundled model as a bundled model. -/
-def ElementarySubstructure.toModel {M : T.Model} (S : L.ElementarySubstructure M) : T.Model :=
+def ElementarySubstructure.toModel {M : T.ModelCat} (S : L.ElementarySubstructure M) : T.ModelCat :=
   S.ElementarilyEquivalent.symm.toModel T
 
-instance {M : T.Model} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=
+instance {M : T.ModelCat} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=
   h
 
 end Language

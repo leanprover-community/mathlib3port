@@ -49,7 +49,7 @@ variable {F α : Type _}
 -- to be true by `rfl`. After upgrading to Lean 4, this should no longer be needed
 -- because eta for structures should provide the same result.
 /-- The type of centroid homomorphisms from `α` to `α`. -/
-structure CentroidHom (α : Type _) [NonUnitalNonAssocSemiringₓ α] extends α →+ α where
+structure CentroidHom (α : Type _) [NonUnitalNonAssocSemiring α] extends α →+ α where
   map_mul_left' (a b : α) : to_fun (a * b) = a * to_fun b
   map_mul_right' (a b : α) : to_fun (a * b) = to_fun a * b
 
@@ -58,14 +58,14 @@ attribute [nolint doc_blame] CentroidHom.toAddMonoidHom
 /-- `centroid_hom_class F α` states that `F` is a type of centroid homomorphisms.
 
 You should extend this class when you extend `centroid_hom`. -/
-class CentroidHomClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocSemiringₓ α] extends
+class CentroidHomClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocSemiring α] extends
   AddMonoidHomClass F α α where
   map_mul_left (f : F) (a b : α) : f (a * b) = a * f b
   map_mul_right (f : F) (a b : α) : f (a * b) = f a * b
 
 export CentroidHomClass (map_mul_left map_mul_right)
 
-instance [NonUnitalNonAssocSemiringₓ α] [CentroidHomClass F α] : CoeTₓ F (CentroidHom α) :=
+instance [NonUnitalNonAssocSemiring α] [CentroidHomClass F α] : CoeT F (CentroidHom α) :=
   ⟨fun f => { (f : α →+ α) with toFun := f, map_mul_left' := map_mul_left f, map_mul_right' := map_mul_right f }⟩
 
 /-! ### Centroid homomorphisms -/
@@ -73,20 +73,20 @@ instance [NonUnitalNonAssocSemiringₓ α] [CentroidHomClass F α] : CoeTₓ F (
 
 namespace CentroidHom
 
-section NonUnitalNonAssocSemiringₓ
+section NonUnitalNonAssocSemiring
 
-variable [NonUnitalNonAssocSemiringₓ α]
+variable [NonUnitalNonAssocSemiring α]
 
 instance : CentroidHomClass (CentroidHom α) α where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     cases f
     cases g
     congr
-  map_zero := fun f => f.map_zero'
-  map_add := fun f => f.map_add'
-  map_mul_left := fun f => f.map_mul_left'
-  map_mul_right := fun f => f.map_mul_right'
+  map_zero f := f.map_zero'
+  map_add f := f.map_add'
+  map_mul_left f := f.map_mul_left'
+  map_mul_right f := f.map_mul_right'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -115,10 +115,10 @@ theorem coe_to_add_monoid_hom_injective : Injective (coe : CentroidHom α → α
     this
 
 /-- Turn a centroid homomorphism into an additive monoid endomorphism. -/
-def toEnd (f : CentroidHom α) : AddMonoidₓ.End α :=
+def toEnd (f : CentroidHom α) : AddMonoid.EndCat α :=
   (f : α →+ α)
 
-theorem to_End_injective : Injective (CentroidHom.toEnd : CentroidHom α → AddMonoidₓ.End α) :=
+theorem to_End_injective : Injective (CentroidHom.toEnd : CentroidHom α → AddMonoid.EndCat α) :=
   coe_to_add_monoid_hom_injective
 
 /-- Copy of a `centroid_hom` with a new `to_fun` equal to the old one. Useful to fix
@@ -194,8 +194,8 @@ instance : One (CentroidHom α) :=
 
 instance : Add (CentroidHom α) :=
   ⟨fun f g =>
-    { (f + g : α →+ α) with map_mul_left' := fun a b => by simp [map_mul_left, mul_addₓ],
-      map_mul_right' := fun a b => by simp [map_mul_right, add_mulₓ] }⟩
+    { (f + g : α →+ α) with map_mul_left' := fun a b => by simp [map_mul_left, mul_add],
+      map_mul_right' := fun a b => by simp [map_mul_right, add_mul] }⟩
 
 instance : Mul (CentroidHom α) :=
   ⟨comp⟩
@@ -212,19 +212,19 @@ instance hasNsmul : HasSmul ℕ (CentroidHom α) :=
 
 instance hasNpowNat : Pow (CentroidHom α) ℕ :=
   ⟨fun f n =>
-    { (f.toEnd ^ n : AddMonoidₓ.End α) with
+    { (f.toEnd ^ n : AddMonoid.EndCat α) with
       map_mul_left' := fun a b => by
         induction' n with n ih
         · simp
           
-        · rw [pow_succₓ]
+        · rw [pow_succ]
           exact (congr_arg f.to_End ih).trans (f.map_mul_left' _ _)
           ,
       map_mul_right' := fun a b => by
         induction' n with n ih
         · simp
           
-        · rw [pow_succₓ]
+        · rw [pow_succ]
           exact (congr_arg f.to_End ih).trans (f.map_mul_right' _ _)
            }⟩
 
@@ -282,10 +282,10 @@ theorem to_End_nsmul (x : CentroidHom α) (n : ℕ) : (n • x).toEnd = n • x.
   rfl
 
 -- cf.`add_monoid_hom.add_comm_monoid`
-instance : AddCommMonoidₓ (CentroidHom α) :=
+instance : AddCommMonoid (CentroidHom α) :=
   coe_to_add_monoid_hom_injective.AddCommMonoid _ to_End_zero to_End_add to_End_nsmul
 
-instance : HasNatCast (CentroidHom α) where natCast := fun n => n • 1
+instance : HasNatCast (CentroidHom α) where natCast n := n • 1
 
 @[simp, norm_cast]
 theorem coe_nat_cast (n : ℕ) : ⇑(n : CentroidHom α) = n • id :=
@@ -312,13 +312,13 @@ theorem to_End_nat_cast (n : ℕ) : (n : CentroidHom α).toEnd = ↑n :=
   rfl
 
 -- cf `add_monoid.End.semiring`
-instance : Semiringₓ (CentroidHom α) :=
+instance : Semiring (CentroidHom α) :=
   to_End_injective.Semiring _ to_End_zero to_End_one to_End_add to_End_mul to_End_nsmul to_End_pow to_End_nat_cast
 
 theorem comp_mul_comm (T S : CentroidHom α) (a b : α) : (T ∘ S) (a * b) = (S ∘ T) (a * b) := by
   rw [comp_app, map_mul_right, map_mul_left, ← map_mul_right, ← map_mul_left]
 
-end NonUnitalNonAssocSemiringₓ
+end NonUnitalNonAssocSemiring
 
 section NonUnitalNonAssocRing
 
@@ -343,7 +343,7 @@ instance hasZsmul : HasSmul ℤ (CentroidHom α) :=
         change n • f (a * b) = n • f a * b
         rw [map_mul_right f, ← smul_mul_assoc] }⟩
 
-instance : HasIntCast (CentroidHom α) where intCast := fun z => z • 1
+instance : HasIntCast (CentroidHom α) where intCast z := z • 1
 
 @[simp, norm_cast]
 theorem coe_int_cast (z : ℤ) : ⇑(z : CentroidHom α) = z • id :=
@@ -363,7 +363,7 @@ theorem to_End_sub (x y : CentroidHom α) : (x - y).toEnd = x.toEnd - y.toEnd :=
 theorem to_End_zsmul (x : CentroidHom α) (n : ℤ) : (n • x).toEnd = n • x.toEnd :=
   rfl
 
-instance : AddCommGroupₓ (CentroidHom α) :=
+instance : AddCommGroup (CentroidHom α) :=
   to_End_injective.AddCommGroup _ to_End_zero to_End_add to_End_neg to_End_sub to_End_nsmul to_End_zsmul
 
 @[simp, norm_cast]
@@ -386,7 +386,7 @@ theorem sub_apply (f g : CentroidHom α) (a : α) : (f - g) a = f a - g a :=
 theorem to_End_int_cast (z : ℤ) : (z : CentroidHom α).toEnd = ↑z :=
   rfl
 
-instance : Ringₓ (CentroidHom α) :=
+instance : Ring (CentroidHom α) :=
   to_End_injective.Ring _ to_End_zero to_End_one to_End_add to_End_mul to_End_neg to_End_sub to_End_nsmul to_End_zsmul
     to_End_pow to_End_nat_cast to_End_int_cast
 
@@ -399,11 +399,11 @@ variable [NonUnitalRing α]
 -- See note [reducible non instances]
 /-- A prime associative ring has commutative centroid. -/
 @[reducible]
-def commRing (h : ∀ a b : α, (∀ r : α, a * r * b = 0) → a = 0 ∨ b = 0) : CommRingₓ (CentroidHom α) :=
+def commRing (h : ∀ a b : α, (∀ r : α, a * r * b = 0) → a = 0 ∨ b = 0) : CommRing (CentroidHom α) :=
   { CentroidHom.ring with
     mul_comm := fun f g => by
       ext
-      refine' sub_eq_zero.1 ((or_selfₓ _).1 <| (h _ _) fun r => _)
+      refine' sub_eq_zero.1 ((or_self_iff _).1 <| (h _ _) fun r => _)
       rw [mul_assoc, sub_mul, sub_eq_zero, ← map_mul_right, ← map_mul_right, coe_mul, coe_mul, comp_mul_comm] }
 
 end NonUnitalRing

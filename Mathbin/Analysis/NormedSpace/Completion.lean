@@ -29,12 +29,12 @@ namespace Completion
 variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : HasUniformContinuousConstSmul 𝕜 E :=
-  ⟨fun c => (lipschitz_with_smul c).UniformContinuous⟩
+  ⟨fun c => (lipschitzWithSmul c).UniformContinuous⟩
 
 instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with smul := (· • ·),
     norm_smul_le := fun c x =>
-      (induction_on x (is_closed_le (continuous_const_smul _).norm (continuous_const.mul continuous_norm))) fun y => by
+      (inductionOn x (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm))) fun y => by
         simp only [← coe_smul, norm_coe, norm_smul] }
 
 variable {𝕜 E}
@@ -68,7 +68,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
   { Completion.ring, Completion.metricSpace with
     dist_eq := fun x y => by
       apply completion.induction_on₂ x y <;> clear x y
-      · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
+      · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
         
       · intro x y
@@ -77,7 +77,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
     norm_mul := fun x y => by
       apply completion.induction_on₂ x y <;> clear x y
       · exact
-          is_closed_le (Continuous.comp continuous_norm continuous_mul)
+          isClosedLe (Continuous.comp continuous_norm continuous_mul)
             (Continuous.comp Real.continuous_mul (Continuous.prod_map continuous_norm continuous_norm))
         
       · intro x y
@@ -91,7 +91,7 @@ instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousCons
     norm_smul_le := fun r x => by
       apply completion.induction_on x <;> clear x
       · exact
-          is_closed_le (Continuous.comp continuous_norm (continuous_const_smul r))
+          isClosedLe (Continuous.comp continuous_norm (continuous_const_smul r))
             (Continuous.comp (continuous_mul_left _) continuous_norm)
         
       · intro x

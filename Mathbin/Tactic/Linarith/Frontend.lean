@@ -133,13 +133,13 @@ unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
   | quote.1 (@LE.le (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
   | quote.1 (@Eq (%%ₓtp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
   | quote.1 (@Ne (%%ₓtp) _ _) => return (`not.intro, tp)
-  | quote.1 (@Ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
-  | quote.1 (@Gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
+  | quote.1 (@ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
+  | quote.1 (@gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
   | quote.1 ¬@LT.lt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | quote.1 ¬@LE.le (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | quote.1 ¬@Eq (%%ₓtp) _ _ => return (`` Not.intro, tp)
-  | quote.1 ¬@Ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-  | quote.1 ¬@Gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | _ => none
 
 /-- `apply_contr_lemma` inspects the target to see if it can be moved to a hypothesis by negation.
@@ -176,7 +176,7 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
   (first <| ls.map <| prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
 preprocesses `hyps` according to the list of preprocessors in `cfg`.
 This results in a list of branches (typically only one),

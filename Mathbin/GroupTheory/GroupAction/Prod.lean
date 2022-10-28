@@ -58,10 +58,16 @@ theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
 theorem smul_swap : (a • x).swap = a • x.swap :=
   rfl
 
+theorem smul_zero_mk {α : Type _} [Monoid M] [AddMonoid α] [DistribMulAction M α] (a : M) (c : β) :
+    a • ((0 : α), c) = (0, a • c) := by rw [Prod.smul_mk, smul_zero]
+
+theorem smul_mk_zero {β : Type _} [Monoid M] [AddMonoid β] [DistribMulAction M β] (a : M) (b : α) :
+    a • (b, (0 : β)) = (a • b, 0) := by rw [Prod.smul_mk, smul_zero]
+
 variable [Pow α E] [Pow β E]
 
 @[to_additive HasSmul]
-instance hasPow : Pow (α × β) E where pow := fun p c => (p.1 ^ c, p.2 ^ c)
+instance hasPow : Pow (α × β) E where pow p c := (p.1 ^ c, p.2 ^ c)
 
 @[simp, to_additive smul_snd, to_additive_reorder 6]
 theorem pow_fst (p : α × β) (c : E) : (p ^ c).fst = p.fst ^ c :=
@@ -87,14 +93,14 @@ theorem pow_swap (p : α × β) (c : E) : (p ^ c).swap = p.swap ^ c :=
   rfl
 
 instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
-  ⟨fun x y z => mk.inj_iffₓ.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
+  ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
 @[to_additive]
 instance [SmulCommClass M N α] [SmulCommClass M N β] :
-    SmulCommClass M N (α × β) where smul_comm := fun r s x => mk.inj_iffₓ.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
+    SmulCommClass M N (α × β) where smul_comm r s x := mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
 instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] : IsCentralScalar M (α × β) :=
-  ⟨fun r m => Prod.extₓ (op_smul_eq_smul _ _) (op_smul_eq_smul _ _)⟩
+  ⟨fun r m => Prod.ext (op_smul_eq_smul _ _) (op_smul_eq_smul _ _)⟩
 
 @[to_additive]
 instance has_faithful_smul_left [HasFaithfulSmul M α] [Nonempty β] : HasFaithfulSmul M (α × β) :=
@@ -120,24 +126,24 @@ instance is_scalar_tower_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsSca
   ⟨fun c x y => by simp [smul_def, mul_def, smul_mul_assoc]⟩
 
 @[to_additive]
-instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
-  mul_smul := fun a₁ a₂ p => mk.inj_iffₓ.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
-  one_smul := fun ⟨b, c⟩ => mk.inj_iffₓ.mpr ⟨one_smul _ _, one_smul _ _⟩
+instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
+  mul_smul a₁ a₂ p := mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
+  one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
 
 instance {R M N : Type _} [Zero M] [Zero N] [SmulZeroClass R M] [SmulZeroClass R N] :
-    SmulZeroClass R (M × N) where smul_zero := fun a => mk.inj_iffₓ.mpr ⟨smul_zero _, smul_zero _⟩
+    SmulZeroClass R (M × N) where smul_zero a := mk.inj_iff.mpr ⟨smul_zero _, smul_zero _⟩
 
-instance {R M N : Type _} [AddZeroClassₓ M] [AddZeroClassₓ N] [DistribSmul R M] [DistribSmul R N] :
-    DistribSmul R (M × N) where smul_add := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
+instance {R M N : Type _} [AddZeroClass M] [AddZeroClass N] [DistribSmul R M] [DistribSmul R N] :
+    DistribSmul R (M × N) where smul_add a p₁ p₂ := mk.inj_iff.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
 
-instance {R M N : Type _} {r : Monoidₓ R} [AddMonoidₓ M] [AddMonoidₓ N] [DistribMulAction R M] [DistribMulAction R N] :
+instance {R M N : Type _} {r : Monoid R} [AddMonoid M] [AddMonoid N] [DistribMulAction R M] [DistribMulAction R N] :
     DistribMulAction R (M × N) :=
   { Prod.distribSmul with }
 
-instance {R M N : Type _} {r : Monoidₓ R} [Monoidₓ M] [Monoidₓ N] [MulDistribMulAction R M] [MulDistribMulAction R N] :
+instance {R M N : Type _} {r : Monoid R} [Monoid M] [Monoid N] [MulDistribMulAction R M] [MulDistribMulAction R N] :
     MulDistribMulAction R (M × N) where
-  smul_mul := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
-  smul_one := fun a => mk.inj_iffₓ.mpr ⟨smul_one _, smul_one _⟩
+  smul_mul a p₁ p₂ := mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
+  smul_one a := mk.inj_iff.mpr ⟨smul_one _, smul_one _⟩
 
 end Prod
 
@@ -148,14 +154,13 @@ section BundledSmul
 
 /-- Scalar multiplication as a multiplicative homomorphism. -/
 @[simps]
-def smulMulHom [Monoidₓ α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →ₙ* β where
-  toFun := fun a => a.1 • a.2
-  map_mul' := fun a b => (smul_mul_smul _ _ _ _).symm
+def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →ₙ* β where
+  toFun a := a.1 • a.2
+  map_mul' a b := (smul_mul_smul _ _ _ _).symm
 
 /-- Scalar multiplication as a monoid homomorphism. -/
 @[simps]
-def smulMonoidHom [Monoidₓ α] [MulOneClassₓ β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] :
-    α × β →* β :=
+def smulMonoidHom [Monoid α] [MulOneClass β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →* β :=
   { smulMulHom with map_one' := one_smul _ _ }
 
 end BundledSmul

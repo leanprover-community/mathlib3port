@@ -23,7 +23,7 @@ Notible examples include principal ideal rings, valuation rings, and the ring of
 
 universe u v
 
-variable (R : Type u) [CommRingₓ R]
+variable (R : Type u) [CommRing R]
 
 /-- A Bézout ring is a ring whose finitely generated ideals are principal. -/
 class IsBezout : Prop where
@@ -99,20 +99,23 @@ attribute [local instance] to_gcd_domain
 instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R :=
   inferInstance
 
-theorem _root_.function.surjective.is_bezout {S : Type v} [CommRingₓ S] (f : R →+* S) (hf : Function.Surjective f)
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ideal.map f (ideal.span {gcd x y})]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+theorem _root_.function.surjective.is_bezout {S : Type v} [CommRing S] (f : R →+* S) (hf : Function.Surjective f)
     [IsBezout R] : IsBezout S := by
   rw [iff_span_pair_is_principal]
   intro x y
   obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := hf x, hf y
   use f (gcd x y)
-  trans Ideal.map f (Ideal.span {gcd x y})
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ideal.map f (ideal.span {gcd x y})]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · rw [span_gcd, Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
     
   · rw [Ideal.map_span, Set.image_singleton]
     rfl
     
 
-instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] : IsBezout R :=
+instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=
   ⟨fun I _ => IsPrincipalIdealRing.principal I⟩
 
 theorem tfae [IsBezout R] [IsDomain R] :

@@ -25,7 +25,7 @@ theorem join_nil : [([] : List α)].join = [] :=
 
 @[simp]
 theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l ∈ L, l = []
-  | [] => iff_of_true rfl (forall_mem_nilₓ _)
+  | [] => iff_of_true rfl (forall_mem_nil _)
   | l :: L => by simp only [join, append_eq_nil, join_eq_nil, forall_mem_cons]
 
 @[simp]
@@ -90,14 +90,14 @@ theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length
     (L.take (i + 1)).drop i = [nthLe L i hi] := by
   induction L generalizing i
   · simp only [length] at hi
-    exact (Nat.not_succ_le_zeroₓ i hi).elim
+    exact (Nat.not_succ_le_zero i hi).elim
     
   cases i
   · simp
     
   have : i < L_tl.length := by
     simp at hi
-    exact Nat.lt_of_succ_lt_succₓ hi
+    exact Nat.lt_of_succ_lt_succ hi
   simp [L_ih this]
   rfl
 
@@ -116,7 +116,7 @@ theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.len
 /-- Auxiliary lemma to control elements in a join. -/
 theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
     ((L.map length).take i).Sum + j < L.join.length := by
-  convert lt_of_lt_of_leₓ (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)
+  convert lt_of_lt_of_le (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)
   have : L.length = (L.map length).length := by simp
   simp [this, -length_map]
 

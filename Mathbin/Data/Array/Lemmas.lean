@@ -10,25 +10,25 @@ universe u v w
 
 namespace DArray
 
-variable {n : ℕ} {α : Finₓ n → Type u}
+variable {n : ℕ} {α : Fin n → Type u}
 
 instance [∀ i, Inhabited (α i)] : Inhabited (DArray n α) :=
   ⟨⟨default⟩⟩
 
 end DArray
 
-namespace Arrayₓ
+namespace Array'
 
-instance {n α} [Inhabited α] : Inhabited (Arrayₓ n α) :=
+instance {n α} [Inhabited α] : Inhabited (Array' n α) :=
   DArray.inhabited
 
-theorem to_list_of_heq {n₁ n₂ α} {a₁ : Arrayₓ n₁ α} {a₂ : Arrayₓ n₂ α} (hn : n₁ = n₂) (ha : HEq a₁ a₂) :
+theorem to_list_of_heq {n₁ n₂ α} {a₁ : Array' n₁ α} {a₂ : Array' n₂ α} (hn : n₁ = n₂) (ha : HEq a₁ a₂) :
     a₁.toList = a₂.toList := by congr <;> assumption
 
 -- rev_list
 section RevList
 
-variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {a : Array' n α}
 
 theorem rev_list_reverse_aux :
     ∀ (i) (h : i ≤ n) (t : List α),
@@ -48,28 +48,28 @@ end RevList
 -- mem
 section Mem
 
-variable {n : ℕ} {α : Type u} {v : α} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {v : α} {a : Array' n α}
 
 theorem Mem.def : v ∈ a ↔ ∃ i, a.read i = v :=
   Iff.rfl
 
 theorem mem_rev_list_aux :
-    ∀ {i} (h : i ≤ n), (∃ j : Finₓ n, (j : ℕ) < i ∧ read a j = v) ↔ v ∈ a.iterateAux (fun _ => (· :: ·)) i h []
+    ∀ {i} (h : i ≤ n), (∃ j : Fin n, (j : ℕ) < i ∧ read a j = v) ↔ v ∈ a.iterateAux (fun _ => (· :: ·)) i h []
   | 0, _ => ⟨fun ⟨i, n, _⟩ => absurd n i.val.not_lt_zero, False.elim⟩
   | i + 1, h =>
-    let IH := mem_rev_list_aux (le_of_ltₓ h)
+    let IH := mem_rev_list_aux (le_of_lt h)
     ⟨fun ⟨j, ji1, e⟩ =>
-      Or.elim (lt_or_eq_of_leₓ <| Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _ <| IH.1 ⟨j, ji, e⟩)
+      Or.elim (lt_or_eq_of_le <| Nat.le_of_succ_le_succ ji1) (fun ji => List.mem_cons_of_mem _ <| IH.1 ⟨j, ji, e⟩)
         fun je => by
         simp [DArray.iterateAux] <;>
-          apply Or.inl <;> unfold read at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [← H, e],
+          apply Or.inl <;> unfold read at e <;> have H : j = ⟨i, h⟩ := Fin.eq_of_veq je <;> rwa [← H, e],
       fun m => by
-      simp [DArray.iterateAux, List.Memₓ] at m
+      simp [DArray.iterateAux, List.Mem] at m
       cases' m with e m'
-      exact ⟨⟨i, h⟩, Nat.lt_succ_selfₓ _, Eq.symm e⟩
+      exact ⟨⟨i, h⟩, Nat.lt_succ_self _, Eq.symm e⟩
       exact
         let ⟨j, ji, e⟩ := IH.2 m'
-        ⟨j, Nat.le_succ_of_leₓ ji, e⟩⟩
+        ⟨j, Nat.le_succ_of_le ji, e⟩⟩
 
 @[simp]
 theorem mem_rev_list : v ∈ a.revList ↔ v ∈ a :=
@@ -85,7 +85,7 @@ end Mem
 -- foldr
 section Foldr
 
-variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : α → β → β} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : α → β → β} {a : Array' n α}
 
 theorem rev_list_foldr_aux :
     ∀ {i} (h : i ≤ n),
@@ -101,10 +101,10 @@ end Foldr
 -- foldl
 section Foldl
 
-variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : β → α → β} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : β → α → β} {a : Array' n α}
 
 theorem to_list_foldl : a.toList.foldl f b = a.foldl b (Function.swap f) := by
-  rw [← rev_list_reverse, List.foldl_reverseₓ, rev_list_foldr]
+  rw [← rev_list_reverse, List.foldl_reverse, rev_list_foldr]
 
 end Foldl
 
@@ -113,15 +113,15 @@ section Length
 
 variable {n : ℕ} {α : Type u}
 
-theorem rev_list_length_aux (a : Arrayₓ n α) (i h) : (a.iterateAux (fun _ => (· :: ·)) i h []).length = i := by
+theorem rev_list_length_aux (a : Array' n α) (i h) : (a.iterateAux (fun _ => (· :: ·)) i h []).length = i := by
   induction i <;> simp [*, DArray.iterateAux]
 
 @[simp]
-theorem rev_list_length (a : Arrayₓ n α) : a.revList.length = n :=
+theorem rev_list_length (a : Array' n α) : a.revList.length = n :=
   rev_list_length_aux a _ _
 
 @[simp]
-theorem to_list_length (a : Arrayₓ n α) : a.toList.length = n := by
+theorem to_list_length (a : Array' n α) : a.toList.length = n := by
   rw [← rev_list_reverse, List.length_reverse, rev_list_length]
 
 end Length
@@ -129,13 +129,13 @@ end Length
 -- nth
 section Nth
 
-variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {a : Array' n α}
 
 theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
     ∀ (j) {jh t h'},
       (∀ k tl, j + k = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
         (a.revIterateAux (fun _ => (· :: ·)) j jh t).nthLe i h' = a.read ⟨i, ih⟩
-  | 0, _, _, _, al => al i _ <| zero_addₓ _
+  | 0, _, _, _, al => al i _ <| zero_add _
   | j + 1, jh, t, h', al =>
     (to_list_nth_le_aux j) fun k tl hjk =>
       show List.nthLe (a.read ⟨j, jh⟩ :: t) k tl = a.read ⟨i, ih⟩ from
@@ -143,13 +143,13 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
         | 0, e, tl =>
           match i, e, ih with
           | _, rfl, _ => rfl
-        | k' + 1, _, tl => by simp [List.nthLe] <;> exact al _ _ (by simp [add_commₓ, add_assocₓ, *] <;> cc)
+        | k' + 1, _, tl => by simp [List.nthLe] <;> exact al _ _ (by simp [add_comm, add_assoc, *] <;> cc)
 
 theorem to_list_nth_le (i : ℕ) (h h') : List.nthLe a.toList i h' = a.read ⟨i, h⟩ :=
   to_list_nth_le_aux _ _ _ fun k tl => absurd tl k.not_lt_zero
 
 @[simp]
-theorem to_list_nth_le' (a : Arrayₓ n α) (i : Finₓ n) (h') : List.nthLe a.toList i h' = a.read i := by
+theorem to_list_nth_le' (a : Array' n α) (i : Fin n) (h') : List.nthLe a.toList i h' = a.read i := by
   cases i <;> apply to_list_nth_le
 
 theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v := by
@@ -170,11 +170,11 @@ theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
       e.symm
     by_cases ij:(i : ℕ) = j
     · subst j
-      rw [show (⟨(i : ℕ), h₃⟩ : Finₓ _) = i from Finₓ.eq_of_veq rfl, Arrayₓ.read_write, List.nth_update_nth_of_lt]
+      rw [show (⟨(i : ℕ), h₃⟩ : Fin _) = i from Fin.eq_of_veq rfl, Array'.read_write, List.nth_update_nth_of_lt]
       simp [h₃]
       
     · rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
-      exact Finₓ.ne_of_vne ij
+      exact Fin.ne_of_vne ij
       
 
 end Nth
@@ -182,10 +182,10 @@ end Nth
 -- enum
 section Enum
 
-variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {a : Array' n α}
 
 theorem mem_to_list_enum {i v} : (i, v) ∈ a.toList.enum ↔ ∃ h, a.read ⟨i, h⟩ = v := by
-  simp [List.mem_iff_nth, to_list_nth, And.comm, And.assoc, And.left_comm]
+  simp [List.mem_iff_nth, to_list_nth, and_comm, and_assoc, and_left_comm]
 
 end Enum
 
@@ -195,7 +195,7 @@ section ToArray
 variable {n : ℕ} {α : Type u}
 
 @[simp]
-theorem to_list_to_array (a : Arrayₓ n α) : HEq a.toList.toArray a :=
+theorem to_list_to_array (a : Array' n α) : HEq a.toList.toArray a :=
   heq_of_heq_of_eq
       (@Eq.drecOn
         (fun m (e : a.toList.length = m) =>
@@ -213,7 +213,7 @@ end ToArray
 -- push_back
 section PushBack
 
-variable {n : ℕ} {α : Type u} {v : α} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {v : α} {a : Array' n α}
 
 theorem push_back_rev_list_aux :
     ∀ i h h',
@@ -225,7 +225,7 @@ theorem push_back_rev_list_aux :
     dsimp [read, DArray.read, push_back]
     rw [dif_neg]
     rfl
-    exact ne_of_ltₓ h'
+    exact ne_of_lt h'
 
 @[simp]
 theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
@@ -240,23 +240,23 @@ theorem push_back_to_list : (a.pushBack v).toList = a.toList ++ [v] := by
   rw [← rev_list_reverse, ← rev_list_reverse, push_back_rev_list, List.reverse_cons]
 
 @[simp]
-theorem read_push_back_left (i : Finₓ n) : (a.pushBack v).read i.cast_succ = a.read i := by
+theorem read_push_back_left (i : Fin n) : (a.pushBack v).read i.cast_succ = a.read i := by
   cases' i with i hi
-  have : ¬i = n := ne_of_ltₓ hi
-  simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
+  have : ¬i = n := ne_of_lt hi
+  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
 
 @[simp]
-theorem read_push_back_right : (a.pushBack v).read (Finₓ.last _) = v := by
-  cases' hn : Finₓ.last n with k hk
-  have : k = n := by simpa [Finₓ.eq_iff_veq] using hn.symm
-  simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
+theorem read_push_back_right : (a.pushBack v).read (Fin.last _) = v := by
+  cases' hn : Fin.last n with k hk
+  have : k = n := by simpa [Fin.eq_iff_veq] using hn.symm
+  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
 
 end PushBack
 
 -- foreach
 section Foreach
 
-variable {n : ℕ} {α : Type u} {β : Type v} {i : Finₓ n} {f : Finₓ n → α → β} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type v} {i : Fin n} {f : Fin n → α → β} {a : Array' n α}
 
 @[simp]
 theorem read_foreach : (foreach a f).read i = f i (a.read i) :=
@@ -267,7 +267,7 @@ end Foreach
 -- map
 section Map
 
-variable {n : ℕ} {α : Type u} {β : Type v} {i : Finₓ n} {f : α → β} {a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type v} {i : Fin n} {f : α → β} {a : Array' n α}
 
 theorem read_map : (a.map f).read i = f (a.read i) :=
   read_foreach
@@ -277,7 +277,7 @@ end Map
 -- map₂
 section Map₂
 
-variable {n : ℕ} {α : Type u} {i : Finₓ n} {f : α → α → α} {a₁ a₂ : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {i : Fin n} {f : α → α → α} {a₁ a₂ : Array' n α}
 
 @[simp]
 theorem read_map₂ : (map₂ f a₁ a₂).read i = f (a₁.read i) (a₂.read i) :=
@@ -285,36 +285,36 @@ theorem read_map₂ : (map₂ f a₁ a₂).read i = f (a₁.read i) (a₂.read i
 
 end Map₂
 
-end Arrayₓ
+end Array'
 
-namespace Equivₓ
+namespace Equiv
 
 /-- The natural equivalence between length-`n` heterogeneous arrays
 and dependent functions from `fin n`. -/
-def dArrayEquivFin {n : ℕ} (α : Finₓ n → Type _) : DArray n α ≃ ∀ i, α i :=
+def dArrayEquivFin {n : ℕ} (α : Fin n → Type _) : DArray n α ≃ ∀ i, α i :=
   ⟨DArray.read, DArray.mk, fun ⟨f⟩ => rfl, fun f => rfl⟩
 
 /-- The natural equivalence between length-`n` arrays and functions from `fin n`. -/
-def arrayEquivFin (n : ℕ) (α : Type _) : Arrayₓ n α ≃ (Finₓ n → α) :=
+def arrayEquivFin (n : ℕ) (α : Type _) : Array' n α ≃ (Fin n → α) :=
   dArrayEquivFin _
 
 /-- The natural equivalence between length-`n` vectors and length-`n` arrays. -/
-def vectorEquivArray (α : Type _) (n : ℕ) : Vector α n ≃ Arrayₓ n α :=
+def vectorEquivArray (α : Type _) (n : ℕ) : Vector α n ≃ Array' n α :=
   (vectorEquivFin _ _).trans (arrayEquivFin _ _).symm
 
-end Equivₓ
+end Equiv
 
-namespace Arrayₓ
+namespace Array'
 
 open Function
 
 variable {n : ℕ}
 
-instance : Traversable (Arrayₓ n) :=
-  @Equivₓ.traversable (flip Vector n) _ (fun α => Equivₓ.vectorEquivArray α n) _
+instance : Traversable (Array' n) :=
+  @Equiv.traversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _
 
-instance : IsLawfulTraversable (Arrayₓ n) :=
-  @Equivₓ.isLawfulTraversable (flip Vector n) _ (fun α => Equivₓ.vectorEquivArray α n) _ _
+instance : IsLawfulTraversable (Array' n) :=
+  @Equiv.isLawfulTraversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _ _
 
-end Arrayₓ
+end Array'
 

@@ -49,10 +49,10 @@ theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := 
 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t ≥ 0`. -/
-def IsFwInvariant [Preorderₓ τ] [Zero τ] (ϕ : τ → α → α) (s : Set α) : Prop :=
+def IsFwInvariant [Preorder τ] [Zero τ] (ϕ : τ → α → α) (s : Set α) : Prop :=
   ∀ ⦃t⦄, 0 ≤ t → MapsTo (ϕ t) s s
 
-theorem IsInvariant.is_fw_invariant [Preorderₓ τ] [Zero τ] {ϕ : τ → α → α} {s : Set α} (h : IsInvariant ϕ s) :
+theorem IsInvariant.is_fw_invariant [Preorder τ] [Zero τ] {ϕ : τ → α → α} {s : Set α} (h : IsInvariant ϕ s) :
     IsFwInvariant ϕ s := fun t ht => h t
 
 /-- If `τ` is a `canonically_ordered_add_monoid` (e.g., `ℕ` or `ℝ≥0`), then the notions
@@ -75,7 +75,7 @@ end Invariant
 
 /-- A flow on a topological space `α` by an a additive topological
     monoid `τ` is a continuous monoid action of `τ` on `α`.-/
-structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd τ] (α : Type _)
+structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoid τ] [HasContinuousAdd τ] (α : Type _)
   [TopologicalSpace α] where
   toFun : τ → α → α
   cont' : Continuous (uncurry to_fun)
@@ -84,7 +84,7 @@ structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinu
 
 namespace Flow
 
-variable {τ : Type _} [AddMonoidₓ τ] [TopologicalSpace τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
+variable {τ : Type _} [AddMonoid τ] [TopologicalSpace τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
   (ϕ : Flow τ α)
 
 instance : Inhabited (Flow τ α) :=
@@ -120,23 +120,23 @@ theorem map_zero_apply (x : α) : ϕ 0 x = x :=
 /-- Iterations of a continuous function from a topological space `α`
     to itself defines a semiflow by `ℕ` on `α`. -/
 def fromIter {g : α → α} (h : Continuous g) : Flow ℕ α where
-  toFun := fun n x => (g^[n]) x
+  toFun n x := (g^[n]) x
   cont' := continuous_uncurry_of_discrete_topology_left (Continuous.iterate h)
   map_add' := iterate_add_apply _
-  map_zero' := fun x => rfl
+  map_zero' x := rfl
 
 /-- Restriction of a flow onto an invariant set. -/
 def restrict {s : Set α} (h : IsInvariant ϕ s) : Flow τ ↥s where
-  toFun := fun t => (h t).restrict _ _ _
+  toFun t := (h t).restrict _ _ _
   cont' := (ϕ.Continuous continuous_fst continuous_subtype_coe.snd').subtype_mk _
-  map_add' := fun _ _ _ => Subtype.ext (map_add _ _ _ _)
-  map_zero' := fun _ => Subtype.ext (map_zero_apply _ _)
+  map_add' _ _ _ := Subtype.ext (map_add _ _ _ _)
+  map_zero' _ := Subtype.ext (map_zero_apply _ _)
 
 end Flow
 
 namespace Flow
 
-variable {τ : Type _} [AddCommGroupₓ τ] [TopologicalSpace τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
+variable {τ : Type _} [AddCommGroup τ] [TopologicalSpace τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
   (ϕ : Flow τ α)
 
 theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
@@ -147,17 +147,17 @@ theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ 
 /-- The time-reversal of a flow `ϕ` by a (commutative, additive) group
     is defined `ϕ.reverse t x = ϕ (-t) x`. -/
 def reverse : Flow τ α where
-  toFun := fun t => ϕ (-t)
+  toFun t := ϕ (-t)
   cont' := ϕ.Continuous continuous_fst.neg continuous_snd
-  map_add' := fun _ _ _ => by rw [neg_add, map_add]
-  map_zero' := fun _ => by rw [neg_zero, map_zero_apply]
+  map_add' _ _ _ := by rw [neg_add, map_add]
+  map_zero' _ := by rw [neg_zero, map_zero_apply]
 
 /-- The map `ϕ t` as a homeomorphism. -/
 def toHomeomorph (t : τ) : α ≃ₜ α where
   toFun := ϕ t
   invFun := ϕ (-t)
-  left_inv := fun x => by rw [← map_add, neg_add_selfₓ, map_zero_apply]
-  right_inv := fun x => by rw [← map_add, add_neg_selfₓ, map_zero_apply]
+  left_inv x := by rw [← map_add, neg_add_self, map_zero_apply]
+  right_inv x := by rw [← map_add, add_neg_self, map_zero_apply]
 
 theorem image_eq_preimage (t : τ) (s : Set α) : ϕ t '' s = ϕ (-t) ⁻¹' s :=
   (ϕ.toHomeomorph t).toEquiv.image_eq_preimage s

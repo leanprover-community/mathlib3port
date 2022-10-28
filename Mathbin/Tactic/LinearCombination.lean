@@ -44,21 +44,21 @@ theorem left_mul_both_sides {α} [h : Mul α] {x y : α} (z : α) (h1 : x = y) :
 theorem sum_two_equations {α} [h : Add α] {x1 y1 x2 y2 : α} (h1 : x1 = y1) (h2 : x2 = y2) : x1 + x2 = y1 + y2 :=
   congr (congr_arg Add.add h1) h2
 
-theorem left_minus_right {α} [h : AddGroupₓ α] {x y : α} (h1 : x = y) : x - y = 0 :=
+theorem left_minus_right {α} [h : AddGroup α] {x y : α} (h1 : x = y) : x - y = 0 :=
   sub_eq_zero.mpr h1
 
-theorem all_on_left_equiv {α} [h : AddGroupₓ α] (x y : α) : (x = y) = (x - y = 0) :=
+theorem all_on_left_equiv {α} [h : AddGroup α] (x y : α) : (x = y) = (x - y = 0) :=
   propext ⟨left_minus_right, sub_eq_zero.mp⟩
 
 theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) : y = 0 := by rwa [h2]
 
-theorem eq_zero_of_sub_eq_zero {α} [AddGroupₓ α] {x y : α} (h : y = 0) (h2 : x - y = 0) : x = 0 := by
+theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x - y = 0) : x = 0 := by
   rwa [h, sub_zero] at h2
 
 /-! ### Configuration -/
 
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.
@@ -126,16 +126,16 @@ unsafe def sum_equalities (h_equality1 h_equality2 : expr) : tactic expr :=
 unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_for_eq2 : pexpr) : tactic expr :=
   mul_equality_expr h_equality2 coeff_for_eq2 >>= sum_equalities h_equality1
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
   coefficients `c_1`, ..., `c_n`, this tactic returns an `expr` proving that
     `l_sum1 + (c_1 * l_h1) + ... + (c_n * l_hn)`
@@ -303,15 +303,15 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
   set_goal_to_hleft_sub_tleft hsum_on_left
   normalize_if_desired config
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/
 unsafe def mk_mul : List pexpr → pexpr
   | [] => pquote.1 1
   | [e] => e
   | e::es => pquote.1 ((%%ₓe) * %%ₓmk_mul es)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `as_linear_combo neg ms e` is used to parse the argument to `linear_combination`.
 This argument is a sequence of literals `x`, `-x`, or `c*x` combined with `+` or `-`,
 given by the pexpr `e`.
@@ -323,10 +323,10 @@ unsafe def as_linear_combo : Bool → List pexpr → pexpr → List (pexpr × pe
     let (head, args) := pexpr.get_app_fn_args e
     match head.get_frozen_name, args with
     | `` Add.add, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo neg ms e2
-    | `` Sub.sub, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo (bnot neg) ms e2
+    | `` Sub.sub, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo (not neg) ms e2
     | `` Mul.mul, [e1, e2] => as_linear_combo neg (e1::ms) e2
     | `` Div.div, [e1, e2] => as_linear_combo neg (pquote.1 (%%ₓe2)⁻¹::ms) e1
-    | `` Neg.neg, [e1] => as_linear_combo (bnot neg) ms e1
+    | `` Neg.neg, [e1] => as_linear_combo (not neg) ms e1
     | _, _ =>
       let m := mk_mul ms
       [(e, if neg then pquote.1 (-%%ₓm) else m)]

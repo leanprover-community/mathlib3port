@@ -36,7 +36,7 @@ we use the `types_has_terminal` and `types_has_binary_products` instances.
 -/
 
 
-universe u
+universe u v
 
 open CategoryTheory
 
@@ -96,9 +96,9 @@ theorem binary_product_cone_snd (X Y : Type u) : (binaryProductCone X Y).snd = P
 /-- The product type `X × Y` is a binary product for `X` and `Y`. -/
 @[simps]
 def binaryProductLimit (X Y : Type u) : IsLimit (binaryProductCone X Y) where
-  lift := fun (s : BinaryFan X Y) x => (s.fst x, s.snd x)
-  fac' := fun s j => Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
-  uniq' := fun s m w => funext fun x => Prod.extₓ (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
+  lift (s : BinaryFan X Y) x := (s.fst x, s.snd x)
+  fac' s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
+  uniq' s m w := funext fun x => Prod.ext (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
 
 /-- The category of types has `X × Y`, the usual cartesian product,
 as the binary product of `X` and `Y`.
@@ -132,10 +132,10 @@ theorem binary_product_iso_inv_comp_snd (X Y : Type u) : (binaryProductIso X Y).
 /-- The functor which sends `X, Y` to the product type `X × Y`. -/
 @[simps (config := { typeMd := reducible })]
 def binaryProductFunctor : Type u ⥤ Type u ⥤ Type u where
-  obj := fun X =>
+  obj X :=
     { obj := fun Y => X × Y,
       map := fun Y₁ Y₂ f => (binaryProductLimit X Y₂).lift (BinaryFan.mk Prod.fst (Prod.snd ≫ f)) }
-  map := fun X₁ X₂ f => { app := fun Y => (binaryProductLimit X₂ Y).lift (BinaryFan.mk (Prod.fst ≫ f) Prod.snd) }
+  map X₁ X₂ f := { app := fun Y => (binaryProductLimit X₂ Y).lift (BinaryFan.mk (Prod.fst ≫ f) Prod.snd) }
 
 /-- The product functor given by the instance `has_binary_products (Type u)` is isomorphic to the
 explicit binary product functor given by the product type.
@@ -162,8 +162,8 @@ def binaryCoproductCocone (X Y : Type u) : Cocone (pair X Y) :=
 @[simps]
 def binaryCoproductColimit (X Y : Type u) : IsColimit (binaryCoproductCocone X Y) where
   desc := fun s : BinaryCofan X Y => Sum.elim s.inl s.inr
-  fac' := fun s j => Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
-  uniq' := fun s m w => funext fun x => Sum.casesOn x (congr_fun (w ⟨left⟩)) (congr_fun (w ⟨right⟩))
+  fac' s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
+  uniq' s m w := funext fun x => Sum.casesOn x (congr_fun (w ⟨left⟩)) (congr_fun (w ⟨right⟩))
 
 /-- The category of types has `X ⊕ Y`,
 as the binary coproduct of `X` and `Y`.
@@ -175,7 +175,7 @@ def binaryCoproductColimitCocone (X Y : Type u) : Limits.ColimitCocone (pair X Y
 noncomputable def binaryCoproductIso (X Y : Type u) : Limits.coprod X Y ≅ Sum X Y :=
   colimit.isoColimitCocone (binaryCoproductColimitCocone X Y)
 
-open CategoryTheory.Type
+open CategoryTheory.TypeCat
 
 @[simp, elementwise]
 theorem binary_coproduct_iso_inl_comp_hom (X Y : Type u) : limits.coprod.inl ≫ (binaryCoproductIso X Y).Hom = Sum.inl :=
@@ -197,23 +197,24 @@ theorem binary_coproduct_iso_inr_comp_inv (X Y : Type u) :
 
 /-- The category of types has `Π j, f j` as the product of a type family `f : J → Type`.
 -/
-def productLimitCone {J : Type u} (F : J → Type u) : Limits.LimitCone (Discrete.functor F) where
+def productLimitCone {J : Type u} (F : J → Type max u v) : Limits.LimitCone (Discrete.functor F) where
   Cone := { x := ∀ j, F j, π := { app := fun j f => f j.as } }
   IsLimit :=
     { lift := fun s x j => s.π.app ⟨j⟩ x,
       uniq' := fun s m w => funext fun x => funext fun j => (congr_fun (w ⟨j⟩) x : _) }
 
 /-- The categorical product in `Type u` is the type theoretic product `Π j, F j`. -/
-noncomputable def productIso {J : Type u} (F : J → Type u) : ∏ F ≅ ∀ j, F j :=
+noncomputable def productIso {J : Type u} (F : J → Type max u v) : ∏ F ≅ ∀ j, F j :=
   limit.isoLimitCone (productLimitCone F)
 
 @[simp, elementwise]
-theorem product_iso_hom_comp_eval {J : Type u} (F : J → Type u) (j : J) :
+theorem product_iso_hom_comp_eval {J : Type u} (F : J → Type max u v) (j : J) :
     ((productIso F).Hom ≫ fun f => f j) = Pi.π F j :=
   rfl
 
 @[simp, elementwise]
-theorem product_iso_inv_comp_π {J : Type u} (F : J → Type u) (j : J) : (productIso F).inv ≫ Pi.π F j = fun f => f j :=
+theorem product_iso_inv_comp_π {J : Type u} (F : J → Type max u v) (j : J) :
+    (productIso F).inv ≫ Pi.π F j = fun f => f j :=
   limit.iso_limit_cone_inv_π (productLimitCone F) ⟨j⟩
 
 /-- The category of types has `Σ j, f j` as the coproduct of a type family `f : J → Type`.
@@ -398,8 +399,7 @@ def pullbackLimitCone (f : X ⟶ Z) (g : Y ⟶ Z) : Limits.LimitCone (cospan f g
   IsLimit :=
     PullbackCone.isLimitAux _ (fun s x => ⟨⟨s.fst x, s.snd x⟩, congr_fun s.condition x⟩) (by tidy) (by tidy)
       fun s m w =>
-      funext fun x =>
-        Subtype.ext <| Prod.extₓ (congr_fun (w WalkingCospan.left) x) (congr_fun (w WalkingCospan.right) x)
+      funext fun x => Subtype.ext <| Prod.ext (congr_fun (w WalkingCospan.left) x) (congr_fun (w WalkingCospan.right) x)
 
 /-- The pullback cone given by the instance `has_pullbacks (Type u)` is isomorphic to the
 explicit pullback cone given by `pullback_limit_cone`.

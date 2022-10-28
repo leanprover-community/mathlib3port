@@ -23,17 +23,17 @@ variable {α β : Type _}
 /-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
   multiplication `*` as "multiplication". -/
 def SetSemiring (α : Type _) : Type _ :=
-  Set α deriving Inhabited, PartialOrderₓ, OrderBot
+  Set α deriving Inhabited, PartialOrder, OrderBot
 
 /-- The identity function `set α → set_semiring α`. -/
 protected def Set.up : Set α ≃ SetSemiring α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 namespace SetSemiring
 
 /-- The identity function `set_semiring α → set α`. -/
 protected def down : SetSemiring α ≃ Set α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 protected theorem down_up (s : Set α) : s.up.down = s :=
@@ -58,8 +58,8 @@ theorem down_subset_down {s t : SetSemiring α} : s.down ⊆ t.down ↔ s ≤ t 
 theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :=
   Iff.rfl
 
-instance : AddCommMonoidₓ (SetSemiring α) where
-  add := fun s t => (s.down ∪ t.down).up
+instance : AddCommMonoid (SetSemiring α) where
+  add s t := (s.down ∪ t.down).up
   zero := (∅ : Set α).up
   add_assoc := union_assoc
   zero_add := empty_union
@@ -75,7 +75,7 @@ section Mul
 
 variable [Mul α]
 
-instance : NonUnitalNonAssocSemiringₓ (SetSemiring α) :=
+instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
   { SetSemiring.addCommMonoid with mul := fun s t => (Image2 (· * ·) s.down t.down).up, zero_mul := fun s => empty_mul,
     mul_zero := fun s => mul_empty, left_distrib := fun _ _ _ => mul_union, right_distrib := fun _ _ _ => union_mul }
 
@@ -92,31 +92,31 @@ instance covariant_class_mul_right : CovariantClass (SetSemiring α) (SetSemirin
 
 end Mul
 
-instance [MulOneClassₓ α] : NonAssocSemiringₓ (SetSemiring α) :=
+instance [MulOneClass α] : NonAssocSemiring (SetSemiring α) :=
   { SetSemiring.nonUnitalNonAssocSemiring, Set.mulOneClass with one := 1, mul := (· * ·) }
 
-instance [Semigroupₓ α] : NonUnitalSemiringₓ (SetSemiring α) :=
+instance [Semigroup α] : NonUnitalSemiring (SetSemiring α) :=
   { SetSemiring.nonUnitalNonAssocSemiring, Set.semigroup with }
 
-instance [Monoidₓ α] : Semiringₓ (SetSemiring α) :=
+instance [Monoid α] : Semiring (SetSemiring α) :=
   { SetSemiring.nonAssocSemiring, SetSemiring.nonUnitalSemiring with }
 
-instance [CommSemigroupₓ α] : NonUnitalCommSemiring (SetSemiring α) :=
+instance [CommSemigroup α] : NonUnitalCommSemiring (SetSemiring α) :=
   { SetSemiring.nonUnitalSemiring, Set.commSemigroup with }
 
-instance [CommMonoidₓ α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
+instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
   { SetSemiring.semiring, Set.commMonoid, SetSemiring.partialOrder _, SetSemiring.orderBot _,
     SetSemiring.no_zero_divisors with add_le_add_left := fun a b => add_le_add_left,
     exists_add_of_le := fun a b ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩, le_self_add := subset_union_left }
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
-def imageHom [MulOneClassₓ α] [MulOneClassₓ β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
+def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
   toFun := Image f
   map_zero' := image_empty _
   map_one' := by rw [image_one, map_one, singleton_one]
   map_add' := image_union _
-  map_mul' := fun _ _ => image_mul f
+  map_mul' _ _ := image_mul f
 
 end SetSemiring
 

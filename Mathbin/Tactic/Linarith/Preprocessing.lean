@@ -34,7 +34,7 @@ namespace Linarith
 
 open Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -42,10 +42,10 @@ set_option eqn_compiler.max_steps 50000
 For example, if `prf : ¬ a < b`, ``rem_neg prf `(a < b)`` returns a proof of `a ≥ b`.
 -/
 unsafe def rem_neg (prf : expr) : expr → tactic expr
-  | quote.1 (_ ≤ _) => mk_app `` lt_of_not_geₓ [prf]
-  | quote.1 (_ < _) => mk_app `` le_of_not_gtₓ [prf]
-  | quote.1 (_ > _) => mk_app `` le_of_not_gtₓ [prf]
-  | quote.1 (_ ≥ _) => mk_app `` lt_of_not_geₓ [prf]
+  | quote.1 (_ ≤ _) => mk_app `` lt_of_not_ge [prf]
+  | quote.1 (_ < _) => mk_app `` le_of_not_gt [prf]
+  | quote.1 (_ > _) => mk_app `` le_of_not_gt [prf]
+  | quote.1 (_ ≥ _) => mk_app `` lt_of_not_ge [prf]
   | e => failed
 
 private unsafe def rearr_comp_aux : expr → expr → tactic expr
@@ -101,10 +101,10 @@ and similarly if `pf` proves a negated weak inequality.
 unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr := do
   let tp ← infer_type pf
   match tp with
-    | quote.1 ((%%ₓa) < %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓpf)))
-    | quote.1 ((%%ₓa) > %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓpf)))
-    | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (le_of_not_gtₓ (%%ₓpf))))
-    | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (le_of_not_gtₓ (%%ₓpf))))
+    | quote.1 ((%%ₓa) < %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
+    | quote.1 ((%%ₓa) > %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
+    | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gt (%%ₓpf))))
+    | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gt (%%ₓpf))))
     | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
 
 /-- `is_nat_prop tp` is true iff `tp` is an inequality or equality between natural numbers
@@ -114,8 +114,8 @@ unsafe def is_nat_prop : expr → Bool
   | quote.1 (@Eq ℕ (%%ₓ_) _) => true
   | quote.1 (@LE.le ℕ (%%ₓ_) _ _) => true
   | quote.1 (@LT.lt ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@Ge ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@Gt ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@ge ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@gt ℕ (%%ₓ_) _ _) => true
   | quote.1 ¬%%ₓp => is_nat_prop p
   | _ => false
 
@@ -124,9 +124,9 @@ or the negation of a weak inequality between integers.
 -/
 unsafe def is_strict_int_prop : expr → Bool
   | quote.1 (@LT.lt ℤ (%%ₓ_) _ _) => true
-  | quote.1 (@Gt ℤ (%%ₓ_) _ _) => true
+  | quote.1 (@gt ℤ (%%ₓ_) _ _) => true
   | quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => true
-  | quote.1 ¬@Ge ℤ (%%ₓ_) _ _ => true
+  | quote.1 ¬@ge ℤ (%%ₓ_) _ _ => true
   | _ => false
 
 private unsafe def filter_comparisons_aux : expr → Bool
@@ -137,7 +137,7 @@ private unsafe def filter_comparisons_aux : expr → Bool
 -/
 unsafe def filter_comparisons : preprocessor where
   Name := "filter terms that are not proofs of comparisons"
-  transform := fun h =>
+  transform h :=
     (do
         let tp ← infer_type h
         is_prop tp >>= guardb
@@ -150,7 +150,7 @@ For example, a proof of `¬ a < b` will become a proof of `a ≥ b`.
 -/
 unsafe def remove_negations : preprocessor where
   Name := "replace negations of comparisons"
-  transform := fun h => do
+  transform h := do
     let tp ← infer_type h
     match tp with
       | quote.1 ¬%%ₓp => singleton <$> rem_neg h p
@@ -163,7 +163,7 @@ To avoid adding the same nonnegativity facts many times, it is a global preproce
  -/
 unsafe def nat_to_int : global_preprocessor where
   Name := "move nats to ints"
-  transform := fun l => -- we lock the tactic state here because a `simplify` call inside of
+  transform l :=-- we lock the tactic state here because a `simplify` call inside of
   -- `zify_proof` corrupts the tactic state when run under `io.run_tactic`.
   do
     let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
@@ -179,7 +179,7 @@ unsafe def nat_to_int : global_preprocessor where
 into a proof of `t1 ≤ t2 + 1`. -/
 unsafe def strengthen_strict_int : preprocessor where
   Name := "strengthen strict inequalities over int"
-  transform := fun h => do
+  transform h := do
     let tp ← infer_type h
     guardb (is_strict_int_prop tp) >> singleton <$> mk_non_strict_int_pf_of_strict_int_pf h <|> return [h]
 
@@ -188,7 +188,7 @@ and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
  -/
 unsafe def make_comp_with_zero : preprocessor where
   Name := "make comparisons with zero"
-  transform := fun e => singleton <$> rearr_comp e <|> return []
+  transform e := singleton <$> rearr_comp e <|> return []
 
 /-- `normalize_denominators_in_lhs h lhs` assumes that `h` is a proof of `lhs R 0`.
 It creates a proof of `lhs' R 0`, where all numeric division in `lhs` has been cancelled.
@@ -206,7 +206,7 @@ it tries to scale `t` to cancel out division by numerals.
 -/
 unsafe def cancel_denoms : preprocessor where
   Name := "cancel denominators"
-  transform := fun pf =>
+  transform pf :=
     (do
         let some (_, lhs) ← parse_into_comp_and_expr <$> infer_type pf
         guardb <| lhs (· = `has_div.div)
@@ -228,7 +228,7 @@ unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set <| e
     else e.mfoldl find_squares s
   | s, e => e.mfoldl find_squares s
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `nlinarith_extras` is the preprocessor corresponding to the `nlinarith` tactic.
 
 * For every term `t` such that `t^2` or `t*t` appears in the input, adds a proof of `t^2 ≥ 0`
@@ -239,7 +239,7 @@ This preprocessor is typically run last, after all inputs have been canonized.
 -/
 unsafe def nlinarith_extras : global_preprocessor where
   Name := "nonlinear arithmetic extras"
-  transform := fun ls => do
+  transform ls := do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
       (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
@@ -263,17 +263,17 @@ unsafe def nlinarith_extras : global_preprocessor where
               | _, ineq.eq => mk_app `` mul_zero_eq [a, b]
               | ineq.lt, ineq.lt => mk_app `` mul_pos_of_neg_of_neg [a, b]
               | ineq.lt, ineq.le => do
-                let a ← mk_app `` le_of_ltₓ [a]
+                let a ← mk_app `` le_of_lt [a]
                 mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]
               | ineq.le, ineq.lt => do
-                let b ← mk_app `` le_of_ltₓ [b]
+                let b ← mk_app `` le_of_lt [b]
                 mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]
               | ineq.le, ineq.le => mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]) <|>
             return none
     let products ← make_comp_with_zero.globalize.transform products.reduceOption
     return <| new_es ++ ls ++ products
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
 -/
@@ -282,8 +282,8 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
       let e ←
         hs.mfind fun e : expr => do
             let e ← infer_type e
-            guardₓ <| e
-      let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_neₓ (%%ₓe)))) >>= apply
+            guard <| e
+      let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_ne (%%ₓe)))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1

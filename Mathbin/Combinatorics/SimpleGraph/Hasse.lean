@@ -26,15 +26,15 @@ namespace SimpleGraph
 
 variable (α β : Type _)
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [Preorderₓ β]
+variable [Preorder α] [Preorder β]
 
 /-- The Hasse diagram of an order as a simple graph. The graph of the covering relation. -/
 def hasse : SimpleGraph α where
-  Adj := fun a b => a ⋖ b ∨ b ⋖ a
-  symm := fun a b => Or.symm
-  loopless := fun a h => h.elim (irrefl _) (irrefl _)
+  Adj a b := a ⋖ b ∨ b ⋖ a
+  symm a b := Or.symm
+  loopless a h := h.elim (irrefl _) (irrefl _)
 
 variable {α β} {a b : α}
 
@@ -44,7 +44,7 @@ theorem hasse_adj : (hasse α).Adj a b ↔ a ⋖ b ∨ b ⋖ a :=
 
 /-- `αᵒᵈ` and `α` have the same Hasse diagram. -/
 def hasseDualIso : hasse αᵒᵈ ≃g hasse α :=
-  { ofDual with map_rel_iff' := fun a b => by simp [or_comm] }
+  { ofDual with map_rel_iff' := fun a b => by simp [or_comm'] }
 
 @[simp]
 theorem hasse_dual_iso_apply (a : αᵒᵈ) : hasseDualIso a = ofDual a :=
@@ -54,22 +54,22 @@ theorem hasse_dual_iso_apply (a : αᵒᵈ) : hasseDualIso a = ofDual a :=
 theorem hasse_dual_iso_symm_apply (a : α) : hasseDualIso.symm a = toDual a :=
   rfl
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α] [PartialOrderₓ β]
+variable [PartialOrder α] [PartialOrder β]
 
 @[simp]
 theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by
   ext x y
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_distrib_right, @eq_comm _ y.1, @eq_comm _ y.2, or_or_or_comm]
 
-end PartialOrderₓ
+end PartialOrder
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [LinearOrderₓ α]
+variable [LinearOrder α]
 
 theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hasse α).Preconnected := fun a b => by
   rw [reachable_iff_refl_trans_gen]
@@ -83,10 +83,10 @@ theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hass
     refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min) fun c hc =>
       Or.inr <| pred_covby_of_not_is_min hc.1.not_is_min
 
-end LinearOrderₓ
+end LinearOrder
 
 /-- The path graph on `n` vertices. -/
-def pathGraph (n : ℕ) : SimpleGraph (Finₓ n) :=
+def pathGraph (n : ℕ) : SimpleGraph (Fin n) :=
   hasse _
 
 theorem path_graph_preconnected (n : ℕ) : (pathGraph n).Preconnected :=

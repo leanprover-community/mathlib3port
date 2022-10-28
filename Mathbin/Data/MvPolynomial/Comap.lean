@@ -26,7 +26,7 @@ As in other polynomial files, we typically use the notation:
 
 namespace MvPolynomial
 
-variable {σ : Type _} {τ : Type _} {υ : Type _} {R : Type _} [CommSemiringₓ R]
+variable {σ : Type _} {τ : Type _} {υ : Type _} {R : Type _} [CommSemiring R]
 
 /-- Given an algebra hom `f : mv_polynomial σ R →ₐ[R] mv_polynomial τ R`
 and a variable evaluation `v : τ → R`,
@@ -52,10 +52,13 @@ theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id := by
 
 variable {σ R}
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr aeval x (aeval (λ i, g (X i)) (f (X i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R)
     (x : υ → R) : comap (g.comp f) x = comap f (comap g x) := by
   funext i
-  trans aeval x (aeval (fun i => g (X i)) (f (X i)))
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr aeval x (aeval (λ i, g (X i)) (f (X i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · apply eval₂_hom_congr rfl rfl
     rw [AlgHom.comp_apply]
     suffices g = aeval fun i => g (X i) by rw [← this]

@@ -62,7 +62,7 @@ ordered map, ordered set, data structure
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: nil {}
+/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: nil {} -/
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
@@ -153,11 +153,11 @@ def node' (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
 /-- Basic pretty printing for `ordnode α` that shows the structure of the tree.
 
      repr {3, 1, 2, 4} = ((∅ 1 ∅) 2 ((∅ 3 ∅) 4 ∅)) -/
-def repr {α} [HasRepr α] : Ordnode α → Stringₓ
+def repr {α} [Repr α] : Ordnode α → String
   | nil => "∅"
-  | node _ l x r => "(" ++ reprₓ l ++ " " ++ reprₓ x ++ " " ++ reprₓ r ++ ")"
+  | node _ l x r => "(" ++ repr l ++ " " ++ repr x ++ " " ++ repr r ++ ")"
 
-instance {α} [HasRepr α] : HasRepr (Ordnode α) :=
+instance {α} [Repr α] : Repr (Ordnode α) :=
   ⟨repr⟩
 
 -- Note: The function has been written with tactics to avoid extra junk
@@ -536,36 +536,60 @@ def partition (p : α → Prop) [DecidablePred p] : Ordnode α → Ordnode α ×
     let (r₁, r₂) := partition r
     if p x then (link l₁ x r₁, merge l₂ r₂) else (merge l₁ r₁, link l₂ x r₂)
 
+/- warning: ordnode.map -> Ordnode.map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{u_1}}, (α -> β) -> (Ordnode.{u} α) -> (Ordnode.{u_1} β)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{_aux_param_0}}, (α -> β) -> (Ordnode.{u} α) -> (Ordnode.{_aux_param_0} β)
+Case conversion may be inaccurate. Consider using '#align ordnode.map Ordnode.mapₓ'. -/
 /-- O(n). Map a function across a tree, without changing the structure. Only valid when
 the function is strictly monotone, i.e. `x < y → f x < f y`.
 
      partition (λ x, x + 2) {1, 2, 4} = {2, 3, 6}
      partition (λ x : ℕ, x - 2) {1, 2, 4} = precondition violation -/
-def mapₓ {β} (f : α → β) : Ordnode α → Ordnode β
+def map {β} (f : α → β) : Ordnode α → Ordnode β
   | nil => nil
   | node s l x r => node s (map l) (f x) (map r)
 
+/- warning: ordnode.fold -> Ordnode.fold is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Sort.{u_1}}, β -> (β -> α -> β -> β) -> (Ordnode.{u} α) -> β
+but is expected to have type
+  forall {α : Type.{u}} {β : Sort.{_aux_param_0}}, β -> (β -> α -> β -> β) -> (Ordnode.{u} α) -> β
+Case conversion may be inaccurate. Consider using '#align ordnode.fold Ordnode.foldₓ'. -/
 /-- O(n). Fold a function across the structure of a tree.
 
      fold z f {1, 2, 4} = f (f z 1 z) 2 (f z 4 z)
 
 The exact structure of function applications depends on the tree and so
 is unspecified. -/
-def foldₓ {β} (z : β) (f : β → α → β → β) : Ordnode α → β
+def fold {β} (z : β) (f : β → α → β → β) : Ordnode α → β
   | nil => z
   | node _ l x r => f (fold l) x (fold r)
 
+/- warning: ordnode.foldl -> Ordnode.foldl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Sort.{u_1}}, (β -> α -> β) -> β -> (Ordnode.{u} α) -> β
+but is expected to have type
+  forall {α : Type.{u}} {β : Sort.{_aux_param_0}}, (β -> α -> β) -> β -> (Ordnode.{u} α) -> β
+Case conversion may be inaccurate. Consider using '#align ordnode.foldl Ordnode.foldlₓ'. -/
 /-- O(n). Fold a function from left to right (in increasing order) across the tree.
 
      foldl f z {1, 2, 4} = f (f (f z 1) 2) 4 -/
-def foldlₓ {β} (f : β → α → β) : β → Ordnode α → β
+def foldl {β} (f : β → α → β) : β → Ordnode α → β
   | z, nil => z
   | z, node _ l x r => foldl (f (foldl z l) x) r
 
+/- warning: ordnode.foldr -> Ordnode.foldr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Sort.{u_1}}, (α -> β -> β) -> (Ordnode.{u} α) -> β -> β
+but is expected to have type
+  forall {α : Type.{u}} {β : Sort.{_aux_param_0}}, (α -> β -> β) -> (Ordnode.{u} α) -> β -> β
+Case conversion may be inaccurate. Consider using '#align ordnode.foldr Ordnode.foldrₓ'. -/
 /-- O(n). Fold a function from right to left (in decreasing order) across the tree.
 
      foldl f {1, 2, 4} z = f 1 (f 2 (f 4 z)) -/
-def foldrₓ {β} (f : α → β → β) : Ordnode α → β → β
+def foldr {β} (f : α → β → β) : Ordnode α → β → β
   | nil, z => z
   | node _ l x r, z => foldr l (f x (foldr r z))
 
@@ -574,17 +598,17 @@ def foldrₓ {β} (f : α → β → β) : Ordnode α → β → β
      to_list {1, 2, 4} = [1, 2, 4]
      to_list {2, 1, 1, 4} = [1, 2, 4] -/
 def toList (t : Ordnode α) : List α :=
-  foldrₓ List.cons t []
+  foldr List.cons t []
 
 /-- O(n). Build a list of elements in descending order from the tree.
 
      to_rev_list {1, 2, 4} = [4, 2, 1]
      to_rev_list {2, 1, 1, 4} = [4, 2, 1] -/
 def toRevList (t : Ordnode α) : List α :=
-  foldlₓ (flip List.cons) [] t
+  foldl (flip List.cons) [] t
 
-instance [HasToString α] : HasToString (Ordnode α) :=
-  ⟨fun t => "{" ++ Stringₓ.intercalate ", " (t.toList.map toString) ++ "}"⟩
+instance [ToString α] : ToString (Ordnode α) :=
+  ⟨fun t => "{" ++ String.intercalate ", " (t.toList.map toString) ++ "}"⟩
 
 unsafe instance [has_to_format α] : has_to_format (Ordnode α) :=
   ⟨fun t => "{" ++ format.intercalate ", " (t.toList.map to_fmt) ++ "}"⟩
@@ -602,26 +626,32 @@ instance [DecidableEq α] : DecidableRel (@Equiv α) := fun t₁ t₂ => And.dec
 
      powerset {1, 2, 3} = {∅, {1}, {2}, {3}, {1,2}, {1,3}, {2,3}, {1,2,3}} -/
 def powerset (t : Ordnode α) : Ordnode (Ordnode α) :=
-  insertMin nil <| foldrₓ (fun x ts => glue (insertMin (ι x) (mapₓ (insertMin x) ts)) ts) t nil
+  insertMin nil <| foldr (fun x ts => glue (insertMin (ι x) (map (insertMin x) ts)) ts) t nil
 
 /-- O(m*n). The cartesian product of two sets: `(a, b) ∈ s.prod t` iff `a ∈ s` and `b ∈ t`.
 
      prod {1, 2} {2, 3} = {(1, 2), (1, 3), (2, 2), (2, 3)} -/
 protected def prod {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (α × β) :=
-  foldₓ nil (fun s₁ a s₂ => merge s₁ <| merge (mapₓ (Prod.mk a) t₂) s₂) t₁
+  fold nil (fun s₁ a s₂ => merge s₁ <| merge (map (Prod.mk a) t₂) s₂) t₁
 
 /-- O(m+n). Build a set on the disjoint union by combining sets on the factors.
 `inl a ∈ s.copair t` iff `a ∈ s`, and `inr b ∈ s.copair t` iff `b ∈ t`.
 
     copair {1, 2} {2, 3} = {inl 1, inl 2, inr 2, inr 3} -/
 protected def copair {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (Sum α β) :=
-  merge (mapₓ Sum.inl t₁) (mapₓ Sum.inr t₂)
+  merge (map Sum.inl t₁) (map Sum.inr t₂)
 
+/- warning: ordnode.pmap -> Ordnode.pmap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {P : α -> Prop} {β : Type.{u_1}}, (forall (a : α), (P a) -> β) -> (forall (t : Ordnode.{u} α), (Ordnode.All.{u} α P t) -> (Ordnode.{u_1} β))
+but is expected to have type
+  forall {α : Type.{u}} {P : α -> Prop} {β : Type.{_aux_param_0}}, (forall (a : α), (P a) -> β) -> (forall (t : Ordnode.{u} α), (Ordnode.All.{u} α P t) -> (Ordnode.{_aux_param_0} β))
+Case conversion may be inaccurate. Consider using '#align ordnode.pmap Ordnode.pmapₓ'. -/
 /-- O(n). Map a partial function across a set. The result depends on a proof
 that the function is defined on all members of the set.
 
     pmap (fin.mk : ∀ n, n < 4 → fin 4) {1, 2} H = {(1 : fin 4), (2 : fin 4)} -/
-def pmapₓ {P : α → Prop} {β} (f : ∀ a, P a → β) : ∀ t : Ordnode α, All P t → Ordnode β
+def pmap {P : α → Prop} {β} (f : ∀ a, P a → β) : ∀ t : Ordnode α, All P t → Ordnode β
   | nil, _ => nil
   | node s l x r, ⟨hl, hx, hr⟩ => node s (pmap l hl) (f x hx) (pmap r hr)
 
@@ -630,7 +660,7 @@ P to these elements inside the set, producing a set in the subtype.
 
     attach' (λ x, x < 4) {1, 2} H = ({1, 2} : ordnode {x // x<4}) -/
 def attach' {P : α → Prop} : ∀ t, All P t → Ordnode { a // P a } :=
-  pmapₓ Subtype.mk
+  pmap Subtype.mk
 
 /-- O(log n). Get the `i`th element of the set, by its index from left to right.
 
@@ -766,26 +796,26 @@ in the kernel, meaning that you probably can't prove things like
 `of_asc_list [1, 2, 3] = {1, 2, 3}` by `rfl`.
 This implementation is optimized for VM evaluation. -/
 def ofAscListAux₁ : ∀ l : List α, ℕ → Ordnode α × { l' : List α // l'.length ≤ l.length }
-  | [] => fun s => (nil, ⟨[], le_rflₓ⟩)
+  | [] => fun s => (nil, ⟨[], le_rfl⟩)
   | x :: xs => fun s =>
-    if s = 1 then (ι x, ⟨xs, Nat.le_succₓ _⟩)
+    if s = 1 then (ι x, ⟨xs, Nat.le_succ _⟩)
     else
-      have := Nat.lt_succ_selfₓ xs.length
+      have := Nat.lt_succ_self xs.length
       match of_asc_list_aux₁ xs (s.shiftl 1) with
-      | (t, ⟨[], h⟩) => (t, ⟨[], Nat.zero_leₓ _⟩)
+      | (t, ⟨[], h⟩) => (t, ⟨[], Nat.zero_le _⟩)
       | (l, ⟨y :: ys, h⟩) =>
-        have := Nat.le_succ_of_leₓ h
+        have := Nat.le_succ_of_le h
         let (r, ⟨zs, h'⟩) := of_asc_list_aux₁ ys (s.shiftl 1)
-        (link l y r, ⟨zs, le_transₓ h' (le_of_ltₓ this)⟩)
+        (link l y r, ⟨zs, le_trans h' (le_of_lt this)⟩)
 
 /-- Auxiliary definition for `of_asc_list`. -/
 def ofAscListAux₂ : List α → Ordnode α → ℕ → Ordnode α
   | [] => fun t s => t
   | x :: xs => fun l s =>
-    have := Nat.lt_succ_selfₓ xs.length
+    have := Nat.lt_succ_self xs.length
     match ofAscListAux₁ xs s with
     | (r, ⟨ys, h⟩) =>
-      have := Nat.lt_succ_of_leₓ h
+      have := Nat.lt_succ_of_le h
       of_asc_list_aux₂ ys (link l x r) (s.shiftl 1)
 
 /-- O(n). Build a set from a list which is already sorted. Performs no comparisons.
@@ -972,12 +1002,12 @@ def split (x : α) : Ordnode α → Ordnode α × Ordnode α
   | node sz l y r =>
     match cmpLe x y with
     | Ordering.lt =>
-      let (lt, Gt) := split l
-      (lt, link Gt y r)
+      let (lt, GT.gt) := split l
+      (lt, link GT.gt y r)
     | Ordering.eq => (l, r)
     | Ordering.gt =>
-      let (lt, Gt) := split r
-      (link l y lt, Gt)
+      let (lt, GT.gt) := split r
+      (link l y lt, GT.gt)
 
 /-- O(log n). Split the tree into those smaller than `x` and those greater than it,
 plus an element equivalent to `x`, if it exists.
@@ -995,12 +1025,12 @@ def split3 (x : α) : Ordnode α → Ordnode α × Option α × Ordnode α
   | node sz l y r =>
     match cmpLe x y with
     | Ordering.lt =>
-      let (lt, f, Gt) := split3 l
-      (lt, f, link Gt y r)
+      let (lt, f, GT.gt) := split3 l
+      (lt, f, link GT.gt y r)
     | Ordering.eq => (l, some y, r)
     | Ordering.gt =>
-      let (lt, f, Gt) := split3 r
-      (link l y lt, f, Gt)
+      let (lt, f, GT.gt) := split3 r
+      (link l y lt, f, GT.gt)
 
 /-- O(log n). Remove an element from the set equivalent to `x`. Does nothing if there
 is no such element.
@@ -1115,15 +1145,15 @@ def isSubsetAux : Ordnode α → Ordnode α → Bool
   | nil, _ => true
   | _, nil => false
   | node _ l x r, t =>
-    let (lt, found, Gt) := split3 x t
-    found.isSome && is_subset_aux l lt && is_subset_aux r Gt
+    let (lt, found, GT.gt) := split3 x t
+    found.isSome && is_subset_aux l lt && is_subset_aux r GT.gt
 
 /-- O(m+n). Is every element of `t₁` equivalent to some element of `t₂`?
 
      is_subset {1, 4} {1, 2, 4} = tt
      is_subset {1, 3} {1, 2, 4} = ff -/
 def isSubset (t₁ t₂ : Ordnode α) : Bool :=
-  toBool (size t₁ ≤ size t₂) && isSubsetAux t₁ t₂
+  decide (size t₁ ≤ size t₂) && isSubsetAux t₁ t₂
 
 /-- O(m+n). Is every element of `t₁` not equivalent to any element of `t₂`?
 
@@ -1133,8 +1163,8 @@ def disjoint : Ordnode α → Ordnode α → Bool
   | nil, _ => true
   | _, nil => true
   | node _ l x r, t =>
-    let (lt, found, Gt) := split3 x t
-    found.isNone && Disjoint l lt && Disjoint r Gt
+    let (lt, found, GT.gt) := split3 x t
+    found.isNone && Disjoint l lt && Disjoint r GT.gt
 
 /-- O(m * log(|m ∪ n| + 1)), m ≤ n. The union of two sets, preferring members of
   `t₁` over those of `t₂` when equivalent elements are encountered.

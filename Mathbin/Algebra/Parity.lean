@@ -53,24 +53,24 @@ theorem is_square_op_iff (a : α) : IsSquare (op a) ↔ IsSquare a :=
   ⟨fun ⟨c, hc⟩ => ⟨unop c, by rw [← unop_mul, ← hc, unop_op]⟩, fun ⟨c, hc⟩ => by simp [hc]⟩
 
 /-- Create a decidability instance for `is_square` on `fintype`s. -/
-instance isSquareDecidable [Fintypeₓ α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
-  Fintypeₓ.decidableExistsFintype
+instance isSquareDecidable [Fintype α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
+  Fintype.decidableExistsFintype
 
 end Mul
 
 @[simp, to_additive]
-theorem is_square_one [MulOneClassₓ α] : IsSquare (1 : α) :=
-  ⟨1, (mul_oneₓ _).symm⟩
+theorem is_square_one [MulOneClass α] : IsSquare (1 : α) :=
+  ⟨1, (mul_one _).symm⟩
 
 @[to_additive]
-theorem IsSquare.map [MulOneClassₓ α] [MulOneClassₓ β] [MonoidHomClass F α β] {m : α} (f : F) :
+theorem IsSquare.map [MulOneClass α] [MulOneClass β] [MonoidHomClass F α β] {m : α} (f : F) :
     IsSquare m → IsSquare (f m) := by
   rintro ⟨m, rfl⟩
   exact ⟨f m, by simp⟩
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α] {n : ℕ} {a : α}
+variable [Monoid α] {n : ℕ} {a : α}
 
 @[to_additive even_iff_exists_two_nsmul]
 theorem is_square_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by simp [IsSquare, pow_two]
@@ -91,7 +91,7 @@ theorem IsSquare.pow (n : ℕ) : IsSquare a → IsSquare (a ^ n) := by
 @[simp, to_additive Even.nsmul']
 theorem Even.is_square_pow : Even n → ∀ a : α, IsSquare (a ^ n) := by
   rintro ⟨n, rfl⟩ a
-  exact ⟨a ^ n, pow_addₓ _ _ _⟩
+  exact ⟨a ^ n, pow_add _ _ _⟩
 
 @[simp, to_additive even_two_nsmul]
 theorem is_square_sq (a : α) : IsSquare (a ^ 2) :=
@@ -101,34 +101,34 @@ variable [HasDistribNeg α]
 
 theorem Even.neg_pow : Even n → ∀ a : α, -a ^ n = a ^ n := by
   rintro ⟨c, rfl⟩ a
-  simp_rw [← two_mul, pow_mulₓ, neg_sq]
+  simp_rw [← two_mul, pow_mul, neg_sq]
 
 theorem Even.neg_one_pow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_pow, one_pow]
 
-end Monoidₓ
+end Monoid
 
 @[to_additive]
-theorem IsSquare.mul [CommSemigroupₓ α] {a b : α} : IsSquare a → IsSquare b → IsSquare (a * b) := by
+theorem IsSquare.mul [CommSemigroup α] {a b : α} : IsSquare a → IsSquare b → IsSquare (a * b) := by
   rintro ⟨a, rfl⟩ ⟨b, rfl⟩
-  exact ⟨a * b, mul_mul_mul_commₓ _ _ _ _⟩
+  exact ⟨a * b, mul_mul_mul_comm _ _ _ _⟩
 
-section CommMonoidₓ
+section CommMonoid
 
-variable [CommMonoidₓ α] {a : α}
+variable [CommMonoid α] {a : α}
 
 theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by
   rintro ⟨b, rfl⟩
-  simp only [irreducible_mul_iff, or_selfₓ] at ha
+  simp only [irreducible_mul_iff, or_self_iff] at ha
   exact ha.1.not_unit ha.2
 
 theorem IsSquare.not_irreducible (ha : IsSquare a) : ¬Irreducible a := fun h => h.not_square ha
 
-end CommMonoidₓ
+end CommMonoid
 
 variable (α)
 
 @[simp]
-theorem is_square_zero [MulZeroClassₓ α] : IsSquare (0 : α) :=
+theorem is_square_zero [MulZeroClass α] : IsSquare (0 : α) :=
   ⟨0, (mul_zero _).symm⟩
 
 variable {α}
@@ -151,7 +151,7 @@ variable [DivisionMonoid α] {a : α}
 @[simp, to_additive]
 theorem is_square_inv : IsSquare a⁻¹ ↔ IsSquare a := by
   refine' ⟨fun h => _, fun h => _⟩
-  · rw [← is_square_op_iff, ← inv_invₓ a]
+  · rw [← is_square_op_iff, ← inv_inv a]
     exact h.map (MulEquiv.inv' α)
     
   · exact ((is_square_op_iff a).mpr h).map (MulEquiv.inv' α).symm
@@ -176,7 +176,7 @@ theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow,
 
 end DivisionMonoid
 
-theorem even_abs [SubtractionMonoid α] [LinearOrderₓ α] {a : α} : Even (abs a) ↔ Even a := by
+theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (abs a) ↔ Even a := by
   cases abs_choice a <;> simp only [h, even_neg]
 
 @[to_additive]
@@ -185,7 +185,7 @@ theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : 
   exact ha.mul hb.inv
 
 @[simp, to_additive Even.zsmul']
-theorem Even.is_square_zpow [Groupₓ α] {n : ℤ} : Even n → ∀ a : α, IsSquare (a ^ n) := by
+theorem Even.is_square_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSquare (a ^ n) := by
   rintro ⟨n, rfl⟩ a
   exact ⟨a ^ n, zpow_add _ _ _⟩
 
@@ -195,8 +195,8 @@ theorem Even.tsub [CanonicallyLinearOrderedAddMonoid α] [Sub α] [HasOrderedSub
   obtain ⟨a, rfl⟩ := hm
   obtain ⟨b, rfl⟩ := hn
   refine' ⟨a - b, _⟩
-  obtain h | h := le_totalₓ a b
-  · rw [tsub_eq_zero_of_le h, tsub_eq_zero_of_le (add_le_add h h), add_zeroₓ]
+  obtain h | h := le_total a b
+  · rw [tsub_eq_zero_of_le h, tsub_eq_zero_of_le (add_le_add h h), add_zero]
     
   · exact (tsub_add_tsub_comm h h).symm
     
@@ -206,16 +206,16 @@ theorem even_iff_exists_bit0 [Add α] {a : α} : Even a ↔ ∃ b, a = bit0 b :=
 
 alias even_iff_exists_bit0 ↔ Even.exists_bit0 _
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ α] [Semiringₓ β] {m n : α}
+variable [Semiring α] [Semiring β] {m n : α}
 
 theorem even_iff_exists_two_mul (m : α) : Even m ↔ ∃ c, m = 2 * c := by simp [even_iff_exists_two_nsmul]
 
 theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd, two_mul]
 
 @[simp]
-theorem range_two_mul (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2 * x) = { a | Even a } := by
+theorem range_two_mul (α : Type _) [Semiring α] : (Set.Range fun x : α => 2 * x) = { a | Even a } := by
   ext x
   simp [eq_comm, two_mul, Even]
 
@@ -241,7 +241,7 @@ theorem even_two_mul (m : α) : Even (2 * m) :=
 theorem Even.pow_of_ne_zero (hm : Even m) : ∀ {a : ℕ}, a ≠ 0 → Even (m ^ a)
   | 0, a0 => (a0 rfl).elim
   | a + 1, _ => by
-    rw [pow_succₓ]
+    rw [pow_succ]
     exact hm.mul_right _
 
 section WithOdd
@@ -262,27 +262,27 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
   odd_iff_exists_bit1.2 ⟨a, rfl⟩
 
 @[simp]
-theorem range_two_mul_add_one (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2 * x + 1) = { a | Odd a } := by
+theorem range_two_mul_add_one (α : Type _) [Semiring α] : (Set.Range fun x : α => 2 * x + 1) = { a | Odd a } := by
   ext x
   simp [Odd, eq_comm]
 
 theorem Even.add_odd : Even m → Odd n → Odd (m + n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
-  exact ⟨m + n, by rw [mul_addₓ, ← two_mul, add_assocₓ]⟩
+  exact ⟨m + n, by rw [mul_add, ← two_mul, add_assoc]⟩
 
 theorem Odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) := by
-  rw [add_commₓ]
+  rw [add_comm]
   exact hn.add_odd hm
 
 theorem Odd.add_odd : Odd m → Odd n → Even (m + n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨n + m + 1, _⟩
-  rw [← two_mul, ← add_assocₓ, add_commₓ _ (2 * n), ← add_assocₓ, ← mul_addₓ, add_assocₓ, mul_addₓ _ (n + m), mul_oneₓ]
+  rw [← two_mul, ← add_assoc, add_comm _ (2 * n), ← add_assoc, ← mul_add, add_assoc, mul_add _ (n + m), mul_one]
   rfl
 
 @[simp]
 theorem odd_one : Odd (1 : α) :=
-  ⟨0, (zero_addₓ _).symm.trans (congr_arg (· + (1 : α)) (mul_zero _).symm)⟩
+  ⟨0, (zero_add _).symm.trans (congr_arg (· + (1 : α)) (mul_zero _).symm)⟩
 
 @[simp]
 theorem odd_two_mul_add_one (m : α) : Odd (2 * m + 1) :=
@@ -296,32 +296,32 @@ theorem Odd.map [RingHomClass F α β] (f : F) : Odd m → Odd (f m) := by
 theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨2 * m * n + n + m, _⟩
-  rw [mul_addₓ, add_mulₓ, mul_oneₓ, ← add_assocₓ, one_mulₓ, mul_assoc, ← mul_addₓ, ← mul_addₓ, ← mul_assoc, ←
-    Nat.cast_two, ← Nat.cast_comm]
+  rw [mul_add, add_mul, mul_one, ← add_assoc, one_mul, mul_assoc, ← mul_add, ← mul_add, ← mul_assoc, ← Nat.cast_two, ←
+    Nat.cast_comm]
 
 theorem Odd.pow (hm : Odd m) : ∀ {a : ℕ}, Odd (m ^ a)
   | 0 => by
-    rw [pow_zeroₓ]
+    rw [pow_zero]
     exact odd_one
   | a + 1 => by
-    rw [pow_succₓ]
+    rw [pow_succ]
     exact hm.mul Odd.pow
 
 end WithOdd
 
-end Semiringₓ
+end Semiring
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α] [HasDistribNeg α] {a : α} {n : ℕ}
+variable [Monoid α] [HasDistribNeg α] {a : α} {n : ℕ}
 
 theorem Odd.neg_pow : Odd n → ∀ a : α, -a ^ n = -(a ^ n) := by
   rintro ⟨c, rfl⟩ a
-  simp_rw [pow_addₓ, pow_mulₓ, neg_sq, pow_oneₓ, mul_neg]
+  simp_rw [pow_add, pow_mul, neg_sq, pow_one, mul_neg]
 
 theorem Odd.neg_one_pow (h : Odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_pow, one_pow]
 
-end Monoidₓ
+end Monoid
 
 section CanonicallyOrderedCommSemiring
 
@@ -336,9 +336,9 @@ theorem Odd.pos [Nontrivial α] {n : α} (hn : Odd n) : 0 < n := by
 
 end CanonicallyOrderedCommSemiring
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ α] {a b : α} {n : ℕ}
+variable [Ring α] {a b : α} {n : ℕ}
 
 @[simp]
 theorem even_neg_two : Even (-2 : α) := by simp only [even_neg, even_two]
@@ -346,11 +346,11 @@ theorem even_neg_two : Even (-2 : α) := by simp only [even_neg, even_two]
 theorem Odd.neg (hp : Odd a) : Odd (-a) := by
   obtain ⟨k, hk⟩ := hp
   use -(k + 1)
-  rw [mul_neg, mul_addₓ, neg_add, add_assocₓ, two_mul (1 : α), neg_add, neg_add_cancel_right, ← neg_add, hk]
+  rw [mul_neg, mul_add, neg_add, add_assoc, two_mul (1 : α), neg_add, neg_add_cancel_right, ← neg_add, hk]
 
 @[simp]
 theorem odd_neg : Odd (-a) ↔ Odd a :=
-  ⟨fun h => neg_negₓ a ▸ h.neg, Odd.neg⟩
+  ⟨fun h => neg_neg a ▸ h.neg, Odd.neg⟩
 
 @[simp]
 theorem odd_neg_one : Odd (-1 : α) := by simp
@@ -367,9 +367,9 @@ theorem Odd.sub_odd (ha : Odd a) (hb : Odd b) : Even (a - b) := by
   rw [sub_eq_add_neg]
   exact ha.add_odd hb.neg
 
-theorem odd_abs [LinearOrderₓ α] : Odd (abs a) ↔ Odd a := by cases' abs_choice a with h h <;> simp only [h, odd_neg]
+theorem odd_abs [LinearOrder α] : Odd (abs a) ↔ Odd a := by cases' abs_choice a with h h <;> simp only [h, odd_neg]
 
-end Ringₓ
+end Ring
 
 section Powers
 
@@ -388,10 +388,10 @@ theorem Odd.pow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using pow_bit1_neg_iff.mpr ha
 
 theorem Odd.pow_nonneg_iff (hn : Odd n) : 0 ≤ a ^ n ↔ 0 ≤ a :=
-  ⟨fun h => le_of_not_ltₓ fun ha => h.not_lt <| hn.pow_neg ha, fun ha => pow_nonneg ha n⟩
+  ⟨fun h => le_of_not_lt fun ha => h.not_lt <| hn.pow_neg ha, fun ha => pow_nonneg ha n⟩
 
 theorem Odd.pow_nonpos_iff (hn : Odd n) : a ^ n ≤ 0 ↔ a ≤ 0 :=
-  ⟨fun h => le_of_not_ltₓ fun ha => h.not_lt <| pow_pos ha _, hn.pow_nonpos⟩
+  ⟨fun h => le_of_not_lt fun ha => h.not_lt <| pow_pos ha _, hn.pow_nonpos⟩
 
 theorem Odd.pow_pos_iff (hn : Odd n) : 0 < a ^ n ↔ 0 < a :=
   ⟨fun h => lt_of_not_le fun ha => h.not_le <| hn.pow_nonpos ha, fun ha => pow_pos ha n⟩
@@ -402,7 +402,7 @@ theorem Odd.pow_neg_iff (hn : Odd n) : a ^ n < 0 ↔ a < 0 :=
 theorem Even.pow_pos_iff (hn : Even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=
   ⟨fun h ha => by
     rw [ha, zero_pow h₀] at h
-    exact lt_irreflₓ 0 h, hn.pow_pos⟩
+    exact lt_irrefl 0 h, hn.pow_pos⟩
 
 theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : abs a ^ p = a ^ p := by
   rw [← abs_pow, abs_eq_self]
@@ -412,16 +412,16 @@ theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : abs a ^ p = a ^ p := by
 theorem pow_bit0_abs (a : R) (p : ℕ) : abs a ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 
-theorem Odd.strict_mono_pow (hn : Odd n) : StrictMonoₓ fun a : R => a ^ n := by
+theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using strict_mono_pow_bit1 _
 
 end Powers
 
 /-- The cardinality of `fin (bit0 k)` is even, `fact` version.
 This `fact` is needed as an instance by `matrix.special_linear_group.has_neg`. -/
-theorem Fintypeₓ.card_fin_even {k : ℕ} : Fact (Even (Fintypeₓ.card (Finₓ (bit0 k)))) :=
+theorem Fintype.card_fin_even {k : ℕ} : Fact (Even (Fintype.card (Fin (bit0 k)))) :=
   ⟨by
-    rw [Fintypeₓ.card_fin]
+    rw [Fintype.card_fin]
     exact even_bit0 k⟩
 
 section FieldPower
@@ -443,7 +443,7 @@ end DivisionRing
 variable [LinearOrderedField K] {n : ℤ} {a : K}
 
 protected theorem Even.zpow_nonneg (hn : Even n) (a : K) : 0 ≤ a ^ n := by
-  cases' le_or_ltₓ 0 a with h h
+  cases' le_or_lt 0 a with h h
   · exact zpow_nonneg h _
     
   · exact (hn.neg_zpow a).subst (zpow_nonneg (neg_nonneg_of_nonpos h.le) _)

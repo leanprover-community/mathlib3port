@@ -21,7 +21,7 @@ open Interval
 
 namespace Set
 
-variable {α : Type _} [LinearOrderₓ α] {s t : Set α} {x y z : α}
+variable {α : Type _} [LinearOrder α] {s t : Set α} {x y z : α}
 
 /-- Order-connected component of a point `x` in a set `s`. It is defined as the set of `y` such that
 `set.interval x y ⊆ s`. Note that it is empty if and only if `x ∉ s`. -/
@@ -148,11 +148,11 @@ def OrdSeparatingSet (s t : Set α) : Set α :=
 theorem ord_separating_set_comm (s t : Set α) : OrdSeparatingSet s t = OrdSeparatingSet t s :=
   inter_comm _ _
 
-theorem disjoint_left_ord_separating_set : Disjoint s (OrdSeparatingSet s t) :=
-  Disjoint.inter_right' _ <|
-    disjoint_Union₂_right.2 fun x hx => disjoint_compl_right.mono_right <| ord_connected_component_subset
+theorem disjointLeftOrdSeparatingSet : Disjoint s (OrdSeparatingSet s t) :=
+  Disjoint.interRight' _ <|
+    disjoint_Union₂_right.2 fun x hx => disjointComplRight.mono_right <| ord_connected_component_subset
 
-theorem disjoint_right_ord_separating_set : Disjoint t (OrdSeparatingSet s t) :=
+theorem disjointRightOrdSeparatingSet : Disjoint t (OrdSeparatingSet s t) :=
   ord_separating_set_comm t s ▸ disjoint_left_ord_separating_set
 
 theorem dual_ord_separating_set : OrdSeparatingSet (of_dual ⁻¹' s) (of_dual ⁻¹' t) = of_dual ⁻¹' OrdSeparatingSet s t :=
@@ -164,14 +164,14 @@ theorem dual_ord_separating_set : OrdSeparatingSet (of_dual ⁻¹' s) (of_dual �
 def OrdT5Nhd (s t : Set α) : Set α :=
   ⋃ x ∈ s, OrdConnectedComponent (tᶜ ∩ (ord_connected_section <| OrdSeparatingSet s t)ᶜ) x
 
-theorem disjoint_ord_t5_nhd : Disjoint (OrdT5Nhd s t) (OrdT5Nhd t s) := by
+theorem disjointOrdT5Nhd : Disjoint (OrdT5Nhd s t) (OrdT5Nhd t s) := by
   rintro x ⟨hx₁, hx₂⟩
   rcases mem_Union₂.1 hx₁ with ⟨a, has, ha⟩
   clear hx₁
   rcases mem_Union₂.1 hx₂ with ⟨b, hbt, hb⟩
   clear hx₂
   rw [mem_ord_connected_component, subset_inter_iff] at ha hb
-  wlog (discharger := tactic.skip) hab : a ≤ b := le_totalₓ a b using a b s t, b a t s
+  wlog (discharger := tactic.skip) hab : a ≤ b := le_total a b using a b s t, b a t s
   rotate_left
   exact fun h₁ h₂ h₃ h₄ => this h₂ h₁ h₄ h₃
   cases' ha with ha ha'
@@ -183,10 +183,10 @@ theorem disjoint_ord_t5_nhd : Disjoint (OrdT5Nhd s t) (OrdT5Nhd t s) := by
       _ ⊆ (ord_separating_set s t).OrdConnectedSectionᶜ := union_subset ha' hb'
       
   clear ha' hb'
-  cases' le_totalₓ x a with hxa hax
+  cases' le_total x a with hxa hax
   · exact hb (Icc_subset_interval' ⟨hxa, hab⟩) has
     
-  cases' le_totalₓ b x with hbx hxb
+  cases' le_total b x with hbx hxb
   · exact ha (Icc_subset_interval ⟨hab, hbx⟩) hbt
     
   have : x ∈ ord_separating_set s t := ⟨mem_Union₂.2 ⟨a, has, ha⟩, mem_Union₂.2 ⟨b, hbt, hb⟩⟩
@@ -194,7 +194,7 @@ theorem disjoint_ord_t5_nhd : Disjoint (OrdT5Nhd s t) (OrdT5Nhd t s) := by
   suffices : ord_connected_component (ord_separating_set s t) x ⊆ [a, b]
   exact hsub (this <| ord_connected_proj_mem_ord_connected_component _ _) (mem_range_self _)
   rintro y (hy : [↑x, y] ⊆ ord_separating_set s t)
-  rw [interval_of_le hab, mem_Icc, ← not_ltₓ, ← not_ltₓ]
+  rw [interval_of_le hab, mem_Icc, ← not_lt, ← not_lt]
   exact
     ⟨fun hya => disjoint_left.1 disjoint_left_ord_separating_set has (hy <| Icc_subset_interval' ⟨hya.le, hax⟩),
       fun hyb => disjoint_left.1 disjoint_right_ord_separating_set hbt (hy <| Icc_subset_interval ⟨hxb, hyb.le⟩)⟩

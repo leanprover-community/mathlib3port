@@ -67,23 +67,23 @@ theorem snd_eps [Zero R] [One R] : snd ε = (1 : R) :=
 
 /-- A version of `triv_sq_zero_ext.snd_mul` with `*` instead of `•`. -/
 @[simp]
-theorem snd_mul [Semiringₓ R] (x y : R[ε]) : snd (x * y) = fst x * snd y + fst y * snd x :=
+theorem snd_mul [Semiring R] (x y : R[ε]) : snd (x * y) = fst x * snd y + fst y * snd x :=
   snd_mul _ _
 
 @[simp]
-theorem eps_mul_eps [Semiringₓ R] : (ε * ε : R[ε]) = 0 :=
+theorem eps_mul_eps [Semiring R] : (ε * ε : R[ε]) = 0 :=
   inr_mul_inr _ _ _
 
 @[simp]
-theorem inr_eq_smul_eps [MulZeroOneClassₓ R] (r : R) : inr r = (r • ε : R[ε]) :=
-  ext (mul_zero r).symm (mul_oneₓ r).symm
+theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : R[ε]) :=
+  ext (mul_zero r).symm (mul_one r).symm
 
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
 @[ext]
-theorem alg_hom_ext {A} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
+theorem alg_hom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
   alg_hom_ext' <| LinearMap.ext_ring <| h
 
-variable {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
 /-- A universal property of the dual numbers, providing a unique `R[ε] →ₐ[R] A` for every element
 of `A` which squares to `0`.
@@ -91,7 +91,7 @@ of `A` which squares to `0`.
 This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps (config := { attrs := [] })]
 def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
-  Equivₓ.trans
+  Equiv.trans
     (show { e : A // e * e = 0 } ≃ { f : R →ₗ[R] A // ∀ x y, f x * f y = 0 } from
       (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv fun a => by
         dsimp

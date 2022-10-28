@@ -42,7 +42,7 @@ instance : ∀ [Inhabited C], Inhabited (LocallyDiscrete C) :=
 instance [CategoryStruct.{v} C] : CategoryStruct (LocallyDiscrete C) where
   Hom := fun X Y : C => Discrete (X ⟶ Y)
   id := fun X : C => ⟨𝟙 X⟩
-  comp := fun X Y Z f g => ⟨f.as ≫ g.as⟩
+  comp X Y Z f g := ⟨f.as ≫ g.as⟩
 
 variable {C} [CategoryStruct.{v} C]
 
@@ -63,17 +63,17 @@ variable (C) [Category.{v} C]
 equalities between 1-morphisms.
 -/
 instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
-  whiskerLeft := fun X Y Z f g h η => eqToHom (congr_arg2ₓ (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
-  whiskerRight := fun X Y Z f g η h => eqToHom (congr_arg2ₓ (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
-  associator := fun W X Y Z f g h =>
+  whiskerLeft X Y Z f g h η := eqToHom (congr_arg2 (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
+  whiskerRight X Y Z f g η h := eqToHom (congr_arg2 (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
+  associator W X Y Z f g h :=
     eq_to_iso <| by
       unfold_projs
       simp only [category.assoc]
-  leftUnitor := fun X Y f =>
+  leftUnitor X Y f :=
     eq_to_iso <| by
       unfold_projs
       simp only [category.id_comp, mk_as]
-  rightUnitor := fun X Y f =>
+  rightUnitor X Y f :=
     eq_to_iso <| by
       unfold_projs
       simp only [category.comp_id, mk_as]
@@ -104,10 +104,10 @@ be promoted to an oplax functor from `locally_discrete I` to `B`.
 @[simps]
 def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B where
   obj := F.obj
-  map := fun X Y f => F.map f.as
-  map₂ := fun i j f g η => eqToHom (congr_arg _ (eq_of_hom η))
-  map_id := fun i => eqToHom (F.map_id i)
-  map_comp := fun i j k f g => eqToHom (F.map_comp f.as g.as)
+  map X Y f := F.map f.as
+  map₂ i j f g η := eqToHom (congr_arg _ (eq_of_hom η))
+  map_id i := eqToHom (F.map_id i)
+  map_comp i j k f g := eqToHom (F.map_comp f.as g.as)
 
 end CategoryTheory
 

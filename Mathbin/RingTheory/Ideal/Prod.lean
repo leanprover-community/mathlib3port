@@ -17,7 +17,7 @@ product `I × J`, viewed as an ideal of `R × S`. In `ideal_prod_eq` we show tha
 
 universe u v
 
-variable {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (I I' : Ideal R) (J J' : Ideal S)
+variable {R : Type u} {S : Type v} [Ring R] [Ring S] (I I' : Ideal R) (J J' : Ideal S)
 
 namespace Ideal
 
@@ -46,7 +46,7 @@ theorem ideal_prod_eq (I : Ideal (R × S)) : I = Ideal.prod (map (RingHom.fst R 
   apply Ideal.ext
   rintro ⟨r, s⟩
   rw [mem_prod, mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjective,
-    mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjectiveₓ]
+    mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjective]
   refine' ⟨fun h => ⟨⟨_, ⟨h, rfl⟩⟩, ⟨_, ⟨h, rfl⟩⟩⟩, _⟩
   rintro ⟨⟨⟨r, s'⟩, ⟨h₁, rfl⟩⟩, ⟨⟨r', s⟩, ⟨h₂, rfl⟩⟩⟩
   simpa using I.add_mem (I.mul_mem_left (1, 0) h₁) (I.mul_mem_left (0, 1) h₂)
@@ -63,7 +63,7 @@ theorem map_fst_prod (I : Ideal R) (J : Ideal S) : map (RingHom.fst R S) (prod I
 @[simp]
 theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I J) = J := by
   ext
-  rw [mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjectiveₓ]
+  rw [mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjective]
   exact
     ⟨by
       rintro ⟨x, ⟨h, rfl⟩⟩
@@ -77,9 +77,9 @@ theorem map_prod_comm_prod : map ((RingEquiv.prodComm : R × S ≃+* S × R) : R
 /-- Ideals of `R × S` are in one-to-one correspondence with pairs of ideals of `R` and ideals of
     `S`. -/
 def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S where
-  toFun := fun I => ⟨map (RingHom.fst R S) I, map (RingHom.snd R S) I⟩
-  invFun := fun I => prod I.1 I.2
-  left_inv := fun I => (ideal_prod_eq I).symm
+  toFun I := ⟨map (RingHom.fst R S) I, map (RingHom.snd R S) I⟩
+  invFun I := prod I.1 I.2
+  left_inv I := (ideal_prod_eq I).symm
   right_inv := fun ⟨I, J⟩ => by simp
 
 @[simp]
@@ -87,7 +87,7 @@ theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv
   rfl
 
 theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
-  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iffₓ]
+  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
 
 theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.IsPrime := by
   constructor
@@ -96,8 +96,8 @@ theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Id
     
   · intro x y hxy
     have : (⟨x, 1⟩ : R × S) * ⟨y, 1⟩ ∈ Prod I ⊤ := by
-      rw [Prod.mk_mul_mk, mul_oneₓ, mem_prod]
-      exact ⟨hxy, trivialₓ⟩
+      rw [Prod.mk_mul_mk, mul_one, mem_prod]
+      exact ⟨hxy, trivial⟩
     simpa using h.mem_or_mem this
     
 
@@ -110,14 +110,14 @@ theorem is_prime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : I
   constructor
   · rcases h with ⟨h, -⟩
     contrapose! h
-    rw [← prod_top_top, Prod.ext_iffₓ] at h
+    rw [← prod_top_top, Prod.ext_iff] at h
     exact h.1
     
   rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, h₂⟩
   cases' h.mem_or_mem h₁ with h h
-  · exact Or.inl ⟨h, trivialₓ⟩
+  · exact Or.inl ⟨h, trivial⟩
     
-  · exact Or.inr ⟨h, trivialₓ⟩
+  · exact Or.inr ⟨h, trivial⟩
     
 
 theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime := by
@@ -168,11 +168,11 @@ variable (R S)
     of `R` and the prime ideals of `S`. -/
 noncomputable def primeIdealsEquiv :
     { K : Ideal (R × S) // K.IsPrime } ≃ Sum { I : Ideal R // I.IsPrime } { J : Ideal S // J.IsPrime } :=
-  Equivₓ.symm <|
-    Equivₓ.ofBijective primeIdealsEquivImpl
+  Equiv.symm <|
+    Equiv.ofBijective primeIdealsEquivImpl
       (by
         constructor
-        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iffₓ] at h
+        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iff] at h
           · simp [h]
             
           · exact False.elim (hI.ne_top h.1)

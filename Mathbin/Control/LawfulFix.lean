@@ -60,19 +60,19 @@ theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j := by
   induction' j with j ih
   · cases hij
-    exact le_rflₓ
+    exact le_rfl
     
   cases hij
-  · exact le_rflₓ
+  · exact le_rfl
     
-  exact le_transₓ (ih ‹_›) (approx_mono' f)
+  exact le_trans (ih ‹_›) (approx_mono' f)
 
 theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx f i a := by
   by_cases h₀:∃ i : ℕ, (approx f i a).Dom
   · simp only [Part.fix_def f h₀]
     constructor <;> intro hh
     exact ⟨_, hh⟩
-    have h₁ := Nat.find_specₓ h₀
+    have h₁ := Nat.find_spec h₀
     rw [dom_iff_mem] at h₁
     cases' h₁ with y h₁
     replace h₁ := approx_mono' f _ _ h₁
@@ -81,13 +81,13 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
     exact h₁
     cases' hh with i hh
     revert h₁
-    generalize succ (Nat.findₓ h₀) = j
+    generalize succ (Nat.find h₀) = j
     intro
-    wlog : i ≤ j := le_totalₓ i j using i j b y, j i y b
+    wlog : i ≤ j := le_total i j using i j b y, j i y b
     replace hh := approx_mono f case _ _ hh
     apply Part.mem_unique h₁ hh
     
-  · simp only [fix_def' (⇑f) h₀, not_exists, false_iffₓ, not_mem_none]
+  · simp only [fix_def' (⇑f) h₀, not_exists, false_iff_iff, not_mem_none]
     simp only [dom_iff_mem, not_exists] at h₀
     intro
     apply h₀
@@ -126,7 +126,7 @@ theorem le_f_of_mem_approx {x} : x ∈ approxChain f → x ≤ f x := by
   apply approx_mono'
 
 theorem approx_mem_approx_chain {i} : approx f i ∈ approxChain f :=
-  Streamₓ.mem_of_nth_eq rfl
+  Stream.mem_of_nth_eq rfl
 
 end Fix
 
@@ -145,7 +145,7 @@ open Nat
 open Nat.Upto OmegaCompletePartialOrder
 
 theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · intro x
     cases' exists_fix_le_approx f x with i hx
     trans' approx f i.succ x
@@ -181,7 +181,7 @@ include hc
 
 theorem fix_eq : Part.fix f = f (Part.fix f) := by
   rw [fix_eq_ωSup f, hc]
-  apply le_antisymmₓ
+  apply le_antisymm
   · apply ωSup_le_ωSup_of_le _
     intro i
     exists i
@@ -202,8 +202,8 @@ namespace Part
 /-- `to_unit` as a monotone function -/
 @[simps]
 def toUnitMono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α where
-  toFun := fun x u => f (x u)
-  monotone' := fun x y (h : x ≤ y) u => f.Monotone <| h u
+  toFun x u := f (x u)
+  monotone' x y (h : x ≤ y) u := f.Monotone <| h u
 
 theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
@@ -226,21 +226,21 @@ instance {β} : LawfulFix (α → Part β) :=
 
 variable {γ : ∀ a : α, β a → Type _}
 
-section Monotoneₓ
+section Monotone
 
 variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotoneCurry [∀ x y, Preorderₓ <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b where
+def monotoneCurry [∀ x y, Preorder <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b where
   toFun := curry
-  monotone' := fun x y h a b => h ⟨a, b⟩
+  monotone' x y h a b := h ⟨a, b⟩
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotoneUncurry [∀ x y, Preorderₓ <| γ x y] : (∀ (a) (b : β a), γ a b) →o ∀ x : Σa, β a, γ x.1 x.2 where
+def monotoneUncurry [∀ x y, Preorder <| γ x y] : (∀ (a) (b : β a), γ a b) →o ∀ x : Σa, β a, γ x.1 x.2 where
   toFun := uncurry
-  monotone' := fun x y h a => h a.1 a.2
+  monotone' x y h a := h a.1 a.2
 
 variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 
@@ -258,7 +258,7 @@ theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c => 
   rw [map_comp, map_comp]
   rfl
 
-end Monotoneₓ
+end Monotone
 
 open HasFix
 
@@ -279,7 +279,7 @@ theorem uncurry_curry_continuous : continuous <| (monotoneUncurry α β γ).comp
 end Curry
 
 instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] :
-    LawfulFix (∀ x y, γ x y) where fix_eq := fun f hc => by
+    LawfulFix (∀ x y, γ x y) where fix_eq f hc := by
     dsimp [fix]
     conv =>
     lhs

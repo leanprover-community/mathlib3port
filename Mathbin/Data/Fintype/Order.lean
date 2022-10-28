@@ -43,11 +43,11 @@ We provide a few instances for concrete types:
 -/
 
 
-open Finsetₓ
+open Finset
 
-namespace Fintypeₓ
+namespace Fintype
 
-variable {ι α : Type _} [Fintypeₓ ι] [Fintypeₓ α]
+variable {ι α : Type _} [Fintype ι] [Fintype α]
 
 section Nonempty
 
@@ -58,14 +58,14 @@ variable (α) [Nonempty α]
 @[reducible]
 def toOrderBot [SemilatticeInf α] : OrderBot α where
   bot := univ.inf' univ_nonempty id
-  bot_le := fun a => inf'_le _ <| mem_univ a
+  bot_le a := inf'_le _ <| mem_univ a
 
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 @[reducible]
 def toOrderTop [SemilatticeSup α] : OrderTop α where
   top := univ.sup' univ_nonempty id
-  le_top := fun a => le_sup' _ <| mem_univ a
+  le_top a := le_sup' _ <| mem_univ a
 
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
@@ -86,10 +86,10 @@ open Classical
 @[reducible]
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
   { ‹Lattice α›, ‹BoundedOrder α› with sup := fun s => s.toFinset.sup id, inf := fun s => s.toFinset.inf id,
-    le_Sup := fun _ _ ha => Finsetₓ.le_sup (Set.mem_to_finset.mpr ha),
-    Sup_le := fun s _ ha => Finsetₓ.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
-    Inf_le := fun _ _ ha => Finsetₓ.inf_le (Set.mem_to_finset.mpr ha),
-    le_Inf := fun s _ ha => Finsetₓ.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
+    le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha),
+    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
+    Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
+    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
 
 -- See note [reducible non-instances]
 /-- A finite bounded distributive lattice is completely distributive. -/
@@ -97,27 +97,27 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
 noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α] : CompleteDistribLattice α :=
   { toCompleteLattice α with
     infi_sup_le_sup_Inf := fun a s => by
-      convert (Finsetₓ.inf_sup_distrib_left _ _ _).Ge
-      convert (Finsetₓ.inf_eq_infi _ _).symm
+      convert (Finset.inf_sup_distrib_left _ _ _).ge
+      convert (Finset.inf_eq_infi _ _).symm
       simp_rw [Set.mem_to_finset]
       rfl,
     inf_Sup_le_supr_inf := fun a s => by
-      convert (Finsetₓ.sup_inf_distrib_left _ _ _).le
-      convert (Finsetₓ.sup_eq_supr _ _).symm
+      convert (Finset.sup_inf_distrib_left _ _ _).le
+      convert (Finset.sup_eq_supr _ _).symm
       simp_rw [Set.mem_to_finset]
       rfl }
 
 -- See note [reducible non-instances]
 /-- A finite bounded linear order is complete. -/
 @[reducible]
-noncomputable def toCompleteLinearOrder [LinearOrderₓ α] [BoundedOrder α] : CompleteLinearOrder α :=
-  { toCompleteLattice α, ‹LinearOrderₓ α› with }
+noncomputable def toCompleteLinearOrder [LinearOrder α] [BoundedOrder α] : CompleteLinearOrder α :=
+  { toCompleteLattice α, ‹LinearOrder α› with }
 
 -- See note [reducible non-instances]
 /-- A finite boolean algebra is complete. -/
 @[reducible]
 noncomputable def toCompleteBooleanAlgebra [BooleanAlgebra α] : CompleteBooleanAlgebra α :=
-  { Fintypeₓ.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
+  { Fintype.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
 
 end BoundedOrder
 
@@ -137,43 +137,43 @@ noncomputable def toCompleteLatticeOfNonempty [Lattice α] : CompleteLattice α 
 then use `fintype.to_complete_linear_order` instead, as this gives definitional equality for `⊥` and
 `⊤`. -/
 @[reducible]
-noncomputable def toCompleteLinearOrderOfNonempty [LinearOrderₓ α] : CompleteLinearOrder α :=
-  { toCompleteLatticeOfNonempty α, ‹LinearOrderₓ α› with }
+noncomputable def toCompleteLinearOrderOfNonempty [LinearOrder α] : CompleteLinearOrder α :=
+  { toCompleteLatticeOfNonempty α, ‹LinearOrder α› with }
 
 end Nonempty
 
-end Fintypeₓ
+end Fintype
 
 /-! ### Concrete instances -/
 
 
-noncomputable instance {n : ℕ} : CompleteLinearOrder (Finₓ (n + 1)) :=
-  Fintypeₓ.toCompleteLinearOrder _
+noncomputable instance {n : ℕ} : CompleteLinearOrder (Fin (n + 1)) :=
+  Fintype.toCompleteLinearOrder _
 
 noncomputable instance : CompleteLinearOrder Bool :=
-  Fintypeₓ.toCompleteLinearOrder _
+  Fintype.toCompleteLinearOrder _
 
 noncomputable instance : CompleteBooleanAlgebra Bool :=
-  Fintypeₓ.toCompleteBooleanAlgebra _
+  Fintype.toCompleteBooleanAlgebra _
 
 /-! ### Directed Orders -/
 
 
 variable {α : Type _}
 
-theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α} [Fintypeₓ β]
+theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α} [Fintype β]
     (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
   classical
-  obtain ⟨z, hz⟩ := D.finset_le (Finsetₓ.image g Finsetₓ.univ)
-  exact ⟨z, fun i => hz (g i) (Finsetₓ.mem_image_of_mem g (Finsetₓ.mem_univ i))⟩
+  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 
-theorem Fintypeₓ.exists_le [Nonempty α] [Preorderₓ α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintypeₓ β] (f : β → α) :
+theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :
     ∃ M, ∀ i, f i ≤ M :=
   directed_id.fintype_le _
 
-theorem Fintypeₓ.bdd_above_range [Nonempty α] [Preorderₓ α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintypeₓ β]
-    (f : β → α) : BddAbove (Set.Range f) := by
-  obtain ⟨M, hM⟩ := Fintypeₓ.exists_le f
+theorem Fintype.bdd_above_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :
+    BddAbove (Set.Range f) := by
+  obtain ⟨M, hM⟩ := Fintype.exists_le f
   refine' ⟨M, fun a ha => _⟩
   obtain ⟨b, rfl⟩ := ha
   exact hM b

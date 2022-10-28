@@ -14,11 +14,11 @@ order are locally finite and calculates the cardinality of their intervals.
 -/
 
 
-open Finsetₓ Fintypeₓ
+open Finset Fintype
 
 open BigOperators
 
-variable {ι : Type _} {α : ι → Type _} [DecidableEq ι] [Fintypeₓ ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrderₓ (α i)]
+variable {ι : Type _} {α : ι → Type _} [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrder (α i)]
   [∀ i, LocallyFiniteOrder (α i)]
 
 namespace Pi
@@ -29,6 +29,9 @@ instance : LocallyFiniteOrder (∀ i, α i) :=
     exact forall_and_distrib
 
 variable (a b : ∀ i, α i)
+
+theorem Icc_eq : icc a b = piFinset fun i => icc (a i) (b i) :=
+  rfl
 
 theorem card_Icc : (icc a b).card = ∏ i, (icc (a i) (b i)).card :=
   card_pi_finset _

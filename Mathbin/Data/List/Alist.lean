@@ -99,7 +99,7 @@ instance : Inhabited (Alist β) :=
 
 @[simp]
 theorem not_mem_empty (a : α) : a ∉ (∅ : Alist β) :=
-  not_mem_nilₓ a
+  not_mem_nil a
 
 @[simp]
 theorem empty_entries : (∅ : Alist β).entries = [] :=
@@ -267,7 +267,7 @@ theorem insert_insert_of_ne {a a'} {b : β a} {b' : β a'} (s : Alist β) (h : a
 @[simp]
 theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b') = singleton a b :=
   ext <| by
-    simp only [Alist.insert_entries, List.kerase_cons_eq, and_selfₓ, Alist.singleton_entries, heq_iff_eq,
+    simp only [Alist.insert_entries, List.kerase_cons_eq, and_self_iff, Alist.singleton_entries, heq_iff_eq,
       eq_self_iff_true]
 
 @[simp]
@@ -345,7 +345,7 @@ theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ �
 
 theorem union_assoc {s₁ s₂ s₃ : Alist β} : (s₁ ∪ s₂ ∪ s₃).entries ~ (s₁ ∪ (s₂ ∪ s₃)).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)
-    (by simp [Decidable.not_or_iff_and_not, or_assocₓ, and_or_distrib_left, and_assocₓ])
+    (by simp [Decidable.not_or_iff_and_not, or_assoc', and_or_distrib_left, and_assoc'])
 
 end
 

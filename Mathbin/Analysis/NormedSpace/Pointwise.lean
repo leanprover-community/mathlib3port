@@ -32,7 +32,7 @@ theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Ball x r =
   simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul]
 
 theorem smul_unit_ball {c : 𝕜} (hc : c ≠ 0) : c • Ball (0 : E) (1 : ℝ) = Ball (0 : E) ∥c∥ := by
-  rw [smul_ball hc, smul_zero, mul_oneₓ]
+  rw [smul_ball hc, smul_zero, mul_one]
 
 theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) := by
   ext y
@@ -93,7 +93,7 @@ theorem exists_dist_eq (x z : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab 
 
 theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε + δ) : ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε := by
   obtain rfl | hε' := hε.eq_or_lt
-  · exact ⟨z, by rwa [zero_addₓ] at h, (dist_self _).le⟩
+  · exact ⟨z, by rwa [zero_add] at h, (dist_self _).le⟩
     
   have hεδ := add_pos_of_pos_of_nonneg hε' hδ
   refine'
@@ -116,7 +116,7 @@ theorem exists_dist_le_lt (hδ : 0 ≤ δ) (hε : 0 < ε) (h : dist x z < ε + �
 
 -- This is also true for `ℚ`-normed spaces
 theorem exists_dist_lt_le (hδ : 0 < δ) (hε : 0 ≤ ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z ≤ ε := by
-  obtain ⟨y, yz, xy⟩ := exists_dist_le_lt hε hδ (show dist z x < δ + ε by simpa only [dist_comm, add_commₓ] using h)
+  obtain ⟨y, yz, xy⟩ := exists_dist_le_lt hε hδ (show dist z x < δ + ε by simpa only [dist_comm, add_comm] using h)
   exact ⟨y, by simp [dist_comm x y, dist_comm y z, *]⟩
 
 -- This is also true for `ℚ`-normed spaces
@@ -131,8 +131,8 @@ theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ)
 
 -- This is also true for `ℚ`-normed spaces
 theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) : Disjoint (Ball x δ) (Ball y ε) ↔ δ + ε ≤ dist x y := by
-  refine' ⟨fun h => le_of_not_ltₓ fun hxy => _, ball_disjoint_ball⟩
-  rw [add_commₓ] at hxy
+  refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_ball⟩
+  rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_lt hδ hε hxy
   rw [dist_comm] at hxz
   exact h ⟨hxz, hzy⟩
@@ -140,8 +140,8 @@ theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) : Disjoint (Ball x 
 -- This is also true for `ℚ`-normed spaces
 theorem disjoint_ball_closed_ball_iff (hδ : 0 < δ) (hε : 0 ≤ ε) :
     Disjoint (Ball x δ) (ClosedBall y ε) ↔ δ + ε ≤ dist x y := by
-  refine' ⟨fun h => le_of_not_ltₓ fun hxy => _, ball_disjoint_closed_ball⟩
-  rw [add_commₓ] at hxy
+  refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_closed_ball⟩
+  rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_le hδ hε hxy
   rw [dist_comm] at hxz
   exact h ⟨hxz, hzy⟩
@@ -149,12 +149,12 @@ theorem disjoint_ball_closed_ball_iff (hδ : 0 < δ) (hε : 0 ≤ ε) :
 -- This is also true for `ℚ`-normed spaces
 theorem disjoint_closed_ball_ball_iff (hδ : 0 ≤ δ) (hε : 0 < ε) :
     Disjoint (ClosedBall x δ) (Ball y ε) ↔ δ + ε ≤ dist x y := by
-  rw [Disjoint.comm, disjoint_ball_closed_ball_iff hε hδ, add_commₓ, dist_comm] <;> infer_instance
+  rw [Disjoint.comm, disjoint_ball_closed_ball_iff hε hδ, add_comm, dist_comm] <;> infer_instance
 
 theorem disjoint_closed_ball_closed_ball_iff (hδ : 0 ≤ δ) (hε : 0 ≤ ε) :
     Disjoint (ClosedBall x δ) (ClosedBall y ε) ↔ δ + ε < dist x y := by
-  refine' ⟨fun h => lt_of_not_geₓ fun hxy => _, closed_ball_disjoint_closed_ball⟩
-  rw [add_commₓ] at hxy
+  refine' ⟨fun h => lt_of_not_ge fun hxy => _, closed_ball_disjoint_closed_ball⟩
+  rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_le_le hδ hε hxy
   rw [dist_comm] at hxz
   exact h ⟨hxz, hzy⟩
@@ -164,13 +164,13 @@ open Emetric Ennreal
 @[simp]
 theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     infEdist x (Thickening δ s) = infEdist x s - Ennreal.ofReal δ := by
-  obtain hs | hs := lt_or_leₓ (inf_edist x s) (Ennreal.ofReal δ)
+  obtain hs | hs := lt_or_le (inf_edist x s) (Ennreal.ofReal δ)
   · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]
     exact hs
     
   refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
   refine' le_sub_of_add_le_right of_real_ne_top _
-  refine' le_inf_edist.2 fun z hz => le_of_forall_lt'ₓ fun r h => _
+  refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
   cases r
   · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩, of_real_lt_top⟩
     
@@ -186,7 +186,7 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
           inf_edist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_of_real.2 hxy⟩).trans_le
       _
   rw [← of_real_add hr.le hδ.le, sub_add_cancel, of_real_coe_nnreal]
-  exact le_rflₓ
+  exact le_rfl
 
 @[simp]
 theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
@@ -194,7 +194,7 @@ theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
   (thickening_thickening_subset _ _ _).antisymm fun x => by
     simp_rw [mem_thickening_iff]
     rintro ⟨z, hz, hxz⟩
-    rw [add_commₓ] at hxz
+    rw [add_comm] at hxz
     obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hε hδ hxz
     exact ⟨y, ⟨_, hz, hyz⟩, hxy⟩
 
@@ -208,13 +208,13 @@ theorem cthickening_thickening (hε : 0 ≤ ε) (hδ : 0 < δ) (s : Set E) :
 -- Note: `interior (cthickening δ s) ≠ thickening δ s` in general
 @[simp]
 theorem closure_thickening (hδ : 0 < δ) (s : Set E) : Closure (Thickening δ s) = Cthickening δ s := by
-  rw [← cthickening_zero, cthickening_thickening le_rflₓ hδ, zero_addₓ]
+  rw [← cthickening_zero, cthickening_thickening le_rfl hδ, zero_add]
   infer_instance
 
 @[simp]
 theorem inf_edist_cthickening (δ : ℝ) (s : Set E) (x : E) :
     infEdist x (Cthickening δ s) = infEdist x s - Ennreal.ofReal δ := by
-  obtain hδ | hδ := le_or_ltₓ δ 0
+  obtain hδ | hδ := le_or_lt δ 0
   · rw [cthickening_of_nonpos hδ, inf_edist_closure, of_real_of_nonpos hδ, tsub_zero]
     
   · rw [← closure_thickening hδ, inf_edist_closure, inf_edist_thickening hδ] <;> infer_instance
@@ -224,7 +224,7 @@ theorem inf_edist_cthickening (δ : ℝ) (s : Set E) (x : E) :
 theorem thickening_cthickening (hε : 0 < ε) (hδ : 0 ≤ δ) (s : Set E) :
     Thickening ε (Cthickening δ s) = Thickening (ε + δ) s := by
   obtain rfl | hδ := hδ.eq_or_lt
-  · rw [cthickening_zero, thickening_closure, add_zeroₓ]
+  · rw [cthickening_zero, thickening_closure, add_zero]
     
   · rw [← closure_thickening hδ, thickening_closure, thickening_thickening hε hδ] <;> infer_instance
     
@@ -268,7 +268,7 @@ theorem ball_sub_closed_ball (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) : Ball a 
   by simp_rw [sub_eq_add_neg, neg_closed_ball, ball_add_closed_ball hε hδ]
 
 theorem closed_ball_add_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedBall a ε + Ball b δ = Ball (a + b) (ε + δ) :=
-  by rw [add_commₓ, ball_add_closed_ball hδ hε, add_commₓ, add_commₓ δ] <;> infer_instance
+  by rw [add_comm, ball_add_closed_ball hδ hε, add_comm, add_comm δ] <;> infer_instance
 
 theorem closed_ball_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedBall a ε - Ball b δ = Ball (a - b) (ε + δ) :=
   by simp_rw [sub_eq_add_neg, neg_ball, closed_ball_add_ball hε hδ]
@@ -276,7 +276,7 @@ theorem closed_ball_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedB
 theorem closed_ball_add_closed_ball [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
     ClosedBall a ε + ClosedBall b δ = ClosedBall (a + b) (ε + δ) := by
   rw [(is_compact_closed_ball _ _).add_closed_ball hδ, cthickening_closed_ball hδ hε, vadd_closed_ball, vadd_eq_add,
-      add_commₓ, add_commₓ δ] <;>
+      add_comm, add_comm δ] <;>
     infer_instance
 
 theorem closed_ball_sub_closed_ball [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
@@ -297,7 +297,7 @@ theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • Clo
     
 
 theorem smul_closed_unit_ball (c : 𝕜) : c • ClosedBall (0 : E) (1 : ℝ) = ClosedBall (0 : E) ∥c∥ := by
-  rw [smul_closed_ball _ _ zero_le_one, smul_zero, mul_oneₓ]
+  rw [smul_closed_ball _ _ zero_le_one, smul_zero, mul_one]
 
 variable [NormedSpace ℝ E]
 

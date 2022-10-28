@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
 import Mathbin.Algebra.Group.TypeTags
-import Mathbin.Algebra.GroupWithZero.Basic
+import Mathbin.Algebra.GroupWithZero.Units
 import Mathbin.Data.Pi.Algebra
 
 /-!
@@ -39,7 +39,7 @@ variable {F α β A B M N P Q G H : Type _}
 def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Function.LeftInverse g f)
     (h₂ : Function.RightInverse g f) : N →ₙ* M where
   toFun := g
-  map_mul' := fun x y =>
+  map_mul' x y :=
     calc
       g (x * y) = g (f (g x) * f (g y)) := by rw [h₂ x, h₂ y]
       _ = g (f (g x * g y)) := by rw [f.map_mul]
@@ -48,7 +48,7 @@ def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Funct
 
 /-- The inverse of a bijective `monoid_hom` is a `monoid_hom`. -/
 @[to_additive "The inverse of a bijective `add_monoid_hom` is an `add_monoid_hom`.", simps]
-def MonoidHom.inverse {A B : Type _} [Monoidₓ A] [Monoidₓ B] (f : A →* B) (g : B → A) (h₁ : Function.LeftInverse g f)
+def MonoidHom.inverse {A B : Type _} [Monoid A] [Monoid B] (f : A →* B) (g : B → A) (h₁ : Function.LeftInverse g f)
     (h₂ : Function.RightInverse g f) : B →* A :=
   { (f : A →ₙ* B).inverse g h₁ h₂ with toFun := g, map_one' := by rw [← f.map_one, h₁] }
 
@@ -60,18 +60,22 @@ You should extend this class when you extend `add_equiv`. -/
 class AddEquivClass (F A B : Type _) [Add A] [Add B] extends EquivLike F A B where
   map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_equiv.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The `equiv` underlying an `add_equiv`. -/
+add_decl_doc AddEquiv.toEquiv
+
+/-- The `add_hom` underlying a `add_equiv`. -/
+add_decl_doc AddEquiv.toAddHom
+
 /-- `mul_equiv α β` is the type of an equiv `α ≃ β` which preserves multiplication. -/
 @[to_additive]
 structure MulEquiv (M N : Type _) [Mul M] [Mul N] extends M ≃ N, M →ₙ* N
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_equiv.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The `equiv` underlying a `mul_equiv`. -/
+add_decl_doc MulEquiv.toEquiv
+
+/-- The `mul_hom` underlying a `mul_equiv`. -/
+add_decl_doc MulEquiv.toMulHom
+
 /-- `mul_equiv_class F A B` states that `F` is a type of multiplication-preserving morphisms.
 You should extend this class when you extend `mul_equiv`. -/
 @[to_additive]
@@ -95,18 +99,18 @@ instance (priority := 100) [Mul M] [Mul N] [h : MulEquivClass F M N] : MulHomCla
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass F M N] : MonoidHomClass F M N :=
+instance (priority := 100) [MulOneClass M] [MulOneClass N] [MulEquivClass F M N] : MonoidHomClass F M N :=
   { MulEquivClass.mulHomClass F with coe := (coe : F → M → N),
     map_one := fun e =>
       calc
-        e 1 = e 1 * 1 := (mul_oneₓ _).symm
+        e 1 = e 1 * 1 := (mul_one _).symm
         _ = e 1 * e (inv e (1 : N) : M) := congr_arg _ (right_inv e 1).symm
-        _ = e (inv e (1 : N)) := by rw [← map_mul, one_mulₓ]
+        _ = e (inv e (1 : N)) := by rw [← map_mul, one_mul]
         _ = 1 := right_inv e 1
          }
 
 -- See note [lower instance priority]
-instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOneClassₓ α] [MulZeroOneClassₓ β]
+instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOneClass α] [MulZeroOneClass β]
     [MulEquivClass F α β] : MonoidWithZeroHomClass F α β :=
   { MulEquivClass.monoidHomClass _ with
     map_zero := fun e =>
@@ -120,19 +124,17 @@ instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOne
 variable {F}
 
 @[simp, to_additive]
-theorem map_eq_one_iff {M N} [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass F M N] (h : F) {x : M} :
-    h x = 1 ↔ x = 1 :=
+theorem map_eq_one_iff {M N} [MulOneClass M] [MulOneClass N] [MulEquivClass F M N] (h : F) {x : M} : h x = 1 ↔ x = 1 :=
   map_eq_one_iff h (EquivLike.injective h)
 
 @[to_additive]
-theorem map_ne_one_iff {M N} [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass F M N] (h : F) {x : M} :
-    h x ≠ 1 ↔ x ≠ 1 :=
+theorem map_ne_one_iff {M N} [MulOneClass M] [MulOneClass N] [MulEquivClass F M N] (h : F) {x : M} : h x ≠ 1 ↔ x ≠ 1 :=
   map_ne_one_iff h (EquivLike.injective h)
 
 end MulEquivClass
 
 @[to_additive]
-instance [Mul α] [Mul β] [MulEquivClass F α β] : CoeTₓ F (α ≃* β) :=
+instance [Mul α] [Mul β] [MulEquivClass F α β] : CoeT F (α ≃* β) :=
   ⟨fun f =>
     { toFun := f, invFun := EquivLike.inv f, left_inv := EquivLike.left_inv f, right_inv := EquivLike.right_inv f,
       map_mul' := map_mul f }⟩
@@ -149,7 +151,7 @@ instance [Mul M] [Mul N] : MulEquivClass (M ≃* N) M N where
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' := fun f g h₁ h₂ => by
+  coe_injective' f g h₁ h₂ := by
     cases f
     cases g
     congr
@@ -198,7 +200,7 @@ protected theorem surjective (e : M ≃* N) : Function.Surjective e :=
 /-- The identity map is a multiplicative isomorphism. -/
 @[refl, to_additive "The identity map is an additive isomorphism."]
 def refl (M : Type _) [Mul M] : M ≃* M :=
-  { Equivₓ.refl _ with map_mul' := fun _ _ => rfl }
+  { Equiv.refl _ with map_mul' := fun _ _ => rfl }
 
 @[to_additive]
 instance : Inhabited (M ≃* M) :=
@@ -242,7 +244,7 @@ theorem symm_symm : ∀ f : M ≃* N, f.symm.symm = f
 
 @[to_additive]
 theorem symm_bijective : Function.Bijective (symm : M ≃* N → N ≃* M) :=
-  Equivₓ.bijective ⟨symm, symm, symm_symm, symm_symm⟩
+  Equiv.bijective ⟨symm, symm, symm_symm, symm_symm⟩
 
 @[simp, to_additive]
 theorem symm_mk (f : M → N) (g h₁ h₂ h₃) :
@@ -338,11 +340,11 @@ theorem self_trans_symm (e : M ≃* N) : e.trans e.symm = refl M :=
   FunLike.ext _ _ e.symm_apply_apply
 
 @[to_additive, simp]
-theorem coe_monoid_hom_refl {M} [MulOneClassₓ M] : (refl M : M →* M) = MonoidHom.id M :=
+theorem coe_monoid_hom_refl {M} [MulOneClass M] : (refl M : M →* M) = MonoidHom.id M :=
   rfl
 
 @[to_additive, simp]
-theorem coe_monoid_hom_trans {M N P} [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (e₁ : M ≃* N) (e₂ : N ≃* P) :
+theorem coe_monoid_hom_trans {M N P} [MulOneClass M] [MulOneClass N] [MulOneClass P] (e₁ : M ≃* N) (e₂ : N ≃* P) :
     (e₁.trans e₂ : M →* P) = (e₂ : N →* P).comp ↑e₁ :=
   rfl
 
@@ -375,13 +377,13 @@ protected theorem congr_fun {f g : MulEquiv M N} (h : f = g) (x : M) : f x = g x
 /-- The `mul_equiv` between two monoids with a unique element. -/
 @[to_additive "The `add_equiv` between two add_monoids with a unique element."]
 def mulEquivOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
-  { Equivₓ.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elim _ _ }
+  { Equiv.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elim _ _ }
 
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
 @[to_additive "There is a unique additive monoid homomorphism between two additive monoids with\na unique element."]
 instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) where
   default := mulEquivOfUnique
-  uniq := fun _ => ext fun x => Subsingleton.elim _ _
+  uniq _ := ext fun x => Subsingleton.elim _ _
 
 /-!
 ## Monoids
@@ -391,41 +393,41 @@ instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) where
 /-- A multiplicative isomorphism of monoids sends `1` to `1` (and is hence a monoid isomorphism). -/
 @[to_additive
       "An additive isomorphism of additive monoids sends `0` to `0`\n(and is hence an additive monoid isomorphism)."]
-protected theorem map_one {M N} [MulOneClassₓ M] [MulOneClassₓ N] (h : M ≃* N) : h 1 = 1 :=
+protected theorem map_one {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) : h 1 = 1 :=
   map_one h
 
 @[to_additive]
-protected theorem map_eq_one_iff {M N} [MulOneClassₓ M] [MulOneClassₓ N] (h : M ≃* N) {x : M} : h x = 1 ↔ x = 1 :=
+protected theorem map_eq_one_iff {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) {x : M} : h x = 1 ↔ x = 1 :=
   MulEquivClass.map_eq_one_iff h
 
 @[to_additive]
-theorem map_ne_one_iff {M N} [MulOneClassₓ M] [MulOneClassₓ N] (h : M ≃* N) {x : M} : h x ≠ 1 ↔ x ≠ 1 :=
+theorem map_ne_one_iff {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) {x : M} : h x ≠ 1 ↔ x ≠ 1 :=
   MulEquivClass.map_ne_one_iff h
 
 /-- A bijective `semigroup` homomorphism is an isomorphism -/
 @[to_additive "A bijective `add_semigroup` homomorphism is an isomorphism", simps apply]
 noncomputable def ofBijective {M N F} [Mul M] [Mul N] [MulHomClass F M N] (f : F) (hf : Function.Bijective f) :
     M ≃* N :=
-  { Equivₓ.ofBijective f hf with map_mul' := map_mul f }
+  { Equiv.ofBijective f hf with map_mul' := map_mul f }
 
 @[simp]
-theorem of_bijective_apply_symm_apply {M N} [MulOneClassₓ M] [MulOneClassₓ N] {n : N} (f : M →* N)
-    (hf : Function.Bijective f) : f ((Equivₓ.ofBijective f hf).symm n) = n :=
+theorem of_bijective_apply_symm_apply {M N} [MulOneClass M] [MulOneClass N] {n : N} (f : M →* N)
+    (hf : Function.Bijective f) : f ((Equiv.ofBijective f hf).symm n) = n :=
   (MulEquiv.ofBijective f hf).apply_symm_apply n
 
 /-- Extract the forward direction of a multiplicative equivalence
 as a multiplication-preserving function.
 -/
 @[to_additive "Extract the forward direction of an additive equivalence\nas an addition-preserving function."]
-def toMonoidHom {M N} [MulOneClassₓ M] [MulOneClassₓ N] (h : M ≃* N) : M →* N :=
+def toMonoidHom {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) : M →* N :=
   { h with map_one' := h.map_one }
 
 @[simp, to_additive]
-theorem coe_to_monoid_hom {M N} [MulOneClassₓ M] [MulOneClassₓ N] (e : M ≃* N) : ⇑e.toMonoidHom = e :=
+theorem coe_to_monoid_hom {M N} [MulOneClass M] [MulOneClass N] (e : M ≃* N) : ⇑e.toMonoidHom = e :=
   rfl
 
 @[to_additive]
-theorem to_monoid_hom_injective {M N} [MulOneClassₓ M] [MulOneClassₓ N] :
+theorem to_monoid_hom_injective {M N} [MulOneClass M] [MulOneClass N] :
     Function.Injective (toMonoidHom : M ≃* N → M →* N) := fun f g h => MulEquiv.ext (MonoidHom.ext_iff.1 h)
 
 /-- A multiplicative analogue of `equiv.arrow_congr`,
@@ -434,15 +436,15 @@ where the equivalence between the targets is multiplicative.
 @[to_additive "An additive analogue of `equiv.arrow_congr`,\nwhere the equivalence between the targets is additive.",
   simps apply]
 def arrowCongr {M N P Q : Type _} [Mul P] [Mul Q] (f : M ≃ N) (g : P ≃* Q) : (M → P) ≃* (N → Q) where
-  toFun := fun h n => g (h (f.symm n))
-  invFun := fun k m => g.symm (k (f m))
-  left_inv := fun h => by
+  toFun h n := g (h (f.symm n))
+  invFun k m := g.symm (k (f m))
+  left_inv h := by
     ext
     simp
-  right_inv := fun k => by
+  right_inv k := by
     ext
     simp
-  map_mul' := fun h k => by
+  map_mul' h k := by
     ext
     simp
 
@@ -452,17 +454,17 @@ for multiplicative maps from a monoid to a commutative monoid.
 @[to_additive
       "An additive analogue of `equiv.arrow_congr`,\nfor additive maps from an additive monoid to a commutative additive monoid.",
   simps apply]
-def monoidHomCongr {M N P Q} [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M ≃* N)
-    (g : P ≃* Q) : (M →* P) ≃* (N →* Q) where
-  toFun := fun h => g.toMonoidHom.comp (h.comp f.symm.toMonoidHom)
-  invFun := fun k => g.symm.toMonoidHom.comp (k.comp f.toMonoidHom)
-  left_inv := fun h => by
+def monoidHomCongr {M N P Q} [MulOneClass M] [MulOneClass N] [CommMonoid P] [CommMonoid Q] (f : M ≃* N) (g : P ≃* Q) :
+    (M →* P) ≃* (N →* Q) where
+  toFun h := g.toMonoidHom.comp (h.comp f.symm.toMonoidHom)
+  invFun k := g.symm.toMonoidHom.comp (k.comp f.toMonoidHom)
+  left_inv h := by
     ext
     simp
-  right_inv := fun k => by
+  right_inv k := by
     ext
     simp
-  map_mul' := fun h k => by
+  map_mul' h k := by
     ext
     simp
 
@@ -477,7 +479,7 @@ This is the `mul_equiv` version of `equiv.Pi_congr_right`, and the dependent ver
   simps apply]
 def piCongrRight {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)] (es : ∀ j, Ms j ≃* Ns j) :
     (∀ j, Ms j) ≃* ∀ j, Ns j :=
-  { Equivₓ.piCongrRight fun j => (es j).toEquiv with toFun := fun x j => es j (x j),
+  { Equiv.piCongrRight fun j => (es j).toEquiv with toFun := fun x j => es j (x j),
     invFun := fun x j => (es j).symm (x j), map_mul' := fun x y => funext fun j => (es j).map_mul (x j) (y j) }
 
 @[simp]
@@ -502,7 +504,7 @@ index. -/
       "A family indexed by a nonempty subsingleton type is\nequivalent to the element at the single index.",
   simps]
 def piSubsingleton {ι : Type _} (M : ι → Type _) [∀ j, Mul (M j)] [Subsingleton ι] (i : ι) : (∀ j, M j) ≃* M i :=
-  { Equivₓ.piSubsingleton M i with map_mul' := fun f1 f2 => Pi.mul_apply _ _ _ }
+  { Equiv.piSubsingleton M i with map_mul' := fun f1 f2 => Pi.mul_apply _ _ _ }
 
 /-!
 # Groups
@@ -511,12 +513,12 @@ def piSubsingleton {ι : Type _} (M : ι → Type _) [∀ j, Mul (M j)] [Subsing
 
 /-- A multiplicative equivalence of groups preserves inversion. -/
 @[to_additive "An additive equivalence of additive groups preserves negation."]
-protected theorem map_inv [Groupₓ G] [DivisionMonoid H] (h : G ≃* H) (x : G) : h x⁻¹ = (h x)⁻¹ :=
+protected theorem map_inv [Group G] [DivisionMonoid H] (h : G ≃* H) (x : G) : h x⁻¹ = (h x)⁻¹ :=
   map_inv h x
 
 /-- A multiplicative equivalence of groups preserves division. -/
 @[to_additive "An additive equivalence of additive groups preserves subtractions."]
-protected theorem map_div [Groupₓ G] [DivisionMonoid H] (h : G ≃* H) (x y : G) : h (x / y) = h x / h y :=
+protected theorem map_div [Group G] [DivisionMonoid H] (h : G ≃* H) (x y : G) : h (x / y) = h x / h y :=
   map_div h x y
 
 end MulEquiv
@@ -527,7 +529,7 @@ useful if the underlying type(s) have specialized `ext` lemmas for monoid homomo
 @[to_additive
       "Given a pair of additive monoid homomorphisms `f`, `g` such that `g.comp f = id`\nand `f.comp g = id`, returns an additive equivalence with `to_fun = f` and `inv_fun = g`.  This\nconstructor is useful if the underlying type(s) have specialized `ext` lemmas for additive\nmonoid homomorphisms.",
   simps (config := { fullyApplied := false })]
-def MonoidHom.toMulEquiv [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (g : N →* M) (h₁ : g.comp f = MonoidHom.id _)
+def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N →* M) (h₁ : g.comp f = MonoidHom.id _)
     (h₂ : f.comp g = MonoidHom.id _) : M ≃* N where
   toFun := f
   invFun := g
@@ -537,20 +539,20 @@ def MonoidHom.toMulEquiv [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (g
 
 /-- A group is isomorphic to its group of units. -/
 @[to_additive "An additive group is isomorphic to its group of additive units"]
-def toUnits [Groupₓ G] : G ≃* Gˣ where
-  toFun := fun x => ⟨x, x⁻¹, mul_inv_selfₓ _, inv_mul_selfₓ _⟩
+def toUnits [Group G] : G ≃* Gˣ where
+  toFun x := ⟨x, x⁻¹, mul_inv_self _, inv_mul_self _⟩
   invFun := coe
-  left_inv := fun x => rfl
-  right_inv := fun u => Units.ext rfl
-  map_mul' := fun x y => Units.ext rfl
+  left_inv x := rfl
+  right_inv u := Units.ext rfl
+  map_mul' x y := Units.ext rfl
 
 @[simp, to_additive]
-theorem coe_to_units [Groupₓ G] (g : G) : (toUnits g : G) = g :=
+theorem coe_to_units [Group G] (g : G) : (toUnits g : G) = g :=
   rfl
 
 namespace Units
 
-variable [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
+variable [Monoid M] [Monoid N] [Monoid P]
 
 /-- A multiplicative equivalence of monoids defines a multiplicative equivalence
 of their groups of units. -/
@@ -569,15 +571,15 @@ theorem coe_map_equiv (h : M ≃* N) (x : Mˣ) : (mapEquiv h x : N) = h x :=
 /-- Left multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Left addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
-def mulLeft (u : Mˣ) : Equivₓ.Perm M where
-  toFun := fun x => u * x
-  invFun := fun x => ↑u⁻¹ * x
+def mulLeft (u : Mˣ) : Equiv.Perm M where
+  toFun x := u * x
+  invFun x := ↑u⁻¹ * x
   left_inv := u.inv_mul_cancel_left
   right_inv := u.mul_inv_cancel_left
 
 @[simp, to_additive]
 theorem mul_left_symm (u : Mˣ) : u.mul_left.symm = u⁻¹.mul_left :=
-  Equivₓ.ext fun x => rfl
+  Equiv.ext fun x => rfl
 
 @[to_additive]
 theorem mul_left_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M) :=
@@ -586,15 +588,15 @@ theorem mul_left_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M
 /-- Right multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Right addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
-def mulRight (u : Mˣ) : Equivₓ.Perm M where
-  toFun := fun x => x * u
-  invFun := fun x => x * ↑u⁻¹
-  left_inv := fun x => mul_inv_cancel_right x u
-  right_inv := fun x => inv_mul_cancel_right x u
+def mulRight (u : Mˣ) : Equiv.Perm M where
+  toFun x := x * u
+  invFun x := x * ↑u⁻¹
+  left_inv x := mul_inv_cancel_right x u
+  right_inv x := inv_mul_cancel_right x u
 
 @[simp, to_additive]
 theorem mul_right_symm (u : Mˣ) : u.mul_right.symm = u⁻¹.mul_right :=
-  Equivₓ.ext fun x => rfl
+  Equiv.ext fun x => rfl
 
 @[to_additive]
 theorem mul_right_bijective (a : Mˣ) : Function.Bijective ((· * a) : M → M) :=
@@ -602,7 +604,7 @@ theorem mul_right_bijective (a : Mˣ) : Function.Bijective ((· * a) : M → M) 
 
 end Units
 
-namespace Equivₓ
+namespace Equiv
 
 section HasInvolutiveNeg
 
@@ -617,14 +619,14 @@ protected def inv : Perm G :=
 variable {G}
 
 @[simp, to_additive]
-theorem inv_symm : (Equivₓ.inv G).symm = Equivₓ.inv G :=
+theorem inv_symm : (Equiv.inv G).symm = Equiv.inv G :=
   rfl
 
 end HasInvolutiveNeg
 
-section Groupₓ
+section Group
 
-variable [Groupₓ G]
+variable [Group G]
 
 /-- Left multiplication in a `group` is a permutation of the underlying type. -/
 @[to_additive "Left addition in an `add_group` is a permutation of the underlying type."]
@@ -632,21 +634,21 @@ protected def mulLeft (a : G) : Perm G :=
   (toUnits a).mul_left
 
 @[simp, to_additive]
-theorem coe_mul_left (a : G) : ⇑(Equivₓ.mulLeft a) = (· * ·) a :=
+theorem coe_mul_left (a : G) : ⇑(Equiv.mulLeft a) = (· * ·) a :=
   rfl
 
 /-- Extra simp lemma that `dsimp` can use. `simp` will never use this. -/
 @[simp, nolint simp_nf, to_additive "Extra simp lemma that `dsimp` can use. `simp` will never use this."]
-theorem mul_left_symm_apply (a : G) : ((Equivₓ.mulLeft a).symm : G → G) = (· * ·) a⁻¹ :=
+theorem mul_left_symm_apply (a : G) : ((Equiv.mulLeft a).symm : G → G) = (· * ·) a⁻¹ :=
   rfl
 
 @[simp, to_additive]
-theorem mul_left_symm (a : G) : (Equivₓ.mulLeft a).symm = Equivₓ.mulLeft a⁻¹ :=
+theorem mul_left_symm (a : G) : (Equiv.mulLeft a).symm = Equiv.mulLeft a⁻¹ :=
   ext fun x => rfl
 
 @[to_additive]
 theorem _root_.group.mul_left_bijective (a : G) : Function.Bijective ((· * ·) a) :=
-  (Equivₓ.mulLeft a).Bijective
+  (Equiv.mulLeft a).Bijective
 
 /-- Right multiplication in a `group` is a permutation of the underlying type. -/
 @[to_additive "Right addition in an `add_group` is a permutation of the underlying type."]
@@ -654,51 +656,51 @@ protected def mulRight (a : G) : Perm G :=
   (toUnits a).mul_right
 
 @[simp, to_additive]
-theorem coe_mul_right (a : G) : ⇑(Equivₓ.mulRight a) = fun x => x * a :=
+theorem coe_mul_right (a : G) : ⇑(Equiv.mulRight a) = fun x => x * a :=
   rfl
 
 @[simp, to_additive]
-theorem mul_right_symm (a : G) : (Equivₓ.mulRight a).symm = Equivₓ.mulRight a⁻¹ :=
+theorem mul_right_symm (a : G) : (Equiv.mulRight a).symm = Equiv.mulRight a⁻¹ :=
   ext fun x => rfl
 
 /-- Extra simp lemma that `dsimp` can use. `simp` will never use this. -/
 @[simp, nolint simp_nf, to_additive "Extra simp lemma that `dsimp` can use. `simp` will never use this."]
-theorem mul_right_symm_apply (a : G) : ((Equivₓ.mulRight a).symm : G → G) = fun x => x * a⁻¹ :=
+theorem mul_right_symm_apply (a : G) : ((Equiv.mulRight a).symm : G → G) = fun x => x * a⁻¹ :=
   rfl
 
 @[to_additive]
 theorem _root_.group.mul_right_bijective (a : G) : Function.Bijective (· * a) :=
-  (Equivₓ.mulRight a).Bijective
+  (Equiv.mulRight a).Bijective
 
 /-- A version of `equiv.mul_left a b⁻¹` that is defeq to `a / b`. -/
 @[to_additive " A version of `equiv.add_left a (-b)` that is defeq to `a - b`. ", simps]
 protected def divLeft (a : G) : G ≃ G where
-  toFun := fun b => a / b
-  invFun := fun b => b⁻¹ * a
-  left_inv := fun b => by simp [div_eq_mul_inv]
-  right_inv := fun b => by simp [div_eq_mul_inv]
+  toFun b := a / b
+  invFun b := b⁻¹ * a
+  left_inv b := by simp [div_eq_mul_inv]
+  right_inv b := by simp [div_eq_mul_inv]
 
 @[to_additive]
-theorem div_left_eq_inv_trans_mul_left (a : G) : Equivₓ.divLeft a = (Equivₓ.inv G).trans (Equivₓ.mulLeft a) :=
+theorem div_left_eq_inv_trans_mul_left (a : G) : Equiv.divLeft a = (Equiv.inv G).trans (Equiv.mulLeft a) :=
   ext fun _ => div_eq_mul_inv _ _
 
 /-- A version of `equiv.mul_right a⁻¹ b` that is defeq to `b / a`. -/
 @[to_additive " A version of `equiv.add_right (-a) b` that is defeq to `b - a`. ", simps]
 protected def divRight (a : G) : G ≃ G where
-  toFun := fun b => b / a
-  invFun := fun b => b * a
-  left_inv := fun b => by simp [div_eq_mul_inv]
-  right_inv := fun b => by simp [div_eq_mul_inv]
+  toFun b := b / a
+  invFun b := b * a
+  left_inv b := by simp [div_eq_mul_inv]
+  right_inv b := by simp [div_eq_mul_inv]
 
 @[to_additive]
-theorem div_right_eq_mul_right_inv (a : G) : Equivₓ.divRight a = Equivₓ.mulRight a⁻¹ :=
+theorem div_right_eq_mul_right_inv (a : G) : Equiv.divRight a = Equiv.mulRight a⁻¹ :=
   ext fun _ => div_eq_mul_inv _ _
 
-end Groupₓ
+end Group
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable [GroupWithZeroₓ G]
+variable [GroupWithZero G]
 
 /-- Left multiplication by a nonzero element in a `group_with_zero` is a permutation of the
 underlying type. -/
@@ -707,7 +709,7 @@ protected def mulLeft₀ (a : G) (ha : a ≠ 0) : Perm G :=
   (Units.mk0 a ha).mul_left
 
 theorem _root_.mul_left_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * ·) a : G → G) :=
-  (Equivₓ.mulLeft₀ a ha).Bijective
+  (Equiv.mulLeft₀ a ha).Bijective
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` is a permutation of the
 underlying type. -/
@@ -716,17 +718,17 @@ protected def mulRight₀ (a : G) (ha : a ≠ 0) : Perm G :=
   (Units.mk0 a ha).mul_right
 
 theorem _root_.mul_right_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * a) : G → G) :=
-  (Equivₓ.mulRight₀ a ha).Bijective
+  (Equiv.mulRight₀ a ha).Bijective
 
-end GroupWithZeroₓ
+end GroupWithZero
 
-end Equivₓ
+end Equiv
 
 /-- In a `division_comm_monoid`, `equiv.inv` is a `mul_equiv`. There is a variant of this
 `mul_equiv.inv' G : G ≃* Gᵐᵒᵖ` for the non-commutative case. -/
 @[to_additive "When the `add_group` is commutative, `equiv.neg` is an `add_equiv`.", simps apply]
 def MulEquiv.inv (G : Type _) [DivisionCommMonoid G] : G ≃* G :=
-  { Equivₓ.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := mul_inv }
+  { Equiv.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := mul_inv }
 
 @[simp]
 theorem MulEquiv.inv_symm (G : Type _) [DivisionCommMonoid G] : (MulEquiv.inv G).symm = MulEquiv.inv G :=
@@ -735,56 +737,55 @@ theorem MulEquiv.inv_symm (G : Type _) [DivisionCommMonoid G] : (MulEquiv.inv G)
 section TypeTags
 
 /-- Reinterpret `G ≃+ H` as `multiplicative G ≃* multiplicative H`. -/
-def AddEquiv.toMultiplicative [AddZeroClassₓ G] [AddZeroClassₓ H] :
-    G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
-  toFun := fun f => ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
-  invFun := fun f => ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv := fun x => by
+def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] : G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
+  toFun f := ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
+  invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `G ≃* H` as `additive G ≃+ additive H`. -/
-def MulEquiv.toAdditive [MulOneClassₓ G] [MulOneClassₓ H] : G ≃* H ≃ (Additive G ≃+ Additive H) where
-  toFun := fun f => ⟨f.toMonoidHom.toAdditive, f.symm.toMonoidHom.toAdditive, f.3, f.4, f.5⟩
-  invFun := fun f => ⟨f.toAddMonoidHom, f.symm.toAddMonoidHom, f.3, f.4, f.5⟩
-  left_inv := fun x => by
+def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive G ≃+ Additive H) where
+  toFun f := ⟨f.toMonoidHom.toAdditive, f.symm.toMonoidHom.toAdditive, f.3, f.4, f.5⟩
+  invFun f := ⟨f.toAddMonoidHom, f.symm.toAddMonoidHom, f.3, f.4, f.5⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `additive G ≃+ H` as `G ≃* multiplicative H`. -/
-def AddEquiv.toMultiplicative' [MulOneClassₓ G] [AddZeroClassₓ H] : Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
-  toFun := fun f => ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
-  invFun := fun f => ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv := fun x => by
+def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] : Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
+  toFun f := ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
+  invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `G ≃* multiplicative H` as `additive G ≃+ H` as. -/
-def MulEquiv.toAdditive' [MulOneClassₓ G] [AddZeroClassₓ H] : G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
+def MulEquiv.toAdditive' [MulOneClass G] [AddZeroClass H] : G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
   AddEquiv.toMultiplicative'.symm
 
 /-- Reinterpret `G ≃+ additive H` as `multiplicative G ≃* H`. -/
-def AddEquiv.toMultiplicative'' [AddZeroClassₓ G] [MulOneClassₓ H] : G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
-  toFun := fun f => ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
-  invFun := fun f => ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv := fun x => by
+def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] : G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
+  toFun f := ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
+  invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `multiplicative G ≃* H` as `G ≃+ additive H` as. -/
-def MulEquiv.toAdditive'' [AddZeroClassₓ G] [MulOneClassₓ H] : Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
+def MulEquiv.toAdditive'' [AddZeroClass G] [MulOneClass H] : Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
   AddEquiv.toMultiplicative''.symm
 
 end TypeTags
@@ -794,11 +795,11 @@ section
 variable (G) (H)
 
 /-- `additive (multiplicative G)` is just `G`. -/
-def AddEquiv.additiveMultiplicative [AddZeroClassₓ G] : Additive (Multiplicative G) ≃+ G :=
+def AddEquiv.additiveMultiplicative [AddZeroClass G] : Additive (Multiplicative G) ≃+ G :=
   MulEquiv.toAdditive'' (MulEquiv.refl (Multiplicative G))
 
 /-- `multiplicative (additive H)` is just `H`. -/
-def MulEquiv.multiplicativeAdditive [MulOneClassₓ H] : Multiplicative (Additive H) ≃* H :=
+def MulEquiv.multiplicativeAdditive [MulOneClass H] : Multiplicative (Additive H) ≃* H :=
   AddEquiv.toMultiplicative'' (AddEquiv.refl (Additive H))
 
 end

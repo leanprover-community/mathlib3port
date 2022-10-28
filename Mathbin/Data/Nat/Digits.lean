@@ -39,18 +39,18 @@ def digitsAux0 : ℕ → List ℕ
 def digitsAux1 (n : ℕ) : List ℕ :=
   List.repeat 1 n
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux (b : ℕ) (h : 2 ≤ b) : ℕ → List ℕ
   | 0 => []
   | n + 1 =>
-    have : (n + 1) / b < n + 1 := Nat.div_lt_selfₓ (Nat.succ_posₓ _) h
+    have : (n + 1) / b < n + 1 := Nat.div_lt_self (Nat.succ_pos _) h
     ((n + 1) % b)::digits_aux ((n + 1) / b)
 
 @[simp]
 theorem digits_aux_zero (b : ℕ) (h : 2 ≤ b) : digitsAux b h 0 = [] := by rw [digits_aux]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_aux_def (b : ℕ) (h : 2 ≤ b) (n : ℕ) (w : 0 < n) : digitsAux b h n = (n % b)::digitsAux b h (n / b) := by
   cases n
   · cases w
@@ -96,19 +96,19 @@ theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
 theorem digits_one (n : ℕ) : digits 1 n = List.repeat 1 n :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem digits_one_succ (n : ℕ) : digits 1 (n + 1) = 1::digits 1 n :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem digits_add_two_add_one (b n : ℕ) :
     digits (b + 2) (n + 1) = ((n + 1) % (b + 2))::digits (b + 2) ((n + 1) / (b + 2)) := by
   rw [digits, digits_aux_def]
   exact succ_pos n
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = (n % b)::digits b (n / b)
   | 0, h => absurd h (by decide)
   | 1, h => absurd h (by decide)
@@ -125,12 +125,12 @@ theorem digits_of_lt (b x : ℕ) (w₁ : 0 < x) (w₂ : x < b) : digits b x = [x
     · cases x
       · cases w₁
         
-      · rw [digits_add_two_add_one, Nat.div_eq_of_ltₓ w₂, digits_zero, Nat.mod_eq_of_ltₓ w₂]
+      · rw [digits_add_two_add_one, Nat.div_eq_of_lt w₂, digits_zero, Nat.mod_eq_of_lt w₂]
         
       
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x ∨ 0 < y) :
     digits b (x + b * y) = x::digits b y := by
   cases b
@@ -146,28 +146,28 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
       dsimp [digits]
       rw [digits_aux_def]
       · congr
-        · simp [Nat.add_modₓ, Nat.mod_eq_of_ltₓ w]
+        · simp [Nat.add_mod, Nat.mod_eq_of_lt w]
           
-        · simp [mul_comm (b + 2), Nat.add_mul_div_rightₓ, Nat.div_eq_of_ltₓ w]
+        · simp [mul_comm (b + 2), Nat.add_mul_div_right, Nat.div_eq_of_lt w]
           
         
-      · apply Nat.succ_posₓ
+      · apply Nat.succ_pos
         
       
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- If we had a function converting a list into a polynomial,
 -- and appropriate lemmas about that function,
 -- we could rewrite this in terms of that.
 /-- `of_digits b L` takes a list `L` of natural numbers, and interprets them
 as a number in semiring, as the little-endian digits in base `b`.
 -/
-def ofDigits {α : Type _} [Semiringₓ α] (b : α) : List ℕ → α
+def ofDigits {α : Type _} [Semiring α] (b : α) : List ℕ → α
   | [] => 0
   | h::t => h + b * of_digits t
 
-theorem of_digits_eq_foldr {α : Type _} [Semiringₓ α] (b : α) (L : List ℕ) :
+theorem of_digits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
     ofDigits b L = L.foldr (fun x y => x + b * y) 0 := by
   induction' L with d L ih
   · rfl
@@ -186,7 +186,7 @@ theorem of_digits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
     by simp [this]
   congr
   ext
-  simp [pow_succₓ]
+  simp [pow_succ]
   ring
 
 theorem of_digits_eq_sum_map_with_index (b : ℕ) (L : List ℕ) :
@@ -201,9 +201,9 @@ theorem of_digits_eq_sum_map_with_index (b : ℕ) (L : List ℕ) :
 @[simp]
 theorem of_digits_singleton {b n : ℕ} : ofDigits b [n] = n := by simp [of_digits]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem of_digits_one_cons {α : Type _} [Semiringₓ α] (h : ℕ) (L : List ℕ) :
+theorem of_digits_one_cons {α : Type _} [Semiring α] (h : ℕ) (L : List ℕ) :
     ofDigits (1 : α) (h::L) = h + ofDigits 1 L := by simp [of_digits]
 
 theorem of_digits_append {b : ℕ} {l1 l2 : List ℕ} :
@@ -211,12 +211,12 @@ theorem of_digits_append {b : ℕ} {l1 l2 : List ℕ} :
   induction' l1 with hd tl IH
   · simp [of_digits]
     
-  · rw [of_digits, List.cons_append, of_digits, IH, List.length_cons, pow_succ'ₓ]
+  · rw [of_digits, List.cons_append, of_digits, IH, List.length_cons, pow_succ']
     ring
     
 
 @[norm_cast]
-theorem coe_of_digits (α : Type _) [Semiringₓ α] (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : α) = ofDigits (b : α) L :=
+theorem coe_of_digits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : α) = ofDigits (b : α) L :=
   by
   induction' L with d L ih
   · simp [of_digits]
@@ -261,7 +261,7 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l �
     · rw [ih]
       · intro l m
         apply w₁
-        exact List.mem_cons_of_memₓ _ m
+        exact List.mem_cons_of_mem _ m
         
       · intro h
         · rw [List.last_cons h] at w₂
@@ -269,23 +269,23 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l �
           
         
       
-    · exact w₁ d (List.mem_cons_selfₓ _ _)
+    · exact w₁ d (List.mem_cons_self _ _)
       
     · by_cases h':L = []
       · rcases h' with rfl
         simp at w₂
         left
-        apply Nat.pos_of_ne_zeroₓ
+        apply Nat.pos_of_ne_zero
         exact w₂
         
       · right
-        apply Nat.pos_of_ne_zeroₓ
+        apply Nat.pos_of_ne_zero
         contrapose! w₂
         apply digits_zero_of_eq_zero _ w₂
         · rw [List.last_cons h']
           exact List.last_mem h'
           
-        · exact le_of_ltₓ h
+        · exact le_of_lt h
           
         
       
@@ -305,10 +305,10 @@ theorem of_digits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
     · induction' n with n ih
       · rfl
         
-      · simp only [ih, add_commₓ 1, of_digits_one_cons, Nat.cast_id, digits_one_succ]
+      · simp only [ih, add_comm 1, of_digits_one_cons, Nat.cast_id, digits_one_succ]
         
       
-    · apply Nat.strong_induction_onₓ n _
+    · apply Nat.strong_induction_on n _
       clear n
       intro n h
       cases n
@@ -318,7 +318,7 @@ theorem of_digits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
       · simp only [Nat.succ_eq_add_one, digits_add_two_add_one]
         dsimp [of_digits]
         rw [h _ (Nat.div_lt_self' n b)]
-        rw [Nat.mod_add_divₓ]
+        rw [Nat.mod_add_div]
         
       
     
@@ -351,10 +351,10 @@ theorem digits_eq_nil_iff_eq_zero {b n : ℕ} : digits b n = [] ↔ n = 0 := by
 theorem digits_ne_nil_iff_ne_zero {b n : ℕ} : digits b n ≠ [] ↔ n ≠ 0 :=
   not_congr digits_eq_nil_iff_eq_zero
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_eq_cons_digits_div {b n : ℕ} (h : 2 ≤ b) (w : 0 < n) : digits b n = (n % b)::digits b (n / b) := by
   rcases b with (_ | _ | b)
-  · rw [digits_zero_succ' w, Nat.mod_zeroₓ, Nat.div_zeroₓ, Nat.digits_zero_zero]
+  · rw [digits_zero_succ' w, Nat.mod_zero, Nat.div_zero, Nat.digits_zero_zero]
     
   · norm_num at h
     
@@ -367,7 +367,7 @@ theorem digits_last {b : ℕ} (m : ℕ) (h : 2 ≤ b) (p q) : (digits b m).last 
   by_cases hm:m = 0
   · simp [hm]
     
-  simp only [digits_eq_cons_digits_div h (Nat.pos_of_ne_zeroₓ hm)]
+  simp only [digits_eq_cons_digits_div h (Nat.pos_of_ne_zero hm)]
   rw [List.last_cons]
 
 theorem digits.injective (b : ℕ) : Function.Injective b.digits :=
@@ -378,7 +378,7 @@ theorem digits_inj_iff {b n m : ℕ} : b.digits n = b.digits m ↔ n = m :=
   (digits.injective b).eq_iff
 
 theorem digits_len (b n : ℕ) (hb : 2 ≤ b) (hn : 0 < n) : (b.digits n).length = b.log n + 1 := by
-  induction' n using Nat.strong_induction_onₓ with n IH
+  induction' n using Nat.strong_induction_on with n IH
   rw [digits_eq_cons_digits_div hb hn, List.length]
   cases' (n / b).eq_zero_or_pos with h h
   · have posb : 0 < b := zero_lt_two.trans_le hb
@@ -408,23 +408,23 @@ theorem last_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) : (digits b m).las
     norm_num
     
   revert hm
-  apply Nat.strong_induction_onₓ m
+  apply Nat.strong_induction_on m
   intro n IH hn
-  have hnpos : 0 < n := Nat.pos_of_ne_zeroₓ hn
+  have hnpos : 0 < n := Nat.pos_of_ne_zero hn
   by_cases hnb:n < b + 2
   · simp_rw [digits_of_lt b.succ.succ n hnpos hnb]
     exact pos_iff_ne_zero.mp hnpos
     
   · rw [digits_last n (show 2 ≤ b + 2 by decide)]
-    refine' IH _ (Nat.div_lt_selfₓ hnpos (by decide)) _
+    refine' IH _ (Nat.div_lt_self hnpos (by decide)) _
     · rw [← pos_iff_ne_zero]
-      exact Nat.div_pos (le_of_not_ltₓ hnb) (by decide)
+      exact Nat.div_pos (le_of_not_lt hnb) (by decide)
       
     
 
 /-- The digits in the base b+2 expansion of n are all less than b+2 -/
 theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b + 2 := by
-  apply Nat.strong_induction_onₓ m
+  apply Nat.strong_induction_on m
   intro n IH d hd
   cases' n with n
   · rw [digits_zero] at hd
@@ -436,7 +436,7 @@ theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b 
   · rw [hd]
     exact n.succ.mod_lt (by linarith)
     
-  · exact IH _ (Nat.div_lt_selfₓ (Nat.succ_posₓ _) (by linarith)) hd
+  · exact IH _ (Nat.div_lt_self (Nat.succ_pos _) (by linarith)) hd
     
 
 /-- The digits in the base b expansion of n are all less than b, if b ≥ 2 -/
@@ -450,12 +450,12 @@ theorem of_digits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l
   induction' l with hd tl IH
   · simp [of_digits]
     
-  · rw [of_digits, List.length_cons, pow_succₓ]
+  · rw [of_digits, List.length_cons, pow_succ]
     have : (of_digits (b + 2) tl + 1) * (b + 2) ≤ (b + 2) ^ tl.length * (b + 2) :=
-      mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_memₓ _ hx)) (by rfl) (by decide) (Nat.zero_leₓ _)
+      mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) (by decide) (Nat.zero_le _)
     suffices ↑hd < b + 2 by linarith
     norm_cast
-    exact hl hd (List.mem_cons_selfₓ _ _)
+    exact hl hd (List.mem_cons_self _ _)
     
 
 /-- an n-digit number in base b is less than b^n if b ≥ 2 -/
@@ -482,7 +482,7 @@ theorem digits_len_le_digits_len_succ (b n : ℕ) : (digits b n).length ≤ (dig
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
     
-  cases' lt_or_leₓ b 2 with hb hb
+  cases' lt_or_le b 2 with hb hb
   · rcases b with (_ | _ | b)
     · simp [digits_zero_succ', hn]
       
@@ -499,13 +499,13 @@ theorem le_digits_len_le (b n m : ℕ) (h : n ≤ m) : (digits b n).length ≤ (
 theorem pow_length_le_mul_of_digits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2 : l.last hl ≠ 0) :
     (b + 2) ^ l.length ≤ (b + 2) * ofDigits (b + 2) l := by
   rw [← List.init_append_last hl]
-  simp only [List.length_append, List.length, zero_addₓ, List.length_init, of_digits_append, List.length_init,
-    of_digits_singleton, add_commₓ (l.length - 1), pow_addₓ, pow_oneₓ]
-  apply Nat.mul_le_mul_leftₓ
-  refine' le_transₓ _ (Nat.le_add_leftₓ _ _)
+  simp only [List.length_append, List.length, zero_add, List.length_init, of_digits_append, List.length_init,
+    of_digits_singleton, add_comm (l.length - 1), pow_add, pow_one]
+  apply Nat.mul_le_mul_left
+  refine' le_trans _ (Nat.le_add_left _ _)
   have : 0 < l.last hl := by rwa [pos_iff_ne_zero]
-  convert Nat.mul_le_mul_leftₓ _ this
-  rw [mul_oneₓ]
+  convert Nat.mul_le_mul_left _ this
+  rw [mul_one]
 
 /-- Any non-zero natural number `m` is greater than
 (b+2)^((number of digits in the base (b+2) representation of m) - 1)
@@ -533,20 +533,20 @@ theorem digits_two_eq_bits (n : ℕ) : digits 2 n = n.bits.map fun b => cond b 1
     
   rw [bits_append_bit _ _ fun hn => absurd hn h]
   cases b
-  · rw [digits_def' (le_reflₓ 2)]
+  · rw [digits_def' (le_refl 2)]
     · simpa [Nat.bit, Nat.bit0_val n]
       
     · simpa [pos_iff_ne_zero, bit_eq_zero_iff]
       
     
-  · simpa [Nat.bit, Nat.bit1_val n, add_commₓ, digits_add 2 le_rflₓ 1 n (by norm_num) (by norm_num)]
+  · simpa [Nat.bit, Nat.bit1_val n, add_comm, digits_add 2 le_rfl 1 n (by norm_num) (by norm_num)]
     
 
 /-! ### Modular Arithmetic -/
 
 
 -- This is really a theorem about polynomials.
-theorem dvd_of_digits_sub_of_digits {α : Type _} [CommRingₓ α] {a b k : α} (h : k ∣ a - b) (L : List ℕ) :
+theorem dvd_of_digits_sub_of_digits {α : Type _} [CommRing α] {a b k : α} (h : k ∣ a - b) (L : List ℕ) :
     k ∣ ofDigits a L - ofDigits b L := by
   induction' L with d L ih
   · change k ∣ 0 - 0
@@ -563,8 +563,8 @@ theorem of_digits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List
     
   · dsimp [of_digits]
     dsimp [Nat.Modeq] at *
-    conv_lhs => rw [Nat.add_modₓ, Nat.mul_modₓ, h, ih]
-    conv_rhs => rw [Nat.add_modₓ, Nat.mul_modₓ]
+    conv_lhs => rw [Nat.add_mod, Nat.mul_mod, h, ih]
+    conv_rhs => rw [Nat.add_mod, Nat.mul_mod]
     
 
 theorem of_digits_modeq (b k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [MOD k] :=
@@ -614,13 +614,13 @@ theorem zmodeq_of_digits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (
   rw [coe_int_of_digits]
   apply of_digits_zmodeq' _ _ _ h
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem of_digits_neg_one : ∀ L : List ℕ, ofDigits (-1 : ℤ) L = (L.map fun n : ℕ => (n : ℤ)).alternatingSum
   | [] => rfl
   | [n] => by simp [of_digits, List.alternatingSum]
   | a::b::t => by
-    simp only [of_digits, List.alternatingSum, List.map_consₓ, of_digits_neg_one t]
+    simp only [of_digits, List.alternatingSum, List.map_cons, of_digits_neg_one t]
     ring
 
 theorem modeq_eleven_digits_sum (n : ℕ) : n ≡ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum [ZMOD 11] := by
@@ -633,7 +633,7 @@ theorem modeq_eleven_digits_sum (n : ℕ) : n ≡ ((digits 10 n).map fun n : ℕ
 theorem dvd_iff_dvd_digits_sum (b b' : ℕ) (h : b' % b = 1) (n : ℕ) : b ∣ n ↔ b ∣ (digits b' n).Sum := by
   rw [← of_digits_one]
   conv_lhs => rw [← of_digits_digits b' n]
-  rw [Nat.dvd_iff_mod_eq_zeroₓ, Nat.dvd_iff_mod_eq_zeroₓ, of_digits_mod, h]
+  rw [Nat.dvd_iff_mod_eq_zero, Nat.dvd_iff_mod_eq_zero, of_digits_mod, h]
 
 /-- **Divisibility by 3 Rule** -/
 theorem three_dvd_iff (n : ℕ) : 3 ∣ n ↔ 3 ∣ (digits 10 n).Sum :=
@@ -654,10 +654,10 @@ theorem eleven_dvd_iff : 11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : 
 
 theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digits 10 n).length) : 11 ∣ n := by
   let dig := (digits 10 n).map (coe : ℕ → ℤ)
-  replace h : Even dig.length := by rwa [List.length_mapₓ]
+  replace h : Even dig.length := by rwa [List.length_map]
   refine' eleven_dvd_iff.2 ⟨0, (_ : dig.alternating_sum = 0)⟩
   have := dig.alternating_sum_reverse
-  rw [(p.map _).reverse_eq, pow_succₓ, h.neg_one_pow, mul_oneₓ, neg_one_zsmul] at this
+  rw [(p.map _).reverse_eq, pow_succ, h.neg_one_pow, mul_one, neg_one_zsmul] at this
   exact eq_zero_of_neg_eq this.symm
 
 /-! ### `norm_digits` tactic -/
@@ -665,7 +665,7 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
 
 namespace NormDigits
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b) (h : Nat.digits b m = l ∧ 2 ≤ b ∧ 0 < m) :
     (Nat.digits b n = r::l) ∧ 2 ≤ b ∧ 0 < n := by
   rcases h with ⟨h, b2, m0⟩
@@ -679,7 +679,7 @@ theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b) (h : Nat.digits
 theorem digits_one (b n) (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 2 ≤ b ∧ 0 < n := by
   have b2 : 2 ≤ b := by linarith
   refine' ⟨_, b2, n0⟩
-  rw [Nat.digits_def' b2 n0, Nat.mod_eq_of_ltₓ nb, (Nat.div_eq_zero_iff (by linarith : 0 < b)).2 nb, Nat.digits_zero]
+  rw [Nat.digits_def' b2 n0, Nat.mod_eq_of_lt nb, (Nat.div_eq_zero_iff (by linarith : 0 < b)).2 nb, Nat.digits_zero]
 
 open Tactic
 

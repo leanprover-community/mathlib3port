@@ -42,12 +42,12 @@ universe u
 
 /-- Lawless bitraversable bifunctor. This only holds data for the bimap and bitraverse. -/
 class Bitraversable (t : Type u → Type u → Type u) extends Bifunctor t where
-  bitraverse : ∀ {m : Type u → Type u} [Applicativeₓ m] {α α' β β'}, (α → m α') → (β → m β') → t α β → m (t α' β')
+  bitraverse : ∀ {m : Type u → Type u} [Applicative m] {α α' β β'}, (α → m α') → (β → m β') → t α β → m (t α' β')
 
 export Bitraversable (bitraverse)
 
 /-- A bitraversable functor commutes with all applicative functors. -/
-def bisequence {t m} [Bitraversable t] [Applicativeₓ m] {α β} : t (m α) (m β) → m (t α β) :=
+def bisequence {t m} [Bitraversable t] [Applicative m] {α β} : t (m α) (m β) → m (t α β) :=
   bitraverse id id
 
 open Functor
@@ -56,13 +56,13 @@ open Functor
 class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t] extends IsLawfulBifunctor t where
   id_bitraverse : ∀ {α β} (x : t α β), bitraverse id.mk id.mk x = id.mk x
   comp_bitraverse :
-    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α α' β β' γ γ'}
-      (f : β → F γ) (f' : β' → F γ') (g : α → G β) (g' : α' → G β') (x : t α α'),
+    ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G] {α α' β β' γ γ'} (f : β → F γ)
+      (f' : β' → F γ') (g : α → G β) (g' : α' → G β') (x : t α α'),
       bitraverse (comp.mk ∘ map f ∘ g) (comp.mk ∘ map f' ∘ g') x = Comp.mk (bitraverse f f' <$> bitraverse g g' x)
   bitraverse_eq_bimap_id :
     ∀ {α α' β β'} (f : α → β) (f' : α' → β') (x : t α α'), bitraverse (id.mk ∘ f) (id.mk ∘ f') x = id.mk (bimap f f' x)
   binaturality :
-    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G]
+    ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G]
       (η : ApplicativeTransformation F G) {α α' β β'} (f : α → F β) (f' : α' → F β') (x : t α α'),
       η (bitraverse f f' x) = bitraverse (@η _ ∘ f) (@η _ ∘ f') x
 

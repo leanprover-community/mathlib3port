@@ -43,7 +43,7 @@ namespace Fin2
 
 /-- Define a dependent function on `fin2 (succ n)` by giving its value at
 zero (`H1`) and by giving a dependent function on the rest (`H2`). -/
-@[elabAsElim]
+@[elab_as_elim]
 protected def cases' {n} {C : Fin2 (succ n) → Sort u} (H1 : C fz) (H2 : ∀ n, C (fs n)) : ∀ i : Fin2 (succ n), C i
   | fz => H1
   | fs n => H2 n
@@ -100,17 +100,17 @@ class IsLt (m n : ℕ) where
   h : m < n
 
 instance IsLt.zero (n) : IsLt 0 (succ n) :=
-  ⟨succ_posₓ _⟩
+  ⟨succ_pos _⟩
 
 instance IsLt.succ (m n) [l : IsLt m n] : IsLt (succ m) (succ n) :=
-  ⟨succ_lt_succₓ l.h⟩
+  ⟨succ_lt_succ l.h⟩
 
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
 def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
-  | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zeroₓ _)
+  | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zero _)
   | succ n, 0, ⟨h⟩ => fz
-  | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succₓ h⟩)
+  | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
 
 -- mathport name: «expr& »
 local prefix:arg "&" => ofNat'

@@ -32,6 +32,8 @@ structure LocallyBoundedMap (α β : Type _) [Bornology α] [Bornology β] where
   toFun : α → β
   comap_cobounded_le' : (cobounded β).comap to_fun ≤ cobounded α
 
+section
+
 /-- `locally_bounded_map_class F α β` states that `F` is a type of bounded maps.
 
 You should extend this class when you extend `locally_bounded_map`. -/
@@ -39,13 +41,15 @@ class LocallyBoundedMapClass (F : Type _) (α β : outParam <| Type _) [Bornolog
   FunLike F α fun _ => β where
   comap_cobounded_le (f : F) : (cobounded β).comap f ≤ cobounded α
 
+end
+
 export LocallyBoundedMapClass (comap_cobounded_le)
 
 theorem IsBounded.image [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] {f : F} {s : Set α}
     (hs : IsBounded s) : IsBounded (f '' s) :=
   comap_cobounded_le_iff.1 (comap_cobounded_le f) hs
 
-instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] : CoeTₓ F (LocallyBoundedMap α β) :=
+instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] : CoeT F (LocallyBoundedMap α β) :=
   ⟨fun f => ⟨f, comap_cobounded_le f⟩⟩
 
 namespace LocallyBoundedMap
@@ -53,12 +57,12 @@ namespace LocallyBoundedMap
 variable [Bornology α] [Bornology β] [Bornology γ] [Bornology δ]
 
 instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     cases f
     cases g
     congr
-  comap_cobounded_le := fun f => f.comap_cobounded_le'
+  comap_cobounded_le f := f.comap_cobounded_le'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -113,7 +117,7 @@ theorem id_apply (a : α) : LocallyBoundedMap.id α a = a :=
 /-- Composition of `locally_bounded_map`s as a `locally_bounded_map`. -/
 def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : LocallyBoundedMap α γ where
   toFun := f ∘ g
-  comap_cobounded_le' := comap_comap.Ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'
+  comap_cobounded_le' := comap_comap.ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'
 
 @[simp]
 theorem coe_comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : ⇑(f.comp g) = f ∘ g :=

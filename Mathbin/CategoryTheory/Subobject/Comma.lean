@@ -101,10 +101,10 @@ theorem lift_project_subobject [HasLimits C] [PreservesLimits T] {A : Structured
 @[simps]
 def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
     Subobject A ≃o { P : Subobject A.right // ∃ q, q ≫ T.map P.arrow = A.Hom } where
-  toFun := fun P => ⟨projectSubobject P, project_subobject_factors P⟩
-  invFun := fun P => liftSubobject P.val P.Prop.some_spec
-  left_inv := fun P => lift_project_subobject _ _
-  right_inv := fun P => Subtype.ext (by simp)
+  toFun P := ⟨projectSubobject P, project_subobject_factors P⟩
+  invFun P := liftSubobject P.val P.Prop.some_spec
+  left_inv P := lift_project_subobject _ _
+  right_inv P := Subtype.ext (by simp)
   map_rel_iff' :=
     Subobject.ind₂ _
       (by
@@ -122,7 +122,7 @@ def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
 /-- If `C` is well-powered and complete and `T` preserves limits, then `structured_arrow S T` is
     well-powered. -/
 instance well_powered_structured_arrow [WellPowered C] [HasLimits C] [PreservesLimits T] :
-    WellPowered (StructuredArrow S T) where subobject_small := fun X => small_map (subobjectEquiv X).toEquiv
+    WellPowered (StructuredArrow S T) where subobject_small X := small_map (subobjectEquiv X).toEquiv
 
 end StructuredArrow
 
@@ -212,10 +212,10 @@ theorem unop_left_comp_of_mk_le_mk_unop {A : CostructuredArrow S T} {P Q : (Cost
     factors through the image of `P` under `S`. -/
 def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S T) :
     Subobject (op A) ≃o { P : Subobject (op A.left) // ∃ q, S.map P.arrow.unop ≫ q = A.Hom } where
-  toFun := fun P => ⟨projectQuotient P, project_quotient_factors P⟩
-  invFun := fun P => liftQuotient P.val P.Prop.some_spec
-  left_inv := fun P => lift_project_quotient _ _
-  right_inv := fun P => Subtype.ext (by simp)
+  toFun P := ⟨projectQuotient P, project_quotient_factors P⟩
+  invFun P := liftQuotient P.val P.Prop.some_spec
+  left_inv P := lift_project_quotient _ _
+  right_inv P := Subtype.ext (by simp)
   map_rel_iff' :=
     Subobject.ind₂ _
       (by
@@ -238,7 +238,7 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
 /-- If `C` is well-copowered and cocomplete and `S` preserves colimits, then
     `costructured_arrow S T` is well-copowered. -/
 instance well_copowered_costructured_arrow [WellPowered Cᵒᵖ] [HasColimits C] [PreservesColimits S] :
-    WellPowered (CostructuredArrow S T)ᵒᵖ where subobject_small := fun X => small_map (quotientEquiv (unop X)).toEquiv
+    WellPowered (CostructuredArrow S T)ᵒᵖ where subobject_small X := small_map (quotientEquiv (unop X)).toEquiv
 
 end CostructuredArrow
 

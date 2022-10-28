@@ -25,8 +25,8 @@ is guaranteed to be the identity.
 -/
 @[inline]
 unsafe irreducible_def unchecked_cast' {α : Sort u} {β : Sort v} (a : α) : β :=
-  Plift.down <|
-    @cast (α → β → Plift β) (β → α → Plift β) undefined (fun _ a => Plift.up a) (cast undefined PUnit.unit) a
+  PLift.down <|
+    @cast (α → β → PLift β) (β → α → PLift β) undefined (fun _ a => PLift.up a) (cast undefined PUnit.unit) a
 
 /-- `uchange (α : Sort v) : Sort u` is an equivalent type in a different universe.
 
@@ -65,6 +65,6 @@ end Uchange
 
 -- Sanity check
 #eval do
-  guardₓ <| (uchange.down.{0} 42).up = 42
+  guard <| (uchange.down.{0} 42).up = 42
   tactic.skip
 

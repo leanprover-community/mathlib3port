@@ -21,9 +21,9 @@ run_cmd
   mk_simp_attr `sugar
 
 attribute [sugar]
-  Ne not_leₓ not_ltₓ Int.lt_iff_add_one_leₓ or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ one_mulₓ mul_oneₓ mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
+  Ne not_le not_lt Int.lt_iff_add_one_le or_false_iff false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul one_mul mul_one mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 
@@ -88,15 +88,15 @@ unsafe def to_exprform : expr → tactic exprform
 unsafe def exprterm.exprs : exprterm → List expr
   | exprterm.cst _ => []
   | exprterm.exp _ x => [x]
-  | exprterm.add t s => List.unionₓ t.exprs s.exprs
+  | exprterm.add t s => List.union t.exprs s.exprs
 
 /-- List of all unreified exprs -/
 unsafe def exprform.exprs : exprform → List expr
-  | exprform.eq t s => List.unionₓ t.exprs s.exprs
-  | exprform.le t s => List.unionₓ t.exprs s.exprs
+  | exprform.eq t s => List.union t.exprs s.exprs
+  | exprform.le t s => List.union t.exprs s.exprs
   | exprform.not p => p.exprs
-  | exprform.or p q => List.unionₓ p.exprs q.exprs
-  | exprform.and p q => List.unionₓ p.exprs q.exprs
+  | exprform.or p q => List.union p.exprs q.exprs
+  | exprform.and p q => List.union p.exprs q.exprs
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
@@ -158,12 +158,12 @@ unsafe def wff : expr → tactic Unit
   | quote.1 ((%%ₓpx) ∧ %%ₓqx) => wff px >> wff qx
   | quote.1 ((%%ₓpx) ↔ %%ₓqx) => wff px >> wff qx
   | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monadₓ.cond (if expr.has_var px then return true else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
+    Monad.cond (if expr.has_var px then return true else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@Eq (%%ₓdx) _ _) => eq_int dx
-  | quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => eq_int dx
-  | quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+  | quote.1 (@ge (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+  | quote.1 (@gt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@Ne (%%ₓdx) _ _) => eq_int dx
   | quote.1 True => skip
   | quote.1 False => skip

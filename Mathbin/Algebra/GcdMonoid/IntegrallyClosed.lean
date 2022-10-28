@@ -17,7 +17,7 @@ import Mathbin.RingTheory.Polynomial.Eisenstein
 
 open BigOperators Polynomial
 
-variable {R A : Type _} [CommRingₓ R] [IsDomain R] [GcdMonoid R] [CommRingₓ A] [Algebra R A]
+variable {R A : Type _} [CommRing R] [IsDomain R] [GcdMonoid R] [CommRing A] [Algebra R A]
 
 theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A] (z : A) :
     ∃ a b : R, IsUnit (gcd a b) ∧ z * algebraMap R A b = algebraMap R A a := by
@@ -32,7 +32,7 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
   · infer_instance
     
 
-instance (priority := 100) GcdMonoid.to_is_integrally_closed : IsIntegrallyClosed R :=
+instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
   ⟨fun X ⟨p, hp₁, hp₂⟩ => by
     obtain ⟨x, y, hg, he⟩ := IsLocalization.surj_of_gcd_domain (nonZeroDivisors R) X
     have :=

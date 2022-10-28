@@ -28,14 +28,14 @@ theorem mod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 := by cases' mod_two_eq_zero_
 theorem mod_two_ne_zero : ¬n % 2 = 0 ↔ n % 2 = 1 := by cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
 
 theorem even_iff : Even n ↔ n % 2 = 0 :=
-  ⟨fun ⟨m, hm⟩ => by simp [← two_mul, hm], fun h => ⟨n / 2, (mod_add_divₓ n 2).symm.trans (by simp [← two_mul, h])⟩⟩
+  ⟨fun ⟨m, hm⟩ => by simp [← two_mul, hm], fun h => ⟨n / 2, (mod_add_div n 2).symm.trans (by simp [← two_mul, h])⟩⟩
 
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
   ⟨fun ⟨m, hm⟩ => by
     rw [hm, add_mod]
     norm_num, fun h =>
     ⟨n / 2,
-      (mod_add_divₓ n 2).symm.trans
+      (mod_add_div n 2).symm.trans
         (by
           rw [h]
           abel)⟩⟩
@@ -49,7 +49,7 @@ theorem even_iff_not_odd : Even n ↔ ¬Odd n := by rw [not_odd_iff, even_iff]
 @[simp]
 theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 
-theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by simp [← Set.compl_set_of, is_compl_compl]
+theorem isComplEvenOdd : IsCompl { n : ℤ | Even n } { n | Odd n } := by simp [← Set.compl_set_of, isComplCompl]
 
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
   Or.imp_right odd_iff_not_even.2 <| em <| Even n
@@ -57,19 +57,20 @@ theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
 theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or_distrib, ← Odd, ← Even] using even_or_odd n
 
-theorem even_xor_odd (n : ℤ) : Xorₓ (Even n) (Odd n) := by
+theorem even_xor_odd (n : ℤ) : Xor' (Even n) (Odd n) := by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
     
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
     
 
-theorem even_xor_odd' (n : ℤ) : ∃ k, Xorₓ (n = 2 * k) (n = 2 * k + 1) := by
+theorem even_xor_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
-  · simpa only [← two_mul, Xorₓ, true_andₓ, eq_self_iff_true, not_true, or_falseₓ, and_falseₓ] using
+  · simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff, and_false_iff] using
       (succ_ne_self (2 * k)).symm
     
-  · simp only [Xorₓ, add_right_eq_selfₓ, false_orₓ, eq_self_iff_true, not_true, not_false_iff, one_ne_zero, and_selfₓ]
+  · simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff, one_ne_zero,
+      and_self_iff]
     
 
 @[simp]
@@ -120,16 +121,16 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 
 @[parity_simps]
 theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
-  induction' n with n ih <;> simp [*, even_mul, pow_succₓ]
+  induction' n with n ih <;> simp [*, even_mul, pow_succ]
   tauto
 
 theorem even_pow' {n : ℕ} (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
-  even_pow.trans <| and_iff_leftₓ h
+  even_pow.trans <| and_iff_left h
 
 @[parity_simps]
 theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by rw [odd_iff_not_even, even_add, not_iff, odd_iff_not_even]
 
-theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by rw [add_commₓ, odd_add]
+theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by rw [add_comm, odd_add]
 
 theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by simpa [hnot, parity_simps] using h
 
@@ -170,40 +171,40 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
     rw [Int.even_add, ← Int.even_sub] at h
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 k
-    rw [eq_add_of_sub_eq hk, mul_addₓ, add_assocₓ, add_sub_cancel, ← two_mul, ← mul_assoc]
+    rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel, ← two_mul, ← mul_assoc]
     rfl
     
   · left
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 (k + 1)
-    rw [eq_sub_of_add_eq hk, add_right_commₓ, ← add_sub, mul_addₓ, mul_sub, add_assocₓ, add_assocₓ, sub_add, add_assocₓ,
-      ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc, mul_addₓ]
+    rw [eq_sub_of_add_eq hk, add_right_comm, ← add_sub, mul_add, mul_sub, add_assoc, add_assoc, sub_add, add_assoc, ←
+      sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc, mul_add]
     rfl
     
 
-theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h => Int.mul_div_cancel'ₓ (even_iff_two_dvd.mp h)
+theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h => Int.mul_div_cancel' (even_iff_two_dvd.mp h)
 
 theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
   fun
     --int.div_mul_cancel
     h =>
-  Int.div_mul_cancelₓ (even_iff_two_dvd.mp h)
+  Int.div_mul_cancel (even_iff_two_dvd.mp h)
 
 theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
   rintro ⟨c, rfl⟩
   rw [mul_comm]
-  convert Int.div_add_mod'ₓ _ _
+  convert Int.div_add_mod' _ _
   simpa [Int.add_mod]
 
 theorem div_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by
   rintro ⟨c, rfl⟩
-  convert Int.div_add_mod'ₓ _ _
+  convert Int.div_add_mod' _ _
   simpa [Int.add_mod]
 
 theorem add_one_div_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by
   rintro ⟨c, rfl⟩
-  rw [add_commₓ]
-  convert Int.div_add_mod'ₓ _ _
+  rw [add_comm]
+  convert Int.div_add_mod' _ _
   simpa [Int.add_mod]
 
 theorem two_mul_div_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=

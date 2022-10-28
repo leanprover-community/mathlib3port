@@ -11,13 +11,13 @@ import Mathbin.LinearAlgebra.InvariantBasisNumber
 -/
 
 
-variable {n m : Type _} [Fintypeₓ n] [DecidableEq n] [Fintypeₓ m] [DecidableEq m]
+variable {n m : Type _} [Fintype n] [DecidableEq n] [Fintype m] [DecidableEq m]
 
-variable {R : Type _} [Semiringₓ R] [InvariantBasisNumber R]
+variable {R : Type _} [Semiring R] [InvariantBasisNumber R]
 
 open Matrix
 
 theorem Matrix.square_of_invertible (M : Matrix n m R) (N : Matrix m n R) (h : M ⬝ N = 1) (h' : N ⬝ M = 1) :
-    Fintypeₓ.card n = Fintypeₓ.card m :=
+    Fintype.card n = Fintype.card m :=
   card_eq_of_lequiv R (Matrix.toLinearEquivRight'OfInv h' h)
 

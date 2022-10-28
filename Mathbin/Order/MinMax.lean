@@ -20,11 +20,11 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-attribute [simp] max_eq_leftₓ max_eq_rightₓ min_eq_leftₓ min_eq_rightₓ
+attribute [simp] max_eq_left max_eq_right min_eq_left min_eq_right
 
 section
 
-variable [LinearOrderₓ α] [LinearOrderₓ β] {f : α → β} {s : Set α} {a b c d : α}
+variable [LinearOrder α] [LinearOrder β] {f : α → β} {s : Set α} {a b c d : α}
 
 -- translate from lattices to linear orders (sup → max, inf → min)
 @[simp]
@@ -72,10 +72,10 @@ theorem le_max_of_le_right : a ≤ c → a ≤ max b c :=
   le_sup_of_le_right
 
 theorem lt_max_of_lt_left (h : a < b) : a < max b c :=
-  h.trans_le (le_max_leftₓ b c)
+  h.trans_le (le_max_left b c)
 
 theorem lt_max_of_lt_right (h : a < c) : a < max b c :=
-  h.trans_le (le_max_rightₓ b c)
+  h.trans_le (le_max_right b c)
 
 theorem min_le_of_left_le : a ≤ c → min a b ≤ c :=
   inf_le_of_left_le
@@ -84,10 +84,10 @@ theorem min_le_of_right_le : b ≤ c → min a b ≤ c :=
   inf_le_of_right_le
 
 theorem min_lt_of_left_lt (h : a < c) : min a b < c :=
-  (min_le_leftₓ a b).trans_lt h
+  (min_le_left a b).trans_lt h
 
 theorem min_lt_of_right_lt (h : b < c) : min a b < c :=
-  (min_le_rightₓ a b).trans_lt h
+  (min_le_right a b).trans_lt h
 
 theorem max_min_distrib_left : max a (min b c) = min (max a b) (max a c) :=
   sup_inf_left
@@ -102,7 +102,7 @@ theorem min_max_distrib_right : min (max a b) c = max (min a c) (min b c) :=
   inf_sup_right
 
 theorem min_le_max : min a b ≤ max a b :=
-  le_transₓ (min_le_leftₓ a b) (le_max_leftₓ a b)
+  le_trans (min_le_left a b) (le_max_left a b)
 
 @[simp]
 theorem min_eq_left_iff : min a b = a ↔ a ≤ b :=
@@ -126,10 +126,10 @@ theorem max_eq_right_iff : max a b = b ↔ a ≤ b :=
 theorem min_cases (a b : α) : min a b = a ∧ a ≤ b ∨ min a b = b ∧ b < a := by
   by_cases a ≤ b
   · left
-    exact ⟨min_eq_leftₓ h, h⟩
+    exact ⟨min_eq_left h, h⟩
     
   · right
-    exact ⟨min_eq_rightₓ (le_of_ltₓ (not_le.mp h)), not_le.mp h⟩
+    exact ⟨min_eq_right (le_of_lt (not_le.mp h)), not_le.mp h⟩
     
 
 /-- For elements `a` and `b` of a linear order, either `max a b = a` and `b ≤ a`,
@@ -141,7 +141,7 @@ theorem max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b
 theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := by
   constructor
   · intro h
-    refine' Or.impₓ (fun h' => _) (fun h' => _) (le_totalₓ a b) <;> exact ⟨by simpa [h'] using h, h'⟩
+    refine' Or.imp (fun h' => _) (fun h' => _) (le_total a b) <;> exact ⟨by simpa [h'] using h, h'⟩
     
   · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [h]
     
@@ -150,10 +150,10 @@ theorem max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b :=
   @min_eq_iff αᵒᵈ _ a b c
 
 theorem min_lt_min_left_iff : min a c < min b c ↔ a < b ∧ a < c := by
-  simp_rw [lt_min_iff, min_lt_iff, or_iff_leftₓ (lt_irreflₓ _)]
-  exact and_congr_leftₓ fun h => or_iff_left_of_impₓ h.trans
+  simp_rw [lt_min_iff, min_lt_iff, or_iff_left (lt_irrefl _)]
+  exact and_congr_left fun h => or_iff_left_of_imp h.trans
 
-theorem min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a := by simp_rw [min_commₓ a, min_lt_min_left_iff]
+theorem min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a := by simp_rw [min_comm a, min_lt_min_left_iff]
 
 theorem max_lt_max_left_iff : max a c < max b c ↔ a < b ∧ c < b :=
   @min_lt_min_left_iff αᵒᵈ _ _ _ _
@@ -178,66 +178,64 @@ theorem min_lt_min (h₁ : a < c) (h₂ : b < d) : min a b < min c d :=
   @max_lt_max αᵒᵈ _ _ _ _ _ h₁ h₂
 
 theorem min_right_comm (a b c : α) : min (min a b) c = min (min a c) b :=
-  right_comm min min_commₓ min_assocₓ a b c
+  right_comm min min_comm min_assoc a b c
 
 theorem Max.left_comm (a b c : α) : max a (max b c) = max b (max a c) :=
-  left_comm max max_commₓ max_assocₓ a b c
+  left_comm max max_comm max_assoc a b c
 
 theorem Max.right_comm (a b c : α) : max (max a b) c = max (max a c) b :=
-  right_comm max max_commₓ max_assocₓ a b c
+  right_comm max max_comm max_assoc a b c
 
-theorem MonotoneOnₓ.map_max (hf : MonotoneOnₓ f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = max (f a) (f b) := by
-  cases le_totalₓ a b <;> simp only [max_eq_rightₓ, max_eq_leftₓ, hf ha hb, hf hb ha, h]
+theorem MonotoneOn.map_max (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = max (f a) (f b) := by
+  cases le_total a b <;> simp only [max_eq_right, max_eq_left, hf ha hb, hf hb ha, h]
 
-theorem MonotoneOnₓ.map_min (hf : MonotoneOnₓ f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = min (f a) (f b) :=
+theorem MonotoneOn.map_min (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = min (f a) (f b) :=
   hf.dual.map_max ha hb
 
-theorem AntitoneOnₓ.map_max (hf : AntitoneOnₓ f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = min (f a) (f b) :=
+theorem AntitoneOn.map_max (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = min (f a) (f b) :=
   hf.dual_right.map_max ha hb
 
-theorem AntitoneOnₓ.map_min (hf : AntitoneOnₓ f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = max (f a) (f b) :=
+theorem AntitoneOn.map_min (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = max (f a) (f b) :=
   hf.dual.map_max ha hb
 
-theorem Monotoneₓ.map_max (hf : Monotoneₓ f) : f (max a b) = max (f a) (f b) := by
-  cases le_totalₓ a b <;> simp [h, hf h]
+theorem Monotone.map_max (hf : Monotone f) : f (max a b) = max (f a) (f b) := by cases le_total a b <;> simp [h, hf h]
 
-theorem Monotoneₓ.map_min (hf : Monotoneₓ f) : f (min a b) = min (f a) (f b) :=
+theorem Monotone.map_min (hf : Monotone f) : f (min a b) = min (f a) (f b) :=
   hf.dual.map_max
 
-theorem Antitoneₓ.map_max (hf : Antitoneₓ f) : f (max a b) = min (f a) (f b) := by
-  cases le_totalₓ a b <;> simp [h, hf h]
+theorem Antitone.map_max (hf : Antitone f) : f (max a b) = min (f a) (f b) := by cases le_total a b <;> simp [h, hf h]
 
-theorem Antitoneₓ.map_min (hf : Antitoneₓ f) : f (min a b) = max (f a) (f b) :=
+theorem Antitone.map_min (hf : Antitone f) : f (min a b) = max (f a) (f b) :=
   hf.dual.map_max
 
-theorem min_choice (a b : α) : min a b = a ∨ min a b = b := by cases le_totalₓ a b <;> simp [*]
+theorem min_choice (a b : α) : min a b = a ∨ min a b = b := by cases le_total a b <;> simp [*]
 
 theorem max_choice (a b : α) : max a b = a ∨ max a b = b :=
   @min_choice αᵒᵈ _ a b
 
 theorem le_of_max_le_left {a b c : α} (h : max a b ≤ c) : a ≤ c :=
-  le_transₓ (le_max_leftₓ _ _) h
+  le_trans (le_max_left _ _) h
 
 theorem le_of_max_le_right {a b c : α} (h : max a b ≤ c) : b ≤ c :=
-  le_transₓ (le_max_rightₓ _ _) h
+  le_trans (le_max_right _ _) h
 
 theorem max_commutative : Commutative (max : α → α → α) :=
-  max_commₓ
+  max_comm
 
 theorem max_associative : Associative (max : α → α → α) :=
-  max_assocₓ
+  max_assoc
 
 theorem max_left_commutative : LeftCommutative (max : α → α → α) :=
-  max_left_commₓ
+  max_left_comm
 
 theorem min_commutative : Commutative (min : α → α → α) :=
-  min_commₓ
+  min_comm
 
 theorem min_associative : Associative (min : α → α → α) :=
-  min_assocₓ
+  min_assoc
 
 theorem min_left_commutative : LeftCommutative (min : α → α → α) :=
-  min_left_commₓ
+  min_left_comm
 
 end
 

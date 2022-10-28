@@ -3,9 +3,9 @@ Copyright (c) 2021 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.CategoryTheory.Category.Groupoid
+import Mathbin.CategoryTheory.Category.GroupoidCat
 import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Topology.Category.Top.Basic
+import Mathbin.Topology.Category.TopCat.Basic
 import Mathbin.Topology.Homotopy.Path
 
 /-!
@@ -99,10 +99,10 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₀` to
   `p.trans p.symm`. -/
 def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.symm) where
-  toFun := fun x => p ⟨reflTransSymmAux x, refl_trans_symm_aux_mem_I x⟩
+  toFun x := p ⟨reflTransSymmAux x, refl_trans_symm_aux_mem_I x⟩
   continuous_to_fun := by continuity
   map_zero_left' := by norm_num [refl_trans_symm_aux]
-  map_one_left' := fun x => by
+  map_one_left' x := by
     dsimp only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
     change _ = ite _ _ _
     split_ifs
@@ -119,10 +119,10 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
         norm_num [sub_sub_eq_add_sub]
         
       · rw [UnitInterval.two_mul_sub_one_mem_iff]
-        exact ⟨(not_leₓ.1 h).le, UnitInterval.le_one x⟩
+        exact ⟨(not_le.1 h).le, UnitInterval.le_one x⟩
         
       
-  prop' := fun t x hx => by
+  prop' t x hx := by
     cases hx
     · rw [hx]
       simp [refl_trans_symm_aux]
@@ -167,7 +167,7 @@ theorem trans_refl_reparam (p : Path x₀ x₁) :
   by
   ext
   unfold trans_refl_reparam_aux
-  simp only [Path.trans_apply, not_leₓ, coe_to_fun, Function.comp_app]
+  simp only [Path.trans_apply, not_le, coe_to_fun, Function.comp_app]
   split_ifs
   · rfl
     
@@ -218,7 +218,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
         (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one) :=
   by
   ext
-  simp only [trans_assoc_reparam_aux, Path.trans_apply, mul_inv_cancel_left₀, not_leₓ, Function.comp_app, Ne.def,
+  simp only [trans_assoc_reparam_aux, Path.trans_apply, mul_inv_cancel_left₀, not_le, Function.comp_app, Ne.def,
     not_false_iff, bit0_eq_zero, one_ne_zero, mul_ite, Subtype.coe_mk, Path.coe_to_fun]
   -- TODO: why does split_ifs not reduce the ifs??????
   split_ifs with h₁ h₂ h₃ h₄ h₅
@@ -275,31 +275,29 @@ attribute [local reducible] FundamentalGroupoid
 attribute [local instance] Path.Homotopic.setoid
 
 instance : CategoryTheory.Groupoid (FundamentalGroupoid X) where
-  Hom := fun x y => Path.Homotopic.Quotient x y
-  id := fun x => ⟦Path.refl x⟧
-  comp := fun x y z => Path.Homotopic.Quotient.comp
-  id_comp' := fun x y f =>
-    Quotientₓ.induction_on f fun a =>
-      show ⟦(Path.refl x).trans a⟧ = ⟦a⟧ from Quotientₓ.sound ⟨Path.Homotopy.reflTrans a⟩
-  comp_id' := fun x y f =>
-    Quotientₓ.induction_on f fun a =>
-      show ⟦a.trans (Path.refl y)⟧ = ⟦a⟧ from Quotientₓ.sound ⟨Path.Homotopy.transRefl a⟩
-  assoc' := fun w x y z f g h =>
-    Quotientₓ.induction_on₃ f g h fun p q r =>
-      show ⟦(p.trans q).trans r⟧ = ⟦p.trans (q.trans r)⟧ from Quotientₓ.sound ⟨Path.Homotopy.transAssoc p q r⟩
-  inv := fun x y p =>
-    Quotientₓ.lift (fun l : Path x y => ⟦l.symm⟧)
+  Hom x y := Path.Homotopic.Quotient x y
+  id x := ⟦Path.refl x⟧
+  comp x y z := Path.Homotopic.Quotient.comp
+  id_comp' x y f :=
+    Quotient.induction_on f fun a => show ⟦(Path.refl x).trans a⟧ = ⟦a⟧ from Quotient.sound ⟨Path.Homotopy.reflTrans a⟩
+  comp_id' x y f :=
+    Quotient.induction_on f fun a => show ⟦a.trans (Path.refl y)⟧ = ⟦a⟧ from Quotient.sound ⟨Path.Homotopy.transRefl a⟩
+  assoc' w x y z f g h :=
+    Quotient.induction_on₃ f g h fun p q r =>
+      show ⟦(p.trans q).trans r⟧ = ⟦p.trans (q.trans r)⟧ from Quotient.sound ⟨Path.Homotopy.transAssoc p q r⟩
+  inv x y p :=
+    Quotient.lift (fun l : Path x y => ⟦l.symm⟧)
       (by
         rintro a b ⟨h⟩
-        rw [Quotientₓ.eq]
+        rw [Quotient.eq]
         exact ⟨h.symm₂⟩)
       p
-  inv_comp' := fun x y f =>
-    Quotientₓ.induction_on f fun a =>
-      show ⟦a.symm.trans a⟧ = ⟦Path.refl y⟧ from Quotientₓ.sound ⟨(Path.Homotopy.reflSymmTrans a).symm⟩
-  comp_inv' := fun x y f =>
-    Quotientₓ.induction_on f fun a =>
-      show ⟦a.trans a.symm⟧ = ⟦Path.refl x⟧ from Quotientₓ.sound ⟨(Path.Homotopy.reflTransSymm a).symm⟩
+  inv_comp' x y f :=
+    Quotient.induction_on f fun a =>
+      show ⟦a.symm.trans a⟧ = ⟦Path.refl y⟧ from Quotient.sound ⟨(Path.Homotopy.reflSymmTrans a).symm⟩
+  comp_inv' x y f :=
+    Quotient.induction_on f fun a =>
+      show ⟦a.trans a.symm⟧ = ⟦Path.refl x⟧ from Quotient.sound ⟨(Path.Homotopy.reflTransSymm a).symm⟩
 
 theorem comp_eq (x y z : FundamentalGroupoid X) (p : x ⟶ y) (q : y ⟶ z) : p ≫ q = p.comp q :=
   rfl
@@ -309,19 +307,19 @@ theorem id_eq_path_refl (x : FundamentalGroupoid X) : 𝟙 x = ⟦Path.refl x⟧
 
 /-- The functor sending a topological space `X` to its fundamental groupoid.
 -/
-def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
-  obj := fun X => { α := FundamentalGroupoid X }
-  map := fun X Y f =>
+def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat where
+  obj X := { α := FundamentalGroupoid X }
+  map X Y f :=
     { obj := f, map := fun x y p => p.mapFn f, map_id' := fun X => rfl,
       map_comp' := fun x y z p q =>
-        (Quotientₓ.induction_on₂ p q) fun a b => by
+        (Quotient.induction_on₂ p q) fun a b => by
           simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }
   map_id' := by
     intro X
     change _ = (⟨_, _, _, _⟩ : FundamentalGroupoid X ⥤ FundamentalGroupoid X)
     congr
     ext x y p
-    refine' Quotientₓ.induction_on p fun q => _
+    refine' Quotient.induction_on p fun q => _
     rw [← Path.Homotopic.map_lift]
     conv_rhs => rw [← q.map_id]
     rfl
@@ -329,8 +327,8 @@ def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
     intro X Y Z f g
     congr
     ext x y p
-    refine' Quotientₓ.induction_on p fun q => _
-    simp only [Quotientₓ.map_mk, Path.map_map, Quotientₓ.eq]
+    refine' Quotient.induction_on p fun q => _
+    simp only [Quotient.map_mk, Path.map_map, Quotient.eq]
     rfl
 
 -- mathport name: fundamental_groupoid_functor
@@ -342,31 +340,32 @@ localized [FundamentalGroupoid] notation "πₓ" => FundamentalGroupoid.fundamen
 -- mathport name: fundamental_groupoid_functor.map
 localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
 
-theorem map_eq {X Y : Top} {x₀ x₁ : X} (f : C(X, Y)) (p : Path.Homotopic.Quotient x₀ x₁) : (πₘ f).map p = p.mapFn f :=
+theorem map_eq {X Y : TopCat} {x₀ x₁ : X} (f : C(X, Y)) (p : Path.Homotopic.Quotient x₀ x₁) :
+    (πₘ f).map p = p.mapFn f :=
   rfl
 
 /-- Help the typechecker by converting a point in a groupoid back to a point in
 the underlying topological space. -/
 @[reducible]
-def toTop {X : Top} (x : πₓ X) : X :=
+def toTop {X : TopCat} (x : πₓ X) : X :=
   x
 
 /-- Help the typechecker by converting a point in a topological space to a
 point in the fundamental groupoid of that space -/
 @[reducible]
-def fromTop {X : Top} (x : X) : πₓ X :=
+def fromTop {X : TopCat} (x : X) : πₓ X :=
   x
 
 /-- Help the typechecker by converting an arrow in the fundamental groupoid of
 a topological space back to a path in that space (i.e., `path.homotopic.quotient`). -/
 @[reducible]
-def toPath {X : Top} {x₀ x₁ : πₓ X} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
+def toPath {X : TopCat} {x₀ x₁ : πₓ X} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
   p
 
 /-- Help the typechecker by convering a path in a topological space to an arrow in the
 fundamental groupoid of that space. -/
 @[reducible]
-def fromPath {X : Top} {x₀ x₁ : X} (p : Path.Homotopic.Quotient x₀ x₁) : x₀ ⟶ x₁ :=
+def fromPath {X : TopCat} {x₀ x₁ : X} (p : Path.Homotopic.Quotient x₀ x₁) : x₀ ⟶ x₁ :=
   p
 
 end FundamentalGroupoid

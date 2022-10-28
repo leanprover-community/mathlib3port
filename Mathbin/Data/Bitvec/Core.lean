@@ -68,12 +68,12 @@ def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
   Bitvec.cong
       (by
         by_cases i ≤ n
-        · have h₁ := Nat.sub_leₓ n i
-          rw [min_eq_rightₓ h]
-          rw [min_eq_leftₓ h₁, ← add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
+        · have h₁ := Nat.sub_le n i
+          rw [min_eq_right h]
+          rw [min_eq_left h₁, ← add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
           
-        · have h₁ := le_of_not_geₓ h
-          rw [min_eq_leftₓ h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]
+        · have h₁ := le_of_not_ge h
+          rw [min_eq_left h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]
           ) <|
     repeat fill (min n i)++ₜtake (n - i) x
 
@@ -97,19 +97,19 @@ variable {n : ℕ}
 
 /-- bitwise not -/
 def not : Bitvec n → Bitvec n :=
-  map bnot
+  map not
 
 /-- bitwise and -/
 def and : Bitvec n → Bitvec n → Bitvec n :=
-  map₂ band
+  map₂ and
 
 /-- bitwise or -/
 def or : Bitvec n → Bitvec n → Bitvec n :=
-  map₂ bor
+  map₂ or
 
 /-- bitwise xor -/
 def xor : Bitvec n → Bitvec n → Bitvec n :=
-  map₂ bxor
+  map₂ xor
 
 end Bitwise
 
@@ -122,7 +122,7 @@ variable {n : ℕ}
 
 /-- `xor3 x y c` is `((x XOR y) XOR c)`. -/
 protected def xor3 (x y c : Bool) :=
-  bxor (bxor x y) c
+  xor (xor x y) c
 
 /-- `carry x y c` is `x && y || x && c || y && c`. -/
 protected def carry (x y c : Bool) :=
@@ -130,12 +130,12 @@ protected def carry (x y c : Bool) :=
 
 /-- `neg x` is the two's complement of `x`. -/
 protected def neg (x : Bitvec n) : Bitvec n :=
-  let f := fun y c => (y || c, bxor y c)
+  let f y c := (y || c, xor y c)
   Prod.snd (mapAccumr f x false)
 
 /-- Add with carry (no overflow) -/
 def adc (x y : Bitvec n) (c : Bool) : Bitvec (n + 1) :=
-  let f := fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)
+  let f x y c := (Bitvec.carry x y c, Bitvec.xor3 x y c)
   let ⟨c, z⟩ := Vector.mapAccumr₂ f x y c
   c ::ᵥ z
 
@@ -145,7 +145,7 @@ protected def add (x y : Bitvec n) : Bitvec n :=
 
 /-- Subtract with borrow -/
 def sbb (x y : Bitvec n) (b : Bool) : Bool × Bitvec n :=
-  let f := fun x y c => (Bitvec.carry (bnot x) y c, Bitvec.xor3 x y c)
+  let f x y c := (Bitvec.carry (not x) y c, Bitvec.xor3 x y c)
   Vector.mapAccumr₂ f x y b
 
 /-- The difference of two bitvectors -/
@@ -169,7 +169,7 @@ instance : Neg (Bitvec n) :=
 
 /-- The product of two bitvectors -/
 protected def mul (x y : Bitvec n) : Bitvec n :=
-  let f := fun r b => cond b (r + r + y) (r + r)
+  let f r b := cond b (r + r + y) (r + r)
   (toList x).foldl f 0
 
 instance : Mul (Bitvec n) :=
@@ -242,7 +242,7 @@ variable {α : Type}
 /-- Create a bitvector from a `nat` -/
 protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
   | 0, x => nil
-  | succ n, x => of_nat n (x / 2)++ₜtoBool (x % 2 = 1) ::ᵥ nil
+  | succ n, x => of_nat n (x / 2)++ₜdecide (x % 2 = 1) ::ᵥ nil
 
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
@@ -289,17 +289,17 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     apply xs_ih
     
 
-theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (toBool (n % 2 = 1) ::ᵥ nil) = n % 2 := by
+theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 := by
   simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldl cond
   simp [cond_to_bool_mod_two]
 
-theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜtoBool (n % 2 = 1) ::ᵥ nil :=
+theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
   rfl
 
 theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k := by
   induction' k with k ih generalizing n
-  · simp [Nat.mod_oneₓ]
+  · simp [Nat.mod_one]
     rfl
     
   · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]
@@ -315,11 +315,11 @@ end Conversion
 /-! ### Miscellaneous instances -/
 
 
-private def repr {n : Nat} : Bitvec n → Stringₓ
+private def repr {n : Nat} : Bitvec n → String
   | ⟨bs, p⟩ => "0b" ++ (bs.map fun b : Bool => if b then '1' else '0').asString
 
-instance (n : Nat) : HasRepr (Bitvec n) :=
-  ⟨reprₓ⟩
+instance (n : Nat) : Repr (Bitvec n) :=
+  ⟨repr⟩
 
 end Bitvec
 

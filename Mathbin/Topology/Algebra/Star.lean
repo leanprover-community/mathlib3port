@@ -83,7 +83,7 @@ instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, HasStar (C 
 instance [HasStar R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.star⟩
 
-instance [Monoidₓ R] [StarSemigroup R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rˣ :=
+instance [Monoid R] [StarSemigroup R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rˣ :=
   ⟨continuous_induced_rng.2 Units.continuous_embed_product.star⟩
 
 end Instances

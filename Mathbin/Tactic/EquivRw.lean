@@ -3,7 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 import Mathbin.Tactic.Clear
 import Mathbin.Tactic.SimpResult
 import Mathbin.Tactic.Apply
@@ -109,11 +109,11 @@ initialize
 unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
@@ -188,12 +188,22 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
       Prod.fst <$>
       new_eqv { failIfUnchanged := ff }
 
-mk_simp_attribute equiv_rw_simp :=
-  "The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to\nsimplify applications of equivalences and their inverses."
+/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
+     [(Command.docComment
+       "/--"
+       "The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to\nsimplify applications of equivalences and their inverses. -/")]
+     "register_simp_attr"
+     `equiv_rw_simp)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+/--
+    The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to
+    simplify applications of equivalences and their inverses. -/
+  register_simp_attr
+  equiv_rw_simp
 
-attribute [equiv_rw_simp] Equivₓ.symm_symm Equivₓ.apply_symm_apply Equivₓ.symm_apply_apply
+attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_apply_apply
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempt to replace the hypothesis with name `x`
 by transporting it along the equivalence in `e : α ≃ β`.
 -/
@@ -207,13 +217,13 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
         ←-- Adapt `e` to an equivalence with left-hand-side `x_ty`.
             equiv_rw_type
             e x_ty cfg
-      let eq ← to_expr (pquote.1 ((%%ₓx') = Equivₓ.symm (%%ₓe) (Equivₓ.toFun (%%ₓe) (%%ₓx'))))
-      let prf ← to_expr (pquote.1 (Equivₓ.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
+      let eq ← to_expr (pquote.1 ((%%ₓx') = Equiv.symm (%%ₓe) (Equiv.toFun (%%ₓe) (%%ₓx'))))
+      let prf ← to_expr (pquote.1 (Equiv.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
       let h ← note_anon Eq prf
       -- Revert the new hypothesis, so it is also part of the goal.
           revert
           h
-      let ex ← to_expr (pquote.1 (Equivₓ.toFun (%%ₓe) (%%ₓx')))
+      let ex ← to_expr (pquote.1 (Equiv.toFun (%%ₓe) (%%ₓx')))
       -- Now call `generalize`,
           -- attempting to replace all occurrences of `e x`,
           -- calling it for now `j : β`, with `k : x = e.symm j`.
@@ -243,7 +253,7 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
 unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
   let t ← target
   let e ← equiv_rw_type e t cfg
-  let s ← to_expr (pquote.1 (Equivₓ.invFun (%%ₓe)))
+  let s ← to_expr (pquote.1 (Equiv.invFun (%%ₓe)))
   tactic.eapply s
   skip
 
@@ -255,7 +265,7 @@ open Tactic
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary function to call `equiv_rw_hyp` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) : List expr → itactic
   | [] => skip
@@ -263,7 +273,7 @@ unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool
     if permissive then equiv_rw_hyp hyp e cfg <|> skip else equiv_rw_hyp hyp e cfg
     equiv_rw_hyp_aux t
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary function to call `equiv_rw_target` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_target_aux (cfg : equiv_rw_cfg) (permissive : Bool) : List expr → itactic
   | [] => skip

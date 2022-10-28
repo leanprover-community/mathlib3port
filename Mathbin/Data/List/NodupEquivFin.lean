@@ -38,8 +38,8 @@ a bijection `fin l.length → α`.  See `list.nodup.nth_le_equiv_of_forall_mem_l
 for a version giving an equivalence when there is decidable equality. -/
 @[simps]
 def nthLeBijectionOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
-    { f : Finₓ l.length → α // Function.Bijective f } :=
-  ⟨fun i => l.nthLe i i.property, fun i j h => Finₓ.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
+    { f : Fin l.length → α // Function.Bijective f } :=
+  ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
 
@@ -48,11 +48,11 @@ variable [DecidableEq α]
 /-- If `l` has no duplicates, then `list.nth_le` defines an equivalence between `fin (length l)` and
 the set of elements of `l`. -/
 @[simps]
-def nthLeEquiv (l : List α) (H : Nodupₓ l) : Finₓ (length l) ≃ { x // x ∈ l } where
-  toFun := fun i => ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
-  invFun := fun x => ⟨indexOfₓ (↑x) l, index_of_lt_length.2 x.2⟩
-  left_inv := fun i => by simp [H]
-  right_inv := fun x => by simp
+def nthLeEquiv (l : List α) (H : Nodup l) : Fin (length l) ≃ { x // x ∈ l } where
+  toFun i := ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
+  invFun x := ⟨indexOf' (↑x) l, index_of_lt_length.2 x.2⟩
+  left_inv i := by simp [H]
+  right_inv x := by simp
 
 /-- If `l` lists all the elements of `α` without duplicates, then `list.nth_le` defines
 an equivalence between `fin l.length` and `α`.
@@ -60,40 +60,40 @@ an equivalence between `fin l.length` and `α`.
 See `list.nodup.nth_le_bijection_of_forall_mem_list` for a version without
 decidable equality. -/
 @[simps]
-def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Finₓ l.length ≃ α where
-  toFun := fun i => l.nthLe i i.2
-  invFun := fun a => ⟨_, index_of_lt_length.2 (h a)⟩
-  left_inv := fun i => by simp [nd]
-  right_inv := fun a => by simp
+def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Fin l.length ≃ α where
+  toFun i := l.nthLe i i.2
+  invFun a := ⟨_, index_of_lt_length.2 (h a)⟩
+  left_inv i := by simp [nd]
+  right_inv a := by simp
 
 end Nodup
 
 namespace Sorted
 
-variable [Preorderₓ α] {l : List α}
+variable [Preorder α] {l : List α}
 
-theorem nth_le_mono (h : l.Sorted (· ≤ ·)) : Monotoneₓ fun i : Finₓ l.length => l.nthLe i i.2 := fun i j =>
+theorem nth_le_mono (h : l.Sorted (· ≤ ·)) : Monotone fun i : Fin l.length => l.nthLe i i.2 := fun i j =>
   h.rel_nth_le_of_le _ _
 
-theorem nth_le_strict_mono (h : l.Sorted (· < ·)) : StrictMonoₓ fun i : Finₓ l.length => l.nthLe i i.2 := fun i j =>
+theorem nth_le_strict_mono (h : l.Sorted (· < ·)) : StrictMono fun i : Fin l.length => l.nthLe i i.2 := fun i j =>
   h.rel_nth_le_of_lt _ _
 
 variable [DecidableEq α]
 
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
-def nthLeIso (l : List α) (H : Sorted (· < ·) l) : Finₓ (length l) ≃o { x // x ∈ l } where
+def nthLeIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l } where
   toEquiv := H.Nodup.nthLeEquiv l
-  map_rel_iff' := fun i j => H.nth_le_strict_mono.le_iff_le
+  map_rel_iff' i j := H.nth_le_strict_mono.le_iff_le
 
-variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Finₓ l.length}
+variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Fin l.length}
 
 @[simp]
 theorem coe_nth_le_iso_apply : (H.nthLeIso l i : α) = nthLe l i i.2 :=
   rfl
 
 @[simp]
-theorem coe_nth_le_iso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOfₓ (↑x) l :=
+theorem coe_nth_le_iso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOf' (↑x) l :=
   rfl
 
 end Sorted
@@ -118,9 +118,9 @@ theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ) (h
   have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).nth (f' ix) := by
     intro ix
     simp [List.nth_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ← hf]
-  rw [← List.take_append_dropₓ (f 0 + 1) l', ← List.singleton_append]
+  rw [← List.take_append_drop (f 0 + 1) l', ← List.singleton_append]
   apply List.Sublist.append _ (IH _ this)
-  rw [List.singleton_sublist, ← h, l'.nth_le_take _ (Nat.lt_succ_selfₓ _)]
+  rw [List.singleton_sublist, ← h, l'.nth_le_take _ (Nat.lt_succ_self _)]
   apply List.nth_le_mem
 
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
@@ -140,7 +140,7 @@ theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
       
     · obtain ⟨f, hf⟩ := IH
       refine' ⟨OrderEmbedding.ofMapLeIff (fun ix : ℕ => if ix = 0 then 0 else (f ix.pred).succ) _, _⟩
-      · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iffₓ]
+      · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iff]
         
       · rintro ⟨_ | i⟩
         · simp
@@ -160,7 +160,7 @@ any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 -/
 theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
     l <+ l' ↔
-      ∃ f : Finₓ l.length ↪o Finₓ l'.length, ∀ ix : Finₓ l.length, l.nthLe ix ix.is_lt = l'.nthLe (f ix) (f ix).is_lt :=
+      ∃ f : Fin l.length ↪o Fin l'.length, ∀ ix : Fin l.length, l.nthLe ix ix.is_lt = l'.nthLe (f ix) (f ix).is_lt :=
   by
   rw [sublist_iff_exists_order_embedding_nth_eq]
   constructor
@@ -186,8 +186,8 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
       split_ifs with hi hj hj hi
       · simpa using h
         
-      · rw [add_commₓ]
-        exact lt_add_of_lt_of_pos (Finₓ.is_lt _) (i.zero_le.trans_lt h)
+      · rw [add_comm]
+        exact lt_add_of_lt_of_pos (Fin.is_lt _) (i.zero_le.trans_lt h)
         
       · exact absurd (h.trans hj) hi
         
@@ -220,7 +220,7 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
   rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist, sublist_iff_exists_fin_order_embedding_nth_le_eq]
   constructor
   · rintro ⟨f, hf⟩
-    refine' ⟨f ⟨0, by simp⟩, Finₓ.is_lt _, f ⟨1, by simp⟩, Finₓ.is_lt _, by simp, _, _⟩
+    refine' ⟨f ⟨0, by simp⟩, Fin.is_lt _, f ⟨1, by simp⟩, Fin.is_lt _, by simp, _, _⟩
     · simpa using hf ⟨0, by simp⟩
       
     · simpa using hf ⟨1, by simp⟩
@@ -235,7 +235,7 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
         
       · simp
         
-      · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iffₓ, repeat, length, nonpos_iff_eq_zero] at hi hj
+      · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iff, repeat, length, nonpos_iff_eq_zero] at hi hj
         simp [hi, hj]
         
       

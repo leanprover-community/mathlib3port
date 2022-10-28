@@ -47,13 +47,13 @@ section
 
 -- At first we work with any `[comm_ring k]`, and add the assumption that
 -- `[invertible (fintype.card G : k)]` when it is required.
-variable {k : Type u} [CommRingₓ k] {G : Type u} [Groupₓ G]
+variable {k : Type u} [CommRing k] {G : Type u} [Group G]
 
-variable {V : Type u} [AddCommGroupₓ V] [Module k V] [Module (MonoidAlgebra k G) V]
+variable {V : Type u} [AddCommGroup V] [Module k V] [Module (MonoidAlgebra k G) V]
 
 variable [IsScalarTower k (MonoidAlgebra k G) V]
 
-variable {W : Type u} [AddCommGroupₓ W] [Module k W] [Module (MonoidAlgebra k G) W]
+variable {W : Type u} [AddCommGroup W] [Module k W] [Module (MonoidAlgebra k G) W]
 
 variable [IsScalarTower k (MonoidAlgebra k G) W]
 
@@ -90,13 +90,13 @@ include h
 
 theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v := by
   dsimp [conjugate]
-  simp only [← i.map_smul, h, ← mul_smul, single_mul_single, mul_oneₓ, mul_left_invₓ]
+  simp only [← i.map_smul, h, ← mul_smul, single_mul_single, mul_one, mul_left_inv]
   change (1 : MonoidAlgebra k G) • v = v
   simp
 
 end
 
-variable (G) [Fintypeₓ G]
+variable (G) [Fintype G]
 
 /-- The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
 
@@ -112,18 +112,18 @@ def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
     simp only [sum_of_conjugates,
       LinearMap.sum_apply,-- We have a `module (monoid_algebra k G)` instance but are working with `finsupp`s,
         -- so help the elaborator unfold everything correctly.
-        @Finsetₓ.smul_sum
+        @Finset.smul_sum
         (MonoidAlgebra k G)]
     dsimp [conjugate]
     conv_lhs =>
-    rw [← Finsetₓ.univ_map_embedding (mulRightEmbedding g⁻¹)]
+    rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]
     simp only [mulRightEmbedding]
-    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finsetₓ.sum_map,
-      inv_invₓ, inv_mul_cancel_right]
+    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coe_fn_mk, Finset.sum_map,
+      inv_inv, inv_mul_cancel_right]
 
 section
 
-variable [inv : Invertible (Fintypeₓ.card G : k)]
+variable [inv : Invertible (Fintype.card G : k)]
 
 include inv
 
@@ -131,7 +131,7 @@ include inv
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
 def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
-  ⅟ (Fintypeₓ.card G : k) • π.sumOfConjugatesEquivariant G
+  ⅟ (Fintype.card G : k) • π.sumOfConjugatesEquivariant G
 
 include h
 
@@ -140,7 +140,7 @@ theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) 
     sum_of_conjugates]
   rw [LinearMap.sum_apply]
   simp only [conjugate_i π i h]
-  rw [Finsetₓ.sum_const, Finsetₓ.card_univ, nsmul_eq_smul_cast k, ← mul_smul, Invertible.inv_of_mul_self, one_smul]
+  rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul, Invertible.inv_of_mul_self, one_smul]
 
 end
 
@@ -150,25 +150,25 @@ end
 
 namespace CharZero
 
-variable {k : Type u} [Field k] {G : Type u} [Fintypeₓ G] [Groupₓ G] [CharZero k]
+variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Group G] [CharZero k]
 
-instance : Invertible (Fintypeₓ.card G : k) :=
-  invertibleOfRingCharNotDvd (by simp [Fintypeₓ.card_eq_zero_iff])
+instance : Invertible (Fintype.card G : k) :=
+  invertibleOfRingCharNotDvd (by simp [Fintype.card_eq_zero_iff])
 
 end CharZero
 
 namespace MonoidAlgebra
 
 -- Now we work over a `[field k]`.
-variable {k : Type u} [Field k] {G : Type u} [Fintypeₓ G] [Invertible (Fintypeₓ.card G : k)]
+variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Invertible (Fintype.card G : k)]
 
-variable [Groupₓ G]
+variable [Group G]
 
-variable {V : Type u} [AddCommGroupₓ V] [Module k V] [Module (MonoidAlgebra k G) V]
+variable {V : Type u} [AddCommGroup V] [Module k V] [Module (MonoidAlgebra k G) V]
 
 variable [IsScalarTower k (MonoidAlgebra k G) V]
 
-variable {W : Type u} [AddCommGroupₓ W] [Module k W] [Module (MonoidAlgebra k G) W]
+variable {W : Type u} [AddCommGroup W] [Module k W] [Module (MonoidAlgebra k G) W]
 
 variable [IsScalarTower k (MonoidAlgebra k G) W]
 
@@ -190,10 +190,10 @@ namespace Submodule
 
 theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) : ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
   let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.Subtype p.ker_subtype
-  ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
+  ⟨f.ker, LinearMap.isComplOfProj <| LinearMap.ext_iff.1 hf⟩
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
-instance complemented_lattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
+instance complementedLattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
   ⟨exists_is_compl⟩
 
 end Submodule

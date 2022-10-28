@@ -20,7 +20,7 @@ open Cardinal Submodule Module Function
 
 namespace IsNoetherian
 
-variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V]
+variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [Module K V]
 
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
@@ -48,12 +48,12 @@ theorem dim_lt_aleph_0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
 variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
-noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintypeₓ ι :=
+noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
   b.fintypeIndexOfDimLtAleph0 (dim_lt_aleph_0 K V)
 
 /-- In a noetherian module over a division ring,
 `basis.of_vector_space` is indexed by a finite type. -/
-noncomputable instance [IsNoetherian K V] : Fintypeₓ (Basis.OfVectorSpaceIndex K V) :=
+noncomputable instance [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
   fintypeBasisIndex (Basis.ofVectorSpace K V)
 
 /-- In a noetherian module over a division ring,
@@ -65,7 +65,7 @@ variable (K V)
 
 /-- In a noetherian module over a division ring,
 there exists a finite basis. This is the indexing `finset`. -/
-noncomputable def finsetBasisIndex [IsNoetherian K V] : Finsetₓ V :=
+noncomputable def finsetBasisIndex [IsNoetherian K V] : Finset V :=
   (finite_basis_index (Basis.ofVectorSpace K V)).toFinset
 
 @[simp]
@@ -102,7 +102,7 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V := by
     
   · rintro ⟨s, hs⟩
     rw [IsNoetherian.iff_dim_lt_aleph_0, ← dim_top, ← hs]
-    exact lt_of_le_of_ltₓ (dim_span_le _) s.finite_to_set.lt_aleph_0
+    exact lt_of_le_of_lt (dim_span_le _) s.finite_to_set.lt_aleph_0
     
 
 end IsNoetherian

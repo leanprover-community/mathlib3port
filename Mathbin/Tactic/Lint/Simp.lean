@@ -69,7 +69,7 @@ unsafe def is_simp_eq (a b : expr) : tactic Bool :=
   else succeeds <| is_def_eq a b Transparency.reducible
 
 /-- Reports declarations that are simp lemmas whose left-hand side is not in simp-normal form. -/
-unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option Stringₓ) := do
+unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option String) := do
   let tt ← is_simp_lemma d.to_name | pure none
   let-- Sometimes, a definition is tagged @[simp] to add the equational lemmas to the simp set.
     -- In this case, ignore the declaration if it is not a valid simp lemma by itself.
@@ -179,7 +179,7 @@ unsafe def linter.simp_nf : linter where
   errors_found :=
     "SOME SIMP LEMMAS ARE NOT IN SIMP-NORMAL FORM.\nsee note [simp-normal form] for tips how to debug this.\nhttps://leanprover-community.github.io/mathlib_docs/notes.html#simp-normal%20form"
 
-private unsafe def simp_var_head (d : declaration) : tactic (Option Stringₓ) := do
+private unsafe def simp_var_head (d : declaration) : tactic (Option String) := do
   let tt ← is_simp_lemma d.to_name | pure none
   let-- Sometimes, a definition is tagged @[simp] to add the equational lemmas to the simp set.
     -- In this case, ignore the declaration if it is not a valid simp lemma by itself.
@@ -202,7 +202,7 @@ unsafe def linter.simp_var_head : linter where
     "LEFT-HAND SIDE HAS VARIABLE AS HEAD SYMBOL.\n" ++
       "Some simp lemmas have a variable as head symbol of the left-hand side:"
 
-private unsafe def simp_comm (d : declaration) : tactic (Option Stringₓ) := do
+private unsafe def simp_comm (d : declaration) : tactic (Option String) := do
   let tt ← is_simp_lemma d.to_name | pure none
   let-- Sometimes, a definition is tagged @[simp] to add the equational lemmas to the simp set.
     -- In this case, ignore the declaration if it is not a valid simp lemma by itself.

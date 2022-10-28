@@ -33,11 +33,11 @@ open Opposite
 
 open TopologicalSpace.Opens
 
-namespace Top
+namespace TopCat
 
 variable {C : Type u} [Category.{v} C] [HasProducts.{v} C]
 
-variable {X : Top.{v'}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : TopCat.{v'}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -160,7 +160,7 @@ def fork.isoOfIso (α : F ≅ G) : fork F U ≅ (Cones.postcompose (diagram.isoO
 
 section OpenEmbedding
 
-variable {V : Top.{v'}} {j : V ⟶ X} (oe : OpenEmbedding j)
+variable {V : TopCat.{v'}} {j : V ⟶ X} (oe : OpenEmbedding j)
 
 variable (𝒰 : ι → Opens V)
 
@@ -189,12 +189,12 @@ def piInters.isoOfOpenEmbedding : piInters (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 
                 hom_of_le
                   (by
                     simp only [oe.to_embedding.inj, Set.image_inter]
-                    exact le_rflₓ),
+                    exact le_rfl),
               inv :=
                 hom_of_le
                   (by
                     simp only [oe.to_embedding.inj, Set.image_inter]
-                    exact le_rflₓ) })
+                    exact le_rfl) })
 
 /-- The isomorphism of sheaf condition diagrams corresponding to an open embedding. -/
 def diagram.isoOfOpenEmbedding : diagram (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ diagram F (Cover.ofOpenEmbedding oe 𝒰) :=
@@ -273,5 +273,5 @@ def IsSheafEqualizerProducts (F : Presheaf.{v', v, u} C X) : Prop :=
 
 end Presheaf
 
-end Top
+end TopCat
 

@@ -49,7 +49,7 @@ variable (𝕜 : Type _) {E : Type _}
 
 section HasSmul
 
-variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [HasSmul 𝕜 E]
+variable [OrderedSemiring 𝕜] [AddCommMonoid E] [HasSmul 𝕜 E]
 
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
@@ -81,7 +81,7 @@ protected theorem IsExtreme.antisymm : AntiSymmetric (IsExtreme 𝕜 : Set E →
 
 instance : IsPartialOrder (Set E) (IsExtreme 𝕜) where
   refl := IsExtreme.refl 𝕜
-  trans := fun A B C => IsExtreme.trans
+  trans A B C := IsExtreme.trans
   antisymm := IsExtreme.antisymm
 
 theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : IsExtreme 𝕜 A (B ∩ C) := by
@@ -118,7 +118,7 @@ theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 theorem extreme_points_def :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
@@ -157,7 +157,7 @@ end HasSmul
 
 section OrderedSemiring
 
-variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
+variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroup E] [Module 𝕜 E] {A B : Set E} {x : E}
 
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
   convex_iff_open_segment_subset.2 fun x₁ ⟨hx₁A, hx₁B⟩ x₂ ⟨hx₂A, hx₂B⟩ x hx =>
@@ -167,16 +167,16 @@ end OrderedSemiring
 
 section LinearOrderedRing
 
-variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
+variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {A B : Set E} {x : E}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x := by
-  refine' and_congr_right fun hxA => forall₄_congrₓ fun x₁ h₁ x₂ h₂ => _
+  refine' and_congr_right fun hxA => forall₄_congr fun x₁ h₁ x₂ h₂ => _
   constructor
   · rw [← insert_endpoints_open_segment]
     rintro H (rfl | rfl | hx)

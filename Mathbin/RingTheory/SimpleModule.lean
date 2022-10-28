@@ -28,7 +28,7 @@ import Mathbin.LinearAlgebra.Isomorphisms
 -/
 
 
-variable (R : Type _) [Ringₓ R] (M : Type _) [AddCommGroupₓ M] [Module R M]
+variable (R : Type _) [Ring R] (M : Type _) [AddCommGroup M] [Module R M]
 
 /-- A module is simple when it has only two submodules, `⊥` and `⊤`. -/
 abbrev IsSimpleModule :=
@@ -47,7 +47,7 @@ theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
       ext
       simp [Submodule.mem_bot, Submodule.mem_top, h x]⟩⟩
 
-variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroupₓ N] [Module R N]
+variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroup N] [Module R N]
 
 theorem IsSimpleModule.congr (l : M ≃ₗ[R] N) [IsSimpleModule R N] : IsSimpleModule R M :=
   (Submodule.orderIsoMapComap l).IsSimpleOrder
@@ -74,7 +74,7 @@ end IsSimpleModule
 
 theorem is_semisimple_of_Sup_simples_eq_top (h : sup { m : Submodule R M | IsSimpleModule R m } = ⊤) :
     IsSemisimpleModule R M :=
-  complemented_lattice_of_Sup_atoms_eq_top (by simp_rw [← h, is_simple_module_iff_is_atom])
+  complementedLatticeOfSupAtomsEqTop (by simp_rw [← h, is_simple_module_iff_is_atom])
 
 namespace IsSemisimpleModule
 
@@ -85,8 +85,8 @@ theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = �
   exact Sup_atoms_eq_top
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
-  haveI f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
-  f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
+  haveI f : Submodule R m ≃o Set.IicCat m := Submodule.MapSubtype.relIso m
+  f.complemented_lattice_iff.2 IsModularLattice.complementedLatticeIic
 
 end IsSemisimpleModule
 
@@ -106,7 +106,7 @@ theorem injective_of_ne_zero [IsSimpleModule R M] {f : M →ₗ[R] N} (h : f ≠
   f.injective_or_eq_zero.resolve_right h
 
 theorem surjective_or_eq_zero [IsSimpleModule R N] (f : M →ₗ[R] N) : Function.Surjective f ∨ f = 0 := by
-  rw [← range_eq_top, ← range_eq_bot, or_comm]
+  rw [← range_eq_top, ← range_eq_bot, or_comm']
   apply eq_bot_or_eq_top
 
 theorem surjective_of_ne_zero [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f ≠ 0) : Function.Surjective f :=
@@ -131,15 +131,15 @@ theorem is_coatom_ker_of_surjective [IsSimpleModule R N] {f : M →ₗ[R] N} (hf
   exact IsSimpleModule.congr (f.quot_ker_equiv_of_surjective hf)
 
 /-- Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
-noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End R M)] [IsSimpleModule R M] :
-    DivisionRing (Module.End R M) :=
-  { (Module.End.ring : Ringₓ (Module.End R M)) with
+noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.EndCat R M)] [IsSimpleModule R M] :
+    DivisionRing (Module.EndCat R M) :=
+  { (Module.EndCat.ring : Ring (Module.EndCat R M)) with
     inv := fun f =>
       if h : f = 0 then 0
       else
-        LinearMap.inverse f (Equivₓ.ofBijective _ (bijective_of_ne_zero h)).invFun
-          (Equivₓ.ofBijective _ (bijective_of_ne_zero h)).left_inv
-          (Equivₓ.ofBijective _ (bijective_of_ne_zero h)).right_inv,
+        LinearMap.inverse f (Equiv.ofBijective _ (bijective_of_ne_zero h)).invFun
+          (Equiv.ofBijective _ (bijective_of_ne_zero h)).left_inv
+          (Equiv.ofBijective _ (bijective_of_ne_zero h)).right_inv,
     exists_pair_ne :=
       ⟨0, 1, by
         haveI := IsSimpleModule.nontrivial R M
@@ -153,7 +153,7 @@ noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End 
       change a * dite _ _ _ = 1
       ext
       rw [dif_neg a0, mul_eq_comp, one_apply, comp_apply]
-      exact (Equivₓ.ofBijective _ (bijective_of_ne_zero a0)).right_inv x,
+      exact (Equiv.ofBijective _ (bijective_of_ne_zero a0)).right_inv x,
     inv_zero := dif_pos rfl }
 
 end LinearMap

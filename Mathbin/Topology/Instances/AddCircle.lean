@@ -30,7 +30,6 @@ the rational circle `add_circle (1 : ℚ)`, and so we set things up more general
 ## TODO
 
  * Link with periodicity
- * Measure space structure
  * Lie group structure
  * Exponential equivalence to `circle`
 
@@ -43,15 +42,15 @@ open Set
 
 open Int hiding mem_zmultiples_iff
 
-open AddSubgroup
+open AddSubgroup TopologicalSpace
 
 variable {𝕜 : Type _}
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜 -/
 /-- The "additive circle": `𝕜 ⧸ (ℤ ∙ p)`. See also `circle` and `real.angle`. -/
 @[nolint unused_arguments]
 def AddCircle [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p : 𝕜) :=
-  𝕜 ⧸ zmultiples p deriving AddCommGroupₓ, TopologicalSpace, TopologicalAddGroup, Inhabited,
+  𝕜 ⧸ zmultiples p deriving AddCommGroup, TopologicalSpace, TopologicalAddGroup, Inhabited,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜»
 
 namespace AddCircle
@@ -93,57 +92,76 @@ theorem equiv_add_circle_symm_apply_mk (hp : p ≠ 0) (hq : q ≠ 0) (x : 𝕜) 
     (equivAddCircle p q hp hq).symm (x : 𝕜) = (x * (q⁻¹ * p) : 𝕜) :=
   rfl
 
-variable [FloorRing 𝕜]
+variable [FloorRing 𝕜] [hp : Fact (0 < p)]
+
+include hp
 
 /-- The natural equivalence between `add_circle p` and the half-open interval `[0, p)`. -/
-def equivIco (hp : 0 < p) : AddCircle p ≃ Ico 0 p where
+def equivIco : AddCircle p ≃ IcoCat 0 p where
   invFun := QuotientAddGroup.mk' _ ∘ coe
-  toFun := fun x => ⟨(to_Ico_mod_periodic 0 hp).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp⟩
+  toFun x := ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp.out⟩
   right_inv := by
     rintro ⟨x, hx⟩
     ext
     simp [to_Ico_mod_eq_self, hx.1, hx.2]
   left_inv := by
     rintro ⟨x⟩
-    change QuotientAddGroup.mk (toIcoMod 0 hp x) = QuotientAddGroup.mk x
+    change QuotientAddGroup.mk (toIcoMod 0 hp.out x) = QuotientAddGroup.mk x
     rw [QuotientAddGroup.eq', neg_add_eq_sub, self_sub_to_Ico_mod, zsmul_eq_mul]
     apply int_cast_mul_mem_zmultiples
 
 @[simp]
-theorem coe_equiv_Ico_mk_apply (hp : 0 < p) (x : 𝕜) :
-    (equivIco p hp <| QuotientAddGroup.mk x : 𝕜) = fract (x / p) * p :=
-  to_Ico_mod_eq_fract_mul hp x
+theorem coe_equiv_Ico_mk_apply (x : 𝕜) : (equivIco p <| QuotientAddGroup.mk x : 𝕜) = fract (x / p) * p :=
+  to_Ico_mod_eq_fract_mul _ x
 
 @[continuity]
-theorem continuous_equiv_Ico_symm (hp : 0 < p) : Continuous (equivIco p hp).symm :=
+theorem continuous_equiv_Ico_symm : Continuous (equivIco p).symm :=
   continuous_coinduced_rng.comp continuous_induced_dom
 
 /-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
 entire space. -/
 @[simp]
-theorem coe_image_Icc_eq (hp : 0 < p) : (coe : 𝕜 → AddCircle p) '' Icc 0 p = univ := by
+theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' IccCat 0 p = univ := by
   refine' eq_univ_iff_forall.mpr fun x => _
-  let y := equiv_Ico p hp x
-  exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p hp).symm_apply_apply x⟩
+  let y := equiv_Ico p x
+  exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩
 
 end LinearOrderedField
 
 variable (p : ℝ)
 
-theorem compact_space (hp : 0 < p) : CompactSpace <| AddCircle p := by
-  rw [← is_compact_univ_iff, ← coe_image_Icc_eq p hp]
+/-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is compact. -/
+instance compact_space [Fact (0 < p)] : CompactSpace <| AddCircle p := by
+  rw [← is_compact_univ_iff, ← coe_image_Icc_eq p]
   exact is_compact_Icc.image (AddCircle.continuous_mk' p)
+
+/-- The action on `ℝ` by right multiplication of its the subgroup `zmultiples p` (the multiples of
+`p:ℝ`) is properly discontinuous. -/
+instance : ProperlyDiscontinuousVadd (zmultiples p).opposite ℝ :=
+  (zmultiples p).properly_discontinuous_vadd_opposite_of_tendsto_cofinite
+    (AddSubgroup.tendsto_zmultiples_subtype_cofinite p)
+
+/-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is Hausdorff. -/
+instance : T2Space (AddCircle p) :=
+  t2SpaceOfProperlyDiscontinuousVaddOfT2Space
+
+/-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is normal. -/
+instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=
+  normalOfCompactT2
+
+/-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is second-countable. -/
+instance : SecondCountableTopology (AddCircle p) :=
+  QuotientAddGroup.second_countable_topology
 
 end AddCircle
 
+private theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
+  ⟨zero_lt_one⟩
+
+attribute [local instance] fact_zero_lt_one
+
+/- ./././Mathport/Syntax/Translate/Command.lean:291:31: unsupported: @[derive] abbrev -/
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=
   AddCircle (1 : ℝ)
-
-namespace UnitAddCircle
-
-instance : CompactSpace UnitAddCircle :=
-  AddCircle.compact_space _ zero_lt_one
-
-end UnitAddCircle
 

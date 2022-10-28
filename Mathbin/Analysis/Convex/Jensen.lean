@@ -26,7 +26,7 @@ As corollaries, we get:
 -/
 
 
-open Finsetₓ LinearMap Set
+open Finset LinearMap Set
 
 open BigOperators Classical Convex Pointwise
 
@@ -37,13 +37,13 @@ variable {𝕜 E F β ι : Type _}
 
 section Jensen
 
-variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [OrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β]
-  {s : Set E} {f : E → β} {t : Finsetₓ ι} {w : ι → 𝕜} {p : ι → E}
+variable [LinearOrderedField 𝕜] [AddCommGroup E] [OrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β]
+  {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
 /-- Convex **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
     (hmem : ∀ i ∈ t, p i ∈ s) : f (t.centerMass w p) ≤ t.centerMass w (f ∘ p) := by
-  have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi => ⟨hmem i hi, le_rflₓ⟩
+  have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi => ⟨hmem i hi, le_rfl⟩
   convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
     simp only [center_mass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
 
@@ -69,12 +69,12 @@ end Jensen
 
 section MaximumPrinciple
 
-variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [LinearOrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
-  [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finsetₓ ι} {w : ι → 𝕜} {p : ι → E}
+variable [LinearOrderedField 𝕜] [AddCommGroup E] [LinearOrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
+  [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, ",", ident hfi, "⟩", ":", expr «expr∃ , »((i «expr ∈ » t.filter
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, ",", ident hfi, "⟩", ":", expr «expr∃ , »((i «expr ∈ » t.filter
      (λ i, «expr ≠ »(w i, 0))),
-    «expr ≤ »(«expr • »(w i, f y), «expr • »(w i, «expr ∘ »(f, p) i)))]]
+    «expr ≤ »(«expr • »(w i, f y), «expr • »(w i, «expr ∘ »(f, p) i)))]] -/
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of
 `s` is less than the value it takes on one of those points. -/
 theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i) (hw₁ : 0 < ∑ i in t, w i)
@@ -87,8 +87,8 @@ theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i
     
   have hw' : (0 : 𝕜) < ∑ i in filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
   refine' exists_le_of_sum_le (nonempty_of_sum_ne_zero hw'.ne') _
-  rw [← sum_smul, ← smul_le_smul_iff_of_pos (inv_pos.2 hw'), inv_smul_smul₀ hw'.ne', ← Finsetₓ.centerMass,
-    Finsetₓ.center_mass_filter_ne_zero]
+  rw [← sum_smul, ← smul_le_smul_iff_of_pos (inv_pos.2 hw'), inv_smul_smul₀ hw'.ne', ← Finset.centerMass,
+    Finset.center_mass_filter_ne_zero]
   exact h.map_center_mass_le hw₀ hw₁ hp
   infer_instance
 

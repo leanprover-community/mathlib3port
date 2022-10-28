@@ -30,43 +30,43 @@ noncomputable section
 variable (R : Type u) (M : Type v) (N : Type w) (X : Type x) (Y : Type y) [UniformSpace X] [UniformSpace Y]
 
 /-- An additive action such that for all `c`, the map `λ x, c +ᵥ x` is uniformly continuous. -/
-class HasUniformContinuousConstVadd [UniformSpace X] [HasVadd M X] : Prop where
+class HasUniformContinuousConstVadd [HasVadd M X] : Prop where
   uniform_continuous_const_vadd : ∀ c : M, UniformContinuous ((· +ᵥ ·) c : X → X)
 
 /-- A multiplicative action such that for all `c`, the map `λ x, c • x` is uniformly continuous. -/
 @[to_additive]
-class HasUniformContinuousConstSmul [UniformSpace X] [HasSmul M X] : Prop where
+class HasUniformContinuousConstSmul [HasSmul M X] : Prop where
   uniform_continuous_const_smul : ∀ c : M, UniformContinuous ((· • ·) c : X → X)
 
 export HasUniformContinuousConstVadd (uniform_continuous_const_vadd)
 
 export HasUniformContinuousConstSmul (uniform_continuous_const_smul)
 
-instance AddMonoidₓ.has_uniform_continuous_const_smul_nat [AddGroupₓ X] [UniformAddGroup X] :
+instance AddMonoid.has_uniform_continuous_const_smul_nat [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℕ X :=
   ⟨uniform_continuous_const_nsmul⟩
 
-instance AddGroupₓ.has_uniform_continuous_const_smul_int [AddGroupₓ X] [UniformAddGroup X] :
+instance AddGroup.has_uniform_continuous_const_smul_int [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℤ X :=
   ⟨uniform_continuous_const_zsmul⟩
 
 /-- A `distrib_mul_action` that is continuous on a uniform group is uniformly continuous.
 This can't be an instance due to it forming a loop with
 `has_uniform_continuous_const_smul.to_has_continuous_const_smul` -/
-theorem has_uniform_continuous_const_smul_of_continuous_const_smul [Monoidₓ R] [AddCommGroupₓ M] [DistribMulAction R M]
+theorem has_uniform_continuous_const_smul_of_continuous_const_smul [Monoid R] [AddCommGroup M] [DistribMulAction R M]
     [UniformSpace M] [UniformAddGroup M] [HasContinuousConstSmul R M] : HasUniformContinuousConstSmul R M :=
   ⟨fun r =>
     uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
       (Continuous.continuous_at (continuous_const_smul r))⟩
 
 /-- The action of `semiring.to_module` is uniformly continuous. -/
-instance Ringₓ.has_uniform_continuous_const_smul [Ringₓ R] [UniformSpace R] [UniformAddGroup R] [HasContinuousMul R] :
+instance Ring.has_uniform_continuous_const_smul [Ring R] [UniformSpace R] [UniformAddGroup R] [HasContinuousMul R] :
     HasUniformContinuousConstSmul R R :=
   has_uniform_continuous_const_smul_of_continuous_const_smul _ _
 
 /-- The action of `semiring.to_opposite_module` is uniformly continuous. -/
-instance Ringₓ.has_uniform_continuous_const_op_smul [Ringₓ R] [UniformSpace R] [UniformAddGroup R]
-    [HasContinuousMul R] : HasUniformContinuousConstSmul Rᵐᵒᵖ R :=
+instance Ring.has_uniform_continuous_const_op_smul [Ring R] [UniformSpace R] [UniformAddGroup R] [HasContinuousMul R] :
+    HasUniformContinuousConstSmul Rᵐᵒᵖ R :=
   has_uniform_continuous_const_smul_of_continuous_const_smul _ _
 
 section HasSmul
@@ -101,7 +101,7 @@ instance MulOpposite.has_uniform_continuous_const_smul [HasUniformContinuousCons
 end HasSmul
 
 @[to_additive]
-instance UniformGroup.to_has_uniform_continuous_const_smul {G : Type u} [Groupₓ G] [UniformSpace G] [UniformGroup G] :
+instance UniformGroup.to_has_uniform_continuous_const_smul {G : Type u} [Group G] [UniformSpace G] [UniformGroup G] :
     HasUniformContinuousConstSmul G G :=
   ⟨fun c => uniform_continuous_const.mul uniform_continuous_id⟩
 
@@ -153,10 +153,10 @@ theorem coe_smul (c : M) (x : X) : ↑(c • x) = (c • x : Completion X) :=
 end HasSmul
 
 @[to_additive]
-instance [Monoidₓ M] [MulAction M X] [HasUniformContinuousConstSmul M X] : MulAction M (Completion X) where
+instance [Monoid M] [MulAction M X] [HasUniformContinuousConstSmul M X] : MulAction M (Completion X) where
   smul := (· • ·)
   one_smul := (ext' (continuous_const_smul _) continuous_id) fun a => by rw [← coe_smul, one_smul]
-  mul_smul := fun x y =>
+  mul_smul x y :=
     (ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _)) fun a => by
       simp only [← coe_smul, mul_smul]
 

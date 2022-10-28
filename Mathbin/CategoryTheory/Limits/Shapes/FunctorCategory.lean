@@ -24,10 +24,10 @@ variable {C : Type u₁} [Category.{v₁} C]
 variable {D : Type u₂} [Category.{v₂} D]
 
 instance functor_category_has_finite_limits [HasFiniteLimits D] :
-    HasFiniteLimits (C ⥤ D) where out := fun J _ _ => inferInstance
+    HasFiniteLimits (C ⥤ D) where out J _ _ := inferInstance
 
 instance functor_category_has_finite_colimits [HasFiniteColimits D] :
-    HasFiniteColimits (C ⥤ D) where out := fun J _ _ => inferInstance
+    HasFiniteColimits (C ⥤ D) where out J _ _ := inferInstance
 
 end CategoryTheory.Limits
 

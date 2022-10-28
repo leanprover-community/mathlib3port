@@ -37,7 +37,7 @@ variable [HasFiniteProducts C] [CartesianClosed C]
 then each homset has exactly one element.
 -/
 def uniqueHomsetOfInitialIsoTerminal [HasInitial C] (i : ⊥_ C ≅ ⊤_ C) (X Y : C) : Unique (X ⟶ Y) :=
-  Equivₓ.unique <|
+  Equiv.unique <|
     calc
       (X ⟶ Y) ≃ (X ⨯ ⊤_ C ⟶ Y) := Iso.homCongr (prod.rightUnitor _).symm (Iso.refl _)
       _ ≃ (X ⨯ ⊥_ C ⟶ Y) := Iso.homCongr (prod.mapIso (Iso.refl _) i.symm) (Iso.refl _)

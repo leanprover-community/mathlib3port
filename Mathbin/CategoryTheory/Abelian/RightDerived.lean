@@ -66,17 +66,17 @@ def Functor.rightDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
 
 /-- We can compute a right derived functor using a chosen injective resolution. -/
 @[simps]
-def Functor.rightDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C} (P : InjectiveResolution X) :
+def Functor.rightDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C} (P : InjectiveResolutionCat X) :
     (F.rightDerived n).obj X ≅ (homologyFunctor D _ n).obj ((F.mapHomologicalComplex _).obj P.cocomplex) :=
   (HomotopyCategory.homologyFunctor D _ n).mapIso
-      (HomotopyCategory.isoOfHomotopyEquiv (F.mapHomotopyEquiv (InjectiveResolution.homotopyEquiv _ P))) ≪≫
+      (HomotopyCategory.isoOfHomotopyEquiv (F.mapHomotopyEquiv (InjectiveResolutionCat.homotopyEquiv _ P))) ≪≫
     (HomotopyCategory.homologyFactors D _ n).app _
 
 /-- The 0-th derived functor of `F` on an injective object `X` is just `F.obj X`. -/
 @[simps]
 def Functor.rightDerivedObjInjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Injective X] :
     (F.rightDerived 0).obj X ≅ F.obj X :=
-  F.rightDerivedObjIso 0 (InjectiveResolution.self X) ≪≫
+  F.rightDerivedObjIso 0 (InjectiveResolutionCat.self X) ≪≫
     (homologyFunctor _ _ _).mapIso ((CochainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (CochainComplex.homologyFunctor0Single₀ D).app (F.obj X)
 
@@ -86,15 +86,16 @@ open ZeroObject
 @[simps inv]
 def Functor.rightDerivedObjInjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X : C) [Injective X] :
     (F.rightDerived (n + 1)).obj X ≅ 0 :=
-  F.rightDerivedObjIso (n + 1) (InjectiveResolution.self X) ≪≫
+  F.rightDerivedObjIso (n + 1) (InjectiveResolutionCat.self X) ≪≫
     (homologyFunctor _ _ _).mapIso ((CochainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (CochainComplex.homologyFunctorSuccSingle₀ D n).app (F.obj X) ≪≫ (Functor.zero_obj _).isoZero
 
 /-- We can compute a right derived functor on a morphism using a descent of that morphism
 to a cochain map between chosen injective resolutions.
 -/
-theorem Functor.right_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C} (f : Y ⟶ X) {P : InjectiveResolution X}
-    {Q : InjectiveResolution Y} (g : Q.cocomplex ⟶ P.cocomplex) (w : Q.ι ≫ g = (CochainComplex.single₀ C).map f ≫ P.ι) :
+theorem Functor.right_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C} (f : Y ⟶ X)
+    {P : InjectiveResolutionCat X} {Q : InjectiveResolutionCat Y} (g : Q.cocomplex ⟶ P.cocomplex)
+    (w : Q.ι ≫ g = (CochainComplex.single₀ C).map f ≫ P.ι) :
     (F.rightDerived n).map f =
       (F.rightDerivedObjIso n Q).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫ (F.rightDerivedObjIso n P).inv :=
@@ -139,7 +140,7 @@ theorem NatTrans.right_derived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] 
 using a chosen injective resolution.
 -/
 theorem NatTrans.right_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G) (n : ℕ) {X : C}
-    (P : InjectiveResolution X) :
+    (P : InjectiveResolutionCat X) :
     (NatTrans.rightDerived α n).app X =
       (F.rightDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.cocomplex) ≫
@@ -183,7 +184,7 @@ theorem preserves_exact_of_preserves_finite_limits_of_mono [PreservesFiniteLimit
   Abelian.exact_of_is_kernel _ _ (by simp [← functor.map_comp, ex.w]) <|
     Limits.isLimitForkMapOfIsLimit' _ ex.w (Abelian.isLimitOfExactOfMono _ _ ex)
 
-theorem exact_of_map_injective_resolution (P : InjectiveResolution X) [PreservesFiniteLimits F] :
+theorem exact_of_map_injective_resolution (P : InjectiveResolutionCat X) [PreservesFiniteLimits F] :
     Exact (F.map (P.ι.f 0)) (((F.mapHomologicalComplex (ComplexShape.up ℕ)).obj P.cocomplex).dFrom 0) :=
   Preadditive.exact_of_iso_of_exact' (F.map (P.ι.f 0)) (F.map (P.cocomplex.d 0 1)) _ _ (Iso.refl _) (Iso.refl _)
     (HomologicalComplex.xNextIso ((F.mapHomologicalComplex _).obj P.cocomplex) rfl).symm (by simp)
@@ -192,7 +193,7 @@ theorem exact_of_map_injective_resolution (P : InjectiveResolution X) [Preserves
 
 /-- Given `P : InjectiveResolution X`, a morphism `(F.right_derived 0).obj X ⟶ F.obj X` given
 `preserves_finite_limits F`. -/
-def rightDerivedZeroToSelfApp [EnoughInjectives C] [PreservesFiniteLimits F] {X : C} (P : InjectiveResolution X) :
+def rightDerivedZeroToSelfApp [EnoughInjectives C] [PreservesFiniteLimits F] {X : C} (P : InjectiveResolutionCat X) :
     (F.rightDerived 0).obj X ⟶ F.obj X :=
   (rightDerivedObjIso F 0 P).Hom ≫
     (homologyIsoKernelDesc _ _ _).Hom ≫
@@ -203,7 +204,7 @@ def rightDerivedZeroToSelfApp [EnoughInjectives C] [PreservesFiniteLimits F] {X 
         (asIso (kernel.lift _ _ (exact_of_map_injective_resolution F P).w)).inv
 
 /-- Given `P : InjectiveResolution X`, a morphism `F.obj X ⟶ (F.right_derived 0).obj X`. -/
-def rightDerivedZeroToSelfAppInv [EnoughInjectives C] {X : C} (P : InjectiveResolution X) :
+def rightDerivedZeroToSelfAppInv [EnoughInjectives C] {X : C} (P : InjectiveResolutionCat X) :
     F.obj X ⟶ (F.rightDerived 0).obj X :=
   homology.lift _ _ _ (F.map (P.ι.f 0) ≫ cokernel.π _)
       (by
@@ -214,8 +215,8 @@ def rightDerivedZeroToSelfAppInv [EnoughInjectives C] {X : C} (P : InjectiveReso
     (rightDerivedObjIso F 0 P).inv
 
 theorem right_derived_zero_to_self_app_comp_inv [EnoughInjectives C] [PreservesFiniteLimits F] {X : C}
-    (P : InjectiveResolution X) : right_derived_zero_to_self_app F P ≫ right_derived_zero_to_self_app_inv F P = 𝟙 _ :=
-  by
+    (P : InjectiveResolutionCat X) :
+    right_derived_zero_to_self_app F P ≫ right_derived_zero_to_self_app_inv F P = 𝟙 _ := by
   dsimp [right_derived_zero_to_self_app, right_derived_zero_to_self_app_inv]
   rw [← category.assoc, iso.comp_inv_eq, category.id_comp, category.assoc, category.assoc, ← iso.eq_inv_comp,
     iso.inv_hom_id]
@@ -228,8 +229,8 @@ theorem right_derived_zero_to_self_app_comp_inv [EnoughInjectives C] [PreservesF
   convert category.id_comp (cokernel.π _)
 
 theorem right_derived_zero_to_self_app_inv_comp [EnoughInjectives C] [PreservesFiniteLimits F] {X : C}
-    (P : InjectiveResolution X) : right_derived_zero_to_self_app_inv F P ≫ right_derived_zero_to_self_app F P = 𝟙 _ :=
-  by
+    (P : InjectiveResolutionCat X) :
+    right_derived_zero_to_self_app_inv F P ≫ right_derived_zero_to_self_app F P = 𝟙 _ := by
   dsimp [right_derived_zero_to_self_app, right_derived_zero_to_self_app_inv]
   rw [← category.assoc _ (F.right_derived_obj_iso 0 P).Hom, category.assoc _ _ (F.right_derived_obj_iso 0 P).Hom,
     iso.inv_hom_id, category.comp_id, ← category.assoc, ← category.assoc, is_iso.comp_inv_eq, category.id_comp]
@@ -240,7 +241,7 @@ theorem right_derived_zero_to_self_app_inv_comp [EnoughInjectives C] [PreservesF
 
 /-- Given `P : InjectiveResolution X`, the isomorphism `(F.right_derived 0).obj X ≅ F.obj X` if
 `preserves_finite_limits F`. -/
-def rightDerivedZeroToSelfAppIso [EnoughInjectives C] [PreservesFiniteLimits F] {X : C} (P : InjectiveResolution X) :
+def rightDerivedZeroToSelfAppIso [EnoughInjectives C] [PreservesFiniteLimits F] {X : C} (P : InjectiveResolutionCat X) :
     (F.rightDerived 0).obj X ≅ F.obj X where
   Hom := right_derived_zero_to_self_app _ P
   inv := right_derived_zero_to_self_app_inv _ P
@@ -249,8 +250,8 @@ def rightDerivedZeroToSelfAppIso [EnoughInjectives C] [PreservesFiniteLimits F] 
 
 /-- Given `P : InjectiveResolution X` and `Q : InjectiveResolution Y` and a morphism `f : X ⟶ Y`,
 naturality of the square given by `right_derived_zero_to_self_natural`. -/
-theorem right_derived_zero_to_self_natural [EnoughInjectives C] {X : C} {Y : C} (f : X ⟶ Y) (P : InjectiveResolution X)
-    (Q : InjectiveResolution Y) :
+theorem right_derived_zero_to_self_natural [EnoughInjectives C] {X : C} {Y : C} (f : X ⟶ Y)
+    (P : InjectiveResolutionCat X) (Q : InjectiveResolutionCat Y) :
     F.map f ≫ right_derived_zero_to_self_app_inv F Q =
       right_derived_zero_to_self_app_inv F P ≫ (F.rightDerived 0).map f :=
   by
@@ -270,8 +271,8 @@ theorem right_derived_zero_to_self_natural [EnoughInjectives C] {X : C} {Y : C} 
 /-- Given `preserves_finite_limits F`, the natural isomorphism `(F.right_derived 0) ≅ F`. -/
 def rightDerivedZeroIsoSelf [EnoughInjectives C] [PreservesFiniteLimits F] : F.rightDerived 0 ≅ F :=
   iso.symm <|
-    NatIso.ofComponents (fun X => (right_derived_zero_to_self_app_iso _ (InjectiveResolution.of X)).symm) fun X Y f =>
-      right_derived_zero_to_self_natural _ _ _ _
+    NatIso.ofComponents (fun X => (right_derived_zero_to_self_app_iso _ (InjectiveResolutionCat.of X)).symm)
+      fun X Y f => right_derived_zero_to_self_natural _ _ _ _
 
 end CategoryTheory.Abelian.Functor
 

@@ -36,11 +36,11 @@ section SkewAdjointEndomorphisms
 
 open BilinForm
 
-variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable (B : BilinForm R M)
 
-theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skewAdjointSubmodule)
+theorem BilinForm.is_skew_adjoint_bracket (f g : Module.EndCat R M) (hf : f ∈ B.skewAdjointSubmodule)
     (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule := by
   rw [mem_skew_adjoint_submodule] at *
   have hfg : is_adjoint_pair B B (f * g) (g * f) := by
@@ -55,10 +55,10 @@ theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.s
 
 /-- Given an `R`-module `M`, equipped with a bilinear form, the skew-adjoint endomorphisms form a
 Lie subalgebra of the Lie algebra of endomorphisms. -/
-def skewAdjointLieSubalgebra : LieSubalgebra R (Module.End R M) :=
+def skewAdjointLieSubalgebra : LieSubalgebra R (Module.EndCat R M) :=
   { B.skewAdjointSubmodule with lie_mem' := B.is_skew_adjoint_bracket }
 
-variable {N : Type w} [AddCommGroupₓ N] [Module R N] (e : N ≃ₗ[R] M)
+variable {N : Type w} [AddCommGroup N] [Module R N] (e : N ≃ₗ[R] M)
 
 /-- An equivalence of modules with bilinear forms gives equivalence of Lie algebras of skew-adjoint
 endomorphisms. -/
@@ -83,7 +83,7 @@ section SkewAdjointMatrices
 
 open Matrix
 
-variable {R : Type u} {n : Type w} [CommRingₓ R] [DecidableEq n] [Fintypeₓ n]
+variable {R : Type u} {n : Type w} [CommRing R] [DecidableEq n] [Fintype n]
 
 variable (J : Matrix n n R)
 
@@ -128,7 +128,7 @@ theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h :
 
 /-- An equivalence of matrix algebras commuting with the transpose endomorphisms restricts to an
 equivalence of Lie algebras of skew-adjoint matrices. -/
-def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] [Fintypeₓ m]
+def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] [Fintype m]
     (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ) :
     skewAdjointMatricesLieSubalgebra J ≃ₗ⁅R⁆ skewAdjointMatricesLieSubalgebra (e J) :=
   LieEquiv.ofSubalgebras _ _ e.toLieEquiv
@@ -139,7 +139,7 @@ def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] 
         Function.Injective.eq_iff e.injective])
 
 @[simp]
-theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} [DecidableEq m] [Fintypeₓ m]
+theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} [DecidableEq m] [Fintype m]
     (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ) (A : skewAdjointMatricesLieSubalgebra J) :
     (skewAdjointMatricesLieSubalgebraEquivTranspose J e h A : Matrix m m R) = e A :=
   rfl

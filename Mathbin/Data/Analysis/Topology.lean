@@ -119,9 +119,9 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     IsClosed s ↔ ∀ a, (∀ b, a ∈ F.f b → ∃ z, z ∈ F.f b ∩ s) → a ∈ s :=
   is_open_compl_iff.symm.trans <|
     F.is_open_iff.trans <|
-      forall_congrₓ fun a =>
+      forall_congr fun a =>
         show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀ z ∈ F.f b, z ∉ s) ↔ _ by
-          haveI := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm]
+          haveI := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm']
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
     a ∈ Interior s ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
@@ -197,7 +197,7 @@ choice of open sets from the basis of `F` such that they intersect only finitely
 of `f`.  -/
 structure LocallyFinite.Realizer [TopologicalSpace α] (F : Realizer α) (f : β → Set α) where
   bas : ∀ a, { s // a ∈ F.f s }
-  Sets : ∀ x : α, Fintypeₓ { i | (f i ∩ F.f (bas x)).Nonempty }
+  Sets : ∀ x : α, Fintype { i | (f i ∩ F.f (bas x)).Nonempty }
 
 theorem LocallyFinite.Realizer.to_locally_finite [TopologicalSpace α] {F : Realizer α} {f : β → Set α}
     (R : LocallyFinite.Realizer F f) : LocallyFinite f := fun a =>

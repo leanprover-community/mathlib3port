@@ -69,13 +69,13 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
                       set_goals [m]
                       ctxt fun e => do
                           let b ← is_proof e
-                          Monadₓ.unlessb b <| (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
+                          Monad.unlessb b <| (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
                       reset_instance_cache
                       apply_instance
                       instantiate_mvars m)
             pure (some (Option.guard (fun _ => nonemp) Ne), nonemp)
           else pure (none, none)
-      let ctxt' ← if nonemp then ctxt fun e => bnot <$> is_proof e else pure ctxt
+      let ctxt' ← if nonemp then ctxt fun e => not <$> is_proof e else pure ctxt
       let value ← mk_local_def data (α ctxt')
       let t' ← head_beta (p (value ctxt'))
       let spec ← mk_local_def spec (t' ctxt)
@@ -88,8 +88,8 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
       let e ← intro1
       pure (e, ne_fail)
     | quote.1 ((%%ₓp) ∧ %%ₓq) => do
-      mk_app `` And.elim_left [h ctxt] >>= lambdas ctxt >>= note data none
-      let hq ← mk_app `` And.elim_right [h ctxt] >>= lambdas ctxt >>= note spec none
+      mk_app `` And.left [h ctxt] >>= lambdas ctxt >>= note data none
+      let hq ← mk_app `` And.right [h ctxt] >>= lambdas ctxt >>= note spec none
       try (tactic.clear h)
       pure (hq, none)
     | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
@@ -129,9 +129,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs
@@ -177,7 +177,7 @@ unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ide
       | none => get_local `this
       | some e => tactic.i_to_expr_strict e
   tactic.choose nondep tgt (first :: names)
-  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_propₓ)] [] (loc.ns <| some <$> names))
+  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns <| some <$> names))
   try (tactic.clear tgt)
 
 add_tactic_doc

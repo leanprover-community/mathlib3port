@@ -40,9 +40,9 @@ class HasVariableNames (α : Sort u) : Type where
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- `typical_variable_names t` obtains typical names for variables of type `t`.
 The returned list is guaranteed to be nonempty. Fails if there is no instance
 `has_typical_variable_names t`.
@@ -87,10 +87,10 @@ instance {n α} [HasVariableNames α] : HasVariableNames (DArray n fun _ => α) 
 instance : HasVariableNames Bool :=
   ⟨[`b]⟩
 
-instance : HasVariableNames Charₓ :=
+instance : HasVariableNames Char :=
   ⟨[`c]⟩
 
-instance {n} : HasVariableNames (Finₓ n) :=
+instance {n} : HasVariableNames (Fin n) :=
   ⟨[`n, `m, `o]⟩
 
 instance : HasVariableNames ℤ :=
@@ -102,10 +102,10 @@ instance {α} [HasVariableNames α] : HasVariableNames (List α) :=
 instance : HasVariableNames ℕ :=
   ⟨[`n, `m, `o]⟩
 
-instance Prop.hasVariableNames : HasVariableNames Prop :=
+instance PropCat.hasVariableNames : HasVariableNames Prop :=
   ⟨[`P, `Q, `R]⟩
 
-instance {α} [HasVariableNames α] : HasVariableNames (Thunkₓ α) :=
+instance {α} [HasVariableNames α] : HasVariableNames (Thunk' α) :=
   makeInheritingInstance α
 
 instance {α β} : HasVariableNames (Prod α β) :=
@@ -138,7 +138,7 @@ unsafe instance {α} [HasVariableNames α] : HasVariableNames (native.rb_set α)
 instance {α} [HasVariableNames α] : HasVariableNames (Set α) :=
   makeListlikeInstance α
 
-instance : HasVariableNames Stringₓ :=
+instance : HasVariableNames String :=
   ⟨[`s]⟩
 
 instance : HasVariableNames Unsigned :=

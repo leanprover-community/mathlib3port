@@ -59,7 +59,7 @@ def upath01 : Path (ULift.up 0 : ULift.{u} I) (ULift.up 1) where
 attribute [local instance] Path.Homotopic.setoid
 
 /-- The homotopy path class of 0 → 1 in `ulift I` -/
-def uhpath01 : @fromTop (Top.of <| ULift.{u} I) (ULift.up (0 : I)) ⟶ fromTop (ULift.up 1) :=
+def uhpath01 : @fromTop (TopCat.of <| ULift.{u} I) (ULift.up (0 : I)) ⟶ fromTop (ULift.up 1) :=
   ⟦upath01⟧
 
 end UnitInterval
@@ -73,15 +73,15 @@ attribute [local instance] Path.Homotopic.setoid
 section Casts
 
 /-- Abbreviation for `eq_to_hom` that accepts points in a topological space -/
-abbrev hcast {X : Top} {x₀ x₁ : X} (hx : x₀ = x₁) : fromTop x₀ ⟶ fromTop x₁ :=
+abbrev hcast {X : TopCat} {x₀ x₁ : X} (hx : x₀ = x₁) : fromTop x₀ ⟶ fromTop x₁ :=
   eqToHom hx
 
 @[simp]
-theorem hcast_def {X : Top} {x₀ x₁ : X} (hx₀ : x₀ = x₁) : hcast hx₀ = eqToHom hx₀ :=
+theorem hcast_def {X : TopCat} {x₀ x₁ : X} (hx₀ : x₀ = x₁) : hcast hx₀ = eqToHom hx₀ :=
   rfl
 
-variable {X₁ X₂ Y : Top.{u}} {f : C(X₁, Y)} {g : C(X₂, Y)} {x₀ x₁ : X₁} {x₂ x₃ : X₂} {p : Path x₀ x₁} {q : Path x₂ x₃}
-  (hfg : ∀ t, f (p t) = g (q t))
+variable {X₁ X₂ Y : TopCat.{u}} {f : C(X₁, Y)} {g : C(X₂, Y)} {x₀ x₁ : X₁} {x₂ x₃ : X₂} {p : Path x₀ x₁}
+  {q : Path x₂ x₃} (hfg : ∀ t, f (p t) = g (q t))
 
 include hfg
 
@@ -103,7 +103,7 @@ theorem eq_path_of_eq_image : (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫
 end Casts
 
 -- We let `X` and `Y` be spaces, and `f` and `g` be homotopic maps between them
-variable {X Y : Top.{u}} {f g : C(X, Y)} (H : ContinuousMap.Homotopy f g) {x₀ x₁ : X} (p : fromTop x₀ ⟶ fromTop x₁)
+variable {X Y : TopCat.{u}} {f g : C(X, Y)} (H : ContinuousMap.Homotopy f g) {x₀ x₁ : X} (p : fromTop x₀ ⟶ fromTop x₁)
 
 /-!
 These definitions set up the following diagram, for each path `p`:
@@ -129,7 +129,7 @@ many of the paths do not have defeq starting/ending points, so we end up needing
 
 
 /-- Interpret a homotopy `H : C(I × X, Y) as a map C(ulift I × X, Y) -/
-def uliftMap : C(Top.of (ULift.{u} I × X), Y) :=
+def uliftMap : C(TopCat.of (ULift.{u} I × X), Y) :=
   ⟨fun x => H (x.1.down, x.2), H.Continuous.comp ((continuous_induced_dom.comp continuous_fst).prod_mk continuous_snd)⟩
 
 @[simp]
@@ -138,9 +138,9 @@ theorem ulift_apply (i : ULift.{u} I) (x : X) : H.uliftMap (i, x) = H (i.down, x
 
 /-- An abbreviation for `prod_to_prod_Top`, with some types already in place to help the
  typechecker. In particular, the first path should be on the ulifted unit interval. -/
-abbrev prodToProdTopI {a₁ a₂ : Top.of (ULift I)} {b₁ b₂ : X} (p₁ : fromTop a₁ ⟶ fromTop a₂)
+abbrev prodToProdTopI {a₁ a₂ : TopCat.of (ULift I)} {b₁ b₂ : X} (p₁ : fromTop a₁ ⟶ fromTop a₂)
     (p₂ : fromTop b₁ ⟶ fromTop b₂) :=
-  @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop (Top.of <| ULift I) X) (a₁, b₁) (a₂, b₂) (p₁, p₂)
+  @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop (TopCat.of <| ULift I) X) (a₁, b₁) (a₂, b₂) (p₁, p₂)
 
 /-- The diagonal path `d` of a homotopy `H` on a path `p` -/
 def diagonalPath : fromTop (H (0, x₀)) ⟶ fromTop (H (1, x₁)) :=
@@ -156,7 +156,7 @@ theorem apply_zero_path :
       hcast (H.apply_zero x₀).symm ≫
         (πₘ H.uliftMap).map (prodToProdTopI (𝟙 (ULift.up 0)) p) ≫ hcast (H.apply_zero x₁) :=
   by
-  apply Quotientₓ.induction_on p
+  apply Quotient.induction_on p
   intro p'
   apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
   simp
@@ -166,7 +166,7 @@ theorem apply_one_path :
     (πₘ g).map p =
       hcast (H.apply_one x₀).symm ≫ (πₘ H.uliftMap).map (prodToProdTopI (𝟙 (ULift.up 1)) p) ≫ hcast (H.apply_one x₁) :=
   by
-  apply Quotientₓ.induction_on p
+  apply Quotient.induction_on p
   intro p'
   apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
   simp
@@ -206,13 +206,13 @@ open FundamentalGroupoid
 
 attribute [local instance] Path.Homotopic.setoid
 
-variable {X Y : Top.{u}} {f g : C(X, Y)} (H : ContinuousMap.Homotopy f g)
+variable {X Y : TopCat.{u}} {f g : C(X, Y)} (H : ContinuousMap.Homotopy f g)
 
 /-- Given a homotopy H : f ∼ g, we have an associated natural isomorphism between the induced
 functors `f` and `g` -/
 def homotopicMapsNatIso : πₘ f ⟶ πₘ g where
-  app := fun x => ⟦H.evalAt x⟧
-  naturality' := fun x y p => by rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
+  app x := ⟦H.evalAt x⟧
+  naturality' x y p := by rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
 
 instance : IsIso (homotopicMapsNatIso H) := by apply nat_iso.is_iso_of_is_iso_app
 

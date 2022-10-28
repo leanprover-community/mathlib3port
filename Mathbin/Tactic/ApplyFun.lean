@@ -7,10 +7,10 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
 of the form `a = b` or `a ≤ b`, replacing the type of `hyp` with `f a = f b` or `f a ≤ f b`. If
 `hyp` names an inequality then a new goal `monotone f` is created, unless the name of a proof of
@@ -30,7 +30,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
             | some mono_lem => tactic.i_to_expr mono_lem
             | none => do
               let n ← get_unused_name `mono
-              to_expr (pquote.1 (Monotoneₓ (%%ₓe))) >>= assert n
+              to_expr (pquote.1 (Monotone (%%ₓe))) >>= assert n
               -- In order to resolve implicit arguments in `%%e`,
                 -- we build (and discard) the expression `%%n %%hyp` before calling the `mono` tactic.
                 swap
@@ -51,9 +51,9 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
       try <|
       tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
 
 If the goal is of the form `a ≠ b`, we obtain the new goal `f a ≠ f b`.
@@ -82,7 +82,7 @@ unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit := d
               -- We require that applying the lemma closes the goal, not just makes progress:
               focus1 <|
               assumption <|>
-                (to_expr (pquote.1 Equivₓ.injective) >>= apply) >> done <|>
+                (to_expr (pquote.1 Equiv.injective) >>= apply) >> done <|>
                   (lem fun l => to_expr l >>= apply) >> done) <|>
             swap
         let n

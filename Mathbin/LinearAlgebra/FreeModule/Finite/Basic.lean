@@ -29,27 +29,27 @@ variable (R : Type u) (M : Type v) (N : Type w)
 
 namespace Module.Free
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
+variable [Ring R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
 /-- If a free module is finite, then any basis is finite. -/
-noncomputable instance [Nontrivial R] [Module.Finite R M] : Fintypeₓ (Module.Free.ChooseBasisIndex R M) := by
+noncomputable instance [Nontrivial R] [Module.Finite R M] : Fintype (Module.Free.ChooseBasisIndex R M) := by
   obtain ⟨h⟩ := id ‹Module.Finite R M›
   choose s hs using h
   exact basisFintypeOfFiniteSpans (↑s) hs (choose_basis _ _)
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
+variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
-variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
+variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
-instance linear_map [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
+instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R
-  · apply Module.Free.of_subsingleton'
+  · apply Module.Free.ofSubsingleton'
     
   classical
   exact of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
@@ -57,12 +57,12 @@ instance linear_map [Module.Finite R M] [Module.Finite R N] : Module.Free R (M �
 variable {R}
 
 /-- A free module with a basis indexed by a `fintype` is finite. -/
-theorem _root_.module.finite.of_basis {R M ι : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Finite ι]
+theorem _root_.module.finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M] [Finite ι]
     (b : Basis ι R M) : Module.Finite R M := by
   cases nonempty_fintype ι
   classical
   refine' ⟨⟨finset.univ.image b, _⟩⟩
-  simp only [Set.image_univ, Finsetₓ.coe_univ, Finsetₓ.coe_image, Basis.span_eq]
+  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 
 instance _root_.module.finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] : Module.Finite R (Matrix ι₁ ι₂ R) := by
   cases nonempty_fintype ι₁
@@ -77,20 +77,20 @@ instance _root_.module.finite.linear_map [Module.Finite R M] [Module.Finite R N]
   have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
   exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
 
-end CommRingₓ
+end CommRing
 
 section Integer
 
-variable [AddCommGroupₓ M] [Module.Finite ℤ M] [Module.Free ℤ M]
+variable [AddCommGroup M] [Module.Finite ℤ M] [Module.Free ℤ M]
 
-variable [AddCommGroupₓ N] [Module.Finite ℤ N] [Module.Free ℤ N]
+variable [AddCommGroup N] [Module.Finite ℤ N] [Module.Free ℤ N]
 
 instance _root_.module.finite.add_monoid_hom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 
-instance add_monoid_hom : Module.Free ℤ (M →+ N) :=
-  letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linear_map _ _ _
-  Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
+instance addMonoidHom : Module.Free ℤ (M →+ N) :=
+  letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linearMap _ _ _
+  Module.Free.ofEquiv (addMonoidHomLequivInt ℤ).symm
 
 end Integer
 

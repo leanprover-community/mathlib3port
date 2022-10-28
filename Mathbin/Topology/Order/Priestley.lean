@@ -35,14 +35,14 @@ variable {α : Type _}
 
 /-- A Priestley space is an ordered topological space such that any two distinct points can be
 separated by a clopen upper set. Compactness is often assumed, but we do not include it here. -/
-class PriestleySpace (α : Type _) [Preorderₓ α] [TopologicalSpace α] where
+class PriestleySpace (α : Type _) [Preorder α] [TopologicalSpace α] where
   priestley {x y : α} : ¬x ≤ y → ∃ U : Set α, IsClopen U ∧ IsUpperSet U ∧ x ∈ U ∧ y ∉ U
 
 variable [TopologicalSpace α]
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [PriestleySpace α] {x y : α}
+variable [Preorder α] [PriestleySpace α] {x y : α}
 
 theorem exists_clopen_upper_of_not_le : ¬x ≤ y → ∃ U : Set α, IsClopen U ∧ IsUpperSet U ∧ x ∈ U ∧ y ∉ U :=
   PriestleySpace.priestley
@@ -51,11 +51,11 @@ theorem exists_clopen_lower_of_not_le (h : ¬x ≤ y) : ∃ U : Set α, IsClopen
   let ⟨U, hU, hU', hx, hy⟩ := exists_clopen_upper_of_not_le h
   ⟨Uᶜ, hU.compl, hU'.compl, not_not.2 hx, hy⟩
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α] [PriestleySpace α] {x y : α}
+variable [PartialOrder α] [PriestleySpace α] {x y : α}
 
 theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
     ∃ U : Set α, IsClopen U ∧ (IsUpperSet U ∨ IsLowerSet U) ∧ x ∈ U ∧ y ∉ U := by
@@ -67,10 +67,10 @@ theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
     
 
 -- See note [lower instance priority]
-instance (priority := 100) PriestleySpace.to_t2_space : T2Space α :=
+instance (priority := 100) PriestleySpace.toT2Space : T2Space α :=
   ⟨fun x y h =>
     let ⟨U, hU, _, hx, hy⟩ := exists_clopen_upper_or_lower_of_ne h
-    ⟨U, Uᶜ, hU.IsOpen, hU.compl.IsOpen, hx, hy, disjoint_compl_right⟩⟩
+    ⟨U, Uᶜ, hU.IsOpen, hU.compl.IsOpen, hx, hy, disjointComplRight⟩⟩
 
-end PartialOrderₓ
+end PartialOrder
 

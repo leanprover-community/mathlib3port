@@ -27,7 +27,7 @@ theorem is_prime_pow_def : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p ∧ 0 
 natural `k` such that `n` can be written as `p^(k+1)`. -/
 theorem is_prime_pow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p ∧ p ^ (k + 1) = n :=
   (is_prime_pow_def _).trans
-    ⟨fun ⟨p, k, hp, hk, hn⟩ => ⟨_, _, hp, by rwa [Nat.sub_add_cancelₓ hk]⟩, fun ⟨p, k, hp, hn⟩ =>
+    ⟨fun ⟨p, k, hp, hk, hn⟩ => ⟨_, _, hp, by rwa [Nat.sub_add_cancel hk]⟩, fun ⟨p, k, hp, hn⟩ =>
       ⟨_, _, hp, Nat.succ_pos', hn⟩⟩
 
 theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
@@ -41,7 +41,7 @@ theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) := by
   intro x n hn hx ht
   exact ht.not_unit (is_unit_of_pow_eq_one x n hx hn)
 
-theorem Prime.is_prime_pow {p : R} (hp : Prime p) : IsPrimePow p :=
+theorem Prime.isPrimePow {p : R} (hp : Prime p) : IsPrimePow p :=
   ⟨p, 1, hp, zero_lt_one, by simp⟩
 
 theorem IsPrimePow.pow {n : R} (hn : IsPrimePow n) {k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) :=
@@ -72,7 +72,7 @@ section Nat
 theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime p ∧ 0 < k ∧ p ^ k = n := by
   simp only [is_prime_pow_def, Nat.prime_iff]
 
-theorem Nat.Prime.is_prime_pow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
+theorem Nat.Prime.isPrimePow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
   (Nat.prime_iff.mp hp).IsPrimePow
 
 theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
@@ -81,7 +81,7 @@ theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
   refine' Iff.symm ⟨fun ⟨p, _, k, _, hp, hk, hn⟩ => ⟨p, k, hp, hk, hn⟩, _⟩
   rintro ⟨p, k, hp, hk, rfl⟩
   refine' ⟨p, _, k, (Nat.lt_pow_self hp.one_lt _).le, hp, hk, rfl⟩
-  simpa using Nat.pow_le_pow_of_le_rightₓ hp.pos hk
+  simpa using Nat.pow_le_pow_of_le_right hp.pos hk
 
 instance {n : ℕ} : Decidable (IsPrimePow n) :=
   decidableOfIff' _ (is_prime_pow_nat_iff_bounded n)
@@ -91,13 +91,13 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
   rcases hn with ⟨p, k, hp, hk, rfl⟩
   obtain ⟨i, hik, rfl⟩ := (Nat.dvd_prime_pow hp).1 hm
   refine' ⟨p, i, hp, _, rfl⟩
-  apply Nat.pos_of_ne_zeroₓ
+  apply Nat.pos_of_ne_zero
   rintro rfl
   simpa using hm₁
 
-theorem Nat.disjoint_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
+theorem Nat.disjointDivisorsFilterPrimePow {a b : ℕ} (hab : a.Coprime b) :
     Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) := by
-  simp only [Finsetₓ.disjoint_left, Finsetₓ.mem_filter, and_imp, Nat.mem_divisors, not_and]
+  simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]
   rintro n han ha hn hbn hb -
   exact hn.ne_one (Nat.eq_one_of_dvd_coprimes hab han hbn)
 

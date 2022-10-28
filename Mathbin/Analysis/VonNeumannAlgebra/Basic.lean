@@ -67,8 +67,12 @@ structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpac
   StarSubalgebra ℂ (H →L[ℂ] H) where
   double_commutant : Set.Centralizer (Set.Centralizer carrier) = carrier
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident von_neumann_algebra.to_star_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Consider a von Neumann algebra acting on a Hilbert space `H` as a *-subalgebra of `H →L[ℂ] H`.
+(That is, we forget that it is equal to its double commutant
+or equivalently that it is closed in the weak and strong operator topologies.)
+-/
+add_decl_doc VonNeumannAlgebra.toStarSubalgebra
+
 namespace VonNeumannAlgebra
 
 variable (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H]

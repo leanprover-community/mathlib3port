@@ -54,8 +54,7 @@ theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.LSeriesSummable z := by
   by_cases h0:m = 0
   · subst h0
-    have hf : f = 0 :=
-      arithmetic_function.ext fun n => complex.abs.eq_zero.1 (le_antisymmₓ (h n) (complex.abs.nonneg _))
+    have hf : f = 0 := arithmetic_function.ext fun n => complex.abs.eq_zero.1 (le_antisymm (h n) (complex.abs.nonneg _))
     simp [hf]
     
   refine' summable_of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
@@ -63,12 +62,12 @@ theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ}
     exact (summable_mul_left_iff h0).1 (Real.summable_nat_rpow_inv.2 hz)
     
   · intro n
-    have hm : 0 ≤ m := le_transₓ (complex.abs.nonneg _) (h 0)
+    have hm : 0 ≤ m := le_trans (complex.abs.nonneg _) (h 0)
     cases n
-    · simp [hm, Real.zero_rpow (ne_of_gtₓ (lt_transₓ Real.zero_lt_one hz))]
+    · simp [hm, Real.zero_rpow (ne_of_gt (lt_trans Real.zero_lt_one hz))]
       
     simp only [map_div₀, Complex.norm_eq_abs]
-    apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eqₓ _)
+    apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eq _)
     rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
     
 
@@ -89,7 +88,7 @@ theorem l_series_summable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : �
   simp only [h, Complex.mul_re, mul_eq_mul_left_iff, sub_right_inj]
   right
   rw [Complex.log_im, ← Complex.of_real_nat_cast]
-  exact Complex.arg_of_real_of_nonneg (le_of_ltₓ (cast_pos.2 n.succ_pos))
+  exact Complex.arg_of_real_of_nonneg (le_of_lt (cast_pos.2 n.succ_pos))
 
 theorem l_series_summable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {m : ℝ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.LSeriesSummable z := by
@@ -116,7 +115,7 @@ theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z �
     · simp [h0]
       
     simp only [cast_zero, nat_coe_apply, zeta_apply, succ_ne_zero, if_false, cast_succ, one_div, Complex.norm_eq_abs,
-      map_inv₀, Complex.abs_cpow_real, inv_inj, zero_addₓ]
+      map_inv₀, Complex.abs_cpow_real, inv_inj, zero_add]
     rw [← cast_one, ← cast_add, Complex.abs_of_nat, cast_add, cast_one]
     
 

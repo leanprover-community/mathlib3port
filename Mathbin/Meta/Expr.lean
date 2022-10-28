@@ -32,7 +32,7 @@ instance : Inhabited BinderInfo :=
   ⟨BinderInfo.default⟩
 
 /-- The brackets corresponding to a given binder_info. -/
-def brackets : BinderInfo → Stringₓ × Stringₓ
+def brackets : BinderInfo → String × String
   | BinderInfo.implicit => ("{", "}")
   | BinderInfo.strict_implicit => ("{{", "}}")
   | BinderInfo.inst_implicit => ("[", "]")
@@ -81,13 +81,13 @@ unsafe def pop_prefix (n : Name) : Name :=
   pop_nth_prefix n 1
 
 /-- Auxiliary definition for `from_components` -/
-private def from_components_aux : Name → List Stringₓ → Name
+private def from_components_aux : Name → List String → Name
   | n, [] => n
   | n, s :: rest => from_components_aux (Name.mk_string s n) rest
 
 /-- Build a name from components. For example `from_components ["foo","bar"]` becomes
   ``` `foo.bar``` -/
-def fromComponents : List Stringₓ → Name :=
+def fromComponents : List String → Name :=
   fromComponentsAux Name.anonymous
 
 /-- `name`s can contain numeral pieces, which are not legal names
@@ -99,23 +99,23 @@ unsafe def sanitize_name : Name → Name
   | Name.mk_numeral s p => (Name.mk_string s! "n{s}") <| sanitize_name p
 
 /-- Append a string to the last component of a name. -/
-def appendSuffix : Name → Stringₓ → Name
+def appendSuffix : Name → String → Name
   | mk_string s n, s' => mk_string (s ++ s') n
   | n, _ => n
 
 /-- Update the last component of a name. -/
-def updateLast (f : Stringₓ → Stringₓ) : Name → Name
+def updateLast (f : String → String) : Name → Name
   | mk_string s n => mk_string (f s) n
   | n => n
 
 /-- `append_to_last nm s is_prefix` adds `s` to the last component of `nm`,
   either as prefix or as suffix (specified by `is_prefix`), separated by `_`.
   Used by `simps_add_projections`. -/
-def appendToLast (nm : Name) (s : Stringₓ) (is_prefix : Bool) : Name :=
+def appendToLast (nm : Name) (s : String) (is_prefix : Bool) : Name :=
   nm.updateLast fun s' => if is_prefix then s ++ "_" ++ s' else s' ++ "_" ++ s
 
 /-- The first component of a name, turning a number to a string -/
-unsafe def head : Name → Stringₓ
+unsafe def head : Name → String
   | mk_string s anonymous => s
   | mk_string s p => head p
   | mk_numeral n p => head p
@@ -146,7 +146,7 @@ unsafe def add_prime : Name → Name
 
 /-- `last_string n` returns the rightmost component of `n`, ignoring numeral components.
 For example, ``last_string `a.b.c.33`` will return `` `c ``. -/
-def lastString : Name → Stringₓ
+def lastString : Name → String
   | anonymous => "[anonymous]"
   | mk_string s _ => s
   | mk_numeral _ n => last_string n
@@ -168,7 +168,7 @@ unsafe def append_namespace (ns : Name) : Name → Name
 
 Example: ``name.from_string "foo.bar" = `foo.bar``
 -/
-unsafe def from_string (s : Stringₓ) : Name :=
+unsafe def from_string (s : String) : Name :=
   from_components <| s.split (· = '.')
 
 library_note "likely generated binder names"/--
@@ -210,7 +210,7 @@ a name is of the form `ᾰ`, `ᾰ_1`, etc.
 binder. Such names are either `ᾰ` or `ᾰ_n` for some natural `n`. See
 note [likely generated binder names].
 -/
-unsafe def is_likely_generated_binder_simple_name : Stringₓ → Bool
+unsafe def is_likely_generated_binder_simple_name : String → Bool
   | "ᾰ" => true
   | n =>
     match n.getRest "ᾰ_" with
@@ -275,11 +275,11 @@ unsafe structure binder where
 namespace Binder
 
 /-- Turn a binder into a string. Uses expr.to_string for the type. -/
-protected unsafe def to_string (b : binder) : Stringₓ :=
+protected unsafe def to_string (b : binder) : String :=
   let (l, r) := b.info.brackets
   l ++ b.Name.toString ++ " : " ++ b.type.toString ++ r
 
-unsafe instance : HasToString binder :=
+unsafe instance : ToString binder :=
   ⟨binder.to_string⟩
 
 unsafe instance : has_to_format binder :=
@@ -446,7 +446,7 @@ unsafe def replace_with (e : expr) (s : expr) (s' : expr) : expr :=
   e.replace fun c d => if c = s then some (s'.lift_vars 0 d) else none
 
 /-- Implementation of `expr.mreplace`. -/
-unsafe def mreplace_aux {m : Type _ → Type _} [Monadₓ m] (R : expr → Nat → m (Option expr)) : expr → ℕ → m expr
+unsafe def mreplace_aux {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) : expr → ℕ → m expr
   | app f x, n =>
     Option.mgetOrElse (R (app f x) n) do
       let Rf ← mreplace_aux f n
@@ -484,7 +484,7 @@ WARNING: This function performs exponentially worse on large terms than `expr.re
 if a subexpression occurs more than once in an expression, `expr.replace` visits them only once,
 but this function will visit every occurence of it. Do not use this on large expressions.
 -/
-unsafe def mreplace {m : Type _ → Type _} [Monadₓ m] (R : expr → Nat → m (Option expr)) (e : expr) : m expr :=
+unsafe def mreplace {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) (e : expr) : m expr :=
   mreplace_aux R e 0
 
 /-- Match a variable. -/
@@ -659,7 +659,7 @@ unsafe def get_simp_args (e : expr) : tactic (List expr) :=
     let cgr ← mk_specialized_congr_lemma_simp e
     pure <| do
         let (arg_kind, arg) ← cgr e
-        guardₓ <| arg_kind = CongrArgKind.eq
+        guard <| arg_kind = CongrArgKind.eq
         pure arg
 
 /-- Simplifies the expression `t` with the specified options.
@@ -765,7 +765,7 @@ unsafe def get_app_fn_args : expr → expr × List expr :=
 unsafe def drop_pis : List expr → expr → tactic expr
   | v :: vs, pi n bi d b => do
     let t ← infer_type v
-    guardₓ (expr.alpha_eqv t d)
+    guard (expr.alpha_eqv t d)
     drop_pis vs (b v)
   | [], e => return e
   | _, _ => failed
@@ -916,7 +916,7 @@ protected unsafe def eta_expand (env : environment) (dict : name_map <| List ℕ
     e.replace fun e _ => do
       let (e0, es) := e.get_app_fn_args
       let ns := (dict.find e0.const_name).iget
-      guardₓ (bnot ns)
+      guard (not ns)
       let e' := e0.mk_app <| es.map eta_expand
       let needed_n := ns.foldr max 0 + 1
       if needed_n ≤ es then some e'
@@ -1008,7 +1008,7 @@ unsafe def get_decl_names (e : environment) : List Name :=
   e.decl_map declaration.to_name
 
 /-- Fold a monad over all declarations in the environment. -/
-unsafe def mfold {α : Type} {m : Type → Type} [Monadₓ m] (e : environment) (x : α) (fn : declaration → α → m α) : m α :=
+unsafe def mfold {α : Type} {m : Type → Type} [Monad m] (e : environment) (x : α) (fn : declaration → α → m α) : m α :=
   e.fold (return x) fun d t => t >>= fn d
 
 /-- Filters all declarations in the environment. -/
@@ -1023,7 +1023,7 @@ unsafe def mfilter (e : environment) (test : declaration → tactic Bool) : tact
 
 /-- Checks whether `s` is a prefix of the file where `n` is declared.
   This is used to check whether `n` is declared in mathlib, where `s` is the mathlib directory. -/
-unsafe def is_prefix_of_file (e : environment) (s : Stringₓ) (n : Name) : Bool :=
+unsafe def is_prefix_of_file (e : environment) (s : String) (n : Name) : Bool :=
   s.isPrefixOf <| (e.decl_olean n).getOrElse ""
 
 end Environment
@@ -1068,7 +1068,7 @@ unsafe def is_eta_expansion_test : List (Name × expr) → Option expr
   afterward checks whether the resulting expression `e` unifies with `val`.
   This last check is necessary, because `val` and `e` might have different types. -/
 unsafe def is_eta_expansion_aux (val : expr) (l : List (Name × expr)) : tactic (Option expr) := do
-  let l' ← l.mfilter fun ⟨proj, val⟩ => bnot <$> is_proof val
+  let l' ← l.mfilter fun ⟨proj, val⟩ => not <$> is_proof val
   match is_eta_expansion_test l' with
     | some e => (Option.map fun _ => e) <$> try_core (unify e val)
     | none => return none
@@ -1198,7 +1198,7 @@ section
 
 attribute [local semireducible] reflected
 
-unsafe instance {α} [has_reflect α] : has_reflect (Thunkₓ α)
+unsafe instance {α} [has_reflect α] : has_reflect (Thunk' α)
   | a => expr.lam `x BinderInfo.default (reflect Unit) (reflect <| a ())
 
 end

@@ -41,7 +41,7 @@ theorem holds_append {v : Nat → Int} {c1 c2 : Clause} : Holds v c1 → Holds v
   cases' c2 with eqs2 les2
   cases h1
   cases h2
-  constructor <;> rw [List.forall_mem_appendₓ] <;> constructor <;> assumption
+  constructor <;> rw [List.forall_mem_append] <;> constructor <;> assumption
 
 end Clause
 
@@ -58,7 +58,7 @@ theorem Clauses.unsat_nil : Clauses.Unsat [] := by
   rcases h1 with ⟨c, h1, h2⟩
   cases h1
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Clauses.unsat_cons (c : Clause) (cs : List Clause) : Clause.Unsat c → Clauses.Unsat cs → Clauses.Unsat (c::cs)
   | h1, h2, h3 => by
     unfold clauses.sat at h3

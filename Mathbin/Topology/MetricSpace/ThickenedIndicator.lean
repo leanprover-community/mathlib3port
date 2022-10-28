@@ -65,7 +65,7 @@ theorem thickened_indicator_aux_le_one (δ : ℝ) (E : Set α) (x : α) : thicke
   apply @tsub_le_self _ _ _ _ (1 : ℝ≥0∞)
 
 theorem thickened_indicator_aux_lt_top {δ : ℝ} {E : Set α} {x : α} : thickenedIndicatorAux δ E x < ∞ :=
-  lt_of_le_of_ltₓ (thickened_indicator_aux_le_one _ _ _) one_lt_top
+  lt_of_le_of_lt (thickened_indicator_aux_le_one _ _ _) one_lt_top
 
 theorem thickened_indicator_aux_closure_eq (δ : ℝ) (E : Set α) :
     thickenedIndicatorAux δ (Closure E) = thickenedIndicatorAux δ E := by
@@ -80,11 +80,11 @@ theorem thickened_indicator_aux_one_of_mem_closure (δ : ℝ) (E : Set α) {x : 
 
 theorem thickened_indicator_aux_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_out : x ∉ Thickening δ E) :
     thickenedIndicatorAux δ E x = 0 := by
-  rw [thickening, mem_set_of_eq, not_ltₓ] at x_out
+  rw [thickening, mem_set_of_eq, not_lt] at x_out
   unfold thickenedIndicatorAux
-  apply le_antisymmₓ _ bot_le
+  apply le_antisymm _ bot_le
   have key := tsub_le_tsub (@rfl _ (1 : ℝ≥0∞)).le (Ennreal.div_le_div x_out rfl.le)
-  rw [Ennreal.div_self (ne_of_gtₓ (ennreal.of_real_pos.mpr δ_pos)) of_real_ne_top] at key
+  rw [Ennreal.div_self (ne_of_gt (ennreal.of_real_pos.mpr δ_pos)) of_real_ne_top] at key
   simpa using key
 
 theorem thickened_indicator_aux_mono {δ₁ δ₂ : ℝ} (hle : δ₁ ≤ δ₂) (E : Set α) :
@@ -95,7 +95,7 @@ theorem indicator_le_thickened_indicator_aux (δ : ℝ) (E : Set α) :
     (E.indicator fun _ => (1 : ℝ≥0∞)) ≤ thickenedIndicatorAux δ E := by
   intro a
   by_cases a ∈ E
-  · simp only [h, indicator_of_mem, thickened_indicator_aux_one δ E h, le_reflₓ]
+  · simp only [h, indicator_of_mem, thickened_indicator_aux_one δ E h, le_refl]
     
   · simp only [h, indicator_of_not_mem, not_false_iff, zero_le]
     
@@ -113,7 +113,7 @@ This statement is for the unbundled `ℝ≥0∞`-valued functions `thickened_ind
 bounded continuous functions. -/
 theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} (δseq_lim : Tendsto δseq atTop (𝓝 0))
     (E : Set α) :
-    Tendsto (fun n => thickenedIndicatorAux (δseq n) E) atTop (𝓝 (indicatorₓ (Closure E) fun x => (1 : ℝ≥0∞))) := by
+    Tendsto (fun n => thickenedIndicatorAux (δseq n) E) atTop (𝓝 (indicator (Closure E) fun x => (1 : ℝ≥0∞))) := by
   rw [tendsto_pi_nhds]
   intro x
   by_cases x_mem_closure:x ∈ Closure E
@@ -134,12 +134,12 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} 
         
     rw [Metric.tendsto_nhds] at δseq_lim
     specialize δseq_lim ε ε_pos
-    simp only [dist_zero_right, Real.norm_eq_abs, eventually_at_top, ge_iff_leₓ] at δseq_lim
+    simp only [dist_zero_right, Real.norm_eq_abs, eventually_at_top, ge_iff_le] at δseq_lim
     rcases δseq_lim with ⟨N, hN⟩
     apply @tendsto_at_top_of_eventually_const _ _ _ _ _ _ _ N
     intro n n_large
-    have key : x ∉ thickening ε E := by rwa [thickening, mem_set_of_eq, not_ltₓ]
-    refine' le_antisymmₓ _ bot_le
+    have key : x ∉ thickening ε E := by rwa [thickening, mem_set_of_eq, not_lt]
+    refine' le_antisymm _ bot_le
     apply (thickened_indicator_aux_mono (lt_of_abs_lt (hN n n_large)).le E x).trans
     exact (thickened_indicator_aux_zero ε_pos E key).le
     
@@ -156,7 +156,7 @@ def thickenedIndicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : α →ᵇ ℝ
   continuous_to_fun := by
     apply ContinuousOn.comp_continuous continuous_on_to_nnreal (continuous_thickened_indicator_aux δ_pos E)
     intro x
-    exact (lt_of_le_of_ltₓ (@thickened_indicator_aux_le_one _ _ δ E x) one_lt_top).Ne
+    exact (lt_of_le_of_lt (@thickened_indicator_aux_le_one _ _ δ E x) one_lt_top).Ne
   map_bounded' := by
     use 2
     intro x y
@@ -166,7 +166,7 @@ def thickenedIndicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : α →ᵇ ℝ
     have key := @thickened_indicator_aux_le_one _ _ δ E
     apply add_le_add <;>
       · norm_cast
-        refine' (to_nnreal_le_to_nnreal (lt_of_le_of_ltₓ (key _) one_lt_top).Ne one_ne_top).mpr (key _)
+        refine' (to_nnreal_le_to_nnreal (lt_of_le_of_lt (key _) one_lt_top).Ne one_ne_top).mpr (key _)
         
 
 theorem thickenedIndicator.coe_fn_eq_comp {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
@@ -194,7 +194,7 @@ theorem indicator_le_thickened_indicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set �
     (E.indicator fun _ => (1 : ℝ≥0)) ≤ thickenedIndicator δ_pos E := by
   intro a
   by_cases a ∈ E
-  · simp only [h, indicator_of_mem, thickened_indicator_one δ_pos E h, le_reflₓ]
+  · simp only [h, indicator_of_mem, thickened_indicator_one δ_pos E h, le_refl]
     
   · simp only [h, indicator_of_not_mem, not_false_iff, zero_le]
     
@@ -219,7 +219,7 @@ instance is the product topology (the topology of pointwise convergence). -/
 theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δseq_pos : ∀ n, 0 < δseq n)
     (δseq_lim : Tendsto δseq atTop (𝓝 0)) (E : Set α) :
     Tendsto (fun n : ℕ => (coeFn : (α →ᵇ ℝ≥0) → α → ℝ≥0) (thickenedIndicator (δseq_pos n) E)) atTop
-      (𝓝 (indicatorₓ (Closure E) fun x => (1 : ℝ≥0))) :=
+      (𝓝 (indicator (Closure E) fun x => (1 : ℝ≥0))) :=
   by
   have key := thickened_indicator_aux_tendsto_indicator_closure δseq_lim E
   rw [tendsto_pi_nhds] at *

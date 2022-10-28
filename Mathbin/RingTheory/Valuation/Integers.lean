@@ -18,30 +18,30 @@ universe u v w
 
 namespace Valuation
 
-section Ringₓ
+section Ring
 
-variable {R : Type u} {Γ₀ : Type v} [Ringₓ R] [LinearOrderedCommGroupWithZero Γ₀]
+variable {R : Type u} {Γ₀ : Type v} [Ring R] [LinearOrderedCommGroupWithZero Γ₀]
 
 variable (v : Valuation R Γ₀)
 
 /-- The ring of integers under a given valuation is the subring of elements with valuation ≤ 1. -/
 def integer : Subring R where
   Carrier := { x | v x ≤ 1 }
-  one_mem' := le_of_eqₓ v.map_one
-  mul_mem' := fun x y hx hy => trans_rel_right (· ≤ ·) (v.map_mul x y) (mul_le_one' hx hy)
+  one_mem' := le_of_eq v.map_one
+  mul_mem' x y hx hy := trans_rel_right (· ≤ ·) (v.map_mul x y) (mul_le_one' hx hy)
   zero_mem' := trans_rel_right (· ≤ ·) v.map_zero zero_le_one
-  add_mem' := fun x y hx hy => le_transₓ (v.map_add x y) (max_leₓ hx hy)
-  neg_mem' := fun x hx => trans_rel_right (· ≤ ·) (v.map_neg x) hx
+  add_mem' x y hx hy := le_trans (v.map_add x y) (max_le hx hy)
+  neg_mem' x hx := trans_rel_right (· ≤ ·) (v.map_neg x) hx
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable {R : Type u} {Γ₀ : Type v} [CommRingₓ R] [LinearOrderedCommGroupWithZero Γ₀]
+variable {R : Type u} {Γ₀ : Type v} [CommRing R] [LinearOrderedCommGroupWithZero Γ₀]
 
 variable (v : Valuation R Γ₀)
 
-variable (O : Type w) [CommRingₓ O] [Algebra O R]
+variable (O : Type w) [CommRing O] [Algebra O R]
 
 /-- Given a valuation v : R → Γ₀ and a ring homomorphism O →+* R, we say that O is the integers of v
 if f is injective, and its range is exactly `v.integer`. -/
@@ -65,15 +65,15 @@ include hv
 
 theorem one_of_is_unit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
   let ⟨u, hu⟩ := hx
-  le_antisymmₓ (hv.2 _) <| by
-    rw [← v.map_one, ← (algebraMap O R).map_one, ← u.mul_inv, ← mul_oneₓ (v (algebraMap O R x)), hu,
+  le_antisymm (hv.2 _) <| by
+    rw [← v.map_one, ← (algebraMap O R).map_one, ← u.mul_inv, ← mul_one (v (algebraMap O R x)), hu,
       (algebraMap O R).map_mul, v.map_mul]
     exact mul_le_mul_left' (hv.2 (u⁻¹ : Units O)) _
 
 theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) : IsUnit x :=
   let ⟨u, hu⟩ := hx
   have h1 : v u ≤ 1 := hu.symm ▸ hv.2 x
-  have h2 : v (u⁻¹ : Rˣ) ≤ 1 := by rw [← one_mulₓ (v _), ← hvx, ← v.map_mul, ← hu, u.mul_inv, hu, hvx, v.map_one]
+  have h2 : v (u⁻¹ : Rˣ) ≤ 1 := by rw [← one_mul (v _), ← hvx, ← v.map_mul, ← hu, u.mul_inv, hu, hvx, v.map_one]
   let ⟨r1, hr1⟩ := hv.3 h1
   let ⟨r2, hr2⟩ := hv.3 h2
   ⟨⟨r1, r2, hv.1 <| by rw [RingHom.map_mul, RingHom.map_one, hr1, hr2, Units.mul_inv],
@@ -82,18 +82,18 @@ theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebr
 
 theorem le_of_dvd {x y : O} (h : x ∣ y) : v (algebraMap O R y) ≤ v (algebraMap O R x) := by
   let ⟨z, hz⟩ := h
-  rw [← mul_oneₓ (v (algebraMap O R x)), hz, RingHom.map_mul, v.map_mul]
+  rw [← mul_one (v (algebraMap O R x)), hz, RingHom.map_mul, v.map_mul]
   exact mul_le_mul_left' (hv.2 z) _
 
 end Integers
 
-end CommRingₓ
+end CommRing
 
 section Field
 
 variable {F : Type u} {Γ₀ : Type v} [Field F] [LinearOrderedCommGroupWithZero Γ₀]
 
-variable {v : Valuation F Γ₀} {O : Type w} [CommRingₓ O] [Algebra O F] (hv : Integers v O)
+variable {v : Valuation F Γ₀} {O : Type w} [CommRing O] [Algebra O F] (hv : Integers v O)
 
 include hv
 

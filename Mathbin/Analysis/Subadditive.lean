@@ -37,7 +37,7 @@ include h
 this limit is given in `subadditive.tendsto_lim` -/
 @[nolint unused_arguments]
 protected irreducible_def lim :=
-  inf ((fun n : ℕ => u n / n) '' Ici 1)
+  inf ((fun n : ℕ => u n / n) '' IciCat 1)
 
 theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) : h.lim ≤ u n / n := by
   rw [Subadditive.lim]
@@ -51,7 +51,7 @@ theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n 
 
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
   induction' k with k IH
-  · simp only [Nat.cast_zeroₓ, zero_mul, zero_addₓ]
+  · simp only [Nat.cast_zero, zero_mul, zero_add]
     
   calc
     u ((k + 1) * n + r) = u (n + (k * n + r)) := by
@@ -68,16 +68,16 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     simp only [hi.ne', Ne.def, Nat.cast_eq_zero, not_false_iff]
   obtain ⟨w, nw, wL⟩ : ∃ w, u n / n < w ∧ w < L := exists_between hL
   obtain ⟨x, hx⟩ : ∃ x, ∀ i < n, u i - i * w ≤ x := by
-    obtain ⟨x, hx⟩ : BddAbove ↑(Finsetₓ.image (fun i => u i - i * w) (Finsetₓ.range n)) := Finsetₓ.bdd_above _
+    obtain ⟨x, hx⟩ : BddAbove ↑(Finset.image (fun i => u i - i * w) (Finset.range n)) := Finset.bdd_above _
     refine' ⟨x, fun i hi => _⟩
     simp only [UpperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq, forall_apply_eq_imp_iff₂,
-      Finsetₓ.mem_range, Finsetₓ.mem_coe, Finsetₓ.coe_image] at hx
+      Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx
     exact hx _ hi
   have A : ∀ p : ℕ, u p ≤ p * w + x := by
     intro p
     let s := p / n
     let r := p % n
-    have hp : p = s * n + r := by rw [mul_comm, Nat.div_add_modₓ]
+    have hp : p = s * n + r := by rw [mul_comm, Nat.div_add_mod]
     calc
       u p = u (s * n + r) := by rw [hp]
       _ ≤ s * u n + u r := h.apply_mul_add_le _ _ _
@@ -89,8 +89,8 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
       _ = (s * n + r) * w + (u r - r * w) := by ring
       _ = p * w + (u r - r * w) := by
         rw [hp]
-        simp only [Nat.cast_addₓ, Nat.cast_mulₓ]
-      _ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_ltₓ _ hn.bot_lt)) _
+        simp only [Nat.cast_add, Nat.cast_mul]
+      _ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_lt _ hn.bot_lt)) _
       
   have B : ∀ᶠ p in at_top, u p / p ≤ w + x / p := by
     refine' eventually_at_top.2 ⟨1, fun p hp => _⟩
@@ -101,7 +101,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
   have C : ∀ᶠ p : ℕ in at_top, w + x / p < L := by
     have : tendsto (fun p : ℕ => w + x / p) at_top (𝓝 (w + 0)) :=
       tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_coe_nat_at_top_at_top)
-    rw [add_zeroₓ] at this
+    rw [add_zero] at this
     exact (tendsto_order.1 this).2 _ wL
   filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p
 

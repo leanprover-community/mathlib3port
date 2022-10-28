@@ -111,26 +111,26 @@ namespace DeriveFintype
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
 def FinsetAbove (α) (enum : α → ℕ) (n : ℕ) :=
-  { s : Finsetₓ α // ∀ x ∈ s, n ≤ enum x }
+  { s : Finset α // ∀ x ∈ s, n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
-def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintypeₓ α :=
+def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
   ⟨s.1, H⟩
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
 def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
-  refine' ⟨Finsetₓ.cons a s.1 _, _⟩
+  refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
     have := s.2 _ h'
     rw [h] at this
-    exact Nat.not_succ_le_selfₓ n this
+    exact Nat.not_succ_le_self n this
     
   · intro x h'
-    rcases Finsetₓ.mem_cons.1 h' with (rfl | h')
-    · exact ge_of_eqₓ h
+    rcases Finset.mem_cons.1 h' with (rfl | h')
+    · exact ge_of_eq h
       
-    · exact Nat.le_of_succ_leₓ (s.2 _ h')
+    · exact Nat.le_of_succ_le (s.2 _ h')
       
     
 
@@ -153,36 +153,36 @@ The property `P` here is `λ a, enum a = n` where `n` is the discriminant for th
 variant. -/
 @[nolint has_nonempty_instance]
 def FinsetIn {α} (P : α → Prop) :=
-  { s : Finsetₓ α // ∀ x ∈ s, P x }
+  { s : Finset α // ∀ x ∈ s, P x }
 
 /-- To construct the finset, we use an injective map from the type `Γ`, which will be the
 sigma over all constructor arguments. We use sigma instances and existing fintype instances
 to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a, b, c, ...⟩`
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
 `enum (C_n a b c ...) = n`. -/
-def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintypeₓ Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
+def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
     FinsetIn P :=
-  ⟨Finsetₓ.univ.map ⟨f, inj⟩, fun x h => by rcases Finsetₓ.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
+  ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
 
-theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintypeₓ Γ} {f : Γ → α} {inj mem a} (b) (H : f b = a) :
+theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} (b) (H : f b = a) :
     a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
-  Finsetₓ.mem_map.2 ⟨_, Finsetₓ.mem_univ _, H⟩
+  Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
 def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
-  refine' ⟨Finsetₓ.disjUnion s.1 t.1 _, _⟩
+  refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · intro a hs ht
     have := t.2 _ ht
     rw [s.2 _ hs] at this
-    exact Nat.not_succ_le_selfₓ n this
+    exact Nat.not_succ_le_self n this
     
   · intro x h'
-    rcases Finsetₓ.mem_disj_union.1 h' with (h' | h')
-    · exact ge_of_eqₓ (s.2 _ h')
+    rcases Finset.mem_disj_union.1 h' with (h' | h')
+    · exact ge_of_eq (s.2 _ h')
       
-    · exact Nat.le_of_succ_leₓ (t.2 _ h')
+    · exact Nat.le_of_succ_le (t.2 _ h')
       
     
 
@@ -255,7 +255,7 @@ unsafe def mk_sigma_elim_eq : ℕ → expr → tactic Unit
     mk_sigma_elim_eq n x2
   | 0, x => reflexivity
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Prove the goal `|- finset_above T enum k`, where `T` is the inductive type and `enum` is the
 discriminant function. The arguments are `args`, the parameters to the inductive type (and all
 constructors), `k`, the index of the current variant, and `cs`, the list of constructor names.
@@ -281,13 +281,13 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
         mk_finset (k + 1) cs
   | k, [] => applyc `` finset_above.nil
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
 unsafe def mk_sigma_mem : List expr → tactic Unit
   | x::xs => (fconstructor >> exact x) >> mk_sigma_mem xs
   | [] => fconstructor $> ()
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- This function is called to prove `a : T |- a ∈ S.1` where `S` is the `finset_above` constructed
 by `mk_finset`, after the initial cases on `a : T`, producing a list of subgoals. For each case,
 we have to navigate past all the variants that don't apply (which is what the `tac` input tactic
@@ -315,12 +315,12 @@ open Tactic.DeriveFintype
 where all arguments to all constructors are fintypes. -/
 unsafe def mk_fintype_instance : tactic Unit := do
   intros
-  let quote.1 (Fintypeₓ (%%ₓe)) ← target >>= whnf
+  let quote.1 (Fintype (%%ₓe)) ← target >>= whnf
   let (const I ls, args) ← pure (get_app_fn_args e)
   let env ← get_env
   let cs := env.constructors_of I
-  guardₓ (env I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
-  guardₓ ¬env I <|>
+  guard (env I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
+  guard ¬env I <|>
       fail ("@[derive fintype]: recursive inductive types are " ++ "not supported (they are also usually infinite)")
   applyc `` mk_fintype { NewGoals := new_goals.all }
   intro1 >>= cases >>= fun gs => gs fun ⟨i, _⟩ => exact (reflect i)
@@ -347,7 +347,7 @@ argument `fintype α`, even if it is not used.  (This is due to the implementati
 -/
 @[derive_handler]
 unsafe def fintype_instance : derive_handler :=
-  instance_derive_handler `` Fintypeₓ mk_fintype_instance
+  instance_derive_handler `` Fintype mk_fintype_instance
 
 end Tactic
 

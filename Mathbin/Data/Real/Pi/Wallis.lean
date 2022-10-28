@@ -12,7 +12,7 @@ namespace Real
 
 open Real TopologicalSpace BigOperators
 
-open Filter Finsetₓ intervalIntegral
+open Filter Finset intervalIntegral
 
 theorem integral_sin_pow_div_tendsto_one :
     Tendsto (fun k => (∫ x in 0 ..π, sin x ^ (2 * k + 1)) / ∫ x in 0 ..π, sin x ^ (2 * k)) atTop (𝓝 1) := by
@@ -27,7 +27,7 @@ theorem integral_sin_pow_div_tendsto_one :
       ((∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n.succ)) ≥
           (∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n + 1) :=
         by
-        refine' div_le_div (integral_sin_pow_pos _).le le_rflₓ (integral_sin_pow_pos _) _
+        refine' div_le_div (integral_sin_pow_pos _).le le_rfl (integral_sin_pow_pos _) _
         convert integral_sin_pow_succ_le (2 * n + 1) using 1
       _ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
         rw [div_eq_iff (integral_sin_pow_pos (2 * n + 1)).ne']
@@ -84,7 +84,7 @@ theorem tendsto_prod_pi_div_two :
   · convert h.const_mul (π / 2)
     · simp_rw [mul_inv_cancel_left₀ (show π / 2 ≠ 0 by norm_num [pi_ne_zero] )]
       
-    · rw [mul_oneₓ]
+    · rw [mul_one]
       
     
   convert integral_sin_pow_div_tendsto_one

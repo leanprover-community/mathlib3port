@@ -23,7 +23,7 @@ noncomputable section
 
 open Classical BigOperators
 
-open Finsetₓ
+open Finset
 
 variable {ι α : Type _}
 
@@ -48,12 +48,12 @@ theorem le_def {f g : ι →₀ α} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 
 /-- The order on `finsupp`s over a partial order embeds into the order on functions -/
 def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α) where
-  toFun := fun f => f
-  inj' := fun f g h =>
+  toFun f := f
+  inj' f g h :=
     Finsupp.ext fun i => by
       dsimp at h
       rw [h]
-  map_rel_iff' := fun a b => (@le_def _ _ _ _ a b).symm
+  map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
 
 @[simp]
 theorem order_embedding_to_fun_apply {f : ι →₀ α} {i : ι} : orderEmbeddingToFun f i = f i :=
@@ -61,18 +61,18 @@ theorem order_embedding_to_fun_apply {f : ι →₀ α} {i : ι} : orderEmbeddin
 
 end LE
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α]
+variable [Preorder α]
 
-instance : Preorderₓ (ι →₀ α) :=
-  { Finsupp.hasLe with le_refl := fun f i => le_rflₓ, le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
+instance : Preorder (ι →₀ α) :=
+  { Finsupp.hasLe with le_refl := fun f i => le_rfl, le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
-theorem monotone_to_fun : Monotoneₓ (Finsupp.toFun : (ι →₀ α) → ι → α) := fun f g h a => le_def.1 h a
+theorem monotone_to_fun : Monotone (Finsupp.toFun : (ι →₀ α) → ι → α) := fun f g h a => le_def.1 h a
 
-end Preorderₓ
+end Preorder
 
-instance [PartialOrderₓ α] : PartialOrderₓ (ι →₀ α) :=
+instance [PartialOrder α] : PartialOrder (ι →₀ α) :=
   { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [SemilatticeInf α] : SemilatticeInf (ι →₀ α) :=
@@ -115,7 +115,7 @@ variable [CanonicallyOrderedAddMonoid α]
 
 instance : OrderBot (ι →₀ α) where
   bot := 0
-  bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, implies_true_iff, zero_le]
+  bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
 
 protected theorem bot_eq_zero : (⊥ : ι →₀ α) = 0 :=
   rfl
@@ -123,7 +123,7 @@ protected theorem bot_eq_zero : (⊥ : ι →₀ α) = 0 :=
 @[simp]
 theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and_distrib]
 
-theorem le_iff' (f g : ι →₀ α) {s : Finsetₓ ι} (hf : f.Support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
+theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.Support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
     if H : s ∈ f.Support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
@@ -145,7 +145,7 @@ instance tsub : Sub (ι →₀ α) :=
   ⟨zipWith (fun m n => m - n) (tsub_self 0)⟩
 
 instance : HasOrderedSub (ι →₀ α) :=
-  ⟨fun n m k => forall_congrₓ fun x => tsub_le_iff_right⟩
+  ⟨fun n m k => forall_congr fun x => tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
   { Finsupp.orderBot, Finsupp.orderedAddCommMonoid with
@@ -170,7 +170,7 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
 
 theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).Support ⊆ f1.Support := by
   simp (config := { contextual := true }) only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,
-    Pi.sub_apply, not_imp_not, zero_le, implies_true_iff]
+    Pi.sub_apply, not_imp_not, zero_le, imp_true_iff]
 
 theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.Support \ f2.Support ⊆ (f1 - f2).Support := by
   simp (config := { contextual := true }) [subset_iff]
@@ -184,13 +184,13 @@ variable [CanonicallyLinearOrderedAddMonoid α] [DecidableEq ι] {f g : ι →�
 @[simp]
 theorem support_inf : (f ⊓ g).Support = f.Support ∩ g.Support := by
   ext
-  simp only [inf_apply, mem_support_iff, Ne.def, Finsetₓ.mem_union, Finsetₓ.mem_filter, Finsetₓ.mem_inter]
+  simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
 
 @[simp]
 theorem support_sup : (f ⊔ g).Support = f.Support ∪ g.Support := by
   ext
-  simp only [Finsetₓ.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
+  simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_distrib]
 
 theorem disjoint_iff : Disjoint f g ↔ Disjoint f.Support g.Support := by

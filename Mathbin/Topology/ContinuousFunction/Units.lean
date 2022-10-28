@@ -19,9 +19,9 @@ variable {X M R 𝕜 : Type _} [TopologicalSpace X]
 
 namespace ContinuousMap
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ M] [TopologicalSpace M] [HasContinuousMul M]
+variable [Monoid M] [TopologicalSpace M] [HasContinuousMul M]
 
 /-- Equivalence between continuous maps into the units of a monoid with continuous multiplication
 and the units of the monoid of continuous maps. -/
@@ -29,23 +29,23 @@ and the units of the monoid of continuous maps. -/
       "Equivalence between continuous maps into the additive units of an additive monoid\nwith continuous addition and the additive units of the additive monoid of continuous maps.",
   simps]
 def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
-  toFun := fun f =>
+  toFun f :=
     { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩,
       inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩,
       val_inv := ext fun x => Units.mul_inv _, inv_val := ext fun x => Units.inv_mul _ }
-  invFun := fun f =>
+  invFun f :=
     { toFun := fun x => ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩,
       continuous_to_fun :=
         continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <| MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
-  left_inv := fun f => by
+  left_inv f := by
     ext
     rfl
-  right_inv := fun f => by
+  right_inv f := by
     ext
     rfl
 
-end Monoidₓ
+end Monoid
 
 section NormedRing
 
@@ -57,19 +57,19 @@ theorem _root_.normed_ring.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsU
     continuous_induced_rng.2
       (Continuous.prod_mk f.continuous (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
   have := NormedRing.inverse_continuous_at (h x).Unit
-  simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_applyₓ] at this⊢
+  simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_apply] at this⊢
   exact this.comp (f.continuous_at x)
 
 /-- Construct a continuous map into the group of units of a normed ring from a function into the
 normed ring and a proof that every element of the range is a unit. -/
 @[simps]
 noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : C(X, Rˣ) where
-  toFun := fun x => (h x).Unit
+  toFun x := (h x).Unit
   continuous_to_fun := NormedRing.is_unit_unit_continuous h
 
 instance canLift :
     CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩) fun f =>
-      ∀ x, IsUnit (f x) where prf := fun f h =>
+      ∀ x, IsUnit (f x) where prf f h :=
     ⟨unitsOfForallIsUnit h, by
       ext
       rfl⟩
@@ -92,7 +92,7 @@ theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x �
 theorem spectrum_eq_range (f : C(X, 𝕜)) : Spectrum 𝕜 f = Set.Range f := by
   ext
   simp only [Spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply, algebra_map_apply,
-    Algebra.id.smul_eq_mul, mul_oneₓ, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
+    Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
 
 end NormedField
 

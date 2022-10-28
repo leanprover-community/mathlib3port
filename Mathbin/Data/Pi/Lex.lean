@@ -73,25 +73,25 @@ theorem is_trichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r
 instance [LT ι] [∀ a, LT (β a)] : LT (Lex (∀ i, β i)) :=
   ⟨Pi.Lex (· < ·) fun _ => (· < ·)⟩
 
-instance Lex.is_strict_order [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : IsStrictOrder (Lex (∀ i, β i)) (· < ·) where
-  irrefl := fun a ⟨k, hk₁, hk₂⟩ => lt_irreflₓ (a k) hk₂
+instance Lex.is_strict_order [LinearOrder ι] [∀ a, PartialOrder (β a)] : IsStrictOrder (Lex (∀ i, β i)) (· < ·) where
+  irrefl := fun a ⟨k, hk₁, hk₂⟩ => lt_irrefl (a k) hk₂
   trans := by
     rintro a b c ⟨N₁, lt_N₁, a_lt_b⟩ ⟨N₂, lt_N₂, b_lt_c⟩
-    rcases lt_trichotomyₓ N₁ N₂ with (H | rfl | H)
+    rcases lt_trichotomy N₁ N₂ with (H | rfl | H)
     exacts[⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ <| hj.trans H), lt_N₂ _ H ▸ a_lt_b⟩,
       ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
       ⟨N₂, fun j hj => (lt_N₁ _ (hj.trans H)).trans (lt_N₂ _ hj), (lt_N₁ _ H).symm ▸ b_lt_c⟩]
 
-instance [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (Lex (∀ i, β i)) :=
+instance [LinearOrder ι] [∀ a, PartialOrder (β a)] : PartialOrder (Lex (∀ i, β i)) :=
   partialOrderOfSO (· < ·)
 
 /-- `Πₗ i, α i` is a linear order if the original order is well-founded. -/
-noncomputable instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] :
-    LinearOrderₓ (Lex (∀ i, β i)) :=
+noncomputable instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrder (β a)] :
+    LinearOrder (Lex (∀ i, β i)) :=
   @linearOrderOfSTO (Πₗ i, β i) (· < ·) { to_is_trichotomous := is_trichotomous_lex _ _ IsWellFounded.wf }
     (Classical.decRel _)
 
-theorem Lex.le_of_forall_le [LinearOrderₓ ι] [hwf : IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)]
+theorem Lex.le_of_forall_le [LinearOrder ι] [hwf : IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)]
     {a b : Lex (∀ i, β i)} (h : ∀ i, a i ≤ b i) : a ≤ b :=
   or_iff_not_imp_left.2 fun hne =>
     let ⟨i, hi, hl⟩ := hwf.to_is_well_founded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
@@ -99,34 +99,41 @@ theorem Lex.le_of_forall_le [LinearOrderₓ ι] [hwf : IsWellOrder ι (· < ·)]
       contrapose! hl
       exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 
-theorem Lex.le_of_of_lex_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] {a b : Lex (∀ i, β i)}
+theorem Lex.le_of_of_lex_le [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] {a b : Lex (∀ i, β i)}
     (h : ofLex a ≤ ofLex b) : a ≤ b :=
   Lex.le_of_forall_le h
 
-theorem to_lex_monotone [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] :
-    Monotoneₓ (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
+theorem to_lex_monotone [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] :
+    Monotone (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
 
-instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] [∀ a, OrderBot (β a)] :
+instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] [∀ a, OrderBot (β a)] :
     OrderBot (Lex (∀ a, β a)) where
   bot := toLex ⊥
-  bot_le := fun f => Lex.le_of_of_lex_le bot_le
+  bot_le f := Lex.le_of_of_lex_le bot_le
 
-instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] [∀ a, OrderTop (β a)] :
+instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] [∀ a, OrderTop (β a)] :
     OrderTop (Lex (∀ a, β a)) where
   top := toLex ⊤
-  le_top := fun f => Lex.le_of_of_lex_le le_top
+  le_top f := Lex.le_of_of_lex_le le_top
 
-instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] [∀ a, BoundedOrder (β a)] :
+instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] [∀ a, BoundedOrder (β a)] :
     BoundedOrder (Lex (∀ a, β a)) :=
   { Pi.Lex.orderBot, Pi.Lex.orderTop with }
 
 --we might want the analog of `pi.ordered_cancel_comm_monoid` as well in the future
 @[to_additive]
-instance Lex.orderedCommGroup [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Lex (∀ i, β i)) :=
+instance Lex.orderedCommGroup [LinearOrder ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Lex (∀ i, β i)) :=
   { Pi.Lex.partialOrder, Pi.commGroup with
     mul_le_mul_left := fun x y hxy z =>
-      hxy.elim (fun hxyz => hxyz ▸ le_rflₓ) fun ⟨i, hi⟩ =>
+      hxy.elim (fun hxyz => hxyz ▸ le_rfl) fun ⟨i, hi⟩ =>
         Or.inr ⟨i, fun j hji => show z j * x j = z j * y j by rw [hi.1 j hji], mul_lt_mul_left' hi.2 _⟩ }
+
+/-- If we swap two strictly decreasing values in a function, then the result is lexicographically
+smaller than the original function. -/
+theorem lex_desc {α} [Preorder ι] [DecidableEq ι] [Preorder α] {f : ι → α} {i j : ι} (h₁ : i < j) (h₂ : f j < f i) :
+    toLex (f ∘ Equiv.swap i j) < toLex f :=
+  ⟨i, fun k hik => congr_arg f (Equiv.swap_apply_of_ne_of_ne hik.Ne (hik.trans h₁).Ne), by
+    simpa only [Pi.to_lex_apply, Function.comp_app, Equiv.swap_apply_left] using h₂⟩
 
 end Pi
 

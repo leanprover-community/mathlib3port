@@ -29,7 +29,7 @@ open Set Function
 
 open BigOperators TopologicalSpace
 
-variable {ι X E : Type _} [TopologicalSpace X] [AddCommGroupₓ E] [Module ℝ E]
+variable {ι X E : Type _} [TopologicalSpace X] [AddCommGroup E] [Module ℝ E]
 
 theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnity ι X s) {g : ι → X → E} {t : Set E}
     {x : X} (hx : x ∈ s) (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
@@ -48,7 +48,7 @@ theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
     (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x := by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
-    PartitionOfUnity.exists_is_subordinate is_closed_univ (fun x => Interior (U x)) (fun x => is_open_interior)
+    PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => Interior (U x)) (fun x => is_open_interior)
       fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,

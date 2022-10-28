@@ -158,6 +158,42 @@ instance : IsIso (coequalizerComparison f g G) := by
   rw [← preserves_coequalizer.iso_hom]
   infer_instance
 
+instance map_π_epi : Epi (G.map (coequalizer.π f g)) :=
+  ⟨fun W h k => by
+    rw [← ι_comp_coequalizer_comparison]
+    apply (cancel_epi _).1
+    apply epi_comp⟩
+
+@[reassoc]
+theorem map_π_preserves_coequalizer_inv :
+    G.map (coequalizer.π f g) ≫ (PreservesCoequalizer.iso G f g).inv = coequalizer.π (G.map f) (G.map g) := by
+  rw [← ι_comp_coequalizer_comparison_assoc, ← preserves_coequalizer.iso_hom, iso.hom_inv_id, comp_id]
+
+@[reassoc]
+theorem map_π_preserves_coequalizer_inv_desc {W : D} (k : G.obj Y ⟶ W) (wk : G.map f ≫ k = G.map g ≫ k) :
+    G.map (coequalizer.π f g) ≫ (PreservesCoequalizer.iso G f g).inv ≫ coequalizer.desc k wk = k := by
+  rw [← category.assoc, map_π_preserves_coequalizer_inv, coequalizer.π_desc]
+
+@[reassoc]
+theorem map_π_preserves_coequalizer_inv_colim_map {X' Y' : D} (f' g' : X' ⟶ Y') [HasCoequalizer f' g']
+    (p : G.obj X ⟶ X') (q : G.obj Y ⟶ Y') (wf : G.map f ≫ q = p ≫ f') (wg : G.map g ≫ q = p ≫ g') :
+    G.map (coequalizer.π f g) ≫
+        (PreservesCoequalizer.iso G f g).inv ≫ colimMap (parallelPairHom (G.map f) (G.map g) f' g' p q wf wg) =
+      q ≫ coequalizer.π f' g' :=
+  by rw [← category.assoc, map_π_preserves_coequalizer_inv, ι_colim_map, parallel_pair_hom_app_one]
+
+@[reassoc]
+theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' ⟶ Y') [HasCoequalizer f' g']
+    (p : G.obj X ⟶ X') (q : G.obj Y ⟶ Y') (wf : G.map f ≫ q = p ≫ f') (wg : G.map g ≫ q = p ≫ g') {Z' : D} (h : Y' ⟶ Z')
+    (wh : f' ≫ h = g' ≫ h) :
+    G.map (coequalizer.π f g) ≫
+        (PreservesCoequalizer.iso G f g).inv ≫
+          colimMap (parallelPairHom (G.map f) (G.map g) f' g' p q wf wg) ≫ coequalizer.desc h wh =
+      q ≫ h :=
+  by
+  slice_lhs 1 3 => rw [map_π_preserves_coequalizer_inv_colim_map]
+  slice_lhs 2 3 => rw [coequalizer.π_desc]
+
 /-- Any functor preserves coequalizers of split pairs. -/
 instance (priority := 1) preservesSplitCoequalizers (f g : X ⟶ Y) [HasSplitCoequalizer f g] :
     PreservesColimit (parallelPair f g) G := by

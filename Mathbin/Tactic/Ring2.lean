@@ -57,7 +57,7 @@ instance : Inhabited CsringExpr :=
 /-- Evaluates a reflected `csring_expr` into an element of the
 original `comm_semiring` type `α`, retrieving opaque elements
 (atoms) from the tree `t`. -/
-def eval {α} [CommSemiringₓ α] (t : Tree α) : CsringExpr → α
+def eval {α} [CommSemiring α] (t : Tree α) : CsringExpr → α
   | atom n => t.getOrZero n
   | const n => n
   | add x y => eval x + eval y
@@ -101,11 +101,11 @@ instance : Inhabited HornerExpr :=
 def atom (n : PosNum) : HornerExpr :=
   horner 1 n 1 0
 
-def toString : HornerExpr → Stringₓ
-  | const n => reprₓ n
-  | horner a x n b => "(" ++ toString a ++ ") * x" ++ reprₓ x ++ "^" ++ reprₓ n ++ " + " ++ toString b
+def toString : HornerExpr → String
+  | const n => repr n
+  | horner a x n b => "(" ++ toString a ++ ") * x" ++ repr x ++ "^" ++ repr n ++ " + " ++ toString b
 
-instance : HasToString HornerExpr :=
+instance : ToString HornerExpr :=
   ⟨toString⟩
 
 /-- Alternative constructor for (horner a x n b) which maintains canonical
@@ -240,48 +240,48 @@ def ofCsexpr : CsringExpr → HornerExpr
   | csring_expr.pow x n => (of_csexpr x).pow n
 
 /-- Evaluates a reflected `horner_expr` - see `csring_expr.eval`. -/
-def cseval {α} [CommSemiringₓ α] (t : Tree α) : HornerExpr → α
+def cseval {α} [CommSemiring α] (t : Tree α) : HornerExpr → α
   | const n => n.abs
-  | horner a x n b => Tactic.Ring.hornerₓ (cseval a) (t.getOrZero x) n (cseval b)
+  | horner a x n b => Tactic.Ring.horner (cseval a) (t.getOrZero x) n (cseval b)
 
-theorem cseval_atom {α} [CommSemiringₓ α] (t : Tree α) (n : PosNum) :
+theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
     (atom n).IsCs ∧ cseval t (atom n) = t.getOrZero n :=
-  ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atomₓ _).symm⟩
+  ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atom _).symm⟩
 
-theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
+theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
     (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e := by
   simp [add_const]
   cases k <;> simp! [*]
   simp [show Znum.pos k ≠ 0 by decide]
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
-    refine' ⟨⟨n + Num.pos k, by simp [add_commₓ] <;> rfl⟩, _⟩
+    refine' ⟨⟨n + Num.pos k, by simp [add_comm] <;> rfl⟩, _⟩
     cases n <;> simp!
     
   · rcases B cs.2 with ⟨csb, h⟩
     simp! [*, cs.1]
-    rw [← Tactic.Ring.horner_add_constₓ, add_commₓ]
-    rw [add_commₓ]
+    rw [← Tactic.Ring.horner_add_const, add_comm]
+    rw [add_comm]
     
 
-theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
+theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
-      cseval t (horner' a x n b) = Tactic.Ring.hornerₓ (cseval t a) (t.getOrZero x) n (cseval t b) :=
+      cseval t (horner' a x n b) = Tactic.Ring.horner (cseval t a) (t.getOrZero x) n (cseval t b) :=
   by
   cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [horner'] <;> split_ifs
-  · simp! [*, Tactic.Ring.hornerₓ]
+  · simp! [*, Tactic.Ring.horner]
     
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
     
   · refine' ⟨⟨h₁.1, h₂⟩, Eq.symm _⟩
     simp! [*]
-    apply Tactic.Ring.horner_hornerₓ
+    apply Tactic.Ring.horner_horner
     simp
     
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
     
 
-theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
+theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
     (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
@@ -289,7 +289,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
     
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂ generalizing n₁ b₁
   · rcases cs₂ with ⟨n₂, rfl⟩
-    simp! [cseval_add_const t n₂ cs₁, add_commₓ]
+    simp! [cseval_add_const t n₂ cs₁, add_comm]
     
   cases' cs₁ with csa₁ csb₁
   cases' id cs₂ with csa₂ csb₂
@@ -298,13 +298,13 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
   cases PosNum.cmp x₁ x₂ <;> simp!
   · rcases B₁ csb₁ cs₂ with ⟨csh, h⟩
     refine' ⟨⟨csa₁, csh⟩, Eq.symm _⟩
-    apply Tactic.Ring.horner_add_constₓ
+    apply Tactic.Ring.horner_add_const
     exact h.symm
     
   · cases C
     have B0 :
       is_cs 0 → ∀ {e₂ : horner_expr}, is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
-      fun _ e₂ c => ⟨c, (zero_addₓ _).symm⟩
+      fun _ e₂ c => ⟨c, (zero_add _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
     · have : n₁ = n₂ := by
         have := congr_arg (coe : Znum → ℤ) e
@@ -316,28 +316,28 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       rcases cseval_horner' _ _ _ _ _ _ _ with ⟨csh, h⟩
       · refine' ⟨csh, h.trans (Eq.symm _)⟩
         simp [*]
-        apply Tactic.Ring.horner_add_horner_eqₓ <;> try rfl
+        apply Tactic.Ring.horner_add_horner_eq <;> try rfl
         
       all_goals simp! [*]
       
-    · simp [B₁ csb₁ csb₂, add_commₓ]
+    · simp [B₁ csb₁ csb₂, add_comm]
       rcases A₂ csa₂ _ _ B0 ⟨csa₁, 0, rfl⟩ with ⟨csh, h⟩
       refine' ⟨csh, Eq.symm _⟩
       rw [show id = add 0 from rfl, h]
-      apply Tactic.Ring.horner_add_horner_gtₓ
+      apply Tactic.Ring.horner_add_horner_gt
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add']
         simpa using congr_arg (coe : Znum → ℤ) e
         
       · rfl
         
-      · apply add_commₓ
+      · apply add_comm
         
       
     · have : (horner a₂ x₁ (Num.pos k) 0).IsCs := ⟨csa₂, 0, rfl⟩
       simp [B₁ csb₁ csb₂, A₁ csa₁ this]
       symm
-      apply Tactic.Ring.horner_add_horner_ltₓ
+      apply Tactic.Ring.horner_add_horner_lt
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
         simpa using congr_arg (coe : Znum → ℤ) e
@@ -347,11 +347,11 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
     
   · rcases B₂ csb₂ _ _ B₁ ⟨csa₁, csb₁⟩ with ⟨csh, h⟩
     refine' ⟨⟨csa₂, csh⟩, Eq.symm _⟩
-    apply Tactic.Ring.const_add_hornerₓ
+    apply Tactic.Ring.const_add_horner
     simp [h]
     
 
-theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
+theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
     (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k := by
   simp [mul_const]
   split_ifs with h h
@@ -359,7 +359,7 @@ theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
     exact ⟨⟨0, rfl⟩, (mul_zero _).symm⟩
     
   · cases (Num.to_znum_inj.1 h : k = 1)
-    exact ⟨cs, (mul_oneₓ _).symm⟩
+    exact ⟨cs, (mul_one _).symm⟩
     
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
@@ -374,10 +374,10 @@ theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
   · cases cs
     simp! [*]
     symm
-    apply Tactic.Ring.horner_mul_constₓ <;> rfl
+    apply Tactic.Ring.horner_mul_const <;> rfl
     
 
-theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
+theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
     (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
@@ -395,20 +395,20 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
   cases PosNum.cmp x₁ x₂ <;> simp!
   · simp [A₁ csa₁ cs₂, B₁ csb₁ cs₂]
     symm
-    apply Tactic.Ring.horner_mul_constₓ <;> rfl
+    apply Tactic.Ring.horner_mul_const <;> rfl
     
   · cases' cseval_horner' t _ x₁ n₂ 0 csA₂ ⟨0, rfl⟩ with csh₁ h₁
     cases C
     split_ifs
     · subst b₂
       refine' ⟨csh₁, h₁.trans (Eq.symm _)⟩
-      apply Tactic.Ring.horner_mul_horner_zeroₓ <;> try rfl
+      apply Tactic.Ring.horner_mul_horner_zero <;> try rfl
       simp! [hA₂]
       
     · cases' A₁ csa₁ csb₂ with csA₁ hA₁
       cases' cseval_add t csh₁ _ with csh₂ h₂
       · refine' ⟨csh₂, h₂.trans (Eq.symm _)⟩
-        apply Tactic.Ring.horner_mul_hornerₓ <;> try rfl
+        apply Tactic.Ring.horner_mul_horner <;> try rfl
         simp! [*]
         
       exact ⟨csA₁, (B₁ csb₁ csb₂).1⟩
@@ -416,16 +416,16 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
     
   · simp [A₂ csa₂, B₂ csb₂]
     rw [mul_comm, eq_comm]
-    apply Tactic.Ring.horner_const_mulₓ
+    apply Tactic.Ring.horner_const_mul
     · apply mul_comm
       
     · rfl
       
     
 
-theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :
+theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
-  | 0 => ⟨⟨1, rfl⟩, (pow_zeroₓ _).symm⟩
+  | 0 => ⟨⟨1, rfl⟩, (pow_zero _).symm⟩
   | Num.pos p => by
     simp [pow]
     induction' p with p ep p ep
@@ -444,7 +444,7 @@ theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : HornerExpr} (cs 
 /-- For any given tree `t` of atoms and any reflected expression `r`,
 the Horner form of `r` is a valid csring expression, and under `t`,
 the Horner form evaluates to the same thing as `r`. -/
-theorem cseval_of_csexpr {α} [CommSemiringₓ α] (t : Tree α) :
+theorem cseval_of_csexpr {α} [CommSemiring α] (t : Tree α) :
     ∀ r : CsringExpr, (ofCsexpr r).IsCs ∧ cseval t (ofCsexpr r) = r.eval t
   | csring_expr.atom n => cseval_atom _ _
   | csring_expr.const n => ⟨⟨n, rfl⟩, by cases n <;> rfl⟩
@@ -469,7 +469,7 @@ end HornerExpr
 `r₁` and `r₂` plus a storage `t` of atoms, if both expressions go to the
 same Horner normal form, then the original non-reflected expressions are
 equal. `H` follows from kernel reduction and is therefore `rfl`. -/
-theorem correctness {α} [CommSemiringₓ α] (t : Tree α) (r₁ r₂ : CsringExpr)
+theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr)
     (H : HornerExpr.ofCsexpr r₁ = HornerExpr.ofCsexpr r₂) : r₁.eval t = r₂.eval t := by
   repeat' rw [← (horner_expr.cseval_of_csexpr t _).2] <;> rw [H]
 
@@ -508,7 +508,7 @@ The indices cannot be computed until the whole tree is built, so another pass ov
 the expressions is needed - this is what `replace` does. The computation (expressed
 in the state monad) fixes up `atom`s to match their positions in the atom tree.
 The initial state is a list of all atom occurrences in the goal, left-to-right. -/
-unsafe def csring_expr.replace (t : Tree expr) : CsringExpr → StateTₓ (List expr) Option CsringExpr
+unsafe def csring_expr.replace (t : Tree expr) : CsringExpr → StateT (List expr) Option CsringExpr
   | csring_expr.atom _ => do
     let e ← get
     let p ← monadLift (t.indexOf (· < ·) e.head)
@@ -532,9 +532,9 @@ open Interactive Interactive.Types Lean.Parser
 open Tactic.Ring2
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or
@@ -551,12 +551,12 @@ unsafe def ring2 : tactic Unit := do
   let (r₂, l₂) := reflect_expr e₂
   let L := (l₁ ++ l₂).toList
   let s := Tree.ofRbnode (rbtreeOf L).1
-  let (r₁, L) ← (StateTₓ.run (r₁.replace s) L : Option _)
-  let (r₂, _) ← (StateTₓ.run (r₂.replace s) L : Option _)
+  let (r₁, L) ← (StateT.run (r₁.replace s) L : Option _)
+  let (r₂, _) ← (StateT.run (r₂.replace s) L : Option _)
   let se : expr := s.reflect' u α
   let er₁ : expr := reflect r₁
   let er₂ : expr := reflect r₂
-  let cs ← mk_app `` CommSemiringₓ [α] >>= mk_instance
+  let cs ← mk_app `` CommSemiring [α] >>= mk_instance
   let e ←
     to_expr (pquote.1 (correctness (%%ₓse) (%%ₓer₁) (%%ₓer₂) rfl)) <|>
         fail

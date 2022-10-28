@@ -20,7 +20,7 @@ inductive SignType
   | zero
   | neg
   | Pos
-  deriving DecidableEq, Inhabited, Fintypeₓ
+  deriving DecidableEq, Inhabited, Fintype
 
 namespace SignType
 
@@ -75,22 +75,22 @@ instance : CommGroupWithZero SignType where
   one := 1
   mul := (· * ·)
   inv := id
-  mul_zero := fun a => by cases a <;> rfl
-  zero_mul := fun a => by cases a <;> rfl
-  mul_one := fun a => by cases a <;> rfl
-  one_mul := fun a => by cases a <;> rfl
-  mul_inv_cancel := fun a ha => by cases a <;> trivial
-  mul_comm := fun a b => by casesm*_ <;> rfl
-  mul_assoc := fun a b c => by casesm*_ <;> rfl
+  mul_zero a := by cases a <;> rfl
+  zero_mul a := by cases a <;> rfl
+  mul_one a := by cases a <;> rfl
+  one_mul a := by cases a <;> rfl
+  mul_inv_cancel a ha := by cases a <;> trivial
+  mul_comm a b := by casesm*_ <;> rfl
+  mul_assoc a b c := by casesm*_ <;> rfl
   exists_pair_ne := ⟨0, 1, by rintro ⟨⟩⟩
   inv_zero := rfl
 
-instance : LinearOrderₓ SignType where
+instance : LinearOrder SignType where
   le := (· ≤ ·)
-  le_refl := fun a => by cases a <;> constructor
-  le_total := fun a b => by casesm*_ <;> decide
-  le_antisymm := fun a b ha hb => by casesm*_ <;> rfl
-  le_trans := fun a b c hab hbc => by casesm*_ <;> constructor
+  le_refl a := by cases a <;> constructor
+  le_total a b := by casesm*_ <;> decide
+  le_antisymm a b ha hb := by casesm*_ <;> rfl
+  le_trans a b c hab hbc := by casesm*_ <;> constructor
   decidableLe := Le.decidableRel
 
 instance : BoundedOrder SignType where
@@ -104,22 +104,22 @@ instance : HasDistribNeg SignType :=
     mul_neg := fun x y => by casesm*_ <;> rfl }
 
 /-- `sign_type` is equivalent to `fin 3`. -/
-def fin3Equiv : SignType ≃* Finₓ 3 where
-  toFun := fun a => a.recOn 0 (-1) 1
-  invFun := fun a =>
+def fin3Equiv : SignType ≃* Fin 3 where
+  toFun a := a.recOn 0 (-1) 1
+  invFun a :=
     match a with
     | ⟨0, h⟩ => 0
     | ⟨1, h⟩ => 1
     | ⟨2, h⟩ => -1
     | ⟨n + 3, h⟩ => (h.not_le le_add_self).elim
-  left_inv := fun a => by cases a <;> rfl
-  right_inv := fun a =>
+  left_inv a := by cases a <;> rfl
+  right_inv a :=
     match a with
     | ⟨0, h⟩ => rfl
     | ⟨1, h⟩ => rfl
     | ⟨2, h⟩ => rfl
     | ⟨n + 3, h⟩ => (h.not_le le_add_self).elim
-  map_mul' := fun x y => by casesm*_ <;> rfl
+  map_mul' x y := by casesm*_ <;> rfl
 
 section CaseBashing
 
@@ -188,7 +188,7 @@ def cast : SignType → α
   | Pos => 1
   | neg => -1
 
-instance : CoeTₓ SignType α :=
+instance : CoeT SignType α :=
   ⟨cast⟩
 
 @[simp]
@@ -211,15 +211,15 @@ end cast
 
 /-- `sign_type.cast` as a `mul_with_zero_hom`. -/
 @[simps]
-def castHom {α} [MulZeroOneClassₓ α] [HasDistribNeg α] : SignType →*₀ α where
+def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] : SignType →*₀ α where
   toFun := cast
   map_zero' := rfl
   map_one' := rfl
-  map_mul' := fun x y => by cases x <;> cases y <;> simp
+  map_mul' x y := by cases x <;> cases y <;> simp
 
 theorem range_eq {α} (f : SignType → α) : Set.Range f = {f zero, f neg, f pos} := by
   classical
-  simpa only [← Finsetₓ.coe_singleton, ← Finsetₓ.image_singleton, ← Fintypeₓ.coe_image_univ, Finsetₓ.coe_image, ←
+  simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ, Finset.coe_image, ←
     Set.image_insert_eq]
 
 end SignType
@@ -228,16 +228,16 @@ variable {α : Type _}
 
 open SignType
 
-section Preorderₓ
+section Preorder
 
-variable [Zero α] [Preorderₓ α] [DecidableRel ((· < ·) : α → α → Prop)] {a : α}
+variable [Zero α] [Preorder α] [DecidableRel ((· < ·) : α → α → Prop)] {a : α}
 
 /-- The sign of an element is 1 if it's positive, -1 if negative, 0 otherwise. -/
 def sign : α →o SignType :=
   ⟨fun a => if 0 < a then 1 else if a < 0 then -1 else 0, fun a b h => by
     dsimp
     split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;> try constructor
-    · cases lt_irreflₓ 0 (h₁.trans <| h.trans_lt h₃)
+    · cases lt_irrefl 0 (h₁.trans <| h.trans_lt h₃)
       
     · cases h₂ (h₁.trans_le h)
       
@@ -273,25 +273,25 @@ theorem sign_eq_neg_one_iff : sign a = -1 ↔ a < 0 := by
   · simpa using h
     
 
-end Preorderₓ
+end Preorder
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [Zero α] [LinearOrderₓ α] {a : α}
+variable [Zero α] [LinearOrder α] {a : α}
 
 @[simp]
 theorem sign_eq_zero_iff : sign a = 0 ↔ a = 0 := by
   refine' ⟨fun h => _, fun h => h.symm ▸ sign_zero⟩
   rw [sign_apply] at h
   split_ifs  at h <;> cases h
-  exact (le_of_not_ltₓ h_1).eq_of_not_lt h_2
+  exact (le_of_not_lt h_1).eq_of_not_lt h_2
 
 theorem sign_ne_zero : sign a ≠ 0 ↔ a ≠ 0 :=
   sign_eq_zero_iff.Not
 
 @[simp]
 theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
-  rcases lt_trichotomyₓ 0 a with (h | rfl | h)
+  rcases lt_trichotomy 0 a with (h | rfl | h)
   · simp [h, h.le]
     
   · simp
@@ -301,7 +301,7 @@ theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
 
 @[simp]
 theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
-  rcases lt_trichotomyₓ 0 a with (h | rfl | h)
+  rcases lt_trichotomy 0 a with (h | rfl | h)
   · simp [h, h.not_le]
     
   · simp
@@ -309,7 +309,7 @@ theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
   · simp [h, h.le]
     
 
-end LinearOrderₓ
+end LinearOrder
 
 section OrderedSemiring
 
@@ -330,9 +330,9 @@ variable [LinearOrderedRing α] {a b : α}
 attribute [local instance] LinearOrderedRing.decidableLt
 
 theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
-  rcases lt_trichotomyₓ x 0 with (hx | hx | hx) <;>
-    rcases lt_trichotomyₓ y 0 with (hy | hy | hy) <;>
-      simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_oneₓ, neg_one_mul, neg_negₓ, one_mulₓ,
+  rcases lt_trichotomy x 0 with (hx | hx | hx) <;>
+    rcases lt_trichotomy y 0 with (hy | hy | hy) <;>
+      simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_one, neg_one_mul, neg_neg, one_mul,
         mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero, mul_neg_of_pos_of_neg, mul_pos]
 
 /-- `sign` as a `monoid_with_zero_hom` for a nontrivial ordered semiring. Note that linearity
@@ -351,14 +351,14 @@ theorem sign_pow (x : α) (n : ℕ) : sign (x ^ n) = sign x ^ n := by
 
 end LinearOrderedRing
 
-section AddGroupₓ
+section AddGroup
 
-variable [AddGroupₓ α] [Preorderₓ α] [DecidableRel ((· < ·) : α → α → Prop)]
+variable [AddGroup α] [Preorder α] [DecidableRel ((· < ·) : α → α → Prop)]
 
 theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign (-a) = -sign a := by
   simp_rw [sign_apply, Left.neg_pos_iff, Left.neg_neg_iff]
   split_ifs with h h'
-  · exact False.elim (lt_asymmₓ h h')
+  · exact False.elim (lt_asymm h h')
     
   · simp
     
@@ -370,7 +370,7 @@ theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign
 theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) : sign (-a) = -sign a := by
   simp_rw [sign_apply, Right.neg_pos_iff, Right.neg_neg_iff]
   split_ifs with h h'
-  · exact False.elim (lt_asymmₓ h h')
+  · exact False.elim (lt_asymm h h')
     
   · simp
     
@@ -379,7 +379,7 @@ theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)
   · simp
     
 
-end AddGroupₓ
+end AddGroup
 
 namespace Int
 
@@ -394,12 +394,12 @@ theorem sign_eq_sign (n : ℤ) : n.sign = sign n := by
 
 end Int
 
-open Finsetₓ Nat
+open Finset Nat
 
 open BigOperators
 
-private theorem exists_signed_sum_aux [DecidableEq α] (s : Finsetₓ α) (f : α → ℤ) :
-    ∃ (β : Type u_1)(t : Finsetₓ β)(sgn : β → SignType)(g : β → α),
+private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
+    ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
         (t.card = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
   by
@@ -414,25 +414,25 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finsetₓ α) (f : �
     
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
-theorem exists_signed_sum [DecidableEq α] (s : Finsetₓ α) (f : α → ℤ) :
-    ∃ (β : Type u_1)(_ : Fintypeₓ β)(sgn : β → SignType)(g : β → α),
+theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
+    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
-        (Fintypeₓ.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
+        (Fintype.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
   let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
   ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by simp [ht], fun a ha =>
     (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
 
 /-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
-theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finsetₓ α) (f : α → ℤ) (n : ℕ)
+theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
     (h : (∑ i in s, (f i).natAbs) ≤ n) :
-    ∃ (β : Type u_1)(_ : Fintypeₓ β)(sgn : β → SignType)(g : β → α),
-      (∀ b, g b ∉ s → sgn b = 0) ∧ Fintypeₓ.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
+    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
+      (∀ b, g b ∉ s → sgn b = 0) ∧ Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
   by
   obtain ⟨β, _, sgn, g, hg, hβ, hf⟩ := exists_signed_sum s f
   skip
   refine'
-    ⟨Sum β (Finₓ (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0, Sum.elim g <| Classical.arbitrary _, _,
-      by simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
+    ⟨Sum β (Fin (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0, Sum.elim g <| Classical.arbitrary _, _, by
+      simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
   rintro (b | b) hb
   · cases hb (hg _)
     

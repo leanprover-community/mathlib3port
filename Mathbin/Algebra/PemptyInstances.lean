@@ -17,7 +17,7 @@ that it is a semigroup.
 universe u
 
 @[to_additive]
-instance semigroupPempty : Semigroupₓ Pempty.{u + 1} where
-  mul := fun x y => by cases x
-  mul_assoc := fun x y z => by cases x
+instance semigroupPempty : Semigroup Pempty.{u + 1} where
+  mul x y := by cases x
+  mul_assoc x y z := by cases x
 

@@ -45,7 +45,7 @@ open TopologicalSpace
 
 variable {R E F : Type _}
 
-variable [CommRingₓ R] [AddCommGroupₓ E] [AddCommGroupₓ F]
+variable [CommRing R] [AddCommGroup E] [AddCommGroup F]
 
 variable [Module R E] [Module R F]
 
@@ -69,11 +69,11 @@ def IsClosable (f : E →ₗ.[R] F) : Prop :=
   ∃ f' : LinearPmap R E F, f.graph.topologicalClosure = f'.graph
 
 /-- A closed operator is trivially closable. -/
-theorem IsClosed.is_closable {f : E →ₗ.[R] F} (hf : f.IsClosed) : f.IsClosable :=
+theorem IsClosed.isClosable {f : E →ₗ.[R] F} (hf : f.IsClosed) : f.IsClosable :=
   ⟨f, hf.submodule_topological_closure_eq⟩
 
 /-- If `g` has a closable extension `f`, then `g` itself is closable. -/
-theorem IsClosable.le_is_closable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg : g ≤ f) : g.IsClosable := by
+theorem IsClosable.leIsClosable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg : g ≤ f) : g.IsClosable := by
   cases' hf with f' hf
   have : g.graph.topological_closure ≤ f'.graph := by
     rw [← hf]
@@ -125,17 +125,17 @@ theorem IsClosable.closure_mono {f g : E →ₗ.[R] F} (hg : g.IsClosable) (h : 
   exact Submodule.topological_closure_mono (le_graph_of_le h)
 
 /-- If `f` is closable, then the closure is closed. -/
-theorem IsClosable.closure_is_closed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosed := by
+theorem IsClosable.closureIsClosed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosed := by
   rw [IsClosed, ← hf.graph_closure_eq_closure_graph]
   exact f.graph.is_closed_topological_closure
 
 /-- If `f` is closable, then the closure is closable. -/
-theorem IsClosable.closure_is_closable {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosable :=
-  hf.closure_is_closed.IsClosable
+theorem IsClosable.closureIsClosable {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosable :=
+  hf.closureIsClosed.IsClosable
 
 theorem is_closable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
     f.IsClosable ↔ ∃ (g : E →ₗ.[R] F)(hg : g.IsClosed), f ≤ g :=
-  ⟨fun h => ⟨f.closure, h.closure_is_closed, f.le_closure⟩, fun ⟨_, hg, h⟩ => hg.IsClosable.le_is_closable h⟩
+  ⟨fun h => ⟨f.closure, h.closureIsClosed, f.le_closure⟩, fun ⟨_, hg, h⟩ => hg.IsClosable.leIsClosable h⟩
 
 /-! ### The core of a linear operator -/
 
@@ -151,7 +151,7 @@ theorem has_core_def {f : E →ₗ.[R] F} {S : Submodule R E} (h : f.HasCore S) 
 /-- For every unbounded operator `f` the submodule `f.domain` is a core of its closure.
 
 Note that we don't require that `f` is closable, due to the definition of the closure. -/
-theorem closure_has_core (f : E →ₗ.[R] F) : f.closure.HasCore f.domain := by
+theorem closureHasCore (f : E →ₗ.[R] F) : f.closure.HasCore f.domain := by
   refine' ⟨f.le_closure.1, _⟩
   congr
   ext

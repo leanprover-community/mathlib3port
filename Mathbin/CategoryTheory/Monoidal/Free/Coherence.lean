@@ -89,7 +89,7 @@ def normalizeObj : F C → NormalMonoidalObject C → N C
 theorem normalize_obj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem normalize_obj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
     normalizeObj (X ⊗ Y) n = normalizeObj Y (normalizeObj X n).as :=
@@ -149,8 +149,8 @@ variable (C)
     `𝟙_ C`. -/
 @[simp]
 def normalize : F C ⥤ N C ⥤ N C where
-  obj := fun X => Discrete.functor (normalizeObj X)
-  map := fun X Y => Quotientₓ.lift normalizeMapAux (by tidy)
+  obj X := Discrete.functor (normalizeObj X)
+  map X Y := Quotient.lift normalizeMapAux (by tidy)
 
 /-- A variant of the normalization functor where we consider the result as an object in the free
     monoidal category (rather than an object of the discrete subcategory of objects in normal
@@ -161,26 +161,26 @@ def normalize' : F C ⥤ N C ⥤ F C :=
 
 /-- The normalization functor for the free monoidal category over `C`. -/
 def fullNormalize : F C ⥤ N C where
-  obj := fun X => ((normalize C).obj X).obj ⟨NormalMonoidalObject.unit⟩
-  map := fun X Y f => ((normalize C).map f).app ⟨NormalMonoidalObject.unit⟩
+  obj X := ((normalize C).obj X).obj ⟨NormalMonoidalObject.unit⟩
+  map X Y f := ((normalize C).map f).app ⟨NormalMonoidalObject.unit⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given an object `X` of the free monoidal category and an object `n` in normal form, taking
     the tensor product `n ⊗ X` in the free monoidal category is functorial in both `X` and `n`. -/
 @[simp]
 def tensorFunc : F C ⥤ N C ⥤ F C where
-  obj := fun X => Discrete.functor fun n => inclusion.obj ⟨n⟩ ⊗ X
-  map := fun X Y f =>
+  obj X := Discrete.functor fun n => inclusion.obj ⟨n⟩ ⊗ X
+  map X Y f :=
     ⟨fun n => 𝟙 _ ⊗ f, by
       rintro ⟨X⟩ ⟨Y⟩
       tidy⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
     ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by
   cases n
@@ -195,7 +195,7 @@ def normalizeIsoApp : ∀ (X : F C) (n : N C), ((tensorFunc C).obj X).obj n ≅ 
   | Unit, n => ρ_ _
   | tensor X Y, n => (α_ _ _ _).symm ≪≫ tensorIso (normalize_iso_app X n) (Iso.refl _) ≪≫ normalize_iso_app _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem normalize_iso_app_tensor (X Y : F C) (n : N C) :
     normalizeIsoApp C (X ⊗ Y) n =
@@ -236,7 +236,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
   NatIso.ofComponents (normalizeIsoAux C)
     (by
       rintro X Y f
-      apply Quotientₓ.induction_on f
+      apply Quotient.induction_on f
       intro f
       ext n
       induction f generalizing n
@@ -297,7 +297,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         conv_lhs => rw [← @category.id_comp (F C) _ _ _ ⟦f_g⟧]
         simp only [category.comp_id, tensor_comp, category.assoc]
         congr 2
-        rw [← mk_tensor, Quotientₓ.lift_mk]
+        rw [← mk_tensor, Quotient.lift_mk]
         dsimp
         rw [functor.map_comp, ← category.assoc, ← f_ih_g ⟦f_g⟧, ← @category.comp_id (F C) _ _ _ ⟦f_g⟧, ←
           category.id_comp ((discrete.functor inclusion_obj).map _), tensor_comp]
@@ -350,7 +350,7 @@ def inverseAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (Y ⟶ᵐ X)
 end
 
 instance : Groupoid.{u} (F C) :=
-  { (inferInstance : Category (F C)) with inv := fun X Y => Quotientₓ.lift (fun f => ⟦inverseAux f⟧) (by tidy) }
+  { (inferInstance : Category (F C)) with inv := fun X Y => Quotient.lift (fun f => ⟦inverseAux f⟧) (by tidy) }
 
 end Groupoid
 

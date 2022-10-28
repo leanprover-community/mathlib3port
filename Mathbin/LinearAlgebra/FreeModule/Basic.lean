@@ -32,9 +32,9 @@ open TensorProduct DirectSum BigOperators
 
 section Basic
 
-variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [Semiring R] [AddCommMonoid M] [Module R M]
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`exists_basis] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
   exists_basis : Nonempty (ΣI : Type v, Basis I R M)
@@ -55,18 +55,18 @@ theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis
 
 variable {R M}
 
-theorem Module.Free.of_basis {ι : Type w} (b : Basis ι R M) : Module.Free R M :=
+theorem Module.Free.ofBasis {ι : Type w} (b : Basis ι R M) : Module.Free R M :=
   (Module.free_def R M).2 ⟨Set.Range b, ⟨b.reindexRange⟩⟩
 
 end Basic
 
 namespace Module.Free
 
-section Semiringₓ
+section Semiring
 
-variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Module.Free R M]
+variable (R M) [Semiring R] [AddCommMonoid M] [Module R M] [Module.Free R M]
 
-variable [AddCommMonoidₓ N] [Module R N]
+variable [AddCommMonoid N] [Module R N]
 
 /-- If `module.free R M` then `choose_basis_index R M` is the `ι` which indexes the basis
   `ι → M`. -/
@@ -91,7 +91,7 @@ such that `smul_comm_class R S M'` holds.
 If `R` is commutative, you can set `S := R`; if `R` is not commutative,
 you can recover an `add_equiv` by setting `S := ℕ`.
 See library note [bundled maps over different rings]. -/
-noncomputable def constr {S : Type z} [Semiringₓ S] [Module S N] [SmulCommClass R S N] :
+noncomputable def constr {S : Type z} [Semiring S] [Module S N] [SmulCommClass R S N] :
     (ChooseBasisIndex R M → N) ≃ₗ[S] M →ₗ[R] N :=
   Basis.constr (chooseBasis R M) S
 
@@ -101,26 +101,25 @@ instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSmul
 
 variable {R M N}
 
-theorem of_equiv (e : M ≃ₗ[R] N) : Module.Free R N :=
+theorem ofEquiv (e : M ≃ₗ[R] N) : Module.Free R N :=
   of_basis <| (chooseBasis R M).map e
 
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
 instance. -/
-theorem of_equiv' {P : Type v} [AddCommMonoidₓ P] [Module R P] (h : Module.Free R P) (e : P ≃ₗ[R] N) :
-    Module.Free R N :=
-  of_equiv e
+theorem ofEquiv' {P : Type v} [AddCommMonoid P] [Module R P] (h : Module.Free R P) (e : P ≃ₗ[R] N) : Module.Free R N :=
+  ofEquiv e
 
 variable (R M N)
 
 /-- The module structure provided by `semiring.to_module` is free. -/
 instance self : Module.Free R R :=
-  of_basis (Basis.singleton Unit R)
+  ofBasis (Basis.singleton Unit R)
 
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
   of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
 
 /-- The product of finitely many free modules is free. -/
-instance pi (M : ι → Type _) [Finite ι] [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
+instance pi (M : ι → Type _) [Finite ι] [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
   let ⟨_⟩ := nonempty_fintype ι
   of_basis <| Pi.basis fun i => choose_basis R (M i)
@@ -137,45 +136,45 @@ instance function [Finite ι] : Module.Free R (ι → M) :=
   Free.pi _ _
 
 instance finsupp : Module.Free R (ι →₀ M) :=
-  of_basis (Finsupp.basis fun i => chooseBasis R M)
+  ofBasis (Finsupp.basis fun i => chooseBasis R M)
 
 variable {ι}
 
-instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
-  of_basis (Basis.empty N : Basis Pempty R N)
+instance (priority := 100) ofSubsingleton [Subsingleton N] : Module.Free R N :=
+  ofBasis (Basis.empty N : Basis Pempty R N)
 
-instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N :=
+instance (priority := 100) ofSubsingleton' [Subsingleton R] : Module.Free R N :=
   letI := Module.subsingleton R N
-  Module.Free.of_subsingleton R N
+  Module.Free.ofSubsingleton R N
 
-instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
+instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
   of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 
-instance direct_sum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
+instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
   Module.Free.dfinsupp R M
 
-end Semiringₓ
+end Semiring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
+variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
-variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
+variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 instance tensor : Module.Free R (M ⊗[R] N) :=
-  of_equiv' (of_equiv' (Free.finsupp _ R _) (finsuppTensorFinsupp' R _ _).symm)
+  ofEquiv' (ofEquiv' (Free.finsupp _ R _) (finsuppTensorFinsupp' R _ _).symm)
     (TensorProduct.congr (chooseBasis R M).repr (chooseBasis R N).repr).symm
 
-end CommRingₓ
+end CommRing
 
 section DivisionRing
 
-variable [DivisionRing R] [AddCommGroupₓ M] [Module R M]
+variable [DivisionRing R] [AddCommGroup M] [Module R M]
 
-instance (priority := 100) of_division_ring : Module.Free R M :=
-  of_basis (Basis.ofVectorSpace R M)
+instance (priority := 100) ofDivisionRing : Module.Free R M :=
+  ofBasis (Basis.ofVectorSpace R M)
 
 end DivisionRing
 

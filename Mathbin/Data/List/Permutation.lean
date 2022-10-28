@@ -183,7 +183,7 @@ theorem mem_foldr_permutations_aux2 {t : α} {ts : List α} {r L : List (List α
       ∃ l₁ l₂ : List α, ¬l₂ = nil ∧ l₁ ++ l₂ ∈ L ∧ l' = l₁ ++ t :: (l₂ ++ ts) :=
     ⟨fun ⟨a, aL, l₁, l₂, l0, e, h⟩ => ⟨l₁, l₂, l0, e ▸ aL, h⟩, fun ⟨l₁, l₂, l0, aL, h⟩ => ⟨_, aL, l₁, l₂, l0, rfl, h⟩⟩
   rw [foldr_permutations_aux2] <;>
-    simp [mem_permutations_aux2', this, Or.comm, Or.left_comm, Or.assoc, And.comm, And.left_comm, And.assoc]
+    simp [mem_permutations_aux2', this, or_comm, or_left_comm, or_assoc, and_comm, and_left_comm, and_assoc]
 
 theorem length_foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List α)) :
     length (foldr (fun y r => (permutationsAux2 t ts r y id).2) r L) = sum (map length L) + length r := by
@@ -197,7 +197,7 @@ theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (Lis
     
   have sum_map : Sum (map length L) = n * length L := ih fun l m => H l (mem_cons_of_mem _ m)
   have length_l : length l = n := H _ (mem_cons_self _ _)
-  simp [sum_map, length_l, mul_addₓ, add_commₓ]
+  simp [sum_map, length_l, mul_add, add_comm]
 
 @[simp]
 theorem permutations_aux_nil (is : List α) : permutationsAux [] is = [] := by

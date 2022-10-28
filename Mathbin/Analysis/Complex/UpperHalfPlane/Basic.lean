@@ -27,20 +27,20 @@ open Matrix Matrix.SpecialLinearGroup
 
 open Classical BigOperators MatrixGroups
 
-attribute [local instance] Fintypeₓ.card_fin_even
+attribute [local instance] Fintype.card_fin_even
 
 /- Disable this instances as it is not the simp-normal form, and having them disabled ensures
 we state lemmas in this file without spurious `coe_fn` terms. -/
 attribute [-instance] Matrix.SpecialLinearGroup.hasCoeToFun
 
 -- mathport name: «expr↑ₘ »
-local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) _) _
+local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
 -- mathport name: «exprGL( , )⁺»
-local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Finₓ n) R
+local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
-has_coe[has_coe] α exprℂ()
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
+has_coe[has_coe] α exprℂ() -/
 /-- The open upper half plane -/
 def UpperHalfPlane :=
   { point : ℂ // 0 < point.im }deriving
@@ -124,15 +124,15 @@ def num (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
 def denom (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
   (↑ₘg 1 0 : ℝ) * z + (↑ₘg 1 1 : ℝ)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
-theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
   contrapose! h
   have : cd 0 = 0 := by
     -- we will need this twice
     apply_fun Complex.im  at h
-    simpa only [z.im_ne_zero, Complex.add_im, add_zeroₓ, coe_im, zero_mul, or_falseₓ, Complex.of_real_im,
+    simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, zero_mul, or_false_iff, Complex.of_real_im,
       Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
-  simp only [this, zero_mul, Complex.of_real_zero, zero_addₓ, Complex.of_real_eq_zero] at h
+  simp only [this, zero_mul, Complex.of_real_zero, zero_add, Complex.of_real_eq_zero] at h
   ext i
   fin_cases i <;> assumption
 
@@ -143,9 +143,9 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 := by
   simp only [general_linear_group.coe_det_apply] at DET
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by simpa using congr_arg Complex.im H
   cases H1
-  · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_addₓ, Complex.of_real_eq_zero] at H
-    rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Finₓ 2) (Finₓ 2) ℝ)] at DET
-    simp only [coe_coe, H, H1, mul_zero, sub_zero, lt_self_iff_falseₓ] at DET
+  · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_add, Complex.of_real_eq_zero] at H
+    rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Fin 2) (Fin 2) ℝ)] at DET
+    simp only [coe_coe, H, H1, mul_zero, sub_zero, lt_self_iff_false] at DET
     exact DET
     
   · change z.im > 0 at hz
@@ -156,7 +156,7 @@ theorem norm_sq_denom_pos (g : GL(2, ℝ)⁺) (z : ℍ) : 0 < Complex.normSq (de
   Complex.norm_sq_pos.mpr (denom_ne_zero g z)
 
 theorem norm_sq_denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : Complex.normSq (denom g z) ≠ 0 :=
-  ne_of_gtₓ (norm_sq_denom_pos g z)
+  ne_of_gt (norm_sq_denom_pos g z)
 
 /-- Fractional linear transformation, also known as the Moebius transformation -/
 def smulAux' (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
@@ -181,9 +181,9 @@ def smulAux (g : GL(2, ℝ)⁺) (z : ℍ) : ℍ :=
 theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) : denom (x * y) z = denom x (smulAux y z) * denom y z := by
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Matrix.mul, dot_product, Finₓ.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintypeₓ.univ_of_subsingleton, Finₓ.mk_zero, Finsetₓ.sum_singleton,
-    Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
+  simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
+    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Fin.mk_zero, Finset.sum_singleton, Fin.succ_zero_eq_one,
+    Complex.of_real_add, Complex.of_real_mul]
   ring
 
 theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux x (smulAux y z) := by
@@ -191,15 +191,15 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   change _ / _ = (_ * (_ / _) + _) * _
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Matrix.mul, dot_product, Finₓ.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintypeₓ.univ_of_subsingleton, Finₓ.mk_zero, Finsetₓ.sum_singleton,
-    Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
+  simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
+    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Fin.mk_zero, Finset.sum_singleton, Fin.succ_zero_eq_one,
+    Complex.of_real_add, Complex.of_real_mul]
   ring
 
 /-- The action of ` GL_pos 2 ℝ` on the upper half-plane by fractional linear transformations. -/
 instance : MulAction GL(2, ℝ)⁺ ℍ where
   smul := smulAux
-  one_smul := fun z => by
+  one_smul z := by
     ext1
     change _ / _ = _
     simp [coe_fn_coe_base']
@@ -207,9 +207,9 @@ instance : MulAction GL(2, ℝ)⁺ ℍ where
 
 section ModularScalarTowers
 
-variable (Γ : Subgroup (SpecialLinearGroup (Finₓ 2) ℤ))
+variable (Γ : Subgroup (SpecialLinearGroup (Fin 2) ℤ))
 
-instance sLAction {R : Type _} [CommRingₓ R] [Algebra R ℝ] : MulAction SL(2, R) ℍ :=
+instance sLAction {R : Type _} [CommRing R] [Algebra R ℝ] : MulAction SL(2, R) ℍ :=
   MulAction.compHom ℍ <| SpecialLinearGroup.toGLPos.comp <| map (algebraMap R ℝ)
 
 instance : Coe SL(2, ℤ) GL(2, ℝ)⁺ :=
@@ -246,7 +246,7 @@ theorem subgroup_on_SL_apply (s : Γ) (g : SL(2, ℤ)) (z : ℍ) : (s • g) •
   rfl
 
 instance subgroup_to_SL_tower :
-    IsScalarTower Γ SL(2, ℤ) ℍ where smul_assoc := fun s g z => by
+    IsScalarTower Γ SL(2, ℤ) ℍ where smul_assoc s g z := by
     rw [subgroup_on_SL_apply]
     apply MulAction.mul_smul
 
@@ -305,19 +305,19 @@ theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2, ℝ)) : ((↑ₘg 1 0 
 theorem SpecialLinearGroup.im_smul_eq_div_norm_sq : (g • z).im = z.im / Complex.normSq (denom g z) := by
   convert im_smul_eq_div_norm_sq g z
   simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix, Int.coe_cast_ring_hom,
-    (g : SL(2, ℝ)).Prop, one_mulₓ]
+    (g : SL(2, ℝ)).Prop, one_mul]
 
 theorem denom_apply (g : SL(2, ℤ)) (z : ℍ) :
-    denom g z = (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 0 * z + (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 1 := by simp
+    denom g z = (↑g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 * z + (↑g : Matrix (Fin 2) (Fin 2) ℤ) 1 1 := by simp
 
 end SLModularAction
 
 section PosRealAction
 
 instance posRealAction : MulAction { x : ℝ // 0 < x } ℍ where
-  smul := fun x z => mk ((x : ℝ) • z) <| by simpa using mul_pos x.2 z.2
-  one_smul := fun z => Subtype.ext <| one_smul _ _
-  mul_smul := fun x y z => Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
+  smul x z := mk ((x : ℝ) • z) <| by simpa using mul_pos x.2 z.2
+  one_smul z := Subtype.ext <| one_smul _ _
+  mul_smul x y z := Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
 
 variable (x : { x : ℝ // 0 < x }) (z : ℍ)
 
@@ -338,9 +338,9 @@ end PosRealAction
 section RealAddAction
 
 instance : AddAction ℝ ℍ where
-  vadd := fun x z => mk (x + z) <| by simpa using z.im_pos
-  zero_vadd := fun z => Subtype.ext <| by simp
-  add_vadd := fun x y z => Subtype.ext <| by simp [add_assocₓ]
+  vadd x z := mk (x + z) <| by simpa using z.im_pos
+  zero_vadd z := Subtype.ext <| by simp
+  add_vadd x y z := Subtype.ext <| by simp [add_assoc]
 
 variable (x : ℝ) (z : ℍ)
 
@@ -354,7 +354,7 @@ theorem vadd_re : (x +ᵥ z).re = x + z.re :=
 
 @[simp]
 theorem vadd_im : (x +ᵥ z).im = z.im :=
-  zero_addₓ _
+  zero_add _
 
 end RealAddAction
 

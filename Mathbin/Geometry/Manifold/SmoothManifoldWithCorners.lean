@@ -128,11 +128,11 @@ localized [Manifold] notation "∞" => (⊤ : ℕ∞)
 model vector space `E` over the field `𝕜`. This is all what is needed to
 define a smooth manifold with model space `H`, and model vector space `E`.
 -/
-@[nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure ModelWithCorners (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] (H : Type _) [TopologicalSpace H] extends LocalEquiv H E where
   source_eq : source = univ
-  unique_diff' : UniqueDiffOn 𝕜 to_local_equiv.Target
+  uniqueDiff' : UniqueDiffOn 𝕜 to_local_equiv.Target
   continuous_to_fun : Continuous to_fun := by continuity
   continuous_inv_fun : Continuous inv_fun := by continuity
 
@@ -143,7 +143,7 @@ def modelWithCornersSelf (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Typ
     [NormedSpace 𝕜 E] : ModelWithCorners 𝕜 E E where
   toLocalEquiv := LocalEquiv.refl E
   source_eq := rfl
-  unique_diff' := unique_diff_on_univ
+  uniqueDiff' := uniqueDiffOnUniv
   continuous_to_fun := continuous_id
   continuous_inv_fun := continuous_id
 
@@ -228,8 +228,8 @@ theorem target_eq : I.Target = Range (I : H → E) := by
   rw [← image_univ, ← I.source_eq]
   exact I.to_local_equiv.image_source_eq_target.symm
 
-protected theorem unique_diff : UniqueDiffOn 𝕜 (Range I) :=
-  I.target_eq ▸ I.unique_diff'
+protected theorem uniqueDiff : UniqueDiffOn 𝕜 (Range I) :=
+  I.target_eq ▸ I.uniqueDiff'
 
 @[simp, mfld_simps]
 protected theorem left_inv (x : H) : I.symm (I x) = x := by
@@ -253,6 +253,9 @@ protected theorem right_inv_on : RightInvOn I.symm I (Range I) :=
 protected theorem right_inv {x : E} (hx : x ∈ Range I) : I (I.symm x) = x :=
   I.RightInvOn hx
 
+theorem preimage_image (s : Set H) : I ⁻¹' (I '' s) = s :=
+  I.Injective.preimage_image s
+
 protected theorem image_eq (s : Set H) : I '' s = I.symm ⁻¹' s ∩ Range I := by
   refine' (I.to_local_equiv.image_eq_target_inter_inv_preimage _).trans _
   · rw [I.source_eq]
@@ -261,11 +264,11 @@ protected theorem image_eq (s : Set H) : I '' s = I.symm ⁻¹' s ∩ Range I :=
   · rw [inter_comm, I.target_eq, I.to_local_equiv_coe_symm]
     
 
-protected theorem closed_embedding : ClosedEmbedding I :=
+protected theorem closedEmbedding : ClosedEmbedding I :=
   I.LeftInverse.ClosedEmbedding I.continuous_symm I.Continuous
 
-theorem closed_range : IsClosed (Range I) :=
-  I.ClosedEmbedding.closed_range
+theorem closedRange : IsClosed (Range I) :=
+  I.ClosedEmbedding.closedRange
 
 theorem map_nhds_eq (x : H) : map I (𝓝 x) = 𝓝[Range I] I x :=
   I.ClosedEmbedding.toEmbedding.map_nhds_eq x
@@ -276,16 +279,16 @@ theorem image_mem_nhds_within {x : H} {s : Set H} (hs : s ∈ 𝓝 x) : I '' s �
 theorem symm_map_nhds_within_range (x : H) : map I.symm (𝓝[Range I] I x) = 𝓝 x := by
   rw [← I.map_nhds_eq, map_map, I.symm_comp_self, map_id]
 
-theorem unique_diff_preimage {s : Set H} (hs : IsOpen s) : UniqueDiffOn 𝕜 (I.symm ⁻¹' s ∩ Range I) := by
+theorem uniqueDiffPreimage {s : Set H} (hs : IsOpen s) : UniqueDiffOn 𝕜 (I.symm ⁻¹' s ∩ Range I) := by
   rw [inter_comm]
   exact I.unique_diff.inter (hs.preimage I.continuous_inv_fun)
 
-theorem unique_diff_preimage_source {β : Type _} [TopologicalSpace β] {e : LocalHomeomorph H β} :
+theorem uniqueDiffPreimageSource {β : Type _} [TopologicalSpace β] {e : LocalHomeomorph H β} :
     UniqueDiffOn 𝕜 (I.symm ⁻¹' e.Source ∩ Range I) :=
-  I.unique_diff_preimage e.open_source
+  I.uniqueDiffPreimage e.open_source
 
-theorem unique_diff_at_image {x : H} : UniqueDiffWithinAt 𝕜 (Range I) (I x) :=
-  I.unique_diff _ (mem_range_self _)
+theorem uniqueDiffAtImage {x : H} : UniqueDiffWithinAt 𝕜 (Range I) (I x) :=
+  I.uniqueDiff _ (mem_range_self _)
 
 protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) : LocallyCompactSpace H := by
   have : ∀ x : H, (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (I x) ∧ IsCompact s) fun s => I.symm '' (s ∩ range ⇑I) := by
@@ -339,19 +342,19 @@ def ModelWithCorners.prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Ty
     ModelWithCorners 𝕜 (E × E') (ModelProd H H') :=
   { I.toLocalEquiv.Prod I'.toLocalEquiv with toFun := fun x => (I x.1, I' x.2),
     invFun := fun x => (I.symm x.1, I'.symm x.2), Source := { x | x.1 ∈ I.Source ∧ x.2 ∈ I'.Source },
-    source_eq := by simp only [set_of_true, mfld_simps], unique_diff' := I.unique_diff'.Prod I'.unique_diff',
+    source_eq := by simp only [set_of_true, mfld_simps], uniqueDiff' := I.uniqueDiff'.Prod I'.uniqueDiff',
     continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun,
     continuous_inv_fun := I.continuous_inv_fun.prod_map I'.continuous_inv_fun }
 
 /-- Given a finite family of `model_with_corners` `I i` on `(E i, H i)`, we define the model with
 corners `pi I` on `(Π i, E i, model_pi H)`. See note [Manifold type tags] for explanation about
 `model_pi H`. -/
-def ModelWithCorners.pi {𝕜 : Type u} [NontriviallyNormedField 𝕜] {ι : Type v} [Fintypeₓ ι] {E : ι → Type w}
+def ModelWithCorners.pi {𝕜 : Type u} [NontriviallyNormedField 𝕜] {ι : Type v} [Fintype ι] {E : ι → Type w}
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] {H : ι → Type u'} [∀ i, TopologicalSpace (H i)]
     (I : ∀ i, ModelWithCorners 𝕜 (E i) (H i)) : ModelWithCorners 𝕜 (∀ i, E i) (ModelPi H) where
   toLocalEquiv := LocalEquiv.pi fun i => (I i).toLocalEquiv
   source_eq := by simp only [Set.pi_univ, mfld_simps]
-  unique_diff' := UniqueDiffOn.pi ι E _ _ fun i _ => (I i).unique_diff'
+  uniqueDiff' := UniqueDiffOn.pi ι E _ _ fun i _ => (I i).uniqueDiff'
   continuous_to_fun := continuous_pi fun i => (I i).Continuous.comp (continuous_apply i)
   continuous_inv_fun := continuous_pi fun i => (I i).continuous_symm.comp (continuous_apply i)
 
@@ -383,6 +386,15 @@ theorem model_with_corners_prod_coe_symm (I : ModelWithCorners 𝕜 E H) (I' : M
     ((I.Prod I').symm : _ × _ → _ × _) = Prod.map I.symm I'.symm :=
   rfl
 
+theorem model_with_corners_self_prod : 𝓘(𝕜, E × F) = 𝓘(𝕜, E).Prod 𝓘(𝕜, F) := by
+  ext1
+  simp
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem ModelWithCorners.range_prod : Range (I.Prod J) = Range I ×ˢ Range J := by
+  simp_rw [← ModelWithCorners.target_eq]
+  rfl
+
 end ModelWithCornersProd
 
 section Boundaryless
@@ -393,15 +405,15 @@ class ModelWithCorners.Boundaryless {𝕜 : Type _} [NontriviallyNormedField �
   range_eq_univ : Range I = univ
 
 /-- The trivial model with corners has no boundary -/
-instance model_with_corners_self_boundaryless (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
-    [NormedAddCommGroup E] [NormedSpace 𝕜 E] : (modelWithCornersSelf 𝕜 E).Boundaryless :=
+instance modelWithCornersSelfBoundaryless (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] : (modelWithCornersSelf 𝕜 E).Boundaryless :=
   ⟨by simp⟩
 
 /-- If two model with corners are boundaryless, their product also is -/
-instance ModelWithCorners.range_eq_univ_prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Type v}
-    [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type w} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
-    [I.Boundaryless] {E' : Type v'} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type w'} [TopologicalSpace H']
-    (I' : ModelWithCorners 𝕜 E' H') [I'.Boundaryless] : (I.Prod I').Boundaryless := by
+instance ModelWithCorners.rangeEqUnivProd {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Type v} [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] {H : Type w} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) [I.Boundaryless] {E' : Type v'}
+    [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
+    [I'.Boundaryless] : (I.Prod I').Boundaryless := by
   constructor
   dsimp [ModelWithCorners.prod, ModelProd]
   rw [← prod_range_range_eq, ModelWithCorners.Boundaryless.range_eq_univ, ModelWithCorners.Boundaryless.range_eq_univ,
@@ -445,7 +457,7 @@ def contDiffGroupoid : StructureGroupoid H :=
         rw [← hy]
         simp only [mfld_simps],
       locality := fun f u hu H => by
-        apply cont_diff_on_of_locally_cont_diff_on
+        apply contDiffOnOfLocallyContDiffOn
         rintro y ⟨hy1, hy2⟩
         rcases mem_range.1 hy2 with ⟨x, hx⟩
         rw [← hx] at hy1⊢
@@ -473,12 +485,12 @@ theorem cont_diff_groupoid_le (h : m ≤ n) : contDiffGroupoid n I ≤ contDiffG
   rw [contDiffGroupoid, contDiffGroupoid]
   apply groupoid_of_pregroupoid_le
   intro f s hfs
-  exact ContDiffOn.of_le hfs h
+  exact ContDiffOn.ofLe hfs h
 
 /-- The groupoid of `0`-times continuously differentiable maps is just the groupoid of all
 local homeomorphisms -/
 theorem cont_diff_groupoid_zero_eq : contDiffGroupoid 0 I = continuousGroupoid H := by
-  apply le_antisymmₓ le_top
+  apply le_antisymm le_top
   intro u hu
   -- we have to check that every local homeomorphism belongs to `cont_diff_groupoid 0 I`,
   -- by unfolding its definition
@@ -521,12 +533,12 @@ theorem cont_diff_groupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithC
   cases' he' with he' he'_symm
   simp only at he he_symm he' he'_symm
   constructor <;> simp only [LocalEquiv.prod_source, LocalHomeomorph.prod_to_local_equiv]
-  · have h3 := ContDiffOn.prod_map he he'
+  · have h3 := ContDiffOn.prodMap he he'
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
     exact h3
     
-  · have h3 := ContDiffOn.prod_map he_symm he'_symm
+  · have h3 := ContDiffOn.prodMap he_symm he'_symm
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
     exact h3
@@ -559,7 +571,7 @@ theorem SmoothManifoldWithCorners.mk' {𝕜 : Type _} [NontriviallyNormedField �
     [ChartedSpace H M] [gr : HasGroupoid M (contDiffGroupoid ∞ I)] : SmoothManifoldWithCorners I M :=
   { gr with }
 
-theorem smooth_manifold_with_corners_of_cont_diff_on {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
+theorem smoothManifoldWithCornersOfContDiffOn {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _)
     [TopologicalSpace M] [ChartedSpace H M]
     (h :
@@ -572,8 +584,8 @@ theorem smooth_manifold_with_corners_of_cont_diff_on {𝕜 : Type _} [Nontrivial
       apply StructureGroupoid.compatible }
 
 /-- For any model with corners, the model space is a smooth manifold -/
-instance model_space_smooth {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
-    [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} : SmoothManifoldWithCorners I H :=
+instance modelSpaceSmooth {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} : SmoothManifoldWithCorners I H :=
   { has_groupoid_model_space _ _ with }
 
 end SmoothManifoldWithCorners
@@ -620,17 +632,17 @@ instance prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [Norme
 
 end SmoothManifoldWithCorners
 
-theorem LocalHomeomorph.singleton_smooth_manifold_with_corners {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
+theorem LocalHomeomorph.singletonSmoothManifoldWithCorners {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
     [TopologicalSpace M] (e : LocalHomeomorph M H) (h : e.Source = Set.Univ) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ (e.singletonChartedSpace h) :=
   @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <| e.singleton_has_groupoid h (contDiffGroupoid ∞ I)
 
-theorem OpenEmbedding.singleton_smooth_manifold_with_corners {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
+theorem OpenEmbedding.singletonSmoothManifoldWithCorners {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
     [TopologicalSpace M] [Nonempty M] {f : M → H} (h : OpenEmbedding f) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ h.singletonChartedSpace :=
-  (h.toLocalHomeomorph f).singleton_smooth_manifold_with_corners I (by simp)
+  (h.toLocalHomeomorph f).singletonSmoothManifoldWithCorners I (by simp)
 
 namespace TopologicalSpace.Opens
 
@@ -650,8 +662,9 @@ section ExtendedCharts
 open TopologicalSpace
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
-  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] (x : M)
-  {s t : Set M}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {E' : Type _}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
+  {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M'] (x : M) {s t : Set M}
 
 /-!
 ### Extended charts
@@ -853,18 +866,24 @@ theorem ext_coord_change_source (x x' : M) :
     inter_right_comm _ (range I)]
   rfl
 
-theorem cont_diff_on_ext_coord_change [SmoothManifoldWithCorners I M] (x x' : M) :
+theorem contDiffOnExtCoordChange [SmoothManifoldWithCorners I M] (x x' : M) :
     ContDiffOn 𝕜 ⊤ (extChartAt I x ∘ (extChartAt I x').symm) ((extChartAt I x').symm ≫ extChartAt I x).Source := by
   rw [ext_coord_change_source, I.image_eq]
   exact (HasGroupoid.compatible (contDiffGroupoid ⊤ I) (chart_mem_atlas H x') (chart_mem_atlas H x)).1
 
-theorem cont_diff_within_at_ext_coord_change [SmoothManifoldWithCorners I M] (x x' : M) {y : E}
+theorem contDiffWithinAtExtCoordChange [SmoothManifoldWithCorners I M] (x x' : M) {y : E}
     (hy : y ∈ ((extChartAt I x').symm ≫ extChartAt I x).Source) :
     ContDiffWithinAt 𝕜 ⊤ (extChartAt I x ∘ (extChartAt I x').symm) (Range I) y := by
-  apply (cont_diff_on_ext_coord_change I x x' y hy).mono_of_mem
+  apply (contDiffOnExtCoordChange I x x' y hy).mono_of_mem
   rw [ext_coord_change_source] at hy⊢
   obtain ⟨z, hz, rfl⟩ := hy
   exact I.image_mem_nhds_within ((LocalHomeomorph.open_source _).mem_nhds hz)
+
+/-- Conjugating a function to write it in the preferred charts around `x`.
+The manifold derivative of `f` will just be the derivative of this conjugated function. -/
+@[simp, mfld_simps]
+def writtenInExtChartAt (x : M) (f : M → M') : E → E' :=
+  extChartAt I' (f x) ∘ f ∘ (extChartAt I x).symm
 
 variable (𝕜)
 
@@ -880,6 +899,11 @@ theorem ext_chart_model_space_eq_id (x : E) : extChartAt 𝓘(𝕜, E) x = Local
 
 theorem ext_chart_model_space_apply {x y : E} : extChartAt 𝓘(𝕜, E) x y = y :=
   rfl
+
+variable {𝕜}
+
+theorem ext_chart_at_prod (x : M × M') : extChartAt (I.Prod I') x = (extChartAt I x.1).Prod (extChartAt I' x.2) := by
+  simp only [mfld_simps]
 
 end ExtendedCharts
 

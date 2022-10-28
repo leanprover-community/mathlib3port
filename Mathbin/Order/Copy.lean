@@ -58,8 +58,8 @@ with possibly different definitional equalities. -/
 def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_le : le = @CompleteLattice.Le α c) (top : α)
     (eq_top : top = @CompleteLattice.top α c) (bot : α) (eq_bot : bot = @CompleteLattice.bot α c) (sup : α → α → α)
     (eq_sup : sup = @CompleteLattice.sup α c) (inf : α → α → α) (eq_inf : inf = @CompleteLattice.inf α c)
-    (Sup : Set α → α) (eq_Sup : Sup = @CompleteLattice.supₓ α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @CompleteLattice.infₓ α c) : CompleteLattice α := by
+    (Sup : Set α → α) (eq_Sup : Sup = @CompleteLattice.sup α c) (Inf : Set α → α)
+    (eq_Inf : Inf = @CompleteLattice.inf α c) : CompleteLattice α := by
   refine'
     { Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf eq_inf with le, top, bot, sup, inf, sup,
       inf.. }
@@ -72,8 +72,8 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
 equalities. -/
 def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le α c) (top : α) (eq_top : top = @Frame.top α c)
     (bot : α) (eq_bot : bot = @Frame.bot α c) (sup : α → α → α) (eq_sup : sup = @Frame.sup α c) (inf : α → α → α)
-    (eq_inf : inf = @Frame.inf α c) (Sup : Set α → α) (eq_Sup : Sup = @Frame.supₓ α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @Frame.infₓ α c) : Frame α := by
+    (eq_inf : inf = @Frame.inf α c) (Sup : Set α → α) (eq_Sup : Sup = @Frame.sup α c) (Inf : Set α → α)
+    (eq_Inf : Inf = @Frame.inf α c) : Frame α := by
   refine'
     { CompleteLattice.copy (@frame.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup
         eq_Sup Inf eq_Inf with
@@ -88,7 +88,7 @@ equalities. -/
 def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Coframe.Le α c) (top : α)
     (eq_top : top = @Coframe.top α c) (bot : α) (eq_bot : bot = @Coframe.bot α c) (sup : α → α → α)
     (eq_sup : sup = @Coframe.sup α c) (inf : α → α → α) (eq_inf : inf = @Coframe.inf α c) (Sup : Set α → α)
-    (eq_Sup : Sup = @Coframe.supₓ α c) (Inf : Set α → α) (eq_Inf : Inf = @Coframe.infₓ α c) : Coframe α := by
+    (eq_Sup : Sup = @Coframe.sup α c) (Inf : Set α → α) (eq_Inf : Inf = @Coframe.inf α c) : Coframe α := by
   refine'
     { CompleteLattice.copy (@coframe.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup
         eq_Sup Inf eq_Inf with
@@ -104,8 +104,8 @@ def CompleteDistribLattice.copy (c : CompleteDistribLattice α) (le : α → α 
     (eq_le : le = @CompleteDistribLattice.Le α c) (top : α) (eq_top : top = @CompleteDistribLattice.top α c) (bot : α)
     (eq_bot : bot = @CompleteDistribLattice.bot α c) (sup : α → α → α) (eq_sup : sup = @CompleteDistribLattice.sup α c)
     (inf : α → α → α) (eq_inf : inf = @CompleteDistribLattice.inf α c) (Sup : Set α → α)
-    (eq_Sup : Sup = @CompleteDistribLattice.supₓ α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @CompleteDistribLattice.infₓ α c) : CompleteDistribLattice α :=
+    (eq_Sup : Sup = @CompleteDistribLattice.sup α c) (Inf : Set α → α)
+    (eq_Inf : Inf = @CompleteDistribLattice.inf α c) : CompleteDistribLattice α :=
   { Frame.copy (@CompleteDistribLattice.toFrame α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup eq_Sup Inf
       eq_Inf,
     Coframe.copy (@CompleteDistribLattice.toCoframe α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup eq_Sup
@@ -117,8 +117,8 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     (eq_le : le = @ConditionallyCompleteLattice.Le α c) (sup : α → α → α)
     (eq_sup : sup = @ConditionallyCompleteLattice.sup α c) (inf : α → α → α)
     (eq_inf : inf = @ConditionallyCompleteLattice.inf α c) (Sup : Set α → α)
-    (eq_Sup : Sup = @ConditionallyCompleteLattice.supₓ α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @ConditionallyCompleteLattice.infₓ α c) : ConditionallyCompleteLattice α := by
+    (eq_Sup : Sup = @ConditionallyCompleteLattice.sup α c) (Inf : Set α → α)
+    (eq_Inf : Inf = @ConditionallyCompleteLattice.inf α c) : ConditionallyCompleteLattice α := by
   refine' { le, sup, inf, sup, inf.. }
   all_goals abstract 
     subst_vars

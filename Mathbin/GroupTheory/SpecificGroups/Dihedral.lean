@@ -56,22 +56,22 @@ private def inv : DihedralGroup n → DihedralGroup n
 
 /-- The group structure on `dihedral_group n`.
 -/
-instance : Groupₓ (DihedralGroup n) where
+instance : Group (DihedralGroup n) where
   mul := mul
   mul_assoc := by rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
   one := one
   one_mul := by
     rintro (a | a)
-    exact congr_arg r (zero_addₓ a)
+    exact congr_arg r (zero_add a)
     exact congr_arg sr (sub_zero a)
   mul_one := by
     rintro (a | a)
-    exact congr_arg r (add_zeroₓ a)
-    exact congr_arg sr (add_zeroₓ a)
+    exact congr_arg r (add_zero a)
+    exact congr_arg sr (add_zero a)
   inv := inv
   mul_left_inv := by
     rintro (a | a)
-    exact congr_arg r (neg_add_selfₓ a)
+    exact congr_arg r (neg_add_self a)
     exact congr_arg r (sub_self a)
 
 @[simp]
@@ -94,11 +94,11 @@ theorem one_def : (1 : DihedralGroup n) = r 0 :=
   rfl
 
 private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
-  invFun := fun i =>
+  invFun i :=
     match i with
     | r j => Sum.inl j
     | sr j => Sum.inr j
-  toFun := fun i =>
+  toFun i :=
     match i with
     | Sum.inl j => r j
     | Sum.inr j => sr j
@@ -107,24 +107,24 @@ private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
 
 /-- If `0 < n`, then `dihedral_group n` is a finite group.
 -/
-instance [NeZero n] : Fintypeₓ (DihedralGroup n) :=
-  Fintypeₓ.ofEquiv _ fintypeHelper
+instance [NeZero n] : Fintype (DihedralGroup n) :=
+  Fintype.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (DihedralGroup n) :=
   ⟨⟨r 0, sr 0, by decide⟩⟩
 
 /-- If `0 < n`, then `dihedral_group n` has `2n` elements.
 -/
-theorem card [NeZero n] : Fintypeₓ.card (DihedralGroup n) = 2 * n := by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintypeₓ.card_sum, Zmod.card, two_mul]
+theorem card [NeZero n] : Fintype.card (DihedralGroup n) = 2 * n := by
+  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
 
 @[simp]
 theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
   induction' k with k IH
-  · rw [Nat.cast_zeroₓ]
+  · rw [Nat.cast_zero]
     rfl
     
-  · rw [pow_succₓ, IH, r_mul_r]
+  · rw [pow_succ, IH, r_mul_r]
     congr 1
     norm_cast
     rw [Nat.one_add]
@@ -161,32 +161,32 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     simpa using hn.ne'
     
   · skip
-    apply (Nat.le_of_dvdₓ (NeZero.pos n) <| order_of_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
+    apply (Nat.le_of_dvd (NeZero.pos n) <| order_of_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
     intro h
     have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_order_of_eq_one _
     rw [r_one_pow] at h1
     injection h1 with h2
-    rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_ltₓ h] at h2
+    rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
     exact absurd h2.symm (order_of_pos _).Ne
     
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
 -/
-theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcdₓ n i.val := by
+theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val := by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
   rw [← r_one_pow, order_of_pow, order_of_r_one]
 
-theorem exponent : Monoidₓ.exponent (DihedralGroup n) = lcm n 2 := by
+theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 := by
   rcases eq_zero_or_ne_zero n with (rfl | hn)
-  · exact Monoidₓ.exponent_eq_zero_of_order_zero order_of_r_one
+  · exact Monoid.exponent_eq_zero_of_order_zero order_of_r_one
     
   skip
   apply Nat.dvd_antisymm
-  · apply Monoidₓ.exponent_dvd_of_forall_pow_eq_one
+  · apply Monoid.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)
     · rw [← order_of_dvd_iff_pow_eq_one, order_of_r]
       refine' Nat.dvd_trans ⟨gcd n m.val, _⟩ (dvd_lcm_left n 2)
-      · exact (Nat.div_mul_cancelₓ (Nat.gcd_dvd_leftₓ n m.val)).symm
+      · exact (Nat.div_mul_cancel (Nat.gcd_dvd_left n m.val)).symm
         
       
     · rw [← order_of_dvd_iff_pow_eq_one, order_of_sr]
@@ -194,10 +194,10 @@ theorem exponent : Monoidₓ.exponent (DihedralGroup n) = lcm n 2 := by
       
     
   · apply lcm_dvd
-    · convert Monoidₓ.order_dvd_exponent (r 1)
+    · convert Monoid.order_dvd_exponent (r 1)
       exact order_of_r_one.symm
       
-    · convert Monoidₓ.order_dvd_exponent (sr 0)
+    · convert Monoid.order_dvd_exponent (sr 0)
       exact (order_of_sr 0).symm
       
     

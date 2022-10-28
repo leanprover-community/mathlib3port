@@ -203,9 +203,9 @@ theorem from_zero_ext {X : C} (f g : 0 ⟶ X) : f = g :=
 
 instance (X : C) : Subsingleton (X ≅ 0) := by tidy
 
-instance {X : C} (f : 0 ⟶ X) : Mono f where right_cancellation := fun Z g h w => by ext
+instance {X : C} (f : 0 ⟶ X) : Mono f where right_cancellation Z g h w := by ext
 
-instance {X : C} (f : X ⟶ 0) : Epi f where left_cancellation := fun Z g h w => by ext
+instance {X : C} (f : X ⟶ 0) : Epi f where left_cancellation Z g h w := by ext
 
 instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) : IsIso f := by convert show is_iso (𝟙 (0 : C)) by infer_instance
 

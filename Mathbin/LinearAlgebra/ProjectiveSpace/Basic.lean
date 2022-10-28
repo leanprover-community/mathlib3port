@@ -36,17 +36,17 @@ this would require a significant refactor of the results from
 -/
 
 
-variable (K V : Type _) [Field K] [AddCommGroupₓ V] [Module K V]
+variable (K V : Type _) [Field K] [AddCommGroup V] [Module K V]
 
 /-- The setoid whose quotient is the projectivization of `V`. -/
-def projectivizationSetoid : Setoidₓ { v : V // v ≠ 0 } :=
+def projectivizationSetoid : Setoid { v : V // v ≠ 0 } :=
   (MulAction.orbitRel Kˣ V).comap coe
 
 /-- The projectivization of the `K`-vector space `V`.
 The notation `ℙ K V` is preferred. -/
 @[nolint has_nonempty_instance]
 def Projectivization :=
-  Quotientₓ (projectivizationSetoid K V)
+  Quotient (projectivizationSetoid K V)
 
 -- mathport name: exprℙ
 notation "ℙ" => Projectivization
@@ -57,11 +57,11 @@ variable {V}
 
 /-- Construct an element of the projectivization from a nonzero vector. -/
 def mk (v : V) (hv : v ≠ 0) : ℙ K V :=
-  Quotientₓ.mk' ⟨v, hv⟩
+  Quotient.mk' ⟨v, hv⟩
 
 /-- A variant of `projectivization.mk` in terms of a subtype. `mk` is preferred. -/
 def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
-  Quotientₓ.mk' v
+  Quotient.mk' v
 
 @[simp]
 theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by
@@ -91,14 +91,14 @@ open FiniteDimensional
 
 /-- Consider an element of the projectivization as a submodule of `V`. -/
 protected def submodule (v : ℙ K V) : Submodule K V :=
-  (Quotientₓ.liftOn' v fun v => K ∙ (v : V)) <| by
+  (Quotient.liftOn' v fun v => K ∙ (v : V)) <| by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨x, rfl : x • b = a⟩
     exact Submodule.span_singleton_group_smul_eq _ x _
 
 variable (K)
 
 theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) : mk K v hv = mk K w hw ↔ ∃ a : Kˣ, a • w = v :=
-  Quotientₓ.eq'
+  Quotient.eq'
 
 /-- Two nonzero vectors go to the same point in projective space if and only if one is
 a scalar multiple of the other. -/
@@ -114,15 +114,15 @@ theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) : mk K v hv = mk K
     
 
 theorem exists_smul_eq_mk_rep (v : V) (hv : v ≠ 0) : ∃ a : Kˣ, a • v = (mk K v hv).rep :=
-  show (projectivizationSetoid K V).Rel _ _ from Quotientₓ.mk_out' ⟨v, hv⟩
+  show (projectivizationSetoid K V).Rel _ _ from Quotient.mk_out' ⟨v, hv⟩
 
 variable {K}
 
 /-- An induction principle for `projectivization`.
 Use as `induction v using projectivization.ind`. -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem ind {P : ℙ K V → Prop} (h : ∀ (v : V) (h : v ≠ 0), P (mk K v h)) : ∀ p, P p :=
-  Quotientₓ.ind' <| Subtype.rec <| h
+  Quotient.ind' <| Subtype.rec <| h
 
 @[simp]
 theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).Submodule = K ∙ v :=
@@ -143,11 +143,11 @@ instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by
 
 theorem submodule_injective : Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) := by
   intro u v h
-  replace h := le_of_eqₓ h
+  replace h := le_of_eq h
   simp only [submodule_eq] at h
   rw [Submodule.le_span_singleton_iff] at h
   rw [← mk_rep v, ← mk_rep u]
-  apply Quotientₓ.sound'
+  apply Quotient.sound'
   obtain ⟨a, ha⟩ := h u.rep (Submodule.mem_span_singleton_self _)
   have : a ≠ 0 := fun c => u.rep_nonzero (by simpa [c] using ha.symm)
   use Units.mk0 a this, ha
@@ -157,7 +157,7 @@ variable (K V)
 /-- The equivalence between the projectivization and the
 collection of subspaces of dimension 1. -/
 noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K H = 1 } :=
-  Equivₓ.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
+  Equiv.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
     (by
       constructor
       · intro u v h
@@ -203,11 +203,11 @@ theorem mk''_submodule (v : ℙ K V) : mk'' v.Submodule v.finrank_submodule = v 
 
 section Map
 
-variable {L W : Type _} [Field L] [AddCommGroupₓ W] [Module L W]
+variable {L W : Type _} [Field L] [AddCommGroup W] [Module L W]
 
 /-- An injective semilinear map of vector spaces induces a map on projective spaces. -/
 def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : ℙ K V → ℙ L W :=
-  Quotientₓ.map' (fun v => ⟨f v, fun c => v.2 (hf (by simp [c]))⟩)
+  Quotient.map' (fun v => ⟨f v, fun c => v.2 (hf (by simp [c]))⟩)
     (by
       rintro ⟨u, hu⟩ ⟨v, hv⟩ ⟨a, ha⟩
       use Units.map σ.to_monoid_hom a
@@ -220,9 +220,9 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
     Function.Injective (map f hf) := by
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
-  apply Quotientₓ.sound'
+  apply Quotient.sound'
   dsimp [map, mk] at h
-  simp only [Quotientₓ.eq'] at h
+  simp only [Quotient.eq'] at h
   obtain ⟨a, ha⟩ := h
   use Units.map τ.to_monoid_hom a
   dsimp at ha⊢
@@ -238,7 +238,7 @@ theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injec
   rfl
 
 @[simp]
-theorem map_comp {F U : Type _} [Field F] [AddCommGroupₓ U] [Module F U] {σ : K →+* L} {τ : L →+* F} {γ : K →+* F}
+theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K →+* L} {τ : L →+* F} {γ : K →+* F}
     [RingHomCompTriple σ τ γ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f) (g : W →ₛₗ[τ] U)
     (hg : Function.Injective g) : map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf := by
   ext v

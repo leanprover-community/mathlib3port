@@ -21,7 +21,7 @@ variable {E : Type _} [SeminormedAddCommGroup E] {r : ℝ}
 antipodal map. -/
 instance : HasInvolutiveNeg (Sphere (0 : E) r) where
   neg := (Subtype.map Neg.neg) fun w => by simp
-  neg_neg := fun x => Subtype.ext <| neg_negₓ x
+  neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
 theorem coe_neg_sphere {r : ℝ} (v : Sphere (0 : E) r) : ↑(-v) = (-v : E) :=
@@ -34,7 +34,7 @@ instance : HasContinuousNeg (Sphere (0 : E) r) :=
 antipodal map. -/
 instance {r : ℝ} : HasInvolutiveNeg (Ball (0 : E) r) where
   neg := (Subtype.map Neg.neg) fun w => by simp
-  neg_neg := fun x => Subtype.ext <| neg_negₓ x
+  neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
 theorem coe_neg_ball {r : ℝ} (v : Ball (0 : E) r) : ↑(-v) = (-v : E) :=
@@ -47,7 +47,7 @@ instance : HasContinuousNeg (Ball (0 : E) r) :=
 antipodal map. -/
 instance {r : ℝ} : HasInvolutiveNeg (ClosedBall (0 : E) r) where
   neg := (Subtype.map Neg.neg) fun w => by simp
-  neg_neg := fun x => Subtype.ext <| neg_negₓ x
+  neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
 theorem coe_neg_closed_ball {r : ℝ} (v : ClosedBall (0 : E) r) : ↑(-v) = (-v : E) :=

@@ -64,12 +64,12 @@ instance [HasFaithfulSmul M α] : HasFaithfulSmul M (Option α) :=
 
 end HasSmul
 
-instance [Monoidₓ M] [MulAction M α] : MulAction M (Option α) where
+instance [Monoid M] [MulAction M α] : MulAction M (Option α) where
   smul := (· • ·)
-  one_smul := fun b => by
+  one_smul b := by
     cases b
     exacts[rfl, congr_arg some (one_smul _ _)]
-  mul_smul := fun a₁ a₂ b => by
+  mul_smul a₁ a₂ b := by
     cases b
     exacts[rfl, congr_arg some (mul_smul _ _ _)]
 

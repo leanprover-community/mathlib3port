@@ -13,15 +13,15 @@ This generalises the integer power function on a division ring.
 -/
 
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable {G₀ : Type _} [GroupWithZeroₓ G₀] {a : G₀} {m n : ℕ}
+variable {G₀ : Type _} [GroupWithZero G₀] {a : G₀} {m n : ℕ}
 
 section NatPow
 
 theorem pow_sub₀ (a : G₀) {m n : ℕ} (ha : a ≠ 0) (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
   have h1 : m - n + n = m := tsub_add_cancel_of_le h
-  have h2 : a ^ (m - n) * a ^ n = a ^ m := by rw [← pow_addₓ, h1]
+  have h2 : a ^ (m - n) * a ^ n = a ^ m := by rw [← pow_add, h1]
   simpa only [div_eq_mul_inv] using eq_div_of_mul_eq (pow_ne_zero _ ha) h2
 
 theorem pow_sub_of_lt (a : G₀) {m n : ℕ} (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
@@ -35,22 +35,22 @@ theorem pow_inv_comm₀ (a : G₀) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a�
   (Commute.refl a).inv_left₀.pow_pow m n
 
 theorem inv_pow_sub₀ (ha : a ≠ 0) (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
-  rw [pow_sub₀ _ (inv_ne_zero ha) h, inv_pow, inv_pow, inv_invₓ]
+  rw [pow_sub₀ _ (inv_ne_zero ha) h, inv_pow, inv_pow, inv_inv]
 
 theorem inv_pow_sub_of_lt (a : G₀) (h : n < m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
-  rw [pow_sub_of_lt a⁻¹ h, inv_pow, inv_pow, inv_invₓ]
+  rw [pow_sub_of_lt a⁻¹ h, inv_pow, inv_pow, inv_inv]
 
 end NatPow
 
-end GroupWithZeroₓ
+end GroupWithZero
 
 section Zpow
 
 open Int
 
-variable {G₀ : Type _} [GroupWithZeroₓ G₀]
+variable {G₀ : Type _} [GroupWithZero G₀]
 
-attribute [local ematch] le_of_ltₓ
+attribute [local ematch] le_of_lt
 
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
   | (n : ℕ), h => by
@@ -66,22 +66,22 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
     
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
-  | (n : ℕ) => by simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ'ₓ]
-  | -[1 + 0] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_oneₓ, inv_mul_cancel ha]
+  | (n : ℕ) => by simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ']
+  | -[1 + 0] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
   | -[1 + (n + 1)] => by
     rw [Int.neg_succ_of_nat_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.coe_nat_succ, zpow_coe_nat,
-      zpow_coe_nat, pow_succₓ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_oneₓ]
+      zpow_coe_nat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_one]
 
 theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
   calc
-    a ^ (n - 1) = a ^ (n - 1) * a * a⁻¹ := by rw [mul_assoc, mul_inv_cancel ha, mul_oneₓ]
+    a ^ (n - 1) = a ^ (n - 1) * a * a⁻¹ := by rw [mul_assoc, mul_inv_cancel ha, mul_one]
     _ = a ^ n * a⁻¹ := by rw [← zpow_add_one₀ ha, sub_add_cancel]
     
 
 theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m * a ^ n := by
   induction' n using Int.induction_on with n ihn n ihn
   case hz => simp
-  · simp only [← add_assocₓ, zpow_add_one₀ ha, ihn, mul_assoc]
+  · simp only [← add_assoc, zpow_add_one₀ ha, ihn, mul_assoc]
     
   · rw [zpow_sub_one₀ ha, ← mul_assoc, ← ihn, ← zpow_sub_one₀ ha, add_sub_assoc]
     
@@ -95,7 +95,7 @@ theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 
     
   by_cases ha:a = 0
   · subst a
-    simp only [false_orₓ, eq_self_iff_true, not_true, Ne.def, hm, hn, false_andₓ, or_falseₓ] at h
+    simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff, or_false_iff] at h
     rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
     
   · exact zpow_add₀ ha m n
@@ -174,7 +174,7 @@ end
 /-- If a monoid homomorphism `f` between two `group_with_zero`s maps `0` to `0`, then it maps `x^n`,
 `n : ℤ`, to `(f x)^n`. -/
 @[simp]
-theorem map_zpow₀ {F G₀ G₀' : Type _} [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroHomClass F G₀ G₀'] (f : F)
+theorem map_zpow₀ {F G₀ G₀' : Type _} [GroupWithZero G₀] [GroupWithZero G₀'] [MonoidWithZeroHomClass F G₀ G₀'] (f : F)
     (x : G₀) (n : ℤ) : f (x ^ n) = f x ^ n :=
   map_zpow' f (map_inv₀ f) x n
 

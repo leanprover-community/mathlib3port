@@ -81,8 +81,8 @@ theorem omega_limit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω 
 theorem omega_limit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
   Inter₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
 
-theorem is_closed_omega_limit : IsClosed (ω f ϕ s) :=
-  is_closed_Inter fun u => is_closed_Inter fun hu => is_closed_closure
+theorem isClosedOmegaLimit : IsClosed (ω f ϕ s) :=
+  isClosedInter fun u => isClosedInter fun hu => isClosedClosure
 
 theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
     {ga : α → α'} {s' : Set α'} (hs : MapsTo ga s s') {gb : β → β'} (hg : ∀ᶠ t in f, EqOn (gb ∘ ϕ t) (ϕ' t ∘ ga) s)
@@ -215,9 +215,9 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
     ∃ u ∈ f, Closure (Image2 ϕ u s) ⊆ n := by
   rcases hc₂ with ⟨v, hv₁, hv₂⟩
   let k := Closure (image2 ϕ v s)
-  have hk : IsCompact (k \ n) := IsCompact.diff (compact_of_is_closed_subset hc₁ is_closed_closure hv₂) hn₁
-  let j := fun u => Closure (image2 ϕ (u ∩ v) s)ᶜ
-  have hj₁ : ∀ u ∈ f, IsOpen (j u) := fun _ _ => is_open_compl_iff.mpr is_closed_closure
+  have hk : IsCompact (k \ n) := IsCompact.diff (compact_of_is_closed_subset hc₁ isClosedClosure hv₂) hn₁
+  let j u := Closure (image2 ϕ (u ∩ v) s)ᶜ
+  have hj₁ : ∀ u ∈ f, IsOpen (j u) := fun _ _ => is_open_compl_iff.mpr isClosedClosure
   have hj₂ : k \ n ⊆ ⋃ u ∈ f, j u := by
     have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bUnion_eq_Union _ _
     rw [this, diff_subset_comm, diff_Union]
@@ -291,13 +291,13 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
     exact hn.mono subset_closure
     
   · intro
-    apply compact_of_is_closed_subset hc₁ is_closed_closure
+    apply compact_of_is_closed_subset hc₁ isClosedClosure
     calc
       _ ⊆ Closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
       _ ⊆ c := hv₂
       
     
-  · exact fun _ => is_closed_closure
+  · exact fun _ => isClosedClosure
     
 
 theorem nonempty_omega_limit [CompactSpace β] [NeBot f] (hs : s.Nonempty) : (ω f ϕ s).Nonempty :=
@@ -312,7 +312,7 @@ end OmegaLimit
 
 namespace Flow
 
-variable {τ : Type _} [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
+variable {τ : Type _} [TopologicalSpace τ] [AddMonoid τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
   (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
 open OmegaLimit
@@ -335,7 +335,7 @@ end Flow
 
 namespace Flow
 
-variable {τ : Type _} [TopologicalSpace τ] [AddCommGroupₓ τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
+variable {τ : Type _} [TopologicalSpace τ] [AddCommGroup τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
   (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
 open OmegaLimit

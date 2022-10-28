@@ -67,16 +67,16 @@ theorem jacobiSymNat.zero_right (a : ℕ) : jacobiSymNat a 0 = 1 := by rwa [jaco
 theorem jacobiSymNat.one_right (a : ℕ) : jacobiSymNat a 1 = 1 := by rwa [jacobi_sym_nat, jacobiSym.one_right]
 
 theorem jacobiSymNat.zero_left_even (b : ℕ) (hb : b ≠ 0) : jacobiSymNat 0 (bit0 b) = 0 := by
-  rw [jacobi_sym_nat, Nat.cast_zeroₓ, jacobiSym.zero_left (Nat.one_lt_bit0 hb)]
+  rw [jacobi_sym_nat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit0 hb)]
 
 theorem jacobiSymNat.zero_left_odd (b : ℕ) (hb : b ≠ 0) : jacobiSymNat 0 (bit1 b) = 0 := by
-  rw [jacobi_sym_nat, Nat.cast_zeroₓ, jacobiSym.zero_left (Nat.one_lt_bit1 hb)]
+  rw [jacobi_sym_nat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit1 hb)]
 
 theorem jacobiSymNat.one_left_even (b : ℕ) : jacobiSymNat 1 (bit0 b) = 1 := by
-  rw [jacobi_sym_nat, Nat.cast_oneₓ, jacobiSym.one_left]
+  rw [jacobi_sym_nat, Nat.cast_one, jacobiSym.one_left]
 
 theorem jacobiSymNat.one_left_odd (b : ℕ) : jacobiSymNat 1 (bit1 b) = 1 := by
-  rw [jacobi_sym_nat, Nat.cast_oneₓ, jacobiSym.one_left]
+  rw [jacobi_sym_nat, Nat.cast_one, jacobiSym.one_left]
 
 /-- Turn a Legendre symbol into a Jacobi symbol. -/
 theorem LegendreSym.to_jacobi_sym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ) (hr : jacobiSym a p = r) :
@@ -95,7 +95,7 @@ theorem jacobiSymNat.mod_left (a b ab : ℕ) (r : ℤ) (hab : a % b = ab) (hr : 
 /-- The symbol vanishes when both entries are even (and `b ≠ 0`). -/
 theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) : jacobiSymNat (bit0 a) (bit0 b) = 0 := by
   refine' jacobi_sym.eq_zero_iff.mpr ⟨Nat.bit0_ne_zero hb₀, fun hf => _⟩
-  have h : 2 ∣ (bit0 a).gcd (bit0 b) := Nat.dvd_gcdₓ two_dvd_bit0 two_dvd_bit0
+  have h : 2 ∣ (bit0 a).gcd (bit0 b) := Nat.dvd_gcd two_dvd_bit0 two_dvd_bit0
   change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h
   rw [← Nat.cast_bit0, ← Nat.cast_bit0, hf, ← even_iff_two_dvd] at h
   exact Nat.not_even_one h
@@ -112,7 +112,7 @@ theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) 
   · haveI : NeZero b := ⟨hb⟩
     -- for `jacobi_sym.mul_right`
     rwa [bit0_eq_two_mul b, jacobi_sym_nat, jacobiSym.mul_right, ← _root_.legendre_sym.to_jacobi_sym, Nat.cast_bit1, ha,
-      one_mulₓ]
+      one_mul]
     
 
 /-- If `a` is divisible by `4` and `b` is odd, then we can remove the factor `4` from `a`. -/
@@ -120,9 +120,9 @@ theorem jacobiSymNat.double_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
     jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r := by
   have : ((2 : ℕ) : ℤ).gcd (bit1 b : ℕ) = 1 := by
     rw [Int.coe_nat_gcd, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one, Nat.gcd_mul_left_add_right,
-      Nat.gcd_one_rightₓ]
-  rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat, Nat.cast_mulₓ, Nat.cast_powₓ,
-    jacobiSym.mul_left, jacobiSym.sq_one' this, one_mulₓ]
+      Nat.gcd_one_right]
+  rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat, Nat.cast_mul, Nat.cast_pow,
+    jacobiSym.mul_left, jacobiSym.sq_one' this, one_mul]
 
 /-- If `a` is even and `b` is odd, then we can remove a factor `2` from `a`,
 but we may have to change the sign, depending on `b % 8`.
@@ -130,7 +130,7 @@ We give one version for each of the four odd residue classes mod `8`. -/
 theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit0 (bit0 b))) = r) :
     jacobiSymNat (bit0 a) (bit1 (bit0 (bit0 b))) = r := by
   have hb : bit1 (bit0 (bit0 b)) % 8 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit0_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mulₓ, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
+  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
     Zmod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -138,7 +138,7 @@ theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit1 (bit1 b))) = r) :
     jacobiSymNat (bit0 a) (bit1 (bit1 (bit1 b))) = r := by
   have hb : bit1 (bit1 (bit1 b)) % 8 = 7 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit1_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mulₓ, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
+  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
     Zmod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -146,7 +146,7 @@ theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit1 (bit0 b))) = r) :
     jacobiSymNat (bit0 a) (bit1 (bit1 (bit0 b))) = -r := by
   have hb : bit1 (bit1 (bit0 b)) % 8 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit0_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mulₓ, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
+  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
     Zmod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -154,7 +154,7 @@ theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit0 (bit1 b))) = r) :
     jacobiSymNat (bit0 a) (bit1 (bit0 (bit1 b))) = -r := by
   have hb : bit1 (bit0 (bit1 b)) % 8 = 5 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit1_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mulₓ, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
+  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two, jacobiSym.at_two (odd_bit1 _),
     Zmod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr

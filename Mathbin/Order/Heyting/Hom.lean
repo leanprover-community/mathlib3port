@@ -109,7 +109,7 @@ instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [
     HeytingHomClass F α β :=
   { OrderIsoClass.toBoundedLatticeHomClass with
     map_himp := fun f a b =>
-      eq_of_forall_le_iffₓ fun c => by
+      eq_of_forall_le_iff fun c => by
         simp only [← map_inv_le_iff, le_himp_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
@@ -119,7 +119,7 @@ instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra �
     [OrderIsoClass F α β] : CoheytingHomClass F α β :=
   { OrderIsoClass.toBoundedLatticeHomClass with
     map_sdiff := fun f a b =>
-      eq_of_forall_ge_iffₓ fun c => by
+      eq_of_forall_ge_iff fun c => by
         simp only [← le_map_inv_iff, sdiff_le_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
@@ -129,12 +129,12 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
     [OrderIsoClass F α β] : BiheytingHomClass F α β :=
   { OrderIsoClass.toLatticeHomClass with
     map_himp := fun f a b =>
-      eq_of_forall_le_iffₓ fun c => by
+      eq_of_forall_le_iff fun c => by
         simp only [← map_inv_le_iff, le_himp_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp,
     map_sdiff := fun f a b =>
-      eq_of_forall_ge_iffₓ fun c => by
+      eq_of_forall_ge_iff fun c => by
         simp only [← le_map_inv_iff, sdiff_le_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
@@ -177,15 +177,15 @@ theorem map_symm_diff (a b : α) : f (a ∆ b) = f a ∆ f b := by simp_rw [symm
 
 end CoheytingAlgebra
 
-instance [HeytingAlgebra α] [HeytingAlgebra β] [HeytingHomClass F α β] : CoeTₓ F (HeytingHom α β) :=
+instance [HeytingAlgebra α] [HeytingAlgebra β] [HeytingHomClass F α β] : CoeT F (HeytingHom α β) :=
   ⟨fun f =>
     { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_bot' := map_bot f, map_himp' := map_himp f }⟩
 
-instance [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingHomClass F α β] : CoeTₓ F (CoheytingHom α β) :=
+instance [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingHomClass F α β] : CoeT F (CoheytingHom α β) :=
   ⟨fun f =>
     { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_top' := map_top f, map_sdiff' := map_sdiff f }⟩
 
-instance [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingHomClass F α β] : CoeTₓ F (BiheytingHom α β) :=
+instance [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingHomClass F α β] : CoeT F (BiheytingHom α β) :=
   ⟨fun f =>
     { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_himp' := map_himp f, map_sdiff' := map_sdiff f }⟩
 
@@ -194,11 +194,11 @@ namespace HeytingHom
 variable [HeytingAlgebra α] [HeytingAlgebra β] [HeytingAlgebra γ] [HeytingAlgebra δ]
 
 instance : HeytingHomClass (HeytingHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
-  map_sup := fun f => f.map_sup'
-  map_inf := fun f => f.map_inf'
-  map_bot := fun f => f.map_bot'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
+  map_sup f := f.map_sup'
+  map_inf f := f.map_inf'
+  map_bot f := f.map_bot'
   map_himp := HeytingHom.map_himp'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -242,8 +242,8 @@ theorem id_apply (a : α) : HeytingHom.id α a = a :=
 instance : Inhabited (HeytingHom α α) :=
   ⟨HeytingHom.id _⟩
 
-instance : PartialOrderₓ (HeytingHom α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance : PartialOrder (HeytingHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
 /-- Composition of `heyting_hom`s as a `heyting_hom`. -/
 def comp (f : HeytingHom β γ) (g : HeytingHom α β) : HeytingHom α γ :=
@@ -285,11 +285,11 @@ namespace CoheytingHom
 variable [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingAlgebra γ] [CoheytingAlgebra δ]
 
 instance : CoheytingHomClass (CoheytingHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
-  map_sup := fun f => f.map_sup'
-  map_inf := fun f => f.map_inf'
-  map_top := fun f => f.map_top'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
+  map_sup f := f.map_sup'
+  map_inf f := f.map_inf'
+  map_top f := f.map_top'
   map_sdiff := CoheytingHom.map_sdiff'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -333,8 +333,8 @@ theorem id_apply (a : α) : CoheytingHom.id α a = a :=
 instance : Inhabited (CoheytingHom α α) :=
   ⟨CoheytingHom.id _⟩
 
-instance : PartialOrderₓ (CoheytingHom α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance : PartialOrder (CoheytingHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
 /-- Composition of `coheyting_hom`s as a `coheyting_hom`. -/
 def comp (f : CoheytingHom β γ) (g : CoheytingHom α β) : CoheytingHom α γ :=
@@ -376,12 +376,12 @@ namespace BiheytingHom
 variable [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingAlgebra γ] [BiheytingAlgebra δ]
 
 instance : BiheytingHomClass (BiheytingHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
-  map_sup := fun f => f.map_sup'
-  map_inf := fun f => f.map_inf'
-  map_himp := fun f => f.map_himp'
-  map_sdiff := fun f => f.map_sdiff'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
+  map_sup f := f.map_sup'
+  map_inf f := f.map_inf'
+  map_himp f := f.map_himp'
+  map_sdiff f := f.map_sdiff'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -424,8 +424,8 @@ theorem id_apply (a : α) : BiheytingHom.id α a = a :=
 instance : Inhabited (BiheytingHom α α) :=
   ⟨BiheytingHom.id _⟩
 
-instance : PartialOrderₓ (BiheytingHom α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance : PartialOrder (BiheytingHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
 /-- Composition of `biheyting_hom`s as a `biheyting_hom`. -/
 def comp (f : BiheytingHom β γ) (g : BiheytingHom α β) : BiheytingHom α γ :=

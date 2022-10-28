@@ -31,22 +31,22 @@ open DirectSum
 
 section General
 
-variable {R : Type u} [Semiringₓ R]
+variable {R : Type u} [Semiring R]
 
 variable {ι : Type v} [dec_ι : DecidableEq ι]
 
 include R
 
-variable {M : ι → Type w} [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
+variable {M : ι → Type w} [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)]
 
 instance : Module R (⨁ i, M i) :=
   Dfinsupp.module
 
-instance {S : Type _} [Semiringₓ S] [∀ i, Module S (M i)] [∀ i, SmulCommClass R S (M i)] :
+instance {S : Type _} [Semiring S] [∀ i, Module S (M i)] [∀ i, SmulCommClass R S (M i)] :
     SmulCommClass R S (⨁ i, M i) :=
   Dfinsupp.smul_comm_class
 
-instance {S : Type _} [Semiringₓ S] [HasSmul R S] [∀ i, Module S (M i)] [∀ i, IsScalarTower R S (M i)] :
+instance {S : Type _} [Semiring S] [HasSmul R S] [∀ i, Module S (M i)] [∀ i, IsScalarTower R S (M i)] :
     IsScalarTower R S (⨁ i, M i) :=
   Dfinsupp.is_scalar_tower
 
@@ -61,7 +61,7 @@ include dec_ι
 variable (R ι M)
 
 /-- Create the direct sum given a family `M` of `R` modules indexed over `ι`. -/
-def lmk : ∀ s : Finsetₓ ι, (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
+def lmk : ∀ s : Finset ι, (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
   Dfinsupp.lmk
 
 /-- Inclusion of each component into the direct sum. -/
@@ -77,7 +77,7 @@ theorem single_eq_lof (i : ι) (b : M i) : Dfinsupp.single i b = lof R ι M i b 
   rfl
 
 /-- Scalar multiplication commutes with direct sums. -/
-theorem mk_smul (s : Finsetₓ ι) (c : R) (x) : mk M s (c • x) = c • mk M s x :=
+theorem mk_smul (s : Finset ι) (c : R) (x) : mk M s (c • x) = c • mk M s x :=
   (lmk R ι M s).map_smul c x
 
 /-- Scalar multiplication commutes with the inclusion of each component into the direct sum. -/
@@ -89,7 +89,7 @@ variable {R}
 theorem support_smul [∀ (i : ι) (x : M i), Decidable (x ≠ 0)] (c : R) (v : ⨁ i, M i) : (c • v).support ⊆ v.support :=
   Dfinsupp.support_smul _ _
 
-variable {N : Type u₁} [AddCommMonoidₓ N] [Module R N]
+variable {N : Type u₁} [AddCommMonoid N] [Module R N]
 
 variable (φ : ∀ i, M i →ₗ[R] N)
 
@@ -142,7 +142,7 @@ variable (ι M)
 /-- Given `fintype α`, `linear_equiv_fun_on_fintype R` is the natural `R`-linear equivalence
 between `⨁ i, M i` and `Π i, M i`. -/
 @[simps apply]
-def linearEquivFunOnFintype [Fintypeₓ ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
+def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
   { Dfinsupp.equivFunOnFintype with toFun := coeFn,
     map_add' := fun f g => by
       ext
@@ -154,14 +154,14 @@ def linearEquivFunOnFintype [Fintypeₓ ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i 
 variable {ι M}
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_lof [Fintypeₓ ι] [DecidableEq ι] (i : ι) (m : M i) :
+theorem linear_equiv_fun_on_fintype_lof [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
     (linearEquivFunOnFintype R ι M) (lof R ι M i m) = Pi.single i m := by
   ext a
   change (Dfinsupp.equivFunOnFintype (lof R ι M i m)) a = _
   convert _root_.congr_fun (Dfinsupp.equiv_fun_on_fintype_single i m) a
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_symm_single [Fintypeₓ ι] [DecidableEq ι] (i : ι) (m : M i) :
+theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
     (linearEquivFunOnFintype R ι M).symm (Pi.single i m) = lof R ι M i m := by
   ext a
   change (dfinsupp.equiv_fun_on_fintype.symm (Pi.single i m)) a = _
@@ -169,14 +169,13 @@ theorem linear_equiv_fun_on_fintype_symm_single [Fintypeₓ ι] [DecidableEq ι]
   rfl
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_symm_coe [Fintypeₓ ι] (f : ⨁ i, M i) : (linearEquivFunOnFintype R ι M).symm f = f :=
+theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁ i, M i) : (linearEquivFunOnFintype R ι M).symm f = f :=
   by
   ext
   simp [linear_equiv_fun_on_fintype]
 
 /-- The natural linear equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
-protected def lid (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Module R M] [Unique ι] :
-    (⨁ _ : ι, M) ≃ₗ[R] M :=
+protected def lid (M : Type v) (ι : Type _ := PUnit) [AddCommMonoid M] [Module R M] [Unique ι] : (⨁ _ : ι, M) ≃ₗ[R] M :=
   { DirectSum.id M ι, toModule R ι M fun i => LinearMap.id with }
 
 variable (ι M)
@@ -208,7 +207,7 @@ theorem component.lof_self (i : ι) (b : M i) : component R ι M i ((lof R ι M 
   lof_apply R i b
 
 theorem component.of (i j : ι) (b : M j) :
-    component R ι M i ((lof R ι M j) b) = if h : j = i then Eq.recOnₓ h b else 0 :=
+    component R ι M i ((lof R ι M j) b) = if h : j = i then Eq.recOn h b else 0 :=
   Dfinsupp.single_apply
 
 omit dec_ι
@@ -231,9 +230,9 @@ section Sigma
 
 variable {α : ι → Type _} {δ : ∀ i, α i → Type w}
 
-variable [∀ i j, AddCommMonoidₓ (δ i j)] [∀ i j, Module R (δ i j)]
+variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurry with map_smul' := fun r => by convert @Dfinsupp.sigma_curry_smul _ _ _ δ _ _ _ r }
@@ -242,17 +241,17 @@ noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (
 theorem sigma_lcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
   sigma_curry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `uncurry` as a linear map.-/
 noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigma_uncurry_smul }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem sigma_luncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaLuncurry R f ⟨i, j⟩ = f i j :=
   sigma_uncurry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry_equiv` as a linear equiv.-/
 noncomputable def sigmaLcurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }
@@ -261,7 +260,7 @@ end Sigma
 
 section Option
 
-variable {α : Option ι → Type w} [∀ i, AddCommMonoidₓ (α i)] [∀ i, Module R (α i)]
+variable {α : Option ι → Type w} [∀ i, AddCommMonoid (α i)] [∀ i, Module R (α i)]
 
 include dec_ι
 
@@ -277,15 +276,15 @@ end General
 
 section Submodule
 
-section Semiringₓ
+section Semiring
 
-variable {R : Type u} [Semiringₓ R]
+variable {R : Type u} [Semiring R]
 
 variable {ι : Type v} [dec_ι : DecidableEq ι]
 
 include dec_ι
 
-variable {M : Type _} [AddCommMonoidₓ M] [Module R M]
+variable {M : Type _} [AddCommMonoid M] [Module R M]
 
 variable (A : ι → Submodule R M)
 
@@ -306,8 +305,8 @@ theorem IsInternal.submodule_supr_eq_top (h : IsInternal A) : supr A = ⊤ := by
   exact Function.Bijective.surjective h
 
 /-- If a direct sum of submodules is internal then the submodules are independent. -/
-theorem IsInternal.submodule_independent (h : IsInternal A) : CompleteLattice.Independent A :=
-  CompleteLattice.independent_of_dfinsupp_lsum_injective _ h.Injective
+theorem IsInternal.submoduleIndependent (h : IsInternal A) : CompleteLattice.Independent A :=
+  CompleteLattice.independentOfDfinsuppLsumInjective _ h.Injective
 
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
 components of the direct sum, the disjoint union of these bases is a basis for `M`. -/
@@ -335,24 +334,24 @@ theorem IsInternal.collected_basis_mem (h : IsInternal A) {α : ι → Type _} (
 /-- When indexed by only two distinct elements, `direct_sum.is_internal` implies
 the two submodules are complementary. Over a `ring R`, this is true as an iff, as
 `direct_sum.is_internal_iff_is_compl`. --/
-theorem IsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.Univ : Set ι) = {i, j})
+theorem IsInternal.isCompl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.Univ : Set ι) = {i, j})
     (hi : IsInternal A) : IsCompl (A i) (A j) :=
-  ⟨hi.submodule_independent.PairwiseDisjoint _ _ hij,
-    Eq.leₓ <|
+  ⟨hi.submoduleIndependent.PairwiseDisjoint _ _ hij,
+    Eq.le <|
       hi.submodule_supr_eq_top.symm.trans <| by
         rw [← Sup_pair, supr, ← Set.image_univ, h, Set.image_insert_eq, Set.image_singleton]⟩
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable {R : Type u} [Ringₓ R]
+variable {R : Type u} [Ring R]
 
 variable {ι : Type v} [dec_ι : DecidableEq ι]
 
 include dec_ι
 
-variable {M : Type _} [AddCommGroupₓ M] [Module R M]
+variable {M : Type _} [AddCommGroup M] [Module R M]
 
 /-- Note that this is not generally true for `[semiring R]`; see
 `complete_lattice.independent.dfinsupp_lsum_injective` for details. -/
@@ -365,7 +364,7 @@ theorem is_internal_submodule_of_independent_of_supr_eq_top {A : ι → Submodul
 -/
 theorem is_internal_submodule_iff_independent_and_supr_eq_top (A : ι → Submodule R M) :
     IsInternal A ↔ CompleteLattice.Independent A ∧ supr A = ⊤ :=
-  ⟨fun i => ⟨i.submodule_independent, i.submodule_supr_eq_top⟩,
+  ⟨fun i => ⟨i.submoduleIndependent, i.submodule_supr_eq_top⟩,
     And.ndrec is_internal_submodule_of_independent_of_supr_eq_top⟩
 
 /-- If a collection of submodules has just two indices, `i` and `j`, then
@@ -375,20 +374,20 @@ theorem is_internal_submodule_iff_is_compl (A : ι → Submodule R M) {i j : ι}
   have : ∀ k, k = i ∨ k = j := fun k => by simpa using set.ext_iff.mp h k
   rw [is_internal_submodule_iff_independent_and_supr_eq_top, supr, ← Set.image_univ, h, Set.image_insert_eq,
     Set.image_singleton, Sup_pair, CompleteLattice.independent_pair hij this]
-  exact ⟨fun ⟨hd, ht⟩ => ⟨hd, ht.Ge⟩, fun ⟨hd, ht⟩ => ⟨hd, eq_top_iff.mpr ht⟩⟩
+  exact ⟨fun ⟨hd, ht⟩ => ⟨hd, ht.ge⟩, fun ⟨hd, ht⟩ => ⟨hd, eq_top_iff.mpr ht⟩⟩
 
 /-! Now copy the lemmas for subgroup and submonoids. -/
 
 
-theorem IsInternal.add_submonoid_independent {M : Type _} [AddCommMonoidₓ M] {A : ι → AddSubmonoid M}
-    (h : IsInternal A) : CompleteLattice.Independent A :=
-  CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective _ h.Injective
-
-theorem IsInternal.add_subgroup_independent {M : Type _} [AddCommGroupₓ M] {A : ι → AddSubgroup M} (h : IsInternal A) :
+theorem IsInternal.addSubmonoidIndependent {M : Type _} [AddCommMonoid M] {A : ι → AddSubmonoid M} (h : IsInternal A) :
     CompleteLattice.Independent A :=
-  CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective' _ h.Injective
+  CompleteLattice.independentOfDfinsuppSumAddHomInjective _ h.Injective
 
-end Ringₓ
+theorem IsInternal.addSubgroupIndependent {M : Type _} [AddCommGroup M] {A : ι → AddSubgroup M} (h : IsInternal A) :
+    CompleteLattice.Independent A :=
+  CompleteLattice.independentOfDfinsuppSumAddHomInjective' _ h.Injective
+
+end Ring
 
 end Submodule
 

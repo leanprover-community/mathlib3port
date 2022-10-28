@@ -18,7 +18,7 @@ The main result is `polynomial.induction_on`.
 
 noncomputable section
 
-open Finsupp Finsetₓ
+open Finsupp Finset
 
 namespace Polynomial
 
@@ -28,22 +28,22 @@ universe u v w x y z
 
 variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R} {m n : ℕ}
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R] {p q r : R[X]}
+variable [Semiring R] {p q r : R[X]}
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a)) (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p := by
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a
     induction' n with n ih
-    · simp only [pow_zeroₓ, mul_oneₓ, h_C]
+    · simp only [pow_zero, mul_one, h_C]
       
     · exact h_monomial _ _ ih
       
-  have B : ∀ s : Finsetₓ ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) := by
-    apply Finsetₓ.induction
+  have B : ∀ s : Finset ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) := by
+    apply Finset.induction
     · convert h_C 0
       exact C_0.symm
       
@@ -58,7 +58,7 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
 it suffices to show the condition is closed under taking sums,
 and it holds for monomials.
 -/
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (monomial n a)) : M p :=
   Polynomial.induction_on p (h_monomial 0) h_add fun n a h => by
@@ -85,13 +85,13 @@ theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coe
     simp
   have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this
   convert this using 1
-  simp only [monomial_mul_C, one_mulₓ, smul_eq_mul]
+  simp only [monomial_mul_C, one_mul, smul_eq_mul]
   rw [monomial_eq_C_mul_X]
 
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, c (coeff f i) ∉ I :=
   Not.imp_symm fun cf => span_le_of_C_coeff_mem (not_exists_not.mp cf) mem_span_C_coeff
 
-end Semiringₓ
+end Semiring
 
 end Polynomial
 

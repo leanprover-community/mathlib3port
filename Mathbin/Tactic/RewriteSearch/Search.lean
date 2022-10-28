@@ -50,7 +50,7 @@ recalculating it.
 unsafe structure vertex where
   id : ℕ
   exp : expr
-  pp : Stringₓ
+  pp : String
   Side : Side
   parent : Option edge
 
@@ -70,7 +70,7 @@ unsafe structure graph where
   conf : config
   rules : List (expr × Bool)
   vertices : Buffer vertex
-  vmap : native.rb_map Stringₓ (List ℕ)
+  vmap : native.rb_map String (List ℕ)
   solving_edge : Option edge
   lhs : expr
   rhs : expr
@@ -166,7 +166,7 @@ private unsafe def find_solving_edge : graph → ℕ → tactic graph
     if vertex_id ≥ g.conf.max_iterations then fail "search failed: max iterations reached"
     else
       if h : vertex_id < g.vertices.size then do
-        let v := g.vertices.read (Finₓ.mk vertex_id h)
+        let v := g.vertices.read (Fin.mk vertex_id h)
         let g ← expand_vertex g v
         match g with
           | some _ => return g

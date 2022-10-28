@@ -33,7 +33,7 @@ open Polynomial
 
 open Classical nonZeroDivisors Polynomial
 
-variable {R : Type u} [CommRingₓ R] [hdomain : IsDomain R] (r s : R) (p q : R[X]) (f : Ratfunc R)
+variable {R : Type u} [CommRing R] [hdomain : IsDomain R] (r s : R) (p q : R[X]) (f : Ratfunc R)
 
 theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]⁰ := by
   rw [mem_non_zero_divisors_iff]
@@ -87,11 +87,11 @@ theorem laurent_C (x : R) : laurent r (c x) = c x := by rw [← algebra_map_C, l
 
 @[simp]
 theorem laurent_at_zero : laurent 0 f = f := by
-  induction f using Ratfunc.induction_on
+  induction f using Ratfunc.inductionOn
   simp
 
 theorem laurent_laurent : laurent r (laurent s f) = laurent (r + s) f := by
-  induction f using Ratfunc.induction_on
+  induction f using Ratfunc.inductionOn
   simp_rw [laurent_div, taylor_taylor]
 
 theorem laurent_injective : Function.Injective (laurent r) := fun _ _ h => by

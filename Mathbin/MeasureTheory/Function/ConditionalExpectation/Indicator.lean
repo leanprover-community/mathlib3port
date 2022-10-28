@@ -120,7 +120,7 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
       · simp only [hxs, Set.indicator_of_not_mem, not_false_iff]
         
     _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) := by
-      rw [Set.indicator_indicator, Set.inter_compl_self, Set.indicator_empty', add_zeroₓ]
+      rw [Set.indicator_indicator, Set.inter_compl_self, Set.indicator_empty', add_zero]
     _ =ᵐ[μ] μ[s.indicator f|m] := by
       refine' (condexp_indicator_aux hs _).symm.trans _
       · exact indicator_ae_eq_restrict_compl (hm _ hs)
@@ -160,7 +160,7 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
           Set.inter_comm]
       
     
-  · exact (strongly_measurable_condexp.indicator hs_m).ae_strongly_measurable'
+  · exact (strongly_measurable_condexp.indicator hs_m).aeStronglyMeasurable'
     
 
 /-- If the restriction to a `m`-measurable set `s` of a σ-algebra `m` is equal to the restriction
@@ -188,7 +188,7 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
   have : (∫ x in t, (μ[s.indicator f|m]) x ∂μ) = ∫ x in s ∩ t, (μ[s.indicator f|m]) x ∂μ := by
     rw [← integral_add_compl (hm _ hs_m) integrable_condexp.integrable_on]
     suffices (∫ x in sᶜ, (μ[s.indicator f|m]) x ∂μ.restrict t) = 0 by
-      rw [this, add_zeroₓ, measure.restrict_restrict (hm _ hs_m)]
+      rw [this, add_zero, measure.restrict_restrict (hm _ hs_m)]
     rw [measure.restrict_restrict (MeasurableSet.compl (hm _ hs_m))]
     suffices μ[s.indicator f|m] =ᵐ[μ.restrict (sᶜ)] 0 by
       rw [Set.inter_comm, ← measure.restrict_restrict (hm₂ _ ht)]

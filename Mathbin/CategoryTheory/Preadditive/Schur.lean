@@ -53,10 +53,10 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
 -/
-noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) := by
+noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (EndCat X) := by
   classical <;>
     exact
-      { (inferInstance : Ringₓ (End X)) with
+      { (inferInstance : Ring (End X)) with
         inv := fun f =>
           if h : f = 0 then 0
           else
@@ -143,7 +143,8 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 /-- Endomorphisms of a simple object form a field if they are finite dimensional.
 This can't be an instance as `𝕜` would be undetermined.
 -/
-noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] : Field (End X) := by
+noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] : Field (EndCat X) :=
+  by
   classical <;>
     exact
       { (inferInstance : DivisionRing (End X)) with

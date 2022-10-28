@@ -13,7 +13,7 @@ import Mathbin.Analysis.SpecialFunctions.Log.Deriv
 
 namespace Real
 
-open IsAbsoluteValue Finsetₓ CauSeq Complex
+open IsAbsoluteValue Finset CauSeq Complex
 
 theorem exp_one_near_10 : abs (exp 1 - 2244083 / 825552) ≤ 1 / 10 ^ 10 := by
   apply exp_approx_start
@@ -30,19 +30,19 @@ theorem exp_one_near_20 : abs (exp 1 - 363916618873 / 133877442384) ≤ 1 / 10 ^
   rw [_root_.abs_one, abs_of_pos] <;> norm_num1
 
 theorem exp_one_gt_d9 : 2.7182818283 < exp 1 :=
-  lt_of_lt_of_leₓ (by norm_num) (sub_le.1 (abs_sub_le_iff.1 exp_one_near_10).2)
+  lt_of_lt_of_le (by norm_num) (sub_le.1 (abs_sub_le_iff.1 exp_one_near_10).2)
 
 theorem exp_one_lt_d9 : exp 1 < 2.7182818286 :=
-  lt_of_le_of_ltₓ (sub_le_iff_le_add.1 (abs_sub_le_iff.1 exp_one_near_10).1) (by norm_num)
+  lt_of_le_of_lt (sub_le_iff_le_add.1 (abs_sub_le_iff.1 exp_one_near_10).1) (by norm_num)
 
 theorem exp_neg_one_gt_d9 : 0.36787944116 < exp (-1) := by
   rw [exp_neg, lt_inv _ (exp_pos _)]
-  refine' lt_of_le_of_ltₓ (sub_le_iff_le_add.1 (abs_sub_le_iff.1 exp_one_near_10).1) _
+  refine' lt_of_le_of_lt (sub_le_iff_le_add.1 (abs_sub_le_iff.1 exp_one_near_10).1) _
   all_goals norm_num
 
 theorem exp_neg_one_lt_d9 : exp (-1) < 0.3678794412 := by
   rw [exp_neg, inv_lt (exp_pos _)]
-  refine' lt_of_lt_of_leₓ _ (sub_le.1 (abs_sub_le_iff.1 exp_one_near_10).2)
+  refine' lt_of_lt_of_le _ (sub_le.1 (abs_sub_le_iff.1 exp_one_near_10).2)
   all_goals norm_num
 
 theorem log_two_near_10 : abs (log 2 - 287209 / 414355) ≤ 1 / 10 ^ 10 := by
@@ -61,16 +61,16 @@ theorem log_two_near_10 : abs (log 2 - 287209 / 414355) ≤ 1 / 10 ^ 10 := by
   rw [t] at z
   norm_num1 at z
   rw [one_div (2 : ℝ), log_inv, ← sub_eq_add_neg, _root_.abs_sub_comm] at z
-  apply le_transₓ (_root_.abs_sub_le _ _ _) (add_le_add z _)
+  apply le_trans (_root_.abs_sub_le _ _ _) (add_le_add z _)
   simp_rw [sum_range_succ]
   norm_num
   rw [abs_of_pos] <;> norm_num
 
 theorem log_two_gt_d9 : 0.6931471803 < log 2 :=
-  lt_of_lt_of_leₓ (by norm_num1) (sub_le.1 (abs_sub_le_iff.1 log_two_near_10).2)
+  lt_of_lt_of_le (by norm_num1) (sub_le.1 (abs_sub_le_iff.1 log_two_near_10).2)
 
 theorem log_two_lt_d9 : log 2 < 0.6931471808 :=
-  lt_of_le_of_ltₓ (sub_le_iff_le_add.1 (abs_sub_le_iff.1 log_two_near_10).1) (by norm_num)
+  lt_of_le_of_lt (sub_le_iff_le_add.1 (abs_sub_le_iff.1 log_two_near_10).1) (by norm_num)
 
 end Real
 

@@ -32,12 +32,12 @@ instance [Inhabited α] : Inhabited (Vector3 α n) :=
 namespace Vector3
 
 /-- The empty vector -/
-@[matchPattern]
+@[match_pattern]
 def nil : Vector3 α 0 :=
   fun.
 
 /-- The vector cons operation -/
-@[matchPattern]
+@[match_pattern]
 def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by
   refine' i.cases' _ _
   exact a
@@ -52,12 +52,12 @@ localized [Vector3] notation3"["(l", "* => foldr (h t => Vector3.cons h t) Vecto
 -- mathport name: vector.cons
 notation a "::" b => cons a b
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem cons_fz (a : α) (v : Vector3 α n) : (a::v) fz = a :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem cons_fs (a : α) (v : Vector3 α n) (i) : (a::v) (fs i) = v i :=
   rfl
@@ -82,26 +82,26 @@ def tail (v : Vector3 α (succ n)) : Vector3 α n := fun i => v (fs i)
 theorem eq_nil (v : Vector3 α 0) : v = [] :=
   funext fun i => nomatch i
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cons_head_tail (v : Vector3 α (succ n)) : (head v::tail v) = v :=
   funext fun i => Fin2.cases' rfl (fun _ => rfl) i
 
 /-- Eliminator for an empty vector. -/
 def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by rw [eq_nil v] <;> apply H
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursion principle for a nonempty vector. -/
 def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3 α n), C (a::t)) (v : Vector3 α (succ n)) :
     C v := by rw [← cons_head_tail v] <;> apply H
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem cons_elim_cons {C H a t} : @consElim α n C H (a::t) = H a t :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursion principle with the vector as first argument. -/
-@[elabAsElim]
+@[elab_as_elim]
 protected def recOn {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n) (H0 : C [])
     (Hs : ∀ {n} (a) (w : Vector3 α n), C w → C (a::w)) : C v :=
   Nat.recOn n (fun v => v.nilElim H0) (fun n IH v => v.consElim fun a t => Hs _ _ (IH _)) v
@@ -110,7 +110,7 @@ protected def recOn {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n
 theorem rec_on_nil {C H0 Hs} : @Vector3.recOn α (@C) 0 [] H0 @Hs = H0 :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem rec_on_cons {C H0 Hs n a v} :
     @Vector3.recOn α (@C) (succ n) (a::v) H0 @Hs = Hs a v (@Vector3.recOn α (@C) n v H0 @Hs) :=
@@ -127,8 +127,8 @@ local infixl:65 " +-+ " => Vector3.append
 theorem append_nil (w : Vector3 α n) : [] +-+ w = w :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem append_cons (a : α) (v : Vector3 α m) (w : Vector3 α n) : (a::v) +-+ w = a::v +-+ w :=
   rfl
@@ -143,36 +143,35 @@ theorem append_add : ∀ {m} (v : Vector3 α m) {n} (w : Vector3 α n) (i : Fin2
   | 0, v, n, w, i => rfl
   | succ m, v, n, w, i => v.consElim fun a t => by simp [*, add]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Insert `a` into `v` at index `i`. -/
 def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j => (a::v) (insertPerm i j)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
   refine' funext fun j => j.cases' _ _ <;> intros <;> rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) : insert a (b::v) (fs i) = b::insert a v i :=
   funext fun j => by
     refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
     refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (succ n)) (e : succ n + m = succ (n + m)) :
-    insert a (t +-+ v) (Eq.recOnₓ e (i.add m)) = Eq.recOnₓ e (t +-+ insert a v i) := by
+    insert a (t +-+ v) (Eq.recOn e (i.add m)) = Eq.recOn e (t +-+ insert a v i) := by
   refine' Vector3.recOn t (fun e => _) (fun k b t IH e => _) e
   rfl
   have e' := succ_add n k
   change
-    insert a (b::t +-+ v) (Eq.recOnₓ (congr_arg succ e') (fs (add i k))) =
-      Eq.recOnₓ (congr_arg succ e') (b::t +-+ insert a v i)
+    insert a (b::t +-+ v) (Eq.recOn (congr_arg succ e') (fs (add i k))) =
+      Eq.recOn (congr_arg succ e') (b::t +-+ insert a v i)
   rw [←
-    (Eq.drecOn e' rfl :
-      fs (Eq.recOnₓ e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOnₓ (congr_arg succ e') (fs (i.add k)))]
+    (Eq.drecOn e' rfl : fs (Eq.recOn e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOn (congr_arg succ e') (fs (i.add k)))]
   simp
   rw [IH]
   exact Eq.drecOn e' rfl
@@ -185,13 +184,13 @@ open Vector3
 
 open Vector3
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- "Curried" exists, i.e. `∃ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorEx : ∀ k, (Vector3 α k → Prop) → Prop
   | 0, f => f []
   | succ k, f => ∃ x : α, VectorEx k fun v => f (x::v)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- "Curried" forall, i.e. `∀ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorAll : ∀ k, (Vector3 α k → Prop) → Prop
   | 0, f => f []
@@ -200,7 +199,7 @@ def VectorAll : ∀ k, (Vector3 α k → Prop) → Prop
 theorem exists_vector_zero (f : Vector3 α 0 → Prop) : Exists f ↔ f [] :=
   ⟨fun ⟨v, fv⟩ => by rw [← eq_nil v] <;> exact fv, fun f0 => ⟨[], f0⟩⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃ x v, f (x::v) :=
   ⟨fun ⟨v, fv⟩ => ⟨_, _, by rw [cons_head_tail v] <;> exact fv⟩, fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
 
@@ -208,12 +207,12 @@ theorem vector_ex_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f
   | 0, f => (exists_vector_zero f).symm
   | succ n, f => Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem vector_all_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
   | 0, f => ⟨fun f0 v => v.nilElim f0, fun al => al []⟩
   | succ n, f =>
-    (forall_congrₓ fun x => vector_all_iff_forall fun v => f (x::v)).trans
+    (forall_congr fun x => vector_all_iff_forall fun v => f (x::v)).trans
       ⟨fun al v => v.consElim al, fun al x v => al (x::v)⟩
 
 /-- `vector_allp p v` is equivalent to `∀ i, p (v i)`, but unfolds directly to a conjunction,
@@ -229,14 +228,14 @@ theorem vector_allp_nil (p : α → Prop) : VectorAllp p [] = True :=
 theorem vector_allp_singleton (p : α → Prop) (x : α) : VectorAllp p [x] = p x :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem vector_allp_cons (p : α → Prop) (x : α) (v : Vector3 α n) : VectorAllp p (x::v) ↔ p x ∧ VectorAllp p v :=
-  Vector3.recOn v (and_trueₓ _).symm fun n a v IH => Iff.rfl
+  Vector3.recOn v (and_true_iff _).symm fun n a v IH => Iff.rfl
 
 theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) := by
   refine' v.rec_on _ _
-  · exact ⟨fun _ => Fin2.elim0, fun _ => trivialₓ⟩
+  · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
     
   · simp
     refine' fun n a v IH =>

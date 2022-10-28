@@ -79,23 +79,23 @@ def RestrictScalars (R S M : Type _) : Type _ :=
 instance [I : Inhabited M] : Inhabited (RestrictScalars R S M) :=
   I
 
-instance [I : AddCommMonoidₓ M] : AddCommMonoidₓ (RestrictScalars R S M) :=
+instance [I : AddCommMonoid M] : AddCommMonoid (RestrictScalars R S M) :=
   I
 
-instance [I : AddCommGroupₓ M] : AddCommGroupₓ (RestrictScalars R S M) :=
+instance [I : AddCommGroup M] : AddCommGroup (RestrictScalars R S M) :=
   I
 
 section Module
 
 section
 
-variable [Semiringₓ S] [AddCommMonoidₓ M]
+variable [Semiring S] [AddCommMonoid M]
 
 /-- We temporarily install an action of the original ring on `restrict_sclars R S M`. -/
 def RestrictScalars.moduleOrig [I : Module S M] : Module S (RestrictScalars R S M) :=
   I
 
-variable [CommSemiringₓ R] [Algebra R S]
+variable [CommSemiring R] [Algebra R S]
 
 section
 
@@ -129,12 +129,12 @@ instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (Res
 
 instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [IsCentralScalar S M] :
     IsCentralScalar R
-      (RestrictScalars R S M) where op_smul_eq_smul := fun r x => (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
+      (RestrictScalars R S M) where op_smul_eq_smul r x := (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
 
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
 of `restrict_scalars R S M`.
 -/
-def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScalars R S M) :=
+def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.EndCat R (RestrictScalars R S M) :=
   letI-- We use `restrict_scalars.module_orig` in the implementation,
   -- but not in the type.
    : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M
@@ -142,13 +142,13 @@ def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScala
 
 end
 
-variable [AddCommMonoidₓ M]
+variable [AddCommMonoid M]
 
 /-- `restrict_scalars.add_equiv` is the additive equivalence with the original module. -/
 def RestrictScalars.addEquiv : RestrictScalars R S M ≃+ M :=
   AddEquiv.refl M
 
-variable [CommSemiringₓ R] [Semiringₓ S] [Algebra R S] [Module S M]
+variable [CommSemiring R] [Semiring S] [Algebra R S] [Module S M]
 
 /-- Note that this lemma relies on the definitional equality `restrict_scalars R S M = M`,
 so usage may result in instance leakage.
@@ -179,25 +179,25 @@ end Module
 
 section Algebra
 
-instance [I : Semiringₓ A] : Semiringₓ (RestrictScalars R S A) :=
+instance [I : Semiring A] : Semiring (RestrictScalars R S A) :=
   I
 
-instance [I : Ringₓ A] : Ringₓ (RestrictScalars R S A) :=
+instance [I : Ring A] : Ring (RestrictScalars R S A) :=
   I
 
-instance [I : CommSemiringₓ A] : CommSemiringₓ (RestrictScalars R S A) :=
+instance [I : CommSemiring A] : CommSemiring (RestrictScalars R S A) :=
   I
 
-instance [I : CommRingₓ A] : CommRingₓ (RestrictScalars R S A) :=
+instance [I : CommRing A] : CommRing (RestrictScalars R S A) :=
   I
 
-variable [Semiringₓ A]
+variable [Semiring A]
 
 /-- Tautological ring isomorphism `restrict_scalars R S A ≃+* A`. -/
 def RestrictScalars.ringEquiv : RestrictScalars R S A ≃+* A :=
   RingEquiv.refl _
 
-variable [CommSemiringₓ S] [Algebra S A] [CommSemiringₓ R] [Algebra R S]
+variable [CommSemiring S] [Algebra S A] [CommSemiring R] [Algebra R S]
 
 @[simp]
 theorem RestrictScalars.ring_equiv_map_smul (r : R) (x : RestrictScalars R S A) :

@@ -28,19 +28,19 @@ matrix determinant, polynomial
 
 open Matrix BigOperators Polynomial
 
-variable {n α : Type _} [DecidableEq n] [Fintypeₓ n] [CommRingₓ α]
+variable {n α : Type _} [DecidableEq n] [Fintype n] [CommRing α]
 
-open Polynomial Matrix Equivₓ.Perm
+open Polynomial Matrix Equiv.Perm
 
 namespace Polynomial
 
 theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
-    natDegree (det ((x : α[X]) • A.map c + B.map c)) ≤ Fintypeₓ.card n := by
+    natDegree (det ((x : α[X]) • A.map c + B.map c)) ≤ Fintype.card n := by
   rw [det_apply]
   refine' (nat_degree_sum_le _ _).trans _
   refine' Multiset.max_nat_le_of_forall_le _ _ _
-  simp only [forall_apply_eq_imp_iff', true_andₓ, Function.comp_app, Multiset.map_map, Multiset.mem_map,
-    exists_imp_distrib, Finsetₓ.mem_univ_val]
+  simp only [forall_apply_eq_imp_iff', true_and_iff, Function.comp_app, Multiset.map_map, Multiset.mem_map,
+    exists_imp_distrib, Finset.mem_univ_val]
   intro g
   calc
     nat_degree (sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤
@@ -52,44 +52,44 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
       · rw [sg, Units.neg_smul, one_smul, nat_degree_neg]
         
     _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
-      nat_degree_prod_le (Finsetₓ.univ : Finsetₓ n) fun i : n => (X • A.map C + B.map C) (g i) i
-    _ ≤ finset.univ.card • 1 := Finsetₓ.sum_le_card_nsmul _ _ 1 fun (i : n) _ => _
-    _ ≤ Fintypeₓ.card n := by simpa
+      nat_degree_prod_le (Finset.univ : Finset n) fun i : n => (X • A.map C + B.map C) (g i) i
+    _ ≤ finset.univ.card • 1 := Finset.sum_le_card_nsmul _ _ 1 fun (i : n) _ => _
+    _ ≤ Fintype.card n := by simpa
     
   calc
     nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) = nat_degree ((X : α[X]) * C (A (g i) i) + C (B (g i) i)) :=
       by simp
     _ ≤ max (nat_degree ((X : α[X]) * C (A (g i) i))) (nat_degree (C (B (g i) i))) := nat_degree_add_le _ _
-    _ = nat_degree ((X : α[X]) * C (A (g i) i)) := max_eq_leftₓ ((nat_degree_C _).le.trans (zero_le _))
+    _ = nat_degree ((X : α[X]) * C (A (g i) i)) := max_eq_left ((nat_degree_C _).le.trans (zero_le _))
     _ ≤ nat_degree (X : α[X]) := nat_degree_mul_C_le _ _
     _ ≤ 1 := nat_degree_X_le
     
 
 theorem coeff_det_X_add_C_zero (A B : Matrix n n α) : coeff (det ((x : α[X]) • A.map c + B.map c)) 0 = det B := by
   rw [det_apply, finset_sum_coeff, det_apply]
-  refine' Finsetₓ.sum_congr rfl _
+  refine' Finset.sum_congr rfl _
   intro g hg
   convert coeff_smul (sign g) _ 0
   rw [coeff_zero_prod]
-  refine' Finsetₓ.prod_congr rfl _
+  refine' Finset.prod_congr rfl _
   simp
 
 theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
-    coeff (det ((x : α[X]) • A.map c + B.map c)) (Fintypeₓ.card n) = det A := by
+    coeff (det ((x : α[X]) • A.map c + B.map c)) (Fintype.card n) = det A := by
   rw [det_apply, det_apply, finset_sum_coeff]
-  refine' Finsetₓ.sum_congr rfl _
-  simp only [Algebra.id.smul_eq_mul, Finsetₓ.mem_univ, RingHom.map_matrix_apply, forall_true_left, map_apply,
+  refine' Finset.sum_congr rfl _
+  simp only [Algebra.id.smul_eq_mul, Finset.mem_univ, RingHom.map_matrix_apply, forall_true_left, map_apply,
     Pi.smul_apply]
   intro g
   convert coeff_smul (sign g) _ _
-  rw [← mul_oneₓ (Fintypeₓ.card n)]
+  rw [← mul_one (Fintype.card n)]
   convert (coeff_prod_of_nat_degree_le _ _ _ _).symm
   · ext
     simp [coeff_C]
     
   · intro p hp
     refine' (nat_degree_add_le _ _).trans _
-    simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C, max_eq_leftₓ, zero_le'] using
+    simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C, max_eq_left, zero_le'] using
       (nat_degree_C_mul_le _ _).trans nat_degree_X_le
     
 

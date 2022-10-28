@@ -34,24 +34,24 @@ universe u v w u₁
 
 open Submodule
 
-variable {R : Type u} [Ringₓ R]
+variable {R : Type u} [Ring R]
 
 variable {ι : Type v}
 
-variable [dec_ι : DecidableEq ι] [Preorderₓ ι]
+variable [dec_ι : DecidableEq ι] [Preorder ι]
 
 variable (G : ι → Type w)
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_self] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_map] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x
-  map_map : ∀ {i j k} (hij hjk x), f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
+  map_map : ∀ {i j k} (hij hjk x), f j k hjk (f i j hij x) = f i k (le_trans hij hjk) x
 
 namespace Module
 
-variable [∀ i, AddCommGroupₓ (G i)] [∀ i, Module R (G i)]
+variable [∀ i, AddCommGroup (G i)] [∀ i, Module R (G i)]
 
 variable {G} (f : ∀ i j, i ≤ j → G i →ₗ[R] G j)
 
@@ -63,7 +63,7 @@ theorem DirectedSystem.map_self [DirectedSystem G fun i j h => f i j h] (i x h) 
 /-- A copy of `directed_system.map_map` specialized to linear maps, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
 theorem DirectedSystem.map_map [DirectedSystem G fun i j h => f i j h] {i j k} (hij hjk x) :
-    f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x :=
+    f j k hjk (f i j hij x) = f i k (le_trans hij hjk) x :=
   DirectedSystem.map_map (fun i j h => f i j h) hij hjk x
 
 variable (G)
@@ -77,7 +77,7 @@ def DirectLimit : Type max v w :=
 
 namespace DirectLimit
 
-instance : AddCommGroupₓ (DirectLimit G f) :=
+instance : AddCommGroup (DirectLimit G f) :=
   Quotient.addCommGroup _
 
 instance : Module R (DirectLimit G f) :=
@@ -101,20 +101,20 @@ theorem of_f {i j hij x} : of R ι G f j (f i j hij x) = of R ι G f i x :=
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
 theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ i x, of R ι G f i x = z :=
-  (Nonempty.elimₓ (by infer_instance)) fun ind : ι =>
-    (Quotientₓ.induction_on' z) fun z =>
+  (Nonempty.elim (by infer_instance)) fun ind : ι =>
+    (Quotient.induction_on' z) fun z =>
       DirectSum.induction_on z ⟨ind, 0, LinearMap.map_zero _⟩ (fun i x => ⟨i, x, rfl⟩)
         fun p q ⟨i, x, ihx⟩ ⟨j, y, ihy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
         ⟨k, f i k hik x + f j k hjk y, by rw [LinearMap.map_add, of_f, of_f, ihx, ihy] <;> rfl⟩
 
-@[elabAsElim]
-protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
+@[elab_as_elim]
+protected theorem inductionOn [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of R ι G f i x)) : C z :=
   let ⟨i, x, h⟩ := exists_of z
   h ▸ ih i x
 
-variable {P : Type u₁} [AddCommGroupₓ P] [Module R P] (g : ∀ i, G i →ₗ[R] P)
+variable {P : Type u₁} [AddCommGroup P] [Module R P] (g : ∀ i, G i →ₗ[R] P)
 
 variable (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 
@@ -140,7 +140,7 @@ theorem lift_of {i} (x) : lift R ι G f g Hg (of R ι G f i x) = g i x :=
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) (x) :
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i) (fun i j hij x => by rw [LinearMap.comp_apply, of_f] <;> rfl) x :=
-  (DirectLimit.induction_on x) fun i x => by rw [lift_of] <;> rfl
+  (DirectLimit.inductionOn x) fun i x => by rw [lift_of] <;> rfl
 
 section Totalize
 
@@ -177,14 +177,14 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
   rw [← @Dfinsupp.sum_single ι G _ _ _ x]
   unfold Dfinsupp.sum
   simp only [LinearMap.map_sum]
-  refine' Finsetₓ.sum_congr rfl fun k hk => _
+  refine' Finset.sum_congr rfl fun k hk => _
   rw [DirectSum.single_eq_lof R k (x k), DirectSum.to_module_lof, DirectSum.to_module_lof, totalize_of_le (hx k hk),
-    totalize_of_le (le_transₓ (hx k hk) hij), DirectedSystem.map_map]
+    totalize_of_le (le_trans (hx k hk) hij), DirectedSystem.map_map]
 
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectSum ι G}
     (H : Submodule.Quotient.mk x = (0 : DirectLimit G f)) :
     ∃ j, (∀ k ∈ x.support, k ≤ j) ∧ DirectSum.toModule R ι (G j) (fun i => totalize G f i j) x = (0 : G j) :=
-  (Nonempty.elimₓ (by infer_instance)) fun ind : ι =>
+  (Nonempty.elim (by infer_instance)) fun ind : ι =>
     span_induction ((Quotient.mk_eq_zero _).1 H)
       (fun x ⟨i, j, hij, y, hxy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -208,12 +208,12 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
             
           simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map, DirectSum.apply_eq_component,
             DirectSum.component.of]⟩)
-      ⟨ind, fun _ h => (Finsetₓ.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
+      ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
       (fun x y ⟨i, hi, hxi⟩ ⟨j, hj, hyj⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
         ⟨k, fun l hl =>
-          (Finsetₓ.mem_union.1 (Dfinsupp.support_add hl)).elim (fun hl => le_transₓ (hi _ hl) hik) fun hl =>
-            le_transₓ (hj _ hl) hjk,
+          (Finset.mem_union.1 (Dfinsupp.support_add hl)).elim (fun hl => le_trans (hi _ hl) hik) fun hl =>
+            le_trans (hj _ hl) hjk,
           by simp [LinearMap.map_add, hxi, hyj, to_module_totalize_of_le hik hi, to_module_totalize_of_le hjk hj]⟩)
       fun a x ⟨i, hi, hxi⟩ => ⟨i, fun k hk => hi k (DirectSum.support_smul _ _ hk), by simp [LinearMap.map_smul, hxi]⟩
 
@@ -222,7 +222,7 @@ bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0) : ∃ j hij, f i j hij x = (0 : G j) :=
   haveI : Nonempty ι := ⟨i⟩
   let ⟨j, hj, hxj⟩ := of.zero_exact_aux H
-  if hx0 : x = 0 then ⟨i, le_rflₓ, by simp [hx0]⟩
+  if hx0 : x = 0 then ⟨i, le_rfl, by simp [hx0]⟩
   else
     have hij : i ≤ j := hj _ <| by simp [DirectSum.apply_eq_component, hx0]
     ⟨j, hij, by simpa [totalize_of_le hij] using hxj⟩
@@ -231,9 +231,9 @@ end DirectLimit
 
 end Module
 
-namespace AddCommGroupₓ
+namespace AddCommGroup
 
-variable [∀ i, AddCommGroupₓ (G i)]
+variable [∀ i, AddCommGroup (G i)]
 
 include dec_ι
 
@@ -255,7 +255,7 @@ include dec_ι
 
 attribute [local instance] direct_limit.directed_system
 
-instance : AddCommGroupₓ (DirectLimit G f) :=
+instance : AddCommGroup (DirectLimit G f) :=
   Module.DirectLimit.addCommGroup G fun i j hij => (f i j hij).toIntLinearMap
 
 instance : Inhabited (DirectLimit G f) :=
@@ -271,10 +271,10 @@ variable {G f}
 theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
   Module.DirectLimit.of_f
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
-  Module.DirectLimit.induction_on z ih
+  Module.DirectLimit.inductionOn z ih
 
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
@@ -282,7 +282,7 @@ theorem of.zero_exact [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h =>
     ∃ j hij, f i j hij x = 0 :=
   Module.DirectLimit.of.zero_exact h
 
-variable (P : Type u₁) [AddCommGroupₓ P]
+variable (P : Type u₁) [AddCommGroup P]
 
 variable (g : ∀ i, G i →+ P)
 
@@ -308,11 +308,11 @@ theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G
 
 end DirectLimit
 
-end AddCommGroupₓ
+end AddCommGroup
 
-namespace Ringₓ
+namespace Ring
 
-variable [∀ i, CommRingₓ (G i)]
+variable [∀ i, CommRing (G i)]
 
 section
 
@@ -332,11 +332,11 @@ def DirectLimit : Type max v w :=
 
 namespace DirectLimit
 
-instance : CommRingₓ (DirectLimit G f) :=
+instance : CommRing (DirectLimit G f) :=
   Ideal.Quotient.commRing _
 
-instance : Ringₓ (DirectLimit G f) :=
-  CommRingₓ.toRing _
+instance : Ring (DirectLimit G f) :=
+  CommRing.toRing _
 
 instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
@@ -358,8 +358,8 @@ theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
 theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ i x, of G f i x = z :=
-  (Nonempty.elimₓ (by infer_instance)) fun ind : ι =>
-    (Quotientₓ.induction_on' z) fun x =>
+  (Nonempty.elim (by infer_instance)) fun ind : ι =>
+    (Quotient.induction_on' z) fun x =>
       FreeAbelianGroup.induction_on x ⟨ind, 0, (of _ _ ind).map_zero⟩
         (fun s =>
           Multiset.induction_on s ⟨ind, 1, (of _ _ ind).map_one⟩ fun a s ih =>
@@ -397,7 +397,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
 
 end
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
   let ⟨i, x, hx⟩ := exists_of z
@@ -509,7 +509,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         
       
     
-  · refine' Nonempty.elimₓ (by infer_instance) fun ind : ι => _
+  · refine' Nonempty.elim (by infer_instance) fun ind : ι => _
     refine' ⟨ind, ∅, fun _ => False.elim, is_supported_zero, _⟩
     rw [(restriction _).map_zero, (FreeCommRing.lift _).map_zero]
     
@@ -517,8 +517,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
     have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
       rintro z (hz | hz)
-      exact le_transₓ (hi z hz) hik
-      exact le_transₓ (hj z hz) hjk
+      exact le_trans (hi z hz) hik
+      exact le_trans (hj z hz) hjk
     refine'
       ⟨k, s ∪ t, this,
         is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
@@ -527,7 +527,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     · rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, ←
         of.zero_exact_aux2 G f' hxs hi this hik (Set.subset_union_left s t), ←
         of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right s t), ihs, (f' i k hik).map_zero, iht,
-        (f' j k hjk).map_zero, zero_addₓ]
+        (f' j k hjk).map_zero, zero_add]
       
     
   · rintro x y ⟨j, t, hj, hyt, iht⟩
@@ -537,7 +537,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
     have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
       rintro z (hz | hz)
-      exacts[(hi z.1 <| Finsetₓ.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
+      exacts[(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
     refine'
       ⟨k, ↑s ∪ t, this,
         is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left (↑s) t)
@@ -574,7 +574,7 @@ theorem of_injective [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => 
   apply hf i j hij
   rw [hfx, (f' i j hij).map_zero]
 
-variable (P : Type u₁) [CommRingₓ P]
+variable (P : Type u₁) [CommRing P]
 
 variable (g : ∀ i, G i →+* P)
 
@@ -619,7 +619,7 @@ end DirectLimit
 
 end
 
-end Ringₓ
+end Ring
 
 namespace Field
 
@@ -631,43 +631,43 @@ variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 
 namespace DirectLimit
 
-instance nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
+instance nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ring.DirectLimit G fun i j h => f' i j h) :=
   ⟨⟨0, 1,
-      (Nonempty.elimₓ (by infer_instance)) fun i : ι => by
-        change (0 : Ringₓ.DirectLimit G fun i j h => f' i j h) ≠ 1
-        rw [← (Ringₓ.DirectLimit.of _ _ _).map_one]
+      (Nonempty.elim (by infer_instance)) fun i : ι => by
+        change (0 : Ring.DirectLimit G fun i j h => f' i j h) ≠ 1
+        rw [← (Ring.DirectLimit.of _ _ _).map_one]
         intro H
-        rcases Ringₓ.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
+        rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
         rw [(f' i j hij).map_one] at hf
         exact one_ne_zero hf⟩⟩
 
-theorem exists_inv {p : Ringₓ.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
-  (Ringₓ.DirectLimit.induction_on p) fun i x H =>
-    ⟨Ringₓ.DirectLimit.of G f i x⁻¹, by
-      erw [← (Ringₓ.DirectLimit.of _ _ _).map_mul,
-        mul_inv_cancel fun h : x = 0 => H <| by rw [h, (Ringₓ.DirectLimit.of _ _ _).map_zero],
-        (Ringₓ.DirectLimit.of _ _ _).map_one]⟩
+theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
+  (Ring.DirectLimit.induction_on p) fun i x H =>
+    ⟨Ring.DirectLimit.of G f i x⁻¹, by
+      erw [← (Ring.DirectLimit.of _ _ _).map_mul,
+        mul_inv_cancel fun h : x = 0 => H <| by rw [h, (Ring.DirectLimit.of _ _ _).map_zero],
+        (Ring.DirectLimit.of _ _ _).map_one]⟩
 
 section
 
 open Classical
 
 /-- Noncomputable multiplicative inverse in a direct limit of fields. -/
-noncomputable def inv (p : Ringₓ.DirectLimit G f) : Ringₓ.DirectLimit G f :=
+noncomputable def inv (p : Ring.DirectLimit G f) : Ring.DirectLimit G f :=
   if H : p = 0 then 0 else Classical.choose (DirectLimit.exists_inv G f H)
 
-protected theorem mul_inv_cancel {p : Ringₓ.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
+protected theorem mul_inv_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
   rw [inv, dif_neg hp, Classical.choose_spec (direct_limit.exists_inv G f hp)]
 
-protected theorem inv_mul_cancel {p : Ringₓ.DirectLimit G f} (hp : p ≠ 0) : inv G f p * p = 1 := by
+protected theorem inv_mul_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : inv G f p * p = 1 := by
   rw [_root_.mul_comm, direct_limit.mul_inv_cancel G f hp]
 
 /-- Noncomputable field structure on the direct limit of fields.
 See note [reducible non-instances]. -/
 @[reducible]
 protected noncomputable def field [DirectedSystem G fun i j h => f' i j h] :
-    Field (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
-  { Ringₓ.DirectLimit.commRing G fun i j h => f' i j h, DirectLimit.nontrivial G fun i j h => f' i j h with
+    Field (Ring.DirectLimit G fun i j h => f' i j h) :=
+  { Ring.DirectLimit.commRing G fun i j h => f' i j h, DirectLimit.nontrivial G fun i j h => f' i j h with
     inv := inv G fun i j h => f' i j h, mul_inv_cancel := fun p => DirectLimit.mul_inv_cancel G fun i j h => f' i j h,
     inv_zero := dif_pos rfl }
 

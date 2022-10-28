@@ -60,14 +60,13 @@ theorem balanced (t : Rbtree α lt) : t.depth max ≤ 2 * t.depth min + 1 := by
 theorem not_mem_mk_rbtree : ∀ a : α, a ∉ mkRbtree α lt := by simp [Membership.Mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
 
 theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.Empty = tt → a ∉ t := by
-  cases' t with n p <;> cases n <;> simp [Empty, Membership.Mem, Rbtree.Mem, Rbnode.Mem, false_implies_iff]
+  cases' t with n p <;> cases n <;> simp [Empty, Membership.Mem, Rbtree.Mem, Rbnode.Mem, false_imp_iff]
 
 theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {t : Rbtree α lt} {a b : α} : a ∈ t → a ≈[lt]b → b ∈ t := by
   cases' t with n p <;>
     simp [Membership.Mem, Rbtree.Mem] <;>
       clear p <;>
-        induction n <;>
-          simp only [Rbnode.Mem, StrictWeakOrder.Equiv, false_implies_iff] <;> intro h₁ h₂ <;> cases_type*or.1
+        induction n <;> simp only [Rbnode.Mem, StrictWeakOrder.Equiv, false_imp_iff] <;> intro h₁ h₂ <;> cases_type*or.1
   iterate 2 
   · have : Rbnode.Mem lt b n_lchild := n_ih_lchild h₁ h₂
     simp [this]
@@ -143,7 +142,7 @@ theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α l
   assumption
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} : t.find a = none → a ∉ t := fun h =>
-  Iff.mpr (not_iff_not_of_iff (find_correct a t)) <| by
+  Iff.mpr (not_congr (find_correct a t)) <| by
     intro h
     cases' h with _ h
     cases' h with h₁ h₂
@@ -205,13 +204,11 @@ theorem mem_insert_of_mem [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} 
   cases t
   apply Rbnode.mem_insert_of_mem
 
-theorem equiv_or_mem_of_mem_insert [IsStrictWeakOrder α lt] {a b : α} {t : Rbtree α lt} :
-    a ∈ t.insert b → a ≈[lt]b ∨ a ∈ t := by
+theorem equiv_or_mem_of_mem_insert {a b : α} {t : Rbtree α lt} : a ∈ t.insert b → a ≈[lt]b ∨ a ∈ t := by
   cases t
   apply Rbnode.equiv_or_mem_of_mem_insert
 
-theorem incomp_or_mem_of_mem_ins [IsStrictWeakOrder α lt] {a b : α} {t : Rbtree α lt} :
-    a ∈ t.insert b → ¬lt a b ∧ ¬lt b a ∨ a ∈ t :=
+theorem incomp_or_mem_of_mem_ins {a b : α} {t : Rbtree α lt} : a ∈ t.insert b → ¬lt a b ∧ ¬lt b a ∨ a ∈ t :=
   equiv_or_mem_of_mem_insert
 
 theorem eq_or_mem_of_mem_ins [IsStrictTotalOrder α lt] {a b : α} {t : Rbtree α lt} : a ∈ t.insert b → a = b ∨ a ∈ t :=

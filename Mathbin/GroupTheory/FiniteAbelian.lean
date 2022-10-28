@@ -26,8 +26,8 @@ namespace Module
 
 variable (M : Type u)
 
-theorem finite_of_fg_torsion [AddCommGroupₓ M] [Module ℤ M] [Module.Finite ℤ M] (hM : Module.IsTorsion ℤ M) :
-    Finite M := by
+theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ M] (hM : Module.IsTorsion ℤ M) : Finite M :=
+  by
   rcases Module.equiv_direct_sum_of_is_torsion hM with ⟨ι, _, p, h, e, ⟨l⟩⟩
   haveI : ∀ i : ι, NeZero (p i ^ e i).natAbs := fun i =>
     ⟨Int.nat_abs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).ne_zero⟩
@@ -41,16 +41,16 @@ end Module
 
 variable (G : Type u)
 
-namespace AddCommGroupₓ
+namespace AddCommGroup
 
-variable [AddCommGroupₓ G]
+variable [AddCommGroup G]
 
 /-- **Structure theorem of finitely generated abelian groups** : Any finitely generated abelian
 group is the product of a power of `ℤ` and a direct sum of some `zmod (p i ^ e i)` for some
 prime powers `p i ^ e i`. -/
-theorem equiv_free_prod_direct_sum_zmod [hG : AddGroupₓ.Fg G] :
-    ∃ (n : ℕ)(ι : Type)(_ : Fintypeₓ ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
-      Nonempty <| G ≃+ (Finₓ n →₀ ℤ) × ⨁ i : ι, Zmod (p i ^ e i) :=
+theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
+    ∃ (n : ℕ)(ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
+      Nonempty <| G ≃+ (Fin n →₀ ℤ) × ⨁ i : ι, Zmod (p i ^ e i) :=
   by
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ :=
     @Module.equiv_free_prod_direct_sum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
@@ -67,7 +67,7 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroupₓ.Fg G] :
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
 theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
-    ∃ (ι : Type)(_ : Fintypeₓ ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
+    ∃ (ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
       Nonempty <| G ≃+ ⨁ i : ι, Zmod (p i ^ e i) :=
   by
   cases nonempty_fintype G
@@ -75,22 +75,22 @@ theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
   cases n
   · exact ⟨ι, fι, p, hp, e, ⟨f.trans AddEquiv.uniqueProd⟩⟩
     
-  · haveI := @Fintypeₓ.prodLeft _ _ _ (Fintypeₓ.ofEquiv G f.to_equiv) _
+  · haveI := @Fintype.prodLeft _ _ _ (Fintype.ofEquiv G f.to_equiv) _
     exact
-      ((Fintypeₓ.ofSurjective fun f : Finₓ n.succ →₀ ℤ => f 0) fun a =>
+      ((Fintype.ofSurjective fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
     
 
-theorem finite_of_fg_torsion [hG' : AddGroupₓ.Fg G] (hG : AddMonoidₓ.IsTorsion G) : Finite G :=
+theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=
   @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_add_group_fg.mpr hG') <|
-    AddMonoidₓ.is_torsion_iff_is_torsion_int.mp hG
+    AddMonoid.is_torsion_iff_is_torsion_int.mp hG
 
-end AddCommGroupₓ
+end AddCommGroup
 
-namespace CommGroupₓ
+namespace CommGroup
 
-theorem finite_of_fg_torsion [CommGroupₓ G] [Groupₓ.Fg G] (hG : Monoidₓ.IsTorsion G) : Finite G :=
-  @Finite.of_equiv _ _ (AddCommGroupₓ.finite_of_fg_torsion (Additive G) hG) Multiplicative.ofAdd
+theorem finite_of_fg_torsion [CommGroup G] [Group.Fg G] (hG : Monoid.IsTorsion G) : Finite G :=
+  @Finite.of_equiv _ _ (AddCommGroup.finite_of_fg_torsion (Additive G) hG) Multiplicative.ofAdd
 
-end CommGroupₓ
+end CommGroup
 

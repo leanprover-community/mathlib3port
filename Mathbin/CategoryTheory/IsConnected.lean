@@ -201,13 +201,13 @@ theorem is_preconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPre
 
 /-- If `J` and `K` are equivalent, then if `J` is connected then `K` is as well. -/
 theorem is_connected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌ K) [IsConnected J] : IsConnected K :=
-  { is_nonempty := Nonempty.mapₓ e.Functor.obj (by infer_instance),
+  { is_nonempty := Nonempty.map e.Functor.obj (by infer_instance),
     to_is_preconnected := is_preconnected_of_equivalent e }
 
 /-- If `J` is preconnected, then `Jᵒᵖ` is preconnected as well. -/
 instance is_preconnected_op [IsPreconnected J] :
     IsPreconnected
-      Jᵒᵖ where iso_constant := fun α F X =>
+      Jᵒᵖ where iso_constant α F X :=
     ⟨NatIso.ofComponents
         (fun Y =>
           eqToIso
@@ -244,13 +244,13 @@ def Zigzag : J → J → Prop :=
 theorem zigzag_symmetric : Symmetric (@Zigzag J _) :=
   Relation.ReflTransGen.symmetric zag_symmetric
 
-theorem zigzag_equivalence : Equivalenceₓ (@Zigzag J _) :=
-  mk_equivalence _ Relation.reflexive_refl_trans_gen zigzag_symmetric Relation.transitive_refl_trans_gen
+theorem zigzag_equivalence : Equivalence (@Zigzag J _) :=
+  mk _ Relation.reflexive_refl_trans_gen zigzag_symmetric Relation.transitive_refl_trans_gen
 
 /-- The setoid given by the equivalence relation `zigzag`. A quotient for this
 setoid is a connected component of the category.
 -/
-def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoidₓ J where
+def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoid J where
   R := Zigzag
   iseqv := zigzag_equivalence
 
@@ -258,14 +258,14 @@ def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoidₓ J where
 `F j₂` as long as `F` is a functor.
 -/
 theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : Zigzag j₁ j₂) : Zigzag (F.obj j₁) (F.obj j₂) :=
-  (h.lift _) fun j k => Or.impₓ (Nonempty.mapₓ fun f => F.map f) (Nonempty.mapₓ fun f => F.map f)
+  (h.lift _) fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
 
 -- TODO: figure out the right way to generalise this to `zigzag`.
 theorem zag_of_zag_obj (F : J ⥤ K) [Full F] {j₁ j₂ : J} (h : Zag (F.obj j₁) (F.obj j₂)) : Zag j₁ j₂ :=
-  Or.impₓ (Nonempty.mapₓ F.Preimage) (Nonempty.mapₓ F.Preimage) h
+  Or.imp (Nonempty.map F.Preimage) (Nonempty.map F.Preimage) h
 
 /-- Any equivalence relation containing (⟶) holds for all pairs of a connected category. -/
-theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalenceₓ r)
+theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalence r)
     (h : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), r j₁ j₂) : ∀ j₁ j₂ : J, r j₁ j₂ := by
   have z : ∀ j : J, r (Classical.arbitrary J) j :=
     induct_on_objects (fun k => r (Classical.arbitrary J) k) (hr.1 (Classical.arbitrary J)) fun _ _ f =>
@@ -330,14 +330,14 @@ theorem nat_trans_from_is_connected [IsPreconnected J] {X Y : C}
     exact this.symm
 
 instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C) where
-  Preimage := fun X Y f => f.app (Classical.arbitrary J)
-  witness' := fun X Y f => by
+  Preimage X Y f := f.app (Classical.arbitrary J)
+  witness' X Y f := by
     ext j
     apply nat_trans_from_is_connected f (Classical.arbitrary J) j
 
 instance nonempty_hom_of_connected_groupoid {G} [Groupoid G] [IsConnected G] : ∀ x y : G, Nonempty (x ⟶ y) := by
   refine' equiv_relation _ _ fun j₁ j₂ => Nonempty.intro
-  exact ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.mapₓ fun f => inv f, fun _ _ _ => Nonempty.map2ₓ (· ≫ ·)⟩
+  exact ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.map fun f => inv f, fun _ _ _ => Nonempty.map2 (· ≫ ·)⟩
 
 end CategoryTheory
 

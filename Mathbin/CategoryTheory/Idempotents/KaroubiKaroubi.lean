@@ -29,8 +29,8 @@ variable (C : Type _) [Category C]
 /-- The canonical functor `karoubi (karoubi C) ⥤ karoubi C` -/
 @[simps]
 def inverse : Karoubi (Karoubi C) ⥤ Karoubi C where
-  obj := fun P => ⟨P.x.x, P.p.f, by simpa only [hom_ext] using P.idem⟩
-  map := fun P Q f => ⟨f.f.f, by simpa only [hom_ext] using f.comm⟩
+  obj P := ⟨P.x.x, P.p.f, by simpa only [hom_ext] using P.idem⟩
+  map P Q f := ⟨f.f.f, by simpa only [hom_ext] using f.comm⟩
 
 instance [Preadditive C] : Functor.Additive (inverse C) where
 
@@ -98,7 +98,7 @@ def equivalence : Karoubi C ≌ Karoubi (Karoubi C) where
   inverse := KaroubiKaroubi.inverse C
   unitIso := KaroubiKaroubi.unitIso C
   counitIso := KaroubiKaroubi.counitIso C
-  functor_unit_iso_comp' := fun P => by
+  functor_unit_iso_comp' P := by
     ext
     simp only [eq_to_hom_f, eq_to_hom_refl, comp_id, counit_iso_hom_app_f_f, to_karoubi_obj_p, id_eq, assoc, comp,
       unit_iso_hom, eq_to_hom_app, eq_to_hom_map]

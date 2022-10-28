@@ -45,11 +45,11 @@ def toMonad (h : L ⊣ R) : Monad C where
   toFunctor := L ⋙ R
   η' := h.Unit
   μ' := whiskerRight (whiskerLeft L h.counit) R
-  assoc' := fun X => by
+  assoc' X := by
     dsimp
     rw [← R.map_comp]
     simp
-  right_unit' := fun X => by
+  right_unit' X := by
     dsimp
     rw [← R.map_comp]
     simp
@@ -62,11 +62,11 @@ def toComonad (h : L ⊣ R) : Comonad D where
   toFunctor := R ⋙ L
   ε' := h.counit
   δ' := whiskerRight (whiskerLeft R h.Unit) L
-  coassoc' := fun X => by
+  coassoc' X := by
     dsimp
     rw [← L.map_comp]
     simp
-  right_counit' := fun X => by
+  right_counit' X := by
     dsimp
     rw [← L.map_comp]
     simp
@@ -103,13 +103,13 @@ and essentially surjective when `R` is reflective.
 -/
 @[simps]
 def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra where
-  obj := fun X =>
+  obj X :=
     { A := R.obj X, a := R.map (h.counit.app X),
       assoc' := by
         dsimp
         rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
         rfl }
-  map := fun X Y f =>
+  map X Y f :=
     { f := R.map f,
       h' := by
         dsimp
@@ -127,15 +127,14 @@ theorem Monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMon
 
 instance [Faithful R] (h : L ⊣ R) :
     Faithful
-      (Monad.comparison
-        h) where map_injective' := fun X Y f g w => R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
+      (Monad.comparison h) where map_injective' X Y f g w := R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
 
-instance (T : Monad C) : Full (Monad.comparison T.adj) where preimage := fun X Y f => ⟨f.f, by simpa using f.h⟩
+instance (T : Monad C) : Full (Monad.comparison T.adj) where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
 instance (T : Monad C) :
     EssSurj
       (Monad.comparison
-        T.adj) where mem_ess_image := fun X =>
+        T.adj) where mem_ess_image X :=
     ⟨{ A := X.A, a := X.a, unit' := by simpa using X.unit, assoc' := by simpa using X.assoc },
       ⟨Monad.Algebra.isoMk (Iso.refl _) (by simp)⟩⟩
 
@@ -145,13 +144,13 @@ sending objects `X : C` to Eilenberg-Moore coalgebras for `L ⋙ R` with underly
 -/
 @[simps]
 def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra where
-  obj := fun X =>
+  obj X :=
     { A := L.obj X, a := L.map (h.Unit.app X),
       coassoc' := by
         dsimp
         rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
         rfl }
-  map := fun X Y f =>
+  map X Y f :=
     { f := L.map f,
       h' := by
         dsimp
@@ -170,15 +169,14 @@ theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.t
 
 instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) :
     Faithful
-      (Comonad.comparison
-        h) where map_injective' := fun X Y f g w => L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
+      (Comonad.comparison h) where map_injective' X Y f g w := L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
 
-instance (G : Comonad C) : Full (Comonad.comparison G.adj) where preimage := fun X Y f => ⟨f.f, by simpa using f.h⟩
+instance (G : Comonad C) : Full (Comonad.comparison G.adj) where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
 instance (G : Comonad C) :
     EssSurj
       (Comonad.comparison
-        G.adj) where mem_ess_image := fun X =>
+        G.adj) where mem_ess_image X :=
     ⟨{ A := X.A, a := X.a, counit' := by simpa using X.counit, coassoc' := by simpa using X.coassoc },
       ⟨Comonad.Coalgebra.isoMk (Iso.refl _) (by simp)⟩⟩
 
@@ -235,7 +233,7 @@ instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunct
   apply (X.unit_assoc _).symm
 
 instance comparisonFull [Full R] [IsRightAdjoint R] :
-    Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where preimage := fun X Y f => R.preimage f.f
+    Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where preimage X Y f := R.preimage f.f
 
 end Reflective
 

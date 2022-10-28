@@ -18,14 +18,14 @@ open Set Filter Bornology Function
 
 open Filter
 
-variable {α β ι : Type _} {π : ι → Type _} [Fintypeₓ ι] [Bornology α] [Bornology β] [∀ i, Bornology (π i)]
+variable {α β ι : Type _} {π : ι → Type _} [Fintype ι] [Bornology α] [Bornology β] [∀ i, Bornology (π i)]
 
 instance : Bornology (α × β) where
   cobounded := (cobounded α).coprod (cobounded β)
   le_cofinite := @coprod_cofinite α β ▸ coprod_mono ‹Bornology α›.le_cofinite ‹Bornology β›.le_cofinite
 
 instance : Bornology (∀ i, π i) where
-  cobounded := Filter.coprodₓ fun i => cobounded (π i)
+  cobounded := Filter.coprod fun i => cobounded (π i)
   le_cofinite := @Coprod_cofinite ι π _ ▸ Filter.Coprod_mono fun i => Bornology.le_cofinite _
 
 /-- Inverse image of a bornology. -/
@@ -53,24 +53,24 @@ theorem is_bounded_image_fst_and_snd {s : Set (α × β)} :
 
 variable {s : Set α} {t : Set β} {S : ∀ i, Set (π i)}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.fst_of_prod (h : IsBounded (s ×ˢ t)) (ht : t.Nonempty) : IsBounded s :=
   fst_image_prod s ht ▸ (is_bounded_image_fst_and_snd.2 h).1
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsBounded t :=
   snd_image_prod hs t ▸ (is_bounded_image_fst_and_snd.2 h).2
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.prod (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ×ˢ t) :=
   is_bounded_image_fst_and_snd.1 ⟨hs.Subset <| fst_image_prod_subset _ _, ht.Subset <| snd_image_prod_subset _ _⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_bounded_prod_of_nonempty (hne : Set.Nonempty (s ×ˢ t)) : IsBounded (s ×ˢ t) ↔ IsBounded s ∧ IsBounded t :=
   ⟨fun h => ⟨h.fst_of_prod hne.snd, h.snd_of_prod hne.fst⟩, fun h => h.1.Prod h.2⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_bounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBounded s ∧ IsBounded t := by
   rcases s.eq_empty_or_nonempty with (rfl | hs)
   · simp
@@ -78,21 +78,21 @@ theorem is_bounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBou
   rcases t.eq_empty_or_nonempty with (rfl | ht)
   · simp
     
-  simp only [hs.ne_empty, ht.ne_empty, is_bounded_prod_of_nonempty (hs.prod ht), false_orₓ]
+  simp only [hs.ne_empty, ht.ne_empty, is_bounded_prod_of_nonempty (hs.prod ht), false_or_iff]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_bounded_prod_self : IsBounded (s ×ˢ s) ↔ IsBounded s := by
   rcases s.eq_empty_or_nonempty with (rfl | hs)
   · simp
     
-  exact (is_bounded_prod_of_nonempty (hs.prod hs)).trans (and_selfₓ _)
+  exact (is_bounded_prod_of_nonempty (hs.prod hs)).trans (and_self_iff _)
 
 /-!
 ### Bounded sets in `Π i, π i`
 -/
 
 
-theorem cobounded_pi : cobounded (∀ i, π i) = Filter.coprodₓ fun i => cobounded (π i) :=
+theorem cobounded_pi : cobounded (∀ i, π i) = Filter.coprod fun i => cobounded (π i) :=
   rfl
 
 theorem forall_is_bounded_image_eval_iff {s : Set (∀ i, π i)} : (∀ i, IsBounded (eval i '' s)) ↔ IsBounded s :=
@@ -108,7 +108,7 @@ theorem is_bounded_pi : IsBounded (pi Univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, 
   by_cases hne:∃ i, S i = ∅
   · simp [hne, univ_pi_eq_empty_iff.2 hne]
     
-  · simp only [hne, false_orₓ]
+  · simp only [hne, false_or_iff]
     simp only [not_exists, ← Ne.def, ne_empty_iff_nonempty, ← univ_pi_nonempty_iff] at hne
     exact is_bounded_pi_of_nonempty hne
     

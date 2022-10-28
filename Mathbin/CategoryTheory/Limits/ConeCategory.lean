@@ -37,8 +37,8 @@ variable {C : Type u₃} [Category.{v₃} C] {D : Type u₄} [Category.{v₄} D]
     equivalence, see `cone.equiv_costructured_arrow`. -/
 @[simps]
 def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const J) F where
-  obj := fun c => CostructuredArrow.mk c.π
-  map := fun c d f =>
+  obj c := CostructuredArrow.mk c.π
+  map c d f :=
     CostructuredArrow.homMk f.Hom <| by
       ext
       simp
@@ -47,8 +47,8 @@ def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const
     equivalence, see `cone.equiv_costructured_arrow`. -/
 @[simps]
 def Cone.fromCostructuredArrow (F : J ⥤ C) : CostructuredArrow (const J) F ⥤ Cone F where
-  obj := fun c => ⟨c.left, c.Hom⟩
-  map := fun c d f =>
+  obj c := ⟨c.left, c.Hom⟩
+  map c d f :=
     { Hom := f.left,
       w' := fun j => by
         convert congr_fun (congr_arg nat_trans.app f.w) j
@@ -77,9 +77,9 @@ theorem has_limits_of_shape_iff_is_left_adjoint_const :
     HasLimitsOfShape J C ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) :=
   calc
     HasLimitsOfShape J C ↔ ∀ F : J ⥤ C, HasLimit F := ⟨fun h => h.HasLimit, fun h => has_limits_of_shape.mk⟩
-    _ ↔ ∀ F : J ⥤ C, HasTerminal (Cone F) := forall_congrₓ has_limit_iff_has_terminal_cone
+    _ ↔ ∀ F : J ⥤ C, HasTerminal (Cone F) := forall_congr has_limit_iff_has_terminal_cone
     _ ↔ ∀ F : J ⥤ C, HasTerminal (CostructuredArrow (const J) F) :=
-      forall_congrₓ fun F => (Cone.equivCostructuredArrow F).has_terminal_iff
+      forall_congr fun F => (Cone.equivCostructuredArrow F).has_terminal_iff
     _ ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) := nonempty_is_left_adjoint_iff_has_terminal_costructured_arrow.symm
     
 
@@ -105,8 +105,8 @@ def IsLimit.ofReflectsConeTerminal {F : J ⥤ C} {F' : K ⥤ D} (G : Cone F ⥤ 
     equivalence, see `cocone.equiv_structured_arrow`. -/
 @[simps]
 def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (const J) where
-  obj := fun c => StructuredArrow.mk c.ι
-  map := fun c d f =>
+  obj c := StructuredArrow.mk c.ι
+  map c d f :=
     StructuredArrow.homMk f.Hom <| by
       ext
       simp
@@ -115,8 +115,8 @@ def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (con
     equivalence, see `cocone.equiv_structured_arrow`. -/
 @[simps]
 def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ Cocone F where
-  obj := fun c => ⟨c.right, c.Hom⟩
-  map := fun c d f =>
+  obj c := ⟨c.right, c.Hom⟩
+  map c d f :=
     { Hom := f.right,
       w' := fun j => by
         convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
@@ -145,9 +145,9 @@ theorem has_colimits_of_shape_iff_is_right_adjoint_const :
     HasColimitsOfShape J C ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) :=
   calc
     HasColimitsOfShape J C ↔ ∀ F : J ⥤ C, HasColimit F := ⟨fun h => h.HasColimit, fun h => has_colimits_of_shape.mk⟩
-    _ ↔ ∀ F : J ⥤ C, HasInitial (Cocone F) := forall_congrₓ has_colimit_iff_has_initial_cocone
+    _ ↔ ∀ F : J ⥤ C, HasInitial (Cocone F) := forall_congr has_colimit_iff_has_initial_cocone
     _ ↔ ∀ F : J ⥤ C, HasInitial (StructuredArrow F (const J)) :=
-      forall_congrₓ fun F => (Cocone.equivStructuredArrow F).has_initial_iff
+      forall_congr fun F => (Cocone.equivStructuredArrow F).has_initial_iff
     _ ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) := nonempty_is_right_adjoint_iff_has_initial_structured_arrow.symm
     
 

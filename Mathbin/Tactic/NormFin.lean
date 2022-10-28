@@ -30,7 +30,7 @@ open NormNum
 /-- `normalize_fin n a b` means that `a : fin n` is equivalent to `b : ℕ` in the modular sense -
 that is, `↑a ≡ b (mod n)`. This is used for translating the algebraic operations: addition,
 multiplication, zero and one, which use modulo for reduction. -/
-def NormalizeFin (n : ℕ) (a : Finₓ n) (b : ℕ) :=
+def NormalizeFin (n : ℕ) (a : Fin n) (b : ℕ) :=
   a.1 = b % n
 
 /-- `normalize_fin_lt n a b` means that `a : fin n` is equivalent to `b : ℕ` in the embedding
@@ -40,22 +40,22 @@ function, but it does not lift to a map `zmod n → zmod (n+1)`; this addition o
 the input is strictly less than `n`.
 
 `normalize_fin_lt n a b` is equivalent to `normalize_fin n a b ∧ b < n`. -/
-def NormalizeFinLt (n : ℕ) (a : Finₓ n) (b : ℕ) :=
+def NormalizeFinLt (n : ℕ) (a : Fin n) (b : ℕ) :=
   a.1 = b
 
-theorem NormalizeFinLt.coe {n} {a : Finₓ n} {b : ℕ} (h : NormalizeFinLt n a b) : ↑a = b :=
+theorem NormalizeFinLt.coe {n} {a : Fin n} {b : ℕ} (h : NormalizeFinLt n a b) : ↑a = b :=
   h
 
-theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a = Finₓ.ofNat' b :=
-  Iff.symm (Finₓ.eq_iff_veq _ _)
+theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a = Fin.ofNat' b :=
+  Iff.symm (Fin.eq_iff_veq _ _)
 
 theorem NormalizeFinLt.mk {n a b n'} (hn : n = n') (h : NormalizeFin n a b) (h2 : b < n') : NormalizeFinLt n a b :=
-  h.trans <| Nat.mod_eq_of_ltₓ <| by rw [hn] <;> exact h2
+  h.trans <| Nat.mod_eq_of_lt <| by rw [hn] <;> exact h2
 
 theorem NormalizeFinLt.lt {n a b} (h : NormalizeFinLt n a b) : b < n := by rw [← h.coe] <;> exact a.2
 
 theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a b :=
-  h.trans <| Eq.symm <| Nat.mod_eq_of_ltₓ h.lt
+  h.trans <| Eq.symm <| Nat.mod_eq_of_lt h.lt
 
 theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 := by
   rw [normalize_fin]
@@ -67,65 +67,65 @@ theorem NormalizeFinLt.zero (n) : NormalizeFinLt (n + 1) 0 0 :=
 theorem NormalizeFin.one (n) : NormalizeFin (n + 1) 1 1 :=
   refl _
 
-theorem NormalizeFin.add {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
+theorem NormalizeFin.add {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
     (h : a' + b' = c') : NormalizeFin n (a + b) c' := by
-  simp only [normalize_fin, ← h] at * <;> rw [Nat.add_modₓ, ← ha, ← hb, Finₓ.add_def]
+  simp only [normalize_fin, ← h] at * <;> rw [Nat.add_mod, ← ha, ← hb, Fin.add_def]
 
-theorem NormalizeFin.mul {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
+theorem NormalizeFin.mul {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
     (h : a' * b' = c') : NormalizeFin n (a * b) c' := by
-  simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_modₓ, ← ha, ← hb, Finₓ.mul_def]
+  simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_mod, ← ha, ← hb, Fin.mul_def]
 
-theorem NormalizeFin.bit0 {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFin n a a') : NormalizeFin n (bit0 a) (bit0 a') :=
+theorem NormalizeFin.bit0 {n} {a : Fin n} {a' : ℕ} (h : NormalizeFin n a a') : NormalizeFin n (bit0 a) (bit0 a') :=
   h.add h rfl
 
-theorem NormalizeFin.bit1 {n} {a : Finₓ (n + 1)} {a' : ℕ} (h : NormalizeFin (n + 1) a a') :
+theorem NormalizeFin.bit1 {n} {a : Fin (n + 1)} {a' : ℕ} (h : NormalizeFin (n + 1) a a') :
     NormalizeFin (n + 1) (bit1 a) (bit1 a') :=
   h.bit0.add (NormalizeFin.one _) rfl
 
-theorem NormalizeFinLt.succ {n} {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a') (e : a' + 1 = b) :
-    NormalizeFinLt n.succ (Finₓ.succ a) b := by simpa [normalize_fin_lt, ← e] using h
+theorem NormalizeFinLt.succ {n} {a : Fin n} {a' b : ℕ} (h : NormalizeFinLt n a a') (e : a' + 1 = b) :
+    NormalizeFinLt n.succ (Fin.succ a) b := by simpa [normalize_fin_lt, ← e] using h
 
-theorem NormalizeFinLt.cast_lt {n m} {a : Finₓ m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Finₓ.castLt a ha) a' := by simpa [normalize_fin_lt] using h
+theorem NormalizeFinLt.cast_lt {n m} {a : Fin m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.castLt a ha) a' := by simpa [normalize_fin_lt] using h
 
-theorem NormalizeFinLt.cast_le {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Finₓ.castLe nm a) a' := by simpa [normalize_fin_lt] using h
+theorem NormalizeFinLt.cast_le {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.castLe nm a) a' := by simpa [normalize_fin_lt] using h
 
-theorem NormalizeFinLt.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Finₓ.cast nm a) a' := by simpa [normalize_fin_lt] using h
+theorem NormalizeFinLt.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.cast nm a) a' := by simpa [normalize_fin_lt] using h
 
-theorem NormalizeFin.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFin m a a') :
-    NormalizeFin n (Finₓ.cast nm a) a' := by convert ← normalize_fin_lt.cast h
+theorem NormalizeFin.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFin m a a') :
+    NormalizeFin n (Fin.cast nm a) a' := by convert ← normalize_fin_lt.cast h
 
-theorem NormalizeFinLt.cast_add {n m} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
-    NormalizeFinLt (n + m) (Finₓ.castAdd m a) a' := by simpa [normalize_fin_lt] using h
+theorem NormalizeFinLt.cast_add {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
+    NormalizeFinLt (n + m) (Fin.castAdd m a) a' := by simpa [normalize_fin_lt] using h
 
-theorem NormalizeFinLt.cast_succ {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
-    NormalizeFinLt (n + 1) (Finₓ.castSucc a) a' :=
+theorem NormalizeFinLt.cast_succ {n} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
+    NormalizeFinLt (n + 1) (Fin.castSucc a) a' :=
   NormalizeFinLt.cast_add h
 
-theorem NormalizeFinLt.add_nat {n m m'} (hm : m = m') {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a')
-    (e : a' + m' = b) : NormalizeFinLt (n + m) (@Finₓ.addNat n m a) b := by simpa [normalize_fin_lt, ← e, ← hm] using h
+theorem NormalizeFinLt.add_nat {n m m'} (hm : m = m') {a : Fin n} {a' b : ℕ} (h : NormalizeFinLt n a a')
+    (e : a' + m' = b) : NormalizeFinLt (n + m) (@Fin.addNat n m a) b := by simpa [normalize_fin_lt, ← e, ← hm] using h
 
-theorem NormalizeFinLt.nat_add {n m n'} (hn : n = n') {a : Finₓ m} {a' b : ℕ} (h : NormalizeFinLt m a a')
-    (e : n' + a' = b) : NormalizeFinLt (n + m) (@Finₓ.natAdd n m a) b := by simpa [normalize_fin_lt, ← e, ← hn] using h
+theorem NormalizeFinLt.nat_add {n m n'} (hn : n = n') {a : Fin m} {a' b : ℕ} (h : NormalizeFinLt m a a')
+    (e : n' + a' = b) : NormalizeFinLt (n + m) (@Fin.natAdd n m a) b := by simpa [normalize_fin_lt, ← e, ← hn] using h
 
-theorem NormalizeFin.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
+theorem NormalizeFin.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
     (e1 : n' * k = nk) (e2 : nk + b = a') : NormalizeFin n a b := by
-  rwa [← e2, ← e1, ← hn, normalize_fin, add_commₓ, Nat.add_mul_mod_self_leftₓ] at h
+  rwa [← e2, ← e1, ← hn, normalize_fin, add_comm, Nat.add_mul_mod_self_left] at h
 
-theorem NormalizeFinLt.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
+theorem NormalizeFinLt.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
     (e1 : n' * k = nk) (e2 : nk + b = a') (hl : b < n') : NormalizeFinLt n a b :=
   NormalizeFinLt.mk hn (h.reduce hn e1 e2) hl
 
-theorem NormalizeFin.eq {n} {a b : Finₓ n} {c : ℕ} (ha : NormalizeFin n a c) (hb : NormalizeFin n b c) : a = b :=
-  Finₓ.eq_of_veq <| ha.trans hb.symm
+theorem NormalizeFin.eq {n} {a b : Fin n} {c : ℕ} (ha : NormalizeFin n a c) (hb : NormalizeFin n b c) : a = b :=
+  Fin.eq_of_veq <| ha.trans hb.symm
 
-theorem NormalizeFin.lt {n} {a b : Finₓ n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
+theorem NormalizeFin.lt {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
     (h : a' < b') : a < b := by
   have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 
-theorem NormalizeFin.le {n} {a b : Finₓ n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
+theorem NormalizeFin.le {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
     (h : a' ≤ b') : a ≤ b := by
   have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 
@@ -135,7 +135,7 @@ number. (`n` itself is implicit.)  It is in an `option` because it is lazily ini
 `n` we will never need this information, and indeed eagerly computing it would make some reductions
 fail spuriously if `n` is not a numeral. -/
 unsafe def eval_fin_m (α : Type) : Type :=
-  StateTₓ (instance_cache × Option (ℕ × expr × expr)) tactic α deriving Monadₓ, Alternativeₓ
+  StateT (instance_cache × Option (ℕ × expr × expr)) tactic α deriving Monad, Alternative
 
 /-- Lifts a tactic into the `eval_fin_m` monad. -/
 @[inline]
@@ -183,7 +183,7 @@ unsafe def eval_fin_m.eval_n (n : expr) : eval_fin_m (ℕ × expr × expr) :=
 @[inline]
 unsafe def eval_fin_m.run {α} (m : eval_fin_m α) : tactic α := do
   let ic ← mk_instance_cache (quote.1 ℕ)
-  let (a, _) ← StateTₓ.run m (ic, none)
+  let (a, _) ← StateT.run m (ic, none)
   pure a
 
 /-- The expression constructors recognized by the `eval_fin` evaluator. This is used instead of a
@@ -227,25 +227,25 @@ open MatchFinResult
 functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fin m` is not actually a
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
-  | quote.1 (@Finₓ.castLe (%%ₓn) (%%ₓm) (%%ₓh)) => some (cast_le n m h a)
-  | quote.1 (@Finₓ.cast (%%ₓm) (%%ₓn) (%%ₓh)) => some (cast n m h a)
-  | quote.1 (@Finₓ.castAdd (%%ₓn) (%%ₓm)) => some (cast_add n m a)
-  | quote.1 (@Finₓ.castSucc (%%ₓn)) => some (cast_succ n a)
-  | quote.1 (@Finₓ.addNat (%%ₓn) (%%ₓm)) => some (add_nat n m a)
-  | quote.1 (@Finₓ.natAdd (%%ₓn) (%%ₓm)) => some (nat_add n m a)
+  | quote.1 (@Fin.castLe (%%ₓn) (%%ₓm) (%%ₓh)) => some (cast_le n m h a)
+  | quote.1 (@Fin.cast (%%ₓm) (%%ₓn) (%%ₓh)) => some (cast n m h a)
+  | quote.1 (@Fin.castAdd (%%ₓn) (%%ₓm)) => some (cast_add n m a)
+  | quote.1 (@Fin.castSucc (%%ₓn)) => some (cast_succ n a)
+  | quote.1 (@Fin.addNat (%%ₓn) (%%ₓm)) => some (add_nat n m a)
+  | quote.1 (@Fin.natAdd (%%ₓn) (%%ₓm)) => some (nat_add n m a)
   | _ => none
 
 /-- Match a fin expression to a `match_fin_result`, for easier pattern matching in the
 evaluator. -/
 unsafe def match_fin : expr → Option match_fin_result
-  | quote.1 (@Zero.zero _ (@Finₓ.hasZero (%%ₓn))) => some (zero n)
-  | quote.1 (@One.one _ (@Finₓ.hasOne (%%ₓn))) => some (one n)
-  | quote.1 (@Add.add (Finₓ (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (add n a b)
-  | quote.1 (@Mul.mul (Finₓ (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (mul n a b)
-  | quote.1 (@bit0 (Finₓ (%%ₓn)) _ (%%ₓa)) => some (bit0 n a)
-  | quote.1 (@bit1 _ (@Finₓ.hasOne (%%ₓn)) _ (%%ₓa)) => some (bit1 n a)
-  | quote.1 (@Finₓ.succ (%%ₓn) (%%ₓa)) => some (succ n a)
-  | quote.1 (@Finₓ.castLt (%%ₓn) (%%ₓm) (%%ₓa) (%%ₓh)) => some (cast_lt n m a h)
+  | quote.1 (@Zero.zero _ (@Fin.hasZero (%%ₓn))) => some (zero n)
+  | quote.1 (@One.one _ (@Fin.hasOne (%%ₓn))) => some (one n)
+  | quote.1 (@Add.add (Fin (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (add n a b)
+  | quote.1 (@Mul.mul (Fin (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (mul n a b)
+  | quote.1 (@bit0 (Fin (%%ₓn)) _ (%%ₓa)) => some (bit0 n a)
+  | quote.1 (@bit1 _ (@Fin.hasOne (%%ₓn)) _ (%%ₓa)) => some (bit1 n a)
+  | quote.1 (@Fin.succ (%%ₓn) (%%ₓa)) => some (succ n a)
+  | quote.1 (@Fin.castLt (%%ₓn) (%%ₓm) (%%ₓa) (%%ₓh)) => some (cast_lt n m a h)
   | expr.app (quote.1 (@coeFn _ _ _ (%%ₓf))) a => match_fin_coe_fn a f
   | _ => none
 
@@ -322,7 +322,7 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) : expr �
 
 /-- Get `n` such that `a : fin n`. -/
 unsafe def get_fin_type (a : expr) : tactic expr := do
-  let quote.1 (Finₓ (%%ₓn)) ← infer_type a
+  let quote.1 (Fin (%%ₓn)) ← infer_type a
   pure n
 
 /-- Given `a : fin n`, `eval_fin a` returns `(b, p)` where `p : normalize_fin n a b`. This function
@@ -397,7 +397,7 @@ unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × e
     else do
       let (a', pa) ← reduce_fin' false n a (a', pa)
       let (b', pb) ← reduce_fin' false n b (b', pb)
-      guardₓ (expr.alpha_eqv a' b')
+      guard (expr.alpha_eqv a' b')
       pure ((quote.1 @NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
 
 /-- Given a function with the type of `prove_eq_fin'`, evaluates it with the given `a` and `b`. -/
@@ -430,19 +430,19 @@ unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
     match match_numeral a with
     | zero =>
       some
-        (expr.app (quote.1 (@Zero.zero (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasZero (%%ₓm))),
+        (expr.app (quote.1 (@Zero.zero (Fin (%%ₓn)))) (quote.1 (@Fin.hasZero (%%ₓm))),
           expr.app (quote.1 NormalizeFin.zero) m)
     | one =>
       some
-        (expr.app (quote.1 (@One.one (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasOne (%%ₓm))),
+        (expr.app (quote.1 (@One.one (Fin (%%ₓn)))) (quote.1 (@Fin.hasOne (%%ₓm))),
           expr.app (quote.1 NormalizeFin.one) m)
     | bit0 a => do
       let (a', p) ← mk_fin_numeral a
-      some (quote.1 (bit0 (%%ₓa') : Finₓ (%%ₓn)), (quote.1 @NormalizeFin.bit0).mk_app [n, a', a, p])
+      some (quote.1 (bit0 (%%ₓa') : Fin (%%ₓn)), (quote.1 @NormalizeFin.bit0).mk_app [n, a', a, p])
     | bit1 a => do
       let (a', p) ← mk_fin_numeral a
       some
-          ((quote.1 (@bit1 (Finₓ (%%ₓn)))).mk_app [quote.1 (@Finₓ.hasOne (%%ₓm)), quote.1 (@Finₓ.hasAdd (%%ₓn)), a'],
+          ((quote.1 (@bit1 (Fin (%%ₓn)))).mk_app [quote.1 (@Fin.hasOne (%%ₓm)), quote.1 (@Fin.hasAdd (%%ₓn)), a'],
             (quote.1 @NormalizeFin.bit1).mk_app [m, a', a, p])
     | _ => none
 
@@ -478,10 +478,10 @@ unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
       else
         if na < nb then do
           let p ← prove_lt_fin' n a b a' b'
-          pure (n, ff, (quote.1 (@ne_of_ltₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
+          pure (n, ff, (quote.1 (@ne_of_lt (Fin (%%ₓn)) _)).mk_app [a, b, p])
         else do
           let p ← prove_lt_fin' n b a b' a'
-          pure (n, ff, (quote.1 (@ne_of_gtₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
+          pure (n, ff, (quote.1 (@ne_of_gt (Fin (%%ₓn)) _)).mk_app [a, b, p])
 
 /-- A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.
 
@@ -493,10 +493,10 @@ example : (5 : fin 7) = fin.succ (fin.succ 3) := by norm_num
 unsafe def eval_ineq : expr → tactic (expr × expr)
   | quote.1 ((%%ₓa) < %%ₓb) => do
     let (n, lt, p) ← prove_lt_ge_fin a b
-    if lt then true_intro p else false_intro ((quote.1 (@not_lt_of_geₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
+    if lt then true_intro p else false_intro ((quote.1 (@not_lt_of_ge (Fin (%%ₓn)) _)).mk_app [a, b, p])
   | quote.1 ((%%ₓa) ≤ %%ₓb) => do
     let (n, lt, p) ← prove_lt_ge_fin b a
-    if lt then false_intro ((quote.1 (@not_le_of_gtₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p]) else true_intro p
+    if lt then false_intro ((quote.1 (@not_le_of_gt (Fin (%%ₓn)) _)).mk_app [a, b, p]) else true_intro p
   | quote.1 ((%%ₓa) = %%ₓb) => do
     let (n, Eq, p) ← prove_eq_ne_fin a b
     if Eq then true_intro p else false_intro p
@@ -504,7 +504,7 @@ unsafe def eval_ineq : expr → tactic (expr × expr)
   | quote.1 ((%%ₓa) ≥ %%ₓb) => mk_app `` LE.le [b, a] >>= eval_ineq
   | quote.1 ((%%ₓa) ≠ %%ₓb) => do
     let (n, Eq, p) ← prove_eq_ne_fin a b
-    if Eq then false_intro (quote.1 (not_not_intro (%%ₓp : (%%ₓa : Finₓ (%%ₓn)) = %%ₓb))) else true_intro p
+    if Eq then false_intro (quote.1 (not_not_intro (%%ₓp : (%%ₓa : Fin (%%ₓn)) = %%ₓb))) else true_intro p
   | _ => failed
 
 /-- Evaluates `e : fin n` to a natural number less than `n`. Returns `none` if it is not a natural

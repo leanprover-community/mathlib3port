@@ -57,9 +57,9 @@ theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.swap.snd = t.fst :=
 -/
 @[simps]
 def IsLimit.swapBinaryFan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.swap where
-  lift := fun s => I.lift (BinaryFan.swap s)
-  fac' := fun s => by rintro ⟨⟨⟩⟩ <;> simp
-  uniq' := fun s m w => by
+  lift s := I.lift (BinaryFan.swap s)
+  fac' s := by rintro ⟨⟨⟩⟩ <;> simp
+  uniq' s m w := by
     have h := I.uniq (binary_fan.swap s) m
     rw [h]
     rintro ⟨j⟩
@@ -122,12 +122,12 @@ theorem BinaryFan.assoc_inv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit s
 @[simps]
 def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
     {s : BinaryFan sXY.x Z} (R : IsLimit s) : IsLimit (s.assoc Q) where
-  lift := fun t => R.lift (BinaryFan.assocInv P t)
-  fac' := fun t => by
+  lift t := R.lift (BinaryFan.assocInv P t)
+  fac' t := by
     rintro ⟨⟨⟩⟩ <;> simp
     apply Q.hom_ext
     rintro ⟨⟨⟩⟩ <;> simp
-  uniq' := fun t m w => by
+  uniq' t m w := by
     have h := R.uniq (binary_fan.assoc_inv P t) m
     rw [h]
     rintro ⟨⟨⟩⟩ <;> simp
@@ -310,18 +310,18 @@ open MonoidalOfChosenFiniteProducts
 /-- A category with a terminal object and binary products has a natural monoidal structure. -/
 def monoidalOfChosenFiniteProducts : MonoidalCategory C where
   tensorUnit := 𝒯.Cone.x
-  tensorObj := fun X Y => tensorObj ℬ X Y
-  tensorHom := fun _ _ _ _ f g => tensorHom ℬ f g
+  tensorObj X Y := tensorObj ℬ X Y
+  tensorHom _ _ _ _ f g := tensorHom ℬ f g
   tensor_id' := tensor_id ℬ
-  tensor_comp' := fun _ _ _ _ _ _ f₁ f₂ g₁ g₂ => tensor_comp ℬ f₁ f₂ g₁ g₂
-  associator := fun X Y Z => BinaryFan.associatorOfLimitCone ℬ X Y Z
-  leftUnitor := fun X => BinaryFan.leftUnitor 𝒯.IsLimit (ℬ 𝒯.Cone.x X).IsLimit
-  rightUnitor := fun X => BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X 𝒯.Cone.x).IsLimit
+  tensor_comp' _ _ _ _ _ _ f₁ f₂ g₁ g₂ := tensor_comp ℬ f₁ f₂ g₁ g₂
+  associator X Y Z := BinaryFan.associatorOfLimitCone ℬ X Y Z
+  leftUnitor X := BinaryFan.leftUnitor 𝒯.IsLimit (ℬ 𝒯.Cone.x X).IsLimit
+  rightUnitor X := BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X 𝒯.Cone.x).IsLimit
   pentagon' := pentagon ℬ
   triangle' := triangle 𝒯 ℬ
-  left_unitor_naturality' := fun _ _ f => left_unitor_naturality 𝒯 ℬ f
-  right_unitor_naturality' := fun _ _ f => right_unitor_naturality 𝒯 ℬ f
-  associator_naturality' := fun _ _ _ _ _ _ f₁ f₂ f₃ => associator_naturality ℬ f₁ f₂ f₃
+  left_unitor_naturality' _ _ f := left_unitor_naturality 𝒯 ℬ f
+  right_unitor_naturality' _ _ f := right_unitor_naturality 𝒯 ℬ f
+  associator_naturality' _ _ _ _ _ _ f₁ f₂ f₃ := associator_naturality ℬ f₁ f₂ f₃
 
 namespace MonoidalOfChosenFiniteProducts
 
@@ -411,11 +411,11 @@ open MonoidalOfChosenFiniteProducts
 /-- The monoidal structure coming from finite products is symmetric.
 -/
 def symmetricOfChosenFiniteProducts : SymmetricCategory (MonoidalOfChosenFiniteProductsSynonym 𝒯 ℬ) where
-  braiding := fun X Y => Limits.BinaryFan.braiding (ℬ _ _).IsLimit (ℬ _ _).IsLimit
-  braiding_naturality' := fun X X' Y Y' f g => braiding_naturality ℬ f g
-  hexagon_forward' := fun X Y Z => hexagon_forward ℬ X Y Z
-  hexagon_reverse' := fun X Y Z => hexagon_reverse ℬ X Y Z
-  symmetry' := fun X Y => symmetry ℬ X Y
+  braiding X Y := Limits.BinaryFan.braiding (ℬ _ _).IsLimit (ℬ _ _).IsLimit
+  braiding_naturality' X X' Y Y' f g := braiding_naturality ℬ f g
+  hexagon_forward' X Y Z := hexagon_forward ℬ X Y Z
+  hexagon_reverse' X Y Z := hexagon_reverse ℬ X Y Z
+  symmetry' X Y := symmetry ℬ X Y
 
 end
 

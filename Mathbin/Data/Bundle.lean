@@ -68,7 +68,7 @@ theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
 theorem TotalSpace.eta (z : TotalSpace E) : totalSpaceMk z.proj z.2 = z :=
   Sigma.eta z
 
-instance {x : B} : CoeTₓ (E x) (TotalSpace E) :=
+instance {x : B} : CoeT (E x) (TotalSpace E) :=
   ⟨totalSpaceMk x⟩
 
 @[simp]
@@ -134,14 +134,14 @@ end Pullback
 
 section FiberStructures
 
-variable [∀ x, AddCommMonoidₓ (E x)]
+variable [∀ x, AddCommMonoid (E x)]
 
 @[simp]
 theorem coe_snd_map_apply (x : B) (v w : E x) :
     (↑(v + w) : TotalSpace E).snd = (v : TotalSpace E).snd + (w : TotalSpace E).snd :=
   rfl
 
-variable (R : Type _) [Semiringₓ R] [∀ x, Module R (E x)]
+variable (R : Type _) [Semiring R] [∀ x, Module R (E x)]
 
 @[simp]
 theorem coe_snd_map_smul (x : B) (r : R) (v : E x) : (↑(r • v) : TotalSpace E).snd = r • (v : TotalSpace E).snd :=
@@ -151,15 +151,15 @@ end FiberStructures
 
 section TrivialInstances
 
-variable {F : Type _} {R : Type _} [Semiringₓ R] (b : B)
+variable {F : Type _} {R : Type _} [Semiring R] (b : B)
 
-instance [AddCommMonoidₓ F] : AddCommMonoidₓ (Bundle.Trivial B F b) :=
-  ‹AddCommMonoidₓ F›
+instance [AddCommMonoid F] : AddCommMonoid (Bundle.Trivial B F b) :=
+  ‹AddCommMonoid F›
 
-instance [AddCommGroupₓ F] : AddCommGroupₓ (Bundle.Trivial B F b) :=
-  ‹AddCommGroupₓ F›
+instance [AddCommGroup F] : AddCommGroup (Bundle.Trivial B F b) :=
+  ‹AddCommGroup F›
 
-instance [AddCommMonoidₓ F] [Module R F] : Module R (Bundle.Trivial B F b) :=
+instance [AddCommMonoid F] [Module R F] : Module R (Bundle.Trivial B F b) :=
   ‹Module R F›
 
 end TrivialInstances

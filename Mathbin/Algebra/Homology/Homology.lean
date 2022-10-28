@@ -111,9 +111,54 @@ variable [HasCokernels V]
 abbrev homology (C : HomologicalComplex V c) (i : ι) : V :=
   homology (C.dTo i) (C.dFrom i) (C.d_to_comp_d_from i)
 
+/-- The `j`th homology of a homological complex (as kernel of 'the differential from `Cⱼ`' modulo
+the image of 'the differential to `Cⱼ`') is isomorphic to the kernel of `d : Cⱼ → Cₖ` modulo
+the image of `d : Cᵢ → Cⱼ` when `rel i j` and `rel j k`. -/
+def homologyIso (C : HomologicalComplex V c) {i j k : ι} (hij : c.Rel i j) (hjk : c.Rel j k) :
+    C.homology j ≅ homology (C.d i j) (C.d j k) (C.d_comp_d i j k) :=
+  homology.mapIso _ _ (Arrow.isoMk (C.xPrevIso hij) (Iso.refl _) <| by dsimp <;> rw [C.d_to_eq hij, category.comp_id])
+    (Arrow.isoMk (Iso.refl _) (C.xNextIso hjk) <| by dsimp <;> rw [C.d_from_comp_X_next_iso hjk, category.id_comp]) rfl
+
 end
 
 end HomologicalComplex
+
+/-- The 0th homology of a chain complex is isomorphic to the cokernel of `d : C₁ ⟶ C₀`. -/
+def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V] (C : ChainComplex V ℕ)
+    [Epi (factorThruImage (C.d 1 0))] : C.homology 0 ≅ cokernel (C.d 1 0) :=
+  (homology.mapIso _ _
+        (Arrow.isoMk (C.xPrevIso rfl) (Iso.refl _) <| by rw [C.d_to_eq rfl] <;> exact (category.comp_id _).symm :
+          Arrow.mk (C.dTo 0) ≅ Arrow.mk (C.d 1 0))
+        (Arrow.isoMk (Iso.refl _) (Iso.refl _) <| by
+          simp [C.d_from_eq_zero fun h : _ = _ => one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h] :
+          Arrow.mk (C.dFrom 0) ≅ Arrow.mk 0)
+        rfl).trans <|
+    homologyOfZeroRight _
+
+/-- The 0th cohomology of a cochain complex is isomorphic to the kernel of `d : C₀ → C₁`. -/
+def CochainComplex.homologyZeroIso [HasZeroObject V] [HasKernels V] [HasImages V] [HasCokernels V]
+    (C : CochainComplex V ℕ) : C.homology 0 ≅ kernel (C.d 0 1) :=
+  (homology.mapIso _ _
+          (Arrow.isoMk (C.xPrevIsoSelf (by rw [CochainComplex.prev_nat_zero] <;> exact one_ne_zero)) (Iso.refl _)
+            (by simp) :
+            Arrow.mk (C.dTo 0) ≅ Arrow.mk 0)
+          (Arrow.isoMk (Iso.refl _) (C.xNextIso rfl) (by simp) : Arrow.mk (C.dFrom 0) ≅ Arrow.mk (C.d 0 1)) <|
+        by simpa).trans <|
+    homologyOfZeroLeft _
+
+/-- The `n + 1`th homology of a chain complex (as kernel of 'the differential from `Cₙ₊₁`' modulo
+the image of 'the differential to `Cₙ₊₁`') is isomorphic to the kernel of `d : Cₙ₊₁ → Cₙ` modulo
+the image of `d : Cₙ₊₂ → Cₙ₊₁`. -/
+def ChainComplex.homologySuccIso [HasKernels V] [HasImages V] [HasCokernels V] (C : ChainComplex V ℕ) (n : ℕ) :
+    C.homology (n + 1) ≅ homology (C.d (n + 2) (n + 1)) (C.d (n + 1) n) (C.d_comp_d _ _ _) :=
+  C.homologyIso rfl rfl
+
+/-- The `n + 1`th cohomology of a cochain complex (as kernel of 'the differential from `Cₙ₊₁`'
+modulo the image of 'the differential to `Cₙ₊₁`') is isomorphic to the kernel of `d : Cₙ₊₁ → Cₙ₊₂`
+modulo the image of `d : Cₙ → Cₙ₊₁`. -/
+def CochainComplex.homologySuccIso [HasKernels V] [HasImages V] [HasCokernels V] (C : CochainComplex V ℕ) (n : ℕ) :
+    C.homology (n + 1) ≅ homology (C.d n (n + 1)) (C.d (n + 1) (n + 2)) (C.d_comp_d _ _ _) :=
+  C.homologyIso rfl rfl
 
 open HomologicalComplex
 
@@ -150,8 +195,8 @@ variable (V c)
 /-- Cycles as a functor. -/
 @[simps]
 def cyclesFunctor (i : ι) : HomologicalComplex V c ⥤ V where
-  obj := fun C => C.cycles i
-  map := fun C₁ C₂ f => cyclesMap f i
+  obj C := C.cycles i
+  map C₁ C₂ f := cyclesMap f i
 
 end
 
@@ -174,8 +219,8 @@ variable (V c)
 /-- Boundaries as a functor. -/
 @[simps]
 def boundariesFunctor (i : ι) : HomologicalComplex V c ⥤ V where
-  obj := fun C => C.boundaries i
-  map := fun C₁ C₂ f => imageSubobjectMap (f.sqTo i)
+  obj C := C.boundaries i
+  map C₁ C₂ f := imageSubobjectMap (f.sqTo i)
 
 end
 
@@ -199,8 +244,8 @@ variable (V c)
 /-- The natural transformation from the boundaries functor to the cycles functor. -/
 @[simps]
 def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunctor V c i where
-  app := fun C => C.boundariesToCycles i
-  naturality' := fun C₁ C₂ f => boundaries_to_cycles_naturality f i
+  app C := C.boundariesToCycles i
+  naturality' C₁ C₂ f := boundaries_to_cycles_naturality f i
 
 /-- The `i`-th homology, as a functor to `V`. -/
 @[simps]
@@ -208,8 +253,8 @@ def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V whe
   -- It would be nice if we could just write
   -- `cokernel (boundaries_to_cycles_nat_trans V c i)`
   -- here, but universe implementation details get in the way...
-  obj := fun C => C.homology i
-  map := fun C₁ C₂ f => homology.map _ _ (f.sqTo i) (f.sqFrom i) rfl
+  obj C := C.homology i
+  map C₁ C₂ f := homology.map _ _ (f.sqTo i) (f.sqFrom i) rfl
   map_id' := by
     intros
     ext1
@@ -222,8 +267,8 @@ def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V whe
 /-- The homology functor from `ι`-indexed complexes to `ι`-graded objects in `V`. -/
 @[simps]
 def gradedHomologyFunctor [HasCokernels V] : HomologicalComplex V c ⥤ GradedObject ι V where
-  obj := fun C i => C.homology i
-  map := fun C C' f i => (homologyFunctor V c i).map f
+  obj C i := C.homology i
+  map C C' f i := (homologyFunctor V c i).map f
   map_id' := by
     intros
     ext

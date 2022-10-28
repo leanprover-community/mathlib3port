@@ -40,11 +40,11 @@ open TensorProduct
 
 section
 
-variable (R : Type u) [CommSemiringₓ R] {M : Type v} [AddCommMonoidₓ M] [Module R M]
+variable (R : Type u) [CommSemiring R] {M : Type v} [AddCommMonoid M] [Module R M]
 
-variable {ι : Type w} [DecidableEq ι] [Fintypeₓ ι]
+variable {ι : Type w} [DecidableEq ι] [Fintype ι]
 
-variable {κ : Type _} [DecidableEq κ] [Fintypeₓ κ]
+variable {κ : Type _} [DecidableEq κ] [Fintype κ]
 
 variable (b : Basis ι R M) (c : Basis κ R M)
 
@@ -81,14 +81,14 @@ variable (R) (M)
 
 /-- Trace of an endomorphism independent of basis. -/
 def trace : (M →ₗ[R] M) →ₗ[R] R :=
-  if H : ∃ s : Finsetₓ M, Nonempty (Basis s R M) then traceAux R H.some_spec.some else 0
+  if H : ∃ s : Finset M, Nonempty (Basis s R M) then traceAux R H.some_spec.some else 0
 
 variable (R) {M}
 
 /-- Auxiliary lemma for `trace_eq_matrix_trace`. -/
-theorem trace_eq_matrix_trace_of_finset {s : Finsetₓ M} (b : Basis s R M) (f : M →ₗ[R] M) :
+theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M →ₗ[R] M) :
     trace R M f = Matrix.trace (LinearMap.toMatrix b b f) := by
-  have : ∃ s : Finsetₓ M, Nonempty (Basis s R M) := ⟨s, ⟨b⟩⟩
+  have : ∃ s : Finset M, Nonempty (Basis s R M) := ⟨s, ⟨b⟩⟩
   rw [trace, dif_pos this, ← trace_aux_def]
   congr 1
   apply trace_aux_eq
@@ -97,7 +97,7 @@ theorem trace_eq_matrix_trace (f : M →ₗ[R] M) : trace R M f = Matrix.trace (
   rw [trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ← trace_aux_def, ← trace_aux_def, trace_aux_eq R b]
 
 theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f * g) = trace R M (g * f) :=
-  if H : ∃ s : Finsetₓ M, Nonempty (Basis s R M) then by
+  if H : ∃ s : Finset M, Nonempty (Basis s R M) then by
     let ⟨s, ⟨b⟩⟩ := H
     simp_rw [trace_eq_matrix_trace R b, LinearMap.to_matrix_mul]
     apply Matrix.trace_mul_comm
@@ -113,9 +113,9 @@ end
 
 section
 
-variable {R : Type _} [CommRingₓ R] {M : Type _} [AddCommGroupₓ M] [Module R M]
+variable {R : Type _} [CommRing R] {M : Type _} [AddCommGroup M] [Module R M]
 
-variable (N : Type _) [AddCommGroupₓ N] [Module R N]
+variable (N : Type _) [AddCommGroup N] [Module R N]
 
 variable {ι : Type _}
 
@@ -138,7 +138,7 @@ theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
 
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
-theorem trace_eq_contract_of_basis' [Fintypeₓ ι] [DecidableEq ι] (b : Basis ι R M) :
+theorem trace_eq_contract_of_basis' [Fintype ι] [DecidableEq ι] (b : Basis ι R M) :
     LinearMap.trace R M = contractLeft R M ∘ₗ (dualTensorHomEquivOfBasis b).symm.toLinearMap := by
   simp [LinearEquiv.eq_comp_to_linear_map_symm, trace_eq_contract_of_basis b]
 
@@ -192,13 +192,13 @@ theorem trace_prod_map :
   · simp only [dualTensorHomEquiv, TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
       TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp, LinearEquiv.coe_to_linear_map, coe_inl,
       Function.comp_app, LinearEquiv.prod_apply, dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply,
-      coprod_apply, id_coe, id.def, add_zeroₓ, prod_map_linear_apply, dual_tensor_hom_prod_map_zero,
+      coprod_apply, id_coe, id.def, add_zero, prod_map_linear_apply, dual_tensor_hom_prod_map_zero,
       trace_eq_contract_apply, contract_left_apply, fst_apply]
     
   · simp only [dualTensorHomEquiv, TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
       TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp, LinearEquiv.coe_to_linear_map, coe_inr,
       Function.comp_app, LinearEquiv.prod_apply, dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply,
-      coprod_apply, id_coe, id.def, zero_addₓ, prod_map_linear_apply, zero_prod_map_dual_tensor_hom,
+      coprod_apply, id_coe, id.def, zero_add, prod_map_linear_apply, zero_prod_map_dual_tensor_hom,
       trace_eq_contract_apply, contract_left_apply, snd_apply]
     
 
@@ -259,7 +259,7 @@ theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj 
 
 theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p] [Module.Finite R p]
     [Module.Free R f.ker] [Module.Finite R f.ker] : trace R M f = (finrank R p : R) := by
-  rw [h.eq_conj_prod_map, trace_conj', trace_prod_map', trace_id, map_zero, add_zeroₓ]
+  rw [h.eq_conj_prod_map, trace_conj', trace_prod_map', trace_id, map_zero, add_zero]
 
 end
 

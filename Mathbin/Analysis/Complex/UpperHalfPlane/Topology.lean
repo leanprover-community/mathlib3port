@@ -48,10 +48,10 @@ instance : TopologicalSpace.SecondCountableTopology ℍ :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
 instance : T3Space ℍ :=
-  Subtype.t3_space
+  Subtype.t3Space
 
 instance : NormalSpace ℍ :=
-  normal_space_of_t3_second_countable ℍ
+  normalSpaceOfT3SecondCountable ℍ
 
 instance : ContractibleSpace ℍ :=
   (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq I_im.symm⟩
@@ -64,7 +64,7 @@ instance : NoncompactSpace ℍ := by
   have : IsCompact (Complex.im ⁻¹' Ioi 0) := is_compact_iff_is_compact_univ.2 h
   replace := this.is_closed.closure_eq
   rw [closure_preimage_im, closure_Ioi, Set.ext_iff] at this
-  exact absurd ((this 0).1 left_mem_Ici) (lt_irreflₓ _)
+  exact absurd ((this 0).1 left_mem_Ici) (lt_irrefl _)
 
 instance : LocallyCompactSpace ℍ :=
   open_embedding_coe.LocallyCompactSpace

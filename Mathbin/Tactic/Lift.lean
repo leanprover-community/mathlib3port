@@ -32,28 +32,26 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
       ∀ i,
         P i
           (f
-            i) where prf := fun f hf =>
+            i) where prf f hf :=
     ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
       funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
     (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
-  run_tac
-    tactic.classical
+  classical
   refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
   rintro ⟨i, hi⟩
   exact dif_pos hi
 
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
     CanLift (∀ i : Subtype p, α i) (∀ i, α i) (fun f i => f i) fun _ =>
-      True where prf := fun f _ => Subtype.exists_pi_extension f
+      True where prf f _ := Subtype.exists_pi_extension f
 
 instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
     CanLift (Subtype p → α) (ι → α) (fun f i => f i) fun _ => True :=
   PiSubtype.canLift ι (fun _ => α) p
 
-instance Subtype.canLift {α : Sort _} (p : α → Prop) :
-    CanLift α { x // p x } coe p where prf := fun a ha => ⟨⟨a, ha⟩, rfl⟩
+instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } coe p where prf a ha := ⟨⟨a, ha⟩, rfl⟩
 
 open Tactic
 
@@ -136,13 +134,13 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
       (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
   /- If the proof `prf_cond` is a local constant, remove it from the context,
           unless `n` specifies to keep it. -/
-      if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear
+      if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.get h_prf_nm.1) >>= clear
     else skip
   if b then skip else swap
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   parser.optional (tk "using" *> texpr)

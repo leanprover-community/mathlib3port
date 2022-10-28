@@ -23,7 +23,7 @@ namespace PUnit
 variable {R S : Type _} (x y : PUnit.{u + 1}) (s : Set PUnit.{u + 1})
 
 @[to_additive]
-instance : CommGroupₓ PUnit := by
+instance : CommGroup PUnit := by
   refine_struct
       { mul := fun _ _ => star, one := star, inv := fun _ => star, div := fun _ _ => star, npow := fun _ _ => star,
         zpow := fun _ _ => star.. } <;>
@@ -47,7 +47,7 @@ theorem div_eq : x / y = star :=
 theorem inv_eq : x⁻¹ = star :=
   rfl
 
-instance : CommRingₓ PUnit := by
+instance : CommRing PUnit := by
   refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit.. } <;>
     intros <;> exact Subsingleton.elim _ _
 
@@ -82,12 +82,12 @@ instance : CanonicallyOrderedAddMonoid PUnit := by
     intros <;> trivial
 
 instance : LinearOrderedCancelAddCommMonoid PUnit :=
-  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with le_of_add_le_add_left := fun _ _ _ _ => trivialₓ }
+  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with le_of_add_le_add_left := fun _ _ _ _ => trivial }
 
 instance : LinearOrderedAddCommMonoidWithTop PUnit :=
   { PUnit.completeBooleanAlgebra, PUnit.linearOrderedCancelAddCommMonoid with top_add' := fun _ => rfl }
 
-instance : HasSmul R PUnit where smul := fun _ _ => unit
+instance : HasSmul R PUnit where smul _ _ := unit
 
 @[simp]
 theorem smul_eq (r : R) : r • y = star :=
@@ -105,22 +105,22 @@ instance [HasSmul R S] : IsScalarTower R S PUnit :=
 instance [Zero R] : SmulWithZero R PUnit := by
   refine' { PUnit.hasSmul with .. } <;> intros <;> exact Subsingleton.elim _ _
 
-instance [Monoidₓ R] : MulAction R PUnit := by
+instance [Monoid R] : MulAction R PUnit := by
   refine' { PUnit.hasSmul with .. } <;> intros <;> exact Subsingleton.elim _ _
 
-instance [Monoidₓ R] : DistribMulAction R PUnit := by
+instance [Monoid R] : DistribMulAction R PUnit := by
   refine' { PUnit.mulAction with .. } <;> intros <;> exact Subsingleton.elim _ _
 
-instance [Monoidₓ R] : MulDistribMulAction R PUnit := by
+instance [Monoid R] : MulDistribMulAction R PUnit := by
   refine' { PUnit.mulAction with .. } <;> intros <;> exact Subsingleton.elim _ _
 
-instance [Semiringₓ R] : MulSemiringAction R PUnit :=
+instance [Semiring R] : MulSemiringAction R PUnit :=
   { PUnit.distribMulAction, PUnit.mulDistribMulAction with }
 
-instance [MonoidWithZeroₓ R] : MulActionWithZero R PUnit :=
+instance [MonoidWithZero R] : MulActionWithZero R PUnit :=
   { PUnit.mulAction, PUnit.smulWithZero with }
 
-instance [Semiringₓ R] : Module R PUnit := by
+instance [Semiring R] : Module R PUnit := by
   refine' { PUnit.distribMulAction with .. } <;> intros <;> exact Subsingleton.elim _ _
 
 end PUnit

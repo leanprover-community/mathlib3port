@@ -152,8 +152,8 @@ def Elements.initial (A : C) : (yoneda.obj A).Elements :=
 /-- Show that `elements.initial A` is initial in the category of elements for the `yoneda` functor.
 -/
 def isInitial (A : C) : IsInitial (Elements.initial A) where
-  desc := fun s => ⟨s.x.2.op, comp_id _⟩
-  uniq' := fun s m w => by
+  desc s := ⟨s.x.2.op, comp_id _⟩
+  uniq' s m w := by
     simp_rw [← m.2]
     dsimp [elements.initial]
     simp
@@ -186,17 +186,22 @@ def isExtensionAlongYoneda : (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ⋙ extendAl
 instance : PreservesColimits (extendAlongYoneda A) :=
   (yonedaAdjunction A).leftAdjointPreservesColimits
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre «expr ⋙ »((category_of_elements.π X).left_op, A) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre (Lan.diagram (yoneda : «expr ⥤ »(C, «expr ⥤ »(_, Type u₁))) A X) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Show that the images of `X` after `extend_along_yoneda` and `Lan yoneda` are indeed isomorphic.
 This follows from `category_theory.category_of_elements.costructured_arrow_yoneda_equivalence`.
 -/
 @[simps]
 def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
   let eq := categoryOfElements.costructuredArrowYonedaEquivalence X
-  { Hom := colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor,
+  { Hom := colimit.pre (LanCat.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor,
     inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse,
     hom_inv_id' := by
       erw [colimit.pre_pre ((category_of_elements.π X).leftOp ⋙ A) eq.inverse]
-      trans colimit.pre ((category_of_elements.π X).leftOp ⋙ A) (𝟭 _)
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre «expr ⋙ »((category_of_elements.π X).left_op, A) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       congr
       · exact congr_arg functor.op (category_of_elements.from_to_costructured_arrow_eq X)
         
@@ -207,7 +212,8 @@ def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoned
         ,
     inv_hom_id' := by
       erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) eq.functor]
-      trans colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) (𝟭 _)
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre (Lan.diagram (yoneda : «expr ⥤ »(C, «expr ⥤ »(_, Type u₁))) A X) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       congr
       · exact category_of_elements.to_from_costructured_arrow_eq X
         

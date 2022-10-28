@@ -145,7 +145,7 @@ variable {β : Type u}
 
 variable (pp : β → Prop)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def f :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 // ofRepeat (predLast' α pp i p_1) }) ⟹ fun i : Fin2 (n + 1) =>
@@ -153,7 +153,7 @@ private def f :
   | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def g :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i // PredLast α pp p_1 }) ⟹ fun i : Fin2 (n + 1) =>
@@ -161,7 +161,7 @@ private def g :
   | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) : Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x :=
   by
   dsimp only [liftp, liftp']
@@ -178,7 +178,7 @@ open Function
 
 variable (rr : β → β → Prop)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def f :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.Prod.mk _ p_1.fst p_1.snd)) }) ⟹
@@ -186,7 +186,7 @@ private def f :
   | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def g :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }) ⟹ fun i : Fin2 (n + 1) =>
@@ -194,7 +194,7 @@ private def g :
   | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftr_last_rel_iff (x y : F (α ::: β)) : Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)

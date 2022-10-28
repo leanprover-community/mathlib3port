@@ -104,7 +104,7 @@ noncomputable def whiskerLeftRUnitIsoOfIsIsoCounit [IsIso h.counit] : R ⋙ L �
 
 /-- If the unit is an isomorphism, then the left adjoint is full-/
 noncomputable def lFullOfUnitIsIso [IsIso h.Unit] :
-    Full L where preimage := fun X Y f => h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
+    Full L where preimage X Y f := h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
 
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
 theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
@@ -114,7 +114,7 @@ theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
 
 /-- If the counit is an isomorphism, then the right adjoint is full-/
 noncomputable def rFullOfCounitIsIso [IsIso h.counit] :
-    Full R where preimage := fun X Y f => inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
+    Full R where preimage X Y f := inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
 
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
 theorem R_faithful_of_counit_is_iso [IsIso h.counit] : Faithful R :=

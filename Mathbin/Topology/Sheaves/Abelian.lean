@@ -40,7 +40,7 @@ instance : Abelian (Cᵒᵖ ⥤ D) :=
 
 -- This also needs to be specified manually, but I don't know why.
 instance :
-    HasFiniteProducts (Sheaf J D) where out := fun j ij =>
+    HasFiniteProducts (SheafCat J D) where out j ij :=
     { HasLimit := by
         intro
         infer_instance }
@@ -56,7 +56,7 @@ variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 variable [ReflectsIsomorphisms (forget D)]
 
-instance sheafIsAbelian [HasFiniteLimits D] : Abelian (Sheaf J D) :=
+instance sheafIsAbelian [HasFiniteLimits D] : Abelian (SheafCat J D) :=
   let adj := sheafificationAdjunction J D
   abelianOfAdjunction _ _ (asIso adj.counit) adj
 

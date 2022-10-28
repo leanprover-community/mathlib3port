@@ -119,8 +119,8 @@ def isoMk (h : A₀.1 ≅ A₁.1) (w : F.map h.Hom ≫ A₁.str = A₀.str ≫ h
 /-- The forgetful functor from the category of algebras, forgetting the algebraic structure. -/
 @[simps]
 def forget (F : C ⥤ C) : Algebra F ⥤ C where
-  obj := fun A => A.1
-  map := fun A B f => f.1
+  obj A := A.1
+  map A B f := f.1
 
 /-- An algebra morphism with an underlying isomorphism hom in `C` is an algebra isomorphism. -/
 theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
@@ -130,7 +130,7 @@ theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
           simp },
       by tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects := fun A B => iso_of_iso
+instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects A B := iso_of_iso
 
 instance forget_faithful : Faithful (forget F) where
 
@@ -147,8 +147,8 @@ algebras of `F` to algebras of `G`.
 -/
 @[simps]
 def functorOfNatTrans {F G : C ⥤ C} (α : G ⟶ F) : Algebra F ⥤ Algebra G where
-  obj := fun A => { A := A.1, str := α.app A.1 ≫ A.str }
-  map := fun A₀ A₁ f => { f := f.1 }
+  obj A := { A := A.1, str := α.app A.1 ≫ A.str }
+  map A₀ A₁ f := { f := f.1 }
 
 /-- The identity transformation induces the identity endofunctor on the category of algebras. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -325,8 +325,8 @@ def isoMk (h : V₀.1 ≅ V₁.1) (w : V₀.str ≫ F.map h.Hom = h.Hom ≫ V₁
 /-- The forgetful functor from the category of coalgebras, forgetting the coalgebraic structure. -/
 @[simps]
 def forget (F : C ⥤ C) : Coalgebra F ⥤ C where
-  obj := fun A => A.1
-  map := fun A B f => f.1
+  obj A := A.1
+  map A B f := f.1
 
 /-- A coalgebra morphism with an underlying isomorphism hom in `C` is a coalgebra isomorphism. -/
 theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
@@ -336,7 +336,7 @@ theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
           simp },
       by tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects := fun A B => iso_of_iso
+instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects A B := iso_of_iso
 
 instance forget_faithful : Faithful (forget F) where
 
@@ -353,9 +353,8 @@ coalgebras of `F` to coalgebras of `G`.
 -/
 @[simps]
 def functorOfNatTrans {F G : C ⥤ C} (α : F ⟶ G) : Coalgebra F ⥤ Coalgebra G where
-  obj := fun V => { V := V.1, str := V.str ≫ α.app V.1 }
-  map := fun V₀ V₁ f =>
-    { f := f.1, h' := by rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] }
+  obj V := { V := V.1, str := V.str ≫ α.app V.1 }
+  map V₀ V₁ f := { f := f.1, h' := by rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] }
 
 /-- The identity transformation induces the identity endofunctor on the category of coalgebras. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -432,14 +431,14 @@ theorem Coalgebra.hom_equiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : Coa
 /-- Given an adjunction `F ⊣ G`, the functor that associates to an algebra over `F` a
 coalgebra over `G` defined via adjunction applied to the structure map. -/
 def Algebra.toCoalgebraOf (adj : F ⊣ G) : Algebra F ⥤ Coalgebra G where
-  obj := fun A => { V := A.1, str := (adj.homEquiv A.1 A.1).toFun A.2 }
-  map := fun A₁ A₂ f => { f := f.1, h' := Algebra.hom_equiv_naturality_str adj A₁ A₂ f }
+  obj A := { V := A.1, str := (adj.homEquiv A.1 A.1).toFun A.2 }
+  map A₁ A₂ f := { f := f.1, h' := Algebra.hom_equiv_naturality_str adj A₁ A₂ f }
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to a coalgebra over `G` an algebra over
 `F` defined via adjunction applied to the structure map. -/
 def Coalgebra.toAlgebraOf (adj : F ⊣ G) : Coalgebra G ⥤ Algebra F where
-  obj := fun V => { A := V.1, str := (adj.homEquiv V.1 V.1).invFun V.2 }
-  map := fun V₁ V₂ f => { f := f.1, h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
+  obj V := { A := V.1, str := (adj.homEquiv V.1 V.1).invFun V.2 }
+  map V₁ V₂ f := { f := f.1, h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
 
 /-- Given an adjunction, assigning to an algebra over the left adjoint a coalgebra over its right
 adjoint and going back is isomorphic to the identity functor. -/
@@ -515,7 +514,7 @@ def algebraCoalgebraEquiv (adj : F ⊣ G) : Algebra F ≌ Coalgebra G where
   inverse := Coalgebra.toAlgebraOf adj
   unitIso := AlgCoalgEquiv.unitIso adj
   counitIso := AlgCoalgEquiv.counitIso adj
-  functor_unit_iso_comp' := fun A => by
+  functor_unit_iso_comp' A := by
     ext
     exact category.comp_id _
 

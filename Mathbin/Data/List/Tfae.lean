@@ -24,7 +24,7 @@ def Tfae (l : List Prop) : Prop :=
   ∀ x ∈ l, ∀ y ∈ l, x ↔ y
 
 theorem tfae_nil : Tfae [] :=
-  forall_mem_nilₓ _
+  forall_mem_nil _
 
 theorem tfae_singleton (p) : Tfae [p] := by simp [tfae, -eq_iff_iff]
 
@@ -46,11 +46,11 @@ theorem tfae_cons_cons {a b} {l : List Prop} : Tfae (a :: b :: l) ↔ (a ↔ b) 
 theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a ∈ l, a ↔ b) : Tfae l := fun a₁ h₁ a₂ h₂ =>
   (h _ h₁).trans (h _ h₂).symm
 
--- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->»
+/- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
 theorem tfae_of_cycle {a b} {l : List Prop} :
     List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → Tfae (a :: b :: l) := by
   induction' l with c l IH generalizing a b <;>
-    simp only [tfae_cons_cons, tfae_singleton, and_trueₓ, chain_cons, chain.nil] at *
+    simp only [tfae_cons_cons, tfae_singleton, and_true_iff, chain_cons, chain.nil] at *
   · intro a b
     exact Iff.intro a b
     

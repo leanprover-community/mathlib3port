@@ -16,7 +16,7 @@ a polynomial over an integral domain.
 
 open Polynomial Ideal.Quotient
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
 namespace Polynomial
 
@@ -31,19 +31,19 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R} (hfP : �
     by_cases hf0:f = 0
     · simp [hf0]
       
-    rcases lt_trichotomyₓ (↑n) (degree f) with (h | h | h)
+    rcases lt_trichotomy (↑n) (degree f) with (h | h | h)
     · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
       rintro rfl
-      exact not_lt_of_geₓ degree_le_nat_degree h
+      exact not_lt_of_ge degree_le_nat_degree h
       
     · have : nat_degree f = n := nat_degree_eq_of_degree_eq_some h.symm
-      rw [coeff_C_mul, coeff_X_pow, if_pos this.symm, mul_oneₓ, leading_coeff, this, coeff_map]
+      rw [coeff_C_mul, coeff_X_pow, if_pos this.symm, mul_one, leading_coeff, this, coeff_map]
       
     · rw [coeff_eq_zero_of_degree_lt, coeff_eq_zero_of_degree_lt]
-      · refine' lt_of_le_of_ltₓ (degree_C_mul_X_pow_le _ _) _
+      · refine' lt_of_le_of_lt (degree_C_mul_X_pow_le _ _) _
         rwa [← degree_eq_nat_degree hf0]
         
-      · exact lt_of_le_of_ltₓ (degree_map_le _ _) h
+      · exact lt_of_le_of_lt (degree_map_le _ _) h
         
       
 
@@ -52,7 +52,7 @@ theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrim
   WithBot.coe_le_coe.1
     (calc
       ↑n = degree (q.map (mk P)) := by
-        rw [hq, degree_mul, hc0, zero_addₓ, degree_pow, degree_X, nsmul_one, Nat.cast_with_bot]
+        rw [hq, degree_mul, hc0, zero_add, degree_pow, degree_X, nsmul_one, Nat.cast_with_bot]
       _ ≤ degree q := degree_map_le _ _
       _ ≤ natDegree q := degree_le_nat_degree
       )
@@ -84,8 +84,8 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
     Irreducible f :=
   have hf0 : f ≠ 0 := fun _ => by simp_all only [not_true, Submodule.zero_mem, coeff_zero]
   have hf : f.map (mk P) = c (mk P (leadingCoeff f)) * X ^ natDegree f := map_eq_C_mul_X_pow_of_forall_coeff_mem hfP
-  have hfd0 : 0 < f.natDegree := WithBot.coe_lt_coe.1 (lt_of_lt_of_leₓ hfd0 degree_le_nat_degree)
-  ⟨mt degree_eq_zero_of_is_unit fun h => by simp_all only [lt_irreflₓ], by
+  have hfd0 : 0 < f.natDegree := WithBot.coe_lt_coe.1 (lt_of_lt_of_le hfd0 degree_le_nat_degree)
+  ⟨mt degree_eq_zero_of_is_unit fun h => by simp_all only [lt_irrefl], by
     rintro p q rfl
     rw [Polynomial.map_mul] at hf
     rcases mul_eq_mul_prime_pow (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X)
@@ -108,12 +108,12 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       rw [nat_degree_mul hp0 hq0] at hmnd
       clear * - hmnd hmp hnq
       contrapose hmnd
-      apply ne_of_ltₓ
+      apply ne_of_lt
       rw [not_and_distrib] at hmnd
       cases hmnd
-      · exact add_lt_add_of_lt_of_le (lt_of_le_of_neₓ hmp (Ne.symm hmnd)) hnq
+      · exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
         
-      · exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_neₓ hnq (Ne.symm hmnd))
+      · exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_ne hnq (Ne.symm hmnd))
         
     obtain rfl | rfl : m = 0 ∨ n = 0 := by
       rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, not_not, ← or_iff_not_imp_left] at hmn

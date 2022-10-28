@@ -136,8 +136,8 @@ theorem Classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
 end
 
 def commonNormalizeLemmaNames : List Name :=
-  [`` bex_def, `` forall_and_distrib, `` exists_imp_distrib, `` Or.assoc, `` Or.comm, `` Or.left_comm, `` And.assoc,
-    `` And.comm, `` And.left_comm]
+  [`` bex_def, `` forall_and_distrib, `` exists_imp_distrib, `` or_assoc, `` or_comm, `` or_left_comm, `` and_assoc,
+    `` and_comm, `` and_left_comm]
 
 def classicalNormalizeLemmaNames : List Name :=
   common_normalize_lemma_names ++ [`` classical.implies_iff_not_or]
@@ -210,7 +210,7 @@ unsafe def normalize_hyp (cfg : AutoConfig) (simps : simp_lemmas) (h : expr) : t
 
 unsafe def normalize_hyps (cfg : AutoConfig) : tactic Unit := do
   let simps ← add_simps simp_lemmas.mk classicalNormalizeLemmaNames
-  local_context >>= Monadₓ.mapm' (normalize_hyp cfg simps)
+  local_context >>= Monad.mapm' (normalize_hyp cfg simps)
 
 /-!
 ### Eliminate existential quantifiers
@@ -223,7 +223,7 @@ unsafe def eelim : tactic Unit := do
   first <|
       ctx fun h => do
         let t ← infer_type h >>= whnf_reducible
-        guardₓ (is_app_of t `` Exists)
+        guard (is_app_of t `` Exists)
         let tgt ← target
         to_expr (pquote.1 (@Exists.elim _ _ (%%ₓtgt) (%%ₓh))) >>= apply
         intros
@@ -259,7 +259,7 @@ unsafe def do_substs : tactic Unit :=
 /-- Assumes `pr` is a proof of `t`. Adds the consequences of `t` to the context
  and returns `tt` if anything nontrivial has been added. -/
 unsafe def add_conjuncts : expr → expr → tactic Bool := fun pr t =>
-  let assert_consequences := fun e t => mcond (add_conjuncts e t) skip (note_anon t e >> skip)
+  let assert_consequences e t := mcond (add_conjuncts e t) skip (note_anon t e >> skip)
   do
   let t' ← whnf_reducible t
   match t' with
@@ -502,7 +502,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -522,7 +522,7 @@ unsafe def clarify (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "
   let s ← mk_simp_set false [] hs
   auto.clarify s (ps []) cfg
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `safe [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -542,7 +542,7 @@ unsafe def safe (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "usi
   let s ← mk_simp_set false [] hs
   auto.safe s (ps []) cfg
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `finish [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.

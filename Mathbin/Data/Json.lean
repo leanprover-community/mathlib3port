@@ -32,12 +32,12 @@ can parse `{"success": true}` as `my_struct.mk true 0 none`, and reserializing g
 open Exceptional
 
 unsafe instance :
-    HasOrelse exceptional where orelse := fun α f g =>
+    HasOrelse exceptional where orelse α f g :=
     match f with
     | success x => success x
     | exception msg => g
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`of_json] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
 /-- A class to indicate that a type is json serializable -/
 unsafe class json_serializable (α : Type) where
   to_json : α → json
@@ -49,7 +49,7 @@ unsafe class non_null_json_serializable (α : Type) extends json_serializable α
 export JsonSerializable (to_json of_json)
 
 /-- Describe the type of a json value -/
-unsafe def json.typename : json → Stringₓ
+unsafe def json.typename : json → String
   | json.of_string _ => "string"
   | json.of_int _ => "number"
   | json.of_float _ => "number"
@@ -61,15 +61,15 @@ unsafe def json.typename : json → Stringₓ
 /-! ### Primitive types -/
 
 
-unsafe instance : non_null_json_serializable Stringₓ where
+unsafe instance : non_null_json_serializable String where
   to_json := json.of_string
-  of_json := fun j => do
+  of_json j := do
     let json.of_string s ← success j | exception fun _ => f! "string expected, got {j.typename}"
     pure s
 
 unsafe instance : non_null_json_serializable ℤ where
-  to_json := fun z => json.of_int z
-  of_json := fun j => do
+  to_json z := json.of_int z
+  of_json j := do
     let json.of_int z ← success j |
       do
         let json.of_float f ← success j | exception fun _ => f! "number expected, got {j.typename}"
@@ -77,8 +77,8 @@ unsafe instance : non_null_json_serializable ℤ where
     pure z
 
 unsafe instance : non_null_json_serializable native.float where
-  to_json := fun f => json.of_float f
-  of_json := fun j => do
+  to_json f := json.of_float f
+  of_json j := do
     let json.of_int z ← success j |
       do
         let json.of_float f ← success j | exception fun _ => f! "number expected, got {j.typename}"
@@ -86,29 +86,29 @@ unsafe instance : non_null_json_serializable native.float where
     pure z
 
 unsafe instance : non_null_json_serializable Bool where
-  to_json := fun b => json.of_bool b
-  of_json := fun j => do
+  to_json b := json.of_bool b
+  of_json j := do
     let json.of_bool b ← success j | exception fun _ => f! "boolean expected, got {j.typename}"
     pure b
 
 unsafe instance : json_serializable PUnit where
-  to_json := fun u => json.null
-  of_json := fun j => do
+  to_json u := json.null
+  of_json j := do
     let json.null ← success j | exception fun _ => f! "null expected, got {j.typename}"
     pure ()
 
 unsafe instance {α} [json_serializable α] : non_null_json_serializable (List α) where
-  to_json := fun l => json.array (l.map to_json)
-  of_json := fun j => do
+  to_json l := json.array (l.map to_json)
+  of_json j := do
     let json.array l ← success j | exception fun _ => f! "array expected, got {j.typename}"
     l (of_json α)
 
-unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap Stringₓ α) where
-  to_json := fun m => json.object (m.toList.map fun x => (x.1, to_json x.2))
-  of_json := fun j => do
+unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap String α) where
+  to_json m := json.object (m.toList.map fun x => (x.1, to_json x.2))
+  of_json j := do
     let json.object l ← success j | exception fun _ => f! "object expected, got {j.typename}"
     let l ←
-      l.mmap fun x : Stringₓ × json => do
+      l.mmap fun x : String × json => do
           let x2 ← of_json α x.2
           pure (x.1, x2)
     l
@@ -121,20 +121,20 @@ unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap 
 
 
 unsafe instance : non_null_json_serializable ℕ where
-  to_json := fun n => to_json (n : ℤ)
-  of_json := fun j => do
+  to_json n := to_json (n : ℤ)
+  of_json j := do
     let Int.ofNat n ← of_json ℤ j | exception fun _ => f!"must be non-negative"
     pure n
 
-unsafe instance {n : ℕ} : non_null_json_serializable (Finₓ n) where
-  to_json := fun i => to_json i.val
-  of_json := fun j => do
+unsafe instance {n : ℕ} : non_null_json_serializable (Fin n) where
+  to_json i := to_json i.val
+  of_json j := do
     let i ← of_json ℕ j
     if h : i < n then pure ⟨i, h⟩ else exception fun _ => f! "must be less than {n}"
 
 unsafe instance {α : Type} [json_serializable α] (p : α → Prop) [DecidablePred p] : json_serializable (Subtype p) where
-  to_json := fun x => to_json (x : α)
-  of_json := fun j => do
+  to_json x := to_json (x : α)
+  of_json j := do
     let i ← of_json α j
     if h : p i then pure (Subtype.mk i h) else exception fun _ => f!"condition does not hold"
 
@@ -143,8 +143,8 @@ unsafe instance {α : Type} [non_null_json_serializable α] (p : α → Prop) [D
 
 /-- Note this only makes sense on types which do not themselves serialize to `null` -/
 unsafe instance {α} [non_null_json_serializable α] : json_serializable (Option α) where
-  to_json := Option.elimₓ json.null to_json
-  of_json := fun j => do
+  to_json := Option.elim json.null to_json
+  of_json j := do
     of_json PUnit j >> pure none <|> some <$> of_json α j
 
 open Tactic Expr
@@ -155,13 +155,13 @@ unsafe def list.to_expr {elab : Bool} (t : expr elab) (l : level) : List (expr e
   | x :: xs => (((expr.const `list.cons [l]).app t).app x).app xs.to_expr
 
 /-- Begin parsing fields -/
-unsafe def json_serializable.field_starter (j : json) : exceptional (List (Stringₓ × json)) := do
+unsafe def json_serializable.field_starter (j : json) : exceptional (List (String × json)) := do
   let json.object p ← pure j | exception fun _ => f! "object expected, got {j.typename}"
   pure p
 
 /-- Check a field exists and is unique -/
-unsafe def json_serializable.field_get (l : List (Stringₓ × json)) (s : Stringₓ) :
-    exceptional (Option json × List (Stringₓ × json)) :=
+unsafe def json_serializable.field_get (l : List (String × json)) (s : String) :
+    exceptional (Option json × List (String × json)) :=
   let (p, n) := l.partition fun x => Prod.fst x = s
   match p with
   | [] => pure (none, n)
@@ -169,13 +169,13 @@ unsafe def json_serializable.field_get (l : List (Stringₓ × json)) (s : Strin
   | x :: xs => exception fun _ => f! "duplicate {s} field"
 
 /-- Check no fields remain -/
-unsafe def json_serializable.field_terminator (l : List (Stringₓ × json)) : exceptional Unit := do
+unsafe def json_serializable.field_terminator (l : List (String × json)) : exceptional Unit := do
   let [] ← pure l | exception fun _ => f! "unexpected fields {l.map Prod.fst}"
   pure ()
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- ``((c_name, c_fun), [(p_name, p_fun), ...]) ← get_constructor_and_projections `(struct n)``
 gets the names and partial invocations of the constructor and projections of a structure -/
 unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name × expr) × List (Name × expr)) := do
@@ -222,7 +222,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
           to_expr (pquote.1 (exception fun o => f!"field {%%ₓquote.1 fname} is required" : exceptional (%%ₓt)))
     to_expr
         (pquote.1
-          (Option.mmapₓ (of_json _) (%%ₓfj) >>= Option.elimₓ (%%ₓwithout_field) (%%ₓwith_field) : exceptional (%%ₓt)))
+          (Option.mmap (of_json _) (%%ₓfj) >>= Option.elim (%%ₓwithout_field) (%%ₓwith_field) : exceptional (%%ₓt)))
   | vars,
     (fname, none) :: js =>-- try a default value
         of_json_helper
@@ -237,9 +237,9 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
       let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
       to_expr (pquote.1 (dite _ (%%ₓwith_field) fun _ => exception fun _ => f!"condition does not hold"))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- A derive handler to serialize structures by their fields.
 
 For the following structure:
@@ -291,8 +291,8 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
           let level.zero ← pure u |
             "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
           let j ← tactic.mk_app `json_serializable.to_json [x_e]
-          pure (some (quote.1 ((%%ₓquote.1 f.toString, %%ₓj) : Stringₓ × json)))
-    tactic.exact (projs (quote.1 (Stringₓ × json)) level.zero)
+          pure (some (quote.1 ((%%ₓquote.1 f.toString, %%ₓj) : String × json)))
+    tactic.exact (projs (quote.1 (String × json)) level.zero)
     -- the reverse direction
           get_local
           `j >>=

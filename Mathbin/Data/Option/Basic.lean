@@ -49,21 +49,21 @@ protected theorem exists {p : Option α → Prop} : (∃ x, p x) ↔ p none ∨ 
     h.elim (fun h => ⟨_, h⟩) fun ⟨x, hx⟩ => ⟨_, hx⟩⟩
 
 @[simp]
-theorem get_memₓ : ∀ {o : Option α} (h : isSome o), Option.getₓ h ∈ o
+theorem get_mem : ∀ {o : Option α} (h : isSome o), Option.get h ∈ o
   | some a, _ => rfl
 
-theorem get_of_memₓ {a : α} : ∀ {o : Option α} (h : isSome o), a ∈ o → Option.getₓ h = a
+theorem get_of_mem {a : α} : ∀ {o : Option α} (h : isSome o), a ∈ o → Option.get h = a
   | _, _, rfl => rfl
 
 @[simp]
 theorem not_mem_none (a : α) : a ∉ (none : Option α) := fun h => Option.noConfusion h
 
 @[simp]
-theorem some_getₓ : ∀ {x : Option α} (h : isSome x), some (Option.getₓ h) = x
+theorem some_get : ∀ {x : Option α} (h : isSome x), some (Option.get h) = x
   | some x, hx => rfl
 
 @[simp]
-theorem get_some (x : α) (h : isSome (some x)) : Option.getₓ h = x :=
+theorem get_some (x : α) (h : isSome (some x)) : Option.get h = x :=
   rfl
 
 @[simp]
@@ -82,11 +82,11 @@ theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some
   cases x <;> [contradiction, rw [get_or_else_some]]
 
 @[simp]
-theorem coe_get {o : Option α} (h : o.isSome) : ((Option.getₓ h : α) : Option α) = o :=
-  Option.some_getₓ h
+theorem coe_get {o : Option α} (h : o.isSome) : ((Option.get h : α) : Option α) = o :=
+  Option.some_get h
 
 theorem mem_unique {o : Option α} {a b : α} (ha : a ∈ o) (hb : b ∈ o) : a = b :=
-  Option.some.injₓ <| ha.symm.trans hb
+  Option.some.inj <| ha.symm.trans hb
 
 theorem eq_of_mem_of_mem {a : α} {o1 o2 : Option α} (h1 : a ∈ o1) (h2 : a ∈ o2) : o1 = o2 :=
   h1.trans h2.symm
@@ -95,10 +95,16 @@ theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Option α →
 
 theorem some_injective (α : Type _) : Function.Injective (@some α) := fun _ _ => some_inj.mp
 
+/- warning: option.map_injective -> Option.map_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Function.Injective.{succ u_1 succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, (Function.injective.{succ u_1 succ u_2} α β f) -> (Function.injective.{succ u_1 succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f))
+Case conversion may be inaccurate. Consider using '#align option.map_injective Option.map_injectiveₓ'. -/
 /-- `option.map f` is injective if `f` is injective. -/
-theorem map_injectiveₓ {f : α → β} (Hf : Function.Injective f) : Function.Injective (Option.map f)
+theorem map_injective {f : α → β} (Hf : Function.Injective f) : Function.Injective (Option.map f)
   | none, none, H => rfl
-  | some a₁, some a₂, H => by rw [Hf (Option.some.injₓ H)]
+  | some a₁, some a₂, H => by rw [Hf (Option.some.inj H)]
 
 @[simp]
 theorem map_comp_some (f : α → β) : Option.map f ∘ some = some ∘ f :=
@@ -113,12 +119,24 @@ theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) �
 theorem eq_none_iff_forall_not_mem {o : Option α} : o = none ↔ ∀ a, a ∉ o :=
   ⟨fun e a h => by rw [e] at h <;> cases h, fun h => ext <| by simpa⟩
 
+/- warning: option.none_bind -> Option.none_bind is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} (f : α -> (Option.{u_1} β)), Eq.{succ u_1} (Option.{u_1} β) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) α β (Option.none.{u_1} α) f) (Option.none.{u_1} β)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (f : α -> (Option.{u_2} β)), Eq.{succ u_2} (Option.{u_2} β) (Option.bind.{u_1 u_2} α β (Option.none.{u_1} α) f) (Option.none.{u_2} β)
+Case conversion may be inaccurate. Consider using '#align option.none_bind Option.none_bindₓ'. -/
 @[simp]
-theorem none_bindₓ {α β} (f : α → Option β) : none >>= f = none :=
+theorem none_bind {α β} (f : α → Option β) : none >>= f = none :=
   rfl
 
+/- warning: option.some_bind -> Option.some_bind is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} (a : α) (f : α -> (Option.{u_1} β)), Eq.{succ u_1} (Option.{u_1} β) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) α β (Option.some.{u_1} α a) f) (f a)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (a : α) (f : α -> (Option.{u_2} β)), Eq.{succ u_2} (Option.{u_2} β) (Option.bind.{u_1 u_2} α β (Option.some.{u_1} α a) f) (f a)
+Case conversion may be inaccurate. Consider using '#align option.some_bind Option.some_bindₓ'. -/
 @[simp]
-theorem some_bindₓ {α β} (a : α) (f : α → Option β) : some a >>= f = f a :=
+theorem some_bind {α β} (a : α) (f : α → Option β) : some a >>= f = f a :=
   rfl
 
 @[simp]
@@ -129,12 +147,28 @@ theorem none_bind' (f : α → Option β) : none.bind f = none :=
 theorem some_bind' (a : α) (f : α → Option β) : (some a).bind f = f a :=
   rfl
 
+/- warning: option.bind_some -> Option.bind_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) α α x (Option.some.{u_1} α)) x
+but is expected to have type
+  forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.bind.{u_1 u_1} α α x (Option.some.{u_1} α)) x
+Case conversion may be inaccurate. Consider using '#align option.bind_some Option.bind_someₓ'. -/
 @[simp]
 theorem bind_some : ∀ x : Option α, x >>= some = x :=
-  @bind_pureₓ α Option _ _
+  @bind_pure α Option _ _
 
 @[simp]
-theorem bind_eq_someₓ {α β} {x : Option α} {f : α → Option β} {b : β} :
+theorem bind_some' : ∀ x : Option α, x.bind some = x :=
+  bind_some
+
+/- warning: option.bind_eq_some -> Option.bind_eq_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {x : Option.{u_1} α} {f : α -> (Option.{u_1} β)} {b : β}, Iff (Eq.{succ u_1} (Option.{u_1} β) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) α β x f) (Option.some.{u_1} β b)) (Exists.{succ u_1} α (fun (a : α) => And (Eq.{succ u_1} (Option.{u_1} α) x (Option.some.{u_1} α a)) (Eq.{succ u_1} (Option.{u_1} β) (f a) (Option.some.{u_1} β b))))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.1657 : Type.{u_1}} {b : α._@.Std.Data.Option.Lemmas._hyg.1657} {α._@.Std.Data.Option.Lemmas._hyg.1656 : Type.{u_2}} {x : Option.{u_2} α._@.Std.Data.Option.Lemmas._hyg.1656} {f : α._@.Std.Data.Option.Lemmas._hyg.1656 -> (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1657)}, Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1657) (Option.bind.{u_2 u_1} α._@.Std.Data.Option.Lemmas._hyg.1656 α._@.Std.Data.Option.Lemmas._hyg.1657 x f) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1657 b)) (Exists.{succ u_2} α._@.Std.Data.Option.Lemmas._hyg.1656 (fun (a : α._@.Std.Data.Option.Lemmas._hyg.1656) => And (Eq.{succ u_2} (Option.{u_2} α._@.Std.Data.Option.Lemmas._hyg.1656) x (Option.some.{u_2} α._@.Std.Data.Option.Lemmas._hyg.1656 a)) (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1657) (f a) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1657 b))))
+Case conversion may be inaccurate. Consider using '#align option.bind_eq_some Option.bind_eq_someₓ'. -/
+@[simp]
+theorem bind_eq_some {α β} {x : Option α} {f : α → Option β} {b : β} :
     x >>= f = some b ↔ ∃ a, x = some a ∧ f a = some b := by cases x <;> simp
 
 @[simp]
@@ -145,17 +179,41 @@ theorem bind_eq_some' {x : Option α} {f : α → Option β} {b : β} : x.bind f
 theorem bind_eq_none' {o : Option α} {f : α → Option β} : o.bind f = none ↔ ∀ b a, a ∈ o → b ∉ f a := by
   simp only [eq_none_iff_forall_not_mem, not_exists, not_and, mem_def, bind_eq_some']
 
+/- warning: option.bind_eq_none -> Option.bind_eq_none is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {o : Option.{u_1} α} {f : α -> (Option.{u_1} β)}, Iff (Eq.{succ u_1} (Option.{u_1} β) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) α β o f) (Option.none.{u_1} β)) (forall (b : β) (a : α), (Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) -> (Not (Membership.Mem.{u_1 u_1} β (Option.{u_1} β) (Option.hasMem.{u_1} β) b (f a))))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {o : Option.{u_1} α} {f : α -> (Option.{u_2} β)}, Iff (Eq.{succ u_2} (Option.{u_2} β) (Option.bind.{u_1 u_2} α β o f) (Option.none.{u_2} β)) (forall (b : β) (a : α), (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a o) -> (Not (Membership.mem.{u_2 u_2} β (Option.{u_2} β) (Option.instMembershipOption.{u_2} β) b (f a))))
+Case conversion may be inaccurate. Consider using '#align option.bind_eq_none Option.bind_eq_noneₓ'. -/
 @[simp]
-theorem bind_eq_noneₓ {α β} {o : Option α} {f : α → Option β} : o >>= f = none ↔ ∀ b a, a ∈ o → b ∉ f a :=
+theorem bind_eq_none {α β} {o : Option α} {f : α → Option β} : o >>= f = none ↔ ∀ b a, a ∈ o → b ∉ f a :=
   bind_eq_none'
 
-theorem bind_commₓ {α β γ} {f : α → β → Option γ} (a : Option α) (b : Option β) :
+/- warning: option.bind_comm -> Option.bind_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {f : α -> β -> (Option.{u_3} γ)} (a : Option.{u_1} α) (b : Option.{u_2} β), Eq.{succ u_3} (Option.{u_3} γ) (Option.bind.{u_1 u_3} α γ a (fun (x : α) => Option.bind.{u_2 u_3} β γ b (f x))) (Option.bind.{u_2 u_3} β γ b (fun (y : β) => Option.bind.{u_1 u_3} α γ a (fun (x : α) => f x y)))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {f : α -> β -> (Option.{u_3} γ)} (a : Option.{u_1} α) (b : Option.{u_2} β), Eq.{succ u_3} (Option.{u_3} γ) (Option.bind.{u_1 u_3} α γ a (fun (x : α) => Option.bind.{u_2 u_3} β γ b (f x))) (Option.bind.{u_2 u_3} β γ b (fun (y : β) => Option.bind.{u_1 u_3} α γ a (fun (x : α) => f x y)))
+Case conversion may be inaccurate. Consider using '#align option.bind_comm Option.bind_commₓ'. -/
+theorem bind_comm {α β γ} {f : α → β → Option γ} (a : Option α) (b : Option β) :
     (a.bind fun x => b.bind (f x)) = b.bind fun y => a.bind fun x => f x y := by cases a <;> cases b <;> rfl
 
-theorem bind_assocₓ (x : Option α) (f : α → Option β) (g : β → Option γ) :
+/- warning: option.bind_assoc -> Option.bind_assoc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (x : Option.{u_1} α) (f : α -> (Option.{u_2} β)) (g : β -> (Option.{u_3} γ)), Eq.{succ u_3} (Option.{u_3} γ) (Option.bind.{u_2 u_3} β γ (Option.bind.{u_1 u_2} α β x f) g) (Option.bind.{u_1 u_3} α γ x (fun (y : α) => Option.bind.{u_2 u_3} β γ (f y) g))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (x : Option.{u_1} α) (f : α -> (Option.{u_2} β)) (g : β -> (Option.{u_3} γ)), Eq.{succ u_3} (Option.{u_3} γ) (Option.bind.{u_2 u_3} β γ (Option.bind.{u_1 u_2} α β x f) g) (Option.bind.{u_1 u_3} α γ x (fun (y : α) => Option.bind.{u_2 u_3} β γ (f y) g))
+Case conversion may be inaccurate. Consider using '#align option.bind_assoc Option.bind_assocₓ'. -/
+theorem bind_assoc (x : Option α) (f : α → Option β) (g : β → Option γ) :
     (x.bind f).bind g = x.bind fun y => (f y).bind g := by cases x <;> rfl
 
-theorem join_eq_someₓ {x : Option (Option α)} {a : α} : x.join = some a ↔ x = some (some a) := by simp
+/- warning: option.join_eq_some -> Option.join_eq_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {x : Option.{u_1} (Option.{u_1} α)} {a : α}, Iff (Eq.{succ u_1} (Option.{u_1} α) (Option.join.{u_1} α x) (Option.some.{u_1} α a)) (Eq.{succ u_1} (Option.{u_1} (Option.{u_1} α)) x (Option.some.{u_1} (Option.{u_1} α) (Option.some.{u_1} α a)))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.1985 : Type.{u_1}} {a : α._@.Std.Data.Option.Lemmas._hyg.1985} {x : Option.{u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985)}, Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985) (Option.join.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985 x) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985 a)) (Eq.{succ u_1} (Option.{u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985)) x (Option.some.{u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.1985 a)))
+Case conversion may be inaccurate. Consider using '#align option.join_eq_some Option.join_eq_someₓ'. -/
+theorem join_eq_some {x : Option (Option α)} {a : α} : x.join = some a ↔ x = some (some a) := by simp
 
 theorem join_ne_none {x : Option (Option α)} : x.join ≠ none ↔ ∃ z, x = some (some z) := by simp
 
@@ -164,6 +222,12 @@ theorem join_ne_none' {x : Option (Option α)} : ¬x.join = none ↔ ∃ z, x = 
 theorem join_eq_none {o : Option (Option α)} : o.join = none ↔ o = none ∨ o = some none := by
   rcases o with (_ | _ | _) <;> simp
 
+/- warning: option.bind_id_eq_join -> Option.bind_id_eq_join is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {x : Option.{u_1} (Option.{u_1} α)}, Eq.{succ u_1} (Option.{u_1} α) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) (Option.{u_1} α) α x (id.{succ u_1} (Option.{u_1} α))) (Option.join.{u_1} α x)
+but is expected to have type
+  forall {α : Type.{u_1}} {x : Option.{u_1} (Option.{u_1} α)}, Eq.{succ u_1} (Option.{u_1} α) (Option.bind.{u_1 u_1} (Option.{u_1} α) α x (id.{succ u_1} (Option.{u_1} α))) (Option.join.{u_1} α x)
+Case conversion may be inaccurate. Consider using '#align option.bind_id_eq_join Option.bind_id_eq_joinₓ'. -/
 theorem bind_id_eq_join {x : Option (Option α)} : x >>= id = x.join := by simp
 
 theorem join_eq_join : mjoin = @join α :=
@@ -172,43 +236,97 @@ theorem join_eq_join : mjoin = @join α :=
 theorem bind_eq_bind {α β : Type _} {f : α → Option β} {x : Option α} : x >>= f = x.bind f :=
   rfl
 
+/- warning: option.map_eq_map -> Option.map_eq_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {f : α -> β}, Eq.{succ u_1} ((Option.{u_1} α) -> (Option.{u_1} β)) (Functor.map.{u_1 u_1} Option.{u_1} (Traversable.toFunctor.{u_1} Option.{u_1} Option.traversable.{u_1}) α β f) (Option.map.{u_1 u_1} α β f)
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2205 : Type.{u_1}} {α._@.Std.Data.Option.Lemmas._hyg.2206 : Type.{u_1}} {f : α._@.Std.Data.Option.Lemmas._hyg.2205 -> α._@.Std.Data.Option.Lemmas._hyg.2206}, Eq.{succ u_1} ((Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2205) -> (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2206)) (Functor.map.{u_1 u_1} Option.{u_1} instFunctorOption.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2205 α._@.Std.Data.Option.Lemmas._hyg.2206 f) (Option.map.{u_1 u_1} α._@.Std.Data.Option.Lemmas._hyg.2205 α._@.Std.Data.Option.Lemmas._hyg.2206 f)
+Case conversion may be inaccurate. Consider using '#align option.map_eq_map Option.map_eq_mapₓ'. -/
 @[simp]
 theorem map_eq_map {α β} {f : α → β} : (· <$> ·) f = Option.map f :=
   rfl
 
+/- warning: option.map_none -> Option.map_none is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Functor.map.{u_1 u_1} Option.{u_1} (Traversable.toFunctor.{u_1} Option.{u_1} Option.traversable.{u_1}) α β f (Option.none.{u_1} α)) (Option.none.{u_1} β)
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2228 : Type.{u_1}} {α._@.Std.Data.Option.Lemmas._hyg.2227 : Type.{u_1}} {f : α._@.Std.Data.Option.Lemmas._hyg.2228 -> α._@.Std.Data.Option.Lemmas._hyg.2227}, Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2227) (Functor.map.{u_1 u_1} Option.{u_1} instFunctorOption.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2228 α._@.Std.Data.Option.Lemmas._hyg.2227 f (Option.none.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2228)) (Option.none.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2227)
+Case conversion may be inaccurate. Consider using '#align option.map_none Option.map_noneₓ'. -/
 theorem map_none {α β} {f : α → β} : f <$> none = none :=
   rfl
 
-theorem map_someₓ {α β} {a : α} {f : α → β} : f <$> some a = some (f a) :=
+/- warning: option.map_some -> Option.map_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Functor.map.{u_1 u_1} Option.{u_1} (Traversable.toFunctor.{u_1} Option.{u_1} Option.traversable.{u_1}) α β f (Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2265 : Type.{u_1}} {α._@.Std.Data.Option.Lemmas._hyg.2264 : Type.{u_1}} {f : α._@.Std.Data.Option.Lemmas._hyg.2265 -> α._@.Std.Data.Option.Lemmas._hyg.2264} {a : α._@.Std.Data.Option.Lemmas._hyg.2265}, Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2264) (Functor.map.{u_1 u_1} Option.{u_1} instFunctorOption.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2265 α._@.Std.Data.Option.Lemmas._hyg.2264 f (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2265 a)) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2264 (f a))
+Case conversion may be inaccurate. Consider using '#align option.map_some Option.map_someₓ'. -/
+theorem map_some {α β} {a : α} {f : α → β} : f <$> some a = some (f a) :=
   rfl
 
 theorem map_coe {α β} {a : α} {f : α → β} : f <$> (a : Option α) = ↑(f a) :=
   rfl
 
+/- warning: option.map_none' -> Option.map_none' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f (Option.none.{u_1} α)) (Option.none.{u_2} β)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (f : α -> β), Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f (Option.none.{u_1} α)) (Option.none.{u_2} β)
+Case conversion may be inaccurate. Consider using '#align option.map_none' Option.map_none'ₓ'. -/
 @[simp]
-theorem map_none'ₓ {f : α → β} : Option.map f none = none :=
+theorem map_none' {f : α → β} : Option.map f none = none :=
   rfl
 
+/- warning: option.map_some' -> Option.map_some' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {a : α} {f : α -> β}, Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f (Option.some.{u_1} α a)) (Option.some.{u_2} β (f a))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (a : α) (f : α -> β), Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f (Option.some.{u_1} α a)) (Option.some.{u_2} β (f a))
+Case conversion may be inaccurate. Consider using '#align option.map_some' Option.map_some'ₓ'. -/
 @[simp]
-theorem map_some'ₓ {a : α} {f : α → β} : Option.map f (some a) = some (f a) :=
+theorem map_some' {a : α} {f : α → β} : Option.map f (some a) = some (f a) :=
   rfl
 
 @[simp]
 theorem map_coe' {a : α} {f : α → β} : Option.map f (a : Option α) = ↑(f a) :=
   rfl
 
-theorem map_eq_someₓ {α β} {x : Option α} {f : α → β} {b : β} : f <$> x = some b ↔ ∃ a, x = some a ∧ f a = b := by
+/- warning: option.map_eq_some -> Option.map_eq_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {x : Option.{u_1} α} {f : α -> β} {b : β}, Iff (Eq.{succ u_1} (Option.{u_1} β) (Functor.map.{u_1 u_1} (fun {α : Type.{u_1}} => Option.{u_1} α) (Traversable.toFunctor.{u_1} (fun {α : Type.{u_1}} => Option.{u_1} α) Option.traversable.{u_1}) α β f x) (Option.some.{u_1} β b)) (Exists.{succ u_1} α (fun (a : α) => And (Eq.{succ u_1} (Option.{u_1} α) x (Option.some.{u_1} α a)) (Eq.{succ u_1} β (f a) b)))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2466 : Type.{u_1}} {α._@.Std.Data.Option.Lemmas._hyg.2467 : Type.{u_1}} {f : α._@.Std.Data.Option.Lemmas._hyg.2466 -> α._@.Std.Data.Option.Lemmas._hyg.2467} {x : Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2466} {b : α._@.Std.Data.Option.Lemmas._hyg.2467}, Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2467) (Functor.map.{u_1 u_1} Option.{u_1} instFunctorOption.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2466 α._@.Std.Data.Option.Lemmas._hyg.2467 f x) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2467 b)) (Exists.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.2466 (fun (a : α._@.Std.Data.Option.Lemmas._hyg.2466) => And (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2466) x (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2466 a)) (Eq.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.2467 (f a) b)))
+Case conversion may be inaccurate. Consider using '#align option.map_eq_some Option.map_eq_someₓ'. -/
+theorem map_eq_some {α β} {x : Option α} {f : α → β} {b : β} : f <$> x = some b ↔ ∃ a, x = some a ∧ f a = b := by
   cases x <;> simp
 
+/- warning: option.map_eq_some' -> Option.map_eq_some' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {x : Option.{u_1} α} {f : α -> β} {b : β}, Iff (Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f x) (Option.some.{u_2} β b)) (Exists.{succ u_1} α (fun (a : α) => And (Eq.{succ u_1} (Option.{u_1} α) x (Option.some.{u_1} α a)) (Eq.{succ u_2} β (f a) b)))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2370 : Type.{u_1}} {b : α._@.Std.Data.Option.Lemmas._hyg.2370} {α._@.Std.Data.Option.Lemmas._hyg.2369 : Type.{u_2}} {x : Option.{u_2} α._@.Std.Data.Option.Lemmas._hyg.2369} {f : α._@.Std.Data.Option.Lemmas._hyg.2369 -> α._@.Std.Data.Option.Lemmas._hyg.2370}, Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2370) (Option.map.{u_2 u_1} α._@.Std.Data.Option.Lemmas._hyg.2369 α._@.Std.Data.Option.Lemmas._hyg.2370 f x) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2370 b)) (Exists.{succ u_2} α._@.Std.Data.Option.Lemmas._hyg.2369 (fun (a : α._@.Std.Data.Option.Lemmas._hyg.2369) => And (Eq.{succ u_2} (Option.{u_2} α._@.Std.Data.Option.Lemmas._hyg.2369) x (Option.some.{u_2} α._@.Std.Data.Option.Lemmas._hyg.2369 a)) (Eq.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.2370 (f a) b)))
+Case conversion may be inaccurate. Consider using '#align option.map_eq_some' Option.map_eq_some'ₓ'. -/
 @[simp]
-theorem map_eq_some'ₓ {x : Option α} {f : α → β} {b : β} : x.map f = some b ↔ ∃ a, x = some a ∧ f a = b := by
+theorem map_eq_some' {x : Option α} {f : α → β} {b : β} : x.map f = some b ↔ ∃ a, x = some a ∧ f a = b := by
   cases x <;> simp
 
-theorem map_eq_noneₓ {α β} {x : Option α} {f : α → β} : f <$> x = none ↔ x = none := by
+/- warning: option.map_eq_none -> Option.map_eq_none is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {x : Option.{u_1} α} {f : α -> β}, Iff (Eq.{succ u_1} (Option.{u_1} β) (Functor.map.{u_1 u_1} (fun {α : Type.{u_1}} => Option.{u_1} α) (Traversable.toFunctor.{u_1} (fun {α : Type.{u_1}} => Option.{u_1} α) Option.traversable.{u_1}) α β f x) (Option.none.{u_1} β)) (Eq.{succ u_1} (Option.{u_1} α) x (Option.none.{u_1} α))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2584 : Type.{u_1}} {α._@.Std.Data.Option.Lemmas._hyg.2585 : Type.{u_1}} {f : α._@.Std.Data.Option.Lemmas._hyg.2584 -> α._@.Std.Data.Option.Lemmas._hyg.2585} {x : Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2584}, Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2585) (Functor.map.{u_1 u_1} Option.{u_1} instFunctorOption.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2584 α._@.Std.Data.Option.Lemmas._hyg.2585 f x) (Option.none.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2585)) (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2584) x (Option.none.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2584))
+Case conversion may be inaccurate. Consider using '#align option.map_eq_none Option.map_eq_noneₓ'. -/
+theorem map_eq_none {α β} {x : Option α} {f : α → β} : f <$> x = none ↔ x = none := by
   cases x <;> simp only [map_none, map_some, eq_self_iff_true]
 
+/- warning: option.map_eq_none' -> Option.map_eq_none' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {x : Option.{u_1} α} {f : α -> β}, Iff (Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f x) (Option.none.{u_2} β)) (Eq.{succ u_1} (Option.{u_1} α) x (Option.none.{u_1} α))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.2518 : Type.{u_1}} {x : Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2518} {α._@.Std.Data.Option.Lemmas._hyg.2519 : Type.{u_2}} {f : α._@.Std.Data.Option.Lemmas._hyg.2518 -> α._@.Std.Data.Option.Lemmas._hyg.2519}, Iff (Eq.{succ u_2} (Option.{u_2} α._@.Std.Data.Option.Lemmas._hyg.2519) (Option.map.{u_1 u_2} α._@.Std.Data.Option.Lemmas._hyg.2518 α._@.Std.Data.Option.Lemmas._hyg.2519 f x) (Option.none.{u_2} α._@.Std.Data.Option.Lemmas._hyg.2519)) (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2518) x (Option.none.{u_1} α._@.Std.Data.Option.Lemmas._hyg.2518))
+Case conversion may be inaccurate. Consider using '#align option.map_eq_none' Option.map_eq_none'ₓ'. -/
 @[simp]
-theorem map_eq_none'ₓ {x : Option α} {f : α → β} : x.map f = none ↔ x = none := by
+theorem map_eq_none' {x : Option α} {f : α → β} : x.map f = none ↔ x = none := by
   cases x <;> simp only [map_none', map_some', eq_self_iff_true]
 
 /-- `option.map` as a function between functions is injective. -/
@@ -219,7 +337,13 @@ theorem map_injective' : Function.Injective (@Option.map α β) := fun f g h =>
 theorem map_inj {f g : α → β} : Option.map f = Option.map g ↔ f = g :=
   map_injective'.eq_iff
 
-theorem map_congrₓ {f g : α → β} {x : Option α} (h : ∀ a ∈ x, f a = g a) : Option.map f x = Option.map g x := by
+/- warning: option.map_congr -> Option.map_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {g : α -> β} {x : Option.{u_1} α}, (forall (a : α), (Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a x) -> (Eq.{succ u_2} β (f a) (g a))) -> (Eq.{succ u_2} (Option.{u_2} β) (Option.map.{u_1 u_2} α β f x) (Option.map.{u_1 u_2} α β g x))
+but is expected to have type
+  forall {α : Type.{u_1}} {α._@.Std.Data.Option.Lemmas._hyg.2666 : Type.{u_2}} {f : α -> α._@.Std.Data.Option.Lemmas._hyg.2666} {g : α -> α._@.Std.Data.Option.Lemmas._hyg.2666} {x : Option.{u_1} α}, (forall (a : α), (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x) -> (Eq.{succ u_2} α._@.Std.Data.Option.Lemmas._hyg.2666 (f a) (g a))) -> (Eq.{succ u_2} (Option.{u_2} α._@.Std.Data.Option.Lemmas._hyg.2666) (Option.map.{u_1 u_2} α α._@.Std.Data.Option.Lemmas._hyg.2666 f x) (Option.map.{u_1 u_2} α α._@.Std.Data.Option.Lemmas._hyg.2666 g x))
+Case conversion may be inaccurate. Consider using '#align option.map_congr Option.map_congrₓ'. -/
+theorem map_congr {f g : α → β} {x : Option α} (h : ∀ a ∈ x, f a = g a) : Option.map f x = Option.map g x := by
   cases x <;> simp only [map_none', map_some', h, mem_def]
 
 attribute [simp] map_id
@@ -228,35 +352,77 @@ attribute [simp] map_id
 theorem map_eq_id {f : α → α} : Option.map f = id ↔ f = id :=
   map_injective'.eq_iff' map_id
 
+/- warning: option.map_map -> Option.map_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (h : β -> γ) (g : α -> β) (x : Option.{u_1} α), Eq.{succ u_3} (Option.{u_3} γ) (Option.map.{u_2 u_3} β γ h (Option.map.{u_1 u_2} α β g x)) (Option.map.{u_1 u_3} α γ (Function.comp.{succ u_1 succ u_2 succ u_3} α β γ h g) x)
+but is expected to have type
+  forall {β : Type.{u_1}} {γ : Type.{u_2}} {α : Type.{u_3}} (h : β -> γ) (g : α -> β) (x : Option.{u_3} α), Eq.{succ u_2} (Option.{u_2} γ) (Option.map.{u_1 u_2} β γ h (Option.map.{u_3 u_1} α β g x)) (Option.map.{u_3 u_2} α γ (Function.comp.{succ u_3 succ u_1 succ u_2} α β γ h g) x)
+Case conversion may be inaccurate. Consider using '#align option.map_map Option.map_mapₓ'. -/
 @[simp]
-theorem map_mapₓ (h : β → γ) (g : α → β) (x : Option α) : Option.map h (Option.map g x) = Option.map (h ∘ g) x := by
+theorem map_map (h : β → γ) (g : α → β) (x : Option α) : Option.map h (Option.map g x) = Option.map (h ∘ g) x := by
   cases x <;> simp only [map_none', map_some']
 
 theorem map_comm {f₁ : α → β} {f₂ : α → γ} {g₁ : β → δ} {g₂ : γ → δ} (h : g₁ ∘ f₁ = g₂ ∘ f₂) (a : α) :
     (Option.map f₁ a).map g₁ = (Option.map f₂ a).map g₂ := by rw [map_map, h, ← map_map]
 
-theorem comp_mapₓ (h : β → γ) (g : α → β) (x : Option α) : Option.map (h ∘ g) x = Option.map h (Option.map g x) :=
-  (map_mapₓ _ _ _).symm
+/- warning: option.comp_map -> Option.comp_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (h : β -> γ) (g : α -> β) (x : Option.{u_1} α), Eq.{succ u_3} (Option.{u_3} γ) (Option.map.{u_1 u_3} α γ (Function.comp.{succ u_1 succ u_2 succ u_3} α β γ h g) x) (Option.map.{u_2 u_3} β γ h (Option.map.{u_1 u_2} α β g x))
+but is expected to have type
+  forall {β : Type.{u_1}} {γ : Type.{u_2}} {α : Type.{u_3}} (h : β -> γ) (g : α -> β) (x : Option.{u_3} α), Eq.{succ u_2} (Option.{u_2} γ) (Option.map.{u_3 u_2} α γ (Function.comp.{succ u_3 succ u_1 succ u_2} α β γ h g) x) (Option.map.{u_1 u_2} β γ h (Option.map.{u_3 u_1} α β g x))
+Case conversion may be inaccurate. Consider using '#align option.comp_map Option.comp_mapₓ'. -/
+theorem comp_map (h : β → γ) (g : α → β) (x : Option α) : Option.map (h ∘ g) x = Option.map h (Option.map g x) :=
+  (map_map _ _ _).symm
 
+/- warning: option.map_comp_map -> Option.map_comp_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (f : α -> β) (g : β -> γ), Eq.{(max (succ u_1) (succ u_3))} ((Option.{u_1} α) -> (Option.{u_3} γ)) (Function.comp.{succ u_1 succ u_2 succ u_3} (Option.{u_1} α) (Option.{u_2} β) (Option.{u_3} γ) (Option.map.{u_2 u_3} β γ g) (Option.map.{u_1 u_2} α β f)) (Option.map.{u_1 u_3} α γ (Function.comp.{succ u_1 succ u_2 succ u_3} α β γ g f))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (f : α -> β) (g : β -> γ), Eq.{(max (succ u_3) (succ u_1))} ((Option.{u_1} α) -> (Option.{u_3} γ)) (Function.comp.{succ u_1 succ u_2 succ u_3} (Option.{u_1} α) (Option.{u_2} β) (Option.{u_3} γ) (Option.map.{u_2 u_3} β γ g) (Option.map.{u_1 u_2} α β f)) (Option.map.{u_1 u_3} α γ (Function.comp.{succ u_1 succ u_2 succ u_3} α β γ g f))
+Case conversion may be inaccurate. Consider using '#align option.map_comp_map Option.map_comp_mapₓ'. -/
 @[simp]
-theorem map_comp_mapₓ (f : α → β) (g : β → γ) : Option.map g ∘ Option.map f = Option.map (g ∘ f) := by
+theorem map_comp_map (f : α → β) (g : β → γ) : Option.map g ∘ Option.map f = Option.map (g ∘ f) := by
   ext x
   rw [comp_map]
 
-theorem mem_map_of_memₓ {α β : Type _} {a : α} {x : Option α} (g : α → β) (h : a ∈ x) : g a ∈ x.map g :=
+/- warning: option.mem_map_of_mem -> Option.mem_map_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {a : α} {x : Option.{u_1} α} (g : α -> β), (Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a x) -> (Membership.Mem.{u_2 u_2} β (Option.{u_2} β) (Option.hasMem.{u_2} β) (g a) (Option.map.{u_1 u_2} α β g x))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {a : α} {x : Option.{u_1} α} (g : α -> β), (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x) -> (Membership.mem.{u_2 u_2} β (Option.{u_2} β) (Option.instMembershipOption.{u_2} β) (g a) (Option.map.{u_1 u_2} α β g x))
+Case conversion may be inaccurate. Consider using '#align option.mem_map_of_mem Option.mem_map_of_memₓ'. -/
+theorem mem_map_of_mem {a : α} {x : Option α} (g : α → β) (h : a ∈ x) : g a ∈ x.map g :=
   mem_def.mpr ((mem_def.mp h).symm ▸ map_some')
 
-theorem bind_map_commₓ {α β} {x : Option (Option α)} {f : α → β} : x >>= Option.map f = x.map (Option.map f) >>= id :=
-  by cases x <;> simp
+theorem mem_map {f : α → β} {y : β} {o : Option α} : y ∈ o.map f ↔ ∃ x ∈ o, f x = y := by simp
 
-theorem join_map_eq_map_joinₓ {f : α → β} {x : Option (Option α)} : (x.map (Option.map f)).join = x.join.map f := by
+theorem forall_mem_map {f : α → β} {o : Option α} {p : β → Prop} : (∀ y ∈ o.map f, p y) ↔ ∀ x ∈ o, p (f x) := by simp
+
+theorem exists_mem_map {f : α → β} {o : Option α} {p : β → Prop} : (∃ y ∈ o.map f, p y) ↔ ∃ x ∈ o, p (f x) := by simp
+
+/- warning: option.bind_map_comm -> Option.bind_map_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {x : Option.{u_1} (Option.{u_1} α)} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) (Option.{u_1} α) β x (Option.map.{u_1 u_1} α β f)) (Bind.bind.{u_1 u_1} Option.{u_1} (Monad.toHasBind.{u_1 u_1} Option.{u_1} Option.monad.{u_1}) (Option.{u_1} β) β (Option.map.{u_1 u_1} (Option.{u_1} α) (Option.{u_1} β) (Option.map.{u_1 u_1} α β f) x) (id.{succ u_1} (Option.{u_1} β)))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {x : Option.{u_1} (Option.{u_1} α)} {f : α -> β}, Eq.{succ u_2} (Option.{u_2} β) (Option.bind.{u_1 u_2} (Option.{u_1} α) β x (Option.map.{u_1 u_2} α β f)) (Option.bind.{u_2 u_2} (Option.{u_2} β) β (Option.map.{u_1 u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f) x) (id.{succ u_2} (Option.{u_2} β)))
+Case conversion may be inaccurate. Consider using '#align option.bind_map_comm Option.bind_map_commₓ'. -/
+theorem bind_map_comm {α β} {x : Option (Option α)} {f : α → β} : x >>= Option.map f = x.map (Option.map f) >>= id := by
+  cases x <;> simp
+
+/- warning: option.join_map_eq_map_join -> Option.join_map_eq_map_join is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {x : Option.{u_1} (Option.{u_1} α)}, Eq.{succ u_2} (Option.{u_2} β) (Option.join.{u_2} β (Option.map.{u_1 u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f) x)) (Option.map.{u_1 u_2} α β f (Option.join.{u_1} α x))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {x : Option.{u_1} (Option.{u_1} α)}, Eq.{succ u_2} (Option.{u_2} β) (Option.join.{u_2} β (Option.map.{u_1 u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f) x)) (Option.map.{u_1 u_2} α β f (Option.join.{u_1} α x))
+Case conversion may be inaccurate. Consider using '#align option.join_map_eq_map_join Option.join_map_eq_map_joinₓ'. -/
+theorem join_map_eq_map_join {f : α → β} {x : Option (Option α)} : (x.map (Option.map f)).join = x.join.map f := by
   rcases x with (_ | _ | x) <;> simp
 
 theorem join_join {x : Option (Option (Option α))} : x.join.join = (x.map join).join := by
   rcases x with (_ | _ | _ | x) <;> simp
 
 theorem mem_of_mem_join {a : α} {x : Option (Option α)} (h : a ∈ x.join) : some a ∈ x :=
-  mem_def.mpr ((mem_def.mp h).symm ▸ join_eq_someₓ.mp h)
+  mem_def.mpr ((mem_def.mp h).symm ▸ join_eq_some.mp h)
 
 section Pmap
 
@@ -268,7 +434,7 @@ theorem pbind_eq_bind (f : α → Option β) (x : Option α) : (x.pbind fun a _ 
 
 theorem map_bind {α β γ} (f : β → γ) (x : Option α) (g : α → Option β) :
     Option.map f (x >>= g) = x >>= fun a => Option.map f (g a) := by
-  simp_rw [← map_eq_map, ← bind_pure_comp_eq_map, IsLawfulMonad.bind_assoc]
+  simp_rw [← map_eq_map, ← bind_pure_comp_eq_map, LawfulMonad.bind_assoc]
 
 theorem map_bind' (f : β → γ) (x : Option α) (g : α → Option β) :
     Option.map f (x.bind g) = x.bind fun a => Option.map f (g a) := by cases x <;> simp
@@ -277,7 +443,7 @@ theorem map_pbind (f : β → γ) (x : Option α) (g : ∀ a, a ∈ x → Option
     Option.map f (x.pbind g) = x.pbind fun a H => Option.map f (g a H) := by cases x <;> simp only [pbind, map_none']
 
 theorem pbind_map (f : α → β) (x : Option α) (g : ∀ b : β, b ∈ x.map f → Option γ) :
-    pbind (Option.map f x) g = x.pbind fun a h => g (f a) (mem_map_of_memₓ _ h) := by cases x <;> rfl
+    pbind (Option.map f x) g = x.pbind fun a h => g (f a) (mem_map_of_mem _ h) := by cases x <;> rfl
 
 @[simp]
 theorem pmap_none (f : ∀ a : α, p a → β) {H} : pmap f (@none α) H = none :=
@@ -293,7 +459,7 @@ theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) �
   rfl
 
 theorem pmap_map (g : γ → α) (x : Option γ) (H) :
-    pmap f (x.map g) H = pmap (fun a h => f (g a) h) x fun a h => H _ (mem_map_of_memₓ _ h) := by
+    pmap f (x.map g) H = pmap (fun a h => f (g a) h) x fun a h => H _ (mem_map_of_mem _ h) := by
   cases x <;> simp only [map_none', map_some', pmap]
 
 theorem map_pmap (g : β → γ) (f : ∀ a, p a → β) (x H) : Option.map g (pmap f x H) = pmap (fun a h => g (f a h)) x H :=
@@ -319,7 +485,7 @@ theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a ∈ x,
   cases x
   · simp
     
-  · simp only [pbind, iff_falseₓ]
+  · simp only [pbind, iff_false_iff]
     intro h
     cases h' x rfl h
     
@@ -414,8 +580,7 @@ theorem is_none_some {a : α} : isNone (some a) = ff :=
 @[simp]
 theorem not_is_some {a : Option α} : isSome a = ff ↔ a.isNone = tt := by cases a <;> simp
 
-theorem eq_some_iff_get_eqₓ {o : Option α} {a : α} : o = some a ↔ ∃ h : o.isSome, Option.getₓ h = a := by
-  cases o <;> simp
+theorem eq_some_iff_get_eq {o : Option α} {a : α} : o = some a ↔ ∃ h : o.isSome, Option.get h = a := by cases o <;> simp
 
 theorem not_is_some_iff_eq_none {o : Option α} : ¬o.isSome ↔ o = none := by cases o <;> simp
 
@@ -426,11 +591,11 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » none[option.none])
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_is_some.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » none[option.none])
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
     simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
@@ -443,12 +608,18 @@ theorem iget_of_mem [Inhabited α] {a : α} : ∀ {o : Option α}, a ∈ o → o
 
 theorem get_or_else_default_eq_iget [Inhabited α] (o : Option α) : o.getOrElse default = o.iget := by cases o <;> rfl
 
+/- warning: option.guard_eq_some -> Option.guard_eq_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u_1} α p] {a : α} {b : α}, Iff (Eq.{succ u_1} (Option.{u_1} α) (Option.guard.{u_1} α p (fun (a : α) => _inst_1 a) a) (Option.some.{u_1} α b)) (And (Eq.{succ u_1} α a b) (p a))
+but is expected to have type
+  forall {α._@.Std.Data.Option.Lemmas._hyg.3204 : Type.{u_1}} {p : α._@.Std.Data.Option.Lemmas._hyg.3204 -> Prop} {a : α._@.Std.Data.Option.Lemmas._hyg.3204} {b : α._@.Std.Data.Option.Lemmas._hyg.3204} [inst._@.Std.Data.Option.Lemmas._hyg.3180 : DecidablePred.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 p], Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3204) (Option.guard.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 p (fun (a : α._@.Std.Data.Option.Lemmas._hyg.3204) => inst._@.Std.Data.Option.Lemmas._hyg.3180 a) a) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 b)) (And (Eq.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 a b) (p a))
+Case conversion may be inaccurate. Consider using '#align option.guard_eq_some Option.guard_eq_someₓ'. -/
 @[simp]
-theorem guard_eq_someₓ {p : α → Prop} [DecidablePred p] {a b : α} : guard p a = some b ↔ a = b ∧ p a := by
+theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} : guard p a = some b ↔ a = b ∧ p a := by
   by_cases p a <;> simp [Option.guard, h] <;> intro <;> contradiction
 
 @[simp]
-theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guardₓ p = some u ↔ p := by
+theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p := by
   cases u
   by_cases p <;> simp [_root_.guard, h] <;> first |rfl|contradiction
 
@@ -459,9 +630,21 @@ theorem lift_or_get_choice {f : α → α → α} (h : ∀ a b, f a b = a ∨ f 
   | none, some b => Or.inr rfl
   | some a, some b => by simpa [lift_or_get] using h a b
 
+/- warning: option.lift_or_get_none_left -> Option.lift_or_get_none_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {f : α -> α -> α} {b : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.liftOrGet.{u_1} α f (Option.none.{u_1} α) b) b
+but is expected to have type
+  forall {α : Type.{u_1}} {f : α -> α -> α} {b : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.lift_or_get.{u_1} α f (Option.none.{u_1} α) b) b
+Case conversion may be inaccurate. Consider using '#align option.lift_or_get_none_left Option.lift_or_get_none_leftₓ'. -/
 @[simp]
 theorem lift_or_get_none_left {f} {b : Option α} : liftOrGet f none b = b := by cases b <;> rfl
 
+/- warning: option.lift_or_get_none_right -> Option.lift_or_get_none_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {f : α -> α -> α} {a : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.liftOrGet.{u_1} α f a (Option.none.{u_1} α)) a
+but is expected to have type
+  forall {α : Type.{u_1}} {f : α -> α -> α} {a : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.lift_or_get.{u_1} α f a (Option.none.{u_1} α)) a
+Case conversion may be inaccurate. Consider using '#align option.lift_or_get_none_right Option.lift_or_get_none_rightₓ'. -/
 @[simp]
 theorem lift_or_get_none_right {f} {a : Option α} : liftOrGet f a none = a := by cases a <;> rfl
 
@@ -496,9 +679,9 @@ theorem get_or_else_map (f : α → β) (x : α) (o : Option α) : getOrElse (o.
 
 theorem orelse_eq_some (o o' : Option α) (x : α) : (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x := by
   cases o
-  · simp only [true_andₓ, false_orₓ, eq_self_iff_true, none_orelse]
+  · simp only [true_and_iff, false_or_iff, eq_self_iff_true, none_orelse]
     
-  · simp only [some_orelse, or_falseₓ, false_andₓ]
+  · simp only [some_orelse, or_false_iff, false_and_iff]
     
 
 theorem orelse_eq_some' (o o' : Option α) (x : α) : o.orelse o' = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -507,9 +690,9 @@ theorem orelse_eq_some' (o o' : Option α) (x : α) : o.orelse o' = some x ↔ o
 @[simp]
 theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none := by
   cases o
-  · simp only [true_andₓ, none_orelse, eq_self_iff_true]
+  · simp only [true_and_iff, none_orelse, eq_self_iff_true]
     
-  · simp only [some_orelse, false_andₓ]
+  · simp only [some_orelse, false_and_iff]
     
 
 @[simp]
@@ -535,7 +718,7 @@ theorem choice_eq_none (α : Type _) [IsEmpty α] : choice α = none :=
 theorem choice_is_some_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonempty α := by
   fconstructor
   · intro h
-    exact ⟨Option.getₓ h⟩
+    exact ⟨Option.get h⟩
     
   · intro h
     dsimp only [choice]
@@ -554,7 +737,7 @@ theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
 
 @[simp]
-theorem elim_none_some (f : Option α → β) : Option.elimₓ (f none) (f ∘ some) = f :=
+theorem elim_none_some (f : Option α → β) : Option.elim (f none) (f ∘ some) = f :=
   funext fun o => by cases o <;> rfl
 
 end Option

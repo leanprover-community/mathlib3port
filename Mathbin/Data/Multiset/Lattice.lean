@@ -51,7 +51,7 @@ theorem sup_le {s : Multiset α} {a : α} : s.sup ≤ a ↔ ∀ b ∈ s, b ≤ a
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp_distrib, forall_and_distrib])
 
 theorem le_sup {s : Multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
-  sup_le.1 le_rflₓ _ h
+  sup_le.1 le_rfl _ h
 
 theorem sup_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.sup ≤ s₂.sup :=
   sup_le.2 fun b hb => le_sup (h hb)
@@ -121,7 +121,7 @@ theorem le_inf {s : Multiset α} {a : α} : a ≤ s.inf ↔ ∀ b ∈ s, a ≤ b
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp_distrib, forall_and_distrib])
 
 theorem inf_le {s : Multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=
-  le_inf.1 le_rflₓ _ h
+  le_inf.1 le_rfl _ h
 
 theorem inf_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.inf ≤ s₁.inf :=
   le_inf.2 fun b hb => inf_le (h hb)

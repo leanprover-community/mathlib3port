@@ -42,7 +42,7 @@ noncomputable def equivShrink (α : Type v) [Small.{w} α] : α ≃ Shrink α :=
   Nonempty.some (Classical.choose_spec (@Small.equiv_small α _))
 
 instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
-  Small.mk' <| Equivₓ.refl α
+  Small.mk' <| Equiv.refl α
 
 theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
   let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
@@ -50,13 +50,13 @@ theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ �
 
 theorem small_lift (α : Type u) [hα : Small.{v} α] : Small.{max v w} α :=
   let ⟨⟨γ, ⟨f⟩⟩⟩ := hα
-  Small.mk' <| f.trans Equivₓ.ulift.symm
+  Small.mk' <| f.trans Equiv.ulift.symm
 
 instance (priority := 100) small_max (α : Type v) : Small.{max w v} α :=
   small_lift.{v, w} α
 
 instance small_ulift (α : Type u) [Small.{v} α] : Small.{v} (ULift.{w} α) :=
-  small_map Equivₓ.ulift
+  small_map Equiv.ulift
 
 theorem small_type : Small.{max (u + 1) v} (Type u) :=
   small_max.{max (u + 1) v} _
@@ -73,7 +73,7 @@ instance small_subtype (α : Type v) [Small.{w} α] (P : α → Prop) : Small.{w
 
 theorem small_of_injective {α : Type v} {β : Type w} [Small.{u} β] {f : α → β} (hf : Function.Injective f) :
     Small.{u} α :=
-  small_map (Equivₓ.ofInjective f hf)
+  small_map (Equiv.ofInjective f hf)
 
 theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α → β} (hf : Function.Surjective f) :
     Small.{u} β :=
@@ -81,13 +81,13 @@ theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α �
 
 theorem small_subset {α : Type v} {s t : Set α} (hts : t ⊆ s) [Small.{u} s] : Small.{u} t :=
   let f : t → s := fun x => ⟨x, hts x.Prop⟩
-  @small_of_injective _ _ _ f fun x y hxy => Subtype.ext (Subtype.mk.injₓ hxy)
+  @small_of_injective _ _ _ f fun x y hxy => Subtype.ext (Subtype.mk.inj hxy)
 
 instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α := by
   rcases is_empty_or_nonempty α with ⟨⟩ <;> skip
-  · apply small_map (Equivₓ.equivPempty α)
+  · apply small_map (Equiv.equivPempty α)
     
-  · apply small_map Equivₓ.punitOfNonemptyOfSubsingleton
+  · apply small_map Equiv.punitOfNonemptyOfSubsingleton
     assumption'
     
 
@@ -99,20 +99,20 @@ to keep imports to `logic` to a minimum.
 
 instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (∀ a, β a) :=
   ⟨⟨∀ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
-      ⟨Equivₓ.piCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
+      ⟨Equiv.piCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 
 instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σa, β a) :=
   ⟨⟨Σa' : Shrink α, Shrink (β ((equivShrink α).symm a')),
-      ⟨Equivₓ.sigmaCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
+      ⟨Equiv.sigmaCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 
 instance small_prod {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (α × β) :=
-  ⟨⟨Shrink α × Shrink β, ⟨Equivₓ.prodCongr (equivShrink α) (equivShrink β)⟩⟩⟩
+  ⟨⟨Shrink α × Shrink β, ⟨Equiv.prodCongr (equivShrink α) (equivShrink β)⟩⟩⟩
 
 instance small_sum {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (Sum α β) :=
-  ⟨⟨Sum (Shrink α) (Shrink β), ⟨Equivₓ.sumCongr (equivShrink α) (equivShrink β)⟩⟩⟩
+  ⟨⟨Sum (Shrink α) (Shrink β), ⟨Equiv.sumCongr (equivShrink α) (equivShrink β)⟩⟩⟩
 
 instance small_set {α} [Small.{w} α] : Small.{w} (Set α) :=
-  ⟨⟨Set (Shrink α), ⟨Equivₓ.Set.congr (equivShrink α)⟩⟩⟩
+  ⟨⟨Set (Shrink α), ⟨Equiv.Set.congr (equivShrink α)⟩⟩⟩
 
 instance small_range {α : Type v} {β : Type w} (f : α → β) [Small.{u} α] : Small.{u} (Set.Range f) :=
   small_of_surjective Set.surjective_onto_range
@@ -126,10 +126,10 @@ theorem not_small_type : ¬Small.{u} (Type max u v)
       (cast_inj _).1 <| eq_of_heq (Sigma.mk.inj e).2
 
 instance small_vector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Vector α n) :=
-  small_of_injective (Equivₓ.vectorEquivFin α n).Injective
+  small_of_injective (Equiv.vectorEquivFin α n).Injective
 
 instance small_list {α : Type v} [Small.{u} α] : Small.{u} (List α) := by
-  let e : (Σn, Vector α n) ≃ List α := Equivₓ.sigmaFiberEquiv List.length
+  let e : (Σn, Vector α n) ≃ List α := Equiv.sigmaFiberEquiv List.length
   exact small_of_surjective e.surjective
 
 end

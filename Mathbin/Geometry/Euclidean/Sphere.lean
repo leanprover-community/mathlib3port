@@ -3,6 +3,7 @@ Copyright (c) 2021 Manuel Candales. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales, Benjamin Davidson
 -/
+import Mathbin.Geometry.Euclidean.Basic
 import Mathbin.Geometry.Euclidean.Triangle
 
 /-!
@@ -76,7 +77,7 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     _ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by ring
     _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by simp [abs_mul]
     _ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by ring_nf
-    _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by simp [hxy, norm_smul, mul_powₓ, sq_abs]
+    _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by simp [hxy, norm_smul, mul_pow, sq_abs]
     _ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
     
 
@@ -104,7 +105,7 @@ theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧
   let m : P := midpoint ℝ a b
   obtain ⟨v, h1, h2, h3⟩ := vsub_sub_vsub_cancel_left, v a p m, v p q m, v a q m
   have h : ∀ r, b -ᵥ r = m -ᵥ r + (m -ᵥ a) := fun r => by
-    rw [midpoint_vsub_left, ← right_vsub_midpoint, add_commₓ, vsub_add_vsub_cancel]
+    rw [midpoint_vsub_left, ← right_vsub_midpoint, add_comm, vsub_add_vsub_cancel]
   iterate 4 rw [dist_eq_norm_vsub V]
   rw [← h1, ← h2, h, h]
   rw [← h1, h] at hp
@@ -159,7 +160,7 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Co
       
     all_goals field_simp [mul_comm, hmul]
   have h₃ : dist d p = dist a p * dist c p / dist b p := by field_simp [mul_comm, hmul]
-  have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by rw [mul_left_commₓ, mul_comm]
+  have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by rw [mul_left_comm, mul_comm]
   field_simp [h₁, h₂, dist_eq_add_dist_of_angle_eq_pi hbpd, h₃, hbp, dist_comm a b, h₄, ← sq,
     dist_sq_mul_dist_add_dist_sq_mul_dist b, hapc]
 

@@ -36,18 +36,18 @@ namespace WeakDual
 
 /-- The character space of a topological algebra is the subset of elements of the weak dual that
 are also algebra homomorphisms. -/
-def CharacterSpace (𝕜 : Type _) (A : Type _) [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
-    [HasContinuousConstSmul 𝕜 𝕜] [NonUnitalNonAssocSemiringₓ A] [TopologicalSpace A] [Module 𝕜 A] :=
+def CharacterSpace (𝕜 : Type _) (A : Type _) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
+    [HasContinuousConstSmul 𝕜 𝕜] [NonUnitalNonAssocSemiring A] [TopologicalSpace A] [Module 𝕜 A] :=
   { φ : WeakDual 𝕜 A | φ ≠ 0 ∧ ∀ x y : A, φ (x * y) = φ x * φ y }
 
 variable {𝕜 : Type _} {A : Type _}
 
 namespace CharacterSpace
 
-section NonUnitalNonAssocSemiringₓ
+section NonUnitalNonAssocSemiring
 
-variable [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
-  [NonUnitalNonAssocSemiringₓ A] [TopologicalSpace A] [Module 𝕜 A]
+variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
+  [NonUnitalNonAssocSemiring A] [TopologicalSpace A] [Module 𝕜 A]
 
 @[simp, norm_cast, protected]
 theorem coe_coe (φ : CharacterSpace 𝕜 A) : ⇑(φ : WeakDual 𝕜 A) = φ :=
@@ -55,13 +55,13 @@ theorem coe_coe (φ : CharacterSpace 𝕜 A) : ⇑(φ : WeakDual 𝕜 A) = φ :=
 
 /-- Elements of the character space are continuous linear maps. -/
 instance : ContinuousLinearMapClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 where
-  coe := fun φ => (φ : A → 𝕜)
-  coe_injective' := fun φ ψ h => by
+  coe φ := (φ : A → 𝕜)
+  coe_injective' φ ψ h := by
     ext
     exact congr_fun h x
-  map_smulₛₗ := fun φ => (φ : WeakDual 𝕜 A).map_smul
-  map_add := fun φ => (φ : WeakDual 𝕜 A).map_add
-  map_continuous := fun φ => (φ : WeakDual 𝕜 A).cont
+  map_smulₛₗ φ := (φ : WeakDual 𝕜 A).map_smul
+  map_add φ := (φ : WeakDual 𝕜 A).map_add
+  map_continuous φ := (φ : WeakDual 𝕜 A).cont
 
 @[ext]
 theorem ext {φ ψ : CharacterSpace 𝕜 A} (h : ∀ x, φ x = ψ x) : φ = ψ :=
@@ -92,10 +92,13 @@ def toNonUnitalAlgHom (φ : CharacterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜 wher
 theorem coe_to_non_unital_alg_hom (φ : CharacterSpace 𝕜 A) : ⇑(toNonUnitalAlgHom φ) = φ :=
   rfl
 
+instance [Subsingleton A] : IsEmpty (CharacterSpace 𝕜 A) :=
+  ⟨fun φ => φ.Prop.1 <| ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
+
 variable (𝕜 A)
 
 theorem union_zero : CharacterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y } :=
-  le_antisymmₓ
+  le_antisymm
     (by
       rintro φ (hφ | h₀)
       · exact hφ.2
@@ -105,26 +108,26 @@ theorem union_zero : CharacterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | �
     fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
 
 /-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
-theorem union_zero_is_closed [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A ∪ {0}) := by
+theorem unionZeroIsClosed [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A ∪ {0}) := by
   simp only [union_zero, Set.set_of_forall]
   exact
-    is_closed_Inter fun x =>
-      is_closed_Inter fun y => is_closed_eq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
+    isClosedInter fun x =>
+      isClosedInter fun y => isClosedEq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
 
-end NonUnitalNonAssocSemiringₓ
+end NonUnitalNonAssocSemiring
 
 section Unital
 
-variable [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
-  [TopologicalSpace A] [Semiringₓ A] [Algebra 𝕜 A]
+variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
+  [TopologicalSpace A] [Semiring A] [Algebra 𝕜 A]
 
 /-- In a unital algebra, elements of the character space are algebra homomorphisms. -/
 instance : AlgHomClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 :=
   have map_one' : ∀ φ : CharacterSpace 𝕜 A, φ 1 = 1 := fun φ => by
-    have h₁ : φ 1 * (1 - φ 1) = 0 := by rw [mul_sub, sub_eq_zero, mul_oneₓ, ← map_mul φ, one_mulₓ]
+    have h₁ : φ 1 * (1 - φ 1) = 0 := by rw [mul_sub, sub_eq_zero, mul_one, ← map_mul φ, one_mul]
     rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
     · have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
-      exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_oneₓ] using this)
+      exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_one] using this)
       
     · exact (sub_eq_zero.mp h₂).symm
       
@@ -132,7 +135,7 @@ instance : AlgHomClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 :=
     commutes := fun φ r => by
       rw [Algebra.algebra_map_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
       change ((φ : WeakDual 𝕜 A) : A →L[𝕜] 𝕜) (r • 1) = r
-      rw [map_smul, Algebra.id.smul_eq_mul, character_space.coe_coe, map_one' φ, mul_oneₓ] }
+      rw [map_smul, Algebra.id.smul_eq_mul, character_space.coe_coe, map_one' φ, mul_one] }
 
 /-- An element of the character space of a unital algebra, as an algebra homomorphism. -/
 @[simps]
@@ -148,17 +151,17 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `weak_dual 𝕜 A`. -/
-protected theorem is_closed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A) := by
+protected theorem isClosed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A) := by
   rw [eq_set_map_one_map_mul, Set.set_of_and]
-  refine' IsClosed.inter (is_closed_eq (eval_continuous _) continuous_const) _
+  refine' IsClosed.inter (isClosedEq (eval_continuous _) continuous_const) _
   simpa only [(union_zero 𝕜 A).symm] using union_zero_is_closed _ _
 
 end Unital
 
-section Ringₓ
+section Ring
 
-variable [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
-  [TopologicalSpace A] [Ringₓ A] [Algebra 𝕜 A]
+variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
+  [TopologicalSpace A] [Ring A] [Algebra 𝕜 A]
 
 theorem apply_mem_spectrum [Nontrivial 𝕜] (φ : CharacterSpace 𝕜 A) (a : A) : φ a ∈ Spectrum 𝕜 a :=
   AlgHom.apply_mem_spectrum φ a
@@ -170,7 +173,7 @@ theorem ext_ker {φ ψ : CharacterSpace 𝕜 A} (h : RingHom.ker φ = RingHom.ke
   · rwa [RingHom.mem_ker, map_sub, AlgHomClass.commutes, sub_eq_zero] at this
     
 
-end Ringₓ
+end Ring
 
 end CharacterSpace
 
@@ -178,7 +181,7 @@ section Kernel
 
 variable [Field 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
 
-variable [Ringₓ A] [TopologicalSpace A] [Algebra 𝕜 A]
+variable [Ring A] [TopologicalSpace A] [Algebra 𝕜 A]
 
 /-- The `ring_hom.ker` of `φ : character_space 𝕜 A` is maximal. -/
 instance ker_is_maximal (φ : CharacterSpace 𝕜 A) : (RingHom.ker φ).IsMaximal :=
@@ -191,31 +194,31 @@ section GelfandTransform
 
 open ContinuousMap
 
-variable (𝕜 A) [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜] [TopologicalSpace A]
-  [Semiringₓ A] [Algebra 𝕜 A]
+variable (𝕜 A) [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜] [TopologicalSpace A]
+  [Semiring A] [Algebra 𝕜 A]
 
 /-- The **Gelfand transform** is an algebra homomorphism (over `𝕜`) from a topological `𝕜`-algebra
 `A` into the `𝕜`-algebra of continuous `𝕜`-valued functions on the `character_space 𝕜 A`.
 The character space itself consists of all algebra homomorphisms from `A` to `𝕜`.  -/
 @[simps]
 def gelfandTransform : A →ₐ[𝕜] C(CharacterSpace 𝕜 A, 𝕜) where
-  toFun := fun a => { toFun := fun φ => φ a, continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
+  toFun a := { toFun := fun φ => φ a, continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
   map_one' := by
     ext
     simp only [coe_mk, coe_one, Pi.one_apply, map_one a]
-  map_mul' := fun a b => by
+  map_mul' a b := by
     ext
     simp only [map_mul, coe_mk, coe_mul, Pi.mul_apply]
   map_zero' := by
     ext
     simp only [map_zero, coe_mk, coe_mul, coe_zero, Pi.zero_apply]
-  map_add' := fun a b => by
+  map_add' a b := by
     ext
     simp only [map_add, coe_mk, coe_add, Pi.add_apply]
-  commutes' := fun k => by
+  commutes' k := by
     ext
     simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply, coe_mk, algebra_map_apply,
-      Algebra.id.smul_eq_mul, mul_oneₓ]
+      Algebra.id.smul_eq_mul, mul_one]
 
 end GelfandTransform
 

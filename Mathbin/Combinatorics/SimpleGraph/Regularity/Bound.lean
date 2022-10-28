@@ -21,7 +21,7 @@ This file gathers the numerical facts required by the proof of Szemerédi's regu
 -/
 
 
-open Finsetₓ Fintypeₓ Function Real
+open Finset Fintype Function Real
 
 namespace SzemerediRegularity
 
@@ -32,15 +32,17 @@ def stepBound (n : ℕ) : ℕ :=
 
 theorem le_step_bound : id ≤ step_bound := fun n => Nat.le_mul_of_pos_right <| pow_pos (by norm_num) n
 
-theorem step_bound_mono : Monotoneₓ stepBound := fun a b h =>
-  Nat.mul_le_mulₓ h <| Nat.pow_le_pow_of_le_rightₓ (by norm_num) h
+theorem step_bound_mono : Monotone stepBound := fun a b h =>
+  Nat.mul_le_mul h <| Nat.pow_le_pow_of_le_right (by norm_num) h
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem step_bound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
-  zero_lt_mul_right <| pow_pos (by norm_num) _
+  zero_lt_mul_right <| by
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
 
 alias step_bound_pos_iff ↔ _ step_bound_pos
 
-variable {α : Type _} [DecidableEq α] [Fintypeₓ α] {P : Finpartition (univ : Finsetₓ α)} {u : Finsetₓ α} {ε : ℝ}
+variable {α : Type _} [DecidableEq α] [Fintype α] {P : Finpartition (univ : Finset α)} {u : Finset α} {ε : ℝ}
 
 -- mathport name: exprm
 local notation "m" => (card α / stepBound P.parts.card : ℕ)
@@ -49,7 +51,7 @@ local notation "m" => (card α / stepBound P.parts.card : ℕ)
 local notation "a" => (card α / P.parts.card - m * 4 ^ P.parts.card : ℕ)
 
 theorem m_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : 0 < m :=
-  Nat.div_pos ((Nat.mul_le_mul_leftₓ _ <| Nat.pow_le_pow_of_le_leftₓ (by norm_num) _).trans hPα) <|
+  Nat.div_pos ((Nat.mul_le_mul_left _ <| Nat.pow_le_pow_of_le_left (by norm_num) _).trans hPα) <|
     step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos
 
 theorem m_coe_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : (0 : ℝ) < m :=
@@ -67,16 +69,16 @@ theorem eps_pow_five_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε ^ 5
 theorem eps_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε :=
   pow_bit1_pos_iff.1 <| eps_pow_five_pos hPε
 
-theorem four_pow_pos {n : ℕ} : 0 < (4 : ℝ) ^ n :=
-  pow_pos (by norm_num) n
-
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem hundred_div_ε_pow_five_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 100 / ε ^ 5 ≤ m :=
-  (div_le_of_nonneg_of_le_mul (eps_pow_five_pos hPε).le four_pow_pos.le hPε).trans
+  (div_le_of_nonneg_of_le_mul (eps_pow_five_pos hPε).le
+        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+        hPε).trans
     (by
       norm_cast
       rwa [Nat.le_div_iff_mul_le' (step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos), step_bound,
-        mul_left_commₓ, ← mul_powₓ])
+        mul_left_comm, ← mul_pow])
 
 theorem hundred_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) (hε : ε ≤ 1) : 100 ≤ m := by
@@ -86,26 +88,26 @@ theorem hundred_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ 
 
 theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card := by
   have h : 1 ≤ 4 ^ P.parts.card := one_le_pow_of_one_le (by norm_num) _
-  rw [step_bound, ← Nat.div_div_eq_div_mulₓ, ← Nat.le_sub_iff_right h, tsub_le_iff_left, ← Nat.add_sub_assocₓ h]
-  exact Nat.le_pred_of_ltₓ (Nat.lt_div_mul_add h)
+  rw [step_bound, ← Nat.div_div_eq_div_mul, ← Nat.le_sub_iff_right h, tsub_le_iff_left, ← Nat.add_sub_assoc h]
+  exact Nat.le_pred_of_lt (Nat.lt_div_mul_add h)
 
 theorem card_aux₁ (hucard : u.card = m * 4 ^ P.parts.card + a) : (4 ^ P.parts.card - a) * m + a * (m + 1) = u.card := by
-  rw [hucard, mul_addₓ, mul_oneₓ, ← add_assocₓ, ← add_mulₓ,
-    Nat.sub_add_cancelₓ ((Nat.le_succₓ _).trans a_add_one_le_four_pow_parts_card), mul_comm]
+  rw [hucard, mul_add, mul_one, ← add_assoc, ← add_mul,
+    Nat.sub_add_cancel ((Nat.le_succ _).trans a_add_one_le_four_pow_parts_card), mul_comm]
 
 theorem card_aux₂ (hP : P.IsEquipartition) (hu : u ∈ P.parts) (hucard : ¬u.card = m * 4 ^ P.parts.card + a) :
     (4 ^ P.parts.card - (a + 1)) * m + (a + 1) * (m + 1) = u.card := by
   have : m * 4 ^ P.parts.card ≤ card α / P.parts.card := by
-    rw [step_bound, ← Nat.div_div_eq_div_mulₓ]
-    exact Nat.div_mul_le_selfₓ _ _
-  rw [Nat.add_sub_of_leₓ this] at hucard
-  rw [(hP.card_parts_eq_average hu).resolve_left hucard, mul_addₓ, mul_oneₓ, ← add_assocₓ, ← add_mulₓ,
-    Nat.sub_add_cancelₓ a_add_one_le_four_pow_parts_card, ← add_assocₓ, mul_comm, Nat.add_sub_of_leₓ this, card_univ]
+    rw [step_bound, ← Nat.div_div_eq_div_mul]
+    exact Nat.div_mul_le_self _ _
+  rw [Nat.add_sub_of_le this] at hucard
+  rw [(hP.card_parts_eq_average hu).resolve_left hucard, mul_add, mul_one, ← add_assoc, ← add_mul,
+    Nat.sub_add_cancel a_add_one_le_four_pow_parts_card, ← add_assoc, mul_comm, Nat.add_sub_of_le this, card_univ]
 
 theorem pow_mul_m_le_card_part (hP : P.IsEquipartition) (hu : u ∈ P.parts) : (4 : ℝ) ^ P.parts.card * m ≤ u.card := by
   norm_cast
-  rw [step_bound, ← Nat.div_div_eq_div_mulₓ]
-  exact (Nat.mul_div_leₓ _ _).trans (hP.average_le_card_part hu)
+  rw [step_bound, ← Nat.div_div_eq_div_mul]
+  exact (Nat.mul_div_le _ _).trans (hP.average_le_card_part hu)
 
 variable (P ε) (l : ℕ)
 
@@ -115,10 +117,10 @@ noncomputable def initialBound : ℕ :=
   max 7 <| max l <| ⌊log (100 / ε ^ 5) / log 4⌋₊ + 1
 
 theorem le_initial_bound : l ≤ initialBound ε l :=
-  (le_max_leftₓ _ _).trans <| le_max_rightₓ _ _
+  (le_max_left _ _).trans <| le_max_right _ _
 
 theorem seven_le_initial_bound : 7 ≤ initialBound ε l :=
-  le_max_leftₓ _ _
+  le_max_left _ _
 
 theorem initial_bound_pos : 0 < initialBound ε l :=
   Nat.succ_pos'.trans_le <| seven_le_initial_bound _ _
@@ -139,8 +141,11 @@ regularity lemma. -/
 noncomputable def bound : ℕ :=
   (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l) * 16 ^ (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem initial_bound_le_bound : initialBound ε l ≤ bound ε l :=
-  (id_le_iterate_of_id_le le_step_bound _ _).trans <| Nat.le_mul_of_pos_right <| pow_pos (by norm_num) _
+  (id_le_iterate_of_id_le le_step_bound _ _).trans <|
+    Nat.le_mul_of_pos_right <| by
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
 
 theorem le_bound : l ≤ bound ε l :=
   (le_initial_bound ε l).trans <| initial_bound_le_bound ε l
@@ -149,4 +154,30 @@ theorem bound_pos : 0 < bound ε l :=
   (initial_bound_pos ε l).trans_le <| initial_bound_le_bound ε l
 
 end SzemerediRegularity
+
+namespace Tactic
+
+open Positivity SzemerediRegularity
+
+/-- Extension for the `positivity` tactic: `szemeredi_regularity.initial_bound` and
+`szemeredi_regularity.bound` are always positive. -/
+@[positivity]
+unsafe def positivity_szemeredi_regularity_bound : expr → tactic strictness
+  | quote.1 (SzemerediRegularity.initialBound (%%ₓε) (%%ₓl)) => positive <$> mk_app `` initial_bound_pos [ε, l]
+  | quote.1 (SzemerediRegularity.bound (%%ₓε) (%%ₓl)) => positive <$> mk_app `` bound_pos [ε, l]
+  | e =>
+    pp e >>=
+      fail ∘
+        format.bracket "The expression `"
+          "` isn't of the form `szemeredi_regularity.initial_bound ε l` nor `szemeredi_regularity.bound ε l`"
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
+example (ε : ℝ) (l : ℕ) : 0 < SzemerediRegularity.initialBound ε l := by
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
+example (ε : ℝ) (l : ℕ) : 0 < SzemerediRegularity.bound ε l := by
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+
+end Tactic
 

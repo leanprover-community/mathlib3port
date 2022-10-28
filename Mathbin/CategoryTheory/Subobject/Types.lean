@@ -27,7 +27,7 @@ open CategoryTheory
 
 open CategoryTheory.Subobject
 
-open CategoryTheory.Type
+open CategoryTheory.TypeCat
 
 theorem subtype_val_mono {α : Type u} (s : Set α) : Mono (↾(Subtype.val : s → α)) :=
   (mono_iff_injective _).mpr Subtype.val_injective
@@ -54,7 +54,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ S
             simp) }
   unitIso :=
     NatIso.ofComponents
-      (fun f => MonoOver.isoMk (Equivₓ.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso (by tidy)) (by tidy)
+      (fun f => MonoOver.isoMk (Equiv.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso (by tidy)) (by tidy)
   counitIso := NatIso.ofComponents (fun s => eqToIso Subtype.range_val) (by tidy)
 
 instance : WellPowered (Type u) :=

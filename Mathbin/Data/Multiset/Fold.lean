@@ -62,8 +62,16 @@ theorem fold_cons'_left (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s
   rw [fold_cons'_right, hc.comm]
 
 theorem fold_add (b₁ b₂ : α) (s₁ s₂ : Multiset α) : (s₁ + s₂).fold op (b₁ * b₂) = s₁.fold op b₁ * s₂.fold op b₂ :=
-  Multiset.induction_on s₂ (by rw [add_zeroₓ, fold_zero, ← fold_cons'_right, ← fold_cons_right op])
+  Multiset.induction_on s₂ (by rw [add_zero, fold_zero, ← fold_cons'_right, ← fold_cons_right op])
     (by simp (config := { contextual := true }) <;> cc)
+
+theorem fold_bind {ι : Type _} (s : Multiset ι) (t : ι → Multiset α) (b : ι → α) (b₀ : α) :
+    (s.bind t).fold op ((s.map b).fold op b₀) = (s.map fun i => (t i).fold op (b i)).fold op b₀ := by
+  induction' s using Multiset.induction_on with a ha ih
+  · rw [zero_bind, map_zero, map_zero, fold_zero]
+    
+  · rw [cons_bind, map_cons, map_cons, fold_cons_left, fold_cons_left, fold_add, ih]
+    
 
 theorem fold_singleton (b a : α) : ({a} : Multiset α).fold op b = a * b :=
   foldr_singleton _ _ _ _
@@ -94,7 +102,7 @@ section Order
 
 theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddMonoid α] (l : Multiset α) (n : α)
     (h : ∀ x ∈ l, x ≤ n) : l.fold max ⊥ ≤ n := by
-  induction l using Quotientₓ.induction_on
+  induction l using Quotient.induction_on
   simpa using List.max_le_of_forall_le _ _ h
 
 theorem max_nat_le_of_forall_le (l : Multiset ℕ) (n : ℕ) (h : ∀ x ∈ l, x ≤ n) : l.fold max 0 ≤ n :=
@@ -109,11 +117,11 @@ theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n 
     le_iff_count.2 fun a => by
       rw [count_nsmul]
       by_cases a ∈ s
-      · refine' le_transₓ _ (Nat.mul_le_mul_leftₓ _ <| count_pos.2 <| mem_dedup.2 h)
-        have : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [le_max_leftₓ],
+      · refine' le_trans _ (Nat.mul_le_mul_left _ <| count_pos.2 <| mem_dedup.2 h)
+        have : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [le_max_left],
           simpa [cons_erase h] ]
         
-      · simp [count_eq_zero.2 h, Nat.zero_leₓ]
+      · simp [count_eq_zero.2 h, Nat.zero_le]
         ⟩
 
 end Multiset

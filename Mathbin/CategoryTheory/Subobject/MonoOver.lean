@@ -65,7 +65,7 @@ def mk' {X A : C} (f : A ⟶ X) [hf : Mono f] : MonoOver X where
 def forget (X : C) : MonoOver X ⥤ Over X :=
   fullSubcategoryInclusion _
 
-instance : Coe (MonoOver X) C where coe := fun Y => Y.obj.left
+instance : Coe (MonoOver X) C where coe Y := Y.obj.left
 
 @[simp]
 theorem forget_obj_left {f} : ((forget X).obj f).left = (f : C) :=
@@ -130,8 +130,8 @@ given suitable evidence that morphisms are taken to monomorphisms.
 @[simps]
 def lift {Y : D} (F : Over Y ⥤ Over X) (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
     MonoOver Y ⥤ MonoOver X where
-  obj := fun f => ⟨_, h f⟩
-  map := fun _ _ k => (MonoOver.forget X).preimage ((MonoOver.forget Y ⋙ F).map k)
+  obj f := ⟨_, h f⟩
+  map _ _ k := (MonoOver.forget X).preimage ((MonoOver.forget Y ⋙ F).map k)
 
 /-- Isomorphic functors `over Y ⥤ over X` lift to isomorphic functors `mono_over Y ⥤ mono_over X`.
 -/
@@ -227,7 +227,7 @@ theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).
   rfl
 
 instance fullMap (f : X ⟶ Y) [Mono f] :
-    Full (map f) where preimage := fun g h e => by
+    Full (map f) where preimage g h e := by
     refine' hom_mk e.left _
     rw [← cancel_mono f, assoc]
     apply w e
@@ -304,11 +304,11 @@ variable [HasImages C]
 -/
 @[simps]
 def image : Over X ⥤ MonoOver X where
-  obj := fun f => imageMonoOver f.Hom
-  map := fun f g k => by
+  obj f := imageMonoOver f.Hom
+  map f g k := by
     apply (forget X).preimage _
     apply over.hom_mk _ _
-    refine' image.lift { i := image _, m := image.ι g.hom, e := k.left ≫ factor_thru_image g.hom }
+    refine' image.lift { I := image _, m := image.ι g.hom, e := k.left ≫ factor_thru_image g.hom }
     apply image.lift_fac
 
 /-- `mono_over.image : over X ⥤ mono_over X` is left adjoint to
@@ -324,7 +324,7 @@ def imageForgetAdj : image ⊣ forget X :=
             apply image.fac,
           invFun := fun k => by
             refine' over.hom_mk _ _
-            refine' image.lift { i := g.obj.left, m := g.arrow, e := k.left, fac' := over.w k }
+            refine' image.lift { I := g.obj.left, m := g.arrow, e := k.left, fac' := over.w k }
             apply image.lift_fac,
           left_inv := fun k => Subsingleton.elim _ _,
           right_inv := fun k => by

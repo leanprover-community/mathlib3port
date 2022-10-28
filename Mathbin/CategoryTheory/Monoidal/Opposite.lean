@@ -61,9 +61,9 @@ theorem unmop_mop (X : C) : unmop (mop X) = X :=
   rfl
 
 instance monoidalOppositeCategory [I : Category.{v₁} C] : Category Cᴹᵒᵖ where
-  Hom := fun X Y => unmop X ⟶ unmop Y
-  id := fun X => 𝟙 (unmop X)
-  comp := fun X Y Z f g => f ≫ g
+  Hom X Y := unmop X ⟶ unmop Y
+  id X := 𝟙 (unmop X)
+  comp X Y Z f g := f ≫ g
 
 end MonoidalOpposite
 
@@ -141,17 +141,17 @@ variable [MonoidalCategory.{v₁} C]
 
 open Opposite MonoidalCategory
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
-  tensorObj := fun X Y => op (unop X ⊗ unop Y)
-  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
+  tensorObj X Y := op (unop X ⊗ unop Y)
+  tensorHom X₁ Y₁ X₂ Y₂ f g := (f.unop ⊗ g.unop).op
   tensorUnit := op (𝟙_ C)
-  associator := fun X Y Z => (α_ (unop X) (unop Y) (unop Z)).symm.op
-  leftUnitor := fun X => (λ_ (unop X)).symm.op
-  rightUnitor := fun X => (ρ_ (unop X)).symm.op
+  associator X Y Z := (α_ (unop X) (unop Y) (unop Z)).symm.op
+  leftUnitor X := (λ_ (unop X)).symm.op
+  rightUnitor X := (ρ_ (unop X)).symm.op
   associator_naturality' := by
     intros
     apply Quiver.Hom.unop_inj
@@ -173,25 +173,25 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
     apply Quiver.Hom.unop_inj
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
   rfl
 
 theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
-  tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
-  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
+  tensorObj X Y := mop (unmop Y ⊗ unmop X)
+  tensorHom X₁ Y₁ X₂ Y₂ f g := (g.unmop ⊗ f.unmop).mop
   tensorUnit := mop (𝟙_ C)
-  associator := fun X Y Z => (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop
-  leftUnitor := fun X => (ρ_ (unmop X)).mop
-  rightUnitor := fun X => (λ_ (unmop X)).mop
+  associator X Y Z := (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop
+  leftUnitor X := (ρ_ (unmop X)).mop
+  rightUnitor X := (λ_ (unmop X)).mop
   associator_naturality' := by
     intros
     apply unmop_inj
@@ -213,8 +213,8 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
     apply unmop_inj
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
   rfl
 

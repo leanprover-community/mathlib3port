@@ -76,18 +76,18 @@ theorem exists_sigma_iff {p : (Σi, α i) → Prop} : (∃ x ∈ s.Sigma t, p x)
 
 @[simp]
 theorem sigma_empty : (s.Sigma fun _ => (∅ : Set (α i))) = ∅ :=
-  ext fun _ => and_falseₓ _
+  ext fun _ => and_false_iff _
 
 @[simp]
 theorem empty_sigma : (∅ : Set ι).Sigma t = ∅ :=
-  ext fun _ => false_andₓ _
+  ext fun _ => false_and_iff _
 
 theorem univ_sigma_univ : ((@Univ ι).Sigma fun _ => @Univ (α i)) = univ :=
-  ext fun _ => true_andₓ _
+  ext fun _ => true_and_iff _
 
 @[simp]
 theorem sigma_univ : s.Sigma (fun _ => Univ : ∀ i, Set (α i)) = Sigma.fst ⁻¹' s :=
-  ext fun _ => and_trueₓ _
+  ext fun _ => and_true_iff _
 
 @[simp]
 theorem singleton_sigma : ({i} : Set ι).Sigma t = Sigma.mk i '' t i :=
@@ -105,7 +105,7 @@ theorem singleton_sigma : ({i} : Set ι).Sigma t = Sigma.mk i '' t i :=
 theorem sigma_singleton {a : ∀ i, α i} : (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s :=
   by
   ext ⟨x, y⟩
-  simp [And.left_comm, eq_comm]
+  simp [and_left_comm, eq_comm]
 
 theorem singleton_sigma_singleton {a : ∀ i, α i} : (({i} : Set ι).Sigma fun i => ({a i} : Set (α i))) = {⟨i, a i⟩} := by
   rw [sigma_singleton, image_singleton]
@@ -120,7 +120,7 @@ theorem sigma_union : (s.Sigma fun i => t₁ i ∪ t₂ i) = s.Sigma t₁ ∪ s.
 
 theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
   ext ⟨x, y⟩
-  simp [and_assocₓ, And.left_comm]
+  simp [and_assoc', and_left_comm]
 
 theorem insert_sigma : (insert i s).Sigma t = Sigma.mk i '' t i ∪ s.Sigma t := by
   rw [insert_eq, union_sigma, singleton_sigma]

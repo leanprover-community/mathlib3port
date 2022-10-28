@@ -47,11 +47,11 @@ attribute [local tidy] tactic.case_bash
 /-- A category with a terminal object and binary products has a natural monoidal structure. -/
 def monoidalOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : MonoidalCategory C where
   tensorUnit := ⊤_ C
-  tensorObj := fun X Y => X ⨯ Y
-  tensorHom := fun _ _ _ _ f g => Limits.prod.map f g
+  tensorObj X Y := X ⨯ Y
+  tensorHom _ _ _ _ f g := Limits.prod.map f g
   associator := prod.associator
-  leftUnitor := fun P => prod.leftUnitor P
-  rightUnitor := fun P => prod.rightUnitor P
+  leftUnitor P := prod.leftUnitor P
+  rightUnitor P := prod.rightUnitor P
   pentagon' := prod.pentagon
   triangle' := prod.triangle
   associator_naturality' := @prod.associator_naturality _ _ _
@@ -68,17 +68,17 @@ open MonoidalCategory
 -/
 @[simps]
 def symmetricOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : SymmetricCategory C where
-  braiding := fun X Y => Limits.prod.braiding X Y
-  braiding_naturality' := fun X X' Y Y' f g => by
+  braiding X Y := Limits.prod.braiding X Y
+  braiding_naturality' X X' Y Y' f g := by
     dsimp [tensor_hom]
     simp
-  hexagon_forward' := fun X Y Z => by
+  hexagon_forward' X Y Z := by
     dsimp [monoidal_of_has_finite_products]
     simp
-  hexagon_reverse' := fun X Y Z => by
+  hexagon_reverse' X Y Z := by
     dsimp [monoidal_of_has_finite_products]
     simp
-  symmetry' := fun X Y => by
+  symmetry' X Y := by
     dsimp
     simp
     rfl
@@ -91,12 +91,12 @@ variable [HasTerminal C] [HasBinaryProducts C]
 
 attribute [local instance] monoidal_of_has_finite_products
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_obj (X Y : C) : X ⊗ Y = (X ⨯ Y) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.prod.map f g :=
   rfl
@@ -134,8 +134,8 @@ attribute [local tidy] tactic.case_bash
 /-- A category with an initial object and binary coproducts has a natural monoidal structure. -/
 def monoidalOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : MonoidalCategory C where
   tensorUnit := ⊥_ C
-  tensorObj := fun X Y => X ⨿ Y
-  tensorHom := fun _ _ _ _ f g => Limits.coprod.map f g
+  tensorObj X Y := X ⨿ Y
+  tensorHom _ _ _ _ f g := Limits.coprod.map f g
   associator := coprod.associator
   leftUnitor := coprod.leftUnitor
   rightUnitor := coprod.rightUnitor
@@ -156,16 +156,16 @@ open MonoidalCategory
 @[simps]
 def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : SymmetricCategory C where
   braiding := Limits.coprod.braiding
-  braiding_naturality' := fun X X' Y Y' f g => by
+  braiding_naturality' X X' Y Y' f g := by
     dsimp [tensor_hom]
     simp
-  hexagon_forward' := fun X Y Z => by
+  hexagon_forward' X Y Z := by
     dsimp [monoidal_of_has_finite_coproducts]
     simp
-  hexagon_reverse' := fun X Y Z => by
+  hexagon_reverse' X Y Z := by
     dsimp [monoidal_of_has_finite_coproducts]
     simp
-  symmetry' := fun X Y => by
+  symmetry' X Y := by
     dsimp
     simp
     rfl
@@ -178,12 +178,12 @@ variable [HasInitial C] [HasBinaryCoproducts C]
 
 attribute [local instance] monoidal_of_has_finite_coproducts
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_obj (X Y : C) : X ⊗ Y = (X ⨿ Y) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.coprod.map f g :=
   rfl

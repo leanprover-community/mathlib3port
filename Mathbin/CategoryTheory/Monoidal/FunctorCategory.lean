@@ -33,30 +33,30 @@ namespace FunctorCategory
 
 variable (F G F' G' : C ⥤ D)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- (An auxiliary definition for `functor_category_monoidal`.)
 Tensor product of functors `C ⥤ D`, when `D` is monoidal.
  -/
 @[simps]
 def tensorObj : C ⥤ D where
-  obj := fun X => F.obj X ⊗ G.obj X
-  map := fun X Y f => F.map f ⊗ G.map f
-  map_id' := fun X => by rw [F.map_id, G.map_id, tensor_id]
-  map_comp' := fun X Y Z f g => by rw [F.map_comp, G.map_comp, tensor_comp]
+  obj X := F.obj X ⊗ G.obj X
+  map X Y f := F.map f ⊗ G.map f
+  map_id' X := by rw [F.map_id, G.map_id, tensor_id]
+  map_comp' X Y Z f g := by rw [F.map_comp, G.map_comp, tensor_comp]
 
 variable {F G F' G'}
 
 variable (α : F ⟶ G) (β : F' ⟶ G')
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- (An auxiliary definition for `functor_category_monoidal`.)
 Tensor product of natural transformations into `D`, when `D` is monoidal.
 -/
 @[simps]
 def tensorHom : tensorObj F F' ⟶ tensorObj G G' where
-  app := fun X => α.app X ⊗ β.app X
-  naturality' := fun X Y f => by
+  app X := α.app X ⊗ β.app X
+  naturality' X Y f := by
     dsimp
     rw [← tensor_comp, α.naturality, β.naturality, tensor_comp]
 
@@ -69,46 +69,46 @@ the functor category `C ⥤ D` has a natural pointwise monoidal structure,
 where `(F ⊗ G).obj X = F.obj X ⊗ G.obj X`.
 -/
 instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D) where
-  tensorObj := fun F G => tensorObj F G
-  tensorHom := fun F G F' G' α β => tensorHom α β
-  tensor_id' := fun F G => by
+  tensorObj F G := tensorObj F G
+  tensorHom F G F' G' α β := tensorHom α β
+  tensor_id' F G := by
     ext
     dsimp
     rw [tensor_id]
-  tensor_comp' := fun F G H F' G' H' α β γ δ => by
+  tensor_comp' F G H F' G' H' α β γ δ := by
     ext
     dsimp
     rw [tensor_comp]
   tensorUnit := (CategoryTheory.Functor.const C).obj (𝟙_ D)
-  leftUnitor := fun F =>
+  leftUnitor F :=
     NatIso.ofComponents (fun X => λ_ (F.obj X)) fun X Y f => by
       dsimp
       rw [left_unitor_naturality]
-  rightUnitor := fun F =>
+  rightUnitor F :=
     NatIso.ofComponents (fun X => ρ_ (F.obj X)) fun X Y f => by
       dsimp
       rw [right_unitor_naturality]
-  associator := fun F G H =>
+  associator F G H :=
     NatIso.ofComponents (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f => by
       dsimp
       rw [associator_naturality]
-  left_unitor_naturality' := fun F G α => by
+  left_unitor_naturality' F G α := by
     ext X
     dsimp
     rw [left_unitor_naturality]
-  right_unitor_naturality' := fun F G α => by
+  right_unitor_naturality' F G α := by
     ext X
     dsimp
     rw [right_unitor_naturality]
-  associator_naturality' := fun F G H F' G' H' α β γ => by
+  associator_naturality' F G H F' G' H' α β γ := by
     ext X
     dsimp
     rw [associator_naturality]
-  triangle' := fun F G => by
+  triangle' F G := by
     ext X
     dsimp
     rw [triangle]
-  pentagon' := fun F G H K => by
+  pentagon' F G H K := by
     ext X
     dsimp
     rw [pentagon]
@@ -121,57 +121,57 @@ theorem tensor_unit_obj {X} : (𝟙_ (C ⥤ D)).obj X = 𝟙_ D :=
 theorem tensor_unit_map {X Y} {f : X ⟶ Y} : (𝟙_ (C ⥤ D)).map f = 𝟙 (𝟙_ D) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_obj_obj {F G : C ⥤ D} {X} : (F ⊗ G).obj X = F.obj X ⊗ G.obj X :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_obj_map {F G : C ⥤ D} {X Y} {f : X ⟶ Y} : (F ⊗ G).map f = F.map f ⊗ G.map f :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_hom_app {F G F' G' : C ⥤ D} {α : F ⟶ G} {β : F' ⟶ G'} {X} : (α ⊗ β).app X = α.app X ⊗ β.app X :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_unitor_hom_app {F : C ⥤ D} {X} : ((λ_ F).Hom : 𝟙_ _ ⊗ F ⟶ F).app X = (λ_ (F.obj X)).Hom :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_unitor_inv_app {F : C ⥤ D} {X} : ((λ_ F).inv : F ⟶ 𝟙_ _ ⊗ F).app X = (λ_ (F.obj X)).inv :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_hom_app {F : C ⥤ D} {X} : ((ρ_ F).Hom : F ⊗ 𝟙_ _ ⟶ F).app X = (ρ_ (F.obj X)).Hom :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_inv_app {F : C ⥤ D} {X} : ((ρ_ F).inv : F ⟶ F ⊗ 𝟙_ _).app X = (ρ_ (F.obj X)).inv :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem associator_hom_app {F G H : C ⥤ D} {X} :
     ((α_ F G H).Hom : (F ⊗ G) ⊗ H ⟶ F ⊗ G ⊗ H).app X = (α_ (F.obj X) (G.obj X) (H.obj X)).Hom :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem associator_inv_app {F G H : C ⥤ D} {X} :
     ((α_ F G H).inv : F ⊗ G ⊗ H ⟶ (F ⊗ G) ⊗ H).app X = (α_ (F.obj X) (G.obj X) (H.obj X)).inv :=
@@ -188,11 +188,11 @@ the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also braided.
 -/
 instance functorCategoryBraided : BraidedCategory (C ⥤ D) where
-  braiding := fun F G => NatIso.ofComponents (fun X => β_ _ _) (by tidy)
-  hexagon_forward' := fun F G H => by
+  braiding F G := NatIso.ofComponents (fun X => β_ _ _) (by tidy)
+  hexagon_forward' F G H := by
     ext X
     apply hexagon_forward
-  hexagon_reverse' := fun F G H => by
+  hexagon_reverse' F G H := by
     ext X
     apply hexagon_reverse
 
@@ -212,7 +212,7 @@ the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also symmetric.
 -/
 instance functorCategorySymmetric :
-    SymmetricCategory (C ⥤ D) where symmetry' := fun F G => by
+    SymmetricCategory (C ⥤ D) where symmetry' F G := by
     ext X
     apply symmetry
 

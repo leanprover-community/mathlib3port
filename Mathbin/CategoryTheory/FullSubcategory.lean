@@ -60,9 +60,9 @@ instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] : CoeSort (In
   ⟨fun c => ↥(F c)⟩
 
 instance InducedCategory.category : Category.{v} (InducedCategory D F) where
-  Hom := fun X Y => F X ⟶ F Y
-  id := fun X => 𝟙 (F X)
-  comp := fun _ _ _ f g => f ≫ g
+  Hom X Y := F X ⟶ F Y
+  id X := 𝟙 (F X)
+  comp _ _ _ f g := f ≫ g
 
 /-- The forgetful functor from an induced category to the original category,
 forgetting the extra data.
@@ -70,9 +70,9 @@ forgetting the extra data.
 @[simps]
 def inducedFunctor : InducedCategory D F ⥤ D where
   obj := F
-  map := fun x y f => f
+  map x y f := f
 
-instance InducedCategory.full : Full (inducedFunctor F) where preimage := fun x y f => f
+instance InducedCategory.full : Full (inducedFunctor F) where preimage x y f := f
 
 instance InducedCategory.faithful : Faithful (inducedFunctor F) where
 
@@ -124,10 +124,10 @@ variable {Z} {Z' : C → Prop}
 /-- An implication of predicates `Z → Z'` induces a functor between full subcategories. -/
 @[simps]
 def FullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) : FullSubcategory Z ⥤ FullSubcategory Z' where
-  obj := fun X => ⟨X.1, h X.2⟩
-  map := fun X Y f => f
+  obj X := ⟨X.1, h X.2⟩
+  map X Y f := f
 
-instance (h : ∀ ⦃X⦄, Z X → Z' X) : Full (FullSubcategory.map h) where preimage := fun X Y f => f
+instance (h : ∀ ⦃X⦄, Z X → Z' X) : Full (FullSubcategory.map h) where preimage X Y f := f
 
 instance (h : ∀ ⦃X⦄, Z X → Z' X) : Faithful (FullSubcategory.map h) where
 
@@ -144,8 +144,8 @@ variable {D : Type u₂} [Category.{v₂} D] (P Q : D → Prop)
     the full subcategory of objects satisfying that property. -/
 @[simps]
 def FullSubcategory.lift (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) : C ⥤ FullSubcategory P where
-  obj := fun X => ⟨F.obj X, hF X⟩
-  map := fun X Y f => F.map f
+  obj X := ⟨F.obj X, hF X⟩
+  map X Y f := F.map f
 
 /-- Composing the lift of a functor through a full subcategory with the inclusion yields the
     original functor. Unfortunately, this is not true by definition, so we only get a natural

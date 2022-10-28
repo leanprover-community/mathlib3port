@@ -94,7 +94,7 @@ theorem Symmetric.comap (h : Symmetric r) (f : α → β) : Symmetric (r on f) :
 
 theorem Transitive.comap (h : Transitive r) (f : α → β) : Transitive (r on f) := fun a b c hab hbc => h hab hbc
 
-theorem Equivalenceₓ.comap (h : Equivalenceₓ r) (f : α → β) : Equivalenceₓ (r on f) :=
+theorem Equivalence.comap (h : Equivalence r) (f : α → β) : Equivalence (r on f) :=
   ⟨h.1.comap f, h.2.1.comap f, h.2.2.comap f⟩
 
 end Comap
@@ -247,7 +247,7 @@ theorem symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
 theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c ∧ r c b :=
   (cases_tail_iff r a b).1
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b) (refl : P b refl)
     (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
@@ -259,7 +259,7 @@ theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α}
   show ∀ a a', r a a' → refl_trans_gen r a' b → P a' _ → P a _
   exact fun a a' hab hbc => head hab _
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a b : α} (h : ReflTransGen r a b)
     (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} (h : r a b), P (single h))
     (ih₃ : ∀ {a b c} (h₁ : ReflTransGen r a b) (h₂ : ReflTransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
@@ -332,7 +332,7 @@ theorem tail' (hab : ReflTransGen r a b) (hbc : r b c) : TransGen r a c := by
 theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
   head' hab hbc.to_refl
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
     (base : ∀ {a} (h : r a b), P a (single h))
     (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h := by
@@ -345,7 +345,7 @@ theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h 
   show ∀ a a', r a a' → trans_gen r a' b → P a' _ → P a _
   exact fun a a' hab hbc => ih hab _
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : α} (h : TransGen r a b)
     (base : ∀ {a b} (h : r a b), P (single h))
     (ih : ∀ {a b c} (h₁ : TransGen r a b) (h₂ : TransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
@@ -384,7 +384,7 @@ theorem _root_.acc.trans_gen (h : Acc r a) : Acc (TransGen r) a := by
   exacts[H y hyx, (H z hzx).inv hyz]
 
 theorem _root_.acc_trans_gen_iff : Acc (TransGen r) a ↔ Acc r a :=
-  ⟨Subrelation.accessibleₓ fun _ _ => TransGen.single, Acc.trans_gen⟩
+  ⟨Subrelation.accessible fun _ _ => TransGen.single, Acc.trans_gen⟩
 
 theorem _root_.well_founded.trans_gen (h : WellFounded r) : WellFounded (TransGen r) :=
   ⟨fun a => (h.apply a).TransGen⟩
@@ -557,14 +557,14 @@ theorem transitive_join (ht : Transitive r) (h : ∀ a b c, r a b → r a c → 
   ⟨z, ht hax hxz, ht hcy hyz⟩
 
 theorem equivalence_join (hr : Reflexive r) (ht : Transitive r) (h : ∀ a b c, r a b → r a c → Join r b c) :
-    Equivalenceₓ (Join r) :=
+    Equivalence (Join r) :=
   ⟨reflexive_join hr, symmetric_join, transitive_join ht h⟩
 
 theorem equivalence_join_refl_trans_gen (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d ∧ ReflTransGen r c d) :
-    Equivalenceₓ (Join (ReflTransGen r)) :=
+    Equivalence (Join (ReflTransGen r)) :=
   equivalence_join reflexive_refl_trans_gen transitive_refl_trans_gen fun a b c => church_rosser h
 
-theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) (h : ∀ a b, r' a b → r a b) : Join r' a b → r a b
+theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalence r) (h : ∀ a b, r' a b → r a b) : Join r' a b → r a b
   | ⟨c, hac, hbc⟩ => hr.2.2 (h _ _ hac) (hr.2.1 <| h _ _ hbc)
 
 theorem refl_trans_gen_of_transitive_reflexive {r' : α → α → Prop} (hr : Reflexive r) (ht : Transitive r)
@@ -575,7 +575,7 @@ theorem refl_trans_gen_of_transitive_reflexive {r' : α → α → Prop} (hr : R
   · exact ht ih (h _ _ hbc)
     
 
-theorem refl_trans_gen_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) :
+theorem refl_trans_gen_of_equivalence {r' : α → α → Prop} (hr : Equivalence r) :
     (∀ a b, r' a b → r a b) → ReflTransGen r' a b → r a b :=
   refl_trans_gen_of_transitive_reflexive hr.1 hr.2.2
 
@@ -587,7 +587,7 @@ section EqvGen
 
 variable {r : α → α → Prop} {a b : α}
 
-theorem Equivalenceₓ.eqv_gen_iff (h : Equivalenceₓ r) : EqvGen r a b ↔ r a b :=
+theorem Equivalence.eqv_gen_iff (h : Equivalence r) : EqvGen r a b ↔ r a b :=
   Iff.intro
     (by
       intro h
@@ -600,7 +600,7 @@ theorem Equivalenceₓ.eqv_gen_iff (h : Equivalenceₓ r) : EqvGen r a b ↔ r a
       case trans a b c _ _ hab hbc => exact h.2.2 hab hbc)
     (EqvGen.rel a b)
 
-theorem Equivalenceₓ.eqv_gen_eq (h : Equivalenceₓ r) : EqvGen r = r :=
+theorem Equivalence.eqv_gen_eq (h : Equivalence r) : EqvGen r = r :=
   funext fun _ => funext fun _ => propext <| h.eqv_gen_iff
 
 theorem EqvGen.mono {r p : α → α → Prop} (hrp : ∀ a b, r a b → p a b) (h : EqvGen r a b) : EqvGen p a b := by

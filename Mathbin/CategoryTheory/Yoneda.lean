@@ -35,7 +35,7 @@ See <https://stacks.math.columbia.edu/tag/001O>.
 -/
 @[simps]
 def yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁ where
-  obj := fun X =>
+  obj X :=
     { obj := fun Y => unop Y ⟶ X, map := fun Y Y' f g => f.unop ≫ g,
       map_comp' := fun _ _ _ f g => by
         ext
@@ -45,14 +45,14 @@ def yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁ where
         ext
         dsimp
         erw [category.id_comp] }
-  map := fun X X' f => { app := fun Y g => g ≫ f }
+  map X X' f := { app := fun Y g => g ≫ f }
 
 /-- The co-Yoneda embedding, as a functor from `Cᵒᵖ` into co-presheaves on `C`.
 -/
 @[simps]
 def coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁ where
-  obj := fun X => { obj := fun Y => unop X ⟶ Y, map := fun Y Y' f g => g ≫ f }
-  map := fun X X' f => { app := fun Y g => f.unop ≫ g }
+  obj X := { obj := fun Y => unop X ⟶ Y, map := fun Y Y' f g => g ≫ f }
+  map X X' f := { app := fun Y g => f.unop ≫ g }
 
 namespace Yoneda
 
@@ -69,7 +69,7 @@ theorem naturality {X Y : C} (α : yoneda.obj X ⟶ yoneda.obj Y) {Z Z' : C} (f 
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where preimage := fun X Y f => f.app (op X) (𝟙 X)
+instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where preimage X Y f := f.app (op X) (𝟙 X)
 
 /-- The Yoneda embedding is faithful.
 
@@ -81,8 +81,7 @@ instance yoneda_faithful :
         C ⥤
           Cᵒᵖ ⥤
             Type
-              v₁) where map_injective' := fun X Y f g p => by
-    convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp <;> simp
+              v₁) where map_injective' X Y f g p := by convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp <;> simp
 
 /-- Extensionality via Yoneda. The typical usage would be
 ```
@@ -111,10 +110,10 @@ theorem naturality {X Y : Cᵒᵖ} (α : coyoneda.obj X ⟶ coyoneda.obj Y) {Z Z
     α.app Z' h ≫ f = α.app Z (h ≫ f) :=
   (FunctorToTypes.naturality _ _ α f h).symm
 
-instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where preimage := fun X Y f => (f.app _ (𝟙 X.unop)).op
+instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where preimage X Y f := (f.app _ (𝟙 X.unop)).op
 
 instance coyoneda_faithful :
-    Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where map_injective' := fun X Y f g p => by
+    Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where map_injective' X Y f g p := by
     have t := congr_fun (congr_app p X.unop) (𝟙 _)
     simpa using congr_arg Quiver.Hom.op t
 
@@ -170,10 +169,17 @@ noncomputable def reprX : C :=
 noncomputable def reprF : yoneda.obj F.reprX ⟶ F :=
   Representable.has_representation.some_spec.some
 
+/- warning: category_theory.functor.repr_x clashes with category_theory.functor.repr_X -> CategoryTheory.Functor.reprX
+warning: category_theory.functor.repr_x -> CategoryTheory.Functor.reprX is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] (F : CategoryTheory.Functor.{v₁ v₁ u₁ succ v₁} (Opposite.{succ u₁} C) (CategoryTheory.Category.opposite.{v₁ u₁} C _inst_1) Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Representable.{v₁ u₁} C _inst_1 F], CategoryTheory.Functor.obj.{v₁ v₁ u₁ succ v₁} (Opposite.{succ u₁} C) (CategoryTheory.Category.opposite.{v₁ u₁} C _inst_1) Type.{v₁} CategoryTheory.types.{v₁} F (Opposite.op.{succ u₁} C (CategoryTheory.Functor.reprX.{v₁ u₁} C _inst_1 F _inst_2))
+but is expected to have type
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] (F : CategoryTheory.Functor.{v₁ v₁ u₁ succ v₁} (Opposite.{succ u₁} C) (CategoryTheory.Category.opposite.{v₁ u₁} C _inst_1) Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Representable.{v₁ u₁} C _inst_1 F], C
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.repr_x CategoryTheory.Functor.reprXₓ'. -/
 /-- The representing element for the representable functor `F`, sometimes called the universal
 element of the functor.
 -/
-noncomputable def reprXₓ : F.obj (op F.reprX) :=
+noncomputable def reprX : F.obj (op F.reprX) :=
   F.reprF.app (op F.reprX) (𝟙 F.reprX)
 
 instance : IsIso F.reprF :=
@@ -211,10 +217,17 @@ noncomputable def coreprX : C :=
 noncomputable def coreprF : coyoneda.obj (op F.coreprX) ⟶ F :=
   Corepresentable.has_corepresentation.some_spec.some
 
+/- warning: category_theory.functor.corepr_x clashes with category_theory.functor.corepr_X -> CategoryTheory.Functor.coreprX
+warning: category_theory.functor.corepr_x -> CategoryTheory.Functor.coreprX is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] (F : CategoryTheory.Functor.{v₁ v₁ u₁ succ v₁} C _inst_1 Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Corepresentable.{v₁ u₁} C _inst_1 F], CategoryTheory.Functor.obj.{v₁ v₁ u₁ succ v₁} C _inst_1 Type.{v₁} CategoryTheory.types.{v₁} F (CategoryTheory.Functor.coreprX.{v₁ u₁} C _inst_1 F _inst_2)
+but is expected to have type
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] (F : CategoryTheory.Functor.{v₁ v₁ u₁ succ v₁} C _inst_1 Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Corepresentable.{v₁ u₁} C _inst_1 F], C
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.corepr_x CategoryTheory.Functor.coreprXₓ'. -/
 /-- The representing element for the corepresentable functor `F`, sometimes called the universal
 element of the functor.
 -/
-noncomputable def coreprXₓ : F.obj F.coreprX :=
+noncomputable def coreprX : F.obj F.coreprX :=
   F.coreprF.app F.coreprX (𝟙 F.coreprX)
 
 instance : IsIso F.coreprF :=
@@ -333,7 +346,7 @@ def yonedaSections (X : C) (F : Cᵒᵖ ⥤ Type v₁) : (yoneda.obj X ⟶ F) �
 and elements of `F.obj X`, without any universe switching.
 -/
 def yonedaEquiv {X : C} {F : Cᵒᵖ ⥤ Type v₁} : (yoneda.obj X ⟶ F) ≃ F.obj (op X) :=
-  (yonedaSections X F).toEquiv.trans Equivₓ.ulift
+  (yonedaSections X F).toEquiv.trans Equiv.ulift
 
 @[simp]
 theorem yoneda_equiv_apply {X : C} {F : Cᵒᵖ ⥤ Type v₁} (f : yoneda.obj X ⟶ F) : yonedaEquiv f = f.app (op X) (𝟙 X) :=

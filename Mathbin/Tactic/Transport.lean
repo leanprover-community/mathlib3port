@@ -21,14 +21,26 @@ namespace Tactic
 
 open Tactic.Interactive
 
-mk_simp_attribute transport_simps :=
-  "The simpset `transport_simps` is used by the tactic `transport`\nto simplify certain expressions involving application of equivalences,\nand trivial `eq.rec` or `ep.mpr` conversions.\nIt's probably best not to adjust it without understanding the algorithm used by `transport`."
+/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
+     [(Command.docComment
+       "/--"
+       "The simpset `transport_simps` is used by the tactic `transport`\nto simplify certain expressions involving application of equivalences,\nand trivial `eq.rec` or `ep.mpr` conversions.\nIt's probably best not to adjust it without understanding the algorithm used by `transport`. -/")]
+     "register_simp_attr"
+     `transport_simps)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+/--
+    The simpset `transport_simps` is used by the tactic `transport`
+    to simplify certain expressions involving application of equivalences,
+    and trivial `eq.rec` or `ep.mpr` conversions.
+    It's probably best not to adjust it without understanding the algorithm used by `transport`. -/
+  register_simp_attr
+  transport_simps
 
 attribute [transport_simps]
-  eq_rec_constantₓ eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
+  eq_rec_constant eq_mp_eq_cast cast_eq Equiv.to_fun_as_coe Equiv.arrow_congr'_apply Equiv.symm_apply_apply Equiv.apply_eq_iff_eq_symm_apply
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 -- we use `apply_eq_iff_eq_symm_apply` rather than `apply_eq_iff_eq`,
 -- as many axioms have a constant on the right-hand-side
 -- At present we don't actually use `s`; it's inferred in the `mk_app` call.
@@ -128,7 +140,7 @@ unsafe def transport (s : parse texpr ?) (e : parse <| tk "using" *> texpr) : it
             let ctx ← local_context
             ctx fun e => do
                 let t ← infer_type e
-                guardₓ (t = n)
+                guard (t = n)
                 return e) <|>
           fail "`transport` could not find an appropriate source object. Try `transport s using e`."
   let e ← to_expr e

@@ -66,23 +66,23 @@ theorem discr_prime_pow_eq_unit_mul_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (
 
 /-- If `K` is a `p ^ k`-th cyclotomic extension of `ℚ`, then `(adjoin ℤ {ζ})` is the
 integral closure of `ℤ` in `K`. -/
-theorem is_integral_closure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} ℚ K]
+theorem isIntegralClosureAdjoinSingletonOfPrimePow [hcycl : IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K := by
   refine' ⟨Subtype.val_injective, fun x => ⟨fun h => ⟨⟨x, _⟩, rfl⟩, _⟩⟩
   swap
   · rintro ⟨y, rfl⟩
     exact
-      IsIntegral.algebra_map
+      IsIntegral.algebraMap
         (le_integral_closure_iff_is_integral.1 (adjoin_le_integral_closure (hζ.is_integral (p ^ k).Pos)) _)
     
   let B := hζ.sub_one_power_basis ℚ
-  have hint : IsIntegral ℤ B.gen := is_integral_sub (hζ.is_integral (p ^ k).Pos) is_integral_one
+  have hint : IsIntegral ℤ B.gen := isIntegralSub (hζ.is_integral (p ^ k).Pos) isIntegralOne
   have H := discr_mul_is_integral_mem_adjoin ℚ hint h
   obtain ⟨u, n, hun⟩ := discr_prime_pow_eq_unit_mul_pow' hζ
   rw [hun] at H
   replace H := Subalgebra.smul_mem _ H u.inv
   rw [← smul_assoc, ← smul_mul_assoc, Units.inv_eq_coe_inv, coe_coe, zsmul_eq_mul, ← Int.cast_mul, Units.inv_mul,
-    Int.cast_oneₓ, one_mulₓ, show (p : ℚ) ^ n • x = ((p : ℕ) : ℤ) ^ n • x by simp [smul_def]] at H
+    Int.cast_one, one_mul, show (p : ℚ) ^ n • x = ((p : ℕ) : ℤ) ^ n • x by simp [smul_def]] at H
   cases k
   · haveI : IsCyclotomicExtension {1} ℚ K := by simpa using hcycl
     have : x ∈ (⊥ : Subalgebra ℚ K) := by
@@ -100,9 +100,9 @@ theorem is_integral_closure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicE
       rw [IsPrimitiveRoot.sub_one_power_basis_gen] at h₁
       rw [h₁, ← map_cyclotomic_int, show Int.castRingHom ℚ = algebraMap ℤ ℚ by rfl,
         show X + 1 = map (algebraMap ℤ ℚ) (X + 1) by simp, ← map_comp] at h₂
-      haveI : CharZero ℚ := OrderedSemiring.to_char_zero
+      haveI : CharZero ℚ := StrictOrderedSemiring.to_char_zero
       rw [IsPrimitiveRoot.sub_one_power_basis_gen, map_injective (algebraMap ℤ ℚ) (algebraMap ℤ ℚ).injective_int h₂]
-      exact cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at _ _
+      exact cyclotomicPrimePowCompXAddOneIsEisensteinAt _ _
     refine'
       adjoin_le _
         (mem_adjoin_of_smul_prime_pow_smul_of_minpoly_is_eiseinstein_at (Nat.prime_iff_prime_int.1 hp.out) hint h H
@@ -111,20 +111,20 @@ theorem is_integral_closure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicE
     exact Subalgebra.sub_mem _ (self_mem_adjoin_singleton ℤ _) (Subalgebra.one_mem _)
     
 
-theorem is_integral_closure_adjoin_singleton_of_prime [hcycl : IsCyclotomicExtension {p} ℚ K]
-    (hζ : IsPrimitiveRoot ζ ↑p) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K := by
-  rw [← pow_oneₓ p] at hζ hcycl
+theorem isIntegralClosureAdjoinSingletonOfPrime [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ ↑p) :
+    IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K := by
+  rw [← pow_one p] at hζ hcycl
   exact is_integral_closure_adjoin_singleton_of_prime_pow hζ
 
 attribute [-instance] CyclotomicField.algebra
 
 /-- The integral closure of `ℤ` inside `cyclotomic_field (p ^ k) ℚ` is
 `cyclotomic_ring (p ^ k) ℤ ℚ`. -/
-theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
+theorem cyclotomicRingIsIntegralClosureOfPrimePow :
     IsIntegralClosure (CyclotomicRing (p ^ k) ℤ ℚ) ℤ (CyclotomicField (p ^ k) ℚ) := by
-  haveI : CharZero ℚ := OrderedSemiring.to_char_zero
+  haveI : CharZero ℚ := StrictOrderedSemiring.to_char_zero
   have : IsCyclotomicExtension {p ^ k} ℚ (CyclotomicField (p ^ k) ℚ) := by
-    convert CyclotomicField.is_cyclotomic_extension (p ^ k) _
+    convert CyclotomicField.isCyclotomicExtension (p ^ k) _
     · exact Subsingleton.elim _ _
       
     · exact NeZero.char_zero
@@ -143,18 +143,17 @@ theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
       
     
   · have : IsCyclotomicExtension {p ^ k} ℤ (CyclotomicRing (p ^ k) ℤ ℚ) := by
-      convert CyclotomicRing.is_cyclotomic_extension _ ℤ ℚ
+      convert CyclotomicRing.isCyclotomicExtension _ ℤ ℚ
       · exact Subsingleton.elim _ _
         
       · exact NeZero.char_zero
         
     rintro ⟨y, rfl⟩
-    exact IsIntegral.algebra_map ((IsCyclotomicExtension.integral {p ^ k} ℤ _) _)
+    exact IsIntegral.algebraMap ((IsCyclotomicExtension.integral {p ^ k} ℤ _) _)
     
 
-theorem cyclotomic_ring_is_integral_closure_of_prime :
-    IsIntegralClosure (CyclotomicRing p ℤ ℚ) ℤ (CyclotomicField p ℚ) := by
-  rw [← pow_oneₓ p]
+theorem cyclotomicRingIsIntegralClosureOfPrime : IsIntegralClosure (CyclotomicRing p ℤ ℚ) ℤ (CyclotomicField p ℚ) := by
+  rw [← pow_one p]
   exact cyclotomic_ring_is_integral_closure_of_prime_pow
 
 end IsCyclotomicExtension.Rat
@@ -170,7 +169,7 @@ unity and `K` is a `p ^ k`-th cyclotomic extension of `ℚ`. -/
 @[simps]
 noncomputable def _root_.is_primitive_root.adjoin_equiv_ring_of_integers [hcycl : IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
-  let _ := is_integral_closure_adjoin_singleton_of_prime_pow hζ
+  let _ := isIntegralClosureAdjoinSingletonOfPrimePow hζ
   IsIntegralClosure.equiv ℤ (adjoin ℤ ({ζ} : Set K)) K (𝓞 K)
 
 /-- The integral `power_basis` of `𝓞 K` given by a primitive root of unity, where `K` is a `p ^ k`
@@ -197,8 +196,8 @@ noncomputable def _root_.is_primitive_root.adjoin_equiv_ring_of_integers' [hcycl
   @adjoinEquivRingOfIntegers p 1 K _ _ _ _
     (by
       convert hcycl
-      rw [pow_oneₓ])
-    (by rwa [pow_oneₓ])
+      rw [pow_one])
+    (by rwa [pow_one])
 
 /-- The integral `power_basis` of `𝓞 K` given by a primitive root of unity, where `K` is a `p`-th
 cyclotomic extension of `ℚ`. -/
@@ -207,8 +206,8 @@ noncomputable def integralPowerBasis' [hcycl : IsCyclotomicExtension {p} ℚ K] 
   @integralPowerBasis p 1 K _ _ _ _
     (by
       convert hcycl
-      rw [pow_oneₓ])
-    (by rwa [pow_oneₓ])
+      rw [pow_one])
+    (by rwa [pow_one])
 
 @[simp]
 theorem integral_power_basis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
@@ -216,8 +215,8 @@ theorem integral_power_basis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ
   @integral_power_basis_gen p 1 K _ _ _ _
     (by
       convert hcycl
-      rw [pow_oneₓ])
-    (by rwa [pow_oneₓ])
+      rw [pow_one])
+    (by rwa [pow_one])
 
 @[simp]
 theorem power_basis_int'_dim [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
@@ -225,9 +224,9 @@ theorem power_basis_int'_dim [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : Is
   erw [@integral_power_basis_dim p 1 K _ _ _ _
       (by
         convert hcycl
-        rw [pow_oneₓ])
-      (by rwa [pow_oneₓ]),
-    pow_oneₓ]
+        rw [pow_one])
+      (by rwa [pow_one]),
+    pow_one]
 
 /-- The integral `power_basis` of `𝓞 K` given by `ζ - 1`, where `K` is a `p ^ k` cyclotomic
 extension of `ℚ`. -/
@@ -253,8 +252,8 @@ noncomputable def subOneIntegralPowerBasis' [hcycl : IsCyclotomicExtension {p} �
   @subOneIntegralPowerBasis p 1 K _ _ _ _
     (by
       convert hcycl
-      rw [pow_oneₓ])
-    (by rwa [pow_oneₓ])
+      rw [pow_one])
+    (by rwa [pow_one])
 
 @[simp]
 theorem sub_one_integral_power_basis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
@@ -262,8 +261,8 @@ theorem sub_one_integral_power_basis'_gen [hcycl : IsCyclotomicExtension {p} ℚ
   @sub_one_integral_power_basis_gen p 1 K _ _ _ _
     (by
       convert hcycl
-      rw [pow_oneₓ])
-    (by rwa [pow_oneₓ])
+      rw [pow_one])
+    (by rwa [pow_one])
 
 end IsPrimitiveRoot
 

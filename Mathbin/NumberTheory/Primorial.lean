@@ -21,7 +21,7 @@ than or equal to `n`.
 -/
 
 
-open Finsetₓ
+open Finset
 
 open Nat
 
@@ -43,7 +43,7 @@ theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n#
 
 theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ) (p_big : m + 1 < p)
     (p_small : p ≤ 2 * m + 1) : p ∣ choose (2 * m + 1) (m + 1) := by
-  have m_size : m + 1 ≤ 2 * m + 1 := le_of_ltₓ (lt_of_lt_of_leₓ p_big p_small)
+  have m_size : m + 1 ≤ 2 * m + 1 := le_of_lt (lt_of_lt_of_le p_big p_small)
   have s : ¬p ∣ (m + 1)! := by
     intro p_div_fact
     exact lt_le_antisymm p_big (is_prime.dvd_factorial.mp p_div_fact)
@@ -51,7 +51,7 @@ theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ
     intro p_div_fact
     refine' lt_le_antisymm (lt_of_succ_lt p_big) _
     convert is_prime.dvd_factorial.mp p_div_fact
-    rw [two_mul, add_assocₓ, Nat.add_sub_cancel]
+    rw [two_mul, add_assoc, Nat.add_sub_cancel]
   have expanded : choose (2 * m + 1) (m + 1) * (m + 1)! * (2 * m + 1 - (m + 1))! = (2 * m + 1)! :=
     @choose_mul_factorial_mul_factorial (2 * m + 1) (m + 1) m_size
   have p_div_big_fact : p ∣ (2 * m + 1)! := (prime.dvd_factorial is_prime).mpr p_small
@@ -64,66 +64,66 @@ theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ
   exacts[(s h).elim, (t h).elim]
 
 theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
-  | 0 => le_rflₓ
+  | 0 => le_rfl
   | 1 => le_of_inf_eq rfl
   | n + 2 =>
-    match Nat.mod_two_eq_zero_or_oneₓ (n + 1) with
+    match Nat.mod_two_eq_zero_or_one (n + 1) with
     | Or.inl n_odd =>
       match Nat.even_iff.2 n_odd with
       | ⟨m, twice_m⟩ => by
         have recurse : m + 1 < n + 2 := by linarith
         calc
           (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
-          _ = ∏ i in filter Nat.Prime (Finsetₓ.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i := by
-            rw [range_eq_Ico, Finsetₓ.union_comm, Finsetₓ.Ico_union_Ico_eq_Ico]
+          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i := by
+            rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
               
-            · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_leftₓ m m
+            · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
               
-          _ = ∏ i in filter Nat.Prime (Finsetₓ.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i := by
+          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i := by
             rw [filter_union]
           _ =
-              (∏ i in filter Nat.Prime (Finsetₓ.ico (m + 2) (2 * m + 2)), i) *
+              (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
                 ∏ i in filter Nat.Prime (range (m + 2)), i :=
             by
-            apply Finsetₓ.prod_union
-            have disj : Disjoint (Finsetₓ.ico (m + 2) (2 * m + 2)) (range (m + 2)) := by
-              simp only [Finsetₓ.disjoint_left, and_imp, Finsetₓ.mem_Ico, not_ltₓ, Finsetₓ.mem_range]
+            apply Finset.prod_union
+            have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) := by
+              simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_lt, Finset.mem_range]
               intro _ pr _
               exact pr
-            exact Finsetₓ.disjoint_filter_filter disj
-          _ ≤ (∏ i in filter Nat.Prime (Finsetₓ.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
-            Nat.mul_le_mul_leftₓ _ (primorial_le_4_pow (m + 1))
+            exact Finset.disjointFilterFilter disj
+          _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
+            Nat.mul_le_mul_left _ (primorial_le_4_pow (m + 1))
           _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) := by
-            have s : (∏ i in filter Nat.Prime (Finsetₓ.ico (m + 2) (2 * m + 2)), i) ∣ choose (2 * m + 1) (m + 1) := by
+            have s : (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣ choose (2 * m + 1) (m + 1) := by
               refine' prod_primes_dvd (choose (2 * m + 1) (m + 1)) _ _
               · intro a
-                rw [Finsetₓ.mem_filter, Nat.prime_iff]
+                rw [Finset.mem_filter, Nat.prime_iff]
                 apply And.right
                 
               · intro a
-                rw [Finsetₓ.mem_filter]
+                rw [Finset.mem_filter]
                 intro pr
                 rcases pr with ⟨size, is_prime⟩
-                simp only [Finsetₓ.mem_Ico] at size
+                simp only [Finset.mem_Ico] at size
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
                 
-            have r : (∏ i in filter Nat.Prime (Finsetₓ.ico (m + 2) (2 * m + 2)), i) ≤ choose (2 * m + 1) (m + 1) := by
-              refine' @Nat.le_of_dvdₓ _ _ _ s
+            have r : (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤ choose (2 * m + 1) (m + 1) := by
+              refine' @Nat.le_of_dvd _ _ _ s
               exact @choose_pos (2 * m + 1) (m + 1) (by linarith)
-            exact Nat.mul_le_mul_rightₓ _ r
+            exact Nat.mul_le_mul_right _ r
           _ = choose (2 * m + 1) m * 4 ^ (m + 1) := by rw [choose_symm_half m]
-          _ ≤ 4 ^ m * 4 ^ (m + 1) := Nat.mul_le_mul_rightₓ _ (choose_middle_le_pow m)
+          _ ≤ 4 ^ m * 4 ^ (m + 1) := Nat.mul_le_mul_right _ (choose_middle_le_pow m)
           _ = 4 ^ (2 * m + 1) := by ring_exp
           _ = 4 ^ (n + 2) := by rw [two_mul, ← twice_m]
           
     | Or.inr n_even => by
-      obtain one_lt_n | n_le_one : 1 < n + 1 ∨ n + 1 ≤ 1 := lt_or_leₓ 1 (n + 1)
+      obtain one_lt_n | n_le_one : 1 < n + 1 ∨ n + 1 ≤ 1 := lt_or_le 1 (n + 1)
       · rw [primorial_succ one_lt_n n_even]
         calc
           (n + 1)# ≤ 4 ^ n.succ := primorial_le_4_pow (n + 1)
-          _ ≤ 4 ^ (n + 2) := pow_le_pow (by norm_num) (Nat.le_succₓ _)
+          _ ≤ 4 ^ (n + 2) := pow_le_pow (by norm_num) (Nat.le_succ _)
           
         
       · have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)

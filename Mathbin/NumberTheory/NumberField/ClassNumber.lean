@@ -26,14 +26,14 @@ variable (K : Type _) [Field K] [NumberField K]
 
 namespace RingOfIntegers
 
-noncomputable instance : Fintypeₓ (ClassGroup (ringOfIntegers K) K) :=
-  ClassGroup.fintypeOfAdmissibleOfFinite ℚ _ AbsoluteValue.absIsAdmissible
+noncomputable instance : Fintype (ClassGroup (ringOfIntegers K)) :=
+  ClassGroup.fintypeOfAdmissibleOfFinite ℚ K AbsoluteValue.absIsAdmissible
 
 end RingOfIntegers
 
 /-- The class number of a number field is the (finite) cardinality of the class group. -/
 noncomputable def classNumber : ℕ :=
-  Fintypeₓ.card (ClassGroup (ringOfIntegers K) K)
+  Fintype.card (ClassGroup (ringOfIntegers K))
 
 variable {K}
 
@@ -43,15 +43,15 @@ theorem class_number_eq_one_iff : classNumber K = 1 ↔ IsPrincipalIdealRing (ri
 
 end NumberField
 
-namespace Ratₓ
+namespace Rat
 
 open NumberField
 
 theorem class_number_eq : NumberField.classNumber ℚ = 1 :=
   class_number_eq_one_iff.mpr <| by
     convert
-      IsPrincipalIdealRing.of_surjective (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
+      IsPrincipalIdealRing.ofSurjective (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
         rat.ring_of_integers_equiv.symm.surjective
 
-end Ratₓ
+end Rat
 

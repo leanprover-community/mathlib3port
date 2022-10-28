@@ -38,10 +38,10 @@ variable (C)
 /-- We define `Tor C n : C ⥤ C ⥤ C` by left-deriving in the second factor of `(X, Y) ↦ X ⊗ Y`. -/
 @[simps]
 def tor (n : ℕ) : C ⥤ C ⥤ C where
-  obj := fun X => Functor.leftDerived ((tensoringLeft C).obj X) n
-  map := fun X Y f => NatTrans.leftDerived ((tensoringLeft C).map f) n
-  map_id' := fun X => by rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
-  map_comp' := fun X Y Z f g => by rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp]
+  obj X := Functor.leftDerived ((tensoringLeft C).obj X) n
+  map X Y f := NatTrans.leftDerived ((tensoringLeft C).map f) n
+  map_id' X := by rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
+  map_comp' X Y Z f g := by rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp]
 
 /-- An alternative definition of `Tor`, where we left-derive in the first factor instead. -/
 @[simps]

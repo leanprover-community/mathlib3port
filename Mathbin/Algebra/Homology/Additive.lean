@@ -79,7 +79,7 @@ theorem nsmul_f_apply (n : ℕ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f
 theorem zsmul_f_apply (n : ℤ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f.f i :=
   rfl
 
-instance : AddCommGroupₓ (C ⟶ D) :=
+instance : AddCommGroup (C ⟶ D) :=
   Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective (by tidy) (by tidy) (by tidy) (by tidy)
     (by tidy) (by tidy)
 
@@ -105,7 +105,7 @@ instance boundaries_additive : (boundariesFunctor V c i).Additive where
 variable [HasEqualizers V] [HasCokernels V]
 
 instance homology_additive :
-    (homologyFunctor V c i).Additive where map_add' := fun C D f g => by
+    (homologyFunctor V c i).Additive where map_add' C D f g := by
     dsimp [homologyFunctor]
     ext
     simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
@@ -125,11 +125,11 @@ This is sometimes called the "prolongation".
 @[simps]
 def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     HomologicalComplex V c ⥤ HomologicalComplex W c where
-  obj := fun C =>
+  obj C :=
     { x := fun i => F.obj (C.x i), d := fun i j => F.map (C.d i j),
       shape' := fun i j w => by rw [C.shape _ _ w, F.map_zero],
       d_comp_d' := fun i j k _ _ => by rw [← F.map_comp, C.d_comp_d, F.map_zero] }
-  map := fun C D f =>
+  map C D f :=
     { f := fun i => F.map (f.f i),
       comm' := fun i j h => by
         dsimp
@@ -143,7 +143,7 @@ between those functors applied to homological complexes.
 -/
 @[simps]
 def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
-    F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c where app := fun C => { f := fun i => α.app _ }
+    F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c where app C := { f := fun i => α.app _ }
 
 @[simp]
 theorem NatTrans.map_homological_complex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :

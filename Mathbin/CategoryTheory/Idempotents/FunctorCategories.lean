@@ -76,18 +76,18 @@ functor `F : J ⥤ C` to the functor `J ⥤ karoubi C` which sends `(j : J)` to
 the corresponding direct factor of `F.obj j`. -/
 @[simps]
 def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C where
-  obj := fun j => ⟨P.x.obj j, P.p.app j, congr_app P.idem j⟩
-  map := fun j j' φ =>
+  obj j := ⟨P.x.obj j, P.p.app j, congr_app P.idem j⟩
+  map j j' φ :=
     { f := P.p.app j ≫ P.x.map φ,
       comm := by
         simp only [nat_trans.naturality, assoc]
         have h := congr_app P.idem j
         rw [nat_trans.comp_app] at h
         slice_rhs 1 3 => erw [h, h] }
-  map_id' := fun j => by
+  map_id' j := by
     ext
     simp only [Functor.map_id, comp_id, id_eq]
-  map_comp' := fun j j' j'' φ φ' => by
+  map_comp' j j' j'' φ φ' := by
     ext
     have h := congr_app P.idem j
     rw [nat_trans.comp_app] at h
@@ -98,8 +98,8 @@ def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C where
 /-- Tautological action on maps of the functor `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`. -/
 @[simps]
 def map {P Q : Karoubi (J ⥤ C)} (f : P ⟶ Q) : obj P ⟶ obj Q where
-  app := fun j => ⟨f.f.app j, congr_app f.comm j⟩
-  naturality' := fun j j' φ => by
+  app j := ⟨f.f.app j, congr_app f.comm j⟩
+  naturality' j j' φ := by
     ext
     simp only [comp]
     have h := congr_app (comp_p f) j
@@ -118,12 +118,12 @@ variable (J C)
 @[simps]
 def karoubiFunctorCategoryEmbedding : Karoubi (J ⥤ C) ⥤ J ⥤ Karoubi C where
   obj := KaroubiFunctorCategoryEmbedding.obj
-  map := fun P Q => KaroubiFunctorCategoryEmbedding.map
-  map_id' := fun P => rfl
-  map_comp' := fun P Q R f g => rfl
+  map P Q := KaroubiFunctorCategoryEmbedding.map
+  map_id' P := rfl
+  map_comp' P Q R f g := rfl
 
 instance : Full (karoubiFunctorCategoryEmbedding J C) where
-  preimage := fun P Q f =>
+  preimage P Q f :=
     { f :=
         { app := fun j => (f.app j).f,
           naturality' := fun j j' φ => by
@@ -135,12 +135,12 @@ instance : Full (karoubiFunctorCategoryEmbedding J C) where
       comm := by
         ext j
         exact (f.app j).comm }
-  witness' := fun P Q f => by
+  witness' P Q f := by
     ext j
     rfl
 
 instance :
-    Faithful (karoubiFunctorCategoryEmbedding J C) where map_injective' := fun P Q f f' h => by
+    Faithful (karoubiFunctorCategoryEmbedding J C) where map_injective' P Q f f' h := by
     ext j
     exact hom_ext.mp (congr_app h j)
 

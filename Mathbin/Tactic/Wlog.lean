@@ -41,7 +41,7 @@ private unsafe def match_perms (pat : pattern) : expr → tactic (List <| List e
   | t =>
     (do
         let m ← match_pattern pat t
-        guardₓ (m.2.all expr.is_local_constant)
+        guard (m.2.all expr.is_local_constant)
         return [m.2]) <|>
       do
       let quote.1 ((%%ₓl) ∨ %%ₓr) ← whnf t
@@ -50,7 +50,7 @@ private unsafe def match_perms (pat : pattern) : expr → tactic (List <| List e
       return (m.2 :: rs)
 
 unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (List expr)) : tactic Unit := do
-  guardₓ h_cases
+  guard h_cases
   let nr
     ←-- reorder s.t. context is Γ ⬝ vars ⬝ cases ⊢ ∀deps, …
         revert_lst
@@ -91,8 +91,8 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
   | none => return []
   | some [] => return []
   | some perms@(p₀ :: ps) => do
-    guardₓ p₀ <|> fail "No permutation `xs_i` in `using [xs_1, …, xs_n]` should contain the same variable twice."
-    guardₓ (perms fun p => p p₀) <|>
+    guard p₀ <|> fail "No permutation `xs_i` in `using [xs_1, …, xs_n]` should contain the same variable twice."
+    guard (perms fun p => p p₀) <|>
         fail ("The permutations `xs_i` in `using [xs_1, …, xs_n]` must be permutations of the same" ++ " variables.")
     perms fun p => p get_local
 
@@ -178,13 +178,13 @@ unsafe def wlog (h : parse ident ?) (pat : parse (tk ":" *> texpr)?) (cases : pa
                     return m.2
               return (p, perms')
         let vars_name := vars.map local_uniq_name
-        guardₓ (perms' fun p => p fun v => v ∧ v ∈ vars_name) <|>
+        guard (perms' fun p => p fun v => v ∧ v ∈ vars_name) <|>
             fail "Cases contains variables not declared in `using x y z`"
         let perms ←
           if perms.length = 1 then do
               return (perms' fun p => p ++ vars fun v => p fun v' => v' ≠ v)
             else do
-              guardₓ (perms = perms') <|>
+              guard (perms = perms') <|>
                   fail "The provided permutation list has a different length then the provided cases."
               return perms
         return (pat, cases_pr, @none expr, vars, perms)
@@ -201,13 +201,13 @@ unsafe def wlog (h : parse ident ?) (pat : parse (tk ":" *> texpr)?) (cases : pa
               let cases := mk_or_lst [pat, pat [(x, y), (y, x)]]
               (do
                     let quote.1 ((%%ₓx') ≤ %%ₓy') ← return pat
-                    let (cases_pr, []) ← local_proof name_h cases (exact (pquote.1 (le_totalₓ (%%ₓx') (%%ₓy'))))
+                    let (cases_pr, []) ← local_proof name_h cases (exact (pquote.1 (le_total (%%ₓx') (%%ₓy'))))
                     return (pat, cases_pr, none, [x, y], [[x, y], [y, x]])) <|>
                   do
                   let (cases_pr, [g]) ← local_proof name_h cases skip
                   return (pat, cases_pr, some g, [x, y], [[x, y], [y, x]])) <|>
             do
-            guardₓ (perms ≥ 2) <|>
+            guard (perms ≥ 2) <|>
                 fail
                   ("To generate cases at least two permutations are required, i.e. `using [x y, y x]`" ++
                     " or exactly 0 or 2 variables")

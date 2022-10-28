@@ -56,7 +56,7 @@ variable {V : Type u} (G : SimpleGraph V)
 -/
 structure Partition where
   parts : Set (Set V)
-  IsPartition : Setoidₓ.IsPartition parts
+  IsPartition : Setoid.IsPartition parts
   Independent : ∀ s ∈ parts, IsAntichain G.Adj s
 
 /-- Whether a partition `P` has at most `n` parts. A graph with a partition
@@ -102,7 +102,7 @@ def toColoring : G.Coloring P.parts :=
 def toColoring' : G.Coloring (Set V) :=
   (Coloring.mk P.PartOfVertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
 
-theorem to_colorable [Fintypeₓ P.parts] : G.Colorable (Fintypeₓ.card P.parts) :=
+theorem to_colorable [Fintype P.parts] : G.Colorable (Fintype.card P.parts) :=
   P.toColoring.to_colorable
 
 end Partition
@@ -126,14 +126,14 @@ instance : Inhabited (Partition G) :=
 theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorable n := by
   constructor
   · rintro ⟨P, hf, h⟩
-    haveI : Fintypeₓ P.parts := hf.fintype
+    haveI : Fintype P.parts := hf.fintype
     rw [Set.Finite.card_to_finset] at h
     apply P.to_colorable.mono h
     
   · rintro ⟨C⟩
-    refine' ⟨C.to_partition, C.color_classes_finite, le_transₓ _ (Fintypeₓ.card_fin n).le⟩
+    refine' ⟨C.to_partition, C.color_classes_finite, le_trans _ (Fintype.card_fin n).le⟩
     generalize_proofs h
-    haveI : Fintypeₓ C.color_classes := C.color_classes_finite.fintype
+    haveI : Fintype C.color_classes := C.color_classes_finite.fintype
     rw [h.card_to_finset]
     exact C.card_color_classes_le
     

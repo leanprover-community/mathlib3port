@@ -48,8 +48,8 @@ variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 
 /-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
-structure NonUnitalAlgHom [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A]
-  [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] extends A →+[R] B, A →ₙ* B
+structure NonUnitalAlgHom [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
+  [DistribMulAction R B] extends A →+[R] B, A →ₙ* B
 
 -- mathport name: «expr →ₙₐ »
 infixr:25 " →ₙₐ " => NonUnitalAlgHom _
@@ -64,7 +64,7 @@ attribute [nolint doc_blame] NonUnitalAlgHom.toMulHom
 /-- `non_unital_alg_hom_class F R A B` asserts `F` is a type of bundled algebra homomorphisms
 from `A` to `B`.  -/
 class NonUnitalAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
-  [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R A]
+  [Monoid R] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B] [DistribMulAction R A]
   [DistribMulAction R B] extends DistribMulActionHomClass F R A B, MulHomClass F A B
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
@@ -75,12 +75,12 @@ namespace NonUnitalAlgHomClass
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 -- See note [lower instance priority]
 @[nolint dangerous_instance]
-instance (priority := 100) NonUnitalAlgHomClass.toNonUnitalRingHomClass {F R A B : Type _} [Monoidₓ R]
-    [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B]
+instance (priority := 100) NonUnitalAlgHomClass.toNonUnitalRingHomClass {F R A B : Type _} [Monoid R]
+    [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
     [NonUnitalAlgHomClass F R A B] : NonUnitalRingHomClass F A B :=
   { ‹NonUnitalAlgHomClass F R A B› with coe := coeFn }
 
-variable [Semiringₓ R] [NonUnitalNonAssocSemiringₓ A] [Module R A] [NonUnitalNonAssocSemiringₓ B] [Module R B]
+variable [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] [NonUnitalNonAssocSemiring B] [Module R B]
 
 -- see Note [lower instance priority]
 instance (priority := 100) {F : Type _} [NonUnitalAlgHomClass F R A B] : LinearMapClass F R A B :=
@@ -90,13 +90,13 @@ end NonUnitalAlgHomClass
 
 namespace NonUnitalAlgHom
 
-variable {R A B C} [Monoidₓ R]
+variable {R A B C} [Monoid R]
 
-variable [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A]
+variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
 
-variable [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B]
+variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
 
-variable [NonUnitalNonAssocSemiringₓ C] [DistribMulAction R C]
+variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
 
 /-- see Note [function coercion] -/
 instance : CoeFun (A →ₙₐ[R] B) fun _ => A → B :=
@@ -113,10 +113,10 @@ theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn :
 instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
   coe := toFun
   coe_injective' := coe_injective
-  map_smul := fun f => f.map_smul'
-  map_add := fun f => f.map_add'
-  map_zero := fun f => f.map_zero'
-  map_mul := fun f => f.map_mul'
+  map_smul f := f.map_smul'
+  map_add f := f.map_add'
+  map_zero f := f.map_zero'
+  map_mul f := f.map_mul'
 
 @[ext]
 theorem ext {f g : A →ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
@@ -254,18 +254,18 @@ variable (R A B)
 def fst : A × B →ₙₐ[R] A where
   toFun := Prod.fst
   map_zero' := rfl
-  map_add' := fun x y => rfl
-  map_smul' := fun x y => rfl
-  map_mul' := fun x y => rfl
+  map_add' x y := rfl
+  map_smul' x y := rfl
+  map_mul' x y := rfl
 
 /-- The second projection of a product is a non-unital alg_hom. -/
 @[simps]
 def snd : A × B →ₙₐ[R] B where
   toFun := Prod.snd
   map_zero' := rfl
-  map_add' := fun x y => rfl
-  map_smul' := fun x y => rfl
-  map_mul' := fun x y => rfl
+  map_add' x y := rfl
+  map_smul' x y := rfl
+  map_mul' x y := rfl
 
 variable {R A B}
 
@@ -274,9 +274,9 @@ variable {R A B}
 def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C where
   toFun := Pi.prod f g
   map_zero' := by simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
-  map_add' := fun x y => by simp only [Pi.prod, Prod.mk_add_mk, map_add]
-  map_mul' := fun x y => by simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
-  map_smul' := fun c x => by simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
+  map_add' x y := by simp only [Pi.prod, Prod.mk_add_mk, map_add]
+  map_mul' x y := by simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
+  map_smul' c x := by simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
 
 theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
@@ -295,10 +295,10 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 their codomains. -/
 @[simps]
 def prodEquiv : (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃ (A →ₙₐ[R] B × C) where
-  toFun := fun f => f.1.Prod f.2
-  invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by ext <;> rfl
-  right_inv := fun f => by ext <;> rfl
+  toFun f := f.1.Prod f.2
+  invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
+  left_inv f := by ext <;> rfl
+  right_inv f := by ext <;> rfl
 
 variable (R A B)
 
@@ -335,7 +335,7 @@ end NonUnitalAlgHom
 
 namespace AlgHom
 
-variable {R A B} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
+variable {R A B} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
 
 -- see Note [lower instance priority]
 instance (priority := 100) {F : Type _} [AlgHomClass F R A B] : NonUnitalAlgHomClass F R A B :=

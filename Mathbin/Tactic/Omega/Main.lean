@@ -38,13 +38,13 @@ unsafe def form_domain : expr → tactic (Option Bool)
   | quote.1 ((%%ₓpx) ∧ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
   | quote.1 ((%%ₓpx) ↔ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
   | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monadₓ.cond (if expr.has_var px then return true else is_prop px) (select_domain (form_domain px) (form_domain qx))
+    Monad.cond (if expr.has_var px then return true else is_prop px) (select_domain (form_domain px) (form_domain qx))
       (select_domain (type_domain px) (form_domain qx))
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@Eq (%%ₓdx) _ _) => type_domain dx
-  | quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-  | quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@Ne (%%ₓdx) _ _) => type_domain dx
   | quote.1 True => return none
   | quote.1 False => return none
@@ -53,12 +53,12 @@ unsafe def form_domain : expr → tactic (Option Bool)
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=
   omega.int.wff x >> return true <|> omega.nat.wff x >> return false
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Use the current goal to determine.
     Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def goal_domain : tactic Bool := do
   let gx ← target
-  let hxs ← local_context >>= Monadₓ.mapm infer_type
+  let hxs ← local_context >>= Monad.mapm infer_type
   app_first goal_domain_aux (gx::hxs)
 
 /-- Return tt if the domain is ℤ, and return ff if it is ℕ -/

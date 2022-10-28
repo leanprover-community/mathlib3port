@@ -31,7 +31,7 @@ inductive Short : Pgame.{u} → Type (u + 1)
   |
   mk :
     ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} (sL : ∀ i : α, short (L i)) (sR : ∀ j : β, short (R j))
-      [Fintypeₓ α] [Fintypeₓ β], short ⟨α, β, L, R⟩
+      [Fintype α] [Fintype β], short ⟨α, β, L, R⟩
 
 instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
   | mk xl xr xL xR =>
@@ -47,7 +47,7 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
         ⟩
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
-def Short.mk' {x : Pgame} [Fintypeₓ x.LeftMoves] [Fintypeₓ x.RightMoves] (sL : ∀ i : x.LeftMoves, Short (x.moveLeft i))
+def Short.mk' {x : Pgame} [Fintype x.LeftMoves] [Fintype x.RightMoves] (sL : ∀ i : x.LeftMoves, Short (x.moveLeft i))
     (sR : ∀ j : x.RightMoves, Short (x.moveRight j)) : Short x := by
   (
     cases x
@@ -58,13 +58,13 @@ attribute [class] short
 /-- Extracting the `fintype` instance for the indexing type for Left's moves in a short game.
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
-def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintypeₓ α := by
+def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintype α := by
   cases' S with _ _ _ _ _ _ F _
   exact F
 
 attribute [local instance] fintype_left
 
-instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintypeₓ x.LeftMoves := by
+instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
   cases x
   dsimp
   infer_instance
@@ -72,13 +72,13 @@ instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintypeₓ x.LeftMoves := 
 /-- Extracting the `fintype` instance for the indexing type for Right's moves in a short game.
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
-def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintypeₓ β := by
+def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintype β := by
   cases' S with _ _ _ _ _ _ _ F
   exact F
 
 attribute [local instance] fintype_right
 
-instance fintypeRightMoves (x : Pgame) [S : Short x] : Fintypeₓ x.RightMoves := by
+instance fintypeRightMoves (x : Pgame) [S : Short x] : Fintype x.RightMoves := by
   cases x
   dsimp
   infer_instance
@@ -114,7 +114,7 @@ attribute [local instance] move_right_short'
 theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.omega
   | ⟨xl, xr, xL, xR⟩, hs => by
     haveI := hs
-    rcases hs with ⟨_, _, _, _, sL, sR, hl, hr⟩
+    rcases hs with ⟨sL, sR⟩
     rw [birthday, max_lt_iff]
     constructor
     all_goals
@@ -142,7 +142,7 @@ instance short1 : Short 1 :=
       infer_instance)
     fun j => by cases j
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive ListShort : List Pgame.{u} → Type (u + 1)
   | nil : list_short []
@@ -152,10 +152,9 @@ attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-instance listShortNthLe :
-    ∀ (L : List Pgame.{u}) [ListShort L] (i : Finₓ (List.length L)), Short (List.nthLe L i i.is_lt)
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+instance listShortNthLe : ∀ (L : List Pgame.{u}) [ListShort L] (i : Fin (List.length L)), Short (List.nthLe L i i.is_lt)
   | [], _, n => by
     exfalso
     rcases n with ⟨_, ⟨⟩⟩
@@ -178,8 +177,8 @@ instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Shor
 def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short x), Short y
   | x, y, ⟨L, R, rL, rR⟩, S => by
     skip
-    haveI := Fintypeₓ.ofEquiv _ L
-    haveI := Fintypeₓ.ofEquiv _ R
+    haveI := Fintype.ofEquiv _ L
+    haveI := Fintype.ofEquiv _ R
     exact
       short.mk'
         (fun i => by
@@ -226,22 +225,22 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
     constructor
     · refine' @decidableOfIff' _ _ mk_le_mk (id _)
       apply @And.decidable _ _ _ _
-      · apply @Fintypeₓ.decidableForallFintype xl _ _ (by infer_instance)
+      · apply @Fintype.decidableForallFintype xl _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
         
-      · apply @Fintypeₓ.decidableForallFintype yr _ _ (by infer_instance)
+      · apply @Fintype.decidableForallFintype yr _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
         
       
     · refine' @decidableOfIff' _ _ mk_lf_mk (id _)
       apply @Or.decidable _ _ _ _
-      · apply @Fintypeₓ.decidableExistsFintype yl _ _ (by infer_instance)
+      · apply @Fintype.decidableExistsFintype yl _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
         
-      · apply @Fintypeₓ.decidableExistsFintype xr _ _ (by infer_instance)
+      · apply @Fintype.decidableExistsFintype xr _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
         

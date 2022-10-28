@@ -9,7 +9,7 @@ import Mathbin.Tactic.Interactive
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -36,7 +36,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
   black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 
@@ -60,6 +60,7 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, IsSearchabl
   cases lo <;> cases hi <;> simp [lift] at *
   apply trans_of lt h₁ h₂
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : IsSearchable lt t lo (some hi)),
       IsSearchable lt t lo (some hi') :=
@@ -76,6 +77,7 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     
   all_goals apply t_ih_rchild hc hs_hs₂
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : IsSearchable lt t (some lo) hi),
       IsSearchable lt t (some lo') hi :=
@@ -92,6 +94,7 @@ theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     
   all_goals apply t_ih_lchild hc hs_hs₁
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
     ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : IsSearchable lt t (some lo) hi), IsSearchable lt t (some lo') hi := by
   induction t <;>
@@ -104,6 +107,7 @@ theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
     
   all_goals apply t_ih_lchild hlt hs_hs₁
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     ∀ {y hi} (hlt : IsSearchable lt t (some y) hi), IsSearchable lt t none hi := by
   induction t <;>
@@ -114,6 +118,7 @@ theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     
   all_goals apply t_ih_lchild hlt_hs₁
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
     ∀ {lo hi hi'} (hlt : lt hi hi') (hs : IsSearchable lt t lo (some hi)), IsSearchable lt t lo (some hi') := by
   induction t <;>
@@ -127,6 +132,7 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
     
   all_goals apply t_ih_rchild hlt hs_hs₂
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
     ∀ {lo y} (hlt : IsSearchable lt t lo (some y)), IsSearchable lt t lo none := by
   induction t <;>
@@ -237,23 +243,23 @@ open IsRedBlack
 theorem depth_min : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → n ≤ depth min t := by
   intro c n' t h
   induction h
-  case leaf_rb => exact le_reflₓ _
+  case leaf_rb => exact le_refl _
   case red_rb =>
   simp [depth]
-  have : min (depth min h_l) (depth min h_r) ≥ h_n := by apply le_minₓ <;> assumption
+  have : min (depth min h_l) (depth min h_r) ≥ h_n := by apply le_min <;> assumption
   apply le_succ_of_le
   assumption
   case black_rb =>
   simp [depth]
   apply succ_le_succ
-  apply le_minₓ <;> assumption
+  apply le_min <;> assumption
 
 private def upper : Color → Nat → Nat
   | red, n => 2 * n + 1
   | black, n => 2 * n
 
 private theorem upper_le : ∀ c n, upper c n ≤ 2 * n + 1
-  | red, n => le_reflₓ _
+  | red, n => le_refl _
   | black, n => by apply le_succ
 
 theorem depth_max' : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → depth max t ≤ upper c n := by
@@ -263,25 +269,25 @@ theorem depth_max' : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → depth max t
   case red_rb =>
   suffices succ (max (depth max h_l) (depth max h_r)) ≤ 2 * h_n + 1 by simp_all [depth, upper]
   apply succ_le_succ
-  apply max_leₓ <;> assumption
+  apply max_le <;> assumption
   case black_rb =>
-  have : depth max h_l ≤ 2 * h_n + 1 := le_transₓ h_ih_rb_l (upper_le _ _)
-  have : depth max h_r ≤ 2 * h_n + 1 := le_transₓ h_ih_rb_r (upper_le _ _)
+  have : depth max h_l ≤ 2 * h_n + 1 := le_trans h_ih_rb_l (upper_le _ _)
+  have : depth max h_r ≤ 2 * h_n + 1 := le_trans h_ih_rb_r (upper_le _ _)
   suffices new : max (depth max h_l) (depth max h_r) + 1 ≤ 2 * h_n + 2 * 1
   · simp_all [depth, upper, succ_eq_add_one, Nat.left_distrib]
     
   apply succ_le_succ
-  apply max_leₓ <;> assumption
+  apply max_le <;> assumption
 
 theorem depth_max {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * n + 1 :=
-  le_transₓ (depth_max' h) (upper_le _ _)
+  le_trans (depth_max' h) (upper_le _ _)
 
 theorem balanced {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * depth min t + 1 := by
   have : 2 * depth min t + 1 ≥ 2 * n + 1 := by
     apply succ_le_succ
-    apply Nat.mul_le_mul_leftₓ
+    apply Nat.mul_le_mul_left
     apply depth_min h
-  apply le_transₓ
+  apply le_trans
   apply depth_max h
   apply this
 

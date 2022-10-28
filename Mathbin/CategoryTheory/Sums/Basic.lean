@@ -34,17 +34,17 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 /-- `sum C D` gives the direct sum of two categories.
 -/
 instance sum : Category.{v₁} (Sum C D) where
-  Hom := fun X Y =>
+  Hom X Y :=
     match X, Y with
     | inl X, inl Y => X ⟶ Y
     | inl X, inr Y => Pempty
     | inr X, inl Y => Pempty
     | inr X, inr Y => X ⟶ Y
-  id := fun X =>
+  id X :=
     match X with
     | inl X => 𝟙 X
     | inr X => 𝟙 X
-  comp := fun X Y Z f g =>
+  comp X Y Z f g :=
     match X, Y, Z, f, g with
     | inl X, inl Y, inl Z, f, g => f ≫ g
     | inr X, inr Y, inr Z, f, g => f ≫ g
@@ -71,22 +71,22 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 /-- `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
 def inl_ : C ⥤ Sum C D where
-  obj := fun X => inl X
-  map := fun X Y f => f
+  obj X := inl X
+  map X Y f := f
 
 /-- `inr_` is the functor `X ↦ inr X`. -/
 @[simps]
 def inr_ : D ⥤ Sum C D where
-  obj := fun X => inr X
-  map := fun X Y f => f
+  obj X := inr X
+  map X Y f := f
 
 /-- The functor exchanging two direct summand categories. -/
 def swap : Sum C D ⥤ Sum D C where
-  obj := fun X =>
+  obj X :=
     match X with
     | inl X => inr X
     | inr X => inl X
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | inl X, inl Y, f => f
     | inr X, inr Y, f => f
@@ -132,21 +132,21 @@ namespace Functor
 
 /-- The sum of two functors. -/
 def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
-  obj := fun X =>
+  obj X :=
     match X with
     | inl X => inl (F.obj X)
     | inr X => inr (G.obj X)
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | inl X, inl Y, f => F.map f
     | inr X, inr Y, f => G.map f
-  map_id' := fun X => by
+  map_id' X := by
     cases X <;> unfold_aux
     erw [F.map_id]
     rfl
     erw [G.map_id]
     rfl
-  map_comp' := fun X Y Z f g =>
+  map_comp' X Y Z f g :=
     match X, Y, Z, f, g with
     | inl X, inl Y, inl Z, f, g => by
       unfold_aux
@@ -179,11 +179,11 @@ namespace NatTrans
 
 /-- The sum of two natural transformations. -/
 def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H ⟶ G.Sum I where
-  app := fun X =>
+  app X :=
     match X with
     | inl X => α.app X
     | inr X => β.app X
-  naturality' := fun X Y f =>
+  naturality' X Y f :=
     match X, Y, f with
     | inl X, inl Y, f => by
       unfold_aux

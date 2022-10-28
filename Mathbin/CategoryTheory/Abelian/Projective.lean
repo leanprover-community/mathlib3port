@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Markus Himmel, Scott Morrison
+Authors: Markus Himmel, Scott Morrison, Jakob von Raumer
 -/
 import Mathbin.CategoryTheory.Abelian.Exact
 import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
@@ -21,26 +21,34 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
+open Opposite
+
 universe v u
 
 namespace CategoryTheory
 
 open CategoryTheory.Projective
 
-variable {C : Type u} [Category.{v} C]
-
-section
-
-variable [EnoughProjectives C] [Abelian C]
+variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
-theorem exact_d_f {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
+theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
   (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
 
-end
+/-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
+def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
+    PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) := by
+  letI := (projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' P).mp hP
+  apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
 
-namespace ProjectiveResolution
+/-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
+theorem projective_of_preserves_finite_colimits_preadditive_coyoneda_obj (P : C)
+    [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P := by
+  rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
+  infer_instance
+
+namespace ProjectiveResolutionCat
 
 /-!
 Our goal is to define `ProjectiveResolution.of Z : ProjectiveResolution Z`.
@@ -52,7 +60,7 @@ and the map to the `n`-th object as `projective.d`.
 -/
 
 
-variable [Abelian C] [EnoughProjectives C]
+variable [EnoughProjectives C]
 
 /-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]
@@ -63,7 +71,7 @@ def ofComplex (Z : C) : ChainComplex C ℕ :=
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
 -/
-irreducible_def of (Z : C) : ProjectiveResolution Z :=
+irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
   { complex := ofComplex Z,
     π :=
       ChainComplex.mkHom _ _ (Projective.π Z) 0
@@ -82,9 +90,9 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
 
 instance (priority := 100) (Z : C) : HasProjectiveResolution Z where out := ⟨of Z⟩
 
-instance (priority := 100) : HasProjectiveResolutions C where out := fun Z => by infer_instance
+instance (priority := 100) : HasProjectiveResolutions C where out Z := by infer_instance
 
-end ProjectiveResolution
+end ProjectiveResolutionCat
 
 end CategoryTheory
 

@@ -16,7 +16,7 @@ function on `ℕ`.
 
 open Nat Function
 
-namespace Equivₓ
+namespace Equiv
 
 variable {α : Type _}
 
@@ -28,7 +28,7 @@ def boolProdNatEquivNat : Bool × ℕ ≃ ℕ where
   toFun := uncurry bit
   invFun := boddDiv2
   left_inv := fun ⟨b, n⟩ => by simp only [bodd_bit, div2_bit, uncurry_apply_pair, bodd_div2_eq]
-  right_inv := fun n => by simp only [bit_decomp, bodd_div2_eq, uncurry_apply_pair]
+  right_inv n := by simp only [bit_decomp, bodd_div2_eq, uncurry_apply_pair]
 
 /-- An equivalence between `ℕ ⊕ ℕ` and `ℕ`, by mapping `(sum.inl x)` to `2 * x` and `(sum.inr x)` to
 `2 * x + 1`.
@@ -54,5 +54,5 @@ def prodEquivOfEquivNat (e : α ≃ ℕ) : α × α ≃ α :=
     _ ≃ α := e.symm
     
 
-end Equivₓ
+end Equiv
 

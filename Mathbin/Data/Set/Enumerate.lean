@@ -47,11 +47,11 @@ theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ 
       
     · cases m
       case zero =>
-      have : n + 1 = 0 := Nat.eq_zero_of_le_zeroₓ hm
+      have : n + 1 = 0 := Nat.eq_zero_of_le_zero hm
       contradiction
       case succ m' =>
       simp [hs, enumerate] at h⊢
-      have hm : n ≤ m' := Nat.le_of_succ_le_succₓ hm
+      have hm : n ≤ m' := Nat.le_of_succ_le_succ hm
       exact enumerate_eq_none h hm
       
 
@@ -69,7 +69,7 @@ theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) : ∀ {s n a
 theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, sel s = some a → a ∈ s)
     (h₁ : enumerate s n₁ = some a) (h₂ : enumerate s n₂ = some a) : n₁ = n₂ := by
   wlog hn : n₁ ≤ n₂
-  · rcases Nat.Le.dest hn with ⟨m, rfl⟩
+  · rcases Nat.le.dest hn with ⟨m, rfl⟩
     clear hn
     induction n₁ generalizing s
     case zero =>
@@ -80,7 +80,7 @@ theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, 
     have : a ∈ s \ {a} := enumerate_mem _ h_sel this
     · simpa
       
-    case succ => cases h : sel s <;> simp_all [enumerate, Nat.add_succ, add_commₓ] <;> tauto
+    case succ => cases h : sel s <;> simp_all [enumerate, Nat.add_succ, add_comm] <;> tauto
     
 
 end Enumerate

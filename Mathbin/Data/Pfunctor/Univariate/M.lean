@@ -92,7 +92,7 @@ theorem truncate_eq_of_agree {n : ℕ} (x : CofixA F n) (y : CofixA F (succ n)) 
     
   · cases' h with _ _ _ _ _ h₀ h₁
     cases h
-    simp only [truncate, Function.comp, true_andₓ, eq_self_iff_true, heq_iff_eq]
+    simp only [truncate, Function.comp, true_and_iff, eq_self_iff_true, heq_iff_eq]
     ext y
     apply n_ih
     apply h₁
@@ -118,7 +118,7 @@ theorem P_corec (i : X) (n : ℕ) : Agree (sCorec f i n) (sCorec f i (succ n)) :
 
 /-- `path F` provides indices to access internal nodes in `corec F` -/
 def Path (F : Pfunctor.{u}) :=
-  List F.Idx
+  List F.IdxCat
 
 instance Path.inhabited : Inhabited (Path F) :=
   ⟨[]⟩
@@ -208,6 +208,8 @@ it contains -/
 def head (x : M F) :=
   head' (x.1 1)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr i]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- return all the subtrees of the root of a tree `x : M F` -/
 def children (x : M F) (i : F.B (head x)) : M F :=
   let H := fun n : ℕ => @head_succ' _ n 0 x.1 x.2
@@ -216,14 +218,15 @@ def children (x : M F) (i : F.B (head x)) : M F :=
       intro
       have P' := x.2 (succ n)
       apply agree_children _ _ _ P'
-      trans i
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr i]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       apply cast_heq
       symm
       apply cast_heq }
 
 /-- select a subtree using a `i : F.Idx` or return an arbitrary tree if
 `i` designates no subtree of `x` -/
-def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
+def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.IdxCat) (x : M F) : M F :=
   if H' : i.1 = head x then children x (cast (congr_arg _ <| by simp only [head, H'] <;> rfl) i.2) else default
 
 theorem head_succ (n m : ℕ) (x : M F) : head' (x.approx (succ n)) = head' (x.approx (succ m)) :=
@@ -266,7 +269,7 @@ protected def mk (x : F.Obj <| M F) : M F where
 /-- `agree' n` relates two trees of type `M F` that
 are the same up to dept `n` -/
 inductive Agree' : ℕ → M F → M F → Prop
-  | trivialₓ (x y : M F) : agree' 0 x y
+  | trivial (x y : M F) : agree' 0 x y
   |
   step {n : ℕ} {a} (x y : F.B a → M F) {x' y'} :
     x' = M.mk ⟨a, x⟩ → y' = M.mk ⟨a, y⟩ → (∀ i, agree' n (x i) (y i)) → agree' (succ n) x' y'
@@ -398,7 +401,7 @@ theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ (a) (
     Pfunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
   cases_mk ⟨_, x⟩ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `is_path p x` tells us if `p` is a valid path through `x` -/
 inductive IsPath : Path F → M F → Prop
   | nil (x : M F) : is_path [] x
@@ -406,23 +409,23 @@ inductive IsPath : Path F → M F → Prop
   cons (xs : Path F) {a} (x : M F) (f : F.B a → M F) (i : F.B a) :
     x = M.mk ⟨a, f⟩ → is_path xs (f i) → is_path (⟨a, i⟩::xs) x
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_path_cons {xs : Path F} {a a'} {f : F.B a → M F} {i : F.B a'} :
     IsPath (⟨a', i⟩::xs) (M.mk ⟨a, f⟩) → a = a' := by
   generalize h : M.mk ⟨a, f⟩ = x
-  rintro (_ | ⟨_, _, _, _, _, rfl, _⟩)
+  rintro (_ | ⟨_, _, _, _, rfl, _⟩)
   cases mk_inj h
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_path_cons' {xs : Path F} {a} {f : F.B a → M F} {i : F.B a} :
     IsPath (⟨a, i⟩::xs) (M.mk ⟨a, f⟩) → IsPath xs (f i) := by
   generalize h : M.mk ⟨a, f⟩ = x
-  rintro (_ | ⟨_, _, _, _, _, rfl, hp⟩)
+  rintro (_ | ⟨_, _, _, _, rfl, hp⟩)
   cases mk_inj h
   exact hp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- follow a path through a value of `M F` and return the subtree
 found at the end of the path if it is a valid path for that value and
 return a default tree -/
@@ -471,7 +474,7 @@ theorem children_mk {a} (x : F.B a → M F) (i : F.B (head (M.mk ⟨a, x⟩))) :
     children (M.mk ⟨a, x⟩) i = x (cast (by rw [head_mk]) i) := by apply ext' <;> intro n <;> rfl
 
 @[simp]
-theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : F.Idx) :
+theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : F.IdxCat) :
     ichildren i (M.mk x) = x.iget i := by
   dsimp only [ichildren, Pfunctor.Obj.iget]
   congr with h
@@ -480,7 +483,7 @@ theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : 
   intros
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem isubtree_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : F.B a → M F) {i : F.B a} :
     isubtree (⟨_, i⟩::ps) (M.mk ⟨a, f⟩) = isubtree ps (f i) := by
@@ -489,7 +492,7 @@ theorem isubtree_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f :
 @[simp]
 theorem iselect_nil [DecidableEq F.A] [Inhabited (M F)] {a} (f : F.B a → M F) : iselect nil (M.mk ⟨a, f⟩) = a := by rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem iselect_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : F.B a → M F) {i} :
     iselect (⟨a, i⟩::ps) (M.mk ⟨a, f⟩) = iselect ps (f i) := by simp only [iselect, isubtree_cons]
@@ -507,7 +510,7 @@ theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.
     congr
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx : Agree' n z x) (hy : Agree' n z y)
     (hrec : ∀ ps : Path F, n = ps.length → iselect ps x = iselect ps y) : x.approx (n + 1) = y.approx (n + 1) := by
   induction' n with n generalizing x y z
@@ -516,7 +519,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     induction y using Pfunctor.M.casesOn'
     simp only [iselect_nil] at hrec
     subst hrec
-    simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
+    simp only [approx_mk, true_and_iff, eq_self_iff_true, heq_iff_eq]
     apply Subsingleton.elim
     
   · cases hx
@@ -527,7 +530,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     iterate 3 
     have := mk_inj ‹_›
     repeat' cases this
-    simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
+    simp only [approx_mk, true_and_iff, eq_self_iff_true, heq_iff_eq]
     ext i
     apply n_ih
     · solve_by_elim
@@ -678,7 +681,7 @@ theorem bisim_equiv (R : M P → M P → Prop)
 
 theorem corec_unique (g : α → P.Obj α) (f : α → M P) (hyp : ∀ x, M.dest (f x) = f <$> g x) : f = M.corec g := by
   ext x
-  apply bisim' (fun x => True) _ _ _ _ trivialₓ
+  apply bisim' (fun x => True) _ _ _ _ trivial
   clear x
   intro x _
   cases' gxeq : g x with a f'
@@ -686,7 +689,7 @@ theorem corec_unique (g : α → P.Obj α) (f : α → M P) (hyp : ∀ x, M.dest
   have h₁ : M.dest (M.corec g x) = ⟨a, M.corec g ∘ f'⟩ := by rw [dest_corec, gxeq, Pfunctor.map_eq]
   refine' ⟨_, _, _, h₀, h₁, _⟩
   intro i
-  exact ⟨f' i, trivialₓ, rfl, rfl⟩
+  exact ⟨f' i, trivial, rfl, rfl⟩
 
 /-- corecursor where the state of the computation can be sent downstream
 in the form of a recursive call -/

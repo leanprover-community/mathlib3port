@@ -45,7 +45,7 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     intro x y
     simp only [fc]
     simp only [smul_add, LinearMap.map_add, of_real_add]
-    rw [mul_addₓ]
+    rw [mul_add]
     abel
   have A : ∀ (c : ℝ) (x : F), (fr ((c : 𝕜) • x) : 𝕜) = (c : 𝕜) * (fr x : 𝕜) := by
     intro c x
@@ -65,8 +65,7 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     · simp [h]
       
     rw [mul_sub, ← mul_assoc, smul_smul, h]
-    simp only [neg_mul, LinearMap.map_neg, one_mulₓ, one_smul, mul_neg, of_real_neg, neg_smul, sub_neg_eq_add,
-      add_commₓ]
+    simp only [neg_mul, LinearMap.map_neg, one_mul, one_smul, mul_neg, of_real_neg, neg_smul, sub_neg_eq_add, add_comm]
   have smul_𝕜 : ∀ (c : 𝕜) (x : F), fc (c • x) = c • fc x := by
     intro c x
     rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assoc]
@@ -111,14 +110,14 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
         
       
   calc
-    ∥lm x∥ = abs𝕜 t * ∥lm x∥ := by rw [ht, one_mulₓ]
+    ∥lm x∥ = abs𝕜 t * ∥lm x∥ := by rw [ht, one_mul]
     _ = ∥t * lm x∥ := by rw [← norm_eq_abs, norm_mul]
     _ = ∥lm (t • x)∥ := by rw [← smul_eq_mul, lm.map_smul]
     _ = ∥(fr (t • x) : 𝕜)∥ := by rw [h1]
     _ = ∥fr (t • x)∥ := by rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]
     _ ≤ ∥fr∥ * ∥t • x∥ := ContinuousLinearMap.le_op_norm _ _
     _ = ∥fr∥ * (∥t∥ * ∥x∥) := by rw [norm_smul]
-    _ ≤ ∥fr∥ * ∥x∥ := by rw [norm_eq_abs, ht, one_mulₓ]
+    _ ≤ ∥fr∥ * ∥x∥ := by rw [norm_eq_abs, ht, one_mul]
     
 
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/

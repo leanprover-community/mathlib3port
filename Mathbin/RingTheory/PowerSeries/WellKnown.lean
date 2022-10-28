@@ -22,9 +22,9 @@ In this file we define the following power series:
 
 namespace PowerSeries
 
-section Ringₓ
+section Ring
 
-variable {R S : Type _} [Ringₓ R] [Ringₓ S]
+variable {R S : Type _} [Ring R] [Ring S]
 
 /-- The power series for `1 / (u - x)`. -/
 def invUnitsSub (u : Rˣ) : PowerSeries R :=
@@ -36,14 +36,14 @@ theorem coeff_inv_units_sub (u : Rˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 
 
 @[simp]
 theorem constant_coeff_inv_units_sub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
-  rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_units_sub, zero_addₓ, pow_oneₓ]
+  rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_units_sub, zero_add, pow_one]
 
 @[simp]
 theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 := by
   ext (_ | n)
   · simp
     
-  · simp [n.succ_ne_zero, pow_succₓ]
+  · simp [n.succ_ne_zero, pow_succ]
     
 
 @[simp]
@@ -53,11 +53,11 @@ theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) : map f (invUnitsSub u) = in
   ext
   simp [← map_pow]
 
-end Ringₓ
+end Ring
 
 section Field
 
-variable (A A' : Type _) [Ringₓ A] [Ringₓ A'] [Algebra ℚ A] [Algebra ℚ A']
+variable (A A' : Type _) [Ring A] [Ring A'] [Algebra ℚ A] [Algebra ℚ A']
 
 open Nat
 
@@ -108,20 +108,20 @@ theorem map_exp : map (f : A →+* A') (exp A) = exp A' := by
 @[simp]
 theorem map_sin : map f (sin A) = sin A' := by
   ext
-  simp [sin, apply_iteₓ f]
+  simp [sin, apply_ite f]
 
 @[simp]
 theorem map_cos : map f (cos A) = cos A' := by
   ext
-  simp [cos, apply_iteₓ f]
+  simp [cos, apply_ite f]
 
 end Field
 
 open RingHom
 
-open Finsetₓ Nat
+open Finset Nat
 
-variable {A : Type _} [CommRingₓ A]
+variable {A : Type _} [CommRing A]
 
 /-- Shows that $e^{aX} * e^{bX} = e^{(a + b)X}$ -/
 theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
@@ -140,7 +140,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   refine' RingHom.congr_arg _ _
   rw [mul_one_div ↑(n.choose x) _, one_div_mul_one_div]
   symm
-  rw [div_eq_iff, div_mul_eq_mul_div, one_mulₓ, choose_eq_factorial_div_factorial]
+  rw [div_eq_iff, div_mul_eq_mul_div, one_mul, choose_eq_factorial_div_factorial]
   norm_cast
   rw [cast_div_char_zero]
   · apply factorial_mul_factorial_dvd_factorial (mem_range_succ_iff.1 hx)
@@ -159,16 +159,16 @@ theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 
 /-- Shows that $(e^{X})^k = e^{kX}$. -/
 theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (k : A) (exp A) := by
   induction' k with k h
-  · simp only [rescale_zero, constant_coeff_exp, Function.comp_app, map_one, cast_zero, pow_zeroₓ, coe_comp]
+  · simp only [rescale_zero, constant_coeff_exp, Function.comp_app, map_one, cast_zero, pow_zero, coe_comp]
     
   simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply, rescale_one] using
-    pow_succ'ₓ (exp A) k
+    pow_succ' (exp A) k
 
 /-- Shows that
 $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \frac{k^p}{p!}X^p$. -/
 theorem exp_pow_sum [Algebra ℚ A] (n : ℕ) :
-    ((Finsetₓ.range n).Sum fun k => exp A ^ k) =
-      PowerSeries.mk fun p => (Finsetₓ.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
+    ((Finset.range n).Sum fun k => exp A ^ k) =
+      PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
   by
   simp only [exp_pow_eq_rescale_exp, rescale]
   ext

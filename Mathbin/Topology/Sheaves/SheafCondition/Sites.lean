@@ -35,15 +35,15 @@ noncomputable section
 
 universe u v w
 
-namespace Top.Presheaf
+namespace TopCat.Presheaf
 
-open CategoryTheory TopologicalSpace Top CategoryTheory.Limits Opposite
+open CategoryTheory TopologicalSpace TopCat CategoryTheory.Limits Opposite
 
-open Top.Presheaf.SheafConditionEqualizerProducts
+open TopCat.Presheaf.SheafConditionEqualizerProducts
 
 variable {C : Type u} [Category.{v} C] [HasProducts.{v} C]
 
-variable {X : Top.{v}} (F : Presheaf C X)
+variable {X : TopCat.{v}} (F : Presheaf C X)
 
 /-- Given a presieve `R` on `U`, we obtain a covering family of open sets in `X`, by taking as index
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
@@ -80,7 +80,7 @@ The fork map into this diagram is called `res`.
 -/
 theorem supr_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
     supr (coveringOfPresieve U R) = U := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · refine' supr_le _
     intro f
     exact f.2.1.le
@@ -418,13 +418,13 @@ theorem is_sheaf_equalizer_products_of_is_sheaf (Fsh : F.IsSheaf) : F.IsSheafEqu
 theorem is_sheaf_iff_is_sheaf_equalizer_products : F.IsSheaf ↔ F.IsSheafEqualizerProducts :=
   Iff.intro (is_sheaf_equalizer_products_of_is_sheaf F) (is_sheaf_of_is_sheaf_equalizer_products F)
 
-end Top.Presheaf
+end TopCat.Presheaf
 
-namespace Top.Opens
+namespace TopCat.Opens
 
 open CategoryTheory TopologicalSpace
 
-variable {X : Top} {ι : Type _}
+variable {X : TopCat} {ι : Type _}
 
 theorem cover_dense_iff_is_basis [Category ι] (B : ι ⥤ Opens X) :
     CoverDense (Opens.grothendieckTopology X) B ↔ Opens.IsBasis (Set.Range B.obj) := by
@@ -439,19 +439,19 @@ theorem cover_dense_iff_is_basis [Category ι] (B : ι ⥤ Opens X) :
   rcases hb hx with ⟨_, ⟨i, rfl⟩, hx, hi⟩
   exact ⟨B.obj i, ⟨⟨hi⟩⟩, ⟨⟨i, 𝟙 _, ⟨⟨hi⟩⟩, rfl⟩⟩, hx⟩
 
-theorem cover_dense_induced_functor {B : ι → Opens X} (h : Opens.IsBasis (Set.Range B)) :
+theorem coverDenseInducedFunctor {B : ι → Opens X} (h : Opens.IsBasis (Set.Range B)) :
     CoverDense (Opens.grothendieckTopology X) (inducedFunctor B) :=
   (cover_dense_iff_is_basis _).2 h
 
-end Top.Opens
+end TopCat.Opens
 
-namespace Top.Sheaf
+namespace TopCat.Sheaf
 
-open CategoryTheory TopologicalSpace Top Opposite
+open CategoryTheory TopologicalSpace TopCat Opposite
 
 variable {C : Type u} [Category.{v} C]
 
-variable {X : Top.{w}} {ι : Type _} {B : ι → Opens X}
+variable {X : TopCat.{w}} {ι : Type _} {B : ι → Opens X}
 
 variable (F : X.Presheaf C) (F' : Sheaf C X) (h : Opens.IsBasis (Set.Range B))
 
@@ -468,7 +468,7 @@ def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsT
     is equivalent to a homomorphism between their restrictions to the indexing type
     `ι` of `B`, with the induced category structure on `ι`. -/
 def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) ≃ (F ⟶ F'.1) :=
-  @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.cover_dense_induced_functor h) _ F F'
+  @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.coverDenseInducedFunctor h) _ F F'
 
 @[simp]
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :
@@ -483,5 +483,5 @@ theorem hom_ext {α β : F ⟶ F'.1} (he : ∀ i, α.app (op (B i)) = β.app (op
   ext i
   exact he i.unop
 
-end Top.Sheaf
+end TopCat.Sheaf
 

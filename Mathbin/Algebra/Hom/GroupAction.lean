@@ -43,29 +43,29 @@ variable (Y : Type _) [HasSmul M' Y]
 
 variable (Z : Type _) [HasSmul M' Z]
 
-variable (M : Type _) [Monoidₓ M]
+variable (M : Type _) [Monoid M]
 
-variable (A : Type _) [AddMonoidₓ A] [DistribMulAction M A]
+variable (A : Type _) [AddMonoid A] [DistribMulAction M A]
 
-variable (A' : Type _) [AddGroupₓ A'] [DistribMulAction M A']
+variable (A' : Type _) [AddGroup A'] [DistribMulAction M A']
 
-variable (B : Type _) [AddMonoidₓ B] [DistribMulAction M B]
+variable (B : Type _) [AddMonoid B] [DistribMulAction M B]
 
-variable (B' : Type _) [AddGroupₓ B'] [DistribMulAction M B']
+variable (B' : Type _) [AddGroup B'] [DistribMulAction M B']
 
-variable (C : Type _) [AddMonoidₓ C] [DistribMulAction M C]
+variable (C : Type _) [AddMonoid C] [DistribMulAction M C]
 
-variable (R : Type _) [Semiringₓ R] [MulSemiringAction M R]
+variable (R : Type _) [Semiring R] [MulSemiringAction M R]
 
-variable (R' : Type _) [Ringₓ R'] [MulSemiringAction M R']
+variable (R' : Type _) [Ring R'] [MulSemiringAction M R']
 
-variable (S : Type _) [Semiringₓ S] [MulSemiringAction M S]
+variable (S : Type _) [Semiring S] [MulSemiringAction M S]
 
-variable (S' : Type _) [Ringₓ S'] [MulSemiringAction M S']
+variable (S' : Type _) [Ring S'] [MulSemiringAction M S']
 
-variable (T : Type _) [Semiringₓ T] [MulSemiringAction M T]
+variable (T : Type _) [Semiring T] [MulSemiringAction M T]
 
-variable (G : Type _) [Groupₓ G] (H : Subgroup G)
+variable (G : Type _) [Group G] (H : Subgroup G)
 
 /-- Equivariant functions. -/
 @[nolint has_nonempty_instance]
@@ -98,7 +98,7 @@ instance : CoeFun (X →[M'] Y) fun _ => X → Y :=
 
 instance : SmulHomClass (X →[M'] Y) M' X Y where
   coe := MulActionHom.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := MulActionHom.map_smul'
 
 variable {M M' X Y}
@@ -154,7 +154,7 @@ variable {A B}
 @[simps]
 def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →[M] A where
   toFun := g
-  map_smul' := fun m x =>
+  map_smul' m x :=
     calc
       g (m • x) = g (m • f (g x)) := by rw [h₂]
       _ = g (f (m • g x)) := by rw [f.map_smul]
@@ -166,10 +166,12 @@ end MulActionHom
 /-- Equivariant additive monoid homomorphisms. -/
 structure DistribMulActionHom extends A →[M] B, A →+ B
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret an equivariant additive monoid homomorphism as an additive monoid homomorphism. -/
+add_decl_doc DistribMulActionHom.toAddMonoidHom
+
+/-- Reinterpret an equivariant additive monoid homomorphism as an equivariant function. -/
+add_decl_doc DistribMulActionHom.toMulActionHom
+
 -- mathport name: «expr →+[ ] »
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
@@ -177,7 +179,7 @@ notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 the additive monoid structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `distrib_mul_action_hom`. -/
-class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoidₓ M] [AddMonoidₓ A] [AddMonoidₓ B]
+class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoid M] [AddMonoid A] [AddMonoid B]
   [DistribMulAction M A] [DistribMulAction M B] extends SmulHomClass F M A B, AddMonoidHomClass F A B
 
 -- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
@@ -196,7 +198,7 @@ instance : CoeFun (A →+[M] B) fun _ => A → B :=
 
 instance : DistribMulActionHomClass (A →+[M] B) M A B where
   coe := DistribMulActionHom.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := DistribMulActionHom.map_smul'
   map_zero := DistribMulActionHom.map_zero'
   map_add := DistribMulActionHom.map_add'
@@ -304,19 +306,19 @@ theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
 def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →+[M] A :=
   { (f : A →+ B).inverse g h₁ h₂, (f : A →[M] B).inverse g h₁ h₂ with toFun := g }
 
-section Semiringₓ
+section Semiring
 
-variable {R M'} [AddMonoidₓ M'] [DistribMulAction R M']
+variable {R M'} [AddMonoid M'] [DistribMulAction R M']
 
 @[ext]
 theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g := by
   ext x
-  rw [← mul_oneₓ x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
+  rw [← mul_one x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
 
 theorem ext_ring_iff {f g : R →+[R] M'} : f = g ↔ f 1 = g 1 :=
   ⟨fun h => h ▸ rfl, ext_ring⟩
 
-end Semiringₓ
+end Semiring
 
 end DistribMulActionHom
 
@@ -324,10 +326,12 @@ end DistribMulActionHom
 @[nolint has_nonempty_instance]
 structure MulSemiringActionHom extends R →+[M] S, R →+* S
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_distrib_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret an equivariant ring homomorphism as a ring homomorphism. -/
+add_decl_doc MulSemiringActionHom.toRingHom
+
+/-- Reinterpret an equivariant ring homomorphism as an equivariant additive monoid homomorphism. -/
+add_decl_doc MulSemiringActionHom.toDistribMulActionHom
+
 -- mathport name: «expr →+*[ ] »
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 
@@ -335,7 +339,7 @@ notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 the ring structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_semiring_action_hom`. -/
-class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoidₓ M] [Semiringₓ R] [Semiringₓ S]
+class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoid M] [Semiring R] [Semiring S]
   [DistribMulAction M R] [DistribMulAction M S] extends DistribMulActionHomClass F M R S, RingHomClass F R S
 
 -- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
@@ -354,7 +358,7 @@ instance : CoeFun (R →+*[M] S) fun _ => R → S :=
 
 instance : MulSemiringActionHomClass (R →+*[M] S) M R S where
   coe := MulSemiringActionHom.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := MulSemiringActionHom.map_smul'
   map_zero := MulSemiringActionHom.map_zero'
   map_add := MulSemiringActionHom.map_add'

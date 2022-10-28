@@ -27,7 +27,7 @@ noncomputable section
 
 namespace HomologicalComplex
 
-variable {β : Type _} [AddCommGroupₓ β] {b : β}
+variable {β : Type _} [AddCommGroup β] {b : β}
 
 variable {V : Type _} [Category V] [HasZeroMorphisms V]
 
@@ -76,7 +76,7 @@ attribute [local reducible] graded_object.has_shift
 @[simps]
 def dgoToHomologicalComplex :
     DifferentialObject (GradedObjectWithShift b V) ⥤ HomologicalComplex V (ComplexShape.up' b) where
-  obj := fun X =>
+  obj X :=
     { x := fun i => X.x i,
       d := fun i j => if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0,
       shape' := fun i j w => by
@@ -88,7 +88,7 @@ def dgoToHomologicalComplex :
         have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
         reassoc! this
         simp [this] }
-  map := fun X Y f =>
+  map X Y f :=
     { f := f.f,
       comm' := fun i j h => by
         dsimp at h⊢
@@ -102,13 +102,13 @@ def dgoToHomologicalComplex :
 @[simps]
 def homologicalComplexToDgo :
     HomologicalComplex V (ComplexShape.up' b) ⥤ DifferentialObject (GradedObjectWithShift b V) where
-  obj := fun X =>
+  obj X :=
     { x := fun i => X.x i, d := fun i => X.d i (i + 1 • b),
       d_squared' := by
         ext i
         dsimp
         simp }
-  map := fun X Y f =>
+  map X Y f :=
     { f := f.f,
       comm' := by
         ext i

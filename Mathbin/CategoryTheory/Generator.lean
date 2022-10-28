@@ -286,7 +286,7 @@ namespace Subobject
 
 theorem eq_of_le_of_is_detecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C} (P Q : Subobject X) (h₁ : P ≤ Q)
     (h₂ : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, Q.Factors f → P.Factors f) : P = Q := by
-  suffices is_iso (of_le _ _ h₁) by exact le_antisymmₓ h₁ (le_of_comm (inv (of_le _ _ h₁)) (by simp))
+  suffices is_iso (of_le _ _ h₁) by exact le_antisymm h₁ (le_of_comm (inv (of_le _ _ h₁)) (by simp))
   refine' h𝒢 _ fun G hG f => _
   have : P.factors (f ≫ Q.arrow) := h₂ _ hG ((factors_iff _ _).2 ⟨_, rfl⟩)
   refine' ⟨factor_thru _ _ this, _, fun g (hg : g ≫ _ = f) => _⟩
@@ -556,23 +556,23 @@ end ZeroMorphisms
 theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj (G : C) :
     IsDetector G ↔ ReflectsIsomorphisms (coyoneda.obj (op G)) := by
   refine' ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h => (is_detector_def _).2 fun X Y f hf => _⟩
-  · rw [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ] at hf
+  · rw [is_iso_iff_bijective, Function.bijective_iff_exists_unique] at hf
     exact hf h
     
   · suffices is_iso ((coyoneda.obj (op G)).map f) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (coyoneda.obj (op G)) _ h
-    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ]
+    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique]
     
 
 theorem is_codetector_iff_reflects_isomorphisms_yoneda_obj (G : C) :
     IsCodetector G ↔ ReflectsIsomorphisms (yoneda.obj G) := by
   refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => (is_codetector_def _).2 fun X Y f hf => _⟩
   · refine' (is_iso_unop_iff _).1 (hG.def _ _)
-    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ] at hf
+    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique] at hf
     
   · rw [← is_iso_op_iff]
     suffices is_iso ((yoneda.obj G).map f.op) by exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (yoneda.obj G) _ h
-    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ]
+    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique]
     
 
 theorem well_powered_of_is_detector [HasPullbacks C] (G : C) (hG : IsDetector G) : WellPowered C :=

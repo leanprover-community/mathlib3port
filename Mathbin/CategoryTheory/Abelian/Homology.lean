@@ -59,7 +59,7 @@ abbrev homologyCToK : homologyC f g w ⟶ homologyK f g w :=
 
 attribute [local instance] pseudoelement.hom_to_fun pseudoelement.has_zero
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident rfl, "⟩", ":", expr «expr∃ , »((c), «expr = »(kernel.lift g f w c, a))]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident rfl, "⟩", ":", expr «expr∃ , »((c), «expr = »(kernel.lift g f w c, a))]] -/
 instance : Mono (homologyCToK f g w) := by
   apply pseudoelement.mono_of_zero_of_map_zero
   intro a ha

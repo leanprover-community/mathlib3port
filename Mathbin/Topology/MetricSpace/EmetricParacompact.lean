@@ -30,7 +30,7 @@ open Set
 
 namespace Emetric
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
@@ -43,12 +43,12 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     Ennreal.pow_le_pow_of_le_one (Ennreal.inv_le_one.2 ennreal.one_lt_two.le) h
   have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n := by
     intro n
-    simp [pow_succₓ, ← mul_assoc, Ennreal.mul_inv_cancel]
+    simp [pow_succ, ← mul_assoc, Ennreal.mul_inv_cancel]
   -- Consider an open covering `S : set (set α)`
   refine' ⟨fun ι s ho hcov => _⟩
   simp only [Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
-  letI : LinearOrderₓ ι := linearOrderOfSTO WellOrderingRel
+  letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
   have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellFounded.wf ι WellOrderingRel _
   -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
   set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)
@@ -109,10 +109,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     intro n s x
     rw [memD]
     rintro ⟨y, rfl, hsub, -, hyx⟩
-    refine' hsub (lt_of_lt_of_leₓ hyx _)
+    refine' hsub (lt_of_lt_of_le hyx _)
     calc
-      2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mulₓ _).symm
-      _ ≤ 3 * 2⁻¹ ^ n := Ennreal.mul_le_mul _ le_rflₓ
+      2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mul _).symm
+      _ ≤ 3 * 2⁻¹ ^ n := Ennreal.mul_le_mul _ le_rfl
       
     -- TODO: use `norm_num`
     have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := Ennreal.coe_nat_le_coe_nat.2 (by norm_num1)
@@ -161,10 +161,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
           add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
         _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by apply_rules [Ennreal.add_lt_add]
-        _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_commₓ]
+        _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
         _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-          Ennreal.mul_le_mul le_rflₓ <| add_le_add le_rflₓ <| hpow_le (add_le_add hm le_rflₓ)
-        _ = 3 * 2⁻¹ ^ m := by rw [mul_addₓ, h2pow, bit1, add_mulₓ, one_mulₓ]
+          Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
+        _ = 3 * 2⁻¹ ^ m := by rw [mul_add, h2pow, bit1, add_mul, one_mul]
         
     -- Finally, we glue `Hgt` and `Hle`
     have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
@@ -172,12 +172,12 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     refine' this.subset fun I hI => _
     simp only [mem_Union]
     refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩
-    exact not_ltₓ.1 fun hlt => Hgt I.1 hlt I.2 hI.some_spec
+    exact not_lt.1 fun hlt => Hgt I.1 hlt I.2 hI.some_spec
     
 
 -- see Note [lower instance priority]
-instance (priority := 100) normal_of_emetric [EmetricSpace α] : NormalSpace α :=
-  normal_of_paracompact_t2
+instance (priority := 100) normalOfEmetric [EmetricSpace α] : NormalSpace α :=
+  normalOfParacompactT2
 
 end Emetric
 

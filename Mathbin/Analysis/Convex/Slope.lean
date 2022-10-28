@@ -97,13 +97,13 @@ less than the slope of the secant line of `f` on `[x, z]`, then `f` is convex. -
 theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
     (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y)) :
     ConvexOn 𝕜 s f :=
-  (LinearOrderₓ.convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
+  (LinearOrder.convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
     have hxy : x < y := by
-      rw [← one_mulₓ x, ← hab, add_mulₓ]
+      rw [← one_mul x, ← hab, add_mul]
       exact add_lt_add_left ((mul_lt_mul_left hb).2 hxz) _
     have hyz : y < z := by
-      rw [← one_mulₓ z, ← hab, add_mulₓ]
+      rw [← one_mul z, ← hab, add_mul]
       exact add_lt_add_right ((mul_lt_mul_left ha).2 hxz) _
     have : (f y - f x) * (z - y) ≤ (f z - f y) * (y - x) :=
       (div_le_div_iff (sub_pos.2 hxy) (sub_pos.2 hyz)).1 (hf hx hz hxy hyz)
@@ -116,7 +116,7 @@ theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
       rw [eq_comm, ← sub_eq_iff_eq_add] at hab
       simp_rw [div_eq_iff hxz.ne', y, ← hab]
       ring
-    rwa [sub_mul, sub_mul, sub_le_iff_le_add', ← add_sub_assoc, le_sub_iff_add_le, ← mul_addₓ, sub_add_sub_cancel, ←
+    rwa [sub_mul, sub_mul, sub_le_iff_le_add', ← add_sub_assoc, le_sub_iff_add_le, ← mul_add, sub_add_sub_cancel, ←
       le_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x), mul_comm (f z), ha, hb] at this
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
@@ -135,13 +135,13 @@ strictly less than the slope of the secant line of `f` on `[x, z]`, then `f` is 
 theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
     (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y)) :
     StrictConvexOn 𝕜 s f :=
-  (LinearOrderₓ.strict_convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
+  (LinearOrder.strict_convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
     have hxy : x < y := by
-      rw [← one_mulₓ x, ← hab, add_mulₓ]
+      rw [← one_mul x, ← hab, add_mul]
       exact add_lt_add_left ((mul_lt_mul_left hb).2 hxz) _
     have hyz : y < z := by
-      rw [← one_mulₓ z, ← hab, add_mulₓ]
+      rw [← one_mul z, ← hab, add_mul]
       exact add_lt_add_right ((mul_lt_mul_left ha).2 hxz) _
     have : (f y - f x) * (z - y) < (f z - f y) * (y - x) :=
       (div_lt_div_iff (sub_pos.2 hxy) (sub_pos.2 hyz)).1 (hf hx hz hxy hyz)
@@ -154,7 +154,7 @@ theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
       rw [eq_comm, ← sub_eq_iff_eq_add] at hab
       simp_rw [div_eq_iff hxz.ne', y, ← hab]
       ring
-    rwa [sub_mul, sub_mul, sub_lt_iff_lt_add', ← add_sub_assoc, lt_sub_iff_add_lt, ← mul_addₓ, sub_add_sub_cancel, ←
+    rwa [sub_mul, sub_mul, sub_lt_iff_lt_add', ← add_sub_assoc, lt_sub_iff_add_lt, ← mul_add, sub_add_sub_cancel, ←
       lt_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x), mul_comm (f z), ha, hb] at this
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is

@@ -6,6 +6,7 @@ Authors: Kyle Miller, Yury Kudryashov
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Algebra.BigOperators.Order
+import Mathbin.Algebra.Module.Basic
 
 /-!
 # Pigeonhole principles
@@ -68,9 +69,9 @@ open Nat
 
 open BigOperators
 
-namespace Finsetₓ
+namespace Finset
 
-variable {s : Finsetₓ α} {t : Finsetₓ β} {f : α → β} {w : α → M} {b : M} {n : ℕ}
+variable {s : Finset α} {t : Finset β} {f : α → β} {w : α → M} {b : M} {n : ℕ}
 
 /-!
 ### The pigeonhole principles on `finset`s, pigeons counted by weight
@@ -123,7 +124,7 @@ theorem exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul (hf : ∀ a ∈ s, f a �
     ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) < b :=
   @exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum α β Mᵒᵈ _ _ _ _ _ _ _ hf hb
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is greater than `n • b`, they are sorted into some
 pigeonholes, and for all but `n` pigeonholes the total weight of the pigeons there is nonpositive,
@@ -138,7 +139,7 @@ theorem exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum
       _ ≤ ∑ y in t, ∑ x in s.filter fun x => f x = y, w x := sum_le_sum_fiberwise_of_sum_fiber_nonpos ht
       
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is less than `n • b`, they are sorted into some
 pigeonholes, and for all but `n` pigeonholes the total weight of the pigeons there is nonnegative,
@@ -170,7 +171,7 @@ theorem exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul (hf : ∀ a ∈ s, f a �
     (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum α β Mᵒᵈ _ _ _ _ _ _ _ hf ht hb
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is greater than or equal to `n • b`, they
 are sorted into some pigeonholes, and for all but `n > 0` pigeonholes the total weight of the
@@ -185,7 +186,7 @@ theorem exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
       _ ≤ ∑ y in t, ∑ x in s.filter fun x => f x = y, w x := sum_le_sum_fiberwise_of_sum_fiber_nonpos hf
       
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is less than or equal to `n • b`, they are
 sorted into some pigeonholes, and for all but `n > 0` pigeonholes the total weight of the pigeons
@@ -288,13 +289,13 @@ theorem exists_card_fiber_le_of_card_le_mul (ht : t.Nonempty) (hn : s.card ≤ t
     ∃ y ∈ t, (s.filter fun x => f x = y).card ≤ n :=
   exists_card_fiber_le_of_card_le_nsmul ht hn
 
-end Finsetₓ
+end Finset
 
-namespace Fintypeₓ
+namespace Fintype
 
-open Finsetₓ
+open Finset
 
-variable [Fintypeₓ α] [Fintypeₓ β] (f : α → β) {w : α → M} {b : M} {n : ℕ}
+variable [Fintype α] [Fintype β] (f : α → β) {w : α → M} {b : M} {n : ℕ}
 
 section
 
@@ -418,7 +419,7 @@ theorem exists_card_fiber_le_of_card_le_mul [Nonempty β] (hn : card α ≤ card
     ∃ y : β, (univ.filter fun x => f x = y).card ≤ n :=
   exists_card_fiber_le_of_card_le_nsmul _ hn
 
-end Fintypeₓ
+end Fintype
 
 namespace Nat
 
@@ -428,7 +429,7 @@ open Set
 that are equal mod `k`. -/
 theorem exists_lt_modeq_of_infinite {s : Set ℕ} (hs : s.Infinite) {k : ℕ} (hk : 0 < k) :
     ∃ m ∈ s, ∃ n ∈ s, m < n ∧ m ≡ n [MOD k] :=
-  (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ Iio k from Nat.mod_ltₓ n hk) <| finite_lt_nat k
+  (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ IioCat k from Nat.mod_lt n hk) <| finite_lt_nat k
 
 end Nat
 

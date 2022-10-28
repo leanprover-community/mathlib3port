@@ -135,7 +135,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
     let v ← mk_local' n bi d
     summarize_instance <| b v
   | e@(app f x) => do
-    let quote.1 (Testableₓ (%%ₓp)) ← infer_type e
+    let quote.1 (Testable (%%ₓp)) ← infer_type e
     let xs ← e.get_app_args.mmapFilter (try_core ∘ summarize_instance)
     pure <| instance_tree.node e p xs
   | e => do
@@ -152,9 +152,9 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.
 

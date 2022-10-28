@@ -49,7 +49,7 @@ by convex sets, the norm of `f` tends to infinity along `l`, and `f' = O(g)` alo
 is the derivative of `f`, then `g` is not integrable on any interval `a..b` such that
 `[a, b] ∈ l`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f : ℝ → E} {g : ℝ → F} {a b : ℝ}
-    (l : Filter ℝ) [NeBot l] [TendstoIxxClass Icc l l] (hl : [a, b] ∈ l) (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x)
+    (l : Filter ℝ) [NeBot l] [TendstoIxxClass IccCat l l] (hl : [a, b] ∈ l) (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x)
     (hf : Tendsto (fun x => ∥f x∥) l atTop) (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
   intro hgi
   obtain ⟨C, hC₀, s, hsl, hsub, hfd, hg⟩ :
@@ -80,18 +80,17 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
   replace hg : ∀ x ∈ Ι c d, ∥deriv f x∥ ≤ C * ∥g x∥
   exact fun z hz => hg c hc d hd z ⟨hz.1.le, hz.2⟩
   have hg_ae : ∀ᵐ x ∂volume.restrict (Ι c d), ∥deriv f x∥ ≤ C * ∥g x∥ :=
-    (ae_restrict_mem measurable_set_interval_oc).mono hg
+    (ae_restrict_mem measurableSetIntervalOc).mono hg
   have hsub' : Ι c d ⊆ Ι a b := interval_oc_subset_interval_oc_of_interval_subset_interval hsub
   have hfi : IntervalIntegrable (deriv f) volume c d :=
-    (hgi.mono_set hsub).mono_fun' (ae_strongly_measurable_deriv _ _) hg_ae
+    (hgi.mono_set hsub).monoFun' (aeStronglyMeasurableDeriv _ _) hg_ae
   refine' hlt.not_le (sub_le_iff_le_add'.1 _)
   calc
     ∥f d∥ - ∥f c∥ ≤ ∥f d - f c∥ := norm_sub_norm_le _ _
     _ = ∥∫ x in c..d, deriv f x∥ := congr_arg _ (integral_deriv_eq_sub hfd hfi).symm
     _ = ∥∫ x in Ι c d, deriv f x∥ := norm_integral_eq_norm_integral_Ioc _
     _ ≤ ∫ x in Ι c d, ∥deriv f x∥ := norm_integral_le_integral_norm _
-    _ ≤ ∫ x in Ι c d, C * ∥g x∥ :=
-      set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurable_set_interval_oc hg
+    _ ≤ ∫ x in Ι c d, C * ∥g x∥ := set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurableSetIntervalOc hg
     _ ≤ ∫ x in Ι a b, C * ∥g x∥ :=
       set_integral_mono_set hgi.def ((ae_of_all _) fun x => mul_nonneg hC₀ (norm_nonneg _)) hsub'.eventually_le
     
@@ -138,11 +137,11 @@ theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c
     (hf : (fun x => (x - c)⁻¹) =O[𝓝[≠] c] f) (hne : a ≠ b) (hc : c ∈ [a, b]) : ¬IntervalIntegrable f volume a b := by
   have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x := by
     filter_upwards [self_mem_nhds_within] with x hx
-    simpa using ((has_deriv_at_id x).sub_const c).log (sub_ne_zero.2 hx)
+    simpa using ((hasDerivAtId x).sub_const c).log (sub_ne_zero.2 hx)
   have B : tendsto (fun x => ∥Real.log (x - c)∥) (𝓝[≠] c) at_top := by
     refine' tendsto_abs_at_bot_at_top.comp (real.tendsto_log_nhds_within_zero.comp _)
     rw [← sub_self c]
-    exact ((has_deriv_at_id c).sub_const c).tendsto_punctured_nhds one_ne_zero
+    exact ((hasDerivAtId c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact
     not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured (A.mono fun x hx => hx.DifferentiableAt) B
       (hf.congr' (A.mono fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
@@ -157,7 +156,7 @@ theorem interval_integrable_sub_inv_iff {a b c : ℝ} :
     
   · rintro (rfl | h₀)
     exacts[IntervalIntegrable.refl,
-      interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_memₓ hx h₀)
+      interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
         (continuous_on_id.sub continuous_on_const)]
     
 

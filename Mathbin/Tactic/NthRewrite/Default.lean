@@ -73,7 +73,7 @@ unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List Exp
 at all the locations `loc`. -/
 unsafe def nth_rewrite_core (path : List ExprLens.Dir) (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
     tactic Unit := do
-  let fn := fun h => get_nth_rewrite_with_zoom n q path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
+  let fn h := get_nth_rewrite_with_zoom n q path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
   match l with
     | loc.wildcard => l (fn ∘ some) (fn none)
     | _ => l (fn ∘ some) (fn none)

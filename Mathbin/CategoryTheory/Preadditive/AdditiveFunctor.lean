@@ -5,7 +5,7 @@ Authors: Adam Topaz, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.ExactFunctor
 import Mathbin.CategoryTheory.Limits.Preserves.Finite
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Biproducts
+import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 
 /-!
@@ -58,7 +58,7 @@ theorem coe_map_add_hom {X Y : C} : ⇑(F.mapAddHom : (X ⟶ Y) →+ _) = @map C
   rfl
 
 instance (priority := 100) preserves_zero_morphisms_of_additive :
-    PreservesZeroMorphisms F where map_zero' := fun X Y => F.mapAddHom.map_zero
+    PreservesZeroMorphisms F where map_zero' X Y := F.mapAddHom.map_zero
 
 instance : Additive (𝟭 C) where
 
@@ -82,7 +82,7 @@ theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.
 open BigOperators
 
 @[simp]
-theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finsetₓ α) :
+theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) :
     F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
   (F.mapAddHom : (X ⟶ Y) →+ _).map_sum f s
 
@@ -109,7 +109,7 @@ open CategoryTheory.Preadditive
 
 instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
     PreservesFiniteBiproducts
-      F where preserves := fun J _ =>
+      F where preserves J _ :=
     { preserves := fun f =>
         { preserves := fun b hb =>
             is_bilimit_of_total _
@@ -133,16 +133,16 @@ end
 
 end Functor
 
-namespace Equivalenceₓ
+namespace Equivalence
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
 
 instance inverse_additive (e : C ≌ D) [e.Functor.Additive] :
-    e.inverse.Additive where map_add' := fun X Y f g => by
+    e.inverse.Additive where map_add' X Y f g := by
     apply e.functor.map_injective
     simp
 
-end Equivalenceₓ
+end Equivalence
 
 section
 
@@ -150,42 +150,42 @@ variable (C D : Type _) [Category C] [Category D] [Preadditive C] [Preadditive D
 
 /-- Bundled additive functors. -/
 @[nolint has_nonempty_instance]
-def AdditiveFunctor :=
+def AdditiveFunctorCat :=
   FullSubcategory fun F : C ⥤ D => F.Additive deriving Category
 
 -- mathport name: «expr ⥤+ »
-infixr:26 " ⥤+ " => AdditiveFunctor
+infixr:26 " ⥤+ " => AdditiveFunctorCat
 
 instance : Preadditive (C ⥤+ D) :=
   Preadditive.InducedCategory.category _
 
 /-- An additive functor is in particular a functor. -/
-def AdditiveFunctor.forget : (C ⥤+ D) ⥤ C ⥤ D :=
+def AdditiveFunctorCat.forget : (C ⥤+ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 variable {C D}
 
 /-- Turn an additive functor into an object of the category `AdditiveFunctor C D`. -/
-def AdditiveFunctor.of (F : C ⥤ D) [F.Additive] : C ⥤+ D :=
+def AdditiveFunctorCat.of (F : C ⥤ D) [F.Additive] : C ⥤+ D :=
   ⟨F, inferInstance⟩
 
 @[simp]
-theorem AdditiveFunctor.of_fst (F : C ⥤ D) [F.Additive] : (AdditiveFunctor.of F).1 = F :=
+theorem AdditiveFunctorCat.of_fst (F : C ⥤ D) [F.Additive] : (AdditiveFunctorCat.of F).1 = F :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.forget_obj (F : C ⥤+ D) : (AdditiveFunctor.forget C D).obj F = F.1 :=
+theorem AdditiveFunctorCat.forget_obj (F : C ⥤+ D) : (AdditiveFunctorCat.forget C D).obj F = F.1 :=
   rfl
 
-theorem AdditiveFunctor.forget_obj_of (F : C ⥤ D) [F.Additive] :
-    (AdditiveFunctor.forget C D).obj (AdditiveFunctor.of F) = F :=
+theorem AdditiveFunctorCat.forget_obj_of (F : C ⥤ D) [F.Additive] :
+    (AdditiveFunctorCat.forget C D).obj (AdditiveFunctorCat.of F) = F :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.forget_map (F G : C ⥤+ D) (α : F ⟶ G) : (AdditiveFunctor.forget C D).map α = α :=
+theorem AdditiveFunctorCat.forget_map (F G : C ⥤+ D) (α : F ⟶ G) : (AdditiveFunctorCat.forget C D).map α = α :=
   rfl
 
-instance : Functor.Additive (AdditiveFunctor.forget C D) where map_add' := fun F G α β => rfl
+instance : Functor.Additive (AdditiveFunctorCat.forget C D) where map_add' F G α β := rfl
 
 instance (F : C ⥤+ D) : Functor.Additive F.1 :=
   F.2
@@ -207,21 +207,21 @@ attribute [local instance] preserves_binary_biproducts_of_preserves_binary_produ
 attribute [local instance] preserves_binary_biproducts_of_preserves_binary_coproducts
 
 /-- Turn a left exact functor into an additive functor. -/
-def AdditiveFunctor.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
+def AdditiveFunctorCat.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
     functor.additive_of_preserves_binary_biproducts F deriving
   Full, Faithful
 
 /-- Turn a right exact functor into an additive functor. -/
-def AdditiveFunctor.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
+def AdditiveFunctorCat.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
     functor.additive_of_preserves_binary_biproducts F deriving
   Full, Faithful
 
 /-- Turn an exact functor into an additive functor. -/
-def AdditiveFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
+def AdditiveFunctorCat.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h.1
     functor.additive_of_preserves_binary_biproducts F deriving
@@ -232,27 +232,30 @@ end
 variable {C D}
 
 @[simp]
-theorem AdditiveFunctor.of_left_exact_obj_fst (F : C ⥤ₗ D) : ((AdditiveFunctor.ofLeftExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctorCat.of_left_exact_obj_fst (F : C ⥤ₗ D) :
+    ((AdditiveFunctorCat.ofLeftExact C D).obj F).obj = F.obj :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.of_right_exact_obj_fst (F : C ⥤ᵣ D) : ((AdditiveFunctor.ofRightExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctorCat.of_right_exact_obj_fst (F : C ⥤ᵣ D) :
+    ((AdditiveFunctorCat.ofRightExact C D).obj F).obj = F.obj :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.of_exact_obj_fst (F : C ⥤ₑ D) : ((AdditiveFunctor.ofExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctorCat.of_exact_obj_fst (F : C ⥤ₑ D) : ((AdditiveFunctorCat.ofExact C D).obj F).obj = F.obj :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.of_left_exact_map {F G : C ⥤ₗ D} (α : F ⟶ G) : (AdditiveFunctor.ofLeftExact C D).map α = α :=
+theorem AdditiveFunctor.of_left_exact_map {F G : C ⥤ₗ D} (α : F ⟶ G) : (AdditiveFunctorCat.ofLeftExact C D).map α = α :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.of_right_exact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) : (AdditiveFunctor.ofRightExact C D).map α = α :=
+theorem AdditiveFunctor.of_right_exact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) :
+    (AdditiveFunctorCat.ofRightExact C D).map α = α :=
   rfl
 
 @[simp]
-theorem AdditiveFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (AdditiveFunctor.ofExact C D).map α = α :=
+theorem AdditiveFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (AdditiveFunctorCat.ofExact C D).map α = α :=
   rfl
 
 end Exact

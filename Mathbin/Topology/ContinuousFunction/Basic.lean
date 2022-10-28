@@ -59,7 +59,7 @@ theorem map_continuous_at (f : F) (a : α) : ContinuousAt f a :=
 theorem map_continuous_within_at (f : F) (s : Set α) (a : α) : ContinuousWithinAt f s a :=
   (map_continuous f).ContinuousWithinAt
 
-instance : CoeTₓ F C(α, β) :=
+instance : CoeT F C(α, β) :=
   ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f }⟩
 
 end ContinuousMapClass
@@ -73,7 +73,7 @@ variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [Top
 
 instance : ContinuousMapClass C(α, β) α β where
   coe := ContinuousMap.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe_injective' f g h := by cases f <;> cases g <;> congr
   map_continuous := ContinuousMap.continuous_to_fun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -228,7 +228,7 @@ variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [Topologica
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
 def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
-  toFun := fun x => (f x, g x)
+  toFun x := (f x, g x)
   continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
@@ -248,7 +248,7 @@ section Pi
 variable {I A : Type _} {X : I → Type _} [TopologicalSpace A] [∀ i, TopologicalSpace (X i)]
 
 /-- Abbreviation for product of continuous maps, which is continuous -/
-def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where toFun := fun (a : A) (i : I) => f i a
+def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where toFun (a : A) (i : I) := f i a
 
 @[simp]
 theorem pi_eval (f : ∀ i, C(A, X i)) (a : A) : (pi f) a = fun i : I => (f i) a :=
@@ -371,12 +371,12 @@ theorem coe_trans : (f.trans g : C(α, γ)) = (g : C(β, γ)).comp f :=
 /-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
 @[simp]
 theorem symm_comp_to_continuous_map : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α := by
-  rw [← coeTransₓ, self_trans_symm, coe_refl]
+  rw [← coeTrans, self_trans_symm, coe_refl]
 
 /-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
 @[simp]
 theorem to_continuous_map_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β := by
-  rw [← coeTransₓ, symm_trans_self, coe_refl]
+  rw [← coeTrans, symm_trans_self, coe_refl]
 
 end Homeomorph
 

@@ -44,7 +44,7 @@ section NontriviallyNormedField
 
 variable (𝕜 E) {s : Set E}
 
-variable [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [Module ℝ E] [SmulCommClass ℝ 𝕜 E]
 
@@ -56,7 +56,7 @@ theorem nhds_basis_abs_convex : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 
     (LocallyConvexSpace.convex_basis_zero ℝ E).to_has_basis (fun s hs => _) fun s hs => ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
   refine' ⟨convexHull ℝ (BalancedCore 𝕜 s), _, convex_hull_min (balanced_core_subset s) hs.2⟩
   refine' ⟨Filter.mem_of_superset (balanced_core_mem_nhds_zero hs.1) (subset_convex_hull ℝ _), _⟩
-  refine' ⟨balanced_convex_hull_of_balanced (balanced_core_balanced s), _⟩
+  refine' ⟨balancedConvexHullOfBalanced (balancedCoreBalanced s), _⟩
   exact convex_convex_hull ℝ (BalancedCore 𝕜 s)
 
 variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
@@ -77,7 +77,7 @@ end NontriviallyNormedField
 
 section AbsolutelyConvexSets
 
-variable [TopologicalSpace E] [AddCommMonoidₓ E] [Zero E] [SemiNormedRing 𝕜]
+variable [TopologicalSpace E] [AddCommMonoid E] [Zero E] [SemiNormedRing 𝕜]
 
 variable [HasSmul 𝕜 E] [HasSmul ℝ E]
 
@@ -103,7 +103,7 @@ theorem coe_is_open (s : AbsConvexOpenSets 𝕜 E) : IsOpen (s : Set E) :=
 theorem coe_nhds (s : AbsConvexOpenSets 𝕜 E) : (s : Set E) ∈ 𝓝 (0 : E) :=
   s.coe_is_open.mem_nhds s.coe_zero_mem
 
-theorem coe_balanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
+theorem coeBalanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
   s.2.2.2.1
 
 theorem coe_convex (s : AbsConvexOpenSets 𝕜 E) : Convex ℝ (s : Set E) :=
@@ -115,13 +115,13 @@ instance : Nonempty (AbsConvexOpenSets 𝕜 E) := by
   rw [← exists_true_iff_nonempty]
   dsimp only [AbsConvexOpenSets]
   rw [Subtype.exists]
-  exact ⟨Set.Univ, ⟨mem_univ 0, is_open_univ, balanced_univ, convex_univ⟩, trivialₓ⟩
+  exact ⟨Set.Univ, ⟨mem_univ 0, is_open_univ, balancedUniv, convex_univ⟩, trivial⟩
 
 end AbsolutelyConvexSets
 
 variable [IsROrC 𝕜]
 
-variable [AddCommGroupₓ E] [TopologicalSpace E]
+variable [AddCommGroup E] [TopologicalSpace E]
 
 variable [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 
@@ -131,7 +131,7 @@ variable (𝕜 E)
 
 /-- The family of seminorms defined by the gauges of absolute convex open sets. -/
 noncomputable def gaugeSeminormFamily : SeminormFamily 𝕜 E (AbsConvexOpenSets 𝕜 E) := fun s =>
-  gaugeSeminorm s.coe_balanced s.coe_convex (absorbent_nhds_zero s.coe_nhds)
+  gaugeSeminorm s.coeBalanced s.coe_convex (absorbentNhdsZero s.coe_nhds)
 
 variable {𝕜 E}
 
@@ -147,13 +147,13 @@ variable [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E]
 variable [SmulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- The topology of a locally convex space is induced by the gauge seminorm family. -/
-theorem with_gauge_seminorm_family : WithSeminorms (gaugeSeminormFamily 𝕜 E) := by
-  refine' SeminormFamily.with_seminorms_of_has_basis _ _
+theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) := by
+  refine' SeminormFamily.withSeminormsOfHasBasis _ _
   refine' Filter.HasBasis.to_has_basis (nhds_basis_abs_convex_open 𝕜 E) (fun s hs => _) fun s hs => _
   · refine' ⟨s, ⟨_, rfl.subset⟩⟩
     rw [SeminormFamily.basis_sets_iff]
     refine' ⟨{⟨s, hs⟩}, 1, one_pos, _⟩
-    simp only [Finsetₓ.sup_singleton]
+    simp only [Finset.sup_singleton]
     rw [gauge_seminorm_family_ball]
     simp only [Subtype.coe_mk]
     
@@ -165,10 +165,10 @@ theorem with_gauge_seminorm_family : WithSeminorms (gaugeSeminormFamily 𝕜 E) 
   -- We have to show that the intersection contains zero, is open, balanced, and convex
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr], is_open_bInter (to_finite _) fun _ _ => _,
-      balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _, convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
+      balancedInter₂ fun _ _ => Seminorm.balancedBallZero _ _, convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open
   have hr' : r = ∥(r : 𝕜)∥ * 1 := by simp [abs_of_pos hr]
-  have hr'' : (r : 𝕜) ≠ 0 := by simp [ne_of_gtₓ hr]
+  have hr'' : (r : 𝕜) ≠ 0 := by simp [ne_of_gt hr]
   rw [hr']
   rw [← Seminorm.smul_ball_zero (norm_pos_iff.mpr hr'')]
   refine' IsOpen.smul₀ _ hr''

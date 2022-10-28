@@ -46,7 +46,7 @@ variable {ι R A σ : Type _}
 
 section GradedRing
 
-variable [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
 
@@ -106,7 +106,7 @@ theorem GradedRing.proj_apply (i : ι) (r : A) : GradedRing.proj 𝒜 i r = (dec
 
 theorem GradedRing.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
     GradedRing.proj 𝒜 i ((decompose 𝒜).symm a) = (decompose 𝒜).symm (DirectSum.of _ i (a i)) := by
-  rw [GradedRing.proj_apply, decompose_symm_of, Equivₓ.apply_symm_apply]
+  rw [GradedRing.proj_apply, decompose_symm_of, Equiv.apply_symm_apply]
 
 theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r ≠ 0 :=
@@ -118,7 +118,7 @@ section AddCancelMonoid
 
 open DirectSum
 
-variable [DecidableEq ι] [Semiringₓ A] [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
+variable [DecidableEq ι] [Semiring A] [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
 
 variable {i j : ι}
 
@@ -148,7 +148,7 @@ end AddCancelMonoid
 
 section GradedAlgebra
 
-variable [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable (𝒜 : ι → Submodule R A)
 
@@ -201,7 +201,7 @@ theorem GradedAlgebra.proj_apply (i : ι) (r : A) : GradedAlgebra.proj 𝒜 i r 
 
 theorem GradedAlgebra.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
     GradedAlgebra.proj 𝒜 i ((decompose 𝒜).symm a) = (decompose 𝒜).symm (of _ i (a i)) := by
-  rw [GradedAlgebra.proj_apply, decompose_symm_of, Equivₓ.apply_symm_apply]
+  rw [GradedAlgebra.proj_apply, decompose_symm_of, Equiv.apply_symm_apply]
 
 theorem GradedAlgebra.mem_support_iff [DecidableEq A] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedAlgebra.proj 𝒜 i r ≠ 0 :=
@@ -213,7 +213,7 @@ section CanonicalOrder
 
 open SetLike.GradedMonoid DirectSum
 
-variable [Semiringₓ A] [DecidableEq ι]
+variable [Semiring A] [DecidableEq ι]
 
 variable [CanonicallyOrderedAddMonoid ι]
 
@@ -224,12 +224,12 @@ homomorphism.
 -/
 @[simps]
 def GradedRing.projZeroRingHom : A →+* A where
-  toFun := fun a => decompose 𝒜 a 0
+  toFun a := decompose 𝒜 a 0
   map_one' := decompose_of_mem_same 𝒜 one_mem
   map_zero' := by
     rw [decompose_zero]
     rfl
-  map_add' := fun _ _ => by
+  map_add' _ _ := by
     rw [decompose_add]
     rfl
   map_mul' := by
@@ -257,11 +257,11 @@ def GradedRing.projZeroRingHom : A →+* A where
           
         
       · intro _ _ hd he
-        simp only [mul_addₓ, decompose_add, add_apply, AddMemClass.coe_add, hd, he]
+        simp only [mul_add, decompose_add, add_apply, AddMemClass.coe_add, hd, he]
         
       
     · rintro _ _ ha hb _
-      simp only [add_mulₓ, decompose_add, add_apply, AddMemClass.coe_add, ha, hb]
+      simp only [add_mul, decompose_add, add_apply, AddMemClass.coe_add, ha, hb]
       
 
 variable {a b : A} {n i : ι}

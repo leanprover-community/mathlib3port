@@ -22,7 +22,7 @@ variable {M R K : Type _}
 
 section AddBasic
 
-variable [AddMonoidₓ M] [Preorderₓ M] [CovariantClass M M (· + ·) (· < ·)]
+variable [AddMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)]
 
 instance : Add { x : M // 0 < x } :=
   ⟨fun x y => ⟨x + y, add_pos x.2 y.2⟩⟩
@@ -31,18 +31,18 @@ instance : Add { x : M // 0 < x } :=
 theorem coe_add (x y : { x : M // 0 < x }) : ↑(x + y) = (x + y : M) :=
   rfl
 
-instance : AddSemigroupₓ { x : M // 0 < x } :=
+instance : AddSemigroup { x : M // 0 < x } :=
   Subtype.coe_injective.AddSemigroup _ coe_add
 
-instance {M : Type _} [AddCommMonoidₓ M] [Preorderₓ M] [CovariantClass M M (· + ·) (· < ·)] :
-    AddCommSemigroupₓ { x : M // 0 < x } :=
+instance {M : Type _} [AddCommMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)] :
+    AddCommSemigroup { x : M // 0 < x } :=
   Subtype.coe_injective.AddCommSemigroup _ coe_add
 
-instance {M : Type _} [AddLeftCancelMonoid M] [Preorderₓ M] [CovariantClass M M (· + ·) (· < ·)] :
+instance {M : Type _} [AddLeftCancelMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)] :
     AddLeftCancelSemigroup { x : M // 0 < x } :=
   Subtype.coe_injective.AddLeftCancelSemigroup _ coe_add
 
-instance {M : Type _} [AddRightCancelMonoid M] [Preorderₓ M] [CovariantClass M M (· + ·) (· < ·)] :
+instance {M : Type _} [AddRightCancelMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)] :
     AddRightCancelSemigroup { x : M // 0 < x } :=
   Subtype.coe_injective.AddRightCancelSemigroup _ coe_add
 
@@ -71,13 +71,13 @@ instance contravariant_class_swap_add_le [ContravariantClass M M (swap (· + ·)
 
 end AddBasic
 
-instance covariant_class_add_le [AddMonoidₓ M] [PartialOrderₓ M] [CovariantClass M M (· + ·) (· < ·)] :
+instance covariant_class_add_le [AddMonoid M] [PartialOrder M] [CovariantClass M M (· + ·) (· < ·)] :
     CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· ≤ ·) :=
-  ⟨fun x => StrictMonoₓ.monotone fun _ _ h => add_lt_add_left h _⟩
+  ⟨fun x => StrictMono.monotone fun _ _ h => add_lt_add_left h _⟩
 
 section Mul
 
-variable [OrderedSemiring R]
+variable [StrictOrderedSemiring R]
 
 instance : Mul { x : R // 0 < x } :=
   ⟨fun x y => ⟨x * y, mul_pos x.2 y.2⟩⟩
@@ -93,10 +93,10 @@ instance : Pow { x : R // 0 < x } ℕ :=
 theorem coe_pow (x : { x : R // 0 < x }) (n : ℕ) : ↑(x ^ n) = (x ^ n : R) :=
   rfl
 
-instance : Semigroupₓ { x : R // 0 < x } :=
+instance : Semigroup { x : R // 0 < x } :=
   Subtype.coe_injective.Semigroup coe coe_mul
 
-instance : Distribₓ { x : R // 0 < x } :=
+instance : Distrib { x : R // 0 < x } :=
   Subtype.coe_injective.Distrib _ coe_add coe_mul
 
 instance [Nontrivial R] : One { x : R // 0 < x } :=
@@ -106,14 +106,14 @@ instance [Nontrivial R] : One { x : R // 0 < x } :=
 theorem coe_one [Nontrivial R] : ((1 : { x : R // 0 < x }) : R) = 1 :=
   rfl
 
-instance [Nontrivial R] : Monoidₓ { x : R // 0 < x } :=
+instance [Nontrivial R] : Monoid { x : R // 0 < x } :=
   Subtype.coe_injective.Monoid _ coe_one coe_mul coe_pow
 
 end Mul
 
 section mul_comm
 
-instance [OrderedCommSemiring R] [Nontrivial R] : OrderedCommMonoid { x : R // 0 < x } :=
+instance [StrictOrderedCommSemiring R] [Nontrivial R] : OrderedCommMonoid { x : R // 0 < x } :=
   { Subtype.partialOrder _, Subtype.coe_injective.CommMonoid (coe : { x : R // 0 < x } → R) coe_one coe_mul coe_pow with
     mul_le_mul_left := fun x y hxy c => Subtype.coe_le_coe.1 <| mul_le_mul_of_nonneg_left hxy c.2.le }
 

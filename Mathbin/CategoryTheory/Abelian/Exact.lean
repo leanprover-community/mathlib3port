@@ -306,7 +306,7 @@ variable {D : Type u₂} [Category.{v₂} D] [Abelian D]
 variable (F : C ⥤ D) [PreservesZeroMorphisms F]
 
 instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful [Faithful F] :
-    ReflectsExactSequences F where reflects := fun X Y Z f g hfg => by
+    ReflectsExactSequences F where reflects X Y Z f g hfg := by
     rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg
     refine' (abelian.exact_iff _ _).2 ⟨hfg.1, F.zero_of_map_zero _ _⟩
     obtain ⟨k, hk⟩ :=
@@ -378,7 +378,7 @@ theorem preserves_epimorphisms_of_map_exact : L.PreservesEpimorphisms :=
 
 /-- A functor which preserves exactness preserves kernels. -/
 def preservesKernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
-    PreservesLimit (parallelPair f 0) L where preserves := fun c ic => by
+    PreservesLimit (parallelPair f 0) L where preserves c ic := by
     letI := preserves_zero_morphisms_of_map_exact L h
     letI := preserves_monomorphisms_of_map_exact L h
     letI := mono_of_is_limit_fork ic
@@ -390,7 +390,7 @@ def preservesKernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
 
 /-- A functor which preserves exactness preserves zero cokernels. -/
 def preservesCokernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
-    PreservesColimit (parallelPair f 0) L where preserves := fun c ic => by
+    PreservesColimit (parallelPair f 0) L where preserves c ic := by
     letI := preserves_zero_morphisms_of_map_exact L h
     letI := preserves_epimorphisms_of_map_exact L h
     letI := epi_of_is_colimit_cofork ic

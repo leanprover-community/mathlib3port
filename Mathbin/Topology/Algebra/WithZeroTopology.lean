@@ -41,16 +41,16 @@ namespace LinearOrderedCommGroupWithZero
 
 variable {α Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] {γ γ₁ γ₂ : Γ₀} {l : Filter α} {f : α → Γ₀}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
 protected def topologicalSpace : TopologicalSpace Γ₀ :=
-  TopologicalSpace.mkOfNhds <| update pure 0 <| ⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ)
+  TopologicalSpace.mkOfNhds <| update pure 0 <| ⨅ (γ) (_ : γ ≠ 0), 𝓟 (IioCat γ)
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0)
-theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ)) :=
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (IioCat γ)) :=
   funext <| nhds_mk_of_nhds_single <| le_infi₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
 
 /-!
@@ -58,25 +58,25 @@ theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (�
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0)
-theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ) := by rw [nhds_eq_update, update_same]
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (IioCat γ) := by rw [nhds_eq_update, update_same]
 
 /-- In a linearly ordered group with zero element adjoined, `U` is a neighbourhood of `0` if and
 only if there exists a nonzero element `γ₀` such that `Iio γ₀ ⊆ U`. -/
-theorem has_basis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ ≠ 0) Iio := by
+theorem has_basis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ ≠ 0) IioCat := by
   rw [nhds_zero]
   refine' has_basis_binfi_principal _ ⟨1, one_ne_zero⟩
   exact directed_on_iff_directed.2 (directed_of_inf fun a b hab => Iio_subset_Iio hab)
 
-theorem Iio_mem_nhds_zero (hγ : γ ≠ 0) : Iio γ ∈ 𝓝 (0 : Γ₀) :=
+theorem Iio_mem_nhds_zero (hγ : γ ≠ 0) : IioCat γ ∈ 𝓝 (0 : Γ₀) :=
   has_basis_nhds_zero.mem_of_mem hγ
 
 /-- If `γ` is an invertible element of a linearly ordered group with zero element adjoined, then
 `Iio (γ : Γ₀)` is a neighbourhood of `0`. -/
-theorem nhds_zero_of_units (γ : Γ₀ˣ) : Iio ↑γ ∈ 𝓝 (0 : Γ₀) :=
+theorem nhds_zero_of_units (γ : Γ₀ˣ) : IioCat ↑γ ∈ 𝓝 (0 : Γ₀) :=
   Iio_mem_nhds_zero γ.ne_zero
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ₀ «expr ≠ » 0)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
 theorem tendsto_zero : Tendsto f l (𝓝 (0 : Γ₀)) ↔ ∀ (γ₀) (_ : γ₀ ≠ 0), ∀ᶠ x in l, f x < γ₀ := by simp [nhds_zero]
 
 /-!
@@ -115,7 +115,7 @@ theorem tendsto_of_ne_zero {γ : Γ₀} (h : γ ≠ 0) : Tendsto f l (𝓝 γ) �
 theorem tendsto_units {γ₀ : Γ₀ˣ} : Tendsto f l (𝓝 (γ₀ : Γ₀)) ↔ ∀ᶠ x in l, f x = γ₀ :=
   tendsto_of_ne_zero γ₀.ne_zero
 
-theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
+theorem Iio_mem_nhds (h : γ₁ < γ₂) : IioCat γ₂ ∈ 𝓝 γ₁ := by
   rcases eq_or_ne γ₁ 0 with (rfl | h₀) <;> simp [*, h.ne', Iio_mem_nhds_zero]
 
 /-!
@@ -123,17 +123,17 @@ theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0)
-theorem is_open_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), Iio γ ⊆ s := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+theorem is_open_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), IioCat γ ⊆ s := by
   rw [is_open_iff_mem_nhds, ← and_forall_ne (0 : Γ₀)]
   simp (config := { contextual := true }) [nhds_of_ne_zero, imp_iff_not_or, has_basis_nhds_zero.mem_iff]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0)
-theorem is_closed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ Ici γ := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+theorem is_closed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ IciCat γ := by
   simp only [← is_open_compl_iff, is_open_iff, mem_compl_iff, not_not, ← compl_Ici, compl_subset_compl]
 
-theorem is_open_Iio {a : Γ₀} : IsOpen (Iio a) :=
-  is_open_iff.mpr <| imp_iff_not_or.mp fun ha => ⟨a, ne_of_gtₓ ha, Subset.rfl⟩
+theorem is_open_Iio {a : Γ₀} : IsOpen (IioCat a) :=
+  is_open_iff.mpr <| imp_iff_not_or.mp fun ha => ⟨a, ne_of_gt ha, Subset.rfl⟩
 
 /-!
 ### Instances
@@ -142,17 +142,17 @@ theorem is_open_Iio {a : Γ₀} : IsOpen (Iio a) :=
 
 /-- The topology on a linearly ordered group with zero element adjoined is compatible with the order
 structure: the set `{p : Γ₀ × Γ₀ | p.1 ≤ p.2}` is closed. -/
-instance (priority := 100) order_closed_topology :
-    OrderClosedTopology Γ₀ where is_closed_le' := by
-    simp only [← is_open_compl_iff, compl_set_of, not_leₓ, is_open_iff_mem_nhds]
+instance (priority := 100) orderClosedTopology :
+    OrderClosedTopology Γ₀ where isClosedLe' := by
+    simp only [← is_open_compl_iff, compl_set_of, not_le, is_open_iff_mem_nhds]
     rintro ⟨a, b⟩ (hab : b < a)
     rw [nhds_prod_eq, nhds_of_ne_zero (zero_le'.trans_lt hab).ne', pure_prod]
     exact Iio_mem_nhds hab
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
-instance (priority := 100) t3_space :
-    T3Space Γ₀ where to_regular_space :=
-    RegularSpace.of_lift'_closure fun γ => by
+instance (priority := 100) t3Space :
+    T3Space Γ₀ where toRegularSpace :=
+    RegularSpace.ofLift'Closure fun γ => by
       rcases ne_or_eq γ 0 with (h₀ | rfl)
       · rw [nhds_of_ne_zero h₀, lift'_pure (monotone_closure Γ₀), closure_singleton, principal_singleton]
         
@@ -165,7 +165,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
   ⟨by
     rw [continuous_iff_continuous_at]
     rintro ⟨x, y⟩
-    wlog (discharger := tactic.skip) hle : x ≤ y := le_totalₓ x y using x y, y x
+    wlog (discharger := tactic.skip) hle : x ≤ y := le_total x y using x y, y x
     swap
     · simpa only [mul_comm, (· ∘ ·), Prod.swap] using tendsto.comp this (continuous_swap.tendsto (x, y))
       
@@ -175,7 +175,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
         ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iff has_basis_nhds_zero).2 fun γ hγ =>
           ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, _⟩
       rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
-      exact (mul_lt_mul₀ hx hy).trans_eq (mul_oneₓ γ)
+      exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)
       
     · rw [ContinuousAt, zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure, tendsto_map'_iff]
       refine' (has_basis_nhds_zero.tendsto_iff has_basis_nhds_zero).2 fun γ hγ => _

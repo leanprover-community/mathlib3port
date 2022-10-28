@@ -239,13 +239,13 @@ namespace IsIso
 
 -- see Note [lower instance priority]
 instance (priority := 100) epi_of_iso (f : X ⟶ Y) [IsIso f] :
-    Epi f where left_cancellation := fun Z g h w => -- This is an interesting test case for better rewrite automation.
+    Epi f where left_cancellation Z g h w :=-- This is an interesting test case for better rewrite automation.
   by rw [← is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h]
 
 -- see Note [lower instance priority]
 instance (priority := 100) mono_of_iso (f : X ⟶ Y) [IsIso f] :
     Mono
-      f where right_cancellation := fun Z g h w => by
+      f where right_cancellation Z g h w := by
     rw [← category.comp_id g, ← category.comp_id h, ← is_iso.hom_inv_id f, ← category.assoc, w, ← category.assoc]
 
 @[ext]

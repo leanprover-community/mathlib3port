@@ -3,6 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
+import Mathbin.Algebra.GroupRingAction
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.Algebra.Ring.Equiv
 
@@ -33,18 +34,20 @@ def RingAut (R : Type _) [Mul R] [Add R] :=
 
 namespace RingAut
 
+section mul_add
+
 variable (R : Type _) [Mul R] [Add R]
 
 /-- The group operation on automorphisms of a ring is defined by
 `λ g h, ring_equiv.trans h g`.
 This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
-instance : Groupₓ (RingAut R) := by
+instance : Group (RingAut R) := by
   refine_struct
       { mul := fun g h => RingEquiv.trans h g, one := RingEquiv.refl R, inv := RingEquiv.symm, div := _,
         npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩,
         zpow := @zpowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩ ⟨RingEquiv.symm⟩ } <;>
-    intros <;> ext <;> try rfl <;> apply Equivₓ.left_inv
+    intros <;> ext <;> try rfl <;> apply Equiv.left_inv
 
 instance : Inhabited (RingAut R) :=
   ⟨1⟩
@@ -56,7 +59,44 @@ def toAddAut : RingAut R →* AddAut R := by refine_struct { toFun := RingEquiv.
 def toMulAut : RingAut R →* MulAut R := by refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
 
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
-def toPerm : RingAut R →* Equivₓ.Perm R := by refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : RingAut R →* Equiv.Perm R := by refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
+
+end mul_add
+
+section Semiring
+
+variable {G R : Type _} [Group G] [Semiring R]
+
+/-- The tautological action by the group of automorphism of a ring `R` on `R`.-/
+instance applyMulSemiringAction : MulSemiringAction (RingAut R) R where
+  smul := (· <| ·)
+  smul_zero := RingEquiv.map_zero
+  smul_add := RingEquiv.map_add
+  smul_one := RingEquiv.map_one
+  smul_mul := RingEquiv.map_mul
+  one_smul _ := rfl
+  mul_smul _ _ _ := rfl
+
+@[simp]
+protected theorem smul_def (f : RingAut R) (r : R) : f • r = f r :=
+  rfl
+
+instance apply_has_faithful_smul : HasFaithfulSmul (RingAut R) R :=
+  ⟨fun _ _ => RingEquiv.ext⟩
+
+variable (G R)
+
+/-- Each element of the group defines a ring automorphism.
+
+This is a stronger version of `distrib_mul_action.to_add_aut` and
+`mul_distrib_mul_action.to_mul_aut`. -/
+@[simps]
+def _root_.mul_semiring_action.to_ring_aut [MulSemiringAction G R] : G →* RingAut R where
+  toFun := MulSemiringAction.toRingEquiv G R
+  map_mul' g h := RingEquiv.ext <| mul_smul g h
+  map_one' := RingEquiv.ext <| one_smul _
+
+end Semiring
 
 end RingAut
 

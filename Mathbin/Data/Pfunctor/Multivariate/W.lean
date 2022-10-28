@@ -118,8 +118,14 @@ First, describe operations on `W` as a polynomial functor.
 def wpMk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) : P.W α :=
   ⟨⟨a, f⟩, f'⟩
 
+/- warning: mvpfunctor.Wp_rec -> Mvpfunctor.wpRec is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) {α : Typevec.{u_1} n} {C : Type.{u_2}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) P) (f : (Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Pfunctor.W.{u} (Mvpfunctor.last.{u} n P))), (Typevec.Arrow.{u u_1} n (Mvpfunctor.WPath.{u} n P (WType.mk.{u u} (Pfunctor.A.{u} (Mvpfunctor.last.{u} n P)) (Pfunctor.B.{u} (Mvpfunctor.last.{u} n P)) a f)) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (forall (x : Pfunctor.W.{u} (Mvpfunctor.last.{u} n P)), (Typevec.Arrow.{u u_1} n (Mvpfunctor.WPath.{u} n P x) α) -> C)
+but is expected to have type
+  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) {α : Typevec.{_aux_param_0} n} {C : Type.{_aux_param_1}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) P) (f : (Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Pfunctor.W.{u} (Mvpfunctor.last.{u} n P))), (Typevec.Arrow.{u _aux_param_0} n (Mvpfunctor.WPath.{u} n P (WType.mk.{u u} (Pfunctor.A.{u} (Mvpfunctor.last.{u} n P)) (Pfunctor.B.{u} (Mvpfunctor.last.{u} n P)) a f)) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (forall (x : Pfunctor.W.{u} (Mvpfunctor.last.{u} n P)), (Typevec.Arrow.{u _aux_param_0} n (Mvpfunctor.WPath.{u} n P x) α) -> C)
+Case conversion may be inaccurate. Consider using '#align mvpfunctor.Wp_rec Mvpfunctor.wpRecₓ'. -/
 /-- Recursor for `Wp` -/
-def wpRecₓ {α : Typevec n} {C : Type _}
+def wpRec {α : Typevec n} {C : Type _}
     (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
     ∀ (x : P.last.W) (f' : P.WPath x ⟹ α), C
   | ⟨a, f⟩, f' => g a f f' fun i => Wp_rec (f i) (P.wPathDestRight f' i)
@@ -152,8 +158,14 @@ def wMk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → 
   let g' : P.WPath ⟨a, g⟩ ⟹ α := P.wPathCasesOn f' fun i => (f i).snd
   ⟨⟨a, g⟩, g'⟩
 
+/- warning: mvpfunctor.W_rec -> Mvpfunctor.wRec is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) {α : Typevec.{u} n} {C : Type.{u_1}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) P), (Typevec.Arrow.{u u} n (Mvpfunctor.B.{u} n (Mvpfunctor.drop.{u} n P) a) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Mvpfunctor.W.{u} n P α)) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u} n P α) -> C
+but is expected to have type
+  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) {α : Typevec.{u} n} {C : Type.{_aux_param_0}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) P), (Typevec.Arrow.{u u} n (Mvpfunctor.B.{u} n (Mvpfunctor.drop.{u} n P) a) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Mvpfunctor.W.{u} n P α)) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u} n P α) -> C
+Case conversion may be inaccurate. Consider using '#align mvpfunctor.W_rec Mvpfunctor.wRecₓ'. -/
 /-- Recursor for `W` -/
-def wRecₓ {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
+def wRec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
     P.W α → C
   | ⟨a, f'⟩ =>
     let g' (a : P.A) (f : P.last.B a → P.last.W) (h : P.WPath ⟨a, f⟩ ⟹ α) (h' : P.last.B a → C) : C :=
@@ -216,7 +228,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
   have h := Mvpfunctor.map_eq P.Wp g
   rw [h, comp_W_path_cases_on]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- TODO: this technical theorem is used in one place in constructing the initial algebra.
 -- Can it be avoided?
 /-- Constructor of a value of `P.obj (α ::: β)` from components.
@@ -236,7 +248,7 @@ the qpf axioms are expressed in terms of `map` on `P`.
 -/
 
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Constructor for the W-type of `P` -/
 def wMk' {α : Typevec n} : P.Obj (α ::: P.W α) → P.W α
   | ⟨a, f⟩ => P.wMk a (dropFun f) (lastFun f)

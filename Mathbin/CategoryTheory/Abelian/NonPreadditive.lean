@@ -72,7 +72,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C, No
   [HasFiniteProducts : HasFiniteProducts C]
   [HasFiniteCoproducts : HasFiniteCoproducts C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option default_priority
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object
@@ -377,19 +377,19 @@ theorem neg_neg {X Y : C} (a : X ⟶ Y) : - -a = a := by
 
 theorem add_comm {X Y : C} (a b : X ⟶ Y) : a + b = b + a := by
   rw [add_def]
-  conv_lhs => rw [← neg_negₓ a]
+  conv_lhs => rw [← neg_neg a]
   rw [neg_def, neg_def, neg_def, sub_sub_sub]
   conv_lhs =>
   congr
   skip
   rw [← neg_def, neg_sub]
-  rw [sub_sub_sub, add_def, ← neg_def, neg_negₓ b, neg_def]
+  rw [sub_sub_sub, add_def, ← neg_def, neg_neg b, neg_def]
 
-theorem add_neg {X Y : C} (a b : X ⟶ Y) : a + -b = a - b := by rw [add_def, neg_negₓ]
+theorem add_neg {X Y : C} (a b : X ⟶ Y) : a + -b = a - b := by rw [add_def, neg_neg]
 
 theorem add_neg_self {X Y : C} (a : X ⟶ Y) : a + -a = 0 := by rw [add_neg, sub_self]
 
-theorem neg_add_self {X Y : C} (a : X ⟶ Y) : -a + a = 0 := by rw [add_commₓ, add_neg_selfₓ]
+theorem neg_add_self {X Y : C} (a : X ⟶ Y) : -a + a = 0 := by rw [add_comm, add_neg_self]
 
 theorem neg_sub' {X Y : C} (a b : X ⟶ Y) : -(a - b) = -a + b := by
   rw [neg_def, neg_def]
@@ -404,7 +404,7 @@ theorem add_assoc {X Y : C} (a b c : X ⟶ Y) : a + b + c = a + (b + c) := by
   conv_lhs =>
   congr
   rw [add_def]
-  rw [sub_add, ← add_neg, neg_sub', neg_negₓ]
+  rw [sub_add, ← add_neg, neg_sub', neg_neg]
 
 theorem add_zero {X Y : C} (a : X ⟶ Y) : a + 0 = a := by rw [add_def, neg_def, sub_self, sub_zero]
 
@@ -422,7 +422,7 @@ theorem add_comp (X Y Z : C) (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f �
 
 /-- Every `non_preadditive_abelian` category is preadditive. -/
 def preadditive : Preadditive C where
-  homGroup := fun X Y =>
+  homGroup X Y :=
     { add := (· + ·), add_assoc := add_assoc, zero := 0, zero_add := neg_neg, add_zero := add_zero, neg := fun f => -f,
       add_left_neg := neg_add_self, add_comm := add_comm }
   add_comp' := add_comp

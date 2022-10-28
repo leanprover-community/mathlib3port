@@ -29,32 +29,32 @@ open Function
 /-- The equivalence `(x, y) ↦ (x, y+1)`. -/
 @[simps]
 def shiftUp : ℤ × ℤ ≃ ℤ × ℤ :=
-  (Equivₓ.refl ℤ).prodCongr (Equivₓ.addRight (1 : ℤ))
+  (Equiv.refl ℤ).prodCongr (Equiv.addRight (1 : ℤ))
 
 /-- The equivalence `(x, y) ↦ (x+1, y)`. -/
 @[simps]
 def shiftRight : ℤ × ℤ ≃ ℤ × ℤ :=
-  (Equivₓ.addRight (1 : ℤ)).prodCongr (Equivₓ.refl ℤ)
+  (Equiv.addRight (1 : ℤ)).prodCongr (Equiv.refl ℤ)
 
 /-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/
 def Board :=
-  Finsetₓ (ℤ × ℤ)deriving Inhabited
+  Finset (ℤ × ℤ)deriving Inhabited
 
 attribute [local reducible] board
 
 /-- Left can play anywhere that a square and the square below it are open. -/
-def left (b : Board) : Finsetₓ (ℤ × ℤ) :=
+def left (b : Board) : Finset (ℤ × ℤ) :=
   b ∩ b.map shiftUp
 
 /-- Right can play anywhere that a square and the square to the left are open. -/
-def right (b : Board) : Finsetₓ (ℤ × ℤ) :=
+def right (b : Board) : Finset (ℤ × ℤ) :=
   b ∩ b.map shiftRight
 
 theorem mem_left {b : Board} (x : ℤ × ℤ) : x ∈ left b ↔ x ∈ b ∧ (x.1, x.2 - 1) ∈ b :=
-  Finsetₓ.mem_inter.trans (and_congrₓ Iff.rfl Finsetₓ.mem_map_equiv)
+  Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
 
 theorem mem_right {b : Board} (x : ℤ × ℤ) : x ∈ right b ↔ x ∈ b ∧ (x.1 - 1, x.2) ∈ b :=
-  Finsetₓ.mem_inter.trans (and_congrₓ Iff.rfl Finsetₓ.mem_map_equiv)
+  Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
 
 /-- After Left moves, two vertically adjacent squares are removed from the board. -/
 def moveLeft (b : Board) (m : ℤ × ℤ) : Board :=
@@ -66,58 +66,58 @@ def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
 
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : (m.1 - 1, m.2) ∈ b.erase m := by
   rw [mem_right] at h
-  apply Finsetₓ.mem_erase_of_ne_of_mem _ h.2
+  apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
 
 theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : (m.1, m.2 - 1) ∈ b.erase m := by
   rw [mem_left] at h
-  apply Finsetₓ.mem_erase_of_ne_of_mem _ h.2
+  apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
 
-theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finsetₓ.card b := by
-  have w₁ : m ∈ b := (Finsetₓ.mem_inter.1 h).1
+theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b := by
+  have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
   have w₂ : (m.1, m.2 - 1) ∈ b.erase m := snd_pred_mem_erase_of_mem_left h
-  have i₁ := Finsetₓ.card_erase_lt_of_mem w₁
-  have i₂ := Nat.lt_of_le_of_ltₓ (Nat.zero_leₓ _) (Finsetₓ.card_erase_lt_of_mem w₂)
-  exact Nat.lt_of_le_of_ltₓ i₂ i₁
+  have i₁ := Finset.card_erase_lt_of_mem w₁
+  have i₂ := Nat.lt_of_le_of_lt (Nat.zero_le _) (Finset.card_erase_lt_of_mem w₂)
+  exact Nat.lt_of_le_of_lt i₂ i₁
 
-theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finsetₓ.card b := by
-  have w₁ : m ∈ b := (Finsetₓ.mem_inter.1 h).1
+theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finset.card b := by
+  have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
   have w₂ := fst_pred_mem_erase_of_mem_right h
-  have i₁ := Finsetₓ.card_erase_lt_of_mem w₁
-  have i₂ := Nat.lt_of_le_of_ltₓ (Nat.zero_leₓ _) (Finsetₓ.card_erase_lt_of_mem w₂)
-  exact Nat.lt_of_le_of_ltₓ i₂ i₁
+  have i₁ := Finset.card_erase_lt_of_mem w₁
+  have i₂ := Nat.lt_of_le_of_lt (Nat.zero_le _) (Finset.card_erase_lt_of_mem w₂)
+  exact Nat.lt_of_le_of_lt i₂ i₁
 
-theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : Finsetₓ.card (moveLeft b m) + 2 = Finsetₓ.card b := by
+theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : Finset.card (moveLeft b m) + 2 = Finset.card b := by
   dsimp [move_left]
-  rw [Finsetₓ.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
-  rw [Finsetₓ.card_erase_of_mem (Finsetₓ.mem_of_mem_inter_left h)]
+  rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
+  rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
 
-theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : Finsetₓ.card (moveRight b m) + 2 = Finsetₓ.card b :=
+theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : Finset.card (moveRight b m) + 2 = Finset.card b :=
   by
   dsimp [move_right]
-  rw [Finsetₓ.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
-  rw [Finsetₓ.card_erase_of_mem (Finsetₓ.mem_of_mem_inter_left h)]
+  rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
+  rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_right h)
 
 theorem move_left_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    Finsetₓ.card (moveLeft b m) / 2 < Finsetₓ.card b / 2 := by simp [← move_left_card h, lt_add_one]
+    Finset.card (moveLeft b m) / 2 < Finset.card b / 2 := by simp [← move_left_card h, lt_add_one]
 
 theorem move_right_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    Finsetₓ.card (moveRight b m) / 2 < Finsetₓ.card b / 2 := by simp [← move_right_card h, lt_add_one]
+    Finset.card (moveRight b m) / 2 < Finset.card b / 2 := by simp [← move_right_card h, lt_add_one]
 
 /-- The instance describing allowed moves on a Domineering board. -/
 instance state : State Board where
-  turnBound := fun s => s.card / 2
-  l := fun s => (left s).Image (moveLeft s)
-  r := fun s => (right s).Image (moveRight s)
-  left_bound := fun s t m => by
-    simp only [Finsetₓ.mem_image, Prod.existsₓ] at m
+  turnBound s := s.card / 2
+  l s := (left s).Image (moveLeft s)
+  r s := (right s).Image (moveRight s)
+  left_bound s t m := by
+    simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_left_smaller h
-  right_bound := fun s t m => by
-    simp only [Finsetₓ.mem_image, Prod.existsₓ] at m
+  right_bound s t m := by
+    simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
 

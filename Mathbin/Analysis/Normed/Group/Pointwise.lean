@@ -30,10 +30,10 @@ alias bounded_iff_exists_norm_le ↔ Metric.Bounded.exists_norm_le _
 theorem Metric.Bounded.exists_pos_norm_le (hs : Metric.Bounded s) : ∃ R > 0, ∀ x ∈ s, ∥x∥ ≤ R := by
   obtain ⟨R₀, hR₀⟩ := hs.exists_norm_le
   refine' ⟨max R₀ 1, _, _⟩
-  · exact (by norm_num : (0 : ℝ) < 1).trans_le (le_max_rightₓ R₀ 1)
+  · exact (by norm_num : (0 : ℝ) < 1).trans_le (le_max_right R₀ 1)
     
   intro x hx
-  exact (hR₀ x hx).trans (le_max_leftₓ _ _)
+  exact (hR₀ x hx).trans (le_max_left _ _)
 
 theorem Metric.Bounded.add (hs : Bounded s) (ht : Bounded t) : Bounded (s + t) := by
   obtain ⟨Rs, hRs⟩ : ∃ R : ℝ, ∀ x ∈ s, ∥x∥ ≤ R := hs.exists_norm_le
@@ -57,10 +57,10 @@ section Emetric
 open Emetric
 
 theorem inf_edist_neg (x : E) (s : Set E) : infEdist (-x) s = infEdist x (-s) :=
-  eq_of_forall_le_iffₓ fun r => by simp_rw [le_inf_edist, ← image_neg, ball_image_iff, edist_neg]
+  eq_of_forall_le_iff fun r => by simp_rw [le_inf_edist, ← image_neg, ball_image_iff, edist_neg]
 
 @[simp]
-theorem inf_edist_neg_neg (x : E) (s : Set E) : infEdist (-x) (-s) = infEdist x s := by rw [inf_edist_neg, neg_negₓ]
+theorem inf_edist_neg_neg (x : E) (s : Set E) : infEdist (-x) (-s) = infEdist x s := by rw [inf_edist_neg, neg_neg]
 
 end Emetric
 
@@ -91,12 +91,12 @@ theorem neg_closed_ball : -ClosedBall x δ = ClosedBall (-x) δ := by
   rfl
 
 theorem singleton_add_ball : {x} + Ball y δ = Ball (x + y) δ := by
-  simp only [preimage_add_ball, image_add_left, singleton_add, sub_neg_eq_add, add_commₓ y x]
+  simp only [preimage_add_ball, image_add_left, singleton_add, sub_neg_eq_add, add_comm y x]
 
 theorem singleton_sub_ball : {x} - Ball y δ = Ball (x - y) δ := by
   simp_rw [sub_eq_add_neg, neg_ball, singleton_add_ball]
 
-theorem ball_add_singleton : Ball x δ + {y} = Ball (x + y) δ := by rw [add_commₓ, singleton_add_ball, add_commₓ y]
+theorem ball_add_singleton : Ball x δ + {y} = Ball (x + y) δ := by rw [add_comm, singleton_add_ball, add_comm y]
 
 theorem ball_sub_singleton : Ball x δ - {y} = Ball (x - y) δ := by
   simp_rw [sub_eq_add_neg, neg_singleton, ball_add_singleton]
@@ -113,15 +113,14 @@ theorem vadd_ball_zero : x +ᵥ Ball 0 δ = Ball x δ := by simp
 
 @[simp]
 theorem singleton_add_closed_ball : {x} + ClosedBall y δ = ClosedBall (x + y) δ := by
-  simp only [add_commₓ y x, preimage_add_closed_ball, image_add_left, singleton_add, sub_neg_eq_add]
+  simp only [add_comm y x, preimage_add_closed_ball, image_add_left, singleton_add, sub_neg_eq_add]
 
 @[simp]
 theorem singleton_sub_closed_ball : {x} - ClosedBall y δ = ClosedBall (x - y) δ := by
   simp_rw [sub_eq_add_neg, neg_closed_ball, singleton_add_closed_ball]
 
 @[simp]
-theorem closed_ball_add_singleton : ClosedBall x δ + {y} = ClosedBall (x + y) δ := by
-  simp [add_commₓ _ {y}, add_commₓ y]
+theorem closed_ball_add_singleton : ClosedBall x δ + {y} = ClosedBall (x + y) δ := by simp [add_comm _ {y}, add_comm y]
 
 @[simp]
 theorem closed_ball_sub_singleton : ClosedBall x δ - {y} = ClosedBall (x - y) δ := by simp [sub_eq_add_neg]
@@ -142,11 +141,11 @@ theorem add_ball_zero : s + Ball 0 δ = Thickening δ s := by
   convert Union₂_add (fun x (_ : x ∈ s) => {x}) (ball (0 : E) δ)
   exact s.bUnion_of_singleton.symm
   ext x y
-  simp_rw [singleton_add_ball, add_zeroₓ]
+  simp_rw [singleton_add_ball, add_zero]
 
 theorem sub_ball_zero : s - Ball 0 δ = Thickening δ s := by simp [sub_eq_add_neg, add_ball_zero]
 
-theorem ball_add_zero : Ball 0 δ + s = Thickening δ s := by rw [add_commₓ, add_ball_zero]
+theorem ball_add_zero : Ball 0 δ + s = Thickening δ s := by rw [add_comm, add_ball_zero]
 
 theorem ball_sub_zero : Ball 0 δ - s = Thickening δ (-s) := by simp [sub_eq_add_neg, ball_add_zero]
 
@@ -157,7 +156,7 @@ theorem add_ball : s + Ball x δ = x +ᵥ Thickening δ s := by rw [← vadd_bal
 theorem sub_ball : s - Ball x δ = -x +ᵥ Thickening δ s := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem ball_add : Ball x δ + s = x +ᵥ Thickening δ s := by rw [add_commₓ, add_ball]
+theorem ball_add : Ball x δ + s = x +ᵥ Thickening δ s := by rw [add_comm, add_ball]
 
 @[simp]
 theorem ball_sub : Ball x δ - s = x +ᵥ Thickening δ (-s) := by simp [sub_eq_add_neg]
@@ -167,29 +166,29 @@ variable {ε δ s t x y}
 theorem IsCompact.add_closed_ball_zero (hs : IsCompact s) (hδ : 0 ≤ δ) : s + ClosedBall 0 δ = Cthickening δ s := by
   rw [hs.cthickening_eq_bUnion_closed_ball hδ]
   ext x
-  simp only [mem_add, dist_eq_norm, exists_propₓ, mem_Union, mem_closed_ball, exists_and_distrib_leftₓ,
+  simp only [mem_add, dist_eq_norm, exists_prop, mem_Union, mem_closed_ball, exists_and_distrib_left,
     mem_closed_ball_zero_iff, ← eq_sub_iff_add_eq', exists_eq_right]
 
 theorem IsCompact.sub_closed_ball_zero (hs : IsCompact s) (hδ : 0 ≤ δ) : s - ClosedBall 0 δ = Cthickening δ s := by
   simp [sub_eq_add_neg, hs.add_closed_ball_zero hδ]
 
 theorem IsCompact.closed_ball_zero_add (hs : IsCompact s) (hδ : 0 ≤ δ) : ClosedBall 0 δ + s = Cthickening δ s := by
-  rw [add_commₓ, hs.add_closed_ball_zero hδ]
+  rw [add_comm, hs.add_closed_ball_zero hδ]
 
 theorem IsCompact.closed_ball_zero_sub (hs : IsCompact s) (hδ : 0 ≤ δ) : ClosedBall 0 δ - s = Cthickening δ (-s) := by
-  simp [sub_eq_add_neg, add_commₓ, hs.neg.add_closed_ball_zero hδ]
+  simp [sub_eq_add_neg, add_comm, hs.neg.add_closed_ball_zero hδ]
 
 theorem IsCompact.add_closed_ball (hs : IsCompact s) (hδ : 0 ≤ δ) (x : E) : s + ClosedBall x δ = x +ᵥ Cthickening δ s :=
   by rw [← vadd_closed_ball_zero, add_vadd_comm, hs.add_closed_ball_zero hδ]
 
 theorem IsCompact.sub_closed_ball (hs : IsCompact s) (hδ : 0 ≤ δ) (x : E) :
-    s - ClosedBall x δ = -x +ᵥ Cthickening δ s := by simp [sub_eq_add_neg, add_commₓ, hs.add_closed_ball hδ]
+    s - ClosedBall x δ = -x +ᵥ Cthickening δ s := by simp [sub_eq_add_neg, add_comm, hs.add_closed_ball hδ]
 
 theorem IsCompact.closed_ball_add (hs : IsCompact s) (hδ : 0 ≤ δ) (x : E) : ClosedBall x δ + s = x +ᵥ Cthickening δ s :=
-  by rw [add_commₓ, hs.add_closed_ball hδ]
+  by rw [add_comm, hs.add_closed_ball hδ]
 
 theorem IsCompact.closed_ball_sub (hs : IsCompact s) (hδ : 0 ≤ δ) (x : E) : ClosedBall x δ + s = x +ᵥ Cthickening δ s :=
-  by simp [sub_eq_add_neg, add_commₓ, hs.closed_ball_add hδ]
+  by simp [sub_eq_add_neg, add_comm, hs.closed_ball_add hδ]
 
 end SeminormedAddCommGroup
 

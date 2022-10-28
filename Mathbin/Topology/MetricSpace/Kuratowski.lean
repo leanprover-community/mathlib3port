@@ -38,7 +38,7 @@ a fixed countable set, if this set is dense. This map is given in `Kuratowski_em
 without density assumptions. -/
 def embeddingOfSubset : ℓ_infty_ℝ :=
   ⟨fun n => dist a (x n) - dist (x 0) (x n), by
-    apply mem_ℓp_infty
+    apply memℓpInfty
     use dist a (x 0)
     rintro - ⟨n, rfl⟩
     exact abs_dist_sub_le _ _ _⟩
@@ -53,11 +53,11 @@ theorem embedding_of_subset_dist_le (a b : α) : dist (embeddingOfSubset x a) (e
   convert abs_dist_sub_le a b (x n) using 2
   ring
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
-theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
-  refine' Isometry.of_dist_eq fun a b => _
+theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
+  refine' Isometry.ofDistEq fun a b => _
   refine' (embedding_of_subset_dist_le x a b).antisymm (le_of_forall_pos_le_add fun e epos => _)
   -- First step: find n with dist a (x n) < e
   rcases Metric.mem_closure_range_iff.1 (H a) (e / 2) (half_pos epos) with ⟨n, hn⟩
@@ -73,7 +73,7 @@ theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfS
       _ ≤ 2 * dist a (x n) + abs (dist b (x n) - dist a (x n)) := by apply_rules [add_le_add_left, le_abs_self]
       _ ≤ 2 * (e / 2) + abs (embedding_of_subset x b n - embedding_of_subset x a n) := by
         rw [C]
-        apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_reflₓ]
+        apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_refl]
         norm_num
       _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) := by
         have :
@@ -122,6 +122,6 @@ protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [S
 def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α] [Nonempty α] :
     NonemptyCompacts ℓ_infty_ℝ where
   Carrier := Range (kuratowskiEmbedding α)
-  compact' := is_compact_range (kuratowskiEmbedding.isometry α).Continuous
+  is_compact' := is_compact_range (kuratowskiEmbedding.isometry α).Continuous
   nonempty' := range_nonempty _
 

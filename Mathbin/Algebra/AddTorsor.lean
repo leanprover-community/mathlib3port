@@ -43,7 +43,7 @@ acted on by an `add_group G` with a transitive and free action given
 by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
-class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroupₓ G] extends AddAction G P, HasVsub G P where
+class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] extends AddAction G P, HasVsub G P where
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
   vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g
@@ -54,7 +54,7 @@ attribute [nolint dangerous_instance] AddTorsor.toHasVsub
 
 /-- An `add_group G` is a torsor for itself. -/
 @[nolint instance_priority]
-instance addGroupIsAddTorsor (G : Type _) [AddGroupₓ G] : AddTorsor G G where
+instance addGroupIsAddTorsor (G : Type _) [AddGroup G] : AddTorsor G G where
   vsub := Sub.sub
   vsub_vadd' := sub_add_cancel
   vadd_vsub' := add_sub_cancel
@@ -62,12 +62,12 @@ instance addGroupIsAddTorsor (G : Type _) [AddGroupₓ G] : AddTorsor G G where
 /-- Simplify subtraction for a torsor for an `add_group G` over
 itself. -/
 @[simp]
-theorem vsub_eq_sub {G : Type _} [AddGroupₓ G] (g1 g2 : G) : g1 -ᵥ g2 = g1 - g2 :=
+theorem vsub_eq_sub {G : Type _} [AddGroup G] (g1 g2 : G) : g1 -ᵥ g2 = g1 - g2 :=
   rfl
 
 section General
 
-variable {G : Type _} {P : Type _} [AddGroupₓ G] [T : AddTorsor G P]
+variable {G : Type _} {P : Type _} [AddGroup G] [T : AddTorsor G P]
 
 include T
 
@@ -104,7 +104,7 @@ theorem vadd_vsub_assoc (g : G) (p1 p2 : P) : g +ᵥ p1 -ᵥ p2 = g + (p1 -ᵥ p
 
 /-- Subtracting a point from itself produces 0. -/
 @[simp]
-theorem vsub_self (p : P) : p -ᵥ p = (0 : G) := by rw [← zero_addₓ (p -ᵥ p), ← vadd_vsub_assoc, vadd_vsub]
+theorem vsub_self (p : P) : p -ᵥ p = (0 : G) := by rw [← zero_add (p -ᵥ p), ← vadd_vsub_assoc, vadd_vsub]
 
 /-- If subtracting two points produces 0, they are equal. -/
 theorem eq_of_vsub_eq_zero {p1 p2 : P} (h : p1 -ᵥ p2 = (0 : G)) : p1 = p2 := by rw [← vsub_vadd p1 p2, h, zero_vadd]
@@ -137,8 +137,8 @@ theorem vadd_vsub_eq_sub_vsub (g : G) (p q : P) : g +ᵥ p -ᵥ q = g - (q -ᵥ 
 /-- Subtracting the result of adding a group element produces the same result
 as subtracting the points and subtracting that group element. -/
 theorem vsub_vadd_eq_vsub_sub (p1 p2 : P) (g : G) : p1 -ᵥ (g +ᵥ p2) = p1 -ᵥ p2 - g := by
-  rw [← add_right_injₓ (p2 -ᵥ p1 : G), vsub_add_vsub_cancel, ← neg_vsub_eq_vsub_rev, vadd_vsub, ← add_sub_assoc, ←
-    neg_vsub_eq_vsub_rev, neg_add_selfₓ, zero_sub]
+  rw [← add_right_inj (p2 -ᵥ p1 : G), vsub_add_vsub_cancel, ← neg_vsub_eq_vsub_rev, vadd_vsub, ← add_sub_assoc, ←
+    neg_vsub_eq_vsub_rev, neg_add_self, zero_sub]
 
 /-- Cancellation subtracting the results of two subtractions. -/
 @[simp]
@@ -152,7 +152,7 @@ theorem eq_vadd_iff_vsub_eq (p1 : P) (g : G) (p2 : P) : p1 = g +ᵥ p2 ↔ p1 -�
   ⟨fun h => h.symm ▸ vadd_vsub _ _, fun h => h ▸ (vsub_vadd _ _).symm⟩
 
 theorem vadd_eq_vadd_iff_neg_add_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} : v₁ +ᵥ p₁ = v₂ +ᵥ p₂ ↔ -v₁ + v₂ = p₁ -ᵥ p₂ := by
-  rw [eq_vadd_iff_vsub_eq, vadd_vsub_assoc, ← add_right_injₓ (-v₁), neg_add_cancel_leftₓ, eq_comm]
+  rw [eq_vadd_iff_vsub_eq, vadd_vsub_assoc, ← add_right_inj (-v₁), neg_add_cancel_left, eq_comm]
 
 namespace Set
 
@@ -166,7 +166,7 @@ end Set
 
 @[simp]
 theorem vadd_vsub_vadd_cancel_right (v₁ v₂ : G) (p : P) : v₁ +ᵥ p -ᵥ (v₂ +ᵥ p) = v₁ - v₂ := by
-  rw [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, vsub_self, add_zeroₓ]
+  rw [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, vsub_self, add_zero]
 
 /-- If the same point subtracted from two points produces equal
 results, those points are equal. -/
@@ -202,14 +202,14 @@ end General
 
 section comm
 
-variable {G : Type _} {P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
+variable {G : Type _} {P : Type _} [AddCommGroup G] [AddTorsor G P]
 
 include G
 
 /-- Cancellation subtracting the results of two subtractions. -/
 @[simp]
 theorem vsub_sub_vsub_cancel_left (p1 p2 p3 : P) : p3 -ᵥ p2 - (p3 -ᵥ p1) = p1 -ᵥ p2 := by
-  rw [sub_eq_add_neg, neg_vsub_eq_vsub_rev, add_commₓ, vsub_add_vsub_cancel]
+  rw [sub_eq_add_neg, neg_vsub_eq_vsub_rev, add_comm, vsub_add_vsub_cancel]
 
 @[simp]
 theorem vadd_vsub_vadd_cancel_left (v : G) (p1 p2 : P) : v +ᵥ p1 -ᵥ (v +ᵥ p2) = p1 -ᵥ p2 := by
@@ -229,17 +229,17 @@ end comm
 
 namespace Prod
 
-variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroupₓ G] [AddGroupₓ G'] [AddTorsor G P]
+variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroup G] [AddGroup G'] [AddTorsor G P]
   [AddTorsor G' P']
 
 instance : AddTorsor (G × G') (P × P') where
-  vadd := fun v p => (v.1 +ᵥ p.1, v.2 +ᵥ p.2)
-  zero_vadd := fun p => by simp
+  vadd v p := (v.1 +ᵥ p.1, v.2 +ᵥ p.2)
+  zero_vadd p := by simp
   add_vadd := by simp [add_vadd]
-  vsub := fun p₁ p₂ => (p₁.1 -ᵥ p₂.1, p₁.2 -ᵥ p₂.2)
+  vsub p₁ p₂ := (p₁.1 -ᵥ p₂.1, p₁.2 -ᵥ p₂.2)
   Nonempty := Prod.nonempty
-  vsub_vadd' := fun p₁ p₂ => show (p₁.1 -ᵥ p₂.1 +ᵥ p₂.1, _) = p₁ by simp
-  vadd_vsub' := fun v p => show (v.1 +ᵥ p.1 -ᵥ p.1, v.2 +ᵥ p.2 -ᵥ p.2) = v by simp
+  vsub_vadd' p₁ p₂ := show (p₁.1 -ᵥ p₂.1 +ᵥ p₂.1, _) = p₁ by simp
+  vadd_vsub' v p := show (v.1 +ᵥ p.1 -ᵥ p.1, v.2 +ᵥ p.2 -ᵥ p.2) = v by simp
 
 @[simp]
 theorem fst_vadd (v : G × G') (p : P × P') : (v +ᵥ p).1 = v.1 +ᵥ p.1 :=
@@ -271,34 +271,34 @@ namespace Pi
 
 universe u v w
 
-variable {I : Type u} {fg : I → Type v} [∀ i, AddGroupₓ (fg i)] {fp : I → Type w}
+variable {I : Type u} {fg : I → Type v} [∀ i, AddGroup (fg i)] {fp : I → Type w}
 
 open AddAction AddTorsor
 
 /-- A product of `add_torsor`s is an `add_torsor`. -/
 instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i) where
-  vadd := fun g p => fun i => g i +ᵥ p i
-  zero_vadd := fun p => funext fun i => zero_vadd (fg i) (p i)
-  add_vadd := fun g₁ g₂ p => funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
-  vsub := fun p₁ p₂ => fun i => p₁ i -ᵥ p₂ i
+  vadd g p i := g i +ᵥ p i
+  zero_vadd p := funext fun i => zero_vadd (fg i) (p i)
+  add_vadd g₁ g₂ p := funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
+  vsub p₁ p₂ i := p₁ i -ᵥ p₂ i
   Nonempty := ⟨fun i => Classical.choice (T i).Nonempty⟩
-  vsub_vadd' := fun p₁ p₂ => funext fun i => vsub_vadd (p₁ i) (p₂ i)
-  vadd_vsub' := fun g p => funext fun i => vadd_vsub (g i) (p i)
+  vsub_vadd' p₁ p₂ := funext fun i => vsub_vadd (p₁ i) (p₂ i)
+  vadd_vsub' g p := funext fun i => vadd_vsub (g i) (p i)
 
 end Pi
 
-namespace Equivₓ
+namespace Equiv
 
-variable {G : Type _} {P : Type _} [AddGroupₓ G] [AddTorsor G P]
+variable {G : Type _} {P : Type _} [AddGroup G] [AddTorsor G P]
 
 include G
 
 /-- `v ↦ v +ᵥ p` as an equivalence. -/
 def vaddConst (p : P) : G ≃ P where
-  toFun := fun v => v +ᵥ p
-  invFun := fun p' => p' -ᵥ p
-  left_inv := fun v => vadd_vsub _ _
-  right_inv := fun p' => vsub_vadd _ _
+  toFun v := v +ᵥ p
+  invFun p' := p' -ᵥ p
+  left_inv v := vadd_vsub _ _
+  right_inv p' := vsub_vadd _ _
 
 @[simp]
 theorem coe_vadd_const (p : P) : ⇑(vaddConst p) = fun v => v +ᵥ p :=
@@ -311,9 +311,9 @@ theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
 def constVsub (p : P) : P ≃ G where
   toFun := (· -ᵥ ·) p
-  invFun := fun v => -v +ᵥ p
-  left_inv := fun p' => by simp
-  right_inv := fun v => by simp [vsub_vadd_eq_vsub_sub]
+  invFun v := -v +ᵥ p
+  left_inv p' := by simp
+  right_inv v := by simp [vsub_vadd_eq_vsub_sub]
 
 @[simp]
 theorem coe_const_vsub (p : P) : ⇑(constVsub p) = (· -ᵥ ·) p :=
@@ -326,11 +326,11 @@ theorem coe_const_vsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p
 variable (P)
 
 /-- The permutation given by `p ↦ v +ᵥ p`. -/
-def constVadd (v : G) : Equivₓ.Perm P where
+def constVadd (v : G) : Equiv.Perm P where
   toFun := (· +ᵥ ·) v
   invFun := (· +ᵥ ·) (-v)
-  left_inv := fun p => by simp [vadd_vadd]
-  right_inv := fun p => by simp [vadd_vadd]
+  left_inv p := by simp [vadd_vadd]
+  right_inv p := by simp [vadd_vadd]
 
 @[simp]
 theorem coe_const_vadd (v : G) : ⇑(constVadd P v) = (· +ᵥ ·) v :=
@@ -349,8 +349,8 @@ theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P
   ext <| add_vadd v₁ v₂
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
-def constVaddHom : Multiplicative G →* Equivₓ.Perm P where
-  toFun := fun v => constVadd P v.toAdd
+def constVaddHom : Multiplicative G →* Equiv.Perm P where
+  toFun v := constVadd P v.toAdd
   map_one' := const_vadd_zero G P
   map_mul' := const_vadd_add P
 
@@ -374,7 +374,7 @@ theorem point_reflection_self (x : P) : pointReflection x x = x :=
   vsub_vadd _ _
 
 theorem point_reflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
-  (Equivₓ.apply_eq_iff_eq_symm_apply _).2 <| by rw [point_reflection_symm]
+  (Equiv.apply_eq_iff_eq_symm_apply _).2 <| by rw [point_reflection_symm]
 
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/
@@ -385,15 +385,15 @@ theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (b
 
 omit G
 
-theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
+theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroup G] [AddTorsor G P]
     (h : Injective (bit0 : G → G)) (y : P) : Injective fun x : P => pointReflection x y :=
   fun x₁ x₂ (hy : pointReflection x₁ y = pointReflection x₂ y) => by
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right, ←
     neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
 
-end Equivₓ
+end Equiv
 
-theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroupₓ G] [AddTorsor G P] : Subsingleton G ↔ Subsingleton P := by
+theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroup G] [AddTorsor G P] : Subsingleton G ↔ Subsingleton P := by
   inhabit P
-  exact (Equivₓ.vaddConst default).subsingleton_congr
+  exact (Equiv.vaddConst default).subsingleton_congr
 

@@ -37,10 +37,10 @@ Mathematically this should be thought of as the image of the corresponding funct
 def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ where
   Sets := { s | ∃ u v, u ∈ f ∧ v ∈ g ∧ Image2 m u v ⊆ s }
   univ_sets := ⟨Univ, Univ, univ_sets _, univ_sets _, subset_univ _⟩
-  sets_of_superset := fun s t hs hst =>
-    Exists₂.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
-  inter_sets := fun s t => by
-    simp only [exists_propₓ, mem_set_of_eq, subset_inter_iff]
+  sets_of_superset s t hs hst :=
+    Exists₂Cat.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
+  inter_sets s t := by
+    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, hs₁, hs₂, hs⟩ ⟨t₁, t₂, ht₁, ht₂, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, inter_sets f hs₁ ht₁, inter_sets g hs₂ ht₂,
@@ -54,7 +54,7 @@ theorem mem_map₂_iff : u ∈ map₂ m f g ↔ ∃ s t, s ∈ f ∧ t ∈ g ∧
 theorem image2_mem_map₂ (hs : s ∈ f) (ht : t ∈ g) : Image2 m s t ∈ map₂ m f g :=
   ⟨_, _, hs, ht, Subset.rfl⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_prod_eq_map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) :
     Filter.map (fun p : α × β => m p.1 p.2) (f ×ᶠ g) = map₂ m f g := by
   ext s
@@ -100,11 +100,11 @@ theorem le_map₂_iff {h : Filter γ} : h ≤ map₂ m f g ↔ ∀ ⦃s⦄, s �
 
 @[simp]
 theorem map₂_bot_left : map₂ m ⊥ g = ⊥ :=
-  empty_mem_iff_bot.1 ⟨∅, Univ, trivialₓ, univ_mem, image2_empty_left.Subset⟩
+  empty_mem_iff_bot.1 ⟨∅, Univ, trivial, univ_mem, image2_empty_left.Subset⟩
 
 @[simp]
 theorem map₂_bot_right : map₂ m f ⊥ = ⊥ :=
-  empty_mem_iff_bot.1 ⟨Univ, ∅, univ_mem, trivialₓ, image2_empty_right.Subset⟩
+  empty_mem_iff_bot.1 ⟨Univ, ∅, univ_mem, trivial, image2_empty_right.Subset⟩
 
 @[simp]
 theorem map₂_eq_bot_iff : map₂ m f g = ⊥ ↔ f = ⊥ ∨ g = ⊥ := by
@@ -131,10 +131,10 @@ theorem map₂_ne_bot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot := b
 theorem NeBot.map₂ (hf : f.ne_bot) (hg : g.ne_bot) : (map₂ m f g).ne_bot :=
   map₂_ne_bot_iff.2 ⟨hf, hg⟩
 
-theorem NeBot.of_map₂_left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
+theorem NeBot.ofMap₂Left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
   (map₂_ne_bot_iff.1 h).1
 
-theorem NeBot.of_map₂_right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
+theorem NeBot.ofMap₂Right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
   (map₂_ne_bot_iff.1 h).2
 
 theorem map₂_sup_left : map₂ m (f₁ ⊔ f₂) g = map₂ m f₁ g ⊔ map₂ m f₂ g := by
@@ -208,10 +208,10 @@ of the corresponding function `α × β × γ → δ`. -/
 def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Filter γ) : Filter δ where
   Sets := { s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ Image3 m u v w ⊆ s }
   univ_sets := ⟨Univ, Univ, Univ, univ_sets _, univ_sets _, univ_sets _, subset_univ _⟩
-  sets_of_superset := fun s t hs hst =>
-    Exists₃.imp (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
-  inter_sets := fun s t => by
-    simp only [exists_propₓ, mem_set_of_eq, subset_inter_iff]
+  sets_of_superset s t hs hst :=
+    Exists₃Cat.imp (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
+  inter_sets s t := by
+    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, s₃, hs₁, hs₂, hs₃, hs⟩ ⟨t₁, t₂, t₃, ht₁, ht₂, ht₃, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, s₃ ∩ t₃, inter_mem hs₁ ht₁, inter_mem hs₂ ht₂, inter_mem hs₃ ht₃,
@@ -245,7 +245,7 @@ theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
     
 
 theorem map_map₂ (m : α → β → γ) (n : γ → δ) : (map₂ m f g).map n = map₂ (fun a b => n (m a b)) f g :=
-  Filter.ext fun u => exists₂_congrₓ fun s t => by rw [← image_subset_iff, image_image2]
+  Filter.ext fun u => exists₂_congr fun s t => by rw [← image_subset_iff, image_image2]
 
 theorem map₂_map_left (m : γ → β → δ) (n : α → γ) : map₂ m (f.map n) g = map₂ (fun a b => m (n a) b) f g := by
   ext u

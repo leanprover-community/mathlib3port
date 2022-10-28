@@ -15,7 +15,7 @@ universe u v
 
 namespace CharP
 
-instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiringₓ R] (p : ℕ) [CharP R p] : CharP (ι → R) p :=
+instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiring R] (p : ℕ) [CharP R p] : CharP (ι → R) p :=
   ⟨fun x =>
     let ⟨i⟩ := hi
     Iff.symm <|
@@ -24,7 +24,7 @@ instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiringₓ R] (p : �
           map_nat_cast (Pi.evalRingHom (fun _ : ι => R) i) x ▸ by rw [h, RingHom.map_zero]⟩⟩
 
 -- diamonds
-instance pi' (ι : Type u) [hi : Nonempty ι] (R : Type v) [CommRingₓ R] (p : ℕ) [CharP R p] : CharP (ι → R) p :=
+instance pi' (ι : Type u) [hi : Nonempty ι] (R : Type v) [CommRing R] (p : ℕ) [CharP R p] : CharP (ι → R) p :=
   CharP.pi ι R p
 
 end CharP

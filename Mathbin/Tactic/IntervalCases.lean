@@ -55,30 +55,30 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr := do
   let t ← infer_type e
   match t with
     | quote.1 ((%%ₓn') < %%ₓb) => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       return e
     | quote.1 ((%%ₓb) > %%ₓn') => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       return e
     | quote.1 ((%%ₓn') ≤ %%ₓb) => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.lt_add_one_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iffₓ.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
         | _ => failed
     | quote.1 ((%%ₓb) ≥ %%ₓn') => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.lt_add_one_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iffₓ.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
         | _ => failed
     | _ => failed
 
@@ -90,30 +90,30 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
   let t ← infer_type e
   match t with
     | quote.1 ((%%ₓn') ≥ %%ₓb) => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       return e
     | quote.1 ((%%ₓb) ≤ %%ₓn') => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       return e
     | quote.1 ((%%ₓn') > %%ₓb) => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
         | _ => failed
     | quote.1 ((%%ₓb) < %%ₓn') => do
-      guardₓ (n = n')
+      guard (n = n')
       let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
         | _ => failed
     | _ => failed
 
@@ -123,7 +123,7 @@ unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option
   | some prf, none => return <| some prf
   | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
-    Option.some <$> to_expr (pquote.1 (lt_minₓ (%%ₓprf₁) (%%ₓprf₂)))
+    Option.some <$> to_expr (pquote.1 (lt_min (%%ₓprf₁) (%%ₓprf₂)))
 
 /-- Combine two lower bounds. -/
 unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option expr)
@@ -131,7 +131,7 @@ unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option
   | some prf, none => return <| some prf
   | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
-    Option.some <$> to_expr (pquote.1 (max_leₓ (%%ₓprf₂) (%%ₓprf₁)))
+    Option.some <$> to_expr (pquote.1 (max_le (%%ₓprf₂) (%%ₓprf₁)))
 
 /-- Inspect a given expression, using it to update a set of upper and lower bounds on `n`. -/
 unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : expr) :
@@ -163,7 +163,7 @@ unsafe def initial_upper_bound (n : expr) : tactic expr := do
         match tn with
           | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
           | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
-          | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓe)))
+          | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
           | _ => failed
       return e
     | _ => failed
@@ -180,12 +180,12 @@ unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
     | (some lb_prf, some ub_prf) => return (lb_prf, ub_prf)
 
 /-- The finset of elements of a set `s` for which we have `fintype s`. -/
-def setElems {α} [DecidableEq α] (s : Set α) [Fintypeₓ s] : Finsetₓ α :=
-  (Fintypeₓ.elems s).Image Subtype.val
+def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
+  (Fintype.elems s).Image Subtype.val
 
 /-- Each element of `s` is a member of `set_elems s`. -/
-theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintypeₓ s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
-  Finsetₓ.mem_image.2 ⟨⟨a, h⟩, Fintypeₓ.complete _, rfl⟩
+theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
+  Finset.mem_image.2 ⟨⟨a, h⟩, Fintype.complete _, rfl⟩
 
 end IntervalCases
 
@@ -201,8 +201,8 @@ By default `interval_cases_using` automatically generates a name for the new hyp
 can be specified via the optional argument `n`.
 -/
 unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :=
-  (to_expr (pquote.1 (mem_set_elems (Ico _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
-      if hn : n.isSome then note (Option.getₓ hn) else note_anon none) >>=
+  (to_expr (pquote.1 (mem_set_elems (IcoCat _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
+      if hn : n.isSome then note (Option.get hn) else note_anon none) >>=
     fin_cases_at none none
 
 setup_tactic_parser
@@ -210,7 +210,7 @@ setup_tactic_parser
 namespace Interactive
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 /-- `interval_cases n` searches for upper and lower bounds on a variable `n`,
 and if bounds are found,
@@ -237,13 +237,13 @@ as `interval_cases n with h` or `interval_cases n using hl hu with h`.
 unsafe def interval_cases (n : parse texpr ?) (bounds : parse (tk "using" *> (Prod.mk <$> ident <*> ident))?)
     (lname : parse (tk "with" *> ident)?) : tactic Unit := do
   if h : n then do
-      guardₓ bounds <|> fail "Do not use the `using` keyword if specifying the variable explicitly."
-      let n ← to_expr (Option.getₓ h)
+      guard bounds <|> fail "Do not use the `using` keyword if specifying the variable explicitly."
+      let n ← to_expr (Option.get h)
       let (hl, hu) ← get_bounds n
       tactic.interval_cases_using hl hu lname
     else
       if h' : bounds then do
-        let [hl, hu] ← [(Option.getₓ h').1, (Option.getₓ h').2].mmap get_local
+        let [hl, hu] ← [(Option.get h').1, (Option.get h').2].mmap get_local
         tactic.interval_cases_using hl hu lname
       else
         fail

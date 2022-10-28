@@ -36,7 +36,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.
@@ -74,7 +74,7 @@ It first does a quick check to see if there is any `≥` or `>` in the statement
 slower check whether the occurrences of `≥` and `>` are allowed.
 Currently it checks only the conclusion of the declaration, to eliminate false positive from
 binders such as `∀ ε > 0, ...` -/
-private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stringₓ) :=
+private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option String) :=
   return <|
     if (d.type.contains_constant fun n => n ∈ illegal_ge_gt) && contains_illegal_ge_gt d.type then
       some "the type contains ≥/>. Use ≤/< instead."
@@ -123,7 +123,7 @@ flag this as illegal, but it is also allowed. In this case, add the line
 
 
 /-- Checks whether a declaration has a namespace twice consecutively in its name -/
-private unsafe def dup_namespace (d : declaration) : tactic (Option Stringₓ) :=
+private unsafe def dup_namespace (d : declaration) : tactic (Option String) :=
   is_instance d.to_name >>= fun is_inst =>
     return <|
       let nm := d.to_name.components
@@ -178,7 +178,7 @@ the argument is a duplicate.
 See also `check_unused_arguments`.
 This tactic additionally filters out all unused arguments of type `parse _`.
 We skip all declarations that contain `sorry` in their value. -/
-private unsafe def unused_arguments (d : declaration) : tactic (Option Stringₓ) := do
+private unsafe def unused_arguments (d : declaration) : tactic (Option String) := do
   let ff ← d.to_name.contains_sorry | return none
   let ns := check_unused_arguments d
   let tt ← return ns.isSome | return none
@@ -212,20 +212,20 @@ attribute [nolint unused_arguments] imp_intro
 
 
 /-- Reports definitions and constants that are missing doc strings -/
-private unsafe def doc_blame_report_defn : declaration → tactic (Option Stringₓ)
+private unsafe def doc_blame_report_defn : declaration → tactic (Option String)
   | declaration.defn n _ _ _ _ _ => doc_string n >> return none <|> return "def missing doc string"
   | declaration.cnst n _ _ _ => doc_string n >> return none <|> return "constant missing doc string"
   | _ => return none
 
 /-- Reports definitions and constants that are missing doc strings -/
-private unsafe def doc_blame_report_thm : declaration → tactic (Option Stringₓ)
+private unsafe def doc_blame_report_thm : declaration → tactic (Option String)
   | declaration.thm n _ _ _ => doc_string n >> return none <|> return "theorem missing doc string"
   | _ => return none
 
 /-- A linter for checking definition doc strings -/
 @[linter]
 unsafe def linter.doc_blame : linter where
-  test := fun d => mcond (bnot <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
+  test d := mcond (not <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
   auto_decls := false
   no_errors_found := "No definitions are missing documentation."
   errors_found := "DEFINITIONS ARE MISSING DOCUMENTATION STRINGS:"
@@ -249,7 +249,7 @@ comparing it to its sort. Instances will not be printed.
 This test is not very quick: maybe we can speed-up testing that something is a proposition?
 This takes almost all of the execution time.
 -/
-private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option Stringₓ) :=
+private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option String) :=
   if d.is_constant ∨ d.is_axiom then return none
   else do
     let is_instance_d ← is_instance d.to_name
@@ -284,7 +284,7 @@ unsafe def linter.def_lemma : linter where
 
 
 /-- Checks whether the statement of a declaration is well-typed. -/
-unsafe def check_type (d : declaration) : tactic (Option Stringₓ) :=
+unsafe def check_type (d : declaration) : tactic (Option String) :=
   type_check d.type >> return none <|> return "The statement doesn't type-check"
 
 /-- A linter for missing checking whether statements of declarations are well-typed. -/
@@ -330,7 +330,7 @@ unsafe def bad_params : rb_set (List Name) → List Name
   | l =>
     let good_levels : name_set :=
       (l.fold mk_name_set) fun us prev => if us.length = 1 then prev.insert us.head else prev
-    if good_levels.Empty then l.fold [] List.unionₓ
+    if good_levels.Empty then l.fold [] List.union
     else bad_params <| rb_set.of_list <| l.toList.map fun us => us.filter fun nm => !good_levels.contains nm
 
 /-- Checks whether all universe levels `u` in the type of `d` are "good".
@@ -341,7 +341,7 @@ occur by themselves in a level. It is ok if *one* of `u` or `v` never occurs alo
 `(α : Type u) (β : Type (max u v))` is a occasionally useful method of saying that `β` lives in
 a higher universe level than `α`.
 -/
-unsafe def check_univs (d : declaration) : tactic (Option Stringₓ) := do
+unsafe def check_univs (d : declaration) : tactic (Option String) := do
   let l := d.type.univ_params_grouped d.to_name
   let bad := bad_params l
   if bad then return none else return <| some <| "universes " ++ toString bad ++ " only occur together."
@@ -374,7 +374,7 @@ We call declarations of this form syntactic tautologies.
 Such lemmas are (mostly) useless and sometimes introduced unintentionally when proving basic facts
 with rfl when elaboration results in a different term than the user intended.
 -/
-unsafe def syn_taut (d : declaration) : tactic (Option Stringₓ) :=
+unsafe def syn_taut (d : declaration) : tactic (Option String) :=
   (do
       let (el, er) ← d.type.pi_codomain.is_eq
       guardb (expr.alpha_eqv el er)
@@ -415,7 +415,7 @@ unsafe def expr.has_zero_var (e : expr) : Bool :=
 
 /-- Return a list of unused have and suffices terms in an expression
 -/
-unsafe def find_unused_have_suffices_macros : expr → tactic (List Stringₓ)
+unsafe def find_unused_have_suffices_macros : expr → tactic (List String)
   | app a b => (· ++ ·) <$> find_unused_have_suffices_macros a <*> find_unused_have_suffices_macros b
   | lam var_name bi var_type body => find_unused_have_suffices_macros body
   | pi var_name bi var_type body => find_unused_have_suffices_macros body
@@ -438,7 +438,7 @@ unsafe def find_unused_have_suffices_macros : expr → tactic (List Stringₓ)
 
 /-- Return a list of unused have and suffices terms in a declaration
 -/
-unsafe def unused_have_of_decl : declaration → tactic (List Stringₓ)
+unsafe def unused_have_of_decl : declaration → tactic (List String)
   | declaration.defn _ _ _ bd _ _ => find_unused_have_suffices_macros bd
   | declaration.thm _ _ _ bd => find_unused_have_suffices_macros bd.get
   | _ => return []
@@ -446,7 +446,7 @@ unsafe def unused_have_of_decl : declaration → tactic (List Stringₓ)
 /-- Checks whether a declaration contains term mode have statements that have no effect on the resulting
 term.
 -/
-unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option Stringₓ) := do
+unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option String) := do
   let ns ← unused_have_of_decl d
   if ns = 0 then return none else return (", ".intercalate (ns toString))
 
@@ -478,11 +478,11 @@ unsafe def linter.unused_haves_suffices : linter where
 /-- Ensures that every interactive tactic has arguments for which `interactive.param_desc` succeeds.
 This is used to generate the parser documentation that appears in hovers on interactive tactics.
 -/
-unsafe def unprintable_interactive (d : declaration) : tactic (Option Stringₓ) :=
+unsafe def unprintable_interactive (d : declaration) : tactic (Option String) :=
   match d.to_name with
   | Name.mk_string _ (Name.mk_string "interactive" (Name.mk_string _ Name.anonymous)) => do
     let (ds, _) ← mk_local_pis d.type
-    let ds ← ds.mfilter fun d => bnot <$> succeeds (interactive.param_desc d.local_type)
+    let ds ← ds.mfilter fun d => not <$> succeeds (interactive.param_desc d.local_type)
     let ff ← return ds.Empty | return none
     let ds ← ds.mmap (pp ∘ to_binder)
     return <| some <| ds tt
@@ -527,7 +527,7 @@ right expressions if this is the case. Returns `none` otherwise;
 4. If no variable satisfies the condition above, return `none`;
 5. Return a message mentioning the variables that do, otherwise.
 -/
-unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option Stringₓ) := do
+unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option String) := do
   let (ln, li, e) := unravel_explicits_of_pi d.type 0 [] []
   match e with
     | none => return none

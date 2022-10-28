@@ -16,7 +16,7 @@ namespace Interactive
 open Expr Lean.Parser
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 /-- This is a "finishing" tactic modification of `simp`. It has two forms.
 
@@ -36,7 +36,7 @@ unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (t
   let simp_at (lc) (close_tac : tactic Unit) :=
     focus1 <|
       simp use_iota_eqn trace_lemmas no_dflt hs attr_names (Loc.ns lc) { cfg with failIfUnchanged := false } >>
-        ((close_tac <|> trivialₓ) >> done <|> fail "simpa failed")
+        ((close_tac <|> trivial) >> done <|> fail "simpa failed")
   match tgt with
   | none => get_local `this >> simp_at [some `this, none] assumption <|> simp_at [none] assumption
   | some e =>

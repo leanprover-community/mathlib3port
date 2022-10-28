@@ -48,7 +48,7 @@ instance inhabitedGradedObject (β : Type w) (C : Type u) [Inhabited C] : Inhabi
 with a shift functor given by translation by `s`.
 -/
 @[nolint unused_arguments]
-abbrev GradedObjectWithShift {β : Type w} [AddCommGroupₓ β] (s : β) (C : Type u) : Type max w u :=
+abbrev GradedObjectWithShift {β : Type w} [AddCommGroup β] (s : β) (C : Type u) : Type max w u :=
   GradedObject β C
 
 namespace GradedObject
@@ -61,8 +61,8 @@ instance categoryOfGradedObjects (β : Type w) : Category.{max w v} (GradedObjec
 /-- The projection of a graded object to its `i`-th component. -/
 @[simps]
 def eval {β : Type w} (b : β) : GradedObject β C ⥤ C where
-  obj := fun X => X b
-  map := fun X Y f => f b
+  obj X := X b
+  map X Y f := f b
 
 section
 
@@ -118,7 +118,7 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
             ext
             simp)).trans
       (comapComp _ _ _).symm
-  functor_unit_iso_comp' := fun X => by
+  functor_unit_iso_comp' X := by
     ext b
     dsimp
     simp
@@ -126,7 +126,7 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
 -- See note [dsimp, simp].
 end
 
-instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
+instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
       ε :=
@@ -140,7 +140,7 @@ instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (Graded
           comapEq C
             (by
               ext
-              simp [add_zsmul, add_commₓ]),
+              simp [add_zsmul, add_comm]),
       left_unitality := by
         introv
         ext
@@ -158,17 +158,17 @@ instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (Graded
         simp }
 
 @[simp]
-theorem shift_functor_obj_apply {β : Type _} [AddCommGroupₓ β] (s : β) (X : β → C) (t : β) (n : ℤ) :
+theorem shift_functor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
 
 @[simp]
-theorem shift_functor_map_apply {β : Type _} [AddCommGroupₓ β] (s : β) {X Y : GradedObjectWithShift s C} (f : X ⟶ Y)
+theorem shift_functor_map_apply {β : Type _} [AddCommGroup β] (s : β) {X Y : GradedObjectWithShift s C} (f : X ⟶ Y)
     (t : β) (n : ℤ) : (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
 
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
-    HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero := fun X Y => { zero := fun b => 0 }
+    HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero X Y := { zero := fun b => 0 }
 
 @[simp]
 theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) (b : β) : (0 : X ⟶ Y) b = 0 :=
@@ -204,8 +204,8 @@ attribute [local tidy] tactic.discrete_cases
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
 noncomputable def total : GradedObject β C ⥤ C where
-  obj := fun X => ∐ fun i : β => X i
-  map := fun X Y f => Limits.Sigma.map fun i => f i
+  obj X := ∐ fun i : β => X i
+  map X Y f := Limits.Sigma.map fun i => f i
 
 end
 
@@ -216,7 +216,7 @@ To prove this, we need to know that the coprojections into the coproduct are mon
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
 instance :
-    Faithful (total β C) where map_injective' := fun X Y f g w => by
+    Faithful (total β C) where map_injective' X Y f g w := by
     classical
     ext i
     replace w := sigma.ι (fun i : β => X i) i ≫= w

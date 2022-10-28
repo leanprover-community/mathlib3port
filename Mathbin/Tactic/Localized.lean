@@ -22,17 +22,17 @@ The code is inspired by code from Gabriel Ebner from the
 open Lean Lean.Parser Interactive Tactic Native
 
 @[user_attribute]
-unsafe def localized_attr : user_attribute (rb_lmap Name Stringₓ) Unit where
+unsafe def localized_attr : user_attribute (rb_lmap Name String) Unit where
   Name := "_localized"
   descr := "(interal) attribute that flags localized commands"
   parser := failed
   cache_cfg :=
     ⟨fun ns => do
-      let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × Stringₓ)
+      let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × String)
       return <| rb_lmap.of_list dcls, []⟩
 
 /-- Get all commands in the given locale and return them as a list of strings -/
-unsafe def get_localized (ns : List Name) : tactic (List Stringₓ) := do
+unsafe def get_localized (ns : List Name) : tactic (List String) := do
   let m ← localized_attr.get_cache
   ns
       (fun l nm =>
@@ -55,17 +55,17 @@ unsafe def open_locale_cmd (_ : parse <| tk "open_locale") : parser Unit := do
 unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
   let cmd ← parser.pexpr
   let cmd ← i_to_expr cmd
-  let cmd ← eval_expr Stringₓ cmd
+  let cmd ← eval_expr String cmd
   let cmd := "local " ++ cmd
   emit_code_here cmd
   tk "in"
   let nm ← ident
   let env ← get_env
-  let dummy_decl_name := mkNumName `_localized_decl ((Stringₓ.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
+  let dummy_decl_name := mkNumName `_localized_decl ((String.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
   add_decl
-      (declaration.defn dummy_decl_name [] (quote.1 (Name × Stringₓ)) (reflect (⟨nm, cmd⟩ : Name × Stringₓ))
+      (declaration.defn dummy_decl_name [] (quote.1 (Name × String)) (reflect (⟨nm, cmd⟩ : Name × String))
         (ReducibilityHints.regular 1 tt) ff)
-  localized_attr dummy_decl_name Unit.star tt
+  localized_attr dummy_decl_name Unit.unit tt
 
 /-- This consists of two user-commands which allow you to declare notation and commands localized to a
 locale.
@@ -146,7 +146,7 @@ Classical] attribute [instance] Classical.propDecidable
 localized [Classical] attribute [instance] Eq.decidable
 
 -- mathport name: parser.optional
-localized [Parser] postfix:1024 "?" => optionalₓ
+localized [Parser] postfix:1024 "?" => optional
 
 -- mathport name: parser.many
 localized [Parser] postfix:1024 "*" => lean.parser.many

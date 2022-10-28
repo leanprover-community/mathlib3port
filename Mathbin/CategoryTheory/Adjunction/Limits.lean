@@ -66,7 +66,7 @@ Auxiliary definition for `functoriality_is_left_adjoint`.
 @[simps]
 def functorialityUnit :
     𝟭 (Cocone K) ⟶
-      Cocones.functoriality _ F ⋙ functorialityRightAdjoint adj K where app := fun c => { Hom := adj.Unit.app c.x }
+      Cocones.functoriality _ F ⋙ functorialityRightAdjoint adj K where app c := { Hom := adj.Unit.app c.x }
 
 /-- The counit for the adjunction for `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)`.
 
@@ -75,7 +75,7 @@ Auxiliary definition for `functoriality_is_left_adjoint`.
 @[simps]
 def functorialityCounit :
     functorialityRightAdjoint adj K ⋙ Cocones.functoriality _ F ⟶
-      𝟭 (Cocone (K ⋙ F)) where app := fun c => { Hom := adj.counit.app c.x }
+      𝟭 (Cocone (K ⋙ F)) where app c := { Hom := adj.counit.app c.x }
 
 /-- The functor `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)` is a left adjoint. -/
 def functorialityIsLeftAdjoint : IsLeftAdjoint (Cocones.functoriality K F) where
@@ -88,11 +88,11 @@ See <https://stacks.math.columbia.edu/tag/0038>.
 -/
 def leftAdjointPreservesColimits :
     PreservesColimitsOfSize.{v, u}
-      F where PreservesColimitsOfShape := fun J 𝒥 =>
+      F where PreservesColimitsOfShape J 𝒥 :=
     { PreservesColimit := fun F =>
         { preserves := fun c hc =>
             is_colimit.iso_unique_cocone_morphism.inv fun s =>
-              @Equivₓ.unique _ _ (is_colimit.iso_unique_cocone_morphism.hom hc _)
+              @Equiv.unique _ _ (is_colimit.iso_unique_cocone_morphism.hom hc _)
                 ((adj.functoriality_is_left_adjoint _).adj.homEquiv _ _) } }
 
 omit adj
@@ -105,7 +105,7 @@ instance (priority := 100) isEquivalencePreservesColimits (E : C ⥤ D) [IsEquiv
 -- see Note [lower instance priority]
 instance (priority := 100) isEquivalenceReflectsColimits (E : D ⥤ C) [IsEquivalence E] :
     ReflectsColimitsOfSize.{v, u}
-      E where ReflectsColimitsOfShape := fun J 𝒥 =>
+      E where ReflectsColimitsOfShape J 𝒥 :=
     { ReflectsColimit := fun K =>
         { reflects := fun c t => by
             have l := (is_colimit_of_preserves E.inv t).mapCoconeEquiv E.as_equivalence.unit_iso.symm
@@ -115,7 +115,7 @@ instance (priority := 100) isEquivalenceReflectsColimits (E : D ⥤ C) [IsEquiva
 -- see Note [lower instance priority]
 instance (priority := 100) isEquivalenceCreatesColimits (H : D ⥤ C) [IsEquivalence H] :
     CreatesColimitsOfSize.{v, u}
-      H where CreatesColimitsOfShape := fun J 𝒥 =>
+      H where CreatesColimitsOfShape J 𝒥 :=
     { CreatesColimit := fun F =>
         { lifts := fun c t => { liftedCocone := H.map_cocone_inv c, validLift := H.map_cocone_map_cocone_inv c } } }
 
@@ -163,7 +163,7 @@ Auxiliary definition for `functoriality_is_right_adjoint`.
 @[simps]
 def functorialityUnit' :
     𝟭 (Cone (K ⋙ G)) ⟶
-      functorialityLeftAdjoint adj K ⋙ Cones.functoriality _ G where app := fun c => { Hom := adj.Unit.app c.x }
+      functorialityLeftAdjoint adj K ⋙ Cones.functoriality _ G where app c := { Hom := adj.Unit.app c.x }
 
 /-- The counit for the adjunction for`cones.functoriality K G : cone K ⥤ cone (K ⋙ G)`.
 
@@ -171,8 +171,7 @@ Auxiliary definition for `functoriality_is_right_adjoint`.
 -/
 @[simps]
 def functorialityCounit' :
-    Cones.functoriality _ G ⋙ functorialityLeftAdjoint adj K ⟶
-      𝟭 (Cone K) where app := fun c => { Hom := adj.counit.app c.x }
+    Cones.functoriality _ G ⋙ functorialityLeftAdjoint adj K ⟶ 𝟭 (Cone K) where app c := { Hom := adj.counit.app c.x }
 
 /-- The functor `cones.functoriality K G : cone K ⥤ cone (K ⋙ G)` is a right adjoint. -/
 def functorialityIsRightAdjoint : IsRightAdjoint (Cones.functoriality K G) where
@@ -185,11 +184,11 @@ See <https://stacks.math.columbia.edu/tag/0038>.
 -/
 def rightAdjointPreservesLimits :
     PreservesLimitsOfSize.{v, u}
-      G where PreservesLimitsOfShape := fun J 𝒥 =>
+      G where PreservesLimitsOfShape J 𝒥 :=
     { PreservesLimit := fun K =>
         { preserves := fun c hc =>
             is_limit.iso_unique_cone_morphism.inv fun s =>
-              @Equivₓ.unique _ _ (is_limit.iso_unique_cone_morphism.hom hc _)
+              @Equiv.unique _ _ (is_limit.iso_unique_cone_morphism.hom hc _)
                 ((adj.functoriality_is_right_adjoint _).adj.homEquiv _ _).symm } }
 
 omit adj
@@ -202,7 +201,7 @@ instance (priority := 100) isEquivalencePreservesLimits (E : D ⥤ C) [IsEquival
 -- see Note [lower instance priority]
 instance (priority := 100) isEquivalenceReflectsLimits (E : D ⥤ C) [IsEquivalence E] :
     ReflectsLimitsOfSize.{v, u}
-      E where ReflectsLimitsOfShape := fun J 𝒥 =>
+      E where ReflectsLimitsOfShape J 𝒥 :=
     { ReflectsLimit := fun K =>
         { reflects := fun c t => by
             have := (is_limit_of_preserves E.inv t).mapConeEquiv E.as_equivalence.unit_iso.symm
@@ -212,7 +211,7 @@ instance (priority := 100) isEquivalenceReflectsLimits (E : D ⥤ C) [IsEquivale
 -- see Note [lower instance priority]
 instance (priority := 100) isEquivalenceCreatesLimits (H : D ⥤ C) [IsEquivalence H] :
     CreatesLimitsOfSize.{v, u}
-      H where CreatesLimitsOfShape := fun J 𝒥 =>
+      H where CreatesLimitsOfShape J 𝒥 :=
     { CreatesLimit := fun F =>
         { lifts := fun c t => { liftedCone := H.map_cone_inv c, validLift := H.map_cone_map_cone_inv c } } }
 
@@ -242,8 +241,8 @@ end PreservationLimits
 @[simps]
 def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
     (t : ((cocones J D).obj (op (K ⋙ F))).obj Y) : (G ⋙ (cocones J C).obj (op K)).obj Y where
-  app := fun j => (adj.homEquiv (K.obj j) Y) (t.app j)
-  naturality' := fun j j' f => by
+  app j := (adj.homEquiv (K.obj j) Y) (t.app j)
+  naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_left, t.naturality]
     dsimp
     simp
@@ -252,8 +251,8 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
 @[simps]
 def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
     (t : (G ⋙ (cocones J C).obj (op K)).obj Y) : ((cocones J D).obj (op (K ⋙ F))).obj Y where
-  app := fun j => (adj.homEquiv (K.obj j) Y).symm (t.app j)
-  naturality' := fun j j' f => by
+  app j := (adj.homEquiv (K.obj j) Y).symm (t.app j)
+  naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm, t.naturality]
     dsimp
     simp
@@ -262,8 +261,8 @@ def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
 @[simps]
 def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
     (t : (Functor.op F ⋙ (cones J D).obj K).obj X) : ((cones J C).obj (K ⋙ G)).obj X where
-  app := fun j => (adj.homEquiv (unop X) (K.obj j)) (t.app j)
-  naturality' := fun j j' f => by
+  app j := (adj.homEquiv (unop X) (K.obj j)) (t.app j)
+  naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_right, ← t.naturality, category.id_comp, category.id_comp]
     rfl
 
@@ -271,8 +270,8 @@ def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒ�
 @[simps]
 def conesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ) (t : ((cones J C).obj (K ⋙ G)).obj X) :
     (Functor.op F ⋙ (cones J D).obj K).obj X where
-  app := fun j => (adj.homEquiv (unop X) (K.obj j)).symm (t.app j)
-  naturality' := fun j j' f => by
+  app j := (adj.homEquiv (unop X) (K.obj j)).symm (t.app j)
+  naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_right_symm, ← t.naturality, category.id_comp, category.id_comp]
 
 end ArbitraryUniverse

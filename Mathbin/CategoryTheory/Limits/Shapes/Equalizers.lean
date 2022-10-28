@@ -95,11 +95,11 @@ theorem walking_parallel_pair_hom_id (X : WalkingParallelPair) : WalkingParallel
 right.
 -/
 def walkingParallelPairOp : walking_parallel_pair ⥤ walking_parallel_pairᵒᵖ where
-  obj := fun x =>
+  obj x :=
     op <| by
       cases x
       exacts[one, zero]
-  map := fun i j f => by
+  map i j f := by
     cases f <;> apply Quiver.Hom.op
     exacts[left, right, walking_parallel_pair_hom.id _]
   map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) <;> rfl
@@ -169,11 +169,11 @@ variable {X Y : C}
 /-- `parallel_pair f g` is the diagram in `C` consisting of the two morphisms `f` and `g` with
     common domain and codomain. -/
 def parallelPair (f g : X ⟶ Y) : walking_parallel_pair ⥤ C where
-  obj := fun x =>
+  obj x :=
     match x with
     | zero => X
     | one => Y
-  map := fun x y h =>
+  map x y h :=
     match x, y, h with
     | _, _, id _ => 𝟙 _
     | _, _, left => f
@@ -214,7 +214,7 @@ def diagramIsoParallelPair (F : walking_parallel_pair ⥤ C) : F ≅ parallelPai
 /-- Construct a morphism between parallel pairs. -/
 def parallelPairHom {X' Y' : C} (f g : X ⟶ Y) (f' g' : X' ⟶ Y') (p : X ⟶ X') (q : Y ⟶ Y') (wf : f ≫ q = p ≫ f')
     (wg : g ≫ q = p ≫ g') : parallelPair f g ⟶ parallelPair f' g' where
-  app := fun j =>
+  app j :=
     match j with
     | zero => p
     | one => q
@@ -453,10 +453,10 @@ This is a special case of `is_limit.hom_iso'`, often useful to construct adjunct
 @[simps]
 def Fork.IsLimit.homIso {X Y : C} {f g : X ⟶ Y} {t : Fork f g} (ht : IsLimit t) (Z : C) :
     (Z ⟶ t.x) ≃ { h : Z ⟶ X // h ≫ f = h ≫ g } where
-  toFun := fun k => ⟨k ≫ t.ι, by simp only [category.assoc, t.condition]⟩
-  invFun := fun h => (Fork.IsLimit.lift' ht _ h.Prop).1
-  left_inv := fun k => Fork.IsLimit.hom_ext ht (Fork.IsLimit.lift' _ _ _).Prop
-  right_inv := fun h => Subtype.ext (Fork.IsLimit.lift' ht _ _).Prop
+  toFun k := ⟨k ≫ t.ι, by simp only [category.assoc, t.condition]⟩
+  invFun h := (Fork.IsLimit.lift' ht _ h.Prop).1
+  left_inv k := Fork.IsLimit.hom_ext ht (Fork.IsLimit.lift' _ _ _).Prop
+  right_inv h := Subtype.ext (Fork.IsLimit.lift' ht _ _).Prop
 
 /-- The bijection of `fork.is_limit.hom_iso` is natural in `Z`. -/
 theorem Fork.IsLimit.hom_iso_natural {X Y : C} {f g : X ⟶ Y} {t : Fork f g} (ht : IsLimit t) {Z Z' : C} (q : Z' ⟶ Z)
@@ -471,10 +471,10 @@ This is a special case of `is_colimit.hom_iso'`, often useful to construct adjun
 @[simps]
 def Cofork.IsColimit.homIso {X Y : C} {f g : X ⟶ Y} {t : Cofork f g} (ht : IsColimit t) (Z : C) :
     (t.x ⟶ Z) ≃ { h : Y ⟶ Z // f ≫ h = g ≫ h } where
-  toFun := fun k => ⟨t.π ≫ k, by simp only [← category.assoc, t.condition]⟩
-  invFun := fun h => (Cofork.IsColimit.desc' ht _ h.Prop).1
-  left_inv := fun k => Cofork.IsColimit.hom_ext ht (Cofork.IsColimit.desc' _ _ _).Prop
-  right_inv := fun h => Subtype.ext (Cofork.IsColimit.desc' ht _ _).Prop
+  toFun k := ⟨t.π ≫ k, by simp only [← category.assoc, t.condition]⟩
+  invFun h := (Cofork.IsColimit.desc' ht _ h.Prop).1
+  left_inv k := Cofork.IsColimit.hom_ext ht (Cofork.IsColimit.desc' _ _ _).Prop
+  right_inv h := Subtype.ext (Cofork.IsColimit.desc' ht _ _).Prop
 
 /-- The bijection of `cofork.is_colimit.hom_iso` is natural in `Z`. -/
 theorem Cofork.IsColimit.hom_iso_natural {X Y : C} {f g : X ⟶ Y} {t : Cofork f g} {Z Z' : C} (q : Z ⟶ Z')
@@ -679,7 +679,7 @@ theorem equalizer.exists_unique {W : C} (k : W ⟶ X) (h : k ≫ f = k ≫ g) :
   Fork.IsLimit.exists_unique (limit.isLimit _) _ h
 
 /-- An equalizer morphism is a monomorphism -/
-instance equalizer.ι_mono : Mono (equalizer.ι f g) where right_cancellation := fun Z h k w => equalizer.hom_ext w
+instance equalizer.ι_mono : Mono (equalizer.ι f g) where right_cancellation Z h k w := equalizer.hom_ext w
 
 end
 
@@ -805,6 +805,11 @@ abbrev coequalizer.desc {W : C} (k : Y ⟶ W) (h : f ≫ k = g ≫ k) : coequali
 theorem coequalizer.π_desc {W : C} (k : Y ⟶ W) (h : f ≫ k = g ≫ k) : coequalizer.π f g ≫ coequalizer.desc k h = k :=
   colimit.ι_desc _ _
 
+theorem coequalizer.π_colim_map_desc {X' Y' Z : C} (f' g' : X' ⟶ Y') [HasCoequalizer f' g'] (p : X ⟶ X') (q : Y ⟶ Y')
+    (wf : f ≫ q = p ≫ f') (wg : g ≫ q = p ≫ g') (h : Y' ⟶ Z) (wh : f' ≫ h = g' ≫ h) :
+    coequalizer.π f g ≫ colimMap (parallelPairHom f g f' g' p q wf wg) ≫ coequalizer.desc h wh = q ≫ h := by
+  rw [ι_colim_map_assoc, parallel_pair_hom_app_one, coequalizer.π_desc]
+
 /-- Any morphism `k : Y ⟶ W` satisfying `f ≫ k = g ≫ k` induces a morphism
     `l : coequalizer f g ⟶ W` satisfying `coequalizer.π ≫ g = l`. -/
 def coequalizer.desc' {W : C} (k : Y ⟶ W) (h : f ≫ k = g ≫ k) :
@@ -823,7 +828,7 @@ theorem coequalizer.exists_unique {W : C} (k : Y ⟶ W) (h : f ≫ k = g ≫ k) 
   Cofork.IsColimit.exists_unique (colimit.isColimit _) _ h
 
 /-- A coequalizer morphism is an epimorphism -/
-instance coequalizer.π_epi : Epi (coequalizer.π f g) where left_cancellation := fun Z h k w => coequalizer.hom_ext w
+instance coequalizer.π_epi : Epi (coequalizer.π f g) where left_cancellation Z h k w := coequalizer.hom_ext w
 
 end
 

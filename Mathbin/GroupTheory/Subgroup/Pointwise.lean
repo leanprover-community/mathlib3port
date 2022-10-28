@@ -27,21 +27,21 @@ keep them in sync.
 
 open Set
 
-variable {α : Type _} {G : Type _} {A : Type _} [Groupₓ G] [AddGroupₓ A]
+variable {α : Type _} {G : Type _} {A : Type _} [Group G] [AddGroup A]
 
 namespace Subgroup
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α] [MulDistribMulAction α G]
+variable [Monoid α] [MulDistribMulAction α G]
 
 /-- The action on a subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (Subgroup G) where
-  smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
-  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  smul a S := S.map (MulDistribMulAction.toMonoidEnd _ _ a)
+  one_smul S := (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subgroup.pointwiseMulAction
 
@@ -64,6 +64,9 @@ theorem smul_mem_pointwise_smul (m : G) (a : α) (S : Subgroup G) : m ∈ S → 
 theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ a • S ↔ ∃ s : G, s ∈ S ∧ a • s = m :=
   (Set.mem_smul_set : m ∈ a • (S : Set G) ↔ _)
 
+@[simp]
+theorem smul_bot (a : α) : a • (⊥ : Subgroup G) = ⊥ := by simp [SetLike.ext_iff, mem_smul_pointwise_iff_exists, eq_comm]
+
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ G] [IsCentralScalar α G] : IsCentralScalar α (Subgroup G) :=
   ⟨fun a S => (congr_arg fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
@@ -73,7 +76,7 @@ theorem conj_smul_le_of_le {P H : Subgroup G} (hP : P ≤ H) (h : H) : MulAut.co
 
 theorem conj_smul_subgroup_of {P H : Subgroup G} (hP : P ≤ H) (h : H) :
     MulAut.conj h • P.subgroupOf H = (MulAut.conj (h : G) • P).subgroupOf H := by
-  refine' le_antisymmₓ _ _
+  refine' le_antisymm _ _
   · rintro - ⟨g, hg, rfl⟩
     exact ⟨g, hg, rfl⟩
     
@@ -81,11 +84,11 @@ theorem conj_smul_subgroup_of {P H : Subgroup G} (hP : P ≤ H) (h : H) :
     exact ⟨⟨g, hP hg⟩, hg, Subtype.ext hp⟩
     
 
-end Monoidₓ
+end Monoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ α] [MulDistribMulAction α G]
+variable [Group α] [MulDistribMulAction α G]
 
 open Pointwise
 
@@ -109,22 +112,26 @@ theorem pointwise_smul_subset_iff {a : α} {S T : Subgroup G} : a • S ≤ T �
 theorem subset_pointwise_smul_iff {a : α} {S T : Subgroup G} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff
 
+@[simp]
+theorem smul_inf (a : α) (S T : Subgroup G) : a • (S ⊓ T) = a • S ⊓ a • T := by
+  simp [SetLike.ext_iff, mem_pointwise_smul_iff_inv_smul_mem]
+
 /-- Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
 @[simps]
 def equivSmul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
   (MulDistribMulAction.toMulEquiv G a).subgroupMap H
 
 theorem subgroup_mul_singleton {H : Subgroup G} {h : G} (hh : h ∈ H) : (H : Set G) * {h} = H := by
-  refine' le_antisymmₓ _ fun h' hh' => ⟨h' * h⁻¹, h, H.mul_mem hh' (H.inv_mem hh), rfl, inv_mul_cancel_right h' h⟩
+  refine' le_antisymm _ fun h' hh' => ⟨h' * h⁻¹, h, H.mul_mem hh' (H.inv_mem hh), rfl, inv_mul_cancel_right h' h⟩
   rintro _ ⟨h', h, hh', rfl : _ = _, rfl⟩
   exact H.mul_mem hh' hh
 
 theorem singleton_mul_subgroup {H : Subgroup G} {h : G} (hh : h ∈ H) : {h} * (H : Set G) = H := by
-  refine' le_antisymmₓ _ fun h' hh' => ⟨h, h⁻¹ * h', rfl, H.mul_mem (H.inv_mem hh) hh', mul_inv_cancel_left h h'⟩
+  refine' le_antisymm _ fun h' hh' => ⟨h, h⁻¹ * h', rfl, H.mul_mem (H.inv_mem hh) hh', mul_inv_cancel_left h h'⟩
   rintro _ ⟨h, h', rfl : _ = _, hh', rfl⟩
   exact H.mul_mem hh hh'
 
-theorem Normal.conj_act {G : Type _} [Groupₓ G] {H : Subgroup G} (hH : H.Normal) (g : ConjAct G) : g • H = H := by
+theorem Normal.conj_act {G : Type _} [Group G] {H : Subgroup G} (hH : H.Normal) (g : ConjAct G) : g • H = H := by
   ext
   constructor
   · intro h
@@ -132,9 +139,9 @@ theorem Normal.conj_act {G : Type _} [Groupₓ G] {H : Subgroup G} (hH : H.Norma
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
     dsimp at *
     rw [ConjAct.smul_def] at *
-    simp only [ConjAct.of_conj_act_inv, ConjAct.of_conj_act_to_conj_act, inv_invₓ] at *
+    simp only [ConjAct.of_conj_act_inv, ConjAct.of_conj_act_to_conj_act, inv_inv] at *
     convert this
-    simp only [← mul_assoc, mul_right_invₓ, one_mulₓ, mul_inv_cancel_rightₓ]
+    simp only [← mul_assoc, mul_right_inv, one_mul, mul_inv_cancel_right]
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
     exact h
     
@@ -144,11 +151,15 @@ theorem Normal.conj_act {G : Type _} [Groupₓ G] {H : Subgroup G} (hH : H.Norma
     exact h
     
 
-end Groupₓ
+@[simp]
+theorem smul_normal (g : G) (H : Subgroup G) [h : Normal H] : MulAut.conj g • H = H :=
+  h.ConjAct g
 
-section GroupWithZeroₓ
+end Group
 
-variable [GroupWithZeroₓ α] [MulDistribMulAction α G]
+section GroupWithZero
+
+variable [GroupWithZero α] [MulDistribMulAction α G]
 
 open Pointwise
 
@@ -172,23 +183,23 @@ theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : Subgroup G} : a 
 theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : Subgroup G} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff₀ ha
 
-end GroupWithZeroₓ
+end GroupWithZero
 
 end Subgroup
 
 namespace AddSubgroup
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α] [DistribMulAction α A]
+variable [Monoid α] [DistribMulAction α A]
 
 /-- The action on an additive subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (AddSubgroup A) where
-  smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
-  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  smul a S := S.map (DistribMulAction.toAddMonoidEnd _ _ a)
+  one_smul S := (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 
@@ -211,11 +222,11 @@ theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m �
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] : IsCentralScalar α (AddSubgroup A) :=
   ⟨fun a S => (congr_arg fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
-end Monoidₓ
+end Monoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ α] [DistribMulAction α A]
+variable [Group α] [DistribMulAction α A]
 
 open Pointwise
 
@@ -239,11 +250,11 @@ theorem pointwise_smul_le_iff {a : α} {S T : AddSubgroup A} : a • S ≤ T ↔
 theorem le_pointwise_smul_iff {a : α} {S T : AddSubgroup A} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff
 
-end Groupₓ
+end Group
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable [GroupWithZeroₓ α] [DistribMulAction α A]
+variable [GroupWithZero α] [DistribMulAction α A]
 
 open Pointwise
 
@@ -268,7 +279,7 @@ theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubgroup A} :
 theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubgroup A} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff₀ ha
 
-end GroupWithZeroₓ
+end GroupWithZero
 
 end AddSubgroup
 

@@ -18,43 +18,43 @@ and subsequently be moved upstream to `data.finset.locally_finite`.
 -/
 
 
-open Finsetₓ Nat
+open Finset Nat
 
 instance : LocallyFiniteOrder ℕ where
-  finsetIcc := fun a b => ⟨List.range' a (b + 1 - a), List.nodup_range' _ _⟩
-  finsetIco := fun a b => ⟨List.range' a (b - a), List.nodup_range' _ _⟩
-  finsetIoc := fun a b => ⟨List.range' (a + 1) (b - a), List.nodup_range' _ _⟩
-  finsetIoo := fun a b => ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩
-  finset_mem_Icc := fun a b x => by
-    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range']
-    cases le_or_ltₓ a b
-    · rw [add_tsub_cancel_of_le (Nat.lt_succ_of_leₓ h).le, Nat.lt_succ_iff]
+  finsetIcc a b := ⟨List.range' a (b + 1 - a), List.nodup_range' _ _⟩
+  finsetIco a b := ⟨List.range' a (b - a), List.nodup_range' _ _⟩
+  finsetIoc a b := ⟨List.range' (a + 1) (b - a), List.nodup_range' _ _⟩
+  finsetIoo a b := ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩
+  finset_mem_Icc a b x := by
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    cases le_or_lt a b
+    · rw [add_tsub_cancel_of_le (Nat.lt_succ_of_le h).le, Nat.lt_succ_iff]
       
-    · rw [tsub_eq_zero_iff_le.2 (succ_le_of_lt h), add_zeroₓ]
+    · rw [tsub_eq_zero_iff_le.2 (succ_le_of_lt h), add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2)
       
-  finset_mem_Ico := fun a b x => by
-    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range']
-    cases le_or_ltₓ a b
+  finset_mem_Ico a b x := by
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    cases le_or_lt a b
     · rw [add_tsub_cancel_of_le h]
       
-    · rw [tsub_eq_zero_iff_le.2 h.le, add_zeroₓ]
+    · rw [tsub_eq_zero_iff_le.2 h.le, add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2.le)
       
-  finset_mem_Ioc := fun a b x => by
-    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range']
-    cases le_or_ltₓ a b
+  finset_mem_Ioc a b x := by
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    cases le_or_lt a b
     · rw [← succ_sub_succ, add_tsub_cancel_of_le (succ_le_succ h), Nat.lt_succ_iff, Nat.succ_le_iff]
       
-    · rw [tsub_eq_zero_iff_le.2 h.le, add_zeroₓ]
+    · rw [tsub_eq_zero_iff_le.2 h.le, add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.le.trans hx.2)
       
-  finset_mem_Ioo := fun a b x => by
-    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range', ← tsub_add_eq_tsub_tsub]
-    cases le_or_ltₓ (a + 1) b
+  finset_mem_Ioo a b x := by
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range', ← tsub_add_eq_tsub_tsub]
+    cases le_or_lt (a + 1) b
     · rw [add_tsub_cancel_of_le h, Nat.succ_le_iff]
       
-    · rw [tsub_eq_zero_iff_le.2 h.le, add_zeroₓ]
+    · rw [tsub_eq_zero_iff_le.2 h.le, add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2)
       
 
@@ -107,22 +107,22 @@ theorem card_Iic : (iic b).card = b + 1 := by rw [Iic_eq_Icc, card_Icc, bot_eq_z
 theorem card_Iio : (iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero, tsub_zero]
 
 @[simp]
-theorem card_fintype_Icc : Fintypeₓ.card (Set.Icc a b) = b + 1 - a := by rw [Fintypeₓ.card_of_finset, card_Icc]
+theorem card_fintype_Icc : Fintype.card (Set.IccCat a b) = b + 1 - a := by rw [Fintype.card_of_finset, card_Icc]
 
 @[simp]
-theorem card_fintype_Ico : Fintypeₓ.card (Set.Ico a b) = b - a := by rw [Fintypeₓ.card_of_finset, card_Ico]
+theorem card_fintype_Ico : Fintype.card (Set.IcoCat a b) = b - a := by rw [Fintype.card_of_finset, card_Ico]
 
 @[simp]
-theorem card_fintype_Ioc : Fintypeₓ.card (Set.Ioc a b) = b - a := by rw [Fintypeₓ.card_of_finset, card_Ioc]
+theorem card_fintype_Ioc : Fintype.card (Set.IocCat a b) = b - a := by rw [Fintype.card_of_finset, card_Ioc]
 
 @[simp]
-theorem card_fintype_Ioo : Fintypeₓ.card (Set.Ioo a b) = b - a - 1 := by rw [Fintypeₓ.card_of_finset, card_Ioo]
+theorem card_fintype_Ioo : Fintype.card (Set.IooCat a b) = b - a - 1 := by rw [Fintype.card_of_finset, card_Ioo]
 
 @[simp]
-theorem card_fintype_Iic : Fintypeₓ.card (Set.Iic b) = b + 1 := by rw [Fintypeₓ.card_of_finset, card_Iic]
+theorem card_fintype_Iic : Fintype.card (Set.IicCat b) = b + 1 := by rw [Fintype.card_of_finset, card_Iic]
 
 @[simp]
-theorem card_fintype_Iio : Fintypeₓ.card (Set.Iio b) = b := by rw [Fintypeₓ.card_of_finset, card_Iio]
+theorem card_fintype_Iio : Fintype.card (Set.IioCat b) = b := by rw [Fintype.card_of_finset, card_Iio]
 
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`
 theorem Icc_succ_left : icc a.succ b = ioc a b := by
@@ -182,8 +182,8 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).Image fun x => c
   constructor
   · rintro ⟨x, hx, rfl⟩
     rw [mem_Ico] at hx
-    refine' ⟨_, ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt ((tsub_lt_tsub_iff_right hac).2 (Nat.lt_succ_selfₓ _))⟩
-    cases lt_or_leₓ c b
+    refine' ⟨_, ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt ((tsub_lt_tsub_iff_right hac).2 (Nat.lt_succ_self _))⟩
+    cases lt_or_le c b
     · rw [tsub_eq_zero_iff_le.mpr (succ_le_of_lt h)]
       exact zero_le _
       
@@ -193,7 +193,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).Image fun x => c
     
   · rintro ⟨hb, ha⟩
     rw [lt_tsub_iff_left, lt_succ_iff] at ha
-    have hx : x ≤ c := (Nat.le_add_leftₓ _ _).trans ha
+    have hx : x ≤ c := (Nat.le_add_left _ _).trans ha
     refine' ⟨c - x, _, tsub_tsub_cancel_of_le hx⟩
     · rw [mem_Ico]
       exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2 <| succ_le_iff.1 <| tsub_le_iff_right.1 hb⟩
@@ -202,71 +202,71 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).Image fun x => c
 
 theorem Ico_succ_left_eq_erase_Ico : ico a.succ b = erase (ico a b) a := by
   ext x
-  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assocₓ, ne_comm, and_comm (a ≠ x), lt_iff_le_and_neₓ]
+  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc', ne_comm, and_comm' (a ≠ x), lt_iff_le_and_ne]
 
-theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finsetₓ.ico n (n + a)) := by
+theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) := by
   induction' n with n ih
-  · simp only [zero_addₓ, nat_zero_eq_zero, Ico_zero_eq_range]
+  · simp only [zero_add, nat_zero_eq_zero, Ico_zero_eq_range]
     rintro k hk l hl (hkl : k % a = l % a)
-    simp only [Finsetₓ.mem_range, Finsetₓ.mem_coe] at hk hl
+    simp only [Finset.mem_range, Finset.mem_coe] at hk hl
     rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
     
   rw [Ico_succ_left_eq_erase_Ico, succ_add, Ico_succ_right_eq_insert_Ico le_self_add]
   rintro k hk l hl (hkl : k % a = l % a)
   have ha : 0 < a := by
     by_contra ha
-    simp only [not_ltₓ, nonpos_iff_eq_zero] at ha
+    simp only [not_lt, nonpos_iff_eq_zero] at ha
     simpa [ha] using hk
-  simp only [Finsetₓ.mem_coe, Finsetₓ.mem_insert, Finsetₓ.mem_erase] at hk hl
+  simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl
   rcases hk with ⟨hkn, rfl | hk⟩ <;> rcases hl with ⟨hln, rfl | hl⟩
   · rfl
     
   · rw [add_mod_right] at hkl
     refine' (hln <| ih hl _ hkl.symm).elim
-    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finsetₓ.coe_Ico, ha]
+    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
     
   · rw [add_mod_right] at hkl
     suffices k = n by contradiction
     refine' ih hk _ hkl
-    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finsetₓ.coe_Ico, ha]
+    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
     
-  · refine' ih _ _ hkl <;> simp only [Finsetₓ.mem_coe, hk, hl]
+  · refine' ih _ _ hkl <;> simp only [Finset.mem_coe, hk, hl]
     
 
 /-- Note that while this lemma cannot be easily generalized to a type class, it holds for ℤ as
 well. See `int.image_Ico_mod` for the ℤ version. -/
 theorem image_Ico_mod (n a : ℕ) : (ico n (n + a)).Image (· % a) = range a := by
   obtain rfl | ha := eq_or_ne a 0
-  · rw [range_zero, add_zeroₓ, Ico_self, image_empty]
+  · rw [range_zero, add_zero, Ico_self, image_empty]
     
   ext i
-  simp only [mem_image, exists_propₓ, mem_range, mem_Ico]
+  simp only [mem_image, exists_prop, mem_range, mem_Ico]
   constructor
   · rintro ⟨i, h, rfl⟩
     exact mod_lt i ha.bot_lt
     
   intro hia
-  have hn := Nat.mod_add_divₓ n a
-  obtain hi | hi := lt_or_leₓ i (n % a)
+  have hn := Nat.mod_add_div n a
+  obtain hi | hi := lt_or_le i (n % a)
   · refine' ⟨i + a * (n / a + 1), ⟨_, _⟩, _⟩
-    · rw [add_commₓ (n / a), mul_addₓ, mul_oneₓ, ← add_assocₓ]
+    · rw [add_comm (n / a), mul_add, mul_one, ← add_assoc]
       refine' hn.symm.le.trans (add_le_add_right _ _)
-      simpa only [zero_addₓ] using add_le_add (zero_le i) (Nat.mod_ltₓ n ha.bot_lt).le
+      simpa only [zero_add] using add_le_add (zero_le i) (Nat.mod_lt n ha.bot_lt).le
       
-    · refine' lt_of_lt_of_leₓ (add_lt_add_right hi (a * (n / a + 1))) _
-      rw [mul_addₓ, mul_oneₓ, ← add_assocₓ, hn]
+    · refine' lt_of_lt_of_le (add_lt_add_right hi (a * (n / a + 1))) _
+      rw [mul_add, mul_one, ← add_assoc, hn]
       
-    · rw [Nat.add_mul_mod_self_leftₓ, Nat.mod_eq_of_ltₓ hia]
+    · rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
       
     
   · refine' ⟨i + a * (n / a), ⟨_, _⟩, _⟩
     · exact hn.symm.le.trans (add_le_add_right hi _)
       
-    · rw [add_commₓ n a]
-      refine' add_lt_add_of_lt_of_le hia (le_transₓ _ hn.le)
+    · rw [add_comm n a]
+      refine' add_lt_add_of_lt_of_le hia (le_trans _ hn.le)
       simp only [zero_le, le_add_iff_nonneg_left]
       
-    · rw [Nat.add_mul_mod_self_leftₓ, Nat.mod_eq_of_ltₓ hia]
+    · rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
       
     
 
@@ -275,28 +275,28 @@ section Multiset
 open Multiset
 
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.ico n (n + a)).map (· % a) = range a := by
-  convert congr_arg Finsetₓ.val (image_Ico_mod n a)
-  refine' ((nodup_map_iff_inj_on (Finsetₓ.ico _ _).Nodup).2 <| _).dedup.symm
+  convert congr_arg Finset.val (image_Ico_mod n a)
+  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 <| _).dedup.symm
   exact mod_inj_on_Ico _ _
 
 end Multiset
 
 end Nat
 
-namespace Finsetₓ
+namespace Finset
 
-theorem range_image_pred_top_sub (n : ℕ) : ((Finsetₓ.range n).Image fun j => n - 1 - j) = Finsetₓ.range n := by
+theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).Image fun j => n - 1 - j) = Finset.range n := by
   cases n
   · rw [range_zero, image_empty]
     
-  · rw [Finsetₓ.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (zero_le _)]
+  · rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (zero_le _)]
     simp_rw [succ_sub_succ, tsub_zero, tsub_self]
     
 
 theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) := by
-  rw [Finsetₓ.range_eq_Ico, map_eq_image]
+  rw [Finset.range_eq_Ico, map_eq_image]
   convert (Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
   exact image_add_left_Ico _ _ _
 
-end Finsetₓ
+end Finset
 

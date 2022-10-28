@@ -34,20 +34,20 @@ open Function OrderDual Set
 /-- A function `f` between preorders is left order continuous if it preserves all suprema.  We
 define it using `is_lub` instead of `Sup` so that the proof works both for complete lattices and
 conditionally complete lattices. -/
-def LeftOrdContinuous [Preorderₓ α] [Preorderₓ β] (f : α → β) :=
+def LeftOrdContinuous [Preorder α] [Preorder β] (f : α → β) :=
   ∀ ⦃s : Set α⦄ ⦃x⦄, IsLub s x → IsLub (f '' s) (f x)
 
 /-- A function `f` between preorders is right order continuous if it preserves all infima.  We
 define it using `is_glb` instead of `Inf` so that the proof works both for complete lattices and
 conditionally complete lattices. -/
-def RightOrdContinuous [Preorderₓ α] [Preorderₓ β] (f : α → β) :=
+def RightOrdContinuous [Preorder α] [Preorder β] (f : α → β) :=
   ∀ ⦃s : Set α⦄ ⦃x⦄, IsGlb s x → IsGlb (f '' s) (f x)
 
 namespace LeftOrdContinuous
 
-section Preorderₓ
+section Preorder
 
-variable (α) [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β}
+variable (α) [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β}
 
 protected theorem id : LeftOrdContinuous (id : α → α) := fun s x h => by simpa only [image_id] using h
 
@@ -60,7 +60,7 @@ theorem map_is_greatest (hf : LeftOrdContinuous f) {s : Set α} {x : α} (h : Is
     IsGreatest (f '' s) (f x) :=
   ⟨mem_image_of_mem f h.1, (hf h.IsLub).1⟩
 
-theorem mono (hf : LeftOrdContinuous f) : Monotoneₓ f := fun a₁ a₂ h =>
+theorem mono (hf : LeftOrdContinuous f) : Monotone f := fun a₁ a₂ h =>
   have : IsGreatest {a₁, a₂} a₂ := ⟨Or.inr rfl, by simp [*]⟩
   (hf.map_is_greatest this).2 <| mem_image_of_mem _ (Or.inl rfl)
 
@@ -70,7 +70,7 @@ theorem comp (hg : LeftOrdContinuous g) (hf : LeftOrdContinuous f) : LeftOrdCont
 protected theorem iterate {f : α → α} (hf : LeftOrdContinuous f) (n : ℕ) : LeftOrdContinuous (f^[n]) :=
   (Nat.recOn n (LeftOrdContinuous.id α)) fun n ihn => ihn.comp hf
 
-end Preorderₓ
+end Preorder
 
 section SemilatticeSup
 
@@ -83,7 +83,7 @@ theorem le_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y 
   simp only [← sup_eq_right, ← hf.map_sup, h.eq_iff]
 
 theorem lt_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x < f y ↔ x < y := by
-  simp only [lt_iff_le_not_leₓ, hf.le_iff h]
+  simp only [lt_iff_le_not_le, hf.le_iff h]
 
 variable (f)
 
@@ -130,9 +130,9 @@ end LeftOrdContinuous
 
 namespace RightOrdContinuous
 
-section Preorderₓ
+section Preorder
 
-variable (α) [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β}
+variable (α) [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β}
 
 protected theorem id : RightOrdContinuous (id : α → α) := fun s x h => by simpa only [image_id] using h
 
@@ -144,7 +144,7 @@ protected theorem order_dual : RightOrdContinuous f → LeftOrdContinuous (to_du
 theorem map_is_least (hf : RightOrdContinuous f) {s : Set α} {x : α} (h : IsLeast s x) : IsLeast (f '' s) (f x) :=
   hf.OrderDual.map_is_greatest h
 
-theorem mono (hf : RightOrdContinuous f) : Monotoneₓ f :=
+theorem mono (hf : RightOrdContinuous f) : Monotone f :=
   hf.OrderDual.mono.dual
 
 theorem comp (hg : RightOrdContinuous g) (hf : RightOrdContinuous f) : RightOrdContinuous (g ∘ f) :=
@@ -153,7 +153,7 @@ theorem comp (hg : RightOrdContinuous g) (hf : RightOrdContinuous f) : RightOrdC
 protected theorem iterate {f : α → α} (hf : RightOrdContinuous f) (n : ℕ) : RightOrdContinuous (f^[n]) :=
   hf.OrderDual.iterate n
 
-end Preorderₓ
+end Preorder
 
 section SemilatticeInf
 
@@ -214,18 +214,18 @@ end RightOrdContinuous
 
 namespace OrderIso
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {s : Set α} {x : α}
+variable [Preorder α] [Preorder β] (e : α ≃o β) {s : Set α} {x : α}
 
 protected theorem left_ord_continuous : LeftOrdContinuous e := fun s x hx =>
-  ⟨Monotoneₓ.mem_upper_bounds_image (fun x y => e.map_rel_iff.2) hx.1, fun y hy =>
+  ⟨Monotone.mem_upper_bounds_image (fun x y => e.map_rel_iff.2) hx.1, fun y hy =>
     e.rel_symm_apply.1 <| (is_lub_le_iff hx).2 fun x' hx' => e.rel_symm_apply.2 <| hy <| mem_image_of_mem _ hx'⟩
 
 protected theorem right_ord_continuous : RightOrdContinuous e :=
   OrderIso.left_ord_continuous e.dual
 
-end Preorderₓ
+end Preorder
 
 end OrderIso
 

@@ -54,7 +54,7 @@ instance [Zero R] : Zero (Cubic R) :=
 
 section Basic
 
-variable {P : Cubic R} [Semiringₓ R]
+variable {P : Cubic R} [Semiring R]
 
 /-- Convert a cubic polynomial to a polynomial. -/
 def toPoly (P : Cubic R) : R[X] :=
@@ -74,7 +74,7 @@ private theorem coeffs :
   intro n hn
   repeat' rw [if_neg]
   any_goals linarith only [hn]
-  repeat' rw [zero_addₓ]
+  repeat' rw [zero_add]
 
 @[simp]
 theorem coeff_gt_three (n : ℕ) (hn : 3 < n) : P.toPoly.coeff n = 0 :=
@@ -110,15 +110,15 @@ theorem to_poly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
 
 @[simp]
 theorem of_a_eq_zero (ha : P.a = 0) : P.toPoly = c P.b * X ^ 2 + c P.c * X + c P.d := by
-  rw [to_poly, C_eq_zero.mpr ha, zero_mul, zero_addₓ]
+  rw [to_poly, C_eq_zero.mpr ha, zero_mul, zero_add]
 
 @[simp]
 theorem of_a_b_eq_zero (ha : P.a = 0) (hb : P.b = 0) : P.toPoly = c P.c * X + c P.d := by
-  rw [of_a_eq_zero ha, C_eq_zero.mpr hb, zero_mul, zero_addₓ]
+  rw [of_a_eq_zero ha, C_eq_zero.mpr hb, zero_mul, zero_add]
 
 @[simp]
 theorem of_a_b_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) : P.toPoly = c P.d := by
-  rw [of_a_b_eq_zero ha hb, C_eq_zero.mpr hc, zero_mul, zero_addₓ]
+  rw [of_a_b_eq_zero ha hb, C_eq_zero.mpr hc, zero_mul, zero_add]
 
 @[simp]
 theorem of_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) (hd : P.d = 0) : P.toPoly = 0 := by
@@ -158,10 +158,10 @@ section Degree
 /-- The equivalence between cubic polynomials and polynomials of degree at most three. -/
 @[simps]
 def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
-  toFun := fun P => ⟨P.toPoly, degree_cubic_le⟩
-  invFun := fun f => ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
-  left_inv := fun P => by ext <;> simp only [Subtype.coe_mk, coeffs]
-  right_inv := fun f => by
+  toFun P := ⟨P.toPoly, degree_cubic_le⟩
+  invFun f := ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
+  left_inv P := by ext <;> simp only [Subtype.coe_mk, coeffs]
+  right_inv f := by
     ext (_ | _ | _ | _ | n) <;> simp only [Subtype.coe_mk, coeffs]
     have h3 : 3 < n + 4 := by linarith only
     rw [coeff_gt_three _ h3, (degree_le_iff_coeff_zero (f : R[X]) 3).mp f.2 _ <| with_bot.coe_lt_coe.mpr h3]
@@ -200,7 +200,7 @@ end Degree
 
 section Map
 
-variable [Semiringₓ S] {φ : R →+* S}
+variable [Semiring S] {φ : R →+* S}
 
 /-- Map a cubic polynomial across a semiring homomorphism. -/
 def map (φ : R →+* S) (P : Cubic R) : Cubic S :=
@@ -222,7 +222,7 @@ open Multiset
 
 section Extension
 
-variable {P : Cubic R} [CommRingₓ R] [CommRingₓ S] {φ : R →+* S}
+variable {P : Cubic R} [CommRing R] [CommRing S] {φ : R →+* S}
 
 /-- The roots of a cubic polynomial. -/
 def roots [IsDomain R] (P : Cubic R) : Multiset R :=
@@ -269,7 +269,7 @@ theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z})
     (map φ P).toPoly = c (φ P.a) * (X - c x) * (X - c y) * (X - c z) := by
   rw [map_to_poly,
     eq_prod_roots_of_splits <|
-      (splits_iff_roots_eq_three ha).mpr <| Exists.introₓ x <| Exists.introₓ y <| Exists.introₓ z h3,
+      (splits_iff_roots_eq_three ha).mpr <| Exists.intro x <| Exists.intro y <| Exists.intro z h3,
     leading_coeff ha, ← map_roots, h3]
   change C (φ P.a) * ((X - C x) ::ₘ (X - C y) ::ₘ {X - C z}).Prod = _
   rw [prod_cons, prod_cons, prod_singleton, mul_assoc, mul_assoc]
@@ -299,7 +299,7 @@ end Split
 section Discriminant
 
 /-- The discriminant of a cubic polynomial. -/
-def disc {R : Type _} [Ringₓ R] (P : Cubic R) : R :=
+def disc {R : Type _} [Ring R] (P : Cubic R) : R :=
   P.b ^ 2 * P.c ^ 2 - 4 * P.a * P.c ^ 3 - 4 * P.b ^ 3 * P.d - 27 * P.a ^ 2 * P.d ^ 2 + 18 * P.a * P.b * P.c * P.d
 
 theorem disc_eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
@@ -312,7 +312,7 @@ theorem disc_eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y
 theorem disc_ne_zero_iff_roots_ne (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     P.disc ≠ 0 ↔ x ≠ y ∧ x ≠ z ∧ y ≠ z := by
   rw [← _root_.map_ne_zero φ, disc_eq_prod_three_roots ha h3, pow_two]
-  simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_selfₓ, and_iff_right ha, and_assocₓ]
+  simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_self_iff, and_iff_right ha, and_assoc']
 
 theorem disc_ne_zero_iff_roots_nodup (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     P.disc ≠ 0 ↔ (map φ P).roots.Nodup := by

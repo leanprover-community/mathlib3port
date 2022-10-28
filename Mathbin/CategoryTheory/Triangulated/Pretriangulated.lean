@@ -42,8 +42,8 @@ We work in a preadditive category `C` equipped with an additive shift.
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
   [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] []
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] [] -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
 * Any triangle that is isomorphic to a distinguished triangle is also distinguished.
@@ -84,20 +84,20 @@ variable [Pretriangulated C]
 -- mathport name: «exprdist_triang »
 notation:20 "dist_triang " C => DistinguishedTriangles C
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.
 -/
 theorem rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T).mp H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle `T`, then we know `T.inv_rotate` is also distinguished.
 -/
 theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T.invRotate).mpr
     (isomorphic_distinguished T H T.invRotate.rotate (invRotCompRot.app T))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -116,7 +116,7 @@ theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mo
   rw [← f.left]
   simp only [limits.zero_comp, contractible_triangle_mor₂]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 -- TODO : tidy this proof up
 /-- Given any distinguished triangle
 ```
@@ -129,7 +129,7 @@ See <https://stacks.math.columbia.edu/tag/0146>
 theorem comp_dist_triangle_mor_zero₂₃ (T) (_ : T ∈ (dist_triang C)) : T.mor₂ ≫ T.mor₃ = 0 :=
   comp_dist_triangle_mor_zero₁₂ C T.rotate (rot_of_dist_triangle C T H)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -171,8 +171,8 @@ namespace TriangulatedFunctorStruct
 
 /-- The identity `triangulated_functor_struct`. -/
 def id : TriangulatedFunctorStruct C C where
-  obj := fun X => X
-  map := fun _ _ f => f
+  obj X := X
+  map _ _ f := f
   commShift := by rfl
 
 instance : Inhabited (TriangulatedFunctorStruct C C) :=
@@ -185,8 +185,8 @@ triangles of `D`.
 -/
 @[simps]
 def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D where
-  obj := fun T => Triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
-  map := fun S T f =>
+  obj T := Triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
+  map S T f :=
     { hom₁ := F.map f.hom₁, hom₂ := F.map f.hom₂, hom₃ := F.map f.hom₃,
       comm₁' := by
         dsimp

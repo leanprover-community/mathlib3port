@@ -31,9 +31,9 @@ open TopologicalSpace Pointwise
 
 variable {𝕜 𝕜' E F : Type _}
 
-variable [AddCommGroupₓ E] [UniformSpace E] [UniformAddGroup E]
+variable [AddCommGroup E] [UniformSpace E] [UniformAddGroup E]
 
-variable [AddCommGroupₓ F] [UniformSpace F]
+variable [AddCommGroup F] [UniformSpace F]
 
 section NontriviallyNormedField
 
@@ -108,7 +108,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     refine' bE.1.to_has_basis _ _
     · intro n _
       use n + 1
-      simp only [Ne.def, Nat.succ_ne_zero, not_false_iff, Nat.cast_addₓ, Nat.cast_oneₓ, true_andₓ]
+      simp only [Ne.def, Nat.succ_ne_zero, not_false_iff, Nat.cast_add, Nat.cast_one, true_and_iff]
       -- `b (n + 1) ⊆ b n` follows from `antitone`.
       have h : b (n + 1) ⊆ b n := bE.2 (by simp)
       refine' subset_trans _ h
@@ -117,8 +117,8 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
       rw [← hy]
       refine' (bE1 (n + 1)).2.smul_mem _ hx
       have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
-      rw [norm_inv, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, Nat.cast_addₓ,
-        Nat.cast_oneₓ, inv_le h' zero_lt_one]
+      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, Nat.cast_add, Nat.cast_one,
+        inv_le h' zero_lt_one]
       norm_cast
       simp
       
@@ -128,7 +128,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     simp only [ContinuousAt, map_zero, smul_zero] at hcont
     rw [bE.1.tendsto_left_iff] at hcont
     rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
-    refine' ⟨i, trivialₓ, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
+    refine' ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
     simp [← mul_smul, hn]
   rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h
   push_neg  at h
@@ -141,7 +141,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     apply bE.tendsto
     intro n
     by_cases h:n = 0
-    · rw [h, Nat.cast_zeroₓ, zero_smul]
+    · rw [h, Nat.cast_zero, zero_smul]
       refine' mem_of_mem_nhds (bE.1.mem_of_mem <| by triv)
       
     rcases hu n h with ⟨y, hy, hu1⟩
@@ -158,7 +158,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   have h1 : r ≤ ∥(n : 𝕜')∥ := by
     rw [IsROrC.norm_eq_abs, IsROrC.abs_cast_nat]
     exact hn.le
-  have hn' : 0 < ∥(n : 𝕜')∥ := lt_of_lt_of_leₓ hr h1
+  have hn' : 0 < ∥(n : 𝕜')∥ := lt_of_lt_of_le hr h1
   rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn'
   have h'' : f (u n) ∈ V := by
     simp only [Set.image_subset_iff] at h'

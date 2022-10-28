@@ -60,12 +60,12 @@ namespace Partition
 /-- A composition induces a partition (just convert the list to a multiset). -/
 def ofComposition (n : ℕ) (c : Composition n) : Partition n where
   parts := c.blocks
-  parts_pos := fun i hi => c.blocks_pos hi
+  parts_pos i hi := c.blocks_pos hi
   parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
 
 theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) := by
   rintro ⟨b, hb₁, hb₂⟩
-  rcases Quotientₓ.exists_rep b with ⟨b, rfl⟩
+  rcases Quotient.exists_rep b with ⟨b, rfl⟩
   refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
   simpa using hb₂
 
@@ -76,7 +76,7 @@ without the zeros.
 -/
 def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
   parts := l.filter (· ≠ 0)
-  parts_pos := fun i hi => Nat.pos_of_ne_zeroₓ <| by apply of_mem_filter hi
+  parts_pos i hi := Nat.pos_of_ne_zero <| by apply of_mem_filter hi
   parts_sum := by
     have lt : l.filter (· = 0) + l.filter (· ≠ 0) = l := filter_add_not _ l
     apply_fun Multiset.sum  at lt
@@ -111,19 +111,19 @@ theorem count_of_sums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) : (ofSu
 /-- Show there are finitely many partitions by considering the surjection from compositions to
 partitions.
 -/
-instance (n : ℕ) : Fintypeₓ (Partition n) :=
-  Fintypeₓ.ofSurjective (ofComposition n) of_composition_surj
+instance (n : ℕ) : Fintype (Partition n) :=
+  Fintype.ofSurjective (ofComposition n) of_composition_surj
 
 /-- The finset of those partitions in which every part is odd. -/
-def odds (n : ℕ) : Finsetₓ (Partition n) :=
-  Finsetₓ.univ.filter fun c => ∀ i ∈ c.parts, ¬Even i
+def odds (n : ℕ) : Finset (Partition n) :=
+  Finset.univ.filter fun c => ∀ i ∈ c.parts, ¬Even i
 
 /-- The finset of those partitions in which each part is used at most once. -/
-def distincts (n : ℕ) : Finsetₓ (Partition n) :=
-  Finsetₓ.univ.filter fun c => c.parts.Nodup
+def distincts (n : ℕ) : Finset (Partition n) :=
+  Finset.univ.filter fun c => c.parts.Nodup
 
 /-- The finset of those partitions in which every part is odd and used at most once. -/
-def oddDistincts (n : ℕ) : Finsetₓ (Partition n) :=
+def oddDistincts (n : ℕ) : Finset (Partition n) :=
   odds n ∩ distincts n
 
 end Partition

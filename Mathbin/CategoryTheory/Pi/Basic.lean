@@ -24,9 +24,9 @@ variable {I : Type w₀} (C : I → Type u₁) [∀ i, Category.{v₁} (C i)]
 /-- `pi C` gives the cartesian product of an indexed family of categories.
 -/
 instance pi : Category.{max w₀ v₁} (∀ i, C i) where
-  Hom := fun X Y => ∀ i, X i ⟶ Y i
-  id := fun X i => 𝟙 (X i)
-  comp := fun X Y Z f g i => f i ≫ g i
+  Hom X Y := ∀ i, X i ⟶ Y i
+  id X i := 𝟙 (X i)
+  comp X Y Z f g i := f i ≫ g i
 
 /-- This provides some assistance to typeclass search in a common situation,
 which otherwise fails. (Without this `category_theory.pi.has_limit_of_has_limit_comp_eval` fails.)
@@ -50,8 +50,8 @@ theorem comp_apply {X Y Z : ∀ i, C i} (f : X ⟶ Y) (g : Y ⟶ Z) (i) : (f ≫
 -/
 @[simps]
 def eval (i : I) : (∀ i, C i) ⥤ C i where
-  obj := fun f => f i
-  map := fun f g α => α i
+  obj f := f i
+  map f g α := α i
 
 section
 
@@ -61,8 +61,8 @@ variable {J : Type w₁}
 -/
 @[simps]
 def comap (h : J → I) : (∀ i, C i) ⥤ ∀ j, C (h j) where
-  obj := fun f i => f (h i)
-  map := fun f g α i => α (h i)
+  obj f i := f (h i)
+  map f g α i := α (h i)
 
 variable (I)
 
@@ -98,7 +98,13 @@ section
 
 variable {J : Type w₀} {D : J → Type u₁} [∀ j, Category.{v₁} (D j)]
 
-instance sumElimCategoryₓ : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
+/- warning: category_theory.pi.sum_elim_category -> CategoryTheory.pi.sumElimCategory is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{w₀}} (C : I -> Type.{u₁}) [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {J : Type.{w₀}} {D : J -> Type.{u₁}} [_inst_2 : forall (j : J), CategoryTheory.Category.{v₁ u₁} (D j)] (s : Sum.{w₀ w₀} I J), CategoryTheory.Category.{v₁ u₁} (Sum.elim.{w₀ w₀ succ (succ u₁)} I J Type.{u₁} C D s)
+but is expected to have type
+  forall {I : Type.{w₀}} (C : I -> Type.{u₁}) [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {J : Type.{w₀}} {D : J -> Type.{u₁}} [_inst_2 : forall (j : J), CategoryTheory.Category.{v₁ u₁} (D j)] (s : Sum.{w₀ w₀} I J), CategoryTheory.Category.{v₁ u₁} (Sum.elim.{w₀ w₀ succ (succ u₁)} I J Type.{u₁} C D s)
+Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategoryₓ'. -/
+instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inl i => by
     dsimp
     infer_instance
@@ -111,8 +117,8 @@ to obtain an `I ⊕ J`-indexed family of objects.
 -/
 @[simps]
 def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s where
-  obj := fun f => { obj := fun g s => Sum.rec f g s, map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
-  map := fun f f' α => { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
+  obj f := { obj := fun g s => Sum.rec f g s, map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
+  map f f' α := { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
 
 end
 
@@ -153,15 +159,15 @@ variable {D : I → Type u₁} [∀ i, Category.{v₁} (D i)] {A : Type u₁} [C
 -/
 @[simps]
 def pi (F : ∀ i, C i ⥤ D i) : (∀ i, C i) ⥤ ∀ i, D i where
-  obj := fun f i => (F i).obj (f i)
-  map := fun f g α i => (F i).map (α i)
+  obj f i := (F i).obj (f i)
+  map f g α i := (F i).map (α i)
 
 /-- Similar to `pi`, but all functors come from the same category `A`
 -/
 @[simps]
 def pi' (f : ∀ i, A ⥤ C i) : A ⥤ ∀ i, C i where
-  obj := fun a i => (f i).obj a
-  map := fun a₁ a₂ h i => (f i).map h
+  obj a i := (f i).obj a
+  map a₁ a₂ h i := (f i).map h
 
 section EqToHom
 
@@ -213,7 +219,7 @@ variable {F G : ∀ i, C i ⥤ D i}
 /-- Assemble an `I`-indexed family of natural transformations into a single natural transformation.
 -/
 @[simps]
-def pi (α : ∀ i, F i ⟶ G i) : Functor.pi F ⟶ Functor.pi G where app := fun f i => (α i).app (f i)
+def pi (α : ∀ i, F i ⟶ G i) : Functor.pi F ⟶ Functor.pi G where app f i := (α i).app (f i)
 
 end NatTrans
 

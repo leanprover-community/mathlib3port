@@ -147,7 +147,7 @@ theorem smul_cont_linear (t : R) (f : P →A[R] W) : (t • f).contLinear = t �
 
 theorem decomp (f : V →A[R] W) : (f : V → W) = f.contLinear + Function.const V (f 0) := by
   rcases f with ⟨f, h⟩
-  rw [coe_mk_const_linear_eq_linear, coe_mk, f.decomp, Pi.add_apply, LinearMap.map_zero, zero_addₓ]
+  rw [coe_mk_const_linear_eq_linear, coe_mk, f.decomp, Pi.add_apply, LinearMap.map_zero, zero_add]
 
 section NormedSpaceStructure
 
@@ -162,17 +162,17 @@ theorem norm_def : ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ :=
   rfl
 
 theorem norm_cont_linear_le : ∥f.contLinear∥ ≤ ∥f∥ :=
-  le_max_rightₓ _ _
+  le_max_right _ _
 
 theorem norm_image_zero_le : ∥f 0∥ ≤ ∥f∥ :=
-  le_max_leftₓ _ _
+  le_max_left _ _
 
 @[simp]
 theorem norm_eq (h : f 0 = 0) : ∥f∥ = ∥f.contLinear∥ :=
   calc
     ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ := by rw [norm_def]
     _ = max 0 ∥f.contLinear∥ := by rw [h, norm_zero]
-    _ = ∥f.contLinear∥ := max_eq_rightₓ (norm_nonneg _)
+    _ = ∥f.contLinear∥ := max_eq_right (norm_nonneg _)
     
 
 noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
@@ -181,19 +181,19 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
       add_le' := fun f g => by
         simp only [Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
         exact
-          ⟨(norm_add_le _ _).trans (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)),
-            (norm_add_le _ _).trans (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))⟩,
+          ⟨(norm_add_le _ _).trans (add_le_add (le_max_left _ _) (le_max_left _ _)),
+            (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩,
       eq_zero_of_map_eq_zero' := fun f h₀ => by
         rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
         · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂
           obtain ⟨q, rfl⟩ := h₂
-          simp only [Function.const_applyₓ, coe_const, norm_eq_zero] at h₁
+          simp only [Function.const_apply, coe_const, norm_eq_zero] at h₁
           rw [h₁]
           rfl
           
         · rw [norm_eq_zero', cont_linear_eq_zero_iff_exists_const] at h₁
           obtain ⟨q, rfl⟩ := h₁
-          simp only [Function.const_applyₓ, coe_const, norm_le_zero_iff] at h₂
+          simp only [Function.const_apply, coe_const, norm_le_zero_iff] at h₂
           rw [h₂]
           rfl
            }
@@ -201,7 +201,7 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
 instance :
     NormedSpace 𝕜
       (V →A[𝕜]
-        W) where norm_smul_le := fun t f => by
+        W) where norm_smul_le t f := by
     simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ← mul_max_of_nonneg _ _ (norm_nonneg t)]
 
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
@@ -233,18 +233,18 @@ variable (𝕜 V W)
 codomain with the space of linear maps, by taking the value of the affine map at `(0 : V)` and the
 linear part. -/
 def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W) where
-  toFun := fun f => ⟨f 0, f.contLinear⟩
-  invFun := fun p => p.2.toContinuousAffineMap + const 𝕜 V p.1
-  left_inv := fun f => by
+  toFun f := ⟨f 0, f.contLinear⟩
+  invFun p := p.2.toContinuousAffineMap + const 𝕜 V p.1
+  left_inv f := by
     ext
     rw [f.decomp]
     simp
   right_inv := by
     rintro ⟨v, f⟩
     ext <;> simp
-  map_add' := fun _ _ => rfl
-  map_smul' := fun _ _ => rfl
-  norm_map' := fun f => rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+  norm_map' f := rfl
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) : (toConstProdContinuousLinearMap 𝕜 V W f).fst = f 0 :=

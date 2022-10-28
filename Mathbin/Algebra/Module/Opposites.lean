@@ -18,7 +18,7 @@ namespace MulOpposite
 
 universe u v
 
-variable (R : Type u) {M : Type v} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable (R : Type u) {M : Type v} [Semiring R] [AddCommMonoid M] [Module R M]
 
 /-- `mul_opposite.distrib_mul_action` extends to a `module` -/
 instance : Module R (MulOpposite M) :=

@@ -51,7 +51,7 @@ open MvPolynomial Function
 
 open BigOperators
 
-variable {p : ℕ} {R S T : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
+variable {p : ℕ} {R S T : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S] [CommRing T]
 
 variable {α : Type _} {β : Type _}
 
@@ -80,46 +80,55 @@ theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
 
 include hp
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 -- We do not tag these lemmas as `@[simp]` because they will be bundled in `map` later on.
 theorem zero : mapFun f (0 : 𝕎 R) = 0 := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem one : mapFun f (1 : 𝕎 R) = 1 := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem add : mapFun f (x + y) = mapFun f x + mapFun f y := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem sub : mapFun f (x - y) = mapFun f x - mapFun f y := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem mul : mapFun f (x * y) = mapFun f x * mapFun f y := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem neg : mapFun f (-x) = -mapFun f x := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem nsmul (n : ℕ) : mapFun f (n • x) = n • mapFun f x := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem zsmul (z : ℤ) : mapFun f (z • x) = z • mapFun f x := by
   run_tac
     map_fun_tac
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
   run_tac
     map_fun_tac
@@ -140,13 +149,13 @@ setup_tactic_parser
 
 open Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
-  let fn ← to_expr (ppquote.1 (%%ₓfn : Finₓ _ → ℕ → R))
-  let quote.1 (Finₓ (%%ₓk) → _ → _) ← infer_type fn
+  let fn ← to_expr (ppquote.1 (%%ₓfn : Fin _ → ℕ → R))
+  let quote.1 (Fin (%%ₓk) → _ → _) ← infer_type fn
   sorry
   sorry
   to_expr (ppquote.1 (congr_fun (congr_arg (@peval R _ (%%ₓk)) (witt_structure_int_prop p (%%ₓφ) n)) (%%ₓfn))) >>=
@@ -216,7 +225,7 @@ variable (p) (R)
 In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
 private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) where
   toFun := ghostFun
-  invFun := fun x => (mk p) fun n => aeval x (xInTermsOfW p R n)
+  invFun x := (mk p) fun n => aeval x (xInTermsOfW p R n)
   left_inv := by
     intro x
     ext n
@@ -233,14 +242,14 @@ private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) where
 include hp
 
 @[local instance]
-private def comm_ring_aux₁ : CommRingₓ (𝕎 (MvPolynomial R ℚ)) :=
-  letI : CommRingₓ (MvPolynomial R ℚ) := MvPolynomial.commRing
+private def comm_ring_aux₁ : CommRing (𝕎 (MvPolynomial R ℚ)) :=
+  letI : CommRing (MvPolynomial R ℚ) := MvPolynomial.commRing
   (ghost_equiv' p (MvPolynomial R ℚ)).Injective.CommRing ghost_fun ghost_fun_zero ghost_fun_one ghost_fun_add
     ghost_fun_mul ghost_fun_neg ghost_fun_sub ghost_fun_nsmul ghost_fun_zsmul ghost_fun_pow ghost_fun_nat_cast
     ghost_fun_int_cast
 
 @[local instance]
-private def comm_ring_aux₂ : CommRingₓ (𝕎 (MvPolynomial R ℤ)) :=
+private def comm_ring_aux₂ : CommRing (𝕎 (MvPolynomial R ℤ)) :=
   (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (mapFun.zero _) (mapFun.one _)
     (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _)
     (mapFun.nat_cast _) (mapFun.int_cast _)
@@ -248,7 +257,7 @@ private def comm_ring_aux₂ : CommRingₓ (𝕎 (MvPolynomial R ℤ)) :=
 attribute [reducible] comm_ring_aux₂
 
 /-- The commutative ring structure on `𝕎 R`. -/
-instance : CommRingₓ (𝕎 R) :=
+instance : CommRing (𝕎 R) :=
   (mapFun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _) (mapFun.zero _)
     (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _)
     (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
@@ -315,7 +324,7 @@ end Invertible
 /-- `witt_vector.coeff x 0` as a `ring_hom` -/
 @[simps]
 noncomputable def constantCoeff : 𝕎 R →+* R where
-  toFun := fun x => x.coeff 0
+  toFun x := x.coeff 0
   map_zero' := by simp
   map_one' := by simp
   map_add' := add_coeff_zero

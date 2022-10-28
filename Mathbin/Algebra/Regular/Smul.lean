@@ -102,9 +102,9 @@ theorem mul_and_mul_iff [Mul R] [IsScalarTower R R M] :
 
 end HasSmul
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ R] [MulAction R M]
+variable [Monoid R] [MulAction R M]
 
 variable (M)
 
@@ -124,23 +124,23 @@ theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
 /-- Any power of an `M`-regular element is `M`-regular. -/
 theorem pow (n : ℕ) (ra : IsSmulRegular M a) : IsSmulRegular M (a ^ n) := by
   induction' n with n hn
-  · simp only [one, pow_zeroₓ]
+  · simp only [one, pow_zero]
     
-  · rw [pow_succₓ]
+  · rw [pow_succ]
     exact (ra.smul_iff (a ^ n)).mpr hn
     
 
 /-- An element `a` is `M`-regular if and only if a positive power of `a` is `M`-regular. -/
 theorem pow_iff {n : ℕ} (n0 : 0 < n) : IsSmulRegular M (a ^ n) ↔ IsSmulRegular M a := by
   refine' ⟨_, pow n⟩
-  rw [← Nat.succ_pred_eq_of_posₓ n0, pow_succ'ₓ, ← smul_eq_mul]
+  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ', ← smul_eq_mul]
   exact of_smul _
 
-end Monoidₓ
+end Monoid
 
 section MonoidSmul
 
-variable [Monoidₓ S] [HasSmul R M] [HasSmul R S] [MulAction S M] [IsScalarTower R S M]
+variable [Monoid S] [HasSmul R M] [HasSmul R S] [MulAction S M] [IsScalarTower R S M]
 
 /-- An element of `S` admitting a left inverse in `R` is `M`-regular. -/
 theorem of_smul_eq_one (h : a • s = 1) : IsSmulRegular M s :=
@@ -151,9 +151,9 @@ theorem of_smul_eq_one (h : a • s = 1) : IsSmulRegular M s :=
 
 end MonoidSmul
 
-section MonoidWithZeroₓ
+section MonoidWithZero
 
-variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] [Zero M] [MulActionWithZero R M] [MulActionWithZero R S]
+variable [MonoidWithZero R] [MonoidWithZero S] [Zero M] [MulActionWithZero R M] [MulActionWithZero R S]
   [MulActionWithZero S M] [IsScalarTower R S M]
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
@@ -178,24 +178,24 @@ theorem zero [sM : Subsingleton M] : IsSmulRegular M (0 : R) :=
 theorem not_zero [nM : Nontrivial M] : ¬IsSmulRegular M (0 : R) :=
   not_zero_iff.mpr nM
 
-end MonoidWithZeroₓ
+end MonoidWithZero
 
-section CommSemigroupₓ
+section CommSemigroup
 
-variable [CommSemigroupₓ R] [HasSmul R M] [IsScalarTower R R M]
+variable [CommSemigroup R] [HasSmul R M] [IsScalarTower R R M]
 
 /-- A product is `M`-regular if and only if the factors are. -/
 theorem mul_iff : IsSmulRegular M (a * b) ↔ IsSmulRegular M a ∧ IsSmulRegular M b := by
   rw [← mul_and_mul_iff]
   exact ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
 
-end CommSemigroupₓ
+end CommSemigroup
 
 end IsSmulRegular
 
-section Groupₓ
+section Group
 
-variable {G : Type _} [Groupₓ G]
+variable {G : Type _} [Group G]
 
 /-- An element of a group acting on a Type is regular. This relies on the availability
 of the inverse given by groups, since there is no `left_cancel_smul` typeclass. -/
@@ -203,11 +203,11 @@ theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g := 
   intro x y h
   convert congr_arg ((· • ·) g⁻¹) h using 1 <;> simp [← smul_assoc]
 
-end Groupₓ
+end Group
 
 section Units
 
-variable [Monoidₓ R] [MulAction R M]
+variable [Monoid R] [MulAction R M]
 
 /-- Any element in `Rˣ` is `M`-regular. -/
 theorem Units.is_smul_regular (a : Rˣ) : IsSmulRegular M (a : R) :=

@@ -32,22 +32,22 @@ universe v
 
 noncomputable section
 
-open Top
+open TopCat
 
 open Opposite
 
 open TopologicalSpace
 
-variable {X : Top.{v}} (F : Presheaf (Type v) X)
+variable {X : TopCat.{v}} (F : Presheaf (Type v) X)
 
-namespace Top.Presheaf
+namespace TopCat.Presheaf
 
 namespace Sheafify
 
 /-- The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
 def isGerm : PrelocalPredicate fun x => F.stalk x where
-  pred := fun U f => ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
+  pred U f := ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
   res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
 
 /-- The local predicate on functions into the stalks,
@@ -69,8 +69,8 @@ sending each section to its germs.
 (This forms the unit of the adjunction.)
 -/
 def toSheafify : F ⟶ F.sheafify.1 where
-  app := fun U f => ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
-  naturality' := fun U U' f => by
+  app U f := ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
+  naturality' U U' f := by
     ext x ⟨u, m⟩
     exact germ_res_apply F f.unop ⟨u, m⟩ x
 
@@ -128,8 +128,8 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
 /-- The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
 def sheafifyStalkIso (x : X) : F.sheafify.Presheaf.stalk x ≅ F.stalk x :=
-  (Equivₓ.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
+  (Equiv.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
 
 -- PROJECT functoriality, and that sheafification is the left adjoint of the forgetful functor.
-end Top.Presheaf
+end TopCat.Presheaf
 

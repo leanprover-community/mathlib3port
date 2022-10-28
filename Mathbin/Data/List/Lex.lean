@@ -80,7 +80,7 @@ instance is_trichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTric
       rcases trichotomous_of r a b with (ab | rfl | ab)
       · exact Or.inl (rel ab)
         
-      · exact (_match l₁ l₂).imp cons (Or.impₓ (congr_arg _) cons)
+      · exact (_match l₁ l₂).imp cons (Or.imp (congr_arg _) cons)
         
       · exact Or.inr (Or.inr (rel ab))
         ⟩
@@ -108,7 +108,7 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
       · exact lex.cons h
         
       
-    · rcases h with (_ | ⟨_, _, _, h⟩ | ⟨_, _, _, _, h⟩)
+    · rcases h with (_ | h | h)
       · exact Or.inr ⟨rfl, h⟩
         
       · exact Or.inl h
@@ -130,8 +130,8 @@ theorem imp {r s : α → α → Prop} (H : ∀ a b, r a b → s a b) : ∀ l₁
   | _, _, rel r => rel (H _ _ r)
 
 theorem to_ne : ∀ {l₁ l₂ : List α}, Lex (· ≠ ·) l₁ l₂ → l₁ ≠ l₂
-  | _, _, cons h, e => to_ne h (List.cons.injₓ e).2
-  | _, _, rel r, e => r (List.cons.injₓ e).1
+  | _, _, cons h, e => to_ne h (List.cons.inj e).2
+  | _, _, rel r, e => r (List.cons.inj e).1
 
 theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) :
     Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
@@ -141,7 +141,7 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       
     · apply nil
       
-    · exact (not_lt_of_geₓ H).elim (succ_pos _)
+    · exact (not_lt_of_ge H).elim (succ_pos _)
       
     · by_cases ab:a = b
       · subst b
@@ -164,12 +164,12 @@ instance hasLt' [LT α] : LT (List α) :=
 theorem nil_lt_cons [LT α] (a : α) (l : List α) : [] < a :: l :=
   lex.nil
 
-instance [LinearOrderₓ α] : LinearOrderₓ (List α) :=
+instance [LinearOrder α] : LinearOrder (List α) :=
   linearOrderOfSTO (Lex (· < ·))
 
 --Note: this overrides an instance in core lean
-instance hasLe' [LinearOrderₓ α] : LE (List α) :=
-  Preorderₓ.toHasLe _
+instance hasLe' [LinearOrder α] : LE (List α) :=
+  Preorder.toLE _
 
 end List
 

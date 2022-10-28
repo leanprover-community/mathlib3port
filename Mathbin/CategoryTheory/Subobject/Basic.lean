@@ -93,7 +93,7 @@ with morphisms becoming inequalities, and isomorphisms becoming equations.
 /-- The category of subobjects of `X : C`, defined as isomorphism classes of monomorphisms into `X`.
 -/
 def Subobject (X : C) :=
-  ThinSkeleton (MonoOver X)deriving PartialOrderₓ, Category
+  ThinSkeleton (MonoOver X)deriving PartialOrder, Category
 
 namespace Subobject
 
@@ -107,7 +107,7 @@ attribute [local ext] CategoryTheory.Comma
 
 protected theorem ind {X : C} (p : Subobject X → Prop) (h : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], p (subobject.mk f))
     (P : Subobject X) : p P := by
-  apply Quotientₓ.induction_on'
+  apply Quotient.induction_on'
   intro a
   convert h a.arrow
   ext <;> rfl
@@ -115,7 +115,7 @@ protected theorem ind {X : C} (p : Subobject X → Prop) (h : ∀ ⦃A : C⦄ (f
 protected theorem ind₂ {X : C} (p : Subobject X → Subobject X → Prop)
     (h : ∀ ⦃A B : C⦄ (f : A ⟶ X) (g : B ⟶ X) [Mono f] [Mono g], p (subobject.mk f) (subobject.mk g))
     (P Q : Subobject X) : p P Q := by
-  apply Quotientₓ.induction_on₂'
+  apply Quotient.induction_on₂'
   intro a b
   convert h a.arrow b.arrow <;> ext <;> rfl
 
@@ -126,7 +126,7 @@ end
 protected def lift {α : Sort _} {X : C} (F : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], α)
     (h : ∀ ⦃A B : C⦄ (f : A ⟶ X) (g : B ⟶ X) [Mono f] [Mono g] (i : A ≅ B), i.Hom ≫ g = f → F f = F g) :
     Subobject X → α := fun P =>
-  (Quotientₓ.liftOn' P fun m => F m.arrow) fun m n ⟨i⟩ =>
+  (Quotient.liftOn' P fun m => F m.arrow) fun m n ⟨i⟩ =>
     h m.arrow n.arrow ((MonoOver.forget X ⋙ Over.forget X).mapIso i) (Over.w i.Hom)
 
 @[simp]
@@ -159,7 +159,7 @@ Prefer to use the coercion `P : C` rather than explicitly writing `underlying.ob
 noncomputable def underlying {X : C} : Subobject X ⥤ C :=
   representative ⋙ MonoOver.forget _ ⋙ Over.forget _
 
-instance : Coe (Subobject X) C where coe := fun Y => underlying.obj Y
+instance : Coe (Subobject X) C where coe Y := underlying.obj Y
 
 @[simp]
 theorem underlying_as_coe {X : C} (P : Subobject X) : underlying.obj P = P :=
@@ -218,9 +218,9 @@ theorem mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ 
 
 @[simp]
 theorem mk_arrow (P : Subobject X) : mk P.arrow = P :=
-  (Quotientₓ.induction_on' P) fun Q => by
-    obtain ⟨e⟩ := @Quotientₓ.mk_out' _ (is_isomorphic_setoid _) Q
-    refine' Quotientₓ.sound' ⟨mono_over.iso_mk _ _ ≪≫ e⟩ <;> tidy
+  (Quotient.induction_on' P) fun Q => by
+    obtain ⟨e⟩ := @Quotient.mk_out' _ (is_isomorphic_setoid _) Q
+    refine' Quotient.sound' ⟨mono_over.iso_mk _ _ ≪≫ e⟩ <;> tidy
 
 theorem le_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ⟶ (Y : C)) (w : f ≫ Y.arrow = X.arrow) : X ≤ Y := by
   convert mk_le_mk_of_comm _ w <;> simp
@@ -237,7 +237,7 @@ theorem mk_le_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : A 
     the arrows. -/
 @[ext]
 theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C)) (w : f.Hom ≫ Y.arrow = X.arrow) : X = Y :=
-  le_antisymmₓ (le_of_comm f.Hom w) <| le_of_comm f.inv <| f.inv_comp_eq.2 w.symm
+  le_antisymm (le_of_comm f.Hom w) <| le_of_comm f.inv <| f.inv_comp_eq.2 w.symm
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
@@ -347,12 +347,12 @@ theorem of_mk_le_mk_comp_of_mk_le_mk {B A₁ A₂ A₃ : C} (f : A₁ ⟶ B) [Mo
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
 
 @[simp]
-theorem of_le_refl {B : C} (X : Subobject B) : ofLe X X le_rflₓ = 𝟙 _ := by
+theorem of_le_refl {B : C} (X : Subobject B) : ofLe X X le_rfl = 𝟙 _ := by
   apply (cancel_mono X.arrow).mp
   simp
 
 @[simp]
-theorem of_mk_le_mk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLeMk f f le_rflₓ = 𝟙 _ := by
+theorem of_mk_le_mk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLeMk f f le_rfl = 𝟙 _ := by
   apply (cancel_mono f).mp
   simp
 
@@ -362,25 +362,25 @@ theorem of_mk_le_mk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLeMk f f l
 @[simps]
 def isoOfEq {B : C} (X Y : Subobject B) (h : X = Y) : (X : C) ≅ (Y : C) where
   Hom := ofLe _ _ h.le
-  inv := ofLe _ _ h.Ge
+  inv := ofLe _ _ h.ge
 
 /-- An equality of subobjects gives an isomorphism of the corresponding objects. -/
 @[simps]
 def isoOfEqMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X = mk f) : (X : C) ≅ A where
   Hom := ofLeMk X f h.le
-  inv := ofMkLe f X h.Ge
+  inv := ofMkLe f X h.ge
 
 /-- An equality of subobjects gives an isomorphism of the corresponding objects. -/
 @[simps]
 def isoOfMkEq {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f = X) : A ≅ (X : C) where
   Hom := ofMkLe f X h.le
-  inv := ofLeMk X f h.Ge
+  inv := ofLeMk X f h.ge
 
 /-- An equality of subobjects gives an isomorphism of the corresponding objects. -/
 @[simps]
 def isoOfMkEqMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (h : mk f = mk g) : A₁ ≅ A₂ where
   Hom := ofMkLeMk f g h.le
-  inv := ofMkLeMk g f h.Ge
+  inv := ofMkLeMk g f h.ge
 
 end Subobject
 
@@ -444,16 +444,16 @@ def pullback (f : X ⟶ Y) : Subobject Y ⥤ Subobject X :=
   lower (MonoOver.pullback f)
 
 theorem pullback_id (x : Subobject X) : (pullback (𝟙 X)).obj x = x := by
-  apply Quotientₓ.induction_on' x
+  apply Quotient.induction_on' x
   intro f
-  apply Quotientₓ.sound
+  apply Quotient.sound
   exact ⟨mono_over.pullback_id.app f⟩
 
 theorem pullback_comp (f : X ⟶ Y) (g : Y ⟶ Z) (x : Subobject Z) :
     (pullback (f ≫ g)).obj x = (pullback f).obj ((pullback g).obj x) := by
-  apply Quotientₓ.induction_on' x
+  apply Quotient.induction_on' x
   intro t
-  apply Quotientₓ.sound
+  apply Quotient.sound
   refine' ⟨(mono_over.pullback_comp _ _).app t⟩
 
 instance (f : X ⟶ Y) : Faithful (pullback f) where
@@ -469,16 +469,16 @@ def map (f : X ⟶ Y) [Mono f] : Subobject X ⥤ Subobject Y :=
   lower (MonoOver.map f)
 
 theorem map_id (x : Subobject X) : (map (𝟙 X)).obj x = x := by
-  apply Quotientₓ.induction_on' x
+  apply Quotient.induction_on' x
   intro f
-  apply Quotientₓ.sound
+  apply Quotient.sound
   exact ⟨mono_over.map_id.app f⟩
 
 theorem map_comp (f : X ⟶ Y) (g : Y ⟶ Z) [Mono f] [Mono g] (x : Subobject X) :
     (map (f ≫ g)).obj x = (map g).obj ((map f).obj x) := by
-  apply Quotientₓ.induction_on' x
+  apply Quotient.induction_on' x
   intro t
-  apply Quotientₓ.sound
+  apply Quotient.sound
   refine' ⟨(mono_over.map_comp _ _).app t⟩
 
 /-- Isomorphic objects have equivalent subobject lattices. -/
@@ -492,9 +492,9 @@ which preserves the order. -/
 def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y where
   toFun := (map e.Hom).obj
   invFun := (map e.inv).obj
-  left_inv := fun g => by simp_rw [← map_comp, e.hom_inv_id, map_id]
-  right_inv := fun g => by simp_rw [← map_comp, e.inv_hom_id, map_id]
-  map_rel_iff' := fun A B => by
+  left_inv g := by simp_rw [← map_comp, e.hom_inv_id, map_id]
+  right_inv g := by simp_rw [← map_comp, e.inv_hom_id, map_id]
+  map_rel_iff' A B := by
     dsimp
     fconstructor
     · intro h
@@ -525,18 +525,18 @@ def mapPullbackAdj [HasPullbacks C] (f : X ⟶ Y) [Mono f] : map f ⊣ pullback 
 theorem pullback_map_self [HasPullbacks C] (f : X ⟶ Y) [Mono f] (g : Subobject X) :
     (pullback f).obj ((map f).obj g) = g := by
   revert g
-  apply Quotientₓ.ind
+  apply Quotient.ind
   intro g'
-  apply Quotientₓ.sound
+  apply Quotient.sound
   exact ⟨(mono_over.pullback_map_self f).app _⟩
 
 theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} {h : Y ⟶ W} {k : Z ⟶ W} [Mono h] [Mono g]
     (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk f g comm)) (p : Subobject Y) :
     (map g).obj ((pullback f).obj p) = (pullback k).obj ((map h).obj p) := by
   revert p
-  apply Quotientₓ.ind'
+  apply Quotient.ind'
   intro a
-  apply Quotientₓ.sound
+  apply Quotient.sound
   apply thin_skeleton.equiv_of_both_ways
   · refine' mono_over.hom_mk (pullback.lift pullback.fst _ _) (pullback.lift_snd _ _ _)
     change _ ≫ a.arrow ≫ h = (pullback.snd ≫ g) ≫ _

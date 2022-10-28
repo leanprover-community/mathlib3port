@@ -5,7 +5,7 @@ Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
 -/
 import Mathbin.CategoryTheory.EpiMono
 import Mathbin.CategoryTheory.Functor.FullyFaithful
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 
 /-!
 # The category `Type`.
@@ -40,9 +40,9 @@ universe v v' w u u'
   still be additivized. -/
 @[to_additive CategoryTheory.types]
 instance types : LargeCategory (Type u) where
-  Hom := fun a b => a → b
-  id := fun a => id
-  comp := fun _ _ _ f g => g ∘ f
+  Hom a b := a → b
+  id a := id
+  comp _ _ _ f g := g ∘ f
 
 theorem types_hom {α β : Type u} : (α ⟶ β) = (α → β) :=
   rfl
@@ -76,7 +76,7 @@ abbrev asHom {α β : Type u} (f : α → β) : α ⟶ β :=
 
 -- mathport name: category_theory.as_hom
 -- If you don't mind some notation you can use fewer keystrokes:
-localized [CategoryTheory.Type] notation "↾" f:200 => CategoryTheory.asHom f
+localized [CategoryTheory.TypeCat] notation "↾" f:200 => CategoryTheory.asHom f
 
 -- type as \upr in VScode
 section
@@ -161,18 +161,18 @@ def uliftTrivial (V : Type u) : ULift.{u} V ≅ V := by tidy
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
 -/
 def uliftFunctor : Type u ⥤ Type max u v where
-  obj := fun X => ULift.{v} X
-  map := fun X Y f => fun x : ULift.{v} X => ULift.up (f x.down)
+  obj X := ULift.{v} X
+  map X Y f := fun x : ULift.{v} X => ULift.up (f x.down)
 
 @[simp]
 theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) : uliftFunctor.map f x = ULift.up (f x.down) :=
   rfl
 
-instance uliftFunctorFull : Full.{u} uliftFunctor where preimage := fun X Y f x => (f (ULift.up x)).down
+instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (ULift.up x)).down
 
 instance ulift_functor_faithful :
     Faithful
-      uliftFunctor where map_injective' := fun X Y f g p =>
+      uliftFunctor where map_injective' X Y f g p :=
     funext fun x => congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
@@ -230,9 +230,9 @@ section
 allows us to use these functors in category theory. -/
 def ofTypeFunctor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] : Type u ⥤ Type v where
   obj := m
-  map := fun α β => Functor.map
-  map_id' := fun α => Functor.map_id
-  map_comp' := fun α β γ f g => funext fun a => IsLawfulFunctor.comp_map f g _
+  map α β := Functor.map
+  map_id' α := Functor.map_id
+  map_comp' α β γ f g := funext fun a => IsLawfulFunctor.comp_map f g _
 
 variable (m : Type u → Type v) [Functor m] [IsLawfulFunctor m]
 
@@ -249,7 +249,7 @@ end
 end CategoryTheory
 
 -- Isomorphisms in Type and equivalences.
-namespace Equivₓ
+namespace Equiv
 
 universe u
 
@@ -272,7 +272,7 @@ theorem to_iso_hom {e : X ≃ Y} : e.toIso.Hom = e :=
 theorem to_iso_inv {e : X ≃ Y} : e.toIso.inv = e.symm :=
   rfl
 
-end Equivₓ
+end Equiv
 
 universe u
 
@@ -287,8 +287,8 @@ variable {X Y : Type u}
 def toEquiv (i : X ≅ Y) : X ≃ Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := fun x => congr_fun i.hom_inv_id x
-  right_inv := fun y => congr_fun i.inv_hom_id y
+  left_inv x := congr_fun i.hom_inv_id x
+  right_inv y := congr_fun i.inv_hom_id y
 
 @[simp]
 theorem to_equiv_fun (i : X ≅ Y) : (i.toEquiv : X → Y) = i.Hom :=
@@ -299,7 +299,7 @@ theorem to_equiv_symm_fun (i : X ≅ Y) : (i.toEquiv.symm : Y → X) = i.inv :=
   rfl
 
 @[simp]
-theorem to_equiv_id (X : Type u) : (Iso.refl X).toEquiv = Equivₓ.refl X :=
+theorem to_equiv_id (X : Type u) : (Iso.refl X).toEquiv = Equiv.refl X :=
   rfl
 
 @[simp]
@@ -312,12 +312,12 @@ namespace CategoryTheory
 
 /-- A morphism in `Type u` is an isomorphism if and only if it is bijective. -/
 theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
-  Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b => IsIso.of_iso (Equivₓ.ofBijective f b).toIso
+  Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b => IsIso.of_iso (Equiv.ofBijective f b).toIso
 
 instance :
     SplitEpiCategory
       (Type
-        u) where is_split_epi_of_epi := fun X Y f hf =>
+        u) where is_split_epi_of_epi X Y f hf :=
     IsSplitEpi.mk'
       { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf,
         id' := funext <| Function.right_inverse_surj_inv <| (epi_iff_surjective f).1 hf }
@@ -330,8 +330,8 @@ end CategoryTheory
 of types. -/
 @[simps]
 def equivIsoIso {X Y : Type u} : X ≃ Y ≅ X ≅ Y where
-  Hom := fun e => e.toIso
-  inv := fun i => i.toEquiv
+  Hom e := e.toIso
+  inv i := i.toEquiv
 
 /-- Equivalences (between types in the same universe) are the same as (equivalent to) isomorphisms
 of types. -/

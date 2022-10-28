@@ -15,23 +15,23 @@ permutations of interval endpoints.
 -/
 
 
-variable {α : Type _} {β : Type _} [LinearOrderₓ α] [PartialOrderₓ β] {f : α → β}
+variable {α : Type _} {β : Type _} [LinearOrder α] [PartialOrder β] {f : α → β}
 
 open Set Function
 
 open OrderDual (toDual)
 
-theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a b : α) :
-    SurjOn f (Ioo a b) (Ioo (f a) (f b)) := by
+theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
+    SurjOn f (IooCat a b) (IooCat (f a) (f b)) := by
   intro p hp
   rcases h_surj p with ⟨x, rfl⟩
   refine' ⟨x, mem_Ioo.2 _, rfl⟩
   contrapose! hp
   exact fun h => h.2.not_le (h_mono <| hp <| h_mono.reflect_lt h.1)
 
-theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a b : α) :
-    SurjOn f (Ico a b) (Ico (f a) (f b)) := by
-  obtain hab | hab := lt_or_leₓ a b
+theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
+    SurjOn f (IcoCat a b) (IcoCat (f a) (f b)) := by
+  obtain hab | hab := lt_or_le a b
   · intro p hp
     rcases eq_left_or_mem_Ioo_of_mem_Ico hp with (rfl | hp')
     · exact mem_image_of_mem f (left_mem_Ico.mpr hab)
@@ -44,13 +44,13 @@ theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Fu
     exact surj_on_empty f _
     
 
-theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a b : α) :
-    SurjOn f (Ioc a b) (Ioc (f a) (f b)) := by
+theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
+    SurjOn f (IocCat a b) (IocCat (f a) (f b)) := by
   simpa using surj_on_Ico_of_monotone_surjective h_mono.dual h_surj (to_dual b) (to_dual a)
 
 -- to see that the hypothesis `a ≤ b` is necessary, consider a constant function
-theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) {a b : α}
-    (hab : a ≤ b) : SurjOn f (Icc a b) (Icc (f a) (f b)) := by
+theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) {a b : α}
+    (hab : a ≤ b) : SurjOn f (IccCat a b) (IccCat (f a) (f b)) := by
   intro p hp
   rcases eq_endpoints_or_mem_Ioo_of_mem_Icc hp with (rfl | rfl | hp')
   · exact ⟨a, left_mem_Icc.mpr hab, rfl⟩
@@ -61,22 +61,22 @@ theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Fu
     exact image_subset f Ioo_subset_Icc_self this
     
 
-theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a : α) :
-    SurjOn f (Ioi a) (Ioi (f a)) := by
+theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
+    SurjOn f (IoiCat a) (IoiCat (f a)) := by
   rw [← compl_Iic, ← compl_compl (Ioi (f a))]
   refine' maps_to.surj_on_compl _ h_surj
   exact fun x hx => (h_mono hx).not_lt
 
-theorem surj_on_Iio_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a : α) :
-    SurjOn f (Iio a) (Iio (f a)) :=
+theorem surj_on_Iio_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
+    SurjOn f (IioCat a) (IioCat (f a)) :=
   @surj_on_Ioi_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
 
-theorem surj_on_Ici_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a : α) :
-    SurjOn f (Ici a) (Ici (f a)) := by
+theorem surj_on_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
+    SurjOn f (IciCat a) (IciCat (f a)) := by
   rw [← Ioi_union_left, ← Ioi_union_left]
   exact (surj_on_Ioi_of_monotone_surjective h_mono h_surj a).union_union (@image_singleton _ _ f a ▸ surj_on_image _ _)
 
-theorem surj_on_Iic_of_monotone_surjective (h_mono : Monotoneₓ f) (h_surj : Function.Surjective f) (a : α) :
-    SurjOn f (Iic a) (Iic (f a)) :=
+theorem surj_on_Iic_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
+    SurjOn f (IicCat a) (IicCat (f a)) :=
   @surj_on_Ici_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
 

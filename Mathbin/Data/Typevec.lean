@@ -108,7 +108,7 @@ theorem append1_drop_last (α : Typevec (n + 1)) : Append1 (Drop α) (Last α) =
   funext fun i => by cases i <;> rfl
 
 /-- cases on `(n+1)-length` vectors -/
-@[elabAsElim]
+@[elab_as_elim]
 def append1Cases {C : Typevec (n + 1) → Sort u} (H : ∀ α β, C (Append1 α β)) (γ) : C γ := by
   rw [← @append1_drop_last _ γ] <;> apply H
 
@@ -141,9 +141,9 @@ def lastFun {α β : Typevec (n + 1)} (f : α ⟹ β) : Last α → Last β :=
 /-- arrow in the category of `0-length` vectors -/
 def nilFun {α : Typevec 0} {β : Typevec 0} : α ⟹ β := fun i => Fin2.elim0 i
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 theorem eq_of_drop_last_eq {α β : Typevec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
-    (h₁ : lastFun f = lastFun g) : f = g := by replace h₀ := congr_fun h₀ <;> ext1 (ieq | ⟨j, ieq⟩) <;> apply_assumption
+    (h₁ : lastFun f = lastFun g) : f = g := by replace h₀ := congr_fun h₀ <;> ext1 ⟨⟩ <;> apply_assumption
 
 @[simp]
 theorem drop_fun_split_fun {α α' : Typevec (n + 1)} (f : Drop α ⟹ Drop α') (g : Last α → Last α') :
@@ -158,12 +158,12 @@ def Arrow.mp {α β : Typevec n} (h : α = β) : α ⟹ β
 def Arrow.mpr {α β : Typevec n} (h : α = β) : β ⟹ α
   | i => Eq.mpr (congr_fun h _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- decompose a vector into its prefix appended with its last element -/
 def toAppend1DropLast {α : Typevec (n + 1)} : α ⟹ (Drop α ::: Last α) :=
   Arrow.mpr (append1_drop_last _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- stitch two bits of a vector back together -/
 def fromAppend1DropLast {α : Typevec (n + 1)} : (Drop α ::: Last α) ⟹ α :=
   Arrow.mp (append1_drop_last _)
@@ -173,12 +173,12 @@ theorem last_fun_split_fun {α α' : Typevec (n + 1)} (f : Drop α ⟹ Drop α')
     lastFun (splitFun f g) = g :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem drop_fun_append_fun {α α' : Typevec n} {β β' : Type _} (f : α ⟹ α') (g : β → β') : dropFun (f ::: g) = f :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem last_fun_append_fun {α α' : Typevec n} {β β' : Type _} (f : α ⟹ α') (g : β → β') : lastFun (f ::: g) = g :=
   rfl
@@ -190,8 +190,8 @@ theorem split_fun_inj {α α' : Typevec (n + 1)} {f f' : Drop α ⟹ Drop α'} {
     (H : splitFun f g = splitFun f' g') : f = f' ∧ g = g' := by
   rw [← drop_fun_split_fun f g, H, ← last_fun_split_fun f g, H] <;> simp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_fun_inj {α α' : Typevec n} {β β' : Type _} {f f' : α ⟹ α'} {g g' : β → β'} :
     (f ::: g) = (f' ::: g') → f = f' ∧ g = g' :=
   split_fun_inj
@@ -205,16 +205,16 @@ theorem append_fun_comp_split_fun {α γ : Typevec n} {β δ : Type _} {ε : Typ
     (g₀ : Last ε → β) (g₁ : β → δ) : appendFun f₁ g₁ ⊚ splitFun f₀ g₀ = splitFun (f₁ ⊚ f₀) (g₁ ∘ g₀) :=
   (split_fun_comp _ _ _ _).symm
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_fun_comp {α₀ α₁ α₂ : Typevec n} {β₀ β₁ β₂ : Type _} (f₀ : α₀ ⟹ α₁) (f₁ : α₁ ⟹ α₂) (g₀ : β₀ → β₁)
     (g₁ : β₁ → β₂) : (f₁ ⊚ f₀ ::: g₁ ∘ g₀) = (f₁ ::: g₁) ⊚ (f₀ ::: g₀) :=
   eq_of_drop_last_eq rfl rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_fun_comp' {α₀ α₁ α₂ : Typevec n} {β₀ β₁ β₂ : Type _} (f₀ : α₀ ⟹ α₁) (f₁ : α₁ ⟹ α₂) (g₀ : β₀ → β₁)
     (g₁ : β₁ → β₂) : (f₁ ::: g₁) ⊚ (f₀ ::: g₀) = (f₁ ⊚ f₀ ::: g₁ ∘ g₀) :=
   eq_of_drop_last_eq rfl rfl
@@ -222,9 +222,9 @@ theorem append_fun_comp' {α₀ α₁ α₂ : Typevec n} {β₀ β₁ β₂ : Ty
 theorem nil_fun_comp {α₀ : Typevec 0} (f₀ : α₀ ⟹ Fin2.elim0) : nil_fun ⊚ f₀ = f₀ :=
   funext fun x => Fin2.elim0 x
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_fun_comp_id {α : Typevec n} {β₀ β₁ β₂ : Type _} (g₀ : β₀ → β₁) (g₁ : β₁ → β₂) :
     (@id _ α ::: g₁ ∘ g₀) = (id ::: g₁) ⊚ (id ::: g₀) :=
   eq_of_drop_last_eq rfl rfl
@@ -239,14 +239,14 @@ theorem last_fun_comp {α₀ α₁ α₂ : Typevec (n + 1)} (f₀ : α₀ ⟹ α
     lastFun (f₁ ⊚ f₀) = lastFun f₁ ∘ lastFun f₀ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_fun_aux {α α' : Typevec n} {β β' : Type _} (f : (α ::: β) ⟹ (α' ::: β')) :
     (dropFun f ::: lastFun f) = f :=
   eq_of_drop_last_eq rfl rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_fun_id_id {α : Typevec n} {β : Type _} : (@Typevec.id n α ::: @id β) = Typevec.id :=
   eq_of_drop_last_eq rfl rfl
 
@@ -264,7 +264,7 @@ local prefix:0 "♯" => cast (by try simp <;> congr 1 <;> try simp)
 /-- cases distinction for 0-length type vector -/
 protected def casesNil {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : ∀ v, β v := fun v => ♯f
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- cases distinction for (n+1)-length type vector -/
 protected def casesCons (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ (t) (v : Typevec n), β (v ::: t)) : ∀ v, β v :=
   fun v : Typevec (n + 1) => ♯f v.last v.drop
@@ -272,8 +272,8 @@ protected def casesCons (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ (t)
 protected theorem cases_nil_append1 {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : Typevec.casesNil f Fin2.elim0 = f :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem cases_cons_append1 (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ (t) (v : Typevec n), β (v ::: t))
     (v : Typevec n) (α) : Typevec.casesCons n f (v ::: α) = f α v :=
   rfl
@@ -284,9 +284,9 @@ def typevecCasesNil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _} (f : β 
   refine' cast _ f <;> congr 1 <;> ext <;> try intros <;> casesm Fin2 0
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevecCasesCons₃ (n : ℕ) {β : ∀ v v' : Typevec (n + 1), v ⟹ v' → Sort _}
     (F : ∀ (t t') (f : t → t') (v v' : Typevec n) (fs : v ⟹ v'), β (v ::: t) (v' ::: t') (fs ::: f)) :
@@ -305,9 +305,9 @@ def typevecCasesNil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFu
   rw [this]
   exact f
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- specialized cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevecCasesCons₂ (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}
     (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) : ∀ fs, β fs := by
@@ -319,10 +319,10 @@ theorem typevec_cases_nil₂_append_fun {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort
     typevecCasesNil₂ f nilFun = f :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem typevec_cases_cons₂_append_fun (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}
     (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) (f fs) : typevecCasesCons₂ n t t' v v' F (fs ::: f) = F f fs :=
   rfl
@@ -348,7 +348,7 @@ def Repeat : ∀ (n : ℕ) (t : Sort _), Typevec n
   | 0, t => Fin2.elim0
   | Nat.succ i, t => Append1 (repeat i t) t
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `prod α β` is the pointwise product of the components of `α` and `β` -/
 def Prod : ∀ {n} (α β : Typevec.{u} n), Typevec n
   | 0, α, β => Fin2.elim0
@@ -357,31 +357,37 @@ def Prod : ∀ {n} (α β : Typevec.{u} n), Typevec n
 -- mathport name: typevec.prod
 localized [Mvfunctor] infixl:45 " ⊗ " => Typevec.Prod
 
+/- warning: typevec.const -> Typevec.const is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u_1}}, β -> (forall {n : Nat} (α : Typevec.{u_2} n), Typevec.Arrow.{u_2 u_1} n α (Typevec.Repeat.{u_1} n β))
+but is expected to have type
+  forall {β : Type.{_aux_param_1}}, β -> (forall {n : Nat} (α : Typevec.{_aux_param_0} n), Typevec.Arrow.{_aux_param_0 _aux_param_1} n α (Typevec.Repeat.{_aux_param_1} n β))
+Case conversion may be inaccurate. Consider using '#align typevec.const Typevec.constₓ'. -/
 /-- `const x α` is an arrow that ignores its source and constructs a `typevec` that
 contains nothing but `x` -/
-protected def constₓ {β} (x : β) : ∀ {n} (α : Typevec n), α ⟹ Repeat _ β
+protected def const {β} (x : β) : ∀ {n} (α : Typevec n), α ⟹ Repeat _ β
   | succ n, α, Fin2.fs i => const (Drop α) _
   | succ n, α, Fin2.fz => fun _ => x
 
 open Function (uncurry)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- vector of equality on a product of vectors -/
 def repeatEq : ∀ {n} (α : Typevec n), α ⊗ α ⟹ Repeat _ Prop
   | 0, α => nilFun
   | succ n, α => repeat_eq (Drop α) ::: uncurry Eq
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem const_append1 {β γ} (x : γ) {n} (α : Typevec n) :
-    Typevec.constₓ x (α ::: β) = appendFun (Typevec.constₓ x α) fun _ => x := by ext i : 1 <;> cases i <;> rfl
+    Typevec.const x (α ::: β) = appendFun (Typevec.const x α) fun _ => x := by ext i : 1 <;> cases i <;> rfl
 
 theorem eq_nil_fun {α β : Typevec 0} (f : α ⟹ β) : f = nil_fun := by ext x <;> cases x
 
 theorem id_eq_nil_fun {α : Typevec 0} : @id _ α = nil_fun := by ext x <;> cases x
 
-theorem const_nil {β} (x : β) (α : Typevec 0) : Typevec.constₓ x α = nil_fun := by ext i : 1 <;> cases i <;> rfl
+theorem const_nil {β} (x : β) (α : Typevec 0) : Typevec.const x α = nil_fun := by ext i : 1 <;> cases i <;> rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[typevec]
 theorem repeat_eq_append1 {β} {n} (α : Typevec n) : repeatEq (α ::: β) = splitFun (repeatEq α) (uncurry Eq) := by
   induction n <;> rfl
@@ -389,24 +395,24 @@ theorem repeat_eq_append1 {β} {n} (α : Typevec n) : repeatEq (α ::: β) = spl
 @[typevec]
 theorem repeat_eq_nil (α : Typevec 0) : repeatEq α = nil_fun := by ext i : 1 <;> cases i <;> rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- predicate on a type vector to constrain only the last object -/
 def predLast' (α : Typevec n) {β : Type _} (p : β → Prop) : (α ::: β) ⟹ Repeat (n + 1) Prop :=
-  splitFun (Typevec.constₓ True α) p
+  splitFun (Typevec.const True α) p
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- predicate on the product of two type vectors to constrain only their last object -/
 def relLast' (α : Typevec n) {β : Type _} (p : β → β → Prop) : (α ::: β) ⊗ (α ::: β) ⟹ Repeat (n + 1) Prop :=
   splitFun (repeatEq α) (uncurry p)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- given `F : typevec.{u} (n+1) → Type u`, `curry F : Type u → typevec.{u} → Type u`,
 i.e. its first argument can be fed in separately from the rest of the vector of arguments -/
 def Curry (F : Typevec.{u} (n + 1) → Type _) (α : Type u) (β : Typevec.{u} n) : Type _ :=
   F (β ::: α)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance Curry.inhabited (F : Typevec.{u} (n + 1) → Type _) (α : Type u) (β : Typevec.{u} n)
     [I : Inhabited (F <| (β ::: α))] : Inhabited (Curry F α β) :=
   I
@@ -421,8 +427,8 @@ def ofRepeat {α : Sort _} : ∀ {n i}, Repeat n α i → α
   | _, Fin2.fz => id
   | _, Fin2.fs i => @of_repeat _ i
 
-theorem const_iff_true {α : Typevec n} {i x p} : ofRepeat (Typevec.constₓ p α i x) ↔ p := by
-  induction i <;> [rfl, erw [Typevec.constₓ, @i_ih (drop α) x]]
+theorem const_iff_true {α : Typevec n} {i x p} : ofRepeat (Typevec.const p α i x) ↔ p := by
+  induction i <;> [rfl, erw [Typevec.const, @i_ih (drop α) x]]
 
 -- variables  {F : typevec.{u} n → Type*} [mvfunctor F]
 variable {α β γ : Typevec.{u} n}
@@ -542,9 +548,9 @@ theorem prod_id : ∀ {n} {α β : Typevec.{u} n}, (id ⊗' id) = (id : α ⊗ �
   · apply i_ih
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_prod_append_fun {n} {α α' β β' : Typevec.{u} n} {φ φ' ψ ψ' : Type u} {f₀ : α ⟹ α'} {g₀ : β ⟹ β'}
     {f₁ : φ → φ'} {g₁ : ψ → ψ'} : (f₀ ⊗' g₀ ::: Prod.map f₁ g₁) = ((f₀ ::: f₁) ⊗' (g₀ ::: g₁)) := by
   ext i a <;> cases i <;> [cases a, skip] <;> rfl

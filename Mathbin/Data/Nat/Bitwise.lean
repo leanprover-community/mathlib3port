@@ -93,7 +93,7 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, testBit n i
         revert h
         cases b <;> simp]
     refine' ⟨0, ⟨by rw [test_bit_zero], fun j hj => _⟩⟩
-    obtain ⟨j', rfl⟩ := exists_eq_succ_of_ne_zero (ne_of_gtₓ hj)
+    obtain ⟨j', rfl⟩ := exists_eq_succ_of_ne_zero (ne_of_gt hj)
     rw [test_bit_succ, zero_test_bit]
     
   · obtain ⟨k, ⟨hk, hk'⟩⟩ := hn h'
@@ -127,7 +127,7 @@ theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testB
 
 @[simp]
 theorem test_bit_two_pow_self (n : ℕ) : testBit (2 ^ n) n = tt := by
-  rw [test_bit, shiftr_eq_div_pow, Nat.div_selfₓ (pow_pos zero_lt_two n), bodd_one]
+  rw [test_bit, shiftr_eq_div_pow, Nat.div_self (pow_pos zero_lt_two n), bodd_one]
 
 theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = ff := by
   rw [test_bit, shiftr_eq_div_pow]
@@ -136,7 +136,7 @@ theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = 
     exact Nat.pow_lt_pow_of_lt_right one_lt_two hm
     
   · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt <| tsub_pos_of_lt hm)]
-    simp [pow_succₓ]
+    simp [pow_succ]
     
 
 theorem test_bit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) := by
@@ -151,17 +151,17 @@ theorem test_bit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) := by
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
     commutative. -/
 theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b) (hf' : f false false = ff) (n m : ℕ) :
-    bitwiseₓ f n m = bitwiseₓ f m n :=
-  suffices bitwiseₓ f = swap (bitwiseₓ f) by conv_lhs => rw [this]
+    bitwise f n m = bitwise f m n :=
+  suffices bitwise f = swap (bitwise f) by conv_lhs => rw [this]
   calc
-    bitwiseₓ f = bitwiseₓ (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
-    _ = swap (bitwiseₓ f) := bitwise_swap hf'
+    bitwise f = bitwise (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
+    _ = swap (bitwise f) := bitwise_swap hf'
     
 
-theorem lor_comm (n m : ℕ) : lorₓ n m = lorₓ m n :=
+theorem lor_comm (n m : ℕ) : lor n m = lor m n :=
   bitwise_comm Bool.bor_comm rfl n m
 
-theorem land_comm (n m : ℕ) : landₓ n m = landₓ m n :=
+theorem land_comm (n m : ℕ) : land n m = land m n :=
   bitwise_comm Bool.band_comm rfl n m
 
 theorem lxor_comm (n m : ℕ) : lxor n m = lxor m n :=
@@ -174,32 +174,35 @@ theorem zero_lxor (n : ℕ) : lxor 0 n = n := by simp [lxor]
 theorem lxor_zero (n : ℕ) : lxor n 0 = n := by simp [lxor]
 
 @[simp]
-theorem zero_land (n : ℕ) : landₓ 0 n = 0 := by simp [land]
+theorem zero_land (n : ℕ) : land 0 n = 0 := by simp [land]
 
 @[simp]
-theorem land_zero (n : ℕ) : landₓ n 0 = 0 := by simp [land]
+theorem land_zero (n : ℕ) : land n 0 = 0 := by simp [land]
 
 @[simp]
-theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by simp [lor]
+theorem zero_lor (n : ℕ) : lor 0 n = n := by simp [lor]
 
 @[simp]
-theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by simp [lor]
+theorem lor_zero (n : ℕ) : lor n 0 = n := by simp [lor]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
   sorry
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem lxor_assoc (n m k : ℕ) : lxor (lxor n m) k = lxor n (lxor m k) := by
   run_tac
     bitwise_assoc_tac
 
-theorem land_assoc (n m k : ℕ) : landₓ (landₓ n m) k = landₓ n (landₓ m k) := by
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+theorem land_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
   run_tac
     bitwise_assoc_tac
 
-theorem lor_assoc (n m k : ℕ) : lorₓ (lorₓ n m) k = lorₓ n (lorₓ m k) := by
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
   run_tac
     bitwise_assoc_tac
 

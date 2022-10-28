@@ -45,7 +45,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
     ∃ h : α → β, Bijective h := by
   cases' is_empty_or_nonempty β with hβ hβ
   · have : IsEmpty α := Function.is_empty f
-    exact ⟨_, ((Equivₓ.equivEmpty α).trans (Equivₓ.equivEmpty β).symm).Bijective⟩
+    exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
     
   set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ,
@@ -79,7 +79,7 @@ equivalence `α ≃ β`. -/
 theorem antisymm : (α ↪ β) → (β ↪ α) → Nonempty (α ≃ β)
   | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩ =>
     let ⟨f, hf⟩ := schroeder_bernstein h₁ h₂
-    ⟨Equivₓ.ofBijective f hf⟩
+    ⟨Equiv.ofBijective f hf⟩
 
 end antisymm
 
@@ -138,10 +138,10 @@ theorem total (α : Type u) (β : Type v) : Nonempty (α ↪ β) ∨ Nonempty (�
   match @min_injective Bool (fun b => cond b (ULift α) (ULift.{max u v, v} β)) ⟨true⟩ with
   | ⟨tt, ⟨h⟩⟩ =>
     let ⟨f, hf⟩ := h false
-    Or.inl ⟨Embedding.congr Equivₓ.ulift Equivₓ.ulift ⟨f, hf⟩⟩
+    Or.inl ⟨Embedding.congr Equiv.ulift Equiv.ulift ⟨f, hf⟩⟩
   | ⟨ff, ⟨h⟩⟩ =>
     let ⟨f, hf⟩ := h true
-    Or.inr ⟨Embedding.congr Equivₓ.ulift Equivₓ.ulift ⟨f, hf⟩⟩
+    Or.inr ⟨Embedding.congr Equiv.ulift Equiv.ulift ⟨f, hf⟩⟩
 
 end Embedding
 

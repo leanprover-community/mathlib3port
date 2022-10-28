@@ -37,12 +37,12 @@ theorem to_list_injective : Function.Injective (@toList α n) :=
 
 /-- Two `v w : vector α n` are equal iff they are equal at every single index. -/
 @[ext]
-theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Finₓ n, Vector.nth v m = Vector.nth w m), v = w
+theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Fin n, Vector.nth v m = Vector.nth w m), v = w
   | ⟨v, hv⟩, ⟨w, hw⟩, h => Subtype.eq (List.ext_le (by rw [hv, hw]) fun m hm hn => h ⟨m, hv ▸ hm⟩)
 
 /-- The empty `vector` is a `subsingleton`. -/
 instance zero_subsingleton : Subsingleton (Vector α 0) :=
-  ⟨fun _ _ => Vector.ext fun m => Finₓ.elim0 m⟩
+  ⟨fun _ _ => Vector.ext fun m => Fin.elim0 m⟩
 
 @[simp]
 theorem cons_val (a : α) : ∀ v : Vector α n, (a ::ᵥ v).val = a :: v.val
@@ -66,7 +66,7 @@ theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), 
   ⟨v.head, v.tail, (eq_cons_iff v.head v v.tail).2 ⟨rfl, rfl⟩⟩
 
 @[simp]
-theorem to_list_of_fn : ∀ {n} (f : Finₓ n → α), toList (ofFn f) = List.ofFnₓ f
+theorem to_list_of_fn : ∀ {n} (f : Fin n → α), toList (ofFn f) = List.ofFn f
   | 0, f => rfl
   | n + 1, f => by rw [of_fn, List.of_fn_succ, to_list_cons, to_list_of_fn]
 
@@ -95,14 +95,14 @@ theorem nth_eq_nth_le : ∀ (v : Vector α n) (i), nth v i = v.toList.nthLe i.1 
   | ⟨l, h⟩, i => rfl
 
 @[simp]
-theorem nth_repeat (a : α) (i : Finₓ n) : (Vector.repeat a n).nth i = a := by apply List.nth_le_repeat
+theorem nth_repeat (a : α) (i : Fin n) : (Vector.repeat a n).nth i = a := by apply List.nth_le_repeat
 
 @[simp]
-theorem nth_map {β : Type _} (v : Vector α n) (f : α → β) (i : Finₓ n) : (v.map f).nth i = f (v.nth i) := by
+theorem nth_map {β : Type _} (v : Vector α n) (f : α → β) (i : Fin n) : (v.map f).nth i = f (v.nth i) := by
   simp [nth_eq_nth_le]
 
 @[simp]
-theorem nth_of_fn {n} (f : Finₓ n → α) (i) : nth (ofFn f) i = f i := by
+theorem nth_of_fn {n} (f : Fin n → α) (i) : nth (ofFn f) i = f i := by
   rw [nth_eq_nth_le, ← List.nth_le_of_fn f] <;> congr <;> apply to_list_of_fn
 
 @[simp]
@@ -113,14 +113,14 @@ theorem of_fn_nth (v : Vector α n) : ofFn (nth v) = v := by
   simpa only [to_list_of_fn] using List.of_fn_nth_le _
 
 /-- The natural equivalence between length-`n` vectors and functions from `fin n`. -/
-def _root_.equiv.vector_equiv_fin (α : Type _) (n : ℕ) : Vector α n ≃ (Finₓ n → α) :=
+def _root_.equiv.vector_equiv_fin (α : Type _) (n : ℕ) : Vector α n ≃ (Fin n → α) :=
   ⟨Vector.nth, Vector.ofFn, Vector.of_fn_nth, fun f => funext <| Vector.nth_of_fn f⟩
 
 theorem nth_tail (x : Vector α n) (i) : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ := by
   rcases x with ⟨_ | _, h⟩ <;> rfl
 
 @[simp]
-theorem nth_tail_succ : ∀ (v : Vector α n.succ) (i : Finₓ n), nth (tail v) i = nth v i.succ
+theorem nth_tail_succ : ∀ (v : Vector α n.succ) (i : Fin n), nth (tail v) i = nth v i.succ
   | ⟨a :: l, e⟩, ⟨i, h⟩ => by simp [nth_eq_nth_le] <;> rfl
 
 @[simp]
@@ -138,7 +138,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
   simp only [← cons_head_tail, eq_iff_true_of_subsingleton]
 
 @[simp]
-theorem tail_of_fn {n : ℕ} (f : Finₓ n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
+theorem tail_of_fn {n : ℕ} (f : Fin n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
   (of_fn_nth _).symm.trans <| by
     congr
     funext i
@@ -154,7 +154,7 @@ retrieved via `to_list`, is equal to the list of that single element. -/
 @[simp]
 theorem to_list_singleton (v : Vector α 1) : v.toList = [v.head] := by
   rw [← v.cons_head_tail]
-  simp only [to_list_cons, to_list_nil, cons_head, eq_self_iff_true, and_selfₓ, singleton_tail]
+  simp only [to_list_cons, to_list_nil, cons_head, eq_self_iff_true, and_self_iff, singleton_tail]
 
 @[simp]
 theorem empty_to_list_eq_ff (v : Vector α (n + 1)) : v.toList.Empty = ff :=
@@ -209,7 +209,7 @@ theorem nth_zero : ∀ v : Vector α n.succ, nth v 0 = head v
   | ⟨a :: l, e⟩ => rfl
 
 @[simp]
-theorem head_of_fn {n : ℕ} (f : Finₓ n.succ → α) : head (ofFn f) = f 0 := by rw [← nth_zero, nth_of_fn]
+theorem head_of_fn {n : ℕ} (f : Fin n.succ → α) : head (ofFn f) = f 0 := by rw [← nth_zero, nth_of_fn]
 
 @[simp]
 theorem nth_cons_zero (a : α) (v : Vector α n) : nth (a ::ᵥ v) 0 = a := by simp [nth_zero]
@@ -217,26 +217,26 @@ theorem nth_cons_zero (a : α) (v : Vector α n) : nth (a ::ᵥ v) 0 = a := by s
 /-- Accessing the `nth` element of a vector made up
 of one element `x : α` is `x` itself. -/
 @[simp]
-theorem nth_cons_nil {ix : Finₓ 1} (x : α) : nth (x ::ᵥ nil) ix = x := by convert nth_cons_zero x nil
+theorem nth_cons_nil {ix : Fin 1} (x : α) : nth (x ::ᵥ nil) ix = x := by convert nth_cons_zero x nil
 
 @[simp]
-theorem nth_cons_succ (a : α) (v : Vector α n) (i : Finₓ n) : nth (a ::ᵥ v) i.succ = nth v i := by
+theorem nth_cons_succ (a : α) (v : Vector α n) (i : Fin n) : nth (a ::ᵥ v) i.succ = nth v i := by
   rw [← nth_tail_succ, tail_cons]
 
 /-- The last element of a `vector`, given that the vector is at least one element. -/
 def last (v : Vector α (n + 1)) : α :=
-  v.nth (Finₓ.last n)
+  v.nth (Fin.last n)
 
 /-- The last element of a `vector`, given that the vector is at least one element. -/
-theorem last_def {v : Vector α (n + 1)} : v.last = v.nth (Finₓ.last n) :=
+theorem last_def {v : Vector α (n + 1)} : v.last = v.nth (Fin.last n) :=
   rfl
 
 /-- The `last` element of a vector is the `head` of the `reverse` vector. -/
 theorem reverse_nth_zero {v : Vector α (n + 1)} : v.reverse.head = v.last := by
   have : 0 = v.to_list.length - 1 - n := by
-    simp only [Nat.add_succ_sub_one, add_zeroₓ, to_list_length, tsub_self, List.length_reverse]
+    simp only [Nat.add_succ_sub_one, add_zero, to_list_length, tsub_self, List.length_reverse]
   rw [← nth_zero, last_def, nth_eq_nth_le, nth_eq_nth_le]
-  simp_rw [to_list_reverse, Finₓ.val_eq_coe, Finₓ.coe_last, Finₓ.coe_zero, this]
+  simp_rw [to_list_reverse, Fin.val_eq_coe, Fin.coe_last, Fin.coe_zero, this]
   rw [List.nth_le_reverse]
 
 section Scan
@@ -300,7 +300,7 @@ theorem scanl_head : (scanl f b v).head = b := by
     simp only [this, scanl_nil, cons_head]
     
   · rw [← cons_head_tail v]
-    simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Finₓ.val_zero', List.nthLe]
+    simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Fin.val_zero', List.nthLe]
     
 
 /-- For an index `i : fin n`, the `nth` element of `scanl` of a
@@ -311,7 +311,7 @@ function `f : β → α → β` of the `i.cast_succ` element of
 This lemma is the `nth` version of `scanl_cons`.
 -/
 @[simp]
-theorem scanl_nth (i : Finₓ n) : (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) := by
+theorem scanl_nth (i : Fin n) : (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) := by
   cases n
   · exact finZeroElim i
     
@@ -320,33 +320,45 @@ theorem scanl_nth (i : Finₓ n) : (scanl f b v).nth i.succ = f ((scanl f b v).n
     simpa only [scanl_singleton, i0, nth_zero]
     
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
-    refine' Finₓ.cases _ _ i
-    · simp only [nth_zero, scanl_head, Finₓ.cast_succ_zero, cons_head]
+    refine' Fin.cases _ _ i
+    · simp only [nth_zero, scanl_head, Fin.cast_succ_zero, cons_head]
       
     · intro i'
-      simp only [hn, Finₓ.cast_succ_fin_succ, nth_cons_succ]
+      simp only [hn, Fin.cast_succ_fin_succ, nth_cons_succ]
       
     
 
 end Scan
 
+/- warning: vector.m_of_fn -> Vector.mOfFn is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u u_1} m] {α : Type.{u}} {n : Nat}, ((Fin n) -> (m α)) -> (m (Vector.{u} α n))
+but is expected to have type
+  forall {m : Type.{u} -> Type.{_aux_param_0}} [_inst_1 : Monad.{u _aux_param_0} m] {α : Type.{u}} {n : Nat}, ((Fin n) -> (m α)) -> (m (Vector.{u} α n))
+Case conversion may be inaccurate. Consider using '#align vector.m_of_fn Vector.mOfFnₓ'. -/
 /-- Monadic analog of `vector.of_fn`.
 Given a monadic function on `fin n`, return a `vector α n` inside the monad. -/
-def mOfFnₓ {m} [Monadₓ m] {α : Type u} : ∀ {n}, (Finₓ n → m α) → m (Vector α n)
+def mOfFn {m} [Monad m] {α : Type u} : ∀ {n}, (Fin n → m α) → m (Vector α n)
   | 0, f => pure nil
   | n + 1, f => do
     let a ← f 0
     let v ← m_of_fn fun i => f i.succ
     pure (a ::ᵥ v)
 
-theorem m_of_fn_pure {m} [Monadₓ m] [IsLawfulMonad m] {α} :
-    ∀ {n} (f : Finₓ n → α), (@mOfFnₓ m _ _ _ fun i => pure (f i)) = pure (ofFn f)
+theorem m_of_fn_pure {m} [Monad m] [LawfulMonad m] {α} :
+    ∀ {n} (f : Fin n → α), (@mOfFn m _ _ _ fun i => pure (f i)) = pure (ofFn f)
   | 0, f => rfl
   | n + 1, f => by simp [m_of_fn, @m_of_fn_pure n, of_fn]
 
+/- warning: vector.mmap -> Vector.mmap is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u u_1} m] {α : Type.{u_2}} {β : Type.{u}}, (α -> (m β)) -> (forall {n : Nat}, (Vector.{u_2} α n) -> (m (Vector.{u} β n)))
+but is expected to have type
+  forall {m : Type.{u} -> Type.{_aux_param_1}} [_inst_1 : Monad.{u _aux_param_1} m] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (m β)) -> (forall {n : Nat}, (Vector.{_aux_param_0} α n) -> (m (Vector.{u} β n)))
+Case conversion may be inaccurate. Consider using '#align vector.mmap Vector.mmapₓ'. -/
 /-- Apply a monadic function to each component of a vector,
 returning a vector inside the monad. -/
-def mmapₓ {m} [Monadₓ m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α n → m (Vector β n)
+def mmap {m} [Monad m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α n → m (Vector β n)
   | 0, xs => pure nil
   | n + 1, xs => do
     let h' ← f xs.head
@@ -354,15 +366,15 @@ def mmapₓ {m} [Monadₓ m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vec
     pure (h' ::ᵥ t')
 
 @[simp]
-theorem mmap_nil {m} [Monadₓ m] {α β} (f : α → m β) : mmapₓ f nil = pure nil :=
+theorem mmap_nil {m} [Monad m] {α β} (f : α → m β) : mmap f nil = pure nil :=
   rfl
 
 @[simp]
-theorem mmap_cons {m} [Monadₓ m] {α β} (f : α → m β) (a) :
+theorem mmap_cons {m} [Monad m] {α β} (f : α → m β) (a) :
     ∀ {n} (v : Vector α n),
-      mmapₓ f (a ::ᵥ v) = do
+      mmap f (a ::ᵥ v) = do
         let h' ← f a
-        let t' ← mmapₓ f v
+        let t' ← mmap f v
         pure (h' ::ᵥ t')
   | _, ⟨l, rfl⟩ => rfl
 
@@ -372,7 +384,7 @@ This function has two arguments: `h_nil` handles the base case on `C nil`,
 and `h_cons` defines the inductive step using `∀ x : α, C w → C (x ::ᵥ w)`.
 
 This can be used as `induction v using vector.induction_on`. -/
-@[elabAsElim]
+@[elab_as_elim]
 def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vector α n) (h_nil : C nil)
     (h_cons : ∀ {n : ℕ} {x : α} {w : Vector α n}, C w → C (x ::ᵥ w)) : C v := by
   induction' n with n ih generalizing v
@@ -381,7 +393,7 @@ def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vecto
     
   · rcases v with ⟨_ | ⟨a, v⟩, _⟩
     cases v_property
-    apply @h_cons n _ ⟨v, (add_left_injₓ 1).mp v_property⟩
+    apply @h_cons n _ ⟨v, (add_left_inj 1).mp v_property⟩
     apply ih
     
 
@@ -391,7 +403,7 @@ example (v : Vector α n) : True := by induction v using Vector.inductionOn <;> 
 variable {β γ : Type _}
 
 /-- Define `C v w` by induction on a pair of vectors `v : vector α n` and `w : vector β n`. -/
-@[elabAsElim]
+@[elab_as_elim]
 def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Vector α n) (w : Vector β n) (h_nil : C nil nil)
     (h_cons : ∀ {n a b} {x : Vector α n} {y}, C x y → C (a ::ᵥ x) (b ::ᵥ y)) : C v w := by
   induction' n with n ih generalizing v w
@@ -403,13 +415,13 @@ def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Ve
     cases v_property
     rcases w with ⟨_ | ⟨b, w⟩, _⟩
     cases w_property
-    apply @h_cons n _ _ ⟨v, (add_left_injₓ 1).mp v_property⟩ ⟨w, (add_left_injₓ 1).mp w_property⟩
+    apply @h_cons n _ _ ⟨v, (add_left_inj 1).mp v_property⟩ ⟨w, (add_left_inj 1).mp w_property⟩
     apply ih
     
 
 /-- Define `C u v w` by induction on a triplet of vectors
 `u : vector α n`, `v : vector β n`, and `w : vector γ b`. -/
-@[elabAsElim]
+@[elab_as_elim]
 def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n → Sort _} (u : Vector α n) (v : Vector β n)
     (w : Vector γ n) (h_nil : C nil nil nil)
     (h_cons : ∀ {n a b c} {x : Vector α n} {y z}, C x y z → C (a ::ᵥ x) (b ::ᵥ y) (c ::ᵥ z)) : C u v w := by
@@ -426,13 +438,13 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
     rcases w with ⟨_ | ⟨c, w⟩, _⟩
     cases w_property
     apply
-      @h_cons n _ _ _ ⟨u, (add_left_injₓ 1).mp u_property⟩ ⟨v, (add_left_injₓ 1).mp v_property⟩
-        ⟨w, (add_left_injₓ 1).mp w_property⟩
+      @h_cons n _ _ _ ⟨u, (add_left_inj 1).mp u_property⟩ ⟨v, (add_left_inj 1).mp v_property⟩
+        ⟨w, (add_left_inj 1).mp w_property⟩
     apply ih
     
 
 /-- Cast a vector to an array. -/
-def toArray : Vector α n → Arrayₓ n α
+def toArray : Vector α n → Array' n α
   | ⟨xs, h⟩ => cast (by rw [h]) xs.toArray
 
 section InsertNth
@@ -441,39 +453,39 @@ variable {a : α}
 
 /-- `v.insert_nth a i` inserts `a` into the vector `v` at position `i`
 (and shifting later components to the right). -/
-def insertNth (a : α) (i : Finₓ (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
+def insertNth (a : α) (i : Fin (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
   ⟨v.1.insertNth i a, by
     rw [List.length_insert_nth, v.2]
-    rw [v.2, ← Nat.succ_le_succ_iffₓ]
+    rw [v.2, ← Nat.succ_le_succ_iff]
     exact i.2⟩
 
-theorem insert_nth_val {i : Finₓ (n + 1)} {v : Vector α n} : (v.insertNth a i).val = v.val.insertNth i.1 a :=
+theorem insert_nth_val {i : Fin (n + 1)} {v : Vector α n} : (v.insertNth a i).val = v.val.insertNth i.1 a :=
   rfl
 
 @[simp]
-theorem remove_nth_val {i : Finₓ n} : ∀ {v : Vector α n}, (removeNth i v).val = v.val.removeNth i
+theorem remove_nth_val {i : Fin n} : ∀ {v : Vector α n}, (removeNth i v).val = v.val.removeNth i
   | ⟨l, hl⟩ => rfl
 
-theorem remove_nth_insert_nth {v : Vector α n} {i : Finₓ (n + 1)} : removeNth i (insertNth a i v) = v :=
+theorem remove_nth_insert_nth {v : Vector α n} {i : Fin (n + 1)} : removeNth i (insertNth a i v) = v :=
   Subtype.eq <| List.remove_nth_insert_nth i.1 v.1
 
 theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
-    ∀ {i : Finₓ (n + 1)} {j : Finₓ (n + 2)},
+    ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
       removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
   | ⟨i, hi⟩, ⟨j, hj⟩ => by
-    dsimp [insert_nth, remove_nth, Finₓ.succAbove, Finₓ.predAbove]
+    dsimp [insert_nth, remove_nth, Fin.succAbove, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
     · convert (List.insert_nth_remove_nth_of_ge i (j - 1) _ _ _).symm
-      · convert (Nat.succ_pred_eq_of_posₓ _).symm
-        exact lt_of_le_of_ltₓ (zero_le _) h
+      · convert (Nat.succ_pred_eq_of_pos _).symm
+        exact lt_of_le_of_lt (zero_le _) h
         
       · apply remove_nth_val
         
       · convert hi
         exact v.2
         
-      · exact Nat.le_pred_of_ltₓ h
+      · exact Nat.le_pred_of_lt h
         
       
     · convert (List.insert_nth_remove_nth_of_le i j _ _ _).symm
@@ -486,16 +498,16 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
         
       
 
-theorem insert_nth_comm (a b : α) (i j : Finₓ (n + 1)) (h : i ≤ j) :
+theorem insert_nth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     ∀ v : Vector α n, (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
   | ⟨l, hl⟩ => by
     refine' Subtype.eq _
-    simp only [insert_nth_val, Finₓ.coe_succ, Finₓ.castSucc, Finₓ.val_eq_coe, Finₓ.coe_cast_add]
+    simp only [insert_nth_val, Fin.coe_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_cast_add]
     apply List.insert_nth_comm
     · assumption
       
     · rw [hl]
-      exact Nat.le_of_succ_le_succₓ j.2
+      exact Nat.le_of_succ_le_succ j.2
       
 
 end InsertNth
@@ -503,39 +515,39 @@ end InsertNth
 section UpdateNth
 
 /-- `update_nth v n a` replaces the `n`th element of `v` with `a` -/
-def updateNth (v : Vector α n) (i : Finₓ n) (a : α) : Vector α n :=
+def updateNth (v : Vector α n) (i : Fin n) (a : α) : Vector α n :=
   ⟨v.1.updateNth i.1 a, by rw [List.update_nth_length, v.2]⟩
 
 @[simp]
-theorem to_list_update_nth (v : Vector α n) (i : Finₓ n) (a : α) : (v.updateNth i a).toList = v.toList.updateNth i a :=
+theorem to_list_update_nth (v : Vector α n) (i : Fin n) (a : α) : (v.updateNth i a).toList = v.toList.updateNth i a :=
   rfl
 
 @[simp]
-theorem nth_update_nth_same (v : Vector α n) (i : Finₓ n) (a : α) : (v.updateNth i a).nth i = a := by
+theorem nth_update_nth_same (v : Vector α n) (i : Fin n) (a : α) : (v.updateNth i a).nth i = a := by
   cases v <;> cases i <;> simp [Vector.updateNth, Vector.nth_eq_nth_le]
 
-theorem nth_update_nth_of_ne {v : Vector α n} {i j : Finₓ n} (h : i ≠ j) (a : α) : (v.updateNth i a).nth j = v.nth j :=
+theorem nth_update_nth_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) : (v.updateNth i a).nth j = v.nth j :=
   by
   cases v <;>
     cases i <;>
-      cases j <;> simp [Vector.updateNth, Vector.nth_eq_nth_le, List.nth_le_update_nth_of_ne (Finₓ.vne_of_ne h)]
+      cases j <;> simp [Vector.updateNth, Vector.nth_eq_nth_le, List.nth_le_update_nth_of_ne (Fin.vne_of_ne h)]
 
-theorem nth_update_nth_eq_if {v : Vector α n} {i j : Finₓ n} (a : α) :
+theorem nth_update_nth_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
     (v.updateNth i a).nth j = if i = j then a else v.nth j := by
   split_ifs <;> try simp [*] <;> try rw [nth_update_nth_of_ne] <;> assumption
 
 @[to_additive]
-theorem prod_update_nth [Monoidₓ α] (v : Vector α n) (i : Finₓ n) (a : α) :
+theorem prod_update_nth [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.updateNth i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod := by
   refine' (List.prod_update_nth v.to_list i a).trans _
-  have : ↑i < v.to_list.length := lt_of_lt_of_leₓ i.2 (le_of_eqₓ v.2.symm)
+  have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp_all
 
 @[to_additive]
-theorem prod_update_nth' [CommGroupₓ α] (v : Vector α n) (i : Finₓ n) (a : α) :
+theorem prod_update_nth' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.updateNth i a).toList.Prod = v.toList.Prod * (v.nth i)⁻¹ * a := by
   refine' (List.prod_update_nth' v.to_list i a).trans _
-  have : ↑i < v.to_list.length := lt_of_lt_of_leₓ i.2 (le_of_eqₓ v.2.symm)
+  have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp [this, nth_eq_nth_le, mul_assoc]
 
 end UpdateNth
@@ -548,9 +560,9 @@ section Traverse
 
 variable {F G : Type u → Type u}
 
-variable [Applicativeₓ F] [Applicativeₓ G]
+variable [Applicative F] [Applicative G]
 
-open Applicativeₓ Functor
+open Applicative Functor
 
 open List (cons)
 
@@ -585,7 +597,7 @@ end
 
 open Function
 
-variable [IsLawfulApplicative F] [IsLawfulApplicative G]
+variable [LawfulApplicative F] [LawfulApplicative G]
 
 variable {α β γ : Type u}
 
@@ -612,7 +624,7 @@ end Traverse
 
 instance : Traversable.{u} (flip Vector n) where
   traverse := @Vector.traverse n
-  map := fun α β => @Vector.map.{u, u} α β n
+  map α β := @Vector.map.{u, u} α β n
 
 instance : IsLawfulTraversable.{u} (flip Vector n) where
   id_traverse := @Vector.id_traverse n
@@ -622,8 +634,8 @@ instance : IsLawfulTraversable.{u} (flip Vector n) where
   id_map := by intros <;> cases x <;> simp! [(· <$> ·)]
   comp_map := by intros <;> cases x <;> simp! [(· <$> ·)]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
 unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v

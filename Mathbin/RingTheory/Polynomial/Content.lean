@@ -34,7 +34,7 @@ open Polynomial
 
 section Primitive
 
-variable {R : Type _} [CommSemiringₓ R]
+variable {R : Type _} [CommSemiring R]
 
 /-- A polynomial is primitive when the only constant polynomials dividing it are units -/
 def IsPrimitive (p : R[X]) : Prop :=
@@ -56,7 +56,7 @@ theorem IsPrimitive.ne_zero [Nontrivial R] {p : R[X]} (hp : p.IsPrimitive) : p �
 
 end Primitive
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R]
+variable {R : Type _} [CommRing R] [IsDomain R]
 
 section NormalizedGcdMonoid
 
@@ -68,7 +68,7 @@ def content (p : R[X]) : R :=
 
 theorem content_dvd_coeff {p : R[X]} (n : ℕ) : p.content ∣ p.coeff n := by
   by_cases h:n ∈ p.support
-  · apply Finsetₓ.gcd_dvd h
+  · apply Finset.gcd_dvd h
     
   rw [mem_support_iff, not_not] at h
   rw [h]
@@ -90,11 +90,11 @@ theorem content_zero : content (0 : R[X]) = 0 := by rw [← C_0, content_C, norm
 theorem content_one : content (1 : R[X]) = 1 := by rw [← C_1, content_C, normalize_one]
 
 theorem content_X_mul {p : R[X]} : content (X * p) = content p := by
-  rw [content, content, Finsetₓ.gcd_def, Finsetₓ.gcd_def]
+  rw [content, content, Finset.gcd_def, Finset.gcd_def]
   refine' congr rfl _
   have h : (X * p).Support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩ := by
     ext a
-    simp only [exists_propₓ, Finsetₓ.mem_map, Function.Embedding.coe_fn_mk, Ne.def, mem_support_iff]
+    simp only [exists_prop, Finset.mem_map, Function.Embedding.coe_fn_mk, Ne.def, mem_support_iff]
     cases a
     · simp [coeff_X_mul_zero, Nat.succ_ne_zero]
       
@@ -109,7 +109,7 @@ theorem content_X_mul {p : R[X]} : content (X * p) = content p := by
       apply h1
       
   rw [h]
-  simp only [Finsetₓ.map_val, Function.comp_app, Function.Embedding.coe_fn_mk, Multiset.map_map]
+  simp only [Finset.map_val, Function.comp_app, Function.Embedding.coe_fn_mk, Multiset.map_map]
   refine' congr (congr rfl _) rfl
   ext a
   rw [mul_comm]
@@ -120,10 +120,10 @@ theorem content_X_pow {k : ℕ} : content ((x : R[X]) ^ k) = 1 := by
   induction' k with k hi
   · simp
     
-  rw [pow_succₓ, content_X_mul, hi]
+  rw [pow_succ, content_X_mul, hi]
 
 @[simp]
-theorem content_X : content (x : R[X]) = 1 := by rw [← mul_oneₓ X, content_X_mul, content_one]
+theorem content_X : content (x : R[X]) = 1 := by rw [← mul_one X, content_X_mul, content_one]
 
 theorem content_C_mul (r : R) (p : R[X]) : (c r * p).content = normalize r * p.content := by
   by_cases h0:r = 0
@@ -131,15 +131,15 @@ theorem content_C_mul (r : R) (p : R[X]) : (c r * p).content = normalize r * p.c
     
   rw [content]
   rw [content]
-  rw [← Finsetₓ.gcd_mul_left]
+  rw [← Finset.gcd_mul_left]
   refine' congr (congr rfl _) _ <;> ext <;> simp [h0, mem_support_iff]
 
 @[simp]
 theorem content_monomial {r : R} {k : ℕ} : content (monomial k r) = normalize r := by
-  rw [monomial_eq_C_mul_X, content_C_mul, content_X_pow, mul_oneₓ]
+  rw [monomial_eq_C_mul_X, content_C_mul, content_X_pow, mul_one]
 
 theorem content_eq_zero_iff {p : R[X]} : content p = 0 ↔ p = 0 := by
-  rw [content, Finsetₓ.gcd_eq_zero_iff]
+  rw [content, Finset.gcd_eq_zero_iff]
   constructor <;> intro h
   · ext n
     by_cases h0:n ∈ p.support
@@ -156,25 +156,25 @@ theorem content_eq_zero_iff {p : R[X]} : content p = 0 ↔ p = 0 := by
 
 @[simp]
 theorem normalize_content {p : R[X]} : normalize p.content = p.content :=
-  Finsetₓ.normalize_gcd
+  Finset.normalize_gcd
 
 theorem content_eq_gcd_range_of_lt (p : R[X]) (n : ℕ) (h : p.natDegree < n) :
-    p.content = (Finsetₓ.range n).gcd p.coeff := by
-  apply dvd_antisymm_of_normalize_eq normalize_content Finsetₓ.normalize_gcd
-  · rw [Finsetₓ.dvd_gcd_iff]
+    p.content = (Finset.range n).gcd p.coeff := by
+  apply dvd_antisymm_of_normalize_eq normalize_content Finset.normalize_gcd
+  · rw [Finset.dvd_gcd_iff]
     intro i hi
     apply content_dvd_coeff _
     
-  · apply Finsetₓ.gcd_mono
+  · apply Finset.gcd_mono
     intro i
-    simp only [Nat.lt_succ_iff, mem_support_iff, Ne.def, Finsetₓ.mem_range]
+    simp only [Nat.lt_succ_iff, mem_support_iff, Ne.def, Finset.mem_range]
     contrapose!
     intro h1
-    apply coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_leₓ h h1)
+    apply coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_le h h1)
     
 
-theorem content_eq_gcd_range_succ (p : R[X]) : p.content = (Finsetₓ.range p.natDegree.succ).gcd p.coeff :=
-  content_eq_gcd_range_of_lt _ _ (Nat.lt_succ_selfₓ _)
+theorem content_eq_gcd_range_succ (p : R[X]) : p.content = (Finset.range p.natDegree.succ).gcd p.coeff :=
+  content_eq_gcd_range_of_lt _ _ (Nat.lt_succ_self _)
 
 theorem content_eq_gcd_leading_coeff_content_erase_lead (p : R[X]) :
     p.content = GcdMonoid.gcd p.leadingCoeff (eraseLead p).content := by
@@ -182,9 +182,9 @@ theorem content_eq_gcd_leading_coeff_content_erase_lead (p : R[X]) :
   · simp [h]
     
   rw [← leading_coeff_eq_zero, leading_coeff, ← Ne.def, ← mem_support_iff] at h
-  rw [content, ← Finsetₓ.insert_erase h, Finsetₓ.gcd_insert, leading_coeff, content, erase_lead_support]
-  refine' congr rfl (Finsetₓ.gcd_congr rfl fun i hi => _)
-  rw [Finsetₓ.mem_erase] at hi
+  rw [content, ← Finset.insert_erase h, Finset.gcd_insert, leading_coeff, content, erase_lead_support]
+  refine' congr rfl (Finset.gcd_congr rfl fun i hi => _)
+  rw [Finset.mem_erase] at hi
   rw [erase_lead_coeff, if_neg hi.1]
 
 theorem dvd_content_iff_C_dvd {p : R[X]} {r : R} : r ∣ p.content ↔ c r ∣ p := by
@@ -194,7 +194,7 @@ theorem dvd_content_iff_C_dvd {p : R[X]} {r : R} : r ∣ p.content ↔ c r ∣ p
     apply h.trans (content_dvd_coeff _)
     
   · intro h
-    rw [content, Finsetₓ.dvd_gcd_iff]
+    rw [content, Finset.dvd_gcd_iff]
     intro i hi
     apply h i
     
@@ -238,7 +238,7 @@ theorem is_primitive_prim_part (p : R[X]) : p.primPart.IsPrimitive := by
   rw [← content_eq_zero_iff] at h
   rw [is_primitive_iff_content_eq_one]
   apply mul_left_cancel₀ h
-  conv_rhs => rw [p.eq_C_content_mul_prim_part, mul_oneₓ, content_C_mul, normalize_content]
+  conv_rhs => rw [p.eq_C_content_mul_prim_part, mul_one, content_C_mul, normalize_content]
 
 theorem content_prim_part (p : R[X]) : p.primPart.content = 1 :=
   p.is_primitive_prim_part.content_eq_one
@@ -251,11 +251,11 @@ theorem nat_degree_prim_part (p : R[X]) : p.primPart.natDegree = p.natDegree := 
   · rw [C_eq_zero, content_eq_zero_iff] at h
     simp [h]
     
-  conv_rhs => rw [p.eq_C_content_mul_prim_part, nat_degree_mul h p.prim_part_ne_zero, nat_degree_C, zero_addₓ]
+  conv_rhs => rw [p.eq_C_content_mul_prim_part, nat_degree_mul h p.prim_part_ne_zero, nat_degree_C, zero_add]
 
 @[simp]
 theorem IsPrimitive.prim_part_eq {p : R[X]} (hp : p.IsPrimitive) : p.primPart = p := by
-  rw [← one_mulₓ p.prim_part, ← C_1, ← hp.content_eq_one, ← p.eq_C_content_mul_prim_part]
+  rw [← one_mul p.prim_part, ← C_1, ← hp.content_eq_one, ← p.eq_C_content_mul_prim_part]
 
 theorem is_unit_prim_part_C (r : R) : IsUnit (c r).primPart := by
   by_cases h0:r = 0
@@ -270,12 +270,12 @@ theorem is_unit_prim_part_C (r : R) : IsUnit (c r).primPart := by
   apply mul_left_cancel₀ h0
   conv_rhs => rw [← content_C, ← (C r).eq_C_content_mul_prim_part]
   simp only [Units.coe_mk, normalize_apply, RingHom.map_mul]
-  rw [mul_assoc, ← RingHom.map_mul, Units.mul_inv, C_1, mul_oneₓ]
+  rw [mul_assoc, ← RingHom.map_mul, Units.mul_inv, C_1, mul_one]
 
 theorem prim_part_dvd (p : R[X]) : p.primPart ∣ p :=
   Dvd.intro_left (c p.content) p.eq_C_content_mul_prim_part.symm
 
-theorem aeval_prim_part_eq_zero {S : Type _} [Ringₓ S] [IsDomain S] [Algebra R S] [NoZeroSmulDivisors R S] {p : R[X]}
+theorem aeval_prim_part_eq_zero {S : Type _} [Ring S] [IsDomain S] [Algebra R S] [NoZeroSmulDivisors R S] {p : R[X]}
     {s : S} (hpzero : p ≠ 0) (hp : aeval s p = 0) : aeval s p.primPart = 0 := by
   rw [eq_C_content_mul_prim_part p, map_mul, aeval_C] at hp
   have hcont : p.content ≠ 0 := fun h => hpzero (content_eq_zero_iff.1 h)
@@ -283,7 +283,7 @@ theorem aeval_prim_part_eq_zero {S : Type _} [Ringₓ S] [IsDomain S] [Algebra R
   rw [map_zero] at hcont
   exact eq_zero_of_ne_zero_of_mul_left_eq_zero hcont hp
 
-theorem eval₂_prim_part_eq_zero {S : Type _} [CommRingₓ S] [IsDomain S] {f : R →+* S} (hinj : Function.Injective f)
+theorem eval₂_prim_part_eq_zero {S : Type _} [CommRing S] [IsDomain S] {f : R →+* S} (hinj : Function.Injective f)
     {p : R[X]} {s : S} (hpzero : p ≠ 0) (hp : eval₂ f s p = 0) : eval₂ f s p.primPart = 0 := by
   rw [eq_C_content_mul_prim_part p, eval₂_mul, eval₂_C] at hp
   have hcont : p.content ≠ 0 := fun h => hpzero (content_eq_zero_iff.1 h)
@@ -296,10 +296,10 @@ end PrimPart
 theorem gcd_content_eq_of_dvd_sub {a : R} {p q : R[X]} (h : c a ∣ p - q) :
     GcdMonoid.gcd a p.content = GcdMonoid.gcd a q.content := by
   rw [content_eq_gcd_range_of_lt p (max p.nat_degree q.nat_degree).succ
-      (lt_of_le_of_ltₓ (le_max_leftₓ _ _) (Nat.lt_succ_selfₓ _))]
+      (lt_of_le_of_lt (le_max_left _ _) (Nat.lt_succ_self _))]
   rw [content_eq_gcd_range_of_lt q (max p.nat_degree q.nat_degree).succ
-      (lt_of_le_of_ltₓ (le_max_rightₓ _ _) (Nat.lt_succ_selfₓ _))]
-  apply Finsetₓ.gcd_eq_of_dvd_sub
+      (lt_of_le_of_lt (le_max_right _ _) (Nat.lt_succ_self _))]
+  apply Finset.gcd_eq_of_dvd_sub
   intro x hx
   cases' h with w hw
   use w.coeff x
@@ -310,7 +310,7 @@ theorem content_mul_aux {p q : R[X]} :
   by
   rw [gcd_comm (content _) _, gcd_comm (content _) _]
   apply gcd_content_eq_of_dvd_sub
-  rw [← self_sub_C_mul_X_pow, ← self_sub_C_mul_X_pow, sub_mul, sub_sub, add_commₓ, sub_add, sub_sub_cancel,
+  rw [← self_sub_C_mul_X_pow, ← self_sub_C_mul_X_pow, sub_mul, sub_sub, add_comm, sub_add, sub_sub_cancel,
     leading_coeff_mul, RingHom.map_mul, mul_assoc, mul_assoc]
   apply dvd_sub (Dvd.intro _ rfl) (Dvd.intro _ rfl)
 
@@ -319,7 +319,7 @@ theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
   classical
   suffices h : ∀ (n : ℕ) (p q : R[X]), (p * q).degree < n → (p * q).content = p.content * q.content
   · apply h
-    apply lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 (Nat.lt_succ_selfₓ _))
+    apply lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 (Nat.lt_succ_self _))
     
   intro n
   induction' n with n ih
@@ -344,13 +344,13 @@ theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
   rw [p.eq_C_content_mul_prim_part, q.eq_C_content_mul_prim_part]
   suffices h : (q.prim_part * p.prim_part).content = 1
   · rw [mul_assoc, content_C_mul, content_C_mul, mul_comm p.prim_part, mul_assoc, content_C_mul, content_C_mul, h,
-      mul_oneₓ, content_prim_part, content_prim_part, mul_oneₓ, mul_oneₓ]
+      mul_one, content_prim_part, content_prim_part, mul_one, mul_one]
     
   rw [← normalize_content, normalize_eq_one, is_unit_iff_dvd_one, content_eq_gcd_leading_coeff_content_erase_lead,
     leading_coeff_mul, gcd_comm]
   apply (gcd_mul_dvd_mul_gcd _ _ _).trans
-  rw [content_mul_aux, ih, content_prim_part, mul_oneₓ, gcd_comm, ← content_eq_gcd_leading_coeff_content_erase_lead,
-    content_prim_part, one_mulₓ, mul_comm q.prim_part, content_mul_aux, ih, content_prim_part, mul_oneₓ, gcd_comm, ←
+  rw [content_mul_aux, ih, content_prim_part, mul_one, gcd_comm, ← content_eq_gcd_leading_coeff_content_erase_lead,
+    content_prim_part, one_mul, mul_comm q.prim_part, content_mul_aux, ih, content_prim_part, mul_one, gcd_comm, ←
     content_eq_gcd_leading_coeff_content_erase_lead, content_prim_part]
   · rw [← HEq, degree_mul, WithBot.add_lt_add_iff_right]
     · apply degree_erase_lt p.prim_part_ne_zero
@@ -368,7 +368,7 @@ theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
     
 
 theorem IsPrimitive.mul {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) : (p * q).IsPrimitive := by
-  rw [is_primitive_iff_content_eq_one, content_mul, hp.content_eq_one, hq.content_eq_one, mul_oneₓ]
+  rw [is_primitive_iff_content_eq_one, content_mul, hp.content_eq_one, hq.content_eq_one, mul_one]
 
 @[simp]
 theorem prim_part_mul {p q : R[X]} (h0 : p * q ≠ 0) : (p * q).primPart = p.primPart * q.primPart := by
@@ -395,34 +395,34 @@ theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (
   classical
   have h : ∃ (n : ℕ)(r : R[X]), r.natDegree = n ∧ r.IsPrimitive ∧ p ∣ r ∧ q ∣ r :=
     ⟨(p * q).natDegree, p * q, rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩
-  rcases Nat.find_specₓ h with ⟨r, rdeg, rprim, pr, qr⟩
+  rcases Nat.find_spec h with ⟨r, rdeg, rprim, pr, qr⟩
   refine' ⟨r, rprim, fun s => ⟨_, fun rs => ⟨pr.trans rs, qr.trans rs⟩⟩⟩
   suffices hs : ∀ (n : ℕ) (s : R[X]), s.natDegree = n → p ∣ s ∧ q ∣ s → r ∣ s
   · apply hs s.nat_degree s rfl
     
   clear s
   by_contra' con
-  rcases Nat.find_specₓ Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
+  rcases Nat.find_spec Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
   have s0 : s ≠ 0 := by
     contrapose! rs
     simp [rs]
   have hs :=
-    Nat.find_min'ₓ h
+    Nat.find_min' h
       ⟨_, s.nat_degree_prim_part, s.is_primitive_prim_part, (hp.dvd_prim_part_iff_dvd s0).2 ps,
         (hq.dvd_prim_part_iff_dvd s0).2 qs⟩
   rw [← rdeg] at hs
   by_cases sC:s.nat_degree ≤ 0
-  · rw [eq_C_of_nat_degree_le_zero (le_transₓ hs sC), is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at
+  · rw [eq_C_of_nat_degree_le_zero (le_trans hs sC), is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at
       rprim
-    rw [eq_C_of_nat_degree_le_zero (le_transₓ hs sC), ← dvd_content_iff_C_dvd] at rs
+    rw [eq_C_of_nat_degree_le_zero (le_trans hs sC), ← dvd_content_iff_C_dvd] at rs
     apply rs rprim.dvd
     
-  have hcancel := nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree hs (lt_of_not_geₓ sC)
+  have hcancel := nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree hs (lt_of_not_ge sC)
   rw [sdeg] at hcancel
-  apply Nat.find_minₓ Con hcancel
+  apply Nat.find_min Con hcancel
   refine' ⟨_, rfl, ⟨dvd_cancel_leads_of_dvd_of_dvd pr ps, dvd_cancel_leads_of_dvd_of_dvd qr qs⟩, fun rcs => rs _⟩
   rw [← rprim.dvd_prim_part_iff_dvd s0]
-  rw [cancel_leads, tsub_eq_zero_iff_le.mpr hs, pow_zeroₓ, mul_oneₓ] at rcs
+  rw [cancel_leads, tsub_eq_zero_iff_le.mpr hs, pow_zero, mul_one] at rcs
   have h := dvd_add rcs (Dvd.intro_left _ rfl)
   have hC0 := rprim.ne_zero
   rw [Ne.def, ← leading_coeff_eq_zero, ← C_eq_zero] at hC0
@@ -454,7 +454,7 @@ instance (priority := 100) normalizedGcdMonoid : NormalizedGcdMonoid R[X] :=
       rcases hpq with (hpq | hpq) <;> simp [hpq, hs]
       
     iterate 3 rw [dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part hs]
-    rw [content_mul, rprim.content_eq_one, mul_oneₓ, content_C, normalize_lcm, lcm_dvd_iff,
+    rw [content_mul, rprim.content_eq_one, mul_one, content_C, normalize_lcm, lcm_dvd_iff,
       prim_part_mul (mul_ne_zero hpq rprim.ne_zero), rprim.prim_part_eq,
       IsUnit.mul_left_dvd _ _ _ (is_unit_prim_part_C (lcm p.content q.content)), ← hr s.prim_part]
     tauto

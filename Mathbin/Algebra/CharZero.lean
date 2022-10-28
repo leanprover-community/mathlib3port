@@ -22,7 +22,7 @@ with `1`.
 
 namespace Nat
 
-variable {R : Type _} [AddMonoidWithOneₓ R] [CharZero R]
+variable {R : Type _} [AddMonoidWithOne R] [CharZero R]
 
 /-- `nat.cast` as an embedding into monoids of characteristic `0`. -/
 @[simps]
@@ -30,8 +30,8 @@ def castEmbedding : ℕ ↪ R :=
   ⟨coe, cast_injective⟩
 
 @[simp]
-theorem cast_pow_eq_one {R : Type _} [Semiringₓ R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
-    (q : R) ^ n = 1 ↔ q = 1 := by
+theorem cast_pow_eq_one {R : Type _} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) : (q : R) ^ n = 1 ↔ q = 1 :=
+  by
   rw [← cast_pow, cast_eq_one]
   exact pow_eq_one_iff hn
 
@@ -48,7 +48,7 @@ end Nat
 
 section
 
-variable (M : Type _) [AddMonoidWithOneₓ M] [CharZero M]
+variable (M : Type _) [AddMonoidWithOne M] [CharZero M]
 
 -- see Note [lower instance priority]
 instance (priority := 100) CharZero.infinite : Infinite M :=
@@ -65,11 +65,11 @@ end
 
 section
 
-variable {R : Type _} [NonAssocSemiringₓ R] [NoZeroDivisors R] [CharZero R]
+variable {R : Type _} [NonAssocSemiring R] [NoZeroDivisors R] [CharZero R]
 
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
-  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero', false_orₓ]
+  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero', false_or_iff]
 
 @[simp]
 theorem bit0_eq_zero {a : R} : bit0 a = 0 ↔ a = 0 :=
@@ -106,7 +106,7 @@ theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
   exact_mod_cast h
 
 theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h => by
-  simp only [bit1, add_left_injₓ] at h
+  simp only [bit1, add_left_inj] at h
   exact bit0_injective h
 
 @[simp]
@@ -145,15 +145,14 @@ end
 
 namespace WithTop
 
-instance {R : Type _} [AddMonoidWithOneₓ R] [CharZero R] :
-    CharZero
-      (WithTop R) where cast_injective := fun m n h => by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
+instance {R : Type _} [AddMonoidWithOne R] [CharZero R] :
+    CharZero (WithTop R) where cast_injective m n h := by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
 
 section RingHom
 
-variable {R S : Type _} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
+variable {R S : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
 
 theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
   ⟨fun a b h => CharZero.cast_injective (by rw [← map_nat_cast ϕ, ← map_nat_cast ϕ, h])⟩

@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Category.Cat
+import Mathbin.CategoryTheory.Category.CatCat
 import Mathbin.CategoryTheory.Elements
 
 /-!
@@ -97,10 +97,10 @@ def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where
 attribute [local simp] eq_to_hom_map
 
 instance : Category (Grothendieck F) where
-  Hom := fun X Y => Grothendieck.Hom X Y
-  id := fun X => Grothendieck.id X
-  comp := fun X Y Z f g => Grothendieck.comp f g
-  comp_id' := fun X Y f => by
+  Hom X Y := Grothendieck.Hom X Y
+  id X := Grothendieck.id X
+  comp X Y Z f g := Grothendieck.comp f g
+  comp_id' X Y f := by
     ext
     · dsimp
       -- We need to turn `F.map_id` (which is an equation between functors)
@@ -110,8 +110,8 @@ instance : Category (Grothendieck F) where
       
     · simp
       
-  id_comp' := fun X Y f => by ext <;> simp
-  assoc' := fun W X Y Z f g h => by
+  id_comp' X Y f := by ext <;> simp
+  assoc' W X Y Z f g h := by
     ext
     swap
     · simp
@@ -139,8 +139,8 @@ variable (F)
 /-- The forgetful functor from `grothendieck F` to the source category. -/
 @[simps]
 def forget : Grothendieck F ⥤ C where
-  obj := fun X => X.1
-  map := fun X Y f => f.1
+  obj X := X.1
+  map X Y f := f.1
 
 end
 
@@ -151,14 +151,14 @@ variable (G : C ⥤ Type w)
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
 def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elements where
-  obj := fun X => ⟨X.1, X.2.as⟩
-  map := fun X Y f => ⟨f.1, f.2.1.1⟩
+  obj X := ⟨X.1, X.2.as⟩
+  map X Y f := ⟨f.1, f.2.1.1⟩
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
 def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Cat) where
-  obj := fun X => ⟨X.1, ⟨X.2⟩⟩
-  map := fun X Y f => ⟨f.1, ⟨⟨f.2⟩⟩⟩
+  obj X := ⟨X.1, ⟨X.2⟩⟩
+  map X Y f := ⟨f.1, ⟨⟨f.2⟩⟩⟩
 
 /-- The Grothendieck construction applied to a functor to `Type`
 (thought of as a functor to `Cat` by realising a type as a discrete category)

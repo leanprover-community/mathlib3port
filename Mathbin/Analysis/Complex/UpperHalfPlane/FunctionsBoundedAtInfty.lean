@@ -29,11 +29,11 @@ namespace UpperHalfPlane
 def atImInfty :=
   Filter.atTop.comap UpperHalfPlane.im
 
-theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.Ici i :=
+theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.IciCat i :=
   Filter.HasBasis.comap UpperHalfPlane.im Filter.at_top_basis
 
 theorem at_im_infty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S := by
-  simp only [at_im_infty, Filter.mem_comap', Filter.mem_at_top_sets, ge_iff_leₓ, Set.mem_set_of_eq,
+  simp only [at_im_infty, Filter.mem_comap', Filter.mem_at_top_sets, ge_iff_le, Set.mem_set_of_eq,
     UpperHalfPlane.coe_im]
   refine' ⟨fun ⟨a, h⟩ => ⟨a, fun z hz => h (im z) hz rfl⟩, _⟩
   rintro ⟨A, h⟩
@@ -60,7 +60,7 @@ def boundedAtImInftySubalgebra (α : Type _) [NormedField α] : Subalgebra α (�
   boundedFilterSubalgebra atImInfty
 
 theorem prod_of_bounded_is_bounded {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f) (hg : IsBoundedAtImInfty g) :
-    IsBoundedAtImInfty (f * g) := by simpa only [Pi.one_apply, mul_oneₓ, norm_eq_abs] using hf.mul hg
+    IsBoundedAtImInfty (f * g) := by simpa only [Pi.one_apply, mul_one, norm_eq_abs] using hf.mul hg
 
 @[simp]
 theorem bounded_mem (f : ℍ → ℂ) : IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
@@ -85,7 +85,7 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
     have hzs : f z ∈ s := by
       apply h2
       simp only [mem_ball_zero_iff, norm_eq_abs]
-      apply lt_of_le_of_ltₓ (hA z hz)
+      apply lt_of_le_of_lt (hA z hz)
       linarith
     apply hzs
     

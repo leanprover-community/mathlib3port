@@ -33,22 +33,22 @@ lie algebra, abelian, commutative, center
 universe u v w w₁ w₂
 
 /-- A Lie (ring) module is trivial iff all brackets vanish. -/
-class LieModule.IsTrivial (L : Type v) (M : Type w) [HasBracket L M] [Zero M] : Prop where
+class LieModule.IsTrivial (L : Type v) (M : Type w) [Bracket L M] [Zero M] : Prop where
   trivial : ∀ (x : L) (m : M), ⁅x, m⁆ = 0
 
 @[simp]
-theorem trivial_lie_zero (L : Type v) (M : Type w) [HasBracket L M] [Zero M] [LieModule.IsTrivial L M] (x : L) (m : M) :
+theorem trivial_lie_zero (L : Type v) (M : Type w) [Bracket L M] [Zero M] [LieModule.IsTrivial L M] (x : L) (m : M) :
     ⁅x, m⁆ = 0 :=
   LieModule.IsTrivial.trivial x m
 
 /-- A Lie algebra is Abelian iff it is trivial as a Lie module over itself. -/
-abbrev IsLieAbelian (L : Type v) [HasBracket L L] [Zero L] : Prop :=
+abbrev IsLieAbelian (L : Type v) [Bracket L L] [Zero L] : Prop :=
   LieModule.IsTrivial L L
 
-instance LieIdeal.is_lie_abelian_of_trivial (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
-    (I : LieIdeal R L) [h : LieModule.IsTrivial L I] : IsLieAbelian I where trivial := fun x y => by apply h.trivial
+instance LieIdeal.is_lie_abelian_of_trivial (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L]
+    (I : LieIdeal R L) [h : LieModule.IsTrivial L I] : IsLieAbelian I where trivial x y := by apply h.trivial
 
-theorem Function.Injective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRingₓ R] [LieRing L₁]
+theorem Function.Injective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R] [LieRing L₁]
     [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂} (h₁ : Function.Injective f)
     (h₂ : IsLieAbelian L₂) : IsLieAbelian L₁ :=
   { trivial := fun x y =>
@@ -59,7 +59,7 @@ theorem Function.Injective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : T
           _ = f 0 := f.map_zero.symm
            }
 
-theorem Function.Surjective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRingₓ R] [LieRing L₁]
+theorem Function.Surjective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R] [LieRing L₁]
     [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂} (h₁ : Function.Surjective f)
     (h₂ : IsLieAbelian L₁) : IsLieAbelian L₂ :=
   { trivial := fun x y => by
@@ -67,16 +67,16 @@ theorem Function.Surjective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : 
       obtain ⟨v, rfl⟩ := h₁ y
       rw [← LieHom.map_lie, trivial_lie_zero, LieHom.map_zero] }
 
-theorem lie_abelian_iff_equiv_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRingₓ R] [LieRing L₁]
+theorem lie_abelian_iff_equiv_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R] [LieRing L₁]
     [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] (e : L₁ ≃ₗ⁅R⁆ L₂) : IsLieAbelian L₁ ↔ IsLieAbelian L₂ :=
   ⟨e.symm.Injective.IsLieAbelian, e.Injective.IsLieAbelian⟩
 
-theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ringₓ A] : IsCommutative A (· * ·) ↔ IsLieAbelian A := by
+theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ring A] : IsCommutative A (· * ·) ↔ IsLieAbelian A := by
   have h₁ : IsCommutative A (· * ·) ↔ ∀ a b : A, a * b = b * a := ⟨fun h => h.1, fun h => ⟨h⟩⟩
   have h₂ : IsLieAbelian A ↔ ∀ a b : A, ⁅a, b⁆ = 0 := ⟨fun h => h.1, fun h => ⟨h⟩⟩
   simp only [h₁, h₂, LieRing.of_associative_ring_bracket, sub_eq_zero]
 
-theorem LieAlgebra.is_lie_abelian_bot (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L] :
+theorem LieAlgebra.is_lie_abelian_bot (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L] :
     IsLieAbelian (⊥ : LieIdeal R L) :=
   ⟨fun ⟨x, hx⟩ _ => by convert zero_lie _⟩
 
@@ -84,11 +84,11 @@ section Center
 
 variable (R : Type u) (L : Type v) (M : Type w) (N : Type w₁)
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable [CommRing R] [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable [AddCommGroupₓ N] [Module R N] [LieRingModule L N] [LieModule R L N]
+variable [AddCommGroup N] [Module R N] [LieRingModule L N] [LieModule R L N]
 
 namespace LieModule
 
@@ -103,16 +103,16 @@ protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
 def maxTrivSubmodule : LieSubmodule R L M where
   Carrier := { m | ∀ x : L, ⁅x, m⁆ = 0 }
-  zero_mem' := fun x => lie_zero x
-  add_mem' := fun x y hx hy z => by rw [lie_add, hx, hy, add_zeroₓ]
-  smul_mem' := fun c x hx y => by rw [lie_smul, hx, smul_zero]
-  lie_mem := fun x m hm y => by rw [hm, lie_zero]
+  zero_mem' x := lie_zero x
+  add_mem' x y hx hy z := by rw [lie_add, hx, hy, add_zero]
+  smul_mem' c x hx y := by rw [lie_smul, hx, smul_zero]
+  lie_mem x m hm y := by rw [hm, lie_zero]
 
 @[simp]
 theorem mem_max_triv_submodule (m : M) : m ∈ maxTrivSubmodule R L M ↔ ∀ x : L, ⁅x, m⁆ = 0 :=
   Iff.rfl
 
-instance : IsTrivial L (maxTrivSubmodule R L M) where trivial := fun x m => Subtype.ext (m.property x)
+instance : IsTrivial L (maxTrivSubmodule R L M) where trivial x m := Subtype.ext (m.property x)
 
 @[simp]
 theorem ideal_oper_max_triv_submodule_eq_bot (I : LieIdeal R L) : ⁅I, maxTrivSubmodule R L M⁆ = ⊥ := by
@@ -140,7 +140,7 @@ theorem is_trivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L 
   constructor
   · rintro ⟨h⟩
     ext
-    simp only [mem_max_triv_submodule, h, forall_const, true_iffₓ, eq_self_iff_true]
+    simp only [mem_max_triv_submodule, h, forall_const, true_iff_iff, eq_self_iff_true]
     
   · intro h
     constructor
@@ -154,12 +154,12 @@ variable {R L M N}
 
 /-- `max_triv_submodule` is functorial. -/
 def maxTrivHom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L⁆ maxTrivSubmodule R L N where
-  toFun := fun m =>
+  toFun m :=
     ⟨f m, fun x =>
       (LieModuleHom.map_lie _ _ _).symm.trans <| (congr_arg f (m.property x)).trans (LieModuleHom.map_zero _)⟩
-  map_add' := fun m n => by simpa
-  map_smul' := fun t m => by simpa
-  map_lie' := fun x m => by simp
+  map_add' m n := by simpa
+  map_smul' t m := by simpa
+  map_lie' x m := by simp
 
 @[norm_cast, simp]
 theorem coe_max_triv_hom_apply (f : M →ₗ⁅R,L⁆ N) (m : maxTrivSubmodule R L M) : (maxTrivHom f m : N) = f m :=
@@ -192,24 +192,24 @@ theorem max_triv_equiv_of_equiv_symm_eq_symm (e : M ≃ₗ⁅R,L⁆ N) : (maxTri
 /-- A linear map between two Lie modules is a morphism of Lie modules iff the Lie algebra action
 on it is trivial. -/
 def maxTrivLinearMapEquivLieModuleHom : maxTrivSubmodule R L (M →ₗ[R] N) ≃ₗ[R] M →ₗ⁅R,L⁆ N where
-  toFun := fun f =>
+  toFun f :=
     { toLinearMap := f.val,
       map_lie' := fun x m => by
         have hf : ⁅x, f.val⁆ m = 0 := by rw [f.property x, LinearMap.zero_apply]
         rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.to_fun_eq_coe] at hf
         exact hf.symm }
-  map_add' := fun f g => by
+  map_add' f g := by
     ext
     simp
-  map_smul' := fun F G => by
+  map_smul' F G := by
     ext
     simp
-  invFun := fun F =>
+  invFun F :=
     ⟨F, fun x => by
       ext
       simp⟩
-  left_inv := fun f => by simp
-  right_inv := fun F => by simp
+  left_inv f := by simp
+  right_inv F := by simp
 
 @[simp]
 theorem coe_max_triv_linear_map_equiv_lie_module_hom (f : maxTrivSubmodule R L (M →ₗ[R] N)) :
@@ -272,7 +272,7 @@ open LieSubmodule LieSubalgebra
 
 variable {R : Type u} {L : Type v} {M : Type w}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
+variable [CommRing R] [LieRing L] [LieAlgebra R L] [AddCommGroup M] [Module R M]
 
 variable [LieRingModule L M] [LieModule R L M]
 

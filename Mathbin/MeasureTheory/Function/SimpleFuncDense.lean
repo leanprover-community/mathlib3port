@@ -33,7 +33,7 @@ by a sequence of simple functions.
 -/
 
 
-open Set Function Filter TopologicalSpace Ennreal Emetric Finsetₓ
+open Set Function Filter TopologicalSpace Ennreal Emetric Finset
 
 open Classical TopologicalSpace Ennreal MeasureTheory BigOperators
 
@@ -60,8 +60,8 @@ noncomputable def nearestPtInd (e : ℕ → α) : ℕ → α →ₛ ℕ
   | 0 => const α 0
   | N + 1 =>
     piecewise (⋂ k ≤ N, { x | edist (e (N + 1)) x < edist (e k) x })
-      (MeasurableSet.Inter fun k =>
-        MeasurableSet.Inter fun hk => measurable_set_lt measurable_edist_right measurable_edist_right)
+      (MeasurableSet.inter fun k =>
+        MeasurableSet.inter fun hk => measurableSetLt measurableEdistRight measurableEdistRight)
       (const α <| N + 1) (nearest_pt_ind N)
 
 /-- `nearest_pt e N x` is the nearest point to `x` among the points `e 0`, ..., `e N`. If more than
@@ -90,16 +90,16 @@ theorem nearest_pt_ind_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N
     
   simp only [nearest_pt_ind_succ]
   split_ifs
-  exacts[le_rflₓ, ihN.trans N.le_succ]
+  exacts[le_rfl, ihN.trans N.le_succ]
 
 theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) : edist (nearestPt e N x) x ≤ edist (e k) x := by
   induction' N with N ihN generalizing k
-  · simp [nonpos_iff_eq_zero.1 hk, le_reflₓ]
+  · simp [nonpos_iff_eq_zero.1 hk, le_refl]
     
   · simp only [nearest_pt, nearest_pt_ind_succ, map_apply]
     split_ifs
     · rcases hk.eq_or_lt with (rfl | hk)
-      exacts[le_rflₓ, (h k (Nat.lt_succ_iff.1 hk)).le]
+      exacts[le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
       
     · push_neg  at h
       rcases h with ⟨l, hlN, hxl⟩
@@ -113,7 +113,7 @@ theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ Closure (range 
   refine' (at_top_basis.tendsto_iff nhds_basis_eball).2 fun ε hε => _
   rcases Emetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
   rw [edist_comm] at hN
-  exact ⟨N, trivialₓ, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
+  exact ⟨N, trivial, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
 
 variable [MeasurableSpace β] {f : β → α}
 
@@ -147,7 +147,7 @@ theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]
-  refine' tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)
+  refine' tendsto_nearest_pt (closure_minimal _ isClosedClosure hx)
   simp only [Nat.range_cases_on, closure_union, range_comp coe]
   exact subset.trans (image_closure_subset_closure_image continuous_subtype_coe) (subset_union_right _ _)
 

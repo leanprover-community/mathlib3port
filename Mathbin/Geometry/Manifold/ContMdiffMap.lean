@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.ContMdiff
+import Mathbin.Geometry.Manifold.ContMdiffMfderiv
 import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
@@ -25,7 +25,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 @[protect_proj]
 structure ContMdiffMap where
   toFun : M → M'
-  cont_mdiff_to_fun : ContMdiff I I' n to_fun
+  contMdiffToFun : ContMdiff I I' n to_fun
 
 /-- Bundled smooth maps. -/
 @[reducible]
@@ -48,7 +48,7 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
   ⟨ContMdiffMap.toFun⟩
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.cont_mdiff_to_fun.Continuous⟩⟩
+  ⟨fun f => ⟨f, f.contMdiffToFun.Continuous⟩⟩
 
 attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
 
@@ -58,11 +58,11 @@ variable {f g : C^n⟮I, M; I', M'⟯}
 theorem coe_fn_mk (f : M → M') (hf : ContMdiff I I' n f) : (mk f hf : M → M') = f :=
   rfl
 
-protected theorem cont_mdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
-  f.cont_mdiff_to_fun
+protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
+  f.contMdiffToFun
 
 protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
-  f.cont_mdiff_to_fun
+  f.contMdiffToFun
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
   f.ContMdiff.Mdifferentiable hn
@@ -70,7 +70,7 @@ protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : 
 protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
   f.ContMdiff.Mdifferentiable le_top
 
-protected theorem mdifferentiable_at (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
+protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.Mdifferentiable x
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by cases f <;> cases g <;> cases h <;> rfl
@@ -80,23 +80,23 @@ theorem ext (h : ∀ x, f x = g x) : f = g := by cases f <;> cases g <;> congr <
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=
-  ⟨id, cont_mdiff_id⟩
+  ⟨id, contMdiffId⟩
 
 /-- The composition of smooth maps, as a smooth map. -/
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯ where
-  toFun := fun a => f (g a)
-  cont_mdiff_to_fun := f.cont_mdiff_to_fun.comp g.cont_mdiff_to_fun
+  toFun a := f (g a)
+  contMdiffToFun := f.contMdiffToFun.comp g.contMdiffToFun
 
 @[simp]
 theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (x : M) : f.comp g x = f (g x) :=
   rfl
 
 instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
-  ⟨⟨fun _ => default, cont_mdiff_const⟩⟩
+  ⟨⟨fun _ => default, contMdiffConst⟩⟩
 
 /-- Constant map as a smooth map -/
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
-  ⟨fun x => y, cont_mdiff_const⟩
+  ⟨fun x => y, contMdiffConst⟩
 
 end ContMdiffMap
 

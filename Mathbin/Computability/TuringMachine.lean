@@ -90,7 +90,7 @@ longer of `l₁` and `l₂`). -/
 def BlankExtends.above {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} (h₁ : BlankExtends l l₁) (h₂ : BlankExtends l l₂) :
     { l' // BlankExtends l₁ l' ∧ BlankExtends l₂ l' } :=
   if h : l₁.length ≤ l₂.length then ⟨l₂, h₁.below_of_le h₂ h, BlankExtends.refl _⟩
-  else ⟨l₁, BlankExtends.refl _, h₂.below_of_le h₁ (le_of_not_geₓ h)⟩
+  else ⟨l₁, BlankExtends.refl _, h₂.below_of_le h₁ (le_of_not_ge h)⟩
 
 theorem BlankExtends.above_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
     BlankExtends l₁ l → BlankExtends l₂ l → l₁.length ≤ l₂.length → BlankExtends l₁ l₂ := by
@@ -120,13 +120,13 @@ theorem BlankRel.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} : BlankRel
   rintro (h₁ | h₁) (h₂ | h₂)
   · exact Or.inl (h₁.trans h₂)
     
-  · cases' le_totalₓ l₁.length l₃.length with h h
+  · cases' le_total l₁.length l₃.length with h h
     · exact Or.inl (h₁.above_of_le h₂ h)
       
     · exact Or.inr (h₂.above_of_le h₁ h)
       
     
-  · cases' le_totalₓ l₁.length l₃.length with h h
+  · cases' le_total l₁.length l₃.length with h h
     · exact Or.inl (h₁.below_of_le h₂ h)
       
     · exact Or.inr (h₂.below_of_le h₁ h)
@@ -142,7 +142,7 @@ def BlankRel.above {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ 
     if hl : l₁.length ≤ l₂.length then ⟨l₂, Or.elim h id fun h' => _, blank_extends.refl _⟩
     else ⟨l₁, blank_extends.refl _, Or.elim h (fun h' => _) id⟩
   exact (blank_extends.refl _).above_of_le h' hl
-  exact (blank_extends.refl _).above_of_le h' (le_of_not_geₓ hl)
+  exact (blank_extends.refl _).above_of_le h' (le_of_not_ge hl)
 
 /-- Given two `blank_rel` lists, there exists (constructively) a common meet. -/
 def BlankRel.below {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ l₂) :
@@ -151,46 +151,46 @@ def BlankRel.below {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ 
     if hl : l₁.length ≤ l₂.length then ⟨l₁, blank_extends.refl _, Or.elim h id fun h' => _⟩
     else ⟨l₂, Or.elim h (fun h' => _) id, blank_extends.refl _⟩
   exact (blank_extends.refl _).above_of_le h' hl
-  exact (blank_extends.refl _).above_of_le h' (le_of_not_geₓ hl)
+  exact (blank_extends.refl _).above_of_le h' (le_of_not_ge hl)
 
-theorem BlankRel.equivalence (Γ) [Inhabited Γ] : Equivalenceₓ (@BlankRel Γ _) :=
+theorem BlankRel.equivalence (Γ) [Inhabited Γ] : Equivalence (@BlankRel Γ _) :=
   ⟨BlankRel.refl, @BlankRel.symm _ _, @BlankRel.trans _ _⟩
 
 /-- Construct a setoid instance for `blank_rel`. -/
-def BlankRel.setoid (Γ) [Inhabited Γ] : Setoidₓ (List Γ) :=
+def BlankRel.setoid (Γ) [Inhabited Γ] : Setoid (List Γ) :=
   ⟨_, BlankRel.equivalence _⟩
 
 /-- A `list_blank Γ` is a quotient of `list Γ` by extension by blanks at the end. This is used to
 represent half-tapes of a Turing machine, so that we can pretend that the list continues
 infinitely with blanks. -/
 def ListBlank (Γ) [Inhabited Γ] :=
-  Quotientₓ (BlankRel.setoid Γ)
+  Quotient (BlankRel.setoid Γ)
 
 instance ListBlank.inhabited {Γ} [Inhabited Γ] : Inhabited (ListBlank Γ) :=
-  ⟨Quotientₓ.mk' []⟩
+  ⟨Quotient.mk' []⟩
 
 instance ListBlank.hasEmptyc {Γ} [Inhabited Γ] : EmptyCollection (ListBlank Γ) :=
-  ⟨Quotientₓ.mk' []⟩
+  ⟨Quotient.mk' []⟩
 
 /-- A modified version of `quotient.lift_on'` specialized for `list_blank`, with the stronger
 precondition `blank_extends` instead of `blank_rel`. -/
-@[elabAsElim, reducible]
+@[elab_as_elim, reducible]
 protected def ListBlank.liftOn {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : List Γ → α)
     (H : ∀ a b, BlankExtends a b → f a = f b) : α :=
   l.liftOn' f <| by rintro a b (h | h) <;> [exact H _ _ h, exact (H _ _ h).symm]
 
 /-- The quotient map turning a `list` into a `list_blank`. -/
 def ListBlank.mk {Γ} [Inhabited Γ] : List Γ → ListBlank Γ :=
-  Quotientₓ.mk'
+  Quotient.mk'
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem ListBlank.induction_on {Γ} [Inhabited Γ] {p : ListBlank Γ → Prop} (q : ListBlank Γ)
     (h : ∀ a, p (ListBlank.mk a)) : p q :=
-  Quotientₓ.induction_on' q h
+  Quotient.induction_on' q h
 
 /-- The head of a `list_blank` is well defined. -/
 def ListBlank.head {Γ} [Inhabited Γ] (l : ListBlank Γ) : Γ :=
-  l.liftOn List.headₓ
+  l.liftOn List.head'
     (by
       rintro _ _ ⟨i, rfl⟩
       cases a
@@ -207,7 +207,7 @@ def ListBlank.tail {Γ} [Inhabited Γ] (l : ListBlank Γ) : ListBlank Γ :=
   l.liftOn (fun l => ListBlank.mk l.tail)
     (by
       rintro _ _ ⟨i, rfl⟩
-      refine' Quotientₓ.sound' (Or.inl _)
+      refine' Quotient.sound' (Or.inl _)
       cases a <;>
         [· cases i <;> [exact ⟨0, rfl⟩, exact ⟨i, rfl⟩]
           ,
@@ -222,9 +222,9 @@ def ListBlank.cons {Γ} [Inhabited Γ] (a : Γ) (l : ListBlank Γ) : ListBlank �
   l.liftOn (fun l => ListBlank.mk (List.cons a l))
     (by
       rintro _ _ ⟨i, rfl⟩
-      exact Quotientₓ.sound' (Or.inl ⟨i, rfl⟩))
+      exact Quotient.sound' (Or.inl ⟨i, rfl⟩))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem ListBlank.cons_mk {Γ} [Inhabited Γ] (a : Γ) (l : List Γ) :
     ListBlank.cons a (ListBlank.mk l) = ListBlank.mk (a::l) :=
@@ -232,19 +232,19 @@ theorem ListBlank.cons_mk {Γ} [Inhabited Γ] (a : Γ) (l : List Γ) :
 
 @[simp]
 theorem ListBlank.head_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : ListBlank Γ, (l.cons a).head = a :=
-  Quotientₓ.ind' fun l => rfl
+  Quotient.ind' fun l => rfl
 
 @[simp]
 theorem ListBlank.tail_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : ListBlank Γ, (l.cons a).tail = l :=
-  Quotientₓ.ind' fun l => rfl
+  Quotient.ind' fun l => rfl
 
 /-- The `cons` and `head`/`tail` functions are mutually inverse, unlike in the case of `list` where
 this only holds for nonempty lists. -/
 @[simp]
 theorem ListBlank.cons_head_tail {Γ} [Inhabited Γ] : ∀ l : ListBlank Γ, l.tail.cons l.head = l :=
-  Quotientₓ.ind'
+  Quotient.ind'
     (by
-      refine' fun l => Quotientₓ.sound' (Or.inr _)
+      refine' fun l => Quotient.sound' (Or.inr _)
       cases l
       · exact ⟨1, rfl⟩
         
@@ -262,11 +262,11 @@ def ListBlank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
     (by
       rintro l _ ⟨i, rfl⟩
       simp only
-      cases' lt_or_leₓ _ _ with h h
+      cases' lt_or_le _ _ with h h
       · rw [List.inth_append _ _ _ h]
         
       rw [List.inth_eq_default _ h]
-      cases' le_or_ltₓ _ _ with h₂ h₂
+      cases' le_or_lt _ _ with h₂ h₂
       · rw [List.inth_eq_default _ h₂]
         
       rw [List.inth_eq_nth_le _ h₂, List.nth_le_append_right h, List.nth_le_repeat])
@@ -280,14 +280,14 @@ theorem ListBlank.nth_zero {Γ} [Inhabited Γ] (l : ListBlank Γ) : l.nth 0 = l.
   conv =>
   lhs
   rw [← list_blank.cons_head_tail l]
-  exact Quotientₓ.induction_on' l.tail fun l => rfl
+  exact Quotient.induction_on' l.tail fun l => rfl
 
 @[simp]
 theorem ListBlank.nth_succ {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : l.nth (n + 1) = l.tail.nth n := by
   conv =>
   lhs
   rw [← list_blank.cons_head_tail l]
-  exact Quotientₓ.induction_on' l.tail fun l => rfl
+  exact Quotient.induction_on' l.tail fun l => rfl
 
 @[ext]
 theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} : (∀ i, L₁.nth i = L₂.nth i) → L₁ = L₂ :=
@@ -297,12 +297,12 @@ theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} : (∀ i, L
       swap
       · exact (this fun i => (H i).symm).symm
         
-      refine' Quotientₓ.sound' (Or.inl ⟨l₂.length - l₁.length, _⟩)
+      refine' Quotient.sound' (Or.inl ⟨l₂.length - l₁.length, _⟩)
       refine' List.ext_le _ fun i h h₂ => Eq.symm _
       · simp only [add_tsub_cancel_of_le h, List.length_append, List.length_repeat]
         
       simp only [list_blank.nth_mk] at H
-      cases' lt_or_leₓ i l₁.length with h' h'
+      cases' lt_or_le i l₁.length with h' h'
       · simp only [List.nth_le_append _ h', List.nth_le_nth h, List.nth_le_nth h', ← List.inth_eq_nth_le _ h, ←
           List.inth_eq_nth_le _ h', H]
         
@@ -360,8 +360,8 @@ def ListBlank.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ'
   l.liftOn (fun l => ListBlank.mk (List.map f l))
     (by
       rintro l _ ⟨i, rfl⟩
-      refine' Quotientₓ.sound' (Or.inl ⟨i, _⟩)
-      simp only [pointed_map.map_pt, List.map_appendₓ, List.map_repeat])
+      refine' Quotient.sound' (Or.inl ⟨i, _⟩)
+      simp only [pointed_map.map_pt, List.map_append, List.map_repeat])
 
 @[simp]
 theorem ListBlank.map_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
@@ -374,7 +374,7 @@ theorem ListBlank.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedM
   conv =>
   lhs
   rw [← list_blank.cons_head_tail l]
-  exact Quotientₓ.induction_on' l fun a => rfl
+  exact Quotient.induction_on' l fun a => rfl
 
 @[simp]
 theorem ListBlank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) :
@@ -382,7 +382,7 @@ theorem ListBlank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedM
   conv =>
   lhs
   rw [← list_blank.cons_head_tail l]
-  exact Quotientₓ.induction_on' l fun a => rfl
+  exact Quotient.induction_on' l fun a => rfl
 
 @[simp]
 theorem ListBlank.map_cons {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) (a : Γ) :
@@ -415,7 +415,7 @@ theorem ListBlank.map_modify_nth {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (F : Po
   induction' n with n IH generalizing L <;>
     simp only [*, list_blank.head_map, list_blank.modify_nth, list_blank.map_cons, list_blank.tail_map]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Append a list on the left side of a list_blank. -/
 @[simp]
 def ListBlank.append {Γ} [Inhabited Γ] : List Γ → ListBlank Γ → ListBlank Γ
@@ -439,12 +439,12 @@ def ListBlank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : ListBlank Γ) (f
     (by
       rintro l _ ⟨i, rfl⟩
       cases' hf with n e
-      refine' Quotientₓ.sound' (Or.inl ⟨i * n, _⟩)
+      refine' Quotient.sound' (Or.inl ⟨i * n, _⟩)
       rw [List.bind_append, mul_comm]
       congr
       induction' i with i IH
       rfl
-      simp only [IH, e, List.repeat_add, Nat.mul_succ, add_commₓ, List.repeat_succ, List.cons_bindₓ])
+      simp only [IH, e, List.repeat_add, Nat.mul_succ, add_comm, List.repeat_succ, List.cons_bind])
 
 @[simp]
 theorem ListBlank.bind_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : List Γ) (f : Γ → List Γ') (hf) :
@@ -455,7 +455,7 @@ theorem ListBlank.bind_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : List Γ) 
 theorem ListBlank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l : ListBlank Γ) (f : Γ → List Γ') (hf) :
     (l.cons a).bind f hf = (l.bind f hf).append (f a) :=
   l.induction_on <| by
-    intro <;> simp only [list_blank.append_mk, list_blank.bind_mk, list_blank.cons_mk, List.cons_bindₓ]
+    intro <;> simp only [list_blank.append_mk, list_blank.bind_mk, list_blank.cons_mk, List.cons_bind]
 
 /-- The tape of a Turing machine is composed of a head element (which we imagine to be the
 current position of the head), together with two `list_blank`s denoting the portions of the tape
@@ -520,7 +520,8 @@ theorem Tape.mk'_right₀ {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L
 
 @[simp]
 theorem Tape.mk'_left_right₀ {Γ} [Inhabited Γ] (T : Tape Γ) : Tape.mk' T.left T.right₀ = T := by
-  cases T <;> simp only [tape.right₀, tape.mk', list_blank.head_cons, list_blank.tail_cons, eq_self_iff_true, and_selfₓ]
+  cases T <;>
+    simp only [tape.right₀, tape.mk', list_blank.head_cons, list_blank.tail_cons, eq_self_iff_true, and_self_iff]
 
 theorem Tape.exists_mk' {Γ} [Inhabited Γ] (T : Tape Γ) : ∃ L R, T = Tape.mk' L R :=
   ⟨_, _, (Tape.mk'_left_right₀ _).symm⟩
@@ -528,13 +529,13 @@ theorem Tape.exists_mk' {Γ} [Inhabited Γ] (T : Tape Γ) : ∃ L R, T = Tape.mk
 @[simp]
 theorem Tape.move_left_mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) :
     (Tape.mk' L R).move Dir.left = Tape.mk' L.tail (R.cons L.head) := by
-  simp only [tape.move, tape.mk', list_blank.head_cons, eq_self_iff_true, list_blank.cons_head_tail, and_selfₓ,
+  simp only [tape.move, tape.mk', list_blank.head_cons, eq_self_iff_true, list_blank.cons_head_tail, and_self_iff,
     list_blank.tail_cons]
 
 @[simp]
 theorem Tape.move_right_mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) :
     (Tape.mk' L R).move Dir.right = Tape.mk' (L.cons R.head) R.tail := by
-  simp only [tape.move, tape.mk', list_blank.head_cons, eq_self_iff_true, list_blank.cons_head_tail, and_selfₓ,
+  simp only [tape.move, tape.mk', list_blank.head_cons, eq_self_iff_true, list_blank.cons_head_tail, and_self_iff,
     list_blank.tail_cons]
 
 /-- Construct a tape from a left side and an inclusive right side. -/
@@ -603,7 +604,7 @@ theorem Tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
 @[simp]
 theorem Tape.write_mk' {Γ} [Inhabited Γ] (a b : Γ) (L R : ListBlank Γ) :
     (Tape.mk' L (R.cons a)).write b = Tape.mk' L (R.cons b) := by
-  simp only [tape.write, tape.mk', list_blank.head_cons, list_blank.tail_cons, eq_self_iff_true, and_selfₓ]
+  simp only [tape.write, tape.mk', list_blank.head_cons, list_blank.tail_cons, eq_self_iff_true, and_self_iff]
 
 /-- Apply a pointed map to a tape to change the alphabet. -/
 def Tape.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T : Tape Γ) : Tape Γ' :=
@@ -633,12 +634,12 @@ theorem Tape.map_move {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ
     (T.move d).map f = (T.map f).move d := by
   cases T <;>
     cases d <;>
-      simp only [tape.move, tape.map, list_blank.head_map, eq_self_iff_true, list_blank.map_cons, and_selfₓ,
+      simp only [tape.move, tape.map, list_blank.head_map, eq_self_iff_true, list_blank.map_cons, and_self_iff,
         list_blank.tail_map]
 
 theorem Tape.map_mk' {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : ListBlank Γ) :
     (Tape.mk' L R).map f = Tape.mk' (L.map f) (R.map f) := by
-  simp only [tape.mk', tape.map, list_blank.head_map, eq_self_iff_true, and_selfₓ, list_blank.tail_map]
+  simp only [tape.mk', tape.map, list_blank.head_map, eq_self_iff_true, and_self_iff, list_blank.tail_map]
 
 theorem Tape.map_mk₂ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : List Γ) :
     (Tape.mk₂ L R).map f = Tape.mk₂ (L.map f) (R.map f) := by simp only [tape.mk₂, tape.map_mk', list_blank.map_mk]
@@ -715,7 +716,7 @@ theorem Reaches₀.tail' {σ} {f : σ → Option σ} {a b c : σ} (h : Reaches�
 which is either terminal (meaning `a = b`) or where the next point also satisfies `C`, then it
 holds of any point where `eval f a` evaluates to `b`. This formalizes the notion that if
 `eval f a` evaluates to `b` then it reaches terminal state `b` in finitely many steps. -/
-@[elabAsElim]
+@[elab_as_elim]
 def evalInduction {σ} {f : σ → Option σ} {b : σ} {C : σ → Sort _} {a : σ} (h : b ∈ eval f a)
     (H : ∀ a, b ∈ eval f a → (∀ a', f a = some a' → C a') → C a) : C a :=
   Pfun.fixInduction h fun a' ha' h' => (H _ ha') fun b' e => h' _ <| Part.mem_some_iff.2 <| by rw [e] <;> rfl
@@ -757,7 +758,7 @@ theorem reaches_eval {σ} {f : σ → Option σ} {a b} (ab : Reaches f a b) : ev
     ⟨fun h =>
       let ⟨ac, c0⟩ := mem_eval.1 h
       mem_eval.2
-        ⟨(or_iff_left_of_impₓ fun cb => (eval_maximal h).1 cb ▸ refl_trans_gen.refl).1 (reaches_total ab ac), c0⟩,
+        ⟨(or_iff_left_of_imp fun cb => (eval_maximal h).1 cb ▸ refl_trans_gen.refl).1 (reaches_total ab ac), c0⟩,
       fun h =>
       let ⟨bc, c0⟩ := mem_eval.1 h
       mem_eval.2 ⟨ab.trans bc, c0⟩⟩
@@ -865,7 +866,7 @@ theorem frespects_eq {σ₁ σ₂} {f₂ : σ₂ → Option σ₂} {tr : σ₁ �
 
 theorem fun_respects {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂} :
     (Respects f₁ f₂ fun a b => tr a = b) ↔ ∀ ⦃a₁⦄, Frespects f₂ tr (tr a₁) (f₁ a₁) :=
-  forall_congrₓ fun a₁ => by cases f₁ a₁ <;> simp only [frespects, respects, exists_eq_left', forall_eq']
+  forall_congr fun a₁ => by cases f₁ a₁ <;> simp only [frespects, respects, exists_eq_left', forall_eq']
 
 theorem tr_eval' {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂)
     (H : Respects f₁ f₂ fun a b => tr a = b) (a₁) : eval f₂ (tr a₁) = tr <$> eval f₁ a₁ :=
@@ -903,7 +904,7 @@ to remove the infinite tail of blanks.)
 -/
 
 
-namespace TM0
+namespace TM0Cat
 
 section
 
@@ -987,11 +988,11 @@ def Supports (M : machine) (S : Set Λ) :=
 
 theorem step_supports (M : machine) {S} (ss : supports M S) : ∀ {c c' : cfg}, c' ∈ step M c → c.q ∈ S → c'.q ∈ S
   | ⟨q, T⟩, c', h₁, h₂ => by
-    rcases Option.map_eq_some'ₓ.1 h₁ with ⟨⟨q', a⟩, h, rfl⟩
+    rcases Option.map_eq_some'.1 h₁ with ⟨⟨q', a⟩, h, rfl⟩
     exact ss.2 h h₂
 
 theorem univ_supports (M : machine) : supports M Set.Univ :=
-  ⟨trivialₓ, fun q a q' s h₁ h₂ => trivialₓ⟩
+  ⟨trivial, fun q a q' s h₁ h₂ => trivial⟩
 
 end
 
@@ -1032,10 +1033,10 @@ theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
     rcases M q T.1 with (_ | ⟨q', d | a⟩)
     · rfl
       
-    · simp only [step, cfg.map, Option.map_some'ₓ, tape.map_move f₁]
+    · simp only [step, cfg.map, Option.map_some', tape.map_move f₁]
       rfl
       
-    · simp only [step, cfg.map, Option.map_some'ₓ, tape.map_write]
+    · simp only [step, cfg.map, Option.map_some', tape.map_write]
       rfl
       
 
@@ -1057,7 +1058,7 @@ theorem Machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} 
 
 end
 
-end TM0
+end TM0Cat
 
 /-!
 ## The TM1 model
@@ -1089,7 +1090,7 @@ before the halt as the output, and `move` and `write` etc. take 0 steps in this 
 -/
 
 
-namespace TM1
+namespace TM1Cat
 
 section
 
@@ -1155,7 +1156,7 @@ def step (M : Λ → stmt) : cfg → Option cfg
 
 /-- A set `S` of labels supports the statement `q` if all the `goto`
   statements in `q` refer only to other functions in `S`. -/
-def SupportsStmt (S : Finsetₓ Λ) : stmt → Prop
+def SupportsStmt (S : Finset Λ) : stmt → Prop
   | move d q => supports_stmt q
   | write a q => supports_stmt q
   | load s q => supports_stmt q
@@ -1166,36 +1167,35 @@ def SupportsStmt (S : Finsetₓ Λ) : stmt → Prop
 open Classical
 
 /-- The subterm closure of a statement. -/
-noncomputable def stmts₁ : stmt → Finsetₓ stmt
+noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(move d q) => insert Q (stmts₁ q)
   | Q@(write a q) => insert Q (stmts₁ q)
   | Q@(load s q) => insert Q (stmts₁ q)
   | Q@(branch p q₁ q₂) => insert Q (stmts₁ q₁ ∪ stmts₁ q₂)
   | Q => {Q}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
-theorem stmts₁_self {q} : q ∈ stmts₁ q := by
-  cases q <;> apply_rules [Finsetₓ.mem_insert_self, Finsetₓ.mem_singleton_self]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+theorem stmts₁_self {q} : q ∈ stmts₁ q := by cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ := by
   intro h₁₂ q₀ h₀₁
   induction' q₂ with _ q IH _ q IH _ q IH <;>
-    simp only [stmts₁] at h₁₂⊢ <;> simp only [Finsetₓ.mem_insert, Finsetₓ.mem_union, Finsetₓ.mem_singleton] at h₁₂
+    simp only [stmts₁] at h₁₂⊢ <;> simp only [Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h₁₂
   iterate 3 
   rcases h₁₂ with (rfl | h₁₂)
   · unfold stmts₁ at h₀₁
     exact h₀₁
     
-  · exact Finsetₓ.mem_insert_of_mem (IH h₁₂)
+  · exact Finset.mem_insert_of_mem (IH h₁₂)
     
   case branch p q₁ q₂ IH₁ IH₂ =>
   rcases h₁₂ with (rfl | h₁₂ | h₁₂)
   · unfold stmts₁ at h₀₁
     exact h₀₁
     
-  · exact Finsetₓ.mem_insert_of_mem (Finsetₓ.mem_union_left _ <| IH₁ h₁₂)
+  · exact Finset.mem_insert_of_mem (Finset.mem_union_left _ <| IH₁ h₁₂)
     
-  · exact Finsetₓ.mem_insert_of_mem (Finsetₓ.mem_union_right _ <| IH₂ h₁₂)
+  · exact Finset.mem_insert_of_mem (Finset.mem_union_right _ <| IH₂ h₁₂)
     
   case goto l =>
   subst h₁₂
@@ -1206,7 +1206,7 @@ theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ �
 
 theorem stmts₁_supports_stmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (hs : supports_stmt S q₂) : supports_stmt S q₁ := by
   induction' q₂ with _ q IH _ q IH _ q IH <;>
-    simp only [stmts₁, supports_stmt, Finsetₓ.mem_insert, Finsetₓ.mem_union, Finsetₓ.mem_singleton] at h hs
+    simp only [stmts₁, supports_stmt, Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h hs
   iterate 3 rcases h with (rfl | h) <;> [exact hs, exact IH h hs]
   case branch p q₁ q₂ IH₁ IH₂ =>
   rcases h with (rfl | h | h)
@@ -1220,11 +1220,11 @@ theorem stmts₁_supports_stmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (
 
 /-- The set of all statements in a turing machine, plus one extra value `none` representing the
 halt state. This is used in the TM1 to TM0 reduction. -/
-noncomputable def stmts (M : Λ → stmt) (S : Finsetₓ Λ) : Finsetₓ (Option stmt) :=
+noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt) :=
   (S.bUnion fun q => stmts₁ (M q)).insertNone
 
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) : some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
-  simp only [stmts, Finsetₓ.mem_insert_none, Finsetₓ.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 
 variable [Inhabited Λ]
@@ -1232,17 +1232,17 @@ variable [Inhabited Λ]
 /-- A set `S` of labels supports machine `M` if all the `goto`
   statements in the functions in `S` refer only to other functions
   in `S`. -/
-def Supports (M : Λ → stmt) (S : Finsetₓ Λ) :=
+def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀ q ∈ S, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
-  simp only [stmts, Finsetₓ.mem_insert_none, Finsetₓ.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 
 theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     ∀ {c c' : cfg}, c' ∈ step M c → c.l ∈ S.insertNone → c'.l ∈ S.insertNone
   | ⟨some l₁, v, T⟩, c', h₁, h₂ => by
-    replace h₂ := ss.2 _ (Finsetₓ.some_mem_insert_none.1 h₂)
+    replace h₂ := ss.2 _ (Finset.some_mem_insert_none.1 h₂)
     simp only [step, Option.mem_def] at h₁
     subst c'
     revert h₂
@@ -1255,7 +1255,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
       
     · exact IH₁ _ _ hs.1
       
-    case goto => exact Finsetₓ.some_mem_insert_none.2 (hs _ _)
+    case goto => exact Finset.some_mem_insert_none.2 (hs _ _)
     case halt => apply Multiset.mem_cons_self
 
 variable [Inhabited σ]
@@ -1272,7 +1272,7 @@ def eval (M : Λ → stmt) (l : List Γ) : Part (ListBlank Γ) :=
 
 end
 
-end TM1
+end TM1Cat
 
 /-!
 ## TM1 emulator in TM0
@@ -1293,7 +1293,7 @@ TM1 semantics.
 -/
 
 
-namespace TM1to0
+namespace TM1to0Cat
 
 section
 
@@ -1304,13 +1304,13 @@ parameter {Λ : Type _}[Inhabited Λ]
 parameter {σ : Type _}[Inhabited σ]
 
 -- mathport name: exprstmt₁
-local notation "stmt₁" => TM1.Stmt Γ Λ σ
+local notation "stmt₁" => TM1Cat.Stmt Γ Λ σ
 
 -- mathport name: exprcfg₁
-local notation "cfg₁" => TM1.Cfg Γ Λ σ
+local notation "cfg₁" => TM1Cat.Cfg Γ Λ σ
 
 -- mathport name: exprstmt₀
-local notation "stmt₀" => TM0.Stmt Γ
+local notation "stmt₀" => TM0Cat.Stmt Γ
 
 parameter (M : Λ → stmt₁)
 
@@ -1331,7 +1331,7 @@ def Λ' :=
 instance : Inhabited Λ' :=
   ⟨(some (M default), default)⟩
 
-open TM0.Stmt
+open TM0Cat.Stmt
 
 /-- The core TM1 → TM0 translation function. Here `s` is the current value on the tape, and the
 `stmt₁` is the TM1 statement to translate, with local state `v : σ`. We evaluate all regular
@@ -1346,10 +1346,10 @@ def trAux (s : Γ) : stmt₁ → σ → Λ' × stmt₀
   | TM1.stmt.halt, v => ((none, v), write s)
 
 -- mathport name: exprcfg₀
-local notation "cfg₀" => TM0.Cfg Γ Λ'
+local notation "cfg₀" => TM0Cat.Cfg Γ Λ'
 
 /-- The translated TM0 machine (given the TM1 machine input). -/
-def tr : TM0.Machine Γ Λ'
+def tr : TM0Cat.Machine Γ Λ'
   | (none, v), s => none
   | (some q, v), s => some (tr_aux s q v)
 
@@ -1357,7 +1357,7 @@ def tr : TM0.Machine Γ Λ'
 def trCfg : cfg₁ → cfg₀
   | ⟨l, v, T⟩ => ⟨(l.map M, v), T⟩
 
-theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cfg c₁ = c₂ :=
+theorem tr_respects : Respects (TM1Cat.step M) (TM0Cat.step tr) fun c₁ c₂ => tr_cfg c₁ = c₂ :=
   fun_respects.2 fun ⟨l₁, v, T⟩ => by
     cases' l₁ with l₁
     · exact rfl
@@ -1376,34 +1376,34 @@ theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cf
       
     iterate 2 exact trans_gen.single (congr_arg some (congr (congr_arg TM0.cfg.mk rfl) (tape.write_self T)))
 
-theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
+theorem tr_eval (l : List Γ) : TM0Cat.eval tr l = TM1Cat.eval M l :=
   (congr_arg _ (tr_eval' _ _ _ tr_respects ⟨some _, _, _⟩)).trans
     (by
       rw [Part.map_eq_map, Part.map_map, TM1.eval]
       congr with ⟨⟩
       rfl)
 
-variable [Fintypeₓ σ]
+variable [Fintype σ]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
-noncomputable def trStmts (S : Finsetₓ Λ) : Finsetₓ Λ' :=
-  TM1.stmts M S ×ˢ Finsetₓ.univ
+noncomputable def trStmts (S : Finset Λ) : Finset Λ' :=
+  TM1Cat.stmts M S ×ˢ Finset.univ
 
 open Classical
 
 attribute [local simp] TM1.stmts₁_self
 
-theorem tr_supports {S : Finsetₓ Λ} (ss : TM1.Supports M S) : TM0.Supports tr ↑(tr_stmts S) :=
-  ⟨Finsetₓ.mem_product.2
-      ⟨Finsetₓ.some_mem_insert_none.2 (Finsetₓ.mem_bUnion.2 ⟨_, ss.1, TM1.stmts₁_self⟩), Finsetₓ.mem_univ _⟩,
+theorem tr_supports {S : Finset Λ} (ss : TM1Cat.Supports M S) : TM0Cat.Supports tr ↑(tr_stmts S) :=
+  ⟨Finset.mem_product.2
+      ⟨Finset.some_mem_insert_none.2 (Finset.mem_bUnion.2 ⟨_, ss.1, TM1Cat.stmts₁_self⟩), Finset.mem_univ _⟩,
     fun q a q' s h₁ h₂ => by
     rcases q with ⟨_ | q, v⟩
     · cases h₁
       
     cases' q' with q' v'
-    simp only [tr_stmts, Finsetₓ.mem_coe, Finsetₓ.mem_product, Finsetₓ.mem_univ, and_trueₓ] at h₂⊢
+    simp only [tr_stmts, Finset.mem_coe, Finset.mem_product, Finset.mem_univ, and_true_iff] at h₂⊢
     cases q'
     · exact Multiset.mem_cons_self _ _
       
@@ -1415,35 +1415,35 @@ theorem tr_supports {S : Finsetₓ Λ} (ss : TM1.Supports M S) : TM0.Supports tr
     cases h₁
     refine' TM1.stmts_trans _ h₂
     unfold TM1.stmts₁
-    exact Finsetₓ.mem_insert_of_mem TM1.stmts₁_self
+    exact Finset.mem_insert_of_mem TM1.stmts₁_self
     case write b q =>
     cases h₁
     refine' TM1.stmts_trans _ h₂
     unfold TM1.stmts₁
-    exact Finsetₓ.mem_insert_of_mem TM1.stmts₁_self
+    exact Finset.mem_insert_of_mem TM1.stmts₁_self
     case load b q IH =>
     refine' IH (TM1.stmts_trans _ h₂) _ h₁ hs
     unfold TM1.stmts₁
-    exact Finsetₓ.mem_insert_of_mem TM1.stmts₁_self
+    exact Finset.mem_insert_of_mem TM1.stmts₁_self
     case branch p q₁ q₂ IH₁ IH₂ =>
     change cond (p a v) _ _ = ((some q', v'), s) at h₁
     cases p a v
     · refine' IH₂ (TM1.stmts_trans _ h₂) _ h₁ hs.2
       unfold TM1.stmts₁
-      exact Finsetₓ.mem_insert_of_mem (Finsetₓ.mem_union_right _ TM1.stmts₁_self)
+      exact Finset.mem_insert_of_mem (Finset.mem_union_right _ TM1.stmts₁_self)
       
     · refine' IH₁ (TM1.stmts_trans _ h₂) _ h₁ hs.1
       unfold TM1.stmts₁
-      exact Finsetₓ.mem_insert_of_mem (Finsetₓ.mem_union_left _ TM1.stmts₁_self)
+      exact Finset.mem_insert_of_mem (Finset.mem_union_left _ TM1.stmts₁_self)
       
     case goto l =>
     cases h₁
-    exact Finsetₓ.some_mem_insert_none.2 (Finsetₓ.mem_bUnion.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)
+    exact Finset.some_mem_insert_none.2 (Finset.mem_bUnion.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)
     case halt => cases h₁⟩
 
 end
 
-end TM1to0
+end TM1to0Cat
 
 /-!
 ## TM1(Γ) emulator in TM1(bool)
@@ -1469,24 +1469,24 @@ finitely long.
 -/
 
 
-namespace TM1to1
+namespace TM1to1Cat
 
-open TM1
+open TM1Cat
 
 section
 
 parameter {Γ : Type _}[Inhabited Γ]
 
-theorem exists_enc_dec [Fintypeₓ Γ] :
+theorem exists_enc_dec [Fintype Γ] :
     ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
       enc default = Vector.repeat false n ∧ ∀ a, dec (enc a) = a :=
   by
   letI := Classical.decEq Γ
-  let n := Fintypeₓ.card Γ
-  obtain ⟨F⟩ := Fintypeₓ.truncEquivFin Γ
-  let G : Finₓ n ↪ Finₓ n → Bool :=
+  let n := Fintype.card Γ
+  obtain ⟨F⟩ := Fintype.truncEquivFin Γ
+  let G : Fin n ↪ Fin n → Bool :=
     ⟨fun a b => a = b, fun a b h => of_to_bool_true <| (congr_fun h b).trans <| to_bool_tt rfl⟩
-  let H := (F.to_embedding.trans G).trans (Equivₓ.vectorEquivFin _ _).symm.toEmbedding
+  let H := (F.to_embedding.trans G).trans (Equiv.vectorEquivFin _ _).symm.toEmbedding
   classical
   let enc := H.set_value default (Vector.repeat ff n)
   exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.left_inverse_inv_fun enc.2⟩
@@ -1533,7 +1533,7 @@ then return to the original position with `n` moves to the left. -/
 def read (f : Γ → stmt') : stmt' :=
   read_aux n fun v => move Dir.left <| f (dec v)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Write a list of bools on the tape. -/
 def write : List Bool → stmt' → stmt'
   | [], q => q
@@ -1642,7 +1642,7 @@ theorem step_aux_write (q v a b L R) :
     stepAux (write (enc a).toList q) v (tr_tape' L (ListBlank.cons b R)) =
       stepAux q v (tr_tape' (ListBlank.cons a L) R) :=
   by
-  simp only [tr_tape', List.cons_bindₓ, List.append_assoc]
+  simp only [tr_tape', List.cons_bind, List.append_assoc]
   suffices
     ∀ {L' R'} (l₁ l₂ l₂' : List Bool) (e : l₂'.length = l₂.length),
       step_aux (write l₂ q) v (tape.mk' (list_blank.append l₁ L') (list_blank.append l₂' R')) =
@@ -1663,6 +1663,8 @@ parameter (encdec : ∀ a, dec (enc a) = a)
 
 include encdec
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr step_aux (read_aux l₂.length (λ v, f «expr ::ᵥ »(a, v))) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem step_aux_read (f v L R) : stepAux (read f) v (tr_tape' L R) = stepAux (f R.head) v (tr_tape' L R) := by
   suffices
     ∀ f,
@@ -1685,7 +1687,8 @@ theorem step_aux_read (f v L R) : stepAux (read f) v (tr_tape' L R) = stepAux (f
   induction' l₂ with a l₂ IH generalizing l₁
   · rfl
     
-  trans step_aux (read_aux l₂.length fun v => f (a ::ᵥ v)) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr step_aux (read_aux l₂.length (λ v, f «expr ::ᵥ »(a, v))) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · dsimp [read_aux, step_aux]
     simp
     cases a <;> rfl
@@ -1740,12 +1743,12 @@ omit enc0 encdec
 
 open Classical
 
-parameter [Fintypeₓ Γ]
+parameter [Fintype Γ]
 
 /-- The set of accessible `Λ'.write` machine states. -/
-noncomputable def writes : stmt₁ → Finsetₓ Λ'
+noncomputable def writes : stmt₁ → Finset Λ'
   | stmt.move d q => writes q
-  | stmt.write f q => (Finsetₓ.univ.Image fun a => Λ'.write a q) ∪ writes q
+  | stmt.write f q => (Finset.univ.Image fun a => Λ'.write a q) ∪ writes q
   | stmt.load f q => writes q
   | stmt.branch p q₁ q₂ => writes q₁ ∪ writes q₂
   | stmt.goto l => ∅
@@ -1753,11 +1756,11 @@ noncomputable def writes : stmt₁ → Finsetₓ Λ'
 
 /-- The set of accessible machine states, assuming that the input machine is supported on `S`,
 are the normal states embedded from `S`, plus all write states accessible from these states. -/
-noncomputable def trSupp (S : Finsetₓ Λ) : Finsetₓ Λ' :=
+noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
   S.bUnion fun l => insert (Λ'.normal l) (writes (M l))
 
 theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
-  ⟨Finsetₓ.mem_bUnion.2 ⟨_, ss.1, Finsetₓ.mem_insert_self _ _⟩, fun q h => by
+  ⟨Finset.mem_bUnion.2 ⟨_, ss.1, Finset.mem_insert_self _ _⟩, fun q h => by
     suffices
       ∀ q,
         supports_stmt S q →
@@ -1765,9 +1768,9 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
             supports_stmt (tr_supp M S) (tr_normal dec q) ∧
               ∀ q' ∈ writes q, supports_stmt (tr_supp M S) (tr enc dec M q')
       by
-      rcases Finsetₓ.mem_bUnion.1 h with ⟨l, hl, h⟩
-      have := this _ (ss.2 _ hl) fun q' hq => Finsetₓ.mem_bUnion.2 ⟨_, hl, Finsetₓ.mem_insert_of_mem hq⟩
-      rcases Finsetₓ.mem_insert.1 h with (rfl | h)
+      rcases Finset.mem_bUnion.1 h with ⟨l, hl, h⟩
+      have := this _ (ss.2 _ hl) fun q' hq => Finset.mem_bUnion.2 ⟨_, hl, Finset.mem_insert_of_mem hq⟩
+      rcases Finset.mem_insert.1 h with (rfl | h)
       exacts[this.1, this.2 _ h]
     intro q hs hw
     induction q
@@ -1778,7 +1781,7 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
     cases d <;> simp only [tr_normal, iterate, supports_stmt_move, IH]
     case write f q IH =>
     unfold writes at hw⊢
-    simp only [Finsetₓ.mem_image, Finsetₓ.mem_union, Finsetₓ.mem_univ, exists_propₓ, true_andₓ] at hw⊢
+    simp only [Finset.mem_image, Finset.mem_union, Finset.mem_univ, exists_prop, true_and_iff] at hw⊢
     replace IH := IH hs fun q hq => hw q (Or.inr hq)
     refine' ⟨(supports_stmt_read _) fun a _ s => hw _ (Or.inl ⟨_, rfl⟩), fun q' hq => _⟩
     rcases hq with (⟨a, q₂, rfl⟩ | hq)
@@ -1792,21 +1795,21 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
     refine' ⟨supports_stmt_read _ fun a => IH.1, IH.2⟩
     case branch p q₁ q₂ IH₁ IH₂ =>
     unfold writes at hw⊢
-    simp only [Finsetₓ.mem_union] at hw⊢
+    simp only [Finset.mem_union] at hw⊢
     replace IH₁ := IH₁ hs.1 fun q hq => hw q (Or.inl hq)
     replace IH₂ := IH₂ hs.2 fun q hq => hw q (Or.inr hq)
     exact ⟨supports_stmt_read _ fun a => ⟨IH₁.1, IH₂.1⟩, fun q => Or.ndrec (IH₁.2 _) (IH₂.2 _)⟩
     case goto l =>
     refine' ⟨_, fun _ => False.elim⟩
     refine' supports_stmt_read _ fun a _ s => _
-    exact Finsetₓ.mem_bUnion.2 ⟨_, hs _ _, Finsetₓ.mem_insert_self _ _⟩
+    exact Finset.mem_bUnion.2 ⟨_, hs _ _, Finset.mem_insert_self _ _⟩
     case halt =>
     refine' ⟨_, fun _ => False.elim⟩
     simp only [supports_stmt, supports_stmt_move, tr_normal]⟩
 
 end
 
-end TM1to1
+end TM1to1Cat
 
 /-!
 ## TM0 emulator in TM1
@@ -1823,7 +1826,7 @@ unreachable branch).
 -/
 
 
-namespace TM0to1
+namespace TM0to1Cat
 
 section
 
@@ -1836,23 +1839,23 @@ as `normal q` states, but the actual operation is split into two parts, a jump t
 followed by the action and a jump to the next `normal` state.  -/
 inductive Λ'
   | normal : Λ → Λ'
-  | act : TM0.Stmt Γ → Λ → Λ'
+  | act : TM0Cat.Stmt Γ → Λ → Λ'
 
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
 -- mathport name: exprcfg₀
-local notation "cfg₀" => TM0.Cfg Γ Λ
+local notation "cfg₀" => TM0Cat.Cfg Γ Λ
 
 -- mathport name: exprstmt₁
-local notation "stmt₁" => TM1.Stmt Γ Λ' Unit
+local notation "stmt₁" => TM1Cat.Stmt Γ Λ' Unit
 
 -- mathport name: exprcfg₁
-local notation "cfg₁" => TM1.Cfg Γ Λ' Unit
+local notation "cfg₁" => TM1Cat.Cfg Γ Λ' Unit
 
-parameter (M : TM0.Machine Γ Λ)
+parameter (M : TM0Cat.Machine Γ Λ)
 
-open TM1.Stmt
+open TM1Cat.Stmt
 
 /-- The program.  -/
 def tr : Λ' → stmt₁
@@ -1872,13 +1875,13 @@ def tr : Λ' → stmt₁
 def trCfg : cfg₀ → cfg₁
   | ⟨q, T⟩ => ⟨cond (M q T.1).isSome (some (Λ'.normal q)) none, (), T⟩
 
-theorem tr_respects : Respects (TM0.step M) (TM1.step tr) fun a b => tr_cfg a = b :=
+theorem tr_respects : Respects (TM0Cat.step M) (TM1Cat.step tr) fun a b => tr_cfg a = b :=
   fun_respects.2 fun ⟨q, T⟩ => by
     cases e : M q T.1
     · simp only [TM0.step, tr_cfg, e] <;> exact Eq.refl none
       
     cases' val with q' s
-    simp only [frespects, TM0.step, tr_cfg, e, Option.isSome, cond, Option.map_some'ₓ]
+    simp only [frespects, TM0.step, tr_cfg, e, Option.isSome, cond, Option.map_some']
     have : TM1.step (tr M) ⟨some (Λ'.act s q'), (), T⟩ = some ⟨some (Λ'.normal q'), (), TM0.step._match_1 T s⟩ := by
       cases' s with d a <;> rfl
     refine' trans_gen.head _ (trans_gen.head' this _)
@@ -1897,7 +1900,7 @@ theorem tr_respects : Respects (TM0.step M) (TM1.step tr) fun a b => tr_cfg a = 
 
 end
 
-end TM0to1
+end TM0to1Cat
 
 /-!
 ## The TM2 model
@@ -1927,7 +1930,7 @@ as the output stack.
 -/
 
 
-namespace TM2
+namespace TM2Cat
 
 section
 
@@ -1976,7 +1979,7 @@ instance Cfg.inhabited [Inhabited σ] : Inhabited cfg :=
 
 parameter {Γ Λ σ K}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The step function for the TM2 model. -/
 @[simp]
 def stepAux : stmt → σ → (∀ k, List (Γ k)) → cfg
@@ -1999,7 +2002,7 @@ def Reaches (M : Λ → stmt) : cfg → cfg → Prop :=
   ReflTransGen fun a b => b ∈ step M a
 
 /-- Given a set `S` of states, `support_stmt S q` means that `q` only jumps to states in `S`. -/
-def SupportsStmt (S : Finsetₓ Λ) : stmt → Prop
+def SupportsStmt (S : Finset Λ) : stmt → Prop
   | push k f q => supports_stmt q
   | peek k f q => supports_stmt q
   | pop k f q => supports_stmt q
@@ -2011,7 +2014,7 @@ def SupportsStmt (S : Finsetₓ Λ) : stmt → Prop
 open Classical
 
 /-- The set of subtree statements in a statement. -/
-noncomputable def stmts₁ : stmt → Finsetₓ stmt
+noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(push k f q) => insert Q (stmts₁ q)
   | Q@(peek k f q) => insert Q (stmts₁ q)
   | Q@(pop k f q) => insert Q (stmts₁ q)
@@ -2020,29 +2023,28 @@ noncomputable def stmts₁ : stmt → Finsetₓ stmt
   | Q@(goto l) => {Q}
   | Q@halt => {Q}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
-theorem stmts₁_self {q} : q ∈ stmts₁ q := by
-  cases q <;> apply_rules [Finsetₓ.mem_insert_self, Finsetₓ.mem_singleton_self]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+theorem stmts₁_self {q} : q ∈ stmts₁ q := by cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ := by
   intro h₁₂ q₀ h₀₁
   induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;>
-    simp only [stmts₁] at h₁₂⊢ <;> simp only [Finsetₓ.mem_insert, Finsetₓ.mem_singleton, Finsetₓ.mem_union] at h₁₂
+    simp only [stmts₁] at h₁₂⊢ <;> simp only [Finset.mem_insert, Finset.mem_singleton, Finset.mem_union] at h₁₂
   iterate 4 
   rcases h₁₂ with (rfl | h₁₂)
   · unfold stmts₁ at h₀₁
     exact h₀₁
     
-  · exact Finsetₓ.mem_insert_of_mem (IH h₁₂)
+  · exact Finset.mem_insert_of_mem (IH h₁₂)
     
   case branch f q₁ q₂ IH₁ IH₂ =>
   rcases h₁₂ with (rfl | h₁₂ | h₁₂)
   · unfold stmts₁ at h₀₁
     exact h₀₁
     
-  · exact Finsetₓ.mem_insert_of_mem (Finsetₓ.mem_union_left _ (IH₁ h₁₂))
+  · exact Finset.mem_insert_of_mem (Finset.mem_union_left _ (IH₁ h₁₂))
     
-  · exact Finsetₓ.mem_insert_of_mem (Finsetₓ.mem_union_right _ (IH₂ h₁₂))
+  · exact Finset.mem_insert_of_mem (Finset.mem_union_right _ (IH₂ h₁₂))
     
   case goto l =>
   subst h₁₂
@@ -2053,7 +2055,7 @@ theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ �
 
 theorem stmts₁_supports_stmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (hs : supports_stmt S q₂) : supports_stmt S q₁ := by
   induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;>
-    simp only [stmts₁, supports_stmt, Finsetₓ.mem_insert, Finsetₓ.mem_union, Finsetₓ.mem_singleton] at h hs
+    simp only [stmts₁, supports_stmt, Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h hs
   iterate 4 rcases h with (rfl | h) <;> [exact hs, exact IH h hs]
   case branch f q₁ q₂ IH₁ IH₂ =>
   rcases h with (rfl | h | h)
@@ -2066,28 +2068,28 @@ theorem stmts₁_supports_stmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (
   trivial
 
 /-- The set of statements accessible from initial set `S` of labels. -/
-noncomputable def stmts (M : Λ → stmt) (S : Finsetₓ Λ) : Finsetₓ (Option stmt) :=
+noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt) :=
   (S.bUnion fun q => stmts₁ (M q)).insertNone
 
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) : some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
-  simp only [stmts, Finsetₓ.mem_insert_none, Finsetₓ.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 
 variable [Inhabited Λ]
 
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
-def Supports (M : Λ → stmt) (S : Finsetₓ Λ) :=
+def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀ q ∈ S, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
-  simp only [stmts, Finsetₓ.mem_insert_none, Finsetₓ.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 
 theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     ∀ {c c' : cfg}, c' ∈ step M c → c.l ∈ S.insertNone → c'.l ∈ S.insertNone
   | ⟨some l₁, v, T⟩, c', h₁, h₂ => by
-    replace h₂ := ss.2 _ (Finsetₓ.some_mem_insert_none.1 h₂)
+    replace h₂ := ss.2 _ (Finset.some_mem_insert_none.1 h₂)
     simp only [step, Option.mem_def] at h₁
     subst c'
     revert h₂
@@ -2100,7 +2102,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
       
     · exact IH₁ _ _ hs.1
       
-    case goto => exact Finsetₓ.some_mem_insert_none.2 (hs _)
+    case goto => exact Finset.some_mem_insert_none.2 (hs _)
     case halt => apply Multiset.mem_cons_self
 
 variable [Inhabited σ]
@@ -2115,7 +2117,7 @@ def eval (M : Λ → stmt) (k) (L : List (Γ k)) : Part (List (Γ k)) :=
 
 end
 
-end TM2
+end TM2Cat
 
 /-!
 ## TM2 emulator in TM1
@@ -2156,7 +2158,7 @@ steps to run when emulated in TM1, where `m` is the length of the input.
 -/
 
 
-namespace TM2to1
+namespace TM2to1Cat
 
 -- A displaced lemma proved in unnecessary generality
 theorem stk_nth_val {K : Type _} {Γ : K → Type _} {L : ListBlank (∀ k, Option (Γ k))} {k S} (n)
@@ -2175,10 +2177,10 @@ parameter {Λ : Type _}[Inhabited Λ]
 parameter {σ : Type _}[Inhabited σ]
 
 -- mathport name: exprstmt₂
-local notation "stmt₂" => TM2.Stmt Γ Λ σ
+local notation "stmt₂" => TM2Cat.Stmt Γ Λ σ
 
 -- mathport name: exprcfg₂
-local notation "cfg₂" => TM2.Cfg Γ Λ σ
+local notation "cfg₂" => TM2Cat.Cfg Γ Λ σ
 
 -- [decidable_eq K]: Because K is a parameter, we cannot easily skip
 -- the decidable_eq assumption, and this is a local definition anyway so it's not important.
@@ -2191,7 +2193,7 @@ def Γ' :=
 instance Γ'.inhabited : Inhabited Γ' :=
   ⟨⟨false, fun _ => none⟩⟩
 
-instance Γ'.fintype [Fintypeₓ K] [∀ k, Fintypeₓ (Γ k)] : Fintypeₓ Γ' :=
+instance Γ'.fintype [Fintype K] [∀ k, Fintype (Γ k)] : Fintype Γ' :=
   Prod.fintype _ _
 
 /-- The bottom marker is fixed throughout the calculation, so we use the `add_bottom` function
@@ -2239,14 +2241,20 @@ section
 
 open StAct
 
+/- warning: turing.TM2to1.st_run -> Turing.TM2to1Cat.stRun is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} K] {Γ : K -> Type.{u_2}} {Λ : Type.{u_3}} [_inst_2 : Inhabited.{succ u_3} Λ] {σ : Type.{u_4}} [_inst_3 : Inhabited.{succ u_4} σ] {k : K}, (Turing.TM2to1Cat.StAct.{u_1 u_2 u_4} K _inst_1 Γ σ _inst_3 k) -> (Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ) -> (Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ)
+but is expected to have type
+  forall {K : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} K] {Γ : K -> Type.{u_2}} {Λ : Type.{u_3}} {σ : Type.{u_4}} [_inst_3 : Inhabited.{succ u_4} σ] {k : K}, (Turing.TM2to1Cat.StAct.{u_1 u_2 u_4} K _inst_1 Γ σ _inst_3 k) -> (Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ) -> (Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ)
+Case conversion may be inaccurate. Consider using '#align turing.TM2to1.st_run Turing.TM2to1Cat.stRunₓ'. -/
 -- [inhabited Λ]: as this is a local definition it is more trouble than
 -- it is worth to omit the typeclass assumption without breaking the parameters
 /-- The TM2 statement corresponding to a stack action. -/
 @[nolint unused_arguments]
-def stRunₓ {k : K} : st_act k → stmt₂ → stmt₂
-  | push f => TM2.Stmt.push k f
-  | peek f => TM2.Stmt.peek k f
-  | pop f => TM2.Stmt.pop k f
+def stRun {k : K} : st_act k → stmt₂ → stmt₂
+  | push f => TM2Cat.Stmt.push k f
+  | peek f => TM2Cat.Stmt.peek k f
+  | pop f => TM2Cat.Stmt.pop k f
 
 /-- The effect of a stack action on the local variables, given the value of the stack. -/
 def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
@@ -2254,21 +2262,27 @@ def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
   | peek f => f v l.head'
   | pop f => f v l.head'
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The effect of a stack action on the stack. -/
 def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
   | push f => f v::l
   | peek f => l
   | pop f => l.tail
 
+/- warning: turing.TM2to1.stmt_st_rec -> Turing.TM2to1Cat.stmtStRec is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} K] {Γ : K -> Type.{u_2}} {Λ : Type.{u_3}} [_inst_2 : Inhabited.{succ u_3} Λ] {σ : Type.{u_4}} [_inst_3 : Inhabited.{succ u_4} σ] {C : (Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ) -> Sort.{l}}, (forall (k : K) (s : Turing.TM2to1Cat.StAct.{u_1 u_2 u_4} K _inst_1 Γ σ _inst_3 k) (q : Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ), (C q) -> (C (Turing.TM2to1Cat.stRun.{u_1 u_2 u_3 u_4} K _inst_1 Γ Λ _inst_2 σ _inst_3 k s q))) -> (forall (a : σ -> σ) (q : Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ), (C q) -> (C (Turing.TM2Cat.Stmt.load.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ a q))) -> (forall (p : σ -> Bool) (q₁ : Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ) (q₂ : Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ), (C q₁) -> (C q₂) -> (C (Turing.TM2Cat.Stmt.branch.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ p q₁ q₂))) -> (forall (l : σ -> Λ), C (Turing.TM2Cat.Stmt.goto.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ l)) -> (C (Turing.TM2Cat.Stmt.halt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ)) -> (forall (n : Turing.TM2Cat.Stmt.{u_1 u_2 u_3 u_4} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ), C n)
+but is expected to have type
+  PUnit.{(imax (succ (succ u_1)) (succ u_1) (max (succ u_1) (succ (succ u_2))) (succ (succ u_3)) (succ u_3) (succ (succ u_4)) (succ u_4) (max (max (max (max (succ l) (succ u_1)) (succ u_2)) (succ u_3)) (succ u_4)) (imax (succ u_1) (max (succ u_2) (succ u_4)) (max (max (max (succ u_1) (succ u_2)) (succ u_3)) (succ u_4)) l) (imax (succ u_4) (max (max (max (succ u_1) (succ u_2)) (succ u_3)) (succ u_4)) l) (imax (succ u_4) (max (max (max (succ u_1) (succ u_2)) (succ u_3)) (succ u_4)) (max (max (max (succ u_1) (succ u_2)) (succ u_3)) (succ u_4)) l) (imax (max (succ u_3) (succ u_4)) l) l (max (max (max (succ u_1) (succ u_2)) (succ u_3)) (succ u_4)) l)}
+Case conversion may be inaccurate. Consider using '#align turing.TM2to1.stmt_st_rec Turing.TM2to1Cat.stmtStRecₓ'. -/
 /-- We have partitioned the TM2 statements into "stack actions", which require going to the end
 of the stack, and all other actions, which do not. This is a modified recursor which lumps the
 stack actions into one. -/
-@[elabAsElim]
-def stmtStRecₓ.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q) (IH : C q), C (st_run s q))
-    (H₂ : ∀ (a q) (IH : C q), C (TM2.Stmt.load a q))
-    (H₃ : ∀ (p q₁ q₂) (IH₁ : C q₁) (IH₂ : C q₂), C (TM2.Stmt.branch p q₁ q₂)) (H₄ : ∀ l, C (TM2.Stmt.goto l))
-    (H₅ : C TM2.Stmt.halt) : ∀ n, C n
+@[elab_as_elim]
+def stmtStRec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q) (IH : C q), C (st_run s q))
+    (H₂ : ∀ (a q) (IH : C q), C (TM2Cat.Stmt.load a q))
+    (H₃ : ∀ (p q₁ q₂) (IH₁ : C q₁) (IH₂ : C q₂), C (TM2Cat.Stmt.branch p q₁ q₂)) (H₄ : ∀ l, C (TM2Cat.Stmt.goto l))
+    (H₅ : C TM2Cat.Stmt.halt) : ∀ n, C n
   | TM2.stmt.push k f q => H₁ _ (push f) _ (stmt_st_rec q)
   | TM2.stmt.peek k f q => H₁ _ (peek f) _ (stmt_st_rec q)
   | TM2.stmt.pop k f q => H₁ _ (pop f) _ (stmt_st_rec q)
@@ -2277,8 +2291,8 @@ def stmtStRecₓ.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q)
   | TM2.stmt.goto l => H₄ _
   | TM2.stmt.halt => H₅
 
-theorem supports_run (S : Finsetₓ Λ) {k} (s : st_act k) (q) : TM2.SupportsStmt S (st_run s q) ↔ TM2.SupportsStmt S q :=
-  by rcases s with (_ | _ | _) <;> rfl
+theorem supports_run (S : Finset Λ) {k} (s : st_act k) (q) :
+    TM2Cat.SupportsStmt S (st_run s q) ↔ TM2Cat.SupportsStmt S q := by rcases s with (_ | _ | _) <;> rfl
 
 end
 
@@ -2296,12 +2310,12 @@ instance Λ'.inhabited : Inhabited Λ' :=
   ⟨normal default⟩
 
 -- mathport name: exprstmt₁
-local notation "stmt₁" => TM1.Stmt Γ' Λ' σ
+local notation "stmt₁" => TM1Cat.Stmt Γ' Λ' σ
 
 -- mathport name: exprcfg₁
-local notation "cfg₁" => TM1.Cfg Γ' Λ' σ
+local notation "cfg₁" => TM1Cat.Cfg Γ' Λ' σ
 
-open TM1.Stmt
+open TM1Cat.Stmt
 
 /-- The program corresponding to state transitions at the end of a stack. Here we start out just
 after the top of the stack, and should end just after the new top of the stack. -/
@@ -2312,7 +2326,7 @@ def trStAct {k} (q : stmt₁) : st_act k → stmt₁
     branch (fun a _ => a.1) (load (fun a s => f s none) q)
       (move Dir.left <| (load fun a s => f s (a.2 k)) <| write (fun a s => (a.1, update a.2 k none)) q)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The initial state for the TM2 emulator, given an initial TM2 state. All stacks start out empty
 except for the input stack, and the stack bottom mark is set at the head. -/
 def trInit (k) (L : List (Γ k)) : List Γ' :=
@@ -2320,7 +2334,8 @@ def trInit (k) (L : List (Γ k)) : List Γ' :=
   (true, L'.head.2)::L'.tail
 
 theorem step_run {k : K} (q v S) :
-    ∀ s : st_act k, TM2.stepAux (st_run s q) v S = TM2.stepAux q (st_var v (S k) s) (update S k (st_write v (S k) s))
+    ∀ s : st_act k,
+      TM2Cat.stepAux (st_run s q) v S = TM2Cat.stepAux q (st_var v (S k) s) (update S k (st_write v (S k) s))
   | st_act.push f => rfl
   | st_act.peek f => by unfold st_write <;> rw [Function.update_eq_self] <;> rfl
   | st_act.pop f => rfl
@@ -2343,7 +2358,7 @@ theorem tr_normal_run {k} (s q) : tr_normal (st_run s q) = goto fun _ _ => go k 
 open Classical
 
 /-- The set of machine states accessible from an initial TM2 statement. -/
-noncomputable def trStmts₁ : stmt₂ → Finsetₓ Λ'
+noncomputable def trStmts₁ : stmt₂ → Finset Λ'
   | TM2.stmt.push k f q => {go k (st_act.push f) q, ret q} ∪ tr_stmts₁ q
   | TM2.stmt.peek k f q => {go k (st_act.peek f) q, ret q} ∪ tr_stmts₁ q
   | TM2.stmt.pop k f q => {go k (st_act.pop f) q, ret q} ∪ tr_stmts₁ q
@@ -2361,8 +2376,8 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
     let S' := update S k Sk'
     ∃ L' : ListBlank (∀ k, Option (Γ k)),
       (∀ k, L'.map (proj k) = ListBlank.mk ((S' k).map some).reverse) ∧
-        TM1.stepAux (tr_st_act q o) v ((Tape.move Dir.right^[(S k).length]) (Tape.mk' ∅ (add_bottom L))) =
-          TM1.stepAux q v' ((Tape.move Dir.right^[(S' k).length]) (Tape.mk' ∅ (add_bottom L'))) :=
+        TM1Cat.stepAux (tr_st_act q o) v ((Tape.move Dir.right^[(S k).length]) (Tape.mk' ∅ (add_bottom L))) =
+          TM1Cat.stepAux q v' ((Tape.move Dir.right^[(S' k).length]) (Tape.mk' ∅ (add_bottom L'))) :=
   by
   dsimp only
   simp
@@ -2380,18 +2395,18 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
   · subst k'
     split_ifs <;> simp only [List.reverse_cons, Function.update_same, list_blank.nth_mk, List.map]
     · rw [List.inth_eq_nth_le, List.nth_le_append_right] <;>
-        simp only [h, List.nth_le_singleton, List.length_mapₓ, List.length_reverse, Nat.succ_pos', List.length_append,
+        simp only [h, List.nth_le_singleton, List.length_map, List.length_reverse, Nat.succ_pos', List.length_append,
           lt_add_iff_pos_right, List.length]
       
     rw [← proj_map_nth, hL, list_blank.nth_mk]
-    cases' lt_or_gt_of_neₓ h with h h
+    cases' lt_or_gt_of_ne h with h h
     · rw [List.inth_append]
-      simpa only [List.length_mapₓ, List.length_reverse] using h
+      simpa only [List.length_map, List.length_reverse] using h
       
-    · rw [gt_iff_ltₓ] at h
+    · rw [gt_iff_lt] at h
       rw [List.inth_eq_default, List.inth_eq_default] <;>
-        simp only [Nat.add_one_le_iff, h, List.length, le_of_ltₓ, List.length_reverse, List.length_append,
-          List.length_mapₓ]
+        simp only [Nat.add_one_le_iff, h, List.length, le_of_lt, List.length_reverse, List.length_append,
+          List.length_map]
       
     
   · split_ifs <;> rw [Function.update_noteq h', ← proj_map_nth, hL]
@@ -2432,17 +2447,17 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
       · rw [List.inth_eq_default]
         · rfl
           
-        rw [h, List.length_reverse, List.length_mapₓ]
+        rw [h, List.length_reverse, List.length_map]
         
       rw [← proj_map_nth, hL, list_blank.nth_mk, e, List.map, List.reverse_cons]
-      cases' lt_or_gt_of_neₓ h with h h
+      cases' lt_or_gt_of_ne h with h h
       · rw [List.inth_append]
-        simpa only [List.length_mapₓ, List.length_reverse] using h
+        simpa only [List.length_map, List.length_reverse] using h
         
-      · rw [gt_iff_ltₓ] at h
+      · rw [gt_iff_lt] at h
         rw [List.inth_eq_default, List.inth_eq_default] <;>
-          simp only [Nat.add_one_le_iff, h, List.length, le_of_ltₓ, List.length_reverse, List.length_append,
-            List.length_mapₓ]
+          simp only [Nat.add_one_le_iff, h, List.length, le_of_lt, List.length_reverse, List.length_append,
+            List.length_map]
         
       
     · split_ifs <;> rw [Function.update_noteq h', ← proj_map_nth, hL]
@@ -2463,7 +2478,7 @@ def tr : Λ' → stmt₁
       (move Dir.right <| goto fun _ _ => go k s q)
   | ret q => branch (fun a s => a.1) (tr_normal q) (move Dir.left <| goto fun _ _ => ret q)
 
-attribute [local pp_using_anonymous_constructor] Turing.TM1.Cfg
+attribute [local pp_using_anonymous_constructor] Turing.TM1Cat.Cfg
 
 /-- The relation between TM2 configurations and TM1 configurations of the TM2 emulator. -/
 inductive TrCfg : cfg₂ → cfg₁ → Prop
@@ -2472,16 +2487,16 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (n «expr ≤ » S.length)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :
-    Reaches₀ (TM1.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩
+    Reaches₀ (TM1Cat.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩
       ⟨some (go k o q), v, (Tape.move Dir.right^[n]) (Tape.mk' ∅ (add_bottom L))⟩ :=
   by
   induction' n with n IH
   · rfl
     
-  apply (IH (le_of_ltₓ H)).tail
+  apply (IH (le_of_lt H)).tail
   rw [iterate_succ_apply']
   simp only [TM1.step, TM1.step_aux, tr, tape.mk'_nth_nat, tape.move_right_n_head, add_bottom_nth_snd, Option.mem_def]
   rw [stk_nth_val _ hL, List.nth_le_nth]
@@ -2489,7 +2504,7 @@ theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, 
   rwa [List.length_reverse]
 
 theorem tr_respects_aux₃ {q v} {L : ListBlank (∀ k, Option (Γ k))} (n) :
-    Reaches₀ (TM1.step tr) ⟨some (ret q), v, (Tape.move Dir.right^[n]) (Tape.mk' ∅ (add_bottom L))⟩
+    Reaches₀ (TM1Cat.step tr) ⟨some (ret q), v, (Tape.move Dir.right^[n]) (Tape.mk' ∅ (add_bottom L))⟩
       ⟨some (ret q), v, Tape.mk' ∅ (add_bottom L)⟩ :=
   by
   induction' n with n IH
@@ -2506,19 +2521,19 @@ theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
       ∀ {v : σ} {S : ∀ k : K, List (Γ k)} {T : ListBlank (∀ k, Option (Γ k))},
         (∀ k, ListBlank.map (proj k) T = ListBlank.mk ((S k).map some).reverse) →
           ∃ b,
-            tr_cfg (TM2.stepAux q v S) b ∧
-              Reaches (TM1.step tr) (TM1.stepAux (tr_normal q) v (Tape.mk' ∅ (add_bottom T))) b) :
+            tr_cfg (TM2Cat.stepAux q v S) b ∧
+              Reaches (TM1Cat.step tr) (TM1Cat.stepAux (tr_normal q) v (Tape.mk' ∅ (add_bottom T))) b) :
     ∃ b,
-      tr_cfg (TM2.stepAux (st_run o q) v S) b ∧
-        Reaches (TM1.step tr) (TM1.stepAux (tr_normal (st_run o q)) v (Tape.mk' ∅ (add_bottom T))) b :=
+      tr_cfg (TM2Cat.stepAux (st_run o q) v S) b ∧
+        Reaches (TM1Cat.step tr) (TM1Cat.stepAux (tr_normal (st_run o q)) v (Tape.mk' ∅ (add_bottom T))) b :=
   by
   simp only [tr_normal_run, step_run]
-  have hgo := tr_respects_aux₁ M o q v (hT k) _ le_rflₓ
+  have hgo := tr_respects_aux₁ M o q v (hT k) _ le_rfl
   obtain ⟨T', hT', hrun⟩ := tr_respects_aux₂ hT o
   have hret := tr_respects_aux₃ M _
   have := hgo.tail' rfl
   rw [tr, TM1.step_aux, tape.move_right_n_head, tape.mk'_nth_nat, add_bottom_nth_snd, stk_nth_val _ (hT k),
-    List.nth_len_le (le_of_eqₓ (List.length_reverse _)), Option.isNone, cond, hrun, TM1.step_aux] at this
+    List.nth_len_le (le_of_eq (List.length_reverse _)), Option.isNone, cond, hrun, TM1.step_aux] at this
   obtain ⟨c, gc, rc⟩ := IH hT'
   refine' ⟨c, gc, (this.to₀.trans hret c (trans_gen.head' rfl _)).to_refl⟩
   rw [tr, TM1.step_aux, tape.mk'_head, add_bottom_head_fst]
@@ -2526,15 +2541,15 @@ theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
 
 attribute [local simp] respects TM2.step TM2.step_aux tr_normal
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident b, ",", ident c, ",", ident r, "⟩", ":", expr «expr∃ , »((b),
-    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]
-theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c₂ h => by
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident b, ",", ident c, ",", ident r, "⟩", ":", expr «expr∃ , »((b),
+    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]] -/
+theorem tr_respects : Respects (TM2Cat.step M) (TM1Cat.step tr) tr_cfg := fun c₁ c₂ h => by
   cases' h with l v S L hT
   clear h
   cases l
   · constructor
     
-  simp only [TM2.step, respects, Option.map_some'ₓ]
+  simp only [TM2.step, respects, Option.map_some']
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident b, \",\", ident c, \",\", ident r, \"⟩\", \":\", expr «expr∃ , »((b),\n    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]"
   · exact ⟨b, c, trans_gen.head' rfl r⟩
@@ -2554,11 +2569,11 @@ theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c�
   · exact ⟨_, ⟨_, hT⟩, refl_trans_gen.refl⟩
     
 
-theorem tr_cfg_init (k) (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_init k L)) := by
+theorem tr_cfg_init (k) (L : List (Γ k)) : tr_cfg (TM2Cat.init k L) (TM1Cat.init (tr_init k L)) := by
   rw [(_ : TM1.init _ = _)]
   · refine' ⟨list_blank.mk (L.reverse.map fun a => update default k (some a)), fun k' => _⟩
     refine' list_blank.ext fun i => _
-    rw [list_blank.map_mk, list_blank.nth_mk, List.inth_eq_iget_nth, List.map_mapₓ, (· ∘ ·), List.nth_map, proj,
+    rw [list_blank.map_mk, list_blank.nth_mk, List.inth_eq_iget_nth, List.map_map, (· ∘ ·), List.nth_map, proj,
       pointed_map.mk_val]
     by_cases k' = k
     · subst k'
@@ -2573,47 +2588,47 @@ theorem tr_cfg_init (k) (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_
   · rw [tr_init, TM1.init]
     dsimp only
     congr <;> cases L.reverse <;> try rfl
-    simp only [List.map_mapₓ, List.tail_cons, List.map]
+    simp only [List.map_map, List.tail_cons, List.map]
     rfl
     
 
-theorem tr_eval_dom (k) (L : List (Γ k)) : (TM1.eval tr (tr_init k L)).Dom ↔ (TM2.eval M k L).Dom :=
+theorem tr_eval_dom (k) (L : List (Γ k)) : (TM1Cat.eval tr (tr_init k L)).Dom ↔ (TM2Cat.eval M k L).Dom :=
   tr_eval_dom tr_respects (tr_cfg_init _ _)
 
-theorem tr_eval (k) (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (tr_init k L)) (H₂ : L₂ ∈ TM2.eval M k L) :
+theorem tr_eval (k) (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1Cat.eval tr (tr_init k L)) (H₂ : L₂ ∈ TM2Cat.eval M k L) :
     ∃ (S : ∀ k, List (Γ k))(L' : ListBlank (∀ k, Option (Γ k))),
       add_bottom L' = L₁ ∧ (∀ k, L'.map (proj k) = ListBlank.mk ((S k).map some).reverse) ∧ S k = L₂ :=
   by
   obtain ⟨c₁, h₁, rfl⟩ := (Part.mem_map_iff _).1 H₁
   obtain ⟨c₂, h₂, rfl⟩ := (Part.mem_map_iff _).1 H₂
-  obtain ⟨_, ⟨q, v, S, L', hT⟩, h₃⟩ := tr_eval (tr_respects M) (tr_cfg_init M k L) h₂
+  obtain ⟨_, ⟨L', hT⟩, h₃⟩ := tr_eval (tr_respects M) (tr_cfg_init M k L) h₂
   cases Part.mem_unique h₁ h₃
-  exact ⟨S, L', by simp only [tape.mk'_right₀], hT, rfl⟩
+  exact ⟨_, L', by simp only [tape.mk'_right₀], hT, rfl⟩
 
 /-- The support of a set of TM2 states in the TM2 emulator. -/
-noncomputable def trSupp (S : Finsetₓ Λ) : Finsetₓ Λ' :=
+noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
   S.bUnion fun l => insert (normal l) (tr_stmts₁ (M l))
 
-theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
-  ⟨Finsetₓ.mem_bUnion.2 ⟨_, ss.1, Finsetₓ.mem_insert.2 <| Or.inl rfl⟩, fun l' h => by
+theorem tr_supports {S} (ss : TM2Cat.Supports M S) : TM1Cat.Supports tr (tr_supp S) :=
+  ⟨Finset.mem_bUnion.2 ⟨_, ss.1, Finset.mem_insert.2 <| Or.inl rfl⟩, fun l' h => by
     suffices
       ∀ (q) (ss' : TM2.supports_stmt S q) (sub : ∀ x ∈ tr_stmts₁ q, x ∈ tr_supp M S),
         TM1.supports_stmt (tr_supp M S) (tr_normal q) ∧ ∀ l' ∈ tr_stmts₁ q, TM1.supports_stmt (tr_supp M S) (tr M l')
       by
-      rcases Finsetₓ.mem_bUnion.1 h with ⟨l, lS, h⟩
-      have := this _ (ss.2 l lS) fun x hx => Finsetₓ.mem_bUnion.2 ⟨_, lS, Finsetₓ.mem_insert_of_mem hx⟩
-      rcases Finsetₓ.mem_insert.1 h with (rfl | h) <;> [exact this.1, exact this.2 _ h]
+      rcases Finset.mem_bUnion.1 h with ⟨l, lS, h⟩
+      have := this _ (ss.2 l lS) fun x hx => Finset.mem_bUnion.2 ⟨_, lS, Finset.mem_insert_of_mem hx⟩
+      rcases Finset.mem_insert.1 h with (rfl | h) <;> [exact this.1, exact this.2 _ h]
     clear h l'
     refine' stmt_st_rec _ _ _ _ _ <;> intros
     · -- stack op
       rw [TM2to1.supports_run] at ss'
-      simp only [TM2to1.tr_stmts₁_run, Finsetₓ.mem_union, Finsetₓ.mem_insert, Finsetₓ.mem_singleton] at sub
+      simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at sub
       have hgo := sub _ (Or.inl <| Or.inl rfl)
       have hret := sub _ (Or.inl <| Or.inr rfl)
       cases' IH ss' fun x hx => sub x <| Or.inr hx with IH₁ IH₂
       refine' ⟨by simp only [tr_normal_run, TM1.supports_stmt] <;> intros <;> exact hgo, fun l h => _⟩
       rw [tr_stmts₁_run] at h
-      simp only [TM2to1.tr_stmts₁_run, Finsetₓ.mem_union, Finsetₓ.mem_insert, Finsetₓ.mem_singleton] at h
+      simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at h
       rcases h with (⟨rfl | rfl⟩ | h)
       · unfold TM1.supports_stmt TM2to1.tr
         rcases s with (_ | _ | _)
@@ -2636,25 +2651,25 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
       
     · -- branch
       unfold TM2to1.tr_stmts₁ at sub
-      cases' IH₁ ss'.1 fun x hx => sub x <| Finsetₓ.mem_union_left _ hx with IH₁₁ IH₁₂
-      cases' IH₂ ss'.2 fun x hx => sub x <| Finsetₓ.mem_union_right _ hx with IH₂₁ IH₂₂
+      cases' IH₁ ss'.1 fun x hx => sub x <| Finset.mem_union_left _ hx with IH₁₁ IH₁₂
+      cases' IH₂ ss'.2 fun x hx => sub x <| Finset.mem_union_right _ hx with IH₂₁ IH₂₂
       refine' ⟨⟨IH₁₁, IH₂₁⟩, fun l h => _⟩
       rw [tr_stmts₁] at h
-      rcases Finsetₓ.mem_union.1 h with (h | h) <;> [exact IH₁₂ _ h, exact IH₂₂ _ h]
+      rcases Finset.mem_union.1 h with (h | h) <;> [exact IH₁₂ _ h, exact IH₂₂ _ h]
       
     · -- goto
       rw [tr_stmts₁]
       unfold TM2to1.tr_normal TM1.supports_stmt
       unfold TM2.supports_stmt at ss'
-      exact ⟨fun _ v => Finsetₓ.mem_bUnion.2 ⟨_, ss' v, Finsetₓ.mem_insert_self _ _⟩, fun _ => False.elim⟩
+      exact ⟨fun _ v => Finset.mem_bUnion.2 ⟨_, ss' v, Finset.mem_insert_self _ _⟩, fun _ => False.elim⟩
       
-    · exact ⟨trivialₓ, fun _ => False.elim⟩
+    · exact ⟨trivial, fun _ => False.elim⟩
       ⟩
 
 -- halt
 end
 
-end TM2to1
+end TM2to1Cat
 
 end Turing
 

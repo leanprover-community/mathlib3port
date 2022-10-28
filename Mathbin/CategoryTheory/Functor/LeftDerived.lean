@@ -64,10 +64,10 @@ def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
 -- TODO the left derived functors are additive (and linear when `F` is linear)
 /-- We can compute a left derived functor using a chosen projective resolution. -/
 @[simps]
-def Functor.leftDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C} (P : ProjectiveResolution X) :
+def Functor.leftDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C} (P : ProjectiveResolutionCat X) :
     (F.leftDerived n).obj X ≅ (homologyFunctor D _ n).obj ((F.mapHomologicalComplex _).obj P.complex) :=
   (HomotopyCategory.homologyFunctor D _ n).mapIso
-      (HomotopyCategory.isoOfHomotopyEquiv (F.mapHomotopyEquiv (ProjectiveResolution.homotopyEquiv _ P))) ≪≫
+      (HomotopyCategory.isoOfHomotopyEquiv (F.mapHomotopyEquiv (ProjectiveResolutionCat.homotopyEquiv _ P))) ≪≫
     (HomotopyCategory.homologyFactors D _ n).app _
 
 section
@@ -78,7 +78,7 @@ variable [HasZeroObject D]
 @[simps]
 def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Projective X] :
     (F.leftDerived 0).obj X ≅ F.obj X :=
-  F.leftDerivedObjIso 0 (ProjectiveResolution.self X) ≪≫
+  F.leftDerivedObjIso 0 (ProjectiveResolutionCat.self X) ≪≫
     (homologyFunctor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (ChainComplex.homologyFunctor0Single₀ D).app (F.obj X)
 
@@ -88,7 +88,7 @@ open ZeroObject
 @[simps inv]
 def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X : C) [Projective X] :
     (F.leftDerived (n + 1)).obj X ≅ 0 :=
-  F.leftDerivedObjIso (n + 1) (ProjectiveResolution.self X) ≪≫
+  F.leftDerivedObjIso (n + 1) (ProjectiveResolutionCat.self X) ≪≫
     (homologyFunctor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (ChainComplex.homologyFunctorSuccSingle₀ D n).app (F.obj X) ≪≫ (Functor.zero_obj _).isoZero
 
@@ -97,8 +97,9 @@ end
 /-- We can compute a left derived functor on a morphism using a lift of that morphism
 to a chain map between chosen projective resolutions.
 -/
-theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C} (f : X ⟶ Y) {P : ProjectiveResolution X}
-    {Q : ProjectiveResolution Y} (g : P.complex ⟶ Q.complex) (w : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) :
+theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C} (f : X ⟶ Y)
+    {P : ProjectiveResolutionCat X} {Q : ProjectiveResolutionCat Y} (g : P.complex ⟶ Q.complex)
+    (w : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) :
     (F.leftDerived n).map f =
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫ (F.leftDerivedObjIso n Q).inv :=
@@ -142,7 +143,7 @@ theorem NatTrans.left_derived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [
 using a chosen projective resolution.
 -/
 theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G) (n : ℕ) {X : C}
-    (P : ProjectiveResolution X) :
+    (P : ProjectiveResolutionCat X) :
     (NatTrans.leftDerived α n).app X =
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.complex) ≫

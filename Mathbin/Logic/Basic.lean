@@ -30,7 +30,7 @@ section Miscellany
 /- We add the `inline` attribute to optimize VM computation using these declarations. For example,
   `if p ∧ q then ... else ...` will not evaluate the decidability of `q` if `p` is false. -/
 attribute [inline]
-  And.decidable Or.decidable Decidable.false Xorₓ.decidable Iff.decidable Decidable.true Implies.decidable Not.decidable Ne.decidable Bool.decidableEq Decidable.toBool
+  And.decidable Or.decidable Decidable.false Xor'.decidable Iff.decidable Decidable.true Implies.decidable Not.decidable Ne.decidable Bool.decidableEq Decidable.decide
 
 attribute [simp] cast_eq cast_heq
 
@@ -94,7 +94,7 @@ instance Subtype.subsingleton (α : Sort _) [Subsingleton α] (p : α → Prop) 
    most simp lemmas are stated with respect to simple coercions and will not match when
    part of a chain. -/
 @[simp]
-theorem coe_coe {α β γ} [Coe α β] [CoeTₓ β γ] (a : α) : (a : γ) = (a : β) :=
+theorem coe_coe {α β γ} [Coe α β] [CoeT β γ] (a : α) : (a : γ) = (a : β) :=
   rfl
 
 theorem coe_fn_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeFun γ δ] (x : α) : @coeFn α _ _ x = @coeFn β _ _ x :=
@@ -156,15 +156,27 @@ theorem coe_sort_coe_base {α β γ} [Coe α β] [CoeSort β γ] (x : α) : @coe
 inductive Pempty.{u} : Sort u
   deriving DecidableEq
 
+/- warning: pempty.elim -> Pempty.elim is a dubious translation:
+lean 3 declaration is
+  forall {C : Sort.{u_1}}, Pempty.{u_2} -> C
+but is expected to have type
+  forall {C : Sort.{_aux_param_1}}, Pempty.{_aux_param_0} -> C
+Case conversion may be inaccurate. Consider using '#align pempty.elim Pempty.elimₓ'. -/
 /-- Ex falso, the nondependent eliminator for the `pempty` type. -/
-def Pempty.elimₓ {C : Sort _} : Pempty → C :=
+def Pempty.elim {C : Sort _} : Pempty → C :=
   fun.
 
 instance subsingleton_pempty : Subsingleton Pempty :=
   ⟨fun a => a.elim⟩
 
+/- warning: not_nonempty_pempty -> not_nonempty_pempty is a dubious translation:
+lean 3 declaration is
+  Not (Nonempty.{u_1} Pempty.{u_1})
+but is expected to have type
+  Not (Nonempty.{u_1} PEmpty.{u_1})
+Case conversion may be inaccurate. Consider using '#align not_nonempty_pempty not_nonempty_pemptyₓ'. -/
 @[simp]
-theorem not_nonempty_pemptyₓ : ¬Nonempty Pempty := fun ⟨h⟩ => h.elim
+theorem not_nonempty_pempty : ¬Nonempty Pempty := fun ⟨h⟩ => h.elim
 
 theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g) (h₂ : HEq x y) : f x = g y :=
   by
@@ -182,12 +194,12 @@ theorem ULift.down_injective {α : Sort _} : Function.Injective (@ULift.down α)
 theorem ULift.down_inj {α : Sort _} {a b : ULift α} : a.down = b.down ↔ a = b :=
   ⟨fun h => ULift.down_injective h, fun h => by rw [h]⟩
 
-theorem Plift.down_injective {α : Sort _} : Function.Injective (@Plift.down α)
+theorem PLift.down_injective {α : Sort _} : Function.Injective (@PLift.down α)
   | ⟨a⟩, ⟨b⟩, rfl => rfl
 
 @[simp]
-theorem Plift.down_inj {α : Sort _} {a b : Plift α} : a.down = b.down ↔ a = b :=
-  ⟨fun h => Plift.down_injective h, fun h => by rw [h]⟩
+theorem PLift.down_inj {α : Sort _} {a b : PLift α} : a.down = b.down ↔ a = b :=
+  ⟨fun h => PLift.down_injective h, fun h => by rw [h]⟩
 
 -- missing [symm] attribute for ne in core.
 attribute [symm] Ne.symm
@@ -203,7 +215,7 @@ theorem eq_iff_eq_cancel_left {b c : α} : (∀ {a}, a = b ↔ a = c) ↔ b = c 
 theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b :=
   ⟨fun h => by rw [h], fun h a => by rw [h]⟩
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`out] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 
@@ -245,7 +257,7 @@ def Function.swap₂ {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : 
 /-- If `x : α . tac_name` then `x.out : α`. These are definitionally equal, but this can
 nevertheless be useful for various reasons, e.g. to apply further projection notation or in an
 argument to `simp`. -/
-def AutoParam.out {α : Sort _} {n : Name} (x : AutoParam α n) : α :=
+def autoParam'.out {α : Sort _} {n : Name} (x : autoParam' α n) : α :=
   x
 
 /-- If `x : α := d` then `x.out : α`. These are definitionally equal, but this can
@@ -264,7 +276,11 @@ open Function
 
 
 theorem false_ne_true : False ≠ True
-  | h => h.symm ▸ trivialₓ
+  | h => h.symm ▸ trivial
+
+theorem eq_true_iff {a : Prop} : (a = True) = a :=
+  have : (a ↔ True) = a := propext (iff_true_iff a)
+  Eq.subst (@iff_eq_eq a True) this
 
 section Propositional
 
@@ -294,12 +310,12 @@ theorem imp_self : a → a ↔ True :=
   iff_true_intro id
 
 theorem Iff.imp (h₁ : a ↔ b) (h₂ : c ↔ d) : a → c ↔ b → d :=
-  imp_congrₓ h₁ h₂
+  imp_congr h₁ h₂
 
 @[simp]
 theorem eq_true_eq_id : Eq True = id := by
   funext
-  simp only [true_iffₓ, id.def, iff_selfₓ, eq_iff_iff]
+  simp only [true_iff_iff, id.def, iff_self_iff, eq_iff_iff]
 
 theorem imp_intro {α β : Prop} (h : α) : β → α := fun _ => h
 
@@ -317,28 +333,37 @@ theorem iff_def : (a ↔ b) ↔ (a → b) ∧ (b → a) :=
   iff_iff_implies_and_implies _ _
 
 theorem iff_def' : (a ↔ b) ↔ (b → a) ∧ (a → b) :=
-  iff_def.trans And.comm
+  iff_def.trans and_comm
 
-theorem imp_true_iff {α : Sort _} : α → True ↔ True :=
-  iff_true_intro fun _ => trivialₓ
-
-theorem imp_iff_rightₓ (ha : a) : a → b ↔ b :=
+/- warning: imp_iff_right -> imp_iff_right is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop}, a -> (Iff (a -> b) b)
+but is expected to have type
+  forall {b : Prop} {a : Prop}, a -> (Iff (a -> b) b)
+Case conversion may be inaccurate. Consider using '#align imp_iff_right imp_iff_rightₓ'. -/
+theorem imp_iff_right (ha : a) : a → b ↔ b :=
   ⟨fun f => f ha, imp_intro⟩
 
-theorem imp_iff_notₓ (hb : ¬b) : a → b ↔ ¬a :=
-  imp_congr_rightₓ fun _ => iff_false_intro hb
+/- warning: imp_iff_not -> imp_iff_not is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop}, (Not b) -> (Iff (a -> b) (Not a))
+but is expected to have type
+  forall {b : Prop} {a : Prop}, (Not b) -> (Iff (a -> b) (Not a))
+Case conversion may be inaccurate. Consider using '#align imp_iff_not imp_iff_notₓ'. -/
+theorem imp_iff_not (hb : ¬b) : a → b ↔ ¬a :=
+  imp_congr_right fun _ => iff_false_intro hb
 
 theorem Decidable.imp_iff_right_iff [Decidable a] : (a → b ↔ b) ↔ a ∨ b :=
   ⟨fun H => (Decidable.em a).imp_right fun ha' => H.1 fun ha => (ha' ha).elim, fun H =>
-    (H.elim imp_iff_rightₓ) fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
+    (H.elim imp_iff_right) fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
 
 @[simp]
 theorem imp_iff_right_iff : (a → b ↔ b) ↔ a ∨ b :=
   Decidable.imp_iff_right_iff
 
 theorem Decidable.and_or_imp [Decidable a] : a ∧ b ∨ (a → c) ↔ a → b ∨ c :=
-  if ha : a then by simp only [ha, true_andₓ, true_implies_iff]
-  else by simp only [ha, false_orₓ, false_andₓ, false_implies_iff]
+  if ha : a then by simp only [ha, true_and_iff, true_imp_iff]
+  else by simp only [ha, false_or_iff, false_and_iff, false_imp_iff]
 
 @[simp]
 theorem and_or_imp : a ∧ b ∨ (a → c) ↔ a → b ∨ c :=
@@ -499,34 +524,46 @@ theorem Iff.not_right (h : ¬a ↔ b) : a ↔ ¬b :=
 
 
 @[simp]
-theorem xor_true : Xorₓ True = Not :=
-  funext fun a => by simp [Xorₓ]
+theorem xor_true : Xor' True = Not :=
+  funext fun a => by simp [Xor']
 
 @[simp]
-theorem xor_false : Xorₓ False = id :=
-  funext fun a => by simp [Xorₓ]
+theorem xor_false : Xor' False = id :=
+  funext fun a => by simp [Xor']
 
-theorem xor_comm (a b) : Xorₓ a b = Xorₓ b a := by simp [Xorₓ, and_comm, or_comm]
+theorem xor_comm (a b) : Xor' a b = Xor' b a := by simp [Xor', and_comm', or_comm']
 
-instance : IsCommutative Prop Xorₓ :=
+instance : IsCommutative Prop Xor' :=
   ⟨xor_comm⟩
 
 @[simp]
-theorem xor_self (a : Prop) : Xorₓ a a = False := by simp [Xorₓ]
+theorem xor_self (a : Prop) : Xor' a a = False := by simp [Xor']
 
 /-! ### Declarations about `and` -/
 
 
 theorem Iff.and (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∧ c ↔ b ∧ d :=
-  and_congrₓ h₁ h₂
+  and_congr h₁ h₂
 
-theorem and_congr_leftₓ (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
-  And.comm.trans <| (and_congr_right h).trans And.comm
+/- warning: and_congr_left -> and_congr_left is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, (c -> (Iff a b)) -> (Iff (And a c) (And b c))
+but is expected to have type
+  forall {c : Prop} {a : Prop} {b : Prop}, (c -> (Iff a b)) -> (Iff (And a c) (And b c))
+Case conversion may be inaccurate. Consider using '#align and_congr_left and_congr_leftₓ'. -/
+theorem and_congr_left (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
+  and_comm.trans <| (and_congr_right h).trans and_comm
 
 theorem and_congr_left' (h : a ↔ b) : a ∧ c ↔ b ∧ c :=
   h.And Iff.rfl
 
-theorem and_congr_right'ₓ (h : b ↔ c) : a ∧ b ↔ a ∧ c :=
+/- warning: and_congr_right' -> and_congr_right' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, (Iff b c) -> (Iff (And a b) (And a c))
+but is expected to have type
+  forall {b : Prop} {c : Prop} {a : Prop}, (Iff b c) -> (Iff (And a b) (And a c))
+Case conversion may be inaccurate. Consider using '#align and_congr_right' and_congr_right'ₓ'. -/
+theorem and_congr_right' (h : b ↔ c) : a ∧ b ↔ a ∧ c :=
   Iff.rfl.And h
 
 theorem not_and_of_not_left (b : Prop) : ¬a → ¬(a ∧ b) :=
@@ -536,35 +573,41 @@ theorem not_and_of_not_right (a : Prop) {b : Prop} : ¬b → ¬(a ∧ b) :=
   mt And.right
 
 theorem And.imp_left (h : a → b) : a ∧ c → b ∧ c :=
-  And.impₓ h id
+  And.imp h id
 
 theorem And.imp_right (h : a → b) : c ∧ a → c ∧ b :=
-  And.impₓ id h
+  And.imp id h
 
-theorem And.right_comm : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b := by simp only [And.left_comm, And.comm]
+theorem And.right_comm : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b := by simp only [and_left_comm, and_comm]
 
 theorem and_and_and_comm (a b c d : Prop) : (a ∧ b) ∧ c ∧ d ↔ (a ∧ c) ∧ b ∧ d := by
-  rw [← and_assocₓ, @And.right_comm a, and_assocₓ]
+  rw [← and_assoc', @And.right_comm a, and_assoc']
 
-theorem and_and_distrib_left (a b c : Prop) : a ∧ b ∧ c ↔ (a ∧ b) ∧ a ∧ c := by rw [and_and_and_comm, and_selfₓ]
+theorem and_and_distrib_left (a b c : Prop) : a ∧ b ∧ c ↔ (a ∧ b) ∧ a ∧ c := by rw [and_and_and_comm, and_self_iff]
 
-theorem and_and_distrib_right (a b c : Prop) : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b ∧ c := by rw [and_and_and_comm, and_selfₓ]
+theorem and_and_distrib_right (a b c : Prop) : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b ∧ c := by rw [and_and_and_comm, and_self_iff]
 
-theorem and_rotate : a ∧ b ∧ c ↔ b ∧ c ∧ a := by simp only [And.left_comm, And.comm]
+theorem and_rotate : a ∧ b ∧ c ↔ b ∧ c ∧ a := by simp only [and_left_comm, and_comm]
 
-theorem And.rotateₓ : a ∧ b ∧ c → b ∧ c ∧ a :=
+/- warning: and.rotate -> And.rotate is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, (And a (And b c)) -> (And b (And c a))
+but is expected to have type
+  forall {a : Prop} {b : Prop} {c : Prop}, Iff (And a (And b c)) (And b (And c a))
+Case conversion may be inaccurate. Consider using '#align and.rotate And.rotateₓ'. -/
+theorem And.rotate : a ∧ b ∧ c → b ∧ c ∧ a :=
   and_rotate.1
-
-theorem and_not_self_iff (a : Prop) : a ∧ ¬a ↔ False :=
-  Iff.intro (fun h => h.right h.left) fun h => h.elim
-
-theorem not_and_self_iff (a : Prop) : ¬a ∧ a ↔ False :=
-  Iff.intro (fun ⟨hna, ha⟩ => hna ha) False.elim
 
 theorem and_iff_left_of_imp {a b : Prop} (h : a → b) : a ∧ b ↔ a :=
   Iff.intro And.left fun ha => ⟨ha, h ha⟩
 
-theorem and_iff_right_of_impₓ {a b : Prop} (h : b → a) : a ∧ b ↔ b :=
+/- warning: and_iff_right_of_imp -> and_iff_right_of_imp is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop}, (b -> a) -> (Iff (And a b) b)
+but is expected to have type
+  forall {b : Prop} {a : Prop}, (b -> a) -> (Iff (And a b) b)
+Case conversion may be inaccurate. Consider using '#align and_iff_right_of_imp and_iff_right_of_impₓ'. -/
+theorem and_iff_right_of_imp {a b : Prop} (h : b → a) : a ∧ b ↔ b :=
   Iff.intro And.right fun hb => ⟨h hb, hb⟩
 
 @[simp]
@@ -573,20 +616,26 @@ theorem and_iff_left_iff_imp {a b : Prop} : (a ∧ b ↔ a) ↔ a → b :=
 
 @[simp]
 theorem and_iff_right_iff_imp {a b : Prop} : (a ∧ b ↔ b) ↔ b → a :=
-  ⟨fun h ha => (h.2 ha).1, and_iff_right_of_impₓ⟩
+  ⟨fun h ha => (h.2 ha).1, and_iff_right_of_imp⟩
 
 @[simp]
 theorem iff_self_and {p q : Prop} : (p ↔ p ∧ q) ↔ p → q := by rw [@Iff.comm p, and_iff_left_iff_imp]
 
 @[simp]
-theorem iff_and_self {p q : Prop} : (p ↔ q ∧ p) ↔ p → q := by rw [and_comm, iff_self_and]
+theorem iff_and_self {p q : Prop} : (p ↔ q ∧ p) ↔ p → q := by rw [and_comm', iff_self_and]
 
 @[simp]
 theorem And.congr_right_iff : (a ∧ b ↔ a ∧ c) ↔ a → (b ↔ c) :=
   ⟨fun h ha => by simp [ha] at h <;> exact h, and_congr_right⟩
 
+/- warning: and.congr_left_iff -> And.congr_left_iff is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, Iff (Iff (And a c) (And b c)) (c -> (Iff a b))
+but is expected to have type
+  forall {a : Prop} {c : Prop} {b : Prop}, Iff (Iff (And a c) (And b c)) (c -> (Iff a b))
+Case conversion may be inaccurate. Consider using '#align and.congr_left_iff And.congr_left_iffₓ'. -/
 @[simp]
-theorem And.congr_left_iffₓ : (a ∧ c ↔ b ∧ c) ↔ c → (a ↔ b) := by simp only [And.comm, ← And.congr_right_iff]
+theorem And.congr_left_iff : (a ∧ c ↔ b ∧ c) ↔ c → (a ↔ b) := by simp only [and_comm, ← And.congr_right_iff]
 
 @[simp]
 theorem and_self_left : a ∧ a ∧ b ↔ a ∧ b :=
@@ -600,30 +649,42 @@ theorem and_self_right : (a ∧ b) ∧ b ↔ a ∧ b :=
 
 
 theorem Iff.or (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∨ c ↔ b ∨ d :=
-  or_congrₓ h₁ h₂
+  or_congr h₁ h₂
 
-theorem or_congr_left'ₓ (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
+/- warning: or_congr_left' -> or_congr_left' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, (Iff a b) -> (Iff (Or a c) (Or b c))
+but is expected to have type
+  forall {a : Prop} {b : Prop} {c : Prop}, ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
+Case conversion may be inaccurate. Consider using '#align or_congr_left' or_congr_left'ₓ'. -/
+theorem or_congr_left' (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
   h.Or Iff.rfl
 
-theorem or_congr_right'ₓ (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
+/- warning: or_congr_right' -> or_congr_right' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, (Iff b c) -> (Iff (Or a b) (Or a c))
+but is expected to have type
+  forall {a : Prop} {b : Prop} {c : Prop}, ((Not a) -> (Iff b c)) -> (Iff (Or a b) (Or a c))
+Case conversion may be inaccurate. Consider using '#align or_congr_right' or_congr_right'ₓ'. -/
+theorem or_congr_right' (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
   Iff.rfl.Or h
 
-theorem Or.right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by rw [or_assocₓ, or_assocₓ, or_comm b]
+theorem Or.right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by rw [or_assoc', or_assoc', or_comm' b]
 
 theorem or_or_or_comm (a b c d : Prop) : (a ∨ b) ∨ c ∨ d ↔ (a ∨ c) ∨ b ∨ d := by
-  rw [← or_assocₓ, @Or.right_comm a, or_assocₓ]
+  rw [← or_assoc', @Or.right_comm a, or_assoc']
 
-theorem or_or_distrib_left (a b c : Prop) : a ∨ b ∨ c ↔ (a ∨ b) ∨ a ∨ c := by rw [or_or_or_comm, or_selfₓ]
+theorem or_or_distrib_left (a b c : Prop) : a ∨ b ∨ c ↔ (a ∨ b) ∨ a ∨ c := by rw [or_or_or_comm, or_self_iff]
 
-theorem or_or_distrib_right (a b c : Prop) : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b ∨ c := by rw [or_or_or_comm, or_selfₓ]
+theorem or_or_distrib_right (a b c : Prop) : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b ∨ c := by rw [or_or_or_comm, or_self_iff]
 
-theorem or_rotate : a ∨ b ∨ c ↔ b ∨ c ∨ a := by simp only [Or.left_comm, Or.comm]
+theorem or_rotate : a ∨ b ∨ c ↔ b ∨ c ∨ a := by simp only [or_left_comm, or_comm]
 
 theorem Or.rotate : a ∨ b ∨ c → b ∨ c ∨ a :=
   or_rotate.1
 
 theorem or_of_or_of_imp_of_imp (h₁ : a ∨ b) (h₂ : a → c) (h₃ : b → d) : c ∨ d :=
-  Or.impₓ h₂ h₃ h₁
+  Or.imp h₂ h₃ h₁
 
 theorem or_of_or_of_imp_left (h₁ : a ∨ c) (h : a → b) : b ∨ c :=
   Or.imp_left h h₁
@@ -635,7 +696,7 @@ theorem Or.elim3 (h : a ∨ b ∨ c) (ha : a → d) (hb : b → d) (hc : c → d
   Or.elim h ha fun h₂ => Or.elim h₂ hb hc
 
 theorem Or.imp3 (had : a → d) (hbe : b → e) (hcf : c → f) : a ∨ b ∨ c → d ∨ e ∨ f :=
-  Or.impₓ had <| Or.impₓ hbe hcf
+  Or.imp had <| Or.imp hbe hcf
 
 theorem or_imp_distrib : a ∨ b → c ↔ (a → c) ∧ (b → c) :=
   ⟨fun h => ⟨fun ha => h (Or.inl ha), fun hb => h (Or.inr hb)⟩, fun ⟨ha, hb⟩ => Or.ndrec ha hb⟩
@@ -647,12 +708,18 @@ protected theorem Decidable.or_iff_not_imp_left [Decidable a] : a ∨ b ↔ ¬a 
 theorem or_iff_not_imp_left : a ∨ b ↔ ¬a → b :=
   Decidable.or_iff_not_imp_left
 
+/- warning: decidable.or_iff_not_imp_right -> Decidable.or_iff_not_imp_right is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Or a b) ((Not b) -> a)
+but is expected to have type
+  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.9947 : Decidable b], Iff (Or a b) ((Not b) -> a)
+Case conversion may be inaccurate. Consider using '#align decidable.or_iff_not_imp_right Decidable.or_iff_not_imp_rightₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.or_iff_not_imp_rightₓ [Decidable b] : a ∨ b ↔ ¬b → a :=
-  Or.comm.trans Decidable.or_iff_not_imp_left
+protected theorem Decidable.or_iff_not_imp_right [Decidable b] : a ∨ b ↔ ¬b → a :=
+  or_comm.trans Decidable.or_iff_not_imp_left
 
 theorem or_iff_not_imp_right : a ∨ b ↔ ¬b → a :=
-  Decidable.or_iff_not_imp_rightₓ
+  Decidable.or_iff_not_imp_right
 
 -- See Note [decidable namespace]
 protected theorem Decidable.not_or_of_imp [Decidable a] (h : a → b) : ¬a ∨ b :=
@@ -675,12 +742,18 @@ protected theorem Decidable.imp_iff_not_or [Decidable a] : a → b ↔ ¬a ∨ b
 theorem imp_iff_not_or : a → b ↔ ¬a ∨ b :=
   Decidable.imp_iff_not_or
 
+/- warning: decidable.imp_iff_or_not -> Decidable.imp_iff_or_not is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (b -> a) (Or a (Not b))
+but is expected to have type
+  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.10145 : Decidable b], Iff (b -> a) (Or a (Not b))
+Case conversion may be inaccurate. Consider using '#align decidable.imp_iff_or_not Decidable.imp_iff_or_notₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.imp_iff_or_notₓ [Decidable b] : b → a ↔ a ∨ ¬b :=
-  Decidable.imp_iff_not_or.trans Or.comm
+protected theorem Decidable.imp_iff_or_not [Decidable b] : b → a ↔ a ∨ ¬b :=
+  Decidable.imp_iff_not_or.trans or_comm
 
 theorem imp_iff_or_not : b → a ↔ a ∨ ¬b :=
-  Decidable.imp_iff_or_notₓ
+  Decidable.imp_iff_or_not
 
 -- See Note [decidable namespace]
 protected theorem Decidable.not_imp_not [Decidable a] : ¬a → ¬b ↔ b → a :=
@@ -695,28 +768,46 @@ protected theorem Function.mtr : (¬a → ¬b) → b → a :=
 
 -- See Note [decidable namespace]
 protected theorem Decidable.or_congr_left [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
-  rw [Decidable.or_iff_not_imp_rightₓ, Decidable.or_iff_not_imp_rightₓ]
-  exact imp_congr_rightₓ h
+  rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]
+  exact imp_congr_right h
 
-theorem or_congr_leftₓ (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
+/- warning: or_congr_left -> or_congr_left is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
+but is expected to have type
+  forall {a : Prop} {b : Prop} {c : Prop}, (Iff a b) -> (Iff (Or a c) (Or b c))
+Case conversion may be inaccurate. Consider using '#align or_congr_left or_congr_leftₓ'. -/
+theorem or_congr_left (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
   Decidable.or_congr_left h
 
 -- See Note [decidable namespace]
 protected theorem Decidable.or_congr_right [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c := by
   rw [Decidable.or_iff_not_imp_left, Decidable.or_iff_not_imp_left]
-  exact imp_congr_rightₓ h
+  exact imp_congr_right h
 
-theorem or_congr_rightₓ (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c :=
+/- warning: or_congr_right -> or_congr_right is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, ((Not a) -> (Iff b c)) -> (Iff (Or a b) (Or a c))
+but is expected to have type
+  forall {b : Prop} {c : Prop} {a : Prop}, (Iff b c) -> (Iff (Or a b) (Or a c))
+Case conversion may be inaccurate. Consider using '#align or_congr_right or_congr_rightₓ'. -/
+theorem or_congr_right (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c :=
   Decidable.or_congr_right h
 
 @[simp]
 theorem or_iff_left_iff_imp : (a ∨ b ↔ a) ↔ b → a :=
-  ⟨fun h hb => h.1 (Or.inr hb), or_iff_left_of_impₓ⟩
+  ⟨fun h hb => h.1 (Or.inr hb), or_iff_left_of_imp⟩
 
 @[simp]
-theorem or_iff_right_iff_imp : (a ∨ b ↔ b) ↔ a → b := by rw [or_comm, or_iff_left_iff_imp]
+theorem or_iff_right_iff_imp : (a ∨ b ↔ b) ↔ a → b := by rw [or_comm', or_iff_left_iff_imp]
 
-theorem or_iff_leftₓ (hb : ¬b) : a ∨ b ↔ a :=
+/- warning: or_iff_left -> or_iff_left is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop}, (Not b) -> (Iff (Or a b) a)
+but is expected to have type
+  forall {b : Prop} {a : Prop}, (Not b) -> (Iff (Or a b) a)
+Case conversion may be inaccurate. Consider using '#align or_iff_left or_iff_leftₓ'. -/
+theorem or_iff_left (hb : ¬b) : a ∨ b ↔ a :=
   ⟨fun h => h.resolve_right hb, Or.inl⟩
 
 theorem or_iff_right (ha : ¬a) : a ∨ b ↔ b :=
@@ -731,16 +822,16 @@ theorem and_or_distrib_left : a ∧ (b ∨ c) ↔ a ∧ b ∨ a ∧ c :=
 
 /-- `∧` distributes over `∨` (on the right). -/
 theorem or_and_distrib_right : (a ∨ b) ∧ c ↔ a ∧ c ∨ b ∧ c :=
-  (And.comm.trans and_or_distrib_left).trans (And.comm.Or And.comm)
+  (and_comm.trans and_or_distrib_left).trans (and_comm.Or and_comm)
 
 /-- `∨` distributes over `∧` (on the left). -/
 theorem or_and_distrib_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
-  ⟨Or.ndrec (fun ha => And.intro (Or.inl ha) (Or.inl ha)) (And.impₓ Or.inr Or.inr),
+  ⟨Or.ndrec (fun ha => And.intro (Or.inl ha) (Or.inl ha)) (And.imp Or.inr Or.inr),
     And.ndrec <| Or.ndrec (imp_intro ∘ Or.inl) (Or.imp_right ∘ And.intro)⟩
 
 /-- `∨` distributes over `∧` (on the right). -/
 theorem and_or_distrib_right : a ∧ b ∨ c ↔ (a ∨ c) ∧ (b ∨ c) :=
-  (Or.comm.trans or_and_distrib_left).trans (Or.comm.And Or.comm)
+  (or_comm.trans or_and_distrib_left).trans (or_comm.And or_comm)
 
 @[simp]
 theorem or_self_left : a ∨ a ∨ b ↔ a ∨ b :=
@@ -754,7 +845,7 @@ theorem or_self_right : (a ∨ b) ∨ b ↔ a ∨ b :=
 
 
 theorem Iff.iff (h₁ : a ↔ b) (h₂ : c ↔ d) : (a ↔ c) ↔ (b ↔ d) :=
-  iff_congrₓ h₁ h₂
+  iff_congr h₁ h₂
 
 theorem iff_of_true (ha : a) (hb : b) : a ↔ b :=
   ⟨fun _ => hb, fun _ => ha⟩
@@ -780,17 +871,23 @@ theorem iff_mpr_iff_true_intro {P : Prop} (h : P) : Iff.mpr (iff_true_intro h) T
 
 -- See Note [decidable namespace]
 protected theorem Decidable.imp_or_distrib [Decidable a] : a → b ∨ c ↔ (a → b) ∨ (a → c) := by
-  simp [Decidable.imp_iff_not_or, Or.comm, Or.left_comm]
+  simp [Decidable.imp_iff_not_or, or_comm, or_left_comm]
 
 theorem imp_or_distrib : a → b ∨ c ↔ (a → b) ∨ (a → c) :=
   Decidable.imp_or_distrib
 
+/- warning: decidable.imp_or_distrib' -> Decidable.imp_or_distrib' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop} [_inst_1 : Decidable b], Iff (a -> (Or b c)) (Or (a -> b) (a -> c))
+but is expected to have type
+  forall {b : Prop} {a : Sort.{u_1}} {c : Prop} [inst._@.Std.Logic._hyg.10303 : Decidable b], Iff (a -> (Or b c)) (Or (a -> b) (a -> c))
+Case conversion may be inaccurate. Consider using '#align decidable.imp_or_distrib' Decidable.imp_or_distrib'ₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.imp_or_distrib'ₓ [Decidable b] : a → b ∨ c ↔ (a → b) ∨ (a → c) := by
+protected theorem Decidable.imp_or_distrib' [Decidable b] : a → b ∨ c ↔ (a → b) ∨ (a → c) := by
   by_cases b <;> simp [h, or_iff_right_of_imp ((· ∘ ·) False.elim)]
 
 theorem imp_or_distrib' : a → b ∨ c ↔ (a → b) ∨ (a → c) :=
-  Decidable.imp_or_distrib'ₓ
+  Decidable.imp_or_distrib'
 
 theorem not_imp_of_and_not : a ∧ ¬b → ¬(a → b)
   | ⟨ha, hb⟩, h => hb <| h ha
@@ -829,12 +926,18 @@ protected theorem Decidable.not_iff_comm [Decidable a] [Decidable b] : (¬a ↔ 
 theorem not_iff_comm : (¬a ↔ b) ↔ (¬b ↔ a) :=
   Decidable.not_iff_comm
 
+/- warning: decidable.not_iff -> Decidable.not_iff is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Not (Iff a b)) (Iff (Not a) b)
+but is expected to have type
+  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.10728 : Decidable b], Iff (Not (Iff a b)) (Iff (Not a) b)
+Case conversion may be inaccurate. Consider using '#align decidable.not_iff Decidable.not_iffₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.not_iffₓ : ∀ [Decidable b], ¬(a ↔ b) ↔ (¬a ↔ b) := by
-  intro h <;> cases h <;> simp only [h, iff_trueₓ, iff_falseₓ]
+protected theorem Decidable.not_iff : ∀ [Decidable b], ¬(a ↔ b) ↔ (¬a ↔ b) := by
+  intro h <;> cases h <;> simp only [h, iff_true_iff, iff_false_iff]
 
 theorem not_iff : ¬(a ↔ b) ↔ (¬a ↔ b) :=
-  Decidable.not_iffₓ
+  Decidable.not_iff
 
 -- See Note [decidable namespace]
 protected theorem Decidable.iff_not_comm [Decidable a] [Decidable b] : (a ↔ ¬b) ↔ (b ↔ ¬a) := by
@@ -843,8 +946,14 @@ protected theorem Decidable.iff_not_comm [Decidable a] [Decidable b] : (a ↔ ¬
 theorem iff_not_comm : (a ↔ ¬b) ↔ (b ↔ ¬a) :=
   Decidable.iff_not_comm
 
+/- warning: decidable.iff_iff_and_or_not_and_not -> Decidable.iff_iff_and_or_not_and_not is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Iff a b) (Or (And a b) (And (Not a) (Not b)))
+but is expected to have type
+  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.10896 : Decidable b], Iff (Iff a b) (Or (And a b) (And (Not a) (Not b)))
+Case conversion may be inaccurate. Consider using '#align decidable.iff_iff_and_or_not_and_not Decidable.iff_iff_and_or_not_and_notₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.iff_iff_and_or_not_and_notₓ [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b := by
+protected theorem Decidable.iff_iff_and_or_not_and_not [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b := by
   constructor <;> intro h
   · rw [h] <;> by_cases b <;> [left, right] <;> constructor <;> assumption
     
@@ -857,21 +966,27 @@ protected theorem Decidable.iff_iff_and_or_not_and_notₓ [Decidable b] : (a ↔
     
 
 theorem iff_iff_and_or_not_and_not : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b :=
-  Decidable.iff_iff_and_or_not_and_notₓ
+  Decidable.iff_iff_and_or_not_and_not
 
 theorem Decidable.iff_iff_not_or_and_or_not [Decidable a] [Decidable b] : (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) := by
   rw [iff_iff_implies_and_implies a b]
-  simp only [Decidable.imp_iff_not_or, Or.comm]
+  simp only [Decidable.imp_iff_not_or, or_comm]
 
 theorem iff_iff_not_or_and_or_not : (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) :=
   Decidable.iff_iff_not_or_and_or_not
 
+/- warning: decidable.not_and_not_right -> Decidable.not_and_not_right is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Not (And a (Not b))) (a -> b)
+but is expected to have type
+  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.11095 : Decidable b], Iff (Not (And a (Not b))) (a -> b)
+Case conversion may be inaccurate. Consider using '#align decidable.not_and_not_right Decidable.not_and_not_rightₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.not_and_not_rightₓ [Decidable b] : ¬(a ∧ ¬b) ↔ a → b :=
+protected theorem Decidable.not_and_not_right [Decidable b] : ¬(a ∧ ¬b) ↔ a → b :=
   ⟨fun h ha => h.decidable_imp_symm <| And.intro ha, fun h ⟨ha, hb⟩ => hb <| h ha⟩
 
 theorem not_and_not_right : ¬(a ∧ ¬b) ↔ a → b :=
-  Decidable.not_and_not_rightₓ
+  Decidable.not_and_not_right
 
 /-- Transfer decidability of `a` to decidability of `b`, if the propositions are equivalent.
 **Important**: this function should be used instead of `rw` on `decidable b`, because the
@@ -879,13 +994,13 @@ kernel will get stuck reducing the usage of `propext` otherwise,
 and `dec_trivial` will not work. -/
 @[inline]
 def decidableOfIff (a : Prop) (h : a ↔ b) [D : Decidable a] : Decidable b :=
-  decidableOfDecidableOfIff D h
+  decidable_of_decidable_of_iff D h
 
 /-- Transfer decidability of `b` to decidability of `a`, if the propositions are equivalent.
 This is the same as `decidable_of_iff` but the iff is flipped. -/
 @[inline]
 def decidableOfIff' (b : Prop) (h : a ↔ b) [D : Decidable b] : Decidable a :=
-  decidableOfDecidableOfIff D h.symm
+  decidable_of_decidable_of_iff D h.symm
 
 /-- Prove that `a` is decidable by constructing a boolean `b` and a proof that `b ↔ a`.
 (This is sometimes taken as an alternate definition of decidability.) -/
@@ -903,8 +1018,14 @@ theorem not_and_of_not_or_not (h : ¬a ∨ ¬b) : ¬(a ∧ b)
 protected theorem Decidable.not_and_distrib [Decidable a] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
   ⟨fun h => if ha : a then Or.inr fun hb => h ⟨ha, hb⟩ else Or.inl ha, not_and_of_not_or_not⟩
 
+/- warning: decidable.not_and_distrib' -> Decidable.not_and_distrib' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Not (And a b)) (Or (Not a) (Not b))
+but is expected to have type
+  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.11267 : Decidable b], Iff (Not (And a b)) (Or (Not a) (Not b))
+Case conversion may be inaccurate. Consider using '#align decidable.not_and_distrib' Decidable.not_and_distrib'ₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.not_and_distrib'ₓ [Decidable b] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
+protected theorem Decidable.not_and_distrib' [Decidable b] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
   ⟨fun h => if hb : b then Or.inl fun ha => h ⟨ha, hb⟩ else Or.inr hb, not_and_of_not_or_not⟩
 
 /-- One of de Morgan's laws: the negation of a conjunction is logically equivalent to the
@@ -939,10 +1060,10 @@ theorem and_iff_not_or_not : a ∧ b ↔ ¬(¬a ∨ ¬b) :=
   Decidable.and_iff_not_or_not
 
 @[simp]
-theorem not_xor (P Q : Prop) : ¬Xorₓ P Q ↔ (P ↔ Q) := by
-  simp only [not_and, Xorₓ, not_or_distrib, not_not, ← iff_iff_implies_and_implies]
+theorem not_xor (P Q : Prop) : ¬Xor' P Q ↔ (P ↔ Q) := by
+  simp only [not_and, Xor', not_or_distrib, not_not, ← iff_iff_implies_and_implies]
 
-theorem xor_iff_not_iff (P Q : Prop) : Xorₓ P Q ↔ ¬(P ↔ Q) := by rw [iff_not_comm, not_xor]
+theorem xor_iff_not_iff (P Q : Prop) : Xor' P Q ↔ ¬(P ↔ Q) := by rw [iff_not_comm, not_xor]
 
 end Propositional
 
@@ -953,19 +1074,31 @@ section Mem
 
 variable {α β : Type _} [Membership α β] {s t : β} {a b : α}
 
-theorem ne_of_mem_of_not_memₓ (h : a ∈ s) : b ∉ s → a ≠ b :=
+/- warning: ne_of_mem_of_not_mem -> ne_of_mem_of_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1 u_2} α β] {s : β} {a : α} {b : α}, (Membership.Mem.{u_1 u_2} α β _inst_1 a s) -> (Not (Membership.Mem.{u_1 u_2} α β _inst_1 b s)) -> (Ne.{succ u_1} α a b)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Std.Logic._hyg.12244 : Membership.{u_1 u_2} α β] {s : β} {a : α} {b : α}, (Membership.mem.{u_1 u_2} α β inst._@.Std.Logic._hyg.12244 a s) -> (Not (Membership.mem.{u_1 u_2} α β inst._@.Std.Logic._hyg.12244 b s)) -> (Ne.{succ u_1} α a b)
+Case conversion may be inaccurate. Consider using '#align ne_of_mem_of_not_mem ne_of_mem_of_not_memₓ'. -/
+theorem ne_of_mem_of_not_mem (h : a ∈ s) : b ∉ s → a ≠ b :=
   mt fun e => e ▸ h
 
-theorem ne_of_mem_of_not_mem'ₓ (h : a ∈ s) : a ∉ t → s ≠ t :=
+/- warning: ne_of_mem_of_not_mem' -> ne_of_mem_of_not_mem' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1 u_2} α β] {s : β} {t : β} {a : α}, (Membership.Mem.{u_1 u_2} α β _inst_1 a s) -> (Not (Membership.Mem.{u_1 u_2} α β _inst_1 a t)) -> (Ne.{succ u_2} β s t)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Std.Logic._hyg.12292 : Membership.{u_1 u_2} α β] {s : β} {t : β} {a : α}, (Membership.mem.{u_1 u_2} α β inst._@.Std.Logic._hyg.12292 a s) -> (Not (Membership.mem.{u_1 u_2} α β inst._@.Std.Logic._hyg.12292 a t)) -> (Ne.{succ u_2} β s t)
+Case conversion may be inaccurate. Consider using '#align ne_of_mem_of_not_mem' ne_of_mem_of_not_mem'ₓ'. -/
+theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
   mt fun e => e ▸ h
 
 /-- **Alias** of `ne_of_mem_of_not_mem`. -/
 theorem Membership.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
-  ne_of_mem_of_not_memₓ
+  ne_of_mem_of_not_mem
 
 /-- **Alias** of `ne_of_mem_of_not_mem'`. -/
 theorem Membership.Mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
-  ne_of_mem_of_not_mem'ₓ
+  ne_of_mem_of_not_mem'
 
 end Mem
 
@@ -986,7 +1119,7 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
   ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a b «expr ∈ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
     (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
@@ -994,12 +1127,18 @@ theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Pro
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y := fun w : x = y =>
   h (congr_arg f w)
 
-theorem eq_equivalence : Equivalenceₓ (@Eq α) :=
+theorem eq_equivalence : Equivalence (@Eq α) :=
   ⟨Eq.refl, @Eq.symm _, @Eq.trans _⟩
 
+/- warning: eq_rec_constant -> eq_rec_constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {a : α} {a' : α} {β : Sort.{u_2}} (y : β) (h : Eq.{u_1} α a a'), Eq.{u_2} ((fun (a : α) => β) a') (Eq.ndrec.{u_2 u_1} α a (fun (a : α) => β) y a' h) y
+but is expected to have type
+  forall {α : Sort.{u_1}} {a : α} {a' : α} {β : Sort.{u_2}} (y : β) (h : Eq.{u_1} α a a'), Eq.{u_2} β (Eq.rec.{u_2 u_1} α a (fun (α_1 : α) (x._@.Std.Logic._hyg.12140 : Eq.{u_1} α a α_1) => β) y a' h) y
+Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec_constantₓ'. -/
 /-- Transport through trivial families is the identity. -/
 @[simp]
-theorem eq_rec_constantₓ {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
+theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
     @Eq.ndrec α a (fun a => β) y a' h = y := by
   cases h
   rfl
@@ -1038,7 +1177,7 @@ theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : �
   rfl
 
 theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (h₂ : cast e a = a'), HEq a a'
-  | α, _, a, a', rfl, h => Eq.recOnₓ h (HEq.refl _)
+  | α, _, a, a', rfl, h => Eq.recOn h (HEq.refl _)
 
 theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
   ⟨heq_of_cast_eq _, fun h => by cases h <;> rfl⟩
@@ -1054,7 +1193,13 @@ theorem Eq.congr_left {x y z : α} (h : x = y) : x = z ↔ y = z := by rw [h]
 
 theorem Eq.congr_right {x y z : α} (h : x = y) : z = x ↔ z = y := by rw [h]
 
-theorem congr_arg2ₓ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x') (hy : y = y') :
+/- warning: congr_arg2 -> congr_arg2 is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u_1} α x x') -> (Eq.{u_2} β y y') -> (Eq.{u_3} γ (f x y) (f x' y'))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u_1} α x x') -> (Eq.{u_2} β y y') -> (Eq.{u_3} γ (f x y) (f x' y'))
+Case conversion may be inaccurate. Consider using '#align congr_arg2 congr_arg2ₓ'. -/
+theorem congr_arg2 {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x') (hy : y = y') :
     f x y = f x' y' := by
   subst hx
   subst hy
@@ -1089,35 +1234,59 @@ variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a 
 theorem pi_congr {β' : α → Sort _} (h : ∀ a, β a = β' a) : (∀ a, β a) = ∀ a, β' a :=
   (funext h : β = β') ▸ rfl
 
-theorem forall₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∀ a b, p a b) ↔ ∀ a b, q a b :=
-  forall_congrₓ fun a => forall_congrₓ <| h a
+theorem forall₂_congr {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∀ a b, p a b) ↔ ∀ a b, q a b :=
+  forall_congr fun a => forall_congr <| h a
 
-theorem forall₃_congrₓ {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
+theorem forall₃_congr {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
     (∀ a b c, p a b c) ↔ ∀ a b c, q a b c :=
-  forall_congrₓ fun a => forall₂_congrₓ <| h a
+  forall_congr fun a => forall₂_congr <| h a
 
-theorem forall₄_congrₓ {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
+theorem forall₄_congr {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
     (∀ a b c d, p a b c d) ↔ ∀ a b c d, q a b c d :=
-  forall_congrₓ fun a => forall₃_congrₓ <| h a
+  forall_congr fun a => forall₃_congr <| h a
 
 theorem forall₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
     (∀ a b c d e, p a b c d e) ↔ ∀ a b c d e, q a b c d e :=
-  forall_congrₓ fun a => forall₄_congrₓ <| h a
+  forall_congr fun a => forall₄_congr <| h a
 
-theorem exists₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∃ a b, p a b) ↔ ∃ a b, q a b :=
+/- warning: exists₂_congr -> exists₂_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {p : forall (a : α), (β a) -> Prop} {q : forall (a : α), (β a) -> Prop}, (forall (a : α) (b : β a), Iff (p a b) (q a b)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => p a b))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => q a b))))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {p : forall (a : α), (β a) -> Prop} {q : forall (a : α), (β a) -> Prop}, (forall (a : α) (b : β a), Iff (p a b) (q a b)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => p a b))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => q a b))))
+Case conversion may be inaccurate. Consider using '#align exists₂_congr exists₂_congrₓ'. -/
+theorem exists₂_congr {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∃ a b, p a b) ↔ ∃ a b, q a b :=
   exists_congr fun a => exists_congr <| h a
 
-theorem exists₃_congrₓ {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
+/- warning: exists₃_congr -> exists₃_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {p : forall (a : α) (b : β a), (γ a b) -> Prop} {q : forall (a : α) (b : β a), (γ a b) -> Prop}, (forall (a : α) (b : β a) (c : γ a b), Iff (p a b c) (q a b c)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => p a b c)))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => q a b c)))))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {p : forall (a : α) (b : β a), (γ a b) -> Prop} {q : forall (a : α) (b : β a), (γ a b) -> Prop}, (forall (a : α) (b : β a) (c : γ a b), Iff (p a b c) (q a b c)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => p a b c)))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => q a b c)))))
+Case conversion may be inaccurate. Consider using '#align exists₃_congr exists₃_congrₓ'. -/
+theorem exists₃_congr {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
     (∃ a b c, p a b c) ↔ ∃ a b c, q a b c :=
-  exists_congr fun a => exists₂_congrₓ <| h a
+  exists_congr fun a => exists₂_congr <| h a
 
-theorem exists₄_congrₓ {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
+/- warning: exists₄_congr -> exists₄_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {p : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), Iff (p a b c d) (q a b c d)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => p a b c d))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => q a b c d))))))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {p : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), Iff (p a b c d) (q a b c d)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => p a b c d))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => q a b c d))))))
+Case conversion may be inaccurate. Consider using '#align exists₄_congr exists₄_congrₓ'. -/
+theorem exists₄_congr {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
     (∃ a b c d, p a b c d) ↔ ∃ a b c d, q a b c d :=
-  exists_congr fun a => exists₃_congrₓ <| h a
+  exists_congr fun a => exists₃_congr <| h a
 
+/- warning: exists₅_congr -> exists₅_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {ε : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Sort.{u_5}} {p : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c) (e : ε a b c d), Iff (p a b c d e) (q a b c d e)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => p a b c d e)))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => q a b c d e)))))))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {ε : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Sort.{u_5}} {p : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c) (e : ε a b c d), Iff (p a b c d e) (q a b c d e)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => p a b c d e)))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => q a b c d e)))))))
+Case conversion may be inaccurate. Consider using '#align exists₅_congr exists₅_congrₓ'. -/
 theorem exists₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
     (∃ a b c d e, p a b c d e) ↔ ∃ a b c d e, q a b c d e :=
-  exists_congr fun a => exists₄_congrₓ <| h a
+  exists_congr fun a => exists₄_congr <| h a
 
 theorem forall_imp {p q : α → Prop} (h : ∀ a, p a → q a) : (∀ a, p a) → ∀ a, q a := fun h' a => h a (h' a)
 
@@ -1129,23 +1298,35 @@ theorem forall₃_imp {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c �
   forall_imp fun a => forall₂_imp <| h a
 
 theorem Exists.imp {p q : α → Prop} (h : ∀ a, p a → q a) : (∃ a, p a) → ∃ a, q a :=
-  exists_imp_exists h
+  imp h
 
-theorem Exists₂.imp {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b → q a b) : (∃ a b, p a b) → ∃ a b, q a b :=
+theorem Exists₂Cat.imp {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b → q a b) : (∃ a b, p a b) → ∃ a b, q a b :=
   Exists.imp fun a => Exists.imp <| h a
 
-theorem Exists₃.imp {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c → q a b c) :
+theorem Exists₃Cat.imp {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c → q a b c) :
     (∃ a b c, p a b c) → ∃ a b c, q a b c :=
-  Exists.imp fun a => Exists₂.imp <| h a
+  Exists.imp fun a => Exists₂Cat.imp <| h a
 
 end Dependent
 
 variable {ι β : Sort _} {κ : ι → Sort _} {p q : α → Prop} {b : Prop}
 
-theorem exists_imp_exists'ₓ {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a)) (hp : ∃ a, p a) :
+/- warning: exists_imp_exists' -> exists_imp_exists' is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {p : α -> Prop} {q : β -> Prop} (f : α -> β), (forall (a : α), (p a) -> (q (f a))) -> (Exists.{u_1} α (fun (a : α) => p a)) -> (Exists.{u_3} β (fun (b : β) => q b))
+but is expected to have type
+  forall {α : Sort.{u_2}} {p : α -> Prop} {β : Sort.{u_1}} {q : β -> Prop} (f : α -> β), (forall (a : α), (p a) -> (q (f a))) -> (Exists.{u_2} α (fun (a : α) => p a)) -> (Exists.{u_1} β (fun (b : β) => q b))
+Case conversion may be inaccurate. Consider using '#align exists_imp_exists' exists_imp_exists'ₓ'. -/
+theorem exists_imp_exists' {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a)) (hp : ∃ a, p a) :
     ∃ b, q b :=
   Exists.elim hp fun a hp' => ⟨_, hpq _ hp'⟩
 
+/- warning: forall_swap -> forall_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {p : α -> β -> Prop}, Iff (forall (x : α) (y : β), p x y) (forall (y : β) (x : α), p x y)
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {p : α -> β -> Prop}, Iff (forall (x : α) (y : β), p x y) (forall (y : β) (x : α), p x y)
+Case conversion may be inaccurate. Consider using '#align forall_swap forall_swapₓ'. -/
 theorem forall_swap {p : α → β → Prop} : (∀ x y, p x y) ↔ ∀ y x, p x y :=
   ⟨swap, swap⟩
 
@@ -1172,17 +1353,23 @@ theorem exists_imp_distrib : (∃ x, p x) → b ↔ ∀ x, p x → b :=
 /-- Extract an element from a existential statement, using `classical.some`.
 -/
 @[reducible]
-noncomputable def Exists.some {p : α → Prop} (P : ∃ a, p a) : α :=
+noncomputable def Exists.choose {p : α → Prop} (P : ∃ a, p a) : α :=
   Classical.choose P
 
 /-- Show that an element extracted from `P : ∃ a, p a` using `P.some` satisfies `p`.
 -/
-theorem Exists.some_spec {p : α → Prop} (P : ∃ a, p a) : p P.some :=
+theorem Exists.choose_spec {p : α → Prop} (P : ∃ a, p a) : p P.some :=
   Classical.choose_spec P
 
+/- warning: not_exists_of_forall_not -> not_exists_of_forall_not is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {p : α -> Prop}, (forall (x : α), Not (p x)) -> (Not (Exists.{u_1} α (fun (x : α) => p x)))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop}, (forall (x : α), (p x) -> b) -> (Exists.{u_1} α (fun (x : α) => p x)) -> b
+Case conversion may be inaccurate. Consider using '#align not_exists_of_forall_not not_exists_of_forall_notₓ'. -/
 --theorem forall_not_of_not_exists (h : ¬ ∃ x, p x) : ∀ x, ¬ p x :=
 --forall_imp_of_exists_imp h
-theorem not_exists_of_forall_notₓ (h : ∀ x, ¬p x) : ¬∃ x, p x :=
+theorem not_exists_of_forall_not (h : ∀ x, ¬p x) : ¬∃ x, p x :=
   exists_imp_distrib.2 h
 
 @[simp]
@@ -1225,7 +1412,7 @@ theorem forall_imp_iff_exists_imp [ha : Nonempty α] : (∀ x, p x) → b ↔ �
 
 -- TODO: duplicate of a lemma in core
 theorem forall_true_iff : α → True ↔ True :=
-  implies_true_iff α
+  imp_true_iff α
 
 -- Unfortunately this causes simp to loop sometimes, so we
 -- add the 2 and 3 cases as simp lemmas instead
@@ -1254,11 +1441,11 @@ theorem forall_const (α : Sort _) [i : Nonempty α] : α → b ↔ b :=
 /-- For some reason simp doesn't use `forall_const` to simplify in this case. -/
 @[simp]
 theorem forall_forall_const {α β : Type _} (p : β → Prop) [Nonempty α] : (∀ x, α → p x) ↔ ∀ x, p x :=
-  forall_congrₓ fun x => forall_const α
+  forall_congr fun x => forall_const α
 
 @[simp]
 theorem exists_const (α : Sort _) [i : Nonempty α] : (∃ x : α, b) ↔ b :=
-  ⟨fun ⟨x, h⟩ => h, i.elim Exists.introₓ⟩
+  ⟨fun ⟨x, h⟩ => h, i.elim Exists.intro⟩
 
 theorem exists_unique_const (α : Sort _) [i : Nonempty α] [Subsingleton α] : (∃! x : α, b) ↔ b := by simp
 
@@ -1269,12 +1456,24 @@ theorem exists_or_distrib : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ ∃ x, q x
   ⟨fun ⟨x, hpq⟩ => hpq.elim (fun hpx => Or.inl ⟨x, hpx⟩) fun hqx => Or.inr ⟨x, hqx⟩, fun hepq =>
     hepq.elim (fun ⟨x, hpx⟩ => ⟨x, Or.inl hpx⟩) fun ⟨x, hqx⟩ => ⟨x, Or.inr hqx⟩⟩
 
+/- warning: exists_and_distrib_left -> exists_and_distrib_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {q : Prop} {p : α -> Prop}, Iff (Exists.{u_1} α (fun (x : α) => And q (p x))) (And q (Exists.{u_1} α (fun (x : α) => p x)))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop}, Iff (Exists.{u_1} α (fun (x : α) => And b (p x))) (And b (Exists.{u_1} α (fun (x : α) => p x)))
+Case conversion may be inaccurate. Consider using '#align exists_and_distrib_left exists_and_distrib_leftₓ'. -/
 @[simp]
-theorem exists_and_distrib_leftₓ {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q ∧ ∃ x, p x :=
+theorem exists_and_distrib_left {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q ∧ ∃ x, p x :=
   ⟨fun ⟨x, hq, hp⟩ => ⟨hq, x, hp⟩, fun ⟨hq, x, hp⟩ => ⟨x, hq, hp⟩⟩
 
+/- warning: exists_and_distrib_right -> exists_and_distrib_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {q : Prop} {p : α -> Prop}, Iff (Exists.{u_1} α (fun (x : α) => And (p x) q)) (And (Exists.{u_1} α (fun (x : α) => p x)) q)
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop}, Iff (Exists.{u_1} α (fun (x : α) => And (p x) b)) (And (Exists.{u_1} α (fun (x : α) => p x)) b)
+Case conversion may be inaccurate. Consider using '#align exists_and_distrib_right exists_and_distrib_rightₓ'. -/
 @[simp]
-theorem exists_and_distrib_rightₓ {q : Prop} {p : α → Prop} : (∃ x, p x ∧ q) ↔ (∃ x, p x) ∧ q := by simp [and_comm]
+theorem exists_and_distrib_right {q : Prop} {p : α → Prop} : (∃ x, p x ∧ q) ↔ (∃ x, p x) ∧ q := by simp [and_comm']
 
 @[simp]
 theorem forall_eq {a' : α} : (∀ a, a = a' → p a) ↔ p a' :=
@@ -1283,7 +1482,7 @@ theorem forall_eq {a' : α} : (∀ a, a = a' → p a) ↔ p a' :=
 @[simp]
 theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by simp [@eq_comm _ a']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » a)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
   simp only [← @forall_eq _ p a, ← forall_and_distrib, ← or_imp_distrib, Classical.em, forall_const]
 
@@ -1304,10 +1503,10 @@ theorem exists_eq' {a' : α} : ∃ a, a' = a :=
 
 @[simp]
 theorem exists_unique_eq {a' : α} : ∃! a, a = a' := by
-  simp only [eq_comm, ExistsUnique, and_selfₓ, forall_eq', exists_eq']
+  simp only [eq_comm, ExistsUnique, and_self_iff, forall_eq', exists_eq']
 
 @[simp]
-theorem exists_unique_eq' {a' : α} : ∃! a, a' = a := by simp only [ExistsUnique, and_selfₓ, forall_eq', exists_eq']
+theorem exists_unique_eq' {a' : α} : ∃! a, a' = a := by simp only [ExistsUnique, and_self_iff, forall_eq', exists_eq']
 
 @[simp]
 theorem exists_eq_left {a' : α} : (∃ a, a = a' ∧ p a) ↔ p a' :=
@@ -1315,14 +1514,26 @@ theorem exists_eq_left {a' : α} : (∃ a, a = a' ∧ p a) ↔ p a' :=
 
 @[simp]
 theorem exists_eq_right {a' : α} : (∃ a, p a ∧ a = a') ↔ p a' :=
-  (exists_congr fun a => And.comm).trans exists_eq_left
+  (exists_congr fun a => and_comm).trans exists_eq_left
 
+/- warning: exists_eq_right_right -> exists_eq_right_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {p : α -> Prop} {q : α -> Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And (q a) (Eq.{u_1} α a a')))) (And (p a') (q a'))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And b (Eq.{u_1} α a a')))) (And (p a') b)
+Case conversion may be inaccurate. Consider using '#align exists_eq_right_right exists_eq_right_rightₓ'. -/
 @[simp]
-theorem exists_eq_right_rightₓ {a' : α} : (∃ a : α, p a ∧ q a ∧ a = a') ↔ p a' ∧ q a' :=
+theorem exists_eq_right_right {a' : α} : (∃ a : α, p a ∧ q a ∧ a = a') ↔ p a' ∧ q a' :=
   ⟨fun ⟨_, hp, hq, rfl⟩ => ⟨hp, hq⟩, fun ⟨hp, hq⟩ => ⟨a', hp, hq, rfl⟩⟩
 
+/- warning: exists_eq_right_right' -> exists_eq_right_right' is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {p : α -> Prop} {q : α -> Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And (q a) (Eq.{u_1} α a' a)))) (And (p a') (q a'))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And b (Eq.{u_1} α a' a)))) (And (p a') b)
+Case conversion may be inaccurate. Consider using '#align exists_eq_right_right' exists_eq_right_right'ₓ'. -/
 @[simp]
-theorem exists_eq_right_right'ₓ {a' : α} : (∃ a : α, p a ∧ q a ∧ a' = a) ↔ p a' ∧ q a' :=
+theorem exists_eq_right_right' {a' : α} : (∃ a : α, p a ∧ q a ∧ a' = a) ↔ p a' ∧ q a' :=
   ⟨fun ⟨_, hp, hq, rfl⟩ => ⟨hp, hq⟩, fun ⟨hp, hq⟩ => ⟨a', hp, hq, rfl⟩⟩
 
 @[simp]
@@ -1409,13 +1620,19 @@ theorem forall_or_distrib_left {q : Prop} {p : α → Prop} : (∀ x, q ∨ p x)
 
 -- See Note [decidable namespace]
 protected theorem Decidable.forall_or_distrib_right {q : Prop} {p : α → Prop} [Decidable q] :
-    (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q := by simp [or_comm, Decidable.forall_or_distrib_left]
+    (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q := by simp [or_comm', Decidable.forall_or_distrib_left]
 
 theorem forall_or_distrib_right {q : Prop} {p : α → Prop} : (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q :=
   Decidable.forall_or_distrib_right
 
+/- warning: exists_prop -> exists_prop is a dubious translation:
+lean 3 declaration is
+  forall {p : Prop} {q : Prop}, Iff (Exists.{0} p (fun (h : p) => q)) (And p q)
+but is expected to have type
+  forall {b : Prop} {a : Prop}, Iff (Exists.{0} a (fun (_h : a) => b)) (And a b)
+Case conversion may be inaccurate. Consider using '#align exists_prop exists_propₓ'. -/
 @[simp]
-theorem exists_propₓ {p q : Prop} : (∃ h : p, q) ↔ p ∧ q :=
+theorem exists_prop {p q : Prop} : (∃ h : p, q) ↔ p ∧ q :=
   ⟨fun ⟨h₁, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨h₁, h₂⟩⟩
 
 theorem exists_unique_prop {p q : Prop} : (∃! h : p, q) ↔ p ∧ q := by simp
@@ -1532,7 +1749,7 @@ noncomputable def decEq (α : Sort _) : DecidableEq α := by infer_instance
 
 /-- Construct a function from a default value `H0`, and a function to use if there exists a value
 satisfying the predicate. -/
-@[elabAsElim]
+@[elab_as_elim]
 noncomputable def existsCases.{u} {C : Sort u} (H0 : C) (H : ∀ a, p a → C) : C :=
   if h : ∃ a, p a then H (Classical.choose h) (Classical.choose_spec h) else H0
 
@@ -1555,7 +1772,7 @@ end Classical
 /-- This function has the same type as `exists.rec_on`, and can be used to case on an equality,
 but `exists.rec_on` can only eliminate into Prop, while this version eliminates into any universe
 using the axiom of choice. -/
-@[elabAsElim]
+@[elab_as_elim]
 noncomputable def Exists.classicalRecOn.{u} {α} {p : α → Prop} (h : ∃ a, p a) {C : Sort u} (H : ∀ a, p a → C) : C :=
   H (Classical.choose h) (Classical.choose_spec h)
 
@@ -1576,12 +1793,12 @@ theorem Bex.intro (a : α) (h₁ : p a) (h₂ : P a h₁) : ∃ (x : _)(h : p x)
   ⟨a, h₁, h₂⟩
 
 theorem ball_congr (H : ∀ x h, P x h ↔ Q x h) : (∀ x h, P x h) ↔ ∀ x h, Q x h :=
-  forall_congrₓ fun x => forall_congrₓ (H x)
+  forall_congr fun x => forall_congr (H x)
 
 theorem bex_congr (H : ∀ x h, P x h ↔ Q x h) : (∃ x h, P x h) ↔ ∃ x h, Q x h :=
   exists_congr fun x => exists_congr (H x)
 
-theorem bex_eq_left {a : α} : (∃ (x : _)(_ : x = a), p x) ↔ p a := by simp only [exists_propₓ, exists_eq_left]
+theorem bex_eq_left {a : α} : (∃ (x : _)(_ : x = a), p x) ↔ p a := by simp only [exists_prop, exists_eq_left]
 
 theorem Ball.imp_right (H : ∀ x h, P x h → Q x h) (h₁ : ∀ x h, P x h) (x h) : Q x h :=
   H _ _ <| h₁ _ _
@@ -1589,6 +1806,12 @@ theorem Ball.imp_right (H : ∀ x h, P x h → Q x h) (h₁ : ∀ x h, P x h) (x
 theorem Bex.imp_right (H : ∀ x h, P x h → Q x h) : (∃ x h, P x h) → ∃ x h, Q x h
   | ⟨x, h, h'⟩ => ⟨_, _, H _ _ h'⟩
 
+/- warning: ball.imp_left -> Ball.imp_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {r : α -> Prop} {p : α -> Prop} {q : α -> Prop}, (forall (x : α), (p x) -> (q x)) -> (forall (x : α), (q x) -> (r x)) -> (forall (x : α), (p x) -> (r x))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Prop} {q : α -> Prop} {r : α -> Prop}, (forall (x : α), (p x) -> (q x)) -> (forall (x : α), (q x) -> (r x)) -> (forall (x : α), (p x) -> (r x))
+Case conversion may be inaccurate. Consider using '#align ball.imp_left Ball.imp_leftₓ'. -/
 theorem Ball.imp_left (H : ∀ x, p x → q x) (h₁ : ∀ x, q x → r x) (x) (h : p x) : r x :=
   h₁ _ <| H _ h
 
@@ -1625,19 +1848,19 @@ theorem not_ball : (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
   Decidable.not_ball
 
 theorem ball_true_iff (p : α → Prop) : (∀ x, p x → True) ↔ True :=
-  iff_true_intro fun h hrx => trivialₓ
+  iff_true_intro fun h hrx => trivial
 
 theorem ball_and_distrib : (∀ x h, P x h ∧ Q x h) ↔ (∀ x h, P x h) ∧ ∀ x h, Q x h :=
-  Iff.trans (forall_congrₓ fun x => forall_and_distrib) forall_and_distrib
+  Iff.trans (forall_congr fun x => forall_and_distrib) forall_and_distrib
 
 theorem bex_or_distrib : (∃ x h, P x h ∨ Q x h) ↔ (∃ x h, P x h) ∨ ∃ x h, Q x h :=
   Iff.trans (exists_congr fun x => exists_or_distrib) exists_or_distrib
 
 theorem ball_or_left_distrib : (∀ x, p x ∨ q x → r x) ↔ (∀ x, p x → r x) ∧ ∀ x, q x → r x :=
-  Iff.trans (forall_congrₓ fun x => or_imp_distrib) forall_and_distrib
+  Iff.trans (forall_congr fun x => or_imp_distrib) forall_and_distrib
 
 theorem bex_or_left_distrib : (∃ (x : _)(_ : p x ∨ q x), r x) ↔ (∃ (x : _)(_ : p x), r x) ∨ ∃ (x : _)(_ : q x), r x :=
-  by simp only [exists_propₓ] <;> exact Iff.trans (exists_congr fun x => or_and_distrib_right) exists_or_distrib
+  by simp only [exists_prop] <;> exact Iff.trans (exists_congr fun x => or_and_distrib_right) exists_or_distrib
 
 end BoundedQuantifiers
 
@@ -1659,7 +1882,14 @@ theorem dite_eq_iff : dite P A B = c ↔ (∃ h, A h = c) ∨ ∃ h, B h = c := 
   by_cases P <;> simp [*, exists_prop_of_false not_false]
 
 theorem ite_eq_iff : ite P a b = c ↔ P ∧ a = c ∨ ¬P ∧ b = c :=
-  dite_eq_iff.trans <| by rw [exists_propₓ, exists_propₓ]
+  dite_eq_iff.trans <| by rw [exists_prop, exists_prop]
+
+theorem dite_eq_iff' : dite P A B = c ↔ (∀ h, A h = c) ∧ ∀ h, B h = c :=
+  ⟨fun he => ⟨fun h => (dif_pos h).symm.trans he, fun h => (dif_neg h).symm.trans he⟩, fun he =>
+    (em P).elim (fun h => (dif_pos h).trans <| he.1 h) fun h => (dif_neg h).trans <| he.2 h⟩
+
+theorem ite_eq_iff' : ite P a b = c ↔ (P → a = c) ∧ (¬P → b = c) :=
+  dite_eq_iff'
 
 @[simp]
 theorem dite_eq_left_iff : dite P (fun _ => a) B = a ↔ ∀ h, B h = a := by
@@ -1685,10 +1915,10 @@ theorem dite_ne_right_iff : (dite P A fun _ => b) ≠ b ↔ ∃ h, A h ≠ b := 
   simp only [Ne.def, dite_eq_right_iff, not_forall]
 
 theorem ite_ne_left_iff : ite P a b ≠ a ↔ ¬P ∧ a ≠ b :=
-  dite_ne_left_iff.trans <| by rw [exists_propₓ]
+  dite_ne_left_iff.trans <| by rw [exists_prop]
 
 theorem ite_ne_right_iff : ite P a b ≠ b ↔ P ∧ a ≠ b :=
-  dite_ne_right_iff.trans <| by rw [exists_propₓ]
+  dite_ne_right_iff.trans <| by rw [exists_prop]
 
 protected theorem Ne.dite_eq_left_iff (h : ∀ h, a ≠ B h) : dite P (fun _ => a) B = a ↔ P :=
   dite_eq_left_iff.trans <| ⟨fun H => of_not_not fun h' => h h' (H h').symm, fun h H => (H h).elim⟩
@@ -1727,13 +1957,25 @@ theorem dite_eq_or_eq : (∃ h, dite P A B = A h) ∨ ∃ h, dite P A B = B h :=
 theorem ite_eq_or_eq : ite P a b = a ∨ ite P a b = b :=
   Decidable.byCases (fun h => Or.inl (if_pos h)) fun h => Or.inr (if_neg h)
 
+/- warning: apply_dite -> apply_dite is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (x : P -> α) (y : (Not P) -> α), Eq.{u_2} β (f (dite.{u_1} α P _inst_1 x y)) (dite.{u_2} β P _inst_1 (fun (h : P) => f (x h)) (fun (h : Not P) => f (y h)))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [inst._@.Std.Logic._hyg.12432 : Decidable P] (x : P -> α) (y : (Not P) -> α), Eq.{u_2} β (f (dite.{u_1} α P inst._@.Std.Logic._hyg.12432 x y)) (dite.{u_2} β P inst._@.Std.Logic._hyg.12432 (fun (h : P) => f (x h)) (fun (h : Not P) => f (y h)))
+Case conversion may be inaccurate. Consider using '#align apply_dite apply_diteₓ'. -/
 /-- A function applied to a `dite` is a `dite` of that function applied to each of the branches. -/
-theorem apply_diteₓ (x : P → α) (y : ¬P → α) : f (dite P x y) = dite P (fun h => f (x h)) fun h => f (y h) := by
+theorem apply_dite (x : P → α) (y : ¬P → α) : f (dite P x y) = dite P (fun h => f (x h)) fun h => f (y h) := by
   by_cases h:P <;> simp [h]
 
+/- warning: apply_ite -> apply_ite is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (a : α) (b : α), Eq.{u_2} β (f (ite.{u_1} α P _inst_1 a b)) (ite.{u_2} β P _inst_1 (f a) (f b))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [inst._@.Std.Logic._hyg.12526 : Decidable P] (x : α) (y : α), Eq.{u_2} β (f (ite.{u_1} α P inst._@.Std.Logic._hyg.12526 x y)) (ite.{u_2} β P inst._@.Std.Logic._hyg.12526 (f x) (f y))
+Case conversion may be inaccurate. Consider using '#align apply_ite apply_iteₓ'. -/
 /-- A function applied to a `ite` is a `ite` of that function applied to each of the branches. -/
-theorem apply_iteₓ : f (ite P a b) = ite P (f a) (f b) :=
-  apply_diteₓ f P (fun _ => a) fun _ => b
+theorem apply_ite : f (ite P a b) = ite P (f a) (f b) :=
+  apply_dite f P (fun _ => a) fun _ => b
 
 /-- A two-argument function applied to two `dite`s is a `dite` of that two-argument function
 applied to each of the branches. -/
@@ -1756,17 +1998,40 @@ either branch to `a`. -/
 theorem ite_apply (f g : ∀ a, σ a) (a : α) : (ite P f g) a = ite P (f a) (g a) :=
   dite_apply P (fun _ => f) (fun _ => g) a
 
+/- warning: dite_not -> dite_not is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} (P : Prop) [_inst_1 : Decidable P] (x : (Not P) -> α) (y : (Not (Not P)) -> α), Eq.{u_1} α (dite.{u_1} α (Not P) (Not.decidable P _inst_1) x y) (dite.{u_1} α P _inst_1 (fun (h : P) => y (not_not_intro P h)) x)
+but is expected to have type
+  forall {α : Sort.{u_1}} (P : Prop) [inst._@.Std.Logic._hyg.12580 : Decidable P] (x : (Not P) -> α) (y : (Not (Not P)) -> α), Eq.{u_1} α (dite.{u_1} α (Not P) (instDecidableNot P inst._@.Std.Logic._hyg.12580) x y) (dite.{u_1} α P inst._@.Std.Logic._hyg.12580 (fun (h : P) => y (not_not_intro P h)) x)
+Case conversion may be inaccurate. Consider using '#align dite_not dite_notₓ'. -/
 /-- Negation of the condition `P : Prop` in a `dite` is the same as swapping the branches. -/
 @[simp]
 theorem dite_not (x : ¬P → α) (y : ¬¬P → α) : dite (¬P) x y = dite P (fun h => y (not_not_intro h)) x := by
   by_cases h:P <;> simp [h]
 
+/- warning: ite_not -> ite_not is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} (P : Prop) [_inst_1 : Decidable P] (a : α) (b : α), Eq.{u_1} α (ite.{u_1} α (Not P) (Not.decidable P _inst_1) a b) (ite.{u_1} α P _inst_1 b a)
+but is expected to have type
+  forall {α : Sort.{u_1}} (P : Prop) [inst._@.Std.Logic._hyg.12670 : Decidable P] (x : α) (y : α), Eq.{u_1} α (ite.{u_1} α (Not P) (instDecidableNot P inst._@.Std.Logic._hyg.12670) x y) (ite.{u_1} α P inst._@.Std.Logic._hyg.12670 y x)
+Case conversion may be inaccurate. Consider using '#align ite_not ite_notₓ'. -/
 /-- Negation of the condition `P : Prop` in a `ite` is the same as swapping the branches. -/
 @[simp]
 theorem ite_not : ite (¬P) a b = ite P b a :=
   dite_not P (fun _ => a) fun _ => b
 
 theorem ite_and : ite (P ∧ Q) a b = ite P (ite Q a b) b := by by_cases hp:P <;> by_cases hq:Q <;> simp [hp, hq]
+
+theorem dite_dite_comm {B : Q → α} {C : ¬P → ¬Q → α} (h : P → ¬Q) :
+    (if p : P then A p else if q : Q then B q else C p q) = if q : Q then B q else if p : P then A p else C p q :=
+  dite_eq_iff'.2
+    ⟨fun p => by rw [dif_neg (h p), dif_pos p], fun np => by
+      congr
+      funext
+      rw [dif_neg np]⟩
+
+theorem ite_ite_comm (h : P → ¬Q) : (if P then a else if Q then b else c) = if Q then b else if P then a else c :=
+  dite_dite_comm P Q h
 
 end ite
 

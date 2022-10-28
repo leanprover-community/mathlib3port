@@ -49,17 +49,17 @@ abbrev IsInitial (X : C) :=
 /-- An object `Y` is terminal iff for every `X` there is a unique morphism `X ⟶ Y`. -/
 def isTerminalEquivUnique (F : Discrete.{0} Pempty.{1} ⥤ C) (Y : C) :
     IsLimit (⟨Y, by tidy⟩ : Cone F) ≃ ∀ X : C, Unique (X ⟶ Y) where
-  toFun := fun t X => { default := t.lift ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
-  invFun := fun u => { lift := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
+  toFun t X := { default := t.lift ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
+  invFun u := { lift := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
   left_inv := by tidy
   right_inv := by tidy
 
 /-- An object `Y` is terminal if for every `X` there is a unique morphism `X ⟶ Y`
     (as an instance). -/
-def IsTerminal.ofUnique (Y : C) [h : ∀ X : C, Unique (X ⟶ Y)] : IsTerminal Y where lift := fun s => (h s.x).default
+def IsTerminal.ofUnique (Y : C) [h : ∀ X : C, Unique (X ⟶ Y)] : IsTerminal Y where lift s := (h s.x).default
 
 /-- If `α` is a preorder with top, then `⊤` is a terminal object. -/
-def isTerminalTop {α : Type _} [Preorderₓ α] [OrderTop α] : IsTerminal (⊤ : α) :=
+def isTerminalTop {α : Type _} [Preorder α] [OrderTop α] : IsTerminal (⊤ : α) :=
   IsTerminal.ofUnique _
 
 /-- Transport a term of type `is_terminal` across an isomorphism. -/
@@ -69,17 +69,17 @@ def IsTerminal.ofIso {Y Z : C} (hY : IsTerminal Y) (i : Y ≅ Z) : IsTerminal Z 
 /-- An object `X` is initial iff for every `Y` there is a unique morphism `X ⟶ Y`. -/
 def isInitialEquivUnique (F : Discrete.{0} Pempty.{1} ⥤ C) (X : C) :
     IsColimit (⟨X, by tidy⟩ : Cocone F) ≃ ∀ Y : C, Unique (X ⟶ Y) where
-  toFun := fun t X => { default := t.desc ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
-  invFun := fun u => { desc := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
+  toFun t X := { default := t.desc ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
+  invFun u := { desc := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
   left_inv := by tidy
   right_inv := by tidy
 
 /-- An object `X` is initial if for every `Y` there is a unique morphism `X ⟶ Y`
     (as an instance). -/
-def IsInitial.ofUnique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : IsInitial X where desc := fun s => (h s.x).default
+def IsInitial.ofUnique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : IsInitial X where desc s := (h s.x).default
 
 /-- If `α` is a preorder with bot, then `⊥` is an initial object. -/
-def isInitialBot {α : Type _} [Preorderₓ α] [OrderBot α] : IsInitial (⊥ : α) :=
+def isInitialBot {α : Type _} [Preorder α] [OrderBot α] : IsInitial (⊥ : α) :=
   IsInitial.ofUnique _
 
 /-- Transport a term of type `is_initial` across an isomorphism. -/
@@ -167,17 +167,17 @@ variable (X : C) {F₁ : Discrete.{w} Pempty ⥤ C} {F₂ : Discrete.{w'} Pempty
 /-- Being terminal is independent of the empty diagram, its universe, and the cone over it,
     as long as the cone points are isomorphic. -/
 def isLimitChangeEmptyCone {c₁ : Cone F₁} (hl : IsLimit c₁) (c₂ : Cone F₂) (hi : c₁.x ≅ c₂.x) : IsLimit c₂ where
-  lift := fun c => hl.lift ⟨c.x, by tidy⟩ ≫ hi.Hom
-  fac' := fun _ j => j.as.elim
-  uniq' := fun c f _ => by
+  lift c := hl.lift ⟨c.x, by tidy⟩ ≫ hi.Hom
+  fac' _ j := j.as.elim
+  uniq' c f _ := by
     erw [← hl.uniq ⟨c.X, by tidy⟩ (f ≫ hi.inv) fun j => j.as.elim]
     simp
 
 /-- Replacing an empty cone in `is_limit` by another with the same cone point
     is an equivalence. -/
 def isLimitEmptyConeEquiv (c₁ : Cone F₁) (c₂ : Cone F₂) (h : c₁.x ≅ c₂.x) : IsLimit c₁ ≃ IsLimit c₂ where
-  toFun := fun hl => isLimitChangeEmptyCone C hl c₂ h
-  invFun := fun hl => isLimitChangeEmptyCone C hl c₁ h.symm
+  toFun hl := isLimitChangeEmptyCone C hl c₂ h
+  invFun hl := isLimitChangeEmptyCone C hl c₁ h.symm
   left_inv := by tidy
   right_inv := by tidy
 
@@ -195,17 +195,17 @@ theorem has_terminal_change_universe [h : HasLimitsOfShape (Discrete.{w} Pempty)
     as long as the cocone points are isomorphic. -/
 def isColimitChangeEmptyCocone {c₁ : Cocone F₁} (hl : IsColimit c₁) (c₂ : Cocone F₂) (hi : c₁.x ≅ c₂.x) :
     IsColimit c₂ where
-  desc := fun c => hi.inv ≫ hl.desc ⟨c.x, by tidy⟩
-  fac' := fun _ j => j.as.elim
-  uniq' := fun c f _ => by
+  desc c := hi.inv ≫ hl.desc ⟨c.x, by tidy⟩
+  fac' _ j := j.as.elim
+  uniq' c f _ := by
     erw [← hl.uniq ⟨c.X, by tidy⟩ (hi.hom ≫ f) fun j => j.as.elim]
     simp
 
 /-- Replacing an empty cocone in `is_colimit` by another with the same cocone point
     is an equivalence. -/
 def isColimitEmptyCoconeEquiv (c₁ : Cocone F₁) (c₂ : Cocone F₂) (h : c₁.x ≅ c₂.x) : IsColimit c₁ ≃ IsColimit c₂ where
-  toFun := fun hl => isColimitChangeEmptyCocone C hl c₂ h
-  invFun := fun hl => isColimitChangeEmptyCocone C hl c₁ h.symm
+  toFun hl := isColimitChangeEmptyCocone C hl c₂ h
+  invFun hl := isColimitChangeEmptyCocone C hl c₁ h.symm
   left_inv := by tidy
   right_inv := by tidy
 
@@ -270,10 +270,10 @@ abbrev initial.to [HasInitial C] (P : C) : ⊥_ C ⟶ P :=
   colimit.desc (Functor.empty C) (asEmptyCocone P)
 
 /-- A terminal object is terminal. -/
-def terminalIsTerminal [HasTerminal C] : IsTerminal (⊤_ C) where lift := fun s => terminal.from _
+def terminalIsTerminal [HasTerminal C] : IsTerminal (⊤_ C) where lift s := terminal.from _
 
 /-- An initial object is initial. -/
-def initialIsInitial [HasInitial C] : IsInitial (⊥_ C) where desc := fun s => initial.to _
+def initialIsInitial [HasInitial C] : IsInitial (⊥_ C) where desc s := initial.to _
 
 instance uniqueToTerminal [HasTerminal C] (P : C) : Unique (P ⟶ ⊤_ C) :=
   isTerminalEquivUnique _ (⊤_ C) terminalIsTerminal P
@@ -307,23 +307,23 @@ instance initial.is_split_epi_to {Y : C} [HasInitial C] (f : Y ⟶ ⊥_ C) : IsS
 
 /-- An initial object is terminal in the opposite category. -/
 def terminalOpOfInitial {X : C} (t : IsInitial X) : IsTerminal (Opposite.op X) where
-  lift := fun s => (t.to s.x.unop).op
-  uniq' := fun s m w => Quiver.Hom.unop_inj (t.hom_ext _ _)
+  lift s := (t.to s.x.unop).op
+  uniq' s m w := Quiver.Hom.unop_inj (t.hom_ext _ _)
 
 /-- An initial object in the opposite category is terminal in the original category. -/
 def terminalUnopOfInitial {X : Cᵒᵖ} (t : IsInitial X) : IsTerminal X.unop where
-  lift := fun s => (t.to (Opposite.op s.x)).unop
-  uniq' := fun s m w => Quiver.Hom.op_inj (t.hom_ext _ _)
+  lift s := (t.to (Opposite.op s.x)).unop
+  uniq' s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
 
 /-- A terminal object is initial in the opposite category. -/
 def initialOpOfTerminal {X : C} (t : IsTerminal X) : IsInitial (Opposite.op X) where
-  desc := fun s => (t.from s.x.unop).op
-  uniq' := fun s m w => Quiver.Hom.unop_inj (t.hom_ext _ _)
+  desc s := (t.from s.x.unop).op
+  uniq' s m w := Quiver.Hom.unop_inj (t.hom_ext _ _)
 
 /-- A terminal object in the opposite category is initial in the original category. -/
 def initialUnopOfTerminal {X : Cᵒᵖ} (t : IsTerminal X) : IsInitial X.unop where
-  desc := fun s => (t.from (Opposite.op s.x)).unop
-  uniq' := fun s m w => Quiver.Hom.op_inj (t.hom_ext _ _)
+  desc s := (t.from (Opposite.op s.x)).unop
+  uniq' s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
 
 instance has_initial_op_of_has_terminal [HasTerminal C] : HasInitial Cᵒᵖ :=
   (initialOpOfTerminal terminalIsTerminal).HasInitial
@@ -449,8 +449,8 @@ def coneOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) : Cone F where
 /-- From a functor `F : J ⥤ C`, given an initial object of `J`, show the cone
 `cone_of_diagram_initial` is a limit. -/
 def limitOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) : IsLimit (coneOfDiagramInitial tX F) where
-  lift := fun s => s.π.app X
-  uniq' := fun s m w => by
+  lift s := s.π.app X
+  uniq' s m w := by
     rw [← w X, cone_of_diagram_initial_π_app, tX.hom_ext (tX.to X) (𝟙 _)]
     dsimp
     simp
@@ -481,7 +481,7 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ (i j : 
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cone_of_diagram_terminal` is a limit. -/
 def limitOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
-    IsLimit (coneOfDiagramTerminal hX F) where lift := fun S => S.π.app _
+    IsLimit (coneOfDiagramTerminal hX F) where lift S := S.π.app _
 
 -- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object and all the morphisms in the diagram
@@ -505,8 +505,8 @@ def coconeOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) : Cocone F
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J`, show the cocone
 `cocone_of_diagram_terminal` is a colimit. -/
 def colimitOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) : IsColimit (coconeOfDiagramTerminal tX F) where
-  desc := fun s => s.ι.app X
-  uniq' := fun s m w => by
+  desc s := s.ι.app X
+  uniq' s m w := by
     rw [← w X, cocone_of_diagram_terminal_ι_app, tX.hom_ext (tX.from X) (𝟙 _)]
     simp
 
@@ -535,7 +535,7 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ (i j : 
 /-- From a functor `F : J ⥤ C`, given an initial object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cocone_of_diagram_initial` is a colimit. -/
 def colimitOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
-    IsColimit (coconeOfDiagramInitial hX F) where desc := fun S => S.ι.app _
+    IsColimit (coconeOfDiagramInitial hX F) where desc S := S.ι.app _
 
 -- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object and all the morphisms in the diagram

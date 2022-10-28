@@ -43,11 +43,11 @@ theorem unop_mem_unop {s : Set αᵒᵖ} {a : αᵒᵖ} : unop a ∈ s.unop ↔ 
 
 @[simp]
 theorem op_unop (s : Set α) : s.op.unop = s :=
-  ext (by simp only [mem_unop, op_mem_op, iff_selfₓ, implies_true_iff])
+  ext (by simp only [mem_unop, op_mem_op, iff_self_iff, imp_true_iff])
 
 @[simp]
 theorem unop_op (s : Set αᵒᵖ) : s.unop.op = s :=
-  ext (by simp only [mem_op, unop_mem_unop, iff_selfₓ, implies_true_iff])
+  ext (by simp only [mem_op, unop_mem_unop, iff_self_iff, imp_true_iff])
 
 /-- The members of the opposite of a set are in bijection with the members of the set itself. -/
 @[simps]

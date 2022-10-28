@@ -67,7 +67,7 @@ example (z : A) : z.x = 1 := by rw A.f
 @[user_command]
 unsafe def restate_axiom_cmd (_ : parse <| tk "restate_axiom") : lean.parser Unit := do
   let from_lemma ← ident
-  let new_name ← optionalₓ ident
+  let new_name ← optional ident
   let from_lemma_fully_qualified ← resolve_constant from_lemma
   let d ← get_decl from_lemma_fully_qualified <|> fail ("declaration " ++ toString from_lemma ++ " not found")
   do

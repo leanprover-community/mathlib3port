@@ -82,11 +82,11 @@ theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1) (h₂ : A₁.e �
   simp only [eq_to_hom_refl, comp_id, index_set.e] at h₂
   simp only [h₂]
 
-instance : Fintypeₓ (IndexSet Δ) :=
-  Fintypeₓ.ofInjective
+instance : Fintype (IndexSet Δ) :=
+  Fintype.ofInjective
     (fun A =>
       ⟨⟨A.1.unop.len, Nat.lt_succ_iff.mpr (SimplexCategory.len_le_of_epi (inferInstance : Epi A.e))⟩, A.e.toOrderHom⟩ :
-      IndexSet Δ → Sigma fun k : Finₓ (Δ.unop.len + 1) => Finₓ (Δ.unop.len + 1) → Finₓ (k + 1))
+      IndexSet Δ → Sigma fun k : Fin (Δ.unop.len + 1) => Fin (Δ.unop.len + 1) → Fin (k + 1))
     (by
       rintro ⟨Δ₁, α₁⟩ ⟨Δ₂, α₂⟩ h₁
       induction Δ₁ using Opposite.rec
@@ -94,7 +94,7 @@ instance : Fintypeₓ (IndexSet Δ) :=
       simp only at h₁
       have h₂ : Δ₁ = Δ₂ := by
         ext1
-        simpa only [Finₓ.mk_eq_mk] using h₁.1
+        simpa only [Fin.mk_eq_mk] using h₁.1
       subst h₂
       refine' ext _ _ rfl _
       ext : 2
@@ -109,6 +109,51 @@ def id : IndexSet Δ :=
 
 instance : Inhabited (IndexSet Δ) :=
   ⟨id Δ⟩
+
+variable {Δ}
+
+/-- The condition that an element `splitting.index_set Δ` is the distinguished
+element `splitting.index_set.id Δ`. -/
+@[simp]
+def EqId : Prop :=
+  A = id _
+
+theorem eq_id_iff_eq : A.EqId ↔ A.1 = Δ := by
+  constructor
+  · intro h
+    dsimp at h
+    rw [h]
+    rfl
+    
+  · intro h
+    rcases A with ⟨Δ', ⟨f, hf⟩⟩
+    simp only at h
+    subst h
+    refine' ext _ _ rfl _
+    · haveI := hf
+      simp only [eq_to_hom_refl, comp_id]
+      exact SimplexCategory.eq_id_of_epi f
+      
+    
+
+theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len := by
+  rw [eq_id_iff_eq]
+  constructor
+  · intro h
+    rw [h]
+    
+  · intro h
+    rw [← unop_inj_iff]
+    ext
+    exact h
+    
+
+/-- Given `A : index_set Δ₁`, if `p.unop : unop Δ₂ ⟶ unop Δ₁` is an epi, this
+is the obvious element in `A : index_set Δ₂` associated to the composition
+of epimorphisms `p.unop ≫ A.e`. -/
+@[simps]
+def epiComp {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ₁ ⟶ Δ₂) [Epi p.unop] : IndexSet Δ₂ :=
+  ⟨A.1, ⟨p.unop ≫ A.e, epi_comp _ _⟩⟩
 
 end IndexSet
 
@@ -196,7 +241,7 @@ theorem ι_summand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : Inde
     s.ιSummand A ≫ f.app Δ = s.φ f A.1.unop.len ≫ Y.map A.e.op := by
   simp only [ι_summand_eq_assoc, φ, nat_trans.naturality, assoc]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g := by
   rw [← cancel_epi (s.iso Δ).Hom]
@@ -229,10 +274,18 @@ theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s
 @[simps]
 def ofIso (e : X ≅ Y) : Splitting Y where
   n := s.n
-  ι := fun n => s.ι n ≫ e.Hom.app (op [n])
-  map_is_iso' := fun Δ => by
+  ι n := s.ι n ≫ e.Hom.app (op [n])
+  map_is_iso' Δ := by
     convert (inferInstance : is_iso ((s.iso Δ).Hom ≫ e.hom.app Δ))
     tidy
+
+@[reassoc]
+theorem ι_summand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ₁ ⟶ Δ₂) [Epi p.unop] :
+    s.ιSummand A ≫ X.map p = s.ιSummand (A.epi_comp p) := by
+  dsimp [ι_summand]
+  erw [colimit.ι_desc, colimit.ι_desc, cofan.mk_ι_app, cofan.mk_ι_app]
+  dsimp only [index_set.epi_comp, index_set.e]
+  rw [op_comp, X.map_comp, assoc, Quiver.Hom.op_unop]
 
 end Splitting
 
@@ -272,7 +325,7 @@ theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n :
     ext
     apply h
   subst h'
-  simp only [eq_self_iff_true, and_trueₓ]
+  simp only [eq_self_iff_true, and_true_iff]
   apply S₁.s.hom_ext
   intro n
   dsimp
@@ -286,8 +339,8 @@ end Split
 
 instance : Category (Split C) where
   Hom := Split.Hom
-  id := fun S => { f := 𝟙 _, f := fun n => 𝟙 _, comm' := by tidy }
-  comp := fun S₁ S₂ S₃ Φ₁₂ Φ₂₃ => { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n, comm' := by tidy }
+  id S := { f := 𝟙 _, f := fun n => 𝟙 _, comm' := by tidy }
+  comp S₁ S₂ S₃ Φ₁₂ Φ₂₃ := { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n, comm' := by tidy }
 
 variable {C}
 
@@ -324,15 +377,15 @@ variable (C)
 the splitting. -/
 @[simps]
 def forget : Split C ⥤ SimplicialObject C where
-  obj := fun S => S.x
-  map := fun S₁ S₂ Φ => Φ.f
+  obj S := S.x
+  map S₁ S₂ Φ := Φ.f
 
 /-- The functor `simplicial_object.split C ⥤ C` which sends a simplicial object equipped
 with a splitting to its nondegenerate `n`-simplices. -/
 @[simps]
 def evalN (n : ℕ) : Split C ⥤ C where
-  obj := fun S => S.s.n n
-  map := fun S₁ S₂ Φ => Φ.f n
+  obj S := S.s.n n
+  map S₁ S₂ Φ := Φ.f n
 
 /-- The inclusion of each summand in the coproduct decomposition of simplices
 in split simplicial objects is a natural transformation of functors
@@ -340,8 +393,8 @@ in split simplicial objects is a natural transformation of functors
 @[simps]
 def natTransιSummand {Δ : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) :
     evalN C A.1.unop.len ⟶ forget C ⋙ (evaluation SimplexCategoryᵒᵖ C).obj Δ where
-  app := fun S => S.s.ιSummand A
-  naturality' := fun S₁ S₂ Φ => (ι_summand_naturality_symm Φ A).symm
+  app S := S.s.ιSummand A
+  naturality' S₁ S₂ Φ := (ι_summand_naturality_symm Φ A).symm
 
 end Split
 

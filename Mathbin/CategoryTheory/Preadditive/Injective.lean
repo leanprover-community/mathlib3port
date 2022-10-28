@@ -44,7 +44,7 @@ structure InjectivePresentation (X : C) where
   j : C
   Injective : Injective J := by infer_instance
   f : X ⟶ J
-  mono : Mono f := by infer_instance
+  Mono : Mono f := by infer_instance
 
 variable (C)
 
@@ -71,7 +71,7 @@ section
 open ZeroObject
 
 instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] :
-    Injective (0 : C) where Factors := fun X Y g f mono => ⟨0, by ext⟩
+    Injective (0 : C) where Factors X Y g f mono := ⟨0, by ext⟩
 
 end
 
@@ -87,7 +87,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
 instance (X : Type u₁) [Nonempty X] :
     Injective
-      X where Factors := fun Y Z g f mono =>
+      X where Factors Y Z g f mono :=
     ⟨fun z => by
       classical <;> exact if h : z ∈ Set.Range f then g (Classical.choose h) else Nonempty.some inferInstance, by
       ext y
@@ -99,18 +99,18 @@ instance (X : Type u₁) [Nonempty X] :
       · exact False.elim (h ⟨y, rfl⟩)
         ⟩
 
-instance Type.enough_injectives :
+instance TypeCat.enough_injectives :
     EnoughInjectives
       (Type
-        u₁) where presentation := fun X =>
+        u₁) where presentation X :=
     Nonempty.intro
       { j := WithBot X, Injective := inferInstance, f := Option.some,
-        mono := by
+        Mono := by
           rw [mono_iff_injective]
           exact Option.some_injective X }
 
 instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
-    Injective (P ⨯ Q) where Factors := fun X Y g f mono => by
+    Injective (P ⨯ Q) where Factors X Y g f mono := by
     skip
     use limits.prod.lift (factor_thru (g ≫ limits.prod.fst) f) (factor_thru (g ≫ limits.prod.snd) f)
     simp only [prod.comp_lift, comp_factor_thru]
@@ -121,14 +121,14 @@ instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
       
 
 instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] :
-    Injective (∏ c) where Factors := fun X Y g f mono => by
+    Injective (∏ c) where Factors X Y g f mono := by
     skip
     refine' ⟨pi.lift fun b => factor_thru (g ≫ pi.π c _) f, _⟩
     ext ⟨j⟩
     simp only [category.assoc, limit.lift_π, fan.mk_π_app, comp_factor_thru]
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] :
-    Injective (P ⊞ Q) where Factors := fun X Y g f mono => by
+    Injective (P ⊞ Q) where Factors X Y g f mono := by
     skip
     refine' ⟨biprod.lift (factor_thru (g ≫ biprod.fst) f) (factor_thru (g ≫ biprod.snd) f), _⟩
     ext
@@ -138,7 +138,7 @@ instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [
       
 
 instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
-    Injective (⨁ c) where Factors := fun X Y g f mono => by
+    Injective (⨁ c) where Factors X Y g f mono := by
     skip
     refine' ⟨biproduct.lift fun b => factor_thru (g ≫ biproduct.π _ _) f, _⟩
     ext
@@ -147,25 +147,21 @@ instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀
 instance {P : Cᵒᵖ} [Projective P] :
     Injective
       (unop
-        P) where Factors := fun X Y g f mono =>
+        P) where Factors X Y g f mono :=
     ⟨(@projective.factor_thru Cᵒᵖ _ P _ _ _ g.op f.op _).unop, Quiver.Hom.op_inj (by simp)⟩
 
 instance {J : Cᵒᵖ} [Injective J] :
     Projective
-      (unop
-        J) where Factors := fun E X f e he =>
-    ⟨(@factor_thru Cᵒᵖ _ J _ _ _ f.op e.op _).unop, Quiver.Hom.op_inj (by simp)⟩
+      (unop J) where Factors E X f e he := ⟨(@factor_thru Cᵒᵖ _ J _ _ _ f.op e.op _).unop, Quiver.Hom.op_inj (by simp)⟩
 
 instance {J : C} [Injective J] :
     Projective
-      (op
-        J) where Factors := fun E X f e epi =>
-    ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
+      (op J) where Factors E X f e epi := ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
 instance {P : C} [Projective P] :
     Injective
       (op
-        P) where Factors := fun X Y g f mono =>
+        P) where Factors X Y g f mono :=
     ⟨(@projective.factor_thru C _ P _ _ _ g.unop f.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
 theorem injective_iff_projective_op {J : C} : Injective J ↔ Projective (op J) :=
@@ -240,7 +236,7 @@ def ι (X : C) : X ⟶ under X :=
   (EnoughInjectives.presentation X).some.f
 
 instance ι_mono (X : C) : Mono (ι X) :=
-  (EnoughInjectives.presentation X).some.mono
+  (EnoughInjectives.presentation X).some.Mono
 
 section
 

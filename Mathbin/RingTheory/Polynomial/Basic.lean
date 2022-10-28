@@ -29,7 +29,7 @@ noncomputable section
 
 open Classical BigOperators Polynomial
 
-open Finsetₓ
+open Finset
 
 universe u v w
 
@@ -37,9 +37,9 @@ variable {R : Type u} {S : Type _}
 
 namespace Polynomial
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 instance (p : ℕ) [h : CharP R p] : CharP R[X] p :=
   let ⟨h⟩ := h
@@ -62,68 +62,68 @@ theorem mem_degree_le {n : WithBot ℕ} {f : R[X]} : f ∈ degreeLe R n ↔ degr
 
 @[mono]
 theorem degree_le_mono {m n : WithBot ℕ} (H : m ≤ n) : degreeLe R m ≤ degreeLe R n := fun f hf =>
-  mem_degree_le.2 (le_transₓ (mem_degree_le.1 hf) H)
+  mem_degree_le.2 (le_trans (mem_degree_le.1 hf) H)
 
 theorem degree_le_eq_span_X_pow {n : ℕ} :
-    degreeLe R n = Submodule.span R ↑((Finsetₓ.range (n + 1)).Image fun n => (x : R[X]) ^ n) := by
-  apply le_antisymmₓ
+    degreeLe R n = Submodule.span R ↑((Finset.range (n + 1)).Image fun n => (x : R[X]) ^ n) := by
+  apply le_antisymm
   · intro p hp
     replace hp := mem_degree_le.1 hp
     rw [← Polynomial.sum_monomial_eq p, Polynomial.sum]
     refine' Submodule.sum_mem _ fun k hk => _
     show monomial _ _ ∈ _
-    have := WithBot.coe_le_coe.1 (Finsetₓ.sup_le_iff.1 hp k hk)
+    have := WithBot.coe_le_coe.1 (Finset.sup_le_iff.1 hp k hk)
     rw [monomial_eq_C_mul_X, C_mul']
     refine'
       Submodule.smul_mem _ _
         (Submodule.subset_span <|
-          Finsetₓ.mem_coe.2 <| Finsetₓ.mem_image.2 ⟨_, Finsetₓ.mem_range.2 (Nat.lt_succ_of_leₓ this), rfl⟩)
+          Finset.mem_coe.2 <| Finset.mem_image.2 ⟨_, Finset.mem_range.2 (Nat.lt_succ_of_le this), rfl⟩)
     
-  rw [Submodule.span_le, Finsetₓ.coe_image, Set.image_subset_iff]
+  rw [Submodule.span_le, Finset.coe_image, Set.image_subset_iff]
   intro k hk
   apply mem_degree_le.2
-  exact (degree_X_pow_le _).trans (WithBot.coe_le_coe.2 <| Nat.le_of_lt_succₓ <| Finsetₓ.mem_range.1 hk)
+  exact (degree_X_pow_le _).trans (WithBot.coe_le_coe.2 <| Nat.le_of_lt_succ <| Finset.mem_range.1 hk)
 
 theorem mem_degree_lt {n : ℕ} {f : R[X]} : f ∈ degreeLt R n ↔ degree f < n := by
-  simp_rw [degree_lt, Submodule.mem_infi, LinearMap.mem_ker, degree, Finsetₓ.max_eq_sup_coe,
-    Finsetₓ.sup_lt_iff (WithBot.bot_lt_coe n), mem_support_iff, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
+  simp_rw [degree_lt, Submodule.mem_infi, LinearMap.mem_ker, degree, Finset.max_eq_sup_coe,
+    Finset.sup_lt_iff (WithBot.bot_lt_coe n), mem_support_iff, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
   rfl
 
 @[mono]
 theorem degree_lt_mono {m n : ℕ} (H : m ≤ n) : degreeLt R m ≤ degreeLt R n := fun f hf =>
-  mem_degree_lt.2 (lt_of_lt_of_leₓ (mem_degree_lt.1 hf) <| WithBot.coe_le_coe.2 H)
+  mem_degree_lt.2 (lt_of_lt_of_le (mem_degree_lt.1 hf) <| WithBot.coe_le_coe.2 H)
 
 theorem degree_lt_eq_span_X_pow {n : ℕ} :
-    degreeLt R n = Submodule.span R ↑((Finsetₓ.range n).Image fun n => X ^ n : Finsetₓ R[X]) := by
-  apply le_antisymmₓ
+    degreeLt R n = Submodule.span R ↑((Finset.range n).Image fun n => X ^ n : Finset R[X]) := by
+  apply le_antisymm
   · intro p hp
     replace hp := mem_degree_lt.1 hp
     rw [← Polynomial.sum_monomial_eq p, Polynomial.sum]
     refine' Submodule.sum_mem _ fun k hk => _
     show monomial _ _ ∈ _
-    have := WithBot.coe_lt_coe.1 ((Finsetₓ.sup_lt_iff <| WithBot.bot_lt_coe n).1 hp k hk)
+    have := WithBot.coe_lt_coe.1 ((Finset.sup_lt_iff <| WithBot.bot_lt_coe n).1 hp k hk)
     rw [monomial_eq_C_mul_X, C_mul']
     refine'
       Submodule.smul_mem _ _
-        (Submodule.subset_span <| Finsetₓ.mem_coe.2 <| Finsetₓ.mem_image.2 ⟨_, Finsetₓ.mem_range.2 this, rfl⟩)
+        (Submodule.subset_span <| Finset.mem_coe.2 <| Finset.mem_image.2 ⟨_, Finset.mem_range.2 this, rfl⟩)
     
-  rw [Submodule.span_le, Finsetₓ.coe_image, Set.image_subset_iff]
+  rw [Submodule.span_le, Finset.coe_image, Set.image_subset_iff]
   intro k hk
   apply mem_degree_lt.2
-  exact lt_of_le_of_ltₓ (degree_X_pow_le _) (WithBot.coe_lt_coe.2 <| Finsetₓ.mem_range.1 hk)
+  exact lt_of_le_of_lt (degree_X_pow_le _) (WithBot.coe_lt_coe.2 <| Finset.mem_range.1 hk)
 
 /-- The first `n` coefficients on `degree_lt n` form a linear equivalence with `fin n → R`. -/
-def degreeLtEquiv (R) [Semiringₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ n → R where
-  toFun := fun p n => (↑p : R[X]).coeff n
-  invFun := fun f =>
-    ⟨∑ i : Finₓ n, monomial i (f i),
+def degreeLtEquiv (R) [Semiring R] (n : ℕ) : degreeLt R n ≃ₗ[R] Fin n → R where
+  toFun p n := (↑p : R[X]).coeff n
+  invFun f :=
+    ⟨∑ i : Fin n, monomial i (f i),
       (degreeLt R n).sum_mem fun i _ =>
-        mem_degree_lt.mpr (lt_of_le_of_ltₓ (degree_monomial_le i (f i)) (WithBot.coe_lt_coe.mpr i.is_lt))⟩
-  map_add' := fun p q => by
+        mem_degree_lt.mpr (lt_of_le_of_lt (degree_monomial_le i (f i)) (WithBot.coe_lt_coe.mpr i.is_lt))⟩
+  map_add' p q := by
     ext
     rw [Submodule.coe_add, coeff_add]
     rfl
-  map_smul' := fun x p => by
+  map_smul' x p := by
     ext
     rw [Submodule.coe_smul, coeff_smul]
     rfl
@@ -133,21 +133,21 @@ def degreeLtEquiv (R) [Semiringₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ 
     simp only [Submodule.coe_mk]
     by_cases hp0:p = 0
     · subst hp0
-      simp only [coeff_zero, LinearMap.map_zero, Finsetₓ.sum_const_zero]
+      simp only [coeff_zero, LinearMap.map_zero, Finset.sum_const_zero]
       
     rw [mem_degree_lt, degree_eq_nat_degree hp0, WithBot.coe_lt_coe] at hp
-    conv_rhs => rw [p.as_sum_range' n hp, ← Finₓ.sum_univ_eq_sum_range]
+    conv_rhs => rw [p.as_sum_range' n hp, ← Fin.sum_univ_eq_sum_range]
   right_inv := by
     intro f
     ext i
     simp only [finset_sum_coeff, Submodule.coe_mk]
-    rw [Finsetₓ.sum_eq_single i, coeff_monomial, if_pos rfl]
+    rw [Finset.sum_eq_single i, coeff_monomial, if_pos rfl]
     · rintro j - hji
       rw [coeff_monomial, if_neg]
-      rwa [← Finₓ.ext_iff]
+      rwa [← Fin.ext_iff]
       
     · intro h
-      exact (h (Finsetₓ.mem_univ _)).elim
+      exact (h (Finset.mem_univ _)).elim
       
 
 @[simp]
@@ -160,8 +160,8 @@ theorem eval_eq_sum_degree_lt_equiv {n : ℕ} {p : R[X]} (hp : p ∈ degreeLt R 
   exact (sum_fin _ (by simp_rw [zero_mul, forall_const]) (mem_degree_lt.mp hp)).symm
 
 /-- The finset of nonzero coefficients of a polynomial. -/
-def frange (p : R[X]) : Finsetₓ R :=
-  Finsetₓ.image (fun n => p.coeff n) p.Support
+def frange (p : R[X]) : Finset R :=
+  Finset.image (fun n => p.coeff n) p.Support
 
 theorem frange_zero : frange (0 : R[X]) = ∅ :=
   rfl
@@ -169,35 +169,38 @@ theorem frange_zero : frange (0 : R[X]) = ∅ :=
 theorem mem_frange_iff {p : R[X]} {c : R} : c ∈ p.frange ↔ ∃ n ∈ p.Support, c = p.coeff n := by simp [frange, eq_comm]
 
 theorem frange_one : frange (1 : R[X]) ⊆ {1} := by
-  simp [frange, Finsetₓ.image_subset_iff]
+  simp [frange, Finset.image_subset_iff]
   simp only [← C_1, coeff_C]
   intro n hn
-  simp only [exists_propₓ, ite_eq_right_iff, not_forall] at hn
+  simp only [exists_prop, ite_eq_right_iff, not_forall] at hn
   simp [hn]
 
 theorem coeff_mem_frange (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n ∈ p.frange := by
-  simp only [frange, exists_propₓ, mem_support_iff, Finsetₓ.mem_image, Ne.def]
+  simp only [frange, exists_prop, mem_support_iff, Finset.mem_image, Ne.def]
   exact ⟨n, h, rfl⟩
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (n.choose «expr + »(i, 1) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
     (∑ i in range n, (x : R[X]) ^ i).comp (X + 1) =
-      (Finsetₓ.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i :=
+      (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i :=
   by
   ext i
-  trans (n.choose (i + 1) : R)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (n.choose «expr + »(i, 1) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   swap
   · simp only [finset_sum_coeff, ← C_eq_nat_cast, coeff_C_mul_X_pow]
-    rw [Finsetₓ.sum_eq_single i, if_pos rfl]
-    · simp (config := { contextual := true }) only [@eq_comm _ i, if_false, eq_self_iff_true, implies_true_iff]
+    rw [Finset.sum_eq_single i, if_pos rfl]
+    · simp (config := { contextual := true }) only [@eq_comm _ i, if_false, eq_self_iff_true, imp_true_iff]
       
-    · simp (config := { contextual := true }) only [Nat.lt_add_one_iff, Nat.choose_eq_zero_of_lt, Nat.cast_zeroₓ,
-        Finsetₓ.mem_range, not_ltₓ, eq_self_iff_true, if_true, implies_true_iff]
+    · simp (config := { contextual := true }) only [Nat.lt_add_one_iff, Nat.choose_eq_zero_of_lt, Nat.cast_zero,
+        Finset.mem_range, not_lt, eq_self_iff_true, if_true, imp_true_iff]
       
     
   induction' n with n ih generalizing i
-  · simp only [geom_sum_zero, zero_comp, coeff_zero, Nat.choose_zero_succ, Nat.cast_zeroₓ]
+  · simp only [geom_sum_zero, zero_comp, coeff_zero, Nat.choose_zero_succ, Nat.cast_zero]
     
-  simp only [geom_sum_succ', ih, add_comp, X_pow_comp, coeff_add, Nat.choose_succ_succ, Nat.cast_addₓ,
+  simp only [geom_sum_succ', ih, add_comp, X_pow_comp, coeff_add, Nat.choose_succ_succ, Nat.cast_add,
     coeff_X_add_one_pow]
 
 theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : ℕ} (hn : n ≠ 0) :
@@ -208,9 +211,9 @@ theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : �
     
   rw [geom_sum_succ']
   refine' (hP.pow _).add_of_left _
-  refine' lt_of_le_of_ltₓ (degree_sum_le _ _) _
-  rw [Finsetₓ.sup_lt_iff]
-  · simp only [Finsetₓ.mem_range, degree_eq_nat_degree (hP.pow _).ne_zero, WithBot.coe_lt_coe, hP.nat_degree_pow]
+  refine' lt_of_le_of_lt (degree_sum_le _ _) _
+  rw [Finset.sup_lt_iff]
+  · simp only [Finset.mem_range, degree_eq_nat_degree (hP.pow _).ne_zero, WithBot.coe_lt_coe, hP.nat_degree_pow]
     intro k
     exact nsmul_lt_nsmul hdeg
     
@@ -227,11 +230,11 @@ theorem monic_geom_sum_X {n : ℕ} (hn : n ≠ 0) : (∑ i in range n, (x : R[X]
   apply monic_X.geom_sum _ hn
   simpa only [nat_degree_X] using zero_lt_one
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R]
+variable [Ring R]
 
 /-- Given a polynomial, return the polynomial whose coefficients are in
 the ring closure of the original coefficients. -/
@@ -245,7 +248,7 @@ def restriction (p : R[X]) : Polynomial (Subring.closure (↑p.frange : Set R)) 
 
 @[simp]
 theorem coeff_restriction {p : R[X]} {n : ℕ} : ↑(coeff (restriction p) n) = coeff p n := by
-  simp only [restriction, coeff_monomial, finset_sum_coeff, mem_support_iff, Finsetₓ.sum_ite_eq', Ne.def, ite_not]
+  simp only [restriction, coeff_monomial, finset_sum_coeff, mem_support_iff, Finset.sum_ite_eq', Ne.def, ite_not]
   split_ifs
   · rw [h]
     rfl
@@ -268,7 +271,7 @@ theorem support_restriction (p : R[X]) : support (restriction p) = support p := 
       rfl, fun H => Subtype.coe_injective H⟩
 
 @[simp]
-theorem map_restriction {R : Type u} [CommRingₓ R] (p : R[X]) : p.restriction.map (algebraMap _ _) = p :=
+theorem map_restriction {R : Type u} [CommRing R] (p : R[X]) : p.restriction.map (algebraMap _ _) = p :=
   ext fun n => by rw [coeff_map, Algebra.algebra_map_of_subring_apply, coeff_restriction]
 
 @[simp]
@@ -287,13 +290,13 @@ theorem monic_restriction {p : R[X]} : Monic (restriction p) ↔ Monic p := by
       rfl, fun H => Subtype.coe_injective H⟩
 
 @[simp]
-theorem restriction_zero : restriction (0 : R[X]) = 0 := by simp only [restriction, Finsetₓ.sum_empty, support_zero]
+theorem restriction_zero : restriction (0 : R[X]) = 0 := by simp only [restriction, Finset.sum_empty, support_zero]
 
 @[simp]
 theorem restriction_one : restriction (1 : R[X]) = 1 :=
   ext fun i => Subtype.eq <| by rw [coeff_restriction', coeff_one, coeff_one] <;> split_ifs <;> rfl
 
-variable [Semiringₓ S] {f : R →+* S} {x : S}
+variable [Semiring S] {f : R →+* S} {x : S}
 
 theorem eval₂_restriction {p : R[X]} :
     eval₂ f x p = eval₂ (f.comp (Subring.subtype (Subring.closure (p.frange : Set R)))) x p.restriction := by
@@ -316,7 +319,7 @@ include hp
 
 @[simp]
 theorem coeff_to_subring {n : ℕ} : ↑(coeff (toSubring p T hp) n) = coeff p n := by
-  simp only [to_subring, coeff_monomial, finset_sum_coeff, mem_support_iff, Finsetₓ.sum_ite_eq', Ne.def, ite_not]
+  simp only [to_subring, coeff_monomial, finset_sum_coeff, mem_support_iff, Finset.sum_ite_eq', Ne.def, ite_not]
   split_ifs
   · rw [h]
     rfl
@@ -361,7 +364,7 @@ theorem to_subring_zero : toSubring (0 : R[X]) T (by simp [frange_zero]) = 0 := 
 
 @[simp]
 theorem to_subring_one :
-    toSubring (1 : R[X]) T (Set.Subset.trans frange_one <| Finsetₓ.singleton_subset_set_iff.2 T.one_mem) = 1 :=
+    toSubring (1 : R[X]) T (Set.Subset.trans frange_one <| Finset.singleton_subset_set_iff.2 T.one_mem) = 1 :=
   ext fun i => Subtype.eq <| by rw [coeff_to_subring', coeff_one, coeff_one] <;> split_ifs <;> rfl
 
 @[simp]
@@ -379,7 +382,7 @@ def ofSubring (p : T[X]) : R[X] :=
   ∑ i in p.Support, monomial i (p.coeff i : R)
 
 theorem coeff_of_subring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff p n : T) := by
-  simp only [of_subring, coeff_monomial, finset_sum_coeff, mem_support_iff, Finsetₓ.sum_ite_eq', ite_eq_right_iff,
+  simp only [of_subring, coeff_monomial, finset_sum_coeff, mem_support_iff, Finset.sum_ite_eq', ite_eq_right_iff,
     Ne.def, ite_not, not_not, ite_eq_left_iff]
   intro h
   rw [h]
@@ -388,16 +391,16 @@ theorem coeff_of_subring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff
 @[simp]
 theorem frange_of_subring {p : T[X]} : (↑(p.ofSubring T).frange : Set R) ⊆ T := by
   intro i hi
-  simp only [frange, Set.mem_image, mem_support_iff, Ne.def, Finsetₓ.mem_coe, Finsetₓ.coe_image] at hi
+  simp only [frange, Set.mem_image, mem_support_iff, Ne.def, Finset.mem_coe, Finset.coe_image] at hi
   rcases hi with ⟨n, hn, h'n⟩
   rw [← h'n, coeff_of_subring]
   exact Subtype.mem (coeff p n : T)
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 section ModByMonic
 
@@ -412,7 +415,7 @@ theorem ker_mod_by_monic_hom (hq : q.Monic) : (Polynomial.modByMonicHom q).ker =
 
 end ModByMonic
 
-end CommRingₓ
+end CommRing
 
 end Polynomial
 
@@ -420,16 +423,16 @@ namespace Ideal
 
 open Polynomial
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 /-- Transport an ideal of `R[X]` to an `R`-submodule of `R[X]`. -/
 def ofPolynomial (I : Ideal R[X]) : Submodule R R[X] where
   Carrier := I.Carrier
   zero_mem' := I.zero_mem
-  add_mem' := fun _ _ => I.add_mem
-  smul_mem' := fun c x H => by
+  add_mem' _ _ := I.add_mem
+  smul_mem' c x H := by
     rw [← C_mul']
     exact I.mul_mem_left _ H
 
@@ -455,11 +458,11 @@ leading coefficients in `I`. -/
 def leadingCoeff : Ideal R :=
   ⨆ n : ℕ, I.leadingCoeffNth n
 
-end Semiringₓ
+end Semiring
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R] [Semiringₓ S]
+variable [CommSemiring R] [Semiring S]
 
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself -/
 theorem polynomial_mem_ideal_of_coeff_mem_ideal (I : Ideal R[X]) (p : R[X])
@@ -511,12 +514,12 @@ theorem mem_leading_coeff_nth (n : ℕ) (x) : x ∈ I.leadingCoeffNth n ↔ ∃ 
   simp only [leading_coeff_nth, degree_le, Submodule.mem_map, lcoeff_apply, Submodule.mem_inf, mem_degree_le]
   constructor
   · rintro ⟨p, ⟨hpdeg, hpI⟩, rfl⟩
-    cases' lt_or_eq_of_leₓ hpdeg with hpdeg hpdeg
+    cases' lt_or_eq_of_le hpdeg with hpdeg hpdeg
     · refine' ⟨0, I.zero_mem, bot_le, _⟩
       rw [leading_coeff_zero, eq_comm]
       exact coeff_eq_zero_of_degree_lt hpdeg
       
-    · refine' ⟨p, hpI, le_of_eqₓ hpdeg, _⟩
+    · refine' ⟨p, hpI, le_of_eq hpdeg, _⟩
       rw [Polynomial.leadingCoeff, nat_degree, hpdeg]
       rfl
       
@@ -524,10 +527,10 @@ theorem mem_leading_coeff_nth (n : ℕ) (x) : x ∈ I.leadingCoeffNth n ↔ ∃ 
   · rintro ⟨p, hpI, hpdeg, rfl⟩
     have : nat_degree p + (n - nat_degree p) = n := add_tsub_cancel_of_le (nat_degree_le_of_degree_le hpdeg)
     refine' ⟨p * X ^ (n - nat_degree p), ⟨_, I.mul_mem_right _ hpI⟩, _⟩
-    · apply le_transₓ (degree_mul_le _ _) _
-      apply le_transₓ (add_le_add degree_le_nat_degree (degree_X_pow_le _)) _
+    · apply le_trans (degree_mul_le _ _) _
+      apply le_trans (add_le_add degree_le_nat_degree (degree_X_pow_le _)) _
       rw [← WithBot.coe_add, this]
-      exact le_rflₓ
+      exact le_rfl
       
     · rw [Polynomial.leadingCoeff, ← coeff_mul_X_pow p (n - nat_degree p), this]
       
@@ -536,7 +539,7 @@ theorem mem_leading_coeff_nth (n : ℕ) (x) : x ∈ I.leadingCoeffNth n ↔ ∃ 
 theorem mem_leading_coeff_nth_zero (x) : x ∈ I.leadingCoeffNth 0 ↔ c x ∈ I :=
   (mem_leading_coeff_nth _ _ _).trans
     ⟨fun ⟨p, hpI, hpdeg, hpx⟩ => by
-      rwa [← hpx, Polynomial.leadingCoeff, Nat.eq_zero_of_le_zeroₓ (nat_degree_le_of_degree_le hpdeg), ←
+      rwa [← hpx, Polynomial.leadingCoeff, Nat.eq_zero_of_le_zero (nat_degree_le_of_degree_le hpdeg), ←
         eq_C_of_degree_le_zero hpdeg],
       fun hx => ⟨c x, hx, degree_C_le, leading_coeff_C x⟩⟩
 
@@ -545,10 +548,10 @@ theorem leading_coeff_nth_mono {m n : ℕ} (H : m ≤ n) : I.leadingCoeffNth m �
   simp only [SetLike.mem_coe, mem_leading_coeff_nth] at hr⊢
   rcases hr with ⟨p, hpI, hpdeg, rfl⟩
   refine' ⟨p * X ^ (n - m), I.mul_mem_right _ hpI, _, leading_coeff_mul_X_pow⟩
-  refine' le_transₓ (degree_mul_le _ _) _
-  refine' le_transₓ (add_le_add hpdeg (degree_X_pow_le _)) _
+  refine' le_trans (degree_mul_le _ _) _
+  refine' le_trans (add_le_add hpdeg (degree_X_pow_le _)) _
   rw [← WithBot.coe_add, add_tsub_cancel_of_le H]
-  exact le_rflₓ
+  exact le_rfl
 
 theorem mem_leading_coeff (x) : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.leadingCoeff p = x := by
   rw [leading_coeff, Submodule.mem_supr_of_directed]
@@ -561,17 +564,17 @@ theorem mem_leading_coeff (x) : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial
     exact ⟨nat_degree p, p, hpI, degree_le_nat_degree, rfl⟩
     
   intro i j
-  exact ⟨i + j, I.leading_coeff_nth_mono (Nat.le_add_rightₓ _ _), I.leading_coeff_nth_mono (Nat.le_add_leftₓ _ _)⟩
+  exact ⟨i + j, I.leading_coeff_nth_mono (Nat.le_add_right _ _), I.leading_coeff_nth_mono (Nat.le_add_left _ _)⟩
 
 /-- If `I` is an ideal, and `pᵢ` is a finite family of polynomials each satisfying
 `∀ k, (pᵢ)ₖ ∈ Iⁿⁱ⁻ᵏ` for some `nᵢ`, then `p = ∏ pᵢ` also satisfies `∀ k, pₖ ∈ Iⁿ⁻ᵏ` with `n = ∑ nᵢ`.
 -/
-theorem _root_.polynomial.coeff_prod_mem_ideal_pow_tsub {ι : Type _} (s : Finsetₓ ι) (f : ι → R[X]) (I : Ideal R)
+theorem _root_.polynomial.coeff_prod_mem_ideal_pow_tsub {ι : Type _} (s : Finset ι) (f : ι → R[X]) (I : Ideal R)
     (n : ι → ℕ) (h : ∀ i ∈ s, ∀ (k), (f i).coeff k ∈ I ^ (n i - k)) (k : ℕ) : (s.Prod f).coeff k ∈ I ^ (s.Sum n - k) :=
   by
   classical
-  induction' s using Finsetₓ.induction with a s ha hs generalizing k
-  · rw [sum_empty, prod_empty, coeff_one, zero_tsub, pow_zeroₓ, Ideal.one_eq_top]
+  induction' s using Finset.induction with a s ha hs generalizing k
+  · rw [sum_empty, prod_empty, coeff_one, zero_tsub, pow_zero, Ideal.one_eq_top]
     exact Submodule.mem_top
     
   · rw [sum_insert ha, prod_insert ha, coeff_mul]
@@ -579,17 +582,17 @@ theorem _root_.polynomial.coeff_prod_mem_ideal_pow_tsub {ι : Type _} (s : Finse
     rintro ⟨i, j⟩ e
     obtain rfl : i + j = k := nat.mem_antidiagonal.mp e
     apply Ideal.pow_le_pow add_tsub_add_le_tsub_add_tsub
-    rw [pow_addₓ]
+    rw [pow_add]
     exact
       Ideal.mul_mem_mul (h _ (finset.mem_insert.mpr <| Or.inl rfl) _)
         (hs (fun i hi k => h _ (finset.mem_insert.mpr <| Or.inr hi) _) j)
     
 
-end CommSemiringₓ
+end CommSemiring
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R]
+variable [Ring R]
 
 /-- `polynomial R` is never a field for any ring `R`. -/
 theorem polynomial_not_is_field : ¬IsField R[X] := by
@@ -612,11 +615,11 @@ theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal R[X]) [hI
   convert I.mul_mem_left (C y) hx
   rw [← C.map_mul, hR.mul_comm y x, hy, RingHom.map_one]
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 theorem quotient_map_C_eq_zero {I : Ideal R} :
     ∀ a ∈ I, ((Quotient.mk (map (c : R →+* R[X]) I : Ideal R[X])).comp c) a = 0 := by
@@ -630,9 +633,9 @@ theorem eval₂_C_mk_eq_zero {I : Ideal R} :
   rw [← sum_monomial_eq a]
   dsimp
   rw [eval₂_sum]
-  refine' Finsetₓ.sum_eq_zero fun n hn => _
+  refine' Finset.sum_eq_zero fun n hn => _
   dsimp
-  rw [eval₂_monomial (C.comp (Quotientₓ.mk I)) X]
+  rw [eval₂_monomial (C.comp (Quotient.mk I)) X]
   refine' mul_eq_zero_of_left (Polynomial.ext fun m => _) (X ^ n)
   erw [coeff_C]
   by_cases h:m = 0
@@ -649,8 +652,8 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : Polynomial (R ⧸ 
     eval₂RingHom (Quotient.lift I ((Quotient.mk (map c I : Ideal R[X])).comp c) quotient_map_C_eq_zero)
       (Quotient.mk (map c I : Ideal R[X]) x)
   invFun := Quotient.lift (map c I : Ideal R[X]) (eval₂RingHom (c.comp (Quotient.mk I)) x) eval₂_C_mk_eq_zero
-  map_mul' := fun f g => by simp only [coe_eval₂_ring_hom, eval₂_mul]
-  map_add' := fun f g => by simp only [eval₂_add, coe_eval₂_ring_hom]
+  map_mul' f g := by simp only [coe_eval₂_ring_hom, eval₂_mul]
+  map_add' f g := by simp only [eval₂_add, coe_eval₂_ring_hom]
   left_inv := by
     intro f
     apply Polynomial.induction_on' f
@@ -660,7 +663,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : Polynomial (R ⧸ 
       simp only [coe_eval₂_ring_hom, hp, hq, RingHom.map_add]
       
     · rintro n ⟨x⟩
-      simp only [monomial_eq_smul_X, C_mul', Quotientₓ.lift_mk, Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk,
+      simp only [monomial_eq_smul_X, C_mul', Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk,
         eval₂_X_pow, eval₂_smul, coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp, RingHom.map_mul,
         eval₂_X]
       
@@ -671,7 +674,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : Polynomial (R ⧸ 
       rw [hp, hq]
       
     · intro n a
-      simp only [monomial_eq_smul_X, ← C_mul' a (X ^ n), Quotientₓ.lift_mk, Submodule.Quotient.quot_mk_eq_mk,
+      simp only [monomial_eq_smul_X, ← C_mul' a (X ^ n), Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk,
         quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul, coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp,
         RingHom.map_mul, eval₂_X]
       
@@ -689,13 +692,12 @@ theorem polynomial_quotient_equiv_quotient_polynomial_map_mk (I : Ideal R) (f : 
   rw [RingEquiv.symm_apply_apply, polynomial_quotient_equiv_quotient_polynomial_symm_mk]
 
 /-- If `P` is a prime ideal of `R`, then `R[x]/(P)` is an integral domain. -/
-theorem is_domain_map_C_quotient {P : Ideal R} (H : IsPrime P) :
-    IsDomain (R[X] ⧸ (map (c : R →+* R[X]) P : Ideal R[X])) :=
-  RingEquiv.is_domain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
+theorem isDomainMapCQuotient {P : Ideal R} (H : IsPrime P) : IsDomain (R[X] ⧸ (map (c : R →+* R[X]) P : Ideal R[X])) :=
+  RingEquiv.isDomain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
 theorem is_prime_map_C_of_is_prime {P : Ideal R} (H : IsPrime P) : IsPrime (map (c : R →+* R[X]) P : Ideal R[X]) :=
-  (Quotient.is_domain_iff_prime (map c P : Ideal R[X])).mp (is_domain_map_C_quotient H)
+  (Quotient.is_domain_iff_prime (map c P : Ideal R[X])).mp (isDomainMapCQuotient H)
 
 /-- Given any ring `R` and an ideal `I` of `polynomial R`, we get a map `R → R[x] → R[x]/I`.
   If we let `R` be the image of `R` in `R[x]/I` then we also have a map `R[x] → R'[x]`.
@@ -704,7 +706,7 @@ theorem is_prime_map_C_of_is_prime {P : Ideal R} (H : IsPrime P) : IsPrime (map 
   -/
 theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk I).comp c).range)
     (hx : c x ∈ I.map (Polynomial.mapRingHom ((Quotient.mk I).comp c).range_restrict)) : x = 0 := by
-  let i := ((Quotientₓ.mk I).comp C).range_restrict
+  let i := ((Quotient.mk I).comp C).range_restrict
   have hi' : (Polynomial.mapRingHom i).ker ≤ I := by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
     rw [mem_comap, ← quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
@@ -719,7 +721,7 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
   suffices C (i y) ∈ I.map (Polynomial.mapRingHom i) by
     obtain ⟨f, hf⟩ :=
       mem_image_of_mem_map_of_surjective (Polynomial.mapRingHom i)
-        (Polynomial.map_surjective _ ((Quotientₓ.mk I).comp C).range_restrict_surjective) this
+        (Polynomial.map_surjective _ ((Quotient.mk I).comp C).range_restrict_surjective) this
     refine' sub_add_cancel (C y) f ▸ I.add_mem (hi' _ : C y - f ∈ I) hf.1
     rw [RingHom.mem_ker, RingHom.map_sub, hf.2, sub_eq_zero, coe_map_ring_hom, map_C]
   exact hx
@@ -727,13 +729,13 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
 theorem is_fg_degree_le [IsNoetherianRing R] (I : Ideal R[X]) (n : ℕ) : Submodule.Fg (I.degreeLe n) :=
   is_noetherian_submodule_left.1 (is_noetherian_of_fg_of_noetherian _ ⟨_, degree_le_eq_span_X_pow.symm⟩) _
 
-end CommRingₓ
+end CommRing
 
 end Ideal
 
 variable {σ : Type v} {M : Type w}
 
-variable [CommRingₓ R] [CommRingₓ S] [AddCommGroupₓ M] [Module R M]
+variable [CommRing R] [CommRing S] [AddCommGroup M] [Module R M]
 
 section Prime
 
@@ -742,7 +744,7 @@ variable (σ) {r : R}
 namespace Polynomial
 
 theorem prime_C_iff : Prime (c r) ↔ Prime r :=
-  ⟨comap_prime c (evalRingHom (0 : R)) fun r => eval_C, fun hr => by
+  ⟨comapPrime c (evalRingHom (0 : R)) fun r => eval_C, fun hr => by
     have := hr.1
     rw [← Ideal.span_singleton_prime] at hr⊢
     · convert Ideal.is_prime_map_C_of_is_prime hr using 1
@@ -754,15 +756,15 @@ end Polynomial
 
 namespace MvPolynomial
 
-private theorem prime_C_iff_of_fintype [Fintypeₓ σ] : Prime (c r : MvPolynomial σ R) ↔ Prime r := by
-  rw [(rename_equiv R (Fintypeₓ.equivFin σ)).toMulEquiv.prime_iff]
+private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (c r : MvPolynomial σ R) ↔ Prime r := by
+  rw [(rename_equiv R (Fintype.equivFin σ)).toMulEquiv.prime_iff]
   convert_to Prime (C r) ↔ _
   · congr
     apply rename_C
     
   · symm
-    induction' Fintypeₓ.card σ with d hd
-    · exact (is_empty_alg_equiv R (Finₓ 0)).toMulEquiv.symm.prime_iff
+    induction' Fintype.card σ with d hd
+    · exact (is_empty_alg_equiv R (Fin 0)).toMulEquiv.symm.prime_iff
       
     · rw [hd, ← Polynomial.prime_C_iff]
       convert (finSuccEquiv R d).toMulEquiv.symm.prime_iff
@@ -772,7 +774,7 @@ private theorem prime_C_iff_of_fintype [Fintypeₓ σ] : Prime (c r : MvPolynomi
     
 
 theorem prime_C_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
-  ⟨comap_prime c constantCoeff constant_coeff_C, fun hr =>
+  ⟨comapPrime c constantCoeff constant_coeff_C, fun hr =>
     ⟨fun h =>
       hr.1 <| by
         rw [← C_inj, h]
@@ -798,7 +800,7 @@ theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} : Prime (rename (co
   classical
   symm
   let eqv :=
-    (sum_alg_equiv R _ _).symm.trans (rename_equiv R <| (Equivₓ.sumComm (↥(sᶜ)) s).trans <| Equivₓ.Set.sumCompl s)
+    (sum_alg_equiv R _ _).symm.trans (rename_equiv R <| (Equiv.sumComm (↥(sᶜ)) s).trans <| Equiv.Set.sumCompl s)
   rw [← prime_C_iff ↥(sᶜ), eqv.to_mul_equiv.prime_iff]
   convert Iff.rfl
   suffices (rename coe).toRingHom = eqv.to_alg_hom.to_ring_hom.comp C by apply RingHom.congr_fun this
@@ -820,7 +822,7 @@ end Prime
 
 namespace Polynomial
 
-instance (priority := 100) {R : Type _} [CommRingₓ R] [IsDomain R] [WfDvdMonoid R] :
+instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R] :
     WfDvdMonoid R[X] where well_founded_dvd_not_unit := by
     classical
     refine'
@@ -834,12 +836,12 @@ instance (priority := 100) {R : Type _} [CommRingₓ R] [IsDomain R] [WfDvdMonoi
     split_ifs with hac
     · rw [hac, Polynomial.leading_coeff_zero]
       apply Prod.Lex.left
-      exact lt_of_le_of_neₓ le_top WithTop.coe_ne_top
+      exact lt_of_le_of_ne le_top WithTop.coe_ne_top
       
     have cne0 : c ≠ 0 := right_ne_zero_of_mul hac
     simp only [cne0, ane0, Polynomial.leading_coeff_mul]
     by_cases hdeg:c.degree = 0
-    · simp only [hdeg, add_zeroₓ]
+    · simp only [hdeg, add_zero]
       refine' Prod.Lex.right _ ⟨_, ⟨c.leading_coeff, fun unit_c => not_unit_c _, rfl⟩⟩
       · rwa [Ne, Polynomial.leading_coeff_eq_zero]
         
@@ -850,7 +852,7 @@ instance (priority := 100) {R : Type _} [CommRingₓ R] [IsDomain R] [WfDvdMonoi
     · apply Prod.Lex.left
       rw [Polynomial.degree_eq_nat_degree cne0] at *
       rw [WithTop.coe_lt_coe, Polynomial.degree_eq_nat_degree ane0, ← WithBot.coe_add, WithBot.coe_lt_coe]
-      exact lt_add_of_pos_right _ (Nat.pos_of_ne_zeroₓ fun h => hdeg (h.symm ▸ WithBot.coe_zero))
+      exact lt_add_of_pos_right _ (Nat.pos_of_ne_zero fun h => hdeg (h.symm ▸ WithBot.coe_zero))
       
 
 end Polynomial
@@ -866,17 +868,17 @@ protected theorem Polynomial.is_noetherian_ring [IsNoetherianRing R] : IsNoether
       let ⟨N, HN⟩ := hm
       let ⟨s, hs⟩ := I.is_fg_degree_le N
       have hm2 : ∀ k, I.leadingCoeffNth k ≤ M := fun k =>
-        Or.cases_on (le_or_ltₓ k N) (fun h => HN ▸ I.leading_coeff_nth_mono h) fun h x hx =>
+        Or.cases_on (le_or_lt k N) (fun h => HN ▸ I.leading_coeff_nth_mono h) fun h x hx =>
           Classical.by_contradiction fun hxm =>
             have : ¬M < I.leadingCoeffNth k := by
               refine' WellFounded.not_lt_min (well_founded_submodule_gt _ _) _ _ _ <;> exact ⟨k, rfl⟩
-            this ⟨HN ▸ I.leading_coeff_nth_mono (le_of_ltₓ h), fun H => hxm (H hx)⟩
+            this ⟨HN ▸ I.leading_coeff_nth_mono (le_of_lt h), fun H => hxm (H hx)⟩
       have hs2 : ∀ {x}, x ∈ I.degreeLe N → x ∈ Ideal.span (↑s : Set R[X]) :=
         hs ▸ fun x hx =>
           Submodule.span_induction hx (fun _ hx => Ideal.subset_span hx) (Ideal.zero_mem _) (fun _ _ => Ideal.add_mem _)
             fun c f hf => f.C_mul' c ▸ Ideal.mul_mem_left _ _ hf
       ⟨s,
-        le_antisymmₓ
+        le_antisymm
             (Ideal.span_le.2 fun x hx =>
               have : x ∈ I.degreeLe N := hs ▸ Submodule.subset_span hx
               this.2) <|
@@ -885,21 +887,21 @@ protected theorem Polynomial.is_noetherian_ring [IsNoetherianRing R] : IsNoether
           rw [this]
           intro p hp
           generalize hn : p.nat_degree = k
-          induction' k using Nat.strong_induction_onₓ with k ih generalizing p
-          cases le_or_ltₓ k N
+          induction' k using Nat.strong_induction_on with k ih generalizing p
+          cases le_or_lt k N
           · subst k
             refine'
-              hs2 ⟨Polynomial.mem_degree_le.2 (le_transₓ Polynomial.degree_le_nat_degree <| WithBot.coe_le_coe.2 h), hp⟩
+              hs2 ⟨Polynomial.mem_degree_le.2 (le_trans Polynomial.degree_le_nat_degree <| WithBot.coe_le_coe.2 h), hp⟩
             
           · have hp0 : p ≠ 0 := by
               rintro rfl
               cases hn
-              exact Nat.not_lt_zeroₓ _ h
+              exact Nat.not_lt_zero _ h
             have : (0 : R) ≠ 1 := by
               intro h
               apply hp0
               ext i
-              refine' (mul_oneₓ _).symm.trans _
+              refine' (mul_one _).symm.trans _
               rw [← h, mul_zero]
               rfl
             haveI : Nontrivial R := ⟨⟨0, 1, this⟩⟩
@@ -917,9 +919,9 @@ protected theorem Polynomial.is_noetherian_ring [IsNoetherianRing R] : IsNoether
               rw [Polynomial.degree_mul', Polynomial.degree_X_pow]
               rw [Polynomial.degree_eq_nat_degree hp0, Polynomial.degree_eq_nat_degree hq0]
               rw [← WithBot.coe_add, add_tsub_cancel_of_le, hn]
-              · refine' le_transₓ (Polynomial.nat_degree_le_of_degree_le hdq) (le_of_ltₓ h)
+              · refine' le_trans (Polynomial.nat_degree_le_of_degree_le hdq) (le_of_lt h)
                 
-              rw [Polynomial.leading_coeff_X_pow, mul_oneₓ]
+              rw [Polynomial.leading_coeff_X_pow, mul_one]
               exact mt Polynomial.leading_coeff_eq_zero.1 hq0
             have h2 : p.leading_coeff = (q * Polynomial.x ^ (k - q.nat_degree)).leadingCoeff := by
               rw [← hlqp, Polynomial.leading_coeff_mul_X_pow]
@@ -941,20 +943,20 @@ attribute [instance] Polynomial.is_noetherian_ring
 
 namespace Polynomial
 
-theorem exists_irreducible_of_degree_pos {R : Type u} [CommRingₓ R] [IsDomain R] [WfDvdMonoid R] {f : R[X]}
+theorem exists_irreducible_of_degree_pos {R : Type u} [CommRing R] [IsDomain R] [WfDvdMonoid R] {f : R[X]}
     (hf : 0 < f.degree) : ∃ g, Irreducible g ∧ g ∣ f :=
-  WfDvdMonoid.exists_irreducible_factor (fun huf => ne_of_gtₓ hf <| degree_eq_zero_of_is_unit huf) fun hf0 =>
+  WfDvdMonoid.exists_irreducible_factor (fun huf => ne_of_gt hf <| degree_eq_zero_of_is_unit huf) fun hf0 =>
     not_lt_of_lt hf <| hf0.symm ▸ (@degree_zero R _).symm ▸ WithBot.bot_lt_coe _
 
-theorem exists_irreducible_of_nat_degree_pos {R : Type u} [CommRingₓ R] [IsDomain R] [WfDvdMonoid R] {f : R[X]}
+theorem exists_irreducible_of_nat_degree_pos {R : Type u} [CommRing R] [IsDomain R] [WfDvdMonoid R] {f : R[X]}
     (hf : 0 < f.natDegree) : ∃ g, Irreducible g ∧ g ∣ f :=
   exists_irreducible_of_degree_pos <| by
     contrapose! hf
     exact nat_degree_le_of_degree_le hf
 
-theorem exists_irreducible_of_nat_degree_ne_zero {R : Type u} [CommRingₓ R] [IsDomain R] [WfDvdMonoid R] {f : R[X]}
+theorem exists_irreducible_of_nat_degree_ne_zero {R : Type u} [CommRing R] [IsDomain R] [WfDvdMonoid R] {f : R[X]}
     (hf : f.natDegree ≠ 0) : ∃ g, Irreducible g ∧ g ∣ f :=
-  exists_irreducible_of_nat_degree_pos <| Nat.pos_of_ne_zeroₓ hf
+  exists_irreducible_of_nat_degree_pos <| Nat.pos_of_ne_zero hf
 
 theorem linear_independent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :
     (LinearIndependent R fun n : ℕ => (f ^ n) v) ↔ ∀ p : R[X], aeval f p v = 0 → p = 0 := by
@@ -963,7 +965,7 @@ theorem linear_independent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :
     of_finsupp_eq_zero]
   exact Iff.rfl
 
-theorem disjoint_ker_aeval_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
+theorem disjointKerAevalOfCoprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
     Disjoint (aeval f p).ker (aeval f q).ker := by
   intro v hv
   rcases hpq with ⟨p', q', hpq'⟩
@@ -990,11 +992,11 @@ theorem sup_ker_aeval_le_ker_aeval_mul {f : M →ₗ[R] M} {p q : R[X]} :
     rw [mul_comm, aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hx, LinearMap.map_zero]
   have h_eval_y : aeval f (p * q) y = 0 := by
     rw [aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hy, LinearMap.map_zero]
-  rw [LinearMap.mem_ker, ← hxy, LinearMap.map_add, h_eval_x, h_eval_y, add_zeroₓ]
+  rw [LinearMap.mem_ker, ← hxy, LinearMap.map_add, h_eval_x, h_eval_y, add_zero]
 
 theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
     (aeval f p).ker ⊔ (aeval f q).ker = (aeval f (p * q)).ker := by
-  apply le_antisymmₓ sup_ker_aeval_le_ker_aeval_mul
+  apply le_antisymm sup_ker_aeval_le_ker_aeval_mul
   intro v hv
   rw [Submodule.mem_sup]
   rcases hpq with ⟨p', q', hpq'⟩
@@ -1012,31 +1014,31 @@ theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime (f : M →ₗ[R] M) {p q : R[X
   rw [aeval_mul] at h_eval₂_qpp' h_eval₂_pqq'
   refine'
     ⟨aeval f (q * q') v, LinearMap.mem_ker.1 h_eval₂_pqq', aeval f (p * p') v, LinearMap.mem_ker.1 h_eval₂_qpp', _⟩
-  rw [add_commₓ, mul_comm p p', mul_comm q q']
+  rw [add_comm, mul_comm p p', mul_comm q q']
   simpa using congr_arg (fun p : R[X] => aeval f p v) hpq'
 
 end Polynomial
 
 namespace MvPolynomial
 
-theorem is_noetherian_ring_fin_0 [IsNoetherianRing R] : IsNoetherianRing (MvPolynomial (Finₓ 0) R) :=
+theorem is_noetherian_ring_fin_0 [IsNoetherianRing R] : IsNoetherianRing (MvPolynomial (Fin 0) R) :=
   is_noetherian_ring_of_ring_equiv R
     ((MvPolynomial.isEmptyRingEquiv R Pempty).symm.trans (renameEquiv R finZeroEquiv'.symm).toRingEquiv)
 
-theorem is_noetherian_ring_fin [IsNoetherianRing R] : ∀ {n : ℕ}, IsNoetherianRing (MvPolynomial (Finₓ n) R)
+theorem is_noetherian_ring_fin [IsNoetherianRing R] : ∀ {n : ℕ}, IsNoetherianRing (MvPolynomial (Fin n) R)
   | 0 => is_noetherian_ring_fin_0
   | n + 1 =>
-    @is_noetherian_ring_of_ring_equiv (Polynomial (MvPolynomial (Finₓ n) R)) _ _ _
+    @is_noetherian_ring_of_ring_equiv (Polynomial (MvPolynomial (Fin n) R)) _ _ _
       (MvPolynomial.finSuccEquiv _ n).toRingEquiv.symm
-      (@Polynomial.is_noetherian_ring (MvPolynomial (Finₓ n) R) _ is_noetherian_ring_fin)
+      (@Polynomial.is_noetherian_ring (MvPolynomial (Fin n) R) _ is_noetherian_ring_fin)
 
 /-- The multivariate polynomial ring in finitely many variables over a noetherian ring
 is itself a noetherian ring. -/
 instance is_noetherian_ring [Finite σ] [IsNoetherianRing R] : IsNoetherianRing (MvPolynomial σ R) := by
   cases nonempty_fintype σ <;>
     exact
-      @is_noetherian_ring_of_ring_equiv (MvPolynomial (Finₓ (Fintypeₓ.card σ)) R) _ _ _
-        (rename_equiv R (Fintypeₓ.equivFin σ).symm).toRingEquiv is_noetherian_ring_fin
+      @is_noetherian_ring_of_ring_equiv (MvPolynomial (Fin (Fintype.card σ)) R) _ _ _
+        (rename_equiv R (Fintype.equivFin σ).symm).toRingEquiv is_noetherian_ring_fin
 
 /-- Auxiliary lemma:
 Multivariate polynomials over an integral domain
@@ -1044,8 +1046,8 @@ with variables indexed by `fin n` form an integral domain.
 This fact is proven inductively,
 and then used to prove the general case without any finiteness hypotheses.
 See `mv_polynomial.no_zero_divisors` for the general case. -/
-theorem no_zero_divisors_fin (R : Type u) [CommSemiringₓ R] [NoZeroDivisors R] :
-    ∀ n : ℕ, NoZeroDivisors (MvPolynomial (Finₓ n) R)
+theorem no_zero_divisors_fin (R : Type u) [CommSemiring R] [NoZeroDivisors R] :
+    ∀ n : ℕ, NoZeroDivisors (MvPolynomial (Fin n) R)
   | 0 => (MvPolynomial.isEmptyAlgEquiv R _).Injective.NoZeroDivisors _ (map_zero _) (map_mul _)
   | n + 1 =>
     haveI := no_zero_divisors_fin n
@@ -1056,19 +1058,19 @@ Multivariate polynomials in finitely many variables over an integral domain form
 This fact is proven by transport of structure from the `mv_polynomial.no_zero_divisors_fin`,
 and then used to prove the general case without finiteness hypotheses.
 See `mv_polynomial.no_zero_divisors` for the general case. -/
-theorem no_zero_divisors_of_finite (R : Type u) (σ : Type v) [CommSemiringₓ R] [Finite σ] [NoZeroDivisors R] :
+theorem no_zero_divisors_of_finite (R : Type u) (σ : Type v) [CommSemiring R] [Finite σ] [NoZeroDivisors R] :
     NoZeroDivisors (MvPolynomial σ R) := by
   cases nonempty_fintype σ
-  haveI := no_zero_divisors_fin R (Fintypeₓ.card σ)
-  exact (rename_equiv R (Fintypeₓ.equivFin σ)).Injective.NoZeroDivisors _ (map_zero _) (map_mul _)
+  haveI := no_zero_divisors_fin R (Fintype.card σ)
+  exact (rename_equiv R (Fintype.equivFin σ)).Injective.NoZeroDivisors _ (map_zero _) (map_mul _)
 
-instance {R : Type u} [CommSemiringₓ R] [NoZeroDivisors R] {σ : Type v} : NoZeroDivisors (MvPolynomial σ R) :=
+instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} : NoZeroDivisors (MvPolynomial σ R) :=
   ⟨fun p q h => by
     obtain ⟨s, p, rfl⟩ := exists_finset_rename p
     obtain ⟨t, q, rfl⟩ := exists_finset_rename q
     have :
-      rename (Subtype.map id (Finsetₓ.subset_union_left s t) : { x // x ∈ s } → { x // x ∈ s ∪ t }) p *
-          rename (Subtype.map id (Finsetₓ.subset_union_right s t) : { x // x ∈ t } → { x // x ∈ s ∪ t }) q =
+      rename (Subtype.map id (Finset.subset_union_left s t) : { x // x ∈ s } → { x // x ∈ s ∪ t }) p *
+          rename (Subtype.map id (Finset.subset_union_right s t) : { x // x ∈ t } → { x // x ∈ s ∪ t }) q =
         0 :=
       by
       apply rename_injective _ Subtype.val_injective
@@ -1079,10 +1081,10 @@ instance {R : Type u} [CommSemiringₓ R] [NoZeroDivisors R] {σ : Type v} : NoZ
     all_goals simpa using congr_arg (rename Subtype.val) this⟩
 
 /-- The multivariate polynomial ring over an integral domain is an integral domain. -/
-instance {R : Type u} {σ : Type v} [CommRingₓ R] [IsDomain R] : IsDomain (MvPolynomial σ R) :=
+instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPolynomial σ R) :=
   { MvPolynomial.no_zero_divisors, AddMonoidAlgebra.nontrivial with }
 
-theorem map_mv_polynomial_eq_eval₂ {S : Type _} [CommRingₓ S] [Finite σ] (ϕ : MvPolynomial σ R →+* S)
+theorem map_mv_polynomial_eq_eval₂ {S : Type _} [CommRing S] [Finite σ] (ϕ : MvPolynomial σ R →+* S)
     (p : MvPolynomial σ R) : ϕ p = MvPolynomial.eval₂ (ϕ.comp MvPolynomial.c) (fun s => ϕ (MvPolynomial.x s)) p := by
   cases nonempty_fintype σ
   refine' trans (congr_arg ϕ (MvPolynomial.as_sum p)) _
@@ -1103,7 +1105,7 @@ theorem mem_ideal_of_coeff_mem_ideal (I : Ideal (MvPolynomial σ R)) (p : MvPoly
   rw [as_sum p]
   suffices ∀ m ∈ p.support, monomial m (MvPolynomial.coeff m p) ∈ I by exact Submodule.sum_mem I this
   intro m hm
-  rw [← mul_oneₓ (coeff m p), ← C_mul_monomial]
+  rw [← mul_one (coeff m p), ← C_mul_monomial]
   suffices C (coeff m p) ∈ I by exact I.mul_mem_right (monomial m 1) this
   simpa [Ideal.mem_comap] using hcoe m
 
@@ -1137,7 +1139,7 @@ theorem mem_map_C_iff {I : Ideal R} {f : MvPolynomial σ R} :
     suffices ∀ m ∈ f.support, monomial m (coeff m f) ∈ (Ideal.map C I : Ideal (MvPolynomial σ R)) by
       exact Submodule.sum_mem _ this
     intro m hm
-    rw [← mul_oneₓ (coeff m f), ← C_mul_monomial]
+    rw [← mul_one (coeff m f), ← C_mul_monomial]
     suffices C (coeff m f) ∈ (Ideal.map C I : Ideal (MvPolynomial σ R)) by exact Ideal.mul_mem_right _ _ this
     apply Ideal.mem_map_of_mem _
     exact hf m
@@ -1154,7 +1156,7 @@ theorem eval₂_C_mk_eq_zero {I : Ideal R} {a : MvPolynomial σ R}
     eval₂Hom (c.comp (Ideal.Quotient.mk I)) x a = 0 := by
   rw [as_sum a]
   rw [coe_eval₂_hom, eval₂_sum]
-  refine' Finsetₓ.sum_eq_zero fun n hn => _
+  refine' Finset.sum_eq_zero fun n hn => _
   simp only [eval₂_monomial, Function.comp_app, RingHom.coe_comp]
   refine' mul_eq_zero_of_left _ _
   suffices coeff n a ∈ I by
@@ -1207,35 +1209,35 @@ def quotientEquivQuotientMvPolynomial (I : Ideal R) :
         Ideal.Quotient.lift_mk, Ideal.Quotient.mk_eq_mk, bind₂_X_right, eval₂_mul, RingHom.map_mul, eval₂_X]
       simp only [hp]
       
-  commutes' := fun r => eval₂_hom_C _ _ (Ideal.Quotient.mk I r)
+  commutes' r := eval₂_hom_C _ _ (Ideal.Quotient.mk I r)
 
 end MvPolynomial
 
 section UniqueFactorizationDomain
 
-variable {D : Type u} [CommRingₓ D] [IsDomain D] [UniqueFactorizationMonoid D] (σ)
+variable {D : Type u} [CommRing D] [IsDomain D] [UniqueFactorizationMonoid D] (σ)
 
 open UniqueFactorizationMonoid
 
 namespace Polynomial
 
-instance (priority := 100) unique_factorization_monoid : UniqueFactorizationMonoid (Polynomial D) := by
-  haveI := arbitrary (NormalizationMonoid D)
+instance (priority := 100) uniqueFactorizationMonoid : UniqueFactorizationMonoid (Polynomial D) := by
+  haveI := Inhabited.default (NormalizationMonoid D)
   haveI := to_normalized_gcd_monoid D
-  exact ufm_of_gcd_of_wf_dvd_monoid
+  exact ufmOfGcdOfWfDvdMonoid
 
 end Polynomial
 
 namespace MvPolynomial
 
-private theorem unique_factorization_monoid_of_fintype [Fintypeₓ σ] : UniqueFactorizationMonoid (MvPolynomial σ D) :=
-  (renameEquiv D (Fintypeₓ.equivFin σ)).toMulEquiv.symm.UniqueFactorizationMonoid <| by
-    induction' Fintypeₓ.card σ with d hd
-    · apply (is_empty_alg_equiv D (Finₓ 0)).toMulEquiv.symm.UniqueFactorizationMonoid
+private theorem unique_factorization_monoid_of_fintype [Fintype σ] : UniqueFactorizationMonoid (MvPolynomial σ D) :=
+  (renameEquiv D (Fintype.equivFin σ)).toMulEquiv.symm.UniqueFactorizationMonoid <| by
+    induction' Fintype.card σ with d hd
+    · apply (is_empty_alg_equiv D (Fin 0)).toMulEquiv.symm.UniqueFactorizationMonoid
       infer_instance
       
     · apply (finSuccEquiv D d).toMulEquiv.symm.UniqueFactorizationMonoid
-      exact Polynomial.unique_factorization_monoid
+      exact Polynomial.uniqueFactorizationMonoid
       
 
 instance (priority := 100) : UniqueFactorizationMonoid (MvPolynomial σ D) := by

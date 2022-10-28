@@ -23,13 +23,13 @@ namespace AffineMap
 
 variable {R E F : Type _}
 
-variable [AddCommGroupₓ E] [TopologicalSpace E]
+variable [AddCommGroup E] [TopologicalSpace E]
 
-variable [AddCommGroupₓ F] [TopologicalSpace F] [TopologicalAddGroup F]
+variable [AddCommGroup F] [TopologicalSpace F] [TopologicalAddGroup F]
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] [Module R E] [Module R F]
+variable [Ring R] [Module R E] [Module R F]
 
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
@@ -52,11 +52,11 @@ theorem line_map_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : 
     Continuous ⇑(lineMap p v : R →ᵃ[R] F) :=
   continuous_iff.mpr <| (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R] [Module R F] [HasContinuousConstSmul R F]
+variable [CommRing R] [Module R F] [HasContinuousConstSmul R F]
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t := by
@@ -66,7 +66,7 @@ theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t := by
   ext y
   simp [homothety_apply]
 
-end CommRingₓ
+end CommRing
 
 section Field
 

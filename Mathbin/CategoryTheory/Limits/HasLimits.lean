@@ -253,9 +253,7 @@ def limit.homIso' (F : J ⥤ C) [HasLimit F] (W : C) :
   (limit.isLimit F).homIso' W
 
 theorem limit.lift_extend {F : J ⥤ C} [HasLimit F] (c : Cone F) {X : C} (f : X ⟶ c.x) :
-    limit.lift F (c.extend f) = f ≫ limit.lift F c := by
-  run_tac
-    obviously
+    limit.lift F (c.extend f) = f ≫ limit.lift F c := by obviously
 
 /-- If a functor `F` has a limit, so does any naturally isomorphic functor.
 -/
@@ -420,7 +418,7 @@ instance has_limit_equivalence_comp (e : K ≌ J) [HasLimit F] : HasLimit (e.Fun
   HasLimit.mk
     { Cone := Cone.whisker e.Functor (Limit.cone F), IsLimit := IsLimit.whiskerEquivalence (limit.isLimit F) e }
 
-attribute [local elabWithoutExpectedType] inv_fun_id_assoc
+attribute [local elab_without_expected_type] inv_fun_id_assoc
 
 -- not entirely sure why this is needed
 /-- If a `E ⋙ F` has a limit, and `E` is an equivalence, we can construct a limit of `F`.
@@ -440,12 +438,12 @@ section
 /-- `limit F` is functorial in `F`, when `C` has all limits of shape `J`. -/
 @[simps obj]
 def lim : (J ⥤ C) ⥤ C where
-  obj := fun F => limit F
-  map := fun F G α => limMap α
-  map_id' := fun F => by
+  obj F := limit F
+  map F G α := limMap α
+  map_id' F := by
     ext
     erw [lim_map_π, category.id_comp, category.comp_id]
-  map_comp' := fun F G H α β => by ext <;> erw [assoc, is_limit.fac, is_limit.fac, ← assoc, is_limit.fac, assoc] <;> rfl
+  map_comp' F G H α β := by ext <;> erw [assoc, is_limit.fac, is_limit.fac, ← assoc, is_limit.fac, assoc] <;> rfl
 
 end
 
@@ -487,15 +485,15 @@ def limYoneda : lim ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u�
 
 /-- The constant functor and limit functor are adjoint to each other-/
 def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim where
-  homEquiv := fun c g =>
+  homEquiv c g :=
     { toFun := fun f => limit.lift _ ⟨c, f⟩,
       invFun := fun f => { app := fun j => f ≫ limit.π _ _, naturality' := by tidy },
       left_inv := fun _ => NatTrans.ext _ _ <| funext fun j => limit.lift_π _ _,
       right_inv := fun α => limit.hom_ext fun j => limit.lift_π _ _ }
   Unit := { app := fun c => limit.lift _ ⟨_, 𝟙 _⟩, naturality' := fun _ _ _ => by tidy }
   counit := { app := fun g => { app := limit.π _, naturality' := by tidy }, naturality' := fun _ _ _ => by tidy }
-  hom_equiv_unit' := fun c g f => limit.hom_ext fun j => by simp
-  hom_equiv_counit' := fun c g f => NatTrans.ext _ _ <| funext fun j => rfl
+  hom_equiv_unit' c g f := limit.hom_ext fun j => by simp
+  hom_equiv_counit' c g f := NatTrans.ext _ _ <| funext fun j => rfl
 
 instance : IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
   ⟨_, constLimAdj⟩
@@ -922,12 +920,12 @@ attribute [local simp] colim_map
 /-- `colimit F` is functorial in `F`, when `C` has all colimits of shape `J`. -/
 @[simps obj]
 def colim : (J ⥤ C) ⥤ C where
-  obj := fun F => colimit F
-  map := fun F G α => colimMap α
-  map_id' := fun F => by
+  obj F := colimit F
+  map F G α := colimMap α
+  map_id' F := by
     ext
     erw [ι_colim_map, id_comp, comp_id]
-  map_comp' := fun F G H α β => by
+  map_comp' F G H α β := by
     ext
     erw [← assoc, is_colimit.fac, is_colimit.fac, assoc, is_colimit.fac, ← assoc]
     rfl
@@ -977,14 +975,14 @@ def colimCoyoneda : colim.op ⋙ coyoneda ⋙ (whiskeringRight _ _ _).obj uliftF
 /-- The colimit functor and constant functor are adjoint to each other
 -/
 def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J where
-  homEquiv := fun f c =>
+  homEquiv f c :=
     { toFun := fun g => { app := fun _ => colimit.ι _ _ ≫ g, naturality' := by tidy },
       invFun := fun g => colimit.desc _ ⟨_, g⟩, left_inv := fun _ => colimit.hom_ext fun j => colimit.ι_desc _ _,
       right_inv := fun _ => NatTrans.ext _ _ <| funext fun j => colimit.ι_desc _ _ }
   Unit := { app := fun g => { app := colimit.ι _, naturality' := by tidy }, naturality' := by tidy }
   counit := { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩, naturality' := by tidy }
-  hom_equiv_unit' := fun _ _ _ => NatTrans.ext _ _ <| funext fun _ => rfl
-  hom_equiv_counit' := fun _ _ _ => colimit.hom_ext fun _ => by simp
+  hom_equiv_unit' _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
+  hom_equiv_counit' _ _ _ := colimit.hom_ext fun _ => by simp
 
 instance : IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=
   ⟨_, colimConstAdj⟩
@@ -1025,9 +1023,9 @@ section Opposite
 /-- If `t : cone F` is a limit cone, then `t.op : cocone F.op` is a colimit cocone.
 -/
 def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
-  desc := fun s => (P.lift s.unop).op
-  fac' := fun s j => congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
-  uniq' := fun s m w => by
+  desc s := (P.lift s.unop).op
+  fac' s j := congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
+  uniq' s m w := by
     rw [← P.uniq s.unop m.unop]
     · rfl
       
@@ -1040,9 +1038,9 @@ def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
 /-- If `t : cocone F` is a colimit cocone, then `t.op : cone F.op` is a limit cone.
 -/
 def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
-  lift := fun s => (P.desc s.unop).op
-  fac' := fun s j => congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
-  uniq' := fun s m w => by
+  lift s := (P.desc s.unop).op
+  fac' s j := congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
+  uniq' s m w := by
     rw [← P.uniq s.unop m.unop]
     · rfl
       
@@ -1055,9 +1053,9 @@ def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
 /-- If `t : cone F.op` is a limit cone, then `t.unop : cocone F` is a colimit cocone.
 -/
 def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
-  desc := fun s => (P.lift s.op).unop
-  fac' := fun s j => congr_arg Quiver.Hom.unop (P.fac s.op (op j))
-  uniq' := fun s m w => by
+  desc s := (P.lift s.op).unop
+  fac' s j := congr_arg Quiver.Hom.unop (P.fac s.op (op j))
+  uniq' s m w := by
     rw [← P.uniq s.op m.op]
     · rfl
       
@@ -1070,9 +1068,9 @@ def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
 /-- If `t : cocone F.op` is a colimit cocone, then `t.unop : cone F.` is a limit cone.
 -/
 def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) : IsLimit t.unop where
-  lift := fun s => (P.desc s.op).unop
-  fac' := fun s j => congr_arg Quiver.Hom.unop (P.fac s.op (op j))
-  uniq' := fun s m w => by
+  lift s := (P.desc s.op).unop
+  fac' s j := congr_arg Quiver.Hom.unop (P.fac s.op (op j))
+  uniq' s m w := by
     rw [← P.uniq s.op m.op]
     · rfl
       

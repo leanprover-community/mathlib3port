@@ -57,7 +57,7 @@ def Float.isFinite : Float → Bool
 def toRat : ∀ f : Float, f.isFinite → ℚ
   | float.finite s e m f, _ =>
     let (n, d) := Int.shift2 m 1 e
-    let r := Ratₓ.mkNat n d
+    let r := Rat.mkNat n d
     if s then -r else r
 
 theorem Float.Zero.valid : ValidFinite emin 0 :=
@@ -68,13 +68,13 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
     apply Int.coe_nat_le_coe_nat_of_le
     exact C.prec_pos,
     suffices prec ≤ 2 * emax by
-      rw [← Int.coe_nat_leₓ] at this
+      rw [← Int.coe_nat_le] at this
       rw [← sub_nonneg] at *
       simp only [emin, emax] at *
       ring_nf
       assumption
-    le_transₓ C.prec_max (Nat.le_mul_of_pos_left (by decide)),
-    by rw [max_eq_rightₓ] <;> simp [sub_eq_add_neg]⟩
+    le_trans C.prec_max (Nat.le_mul_of_pos_left (by decide)),
+    by rw [max_eq_right] <;> simp [sub_eq_add_neg]⟩
 
 def Float.zero (s : Bool) : Float :=
   Float.finite s emin 0 Float.Zero.valid
@@ -97,11 +97,17 @@ protected def Float.isZero : Float → Bool
   | _ => false
 
 protected def Float.neg : Float → Float
-  | float.inf s => Float.inf (bnot s)
+  | float.inf s => Float.inf (not s)
   | float.nan => Float.nan
-  | float.finite s e m f => Float.finite (bnot s) e m f
+  | float.finite s e m f => Float.finite (not s) e m f
 
-def divNatLtTwoPowₓ (n d : ℕ) : ℤ → Bool
+/- warning: fp.div_nat_lt_two_pow -> Fp.divNatLtTwoPow is a dubious translation:
+lean 3 declaration is
+  forall [C : Fp.FloatCfg], Nat -> Nat -> Int -> Bool
+but is expected to have type
+  Nat -> Nat -> Int -> Bool
+Case conversion may be inaccurate. Consider using '#align fp.div_nat_lt_two_pow Fp.divNatLtTwoPowₓ'. -/
+def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
   | -[1 + e] => n.shiftl e.succ < d
 
@@ -112,7 +118,7 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   let e₂ := if n₁ < d₁ then e₁ - 1 else e₁
   let e₃ := max e₂ emin
   cases' h₂ : Int.shift2 d.1 n.1 (e₃ + prec) with d₂ n₂
-  let r := Ratₓ.mkNat n₂ d₂
+  let r := Rat.mkNat n₂ d₂
   let m := r.floor
   refine' (float.finite ff e₃ (Int.toNat m) _, r.denom = 1)
   · exact undefined
@@ -196,8 +202,8 @@ unsafe instance : Sub Float :=
 unsafe def mul (mode : Rmode) : Float → Float → Float
   | nan, _ => nan
   | _, nan => nan
-  | inf s₁, f₂ => if f₂.isZero then nan else inf (bxor s₁ f₂.sign)
-  | f₁, inf s₂ => if f₁.isZero then nan else inf (bxor f₁.sign s₂)
+  | inf s₁, f₂ => if f₂.isZero then nan else inf (xor s₁ f₂.sign)
+  | f₁, inf s₂ => if f₁.isZero then nan else inf (xor f₁.sign s₂)
   | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
@@ -207,12 +213,12 @@ unsafe def div (mode : Rmode) : Float → Float → Float
   | nan, _ => nan
   | _, nan => nan
   | inf s₁, inf s₂ => nan
-  | inf s₁, f₂ => inf (bxor s₁ f₂.sign)
-  | f₁, inf s₂ => zero (bxor f₁.sign s₂)
+  | inf s₁, f₂ => inf (xor s₁ f₂.sign)
+  | f₁, inf s₂ => zero (xor f₁.sign s₂)
   | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
-    if f₂.isZero then inf (bxor s₁ s₂) else of_rat mode (toRat f₁ rfl / toRat f₂ rfl)
+    if f₂.isZero then inf (xor s₁ s₂) else of_rat mode (toRat f₁ rfl / toRat f₂ rfl)
 
 end Float
 

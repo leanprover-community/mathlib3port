@@ -41,14 +41,14 @@ https://math.stackexchange.com/questions/3304415/catalan-numbers-algebraic-proof
 
 open BigOperators
 
-open Finsetₓ
+open Finset
 
 /-- The recursive definition of the sequence of Catalan numbers:
 `catalan (n + 1) = ∑ i : fin n.succ, catalan i * catalan (n - i)` -/
 def catalan : ℕ → ℕ
   | 0 => 1
   | n + 1 =>
-    ∑ i : Finₓ n.succ,
+    ∑ i : Fin n.succ,
       have := i.2
       have := Nat.lt_succ_iff.mpr (n.sub_le i)
       catalan i * catalan (n - i)
@@ -56,7 +56,7 @@ def catalan : ℕ → ℕ
 @[simp]
 theorem catalan_zero : catalan 0 = 1 := by rw [catalan]
 
-theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Finₓ n.succ, catalan i * catalan (n - i) := by rw [catalan]
+theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Fin n.succ, catalan i * catalan (n - i) := by rw [catalan]
 
 @[simp]
 theorem catalan_one : catalan 1 = 1 := by simp [catalan_succ]
@@ -66,7 +66,7 @@ definition using a telescoping sum argument. -/
 private def gosper_catalan (n j : ℕ) : ℚ :=
   Nat.centralBinom j * Nat.centralBinom (n - j) * (2 * j - n) / (2 * n * (n + 1))
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()),
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()),
           «expr - »(n, i).central_binom),
          «expr - »(«expr + »(i, 1), «expr - »(n, i))),
         «expr + »(n, 1)),
@@ -77,7 +77,7 @@ private def gosper_catalan (n j : ℕ) : ℚ :=
        «expr - »(«expr - »(i, «expr - »(n, i)), 1)),
       «expr + »(i, 1)),
      h₂))],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
     gosperCatalan (n + 1) (i + 1) - gosperCatalan (n + 1) i =
       Nat.centralBinom i / (i + 1) * Nat.centralBinom (n - i) / (n - i + 1) :=
@@ -93,7 +93,7 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
   simp only [gosper_catalan]
   push_cast
   field_simp
-  rw [Nat.succ_subₓ h]
+  rw [Nat.succ_sub h]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()),\n          «expr - »(n, i).central_binom),\n         «expr - »(«expr + »(i, 1), «expr - »(n, i))),\n        «expr + »(n, 1)),\n       «expr + »(n, 2)),\n      «expr + »(«expr - »(n, i), 1)),\n     h₁),\n    «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(2, i.central_binom), «expr + »(n, 1)), «expr + »(n, 2)),\n       «expr - »(«expr - »(i, «expr - »(n, i)), 1)),\n      «expr + »(i, 1)),\n     h₂))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
 
@@ -106,15 +106,23 @@ private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
   field_simp
   ring
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finset.sum_univ((i : fin d.succ),
+    «expr * »(«expr / »(nat.central_binom i, «expr + »(i, 1)),
+     «expr / »(nat.central_binom «expr - »(d, i), «expr + »(«expr - »(d, i), 1)))) : exprℚ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum_univ((i : fin d.succ),
+    «expr - »(gosper_catalan «expr + »(d, 1) «expr + »(i, 1), gosper_catalan «expr + »(d, 1) i))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n + 1) := by
   suffices (catalan n : ℚ) = Nat.centralBinom n / (n + 1) by
     have h := Nat.succ_dvd_central_binom n
     exact_mod_cast this
-  induction' n using Nat.case_strong_induction_onₓ with d hd
+  induction' n using Nat.case_strong_induction_on with d hd
   · simp
     
-  · simp_rw [catalan_succ, Nat.cast_sum, Nat.cast_mulₓ]
-    trans (∑ i : Finₓ d.succ, Nat.centralBinom i / (i + 1) * (Nat.centralBinom (d - i) / (d - i + 1)) : ℚ)
+  · simp_rw [catalan_succ, Nat.cast_sum, Nat.cast_mul]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finset.sum_univ((i : fin d.succ),\n    «expr * »(«expr / »(nat.central_binom i, «expr + »(i, 1)),\n     «expr / »(nat.central_binom «expr - »(d, i), «expr + »(«expr - »(d, i), 1)))) : exprℚ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     · refine' sum_congr rfl fun i _ => _
       congr
       · exact_mod_cast hd i i.is_le
@@ -125,7 +133,8 @@ theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n
         exact tsub_le_self
         
       
-    · trans ∑ i : Finₓ d.succ, gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i
+    · trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum_univ((i : fin d.succ),\n    «expr - »(gosper_catalan «expr + »(d, 1) «expr + »(i, 1), gosper_catalan «expr + »(d, 1) i))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       · refine' sum_congr rfl fun i _ => _
         rw_mod_cast [gosper_trick i.is_le, mul_div]
         

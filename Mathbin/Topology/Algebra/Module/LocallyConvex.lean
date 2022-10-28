@@ -31,17 +31,17 @@ In a module, this is equivalent to `0` satisfying such properties.
 
 open TopologicalSpace Filter Set
 
-open TopologicalSpace
+open TopologicalSpace Pointwise
 
 section Semimodule
 
 /-- A `locally_convex_space` is a topological semimodule over an ordered semiring in which convex
 neighborhoods of a point form a neighborhood basis at that point. -/
-class LocallyConvexSpace (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E] :
+class LocallyConvexSpace (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :
   Prop where
   convex_basis : ∀ x : E, (𝓝 x).HasBasis (fun s : Set E => s ∈ 𝓝 x ∧ Convex 𝕜 s) id
 
-variable (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E]
+variable (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 
 theorem locally_convex_space_iff :
     LocallyConvexSpace 𝕜 E ↔ ∀ x : E, (𝓝 x).HasBasis (fun s : Set E => s ∈ 𝓝 x ∧ Convex 𝕜 s) id :=
@@ -51,7 +51,7 @@ theorem LocallyConvexSpace.of_bases {ι : Type _} (b : E → ι → Set E) (p : 
     (hbasis : ∀ x : E, (𝓝 x).HasBasis (p x) (b x)) (hconvex : ∀ x i, p x i → Convex 𝕜 (b x i)) :
     LocallyConvexSpace 𝕜 E :=
   ⟨fun x =>
-    (hbasis x).to_has_basis (fun i hi => ⟨b x i, ⟨⟨(hbasis x).mem_of_mem hi, hconvex x i hi⟩, le_reflₓ (b x i)⟩⟩)
+    (hbasis x).to_has_basis (fun i hi => ⟨b x i, ⟨⟨(hbasis x).mem_of_mem hi, hconvex x i hi⟩, le_refl (b x i)⟩⟩)
       fun s hs => ⟨(hbasis x).index s hs.1, ⟨(hbasis x).property_index hs.1, (hbasis x).set_index_subset hs.1⟩⟩⟩
 
 theorem LocallyConvexSpace.convex_basis_zero [LocallyConvexSpace 𝕜 E] :
@@ -60,13 +60,13 @@ theorem LocallyConvexSpace.convex_basis_zero [LocallyConvexSpace 𝕜 E] :
 
 theorem locally_convex_space_iff_exists_convex_subset :
     LocallyConvexSpace 𝕜 E ↔ ∀ x : E, ∀ U ∈ 𝓝 x, ∃ S ∈ 𝓝 x, Convex 𝕜 S ∧ S ⊆ U :=
-  (locally_convex_space_iff 𝕜 E).trans (forall_congrₓ fun x => has_basis_self)
+  (locally_convex_space_iff 𝕜 E).trans (forall_congr fun x => has_basis_self)
 
 end Semimodule
 
 section Module
 
-variable (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
+variable (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
 
 theorem LocallyConvexSpace.of_basis_zero {ι : Type _} (b : ι → Set E) (p : ι → Prop) (hbasis : (𝓝 0).HasBasis p b)
     (hconvex : ∀ i, p i → Convex 𝕜 (b i)) : LocallyConvexSpace 𝕜 E := by
@@ -93,10 +93,41 @@ instance (priority := 100) LocallyConvexSpace.to_locally_connected_space [Module
 
 end Module
 
+section LinearOrderedField
+
+variable (𝕜 E : Type _) [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
+  [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+
+theorem LocallyConvexSpace.convex_open_basis_zero [LocallyConvexSpace 𝕜 E] :
+    (𝓝 0 : Filter E).HasBasis (fun s => (0 : E) ∈ s ∧ IsOpen s ∧ Convex 𝕜 s) id :=
+  (LocallyConvexSpace.convex_basis_zero 𝕜 E).to_has_basis
+    (fun s hs => ⟨Interior s, ⟨mem_interior_iff_mem_nhds.mpr hs.1, is_open_interior, hs.2.Interior⟩, interior_subset⟩)
+    fun s hs => ⟨s, ⟨hs.2.1.mem_nhds hs.1, hs.2.2⟩, subset_rfl⟩
+
+variable {𝕜 E}
+
+/-- In a locally convex space, if `s`, `t` are disjoint convex sets, `s` is compact and `t` is
+closed, then we can find open disjoint convex sets containing them. -/
+theorem Disjoint.exists_open_convexes [LocallyConvexSpace 𝕜 E] {s t : Set E} (disj : Disjoint s t) (hs₁ : Convex 𝕜 s)
+    (hs₂ : IsCompact s) (ht₁ : Convex 𝕜 t) (ht₂ : IsClosed t) :
+    ∃ u v, IsOpen u ∧ IsOpen v ∧ Convex 𝕜 u ∧ Convex 𝕜 v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v := by
+  letI : UniformSpace E := TopologicalAddGroup.toUniformSpace E
+  haveI : UniformAddGroup E := topological_add_comm_group_is_uniform
+  have := (LocallyConvexSpace.convex_open_basis_zero 𝕜 E).comap fun x : E × E => x.2 - x.1
+  rw [← uniformity_eq_comap_nhds_zero] at this
+  rcases disj.exists_uniform_thickening_of_basis this hs₂ ht₂ with ⟨V, ⟨hV0, hVopen, hVconvex⟩, hV⟩
+  refine'
+    ⟨s + V, t + V, hVopen.add_left, hVopen.add_left, hs₁.add hVconvex, ht₁.add hVconvex, subset_add_left _ hV0,
+      subset_add_left _ hV0, _⟩
+  simp_rw [← Union_add_left_image, image_add_left]
+  simp_rw [UniformSpace.Ball, ← preimage_comp, sub_eq_neg_add] at hV
+  exact hV
+
+end LinearOrderedField
+
 section LatticeOps
 
-variable {ι : Sort _} {𝕜 E F : Type _} [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] [AddCommMonoidₓ F]
-  [Module 𝕜 F]
+variable {ι : Sort _} {𝕜 E F : Type _} [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [AddCommMonoid F] [Module 𝕜 F]
 
 theorem locally_convex_space_Inf {ts : Set (TopologicalSpace E)} (h : ∀ t ∈ ts, @LocallyConvexSpace 𝕜 E _ _ _ t) :
     @LocallyConvexSpace 𝕜 E _ _ _ (inf ts) := by
@@ -128,7 +159,7 @@ theorem locally_convex_space_induced {t : TopologicalSpace F} [LocallyConvexSpac
   rw [nhds_induced]
   exact (LocallyConvexSpace.convex_basis <| f x).comap f
 
-instance {ι : Type _} {X : ι → Type _} [∀ i, AddCommMonoidₓ (X i)] [∀ i, TopologicalSpace (X i)] [∀ i, Module 𝕜 (X i)]
+instance {ι : Type _} {X : ι → Type _} [∀ i, AddCommMonoid (X i)] [∀ i, TopologicalSpace (X i)] [∀ i, Module 𝕜 (X i)]
     [∀ i, LocallyConvexSpace 𝕜 (X i)] : LocallyConvexSpace 𝕜 (∀ i, X i) :=
   locally_convex_space_infi fun i => locally_convex_space_induced (LinearMap.proj i)
 

@@ -32,11 +32,11 @@ universe u
 variable {α : Type u}
 
 /-- Construct a string representation of a tree. Provides a `has_repr` instance. -/
-def repr [HasRepr α] : Tree α → Stringₓ
+def repr [Repr α] : Tree α → String
   | nil => "nil"
-  | node a t1 t2 => "tree.node " ++ HasRepr.repr a ++ " (" ++ reprₓ t1 ++ ") (" ++ reprₓ t2 ++ ")"
+  | node a t1 t2 => "tree.node " ++ Repr.repr a ++ " (" ++ repr t1 ++ ") (" ++ repr t2 ++ ")"
 
-instance [HasRepr α] : HasRepr (Tree α) :=
+instance [Repr α] : Repr (Tree α) :=
   ⟨Tree.repr⟩
 
 instance : Inhabited (Tree α) :=
@@ -76,9 +76,15 @@ if the index is invalid. See `tree.get`. -/
 def getOrElse (n : PosNum) (t : Tree α) (v : α) : α :=
   (t.get n).getOrElse v
 
+/- warning: tree.map -> Tree.map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{u_1}}, (α -> β) -> (Tree.{u} α) -> (Tree.{u_1} β)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{_aux_param_0}}, (α -> β) -> (Tree.{u} α) -> (Tree.{_aux_param_0} β)
+Case conversion may be inaccurate. Consider using '#align tree.map Tree.mapₓ'. -/
 /-- Apply a function to each value in the tree.  This is the `map` function for the `tree` functor.
 TODO: implement `traversable tree`. -/
-def mapₓ {β} (f : α → β) : Tree α → Tree β
+def map {β} (f : α → β) : Tree α → Tree β
   | nil => nil
   | node a l r => node (f a) (map l) (map r)
 

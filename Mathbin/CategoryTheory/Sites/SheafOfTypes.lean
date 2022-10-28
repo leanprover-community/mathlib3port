@@ -252,10 +252,10 @@ theorem restrict_inj {x₁ x₂ : FamilyOfElements P (generate R)} (t₁ : x₁.
 @[simps]
 noncomputable def compatibleEquivGenerateSieveCompatible :
     { x : FamilyOfElements P R // x.Compatible } ≃ { x : FamilyOfElements P (generate R) // x.Compatible } where
-  toFun := fun x => ⟨x.1.sieveExtend, x.2.sieveExtend⟩
-  invFun := fun x => ⟨x.1.restrict (le_generate R), x.2.restrict _⟩
-  left_inv := fun x => Subtype.ext (restrict_extend x.2)
-  right_inv := fun x => Subtype.ext (extend_restrict x.2)
+  toFun x := ⟨x.1.sieveExtend, x.2.sieveExtend⟩
+  invFun x := ⟨x.1.restrict (le_generate R), x.2.restrict _⟩
+  left_inv x := Subtype.ext (restrict_extend x.2)
+  right_inv x := Subtype.ext (extend_restrict x.2)
 
 theorem FamilyOfElements.comp_of_compatible (S : Sieve X) {x : FamilyOfElements P S} (t : x.Compatible) {f : Y ⟶ X}
     (hf : S f) {Z} (g : Z ⟶ Y) : x (g ≫ f) (S.downward_closed hf g) = P.map g.op (x f hf) := by
@@ -425,7 +425,7 @@ the proof of C2.1.4 of [Elephant], and the discussion in [MM92], Chapter III, Se
 -/
 def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
     (S.Functor ⟶ P) ≃ { x : FamilyOfElements P S // x.Compatible } where
-  toFun := fun α => by
+  toFun α := by
     refine' ⟨fun Y f hf => _, _⟩
     · apply α.app (op Y) ⟨_, hf⟩
       
@@ -435,12 +435,12 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
       rw [← functor_to_types.naturality _ _ α g.op]
       rfl
       
-  invFun := fun t =>
+  invFun t :=
     { app := fun Y f => t.1 _ f.2,
       naturality' := fun Y Z g => by
         ext ⟨f, hf⟩
         apply t.2.to_sieve_compatible _ }
-  left_inv := fun α => by
+  left_inv α := by
     ext X ⟨_, _⟩
     rfl
   right_inv := by
@@ -475,11 +475,11 @@ C2.1.4 of [Elephant].
 theorem is_sheaf_for_iff_yoneda_sheaf_condition {P : Cᵒᵖ ⥤ Type v₁} : IsSheafFor P S ↔ YonedaSheafCondition P S := by
   rw [is_sheaf_for, yoneda_sheaf_condition]
   simp_rw [extension_iff_amalgamation]
-  rw [Equivₓ.forall_congr_left' nat_trans_equiv_compatible_family]
+  rw [Equiv.forall_congr_left' nat_trans_equiv_compatible_family]
   rw [Subtype.forall]
   apply ball_congr
   intro x hx
-  rw [Equivₓ.exists_unique_congr_left _]
+  rw [Equiv.exists_unique_congr_left _]
   simp
 
 /-- If `P` is a sheaf for the sieve `S` on `X`, a natural transformation from `S` (viewed as a functor)
@@ -524,7 +524,7 @@ theorem IsSheafFor.hom_ext {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S) (t�
 theorem is_separated_for_and_exists_is_amalgamation_iff_sheaf_for :
     (IsSeparatedFor P R ∧ ∀ x : FamilyOfElements P R, x.Compatible → ∃ t, x.IsAmalgamation t) ↔ IsSheafFor P R := by
   rw [is_separated_for, ← forall_and_distrib]
-  apply forall_congrₓ
+  apply forall_congr
   intro x
   constructor
   · intro z hx
@@ -567,15 +567,15 @@ theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafF
   rw [← is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   rw [← is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   rw [← is_separated_for_iff_generate]
-  apply and_congrₓ (Iff.refl _)
+  apply and_congr (Iff.refl _)
   constructor
   · intro q x hx
-    apply exists_imp_exists _ (q _ (hx.restrict (le_generate R)))
+    apply Exists.imp _ (q _ (hx.restrict (le_generate R)))
     intro t ht
     simpa [hx] using is_amalgamation_sieve_extend _ _ ht
     
   · intro q x hx
-    apply exists_imp_exists _ (q _ hx.sieve_extend)
+    apply Exists.imp _ (q _ hx.sieve_extend)
     intro t ht
     simpa [hx] using is_amalgamation_restrict (le_generate R) _ _ ht
     
@@ -672,17 +672,17 @@ theorem IsSheaf.is_sheaf_for {P : Cᵒᵖ ⥤ Type w} (hp : IsSheaf J P) (R : Pr
     IsSheafFor P R :=
   (is_sheaf_for_iff_generate R).2 <| hp _ hr
 
-theorem is_sheaf_of_le (P : Cᵒᵖ ⥤ Type w) {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ → IsSheaf J₂ P → IsSheaf J₁ P :=
+theorem isSheafOfLe (P : Cᵒᵖ ⥤ Type w) {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ → IsSheaf J₂ P → IsSheaf J₁ P :=
   fun h t X S hS => t S (h _ hS)
 
-theorem is_separated_of_is_sheaf (P : Cᵒᵖ ⥤ Type w) (h : IsSheaf J P) : IsSeparated J P := fun X S hS =>
+theorem isSeparatedOfIsSheaf (P : Cᵒᵖ ⥤ Type w) (h : IsSheaf J P) : IsSeparated J P := fun X S hS =>
   (h S hS).IsSeparatedFor
 
 /-- The property of being a sheaf is preserved by isomorphism. -/
-theorem is_sheaf_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') (h : IsSheaf J P) : IsSheaf J P' := fun X S hS =>
+theorem isSheafIso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') (h : IsSheaf J P) : IsSheaf J P' := fun X S hS =>
   is_sheaf_for_iso i (h S hS)
 
-theorem is_sheaf_of_yoneda {P : Cᵒᵖ ⥤ Type v₁} (h : ∀ {X} (S : Sieve X), S ∈ J X → YonedaSheafCondition P S) :
+theorem isSheafOfYoneda {P : Cᵒᵖ ⥤ Type v₁} (h : ∀ {X} (S : Sieve X), S ∈ J X → YonedaSheafCondition P S) :
     IsSheaf J P := fun X S hS => is_sheaf_for_iff_yoneda_sheaf_condition.2 (h _ hS)
 
 /-- For a topology generated by a basis, it suffices to check the sheaf condition on the basis
@@ -706,7 +706,7 @@ theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
     
 
 /-- Any presheaf is a sheaf for the bottom (trivial) grothendieck topology. -/
-theorem is_sheaf_bot : IsSheaf (⊥ : GrothendieckTopology C) P := fun X => by simp [is_sheaf_for_top_sieve]
+theorem isSheafBot : IsSheaf (⊥ : GrothendieckTopology C) P := fun X => by simp [is_sheaf_for_top_sieve]
 
 end Presieve
 
@@ -725,7 +725,7 @@ def FirstObj : Type max v₁ u₁ :=
 /-- Show that `first_obj` is isomorphic to `family_of_elements`. -/
 @[simps]
 def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P where
-  Hom := fun t Y f hf => Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
+  Hom t Y f hf := Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
   hom_inv_id' := by
     ext ⟨Y, f, hf⟩ p
@@ -791,7 +791,7 @@ theorem compatible_iff (x : FirstObj P S) :
 
 /-- `P` is a sheaf for `S`, iff the fork given by `w` is an equalizer. -/
 theorem equalizer_sheaf_condition : Presieve.IsSheafFor P S ↔ Nonempty (IsLimit (Fork.ofι _ (w P S))) := by
-  rw [types.type_equalizer_iff_unique, ← Equivₓ.forall_congr_left (first_obj_eq_family P S).toEquiv.symm]
+  rw [types.type_equalizer_iff_unique, ← Equiv.forall_congr_left (first_obj_eq_family P S).toEquiv.symm]
   simp_rw [← compatible_iff]
   simp only [inv_hom_id_apply, iso.to_equiv_symm_fun]
   apply ball_congr
@@ -799,7 +799,7 @@ theorem equalizer_sheaf_condition : Presieve.IsSheafFor P S ↔ Nonempty (IsLimi
   apply exists_unique_congr
   intro t
   rw [← iso.to_equiv_symm_fun]
-  rw [Equivₓ.eq_symm_apply]
+  rw [Equiv.eq_symm_apply]
   constructor
   · intro q
     ext Y f hf
@@ -868,13 +868,13 @@ See <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P R))) := by
   rw [types.type_equalizer_iff_unique]
-  erw [← Equivₓ.forall_congr_left (first_obj_eq_family P R).toEquiv.symm]
-  simp_rw [← compatible_iff, ← iso.to_equiv_fun, Equivₓ.apply_symm_apply]
+  erw [← Equiv.forall_congr_left (first_obj_eq_family P R).toEquiv.symm]
+  simp_rw [← compatible_iff, ← iso.to_equiv_fun, Equiv.apply_symm_apply]
   apply ball_congr
   intro x hx
   apply exists_unique_congr
   intro t
-  rw [Equivₓ.eq_symm_apply]
+  rw [Equiv.eq_symm_apply]
   constructor
   · intro q
     ext Y f hf
@@ -894,43 +894,43 @@ variable {C : Type u₁} [Category.{v₁} C]
 variable (J : GrothendieckTopology C)
 
 /-- The category of sheaves on a grothendieck topology. -/
-structure SheafOfTypes (J : GrothendieckTopology C) : Type max u₁ v₁ (w + 1) where
+structure SheafOfTypesCat (J : GrothendieckTopology C) : Type max u₁ v₁ (w + 1) where
   val : Cᵒᵖ ⥤ Type w
   cond : Presieve.IsSheaf J val
 
-namespace SheafOfTypes
+namespace SheafOfTypesCat
 
 variable {J}
 
 /-- Morphisms between sheaves of types are just morphisms between the underlying presheaves. -/
 @[ext]
-structure Hom (X Y : SheafOfTypes J) where
+structure Hom (X Y : SheafOfTypesCat J) where
   val : X.val ⟶ Y.val
 
 @[simps]
-instance : Category (SheafOfTypes J) where
+instance : Category (SheafOfTypesCat J) where
   Hom := Hom
-  id := fun X => ⟨𝟙 _⟩
-  comp := fun X Y Z f g => ⟨f.val ≫ g.val⟩
-  id_comp' := fun X Y f => Hom.ext _ _ <| id_comp _
-  comp_id' := fun X Y f => Hom.ext _ _ <| comp_id _
-  assoc' := fun X Y Z W f g h => Hom.ext _ _ <| assoc _ _ _
+  id X := ⟨𝟙 _⟩
+  comp X Y Z f g := ⟨f.val ≫ g.val⟩
+  id_comp' X Y f := Hom.ext _ _ <| id_comp _
+  comp_id' X Y f := Hom.ext _ _ <| comp_id _
+  assoc' X Y Z W f g h := Hom.ext _ _ <| assoc _ _ _
 
 -- Let's make the inhabited linter happy...
-instance (X : SheafOfTypes J) : Inhabited (Hom X X) :=
+instance (X : SheafOfTypesCat J) : Inhabited (Hom X X) :=
   ⟨𝟙 X⟩
 
-end SheafOfTypes
+end SheafOfTypesCat
 
 /-- The inclusion functor from sheaves to presheaves. -/
 @[simps]
-def sheafOfTypesToPresheaf : SheafOfTypes J ⥤ Cᵒᵖ ⥤ Type w where
-  obj := SheafOfTypes.val
-  map := fun X Y f => f.val
-  map_id' := fun X => rfl
-  map_comp' := fun X Y Z f g => rfl
+def sheafOfTypesToPresheaf : SheafOfTypesCat J ⥤ Cᵒᵖ ⥤ Type w where
+  obj := SheafOfTypesCat.val
+  map X Y f := f.val
+  map_id' X := rfl
+  map_comp' X Y Z f g := rfl
 
-instance : Full (sheafOfTypesToPresheaf J) where Preimage := fun X Y f => ⟨f⟩
+instance : Full (sheafOfTypesToPresheaf J) where Preimage X Y f := ⟨f⟩
 
 instance : Faithful (sheafOfTypesToPresheaf J) where
 
@@ -938,13 +938,13 @@ instance : Faithful (sheafOfTypesToPresheaf J) where
 of presheaves.
 -/
 @[simps]
-def sheafOfTypesBotEquiv : SheafOfTypes (⊥ : GrothendieckTopology C) ≌ Cᵒᵖ ⥤ Type w where
+def sheafOfTypesBotEquiv : SheafOfTypesCat (⊥ : GrothendieckTopology C) ≌ Cᵒᵖ ⥤ Type w where
   Functor := sheafOfTypesToPresheaf _
-  inverse := { obj := fun P => ⟨P, Presieve.is_sheaf_bot⟩, map := fun P₁ P₂ f => (sheafOfTypesToPresheaf _).Preimage f }
+  inverse := { obj := fun P => ⟨P, Presieve.isSheafBot⟩, map := fun P₁ P₂ f => (sheafOfTypesToPresheaf _).Preimage f }
   unitIso := { Hom := { app := fun _ => ⟨𝟙 _⟩ }, inv := { app := fun _ => ⟨𝟙 _⟩ } }
   counitIso := Iso.refl _
 
-instance : Inhabited (SheafOfTypes (⊥ : GrothendieckTopology C)) :=
+instance : Inhabited (SheafOfTypesCat (⊥ : GrothendieckTopology C)) :=
   ⟨sheafOfTypesBotEquiv.inverse.obj ((Functor.const _).obj PUnit)⟩
 
 end CategoryTheory

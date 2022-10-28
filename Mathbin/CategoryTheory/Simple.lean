@@ -101,7 +101,7 @@ theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono 
 theorem id_nonzero (X : C) [Simple.{v} X] : 𝟙 X ≠ 0 :=
   (Simple.mono_is_iso_iff_nonzero (𝟙 X)).mp (by infer_instance)
 
-instance (X : C) [Simple.{v} X] : Nontrivial (End X) :=
+instance (X : C) [Simple.{v} X] : Nontrivial (EndCat X) :=
   nontrivial_of_ne 1 0 (id_nonzero X)
 
 section
@@ -172,7 +172,7 @@ variable [Preadditive C] [HasBinaryBiproducts C]
 -- There are another three potential variations of this lemma,
 -- but as any one suffices to prove `indecomposable_of_simple` we will not give them all.
 theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ Y) ↔ IsZero Y := by
-  rw [biprod.is_iso_inl_iff_id_eq_fst_comp_inl, ← biprod.total, add_right_eq_selfₓ]
+  rw [biprod.is_iso_inl_iff_id_eq_fst_comp_inl, ← biprod.total, add_right_eq_self]
   constructor
   · intro h
     replace h := h =≫ biprod.snd

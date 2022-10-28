@@ -39,9 +39,9 @@ theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.Prod → ∃ a ∈ s
 include hp
 
 theorem exists_mem_multiset_map_dvd {s : Multiset β} {f : β → α} : p ∣ (s.map f).Prod → ∃ a ∈ s, p ∣ f a := fun h => by
-  simpa only [exists_propₓ, Multiset.mem_map, exists_exists_and_eq_and] using hp.exists_mem_multiset_dvd h
+  simpa only [exists_prop, Multiset.mem_map, exists_exists_and_eq_and] using hp.exists_mem_multiset_dvd h
 
-theorem exists_mem_finset_dvd {s : Finsetₓ β} {f : β → α} : p ∣ s.Prod f → ∃ i ∈ s, p ∣ f i :=
+theorem exists_mem_finset_dvd {s : Finset β} {f : β → α} : p ∣ s.Prod f → ∃ i ∈ s, p ∣ f i :=
   hp.exists_mem_multiset_map_dvd
 
 end Prime
@@ -75,33 +75,33 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α] [∀ a : α, Deci
       refine' (b_prime.dvd_or_dvd b_div_n).resolve_left fun b_div_a => _
       have assoc := b_prime.associated_of_dvd a_prime b_div_a
       have := uniq a
-      rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iffₓ, ← not_ltₓ, Multiset.countp_pos] at
+      rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iff, ← not_lt, Multiset.countp_pos] at
         this
       exact this ⟨b, b_in_s, assoc.symm⟩
       
     
 
-theorem Finsetₓ.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finsetₓ α} (n : α) (h : ∀ a ∈ s, Prime a)
+theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α) (h : ∀ a ∈ s, Prime a)
     (div : ∀ a ∈ s, a ∣ n) : (∏ p in s, p) ∣ n := by
   classical
   exact
-    Multiset.prod_primes_dvd n (by simpa only [Multiset.map_id', Finsetₓ.mem_def] using h)
-      (by simpa only [Multiset.map_id', Finsetₓ.mem_def] using div)
+    Multiset.prod_primes_dvd n (by simpa only [Multiset.map_id', Finset.mem_def] using h)
+      (by simpa only [Multiset.map_id', Finset.mem_def] using div)
       (by
         simp only [Multiset.map_id', associated_eq_eq, Multiset.countp_eq_card_filter, ←
           Multiset.count_eq_card_filter_eq, ← Multiset.nodup_iff_count_le_one, s.nodup])
 
 namespace Associates
 
-section CommMonoidₓ
+section CommMonoid
 
-variable [CommMonoidₓ α]
+variable [CommMonoid α]
 
 theorem prod_mk {p : Multiset α} : (p.map Associates.mk).Prod = Associates.mk p.Prod :=
   (Multiset.induction_on p (by simp)) fun a s ih => by simp [ih, Associates.mk_mul_mk]
 
-theorem finset_prod_mk {p : Finsetₓ β} {f : β → α} : (∏ i in p, Associates.mk (f i)) = Associates.mk (∏ i in p, f i) :=
-  by rw [Finsetₓ.prod_eq_multiset_prod, ← Multiset.map_map, prod_mk, ← Finsetₓ.prod_eq_multiset_prod]
+theorem finset_prod_mk {p : Finset β} {f : β → α} : (∏ i in p, Associates.mk (f i)) = Associates.mk (∏ i in p, f i) :=
+  by rw [Finset.prod_eq_multiset_prod, ← Multiset.map_map, prod_mk, ← Finset.prod_eq_multiset_prod]
 
 theorem rel_associated_iff_map_eq_map {p q : Multiset α} :
     Multiset.Rel Associated p q ↔ p.map Associates.mk = q.map Associates.mk := by
@@ -117,9 +117,9 @@ theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤
   haveI := Classical.decEq α
   suffices p.prod ≤ (p + (q - p)).Prod by rwa [add_tsub_cancel_of_le h] at this
   suffices p.prod * 1 ≤ p.prod * (q - p).Prod by simpa
-  exact mul_mono (le_reflₓ p.prod) one_le
+  exact mul_mono (le_refl p.prod) one_le
 
-end CommMonoidₓ
+end CommMonoid
 
 section CancelCommMonoidWithZero
 
@@ -147,14 +147,13 @@ theorem prod_ne_zero_of_prime [CancelCommMonoidWithZero α] [Nontrivial α] (s :
 
 end Multiset
 
-open Finsetₓ Finsupp
+open Finset Finsupp
 
 section CommMonoidWithZero
 
 variable {M : Type _} [CommMonoidWithZero M]
 
-theorem Prime.dvd_finset_prod_iff {S : Finsetₓ α} {p : M} (pp : Prime p) (g : α → M) :
-    p ∣ S.Prod g ↔ ∃ a ∈ S, p ∣ g a :=
+theorem Prime.dvd_finset_prod_iff {S : Finset α} {p : M} (pp : Prime p) (g : α → M) : p ∣ S.Prod g ↔ ∃ a ∈ S, p ∣ g a :=
   ⟨pp.exists_mem_finset_dvd, fun ⟨a, ha1, ha2⟩ => dvd_trans ha2 (dvd_prod_of_mem g ha1)⟩
 
 theorem Prime.dvd_finsupp_prod_iff {f : α →₀ M} {g : α → M → ℕ} {p : ℕ} (pp : Prime p) :

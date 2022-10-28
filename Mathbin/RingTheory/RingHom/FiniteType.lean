@@ -19,11 +19,11 @@ namespace RingHom
 
 open Pointwise
 
-theorem finite_type_stable_under_composition : StableUnderComposition @FiniteType := by
+theorem finiteTypeStableUnderComposition : StableUnderComposition @FiniteType := by
   introv R hf hg
   exact hg.comp hf
 
-theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @FiniteType := by
+theorem finiteTypeHoldsForLocalizationAway : HoldsForLocalizationAway @FiniteType := by
   introv R _
   skip
   suffices Algebra.FiniteType R S by
@@ -32,9 +32,9 @@ theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @Fini
     ext
     rw [Algebra.smul_def]
     rfl
-  exact IsLocalization.finite_type_of_monoid_fg (Submonoid.powers r) S
+  exact IsLocalization.finiteTypeOfMonoidFg (Submonoid.powers r) S
 
-theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @FiniteType := by
+theorem finiteTypeOfLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteType := by
   -- Setup algebra intances.
   rw [of_localization_span_target_iff_finite]
   introv R hs H
@@ -69,7 +69,7 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
   apply Subalgebra.mem_of_span_eq_top_of_smul_pow_mem _ (s : Set S) l hl _ _ x _
   · intro x hx
     apply Algebra.subset_adjoin
-    rw [Finsetₓ.coe_union, Finsetₓ.coe_union]
+    rw [Finset.coe_union, Finset.coe_union]
     exact Or.inl (Or.inr hx)
     
   · intro i
@@ -78,11 +78,11 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
       exact zero_mem _
       
     apply Algebra.subset_adjoin
-    rw [Finsetₓ.coe_union, Finsetₓ.coe_image]
+    rw [Finset.coe_union, Finset.coe_image]
     exact Or.inr (Set.mem_image_of_mem _ (finsupp.mem_support_iff.mpr h))
     
   · intro r
-    rw [Finsetₓ.coe_union, Finsetₓ.coe_union, Finsetₓ.coe_bUnion]
+    rw [Finset.coe_union, Finset.coe_union, Finset.coe_bUnion]
     -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
     -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
     obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ :=
@@ -102,12 +102,12 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
       
     
 
-theorem finite_type_is_local : PropertyIsLocal @FiniteType :=
-  ⟨localization_finite_type, finite_type_of_localization_span_target, finite_type_stable_under_composition,
-    finite_type_holds_for_localization_away⟩
+theorem finiteTypeIsLocal : PropertyIsLocal @FiniteType :=
+  ⟨localizationFiniteType, finiteTypeOfLocalizationSpanTarget, finiteTypeStableUnderComposition,
+    finiteTypeHoldsForLocalizationAway⟩
 
-theorem finite_type_respects_iso : RingHom.RespectsIso @RingHom.FiniteType :=
-  RingHom.finite_type_is_local.RespectsIso
+theorem finiteTypeRespectsIso : RingHom.RespectsIso @RingHom.FiniteType :=
+  RingHom.finiteTypeIsLocal.RespectsIso
 
 end RingHom
 

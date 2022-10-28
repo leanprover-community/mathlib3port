@@ -14,7 +14,7 @@ be the polynomial with root `r * s` for each root `r` of `p` and proves some bas
 -/
 
 
-variable {A K R S : Type _} [CommRingₓ A] [IsDomain A] [Field K] [CommRingₓ R] [CommRingₓ S]
+variable {A K R S : Type _} [CommRing A] [IsDomain A] [Field K] [CommRing R] [CommRing S]
 
 variable {M : Submonoid A}
 
@@ -31,7 +31,7 @@ theorem coeff_scale_roots (p : R[X]) (s : R) (i : ℕ) : (scaleRoots p s).coeff 
   by simp (config := { contextual := true }) [scale_roots, coeff_monomial]
 
 theorem coeff_scale_roots_nat_degree (p : R[X]) (s : R) : (scaleRoots p s).coeff p.natDegree = p.leadingCoeff := by
-  rw [leading_coeff, coeff_scale_roots, tsub_self, pow_zeroₓ, mul_oneₓ]
+  rw [leading_coeff, coeff_scale_roots, tsub_self, pow_zero, mul_one]
 
 @[simp]
 theorem zero_scale_roots (s : R) : scaleRoots 0 s = 0 := by
@@ -50,7 +50,7 @@ theorem support_scale_roots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤
   simpa using left_ne_zero_of_mul
 
 theorem support_scale_roots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) : (scaleRoots p s).support = p.support :=
-  le_antisymmₓ (support_scale_roots_le p s)
+  le_antisymm (support_scale_roots_le p s)
     (by
       intro i
       simp only [coeff_scale_roots, Polynomial.mem_support_iff]
@@ -65,7 +65,7 @@ theorem degree_scale_roots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree
   · rw [hp, zero_scale_roots]
     
   have := scale_roots_ne_zero hp s
-  refine' le_antisymmₓ (Finsetₓ.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)
+  refine' le_antisymm (Finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)
   rw [coeff_scale_roots_nat_degree]
   intro h
   have := leading_coeff_eq_zero.mp h
@@ -85,16 +85,16 @@ theorem scale_roots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
         (scaleRoots p s).support.Sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
       by simp [eval₂_eq_sum, sum_def]
     _ = p.support.Sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
-      Finsetₓ.sum_subset (support_scale_roots_le p s) fun i hi hi' => by
+      Finset.sum_subset (support_scale_roots_le p s) fun i hi hi' => by
         let this : coeff p i * s ^ (p.natDegree - i) = 0 := by simpa using hi'
         simp [this]
     _ = p.support.Sum fun i : ℕ => f (p.coeff i) * f s ^ (p.natDegree - i + i) * r ^ i :=
-      Finsetₓ.sum_congr rfl fun i hi => by simp_rw [f.map_mul, f.map_pow, pow_addₓ, mul_powₓ, mul_assoc]
+      Finset.sum_congr rfl fun i hi => by simp_rw [f.map_mul, f.map_pow, pow_add, mul_pow, mul_assoc]
     _ = p.support.Sum fun i : ℕ => f s ^ p.natDegree * (f (p.coeff i) * r ^ i) :=
-      Finsetₓ.sum_congr rfl fun i hi => by
-        rw [mul_assoc, mul_left_commₓ, tsub_add_cancel_of_le]
+      Finset.sum_congr rfl fun i hi => by
+        rw [mul_assoc, mul_left_comm, tsub_add_cancel_of_le]
         exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
-    _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finsetₓ.mul_sum.symm
+    _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.natDegree * eval₂ f r p := by simp [eval₂_eq_sum, sum_def]
     
 

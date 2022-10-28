@@ -38,14 +38,20 @@ include hp
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
-section CommRingₓ
+section CommRing
 
-variable {k : Type _} [CommRingₓ k] [CharP k p]
+variable {k : Type _} [CommRing k] [CharP k p]
 
 /-- This is the `n+1`st coefficient of our inverse. -/
-def succNthValUnits (n : ℕ) (a : Units k) (A : 𝕎 k) (bs : Finₓ (n + 1) → k) : k :=
+def succNthValUnits (n : ℕ) (a : Units k) (A : 𝕎 k) (bs : Fin (n + 1) → k) : k :=
   -↑(a⁻¹ ^ p ^ (n + 1)) * (A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) + nthRemainder p n (truncateFun (n + 1) A) bs)
 
+/- warning: witt_vector.inverse_coeff -> WittVector.inverseCoeff is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {k : Type.{u_1}} [_inst_1 : CommRing.{u_1} k] [_inst_2 : CharP.{u_1} k (AddGroupWithOne.toAddMonoidWithOne.{u_1} k (NonAssocRing.toAddGroupWithOne.{u_1} k (Ring.toNonAssocRing.{u_1} k (CommRing.toRing.{u_1} k _inst_1)))) p], (Units.{u_1} k (Ring.toMonoid.{u_1} k (CommRing.toRing.{u_1} k _inst_1))) -> (WittVector.{u_1} p k) -> Nat -> k
+but is expected to have type
+  PUnit.{succ (succ u_1)}
+Case conversion may be inaccurate. Consider using '#align witt_vector.inverse_coeff WittVector.inverseCoeffₓ'. -/
 /-- Recursively defines the sequence of coefficients for the inverse to a Witt vector whose first entry
 is a unit.
 -/
@@ -53,7 +59,7 @@ noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | 0 => ↑a⁻¹
   | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], ["with"], { normalize := ff[bool.ff] }]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], ["with"], { normalize := ff[bool.ff] }]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.
 -/
 def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
@@ -65,13 +71,13 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
         
       let H_coeff :=
         A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) +
-          nth_remainder p n (truncate_fun (n + 1) A) fun i : Finₓ (n + 1) => inverse_coeff a A i
+          nth_remainder p n (truncate_fun (n + 1) A) fun i : Fin (n + 1) => inverse_coeff a A i
       have H := Units.mul_inv (a ^ p ^ (n + 1))
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], [\"with\"], { normalize := ff[bool.ff] }]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by exact_mod_cast inv_pow _ _
-      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Finₓ.val_eq_coe, one_coeff_eq_of_pos,
+      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe, one_coeff_eq_of_pos,
         Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
       ring!)
 
@@ -79,7 +85,7 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
 theorem coe_mk_unit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : (mkUnit hA : 𝕎 k) = A :=
   rfl
 
-end CommRingₓ
+end CommRing
 
 section Field
 
@@ -113,7 +119,7 @@ theorem irreducible : Irreducible (p : 𝕎 k) := by
     
   rw [iterate_verschiebung_mul] at hab
   apply_fun fun x => coeff x 1  at hab
-  simp only [coeff_p_one, Nat.add_succ, add_commₓ _ n, Function.iterate_succ', Function.comp_app,
+  simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_app,
     verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
   exact (one_ne_zero hab).elim
 
@@ -121,7 +127,7 @@ end Field
 
 section PerfectRing
 
-variable {k : Type _} [CommRingₓ k] [CharP k p] [PerfectRing k p]
+variable {k : Type _} [CommRing k] [CharP k p] [PerfectRing k p]
 
 theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
@@ -161,8 +167,8 @@ https://github.com/leanprover/lean4/issues/1102
 -/
 /-- The ring of Witt Vectors of a perfect field of positive characteristic is a DVR.
 -/
-theorem discrete_valuation_ring : DiscreteValuationRing (𝕎 k) :=
-  DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
+theorem discreteValuationRing : DiscreteValuationRing (𝕎 k) :=
+  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
     (by
       refine' ⟨p, Irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx

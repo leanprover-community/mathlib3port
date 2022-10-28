@@ -143,12 +143,12 @@ def regularMonoOfMono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMo
   RegularMonoCategory.regularMonoOfMono _
 
 instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCategory C] :
-    RegularMonoCategory C where regularMonoOfMono := fun _ _ f _ => by
+    RegularMonoCategory C where regularMonoOfMono _ _ f _ := by
     haveI := is_split_mono_of_mono f
     infer_instance
 
 instance (priority := 100) strong_mono_category_of_regular_mono_category [RegularMonoCategory C] :
-    StrongMonoCategory C where strong_mono_of_mono := fun _ _ f _ => by
+    StrongMonoCategory C where strong_mono_of_mono _ _ f _ := by
     haveI := regular_mono_of_mono f
     infer_instance
 
@@ -259,12 +259,12 @@ def regularEpiOfEpi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f 
   RegularEpiCategory.regularEpiOfEpi _
 
 instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategory C] :
-    RegularEpiCategory C where regularEpiOfEpi := fun _ _ f _ => by
+    RegularEpiCategory C where regularEpiOfEpi _ _ f _ := by
     haveI := is_split_epi_of_epi f
     infer_instance
 
 instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularEpiCategory C] :
-    StrongEpiCategory C where strong_epi_of_epi := fun _ _ f _ => by
+    StrongEpiCategory C where strong_epi_of_epi _ _ f _ := by
     haveI := regular_epi_of_epi f
     infer_instance
 

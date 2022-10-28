@@ -73,10 +73,10 @@ theorem IsSymmetric.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) (
 theorem IsSymmetric.apply_clm {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x y : E) : ⟪T x, y⟫ = ⟪x, T y⟫ :=
   hT x y
 
-theorem is_symmetric_zero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
+theorem isSymmetricZero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
   (inner_zero_right : ⟪x, 0⟫ = 0).symm ▸ (inner_zero_left : ⟪0, y⟫ = 0)
 
-theorem is_symmetric_id : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
+theorem isSymmetricId : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
 
 theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) : (T + S).IsSymmetric := by
   intro x y
@@ -99,7 +99,7 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
   rw [← sub_self x]
   exact hu.sub_const _
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident r, ",", ident hr, "⟩", ":", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident r, ",", ident hr, "⟩", ":", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]] -/
 /-- For a symmetric operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
 @[simp]
 theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x : E) :
@@ -113,10 +113,10 @@ theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsS
 
 /-- If a symmetric operator preserves a submodule, its restriction to that submodule is
 symmetric. -/
-theorem IsSymmetric.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E}
-    (hV : ∀ v ∈ V, T v ∈ V) : IsSymmetric (T.restrict hV) := fun v w => hT v w
+theorem IsSymmetric.restrictInvariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E} (hV : ∀ v ∈ V, T v ∈ V) :
+    IsSymmetric (T.restrict hV) := fun v w => hT v w
 
-theorem IsSymmetric.restrict_scalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
+theorem IsSymmetric.restrictScalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
     @LinearMap.IsSymmetric ℝ E _ (InnerProductSpace.isROrCToReal 𝕜 E)
       (@LinearMap.restrictScalars ℝ 𝕜 _ _ _ _ _ _ (InnerProductSpace.isROrCToReal 𝕜 E).toModule
         (InnerProductSpace.isROrCToReal 𝕜 E).toModule _ _ _ T) :=

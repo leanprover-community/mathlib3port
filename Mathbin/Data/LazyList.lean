@@ -23,7 +23,7 @@ All elements (except the first) are computed lazily.
 -/
 inductive LazyList (α : Type u) : Type u
   | nil : LazyList
-  | cons (hd : α) (tl : Thunkₓ LazyList) : LazyList
+  | cons (hd : α) (tl : Thunk' LazyList) : LazyList
 
 namespace LazyList
 
@@ -63,7 +63,7 @@ def tail : LazyList α → LazyList α
   | cons h t => t ()
 
 /-- Appends two lazy lists.  -/
-def append : LazyList α → Thunkₓ (LazyList α) → LazyList α
+def append : LazyList α → Thunk' (LazyList α) → LazyList α
   | nil, l => l ()
   | cons h t, l => cons h (@append (t ()) l)
 

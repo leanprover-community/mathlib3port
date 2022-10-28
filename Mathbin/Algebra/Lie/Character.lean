@@ -29,7 +29,7 @@ universe u v w w₁
 
 namespace LieAlgebra
 
-variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L]
 
 /-- A character of a Lie algebra is a morphism to the scalars. -/
 abbrev LieCharacter :=
@@ -51,7 +51,7 @@ theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : 
   · exact χ.map_zero
     
   · intro y z hy hz
-    rw [LieHom.map_add, hy, hz, add_zeroₓ]
+    rw [LieHom.map_add, hy, hz, add_zero]
     
   · intro t y hy
     rw [LieHom.map_smul, hy, smul_zero]
@@ -60,16 +60,16 @@ theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
 def lieCharacterEquivLinearDual [IsLieAbelian L] : LieCharacter R L ≃ Module.Dual R L where
-  toFun := fun χ => (χ : L →ₗ[R] R)
-  invFun := fun ψ =>
+  toFun χ := (χ : L →ₗ[R] R)
+  invFun ψ :=
     { ψ with
       map_lie' := fun x y => by
         rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_comm, sub_self,
           LinearMap.to_fun_eq_coe, LinearMap.map_zero] }
-  left_inv := fun χ => by
+  left_inv χ := by
     ext
     rfl
-  right_inv := fun ψ => by
+  right_inv ψ := by
     ext
     rfl
 

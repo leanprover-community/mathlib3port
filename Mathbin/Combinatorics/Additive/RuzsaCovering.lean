@@ -19,20 +19,19 @@ Merge this file with other prerequisites to Freiman's theorem once we have them.
 
 open Pointwise
 
-namespace Finsetₓ
+namespace Finset
 
-variable {α : Type _} [DecidableEq α] [CommGroupₓ α] (s : Finsetₓ α) {t : Finsetₓ α}
+variable {α : Type _} [DecidableEq α] [CommGroup α] (s : Finset α) {t : Finset α}
 
 /-- **Ruzsa's covering lemma**. -/
 @[to_additive "**Ruzsa's covering lemma**"]
-theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finsetₓ α, u.card * t.card ≤ (s * t).card ∧ s ⊆ u * t / t := by
+theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.card ≤ (s * t).card ∧ s ⊆ u * t / t := by
   haveI : ∀ u, Decidable ((u : Set α).PairwiseDisjoint (· • t)) := fun u => Classical.dec _
   set C := s.powerset.filter fun u => (u : Set α).PairwiseDisjoint (· • t)
-  obtain ⟨u, hu, hCmax⟩ :=
-    C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwise_disjoint_empty⟩)
+  obtain ⟨u, hu, hCmax⟩ := C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwiseDisjointEmpty⟩)
   rw [mem_filter, mem_powerset] at hu
   refine'
-    ⟨u, (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).Ge.trans (card_le_of_subset <| mul_subset_mul_right hu.1),
+    ⟨u, (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).ge.trans (card_le_of_subset <| mul_subset_mul_right hu.1),
       fun a ha => _⟩
   rw [mul_div_assoc]
   by_cases hau:a ∈ u
@@ -48,5 +47,5 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finsetₓ α, u.card *
   obtain ⟨b, hb, c, hc₁, hc₂⟩ := H
   exact mem_mul.2 ⟨_, _, hb, mem_div.2 ⟨_, _, hc₂, hc₁, by simp [div_eq_mul_inv a b]⟩, by simp⟩
 
-end Finsetₓ
+end Finset
 

@@ -69,7 +69,7 @@ theorem Concrete.wide_pullback_ext' {B : C} {ι : Type w} [Nonempty ι] {X : ι 
     (h : ∀ j, π f j x = π f j y) : x = y := by
   apply concrete.wide_pullback_ext _ _ _ _ h
   inhabit ι
-  simp only [← π_arrow f (arbitrary _), comp_apply, h]
+  simp only [← π_arrow f (Inhabited.default _), comp_apply, h]
 
 end WidePullback
 
@@ -88,13 +88,13 @@ theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequali
 /-- An auxiliary equivalence to be used in `multiequalizer_equiv` below.-/
 def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
     (I.multicospan ⋙ forget C).sections ≃ { x : ∀ i : I.L, I.left i // ∀ i : I.R, I.fst i (x _) = I.snd i (x _) } where
-  toFun := fun x =>
+  toFun x :=
     ⟨fun i => x.1 (WalkingMulticospan.left _), fun i => by
       have a := x.2 (walking_multicospan.hom.fst i)
       have b := x.2 (walking_multicospan.hom.snd i)
       rw [← b] at a
       exact a⟩
-  invFun := fun x =>
+  invFun x :=
     { val := fun j =>
         match j with
         | walking_multicospan.left a => x.1 _
@@ -135,7 +135,7 @@ noncomputable def Concrete.multiequalizerEquiv (I : MulticospanIndex.{w} C) [Has
   let h1 := limit.isLimit I.multicospan
   let h2 := isLimitOfPreserves (forget C) h1
   let E := h2.conePointUniqueUpToIso (Types.limitConeIsLimit _)
-  Equivₓ.trans E.toEquiv (Concrete.multiequalizerEquivAux I)
+  Equiv.trans E.toEquiv (Concrete.multiequalizerEquivAux I)
 
 @[simp]
 theorem Concrete.multiequalizer_equiv_apply (I : MulticospanIndex.{w} C) [HasMultiequalizer I]
@@ -298,8 +298,8 @@ theorem Concrete.wide_pushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X
     ∃ (i : α)(y : X i), ι f i y = x := by
   rcases concrete.wide_pushout_exists_rep f x with (⟨y, rfl⟩ | ⟨i, y, rfl⟩)
   · inhabit α
-    use arbitrary _, f _ y
-    simp only [← arrow_ι _ (arbitrary α), comp_apply]
+    use Inhabited.default _, f _ y
+    simp only [← arrow_ι _ (Inhabited.default α), comp_apply]
     
   · use i, y
     

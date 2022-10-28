@@ -19,7 +19,7 @@ universe u v
 
 variable {R M M₂ M₃ : Type _}
 
-variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
+variable [Ring R] [AddCommGroup M] [AddCommGroup M₂] [AddCommGroup M₃]
 
 variable [Module R M] [Module R M₂] [Module R M₃]
 
@@ -37,8 +37,8 @@ section IsomorphismLaws
 /-- The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
 equivalent to the range of `f`. -/
 noncomputable def quotKerEquivRange : (M ⧸ f.ker) ≃ₗ[R] f.range :=
-  (LinearEquiv.ofInjective (f.ker.liftq f <| le_rflₓ) <|
-        ker_eq_bot.mp <| Submodule.ker_liftq_eq_bot _ _ _ (le_reflₓ f.ker)).trans
+  (LinearEquiv.ofInjective (f.ker.liftq f <| le_rfl) <|
+        ker_eq_bot.mp <| Submodule.ker_liftq_eq_bot _ _ _ (le_refl f.ker)).trans
     (LinearEquiv.ofEq _ _ <| Submodule.range_liftq _ _ _)
 
 /-- The first isomorphism theorem for surjective linear maps. -/
@@ -139,8 +139,8 @@ theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
 def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
   { quotientQuotientEquivQuotientAux S T h with toFun := quotientQuotientEquivQuotientAux S T h,
     invFun := mapq _ _ (mkq S) (le_comap_map _ _),
-    left_inv := fun x => (Quotientₓ.induction_on' x) fun x => (Quotientₓ.induction_on' x) fun x => by simp,
-    right_inv := fun x => (Quotientₓ.induction_on' x) fun x => by simp }
+    left_inv := fun x => (Quotient.induction_on' x) fun x => (Quotient.induction_on' x) fun x => by simp,
+    right_inv := fun x => (Quotient.induction_on' x) fun x => by simp }
 
 end Submodule
 

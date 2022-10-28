@@ -61,11 +61,11 @@ instance [HasColimits C] : HasColimits (SimplicialObject C) :=
 variable {C} (X : SimplicialObject C)
 
 /-- Face maps for a simplicial object. -/
-def δ {n} (i : Finₓ (n + 2)) : X _[n + 1] ⟶ X _[n] :=
+def δ {n} (i : Fin (n + 2)) : X _[n + 1] ⟶ X _[n] :=
   X.map (SimplexCategory.δ i).op
 
 /-- Degeneracy maps for a simplicial object. -/
-def σ {n} (i : Finₓ (n + 1)) : X _[n] ⟶ X _[n + 1] :=
+def σ {n} (i : Fin (n + 1)) : X _[n] ⟶ X _[n + 1] :=
   X.map (SimplexCategory.σ i).op
 
 /-- Isomorphisms from identities in ℕ. -/
@@ -78,51 +78,51 @@ theorem eq_to_iso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ := by
   simp [eq_to_iso]
 
 /-- The generic case of the first simplicial identity -/
-theorem δ_comp_δ {n} {i j : Finₓ (n + 2)} (H : i ≤ j) : X.δ j.succ ≫ X.δ i = X.δ i.cast_succ ≫ X.δ j := by
+theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : X.δ j.succ ≫ X.δ i = X.δ i.cast_succ ≫ X.δ j := by
   dsimp [δ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ H]
 
 /-- The special case of the first simplicial identity -/
-theorem δ_comp_δ_self {n} {i : Finₓ (n + 2)} : X.δ i.cast_succ ≫ X.δ i = X.δ i.succ ≫ X.δ i := by
+theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i.cast_succ ≫ X.δ i = X.δ i.succ ≫ X.δ i := by
   dsimp [δ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ_self]
 
 /-- The second simplicial identity -/
-theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i ≤ j.cast_succ) :
+theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
     X.σ j.succ ≫ X.δ i.cast_succ = X.δ i ≫ X.σ j := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_le H]
 
 /-- The first part of the third simplicial identity -/
-theorem δ_comp_σ_self {n} {i : Finₓ (n + 1)} : X.σ i ≫ X.δ i.cast_succ = 𝟙 _ := by
+theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : X.σ i ≫ X.δ i.cast_succ = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_self, op_id, X.map_id]
 
 /-- The second part of the third simplicial identity -/
-theorem δ_comp_σ_succ {n} {i : Finₓ (n + 1)} : X.σ i ≫ X.δ i.succ = 𝟙 _ := by
+theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : X.σ i ≫ X.δ i.succ = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_succ, op_id, X.map_id]
 
 /-- The fourth simplicial identity -/
-theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.cast_succ < i) :
+theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
     X.σ j.cast_succ ≫ X.δ i.succ = X.δ i ≫ X.σ j := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt H]
 
 /-- The fifth simplicial identity -/
-theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : X.σ j ≫ X.σ i.cast_succ = X.σ i ≫ X.σ j.succ := by
+theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : X.σ j ≫ X.σ i.cast_succ = X.σ i ≫ X.σ j.succ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, ← op_comp, SimplexCategory.σ_comp_σ H]
 
 open Simplicial
 
 @[simp, reassoc]
-theorem δ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Finₓ (n + 2)) :
+theorem δ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 2)) :
     X.δ i ≫ f.app (op [n]) = f.app (op [n + 1]) ≫ X'.δ i :=
   f.naturality _
 
 @[simp, reassoc]
-theorem σ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Finₓ (n + 1)) :
+theorem σ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ f.app (op [n + 1]) = f.app (op [n]) ≫ X'.σ i :=
   f.naturality _
 
@@ -205,8 +205,8 @@ def point : Augmented C ⥤ C :=
 /-- The functor from augmented objects to arrows. -/
 @[simps]
 def toArrow : Augmented C ⥤ Arrow C where
-  obj := fun X => { left := drop.obj X _[0], right := point.obj X, Hom := X.Hom.app _ }
-  map := fun X Y η =>
+  obj X := { left := drop.obj X _[0], right := point.obj X, Hom := X.Hom.app _ }
+  map X Y η :=
     { left := (drop.map η).app _, right := point.map η,
       w' := by
         dsimp
@@ -226,10 +226,10 @@ variable (C)
 /-- Functor composition induces a functor on augmented simplicial objects. -/
 @[simp]
 def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) : Augmented C ⥤ Augmented D where
-  obj := fun X =>
+  obj X :=
     { left := ((whiskering _ _).obj F).obj (drop.obj X), right := F.obj (point.obj X),
       Hom := whiskerRight X.Hom F ≫ (Functor.constComp _ _ _).Hom }
-  map := fun X Y η =>
+  map X Y η :=
     { left := whiskerRight η.left _, right := F.map η.right,
       w' := by
         ext
@@ -242,7 +242,7 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) : Augmented C ⥤ Augm
 @[simps]
 def whiskering (D : Type u') [Category.{v'} D] : (C ⥤ D) ⥤ Augmented C ⥤ Augmented D where
   obj := whiskeringObj _ _
-  map := fun X Y η =>
+  map X Y η :=
     { app := fun A =>
         { left := whiskerLeft _ η, right := η.app _,
           w' := by
@@ -305,11 +305,11 @@ instance [HasColimits C] : HasColimits (CosimplicialObject C) :=
 variable {C} (X : CosimplicialObject C)
 
 /-- Coface maps for a cosimplicial object. -/
-def δ {n} (i : Finₓ (n + 2)) : X _[n] ⟶ X _[n + 1] :=
+def δ {n} (i : Fin (n + 2)) : X _[n] ⟶ X _[n + 1] :=
   X.map (SimplexCategory.δ i)
 
 /-- Codegeneracy maps for a cosimplicial object. -/
-def σ {n} (i : Finₓ (n + 1)) : X _[n + 1] ⟶ X _[n] :=
+def σ {n} (i : Fin (n + 1)) : X _[n + 1] ⟶ X _[n] :=
   X.map (SimplexCategory.σ i)
 
 /-- Isomorphisms from identities in ℕ. -/
@@ -322,49 +322,49 @@ theorem eq_to_iso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ := by
   simp [eq_to_iso]
 
 /-- The generic case of the first cosimplicial identity -/
-theorem δ_comp_δ {n} {i j : Finₓ (n + 2)} (H : i ≤ j) : X.δ i ≫ X.δ j.succ = X.δ j ≫ X.δ i.cast_succ := by
+theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : X.δ i ≫ X.δ j.succ = X.δ j ≫ X.δ i.cast_succ := by
   dsimp [δ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_δ H]
 
 /-- The special case of the first cosimplicial identity -/
-theorem δ_comp_δ_self {n} {i : Finₓ (n + 2)} : X.δ i ≫ X.δ i.cast_succ = X.δ i ≫ X.δ i.succ := by
+theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i ≫ X.δ i.cast_succ = X.δ i ≫ X.δ i.succ := by
   dsimp [δ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_δ_self]
 
 /-- The second cosimplicial identity -/
-theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i ≤ j.cast_succ) :
+theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
     X.δ i.cast_succ ≫ X.σ j.succ = X.σ j ≫ X.δ i := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_of_le H]
 
 /-- The first part of the third cosimplicial identity -/
-theorem δ_comp_σ_self {n} {i : Finₓ (n + 1)} : X.δ i.cast_succ ≫ X.σ i = 𝟙 _ := by
+theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : X.δ i.cast_succ ≫ X.σ i = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_self, X.map_id]
 
 /-- The second part of the third cosimplicial identity -/
-theorem δ_comp_σ_succ {n} {i : Finₓ (n + 1)} : X.δ i.succ ≫ X.σ i = 𝟙 _ := by
+theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : X.δ i.succ ≫ X.σ i = 𝟙 _ := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_succ, X.map_id]
 
 /-- The fourth cosimplicial identity -/
-theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.cast_succ < i) :
+theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
     X.δ i.succ ≫ X.σ j.cast_succ = X.σ j ≫ X.δ i := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_of_gt H]
 
 /-- The fifth cosimplicial identity -/
-theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : X.σ i.cast_succ ≫ X.σ j = X.σ j.succ ≫ X.σ i := by
+theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : X.σ i.cast_succ ≫ X.σ j = X.σ j.succ ≫ X.σ i := by
   dsimp [δ, σ]
   simp only [← X.map_comp, SimplexCategory.σ_comp_σ H]
 
 @[simp, reassoc]
-theorem δ_naturality {X' X : CosimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Finₓ (n + 2)) :
+theorem δ_naturality {X' X : CosimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 2)) :
     X.δ i ≫ f.app (SimplexCategory.mk (n + 1)) = f.app (SimplexCategory.mk n) ≫ X'.δ i :=
   f.naturality _
 
 @[simp, reassoc]
-theorem σ_naturality {X' X : CosimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Finₓ (n + 1)) :
+theorem σ_naturality {X' X : CosimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ f.app (SimplexCategory.mk n) = f.app (SimplexCategory.mk (n + 1)) ≫ X'.σ i :=
   f.naturality _
 
@@ -447,8 +447,8 @@ def point : Augmented C ⥤ C :=
 /-- The functor from augmented objects to arrows. -/
 @[simps]
 def toArrow : Augmented C ⥤ Arrow C where
-  obj := fun X => { left := point.obj X, right := drop.obj X _[0], Hom := X.Hom.app _ }
-  map := fun X Y η =>
+  obj X := { left := point.obj X, right := drop.obj X _[0], Hom := X.Hom.app _ }
+  map X Y η :=
     { left := point.map η, right := (drop.map η).app _,
       w' := by
         dsimp
@@ -461,10 +461,10 @@ variable (C)
 /-- Functor composition induces a functor on augmented cosimplicial objects. -/
 @[simp]
 def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) : Augmented C ⥤ Augmented D where
-  obj := fun X =>
+  obj X :=
     { left := F.obj (point.obj X), right := ((whiskering _ _).obj F).obj (drop.obj X),
       Hom := (Functor.constComp _ _ _).inv ≫ whiskerRight X.Hom F }
-  map := fun X Y η =>
+  map X Y η :=
     { left := F.map η.left, right := whiskerRight η.right _,
       w' := by
         ext
@@ -477,7 +477,7 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) : Augmented C ⥤ Augm
 @[simps]
 def whiskering (D : Type u') [Category.{v'} D] : (C ⥤ D) ⥤ Augmented C ⥤ Augmented D where
   obj := whiskeringObj _ _
-  map := fun X Y η =>
+  map X Y η :=
     { app := fun A =>
         { left := η.app _, right := whiskerLeft _ η,
           w' := by
@@ -557,8 +557,8 @@ variable (C)
 /-- A functorial version of `simplicial_object.augmented.right_op`. -/
 @[simps]
 def simplicialToCosimplicialAugmented : (SimplicialObject.Augmented C)ᵒᵖ ⥤ CosimplicialObject.Augmented Cᵒᵖ where
-  obj := fun X => X.unop.rightOp
-  map := fun X Y f =>
+  obj X := X.unop.rightOp
+  map X Y f :=
     { left := f.unop.right.op, right := f.unop.left.rightOp,
       w' := by
         ext x
@@ -570,8 +570,8 @@ def simplicialToCosimplicialAugmented : (SimplicialObject.Augmented C)ᵒᵖ ⥤
 /-- A functorial version of `cosimplicial_object.augmented.left_op`. -/
 @[simps]
 def cosimplicialToSimplicialAugmented : CosimplicialObject.Augmented Cᵒᵖ ⥤ (SimplicialObject.Augmented C)ᵒᵖ where
-  obj := fun X => Opposite.op X.leftOp
-  map := fun X Y f =>
+  obj X := Opposite.op X.leftOp
+  map X Y f :=
     Quiver.Hom.op <|
       { left := f.right.leftOp, right := f.left.unop,
         w' := by

@@ -102,7 +102,7 @@ theorem inv_id : Inv (@Eq α) = @Eq α := by
 
 theorem inv_comp (r : Rel α β) (s : Rel β γ) : Inv (r ∘ s) = (Inv s ∘ Inv r) := by
   ext x z
-  simp [comp, inv, flip, And.comm]
+  simp [comp, inv, flip, and_comm]
 
 /-- Image of a set under a relation -/
 def Image (s : Set α) : Set β :=
@@ -113,14 +113,14 @@ theorem mem_image (y : β) (s : Set α) : y ∈ Image r s ↔ ∃ x ∈ s, r x y
 
 theorem image_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
 
-theorem image_mono : Monotoneₓ r.Image :=
+theorem image_mono : Monotone r.Image :=
   r.image_subset
 
 theorem image_inter (s t : Set α) : r.Image (s ∩ t) ⊆ r.Image s ∩ r.Image t :=
   r.image_mono.map_inf_le s t
 
 theorem image_union (s t : Set α) : r.Image (s ∪ t) = r.Image s ∪ r.Image t :=
-  le_antisymmₓ (fun y ⟨x, xst, rxy⟩ => xst.elim (fun xs => Or.inl ⟨x, ⟨xs, rxy⟩⟩) fun xt => Or.inr ⟨x, ⟨xt, rxy⟩⟩)
+  le_antisymm (fun y ⟨x, xst, rxy⟩ => xst.elim (fun xs => Or.inl ⟨x, ⟨xs, rxy⟩⟩) fun xt => Or.inr ⟨x, ⟨xt, rxy⟩⟩)
     (r.image_mono.le_map_sup s t)
 
 @[simp]
@@ -178,7 +178,7 @@ theorem mem_core (x : α) (s : Set β) : x ∈ r.Core s ↔ ∀ y, r x y → y �
 
 theorem core_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
 
-theorem core_mono : Monotoneₓ r.Core :=
+theorem core_mono : Monotone r.Core :=
   r.core_subset
 
 theorem core_inter (s t : Set β) : r.Core (s ∩ t) = r.Core s ∩ r.Core t :=

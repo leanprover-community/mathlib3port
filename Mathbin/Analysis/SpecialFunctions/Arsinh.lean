@@ -66,7 +66,7 @@ theorem arsinh_zero : arsinh 0 = 0 := by simp [arsinh]
 theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x := by
   rw [← exp_eq_exp, exp_arsinh, exp_neg, exp_arsinh]
   apply eq_inv_of_mul_eq_one_left
-  rw [neg_sq, neg_add_eq_sub, add_commₓ x, mul_comm, ← sq_sub_sq, sq_sqrt, add_sub_cancel]
+  rw [neg_sq, neg_add_eq_sub, add_comm x, mul_comm, ← sq_sub_sq, sq_sqrt, add_sub_cancel]
   exact add_nonneg zero_le_one (sq_nonneg _)
 
 /-- `arsinh` is the right inverse of `sinh`. -/
@@ -120,7 +120,7 @@ theorem arsinh_injective : Injective arsinh :=
 theorem arsinh_surjective : Surjective arsinh :=
   sinhEquiv.symm.Surjective
 
-theorem arsinh_strict_mono : StrictMonoₓ arsinh :=
+theorem arsinh_strict_mono : StrictMono arsinh :=
   sinhOrderIso.symm.StrictMono
 
 @[simp]
@@ -147,25 +147,25 @@ theorem arsinh_nonpos_iff : arsinh x ≤ 0 ↔ x ≤ 0 := by rw [← sinh_le_sin
 
 @[simp]
 theorem arsinh_pos_iff : 0 < arsinh x ↔ 0 < x :=
-  lt_iff_lt_of_le_iff_leₓ arsinh_nonpos_iff
+  lt_iff_lt_of_le_iff_le arsinh_nonpos_iff
 
 @[simp]
 theorem arsinh_neg_iff : arsinh x < 0 ↔ x < 0 :=
-  lt_iff_lt_of_le_iff_leₓ arsinh_nonneg_iff
+  lt_iff_lt_of_le_iff_le arsinh_nonneg_iff
 
-theorem has_strict_deriv_at_arsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x := by
+theorem hasStrictDerivAtArsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x := by
   convert
     sinh_homeomorph.to_local_homeomorph.has_strict_deriv_at_symm (mem_univ x) (cosh_pos _).ne'
       (has_strict_deriv_at_sinh _)
   exact (cosh_arsinh _).symm
 
-theorem has_deriv_at_arsinh (x : ℝ) : HasDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x :=
-  (has_strict_deriv_at_arsinh x).HasDerivAt
+theorem hasDerivAtArsinh (x : ℝ) : HasDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x :=
+  (hasStrictDerivAtArsinh x).HasDerivAt
 
-theorem differentiable_arsinh : Differentiable ℝ arsinh := fun x => (has_deriv_at_arsinh x).DifferentiableAt
+theorem differentiableArsinh : Differentiable ℝ arsinh := fun x => (hasDerivAtArsinh x).DifferentiableAt
 
-theorem cont_diff_arsinh {n : ℕ∞} : ContDiff ℝ n arsinh :=
-  sinhHomeomorph.cont_diff_symm_deriv (fun x => (cosh_pos x).ne') has_deriv_at_sinh cont_diff_sinh
+theorem contDiffArsinh {n : ℕ∞} : ContDiff ℝ n arsinh :=
+  sinhHomeomorph.contDiffSymmDeriv (fun x => (cosh_pos x).ne') hasDerivAtSinh contDiffSinh
 
 @[continuity]
 theorem continuous_arsinh : Continuous arsinh :=
@@ -203,37 +203,37 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasStrictFderivAt.arsinh (hf : HasStrictFderivAt f f' a) :
     HasStrictFderivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=
-  (has_strict_deriv_at_arsinh _).comp_has_strict_fderiv_at a hf
+  (hasStrictDerivAtArsinh _).compHasStrictFderivAt a hf
 
 theorem HasFderivAt.arsinh (hf : HasFderivAt f f' a) :
     HasFderivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=
-  (has_deriv_at_arsinh _).comp_has_fderiv_at a hf
+  (hasDerivAtArsinh _).compHasFderivAt a hf
 
 theorem HasFderivWithinAt.arsinh (hf : HasFderivWithinAt f f' s a) :
     HasFderivWithinAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') s a :=
-  (has_deriv_at_arsinh _).comp_has_fderiv_within_at a hf
+  (hasDerivAtArsinh _).compHasFderivWithinAt a hf
 
 theorem DifferentiableAt.arsinh (h : DifferentiableAt ℝ f a) : DifferentiableAt ℝ (fun x => arsinh (f x)) a :=
-  (differentiable_arsinh _).comp a h
+  (differentiableArsinh _).comp a h
 
 theorem DifferentiableWithinAt.arsinh (h : DifferentiableWithinAt ℝ f s a) :
     DifferentiableWithinAt ℝ (fun x => arsinh (f x)) s a :=
-  (differentiable_arsinh _).comp_differentiable_within_at a h
+  (differentiableArsinh _).compDifferentiableWithinAt a h
 
 theorem DifferentiableOn.arsinh (h : DifferentiableOn ℝ f s) : DifferentiableOn ℝ (fun x => arsinh (f x)) s :=
   fun x hx => (h x hx).arsinh
 
 theorem Differentiable.arsinh (h : Differentiable ℝ f) : Differentiable ℝ fun x => arsinh (f x) :=
-  differentiable_arsinh.comp h
+  differentiableArsinh.comp h
 
 theorem ContDiffAt.arsinh (h : ContDiffAt ℝ n f a) : ContDiffAt ℝ n (fun x => arsinh (f x)) a :=
-  cont_diff_arsinh.ContDiffAt.comp a h
+  contDiffArsinh.ContDiffAt.comp a h
 
 theorem ContDiffWithinAt.arsinh (h : ContDiffWithinAt ℝ n f s a) : ContDiffWithinAt ℝ n (fun x => arsinh (f x)) s a :=
-  cont_diff_arsinh.ContDiffAt.comp_cont_diff_within_at a h
+  contDiffArsinh.ContDiffAt.compContDiffWithinAt a h
 
 theorem ContDiff.arsinh (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => arsinh (f x) :=
-  cont_diff_arsinh.comp h
+  contDiffArsinh.comp h
 
 theorem ContDiffOn.arsinh (h : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x => arsinh (f x)) s := fun x hx =>
   (h x hx).arsinh
@@ -246,15 +246,15 @@ variable {f : ℝ → ℝ} {s : Set ℝ} {a f' : ℝ}
 
 theorem HasStrictDerivAt.arsinh (hf : HasStrictDerivAt f f' a) :
     HasStrictDerivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=
-  (has_strict_deriv_at_arsinh _).comp a hf
+  (hasStrictDerivAtArsinh _).comp a hf
 
 theorem HasDerivAt.arsinh (hf : HasDerivAt f f' a) :
     HasDerivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=
-  (has_deriv_at_arsinh _).comp a hf
+  (hasDerivAtArsinh _).comp a hf
 
 theorem HasDerivWithinAt.arsinh (hf : HasDerivWithinAt f f' s a) :
     HasDerivWithinAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') s a :=
-  (has_deriv_at_arsinh _).comp_has_deriv_within_at a hf
+  (hasDerivAtArsinh _).compHasDerivWithinAt a hf
 
 end deriv
 

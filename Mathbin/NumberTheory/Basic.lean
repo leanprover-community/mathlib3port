@@ -24,12 +24,12 @@ section
 
 open Ideal Ideal.Quotient
 
-theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRingₓ R] {p : ℕ} {a b : R} (h : (p : R) ∣ a - b) (k : ℕ) :
+theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h : (p : R) ∣ a - b) (k : ℕ) :
     (p ^ (k + 1) : R) ∣ a ^ p ^ k - b ^ p ^ k := by
   induction' k with k ih
-  · rwa [pow_oneₓ, pow_zeroₓ, pow_oneₓ, pow_oneₓ]
+  · rwa [pow_one, pow_zero, pow_one, pow_one]
     
-  rw [pow_succ'ₓ p k, pow_mulₓ, pow_mulₓ, ← geom_sum₂_mul, pow_succₓ]
+  rw [pow_succ' p k, pow_mul, pow_mul, ← geom_sum₂_mul, pow_succ]
   refine' mul_dvd_mul _ ih
   let I : Ideal R := span {p}
   let f : R →+* R ⧸ I := mk I

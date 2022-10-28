@@ -29,9 +29,9 @@ section OrderedSemiring
 
 variable [OrderedSemiring 𝕜] [TopologicalSpace E] [TopologicalSpace F]
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [AddCommMonoidₓ E] [AddCommMonoidₓ F]
+variable [AddCommMonoid E] [AddCommMonoid F]
 
 section HasSmul
 
@@ -106,7 +106,7 @@ theorem strict_convex_singleton (c : E) : StrictConvex 𝕜 ({c} : Set E) :=
 theorem Set.Subsingleton.strict_convex (hs : s.Subsingleton) : StrictConvex 𝕜 s :=
   hs.Pairwise _
 
-theorem StrictConvex.linear_image [Semiringₓ 𝕝] [Module 𝕝 E] [Module 𝕝 F] [LinearMap.CompatibleSmul E F 𝕜 𝕝]
+theorem StrictConvex.linear_image [Semiring 𝕝] [Module 𝕝 E] [Module 𝕝 F] [LinearMap.CompatibleSmul E F 𝕜 𝕝]
     (hs : StrictConvex 𝕜 s) (f : E →ₗ[𝕝] F) (hf : IsOpenMap f) : StrictConvex 𝕜 (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy a b ha hb hab
   refine' hf.image_interior_subset _ ⟨a • x + b • y, hs hx hy (ne_of_apply_ne _ hxy) ha hb hab, _⟩
@@ -131,7 +131,7 @@ section LinearOrderedCancelAddCommMonoid
 
 variable [TopologicalSpace β] [LinearOrderedCancelAddCommMonoid β] [OrderTopology β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
-theorem strict_convex_Iic (r : β) : StrictConvex 𝕜 (Iic r) := by
+theorem strict_convex_Iic (r : β) : StrictConvex 𝕜 (IicCat r) := by
   rintro x (hx : x ≤ r) y (hy : y ≤ r) hxy a b ha hb hab
   refine' is_open_Iio.subset_interior_iff.2 Iio_subset_Iic_self _
   rw [← Convex.combo_self hab r]
@@ -144,25 +144,25 @@ theorem strict_convex_Iic (r : β) : StrictConvex 𝕜 (Iic r) := by
   · exact add_lt_add (smul_lt_smul_of_pos hx ha) (smul_lt_smul_of_pos hy hb)
     
 
-theorem strict_convex_Ici (r : β) : StrictConvex 𝕜 (Ici r) :=
+theorem strict_convex_Ici (r : β) : StrictConvex 𝕜 (IciCat r) :=
   @strict_convex_Iic 𝕜 βᵒᵈ _ _ _ _ _ _ r
 
-theorem strict_convex_Icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
+theorem strict_convex_Icc (r s : β) : StrictConvex 𝕜 (IccCat r s) :=
   (strict_convex_Ici r).inter <| strict_convex_Iic s
 
-theorem strict_convex_Iio (r : β) : StrictConvex 𝕜 (Iio r) :=
+theorem strict_convex_Iio (r : β) : StrictConvex 𝕜 (IioCat r) :=
   (convex_Iio r).StrictConvex is_open_Iio
 
-theorem strict_convex_Ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=
+theorem strict_convex_Ioi (r : β) : StrictConvex 𝕜 (IoiCat r) :=
   (convex_Ioi r).StrictConvex is_open_Ioi
 
-theorem strict_convex_Ioo (r s : β) : StrictConvex 𝕜 (Ioo r s) :=
+theorem strict_convex_Ioo (r s : β) : StrictConvex 𝕜 (IooCat r s) :=
   (strict_convex_Ioi r).inter <| strict_convex_Iio s
 
-theorem strict_convex_Ico (r s : β) : StrictConvex 𝕜 (Ico r s) :=
+theorem strict_convex_Ico (r s : β) : StrictConvex 𝕜 (IcoCat r s) :=
   (strict_convex_Ici r).inter <| strict_convex_Iio s
 
-theorem strict_convex_Ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
+theorem strict_convex_Ioc (r s : β) : StrictConvex 𝕜 (IocCat r s) :=
   (strict_convex_Ioi r).inter <| strict_convex_Iic s
 
 theorem strict_convex_interval (r s : β) : StrictConvex 𝕜 (Interval r s) :=
@@ -172,7 +172,7 @@ end LinearOrderedCancelAddCommMonoid
 
 end Module
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
 section AddCancelCommMonoid
 
@@ -183,17 +183,17 @@ theorem StrictConvex.preimage_add_right (hs : StrictConvex 𝕜 s) (z : E) : Str
   intro x hx y hy hxy a b ha hb hab
   refine' preimage_interior_subset_interior_preimage (continuous_add_left _) _
   have h := hs hx hy ((add_right_injective _).Ne hxy) ha hb hab
-  rwa [smul_add, smul_add, add_add_add_commₓ, ← add_smul, hab, one_smul] at h
+  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h
 
 /-- The translation of a strictly convex set is also strictly convex. -/
 theorem StrictConvex.preimage_add_left (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => x + z) ⁻¹' s) := by
-  simpa only [add_commₓ] using hs.preimage_add_right z
+  simpa only [add_comm] using hs.preimage_add_right z
 
 end AddCancelCommMonoid
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
+variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F]
 
 section continuous_add
 
@@ -201,7 +201,7 @@ variable [HasContinuousAdd E] {s t : Set E}
 
 theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) : StrictConvex 𝕜 (s + t) := by
   rintro _ ⟨v, w, hv, hw, rfl⟩ _ ⟨x, y, hx, hy, rfl⟩ h a b ha hb hab
-  rw [smul_add, smul_add, add_add_add_commₓ]
+  rw [smul_add, smul_add, add_add_add_comm]
   obtain rfl | hvx := eq_or_ne v x
   · refine' interior_mono (add_subset_add (singleton_subset_iff.2 hv) subset.rfl) _
     rw [Convex.combo_self hab, singleton_add]
@@ -214,7 +214,7 @@ theorem StrictConvex.add_left (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 
   simpa only [singleton_add] using (strict_convex_singleton z).add hs
 
 theorem StrictConvex.add_right (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => x + z) '' s) := by
-  simpa only [add_commₓ] using hs.add_left z
+  simpa only [add_comm] using hs.add_left z
 
 /-- The translation of a strictly convex set is also strictly convex. -/
 theorem StrictConvex.vadd (hs : StrictConvex 𝕜 s) (x : E) : StrictConvex 𝕜 (x +ᵥ s) :=
@@ -240,7 +240,7 @@ theorem StrictConvex.affinity [HasContinuousAdd E] (hs : StrictConvex 𝕜 s) (z
 
 end ContinuousSmul
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end OrderedSemiring
 
@@ -248,9 +248,9 @@ section OrderedCommSemiring
 
 variable [OrderedCommSemiring 𝕜] [TopologicalSpace E]
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E] {s : Set E}
+variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E] {s : Set E}
 
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) : StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
   classical
@@ -266,7 +266,7 @@ theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) : Stric
   unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
   exact continuous_const_smul _
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end OrderedCommSemiring
 
@@ -274,9 +274,9 @@ section OrderedRing
 
 variable [OrderedRing 𝕜] [TopologicalSpace E] [TopologicalSpace F]
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E} {x y : E}
+variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E} {x y : E}
 
 theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [DenselyOrdered 𝕜] (hs : StrictConvex 𝕜 s)
     (hx : x ∈ s) (hy : y ∈ s) (h : OpenSegment 𝕜 x y ⊆ Frontier s) : x = y := by
@@ -289,11 +289,11 @@ theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [Dense
 
 theorem StrictConvex.add_smul_mem (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hxy : x + y ∈ s) (hy : y ≠ 0) {t : 𝕜}
     (ht₀ : 0 < t) (ht₁ : t < 1) : x + t • y ∈ Interior s := by
-  have h : x + t • y = (1 - t) • x + t • (x + y) := by rw [smul_add, ← add_assocₓ, ← add_smul, sub_add_cancel, one_smul]
+  have h : x + t • y = (1 - t) • x + t • (x + y) := by rw [smul_add, ← add_assoc, ← add_smul, sub_add_cancel, one_smul]
   rw [h]
-  refine' hs hx hxy (fun h => hy <| add_left_cancelₓ _) (sub_pos_of_lt ht₁) ht₀ (sub_add_cancel _ _)
+  refine' hs hx hxy (fun h => hy <| add_left_cancel _) (sub_pos_of_lt ht₁) ht₀ (sub_add_cancel _ _)
   exact x
-  rw [← h, add_zeroₓ]
+  rw [← h, add_zero]
 
 theorem StrictConvex.smul_mem_of_zero_mem (hs : StrictConvex 𝕜 s) (zero_mem : (0 : E) ∈ s) (hx : x ∈ s) (hx₀ : x ≠ 0)
     {t : 𝕜} (ht₀ : 0 < t) (ht₁ : t < 1) : t • x ∈ Interior s := by
@@ -329,7 +329,7 @@ theorem StrictConvex.neg (hs : StrictConvex 𝕜 s) : StrictConvex 𝕜 (-s) :=
 theorem StrictConvex.sub (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) : StrictConvex 𝕜 (s - t) :=
   (sub_eq_add_neg s t).symm ▸ hs.add ht.neg
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end OrderedRing
 
@@ -337,9 +337,9 @@ section LinearOrderedField
 
 variable [LinearOrderedField 𝕜] [TopologicalSpace E]
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E} {x : E}
+variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E} {x : E}
 
 /-- Alternative definition of set strict convexity, using division. -/
 theorem strict_convex_iff_div :
@@ -356,7 +356,7 @@ theorem StrictConvex.mem_smul_of_zero_mem (hs : StrictConvex 𝕜 s) (zero_mem :
   rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans ht).ne']
   exact hs.smul_mem_of_zero_mem zero_mem hx hx₀ (inv_pos.2 <| zero_lt_one.trans ht) (inv_lt_one ht)
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end LinearOrderedField
 

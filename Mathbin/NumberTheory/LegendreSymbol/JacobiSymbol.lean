@@ -101,7 +101,7 @@ theorem one_right (a : ℤ) : J(a | 1) = 1 := by simp only [jacobiSym, factors_o
 /-- The Legendre symbol `legendre_sym p a` with an integer `a` and a prime number `p`
 is the same as the Jacobi symbol `J(a | p)`. -/
 theorem _root_.legendre_sym.to_jacobi_sym (p : ℕ) [fp : Fact p.Prime] (a : ℤ) : legendreSym p a = J(a | p) := by
-  simp only [jacobiSym, factors_prime fp.1, List.prod_cons, List.prod_nil, mul_oneₓ, List.pmap]
+  simp only [jacobiSym, factors_prime fp.1, List.prod_cons, List.prod_nil, mul_one, List.pmap]
 
 /-- The Jacobi symbol is multiplicative in its second argument. -/
 theorem mul_right' (a : ℤ) {b₁ b₂ : ℕ} (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) : J(a | b₁ * b₂) = J(a | b₁) * J(a | b₂) := by
@@ -121,7 +121,7 @@ theorem trichotomy (a : ℤ) (b : ℕ) : J(a | b) = 0 ∨ J(a | b) = 1 ∨ J(a |
       intro _ ha'
       rcases list.mem_pmap.mp ha' with ⟨p, hp, rfl⟩
       haveI : Fact p.prime := ⟨prime_of_mem_factors hp⟩
-      exact quadratic_char_is_quadratic (Zmod p) a)
+      exact quadraticCharIsQuadratic (Zmod p) a)
 
 /-- The symbol `J(1 | b)` has the value `1`. -/
 @[simp]
@@ -141,7 +141,7 @@ theorem eq_zero_iff_not_coprime {a : ℤ} {b : ℕ} [NeZero b] : J(a | b) = 0 �
     (by
       rw [List.mem_pmap, Int.gcd_eq_nat_abs, Ne, prime.not_coprime_iff_dvd]
       simp_rw [legendreSym.eq_zero_iff, int_coe_zmod_eq_zero_iff_dvd, mem_factors (NeZero.ne b), ← Int.coe_nat_dvd_left,
-        Int.coe_nat_dvd, exists_propₓ, and_assocₓ, and_comm])
+        Int.coe_nat_dvd, exists_prop, and_assoc', and_comm'])
 
 /-- The symbol `J(a | b)` is nonzero when `a` and `b` are coprime. -/
 protected theorem ne_zero {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) ≠ 0 := by
@@ -176,17 +176,17 @@ theorem eq_one_or_neg_one {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) = 1 �
 
 /-- We have that `J(a^e | b) = J(a | b)^e`. -/
 theorem pow_left (a : ℤ) (e b : ℕ) : J(a ^ e | b) = J(a | b) ^ e :=
-  (Nat.recOn e (by rw [pow_zeroₓ, pow_zeroₓ, one_left])) fun _ ih => by rw [pow_succₓ, pow_succₓ, mul_left, ih]
+  (Nat.recOn e (by rw [pow_zero, pow_zero, one_left])) fun _ ih => by rw [pow_succ, pow_succ, mul_left, ih]
 
 /-- We have that `J(a | b^e) = J(a | b)^e`. -/
 theorem pow_right (a : ℤ) (b e : ℕ) : J(a | b ^ e) = J(a | b) ^ e := by
   induction' e with e ih
-  · rw [pow_zeroₓ, pow_zeroₓ, one_right]
+  · rw [pow_zero, pow_zero, one_right]
     
   · cases' eq_zero_or_ne_zero b with hb
     · rw [hb, zero_pow (succ_pos e), zero_right, one_pow]
       
-    · rw [pow_succₓ, pow_succₓ, mul_right, ih]
+    · rw [pow_succ, pow_succ, mul_right, ih]
       
     
 
@@ -245,11 +245,11 @@ namespace jacobiSym
 
 /-- If `χ` is a multiplicative function such that `J(a | p) = χ p` for all odd primes `p`,
 then `J(a | b)` equals `χ b` for all odd natural numbers `b`. -/
-theorem value_at (a : ℤ) {R : Type _} [CommSemiringₓ R] (χ : R →* ℤ)
+theorem value_at (a : ℤ) {R : Type _} [CommSemiring R] (χ : R →* ℤ)
     (hp : ∀ (p : ℕ) (pp : p.Prime) (h2 : p ≠ 2), @legendreSym p ⟨pp⟩ a = χ p) {b : ℕ} (hb : Odd b) : J(a | b) = χ b :=
   by
   conv_rhs => rw [← prod_factors hb.pos.ne', cast_list_prod, χ.map_list_prod]
-  rw [jacobiSym, List.map_mapₓ, ← List.pmap_eq_map Nat.Prime _ _ fun _ => prime_of_mem_factors]
+  rw [jacobiSym, List.map_map, ← List.pmap_eq_map Nat.Prime _ _ fun _ => prime_of_mem_factors]
   congr 1
   apply List.pmap_congr
   exact fun p h pp _ => hp p pp (hb.factors_ne_two h)
@@ -285,7 +285,7 @@ namespace qrSign
 
 /-- We can express `qr_sign m n` as a power of `-1` when `m` and `n` are odd. -/
 theorem neg_one_pow {m n : ℕ} (hm : Odd m) (hn : Odd n) : qrSign m n = -1 ^ (m / 2 * (n / 2)) := by
-  rw [qrSign, pow_mulₓ, ← χ₄_eq_neg_one_pow (odd_iff.mp hm)]
+  rw [qrSign, pow_mul, ← χ₄_eq_neg_one_pow (odd_iff.mp hm)]
   cases' odd_mod_four_iff.mp (odd_iff.mp hm) with h h
   · rw [χ₄_nat_one_mod_four h, jacobiSym.one_left, one_pow]
     
@@ -294,11 +294,11 @@ theorem neg_one_pow {m n : ℕ} (hm : Odd m) (hn : Odd n) : qrSign m n = -1 ^ (m
 
 /-- When `m` and `n` are odd, then the square of `qr_sign m n` is `1`. -/
 theorem sq_eq_one {m n : ℕ} (hm : Odd m) (hn : Odd n) : qrSign m n ^ 2 = 1 := by
-  rw [neg_one_pow hm hn, ← pow_mulₓ, mul_comm, pow_mulₓ, neg_one_sq, one_pow]
+  rw [neg_one_pow hm hn, ← pow_mul, mul_comm, pow_mul, neg_one_sq, one_pow]
 
 /-- `qr_sign` is multiplicative in the first argument. -/
 theorem mul_left (m₁ m₂ n : ℕ) : qrSign (m₁ * m₂) n = qrSign m₁ n * qrSign m₂ n := by
-  simp_rw [qrSign, Nat.cast_mulₓ, map_mul, jacobiSym.mul_left]
+  simp_rw [qrSign, Nat.cast_mul, map_mul, jacobiSym.mul_left]
 
 /-- `qr_sign` is multiplicative in the second argument. -/
 theorem mul_right (m n₁ n₂ : ℕ) [NeZero n₁] [NeZero n₂] : qrSign m (n₁ * n₂) = qrSign m n₁ * qrSign m n₂ :=
@@ -315,7 +315,7 @@ theorem eq_iff_eq {m n : ℕ} (hm : Odd m) (hn : Odd n) (x y : ℤ) : qrSign m n
         let h := h'.symm
         _,
         fun h => _⟩ <;>
-    rw [h, ← mul_assoc, ← pow_two, sq_eq_one hm hn, one_mulₓ]
+    rw [h, ← mul_assoc, ← pow_two, sq_eq_one hm hn, one_mul]
 
 end qrSign
 
@@ -327,10 +327,10 @@ theorem quadratic_reciprocity' {a b : ℕ} (ha : Odd a) (hb : Odd b) : J(a | b) 
   let rhs : ℕ → ℕ →* ℤ := fun a =>
     { toFun := fun x => qrSign x a * J(x | a),
       map_one' := by
-        convert ← mul_oneₓ _
+        convert ← mul_one _
         symm
         all_goals apply one_left,
-      map_mul' := fun x y => by rw [qrSign.mul_left, Nat.cast_mulₓ, mul_left, mul_mul_mul_commₓ] }
+      map_mul' := fun x y => by rw [qrSign.mul_left, Nat.cast_mul, mul_left, mul_mul_mul_comm] }
   have rhs_apply : ∀ a b : ℕ, rhs a b = qrSign b a * J(b | a) := fun a b => rfl
   refine' value_at a (rhs a) (fun p pp hp => Eq.symm _) hb
   have hpo := pp.eq_two_or_odd'.resolve_left hp
@@ -347,8 +347,8 @@ theorem quadratic_reciprocity {a b : ℕ} (ha : Odd a) (hb : Odd b) : J(a | b) =
 /-- The Law of Quadratic Reciprocity for the Jacobi symbol: if `a` and `b` are natural numbers
 with `a % 4 = 1` and `b` odd, then `J(a | b) = J(b | a)`. -/
 theorem quadratic_reciprocity_one_mod_four {a b : ℕ} (ha : a % 4 = 1) (hb : Odd b) : J(a | b) = J(b | a) := by
-  rw [quadratic_reciprocity (odd_iff.mpr (odd_of_mod_four_eq_one ha)) hb, pow_mulₓ,
-    neg_one_pow_div_two_of_one_mod_four ha, one_pow, one_mulₓ]
+  rw [quadratic_reciprocity (odd_iff.mpr (odd_of_mod_four_eq_one ha)) hb, pow_mul,
+    neg_one_pow_div_two_of_one_mod_four ha, one_pow, one_mul]
 
 /-- The Law of Quadratic Reciprocity for the Jacobi symbol: if `a` and `b` are natural numbers
 with `a` odd and `b % 4 = 1`, then `J(a | b) = J(b | a)`. -/
@@ -359,7 +359,7 @@ theorem quadratic_reciprocity_one_mod_four' {a b : ℕ} (ha : Odd a) (hb : b % 4
 both congruent to `3` mod `4`, then `J(a | b) = -J(b | a)`. -/
 theorem quadratic_reciprocity_three_mod_four {a b : ℕ} (ha : a % 4 = 3) (hb : b % 4 = 3) : J(a | b) = -J(b | a) := by
   let nop := @neg_one_pow_div_two_of_three_mod_four
-  rw [quadratic_reciprocity, pow_mulₓ, nop ha, nop hb, neg_one_mul] <;> rwa [odd_iff, odd_of_mod_four_eq_three]
+  rw [quadratic_reciprocity, pow_mul, nop ha, nop hb, neg_one_mul] <;> rwa [odd_iff, odd_of_mod_four_eq_three]
 
 /-- The Jacobi symbol `J(a | b)` depends only on `b` mod `4*a` (version for `a : ℕ`). -/
 theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * a)) := by
@@ -371,7 +371,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
   have ha₁ := odd_iff.mpr (two_dvd_ne_zero.mp ha₁')
   nth_rw 1 [ha₂]
   nth_rw 0 [ha₂]
-  rw [Nat.cast_mulₓ, mul_left, mul_left, quadratic_reciprocity' ha₁ hb, quadratic_reciprocity' ha₁ hb', Nat.cast_powₓ,
+  rw [Nat.cast_mul, mul_left, mul_left, quadratic_reciprocity' ha₁ hb, quadratic_reciprocity' ha₁ hb', Nat.cast_pow,
     pow_left, pow_left, Nat.cast_two, at_two hb, at_two hb']
   congr 1
   swap
@@ -380,7 +380,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
     rw [χ₄_nat_mod_four, χ₄_nat_mod_four (b % (4 * a)), mod_mod_of_dvd b (dvd_mul_right 4 a)]
     
   · rw [mod_left ↑(b % _), mod_left b, Int.coe_nat_mod, Int.mod_mod_of_dvd b]
-    simp only [ha₂, Nat.cast_mulₓ, ← mul_assoc]
+    simp only [ha₂, Nat.cast_mul, ← mul_assoc]
     exact dvd_mul_left a' _
     
   cases e
@@ -388,7 +388,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
     
   · rw [χ₈_nat_mod_eight, χ₈_nat_mod_eight (b % (4 * a)), mod_mod_of_dvd b]
     use 2 ^ e * a'
-    rw [ha₂, pow_succₓ]
+    rw [ha₂, pow_succ]
     ring
     
 

@@ -33,7 +33,7 @@ namespace Ordinal
 variable {s : Set Ordinal.{u}} {a : Ordinal.{u}}
 
 instance : TopologicalSpace Ordinal.{u} :=
-  Preorderₓ.topology Ordinal.{u}
+  Preorder.topology Ordinal.{u}
 
 instance : OrderTopology Ordinal.{u} :=
   ⟨rfl⟩
@@ -59,7 +59,7 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
         exact lt_succ b
         
       · rintro ⟨hc, hc'⟩
-        apply le_antisymmₓ (le_of_lt_succ hc')
+        apply le_antisymm (le_of_lt_succ hc')
         rw [hb]
         exact succ_le_of_lt hc
         
@@ -68,7 +68,7 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
       
     
 
-theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
+theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.IooCat a o ⊆ s := by
   classical
   refine' ⟨_, fun h => _⟩
   · rw [is_open_iff_generate_intervals]
@@ -86,8 +86,8 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo
     · rcases ht' hos.1 with ⟨a, ha, ha'⟩
       rcases hu' hos.2 with ⟨b, hb, hb'⟩
       exact
-        ⟨_, max_ltₓ ha hb, fun c hc =>
-          ⟨ha' ⟨(le_max_leftₓ a b).trans_lt hc.1, hc.2⟩, hb' ⟨(le_max_rightₓ a b).trans_lt hc.1, hc.2⟩⟩⟩
+        ⟨_, max_lt ha hb, fun c hc =>
+          ⟨ha' ⟨(le_max_left a b).trans_lt hc.1, hc.2⟩, hb' ⟨(le_max_right a b).trans_lt hc.1, hc.2⟩⟩⟩
       
     · rcases hos with ⟨u, hu, hu'⟩
       rcases H u hu hu' with ⟨a, ha, ha'⟩
@@ -95,7 +95,7 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo
       
     
   · let f : s → Set Ordinal := fun o =>
-      if ho : is_limit o.val then Set.Ioo (Classical.choose (h o.val o.Prop ho)) (o + 1) else {o.val}
+      if ho : is_limit o.val then Set.IooCat (Classical.choose (h o.val o.Prop ho)) (o + 1) else {o.val}
     have : ∀ a, IsOpen (f a) := fun a => by
       change IsOpen (dite _ _ _)
       split_ifs
@@ -118,7 +118,7 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo
       change dite _ _ _ = t at ht
       split_ifs  at ht with ha <;> subst ht
       · cases' Classical.choose_spec (h a.val a.prop ha) with H has
-        rcases lt_or_eq_of_leₓ (le_of_lt_succ hoa.2) with (hoa' | rfl)
+        rcases lt_or_eq_of_le (le_of_lt_succ hoa.2) with (hoa' | rfl)
         · exact has ⟨hoa.1, hoa'⟩
           
         · exact a.prop
@@ -137,7 +137,7 @@ theorem mem_closure_iff_sup :
       
     · have H := fun b (hba : b < a) => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
       let f : a.out.α → Ordinal := fun i => Classical.choose (H (typein (· < ·) i) (typein_lt_self i))
-      have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.choose_spec (H _ _)
+      have hf : ∀ i, f i ∈ Set.IooCat (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.choose_spec (H _ _)
       rcases eq_zero_or_pos a with (rfl | ha₀)
       · rcases h _ (is_open_singleton_iff.2 not_zero_is_limit) rfl with ⟨b, hb, hb'⟩
         rw [Set.mem_singleton_iff.1 hb] at *
@@ -145,10 +145,10 @@ theorem mem_closure_iff_sup :
         
       refine'
         ⟨_, out_nonempty_iff_ne_zero.2 (Ordinal.pos_iff_ne_zero.1 ha₀), f, fun i => (hf i).2,
-          le_antisymmₓ (sup_le fun i => le_of_lt_succ (hf i).1.2) _⟩
+          le_antisymm (sup_le fun i => le_of_lt_succ (hf i).1.2) _⟩
       by_contra' h
       cases' H _ h with b hb
-      rcases eq_or_lt_of_leₓ (le_of_lt_succ hb.1.2) with (rfl | hba)
+      rcases eq_or_lt_of_le (le_of_lt_succ hb.1.2) with (rfl | hba)
       · exact has hb.2
         
       · have : b < f (enum (· < ·) b (by rwa [type_lt])) := by
@@ -218,7 +218,7 @@ theorem is_limit_of_mem_frontier (ha : a ∈ Frontier s) : IsLimit a := by
   exact hc' hb'
 
 theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u}) :
-    IsNormal f ↔ StrictMonoₓ f ∧ Continuous f := by
+    IsNormal f ↔ StrictMono f ∧ Continuous f := by
   refine' ⟨fun h => ⟨h.StrictMono, _⟩, _⟩
   · rw [continuous_def]
     intro s hs
@@ -232,13 +232,13 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
   · rw [is_normal_iff_strict_mono_limit]
     rintro ⟨h, h'⟩
     refine' ⟨h, fun o ho a h => _⟩
-    suffices : o ∈ f ⁻¹' Set.Iic a
+    suffices : o ∈ f ⁻¹' Set.IicCat a
     exact Set.mem_preimage.1 this
-    rw [mem_closed_iff_sup (IsClosed.preimage h' (@is_closed_Iic _ _ _ _ a))]
+    rw [mem_closed_iff_sup (IsClosed.preimage h' (@isClosedIic _ _ _ _ a))]
     exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr < » a)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr < » a) -/
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'

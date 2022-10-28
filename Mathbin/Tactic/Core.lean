@@ -17,7 +17,7 @@ universe u
 deriving instance has_reflect, DecidableEq for Tactic.Transparency
 
 -- Rather than import data.prod.lex here, we can get away with defining the order by hand.
-instance : LT Pos where lt := fun x y => x.line < y.line ∨ x.line = y.line ∧ x.column < y.column
+instance : LT Pos where lt x y := x.line < y.line ∨ x.line = y.line ∧ x.column < y.column
 
 namespace Tactic
 
@@ -87,7 +87,7 @@ unsafe def mk_exists_lst (args : List expr) (inner : expr) : tactic expr :=
     inner
 
 /-- `traverse f e` applies the monadic function `f` to the direct descendants of `e`. -/
-unsafe def traverse {m : Type → Type u} [Applicativeₓ m] {elab elab' : Bool} (f : expr elab → m (expr elab')) :
+unsafe def traverse {m : Type → Type u} [Applicative m] {elab elab' : Bool} (f : expr elab → m (expr elab')) :
     expr elab → m (expr elab')
   | var v => pure <| var v
   | sort l => pure <| sort l
@@ -98,12 +98,12 @@ unsafe def traverse {m : Type → Type u} [Applicativeₓ m] {elab elab' : Bool}
   | lam n bi e₀ e₁ => lam n bi <$> f e₀ <*> f e₁
   | pi n bi e₀ e₁ => pi n bi <$> f e₀ <*> f e₁
   | elet n e₀ e₁ e₂ => elet n <$> f e₀ <*> f e₁ <*> f e₂
-  | macro mac es => macro mac <$> List.traverseₓ f es
+  | macro mac es => macro mac <$> List.traverse f es
 
 /-- `mfoldl f a e` folds the monadic function `f` over the subterms of the expression `e`,
 with initial value `a`. -/
-unsafe def mfoldl {α : Type} {m} [Monadₓ m] (f : α → expr → m α) : α → expr → m α
-  | x, e => Prod.snd <$> (StateTₓ.run (e.traverse fun e' => (get >>= monad_lift ∘ flip f e' >>= put) $> e') x : m _)
+unsafe def mfoldl {α : Type} {m} [Monad m] (f : α → expr → m α) : α → expr → m α
+  | x, e => Prod.snd <$> (StateT.run (e.traverse fun e' => (get >>= monad_lift ∘ flip f e' >>= put) $> e') x : m _)
 
 /-- `kreplace e old new` replaces all occurrences of the expression `old` in `e`
 with `new`. The occurrences of `old` in `e` are determined using keyed matching
@@ -438,11 +438,11 @@ directory, which may not always point at the root of the project.
 It would work better if it searched for the root directory or,
 better yet, if Lean exposed its path information.
 -/
-unsafe def get_decls_from (fs : List (Option Stringₓ)) : tactic (name_map declaration) := do
+unsafe def get_decls_from (fs : List (Option String)) : tactic (name_map declaration) := do
   let root ← unsafe_run_io <| Io.Env.getCwd
   let fs := fs.map (Option.map fun path => root ++ "/" ++ path)
-  let err ← unsafe_run_io <| (fs.filterMap id).mfilter <| (· <$> ·) bnot ∘ Io.Fs.fileExists
-  guardₓ (err = []) <|> fail f! "File not found: {err}"
+  let err ← unsafe_run_io <| (fs.filterMap id).mfilter <| (· <$> ·) not ∘ Io.Fs.fileExists
+  guard (err = []) <|> fail f! "File not found: {err}"
   let e ← tactic.get_env
   let xs :=
     e.fold native.mk_rb_map fun d s =>
@@ -564,7 +564,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   add_decl <| declaration.defn n univ t' d' (ReducibilityHints.regular 1 tt) trusted
   applyc n
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -606,7 +606,7 @@ unsafe def replace_at (tac : expr → tactic (expr × expr)) (hs : List expr) (t
             mk_eq_mp pr h >>= tactic.exact
   let goal_simplified ←
     succeeds <| do
-        guardₓ tgt
+        guard tgt
         let (new_t, pr) ← target >>= tac
         replace_target new_t pr
   to_remove fun h => try (clear h)
@@ -998,7 +998,11 @@ application of `i_to_expr_for_apply` to a declaration with that attribute.
 -/
 unsafe def resolve_attribute_expr_list (attr_name : Name) : tactic (List (tactic expr)) := do
   let l ← attribute.get_instances attr_name
-  List.map i_to_expr_for_apply <$> List.reverse <$> l resolve_name
+  List.map i_to_expr_for_apply <$>
+      List.reverse <$>
+        l fun n => do
+          let c ← mk_const n
+          return (pexpr.of_expr c)
 
 /-- `apply_rules args attrs n`: apply the lists of rules `args` (given as pexprs) and `attrs` (given
 as names of attributes) and the tactic `assumption` on the first goal and the resulting subgoals,
@@ -1141,12 +1145,12 @@ and fail otherwise.
 -/
 unsafe def sorry_if_contains_sorry : tactic Unit := do
   let g ← target
-  guardₓ g <|> fail "goal does not contain `sorry`"
+  guard g <|> fail "goal does not contain `sorry`"
   tactic.admit
 
 /-- Fail if the target contains a metavariable. -/
 unsafe def no_mvars_in_target : tactic Unit :=
-  expr.has_meta_var <$> target >>= guardb ∘ bnot
+  expr.has_meta_var <$> target >>= guardb ∘ not
 
 /-- Succeeds only if the current goal is a proposition. -/
 unsafe def propositional_goal : tactic Unit := do
@@ -1168,11 +1172,11 @@ unsafe def terminal_goal : tactic Unit :=
   propositional_goal <|>
     subsingleton_goal <|> do
       let g₀ :: _ ← get_goals
-      let mvars ← (fun L => List.eraseₓ L g₀) <$> metavariables
+      let mvars ← (fun L => List.erase' L g₀) <$> metavariables
       mvars fun g => do
           let t ← infer_type g >>= instantiate_mvars
           let d ← kdepends_on t g₀
-          Monadₓ.whenb d <| pp t >>= fun s => fail ("The current goal is not terminal: " ++ s ++ " depends on it.")
+          Monad.whenb d <| pp t >>= fun s => fail ("The current goal is not terminal: " ++ s ++ " depends on it.")
 
 /-- Succeeds only if the current goal is "independent", in the sense
 that no other goals depend on it, even through shared meta-variables.
@@ -1228,7 +1232,7 @@ end Interactive
 
 /-- `successes` invokes each tactic in turn, returning the list of successful results. -/
 unsafe def successes (tactics : List (tactic α)) : tactic (List α) :=
-  List.filterMap id <$> Monadₓ.sequence (tactics.map fun t => try_core t)
+  List.filterMap id <$> Monad.sequence (tactics.map fun t => try_core t)
 
 -- Note this is not the same as `successes`, which keeps track of the evolving `tactic_state`.
 /-- Try all the tactics in a list, each time starting at the original `tactic_state`,
@@ -1275,7 +1279,7 @@ However it does not reorder goals or invoke `auto_param` tactics.
 unsafe def fsplit : tactic Unit := do
   let [c] ← target' >>= get_constructors_for |
     fail "fsplit tactic failed, target is not an inductive datatype with only one constructor"
-  mk_const c >>= fun e => apply e { NewGoals := new_goals.all, AutoParam := ff } >> skip
+  mk_const c >>= fun e => apply e { NewGoals := new_goals.all, autoParam := ff } >> skip
 
 run_cmd
   add_interactive [`fsplit]
@@ -1284,7 +1288,7 @@ add_tactic_doc
   { Name := "fsplit", category := DocCategory.tactic, declNames := [`tactic.interactive.fsplit],
     tags := ["logic", "goal management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
 /-- Calls `injection` on each hypothesis, and then, for each hypothesis on which `injection`
 succeeds, clears the old hypothesis. -/
 unsafe def injections_and_clear : tactic Unit := do
@@ -1299,7 +1303,7 @@ add_tactic_doc
   { Name := "injections_and_clear", category := DocCategory.tactic,
     declNames := [`tactic.interactive.injections_and_clear], tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `r
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `r -/
 /-- Calls `cases` on every local hypothesis, succeeding if
 it succeeds on at least one hypothesis. -/
 unsafe def case_bash : tactic Unit := do
@@ -1366,18 +1370,18 @@ well-behaved if `p` and `s` are backtrackable; which in practice means they must
 input when they do not have a match. -/
 unsafe def sep_by_trailing {α : Type} (s : lean.parser Unit) (p : lean.parser α) : lean.parser (List α) := do
   let fst ← p
-  let some () ← optionalₓ s | pure [fst]
-  let some rest ← optionalₓ sep_by_trailing | pure [fst]
+  let some () ← optional s | pure [fst]
+  let some rest ← optional sep_by_trailing | pure [fst]
   pure (fst :: rest)
 
 /-- `emit_command_here str` behaves as if the string `str` were placed as a user command at the
 current line. -/
-unsafe def emit_command_here (str : Stringₓ) : lean.parser Stringₓ := do
+unsafe def emit_command_here (str : String) : lean.parser String := do
   let (_, left) ← with_input command_like str
   return left
 
 /-- Inner recursion for `emit_code_here`. -/
-unsafe def emit_code_here_aux : Stringₓ → ℕ → lean.parser Unit
+unsafe def emit_code_here_aux : String → ℕ → lean.parser Unit
   | str, slen => do
     let left ← emit_command_here str
     let llen := left.length
@@ -1385,7 +1389,7 @@ unsafe def emit_code_here_aux : Stringₓ → ℕ → lean.parser Unit
 
 /-- `emit_code_here str` behaves as if the string `str` were placed at the current location in
 source code. -/
-unsafe def emit_code_here (s : Stringₓ) : lean.parser Unit :=
+unsafe def emit_code_here (s : String) : lean.parser Unit :=
   emit_code_here_aux s s.length
 
 /-- `run_parser p` is like `run_cmd` but for the parser monad. It executes parser `p` at the
@@ -1420,7 +1424,7 @@ unsafe def get_variables : lean.parser (List (Name × BinderInfo × expr)) :=
 "included" by an `include v` statement and are not (yet) `omit`ed. -/
 unsafe def get_included_variables : lean.parser (List (Name × BinderInfo × expr)) := do
   let ns ← list_include_var_names
-  (List.filterₓ fun v => v.1 ∈ ns) <$> get_variables
+  (List.filter' fun v => v.1 ∈ ns) <$> get_variables
 
 /-- From the `lean.parser` monad, synthesize a `tactic_state` which includes all of the local
 variables referenced in `es : list pexpr`, and those variables which have been `include`ed in the
@@ -1513,7 +1517,7 @@ instance : monad id :=
 unsafe def instance_stub : hole_command where
   Name := "Instance Stub"
   descr := "Generate a skeleton for the structure under construction."
-  action := fun _ => do
+  action _ := do
     let tgt ← target >>= whnf
     let cl := tgt.get_app_fn.const_name
     let env ← get_env
@@ -1536,7 +1540,7 @@ unsafe def resolve_name' (n : Name) : tactic pexpr := do
   set_goals [g]
   resolve_name n <* set_goals []
 
-private unsafe def strip_prefix' (n : Name) : List Stringₓ → Name → tactic Name
+private unsafe def strip_prefix' (n : Name) : List String → Name → tactic Name
   | s, Name.anonymous => pure <| s.foldl (flip Name.mk_string) Name.anonymous
   | s, Name.mk_string a p => do
     let n' := s.foldl (flip Name.mk_string) Name.anonymous
@@ -1612,7 +1616,7 @@ end
 unsafe def match_stub : hole_command where
   Name := "Match Stub"
   descr := "Generate a list of equations for a `match` expression."
-  action := fun es => do
+  action es := do
     let [e] ← pure es | fail "expecting one expression"
     let e ← to_expr e
     let t ← infer_type e >>= whnf
@@ -1678,7 +1682,7 @@ meta def foo : expr → tactic unit := -- don't forget to erase `:=`!!
 unsafe def eqn_stub : hole_command where
   Name := "Equations Stub"
   descr := "Generate a list of equations for a recursive definition."
-  action := fun es => do
+  action es := do
     let t ←
       match es with
         | [t] => to_expr t
@@ -1734,7 +1738,7 @@ sum.inr : ℕ → ℤ ⊕ ℕ
 unsafe def list_constructors_hole : hole_command where
   Name := "List Constructors"
   descr := "Show the list of constructors of the expected type."
-  action := fun es => do
+  action es := do
     let t ← target >>= whnf
     let (_, t) ← open_pis t
     let cl := t.get_app_fn.const_name
@@ -1782,12 +1786,12 @@ unsafe def mk_comp (v : expr) : expr → tactic expr
   | app f e =>
     if e = v then pure f
     else do
-      guardₓ ¬v f <|> fail "bad guard"
+      guard ¬v f <|> fail "bad guard"
       let e' ← mk_comp e >>= instantiate_mvars
       let f ← instantiate_mvars f
       mk_mapp `` Function.comp [none, none, none, f, e']
   | e => do
-    guardₓ (e = v)
+    guard (e = v)
     let t ← infer_type e
     mk_mapp `` id [t]
 
@@ -1821,7 +1825,7 @@ It derives an auxiliary lemma of the form `f ∘ g = h` for reasoning about high
 @[user_attribute]
 unsafe def higher_order_attr : user_attribute Unit (Option Name) where
   Name := `higher_order
-  parser := optionalₓ ident
+  parser := optional ident
   descr :=
     "From a lemma of the shape `∀ x, f (g x) = h x` derive an auxiliary lemma of the\nform `f ∘ g = h` for reasoning about higher-order functions."
   after_set :=
@@ -1969,7 +1973,7 @@ unsafe def on_exception {β} (handler : tactic β) (tac : tactic α) : tactic α
     | ok => ok
 
 /-- `decorate_error add_msg tac` prepends `add_msg` to an exception produced by `tac` -/
-unsafe def decorate_error (add_msg : Stringₓ) (tac : tactic α) : tactic α
+unsafe def decorate_error (add_msg : String) (tac : tactic α) : tactic α
   | s =>
     match tac s with
     | result.exception msg p s =>
@@ -1982,20 +1986,20 @@ unsafe def decorate_error (add_msg : Stringₓ) (tac : tactic α) : tactic α
 
 /-- Applies tactic `t`. If it succeeds, revert the state, and return the value. If it fails,
   returns the error message. -/
-unsafe def retrieve_or_report_error {α : Type u} (t : tactic α) : tactic (Sum α Stringₓ) := fun s =>
+unsafe def retrieve_or_report_error {α : Type u} (t : tactic α) : tactic (Sum α String) := fun s =>
   match t s with
   | interaction_monad.result.success a s' => result.success (Sum.inl a) s
   | interaction_monad.result.exception msg' _ s' => result.success (Sum.inr (msg'.iget ()).toString) s
 
 /-- Applies tactic `t`. If it succeeds, return the value. If it fails, returns the error message. -/
-unsafe def try_or_report_error {α : Type u} (t : tactic α) : tactic (Sum α Stringₓ) := fun s =>
+unsafe def try_or_report_error {α : Type u} (t : tactic α) : tactic (Sum α String) := fun s =>
   match t s with
   | interaction_monad.result.success a s' => result.success (Sum.inl a) s'
   | interaction_monad.result.exception msg' _ s' => result.success (Sum.inr (msg'.iget ()).toString) s
 
 /-- This tactic succeeds if `t` succeeds or fails with message `msg` such that `p msg` is `tt`.
 -/
-unsafe def succeeds_or_fails_with_msg {α : Type} (t : tactic α) (p : Stringₓ → Bool) : tactic Unit := do
+unsafe def succeeds_or_fails_with_msg {α : Type} (t : tactic α) (p : String → Bool) : tactic Unit := do
   let x ← retrieve_or_report_error t
   match x with
     | Sum.inl _ => skip
@@ -2007,7 +2011,7 @@ add_tactic_doc
 
 /-- `trace_error msg t` executes the tactic `t`. If `t` fails, traces `msg` and the failure message
 of `t`. -/
-unsafe def trace_error (msg : Stringₓ) (t : tactic α) : tactic α
+unsafe def trace_error (msg : String) (t : tactic α) : tactic α
   | s =>
     match t s with
     | result.success r s' => result.success r s'
@@ -2027,13 +2031,13 @@ unsafe def trace_if_enabled (n : Name) {α : Type u} [has_to_tactic_format α] (
 preceded by the optional string `msg`,
 only if tracing is enabled for the name `n`.
 -/
-unsafe def trace_state_if_enabled (n : Name) (msg : Stringₓ := "") : tactic Unit :=
+unsafe def trace_state_if_enabled (n : Name) (msg : String := "") : tactic Unit :=
   when_tracing n ((if msg = "" then skip else trace msg) >> trace_state)
 
 /-- This combinator is for testing purposes. It succeeds if `t` fails with message `msg`,
 and fails otherwise.
 -/
-unsafe def success_if_fail_with_msg {α : Type u} (t : tactic α) (msg : Stringₓ) : tactic Unit := fun s =>
+unsafe def success_if_fail_with_msg {α : Type u} (t : tactic α) (msg : String) : tactic Unit := fun s =>
   match t s with
   | interaction_monad.result.exception msg' _ s' =>
     let expected_msg := (msg'.iget ()).toString
@@ -2048,7 +2052,7 @@ unsafe def success_if_fail_with_msg {α : Type u} (t : tactic α) (msg : String�
 
 /-- Construct a `Try this: refine ...` or `Try this: exact ...` string which would construct `g`.
 -/
-unsafe def tactic_statement (g : expr) : tactic Stringₓ := do
+unsafe def tactic_statement (g : expr) : tactic String := do
   let g ← instantiate_mvars g
   let g ← head_beta g
   let r ← pp (replace_mvars g)
@@ -2184,7 +2188,7 @@ unsafe instance : Append pformat :=
 unsafe instance tactic.has_to_tactic_format [has_to_tactic_format α] : has_to_tactic_format (tactic α) :=
   ⟨fun x => x >>= to_pfmt⟩
 
-private unsafe def parse_pformat : Stringₓ → List Charₓ → parser pexpr
+private unsafe def parse_pformat : String → List Char → parser pexpr
   | Acc, [] => pure (pquote.1 (to_pfmt (%%ₓreflect Acc)))
   | Acc, '\n' :: s => do
     let f ← parse_pformat "" s
@@ -2220,33 +2224,33 @@ trace pformat!"{e} : {infer_type e}" -- outputs `3 + 7 : ℕ`
 See also: `trace!` and `fail!`
 -/
 @[user_notation]
-unsafe def pformat_macro (_ : parse <| tk "pformat!") (s : Stringₓ) : parser pexpr := do
+unsafe def pformat_macro (_ : parse <| tk "pformat!") (s : String) : parser pexpr := do
   let e ← parse_pformat "" s.toList
   return (pquote.1 (%%ₓe : pformat))
 
 /-- The combination of `pformat` and `fail`.
 -/
 @[user_notation]
-unsafe def fail_macro (_ : parse <| tk "fail!") (s : Stringₓ) : parser pexpr := do
+unsafe def fail_macro (_ : parse <| tk "fail!") (s : String) : parser pexpr := do
   let e ← pformat_macro () s
   pure (pquote.1 ((%%ₓe : pformat) >>= fail))
 
 /-- The combination of `pformat` and `trace`.
 -/
 @[user_notation]
-unsafe def trace_macro (_ : parse <| tk "trace!") (s : Stringₓ) : parser pexpr := do
+unsafe def trace_macro (_ : parse <| tk "trace!") (s : String) : parser pexpr := do
   let e ← pformat_macro () s
   pure (pquote.1 ((%%ₓe : pformat) >>= trace))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- A hackish way to get the `src` directory of any project.
   Requires as argument any declaration name `n` in that project, and `k`, the number of characters
   in the path of the file where `n` is declared not part of the `src` directory.
   Example: For `mathlib_dir_locator` this is the length of `tactic/project_dir.lean`, so `23`.
   Note: does not work in the file where `n` is declared. -/
-unsafe def get_project_dir (n : Name) (k : ℕ) : tactic Stringₓ := do
+unsafe def get_project_dir (n : Name) (k : ℕ) : tactic String := do
   let e ← get_env
   let s ←
     e.decl_olean n <|>
@@ -2254,7 +2258,7 @@ unsafe def get_project_dir (n : Name) (k : ℕ) : tactic Stringₓ := do
   return <| s k
 
 /-- A hackish way to get the `src` directory of mathlib. -/
-unsafe def get_mathlib_dir : tactic Stringₓ :=
+unsafe def get_mathlib_dir : tactic String :=
   get_project_dir `mathlib_dir_locator 23
 
 /-- Checks whether a declaration with the given name is declared in mathlib.
@@ -2265,22 +2269,22 @@ unsafe def is_in_mathlib (n : Name) : tactic Bool := do
   let e ← get_env
   return <| e ml n
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Runs a tactic by name.
 If it is a `tactic string`, return whatever string it returns.
 If it is a `tactic unit`, return the name.
 (This is mostly used in invoking "self-reporting tactics", e.g. by `tidy` and `hint`.)
 -/
-unsafe def name_to_tactic (n : Name) : tactic Stringₓ := do
+unsafe def name_to_tactic (n : Name) : tactic String := do
   let d ← get_decl n
   let e ← mk_const n
   let t := d.type
   if expr.alpha_eqv t (quote.1 (tactic Unit)) then
       eval_expr (tactic Unit) e >>= fun t => t >> Name.toString <$> strip_prefix n
     else
-      if expr.alpha_eqv t (quote.1 (tactic Stringₓ)) then eval_expr (tactic Stringₓ) e >>= fun t => t
+      if expr.alpha_eqv t (quote.1 (tactic String)) then eval_expr (tactic String) e >>= fun t => t
       else
         "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
@@ -2330,18 +2334,18 @@ declaration named `m` can be found. -/
 unsafe def find_private_decl (n : Name) (fr : Option Name) : tactic Name := do
   let env ← get_env
   let fn ←
-    OptionTₓ.run do
-        let fr ← OptionTₓ.mk (return fr)
+    OptionT.run do
+        let fr ← OptionT.mk (return fr)
         let d ← monad_lift <| get_decl fr
-        OptionTₓ.mk (return <| env d)
-  let p : Stringₓ → Bool :=
+        OptionT.mk (return <| env d)
+  let p : String → Bool :=
     match fn with
     | some fn => fun x => fn = x
     | none => fun _ => true
   let xs :=
     env.decl_filter_map fun d => do
       let fn ← env.decl_olean d.to_name
-      guardₓ (`_private.isPrefixOf d ∧ p fn ∧ d Name.anonymous = n)
+      guard (`_private.isPrefixOf d ∧ p fn ∧ d Name.anonymous = n)
       pure d
   match xs with
     | [n] => pure n
@@ -2360,7 +2364,7 @@ When possible, make `foo` non-private rather than using this feature.
 @[user_command]
 unsafe def import_private_cmd (_ : parse <| tk "import_private") : lean.parser Unit := do
   let n ← ident
-  let fr ← optionalₓ (tk "from" *> ident)
+  let fr ← optional (tk "from" *> ident)
   let n ← find_private_decl n fr
   let c ← resolve_constant n
   let d ← get_decl n
@@ -2394,8 +2398,8 @@ run_cmd add_doc_string `simp_attr.simp_name "Description of the simp set here"
 unsafe def mk_simp_attribute_cmd (_ : parse <| tk "mk_simp_attribute") : lean.parser Unit := do
   let n ← ident
   let d ← parser.pexpr
-  let d ← to_expr (pquote.1 (%%ₓd : Option Stringₓ))
-  let descr ← eval_expr (Option Stringₓ) d
+  let d ← to_expr (pquote.1 (%%ₓd : Option String))
+  let descr ← eval_expr (Option String) d
   let with_list ← tk "with" *> many ident <|> return []
   mk_simp_attr n with_list
   add_doc_string (name.append `simp_attr n) <| descr <| "simp set for " ++ toString n
@@ -2404,9 +2408,9 @@ add_tactic_doc
   { Name := "mk_simp_attribute", category := DocCategory.cmd, declNames := [`tactic.mk_simp_attribute_cmd],
     tags := ["simplification"] }
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Given a user attribute name `attr_name`, `get_user_attribute_name attr_name` returns
 the name of the declaration that defines this attribute.
 Fails if there is no user attribute with this name.
@@ -2417,16 +2421,16 @@ unsafe def get_user_attribute_name (attr_name : Name) : tactic Name := do
         let d ← get_decl nm
         let e ← mk_app `user_attribute.name [d]
         let attr_nm ← eval_expr Name e
-        guardₓ <| attr_nm = attr_name
+        guard <| attr_nm = attr_name
         return nm) <|>
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- A tactic to set either a basic attribute or a user attribute.
   If the user attribute has a parameter, the default value will be used.
   This tactic raises an error if there is no `inhabited` instance for the parameter type. -/

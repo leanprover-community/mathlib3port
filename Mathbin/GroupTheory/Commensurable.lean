@@ -28,7 +28,7 @@ the map `G → (conj_act G)` to obtain our commensurator as a subgroup of `G`.
 -/
 
 
-variable {G : Type _} [Groupₓ G]
+variable {G : Type _} [Group G]
 
 /-- Two subgroups `H K` of `G` are commensurable if `H ⊓ K` has finite index in both `H` and `K` -/
 def Commensurable (H K : Subgroup G) : Prop :=
@@ -42,7 +42,7 @@ open Pointwise
 protected theorem refl (H : Subgroup G) : Commensurable H H := by simp [Commensurable]
 
 theorem comm {H K : Subgroup G} : Commensurable H K ↔ Commensurable K H :=
-  And.comm
+  and_comm
 
 @[symm]
 theorem symm {H K : Subgroup G} : Commensurable H K → Commensurable K H :=
@@ -52,18 +52,18 @@ theorem symm {H K : Subgroup G} : Commensurable H K → Commensurable K H :=
 theorem trans {H K L : Subgroup G} (hhk : Commensurable H K) (hkl : Commensurable K L) : Commensurable H L :=
   ⟨Subgroup.relindex_ne_zero_trans hhk.1 hkl.1, Subgroup.relindex_ne_zero_trans hkl.2 hhk.2⟩
 
-theorem equivalence : Equivalenceₓ (@Commensurable G _) :=
+theorem equivalence : Equivalence (@Commensurable G _) :=
   ⟨Commensurable.refl, fun _ _ => Commensurable.symm, fun _ _ _ => Commensurable.trans⟩
 
 /-- Equivalence of `K/H ⊓ K` with `gKg⁻¹/gHg⁻¹ ⊓ gKg⁻¹`-/
 def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) : K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
-  Quotientₓ.congr (K.equivSmul g).toEquiv fun a b => by
-    rw [← Quotientₓ.eq', ← Quotientₓ.eq', QuotientGroup.eq', QuotientGroup.eq', Subgroup.mem_subgroup_of,
+  Quotient.congr (K.equivSmul g).toEquiv fun a b => by
+    rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq', Subgroup.mem_subgroup_of,
       Subgroup.mem_subgroup_of, MulEquiv.to_equiv_eq_coe, MulEquiv.coe_to_equiv, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
       Subgroup.equiv_smul_apply_coe, Subgroup.smul_mem_pointwise_smul_iff]
 
 theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) : Commensurable H K ↔ Commensurable (g • H) (g • K) :=
-  and_congrₓ (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv H K g))))
+  and_congr (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv H K g))))
     (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv K H g))))
 
 theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) : Commensurable (g • H) H ↔ Commensurable H (g⁻¹ • H) := by
@@ -74,10 +74,10 @@ such that `commensurable (g • H) H` -/
 def commensurator' (H : Subgroup G) : Subgroup (ConjAct G) where
   Carrier := { g : ConjAct G | Commensurable (g • H) H }
   one_mem' := by rw [Set.mem_set_of_eq, one_smul]
-  mul_mem' := fun a b ha hb => by
+  mul_mem' a b ha hb := by
     rw [Set.mem_set_of_eq, mul_smul]
     exact trans ((commensurable_conj a).mp hb) ha
-  inv_mem' := fun a ha => by rwa [Set.mem_set_of_eq, comm, ← commensurable_inv]
+  inv_mem' a ha := by rwa [Set.mem_set_of_eq, comm, ← commensurable_inv]
 
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : G`
 such that `commensurable (g H g⁻¹) H` -/

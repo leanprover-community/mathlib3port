@@ -69,8 +69,7 @@ def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (o
 
 /-- A well-powered abelian category is also well-copowered. -/
 instance well_powered_opposite [Abelian C] [WellPowered C] :
-    WellPowered
-      Cᵒᵖ where subobject_small := fun X => (small_congr (subobjectIsoSubobjectOp (unop X)).toEquiv).1 inferInstance
+    WellPowered Cᵒᵖ where subobject_small X := (small_congr (subobjectIsoSubobjectOp (unop X)).toEquiv).1 inferInstance
 
 end CategoryTheory.Abelian
 

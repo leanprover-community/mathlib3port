@@ -20,9 +20,9 @@ commutative ring, field of fractions
 -/
 
 
-variable {R : Type _} [CommRingₓ R] (M : Submonoid R) {S : Type _} [CommRingₓ S]
+variable {R : Type _} [CommRing R] (M : Submonoid R) {S : Type _} [CommRing S]
 
-variable [Algebra R S] {P : Type _} [CommRingₓ P]
+variable [Algebra R S] {P : Type _} [CommRing P]
 
 namespace IsFractionRing
 
@@ -30,7 +30,7 @@ open IsLocalization
 
 section NumDenom
 
-variable (A : Type _) [CommRingₓ A] [IsDomain A] [UniqueFactorizationMonoid A]
+variable (A : Type _) [CommRing A] [IsDomain A] [UniqueFactorizationMonoid A]
 
 variable {K : Type _} [Field K] [Algebra A K] [IsFractionRing A K]
 
@@ -76,7 +76,7 @@ theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} : num A y * denom A x = 
 theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=
   num_mul_denom_eq_num_iff_eq'.mp (by rw [zero_mul, h, RingHom.map_zero])
 
-theorem is_integer_of_is_unit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInteger A x := by
+theorem isIntegerOfIsUnitDenom {x : K} (h : IsUnit (denom A x : A)) : IsInteger A x := by
   cases' h with d hd
   have d_ne_zero : algebraMap A K (denom A x) ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors (denom A x).2
@@ -84,7 +84,7 @@ theorem is_integer_of_is_unit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInt
   refine' trans _ (mk'_num_denom A x)
   rw [map_mul, map_units_inv, hd]
   apply mul_left_cancel₀ d_ne_zero
-  rw [← mul_assoc, mul_inv_cancel d_ne_zero, one_mulₓ, mk'_spec']
+  rw [← mul_assoc, mul_inv_cancel d_ne_zero, one_mul, mk'_spec']
 
 theorem is_unit_denom_of_num_eq_zero {x : K} (h : num A x = 0) : IsUnit (denom A x : A) :=
   num_denom_reduced A x (h.symm ▸ dvd_zero _) dvd_rfl

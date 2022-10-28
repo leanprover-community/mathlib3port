@@ -89,15 +89,15 @@ cones with a given cone point.
 @[simps]
 def cones : (J ⥤ C) ⥤ Cᵒᵖ ⥤ Type max u₁ v₃ where
   obj := Functor.cones
-  map := fun F G f => whiskerLeft (const J).op (yoneda.map f)
+  map F G f := whiskerLeft (const J).op (yoneda.map f)
 
 /-- Contravariantly associated to each functor `J ⥤ C`, we have the `C`-copresheaf consisting of
 cocones with a given cocone point.
 -/
 @[simps]
 def cocones : (J ⥤ C)ᵒᵖ ⥤ C ⥤ Type max u₁ v₃ where
-  obj := fun F => Functor.cocones (unop F)
-  map := fun F G f => whiskerLeft (const J) (coyoneda.map f)
+  obj F := Functor.cocones (unop F)
+  map F G f := whiskerLeft (const J) (coyoneda.map f)
 
 end
 
@@ -152,8 +152,8 @@ namespace Cone
 /-- The isomorphism between a cone on `F` and an element of the functor `F.cones`. -/
 @[simps]
 def equiv (F : J ⥤ C) : Cone F ≅ ΣX, F.cones.obj X where
-  Hom := fun c => ⟨op c.x, c.π⟩
-  inv := fun c => { x := c.1.unop, π := c.2 }
+  Hom c := ⟨op c.x, c.π⟩
+  inv c := { x := c.1.unop, π := c.2 }
   hom_inv_id' := by
     ext1
     cases x
@@ -165,8 +165,7 @@ def equiv (F : J ⥤ C) : Cone F ≅ ΣX, F.cones.obj X where
 
 /-- A map to the vertex of a cone naturally induces a cone by composition. -/
 @[simps]
-def extensions (c : Cone F) :
-    yoneda.obj c.x ⋙ ulift_functor.{u₁} ⟶ F.cones where app := fun X f => (const J).map f.down ≫ c.π
+def extensions (c : Cone F) : yoneda.obj c.x ⋙ ulift_functor.{u₁} ⟶ F.cones where app X f := (const J).map f.down ≫ c.π
 
 /-- A map to the vertex of a cone induces a cone by composition. -/
 @[simps]
@@ -185,8 +184,8 @@ namespace Cocone
 
 /-- The isomorphism between a cocone on `F` and an element of the functor `F.cocones`. -/
 def equiv (F : J ⥤ C) : Cocone F ≅ ΣX, F.cocones.obj X where
-  Hom := fun c => ⟨c.x, c.ι⟩
-  inv := fun c => { x := c.1, ι := c.2 }
+  Hom c := ⟨c.x, c.ι⟩
+  inv c := { x := c.1, ι := c.2 }
   hom_inv_id' := by
     ext1
     cases x
@@ -199,7 +198,7 @@ def equiv (F : J ⥤ C) : Cocone F ≅ ΣX, F.cocones.obj X where
 /-- A map from the vertex of a cocone naturally induces a cocone by composition. -/
 @[simps]
 def extensions (c : Cocone F) :
-    coyoneda.obj (op c.x) ⋙ ulift_functor.{u₁} ⟶ F.cocones where app := fun X f => c.ι ≫ (const J).map f.down
+    coyoneda.obj (op c.x) ⋙ ulift_functor.{u₁} ⟶ F.cocones where app X f := c.ι ≫ (const J).map f.down
 
 /-- A map from the vertex of a cocone induces a cocone by composition. -/
 @[simps]
@@ -233,9 +232,9 @@ instance inhabitedConeMorphism (A : Cone F) : Inhabited (ConeMorphism A A) :=
 /-- The category of cones on a given diagram. -/
 @[simps]
 instance Cone.category : Category (Cone F) where
-  Hom := fun A B => ConeMorphism A B
-  comp := fun X Y Z f g => { Hom := f.Hom ≫ g.Hom }
-  id := fun B => { Hom := 𝟙 B.x }
+  Hom A B := ConeMorphism A B
+  comp X Y Z f g := { Hom := f.Hom ≫ g.Hom }
+  id B := { Hom := 𝟙 B.x }
 
 namespace Cones
 
@@ -262,8 +261,8 @@ theorem cone_iso_of_hom_iso {K : J ⥤ C} {c d : Cone K} (f : c ⟶ d) [i : IsIs
 -/
 @[simps]
 def postcompose {G : J ⥤ C} (α : F ⟶ G) : Cone F ⥤ Cone G where
-  obj := fun c => { x := c.x, π := c.π ≫ α }
-  map := fun c₁ c₂ f => { Hom := f.Hom }
+  obj c := { x := c.x, π := c.π ≫ α }
+  map c₁ c₂ f := { Hom := f.Hom }
 
 /-- Postcomposing a cone by the composite natural transformation `α ≫ β` is the same as
 postcomposing by `α` and then by `β`. -/
@@ -290,8 +289,8 @@ def postcomposeEquivalence {G : J ⥤ C} (α : F ≅ G) : Cone F ≌ Cone G wher
 -/
 @[simps]
 def whiskering (E : K ⥤ J) : Cone F ⥤ Cone (E ⋙ F) where
-  obj := fun c => c.whisker E
-  map := fun c c' f => { Hom := f.Hom }
+  obj c := c.whisker E
+  map c c' f := { Hom := f.Hom }
 
 /-- Whiskering by an equivalence gives an equivalence between categories of cones.
 -/
@@ -325,27 +324,26 @@ variable (F)
 /-- Forget the cone structure and obtain just the cone point. -/
 @[simps]
 def forget : Cone F ⥤ C where
-  obj := fun t => t.x
-  map := fun s t f => f.Hom
+  obj t := t.x
+  map s t f := f.Hom
 
 variable (G : C ⥤ D)
 
 /-- A functor `G : C ⥤ D` sends cones over `F` to cones over `F ⋙ G` functorially. -/
 @[simps]
 def functoriality : Cone F ⥤ Cone (F ⋙ G) where
-  obj := fun A =>
+  obj A :=
     { x := G.obj A.x,
       π := { app := fun j => G.map (A.π.app j), naturality' := by intros <;> erw [← G.map_comp] <;> tidy } }
-  map := fun X Y f => { Hom := G.map f.Hom, w' := fun j => by simp [-cone_morphism.w, ← f.w j] }
+  map X Y f := { Hom := G.map f.Hom, w' := fun j => by simp [-cone_morphism.w, ← f.w j] }
 
 instance functorialityFull [Full G] [Faithful G] :
     Full
       (functoriality F
-        G) where preimage := fun X Y t =>
-    { Hom := G.preimage t.Hom, w' := fun j => G.map_injective (by simpa using t.w j) }
+        G) where preimage X Y t := { Hom := G.preimage t.Hom, w' := fun j => G.map_injective (by simpa using t.w j) }
 
 instance functoriality_faithful [Faithful G] :
-    Faithful (Cones.functoriality F G) where map_injective' := fun X Y f g e => by
+    Faithful (Cones.functoriality F G) where map_injective' X Y f g e := by
     ext1
     injection e
     apply G.map_injective h_1
@@ -393,9 +391,9 @@ attribute [simp, reassoc] cocone_morphism.w
 
 @[simps]
 instance Cocone.category : Category (Cocone F) where
-  Hom := fun A B => CoconeMorphism A B
-  comp := fun _ _ _ f g => { Hom := f.Hom ≫ g.Hom }
-  id := fun B => { Hom := 𝟙 B.x }
+  Hom A B := CoconeMorphism A B
+  comp _ _ _ f g := { Hom := f.Hom ≫ g.Hom }
+  id B := { Hom := 𝟙 B.x }
 
 namespace Cocones
 
@@ -422,8 +420,8 @@ theorem cocone_iso_of_hom_iso {K : J ⥤ C} {c d : Cocone K} (f : c ⟶ d) [i : 
 for `G`. -/
 @[simps]
 def precompose {G : J ⥤ C} (α : G ⟶ F) : Cocone F ⥤ Cocone G where
-  obj := fun c => { x := c.x, ι := α ≫ c.ι }
-  map := fun c₁ c₂ f => { Hom := f.Hom }
+  obj c := { x := c.x, ι := α ≫ c.ι }
+  map c₁ c₂ f := { Hom := f.Hom }
 
 /-- Precomposing a cocone by the composite natural transformation `α ≫ β` is the same as
 precomposing by `β` and then by `α`. -/
@@ -448,8 +446,8 @@ def precomposeEquivalence {G : J ⥤ C} (α : G ≅ F) : Cocone F ≌ Cocone G w
 -/
 @[simps]
 def whiskering (E : K ⥤ J) : Cocone F ⥤ Cocone (E ⋙ F) where
-  obj := fun c => c.whisker E
-  map := fun c c' f => { Hom := f.Hom }
+  obj c := c.whisker E
+  map c c' f := { Hom := f.Hom }
 
 /-- Whiskering by an equivalence gives an equivalence between categories of cones.
 -/
@@ -484,27 +482,26 @@ variable (F)
 /-- Forget the cocone structure and obtain just the cocone point. -/
 @[simps]
 def forget : Cocone F ⥤ C where
-  obj := fun t => t.x
-  map := fun s t f => f.Hom
+  obj t := t.x
+  map s t f := f.Hom
 
 variable (G : C ⥤ D)
 
 /-- A functor `G : C ⥤ D` sends cocones over `F` to cocones over `F ⋙ G` functorially. -/
 @[simps]
 def functoriality : Cocone F ⥤ Cocone (F ⋙ G) where
-  obj := fun A =>
+  obj A :=
     { x := G.obj A.x,
       ι := { app := fun j => G.map (A.ι.app j), naturality' := by intros <;> erw [← G.map_comp] <;> tidy } }
-  map := fun _ _ f => { Hom := G.map f.Hom, w' := by intros <;> rw [← functor.map_comp, cocone_morphism.w] }
+  map _ _ f := { Hom := G.map f.Hom, w' := by intros <;> rw [← functor.map_comp, cocone_morphism.w] }
 
 instance functorialityFull [Full G] [Faithful G] :
     Full
       (functoriality F
-        G) where preimage := fun X Y t =>
-    { Hom := G.preimage t.Hom, w' := fun j => G.map_injective (by simpa using t.w j) }
+        G) where preimage X Y t := { Hom := G.preimage t.Hom, w' := fun j => G.map_injective (by simpa using t.w j) }
 
 instance functoriality_faithful [Faithful G] :
-    Faithful (functoriality F G) where map_injective' := fun X Y f g e => by
+    Faithful (functoriality F G) where map_injective' X Y f g e := by
     ext1
     injection e
     apply G.map_injective h_1
@@ -770,7 +767,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
           (by
             dsimp
             simp))
-  functor_unit_iso_comp' := fun c => by
+  functor_unit_iso_comp' c := by
     apply Quiver.Hom.unop_inj
     ext
     dsimp

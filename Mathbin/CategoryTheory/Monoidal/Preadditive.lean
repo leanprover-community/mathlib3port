@@ -26,14 +26,14 @@ open CategoryTheory.MonoidalCategory
 
 variable (C : Type _) [Category C] [Preadditive C] [MonoidalCategory C]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A category is `monoidal_preadditive` if tensoring is additive in both factors.
 
 Note we don't `extend preadditive C` here, as `abelian C` already extends it,
@@ -69,9 +69,9 @@ instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive 
 
 open BigOperators
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finsetₓ J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
     (f ⊗ ∑ j in s, g j) = ∑ j in s, f ⊗ g j := by
   rw [← tensor_id_comp_id_tensor]
   let tQ := (((tensoring_left C).obj Q).mapAddHom : (R ⟶ S) →+ _)
@@ -80,9 +80,9 @@ theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finsetₓ J) (f : P ⟶ Q) (g
   dsimp [tQ]
   simp only [tensor_id_comp_id_tensor]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finsetₓ J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
     (∑ j in s, g j) ⊗ f = ∑ j in s, g j ⊗ f := by
   rw [← tensor_id_comp_id_tensor]
   let tQ := (((tensoring_right C).obj P).mapAddHom : (R ⟶ S) →+ _)
@@ -98,8 +98,7 @@ variable {C}
 -- In any case it is true in any preadditive category.
 instance (X : C) :
     PreservesFiniteBiproducts
-      (tensorLeft
-        X) where preserves := fun J _ =>
+      (tensorLeft X) where preserves J _ :=
     { preserves := fun f =>
         { preserves := fun b i =>
             is_bilimit_of_total _
@@ -109,8 +108,7 @@ instance (X : C) :
 
 instance (X : C) :
     PreservesFiniteBiproducts
-      (tensorRight
-        X) where preserves := fun J _ =>
+      (tensorRight X) where preserves J _ :=
     { preserves := fun f =>
         { preserves := fun b i =>
             is_bilimit_of_total _
@@ -120,86 +118,86 @@ instance (X : C) :
 
 variable [HasFiniteBiproducts C]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The isomorphism showing how tensor product on the left distributes over direct sums. -/
-def leftDistributor {J : Type} [Fintypeₓ J] (X : C) (f : J → C) : X ⊗ ⨁ f ≅ ⨁ fun j => X ⊗ f j :=
+def leftDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f ≅ ⨁ fun j => X ⊗ f j :=
   (tensorLeft X).mapBiproduct f
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_distributor_hom {J : Type} [Fintypeₓ J] (X : C) (f : J → C) :
+theorem left_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j := by
   ext
   dsimp [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_distributor_inv {J : Type} [Fintypeₓ J] (X : C) (f : J → C) :
+theorem left_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) := by
   ext
   dsimp [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem left_distributor_assoc {J : Type} [Fintypeₓ J] (X Y : C) (f : J → C) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem left_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (asIso (𝟙 X) ⊗ leftDistributor Y f) ≪≫ leftDistributor X _ =
       (α_ X Y (⨁ f)).symm ≪≫ leftDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => α_ X Y _ :=
   by
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.trans_hom, iso.symm_hom, as_iso_hom, comp_zero,
     comp_dite, preadditive.sum_comp, preadditive.comp_sum, tensor_sum, id_tensor_comp, tensor_iso_hom,
-    left_distributor_hom, biproduct.map_iso_hom, biproduct.ι_map, biproduct.ι_π, Finsetₓ.sum_dite_irrel,
-    Finsetₓ.sum_dite_eq', Finsetₓ.sum_const_zero]
+    left_distributor_hom, biproduct.map_iso_hom, biproduct.ι_map, biproduct.ι_π, Finset.sum_dite_irrel,
+    Finset.sum_dite_eq', Finset.sum_const_zero]
   simp only [← id_tensor_comp, biproduct.ι_π]
   simp only [id_tensor_comp, tensor_dite, comp_dite]
   simp only [category.comp_id, comp_zero, monoidal_preadditive.tensor_zero, eq_to_hom_refl, tensor_id, if_true,
-    dif_ctx_congr, Finsetₓ.sum_congr, Finsetₓ.mem_univ, Finsetₓ.sum_dite_eq']
+    dif_ctx_congr, Finset.sum_congr, Finset.mem_univ, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The isomorphism showing how tensor product on the right distributes over direct sums. -/
-def rightDistributor {J : Type} [Fintypeₓ J] (X : C) (f : J → C) : (⨁ f) ⊗ X ≅ ⨁ fun j => f j ⊗ X :=
+def rightDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ X ≅ ⨁ fun j => f j ⊗ X :=
   (tensorRight X).mapBiproduct f
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_distributor_hom {J : Type} [Fintypeₓ J] (X : C) (f : J → C) :
+theorem right_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j := by
   ext
   dsimp [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_distributor_inv {J : Type} [Fintypeₓ J] (X : C) (f : J → C) :
+theorem right_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) := by
   ext
   dsimp [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem right_distributor_assoc {J : Type} [Fintypeₓ J] (X Y : C) (f : J → C) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem right_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (rightDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ (⨁ f) X Y ≪≫ rightDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => (α_ _ X Y).symm :=
   by
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.symm_hom, iso.trans_hom, as_iso_hom, comp_zero,
     comp_dite, preadditive.sum_comp, preadditive.comp_sum, sum_tensor, comp_tensor_id, tensor_iso_hom,
-    right_distributor_hom, biproduct.map_iso_hom, biproduct.ι_map, biproduct.ι_π, Finsetₓ.sum_dite_irrel,
-    Finsetₓ.sum_dite_eq', Finsetₓ.sum_const_zero, Finsetₓ.mem_univ, if_true]
+    right_distributor_hom, biproduct.map_iso_hom, biproduct.ι_map, biproduct.ι_π, Finset.sum_dite_irrel,
+    Finset.sum_dite_eq', Finset.sum_const_zero, Finset.mem_univ, if_true]
   simp only [← comp_tensor_id, biproduct.ι_π, dite_tensor, comp_dite]
   simp only [category.comp_id, comp_tensor_id, eq_to_hom_refl, tensor_id, comp_zero, monoidal_preadditive.zero_tensor,
-    if_true, dif_ctx_congr, Finsetₓ.mem_univ, Finsetₓ.sum_congr, Finsetₓ.sum_dite_eq']
+    if_true, dif_ctx_congr, Finset.mem_univ, Finset.sum_congr, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_inv_naturality, iso.hom_inv_id_assoc]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem left_distributor_right_distributor_assoc {J : Type _} [Fintypeₓ J] (X Y : C) (f : J → C) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
     (leftDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ X (⨁ f) Y ≪≫
         (asIso (𝟙 X) ⊗ rightDistributor Y _) ≪≫ leftDistributor X _ ≪≫ biproduct.mapIso fun j => (α_ _ _ _).symm :=
@@ -208,12 +206,12 @@ theorem left_distributor_right_distributor_assoc {J : Type _} [Fintypeₓ J] (X 
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.symm_hom, iso.trans_hom, as_iso_hom, comp_zero,
     comp_dite, preadditive.sum_comp, preadditive.comp_sum, sum_tensor, tensor_sum, comp_tensor_id, tensor_iso_hom,
     left_distributor_hom, right_distributor_hom, biproduct.map_iso_hom, biproduct.ι_map, biproduct.ι_π,
-    Finsetₓ.sum_dite_irrel, Finsetₓ.sum_dite_eq', Finsetₓ.sum_const_zero, Finsetₓ.mem_univ, if_true]
+    Finset.sum_dite_irrel, Finset.sum_dite_eq', Finset.sum_const_zero, Finset.mem_univ, if_true]
   simp only [← comp_tensor_id, ← id_tensor_comp_assoc, category.assoc, biproduct.ι_π, comp_dite, dite_comp, tensor_dite,
     dite_tensor]
   simp only [category.comp_id, category.id_comp, category.assoc, id_tensor_comp, comp_zero, zero_comp,
     monoidal_preadditive.tensor_zero, monoidal_preadditive.zero_tensor, comp_tensor_id, eq_to_hom_refl, tensor_id,
-    if_true, dif_ctx_congr, Finsetₓ.sum_congr, Finsetₓ.mem_univ, Finsetₓ.sum_dite_eq']
+    if_true, dif_ctx_congr, Finset.sum_congr, Finset.mem_univ, Finset.sum_dite_eq']
   simp only [associator_inv_naturality, iso.hom_inv_id_assoc]
 
 end CategoryTheory

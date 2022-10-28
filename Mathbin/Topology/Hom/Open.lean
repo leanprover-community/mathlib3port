@@ -34,6 +34,8 @@ structure ContinuousOpenMap (α β : Type _) [TopologicalSpace α] [TopologicalS
 -- mathport name: «expr →CO »
 infixr:25 " →CO " => ContinuousOpenMap
 
+section
+
 /-- `continuous_open_map_class F α β` states that `F` is a type of continuous open maps.
 
 You should extend this class when you extend `continuous_open_map`. -/
@@ -41,9 +43,11 @@ class ContinuousOpenMapClass (F : Type _) (α β : outParam <| Type _) [Topologi
   ContinuousMapClass F α β where
   map_open (f : F) : IsOpenMap f
 
+end
+
 export ContinuousOpenMapClass (map_open)
 
-instance [TopologicalSpace α] [TopologicalSpace β] [ContinuousOpenMapClass F α β] : CoeTₓ F (α →CO β) :=
+instance [TopologicalSpace α] [TopologicalSpace β] [ContinuousOpenMapClass F α β] : CoeT F (α →CO β) :=
   ⟨fun f => ⟨f, map_open f⟩⟩
 
 /-! ### Continuous open maps -/
@@ -54,13 +58,13 @@ namespace ContinuousOpenMap
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 instance : ContinuousOpenMapClass (α →CO β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_continuous := fun f => f.continuous_to_fun
-  map_open := fun f => f.map_open'
+  map_continuous f := f.continuous_to_fun
+  map_open f := f.map_open'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/

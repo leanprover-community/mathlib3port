@@ -26,15 +26,15 @@ open Set
 
 variable {α : Type _} (s : Set α)
 
-section HasSupₓ
+section HasSup
 
-variable [HasSupₓ α]
+variable [HasSup α]
 
 /-- `has_Sup` structure on a nonempty subset `s` of an object with `has_Sup`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasSup [Inhabited s] :
-    HasSupₓ s where sup := fun t => if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
+    HasSup s where sup t := if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasSup
 
@@ -46,17 +46,17 @@ theorem subset_Sup_def [Inhabited s] :
 theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : sup (coe '' t : Set α) ∈ s) :
     sup (coe '' t : Set α) = (@sup s _ t : α) := by simp [dif_pos h]
 
-end HasSupₓ
+end HasSup
 
-section HasInfₓ
+section HasInf
 
-variable [HasInfₓ α]
+variable [HasInf α]
 
 /-- `has_Inf` structure on a nonempty subset `s` of an object with `has_Inf`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasInf [Inhabited s] :
-    HasInfₓ s where inf := fun t => if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
+    HasInf s where inf t := if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasInf
 
@@ -68,7 +68,7 @@ theorem subset_Inf_def [Inhabited s] :
 theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : inf (coe '' t : Set α) ∈ s) :
     inf (coe '' t : Set α) = (@inf s _ t : α) := by simp [dif_pos h]
 
-end HasInfₓ
+end HasInf
 
 variable [ConditionallyCompleteLinearOrder α]
 
@@ -90,7 +90,7 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
       --   (strict_mono_coe s).monotone.le_cSup_image hct h_bdd,
       subsetHasSup
       s,
-    subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrderₓ s) with
+    subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrder s) with
     le_cSup := by
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).le_cSup_image hct h_bdd

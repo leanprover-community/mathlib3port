@@ -29,7 +29,7 @@ open Polynomial
 
 section ScaleRoots
 
-variable {A K R S : Type _} [CommRingₓ A] [Field K] [CommRingₓ R] [CommRingₓ S]
+variable {A K R S : Type _} [CommRing A] [Field K] [CommRing R] [CommRing S]
 
 variable {M : Submonoid A} [Algebra A S] [IsLocalization M S] [Algebra A K] [IsFractionRing A K]
 
@@ -53,7 +53,7 @@ end ScaleRoots
 
 section RationalRootTheorem
 
-variable {A K : Type _} [CommRingₓ A] [IsDomain A] [UniqueFactorizationMonoid A] [Field K]
+variable {A K : Type _} [CommRing A] [IsDomain A] [UniqueFactorizationMonoid A] [Field K]
 
 variable [Algebra A K] [IsFractionRing A K]
 
@@ -77,12 +77,12 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
       exact num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
       
   convert dvd_term_of_is_root_of_dvd_terms 0 (num_is_root_scale_roots_of_aeval_eq_zero hr) _
-  · rw [pow_zeroₓ, mul_oneₓ]
+  · rw [pow_zero, mul_one]
     
   intro j hj
   apply dvd_mul_of_dvd_right
-  convert pow_dvd_pow (Num A r) (Nat.succ_le_of_ltₓ (bot_lt_iff_ne_bot.mpr hj))
-  exact (pow_oneₓ _).symm
+  convert pow_dvd_pow (Num A r) (Nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))
+  exact (pow_one _).symm
 
 /-- Rational root theorem part 2:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
@@ -100,28 +100,27 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : (denom A 
   · rw [coeff_scale_roots]
     refine' (dvd_mul_of_dvd_right _ _).mul_right _
     convert pow_dvd_pow _ (nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
-    · exact (pow_oneₓ _).symm
+    · exact (pow_one _).symm
       
     simpa using h
     
   rw [← nat_degree_scale_roots p (denom A r)] at *
-  rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_neₓ (le_of_not_gtₓ h) hj.symm), zero_mul]
+  rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm), zero_mul]
   exact dvd_zero _
 
 /-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
-theorem is_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) : IsInteger A r :=
-  is_integer_of_is_unit_denom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
+theorem isIntegerOfIsRootOfMonic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) : IsInteger A r :=
+  isIntegerOfIsUnitDenom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
 
 namespace UniqueFactorizationMonoid
 
-theorem integer_of_integral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ =>
-  is_integer_of_is_root_of_monic hp hx
+theorem integerOfIntegral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ => isIntegerOfIsRootOfMonic hp hx
 
 -- See library note [lower instance priority]
 instance (priority := 100) : IsIntegrallyClosed A :=
-  ⟨fun x => integer_of_integral⟩
+  ⟨fun x => integerOfIntegral⟩
 
 end UniqueFactorizationMonoid
 

@@ -40,7 +40,7 @@ universe u v w
 
 noncomputable section
 
-variable (R : Type u) (X : Type v) [Semiringₓ R]
+variable (R : Type u) (X : Type v) [Semiring R]
 
 /-- The free non-unital, non-associative algebra on the type `X` with coefficients in `R`. -/
 abbrev FreeNonUnitalNonAssocAlgebra :=
@@ -54,7 +54,7 @@ variable {X}
 def of : X → FreeNonUnitalNonAssocAlgebra R X :=
   MonoidAlgebra.ofMagma R _ ∘ FreeMagma.of
 
-variable {A : Type w} [NonUnitalNonAssocSemiringₓ A]
+variable {A : Type w} [NonUnitalNonAssocSemiring A]
 
 variable [Module R A] [IsScalarTower R A A] [SmulCommClass R A A]
 

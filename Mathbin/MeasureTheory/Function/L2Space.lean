@@ -34,7 +34,7 @@ section
 
 variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]
 
-theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
+theorem Memℒp.integrableSq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
   simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
 
 theorem mem_ℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
@@ -54,7 +54,7 @@ theorem mem_ℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurab
 
 end
 
-namespace L2
+namespace L2Cat
 
 variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [InnerProductSpace 𝕜 E]
   [NormedAddCommGroup F]
@@ -64,27 +64,27 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
   have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
-  rw [snorm_norm_rpow f zero_lt_two, one_mulₓ, h_two]
+  rw [snorm_norm_rpow f zero_lt_two, one_mul, h_two]
   exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
 
 theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ := by
   have h : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ ∥f x∥ * ∥g x∥ := fun x => abs_inner_le_norm _ _
   have h' : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ IsROrC.abs (∥f x∥ ^ 2 + ∥g x∥ ^ 2) := by
-    refine' fun x => le_transₓ (h x) _
+    refine' fun x => le_trans (h x) _
     rw [IsROrC.abs_to_real, abs_eq_self.mpr]
     swap
     · exact add_nonneg (by simp) (by simp)
       
-    refine' le_transₓ _ (half_le_self (add_nonneg (sq_nonneg _) (sq_nonneg _)))
-    refine' (le_div_iff (@zero_lt_two ℝ _ _)).mpr ((le_of_eqₓ _).trans (two_mul_le_add_sq _ _))
+    refine' le_trans _ (half_le_self (add_nonneg (sq_nonneg _) (sq_nonneg _)))
+    refine' (le_div_iff (@zero_lt_two ℝ _ _)).mpr ((le_of_eq _).trans (two_mul_le_add_sq _ _))
     ring
   simp_rw [← IsROrC.norm_eq_abs, ← Real.rpow_nat_cast] at h'
-  refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rflₓ).trans_lt _)
+  refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
   · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
   · exact ((Lp.ae_strongly_measurable g).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
-  simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_oneₓ]
+  simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_one]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 
 section InnerProductSpace
@@ -130,15 +130,13 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ∥f∥ ^ 2 = IsROrC.r
     
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
-    AeEqFun.mk (fun x => ⟪f x, g x⟫) ((lp.ae_strongly_measurable f).inner (lp.ae_strongly_measurable g)) ∈ lp 𝕜 1 μ :=
-  by
+    AeEqFun.mk (fun x => ⟪f x, g x⟫) ((lp.aeStronglyMeasurable f).inner (lp.aeStronglyMeasurable g)) ∈ lp 𝕜 1 μ := by
   simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
   exact snorm_inner_lt_top f g
 
-theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
+theorem integrableInner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
   (integrable_congr
-        (AeEqFun.coe_fn_mk (fun x => ⟪f x, g x⟫)
-          ((lp.ae_strongly_measurable f).inner (lp.ae_strongly_measurable g)))).mp
+        (AeEqFun.coe_fn_mk (fun x => ⟪f x, g x⟫) ((lp.aeStronglyMeasurable f).inner (lp.aeStronglyMeasurable g)))).mp
     (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 
 private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f g + inner f' g := by
@@ -156,7 +154,7 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
 
 instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E) where
   norm_sq_eq_inner := norm_sq_eq_inner'
-  conj_sym := fun _ _ => by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
+  conj_sym _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
   add_left := add_left'
   smul_left := smul_left'
 
@@ -191,7 +189,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : Mea
     refine' h_indicator.mono fun x hx hxs => _
     rw [hx hxs]
     exact inner_zero_left
-  rw [h_left, h_right, add_zeroₓ]
+  rw [h_left, h_right, add_zero]
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the inner product of the constant `c` and the integral of `f` over `s`. -/
@@ -211,7 +209,7 @@ theorem inner_indicator_const_Lp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞
 
 end IndicatorConstLp
 
-end L2
+end L2Cat
 
 section InnerContinuous
 

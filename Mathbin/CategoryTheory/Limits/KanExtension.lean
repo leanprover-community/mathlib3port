@@ -43,7 +43,7 @@ variable [Category.{v₁} S] [Category.{v₂} L] [Category.{v₃} D]
 
 variable (ι : S ⥤ L)
 
-namespace Ran
+namespace RanCat
 
 attribute [local simp] structured_arrow.proj
 
@@ -72,8 +72,8 @@ variable (ι)
 /-- An auxiliary definition used to define `Ran`. -/
 @[simps]
 def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D where
-  obj := fun x => limit (diagram ι F x)
-  map := fun x y f => limit.pre (diagram _ _ _) (StructuredArrow.map f : StructuredArrow _ ι ⥤ _)
+  obj x := limit (diagram ι F x)
+  map x y f := limit.pre (diagram _ _ _) (StructuredArrow.map f : StructuredArrow _ ι ⥤ _)
   map_id' := by
     intro l
     ext j
@@ -91,7 +91,7 @@ def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D where
 @[simps]
 def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     (G ⟶ loc ι F) ≃ (((whiskeringLeft _ _ _).obj ι).obj G ⟶ F) where
-  toFun := fun f =>
+  toFun f :=
     { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _)),
       naturality' := by
         intro x y ff
@@ -102,7 +102,7 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
         change _ = _ ≫ (diagram ι F (ι.obj x)).map (structured_arrow.hom_mk _ _)
         rw [limit.w]
         tidy }
-  invFun := fun f =>
+  invFun f :=
     { app := fun x => limit.lift (diagram ι F x) (cone _ f),
       naturality' := by
         intro x y ff
@@ -121,14 +121,14 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     tidy
   right_inv := by tidy
 
-end Ran
+end RanCat
 
 /-- The right Kan extension of a functor. -/
 @[simps]
 def ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm) (by tidy)
+  Adjunction.rightAdjointOfEquiv (fun F G => (RanCat.equiv ι G F).symm) (by tidy)
 
-namespace Ran
+namespace RanCat
 
 variable (D)
 
@@ -148,9 +148,9 @@ theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredA
     is_iso.of_iso
       ((limit.is_limit _).conePointUniqueUpToIso (limit_of_diagram_initial structured_arrow.mk_id_initial _))
 
-end Ran
+end RanCat
 
-namespace Lan
+namespace LanCat
 
 attribute [local simp] costructured_arrow.proj
 
@@ -178,8 +178,8 @@ variable (ι)
 /-- An auxiliary definition used to define `Lan`. -/
 @[simps]
 def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
-  obj := fun x => colimit (diagram ι F x)
-  map := fun x y f => colimit.pre (diagram _ _ _) (CostructuredArrow.map f : CostructuredArrow ι _ ⥤ _)
+  obj x := colimit (diagram ι F x)
+  map x y f := colimit.pre (diagram _ _ _) (CostructuredArrow.map f : CostructuredArrow ι _ ⥤ _)
   map_id' := by
     intro l
     ext j
@@ -205,7 +205,7 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
 @[simps]
 def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     (loc ι F ⟶ G) ≃ (F ⟶ ((whiskeringLeft _ _ _).obj ι).obj G) where
-  toFun := fun f =>
+  toFun f :=
     { app := fun x => by apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
       naturality' := by
         intro x y ff
@@ -226,7 +226,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
         erw [colimit.w (diagram ι F (ι.obj y)) fff]
         congr
         simp }
-  invFun := fun f =>
+  invFun f :=
     { app := fun x => colimit.desc (diagram ι F x) (cocone _ f),
       naturality' := by
         intro x y ff
@@ -247,14 +247,14 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     tidy
   right_inv := by tidy
 
-end Lan
+end LanCat
 
 /-- The left Kan extension of a functor. -/
 @[simps]
 def lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G) (by tidy)
+  Adjunction.leftAdjointOfEquiv (fun F G => LanCat.equiv ι F G) (by tidy)
 
-namespace Lan
+namespace LanCat
 
 variable (D)
 
@@ -275,7 +275,7 @@ theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (Costruc
       ((colimit.is_colimit _).coconePointUniqueUpToIso
           (colimit_of_diagram_terminal costructured_arrow.mk_id_terminal _)).symm
 
-end Lan
+end LanCat
 
 end CategoryTheory
 

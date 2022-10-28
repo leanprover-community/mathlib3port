@@ -54,7 +54,7 @@ open Finsupp
 
 variable {σ : Type _} {τ : Type _}
 
-variable {R S T : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ T]
+variable {R S T : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring T]
 
 /-- `bind₁` is the "left hand side" bind operation on `mv_polynomial`, operating on the variable type.
 Given a polynomial `p : mv_polynomial σ R` and a map `f : σ → mv_polynomial τ R` taking variables
@@ -272,22 +272,22 @@ theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r :
 theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r : R) :
     bind₂ f (monomial d r) = f r * monomial d 1 := by
   simp only [monomial_eq, RingHom.map_mul, bind₂_C_right, Finsupp.prod, RingHom.map_prod, RingHom.map_pow,
-    bind₂_X_right, C_1, one_mulₓ]
+    bind₂_X_right, C_1, one_mul]
 
 @[simp]
 theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) : bind₂ f (monomial d 1) = monomial d 1 := by
-  rw [bind₂_monomial, f.map_one, one_mulₓ]
+  rw [bind₂_monomial, f.map_one, one_mul]
 
-instance monad : Monadₓ fun σ => MvPolynomial σ R where
-  map := fun α β f p => rename f p
-  pure := fun _ => x
-  bind := fun _ _ p f => bind₁ f p
+instance monad : Monad fun σ => MvPolynomial σ R where
+  map α β f p := rename f p
+  pure _ := x
+  bind _ _ p f := bind₁ f p
 
 instance is_lawful_functor : IsLawfulFunctor fun σ => MvPolynomial σ R where
   id_map := by intros <;> simp [(· <$> ·)]
   comp_map := by intros <;> simp [(· <$> ·)]
 
-instance is_lawful_monad : IsLawfulMonad fun σ => MvPolynomial σ R where
+instance is_lawful_monad : LawfulMonad fun σ => MvPolynomial σ R where
   pure_bind := by intros <;> simp [pure, bind]
   bind_assoc := by intros <;> simp [bind, ← bind₁_comp_bind₁]
 

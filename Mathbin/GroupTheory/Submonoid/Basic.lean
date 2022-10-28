@@ -13,7 +13,7 @@ This file defines bundled multiplicative and additive submonoids. We also define
 a `complete_lattice` structure on `submonoid`s, define the closure of a set as the minimal submonoid
 that includes this set, and prove a few results about extending properties from a dense set (i.e.
 a set with `closure s = ⊤`) to the whole monoid, see `submonoid.dense_induction` and
-`monoid_hom.of_mdense`.
+`monoid_hom.of_mclosure_eq_top_left`/`monoid_hom.of_mclosure_eq_top_right`.
 
 ## Main definitions
 
@@ -30,10 +30,10 @@ definition in the `add_submonoid` namespace.
 * `submonoid.gi` : `closure : set M → submonoid M` and coercion `coe : submonoid M → set M`
   form a `galois_insertion`;
 * `monoid_hom.eq_mlocus`: the submonoid of elements `x : M` such that `f x = g x`;
-* `monoid_hom.of_mdense`:  if a map `f : M → N` between two monoids satisfies `f 1 = 1` and
-  `f (x * y) = f x * f y` for `y` from some dense set `s`, then `f` is a monoid homomorphism.
-  E.g., if `f : ℕ → M` satisfies `f 0 = 0` and `f (x + 1) = f x + f 1`, then `f` is an additive
-  monoid homomorphism.
+* `monoid_hom.of_mclosure_eq_top_right`:  if a map `f : M → N` between two monoids satisfies
+  `f 1 = 1` and `f (x * y) = f x * f y` for `y` from some dense set `s`, then `f` is a monoid
+  homomorphism. E.g., if `f : ℕ → M` satisfies `f 0 = 0` and `f (x + 1) = f x + f 1`, then `f` is
+  an additive monoid homomorphism.
 
 ## Implementation notes
 
@@ -57,9 +57,9 @@ variable {A : Type _}
 
 section NonAssoc
 
-variable [MulOneClassₓ M] {s : Set M}
+variable [MulOneClass M] {s : Set M}
 
-variable [AddZeroClassₓ A] {t : Set A}
+variable [AddZeroClass A] {t : Set A}
 
 /-- `one_mem_class S M` says `S` is a type of subsets `s ≤ M`, such that `1 ∈ s` for all `s`. -/
 class OneMemClass (S : Type _) (M : outParam <| Type _) [One M] [SetLike S M] where
@@ -78,32 +78,35 @@ attribute [to_additive] OneMemClass
 section
 
 /-- A submonoid of a monoid `M` is a subset containing 1 and closed under multiplication. -/
-structure Submonoid (M : Type _) [MulOneClassₓ M] extends Subsemigroup M where
+structure Submonoid (M : Type _) [MulOneClass M] extends Subsemigroup M where
   one_mem' : (1 : M) ∈ carrier
 
 end
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident submonoid.to_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- A submonoid of a monoid `M` can be considered as a subsemigroup of that monoid. -/
+add_decl_doc Submonoid.toSubsemigroup
+
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
-class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClassₓ M] [SetLike S M] extends MulMemClass S M where
+class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClass M] [SetLike S M] extends MulMemClass S M where
   one_mem : ∀ s : S, (1 : M) ∈ s
 
 section
 
 /-- An additive submonoid of an additive monoid `M` is a subset containing 0 and
   closed under addition. -/
-structure AddSubmonoid (M : Type _) [AddZeroClassₓ M] extends AddSubsemigroup M where
+structure AddSubmonoid (M : Type _) [AddZeroClass M] extends AddSubsemigroup M where
   zero_mem' : (0 : M) ∈ carrier
 
 end
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_submonoid.to_add_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- An additive submonoid of an additive monoid `M` can be considered as an
+additive subsemigroup of that additive monoid. -/
+add_decl_doc AddSubmonoid.toAddSubsemigroup
+
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
-class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClassₓ M] [SetLike S M] extends
+class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClass M] [SetLike S M] extends
   AddMemClass S M where
   zero_mem : ∀ s : S, (0 : M) ∈ s
 
@@ -111,18 +114,18 @@ attribute [to_additive] Submonoid SubmonoidClass
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) SubmonoidClass.toOneMemClass (S : Type _) (M : outParam <| Type _) [MulOneClassₓ M]
+instance (priority := 100) SubmonoidClass.toOneMemClass (S : Type _) (M : outParam <| Type _) [MulOneClass M]
     [SetLike S M] [h : SubmonoidClass S M] : OneMemClass S M :=
   { h with }
 
 @[to_additive]
-theorem pow_mem {M} [Monoidₓ M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M} (hx : x ∈ S) :
+theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M} (hx : x ∈ S) :
     ∀ n : ℕ, x ^ n ∈ S
   | 0 => by
-    rw [pow_zeroₓ]
+    rw [pow_zero]
     exact OneMemClass.one_mem S
   | n + 1 => by
-    rw [pow_succₓ]
+    rw [pow_succ]
     exact MulMemClass.mul_mem hx (pow_mem n)
 
 namespace Submonoid
@@ -130,7 +133,7 @@ namespace Submonoid
 @[to_additive]
 instance : SetLike (Submonoid M) M where
   coe := Submonoid.Carrier
-  coe_injective' := fun p q h => by cases p <;> cases q <;> congr
+  coe_injective' p q h := by cases p <;> cases q <;> congr
 
 @[to_additive]
 instance : SubmonoidClass (Submonoid M) M where
@@ -172,7 +175,7 @@ theorem ext {S T : Submonoid M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M where
   Carrier := s
   one_mem' := hs.symm ▸ S.one_mem'
-  mul_mem' := fun _ _ => hs.symm ▸ S.mul_mem'
+  mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 
 variable {S : Submonoid M}
 
@@ -207,7 +210,7 @@ instance : HasBot (Submonoid M) :=
   ⟨{ Carrier := {1}, one_mem' := Set.mem_singleton 1,
       mul_mem' := fun a b ha hb => by
         simp only [Set.mem_singleton_iff] at *
-        rw [ha, hb, mul_oneₓ] }⟩
+        rw [ha, hb, mul_one] }⟩
 
 @[to_additive]
 instance : Inhabited (Submonoid M) :=
@@ -245,7 +248,7 @@ theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x 
   Iff.rfl
 
 @[to_additive]
-instance : HasInfₓ (Submonoid M) :=
+instance : HasInf (Submonoid M) :=
   ⟨fun s =>
     { Carrier := ⋂ t ∈ s, ↑t, one_mem' := Set.mem_bInter fun i h => i.one_mem,
       mul_mem' := fun x y hx hy =>
@@ -273,7 +276,7 @@ instance : CompleteLattice (Submonoid M) :=
   { (completeLatticeOfInf (Submonoid M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
     le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem, top := ⊤,
-    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInfₓ.inf,
+    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInf.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
     inf_le_right := fun a b x => And.right }
 
@@ -331,13 +334,13 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :
 
 @[to_additive]
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
-  le_antisymmₓ (closure_le.2 h₁) h₂
+  le_antisymm (closure_le.2 h₁) h₂
 
 variable (S)
 
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of `s`, and
 is preserved under multiplication, then `p` holds for all elements of the closure of `s`. -/
-@[elabAsElim,
+@[elab_as_elim,
   to_additive
       "An induction principle for additive closure membership. If `p`\nholds for `0` and all elements of `s`, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `s`."]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x ∈ s, p x) (H1 : p 1)
@@ -345,7 +348,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
   (@closure_le _ _ _ ⟨p, Hmul, H1⟩).2 Hs h
 
 /-- A dependent version of `submonoid.closure_induction`.  -/
-@[elabAsElim, to_additive "A dependent version of `add_submonoid.closure_induction`. "]
+@[elab_as_elim, to_additive "A dependent version of `add_submonoid.closure_induction`. "]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
     (H1 : p 1 (one_mem _)) (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) :
     p x hx := by
@@ -353,7 +356,8 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs
   exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) ⟨_, H1⟩ fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
 
 /-- An induction principle for closure membership for predicates with two arguments.  -/
-@[elabAsElim, to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
+@[elab_as_elim,
+  to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
 theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ closure s) (hy : y ∈ closure s)
     (Hs : ∀ x ∈ s, ∀ y ∈ s, p x y) (H1_left : ∀ x, p 1 x) (H1_right : ∀ x, p x 1)
     (Hmul_left : ∀ x y z, p x z → p y z → p (x * y) z) (Hmul_right : ∀ x y z, p z x → p z y → p z (x * y)) : p x y :=
@@ -363,7 +367,7 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
 /-- If `s` is a dense set in a monoid `M`, `submonoid.closure s = ⊤`, then in order to prove that
 some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`, verify `p 1`,
 and verify that `p x` and `p y` imply `p (x * y)`. -/
-@[elabAsElim,
+@[elab_as_elim,
   to_additive
       "If `s` is a dense set in an additive monoid `M`,\n`add_submonoid.closure s = ⊤`, then in order to prove that some predicate `p` holds for all `x : M`\nit suffices to verify `p x` for `x ∈ s`, verify `p 0`, and verify that `p x` and `p y` imply\n`p (x + y)`."]
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀ x ∈ s, p x) (H1 : p 1)
@@ -376,10 +380,10 @@ variable (M)
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
 protected def gi : GaloisInsertion (@closure M _) coe where
-  choice := fun s _ => closure s
-  gc := fun s t => closure_le
-  le_l_u := fun s => subset_closure
-  choice_eq := fun s h => rfl
+  choice s _ := closure s
+  gc s t := closure_le
+  le_l_u s := subset_closure
+  choice_eq s h := rfl
 
 variable {M}
 
@@ -429,7 +433,7 @@ end Submonoid
 
 namespace MonoidHom
 
-variable [MulOneClassₓ N]
+variable [MulOneClass N]
 
 open Submonoid
 
@@ -438,7 +442,7 @@ open Submonoid
 def eqMlocus (f g : M →* N) : Submonoid M where
   Carrier := { x | f x = g x }
   one_mem' := by rw [Set.mem_set_of_eq, f.map_one, g.map_one]
-  mul_mem' := fun x y (hx : _ = _) (hy : _ = _) => by simp [*]
+  mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
 @[to_additive "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]
@@ -447,7 +451,7 @@ theorem eq_on_mclosure {f g : M →* N} {s : Set M} (h : Set.EqOn f g s) : Set.E
 
 @[to_additive]
 theorem eq_of_eq_on_mtop {f g : M →* N} (h : Set.EqOn f g (⊤ : Submonoid M)) : f = g :=
-  ext fun x => h trivialₓ
+  ext fun x => h trivial
 
 @[to_additive]
 theorem eq_of_eq_on_mdense {s : Set M} (hs : closure s = ⊤) {f g : M →* N} (h : s.EqOn f g) : f = g :=
@@ -459,13 +463,13 @@ end NonAssoc
 
 section Assoc
 
-variable [Monoidₓ M] [Monoidₓ N] {s : Set M}
+variable [Monoid M] [Monoid N] {s : Set M}
 
 section IsUnit
 
 /-- The submonoid consisting of the units of a monoid -/
 @[to_additive "The additive submonoid consisting of the additive units of an additive monoid"]
-def IsUnit.submonoid (M : Type _) [Monoidₓ M] : Submonoid M where
+def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M where
   Carrier := SetOf IsUnit
   one_mem' := by simp only [is_unit_one, Set.mem_set_of_eq]
   mul_mem' := by
@@ -474,7 +478,7 @@ def IsUnit.submonoid (M : Type _) [Monoidₓ M] : Submonoid M where
     exact IsUnit.mul ha hb
 
 @[to_additive]
-theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoidₓ M] (a : M) : a ∈ IsUnit.submonoid M ↔ IsUnit a := by
+theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoid M] (a : M) : a ∈ IsUnit.submonoid M ↔ IsUnit a := by
   change a ∈ SetOf IsUnit ↔ IsUnit a
   rw [Set.mem_set_of_eq]
 
@@ -485,21 +489,39 @@ namespace MonoidHom
 open Submonoid
 
 /-- Let `s` be a subset of a monoid `M` such that the closure of `s` is the whole monoid.
-Then `monoid_hom.of_mdense` defines a monoid homomorphism from `M` asking for a proof
-of `f (x * y) = f x * f y` only for `y ∈ s`. -/
-@[to_additive]
-def ofMdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (h1 : f 1 = 1)
+Then `monoid_hom.of_mclosure_eq_top_left` defines a monoid homomorphism from `M` asking for
+a proof of `f (x * y) = f x * f y` only for `x ∈ s`. -/
+@[to_additive
+      "/-- Let `s` be a subset of an additive monoid `M` such that the closure of `s` is\nthe whole monoid. Then `add_monoid_hom.of_mclosure_eq_top_left` defines an additive monoid\nhomomorphism from `M` asking for a proof of `f (x + y) = f x + f y` only for `x ∈ s`. -/"]
+def ofMclosureEqTopLeft {M N} [Monoid M] [Monoid N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (h1 : f 1 = 1)
+    (hmul : ∀ x ∈ s, ∀ (y), f (x * y) = f x * f y) : M →* N where
+  toFun := f
+  map_one' := h1
+  map_mul' x :=
+    (dense_induction x hs hmul fun y => by rw [one_mul, h1, one_mul]) fun a b ha hb y => by
+      rw [mul_assoc, ha, ha, hb, mul_assoc]
+
+@[simp, norm_cast, to_additive]
+theorem coe_of_mclosure_eq_top_left (f : M → N) (hs : closure s = ⊤) (h1 hmul) :
+    ⇑(ofMclosureEqTopLeft f hs h1 hmul) = f :=
+  rfl
+
+/-- Let `s` be a subset of a monoid `M` such that the closure of `s` is the whole monoid.
+Then `monoid_hom.of_mclosure_eq_top_right` defines a monoid homomorphism from `M` asking for
+a proof of `f (x * y) = f x * f y` only for `y ∈ s`. -/
+@[to_additive
+      "/-- Let `s` be a subset of an additive monoid `M` such that the closure of `s` is\nthe whole monoid. Then `add_monoid_hom.of_mclosure_eq_top_right` defines an additive monoid\nhomomorphism from `M` asking for a proof of `f (x + y) = f x + f y` only for `y ∈ s`. -/"]
+def ofMclosureEqTopRight {M N} [Monoid M] [Monoid N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (h1 : f 1 = 1)
     (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) : M →* N where
   toFun := f
   map_one' := h1
-  map_mul' := fun x y =>
+  map_mul' x y :=
     dense_induction y hs (fun y hy x => hmul x y hy) (by simp [h1])
       (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, norm_cast, to_additive]
-theorem coe_of_mdense (f : M → N) (hs : closure s = ⊤) (h1 hmul) : ⇑(ofMdense f hs h1 hmul) = f :=
+theorem coe_of_mclosure_eq_top_right (f : M → N) (hs : closure s = ⊤) (h1 hmul) :
+    ⇑(ofMclosureEqTopRight f hs h1 hmul) = f :=
   rfl
 
 end MonoidHom

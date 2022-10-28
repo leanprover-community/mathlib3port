@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon, Scott Morrison
 -/
 import Mathbin.Control.Bifunctor
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 
 /-!
 # Functor and bifunctors can be applied to `equiv`s.
@@ -26,7 +26,7 @@ universe u v w
 
 variable {α β : Type u}
 
-open Equivₓ
+open Equiv
 
 namespace Functor
 
@@ -36,19 +36,31 @@ variable (f : Type u → Type v) [Functor f] [IsLawfulFunctor f]
 def mapEquiv (h : α ≃ β) : f α ≃ f β where
   toFun := map h
   invFun := map h.symm
-  left_inv := fun x => by simp [map_map]
-  right_inv := fun x => by simp [map_map]
+  left_inv x := by simp [map_map]
+  right_inv x := by simp [map_map]
 
+/- warning: functor.map_equiv_apply -> Functor.map_equiv_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{u}} (f : Type.{u} -> Type.{v}) [_inst_1 : Functor.{u v} f] [_inst_2 : IsLawfulFunctor.{u v} f _inst_1] (h : Equiv.{succ u succ u} α β) (x : f α), Eq.{succ v} (f β) (coeFn.{(max 1 (succ v)) succ v} (Equiv.{succ v succ v} (f α) (f β)) (fun (_x : Equiv.{succ v succ v} (f α) (f β)) => (f α) -> (f β)) (Equiv.hasCoeToFun.{succ v succ v} (f α) (f β)) (Functor.mapEquiv.{u v} α β f _inst_1 _inst_2 h) x) (Functor.map.{u v} f _inst_1 α β (coeFn.{(max 1 (succ u)) succ u} (Equiv.{succ u succ u} α β) (fun (_x : Equiv.{succ u succ u} α β) => α -> β) (Equiv.hasCoeToFun.{succ u succ u} α β) h) x)
+but is expected to have type
+  forall (f : Type.{u} -> Type.{v}) [inst._@.Mathlib.Data.Equiv.Functor._hyg.139 : Functor.{u v} f] [inst._@.Mathlib.Data.Equiv.Functor._hyg.142 : LawfulFunctor.{u v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.139] {α : Type.{u}} {β : Type.{u}} (h : Equiv.{succ u succ u} α β) (x : f α), Eq.{succ v} (f β) (Equiv.toFun.{succ v succ v} (f α) (f β) (Functor.map_equiv.{u v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.139 inst._@.Mathlib.Data.Equiv.Functor._hyg.142 α β h) x) (Functor.map.{u v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.139 α β (Equiv.toFun.{succ u succ u} α β h) x)
+Case conversion may be inaccurate. Consider using '#align functor.map_equiv_apply Functor.map_equiv_applyₓ'. -/
 @[simp]
-theorem map_equiv_applyₓ (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f β) x = map h x :=
+theorem map_equiv_apply (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f β) x = map h x :=
+  rfl
+
+/- warning: functor.map_equiv_symm_apply -> Functor.map_equiv_symm_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{u}} (f : Type.{u} -> Type.{v}) [_inst_1 : Functor.{u v} f] [_inst_2 : IsLawfulFunctor.{u v} f _inst_1] (h : Equiv.{succ u succ u} α β) (y : f β), Eq.{succ v} (f α) (coeFn.{(max 1 (succ v)) succ v} (Equiv.{succ v succ v} (f β) (f α)) (fun (_x : Equiv.{succ v succ v} (f β) (f α)) => (f β) -> (f α)) (Equiv.hasCoeToFun.{succ v succ v} (f β) (f α)) (Equiv.symm.{succ v succ v} (f α) (f β) (Functor.mapEquiv.{u v} α β f _inst_1 _inst_2 h)) y) (Functor.map.{u v} f _inst_1 β α (coeFn.{(max 1 (succ u)) succ u} (Equiv.{succ u succ u} β α) (fun (_x : Equiv.{succ u succ u} β α) => β -> α) (Equiv.hasCoeToFun.{succ u succ u} β α) (Equiv.symm.{succ u succ u} α β h)) y)
+but is expected to have type
+  forall (f : Type.{u} -> Type.{v}) [inst._@.Mathlib.Data.Equiv.Functor._hyg.188 : Functor.{u v} f] [inst._@.Mathlib.Data.Equiv.Functor._hyg.191 : LawfulFunctor.{u v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.188] {α : Type.{u}} {β : Type.{u}} (h : Equiv.{succ u succ u} α β) (y : f β), Eq.{succ v} (f α) (Equiv.toFun.{succ v succ v} (f β) (f α) (Equiv.symm.{succ v succ v} (f α) (f β) (Functor.map_equiv.{u v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.188 inst._@.Mathlib.Data.Equiv.Functor._hyg.191 α β h)) y) (Functor.map.{u v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.188 β α (Equiv.toFun.{succ u succ u} β α (Equiv.symm.{succ u succ u} α β h)) y)
+Case conversion may be inaccurate. Consider using '#align functor.map_equiv_symm_apply Functor.map_equiv_symm_applyₓ'. -/
+@[simp]
+theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) : (mapEquiv f h : f α ≃ f β).symm y = map h.symm y :=
   rfl
 
 @[simp]
-theorem map_equiv_symm_applyₓ (h : α ≃ β) (y : f β) : (mapEquiv f h : f α ≃ f β).symm y = map h.symm y :=
-  rfl
-
-@[simp]
-theorem map_equiv_refl : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
+theorem map_equiv_refl : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) := by
   ext x
   simp only [map_equiv_apply, refl_apply]
   exact IsLawfulFunctor.id_map x
@@ -63,8 +75,8 @@ variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [Is
 def mapEquiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' where
   toFun := bimap h h'
   invFun := bimap h.symm h'.symm
-  left_inv := fun x => by simp [bimap_bimap, id_bimap]
-  right_inv := fun x => by simp [bimap_bimap, id_bimap]
+  left_inv x := by simp [bimap_bimap, id_bimap]
+  right_inv x := by simp [bimap_bimap, id_bimap]
 
 @[simp]
 theorem map_equiv_apply (h : α ≃ β) (h' : α' ≃ β') (x : F α α') :
@@ -77,7 +89,7 @@ theorem map_equiv_symm_apply (h : α ≃ β) (h' : α' ≃ β') (y : F β β') :
   rfl
 
 @[simp]
-theorem map_equiv_refl_refl : mapEquiv F (Equivₓ.refl α) (Equivₓ.refl α') = Equivₓ.refl (F α α') := by
+theorem map_equiv_refl_refl : mapEquiv F (Equiv.refl α) (Equiv.refl α') = Equiv.refl (F α α') := by
   ext x
   simp [id_bimap]
 

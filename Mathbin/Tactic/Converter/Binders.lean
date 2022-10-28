@@ -9,7 +9,7 @@ import Mathbin.Order.CompleteLattice
 
 namespace OldConv
 
-open Tactic Monadₓ
+open Tactic Monad
 
 unsafe instance : MonadFail old_conv :=
   { old_conv.monad with fail := fun α s => (fun r e => tactic.fail (to_fmt s) : old_conv α) }
@@ -62,10 +62,10 @@ unsafe def funext' : (expr → old_conv Unit) → old_conv Unit :=
 
 unsafe def propext' {α : Type} (c : old_conv α) : old_conv α := fun r lhs =>
   (do
-      guardₓ (r = `iff)
+      guard (r = `iff)
       c r lhs) <|>
     do
-    guardₓ (r = `eq)
+    guard (r = `eq)
     let ⟨res, rhs, pr⟩ ← c `iff lhs
     match pr with
       | some pr => return ⟨res, rhs, (expr.const `propext [] : expr) lhs rhs pr⟩
@@ -116,12 +116,12 @@ unsafe structure binder_eq_elim where
 
 -- (B (x : β) (h : x = t), s x) = s t
 unsafe def binder_eq_elim.check_eq (b : binder_eq_elim) (x : expr) : expr → tactic Unit
-  | quote.1 (@Eq (%%ₓβ) (%%ₓl) (%%ₓr)) => guardₓ (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
+  | quote.1 (@Eq (%%ₓβ) (%%ₓl) (%%ₓr)) => guard (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
   | _ => fail "no match"
 
 unsafe def binder_eq_elim.pull (b : binder_eq_elim) (x : expr) : old_conv Unit := do
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder
-  guardₓ ¬x β <|>
+  guard ¬x β <|>
       b x β <|> do
         b fun x => binder_eq_elim.pull
         b
@@ -165,7 +165,7 @@ theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
     fun h => ⟨a, rfl, h⟩⟩
 
 unsafe def exists_eq_elim : binder_eq_elim where
-  match_binder := fun e => do
+  match_binder e := do
     let quote.1 (@Exists (%%ₓβ) (%%ₓf)) ← return e
     return (β, f)
   adapt_rel := propext'
@@ -189,33 +189,33 @@ theorem forall_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
     | _, rfl => h⟩
 
 unsafe def forall_eq_elim : binder_eq_elim where
-  match_binder := fun e => do
+  match_binder e := do
     let expr.pi n bi d bd ← return e
     return (d, expr.lam n bi d bd)
   adapt_rel := propext'
   apply_comm := applyc `` forall_comm
-  applyCongr := congr_binder `` forall_congrₓ
+  applyCongr := congr_binder `` forall_congr
   apply_elim_eq := apply' `` forall_elim_eq_left <|> apply' `` forall_elim_eq_right
 
 unsafe def supr_eq_elim : binder_eq_elim where
-  match_binder := fun e => do
+  match_binder e := do
     let quote.1 (@supr (%%ₓα) (%%ₓcl) (%%ₓβ) (%%ₓf)) ← return e
     return (β, f)
-  adapt_rel := fun c => do
+  adapt_rel c := do
     let r ← current_relation
-    guardₓ (r = `eq)
+    guard (r = `eq)
     c
   apply_comm := applyc `` supr_comm
   applyCongr := congr_arg ∘ funext'
   apply_elim_eq := applyc `` supr_supr_eq_left <|> applyc `` supr_supr_eq_right
 
 unsafe def infi_eq_elim : binder_eq_elim where
-  match_binder := fun e => do
+  match_binder e := do
     let quote.1 (@infi (%%ₓα) (%%ₓcl) (%%ₓβ) (%%ₓf)) ← return e
     return (β, f)
-  adapt_rel := fun c => do
+  adapt_rel c := do
     let r ← current_relation
-    guardₓ (r = `eq)
+    guard (r = `eq)
     c
   apply_comm := applyc `` infi_comm
   applyCongr := congr_arg ∘ funext'
@@ -229,11 +229,13 @@ section
 
 variable [CompleteLattice α]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : inf (Set.Image f s) = ⨅ a ∈ s, f a := by
   simp [Inf_eq_infi, infi_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : sup (Set.Image f s) = ⨆ a ∈ s, f a := by
   simp [Sup_eq_supr, supr_and]
   run_tac

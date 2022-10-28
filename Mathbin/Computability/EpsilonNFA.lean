@@ -84,7 +84,7 @@ theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_appendₓ, List.foldl_cons, List.foldl_nil]
+  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
 
 @[simp]
 theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
@@ -120,7 +120,7 @@ def Accepts : Language α :=
 
 /-- `M.to_NFA` is an `NFA` constructed from an `ε_NFA` `M`. -/
 def toNFA : NFA α σ where
-  step := fun S a => M.εClosure (M.step S a)
+  step S a := M.εClosure (M.step S a)
   start := M.εClosure M.start
   accept := M.accept
 
@@ -134,10 +134,10 @@ theorem to_NFA_correct : M.toNFA.Accepts = M.Accepts := by
   rw [accepts, NFA.Accepts, eval, NFA.Eval, ← to_NFA_eval_from_match]
   rfl
 
-theorem pumping_lemma [Fintypeₓ σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintypeₓ.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintypeₓ.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
@@ -149,7 +149,7 @@ namespace NFA
 /-- `M.to_ε_NFA` is an `ε_NFA` constructed from an `NFA` `M` by using the same start and accept
   states and transition functions. -/
 def toεNFA (M : NFA α σ) : εNFA α σ where
-  step := fun s a => a.casesOn' ∅ fun a => M.step s a
+  step s a := a.casesOn' ∅ fun a => M.step s a
   start := M.start
   accept := M.accept
 
@@ -168,7 +168,7 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.e
   rw [eval_from, εNFA.EvalFrom, to_ε_NFA_ε_closure]
   congr
   ext S s
-  simp only [step_set, εNFA.StepSet, exists_propₓ, Set.mem_Union, Set.bind_def]
+  simp only [step_set, εNFA.StepSet, exists_prop, Set.mem_Union, Set.bind_def]
   apply exists_congr
   simp only [And.congr_right_iff]
   intro t ht

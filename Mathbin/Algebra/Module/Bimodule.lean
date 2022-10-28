@@ -64,9 +64,9 @@ section Algebra
 
 variable {R A B M : Type _}
 
-variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-variable [Semiringₓ A] [Semiringₓ B] [Module A M] [Module B M]
+variable [Semiring A] [Semiring B] [Module A M] [Module B M]
 
 variable [Algebra R A] [Algebra R B]
 
@@ -99,7 +99,7 @@ theorem smul_mem' (p : Submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) 
 /-- If `A` and `B` are also `algebra`s over yet another set of scalars `S` then we may "base change"
 from `R` to `S`. -/
 @[simps]
-def baseChange (S : Type _) [CommSemiringₓ S] [Module S M] [Algebra S A] [Algebra S B] [IsScalarTower S A M]
+def baseChange (S : Type _) [CommSemiring S] [Module S M] [Algebra S A] [Algebra S B] [IsScalarTower S A M]
     [IsScalarTower S B M] (p : Submodule (A ⊗[R] B) M) : Submodule (A ⊗[S] B) M :=
   mk p.toAddSubmonoid (smul_mem p) (smul_mem' p)
 
@@ -115,11 +115,11 @@ def toSubmodule' (p : Submodule (A ⊗[R] B) M) : Submodule B M :=
 
 end Algebra
 
-section Ringₓ
+section Ring
 
-variable (R S M : Type _) [Ringₓ R] [Ringₓ S]
+variable (R S M : Type _) [Ring R] [Ring S]
 
-variable [AddCommGroupₓ M] [Module R M] [Module S M] [SmulCommClass R S M]
+variable [AddCommGroup M] [Module R M] [Module S M] [SmulCommClass R S M]
 
 /-- A `submodule` over `R ⊗[ℕ] S` is naturally also a `submodule` over the canonically-isomorphic
 ring `R ⊗[ℤ] S`. -/
@@ -133,7 +133,7 @@ ring `R ⊗[ℕ] S`. -/
 def toSubbimoduleNat (p : Submodule (R ⊗[ℤ] S) M) : Submodule (R ⊗[ℕ] S) M :=
   baseChange ℕ p
 
-end Ringₓ
+end Ring
 
 end Subbimodule
 

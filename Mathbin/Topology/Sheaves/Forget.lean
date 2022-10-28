@@ -35,7 +35,7 @@ open TopologicalSpace
 
 open Opposite
 
-namespace Top
+namespace TopCat
 
 namespace Presheaf
 
@@ -51,7 +51,7 @@ variable {D : Type u₂} [Category.{v} D] [HasLimits D]
 
 variable (G : C ⥤ D) [PreservesLimits G]
 
-variable {X : Top.{v}} (F : Presheaf C X)
+variable {X : TopCat.{v}} (F : Presheaf C X)
 
 variable {ι : Type v} (U : ι → Opens X)
 
@@ -130,7 +130,7 @@ variable [ReflectsIsomorphisms G]
 
 variable [HasLimits C] [HasLimits D] [PreservesLimits G]
 
-variable {X : Top.{v}} (F : Presheaf C X)
+variable {X : TopCat.{v}} (F : Presheaf C X)
 
 /-- If `G : C ⥤ D` is a functor which reflects isomorphisms and preserves limits
 (we assume all limits exist in both `C` and `D`),
@@ -236,5 +236,5 @@ example (X : Top) (F : presheaf CommRing X) (h : presheaf.is_sheaf (F ⋙ (forge
 
 end Presheaf
 
-end Top
+end TopCat
 

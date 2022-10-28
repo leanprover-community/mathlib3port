@@ -37,19 +37,19 @@ def IsNilpotent [Zero R] [Pow R ℕ] (x : R) : Prop :=
 theorem IsNilpotent.mk [Zero R] [Pow R ℕ] (x : R) (n : ℕ) (e : x ^ n = 0) : IsNilpotent x :=
   ⟨n, e⟩
 
-theorem IsNilpotent.zero [MonoidWithZeroₓ R] : IsNilpotent (0 : R) :=
-  ⟨1, pow_oneₓ 0⟩
+theorem IsNilpotent.zero [MonoidWithZero R] : IsNilpotent (0 : R) :=
+  ⟨1, pow_one 0⟩
 
-theorem IsNilpotent.neg [Ringₓ R] (h : IsNilpotent x) : IsNilpotent (-x) := by
+theorem IsNilpotent.neg [Ring R] (h : IsNilpotent x) : IsNilpotent (-x) := by
   obtain ⟨n, hn⟩ := h
   use n
   rw [neg_pow, hn, mul_zero]
 
 @[simp]
-theorem is_nilpotent_neg_iff [Ringₓ R] : IsNilpotent (-x) ↔ IsNilpotent x :=
-  ⟨fun h => neg_negₓ x ▸ h.neg, fun h => h.neg⟩
+theorem is_nilpotent_neg_iff [Ring R] : IsNilpotent (-x) ↔ IsNilpotent x :=
+  ⟨fun h => neg_neg x ▸ h.neg, fun h => h.neg⟩
 
-theorem IsNilpotent.map [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {r : R} {F : Type _} [MonoidWithZeroHomClass F R S]
+theorem IsNilpotent.map [MonoidWithZero R] [MonoidWithZero S] {r : R} {F : Type _} [MonoidWithZeroHomClass F R S]
     (hr : IsNilpotent r) (f : F) : IsNilpotent (f r) := by
   use hr.some
   rw [← map_pow, hr.some_spec, map_zero]
@@ -58,7 +58,7 @@ theorem IsNilpotent.map [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {r : R} {F :
 class IsReduced (R : Type _) [Zero R] [Pow R ℕ] : Prop where
   eq_zero : ∀ x : R, IsNilpotent x → x = 0
 
-instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZeroₓ R] [NoZeroDivisors R] : IsReduced R :=
+instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZero R] [NoZeroDivisors R] : IsReduced R :=
   ⟨fun _ ⟨_, hn⟩ => pow_eq_zero hn⟩
 
 instance (priority := 900) is_reduced_of_subsingleton [Zero R] [Pow R ℕ] [Subsingleton R] : IsReduced R :=
@@ -68,10 +68,10 @@ theorem IsNilpotent.eq_zero [Zero R] [Pow R ℕ] [IsReduced R] (h : IsNilpotent 
   IsReduced.eq_zero x h
 
 @[simp]
-theorem is_nilpotent_iff_eq_zero [MonoidWithZeroₓ R] [IsReduced R] : IsNilpotent x ↔ x = 0 :=
+theorem is_nilpotent_iff_eq_zero [MonoidWithZero R] [IsReduced R] : IsNilpotent x ↔ x = 0 :=
   ⟨fun h => h.eq_zero, fun h => h.symm ▸ IsNilpotent.zero⟩
 
-theorem is_reduced_of_injective [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {F : Type _} [MonoidWithZeroHomClass F R S]
+theorem is_reduced_of_injective [MonoidWithZero R] [MonoidWithZero S] {F : Type _} [MonoidWithZeroHomClass F R S]
     (f : F) (hf : Function.Injective f) [IsReduced S] : IsReduced R := by
   constructor
   intro x hx
@@ -81,9 +81,9 @@ theorem is_reduced_of_injective [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {F :
 
 namespace Commute
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R] (h_comm : Commute x y)
+variable [Semiring R] (h_comm : Commute x y)
 
 include h_comm
 
@@ -92,7 +92,7 @@ theorem is_nilpotent_add (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent
   obtain ⟨m, hm⟩ := hy
   use n + m - 1
   rw [h_comm.add_pow']
-  apply Finsetₓ.sum_eq_zero
+  apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
   suffices x ^ i * y ^ j = 0 by simp only [this, nsmul_eq_mul, mul_zero]
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
@@ -110,11 +110,11 @@ theorem is_nilpotent_mul_right (h : IsNilpotent y) : IsNilpotent (x * y) := by
   rw [h_comm.eq]
   exact h_comm.symm.is_nilpotent_mul_left h
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] (h_comm : Commute x y)
+variable [Ring R] (h_comm : Commute x y)
 
 include h_comm
 
@@ -124,22 +124,22 @@ theorem is_nilpotent_sub (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent
   rw [sub_eq_add_neg]
   exact h_comm.is_nilpotent_add hx hy
 
-end Ringₓ
+end Ring
 
 end Commute
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R]
+variable [CommSemiring R]
 
 /-- The nilradical of a commutative semiring is the ideal of nilpotent elements. -/
-def nilradical (R : Type _) [CommSemiringₓ R] : Ideal R :=
+def nilradical (R : Type _) [CommSemiring R] : Ideal R :=
   (0 : Ideal R).radical
 
 theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
   Iff.rfl
 
-theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = inf { J : Ideal R | J.IsPrime } :=
+theorem nilradical_eq_Inf (R : Type _) [CommSemiring R] : nilradical R = inf { J : Ideal R | J.IsPrime } :=
   (Ideal.radical_eq_Inf ⊥).trans <| by simp_rw [and_iff_right bot_le]
 
 theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J := by
@@ -150,14 +150,14 @@ theorem nilradical_le_prime (J : Ideal R) [H : J.IsPrime] : nilradical R ≤ J :
   (nilradical_eq_Inf R).symm ▸ Inf_le H
 
 @[simp]
-theorem nilradical_eq_zero (R : Type _) [CommSemiringₓ R] [IsReduced R] : nilradical R = 0 :=
+theorem nilradical_eq_zero (R : Type _) [CommSemiring R] [IsReduced R] : nilradical R = 0 :=
   Ideal.ext fun _ => is_nilpotent_iff_eq_zero
 
-end CommSemiringₓ
+end CommSemiring
 
 namespace LinearMap
 
-variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable (R) {A : Type v} [CommSemiring R] [Semiring A] [Algebra R A]
 
 @[simp]
 theorem is_nilpotent_mul_left_iff (a : A) : IsNilpotent (mulLeft R a) ↔ IsNilpotent a := by
@@ -169,32 +169,31 @@ theorem is_nilpotent_mul_right_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNi
 
 end LinearMap
 
-namespace Module.End
+namespace Module.EndCat
 
-variable {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
+variable {M : Type v} [Ring R] [AddCommGroup M] [Module R M]
 
-variable {f : Module.End R M} {p : Submodule R M} (hp : p ≤ p.comap f)
+variable {f : Module.EndCat R M} {p : Submodule R M} (hp : p ≤ p.comap f)
 
 theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := by
   obtain ⟨k, hk⟩ := hnp
   use k
   simp [← p.mapq_pow, hk]
 
-end Module.End
+end Module.EndCat
 
 section Ideal
 
-variable [CommSemiringₓ R] [CommRingₓ S] [Algebra R S] (I : Ideal S)
+variable [CommSemiring R] [CommRing S] [Algebra R S] (I : Ideal S)
 
 /-- Let `P` be a property on ideals. If `P` holds for square-zero ideals, and if
   `P I → P (J ⧸ I) → P J`, then `P` holds for all nilpotent ideals. -/
-theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, Prop}
-    (h₁ : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, I ^ 2 = ⊥ → P I)
-    (h₂ : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) : P I :=
-  by
+theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I : Ideal S, Prop}
+    (h₁ : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I : Ideal S, I ^ 2 = ⊥ → P I)
+    (h₂ : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) : P I := by
   obtain ⟨n, hI : I ^ n = ⊥⟩ := hI
   revert S
-  apply Nat.strong_induction_onₓ n
+  apply Nat.strong_induction_on n
   clear n
   intro n H S _ I hI
   by_cases hI':I = ⊥
@@ -204,27 +203,27 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type
     exact zero_lt_two
     
   cases n
-  · rw [pow_zeroₓ, Ideal.one_eq_top] at hI
+  · rw [pow_zero, Ideal.one_eq_top] at hI
     haveI := subsingleton_of_bot_eq_top hI.symm
     exact (hI' (Subsingleton.elim _ _)).elim
     
   cases n
-  · rw [pow_oneₓ] at hI
+  · rw [pow_one] at hI
     exact (hI' hI).elim
     
   apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
   · apply H n.succ _ (I ^ 2)
-    · rw [← pow_mulₓ, eq_bot_iff, ← hI, Nat.succ_eq_add_one, Nat.succ_eq_add_one]
+    · rw [← pow_mul, eq_bot_iff, ← hI, Nat.succ_eq_add_one, Nat.succ_eq_add_one]
       exact Ideal.pow_le_pow (by linarith)
       
-    · exact le_reflₓ n.succ.succ
+    · exact le_refl n.succ.succ
       
     
   · apply h₁
     rw [← Ideal.map_pow, Ideal.map_quotient_self]
     
 
-theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRingₓ R] {I : Ideal R} (hI : IsNilpotent I) {x : R} :
+theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal R} (hI : IsNilpotent I) {x : R} :
     IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x := by
   refine' ⟨_, fun h => h.map I⟩
   revert x

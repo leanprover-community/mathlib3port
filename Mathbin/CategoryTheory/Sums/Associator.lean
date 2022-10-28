@@ -25,12 +25,12 @@ variable (C : Type u) [Category.{v} C] (D : Type u) [Category.{v} D] (E : Type u
 /-- The associator functor `(C ⊕ D) ⊕ E ⥤ C ⊕ (D ⊕ E)` for sums of categories.
 -/
 def associator : Sum (Sum C D) E ⥤ Sum C (Sum D E) where
-  obj := fun X =>
+  obj X :=
     match X with
     | inl (inl X) => inl X
     | inl (inr X) => inr (inl X)
     | inr X => inr (inr X)
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | inl (inl X), inl (inl Y), f => f
     | inl (inr X), inl (inr Y), f => f
@@ -63,12 +63,12 @@ theorem associator_map_inr {X Y : E} (f : inr X ⟶ inr Y) : (associator C D E).
 /-- The inverse associator functor `C ⊕ (D ⊕ E) ⥤ (C ⊕ D) ⊕ E` for sums of categories.
 -/
 def inverseAssociator : Sum C (Sum D E) ⥤ Sum (Sum C D) E where
-  obj := fun X =>
+  obj X :=
     match X with
     | inl X => inl (inl X)
     | inr (inl X) => inl (inr X)
     | inr (inr X) => inr X
-  map := fun X Y f =>
+  map X Y f :=
     match X, Y, f with
     | inl X, inl Y, f => f
     | inr (inl X), inr (inl Y), f => f

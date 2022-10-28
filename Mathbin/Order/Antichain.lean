@@ -49,7 +49,7 @@ protected theorem eq' (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b �
   (hs.Eq hb ha h).symm
 
 protected theorem is_antisymm (h : IsAntichain r Univ) : IsAntisymm α r :=
-  ⟨fun a b ha _ => h.Eq trivialₓ trivialₓ ha⟩
+  ⟨fun a b ha _ => h.Eq trivial trivial ha⟩
 
 protected theorem subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.Subsingleton := by
   rintro a ha b hb
@@ -154,9 +154,9 @@ theorem is_antichain_singleton (a : α) (r : α → α → Prop) : IsAntichain r
 theorem Set.Subsingleton.is_antichain (hs : s.Subsingleton) (r : α → α → Prop) : IsAntichain r s :=
   hs.Pairwise _
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α]
+variable [Preorder α]
 
 theorem is_antichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq' hb h.2.1 (h.2.2 hb)⟩, by
@@ -175,10 +175,10 @@ theorem IsAntichain.greatest_iff (hs : IsAntichain (· ≤ ·) s) : IsGreatest s
   (and_iff_right hs).symm.trans is_antichain_and_greatest_iff
 
 theorem IsLeast.antichain_iff (hs : IsLeast s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
-  (and_iff_leftₓ hs).symm.trans is_antichain_and_least_iff
+  (and_iff_left hs).symm.trans is_antichain_and_least_iff
 
 theorem IsGreatest.antichain_iff (hs : IsGreatest s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
-  (and_iff_leftₓ hs).symm.trans is_antichain_and_greatest_iff
+  (and_iff_left hs).symm.trans is_antichain_and_greatest_iff
 
 theorem IsAntichain.bot_mem_iff [OrderBot α] (hs : IsAntichain (· ≤ ·) s) : ⊥ ∈ s ↔ s = {⊥} :=
   is_least_bot_iff.symm.trans hs.least_iff
@@ -186,7 +186,7 @@ theorem IsAntichain.bot_mem_iff [OrderBot α] (hs : IsAntichain (· ≤ ·) s) :
 theorem IsAntichain.top_mem_iff [OrderTop α] (hs : IsAntichain (· ≤ ·) s) : ⊤ ∈ s ↔ s = {⊤} :=
   is_greatest_top_iff.symm.trans hs.greatest_iff
 
-end Preorderₓ
+end Preorder
 
 /-! ### Strong antichains -/
 

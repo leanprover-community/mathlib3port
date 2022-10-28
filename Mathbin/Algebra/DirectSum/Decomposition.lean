@@ -35,9 +35,9 @@ open DirectSum BigOperators
 
 namespace DirectSum
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [DecidableEq ι] [AddCommMonoidₓ M]
+variable [DecidableEq ι] [AddCommMonoid M]
 
 variable [SetLike σ M] [AddSubmonoidClass σ M] (ℳ : ι → σ)
 
@@ -83,7 +83,7 @@ protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0) (h_
     { decompose' := DirectSum.decompose ℳ, left_inv := fun _ => (decompose ℳ).left_inv _,
       right_inv := fun _ => (decompose ℳ).right_inv _ }
   have mem : ∀ m, m ∈ supr ℳ' := fun m =>
-    (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivialₓ
+    (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
   exact fun m => AddSubmonoid.supr_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
 
 @[simp]
@@ -96,7 +96,7 @@ theorem decompose_symm_of {i : ι} (x : ℳ i) : (decompose ℳ).symm (DirectSum
 
 @[simp]
 theorem decompose_coe {i : ι} (x : ℳ i) : decompose ℳ (x : M) = DirectSum.of _ i x := by
-  rw [← decompose_symm_of, Equivₓ.apply_symm_apply]
+  rw [← decompose_symm_of, Equiv.apply_symm_apply]
 
 theorem decompose_of_mem {x : M} {i : ι} (hx : x ∈ ℳ i) : decompose ℳ x = DirectSum.of (fun i => ℳ i) i ⟨x, hx⟩ :=
   decompose_coe _ ⟨x, hx⟩
@@ -131,11 +131,11 @@ theorem decompose_symm_add (x y : ⨁ i, ℳ i) :
   map_add (decomposeAddEquiv ℳ).symm x y
 
 @[simp]
-theorem decompose_sum {ι'} (s : Finsetₓ ι') (f : ι' → M) : decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
+theorem decompose_sum {ι'} (s : Finset ι') (f : ι' → M) : decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
   map_sum (decomposeAddEquiv ℳ) f s
 
 @[simp]
-theorem decompose_symm_sum {ι'} (s : Finsetₓ ι') (f : ι' → ⨁ i, ℳ i) :
+theorem decompose_symm_sum {ι'} (s : Finset ι') (f : ι' → ⨁ i, ℳ i) :
     (decompose ℳ).symm (∑ i in s, f i) = ∑ i in s, (decompose ℳ).symm (f i) :=
   map_sum (decomposeAddEquiv ℳ).symm f s
 
@@ -145,7 +145,7 @@ theorem sum_support_decompose [∀ (i) (x : ℳ i), Decidable (x ≠ 0)] (r : M)
   rw [decompose_symm_sum]
   simp_rw [decompose_symm_of]
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
 /-- The `-` in the statements below doesn't resolve without this line.
 
@@ -153,12 +153,12 @@ This seems to a be a problem of synthesized vs inferred typeclasses disagreeing.
 the statement of `decompose_neg` with `@eq (⨁ i, ℳ i) (decompose ℳ (-x)) (-decompose ℳ x)`
 instead of `decompose ℳ (-x) = -decompose ℳ x`, which forces the typeclasses needed by `⨁ i, ℳ i` to
 be found by unification rather than synthesis, then everything works fine without this instance. -/
-instance addCommGroupSetLike [AddCommGroupₓ M] [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ) :
-    AddCommGroupₓ (⨁ i, ℳ i) := by infer_instance
+instance addCommGroupSetLike [AddCommGroup M] [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ) :
+    AddCommGroup (⨁ i, ℳ i) := by infer_instance
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [DecidableEq ι] [AddCommGroupₓ M]
+variable [DecidableEq ι] [AddCommGroup M]
 
 variable [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ)
 
@@ -183,11 +183,11 @@ theorem decompose_symm_sub (x y : ⨁ i, ℳ i) :
     (decompose ℳ).symm (x - y) = (decompose ℳ).symm x - (decompose ℳ).symm y :=
   map_sub (decomposeAddEquiv ℳ).symm x y
 
-end AddCommGroupₓ
+end AddCommGroup
 
 section Module
 
-variable [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [DecidableEq ι] [Semiring R] [AddCommMonoid M] [Module R M]
 
 variable (ℳ : ι → Submodule R M)
 

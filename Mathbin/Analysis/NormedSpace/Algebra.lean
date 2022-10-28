@@ -33,24 +33,19 @@ namespace WeakDual
 
 namespace CharacterSpace
 
-variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A] [NormOneClass A]
+variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
-theorem norm_one (φ : CharacterSpace 𝕜 A) : ∥toNormedDual (φ : WeakDual 𝕜 A)∥ = 1 := by
-  refine' ContinuousLinearMap.op_norm_eq_of_bounds zero_le_one (fun a => _) fun x hx h => _
-  · rw [one_mulₓ]
-    exact Spectrum.norm_le_norm_of_mem (apply_mem_spectrum φ a)
-    
-  · have : ∥φ 1∥ ≤ x * ∥(1 : A)∥ := h 1
-    simpa only [norm_one, mul_oneₓ, map_one] using this
-    
+theorem norm_le_norm_one (φ : CharacterSpace 𝕜 A) : ∥toNormedDual (φ : WeakDual 𝕜 A)∥ ≤ ∥(1 : A)∥ :=
+  (ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg (1 : A))) fun a =>
+    mul_comm ∥a∥ ∥(1 : A)∥ ▸ Spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ a)
 
 instance [ProperSpace 𝕜] : CompactSpace (CharacterSpace 𝕜 A) := by
   rw [← is_compact_iff_compact_space]
-  have h : character_space 𝕜 A ⊆ to_normed_dual ⁻¹' Metric.ClosedBall 0 1 := by
+  have h : character_space 𝕜 A ⊆ to_normed_dual ⁻¹' Metric.ClosedBall 0 ∥(1 : A)∥ := by
     intro φ hφ
     rw [Set.mem_preimage, mem_closed_ball_zero_iff]
-    exact (le_of_eqₓ <| norm_one ⟨φ, ⟨hφ.1, hφ.2⟩⟩ : _)
-  exact compact_of_is_closed_subset (is_compact_closed_ball 𝕜 0 1) character_space.is_closed h
+    exact (norm_le_norm_one ⟨φ, ⟨hφ.1, hφ.2⟩⟩ : _)
+  exact compact_of_is_closed_subset (is_compact_closed_ball 𝕜 0 _) character_space.is_closed h
 
 end CharacterSpace
 

@@ -18,11 +18,11 @@ open Polynomial Matrix
 
 open Polynomial
 
-variable {n : Type _} [DecidableEq n] [Fintypeₓ n]
+variable {n : Type _} [DecidableEq n] [Fintype n]
 
 @[simp]
-theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintypeₓ K] (M : Matrix n n K) :
-    (M ^ Fintypeₓ.card K).charpoly = M.charpoly := by
+theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
+    (M ^ Fintype.card K).charpoly = M.charpoly := by
   cases (is_empty_or_nonempty n).symm
   · cases' CharP.exists K with p hp
     letI := hp
@@ -53,10 +53,10 @@ theorem Zmod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)
   have h := FiniteField.Matrix.charpoly_pow_card M
   rwa [Zmod.card] at h
 
-theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintypeₓ K] (M : Matrix n n K) :
-    trace (M ^ Fintypeₓ.card K) = trace M ^ Fintypeₓ.card K := by
+theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
+    trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
   cases is_empty_or_nonempty n
-  · simp [zero_pow Fintypeₓ.card_pos, Matrix.trace]
+  · simp [zero_pow Fintype.card_pos, Matrix.trace]
     
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]

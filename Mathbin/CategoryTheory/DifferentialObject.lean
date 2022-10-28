@@ -75,7 +75,7 @@ end Hom
 instance categoryOfDifferentialObjects : Category (DifferentialObject C) where
   hom := Hom
   id := Hom.id
-  comp := fun X Y Z f g => Hom.comp f g
+  comp X Y Z f g := Hom.comp f g
 
 @[simp]
 theorem id_f (X : DifferentialObject C) : (𝟙 X : X ⟶ X).f = 𝟙 X.x :=
@@ -95,12 +95,12 @@ variable (C)
 
 /-- The forgetful functor taking a differential object to its underlying object. -/
 def forget : DifferentialObject C ⥤ C where
-  obj := fun X => X.x
-  map := fun X Y f => f.f
+  obj X := X.x
+  map X Y f := f.f
 
 instance forget_faithful : Faithful (forget C) where
 
-instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject C) where HasZero := fun X Y => ⟨{ f := 0 }⟩
+instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject C) where HasZero X Y := ⟨{ f := 0 }⟩
 
 variable {C}
 
@@ -164,7 +164,7 @@ can be lifted to a functor `differential_object C ⥤ differential_object D`.
 @[simps]
 def mapDifferentialObject (F : C ⥤ D) (η : (shiftFunctor C (1 : ℤ)).comp F ⟶ F.comp (shiftFunctor D (1 : ℤ)))
     (hF : ∀ c c', F.map (0 : c ⟶ c') = 0) : DifferentialObject C ⥤ DifferentialObject D where
-  obj := fun X =>
+  obj X :=
     { x := F.obj X.x, d := F.map X.d ≫ η.app X.x,
       d_squared' := by
         rw [functor.map_comp, ← functor.comp_map F (shift_functor D (1 : ℤ))]
@@ -172,7 +172,7 @@ def mapDifferentialObject (F : C ⥤ D) (η : (shiftFunctor C (1 : ℤ)).comp F 
         rw [functor.comp_map]
         slice_lhs 1 2 => rw [← F.map_comp, X.d_squared, hF]
         rw [zero_comp, zero_comp] }
-  map := fun X Y f =>
+  map X Y f :=
     { f := F.map f.f,
       comm' := by
         dsimp
@@ -232,12 +232,12 @@ noncomputable section
 /-- The shift functor on `differential_object C`. -/
 @[simps]
 def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C where
-  obj := fun X =>
+  obj X :=
     { x := X.x⟦n⟧, d := X.d⟦n⟧' ≫ (shiftComm _ _ _).hom,
       d_squared' := by
         rw [functor.map_comp, category.assoc, shift_comm_hom_comp_assoc, ← functor.map_comp_assoc, X.d_squared,
           functor.map_zero, zero_comp] }
-  map := fun X Y f =>
+  map X Y f :=
     { f := f.f⟦n⟧',
       comm' := by
         dsimp

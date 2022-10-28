@@ -67,14 +67,14 @@ def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L
 limit. -/
 def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F ⋙ fst L R)} (t₁ : IsLimit c₁)
     {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) : IsLimit (coneOfPreserves F c₁ t₂) where
-  lift := fun s =>
+  lift s :=
     { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
       w' :=
         (isLimitOfPreserves R t₂).hom_ext fun j => by
           rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac, limit_auxiliary_cone_π_app, ←
             L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp, t₂.fac]
           exact (s.π.app j).w }
-  uniq' := fun s m w =>
+  uniq' s m w :=
     CommaMorphism.ext _ _ (t₁.uniq ((fst L R).mapCone s) _ fun j => by simp [← w])
       (t₂.uniq ((snd L R).mapCone s) _ fun j => by simp [← w])
 
@@ -102,14 +102,14 @@ def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙
 a colimit. -/
 def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)} (t₁ : IsColimit c₁)
     {c₂ : Cocone (F ⋙ snd L R)} (t₂ : IsColimit c₂) : IsColimit (coconeOfPreserves F t₁ c₂) where
-  desc := fun s =>
+  desc s :=
     { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
       w' :=
         (isColimitOfPreserves L t₁).hom_ext fun j => by
           rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc, colimit_auxiliary_cocone_ι_app,
             assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ← L.map_comp_assoc, t₁.fac]
           exact (s.ι.app j).w }
-  uniq' := fun s m w =>
+  uniq' s m w :=
     CommaMorphism.ext _ _ (t₁.uniq ((fst L R).mapCocone s) _ (by simp [← w]))
       (t₂.uniq ((snd L R).mapCocone s) _ (by simp [← w]))
 

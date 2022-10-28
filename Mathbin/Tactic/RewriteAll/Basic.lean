@@ -16,11 +16,11 @@ def Side.other : Side → Side
   | Side.L => Side.R
   | Side.R => Side.L
 
-def Side.toString : Side → Stringₓ
+def Side.toString : Side → String
   | Side.L => "L"
   | Side.R => "R"
 
-instance : HasToString Side :=
+instance : ToString Side :=
   ⟨Side.toString⟩
 
 namespace Tactic.RewriteAll

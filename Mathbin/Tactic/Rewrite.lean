@@ -127,7 +127,7 @@ unsafe def assoc_rewrite_intl (assoc h e : expr) : tactic (expr × expr) := do
 -- e.g.: x + f (a + b + c) + y should generate two rewrite candidates
 unsafe def enum_assoc_subexpr' (fn : expr) : expr → tactic (Dlist expr)
   | e =>
-    Dlist.singleton e <$ (match_fn fn e >> guardₓ ¬e.has_var) <|>
+    Dlist.singleton e <$ (match_fn fn e >> guard ¬e.has_var) <|>
       expr.mfoldl (fun es e' => (· ++ es) <$> enum_assoc_subexpr' e') Dlist.empty e
 
 unsafe def enum_assoc_subexpr (fn e : expr) : tactic (List expr) :=
@@ -148,7 +148,7 @@ unsafe def assoc_rewrite (h e : expr) (opt_assoc : Option expr := none) : tactic
     match opt_assoc with
       | none => mk_assoc_instance fn
       | some assoc => pure assoc
-  let (_, p) ← mfirstₓ (assoc_rewrite_intl assoc <| h.mk_app vs) es
+  let (_, p) ← mfirst (assoc_rewrite_intl assoc <| h.mk_app vs) es
   let (e', p', _) ← tactic.rewrite p e
   pure (e', p', vs)
 
@@ -166,7 +166,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
   rs.mmap' fun r => do
     save_info r
@@ -183,7 +183,7 @@ private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
 private unsafe def uses_hyp (e : expr) (h : expr) : Bool :=
   (e.fold false) fun t _ r => r || t = h
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_hyp : List rw_rule → expr → tactic Unit
   | [], hyp => skip
   | r :: rs, hyp => do

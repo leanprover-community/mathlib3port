@@ -3,15 +3,16 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 -/
-import Mathbin.Topology.Category.Top.OpenNhds
+import Mathbin.Topology.Category.TopCat.OpenNhds
 import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.Topology.Sheaves.SheafCondition.UniqueGluing
+import Mathbin.CategoryTheory.Adjunction.Evaluation
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Topology.Sober
 import Mathbin.Tactic.Elementwise
-import Mathbin.Algebra.Category.Ring.Default
+import Mathbin.Algebra.Category.RingCat.Default
 
 /-!
 # Stalks
@@ -52,7 +53,7 @@ universe v u v' u'
 
 open CategoryTheory
 
-open Top
+open TopCat
 
 open CategoryTheory.Limits
 
@@ -64,9 +65,9 @@ variable {C : Type u} [Category.{v} C]
 
 variable [HasColimits.{v} C]
 
-variable {X Y Z : Top.{v}}
+variable {X Y Z : TopCat.{v}}
 
-namespace Top.Presheaf
+namespace TopCat.Presheaf
 
 variable (C)
 
@@ -114,12 +115,14 @@ theorem stalk_functor_map_germ {F G : X.Presheaf C} (U : Opens X) (x : U) (f : F
 
 variable (C)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- For a presheaf `F` on a space `X`, a continuous map `f : X ⟶ Y` induces a morphisms between the
 stalk of `f _ * F` at `f x` and the stalk of `F` at `x`.
 -/
 def stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) (x : X) : (f _* F).stalk (f x) ⟶ F.stalk x := by
-  -- This is a hack; Lean doesn't like to elaborate the term written directly.
-  trans
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   swap
   exact colimit.pre _ (open_nhds.map f x).op
   exact colim.map (whisker_right (nat_trans.op (open_nhds.inclusion_map_iso f x).inv) F)
@@ -148,6 +151,7 @@ namespace StalkPushforward
 
 attribute [local tidy] tactic.op_induction'
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.op_induction' -/
 @[simp]
 theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (stalkFunctor C x).map (Pushforward.id ℱ).Hom :=
   by
@@ -220,7 +224,7 @@ def stalkPullbackHom (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) �
 /-- The morphism `(f⁻¹ℱ)(U) ⟶ ℱ_{f(x)}` for some `U ∋ x`. -/
 def germToPullbackStalk (f : X ⟶ Y) (F : Y.Presheaf C) (U : Opens X) (x : U) :
     (pullbackObj f F).obj (op U) ⟶ F.stalk (f x) :=
-  colimit.desc (Lan.diagram (Opens.map f).op F (op U))
+  colimit.desc (LanCat.diagram (Opens.map f).op F (op U))
     { x := F.stalk (f x),
       ι :=
         { app := fun V => F.germ ⟨f x, V.Hom.unop.le x.2⟩,
@@ -412,6 +416,33 @@ theorem app_injective_iff_stalk_functor_map_injective {F : Sheaf C X} {G : Presh
   ⟨fun h U => app_injective_of_stalk_functor_map_injective f U fun x => h x.1,
     stalk_functor_map_injective_of_app_injective f⟩
 
+instance stalk_functor_preserves_mono (x : X) : Functor.PreservesMonomorphisms (Sheaf.forget C X ⋙ stalkFunctor C x) :=
+  ⟨fun 𝓐 𝓑 f m =>
+    ConcreteCategory.mono_of_injective _ <|
+      (app_injective_iff_stalk_functor_map_injective f.1).mpr
+        (fun c =>
+          (@ConcreteCategory.mono_iff_injective_of_preserves_pullback _ _ (f.1.app (op c)) _).mp
+            ((NatTrans.mono_iff_mono_app _ f.1).mp (@CategoryTheory.presheaf_mono_of_mono _ _ _ _ _ _ _ _ _ _ _ m) <|
+              op c))
+        x⟩
+
+theorem stalk_mono_of_mono {F G : Sheaf C X} (f : F ⟶ G) [Mono f] : ∀ x, mono <| (stalkFunctor C x).map f.1 := fun x =>
+  by convert functor.map_mono (Sheaf.forget.{v} C X ⋙ stalk_functor C x) f
+
+theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, mono <| (stalkFunctor C x).map f.1] : Mono f :=
+  (SheafCat.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
+    (NatTrans.mono_iff_mono_app _ _).mpr fun U =>
+      (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mpr <|
+        (app_injective_of_stalk_functor_map_injective f.1 U.unop) fun ⟨x, hx⟩ =>
+          (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mp <| inferInstance
+
+theorem mono_iff_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) : Mono f ↔ ∀ x, Mono ((stalkFunctor C x).map f.1) :=
+  ⟨by
+    intro m
+    exact stalk_mono_of_mono _, by
+    intro m
+    exact mono_of_stalk_mono _⟩
+
 /-- For surjectivity, we are given an arbitrary section `t` and need to find a preimage for it.
 We claim that it suffices to find preimages *locally*. That is, for each `x : U` we construct
 a neighborhood `V ≤ U` and a section `s : F.obj (op V))` such that `f.app (op V) s` and `t`
@@ -518,13 +549,13 @@ theorem is_iso_iff_stalk_functor_map_iso {F G : Sheaf C X} (f : F ⟶ G) :
 
 end Concrete
 
-instance (F : X.Presheaf CommRingₓₓ) {U : Opens X} (x : U) : Algebra (F.obj <| op U) (F.stalk x) :=
+instance (F : X.Presheaf CommRingCat) {U : Opens X} (x : U) : Algebra (F.obj <| op U) (F.stalk x) :=
   (F.germ x).toAlgebra
 
 @[simp]
-theorem stalk_open_algebra_map {X : Top} (F : X.Presheaf CommRingₓₓ) {U : Opens X} (x : U) :
+theorem stalk_open_algebra_map {X : TopCat} (F : X.Presheaf CommRingCat) {U : Opens X} (x : U) :
     algebraMap (F.obj <| op U) (F.stalk x) = F.germ x :=
   rfl
 
-end Top.Presheaf
+end TopCat.Presheaf
 

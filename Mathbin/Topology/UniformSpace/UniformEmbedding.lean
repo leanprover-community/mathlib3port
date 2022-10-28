@@ -35,7 +35,7 @@ theorem UniformInducing.mk' {f : α → β} (h : ∀ s, s ∈ 𝓤 α ↔ ∃ t 
   ⟨by simp [eq_comm, Filter.ext_iff, subset_def, h]⟩
 
 theorem uniform_inducing_id : UniformInducing (@id α) :=
-  ⟨by rw [← Prod.map_defₓ, Prod.map_id, comap_id]⟩
+  ⟨by rw [← Prod.map_def, Prod.map_id, comap_id]⟩
 
 theorem UniformInducing.comp {g : β → γ} (hg : UniformInducing g) {f : α → β} (hf : UniformInducing f) :
     UniformInducing (g ∘ f) :=
@@ -56,8 +56,8 @@ theorem UniformInducing.cauchy_map_iff {f : α → β} (hf : UniformInducing f) 
 
 theorem uniform_inducing_of_compose {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg : UniformContinuous g)
     (hgf : UniformInducing (g ∘ f)) : UniformInducing f := by
-  refine' ⟨le_antisymmₓ _ hf.le_comap⟩
-  rw [← hgf.1, ← Prod.map_defₓ, ← Prod.map_defₓ, ← Prod.map_comp_mapₓ f f g g, ← @comap_comap _ _ _ _ (Prod.map f f)]
+  refine' ⟨le_antisymm _ hf.le_comap⟩
+  rw [← hgf.1, ← Prod.map_def, ← Prod.map_def, ← Prod.map_comp_map f f g g, ← @comap_comap _ _ _ _ (Prod.map f f)]
   exact comap_mono hg.le_comap
 
 /-- A map `f : α → β` between uniform spaces is a *uniform embedding* if it is uniform inducing and
@@ -103,10 +103,10 @@ theorem uniform_embedding_def' {f : α → β} :
       ⟨fun ⟨I, H⟩ => ⟨I, fun s su => (H _).2 ⟨s, su, fun x y => id⟩, fun s => (H s).1⟩, fun ⟨I, H₁, H₂⟩ =>
         ⟨I, fun s => ⟨H₂ s, fun ⟨t, tu, h⟩ => mem_of_superset (H₁ t tu) fun ⟨a, b⟩ => h a b⟩⟩⟩
 
-theorem Equivₓ.uniform_embedding {α β : Type _} [UniformSpace α] [UniformSpace β] (f : α ≃ β) (h₁ : UniformContinuous f)
+theorem Equiv.uniform_embedding {α β : Type _} [UniformSpace α] [UniformSpace β] (f : α ≃ β) (h₁ : UniformContinuous f)
     (h₂ : UniformContinuous f.symm) : UniformEmbedding f :=
   { comap_uniformity := by
-      refine' le_antisymmₓ _ _
+      refine' le_antisymm _ _
       · change comap (f.prod_congr f) _ ≤ _
         rw [← map_equiv_symm (f.prod_congr f)]
         exact h₂
@@ -164,7 +164,7 @@ the preimage of `𝓤 β` under `prod.map f f` is the principal filter generated
 `α × α`. -/
 theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β)
     (hf : Pairwise fun x y => (f x, f y) ∉ s) : comap (Prod.map f f) (𝓤 β) = 𝓟 IdRel := by
-  refine' le_antisymmₓ _ (@refl_le_uniformity α (UniformSpace.comap f ‹_›))
+  refine' le_antisymm _ (@refl_le_uniformity α (UniformSpace.comap f ‹_›))
   calc
     comap (Prod.map f f) (𝓤 β) ≤ comap (Prod.map f f) (𝓟 s) := comap_mono (le_principal_iff.2 hs)
     _ = 𝓟 (Prod.map f f ⁻¹' s) := comap_principal
@@ -207,11 +207,11 @@ theorem UniformEmbedding.embedding {f : α → β} (h : UniformEmbedding f) : Em
 theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f) (hd : DenseRange f) : DenseEmbedding f :=
   { dense := hd, inj := h.inj, induced := h.Embedding.induced }
 
-theorem closed_embedding_of_spaced_out {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β] {f : α → β}
+theorem closedEmbeddingOfSpacedOut {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β] {f : α → β}
     {s : Set (β × β)} (hs : s ∈ 𝓤 β) (hf : Pairwise fun x y => (f x, f y) ∉ s) : ClosedEmbedding f := by
   rcases DiscreteTopology.eq_bot α with rfl
   letI : UniformSpace α := ⊥
-  exact { (uniform_embedding_of_spaced_out hs hf).Embedding with closed_range := is_closed_range_of_spaced_out hs hf }
+  exact { (uniform_embedding_of_spaced_out hs hf).Embedding with closedRange := isClosedRangeOfSpacedOut hs hf }
 
 theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α → β} (b : β) (he₁ : UniformInducing e)
     (he₂ : DenseInducing e) (hs : s ∈ 𝓤 α) : ∃ a, Closure (e '' { a' | (a, a') ∈ s }) ∈ 𝓝 b :=
@@ -221,14 +221,14 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
   let ⟨t₂, ht₂u, ht₂s, ht₂c⟩ := comp_symm_of_uniformity ht₁u
   let ⟨t, htu, hts, htc⟩ := comp_symm_of_uniformity ht₂u
   have : Preimage e { b' | (b, b') ∈ t₂ } ∈ comap e (𝓝 b) := preimage_mem_comap <| mem_nhds_left b ht₂u
-  let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this
+  let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comapNhdsNeBot _).nonempty_of_mem this
   have :
     ∀ (b') (s' : Set (β × β)),
       (b, b') ∈ t → s' ∈ 𝓤 β → ({ y : β | (b', y) ∈ s' } ∩ e '' { a' : α | (a, a') ∈ s }).Nonempty :=
     fun b' s' hb' hs' =>
     have : Preimage e { b'' | (b', b'') ∈ s' ∩ t } ∈ comap e (𝓝 b') :=
       preimage_mem_comap <| mem_nhds_left b' <| inter_mem hs' htu
-    let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this
+    let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comapNhdsNeBot _).nonempty_of_mem this
     have : (e a, e a₂) ∈ t₁ := ht₂c <| prod_mk_mem_comp_rel (ht₂s ha) <| htc <| prod_mk_mem_comp_rel hb' ha₂t
     have : e a₂ ∈ { b'' : β | (b', b'') ∈ s' } ∩ e '' { a' | (a, a') ∈ s } :=
       ⟨ha₂s', mem_image_of_mem _ <| ht₁ (a, a₂) this⟩
@@ -237,7 +237,7 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
     intro b' hb'
     rw [nhds_eq_uniformity, lift'_inf_principal_eq, lift'_ne_bot_iff]
     exact fun s => this b' s hb'
-    exact monotone_preimage.inter monotone_constₓ
+    exact monotone_preimage.inter monotone_const
   have : ∀ b', (b, b') ∈ t → b' ∈ Closure (e '' { a' | (a, a') ∈ s }) := fun b' hb' => by
     rw [closure_eq_cluster_pts] <;> exact this b' hb'
   ⟨a, (𝓝 b).sets_of_superset (mem_nhds_left b htu) this⟩
@@ -299,16 +299,16 @@ theorem complete_space_coe_iff_is_complete {s : Set α} : CompleteSpace s ↔ Is
 theorem IsClosed.complete_space_coe [CompleteSpace α] {s : Set α} (hs : IsClosed s) : CompleteSpace s :=
   hs.IsComplete.complete_space_coe
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense : DenseRange m)
     (h : ∀ f : Filter β, Cauchy f → ∃ x : α, map m f ≤ 𝓝 x) : CompleteSpace α :=
   ⟨fun f : Filter α => fun hf : Cauchy f =>
     let p : Set (α × α) → Set α → Set α := fun s t => { y : α | ∃ x : α, x ∈ t ∧ (x, y) ∈ s }
     let g := (𝓤 α).lift fun s => f.lift' (p s)
-    have mp₀ : Monotoneₓ p := fun a b h t s ⟨x, xs, xa⟩ => ⟨x, xs, h xa⟩
-    have mp₁ : ∀ {s}, Monotoneₓ (p s) := fun s a b h x ⟨y, ya, yxs⟩ => ⟨y, h ya, yxs⟩
+    have mp₀ : Monotone p := fun a b h t s ⟨x, xs, xa⟩ => ⟨x, xs, h xa⟩
+    have mp₁ : ∀ {s}, Monotone (p s) := fun s a b h x ⟨y, ya, yxs⟩ => ⟨y, h ya, yxs⟩
     have : f ≤ g :=
       le_infi fun s =>
         le_infi fun hs =>
@@ -317,10 +317,10 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
     have : NeBot g := hf.left.mono this
     have : NeBot (comap m g) :=
       comap_ne_bot fun t ht =>
-        let ⟨t', ht', ht_mem⟩ := (mem_lift_sets <| monotone_lift' monotone_constₓ mp₀).mp ht
+        let ⟨t', ht', ht_mem⟩ := (mem_lift_sets <| monotone_lift' monotone_const mp₀).mp ht
         let ⟨t'', ht'', ht'_sub⟩ := (mem_lift'_sets mp₁).mp ht_mem
         let ⟨x, (hx : x ∈ t'')⟩ := hf.left.nonempty_of_mem ht''
-        have h₀ : NeBot (𝓝[Range m] x) := Dense.nhds_within_ne_bot x
+        have h₀ : NeBot (𝓝[Range m] x) := Dense.nhdsWithinNeBot x
         have h₁ : { y | (x, y) ∈ t' } ∈ 𝓝[Range m] x := @mem_inf_of_left α (𝓝 x) (𝓟 (Range m)) _ <| mem_nhds_left x ht'
         have h₂ : Range m ∈ 𝓝[Range m] x := @mem_inf_of_right α (𝓝 x) (𝓟 (Range m)) _ <| Subset.refl _
         have : { y | (x, y) ∈ t' } ∩ Range m ∈ 𝓝[Range m] x := @inter_mem α (𝓝[Range m] x) _ _ h₁ h₂
@@ -337,7 +337,7 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
         (g ×ᶠ g).sets_of_superset hg fun ⟨a, b⟩ ⟨⟨c₁, c₁t, hc₁⟩, ⟨c₂, c₂t, hc₂⟩⟩ =>
           have : (c₁, c₂) ∈ t ×ˢ t := ⟨c₁t, c₂t⟩
           comp_s₁ <| prod_mk_mem_comp_rel hc₁ <| comp_s₂ <| prod_mk_mem_comp_rel (prod_t this) hc₂⟩
-    have : Cauchy (Filter.comap m g) := ‹Cauchy g›.comap' (le_of_eqₓ hm.comap_uniformity) ‹_›
+    have : Cauchy (Filter.comap m g) := ‹Cauchy g›.comap' (le_of_eq hm.comap_uniformity) ‹_›
     let ⟨x, (hx : map m (Filter.comap m g) ≤ 𝓝 x)⟩ := h _ this
     have : ClusterPt x (map m (Filter.comap m g)) := (le_nhds_iff_adhp_of_cauchy (this.map hm.UniformContinuous)).mp hx
     have : ClusterPt x g := this.mono map_comap_le
@@ -393,7 +393,7 @@ local notation "ψ" => (h_e.DenseInducing h_dense).extend f
 theorem uniformly_extend_exists [CompleteSpace γ] (a : α) : ∃ c, Tendsto f (comap e (𝓝 a)) (𝓝 c) :=
   let de := h_e.DenseInducing h_dense
   have : Cauchy (𝓝 a) := cauchy_nhds
-  have : Cauchy (comap e (𝓝 a)) := this.comap' (le_of_eqₓ h_e.comap_uniformity) (de.comap_nhds_ne_bot _)
+  have : Cauchy (comap e (𝓝 a)) := this.comap' (le_of_eq h_e.comap_uniformity) (de.comapNhdsNeBot _)
   have : Cauchy (map f (comap e (𝓝 a))) := this.map h_f
   CompleteSpace.complete this
 
@@ -424,17 +424,17 @@ include h_f
 theorem uniformly_extend_spec [CompleteSpace γ] (a : α) : Tendsto f (comap e (𝓝 a)) (𝓝 (ψ a)) := by
   simpa only [DenseInducing.extend] using tendsto_nhds_lim (uniformly_extend_exists h_e ‹_› h_f _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformContinuous ψ := fun d hd =>
   let ⟨s, hs, hs_comp⟩ :=
-    (mem_lift'_sets <| monotone_comp_rel monotone_idₓ <| monotone_comp_rel monotone_idₓ monotone_idₓ).mp
+    (mem_lift'_sets <| monotone_comp_rel monotone_id <| monotone_comp_rel monotone_id monotone_id).mp
       (comp_le_uniformity3 hd)
   have h_pnt : ∀ {a m}, m ∈ 𝓝 a → ∃ c, c ∈ f '' Preimage e m ∧ (c, ψ a) ∈ s ∧ (ψ a, c) ∈ s := fun a m hm =>
-    have nb : NeBot (map f (comap e (𝓝 a))) := ((h_e.DenseInducing h_dense).comap_nhds_ne_bot _).map _
+    have nb : NeBot (map f (comap e (𝓝 a))) := ((h_e.DenseInducing h_dense).comapNhdsNeBot _).map _
     have : f '' Preimage e m ∩ ({ c | (c, ψ a) ∈ s } ∩ { c | (ψ a, c) ∈ s }) ∈ map f (comap e (𝓝 a)) :=
       inter_mem (image_mem_map <| preimage_mem_comap <| hm)
         (uniformly_extend_spec h_e h_dense h_f _ (inter_mem (mem_nhds_right _ hs) (mem_nhds_left _ hs)))

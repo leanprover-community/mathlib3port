@@ -35,25 +35,25 @@ For instance, endowing `{0, 1}` with addition given by `max` (i.e. `1` is absorb
 `char_zero {0, 1}` does not hold and yet `char_p {0, 1} 0` does.
 This example is formalized in `counterexamples/char_p_zero_ne_char_zero`.
  -/
-class CharZero (R : Type _) [AddMonoidWithOneₓ R] : Prop where
+class CharZero (R : Type _) [AddMonoidWithOne R] : Prop where
   cast_injective : Function.Injective (coe : ℕ → R)
 
-theorem char_zero_of_inj_zero {R : Type _} [AddGroupWithOneₓ R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) : CharZero R :=
+theorem char_zero_of_inj_zero {R : Type _} [AddGroupWithOne R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) : CharZero R :=
   ⟨fun m n h => by
     induction' m with m ih generalizing n
     · rw [H n]
-      rw [← h, Nat.cast_zeroₓ]
+      rw [← h, Nat.cast_zero]
       
     cases' n with n
     · apply H
-      rw [h, Nat.cast_zeroₓ]
+      rw [h, Nat.cast_zero]
       
-    simp_rw [Nat.cast_succₓ, add_right_cancel_iffₓ] at h
+    simp_rw [Nat.cast_succ, add_right_cancel_iff] at h
     rwa [ih]⟩
 
 namespace Nat
 
-variable {R : Type _} [AddMonoidWithOneₓ R] [CharZero R]
+variable {R : Type _} [AddMonoidWithOne R] [CharZero R]
 
 theorem cast_injective : Function.Injective (coe : ℕ → R) :=
   CharZero.cast_injective

@@ -204,7 +204,7 @@ theorem mul_single_one (i : I) : mulSingle i (1 : f i) = 1 :=
 /-- On non-dependent functions, `pi.mul_single` can be expressed as an `ite` -/
 @[to_additive "On non-dependent functions, `pi.single` can be expressed as an `ite`"]
 theorem mul_single_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = if i' = i then x else 1 :=
-  Function.update_applyₓ 1 i x i'
+  Function.update_apply 1 i x i'
 
 /-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
 @[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
@@ -214,7 +214,7 @@ theorem mul_single_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSi
 @[to_additive]
 theorem apply_mul_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i : I) (x : f i) (j : I) :
     f' j (mulSingle i x j) = mulSingle i (f' i x) j := by
-  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_updateₓ f' 1 i x j
+  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_update f' 1 i x j
 
 @[to_additive apply_single₂]
 theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i) (y : g i) (j : I) :
@@ -256,7 +256,7 @@ protected def prod (f' : ∀ i, f i) (g' : ∀ i, g i) (i : I) : f i × g i :=
 
 @[simp]
 theorem prod_fst_snd : Pi.prod (Prod.fst : α × β → α) (Prod.snd : α × β → β) = id :=
-  funext fun _ => Prod.mk.etaₓ
+  funext fun _ => Prod.mk.eta
 
 @[simp]
 theorem prod_snd_fst : Pi.prod (Prod.snd : α × β → β) (Prod.fst : α × β → α) = Prod.swap :=
@@ -269,22 +269,22 @@ namespace Function
 section Extend
 
 @[to_additive]
-theorem extend_one [One γ] (f : α → β) : Function.extendₓ f (1 : α → γ) (1 : β → γ) = 1 :=
+theorem extend_one [One γ] (f : α → β) : Function.extend f (1 : α → γ) (1 : β → γ) = 1 :=
   funext fun _ => by apply if_t_t _ _
 
 @[to_additive]
 theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
-    Function.extendₓ f (g₁ * g₂) (e₁ * e₂) = Function.extendₓ f g₁ e₁ * Function.extendₓ f g₂ e₂ :=
+    Function.extend f (g₁ * g₂) (e₁ * e₂) = Function.extend f g₁ e₁ * Function.extend f g₂ e₂ :=
   funext fun _ => by convert (apply_dite2 (· * ·) _ _ _ _ _).symm
 
 @[to_additive]
 theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
-    Function.extendₓ f g⁻¹ e⁻¹ = (Function.extendₓ f g e)⁻¹ :=
-  funext fun _ => by convert (apply_diteₓ Inv.inv _ _ _).symm
+    Function.extend f g⁻¹ e⁻¹ = (Function.extend f g e)⁻¹ :=
+  funext fun _ => by convert (apply_dite Inv.inv _ _ _).symm
 
 @[to_additive]
 theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
-    Function.extendₓ f (g₁ / g₂) (e₁ / e₂) = Function.extendₓ f g₁ e₁ / Function.extendₓ f g₂ e₂ :=
+    Function.extend f (g₁ / g₂) (e₁ / e₂) = Function.extend f g₁ e₁ / Function.extend f g₂ e₂ :=
   funext fun _ => by convert (apply_dite2 (· / ·) _ _ _ _ _).symm
 
 end Extend

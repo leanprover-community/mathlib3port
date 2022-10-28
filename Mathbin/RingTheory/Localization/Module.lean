@@ -29,15 +29,15 @@ open nonZeroDivisors
 
 section Localization
 
-variable {R : Type _} (Rₛ : Type _) [CommRingₓ R] [CommRingₓ Rₛ] [Algebra R Rₛ]
+variable {R : Type _} (Rₛ : Type _) [CommRing R] [CommRing Rₛ] [Algebra R Rₛ]
 
 variable (S : Submonoid R) [hT : IsLocalization S Rₛ]
 
 include hT
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable {M : Type _} [AddCommMonoidₓ M] [Module R M] [Module Rₛ M] [IsScalarTower R Rₛ M]
+variable {M : Type _} [AddCommMonoid M] [Module R M] [Module Rₛ M] [IsScalarTower R Rₛ M]
 
 theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : LinearIndependent R b) :
     LinearIndependent Rₛ b := by
@@ -46,8 +46,8 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
   choose a g' hg' using IsLocalization.exist_integer_multiples S s g
   letI := fun i => Classical.propDecidable (i ∈ s)
   specialize hli s (fun i => if hi : i ∈ s then g' i hi else 0) _ i hi
-  · rw [← @smul_zero _ M _ _ (a : R), ← hg, Finsetₓ.smul_sum]
-    refine' Finsetₓ.sum_congr rfl fun i hi => _
+  · rw [← @smul_zero _ M _ _ (a : R), ← hg, Finset.smul_sum]
+    refine' Finset.sum_congr rfl fun i hi => _
     dsimp only
     rw [dif_pos hi, ← IsScalarTower.algebra_map_smul Rₛ, hg' i hi, smul_assoc]
     infer_instance
@@ -56,11 +56,11 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
   rw [← Algebra.smul_def, ← map_zero (algebraMap R Rₛ), ← hli]
   simp [hi, hg']
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable {M : Type _} [AddCommGroupₓ M] [Module R M] [Module Rₛ M] [IsScalarTower R Rₛ M]
+variable {M : Type _} [AddCommGroup M] [Module R M] [Module Rₛ M] [IsScalarTower R Rₛ M]
 
 /-- Promote a basis for `M` over `R` to a basis for `M` over the localization `Rₛ` -/
 noncomputable def Basis.localization {ι : Type _} (b : Basis ι R M) : Basis ι Rₛ M :=
@@ -68,15 +68,15 @@ noncomputable def Basis.localization {ι : Type _} (b : Basis ι R M) : Basis ι
     rw [← eq_top_iff, ← @Submodule.restrict_scalars_eq_top_iff Rₛ R, eq_top_iff, ← b.span_eq]
     apply Submodule.span_le_restrict_scalars
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end Localization
 
 section FractionRing
 
-variable (R K : Type _) [CommRingₓ R] [Field K] [Algebra R K] [IsFractionRing R K]
+variable (R K : Type _) [CommRing R] [Field K] [Algebra R K] [IsFractionRing R K]
 
-variable {V : Type _} [AddCommGroupₓ V] [Module R V] [Module K V] [IsScalarTower R K V]
+variable {V : Type _} [AddCommGroup V] [Module R V] [Module K V] [IsScalarTower R K V]
 
 theorem LinearIndependent.iff_fraction_ring {ι : Type _} {b : ι → V} : LinearIndependent R b ↔ LinearIndependent K b :=
   ⟨LinearIndependent.localization K R⁰, LinearIndependent.restrict_scalars (smul_left_injective R one_ne_zero)⟩

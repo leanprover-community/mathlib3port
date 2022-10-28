@@ -54,32 +54,32 @@ While this could be defined as `nonempty (fintype α)`, it is defined
 in this way to allow there to be `finite` instances for propositions.
 -/
 class inductive Finite (α : Sort _) : Prop
-  | intro {n : ℕ} : α ≃ Finₓ n → Finite
+  | intro {n : ℕ} : α ≃ Fin n → Finite
 
-theorem finite_iff_exists_equiv_fin {α : Sort _} : Finite α ↔ ∃ n, Nonempty (α ≃ Finₓ n) :=
+theorem finite_iff_exists_equiv_fin {α : Sort _} : Finite α ↔ ∃ n, Nonempty (α ≃ Fin n) :=
   ⟨fun ⟨e⟩ => ⟨_, ⟨e⟩⟩, fun ⟨n, ⟨e⟩⟩ => ⟨e⟩⟩
 
-theorem Finite.exists_equiv_fin (α : Sort _) [h : Finite α] : ∃ n : ℕ, Nonempty (α ≃ Finₓ n) :=
+theorem Finite.exists_equiv_fin (α : Sort _) [h : Finite α] : ∃ n : ℕ, Nonempty (α ≃ Fin n) :=
   finite_iff_exists_equiv_fin.mp h
 
 theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite β := by
   cases' h with n e
   exact Finite.intro (f.symm.trans e)
 
-theorem Equivₓ.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
+theorem Equiv.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
   ⟨fun _ => Finite.of_equiv _ f, fun _ => Finite.of_equiv _ f.symm⟩
 
 theorem Function.Bijective.finite_iff {f : α → β} (h : Bijective f) : Finite α ↔ Finite β :=
-  (Equivₓ.ofBijective f h).finite_iff
+  (Equiv.ofBijective f h).finite_iff
 
 theorem Finite.of_bijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
   h.finite_iff.mp ‹_›
 
-instance [Finite α] : Finite (Plift α) :=
-  Finite.of_equiv α Equivₓ.plift.symm
+instance [Finite α] : Finite (PLift α) :=
+  Finite.of_equiv α Equiv.plift.symm
 
 instance {α : Type v} [Finite α] : Finite (ULift.{u} α) :=
-  Finite.of_equiv α Equivₓ.ulift.symm
+  Finite.of_equiv α Equiv.ulift.symm
 
 /-- A type is said to be infinite if it is not finite. Note that `infinite α` is equivalent to
 `is_empty (fintype α)` or `is_empty (finite α)`. -/

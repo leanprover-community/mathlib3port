@@ -58,24 +58,24 @@ theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } := by
 theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
   continuous_on_iff_continuous_restrict.1 continuous_on_tan
 
-theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := by
+theorem continuous_on_tan_Ioo : ContinuousOn tan (IooCat (-(π / 2)) (π / 2)) := by
   refine' ContinuousOn.mono continuous_on_tan fun x => _
   simp only [and_imp, mem_Ioo, mem_set_of_eq, Ne.def]
   rw [cos_eq_zero_iff]
   rintro hx_gt hx_lt ⟨r, hxr_eq⟩
-  cases le_or_ltₓ 0 r
-  · rw [lt_iff_not_geₓ] at hx_lt
+  cases le_or_lt 0 r
+  · rw [lt_iff_not_ge] at hx_lt
     refine' hx_lt _
-    rw [hxr_eq, ← one_mulₓ (π / 2), mul_div_assoc, ge_iff_leₓ, mul_le_mul_right (half_pos pi_pos)]
+    rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
     simp [h]
     
-  · rw [lt_iff_not_geₓ] at hx_gt
+  · rw [lt_iff_not_ge] at hx_gt
     refine' hx_gt _
-    rw [hxr_eq, ← one_mulₓ (π / 2), mul_div_assoc, ge_iff_leₓ, neg_mul_eq_neg_mulₓ, mul_le_mul_right (half_pos pi_pos)]
-    have hr_le : r ≤ -1 := by rwa [Int.lt_iff_add_one_leₓ, ← le_neg_iff_add_nonpos_right] at h
+    rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul, mul_le_mul_right (half_pos pi_pos)]
+    have hr_le : r ≤ -1 := by rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
     rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
     · norm_num
-      rw [← Int.cast_oneₓ, ← Int.cast_neg]
+      rw [← Int.cast_one, ← Int.cast_neg]
       norm_cast
       exact hr_le
       
@@ -83,18 +83,18 @@ theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := b
       
     
 
-theorem surj_on_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) Univ :=
+theorem surj_on_tan : SurjOn tan (IooCat (-(π / 2)) (π / 2)) Univ :=
   have := neg_lt_self pi_div_two_pos
   continuous_on_tan_Ioo.surj_on_of_tendsto (nonempty_Ioo.2 this) (by simp [tendsto_tan_neg_pi_div_two, this])
     (by simp [tendsto_tan_pi_div_two, this])
 
-theorem tan_surjective : Function.Surjective tan := fun x => surj_on_tan.subset_range trivialₓ
+theorem tan_surjective : Function.Surjective tan := fun x => surj_on_tan.subset_range trivial
 
-theorem image_tan_Ioo : tan '' Ioo (-(π / 2)) (π / 2) = univ :=
+theorem image_tan_Ioo : tan '' IooCat (-(π / 2)) (π / 2) = univ :=
   univ_subset_iff.1 surj_on_tan
 
 /-- `real.tan` as an `order_iso` between `(-(π / 2), π / 2)` and `ℝ`. -/
-def tanOrderIso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
+def tanOrderIso : IooCat (-(π / 2)) (π / 2) ≃o ℝ :=
   (strict_mono_on_tan.OrderIso _ _).trans <| (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
 
 /-- Inverse of the `tan` function, returns values in the range `-π / 2 < arctan x` and
@@ -107,11 +107,11 @@ noncomputable def arctan (x : ℝ) : ℝ :=
 theorem tan_arctan (x : ℝ) : tan (arctan x) = x :=
   tanOrderIso.apply_symm_apply x
 
-theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ Ioo (-(π / 2)) (π / 2) :=
+theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ IooCat (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
 
 @[simp]
-theorem range_arctan : Range arctan = Ioo (-(π / 2)) (π / 2) :=
+theorem range_arctan : Range arctan = IooCat (-(π / 2)) (π / 2) :=
   ((EquivLike.surjective _).range_comp _).trans Subtype.range_coe
 
 theorem arctan_tan {x : ℝ} (hx₁ : -(π / 2) < x) (hx₂ : x < π / 2) : arctan (tan x) = x :=
@@ -138,7 +138,7 @@ theorem neg_pi_div_two_lt_arctan (x : ℝ) : -(π / 2) < arctan x :=
 theorem arctan_eq_arcsin (x : ℝ) : arctan x = arcsin (x / sqrt (1 + x ^ 2)) :=
   Eq.symm <| arcsin_eq_of_sin_eq (sin_arctan x) (mem_Icc_of_Ioo <| arctan_mem_Ioo x)
 
-theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ Ioo (-(1 : ℝ)) 1) : arcsin x = arctan (x / sqrt (1 - x ^ 2)) := by
+theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ IooCat (-(1 : ℝ)) 1) : arcsin x = arctan (x / sqrt (1 - x ^ 2)) := by
   rw [arctan_eq_arcsin, div_pow, sq_sqrt, one_add_div, div_div, ← sqrt_mul, mul_div_cancel', sub_add_cancel, sqrt_one,
       div_one] <;>
     nlinarith [h.1, h.2]
@@ -146,7 +146,7 @@ theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ Ioo (-(1 : ℝ)) 1) : arcsin x = a
 @[simp]
 theorem arctan_zero : arctan 0 = 0 := by simp [arctan_eq_arcsin]
 
-theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ Ioo (-(π / 2)) (π / 2)) : arctan y = x :=
+theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ IooCat (-(π / 2)) (π / 2)) : arctan y = x :=
   inj_on_tan (arctan_mem_Ioo _) hx (by rw [tan_arctan, h])
 
 @[simp]
@@ -167,12 +167,12 @@ theorem continuous_at_arctan {x : ℝ} : ContinuousAt arctan x :=
 def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ where
   toFun := tan
   invFun := arctan
-  Source := Ioo (-(π / 2)) (π / 2)
+  Source := IooCat (-(π / 2)) (π / 2)
   Target := Univ
   map_source' := maps_to_univ _ _
-  map_target' := fun y hy => arctan_mem_Ioo y
-  left_inv' := fun x hx => arctan_tan hx.1 hx.2
-  right_inv' := fun y hy => tan_arctan y
+  map_target' y hy := arctan_mem_Ioo y
+  left_inv' x hx := arctan_tan hx.1 hx.2
+  right_inv' y hy := tan_arctan y
   open_source := is_open_Ioo
   open_target := is_open_univ
   continuous_to_fun := continuous_on_tan_Ioo

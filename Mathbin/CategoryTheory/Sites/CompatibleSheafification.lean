@@ -130,8 +130,7 @@ variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
 
 @[simp]
 theorem sheafify_comp_iso_inv_eq_sheafify_lift :
-    (J.sheafifyCompIso F P).inv = J.sheafifyLift (whiskerRight (J.toSheafify _) _) ((J.sheafify_is_sheaf _).comp _) :=
-  by
+    (J.sheafifyCompIso F P).inv = J.sheafifyLift (whiskerRight (J.toSheafify _) _) ((J.sheafifyIsSheaf _).comp _) := by
   apply J.sheafify_lift_unique
   rw [iso.comp_inv_eq]
   simp

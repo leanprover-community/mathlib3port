@@ -30,23 +30,23 @@ section
 /-- Typeclass for expressing that a type `M₀` with multiplication and a zero satisfies
 `0 * a = 0` and `a * 0 = 0` for all `a : M₀`. -/
 @[protect_proj]
-class MulZeroClassₓ (M₀ : Type _) extends Mul M₀, Zero M₀ where
+class MulZeroClass (M₀ : Type _) extends Mul M₀, Zero M₀ where
   zero_mul : ∀ a : M₀, 0 * a = 0
   mul_zero : ∀ a : M₀, a * 0 = 0
 
-section MulZeroClassₓ
+section MulZeroClass
 
-variable [MulZeroClassₓ M₀] {a b : M₀}
+variable [MulZeroClass M₀] {a b : M₀}
 
 @[ematch, simp]
 theorem zero_mul (a : M₀) : 0 * a = 0 :=
-  MulZeroClassₓ.zero_mul a
+  MulZeroClass.zero_mul a
 
 @[ematch, simp]
 theorem mul_zero (a : M₀) : a * 0 = 0 :=
-  MulZeroClassₓ.mul_zero a
+  MulZeroClass.mul_zero a
 
-end MulZeroClassₓ
+end MulZeroClass
 
 /-- Predicate typeclass for expressing that `a * b = 0` implies `a = 0` or `b = 0`
 for all `a` and `b` of type `G₀`. -/
@@ -58,28 +58,28 @@ export NoZeroDivisors (eq_zero_or_eq_zero_of_mul_eq_zero)
 /-- A type `S₀` is a "semigroup with zero” if it is a semigroup with zero element, and `0` is left
 and right absorbing. -/
 @[protect_proj]
-class SemigroupWithZeroₓ (S₀ : Type _) extends Semigroupₓ S₀, MulZeroClassₓ S₀
+class SemigroupWithZero (S₀ : Type _) extends Semigroup S₀, MulZeroClass S₀
 
 /- By defining this _after_ `semigroup_with_zero`, we ensure that searches for `mul_zero_class` find
 this class first. -/
 /-- A typeclass for non-associative monoids with zero elements. -/
 @[protect_proj]
-class MulZeroOneClassₓ (M₀ : Type _) extends MulOneClassₓ M₀, MulZeroClassₓ M₀
+class MulZeroOneClass (M₀ : Type _) extends MulOneClass M₀, MulZeroClass M₀
 
 /-- A type `M₀` is a “monoid with zero” if it is a monoid with zero element, and `0` is left
 and right absorbing. -/
 @[protect_proj]
-class MonoidWithZeroₓ (M₀ : Type _) extends Monoidₓ M₀, MulZeroOneClassₓ M₀
+class MonoidWithZero (M₀ : Type _) extends Monoid M₀, MulZeroOneClass M₀
 
 -- see Note [lower instance priority]
-instance (priority := 100) MonoidWithZeroₓ.toSemigroupWithZero (M₀ : Type _) [MonoidWithZeroₓ M₀] :
-    SemigroupWithZeroₓ M₀ :=
-  { ‹MonoidWithZeroₓ M₀› with }
+instance (priority := 100) MonoidWithZero.toSemigroupWithZero (M₀ : Type _) [MonoidWithZero M₀] :
+    SemigroupWithZero M₀ :=
+  { ‹MonoidWithZero M₀› with }
 
 /-- A type `M` is a `cancel_monoid_with_zero` if it is a monoid with zero element, `0` is left
 and right absorbing, and left/right multiplication by a non-zero element is injective. -/
 @[protect_proj]
-class CancelMonoidWithZero (M₀ : Type _) extends MonoidWithZeroₓ M₀ where
+class CancelMonoidWithZero (M₀ : Type _) extends MonoidWithZero M₀ where
   mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
   mul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
 
@@ -102,7 +102,7 @@ end CancelMonoidWithZero
 /-- A type `M` is a commutative “monoid with zero” if it is a commutative monoid with zero
 element, and `0` is left and right absorbing. -/
 @[protect_proj]
-class CommMonoidWithZero (M₀ : Type _) extends CommMonoidₓ M₀, MonoidWithZeroₓ M₀
+class CommMonoidWithZero (M₀ : Type _) extends CommMonoid M₀, MonoidWithZero M₀
 
 /-- A type `M` is a `cancel_comm_monoid_with_zero` if it is a commutative monoid with zero element,
  `0` is left and right absorbing,
@@ -116,29 +116,29 @@ The type is required to come with an “inverse” function, and the inverse of 
 
 Examples include division rings and the ordered monoids that are the
 target of valuations in general valuation theory.-/
-class GroupWithZeroₓ (G₀ : Type u) extends MonoidWithZeroₓ G₀, DivInvMonoidₓ G₀, Nontrivial G₀ where
+class GroupWithZero (G₀ : Type u) extends MonoidWithZero G₀, DivInvMonoid G₀, Nontrivial G₀ where
   inv_zero : (0 : G₀)⁻¹ = 0
   mul_inv_cancel : ∀ a : G₀, a ≠ 0 → a * a⁻¹ = 1
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable [GroupWithZeroₓ G₀]
+variable [GroupWithZero G₀]
 
 @[simp]
 theorem inv_zero : (0 : G₀)⁻¹ = 0 :=
-  GroupWithZeroₓ.inv_zero
+  GroupWithZero.inv_zero
 
 @[simp]
 theorem mul_inv_cancel {a : G₀} (h : a ≠ 0) : a * a⁻¹ = 1 :=
-  GroupWithZeroₓ.mul_inv_cancel a h
+  GroupWithZero.mul_inv_cancel a h
 
-end GroupWithZeroₓ
+end GroupWithZero
 
 /-- A type `G₀` is a commutative “group with zero”
 if it is a commutative monoid with zero element (distinct from `1`)
 such that every nonzero element is invertible.
 The type is required to come with an “inverse” function, and the inverse of `0` must be `0`. -/
-class CommGroupWithZero (G₀ : Type _) extends CommMonoidWithZero G₀, GroupWithZeroₓ G₀
+class CommGroupWithZero (G₀ : Type _) extends CommMonoidWithZero G₀, GroupWithZero G₀
 
 end
 

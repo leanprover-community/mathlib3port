@@ -79,26 +79,26 @@ theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i) ⊓ a = ⨆ i, f i �
 theorem inf_supr_eq (a : α) (f : ι → α) : (a ⊓ ⨆ i, f i) = ⨆ i, a ⊓ f i := by
   simpa only [inf_comm] using supr_inf_eq f a
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem bsupr_inf_eq {f : ∀ i, κ i → α} (a : α) : (⨆ (i) (j), f i j) ⊓ a = ⨆ (i) (j), f i j ⊓ a := by
   simp only [supr_inf_eq]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a ⊓ ⨆ (i) (j), f i j) = ⨆ (i) (j), a ⊓ f i j := by
   simp only [inf_supr_eq]
 
 theorem supr_inf_supr {ι ι' : Type _} {f : ι → α} {g : ι' → α} :
     ((⨆ i, f i) ⊓ ⨆ j, g j) = ⨆ i : ι × ι', f i.1 ⊓ g i.2 := by simp only [inf_supr_eq, supr_inf_eq, supr_prod]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem bsupr_inf_bsupr {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨆ i ∈ s, f i) ⊓ ⨆ j ∈ t, g j) = ⨆ p ∈ s ×ˢ t, f (p : ι × ι').1 ⊓ g p.2 := by
   simp only [supr_subtype', supr_inf_supr]
-  exact (Equivₓ.surjective _).supr_congr (Equivₓ.Set.prod s t).symm fun x => rfl
+  exact (Equiv.surjective _).supr_congr (Equiv.Set.prod s t).symm fun x => rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Sup_inf_Sup : sup s ⊓ sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1 ⊓ p.2 := by simp only [Sup_eq_supr, bsupr_inf_bsupr]
 
 theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, Disjoint (f i) a := by
@@ -107,11 +107,11 @@ theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, D
 theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) := by
   simpa only [Disjoint.comm] using supr_disjoint_iff
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem supr₂_disjoint_iff {f : ∀ i, κ i → α} : Disjoint (⨆ (i) (j), f i j) a ↔ ∀ i j, Disjoint (f i j) a := by
   simp_rw [supr_disjoint_iff]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem disjoint_supr₂_iff {f : ∀ i, κ i → α} : Disjoint a (⨆ (i) (j), f i j) ↔ ∀ i j, Disjoint a (f i j) := by
   simp_rw [disjoint_supr_iff]
 
@@ -121,22 +121,22 @@ theorem Sup_disjoint_iff {s : Set α} : Disjoint (sup s) a ↔ ∀ b ∈ s, Disj
 theorem disjoint_Sup_iff {s : Set α} : Disjoint a (sup s) ↔ ∀ b ∈ s, Disjoint a b := by
   simpa only [Disjoint.comm] using Sup_disjoint_iff
 
-theorem supr_inf_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Monotoneₓ f)
-    (hg : Monotoneₓ g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i := by
+theorem supr_inf_of_monotone {ι : Type _} [Preorder ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Monotone f)
+    (hg : Monotone g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i := by
   refine' (le_supr_inf_supr f g).antisymm _
   rw [supr_inf_supr]
   refine' supr_mono' fun i => _
   rcases directed_of (· ≤ ·) i.1 i.2 with ⟨j, h₁, h₂⟩
   exact ⟨j, inf_le_inf (hf h₁) (hg h₂)⟩
 
-theorem supr_inf_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Antitoneₓ f)
-    (hg : Antitoneₓ g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i :=
+theorem supr_inf_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Antitone f)
+    (hg : Antitone g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i :=
   @supr_inf_of_monotone α _ ιᵒᵈ _ _ f g hf.dual_left hg.dual_left
 
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
   { Pi.completeLattice with
     inf_Sup_le_supr_inf := fun a s i => by
-      simp only [CompleteLattice.supₓ, Sup_apply, supr_apply, Pi.inf_apply, inf_supr_eq, ← supr_subtype''] }
+      simp only [CompleteLattice.sup, Sup_apply, supr_apply, Pi.inf_apply, inf_supr_eq, ← supr_subtype''] }
 
 -- see Note [lower instance priority]
 instance (priority := 100) Frame.toDistribLattice : DistribLattice α :=
@@ -163,13 +163,13 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i) ⊔ a = ⨅ i, f i �
 theorem sup_infi_eq (a : α) (f : ι → α) : (a ⊔ ⨅ i, f i) = ⨅ i, a ⊔ f i :=
   @inf_supr_eq αᵒᵈ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j) ⊔ a = ⨅ (i) (j), f i j ⊔ a :=
   @bsupr_inf_eq αᵒᵈ _ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a ⊔ ⨅ (i) (j), f i j) = ⨅ (i) (j), a ⊔ f i j :=
   @inf_bsupr_eq αᵒᵈ _ _ _ _ _
 
@@ -177,21 +177,21 @@ theorem infi_sup_infi {ι ι' : Type _} {f : ι → α} {g : ι' → α} :
     ((⨅ i, f i) ⊔ ⨅ i, g i) = ⨅ i : ι × ι', f i.1 ⊔ g i.2 :=
   @supr_inf_supr αᵒᵈ _ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem binfi_sup_binfi {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨅ i ∈ s, f i) ⊔ ⨅ j ∈ t, g j) = ⨅ p ∈ s ×ˢ t, f (p : ι × ι').1 ⊔ g p.2 :=
   @bsupr_inf_bsupr αᵒᵈ _ _ _ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Inf_sup_Inf : inf s ⊔ inf t = ⨅ p ∈ s ×ˢ t, (p : α × α).1 ⊔ p.2 :=
   @Sup_inf_Sup αᵒᵈ _ _ _
 
-theorem infi_sup_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Monotoneₓ f)
-    (hg : Monotoneₓ g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
+theorem infi_sup_of_monotone {ι : Type _} [Preorder ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Monotone f)
+    (hg : Monotone g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
   supr_inf_of_antitone hf.dual_right hg.dual_right
 
-theorem infi_sup_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Antitoneₓ f)
-    (hg : Antitoneₓ g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
+theorem infi_sup_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Antitone f)
+    (hg : Antitone g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
   supr_inf_of_monotone hf.dual_right hg.dual_right
 
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
@@ -225,19 +225,19 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _} [∀ i, Co
     CompleteBooleanAlgebra (∀ i, π i) :=
   { Pi.booleanAlgebra, Pi.completeDistribLattice with }
 
-instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
-  { Prop.booleanAlgebra, Prop.completeLattice with
+instance PropCat.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
+  { PropCat.booleanAlgebra, PropCat.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
-      Iff.mp <| by simp only [forall_or_distrib_left, CompleteLattice.infₓ, infi_Prop_eq, sup_Prop_eq],
+      Iff.mp <| by simp only [forall_or_distrib_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq],
     inf_Sup_le_supr_inf := fun p s =>
-      Iff.mp <| by simp only [CompleteLattice.supₓ, exists_and_distrib_leftₓ, inf_Prop_eq, supr_Prop_eq] }
+      Iff.mp <| by simp only [CompleteLattice.sup, exists_and_distrib_left, inf_Prop_eq, supr_Prop_eq] }
 
 section CompleteBooleanAlgebra
 
 variable [CompleteBooleanAlgebra α] {a b : α} {s : Set α} {f : ι → α}
 
 theorem compl_infi : infi fᶜ = ⨆ i, f iᶜ :=
-  le_antisymmₓ (compl_le_of_compl_le <| le_infi fun i => compl_le_of_compl_le <| le_supr (compl ∘ f) i)
+  le_antisymm (compl_le_of_compl_le <| le_infi fun i => compl_le_of_compl_le <| le_supr (compl ∘ f) i)
     (supr_le fun i => compl_le_compl <| infi_le _ _)
 
 theorem compl_supr : supr fᶜ = ⨅ i, f iᶜ :=
@@ -260,7 +260,7 @@ section lift
 -- See note [reducible non-instances]
 /-- Pullback an `order.frame` along an injection. -/
 @[reducible]
-protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Frame β]
+protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α] [HasBot α] [Frame β]
     (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
     (map_bot : f ⊥ = ⊥) : Frame α :=
@@ -269,12 +269,12 @@ protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSupₓ α] [H
       change f (a ⊓ Sup s) ≤ f _
       rw [← Sup_image, map_inf, map_Sup s, inf_bsupr_eq]
       simp_rw [← map_inf]
-      exact ((map_Sup _).trans supr_image).Ge }
+      exact ((map_Sup _).trans supr_image).ge }
 
 -- See note [reducible non-instances]
 /-- Pullback an `order.coframe` along an injection. -/
 @[reducible]
-protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Coframe β]
+protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α] [HasBot α] [Coframe β]
     (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
     (map_bot : f ⊥ = ⊥) : Coframe α :=
@@ -288,7 +288,7 @@ protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSupₓ α] 
 -- See note [reducible non-instances]
 /-- Pullback a `complete_distrib_lattice` along an injection. -/
 @[reducible]
-protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
+protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α]
     [HasBot α] [CompleteDistribLattice β] (f : α → β) (hf : Function.Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
@@ -299,7 +299,7 @@ protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] 
 -- See note [reducible non-instances]
 /-- Pullback a `complete_boolean_algebra` along an injection. -/
 @[reducible]
-protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
+protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α]
     [HasBot α] [HasCompl α] [Sdiff α] [CompleteBooleanAlgebra β] (f : α → β) (hf : Function.Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
@@ -316,7 +316,7 @@ variable (s : Set PUnit.{u + 1}) (x y : PUnit.{u + 1})
 
 instance : CompleteBooleanAlgebra PUnit := by
   refine_struct { PUnit.booleanAlgebra with sup := fun _ => star, inf := fun _ => star } <;>
-    intros <;> first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_falseₓ]
+    intros <;> first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
 
 @[simp]
 theorem Sup_eq : sup s = star :=

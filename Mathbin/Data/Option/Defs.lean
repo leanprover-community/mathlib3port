@@ -19,9 +19,15 @@ variable {α : Type _} {β : Type _}
 
 attribute [inline] Option.isSome Option.isNone
 
+/- warning: option.elim -> Option.elim is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, β -> (α -> β) -> (Option.{u_1} α) -> β
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Sort.{u_2}}, (Option.{u_1} α) -> β -> (α -> β) -> β
+Case conversion may be inaccurate. Consider using '#align option.elim Option.elimₓ'. -/
 /-- An elimination principle for `option`. It is a nondependent version of `option.rec`. -/
 @[simp]
-protected def elimₓ (b : β) (f : α → β) : Option α → β
+protected def elim (b : β) (f : α → β) : Option α → β
   | some a => f a
   | none => b
 
@@ -36,7 +42,7 @@ theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
   Iff.rfl
 
 theorem is_none_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
-  ⟨Option.eq_none_of_is_none, fun e => e.symm ▸ rfl⟩
+  ⟨Option.eq_none_of_isNone, fun e => e.symm ▸ rfl⟩
 
 theorem some_inj {a b : α} : some a = some b ↔ a = b := by simp
 
@@ -49,10 +55,10 @@ Try to use `o.is_none` or `o.is_some` instead.
 -/
 @[inline]
 def decidableEqNone {o : Option α} : Decidable (o = none) :=
-  decidableOfDecidableOfIff (Bool.decidableEq _ _) is_none_iff_eq_none
+  decidable_of_decidable_of_iff (Bool.decidableEq _ _) is_none_iff_eq_none
 
 instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a ∈ o, p a)
-  | none => isTrue (by simp [false_implies_iff])
+  | none => isTrue (by simp [false_imp_iff])
   | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
 
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
@@ -73,8 +79,14 @@ theorem iget_some [Inhabited α] {a : α} : (some a).iget = a :=
 def guard (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
   if p a then some a else none
 
+/- warning: option.filter -> Option.filter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u_1} α p], (Option.{u_1} α) -> (Option.{u_1} α)
+but is expected to have type
+  forall {α : Type.{u_1}}, (α -> Bool) -> (Option.{u_1} α) -> (Option.{u_1} α)
+Case conversion may be inaccurate. Consider using '#align option.filter Option.filterₓ'. -/
 /-- `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
-def filterₓ (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
+def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
   o.bind (guard p)
 
 /-- Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
@@ -146,7 +158,7 @@ def pmap {p : α → Prop} (f : ∀ a : α, p a → β) : ∀ x : Option α, (�
 @[simp]
 def join : Option (Option α) → Option α := fun x => bind x id
 
-protected def traverseₓₓ.{u, v} {F : Type u → Type v} [Applicativeₓ F] {α β : Type _} (f : α → F β) :
+protected def traverse.{u, v} {F : Type u → Type v} [Applicative F] {α β : Type _} (f : α → F β) :
     Option α → F (Option β)
   | none => pure none
   | some x => some <$> f x
@@ -155,22 +167,28 @@ protected def traverseₓₓ.{u, v} {F : Type u → Type v} [Applicativeₓ F] {
 /-- If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
 there is a naturally associated way to always perform a computation in `m` which maybe produces a
 result. -/
-def maybeₓ.{u, v} {m : Type u → Type v} [Monadₓ m] {α : Type u} : Option (m α) → m (Option α)
+def maybe.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α) → m (Option α)
   | none => return none
   | some fn => some <$> fn
 
 /-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
-def mmapₓ.{u, v, w} {m : Type u → Type v} [Monadₓ m] {α : Type w} {β : Type u} (f : α → m β) (o : Option α) :
+def mmap.{u, v, w} {m : Type u → Type v} [Monad m] {α : Type w} {β : Type u} (f : α → m β) (o : Option α) :
     m (Option β) :=
   (o.map f).maybe
 
+/- warning: option.melim -> Option.melim is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Monad.{u_1 u_2} m], (m β) -> (α -> (m β)) -> (m (Option.{u_1} α)) -> (m β)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {m : Type.{u_1} -> Type.{u_2}} [inst._@.Mathlib.Data.Option.Defs._hyg.286 : Monad.{u_1 u_2} m], (m (Option.{u_1} α)) -> (m β) -> (α -> (m β)) -> (m β)
+Case conversion may be inaccurate. Consider using '#align option.melim Option.melimₓ'. -/
 /-- A monadic analogue of `option.elim`. -/
-def melimₓ {α β : Type _} {m : Type _ → Type _} [Monadₓ m] (y : m β) (z : α → m β) (x : m (Option α)) : m β :=
-  x >>= Option.elimₓ y z
+def melim {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α → m β) (x : m (Option α)) : m β :=
+  x >>= Option.elim y z
 
 /-- A monadic analogue of `option.get_or_else`. -/
-def mgetOrElse {α : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m α) : m α :=
-  melimₓ y pure x
+def mgetOrElse {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
+  melim y pure x
 
 end Option
 

@@ -44,13 +44,13 @@ variable [EmetricSpace α] [cs : CompleteSpace α] {K : ℝ≥0} {f : α → α}
 
 open Emetric Set
 
-theorem to_lipschitz_with (hf : ContractingWith K f) : LipschitzWith K f :=
+theorem toLipschitzWith (hf : ContractingWith K f) : LipschitzWith K f :=
   hf.2
 
 theorem one_sub_K_pos' (hf : ContractingWith K f) : (0 : ℝ≥0∞) < 1 - K := by simp [hf.1]
 
 theorem one_sub_K_ne_zero (hf : ContractingWith K f) : (1 : ℝ≥0∞) - K ≠ 0 :=
-  ne_of_gtₓ hf.one_sub_K_pos'
+  ne_of_gt hf.one_sub_K_pos'
 
 theorem one_sub_K_ne_top : (1 : ℝ≥0∞) - K ≠ ∞ := by
   norm_cast
@@ -60,20 +60,20 @@ theorem edist_inequality (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞
     edist x y ≤ (edist x (f x) + edist y (f y)) / (1 - K) :=
   suffices edist x y ≤ edist x (f x) + edist y (f y) + K * edist x y by
     rwa [Ennreal.le_div_iff_mul_le (Or.inl hf.one_sub_K_ne_zero) (Or.inl one_sub_K_ne_top), mul_comm,
-      Ennreal.sub_mul fun _ _ => h, one_mulₓ, tsub_le_iff_right]
+      Ennreal.sub_mul fun _ _ => h, one_mul, tsub_le_iff_right]
   calc
     edist x y ≤ edist x (f x) + edist (f x) (f y) + edist (f y) y := edist_triangle4 _ _ _ _
-    _ = edist x (f x) + edist y (f y) + edist (f x) (f y) := by rw [edist_comm y, add_right_commₓ]
-    _ ≤ edist x (f x) + edist y (f y) + K * edist x y := add_le_add le_rflₓ (hf.2 _ _)
+    _ = edist x (f x) + edist y (f y) + edist (f x) (f y) := by rw [edist_comm y, add_right_comm]
+    _ ≤ edist x (f x) + edist y (f y) + K * edist x y := add_le_add le_rfl (hf.2 _ _)
     
 
 theorem edist_le_of_fixed_point (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞) (hy : IsFixedPt f y) :
-    edist x y ≤ edist x (f x) / (1 - K) := by simpa only [hy.eq, edist_self, add_zeroₓ] using hf.edist_inequality h
+    edist x y ≤ edist x (f x) / (1 - K) := by simpa only [hy.eq, edist_self, add_zero] using hf.edist_inequality h
 
 theorem eq_or_edist_eq_top_of_fixed_points (hf : ContractingWith K f) {x y} (hx : IsFixedPt f x) (hy : IsFixedPt f y) :
     x = y ∨ edist x y = ∞ := by
   refine' or_iff_not_imp_right.2 fun h => edist_le_zero.1 _
-  simpa only [hx.eq, edist_self, add_zeroₓ, Ennreal.zero_div] using hf.edist_le_of_fixed_point h hy
+  simpa only [hx.eq, edist_self, add_zero, Ennreal.zero_div] using hf.edist_le_of_fixed_point h hy
 
 /-- If a map `f` is `contracting_with K`, and `s` is a forward-invariant set, then
 restriction of `f` to `s` is `contracting_with K` as well. -/
@@ -93,11 +93,11 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
       IsFixedPt f y ∧
         Tendsto (fun n => (f^[n]) x) atTop (𝓝 y) ∧ ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
   have : CauchySeq fun n => (f^[n]) x :=
-    cauchy_seq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
-      (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x)
+    cauchySeqOfEdistLeGeometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
+      (hf.toLipschitzWith.edist_iterate_succ_le_geometric x)
   let ⟨y, hy⟩ := cauchy_seq_tendsto_of_complete this
   ⟨y, is_fixed_pt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
-    edist_le_of_edist_le_geometric_of_tendsto K (edist x (f x)) (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x)
+    edist_le_of_edist_le_geometric_of_tendsto K (edist x (f x)) (hf.toLipschitzWith.edist_iterate_succ_le_geometric x)
       hy⟩
 
 variable (f)
@@ -126,22 +126,28 @@ theorem apriori_edist_iterate_efixed_point_le (hf : ContractingWith K f) {x : α
 theorem edist_efixed_point_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) ≤ edist x (f x) / (1 - K) := by
   convert hf.apriori_edist_iterate_efixed_point_le hx 0
-  simp only [pow_zeroₓ, mul_oneₓ]
+  simp only [pow_zero, mul_one]
 
 theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) < ∞ :=
   (hf.edist_efixed_point_le hx).trans_lt (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) {y : α}
     (hy : edist y (f y) ≠ ∞) (h : edist x y ≠ ∞) : efixedPoint f hf x hx = efixedPoint f hf y hy := by
-  refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_ltₓ _ h') <;>
+  refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
     try apply efixed_point_is_fixed_pt
   change edist_lt_top_setoid.rel _ _
-  trans x
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · symm
     exact hf.edist_efixed_point_lt_top hx
     
-  trans y
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
 
 omit cs
@@ -200,7 +206,7 @@ theorem edist_efixed_point_le' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f
     (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint' f hsc hsf hf x hxs hx) ≤ edist x (f x) / (1 - K) := by
   convert hf.apriori_edist_iterate_efixed_point_le' hsc hsf hxs hx 0
-  rw [pow_zeroₓ, mul_oneₓ]
+  rw [pow_zero, mul_one]
 
 theorem edist_efixed_point_lt_top' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
     (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
@@ -208,6 +214,10 @@ theorem edist_efixed_point_lt_top' {s : Set α} (hsc : IsComplete s) (hsf : Maps
   (hf.edist_efixed_point_le' hsc hsf hxs hx).trans_lt
     (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- If a globally contracting map `f` has two complete forward-invariant sets `s`, `t`,
 and `x ∈ s` is at a finite distance from `y ∈ t`, then the `efixed_point'` constructed by `x`
 is the same as the `efixed_point'` constructed by `y`.
@@ -219,14 +229,16 @@ theorem efixed_point_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α}
     {t : Set α} (htc : IsComplete t) (htf : MapsTo f t t) (hft : ContractingWith K <| htf.restrict f t t) {y : α}
     (hyt : y ∈ t) (hy : edist y (f y) ≠ ∞) (hxy : edist x y ≠ ∞) :
     efixedPoint' f hsc hsf hfs x hxs hx = efixedPoint' f htc htf hft y hyt hy := by
-  refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_ltₓ _ h') <;>
+  refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
     try apply efixed_point_is_fixed_pt'
   change edist_lt_top_setoid.rel _ _
-  trans x
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · symm
     apply edist_efixed_point_lt_top'
     
-  trans y
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   exact lt_top_iff_ne_top.2 hxy
   apply edist_efixed_point_lt_top'
 
@@ -242,18 +254,18 @@ theorem one_sub_K_pos (hf : ContractingWith K f) : (0 : ℝ) < 1 - K :=
   sub_pos.2 hf.1
 
 theorem dist_le_mul (x y : α) : dist (f x) (f y) ≤ K * dist x y :=
-  hf.to_lipschitz_with.dist_le_mul x y
+  hf.toLipschitzWith.dist_le_mul x y
 
 theorem dist_inequality (x y) : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 - K) :=
   suffices dist x y ≤ dist x (f x) + dist y (f y) + K * dist x y by
-    rwa [le_div_iff hf.one_sub_K_pos, mul_comm, sub_mul, one_mulₓ, sub_le_iff_le_add]
+    rwa [le_div_iff hf.one_sub_K_pos, mul_comm, sub_mul, one_mul, sub_le_iff_le_add]
   calc
     dist x y ≤ dist x (f x) + dist y (f y) + dist (f x) (f y) := dist_triangle4_right _ _ _ _
     _ ≤ dist x (f x) + dist y (f y) + K * dist x y := add_le_add_left (hf.dist_le_mul _ _) _
     
 
 theorem dist_le_of_fixed_point (x) {y} (hy : IsFixedPt f y) : dist x y ≤ dist x (f x) / (1 - K) := by
-  simpa only [hy.eq, dist_self, add_zeroₓ] using hf.dist_inequality x y
+  simpa only [hy.eq, dist_self, add_zero] using hf.dist_inequality x y
 
 theorem fixed_point_unique' {x y} (hx : IsFixedPt f x) (hy : IsFixedPt f y) : x = y :=
   (hf.eq_or_edist_eq_top_of_fixed_points hx hy).resolve_right (edist_ne_top _ _)
@@ -299,8 +311,8 @@ theorem aposteriori_dist_iterate_fixed_point_le (x n) :
 
 theorem apriori_dist_iterate_fixed_point_le (x n) :
     dist ((f^[n]) x) (fixedPoint f hf) ≤ dist x (f x) * K ^ n / (1 - K) :=
-  le_transₓ (hf.aposteriori_dist_iterate_fixed_point_le x n) <|
-    (div_le_div_right hf.one_sub_K_pos).2 <| hf.to_lipschitz_with.dist_iterate_succ_le_geometric x n
+  le_trans (hf.aposteriori_dist_iterate_fixed_point_le x n) <|
+    (div_le_div_right hf.one_sub_K_pos).2 <| hf.toLipschitzWith.dist_iterate_succ_le_geometric x n
 
 theorem tendsto_iterate_fixed_point (x) : Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| fixedPoint f hf) := by
   convert tendsto_iterate_efixed_point hf (edist_ne_top x _)
@@ -323,7 +335,7 @@ theorem is_fixed_pt_fixed_point_iterate {n : ℕ} (hf : ContractingWith K (f^[n]
   rw [← iterate_succ_apply, iterate_succ_apply', hx] at this
   contrapose! this
   have := dist_pos.2 (Ne.symm this)
-  simpa only [Nnreal.coe_one, one_mulₓ, Nnreal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
+  simpa only [Nnreal.coe_one, one_mul, Nnreal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
 
 end ContractingWith
 

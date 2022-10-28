@@ -17,10 +17,10 @@ open BigOperators
 
 variable {α : Type _}
 
-namespace Finsetₓ
+namespace Finset
 
-theorem sum_nat_coe_enat (s : Finsetₓ α) (f : α → ℕ) : (∑ x in s, (f x : PartEnat)) = (∑ x in s, f x : ℕ) :=
+theorem sum_nat_coe_enat (s : Finset α) (f : α → ℕ) : (∑ x in s, (f x : PartEnat)) = (∑ x in s, f x : ℕ) :=
   (PartEnat.coeHom.map_sum _ _).symm
 
-end Finsetₓ
+end Finset
 

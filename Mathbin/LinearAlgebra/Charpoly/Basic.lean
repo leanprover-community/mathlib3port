@@ -24,9 +24,9 @@ in any basis is in `linear_algebra/charpoly/to_matrix`.
 
 universe u v w
 
-variable {R : Type u} {M : Type v} [CommRingₓ R] [Nontrivial R]
+variable {R : Type u} {M : Type v} [CommRing R] [Nontrivial R]
 
-variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M)
+variable [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M)
 
 open Classical Matrix Polynomial
 
@@ -61,14 +61,14 @@ to the linear map itself, is zero.
 
 See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
 theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
-  apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix _).toLinearEquiv).1
+  apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix (choose_basis R M)).toLinearEquiv).1
   rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ← Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
   exact aeval_self_charpoly _
 
-theorem is_integral : IsIntegral R f :=
+theorem isIntegral : IsIntegral R f :=
   ⟨f.charpoly, ⟨charpoly_monic f, aeval_self_charpoly f⟩⟩
 
-theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroupₓ M] [Module K M] [FiniteDimensional K M]
+theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup M] [Module K M] [FiniteDimensional K M]
     (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly f)
 
@@ -97,7 +97,7 @@ theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R
     exact minpoly.monic (IsIntegral f)
   have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _
   simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, AlgHom.map_mul, zero_apply] at hzero
-  exact not_leₓ.2 hdegP (minpoly.min _ _ hPmonic (ext hzero))
+  exact not_le.2 hdegP (minpoly.min _ _ hPmonic (ext hzero))
 
 end CayleyHamilton
 

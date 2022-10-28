@@ -60,9 +60,9 @@ unsafe def allowed_head_symbols : expr → List Name
       quote.1
       (@LE.le ℕ _ (Nat.succ _) _) =>
     [`has_le.le, `has_lt.lt]
-  | quote.1 (@Ge ℕ _ _ (Nat.succ _)) => [`has_le.le, `has_lt.lt]
+  | quote.1 (@ge ℕ _ _ (Nat.succ _)) => [`has_le.le, `has_lt.lt]
   | quote.1 (@LE.le ℕ _ 1 _) => [`has_le.le, `has_lt.lt]
-  | quote.1 (@Ge ℕ _ _ 1) => [`has_le.le, `has_lt.lt]
+  | quote.1 (@ge ℕ _ _ 1) => [`has_le.le, `has_lt.lt]
   |-- These allow `library_search` to search for lemmas of type `¬ a = b` when proving `a ≠ b`
       --   and vice-versa.
       quote.1
@@ -93,7 +93,7 @@ inductive HeadSymbolMatch
 open HeadSymbolMatch
 
 /-- a textual representation of a `head_symbol_match`, for trace debugging. -/
-def HeadSymbolMatch.toString : HeadSymbolMatch → Stringₓ
+def HeadSymbolMatch.toString : HeadSymbolMatch → String
   | ex => "exact"
   | mp => "iff.mp"
   | mpr => "iff.mpr"
@@ -171,7 +171,7 @@ use everything in `compulsory_hyps`.
 unsafe def suggest_opt.mk_accept (o : suggest_opt) : opt :=
   { o with
     accept := fun gs =>
-      o.accept gs >> (guardₓ <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
+      o.accept gs >> (guard <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
 
 -- Implementation note: as this is used by both `library_search` and `suggest`,
 -- we first run `solve_by_elim` separately on the independent goals,
@@ -197,7 +197,7 @@ unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e :
       -- but only as long as we can finish all goals.)
       -- If `compulsory_hyps` is non-empty, we skip this phase and defer to phase 2.
       try
-      (guardₓ (opt = []) >> any_goals (independent_goal >> solve_by_elim opt))
+      (guard (opt = []) >> any_goals (independent_goal >> solve_by_elim opt))
   -- Phase 2
         done >>
         return ng <|>
@@ -206,11 +206,11 @@ unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e :
                 -- (because they weren't propositional, or contained a metavariable)
                 -- as a second phase we attempt to solve all remaining goals at once
                 -- (with backtracking across goals).
-                guardₓ
+                guard
                 (opt ≠ []) <|>
               any_goals (success_if_fail independent_goal) >> skip) >>
             solve_by_elim { opt with backtrack_all_goals := tt } <|>-- and fail unless `close_goals = ff`
-            guardₓ
+            guard
             ¬close_goals
       let ng' ← num_goals
       return (ng - ng')
@@ -238,7 +238,7 @@ unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d
 /-- An `application` records the result of a successful application of a library lemma. -/
 unsafe structure application where
   State : tactic_state
-  script : Stringₓ
+  script : String
   decl : Option declaration
   num_goals : ℕ
   hyps_used : List expr
@@ -266,7 +266,7 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt :
         ←-- This `instantiate_mvars` is necessary so that we count used hypotheses correctly.
             instantiate_mvars
             g
-      guardₓ <| opt fun h => h g
+      guard <| opt fun h => h g
       let ng ← num_goals
       let s ← read
       let m ← tactic_statement g
@@ -286,7 +286,7 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
         let s ← read
         let m ← tactic_statement g
         let g ← instantiate_mvars g
-        guardₓ (opt fun h => h g)
+        guard (opt fun h => h g)
         return <|
             mllist.of_list
               [⟨s, m, none, 0, hyps fun h => h g⟩]) <|>-- Otherwise, let's actually try applying library lemmas.
@@ -339,7 +339,7 @@ unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : ta
   let results := suggest_core opt
   let L
     ←-- Get the first n elements of the successful lemmas
-        if h : limit.isSome then results.take (Option.getₓ h)
+        if h : limit.isSome then results.take (Option.get h)
       else results.force
   -- Sort by number of remaining goals, then by number of hypotheses used.
       return <|
@@ -349,15 +349,15 @@ unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : ta
 `Try this: refine ...`, which make progress on the current goal using a declaration
 from the library.
 -/
-unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List Stringₓ) := do
+unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List String) := do
   let L ← suggest limit opt
   return <| L application.script
 
 /-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
 -/
-unsafe def library_search (opt : suggest_opt := {  }) : tactic Stringₓ :=
+unsafe def library_search (opt : suggest_opt := {  }) : tactic String :=
   (suggest_core opt).mfirst fun a => do
-    guardₓ (a = 0)
+    guard (a = 0)
     write a
     return a
 
@@ -370,7 +370,7 @@ open SolveByElim
 initialize
   registerTraceClass.1 `silence_suggest
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 -- Turn off `Try this: exact/refine ...` trace messages for `suggest`
 /-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.
@@ -479,7 +479,7 @@ end
 ```
 You can also use `library_search with attr` to include all lemmas with the attribute `attr`.
 -/
-unsafe def library_search (semireducible : parse <| optionalₓ (tk "!")) (hs : parse simp_arg_list)
+unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
@@ -518,7 +518,7 @@ nat.one_pos
 unsafe def library_search_hole_cmd : hole_command where
   Name := "library_search"
   descr := "Use `library_search` to complete the goal."
-  action := fun _ => do
+  action _ := do
     let script ← library_search
     -- Is there a better API for dropping the 'Try this: exact ' prefix on this string?
         return

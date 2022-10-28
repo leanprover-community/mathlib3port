@@ -27,37 +27,37 @@ variable (L : Language) {M : Type _}
 
 open FirstOrder
 
-open Structure
+open StructureCat
 
 /-- A prestructure is a first-order structure with a `setoid` equivalence relation on it,
   such that quotienting by that equivalence relation is still a structure. -/
-class Prestructure (s : Setoidₓ M) where
-  toStructure : L.Structure M
-  fun_equiv : ∀ {n} {f : L.Functions n} (x y : Finₓ n → M), x ≈ y → funMap f x ≈ funMap f y
-  rel_equiv : ∀ {n} {r : L.Relations n} (x y : Finₓ n → M) (h : x ≈ y), RelMap r x = RelMap r y
+class Prestructure (s : Setoid M) where
+  toStructure : L.StructureCat M
+  fun_equiv : ∀ {n} {f : L.Functions n} (x y : Fin n → M), x ≈ y → funMap f x ≈ funMap f y
+  rel_equiv : ∀ {n} {r : L.Relations n} (x y : Fin n → M) (h : x ≈ y), RelMap r x = RelMap r y
 
-variable {L} {s : Setoidₓ M} [ps : L.Prestructure s]
+variable {L} {s : Setoid M} [ps : L.Prestructure s]
 
-instance quotientStructure : L.Structure (Quotientₓ s) where
-  funMap := fun n f x => Quotientₓ.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotientₓ.finChoice x)
-  rel_map := fun n r x => Quotientₓ.lift (@RelMap L M ps.toStructure n r) Prestructure.rel_equiv (Quotientₓ.finChoice x)
+instance quotientStructure : L.StructureCat (Quotient s) where
+  funMap n f x := Quotient.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotient.finChoice x)
+  rel_map n r x := Quotient.lift (@RelMap L M ps.toStructure n r) Prestructure.rel_equiv (Quotient.finChoice x)
 
 variable (s)
 
 include s
 
-theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) :
+theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
     (funMap f fun i => ⟦x i⟧) = ⟦@funMap _ _ ps.toStructure _ f x⟧ := by
-  change Quotientₓ.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotientₓ.finChoice _) = _
-  rw [Quotientₓ.fin_choice_eq, Quotientₓ.map_mk]
+  change Quotient.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotient.finChoice _) = _
+  rw [Quotient.fin_choice_eq, Quotient.map_mk]
 
-theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) :
+theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
     (RelMap r fun i => ⟦x i⟧) ↔ @RelMap _ _ ps.toStructure _ r x := by
-  change Quotientₓ.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotientₓ.finChoice _) ↔ _
-  rw [Quotientₓ.fin_choice_eq, Quotientₓ.lift_mk]
+  change Quotient.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotient.finChoice _) ↔ _
+  rw [Quotient.fin_choice_eq, Quotient.lift_mk]
 
 theorem Term.realize_quotient_mk {β : Type _} (t : L.term β) (x : β → M) :
-    (t.realize fun i => ⟦x i⟧) = ⟦@Term.realizeₓ _ _ ps.toStructure _ x t⟧ := by
+    (t.realize fun i => ⟦x i⟧) = ⟦@Term.realize _ _ ps.toStructure _ x t⟧ := by
   induction' t with _ _ _ _ ih
   · rfl
     

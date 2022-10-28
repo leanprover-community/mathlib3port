@@ -22,11 +22,11 @@ This file allows to blow partitions up into parts of controlled size. Given a pa
 -/
 
 
-open Finsetₓ Nat
+open Finset Nat
 
 namespace Finpartition
 
-variable {α : Type _} [DecidableEq α] {s t : Finsetₓ α} {m n a b : ℕ} {P : Finpartition s}
+variable {α : Type _} [DecidableEq α] {s t : Finset α} {m n a b : ℕ} {P : Finpartition s}
 
 /-- Given a partition `P` of `s`, as well as a proof that `a * m + b * (m + 1) = s.card`, we can
 find a new partition `Q` of `s` where each part has size `m` or `m + 1`, every part of `P` is the
@@ -35,22 +35,22 @@ union of parts of `Q` plus at most `m` extra elements, there are `b` parts of si
 `m` and hence `a + b` parts in total. -/
 theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card) :
     ∃ Q : Finpartition s,
-      (∀ x : Finsetₓ α, x ∈ Q.parts → x.card = m ∨ x.card = m + 1) ∧
+      (∀ x : Finset α, x ∈ Q.parts → x.card = m ∨ x.card = m + 1) ∧
         (∀ x, x ∈ P.parts → (x \ (Q.parts.filter fun y => y ⊆ x).bUnion id).card ≤ m) ∧
           (Q.parts.filter fun i => card i = m + 1).card = b :=
   by
   -- Get rid of the easy case `m = 0`
   obtain rfl | m_pos := m.eq_zero_or_pos
   · refine' ⟨⊥, by simp, _, by simpa using hs.symm⟩
-    simp only [le_zero_iff, card_eq_zero, mem_bUnion, exists_propₓ, mem_filter, id.def, and_assocₓ,
+    simp only [le_zero_iff, card_eq_zero, mem_bUnion, exists_prop, mem_filter, id.def, and_assoc',
       sdiff_eq_empty_iff_subset, subset_iff]
     exact fun x hx a ha => ⟨{a}, mem_map_of_mem _ (P.le hx ha), singleton_subset_iff.2 ha, mem_singleton_self _⟩
     
   -- Prove the case `m > 0` by strong induction on `s`
-  induction' s using Finsetₓ.strongInductionₓ with s ih generalizing P a b
+  induction' s using Finset.strongInduction with s ih generalizing P a b
   -- If `a = b = 0`, then `s = ∅` and we can partition into zero parts
   by_cases hab:a = 0 ∧ b = 0
-  · simp only [hab.1, hab.2, add_zeroₓ, zero_mul, eq_comm, card_eq_zero] at hs
+  · simp only [hab.1, hab.2, add_zero, zero_mul, eq_comm, card_eq_zero] at hs
     subst hs
     exact ⟨Finpartition.empty _, by simp, by simp [Unique.eq_default P], by simp [hab.2]⟩
     
@@ -63,11 +63,11 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       n ≤ m + 1 ∧ n ≤ a * m + b * (m + 1) ∧ ite (0 < a) (a - 1) a * m + ite (0 < a) b (b - 1) * (m + 1) = s.card - n :=
     by
     rw [hn, ← hs]
-    split_ifs <;> rw [tsub_mul, one_mulₓ]
+    split_ifs <;> rw [tsub_mul, one_mul]
     · refine' ⟨m_pos, le_succ _, le_add_right (le_mul_of_pos_left ‹0 < a›), _⟩
       rw [tsub_add_eq_add_tsub (le_mul_of_pos_left h)]
       
-    · refine' ⟨succ_pos', le_rflₓ, le_add_left (le_mul_of_pos_left <| hab.resolve_left ‹¬0 < a›), _⟩
+    · refine' ⟨succ_pos', le_rfl, le_add_left (le_mul_of_pos_left <| hab.resolve_left ‹¬0 < a›), _⟩
       rw [← add_tsub_assoc_of_le (le_mul_of_pos_left <| hab.resolve_left ‹¬0 < a›)]
       
   /- We will call the inductive hypothesis on a partition of `s \ t` for a carefully chosen `t ⊆ s`.
@@ -85,7 +85,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       @ih (s \ t) (sdiff_ssubset hts ‹t.nonempty›) (P.avoid t) (if 0 < a then a - 1 else a) (if 0 < a then b else b - 1)
         hcard
     refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel hts), _, _, _⟩
-    · simp only [extend_parts, mem_insert, forall_eq_or_imp, and_iff_leftₓ hR₁, htn, hn]
+    · simp only [extend_parts, mem_insert, forall_eq_or_imp, and_iff_left hR₁, htn, hn]
       exact ite_eq_or_eq _ _ _
       
     · exact fun x hx => (card_le_of_subset <| sdiff_subset _ _).trans (lt_succ_iff.1 <| h _ hx)
@@ -110,7 +110,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     @ih (s \ t) (sdiff_ssubset (htu.trans <| P.le hu₁) ht) (P.avoid t) (if 0 < a then a - 1 else a)
       (if 0 < a then b else b - 1) hcard
   refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel <| htu.trans <| P.le hu₁), _, _, _⟩
-  · simp only [mem_insert, forall_eq_or_imp, extend_parts, and_iff_leftₓ hR₁, htn, hn]
+  · simp only [mem_insert, forall_eq_or_imp, extend_parts, and_iff_left hR₁, htn, hn]
     exact ite_eq_or_eq _ _ _
     
   · conv in _ ∈ _ => rw [← insert_erase hu₁]
@@ -139,7 +139,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   split_ifs
   · rw [hR₃, if_pos h]
     
-  · rw [card_insert_of_not_mem fun H => _, hR₃, if_neg h, Nat.sub_add_cancelₓ (hab.resolve_left h)]
+  · rw [card_insert_of_not_mem fun H => _, hR₃, if_neg h, Nat.sub_add_cancel (hab.resolve_left h)]
     exact ht.ne_empty (le_sdiff_iff.1 <| R.le <| filter_subset _ _ H)
     
 
@@ -158,17 +158,17 @@ variable {P h}
 theorem card_eq_of_mem_parts_equitabilise : t ∈ (P.equitabilise h).parts → t.card = m ∨ t.card = m + 1 :=
   (P.equitabilise_aux h).some_spec.1 _
 
-theorem equitabilise_is_equipartition : (P.equitabilise h).IsEquipartition :=
+theorem equitabiliseIsEquipartition : (P.equitabilise h).IsEquipartition :=
   Set.equitable_on_iff_exists_eq_eq_add_one.2 ⟨m, fun u => card_eq_of_mem_parts_equitabilise⟩
 
 variable (P h)
 
-theorem card_filter_equitabilise_big : ((P.equitabilise h).parts.filter fun u : Finsetₓ α => u.card = m + 1).card = b :=
+theorem card_filter_equitabilise_big : ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m + 1).card = b :=
   (P.equitabilise_aux h).some_spec.2.2
 
 theorem card_filter_equitabilise_small (hm : m ≠ 0) :
-    ((P.equitabilise h).parts.filter fun u : Finsetₓ α => u.card = m).card = a := by
-  refine' (mul_eq_mul_right_iff.1 <| (add_left_injₓ (b * (m + 1))).1 _).resolve_right hm
+    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m).card = a := by
+  refine' (mul_eq_mul_right_iff.1 <| (add_left_inj (b * (m + 1))).1 _).resolve_right hm
   rw [h, ← (P.equitabilise h).sum_card_parts]
   have hunion :
     (P.equitabilise h).parts =
@@ -200,8 +200,8 @@ theorem exists_equipartition_card_eq (hn : n ≠ 0) (hs : n ≤ s.card) :
     ∃ P : Finpartition s, P.IsEquipartition ∧ P.parts.card = n := by
   rw [← pos_iff_ne_zero] at hn
   have : (n - s.card % n) * (s.card / n) + s.card % n * (s.card / n + 1) = s.card := by
-    rw [tsub_mul, mul_addₓ, ← add_assocₓ, tsub_add_cancel_of_le (Nat.mul_le_mul_rightₓ _ (mod_lt _ hn).le), mul_oneₓ,
-      add_commₓ, mod_add_div]
+    rw [tsub_mul, mul_add, ← add_assoc, tsub_add_cancel_of_le (Nat.mul_le_mul_right _ (mod_lt _ hn).le), mul_one,
+      add_comm, mod_add_div]
   refine' ⟨(indiscrete (card_pos.1 <| hn.trans_le hs).ne_empty).equitabilise this, equitabilise_is_equipartition, _⟩
   rw [card_parts_equitabilise _ _ (Nat.div_pos hs hn).ne', tsub_add_cancel_of_le (mod_lt _ hn).le]
 

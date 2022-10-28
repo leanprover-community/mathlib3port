@@ -26,10 +26,10 @@ instance : SuccOrder ℤ :=
 @[reducible]
 instance : PredOrder ℤ where
   pred := pred
-  pred_le := fun a => (sub_one_lt_of_leₓ le_rflₓ).le
-  min_of_le_pred := fun a ha => ((sub_one_lt_of_leₓ le_rflₓ).not_le ha).elim
-  le_pred_of_lt := fun a b => le_sub_one_of_ltₓ
-  le_of_pred_lt := fun a b => le_of_sub_one_ltₓ
+  pred_le a := (sub_one_lt_of_le le_rfl).le
+  min_of_le_pred a ha := ((sub_one_lt_of_le le_rfl).not_le ha).elim
+  le_pred_of_lt a b := le_sub_one_of_lt
+  le_of_pred_lt a b := le_of_sub_one_lt
 
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=
@@ -43,9 +43,9 @@ theorem pos_iff_one_le {a : ℤ} : 0 < a ↔ 1 ≤ a :=
   Order.succ_le_iff.symm
 
 theorem succ_iterate (a : ℤ) : ∀ n, (succ^[n]) a = a + n
-  | 0 => (add_zeroₓ a).symm
+  | 0 => (add_zero a).symm
   | n + 1 => by
-    rw [Function.iterate_succ', Int.coe_nat_succ, ← add_assocₓ]
+    rw [Function.iterate_succ', Int.coe_nat_succ, ← add_assoc]
     exact congr_arg _ (succ_iterate n)
 
 theorem pred_iterate (a : ℤ) : ∀ n, (pred^[n]) a = a - n

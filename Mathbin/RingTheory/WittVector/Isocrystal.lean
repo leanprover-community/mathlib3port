@@ -59,7 +59,7 @@ namespace WittVector
 
 variable (p : ℕ) [Fact p.Prime]
 
-variable (k : Type _) [CommRingₓ k]
+variable (k : Type _) [CommRing k]
 
 -- mathport name: witt_vector.fraction_ring
 localized [Isocrystal] notation "K(" p ", " k ")" => FractionRing (WittVector p k)
@@ -82,11 +82,11 @@ def FractionRing.frobeniusRingHom : K(p, k) →+* K(p, k) :=
 -- mathport name: witt_vector.frobenius_ring_hom
 localized [Isocrystal] notation "φ(" p ", " k ")" => WittVector.FractionRing.frobeniusRingHom p k
 
-instance inv_pair₁ : RingHomInvPair φ(p, k) _ :=
-  RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k)
+instance invPair₁ : RingHomInvPair φ(p, k) _ :=
+  RingHomInvPair.ofRingEquiv (FractionRing.frobenius p k)
 
-instance inv_pair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k) →+* K(p, k)) _ :=
-  RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k).symm
+instance invPair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k) →+* K(p, k)) _ :=
+  RingHomInvPair.ofRingEquiv (FractionRing.frobenius p k).symm
 
 -- mathport name: frobenius_ring_hom.linear_map
 localized [Isocrystal]
@@ -102,12 +102,12 @@ localized [Isocrystal]
 /-- An isocrystal is a vector space over the field `K(p, k)` additionally equipped with a
 Frobenius-linear automorphism.
 -/
-class Isocrystal (V : Type _) [AddCommGroupₓ V] extends Module K(p, k) V where
+class Isocrystal (V : Type _) [AddCommGroup V] extends Module K(p, k) V where
   frob : V ≃ᶠˡ[p, k] V
 
-variable (V : Type _) [AddCommGroupₓ V] [Isocrystal p k V]
+variable (V : Type _) [AddCommGroup V] [Isocrystal p k V]
 
-variable (V₂ : Type _) [AddCommGroupₓ V₂] [Isocrystal p k V₂]
+variable (V₂ : Type _) [AddCommGroup V₂] [Isocrystal p k V₂]
 
 variable {V}
 
@@ -147,15 +147,15 @@ open Isocrystal
 /-- A helper instance for type class inference. -/
 @[local instance]
 def FractionRing.module : Module K(p, k) K(p, k) :=
-  Semiringₓ.toModule
+  Semiring.toModule
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k) -/
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
 @[nolint unused_arguments has_nonempty_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
-  K(p, k)deriving AddCommGroupₓ,
+  K(p, k)deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)»
 
 section PerfectRing
@@ -177,10 +177,10 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(witt_vector.frobenius_ring_hom(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(witt_vector.frobenius_ring_hom(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
-theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroupₓ V]
+theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroup V]
     [Isocrystal p k V] (h_dim : finrank K(p, k) V = 1) :
     ∃ m : ℤ, Nonempty (StandardOneDimIsocrystal p k m ≃ᶠⁱ[p, k] V) := by
   haveI : Nontrivial V := FiniteDimensional.nontrivial_of_finrank_eq_succ h_dim

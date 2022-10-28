@@ -21,7 +21,7 @@ exp
 
 noncomputable section
 
-open Finsetₓ Filter Metric Asymptotics Set Function
+open Finset Filter Metric Asymptotics Set Function
 
 open Classical TopologicalSpace
 
@@ -44,7 +44,7 @@ theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) 
   have hy_eq : y = x + (y - x) := by abel
   have hyx_sq_le : ∥y - x∥ ^ 2 ≤ r * ∥y - x∥ := by
     rw [pow_two]
-    exact mul_le_mul hyx.le le_rflₓ (norm_nonneg _) hr_nonneg
+    exact mul_le_mul hyx.le le_rfl (norm_nonneg _) hr_nonneg
   have h_sq : ∀ z, ∥z∥ ≤ 1 → ∥exp (x + z) - exp x∥ ≤ ∥z∥ * ∥exp x∥ + ∥exp x∥ * ∥z∥ ^ 2 := by
     intro z hz
     have : ∥exp (x + z) - exp x - z • exp x∥ ≤ ∥exp x∥ * ∥z∥ ^ 2 := exp_bound_sq x z hz
@@ -54,14 +54,14 @@ theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) 
     ∥exp y - exp x∥ = ∥exp (x + (y - x)) - exp x∥ := by nth_rw 0 [hy_eq]
     _ ≤ ∥y - x∥ * ∥exp x∥ + ∥exp x∥ * ∥y - x∥ ^ 2 := h_sq (y - x) (hyx.le.trans hr_le)
     _ ≤ ∥y - x∥ * ∥exp x∥ + ∥exp x∥ * (r * ∥y - x∥) :=
-      add_le_add_left (mul_le_mul le_rflₓ hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _
+      add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _
     _ = (1 + r) * ∥exp x∥ * ∥y - x∥ := by ring
     
 
 @[continuity]
 theorem continuous_exp : Continuous exp :=
   continuous_iff_continuous_at.mpr fun x =>
-    continuous_at_of_locally_lipschitz zero_lt_one (2 * ∥exp x∥) (locally_lipschitz_exp zero_le_one le_rflₓ x)
+    continuous_at_of_locally_lipschitz zero_lt_one (2 * ∥exp x∥) (locally_lipschitz_exp zero_le_one le_rfl x)
 
 theorem continuous_on_exp {s : Set ℂ} : ContinuousOn exp s :=
   continuous_exp.ContinuousOn
@@ -153,7 +153,7 @@ theorem tendsto_exp_nhds_0_nhds_1 : Tendsto exp (𝓝 0) (𝓝 1) := by
   simp
 
 theorem tendsto_exp_at_bot : Tendsto exp atBot (𝓝 0) :=
-  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_arg exp <| neg_negₓ x
+  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_arg exp <| neg_neg x
 
 theorem tendsto_exp_at_bot_nhds_within : Tendsto exp atBot (𝓝[>] 0) :=
   tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 <| eventually_of_forall exp_pos⟩
@@ -175,8 +175,8 @@ theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) 
   obtain ⟨N, hN⟩ : ∃ N, ∀ k ≥ N, (↑k ^ n : ℝ) / exp 1 ^ k < (exp 1 * C)⁻¹ :=
     eventually_at_top.1
       ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).Eventually (gt_mem_nhds this))
-  simp only [← exp_nat_mul, mul_oneₓ, div_lt_iff, exp_pos, ← div_eq_inv_mul] at hN
-  refine' ⟨N, trivialₓ, fun x hx => _⟩
+  simp only [← exp_nat_mul, mul_one, div_lt_iff, exp_pos, ← div_eq_inv_mul] at hN
+  refine' ⟨N, trivial, fun x hx => _⟩
   rw [Set.mem_Ioi] at hx
   have hx₀ : 0 < x := N.cast_nonneg.trans_lt hx
   rw [Set.mem_Ici, le_div_iff (pow_pos hx₀ _), ← le_div_iff' hC₀]
@@ -185,20 +185,20 @@ theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) 
     _ ≤ exp ⌈x⌉₊ / (exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
     _ ≤ exp (x + 1) / (exp 1 * C) :=
       div_le_div_of_le (mul_pos (exp_pos _) hC₀).le (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le)
-    _ = exp x / C := by rw [add_commₓ, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
+    _ = exp x / C := by rw [add_comm, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
     
 
 /-- The function `x^n * exp(-x)` tends to `0` at `+∞`, for any natural number `n`. -/
 theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ n * exp (-x)) atTop (𝓝 0) :=
   (tendsto_inv_at_top_zero.comp (tendsto_exp_div_pow_at_top n)).congr fun x => by
-    rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mulₓ, div_eq_mul_inv, exp_neg]
+    rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mul, div_eq_mul_inv, exp_neg]
 
 /-- The function `(b * exp x + c) / (x ^ n)` tends to `+∞` at `+∞`, for any natural number
 `n` and any real numbers `b` and `c` such that `b` is positive. -/
 theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
     Tendsto (fun x => (b * exp x + c) / x ^ n) atTop atTop := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp only [pow_zeroₓ, div_one]
+  · simp only [pow_zero, div_one]
     exact (tendsto_exp_at_top.const_mul_at_top hb).at_top_add tendsto_const_nhds
     
   simp only [add_div, mul_div_assoc]
@@ -215,7 +215,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
     convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_at_top
     ext x
     simpa only [Pi.inv_apply] using (inv_div _ _).symm
-  cases lt_or_gt_of_neₓ hb
+  cases lt_or_gt_of_ne hb
   · exact H b c h
     
   · convert (H (-b) (-c) (neg_pos.mpr h)).neg
@@ -228,8 +228,8 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
     
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
-def expOrderIso : ℝ ≃o Ioi (0 : ℝ) :=
-  StrictMonoₓ.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
+def expOrderIso : ℝ ≃o IoiCat (0 : ℝ) :=
+  StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
     (continuous_exp.subtype_mk _).Surjective (by simp only [tendsto_Ioi_at_top, Subtype.coe_mk, tendsto_exp_at_top])
       (by simp [tendsto_exp_at_bot_nhds_within])
 
@@ -242,7 +242,7 @@ theorem coe_comp_exp_order_iso : coe ∘ exp_order_iso = exp :=
   rfl
 
 @[simp]
-theorem range_exp : Range exp = Ioi 0 := by
+theorem range_exp : Range exp = IoiCat 0 := by
   rw [← coe_comp_exp_order_iso, range_comp, exp_order_iso.range_eq, image_univ, Subtype.range_coe]
 
 @[simp]
@@ -296,7 +296,7 @@ theorem is_Theta_exp_comp_exp_comp {f g : α → ℝ} :
 @[simp]
 theorem is_o_exp_comp_exp_comp {f g : α → ℝ} :
     ((fun x => exp (f x)) =o[l] fun x => exp (g x)) ↔ Tendsto (fun x => g x - f x) l atTop := by
-  simp only [is_o_iff_tendsto, exp_ne_zero, ← exp_sub, ← tendsto_neg_at_top_iff, false_implies_iff, implies_true_iff,
+  simp only [is_o_iff_tendsto, exp_ne_zero, ← exp_sub, ← tendsto_neg_at_top_iff, false_imp_iff, imp_true_iff,
     tendsto_exp_comp_nhds_zero, neg_sub]
 
 @[simp]

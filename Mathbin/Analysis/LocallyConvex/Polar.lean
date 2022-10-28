@@ -42,7 +42,7 @@ namespace LinearMap
 
 section NormedRing
 
-variable [NormedCommRing 𝕜] [AddCommMonoidₓ E] [AddCommMonoidₓ F]
+variable [NormedCommRing 𝕜] [AddCommMonoid E] [AddCommMonoid F]
 
 variable [Module 𝕜 E] [Module 𝕜 F]
 
@@ -80,7 +80,7 @@ theorem polar_Union {ι} {s : ι → Set E} : B.Polar (⋃ i, s i) = ⋂ i, B.Po
 theorem polar_union {s t : Set E} : B.Polar (s ∪ t) = B.Polar s ∩ B.Polar t :=
   B.polar_gc.l_sup
 
-theorem polar_antitone : Antitoneₓ (B.Polar : Set E → Set F) :=
+theorem polar_antitone : Antitone (B.Polar : Set E → Set F) :=
   B.polar_gc.monotone_l
 
 @[simp]
@@ -104,16 +104,16 @@ theorem tripolar_eq_polar (s : Set E) : B.Polar (B.flip.Polar (B.Polar s)) = B.P
   exact B.flip_flip.symm
 
 /-- The polar set is closed in the weak topology induced by `B.flip`. -/
-theorem polar_weak_closed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.Polar s) := by
+theorem polarWeakClosed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.Polar s) := by
   rw [polar_eq_Inter]
-  refine' is_closed_Inter fun x => is_closed_Inter fun _ => _
-  exact is_closed_le (WeakBilin.eval_continuous B.flip x).norm continuous_const
+  refine' isClosedInter fun x => isClosedInter fun _ => _
+  exact isClosedLe (WeakBilin.eval_continuous B.flip x).norm continuous_const
 
 end NormedRing
 
 section NontriviallyNormedField
 
-variable [NontriviallyNormedField 𝕜] [AddCommMonoidₓ E] [AddCommMonoidₓ F]
+variable [NontriviallyNormedField 𝕜] [AddCommMonoid E] [AddCommMonoid F]
 
 variable [Module 𝕜 E] [Module 𝕜 F]
 
@@ -122,13 +122,13 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 theorem polar_univ (h : SeparatingRight B) : B.Polar Set.Univ = {(0 : F)} := by
   rw [Set.eq_singleton_iff_unique_mem]
   refine' ⟨by simp only [zero_mem_polar], fun y hy => h _ fun x => _⟩
-  refine' norm_le_zero_iff.mp (le_of_forall_le_of_denseₓ fun ε hε => _)
+  refine' norm_le_zero_iff.mp (le_of_forall_le_of_dense fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc
     ∥B x y∥ = ∥c∥ * ∥B (c⁻¹ • x) y∥ := by
       rw [B.map_smul, LinearMap.smul_apply, Algebra.id.smul_eq_mul, norm_mul, norm_inv, mul_inv_cancel_left₀ hc.ne']
-    _ ≤ ε * 1 := mul_le_mul hcε.le (hy _ trivialₓ) (norm_nonneg _) hε.le
-    _ = ε := mul_oneₓ _
+    _ ≤ ε * 1 := mul_le_mul hcε.le (hy _ trivial) (norm_nonneg _) hε.le
+    _ = ε := mul_one _
     
 
 end NontriviallyNormedField

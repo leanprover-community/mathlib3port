@@ -27,42 +27,42 @@ namespace OrderHom
 
 variable {α β : Type _}
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α]
+variable [Preorder α]
 
 @[simps]
-instance [SemilatticeSup β] : HasSup (α →o β) where sup := fun f g => ⟨fun a => f a ⊔ g a, f.mono.sup g.mono⟩
+instance [SemilatticeSup β] : HasSup (α →o β) where sup f g := ⟨fun a => f a ⊔ g a, f.mono.sup g.mono⟩
 
 instance [SemilatticeSup β] : SemilatticeSup (α →o β) :=
-  { (_ : PartialOrderₓ (α →o β)) with sup := HasSup.sup, le_sup_left := fun a b x => le_sup_left,
+  { (_ : PartialOrder (α →o β)) with sup := HasSup.sup, le_sup_left := fun a b x => le_sup_left,
     le_sup_right := fun a b x => le_sup_right, sup_le := fun a b c h₀ h₁ x => sup_le (h₀ x) (h₁ x) }
 
 @[simps]
-instance [SemilatticeInf β] : HasInf (α →o β) where inf := fun f g => ⟨fun a => f a ⊓ g a, f.mono.inf g.mono⟩
+instance [SemilatticeInf β] : HasInf (α →o β) where inf f g := ⟨fun a => f a ⊓ g a, f.mono.inf g.mono⟩
 
 instance [SemilatticeInf β] : SemilatticeInf (α →o β) :=
-  { (_ : PartialOrderₓ (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := (· ⊓ ·) }
+  { (_ : PartialOrder (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := (· ⊓ ·) }
 
 instance [Lattice β] : Lattice (α →o β) :=
   { (_ : SemilatticeSup (α →o β)), (_ : SemilatticeInf (α →o β)) with }
 
 @[simps]
-instance [Preorderₓ β] [OrderBot β] : HasBot (α →o β) where bot := const α ⊥
+instance [Preorder β] [OrderBot β] : HasBot (α →o β) where bot := const α ⊥
 
-instance [Preorderₓ β] [OrderBot β] : OrderBot (α →o β) where
+instance [Preorder β] [OrderBot β] : OrderBot (α →o β) where
   bot := ⊥
-  bot_le := fun a x => bot_le
+  bot_le a x := bot_le
 
 @[simps]
-instance [Preorderₓ β] [OrderTop β] : HasTop (α →o β) where top := const α ⊤
+instance [Preorder β] [OrderTop β] : HasTop (α →o β) where top := const α ⊤
 
-instance [Preorderₓ β] [OrderTop β] : OrderTop (α →o β) where
+instance [Preorder β] [OrderTop β] : OrderTop (α →o β) where
   top := ⊤
-  le_top := fun a x => le_top
+  le_top a x := le_top
 
 instance [CompleteLattice β] :
-    HasInfₓ (α →o β) where inf := fun s => ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infi₂_mono fun f _ => f.mono h⟩
+    HasInf (α →o β) where inf s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infi₂_mono fun f _ => f.mono h⟩
 
 @[simp]
 theorem Inf_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : inf s x = ⨅ f ∈ s, (f : _) x :=
@@ -76,7 +76,7 @@ theorem coe_infi {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) : ((
   funext fun x => (infi_apply f x).trans (@infi_apply _ _ _ _ (fun i => f i) _).symm
 
 instance [CompleteLattice β] :
-    HasSupₓ (α →o β) where sup := fun s => ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => supr₂_mono fun f _ => f.mono h⟩
+    HasSup (α →o β) where sup s := ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => supr₂_mono fun f _ => f.mono h⟩
 
 @[simp]
 theorem Sup_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : sup s x = ⨆ f ∈ s, (f : _) x :=
@@ -122,7 +122,7 @@ theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α
       
     
 
-end Preorderₓ
+end Preorder
 
 end OrderHom
 

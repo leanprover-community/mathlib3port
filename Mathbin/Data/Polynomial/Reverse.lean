@@ -20,13 +20,13 @@ coefficients of `f` and `g` do not multiply to zero.
 
 namespace Polynomial
 
-open Polynomial Finsupp Finsetₓ
+open Polynomial Finsupp Finset
 
 open Classical Polynomial
 
-section Semiringₓ
+section Semiring
 
-variable {R : Type _} [Semiringₓ R] {f : R[X]}
+variable {R : Type _} [Semiring R] {f : R[X]}
 
 /-- If `i ≤ N`, then `rev_at_fun N i` returns `N - i`, otherwise it returns `i`.
 This is the map used by the embedding `rev_at`.
@@ -41,7 +41,7 @@ theorem rev_at_fun_invol {N i : ℕ} : revAtFun N (revAtFun N i) = i := by
     
   · exfalso
     apply j
-    exact Nat.sub_leₓ N i
+    exact Nat.sub_le N i
     
   · rfl
     
@@ -55,7 +55,7 @@ Essentially, this embedding is only used for `i ≤ N`.
 The advantage of `rev_at N i` over `N - i` is that `rev_at` is an involution.
 -/
 def revAt (N : ℕ) : Function.Embedding ℕ ℕ where
-  toFun := fun i => ite (i ≤ N) (N - i) i
+  toFun i := ite (i ≤ N) (N - i) i
   inj' := rev_at_fun_inj
 
 /-- We prefer to use the bundled `rev_at` over unbundled `rev_at_fun`. -/
@@ -72,10 +72,10 @@ theorem rev_at_le {N i : ℕ} (H : i ≤ N) : revAt N i = N - i :=
   if_pos H
 
 theorem rev_at_add {N O n o : ℕ} (hn : n ≤ N) (ho : o ≤ O) : revAt (N + O) (n + o) = revAt N n + revAt O o := by
-  rcases Nat.Le.dest hn with ⟨n', rfl⟩
-  rcases Nat.Le.dest ho with ⟨o', rfl⟩
+  rcases Nat.le.dest hn with ⟨n', rfl⟩
+  rcases Nat.le.dest ho with ⟨o', rfl⟩
   repeat' rw [rev_at_le (le_add_right rfl.le)]
-  rw [add_assocₓ, add_left_commₓ n' o, ← add_assocₓ, rev_at_le (le_add_right rfl.le)]
+  rw [add_assoc, add_left_comm n' o, ← add_assoc, rev_at_le (le_add_right rfl.le)]
   repeat' rw [add_tsub_cancel_left]
 
 @[simp]
@@ -90,10 +90,10 @@ Eventually, it will be used with `N` exactly equal to the degree of `f`.  -/
 noncomputable def reflect (N : ℕ) : R[X] → R[X]
   | ⟨f⟩ => ⟨Finsupp.embDomain (revAt N) f⟩
 
-theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).Support = Finsetₓ.image (revAt N) f.Support := by
+theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).Support = Finset.image (revAt N) f.Support := by
   rcases f with ⟨⟩
   ext1
-  simp only [reflect, support_of_finsupp, support_emb_domain, Finsetₓ.mem_map, Finsetₓ.mem_image]
+  simp only [reflect, support_of_finsupp, support_emb_domain, Finset.mem_map, Finset.mem_image]
 
 @[simp]
 theorem coeff_reflect (N : ℕ) (f : R[X]) (i : ℕ) : coeff (reflect N f) i = f.coeff (revAt N i) := by
@@ -132,18 +132,18 @@ theorem reflect_C_mul_X_pow (N n : ℕ) {c : R} : reflect N (c c * X ^ n) = c c 
     
   · rw [not_mem_support_iff.mp]
     intro a
-    rw [← one_mulₓ (X ^ n), ← C_1] at a
+    rw [← one_mul (X ^ n), ← C_1] at a
     apply h
     rw [← mem_support_C_mul_X_pow a, rev_at_invol]
     
 
 @[simp]
 theorem reflect_C (r : R) (N : ℕ) : reflect N (c r) = c r * X ^ N := by
-  conv_lhs => rw [← mul_oneₓ (C r), ← pow_zeroₓ X, reflect_C_mul_X_pow, rev_at_zero]
+  conv_lhs => rw [← mul_one (C r), ← pow_zero X, reflect_C_mul_X_pow, rev_at_zero]
 
 @[simp]
 theorem reflect_monomial (N n : ℕ) : reflect N ((x : R[X]) ^ n) = X ^ revAt N n := by
-  rw [← one_mulₓ (X ^ n), ← one_mulₓ (X ^ rev_at N n), ← C_1, reflect_C_mul_X_pow]
+  rw [← one_mul (X ^ n), ← one_mul (X ^ rev_at N n), ← C_1, reflect_C_mul_X_pow]
 
 theorem reflect_mul_induction (cf cg : ℕ) :
     ∀ N O : ℕ,
@@ -158,22 +158,22 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     -- second induction (right): base case
     · intro N O f g Cf Cg Nf Og
       rw [← C_mul_X_pow_eq_self Cf, ← C_mul_X_pow_eq_self Cg]
-      simp_rw [mul_assoc, X_pow_mul, mul_assoc, ← pow_addₓ (X : R[X]), reflect_C_mul, reflect_monomial, add_commₓ,
-        rev_at_add Nf Og, mul_assoc, X_pow_mul, mul_assoc, ← pow_addₓ (X : R[X]), add_commₓ]
+      simp_rw [mul_assoc, X_pow_mul, mul_assoc, ← pow_add (X : R[X]), reflect_C_mul, reflect_monomial, add_comm,
+        rev_at_add Nf Og, mul_assoc, X_pow_mul, mul_assoc, ← pow_add (X : R[X]), add_comm]
       
     -- second induction (right): induction step
     · intro N O f g Cf Cg Nf Og
       by_cases g0:g = 0
       · rw [g0, reflect_zero, mul_zero, mul_zero, reflect_zero]
         
-      rw [← erase_lead_add_C_mul_X_pow g, mul_addₓ, reflect_add, reflect_add, mul_addₓ, hcg, hcg] <;> try assumption
+      rw [← erase_lead_add_C_mul_X_pow g, mul_add, reflect_add, reflect_add, mul_add, hcg, hcg] <;> try assumption
       · exact le_add_left card_support_C_mul_X_pow_le_one
         
-      · exact le_transₓ (nat_degree_C_mul_X_pow_le g.leading_coeff g.nat_degree) Og
+      · exact le_trans (nat_degree_C_mul_X_pow_le g.leading_coeff g.nat_degree) Og
         
-      · exact nat.lt_succ_iff.mp (gt_of_ge_of_gtₓ Cg (erase_lead_support_card_lt g0))
+      · exact nat.lt_succ_iff.mp (gt_of_ge_of_gt Cg (erase_lead_support_card_lt g0))
         
-      · exact le_transₓ erase_lead_nat_degree_le_aux Og
+      · exact le_trans erase_lead_nat_degree_le_aux Og
         
       
     
@@ -182,14 +182,14 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     by_cases f0:f = 0
     · rw [f0, reflect_zero, zero_mul, zero_mul, reflect_zero]
       
-    rw [← erase_lead_add_C_mul_X_pow f, add_mulₓ, reflect_add, reflect_add, add_mulₓ, hcf, hcf] <;> try assumption
+    rw [← erase_lead_add_C_mul_X_pow f, add_mul, reflect_add, reflect_add, add_mul, hcf, hcf] <;> try assumption
     · exact le_add_left card_support_C_mul_X_pow_le_one
       
-    · exact le_transₓ (nat_degree_C_mul_X_pow_le f.leading_coeff f.nat_degree) Nf
+    · exact le_trans (nat_degree_C_mul_X_pow_le f.leading_coeff f.nat_degree) Nf
       
-    · exact nat.lt_succ_iff.mp (gt_of_ge_of_gtₓ Cf (erase_lead_support_card_lt f0))
+    · exact nat.lt_succ_iff.mp (gt_of_ge_of_gt Cf (erase_lead_support_card_lt f0))
       
-    · exact le_transₓ erase_lead_nat_degree_le_aux Nf
+    · exact le_trans erase_lead_nat_degree_le_aux Nf
       
     
 
@@ -200,7 +200,7 @@ theorem reflect_mul (f g : R[X]) {F G : ℕ} (Ff : f.natDegree ≤ F) (Gg : g.na
 
 section Eval₂
 
-variable {S : Type _} [CommSemiringₓ S]
+variable {S : Type _} [CommSemiring S]
 
 theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X]) (hf : f.natDegree ≤ N) :
     eval₂ i (⅟ x) (reflect N f) * x ^ N = eval₂ i x f := by
@@ -209,11 +209,11 @@ theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ)
     
   · intro n r hr0 hnN
     simp only [rev_at_le hnN, reflect_C_mul_X_pow, eval₂_X_pow, eval₂_C, eval₂_mul]
-    conv in x ^ N => rw [← Nat.sub_add_cancelₓ hnN]
-    rw [pow_addₓ, ← mul_assoc, mul_assoc (i r), ← mul_powₓ, inv_of_mul_self, one_pow, mul_oneₓ]
+    conv in x ^ N => rw [← Nat.sub_add_cancel hnN]
+    rw [pow_add, ← mul_assoc, mul_assoc (i r), ← mul_pow, inv_of_mul_self, one_pow, mul_one]
     
   · intros
-    simp [*, add_mulₓ]
+    simp [*, add_mul]
     
 
 theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X]) (hf : f.natDegree ≤ N) :
@@ -224,7 +224,7 @@ theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : 
     rw [h, zero_mul]
     
   · intro h
-    rw [← mul_oneₓ (eval₂ i (⅟ x) _), ← one_pow N, ← mul_inv_of_self x, mul_powₓ, ← mul_assoc, h, zero_mul]
+    rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_inv_of_self x, mul_pow, ← mul_assoc, h, zero_mul]
     
 
 end Eval₂
@@ -252,14 +252,14 @@ theorem reverse_nat_degree_le (f : R[X]) : f.reverse.natDegree ≤ f.natDegree :
   rw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero]
   intro n hn
   rw [WithBot.coe_lt_coe] at hn
-  rw [coeff_reverse, rev_at, Function.Embedding.coe_fn_mk, if_neg (not_le_of_gtₓ hn), coeff_eq_zero_of_nat_degree_lt hn]
+  rw [coeff_reverse, rev_at, Function.Embedding.coe_fn_mk, if_neg (not_le_of_gt hn), coeff_eq_zero_of_nat_degree_lt hn]
 
 theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree (f : R[X]) :
     f.natDegree = f.reverse.natDegree + f.natTrailingDegree := by
   by_cases hf:f = 0
   · rw [hf, reverse_zero, nat_degree_zero, nat_trailing_degree_zero]
     
-  apply le_antisymmₓ
+  apply le_antisymm
   · refine' tsub_le_iff_right.mp _
     apply le_nat_degree_of_ne_zero
     rw [reverse, coeff_reflect, ← rev_at_le f.nat_trailing_degree_le_nat_degree, rev_at_invol]
@@ -297,7 +297,7 @@ theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) : 
   rw [nat_degree_mul' fg, reflect_mul f g rfl.le rfl.le]
 
 @[simp]
-theorem reverse_mul_of_domain {R : Type _} [Ringₓ R] [NoZeroDivisors R] (f g : R[X]) :
+theorem reverse_mul_of_domain {R : Type _} [Ring R] [NoZeroDivisors R] (f g : R[X]) :
     reverse (f * g) = reverse f * reverse g := by
   by_cases f0:f = 0
   · simp only [f0, zero_mul, reverse_zero]
@@ -307,7 +307,7 @@ theorem reverse_mul_of_domain {R : Type _} [Ringₓ R] [NoZeroDivisors R] (f g :
     
   simp [reverse_mul, *]
 
-theorem trailing_coeff_mul {R : Type _} [Ringₓ R] [NoZeroDivisors R] (p q : R[X]) :
+theorem trailing_coeff_mul {R : Type _} [Ring R] [NoZeroDivisors R] (p q : R[X]) :
     (p * q).trailingCoeff = p.trailingCoeff * q.trailingCoeff := by
   rw [← reverse_leading_coeff, reverse_mul_of_domain, leading_coeff_mul, reverse_leading_coeff, reverse_leading_coeff]
 
@@ -324,24 +324,24 @@ theorem coeff_one_reverse (f : R[X]) : coeff (reverse f) 1 = nextCoeff f := by
 
 section Eval₂
 
-variable {S : Type _} [CommSemiringₓ S]
+variable {S : Type _} [CommSemiring S]
 
 theorem eval₂_reverse_mul_pow (i : R →+* S) (x : S) [Invertible x] (f : R[X]) :
     eval₂ i (⅟ x) (reverse f) * x ^ f.natDegree = eval₂ i x f :=
-  eval₂_reflect_mul_pow i _ _ f le_rflₓ
+  eval₂_reflect_mul_pow i _ _ f le_rfl
 
 @[simp]
 theorem eval₂_reverse_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (f : R[X]) :
     eval₂ i (⅟ x) (reverse f) = 0 ↔ eval₂ i x f = 0 :=
-  eval₂_reflect_eq_zero_iff i x _ _ le_rflₓ
+  eval₂_reflect_eq_zero_iff i x _ _ le_rfl
 
 end Eval₂
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable {R : Type _} [Ringₓ R]
+variable {R : Type _} [Ring R]
 
 @[simp]
 theorem reflect_neg (f : R[X]) (N : ℕ) : reflect N (-f) = -reflect N f := by
@@ -354,7 +354,7 @@ theorem reflect_sub (f g : R[X]) (N : ℕ) : reflect N (f - g) = reflect N f - r
 @[simp]
 theorem reverse_neg (f : R[X]) : reverse (-f) = -reverse f := by rw [reverse, reverse, reflect_neg, nat_degree_neg]
 
-end Ringₓ
+end Ring
 
 end Polynomial
 

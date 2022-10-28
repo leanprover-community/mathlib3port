@@ -3,7 +3,7 @@ Copyright (c) 2019 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.CategoryTheory.Category.Cat
+import Mathbin.CategoryTheory.Category.CatCat
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.Types
 
@@ -29,7 +29,7 @@ def IsIsomorphic : C → C → Prop := fun X Y => Nonempty (X ≅ Y)
 variable (C)
 
 /-- `is_isomorphic` defines a setoid. -/
-def isIsomorphicSetoid : Setoidₓ C where
+def isIsomorphicSetoid : Setoid C where
   R := IsIsomorphic
   iseqv := ⟨fun X => ⟨Iso.refl X⟩, fun X Y ⟨α⟩ => ⟨α.symm⟩, fun X Y Z ⟨α⟩ ⟨β⟩ => ⟨α.trans β⟩⟩
 
@@ -38,8 +38,8 @@ end Category
 /-- The functor that sends each category to the quotient space of its objects up to an isomorphism.
 -/
 def isomorphismClasses : Cat.{v, u} ⥤ Type u where
-  obj := fun C => Quotientₓ (isIsomorphicSetoid C.α)
-  map := fun C D F => (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
+  obj C := Quotient (isIsomorphicSetoid C.α)
+  map C D F := (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 
 theorem Groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [Groupoid.{v} C] {X Y : C} :
     IsIsomorphic X Y ↔ Nonempty (X ⟶ Y) :=

@@ -44,7 +44,7 @@ theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : 
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `continuous.comp` when appropriate.
 
 Applying `continuous.comp` is not always a good idea, so we have some
@@ -65,7 +65,7 @@ unsafe def apply_continuous.comp : tactic Unit :=
   sorry
 
 /-- List of tactics used by `continuity` internally. -/
-unsafe def continuity_tactics (md : Transparency := reducible) : List (tactic Stringₓ) :=
+unsafe def continuity_tactics (md : Transparency := reducible) : List (tactic String) :=
   [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.toString)),
     apply_rules [] [`` continuity] 50 { md } >> pure "apply_rules with continuity",
     apply_continuous.comp >> pure "refine continuous.comp _ _"]
@@ -76,7 +76,7 @@ setup_tactic_parser
 
 /-- Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
 -/
-unsafe def continuity (bang : parse <| optionalₓ (tk "!")) (trace : parse <| optionalₓ (tk "?"))
+unsafe def continuity (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let continuity_core := tactic.tidy { cfg with tactics := continuity_tactics md }

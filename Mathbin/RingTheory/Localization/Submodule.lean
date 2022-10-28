@@ -20,9 +20,9 @@ commutative ring, field of fractions
 -/
 
 
-variable {R : Type _} [CommRingₓ R] (M : Submonoid R) (S : Type _) [CommRingₓ S]
+variable {R : Type _} [CommRing R] (M : Submonoid R) (S : Type _) [CommRing S]
 
-variable [Algebra R S] {P : Type _} [CommRingₓ P]
+variable [Algebra R S] {P : Type _} [CommRing P]
 
 namespace IsLocalization
 
@@ -70,7 +70,7 @@ theorem coe_submodule_span_singleton (x : R) :
 
 variable {g : R →+* P}
 
-variable {T : Submonoid P} (hy : M ≤ T.comap g) {Q : Type _} [CommRingₓ Q]
+variable {T : Submonoid P} (hy : M ≤ T.comap g) {Q : Type _} [CommRing Q]
 
 variable [Algebra P Q] [IsLocalization T Q]
 
@@ -94,15 +94,14 @@ theorem coe_submodule_le_coe_submodule (h : M ≤ nonZeroDivisors R) {I J : Idea
   Submodule.map_le_map_iff_of_injective (IsLocalization.injective _ h) _ _
 
 @[mono]
-theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) :
-    StrictMonoₓ (coeSubmodule S : Ideal R → Submodule R S) :=
+theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) : StrictMono (coeSubmodule S : Ideal R → Submodule R S) :=
   strict_mono_of_le_iff_le fun _ _ => (coe_submodule_le_coe_submodule h).symm
 
 variable (S) {Q M}
 
 theorem coe_submodule_injective (h : M ≤ nonZeroDivisors R) :
     Function.Injective (coeSubmodule S : Ideal R → Submodule R S) :=
-  injective_of_le_imp_leₓ _ fun _ _ => (coe_submodule_le_coe_submodule h).mp
+  injective_of_le_imp_le _ fun _ _ => (coe_submodule_le_coe_submodule h).mp
 
 theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
     (coeSubmodule S I).IsPrincipal ↔ I.IsPrincipal := by
@@ -118,8 +117,8 @@ theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
 
 variable {S} (M)
 
-theorem mem_span_iff {N : Type _} [AddCommGroupₓ N] [Module R N] [Module S N] [IsScalarTower R S N] {x : N}
-    {a : Set N} : x ∈ Submodule.span S a ↔ ∃ y ∈ Submodule.span R a, ∃ z : M, x = mk' S 1 z • y := by
+theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [IsScalarTower R S N] {x : N} {a : Set N} :
+    x ∈ Submodule.span S a ↔ ∃ y ∈ Submodule.span R a, ∃ z : M, x = mk' S 1 z • y := by
   constructor
   intro h
   · refine' Submodule.span_induction h _ _ _ _
@@ -135,9 +134,9 @@ theorem mem_span_iff {N : Type _} [AddCommGroupₓ N] [Module R N] [Module S N] 
       rw [smul_add, ← IsScalarTower.algebra_map_smul S (z : R), ← IsScalarTower.algebra_map_smul S (z' : R), smul_smul,
         smul_smul]
       congr 1
-      · rw [← mul_oneₓ (1 : R), mk'_mul, mul_assoc, mk'_spec, _root_.map_one, mul_oneₓ, mul_oneₓ]
+      · rw [← mul_one (1 : R), mk'_mul, mul_assoc, mk'_spec, _root_.map_one, mul_one, mul_one]
         
-      · rw [← mul_oneₓ (1 : R), mk'_mul, mul_right_commₓ, mk'_spec, _root_.map_one, mul_oneₓ, one_mulₓ]
+      · rw [← mul_one (1 : R), mk'_mul, mul_right_comm, mk'_spec, _root_.map_one, mul_one, one_mul]
         
       all_goals infer_instance
       
@@ -160,11 +159,11 @@ theorem mem_span_map {x : S} {a : Set R} :
   · rw [← coe_submodule_span]
     rintro ⟨_, ⟨y, hy, rfl⟩, z, hz⟩
     refine' ⟨y, hy, z, _⟩
-    rw [hz, Algebra.linear_map_apply, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_oneₓ]
+    rw [hz, Algebra.linear_map_apply, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_one]
     
   · rintro ⟨y, hy, z, hz⟩
     refine' ⟨algebraMap R S y, Submodule.map_mem_span_algebra_map_image _ _ hy, z, _⟩
-    rw [hz, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_oneₓ]
+    rw [hz, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_one]
     
 
 end IsLocalization
@@ -173,30 +172,30 @@ namespace IsFractionRing
 
 open IsLocalization
 
-variable {R} {A K : Type _} [CommRingₓ A]
+variable {R} {A K : Type _} [CommRing A]
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ K] [Algebra R K] [IsFractionRing R K] [Algebra A K] [IsFractionRing A K]
+variable [CommRing K] [Algebra R K] [IsFractionRing R K] [Algebra A K] [IsFractionRing A K]
 
 @[simp, mono]
 theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coeSubmodule K I ≤ coeSubmodule K J ↔ I ≤ J :=
-  IsLocalization.coe_submodule_le_coe_submodule le_rflₓ
+  IsLocalization.coe_submodule_le_coe_submodule le_rfl
 
 @[mono]
-theorem coe_submodule_strict_mono : StrictMonoₓ (coeSubmodule K : Ideal R → Submodule R K) :=
+theorem coe_submodule_strict_mono : StrictMono (coeSubmodule K : Ideal R → Submodule R K) :=
   strict_mono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
 
 variable (R K)
 
 theorem coe_submodule_injective : Function.Injective (coeSubmodule K : Ideal R → Submodule R K) :=
-  injective_of_le_imp_leₓ _ fun _ _ => coe_submodule_le_coe_submodule.mp
+  injective_of_le_imp_le _ fun _ _ => coe_submodule_le_coe_submodule.mp
 
 @[simp]
 theorem coe_submodule_is_principal {I : Ideal R} : (coeSubmodule K I).IsPrincipal ↔ I.IsPrincipal :=
-  IsLocalization.coe_submodule_is_principal _ le_rflₓ
+  IsLocalization.coe_submodule_is_principal _ le_rfl
 
-end CommRingₓ
+end CommRing
 
 end IsFractionRing
 

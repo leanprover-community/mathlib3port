@@ -115,10 +115,10 @@ theorem inner_content_le (U : Opens G) (K : Compacts G) (h2 : (U : Set G) ⊆ K)
 
 theorem inner_content_of_is_compact {K : Set G} (h1K : IsCompact K) (h2K : IsOpen K) :
     μ.innerContent ⟨K, h2K⟩ = μ ⟨K, h1K⟩ :=
-  le_antisymmₓ (supr₂_le fun K' hK' => μ.mono _ ⟨K, h1K⟩ hK') (μ.le_inner_content _ _ Subset.rfl)
+  le_antisymm (supr₂_le fun K' hK' => μ.mono _ ⟨K, h1K⟩ hK') (μ.le_inner_content _ _ Subset.rfl)
 
 theorem inner_content_empty : μ.innerContent ∅ = 0 := by
-  refine' le_antisymmₓ _ (zero_le _)
+  refine' le_antisymm _ (zero_le _)
   rw [← μ.empty]
   refine' supr₂_le fun K hK => _
   have : K = ⊥ := by
@@ -135,7 +135,7 @@ theorem inner_content_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2
 theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
     ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.innerContent U ≤ μ K + ε := by
   have h'ε := Ennreal.coe_ne_zero.2 hε
-  cases le_or_ltₓ (μ.inner_content U) ε
+  cases le_or_lt (μ.inner_content U) ε
   · exact ⟨⊥, empty_subset _, le_add_left h⟩
     
   have := Ennreal.sub_lt_self hU h.ne_bot h'ε
@@ -146,39 +146,39 @@ theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
   rcases this with ⟨U, h1U, h2U⟩
   refine' ⟨U, h1U, _⟩
   rw [← tsub_le_iff_right]
-  exact le_of_ltₓ h2U
+  exact le_of_lt h2U
 
 /-- The inner content of a supremum of opens is at most the sum of the individual inner
 contents. -/
 theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
     μ.innerContent (⨆ i : ℕ, U i) ≤ ∑' i : ℕ, μ.innerContent (U i) := by
-  have h3 : ∀ (t : Finsetₓ ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) := by
+  have h3 : ∀ (t : Finset ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) := by
     intro t K
-    refine' Finsetₓ.induction_on t _ _
-    · simp only [μ.empty, nonpos_iff_eq_zero, Finsetₓ.sum_empty, Finsetₓ.sup_empty]
+    refine' Finset.induction_on t _ _
+    · simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
       
     · intro n s hn ih
-      rw [Finsetₓ.sup_insert, Finsetₓ.sum_insert hn]
-      exact le_transₓ (μ.sup_le _ _) (add_le_add_left ih _)
+      rw [Finset.sup_insert, Finset.sum_insert hn]
+      exact le_trans (μ.sup_le _ _) (add_le_add_left ih _)
       
   refine' supr₂_le fun K hK => _
-  obtain ⟨t, ht⟩ := K.compact.elim_finite_subcover _ (fun i => (U i).Prop) _
+  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).Prop) _
   swap
   · convert hK
     rw [opens.supr_def, Subtype.coe_mk]
     
-  rcases K.compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop) (by simp only [ht]) with
+  rcases K.is_compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop) (by simp only [ht]) with
     ⟨K', h1K', h2K', h3K'⟩
   let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
-  convert le_transₓ (h3 t L) _
+  convert le_trans (h3 t L) _
   · ext1
-    rw [compacts.coe_finset_sup, Finsetₓ.sup_eq_supr]
+    rw [compacts.coe_finset_sup, Finset.sup_eq_supr]
     exact h3K'
     
-  refine' le_transₓ (Finsetₓ.sum_le_sum _) (Ennreal.sum_le_tsum t)
+  refine' le_trans (Finset.sum_le_sum _) (Ennreal.sum_le_tsum t)
   intro i hi
-  refine' le_transₓ _ (le_supr _ (L i))
-  refine' le_transₓ _ (le_supr _ (h2K' i))
+  refine' le_trans _ (le_supr _ (L i))
+  refine' le_trans _ (le_supr _ (h2K' i))
   rfl'
 
 /-- The inner content of a union of sets is at most the sum of the individual inner contents.
@@ -193,17 +193,17 @@ theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (
     μ.innerContent (Opens.comap f.toContinuousMap U) = μ.innerContent U := by
   refine' (compacts.equiv f).Surjective.supr_congr _ fun K => supr_congr_Prop image_subset_iff _
   intro hK
-  simp only [Equivₓ.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
+  simp only [Equiv.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
   apply h
 
 @[to_additive]
-theorem is_mul_left_invariant_inner_content [Groupₓ G] [TopologicalGroup G]
+theorem is_mul_left_invariant_inner_content [Group G] [TopologicalGroup G]
     (h : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G) (U : Opens G) :
     μ.innerContent (Opens.comap (Homeomorph.mulLeft g).toContinuousMap U) = μ.innerContent U := by
   convert μ.inner_content_comap (Homeomorph.mulLeft g) (fun K => h g) U
 
 @[to_additive]
-theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Groupₓ G] [TopologicalGroup G]
+theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Group G] [TopologicalGroup G]
     (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
     (U : Opens G) (hU : (U : Set G).Nonempty) : 0 < μ.innerContent U := by
   have : (Interior (U : Set G)).Nonempty
@@ -213,8 +213,8 @@ theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Groupₓ G] [Top
   have : (K : Set G) ⊆ ↑(⨆ g ∈ s, opens.comap (Homeomorph.mulLeft g).toContinuousMap U) := by
     simpa only [opens.supr_def, opens.coe_comap, Subtype.coe_mk]
   refine' (μ.le_inner_content _ _ this).trans _
-  refine' (rel_supr_sum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
-  simp only [μ.is_mul_left_invariant_inner_content h3, Finsetₓ.sum_const, nsmul_eq_mul, le_reflₓ]
+  refine' (relSuprSum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
+  simp only [μ.is_mul_left_invariant_inner_content h3, Finset.sum_const, nsmul_eq_mul, le_refl]
 
 theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
@@ -255,7 +255,7 @@ theorem outer_measure_exists_compact {U : Opens G} (hU : μ.OuterMeasure U ≠ �
     ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure K + ε := by
   rw [μ.outer_measure_opens] at hU⊢
   rcases μ.inner_content_exists_compact hU hε with ⟨K, h1K, h2K⟩
-  exact ⟨K, h1K, le_transₓ h2K <| add_le_add_right (μ.le_outer_measure_compacts K) _⟩
+  exact ⟨K, h1K, le_trans h2K <| add_le_add_right (μ.le_outer_measure_compacts K) _⟩
 
 theorem outer_measure_exists_open {A : Set G} (hA : μ.OuterMeasure A ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
     ∃ U : Opens G, A ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure A + ε := by
@@ -281,7 +281,7 @@ theorem outer_measure_lt_top_of_is_compact [LocallyCompactSpace G] {K : Set G} (
     
 
 @[to_additive]
-theorem is_mul_left_invariant_outer_measure [Groupₓ G] [TopologicalGroup G]
+theorem is_mul_left_invariant_outer_measure [Group G] [TopologicalGroup G]
     (h : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G) (A : Set G) :
     μ.OuterMeasure ((fun h => g * h) ⁻¹' A) = μ.OuterMeasure A := by
   convert μ.outer_measure_preimage (Homeomorph.mulLeft g) (fun K => h g) A
@@ -297,7 +297,7 @@ theorem outer_measure_caratheodory (A : Set G) :
   apply inner_content_mono'
 
 @[to_additive]
-theorem outer_measure_pos_of_is_mul_left_invariant [Groupₓ G] [TopologicalGroup G]
+theorem outer_measure_pos_of_is_mul_left_invariant [Group G] [TopologicalGroup G]
     (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
     {U : Set G} (h1U : IsOpen U) (h2U : U.Nonempty) : 0 < μ.OuterMeasure U := by
   convert μ.inner_content_pos_of_is_mul_left_invariant h3 K hK ⟨U, h1U⟩ h2U
@@ -323,7 +323,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   rintro ⟨L, hL⟩
   simp only [subset_inter_iff] at hL
   have : ↑U' \ U ⊆ U' \ L := diff_subset_diff_right hL.2
-  refine' le_transₓ (add_le_add_left (μ.outer_measure.mono' this) _) _
+  refine' le_trans (add_le_add_left (μ.outer_measure.mono' this) _) _
   rw [μ.outer_measure_of_is_open (↑U' \ L) (IsOpen.sdiff U'.2 L.2.IsClosed)]
   simp only [inner_content, supr_subtype']
   rw [opens.coe_mk]
@@ -332,9 +332,9 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   refine' supr_le _
   rintro ⟨M, hM⟩
   simp only [subset_diff] at hM
-  have : (↑(L ⊔ M) : Set G) ⊆ U' := by simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_selfₓ]
+  have : (↑(L ⊔ M) : Set G) ⊆ U' := by simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_self_iff]
   rw [μ.outer_measure_of_is_open (↑U') U'.2]
-  refine' le_transₓ (ge_of_eqₓ _) (μ.le_inner_content _ _ this)
+  refine' le_trans (ge_of_eq _) (μ.le_inner_content _ _ this)
   exact μ.sup_disjoint _ _ hM.2.symm
 
 /-- The measure induced by the outer measure coming from a content, on the Borel sigma-algebra. -/

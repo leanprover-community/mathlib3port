@@ -19,7 +19,7 @@ import Mathbin.RingTheory.Ideal.LocalRing
 
 
 /-- In a local ring the characteristics is either zero or a prime power. -/
-theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q : ℕ) [char_R_q : CharP R q] :
+theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : ℕ) [char_R_q : CharP R q] :
     q = 0 ∨ IsPrimePow q := by
   -- Assume `q := char(R)` is not zero.
   apply or_iff_not_imp_left.2
@@ -32,7 +32,7 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q
   cases' CharP.char_is_prime_or_zero K r with r_prime r_zero
   · let a := q / r ^ n
     -- If `r` is prime, we can write it as `r = a * q^n` ...
-    have q_eq_a_mul_rn : q = r ^ n * a := by rw [Nat.mul_div_cancel'ₓ (Nat.ord_proj_dvd q r)]
+    have q_eq_a_mul_rn : q = r ^ n * a := by rw [Nat.mul_div_cancel' (Nat.ord_proj_dvd q r)]
     have r_ne_dvd_a := Nat.not_dvd_ord_compl r_prime q_pos
     have rn_dvd_q : r ^ n ∣ q := ⟨a, q_eq_a_mul_rn⟩
     rw [mul_comm] at q_eq_a_mul_rn
@@ -49,8 +49,8 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q
     -- Let `b` be the inverse of `a`.
     cases' a_unit.exists_left_inv with a_inv h_inv_mul_a
     have rn_cast_zero : ↑(r ^ n) = (0 : R) := by
-      rw [Nat.cast_powₓ, ← @mul_oneₓ R _ (r ^ n), mul_comm, ← Classical.choose_spec a_unit.exists_left_inv, mul_assoc, ←
-        Nat.cast_powₓ, ← Nat.cast_mulₓ, ← q_eq_a_mul_rn, CharP.cast_eq_zero R q]
+      rw [Nat.cast_pow, ← @mul_one R _ (r ^ n), mul_comm, ← Classical.choose_spec a_unit.exists_left_inv, mul_assoc, ←
+        Nat.cast_pow, ← Nat.cast_mul, ← q_eq_a_mul_rn, CharP.cast_eq_zero R q]
       simp
     have q_eq_rn := Nat.dvd_antisymm ((CharP.cast_eq_zero_iff R q (r ^ n)).mp rn_cast_zero) rn_dvd_q
     have n_pos : n ≠ 0 := by

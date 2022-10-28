@@ -29,9 +29,9 @@ variable {R S : Type _}
 
 open Tropical
 
-instance [HasSup R] : HasSup (Tropical R) where sup := fun x y => trop (untrop x ⊔ untrop y)
+instance [HasSup R] : HasSup (Tropical R) where sup x y := trop (untrop x ⊔ untrop y)
 
-instance [HasInf R] : HasInf (Tropical R) where inf := fun x y => trop (untrop x ⊓ untrop y)
+instance [HasInf R] : HasInf (Tropical R) where inf x y := trop (untrop x ⊓ untrop y)
 
 instance [SemilatticeInf R] : SemilatticeInf (Tropical R) :=
   { Tropical.hasInf, Tropical.partialOrder with le_inf := fun _ _ _ => le_inf, inf_le_left := fun _ _ => inf_le_left,
@@ -44,12 +44,12 @@ instance [SemilatticeSup R] : SemilatticeSup (Tropical R) :=
 instance [Lattice R] : Lattice (Tropical R) :=
   { Tropical.semilatticeInf, Tropical.semilatticeSup with }
 
-instance [HasSupₓ R] : HasSupₓ (Tropical R) where sup := fun s => trop (sup (untrop '' s))
+instance [HasSup R] : HasSup (Tropical R) where sup s := trop (sup (untrop '' s))
 
-instance [HasInfₓ R] : HasInfₓ (Tropical R) where inf := fun s => trop (inf (untrop '' s))
+instance [HasInf R] : HasInf (Tropical R) where inf s := trop (inf (untrop '' s))
 
 instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropical R) :=
-  { Tropical.hasSupₓ, Tropical.hasInfₓ, Tropical.lattice with
+  { Tropical.hasSup, Tropical.hasInf, Tropical.lattice with
     le_cSup := fun s x hs hx => le_cSup (untrop_monotone.map_bdd_above hs) (Set.mem_image_of_mem untrop hx),
     cSup_le := fun s x hs hx => cSup_le (hs.Image untrop) (untrop_monotone.mem_upper_bounds_image hx),
     le_cInf := fun s x hs hx => le_cInf (hs.Image untrop) (untrop_monotone.mem_lower_bounds_image hx),

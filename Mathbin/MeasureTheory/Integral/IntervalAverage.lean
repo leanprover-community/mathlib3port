@@ -38,7 +38,7 @@ theorem interval_average_symm (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x)
   rw [set_average_eq, set_average_eq, interval_oc_swap]
 
 theorem interval_average_eq (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x) = (b - a)⁻¹ • ∫ x in a..b, f x := by
-  cases' le_or_ltₓ a b with h h
+  cases' le_or_lt a b with h h
   · rw [set_average_eq, interval_oc_of_le h, Real.volume_Ioc, intervalIntegral.integral_of_le h,
       Ennreal.to_real_of_real (sub_nonneg.2 h)]
     

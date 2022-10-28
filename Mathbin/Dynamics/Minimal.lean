@@ -27,18 +27,18 @@ open Pointwise
 
 /-- An action of an additive monoid `M` on a topological space is called *minimal* if the `M`-orbit
 of every point `x : α` is dense. -/
-class AddAction.IsMinimal (M α : Type _) [AddMonoidₓ M] [TopologicalSpace α] [AddAction M α] : Prop where
+class AddAction.IsMinimal (M α : Type _) [AddMonoid M] [TopologicalSpace α] [AddAction M α] : Prop where
   dense_orbit : ∀ x : α, Dense (AddAction.Orbit M x)
 
 /-- An action of a monoid `M` on a topological space is called *minimal* if the `M`-orbit of every
 point `x : α` is dense. -/
 @[to_additive]
-class MulAction.IsMinimal (M α : Type _) [Monoidₓ M] [TopologicalSpace α] [MulAction M α] : Prop where
+class MulAction.IsMinimal (M α : Type _) [Monoid M] [TopologicalSpace α] [MulAction M α] : Prop where
   dense_orbit : ∀ x : α, Dense (MulAction.Orbit M x)
 
 open MulAction Set
 
-variable (M G : Type _) {α : Type _} [Monoidₓ M] [Groupₓ G] [TopologicalSpace α] [MulAction M α] [MulAction G α]
+variable (M G : Type _) {α : Type _} [Monoid M] [Group G] [TopologicalSpace α] [MulAction M α] [MulAction G α]
 
 @[to_additive]
 theorem MulAction.dense_orbit [IsMinimal M α] (x : α) : Dense (Orbit M x) :=
@@ -70,7 +70,7 @@ theorem IsOpen.Union_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : 
 
 @[to_additive]
 theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstSmul G α] {K U : Set α} (hK : IsCompact K)
-    (hUo : IsOpen U) (hne : U.Nonempty) : ∃ I : Finsetₓ G, K ⊆ ⋃ g ∈ I, g • U :=
+    (hUo : IsOpen U) (hne : U.Nonempty) : ∃ I : Finset G, K ⊆ ⋃ g ∈ I, g • U :=
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
     calc
       K ⊆ univ := subset_univ K
@@ -96,5 +96,5 @@ theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
     exact eq_empty_or_univ_of_smul_invariant_closed M
     
   refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩
-  exacts[is_closed_closure, fun c => smul_closure_orbit_subset _ _, (orbit_nonempty _).closure.ne_empty]
+  exacts[isClosedClosure, fun c => smul_closure_orbit_subset _ _, (orbit_nonempty _).closure.ne_empty]
 

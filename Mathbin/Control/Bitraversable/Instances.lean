@@ -33,28 +33,40 @@ variable {t : Type u → Type u → Type u} [Bitraversable t]
 
 section
 
-variable {F : Type u → Type u} [Applicativeₓ F]
+variable {F : Type u → Type u} [Applicative F]
 
+/- warning: prod.bitraverse -> Prod.bitraverse is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u} -> Type.{u}} [_inst_2 : Applicative.{u u} F] {α : Type.{u_1}} {α' : Type.{u}} {β : Type.{u_2}} {β' : Type.{u}}, (α -> (F α')) -> (β -> (F β')) -> (Prod.{u_1 u_2} α β) -> (F (Prod.{u u} α' β'))
+but is expected to have type
+  forall {F : Type.{u} -> Type.{u}} [_inst_2 : Applicative.{u u} F] {α : Type.{_aux_param_0}} {α' : Type.{u}} {β : Type.{_aux_param_1}} {β' : Type.{u}}, (α -> (F α')) -> (β -> (F β')) -> (Prod.{_aux_param_0 _aux_param_1} α β) -> (F (Prod.{u u} α' β'))
+Case conversion may be inaccurate. Consider using '#align prod.bitraverse Prod.bitraverseₓ'. -/
 /-- The bitraverse function for `α × β`. -/
-def Prod.bitraverseₓ {α α' β β'} (f : α → F α') (f' : β → F β') : α × β → F (α' × β')
+def Prod.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : α × β → F (α' × β')
   | (x, y) => Prod.mk <$> f x <*> f' y
 
-instance : Bitraversable Prod where bitraverse := @Prod.bitraverseₓ
+instance : Bitraversable Prod where bitraverse := @Prod.bitraverse
 
 instance : IsLawfulBitraversable Prod := by
-  constructor <;> intros <;> cases x <;> simp [bitraverse, Prod.bitraverseₓ, functor_norm] <;> rfl
+  constructor <;> intros <;> cases x <;> simp [bitraverse, Prod.bitraverse, functor_norm] <;> rfl
 
 open Functor
 
+/- warning: sum.bitraverse -> Sum.bitraverse is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u} -> Type.{u}} [_inst_2 : Applicative.{u u} F] {α : Type.{u_1}} {α' : Type.{u}} {β : Type.{u_2}} {β' : Type.{u}}, (α -> (F α')) -> (β -> (F β')) -> (Sum.{u_1 u_2} α β) -> (F (Sum.{u u} α' β'))
+but is expected to have type
+  forall {F : Type.{u} -> Type.{u}} [_inst_2 : Applicative.{u u} F] {α : Type.{_aux_param_0}} {α' : Type.{u}} {β : Type.{_aux_param_1}} {β' : Type.{u}}, (α -> (F α')) -> (β -> (F β')) -> (Sum.{_aux_param_0 _aux_param_1} α β) -> (F (Sum.{u u} α' β'))
+Case conversion may be inaccurate. Consider using '#align sum.bitraverse Sum.bitraverseₓ'. -/
 /-- The bitraverse function for `α ⊕ β`. -/
-def Sum.bitraverseₓ {α α' β β'} (f : α → F α') (f' : β → F β') : Sum α β → F (Sum α' β')
+def Sum.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : Sum α β → F (Sum α' β')
   | Sum.inl x => Sum.inl <$> f x
   | Sum.inr x => Sum.inr <$> f' x
 
-instance : Bitraversable Sum where bitraverse := @Sum.bitraverseₓ
+instance : Bitraversable Sum where bitraverse := @Sum.bitraverse
 
 instance : IsLawfulBitraversable Sum := by
-  constructor <;> intros <;> cases x <;> simp [bitraverse, Sum.bitraverseₓ, functor_norm] <;> rfl
+  constructor <;> intros <;> cases x <;> simp [bitraverse, Sum.bitraverse, functor_norm] <;> rfl
 
 /-- The bitraverse function for `const`. It throws away the second map. -/
 @[nolint unused_arguments]
@@ -74,6 +86,7 @@ instance Bitraversable.flip : Bitraversable (flip t) where bitraverse := @flip.b
 
 open IsLawfulBitraversable
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.apply_assumption -/
 instance IsLawfulBitraversable.flip [IsLawfulBitraversable t] : IsLawfulBitraversable (flip t) := by
   constructor <;>
     intros <;>
@@ -107,7 +120,7 @@ section Bicompl
 variable (F G : Type u → Type u) [Traversable F] [Traversable G]
 
 /-- The bitraverse function for `bicompl`. -/
-def Bicompl.bitraverse {m} [Applicativeₓ m] {α β α' β'} (f : α → m β) (f' : α' → m β') :
+def Bicompl.bitraverse {m} [Applicative m] {α β α' β'} (f : α → m β) (f' : α' → m β') :
     bicompl t F G α α' → m (bicompl t F G β β') :=
   (bitraverse (traverse f) (traverse f') : t (F α) (G α') → m _)
 
@@ -132,7 +145,7 @@ section Bicompr
 variable (F : Type u → Type u) [Traversable F]
 
 /-- The bitraverse function for `bicompr`. -/
-def Bicompr.bitraverse {m} [Applicativeₓ m] {α β α' β'} (f : α → m β) (f' : α' → m β') :
+def Bicompr.bitraverse {m} [Applicative m] {α β α' β'} (f : α → m β) (f' : α' → m β') :
     bicompr F t α α' → m (bicompr F t β β') :=
   (traverse (bitraverse f f') : F (t α α') → m _)
 

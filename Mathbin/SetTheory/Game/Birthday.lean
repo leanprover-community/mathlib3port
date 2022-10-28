@@ -115,7 +115,7 @@ theorem birthday_star : birthday star = 1 := by
 @[simp]
 theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
   | ⟨xl, xr, xL, xR⟩ => by
-    rw [birthday_def, birthday_def, max_commₓ]
+    rw [birthday_def, birthday_def, max_comm]
     congr <;> funext <;> apply neg_birthday
 
 @[simp]
@@ -143,7 +143,7 @@ theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.
     simp only [birthday_add, lsub_sum, mk_add_move_left_inl, move_left_mk, mk_add_move_left_inr, mk_add_move_right_inl,
       move_right_mk, mk_add_move_right_inr]
     rw [max_max_max_comm]
-    congr <;> apply le_antisymmₓ
+    congr <;> apply le_antisymm
     any_goals
       exact
         max_le_iff.2

@@ -107,7 +107,7 @@ theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(�
     rw [hm, image_gen f hs hu]
     exact ContinuousMap.is_open_gen (hs.image f.2) hu
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Composition is a continuous map from `C(α, β) × C(β, γ)` to `C(α, γ)`, provided that `β` is
   locally compact. This is Prop. 9 of Chap. X, §3, №. 4 of Bourbaki's *Topologie Générale*. -/
 theorem continuous_comp' [LocallyCompactSpace β] : Continuous fun x : C(α, β) × C(β, γ) => x.2.comp x.1 :=
@@ -138,7 +138,7 @@ section Ev
 
 variable {α β}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact.
 
 See also `continuous_map.continuous_eval` -/
@@ -206,7 +206,7 @@ theorem compact_open_eq_Inf_induced :
     (ContinuousMap.compactOpen : TopologicalSpace C(α, β)) =
       ⨅ (s : Set α) (hs : IsCompact s), TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
   by
-  refine' le_antisymmₓ _ _
+  refine' le_antisymm _ _
   · refine' le_infi₂ _
     exact fun s hs => compact_open_le_induced s
     
@@ -293,7 +293,7 @@ def coev (b : β) : C(α, β × α) :=
 
 variable {α β}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by tidy
 
 -- The coevaluation map β → C(α, β × α) is continuous (always).
@@ -402,9 +402,9 @@ def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) �
 /-- If `α` has a single element, then `β` is homeomorphic to `C(α, β)`. -/
 def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β) where
   toFun := const α
-  invFun := fun f => f default
-  left_inv := fun a => rfl
-  right_inv := fun f => by
+  invFun f := f default
+  left_inv a := rfl
+  right_inv f := by
     ext
     rw [Unique.eq_default a]
     rfl

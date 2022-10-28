@@ -60,10 +60,10 @@ theorem subset_dedup' {s t : Multiset α} : s ⊆ dedup t ↔ s ⊆ t :=
   ⟨fun h => Subset.trans h (dedup_subset _), fun h => Subset.trans h (subset_dedup _)⟩
 
 @[simp]
-theorem nodup_dedup (s : Multiset α) : Nodupₓ (dedup s) :=
+theorem nodup_dedup (s : Multiset α) : Nodup (dedup s) :=
   Quot.induction_on s nodup_dedup
 
-theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodupₓ s :=
+theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodup s :=
   ⟨fun e => e ▸ nodup_dedup s, (Quot.induction_on s) fun l h => congr_arg coe h.dedup⟩
 
 alias dedup_eq_self ↔ _ nodup.dedup
@@ -75,8 +75,8 @@ theorem dedup_eq_zero {s : Multiset α} : dedup s = 0 ↔ s = 0 :=
 theorem dedup_singleton {a : α} : dedup ({a} : Multiset α) = {a} :=
   (nodup_singleton _).dedup
 
-theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodupₓ s :=
-  ⟨fun h => ⟨le_transₓ h (dedup_le _), nodup_of_le h (nodup_dedup _)⟩, fun ⟨l, d⟩ =>
+theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodup s :=
+  ⟨fun h => ⟨le_trans h (dedup_le _), nodup_of_le h (nodup_dedup _)⟩, fun ⟨l, d⟩ =>
     (le_iff_subset d).2 <| Subset.trans (subset_of_le l) (subset_dedup _)⟩
 
 theorem dedup_ext {s t : Multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t := by simp [nodup.ext]
@@ -89,11 +89,11 @@ theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup
   ext a
   by_cases h:a ∈ s <;> simp [h, h0]
 
-theorem Nodupₓ.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedup ↔ s ≤ t := by simp [le_dedup, hno]
+theorem Nodup.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedup ↔ s ≤ t := by simp [le_dedup, hno]
 
 end Multiset
 
-theorem Multiset.Nodupₓ.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup) (hn : n ≠ 0) :
+theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup) (hn : n ≠ 0) :
     s ≤ n • t ↔ s ≤ t := by
   classical
   rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]

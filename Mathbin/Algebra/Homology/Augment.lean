@@ -30,12 +30,12 @@ deleting the object at `0` and shifting everything else down.
 -/
 @[simps]
 def truncate [HasZeroMorphisms V] : ChainComplex V ℕ ⥤ ChainComplex V ℕ where
-  obj := fun C =>
+  obj C :=
     { x := fun i => C.x (i + 1), d := fun i j => C.d (i + 1) (j + 1),
       shape' := fun i j w => by
         apply C.shape
         simpa }
-  map := fun C D f => { f := fun i => f.f (i + 1) }
+  map C D f := { f := fun i => f.f (i + 1) }
 
 /-- There is a canonical chain map from the truncation of a chain map `C` to
 the "single object" chain complex consisting of the truncated object `C.X 0` in degree 0.
@@ -53,16 +53,16 @@ variable [HasZeroMorphisms V]
 (shifting everything else up), along with a suitable differential.
 -/
 def augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) : ChainComplex V ℕ where
-  x := fun i =>
+  x i :=
     match i with
     | 0 => X
     | i + 1 => C.x i
-  d := fun i j =>
+  d i j :=
     match i, j with
     | 1, 0 => f
     | i + 1, j + 1 => C.d i j
     | _, _ => 0
-  shape' := fun i j s => by
+  shape' i j s := by
     simp at s
     rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;> try simp
     · simpa using s
@@ -70,7 +70,7 @@ def augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ 
     · rw [C.shape]
       simpa [← Ne.def, Nat.succ_ne_succ] using s
       
-  d_comp_d' := fun i j k hij hjk => by
+  d_comp_d' i j k hij hjk := by
     rcases i with (_ | _ | i) <;> rcases j with (_ | _ | j) <;> cases k <;> unfold_aux <;> try simp
     cases i
     · exact w
@@ -212,12 +212,12 @@ deleting the object at `0` and shifting everything else down.
 -/
 @[simps]
 def truncate [HasZeroMorphisms V] : CochainComplex V ℕ ⥤ CochainComplex V ℕ where
-  obj := fun C =>
+  obj C :=
     { x := fun i => C.x (i + 1), d := fun i j => C.d (i + 1) (j + 1),
       shape' := fun i j w => by
         apply C.shape
         simpa }
-  map := fun C D f => { f := fun i => f.f (i + 1) }
+  map C D f := { f := fun i => f.f (i + 1) }
 
 /-- There is a canonical chain map from the truncation of a cochain complex `C` to
 the "single object" cochain complex consisting of the truncated object `C.X 0` in degree 0.
@@ -233,16 +233,16 @@ variable [HasZeroMorphisms V]
 (shifting everything else up), along with a suitable differential.
 -/
 def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) : CochainComplex V ℕ where
-  x := fun i =>
+  x i :=
     match i with
     | 0 => X
     | i + 1 => C.x i
-  d := fun i j =>
+  d i j :=
     match i, j with
     | 0, 1 => f
     | i + 1, j + 1 => C.d i j
     | _, _ => 0
-  shape' := fun i j s => by
+  shape' i j s := by
     simp at s
     rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> try simp
     · simpa using s
@@ -252,13 +252,13 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
       contrapose! s
       rw [← s]
       
-  d_comp_d' := fun i j k hij hjk => by
+  d_comp_d' i j k hij hjk := by
     rcases k with (_ | _ | k) <;> rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> try simp
     cases k
     · exact w
       
     · rw [C.shape, comp_zero]
-      simp only [Nat.nat_zero_eq_zero, ComplexShape.up_rel, zero_addₓ]
+      simp only [Nat.zero_eq, ComplexShape.up_rel, zero_add]
       exact (Nat.one_lt_succ_succ _).Ne
       
 
@@ -321,7 +321,7 @@ theorem truncate_augment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x
 @[simp]
 theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C.d 0 (i + 2) = 0 := by
   rw [C.shape]
-  simp only [ComplexShape.up_rel, zero_addₓ]
+  simp only [ComplexShape.up_rel, zero_add]
   exact (Nat.one_lt_succ_succ _).Ne
 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic

@@ -31,27 +31,31 @@ open Function
 variable {F α β γ δ : Type _}
 
 /-- The type of continuous monotone maps from `α` to `β`, aka Priestley homomorphisms. -/
-structure ContinuousOrderHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α]
-  [TopologicalSpace β] extends OrderHom α β where
+structure ContinuousOrderHom (α β : Type _) [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β] extends
+  OrderHom α β where
   continuous_to_fun : Continuous to_fun
 
 -- mathport name: «expr →Co »
 infixr:25 " →Co " => ContinuousOrderHom
 
+section
+
 /-- `continuous_order_hom_class F α β` states that `F` is a type of continuous monotone maps.
 
 You should extend this class when you extend `continuous_order_hom`. -/
-class ContinuousOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α]
+class ContinuousOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
   [TopologicalSpace β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_continuous (f : F) : Continuous f
 
+end
+
 -- See note [lower instance priority]
-instance (priority := 100) ContinuousOrderHomClass.toContinuousMapClass [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α]
+instance (priority := 100) ContinuousOrderHomClass.toContinuousMapClass [Preorder α] [Preorder β] [TopologicalSpace α]
     [TopologicalSpace β] [ContinuousOrderHomClass F α β] : ContinuousMapClass F α β :=
   { ‹ContinuousOrderHomClass F α β› with }
 
-instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpace β] [ContinuousOrderHomClass F α β] :
-    CoeTₓ F (α →Co β) :=
+instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β] [ContinuousOrderHomClass F α β] :
+    CoeT F (α →Co β) :=
   ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono f, continuous_to_fun := map_continuous f }⟩
 
 /-! ### Top homomorphisms -/
@@ -59,24 +63,24 @@ instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpa
 
 namespace ContinuousOrderHom
 
-variable [TopologicalSpace α] [Preorderₓ α] [TopologicalSpace β]
+variable [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ β] [TopologicalSpace γ] [Preorderₓ γ] [TopologicalSpace δ] [Preorderₓ δ]
+variable [Preorder β] [TopologicalSpace γ] [Preorder γ] [TopologicalSpace δ] [Preorder δ]
 
 /-- Reinterpret a `continuous_order_hom` as a `continuous_map`. -/
 def toContinuousMap (f : α →Co β) : C(α, β) :=
   { f with }
 
 instance : ContinuousOrderHomClass (α →Co β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_rel := fun f => f.monotone'
-  map_continuous := fun f => f.continuous_to_fun
+  map_rel f := f.monotone'
+  map_continuous f := f.continuous_to_fun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -145,13 +149,13 @@ theorem cancel_right {g₁ g₂ : β →Co γ} {f : α →Co β} (hf : Surjectiv
 theorem cancel_left {g : β →Co γ} {f₁ f₂ : α →Co β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
-instance : Preorderₓ (α →Co β) :=
-  Preorderₓ.lift (coeFn : (α →Co β) → α → β)
+instance : Preorder (α →Co β) :=
+  Preorder.lift (coeFn : (α →Co β) → α → β)
 
-end Preorderₓ
+end Preorder
 
-instance [PartialOrderₓ β] : PartialOrderₓ (α →Co β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance [PartialOrder β] : PartialOrder (α →Co β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
 end ContinuousOrderHom
 

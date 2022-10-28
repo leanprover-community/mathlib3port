@@ -49,11 +49,11 @@ inductive Dir
   deriving DecidableEq, Inhabited
 
 /-- String representation of `dir`. -/
-def Dir.toString : Dir → Stringₓ
+def Dir.toString : Dir → String
   | dir.F => "F"
   | dir.A => "A"
 
-instance : HasToString Dir :=
+instance : ToString Dir :=
   ⟨Dir.toString⟩
 
 open Tactic
@@ -111,7 +111,7 @@ unsafe def congr : expr_lens → expr → tactic expr
   | app_arg l x, f_eq => mk_congr_fun f_eq x >>= l.congr
 
 /-- Pretty print a lens. -/
-unsafe def to_tactic_string : expr_lens → tactic Stringₓ
+unsafe def to_tactic_string : expr_lens → tactic String
   | entire => return "(entire)"
   | app_fun l f => do
     let pp ← pp f
@@ -131,7 +131,7 @@ private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)
     Option (expr_lens × expr) → tactic (List α)
   | some (l, e) =>
     List.join <$>
-        Monadₓ.sequence [F l e, app_map_aux <| l.zoom [ExprLens.Dir.F] e, app_map_aux <| l.zoom [ExprLens.Dir.A] e] <|>
+        Monad.sequence [F l e, app_map_aux <| l.zoom [ExprLens.Dir.F] e, app_map_aux <| l.zoom [ExprLens.Dir.A] e] <|>
       pure []
   | none => pure []
 

@@ -32,9 +32,9 @@ section OrderedSemiring
 
 variable [OrderedSemiring 𝕜]
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable (𝕜) [AddCommMonoidₓ E] [AddCommMonoidₓ F] [Module 𝕜 E] [Module 𝕜 F]
+variable (𝕜) [AddCommMonoid E] [AddCommMonoid F] [Module 𝕜 E] [Module 𝕜 F]
 
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
@@ -148,13 +148,13 @@ theorem IsLinearMap.convex_hull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s
 theorem LinearMap.convex_hull_image (f : E →ₗ[𝕜] F) (s : Set E) : convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   f.is_linear.convex_hull_image s
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
 end OrderedSemiring
 
 section OrderedCommSemiring
 
-variable [OrderedCommSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E]
+variable [OrderedCommSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
 theorem convex_hull_smul (a : 𝕜) (s : Set E) : convexHull 𝕜 (a • s) = a • convexHull 𝕜 s :=
   (LinearMap.lsmul _ _ a).convex_hull_image _
@@ -165,9 +165,9 @@ section OrderedRing
 
 variable [OrderedRing 𝕜]
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] (s : Set E)
+variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] (s : Set E)
 
 theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) := by
   apply Set.Subset.antisymm
@@ -184,7 +184,7 @@ theorem convex_hull_subset_affine_span : convexHull 𝕜 s ⊆ (affineSpan 𝕜 
 
 @[simp]
 theorem affine_span_convex_hull : affineSpan 𝕜 (convexHull 𝕜 s) = affineSpan 𝕜 s := by
-  refine' le_antisymmₓ _ (affine_span_mono 𝕜 (subset_convex_hull 𝕜 s))
+  refine' le_antisymm _ (affine_span_mono 𝕜 (subset_convex_hull 𝕜 s))
   rw [affine_span_le]
   exact convex_hull_subset_affine_span s
 
@@ -192,7 +192,7 @@ theorem convex_hull_neg (s : Set E) : convexHull 𝕜 (-s) = -convexHull 𝕜 s 
   simp_rw [← image_neg]
   exact (AffineMap.image_convex_hull _ <| -1).symm
 
-end AddCommGroupₓ
+end AddCommGroup
 
 end OrderedRing
 

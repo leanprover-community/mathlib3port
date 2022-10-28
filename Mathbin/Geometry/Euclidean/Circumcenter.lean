@@ -34,13 +34,9 @@ open BigOperators
 
 open Classical
 
-open Real
-
 open RealInnerProductSpace
 
 namespace EuclideanGeometry
-
-open InnerProductGeometry
 
 variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
@@ -162,7 +158,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
       hcr₃
     change x * x + _ * (y * y) = _ at hcr₃
     rw [show x * x + (1 - t₃) * (1 - t₃) * (y * y) = x * x + y * y - 2 * y * (t₃ * y) + t₃ * y * (t₃ * y) by ring,
-      add_left_injₓ] at hcr₃
+      add_left_inj] at hcr₃
     have ht₃ : t₃ = ycc₂ / y := by
       field_simp [← hcr₃, hy0]
       ring
@@ -178,17 +174,17 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
 /-- Given a finite nonempty affinely independent family of points,
 there is a unique (circumcenter, circumradius) pair for those points
 in the affine subspace they span. -/
-theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Nonempty ι] [Fintypeₓ ι] {p : ι → P}
+theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Nonempty ι] [Fintype ι] {p : ι → P}
     (ha : AffineIndependent ℝ p) :
     ∃! cs : Sphere P, cs.Center ∈ affineSpan ℝ (Set.Range p) ∧ Set.Range p ⊆ (cs : Set P) := by
-  induction' hn : Fintypeₓ.card ι with m hm generalizing ι
+  induction' hn : Fintype.card ι with m hm generalizing ι
   · exfalso
-    have h := Fintypeₓ.card_pos_iff.2 hne
+    have h := Fintype.card_pos_iff.2 hne
     rw [hn] at h
-    exact lt_irreflₓ 0 h
+    exact lt_irrefl 0 h
     
   · cases m
-    · rw [Fintypeₓ.card_eq_one_iff] at hn
+    · rw [Fintype.card_eq_one_iff] at hn
       cases' hn with i hi
       haveI : Unique ι := ⟨⟨i⟩, hi⟩
       use ⟨p i, 0⟩
@@ -207,17 +203,17 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
       
     · have i := hne.some
       let ι2 := { x // x ≠ i }
-      have hc : Fintypeₓ.card ι2 = m + 1 := by
-        rw [Fintypeₓ.card_of_subtype (finset.univ.filter fun x => x ≠ i)]
-        · rw [Finsetₓ.filter_not]
+      have hc : Fintype.card ι2 = m + 1 := by
+        rw [Fintype.card_of_subtype (finset.univ.filter fun x => x ≠ i)]
+        · rw [Finset.filter_not]
           simp_rw [eq_comm]
-          rw [Finsetₓ.filter_eq, if_pos (Finsetₓ.mem_univ _), Finsetₓ.card_sdiff (Finsetₓ.subset_univ _),
-            Finsetₓ.card_singleton, Finsetₓ.card_univ, hn]
+          rw [Finset.filter_eq, if_pos (Finset.mem_univ _), Finset.card_sdiff (Finset.subset_univ _),
+            Finset.card_singleton, Finset.card_univ, hn]
           simp
           
         · simp
           
-      haveI : Nonempty ι2 := Fintypeₓ.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succₓ _)
+      haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succ _)
       have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
       replace hm := hm ha2 hc
       have hr : Set.Range p = insert (p i) (Set.Range fun i2 : ι2 => p i2) := by
@@ -242,7 +238,7 @@ namespace Affine
 
 namespace Simplex
 
-open Finsetₓ AffineSubspace EuclideanGeometry
+open Finset AffineSubspace EuclideanGeometry
 
 variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
@@ -283,7 +279,7 @@ theorem circumcenter_mem_affine_span {n : ℕ} (s : Simplex ℝ P n) : s.circumc
 /-- All points have distance from the circumcenter equal to the
 circumradius. -/
 @[simp]
-theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : Simplex ℝ P n) (i : Finₓ (n + 1)) :
+theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : Simplex ℝ P n) (i : Fin (n + 1)) :
     dist (s.points i) s.circumcenter = s.circumradius :=
   dist_of_mem_subset_sphere (Set.mem_range_self _) s.circumsphere_unique_dist_eq.1.2
 
@@ -302,7 +298,7 @@ theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp :
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : p = s.circumcenter := by
   have h := s.circumsphere_unique_dist_eq.2 ⟨p, r⟩
   simp only [hp, hr, forall_const, eq_self_iff_true, subset_sphere, sphere.ext_iff, Set.forall_range_iff, mem_sphere,
-    true_andₓ] at h
+    true_and_iff] at h
   exact h.1
 
 /-- Given a point in the affine span from which all the points are
@@ -311,7 +307,7 @@ theorem eq_circumradius_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp :
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : r = s.circumradius := by
   have h := s.circumsphere_unique_dist_eq.2 ⟨p, r⟩
   simp only [hp, hr, forall_const, eq_self_iff_true, subset_sphere, sphere.ext_iff, Set.forall_range_iff, mem_sphere,
-    true_andₓ] at h
+    true_and_iff] at h
   exact h.2
 
 /-- The circumradius is non-negative. -/
@@ -321,37 +317,37 @@ theorem circumradius_nonneg {n : ℕ} (s : Simplex ℝ P n) : 0 ≤ s.circumradi
 /-- The circumradius of a simplex with at least two points is
 positive. -/
 theorem circumradius_pos {n : ℕ} (s : Simplex ℝ P (n + 1)) : 0 < s.circumradius := by
-  refine' lt_of_le_of_neₓ s.circumradius_nonneg _
+  refine' lt_of_le_of_ne s.circumradius_nonneg _
   intro h
   have hr := s.dist_circumcenter_eq_circumradius
   simp_rw [← h, dist_eq_zero] at hr
-  have h01 := s.independent.injective.ne (by decide : (0 : Finₓ (n + 2)) ≠ 1)
+  have h01 := s.independent.injective.ne (by decide : (0 : Fin (n + 2)) ≠ 1)
   simpa [hr] using h01
 
 /-- The circumcenter of a 0-simplex equals its unique point. -/
-theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Finₓ 1) : s.circumcenter = s.points i := by
+theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Fin 1) : s.circumcenter = s.points i := by
   have h := s.circumcenter_mem_affine_span
   rw [Set.range_unique, mem_affine_span_singleton] at h
   rw [h]
   congr
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The circumcenter of a 1-simplex equals its centroid. -/
-theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finsetₓ.univ.centroid ℝ s.points := by
+theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset.univ.centroid ℝ s.points := by
   have hr :
-    Set.Pairwise Set.Univ fun i j : Finₓ 2 =>
+    Set.Pairwise Set.Univ fun i j : Fin 2 =>
       dist (s.points i) (finset.univ.centroid ℝ s.points) = dist (s.points j) (finset.univ.centroid ℝ s.points) :=
     by
     intro i hi j hj hij
-    rw [Finsetₓ.centroid_pair_fin, dist_eq_norm_vsub V (s.points i), dist_eq_norm_vsub V (s.points j),
+    rw [Finset.centroid_pair_fin, dist_eq_norm_vsub V (s.points i), dist_eq_norm_vsub V (s.points j),
       vsub_vadd_eq_vsub_sub, vsub_vadd_eq_vsub_sub, ← one_smul ℝ (s.points i -ᵥ s.points 0), ←
       one_smul ℝ (s.points j -ᵥ s.points 0)]
     fin_cases i <;> fin_cases j <;> simp [-one_smul, ← sub_smul] <;> norm_num
   rw [Set.pairwise_eq_iff_exists_eq] at hr
   cases' hr with r hr
   exact
-    (s.eq_circumcenter_of_dist_eq (centroid_mem_affine_span_of_card_eq_add_one ℝ _ (Finsetₓ.card_fin 2)) fun i =>
+    (s.eq_circumcenter_of_dist_eq (centroid_mem_affine_span_of_card_eq_add_one ℝ _ (Finset.card_fin 2)) fun i =>
         hr i (Set.mem_univ _)).symm
 
 attribute [local instance] AffineSubspace.toAddTorsor
@@ -388,7 +384,7 @@ theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_
       (orthogonal_projection_vsub_mem_direction_orthogonal _ p2)
 
 theorem dist_circumcenter_sq_eq_sq_sub_circumradius {n : ℕ} {r : ℝ} (s : Simplex ℝ P n) {p₁ : P}
-    (h₁ : ∀ i : Finₓ (n + 1), dist (s.points i) p₁ = r) (h₁' : ↑(s.orthogonalProjectionSpan p₁) = s.circumcenter)
+    (h₁ : ∀ i : Fin (n + 1), dist (s.points i) p₁ = r) (h₁' : ↑(s.orthogonalProjectionSpan p₁) = s.circumcenter)
     (h : s.points 0 ∈ affineSpan ℝ (Set.Range s.points)) :
     dist p₁ s.circumcenter * dist p₁ s.circumcenter = r * r - s.circumradius * s.circumradius := by
   rw [dist_comm, ← h₁ 0, s.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq p₁ h]
@@ -417,7 +413,7 @@ theorem orthogonal_projection_eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex 
 
 /-- The orthogonal projection of the circumcenter onto a face is the
 circumcenter of that face. -/
-theorem orthogonal_projection_circumcenter {n : ℕ} (s : Simplex ℝ P n) {fs : Finsetₓ (Finₓ (n + 1))} {m : ℕ}
+theorem orthogonal_projection_circumcenter {n : ℕ} (s : Simplex ℝ P n) {fs : Finset (Fin (n + 1))} {m : ℕ}
     (h : fs.card = m + 1) : ↑((s.face h).orthogonalProjectionSpan s.circumcenter) = (s.face h).circumcenter :=
   haveI hr : ∃ r, ∀ i, dist ((s.face h).points i) s.circumcenter = r := by
     use s.circumradius
@@ -444,9 +440,9 @@ affine combinations of vertices together with the circumcenter.  (An
 equivalent form sometimes used in the literature is placing the
 circumcenter at the origin and working with vectors for the vertices.) -/
 inductive PointsWithCircumcenterIndex (n : ℕ)
-  | point_index : Finₓ (n + 1) → points_with_circumcenter_index
+  | point_index : Fin (n + 1) → points_with_circumcenter_index
   | circumcenter_index : points_with_circumcenter_index
-  deriving Fintypeₓ
+  deriving Fintype
 
 open PointsWithCircumcenterIndex
 
@@ -454,12 +450,12 @@ instance pointsWithCircumcenterIndexInhabited (n : ℕ) : Inhabited (PointsWithC
   ⟨circumcenter_index⟩
 
 /-- `point_index` as an embedding. -/
-def pointIndexEmbedding (n : ℕ) : Finₓ (n + 1) ↪ PointsWithCircumcenterIndex n :=
+def pointIndexEmbedding (n : ℕ) : Fin (n + 1) ↪ PointsWithCircumcenterIndex n :=
   ⟨fun i => point_index i, fun _ _ h => by injection h⟩
 
 /-- The sum of a function over `points_with_circumcenter_index`. -/
-theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoidₓ α] {n : ℕ} (f : PointsWithCircumcenterIndex n → α) :
-    (∑ i, f i) = (∑ i : Finₓ (n + 1), f (point_index i)) + f circumcenter_index := by
+theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoid α] {n : ℕ} (f : PointsWithCircumcenterIndex n → α) :
+    (∑ i, f i) = (∑ i : Fin (n + 1), f (point_index i)) + f circumcenter_index := by
   have h : univ = insert circumcenter_index (univ.map (point_index_embedding n)) := by
     ext x
     refine' ⟨fun h => _, fun _ => mem_univ _⟩
@@ -469,8 +465,8 @@ theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoidₓ α] {n : �
     · exact mem_insert_self _ _
       
   change _ = (∑ i, f (point_index_embedding n i)) + _
-  rw [add_commₓ, h, ← sum_map, sum_insert]
-  simp_rw [Finsetₓ.mem_map, not_exists]
+  rw [add_comm, h, ← sum_map, sum_insert]
+  simp_rw [Finset.mem_map, not_exists]
   intro x hx h
   injection h
 
@@ -484,7 +480,7 @@ def pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n) : PointsWithCircumcen
 /-- `points_with_circumcenter`, applied to a `point_index` value,
 equals `points` applied to that value. -/
 @[simp]
-theorem points_with_circumcenter_point {n : ℕ} (s : Simplex ℝ P n) (i : Finₓ (n + 1)) :
+theorem points_with_circumcenter_point {n : ℕ} (s : Simplex ℝ P n) (i : Fin (n + 1)) :
     s.pointsWithCircumcenter (point_index i) = s.points i :=
   rfl
 
@@ -499,13 +495,13 @@ omit V
 
 /-- The weights for a single vertex of a simplex, in terms of
 `points_with_circumcenter`. -/
-def pointWeightsWithCircumcenter {n : ℕ} (i : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
+def pointWeightsWithCircumcenter {n : ℕ} (i : Fin (n + 1)) : PointsWithCircumcenterIndex n → ℝ
   | point_index j => if j = i then 1 else 0
   | circumcenter_index => 0
 
 /-- `point_weights_with_circumcenter` sums to 1. -/
 @[simp]
-theorem sum_point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) : (∑ j, pointWeightsWithCircumcenter i j) = 1 :=
+theorem sum_point_weights_with_circumcenter {n : ℕ} (i : Fin (n + 1)) : (∑ j, pointWeightsWithCircumcenter i j) = 1 :=
   by
   convert sum_ite_eq' univ (point_index i) (Function.const _ (1 : ℝ))
   · ext j
@@ -517,9 +513,9 @@ theorem sum_point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) : (�
 include V
 
 /-- A single vertex, in terms of `points_with_circumcenter`. -/
-theorem point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) (i : Finₓ (n + 1)) :
+theorem point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) (i : Fin (n + 1)) :
     s.points i =
-      (univ : Finsetₓ (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
         (pointWeightsWithCircumcenter i) :=
   by
   rw [← points_with_circumcenter_point]
@@ -537,16 +533,16 @@ omit V
 
 /-- The weights for the centroid of some vertices of a simplex, in
 terms of `points_with_circumcenter`. -/
-def centroidWeightsWithCircumcenter {n : ℕ} (fs : Finsetₓ (Finₓ (n + 1))) : PointsWithCircumcenterIndex n → ℝ
+def centroidWeightsWithCircumcenter {n : ℕ} (fs : Finset (Fin (n + 1))) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => if i ∈ fs then (card fs : ℝ)⁻¹ else 0
   | circumcenter_index => 0
 
 /-- `centroid_weights_with_circumcenter` sums to 1, if the `finset` is
 nonempty. -/
 @[simp]
-theorem sum_centroid_weights_with_circumcenter {n : ℕ} {fs : Finsetₓ (Finₓ (n + 1))} (h : fs.Nonempty) :
+theorem sum_centroid_weights_with_circumcenter {n : ℕ} {fs : Finset (Fin (n + 1))} (h : fs.Nonempty) :
     (∑ i, centroidWeightsWithCircumcenter fs i) = 1 := by
-  simp_rw [sum_points_with_circumcenter, centroid_weights_with_circumcenter, add_zeroₓ, ←
+  simp_rw [sum_points_with_circumcenter, centroid_weights_with_circumcenter, add_zero, ←
     fs.sum_centroid_weights_eq_one_of_nonempty ℝ h, Set.sum_indicator_subset _ fs.subset_univ]
   rcongr
 
@@ -555,14 +551,14 @@ include V
 /-- The centroid of some vertices of a simplex, in terms of
 `points_with_circumcenter`. -/
 theorem centroid_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n)
-    (fs : Finsetₓ (Finₓ (n + 1))) :
+    (fs : Finset (Fin (n + 1))) :
     fs.centroid ℝ s.points =
-      (univ : Finsetₓ (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
         (centroidWeightsWithCircumcenter fs) :=
   by
   simp_rw [centroid_def, affine_combination_apply, weighted_vsub_of_point_apply, sum_points_with_circumcenter,
-    centroid_weights_with_circumcenter, points_with_circumcenter_point, zero_smul, add_zeroₓ, centroid_weights,
-    Set.sum_indicator_subset_of_eq_zero (Function.const (Finₓ (n + 1)) (card fs : ℝ)⁻¹)
+    centroid_weights_with_circumcenter, points_with_circumcenter_point, zero_smul, add_zero, centroid_weights,
+    Set.sum_indicator_subset_of_eq_zero (Function.const (Fin (n + 1)) (card fs : ℝ)⁻¹)
       (fun i wi => wi • (s.points i -ᵥ Classical.choice AddTorsor.nonempty)) fs.subset_univ fun i => zero_smul ℝ _,
     Set.indicator_apply]
   congr
@@ -590,7 +586,7 @@ include V
 `points_with_circumcenter`. -/
 theorem circumcenter_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) :
     s.circumcenter =
-      (univ : Finsetₓ (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
         (circumcenterWeightsWithCircumcenter n) :=
   by
   rw [← points_with_circumcenter_eq_circumcenter]
@@ -602,13 +598,13 @@ omit V
 
 /-- The weights for the reflection of the circumcenter in an edge of a
 simplex.  This definition is only valid with `i₁ ≠ i₂`. -/
-def reflectionCircumcenterWeightsWithCircumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
+def reflectionCircumcenterWeightsWithCircumcenter {n : ℕ} (i₁ i₂ : Fin (n + 1)) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => if i = i₁ ∨ i = i₂ then 1 else 0
   | circumcenter_index => -1
 
 /-- `reflection_circumcenter_weights_with_circumcenter` sums to 1. -/
 @[simp]
-theorem sum_reflection_circumcenter_weights_with_circumcenter {n : ℕ} {i₁ i₂ : Finₓ (n + 1)} (h : i₁ ≠ i₂) :
+theorem sum_reflection_circumcenter_weights_with_circumcenter {n : ℕ} {i₁ i₂ : Fin (n + 1)} (h : i₁ ≠ i₂) :
     (∑ i, reflectionCircumcenterWeightsWithCircumcenter i₁ i₂ i) = 1 := by
   simp_rw [sum_points_with_circumcenter, reflection_circumcenter_weights_with_circumcenter, sum_ite, sum_const,
     filter_or, filter_eq']
@@ -623,12 +619,12 @@ include V
 /-- The reflection of the circumcenter of a simplex in an edge, in
 terms of `points_with_circumcenter`. -/
 theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n)
-    {i₁ i₂ : Finₓ (n + 1)} (h : i₁ ≠ i₂) :
+    {i₁ i₂ : Fin (n + 1)} (h : i₁ ≠ i₂) :
     reflection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter =
-      (univ : Finsetₓ (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
         (reflectionCircumcenterWeightsWithCircumcenter i₁ i₂) :=
   by
-  have hc : card ({i₁, i₂} : Finsetₓ (Finₓ (n + 1))) = 2 := by simp [h]
+  have hc : card ({i₁, i₂} : Finset (Fin (n + 1))) = 2 := by simp [h]
   -- Making the next line a separate definition helps the elaborator:
   set W : AffineSubspace ℝ P := affineSpan ℝ (s.points '' {i₁, i₂}) with W_def
   have h_faces : ↑(orthogonalProjection W s.circumcenter) = ↑((s.face hc).orthogonalProjectionSpan s.circumcenter) := by
@@ -640,7 +636,7 @@ theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcente
     weighted_vsub_vadd_affine_combination, affine_combination_vsub, weighted_vsub_apply, sum_points_with_circumcenter]
   simp_rw [Pi.sub_apply, Pi.add_apply, Pi.sub_apply, sub_smul, add_smul, sub_smul, centroid_weights_with_circumcenter,
     circumcenter_weights_with_circumcenter, reflection_circumcenter_weights_with_circumcenter, ite_smul, zero_smul,
-    sub_zero, apply_ite2 (· + ·), add_zeroₓ, ← add_smul, hc, zero_sub, neg_smul, sub_self, add_zeroₓ]
+    sub_zero, apply_ite2 (· + ·), add_zero, ← add_smul, hc, zero_sub, neg_smul, sub_self, add_zero]
   convert sum_const_zero
   norm_num
 
@@ -795,7 +791,7 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p
   by_cases hp:p = s.orthogonal_projection_span p
   · rw [simplex.orthogonal_projection_span] at hp
     rw [hp₁, hp₂, ← hp]
-    simp only [true_orₓ, eq_self_iff_true, smul_zero, vsub_self]
+    simp only [true_or_iff, eq_self_iff_true, smul_zero, vsub_self]
     
   · have hz : ⟪p -ᵥ orthogonalProjection span_s p, p -ᵥ orthogonalProjection span_s p⟫ ≠ 0 := by
       simpa only [Ne.def, vsub_eq_zero_iff_eq, inner_self_eq_zero] using hp

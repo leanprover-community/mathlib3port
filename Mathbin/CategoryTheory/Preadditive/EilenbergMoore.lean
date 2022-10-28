@@ -28,7 +28,7 @@ open CategoryTheory.Limits Preadditive
 /-- The category of algebras over an additive monad on a preadditive category is preadditive. -/
 @[simps]
 instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
-  homGroup := fun F G =>
+  homGroup F G :=
     { add := fun α β =>
         { f := α.f + β.f, h' := by simp only [functor.map_add, add_comp, monad.algebra.hom.h, comp_add] },
       zero := { f := 0, h' := by simp only [functor.map_zero, zero_comp, comp_zero] },
@@ -42,15 +42,15 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
       add_assoc := by
         intros
         ext
-        apply add_assocₓ,
+        apply add_assoc,
       zero_add := by
         intros
         ext
-        apply zero_addₓ,
+        apply zero_add,
       add_zero := by
         intros
         ext
-        apply add_zeroₓ,
+        apply add_zero,
       nsmul_zero' := by
         intros
         ext
@@ -80,11 +80,11 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
       add_left_neg := by
         intros
         ext
-        apply add_left_negₓ,
+        apply add_left_neg,
       add_comm := by
         intros
         ext
-        apply add_commₓ }
+        apply add_comm }
   add_comp' := by
     intros
     ext
@@ -101,7 +101,7 @@ variable (U : Comonad C) [Functor.Additive (U : C ⥤ C)]
 /-- The category of coalgebras over an additive comonad on a preadditive category is preadditive. -/
 @[simps]
 instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
-  homGroup := fun F G =>
+  homGroup F G :=
     { add := fun α β =>
         { f := α.f + β.f, h' := by simp only [functor.map_add, comp_add, comonad.coalgebra.hom.h, add_comp] },
       zero := { f := 0, h' := by simp only [functor.map_zero, comp_zero, zero_comp] },
@@ -115,15 +115,15 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
       add_assoc := by
         intros
         ext
-        apply add_assocₓ,
+        apply add_assoc,
       zero_add := by
         intros
         ext
-        apply zero_addₓ,
+        apply zero_add,
       add_zero := by
         intros
         ext
-        apply add_zeroₓ,
+        apply add_zero,
       nsmul_zero' := by
         intros
         ext
@@ -153,11 +153,11 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
       add_left_neg := by
         intros
         ext
-        apply add_left_negₓ,
+        apply add_left_neg,
       add_comm := by
         intros
         ext
-        apply add_commₓ }
+        apply add_comm }
   add_comp' := by
     intros
     ext

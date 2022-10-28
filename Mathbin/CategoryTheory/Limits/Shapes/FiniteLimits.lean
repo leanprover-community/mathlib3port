@@ -106,13 +106,13 @@ section
 
 open WalkingParallelPair WalkingParallelPairHom
 
-instance fintypeWalkingParallelPair : Fintypeₓ WalkingParallelPair where
+instance fintypeWalkingParallelPair : Fintype WalkingParallelPair where
   elems := [WalkingParallelPair.zero, WalkingParallelPair.one].toFinset
-  complete := fun x => by cases x <;> simp
+  complete x := by cases x <;> simp
 
 attribute [local tidy] tactic.case_bash
 
-instance (j j' : WalkingParallelPair) : Fintypeₓ (WalkingParallelPairHom j j') where
+instance (j j' : WalkingParallelPair) : Fintype (WalkingParallelPairHom j j') where
   elems :=
     WalkingParallelPair.recOn j
       (WalkingParallelPair.recOn j' [WalkingParallelPairHom.id zero].toFinset [left, right].toFinset)
@@ -136,11 +136,11 @@ attribute [local tidy] tactic.case_bash
 
 namespace WidePullbackShape
 
-instance fintypeObj [Fintypeₓ J] : Fintypeₓ (WidePullbackShape J) := by
+instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) := by
   rw [wide_pullback_shape]
   infer_instance
 
-instance fintypeHom (j j' : WidePullbackShape J) : Fintypeₓ (j ⟶ j') where
+instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j') where
   elems := by
     cases j'
     · cases j
@@ -162,11 +162,11 @@ end WidePullbackShape
 
 namespace WidePushoutShape
 
-instance fintypeObj [Fintypeₓ J] : Fintypeₓ (WidePushoutShape J) := by
+instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) := by
   rw [wide_pushout_shape]
   infer_instance
 
-instance fintypeHom (j j' : WidePushoutShape J) : Fintypeₓ (j ⟶ j') where
+instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j') where
   elems := by
     cases j
     · cases j'
@@ -186,10 +186,10 @@ instance fintypeHom (j j' : WidePushoutShape J) : Fintypeₓ (j ⟶ j') where
 
 end WidePushoutShape
 
-instance finCategoryWidePullback [Fintypeₓ J] :
+instance finCategoryWidePullback [Fintype J] :
     FinCategory (WidePullbackShape J) where fintypeHom := WidePullbackShape.fintypeHom
 
-instance finCategoryWidePushout [Fintypeₓ J] :
+instance finCategoryWidePushout [Fintype J] :
     FinCategory (WidePushoutShape J) where fintypeHom := WidePushoutShape.fintypeHom
 
 -- We can't just made this an `abbreviation`
@@ -198,7 +198,7 @@ instance finCategoryWidePushout [Fintypeₓ J] :
 for every finite collection of morphisms
 -/
 class HasFiniteWidePullbacks : Prop where
-  out (J : Type) [Fintypeₓ J] : HasLimitsOfShape (WidePullbackShape J) C
+  out (J : Type) [Fintype J] : HasLimitsOfShape (WidePullbackShape J) C
 
 instance has_limits_of_shape_wide_pullback_shape (J : Type) [Finite J] [HasFiniteWidePullbacks C] :
     HasLimitsOfShape (WidePullbackShape J) C := by
@@ -210,7 +210,7 @@ instance has_limits_of_shape_wide_pullback_shape (J : Type) [Finite J] [HasFinit
 for every finite collection of morphisms
 -/
 class HasFiniteWidePushouts : Prop where
-  out (J : Type) [Fintypeₓ J] : HasColimitsOfShape (WidePushoutShape J) C
+  out (J : Type) [Fintype J] : HasColimitsOfShape (WidePushoutShape J) C
 
 instance has_colimits_of_shape_wide_pushout_shape (J : Type) [Finite J] [HasFiniteWidePushouts C] :
     HasColimitsOfShape (WidePushoutShape J) C := by
@@ -230,9 +230,9 @@ it also has finite wide pushouts
 theorem has_finite_wide_pushouts_of_has_finite_limits [HasFiniteColimits C] : HasFiniteWidePushouts C :=
   ⟨fun J _ => has_finite_colimits.out _⟩
 
-instance fintypeWalkingPair : Fintypeₓ WalkingPair where
+instance fintypeWalkingPair : Fintype WalkingPair where
   elems := {WalkingPair.left, WalkingPair.right}
-  complete := fun x => by cases x <;> simp
+  complete x := by cases x <;> simp
 
 /-- Pullbacks are finite limits, so if `C` has all finite limits, it also has all pullbacks -/
 example [HasFiniteWidePullbacks C] : HasPullbacks C := by infer_instance

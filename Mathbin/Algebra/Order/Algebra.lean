@@ -35,23 +35,16 @@ variable {R A : Type _} {a b : A} {r : R}
 
 variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSmul R A]
 
-theorem algebra_map_monotone : Monotoneₓ (algebraMap R A) := fun a b h => by
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(«expr - »(b, a), (0 : A))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h => by
   rw [Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one, ← sub_nonneg, ← sub_smul]
-  trans (b - a) • (0 : A)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(«expr - »(b, a), (0 : A))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · simp
     
   · exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h)
     
 
 end OrderedAlgebra
-
-section Instances
-
-variable {R : Type _} [LinearOrderedCommRing R]
-
-instance LinearOrderedCommRing.to_ordered_smul : OrderedSmul R R where
-  smul_lt_smul_of_pos := OrderedSemiring.mul_lt_mul_of_pos_left
-  lt_of_smul_lt_smul_of_pos := fun a b c w₁ w₂ => (mul_lt_mul_left w₂).mp w₁
-
-end Instances
 

@@ -23,18 +23,17 @@ to access this notation in your own code.
 section nonZeroDivisors
 
 /-- The submonoid of non-zero-divisors of a `monoid_with_zero` `R`. -/
-def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R where
+def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R where
   Carrier := { x | ∀ z, z * x = 0 → z = 0 }
-  one_mem' := fun z hz => by rwa [mul_oneₓ] at hz
-  mul_mem' := fun x₁ x₂ hx₁ hx₂ z hz =>
+  one_mem' z hz := by rwa [mul_one] at hz
+  mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
     have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this
 
 -- mathport name: non_zero_divisors
 localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
-variable {M M' M₁ R R' F : Type _} [MonoidWithZeroₓ M] [MonoidWithZeroₓ M'] [CommMonoidWithZero M₁] [Ringₓ R]
-  [CommRingₓ R']
+variable {M M' M₁ R R' F : Type _} [MonoidWithZero M] [MonoidWithZero M'] [CommMonoidWithZero M₁] [Ring R] [CommRing R']
 
 theorem mem_non_zero_divisors_iff {r : M} : r ∈ M⁰ ↔ ∀ x, x * r = 0 → x = 0 :=
   Iff.rfl
@@ -68,7 +67,7 @@ theorem mul_cancel_left_coe_non_zero_divisor {x y : R'} {c : R'⁰} : (c : R') *
   mul_cancel_left_mem_non_zero_divisor c.Prop
 
 theorem nonZeroDivisors.ne_zero [Nontrivial M] {x} (hx : x ∈ M⁰) : x ≠ 0 := fun h =>
-  one_ne_zero (hx _ <| (one_mulₓ _).trans h)
+  one_ne_zero (hx _ <| (one_mul _).trans h)
 
 theorem nonZeroDivisors.coe_ne_zero [Nontrivial M] (x : M⁰) : (x : M) ≠ 0 :=
   nonZeroDivisors.ne_zero x.2
@@ -88,7 +87,7 @@ theorem mul_mem_non_zero_divisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M�
     rw [mul_assoc, hx]
     
 
-theorem is_unit_of_mem_non_zero_divisors {G₀ : Type _} [GroupWithZeroₓ G₀] {x : G₀} (hx : x ∈ nonZeroDivisors G₀) :
+theorem is_unit_of_mem_non_zero_divisors {G₀ : Type _} [GroupWithZero G₀] {x : G₀} (hx : x ∈ nonZeroDivisors G₀) :
     IsUnit x :=
   ⟨⟨x, x⁻¹, mul_inv_cancel (nonZeroDivisors.ne_zero hx), inv_mul_cancel (nonZeroDivisors.ne_zero hx)⟩, rfl⟩
 
@@ -106,7 +105,7 @@ theorem mem_non_zero_divisors_iff_ne_zero [NoZeroDivisors M] [Nontrivial M] {x :
 
 theorem map_ne_zero_of_mem_non_zero_divisors [Nontrivial M] [ZeroHomClass F M M'] (g : F)
     (hg : Function.Injective (g : M → M')) {x : M} (h : x ∈ M⁰) : g x ≠ 0 := fun h0 =>
-  one_ne_zero (h 1 ((one_mulₓ x).symm ▸ hg (trans h0 (map_zero g).symm)))
+  one_ne_zero (h 1 ((one_mul x).symm ▸ hg (trans h0 (map_zero g).symm)))
 
 theorem map_mem_non_zero_divisors [Nontrivial M] [NoZeroDivisors M'] [ZeroHomClass F M M'] (g : F)
     (hg : Function.Injective g) {x : M} (h : x ∈ M⁰) : g x ∈ M'⁰ := fun z hz =>
@@ -133,7 +132,7 @@ theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZer
 
 theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
     (f : F) (hf : Function.Injective f) : M⁰ ≤ M'⁰.comap f :=
-  Submonoid.le_comap_of_map_le _ (map_le_non_zero_divisors_of_injective _ hf le_rflₓ)
+  Submonoid.le_comap_of_map_le _ (map_le_non_zero_divisors_of_injective _ hf le_rfl)
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
     s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 := by

@@ -109,9 +109,9 @@ end HasZeroMorphisms
 open Opposite HasZeroMorphisms
 
 instance hasZeroMorphismsOpposite [HasZeroMorphisms C] : HasZeroMorphisms Cᵒᵖ where
-  HasZero := fun X Y => ⟨(0 : unop Y ⟶ unop X).op⟩
-  comp_zero' := fun X Y f Z => congr_arg Quiver.Hom.op (HasZeroMorphisms.zero_comp (unop Z) f.unop)
-  zero_comp' := fun X Y Z f => congr_arg Quiver.Hom.op (HasZeroMorphisms.comp_zero f.unop (unop X))
+  HasZero X Y := ⟨(0 : unop Y ⟶ unop X).op⟩
+  comp_zero' X Y f Z := congr_arg Quiver.Hom.op (HasZeroMorphisms.zero_comp (unop Z) f.unop)
+  zero_comp' X Y Z f := congr_arg Quiver.Hom.op (HasZeroMorphisms.comp_zero f.unop (unop X))
 
 section
 
@@ -137,7 +137,7 @@ section
 
 variable [HasZeroMorphisms D]
 
-instance : HasZeroMorphisms (C ⥤ D) where HasZero := fun F G => ⟨{ app := fun X => 0 }⟩
+instance : HasZeroMorphisms (C ⥤ D) where HasZero F G := ⟨{ app := fun X => 0 }⟩
 
 @[simp]
 theorem zero_app (F G : C ⥤ D) (j : C) : (0 : F ⟶ G).app j = 0 :=
@@ -217,12 +217,12 @@ end IsZero
     code should generally ask for an instance of `has_zero_morphisms` separately, even if it already
     asks for an instance of `has_zero_objects`. -/
 def IsZero.hasZeroMorphisms {O : C} (hO : IsZero O) : HasZeroMorphisms C where
-  HasZero := fun X Y => { zero := hO.from X ≫ hO.to Y }
-  zero_comp' := fun X Y Z f => by
+  HasZero X Y := { zero := hO.from X ≫ hO.to Y }
+  zero_comp' X Y Z f := by
     rw [category.assoc]
     congr
     apply hO.eq_of_src
-  comp_zero' := fun X Y Z f => by
+  comp_zero' X Y Z f := by
     rw [← category.assoc]
     congr
     apply hO.eq_of_tgt
@@ -242,12 +242,12 @@ open ZeroObject
     code should generally ask for an instance of `has_zero_morphisms` separately, even if it already
     asks for an instance of `has_zero_objects`. -/
 def zeroMorphismsOfZeroObject : HasZeroMorphisms C where
-  HasZero := fun X Y => { zero := (default : X ⟶ 0) ≫ default }
-  zero_comp' := fun X Y Z f => by
+  HasZero X Y := { zero := (default : X ⟶ 0) ≫ default }
+  zero_comp' X Y Z f := by
     dsimp only [Zero.zero]
     rw [category.assoc]
     congr
-  comp_zero' := fun X Y Z f => by
+  comp_zero' X Y Z f := by
     dsimp only [Zero.zero]
     rw [← category.assoc]
     congr
@@ -348,8 +348,8 @@ theorem epi_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : Epi f :=
 Because `X ≅ 0` contains data (even if a subsingleton), we express this `↔` as an `≃`.
 -/
 def idZeroEquivIsoZero (X : C) : 𝟙 X = 0 ≃ (X ≅ 0) where
-  toFun := fun h => { Hom := 0, inv := 0 }
-  invFun := fun i => zero_of_target_iso_zero (𝟙 X) i
+  toFun h := { Hom := 0, inv := 0 }
+  invFun i := zero_of_target_iso_zero (𝟙 X) i
   left_inv := by tidy
   right_inv := by tidy
 
@@ -413,7 +413,7 @@ def isIsoZeroEquiv (X Y : C) : IsIso (0 : X ⟶ Y) ≃ 𝟙 X = 0 ∧ 𝟙 Y = 0
     rw [← is_iso.hom_inv_id (0 : X ⟶ Y)]
     rw [← is_iso.inv_hom_id (0 : X ⟶ Y)]
     simp
-  invFun := fun h => ⟨⟨(0 : Y ⟶ X), by tidy⟩⟩
+  invFun h := ⟨⟨(0 : Y ⟶ X), by tidy⟩⟩
   left_inv := by tidy
   right_inv := by tidy
 
@@ -499,7 +499,7 @@ open ZeroObject
 -/
 @[simps]
 def monoFactorisationZero (X Y : C) : MonoFactorisation (0 : X ⟶ Y) where
-  i := 0
+  I := 0
   m := 0
   e := 0
 

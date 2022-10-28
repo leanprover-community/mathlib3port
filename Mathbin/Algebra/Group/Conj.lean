@@ -20,9 +20,9 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α] [Monoidₓ β]
+variable [Monoid α] [Monoid β]
 
 /-- We say that `a` is conjugate to `b` if for some unit `c` we have `c * a * c⁻¹ = b`. -/
 def IsConj (a b : α) :=
@@ -44,15 +44,15 @@ theorem IsConj.trans {a b c : α} : IsConj a b → IsConj b c → IsConj a c
   | ⟨c₁, hc₁⟩, ⟨c₂, hc₂⟩ => ⟨c₂ * c₁, hc₂.mul_left hc₁⟩
 
 @[simp]
-theorem is_conj_iff_eq {α : Type _} [CommMonoidₓ α] {a b : α} : IsConj a b ↔ a = b :=
+theorem is_conj_iff_eq {α : Type _} [CommMonoid α] {a b : α} : IsConj a b ↔ a = b :=
   ⟨fun ⟨c, hc⟩ => by
-    rw [SemiconjBy, mul_comm, ← Units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_oneₓ] at hc
+    rw [SemiconjBy, mul_comm, ← Units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_one] at hc
     exact hc, fun h => by rw [h]⟩
 
 protected theorem MonoidHom.map_is_conj (f : α →* β) {a b : α} : IsConj a b → IsConj (f a) (f b)
   | ⟨c, hc⟩ => ⟨Units.map f c, by rw [Units.coe_map, SemiconjBy, ← f.map_mul, hc.eq, f.map_mul]⟩
 
-end Monoidₓ
+end Monoid
 
 section CancelMonoid
 
@@ -63,7 +63,7 @@ variable [CancelMonoid α]
 -- not generalised.
 @[simp]
 theorem is_conj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
-  ⟨fun ⟨c, hc⟩ => mul_right_cancelₓ (hc.symm.trans ((mul_oneₓ _).trans (one_mulₓ _).symm)), fun h => by rw [h]⟩
+  ⟨fun ⟨c, hc⟩ => mul_right_cancel (hc.symm.trans ((mul_one _).trans (one_mul _).symm)), fun h => by rw [h]⟩
 
 @[simp]
 theorem is_conj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
@@ -74,14 +74,14 @@ theorem is_conj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
 
 end CancelMonoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ α]
+variable [Group α]
 
 @[simp]
 theorem is_conj_iff {a b : α} : IsConj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ => ⟨c, mul_inv_eq_iff_eq_mul.2 hc⟩, fun ⟨c, hc⟩ =>
-    ⟨⟨c, c⁻¹, mul_inv_selfₓ c, inv_mul_selfₓ c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
+    ⟨⟨c, c⁻¹, mul_inv_self c, inv_mul_self c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
 
 @[simp]
 theorem conj_inv {a b : α} : (b * a * b⁻¹)⁻¹ = b * a⁻¹ * b⁻¹ :=
@@ -96,7 +96,7 @@ theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻�
   induction' i with i hi
   · simp
     
-  · simp [pow_succₓ, hi]
+  · simp [pow_succ, hi]
     
 
 @[simp]
@@ -110,10 +110,10 @@ theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
   (MulAut.conj x).Injective
 
-end Groupₓ
+end Group
 
 @[simp]
-theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
+theorem is_conj_iff₀ [GroupWithZero α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ =>
     ⟨c, by
       rw [← Units.coe_inv, Units.mul_inv_eq_iff_eq_mul]
@@ -128,7 +128,7 @@ namespace IsConj
 /- This small quotient API is largely copied from the API of `associates`;
 where possible, try to keep them in sync -/
 /-- The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
-protected def setoid (α : Type _) [Monoidₓ α] : Setoidₓ α where
+protected def setoid (α : Type _) [Monoid α] : Setoid α where
   R := IsConj
   iseqv := ⟨IsConj.refl, fun a b => IsConj.symm, fun a b c => IsConj.trans⟩
 
@@ -137,33 +137,33 @@ end IsConj
 attribute [local instance] IsConj.setoid
 
 /-- The quotient type of conjugacy classes of a group. -/
-def ConjClasses (α : Type _) [Monoidₓ α] : Type _ :=
-  Quotientₓ (IsConj.setoid α)
+def ConjClasses (α : Type _) [Monoid α] : Type _ :=
+  Quotient (IsConj.setoid α)
 
 namespace ConjClasses
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α] [Monoidₓ β]
+variable [Monoid α] [Monoid β]
 
 /-- The canonical quotient map from a monoid `α` into the `conj_classes` of `α` -/
-protected def mk {α : Type _} [Monoidₓ α] (a : α) : ConjClasses α :=
+protected def mk {α : Type _} [Monoid α] (a : α) : ConjClasses α :=
   ⟦a⟧
 
 instance : Inhabited (ConjClasses α) :=
   ⟨⟦1⟧⟩
 
 theorem mk_eq_mk_iff_is_conj {a b : α} : ConjClasses.mk a = ConjClasses.mk b ↔ IsConj a b :=
-  Iff.intro Quotientₓ.exact Quot.sound
+  Iff.intro Quotient.exact Quot.sound
 
 theorem quotient_mk_eq_mk (a : α) : ⟦a⟧ = ConjClasses.mk a :=
   rfl
 
-theorem quot_mk_eq_mk (a : α) : Quot.mk Setoidₓ.R a = ConjClasses.mk a :=
+theorem quot_mk_eq_mk (a : α) : Quot.mk Setoid.R a = ConjClasses.mk a :=
   rfl
 
 theorem forall_is_conj {p : ConjClasses α → Prop} : (∀ a, p a) ↔ ∀ a, p (ConjClasses.mk a) :=
-  Iff.intro (fun h a => h _) fun h a => Quotientₓ.induction_on a h
+  Iff.intro (fun h a => h _) fun h a => Quotient.induction_on a h
 
 theorem mk_surjective : Function.Surjective (@ConjClasses.mk α _) :=
   forall_is_conj.2 fun a => ⟨a, rfl⟩
@@ -179,7 +179,7 @@ theorem exists_rep (a : ConjClasses α) : ∃ a0 : α, ConjClasses.mk a0 = a :=
 
 /-- A `monoid_hom` maps conjugacy classes of one group to conjugacy classes of another. -/
 def map (f : α →* β) : ConjClasses α → ConjClasses β :=
-  Quotientₓ.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab)
+  Quotient.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab)
 
 theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.Surjective (ConjClasses.map f) := by
   intro b
@@ -187,8 +187,8 @@ theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.
   obtain ⟨a, rfl⟩ := hf b
   exact ⟨ConjClasses.mk a, rfl⟩
 
-instance [Fintypeₓ α] [DecidableRel (IsConj : α → α → Prop)] : Fintypeₓ (ConjClasses α) :=
-  Quotientₓ.fintype (IsConj.setoid α)
+instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
+  Quotient.fintype (IsConj.setoid α)
 
 library_note "slow-failing instance priority"/--
 Certain instances trigger further searches when they are considered as candidate instances;
@@ -222,17 +222,17 @@ the instance priority should be even lower, see Note [lower instance priority].
 
 -- see Note [slow-failing instance priority]
 instance (priority := 900) [DecidableRel (IsConj : α → α → Prop)] : DecidableEq (ConjClasses α) :=
-  Quotientₓ.decidableEq
+  Quotient.decidableEq
 
-instance [DecidableEq α] [Fintypeₓ α] : DecidableRel (IsConj : α → α → Prop) := fun a b => by
+instance [DecidableEq α] [Fintype α] : DecidableRel (IsConj : α → α → Prop) := fun a b => by
   delta IsConj SemiconjBy
   infer_instance
 
-end Monoidₓ
+end Monoid
 
-section CommMonoidₓ
+section CommMonoid
 
-variable [CommMonoidₓ α]
+variable [CommMonoid α]
 
 theorem mk_injective : Function.Injective (@ConjClasses.mk α _) := fun _ _ =>
   (mk_eq_mk_iff_is_conj.trans is_conj_iff_eq).1
@@ -242,18 +242,18 @@ theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
 
 /-- The bijection between a `comm_group` and its `conj_classes`. -/
 def mkEquiv : α ≃ ConjClasses α :=
-  ⟨ConjClasses.mk, Quotientₓ.lift id fun (a : α) b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
+  ⟨ConjClasses.mk, Quotient.lift id fun (a : α) b => is_conj_iff_eq.1, Quotient.lift_mk _ _, by
     rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
     intro x
-    rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotientₓ.lift_mk, id.def]⟩
+    rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotient.lift_mk, id.def]⟩
 
-end CommMonoidₓ
+end CommMonoid
 
 end ConjClasses
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ α]
+variable [Monoid α]
 
 /-- Given an element `a`, `conjugates a` is the set of conjugates. -/
 def ConjugatesOf (a : α) : Set α :=
@@ -270,20 +270,20 @@ theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ ConjugatesOf a 
     have ha := mem_conjugates_of_self
     rwa [← h] at ha⟩
 
-instance [Fintypeₓ α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintypeₓ (ConjugatesOf a) :=
+instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintype (ConjugatesOf a) :=
   @Subtype.fintype _ _ (‹DecidableRel IsConj› a) _
 
-end Monoidₓ
+end Monoid
 
 namespace ConjClasses
 
-variable [Monoidₓ α]
+variable [Monoid α]
 
 attribute [local instance] IsConj.setoid
 
 /-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
 def Carrier : ConjClasses α → Set α :=
-  Quotientₓ.lift ConjugatesOf fun (a : α) b ab => IsConj.conjugates_of_eq ab
+  Quotient.lift ConjugatesOf fun (a : α) b ab => IsConj.conjugates_of_eq ab
 
 theorem mem_carrier_mk {a : α} : a ∈ Carrier (ConjClasses.mk a) :=
   IsConj.refl _
@@ -292,20 +292,20 @@ theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ Carrier b �
   revert b
   rw [forall_is_conj]
   intro b
-  rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, Quotientₓ.lift_mk]
+  rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, Quotient.lift_mk]
   rfl
 
 theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.Carrier = ConjClasses.mk ⁻¹' {a} :=
   Set.ext fun x => mem_carrier_iff_mk_eq
 
-section Fintypeₓ
+section Fintype
 
-variable [Fintypeₓ α] [DecidableRel (IsConj : α → α → Prop)]
+variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
 
-instance {x : ConjClasses α} : Fintypeₓ (Carrier x) :=
-  (Quotientₓ.recOnSubsingleton x) fun a => ConjugatesOf.fintype
+instance {x : ConjClasses α} : Fintype (Carrier x) :=
+  (Quotient.recOnSubsingleton x) fun a => ConjugatesOf.fintype
 
-end Fintypeₓ
+end Fintype
 
 end ConjClasses
 

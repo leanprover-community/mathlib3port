@@ -227,7 +227,7 @@ theorem comp_assoc (f : P₃ →ᵃⁱ[𝕜] P₄) (g : P₂ →ᵃⁱ[𝕜] P�
 
 omit V₂ V₃ V₄
 
-instance : Monoidₓ (P →ᵃⁱ[𝕜] P) where
+instance : Monoid (P →ᵃⁱ[𝕜] P) where
   one := id
   mul := comp
   mul_assoc := comp_assoc
@@ -526,13 +526,13 @@ theorem trans_assoc (ePP₂ : P ≃ᵃⁱ[𝕜] P₂) (eP₂G : P₂ ≃ᵃⁱ[�
 omit V₂ V₃ V₄
 
 /-- The group of affine isometries of a `normed_add_torsor`, `P`. -/
-instance : Groupₓ (P ≃ᵃⁱ[𝕜] P) where
-  mul := fun e₁ e₂ => e₂.trans e₁
+instance : Group (P ≃ᵃⁱ[𝕜] P) where
+  mul e₁ e₂ := e₂.trans e₁
   one := refl _ _
   inv := symm
   one_mul := trans_refl
   mul_one := refl_trans
-  mul_assoc := fun _ _ _ => trans_assoc _ _ _
+  mul_assoc _ _ _ := trans_assoc _ _ _
   mul_left_inv := self_trans_symm
 
 @[simp]
@@ -674,8 +674,8 @@ include 𝕜 V
 
 /-- The map `g` from `V` to `V₂` corresponding to a map `f` from `P` to `P₂`, at a base point `p`,
 is an isometry if `f` is one. -/
-theorem vadd_vsub {f : P → P₂} (hf : Isometry f) {p : P} {g : V → V₂} (hg : ∀ v, g v = f (v +ᵥ p) -ᵥ f p) :
-    Isometry g := by
+theorem vaddVsub {f : P → P₂} (hf : Isometry f) {p : P} {g : V → V₂} (hg : ∀ v, g v = f (v +ᵥ p) -ᵥ f p) : Isometry g :=
+  by
   convert (vadd_const 𝕜 (f p)).symm.Isometry.comp (hf.comp (vadd_const 𝕜 p).Isometry)
   exact funext hg
 
@@ -702,7 +702,7 @@ theorem point_reflection_self (x : P) : pointReflection 𝕜 x x = x :=
   AffineEquiv.point_reflection_self 𝕜 x
 
 theorem point_reflection_involutive (x : P) : Function.Involutive (pointReflection 𝕜 x) :=
-  Equivₓ.point_reflection_involutive x
+  Equiv.point_reflection_involutive x
 
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointReflection 𝕜 x :=

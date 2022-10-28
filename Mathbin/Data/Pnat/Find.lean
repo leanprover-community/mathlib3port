@@ -19,7 +19,7 @@ variable {p q : ℕ+ → Prop} [DecidablePred p] [DecidablePred q] (h : ∃ n, p
 
 instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+)(hn : n' = n), p n := fun n' =>
   decidableOfIff' (∃ h : 0 < n', p ⟨n', h⟩) <|
-    Subtype.exists.trans <| by simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_propₓ, exists_eq_left']
+    Subtype.exists.trans <| by simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_prop, exists_eq_left']
 
 include h
 
@@ -59,7 +59,7 @@ protected theorem find_min : ∀ {m : ℕ+}, m < Pnat.find h → ¬p m :=
   (Pnat.findX h).Prop.right
 
 protected theorem find_min' {m : ℕ+} (hm : p m) : Pnat.find h ≤ m :=
-  le_of_not_ltₓ fun l => Pnat.find_min h l hm
+  le_of_not_lt fun l => Pnat.find_min h l hm
 
 variable {n m : ℕ+}
 
@@ -69,7 +69,7 @@ theorem find_eq_iff : Pnat.find h = m ↔ p m ∧ ∀ n < m, ¬p n := by
     exact ⟨Pnat.find_spec h, fun _ => Pnat.find_min h⟩
     
   · rintro ⟨hm, hlt⟩
-    exact le_antisymmₓ (Pnat.find_min' h hm) (not_ltₓ.1 <| imp_not_comm.1 (hlt _) <| Pnat.find_spec h)
+    exact le_antisymm (Pnat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| Pnat.find_spec h)
     
 
 @[simp]
@@ -78,10 +78,10 @@ theorem find_lt_iff (n : ℕ+) : Pnat.find h < n ↔ ∃ m < n, p m :=
 
 @[simp]
 theorem find_le_iff (n : ℕ+) : Pnat.find h ≤ n ↔ ∃ m ≤ n, p m := by
-  simp only [exists_propₓ, ← lt_add_one_iff, find_lt_iff]
+  simp only [exists_prop, ← lt_add_one_iff, find_lt_iff]
 
 @[simp]
-theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀ m < n, ¬p m := by simp_rw [← not_ltₓ, find_lt_iff, not_exists]
+theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀ m < n, ¬p m := by simp_rw [← not_lt, find_lt_iff, not_exists]
 
 @[simp]
 theorem lt_find_iff (n : ℕ+) : n < Pnat.find h ↔ ∀ m ≤ n, ¬p m := by
@@ -98,7 +98,7 @@ theorem find_mono (h : ∀ n, q n → p n) {hp : ∃ n, p n} {hq : ∃ n, q n} :
   Pnat.find_min' _ (h _ (Pnat.find_spec hq))
 
 theorem find_le {h : ∃ n, p n} (hn : p n) : Pnat.find h ≤ n :=
-  (Pnat.find_le_iff _ _).2 ⟨n, le_rflₓ, hn⟩
+  (Pnat.find_le_iff _ _).2 ⟨n, le_rfl, hn⟩
 
 theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) : Pnat.find h = Pnat.find h₂ + 1 := by
   refine' (find_eq_iff _).2 ⟨Pnat.find_spec h₂, fun n => Pnat.recOn n _ _⟩
@@ -106,7 +106,7 @@ theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
     
   intro m IH hm
   simp only [add_lt_add_iff_right, lt_find_iff] at hm
-  exact hm _ le_rflₓ
+  exact hm _ le_rfl
 
 end Pnat
 

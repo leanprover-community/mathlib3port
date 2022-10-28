@@ -17,7 +17,7 @@ This file contains properties about integrability, Lebesgue integration and Boch
 
 namespace MeasureTheory
 
-open Measureₓ TopologicalSpace
+open Measure TopologicalSpace
 
 open Ennreal
 
@@ -29,11 +29,11 @@ variable {μ : Measure G} {f : G → E} {g : G}
 
 section MeasurableInv
 
-variable [Groupₓ G] [HasMeasurableInv G]
+variable [Group G] [HasMeasurableInv G]
 
 @[to_additive]
-theorem Integrable.comp_inv [IsInvInvariant μ] {f : G → F} (hf : Integrable f μ) : Integrable (fun t => f t⁻¹) μ :=
-  (hf.mono_measure (map_inv_eq_self μ).le).comp_measurable measurable_inv
+theorem Integrable.compInv [IsInvInvariant μ] {f : G → F} (hf : Integrable f μ) : Integrable (fun t => f t⁻¹) μ :=
+  (hf.monoMeasure (map_inv_eq_self μ).le).compMeasurable measurableInv
 
 @[to_additive]
 theorem integral_inv_eq_self (f : G → E) (μ : Measure G) [IsInvInvariant μ] : (∫ x, f x⁻¹ ∂μ) = ∫ x, f x ∂μ := by
@@ -44,7 +44,7 @@ end MeasurableInv
 
 section MeasurableMul
 
-variable [Groupₓ G] [HasMeasurableMul G]
+variable [Group G] [HasMeasurableMul G]
 
 /-- Translating a function by left-multiplication does not change its `measure_theory.lintegral`
 with respect to a left-invariant measure. -/
@@ -105,17 +105,17 @@ theorem integral_eq_zero_of_mul_right_eq_neg [IsMulRightInvariant μ] (hf' : ∀
     (∫ x, f x ∂μ) = 0 := by simp_rw [← self_eq_neg ℝ E, ← integral_neg, ← hf', integral_mul_right_eq_self]
 
 @[to_additive]
-theorem Integrable.comp_mul_left {f : G → F} [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
+theorem Integrable.compMulLeft {f : G → F} [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
     Integrable (fun t => f (g * t)) μ :=
-  (hf.mono_measure (map_mul_left_eq_self μ g).le).comp_measurable <| measurable_const_mul g
+  (hf.monoMeasure (map_mul_left_eq_self μ g).le).compMeasurable <| measurableConstMul g
 
 @[to_additive]
-theorem Integrable.comp_mul_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
+theorem Integrable.compMulRight {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
     Integrable (fun t => f (t * g)) μ :=
-  (hf.mono_measure (map_mul_right_eq_self μ g).le).comp_measurable <| measurable_mul_const g
+  (hf.monoMeasure (map_mul_right_eq_self μ g).le).compMeasurable <| measurableMulConst g
 
 @[to_additive]
-theorem Integrable.comp_div_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
+theorem Integrable.compDivRight {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
     Integrable (fun t => f (t / g)) μ := by
   simp_rw [div_eq_mul_inv]
   exact hf.comp_mul_right g⁻¹
@@ -123,24 +123,14 @@ theorem Integrable.comp_div_right {f : G → F} [IsMulRightInvariant μ] (hf : I
 variable [HasMeasurableInv G]
 
 @[to_additive]
-theorem Integrable.comp_div_left {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
-    Integrable (fun t => f (g / t)) μ := by
-  rw [← map_mul_right_inv_eq_self μ g⁻¹, integrable_map_measure, Function.comp]
-  · simp_rw [div_inv_eq_mul, mul_inv_cancel_left]
-    exact hf
-    
-  · refine' ae_strongly_measurable.comp_measurable _ (measurable_id.const_div g)
-    simp_rw [map_map (measurable_id'.const_div g) (measurable_id'.const_mul g⁻¹).inv, Function.comp, div_inv_eq_mul,
-      mul_inv_cancel_left, map_id']
-    exact hf.ae_strongly_measurable
-    
-  · exact (measurable_id'.const_mul g⁻¹).inv.AeMeasurable
-    
+theorem Integrable.compDivLeft {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
+    Integrable (fun t => f (g / t)) μ :=
+  ((measurePreservingDivLeft μ g).integrable_comp hf.AeStronglyMeasurable).mpr hf
 
 @[simp, to_additive]
 theorem integrable_comp_div_left (f : G → F) [IsInvInvariant μ] [IsMulLeftInvariant μ] (g : G) :
     Integrable (fun t => f (g / t)) μ ↔ Integrable f μ := by
-  refine' ⟨fun h => _, fun h => h.comp_div_left g⟩
+  refine' ⟨fun h => _, fun h => h.compDivLeft g⟩
   convert h.comp_inv.comp_mul_left g⁻¹
   simp_rw [div_inv_eq_mul, mul_inv_cancel_left]
 
@@ -153,7 +143,7 @@ end MeasurableMul
 
 section Smul
 
-variable [Groupₓ G] [MeasurableSpace α] [MulAction G α] [HasMeasurableSmul G α]
+variable [Group G] [MeasurableSpace α] [MulAction G α] [HasMeasurableSmul G α]
 
 @[simp, to_additive]
 theorem integral_smul_eq_self {μ : Measure α} [SmulInvariantMeasure G α μ] (f : α → E) {g : G} :
@@ -165,7 +155,7 @@ end Smul
 
 section TopologicalGroup
 
-variable [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] [BorelSpace G] [IsMulLeftInvariant μ]
+variable [TopologicalSpace G] [Group G] [TopologicalGroup G] [BorelSpace G] [IsMulLeftInvariant μ]
 
 /-- For nonzero regular left invariant measures, the integral of a continuous nonnegative function
   `f` is 0 iff `f` is 0. -/

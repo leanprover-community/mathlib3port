@@ -32,7 +32,7 @@ unsafe def try_for (max : parse parser.pexpr) (tac : itactic) : tactic Unit := d
     | some r => r
     | none => (tactic.trace "try_for timeout, using sorry" >> tactic.admit) s
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Multiple `subst`. `substs x y z` is the same as `subst x, subst y, subst z`. -/
 unsafe def substs (l : parse (parser.many ident)) : tactic Unit :=
   propagate_tags <| (l.mmap' fun h => get_local h >>= tactic.subst) >> try (tactic.reflexivity reducible)
@@ -43,7 +43,7 @@ add_tactic_doc
 /-- Unfold coercion-related definitions -/
 unsafe def unfold_coes (loc : parse location) : tactic Unit :=
   unfold
-    [`` coe, `` coeT, `` CoeT.coeₓ, `` coeB, `` Coe.coe, `` lift, `` HasLift.lift, `` liftT, `` HasLiftT.lift, `` coeFn,
+    [`` coe, `` coeT, `` CoeT.coe, `` coeB, `` Coe.coe, `` lift, `` HasLift.lift, `` liftT, `` HasLiftT.lift, `` coeFn,
       `` CoeFun.coe, `` coeSort, `` CoeSort.coe]
     loc
 
@@ -60,7 +60,7 @@ unsafe def unfold_aux : tactic Unit := do
   let tgt ← target
   let name ← decl_name
   let to_unfold := tgt.list_names_with_prefix Name
-  guardₓ ¬to_unfold
+  guard ¬to_unfold
   -- should we be using simp_lemmas.mk_default?
         simp_lemmas.mk
         to_unfold tgt >>=
@@ -144,18 +144,18 @@ unsafe def clear_ : tactic Unit :=
     let l ← local_context
     l fun h => do
         let Name.mk_string s p ← return <| local_pp_name h
-        guardₓ (s = '_')
+        guard (s = '_')
         let cl ← infer_type h >>= is_class
-        guardₓ ¬cl
+        guard ¬cl
         tactic.clear h
 
 add_tactic_doc
   { Name := "clear_", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Acts like `have`, but removes a hypothesis with the same name as
 this one. For example if the state is `h : p ⊢ goal` and `f : p → q`,
 then after `replace h := f h` the goal will be `h : q ⊢ goal`,
@@ -176,7 +176,7 @@ add_tactic_doc
   { Name := "replace", category := DocCategory.tactic, declNames := [`tactic.interactive.replace],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Make every proposition in the context decidable.
 
 `classical!` does this more aggressively, such that even if a decidable instance is already
@@ -199,7 +199,7 @@ private unsafe def generalize_arg_p : parser (pexpr × Name) :=
 noncomputable theorem generalizeAAux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
   h α id
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Like `generalize` but also considers assumptions
 specified by the user. The user can also specify to
 omit the goal.
@@ -263,11 +263,11 @@ unsafe def source_fields (missing : List Name) (e : pexpr) : tactic (List (Name 
   let exp_fields := fields.filter fun x => x.2 ∈ missing
   exp_fields fun ⟨p, n⟩ => (Prod.mk n ∘ to_pexpr) <$> mk_mapp (n p) [none, some e]
 
-unsafe def collect_struct' : pexpr → StateTₓ (List <| expr × structure_instance_info) tactic pexpr
+unsafe def collect_struct' : pexpr → StateT (List <| expr × structure_instance_info) tactic pexpr
   | e => do
     let some str ← pure e.get_structure_instance_info | e.traverse collect_struct'
     let v ← monadLift mk_mvar
-    modifyₓ (List.cons (v, str))
+    modify (List.cons (v, str))
     pure <| to_pexpr v
 
 unsafe def collect_struct (e : pexpr) : tactic <| pexpr × List (expr × structure_instance_info) :=
@@ -373,7 +373,7 @@ We use this tactic for writing tests.
 -/
 unsafe def guard_expr_strict (t : expr) (p : parse <| tk ":=" *> texpr) : tactic Unit := do
   let e ← to_expr p
-  guardₓ (t = e)
+  guard (t = e)
 
 /-- `guard_target_strict t` fails if the target of the main goal is not syntactically `t`.
 We use this tactic for writing tests.
@@ -393,7 +393,7 @@ unsafe def guard_hyp_strict (n : parse ident) (p : parse <| tk ":" *> texpr) : t
 /-- Tests that there are `n` hypotheses in the current context. -/
 unsafe def guard_hyp_nums (n : ℕ) : tactic Unit := do
   let k ← local_context
-  guardₓ (n = k) <|> fail f! "{k} hypotheses found"
+  guard (n = k) <|> fail f! "{k} hypotheses found"
 
 /-- `guard_hyp_mod_implicit h : t` fails if the type of the hypothesis `h`
 is not definitionally equal to `t` modulo none transparency
@@ -415,11 +415,11 @@ unsafe def guard_target_mod_implicit (p : parse texpr) : tactic Unit := do
   let e ← to_expr p
   is_def_eq tgt e transparency.none
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Test that `t` is the tag of the main goal. -/
 unsafe def guard_tags (tags : parse (parser.many ident)) : tactic Unit := do
   let (t : List Name) ← get_main_tag
-  guardₓ (t = tags)
+  guard (t = tags)
 
 /-- `guard_proof_term { t } e` applies tactic `t` and tests whether the resulting proof term
   unifies with `p`. -/
@@ -443,7 +443,7 @@ unsafe def get_current_field : tactic Name := do
 unsafe def field (n : parse ident) (tac : itactic) : tactic Unit := do
   let gs ← get_goals
   let ts ← gs.mmap get_tag
-  let ([g], gs') ← pure <| (List.zipₓ gs ts).partition fun x => x.snd.nth 1 = some n
+  let ([g], gs') ← pure <| (List.zip gs ts).partition fun x => x.snd.nth 1 = some n
   set_goals [g.1]
   tac
   done
@@ -515,7 +515,7 @@ add_tactic_doc
 unsafe def return_cast (f : Option expr) (t : Option (expr × expr)) (es : List (expr × expr × expr))
     (e x x' eq_h : expr) : tactic (Option (expr × expr) × List (expr × expr × expr)) :=
   (do
-      guardₓ ¬e
+      guard ¬e
       unify x x'
       let u ← mk_meta_univ
       let f ← f <|> mk_mapp `` _root_.id [(expr.sort u : expr)]
@@ -535,7 +535,7 @@ unsafe def list_cast_of_aux (x : expr) (t : Option (expr × expr)) (es : List (e
   | e@(quote.1 (@Eq.substr (%%ₓα) (%%ₓp) (%%ₓa) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) =>
     mk_eq_symm eq_h >>= return_cast p t es e x x'
   | e@(quote.1 (@Eq.ndrec (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓx') _ (%%ₓeq_h))) => return_cast f t es e x x' eq_h
-  | e@(quote.1 (@Eq.recOnₓ (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) => return_cast f t es e x x' eq_h
+  | e@(quote.1 (@Eq.recOn (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) => return_cast f t es e x x' eq_h
   | e => return (t, es)
 
 unsafe def list_cast_of (x tgt : expr) : tactic (List (expr × expr × expr)) :=
@@ -548,8 +548,8 @@ private unsafe def h_generalize_arg_p_aux : pexpr → parser (pexpr × Name)
 private unsafe def h_generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr == id" <| parser.pexpr 0 >>= h_generalize_arg_p_aux
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `h_generalize Hx : e == x` matches on `cast _ e` in the goal and replaces it with
 `x`. It also adds `Hx : e == x` as an assumption. If `cast _ e` appears multiple
 times (not necessarily with the same proof), they are all replaced by `x`. `cast`
@@ -567,7 +567,7 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!"))) (h : parse (par
     tactic Unit := do
   let (e, n) := arg
   let h' := if h = `_ then none else h
-  let h' ← (h' : tactic Name) <|> get_unused_name ("h" ++ n.toString : Stringₓ)
+  let h' ← (h' : tactic Name) <|> get_unused_name ("h" ++ n.toString : String)
   let e ← to_expr e
   let tgt ← target
   let (e, x, eq_h) :: es ← list_cast_of e tgt | fail "no cast found"
@@ -677,7 +677,7 @@ unsafe def use (l : parse pexpr_list_or_texpr) : tactic Unit :=
       (try
         (trivial' <|> do
           let quote.1 (Exists (%%ₓp)) ← target
-          (to_expr (pquote.1 exists_propₓ.mpr) >>= tactic.apply) >> skip))
+          (to_expr (pquote.1 exists_prop.mpr) >>= tactic.apply) >> skip))
 
 add_tactic_doc
   { Name := "use", category := DocCategory.tactic, declNames := [`tactic.interactive.use, `tactic.interactive.existsi],
@@ -721,7 +721,7 @@ unsafe def loc.get_local_pp_names : Loc → tactic (List Name)
 unsafe def loc.get_local_uniq_names (l : Loc) : tactic (List Name) :=
   List.map expr.local_uniq_name <$> l.get_locals
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- The logic of `change x with y at l` fails when there are dependencies.
 `change'` mimics the behavior of `change`, except in the case of `change x with y at l`.
 In this case, it will correctly replace occurences of `x` with `y` at all possible hypotheses
@@ -746,13 +746,13 @@ add_tactic_doc
     declNames := [`tactic.interactive.change', `tactic.interactive.change], tags := ["renaming"],
     inheritDescriptionFrom := `tactic.interactive.change' }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 private unsafe def opt_dir_with : parser (Option (Bool × Name)) :=
   parser.optional (tk "with" *> ((fun arrow h => (Option.isSome arrow, h)) <$> parser.optional (tk "<-") <*> ident))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `set a := t with h` is a variant of `let a := t`. It adds the hypothesis `h : a = t` to
 the local context and replaces `t` with `a` everywhere it can.
 
@@ -796,7 +796,7 @@ add_tactic_doc
   { Name := "set", category := DocCategory.tactic, declNames := [`tactic.interactive.set],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- `clear_except h₀ h₁` deletes all the assumptions it can except for `h₀` and `h₁`.
 -/
 unsafe def clear_except (xs : parse (parser.many ident)) : tactic Unit := do
@@ -812,7 +812,7 @@ add_tactic_doc
 unsafe def format_names (ns : List Name) : format :=
   format.join <| List.intersperse " " (ns.map to_fmt)
 
-private unsafe def indent_bindents (l r : Stringₓ) : Option (List Name) → expr → tactic format
+private unsafe def indent_bindents (l r : String) : Option (List Name) → expr → tactic format
   | none, e => do
     let e ← pp e
     f!"{(← l)}{(← format.nest l e)}{← r}"
@@ -841,9 +841,9 @@ private unsafe def partition_vars : tactic (List expr × List expr) := do
   let ls ← local_context
   partition_vars' (name_set.of_list <| ls expr.local_uniq_name) ls [] []
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Format the current goal as a stand-alone example. Useful for testing tactics
 or creating [minimal working examples](https://leanprover-community.github.io/mwe.html).
 
@@ -962,7 +962,7 @@ add_tactic_doc
   { Name := "extract_goal", category := DocCategory.tactic, declNames := [`tactic.interactive.extract_goal],
     tags := ["goal management", "proof extraction", "debugging"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `inhabit α` tries to derive a `nonempty α` instance and then upgrades this
 to an `inhabited α` instance.
 If the target is a `Prop`, this is done constructively;
@@ -995,7 +995,7 @@ add_tactic_doc
   { Name := "inhabit", category := DocCategory.tactic, declNames := [`tactic.interactive.inhabit],
     tags := ["context management", "type class"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- `revert_deps n₁ n₂ ...` reverts all the hypotheses that depend on one of `n₁, n₂, ...`
 It does not revert `n₁, n₂, ...` themselves (unless they depend on another `nᵢ`). -/
 unsafe def revert_deps (ns : parse (parser.many ident)) : tactic Unit :=
@@ -1021,7 +1021,7 @@ add_tactic_doc
   { Name := "revert_target_deps", category := DocCategory.tactic, declNames := [`tactic.interactive.revert_target_deps],
     tags := ["context management", "goal management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- `clear_value n₁ n₂ ...` clears the bodies of the local definitions `n₁, n₂ ...`, changing them
 into regular hypotheses. A hypothesis `n : α := t` is changed to `n : α`. -/
 unsafe def clear_value (ns : parse (parser.many ident)) : tactic Unit :=
@@ -1031,7 +1031,7 @@ add_tactic_doc
   { Name := "clear_value", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_value],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `generalize' : e = x` replaces all occurrences of `e` in the target with a new hypothesis `x` of
 the same type.
 

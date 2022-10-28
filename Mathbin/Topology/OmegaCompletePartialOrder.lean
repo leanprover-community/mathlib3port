@@ -25,13 +25,13 @@ open Classical
 
 universe u
 
-namespace Scott
+namespace ScottCat
 
 /-- `x` is an `ω`-Sup of a chain `c` if it is the least upper bound of the range of `c`. -/
-def IsωSup {α : Type u} [Preorderₓ α] (c : Chain α) (x : α) : Prop :=
+def IsωSup {α : Type u} [Preorder α] (c : Chain α) (x : α) : Prop :=
   (∀ i, c i ≤ x) ∧ ∀ y, (∀ i, c i ≤ y) → x ≤ y
 
-theorem is_ωSup_iff_is_lub {α : Type u} [Preorderₓ α] {c : Chain α} {x : α} : IsωSup c x ↔ IsLub (Range c) x := by
+theorem is_ωSup_iff_is_lub {α : Type u} [Preorder α] {c : Chain α} {x : α} : IsωSup c x ↔ IsLub (Range c) x := by
   simp [is_ωSup, IsLub, IsLeast, UpperBounds, LowerBounds]
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
@@ -53,7 +53,7 @@ theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOp
   simp only [IsOpen] at hs⊢
   convert CompleteLattice.Sup_continuous' (SetOf ⁻¹' s) _
   · ext1 x
-    simp only [Sup_apply, set_of_bijective.surjective.exists, exists_propₓ, mem_preimage, SetCoe.exists, supr_Prop_eq,
+    simp only [Sup_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage, SetCoe.exists, supr_Prop_eq,
       mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
     
   · intro p hp
@@ -61,24 +61,24 @@ theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOp
     simp only [mem_set_of_eq]
     
 
-end Scott
+end ScottCat
 
 /-- A Scott topological space is defined on preorders
 such that their open sets, seen as a function `α → Prop`,
 preserves the joins of ω-chains  -/
 @[reducible]
-def Scott (α : Type u) :=
+def ScottCat (α : Type u) :=
   α
 
-instance Scott.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] : TopologicalSpace (Scott α) where
-  IsOpen := Scott.IsOpen α
-  is_open_univ := Scott.is_open_univ α
-  is_open_inter := Scott.IsOpen.inter α
-  is_open_sUnion := Scott.is_open_sUnion α
+instance ScottCat.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] : TopologicalSpace (ScottCat α) where
+  IsOpen := ScottCat.IsOpen α
+  is_open_univ := ScottCat.is_open_univ α
+  is_open_inter := ScottCat.IsOpen.inter α
+  is_open_sUnion := ScottCat.is_open_sUnion α
 
 section NotBelow
 
-variable {α : Type _} [OmegaCompletePartialOrder α] (y : Scott α)
+variable {α : Type _} [OmegaCompletePartialOrder α] (y : ScottCat α)
 
 /-- `not_below` is an open set in `Scott α` used
 to prove the monotonicity of continuous functions -/
@@ -86,14 +86,14 @@ def NotBelow :=
   { x | ¬x ≤ y }
 
 theorem not_below_is_open : IsOpen (NotBelow y) := by
-  have h : Monotoneₓ (NotBelow y) := by
+  have h : Monotone (NotBelow y) := by
     intro x y' h
     simp only [NotBelow, SetOf, le_Prop_eq]
     intro h₀ h₁
-    apply h₀ (le_transₓ h h₁)
+    apply h₀ (le_trans h h₁)
   exists h
   rintro c
-  apply eq_of_forall_ge_iffₓ
+  apply eq_of_forall_ge_iff
   intro z
   rw [ωSup_le_iff]
   simp only [ωSup_le_iff, NotBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_app,
@@ -101,7 +101,7 @@ theorem not_below_is_open : IsOpen (NotBelow y) := by
 
 end NotBelow
 
-open Scott hiding IsOpen
+open ScottCat hiding IsOpen
 
 open OmegaCompletePartialOrder
 
@@ -112,33 +112,33 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : Isω
   · apply ωSup_le
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:553:11: unsupported: specialize non-hyp
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:553:11: unsupported: specialize non-hyp -/
 theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
-    (f : Scott α → Scott β) (hf : Continuous f) : OmegaCompletePartialOrder.Continuous' f := by
+    (f : ScottCat α → ScottCat β) (hf : Continuous f) : OmegaCompletePartialOrder.Continuous' f := by
   simp only [continuous_def, (· ⁻¹' ·)] at hf
-  have h : Monotoneₓ f := by
+  have h : Monotone f := by
     intro x y h
     cases' hf { x | ¬x ≤ f y } (not_below_is_open _) with hf hf'
     clear hf'
     specialize hf h
     simp only [preimage, mem_set_of_eq, le_Prop_eq] at hf
     by_contra H
-    apply hf H le_rflₓ
+    apply hf H le_rfl
   exists h
   intro c
-  apply eq_of_forall_ge_iffₓ
+  apply eq_of_forall_ge_iff
   intro z
   specialize «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:553:11: unsupported: specialize non-hyp»
   cases hf
   specialize hf_h c
   simp only [NotBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h
   rw [← not_iff_not]
-  simp only [ωSup_le_iff, hf_h, ωSup, supr, Sup, CompleteLattice.supₓ, CompleteSemilatticeSup.sup, exists_propₓ,
+  simp only [ωSup_le_iff, hf_h, ωSup, supr, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup, exists_prop,
     mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_app, eq_iff_iff, not_forall]
   tauto
 
 theorem continuous_of_Scott_continuous {α β} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
-    (f : Scott α → Scott β) (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f := by
+    (f : ScottCat α → ScottCat β) (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f := by
   rw [continuous_def]
   intro s hs
   change continuous' (s ∘ f)

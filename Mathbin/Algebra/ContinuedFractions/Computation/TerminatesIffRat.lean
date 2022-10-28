@@ -60,7 +60,7 @@ variable (v : K) (n : ℕ)
 
 theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
     ∃ conts : Pair ℚ, (of v).continuantsAux n = (conts.map coe : Pair K) :=
-  Nat.strong_induction_onₓ n
+  Nat.strong_induction_on n
     (by
       clear n
       let g := of v
@@ -88,7 +88,7 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
           
         -- option.some
         · -- invoke the IH a second time
-          cases' IH n <| lt_of_le_of_ltₓ n.le_succ <| lt_add_one <| n + 1 with ppred_conts ppred_conts_eq
+          cases' IH n <| lt_of_le_of_lt n.le_succ <| lt_add_one <| n + 1 with ppred_conts ppred_conts_eq
           obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K)
           exact of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq
           -- finally, unfold the recurrence to obtain the required rational value.
@@ -192,7 +192,7 @@ theorem coe_stream_nth_rat_eq :
     
 
 theorem coe_stream_rat_eq :
-    ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Streamₓ <| Option <| IntFractPair K) =
+    ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream <| Option <| IntFractPair K) =
       IntFractPair.stream v :=
   by
   funext n
@@ -209,13 +209,13 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h := by
   simp
 
 theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (Pair.map coe) : Option <| Pair K) = (of v).s.nth n := by
-  simp only [of, int_fract_pair.seq1, Seqₓₓ.map_nth, Seqₓₓ.nth_tail]
-  simp only [Seqₓₓ.nth]
+  simp only [of, int_fract_pair.seq1, Seq.map_nth, Seq.nth_tail]
+  simp only [Seq.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
-    simp [Streamₓ.map, Streamₓ.nth, succ_nth_stream_eq]
+    simp [Stream.map, Stream.nth, succ_nth_stream_eq]
 
-theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seqₓₓ <| Pair K) = (of v).s := by
+theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seq <| Pair K) = (of v).s := by
   ext n
   rw [← coe_of_s_nth_rat_eq v_eq_q]
   rfl
@@ -233,7 +233,7 @@ theorem of_terminates_iff_of_rat_terminates {v : K} {q : ℚ} (v_eq_q : v = (q :
     intro h <;>
       cases' h with n h <;>
         use n <;>
-          simp only [Seqₓₓ.TerminatedAt, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;> cases (of q).s.nth n <;> trivial
+          simp only [Seq.TerminatedAt, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;> cases (of q).s.nth n <;> trivial
 
 end RatTranslation
 
@@ -260,7 +260,7 @@ variable {q : ℚ} {n : ℕ}
 `int_fract_pair.of q⁻¹` is smaller than the numerator of `q`.
 -/
 theorem of_inv_fr_num_lt_num_of_pos (q_pos : 0 < q) : (IntFractPair.of q⁻¹).fr.num < q.num :=
-  Ratₓ.fract_inv_num_lt_num_of_pos q_pos
+  Rat.fract_inv_num_lt_num_of_pos q_pos
 
 /-- Shows that the sequence of numerators of the fractional parts of the stream is strictly
 antitone. -/
@@ -274,7 +274,7 @@ theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : IntFractPai
   cases this
   rw [← int_fract_pair.of_eq_ifp_succ_n]
   cases' nth_stream_fr_nonneg_lt_one stream_nth_eq with zero_le_ifp_n_fract ifp_n_fract_lt_one
-  have : 0 < ifp_n.fr := lt_of_le_of_neₓ zero_le_ifp_n_fract <| ifp_n_fract_ne_zero.symm
+  have : 0 < ifp_n.fr := lt_of_le_of_ne zero_le_ifp_n_fract <| ifp_n_fract_ne_zero.symm
   exact of_inv_fr_num_lt_num_of_pos this
 
 theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
@@ -284,7 +284,7 @@ theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
   case zero =>
   intro ifp_zero stream_zero_eq
   have : int_fract_pair.of q = ifp_zero := by injection stream_zero_eq
-  simp [le_reflₓ, this.symm]
+  simp [le_refl, this.symm]
   case succ =>
   intro ifp_succ_n stream_succ_nth_eq
   suffices ifp_succ_n.fr.num + 1 ≤ (int_fract_pair.of q).fr.num - n by
@@ -292,8 +292,8 @@ theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
     solve_by_elim [le_sub_right_of_add_le]
   rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with ⟨ifp_n, stream_nth_eq, -⟩
   have : ifp_succ_n.fr.num < ifp_n.fr.num := stream_succ_nth_fr_num_lt_nth_fr_num_rat stream_nth_eq stream_succ_nth_eq
-  have : ifp_succ_n.fr.num + 1 ≤ ifp_n.fr.num := Int.add_one_le_of_ltₓ this
-  exact le_transₓ this (IH stream_nth_eq)
+  have : ifp_succ_n.fr.num + 1 ≤ ifp_n.fr.num := Int.add_one_le_of_lt this
+  exact le_trans this (IH stream_nth_eq)
 
 theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.stream q n = none := by
   let fract_q_num := (Int.fract q).num
@@ -318,11 +318,11 @@ theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.s
 end IntFractPair
 
 /-- The continued fraction of a rational number terminates. -/
-theorem terminates_of_rat (q : ℚ) : (of q).Terminates :=
+theorem terminatesOfRat (q : ℚ) : (of q).Terminates :=
   Exists.elim (IntFractPair.exists_nth_stream_eq_none_of_rat q) fun n stream_nth_eq_none =>
-    Exists.introₓ n
-      (have : IntFractPair.stream q (n + 1) = none := IntFractPair.stream_is_seq q stream_nth_eq_none
-      of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right this)
+    Exists.intro n
+      (have : IntFractPair.stream q (n + 1) = none := IntFractPair.streamIsSeq q stream_nth_eq_none
+      of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elimRight this)
 
 end TerminatesOfRat
 
@@ -333,8 +333,8 @@ theorem terminates_iff_rat (v : K) : (of v).Terminates ↔ ∃ q : ℚ, v = (q :
     (fun terminates_v : (of v).Terminates => show ∃ q : ℚ, v = (q : K) from exists_rat_eq_of_terminates terminates_v)
     fun exists_q_eq_v : ∃ q : ℚ, v = (↑q : K) =>
     Exists.elim exists_q_eq_v fun q => fun v_eq_q : v = ↑q =>
-      have : (of q).Terminates := terminates_of_rat q
-      (of_terminates_iff_of_rat_terminates v_eq_q).elim_right this
+      have : (of q).Terminates := terminatesOfRat q
+      (of_terminates_iff_of_rat_terminates v_eq_q).elimRight this
 
 end GeneralizedContinuedFraction
 

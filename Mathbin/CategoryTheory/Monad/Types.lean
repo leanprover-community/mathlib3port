@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monad.Kleisli
-import Mathbin.CategoryTheory.Category.Kleisli
+import Mathbin.CategoryTheory.Category.KleisliCat
 import Mathbin.CategoryTheory.Types
 
 /-!
@@ -23,18 +23,18 @@ section
 
 universe u
 
-variable (m : Type u → Type u) [Monadₓ m] [IsLawfulMonad m]
+variable (m : Type u → Type u) [Monad m] [LawfulMonad m]
 
 /-- A lawful `control.monad` gives a category theory `monad` on the category of types.
 -/
 @[simps]
 def ofTypeMonad : Monad (Type u) where
   toFunctor := ofTypeFunctor m
-  η' := ⟨@pure m _, fun α β f => (IsLawfulApplicative.map_comp_pure f).symm⟩
+  η' := ⟨@pure m _, fun α β f => (LawfulApplicative.map_comp_pure f).symm⟩
   μ' := ⟨@mjoin m _, fun α β (f : α → β) => funext fun a => mjoin_map_map f a⟩
-  assoc' := fun α => funext fun a => mjoin_map_mjoin a
-  left_unit' := fun α => funext fun a => mjoin_pure a
-  right_unit' := fun α => funext fun a => mjoin_map_pure a
+  assoc' α := funext fun a => mjoin_map_mjoin a
+  left_unit' α := funext fun a => mjoin_pure a
+  right_unit' α := funext fun a => mjoin_map_pure a
 
 /-- The `Kleisli` category of a `control.monad` is equivalent to the `kleisli` category of its
 category-theoretic version, provided the monad is lawful.

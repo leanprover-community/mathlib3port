@@ -107,12 +107,12 @@ theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i) (H : Te
   rw [Filter.map_map, comm, ← Filter.map_map, map_le_iff_le_comap] at lim1
   have lim2 : comap i (map h (𝓝 d)) ≤ comap i (𝓝 (i a)) := comap_mono H
   rw [← di.nhds_eq_comap] at lim2
-  exact le_transₓ lim1 lim2
+  exact le_trans lim1 lim2
 
-protected theorem nhds_within_ne_bot (di : DenseInducing i) (b : β) : NeBot (𝓝[Range i] b) :=
-  di.dense.nhds_within_ne_bot b
+protected theorem nhdsWithinNeBot (di : DenseInducing i) (b : β) : NeBot (𝓝[Range i] b) :=
+  di.dense.nhdsWithinNeBot b
 
-theorem comap_nhds_ne_bot (di : DenseInducing i) (b : β) : NeBot (comap i (𝓝 b)) :=
+theorem comapNhdsNeBot (di : DenseInducing i) (b : β) : NeBot (comap i (𝓝 b)) :=
   comap_ne_bot fun s hs =>
     let ⟨_, ⟨ha, a, rfl⟩⟩ := mem_closure_iff_nhds.1 (di.dense b) s hs
     ⟨a, ha⟩
@@ -124,7 +124,7 @@ variable [TopologicalSpace γ]
   continuous extension, then `g` is the unique such extension. In general,
   `g` might not be continuous or even extend `f`. -/
 def extend (di : DenseInducing i) (f : α → γ) (b : β) : γ :=
-  @limₓ _ ⟨f (di.dense.some b)⟩ (comap i (𝓝 b)) f
+  @lim _ ⟨f (di.dense.some b)⟩ (comap i (𝓝 b)) f
 
 theorem extend_eq_of_tendsto [T2Space γ] {b : β} {c : γ} {f : α → γ} (hf : Tendsto f (comap i (𝓝 b)) (𝓝 c)) :
     di.extend f b = c :=
@@ -176,7 +176,7 @@ theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseIn
     dsimp [V₁, φ]
     rwa [di.extend_eq_of_tendsto hc]
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀ x ∈ i ⁻¹' V₂, f x ∈ V' := by
-    simpa [and_assocₓ] using
+    simpa [and_assoc'] using
       ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
   suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by filter_upwards [inter_mem V₁_in V₂_in] using this
   rintro x ⟨x_in₁, x_in₂⟩
@@ -193,7 +193,7 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Ra
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2 fun a =>
-        le_antisymmₓ (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a),
+        le_antisymm (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a),
     dense }
 
 end DenseInducing
@@ -255,42 +255,42 @@ end DenseEmbedding
 theorem Dense.dense_embedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense s) : DenseEmbedding (coe : s → α) :=
   { embedding_subtype_coe with dense := hs.dense_range_coe }
 
-theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e)
-    (hp : IsClosed { x | p x }) (h : ∀ a, p (e a)) : ∀ b, p b :=
+theorem isClosedProperty [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e) (hp : IsClosed { x | p x })
+    (h : ∀ a, p (e a)) : ∀ b, p b :=
   have : univ ⊆ { b | p b } :=
     calc
       univ = Closure (Range e) := he.closure_range.symm
       _ ⊆ Closure { b | p b } := closure_mono <| range_subset_iff.mpr h
       _ = _ := hp.closure_eq
       
-  fun b => this trivialₓ
+  fun b => this trivial
 
-theorem is_closed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
+theorem isClosedProperty2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := (is_closed_property (he.prod_map he) hp) fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := (isClosedProperty (he.prod_map he) hp) fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 
-theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
+theorem isClosedProperty3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) :
     ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
-  have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := (is_closed_property (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
+  have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := (isClosedProperty (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 
-@[elabAsElim]
-theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop} (b₀ : β)
+@[elab_as_elim]
+theorem DenseRange.inductionOn [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop} (b₀ : β)
     (hp : IsClosed { b | p b }) (ih : ∀ a : α, p <| e a) : p b₀ :=
-  is_closed_property he hp ih b₀
+  isClosedProperty he hp ih b₀
 
-@[elabAsElim]
-theorem DenseRange.induction_on₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
+@[elab_as_elim]
+theorem DenseRange.inductionOn₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) (b₁ b₂ : β) : p b₁ b₂ :=
-  is_closed_property2 he hp h _ _
+  isClosedProperty2 he hp h _ _
 
-@[elabAsElim]
-theorem DenseRange.induction_on₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
+@[elab_as_elim]
+theorem DenseRange.inductionOn₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) :
     p b₁ b₂ b₃ :=
-  is_closed_property3 he hp h _ _ _
+  isClosedProperty3 he hp h _ _ _
 
 section
 
@@ -301,7 +301,7 @@ variable {f : α → β}
 /-- Two continuous functions to a t2-space that agree on the dense range of a function are equal. -/
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g) (hh : Continuous h)
     (H : g ∘ f = h ∘ f) : g = h :=
-  funext fun y => hfd.induction_on y (is_closed_eq hg hh) <| congr_fun H
+  funext fun y => hfd.induction_on y (isClosedEq hg hh) <| congr_fun H
 
 end
 

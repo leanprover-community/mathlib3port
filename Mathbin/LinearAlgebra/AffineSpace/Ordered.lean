@@ -203,7 +203,7 @@ theorem line_map_le_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f a b`. -/
 theorem map_lt_line_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
     f c < lineMap (f a) (f b) r ↔ slope f a c < slope f a b :=
-  lt_iff_lt_of_le_iff_le'ₓ (line_map_le_map_iff_slope_le_slope_left h) (map_le_line_map_iff_slope_le_slope_left h)
+  lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope_left h) (map_le_line_map_iff_slope_le_slope_left h)
 
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f a c`. -/
@@ -238,7 +238,7 @@ theorem line_map_le_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f c b`. -/
 theorem map_lt_line_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
     f c < lineMap (f a) (f b) r ↔ slope f a b < slope f c b :=
-  lt_iff_lt_of_le_iff_le'ₓ (line_map_le_map_iff_slope_le_slope_right h) (map_le_line_map_iff_slope_le_slope_right h)
+  lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope_right h) (map_le_line_map_iff_slope_le_slope_right h)
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a b`. -/
@@ -265,7 +265,7 @@ theorem line_map_le_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : 
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f c b`. -/
 theorem map_lt_line_map_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
     f c < lineMap (f a) (f b) r ↔ slope f a c < slope f c b :=
-  lt_iff_lt_of_le_iff_le'ₓ (line_map_le_map_iff_slope_le_slope hab h₀ h₁) (map_le_line_map_iff_slope_le_slope hab h₀ h₁)
+  lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope hab h₀ h₁) (map_le_line_map_iff_slope_le_slope hab h₀ h₁)
 
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a c`. -/

@@ -211,7 +211,7 @@ In particular here we don't need to assume that F reflects limits.
 -/
 def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms F] (h : ∀ c t, LiftsToLimit K F c t) :
     CreatesLimit K F where
-  lifts := fun c t => (h c t).toLiftableCone
+  lifts c t := (h c t).toLiftableCone
   toReflectsLimit :=
     { reflects := fun (d : Cone K) (hd : IsLimit (F.mapCone d)) => by
         let d' : cone K := (h (F.map_cone d) hd).toLiftableCone.liftedCone
@@ -280,7 +280,7 @@ def createsLimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faith
 instance (priority := 100) preservesLimitOfCreatesLimitAndHasLimit (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F]
     [HasLimit (K ⋙ F)] :
     PreservesLimit K
-      F where preserves := fun c t =>
+      F where preserves c t :=
     IsLimit.ofIsoLimit (limit.isLimit _)
       ((liftedLimitMapsToOriginal (limit.isLimit _)).symm ≪≫
         (Cones.functoriality K F).mapIso ((liftedLimitIsLimit (limit.isLimit _)).uniqueUpToIso t))
@@ -301,7 +301,7 @@ In particular here we don't need to assume that F reflects colimits.
 -/
 def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms F] (h : ∀ c t, LiftsToColimit K F c t) :
     CreatesColimit K F where
-  lifts := fun c t => (h c t).toLiftableCocone
+  lifts c t := (h c t).toLiftableCocone
   toReflectsColimit :=
     { reflects := fun (d : Cocone K) (hd : IsColimit (F.mapCocone d)) => by
         let d' : cocone K := (h (F.map_cocone d) hd).toLiftableCocone.liftedCocone
@@ -370,7 +370,7 @@ def createsColimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
 instance (priority := 100) preservesColimitOfCreatesColimitAndHasColimit (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F]
     [HasColimit (K ⋙ F)] :
     PreservesColimit K
-      F where preserves := fun c t =>
+      F where preserves c t :=
     IsColimit.ofIsoColimit (colimit.isColimit _)
       ((liftedColimitMapsToOriginal (colimit.isColimit _)).symm ≪≫
         (Cocones.functoriality K F).mapIso ((liftedColimitIsColimit (colimit.isColimit _)).uniqueUpToIso t))
@@ -401,7 +401,7 @@ def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K
 
 /-- If `F` creates the limit of `K` and `F ≅ G`, then `G` creates the limit of `K`. -/
 def createsLimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimit K F] : CreatesLimit K G where
-  lifts := fun c t =>
+  lifts c t :=
     { liftedCone := liftLimit ((IsLimit.postcomposeInvEquiv (isoWhiskerLeft K h : _) c).symm t),
       validLift := by
         refine' (is_limit.map_cone_equiv h _).uniqueUpToIso t
@@ -411,11 +411,11 @@ def createsLimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimit K F] : Crea
 
 /-- If `F` creates limits of shape `J` and `F ≅ G`, then `G` creates limits of shape `J`. -/
 def createsLimitsOfShapeOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimitsOfShape J F] :
-    CreatesLimitsOfShape J G where CreatesLimit := fun K => createsLimitOfNatIso h
+    CreatesLimitsOfShape J G where CreatesLimit K := createsLimitOfNatIso h
 
 /-- If `F` creates limits and `F ≅ G`, then `G` creates limits. -/
 def createsLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimitsOfSize.{w, w'} F] :
-    CreatesLimitsOfSize.{w, w'} G where CreatesLimitsOfShape := fun J 𝒥₁ => creates_limits_of_shape_of_nat_iso h
+    CreatesLimitsOfSize.{w, w'} G where CreatesLimitsOfShape J 𝒥₁ := creates_limits_of_shape_of_nat_iso h
 
 /-- Transfer creation of colimits along a natural isomorphism in the diagram. -/
 def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [CreatesColimit K₁ F] : CreatesColimit K₂ F :=
@@ -433,7 +433,7 @@ def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅
 
 /-- If `F` creates the colimit of `K` and `F ≅ G`, then `G` creates the colimit of `K`. -/
 def createsColimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimit K F] : CreatesColimit K G where
-  lifts := fun c t =>
+  lifts c t :=
     { liftedCocone := liftColimit ((IsColimit.precomposeHomEquiv (isoWhiskerLeft K h : _) c).symm t),
       validLift := by
         refine' (is_colimit.map_cocone_equiv h _).uniqueUpToIso t
@@ -443,11 +443,11 @@ def createsColimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimit K F] : 
 
 /-- If `F` creates colimits of shape `J` and `F ≅ G`, then `G` creates colimits of shape `J`. -/
 def createsColimitsOfShapeOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimitsOfShape J F] :
-    CreatesColimitsOfShape J G where CreatesColimit := fun K => createsColimitOfNatIso h
+    CreatesColimitsOfShape J G where CreatesColimit K := createsColimitOfNatIso h
 
 /-- If `F` creates colimits and `F ≅ G`, then `G` creates colimits. -/
 def createsColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimitsOfSize.{w, w'} F] :
-    CreatesColimitsOfSize.{w, w'} G where CreatesColimitsOfShape := fun J 𝒥₁ => creates_colimits_of_shape_of_nat_iso h
+    CreatesColimitsOfSize.{w, w'} G where CreatesColimitsOfShape J 𝒥₁ := creates_colimits_of_shape_of_nat_iso h
 
 -- For the inhabited linter later.
 /-- If F creates the limit of K, any cone lifts to a limit. -/
@@ -473,8 +473,7 @@ def idLiftsCone (c : Cone (K ⋙ 𝟭 C)) : LiftableCone K (𝟭 C) c where
 /-- The identity functor creates all limits. -/
 instance idCreatesLimits :
     CreatesLimitsOfSize.{w, w'}
-      (𝟭
-        C) where CreatesLimitsOfShape := fun J 𝒥 => { CreatesLimit := fun F => { lifts := fun c t => id_lifts_cone c } }
+      (𝟭 C) where CreatesLimitsOfShape J 𝒥 := { CreatesLimit := fun F => { lifts := fun c t => id_lifts_cone c } }
 
 /-- Any cocone lifts through the identity functor. -/
 def idLiftsCocone (c : Cocone (K ⋙ 𝟭 C)) : LiftableCocone K (𝟭 C) c where
@@ -484,9 +483,7 @@ def idLiftsCocone (c : Cocone (K ⋙ 𝟭 C)) : LiftableCocone K (𝟭 C) c wher
 /-- The identity functor creates all colimits. -/
 instance idCreatesColimits :
     CreatesColimitsOfSize.{w, w'}
-      (𝟭
-        C) where CreatesColimitsOfShape := fun J 𝒥 =>
-    { CreatesColimit := fun F => { lifts := fun c t => id_lifts_cocone c } }
+      (𝟭 C) where CreatesColimitsOfShape J 𝒥 := { CreatesColimit := fun F => { lifts := fun c t => id_lifts_cocone c } }
 
 /-- Satisfy the inhabited linter -/
 instance inhabitedLiftableCone (c : Cone (K ⋙ 𝟭 C)) : Inhabited (LiftableCone K (𝟭 C) c) :=
@@ -513,7 +510,7 @@ variable (F : C ⥤ D) (G : D ⥤ E)
 instance compCreatesLimit [CreatesLimit K F] [CreatesLimit (K ⋙ F) G] :
     CreatesLimit K
       (F ⋙
-        G) where lifts := fun c t =>
+        G) where lifts c t :=
     { liftedCone := liftLimit (liftedLimitIsLimit t),
       validLift :=
         (Cones.functoriality (K ⋙ F) G).mapIso (liftedLimitMapsToOriginal (liftedLimitIsLimit t)) ≪≫
@@ -528,7 +525,7 @@ instance compCreatesLimits [CreatesLimitsOfSize.{w, w'} F] [CreatesLimitsOfSize.
 instance compCreatesColimit [CreatesColimit K F] [CreatesColimit (K ⋙ F) G] :
     CreatesColimit K
       (F ⋙
-        G) where lifts := fun c t =>
+        G) where lifts c t :=
     { liftedCocone := liftColimit (liftedColimitIsColimit t),
       validLift :=
         (Cocones.functoriality (K ⋙ F) G).mapIso (liftedColimitMapsToOriginal (liftedColimitIsColimit t)) ≪≫

@@ -38,7 +38,7 @@ the reindexed version).
 
 namespace Nat
 
-open Finsetₓ
+open Finset
 
 /-- A variant of the traditional prime counting function which gives the number of primes
 *strictly* less than the input. More convenient for avoiding off-by-one errors.
@@ -56,10 +56,10 @@ localized [Nat] notation "π" => Nat.primeCounting
 -- mathport name: prime_counting'
 localized [Nat] notation "π'" => Nat.primeCounting'
 
-theorem monotone_prime_counting' : Monotoneₓ primeCounting' :=
+theorem monotone_prime_counting' : Monotone primeCounting' :=
   count_monotone Prime
 
-theorem monotone_prime_counting : Monotoneₓ primeCounting := fun a b a_le_b =>
+theorem monotone_prime_counting : Monotone primeCounting := fun a b a_le_b =>
   monotone_prime_counting' (add_le_add_right a_le_b 1)
 
 @[simp]
@@ -87,7 +87,7 @@ theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       · exact ⟨succ_k_le_p, p_lt_n⟩
         
       · rw [coprime_comm]
-        exact coprime_of_lt_prime h0 (gt_of_ge_of_gtₓ succ_k_le_p h1) p_prime
+        exact coprime_of_lt_prime h0 (gt_of_ge_of_gt succ_k_le_p h1) p_prime
         
     _ ≤ π' k + totient a * (n / a + 1) := by
       rw [add_le_add_iff_left]

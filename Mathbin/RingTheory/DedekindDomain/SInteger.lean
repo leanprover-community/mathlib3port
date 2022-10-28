@@ -51,14 +51,14 @@ open nonZeroDivisors
 
 universe u v
 
-variable {R : Type u} [CommRingₓ R] [IsDomain R] [IsDedekindDomain R] (S : Set <| HeightOneSpectrum R) (K : Type v)
+variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R] (S : Set <| HeightOneSpectrum R) (K : Type v)
   [Field K] [Algebra R K] [IsFractionRing R K]
 
 /-! ## `S`-integers -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The `R`-subalgebra of `S`-integers of `K`. -/
 @[simps]
 def integer : Subalgebra R K :=
@@ -67,7 +67,7 @@ def integer : Subalgebra R K :=
       Set.ext fun _ => by simpa only [SetLike.mem_coe, Subring.mem_infi] with
     algebra_map_mem' := fun x v _ => v.valuation_le_one x }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
 theorem integer_eq :
     (S.integer K).toSubring = ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring :=
   SetLike.ext' <| by simpa only [integer, Subring.copy_eq]
@@ -78,8 +78,8 @@ theorem integer_valuation_le_one (x : S.integer K) {v : HeightOneSpectrum R} (hv
 /-! ## `S`-units -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The subgroup of `S`-units of `Kˣ`. -/
 @[simps]
 def unit : Subgroup Kˣ :=
@@ -87,7 +87,7 @@ def unit : Subgroup Kˣ :=
       { x : Kˣ | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation (x : K) = 1 } <|
     Set.ext fun _ => by simpa only [SetLike.mem_coe, Subgroup.mem_infi, Valuation.mem_unit_group_iff]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
 theorem unit_eq : S.Unit K = ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.unitGroup :=
   Subgroup.copy_eq _ _ _
 
@@ -97,23 +97,23 @@ theorem unit_valuation_eq_one (x : S.Unit K) {v : HeightOneSpectrum R} (hv : v �
 /-- The group of `S`-units is the group of units of the ring of `S`-integers. -/
 @[simps]
 def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ where
-  toFun := fun x =>
+  toFun x :=
     ⟨⟨x, fun v hv => (x.property v hv).le⟩, ⟨↑x⁻¹, fun v hv => (x⁻¹.property v hv).le⟩, Subtype.ext x.val.val_inv,
       Subtype.ext x.val.inv_val⟩
-  invFun := fun x =>
+  invFun x :=
     ⟨(Units.mk0 x) fun hx => x.ne_zero ((Subring.coe_eq_zero_iff _).mp hx), fun v hv =>
       eq_one_of_one_le_mul_left (x.val.property v hv) (x.inv.property v hv) <|
-        Eq.geₓ <| by
+        Eq.ge <| by
           rw [← map_mul]
           convert v.valuation.map_one
           exact subtype.mk_eq_mk.mp x.val_inv⟩
-  left_inv := fun _ => by
+  left_inv _ := by
     ext
     rfl
-  right_inv := fun _ => by
+  right_inv _ := by
     ext
     rfl
-  map_mul' := fun _ _ => by
+  map_mul' _ _ := by
     ext
     rfl
 

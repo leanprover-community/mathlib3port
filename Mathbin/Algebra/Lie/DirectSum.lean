@@ -27,7 +27,7 @@ open Dfinsupp
 
 open DirectSum
 
-variable {R : Type u} {ι : Type v} [CommRingₓ R]
+variable {R : Type u} {ι : Type v} [CommRing R]
 
 section Modules
 
@@ -39,19 +39,19 @@ variable {L : Type w₁} {M : ι → Type w}
 
 variable [LieRing L] [LieAlgebra R L]
 
-variable [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
+variable [∀ i, AddCommGroup (M i)] [∀ i, Module R (M i)]
 
 variable [∀ i, LieRingModule L (M i)] [∀ i, LieModule R L (M i)]
 
 instance : LieRingModule L (⨁ i, M i) where
-  bracket := fun x m => m.map_range (fun i m' => ⁅x, m'⁆) fun i => lie_zero x
-  add_lie := fun x y m => by
+  bracket x m := m.map_range (fun i m' => ⁅x, m'⁆) fun i => lie_zero x
+  add_lie x y m := by
     ext
     simp only [map_range_apply, add_apply, add_lie]
-  lie_add := fun x m n => by
+  lie_add x m n := by
     ext
     simp only [map_range_apply, add_apply, lie_add]
-  leibniz_lie := fun x y m => by
+  leibniz_lie x y m := by
     ext
     simp only [map_range_apply, lie_lie, add_apply, sub_add_cancel]
 
@@ -60,10 +60,10 @@ theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x, m⁆ 
   map_range_apply _ _ m i
 
 instance : LieModule R L (⨁ i, M i) where
-  smul_lie := fun t x m => by
+  smul_lie t x m := by
     ext i
     simp only [smul_lie, lie_module_bracket_apply, smul_apply]
-  lie_smul := fun t x m => by
+  lie_smul t x m := by
     ext i
     simp only [lie_smul, lie_module_bracket_apply, smul_apply]
 
@@ -98,7 +98,7 @@ variable (L : ι → Type w)
 variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
 instance lieRing : LieRing (⨁ i, L i) :=
-  { (inferInstance : AddCommGroupₓ _) with bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0,
+  { (inferInstance : AddCommGroup _) with bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0,
     add_lie := fun x y z => by
       ext
       simp only [zip_with_apply, add_apply, add_lie],
@@ -195,7 +195,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
       R ι L' fun i => (f i : L i →ₗ[R] L') with
     toFun := toModule R ι L' fun i => (f i : L i →ₗ[R] L'),
     map_lie' := fun x y => by
-      let f' := fun i => (f i : L i →ₗ[R] L')
+      let f' i := (f i : L i →ₗ[R] L')
       suffices
         ∀ (i : ι) (y : L i), to_module R ι L' f' ⁅x, of L i y⁆ = ⁅to_module R ι L' f' x, to_module R ι L' f' (of L i y)⁆
         by

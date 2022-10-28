@@ -51,7 +51,7 @@ def IsTerminal.isTerminalOfObj [ReflectsLimit (Functor.empty.{0} C) G] (l : IsTe
 /-- Preserving the terminal object implies preserving all limits of the empty diagram. -/
 def preservesLimitsOfShapePemptyOfPreservesTerminal [PreservesLimit (Functor.empty.{0} C) G] :
     PreservesLimitsOfShape (Discrete Pempty)
-      G where PreservesLimit := fun K => preservesLimitOfIsoDiagram G (Functor.emptyExt (Functor.empty.{0} C) _)
+      G where PreservesLimit K := preservesLimitOfIsoDiagram G (Functor.emptyExt (Functor.empty.{0} C) _)
 
 variable [HasTerminal C]
 
@@ -126,7 +126,7 @@ def IsInitial.isInitialOfObj [ReflectsColimit (Functor.empty.{0} C) G] (l : IsIn
 /-- Preserving the initial object implies preserving all colimits of the empty diagram. -/
 def preservesColimitsOfShapePemptyOfPreservesInitial [PreservesColimit (Functor.empty.{0} C) G] :
     PreservesColimitsOfShape (Discrete Pempty)
-      G where PreservesColimit := fun K => preservesColimitOfIsoDiagram G (Functor.emptyExt (Functor.empty.{0} C) _)
+      G where PreservesColimit K := preservesColimitOfIsoDiagram G (Functor.emptyExt (Functor.empty.{0} C) _)
 
 variable [HasInitial C]
 

@@ -51,14 +51,14 @@ variable {X : Type _} [TopologicalSpace X] [CompactSpace X]
 thereby explicitly attaching bounds.
 -/
 def attachBound (f : C(X, ℝ)) :
-    C(X, Set.Icc (-∥f∥) ∥f∥) where toFun := fun x => ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
+    C(X, Set.IccCat (-∥f∥) ∥f∥) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
 
 @[simp]
 theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : ℝ) = f x :=
   rfl
 
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : Polynomial ℝ) :
-    (g.toContinuousMapOn (Set.Icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
+    (g.toContinuousMapOn (Set.IccCat (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
   simp only [ContinuousMap.coe_comp, Function.comp_app, ContinuousMap.attach_bound_apply_coe,
     Polynomial.to_continuous_map_on_apply, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuous_map_apply,
@@ -73,14 +73,14 @@ and then postcompose with a polynomial function on that interval.
 This is in fact the same situation as above, and so also gives a function in `A`.
 -/
 theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : Polynomial ℝ) :
-    (g.toContinuousMapOn (Set.Icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound ∈ A := by
+    (g.toContinuousMapOn (Set.IccCat (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound ∈ A := by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
 
-theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.Icc (-∥f∥) ∥f∥, ℝ)) :
+theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.IccCat (-∥f∥) ∥f∥, ℝ)) :
     p.comp (attachBound f) ∈ A.topologicalClosure := by
   -- `p` itself is in the closure of polynomials, by the Weierstrass theorem,
-  have mem_closure : p ∈ (polynomialFunctions (Set.Icc (-∥f∥) ∥f∥)).topologicalClosure :=
+  have mem_closure : p ∈ (polynomialFunctions (Set.IccCat (-∥f∥) ∥f∥)).topologicalClosure :=
     continuous_map_mem_polynomial_functions_closure _ _ p
   -- and so there are polynomials arbitrarily close.
   have frequently_mem_polynomials := mem_closure_iff_frequently.mp mem_closure
@@ -100,7 +100,7 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
 theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
   let M := ∥f∥
   let f' := attach_bound (f : C(X, ℝ))
-  let abs : C(Set.Icc (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.Icc (-∥f∥) ∥f∥ => abs (x : ℝ) }
+  let abs : C(Set.IccCat (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.IccCat (-∥f∥) ∥f∥ => abs (x : ℝ) }
   change abs.comp f' ∈ A.topological_closure
   apply comp_attach_bound_mem_closure
 
@@ -146,8 +146,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L)
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)
@@ -156,7 +156,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   apply eq_top_iff.mpr
   rintro f -
   refine' Filter.Frequently.mem_closure ((Filter.HasBasis.frequently_iff Metric.nhds_basis_ball).mpr fun ε pos => _)
-  simp only [exists_propₓ, Metric.mem_ball]
+  simp only [exists_prop, Metric.mem_ball]
   -- It will be helpful to assume `X` is nonempty later,
   -- so we get that out of the way here.
   by_cases nX:Nonempty X
@@ -193,18 +193,18 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- and still equal to `f x` at `x`.
   -- Since `X` is compact, for every `x` there is some finset `ys t`
   -- so the union of the `U x y` for `y ∈ ys x` still covers everything.
-  let ys : ∀ x, Finsetₓ X := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some
+  let ys : ∀ x, Finset X := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some
   let ys_w : ∀ x, (⋃ y ∈ ys x, U x y) = ⊤ := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some_spec
   have ys_nonempty : ∀ x, (ys x).Nonempty := fun x => Set.nonempty_of_union_eq_top_of_nonempty _ _ nX (ys_w x)
   -- Thus for each `x` we have the desired `h x : A` so `f z - ε < h x z` everywhere
   -- and `h x x = f x`.
   let h : ∀ x, L := fun x =>
-    ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)), Finsetₓ.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
+    ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)), Finset.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
   have lt_h : ∀ x z, f z - ε < h x z := by
     intro x z
     obtain ⟨y, ym, zm⟩ := Set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z
     dsimp [h]
-    simp only [coe_fn_coe_base', Subtype.coe_mk, sup'_coe, Finsetₓ.sup'_apply, Finsetₓ.lt_sup'_iff]
+    simp only [coe_fn_coe_base', Subtype.coe_mk, sup'_coe, Finset.sup'_apply, Finset.lt_sup'_iff]
     exact ⟨y, ym, zm⟩
   have h_eq : ∀ x, h x x = f x := by
     intro x
@@ -224,13 +224,13 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
       
   -- Since `X` is compact, there is some finset `ys t`
   -- so the union of the `W x` for `x ∈ xs` still covers everything.
-  let xs : Finsetₓ X := (CompactSpace.elim_nhds_subcover W W_nhd).some
+  let xs : Finset X := (CompactSpace.elim_nhds_subcover W W_nhd).some
   let xs_w : (⋃ x ∈ xs, W x) = ⊤ := (CompactSpace.elim_nhds_subcover W W_nhd).some_spec
   have xs_nonempty : xs.nonempty := Set.nonempty_of_union_eq_top_of_nonempty _ _ nX xs_w
   -- Finally our candidate function is the infimum over `x ∈ xs` of the `h x`.
   -- This function is then globally less than `f z + ε`.
   let k : (L : Type _) :=
-    ⟨xs.inf' xs_nonempty fun x => (h x : C(X, ℝ)), Finsetₓ.inf'_mem _ inf_mem _ _ _ fun x _ => (h x).2⟩
+    ⟨xs.inf' xs_nonempty fun x => (h x : C(X, ℝ)), Finset.inf'_mem _ inf_mem _ _ _ fun x _ => (h x).2⟩
   refine' ⟨k.1, _, k.2⟩
   -- We just need to verify the bound, which we do pointwise.
   rw [dist_lt_iff Pos]
@@ -239,14 +239,14 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- so that simp lemmas about inequalities involving `finset.inf'` can fire.
   rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by
       intros
-      simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm]]
+      simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm']]
   fconstructor
   · dsimp [k]
-    simp only [Finsetₓ.inf'_lt_iff, ContinuousMap.inf'_apply]
+    simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]
     exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
     
   · dsimp [k]
-    simp only [Finsetₓ.lt_inf'_iff, ContinuousMap.inf'_apply]
+    simp only [Finset.lt_inf'_iff, ContinuousMap.inf'_apply]
     intro x xm
     apply lt_h
     
@@ -332,7 +332,7 @@ open ContinuousMap
 
 /-- If a conjugation-invariant subalgebra of `C(X, 𝕜)` separates points, then the real subalgebra
 of its purely real-valued elements also separates points. -/
-theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, 𝕜)} (hA : A.SeparatesPoints)
+theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)} (hA : A.SeparatesPoints)
     (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
     ((A.restrictScalars ℝ).comap (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints := by
   intro x₁ x₂ hx
@@ -343,7 +343,7 @@ theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, �
   have hFA : F ∈ A := by
     refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ <| A.smul_mem A.one_mem <| f x₂)
     ext1
-    simp only [coe_smul, coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_oneₓ, const_apply]
+    simp only [coe_smul, coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_one, const_apply]
   -- Consider now the function `λ x, |f x - f x₂| ^ 2`
   refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values

@@ -37,7 +37,7 @@ instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
     dist_eq := by
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
-      · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
+      · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
         
       · intro x y

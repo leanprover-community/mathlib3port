@@ -56,7 +56,7 @@ variable (C : Type u) [Category.{v} C]
 /-- A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is
     linear in both variables. -/
 class Preadditive where
-  homGroup : ∀ P Q : C, AddCommGroupₓ (P ⟶ Q) := by infer_instance
+  homGroup : ∀ P Q : C, AddCommGroup (P ⟶ Q) := by infer_instance
   add_comp' : ∀ (P Q R : C) (f f' : P ⟶ Q) (g : Q ⟶ R), (f + f') ≫ g = f ≫ g + f' ≫ g := by obviously
   comp_add' : ∀ (P Q R : C) (f : P ⟶ Q) (g g' : Q ⟶ R), f ≫ (g + g') = f ≫ g + f ≫ g' := by obviously
 
@@ -94,18 +94,18 @@ universe u'
 variable {C} {D : Type u'} (F : D → C)
 
 instance InducedCategory.category : Preadditive.{v} (InducedCategory C F) where
-  homGroup := fun P Q => @Preadditive.homGroup C _ _ (F P) (F Q)
-  add_comp' := fun P Q R f f' g => add_comp' _ _ _ _ _ _
-  comp_add' := fun P Q R f g g' => comp_add' _ _ _ _ _ _
+  homGroup P Q := @Preadditive.homGroup C _ _ (F P) (F Q)
+  add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
+  comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
 
 end InducedCategory
 
-instance (X : C) : AddCommGroupₓ (End X) := by
+instance (X : C) : AddCommGroup (EndCat X) := by
   dsimp [End]
   infer_instance
 
-instance (X : C) : Ringₓ (End X) :=
-  { (inferInstance : AddCommGroupₓ (End X)), (inferInstance : Monoidₓ (End X)) with
+instance (X : C) : Ring (EndCat X) :=
+  { (inferInstance : AddCommGroup (EndCat X)), (inferInstance : Monoid (EndCat X)) with
     left_distrib := fun f g h => Preadditive.add_comp X X X g h f,
     right_distrib := fun f g h => Preadditive.comp_add X X X h f g }
 
@@ -157,12 +157,12 @@ theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
   map_zsmul (leftComp R f) n g
 
 @[reassoc]
-theorem comp_sum {P Q R : C} {J : Type _} (s : Finsetₓ J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
+theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
     (f ≫ ∑ j in s, g j) = ∑ j in s, f ≫ g j :=
   map_sum (leftComp R f) _ _
 
 @[reassoc]
-theorem sum_comp {P Q R : C} {J : Type _} (s : Finsetₓ J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
+theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
     (∑ j in s, f j) ≫ g = ∑ j in s, f j ≫ g :=
   map_sum (rightComp P g) _ _
 
@@ -174,14 +174,14 @@ instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
 
 instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C where
   HasZero := inferInstance
-  comp_zero' := fun P Q f R => show leftComp R f 0 = 0 from map_zero _
-  zero_comp' := fun P Q R f => show rightComp P f 0 = 0 from map_zero _
+  comp_zero' P Q f R := show leftComp R f 0 = 0 from map_zero _
+  zero_comp' P Q R f := show rightComp P f 0 = 0 from map_zero _
 
-instance moduleEndRight {X Y : C} : Module (End Y) (X ⟶ Y) where
-  smul_add := fun r f g => add_comp _ _ _ _ _ _
-  smul_zero := fun r => zero_comp
-  add_smul := fun r s f => comp_add _ _ _ _ _ _
-  zero_smul := fun r => comp_zero
+instance moduleEndRight {X Y : C} : Module (EndCat Y) (X ⟶ Y) where
+  smul_add r f g := add_comp _ _ _ _ _ _
+  smul_zero r := zero_comp
+  add_smul r s f := comp_add _ _ _ _ _ _
+  zero_smul r := comp_zero
 
 theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} (g : P ⟶ Q), g ≫ f = 0 → g = 0) : Mono f :=
   ⟨fun P g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (rightComp P f) g g').trans <| sub_eq_zero.2 hg⟩

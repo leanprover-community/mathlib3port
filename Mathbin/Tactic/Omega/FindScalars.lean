@@ -14,10 +14,10 @@ open List.Func
 
 namespace Omega
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Divide linear combinations into three groups by the coefficient of the
     `m`th variable in their resultant terms: negative, zero, or positive. -/
 unsafe def trisect (m : Nat) :
@@ -34,7 +34,7 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
   | ((p1, t1), (p2, t2)) =>
     let n := Int.natAbs (get m t1.snd)
     let o := Int.natAbs (get m t2.snd)
-    let lcm := Nat.lcmₓ n o
+    let lcm := Nat.lcm n o
     let n' := lcm / n
     let o' := lcm / o
     return (add (p1.map ((· * ·) n')) (p2.map ((· * ·) o')), Term.add (t1.mul n') (t2.mul o'))
@@ -45,9 +45,9 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
     possible way that eliminates the `m`th variable. -/
 unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) : tactic (List (List Nat × term)) :=
   let pairs := List.product neg Pos
-  Monadₓ.mapm (elim_var_aux m) pairs
+  Monad.mapm (elim_var_aux m) pairs
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Search through a list of (linear combination × resultant term) pairs,
     find the first pair whose resultant term has a negative constant term,
     and return its linear combination -/

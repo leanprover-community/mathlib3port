@@ -33,11 +33,11 @@ strings from theorems referred to by their names.
 unsafe inductive thm : Type
   | expr (e : expr)
   | Name (n : Name)
-  | Stringₓ (s : Stringₓ)
+  | String (s : String)
 
 /-- Turn a thm into a string.
 -/
-unsafe def thm.to_string : thm → Stringₓ
+unsafe def thm.to_string : thm → String
   | thm.expr e => e.toString
   | thm.name n => n.toString
   | thm.string s => s
@@ -50,8 +50,8 @@ unsafe structure entry : Type where
   thm : thm
   deps : List Nat
 
-unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
-  let n := l.foldl (fun r (s : Stringₓ) => max r s.length) 0
+unsafe def pad_right (l : List String) : List String :=
+  let n := l.foldl (fun r (s : String) => max r s.length) 0
   l.map fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
 unsafe structure entries : Type where mk' ::
@@ -71,11 +71,11 @@ unsafe def entries.add : entries → entry → entries
 unsafe def entries.head (es : entries) : Option entry :=
   es.l.head'
 
-unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ → List entry → tactic format
+unsafe def format_aux : List String → List String → List String → List entry → tactic format
   | line :: lines, dep :: deps, thm :: thms, en :: es => do
     let fmt ←
       do
-        let margin := Stringₓ.join (List.repeat " │" en.depth)
+        let margin := String.join (List.repeat " │" en.depth)
         let margin :=
           match en.Status with
           | status.sintro => " ├" ++ margin
@@ -91,7 +91,7 @@ unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ →
 unsafe instance : has_to_tactic_format entries :=
   ⟨fun es : entries =>
     let lines := pad_right <| es.l.map fun en => toString en.line
-    let deps := pad_right <| es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)
+    let deps := pad_right <| es.l.map fun en => String.intercalate "," (en.deps.map toString)
     let thms := pad_right <| es.l.map fun en => (entry.thm en).toString
     format_aux lines deps thms es.l⟩
 
@@ -104,7 +104,7 @@ unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) 
 
 unsafe def may_be_proof (e : expr) : tactic Bool := do
   let expr.sort u ← infer_type e >>= infer_type
-  return <| bnot u
+  return <| not u
 
 end Explode
 

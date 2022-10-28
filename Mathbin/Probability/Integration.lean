@@ -33,47 +33,47 @@ open Set MeasureTheory
 
 open Ennreal MeasureTheory
 
-variable {Ω : Type _} {mΩ : MeasurableSpace Ω} {μ : Measureₓ Ω} {f g : Ω → ℝ≥0∞} {X Y : Ω → ℝ}
+variable {Ω : Type _} {mΩ : MeasurableSpace Ω} {μ : Measure Ω} {f g : Ω → ℝ≥0∞} {X Y : Ω → ℝ}
 
 namespace ProbabilityTheory
 
 /-- If a random variable `f` in `ℝ≥0∞` is independent of an event `T`, then if you restrict the
   random variable to `T`, then `E[f * indicator T c 0]=E[f] * E[indicator T c 0]`. It is useful for
   `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space`. -/
-theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : MeasurableSpace Ω} {μ : Measureₓ Ω}
+theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : MeasurableSpace Ω} {μ : Measure Ω}
     (hMf : Mf ≤ mΩ) (c : ℝ≥0∞) {T : Set Ω} (h_meas_T : MeasurableSet T)
-    (h_ind : IndepSetsₓ { s | measurable_set[Mf] s } {T} μ) (h_meas_f : measurable[Mf] f) :
+    (h_ind : IndepSets { s | measurable_set[Mf] s } {T} μ) (h_meas_f : measurable[Mf] f) :
     (∫⁻ ω, f ω * T.indicator (fun _ => c) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, T.indicator (fun _ => c) ω ∂μ := by
   revert f
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun x => c) a := fun g h_mg =>
     h_mg.mul (measurable_const.indicator h_meas_T)
-  apply Measurable.ennreal_induction
+  apply Measurable.ennrealInduction
   · intro c' s' h_meas_s'
     simp_rw [← inter_indicator_mul]
     rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T), lintegral_indicator _ (hMf _ h_meas_s'),
       lintegral_indicator _ h_meas_T]
-    simp only [measurable_const, lintegral_const, univ_inter, lintegral_const_mul, MeasurableSet.univ,
+    simp only [measurableConst, lintegral_const, univ_inter, lintegral_const_mul, MeasurableSet.univ,
       measure.restrict_apply]
     ring_nf
     congr
     rw [mul_comm, h_ind s' T h_meas_s' (Set.mem_singleton _)]
     
   · intro f' g h_univ h_meas_f' h_meas_g h_ind_f' h_ind_g
-    have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rflₓ
-    have h_measM_g : Measurable g := h_meas_g.mono hMf le_rflₓ
+    have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rfl
+    have h_measM_g : Measurable g := h_meas_g.mono hMf le_rfl
     simp_rw [Pi.add_apply, right_distrib]
     rw [lintegral_add_left (h_mul_indicator _ h_measM_f'), lintegral_add_left h_measM_f', right_distrib, h_ind_f',
       h_ind_g]
     
   · intro f h_meas_f h_mono_f h_ind_f
-    have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rflₓ
+    have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
     simp_rw [Ennreal.supr_mul]
     rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, Ennreal.supr_mul]
     · simp_rw [← h_ind_f]
       
     · exact fun n => h_mul_indicator _ (h_measM_f n)
       
-    · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rflₓ
+    · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rfl
       
     
 
@@ -84,46 +84,46 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
    independence. See `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_fn` for
    a more common variant of the product of independent variables. -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space {Mf Mg mΩ : MeasurableSpace Ω}
-    {μ : Measureₓ Ω} (hMf : Mf ≤ mΩ) (hMg : Mg ≤ mΩ) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : measurable[Mf] f)
+    {μ : Measure Ω} (hMf : Mf ≤ mΩ) (hMg : Mg ≤ mΩ) (h_ind : Indep Mf Mg μ) (h_meas_f : measurable[Mf] f)
     (h_meas_g : measurable[Mg] g) : (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ := by
   revert g
-  have h_measM_f : Measurable f := h_meas_f.mono hMf le_rflₓ
-  apply Measurable.ennreal_induction
+  have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
+  apply Measurable.ennrealInduction
   · intro c s h_s
     apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
     apply indep_sets_of_indep_sets_of_le_right h_ind
     rwa [singleton_subset_iff]
     
   · intro f' g h_univ h_measMg_f' h_measMg_g h_ind_f' h_ind_g'
-    have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rflₓ
-    have h_measM_g : Measurable g := h_measMg_g.mono hMg le_rflₓ
+    have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rfl
+    have h_measM_g : Measurable g := h_measMg_g.mono hMg le_rfl
     simp_rw [Pi.add_apply, left_distrib]
     rw [lintegral_add_left h_measM_f', lintegral_add_left (h_measM_f.mul h_measM_f'), left_distrib, h_ind_f', h_ind_g']
     
   · intro f' h_meas_f' h_mono_f' h_ind_f'
-    have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rflₓ
+    have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
     simp_rw [Ennreal.mul_supr]
     rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', Ennreal.mul_supr]
     · simp_rw [← h_ind_f']
       
     · exact fun n => h_measM_f.mul (h_measM_f' n)
       
-    · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rflₓ (h_mono_f' h_le a)
+    · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
       
     
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun (h_meas_f : Measurable f) (h_meas_g : Measurable g)
-    (h_indep_fun : IndepFunₓ f g μ) : (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
+    (h_indep_fun : IndepFun f g μ) : (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space (measurable_iff_comap_le.1 h_meas_f)
-    (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.of_comap_le le_rflₓ) (Measurable.of_comap_le le_rflₓ)
+    (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.ofComapLe le_rfl) (Measurable.ofComapLe le_rfl)
 
 /-- If `f` and `g` with values in `ℝ≥0∞` are independent and almost everywhere measurable,
    then `E[f * g] = E[f] * E[g]` (slightly generalizing
    `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun`). -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMeasurable f μ)
-    (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFunₓ f g μ) :
+    (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
     (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ := by
   have fg_ae : f * g =ᵐ[μ] h_meas_f.mk _ * h_meas_g.mk _ := h_meas_f.ae_eq_mk.mul h_meas_g.ae_eq_mk
   rw [lintegral_congr_ae h_meas_f.ae_eq_mk, lintegral_congr_ae h_meas_g.ae_eq_mk, lintegral_congr_ae fg_ae]
@@ -131,19 +131,19 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMea
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
 
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' (h_meas_f : AeMeasurable f μ)
-    (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFunₓ f g μ) :
+    (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
     (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h_meas_f h_meas_g h_indep_fun
 
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
-theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β]
-    (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
+theorem IndepFun.integrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β]
+    (hXY : IndepFun X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
   let nX : Ω → Ennreal := fun a => ∥X a∥₊
   let nY : Ω → Ennreal := fun a => ∥Y a∥₊
-  have hXY' : indep_fun (fun a => ∥X a∥₊) (fun a => ∥Y a∥₊) μ := hXY.comp measurable_nnnorm measurable_nnnorm
-  have hXY'' : indep_fun nX nY μ := hXY'.comp measurable_coe_nnreal_ennreal measurable_coe_nnreal_ennreal
-  have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
-  have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
+  have hXY' : indep_fun (fun a => ∥X a∥₊) (fun a => ∥Y a∥₊) μ := hXY.comp measurableNnnorm measurableNnnorm
+  have hXY'' : indep_fun nX nY μ := hXY'.comp measurableCoeNnrealEnnreal measurableCoeNnrealEnnreal
+  have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coeNnrealEnnreal
+  have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coeNnrealEnnreal
   have hmul : (∫⁻ a, nX a * nY a ∂μ) = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
     convert lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' hnX hnY hXY''
   refine' ⟨hX.1.mul hY.1, _⟩
@@ -152,9 +152,9 @@ theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω 
 
 /-- If the product of two independent real_valued random variables is integrable and
 the second one is not almost everywhere zero, then the first one is integrable. -/
-theorem IndepFunₓ.integrable_left_of_integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β}
-    [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunₓ X Y μ) (h'XY : Integrable (X * Y) μ)
-    (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) : Integrable X μ := by
+theorem IndepFun.integrableLeftOfIntegrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β]
+    [BorelSpace β] (hXY : IndepFun X Y μ) (h'XY : Integrable (X * Y) μ) (hX : AeStronglyMeasurable X μ)
+    (hY : AeStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) : Integrable X μ := by
   refine' ⟨hX, _⟩
   have I : (∫⁻ ω, ∥Y ω∥₊ ∂μ) ≠ 0 := by
     intro H
@@ -173,9 +173,9 @@ theorem IndepFunₓ.integrable_left_of_integrable_mul {β : Type _} [MeasurableS
 
 /-- If the product of two independent real_valued random variables is integrable and the
 first one is not almost everywhere zero, then the second one is integrable. -/
-theorem IndepFunₓ.integrable_right_of_integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β}
-    [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunₓ X Y μ) (h'XY : Integrable (X * Y) μ)
-    (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) (h'X : ¬X =ᵐ[μ] 0) : Integrable Y μ := by
+theorem IndepFun.integrableRightOfIntegrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β]
+    [BorelSpace β] (hXY : IndepFun X Y μ) (h'XY : Integrable (X * Y) μ) (hX : AeStronglyMeasurable X μ)
+    (hY : AeStronglyMeasurable Y μ) (h'X : ¬X =ᵐ[μ] 0) : Integrable Y μ := by
   refine' ⟨hY, _⟩
   have I : (∫⁻ ω, ∥X ω∥₊ ∂μ) ≠ 0 := by
     intro H
@@ -195,7 +195,7 @@ theorem IndepFunₓ.integrable_right_of_integrable_mul {β : Type _} [Measurable
 /-- The (Bochner) integral of the product of two independent, nonnegative random
   variables is the product of their integrals. The proof is just plumbing around
   `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'`. -/
-theorem IndepFunₓ.integral_mul_of_nonneg (hXY : IndepFunₓ X Y μ) (hXp : 0 ≤ X) (hYp : 0 ≤ Y) (hXm : AeMeasurable X μ)
+theorem IndepFun.integral_mul_of_nonneg (hXY : IndepFun X Y μ) (hXp : 0 ≤ X) (hYp : 0 ≤ Y) (hXm : AeMeasurable X μ)
     (hYm : AeMeasurable Y μ) : integral μ (X * Y) = integral μ X * integral μ Y := by
   have h1 : AeMeasurable (fun a => Ennreal.ofReal (X a)) μ := ennreal.measurable_of_real.comp_ae_measurable hXm
   have h2 : AeMeasurable (fun a => Ennreal.ofReal (Y a)) μ := ennreal.measurable_of_real.comp_ae_measurable hYm
@@ -207,18 +207,18 @@ theorem IndepFunₓ.integral_mul_of_nonneg (hXY : IndepFunₓ X Y μ) (hXp : 0 �
   simp_rw [← Ennreal.to_real_mul, Pi.mul_apply, Ennreal.of_real_mul (hXp _)]
   congr
   apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h1 h2
-  exact hXY.comp Ennreal.measurable_of_real Ennreal.measurable_of_real
+  exact hXY.comp Ennreal.measurableOfReal Ennreal.measurableOfReal
 
 /-- The (Bochner) integral of the product of two independent, integrable random
   variables is the product of their integrals. The proof is pedestrian decomposition
   into their positive and negative parts in order to apply `indep_fun.integral_mul_of_nonneg`
   four times. -/
-theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) :
+theorem IndepFun.integral_mul_of_integrable (hXY : IndepFun X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) :
     integral μ (X * Y) = integral μ X * integral μ Y := by
   let pos : ℝ → ℝ := fun x => max x 0
   let neg : ℝ → ℝ := fun x => max (-x) 0
-  have posm : Measurable Pos := measurable_id'.max measurable_const
-  have negm : Measurable neg := measurable_id'.neg.max measurable_const
+  have posm : Measurable Pos := measurable_id'.max measurableConst
+  have negm : Measurable neg := measurable_id'.neg.max measurableConst
   let Xp := Pos ∘ X
   -- `X⁺` would look better but it makes `simp_rw` below fail
   let Xm := neg ∘ X
@@ -226,14 +226,14 @@ theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : 
   let Ym := neg ∘ Y
   have hXpm : X = Xp - Xm := funext fun ω => (max_zero_sub_max_neg_zero_eq_self (X ω)).symm
   have hYpm : Y = Yp - Ym := funext fun ω => (max_zero_sub_max_neg_zero_eq_self (Y ω)).symm
-  have hp1 : 0 ≤ Xm := fun ω => le_max_rightₓ _ _
-  have hp2 : 0 ≤ Xp := fun ω => le_max_rightₓ _ _
-  have hp3 : 0 ≤ Ym := fun ω => le_max_rightₓ _ _
-  have hp4 : 0 ≤ Yp := fun ω => le_max_rightₓ _ _
-  have hm1 : AeMeasurable Xm μ := hX.1.AeMeasurable.neg.max ae_measurable_const
-  have hm2 : AeMeasurable Xp μ := hX.1.AeMeasurable.max ae_measurable_const
-  have hm3 : AeMeasurable Ym μ := hY.1.AeMeasurable.neg.max ae_measurable_const
-  have hm4 : AeMeasurable Yp μ := hY.1.AeMeasurable.max ae_measurable_const
+  have hp1 : 0 ≤ Xm := fun ω => le_max_right _ _
+  have hp2 : 0 ≤ Xp := fun ω => le_max_right _ _
+  have hp3 : 0 ≤ Ym := fun ω => le_max_right _ _
+  have hp4 : 0 ≤ Yp := fun ω => le_max_right _ _
+  have hm1 : AeMeasurable Xm μ := hX.1.AeMeasurable.neg.max aeMeasurableConst
+  have hm2 : AeMeasurable Xp μ := hX.1.AeMeasurable.max aeMeasurableConst
+  have hm3 : AeMeasurable Ym μ := hY.1.AeMeasurable.neg.max aeMeasurableConst
+  have hm4 : AeMeasurable Yp μ := hY.1.AeMeasurable.max aeMeasurableConst
   have hv1 : integrable Xm μ := hX.neg_part
   have hv2 : integrable Xp μ := hX.pos_part
   have hv3 : integrable Ym μ := hY.neg_part
@@ -256,7 +256,7 @@ theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : 
 
 /-- The (Bochner) integral of the product of two independent random
   variables is the product of their integrals. -/
-theorem IndepFunₓ.integral_mul (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
+theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
     integral μ (X * Y) = integral μ X * integral μ Y := by
   by_cases h'X:X =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
@@ -284,8 +284,8 @@ theorem IndepFunₓ.integral_mul (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMeas
     cases I <;> simp [integral_undef, I, h]
     
 
-theorem IndepFunₓ.integral_mul' (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMeasurable X μ)
-    (hY : AeStronglyMeasurable Y μ) : (integral μ fun ω => X ω * Y ω) = integral μ X * integral μ Y :=
+theorem IndepFun.integral_mul' (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
+    (integral μ fun ω => X ω * Y ω) = integral μ X * integral μ Y :=
   hXY.integral_mul hX hY
 
 /-- Independence of functions `f` and `g` into arbitrary types is characterized by the relation
@@ -293,7 +293,7 @@ theorem IndepFunₓ.integral_mul' (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMea
   satisfying appropriate integrability conditions. -/
 theorem indep_fun_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _} {mβ : MeasurableSpace β}
     {mβ' : MeasurableSpace β'} {f : Ω → β} {g : Ω → β'} {hfm : Measurable f} {hgm : Measurable g} :
-    IndepFunₓ f g μ ↔
+    IndepFun f g μ ↔
       ∀ {φ : β → ℝ} {ψ : β' → ℝ},
         Measurable φ →
           Measurable ψ →
@@ -304,8 +304,8 @@ theorem indep_fun_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _} {
   rintro h _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩
   specialize
     h (measurable_one.indicator hA) (measurable_one.indicator hB)
-      ((integrable_const 1).indicator (hfm.comp measurable_id hA))
-      ((integrable_const 1).indicator (hgm.comp measurable_id hB))
+      ((integrable_const 1).indicator (hfm.comp measurableId hA))
+      ((integrable_const 1).indicator (hgm.comp measurableId hB))
   rwa [← Ennreal.to_real_eq_to_real (measure_ne_top μ _), Ennreal.to_real_mul, ←
     integral_indicator_one ((hfm hA).inter (hgm hB)), ← integral_indicator_one (hfm hA), ←
     integral_indicator_one (hgm hB), Set.inter_indicator_one]

@@ -75,9 +75,9 @@ protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoi
 @[reducible]
 def _root_.boolean_algebra.of_regular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanAlgebra α :=
   have : ∀ a : α, IsCompl a (aᶜ) := fun a =>
-    ⟨disjoint_compl_right, codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
+    ⟨disjointComplRight, codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
   { ‹HeytingAlgebra α›, GeneralizedHeytingAlgebra.toDistribLattice with
-    himp_eq := fun a b => eq_of_forall_le_iffₓ fun c => le_himp_iff.trans (this _).le_sup_right_iff_inf_left_le.symm,
+    himp_eq := fun a b => eq_of_forall_le_iff fun c => le_himp_iff.trans (this _).le_sup_right_iff_inf_left_le.symm,
     inf_compl_le_bot := fun a => (this _).1, top_le_sup_compl := fun a => (this _).2 }
 
 variable (α)
@@ -166,10 +166,10 @@ theorem to_regular_coe (a : Regular α) : toRegular (a : α) = a :=
 
 /-- The Galois insertion between `regular.to_regular` and `coe`. -/
 def gi : GaloisInsertion toRegular (coe : Regular α → α) where
-  choice := fun a ha => ⟨a, ha.antisymm le_compl_compl⟩
-  gc := fun a b => coe_le_coe.symm.trans <| ⟨le_compl_compl.trans, fun h => (compl_anti <| compl_anti h).trans_eq b.2⟩
-  le_l_u := fun _ => le_compl_compl
-  choice_eq := fun a ha => coe_injective <| le_compl_compl.antisymm ha
+  choice a ha := ⟨a, ha.antisymm le_compl_compl⟩
+  gc a b := coe_le_coe.symm.trans <| ⟨le_compl_compl.trans, fun h => (compl_anti <| compl_anti h).trans_eq b.2⟩
+  le_l_u _ := le_compl_compl
+  choice_eq a ha := coe_injective <| le_compl_compl.antisymm ha
 
 instance : Lattice (Regular α) :=
   gi.liftLattice
@@ -184,7 +184,7 @@ instance : BooleanAlgebra (Regular α) :=
       coe_le_coe.1 <| by
         dsimp
         rw [sup_inf_left, compl_compl_inf_distrib],
-    inf_compl_le_bot := fun a => coe_le_coe.1 disjoint_compl_right,
+    inf_compl_le_bot := fun a => coe_le_coe.1 disjointComplRight,
     top_le_sup_compl := fun a =>
       coe_le_coe.1 <| by
         dsimp
@@ -195,7 +195,7 @@ instance : BooleanAlgebra (Regular α) :=
         (by
           dsimp
           rw [compl_sup, a.prop.eq]
-          refine' eq_of_forall_le_iffₓ fun c => le_himp_iff.trans _
+          refine' eq_of_forall_le_iff fun c => le_himp_iff.trans _
           rw [le_compl_iff_disjoint_right, disjoint_left_comm, b.prop.disjoint_compl_left_iff]) }
 
 @[simp, norm_cast]

@@ -30,7 +30,7 @@ namespace WittVector
 
 open MvPolynomial
 
-variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
+variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
@@ -61,7 +61,7 @@ include hp
 
 private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
   by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finsetₓ.sum_eq_single 0, pow_zeroₓ, one_mulₓ, tsub_zero]
+  rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zero, one_mul, tsub_zero]
   · rfl
     
   · intro i hi h0
@@ -76,9 +76,9 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostCompone
     · exact pow_pos hp.1.Pos _
       
     
-  · rw [Finsetₓ.mem_range]
+  · rw [Finset.mem_range]
     intro h
-    exact (h (Nat.succ_posₓ n)).elim
+    exact (h (Nat.succ_pos n)).elim
     
 
 private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmullerFun p r) = teichmullerFun p (f r) := by
@@ -94,7 +94,7 @@ private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
   apply (ghost_map.bijective_of_invertible p (MvPolynomial R ℚ)).1
   rw [RingHom.map_mul]
   ext1 n
-  simp only [Pi.mul_apply, ghost_map_apply, ghost_component_teichmuller_fun, mul_powₓ]
+  simp only [Pi.mul_apply, ghost_map_apply, ghost_component_teichmuller_fun, mul_pow]
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
@@ -111,7 +111,7 @@ def teichmuller : R →* 𝕎 R where
     · rw [one_coeff_zero]
       rfl
       
-    · rw [one_coeff_eq_of_pos _ _ _ (Nat.succ_posₓ n)]
+    · rw [one_coeff_eq_of_pos _ _ _ (Nat.succ_pos n)]
       rfl
       
   map_mul' := by

@@ -125,7 +125,7 @@ theorem ext {S T : Subsemigroup M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 @[to_additive "Copy an additive subsemigroup replacing `carrier` with a set that is equal to\nit."]
 protected def copy (S : Subsemigroup M) (s : Set M) (hs : s = S) : Subsemigroup M where
   Carrier := s
-  mul_mem' := fun _ _ => hs.symm ▸ S.mul_mem'
+  mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 
 variable {S : Subsemigroup M}
 
@@ -189,7 +189,7 @@ theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧
   Iff.rfl
 
 @[to_additive]
-instance : HasInfₓ (Subsemigroup M) :=
+instance : HasInf (Subsemigroup M) :=
   ⟨fun s =>
     { Carrier := ⋂ t ∈ s, ↑t,
       mul_mem' := fun x y hx hy =>
@@ -217,7 +217,7 @@ instance : CompleteLattice (Subsemigroup M) :=
   { (completeLatticeOfInf (Subsemigroup M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
     le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (not_mem_bot hx).elim, top := ⊤,
-    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInfₓ.inf,
+    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInf.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
     inf_le_right := fun a b x => And.right }
 
@@ -268,13 +268,13 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :
 
 @[to_additive]
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
-  le_antisymmₓ (closure_le.2 h₁) h₂
+  le_antisymm (closure_le.2 h₁) h₂
 
 variable (S)
 
 /-- An induction principle for closure membership. If `p` holds for all elements of `s`, and
 is preserved under multiplication, then `p` holds for all elements of the closure of `s`. -/
-@[elabAsElim,
+@[elab_as_elim,
   to_additive
       "An induction principle for additive closure membership. If `p`\nholds for all elements of `s`, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `s`."]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x ∈ s, p x)
@@ -282,14 +282,15 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
   (@closure_le _ _ _ ⟨p, Hmul⟩).2 Hs h
 
 /-- A dependent version of `subsemigroup.closure_induction`.  -/
-@[elabAsElim, to_additive "A dependent version of `add_subsemigroup.closure_induction`. "]
+@[elab_as_elim, to_additive "A dependent version of `add_subsemigroup.closure_induction`. "]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
     (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) : p x hx := by
   refine' Exists.elim _ fun (hx : x ∈ closure s) (hc : p x hx) => hc
   exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
 
 /-- An induction principle for closure membership for predicates with two arguments.  -/
-@[elabAsElim, to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
+@[elab_as_elim,
+  to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
 theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ closure s) (hy : y ∈ closure s)
     (Hs : ∀ x ∈ s, ∀ y ∈ s, p x y) (Hmul_left : ∀ x y z, p x z → p y z → p (x * y) z)
     (Hmul_right : ∀ x y z, p z x → p z y → p z (x * y)) : p x y :=
@@ -299,7 +300,7 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
 /-- If `s` is a dense set in a magma `M`, `subsemigroup.closure s = ⊤`, then in order to prove that
 some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`,
 and verify that `p x` and `p y` imply `p (x * y)`. -/
-@[elabAsElim,
+@[elab_as_elim,
   to_additive
       "If `s` is a dense set in an additive monoid `M`,\n`add_subsemigroup.closure s = ⊤`, then in order to prove that some predicate `p` holds\nfor all `x : M` it suffices to verify `p x` for `x ∈ s`, and verify that `p x` and `p y` imply\n`p (x + y)`."]
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀ x ∈ s, p x)
@@ -312,10 +313,10 @@ variable (M)
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
 protected def gi : GaloisInsertion (@closure M _) coe where
-  choice := fun s _ => closure s
-  gc := fun s t => closure_le
-  le_l_u := fun s => subset_closure
-  choice_eq := fun s h => rfl
+  choice s _ := closure s
+  gc s t := closure_le
+  le_l_u s := subset_closure
+  choice_eq s h := rfl
 
 variable {M}
 
@@ -366,7 +367,7 @@ open Subsemigroup
 @[to_additive "The additive subsemigroup of elements `x : M` such that `f x = g x`"]
 def eqMlocus (f g : M →ₙ* N) : Subsemigroup M where
   Carrier := { x | f x = g x }
-  mul_mem' := fun x y (hx : _ = _) (hy : _ = _) => by simp [*]
+  mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 
 /-- If two mul homomorphisms are equal on a set, then they are equal on its subsemigroup closure. -/
 @[to_additive "If two add homomorphisms are equal on a set,\nthen they are equal on its additive subsemigroup closure."]
@@ -375,7 +376,7 @@ theorem eq_on_mclosure {f g : M →ₙ* N} {s : Set M} (h : Set.EqOn f g s) : Se
 
 @[to_additive]
 theorem eq_of_eq_on_mtop {f g : M →ₙ* N} (h : Set.EqOn f g (⊤ : Subsemigroup M)) : f = g :=
-  ext fun x => h trivialₓ
+  ext fun x => h trivial
 
 @[to_additive]
 theorem eq_of_eq_on_mdense {s : Set M} (hs : closure s = ⊤) {f g : M →ₙ* N} (h : s.EqOn f g) : f = g :=
@@ -395,16 +396,19 @@ open Subsemigroup
 Then `mul_hom.of_mdense` defines a mul homomorphism from `M` asking for a proof
 of `f (x * y) = f x * f y` only for `y ∈ s`. -/
 @[to_additive]
-def ofMdense {M N} [Semigroupₓ M] [Semigroupₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤)
+def ofMdense {M N} [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : closure s = ⊤)
     (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) : M →ₙ* N where
   toFun := f
-  map_mul' := fun x y =>
+  map_mul' x y :=
     dense_induction y hs (fun y hy x => hmul x y hy) (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Let `s` be a subset of an additive semigroup `M` such that the closure of `s` is the whole
+semigroup.  Then `add_hom.of_mdense` defines an additive homomorphism from `M` asking for a proof
+of `f (x + y) = f x + f y` only for `y ∈ s`. -/
+add_decl_doc AddHom.ofMdense
+
 @[simp, norm_cast, to_additive]
-theorem coe_of_mdense [Semigroupₓ M] [Semigroupₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (hmul) :
+theorem coe_of_mdense [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (hmul) :
     (ofMdense f hs hmul : M → N) = f :=
   rfl
 

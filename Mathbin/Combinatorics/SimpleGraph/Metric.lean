@@ -69,13 +69,13 @@ theorem dist_self {v : V} : dist G v v = 0 := by simp
 protected theorem Reachable.dist_eq_zero_iff {u v : V} (hr : G.Reachable u v) : G.dist u v = 0 ↔ u = v := by simp [hr]
 
 protected theorem Reachable.pos_dist_of_ne {u v : V} (h : G.Reachable u v) (hne : u ≠ v) : 0 < G.dist u v :=
-  Nat.pos_of_ne_zeroₓ (by simp [h, hne])
+  Nat.pos_of_ne_zero (by simp [h, hne])
 
 protected theorem Connected.dist_eq_zero_iff (hconn : G.Connected) {u v : V} : G.dist u v = 0 ↔ u = v := by
   simp [hconn u v]
 
 protected theorem Connected.pos_dist_of_ne {u v : V} (hconn : G.Connected) (hne : u ≠ v) : 0 < G.dist u v :=
-  Nat.pos_of_ne_zeroₓ (by simp [hconn.dist_eq_zero_iff, hne])
+  Nat.pos_of_ne_zero (by simp [hconn.dist_eq_zero_iff, hne])
 
 theorem dist_eq_zero_of_not_reachable {u v : V} (h : ¬G.Reachable u v) : G.dist u v = 0 := by simp [h]
 
@@ -95,7 +95,7 @@ private theorem dist_comm_aux {u v : V} (h : G.Reachable u v) : G.dist u v ≤ G
 
 theorem dist_comm {u v : V} : G.dist u v = G.dist v u := by
   by_cases h:G.reachable u v
-  · apply le_antisymmₓ (dist_comm_aux h) (dist_comm_aux h.symm)
+  · apply le_antisymm (dist_comm_aux h) (dist_comm_aux h.symm)
     
   · have h' : ¬G.reachable v u := fun h' => absurd h'.symm h
     simp [h, h', dist_eq_zero_of_not_reachable]

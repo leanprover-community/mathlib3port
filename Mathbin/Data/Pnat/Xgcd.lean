@@ -54,12 +54,12 @@ instance : SizeOf XgcdType :=
 
 /-- The has_repr instance converts terms to strings in a way that
  reflects the matrix/vector interpretation as above. -/
-instance : HasRepr XgcdType :=
+instance : Repr XgcdType :=
   ⟨fun u =>
-    "[[[" ++ reprₓ (u.wp + 1) ++ ", " ++ reprₓ u.x ++ "], [" ++ reprₓ u.y ++ ", " ++ reprₓ (u.zp + 1) ++ "]], [" ++
-            reprₓ (u.ap + 1) ++
+    "[[[" ++ repr (u.wp + 1) ++ ", " ++ repr u.x ++ "], [" ++ repr u.y ++ ", " ++ repr (u.zp + 1) ++ "]], [" ++
+            repr (u.ap + 1) ++
           ", " ++
-        reprₓ (u.bp + 1) ++
+        repr (u.bp + 1) ++
       "]]"⟩
 
 def mk' (w : ℕ+) (x : ℕ) (y : ℕ) (z : ℕ+) (a : ℕ+) (b : ℕ+) : XgcdType :=
@@ -119,7 +119,7 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
     repeat' rw [Nat.succ_eq_add_one]
     ring
     
-  · apply Nat.succ.injₓ
+  · apply Nat.succ.inj
     replace h := congr_arg (coe : ℕ+ → ℕ) h
     rw [mul_coe, w, z] at h
     repeat' rw [succ_pnat_coe, Nat.succ_eq_add_one] at h
@@ -179,7 +179,7 @@ theorem flip_is_reduced : (flip u).IsReduced ↔ u.IsReduced := by
 
 theorem flip_is_special : (flip u).IsSpecial ↔ u.IsSpecial := by
   dsimp [is_special, flip]
-  rw [mul_comm u.x, mul_comm u.zp, add_commₓ u.zp]
+  rw [mul_comm u.x, mul_comm u.zp, add_comm u.zp]
 
 theorem flip_v : (flip u).V = u.V.swap := by
   dsimp [v]
@@ -193,15 +193,15 @@ theorem flip_v : (flip u).V = u.V.swap := by
 
 /-- Properties of division with remainder for a / b.  -/
 theorem rq_eq : u.R + (u.bp + 1) * u.q = u.ap + 1 :=
-  Nat.mod_add_divₓ (u.ap + 1) (u.bp + 1)
+  Nat.mod_add_div (u.ap + 1) (u.bp + 1)
 
 theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 := by
   by_cases hq:u.q = 0
   · let h := u.rq_eq
-    rw [hr, hq, mul_zero, add_zeroₓ] at h
+    rw [hr, hq, mul_zero, add_zero] at h
     cases h
     
-  · exact (Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hq)).symm
+  · exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
     
 
 /-- The following function provides the starting point for
@@ -218,9 +218,9 @@ theorem start_is_special (a b : ℕ+) : (start a b).IsSpecial := by
 
 theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ := by
   dsimp [start, v, xgcd_type.a, xgcd_type.b, w, z]
-  rw [one_mulₓ, one_mulₓ, zero_mul, zero_mul, zero_addₓ, add_zeroₓ]
+  rw [one_mul, one_mul, zero_mul, zero_mul, zero_add, add_zero]
   rw [← Nat.pred_eq_sub_one, ← Nat.pred_eq_sub_one]
-  rw [Nat.succ_pred_eq_of_posₓ a.pos, Nat.succ_pred_eq_of_posₓ b.pos]
+  rw [Nat.succ_pred_eq_of_pos a.pos, Nat.succ_pred_eq_of_pos b.pos]
 
 def finish : XgcdType :=
   XgcdType.mk u.wp ((u.wp + 1) * u.qp + u.x) u.y (u.y * u.qp + u.zp) u.bp u.bp
@@ -231,12 +231,12 @@ theorem finish_is_reduced : u.finish.IsReduced := by
 
 theorem finish_is_special (hs : u.IsSpecial) : u.finish.IsSpecial := by
   dsimp [is_special, finish] at hs⊢
-  rw [add_mulₓ _ _ u.y, add_commₓ _ (u.x * u.y), ← hs]
+  rw [add_mul _ _ u.y, add_comm _ (u.x * u.y), ← hs]
   ring
 
 theorem finish_v (hr : u.R = 0) : u.finish.V = u.V := by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
-  rw [hr, zero_addₓ] at ha
+  rw [hr, zero_add] at ha
   ext
   · change (u.wp + 1) * u.b + ((u.wp + 1) * u.qp + u.x) * u.b = u.w * u.a + u.x * u.b
     have : u.wp + 1 = u.w := rfl
@@ -255,22 +255,22 @@ def step : XgcdType :=
 
 /-- We will apply the above step recursively.  The following result
  is used to ensure that the process terminates. -/
-theorem step_wf (hr : u.R ≠ 0) : sizeof u.step < sizeof u := by
+theorem step_wf (hr : u.R ≠ 0) : sizeOf u.step < sizeOf u := by
   change u.r - 1 < u.bp
-  have h₀ : u.r - 1 + 1 = u.r := Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hr)
-  have h₁ : u.r < u.bp + 1 := Nat.mod_ltₓ (u.ap + 1) u.bp.succ_pos
+  have h₀ : u.r - 1 + 1 = u.r := Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hr)
+  have h₁ : u.r < u.bp + 1 := Nat.mod_lt (u.ap + 1) u.bp.succ_pos
   rw [← h₀] at h₁
   exact lt_of_succ_lt_succ h₁
 
 theorem step_is_special (hs : u.IsSpecial) : u.step.IsSpecial := by
   dsimp [is_special, step] at hs⊢
-  rw [mul_addₓ, mul_comm u.y u.x, ← hs]
+  rw [mul_add, mul_comm u.y u.x, ← hs]
   ring
 
 /-- The reduction step does not change the product vector. -/
 theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap := by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
-  let hr : u.r - 1 + 1 = u.r := (add_commₓ _ 1).trans (add_tsub_cancel_of_le (Nat.pos_of_ne_zeroₓ hr))
+  let hr : u.r - 1 + 1 = u.r := (add_comm _ 1).trans (add_tsub_cancel_of_le (Nat.pos_of_ne_zero hr))
   ext
   · change ((u.y * u.q + u.z) * u.b + u.y * (u.r - 1 + 1) : ℕ) = u.y * u.a + u.z * u.b
     rw [← ha, hr]
@@ -291,7 +291,7 @@ theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap := by
 def reduce : XgcdType → XgcdType
   | u =>
     dite (u.R = 0) (fun h => u.finish) fun h =>
-      have : sizeof u.step < sizeof u := u.step_wf h
+      have : sizeOf u.step < sizeOf u := u.step_wf h
       flip (reduce u.step)
 
 theorem reduce_a {u : XgcdType} (h : u.R = 0) : u.reduce = u.finish := by
@@ -311,7 +311,7 @@ theorem reduce_reduced : ∀ u : XgcdType, u.reduce.IsReduced
         rw [reduce_a h]
         exact u.finish_is_reduced)
       fun h => by
-      have : sizeof u.step < sizeof u := u.step_wf h
+      have : sizeOf u.step < sizeOf u := u.step_wf h
       rw [reduce_b h, flip_is_reduced]
       apply reduce_reduced
 
@@ -325,7 +325,7 @@ theorem reduce_special : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
         rw [reduce_a h]
         exact u.finish_is_special hs)
       fun h hs => by
-      have : sizeof u.step < sizeof u := u.step_wf h
+      have : sizeOf u.step < sizeOf u := u.step_wf h
       rw [reduce_b h]
       exact (flip_is_special _).mpr (reduce_special _ (u.step_is_special hs))
 
@@ -335,8 +335,8 @@ theorem reduce_special' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' 
 theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
   | u =>
     dite (u.R = 0) (fun h => by rw [reduce_a h, finish_v u h]) fun h => by
-      have : sizeof u.step < sizeof u := u.step_wf h
-      rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swapₓ]
+      have : sizeOf u.step < sizeOf u := u.step_wf h
+      rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swap]
 
 end XgcdType
 
@@ -370,11 +370,11 @@ def gcdB' : ℕ+ :=
 
 theorem gcd_a'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b := by
   dsimp [gcd_a', gcd_x, gcd_w, xgcd_type.w]
-  rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_right_commₓ]
+  rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_right_comm]
 
 theorem gcd_b'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b := by
   dsimp [gcd_b', gcd_y, gcd_z, xgcd_type.z]
-  rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assocₓ]
+  rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assoc]
 
 theorem gcd_props :
     let d := gcdD a b
@@ -402,7 +402,7 @@ theorem gcd_props :
   have hdet' : (w * z : ℕ) = x * y + 1 := by rw [← mul_coe, hdet, succ_pnat_coe]
   have huv : u.v = ⟨a, b⟩ := xgcd_type.start_v a b
   let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ := u.reduce_v.trans (xgcd_type.start_v a b)
-  rw [← hb, ← add_mulₓ, ← add_mulₓ, ← ha', ← hb'] at hv
+  rw [← hb, ← add_mul, ← add_mul, ← ha', ← hb'] at hv
   have ha'' : (a : ℕ) = a' * d := (congr_arg Prod.fst hv).symm
   have hb'' : (b : ℕ) = b' * d := (congr_arg Prod.snd hv).symm
   constructor
@@ -410,10 +410,10 @@ theorem gcd_props :
   constructor
   exact Eq hb''
   have hza' : (z * a' : ℕ) = x * b' + 1 := by
-    rw [ha', hb', mul_addₓ, mul_addₓ, mul_comm (z : ℕ), hdet']
+    rw [ha', hb', mul_add, mul_add, mul_comm (z : ℕ), hdet']
     ring
   have hwb' : (w * b' : ℕ) = y * a' + 1 := by
-    rw [ha', hb', mul_addₓ, mul_addₓ, hdet']
+    rw [ha', hb', mul_add, mul_add, hdet']
     ring
   constructor
   · apply Eq
@@ -435,8 +435,8 @@ theorem gcd_eq : gcdD a b = gcd a b := by
     exact Dvd.intro (gcd_a' a b) (h₁.trans (mul_comm _ _)).symm
     exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_comm _ _)).symm
     
-  · have h₇ : (gcd a b : ℕ) ∣ gcd_z a b * a := (Nat.gcd_dvd_leftₓ a b).trans (dvd_mul_left _ _)
-    have h₈ : (gcd a b : ℕ) ∣ gcd_x a b * b := (Nat.gcd_dvd_rightₓ a b).trans (dvd_mul_left _ _)
+  · have h₇ : (gcd a b : ℕ) ∣ gcd_z a b * a := (Nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)
+    have h₈ : (gcd a b : ℕ) ∣ gcd_x a b * b := (Nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)
     rw [h₅] at h₇
     rw [dvd_iff]
     exact (Nat.dvd_add_iff_right h₈).mpr h₇

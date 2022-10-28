@@ -58,7 +58,7 @@ theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X
     exact F.map_zero _ _⟩
 
 instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
-    PreservesZeroMorphisms F where map_zero' := fun X Y => by
+    PreservesZeroMorphisms F where map_zero' X Y := by
     let adj := Adjunction.ofLeftAdjoint F
     calc
       F.map (0 : X ⟶ Y) = F.map 0 ≫ F.map (adj.unit.app Y) ≫ adj.counit.app (F.obj Y) := _
@@ -74,7 +74,7 @@ instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C �
       
 
 instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C ⥤ D) [IsRightAdjoint G] :
-    PreservesZeroMorphisms G where map_zero' := fun X Y => by
+    PreservesZeroMorphisms G where map_zero' X Y := by
     let adj := Adjunction.ofRightAdjoint G
     calc
       G.map (0 : X ⟶ Y) = adj.unit.app (G.obj X) ≫ G.map (adj.counit.app X) ≫ G.map 0 := _
@@ -89,7 +89,7 @@ instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C �
       
 
 instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] :
-    PreservesZeroMorphisms F where map_zero' := fun X Y =>
+    PreservesZeroMorphisms F where map_zero' X Y :=
     calc
       F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by rw [zero_comp]
       _ = 0 := by rw [F.map_comp, F.image_preimage, comp_zero]

@@ -151,11 +151,11 @@ open Ordering
   -/
 def cmp : PosNum → PosNum → Ordering
   | 1, 1 => Eq
-  | _, 1 => Gt
+  | _, 1 => gt
   | 1, _ => lt
   | bit0 a, bit0 b => cmp a b
-  | bit0 a, bit1 b => Ordering.casesOn (cmp a b) lt lt Gt
-  | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt Gt Gt
+  | bit0 a, bit1 b => Ordering.casesOn (cmp a b) lt lt gt
+  | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt gt gt
   | bit1 a, bit1 b => cmp a b
 
 instance : LT PosNum :=
@@ -190,18 +190,18 @@ def castNum [z : Zero α] : Num → α
   | Num.pos p => castPosNum p
 
 -- see Note [coercion into rings]
-instance (priority := 900) posNumCoe : CoeTₓ PosNum α :=
+instance (priority := 900) posNumCoe : CoeT PosNum α :=
   ⟨castPosNum⟩
 
 -- see Note [coercion into rings]
-instance (priority := 900) numNatCoe [z : Zero α] : CoeTₓ Num α :=
+instance (priority := 900) numNatCoe [z : Zero α] : CoeT Num α :=
   ⟨castNum⟩
 
-instance : HasRepr PosNum :=
-  ⟨fun n => reprₓ (n : ℕ)⟩
+instance : Repr PosNum :=
+  ⟨fun n => repr (n : ℕ)⟩
 
-instance : HasRepr Num :=
-  ⟨fun n => reprₓ (n : ℕ)⟩
+instance : Repr Num :=
+  ⟨fun n => repr (n : ℕ)⟩
 
 end
 
@@ -275,7 +275,7 @@ open Ordering
   -/
 def cmp : Num → Num → Ordering
   | 0, 0 => Eq
-  | _, 0 => Gt
+  | _, 0 => gt
   | 0, _ => lt
   | Pos a, Pos b => PosNum.cmp a b
 
@@ -509,10 +509,10 @@ def cmp : Znum → Znum → Ordering
   | 0, 0 => Eq
   | Pos a, Pos b => PosNum.cmp a b
   | neg a, neg b => PosNum.cmp b a
-  | Pos _, _ => Gt
+  | Pos _, _ => gt
   | neg _, _ => lt
   | _, Pos _ => lt
-  | _, neg _ => Gt
+  | _, neg _ => gt
 
 instance : LT Znum :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
@@ -669,11 +669,11 @@ def castZnum : Znum → α
   | Znum.neg p => -p
 
 -- see Note [coercion into rings]
-instance (priority := 900) znumCoe : CoeTₓ Znum α :=
+instance (priority := 900) znumCoe : CoeT Znum α :=
   ⟨castZnum⟩
 
-instance : HasRepr Znum :=
-  ⟨fun n => reprₓ (n : ℤ)⟩
+instance : Repr Znum :=
+  ⟨fun n => repr (n : ℤ)⟩
 
 end
 

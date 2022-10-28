@@ -61,16 +61,16 @@ protected theorem has_faithful_smul' [HasFaithfulSmul M (α i)] : HasFaithfulSmu
 
 @[to_additive]
 instance [Nonempty ι] [∀ i, HasFaithfulSmul M (α i)] : HasFaithfulSmul M (Σi, α i) :=
-  (Nonempty.elimₓ ‹_›) fun i => Sigma.has_faithful_smul' i
+  (Nonempty.elim ‹_›) fun i => Sigma.has_faithful_smul' i
 
 end HasSmul
 
 @[to_additive]
-instance {m : Monoidₓ M} [∀ i, MulAction M (α i)] : MulAction M (Σi, α i) where
-  mul_smul := fun a b x => by
+instance {m : Monoid M} [∀ i, MulAction M (α i)] : MulAction M (Σi, α i) where
+  mul_smul a b x := by
     cases x
     rw [smul_mk, smul_mk, smul_mk, mul_smul]
-  one_smul := fun x => by
+  one_smul x := by
     cases x
     rw [smul_mk, one_smul]
 

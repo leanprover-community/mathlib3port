@@ -36,20 +36,19 @@ open Complex ContinuousLinearMap
 
 open ComplexConjugate
 
-theorem is_conformal_map_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
+theorem isConformalMapConj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
   conjLie.toLinearIsometry.IsConformalMap
 
 section ConformalIntoComplexNormed
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ} {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
-theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-    IsConformalMap (map.restrictScalars ℝ) := by
+theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) : IsConformalMap (map.restrictScalars ℝ) := by
   have minor₁ : ∥map 1∥ ≠ 0 := by simpa [ext_ring_iff] using nonzero
   refine' ⟨∥map 1∥, minor₁, ⟨∥map 1∥⁻¹ • map, _⟩, _⟩
   · intro x
     simp only [LinearMap.smul_apply]
-    have : x = x • 1 := by rw [smul_eq_mul, mul_oneₓ]
+    have : x = x • 1 := by rw [smul_eq_mul, mul_one]
     nth_rw 0 [this]
     rw [_root_.coe_coe map, LinearMap.coe_coe_is_scalar_tower]
     simp only [map.coe_coe, map.map_smul, norm_smul, norm_inv, norm_norm]
@@ -59,9 +58,9 @@ theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map �
     simp [minor₁]
     
 
-theorem is_conformal_map_complex_linear_conj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
+theorem isConformalMapComplexLinearConj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
     IsConformalMap ((map.restrictScalars ℝ).comp (conjCle : ℂ →L[ℝ] ℂ)) :=
-  (is_conformal_map_complex_linear nonzero).comp is_conformal_map_conj
+  (isConformalMapComplexLinear nonzero).comp isConformalMapConj
 
 end ConformalIntoComplexNormed
 
@@ -104,7 +103,7 @@ theorem is_conformal_map_iff_is_complex_or_conj_linear :
   · exact fun h => ⟨h.is_complex_or_conj_linear, h.ne_zero⟩
     
   · rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
-    · refine' is_conformal_map_complex_linear _
+    · refine' isConformalMapComplexLinear _
       contrapose! h₂ with w
       simp [w]
       
@@ -112,7 +111,7 @@ theorem is_conformal_map_iff_is_complex_or_conj_linear :
         ext1
         simp [hmap]
       rw [minor₁] at h₂⊢
-      refine' is_conformal_map_complex_linear_conj _
+      refine' isConformalMapComplexLinearConj _
       contrapose! h₂ with w
       simp [w]
       

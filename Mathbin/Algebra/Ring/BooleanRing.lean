@@ -42,7 +42,7 @@ boolean ring, boolean algebra
 variable {α β γ : Type _}
 
 /-- A Boolean ring is a ring where multiplication is idempotent. -/
-class BooleanRing (α) extends Ringₓ α where
+class BooleanRing (α) extends Ring α where
   mul_self : ∀ a : α, a * a = a
 
 section BooleanRing
@@ -61,7 +61,7 @@ theorem add_self : a + a = 0 := by
   have : a + a = a + a + (a + a) :=
     calc
       a + a = (a + a) * (a + a) := by rw [mul_self]
-      _ = a * a + a * a + (a * a + a * a) := by rw [add_mulₓ, mul_addₓ]
+      _ = a * a + a * a + (a * a + a * a) := by rw [add_mul, mul_add]
       _ = a + a + (a + a) := by rw [mul_self]
       
   rwa [self_eq_add_left] at this
@@ -69,9 +69,9 @@ theorem add_self : a + a = 0 := by
 @[simp]
 theorem neg_eq : -a = a :=
   calc
-    -a = -a + 0 := by rw [add_zeroₓ]
-    _ = -a + -a + a := by rw [← neg_add_selfₓ, add_assocₓ]
-    _ = a := by rw [add_self, zero_addₓ]
+    -a = -a + 0 := by rw [add_zero]
+    _ = -a + -a + a := by rw [← neg_add_self, add_assoc]
+    _ = a := by rw [add_self, zero_add]
     
 
 theorem add_eq_zero : a + b = 0 ↔ a = b :=
@@ -85,20 +85,20 @@ theorem mul_add_mul : a * b + b * a = 0 := by
   have : a + b = a + b + (a * b + b * a) :=
     calc
       a + b = (a + b) * (a + b) := by rw [mul_self]
-      _ = a * a + a * b + (b * a + b * b) := by rw [add_mulₓ, mul_addₓ, mul_addₓ]
+      _ = a * a + a * b + (b * a + b * b) := by rw [add_mul, mul_add, mul_add]
       _ = a + a * b + (b * a + b) := by simp only [mul_self]
       _ = a + b + (a * b + b * a) := by abel
       
-  rwa [self_eq_add_rightₓ] at this
+  rwa [self_eq_add_right] at this
 
 @[simp]
-theorem sub_eq_add : a - b = a + b := by rw [sub_eq_add_neg, add_right_injₓ, neg_eq]
+theorem sub_eq_add : a - b = a + b := by rw [sub_eq_add_neg, add_right_inj, neg_eq]
 
 @[simp]
-theorem mul_one_add_self : a * (1 + a) = 0 := by rw [mul_addₓ, mul_oneₓ, mul_self, add_self]
+theorem mul_one_add_self : a * (1 + a) = 0 := by rw [mul_add, mul_one, mul_self, add_self]
 
 -- Note [lower instance priority]
-instance (priority := 100) BooleanRing.toCommRing : CommRingₓ α :=
+instance (priority := 100) BooleanRing.toCommRing : CommRing α :=
   { (inferInstance : BooleanRing α) with mul_comm := fun a b => by rw [← add_eq_zero, mul_add_mul] }
 
 end BooleanRing
@@ -117,11 +117,11 @@ def AsBoolalg (α : Type _) :=
 
 /-- The "identity" equivalence between `as_boolalg α` and `α`. -/
 def toBoolalg : α ≃ AsBoolalg α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 /-- The "identity" equivalence between `α` and `as_boolalg α`. -/
 def ofBoolalg : AsBoolalg α ≃ α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 theorem to_boolalg_symm_eq : (@toBoolalg α).symm = ofBoolalg :=
@@ -185,23 +185,23 @@ theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) := by
 
 theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a := by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
-  assoc_rw [mul_self, add_self, add_zeroₓ]
+  assoc_rw [mul_self, add_self, add_zero]
 
 theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a := by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
-  rw [mul_addₓ, mul_addₓ, mul_self, ← mul_assoc, mul_self, add_assocₓ, add_self, add_zeroₓ]
+  rw [mul_add, mul_add, mul_self, ← mul_assoc, mul_self, add_assoc, add_self, add_zero]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
   calc
     (a + b + a * b) * (a + c + a * c) =
         a * a + b * c + a * (b * c) + (a * b + a * a * b) + (a * c + a * a * c) + (a * b * c + a * a * b * c) :=
       by ring
-    _ = a + b * c + a * (b * c) := by simp only [mul_self, add_self, add_zeroₓ]
+    _ = a + b * c + a * (b * c) := by simp only [mul_self, add_self, add_zero]
     
 
 theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c := by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
-  rw [le_sup_inf_aux, add_self, mul_self, zero_addₓ]
+  rw [le_sup_inf_aux, add_self, mul_self, zero_add]
 
 /-- The Boolean algebra structure on a Boolean ring.
 
@@ -216,13 +216,13 @@ The data is defined so that:
 -/
 def toBooleanAlgebra : BooleanAlgebra α :=
   { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self with le_sup_inf := le_sup_inf, top := 1,
-    le_top := fun a => show a + 1 + a * 1 = 1 by assoc_rw [mul_oneₓ, add_commₓ, add_self, add_zeroₓ], bot := 0,
-    bot_le := fun a => show 0 + a + 0 * a = a by rw [zero_mul, zero_addₓ, add_zeroₓ], compl := fun a => 1 + a,
-    inf_compl_le_bot := fun a => show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by norm_num [mul_addₓ, mul_self, add_self] ,
+    le_top := fun a => show a + 1 + a * 1 = 1 by assoc_rw [mul_one, add_comm, add_self, add_zero], bot := 0,
+    bot_le := fun a => show 0 + a + 0 * a = a by rw [zero_mul, zero_add, add_zero], compl := fun a => 1 + a,
+    inf_compl_le_bot := fun a => show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by norm_num [mul_add, mul_self, add_self] ,
     top_le_sup_compl := fun a => by
       change 1 + (a + (1 + a) + a * (1 + a)) + 1 * (a + (1 + a) + a * (1 + a)) = a + (1 + a) + a * (1 + a)
-      norm_num [mul_addₓ, mul_self]
-      rw [← add_assocₓ, add_self] }
+      norm_num [mul_add, mul_self]
+      rw [← add_assoc, add_self] }
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.toBooleanAlgebra
 
@@ -259,7 +259,7 @@ theorem of_boolalg_sdiff (a b : AsBoolalg α) : ofBoolalg (a \ b) = ofBoolalg a 
 private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a * b) = a + b :=
   calc
     (a + b + a * b) * (1 + a * b) = a + b + (a * b + a * b * (a * b)) + (a * (b * b) + a * a * b) := by ring
-    _ = a + b := by simp only [mul_self, add_self, add_zeroₓ]
+    _ = a + b := by simp only [mul_self, add_self, add_zero]
     
 
 @[simp]
@@ -297,7 +297,7 @@ from `α` to `β` considered as Boolean algebras. -/
 @[simps]
 protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg α) (AsBoolalg β) where
   toFun := toBoolalg ∘ f ∘ ofBoolalg
-  map_sup' := fun a b => by
+  map_sup' a b := by
     dsimp
     simp_rw [map_add f, map_mul f]
     rfl
@@ -326,11 +326,11 @@ def AsBoolring (α : Type _) :=
 
 /-- The "identity" equivalence between `as_boolring α` and `α`. -/
 def toBoolring : α ≃ AsBoolring α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 /-- The "identity" equivalence between `α` and `as_boolring α`. -/
 def ofBoolring : AsBoolring α ≃ α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 theorem to_boolring_symm_eq : (@toBoolring α).symm = ofBoolring :=
@@ -375,14 +375,14 @@ def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α]
   zero := ⊥
   zero_add := bot_symm_diff
   add_zero := symm_diff_bot
-  zero_mul := fun _ => bot_inf_eq
-  mul_zero := fun _ => inf_bot_eq
+  zero_mul _ := bot_inf_eq
+  mul_zero _ := inf_bot_eq
   neg := id
   add_left_neg := symm_diff_self
   add_comm := symm_diff_comm
   mul := (· ⊓ ·)
-  mul_assoc := fun _ _ _ => inf_assoc
-  mul_comm := fun _ _ => inf_comm
+  mul_assoc _ _ _ := inf_assoc
+  mul_comm _ _ := inf_comm
   left_distrib := inf_symm_diff_distrib_left
   right_distrib := inf_symm_diff_distrib_right
 
@@ -496,18 +496,18 @@ def RingEquiv.asBoolringAsBoolalg (α : Type _) [BooleanRing α] : AsBoolring (A
 open Bool
 
 instance : BooleanRing Bool where
-  add := bxor
+  add := xor
   add_assoc := bxor_assoc
   zero := false
   zero_add := ff_bxor
   add_zero := bxor_ff
   neg := id
-  sub := bxor
-  sub_eq_add_neg := fun _ _ => rfl
+  sub := xor
+  sub_eq_add_neg _ _ := rfl
   add_left_neg := bxor_self
   add_comm := bxor_comm
   one := true
-  mul := band
+  mul := and
   mul_assoc := band_assoc
   one_mul := tt_band
   mul_one := band_tt

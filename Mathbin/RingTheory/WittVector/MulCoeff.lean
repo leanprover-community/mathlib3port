@@ -32,12 +32,12 @@ namespace WittVector
 
 variable (p : ℕ) [hp : Fact p.Prime]
 
-variable {k : Type _} [CommRingₓ k]
+variable {k : Type _} [CommRing k]
 
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
-open Finsetₓ MvPolynomial
+open Finset MvPolynomial
 
 open BigOperators
 
@@ -46,12 +46,12 @@ open BigOperators
   (∑ i in range n, (y.coeff i)^(p^(n-i)) * p^i.val)
 ```
 -/
-def wittPolyProd (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
-  rename (Prod.mk (0 : Finₓ 2)) (wittPolynomial p ℤ n) * rename (Prod.mk (1 : Finₓ 2)) (wittPolynomial p ℤ n)
+def wittPolyProd (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
+  rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ n) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ n)
 
 include hp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [witt_poly_prod]
   apply subset.trans (vars_mul _ _)
@@ -61,10 +61,10 @@ theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ ra
       
 
 /-- The "remainder term" of `witt_vector.witt_poly_prod`. See `mul_poly_of_interest_aux2`. -/
-def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
+def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   ∑ i in range n, p ^ i * wittMul p i ^ p ^ (n - i)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n := by
   rw [witt_poly_prod_remainder]
   apply subset.trans (vars_sum_subset _ _)
@@ -73,7 +73,7 @@ theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).va
   apply subset.trans (vars_mul _ _)
   apply union_subset
   · apply subset.trans (vars_pow _ _)
-    have : (p : MvPolynomial (Finₓ 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_coe_nat, eq_int_cast]
+    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_coe_nat, eq_int_cast]
     rw [this, vars_C]
     apply empty_subset
     
@@ -90,13 +90,13 @@ omit hp
 `witt_poly_prod p (n+1)` will have variables up to `n+1`,
 but `remainder` will only have variables up to `n`.
 -/
-def remainder (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
+def remainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   (∑ x : ℕ in range (n + 1), (rename (Prod.mk 0)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))) *
     ∑ x : ℕ in range (n + 1), (rename (Prod.mk 1)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))
 
 include hp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [remainder]
   apply subset.trans (vars_mul _ _)
@@ -114,33 +114,33 @@ theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n +
       
 
 /-- This is the polynomial whose degree we want to get a handle on. -/
-def polyOfInterest (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
+def polyOfInterest (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   wittMul p (n + 1) + p ^ (n + 1) * x (0, n + 1) * x (1, n + 1) -
-      x (0, n + 1) * rename (Prod.mk (1 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)) -
-    x (1, n + 1) * rename (Prod.mk (0 : Finₓ 2)) (wittPolynomial p ℤ (n + 1))
+      x (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) -
+    x (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1))
 
 theorem mul_poly_of_interest_aux1 (n : ℕ) :
-    (∑ i in range (n + 1), p ^ i * wittMul p i ^ p ^ (n - i) : MvPolynomial (Finₓ 2 × ℕ) ℤ) = wittPolyProd p n := by
+    (∑ i in range (n + 1), p ^ i * wittMul p i ^ p ^ (n - i) : MvPolynomial (Fin 2 × ℕ) ℤ) = wittPolyProd p n := by
   simp only [witt_poly_prod]
-  convert witt_structure_int_prop p (X (0 : Finₓ 2) * X 1) n using 1
+  convert witt_structure_int_prop p (X (0 : Fin 2) * X 1) n using 1
   · simp only [wittPolynomial, witt_mul]
     rw [AlgHom.map_sum]
     congr 1 with i
     congr 1
     have hsupp : (Finsupp.single i (p ^ (n - i))).support = {i} := by
       rw [Finsupp.support_eq_singleton]
-      simp only [and_trueₓ, Finsupp.single_eq_same, eq_self_iff_true, Ne.def]
+      simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne.def]
       exact pow_ne_zero _ hp.out.ne_zero
     simp only [bind₁_monomial, hsupp, Int.cast_coe_nat, prod_singleton, eq_int_cast, Finsupp.single_eq_same, C_pow,
-      mul_eq_mul_left_iff, true_orₓ, eq_self_iff_true]
+      mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true]
     
   · simp only [map_mul, bind₁_X_right]
     
 
 theorem mul_poly_of_interest_aux2 (n : ℕ) :
-    (p ^ n * wittMul p n : MvPolynomial (Finₓ 2 × ℕ) ℤ) + wittPolyProdRemainder p n = wittPolyProd p n := by
+    (p ^ n * wittMul p n : MvPolynomial (Fin 2 × ℕ) ℤ) + wittPolyProdRemainder p n = wittPolyProd p n := by
   convert mul_poly_of_interest_aux1 p n
-  rw [sum_range_succ, add_commₓ, Nat.sub_self, pow_zeroₓ, pow_oneₓ]
+  rw [sum_range_succ, add_comm, Nat.sub_self, pow_zero, pow_one]
   rfl
 
 omit hp
@@ -148,12 +148,12 @@ omit hp
 theorem mul_poly_of_interest_aux3 (n : ℕ) :
     wittPolyProd p (n + 1) =
       -(p ^ (n + 1) * x (0, n + 1)) * (p ^ (n + 1) * x (1, n + 1)) +
-            p ^ (n + 1) * x (0, n + 1) * rename (Prod.mk (1 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)) +
-          p ^ (n + 1) * x (1, n + 1) * rename (Prod.mk (0 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)) +
+            p ^ (n + 1) * x (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
+          p ^ (n + 1) * x (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
         remainder p n :=
   by
   -- a useful auxiliary fact
-  have mvpz : (p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) = MvPolynomial.c (↑p ^ (n + 1)) := by
+  have mvpz : (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) = MvPolynomial.c (↑p ^ (n + 1)) := by
     simp only [Int.cast_coe_nat, eq_int_cast, C_pow, eq_self_iff_true]
   -- unfold definitions and peel off the last entries of the sums.
   rw [witt_poly_prod, wittPolynomial, AlgHom.map_sum, AlgHom.map_sum, sum_range_succ]
@@ -162,40 +162,39 @@ conv_lhs =>
   congr
   skip
   rw [sum_range_succ]
-  simp only [add_mulₓ, mul_addₓ, tsub_self, pow_zeroₓ, AlgHom.map_sum]
+  simp only [add_mul, mul_add, tsub_self, pow_zero, AlgHom.map_sum]
   -- rearrange so that the first summand on rhs and lhs is `remainder`, and peel off
-  conv_rhs => rw [add_commₓ]
-  simp only [add_assocₓ]
+  conv_rhs => rw [add_comm]
+  simp only [add_assoc]
   apply congr_arg (Add.add _)
   conv_rhs => rw [sum_range_succ]
   -- the rest is equal with proper unfolding and `ring`
-  simp only [rename_monomial, monomial_eq_C_mul_X, map_mul, rename_C, pow_oneₓ, rename_X, mvpz]
-  simp only [Int.cast_coe_nat, map_pow, eq_int_cast, rename_X, pow_oneₓ, tsub_self, pow_zeroₓ]
+  simp only [rename_monomial, monomial_eq_C_mul_X, map_mul, rename_C, pow_one, rename_X, mvpz]
+  simp only [Int.cast_coe_nat, map_pow, eq_int_cast, rename_X, pow_one, tsub_self, pow_zero]
   ring
 
 include hp
 
 theorem mul_poly_of_interest_aux4 (n : ℕ) :
-    (p ^ (n + 1) * wittMul p (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) =
+    (p ^ (n + 1) * wittMul p (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) =
       -(p ^ (n + 1) * x (0, n + 1)) * (p ^ (n + 1) * x (1, n + 1)) +
-            p ^ (n + 1) * x (0, n + 1) * rename (Prod.mk (1 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)) +
-          p ^ (n + 1) * x (1, n + 1) * rename (Prod.mk (0 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)) +
+            p ^ (n + 1) * x (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
+          p ^ (n + 1) * x (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
         (remainder p n - wittPolyProdRemainder p (n + 1)) :=
   by
   rw [← add_sub_assoc, eq_sub_iff_add_eq, mul_poly_of_interest_aux2]
   exact mul_poly_of_interest_aux3 _ _
 
 theorem mul_poly_of_interest_aux5 (n : ℕ) :
-    (p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) * polyOfInterest p n =
-      remainder p n - wittPolyProdRemainder p (n + 1) :=
+    (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n = remainder p n - wittPolyProdRemainder p (n + 1) :=
   by
-  simp only [poly_of_interest, mul_sub, mul_addₓ, sub_eq_iff_eq_add']
+  simp only [poly_of_interest, mul_sub, mul_add, sub_eq_iff_eq_add']
   rw [mul_poly_of_interest_aux4 p n]
   ring
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_poly_of_interest_vars (n : ℕ) :
-    ((p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
+    ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [mul_poly_of_interest_aux5]
   apply subset.trans (vars_sub_subset _ _)
   apply union_subset
@@ -206,18 +205,18 @@ theorem mul_poly_of_interest_vars (n : ℕ) :
 
 theorem poly_of_interest_vars_eq (n : ℕ) :
     (polyOfInterest p n).vars =
-      ((p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) *
+      ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) *
           (wittMul p (n + 1) + p ^ (n + 1) * x (0, n + 1) * x (1, n + 1) -
-              x (0, n + 1) * rename (Prod.mk (1 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)) -
-            x (1, n + 1) * rename (Prod.mk (0 : Finₓ 2)) (wittPolynomial p ℤ (n + 1)))).vars :=
+              x (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) -
+            x (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)))).vars :=
   by
-  have : (p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) = C (p ^ (n + 1) : ℤ) := by
+  have : (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p ^ (n + 1) : ℤ) := by
     simp only [Int.cast_coe_nat, eq_int_cast, C_pow, eq_self_iff_true]
   rw [poly_of_interest, this, vars_C_mul]
   apply pow_ne_zero
   exact_mod_cast hp.out.ne_zero
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [poly_of_interest_vars_eq] <;> apply mul_poly_of_interest_vars
 
@@ -227,9 +226,9 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
           y.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * x.coeff i ^ p ^ (n + 1 - i)) -
         x.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * y.coeff i ^ p ^ (n + 1 - i) :=
   by
-  simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pairₓ, aeval_X,
+  simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pair, aeval_X,
     Matrix.cons_val_one, map_mul, Matrix.cons_val_zero, map_sub]
-  rw [sub_sub, add_commₓ (_ * _), ← sub_sub]
+  rw [sub_sub, add_comm (_ * _), ← sub_sub]
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by rw [eq_int_cast, Int.cast_coe_nat]
   have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by
     intros
@@ -246,11 +245,11 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
   by
   rw [peval_poly_of_interest]
   have : (p : k) = 0 := CharP.cast_eq_zero k p
-  simp only [this, add_zeroₓ, zero_mul, Nat.succ_ne_zero, Ne.def, not_false_iff, zero_pow']
+  simp only [this, add_zero, zero_mul, Nat.succ_ne_zero, Ne.def, not_false_iff, zero_pow']
   have sum_zero_pow_mul_pow_p :
     ∀ y : 𝕎 k, (∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x)) = y.coeff 0 ^ p ^ (n + 1) := by
     intro y
-    rw [Finsetₓ.sum_eq_single_of_mem 0]
+    rw [Finset.sum_eq_single_of_mem 0]
     · simp
       
     · simp
@@ -262,7 +261,7 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
 
 variable (k)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem nth_mul_coeff' (n : ℕ) :
     ∃ f : TruncatedWittVector p (n + 1) k → TruncatedWittVector p (n + 1) k → k,
       ∀ x y : 𝕎 k,
@@ -277,7 +276,7 @@ theorem nth_mul_coeff' (n : ℕ) :
     apply f₀
     rintro ⟨a, ha⟩
     apply Function.uncurry ![x, y]
-    simp only [true_andₓ, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
+    simp only [true_and_iff, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
       Multiset.range_succ, mem_univ_val] at ha
     refine' ⟨a.fst, ⟨a.snd, _⟩⟩
     cases' ha with ha ha <;> linarith only [ha]
@@ -285,12 +284,12 @@ theorem nth_mul_coeff' (n : ℕ) :
   intro x y
   dsimp [peval]
   rw [← hf₀]
-  simp only [f, Function.uncurry_apply_pairₓ]
+  simp only [f, Function.uncurry_apply_pair]
   congr
   ext a
   cases' a with a ha
   cases' a with i m
-  simp only [true_andₓ, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
+  simp only [true_and_iff, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
     Multiset.range_succ, mem_univ_val] at ha
   have ha' : m < n + 1 := by cases' ha with ha ha <;> linarith only [ha]
   fin_cases i <;>-- surely this case split is not necessary
@@ -314,7 +313,7 @@ variable {k}
 
 /-- Produces the "remainder function" of the `n+1`st coefficient, which does not depend on the `n+1`st
 coefficients of the inputs. -/
-def nthRemainder (n : ℕ) : (Finₓ (n + 1) → k) → (Finₓ (n + 1) → k) → k :=
+def nthRemainder (n : ℕ) : (Fin (n + 1) → k) → (Fin (n + 1) → k) → k :=
   Classical.choose (nth_mul_coeff p k n)
 
 theorem nth_remainder_spec (n : ℕ) (x y : 𝕎 k) :

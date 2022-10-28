@@ -15,9 +15,9 @@ variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 -- Auxiliary instances
 private def rbmap_lt_is_swo {α : Type u} {β : Type v} {lt : α → α → Prop} [IsStrictWeakOrder α lt] :
     IsStrictWeakOrder (α × β) (RbmapLt lt) where
-  irrefl := fun _ => irrefl_of lt _
-  trans := fun _ _ _ h₁ h₂ => trans_of lt h₁ h₂
-  incomp_trans := fun _ _ _ h₁ h₂ => incomp_trans_of lt h₁ h₂
+  irrefl _ := irrefl_of lt _
+  trans _ _ _ h₁ h₂ := trans_of lt h₁ h₂
+  incomp_trans _ _ _ h₁ h₂ := incomp_trans_of lt h₁ h₂
 
 private def rbmapLtDec {α : Type u} {β : Type v} {lt : α → α → Prop} [h : DecidableRel lt] :
     DecidableRel (@RbmapLt α β lt) := fun a b => h a.1 b.1
@@ -62,20 +62,20 @@ private theorem to_rbtree_mem' [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α 
   apply eqv_entries
 
 theorem eq_some_of_to_value_eq_some {e : Option (α × β)} {v : β} : toValue e = some v → ∃ k, e = some (k, v) := by
-  cases' e with val <;> simp [to_value, false_implies_iff]
+  cases' e with val <;> simp [to_value, false_imp_iff]
   · cases val
     simp
     
 
 theorem eq_none_of_to_value_eq_none {e : Option (α × β)} : toValue e = none → e = none := by
-  cases e <;> simp [to_value, false_implies_iff]
+  cases e <;> simp [to_value, false_imp_iff]
 
 -- Lemmas
 theorem not_mem_mk_rbmap : ∀ k : α, k ∉ mkRbmap α β lt := by simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem]
 
 theorem not_mem_of_empty {m : Rbmap α β lt} (k : α) : m.Empty = tt → k ∉ m := by
   cases' m with n p <;>
-    cases n <;> simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem, Rbmap.empty, Rbtree.empty, false_implies_iff]
+    cases n <;> simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem, Rbmap.empty, Rbtree.empty, false_imp_iff]
 
 theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {m : Rbmap α β lt} {k₁ k₂ : α} : k₁ ∈ m → k₁ ≈[lt]k₂ → k₂ ∈ m := by
   intro h₁ h₂
@@ -107,7 +107,7 @@ theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α β
 theorem mem_of_find_entry_some [IsStrictWeakOrder α lt] {k₁ : α} {e : α × β} {m : Rbmap α β lt} :
     m.findEntry k₁ = some e → k₁ ∈ m := by
   cases' m with t p
-  cases t <;> simp [find_entry, false_implies_iff]
+  cases t <;> simp [find_entry, false_imp_iff]
   all_goals
   intro h
   exact Rbtree.mem_of_find_some h
@@ -183,7 +183,7 @@ theorem find_entry_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β l
 theorem eqv_of_find_entry_some [IsStrictWeakOrder α lt] {k₁ k₂ : α} {v : β} {m : Rbmap α β lt} :
     m.findEntry k₁ = some (k₂, v) → k₁ ≈[lt]k₂ := by
   cases' m with t p
-  cases t <;> simp [find_entry, false_implies_iff]
+  cases t <;> simp [find_entry, false_imp_iff]
   all_goals
   intro h
   exact eqv_keys_of_eqv_entries (Rbtree.eqv_of_find_some h)

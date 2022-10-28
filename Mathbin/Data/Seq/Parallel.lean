@@ -20,7 +20,7 @@ open Wseq
 
 variable {α : Type u} {β : Type v}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
   List.foldr
     (fun c o =>
@@ -29,12 +29,12 @@ def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
       | Sum.inr ls => rmap (fun c' => c'::ls) (destruct c))
     (Sum.inr [])
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def Parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (List (Computation α) × Wseq (Computation α))
   | (l, S) =>
     rmap
       (fun l' =>
-        match Seqₓₓ.destruct S with
+        match Seq.destruct S with
         | none => (l', nil)
         | some (none, S') => (l', S')
         | some (some c, S') => (c::l', S'))
@@ -109,7 +109,7 @@ theorem TerminatesParallel.aux :
       rw [H2]
       apply @Computation.think_terminates _ _ _
       have := H1 _ h
-      rcases Seqₓₓ.destruct S with (_ | ⟨_ | c, S'⟩) <;> simp [parallel.aux1] <;> apply IH <;> simp [this]
+      rcases Seq.destruct S with (_ | ⟨_ | c, S'⟩) <;> simp [parallel.aux1] <;> apply IH <;> simp [this]
       
     
 
@@ -117,7 +117,7 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
   by
   suffices
     ∀ (n) (l : List (Computation α)) (S c),
-      c ∈ l ∨ some (some c) = Seqₓₓ.nth S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
+      c ∈ l ∨ some (some c) = Seq.nth S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
     from
     let ⟨n, h⟩ := h
     this n [] S c (Or.inr h) T
@@ -126,8 +126,8 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
   · cases' o with a a
     · exact terminates_parallel.aux a T
       
-    have H : Seqₓₓ.destruct S = some (some c, _) := by
-      unfold Seqₓₓ.destruct Functor.map
+    have H : Seq.destruct S = some (some c, _) := by
+      unfold Seq.destruct Functor.map
       rw [← a]
       simp
     induction' h : parallel.aux2 l with a l' <;> have C : corec parallel.aux1 (l, S) = _
@@ -177,18 +177,18 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
         rw [a]
         cases' S with f al
         rfl
-      induction' e : Seqₓₓ.nth S 0 with o
-      · have D : Seqₓₓ.destruct S = none := by
-          dsimp [Seqₓₓ.destruct]
+      induction' e : Seq.nth S 0 with o
+      · have D : Seq.destruct S = none := by
+          dsimp [Seq.destruct]
           rw [e]
           rfl
         rw [D]
         simp [parallel.aux1]
         have TT := TT l'
-        rwa [Seqₓₓ.destruct_eq_nil D, Seqₓₓ.tail_nil] at TT
+        rwa [Seq.destruct_eq_nil D, Seq.tail_nil] at TT
         
-      · have D : Seqₓₓ.destruct S = some (o, S.tail) := by
-          dsimp [Seqₓₓ.destruct]
+      · have D : Seq.destruct S = some (o, S.tail) := by
+          dsimp [Seq.destruct]
           rw [e]
           rfl
         rw [D]
@@ -220,7 +220,7 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
         refine' ⟨c', Or.inr cl, ac⟩
         
       · induction' h : destruct c with a c' <;> simp [rmap]
-        · refine' ⟨c, List.mem_cons_selfₓ _ _, _⟩
+        · refine' ⟨c, List.mem_cons_self _ _, _⟩
           rw [destruct_eq_ret h]
           apply ret_mem
           
@@ -229,7 +229,7 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
           simp at dm
           cases' dm with e dl
           · rw [e] at ad
-            refine' ⟨c, List.mem_cons_selfₓ _ _, _⟩
+            refine' ⟨c, List.mem_cons_self _ _, _⟩
             rw [destruct_eq_think h]
             exact think_mem ad
             
@@ -249,7 +249,7 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
     rcases this with ⟨c, cl, ac⟩
     exact ⟨c, Or.inl cl, ac⟩
     
-  · induction' e : Seqₓₓ.destruct S with a <;> rw [e] at h'
+  · induction' e : Seq.destruct S with a <;> rw [e] at h'
     · exact
         let ⟨d, o, ad⟩ := IH _ _ h'
         let ⟨c, cl, ac⟩ := this a ⟨d, o.resolve_right (not_mem_nil _), ad⟩
@@ -262,15 +262,15 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
           ⟨c, Or.inl cl, ac⟩
         
       · refine' ⟨d, Or.inr _, ad⟩
-        rw [Seqₓₓ.destruct_eq_cons e]
-        exact Seqₓₓ.mem_cons_of_mem _ dS'
+        rw [Seq.destruct_eq_cons e]
+        exact Seq.mem_cons_of_mem _ dS'
         
       · simp at dl
         cases' dl with dc dl
         · rw [dc] at ad
           refine' ⟨c, Or.inr _, ad⟩
-          rw [Seqₓₓ.destruct_eq_cons e]
-          apply Seqₓₓ.mem_cons
+          rw [Seq.destruct_eq_cons e]
+          apply Seq.mem_cons
           
         · exact
             let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩
@@ -278,8 +278,8 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
           
         
       · refine' ⟨d, Or.inr _, ad⟩
-        rw [Seqₓₓ.destruct_eq_cons e]
-        exact Seqₓₓ.mem_cons_of_mem _ dS'
+        rw [Seq.destruct_eq_cons e]
+        exact Seq.mem_cons_of_mem _ dS'
         
       
     
@@ -364,7 +364,7 @@ theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equi
     let ⟨t, tT, se⟩ := Wseq.exists_of_lift_rel_left H sS
     (promises_congr se _).2 (h2 _ tT)⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- The parallel operation is only deterministic when all computation paths lead to the same value
 theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S, s ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
@@ -389,7 +389,7 @@ theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S,
             let aT := (st _).2 as
             mem_parallel h1 tT aT⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀ t ∈ T, t ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
   parallel_congr_left ((parallel_congr_lem H).2 h2) H

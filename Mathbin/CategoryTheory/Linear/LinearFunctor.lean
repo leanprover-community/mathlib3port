@@ -23,7 +23,7 @@ for every two objects `X` and `Y`, the map
 
 namespace CategoryTheory
 
-variable (R : Type _) [Semiringₓ R]
+variable (R : Type _) [Semiring R]
 
 /-- An additive functor `F` is `R`-linear provided `F.map` is an `R`-module morphism. -/
 class Functor.Linear {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] [Linear R C] [Linear R D]
@@ -72,29 +72,28 @@ section
 
 variable {R} {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) [Additive F]
 
-instance nat_linear : F.Linear ℕ where map_smul' := fun X Y f r => F.mapAddHom.map_nsmul f r
+instance nat_linear : F.Linear ℕ where map_smul' X Y f r := F.mapAddHom.map_nsmul f r
 
-instance int_linear :
-    F.Linear ℤ where map_smul' := fun X Y f r => (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul f r
+instance int_linear : F.Linear ℤ where map_smul' X Y f r := (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul f r
 
 variable [CategoryTheory.Linear ℚ C] [CategoryTheory.Linear ℚ D]
 
-instance rat_linear : F.Linear ℚ where map_smul' := fun X Y f r => F.mapAddHom.toRatLinearMap.map_smul r f
+instance rat_linear : F.Linear ℚ where map_smul' X Y f r := F.mapAddHom.toRatLinearMap.map_smul r f
 
 end
 
 end Functor
 
-namespace Equivalenceₓ
+namespace Equivalence
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Linear R C] [Preadditive D] [Linear R D]
 
 instance inverse_linear (e : C ≌ D) [e.Functor.Additive] [e.Functor.Linear R] :
-    e.inverse.Linear R where map_smul' := fun X Y r f => by
+    e.inverse.Linear R where map_smul' X Y r f := by
     apply e.functor.map_injective
     simp
 
-end Equivalenceₓ
+end Equivalence
 
 end Linear
 

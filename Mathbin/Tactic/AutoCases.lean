@@ -11,7 +11,7 @@ namespace AutoCases
 
 /-- Structure representing a tactic which can be used by `tactic.auto_cases`. -/
 unsafe structure auto_cases_tac where
-  Name : Stringₓ
+  Name : String
   {α : Type}
   tac : expr → tactic α
 
@@ -31,14 +31,14 @@ unsafe def find_tac : expr → Option auto_cases_tac
   | quote.1 Unit => tac_cases
   | quote.1 PUnit => tac_cases
   | quote.1 (ULift _) => tac_cases
-  | quote.1 (Plift _) => tac_cases
+  | quote.1 (PLift _) => tac_cases
   | quote.1 (Prod _ _) => tac_cases
   | quote.1 (And _ _) => tac_cases
   | quote.1 (Sigma _) => tac_cases
   | quote.1 (PSigma _) => tac_cases
   | quote.1 (Subtype _) => tac_cases
   | quote.1 (Exists _) => tac_cases
-  | quote.1 (Finₓ 0) => tac_cases
+  | quote.1 (Fin 0) => tac_cases
   | quote.1 (Sum _ _) => tac_cases
   |-- This is perhaps dangerous!
       quote.1
@@ -60,7 +60,7 @@ unsafe def find_tac : expr → Option auto_cases_tac
 end AutoCases
 
 /-- Applies `cases` or `induction` on the local_hypothesis `hyp : expr`. -/
-unsafe def auto_cases_at (hyp : expr) : tactic Stringₓ := do
+unsafe def auto_cases_at (hyp : expr) : tactic String := do
   let t ← infer_type hyp >>= whnf
   match auto_cases.find_tac t with
     | some atac => do
@@ -69,14 +69,14 @@ unsafe def auto_cases_at (hyp : expr) : tactic Stringₓ := do
       return s! "{atac } {pp}"
     | none => fail "hypothesis type unsupported"
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
 /-- Applies `cases` or `induction` on certain hypotheses. -/
 @[hint_tactic]
-unsafe def auto_cases : tactic Stringₓ := do
+unsafe def auto_cases : tactic String := do
   let l ← local_context
   let results ← successes <| l.reverse.map auto_cases_at
   when (results results.empty) <| fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
-  return (Stringₓ.intercalate ", " results)
+  return (String.intercalate ", " results)
 
 end Tactic
 

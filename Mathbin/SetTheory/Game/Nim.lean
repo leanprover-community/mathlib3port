@@ -42,7 +42,7 @@ namespace Pgame
   take a positive number of stones from it on their turn. -/
 noncomputable def nim : Ordinal.{u} → Pgame.{u}
   | o₁ =>
-    let f := fun o₂ =>
+    let f o₂ :=
       have : Ordinal.typein o₁.out.R o₂ < o₁ := Ordinal.typein_lt_self o₂
       nim (Ordinal.typein o₁.out.R o₂)
     ⟨o₁.out.α, o₁.out.α, f, f⟩
@@ -73,12 +73,12 @@ theorem move_right_nim_heq (o : Ordinal) : HEq (nim o).moveRight fun i : o.out.�
   rfl
 
 /-- Turns an ordinal less than `o` into a left move for `nim o` and viceversa. -/
-noncomputable def toLeftMovesNim {o : Ordinal} : Set.Iio o ≃ (nim o).LeftMoves :=
-  (enumIsoOut o).toEquiv.trans (Equivₓ.cast (left_moves_nim o).symm)
+noncomputable def toLeftMovesNim {o : Ordinal} : Set.IioCat o ≃ (nim o).LeftMoves :=
+  (enumIsoOut o).toEquiv.trans (Equiv.cast (left_moves_nim o).symm)
 
 /-- Turns an ordinal less than `o` into a right move for `nim o` and viceversa. -/
-noncomputable def toRightMovesNim {o : Ordinal} : Set.Iio o ≃ (nim o).RightMoves :=
-  (enumIsoOut o).toEquiv.trans (Equivₓ.cast (right_moves_nim o).symm)
+noncomputable def toRightMovesNim {o : Ordinal} : Set.IioCat o ≃ (nim o).RightMoves :=
+  (enumIsoOut o).toEquiv.trans (Equiv.cast (right_moves_nim o).symm)
 
 @[simp]
 theorem to_left_moves_nim_symm_lt {o : Ordinal} (i : (nim o).LeftMoves) : ↑(toLeftMovesNim.symm i) < o :=
@@ -101,14 +101,14 @@ theorem move_right_nim' {o : Ordinal} (i) : (nim o).moveRight i = nim (toRightMo
 theorem move_right_nim {o : Ordinal} (i) : (nim o).moveRight (toRightMovesNim i) = nim i := by simp
 
 /-- A recursion principle for left moves of a nim game. -/
-@[elabAsElim]
+@[elab_as_elim]
 def leftMovesNimRecOn {o : Ordinal} {P : (nim o).LeftMoves → Sort _} (i : (nim o).LeftMoves)
     (H : ∀ a < o, P <| toLeftMovesNim ⟨a, H⟩) : P i := by
   rw [← to_left_moves_nim.apply_symm_apply i]
   apply H
 
 /-- A recursion principle for right moves of a nim game. -/
-@[elabAsElim]
+@[elab_as_elim]
 def rightMovesNimRecOn {o : Ordinal} {P : (nim o).RightMoves → Sort _} (i : (nim o).RightMoves)
     (H : ∀ a < o, P <| toRightMovesNim ⟨a, H⟩) : P i := by
   rw [← to_right_moves_nim.apply_symm_apply i]
@@ -130,10 +130,10 @@ theorem nim_zero_equiv : nim 0 ≈ 0 :=
   Equiv.is_empty _
 
 noncomputable instance uniqueNimOneLeftMoves : Unique (nim 1).LeftMoves :=
-  (Equivₓ.cast <| left_moves_nim 1).unique
+  (Equiv.cast <| left_moves_nim 1).unique
 
 noncomputable instance uniqueNimOneRightMoves : Unique (nim 1).RightMoves :=
-  (Equivₓ.cast <| right_moves_nim 1).unique
+  (Equiv.cast <| right_moves_nim 1).unique
 
 @[simp]
 theorem default_nim_one_left_moves_eq : (default : (nim 1).LeftMoves) = @toLeftMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
@@ -159,7 +159,7 @@ def nimOneRelabelling : nim 1 ≡r star := by
   refine' ⟨_, _, fun i => _, fun j => _⟩
   any_goals
   dsimp
-  apply Equivₓ.equivOfUnique
+  apply Equiv.equivOfUnique
   all_goals
   simp
   exact nim_zero_relabelling
@@ -172,7 +172,7 @@ theorem nim_birthday (o : Ordinal) : (nim o).birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [nim_def, birthday_def]
   dsimp
-  rw [max_eq_rightₓ le_rflₓ]
+  rw [max_eq_right le_rfl]
   convert lsub_typein o
   exact funext fun i => IH _ (typein_lt_self i)
 
@@ -201,21 +201,21 @@ theorem nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) : nim o ∥ 0 := 
 @[simp]
 theorem nim_add_equiv_zero_iff (o₁ o₂ : Ordinal) : (nim o₁ + nim o₂ ≈ 0) ↔ o₁ = o₂ := by
   constructor
-  · contrapose
-    intro h
-    rw [impartial.not_equiv_zero_iff]
-    wlog h' : o₁ ≤ o₂ using o₁ o₂, o₂ o₁
-    · exact le_totalₓ o₁ o₂
-      
-    · have h : o₁ < o₂ := lt_of_le_of_neₓ h' h
-      rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
+  · refine' not_imp_not.1 fun h : _ ≠ _ => (impartial.not_equiv_zero_iff _).2 _
+    obtain h | h := h.lt_or_lt
+    · rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
       refine' ⟨to_left_moves_add (Sum.inr _), _⟩
       · exact (Ordinal.principalSegOut h).top
         
       · simpa using (impartial.add_self (nim o₁)).2
         
       
-    · exact (fuzzy_congr_left add_comm_equiv).1 (this (Ne.symm h))
+    · rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₁]
+      refine' ⟨to_left_moves_add (Sum.inl _), _⟩
+      · exact (Ordinal.principalSegOut h).top
+        
+      · simpa using (impartial.add_self (nim o₂)).2
+        
       
     
   · rintro rfl
@@ -262,11 +262,11 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       rw [nim_def]
       intro i₂
       have h' :
-        ∃ i : G.left_moves, grundy_value (G.move_left i) = Ordinal.typein (Quotientₓ.out (grundy_value G)).R i₂ := by
+        ∃ i : G.left_moves, grundy_value (G.move_left i) = Ordinal.typein (Quotient.out (grundy_value G)).R i₂ := by
         revert i₂
         rw [grundy_value_eq_mex_left]
         intro i₂
-        have hnotin : _ ∉ _ := fun hin => (le_not_le_of_ltₓ (Ordinal.typein_lt_self i₂)).2 (cInf_le' hin)
+        have hnotin : _ ∉ _ := fun hin => (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (cInf_le' hin)
         simpa using hnotin
       cases' h' with i hi
       use to_left_moves_add (Sum.inl i)
@@ -317,8 +317,8 @@ theorem grundy_value_eq_mex_right :
 
 @[simp]
 theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m := by
-  induction' n using Nat.strong_induction_onₓ with n hn generalizing m
-  induction' m using Nat.strong_induction_onₓ with m hm
+  induction' n using Nat.strong_induction_on with n hn generalizing m
+  induction' m using Nat.strong_induction_on with m hm
   rw [grundy_value_eq_mex_left]
   -- We want to show that `n xor m` is the smallest unreachable Grundy value. We will do this in two
   -- steps:
@@ -334,7 +334,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     -- One of the piles is reduced to `k` stones, with `k < n` or `k < m`.
     intro a
     obtain ⟨ok, hk, hk'⟩ := exists_ordinal_move_left_eq a
-    obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hk (Ordinal.nat_lt_omega _))
+    obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hk (Ordinal.nat_lt_omega _))
     replace hk := Ordinal.nat_cast_lt.1 hk
     -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
     -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
@@ -349,7 +349,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
   have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∈ Set.Range fun i => grundy_value ((nim n + nim m).moveLeft i) := by
     -- Take any natural number `u` less than `n xor m`.
     intro ou hu
-    obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hu (Ordinal.nat_lt_omega _))
+    obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hu (Ordinal.nat_lt_omega _))
     replace hu := Ordinal.nat_cast_lt.1 hu
     -- Our goal is to produce a move that gives the Grundy value `u`.
     rw [Set.mem_range]
@@ -378,7 +378,7 @@ theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor n m) := 
 theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (hG : grundyValue G = n)
     (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
   rw [← nim_grundy_value (Nat.lxor n m), grundy_value_eq_iff_equiv]
-  refine' Equivₓ.trans _ nim_add_nim_equiv
+  refine' Equiv.trans _ nim_add_nim_equiv
   convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]
 
 end Pgame

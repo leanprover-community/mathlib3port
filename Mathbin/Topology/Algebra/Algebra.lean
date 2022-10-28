@@ -33,7 +33,7 @@ section TopologicalAlgebra
 
 variable (R : Type _) (A : Type u)
 
-variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable [TopologicalSpace R] [TopologicalSpace A] [TopologicalSemiring A]
 
@@ -70,11 +70,11 @@ end TopologicalAlgebra
 
 section TopologicalAlgebra
 
-variable {R : Type _} [CommSemiringₓ R]
+variable {R : Type _} [CommSemiring R]
 
 variable {A : Type u} [TopologicalSpace A]
 
-variable [Semiringₓ A] [Algebra R A]
+variable [Semiring A] [Algebra R A]
 
 instance Subalgebra.has_continuous_smul [TopologicalSpace R] [HasContinuousSmul R A] (s : Subalgebra R A) :
     HasContinuousSmul R s :=
@@ -98,8 +98,8 @@ instance Subalgebra.topological_semiring (s : Subalgebra R A) : TopologicalSemir
 theorem Subalgebra.subalgebra_topological_closure (s : Subalgebra R A) : s ≤ s.topologicalClosure :=
   subset_closure
 
-theorem Subalgebra.is_closed_topological_closure (s : Subalgebra R A) : IsClosed (s.topologicalClosure : Set A) := by
-  convert is_closed_closure
+theorem Subalgebra.isClosedTopologicalClosure (s : Subalgebra R A) : IsClosed (s.topologicalClosure : Set A) := by
+  convert isClosedClosure
 
 theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalgebra R A} (h : s ≤ t)
     (ht : IsClosed (t : Set A)) : s.topologicalClosure ≤ t :=
@@ -107,7 +107,7 @@ theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalge
 
 /-- If a subalgebra of a topological algebra is commutative, then so is its topological closure. -/
 def Subalgebra.commSemiringTopologicalClosure [T2Space A] (s : Subalgebra R A) (hs : ∀ x y : s, x * y = y * x) :
-    CommSemiringₓ s.topologicalClosure :=
+    CommSemiring s.topologicalClosure :=
   { s.topologicalClosure.toSemiring, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 
 /-- This is really a statement about topological algebra isomorphisms,
@@ -115,7 +115,7 @@ but we don't have those, so we use the clunky approach of talking about
 an algebra homomorphism, and a separate homeomorphism,
 along with a witness that as functions they are the same.
 -/
-theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B : Type _} [TopologicalSpace B] [Ringₓ B]
+theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B : Type _} [TopologicalSpace B] [Ring B]
     [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A) (w : (f : B → A) = f') :
     s.topologicalClosure.comap f = (s.comap f).topologicalClosure := by
   apply SetLike.ext'
@@ -126,13 +126,13 @@ theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B 
 
 end TopologicalAlgebra
 
-section Ringₓ
+section Ring
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
 variable {A : Type u} [TopologicalSpace A]
 
-variable [Ringₓ A]
+variable [Ring A]
 
 variable [Algebra R A] [TopologicalRing A]
 
@@ -140,7 +140,7 @@ variable [Algebra R A] [TopologicalRing A]
 See note [reducible non-instances]. -/
 @[reducible]
 def Subalgebra.commRingTopologicalClosure [T2Space A] (s : Subalgebra R A) (hs : ∀ x y : s, x * y = y * x) :
-    CommRingₓ s.topologicalClosure :=
+    CommRing s.topologicalClosure :=
   { s.topologicalClosure.toRing, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 
 variable (R)
@@ -155,15 +155,15 @@ theorem Algebra.self_mem_elemental_algebra (x : A) : x ∈ Algebra.elementalAlge
 
 variable {R}
 
-instance [T2Space A] {x : A} : CommRingₓ (Algebra.elementalAlgebra R x) :=
+instance [T2Space A] {x : A} : CommRing (Algebra.elementalAlgebra R x) :=
   Subalgebra.commRingTopologicalClosure _
-    letI : CommRingₓ (Algebra.adjoin R ({x} : Set A)) :=
+    letI : CommRing (Algebra.adjoin R ({x} : Set A)) :=
       Algebra.adjoinCommRingOfComm R fun y hy z hz => by
         rw [mem_singleton_iff] at hy hz
         rw [hy, hz]
     fun _ _ => mul_comm _ _
 
-end Ringₓ
+end Ring
 
 section DivisionRing
 

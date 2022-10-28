@@ -1,0 +1,91 @@
+/-
+Copyright (c) 2022 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
+import Mathbin.Data.Dfinsupp.Order
+
+/-!
+# Equivalence between `multiset` and `ℕ`-valued finitely supported functions
+
+This defines `dfinsupp.to_multiset` the equivalence between `Π₀ a : α, ℕ` and `multiset α`, along
+with `multiset.to_dfinsupp` the reverse equivalence.
+
+Note that this provides a computable alternative to `finsupp.to_multiset`.
+-/
+
+
+variable {α : Type _} {β : α → Type _}
+
+namespace Dfinsupp
+
+/-- Non-dependent special case of `dfinsupp.add_zero_class` to help typeclass search. -/
+instance addZeroClass' {β} [AddZeroClass β] : AddZeroClass (Π₀ a : α, β) :=
+  @Dfinsupp.addZeroClass α (fun _ => β) _
+
+variable [DecidableEq α]
+
+/-- A computable version of `finsupp.to_multiset`. -/
+def toMultiset : (Π₀ a : α, ℕ) →+ Multiset α :=
+  Dfinsupp.sumAddHom fun a : α => Multiset.repeatAddMonoidHom a
+
+@[simp]
+theorem to_multiset_single (a : α) (n : ℕ) : toMultiset (Dfinsupp.single a n) = Multiset.repeat a n :=
+  Dfinsupp.sum_add_hom_single _ _ _
+
+end Dfinsupp
+
+namespace Multiset
+
+variable [DecidableEq α]
+
+/-- A computable version of `multiset.to_finsupp` -/
+def toDfinsupp : Multiset α →+ Π₀ a : α, ℕ where
+  toFun s :=
+    { toFun := fun n => s.count n,
+      support' := Trunc.mk ⟨s, fun i => (em (i ∈ s)).imp_right Multiset.count_eq_zero_of_not_mem⟩ }
+  map_zero' := rfl
+  map_add' s t := Dfinsupp.ext fun _ => Multiset.count_add _ _ _
+
+@[simp]
+theorem to_dfinsupp_apply (s : Multiset α) (a : α) : s.toDfinsupp a = s.count a :=
+  rfl
+
+@[simp]
+theorem to_dfinsupp_support (s : Multiset α) : s.toDfinsupp.support = s.toFinset :=
+  (Finset.filter_eq_self _).mpr fun x hx => count_ne_zero.mpr <| Multiset.mem_to_finset.1 hx
+
+@[simp]
+theorem to_dfinsupp_repeat (a : α) (n : ℕ) : toDfinsupp (Multiset.repeat a n) = Dfinsupp.single a n := by
+  ext i
+  dsimp [to_dfinsupp]
+  simp [count_repeat, eq_comm]
+
+@[simp]
+theorem to_dfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 := by rw [← repeat_one, to_dfinsupp_repeat]
+
+/-- `multiset.to_dfinsupp` as an `add_equiv`. -/
+@[simps apply symmApply]
+def equivDfinsupp : Multiset α ≃+ Π₀ a : α, ℕ :=
+  AddMonoidHom.toAddEquiv Multiset.toDfinsupp Dfinsupp.toMultiset
+    (by
+      ext x : 1
+      simp)
+    (by
+      refine' @Dfinsupp.add_hom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _
+      simp)
+
+@[simp]
+theorem to_dfinsupp_to_multiset (s : Multiset α) : s.toDfinsupp.toMultiset = s :=
+  equivDfinsupp.symm_apply_apply s
+
+@[simp]
+theorem to_dfinsupp_le_to_dfinsupp (s t : Multiset α) : toDfinsupp s ≤ toDfinsupp t ↔ s ≤ t := by
+  simp [Multiset.le_iff_count, Dfinsupp.le_def]
+
+end Multiset
+
+@[simp]
+theorem Dfinsupp.to_multiset_to_dfinsupp [DecidableEq α] (f : Π₀ a : α, ℕ) : f.toMultiset.toDfinsupp = f :=
+  Multiset.equivDfinsupp.apply_symm_apply f
+

@@ -28,13 +28,13 @@ instance : IsEmpty Empty :=
   ⟨Empty.elim⟩
 
 instance : IsEmpty Pempty :=
-  ⟨Pempty.elimₓ⟩
+  ⟨Pempty.elim⟩
 
 instance : IsEmpty False :=
   ⟨id⟩
 
-instance : IsEmpty (Finₓ 0) :=
-  ⟨fun n => Nat.not_lt_zeroₓ n.1 n.2⟩
+instance : IsEmpty (Fin 0) :=
+  ⟨fun n => Nat.not_lt_zero n.1 n.2⟩
 
 protected theorem Function.is_empty [IsEmpty β] (f : α → β) : IsEmpty α :=
   ⟨fun x => IsEmpty.false (f x)⟩
@@ -79,7 +79,7 @@ instance Sigma.is_empty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Si
 example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by infer_instance
 
 /-- Eliminate out of a type that `is_empty` (without using projection notation). -/
-@[elabAsElim]
+@[elab_as_elim]
 def isEmptyElim [IsEmpty α] {p : α → Sort _} (a : α) : p a :=
   (IsEmpty.false a).elim
 
@@ -133,10 +133,22 @@ theorem is_empty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by simp only [← not_no
 theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
   simp only [← not_nonempty_iff, Classical.nonempty_pi, not_forall]
 
+/- warning: is_empty_sigma -> is_empty_sigma is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {E : α -> Type.{u_2}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{succ u_2} (E a))
+but is expected to have type
+  forall {α : Type.{u_1}} {E : α -> Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Sigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{succ u_2} (E a))
+Case conversion may be inaccurate. Consider using '#align is_empty_sigma is_empty_sigmaₓ'. -/
 @[simp]
 theorem is_empty_sigma {α} {E : α → Type _} : IsEmpty (Sigma E) ↔ ∀ a, IsEmpty (E a) := by
   simp only [← not_nonempty_iff, nonempty_sigma, not_exists]
 
+/- warning: is_empty_psigma -> is_empty_psigma is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {E : α -> Sort.{u_2}}, Iff (IsEmpty.{(max 1 u_1 u_2)} (PSigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{u_2} (E a))
+but is expected to have type
+  forall {α : Sort.{u_1}} {E : α -> Sort.{u_2}}, Iff (IsEmpty.{(max (max 1 u_2) u_1)} (PSigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{u_2} (E a))
+Case conversion may be inaccurate. Consider using '#align is_empty_psigma is_empty_psigmaₓ'. -/
 @[simp]
 theorem is_empty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
   simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
@@ -145,27 +157,51 @@ theorem is_empty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a,
 theorem is_empty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p x := by
   simp only [← not_nonempty_iff, nonempty_subtype, not_exists]
 
+/- warning: is_empty_prod -> is_empty_prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β)) (Or (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β)) (Or (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
+Case conversion may be inaccurate. Consider using '#align is_empty_prod is_empty_prodₓ'. -/
 @[simp]
 theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_prodₓ, not_and_distrib]
+  simp only [← not_nonempty_iff, nonempty_prod, not_and_distrib]
 
 @[simp]
 theorem is_empty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_pprodₓ, not_and_distrib]
+  simp only [← not_nonempty_iff, nonempty_pprod, not_and_distrib]
 
+/- warning: is_empty_sum -> is_empty_sum is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (Sum.{u_1 u_2} α β)) (And (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Sum.{u_1 u_2} α β)) (And (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
+Case conversion may be inaccurate. Consider using '#align is_empty_sum is_empty_sumₓ'. -/
 @[simp]
 theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_sumₓ, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_sum, not_or_distrib]
 
+/- warning: is_empty_psum -> is_empty_psum is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (IsEmpty.{(max 1 u_1 u_2)} (PSum.{u_1 u_2} α β)) (And (IsEmpty.{u_1} α) (IsEmpty.{u_2} β))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (IsEmpty.{(max (max 1 u_2) u_1)} (PSum.{u_1 u_2} α β)) (And (IsEmpty.{u_1} α) (IsEmpty.{u_2} β))
+Case conversion may be inaccurate. Consider using '#align is_empty_psum is_empty_psumₓ'. -/
 @[simp]
 theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_psumₓ, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
+
+/- warning: is_empty_ulift -> is_empty_ulift is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}}, Iff (IsEmpty.{succ (max u_1 u_2)} (ULift.{u_2 u_1} α)) (IsEmpty.{succ u_1} α)
+but is expected to have type
+  forall {α : Type.{u_1}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (ULift.{u_2 u_1} α)) (IsEmpty.{succ u_1} α)
+Case conversion may be inaccurate. Consider using '#align is_empty_ulift is_empty_uliftₓ'. -/
+@[simp]
+theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_ulift]
 
 @[simp]
-theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_uliftₓ]
-
-@[simp]
-theorem is_empty_plift {α} : IsEmpty (Plift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_pliftₓ]
+theorem is_empty_plift {α} : IsEmpty (PLift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_plift]
 
 theorem well_founded_of_empty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
   ⟨isEmptyElim⟩
@@ -181,6 +217,12 @@ theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
 
 variable {α}
 
-theorem Function.extend_of_empty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extendₓ f g h = h :=
+/- warning: function.extend_of_empty -> Function.extend_of_empty is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : IsEmpty.{u_1} α] (f : α -> β) (g : α -> γ) (h : β -> γ), Eq.{(imax u_2 u_3)} (β -> γ) (Function.extend.{u_1 u_2 u_3} α β γ f g h) h
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_3}} {γ : Type.{u_2}} [inst._@.Mathlib.Logic.IsEmpty._hyg.972 : IsEmpty.{succ u_1} α] (f : α -> β) (g : α -> γ) (h : β -> γ), Eq.{(max (succ u_2) (succ u_3))} (β -> γ) (Function.extend.{u_1 u_3 u_2} α β γ f g h) h
+Case conversion may be inaccurate. Consider using '#align function.extend_of_empty Function.extend_of_emptyₓ'. -/
+theorem Function.extend_of_empty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extend f g h = h :=
   funext fun x => (Function.extend_apply' _ _ _) fun ⟨a, h⟩ => isEmptyElim a
 

@@ -23,17 +23,16 @@ if they are equal upon evaluating them on an arbitrary assignment of the variabl
 
 namespace MvPolynomial
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R] [Infinite R]
+variable {R : Type _} [CommRing R] [IsDomain R] [Infinite R]
 
-private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x : Finₓ n → R, eval x p = 0) : p = 0 := by
+private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R} (h : ∀ x : Fin n → R, eval x p = 0) : p = 0 := by
   induction' n with n ih generalizing R
-  · let e := MvPolynomial.isEmptyRingEquiv R (Finₓ 0)
+  · let e := MvPolynomial.isEmptyRingEquiv R (Fin 0)
     apply e.injective
     rw [RingEquiv.map_zero]
     convert h finZeroElim
     suffices
-      (eval₂_hom (RingHom.id _) (IsEmpty.elim' Finₓ.is_empty)) p = (eval finZeroElim : MvPolynomial (Finₓ 0) R →+* R) p
-      by
+      (eval₂_hom (RingHom.id _) (IsEmpty.elim' Fin.is_empty)) p = (eval finZeroElim : MvPolynomial (Fin 0) R →+* R) p by
       rw [← this]
       simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply, aeval_eq_eval₂_hom]
       congr
@@ -57,7 +56,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
       _ = 0 := h _
       
     · intro i
-      exact Finₓ.cases (eval x q) x i
+      exact Fin.cases (eval x q) x i
       
     apply induction_on p
     · intro r
@@ -71,10 +70,10 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
       congr 1
       by_cases hi:i = 0
       · subst hi
-        simp only [Polynomial.eval_X, Finₓ.cases_zero]
+        simp only [Polynomial.eval_X, Fin.cases_zero]
         
-      · rw [← Finₓ.succ_pred i hi]
-        simp only [eval_X, Polynomial.eval_C, Finₓ.cases_succ]
+      · rw [← Fin.succ_pred i hi]
+        simp only [eval_X, Polynomial.eval_C, Fin.cases_succ]
         
       
     · infer_instance
@@ -94,8 +93,8 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   apply funext_fin
   intro x
   classical
-  convert h (Function.extendₓ f x 0)
-  simp only [eval, eval₂_hom_rename, Function.extend_compₓ hf]
+  convert h (Function.extend f x 0)
+  simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
 
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} : p = q ↔ ∀ x : σ → R, eval x p = eval x q :=
   ⟨by rintro rfl <;> simp only [forall_const, eq_self_iff_true], funext⟩

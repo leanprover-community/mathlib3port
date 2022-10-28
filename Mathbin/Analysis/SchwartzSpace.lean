@@ -77,20 +77,20 @@ instance : Coe 𝓢(E, F) (E → F) :=
   ⟨toFun⟩
 
 instance funLike : FunLike 𝓢(E, F) E fun _ => F where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe f := f.toFun
+  coe_injective' f g h := by cases f <;> cases g <;> congr
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun 𝓢(E, F) fun _ => E → F :=
   ⟨fun p => p.toFun⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- All derivatives of a Schwartz function are rapidly decaying. -/
 theorem decay (f : 𝓢(E, F)) (k n : ℕ) : ∃ (C : ℝ)(hC : 0 < C), ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ C := by
   rcases f.decay' k n with ⟨C, hC⟩
   exact
     ⟨max C 1, by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]",
-      fun x => (hC x).trans (le_max_leftₓ _ _)⟩
+      fun x => (hC x).trans (le_max_left _ _)⟩
 
 /-- Every Schwartz function is smooth. -/
 theorem smooth (f : 𝓢(E, F)) (n : ℕ∞) : ContDiff ℝ n f :=
@@ -105,18 +105,18 @@ section Aux
 theorem bounds_nonempty (k n : ℕ) (f : 𝓢(E, F)) :
     ∃ c : ℝ, c ∈ { c : ℝ | 0 ≤ c ∧ ∀ x : E, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ c } :=
   let ⟨M, hMp, hMb⟩ := f.decay k n
-  ⟨M, le_of_ltₓ hMp, hMb⟩
+  ⟨M, le_of_lt hMp, hMb⟩
 
 theorem bounds_bdd_below (k n : ℕ) (f : 𝓢(E, F)) :
     BddBelow { c | 0 ≤ c ∧ ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ c } :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
     ∥x∥ ^ k * ∥iteratedFderiv ℝ n (f + g) x∥ ≤
       ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ + ∥x∥ ^ k * ∥iteratedFderiv ℝ n g x∥ :=
   by
-  rw [← mul_addₓ]
+  rw [← mul_add]
   refine'
     mul_le_mul_of_nonneg_left _
       (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
@@ -165,7 +165,7 @@ section Smul
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F] [NormedField 𝕜'] [NormedSpace 𝕜' F]
   [SmulCommClass ℝ 𝕜' F]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 instance : HasSmul 𝕜 𝓢(E, F) :=
   ⟨fun c f =>
     { toFun := c • f, smooth' := (f.smooth _).const_smul c,
@@ -173,8 +173,8 @@ instance : HasSmul 𝕜 𝓢(E, F) :=
         refine' ⟨f.seminorm_aux k n * (∥c∥ + 1), fun x => _⟩
         have hc : 0 ≤ ∥c∥ := by
           trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
-        refine' le_transₓ _ ((mul_le_mul_of_nonneg_right (f.le_seminorm_aux k n x) hc).trans _)
-        · apply Eq.leₓ
+        refine' le_trans _ ((mul_le_mul_of_nonneg_right (f.le_seminorm_aux k n x) hc).trans _)
+        · apply Eq.le
           rw [mul_comm _ ∥c∥, ← mul_assoc]
           exact decay_smul_aux k n f c x
           
@@ -224,7 +224,7 @@ end Smul
 section Zero
 
 instance : Zero 𝓢(E, F) :=
-  ⟨{ toFun := fun _ => 0, smooth' := cont_diff_const, decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
+  ⟨{ toFun := fun _ => 0, smooth' := contDiffConst, decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
 
 instance : Inhabited 𝓢(E, F) :=
   ⟨0⟩
@@ -241,7 +241,7 @@ theorem zero_apply {x : E} : (0 : 𝓢(E, F)) x = 0 :=
   rfl
 
 theorem seminorm_aux_zero (k n : ℕ) : (0 : 𝓢(E, F)).seminormAux k n = 0 :=
-  le_antisymmₓ (seminorm_aux_le_bound k n _ rfl.le fun _ => by simp [Pi.zero_def]) (seminorm_aux_nonneg _ _ _)
+  le_antisymm (seminorm_aux_le_bound k n _ rfl.le fun _ => by simp [Pi.zero_def]) (seminorm_aux_nonneg _ _ _)
 
 end Zero
 
@@ -280,7 +280,7 @@ instance : Sub 𝓢(E, F) :=
     ⟨f - g, (f.smooth _).sub (g.smooth _), by
       intro k n
       refine' ⟨f.seminorm_aux k n + g.seminorm_aux k n, fun x => _⟩
-      refine' le_transₓ _ (add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x))
+      refine' le_trans _ (add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x))
       rw [sub_eq_add_neg]
       rw [← decay_neg_aux k n g x]
       convert decay_add_le_aux k n f (-g) x⟩⟩
@@ -292,9 +292,9 @@ theorem sub_apply {f g : 𝓢(E, F)} {x : E} : (f - g) x = f x - g x :=
 
 end Sub
 
-section AddCommGroupₓ
+section AddCommGroup
 
-instance : AddCommGroupₓ 𝓢(E, F) :=
+instance : AddCommGroup 𝓢(E, F) :=
   FunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
     rfl
 
@@ -302,9 +302,9 @@ variable (E F)
 
 /-- Coercion as an additive homomorphism. -/
 def coeHom : 𝓢(E, F) →+ E → F where
-  toFun := fun f => f
+  toFun f := f
   map_zero' := coe_zero
-  map_add' := fun _ _ => rfl
+  map_add' _ _ := rfl
 
 variable {E F}
 
@@ -315,7 +315,7 @@ theorem coe_hom_injective : Function.Injective (coeHom E F) := by
   rw [coe_coe_hom]
   exact FunLike.coe_injective
 
-end AddCommGroupₓ
+end AddCommGroup
 
 section Module
 
@@ -353,7 +353,7 @@ theorem le_seminorm (k n : ℕ) (f : 𝓢(E, F)) (x : E) : ∥x∥ ^ k * ∥iter
 theorem norm_iterated_fderiv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
     ∥iteratedFderiv ℝ n f x₀∥ ≤ (SchwartzMap.seminorm 𝕜 0 n) f := by
   have := SchwartzMap.le_seminorm 𝕜 0 n f x₀
-  rwa [pow_zeroₓ, one_mulₓ] at this
+  rwa [pow_zero, one_mul] at this
 
 theorem norm_pow_mul_le_seminorm (f : 𝓢(E, F)) (k : ℕ) (x₀ : E) : ∥x₀∥ ^ k * ∥f x₀∥ ≤ (SchwartzMap.seminorm 𝕜 k 0) f :=
   by
@@ -386,7 +386,7 @@ theorem _root_.schwartz_with_seminorms : WithSeminorms (schwartzSeminormFamily �
 variable {𝕜 E F}
 
 instance : HasContinuousSmul 𝕜 𝓢(E, F) := by
-  rw [(schwartz_with_seminorms 𝕜 E F).with_seminorms_eq]
+  rw [(schwartzWithSeminorms 𝕜 E F).with_seminorms_eq]
   exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.HasContinuousSmul
 
 instance : TopologicalAddGroup 𝓢(E, F) :=
@@ -399,7 +399,7 @@ instance : UniformAddGroup 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformAddGroup
 
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
-  (schwartz_with_seminorms ℝ E F).to_locally_convex_space
+  (schwartzWithSeminorms ℝ E F).to_locally_convex_space
 
 end Topology
 

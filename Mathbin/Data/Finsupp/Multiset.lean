@@ -15,7 +15,7 @@ promoted to an order isomorphism.
 -/
 
 
-open Finsetₓ
+open Finset
 
 open BigOperators Classical
 
@@ -28,15 +28,15 @@ namespace Finsupp
 /-- Given `f : α →₀ ℕ`, `f.to_multiset` is the multiset with multiplicities given by the values of
 `f` on the elements of `α`. We define this function as an `add_equiv`. -/
 def toMultiset : (α →₀ ℕ) ≃+ Multiset α where
-  toFun := fun f => f.Sum fun a n => n • {a}
-  invFun := fun s => ⟨s.toFinset, fun a => s.count a, fun a => by simp⟩
-  left_inv := fun f =>
+  toFun f := f.Sum fun a n => n • {a}
+  invFun s := ⟨s.toFinset, fun a => s.count a, fun a => by simp⟩
+  left_inv f :=
     ext fun a => by
       simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk, mem_support_iff,
-        Multiset.count_nsmul, Finsetₓ.sum_ite_eq, ite_not, ite_eq_right_iff]
+        Multiset.count_nsmul, Finset.sum_ite_eq, ite_not, ite_eq_right_iff]
       exact Eq.symm
-  right_inv := fun s => by simp only [Sum, coe_mk, Multiset.to_finset_sum_count_nsmul_eq]
-  map_add' := fun f g => sum_add_index' (fun a => zero_nsmul _) fun a => add_nsmul _
+  right_inv s := by simp only [Sum, coe_mk, Multiset.to_finset_sum_count_nsmul_eq]
+  map_add' f g := sum_add_index' (fun a => zero_nsmul _) fun a => add_nsmul _
 
 theorem to_multiset_zero : (0 : α →₀ ℕ).toMultiset = 0 :=
   rfl
@@ -55,11 +55,11 @@ theorem to_multiset_symm_apply [DecidableEq α] (s : Multiset α) (x : α) : Fin
 theorem to_multiset_single (a : α) (n : ℕ) : toMultiset (single a n) = n • {a} := by
   rw [to_multiset_apply, sum_single_index] <;> apply zero_nsmul
 
-theorem to_multiset_sum {f : ι → α →₀ ℕ} (s : Finsetₓ ι) :
+theorem to_multiset_sum {f : ι → α →₀ ℕ} (s : Finset ι) :
     Finsupp.toMultiset (∑ i in s, f i) = ∑ i in s, Finsupp.toMultiset (f i) :=
   AddEquiv.map_sum _ _ _
 
-theorem to_multiset_sum_single (s : Finsetₓ ι) (n : ℕ) : Finsupp.toMultiset (∑ i in s, single i n) = n • s.val := by
+theorem to_multiset_sum_single (s : Finset ι) (n : ℕ) : Finsupp.toMultiset (∑ i in s, single i n) = n • s.val := by
   simp_rw [to_multiset_sum, Finsupp.to_multiset_single, sum_nsmul, sum_multiset_singleton]
 
 theorem card_to_multiset (f : α →₀ ℕ) : f.toMultiset.card = f.Sum fun a => id := by
@@ -76,14 +76,14 @@ theorem to_multiset_map (f : α →₀ ℕ) (g : α → β) : f.toMultiset.map g
     
 
 @[simp]
-theorem prod_to_multiset [CommMonoidₓ α] (f : α →₀ ℕ) : f.toMultiset.Prod = f.Prod fun a n => a ^ n := by
+theorem prod_to_multiset [CommMonoid α] (f : α →₀ ℕ) : f.toMultiset.Prod = f.Prod fun a n => a ^ n := by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.prod_zero, Finsupp.prod_zero_index]
     
   · intro a n f _ _ ih
     rw [to_multiset_add, Multiset.prod_add, ih, to_multiset_single, Multiset.prod_nsmul,
-      Finsupp.prod_add_index' pow_zeroₓ pow_addₓ, Finsupp.prod_single_index, Multiset.prod_singleton]
-    · exact pow_zeroₓ a
+      Finsupp.prod_add_index' pow_zero pow_add, Finsupp.prod_single_index, Multiset.prod_singleton]
+    · exact pow_zero a
       
     
 
@@ -95,8 +95,8 @@ theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultise
   · intro a n f ha hn ih
     rw [to_multiset_add, Multiset.to_finset_add, ih, to_multiset_single, support_add_eq, support_single_ne_zero _ hn,
       Multiset.to_finset_nsmul _ _ hn, Multiset.to_finset_singleton]
-    refine' Disjoint.mono_left support_single_subset _
-    rwa [Finsetₓ.disjoint_singleton_left]
+    refine' Disjoint.monoLeft support_single_subset _
+    rwa [Finset.disjoint_singleton_left]
     
 
 @[simp]
@@ -108,7 +108,7 @@ theorem count_to_multiset [DecidableEq α] (f : α →₀ ℕ) (a : α) : f.toMu
     _ = f a * ({a} : Multiset α).count a :=
       sum_eq_single _ (fun a' _ H => by simp only [Multiset.count_singleton, if_false, H.symm, mul_zero]) fun H => by
         simp only [not_mem_support_iff.1 H, zero_mul]
-    _ = f a := by rw [Multiset.count_singleton_self, mul_oneₓ]
+    _ = f a := by rw [Multiset.count_singleton_self, mul_one]
     
 
 @[simp]
@@ -161,7 +161,7 @@ namespace Finsupp
 /-- `finsupp.to_multiset` as an order isomorphism. -/
 def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι where
   toEquiv := toMultiset.toEquiv
-  map_rel_iff' := fun f g => by simp [Multiset.le_iff_count, le_def]
+  map_rel_iff' f g := by simp [Multiset.le_iff_count, le_def]
 
 @[simp]
 theorem coe_order_iso_multiset : ⇑(@orderIsoMultiset ι) = to_multiset :=
@@ -171,7 +171,7 @@ theorem coe_order_iso_multiset : ⇑(@orderIsoMultiset ι) = to_multiset :=
 theorem coe_order_iso_multiset_symm : ⇑(@orderIsoMultiset ι).symm = Multiset.toFinsupp :=
   rfl
 
-theorem to_multiset_strict_mono : StrictMonoₓ (@toMultiset ι) :=
+theorem to_multiset_strict_mono : StrictMono (@toMultiset ι) :=
   (@orderIsoMultiset ι).StrictMono
 
 theorem sum_id_lt_of_lt (m n : ι →₀ ℕ) (h : m < n) : (m.Sum fun _ => id) < n.Sum fun _ => id := by
@@ -183,10 +183,10 @@ variable (ι)
 
 /-- The order on `ι →₀ ℕ` is well-founded. -/
 theorem lt_wf : WellFounded (@LT.lt (ι →₀ ℕ) _) :=
-  Subrelation.wfₓ sum_id_lt_of_lt <| InvImage.wfₓ _ Nat.lt_wf
+  Subrelation.wf sum_id_lt_of_lt <| InvImage.wf _ Nat.lt_wf
 
 end Finsupp
 
-theorem Multiset.to_finsupp_strict_mono : StrictMonoₓ (@Multiset.toFinsupp ι) :=
+theorem Multiset.to_finsupp_strict_mono : StrictMono (@Multiset.toFinsupp ι) :=
   (@Finsupp.orderIsoMultiset ι).symm.StrictMono
 

@@ -39,17 +39,17 @@ instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)
   { Pi.hasSmul' with smul_zero := fun _ => funext fun _ => smul_zero _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
-instance mulActionWithZero (α) [MonoidWithZeroₓ α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
+instance mulActionWithZero (α) [MonoidWithZero α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
     MulActionWithZero α (∀ i, f i) :=
   { Pi.mulAction _, Pi.smulWithZero _ with }
 
-instance mulActionWithZero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i)] [∀ i, Zero (f i)]
+instance mulActionWithZero' {g : I → Type _} [∀ i, MonoidWithZero (g i)] [∀ i, Zero (f i)]
     [∀ i, MulActionWithZero (g i) (f i)] : MulActionWithZero (∀ i, g i) (∀ i, f i) :=
   { Pi.mulAction', Pi.smulWithZero' with }
 
 variable (I f)
 
-instance module (α) {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i] :
+instance module (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i] :
     @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
   { Pi.distribMulAction _ with add_smul := fun c f g => funext fun i => add_smul _ _ _,
     zero_smul := fun f => funext fun i => zero_smul α _ }
@@ -64,12 +64,12 @@ See: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Typecl
 -/
 /-- A special case of `pi.module` for non-dependent types. Lean struggles to elaborate
 definitions elsewhere in the library without this. -/
-instance _root_.function.module (α β : Type _) [Semiringₓ α] [AddCommMonoidₓ β] [Module α β] : Module α (I → β) :=
+instance _root_.function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Module α β] : Module α (I → β) :=
   Pi.module _ _ _
 
 variable {I f}
 
-instance module' {g : I → Type _} {r : ∀ i, Semiringₓ (f i)} {m : ∀ i, AddCommMonoidₓ (g i)} [∀ i, Module (f i) (g i)] :
+instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddCommMonoid (g i)} [∀ i, Module (f i) (g i)] :
     Module (∀ i, f i) (∀ i, g i) where
   add_smul := by
     intros
@@ -80,7 +80,7 @@ instance module' {g : I → Type _} {r : ∀ i, Semiringₓ (f i)} {m : ∀ i, A
     ext1
     apply zero_smul
 
-instance (α) {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i]
+instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i]
     [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
   ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 

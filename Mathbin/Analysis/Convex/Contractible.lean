@@ -14,7 +14,7 @@ topological space.
 -/
 
 
-variable {E : Type _} [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [HasContinuousAdd E] [HasContinuousSmul ℝ E]
+variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [HasContinuousAdd E] [HasContinuousSmul ℝ E]
   {s : Set E} {x : E}
 
 /-- A non-empty star convex set is a contractible space. -/

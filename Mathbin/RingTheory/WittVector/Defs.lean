@@ -38,7 +38,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 
 noncomputable section
 
--- ./././Mathport/Syntax/Translate/Command.lean:360:34: infer kinds are unsupported in Lean 4: mk []
+/- ./././Mathport/Syntax/Translate/Command.lean:374:34: infer kinds are unsupported in Lean 4: mk [] -/
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -62,10 +62,15 @@ namespace WittVector
 
 variable (p) {R : Type _}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident witt_vector.mk]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident witt_vector.coeff]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Construct a Witt vector `mk p x : 𝕎 R` from a sequence `x` of elements of `R`. -/
+add_decl_doc WittVector.mk
+
+/-- `x.coeff n` is the `n`th coefficient of the Witt vector `x`.
+
+This concept does not have a standard name in the literature.
+-/
+add_decl_doc WittVector.coeff
+
 @[ext]
 theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y := by
   cases x
@@ -82,15 +87,15 @@ theorem coeff_mk (x : ℕ → R) : (mk p x).coeff = x :=
 /- These instances are not needed for the rest of the development,
 but it is interesting to establish early on that `witt_vector p` is a lawful functor. -/
 instance : Functor (WittVector p) where
-  map := fun α β f v => mk p (f ∘ v.coeff)
-  mapConst := fun α β a v => mk p fun _ => a
+  map α β f v := mk p (f ∘ v.coeff)
+  mapConst α β a v := mk p fun _ => a
 
 instance : IsLawfulFunctor (WittVector p) where
-  map_const_eq := fun α β => rfl
+  map_const_eq α β := rfl
   id_map := fun α ⟨v, _⟩ => rfl
-  comp_map := fun α β γ f g v => rfl
+  comp_map α β γ f g v := rfl
 
-variable (p) [hp : Fact p.Prime] [CommRingₓ R]
+variable (p) [hp : Fact p.Prime] [CommRing R]
 
 include hp
 
@@ -99,39 +104,39 @@ open MvPolynomial
 section RingOperations
 
 /-- The polynomials used for defining the element `0` of the ring of Witt vectors. -/
-def wittZero : ℕ → MvPolynomial (Finₓ 0 × ℕ) ℤ :=
+def wittZero : ℕ → MvPolynomial (Fin 0 × ℕ) ℤ :=
   wittStructureInt p 0
 
 /-- The polynomials used for defining the element `1` of the ring of Witt vectors. -/
-def wittOne : ℕ → MvPolynomial (Finₓ 0 × ℕ) ℤ :=
+def wittOne : ℕ → MvPolynomial (Fin 0 × ℕ) ℤ :=
   wittStructureInt p 1
 
 /-- The polynomials used for defining the addition of the ring of Witt vectors. -/
-def wittAdd : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
+def wittAdd : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ :=
   wittStructureInt p (x 0 + x 1)
 
 /-- The polynomials used for defining repeated addition of the ring of Witt vectors. -/
-def wittNsmul (n : ℕ) : ℕ → MvPolynomial (Finₓ 1 × ℕ) ℤ :=
+def wittNsmul (n : ℕ) : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
   wittStructureInt p (n • x 0)
 
 /-- The polynomials used for defining repeated addition of the ring of Witt vectors. -/
-def wittZsmul (n : ℤ) : ℕ → MvPolynomial (Finₓ 1 × ℕ) ℤ :=
+def wittZsmul (n : ℤ) : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
   wittStructureInt p (n • x 0)
 
 /-- The polynomials used for describing the subtraction of the ring of Witt vectors. -/
-def wittSub : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
+def wittSub : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ :=
   wittStructureInt p (x 0 - x 1)
 
 /-- The polynomials used for defining the multiplication of the ring of Witt vectors. -/
-def wittMul : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
+def wittMul : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ :=
   wittStructureInt p (x 0 * x 1)
 
 /-- The polynomials used for defining the negation of the ring of Witt vectors. -/
-def wittNeg : ℕ → MvPolynomial (Finₓ 1 × ℕ) ℤ :=
+def wittNeg : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
   wittStructureInt p (-x 0)
 
 /-- The polynomials used for defining repeated addition of the ring of Witt vectors. -/
-def wittPow (n : ℕ) : ℕ → MvPolynomial (Finₓ 1 × ℕ) ℤ :=
+def wittPow (n : ℕ) : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
   wittStructureInt p (x 0 ^ n)
 
 variable {p}
@@ -142,7 +147,7 @@ omit hp
 Evaluates a polynomial whose variables come from the disjoint union of `k` copies of `ℕ`,
 with a curried evaluation `x`.
 This can be defined more generally but we use only a specific instance here. -/
-def peval {k : ℕ} (φ : MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ k → ℕ → R) : R :=
+def peval {k : ℕ} (φ : MvPolynomial (Fin k × ℕ) ℤ) (x : Fin k → ℕ → R) : R :=
   aeval (Function.uncurry x) φ
 
 /-- Let `φ` be a family of polynomials, indexed by natural numbers, whose variables come from the
@@ -154,7 +159,7 @@ Instantiating `φ` with certain polynomials defined in `structure_polynomial.lea
 ring operations on `𝕎 R`. For example, `witt_vector.witt_add` is such a `φ` with `k = 2`;
 evaluating this at `(x₀, x₁)` gives us the sum of two Witt vectors `x₀ + x₁`.
 -/
-def eval {k : ℕ} (φ : ℕ → MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ k → 𝕎 R) : 𝕎 R :=
+def eval {k : ℕ} (φ : ℕ → MvPolynomial (Fin k × ℕ) ℤ) (x : Fin k → 𝕎 R) : 𝕎 R :=
   (mk p) fun n => (peval (φ n)) fun i => (x i).coeff
 
 variable (R) [Fact p.Prime]
@@ -216,21 +221,21 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_one, wittStructureRat, RingHom.map_zero, AlgHom.map_one, RingHom.map_one, map_witt_structure_int]
   revert hn
-  apply Nat.strong_induction_onₓ n
+  apply Nat.strong_induction_on n
   clear n
   intro n IH hn
   rw [X_in_terms_of_W_eq]
   simp only [AlgHom.map_mul, AlgHom.map_sub, AlgHom.map_sum, AlgHom.map_pow, bind₁_X_right, bind₁_C_right]
-  rw [sub_mul, one_mulₓ]
-  rw [Finsetₓ.sum_eq_single 0]
-  · simp only [inv_of_eq_inv, one_mulₓ, inv_pow, tsub_zero, RingHom.map_one, pow_zeroₓ]
-    simp only [one_pow, one_mulₓ, X_in_terms_of_W_zero, sub_self, bind₁_X_right]
+  rw [sub_mul, one_mul]
+  rw [Finset.sum_eq_single 0]
+  · simp only [inv_of_eq_inv, one_mul, inv_pow, tsub_zero, RingHom.map_one, pow_zero]
+    simp only [one_pow, one_mul, X_in_terms_of_W_zero, sub_self, bind₁_X_right]
     
   · intro i hin hi0
-    rw [Finsetₓ.mem_range] at hin
-    rw [IH _ hin (Nat.pos_of_ne_zeroₓ hi0), zero_pow (pow_pos hp.1.Pos _), mul_zero]
+    rw [Finset.mem_range] at hin
+    rw [IH _ hin (Nat.pos_of_ne_zero hi0), zero_pow (pow_pos hp.1.Pos _), mul_zero]
     
-  · rw [Finsetₓ.mem_range]
+  · rw [Finset.mem_range]
     intro
     contradiction
     
@@ -262,7 +267,7 @@ theorem witt_neg_zero : wittNeg p 0 = -x (0, 0) := by
 @[simp]
 theorem constant_coeff_witt_add (n : ℕ) : constantCoeff (wittAdd p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [add_zeroₓ, RingHom.map_add, constant_coeff_X]
+  simp only [add_zero, RingHom.map_add, constant_coeff_X]
 
 @[simp]
 theorem constant_coeff_witt_sub (n : ℕ) : constantCoeff (wittSub p n) = 0 := by
@@ -311,9 +316,9 @@ variable {p R}
 
 omit hp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
-theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
+theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Fin 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
   fin_cases i <;> simp
 
 include hp
@@ -345,32 +350,32 @@ theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 
 
 end Coeff
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_add_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_add_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_sub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_sub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_mul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_mul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_neg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_neg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_nsmul_vars (m : ℕ) (n : ℕ) : (wittNsmul p m n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_nsmul_vars (m : ℕ) (n : ℕ) : (wittNsmul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_zsmul_vars (m : ℤ) (n : ℕ) : (wittZsmul p m n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_zsmul_vars (m : ℤ) (n : ℕ) : (wittZsmul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem witt_pow_vars (m : ℕ) (n : ℕ) : (wittPow p m n).vars ⊆ Finsetₓ.univ ×ˢ Finsetₓ.range (n + 1) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem witt_pow_vars (m : ℕ) (n : ℕ) : (wittPow p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
 end WittVector

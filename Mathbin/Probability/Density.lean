@@ -80,7 +80,7 @@ def pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
 theorem pdf_undef {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : ¬HasPdf X ℙ μ) :
     pdf X ℙ μ = 0 := by simp only [pdf, dif_neg h]
 
-theorem has_pdf_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : pdf X ℙ μ ≠ 0) :
+theorem hasPdfOfPdfNeZero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : pdf X ℙ μ ≠ 0) :
     HasPdf X ℙ μ := by
   by_contra hpdf
   rw [pdf, dif_neg hpdf] at h
@@ -90,20 +90,20 @@ theorem pdf_eq_zero_of_not_measurable {m : MeasurableSpace Ω} {ℙ : Measure Ω
     (hX : ¬Measurable X) : pdf X ℙ μ = 0 :=
   pdf_undef fun hpdf => hX hpdf.pdf'.1
 
-theorem measurable_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} (X : Ω → E)
-    (h : pdf X ℙ μ ≠ 0) : Measurable X := by
+theorem measurableOfPdfNeZero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} (X : Ω → E) (h : pdf X ℙ μ ≠ 0) :
+    Measurable X := by
   by_contra hX
   exact h (pdf_eq_zero_of_not_measurable hX)
 
 @[measurability]
-theorem measurable_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
+theorem measurablePdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
     (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) : Measurable (pdf X ℙ μ) := by
   by_cases hX:has_pdf X ℙ μ
   · rw [pdf, dif_pos hX]
     exact (Classical.choose_spec hX.pdf'.2).1
     
   · rw [pdf, dif_neg hX]
-    exact measurable_zero
+    exact measurableZero
     
 
 theorem map_eq_with_density_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
@@ -172,7 +172,7 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPd
               Ennreal.ofReal (pdf X ℙ μ x).toReal * Ennreal.ofReal (-f x) :=
           by
           intro x
-          rw [neg_mul_eq_neg_mulₓ, mul_comm, Ennreal.of_real_mul Ennreal.to_real_nonneg]
+          rw [neg_mul_eq_neg_mul, mul_comm, Ennreal.of_real_mul Ennreal.to_real_nonneg]
         simp_rw [this]
         exact lintegral_congr_ae (Filter.EventuallyEq.mul of_real_to_real_ae_eq (ae_eq_refl _))
         
@@ -196,18 +196,17 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPd
     all_goals infer_instance
     
 
-theorem map_absolutely_continuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪ μ := by
+theorem mapAbsolutelyContinuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪ μ := by
   rw [map_eq_with_density_pdf X ℙ μ]
   exact with_density_absolutely_continuous _ _
 
 /-- A random variable that `has_pdf` is quasi-measure preserving. -/
-theorem to_quasi_measure_preserving {X : Ω → E} [HasPdf X ℙ μ] : QuasiMeasurePreserving X ℙ μ :=
-  { Measurable := HasPdf.measurable X ℙ μ, AbsolutelyContinuous := map_absolutely_continuous }
+theorem toQuasiMeasurePreserving {X : Ω → E} [HasPdf X ℙ μ] : QuasiMeasurePreserving X ℙ μ :=
+  { Measurable := HasPdf.measurable X ℙ μ, AbsolutelyContinuous := mapAbsolutelyContinuous }
 
-theorem have_lebesgue_decomposition_of_has_pdf {X : Ω → E} [hX' : HasPdf X ℙ μ] :
-    (map X ℙ).HaveLebesgueDecomposition μ :=
+theorem haveLebesgueDecompositionOfHasPdf {X : Ω → E} [hX' : HasPdf X ℙ μ] : (map X ℙ).HaveLebesgueDecomposition μ :=
   ⟨⟨⟨0, pdf X ℙ μ⟩, by
-      simp only [zero_addₓ, measurable_pdf X ℙ μ, true_andₓ, mutually_singular.zero_left,
+      simp only [zero_add, measurable_pdf X ℙ μ, true_and_iff, mutually_singular.zero_left,
         map_eq_with_density_pdf X ℙ μ]⟩⟩
 
 theorem has_pdf_iff {X : Ω → E} : HasPdf X ℙ μ ↔ Measurable X ∧ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ :=
@@ -225,7 +224,7 @@ theorem has_pdf_iff {X : Ω → E} : HasPdf X ℙ μ ↔ Measurable X ∧ (map X
 theorem has_pdf_iff_of_measurable {X : Ω → E} (hX : Measurable X) :
     HasPdf X ℙ μ ↔ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ := by
   rw [has_pdf_iff]
-  simp only [hX, true_andₓ]
+  simp only [hX, true_and_iff]
 
 section
 
@@ -236,7 +235,7 @@ map also `has_pdf` if `(map g (map X ℙ)).have_lebesgue_decomposition μ`.
 
 `quasi_measure_preserving_has_pdf'` is more useful in the case we are working with a
 probability measure and a real-valued random variable. -/
-theorem quasi_measure_preserving_has_pdf {X : Ω → E} [HasPdf X ℙ μ] {g : E → F} (hg : QuasiMeasurePreserving g μ ν)
+theorem quasiMeasurePreservingHasPdf {X : Ω → E} [HasPdf X ℙ μ] {g : E → F} (hg : QuasiMeasurePreserving g μ ν)
     (hmap : (map g (map X ℙ)).HaveLebesgueDecomposition ν) : HasPdf (g ∘ X) ℙ ν := by
   rw [has_pdf_iff, ← map_map hg.measurable (has_pdf.measurable X ℙ μ)]
   refine' ⟨hg.measurable.comp (has_pdf.measurable X ℙ μ), hmap, _⟩
@@ -247,9 +246,9 @@ theorem quasi_measure_preserving_has_pdf {X : Ω → E} [HasPdf X ℙ μ] {g : E
   rw [map_apply hg.measurable hsm] at this
   exact set_lintegral_measure_zero _ _ this
 
-theorem quasi_measure_preserving_has_pdf' [IsFiniteMeasure ℙ] [SigmaFinite ν] {X : Ω → E} [HasPdf X ℙ μ] {g : E → F}
+theorem quasiMeasurePreservingHasPdf' [IsFiniteMeasure ℙ] [SigmaFinite ν] {X : Ω → E} [HasPdf X ℙ μ] {g : E → F}
     (hg : QuasiMeasurePreserving g μ ν) : HasPdf (g ∘ X) ℙ ν :=
-  quasi_measure_preserving_has_pdf hg inferInstance
+  quasiMeasurePreservingHasPdf hg inferInstance
 
 end
 
@@ -275,10 +274,10 @@ theorem Real.has_pdf_iff : HasPdf X ℙ ↔ Measurable X ∧ map X ℙ ≪ volum
 /-- If `X` is a real-valued random variable that has pdf `f`, then the expectation of `X` equals
 `∫ x, x * f x ∂λ` where `λ` is the Lebesgue measure. -/
 theorem integral_mul_eq_integral [HasPdf X ℙ] : (∫ x, x * (pdf X ℙ volume x).toReal) = ∫ x, X x ∂ℙ :=
-  integral_fun_mul_eq_integral measurable_id
+  integral_fun_mul_eq_integral measurableId
 
-theorem has_finite_integral_mul {f : ℝ → ℝ} {g : ℝ → ℝ≥0∞} (hg : pdf X ℙ =ᵐ[volume] g)
-    (hgi : (∫⁻ x, ∥f x∥₊ * g x) ≠ ∞) : HasFiniteIntegral fun x => f x * (pdf X ℙ volume x).toReal := by
+theorem hasFiniteIntegralMul {f : ℝ → ℝ} {g : ℝ → ℝ≥0∞} (hg : pdf X ℙ =ᵐ[volume] g) (hgi : (∫⁻ x, ∥f x∥₊ * g x) ≠ ∞) :
+    HasFiniteIntegral fun x => f x * (pdf X ℙ volume x).toReal := by
   rw [has_finite_integral]
   have : (fun x => ↑∥f x∥₊ * g x) =ᵐ[volume] fun x => ∥f x * (pdf X ℙ volume x).toReal∥₊ := by
     refine'
@@ -306,9 +305,9 @@ def IsUniform {m : MeasurableSpace Ω} (X : Ω → E) (support : Set E) (ℙ : M
 
 namespace IsUniform
 
-theorem has_pdf {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E} (hns : μ s ≠ 0)
+theorem hasPdf {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E} (hns : μ s ≠ 0)
     (hnt : μ s ≠ ∞) (hu : IsUniform X s ℙ μ) : HasPdf X ℙ μ :=
-  has_pdf_of_pdf_ne_zero
+  hasPdfOfPdfNeZero
     (by
       intro hpdf
       rw [is_uniform, hpdf] at hu
@@ -332,11 +331,11 @@ theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
   haveI := hu.has_pdf hns hnt
   rw [← measure.map_apply (has_pdf.measurable X ℙ μ) hA, map_eq_set_lintegral_pdf X ℙ μ hA,
     lintegral_congr_ae hu.restrict]
-  simp only [hms, hA, lintegral_indicator, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_oneₓ,
+  simp only [hms, hA, lintegral_indicator, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_one,
     lintegral_const, restrict_apply', Set.univ_inter]
   rw [Ennreal.div_eq_inv_mul]
 
-theorem is_probability_measure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E}
+theorem isProbabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E}
     (hns : μ s ≠ 0) (hnt : μ s ≠ ∞) (hms : MeasurableSet s) (hu : IsUniform X s ℙ μ) : IsProbabilityMeasure ℙ :=
   ⟨by
     have : X ⁻¹' Set.Univ = Set.Univ := by simp only [Set.preimage_univ]
@@ -346,7 +345,7 @@ variable {X : Ω → ℝ} {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s 
 
 include hms hns
 
-theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
+theorem mulPdfIntegrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
     Integrable fun x : ℝ => x * (pdf X ℙ volume x).toReal := by
   by_cases hsupp:volume s = ∞
   · have : pdf X ℙ =ᵐ[volume] 0 := by
@@ -356,12 +355,12 @@ theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUn
     rw [(by simp : (fun x => 0 : ℝ → ℝ) = fun x => x * (0 : ℝ≥0∞).toReal)]
     refine' Filter.EventuallyEq.mul (ae_eq_refl _) (Filter.EventuallyEq.fun_comp this.symm Ennreal.toReal)
     
-  refine' ⟨ae_strongly_measurable_id.mul (measurable_pdf X ℙ).AeMeasurable.ennreal_to_real.AeStronglyMeasurable, _⟩
+  refine' ⟨ae_strongly_measurable_id.mul (measurable_pdf X ℙ).AeMeasurable.ennrealToReal.AeStronglyMeasurable, _⟩
   refine' has_finite_integral_mul huX _
   set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
   have : ∀ x, ↑∥x∥₊ * s.indicator ind x = s.indicator (fun x => ∥x∥₊ * ind x) x := fun x =>
     (s.indicator_mul_right (fun x => ↑∥x∥₊) ind).symm
-  simp only [this, lintegral_indicator _ hms, hind, mul_oneₓ, Algebra.id.smul_eq_mul, Pi.one_apply, Pi.smul_apply]
+  simp only [this, lintegral_indicator _ hms, hind, mul_one, Algebra.id.smul_eq_mul, Pi.one_apply, Pi.smul_apply]
   rw [lintegral_mul_const _ measurable_nnnorm.coe_nnreal_ennreal]
   · refine'
       (Ennreal.mul_lt_top (set_lintegral_lt_top_of_is_compact hsupp hcs continuous_nnnorm).Ne
@@ -391,7 +390,7 @@ theorem integral_eq (hnt : volume s ≠ ∞) (huX : IsUniform X s ℙ) : (∫ x,
       
   simp_rw [this, ← s.indicator_mul_right fun x => x, integral_indicator hms]
   change (∫ x in s, x * (volume s)⁻¹.toReal • 1 ∂volume) = _
-  rw [integral_mul_right, mul_comm, Algebra.id.smul_eq_mul, mul_oneₓ]
+  rw [integral_mul_right, mul_comm, Algebra.id.smul_eq_mul, mul_one]
 
 end IsUniform
 

@@ -44,9 +44,9 @@ This file is almost identical to `linear_algebra/exterior_algebra.lean`.
 -/
 
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
-variable {M : Type _} [AddCommGroupₓ M] [Module R M]
+variable {M : Type _} [AddCommGroup M] [Module R M]
 
 variable (Q : QuadraticForm R M)
 
@@ -65,11 +65,11 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R -/
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
-  RingQuot (CliffordAlgebra.Rel Q)deriving Inhabited, Ringₓ,
+  RingQuot (CliffordAlgebra.Rel Q)deriving Inhabited, Ring,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R»
 
 namespace CliffordAlgebra
@@ -85,7 +85,7 @@ theorem ι_sq_scalar (m : M) : ι Q m * ι Q m = algebraMap R _ (Q m) := by
   erw [← AlgHom.map_mul, RingQuot.mk_alg_hom_rel R (rel.of m), AlgHom.commutes]
   rfl
 
-variable {Q} {A : Type _} [Semiringₓ A] [Algebra R A]
+variable {Q} {A : Type _} [Semiring A] [Algebra R A]
 
 @[simp]
 theorem comp_ι_sq_scalar (g : CliffordAlgebra Q →ₐ[R] A) (m : M) : g (ι Q m) * g (ι Q m) = algebraMap _ _ (Q m) := by
@@ -99,18 +99,18 @@ from `clifford_algebra Q` to `A`.
 -/
 @[simps symmApply]
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) where
-  toFun := fun f =>
+  toFun f :=
     RingQuot.liftAlgHom R
       ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y (h : Rel Q x y) => by
         induction h
         rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
-  invFun := fun F =>
+  invFun F :=
     ⟨F.toLinearMap.comp (ι Q), fun m => by rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩
-  left_inv := fun f => by
+  left_inv f := by
     ext
     simp only [ι, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp, Subtype.coe_mk,
       RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
-  right_inv := fun F => by
+  right_inv F := by
     ext
     simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp,
       Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
@@ -142,7 +142,7 @@ theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) : lift Q ⟨g.toLinearM
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : CliffordAlgebra Q →ₐ[R] A} :
+theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : CliffordAlgebra Q →ₐ[R] A} :
     f.toLinearMap.comp (ι Q) = g.toLinearMap.comp (ι Q) → f = g := by
   intro h
   apply (lift Q).symm.Injective
@@ -155,7 +155,7 @@ and is preserved under addition and muliplication, then it holds for all of `cli
 
 See also the stronger `clifford_algebra.left_induction` and `clifford_algebra.right_induction`.
 -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r))
     (h_grade1 : ∀ x, C (ι Q x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : CliffordAlgebra Q) : C a := by
@@ -176,7 +176,7 @@ theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebra
 theorem ι_mul_ι_add_swap (a b : M) : ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticForm.polar Q a b) :=
   calc
     ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b := by
-      rw [(ι Q).map_add, mul_addₓ, add_mulₓ, add_mulₓ]
+      rw [(ι Q).map_add, mul_add, add_mul, add_mul]
       abel
     _ = algebraMap R _ (Q (a + b)) - algebraMap R _ (Q a) - algebraMap R _ (Q b) := by
       rw [ι_sq_scalar, ι_sq_scalar, ι_sq_scalar]
@@ -200,7 +200,7 @@ section Map
 
 variable {M₁ M₂ M₃ : Type _}
 
-variable [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
+variable [AddCommGroup M₁] [AddCommGroup M₂] [AddCommGroup M₃]
 
 variable [Module R M₁] [Module R M₂] [Module R M₃]
 

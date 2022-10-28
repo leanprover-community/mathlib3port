@@ -26,9 +26,9 @@ commutative ring, field of fractions
 -/
 
 
-variable {R : Type _} [CommRingₓ R] (M : Submonoid R) (S : Type _) [CommRingₓ S]
+variable {R : Type _} [CommRing R] (M : Submonoid R) (S : Type _) [CommRing S]
 
-variable [Algebra R S] {P : Type _} [CommRingₓ P]
+variable [Algebra R S] {P : Type _} [CommRing P]
 
 open Function
 
@@ -59,7 +59,7 @@ noncomputable def toInvSubmonoid : M →* invSubmonoid M S :=
   (equivInvSubmonoid M S).toMonoidHom.comp ((algebraMap R S : R →* S).submonoidMap M)
 
 theorem to_inv_submonoid_surjective : Function.Surjective (toInvSubmonoid M S) :=
-  Function.Surjective.comp (Equivₓ.surjective _) (MonoidHom.submonoid_map_surjective _ _)
+  Function.Surjective.comp (Equiv.surjective _) (MonoidHom.submonoid_map_surjective _ _)
 
 @[simp]
 theorem to_inv_submonoid_mul (m : M) : (toInvSubmonoid M S m : S) * algebraMap R S m = 1 :=
@@ -101,9 +101,9 @@ theorem span_inv_submonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :
   rcases IsLocalization.surj' M x with ⟨r, m, rfl⟩
   exact Submodule.smul_mem _ _ (Submodule.subset_span (to_inv_submonoid M S m).Prop)
 
-theorem finite_type_of_monoid_fg [Monoidₓ.Fg M] : Algebra.FiniteType R S := by
-  have := Monoidₓ.fg_of_surjective _ (to_inv_submonoid_surjective M S)
-  rw [Monoidₓ.fg_iff_submonoid_fg] at this
+theorem finiteTypeOfMonoidFg [Monoid.Fg M] : Algebra.FiniteType R S := by
+  have := Monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S)
+  rw [Monoid.fg_iff_submonoid_fg] at this
   rcases this with ⟨s, hs⟩
   refine' ⟨⟨s, _⟩⟩
   rw [eq_top_iff]

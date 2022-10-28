@@ -47,12 +47,12 @@ theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
     
   push_neg  at h
   obtain ⟨w, hw, hwx⟩ := h
-  refine' ⟨f w, fun y hy => ⟨Nat.le_of_succ_le_succₓ _, hs hy hw⟩⟩
-  rw [(Nat.succ_le_of_ltₓ hwx).antisymm (hs hx hw)]
+  refine' ⟨f w, fun y hy => ⟨Nat.le_of_succ_le_succ _, hs hy hw⟩⟩
+  rw [(Nat.succ_le_of_lt hwx).antisymm (hs hx hw)]
   exact hs hx hy
 
 theorem equitable_on_iff_exists_image_subset_Icc {s : Set α} {f : α → ℕ} :
-    s.EquitableOn f ↔ ∃ b, f '' s ⊆ Icc b (b + 1) := by
+    s.EquitableOn f ↔ ∃ b, f '' s ⊆ IccCat b (b + 1) := by
   simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
 
 theorem equitable_on_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
@@ -76,9 +76,9 @@ end Set
 
 open Set
 
-namespace Finsetₓ
+namespace Finset
 
-variable {s : Finsetₓ α} {f : α → ℕ} {a : α}
+variable {s : Finset α} {f : α → ℕ} {a : α}
 
 theorem equitable_on_iff_le_le_add_one :
     EquitableOn (s : Set α) f ↔ ∀ a ∈ s, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ (∑ i in s, f i) / s.card + 1 := by
@@ -87,8 +87,8 @@ theorem equitable_on_iff_le_le_add_one :
   rintro ⟨b, hb⟩
   by_cases h:∀ a ∈ s, f a = b + 1
   · intro a ha
-    rw [h _ ha, sum_const_nat h, Nat.mul_div_cancel_leftₓ _ (card_pos.2 ⟨a, ha⟩)]
-    exact ⟨le_rflₓ, Nat.le_succₓ _⟩
+    rw [h _ ha, sum_const_nat h, Nat.mul_div_cancel_left _ (card_pos.2 ⟨a, ha⟩)]
+    exact ⟨le_rfl, Nat.le_succ _⟩
     
   push_neg  at h
   obtain ⟨x, hx₁, hx₂⟩ := h
@@ -98,7 +98,7 @@ theorem equitable_on_iff_le_le_add_one :
     
   symm
   refine'
-    Nat.div_eq_of_lt_leₓ (le_transₓ (by simp [mul_comm]) (sum_le_sum fun a ha => (hb a ha).1))
+    Nat.div_eq_of_lt_le (le_trans (by simp [mul_comm]) (sum_le_sum fun a ha => (hb a ha).1))
       ((sum_lt_sum (fun a ha => (hb a ha).2) ⟨_, hx₁, (hb _ hx₁).2.lt_of_ne hx₂⟩).trans_le _)
   rw [mul_comm, sum_const_nat]
   exact fun _ _ => rfl
@@ -113,5 +113,5 @@ theorem equitable_on_iff :
     EquitableOn (s : Set α) f ↔ ∀ a ∈ s, f a = (∑ i in s, f i) / s.card ∨ f a = (∑ i in s, f i) / s.card + 1 := by
   simp_rw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
 
-end Finsetₓ
+end Finset
 

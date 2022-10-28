@@ -95,7 +95,7 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
   · intro stream_succ_nth_eq
     have : int_fract_pair.stream v (n + 1) ≠ none := by simp [stream_succ_nth_eq]
     have : ¬int_fract_pair.stream v n = none ∧ ¬∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
-      haveI not_none_not_fract_zero := (not_iff_not_of_iff succ_nth_stream_eq_none_iff).elim_left this
+      haveI not_none_not_fract_zero := (not_congr succ_nth_stream_eq_none_iff).elimLeft this
       not_or_distrib.elim_left not_none_not_fract_zero
     cases' this with stream_nth_ne_none nth_fr_ne_zero
     replace nth_fr_ne_zero : ∀ ifp, int_fract_pair.stream v n = some ifp → ifp.fr ≠ 0
@@ -107,13 +107,12 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
     have ifp_n_fr_ne_zero : ifp_n.fr ≠ 0 := nth_fr_ne_zero ifp_n stream_nth_eq
     cases' ifp_n with _ ifp_n_fr
     suffices int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n by simpa [stream_nth_eq, ifp_n_fr_ne_zero]
-    simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bindₓ, if_false] at
-      stream_succ_nth_eq
+    simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bind, if_false] at stream_succ_nth_eq
     injection stream_succ_nth_eq
     
   · rintro ⟨⟨_⟩, ifp_n_props⟩
     -- `finish [int_fract_pair.stream, ifp_n_props]` closes this goal
-    simpa only [int_fract_pair.stream, ifp_n_props, Option.some_bindₓ, if_false]
+    simpa only [int_fract_pair.stream, ifp_n_props, Option.some_bind, if_false]
     
 
 theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
@@ -193,11 +192,11 @@ theorem of_terminated_at_iff_int_fract_pair_seq1_terminated_at :
     (of v).TerminatedAt n ↔ (IntFractPair.seq1 v).snd.TerminatedAt n := by
   rw [terminated_at_iff_s_none, of]
   rcases int_fract_pair.seq1 v with ⟨head, ⟨st⟩⟩
-  cases st_n_eq : st n <;> simp [of, st_n_eq, Seqₓₓ.map, Seqₓₓ.nth, Streamₓ.map, Seqₓₓ.TerminatedAt, Streamₓ.nth]
+  cases st_n_eq : st n <;> simp [of, st_n_eq, Seq.map, Seq.nth, Stream.map, Seq.TerminatedAt, Stream.nth]
 
 theorem of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none :
     (of v).TerminatedAt n ↔ IntFractPair.stream v (n + 1) = none := by
-  rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, Seqₓₓ.TerminatedAt,
+  rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, Seq.TerminatedAt,
     int_fract_pair.nth_seq1_eq_succ_nth_stream]
 
 end Termination
@@ -212,6 +211,113 @@ Now let's show how the values of the sequences correspond to one another.
 
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`gp_n] [":" (Term.app `Pair [`K])] "}")
+        (Term.explicitBinder
+         "("
+         [`s_nth_eq]
+         [":"
+          («term_=_»
+           (Term.app (Term.proj (Term.proj (Term.app `of [`v]) "." `s) "." `nth) [`n])
+           "="
+           (Term.app `some [`gp_n]))]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term∃_,_»
+         "∃"
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] [":" (Term.app `IntFractPair [`K])]))
+         ","
+         («term_∧_»
+          («term_=_» (Term.app `IntFractPair.stream [`v («term_+_» `n "+" (num "1"))]) "=" (Term.app `some [`ifp]))
+          "∧"
+          («term_=_»
+           (Term.paren "(" [(Term.proj `ifp "." `b) [(Term.typeAscription ":" `K)]] ")")
+           "="
+           (Term.proj `gp_n "." `b))))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Std.Tactic.obtain
+            "obtain"
+            [(Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ifp)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `stream_succ_nth_eq)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `gp_n_eq)])
+                  [])]
+                "⟩")])]
+            [":"
+             («term∃_,_»
+              "∃"
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] []))
+              ","
+              («term_∧_»
+               («term_=_»
+                (Term.app `int_fract_pair.stream [`v («term_+_» `n "+" (num "1"))])
+                "="
+                (Term.app `some [`ifp]))
+               "∧"
+               («term_=_»
+                (Term.app
+                 `pair.mk
+                 [(num "1") (Term.paren "(" [(Term.proj `ifp "." `b) [(Term.typeAscription ":" `K)]] ")")])
+                "="
+                `gp_n)))]
+            [":="
+             [(Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.unfold
+                   "unfold"
+                   [`of `int_fract_pair.seq1]
+                   [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
+                  []
+                  (tacticRwa__
+                   "rwa"
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `Seq.map_tail)
+                     ","
+                     (Tactic.rwRule [] `Seq.nth_tail)
+                     ","
+                     (Tactic.rwRule [] `Seq.map_nth)
+                     ","
+                     (Tactic.rwRule [] `Option.map_eq_some')]
+                    "]")
+                   [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])])))]])
+           []
+           (Tactic.cases "cases" [(Tactic.casesTarget [] `gp_n_eq)] [] [])
+           []
+           (Tactic.injection "injection" `gp_n_eq ["with" ["_" `ifp_b_eq_gp_n_b]])
+           []
+           (Tactic.«tacticExists_,,» "exists" [`ifp])
+           []
+           (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -265,13 +371,13 @@ Now let's show how the values of the sequences correspond to one another.
                   "rwa"
                   (Tactic.rwRuleSeq
                    "["
-                   [(Tactic.rwRule [] `Seqₓₓ.map_tail)
+                   [(Tactic.rwRule [] `Seq.map_tail)
                     ","
-                    (Tactic.rwRule [] `Seqₓₓ.nth_tail)
+                    (Tactic.rwRule [] `Seq.nth_tail)
                     ","
-                    (Tactic.rwRule [] `Seqₓₓ.map_nth)
+                    (Tactic.rwRule [] `Seq.map_nth)
                     ","
-                    (Tactic.rwRule [] `Option.map_eq_some'ₓ)]
+                    (Tactic.rwRule [] `Option.map_eq_some')]
                    "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])])))]])
           []
@@ -282,6 +388,7 @@ Now let's show how the values of the sequences correspond to one another.
           (Tactic.«tacticExists_,,» "exists" [`ifp])
           []
           (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -301,10 +408,18 @@ Now let's show how the values of the sequences correspond to one another.
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.injection
-       "injection"
-       `gp_n_eq
-       ["with" ["_" `ifp_b_eq_gp_n_b]])-/-- failed to format: format: uncaught backtrack exception
+      (Tactic.injection "injection" `gp_n_eq ["with" ["_" `ifp_b_eq_gp_n_b]])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some
   { gp_n : Pair K } ( s_nth_eq : of v . s . nth n = some gp_n )
@@ -317,7 +432,7 @@ theorem
           :=
             by
               unfold of int_fract_pair.seq1 at s_nth_eq
-                rwa [ Seqₓₓ.map_tail , Seqₓₓ.nth_tail , Seqₓₓ.map_nth , Option.map_eq_some'ₓ ] at s_nth_eq
+                rwa [ Seq.map_tail , Seq.nth_tail , Seq.map_nth , Option.map_eq_some' ] at s_nth_eq
         cases gp_n_eq
         injection gp_n_eq with _ ifp_b_eq_gp_n_b
         exists ifp
@@ -330,8 +445,8 @@ theorem nth_of_eq_some_of_succ_nth_int_fract_pair_stream {ifp_succ_n : IntFractP
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) : (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ :=
   by
   unfold of int_fract_pair.seq1
-  rw [Seqₓₓ.map_tail, Seqₓₓ.nth_tail, Seqₓₓ.map_nth]
-  simp [Seqₓₓ.nth, stream_succ_nth_eq]
+  rw [Seq.map_tail, Seq.nth_tail, Seq.map_nth]
+  simp [Seq.nth, stream_succ_nth_eq]
 
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
 fractional parts of the stream of integer and fractional parts.

@@ -31,7 +31,7 @@ def WideSubquiver.ToType (V) [Quiver V] (H : WideSubquiver V) : Type u :=
   V
 
 instance wideSubquiverHasCoeToSort {V} [Quiver V] :
-    CoeSort (WideSubquiver V) (Type u) where coe := fun H => WideSubquiver.ToType V H
+    CoeSort (WideSubquiver V) (Type u) where coe H := WideSubquiver.ToType V H
 
 /-- A wide subquiver viewed as a quiver on its own. -/
 instance WideSubquiver.quiver {V} [Quiver V] (H : WideSubquiver V) : Quiver H :=
@@ -58,9 +58,9 @@ structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
 
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
 def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V) where
-  toFun := fun H => { e | e.Hom ∈ H e.left e.right }
-  invFun := fun S a b => { e | Total.mk a b e ∈ S }
-  left_inv := fun H => rfl
+  toFun H := { e | e.Hom ∈ H e.left e.right }
+  invFun S a b := { e | Total.mk a b e ∈ S }
+  left_inv H := rfl
   right_inv := by
     intro S
     ext

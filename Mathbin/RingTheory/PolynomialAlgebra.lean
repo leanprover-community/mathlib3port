@@ -42,9 +42,9 @@ noncomputable section
 
 variable (R A : Type _)
 
-variable [CommSemiringₓ R]
+variable [CommSemiring R]
 
-variable [Semiringₓ A] [Algebra R A]
+variable [Semiring A] [Algebra R A]
 
 namespace polyEquivTensor
 
@@ -59,7 +59,7 @@ def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
     toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) := by
   dsimp [to_fun_bilinear_apply_apply, aeval_def, eval₂_eq_sum, Polynomial.sum]
-  rw [Finsetₓ.smul_sum]
+  rw [Finset.smul_sum]
   congr with i : 1
   rw [← Algebra.smul_def, ← C_mul', mul_smul_comm, C_mul_X_pow_eq_monomial, ← Algebra.commutes, ← Algebra.smul_def,
     smul_monomial]
@@ -84,10 +84,10 @@ theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p
 
 theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     a₁ * a₂ * (algebraMap R A) ((p₁ * p₂).coeff k) =
-      (Finsetₓ.Nat.antidiagonal k).Sum fun x =>
+      (Finset.Nat.antidiagonal k).Sum fun x =>
         a₁ * (algebraMap R A) (coeff p₁ x.1) * (a₂ * (algebraMap R A) (coeff p₂ x.2)) :=
   by
-  simp_rw [mul_assoc, Algebra.commutes, ← Finsetₓ.mul_sum, mul_assoc, ← Finsetₓ.mul_sum]
+  simp_rw [mul_assoc, Algebra.commutes, ← Finset.mul_sum, mul_assoc, ← Finset.mul_sum]
   congr
   simp_rw [Algebra.commutes (coeff p₂ _), coeff_mul, RingHom.map_sum, RingHom.map_mul]
 
@@ -97,9 +97,9 @@ theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
   classical
   simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
   ext k
-  simp_rw [coeff_sum, coeff_monomial, sum_def, Finsetₓ.sum_ite_eq', mem_support_iff, Ne.def]
+  simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
   conv_rhs => rw [coeff_mul]
-  simp_rw [finset_sum_coeff, coeff_monomial, Finsetₓ.sum_ite_eq', mem_support_iff, Ne.def, mul_ite, mul_zero, ite_mul,
+  simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite, mul_zero, ite_mul,
     zero_mul]
   simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
   simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
@@ -145,7 +145,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
     dsimp only [inv_fun]
     rw [to_fun_alg_hom_apply_tmul, eval₂_sum]
     simp_rw [eval₂_monomial, AlgHom.coe_to_ring_hom, Algebra.TensorProduct.tmul_pow, one_pow,
-      Algebra.TensorProduct.include_left_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_oneₓ, one_mulₓ, ←
+      Algebra.TensorProduct.include_left_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, ←
       Algebra.commutes, ← Algebra.smul_def, smul_tmul, sum_def, ← tmul_sum]
     conv_rhs => rw [← sum_C_mul_X_eq p]
     simp only [Algebra.smul_def]
@@ -162,7 +162,7 @@ theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
     
   · intro n a
     rw [inv_fun_monomial, Algebra.TensorProduct.include_left_apply, Algebra.TensorProduct.tmul_pow, one_pow,
-        Algebra.TensorProduct.tmul_mul_tmul, mul_oneₓ, one_mulₓ, to_fun_alg_hom_apply_tmul, X_pow_eq_monomial,
+        Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, to_fun_alg_hom_apply_tmul, X_pow_eq_monomial,
         sum_monomial_index] <;>
       simp
     
@@ -202,7 +202,7 @@ open BigOperators
 
 variable {R}
 
-variable {n : Type w} [DecidableEq n] [Fintypeₓ n]
+variable {n : Type w} [DecidableEq n] [Fintype n]
 
 /-- The algebra isomorphism stating "matrices of polynomials are the same as polynomials of matrices".
 
@@ -213,7 +213,7 @@ it's an algebra equivalence, and characterised extensionally by the lemma
 noncomputable def matPolyEquiv : Matrix n n R[X] ≃ₐ[R] Polynomial (Matrix n n R) :=
   ((matrixEquivTensor R R[X] n).trans (Algebra.TensorProduct.comm R _ _)).trans (polyEquivTensor R (Matrix n n R)).symm
 
-open Finsetₓ
+open Finset
 
 theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
     matPolyEquiv (stdBasisMatrix i j <| monomial k x) = monomial k (stdBasisMatrix i j x) := by
@@ -223,7 +223,7 @@ theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
   convert Algebra.TensorProduct.comm_tmul _ _ _ _ _
   simp only [poly_equiv_tensor_apply]
   convert eval₂_monomial _ _
-  simp only [Algebra.TensorProduct.tmul_mul_tmul, one_pow, one_mulₓ, Matrix.mul_one, Algebra.TensorProduct.tmul_pow,
+  simp only [Algebra.TensorProduct.tmul_mul_tmul, one_pow, one_mul, Matrix.mul_one, Algebra.TensorProduct.tmul_pow,
     Algebra.TensorProduct.include_left_apply, mul_eq_mul]
   rw [monomial_eq_smul_X, ← TensorProduct.smul_tmul]
   congr with i' j' <;> simp

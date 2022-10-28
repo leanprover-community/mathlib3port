@@ -10,10 +10,10 @@ universe u v w
 def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × β) : Prop :=
   lt a.1 b.1
 
--- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def Rbmap (α : Type u) (β : Type v)
     (lt : α → α → Prop := by
       run_tac
@@ -21,7 +21,7 @@ def Rbmap (α : Type u) (β : Type v)
     Type max u v :=
   Rbtree (α × β) (RbmapLt lt)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def mkRbmap (α : Type u) (β : Type v)
     (lt : α → α → Prop := by
       run_tac
@@ -66,8 +66,8 @@ protected def Mem (k : α) (m : Rbmap α β lt) : Prop :=
 instance : Membership α (Rbmap α β lt) :=
   ⟨Rbmap.Mem⟩
 
-instance [HasRepr α] [HasRepr β] : HasRepr (Rbmap α β lt) :=
-  ⟨fun t => "rbmap_of " ++ reprₓ t.toList⟩
+instance [Repr α] [Repr β] : Repr (Rbmap α β lt) :=
+  ⟨fun t => "rbmap_of " ++ repr t.toList⟩
 
 def rbmapLtDec [h : DecidableRel lt] : DecidableRel (@RbmapLt α β lt) := fun a b => h a.1 b.1
 
@@ -92,7 +92,7 @@ def find (m : Rbmap α β lt) (k : α) : Option β :=
 def contains (m : Rbmap α β lt) (k : α) : Bool :=
   (findEntry m k).isSome
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def fromList (l : List (α × β))
     (lt : α → α → Prop := by
       run_tac
@@ -102,7 +102,7 @@ def fromList (l : List (α × β))
 
 end Rbmap
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/
 def rbmapOf {α : Type u} {β : Type v} (l : List (α × β))
     (lt : α → α → Prop := by
       run_tac

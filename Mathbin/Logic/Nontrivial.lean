@@ -51,14 +51,14 @@ theorem nontrivial_of_ne (x y : α) (h : x ≠ y) : Nontrivial α :=
   ⟨⟨x, y, h⟩⟩
 
 -- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
-theorem nontrivial_of_lt [Preorderₓ α] (x y : α) (h : x < y) : Nontrivial α :=
-  ⟨⟨x, y, ne_of_ltₓ h⟩⟩
+theorem nontrivial_of_lt [Preorder α] (x y : α) (h : x < y) : Nontrivial α :=
+  ⟨⟨x, y, ne_of_lt h⟩⟩
 
-theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrderₓ α] : ∃ x y : α, x < y := by
+theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ x y : α, x < y := by
   rcases exists_pair_ne α with ⟨x, y, hxy⟩
-  cases lt_or_gt_of_neₓ hxy <;> exact ⟨_, _, h⟩
+  cases lt_or_gt_of_ne hxy <;> exact ⟨_, _, h⟩
 
-theorem nontrivial_iff_lt [LinearOrderₓ α] : Nontrivial α ↔ ∃ x y : α, x < y :=
+theorem nontrivial_iff_lt [LinearOrder α] : Nontrivial α ↔ ∃ x y : α, x < y :=
   ⟨fun h => @exists_pair_lt α h _, fun ⟨x, y, h⟩ => nontrivial_of_lt x y h⟩
 
 theorem nontrivial_iff_exists_ne (x : α) : Nontrivial α ↔ ∃ y, y ≠ x :=
@@ -111,7 +111,7 @@ theorem not_subsingleton (α) [h : Nontrivial α] : ¬Subsingleton α :=
 
 /-- A type is either a subsingleton or nontrivial. -/
 theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α := by
-  rw [← not_nontrivial_iff_subsingleton, or_comm]
+  rw [← not_nontrivial_iff_subsingleton, or_comm']
   exact Classical.em _
 
 theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsingleton α] : False :=
@@ -150,7 +150,7 @@ protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β} (
     
 
 instance nontrivial_prod_right [Nonempty α] [Nontrivial β] : Nontrivial (α × β) :=
-  Prod.snd_surjectiveₓ.Nontrivial
+  Prod.snd_surjective.Nontrivial
 
 instance nontrivial_prod_left [Nontrivial α] [Nonempty β] : Nontrivial (α × β) :=
   Prod.fst_surjective.Nontrivial
@@ -175,10 +175,15 @@ end Pi
 instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α → β) :=
   h.elim fun a => Pi.nontrivial_at a
 
-mk_simp_attribute nontriviality := "Simp lemmas for `nontriviality` tactic"
+/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
+     [(Command.docComment "/--" "Simp lemmas for `nontriviality` tactic -/")]
+     "register_simp_attr"
+     `nontriviality)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+/-- Simp lemmas for `nontriviality` tactic -/ register_simp_attr nontriviality
 
-protected theorem Subsingleton.le [Preorderₓ α] [Subsingleton α] (x y : α) : x ≤ y :=
-  le_of_eqₓ (Subsingleton.elim x y)
+protected theorem Subsingleton.le [Preorder α] [Subsingleton α] (x y : α) : x ≤ y :=
+  le_of_eq (Subsingleton.elim x y)
 
 attribute [nontriviality] eq_iff_true_of_subsingleton Subsingleton.le
 
@@ -192,14 +197,14 @@ including `subsingleton.le` and `eq_iff_true_of_subsingleton`.
 unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_list) : tactic Unit := do
   let alternative ← to_expr (pquote.1 (subsingleton_or_nontrivial (%%ₓα)))
   let n ← get_unused_name "_inst"
-  tactic.cases Alternativeₓ [n, n]
+  tactic.cases Alternative [n, n]
   (solve1 <| do
         reset_instance_cache
         apply_instance <|> interactive.simp none none ff lems [`nontriviality] (Interactive.Loc.ns [none])) <|>
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

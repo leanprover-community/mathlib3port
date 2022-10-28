@@ -68,11 +68,11 @@ theorem of_discrete [DiscreteTopology X] (f : X → Y) : IsLocallyConstant f := 
 theorem is_open_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen { x | f x = y } :=
   hf {y}
 
-theorem is_closed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
+theorem isClosedFiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
   ⟨hf ({y}ᶜ)⟩
 
 theorem is_clopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
-  ⟨is_open_fiber hf _, is_closed_fiber hf _⟩
+  ⟨is_open_fiber hf _, isClosedFiber hf _⟩
 
 theorem iff_exists_open (f : X → Y) :
     IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' ∈ U, f x' = f x :=
@@ -109,7 +109,7 @@ theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyC
 
 theorem prod_mk {Y'} {f : X → Y} {f' : X → Y'} (hf : IsLocallyConstant f) (hf' : IsLocallyConstant f') :
     IsLocallyConstant fun x => (f x, f' x) :=
-  (iff_eventually_eq _).2 fun x => (hf.EventuallyEq x).mp <| (hf'.EventuallyEq x).mono fun x' hf' hf => Prod.extₓ hf hf'
+  (iff_eventually_eq _).2 fun x => (hf.EventuallyEq x).mp <| (hf'.EventuallyEq x).mono fun x' hf' hf => Prod.ext hf hf'
 
 theorem comp₂ {Y₁ Y₂ Z : Type _} {f : X → Y₁} {g : X → Y₂} (hf : IsLocallyConstant f) (hg : IsLocallyConstant g)
     (h : Y₁ → Y₂ → Z) : IsLocallyConstant fun x => h (f x) (g x) :=
@@ -135,7 +135,7 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
 
 theorem apply_eq_of_preconnected_space [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) (x y : X) :
     f x = f y :=
-  hf.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ
+  hf.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial
 
 theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) (x : X) : f = Function.const X (f x) :=
   funext fun y => hf.apply_eq_of_preconnected_space y x
@@ -149,7 +149,7 @@ theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : I
     
 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
-  ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ, of_constant _⟩
+  ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial, of_constant _⟩
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.Range f).Finite := by
   letI : TopologicalSpace Y := ⊥
@@ -279,18 +279,18 @@ def const (X : Type _) {Y : Type _} [TopologicalSpace X] (y : Y) : LocallyConsta
 theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
 def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
-    LocallyConstant X (Finₓ 2) where
-  toFun := fun x => if x ∈ U then 0 else 1
+    LocallyConstant X (Fin 2) where
+  toFun x := if x ∈ U then 0 else 1
   IsLocallyConstant := by
-    rw [(IsLocallyConstant.tfae fun x => if x ∈ U then (0 : Finₓ 2) else 1).out 0 3]
+    rw [(IsLocallyConstant.tfae fun x => if x ∈ U then (0 : Fin 2) else 1).out 0 3]
     intro e
     fin_cases e
     · convert hU.1 using 1
       ext
-      simp only [Nat.one_ne_zero, mem_singleton_iff, Finₓ.one_eq_zero_iff, mem_preimage, ite_eq_left_iff]
+      simp only [Nat.one_ne_zero, mem_singleton_iff, Fin.one_eq_zero_iff, mem_preimage, ite_eq_left_iff]
       tauto
       
     · rw [← is_closed_compl_iff]
@@ -301,24 +301,24 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
 
 @[simp]
 theorem of_clopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
-    ofClopen hU ⁻¹' ({0} : Set (Finₓ 2)) = U := by
+    ofClopen hU ⁻¹' ({0} : Set (Fin 2)) = U := by
   ext
-  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, Finₓ.one_eq_zero_iff, coe_mk, mem_preimage, ite_eq_left_iff]
+  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk, mem_preimage, ite_eq_left_iff]
   tauto
 
 @[simp]
 theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
-    ofClopen hU ⁻¹' ({1} : Set (Finₓ 2)) = Uᶜ := by
+    ofClopen hU ⁻¹' ({1} : Set (Fin 2)) = Uᶜ := by
   ext
-  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Finₓ.zero_eq_one_iff, mem_preimage,
-    ite_eq_right_iff, mem_compl_iff]
+  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff, mem_preimage, ite_eq_right_iff,
+    mem_compl_iff]
   tauto
 
-theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (f g : LocallyConstant X (Finₓ 2))
-    (h : f ⁻¹' ({0} : Set (Finₓ 2)) = g ⁻¹' {0}) : f = g := by
+theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (f g : LocallyConstant X (Fin 2))
+    (h : f ⁻¹' ({0} : Set (Fin 2)) = g ⁻¹' {0}) : f = g := by
   simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h
   ext1 x
-  exact Finₓ.fin_two_eq_of_eq_zero_iff (h x)
+  exact Fin.fin_two_eq_of_eq_zero_iff (h x)
 
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.Range f).Finite :=
   f.IsLocallyConstant.range_finite
@@ -328,7 +328,7 @@ theorem apply_eq_of_is_preconnected (f : LocallyConstant X Y) {s : Set X} (hs : 
   f.IsLocallyConstant.apply_eq_of_is_preconnected hs hx hy
 
 theorem apply_eq_of_preconnected_space [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) : f x = f y :=
-  f.IsLocallyConstant.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ
+  f.IsLocallyConstant.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=
   ext fun y => apply_eq_of_preconnected_space f _ _
@@ -367,9 +367,9 @@ def flip {X α β : Type _} [TopologicalSpace X] (f : LocallyConstant X (α → 
 
 /-- If α is finite, this constructs a locally constant function to `α → β` given a
 family of locally constant functions with values in β indexed by α. -/
-def unflip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
+def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
     LocallyConstant X (α → β) where
-  toFun := fun x a => f a x
+  toFun x a := f a x
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
     intro g
@@ -380,13 +380,13 @@ def unflip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : α → L
     apply (f a).IsLocallyConstant
 
 @[simp]
-theorem unflip_flip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : LocallyConstant X (α → β)) :
+theorem unflip_flip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : LocallyConstant X (α → β)) :
     unflip f.flip = f := by
   ext
   rfl
 
 @[simp]
-theorem flip_unflip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
+theorem flip_unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
     (unflip f).flip = f := by
   ext
   rfl

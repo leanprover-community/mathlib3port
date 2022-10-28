@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Johan Commelin, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
+import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
@@ -137,7 +137,7 @@ namespace OfCoimageImageComparisonIsIso
 /-- The factorisation of a morphism through its abelian image. -/
 @[simps]
 def imageMonoFactorisation {X Y : C} (f : X ⟶ Y) : MonoFactorisation f where
-  i := Abelian.image f
+  I := Abelian.image f
   m := kernel.ι _
   m_mono := inferInstance
   e := kernel.lift _ f (cokernel.condition _)
@@ -182,8 +182,7 @@ attribute [local instance] limits.has_finite_biproducts.of_has_finite_products
 is a normal mono category.
 -/
 def normalMonoCategory :
-    NormalMonoCategory
-      C where normalMonoOfMono := fun X Y f m =>
+    NormalMonoCategory C where normalMonoOfMono X Y f m :=
     { z := _, g := cokernel.π f, w := by simp,
       IsLimit := by
         haveI : limits.has_images C := has_images
@@ -207,7 +206,7 @@ is a normal epi category.
 -/
 def normalEpiCategory :
     NormalEpiCategory
-      C where normalEpiOfEpi := fun X Y f m =>
+      C where normalEpiOfEpi X Y f m :=
     { w := kernel f, g := kernel.ι _, w := kernel.condition _,
       IsColimit := by
         haveI : limits.has_images C := has_images
@@ -324,7 +323,7 @@ end
 /-- Factoring through the image is a strong epi-mono factorisation. -/
 @[simps]
 def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
-  i := Abelian.image f
+  I := Abelian.image f
   m := image.ι f
   m_mono := by infer_instance
   e := Abelian.factorThruImage f
@@ -333,7 +332,7 @@ def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
 /-- Factoring through the coimage is a strong epi-mono factorisation. -/
 @[simps]
 def coimageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
-  i := Abelian.coimage f
+  I := Abelian.coimage f
   m := Abelian.factorThruCoimage f
   m_mono := by infer_instance
   e := coimage.π f
@@ -474,7 +473,7 @@ abbrev pullbackToBiproduct : pullback f g ⟶ X ⊞ Y :=
     this may be that it induces an equalizer fork on the maps induced by `(f, 0)` and
     `(0, g)`. -/
 abbrev pullbackToBiproductFork : KernelFork (biprod.desc f (-g)) :=
-  KernelFork.ofι (pullbackToBiproduct f g) <| by rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_negₓ]
+  KernelFork.ofι (pullbackToBiproduct f g) <| by rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_neg]
 
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` is a kernel of the map induced by
     `(f, -g)`. -/
@@ -506,7 +505,7 @@ abbrev biproductToPushout : Y ⊞ Z ⟶ pushout f g :=
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` induces a cokernel cofork on the map
     `X ⟶ Y ⊞ Z` induced by `f` and `-g`. -/
 abbrev biproductToPushoutCofork : CokernelCofork (biprod.lift f (-g)) :=
-  CokernelCofork.ofπ (biproductToPushout f g) <| by rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_negₓ]
+  CokernelCofork.ofπ (biproductToPushout f g) <| by rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_neg]
 
 /-- The cofork induced by the canonical map `Y ⊞ Z ⟶ pushout f g` is in fact a colimit cokernel
     cofork. -/

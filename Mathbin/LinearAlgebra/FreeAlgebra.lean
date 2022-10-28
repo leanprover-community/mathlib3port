@@ -22,7 +22,7 @@ namespace FreeAlgebra
 /-- The `free_monoid X` basis on the `free_algebra R X`,
 mapping `[x₁, x₂, ..., xₙ]` to the "monomial" `1 • x₁ * x₂ * ⋯ * xₙ` -/
 @[simps]
-noncomputable def basisFreeMonoid (R : Type u) (X : Type v) [CommRingₓ R] : Basis (FreeMonoid X) R (FreeAlgebra R X) :=
+noncomputable def basisFreeMonoid (R : Type u) (X : Type v) [CommRing R] : Basis (FreeMonoid X) R (FreeAlgebra R X) :=
   Finsupp.basisSingleOne.map (equivMonoidAlgebraFreeMonoid.symm.toLinearEquiv : _ ≃ₗ[R] FreeAlgebra R X)
 
 -- TODO: generalize to `X : Type v`

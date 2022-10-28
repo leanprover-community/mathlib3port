@@ -95,7 +95,7 @@ structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField �
     ∀ i j k : Atlas H M,
       ∀ x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).Source,
         ∀ v, (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v
-  coord_change_smooth_clm :
+  coordChangeSmoothClm :
     ∀ i j : Atlas H M, ContDiffOn 𝕜 ∞ (coord_change i j ∘ I.symm) (I '' (i.1.symm.trans j.1).Source)
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
@@ -104,12 +104,12 @@ def trivialBasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField 
     [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
     [ChartedSpace H M] [SmoothManifoldWithCorners I M] (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F] :
     BasicSmoothVectorBundleCore I M F where
-  coordChange := fun i j x => ContinuousLinearMap.id 𝕜 F
-  coord_change_self := fun i x hx v => rfl
-  coord_change_comp := fun i j k x hx v => rfl
-  coord_change_smooth_clm := fun i j => by
+  coordChange i j x := ContinuousLinearMap.id 𝕜 F
+  coord_change_self i x hx v := rfl
+  coord_change_comp i j k x hx v := rfl
+  coordChangeSmoothClm i j := by
     dsimp
-    exact cont_diff_on_const
+    exact contDiffOnConst
 
 namespace BasicSmoothVectorBundleCore
 
@@ -120,6 +120,31 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 
 instance : Inhabited (BasicSmoothVectorBundleCore I M F) :=
   ⟨trivialBasicSmoothVectorBundleCore I M F⟩
+
+/-- A reformulation of `coord_change_comp`, formulated in terms of a point in `M`.
+The conditions on this point a significantly simpler than in `coord_change_comp`. -/
+theorem coord_change_comp' {i j k : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (hj : x ∈ j.1.Source) (hk : x ∈ k.1.Source)
+    (v : F) : Z.coordChange j k (j x) (Z.coordChange i j (i x) v) = Z.coordChange i k (i x) v := by
+  rw [show j x = _ by rw [← i.1.left_inv hi]]
+  apply Z.coord_change_comp
+  simp only [hi, hj, hk, mfld_simps]
+
+/-- A reformulation of `coord_change_self`, formulated in terms of a point in `M`. -/
+theorem coord_change_self' {i : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (v : F) : Z.coordChange i i (i x) v = v :=
+  Z.coord_change_self i (i x) (i.1.MapsTo hi) v
+
+/-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`. -/
+theorem coord_change_comp_eq_self (i j : Atlas H M) {x : H} (hx : x ∈ (i.1.symm.trans j.1).Source) (v : F) :
+    Z.coordChange j i (i.1.symm.trans j.1 x) (Z.coordChange i j x v) = v := by
+  rw [Z.coord_change_comp i j i x _ v, Z.coord_change_self _ _ hx.1]
+  simp only [mfld_simps] at hx
+  simp only [hx.1, hx.2, mfld_simps]
+
+/-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`,
+formulated in terms of a point in `M`. -/
+theorem coord_change_comp_eq_self' {i j : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (hj : x ∈ j.1.Source) (v : F) :
+    Z.coordChange j i (j x) (Z.coordChange i j (i x) v) = v := by
+  rw [Z.coord_change_comp' hi hj hi v, Z.coord_change_self' hi]
 
 theorem coord_change_continuous (i j : Atlas H M) : ContinuousOn (Z.coordChange i j) (i.1.symm.trans j.1).Source := by
   intro x hx
@@ -134,14 +159,14 @@ theorem coord_change_continuous (i j : Atlas H M) : ContinuousOn (Z.coordChange 
   · exact maps_to_image I _
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem coord_change_smooth (i j : Atlas H M) :
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem coordChangeSmooth (i j : Atlas H M) :
     ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2) ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
   by
   have A : ContDiff 𝕜 ∞ fun p : (F →L[𝕜] F) × F => p.1 p.2 := by
-    apply IsBoundedBilinearMap.cont_diff
-    exact is_bounded_bilinear_map_apply
+    apply IsBoundedBilinearMap.contDiff
+    exact isBoundedBilinearMapApply
   have B :
     ContDiffOn 𝕜 ∞ (fun p : E × F => (Z.coord_change i j (I.symm p.1), p.snd))
       ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
@@ -156,12 +181,12 @@ theorem coord_change_smooth (i j : Atlas H M) :
 /-- Vector bundle core associated to a basic smooth bundle core -/
 @[simps coordChange indexAt]
 def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas H M) where
-  BaseSet := fun i => i.1.Source
-  is_open_base_set := fun i => i.1.open_source
+  BaseSet i := i.1.Source
+  is_open_base_set i := i.1.open_source
   indexAt := achart H
-  mem_base_set_at := fun x => mem_chart_source H x
-  coordChange := fun i j x => Z.coordChange i j (i.1 x)
-  coord_change_self := fun i x hx v => Z.coord_change_self i (i.1 x) (i.1.map_source hx) v
+  mem_base_set_at x := mem_chart_source H x
+  coordChange i j x := Z.coordChange i j (i.1 x)
+  coord_change_self i x hx v := Z.coord_change_self i (i.1 x) (i.1.map_source hx) v
   coord_change_comp := fun i j k x ⟨⟨hx1, hx2⟩, hx3⟩ v => by
     have := Z.coord_change_comp i j k (i.1 x) _ v
     convert this using 2
@@ -169,7 +194,7 @@ def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas 
       
     · simp only [hx1, hx2, hx3, mfld_simps]
       
-  coord_change_continuous := fun i j => by
+  coord_change_continuous i j := by
     refine' ((Z.coord_change_continuous i j).comp' i.1.ContinuousOn).mono _
     rintro p ⟨hp₁, hp₂⟩
     refine' ⟨hp₁, i.1.MapsTo hp₁, _⟩
@@ -179,7 +204,7 @@ def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas 
 theorem base_set (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).BaseSet = i.1.Source :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
 theorem target (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).Target = i.1.Source ×ˢ univ :=
   rfl
@@ -190,13 +215,18 @@ def chart {e : LocalHomeomorph M H} (he : e ∈ Atlas H M) :
   (Z.toTopologicalVectorBundleCore.localTriv ⟨e, he⟩).toLocalHomeomorph.trans
     (LocalHomeomorph.prod e (LocalHomeomorph.refl F))
 
+theorem chart_apply {x : M} (z : Z.toTopologicalVectorBundleCore.TotalSpace) :
+    Z.chart (chart_mem_atlas H x) z =
+      (chartAt H x z.proj, Z.coordChange (achart H z.proj) (achart H x) (achart H z.proj z.proj) z.2) :=
+  rfl
+
 @[simp, mfld_simps]
 theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
     (Z.chart he).Source = Z.toTopologicalVectorBundleCore.proj ⁻¹' e.Source := by
   simp only [chart, mem_prod]
   mfld_set_tac
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
 theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) : (Z.chart he).Target = e.Target ×ˢ univ := by
   simp only [chart]
@@ -207,9 +237,9 @@ charts are in bijection with the charts of the basis. -/
 @[simps (config := lemmasOnly) chartAt]
 instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace where
   Atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ Atlas H M), {Z.chart he}
-  chartAt := fun p => Z.chart (chart_mem_atlas H p.1)
-  mem_chart_source := fun p => by simp [mem_chart_source]
-  chart_mem_atlas := fun p => by
+  chartAt p := Z.chart (chart_mem_atlas H p.1)
+  mem_chart_source p := by simp [mem_chart_source]
+  chart_mem_atlas p := by
     simp only [mem_Union, mem_singleton_iff, chart_mem_atlas]
     exact ⟨chart_at H p.1, chart_mem_atlas H p.1, rfl⟩
 
@@ -236,13 +266,12 @@ theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toTopologicalVectorBundleCore.
     ((chartAt (ModelProd H F) q).symm p).1 = ((chartAt H q.1).symm : H → M) p.1 :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
-instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toTopologicalVectorBundleCore.TotalSpace :=
-  by
+instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toTopologicalVectorBundleCore.TotalSpace := by
   /- We have to check that the charts belong to the smooth groupoid, i.e., they are smooth on their
     source, and their inverses are smooth on the target. Since both objects are of the same kind, it
     suffices to prove the first statement in A below, and then glue back the pieces at the end. -/
@@ -310,14 +339,14 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Basic smooth bundle core version of the tangent bundle of a smooth manifold `M` modelled over a
 model with corners `I` on `(E, H)`. The fibers are equal to `E`, and the coordinate change in the
 fiber corresponds to the derivative of the coordinate change in `M`. -/
 @[simps]
 def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
-  coordChange := fun i j x => fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (Range I) (I x)
-  coord_change_smooth_clm := fun i j => by
+  coordChange i j x := fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (Range I) (I x)
+  coordChangeSmoothClm i j := by
     rw [I.image_eq]
     have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
       (HasGroupoid.compatible (contDiffGroupoid ∞ I) i.2 j.2).1
@@ -328,7 +357,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
           (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) p.1 : E → E)
             p.2)
         ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) ×ˢ univ) :=
-      cont_diff_on_fderiv_within_apply A B le_top
+      contDiffOnFderivWithinApply A B le_top
     have D :
       ∀ x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I,
         fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) x =
@@ -344,7 +373,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
     intro x hx
     simp only [mfld_simps] at hx
     simp only [hx, D, mfld_simps]
-  coord_change_self := fun i x hx v => by
+  coord_change_self i x hx v := by
     /- Locally, a self-change of coordinate is just the identity, thus its derivative is the
         identity. One just needs to write this carefully, paying attention to the sets where the
         functions are defined. -/
@@ -365,7 +394,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
     rw [fderiv_within_id I.unique_diff_at_image] at C
     rw [C]
     rfl
-  coord_change_comp := fun i j u x hx => by
+  coord_change_comp i j u x hx := by
     /- The cocycle property is just the fact that the derivative of a composition is the product of
         the derivatives. One needs however to check that all the functions one considers are smooth, and
         to pay attention to the domains where these functions are defined, making this proof a little
@@ -517,7 +546,7 @@ variable {M} (x : M)
 
 instance : TopologicalSpace (TangentSpace I x) := by infer_instance
 
-instance : AddCommGroupₓ (TangentSpace I x) := by infer_instance
+instance : AddCommGroup (TangentSpace I x) := by infer_instance
 
 instance : TopologicalAddGroup (TangentSpace I x) := by infer_instance
 
@@ -537,7 +566,7 @@ instance : ChartedSpace (ModelProd H E) TM :=
   (tangentBundleCore I M).toChartedSpace
 
 instance : SmoothManifoldWithCorners I.tangent TM :=
-  (tangentBundleCore I M).to_smooth_manifold
+  (tangentBundleCore I M).toSmoothManifold
 
 instance : TopologicalVectorBundle 𝕜 E (TangentSpace I : M → Type _) :=
   TopologicalVectorBundleCore.Fiber.topologicalVectorBundle (tangentBundleCore I M).toTopologicalVectorBundleCore
@@ -558,7 +587,7 @@ theorem tangent_bundle_proj_open : IsOpenMap (TangentBundle.proj I M) :=
 between a product type and a sigma type, a.k.a. `equiv.sigma_equiv_prod`. -/
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
-    (chartAt (ModelProd H E) p).toLocalEquiv = (Equivₓ.sigmaEquivProd H E).toLocalEquiv := by
+    (chartAt (ModelProd H E) p).toLocalEquiv = (Equiv.sigmaEquivProd H E).toLocalEquiv := by
   have A : ∀ x_fst, fderivWithin 𝕜 (I ∘ I.symm) (range I) (I x_fst) = ContinuousLinearMap.id 𝕜 E := by
     intro x_fst
     have : fderivWithin 𝕜 (I ∘ I.symm) (range I) (I x_fst) = fderivWithin 𝕜 id (range I) (I x_fst) := by
@@ -566,14 +595,14 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
       exact ModelWithCorners.right_inv _ hy
     rwa [fderiv_within_id I.unique_diff_at_image] at this
   ext x : 1
-  show (chart_at (ModelProd H E) p : TangentBundle I H → ModelProd H E) x = (Equivₓ.sigmaEquivProd H E) x
+  show (chart_at (ModelProd H E) p : TangentBundle I H → ModelProd H E) x = (Equiv.sigmaEquivProd H E) x
   · cases x
     simp only [chart_at, BasicSmoothVectorBundleCore.chart, tangentBundleCore,
-      BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, A, Prod.mk.inj_iffₓ, ContinuousLinearMap.coe_id',
+      BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, A, Prod.mk.inj_iff, ContinuousLinearMap.coe_id',
       mfld_simps]
-    exact (tangentBundleCore I H).coord_change_self _ _ trivialₓ x_snd
+    exact (tangentBundleCore I H).coord_change_self _ _ trivial x_snd
     
-  show ∀ x, (chart_at (ModelProd H E) p).toLocalEquiv.symm x = (Equivₓ.sigmaEquivProd H E).symm x
+  show ∀ x, (chart_at (ModelProd H E) p).toLocalEquiv.symm x = (Equiv.sigmaEquivProd H E).symm x
   · rintro ⟨x_fst, x_snd⟩
     simp only [BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, tangentBundleCore, A,
       ContinuousLinearMap.coe_id', BasicSmoothVectorBundleCore.chart, chart_at, ContinuousLinearMap.coe_coe,
@@ -585,13 +614,13 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_coe_chart_at (p : TangentBundle I H) :
-    ⇑(chartAt (ModelProd H E) p) = Equivₓ.sigmaEquivProd H E := by
+    ⇑(chartAt (ModelProd H E) p) = Equiv.sigmaEquivProd H E := by
   unfold_coes
   simp only [mfld_simps]
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_coe_chart_at_symm (p : TangentBundle I H) :
-    ((chartAt (ModelProd H E) p).symm : ModelProd H E → TangentBundle I H) = (Equivₓ.sigmaEquivProd H E).symm := by
+    ((chartAt (ModelProd H E) p).symm : ModelProd H E → TangentBundle I H) = (Equiv.sigmaEquivProd H E).symm := by
   unfold_coes
   simp only [mfld_simps]
 
@@ -600,7 +629,7 @@ variable (H)
 /-- The canonical identification between the tangent bundle to the model space and the product,
 as a homeomorphism -/
 def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :=
-  { Equivₓ.sigmaEquivProd H E with
+  { Equiv.sigmaEquivProd H E with
     continuous_to_fun := by
       let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
       have : Continuous (chart_at (ModelProd H E) p) := by
@@ -618,13 +647,13 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_homeomorph_coe :
-    (tangentBundleModelSpaceHomeomorph H I : TangentBundle I H → ModelProd H E) = Equivₓ.sigmaEquivProd H E :=
+    (tangentBundleModelSpaceHomeomorph H I : TangentBundle I H → ModelProd H E) = Equiv.sigmaEquivProd H E :=
   rfl
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_homeomorph_coe_symm :
     ((tangentBundleModelSpaceHomeomorph H I).symm : ModelProd H E → TangentBundle I H) =
-      (Equivₓ.sigmaEquivProd H E).symm :=
+      (Equiv.sigmaEquivProd H E).symm :=
   rfl
 
 end TangentBundle

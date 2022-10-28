@@ -126,13 +126,13 @@ theorem rdrop_while_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by 
 
 -- it is in this file because it requires `list.infix`
 @[simp]
-theorem drop_while_eq_self_iff : dropWhileₓ p l = l ↔ ∀ hl : 0 < l.length, ¬p (l.nthLe 0 hl) := by
+theorem drop_while_eq_self_iff : dropWhile' p l = l ↔ ∀ hl : 0 < l.length, ¬p (l.nthLe 0 hl) := by
   induction' l with hd tl IH
   · simp
     
   · rw [drop_while]
     split_ifs
-    · simp only [h, length, nth_le, Nat.succ_pos', not_true, forall_true_left, iff_falseₓ]
+    · simp only [h, length, nth_le, Nat.succ_pos', not_true, forall_true_left, iff_false_iff]
       intro H
       refine' (cons_ne_self hd tl) (sublist.antisymm _ (sublist_cons _ _))
       rw [← H]
@@ -146,18 +146,18 @@ theorem drop_while_eq_self_iff : dropWhileₓ p l = l ↔ ∀ hl : 0 < l.length,
 theorem rdrop_while_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p (l.last hl) := by
   simp only [rdrop_while, reverse_eq_iff, length_reverse, Ne.def, drop_while_eq_self_iff, last_eq_nth_le, ←
     length_eq_zero, pos_iff_ne_zero]
-  refine' forall_congrₓ _
+  refine' forall_congr _
   intro h
   rw [nth_le_reverse']
   · simp
     
   · rw [← Ne.def, ← pos_iff_ne_zero] at h
-    simp [tsub_lt_iff_right (Nat.succ_le_of_ltₓ h)]
+    simp [tsub_lt_iff_right (Nat.succ_le_of_lt h)]
     
 
 variable (p) (l)
 
-theorem drop_while_idempotent : dropWhileₓ p (dropWhileₓ p l) = dropWhileₓ p l :=
+theorem drop_while_idempotent : dropWhile' p (dropWhile' p l) = dropWhile' p l :=
   drop_while_eq_self_iff.mpr (drop_while_nth_le_zero_not _ _)
 
 theorem rdrop_while_idempotent : rdropWhile p (rdropWhile p l) = rdropWhile p l :=

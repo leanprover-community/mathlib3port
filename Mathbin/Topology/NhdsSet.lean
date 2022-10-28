@@ -55,7 +55,7 @@ theorem mem_nhds_set_iff_exists : s ∈ 𝓝ˢ t ↔ ∃ U : Set α, IsOpen U �
   rw [← subset_interior_iff_mem_nhds_set, subset_interior_iff]
 
 theorem has_basis_nhds_set (s : Set α) : (𝓝ˢ s).HasBasis (fun U => IsOpen U ∧ s ⊆ U) fun U => U :=
-  ⟨fun t => by simp [mem_nhds_set_iff_exists, and_assocₓ]⟩
+  ⟨fun t => by simp [mem_nhds_set_iff_exists, and_assoc']⟩
 
 theorem IsOpen.mem_nhds_set (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
   rw [← subset_interior_iff_mem_nhds_set, interior_eq_iff_is_open.mpr hU]
@@ -93,7 +93,7 @@ theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by rw [is_open_univ.nhds
 theorem nhds_set_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
   Sup_le_Sup <| image_subset _ h
 
-theorem monotone_nhds_set : Monotoneₓ (𝓝ˢ : Set α → Filter α) := fun s t => nhds_set_mono
+theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t => nhds_set_mono
 
 theorem nhds_le_nhds_set (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
   le_Sup <| mem_image_of_mem _ h

@@ -35,9 +35,9 @@ variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
 
 namespace IsScalarTower
 
-section Semiringₓ
+section Semiring
 
-variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
+variable [CommSemiring R] [CommSemiring S] [Semiring A] [Semiring B]
 
 variable [Algebra R S] [Algebra S A] [Algebra S B] [Algebra R A] [Algebra R B]
 
@@ -57,27 +57,27 @@ def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n
   haveI : Invertible (algebraMap ℕ R n) := inv
   invertible.algebra_tower ℕ R A n
 
-end Semiringₓ
+end Semiring
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B]
+variable [CommSemiring R] [CommSemiring A] [CommSemiring B]
 
 variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
-end CommSemiringₓ
+end CommSemiring
 
 end IsScalarTower
 
 namespace Algebra
 
-theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A]
+theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiring R] [CommSemiring S] [Semiring A]
     [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :
     adjoin R (algebraMap S A '' s) = (adjoin R s).map (IsScalarTower.toAlgHom R S A) :=
-  le_antisymmₓ (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
+  le_antisymm (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
     (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 
-theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiringₓ C] [CommSemiringₓ D] [CommSemiringₓ E] [Algebra C D]
+theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [Algebra C D]
     [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
     (Algebra.adjoin D S).restrictScalars C =
       (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars C :=
@@ -96,9 +96,9 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiringₓ C] [CommSemiri
     exact ⟨z, Eq.trans h1 h2⟩
     
 
-theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiringₓ C] [CommSemiringₓ D] [CommSemiringₓ E]
-    [CommSemiringₓ F] [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F] [Algebra E F] [IsScalarTower C D F]
-    [IsScalarTower C E F] {S : Set D} {T : Set E} (hS : Algebra.adjoin C S = ⊤) (hT : Algebra.adjoin C T = ⊤) :
+theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [CommSemiring F]
+    [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F] [Algebra E F] [IsScalarTower C D F] [IsScalarTower C E F]
+    {S : Set D} {T : Set E} (hS : Algebra.adjoin C S = ⊤) (hT : Algebra.adjoin C T = ⊤) :
     (Algebra.adjoin E (algebraMap D F '' S)).restrictScalars C =
       (Algebra.adjoin D (algebraMap E F '' T)).restrictScalars C :=
   by
@@ -112,20 +112,20 @@ section
 
 open Classical
 
-theorem Algebra.fg_trans' {R S A : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A] [Algebra R S]
-    [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg) (hSA : (⊤ : Subalgebra S A).Fg) :
+theorem Algebra.fgTrans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A] [Algebra R S] [Algebra S A]
+    [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg) (hSA : (⊤ : Subalgebra S A).Fg) :
     (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
   ⟨s.Image (algebraMap S A) ∪ t, by
-    rw [Finsetₓ.coe_union, Finsetₓ.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
+    rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
       Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
 
 end
 
 section AlgebraMapCoeffs
 
-variable {R} (A) {ι M : Type _} [CommSemiringₓ R] [Semiringₓ A] [AddCommMonoidₓ M]
+variable {R} (A) {ι M : Type _} [CommSemiring R] [Semiring A] [AddCommMonoid M]
 
 variable [Algebra R A] [Module A M] [Module R M] [IsScalarTower R A M]
 
@@ -146,7 +146,7 @@ theorem Basis.coe_algebra_map_coeffs : (b.algebraMapCoeffs A h : ι → M) = b :
 
 end AlgebraMapCoeffs
 
-section Semiringₓ
+section Semiring
 
 open Finsupp
 
@@ -156,11 +156,11 @@ universe v₁ w₁
 
 variable {R S A}
 
-variable [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
+variable [CommSemiring R] [Semiring S] [AddCommMonoid A]
 
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A} (hb : LinearIndependent R b)
     (hc : LinearIndependent S c) : LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 := by
   rw [linear_independent_iff'] at hb hc
@@ -170,11 +170,11 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
   · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
       rw [← hsg]
       exact
-        ((Finsetₓ.sum_subset Finsetₓ.subset_product) fun p _ hp =>
+        ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
             show g p • b p.1 • c p.2 = 0 by rw [hg p hp, zero_smul]).symm
-    rw [Finsetₓ.sum_product_right] at h1
-    simp_rw [← smul_assoc, ← Finsetₓ.sum_smul] at h1
-    exact hb _ _ (hc _ _ h1 k (Finsetₓ.mem_image_of_mem _ hik)) i (Finsetₓ.mem_image_of_mem _ hik)
+    rw [Finset.sum_product_right] at h1
+    simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
+    exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
     
   exact hg _ hik
 
@@ -183,8 +183,8 @@ where the `(i, j)`th basis vector is `b i • c j`. -/
 noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) : Basis (ι × ι') R A :=
   Basis.of_repr
     (c.repr.restrictScalars R ≪≫ₗ
-      (Finsupp.lcongr (Equivₓ.refl _) b.repr ≪≫ₗ
-        ((finsuppProdLequiv R).symm ≪≫ₗ Finsupp.lcongr (Equivₓ.prodComm ι' ι) (LinearEquiv.refl _ _))))
+      (Finsupp.lcongr (Equiv.refl _) b.repr ≪≫ₗ
+        ((finsuppProdLequiv R).symm ≪≫ₗ Finsupp.lcongr (Equiv.prodComm ι' ι) (LinearEquiv.refl _ _))))
 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x ij) :
@@ -208,32 +208,32 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   · simp [hi]
     
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
 variable {R S}
 
-variable [CommRingₓ R] [Ringₓ S] [Algebra R S]
+variable [CommRing R] [Ring S] [Algebra R S]
 
 theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S] (b : Basis ι R S) :
     Function.Injective (algebraMap R S) :=
   have : NoZeroSmulDivisors R S := b.NoZeroSmulDivisors
   NoZeroSmulDivisors.algebra_map_injective R S
 
-end Ringₓ
+end Ring
 
 section ArtinTate
 
 variable (C : Type _)
 
-section Semiringₓ
+section Semiring
 
-variable [CommSemiringₓ A] [CommSemiringₓ B] [Semiringₓ C]
+variable [CommSemiring A] [CommSemiring B] [Semiring C]
 
 variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
-open Finsetₓ Submodule
+open Finset Submodule
 
 open Classical
 
@@ -244,27 +244,27 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   have := hy
   simp_rw [eq_top_iff', mem_span_finset] at this
   choose f hf
-  let s : Finsetₓ B := Finsetₓ.image₂ f (x ∪ y * y) y
-  have hxy : ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) := fun xi hxi =>
+  let s : Finset B := Finset.image₂ f (x ∪ y * y) y
+  have hxy : ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) := fun xi hxi =>
     hf xi ▸
       sum_mem fun yj hyj =>
-        smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C))
+        smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
           ⟨f xi yj, Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_left _ hxi) hyj⟩
           (subset_span <| mem_insert_of_mem hyj)
   have hyy :
-    span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) *
-        span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) ≤
-      span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) :=
+    span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) *
+        span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) ≤
+      span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
     by
     rw [span_mul_span, span_le, coe_insert]
     rintro _ ⟨yi, yj, rfl | hyi, rfl | hyj, rfl⟩
-    · rw [mul_oneₓ]
+    · rw [mul_one]
       exact subset_span (Set.mem_insert _ _)
       
-    · rw [one_mulₓ]
+    · rw [one_mul]
       exact subset_span (Set.mem_insert_of_mem _ hyj)
       
-    · rw [mul_oneₓ]
+    · rw [mul_one]
       exact subset_span (Set.mem_insert_of_mem _ hyi)
       
     · rw [← hf (yi * yj)]
@@ -276,18 +276,18 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
                 Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
       
-  refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
+  refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fgAdjoinFinset _, insert 1 y, _⟩
   refine' restrict_scalars_injective A _ _ _
   rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span, span_le]
   refine' fun r hr =>
     Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _) fun p q hp hq =>
       hyy <| Submodule.mul_mem_mul hp hq
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable [CommRingₓ A] [CommRingₓ B] [CommRingₓ C]
+variable [CommRing A] [CommRing B] [CommRing C]
 
 variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
@@ -296,24 +296,24 @@ A is noetherian, and C is algebra-finite over A, and C is module-finite over B,
 then B is algebra-finite over A.
 
 References: Atiyah--Macdonald Proposition 7.8; Stacks 00IS; Altman--Kleiman 16.17. -/
-theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg)
+theorem fgOfFgOfFg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg)
     (hBCi : Function.Injective (algebraMap B C)) : (⊤ : Subalgebra A B).Fg :=
   let ⟨B₀, hAB₀, hB₀C⟩ := exists_subalgebra_of_fg A B C hAC hBC
-  Algebra.fg_trans' (B₀.fg_top.2 hAB₀) <|
-    Subalgebra.fg_of_submodule_fg <|
+  Algebra.fgTrans' (B₀.fg_top.2 hAB₀) <|
+    Subalgebra.fgOfSubmoduleFg <|
       have : IsNoetherianRing B₀ := is_noetherian_ring_of_fg hAB₀
       have : IsNoetherian B₀ C := is_noetherian_of_fg_of_noetherian' hB₀C
       fg_of_injective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
 
-end Ringₓ
+end Ring
 
 end ArtinTate
 
 section AlgHomTower
 
-variable {A} {C D : Type _} [CommSemiringₓ A] [CommSemiringₓ C] [CommSemiringₓ D] [Algebra A C] [Algebra A D]
+variable {A} {C D : Type _} [CommSemiring A] [CommSemiring C] [CommSemiring D] [Algebra A C] [Algebra A D]
 
-variable (f : C →ₐ[A] D) (B) [CommSemiringₓ B] [Algebra A B] [Algebra B C] [IsScalarTower A B C]
+variable (f : C →ₐ[A] D) (B) [CommSemiring B] [Algebra A B] [Algebra B C] [IsScalarTower A B C]
 
 /-- Restrict the domain of an `alg_hom`. -/
 def AlgHom.restrictDomain : B →ₐ[A] D :=
@@ -327,11 +327,11 @@ variable {B}
 
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
 def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
-  toFun := fun f => ⟨f.restrictDomain B, f.extendScalars B⟩
-  invFun := fun fg =>
+  toFun f := ⟨f.restrictDomain B, f.extendScalars B⟩
+  invFun fg :=
     let alg := fg.1.toRingHom.toAlgebra
     fg.2.restrictScalars A
-  left_inv := fun f => by
+  left_inv f := by
     dsimp only
     ext
     rfl

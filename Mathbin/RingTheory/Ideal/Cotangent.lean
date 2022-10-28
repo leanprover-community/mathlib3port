@@ -24,14 +24,14 @@ Additional support is also given to the cotangent space `m ⧸ m ^ 2` of a local
 
 namespace Ideal
 
-variable {R S S' : Type _} [CommRingₓ R] [CommSemiringₓ S] [Algebra S R]
+variable {R S S' : Type _} [CommRing R] [CommSemiring S] [Algebra S R]
 
-variable [CommSemiringₓ S'] [Algebra S' R] [Algebra S S'] [IsScalarTower S S' R] (I : Ideal R)
+variable [CommSemiring S'] [Algebra S' R] [Algebra S S'] [IsScalarTower S S' R] (I : Ideal R)
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I)
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I) -/
 /-- `I ⧸ I ^ 2` as a quotient of `I`. -/
 def Cotangent : Type _ :=
-  I ⧸ (I • ⊤ : Submodule R I)deriving AddCommGroupₓ,
+  I ⧸ (I • ⊤ : Submodule R I)deriving AddCommGroup,
   ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I)
 
 instance : Inhabited I.Cotangent :=
@@ -80,12 +80,12 @@ theorem to_cotangent_range : I.toCotangent.range = ⊤ :=
 theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentElem I := by
   constructor
   · intro H
-    refine' (pow_two I).symm.trans (le_antisymmₓ (Ideal.pow_le_self two_ne_zero) _)
+    refine' (pow_two I).symm.trans (le_antisymm (Ideal.pow_le_self two_ne_zero) _)
     exact fun x hx => (I.to_cotangent_eq_zero ⟨x, hx⟩).mp (Subsingleton.elim _ _)
     
   · exact fun e =>
       ⟨fun x y =>
-        (Quotientₓ.induction_on₂' x y) fun x y =>
+        (Quotient.induction_on₂' x y) fun x y =>
           I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.Prop y.Prop⟩
     
 
@@ -124,8 +124,11 @@ theorem cotangent_ideal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ := by
     exact add_mem hx hy
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (I.cotangent_to_quotient_square.comp I.to_cotangent).range]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem to_quotient_square_range : I.cotangentToQuotientSquare.range = I.cotangentIdeal.restrictScalars R := by
-  trans (I.cotangent_to_quotient_square.comp I.to_cotangent).range
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (I.cotangent_to_quotient_square.comp I.to_cotangent).range]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · rw [LinearMap.range_comp, I.to_cotangent_range, Submodule.map_top]
     
   · rw [to_quotient_square_comp_to_cotangent, LinearMap.range_comp, I.range_subtype]
@@ -140,7 +143,7 @@ noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal :
     { I.cotangent_to_quotient_square.cod_restrict (I.cotangent_ideal.restrict_scalars R) fun x => by
         rw [← to_quotient_square_range]
         exact LinearMap.mem_range_self _ _,
-      Equivₓ.ofBijective _ ⟨_, _⟩ with }
+      Equiv.ofBijective _ ⟨_, _⟩ with }
   · rintro x y e
     replace e := congr_arg Subtype.val e
     obtain ⟨x, rfl⟩ := I.to_cotangent_surjective x
@@ -164,7 +167,7 @@ theorem cotangent_equiv_ideal_symm_apply (x : R) (hx : x ∈ I) :
   ext
   rfl
 
-variable {A B : Type _} [CommRingₓ A] [CommRingₓ B] [Algebra R A] [Algebra R B]
+variable {A B : Type _} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
 /-- The lift of `f : A →ₐ[R] B` to `A ⧸ J ^ 2 →ₐ[R] B` with `J` being the kernel of `f`. -/
 def _root_.alg_hom.ker_square_lift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[R] B := by
@@ -180,7 +183,7 @@ def _root_.alg_hom.ker_square_lift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^
 
 theorem _root_.alg_hom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
     f.kerSquareLift.toRingHom.ker = f.toRingHom.ker.cotangentIdeal := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · intro x hx
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact ⟨x, hx, rfl⟩
@@ -199,7 +202,7 @@ end Ideal
 
 namespace LocalRing
 
-variable (R : Type _) [CommRingₓ R] [LocalRing R]
+variable (R : Type _) [CommRing R] [LocalRing R]
 
 /-- The `A ⧸ I`-vector space `I ⧸ I ^ 2`. -/
 @[reducible]

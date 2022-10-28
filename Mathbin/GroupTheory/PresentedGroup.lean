@@ -35,7 +35,7 @@ def PresentedGroup (rels : Set (FreeGroup α)) : Type :=
 
 namespace PresentedGroup
 
-instance (rels : Set (FreeGroup α)) : Groupₓ (PresentedGroup rels) :=
+instance (rels : Set (FreeGroup α)) : Group (PresentedGroup rels) :=
   QuotientGroup.Quotient.group _
 
 /-- `of` is the canonical map from `α` to a presented group with generators `x : α`. The term `x` is
@@ -50,7 +50,7 @@ Presented groups satisfy a universal property. If `G` is a group and `f : α →
 the images of `f` satisfy all the given relations, then `f` extends uniquely to a group homomorphism
 from `presented_group rels` to `G`.
 -/
-variable {G : Type} [Groupₓ G] {f : α → G} {rels : Set (FreeGroup α)}
+variable {G : Type} [Group G] {f : α → G} {rels : Set (FreeGroup α)}
 
 -- mathport name: exprF
 local notation "F" => FreeGroup.lift f

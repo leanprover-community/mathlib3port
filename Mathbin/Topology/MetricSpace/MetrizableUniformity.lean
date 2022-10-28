@@ -49,29 +49,29 @@ variable {X : Type _}
 
 namespace PseudoMetricSpace
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
 noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) :
     PseudoMetricSpace X where
-  dist := fun x y => ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
-  dist_self := fun x =>
+  dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
+  dist_self x :=
     (Nnreal.coe_eq_zero _).2 <|
       nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp [dist_self]
-  dist_comm := fun x y =>
+  dist_comm x y :=
     Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
       rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse, reverse_singleton, singleton_append,
         reverse_cons, reverse_reverse, zip_with_comm _ dist_comm]
       simp only [length, length_append]
-  dist_triangle := fun x y z => by
+  dist_triangle x y z := by
     rw [← Nnreal.coe_add, Nnreal.coe_le_coe]
     refine' Nnreal.le_infi_add_infi fun lxy lyz => _
     calc
@@ -82,7 +82,7 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc, append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y =
       ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0) :=
@@ -93,11 +93,11 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y ≤ d x y :=
   Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
-    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
+    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
 `y`. Let `dist` be the largest pseudometric distance such that `dist x y ≤ d x y`, see
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
@@ -117,9 +117,9 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   have hd₀_trans : Transitive fun x y => d x y = 0 := by
     intro a b c hab hbc
     rw [← nonpos_iff_eq_zero]
-    simpa only [*, max_eq_rightₓ, mul_zero] using hd a b c c
+    simpa only [*, max_eq_right, mul_zero] using hd a b c c
   haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
-  induction' hn : length l using Nat.strong_induction_onₓ with n ihn generalizing x y l
+  induction' hn : length l using Nat.strong_induction_on with n ihn generalizing x y l
   simp only at ihn
   subst n
   set L := zip_with d (x::l) (l ++ [y])
@@ -129,7 +129,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z z' : X),\n    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
-  · exact (hd x z z' y).trans (mul_le_mul_left' (max_leₓ hxz (max_leₓ hzz' hz'y)) _)
+  · exact (hd x z z' y).trans (mul_le_mul_left' (max_le hxz (max_le hzz' hz'y)) _)
     
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }
   have hs₀ : 0 ∈ s := by simp [s]
@@ -137,7 +137,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M := by
     have hs_ub : length l ∈ UpperBounds s := by
       intro m hm
-      rw [← not_ltₓ, Nat.lt_iff_add_one_le, ← hL_len]
+      rw [← not_lt, Nat.lt_iff_add_one_le, ← hL_len]
       intro hLm
       rw [mem_set_of_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero, sum_eq_zero_iff, ←
           all₂_iff_forall, all₂_zip_with, ← chain_append_singleton_iff_forall₂] at hm <;>
@@ -155,7 +155,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     · simp [dist_self]
       
     rw [Nat.succ_le_iff] at hMl
-    have hMl' : length (take M l) = M := (length_take _ _).trans (min_eq_leftₓ hMl.le)
+    have hMl' : length (take M l) = M := (length_take _ _).trans (min_eq_left hMl.le)
     simp only [nth_le]
     refine' (ihn _ hMl _ _ _ hMl').trans _
     convert hMs.1.out
@@ -167,14 +167,14 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     apply nth_le_zip_with
     
   · rcases hMl.eq_or_lt with (rfl | hMl)
-    · simp only [nth_le_append_right le_rflₓ, sub_self, nth_le_singleton, dist_self, zero_le]
+    · simp only [nth_le_append_right le_rfl, sub_self, nth_le_singleton, dist_self, zero_le]
       
     rw [nth_le_append _ hMl]
     have hlen : length (drop (M + 1) l) = length l - (M + 1) := length_drop _ _
-    have hlen_lt : length l - (M + 1) < length l := Nat.sub_lt_of_pos_leₓ _ _ M.succ_pos hMl
+    have hlen_lt : length l - (M + 1) < length l := Nat.sub_lt_of_pos_le _ _ M.succ_pos hMl
     refine' (ihn _ hlen_lt _ y _ hlen).trans _
     rw [cons_nth_le_drop_succ]
-    have hMs' : L.sum ≤ 2 * (L.take (M + 1)).Sum := not_ltₓ.1 fun h => (hMs.2 h.le).not_lt M.lt_succ_self
+    have hMs' : L.sum ≤ 2 * (L.take (M + 1)).Sum := not_lt.1 fun h => (hMs.2 h.le).not_lt M.lt_succ_self
     rw [← sum_take_add_sum_drop L (M + 1), two_mul, add_le_add_iff_left, ← add_le_add_iff_right, sum_take_add_sum_drop,
       ← two_mul] at hMs'
     convert hMs'
@@ -207,31 +207,31 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       ⟨φ, hφ_mono, hφ_comp, hφB⟩
     exact ⟨V ∘ φ, fun n => hV_symm _, hφ_comp, hφB⟩
   letI := UniformSpace.separationSetoid X
-  set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.findₓ h else 0
+  set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.find h else 0
   have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
     intro x y
     dsimp only [d]
     refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
-    simp only [true_implies_iff]
+    simp only [true_imp_iff]
     split_ifs with h
     · rw [← not_forall] at h
       simp [h, pow_eq_zero_iff']
       
-    · simpa only [not_exists, not_not, eq_self_iff_true, true_iffₓ] using h
+    · simpa only [not_exists, not_not, eq_self_iff_true, true_iff_iff] using h
       
   have hd_symm : ∀ x y, d x y = d y x := by
     intro x y
     dsimp only [d]
     simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
   have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
-  letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoidₓ.refl _)) hd_symm
+  letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
   have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_of_prenndist_le _ _ _
   have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n := by
     intro x y n
     simp only [d]
     split_ifs with h
     · rw [(strict_anti_pow hr.1 hr.2).le_iff_le, Nat.find_le_iff]
-      exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rflₓ, h⟩⟩
+      exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rfl, h⟩⟩
       
     · push_neg  at h
       simp only [h, not_true, (pow_pos hr.1 _).not_le]
@@ -240,24 +240,24 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     refine' PseudoMetricSpace.le_two_mul_dist_of_prenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
     by_cases H:∃ n, (x₁, x₄) ∉ U n
     · refine' (dif_pos H).trans_le _
-      rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ'ₓ]
+      rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
       simp only [le_max_iff, hle_d, ← not_and_distrib]
       rintro ⟨h₁₂, h₂₃, h₃₄⟩
-      refine' Nat.find_specₓ H (hU_comp (lt_add_one <| Nat.findₓ H) _)
+      refine' Nat.find_spec H (hU_comp (lt_add_one <| Nat.find H) _)
       exact ⟨x₂, h₁₂, x₃, h₂₃, h₃₄⟩
       
     · exact (dif_neg H).trans_le (zero_le _)
       
   refine' ⟨I, uniform_space_eq <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
   · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
-    rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_leₓ, hle_d, not_not, Prod.mk.etaₓ]
+    rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_le, hle_d, not_not, Prod.mk.eta]
     
-  · refine' fun n hn => ⟨n + 1, trivialₓ, fun x hx => _⟩
+  · refine' fun n hn => ⟨n + 1, trivial, fun x hx => _⟩
     rw [mem_set_of_eq] at hx
     contrapose! hx
-    refine' le_transₓ _ ((div_le_iff' (@two_pos ℝ _ _)).2 (hd_le x.1 x.2))
-    rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ'ₓ, mul_one_div,
-      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (@two_ne_zero ℝ≥0 _ _), hle_d, Prod.mk.etaₓ]
+    refine' le_trans _ ((div_le_iff' (@two_pos ℝ _ _)).2 (hd_le x.1 x.2))
+    rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ', mul_one_div,
+      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (@two_ne_zero ℝ≥0 _ _), hle_d, Prod.mk.eta]
     
 
 /-- A `pseudo_metric_space` instance compatible with a given `uniform_space` structure. -/
@@ -272,14 +272,14 @@ protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace 
   @ofT0PseudoMetricSpace X (UniformSpace.pseudoMetricSpace X) _
 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
-instance (priority := 100) UniformSpace.pseudo_metrizable_space [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
+instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
     TopologicalSpace.PseudoMetrizableSpace X := by
   letI := UniformSpace.pseudoMetricSpace X
   infer_instance
 
 /-- A T₀ uniform space with countably generated `𝓤 X` is metrizable. This is not an instance to
 avoid loops. -/
-theorem UniformSpace.metrizable_space [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
+theorem UniformSpace.metrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
     TopologicalSpace.MetrizableSpace X := by
   letI := UniformSpace.metricSpace X
   infer_instance

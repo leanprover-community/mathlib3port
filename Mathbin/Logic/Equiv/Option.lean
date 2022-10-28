@@ -18,7 +18,7 @@ We define
 -/
 
 
-namespace Equivₓ
+namespace Equiv
 
 open Option
 
@@ -31,11 +31,11 @@ section OptionCongr
 def optionCongr (e : α ≃ β) : Option α ≃ Option β where
   toFun := Option.map e
   invFun := Option.map e.symm
-  left_inv := fun x => (Option.map_mapₓ _ _ _).trans <| e.symm_comp_self.symm ▸ congr_fun Option.map_id x
-  right_inv := fun x => (Option.map_mapₓ _ _ _).trans <| e.self_comp_symm.symm ▸ congr_fun Option.map_id x
+  left_inv x := (Option.map_map _ _ _).trans <| e.symm_comp_self.symm ▸ congr_fun Option.map_id x
+  right_inv x := (Option.map_map _ _ _).trans <| e.self_comp_symm.symm ▸ congr_fun Option.map_id x
 
 @[simp]
-theorem option_congr_refl : optionCongr (Equivₓ.refl α) = Equivₓ.refl _ :=
+theorem option_congr_refl : optionCongr (Equiv.refl α) = Equiv.refl _ :=
   ext <| congr_fun Option.map_id
 
 @[simp]
@@ -45,7 +45,7 @@ theorem option_congr_symm (e : α ≃ β) : (optionCongr e).symm = optionCongr e
 @[simp]
 theorem option_congr_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) :
     (optionCongr e₁).trans (optionCongr e₂) = optionCongr (e₁.trans e₂) :=
-  ext <| Option.map_mapₓ _ _
+  ext <| Option.map_map _ _
 
 /-- When `α` and `β` are in the same universe, this is the same as the result of
 `equiv_functor.map_equiv`. -/
@@ -60,9 +60,9 @@ section RemoveNone
 variable (e : Option α ≃ Option β)
 
 private def remove_none_aux (x : α) : β :=
-  if h : (e (some x)).isSome then Option.getₓ h
+  if h : (e (some x)).isSome then Option.get h
   else
-    Option.getₓ <|
+    Option.get <|
       show (e none).isSome by
         rw [← Option.ne_none_iff_is_some]
         intro hn
@@ -123,13 +123,13 @@ theorem some_remove_none_iff {x : α} : some (removeNone e x) = e none ↔ e.sym
   · rw [remove_none_some _ ⟨a, h⟩]
     have := congr_arg e.symm h
     rw [symm_apply_apply] at this
-    simp only [false_iffₓ, apply_eq_iff_eq]
+    simp only [false_iff_iff, apply_eq_iff_eq]
     simp [this]
     
 
 @[simp]
 theorem remove_none_option_congr (e : α ≃ β) : removeNone e.optionCongr = e :=
-  Equivₓ.ext fun x => Option.some_injective _ <| remove_none_some _ ⟨e x, by simp [EquivFunctor.map]⟩
+  Equiv.ext fun x => Option.some_injective _ <| remove_none_some _ ⟨e x, by simp [EquivFunctor.map]⟩
 
 end RemoveNone
 
@@ -139,7 +139,7 @@ theorem option_congr_injective : Function.Injective (optionCongr : α ≃ β →
 /-- Equivalences between `option α` and `β` that send `none` to `x` are equivalent to
 equivalences between `α` and `{y : β // y ≠ x}`. -/
 def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none = x } ≃ (α ≃ { y : β // y ≠ x }) where
-  toFun := fun e =>
+  toFun e :=
     { toFun := fun a => ⟨e a, ((EquivLike.injective _).ne_iff' e.property).2 (some_ne_none _)⟩,
       invFun := fun b =>
         get
@@ -152,7 +152,7 @@ def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none =
         ext
         simp
         exact apply_symm_apply _ _ }
-  invFun := fun e =>
+  invFun e :=
     ⟨{ toFun := fun a => casesOn' a x (coe ∘ e), invFun := fun b => if h : b = x then none else e.symm ⟨b, h⟩,
         left_inv := fun a => by
           cases a
@@ -162,14 +162,14 @@ def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none =
           exact if_neg (e a).property,
         right_inv := fun b => by by_cases h:b = x <;> simp [h] },
       rfl⟩
-  left_inv := fun e => by
+  left_inv e := by
     ext a
     cases a
     · simpa using e.property.symm
       
     · simpa
       
-  right_inv := fun e => by
+  right_inv e := by
     ext a
     rfl
 
@@ -210,5 +210,5 @@ theorem option_subtype_symm_apply_symm_apply [DecidableEq β] (x : β) (e : α �
   simp only [option_subtype, coe_fn_symm_mk, Subtype.coe_mk, Subtype.coe_eta, dite_eq_ite, ite_eq_right_iff]
   exact fun h => False.elim (b.property h)
 
-end Equivₓ
+end Equiv
 

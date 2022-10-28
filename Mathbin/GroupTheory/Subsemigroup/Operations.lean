@@ -75,11 +75,11 @@ variable [Mul M]
 /-- Subsemigroups of semigroup `M` are isomorphic to additive subsemigroups of `additive M`. -/
 @[simps]
 def Subsemigroup.toAddSubsemigroup : Subsemigroup M ≃o AddSubsemigroup (Additive M) where
-  toFun := fun S => { Carrier := Additive.toMul ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
-  invFun := fun S => { Carrier := Additive.ofMul ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
-  left_inv := fun x => by cases x <;> rfl
-  right_inv := fun x => by cases x <;> rfl
-  map_rel_iff' := fun a b => Iff.rfl
+  toFun S := { Carrier := Additive.toMul ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
+  invFun S := { Carrier := Additive.ofMul ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
+  left_inv x := by cases x <;> rfl
+  right_inv x := by cases x <;> rfl
+  map_rel_iff' a b := Iff.rfl
 
 /-- Additive subsemigroups of an additive semigroup `additive M` are isomorphic to subsemigroups
 of `M`. -/
@@ -88,13 +88,13 @@ abbrev AddSubsemigroup.toSubsemigroup' : AddSubsemigroup (Additive M) ≃o Subse
 
 theorem Subsemigroup.to_add_subsemigroup_closure (S : Set M) :
     (Subsemigroup.closure S).toAddSubsemigroup = AddSubsemigroup.closure (Additive.toMul ⁻¹' S) :=
-  le_antisymmₓ
+  le_antisymm
     (Subsemigroup.toAddSubsemigroup.le_symm_apply.1 <| Subsemigroup.closure_le.2 AddSubsemigroup.subset_closure)
     (AddSubsemigroup.closure_le.2 Subsemigroup.subset_closure)
 
 theorem AddSubsemigroup.to_subsemigroup'_closure (S : Set (Additive M)) :
     (AddSubsemigroup.closure S).toSubsemigroup' = Subsemigroup.closure (Multiplicative.ofAdd ⁻¹' S) :=
-  le_antisymmₓ
+  le_antisymm
     (AddSubsemigroup.toSubsemigroup'.le_symm_apply.1 <| AddSubsemigroup.closure_le.2 Subsemigroup.subset_closure)
     (Subsemigroup.closure_le.2 AddSubsemigroup.subset_closure)
 
@@ -108,11 +108,11 @@ variable {A : Type _} [Add A]
 multiplicative subsemigroups of `multiplicative A`. -/
 @[simps]
 def AddSubsemigroup.toSubsemigroup : AddSubsemigroup A ≃o Subsemigroup (Multiplicative A) where
-  toFun := fun S => { Carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
-  invFun := fun S => { Carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
-  left_inv := fun x => by cases x <;> rfl
-  right_inv := fun x => by cases x <;> rfl
-  map_rel_iff' := fun a b => Iff.rfl
+  toFun S := { Carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
+  invFun S := { Carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
+  left_inv x := by cases x <;> rfl
+  right_inv x := by cases x <;> rfl
+  map_rel_iff' a b := Iff.rfl
 
 /-- Subsemigroups of a semigroup `multiplicative A` are isomorphic to additive subsemigroups
 of `A`. -/
@@ -121,14 +121,14 @@ abbrev Subsemigroup.toAddSubsemigroup' : Subsemigroup (Multiplicative A) ≃o Ad
 
 theorem AddSubsemigroup.to_subsemigroup_closure (S : Set A) :
     (AddSubsemigroup.closure S).toSubsemigroup = Subsemigroup.closure (Multiplicative.toAdd ⁻¹' S) :=
-  le_antisymmₓ
+  le_antisymm
     (AddSubsemigroup.toSubsemigroup.to_galois_connection.l_le <|
       AddSubsemigroup.closure_le.2 Subsemigroup.subset_closure)
     (Subsemigroup.closure_le.2 AddSubsemigroup.subset_closure)
 
 theorem Subsemigroup.to_add_subsemigroup'_closure (S : Set (Multiplicative A)) :
     (Subsemigroup.closure S).toAddSubsemigroup' = AddSubsemigroup.closure (Additive.ofMul ⁻¹' S) :=
-  le_antisymmₓ
+  le_antisymm
     (Subsemigroup.toAddSubsemigroup'.to_galois_connection.l_le <|
       Subsemigroup.closure_le.2 AddSubsemigroup.subset_closure)
     (AddSubsemigroup.closure_le.2 Subsemigroup.subset_closure)
@@ -150,7 +150,7 @@ variable [Mul M] [Mul N] [Mul P] (S : Subsemigroup M)
 @[to_additive "The preimage of an `add_subsemigroup` along an `add_semigroup` homomorphism is an\n`add_subsemigroup`."]
 def comap (f : M →ₙ* N) (S : Subsemigroup N) : Subsemigroup M where
   Carrier := f ⁻¹' S
-  mul_mem' := fun a b ha hb => show f (a * b) ∈ S by rw [map_mul] <;> exact mul_mem ha hb
+  mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact mul_mem ha hb
 
 @[simp, to_additive]
 theorem coe_comap (S : Subsemigroup N) (f : M →ₙ* N) : (S.comap f : Set M) = f ⁻¹' S :=
@@ -225,11 +225,11 @@ theorem map_comap_le {S : Subsemigroup N} {f : M →ₙ* N} : (S.comap f).map f 
   (gc_map_comap f).l_u_le _
 
 @[to_additive]
-theorem monotone_map {f : M →ₙ* N} : Monotoneₓ (map f) :=
+theorem monotone_map {f : M →ₙ* N} : Monotone (map f) :=
   (gc_map_comap f).monotone_l
 
 @[to_additive]
-theorem monotone_comap {f : M →ₙ* N} : Monotoneₓ (comap f) :=
+theorem monotone_comap {f : M →ₙ* N} : Monotone (comap f) :=
   (gc_map_comap f).monotone_u
 
 @[simp, to_additive]
@@ -312,7 +312,7 @@ theorem map_le_map_iff_of_injective {S T : Subsemigroup M} : S.map f ≤ T.map f
   (gciMapComap hf).l_le_l_iff
 
 @[to_additive]
-theorem map_strict_mono_of_injective : StrictMonoₓ (map f) :=
+theorem map_strict_mono_of_injective : StrictMono (map f) :=
   (gciMapComap hf).strict_mono_l
 
 end GaloisCoinsertion
@@ -363,7 +363,7 @@ theorem comap_le_comap_iff_of_surjective {S T : Subsemigroup N} : S.comap f ≤ 
   (giMapComap hf).u_le_u_iff
 
 @[to_additive]
-theorem comap_strict_mono_of_surjective : StrictMonoₓ (comap f) :=
+theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
   (giMapComap hf).strict_mono_u
 
 end GaloisInsertion
@@ -400,13 +400,12 @@ omit hA
 
 /-- A subsemigroup of a semigroup inherits a semigroup structure. -/
 @[to_additive "An `add_subsemigroup` of an `add_semigroup` inherits an `add_semigroup` structure."]
-instance toSemigroup {M : Type _} [Semigroupₓ M] {A : Type _} [SetLike A M] [MulMemClass A M] (S : A) : Semigroupₓ S :=
+instance toSemigroup {M : Type _} [Semigroup M] {A : Type _} [SetLike A M] [MulMemClass A M] (S : A) : Semigroup S :=
   Subtype.coe_injective.Semigroup coe fun _ _ => rfl
 
 /-- A subsemigroup of a `comm_semigroup` is a `comm_semigroup`. -/
 @[to_additive "An `add_subsemigroup` of an `add_comm_semigroup` is an `add_comm_semigroup`."]
-instance toCommSemigroup {M} [CommSemigroupₓ M] {A : Type _} [SetLike A M] [MulMemClass A M] (S : A) :
-    CommSemigroupₓ S :=
+instance toCommSemigroup {M} [CommSemigroup M] {A : Type _} [SetLike A M] [MulMemClass A M] (S : A) : CommSemigroup S :=
   Subtype.coe_injective.CommSemigroup coe fun _ _ => rfl
 
 include hA
@@ -429,11 +428,11 @@ variable [Mul M] [Mul N] [Mul P] (S : Subsemigroup M)
 /-- The top subsemigroup is isomorphic to the semigroup. -/
 @[to_additive "The top additive subsemigroup is isomorphic to the additive semigroup.", simps]
 def topEquiv : (⊤ : Subsemigroup M) ≃* M where
-  toFun := fun x => x
-  invFun := fun x => ⟨x, mem_top x⟩
-  left_inv := fun x => x.eta _
-  right_inv := fun _ => rfl
-  map_mul' := fun _ _ => rfl
+  toFun x := x
+  invFun x := ⟨x, mem_top x⟩
+  left_inv x := x.eta _
+  right_inv _ := rfl
+  map_mul' _ _ := rfl
 
 @[simp, to_additive]
 theorem top_equiv_to_mul_hom : (topEquiv : _ ≃* M).toMulHom = MulMemClass.subtype (⊤ : Subsemigroup M) :=
@@ -442,7 +441,7 @@ theorem top_equiv_to_mul_hom : (topEquiv : _ ≃* M).toMulHom = MulMemClass.subt
 /-- A subsemigroup is isomorphic to its image under an injective function -/
 @[to_additive "An additive subsemigroup is isomorphic to its image under an injective function"]
 noncomputable def equivMapOfInjective (f : M →ₙ* N) (hf : Function.Injective f) : S ≃* S.map f :=
-  { Equivₓ.Set.image f S hf with map_mul' := fun _ _ => Subtype.ext (map_mul f _ _) }
+  { Equiv.Set.image f S hf with map_mul' := fun _ _ => Subtype.ext (map_mul f _ _) }
 
 @[simp, to_additive]
 theorem coe_equiv_map_of_injective_apply (f : M →ₙ* N) (hf : Function.Injective f) (x : S) :
@@ -459,16 +458,16 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
       · exact Subsemigroup.mul_mem _
         
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given `subsemigroup`s `s`, `t` of semigroups `M`, `N` respectively, `s × t` as a subsemigroup
 of `M × N`. -/
 @[to_additive Prod
       "Given `add_subsemigroup`s `s`, `t` of `add_semigroup`s `A`, `B` respectively,\n`s × t` as an `add_subsemigroup` of `A × B`."]
 def prod (s : Subsemigroup M) (t : Subsemigroup N) : Subsemigroup (M × N) where
   Carrier := s ×ˢ t
-  mul_mem' := fun p q hp hq => ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
+  mul_mem' p q hp hq := ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive coe_prod]
 theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=
   rfl
@@ -501,7 +500,7 @@ theorem bot_prod_bot : (⊥ : Subsemigroup M).Prod (⊥ : Subsemigroup N) = ⊥ 
 /-- The product of subsemigroups is isomorphic to their product as semigroups. -/
 @[to_additive prod_equiv "The product of additive subsemigroups is isomorphic to their product\nas additive semigroups"]
 def prodEquiv (s : Subsemigroup M) (t : Subsemigroup N) : s.Prod t ≃* s × t :=
-  { Equivₓ.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
+  { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
 
 open MulHom
 
@@ -586,8 +585,8 @@ generated by the image of the set. -/
 @[to_additive
       "The image under an `add_semigroup` hom of the `add_subsemigroup` generated by a set\nequals the `add_subsemigroup` generated by the image of the set."]
 theorem map_mclosure (f : M →ₙ* N) (s : Set M) : (closure s).map f = closure (f '' s) :=
-  le_antisymmₓ
-    (map_le_iff_le_comap.2 <| le_transₓ (closure_mono <| Set.subset_preimage_image _ _) (mclosure_preimage_le _ _))
+  le_antisymm
+    (map_le_iff_le_comap.2 <| le_trans (closure_mono <| Set.subset_preimage_image _ _) (mclosure_preimage_le _ _))
     (closure_le.2 <| Set.image_subset _ subset_closure)
 
 /-- Restriction of a semigroup hom to a subsemigroup of the domain. -/
@@ -603,8 +602,8 @@ theorem restrict_apply {N : Type _} [Mul N] [SetLike σ M] [MulMemClass σ M] (f
 /-- Restriction of a semigroup hom to a subsemigroup of the codomain. -/
 @[to_additive "Restriction of an `add_semigroup` hom to an `add_subsemigroup` of the\ncodomain.", simps]
 def codRestrict [SetLike σ N] [MulMemClass σ N] (f : M →ₙ* N) (S : σ) (h : ∀ x, f x ∈ S) : M →ₙ* S where
-  toFun := fun n => ⟨f n, h n⟩
-  map_mul' := fun x y => Subtype.eq (map_mul f x y)
+  toFun n := ⟨f n, h n⟩
+  map_mul' x y := Subtype.eq (map_mul f x y)
 
 /-- Restriction of a semigroup hom to its range interpreted as a subsemigroup. -/
 @[to_additive "Restriction of an `add_semigroup` hom to its range interpreted as a subsemigroup."]
@@ -626,8 +625,8 @@ theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [Mul M'] [Mul N'] (f : 
 /-- The `mul_hom` from the preimage of a subsemigroup to itself. -/
 @[to_additive "the `add_hom` from the preimage of an additive subsemigroup to itself.", simps]
 def subsemigroupComap (f : M →ₙ* N) (N' : Subsemigroup N) : N'.comap f →ₙ* N' where
-  toFun := fun x => ⟨f x, x.Prop⟩
-  map_mul' := fun x y => Subtype.eq (@map_mul M N _ _ _ _ f x y)
+  toFun x := ⟨f x, x.Prop⟩
+  map_mul' x y := Subtype.eq (@map_mul M N _ _ _ _ f x y)
 
 /-- The `mul_hom` from a subsemigroup to its image.
 See `mul_equiv.subsemigroup_map` for a variant for `mul_equiv`s. -/
@@ -635,8 +634,8 @@ See `mul_equiv.subsemigroup_map` for a variant for `mul_equiv`s. -/
       "the `add_hom` from an additive subsemigroup to its image. See\n`add_equiv.add_subsemigroup_map` for a variant for `add_equiv`s.",
   simps]
 def subsemigroupMap (f : M →ₙ* N) (M' : Subsemigroup M) : M' →ₙ* M'.map f where
-  toFun := fun x => ⟨f x, ⟨x, x.Prop, rfl⟩⟩
-  map_mul' := fun x y => Subtype.eq <| @map_mul M N _ _ _ _ f x y
+  toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
+  map_mul' x y := Subtype.eq <| @map_mul M N _ _ _ _ f x y
 
 @[to_additive]
 theorem subsemigroup_map_surjective (f : M →ₙ* N) (M' : Subsemigroup M) : Function.Surjective (f.subsemigroupMap M') :=
@@ -658,7 +657,7 @@ theorem srange_fst [Nonempty N] : (fst M N).srange = ⊤ :=
 
 @[simp, to_additive]
 theorem srange_snd [Nonempty M] : (snd M N).srange = ⊤ :=
-  (snd M N).srange_top_of_surjective <| Prod.snd_surjectiveₓ
+  (snd M N).srange_top_of_surjective <| Prod.snd_surjective
 
 @[to_additive]
 theorem prod_eq_top_iff [Nonempty M] [Nonempty N] {s : Subsemigroup M} {t : Subsemigroup N} :
@@ -689,7 +688,7 @@ variable [Mul M] [Mul N] {S T : Subsemigroup M}
 @[to_additive
       "Makes the identity additive isomorphism from a proof two\nsubsemigroups of an additive semigroup are equal."]
 def subsemigroupCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
+  { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
 -- this name is primed so that the version to `f.range` instead of `f.srange` can be unprimed.
 /-- A semigroup homomorphism `f : M →ₙ* N` with a left-inverse `g : N → M` defines a multiplicative

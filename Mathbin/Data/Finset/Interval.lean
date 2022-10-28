@@ -21,27 +21,27 @@ and
 
 variable {α : Type _}
 
-namespace Finsetₓ
+namespace Finset
 
-variable [DecidableEq α] (s t : Finsetₓ α)
+variable [DecidableEq α] (s t : Finset α)
 
-instance : LocallyFiniteOrder (Finsetₓ α) where
-  finsetIcc := fun s t => t.Powerset.filter ((· ⊆ ·) s)
-  finsetIco := fun s t => t.ssubsets.filter ((· ⊆ ·) s)
-  finsetIoc := fun s t => t.Powerset.filter ((· ⊂ ·) s)
-  finsetIoo := fun s t => t.ssubsets.filter ((· ⊂ ·) s)
-  finset_mem_Icc := fun s t u => by
+instance : LocallyFiniteOrder (Finset α) where
+  finsetIcc s t := t.Powerset.filter ((· ⊆ ·) s)
+  finsetIco s t := t.ssubsets.filter ((· ⊆ ·) s)
+  finsetIoc s t := t.Powerset.filter ((· ⊂ ·) s)
+  finsetIoo s t := t.ssubsets.filter ((· ⊂ ·) s)
+  finset_mem_Icc s t u := by
     rw [mem_filter, mem_powerset]
-    exact and_comm _ _
-  finset_mem_Ico := fun s t u => by
+    exact and_comm' _ _
+  finset_mem_Ico s t u := by
     rw [mem_filter, mem_ssubsets]
-    exact and_comm _ _
-  finset_mem_Ioc := fun s t u => by
+    exact and_comm' _ _
+  finset_mem_Ioc s t u := by
     rw [mem_filter, mem_powerset]
-    exact and_comm _ _
-  finset_mem_Ioo := fun s t u => by
+    exact and_comm' _ _
+  finset_mem_Ioo s t u := by
     rw [mem_filter, mem_ssubsets]
-    exact and_comm _ _
+    exact and_comm' _ _
 
 theorem Icc_eq_filter_powerset : icc s t = t.Powerset.filter ((· ⊆ ·) s) :=
   rfl
@@ -65,7 +65,7 @@ variable {s t}
 
 theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).Powerset.Image ((· ∪ ·) s) := by
   ext u
-  simp_rw [mem_Icc, mem_image, exists_propₓ, mem_powerset]
+  simp_rw [mem_Icc, mem_image, exists_prop, mem_powerset]
   constructor
   · rintro ⟨hs, ht⟩
     exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
@@ -76,7 +76,7 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).Powerset.Image (
 
 theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.Image ((· ∪ ·) s) := by
   ext u
-  simp_rw [mem_Ico, mem_image, exists_propₓ, mem_ssubsets]
+  simp_rw [mem_Ico, mem_image, exists_prop, mem_ssubsets]
   constructor
   · rintro ⟨hs, ht⟩
     exact ⟨u \ s, sdiff_lt_sdiff_right ht hs, sup_sdiff_cancel_right hs⟩
@@ -87,7 +87,7 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.Image (
 
 /-- Cardinality of a non-empty `Icc` of finsets. -/
 theorem card_Icc_finset (h : s ⊆ t) : (icc s t).card = 2 ^ (t.card - s.card) := by
-  rw [← card_sdiff h, ← card_powerset, Icc_eq_image_powerset h, Finsetₓ.card_image_iff]
+  rw [← card_sdiff h, ← card_powerset, Icc_eq_image_powerset h, Finset.card_image_iff]
   rintro u hu v hv (huv : s ⊔ u = s ⊔ v)
   rw [mem_coe, mem_powerset] at hu hv
   rw [← (disjoint_sdiff.mono_right hu : Disjoint s u).sup_sdiff_cancel_left, ←
@@ -105,5 +105,5 @@ theorem card_Ioc_finset (h : s ⊆ t) : (ioc s t).card = 2 ^ (t.card - s.card) -
 theorem card_Ioo_finset (h : s ⊆ t) : (ioo s t).card = 2 ^ (t.card - s.card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc_finset h]
 
-end Finsetₓ
+end Finset
 

@@ -86,9 +86,9 @@ section Real
 
 open BigOperators
 
-open Finsetₓ
+open Finset
 
-theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ} (h : f =o[at_top] g)
+theorem Asymptotics.IsO.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ} (h : f =o[at_top] g)
     (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
     (fun n => ∑ i in range n, f i) =o[at_top] fun n => ∑ i in range n, g i := by
   have A : ∀ i, ∥g i∥ = g i := fun i => Real.norm_of_nonneg (hg i)
@@ -104,19 +104,19 @@ theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedAddCommGroup α] {f : 
     ∥∑ i in range n, f i∥ = ∥(∑ i in range N, f i) + ∑ i in Ico N n, f i∥ := by rw [sum_range_add_sum_Ico _ Nn]
     _ ≤ ∥∑ i in range N, f i∥ + ∥∑ i in Ico N n, f i∥ := norm_add_le _ _
     _ ≤ ∥∑ i in range N, f i∥ + ∑ i in Ico N n, ε / 2 * g i :=
-      add_le_add le_rflₓ (norm_sum_le_of_le _ fun i hi => hN _ (mem_Ico.1 hi).1)
+      add_le_add le_rfl (norm_sum_le_of_le _ fun i hi => hN _ (mem_Ico.1 hi).1)
     _ ≤ ∥∑ i in range N, f i∥ + ∑ i in range n, ε / 2 * g i := by
-      refine' add_le_add le_rflₓ _
+      refine' add_le_add le_rfl _
       apply sum_le_sum_of_subset_of_nonneg
       · rw [range_eq_Ico]
-        exact Ico_subset_Ico (zero_le _) le_rflₓ
+        exact Ico_subset_Ico (zero_le _) le_rfl
         
       · intro i hi hident
         exact mul_nonneg (half_pos εpos).le (hg i)
         
     _ ≤ ε / 2 * ∥∑ i in range n, g i∥ + ε / 2 * ∑ i in range n, g i := by
       rw [← mul_sum]
-      exact add_le_add hn (mul_le_mul_of_nonneg_left le_rflₓ (half_pos εpos).le)
+      exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)
     _ = ε * ∥∑ i in range n, g i∥ := by
       simp [B]
       ring

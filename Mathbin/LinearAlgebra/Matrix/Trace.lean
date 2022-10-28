@@ -26,11 +26,11 @@ namespace Matrix
 
 variable {ι m n p : Type _} {α R S : Type _}
 
-variable [Fintypeₓ m] [Fintypeₓ n] [Fintypeₓ p]
+variable [Fintype m] [Fintype n] [Fintype p]
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [AddCommMonoidₓ R]
+variable [AddCommMonoid R]
 
 /-- The trace of a square matrix. For more bundled versions, see:
 * `matrix.trace_add_monoid_hom`
@@ -43,17 +43,17 @@ variable (n R)
 
 @[simp]
 theorem trace_zero : trace (0 : Matrix n n R) = 0 :=
-  (Finsetₓ.sum_const (0 : R)).trans <| smul_zero _
+  (Finset.sum_const (0 : R)).trans <| smul_zero _
 
 variable {n R}
 
 @[simp]
 theorem trace_add (A B : Matrix n n R) : trace (A + B) = trace A + trace B :=
-  Finsetₓ.sum_add_distrib
+  Finset.sum_add_distrib
 
 @[simp]
-theorem trace_smul [Monoidₓ α] [DistribMulAction α R] (r : α) (A : Matrix n n R) : trace (r • A) = r • trace A :=
-  Finsetₓ.smul_sum.symm
+theorem trace_smul [Monoid α] [DistribMulAction α R] (r : α) (A : Matrix n n R) : trace (r • A) = r • trace A :=
+  Finset.smul_sum.symm
 
 @[simp]
 theorem trace_transpose (A : Matrix n n R) : trace Aᵀ = trace A :=
@@ -74,7 +74,7 @@ def traceAddMonoidHom : Matrix n n R →+ R where
 
 /-- `matrix.trace` as a `linear_map` -/
 @[simps]
-def traceLinearMap [Semiringₓ α] [Module α R] : Matrix n n R →ₗ[α] R where
+def traceLinearMap [Semiring α] [Module α R] : Matrix n n R →ₗ[α] R where
   toFun := trace
   map_add' := trace_add
   map_smul' := trace_smul
@@ -90,43 +90,43 @@ theorem trace_multiset_sum (s : Multiset (Matrix n n R)) : trace s.Sum = (s.map 
   map_multiset_sum (traceAddMonoidHom n R) s
 
 @[simp]
-theorem trace_sum (s : Finsetₓ ι) (f : ι → Matrix n n R) : trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
+theorem trace_sum (s : Finset ι) (f : ι → Matrix n n R) : trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
   map_sum (traceAddMonoidHom n R) f s
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [AddCommGroupₓ R]
+variable [AddCommGroup R]
 
 @[simp]
 theorem trace_sub (A B : Matrix n n R) : trace (A - B) = trace A - trace B :=
-  Finsetₓ.sum_sub_distrib
+  Finset.sum_sub_distrib
 
 @[simp]
 theorem trace_neg (A : Matrix n n R) : trace (-A) = -trace A :=
-  Finsetₓ.sum_neg_distrib
+  Finset.sum_neg_distrib
 
-end AddCommGroupₓ
+end AddCommGroup
 
 section One
 
 variable [DecidableEq n] [AddCommMonoidWithOne R]
 
 @[simp]
-theorem trace_one : trace (1 : Matrix n n R) = Fintypeₓ.card n := by
-  simp_rw [trace, diag_one, Pi.one_def, Finsetₓ.sum_const, nsmul_one, Finsetₓ.card_univ]
+theorem trace_one : trace (1 : Matrix n n R) = Fintype.card n := by
+  simp_rw [trace, diag_one, Pi.one_def, Finset.sum_const, nsmul_one, Finset.card_univ]
 
 end One
 
 section Mul
 
 @[simp]
-theorem trace_transpose_mul [AddCommMonoidₓ R] [Mul R] (A : Matrix m n R) (B : Matrix n m R) :
+theorem trace_transpose_mul [AddCommMonoid R] [Mul R] (A : Matrix m n R) (B : Matrix n m R) :
     trace (Aᵀ ⬝ Bᵀ) = trace (A ⬝ B) :=
-  Finsetₓ.sum_comm
+  Finset.sum_comm
 
-theorem trace_mul_comm [AddCommMonoidₓ R] [CommSemigroupₓ R] (A : Matrix m n R) (B : Matrix n m R) :
+theorem trace_mul_comm [AddCommMonoid R] [CommSemigroup R] (A : Matrix m n R) (B : Matrix n m R) :
     trace (A ⬝ B) = trace (B ⬝ A) := by rw [← trace_transpose, ← trace_transpose_mul, transpose_mul]
 
 theorem trace_mul_cycle [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R) (C : Matrix p m R) :
@@ -136,14 +136,14 @@ theorem trace_mul_cycle' [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matri
     trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) := by rw [← Matrix.mul_assoc, trace_mul_comm]
 
 @[simp]
-theorem trace_col_mul_row [NonUnitalNonAssocSemiringₓ R] (a b : n → R) : trace (colₓ a ⬝ rowₓ b) = dotProduct a b := by
+theorem trace_col_mul_row [NonUnitalNonAssocSemiring R] (a b : n → R) : trace (col a ⬝ row b) = dotProduct a b := by
   simp [dot_product, trace]
 
 end Mul
 
-section Finₓ
+section Fin
 
-variable [AddCommMonoidₓ R]
+variable [AddCommMonoid R]
 
 /-! ### Special cases for `fin n`
 
@@ -153,20 +153,20 @@ with `matrix.det_fin_two` etc.
 
 
 @[simp]
-theorem trace_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) R) : trace A = 0 :=
+theorem trace_fin_zero (A : Matrix (Fin 0) (Fin 0) R) : trace A = 0 :=
   rfl
 
-theorem trace_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) R) : trace A = A 0 0 :=
-  add_zeroₓ _
+theorem trace_fin_one (A : Matrix (Fin 1) (Fin 1) R) : trace A = A 0 0 :=
+  add_zero _
 
-theorem trace_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) R) : trace A = A 0 0 + A 1 1 :=
-  congr_arg ((· + ·) _) (add_zeroₓ (A 1 1))
+theorem trace_fin_two (A : Matrix (Fin 2) (Fin 2) R) : trace A = A 0 0 + A 1 1 :=
+  congr_arg ((· + ·) _) (add_zero (A 1 1))
 
-theorem trace_fin_three (A : Matrix (Finₓ 3) (Finₓ 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 := by
-  rw [← add_zeroₓ (A 2 2), add_assocₓ]
+theorem trace_fin_three (A : Matrix (Fin 3) (Fin 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 := by
+  rw [← add_zero (A 2 2), add_assoc]
   rfl
 
-end Finₓ
+end Fin
 
 end Matrix
 

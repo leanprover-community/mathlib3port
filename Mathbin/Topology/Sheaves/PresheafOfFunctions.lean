@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Yoneda
 import Mathbin.Topology.Sheaves.Presheaf
-import Mathbin.Topology.Category.TopCommRing
+import Mathbin.Topology.Category.TopCommRingCat
 import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
@@ -34,16 +34,20 @@ open TopologicalSpace
 
 open Opposite
 
-namespace Top
+namespace TopCat
 
-variable (X : Top.{v})
+variable (X : TopCat.{v})
 
 /-- The presheaf of dependently typed functions on `X`, with fibres given by a type family `T`.
 There is no requirement that the functions are continuous, here.
 -/
 def presheafToTypes (T : X → Type v) : X.Presheaf (Type v) where
-  obj := fun U => ∀ x : unop U, T x
-  map := fun U V i g => fun x : unop V => g (i.unop x)
+  obj U := ∀ x : unop U, T x
+  map U V i g := fun x : unop V => g (i.unop x)
+  map_id' U := by
+    ext g ⟨x, hx⟩
+    rfl
+  map_comp' U V W i j := rfl
 
 @[simp]
 theorem presheaf_to_Types_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} : (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
@@ -64,8 +68,12 @@ theorem presheaf_to_Types_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U 
 There is no requirement that the functions are continuous, here.
 -/
 def presheafToType (T : Type v) : X.Presheaf (Type v) where
-  obj := fun U => unop U → T
-  map := fun U V i g => g ∘ i.unop
+  obj U := unop U → T
+  map U V i g := g ∘ i.unop
+  map_id' U := by
+    ext g ⟨x, hx⟩
+    rfl
+  map_comp' U V W i j := rfl
 
 @[simp]
 theorem presheaf_to_Type_obj {T : Type v} {U : (Opens X)ᵒᵖ} : (presheafToType X T).obj U = (unop U → T) :=
@@ -78,25 +86,25 @@ theorem presheaf_to_Type_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} 
 
 /-- The presheaf of continuous functions on `X` with values in fixed target topological space
 `T`. -/
-def presheafToTop (T : Top.{v}) : X.Presheaf (Type v) :=
+def presheafToTop (T : TopCat.{v}) : X.Presheaf (Type v) :=
   (Opens.toTop X).op ⋙ yoneda.obj T
 
 @[simp]
-theorem presheaf_to_Top_obj (T : Top.{v}) (U : (Opens X)ᵒᵖ) :
+theorem presheaf_to_Top_obj (T : TopCat.{v}) (U : (Opens X)ᵒᵖ) :
     (presheafToTop X T).obj U = ((Opens.toTop X).obj (unop U) ⟶ T) :=
   rfl
 
 -- TODO upgrade the result to TopCommRing?
 /-- The (bundled) commutative ring of continuous functions from a topological space
 to a topological commutative ring, with pointwise multiplication. -/
-def continuousFunctions (X : Top.{v}ᵒᵖ) (R : TopCommRing.{v}) : CommRingₓₓ.{v} :=
-  CommRingₓₓ.of (unop X ⟶ (forget₂ TopCommRing Top).obj R)
+def continuousFunctions (X : TopCat.{v}ᵒᵖ) (R : TopCommRingCat.{v}) : CommRingCat.{v} :=
+  CommRingCat.of (unop X ⟶ (forget₂ TopCommRingCat TopCat).obj R)
 
 namespace ContinuousFunctions
 
 /-- Pulling back functions into a topological ring along a continuous map is a ring homomorphism. -/
-def pullback {X Y : Topᵒᵖ} (f : X ⟶ Y) (R : TopCommRing) : continuousFunctions X R ⟶ continuousFunctions Y R where
-  toFun := fun g => f.unop ≫ g
+def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRingCat) : continuousFunctions X R ⟶ continuousFunctions Y R where
+  toFun g := f.unop ≫ g
   map_one' := rfl
   map_zero' := rfl
   map_add' := by tidy
@@ -104,8 +112,9 @@ def pullback {X Y : Topᵒᵖ} (f : X ⟶ Y) (R : TopCommRing) : continuousFunct
 
 /-- A homomorphism of topological rings can be postcomposed with functions from a source space `X`;
 this is a ring homomorphism (with respect to the pointwise ring operations on functions). -/
-def map (X : Top.{u}ᵒᵖ) {R S : TopCommRing.{u}} (φ : R ⟶ S) : continuousFunctions X R ⟶ continuousFunctions X S where
-  toFun := fun g => g ≫ (forget₂ TopCommRing Top).map φ
+def map (X : TopCat.{u}ᵒᵖ) {R S : TopCommRingCat.{u}} (φ : R ⟶ S) :
+    continuousFunctions X R ⟶ continuousFunctions X S where
+  toFun g := g ≫ (forget₂ TopCommRingCat TopCat).map φ
   map_one' := by ext <;> exact φ.1.map_one
   map_zero' := by ext <;> exact φ.1.map_zero
   map_add' := by intros <;> ext <;> apply φ.1.map_add
@@ -115,9 +124,18 @@ end ContinuousFunctions
 
 /-- An upgraded version of the Yoneda embedding, observing that the continuous maps
 from `X : Top` to `R : TopCommRing` form a commutative ring, functorial in both `X` and `R`. -/
-def commRingYoneda : TopCommRing.{u} ⥤ Top.{u}ᵒᵖ ⥤ CommRingₓₓ.{u} where
-  obj := fun R => { obj := fun X => continuousFunctions X R, map := fun X Y f => continuousFunctions.pullback f R }
-  map := fun R S φ => { app := fun X => continuousFunctions.map X φ }
+def commRingYoneda : TopCommRingCat.{u} ⥤ TopCat.{u}ᵒᵖ ⥤ CommRingCat.{u} where
+  obj R :=
+    { obj := fun X => continuousFunctions X R, map := fun X Y f => continuousFunctions.pullback f R,
+      map_id' := fun X => by
+        ext
+        rfl,
+      map_comp' := fun X Y Z f g => rfl }
+  map R S φ := { app := fun X => continuousFunctions.map X φ, naturality' := fun X Y f => rfl }
+  map_id' X := by
+    ext
+    rfl
+  map_comp' X Y Z f g := rfl
 
 /-- The presheaf (of commutative rings), consisting of functions on an open set `U ⊆ X` with
 values in some topological commutative ring `T`.
@@ -128,8 +146,8 @@ presheaf_to_TopCommRing X (TopCommRing.of ℂ)
 ```
 (this requires `import topology.instances.complex`).
 -/
-def presheafToTopCommRing (T : TopCommRing.{v}) : X.Presheaf CommRingₓₓ.{v} :=
+def presheafToTopCommRing (T : TopCommRingCat.{v}) : X.Presheaf CommRingCat.{v} :=
   (Opens.toTop X).op ⋙ commRingYoneda.obj T
 
-end Top
+end TopCat
 

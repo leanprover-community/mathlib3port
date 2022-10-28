@@ -60,21 +60,21 @@ namespace Language
 
 variable (L : Language.{u, v}) {L' : Language}
 
-variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structure P]
+variable {M : Type w} {N P : Type _} [L.StructureCat M] [L.StructureCat N] [L.StructureCat P]
 
 variable {α : Type u'} {β : Type v'} {γ : Type _}
 
 open FirstOrder
 
-open Structure Finₓ
+open StructureCat Fin
 
--- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: var {}
--- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: func {}
+/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: var {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: func {} -/
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
   | var : ∀ a : α, term
-  | func : ∀ {l : ℕ} (f : L.Functions l) (ts : Finₓ l → term), term
+  | func : ∀ {l : ℕ} (f : L.Functions l) (ts : Fin l → term), term
 
 export Term ()
 
@@ -82,24 +82,42 @@ variable {L}
 
 namespace Term
 
-open Finsetₓ
+open Finset
 
+/- warning: first_order.language.term.var_finset -> FirstOrder.Language.Term.varFinset is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u v u'} L α) -> (Finset.{u'} α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u v u'} L α) -> (Finset.{u'} α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.var_finset FirstOrder.Language.Term.varFinsetₓ'. -/
 /-- The `finset` of variables used in a given term. -/
 @[simp]
-def varFinsetₓ [DecidableEq α] : L.term α → Finsetₓ α
+def varFinset [DecidableEq α] : L.term α → Finset α
   | var i => {i}
   | func f ts => univ.bUnion fun i => (ts i).varFinset
 
+/- warning: first_order.language.term.var_finset_left -> FirstOrder.Language.Term.varFinsetLeft is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u v (max u' v')} L (Sum.{u' v'} α β)) -> (Finset.{u'} α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u v (max u' v')} L (Sum.{u' v'} α β)) -> (Finset.{u'} α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.var_finset_left FirstOrder.Language.Term.varFinsetLeftₓ'. -/
 /-- The `finset` of variables from the left side of a sum used in a given term. -/
 @[simp]
-def varFinsetLeftₓ [DecidableEq α] : L.term (Sum α β) → Finsetₓ α
+def varFinsetLeft [DecidableEq α] : L.term (Sum α β) → Finset α
   | var (Sum.inl i) => {i}
   | var (Sum.inr i) => ∅
   | func f ts => univ.bUnion fun i => (ts i).varFinsetLeft
 
+/- warning: first_order.language.term.relabel -> FirstOrder.Language.Term.relabel is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}}, (α -> β) -> (FirstOrder.Language.Term.{u v u'} L α) -> (FirstOrder.Language.Term.{u v v'} L β)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}}, (α -> β) -> (FirstOrder.Language.Term.{u v u'} L α) -> (FirstOrder.Language.Term.{u v v'} L β)
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.relabel FirstOrder.Language.Term.relabelₓ'. -/
 /-- Relabels a term's variables along a particular function. -/
 @[simp]
-def relabelₓ (g : α → β) : L.term α → L.term β
+def relabel (g : α → β) : L.term α → L.term β
   | var i => var (g i)
   | func f ts => func f fun i => (ts i).relabel
 
@@ -111,7 +129,7 @@ theorem relabel_id (t : L.term α) : t.relabel id = t := by
     
 
 @[simp]
-theorem relabel_id_eq_id : (Term.relabelₓ id : L.term α → L.term α) = id :=
+theorem relabel_id_eq_id : (Term.relabel id : L.term α → L.term α) = id :=
   funext relabel_id
 
 @[simp]
@@ -124,21 +142,33 @@ theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.term α) : (t.rel
 
 @[simp]
 theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
-    (Term.relabelₓ g ∘ Term.relabelₓ f : L.term α → L.term γ) = Term.relabelₓ (g ∘ f) :=
+    (Term.relabel g ∘ Term.relabel f : L.term α → L.term γ) = Term.relabel (g ∘ f) :=
   funext (relabel_relabel f g)
 
 /-- Relabels a term's variables along a bijection. -/
 @[simps]
 def relabelEquiv (g : α ≃ β) : L.term α ≃ L.term β :=
-  ⟨relabelₓ g, relabelₓ g.symm, fun t => by simp, fun t => by simp⟩
+  ⟨relabel g, relabel g.symm, fun t => by simp, fun t => by simp⟩
 
+/- warning: first_order.language.term.restrict_var -> FirstOrder.Language.Term.restrictVar is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α] (t : FirstOrder.Language.Term.{u v u'} L α), ((coeSort.{succ u' succ (succ u')} (Finset.{u'} α) Type.{u'} (Finset.hasCoeToSort.{u'} α) (FirstOrder.Language.Term.varFinset.{u v u'} L α (fun (a : α) (b : α) => _inst_4 a b) t)) -> β) -> (FirstOrder.Language.Term.{u v v'} L β)
+but is expected to have type
+  PUnit.{(max (max (max (succ (succ u)) (succ (succ u'))) (succ (succ v))) (succ (succ v')))}
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.restrict_var FirstOrder.Language.Term.restrictVarₓ'. -/
 /-- Restricts a term to use only a set of the given variables. -/
-def restrictVarₓ [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β), L.term β
+def restrictVar [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β), L.term β
   | var a, f => var (f ⟨a, mem_singleton_self a⟩)
   | func F ts, f => func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
 
+/- warning: first_order.language.term.restrict_var_left -> FirstOrder.Language.Term.restrictVarLeft is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α] {γ : Type.{u_1}} (t : FirstOrder.Language.Term.{u v (max u' u_1)} L (Sum.{u' u_1} α γ)), ((coeSort.{succ u' succ (succ u')} (Finset.{u'} α) Type.{u'} (Finset.hasCoeToSort.{u'} α) (FirstOrder.Language.Term.varFinsetLeft.{u v u' u_1} L α γ (fun (a : α) (b : α) => _inst_4 a b) t)) -> β) -> (FirstOrder.Language.Term.{u v (max v' u_1)} L (Sum.{v' u_1} β γ))
+but is expected to have type
+  PUnit.{(max (max (max (max (succ (succ _aux_param_0)) (succ (succ u))) (succ (succ u'))) (succ (succ v))) (succ (succ v')))}
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.restrict_var_left FirstOrder.Language.Term.restrictVarLeftₓ'. -/
 /-- Restricts a term to use only a set of the given variables on the left side of a sum. -/
-def restrictVarLeftₓ [DecidableEq α] {γ : Type _} : ∀ (t : L.term (Sum α γ)) (f : t.varFinsetLeft → β), L.term (Sum β γ)
+def restrictVarLeft [DecidableEq α] {γ : Type _} : ∀ (t : L.term (Sum α γ)) (f : t.varFinsetLeft → β), L.term (Sum β γ)
   | var (Sum.inl a), f => var (Sum.inl (f ⟨a, mem_singleton_self a⟩))
   | var (Sum.inr a), f => var (Sum.inr a)
   | func F ts, f => func F fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
@@ -159,16 +189,28 @@ def Functions.apply₂ (f : L.Functions 2) (t₁ t₂ : L.term α) : L.term α :
 
 namespace Term
 
+/- warning: first_order.language.term.constants_to_vars -> FirstOrder.Language.Term.constantsToVars is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{(max u u_5) v u'} (FirstOrder.Language.withConstants.{u v u_5} L γ) α) -> (FirstOrder.Language.Term.{u v (max u_5 u')} L (Sum.{u_5 u'} γ α))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{(max u u_5) v u'} (FirstOrder.Language.withConstants.{u v u_5} L γ) α) -> (FirstOrder.Language.Term.{u v (max u_5 u')} L (Sum.{u_5 u'} γ α))
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.constants_to_vars FirstOrder.Language.Term.constantsToVarsₓ'. -/
 /-- Sends a term with constants to a term with extra variables. -/
 @[simp]
-def constantsToVarsₓ : L[[γ]].term α → L.term (Sum γ α)
+def constantsToVars : L[[γ]].term α → L.term (Sum γ α)
   | var a => var (Sum.inr a)
   | @func _ _ 0 f ts => Sum.casesOn f (fun f => func f fun i => (ts i).constantsToVars) fun c => var (Sum.inl c)
   | @func _ _ (n + 1) f ts => Sum.casesOn f (fun f => func f fun i => (ts i).constantsToVars) fun c => isEmptyElim c
 
+/- warning: first_order.language.term.vars_to_constants -> FirstOrder.Language.Term.varsToConstants is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{u v (max u_5 u')} L (Sum.{u_5 u'} γ α)) -> (FirstOrder.Language.Term.{(max u u_5) v u'} (FirstOrder.Language.withConstants.{u v u_5} L γ) α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{u v (max u_5 u')} L (Sum.{u_5 u'} γ α)) -> (FirstOrder.Language.Term.{(max u u_5) v u'} (FirstOrder.Language.withConstants.{u v u_5} L γ) α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.vars_to_constants FirstOrder.Language.Term.varsToConstantsₓ'. -/
 /-- Sends a term with extra variables to a term with constants. -/
 @[simp]
-def varsToConstantsₓ : L.term (Sum γ α) → L[[γ]].term α
+def varsToConstants : L.term (Sum γ α) → L[[γ]].term α
   | var (Sum.inr a) => var a
   | var (Sum.inl c) => Constants.term (Sum.inr c)
   | func f ts => func (Sum.inl f) fun i => (ts i).varsToConstants
@@ -176,7 +218,7 @@ def varsToConstantsₓ : L.term (Sum γ α) → L[[γ]].term α
 /-- A bijection between terms with constants and terms with extra variables. -/
 @[simps]
 def constantsVarsEquiv : L[[γ]].term α ≃ L.term (Sum γ α) :=
-  ⟨constantsToVarsₓ, varsToConstantsₓ, by
+  ⟨constantsToVars, varsToConstants, by
     intro t
     induction' t with _ n f _ ih
     · rfl
@@ -207,16 +249,16 @@ def constantsVarsEquiv : L[[γ]].term α ≃ L.term (Sum γ α) :=
 
 /-- A bijection between terms with constants and terms with extra variables. -/
 def constantsVarsEquivLeft : L[[γ]].term (Sum α β) ≃ L.term (Sum (Sum γ α) β) :=
-  constantsVarsEquiv.trans (relabelEquiv (Equivₓ.sumAssoc _ _ _)).symm
+  constantsVarsEquiv.trans (relabelEquiv (Equiv.sumAssoc _ _ _)).symm
 
 @[simp]
 theorem constants_vars_equiv_left_apply (t : L[[γ]].term (Sum α β)) :
-    constantsVarsEquivLeft t = (constantsToVarsₓ t).relabel (Equivₓ.sumAssoc _ _ _).symm :=
+    constantsVarsEquivLeft t = (constantsToVars t).relabel (Equiv.sumAssoc _ _ _).symm :=
   rfl
 
 @[simp]
 theorem constants_vars_equiv_left_symm_apply (t : L.term (Sum (Sum γ α) β)) :
-    constantsVarsEquivLeft.symm t = varsToConstantsₓ (t.relabel (Equivₓ.sumAssoc _ _ _)) :=
+    constantsVarsEquivLeft.symm t = varsToConstants (t.relabel (Equiv.sumAssoc _ _ _)) :=
   rfl
 
 instance inhabitedOfVar [Inhabited α] : Inhabited (L.term α) :=
@@ -226,12 +268,18 @@ instance inhabitedOfConstant [Inhabited L.Constants] : Inhabited (L.term α) :=
   ⟨(default : L.Constants).term⟩
 
 /-- Raises all of the `fin`-indexed variables of a term greater than or equal to `m` by `n'`. -/
-def liftAt {n : ℕ} (n' m : ℕ) : L.term (Sum α (Finₓ n)) → L.term (Sum α (Finₓ (n + n'))) :=
-  relabelₓ (Sum.map id fun i => if ↑i < m then Finₓ.castAdd n' i else Finₓ.addNat n' i)
+def liftAt {n : ℕ} (n' m : ℕ) : L.term (Sum α (Fin n)) → L.term (Sum α (Fin (n + n'))) :=
+  relabel (Sum.map id fun i => if ↑i < m then Fin.castAdd n' i else Fin.addNat n' i)
 
+/- warning: first_order.language.term.subst -> FirstOrder.Language.Term.subst is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}}, (FirstOrder.Language.Term.{u v u'} L α) -> (α -> (FirstOrder.Language.Term.{u v v'} L β)) -> (FirstOrder.Language.Term.{u v v'} L β)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}}, (FirstOrder.Language.Term.{u v u'} L α) -> (α -> (FirstOrder.Language.Term.{u v v'} L β)) -> (FirstOrder.Language.Term.{u v v'} L β)
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.subst FirstOrder.Language.Term.substₓ'. -/
 /-- Substitutes the variables in a given term with terms. -/
 @[simp]
-def substₓ : L.term α → (α → L.term β) → L.term β
+def subst : L.term α → (α → L.term β) → L.term β
   | var a, tf => tf a
   | func f ts, tf => func f fun i => (ts i).subst tf
 
@@ -240,16 +288,22 @@ end Term
 -- mathport name: language.term.var
 localized [FirstOrder] prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
 
-namespace Lhom
+namespace LhomCat
 
+/- warning: first_order.language.Lhom.on_term -> FirstOrder.Language.LhomCat.onTerm is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u v u_1 u_2} L L') -> (FirstOrder.Language.Term.{u v u'} L α) -> (FirstOrder.Language.Term.{u_1 u_2 u'} L' α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u v u_1 u_2} L L') -> (FirstOrder.Language.Term.{u v u'} L α) -> (FirstOrder.Language.Term.{u_1 u_2 u'} L' α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_term FirstOrder.Language.LhomCat.onTermₓ'. -/
 /-- Maps a term's symbols along a language map. -/
 @[simp]
-def onTermₓ (φ : L →ᴸ L') : L.term α → L'.term α
+def onTerm (φ : L →ᴸ L') : L.term α → L'.term α
   | var i => var i
   | func f ts => func (φ.onFunction f) fun i => on_term (ts i)
 
 @[simp]
-theorem id_on_term : ((Lhom.id L).onTerm : L.term α → L.term α) = id := by
+theorem id_on_term : ((LhomCat.id L).onTerm : L.term α → L.term α) = id := by
   ext t
   induction' t with _ _ _ _ ih
   · rfl
@@ -269,11 +323,11 @@ theorem comp_on_term {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
     rfl
     
 
-end Lhom
+end LhomCat
 
 /-- Maps a term's symbols along a language equivalence. -/
 @[simps]
-def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α where
+def LequivCat.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α where
   toFun := φ.toLhom.onTerm
   invFun := φ.invLhom.onTerm
   left_inv := by rw [Function.left_inverse_iff_comp, ← Lhom.comp_on_term, φ.left_inv, Lhom.id_on_term]
@@ -281,13 +335,13 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α where
 
 variable (L) (α)
 
--- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: falsum {}
+/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: falsum {} -/
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
   | falsum {n} : bounded_formula n
-  | equal {n} (t₁ t₂ : L.term (Sum α (Finₓ n))) : bounded_formula n
-  | rel {n l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.term (Sum α (Finₓ n))) : bounded_formula n
+  | equal {n} (t₁ t₂ : L.term (Sum α (Fin n))) : bounded_formula n
+  | rel {n l : ℕ} (R : L.Relations l) (ts : Fin l → L.term (Sum α (Fin n))) : bounded_formula n
   | imp {n} (f₁ f₂ : bounded_formula n) : bounded_formula n
   | all {n} (f : bounded_formula (n + 1)) : bounded_formula n
 
@@ -303,30 +357,29 @@ def Sentence :=
 
 /-- A theory is a set of sentences. -/
 @[reducible]
-def Theory :=
+def TheoryCat :=
   Set L.Sentence
 
 variable {L} {α} {n : ℕ}
 
 /-- Applies a relation to terms as a bounded formula. -/
-def Relations.boundedFormula {l : ℕ} (R : L.Relations n) (ts : Finₓ n → L.term (Sum α (Finₓ l))) :
-    L.BoundedFormula α l :=
+def Relations.boundedFormula {l : ℕ} (R : L.Relations n) (ts : Fin n → L.term (Sum α (Fin l))) : L.BoundedFormula α l :=
   BoundedFormula.rel R ts
 
 /-- Applies a unary relation to a term as a bounded formula. -/
-def Relations.boundedFormula₁ (r : L.Relations 1) (t : L.term (Sum α (Finₓ n))) : L.BoundedFormula α n :=
+def Relations.boundedFormula₁ (r : L.Relations 1) (t : L.term (Sum α (Fin n))) : L.BoundedFormula α n :=
   r.BoundedFormula ![t]
 
 /-- Applies a binary relation to two terms as a bounded formula. -/
-def Relations.boundedFormula₂ (r : L.Relations 2) (t₁ t₂ : L.term (Sum α (Finₓ n))) : L.BoundedFormula α n :=
+def Relations.boundedFormula₂ (r : L.Relations 2) (t₁ t₂ : L.term (Sum α (Fin n))) : L.BoundedFormula α n :=
   r.BoundedFormula ![t₁, t₂]
 
 /-- The equality of two terms as a bounded formula. -/
-def Term.bdEqual (t₁ t₂ : L.term (Sum α (Finₓ n))) : L.BoundedFormula α n :=
+def Term.bdEqual (t₁ t₂ : L.term (Sum α (Fin n))) : L.BoundedFormula α n :=
   BoundedFormula.equal t₁ t₂
 
 /-- Applies a relation to terms as a bounded formula. -/
-def Relations.formula (R : L.Relations n) (ts : Finₓ n → L.term α) : L.Formula α :=
+def Relations.formula (R : L.Relations n) (ts : Fin n → L.term α) : L.Formula α :=
   R.BoundedFormula fun i => (ts i).relabel Sum.inl
 
 /-- Applies a unary relation to a term as a formula. -/
@@ -350,12 +403,12 @@ instance : HasBot (L.BoundedFormula α n) :=
   ⟨falsum⟩
 
 /-- The negation of a bounded formula is also a bounded formula. -/
-@[matchPattern]
+@[match_pattern]
 protected def not (φ : L.BoundedFormula α n) : L.BoundedFormula α n :=
   φ.imp ⊥
 
 /-- Puts an `∃` quantifier on a bounded formula. -/
-@[matchPattern]
+@[match_pattern]
 protected def ex (φ : L.BoundedFormula α (n + 1)) : L.BoundedFormula α n :=
   φ.Not.all.Not
 
@@ -372,23 +425,35 @@ instance : HasSup (L.BoundedFormula α n) :=
 protected def iff (φ ψ : L.BoundedFormula α n) :=
   φ.imp ψ ⊓ ψ.imp φ
 
-open Finsetₓ
+open Finset
 
+/- warning: first_order.language.bounded_formula.free_var_finset -> FirstOrder.Language.BoundedFormula.freeVarFinset is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α] {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (Finset.{u'} α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α] {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (Finset.{u'} α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.free_var_finset FirstOrder.Language.BoundedFormula.freeVarFinsetₓ'. -/
 /-- The `finset` of variables used in a given formula. -/
 @[simp]
-def freeVarFinsetₓ [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finsetₓ α
+def freeVarFinset [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finset α
   | n, falsum => ∅
   | n, equal t₁ t₂ => t₁.varFinsetLeft ∪ t₂.varFinsetLeft
   | n, rel R ts => univ.bUnion fun i => (ts i).varFinsetLeft
   | n, imp f₁ f₂ => f₁.freeVarFinset ∪ f₂.freeVarFinset
   | n, all f => f.freeVarFinset
 
+/- warning: first_order.language.bounded_formula.cast_le -> FirstOrder.Language.BoundedFormula.castLe is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α m) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α m) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.cast_le FirstOrder.Language.BoundedFormula.castLeₓ'. -/
 /-- Casts `L.bounded_formula α m` as `L.bounded_formula α n`, where `m ≤ n`. -/
 @[simp]
-def castLeₓ : ∀ {m n : ℕ} (h : m ≤ n), L.BoundedFormula α m → L.BoundedFormula α n
+def castLe : ∀ {m n : ℕ} (h : m ≤ n), L.BoundedFormula α m → L.BoundedFormula α n
   | m, n, h, falsum => falsum
-  | m, n, h, equal t₁ t₂ => equal (t₁.relabel (Sum.map id (Finₓ.castLe h))) (t₂.relabel (Sum.map id (Finₓ.castLe h)))
-  | m, n, h, rel R ts => rel R (Term.relabelₓ (Sum.map id (Finₓ.castLe h)) ∘ ts)
+  | m, n, h, equal t₁ t₂ => equal (t₁.relabel (Sum.map id (Fin.castLe h))) (t₂.relabel (Sum.map id (Fin.castLe h)))
+  | m, n, h, rel R ts => rel R (Term.relabel (Sum.map id (Fin.castLe h)) ∘ ts)
   | m, n, h, imp f₁ f₂ => (f₁.cast_le h).imp (f₂.cast_le h)
   | m, n, h, all f => (f.cast_le (add_le_add_right h 1)).all
 
@@ -397,13 +462,13 @@ theorem cast_le_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.cast_le 
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
     
-  · simp [Finₓ.cast_le_of_eq]
+  · simp [Fin.cast_le_of_eq]
     
-  · simp [Finₓ.cast_le_of_eq]
+  · simp [Fin.cast_le_of_eq]
     
-  · simp [Finₓ.cast_le_of_eq, ih1, ih2]
+  · simp [Fin.cast_le_of_eq, ih1, ih2]
     
-  · simp [Finₓ.cast_le_of_eq, ih3]
+  · simp [Fin.cast_le_of_eq, ih3]
     
 
 @[simp]
@@ -415,7 +480,7 @@ theorem cast_le_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFor
     
   · simp
     
-  · simp only [cast_le, eq_self_iff_true, heq_iff_eq, true_andₓ]
+  · simp only [cast_le, eq_self_iff_true, heq_iff_eq, true_and_iff]
     rw [← Function.comp.assoc, relabel_comp_relabel]
     simp
     
@@ -426,12 +491,18 @@ theorem cast_le_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFor
 
 @[simp]
 theorem cast_le_comp_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) :
-    (BoundedFormula.castLeₓ mn ∘ BoundedFormula.castLeₓ km : L.BoundedFormula α k → L.BoundedFormula α n) =
-      BoundedFormula.castLeₓ (km.trans mn) :=
+    (BoundedFormula.castLe mn ∘ BoundedFormula.castLe km : L.BoundedFormula α k → L.BoundedFormula α n) =
+      BoundedFormula.castLe (km.trans mn) :=
   funext (cast_le_cast_le km mn)
 
+/- warning: first_order.language.bounded_formula.restrict_free_var -> FirstOrder.Language.BoundedFormula.restrictFreeVar is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α] {n : Nat} (φ : FirstOrder.Language.BoundedFormula.{u v u'} L α n), ((coeSort.{succ u' succ (succ u')} (Finset.{u'} α) Type.{u'} (Finset.hasCoeToSort.{u'} α) (FirstOrder.Language.BoundedFormula.freeVarFinset.{u v u'} L α (fun (a : α) (b : α) => _inst_4 a b) n φ)) -> β) -> (FirstOrder.Language.BoundedFormula.{u v v'} L β n)
+but is expected to have type
+  PUnit.{(max (max (max (succ (succ u)) (succ (succ u'))) (succ (succ v))) (succ (succ v')))}
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.restrict_free_var FirstOrder.Language.BoundedFormula.restrictFreeVarₓ'. -/
 /-- Restricts a bounded formula to only use a particular set of free variables. -/
-def restrictFreeVarₓ [DecidableEq α] :
+def restrictFreeVar [DecidableEq α] :
     ∀ {n : ℕ} (φ : L.BoundedFormula α n) (f : φ.freeVarFinset → β), L.BoundedFormula β n
   | n, falsum, f => falsum
   | n, equal t₁ t₂, f =>
@@ -443,18 +514,36 @@ def restrictFreeVarₓ [DecidableEq α] :
       (φ₂.restrictFreeVar (f ∘ Set.inclusion (subset_union_right _ _)))
   | n, all φ, f => (φ.restrictFreeVar f).all
 
+/- warning: first_order.language.bounded_formula.alls -> FirstOrder.Language.BoundedFormula.alls is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.Formula.{u v u'} L α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.Formula.{u v u'} L α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.alls FirstOrder.Language.BoundedFormula.allsₓ'. -/
 /-- Places universal quantifiers on all extra variables of a bounded formula. -/
-def allsₓ : ∀ {n}, L.BoundedFormula α n → L.Formula α
+def alls : ∀ {n}, L.BoundedFormula α n → L.Formula α
   | 0, φ => φ
   | n + 1, φ => φ.all.alls
 
+/- warning: first_order.language.bounded_formula.exs -> FirstOrder.Language.BoundedFormula.exs is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.Formula.{u v u'} L α)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.Formula.{u v u'} L α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.exs FirstOrder.Language.BoundedFormula.exsₓ'. -/
 /-- Places existential quantifiers on all extra variables of a bounded formula. -/
-def exsₓ : ∀ {n}, L.BoundedFormula α n → L.Formula α
+def exs : ∀ {n}, L.BoundedFormula α n → L.Formula α
   | 0, φ => φ
   | n + 1, φ => φ.ex.exs
 
+/- warning: first_order.language.bounded_formula.map_term_rel -> FirstOrder.Language.BoundedFormula.mapTermRel is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u v u'} L (Sum.{u' 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1 u_2 v'} L' (Sum.{v' 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u v} L n) -> (FirstOrder.Language.Relations.{u_1 u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)))) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (One.one.{0} Nat Nat.hasOne)))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g n)))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u v u'} L (Sum.{u' 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1 u_2 v'} L' (Sum.{v' 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u v} L n) -> (FirstOrder.Language.Relations.{u_1 u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)))) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (One.one.{0} Nat Nat.hasOne)))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g n)))
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.map_term_rel FirstOrder.Language.BoundedFormula.mapTermRelₓ'. -/
 /-- Maps bounded formulas along a map of terms and a map of relations. -/
-def mapTermRelₓ {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Finₓ n)) → L'.term (Sum β (Finₓ (g n))))
+def mapTermRel {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (g n))))
     (fr : ∀ n, L.Relations n → L'.Relations n)
     (h : ∀ n, L'.BoundedFormula β (g (n + 1)) → L'.BoundedFormula β (g n + 1)) :
     ∀ {n}, L.BoundedFormula α n → L'.BoundedFormula β (g n)
@@ -466,11 +555,11 @@ def mapTermRelₓ {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Finₓ n)) → 
 
 /-- Raises all of the `fin`-indexed variables of a formula greater than or equal to `m` by `n'`. -/
 def liftAt : ∀ {n : ℕ} (n' m : ℕ), L.BoundedFormula α n → L.BoundedFormula α (n + n') := fun n n' m φ =>
-  φ.mapTermRel (fun k t => t.liftAt n' m) (fun _ => id) fun _ => castLeₓ (by rw [add_assocₓ, add_commₓ 1, add_assocₓ])
+  φ.mapTermRel (fun k t => t.liftAt n' m) (fun _ => id) fun _ => castLe (by rw [add_assoc, add_comm 1, add_assoc])
 
 @[simp]
-theorem map_term_rel_map_term_rel {L'' : Language} (ft : ∀ n, L.term (Sum α (Finₓ n)) → L'.term (Sum β (Finₓ n)))
-    (fr : ∀ n, L.Relations n → L'.Relations n) (ft' : ∀ n, L'.term (Sum β (Finₓ n)) → L''.term (Sum γ (Finₓ n)))
+theorem map_term_rel_map_term_rel {L'' : Language} (ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n)))
+    (fr : ∀ n, L.Relations n → L'.Relations n) (ft' : ∀ n, L'.term (Sum β (Fin n)) → L''.term (Sum γ (Fin n)))
     (fr' : ∀ n, L'.Relations n → L''.Relations n) {n} (φ : L.BoundedFormula α n) :
     ((φ.mapTermRel ft fr fun _ => id).mapTermRel ft' fr' fun _ => id) =
       φ.mapTermRel (fun _ => ft' _ ∘ ft _) (fun _ => fr' _ ∘ fr _) fun _ => id :=
@@ -505,17 +594,17 @@ theorem map_term_rel_id_id_id {n} (φ : L.BoundedFormula α n) :
 /-- An equivalence of bounded formulas given by an equivalence of terms and an equivalence of
 relations. -/
 @[simps]
-def mapTermRelEquiv (ft : ∀ n, L.term (Sum α (Finₓ n)) ≃ L'.term (Sum β (Finₓ n)))
+def mapTermRelEquiv (ft : ∀ n, L.term (Sum α (Fin n)) ≃ L'.term (Sum β (Fin n)))
     (fr : ∀ n, L.Relations n ≃ L'.Relations n) {n} : L.BoundedFormula α n ≃ L'.BoundedFormula β n :=
-  ⟨mapTermRelₓ (fun n => ft n) (fun n => fr n) fun _ => id,
-    mapTermRelₓ (fun n => (ft n).symm) (fun n => (fr n).symm) fun _ => id, fun φ => by simp, fun φ => by simp⟩
+  ⟨mapTermRel (fun n => ft n) (fun n => fr n) fun _ => id,
+    mapTermRel (fun n => (ft n).symm) (fun n => (fr n).symm) fun _ => id, fun φ => by simp, fun φ => by simp⟩
 
 /-- A function to help relabel the variables in bounded formulas. -/
-def relabelAux (g : α → Sum β (Finₓ n)) (k : ℕ) : Sum α (Finₓ k) → Sum β (Finₓ (n + k)) :=
-  Sum.map id finSumFinEquiv ∘ Equivₓ.sumAssoc _ _ _ ∘ Sum.map g id
+def relabelAux (g : α → Sum β (Fin n)) (k : ℕ) : Sum α (Fin k) → Sum β (Fin (n + k)) :=
+  Sum.map id finSumFinEquiv ∘ Equiv.sumAssoc _ _ _ ∘ Sum.map g id
 
 @[simp]
-theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Finₓ n)} {v : β → M} {xs : Finₓ (n + m) → M} :
+theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Fin n)} {v : β → M} {xs : Fin (n + m) → M} :
     Sum.elim v xs ∘ relabelAux g m = Sum.elim (Sum.elim v (xs ∘ castAdd m) ∘ g) (xs ∘ natAdd n) := by
   ext x
   cases x
@@ -526,53 +615,53 @@ theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Finₓ n)} {v : 
     
 
 @[simp]
-theorem relabel_aux_sum_inl (k : ℕ) : relabelAux (Sum.inl : α → Sum α (Finₓ n)) k = Sum.map id (natAdd n) := by
+theorem relabel_aux_sum_inl (k : ℕ) : relabelAux (Sum.inl : α → Sum α (Fin n)) k = Sum.map id (natAdd n) := by
   ext x
   cases x <;>
     · simp [relabel_aux]
       
 
 /-- Relabels a bounded formula's variables along a particular function. -/
-def relabel (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α k) : L.BoundedFormula β (n + k) :=
-  φ.mapTermRel (fun _ t => t.relabel (relabelAux g _)) (fun _ => id) fun _ => castLeₓ (ge_of_eqₓ (add_assocₓ _ _ _))
+def relabel (g : α → Sum β (Fin n)) {k} (φ : L.BoundedFormula α k) : L.BoundedFormula β (n + k) :=
+  φ.mapTermRel (fun _ t => t.relabel (relabelAux g _)) (fun _ => id) fun _ => castLe (ge_of_eq (add_assoc _ _ _))
 
 @[simp]
-theorem relabel_falsum (g : α → Sum β (Finₓ n)) {k} : (falsum : L.BoundedFormula α k).relabel g = falsum :=
+theorem relabel_falsum (g : α → Sum β (Fin n)) {k} : (falsum : L.BoundedFormula α k).relabel g = falsum :=
   rfl
 
 @[simp]
-theorem relabel_bot (g : α → Sum β (Finₓ n)) {k} : (⊥ : L.BoundedFormula α k).relabel g = ⊥ :=
+theorem relabel_bot (g : α → Sum β (Fin n)) {k} : (⊥ : L.BoundedFormula α k).relabel g = ⊥ :=
   rfl
 
 @[simp]
-theorem relabel_imp (g : α → Sum β (Finₓ n)) {k} (φ ψ : L.BoundedFormula α k) :
+theorem relabel_imp (g : α → Sum β (Fin n)) {k} (φ ψ : L.BoundedFormula α k) :
     (φ.imp ψ).relabel g = (φ.relabel g).imp (ψ.relabel g) :=
   rfl
 
 @[simp]
-theorem relabel_not (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α k) : φ.Not.relabel g = (φ.relabel g).Not := by
+theorem relabel_not (g : α → Sum β (Fin n)) {k} (φ : L.BoundedFormula α k) : φ.Not.relabel g = (φ.relabel g).Not := by
   simp [bounded_formula.not]
 
 @[simp]
-theorem relabel_all (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α (k + 1)) :
+theorem relabel_all (g : α → Sum β (Fin n)) {k} (φ : L.BoundedFormula α (k + 1)) :
     φ.all.relabel g = (φ.relabel g).all := by
   rw [relabel, map_term_rel, relabel]
   simp
 
 @[simp]
-theorem relabel_ex (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α (k + 1)) : φ.ex.relabel g = (φ.relabel g).ex :=
+theorem relabel_ex (g : α → Sum β (Fin n)) {k} (φ : L.BoundedFormula α (k + 1)) : φ.ex.relabel g = (φ.relabel g).ex :=
   by simp [bounded_formula.ex]
 
 @[simp]
 theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
-    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.cast_le (ge_of_eqₓ (zero_addₓ n)) := by
+    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.cast_le (ge_of_eq (zero_add n)) := by
   simp only [relabel, relabel_aux_sum_inl]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
     
-  · simp [Finₓ.nat_add_zero, cast_le_of_eq, map_term_rel]
+  · simp [Fin.nat_add_zero, cast_le_of_eq, map_term_rel]
     
-  · simp [Finₓ.nat_add_zero, cast_le_of_eq, map_term_rel]
+  · simp [Fin.nat_add_zero, cast_le_of_eq, map_term_rel]
     
   · simp [map_term_rel, ih1, ih2]
     
@@ -582,15 +671,21 @@ theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
 /-- Substitutes the variables in a given formula with terms. -/
 @[simp]
 def subst {n : ℕ} (φ : L.BoundedFormula α n) (f : α → L.term β) : L.BoundedFormula β n :=
-  φ.mapTermRel (fun _ t => t.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ f) (var ∘ Sum.inr))) (fun _ => id) fun _ => id
+  φ.mapTermRel (fun _ t => t.subst (Sum.elim (Term.relabel Sum.inl ∘ f) (var ∘ Sum.inr))) (fun _ => id) fun _ => id
 
 /-- A bijection sending formulas with constants to formulas with extra variables. -/
 def constantsVarsEquiv : L[[γ]].BoundedFormula α n ≃ L.BoundedFormula (Sum γ α) n :=
-  mapTermRelEquiv (fun _ => Term.constantsVarsEquivLeft) fun _ => Equivₓ.sumEmpty _ _
+  mapTermRelEquiv (fun _ => Term.constantsVarsEquivLeft) fun _ => Equiv.sumEmpty _ _
 
+/- warning: first_order.language.bounded_formula.to_formula -> FirstOrder.Language.BoundedFormula.toFormula is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.Formula.{u v u'} L (Sum.{u' 0} α (Fin n)))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.Formula.{u v u'} L (Sum.{u' 0} α (Fin n)))
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_formula FirstOrder.Language.BoundedFormula.toFormulaₓ'. -/
 /-- Turns the extra variables of a bounded formula into free variables. -/
 @[simp]
-def toFormulaₓ : ∀ {n : ℕ}, L.BoundedFormula α n → L.Formula (Sum α (Finₓ n))
+def toFormula : ∀ {n : ℕ}, L.BoundedFormula α n → L.Formula (Sum α (Fin n))
   | n, falsum => falsum
   | n, equal t₁ t₂ => t₁.equal t₂
   | n, rel R ts => R.Formula ts
@@ -599,19 +694,19 @@ def toFormulaₓ : ∀ {n : ℕ}, L.BoundedFormula α n → L.Formula (Sum α (F
 
 variable {l : ℕ} {φ ψ : L.BoundedFormula α l} {θ : L.BoundedFormula α l.succ}
 
-variable {v : α → M} {xs : Finₓ l → M}
+variable {v : α → M} {xs : Fin l → M}
 
 /-- An atomic formula is either equality or a relation symbol applied to terms.
   Note that `⊥` and `⊤` are not considered atomic in this convention. -/
 inductive IsAtomic : L.BoundedFormula α n → Prop
-  | equal (t₁ t₂ : L.term (Sum α (Finₓ n))) : IsAtomic (bdEqual t₁ t₂)
-  | rel {l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.term (Sum α (Finₓ n))) : IsAtomic (R.BoundedFormula ts)
+  | equal (t₁ t₂ : L.term (Sum α (Fin n))) : IsAtomic (bdEqual t₁ t₂)
+  | rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.term (Sum α (Fin n))) : IsAtomic (R.BoundedFormula ts)
 
 theorem not_all_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsAtomic := fun con => by cases con
 
 theorem not_ex_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsAtomic := fun con => by cases con
 
-theorem IsAtomic.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsAtomic) (f : α → Sum β (Finₓ n)) :
+theorem IsAtomic.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsAtomic) (f : α → Sum β (Fin n)) :
     (φ.relabel f).IsAtomic :=
   IsAtomic.rec_on h (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.rel _ _
 
@@ -637,7 +732,7 @@ theorem is_qf_bot : IsQf (⊥ : L.BoundedFormula α n) :=
 theorem IsQf.not {φ : L.BoundedFormula α n} (h : IsQf φ) : IsQf φ.Not :=
   h.imp is_qf_bot
 
-theorem IsQf.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsQf) (f : α → Sum β (Finₓ n)) : (φ.relabel f).IsQf :=
+theorem IsQf.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsQf) (f : α → Sum β (Fin n)) : (φ.relabel f).IsQf :=
   IsQf.rec_on h is_qf_bot (fun _ h => (h.relabel f).IsQf) fun _ _ _ _ h1 h2 => h1.imp h2
 
 theorem IsQf.lift_at {k m : ℕ} (h : IsQf φ) : (φ.liftAt k m).IsQf :=
@@ -676,7 +771,7 @@ theorem IsPrenex.induction_on_all_not {P : ∀ {n}, L.BoundedFormula α n → Pr
     (hn : ∀ {m} {ψ : L.BoundedFormula α m}, P ψ → P ψ.Not) : P φ :=
   IsPrenex.rec_on h (fun _ _ => hq) (fun _ _ _ => ha) fun _ _ _ ih => hn (ha (hn ih))
 
-theorem IsPrenex.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsPrenex) (f : α → Sum β (Finₓ n)) :
+theorem IsPrenex.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsPrenex) (f : α → Sum β (Fin n)) :
     (φ.relabel f).IsPrenex :=
   IsPrenex.rec_on h (fun _ _ h => (h.relabel f).IsPrenex) (fun _ _ _ h => by simp [h.all]) fun _ _ _ h => by simp [h.ex]
 
@@ -686,10 +781,16 @@ theorem IsPrenex.cast_le (hφ : IsPrenex φ) : ∀ {n} {h : l ≤ n}, (φ.cast_l
 theorem IsPrenex.lift_at {k m : ℕ} (h : IsPrenex φ) : (φ.liftAt k m).IsPrenex :=
   IsPrenex.rec_on h (fun _ _ ih => ih.liftAt.IsPrenex) (fun _ _ _ ih => ih.cast_le.all) fun _ _ _ ih => ih.cast_le.ex
 
+/- warning: first_order.language.bounded_formula.to_prenex_imp_right -> FirstOrder.Language.BoundedFormula.toPrenexImpRight is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_prenex_imp_right FirstOrder.Language.BoundedFormula.toPrenexImpRightₓ'. -/
 /-- An auxiliary operation to `first_order.language.bounded_formula.to_prenex`.
   If `φ` is quantifier-free and `ψ` is in prenex normal form, then `φ.to_prenex_imp_right ψ`
   is a prenex normal form for `φ.imp ψ`. -/
-def toPrenexImpRightₓ : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n → L.BoundedFormula α n
+def toPrenexImpRight : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n → L.BoundedFormula α n
   | n, φ, bounded_formula.ex ψ => ((φ.liftAt 1 n).toPrenexImpRight ψ).ex
   | n, φ, all ψ => ((φ.liftAt 1 n).toPrenexImpRight ψ).all
   | n, φ, ψ => φ.imp ψ
@@ -715,10 +816,16 @@ theorem is_prenex_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQ
   · exact (ih2 hφ.lift_at).ex
     
 
+/- warning: first_order.language.bounded_formula.to_prenex_imp -> FirstOrder.Language.BoundedFormula.toPrenexImp is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_prenex_imp FirstOrder.Language.BoundedFormula.toPrenexImpₓ'. -/
 /-- An auxiliary operation to `first_order.language.bounded_formula.to_prenex`.
   If `φ` and `ψ` are in prenex normal form, then `φ.to_prenex_imp ψ`
   is a prenex normal form for `φ.imp ψ`. -/
-def toPrenexImpₓ : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n → L.BoundedFormula α n
+def toPrenexImp : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n → L.BoundedFormula α n
   | n, bounded_formula.ex φ, ψ => (φ.toPrenexImp (ψ.liftAt 1 n)).all
   | n, all φ, ψ => (φ.toPrenexImp (ψ.liftAt 1 n)).ex
   | _, φ, ψ => φ.toPrenexImpRight ψ
@@ -743,9 +850,15 @@ theorem is_prenex_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex 
   · exact (ih2 hψ.lift_at).all
     
 
+/- warning: first_order.language.bounded_formula.to_prenex -> FirstOrder.Language.BoundedFormula.toPrenex is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u v u'} L α n)
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_prenex FirstOrder.Language.BoundedFormula.toPrenexₓ'. -/
 /-- For any bounded formula `φ`, `φ.to_prenex` is a semantically-equivalent formula in prenex normal
   form. -/
-def toPrenexₓ : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n
+def toPrenex : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n
   | _, falsum => ⊥
   | _, equal t₁ t₂ => t₁.bdEqual t₂
   | _, rel R ts => rel R ts
@@ -759,13 +872,19 @@ theorem to_prenex_is_prenex (φ : L.BoundedFormula α n) : φ.toPrenex.IsPrenex 
 
 end BoundedFormula
 
-namespace Lhom
+namespace LhomCat
 
 open BoundedFormula
 
+/- warning: first_order.language.Lhom.on_bounded_formula -> FirstOrder.Language.LhomCat.onBoundedFormula is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u v u_1 u_2} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α k) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 u'} L' α k))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u v u_1 u_2} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α k) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 u'} L' α k))
+Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_bounded_formula FirstOrder.Language.LhomCat.onBoundedFormulaₓ'. -/
 /-- Maps a bounded formula's symbols along a language map. -/
 @[simp]
-def onBoundedFormulaₓ (g : L →ᴸ L') : ∀ {k : ℕ}, L.BoundedFormula α k → L'.BoundedFormula α k
+def onBoundedFormula (g : L →ᴸ L') : ∀ {k : ℕ}, L.BoundedFormula α k → L'.BoundedFormula α k
   | k, falsum => falsum
   | k, equal t₁ t₂ => (g.onTerm t₁).bdEqual (g.onTerm t₂)
   | k, rel R ts => (g.onRelation R).BoundedFormula (g.onTerm ∘ ts)
@@ -773,7 +892,8 @@ def onBoundedFormulaₓ (g : L →ᴸ L') : ∀ {k : ℕ}, L.BoundedFormula α k
   | k, all f => (on_bounded_formula f).all
 
 @[simp]
-theorem id_on_bounded_formula : ((Lhom.id L).onBoundedFormula : L.BoundedFormula α n → L.BoundedFormula α n) = id := by
+theorem id_on_bounded_formula : ((LhomCat.id L).onBoundedFormula : L.BoundedFormula α n → L.BoundedFormula α n) = id :=
+  by
   ext f
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
@@ -803,7 +923,7 @@ theorem comp_on_bounded_formula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L �
   · simp only [on_bounded_formula, comp_on_relation, comp_on_term, Function.comp_app]
     rfl
     
-  · simp only [on_bounded_formula, Function.comp_app, ih1, ih2, eq_self_iff_true, and_selfₓ]
+  · simp only [on_bounded_formula, Function.comp_app, ih1, ih2, eq_self_iff_true, and_self_iff]
     
   · simp only [ih3, on_bounded_formula, Function.comp_app]
     
@@ -817,17 +937,17 @@ def onSentence (g : L →ᴸ L') : L.Sentence → L'.Sentence :=
   g.onFormula
 
 /-- Maps a theory's symbols along a language map. -/
-def OnTheory (g : L →ᴸ L') (T : L.Theory) : L'.Theory :=
+def OnTheory (g : L →ᴸ L') (T : L.TheoryCat) : L'.TheoryCat :=
   g.onSentence '' T
 
 @[simp]
-theorem mem_on_Theory {g : L →ᴸ L'} {T : L.Theory} {φ : L'.Sentence} :
+theorem mem_on_Theory {g : L →ᴸ L'} {T : L.TheoryCat} {φ : L'.Sentence} :
     φ ∈ g.OnTheory T ↔ ∃ φ₀, φ₀ ∈ T ∧ g.onSentence φ₀ = φ :=
   Set.mem_image _ _ _
 
-end Lhom
+end LhomCat
 
-namespace Lequiv
+namespace LequivCat
 
 /-- Maps a bounded formula's symbols along a language equivalence. -/
 @[simps]
@@ -860,7 +980,7 @@ theorem on_formula_symm (φ : L ≃ᴸ L') : (φ.onFormula.symm : L'.Formula α 
 def onSentence (φ : L ≃ᴸ L') : L.Sentence ≃ L'.Sentence :=
   φ.onFormula
 
-end Lequiv
+end LequivCat
 
 -- mathport name: term.bd_equal
 localized [FirstOrder] infixl:88 " =' " => FirstOrder.Language.Term.bdEqual
@@ -892,7 +1012,7 @@ def relabel (g : α → β) : L.Formula α → L.Formula β :=
   @BoundedFormula.relabel _ _ _ 0 (Sum.inl ∘ g) 0
 
 /-- The graph of a function as a first-order formula. -/
-def graph (f : L.Functions n) : L.Formula (Finₓ (n + 1)) :=
+def graph (f : L.Functions n) : L.Formula (Fin (n + 1)) :=
   equal (var 0) (func f fun i => var i.succ)
 
 /-- The negation of a formula. -/
@@ -953,39 +1073,39 @@ protected def Sentence.cardGe (n) : L.Sentence :=
       (· ⊓ ·) ⊤).exs
 
 /-- A theory indicating that a structure is infinite. -/
-def InfiniteTheory : L.Theory :=
+def InfiniteTheory : L.TheoryCat :=
   Set.Range (Sentence.cardGe L)
 
 /-- A theory that indicates a structure is nonempty. -/
-def NonemptyTheory : L.Theory :=
+def NonemptyTheory : L.TheoryCat :=
   {Sentence.cardGe L 1}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A theory indicating that each of a set of constants is distinct. -/
-def DistinctConstantsTheory (s : Set α) : L[[α]].Theory :=
+def DistinctConstantsTheory (s : Set α) : L[[α]].TheoryCat :=
   (fun ab : α × α => ((L.con ab.1).term.equal (L.con ab.2).term).Not) '' (s ×ˢ s ∩ Set.Diagonal αᶜ)
 
 variable {L} {α}
 
 open Set
 
-theorem monotone_distinct_constants_theory : Monotoneₓ (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
+theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
   fun s t st => image_subset _ (inter_subset_inter_left _ (prod_mono st st))
 
-theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
-  Monotoneₓ.directed_le monotone_distinct_constants_theory
+theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
+  Monotone.directed_le monotone_distinct_constants_theory
 
 theorem distinct_constants_theory_eq_Union (s : Set α) :
     L.DistinctConstantsTheory s =
-      ⋃ t : Finsetₓ s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
+      ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
   by
   classical
   simp only [distinct_constants_theory]
   rw [← image_Union, ← Union_inter]
   refine' congr rfl (congr (congr rfl _) rfl)
   ext ⟨i, j⟩
-  simp only [prod_mk_mem_set_prod_eq, Finsetₓ.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
-    Finsetₓ.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_rightₓ, exists_eq_right]
+  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
+    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
   refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
   · simp
     

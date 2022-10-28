@@ -40,12 +40,12 @@ def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
 -/
 @[simps]
 def colimitCoconeIsColimit (X : Cᵒᵖ) : IsColimit (colimitCocone X) where
-  desc := fun s x => s.ι.app (unop X) (𝟙 _)
-  fac' := fun s Y => by
+  desc s x := s.ι.app (unop X) (𝟙 _)
+  fac' s Y := by
     ext f
     convert congr_fun (s.w f).symm (𝟙 (unop X))
     simp
-  uniq' := fun s m w => by
+  uniq' s m w := by
     ext ⟨⟩
     rw [← w]
     simp
@@ -68,7 +68,7 @@ open Limits
 instance yonedaPreservesLimits (X : C) :
     PreservesLimits
       (yoneda.obj
-        X) where PreservesLimitsOfShape := fun J 𝒥 =>
+        X) where PreservesLimitsOfShape J 𝒥 :=
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
             { lift := fun s x => Quiver.Hom.unop (t.lift ⟨op X, fun j => (s.π.app j x).op, fun j₁ j₂ α => _⟩),
@@ -87,7 +87,7 @@ instance yonedaPreservesLimits (X : C) :
 instance coyonedaPreservesLimits (X : Cᵒᵖ) :
     PreservesLimits
       (coyoneda.obj
-        X) where PreservesLimitsOfShape := fun J 𝒥 =>
+        X) where PreservesLimitsOfShape J 𝒥 :=
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
             { lift := fun s x =>

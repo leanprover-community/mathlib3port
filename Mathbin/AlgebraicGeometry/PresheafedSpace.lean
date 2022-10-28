@@ -21,7 +21,7 @@ universe w v u
 
 open CategoryTheory
 
-open Top
+open TopCat
 
 open TopologicalSpace
 
@@ -36,46 +36,46 @@ attribute [local tidy] tactic.op_induction'
 namespace AlgebraicGeometry
 
 /-- A `PresheafedSpace C` is a topological space equipped with a presheaf of `C`s. -/
-structure PresheafedSpace where
-  Carrier : Top.{w}
+structure PresheafedSpaceCat where
+  Carrier : TopCat.{w}
   Presheaf : carrier.Presheaf C
 
 variable {C}
 
-namespace PresheafedSpace
+namespace PresheafedSpaceCat
 
 attribute [protected] presheaf
 
-instance coeCarrier : Coe (PresheafedSpace.{w, v, u} C) Top.{w} where coe := fun X => X.Carrier
+instance coeCarrier : Coe (PresheafedSpaceCat.{w, v, u} C) TopCat.{w} where coe X := X.Carrier
 
 @[simp]
-theorem as_coe (X : PresheafedSpace.{w, v, u} C) : X.Carrier = (X : Top.{w}) :=
+theorem as_coe (X : PresheafedSpaceCat.{w, v, u} C) : X.Carrier = (X : TopCat.{w}) :=
   rfl
 
 @[simp]
-theorem mk_coe (carrier) (presheaf) : (({ Carrier, Presheaf } : PresheafedSpace.{v} C) : Top.{v}) = carrier :=
+theorem mk_coe (carrier) (presheaf) : (({ Carrier, Presheaf } : PresheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
   rfl
 
-instance (X : PresheafedSpace.{v} C) : TopologicalSpace X :=
+instance (X : PresheafedSpaceCat.{v} C) : TopologicalSpace X :=
   X.Carrier.str
 
 /-- The constant presheaf on `X` with value `Z`. -/
-def const (X : Top) (Z : C) : PresheafedSpace C where
+def const (X : TopCat) (Z : C) : PresheafedSpaceCat C where
   Carrier := X
   Presheaf := { obj := fun U => Z, map := fun U V f => 𝟙 Z }
 
-instance [Inhabited C] : Inhabited (PresheafedSpace C) :=
-  ⟨const (Top.of Pempty) default⟩
+instance [Inhabited C] : Inhabited (PresheafedSpaceCat C) :=
+  ⟨const (TopCat.of Pempty) default⟩
 
 /-- A morphism between presheafed spaces `X` and `Y` consists of a continuous map
     `f` between the underlying topological spaces, and a (notice contravariant!) map
     from the presheaf on `Y` to the pushforward of the presheaf on `X` via `f`. -/
-structure Hom (X Y : PresheafedSpace.{w, v, u} C) where
-  base : (X : Top.{w}) ⟶ (Y : Top.{w})
+structure Hom (X Y : PresheafedSpaceCat.{w, v, u} C) where
+  base : (X : TopCat.{w}) ⟶ (Y : TopCat.{w})
   c : Y.Presheaf ⟶ base _* X.Presheaf
 
 @[ext]
-theorem ext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base)
+theorem ext {X Y : PresheafedSpaceCat C} (α β : Hom X Y) (w : α.base = β.base)
     (h : α.c ≫ whiskerRight (eqToHom (by rw [w])) _ = β.c) : α = β := by
   cases α
   cases β
@@ -83,26 +83,26 @@ theorem ext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base)
   tidy
 
 -- TODO including `injections` would make tidy work earlier.
-theorem hext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) : α = β := by
+theorem hext {X Y : PresheafedSpaceCat C} (α β : Hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) : α = β := by
   cases α
   cases β
   congr
   exacts[w, h]
 
 /-- The identity morphism of a `PresheafedSpace`. -/
-def id (X : PresheafedSpace.{w, v, u} C) : Hom X X where
-  base := 𝟙 (X : Top.{w})
+def id (X : PresheafedSpaceCat.{w, v, u} C) : Hom X X where
+  base := 𝟙 (X : TopCat.{w})
   c := eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm
 
-instance homInhabited (X : PresheafedSpace C) : Inhabited (Hom X X) :=
+instance homInhabited (X : PresheafedSpaceCat C) : Inhabited (Hom X X) :=
   ⟨id X⟩
 
 /-- Composition of morphisms of `PresheafedSpace`s. -/
-def comp {X Y Z : PresheafedSpace C} (α : Hom X Y) (β : Hom Y Z) : Hom X Z where
+def comp {X Y Z : PresheafedSpaceCat C} (α : Hom X Y) (β : Hom Y Z) : Hom X Z where
   base := α.base ≫ β.base
   c := β.c ≫ (Presheaf.pushforward _ β.base).map α.c
 
-theorem comp_c {X Y Z : PresheafedSpace C} (α : Hom X Y) (β : Hom Y Z) :
+theorem comp_c {X Y Z : PresheafedSpaceCat C} (α : Hom X Y) (β : Hom Y Z) :
     (comp α β).c = β.c ≫ (Presheaf.pushforward _ β.base).map α.c :=
   rfl
 
@@ -116,11 +116,11 @@ attribute [local simp] id comp
    and we don't have a tactic caching mechanism. -/
 /-- The category of PresheafedSpaces. Morphisms are pairs, a continuous map and a presheaf map
     from the presheaf on the target to the pushforward of the presheaf on the source. -/
-instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C) where
+instance categoryOfPresheafedSpaces : Category (PresheafedSpaceCat.{v, v, u} C) where
   Hom := Hom
   id := id
-  comp := fun X Y Z f g => comp f g
-  id_comp' := fun X Y f => by
+  comp X Y Z f g := comp f g
+  id_comp' X Y f := by
     ext1
     · rw [comp_c]
       erw [eq_to_hom_map]
@@ -128,7 +128,7 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C) whe
       erw [comp_id, comp_id]
       
     apply id_comp
-  comp_id' := fun X Y f => by
+  comp_id' X Y f := by
     ext1
     · rw [comp_c]
       erw [congr_hom (presheaf.id_pushforward _) f.c]
@@ -138,7 +138,7 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C) whe
       erw [comp_id]
       
     apply comp_id
-  assoc' := fun W X Y Z f g h => by
+  assoc' W X Y Z f g h := by
     ext1
     repeat' rw [comp_c]
     simp only [eq_to_hom_refl, assoc, functor.map_comp, whisker_right_id']
@@ -153,15 +153,15 @@ variable {C}
 attribute [local simp] eq_to_hom_map
 
 @[simp]
-theorem id_base (X : PresheafedSpace.{v, v, u} C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : Top.{v}) :=
+theorem id_base (X : PresheafedSpaceCat.{v, v, u} C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : TopCat.{v}) :=
   rfl
 
-theorem id_c (X : PresheafedSpace.{v, v, u} C) :
+theorem id_c (X : PresheafedSpaceCat.{v, v, u} C) :
     (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
   rfl
 
 @[simp]
-theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
+theorem id_c_app (X : PresheafedSpaceCat.{v, v, u} C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       X.Presheaf.map
         (eqToHom
@@ -177,13 +177,13 @@ theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
   simp
 
 @[simp]
-theorem comp_base {X Y Z : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).base = f.base ≫ g.base :=
+theorem comp_base {X Y Z : PresheafedSpaceCat.{v, v, u} C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).base = f.base ≫ g.base :=
   rfl
 
-instance (X Y : PresheafedSpace.{v, v, u} C) : CoeFun (X ⟶ Y) fun _ => X → Y :=
+instance (X Y : PresheafedSpaceCat.{v, v, u} C) : CoeFun (X ⟶ Y) fun _ => X → Y :=
   ⟨fun f => f.base⟩
 
-theorem coe_to_fun_eq {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : (f : X → Y) = f.base :=
+theorem coe_to_fun_eq {X Y : PresheafedSpaceCat.{v, v, u} C} (f : X ⟶ Y) : (f : X → Y) = f.base :=
   rfl
 
 -- The `reassoc` attribute was added despite the LHS not being a composition of two homs,
@@ -192,11 +192,11 @@ theorem coe_to_fun_eq {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : (f : X
 In that case, `erw comp_c_app_assoc` might make progress.
 The lemma `comp_c_app_assoc` is also better suited for rewrites in the opposite direction. -/
 @[reassoc, simp]
-theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
+theorem comp_c_app {X Y Z : PresheafedSpaceCat.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
   rfl
 
-theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) (U) :
+theorem congr_app {X Y : PresheafedSpaceCat.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) (U) :
     α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) := by
   subst h
   dsimp
@@ -208,15 +208,15 @@ variable (C)
 
 /-- The forgetful functor from `PresheafedSpace` to `Top`. -/
 @[simps]
-def forget : PresheafedSpace.{v, v, u} C ⥤ Top where
-  obj := fun X => (X : Top.{v})
-  map := fun X Y f => f.base
+def forget : PresheafedSpaceCat.{v, v, u} C ⥤ TopCat where
+  obj X := (X : TopCat.{v})
+  map X Y f := f.base
 
 end
 
 section Iso
 
-variable {X Y : PresheafedSpace.{v, v, u} C}
+variable {X Y : PresheafedSpaceCat.{v, v, u} C}
 
 /-- An isomorphism of PresheafedSpaces is a homeomorphism of the underlying space, and a
 natural transformation between the sheaves.
@@ -291,15 +291,15 @@ section Restrict
 /-- The restriction of a presheafed space along an open embedding into the space.
 -/
 @[simps]
-def restrict {U : Top} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) :
-    PresheafedSpace C where
+def restrict {U : TopCat} (X : PresheafedSpaceCat.{v, v, u} C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) :
+    PresheafedSpaceCat C where
   Carrier := U
   Presheaf := h.IsOpenMap.Functor.op ⋙ X.Presheaf
 
 /-- The map from the restriction of a presheafed space.
 -/
 @[simps]
-def ofRestrict {U : Top} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) :
+def ofRestrict {U : TopCat} (X : PresheafedSpaceCat.{v, v, u} C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) :
     X.restrict h ⟶ X where
   base := f
   c :=
@@ -309,9 +309,9 @@ def ofRestrict {U : Top} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : Top.{
           rw [← map_comp, ← map_comp]
           rfl }
 
-instance of_restrict_mono {U : Top} (X : PresheafedSpace C) (f : U ⟶ X.1) (hf : OpenEmbedding f) :
+instance of_restrict_mono {U : TopCat} (X : PresheafedSpaceCat C) (f : U ⟶ X.1) (hf : OpenEmbedding f) :
     Mono (X.ofRestrict hf) := by
-  haveI : mono f := (Top.mono_iff_injective _).mpr hf.inj
+  haveI : mono f := (TopCat.mono_iff_injective _).mpr hf.inj
   constructor
   intro Z g₁ g₂ eq
   ext V
@@ -335,13 +335,13 @@ instance of_restrict_mono {U : Top} (X : PresheafedSpace C) (f : U ⟶ X.1) (hf 
     exact this
     
 
-theorem restrict_top_presheaf (X : PresheafedSpace C) :
+theorem restrict_top_presheaf (X : PresheafedSpaceCat C) :
     (X.restrict (Opens.open_embedding ⊤)).Presheaf = (Opens.inclusionTopIso X.Carrier).inv _* X.Presheaf := by
   dsimp
   rw [opens.inclusion_top_functor X.carrier]
   rfl
 
-theorem of_restrict_top_c (X : PresheafedSpace C) :
+theorem of_restrict_top_c (X : PresheafedSpaceCat C) :
     (X.ofRestrict (Opens.open_embedding ⊤)).c =
       eqToHom
         (by
@@ -361,7 +361,7 @@ theorem of_restrict_top_c (X : PresheafedSpace C) :
     dsimp
     congr
     ext
-    exact ⟨fun h => ⟨⟨x, trivialₓ⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩
+    exact ⟨fun h => ⟨⟨x, trivial⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩
     
 
 /- or `rw [opens.inclusion_top_functor, ←comp_obj, ←opens.map_comp_eq],
@@ -370,14 +370,14 @@ theorem of_restrict_top_c (X : PresheafedSpace C) :
 subspace.
 -/
 @[simps]
-def toRestrictTop (X : PresheafedSpace C) : X ⟶ X.restrict (Opens.open_embedding ⊤) where
+def toRestrictTop (X : PresheafedSpaceCat C) : X ⟶ X.restrict (Opens.open_embedding ⊤) where
   base := (Opens.inclusionTopIso X.Carrier).inv
   c := eqToHom (restrict_top_presheaf X)
 
 /-- The isomorphism from the restriction to the top subspace.
 -/
 @[simps]
-def restrictTopIso (X : PresheafedSpace C) : X.restrict (Opens.open_embedding ⊤) ≅ X where
+def restrictTopIso (X : PresheafedSpaceCat C) : X.restrict (Opens.open_embedding ⊤) ≅ X where
   Hom := X.ofRestrict _
   inv := X.toRestrictTop
   hom_inv_id' :=
@@ -398,21 +398,21 @@ end Restrict
 /-- The global sections, notated Gamma.
 -/
 @[simps]
-def Γ : (PresheafedSpace.{v, v, u} C)ᵒᵖ ⥤ C where
-  obj := fun X => (unop X).Presheaf.obj (op ⊤)
-  map := fun X Y f => f.unop.c.app (op ⊤)
+def Γ : (PresheafedSpaceCat.{v, v, u} C)ᵒᵖ ⥤ C where
+  obj X := (unop X).Presheaf.obj (op ⊤)
+  map X Y f := f.unop.c.app (op ⊤)
 
-theorem Γ_obj_op (X : PresheafedSpace C) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
+theorem Γ_obj_op (X : PresheafedSpaceCat C) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
   rfl
 
-theorem Γ_map_op {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
+theorem Γ_map_op {X Y : PresheafedSpaceCat.{v, v, u} C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
   rfl
 
-end PresheafedSpace
+end PresheafedSpaceCat
 
 end AlgebraicGeometry
 
-open AlgebraicGeometry AlgebraicGeometry.PresheafedSpace
+open AlgebraicGeometry AlgebraicGeometry.PresheafedSpaceCat
 
 variable {C}
 
@@ -426,26 +426,27 @@ namespace Functor
 
 /-- We can apply a functor `F : C ⥤ D` to the values of the presheaf in any `PresheafedSpace C`,
     giving a functor `PresheafedSpace C ⥤ PresheafedSpace D` -/
-def mapPresheaf (F : C ⥤ D) : PresheafedSpace.{v, v, u} C ⥤ PresheafedSpace.{v, v, u} D where
-  obj := fun X => { Carrier := X.Carrier, Presheaf := X.Presheaf ⋙ F }
-  map := fun X Y f => { base := f.base, c := whiskerRight f.c F }
+def mapPresheaf (F : C ⥤ D) : PresheafedSpaceCat.{v, v, u} C ⥤ PresheafedSpaceCat.{v, v, u} D where
+  obj X := { Carrier := X.Carrier, Presheaf := X.Presheaf ⋙ F }
+  map X Y f := { base := f.base, c := whiskerRight f.c F }
 
 @[simp]
-theorem map_presheaf_obj_X (F : C ⥤ D) (X : PresheafedSpace C) : (F.mapPresheaf.obj X : Top.{v}) = (X : Top.{v}) :=
+theorem map_presheaf_obj_X (F : C ⥤ D) (X : PresheafedSpaceCat C) :
+    (F.mapPresheaf.obj X : TopCat.{v}) = (X : TopCat.{v}) :=
   rfl
 
 @[simp]
-theorem map_presheaf_obj_presheaf (F : C ⥤ D) (X : PresheafedSpace C) :
+theorem map_presheaf_obj_presheaf (F : C ⥤ D) (X : PresheafedSpaceCat C) :
     (F.mapPresheaf.obj X).Presheaf = X.Presheaf ⋙ F :=
   rfl
 
 @[simp]
-theorem map_presheaf_map_f (F : C ⥤ D) {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) :
+theorem map_presheaf_map_f (F : C ⥤ D) {X Y : PresheafedSpaceCat.{v, v, u} C} (f : X ⟶ Y) :
     (F.mapPresheaf.map f).base = f.base :=
   rfl
 
 @[simp]
-theorem map_presheaf_map_c (F : C ⥤ D) {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) :
+theorem map_presheaf_map_c (F : C ⥤ D) {X Y : PresheafedSpaceCat.{v, v, u} C} (f : X ⟶ Y) :
     (F.mapPresheaf.map f).c = whiskerRight f.c F :=
   rfl
 
@@ -457,7 +458,7 @@ namespace NatTrans
 -/
 def onPresheaf {F G : C ⥤ D} (α : F ⟶ G) :
     G.mapPresheaf ⟶
-      F.mapPresheaf where app := fun X =>
+      F.mapPresheaf where app X :=
     { base := 𝟙 _, c := whiskerLeft X.Presheaf α ≫ eqToHom (Presheaf.Pushforward.id_eq _).symm }
 
 -- TODO Assemble the last two constructions into a functor

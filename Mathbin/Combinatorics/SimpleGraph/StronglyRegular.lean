@@ -26,7 +26,7 @@ import Mathbin.Data.Set.Finite
 -/
 
 
-open Finsetₓ
+open Finset
 
 universe u
 
@@ -34,7 +34,7 @@ namespace SimpleGraph
 
 variable {V : Type u}
 
-variable [Fintypeₓ V] [DecidableEq V]
+variable [Fintype V] [DecidableEq V]
 
 variable (G : SimpleGraph V) [DecidableRel G.Adj]
 
@@ -45,26 +45,25 @@ variable (G : SimpleGraph V) [DecidableRel G.Adj]
  * every pair of nonadjacent vertices has `μ` common neighbors
 -/
 structure IsSRGWith (n k ℓ μ : ℕ) : Prop where
-  card : Fintypeₓ.card V = n
+  card : Fintype.card V = n
   regular : G.IsRegularOfDegree k
-  of_adj : ∀ v w : V, G.Adj v w → Fintypeₓ.card (G.CommonNeighbors v w) = ℓ
-  of_not_adj : ∀ v w : V, v ≠ w → ¬G.Adj v w → Fintypeₓ.card (G.CommonNeighbors v w) = μ
+  of_adj : ∀ v w : V, G.Adj v w → Fintype.card (G.CommonNeighbors v w) = ℓ
+  of_not_adj : ∀ v w : V, v ≠ w → ¬G.Adj v w → Fintype.card (G.CommonNeighbors v w) = μ
 
 variable {G} {n k ℓ μ : ℕ}
 
 /-- Empty graphs are strongly regular. Note that `ℓ` can take any value
   for empty graphs, since there are no pairs of adjacent vertices. -/
-theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintypeₓ.card V) 0 ℓ 0 :=
+theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 0 ℓ 0 :=
   { card := rfl, regular := bot_degree, of_adj := fun v w h => h.elim,
     of_not_adj := fun v w h => by
-      simp only [card_eq_zero, filter_congr_decidable, Fintypeₓ.card_of_finset, forall_true_left, not_false_iff,
-        bot_adj]
+      simp only [card_eq_zero, filter_congr_decidable, Fintype.card_of_finset, forall_true_left, not_false_iff, bot_adj]
       ext
       simp [mem_common_neighbors] }
 
 /-- Complete graphs are strongly regular. Note that `μ` can take any value
   for complete graphs, since there are no distinct pairs of non-adjacent vertices. -/
-theorem IsSRGWith.top : (⊤ : SimpleGraph V).IsSRGWith (Fintypeₓ.card V) (Fintypeₓ.card V - 1) (Fintypeₓ.card V - 2) μ :=
+theorem IsSRGWith.top : (⊤ : SimpleGraph V).IsSRGWith (Fintype.card V) (Fintype.card V - 1) (Fintype.card V - 2) μ :=
   { card := rfl, regular := IsRegularOfDegree.top,
     of_adj := fun v w h => by
       rw [card_common_neighbors_top]
@@ -72,13 +71,13 @@ theorem IsSRGWith.top : (⊤ : SimpleGraph V).IsSRGWith (Fintypeₓ.card V) (Fin
     of_not_adj := fun v w h h' => False.elim <| by simpa using h }
 
 theorem IsSRGWith.card_neighbor_finset_union_eq {v w : V} (h : G.IsSRGWith n k ℓ μ) :
-    (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintypeₓ.card (G.CommonNeighbors v w) := by
-  apply @Nat.add_right_cancel _ (Fintypeₓ.card (G.common_neighbors v w))
-  rw [Nat.sub_add_cancelₓ, ← Set.to_finset_card]
-  · simp [neighbor_finset, common_neighbors, Set.to_finset_inter, Finsetₓ.card_union_add_card_inter,
-      h.regular.degree_eq, two_mul]
+    (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintype.card (G.CommonNeighbors v w) := by
+  apply @Nat.add_right_cancel _ (Fintype.card (G.common_neighbors v w))
+  rw [Nat.sub_add_cancel, ← Set.to_finset_card]
+  · simp [neighbor_finset, common_neighbors, Set.to_finset_inter, Finset.card_union_add_card_inter, h.regular.degree_eq,
+      two_mul]
     
-  · apply le_transₓ (card_common_neighbors_le_degree_left _ _ _)
+  · apply le_trans (card_common_neighbors_le_degree_left _ _ _)
     simp [h.regular.degree_eq, two_mul]
     
 
@@ -101,7 +100,7 @@ theorem compl_neighbor_finset_sdiff_inter_eq {v w : V} :
   by
   ext
   rw [← not_iff_not]
-  simp [imp_iff_not_or, or_assocₓ, or_comm, Or.left_comm]
+  simp [imp_iff_not_or, or_assoc', or_comm', or_left_comm]
 
 theorem sdiff_compl_neighbor_finset_inter_eq {v w : V} (h : G.Adj v w) :
     (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) = G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ := by
@@ -116,17 +115,17 @@ theorem sdiff_compl_neighbor_finset_inter_eq {v w : V} (h : G.Adj v w) :
     
 
 theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegularOfDegree (n - k - 1) := by
-  rw [← h.card, Nat.sub_sub, add_commₓ, ← Nat.sub_sub]
+  rw [← h.card, Nat.sub_sub, add_comm, ← Nat.sub_sub]
   exact h.regular.compl
 
 theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (ha : Gᶜ.Adj v w) :
-    Fintypeₓ.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - μ) - 2 := by
+    Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - μ) - 2 := by
   simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
     Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
   simp_rw [compl_neighbor_finset_sdiff_inter_eq]
   have hne : v ≠ w := ne_of_adj _ ha
   rw [compl_adj] at ha
-  rw [card_sdiff, ← insert_eq, card_insert_of_not_mem, card_singleton, ← Finsetₓ.compl_union]
+  rw [card_sdiff, ← insert_eq, card_insert_of_not_mem, card_singleton, ← Finset.compl_union]
   · change 1 + 1 with 2
     rw [card_compl, h.card_neighbor_finset_union_of_not_adj hne ha.2, ← h.card]
     
@@ -138,13 +137,13 @@ theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ
     
 
 theorem IsSRGWith.card_common_neighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (hn : v ≠ w)
-    (hna : ¬Gᶜ.Adj v w) : Fintypeₓ.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - ℓ) := by
+    (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - ℓ) := by
   simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
     Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
   simp only [not_and, not_not, compl_adj] at hna
   have h2' := hna hn
   simp_rw [compl_neighbor_finset_sdiff_inter_eq, sdiff_compl_neighbor_finset_inter_eq h2']
-  rwa [← Finsetₓ.compl_union, card_compl, h.card_neighbor_finset_union_of_adj, ← h.card]
+  rwa [← Finset.compl_union, card_compl, h.card_neighbor_finset_union_of_adj, ← h.card]
 
 /-- The complement of a strongly regular graph is strongly regular. -/
 theorem IsSRGWith.compl (h : G.IsSRGWith n k ℓ μ) :

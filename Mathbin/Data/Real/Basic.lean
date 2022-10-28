@@ -24,7 +24,7 @@ open Pointwise
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
 numbers. -/
 structure Real where of_cauchy ::
-  cauchy : @CauSeq.Completion.Cauchy ℚ _ _ _ abs _
+  cauchy : @CauSeq.Completion.CauchyCat ℚ _ _ _ abs _
 
 -- mathport name: exprℝ
 notation "ℝ" => Real
@@ -35,7 +35,7 @@ namespace CauSeq.Completion
 
 -- this can't go in `data.real.cau_seq_completion` as the structure on `rat` isn't available
 @[simp]
-theorem of_rat_rat {abv : ℚ → ℚ} [IsAbsoluteValue abv] (q : ℚ) : ofRat (q : ℚ) = (q : @Cauchy _ _ _ _ abv _) :=
+theorem of_rat_rat {abv : ℚ → ℚ} [IsAbsoluteValue abv] (q : ℚ) : ofRat (q : ℚ) = (q : @CauchyCat _ _ _ _ abv _) :=
   rfl
 
 end CauSeq.Completion
@@ -53,7 +53,7 @@ theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
   ext_cauchy_iff.2
 
 /-- The real numbers are isomorphic to the quotient of Cauchy sequences on the rationals. -/
-def equivCauchy : ℝ ≃ CauSeq.Completion.Cauchy :=
+def equivCauchy : ℝ ≃ CauSeq.Completion.CauchyCat :=
   ⟨Real.cauchy, Real.of_cauchy, fun ⟨_⟩ => rfl, fun _ => rfl⟩
 
 -- irreducible doesn't work for instances: https://github.com/leanprover-community/lean/issues/511
@@ -131,10 +131,10 @@ theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
 
 /-- `real.equiv_Cauchy` as a ring equivalence. -/
 @[simps]
-def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.Cauchy :=
+def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.CauchyCat :=
   { equivCauchy with toFun := cauchy, invFun := of_cauchy, map_add' := cauchy_add, map_mul' := cauchy_mul }
 
-instance : CommRingₓ ℝ := by
+instance : CommRing ℝ := by
   refine_struct
       { zero := (0 : ℝ), one := (1 : ℝ), mul := (· * ·), add := (· + ·), neg := @Neg.neg ℝ _, sub := fun a b => a + -b,
         natCast := fun n => ⟨n⟩, intCast := fun n => ⟨n⟩, npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩,
@@ -145,10 +145,10 @@ instance : CommRingₓ ℝ := by
             show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl] <;>
           first
             |apply
-              add_assocₓ|apply
-              add_commₓ|apply mul_assoc|apply mul_comm|apply left_distrib|apply right_distrib|apply sub_eq_add_neg|skip
+              add_assoc|apply
+              add_comm|apply mul_assoc|apply mul_comm|apply left_distrib|apply right_distrib|apply sub_eq_add_neg|skip
 
-instance : HasRatCast ℝ where ratCast := fun q => ⟨q⟩
+instance : HasRatCast ℝ where ratCast q := ⟨q⟩
 
 theorem of_cauchy_nat_cast (n : ℕ) : (⟨n⟩ : ℝ) = n :=
   rfl
@@ -175,39 +175,39 @@ theorem cauchy_rat_cast (q : ℚ) : (q : ℝ).cauchy = q :=
  version of them. -/
 
 
-instance : Ringₓ ℝ := by infer_instance
+instance : Ring ℝ := by infer_instance
 
-instance : CommSemiringₓ ℝ := by infer_instance
+instance : CommSemiring ℝ := by infer_instance
 
-instance : Semiringₓ ℝ := by infer_instance
+instance : Semiring ℝ := by infer_instance
 
 instance : CommMonoidWithZero ℝ := by infer_instance
 
-instance : MonoidWithZeroₓ ℝ := by infer_instance
+instance : MonoidWithZero ℝ := by infer_instance
 
-instance : AddCommGroupₓ ℝ := by infer_instance
+instance : AddCommGroup ℝ := by infer_instance
 
-instance : AddGroupₓ ℝ := by infer_instance
+instance : AddGroup ℝ := by infer_instance
 
-instance : AddCommMonoidₓ ℝ := by infer_instance
+instance : AddCommMonoid ℝ := by infer_instance
 
-instance : AddMonoidₓ ℝ := by infer_instance
+instance : AddMonoid ℝ := by infer_instance
 
 instance : AddLeftCancelSemigroup ℝ := by infer_instance
 
 instance : AddRightCancelSemigroup ℝ := by infer_instance
 
-instance : AddCommSemigroupₓ ℝ := by infer_instance
+instance : AddCommSemigroup ℝ := by infer_instance
 
-instance : AddSemigroupₓ ℝ := by infer_instance
+instance : AddSemigroup ℝ := by infer_instance
 
-instance : CommMonoidₓ ℝ := by infer_instance
+instance : CommMonoid ℝ := by infer_instance
 
-instance : Monoidₓ ℝ := by infer_instance
+instance : Monoid ℝ := by infer_instance
 
-instance : CommSemigroupₓ ℝ := by infer_instance
+instance : CommSemigroup ℝ := by infer_instance
 
-instance : Semigroupₓ ℝ := by infer_instance
+instance : Semigroup ℝ := by infer_instance
 
 instance : Sub ℝ := by infer_instance
 
@@ -232,10 +232,10 @@ theorem mk_eq {f g : CauSeq ℚ abs} : mk f = mk g ↔ f ≈ g :=
 
 private irreducible_def lt : ℝ → ℝ → Prop
   | ⟨x⟩, ⟨y⟩ =>
-    (Quotientₓ.liftOn₂ x y (· < ·)) fun f₁ g₁ f₂ g₂ hf hg =>
+    (Quotient.liftOn₂ x y (· < ·)) fun f₁ g₁ f₂ g₂ hf hg =>
       propext <|
-        ⟨fun h => lt_of_eq_of_ltₓ (Setoidₓ.symm hf) (lt_of_lt_of_eqₓ h hg), fun h =>
-          lt_of_eq_of_ltₓ hf (lt_of_lt_of_eqₓ h (Setoidₓ.symm hg))⟩
+        ⟨fun h => lt_of_eq_of_lt (Setoid.symm hf) (lt_of_lt_of_eq h hg), fun h =>
+          lt_of_eq_of_lt hf (lt_of_lt_of_eq h (Setoid.symm hg))⟩
 
 instance : LT ℝ :=
   ⟨Lt⟩
@@ -273,34 +273,32 @@ private theorem le_def {x y : ℝ} : x ≤ y ↔ x < y ∨ x = y :=
 @[simp]
 theorem mk_le {f g : CauSeq ℚ abs} : mk f ≤ mk g ↔ f ≤ g := by simp [le_def, mk_eq] <;> rfl
 
-@[elabAsElim]
-protected theorem ind_mk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
+@[elab_as_elim]
+protected theorem indMk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
   cases' x with x
   induction' x using Quot.induction_on with x
   exact h x
 
 theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b := by
-  induction a using Real.ind_mk
-  induction b using Real.ind_mk
-  induction c using Real.ind_mk
+  induction a using Real.indMk
+  induction b using Real.indMk
+  induction c using Real.indMk
   simp only [mk_lt, ← mk_add]
   show Pos _ ↔ Pos _
   rw [add_sub_add_left_eq_sub]
 
-instance : PartialOrderₓ ℝ where
+instance : PartialOrder ℝ where
   le := (· ≤ ·)
   lt := (· < ·)
-  lt_iff_le_not_le := fun a b => (Real.ind_mk a) fun a => (Real.ind_mk b) fun b => by simpa using lt_iff_le_not_leₓ
-  le_refl := fun a => a.ind_mk (by intro a <;> rw [mk_le])
-  le_trans := fun a b c =>
-    (Real.ind_mk a) fun a => (Real.ind_mk b) fun b => (Real.ind_mk c) fun c => by simpa using le_transₓ
-  lt_iff_le_not_le := fun a b => (Real.ind_mk a) fun a => (Real.ind_mk b) fun b => by simpa using lt_iff_le_not_leₓ
-  le_antisymm := fun a b =>
-    (Real.ind_mk a) fun a => (Real.ind_mk b) fun b => by simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b
+  lt_iff_le_not_le a b := (Real.indMk a) fun a => (Real.indMk b) fun b => by simpa using lt_iff_le_not_le
+  le_refl a := a.indMk (by intro a <;> rw [mk_le])
+  le_trans a b c := (Real.indMk a) fun a => (Real.indMk b) fun b => (Real.indMk c) fun c => by simpa using le_trans
+  lt_iff_le_not_le a b := (Real.indMk a) fun a => (Real.indMk b) fun b => by simpa using lt_iff_le_not_le
+  le_antisymm a b := (Real.indMk a) fun a => (Real.indMk b) fun b => by simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b
 
-instance : Preorderₓ ℝ := by infer_instance
+instance : Preorder ℝ := by infer_instance
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
 theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y := by
   rw [mk_lt]
   exact const_lt
@@ -309,36 +307,50 @@ protected theorem zero_lt_one : (0 : ℝ) < 1 := by
   convert rat_cast_lt.2 zero_lt_one <;> simp [← of_cauchy_rat_cast, of_cauchy_one, of_cauchy_zero]
 
 protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
-  induction' a using Real.ind_mk with a
-  induction' b using Real.ind_mk with b
-  simpa only [mk_lt, mk_pos, ← mk_mul] using CauSeq.mul_pos
+  induction' a using Real.indMk with a
+  induction' b using Real.indMk with b
+  simpa only [mk_lt, mk_pos, ← mk_mul] using CauSeq.mulPos
 
-instance : OrderedCommRing ℝ :=
+instance : StrictOrderedCommRing ℝ :=
   { Real.commRing, Real.partialOrder, Real.semiring with
     add_le_add_left := by
-      simp only [le_iff_eq_or_ltₓ]
+      simp only [le_iff_eq_or_lt]
       rintro a b ⟨rfl, h⟩
       · simp
         
       · exact fun c => Or.inr ((add_lt_add_iff_left c).2 ‹_›)
         ,
-    zero_le_one := le_of_ltₓ Real.zero_lt_one, mul_pos := @Real.mul_pos }
+    zero_le_one := le_of_lt Real.zero_lt_one, mul_pos := @Real.mul_pos }
 
-instance : OrderedRing ℝ := by infer_instance
+instance : StrictOrderedRing ℝ :=
+  inferInstance
 
-instance : OrderedSemiring ℝ := by infer_instance
+instance : StrictOrderedCommSemiring ℝ :=
+  inferInstance
 
-instance : OrderedAddCommGroup ℝ := by infer_instance
+instance : StrictOrderedSemiring ℝ :=
+  inferInstance
 
-instance : OrderedCancelAddCommMonoid ℝ := by infer_instance
+instance : OrderedRing ℝ :=
+  inferInstance
 
-instance : OrderedAddCommMonoid ℝ := by infer_instance
+instance : OrderedSemiring ℝ :=
+  inferInstance
+
+instance : OrderedAddCommGroup ℝ :=
+  inferInstance
+
+instance : OrderedCancelAddCommMonoid ℝ :=
+  inferInstance
+
+instance : OrderedAddCommMonoid ℝ :=
+  inferInstance
 
 instance : Nontrivial ℝ :=
-  ⟨⟨0, 1, ne_of_ltₓ Real.zero_lt_one⟩⟩
+  ⟨⟨0, 1, ne_of_lt Real.zero_lt_one⟩⟩
 
 private irreducible_def sup : ℝ → ℝ → ℝ
-  | ⟨x⟩, ⟨y⟩ => ⟨Quotientₓ.map₂ (· ⊔ ·) (fun x₁ x₂ hx y₁ y₂ hy => sup_equiv_sup hx hy) x y⟩
+  | ⟨x⟩, ⟨y⟩ => ⟨Quotient.map₂ (· ⊔ ·) (fun x₁ x₂ hx y₁ y₂ hy => sup_equiv_sup hx hy) x y⟩
 
 instance : HasSup ℝ :=
   ⟨sup⟩
@@ -353,7 +365,7 @@ theorem mk_sup (a b) : (mk (a ⊔ b) : ℝ) = mk a ⊔ mk b :=
   of_cauchy_sup _ _
 
 private irreducible_def inf : ℝ → ℝ → ℝ
-  | ⟨x⟩, ⟨y⟩ => ⟨Quotientₓ.map₂ (· ⊓ ·) (fun x₁ x₂ hx y₁ y₂ hy => inf_equiv_inf hx hy) x y⟩
+  | ⟨x⟩, ⟨y⟩ => ⟨Quotient.map₂ (· ⊓ ·) (fun x₁ x₂ hx y₁ y₂ hy => inf_equiv_inf hx hy) x y⟩
 
 instance : HasInf ℝ :=
   ⟨inf⟩
@@ -370,43 +382,43 @@ theorem mk_inf (a b) : (mk (a ⊓ b) : ℝ) = mk a ⊓ mk b :=
 instance : DistribLattice ℝ :=
   { Real.partialOrder with sup := (· ⊔ ·), le := (· ≤ ·),
     le_sup_left := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b => by
           rw [← mk_sup, mk_le]
           exact CauSeq.le_sup_left,
     le_sup_right := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b => by
           rw [← mk_sup, mk_le]
           exact CauSeq.le_sup_right,
     sup_le := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b c =>
-          (Real.ind_mk c) fun c => by
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b c =>
+          (Real.indMk c) fun c => by
             simp_rw [← mk_sup, mk_le]
             exact CauSeq.sup_le,
     inf := (· ⊓ ·),
     inf_le_left := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b => by
           rw [← mk_inf, mk_le]
           exact CauSeq.inf_le_left,
     inf_le_right := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b => by
           rw [← mk_inf, mk_le]
           exact CauSeq.inf_le_right,
     le_inf := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b c =>
-          (Real.ind_mk c) fun c => by
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b c =>
+          (Real.indMk c) fun c => by
             simp_rw [← mk_inf, mk_le]
             exact CauSeq.le_inf,
     le_sup_inf := fun a =>
-      (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b c =>
-          (Real.ind_mk c) fun c =>
-            Eq.leₓ
+      (Real.indMk a) fun a b =>
+        (Real.indMk b) fun b c =>
+          (Real.indMk c) fun c =>
+            Eq.le
               (by
                 simp only [← mk_sup, ← mk_inf]
                 exact congr_arg mk (CauSeq.sup_inf_distrib_left _ _ _).symm) }
@@ -424,13 +436,13 @@ instance : SemilatticeSup ℝ :=
 open Classical
 
 instance : IsTotal ℝ (· ≤ ·) :=
-  ⟨fun a => (Real.ind_mk a) fun a b => (Real.ind_mk b) fun b => by simpa using le_totalₓ a b⟩
+  ⟨fun a => (Real.indMk a) fun a b => (Real.indMk b) fun b => by simpa using le_total a b⟩
 
-noncomputable instance : LinearOrderₓ ℝ :=
+noncomputable instance : LinearOrder ℝ :=
   Lattice.toLinearOrder _
 
 noncomputable instance : LinearOrderedCommRing ℝ :=
-  { Real.nontrivial, Real.orderedRing, Real.commRing, Real.linearOrder with }
+  { Real.nontrivial, Real.strictOrderedRing, Real.commRing, Real.linearOrder with }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedRing ℝ := by infer_instance
@@ -438,7 +450,7 @@ noncomputable instance : LinearOrderedRing ℝ := by infer_instance
 noncomputable instance : LinearOrderedSemiring ℝ := by infer_instance
 
 instance : IsDomain ℝ :=
-  { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with }
+  { Real.nontrivial, Real.commRing, LinearOrderedRing.isDomain with }
 
 noncomputable instance : LinearOrderedField ℝ :=
   { Real.linearOrderedCommRing with inv := Inv.inv,
@@ -449,7 +461,7 @@ noncomputable instance : LinearOrderedField ℝ :=
       exact CauSeq.Completion.inv_mul_cancel h,
     inv_zero := by simp [← of_cauchy_zero, ← of_cauchy_inv], ratCast := coe,
     rat_cast_mk := fun n d hd h2 => by
-      rw [← of_cauchy_rat_cast, Ratₓ.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast, of_cauchy_int_cast] }
+      rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast, of_cauchy_int_cast] }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by infer_instance
@@ -469,20 +481,20 @@ noncomputable instance decidableEq (a b : ℝ) : Decidable (a = b) := by infer_i
 The representative chosen is the one passed in the VM to `quot.mk`, so two cauchy sequences
 converging to the same number may be printed differently.
 -/
-unsafe instance : HasRepr ℝ where repr := fun r => "real.of_cauchy " ++ reprₓ r.cauchy
+unsafe instance : Repr ℝ where repr r := "real.of_cauchy " ++ repr r.cauchy
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f := by
   intro h
-  induction' x using Real.ind_mk with x
-  apply le_of_not_ltₓ
+  induction' x using Real.indMk with x
+  apply le_of_not_lt
   rw [mk_lt]
   rintro ⟨K, K0, hK⟩
   obtain ⟨i, H⟩ := exists_forall_ge_and h (exists_forall_ge_and hK (f.cauchy₃ <| half_pos K0))
-  apply not_lt_of_leₓ (H _ le_rflₓ).1
+  apply not_lt_of_le (H _ le_rfl).1
   rw [mk_lt]
   refine' ⟨_, half_pos K0, i, fun j ij => _⟩
-  have := add_le_add (H _ ij).2.1 (le_of_ltₓ (abs_lt.1 <| (H _ le_rflₓ).2.2 _ ij).1)
+  have := add_le_add (H _ ij).2.1 (le_of_lt (abs_lt.1 <| (H _ le_rfl).2.2 _ ij).1)
   rwa [← sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this
 
 theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j ≥ i, (f j : ℝ) ≤ x) : mk f ≤ x := by
@@ -499,9 +511,9 @@ theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : �
 
 instance : Archimedean ℝ :=
   archimedean_iff_rat_le.2 fun x =>
-    (Real.ind_mk x) fun f =>
+    (Real.indMk x) fun f =>
       let ⟨M, M0, H⟩ := f.bounded' 0
-      ⟨M, mk_le_of_forall_le ⟨0, fun i _ => Ratₓ.cast_le.2 <| le_of_ltₓ (abs_lt.1 (H i)).2⟩⟩
+      ⟨M, mk_le_of_forall_le ⟨0, fun i _ => Rat.cast_le.2 <| le_of_lt (abs_lt.1 (H i)).2⟩⟩
 
 noncomputable instance : FloorRing ℝ :=
   Archimedean.floorRing _
@@ -509,24 +521,24 @@ noncomputable instance : FloorRing ℝ :=
 theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs fun i => (f i : ℝ) :=
   ⟨fun H ε ε0 =>
     let ⟨δ, δ0, δε⟩ := exists_pos_rat_lt ε0
-    (H _ δ0).imp fun i hi j ij => lt_transₓ (by simpa using (@Ratₓ.cast_lt ℝ _ _ _).2 (hi _ ij)) δε,
-    fun H ε ε0 => (H _ (Ratₓ.cast_pos.2 ε0)).imp fun i hi j ij => (@Ratₓ.cast_lt ℝ _ _ _).1 <| by simpa using hi _ ij⟩
+    (H _ δ0).imp fun i hi j ij => lt_trans (by simpa using (@Rat.cast_lt ℝ _ _ _).2 (hi _ ij)) δε,
+    fun H ε ε0 => (H _ (Rat.cast_pos.2 ε0)).imp fun i hi j ij => (@Rat.cast_lt ℝ _ _ _).1 <| by simpa using hi _ ij⟩
 
 theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε > 0, ∃ i, ∀ j ≥ i, abs ((f j : ℝ) - x) < ε) : ∃ h', Real.mk ⟨f, h'⟩ = x :=
-  ⟨is_cau_seq_iff_lift.2 (of_near _ (const abs x) h),
+  ⟨is_cau_seq_iff_lift.2 (ofNear _ (const abs x) h),
     sub_eq_zero.1 <|
       abs_eq_zero.1 <|
-        (eq_of_le_of_forall_le_of_denseₓ (abs_nonneg _)) fun ε ε0 =>
-          mk_near_of_forall_near <| (h _ ε0).imp fun i h j ij => le_of_ltₓ (h j ij)⟩
+        (eq_of_le_of_forall_le_of_dense (abs_nonneg _)) fun ε ε0 =>
+          mk_near_of_forall_near <| (h _ ε0).imp fun i h j ij => le_of_lt (h j ij)⟩
 
 theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ, (z : ℝ) ≤ x → z ≤ ub :=
   Int.exists_greatest_of_bdd
     (let ⟨n, hn⟩ := exists_int_gt x
-    ⟨n, fun z h' => Int.cast_le.1 <| le_transₓ h' <| le_of_ltₓ hn⟩)
+    ⟨n, fun z h' => Int.cast_le.1 <| le_trans h' <| le_of_lt hn⟩)
     (let ⟨n, hn⟩ := exists_int_lt x
-    ⟨n, le_of_ltₓ hn⟩)
+    ⟨n, le_of_lt hn⟩)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by
@@ -545,40 +557,40 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃
     have := (Int.sub_one_lt_floor _).trans_le (Int.cast_le.2 <| (hf n).2 _ ⟨y, yS, Int.floor_le _⟩)
     simp [-sub_eq_add_neg]
     rwa [lt_div_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _), sub_mul, _root_.inv_mul_cancel]
-    exact ne_of_gtₓ (Nat.cast_pos.2 n0)
+    exact ne_of_gt (Nat.cast_pos.2 n0)
   have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ) := by
     intro ε ε0
     suffices ∀ (j k) (_ : j ≥ ⌈ε⁻¹⌉₊) (_ : k ≥ ⌈ε⁻¹⌉₊), (f j / j - f k / k : ℚ) < ε by
-      refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ ij _ le_rflₓ⟩⟩
+      refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ ij _ le_rfl⟩⟩
       rw [neg_lt, neg_sub]
-      exact this _ le_rflₓ _ ij
+      exact this _ le_rfl _ ij
     intro j ij k ik
-    replace ij := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ij)
-    replace ik := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ik)
+    replace ij := le_trans (Nat.le_ceil _) (Nat.cast_le.2 ij)
+    replace ik := le_trans (Nat.le_ceil _) (Nat.cast_le.2 ik)
     have j0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ij)
     have k0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ik)
     rcases hf₁ _ j0 with ⟨y, yS, hy⟩
-    refine' lt_of_lt_of_leₓ ((@Ratₓ.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
-    simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_ltₓ hy <| sub_lt_iff_lt_add.1 <| hf₂ _ k0 _ yS)
+    refine' lt_of_lt_of_le ((@Rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
+    simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_lt hy <| sub_lt_iff_lt_add.1 <| hf₂ _ k0 _ yS)
   let g : CauSeq ℚ abs := ⟨fun n => f n / n, hg⟩
   refine' ⟨mk g, ⟨fun x xS => _, fun y h => _⟩⟩
-  · refine' le_of_forall_ge_of_denseₓ fun z xz => _
+  · refine' le_of_forall_ge_of_dense fun z xz => _
     cases' exists_nat_gt (x - z)⁻¹ with K hK
     refine' le_mk_of_forall_le ⟨K, fun n nK => _⟩
     replace xz := sub_pos.2 xz
     replace hK := hK.le.trans (Nat.cast_le.2 nK)
     have n0 : 0 < n := Nat.cast_pos.1 ((inv_pos.2 xz).trans_le hK)
-    refine' le_transₓ _ (hf₂ _ n0 _ xS).le
+    refine' le_trans _ (hf₂ _ n0 _ xS).le
     rwa [le_sub, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
     
   · exact
       mk_le_of_forall_le
         ⟨1, fun n n1 =>
           let ⟨x, xS, hx⟩ := hf₁ _ n1
-          le_transₓ hx (h xS)⟩
+          le_trans hx (h xS)⟩
     
 
-noncomputable instance : HasSupₓ ℝ :=
+noncomputable instance : HasSup ℝ :=
   ⟨fun S => if h : S.Nonempty ∧ BddAbove S then Classical.choose (exists_is_lub S h.1 h.2) else 0⟩
 
 theorem Sup_def (S : Set ℝ) :
@@ -589,18 +601,18 @@ protected theorem is_lub_Sup (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove 
   simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
   apply Classical.choose_spec
 
-noncomputable instance : HasInfₓ ℝ :=
+noncomputable instance : HasInf ℝ :=
   ⟨fun S => -sup (-S)⟩
 
 theorem Inf_def (S : Set ℝ) : inf S = -sup (-S) :=
   rfl
 
 protected theorem is_glb_Inf (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBelow S) : IsGlb S (inf S) := by
-  rw [Inf_def, ← is_lub_neg', neg_negₓ]
+  rw [Inf_def, ← is_lub_neg', neg_neg]
   exact Real.is_lub_Sup _ h₁.neg h₂.neg
 
 noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
-  { Real.linearOrder, Real.lattice with sup := HasSupₓ.sup, inf := HasInfₓ.inf,
+  { Real.linearOrder, Real.lattice with sup := HasSup.sup, inf := HasInf.inf,
     le_cSup := fun s a hs ha => (Real.is_lub_Sup s ⟨a, ha⟩ hs).1 ha,
     cSup_le := fun s a hs ha => (Real.is_lub_Sup s hs ⟨a, ha⟩).2 ha,
     cInf_le := fun s a hs ha => (Real.is_glb_Inf s ⟨a, ha⟩ hs).1 ha,
@@ -657,7 +669,7 @@ theorem supr_of_not_bdd_above {α : Sort _} {f : α → ℝ} (hf : ¬BddAbove (S
   Sup_of_not_bdd_above hf
 
 theorem Sup_univ : sup (@Set.Univ ℝ) = 0 :=
-  Real.Sup_of_not_bdd_above fun ⟨x, h⟩ => not_le_of_ltₓ (lt_add_one _) <| h (Set.mem_univ _)
+  Real.Sup_of_not_bdd_above fun ⟨x, h⟩ => not_le_of_lt (lt_add_one _) <| h (Set.mem_univ _)
 
 @[simp]
 theorem Inf_empty : inf (∅ : Set ℝ) = 0 := by simp [Inf_def, Sup_empty]
@@ -685,7 +697,7 @@ theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sup
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Sup_empty.ge
     
-  · apply dite _ (fun h => le_cSup_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).Ge
+  · apply dite _ (fun h => le_cSup_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
     
 
 /-- As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
@@ -722,7 +734,7 @@ theorem Inf_le_Sup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : inf s
 theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x := by
   let S := { x : ℝ | const abs x < f }
   have lb : ∃ x, x ∈ S := exists_lt f
-  have ub' : ∀ x, f < const abs x → ∀ y ∈ S, y ≤ x := fun x h y yS => le_of_ltₓ <| const_lt.1 <| CauSeq.lt_trans yS h
+  have ub' : ∀ x, f < const abs x → ∀ y ∈ S, y ≤ x := fun x h y yS => le_of_lt <| const_lt.1 <| CauSeq.lt_trans yS h
   have ub : ∃ x, ∀ y ∈ S, y ≤ x := (exists_gt f).imp ub'
   refine' ⟨Sup S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
   · rcases h with ⟨ε, ε0, i, ih⟩
@@ -734,7 +746,7 @@ theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x := by
   · rcases h with ⟨ε, ε0, i, ih⟩
     refine' (le_cSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
     refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
-    rw [sub_apply, const_apply, add_commₓ, ← sub_sub, le_sub_iff_add_le, add_halves]
+    rw [sub_apply, const_apply, add_comm, ← sub_sub, le_sub_iff_add_le, add_halves]
     exact ih _ ij
     
 

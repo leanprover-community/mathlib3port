@@ -24,14 +24,14 @@ namespace Submonoid
 
 section
 
-variable [Monoidₓ M] (S)
+variable [Monoid M] (S)
 
 /-- The centralizer of a subset of a monoid `M`. -/
 @[to_additive "The centralizer of a subset of an additive monoid."]
 def centralizer : Submonoid M where
   Carrier := S.Centralizer
   one_mem' := S.one_mem_centralizer
-  mul_mem' := fun a b => Set.mul_mem_centralizer
+  mul_mem' a b := Set.mul_mem_centralizer
 
 @[simp, norm_cast, to_additive]
 theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
@@ -40,7 +40,7 @@ theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
 theorem centralizer_to_subsemigroup : (centralizer S).toSubsemigroup = Subsemigroup.centralizer S :=
   rfl
 
-theorem _root_.add_submonoid.centralizer_to_add_subsemigroup {M} [AddMonoidₓ M] (S : Set M) :
+theorem _root_.add_submonoid.centralizer_to_add_subsemigroup {M} [AddMonoid M] (S : Set M) :
     (AddSubmonoid.centralizer S).toAddSubsemigroup = AddSubsemigroup.centralizer S :=
   rfl
 
@@ -53,7 +53,7 @@ theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z
   Iff.rfl
 
 @[to_additive]
-instance decidableMemCentralizer [DecidableEq M] [Fintypeₓ M] [DecidablePred (· ∈ S)] :
+instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
     DecidablePred (· ∈ centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
 
 @[to_additive]

@@ -37,7 +37,7 @@ theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (b
   split_ifs with h'
   · rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
     rw [binary_rec_zero]
-    simp only [imp_false, or_falseₓ, eq_self_iff_true, not_true] at h
+    simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h
     exact h.symm
     
   · generalize_proofs e
@@ -49,7 +49,7 @@ theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (b
 
 /-- The same as `binary_rec`, but the induction step can assume that if `n=0`,
   the bit being appended is `tt`-/
-@[elabAsElim]
+@[elab_as_elim]
 def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = tt) → C n → C (bit b n)) : ∀ n, C n :=
   binaryRec z fun b n ih =>
     if h : n = 0 → b = tt then f b n h ih
@@ -59,7 +59,7 @@ def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = tt) �
       simpa using h
 
 /-- The same as `binary_rec`, but special casing both 0 and 1 as base cases -/
-@[elabAsElim]
+@[elab_as_elim]
 def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n, n ≠ 0 → C n → C (bit b n)) : ∀ n, C n :=
   binaryRec' z₀ fun b n h ih =>
     if h' : n = 0 then by
@@ -70,18 +70,18 @@ def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n
 @[simp]
 theorem zero_bits : bits 0 = [] := by simp [Nat.bits]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = tt) : (bit b n).bits = b::n.bits := by
   rw [Nat.bits, binary_rec_eq']
   simpa
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem bit0_bits (n : ℕ) (hn : n ≠ 0) : (bit0 n).bits = ff::n.bits :=
   bits_append_bit n false fun hn' => absurd hn' hn
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem bit1_bits (n : ℕ) : (bit1 n).bits = tt::n.bits :=
   bits_append_bit n true fun _ => rfl

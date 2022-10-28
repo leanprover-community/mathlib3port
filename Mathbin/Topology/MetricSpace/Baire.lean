@@ -51,7 +51,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
   let B : ℕ → ℝ≥0∞ := fun n => 1 / 2 ^ n
   have Bpos : ∀ n, 0 < B n := by
     intro n
-    simp only [B, one_div, one_mulₓ, Ennreal.inv_pos]
+    simp only [B, one_div, one_mul, Ennreal.inv_pos]
     exact pow_ne_top two_ne_top
   /- Translate the density assumption into two functions `center` and `radius` associating
     to any n, x, δ, δpos a center and a positive radius such that
@@ -66,15 +66,15 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
       nhds_basis_closed_eball.mem_iff.1 (is_open_iff_mem_nhds.1 (ho n) y ys)
     refine' ⟨y, min (min (δ / 2) r) (B (n + 1)), _, _, fun z hz => ⟨_, _⟩⟩
     show 0 < min (min (δ / 2) r) (B (n + 1))
-    exact lt_minₓ (lt_minₓ (Ennreal.half_pos δpos) rpos) (Bpos (n + 1))
+    exact lt_min (lt_min (Ennreal.half_pos δpos) rpos) (Bpos (n + 1))
     show min (min (δ / 2) r) (B (n + 1)) ≤ B (n + 1)
-    exact min_le_rightₓ _ _
+    exact min_le_right _ _
     show z ∈ closed_ball x δ
     exact
       calc
         edist z x ≤ edist z y + edist y x := edist_triangle _ _ _
-        _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := add_le_add hz (le_of_ltₓ xy)
-        _ ≤ δ / 2 + δ / 2 := add_le_add (le_transₓ (min_le_leftₓ _ _) (min_le_leftₓ _ _)) le_rflₓ
+        _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := add_le_add hz (le_of_lt xy)
+        _ ≤ δ / 2 + δ / 2 := add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl
         _ = δ := Ennreal.add_halves δ
         
     show z ∈ f n
@@ -82,7 +82,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
       hr
         (calc
           edist z y ≤ min (min (δ / 2) r) (B (n + 1)) := hz
-          _ ≤ r := le_transₓ (min_le_leftₓ _ _) (min_le_rightₓ _ _)
+          _ ≤ r := le_trans (min_le_left _ _) (min_le_right _ _)
           )
   choose! center radius Hpos HB Hball using this
   refine' fun x => (mem_closure_iff_nhds_basis nhds_basis_closed_eball).2 fun ε εpos => _
@@ -98,13 +98,13 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
   have rpos : ∀ n, 0 < r n := by
     intro n
     induction' n with n hn
-    exact lt_minₓ εpos (Bpos 0)
+    exact lt_min εpos (Bpos 0)
     exact Hpos n (c n) (r n) hn.ne'
   have r0 : ∀ n, r n ≠ 0 := fun n => (rpos n).ne'
   have rB : ∀ n, r n ≤ B n := by
     intro n
     induction' n with n hn
-    exact min_le_rightₓ _ _
+    exact min_le_right _ _
     exact HB n (c n) (r n) (r0 n)
   have incl : ∀ n, closed_ball (c (n + 1)) (r (n + 1)) ⊆ closed_ball (c n) (r n) ∩ f n := fun n =>
     Hball n (c n) (r n) (r0 n)
@@ -118,13 +118,13 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
         _ ⊆ closed_ball (c n) (B n) := closed_ball_subset_closed_ball (rB n)
         
     exact I A
-  have : CauchySeq c := cauchy_seq_of_edist_le_geometric_two _ one_ne_top cdist
+  have : CauchySeq c := cauchySeqOfEdistLeGeometricTwo _ one_ne_top cdist
   -- as the sequence `c n` is Cauchy in a complete space, it converges to a limit `y`.
   rcases cauchy_seq_tendsto_of_complete this with ⟨y, ylim⟩
   -- this point `y` will be the desired point. We will check that it belongs to all
   -- `f n` and to `ball x ε`.
   use y
-  simp only [exists_propₓ, Set.mem_Inter]
+  simp only [exists_prop, Set.mem_Inter]
   have I : ∀ n, ∀ m ≥ n, closed_ball (c m) (r m) ⊆ closed_ball (c n) (r n) := by
     intro n
     refine' Nat.le_induction _ fun m hnm h => _
@@ -144,7 +144,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
     exact this (yball (n + 1))
     
   show edist y x ≤ ε
-  exact le_transₓ (yball 0) (min_le_leftₓ _ _)
+  exact le_trans (yball 0) (min_le_left _ _)
 
 /-- The second theorem states that locally compact spaces are Baire. -/
 instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSpace α] [T2Space α]
@@ -177,8 +177,8 @@ instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSp
     of nonempty compact subsets.-/
   have hK_nonempty : (⋂ n, K n : Set α).Nonempty :=
     IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed _
-      (fun n => (hK_decreasing n).trans (inter_subset_right _ _)) (fun n => (K n).Nonempty) (K 0).compact fun n =>
-      (K n).compact.IsClosed
+      (fun n => (hK_decreasing n).trans (inter_subset_right _ _)) (fun n => (K n).Nonempty) (K 0).IsCompact fun n =>
+      (K n).IsCompact.IsClosed
   exact hK_nonempty.mono hK_subset
 
 variable [TopologicalSpace α] [BaireSpace α]
@@ -275,14 +275,14 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
       mem_binfi_of_directed
         (fun t₁ h₁ t₂ h₂ => ⟨t₁ ∩ t₂, ⟨h₁.1.inter h₂.1, Dense.inter_of_Gδ h₁.1 h₂.1 h₁.2 h₂.2⟩, by simp⟩)
         ⟨Univ, is_Gδ_univ, dense_univ⟩
-    _ ↔ _ := by simp [and_assocₓ]
+    _ ↔ _ := by simp [and_assoc']
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|
-    exists_congr fun t => by rw [exists_propₓ, and_comm (t ⊆ s), subset_def, and_assocₓ]
+    exists_congr fun t => by rw [exists_prop, and_comm' (t ⊆ s), subset_def, and_assoc']
 
 theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
   let ⟨t, hts, _, hd⟩ := mem_residual.1 hs
@@ -306,7 +306,7 @@ instance : CountableInterFilter (residual α) :=
 is dense. Formulated here with `⋃`. -/
 theorem IsGδ.dense_Union_interior_of_closed [Encodable ι] {s : Set α} (hs : IsGδ s) (hd : Dense s) {f : ι → Set α}
     (hc : ∀ i, IsClosed (f i)) (hU : s ⊆ ⋃ i, f i) : Dense (⋃ i, Interior (f i)) := by
-  let g := fun i => Frontier (f i)ᶜ
+  let g i := Frontier (f i)ᶜ
   have hgo : ∀ i, IsOpen (g i) := fun i => is_closed_frontier.is_open_compl
   have hgd : Dense (⋂ i, g i) := by
     refine' dense_Inter_of_open hgo fun i x => _
@@ -336,19 +336,19 @@ theorem IsGδ.dense_sUnion_interior_of_closed {T : Set (Set α)} {s : Set α} (h
 are dense. Formulated here with an index set which is a countable set in any type. -/
 theorem dense_bUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : ∀ s ∈ S, IsClosed (f s)) (hS : S.Countable)
     (hU : (⋃ s ∈ S, f s) = univ) : Dense (⋃ s ∈ S, Interior (f s)) :=
-  is_Gδ_univ.dense_bUnion_interior_of_closed dense_univ hS hc hU.Ge
+  is_Gδ_univ.dense_bUnion_interior_of_closed dense_univ hS hc hU.ge
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with `⋃₀`. -/
 theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s ∈ S, IsClosed s) (hS : S.Countable)
     (hU : ⋃₀S = univ) : Dense (⋃ s ∈ S, Interior s) :=
-  is_Gδ_univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.Ge
+  is_Gδ_univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.ge
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with an index set which is an encodable type. -/
 theorem dense_Union_interior_of_closed [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
     (hU : (⋃ s, f s) = univ) : Dense (⋃ s, Interior (f s)) :=
-  is_Gδ_univ.dense_Union_interior_of_closed dense_univ hc hU.Ge
+  is_Gδ_univ.dense_Union_interior_of_closed dense_univ hc hU.ge
 
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/

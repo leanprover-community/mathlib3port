@@ -18,17 +18,17 @@ TODO: move the `lazy_list.lean` file from core to mathlib.
 
 universe u
 
-namespace Thunkₓ
+namespace Thunk'
 
 /-- Creates a thunk with a (non-lazy) constant value. -/
-def mk {α} (x : α) : Thunkₓ α := fun _ => x
+def mk {α} (x : α) : Thunk' α := fun _ => x
 
-instance {α : Type u} [DecidableEq α] : DecidableEq (Thunkₓ α)
+instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk' α)
   | a, b => by
     have : a = b ↔ a () = b () := ⟨by cc, by intro <;> ext x <;> cases x <;> assumption⟩
     rw [this] <;> infer_instance
 
-end Thunkₓ
+end Thunk'
 
 namespace LazyList
 
@@ -66,35 +66,35 @@ instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
   | cons _ _, nil => isFalse (by cc)
 
 /-- Traversal of lazy lists using an applicative effect. -/
-protected def traverse {m : Type u → Type u} [Applicativeₓ m] {α β : Type u} (f : α → m β) : LazyList α → m (LazyList β)
+protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} (f : α → m β) : LazyList α → m (LazyList β)
   | LazyList.nil => pure LazyList.nil
-  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunkₓ.mk <$> traverse (xs ())
+  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk'.mk <$> traverse (xs ())
 
 instance : Traversable LazyList where
   map := @LazyList.traverse id _
   traverse := @LazyList.traverse
 
 instance : IsLawfulTraversable LazyList := by
-  apply Equivₓ.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
+  apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
   · induction x
     rfl
-    simp! [Equivₓ.map, Functor.map] at *
+    simp! [Equiv.map, Functor.map] at *
     simp [*]
     rfl
     
   · induction x
     rfl
-    simp! [Equivₓ.map, Functor.mapConst] at *
+    simp! [Equiv.map, Functor.mapConst] at *
     simp [*]
     rfl
     
   · induction x
-    · simp! [Traversable.traverse, Equivₓ.traverse, functor_norm]
+    · simp! [Traversable.traverse, Equiv.traverse, functor_norm]
       rfl
       
-    simp! [Equivₓ.map, Functor.mapConst, Traversable.traverse] at *
+    simp! [Equiv.map, Functor.mapConst, Traversable.traverse] at *
     rw [x_ih]
-    dsimp [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓ]
+    dsimp [list_equiv_lazy_list, Equiv.traverse, to_list, Traversable.traverse, List.traverse]
     simp! [functor_norm]
     rfl
     
@@ -140,7 +140,7 @@ it than a series of thunks. -/
 def reverse {α} (xs : LazyList α) : LazyList α :=
   ofList xs.toList.reverse
 
-instance : Monadₓ LazyList where
+instance : Monad LazyList where
   pure := @LazyList.singleton
   bind := @LazyList.bind
 
@@ -154,11 +154,11 @@ theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs := by
 theorem append_assoc {α} (xs ys zs : LazyList α) : (xs.append ys).append zs = xs.append (ys.append zs) := by
   induction xs <;> simp [append, *]
 
-theorem append_bind {α β} (xs : LazyList α) (ys : Thunkₓ (LazyList α)) (f : α → LazyList β) :
+theorem append_bind {α β} (xs : LazyList α) (ys : Thunk' (LazyList α)) (f : α → LazyList β) :
     (@LazyList.append _ xs ys).bind f = (xs.bind f).append ((ys ()).bind f) := by
   induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
 
-instance : IsLawfulMonad LazyList where
+instance : LawfulMonad LazyList where
   pure_bind := by
     intros
     apply append_nil
@@ -173,9 +173,15 @@ instance : IsLawfulMonad LazyList where
     ext ⟨⟩
     rfl
 
+/- warning: lazy_list.mfirst -> LazyList.mfirst is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Alternative.{u_1 u_2} m] {α : Type.{u_3}} {β : Type.{u_1}}, (α -> (m β)) -> (LazyList.{u_3} α) -> (m β)
+but is expected to have type
+  forall {m : Type.{_aux_param_2} -> Type.{_aux_param_1}} [_inst_1 : Alternative.{_aux_param_2 _aux_param_1} m] {α : Type.{_aux_param_0}} {β : Type.{_aux_param_2}}, (α -> (m β)) -> (LazyList.{_aux_param_0} α) -> (m β)
+Case conversion may be inaccurate. Consider using '#align lazy_list.mfirst LazyList.mfirstₓ'. -/
 /-- Try applying function `f` to every element of a `lazy_list` and
 return the result of the first attempt that succeeds. -/
-def mfirstₓ {m} [Alternativeₓ m] {α β} (f : α → m β) : LazyList α → m β
+def mfirst {m} [Alternative m] {α β} (f : α → m β) : LazyList α → m β
   | nil => failure
   | cons x xs => f x <|> mfirst (xs ())
 
@@ -191,17 +197,17 @@ instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, De
   | LazyList.nil => Decidable.false
   | LazyList.cons y ys =>
     if h : x = y then Decidable.isTrue (Or.inl h)
-    else decidableOfDecidableOfIff (mem.decidable (ys ())) (by simp [*, (· ∈ ·), LazyList.Mem])
+    else decidable_of_decidable_of_iff (mem.decidable (ys ())) (by simp [*, (· ∈ ·), LazyList.Mem])
 
 @[simp]
 theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
   Iff.rfl
 
 @[simp]
-theorem mem_cons {α} (x y : α) (ys : Thunkₓ (LazyList α)) : x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
+theorem mem_cons {α} (x y : α) (ys : Thunk' (LazyList α)) : x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
   Iff.rfl
 
-theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList α)} :
+theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk' (LazyList α)} :
     (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
   simp only [Membership.Mem, LazyList.Mem, or_imp_distrib, forall_and_distrib, forall_eq]
 
@@ -222,8 +228,8 @@ def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α
 def attach {α} (l : LazyList α) : LazyList { x // x ∈ l } :=
   pmap Subtype.mk l fun a => id
 
-instance {α} [HasRepr α] : HasRepr (LazyList α) :=
-  ⟨fun xs => reprₓ xs.toList⟩
+instance {α} [Repr α] : Repr (LazyList α) :=
+  ⟨fun xs => repr xs.toList⟩
 
 end LazyList
 

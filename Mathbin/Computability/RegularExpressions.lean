@@ -38,7 +38,7 @@ of a Kleene algebra (https://en.wikipedia.org/wiki/Kleene_algebra).
 inductive RegularExpression (α : Type u) : Type u
   | zero : RegularExpression
   | epsilon : RegularExpression
-  | Charₓ : α → RegularExpression
+  | Char : α → RegularExpression
   | plus : RegularExpression → RegularExpression → RegularExpression
   | comp : RegularExpression → RegularExpression → RegularExpression
   | star : RegularExpression → RegularExpression
@@ -65,7 +65,7 @@ instance : Zero (RegularExpression α) :=
 instance : Pow (RegularExpression α) ℕ :=
   ⟨fun n r => npowRec r n⟩
 
-attribute [matchPattern] Mul.mul
+attribute [match_pattern] Mul.mul
 
 @[simp]
 theorem zero_def : (zero : RegularExpression α) = 0 :=
@@ -88,7 +88,7 @@ theorem comp_def (P Q : RegularExpression α) : comp P Q = P * Q :=
 def Matches : RegularExpression α → Language α
   | 0 => 0
   | 1 => 1
-  | Charₓ a => {[a]}
+  | Char a => {[a]}
   | P + Q => P.Matches + Q.Matches
   | P * Q => P.Matches * Q.Matches
   | star P => P.Matches.star
@@ -116,7 +116,7 @@ theorem matches_mul (P Q : RegularExpression α) : (P * Q).Matches = P.Matches *
 @[simp]
 theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).Matches = P.Matches ^ n
   | 0 => matches_epsilon
-  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succₓ _ _).symm
+  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
 
 @[simp]
 theorem matches_star (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
@@ -126,7 +126,7 @@ theorem matches_star (P : RegularExpression α) : P.star.Matches = P.Matches.sta
 def matchEpsilon : RegularExpression α → Bool
   | 0 => false
   | 1 => true
-  | Charₓ _ => false
+  | Char _ => false
   | P + Q => P.matchEpsilon || Q.matchEpsilon
   | P * Q => P.matchEpsilon && Q.matchEpsilon
   | star P => true
@@ -138,7 +138,7 @@ include dec
 def deriv : RegularExpression α → α → RegularExpression α
   | 0, _ => 0
   | 1, _ => 0
-  | Charₓ a₁, a₂ => if a₁ = a₂ then 1 else 0
+  | Char a₁, a₂ => if a₁ = a₂ then 1 else 0
   | P + Q, a => deriv P a + deriv Q a
   | P * Q, a => if P.matchEpsilon then deriv P a * Q + deriv Q a else deriv P a * Q
   | star P, a => deriv P a * star P
@@ -266,7 +266,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
   | x => by
     have A : ∀ m n : ℕ, n < m + n + 1 := by
       intro m n
-      convert add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_reflₓ n)) zero_lt_one
+      convert add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_refl n)) zero_lt_one
       simp
     have IH := fun t (h : List.length t < List.length x) => star_rmatch_iff t
     clear star_rmatch_iff
@@ -308,7 +308,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
           
         · cases' t' with b t
           · simp only [forall_eq_or_imp, List.mem_cons_iff] at helem
-            simp only [eq_self_iff_true, not_true, Ne.def, false_andₓ] at helem
+            simp only [eq_self_iff_true, not_true, Ne.def, false_and_iff] at helem
             cases helem
             
           simp only [List.join, List.cons_append] at hsum
@@ -354,7 +354,7 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
   rw [add_rmatch_iff, ih₁, ih₂]
   rfl
   case comp P Q ih₁ ih₂ =>
-  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_distrib_leftₓ, Set.mem_image2, Set.image_prod]
+  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_distrib_left, Set.mem_image2, Set.image_prod]
   constructor
   · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
     rw [ih₁] at hmatch₁
@@ -394,7 +394,7 @@ omit dec
 def map (f : α → β) : RegularExpression α → RegularExpression β
   | 0 => 0
   | 1 => 1
-  | Charₓ a => char (f a)
+  | Char a => char (f a)
   | R + S => map R + map S
   | R * S => map R * map S
   | star R => star (map R)
@@ -408,7 +408,7 @@ protected theorem map_pow (f : α → β) (P : RegularExpression α) : ∀ n : �
 theorem map_id : ∀ P : RegularExpression α, P.map id = P
   | 0 => rfl
   | 1 => rfl
-  | Charₓ a => rfl
+  | Char a => rfl
   | R + S => by simp_rw [map, map_id]
   | R * S => by simp_rw [map, map_id]
   | star R => by simp_rw [map, map_id]
@@ -417,7 +417,7 @@ theorem map_id : ∀ P : RegularExpression α, P.map id = P
 theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, (P.map f).map g = P.map (g ∘ f)
   | 0 => rfl
   | 1 => rfl
-  | Charₓ a => rfl
+  | Char a => rfl
   | R + S => by simp_rw [map, map_map]
   | R * S => by simp_rw [map, map_map]
   | star R => by simp_rw [map, map_map]
@@ -427,7 +427,7 @@ theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, 
 theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).Matches = Language.map f P.Matches
   | 0 => (map_zero _).symm
   | 1 => (map_one _).symm
-  | Charₓ a => by
+  | Char a => by
     rw [eq_comm]
     exact image_singleton
   | R + S => by simp only [matches_map, map, matches_add, map_add]

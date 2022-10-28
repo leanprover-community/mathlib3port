@@ -25,7 +25,7 @@ namespace TopologicalSpace
 
 theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
     t = ⨅ u : Opens X, sierpinskiSpace.induced (· ∈ u) := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · rw [le_infi_iff]
     exact fun u => Continuous.le_induced (is_open_iff_continuous_mem.mp u.2)
     
@@ -42,7 +42,7 @@ variable (X : Type _) [TopologicalSpace X]
 open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given by `x ∈ u`.
 -/
 def productOfMemOpens : ContinuousMap X (Opens X → Prop) where
-  toFun := fun x u => x ∈ u
+  toFun x u := x ∈ u
   continuous_to_fun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
 
 theorem product_of_mem_opens_inducing : Inducing (productOfMemOpens X) := by

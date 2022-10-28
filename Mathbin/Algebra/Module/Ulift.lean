@@ -52,13 +52,13 @@ instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralS
   ⟨fun r m => congr_arg up <| op_smul_eq_smul r m.down⟩
 
 @[to_additive]
-instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (ULift R) M where
+instance mulAction [Monoid R] [MulAction R M] : MulAction (ULift R) M where
   smul := (· • ·)
-  mul_smul := fun _ _ => mul_smul _ _
+  mul_smul _ _ := mul_smul _ _
   one_smul := one_smul _
 
 @[to_additive]
-instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (ULift M) where
+instance mulAction' [Monoid R] [MulAction R M] : MulAction R (ULift M) where
   smul := (· • ·)
   mul_smul := fun r s ⟨f⟩ => ext _ _ <| mul_smul _ _ _
   one_smul := fun ⟨f⟩ => ext _ _ <| one_smul _ _
@@ -67,28 +67,28 @@ instance smulZeroClass [Zero M] [SmulZeroClass R M] : SmulZeroClass (ULift R) M 
   { ULift.hasSmulLeft with smul_zero := fun _ => smul_zero _ }
 
 instance smulZeroClass' [Zero M] [SmulZeroClass R M] :
-    SmulZeroClass R (ULift M) where smul_zero := fun c => by
+    SmulZeroClass R (ULift M) where smul_zero c := by
     ext
     simp [smul_zero]
 
-instance distribSmul [AddZeroClassₓ M] [DistribSmul R M] : DistribSmul (ULift R) M where smul_add := fun _ => smul_add _
+instance distribSmul [AddZeroClass M] [DistribSmul R M] : DistribSmul (ULift R) M where smul_add _ := smul_add _
 
-instance distribSmul' [AddZeroClassₓ M] [DistribSmul R M] :
-    DistribSmul R (ULift M) where smul_add := fun c f g => by
+instance distribSmul' [AddZeroClass M] [DistribSmul R M] :
+    DistribSmul R (ULift M) where smul_add c f g := by
     ext
     simp [smul_add]
 
-instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (ULift R) M :=
+instance distribMulAction [Monoid R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction (ULift R) M :=
   { ULift.mulAction, ULift.distribSmul with }
 
-instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (ULift M) :=
+instance distribMulAction' [Monoid R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R (ULift M) :=
   { ULift.mulAction', ULift.distribSmul' with }
 
-instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (ULift R) M where
-  smul_one := fun _ => smul_one _
-  smul_mul := fun _ => smul_mul' _
+instance mulDistribMulAction [Monoid R] [Monoid M] [MulDistribMulAction R M] : MulDistribMulAction (ULift R) M where
+  smul_one _ := smul_one _
+  smul_mul _ := smul_mul' _
 
-instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction R (ULift M) :=
+instance mulDistribMulAction' [Monoid R] [Monoid M] [MulDistribMulAction R M] : MulDistribMulAction R (ULift M) :=
   { ULift.mulAction' with
     smul_one := fun _ => by
       ext
@@ -101,28 +101,28 @@ instance smulWithZero [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero (ULift
   { ULift.hasSmulLeft with smul_zero := fun _ => smul_zero _, zero_smul := zero_smul _ }
 
 instance smulWithZero' [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero R (ULift M) where
-  smul_zero := fun _ => ULift.ext _ _ <| smul_zero _
-  zero_smul := fun _ => ULift.ext _ _ <| zero_smul _ _
+  smul_zero _ := ULift.ext _ _ <| smul_zero _
+  zero_smul _ := ULift.ext _ _ <| zero_smul _ _
 
-instance mulActionWithZero [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M] : MulActionWithZero (ULift R) M :=
+instance mulActionWithZero [MonoidWithZero R] [Zero M] [MulActionWithZero R M] : MulActionWithZero (ULift R) M :=
   { ULift.smulWithZero with }
 
-instance mulActionWithZero' [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M] : MulActionWithZero R (ULift M) :=
+instance mulActionWithZero' [MonoidWithZero R] [Zero M] [MulActionWithZero R M] : MulActionWithZero R (ULift M) :=
   { ULift.smulWithZero' with }
 
-instance module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (ULift R) M :=
+instance module [Semiring R] [AddCommMonoid M] [Module R M] : Module (ULift R) M :=
   { ULift.smulWithZero with add_smul := fun _ _ => add_smul _ _ }
 
-instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (ULift M) :=
+instance module' [Semiring R] [AddCommMonoid M] [Module R M] : Module R (ULift M) :=
   { ULift.smulWithZero' with add_smul := fun _ _ _ => ULift.ext _ _ <| add_smul _ _ _ }
 
 /-- The `R`-linear equivalence between `ulift M` and `M`.
 -/
-def moduleEquiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : ULift M ≃ₗ[R] M where
+def moduleEquiv [Semiring R] [AddCommMonoid M] [Module R M] : ULift M ≃ₗ[R] M where
   toFun := ULift.down
   invFun := ULift.up
-  map_smul' := fun r x => rfl
-  map_add' := fun x y => rfl
+  map_smul' r x := rfl
+  map_add' x y := rfl
   left_inv := by tidy
   right_inv := by tidy
 

@@ -33,11 +33,11 @@ universe u v w
 
 namespace Set
 
-variable {M : Type w} (A : Set M) (L : FirstOrder.Language.{u, v}) [L.Structure M]
+variable {M : Type w} (A : Set M) (L : FirstOrder.Language.{u, v}) [L.StructureCat M]
 
 open FirstOrder
 
-open FirstOrder.Language FirstOrder.Language.Structure
+open FirstOrder.Language FirstOrder.Language.StructureCat
 
 variable {α : Type _} {β : Type _}
 
@@ -48,7 +48,7 @@ def Definable (s : Set (α → M)) : Prop :=
 
 variable {L} {A} {B : Set M} {s : Set (α → M)}
 
-theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h : A.Definable L s) (φ : L →ᴸ L')
+theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.StructureCat M] (h : A.Definable L s) (φ : L →ᴸ L')
     [φ.IsExpansionOn M] : A.Definable L' s := by
   obtain ⟨ψ, rfl⟩ := h
   refine' ⟨(φ.add_constants A).onFormula ψ, _⟩
@@ -56,7 +56,7 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h :
   simp only [mem_set_of_eq, Lhom.realize_on_formula]
 
 theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = SetOf φ.realize := by
-  rw [definable, Equivₓ.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
+  rw [definable, Equiv.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
   simp
 
 theorem definable_iff_empty_definable_with_params : A.Definable L s ↔ (∅ : Set M).Definable (L[[A]]) s :=
@@ -94,28 +94,28 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   ext
   rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union, mem_set_of_eq, mem_set_of_eq]
 
-theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finsetₓ ι) :
+theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.inf f) := by
   classical
-  refine' Finsetₓ.induction definable_univ (fun i s is h => _) s
-  rw [Finsetₓ.inf_insert]
+  refine' Finset.induction definable_univ (fun i s is h => _) s
+  rw [Finset.inf_insert]
   exact (hf i).inter h
 
-theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finsetₓ ι) :
+theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.sup f) := by
   classical
-  refine' Finsetₓ.induction definable_empty (fun i s is h => _) s
-  rw [Finsetₓ.sup_insert]
+  refine' Finset.induction definable_empty (fun i s is h => _) s
+  rw [Finset.sup_insert]
   exact (hf i).union h
 
-theorem definable_finset_bInter {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
-    (s : Finsetₓ ι) : A.Definable L (⋂ i ∈ s, f i) := by
-  rw [← Finsetₓ.inf_set_eq_bInter]
+theorem definable_finset_bInter {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
+    A.Definable L (⋂ i ∈ s, f i) := by
+  rw [← Finset.inf_set_eq_bInter]
   exact definable_finset_inf hf s
 
-theorem definable_finset_bUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
-    (s : Finsetₓ ι) : A.Definable L (⋃ i ∈ s, f i) := by
-  rw [← Finsetₓ.sup_set_eq_bUnion]
+theorem definable_finset_bUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
+    A.Definable L (⋃ i ∈ s, f i) := by
+  rw [← Finset.sup_set_eq_bUnion]
   exact definable_finset_sup hf s
 
 @[simp]
@@ -142,7 +142,7 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
   rw [image_eq_preimage_of_inverse]
   · intro i
     ext b
-    simp only [Function.comp_app, Equivₓ.apply_symm_apply]
+    simp only [Function.comp_app, Equiv.apply_symm_apply]
     
   · intro i
     ext a
@@ -150,13 +150,13 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
     
 
 /-- This lemma is only intended as a helper for `definable.image_comp. -/
-theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) → M)} (h : A.Definable L s) :
-    A.Definable L ((fun g : Sum α (Finₓ m) → M => g ∘ Sum.inl) '' s) := by
+theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → M)} (h : A.Definable L s) :
+    A.Definable L ((fun g : Sum α (Fin m) → M => g ∘ Sum.inl) '' s) := by
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
   ext x
   simp only [Set.mem_image, mem_set_of_eq, bounded_formula.realize_exs, bounded_formula.realize_relabel,
-    Function.comp.right_id, Finₓ.cast_add_zero, Finₓ.cast_refl]
+    Function.comp.right_id, Fin.cast_add_zero, Fin.cast_refl]
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact ⟨y ∘ Sum.inr, (congr (congr rfl (Sum.elim_comp_inl_inr y).symm) (funext finZeroElim)).mp hy⟩
@@ -172,8 +172,8 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
   cases nonempty_fintype β
   refine'
     (congr rfl (ext fun x => _)).mp
-      (((h.image_comp_equiv (Equivₓ.Set.sumCompl (range f))).image_comp_equiv
-            (Equivₓ.sumCongr (Equivₓ.ofInjective f f.injective) (Fintypeₓ.equivFin _).symm)).image_comp_sum_inl_fin
+      (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
+            (Equiv.sumCongr (Equiv.ofInjective f f.injective) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
         _)
   simp only [mem_preimage, mem_image, exists_exists_and_eq_and]
   refine' exists_congr fun y => and_congr_right fun ys => Eq.congr_left (funext fun a => _)
@@ -186,23 +186,23 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
   cases nonempty_fintype α
   cases nonempty_fintype β
   have h :=
-    (((h.image_comp_equiv (Equivₓ.Set.sumCompl (range f))).image_comp_equiv
-              (Equivₓ.sumCongr (_root_.equiv.refl _) (Fintypeₓ.equivFin _).symm)).image_comp_sum_inl_fin
+    (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
+              (Equiv.sumCongr (_root_.equiv.refl _) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
           _).preimage_comp
       (range_splitting f)
   have h' : A.definable L { x : α → M | ∀ a, x a = x (range_splitting f (range_factorization f a)) } := by
     have h' : ∀ a, A.definable L { x : α → M | x a = x (range_splitting f (range_factorization f a)) } := by
       refine' fun a => ⟨(var a).equal (var (range_splitting f (range_factorization f a))), ext _⟩
       simp
-    refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finsetₓ.univ)
+    refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finset.univ)
     simp
   refine' (congr rfl (ext fun x => _)).mp (h.inter h')
-  simp only [Equivₓ.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and, mem_set_of_eq]
+  simp only [Equiv.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and, mem_set_of_eq]
   constructor
   · rintro ⟨⟨y, ys, hy⟩, hx⟩
     refine' ⟨y, ys, _⟩
     ext a
-    rw [hx a, ← Function.comp_applyₓ x, ← hy]
+    rw [hx a, ← Function.comp_apply x, ← hy]
     simp
     
   · rintro ⟨y, ys, rfl⟩
@@ -210,7 +210,7 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
     · ext
       simp [Set.apply_range_splitting f]
       
-    · rw [Function.comp_applyₓ, Function.comp_applyₓ, apply_range_splitting f, range_factorization_coe]
+    · rw [Function.comp_apply, Function.comp_apply, apply_range_splitting f, range_factorization_coe]
       
     
 
@@ -218,11 +218,11 @@ variable (L) {M} (A)
 
 /-- A 1-dimensional version of `definable`, for `set M`. -/
 def Definable₁ (s : Set M) : Prop :=
-  A.Definable L { x : Finₓ 1 → M | x 0 ∈ s }
+  A.Definable L { x : Fin 1 → M | x 0 ∈ s }
 
 /-- A 2-dimensional version of `definable`, for `set (M × M)`. -/
 def Definable₂ (s : Set (M × M)) : Prop :=
-  A.Definable L { x : Finₓ 2 → M | (x 0, x 1) ∈ s }
+  A.Definable L { x : Fin 2 → M | (x 0, x 1) ∈ s }
 
 end Set
 
@@ -232,7 +232,7 @@ namespace Language
 
 open Set
 
-variable (L : FirstOrder.Language.{u, v}) {M : Type w} [L.Structure M] (A : Set M) (α : Type _)
+variable (L : FirstOrder.Language.{u, v}) {M : Type w} [L.StructureCat M] (A : Set M) (α : Type _)
 
 /-- Definable sets are subsets of finite Cartesian products of a structure such that membership is
   given by a first-order formula. -/

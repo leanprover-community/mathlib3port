@@ -51,11 +51,6 @@ say that `∥-f∥ = ∥f∥`, instead of the non-working `f.norm_neg`.
 * More versions of Hölder's inequality (for example: the case `p = 1`, `q = ∞`; a version for normed
   rings which has `∥∑' i, f i * g i∥` rather than `∑' i, ∥f i∥ * g i∥` on the RHS; a version for
   three exponents satisfying `1 / r = 1 / p + 1 / q`)
-* Equivalence with `pi_Lp`, for `α` finite
-* Equivalence with `measure_theory.Lp`, for `f : α → E` (i.e., functions rather than pi-types) and
-  the counting measure on `α`
-* Equivalence with `bounded_continuous_function`, for `f : α → E` (i.e., functions rather than
-  pi-types) and `p = ∞`, and the discrete topology on `α`
 
 -/
 
@@ -82,13 +77,13 @@ def Memℓp (f : ∀ i, E i) (p : ℝ≥0∞) : Prop :=
 
 theorem mem_ℓp_zero_iff {f : ∀ i, E i} : Memℓp f 0 ↔ Set.Finite { i | f i ≠ 0 } := by dsimp [Memℓp] <;> rw [if_pos rfl]
 
-theorem mem_ℓp_zero {f : ∀ i, E i} (hf : Set.Finite { i | f i ≠ 0 }) : Memℓp f 0 :=
+theorem memℓpZero {f : ∀ i, E i} (hf : Set.Finite { i | f i ≠ 0 }) : Memℓp f 0 :=
   mem_ℓp_zero_iff.2 hf
 
 theorem mem_ℓp_infty_iff {f : ∀ i, E i} : Memℓp f ∞ ↔ BddAbove (Set.Range fun i => ∥f i∥) := by
   dsimp [Memℓp] <;> rw [if_neg Ennreal.top_ne_zero, if_pos rfl]
 
-theorem mem_ℓp_infty {f : ∀ i, E i} (hf : BddAbove (Set.Range fun i => ∥f i∥)) : Memℓp f ∞ :=
+theorem memℓpInfty {f : ∀ i, E i} (hf : BddAbove (Set.Range fun i => ∥f i∥)) : Memℓp f ∞ :=
   mem_ℓp_infty_iff.2 hf
 
 theorem mem_ℓp_gen_iff (hp : 0 < p.toReal) {f : ∀ i, E i} : Memℓp f p ↔ Summable fun i => ∥f i∥ ^ p.toReal := by
@@ -96,21 +91,21 @@ theorem mem_ℓp_gen_iff (hp : 0 < p.toReal) {f : ∀ i, E i} : Memℓp f p ↔ 
   dsimp [Memℓp]
   rw [if_neg hp.1.ne', if_neg hp.2.Ne]
 
-theorem mem_ℓp_gen {f : ∀ i, E i} (hf : Summable fun i => ∥f i∥ ^ p.toReal) : Memℓp f p := by
+theorem memℓpGen {f : ∀ i, E i} (hf : Summable fun i => ∥f i∥ ^ p.toReal) : Memℓp f p := by
   rcases p.trichotomy with (rfl | rfl | hp)
-  · apply mem_ℓp_zero
+  · apply memℓpZero
     have H : Summable fun i : α => (1 : ℝ) := by simpa using hf
     exact (finite_of_summable_const (by norm_num) H).Subset (Set.subset_univ _)
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     have H : Summable fun i : α => (1 : ℝ) := by simpa using hf
     simpa using ((finite_of_summable_const (by norm_num) H).Image fun i => ∥f i∥).BddAbove
     
   exact (mem_ℓp_gen_iff hp).2 hf
 
-theorem mem_ℓp_gen' {C : ℝ} {f : ∀ i, E i} (hf : ∀ s : Finsetₓ α, (∑ i in s, ∥f i∥ ^ p.toReal) ≤ C) : Memℓp f p := by
-  apply mem_ℓp_gen
-  use ⨆ s : Finsetₓ α, ∑ i in s, ∥f i∥ ^ p.to_real
+theorem memℓpGen' {C : ℝ} {f : ∀ i, E i} (hf : ∀ s : Finset α, (∑ i in s, ∥f i∥ ^ p.toReal) ≤ C) : Memℓp f p := by
+  apply memℓpGen
+  use ⨆ s : Finset α, ∑ i in s, ∥f i∥ ^ p.to_real
   apply has_sum_of_is_lub_of_nonneg
   · intro b
     exact Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
@@ -120,21 +115,21 @@ theorem mem_ℓp_gen' {C : ℝ} {f : ∀ i, E i} (hf : ∀ s : Finsetₓ α, (�
   rintro - ⟨s, rfl⟩
   exact hf s
 
-theorem zero_mem_ℓp : Memℓp (0 : ∀ i, E i) p := by
+theorem zeroMemℓp : Memℓp (0 : ∀ i, E i) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
-  · apply mem_ℓp_zero
+  · apply memℓpZero
     simp
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     simp only [norm_zero, Pi.zero_apply]
     exact bdd_above_singleton.mono Set.range_const_subset
     
-  · apply mem_ℓp_gen
+  · apply memℓpGen
     simp [Real.zero_rpow hp.ne', summable_zero]
     
 
-theorem zero_mem_ℓp' : Memℓp (fun i : α => (0 : E i)) p :=
-  zero_mem_ℓp
+theorem zeroMemℓp' : Memℓp (fun i : α => (0 : E i)) p :=
+  zeroMemℓp
 
 namespace Memℓp
 
@@ -149,36 +144,36 @@ theorem summable (hp : 0 < p.toReal) {f : ∀ i, E i} (hf : Memℓp f p) : Summa
 
 theorem neg {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (-f) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
-  · apply mem_ℓp_zero
+  · apply memℓpZero
     simp [hf.finite_dsupport]
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     simpa using hf.bdd_above
     
-  · apply mem_ℓp_gen
+  · apply memℓpGen
     simpa using hf.summable hp
     
 
 @[simp]
 theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
-  ⟨fun h => neg_negₓ f ▸ h.neg, Memℓp.neg⟩
+  ⟨fun h => neg_neg f ▸ h.neg, Memℓp.neg⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
-theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
+theorem ofExponentGe {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
   rcases Ennreal.trichotomy₂ hpq with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     obtain ⟨C, hC⟩ := (hfq.finite_dsupport.image fun i => ∥f i∥).BddAbove
     use max 0 C
     rintro x ⟨i, rfl⟩
     by_cases hi:f i = 0
     · simp [hi]
       
-    · exact (hC ⟨i, hi, rfl⟩).trans (le_max_rightₓ _ _)
+    · exact (hC ⟨i, hi, rfl⟩).trans (le_max_right _ _)
       
     
-  · apply mem_ℓp_gen
+  · apply memℓpGen
     have : ∀ (i) (_ : i ∉ hfq.finite_dsupport.to_finset), ∥f i∥ ^ p.to_real = 0 := by
       intro i hi
       have : f i = 0 := by simpa using hi
@@ -187,14 +182,14 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
     
   · exact hfq
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     obtain ⟨A, hA⟩ := (hfq.summable hq).tendsto_cofinite_zero.bdd_above_range_of_cofinite
     use A ^ q.to_real⁻¹
     rintro x ⟨i, rfl⟩
     have : 0 ≤ ∥f i∥ ^ q.to_real := Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
     simpa [← Real.rpow_mul, mul_inv_cancel hq.ne'] using Real.rpow_le_rpow this (hA ⟨i, rfl⟩) (inv_nonneg.mpr hq.le)
     
-  · apply mem_ℓp_gen
+  · apply memℓpGen
     have hf' := hfq.summable hq
     refine' summable_of_norm_bounded_eventually _ hf' (@Set.Finite.subset _ { i | 1 ≤ ∥f i∥ } _ _ _)
     · have H : { x : α | 1 ≤ ∥f x∥ ^ q.to_real }.Finite := by
@@ -212,21 +207,21 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
 
 theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (f + g) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
-  · apply mem_ℓp_zero
+  · apply memℓpZero
     refine' (hf.finite_dsupport.union hg.finite_dsupport).Subset fun i => _
     simp only [Pi.add_apply, Ne.def, Set.mem_union, Set.mem_set_of_eq]
     contrapose!
     rintro ⟨hf', hg'⟩
     simp [hf', hg']
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     obtain ⟨A, hA⟩ := hf.bdd_above
     obtain ⟨B, hB⟩ := hg.bdd_above
     refine' ⟨A + B, _⟩
     rintro a ⟨i, rfl⟩
-    exact le_transₓ (norm_add_le _ _) (add_le_add (hA ⟨i, rfl⟩) (hB ⟨i, rfl⟩))
+    exact le_trans (norm_add_le _ _) (add_le_add (hA ⟨i, rfl⟩) (hB ⟨i, rfl⟩))
     
-  apply mem_ℓp_gen
+  apply memℓpGen
   let C : ℝ := if p.to_real < 1 then 1 else 2 ^ (p.to_real - 1)
   refine' summable_of_nonneg_of_le _ (fun i => _) (((hf.summable hp).add (hg.summable hp)).mul_left C)
   · exact fun b => Real.rpow_nonneg_of_nonneg (norm_nonneg (f b + g b)) p.to_real
@@ -236,11 +231,11 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
     split_ifs with h h
     · simpa using Nnreal.coe_le_coe.2 (Nnreal.rpow_add_le_add_rpow ∥f i∥₊ ∥g i∥₊ hp.le h.le)
       
-    · let F : Finₓ 2 → ℝ≥0 := ![∥f i∥₊, ∥g i∥₊]
+    · let F : Fin 2 → ℝ≥0 := ![∥f i∥₊, ∥g i∥₊]
       have : ∀ i, (0 : ℝ) ≤ F i := fun i => (F i).coe_nonneg
-      simp only [not_ltₓ] at h
-      simpa [F, Finₓ.sum_univ_succ] using
-        Real.rpow_sum_le_const_mul_sum_rpow_of_nonneg (Finsetₓ.univ : Finsetₓ (Finₓ 2)) h fun i _ => (F i).coe_nonneg
+      simp only [not_lt] at h
+      simpa [F, Fin.sum_univ_succ] using
+        Real.rpow_sum_le_const_mul_sum_rpow_of_nonneg (Finset.univ : Finset (Fin 2)) h fun i _ => (F i).coe_nonneg
       
     
 
@@ -248,41 +243,41 @@ theorem sub {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
   rw [sub_eq_add_neg]
   exact hf.add hg.neg
 
-theorem finset_sum {ι} (s : Finsetₓ ι) {f : ι → ∀ i, E i} (hf : ∀ i ∈ s, Memℓp (f i) p) :
+theorem finsetSum {ι} (s : Finset ι) {f : ι → ∀ i, E i} (hf : ∀ i ∈ s, Memℓp (f i) p) :
     Memℓp (fun a => ∑ i in s, f i a) p := by
   haveI : DecidableEq ι := Classical.decEq _
   revert hf
-  refine' Finsetₓ.induction_on s _ _
-  · simp only [zero_mem_ℓp', Finsetₓ.sum_empty, implies_true_iff]
+  refine' Finset.induction_on s _ _
+  · simp only [zeroMemℓp', Finset.sum_empty, imp_true_iff]
     
   · intro i s his ih hf
-    simp only [his, Finsetₓ.sum_insert, not_false_iff]
-    exact (hf i (s.mem_insert_self i)).add (ih fun j hj => hf j (Finsetₓ.mem_insert_of_mem hj))
+    simp only [his, Finset.sum_insert, not_false_iff]
+    exact (hf i (s.mem_insert_self i)).add (ih fun j hj => hf j (Finset.mem_insert_of_mem hj))
     
 
 section NormedSpace
 
 variable {𝕜 : Type _} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (E i)]
 
-theorem const_smul {f : ∀ i, E i} (hf : Memℓp f p) (c : 𝕜) : Memℓp (c • f) p := by
+theorem constSmul {f : ∀ i, E i} (hf : Memℓp f p) (c : 𝕜) : Memℓp (c • f) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
-  · apply mem_ℓp_zero
+  · apply memℓpZero
     refine' hf.finite_dsupport.subset fun i => (_ : ¬c • f i = 0 → ¬f i = 0)
     exact not_imp_not.mpr fun hf' => hf'.symm ▸ smul_zero c
     
   · obtain ⟨A, hA⟩ := hf.bdd_above
-    refine' mem_ℓp_infty ⟨∥c∥ * A, _⟩
+    refine' memℓpInfty ⟨∥c∥ * A, _⟩
     rintro a ⟨i, rfl⟩
     simpa [norm_smul] using mul_le_mul_of_nonneg_left (hA ⟨i, rfl⟩) (norm_nonneg c)
     
-  · apply mem_ℓp_gen
+  · apply memℓpGen
     convert (hf.summable hp).mul_left (∥c∥ ^ p.to_real)
     ext i
     simp [norm_smul, Real.mul_rpow (norm_nonneg c) (norm_nonneg (f i))]
     
 
-theorem const_mul {f : α → 𝕜} (hf : Memℓp f p) (c : 𝕜) : Memℓp (fun x => c * f x) p :=
-  @Memℓp.const_smul α (fun i => 𝕜) _ _ 𝕜 _ _ _ hf c
+theorem constMul {f : α → 𝕜} (hf : Memℓp f p) (c : 𝕜) : Memℓp (fun x => c * f x) p :=
+  @Memℓp.constSmul α (fun i => 𝕜) _ _ 𝕜 _ _ _ hf c
 
 end NormedSpace
 
@@ -304,7 +299,7 @@ subgroup itself, because this allows all the spaces `lp E p` (for varying `p`) t
 the same ambient group, which permits lemma statements like `lp.monotone` (below). -/
 @[nolint unused_arguments]
 def PreLp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] : Type _ :=
-  ∀ i, E i deriving AddCommGroupₓ
+  ∀ i, E i deriving AddCommGroup
 
 instance PreLp.unique [IsEmpty α] : Unique (PreLp E) :=
   Pi.uniqueOfIsEmpty E
@@ -312,9 +307,9 @@ instance PreLp.unique [IsEmpty α] : Unique (PreLp E) :=
 /-- lp space -/
 def lp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] (p : ℝ≥0∞) : AddSubgroup (PreLp E) where
   Carrier := { f | Memℓp f p }
-  zero_mem' := zero_mem_ℓp
-  add_mem' := fun f g => Memℓp.add
-  neg_mem' := fun f => Memℓp.neg
+  zero_mem' := zeroMemℓp
+  add_mem' f g := Memℓp.add
+  neg_mem' f := Memℓp.neg
 
 namespace lp
 
@@ -334,9 +329,9 @@ protected theorem ext_iff {f g : lp E p} : f = g ↔ (f : ∀ i, E i) = g :=
 theorem eq_zero' [IsEmpty α] (f : lp E p) : f = 0 :=
   Subsingleton.elim f 0
 
-protected theorem monotone {p q : ℝ≥0∞} (hpq : q ≤ p) : lp E q ≤ lp E p := fun f hf => Memℓp.of_exponent_ge hf hpq
+protected theorem monotone {p q : ℝ≥0∞} (hpq : q ≤ p) : lp E q ≤ lp E p := fun f hf => Memℓp.ofExponentGe hf hpq
 
-protected theorem mem_ℓp (f : lp E p) : Memℓp f p :=
+protected theorem memℓp (f : lp E p) : Memℓp f p :=
   f.Prop
 
 variable (E p)
@@ -356,13 +351,13 @@ theorem coe_fn_add (f g : lp E p) : ⇑(f + g) = f + g :=
   rfl
 
 @[simp]
-theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finsetₓ ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
+theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
   classical
-  refine' Finsetₓ.induction _ _ s
+  refine' Finset.induction _ _ s
   · simp
     
   intro i s his
-  simp [Finsetₓ.sum_insert his]
+  simp [Finset.sum_insert his]
 
 @[simp]
 theorem coe_fn_sub (f g : lp E p) : ⇑(f - g) = f - g :=
@@ -371,11 +366,11 @@ theorem coe_fn_sub (f g : lp E p) : ⇑(f - g) = f - g :=
 instance :
     HasNorm
       (lp E
-        p) where norm := fun f =>
-    if hp : p = 0 then by subst hp <;> exact (lp.mem_ℓp f).finite_dsupport.toFinset.card
+        p) where norm f :=
+    if hp : p = 0 then by subst hp <;> exact (lp.memℓp f).finite_dsupport.toFinset.card
     else if p = ∞ then ⨆ i, ∥f i∥ else (∑' i, ∥f i∥ ^ p.toReal) ^ (1 / p.toReal)
 
-theorem norm_eq_card_dsupport (f : lp E 0) : ∥f∥ = (lp.mem_ℓp f).finite_dsupport.toFinset.card :=
+theorem norm_eq_card_dsupport (f : lp E 0) : ∥f∥ = (lp.memℓp f).finite_dsupport.toFinset.card :=
   dif_pos rfl
 
 theorem norm_eq_csupr (f : lp E ∞) : ∥f∥ = ⨆ i, ∥f i∥ := by
@@ -384,7 +379,7 @@ theorem norm_eq_csupr (f : lp E ∞) : ∥f∥ = ⨆ i, ∥f i∥ := by
 
 theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLub (Set.Range fun i => ∥f i∥) ∥f∥ := by
   rw [lp.norm_eq_csupr]
-  exact is_lub_csupr (lp.mem_ℓp f)
+  exact is_lub_csupr (lp.memℓp f)
 
 theorem norm_eq_tsum_rpow (hp : 0 < p.toReal) (f : lp E p) : ∥f∥ = (∑' i, ∥f i∥ ^ p.toReal) ^ (1 / p.toReal) := by
   dsimp [norm]
@@ -404,7 +399,7 @@ theorem norm_rpow_eq_tsum (hp : 0 < p.toReal) (f : lp E p) : ∥f∥ ^ p.toReal 
 
 theorem has_sum_norm (hp : 0 < p.toReal) (f : lp E p) : HasSum (fun i => ∥f i∥ ^ p.toReal) (∥f∥ ^ p.toReal) := by
   rw [norm_rpow_eq_tsum hp]
-  exact ((lp.mem_ℓp f).Summable hp).HasSum
+  exact ((lp.memℓp f).Summable hp).HasSum
 
 theorem norm_nonneg' (f : lp E p) : 0 ≤ ∥f∥ := by
   rcases p.trichotomy with (rfl | rfl | hp)
@@ -451,7 +446,7 @@ theorem norm_eq_zero_iff {f : lp E p} : ∥f∥ = 0 ↔ f = 0 := by
       
     have H : IsLub (Set.Range fun i => ∥f i∥) 0 := by simpa [h] using lp.is_lub_norm f
     ext i
-    have : ∥f i∥ = 0 := le_antisymmₓ (H.1 ⟨i, rfl⟩) (norm_nonneg _)
+    have : ∥f i∥ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
     simpa using this
     
   · have hf : HasSum (fun i : α => ∥f i∥ ^ p.to_real) 0 := by
@@ -495,7 +490,7 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p) :=
           refine' (lp.is_lub_norm (f + g)).2 _
           rintro x ⟨i, rfl⟩
           refine'
-            le_transₓ _
+            le_trans _
               (add_mem_upper_bounds_add (lp.is_lub_norm f).1 (lp.is_lub_norm g).1 ⟨_, _, ⟨i, rfl⟩, ⟨i, rfl⟩, rfl⟩)
           exact norm_add_le (f i) (g i)
           
@@ -507,7 +502,7 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p) :=
           -- apply Minkowski's inequality
           obtain ⟨C, hC₁, hC₂, hCfg⟩ :=
             Real.Lp_add_le_has_sum_of_nonneg hp' hf₁ hg₁ (norm_nonneg' _) (norm_nonneg' _) hf₂ hg₂
-          refine' le_transₓ _ hC₂
+          refine' le_trans _ hC₂
           rw [← Real.rpow_le_rpow_iff (norm_nonneg' (f + g)) hC₁ hp'']
           refine' has_sum_le _ (lp.has_sum_norm hp'' (f + g)) hCfg
           intro i
@@ -549,12 +544,12 @@ theorem norm_apply_le_norm (hp : p ≠ 0) (f : lp E p) (i : α) : ∥f i∥ ≤ 
   rw [← Real.rpow_le_rpow_iff (norm_nonneg _) (norm_nonneg' _) hp'']
   convert le_has_sum (has_sum_norm hp'' f) i fun i hi => this i
 
-theorem sum_rpow_le_norm_rpow (hp : 0 < p.toReal) (f : lp E p) (s : Finsetₓ α) :
+theorem sum_rpow_le_norm_rpow (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     (∑ i in s, ∥f i∥ ^ p.toReal) ≤ ∥f∥ ^ p.toReal := by
   rw [lp.norm_rpow_eq_tsum hp f]
   have : ∀ i, 0 ≤ ∥f i∥ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
   refine' sum_le_tsum _ (fun i hi => this i) _
-  exact (lp.mem_ℓp f).Summable hp
+  exact (lp.memℓp f).Summable hp
 
 theorem norm_le_of_forall_le' [Nonempty α] {f : lp E ∞} (C : ℝ) (hCf : ∀ i, ∥f i∥ ≤ C) : ∥f∥ ≤ C := by
   refine' (is_lub_norm f).2 _
@@ -574,8 +569,8 @@ theorem norm_le_of_tsum_le (hp : 0 < p.toReal) {C : ℝ} (hC : 0 ≤ C) {f : lp 
   exact hf
 
 theorem norm_le_of_forall_sum_le (hp : 0 < p.toReal) {C : ℝ} (hC : 0 ≤ C) {f : lp E p}
-    (hf : ∀ s : Finsetₓ α, (∑ i in s, ∥f i∥ ^ p.toReal) ≤ C ^ p.toReal) : ∥f∥ ≤ C :=
-  norm_le_of_tsum_le hp hC (tsum_le_of_sum_le ((lp.mem_ℓp f).Summable hp) hf)
+    (hf : ∀ s : Finset α, (∑ i in s, ∥f i∥ ^ p.toReal) ≤ C ^ p.toReal) : ∥f∥ ≤ C :=
+  norm_le_of_tsum_le hp hC (tsum_le_of_sum_le ((lp.memℓp f).Summable hp) hf)
 
 end ComparePointwise
 
@@ -587,7 +582,7 @@ instance : Module 𝕜 (PreLp E) :=
   Pi.module α E 𝕜
 
 theorem mem_lp_const_smul (c : 𝕜) (f : lp E p) : c • (f : PreLp E) ∈ lp E p :=
-  (lp.mem_ℓp f).const_smul c
+  (lp.memℓp f).const_smul c
 
 variable (E p 𝕜)
 
@@ -635,7 +630,7 @@ theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ∥c • f∥ =
     
 
 instance [Fact (1 ≤ p)] :
-    NormedSpace 𝕜 (lp E p) where norm_smul_le := fun c f => by
+    NormedSpace 𝕜 (lp E p) where norm_smul_le c f := by
     have hp : 0 < p := ennreal.zero_lt_one.trans_le (Fact.out _)
     simp [norm_const_smul hp.ne']
 
@@ -654,21 +649,21 @@ variable [∀ i, StarAddMonoid (E i)] [∀ i, NormedStarGroup (E i)]
 
 theorem _root_.mem_ℓp.star_mem {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (star f) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
-  · apply mem_ℓp_zero
+  · apply memℓpZero
     simp [hf.finite_dsupport]
     
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     simpa using hf.bdd_above
     
-  · apply mem_ℓp_gen
+  · apply memℓpGen
     simpa using hf.summable hp
     
 
 @[simp]
 theorem _root_.mem_ℓp.star_iff {f : ∀ i, E i} : Memℓp (star f) p ↔ Memℓp f p :=
-  ⟨fun h => star_star f ▸ Memℓp.star_mem h, Memℓp.star_mem⟩
+  ⟨fun h => star_star f ▸ Memℓp.starMem h, Memℓp.starMem⟩
 
-instance : HasStar (lp E p) where star := fun f => ⟨(star f : ∀ i, E i), f.property.star_mem⟩
+instance : HasStar (lp E p) where star f := ⟨(star f : ∀ i, E i), f.property.star_mem⟩
 
 @[simp]
 theorem coe_fn_star (f : lp E p) : ⇑(star f) = star f :=
@@ -679,14 +674,14 @@ protected theorem star_apply (f : lp E p) (i : α) : star f i = star (f i) :=
   rfl
 
 instance :
-    HasInvolutiveStar (lp E p) where star_involutive := fun x => by
+    HasInvolutiveStar (lp E p) where star_involutive x := by
     ext
     simp
 
-instance : StarAddMonoid (lp E p) where star_add := fun f g => ext <| star_add _ _
+instance : StarAddMonoid (lp E p) where star_add f g := ext <| star_add _ _
 
 instance [hp : Fact (1 ≤ p)] :
-    NormedStarGroup (lp E p) where norm_star := fun f => by
+    NormedStarGroup (lp E p) where norm_star f := by
     rcases p.trichotomy with (rfl | rfl | h)
     · exfalso
       have := Ennreal.to_real_mono Ennreal.zero_ne_top hp.elim
@@ -701,7 +696,7 @@ variable {𝕜 : Type _} [HasStar 𝕜] [NormedField 𝕜]
 
 variable [∀ i, NormedSpace 𝕜 (E i)] [∀ i, StarModule 𝕜 (E i)]
 
-instance : StarModule 𝕜 (lp E p) where star_smul := fun r f => ext <| star_smul _ _
+instance : StarModule 𝕜 (lp E p) where star_smul r f := ext <| star_smul _ _
 
 end NormedStarGroup
 
@@ -719,7 +714,7 @@ theorem _root_.mem_ℓp.infty_mul {f g : ∀ i, B i} (hf : Memℓp f ∞) (hg : 
     _ ≤ Cf * Cg := mul_le_mul (hCf ⟨i, rfl⟩) (hCg ⟨i, rfl⟩) (norm_nonneg _) ((norm_nonneg _).trans (hCf ⟨i, rfl⟩))
     
 
-instance : Mul (lp B ∞) where mul := fun f g => ⟨(f * g : ∀ i, B i), f.property.infty_mul g.property⟩
+instance : Mul (lp B ∞) where mul f g := ⟨(f * g : ∀ i, B i), f.property.inftyMul g.property⟩
 
 @[simp]
 theorem infty_coe_fn_mul (f g : lp B ∞) : ⇑(f * g) = f * g :=
@@ -759,9 +754,9 @@ instance inftyStarRing : StarRing (lp B ∞) :=
       infer_instance with
     star_mul := fun f g => ext <| star_mul (_ : ∀ i, B i) _ }
 
-instance infty_cstar_ring [∀ i, CstarRing (B i)] :
-    CstarRing (lp B ∞) where norm_star_mul_self := fun f => by
-    apply le_antisymmₓ
+instance inftyCstarRing [∀ i, CstarRing (B i)] :
+    CstarRing (lp B ∞) where norm_star_mul_self f := by
+    apply le_antisymm
     · rw [← sq]
       refine' lp.norm_le_of_forall_le (sq_nonneg ∥f∥) fun i => _
       simp only [lp.star_apply, CstarRing.norm_star_mul_self, ← sq, infty_coe_fn_mul, Pi.mul_apply]
@@ -782,7 +777,7 @@ section NormedRing
 
 variable {I : Type _} {B : I → Type _} [∀ i, NormedRing (B i)]
 
-instance _root_.pre_lp.ring : Ringₓ (PreLp B) :=
+instance _root_.pre_lp.ring : Ring (PreLp B) :=
   Pi.ring
 
 variable [∀ i, NormOneClass (B i)]
@@ -797,12 +792,11 @@ variable (B)
 /-- The `𝕜`-subring of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
 with extra structure. -/
 def _root_.lp_infty_subring : Subring (PreLp B) :=
-  { lp B ∞ with Carrier := { f | Memℓp f ∞ }, one_mem' := one_mem_ℓp_infty,
-    mul_mem' := fun f g hf hg => hf.infty_mul hg }
+  { lp B ∞ with Carrier := { f | Memℓp f ∞ }, one_mem' := oneMemℓpInfty, mul_mem' := fun f g hf hg => hf.inftyMul hg }
 
 variable {B}
 
-instance inftyRing : Ringₓ (lp B ∞) :=
+instance inftyRing : Ring (lp B ∞) :=
   (lpInftySubring B).toRing
 
 theorem _root_.mem_ℓp.infty_pow {f : ∀ i, B i} (hf : Memℓp f ∞) (n : ℕ) : Memℓp (f ^ n) ∞ :=
@@ -843,7 +837,7 @@ section NormedCommRing
 
 variable {I : Type _} {B : I → Type _} [∀ i, NormedCommRing (B i)] [∀ i, NormOneClass (B i)]
 
-instance inftyCommRing : CommRingₓ (lp B ∞) :=
+instance inftyCommRing : CommRing (lp B ∞) :=
   { lp.inftyRing with
     mul_comm := fun f g => by
       ext
@@ -878,7 +872,7 @@ variable (𝕜 B)
 /-- The `𝕜`-subalgebra of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
 with extra structure. -/
 def _root_.lp_infty_subalgebra : Subalgebra 𝕜 (PreLp B) :=
-  { lpInftySubring B with Carrier := { f | Memℓp f ∞ }, algebra_map_mem' := algebra_map_mem_ℓp_infty }
+  { lpInftySubring B with Carrier := { f | Memℓp f ∞ }, algebra_map_mem' := algebraMapMemℓpInfty }
 
 variable {𝕜 B}
 
@@ -896,7 +890,7 @@ variable [DecidableEq α]
 /-- The element of `lp E p` which is `a : E i` at the index `i`, and zero elsewhere. -/
 protected def single (p) (i : α) (a : E i) : lp E p :=
   ⟨fun j => if h : j = i then Eq.ndrec a h.symm else 0, by
-    refine' (mem_ℓp_zero _).of_exponent_ge (zero_le p)
+    refine' (memℓpZero _).ofExponentGe (zero_le p)
     refine' (Set.finite_singleton i).Subset _
     intro j
     simp only [forall_exists_index, Set.mem_singleton_iff, Ne.def, dite_eq_right_iff, Set.mem_set_of_eq, not_forall]
@@ -933,40 +927,43 @@ protected theorem single_smul (p) (i : α) (a : E i) (c : 𝕜) : lp.single p i 
   · simp [lp.single_apply_ne p i _ hi]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s)
-protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finsetₓ α) :
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ∥∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' (has_sum_norm hp (∑ i in s, lp.single p i (f i))).unique _
-  simp only [lp.single_apply, coe_fn_sum, Finsetₓ.sum_apply, Finsetₓ.sum_dite_eq]
+  simp only [lp.single_apply, coe_fn_sum, Finset.sum_apply, Finset.sum_dite_eq]
   have h : ∀ (i) (_ : i ∉ s), ∥ite (i ∈ s) (f i) 0∥ ^ p.to_real = 0 := by
     intro i hi
     simp [if_neg hi, Real.zero_rpow hp.ne']
   have h' : ∀ i ∈ s, ∥f i∥ ^ p.to_real = ∥ite (i ∈ s) (f i) 0∥ ^ p.to_real := by
     intro i hi
     rw [if_pos hi]
-  simpa [Finsetₓ.sum_congr rfl h'] using has_sum_sum_of_ne_finset_zero h
+  simpa [Finset.sum_congr rfl h'] using has_sum_sum_of_ne_finset_zero h
 
 protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) : ∥lp.single p i (f i)∥ = ∥f i∥ := by
   refine' Real.rpow_left_inj_on hp.ne' (norm_nonneg' _) (norm_nonneg _) _
   simpa using lp.norm_sum_single hp f {i}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s)
-protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finsetₓ α) :
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f∥ ^ p.toReal - ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' ((has_sum_norm hp f).sub (has_sum_norm hp (f - ∑ i in s, lp.single p i (f i)))).unique _
   let F : α → ℝ := fun i => ∥f i∥ ^ p.to_real - ∥(f - ∑ i in s, lp.single p i (f i)) i∥ ^ p.to_real
   have hF : ∀ (i) (_ : i ∉ s), F i = 0 := by
     intro i hi
     suffices ∥f i∥ ^ p.to_real - ∥f i - ite (i ∈ s) (f i) 0∥ ^ p.to_real = 0 by
-      simpa [F, coe_fn_sum, lp.single_apply] using this
-    simp [if_neg hi]
+      simpa only [F, coe_fn_sum, lp.single_apply, coe_fn_sub, Pi.sub_apply, Finset.sum_apply, Finset.sum_dite_eq] using
+        this
+    simp only [if_neg hi, sub_zero, sub_self]
   have hF' : ∀ i ∈ s, F i = ∥f i∥ ^ p.to_real := by
     intro i hi
-    simp [F, coe_fn_sum, lp.single_apply, if_pos hi, Real.zero_rpow hp.ne']
+    simp only [F, coe_fn_sum, lp.single_apply, if_pos hi, sub_self, eq_self_iff_true, coe_fn_sub, Pi.sub_apply,
+      Finset.sum_apply, Finset.sum_dite_eq, sub_eq_self]
+    simp [Real.zero_rpow hp.ne']
   have : HasSum F (∑ i in s, F i) := has_sum_sum_of_ne_finset_zero hF
-  rwa [Finsetₓ.sum_congr rfl hF'] at this
+  rwa [Finset.sum_congr rfl hF'] at this
 
-protected theorem norm_compl_sum_single (hp : 0 < p.toReal) (f : lp E p) (s : Finsetₓ α) :
+protected theorem norm_compl_sum_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∥f∥ ^ p.toReal - ∑ i in s, ∥f i∥ ^ p.toReal := by
   linarith [lp.norm_sub_norm_compl_sub_single hp f s]
 
@@ -977,21 +974,21 @@ protected theorem has_sum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) 
   have hp₀ : 0 < p := ennreal.zero_lt_one.trans_le (Fact.out _)
   have hp' : 0 < p.to_real := Ennreal.to_real_pos hp₀.ne' hp
   have := lp.has_sum_norm hp' f
-  dsimp [HasSum] at this⊢
-  rw [Metric.tendsto_nhds] at this⊢
+  rw [HasSum, Metric.tendsto_nhds] at this⊢
   intro ε hε
   refine' (this _ (Real.rpow_pos_of_pos hε p.to_real)).mono _
   intro s hs
-  rw [← Real.rpow_lt_rpow_iff dist_nonneg (le_of_ltₓ hε) hp']
+  rw [← Real.rpow_lt_rpow_iff dist_nonneg (le_of_lt hε) hp']
   rw [dist_comm] at hs
   simp only [dist_eq_norm, Real.norm_eq_abs] at hs⊢
   have H : ∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real = ∥f∥ ^ p.to_real - ∑ i in s, ∥f i∥ ^ p.to_real := by
-    simpa using lp.norm_compl_sum_single hp' (-f) s
+    simpa only [coe_fn_neg, Pi.neg_apply, lp.single_neg, Finset.sum_neg_distrib, neg_sub_neg, norm_neg,
+      _root_.norm_neg] using lp.norm_compl_sum_single hp' (-f) s
   rw [← H] at hs
   have :
     abs (∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real) =
       ∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real :=
-    by simp [Real.abs_rpow_of_nonneg (norm_nonneg _)]
+    by simp only [Real.abs_rpow_of_nonneg (norm_nonneg _), abs_norm_eq_norm]
   linarith
 
 end Single
@@ -1028,7 +1025,7 @@ variable [_i : Fact (1 ≤ p)]
 include _i
 
 theorem sum_rpow_le_of_tendsto (hp : p ≠ ∞) {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, ∥F k∥ ≤ C) {f : ∀ a, E a}
-    (hf : Tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) (s : Finsetₓ α) :
+    (hf : Tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) (s : Finset α) :
     (∑ i : α in s, ∥f i∥ ^ p.toReal) ≤ C ^ p.toReal := by
   have hp' : p ≠ 0 := (ennreal.zero_lt_one.trans_le _i.elim).ne'
   have hp'' : 0 < p.to_real := Ennreal.to_real_pos hp' hp
@@ -1061,17 +1058,17 @@ theorem norm_le_of_tendsto {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, �
     
 
 /-- If `f` is the pointwise limit of a bounded sequence in `lp E p`, then `f` is in `lp E p`. -/
-theorem mem_ℓp_of_tendsto {F : ι → lp E p} (hF : Metric.Bounded (Set.Range F)) {f : ∀ a, E a}
+theorem memℓpOfTendsto {F : ι → lp E p} (hF : Metric.Bounded (Set.Range F)) {f : ∀ a, E a}
     (hf : Tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) : Memℓp f p := by
   obtain ⟨C, hC, hCF'⟩ := hF.exists_pos_norm_le
   have hCF : ∀ k, ∥F k∥ ≤ C := fun k => hCF' _ ⟨k, rfl⟩
   rcases eq_top_or_lt_top p with (rfl | hp)
-  · apply mem_ℓp_infty
+  · apply memℓpInfty
     use C
     rintro _ ⟨a, rfl⟩
     refine' norm_apply_le_of_tendsto (eventually_of_forall hCF) hf a
     
-  · apply mem_ℓp_gen'
+  · apply memℓpGen'
     exact sum_rpow_le_of_tendsto hp.ne (eventually_of_forall hCF) hf
     
 

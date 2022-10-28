@@ -23,8 +23,8 @@ namespace CategoryTheory.Monoidal
 
 variable {C D : Type _} [Groupoid C] [Category D] [MonoidalCategory D]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual F where
   rightDual :=
     { obj := fun X => F.obj Xᘁ, map := fun X Y f => F.map (inv f)ᘁ,
@@ -47,8 +47,8 @@ instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual
 
 instance rightRigidFunctorCategory [RightRigidCategory D] : RightRigidCategory (C ⥤ D) where
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F where
   leftDual :=
     { obj := fun X => ᘁF.obj X, map := fun X Y f => ᘁF.map (inv f),

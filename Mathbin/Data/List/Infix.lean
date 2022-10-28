@@ -153,13 +153,13 @@ alias reverse_suffix ↔ _ is_prefix.reverse
 alias reverse_infix ↔ _ is_infix.reverse
 
 theorem IsInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
-  length_le_of_sublist h.Sublist
+  h.Sublist.length_le
 
 theorem IsPrefix.length_le (h : l₁ <+: l₂) : l₁.length ≤ l₂.length :=
-  length_le_of_sublist h.Sublist
+  h.Sublist.length_le
 
 theorem IsSuffix.length_le (h : l₁ <:+ l₂) : l₁.length ≤ l₂.length :=
-  length_le_of_sublist h.Sublist
+  h.Sublist.length_le
 
 theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
   eq_nil_of_sublist_nil h.Sublist
@@ -187,15 +187,100 @@ theorem infix_iff_prefix_suffix (l₁ l₂ : List α) : l₁ <:+: l₂ ↔ ∃ t
     ⟨s, t, by rw [append_assoc] <;> exact e⟩⟩
 
 theorem eq_of_infix_of_length_eq (h : l₁ <:+: l₂) : l₁.length = l₂.length → l₁ = l₂ :=
-  eq_of_sublist_of_length_eq h.Sublist
+  h.Sublist.eq_of_length
 
 theorem eq_of_prefix_of_length_eq (h : l₁ <+: l₂) : l₁.length = l₂.length → l₁ = l₂ :=
-  eq_of_sublist_of_length_eq h.Sublist
+  h.Sublist.eq_of_length
 
 theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.length → l₁ = l₂ :=
-  eq_of_sublist_of_length_eq h.Sublist
+  h.Sublist.eq_of_length
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `prefix_of_prefix_length_le [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.forall
+         "∀"
+         [(Term.implicitBinder "{" [`l₁ `l₂ `l₃] [":" (Term.app `List [`α])] "}")]
+         []
+         ","
+         (Term.arrow
+          (List.Data.List.Defs.«term_<+:_» `l₁ " <+: " `l₃)
+          "→"
+          (Term.arrow
+           (List.Data.List.Defs.«term_<+:_» `l₂ " <+: " `l₃)
+           "→"
+           (Term.arrow
+            («term_≤_» (Term.app `length [`l₁]) "≤" (Term.app `length [`l₂]))
+            "→"
+            (List.Data.List.Defs.«term_<+:_» `l₁ " <+: " `l₂)))))))
+      (Command.declValEqns
+       (Term.matchAltsWhereDecls
+        (Term.matchAlts
+         [(Term.matchAlt
+           "|"
+           [[(«term[_]» "[" [] "]") "," `l₂ "," `l₃ "," `h₁ "," `h₂ "," (Term.hole "_")]]
+           "=>"
+           (Term.app `nil_prefix [(Term.hole "_")]))
+          (Term.matchAlt
+           "|"
+           [[(«term_::_» `a "::" `l₁)
+             ","
+             («term_::_» `b "::" `l₂)
+             ","
+             (Term.hole "_")
+             ","
+             (Term.anonymousCtor "⟨" [`r₁ "," `rfl] "⟩")
+             ","
+             (Term.anonymousCtor "⟨" [`r₂ "," `e] "⟩")
+             ","
+             `ll]]
+           "=>"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.injection "injection" `e ["with" ["_" `e']])
+               []
+               (Tactic.subst "subst" [`b])
+               []
+               (Std.Tactic.rcases
+                "rcases"
+                [(Tactic.casesTarget
+                  []
+                  (Term.app
+                   `prefix_of_prefix_length_le
+                   [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
+                    (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
+                    (Term.app `le_of_succ_le_succ [`ll])]))]
+                ["with"
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.tuple
+                     "⟨"
+                     [(Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `r₃)])
+                       [])
+                      ","
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                       [])]
+                     "⟩")])
+                  [])])
+               []
+               (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩"))]))))])
+        []))
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -230,6 +315,7 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
              [])])
           []
           (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -270,8 +356,12 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
        [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
         (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
         (Term.app `le_of_succ_le_succ [`ll])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `le_of_succ_le_succ [`ll])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ll
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -280,6 +370,8 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `le_of_succ_le_succ [`ll]) []] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -289,6 +381,8 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -310,7 +404,17 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.injection "injection" `e ["with" ["_" `e']])-/-- failed to format: format: uncaught backtrack exception
+      (Tactic.injection "injection" `e ["with" ["_" `e']])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   prefix_of_prefix_length_le
   : ∀ { l₁ l₂ l₃ : List α } , l₁ <+: l₃ → l₂ <+: l₃ → length l₁ ≤ length l₂ → l₁ <+: l₂
@@ -325,7 +429,7 @@ theorem
           exact ⟨ r₃ , rfl ⟩
 
 theorem prefix_or_prefix_of_prefix (h₁ : l₁ <+: l₃) (h₂ : l₂ <+: l₃) : l₁ <+: l₂ ∨ l₂ <+: l₁ :=
-  (le_totalₓ (length l₁) (length l₂)).imp (prefix_of_prefix_length_le h₁ h₂) (prefix_of_prefix_length_le h₂ h₁)
+  (le_total (length l₁) (length l₂)).imp (prefix_of_prefix_length_le h₁ h₂) (prefix_of_prefix_length_le h₂ h₁)
 
 theorem suffix_of_suffix_length_le (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) (ll : length l₁ ≤ length l₂) : l₁ <:+ l₂ :=
   reverse_prefix.1 <| prefix_of_prefix_length_le (reverse_prefix.2 h₁) (reverse_prefix.2 h₂) (by simp [ll])
@@ -375,28 +479,34 @@ theorem prefix_append_right_inj (l) : l ++ l₁ <+: l ++ l₂ ↔ l₁ <+: l₂ 
 theorem prefix_cons_inj (a) : a :: l₁ <+: a :: l₂ ↔ l₁ <+: l₂ :=
   prefix_append_right_inj [a]
 
-theorem take_prefix (n) (l : List α) : takeₓ n l <+: l :=
-  ⟨_, take_append_dropₓ _ _⟩
+theorem take_prefix (n) (l : List α) : take n l <+: l :=
+  ⟨_, take_append_drop _ _⟩
 
-theorem drop_suffix (n) (l : List α) : dropₓ n l <:+ l :=
-  ⟨_, take_append_dropₓ _ _⟩
+theorem drop_suffix (n) (l : List α) : drop n l <:+ l :=
+  ⟨_, take_append_drop _ _⟩
 
-theorem take_sublist (n) (l : List α) : takeₓ n l <+ l :=
+theorem take_sublist (n) (l : List α) : take n l <+ l :=
   (take_prefix n l).Sublist
 
-theorem drop_sublist (n) (l : List α) : dropₓ n l <+ l :=
+theorem drop_sublist (n) (l : List α) : drop n l <+ l :=
   (drop_suffix n l).Sublist
 
-theorem take_subset (n) (l : List α) : takeₓ n l ⊆ l :=
+theorem take_subset (n) (l : List α) : take n l ⊆ l :=
   (take_sublist n l).Subset
 
-theorem drop_subset (n) (l : List α) : dropₓ n l ⊆ l :=
+theorem drop_subset (n) (l : List α) : drop n l ⊆ l :=
   (drop_sublist n l).Subset
 
 theorem mem_of_mem_take (h : a ∈ l.take n) : a ∈ l :=
   take_subset n l h
 
-theorem mem_of_mem_dropₓ (h : a ∈ l.drop n) : a ∈ l :=
+/- warning: list.mem_of_mem_drop -> List.mem_of_mem_drop is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {n : Nat}, (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (List.drop.{u_1} α n l)) -> (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)
+but is expected to have type
+  forall {α : Type.{u_1}} {a : α} {n : Nat} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.drop.{u_1} α n l)) -> (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)
+Case conversion may be inaccurate. Consider using '#align list.mem_of_mem_drop List.mem_of_mem_dropₓ'. -/
+theorem mem_of_mem_drop (h : a ∈ l.drop n) : a ∈ l :=
   drop_subset n l h
 
 theorem take_while_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
@@ -429,45 +539,45 @@ theorem mem_of_mem_init (h : a ∈ l.init) : a ∈ l :=
 theorem mem_of_mem_tail (h : a ∈ l.tail) : a ∈ l :=
   tail_subset l h
 
-theorem prefix_iff_eq_append : l₁ <+: l₂ ↔ l₁ ++ dropₓ (length l₁) l₂ = l₂ :=
+theorem prefix_iff_eq_append : l₁ <+: l₂ ↔ l₁ ++ drop (length l₁) l₂ = l₂ :=
   ⟨by rintro ⟨r, rfl⟩ <;> rw [drop_left], fun e => ⟨_, e⟩⟩
 
-theorem suffix_iff_eq_append : l₁ <:+ l₂ ↔ takeₓ (length l₂ - length l₁) l₂ ++ l₁ = l₂ :=
+theorem suffix_iff_eq_append : l₁ <:+ l₂ ↔ take (length l₂ - length l₁) l₂ ++ l₁ = l₂ :=
   ⟨by rintro ⟨r, rfl⟩ <;> simp only [length_append, add_tsub_cancel_right, take_left], fun e => ⟨_, e⟩⟩
 
-theorem prefix_iff_eq_take : l₁ <+: l₂ ↔ l₁ = takeₓ (length l₁) l₂ :=
-  ⟨fun h => append_right_cancel <| (prefix_iff_eq_append.1 h).trans (take_append_dropₓ _ _).symm, fun e =>
+theorem prefix_iff_eq_take : l₁ <+: l₂ ↔ l₁ = take (length l₁) l₂ :=
+  ⟨fun h => append_right_cancel <| (prefix_iff_eq_append.1 h).trans (take_append_drop _ _).symm, fun e =>
     e.symm ▸ take_prefix _ _⟩
 
-theorem suffix_iff_eq_drop : l₁ <:+ l₂ ↔ l₁ = dropₓ (length l₂ - length l₁) l₂ :=
-  ⟨fun h => append_left_cancel <| (suffix_iff_eq_append.1 h).trans (take_append_dropₓ _ _).symm, fun e =>
+theorem suffix_iff_eq_drop : l₁ <:+ l₂ ↔ l₁ = drop (length l₂ - length l₁) l₂ :=
+  ⟨fun h => append_left_cancel <| (suffix_iff_eq_append.1 h).trans (take_append_drop _ _).symm, fun e =>
     e.symm ▸ drop_suffix _ _⟩
 
 instance decidablePrefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <+: l₂)
   | [], l₂ => isTrue ⟨l₂, rfl⟩
   | a :: l₁, [] => is_false fun ⟨t, te⟩ => List.noConfusion te
   | a :: l₁, b :: l₂ =>
-    if h : a = b then decidableOfDecidableOfIff (decidable_prefix l₁ l₂) (by rw [← h, prefix_cons_inj])
+    if h : a = b then decidable_of_decidable_of_iff (decidable_prefix l₁ l₂) (by rw [← h, prefix_cons_inj])
     else is_false fun ⟨t, te⟩ => h <| by injection te
 
 -- Alternatively, use mem_tails
 instance decidableSuffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+ l₂)
   | [], l₂ => isTrue ⟨l₂, append_nil _⟩
-  | a :: l₁, [] => is_false <| mt (length_le_of_sublist ∘ is_suffix.sublist) (by decide)
-  | l₁, b :: l₂ => decidableOfDecidableOfIff (@Or.decidable _ _ _ (l₁.decidableSuffix l₂)) suffix_cons_iff.symm
+  | a :: l₁, [] => is_false <| mt (sublist.length_le ∘ is_suffix.sublist) (by decide)
+  | l₁, b :: l₂ => decidable_of_decidable_of_iff (@Or.decidable _ _ _ (l₁.decidableSuffix l₂)) suffix_cons_iff.symm
 
 instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
   | [], l₂ => isTrue ⟨[], l₂, rfl⟩
   | a :: l₁, [] => is_false fun ⟨s, t, te⟩ => by simp at te <;> exact te
   | l₁, b :: l₂ =>
-    decidableOfDecidableOfIff (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂))
+    decidable_of_decidable_of_iff (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂))
       infix_cons_iff.symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp -/
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L.take m <+: L.take n ↔ m ≤ n := by
   simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n
-  · simp only [min_eq_leftₓ, eq_self_iff_true, Nat.zero_leₓ, take]
+  · simp only [min_eq_left, eq_self_iff_true, Nat.zero_le, take]
     
   cases' L with l ls
   · exact (not_lt_bot hm).elim
@@ -479,10 +589,10 @@ theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L
     exact not_false
     
   · simp only [length] at hm
-    specialize IH ls n (Nat.lt_of_succ_lt_succₓ hm)
-    simp only [le_of_ltₓ (Nat.lt_of_succ_lt_succₓ hm), min_eq_leftₓ] at IH
-    simp only [le_of_ltₓ hm, IH, true_andₓ, min_eq_leftₓ, eq_self_iff_true, length, take]
-    exact ⟨Nat.succ_le_succₓ, Nat.le_of_succ_le_succₓ⟩
+    specialize IH ls n (Nat.lt_of_succ_lt_succ hm)
+    simp only [le_of_lt (Nat.lt_of_succ_lt_succ hm), min_eq_left] at IH
+    simp only [le_of_lt hm, IH, true_and_iff, min_eq_left, eq_self_iff_true, length, take]
+    exact ⟨Nat.succ_le_succ, Nat.le_of_succ_le_succ⟩
     
 
 theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ := by
@@ -544,18 +654,18 @@ theorem IsInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List �
 
 instance : IsPartialOrder (List α) (· <+: ·) where
   refl := prefix_refl
-  trans := fun _ _ _ => IsPrefix.trans
-  antisymm := fun _ _ h₁ h₂ => eq_of_prefix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+  trans _ _ _ := IsPrefix.trans
+  antisymm _ _ h₁ h₂ := eq_of_prefix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 instance : IsPartialOrder (List α) (· <:+ ·) where
   refl := suffix_refl
-  trans := fun _ _ _ => IsSuffix.trans
-  antisymm := fun _ _ h₁ h₂ => eq_of_suffix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+  trans _ _ _ := IsSuffix.trans
+  antisymm _ _ h₁ h₂ := eq_of_suffix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 instance : IsPartialOrder (List α) (· <:+: ·) where
   refl := infix_refl
-  trans := fun _ _ _ => IsInfix.trans
-  antisymm := fun _ _ h₁ h₂ => eq_of_infix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+  trans _ _ _ := IsInfix.trans
+  antisymm _ _ h₁ h₂ := eq_of_infix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 end Fix
 
@@ -687,18 +797,36 @@ variable [DecidableEq α]
 theorem insert_nil (a : α) : insert a nil = [a] :=
   rfl
 
-theorem insertₓ.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
+theorem insert.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
   rfl
 
+/- warning: list.insert_of_mem -> List.insert_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l) -> (Eq.{succ u_1} (List.{u_1} α) (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) l)
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17457 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{succ u_1} (List.{u_1} α) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17457 a b) a l) l)
+Case conversion may be inaccurate. Consider using '#align list.insert_of_mem List.insert_of_memₓ'. -/
 @[simp]
-theorem insert_of_memₓ (h : a ∈ l) : insert a l = l := by simp only [insert.def, if_pos h]
+theorem insert_of_mem (h : a ∈ l) : insert a l = l := by simp only [insert.def, if_pos h]
 
+/- warning: list.insert_of_not_mem -> List.insert_of_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)) -> (Eq.{succ u_1} (List.{u_1} α) (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) (List.cons.{u_1} α a l))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17489 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{succ u_1} (List.{u_1} α) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17489 a b) a l) (List.cons.{u_1} α a l))
+Case conversion may be inaccurate. Consider using '#align list.insert_of_not_mem List.insert_of_not_memₓ'. -/
 @[simp]
-theorem insert_of_not_memₓ (h : a ∉ l) : insert a l = a :: l := by
+theorem insert_of_not_mem (h : a ∉ l) : insert a l = a :: l := by
   simp only [insert.def, if_neg h] <;> constructor <;> rfl
 
+/- warning: list.mem_insert_iff -> List.mem_insert_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u_1} α], Iff (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) b l)) (Or (Eq.{succ u_1} α a b) (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17540 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, Iff (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17540 a b) b l)) (Or (Eq.{succ u_1} α a b) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
+Case conversion may be inaccurate. Consider using '#align list.mem_insert_iff List.mem_insert_iffₓ'. -/
 @[simp]
-theorem mem_insert_iffₓ : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
+theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
   by_cases h':b ∈ l
   · simp only [insert_of_mem h']
     apply (or_iff_right_of_imp _).symm
@@ -721,22 +849,46 @@ theorem subset_insert (a : α) (l : List α) : l ⊆ l.insert a :=
   (sublist_insert a l).Subset
 
 @[simp]
-theorem mem_insert_selfₓ (a : α) (l : List α) : a ∈ l.insert a :=
-  mem_insert_iffₓ.2 <| Or.inl rfl
+theorem mem_insert_self (a : α) (l : List α) : a ∈ l.insert a :=
+  mem_insert_iff.2 <| Or.inl rfl
 
-theorem mem_insert_of_memₓ (h : a ∈ l) : a ∈ insert b l :=
-  mem_insert_iffₓ.2 (Or.inr h)
+/- warning: list.mem_insert_of_mem -> List.mem_insert_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l) -> (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) b l))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17801 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17801 a b) b l))
+Case conversion may be inaccurate. Consider using '#align list.mem_insert_of_mem List.mem_insert_of_memₓ'. -/
+theorem mem_insert_of_mem (h : a ∈ l) : a ∈ insert b l :=
+  mem_insert_iff.2 (Or.inr h)
 
-theorem eq_or_mem_of_mem_insertₓ (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
-  mem_insert_iffₓ.1 h
+/- warning: list.eq_or_mem_of_mem_insert -> List.eq_or_mem_of_mem_insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) b l)) -> (Or (Eq.{succ u_1} α a b) (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17845 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17845 a b) b l)) -> (Or (Eq.{succ u_1} α a b) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
+Case conversion may be inaccurate. Consider using '#align list.eq_or_mem_of_mem_insert List.eq_or_mem_of_mem_insertₓ'. -/
+theorem eq_or_mem_of_mem_insert (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
+  mem_insert_iff.1 h
 
+/- warning: list.length_insert_of_mem -> List.length_insert_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l) -> (Eq.{1} Nat (List.length.{u_1} α (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (List.length.{u_1} α l))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17889 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17889 a b) a l)) (List.length.{u_1} α l))
+Case conversion may be inaccurate. Consider using '#align list.length_insert_of_mem List.length_insert_of_memₓ'. -/
 @[simp]
-theorem length_insert_of_memₓ (h : a ∈ l) : (insert a l).length = l.length :=
-  congr_arg _ <| insert_of_memₓ h
+theorem length_insert_of_mem (h : a ∈ l) : (insert a l).length = l.length :=
+  congr_arg _ <| insert_of_mem h
 
+/- warning: list.length_insert_of_not_mem -> List.length_insert_of_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u_1} α l) (One.one.{0} Nat Nat.hasOne)))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17949 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17949 a b) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u_1} α l) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align list.length_insert_of_not_mem List.length_insert_of_not_memₓ'. -/
 @[simp]
-theorem length_insert_of_not_memₓ (h : a ∉ l) : (insert a l).length = l.length + 1 :=
-  congr_arg _ <| insert_of_not_memₓ h
+theorem length_insert_of_not_mem (h : a ∉ l) : (insert a l).length = l.length + 1 :=
+  congr_arg _ <| insert_of_not_mem h
 
 end Insert
 

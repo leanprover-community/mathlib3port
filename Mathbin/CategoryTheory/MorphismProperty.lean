@@ -45,7 +45,7 @@ variable {C}
 
 namespace MorphismProperty
 
-instance : Subset (MorphismProperty C) :=
+instance : HasSubset (MorphismProperty C) :=
   ⟨fun P₁ P₂ => ∀ ⦃X Y : C⦄ (f : X ⟶ Y) (hf : P₁ f), P₂ f⟩
 
 instance : Inter (MorphismProperty C) :=
@@ -404,6 +404,52 @@ theorem StableUnderBaseChange.diagonal (hP : StableUnderBaseChange P) (hP' : Res
       convert hP.base_change_map f _ _ <;> simp <;> assumption)
 
 end Diagonal
+
+section Universally
+
+/-- `P.universally` holds for a morphism `f : X ⟶ Y` iff `P` holds for all `X ×[Y] Y' ⟶ Y'`. -/
+def Universally (P : MorphismProperty C) : MorphismProperty C := fun X Y f =>
+  ∀ ⦃X' Y' : C⦄ (i₁ : X' ⟶ X) (i₂ : Y' ⟶ Y) (f' : X' ⟶ Y') (h : IsPullback f' i₁ i₂ f), P f'
+
+theorem universally_respects_iso (P : MorphismProperty C) : P.Universally.RespectsIso := by
+  constructor
+  · intro X Y Z e f hf X' Z' i₁ i₂ f' H
+    have : is_pullback (𝟙 _) (i₁ ≫ e.hom) i₁ e.inv :=
+      is_pullback.of_horiz_is_iso ⟨by rw [category.id_comp, category.assoc, e.hom_inv_id, category.comp_id]⟩
+    replace this := this.paste_horiz H
+    rw [iso.inv_hom_id_assoc, category.id_comp] at this
+    exact hf _ _ _ this
+    
+  · intro X Y Z e f hf X' Z' i₁ i₂ f' H
+    have : is_pullback (𝟙 _) i₂ (i₂ ≫ e.inv) e.inv := is_pullback.of_horiz_is_iso ⟨category.id_comp _⟩
+    replace this := H.paste_horiz this
+    rw [category.assoc, iso.hom_inv_id, category.comp_id, category.comp_id] at this
+    exact hf _ _ _ this
+    
+
+theorem universally_stable_under_base_change (P : MorphismProperty C) : P.Universally.StableUnderBaseChange :=
+  fun X Y Y' S f g f' g' H h₁ Y'' X'' i₁ i₂ f'' H' => h₁ _ _ _ (H'.paste_vert H.flip)
+
+theorem StableUnderComposition.universally [HasPullbacks C] {P : MorphismProperty C} (hP : P.StableUnderComposition) :
+    P.Universally.StableUnderComposition := by
+  intro X Y Z f g hf hg X' Z' i₁ i₂ f' H
+  have := pullback.lift_fst _ _ (H.w.trans (category.assoc _ _ _).symm)
+  rw [← this] at H⊢
+  apply hP _ _ _ (hg _ _ _ <| is_pullback.of_has_pullback _ _)
+  exact hf _ _ _ (H.of_right (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback i₂ g))
+
+theorem universally_le (P : MorphismProperty C) : P.Universally ≤ P := by
+  intro X Y f hf
+  exact hf (𝟙 _) (𝟙 _) _ (is_pullback.of_vert_is_iso ⟨by rw [category.comp_id, category.id_comp]⟩)
+
+theorem StableUnderBaseChange.universally_eq {P : MorphismProperty C} (hP : P.StableUnderBaseChange) :
+    P.Universally = P :=
+  P.universally_le.antisymm fun X Y f hf X' Y' i₁ i₂ f' H => hP H.flip hf
+
+theorem universally_mono : Monotone (Universally : MorphismProperty C → MorphismProperty C) :=
+  fun P₁ P₂ h X Y f h₁ X' Y' i₁ i₂ f' H => h _ _ _ (h₁ _ _ _ H)
+
+end Universally
 
 end MorphismProperty
 

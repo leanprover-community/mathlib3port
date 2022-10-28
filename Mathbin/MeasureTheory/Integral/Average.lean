@@ -33,7 +33,7 @@ open MeasureTheory MeasureTheory.Measure Metric Set Filter TopologicalSpace Func
 open TopologicalSpace BigOperators Ennreal Convex
 
 variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measureₓ α} {s : Set E}
+  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measure α} {s : Set E}
 
 /-!
 ### Average value of a function w.r.t. a measure
@@ -127,7 +127,7 @@ theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeas
 
 theorem average_pair {f : α → E} {g : α → F} (hfi : Integrable f μ) (hgi : Integrable g μ) :
     (⨍ x, (f x, g x) ∂μ) = (⨍ x, f x ∂μ, ⨍ x, g x ∂μ) :=
-  integral_pair hfi.to_average hgi.to_average
+  integral_pair hfi.toAverage hgi.toAverage
 
 theorem measure_smul_set_average (f : α → E) {s : Set α} (h : μ s ≠ ∞) :
     ((μ s).toReal • ⨍ x in s, f x ∂μ) = ∫ x in s, f x ∂μ := by

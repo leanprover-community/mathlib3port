@@ -64,7 +64,7 @@ theorem IsChain.mono : s ⊆ t → IsChain r t → IsChain r s :=
   Set.Pairwise.mono
 
 theorem IsChain.mono_rel {r' : α → α → Prop} (h : IsChain r s) (h_imp : ∀ x y, r x y → r' x y) : IsChain r' s :=
-  h.mono' fun x y => Or.impₓ (h_imp x y) (h_imp y x)
+  h.mono' fun x y => Or.imp (h_imp x y) (h_imp y x)
 
 /-- This can be used to turn `is_chain (≥)` into `is_chain (≤)` and vice-versa. -/
 theorem IsChain.symm (h : IsChain r s) : IsChain (flip r) s :=
@@ -78,8 +78,8 @@ theorem IsChain.insert (hs : IsChain r s) (ha : ∀ b ∈ s, a ≠ b → a ≺ b
 
 theorem is_chain_univ_iff : IsChain r (Univ : Set α) ↔ IsTrichotomous α r := by
   refine' ⟨fun h => ⟨fun a b => _⟩, fun h => @is_chain_of_trichotomous _ _ h univ⟩
-  rw [Or.left_comm, or_iff_not_imp_left]
-  exact h trivialₓ trivialₓ
+  rw [or_left_comm, or_iff_not_imp_left]
+  exact h trivial trivial
 
 theorem IsChain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β) (h : ∀ x y, r x y → s (f x) (f y)) {c : Set α}
     (hrc : IsChain r c) : IsChain s (f '' c) := fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
@@ -97,7 +97,7 @@ theorem IsChain.directed_on (H : IsChain r s) : DirectedOn r s := fun x hx y hy 
 
 protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f ⁻¹'o r) c) :
     Directed r fun x : { a : β // a ∈ c } => f x := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
-  (by_cases fun hab : a = b => by simp only [hab, exists_propₓ, and_selfₓ, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
+  (by_cases fun hab : a = b => by simp only [hab, exists_prop, and_self_iff, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
     fun hab => ((h ha hb hab).elim fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
 
 theorem IsChain.exists3 (hchain : IsChain r s) [IsTrans α r] {a b c} (mem1 : a ∈ s) (mem2 : b ∈ s) (mem3 : c ∈ s) :
@@ -251,7 +251,7 @@ variable [LE α] {s t : Flag α} {a : α}
 
 instance : SetLike (Flag α) α where
   coe := Carrier
-  coe_injective' := fun s t h => by
+  coe_injective' s t h := by
     cases s
     cases t
     congr
@@ -286,9 +286,9 @@ theorem bot_mem [OrderBot α] (s : Flag α) : (⊥ : α) ∈ s :=
 
 end LE
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] {a b : α}
+variable [Preorder α] {a b : α}
 
 protected theorem le_or_le (s : Flag α) (ha : a ∈ s) (hb : b ∈ s) : a ≤ b ∨ b ≤ a :=
   s.chain_le.Total ha hb
@@ -302,24 +302,24 @@ instance [OrderBot α] (s : Flag α) : OrderBot s :=
 instance [BoundedOrder α] (s : Flag α) : BoundedOrder s :=
   Subtype.boundedOrder s.bot_mem s.top_mem
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α]
+variable [PartialOrder α]
 
 theorem chain_lt (s : Flag α) : IsChain (· < ·) (s : Set α) := fun a ha b hb h =>
   (s.le_or_le ha hb).imp h.lt_of_le h.lt_of_le'
 
-instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) : LinearOrderₓ s :=
+instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) : LinearOrder s :=
   { Subtype.partialOrder _ with le_total := fun a b => s.le_or_le a.2 b.2, DecidableEq := Subtype.decidableEq,
     decidableLe := Subtype.decidableLe, decidableLt := Subtype.decidableLt }
 
-end PartialOrderₓ
+end PartialOrder
 
-instance [LinearOrderₓ α] : Unique (Flag α) where
+instance [LinearOrder α] : Unique (Flag α) where
   default := ⟨Univ, is_chain_of_trichotomous _, fun s _ => s.subset_univ.antisymm'⟩
-  uniq := fun s => SetLike.coe_injective <| s.3 (is_chain_of_trichotomous _) <| subset_univ _
+  uniq s := SetLike.coe_injective <| s.3 (is_chain_of_trichotomous _) <| subset_univ _
 
 end Flag
 

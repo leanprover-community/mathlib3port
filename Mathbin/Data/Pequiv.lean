@@ -75,8 +75,8 @@ theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
       have hf := fun a => hf a b
       have hg := fun a => hg a b
       cases' h : g₂ b with a
-      · simp only [h, Option.not_mem_none, false_iffₓ] at hg
-        simp only [hg, iff_falseₓ] at hf
+      · simp only [h, Option.not_mem_none, false_iff_iff] at hg
+        simp only [hg, iff_false_iff] at hf
         rwa [Option.eq_none_iff_forall_not_mem]
         
       · rw [← Option.mem_def, hf, ← hg, h, Option.mem_def]
@@ -91,14 +91,14 @@ theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
 protected def refl (α : Type _) : α ≃. α where
   toFun := some
   invFun := some
-  inv := fun _ _ => eq_comm
+  inv _ _ := eq_comm
 
 /-- The inverse partial equivalence. -/
 @[symm]
 protected def symm (f : α ≃. β) : β ≃. α where
   toFun := f.2
   invFun := f.1
-  inv := fun _ _ => (f.inv _ _).symm
+  inv _ _ := (f.inv _ _).symm
 
 theorem mem_iff_mem (f : α ≃. β) : ∀ {a : α} {b : β}, a ∈ f.symm b ↔ b ∈ f a :=
   f.3
@@ -109,9 +109,9 @@ theorem eq_some_iff (f : α ≃. β) : ∀ {a : α} {b : β}, f.symm b = some a 
 /-- Composition of partial equivalences `f : α ≃. β` and `g : β ≃. γ`. -/
 @[trans]
 protected def trans (f : α ≃. β) (g : β ≃. γ) : α ≃. γ where
-  toFun := fun a => (f a).bind g
-  invFun := fun a => (g.symm a).bind f.symm
-  inv := fun a b => by simp_all [And.comm, eq_some_iff f, eq_some_iff g]
+  toFun a := (f a).bind g
+  invFun a := (g.symm a).bind f.symm
+  inv a b := by simp_all [and_comm, eq_some_iff f, eq_some_iff g]
 
 @[simp]
 theorem refl_apply (a : α) : Pequiv.refl α a = some a :=
@@ -128,7 +128,7 @@ theorem symm_injective : Function.Injective (@Pequiv.symm α β) :=
   LeftInverse.injective symm_symm
 
 theorem trans_assoc (f : α ≃. β) (g : β ≃. γ) (h : γ ≃. δ) : (f.trans g).trans h = f.trans (g.trans h) :=
-  ext fun _ => Option.bind_assocₓ _ _ _
+  ext fun _ => Option.bind_assoc _ _ _
 
 theorem mem_trans (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) : c ∈ f.trans g a ↔ ∃ b, b ∈ f a ∧ c ∈ g b :=
   Option.bind_eq_some'
@@ -176,15 +176,15 @@ variable (s : Set α) [DecidablePred (· ∈ s)]
 
 /-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
 def ofSet (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
-  toFun := fun a => if a ∈ s then some a else none
-  invFun := fun a => if a ∈ s then some a else none
-  inv := fun a b => by
+  toFun a := if a ∈ s then some a else none
+  invFun a := if a ∈ s then some a else none
+  inv a b := by
     split_ifs with hb ha ha
     · simp [eq_comm]
       
-    · simp [ne_of_mem_of_not_memₓ hb ha]
+    · simp [ne_of_mem_of_not_mem hb ha]
       
-    · simp [ne_of_mem_of_not_memₓ ha hb]
+    · simp [ne_of_mem_of_not_mem ha hb]
       
     · simp
       
@@ -199,7 +199,7 @@ theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a �
     rintro rfl
     exact h
     
-  · simp only [false_iffₓ, not_and, Option.not_mem_none]
+  · simp only [false_iff_iff, not_and, Option.not_mem_none]
     rintro rfl
     exact h
     
@@ -270,7 +270,7 @@ theorem trans_bot (f : α ≃. β) : f.trans (⊥ : β ≃. γ) = ⊥ := by ext 
 @[simp]
 theorem bot_trans (f : β ≃. γ) : (⊥ : α ≃. β).trans f = ⊥ := by ext <;> dsimp [Pequiv.trans] <;> simp
 
-theorem is_some_symm_get (f : α ≃. β) {a : α} (h : isSome (f a)) : isSome (f.symm (Option.getₓ h)) :=
+theorem is_some_symm_get (f : α ≃. β) {a : α} (h : isSome (f a)) : isSome (f.symm (Option.get h)) :=
   is_some_iff_exists.2 ⟨a, by rw [f.eq_some_iff, some_get]⟩
 
 section Single
@@ -279,9 +279,9 @@ variable [DecidableEq α] [DecidableEq β] [DecidableEq γ]
 
 /-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
 def single (a : α) (b : β) : α ≃. β where
-  toFun := fun x => if x = a then some b else none
-  invFun := fun x => if x = b then some a else none
-  inv := fun _ _ => by simp <;> split_ifs <;> cc
+  toFun x := if x = a then some b else none
+  invFun x := if x = b then some a else none
+  inv _ _ := by simp <;> split_ifs <;> cc
 
 theorem mem_single (a : α) (b : β) : b ∈ single a b a :=
   if_pos rfl
@@ -336,11 +336,11 @@ end Single
 
 section Order
 
-instance : PartialOrderₓ (α ≃. β) where
-  le := fun f g => ∀ (a : α) (b : β), b ∈ f a → b ∈ g a
-  le_refl := fun _ _ _ => id
-  le_trans := fun f g h fg gh a b => gh a b ∘ fg a b
-  le_antisymm := fun f g fg gf =>
+instance : PartialOrder (α ≃. β) where
+  le f g := ∀ (a : α) (b : β), b ∈ f a → b ∈ g a
+  le_refl _ _ _ := id
+  le_trans f g h fg gh a b := gh a b ∘ fg a b
+  le_antisymm f g fg gf :=
     ext
       (by
         intro a
@@ -369,13 +369,13 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
           · contrapose! h2
             rw [h2]
             rw [← h1, hf, h2] at hg
-            simp only [mem_def, true_iffₓ, eq_self_iff_true] at hg
+            simp only [mem_def, true_iff_iff, eq_self_iff_true] at hg
             rw [hg]
             
           · contrapose! h1
             rw [h1] at *
             rw [← h2] at hg
-            simp only [mem_def, eq_self_iff_true, iff_trueₓ] at hf hg
+            simp only [mem_def, eq_self_iff_true, iff_true_iff] at hf hg
             rw [hf, hg]
              },
     inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc,
@@ -395,7 +395,7 @@ end Order
 
 end Pequiv
 
-namespace Equivₓ
+namespace Equiv
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
@@ -403,10 +403,10 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 def toPequiv (f : α ≃ β) : α ≃. β where
   toFun := some ∘ f
   invFun := some ∘ f.symm
-  inv := by simp [Equivₓ.eq_symm_apply, eq_comm]
+  inv := by simp [Equiv.eq_symm_apply, eq_comm]
 
 @[simp]
-theorem to_pequiv_refl : (Equivₓ.refl α).toPequiv = Pequiv.refl α :=
+theorem to_pequiv_refl : (Equiv.refl α).toPequiv = Pequiv.refl α :=
   rfl
 
 theorem to_pequiv_trans (f : α ≃ β) (g : β ≃ γ) : (f.trans g).toPequiv = f.toPequiv.trans g.toPequiv :=
@@ -418,5 +418,5 @@ theorem to_pequiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
 theorem to_pequiv_apply (f : α ≃ β) (x : α) : f.toPequiv x = some (f x) :=
   rfl
 
-end Equivₓ
+end Equiv
 

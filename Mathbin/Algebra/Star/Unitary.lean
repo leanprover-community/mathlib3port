@@ -24,21 +24,21 @@ unitary
 /-- In a *-monoid, `unitary R` is the submonoid consisting of all the elements `U` of
 `R` such that `star U * U = 1` and `U * star U = 1`.
 -/
-def unitary (R : Type _) [Monoidₓ R] [StarSemigroup R] : Submonoid R where
+def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R where
   Carrier := { U | star U * U = 1 ∧ U * star U = 1 }
-  one_mem' := by simp only [mul_oneₓ, and_selfₓ, Set.mem_set_of_eq, star_one]
+  one_mem' := by simp only [mul_one, and_self_iff, Set.mem_set_of_eq, star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
     · calc
         star (U * B) * (U * B) = star B * star U * U * B := by simp only [mul_assoc, star_mul]
         _ = star B * (star U * U) * B := by rw [← mul_assoc]
-        _ = 1 := by rw [hA₁, mul_oneₓ, hB₁]
+        _ = 1 := by rw [hA₁, mul_one, hB₁]
         
       
     · calc
         U * B * star (U * B) = U * B * (star B * star U) := by rw [star_mul]
         _ = U * (B * star B) * star U := by simp_rw [← mul_assoc]
-        _ = 1 := by rw [hB₂, mul_oneₓ, hA₂]
+        _ = 1 := by rw [hB₂, mul_one, hA₂]
         
       
 
@@ -46,9 +46,9 @@ variable {R : Type _}
 
 namespace unitary
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ R] [StarSemigroup R]
+variable [Monoid R] [StarSemigroup R]
 
 theorem mem_iff {U : R} : U ∈ unitary R ↔ star U * U = 1 ∧ U * star U = 1 :=
   Iff.rfl
@@ -89,7 +89,7 @@ theorem star_mul_self (U : unitary R) : star U * U = 1 :=
 theorem mul_star_self (U : unitary R) : U * star U = 1 :=
   Subtype.ext <| coe_mul_star_self U
 
-instance : Groupₓ (unitary R) :=
+instance : Group (unitary R) :=
   { Submonoid.toMonoid _ with inv := star, mul_left_inv := star_mul_self }
 
 instance : HasInvolutiveStar (unitary R) :=
@@ -114,33 +114,33 @@ theorem star_eq_inv' : (star : unitary R → unitary R) = Inv.inv :=
 /-- The unitary elements embed into the units. -/
 @[simps]
 def toUnits : unitary R →* Rˣ where
-  toFun := fun x => ⟨x, ↑x⁻¹, coe_mul_star_self x, coe_star_mul_self x⟩
+  toFun x := ⟨x, ↑x⁻¹, coe_mul_star_self x, coe_star_mul_self x⟩
   map_one' := Units.ext rfl
-  map_mul' := fun x y => Units.ext rfl
+  map_mul' x y := Units.ext rfl
 
 theorem to_units_injective : Function.Injective (toUnits : unitary R → Rˣ) := fun x y h =>
   Subtype.ext <| Units.ext_iff.mp h
 
-end Monoidₓ
+end Monoid
 
-section CommMonoidₓ
+section CommMonoid
 
-variable [CommMonoidₓ R] [StarSemigroup R]
+variable [CommMonoid R] [StarSemigroup R]
 
-instance : CommGroupₓ (unitary R) :=
+instance : CommGroup (unitary R) :=
   { unitary.group, Submonoid.toCommMonoid _ with }
 
 theorem mem_iff_star_mul_self {U : R} : U ∈ unitary R ↔ star U * U = 1 :=
   mem_iff.trans <| and_iff_left_of_imp fun h => mul_comm (star U) U ▸ h
 
 theorem mem_iff_self_mul_star {U : R} : U ∈ unitary R ↔ U * star U = 1 :=
-  mem_iff.trans <| and_iff_right_of_impₓ fun h => mul_comm U (star U) ▸ h
+  mem_iff.trans <| and_iff_right_of_imp fun h => mul_comm U (star U) ▸ h
 
-end CommMonoidₓ
+end CommMonoid
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable [GroupWithZeroₓ R] [StarSemigroup R]
+variable [GroupWithZero R] [StarSemigroup R]
 
 @[norm_cast]
 theorem coe_inv (U : unitary R) : ↑U⁻¹ = (U⁻¹ : R) :=
@@ -158,14 +158,14 @@ theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
   · simp [coe_inv]
     
 
-end GroupWithZeroₓ
+end GroupWithZero
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] [StarRing R]
+variable [Ring R] [StarRing R]
 
 instance :
-    Neg (unitary R) where neg := fun U =>
+    Neg (unitary R) where neg U :=
     ⟨-U, by
       simp_rw [mem_iff, star_neg, neg_mul_neg]
       exact U.prop⟩
@@ -177,7 +177,7 @@ theorem coe_neg (U : unitary R) : ↑(-U) = (-U : R) :=
 instance : HasDistribNeg (unitary R) :=
   Subtype.coe_injective.HasDistribNeg _ coe_neg (unitary R).coe_mul
 
-end Ringₓ
+end Ring
 
 end unitary
 

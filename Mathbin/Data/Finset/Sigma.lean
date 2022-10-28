@@ -30,14 +30,14 @@ open Function Multiset
 
 variable {ι : Type _}
 
-namespace Finsetₓ
+namespace Finset
 
 section Sigma
 
-variable {α : ι → Type _} {β : Type _} (s s₁ s₂ : Finsetₓ ι) (t t₁ t₂ : ∀ i, Finsetₓ (α i))
+variable {α : ι → Type _} {β : Type _} (s s₁ s₂ : Finset ι) (t t₁ t₂ : ∀ i, Finset (α i))
 
 /-- `s.sigma t` is the finset of dependent pairs `⟨i, a⟩` such that `i ∈ s` and `a ∈ t i`. -/
-protected def sigma : Finsetₓ (Σi, α i) :=
+protected def sigma : Finset (Σi, α i) :=
   ⟨_, s.Nodup.Sigma fun i => (t i).Nodup⟩
 
 variable {s s₁ s₂ t t₁ t₂}
@@ -47,12 +47,12 @@ theorem mem_sigma {a : Σi, α i} : a ∈ s.Sigma t ↔ a.1 ∈ s ∧ a.2 ∈ t 
   mem_sigma
 
 @[simp, norm_cast]
-theorem coe_sigma (s : Finsetₓ ι) (t : ∀ i, Finsetₓ (α i)) :
+theorem coe_sigma (s : Finset ι) (t : ∀ i, Finset (α i)) :
     (s.Sigma t : Set (Σi, α i)) = (s : Set ι).Sigma fun i => t i :=
   Set.ext fun _ => mem_sigma
 
 @[simp]
-theorem sigma_nonempty : (s.Sigma t).Nonempty ↔ ∃ i ∈ s, (t i).Nonempty := by simp [Finsetₓ.Nonempty]
+theorem sigma_nonempty : (s.Sigma t).Nonempty ↔ ∃ i ∈ s, (t i).Nonempty := by simp [Finset.Nonempty]
 
 @[simp]
 theorem sigma_eq_empty : s.Sigma t = ∅ ↔ ∀ i ∈ s, t i = ∅ := by
@@ -63,10 +63,10 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.S
   let ⟨hi, ha⟩ := mem_sigma.1 h
   mem_sigma.2 ⟨hs hi, ht i ha⟩
 
-theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finsetₓ ι) (t : ∀ i, Finsetₓ (α i)) :
+theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
     s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i := by
   ext ⟨x, y⟩
-  simp [And.left_comm]
+  simp [and_left_comm]
 
 variable (s t) (f : (Σi, α i) → β)
 
@@ -74,7 +74,7 @@ theorem sup_sigma [SemilatticeSup β] [OrderBot β] : (s.Sigma t).sup f = s.sup 
   refine' (sup_le _).antisymm (sup_le fun i hi => sup_le fun b hb => le_sup <| mem_sigma.2 ⟨hi, hb⟩)
   rintro ⟨i, b⟩ hb
   rw [mem_sigma] at hb
-  refine' le_transₓ _ (le_sup hb.1)
+  refine' le_trans _ (le_sup hb.1)
   convert le_sup hb.2
 
 theorem inf_sigma [SemilatticeInf β] [OrderTop β] : (s.Sigma t).inf f = s.inf fun i => (t i).inf fun b => f ⟨i, b⟩ :=
@@ -87,10 +87,10 @@ section SigmaLift
 variable {α β γ : ι → Type _} [DecidableEq ι]
 
 /-- Lifts maps `α i → β i → finset (γ i)` to a map `Σ i, α i → Σ i, β i → finset (Σ i, γ i)`. -/
-def sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)) (a : Sigma α) (b : Sigma β) : Finsetₓ (Sigma γ) :=
+def sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) : Finset (Sigma γ) :=
   dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).map <| Embedding.sigmaMk _) fun _ => ∅
 
-theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)) (a : Sigma α) (b : Sigma β) (x : Sigma γ) :
+theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) (x : Sigma γ) :
     x ∈ sigmaLift f a b ↔ ∃ (ha : a.1 = x.1)(hb : b.1 = x.1), x.2 ∈ f (ha.rec a.2) (hb.rec b.2) := by
   obtain ⟨⟨i, a⟩, j, b⟩ := a, b
   obtain rfl | h := Decidable.eq_or_ne i j
@@ -110,24 +110,24 @@ theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)) (a 
     exact h rfl
     
 
-theorem mk_mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)) (i : ι) (a : α i) (b : β i) (x : γ i) :
+theorem mk_mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (i : ι) (a : α i) (b : β i) (x : γ i) :
     (⟨i, x⟩ : Sigma γ) ∈ sigmaLift f ⟨i, a⟩ ⟨i, b⟩ ↔ x ∈ f a b := by
   rw [sigma_lift, dif_pos rfl, mem_map]
   refine' ⟨_, fun hx => ⟨_, hx, rfl⟩⟩
   rintro ⟨x, hx, _, rfl⟩
   exact hx
 
-theorem not_mem_sigma_lift_of_ne_left (f : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)) (a : Sigma α) (b : Sigma β) (x : Sigma γ)
+theorem not_mem_sigma_lift_of_ne_left (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) (x : Sigma γ)
     (h : a.1 ≠ x.1) : x ∉ sigmaLift f a b := by
   rw [mem_sigma_lift]
   exact fun H => h H.fst
 
-theorem not_mem_sigma_lift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)) {a : Sigma α} (b : Sigma β) {x : Sigma γ}
+theorem not_mem_sigma_lift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) {a : Sigma α} (b : Sigma β) {x : Sigma γ}
     (h : b.1 ≠ x.1) : x ∉ sigmaLift f a b := by
   rw [mem_sigma_lift]
   exact fun H => h H.snd.fst
 
-variable {f g : ∀ ⦃i⦄, α i → β i → Finsetₓ (γ i)} {a : Σi, α i} {b : Σi, β i}
+variable {f g : ∀ ⦃i⦄, α i → β i → Finset (γ i)} {a : Σi, α i} {b : Σi, β i}
 
 theorem sigma_lift_nonempty : (sigmaLift f a b).Nonempty ↔ ∃ h : a.1 = b.1, (f (h.rec a.2) b.2).Nonempty := by
   simp_rw [nonempty_iff_ne_empty]
@@ -138,7 +138,7 @@ theorem sigma_lift_nonempty : (sigmaLift f a b).Nonempty ↔ ∃ h : a.1 = b.1, 
 
 theorem sigma_lift_eq_empty : sigmaLift f a b = ∅ ↔ ∀ h : a.1 = b.1, f (h.rec a.2) b.2 = ∅ := by
   convert dite_eq_right_iff
-  exact forall_congr_eq fun h => propext map_eq_empty.symm
+  exact forall_congr fun h => propext map_eq_empty.symm
 
 theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σi, α i) (b : Σi, β i) :
     sigmaLift f a b ⊆ sigmaLift g a b := by
@@ -150,11 +150,11 @@ theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b �
 variable (f a b)
 
 theorem card_sigma_lift : (sigmaLift f a b).card = dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).card) fun _ => 0 := by
-  convert apply_diteₓ _ _ _ _
+  convert apply_dite _ _ _ _
   ext h
   exact (card_map _).symm
 
 end SigmaLift
 
-end Finsetₓ
+end Finset
 

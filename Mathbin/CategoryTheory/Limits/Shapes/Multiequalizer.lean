@@ -71,7 +71,7 @@ def Hom.comp : ∀ {A B C : WalkingMulticospan fst snd} (f : Hom A B) (g : Hom B
 instance : SmallCategory (WalkingMulticospan fst snd) where
   Hom := Hom
   id := Hom.id
-  comp := fun X Y Z => Hom.comp
+  comp X Y Z := Hom.comp
   id_comp' := by
     rintro (_ | _) (_ | _) (_ | _ | _)
     tidy
@@ -109,7 +109,7 @@ def Hom.comp : ∀ {A B C : WalkingMultispan fst snd} (f : Hom A B) (g : Hom B C
 instance : SmallCategory (WalkingMultispan fst snd) where
   Hom := Hom
   id := Hom.id
-  comp := fun X Y Z => Hom.comp
+  comp X Y Z := Hom.comp
   id_comp' := by
     rintro (_ | _) (_ | _) (_ | _ | _)
     tidy
@@ -148,11 +148,11 @@ variable {C : Type u} [Category.{v} C] (I : MulticospanIndex C)
 
 /-- The multicospan associated to `I : multicospan_index`. -/
 def multicospan : WalkingMulticospan I.fstTo I.sndTo ⥤ C where
-  obj := fun x =>
+  obj x :=
     match x with
     | walking_multicospan.left a => I.left a
     | walking_multicospan.right b => I.right b
-  map := fun x y f =>
+  map x y f :=
     match x, y, f with
     | _, _, walking_multicospan.hom.id x => 𝟙 _
     | _, _, walking_multicospan.hom.fst b => I.fst _
@@ -211,11 +211,11 @@ variable {C : Type u} [Category.{v} C] (I : MultispanIndex C)
 
 /-- The multispan associated to `I : multispan_index`. -/
 def multispan : WalkingMultispan I.fstFrom I.sndFrom ⥤ C where
-  obj := fun x =>
+  obj x :=
     match x with
     | walking_multispan.left a => I.left a
     | walking_multispan.right b => I.right b
-  map := fun x y f =>
+  map x y f :=
     match x, y, f with
     | _, _, walking_multispan.hom.id x => 𝟙 _
     | _, _, walking_multispan.hom.fst b => I.fst _
@@ -356,7 +356,7 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ (E : Multifo
 
 variable [HasProduct I.left] [HasProduct I.right]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
 theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by
   ext
@@ -438,7 +438,7 @@ attribute [local tidy] tactic.case_bash
 @[simps]
 noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap where
   obj := Multifork.toPiFork
-  map := fun K₁ K₂ f =>
+  map K₁ K₂ f :=
     { Hom := f.Hom,
       w' := by
         rintro (_ | _)
@@ -456,7 +456,7 @@ noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap w
 @[simps]
 noncomputable def ofPiForkFunctor : Fork I.fstPiMap I.sndPiMap ⥤ Multifork I where
   obj := Multifork.ofPiFork I
-  map := fun K₁ K₂ f => { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
+  map K₁ K₂ f := { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
 
 /-- The category of multiforks is equivalent to the category of forks over `∏ I.left ⇉ ∏ I.right`.
 It then follows from `category_theory.is_limit_of_preserves_cone_terminal` (or `reflects`) that it
@@ -560,7 +560,7 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ (E : Mul
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
 theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by
   ext
@@ -639,13 +639,13 @@ attribute [local tidy] tactic.case_bash
 @[simps]
 noncomputable def toSigmaCoforkFunctor : Multicofork I ⥤ Cofork I.fstSigmaMap I.sndSigmaMap where
   obj := Multicofork.toSigmaCofork
-  map := fun K₁ K₂ f => { Hom := f.Hom }
+  map K₁ K₂ f := { Hom := f.Hom }
 
 /-- `multicofork.of_sigma_cofork` is functorial. -/
 @[simps]
 noncomputable def ofSigmaCoforkFunctor : Cofork I.fstSigmaMap I.sndSigmaMap ⥤ Multicofork I where
   obj := Multicofork.ofSigmaCofork I
-  map := fun K₁ K₂ f => { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
+  map K₁ K₂ f := { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
 
 /-- The category of multicoforks is equivalent to the category of coforks over `∐ I.left ⇉ ∐ I.right`.
 It then follows from `category_theory.is_colimit_of_preserves_cocone_initial` (or `reflects`) that

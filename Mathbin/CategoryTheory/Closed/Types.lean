@@ -40,13 +40,13 @@ instance : HasFiniteProducts (Type v₁) :=
 
 instance :
     CartesianClosed
-      (Type v₁) where closed' := fun X => { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
+      (Type v₁) where closed' X := { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
 
 instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u₁) :=
   has_finite_products_of_has_products.{u₁} _
 
 instance {C : Type v₁} [SmallCategory C] :
-    CartesianClosed (C ⥤ Type v₁) where closed' := fun F =>
+    CartesianClosed (C ⥤ Type v₁) where closed' F :=
     { isAdj := by
         letI := functor_category.prod_preserves_colimits F
         apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }

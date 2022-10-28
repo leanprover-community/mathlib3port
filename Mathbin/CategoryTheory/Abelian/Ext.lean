@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 -/
-import Mathbin.Algebra.Category.Group.Basic
-import Mathbin.Algebra.Category.Module.Abelian
+import Mathbin.Algebra.Category.GroupCat.Basic
+import Mathbin.Algebra.Category.ModuleCat.Abelian
 import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Linear.Yoneda
 import Mathbin.CategoryTheory.Abelian.Opposite
@@ -31,7 +31,7 @@ noncomputable section
 
 open CategoryTheory
 
-variable (R : Type _) [Ringₓ R] (C : Type _) [Category C] [Abelian C] [Linear R C] [EnoughProjectives C]
+variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C] [EnoughProjectives C]
 
 /-- `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).

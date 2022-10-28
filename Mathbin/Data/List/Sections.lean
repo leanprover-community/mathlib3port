@@ -27,7 +27,7 @@ theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ Forall₂ (
       
     simp only [sections, bind_eq_bind, mem_bind, mem_map] at h
     rcases h with ⟨_, _, _, _, rfl⟩
-    simp only [*, forall₂_cons, true_andₓ]
+    simp only [*, forall₂_cons, true_and_iff]
     
   · induction' h with a l f L al fL fs
     · exact Or.inl rfl

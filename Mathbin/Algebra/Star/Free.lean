@@ -39,14 +39,14 @@ end FreeMonoid
 
 namespace FreeAlgebra
 
-variable {R : Type _} [CommSemiringₓ R] {X : Type _}
+variable {R : Type _} [CommSemiring R] {X : Type _}
 
 /-- The star ring formed by reversing the elements of products -/
 instance : StarRing (FreeAlgebra R X) where
   star := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R)
-  star_involutive := fun x => by
+  star_involutive x := by
     unfold HasStar.star
-    simp only [Function.comp_applyₓ]
+    simp only [Function.comp_apply]
     refine' FreeAlgebra.induction R X _ _ _ _ x
     · intros
       simp only [AlgHom.commutes, MulOpposite.algebra_map_apply, MulOpposite.unop_op]
@@ -60,8 +60,8 @@ instance : StarRing (FreeAlgebra R X) where
     · intros
       simp only [*, map_add, MulOpposite.unop_add]
       
-  star_mul := fun a b => by simp only [Function.comp_app, map_mul, MulOpposite.unop_mul]
-  star_add := fun a b => by simp only [Function.comp_app, map_add, MulOpposite.unop_add]
+  star_mul a b := by simp only [Function.comp_app, map_mul, MulOpposite.unop_mul]
+  star_add a b := by simp only [Function.comp_app, map_add, MulOpposite.unop_add]
 
 @[simp]
 theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, HasStar.star]

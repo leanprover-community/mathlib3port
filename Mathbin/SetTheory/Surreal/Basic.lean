@@ -90,7 +90,7 @@ theorem move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.m
 
 end Numeric
 
-@[elabAsElim]
+@[elab_as_elim]
 theorem numeric_rec {C : Pgame → Prop}
     (H :
       ∀ (l r) (L : l → Pgame) (R : r → Pgame),
@@ -121,9 +121,9 @@ theorem lf_asymm {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → �
   rintro (⟨i, h₁⟩ | ⟨j, h₁⟩) (⟨i, h₂⟩ | ⟨j, h₂⟩)
   · exact IHxl _ _ (oyl _) (h₁.move_left_lf _) (h₂.move_left_lf _)
     
-  · exact (le_transₓ h₂ h₁).not_gf (lf_of_lt (hy _ _))
+  · exact (le_trans h₂ h₁).not_gf (lf_of_lt (hy _ _))
     
-  · exact (le_transₓ h₁ h₂).not_gf (lf_of_lt (hx _ _))
+  · exact (le_trans h₁ h₂).not_gf (lf_of_lt (hx _ _))
     
   · exact IHxr _ _ (oyr _) (h₁.lf_move_right _) (h₂.lf_move_right _)
     
@@ -141,12 +141,12 @@ alias lt_of_lf ← lf.lt
 theorem lf_iff_lt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y ↔ x < y :=
   ⟨fun h => h.lt ox oy, lf_of_lt⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 /-- Definition of `x ≤ y` on numeric pre-games, in terms of `<` -/
 theorem le_iff_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x ≤ y ↔ (∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j := by
-  refine' le_iff_forall_lf.trans (and_congrₓ _ _) <;>
-    refine' forall_congrₓ fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
+  refine' le_iff_forall_lf.trans (and_congr _ _) <;>
+    refine' forall_congr fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
 
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
 theorem lt_iff_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
@@ -156,7 +156,7 @@ theorem lt_of_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     ((∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y) → x < y :=
   (lt_iff_exists_le ox oy).2
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 /-- The definition of `x < y` on numeric pre-games, in terms of `<` two moves later. -/
 theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔
@@ -164,10 +164,10 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
         ∃ j, (∀ i, (x.moveRight j).moveLeft i < y) ∧ ∀ j', x.moveRight j < y.moveRight j' :=
   by
   rw [← lf_iff_lt ox oy, lf_def]
-  refine' or_congrₓ _ _ <;>
+  refine' or_congr _ _ <;>
     refine' exists_congr fun x_1 => _ <;>
-      refine' and_congrₓ _ _ <;>
-        refine' forall_congrₓ fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
+      refine' and_congr _ _ <;>
+        refine' forall_congr fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
 
 theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>
   not_lf.2 ((lf_of_fuzzy h).le ox oy) h.2
@@ -263,7 +263,7 @@ open Pgame
 by the equivalence relation `x ≈ y ↔ x ≤ y ∧ y ≤ x`. In the quotient,
 the order becomes a total order. -/
 def Surreal :=
-  Quotientₓ (Subtype.setoid Numeric)
+  Quotient (Subtype.setoid Numeric)
 
 namespace Surreal
 
@@ -283,7 +283,7 @@ instance : Inhabited Surreal :=
 /-- Lift an equivalence-respecting function on pre-games to surreals. -/
 def lift {α} (f : ∀ x, Numeric x → α) (H : ∀ {x y} (hx : Numeric x) (hy : Numeric y), x.Equiv y → f x hx = f y hy) :
     Surreal → α :=
-  Quotientₓ.lift (fun x : { x // Numeric x } => f x.1 x.2) fun x y => H x.2 y.2
+  Quotient.lift (fun x : { x // Numeric x } => f x.1 x.2) fun x y => H x.2 y.2
 
 /-- Lift a binary equivalence-respecting function on pre-games to surreals. -/
 def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
@@ -292,7 +292,7 @@ def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
         x₁.Equiv x₂ → y₁.Equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
     Surreal → Surreal → α :=
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ => H _ _ _ _ equiv_rfl) fun x₁ x₂ ox₁ ox₂ h =>
-    funext <| Quotientₓ.ind fun ⟨y, oy⟩ => H _ _ _ _ h equiv_rfl
+    funext <| Quotient.ind fun ⟨y, oy⟩ => H _ _ _ _ h equiv_rfl
 
 instance : LE Surreal :=
   ⟨lift₂ (fun x y _ _ => x ≤ y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (le_congr hx hy)⟩
@@ -304,46 +304,46 @@ instance : LT Surreal :=
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 instance : Add Surreal :=
   ⟨Surreal.lift₂ (fun (x y : Pgame) ox oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
-      Quotientₓ.sound (add_congr hx hy)⟩
+      Quotient.sound (add_congr hx hy)⟩
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
 the negation of `{L | R}` is `{-R | -L}`. -/
 instance : Neg Surreal :=
-  ⟨Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (neg_equiv_neg_iff.2 a)⟩
+  ⟨Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a => Quotient.sound (neg_equiv_neg_iff.2 a)⟩
 
 instance : OrderedAddCommGroup Surreal where
   add := (· + ·)
   add_assoc := by
     rintro ⟨_⟩ ⟨_⟩ ⟨_⟩
-    exact Quotientₓ.sound add_assoc_equiv
+    exact Quotient.sound add_assoc_equiv
   zero := 0
   zero_add := by
     rintro ⟨_⟩
-    exact Quotientₓ.sound (zero_add_equiv a)
+    exact Quotient.sound (zero_add_equiv a)
   add_zero := by
     rintro ⟨_⟩
-    exact Quotientₓ.sound (add_zero_equiv a)
+    exact Quotient.sound (add_zero_equiv a)
   neg := Neg.neg
   add_left_neg := by
     rintro ⟨_⟩
-    exact Quotientₓ.sound (add_left_neg_equiv a)
+    exact Quotient.sound (add_left_neg_equiv a)
   add_comm := by
     rintro ⟨_⟩ ⟨_⟩
-    exact Quotientₓ.sound add_comm_equiv
+    exact Quotient.sound add_comm_equiv
   le := (· ≤ ·)
   lt := (· < ·)
   le_refl := by
     rintro ⟨_⟩
-    apply @le_rflₓ Pgame
+    apply @le_rfl Pgame
   le_trans := by
     rintro ⟨_⟩ ⟨_⟩ ⟨_⟩
-    apply @le_transₓ Pgame
+    apply @le_trans Pgame
   lt_iff_le_not_le := by
     rintro ⟨_, ox⟩ ⟨_, oy⟩
-    apply @lt_iff_le_not_leₓ Pgame
+    apply @lt_iff_le_not_le Pgame
   le_antisymm := by
     rintro ⟨_⟩ ⟨_⟩ h₁ h₂
-    exact Quotientₓ.sound ⟨h₁, h₂⟩
+    exact Quotient.sound ⟨h₁, h₂⟩
   add_le_add_left := by
     rintro ⟨_⟩ ⟨_⟩ hx ⟨_⟩
     exact @add_le_add_left Pgame _ _ _ _ _ hx _
@@ -354,8 +354,8 @@ noncomputable instance : LinearOrderedAddCommGroup Surreal :=
       rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> classical <;> exact or_iff_not_imp_left.2 fun h => (Pgame.not_le.1 h).le oy ox,
     decidableLe := Classical.decRel _ }
 
-instance : AddMonoidWithOneₓ Surreal :=
-  AddMonoidWithOneₓ.unary
+instance : AddMonoidWithOne Surreal :=
+  AddMonoidWithOne.unary
 
 /-- Casts a `surreal` number into a `game`. -/
 def toGame : Surreal →+o Game where
@@ -387,8 +387,8 @@ namespace Ordinal
 
 /-- Converts an ordinal into the corresponding surreal. -/
 noncomputable def toSurreal : Ordinal ↪o Surreal where
-  toFun := fun o => mk _ (numeric_to_pgame o)
-  inj' := fun a b h => to_pgame_equiv_iff.1 (Quotientₓ.exact h)
+  toFun o := mk _ (numeric_to_pgame o)
+  inj' a b h := to_pgame_equiv_iff.1 (Quotient.exact h)
   map_rel_iff' := @to_pgame_le_iff
 
 end Ordinal

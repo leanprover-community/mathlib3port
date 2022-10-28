@@ -21,7 +21,7 @@ example of a proof needing to construct a sequence by induction in the middle of
 
 open Classical TopologicalSpace BigOperators
 
-open Filter Finsetₓ
+open Filter Finset
 
 -- mathport name: exprd
 local notation "d" => dist
@@ -31,7 +31,7 @@ theorem pos_div_pow_pos {α : Type _} [LinearOrderedSemifield α] {a b : α} (ha
     0 < a / b ^ k :=
   div_pos ha (pow_pos hb k)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε) {ϕ : X → ℝ}
     (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
     ∃ ε' > 0, ∃ x' : X, ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' := by
@@ -63,9 +63,9 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- Key properties of u, to be proven by induction
   have key : ∀ n, d (u n) (u (n + 1)) ≤ ε / 2 ^ n ∧ 2 * ϕ (u n) < ϕ (u (n + 1)) := by
     intro n
-    induction' n using Nat.case_strong_induction_onₓ with n IH
+    induction' n using Nat.case_strong_induction_on with n IH
     · specialize hu 0
-      simpa [hu0, mul_nonneg_iff, zero_le_one, ε_pos.le, le_reflₓ] using hu
+      simpa [hu0, mul_nonneg_iff, zero_le_one, ε_pos.le, le_refl] using hu
       
     have A : d (u (n + 1)) x ≤ 2 * ε := by
       rw [dist_comm]
@@ -78,7 +78,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
           congr with i
           field_simp
         _ = (∑ i in r, (1 / 2) ^ i) * ε := finset.sum_mul.symm
-        _ ≤ 2 * ε := mul_le_mul_of_nonneg_right (sum_geometric_two_le _) (le_of_ltₓ ε_pos)
+        _ ≤ 2 * ε := mul_le_mul_of_nonneg_right (sum_geometric_two_le _) (le_of_lt ε_pos)
         
     have B : 2 ^ (n + 1) * ϕ x ≤ ϕ (u (n + 1)) := by
       refine' @geom_le (ϕ ∘ u) _ zero_le_two (n + 1) fun m hm => _
@@ -88,14 +88,14 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   clear hu key
   -- Hence u is Cauchy
   have cauchy_u : CauchySeq u := by
-    refine' cauchy_seq_of_le_geometric _ ε one_half_lt_one fun n => _
+    refine' cauchySeqOfLeGeometric _ ε one_half_lt_one fun n => _
     simpa only [one_div, inv_pow] using key₁ n
   -- So u converges to some y
   obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
   exact CompleteSpace.complete cauchy_u
   -- And ϕ ∘ u goes to +∞
   have lim_top : tendsto (ϕ ∘ u) at_top at_top := by
-    let v := fun n => (ϕ ∘ u) (n + 1)
+    let v n := (ϕ ∘ u) (n + 1)
     suffices tendsto v at_top at_top by rwa [tendsto_add_at_top_iff_nat] at this
     have hv₀ : 0 < v 0 := by
       have : 0 ≤ ϕ (u 0) := nonneg x
@@ -108,5 +108,5 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- But ϕ ∘ u also needs to go to ϕ(y)
   have lim : tendsto (ϕ ∘ u) at_top (𝓝 (ϕ y)) := tendsto.comp cont.continuous_at limy
   -- So we have our contradiction!
-  exact not_tendsto_at_top_of_tendsto_nhds limₓ lim_top
+  exact not_tendsto_at_top_of_tendsto_nhds lim lim_top
 

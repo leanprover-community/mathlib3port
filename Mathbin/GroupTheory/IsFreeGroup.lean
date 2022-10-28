@@ -32,9 +32,9 @@ For the explicit construction of free groups, see `group_theory/free_group`.
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
 /-- `is_free_group G` means that `G` isomorphic to a free group. -/
-class IsFreeGroup (G : Type u) [Groupₓ G] where
+class IsFreeGroup (G : Type u) [Group G] where
   Generators : Type u
   MulEquiv : FreeGroup generators ≃* G
 
@@ -44,7 +44,7 @@ instance (X : Type _) : IsFreeGroup (FreeGroup X) where
 
 namespace IsFreeGroup
 
-variable (G : Type _) [Groupₓ G] [IsFreeGroup G]
+variable (G : Type _) [Group G] [IsFreeGroup G]
 
 /-- Any free group is isomorphic to "the" free group. -/
 @[simps]
@@ -61,7 +61,7 @@ def of : Generators G → G :=
 theorem of_eq_free_group_of {A : Type u} : @of (FreeGroup A) _ _ = FreeGroup.of :=
   rfl
 
-variable {H : Type _} [Groupₓ H]
+variable {H : Type _} [Group H]
 
 /-- The equivalence between functions on the generators and group homomorphisms from a free group
 given by those generators. -/
@@ -101,8 +101,8 @@ theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a
 
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
-def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H : Type u} [Groupₓ H], (X → H) ≃ (G →* H))
-    (lift_of : ∀ {H : Type u} [Groupₓ H], ∀ (f : X → H) (a), lift f (of a) = f a) : IsFreeGroup G where
+def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G) (lift : ∀ {H : Type u} [Group H], (X → H) ≃ (G →* H))
+    (lift_of : ∀ {H : Type u} [Group H], ∀ (f : X → H) (a), lift f (of a) = f a) : IsFreeGroup G where
   Generators := X
   MulEquiv :=
     MonoidHom.toMulEquiv (FreeGroup.lift of) (lift FreeGroup.of)
@@ -111,7 +111,7 @@ def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H 
         intro x
         simp only [MonoidHom.coe_comp, Function.comp_app, MonoidHom.id_apply, FreeGroup.lift.of, lift_of])
       (by
-        let lift_symm_of : ∀ {H : Type u} [Groupₓ H], ∀ (f : G →* H) (a), lift.symm f a = f (of a) := by
+        let lift_symm_of : ∀ {H : Type u} [Group H], ∀ (f : G →* H) (a), lift.symm f a = f (of a) := by
           intro H _ f a <;> simp [← lift_of (lift.symm f)]
         apply lift.symm.injective
         ext x
@@ -119,17 +119,17 @@ def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H 
 
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.unique_lift`.  -/
-noncomputable def ofUniqueLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G)
-    (h : ∀ {H : Type u} [Groupₓ H] (f : X → H), ∃! F : G →* H, ∀ a, F (of a) = f a) : IsFreeGroup G :=
-  let lift {H : Type u} [Groupₓ H] : (X → H) ≃ (G →* H) :=
+noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G)
+    (h : ∀ {H : Type u} [Group H] (f : X → H), ∃! F : G →* H, ∀ a, F (of a) = f a) : IsFreeGroup G :=
+  let lift {H : Type u} [Group H] : (X → H) ≃ (G →* H) :=
     { toFun := fun f => Classical.choose (h f), invFun := fun F => F ∘ of,
       left_inv := fun f => funext (Classical.choose_spec (h f)).left,
       right_inv := fun F => ((Classical.choose_spec (h (F ∘ of))).right F fun _ => rfl).symm }
-  let lift_of {H : Type u} [Groupₓ H] (f : X → H) (a : X) : lift f (of a) = f a := congr_fun (lift.symm_apply_apply f) a
+  let lift_of {H : Type u} [Group H] (f : X → H) (a : X) : lift f (of a) = f a := congr_fun (lift.symm_apply_apply f) a
   ofLift X of @lift @lift_of
 
 /-- Being a free group transports across group isomorphisms. -/
-def ofMulEquiv {H : Type _} [Groupₓ H] (h : G ≃* H) : IsFreeGroup H where
+def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) : IsFreeGroup H where
   Generators := Generators G
   MulEquiv := (mulEquiv G).trans h
 

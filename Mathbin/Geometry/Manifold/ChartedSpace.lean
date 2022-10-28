@@ -194,8 +194,8 @@ theorem StructureGroupoid.eq_on_source (G : StructureGroupoid H) {e e' : LocalHo
   G.eq_on_source' e e' he h
 
 /-- Partial order on the set of groupoids, given by inclusion of the members of the groupoid -/
-instance StructureGroupoid.partialOrder : PartialOrderₓ (StructureGroupoid H) :=
-  PartialOrderₓ.lift StructureGroupoid.Members fun a b h => by
+instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
+  PartialOrder.lift StructureGroupoid.Members fun a b h => by
     cases a
     cases b
     dsimp at h
@@ -209,7 +209,7 @@ theorem StructureGroupoid.le_iff {G₁ G₂ : StructureGroupoid H} : G₁ ≤ G�
 necessary from the definition) -/
 def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H where
   Members := {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.Source = ∅ }
-  trans' := fun e e' he he' => by
+  trans' e e' he he' := by
     cases he <;> simp at he he'
     · simpa only [he, refl_trans]
       
@@ -218,7 +218,7 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H where
       have : e ≫ₕ e' ∈ { e : LocalHomeomorph H H | e.Source = ∅ } := disjoint_iff.1 this
       exact (mem_union _ _ _).2 (Or.inr this)
       
-  symm' := fun e he => by
+  symm' e he := by
     cases' (mem_union _ _ _).1 he with E E
     · simp [mem_singleton_iff.mp E]
       
@@ -226,7 +226,7 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H where
       simpa only [e.to_local_equiv.image_source_eq_target.symm, mfld_simps] using E
       
   id_mem' := mem_union_left _ rfl
-  locality' := fun e he => by
+  locality' e he := by
     cases' e.source.eq_empty_or_nonempty with h h
     · right
       exact h
@@ -256,11 +256,11 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H where
         rwa [hs] at x's
         
       
-  eq_on_source' := fun e e' he he'e => by
+  eq_on_source' e e' he he'e := by
     cases he
     · left
       have : e = e' := by
-        refine' eq_of_eq_on_source_univ (Setoidₓ.symm he'e) _ _ <;> rw [Set.mem_singleton_iff.1 he] <;> rfl
+        refine' eq_of_eq_on_source_univ (Setoid.symm he'e) _ _ <;> rw [Set.mem_singleton_iff.1 he] <;> rfl
       rwa [← this]
       
     · right
@@ -305,7 +305,7 @@ structure Pregroupoid (H : Type _) [TopologicalSpace H] where
 from a pregroupoid asserting that this property is stable under composition. -/
 def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H where
   Members := { e : LocalHomeomorph H H | PG.property e e.Source ∧ PG.property e.symm e.Target }
-  trans' := fun e e' he he' => by
+  trans' e e' he he' := by
     constructor
     · apply PG.comp he.1 he'.1 e.open_source e'.open_source
       apply e.continuous_to_fun.preimage_open_of_open e.open_source e'.open_source
@@ -313,9 +313,9 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H where
     · apply PG.comp he'.2 he.2 e'.open_target e.open_target
       apply e'.continuous_inv_fun.preimage_open_of_open e'.open_target e.open_target
       
-  symm' := fun e he => ⟨he.2, he.1⟩
+  symm' e he := ⟨he.2, he.1⟩
   id_mem' := ⟨PG.id_mem, PG.id_mem⟩
-  locality' := fun e he => by
+  locality' e he := by
     constructor
     · apply PG.locality e.open_source fun x xu => _
       rcases he x xu with ⟨s, s_open, xs, hs⟩
@@ -335,7 +335,7 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H where
         rw [s_open.interior_eq]
         
       
-  eq_on_source' := fun e e' he ee' => by
+  eq_on_source' e e' he ee' := by
     constructor
     · apply PG.congr e'.open_source ee'.2
       simp only [ee'.1, he.1]
@@ -365,11 +365,11 @@ theorem mem_pregroupoid_of_eq_on_source (PG : Pregroupoid H) {e e' : LocalHomeom
 /-- The pregroupoid of all local maps on a topological space `H` -/
 @[reducible]
 def continuousPregroupoid (H : Type _) [TopologicalSpace H] : Pregroupoid H where
-  property := fun f s => True
-  comp := fun f g u v hf hg hu hv huv => trivialₓ
-  id_mem := trivialₓ
-  locality := fun f u u_open h => trivialₓ
-  congr := fun f g u u_open hcongr hf => trivialₓ
+  property f s := True
+  comp f g u v hf hg hu hv huv := trivial
+  id_mem := trivial
+  locality f u u_open h := trivial
+  congr f g u u_open hcongr hf := trivial
 
 instance (H : Type _) [TopologicalSpace H] : Inhabited (Pregroupoid H) :=
   ⟨continuousPregroupoid H⟩
@@ -381,7 +381,7 @@ def continuousGroupoid (H : Type _) [TopologicalSpace H] : StructureGroupoid H :
 /-- Every structure groupoid is contained in the groupoid of all local homeomorphisms -/
 instance : OrderTop (StructureGroupoid H) where
   top := continuousGroupoid H
-  le_top := fun u f hf => by constructor <;> exact by decide
+  le_top u f hf := by constructor <;> exact by decide
 
 /-- A groupoid is closed under restriction if it contains all restrictions of its element local
 homeomorphisms to open subsets of the source. -/
@@ -420,7 +420,7 @@ def idRestrGroupoid : StructureGroupoid H where
     simpa only [mfld_simps] using LocalHomeomorph.EqOnSource.eq_on hes' hes
   eq_on_source' := by
     rintro e e' ⟨s, hs, hse⟩ hee'
-    exact ⟨s, hs, Setoidₓ.trans hee' hse⟩
+    exact ⟨s, hs, Setoid.trans hee' hse⟩
 
 theorem id_restr_groupoid_mem {s : Set H} (hs : IsOpen s) : ofSet s hs ∈ @idRestrGroupoid H _ :=
   ⟨s, hs, by rfl⟩
@@ -430,7 +430,7 @@ instance closed_under_restriction_id_restr_groupoid : ClosedUnderRestriction (@i
   ⟨by
     rintro e ⟨s', hs', he⟩ s hs
     use s' ∩ s, IsOpen.inter hs' hs
-    refine' Setoidₓ.trans (LocalHomeomorph.EqOnSource.restr he s) _
+    refine' Setoid.trans (LocalHomeomorph.EqOnSource.restr he s) _
     exact ⟨by simp only [hs.interior_eq, mfld_simps], by simp only [mfld_simps]⟩⟩
 
 /-- A groupoid is closed under restriction if and only if it contains the trivial restriction-closed
@@ -466,10 +466,10 @@ end Groupoid
 /-! ### Charted spaces -/
 
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`Atlas] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`chartAt] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Atlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`chartAt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] [] -/
 /-- A charted space is a topological space endowed with an atlas, i.e., a set of local
 homeomorphisms taking value in a model space `H`, called charts, such that the domains of the charts
 cover the whole space. We express the covering property by chosing for each `x` a member
@@ -479,6 +479,7 @@ The model space is written as an explicit parameter as there can be several mode
 given topological space. For instance, a complex manifold (modelled over `ℂ^n`) will also be seen
 sometimes as a real manifold over `ℝ^(2n)`.
 -/
+@[ext]
 class ChartedSpace (H : Type _) [TopologicalSpace H] (M : Type _) [TopologicalSpace M] where
   Atlas : Set (LocalHomeomorph M H)
   chartAt : M → LocalHomeomorph M H
@@ -494,9 +495,9 @@ section ChartedSpace
 /-- Any space is a charted_space modelled over itself, by just using the identity chart -/
 instance chartedSpaceSelf (H : Type _) [TopologicalSpace H] : ChartedSpace H H where
   Atlas := {LocalHomeomorph.refl H}
-  chartAt := fun x => LocalHomeomorph.refl H
-  mem_chart_source := fun x => mem_univ x
-  chart_mem_atlas := fun x => mem_singleton _
+  chartAt x := LocalHomeomorph.refl H
+  mem_chart_source x := mem_univ x
+  chart_mem_atlas x := mem_singleton _
 
 /-- In the trivial charted_space structure of a space modelled over itself through the identity, the
 atlas members are just the identity -/
@@ -536,6 +537,9 @@ theorem coe_achart (x : M) : (achart H x : LocalHomeomorph M H) = chartAt H x :=
 @[simp, mfld_simps]
 theorem achart_val (x : M) : (achart H x).1 = chartAt H x :=
   rfl
+
+theorem mem_achart_source (x : M) : x ∈ (achart H x).1.Source :=
+  mem_chart_source H x
 
 open TopologicalSpace
 
@@ -625,7 +629,7 @@ instance modelProdInhabited [Inhabited H] [Inhabited H'] : Inhabited (ModelProd 
 instance (H : Type _) [TopologicalSpace H] (H' : Type _) [TopologicalSpace H'] : TopologicalSpace (ModelProd H H') :=
   Prod.topologicalSpace
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- Next lemma shows up often when dealing with derivatives, register it as simp.
 @[simp, mfld_simps]
 theorem model_prod_range_prod_id {H : Type _} {H' : Type _} {α : Type _} (f : H → α) :
@@ -641,7 +645,7 @@ instance modelPiInhabited [∀ i, Inhabited (Hi i)] : Inhabited (ModelPi Hi) :=
   Pi.inhabited _
 
 instance [∀ i, TopologicalSpace (Hi i)] : TopologicalSpace (ModelPi Hi) :=
-  Pi.topologicalSpace
+  PiCat.topologicalSpace
 
 end
 
@@ -652,8 +656,8 @@ instance prodChartedSpace (H : Type _) [TopologicalSpace H] (M : Type _) [Topolo
     ChartedSpace (ModelProd H H') (M × M') where
   Atlas := Image2 LocalHomeomorph.prod (Atlas H M) (Atlas H' M')
   chartAt := fun x : M × M' => (chartAt H x.1).Prod (chartAt H' x.2)
-  mem_chart_source := fun x => ⟨mem_chart_source _ _, mem_chart_source _ _⟩
-  chart_mem_atlas := fun x => mem_image2_of_mem (chart_mem_atlas _ _) (chart_mem_atlas _ _)
+  mem_chart_source x := ⟨mem_chart_source _ _, mem_chart_source _ _⟩
+  chart_mem_atlas x := mem_image2_of_mem (chart_mem_atlas _ _) (chart_mem_atlas _ _)
 
 section prodChartedSpace
 
@@ -664,19 +668,28 @@ variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M] [Topologic
 theorem prod_charted_space_chart_at : chartAt (ModelProd H H') x = (chartAt H x.fst).Prod (chartAt H' x.snd) :=
   rfl
 
+theorem charted_space_self_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H × H') := by
+  ext1
+  · simp [prodChartedSpace, atlas]
+    
+  · ext1
+    simp [chart_at_self_eq]
+    rfl
+    
+
 end prodChartedSpace
 
 /-- The product of a finite family of charted spaces is naturally a charted space, with the
 canonical construction of the atlas of finite product maps. -/
-instance piChartedSpace {ι : Type _} [Fintypeₓ ι] (H : ι → Type _) [∀ i, TopologicalSpace (H i)] (M : ι → Type _)
+instance piChartedSpace {ι : Type _} [Fintype ι] (H : ι → Type _) [∀ i, TopologicalSpace (H i)] (M : ι → Type _)
     [∀ i, TopologicalSpace (M i)] [∀ i, ChartedSpace (H i) (M i)] : ChartedSpace (ModelPi H) (∀ i, M i) where
   Atlas := LocalHomeomorph.pi '' (Set.Pi Univ) fun i => Atlas (H i) (M i)
-  chartAt := fun f => LocalHomeomorph.pi fun i => chartAt (H i) (f i)
-  mem_chart_source := fun f i hi => mem_chart_source (H i) (f i)
-  chart_mem_atlas := fun f => (mem_image_of_mem _) fun i hi => chart_mem_atlas (H i) (f i)
+  chartAt f := LocalHomeomorph.pi fun i => chartAt (H i) (f i)
+  mem_chart_source f i hi := mem_chart_source (H i) (f i)
+  chart_mem_atlas f := (mem_image_of_mem _) fun i hi => chart_mem_atlas (H i) (f i)
 
 @[simp, mfld_simps]
-theorem pi_charted_space_chart_at {ι : Type _} [Fintypeₓ ι] (H : ι → Type _) [∀ i, TopologicalSpace (H i)]
+theorem pi_charted_space_chart_at {ι : Type _} [Fintype ι] (H : ι → Type _) [∀ i, TopologicalSpace (H i)]
     (M : ι → Type _) [∀ i, TopologicalSpace (M i)] [∀ i, ChartedSpace (H i) (M i)] (f : ∀ i, M i) :
     chartAt (ModelPi H) f = LocalHomeomorph.pi fun i => chartAt (H i) (f i) :=
   rfl
@@ -711,7 +724,7 @@ protected def toTopologicalSpace : TopologicalSpace M :=
 
 theorem open_source' (he : e ∈ c.Atlas) : @IsOpen M c.toTopologicalSpace e.Source := by
   apply TopologicalSpace.GenerateOpen.basic
-  simp only [exists_propₓ, mem_Union, mem_singleton_iff]
+  simp only [exists_prop, mem_Union, mem_singleton_iff]
   refine' ⟨e, he, univ, is_open_univ, _⟩
   simp only [Set.univ_inter, Set.preimage_univ]
 
@@ -731,13 +744,13 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
       intro s s_open
       rw [inter_comm]
       apply TopologicalSpace.GenerateOpen.basic
-      simp only [exists_propₓ, mem_Union, mem_singleton_iff]
+      simp only [exists_prop, mem_Union, mem_singleton_iff]
       exact ⟨e, he, ⟨s, s_open, rfl⟩⟩,
     continuous_inv_fun := by
       letI : TopologicalSpace M := c.to_topological_space
       apply continuous_on_open_of_generate_from (c.open_target he)
       intro t ht
-      simp only [exists_propₓ, mem_Union, mem_singleton_iff] at ht
+      simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
       rcases ht with ⟨e', e'_atlas, s, s_open, ts⟩
       rw [ts]
       let f := e.symm.trans e'
@@ -756,9 +769,9 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
 respect to the topology constructed from the atlas. -/
 def toChartedSpace : @ChartedSpace H _ M c.toTopologicalSpace where
   Atlas := ⋃ (e : LocalEquiv M H) (he : e ∈ c.Atlas), {c.LocalHomeomorph e he}
-  chartAt := fun x => c.LocalHomeomorph (c.chartAt x) (c.chart_mem_atlas x)
-  mem_chart_source := fun x => c.mem_chart_source x
-  chart_mem_atlas := fun x => by
+  chartAt x := c.LocalHomeomorph (c.chartAt x) (c.chart_mem_atlas x)
+  mem_chart_source x := c.mem_chart_source x
+  chart_mem_atlas x := by
     simp only [mem_Union, mem_singleton_iff]
     exact ⟨c.chart_at x, c.chart_mem_atlas x, rfl⟩
 
@@ -771,7 +784,7 @@ section HasGroupoid
 
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`compatible] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`compatible] [] -/
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
@@ -798,7 +811,7 @@ theorem has_groupoid_of_pregroupoid (PG : Pregroupoid H)
 
 /-- The trivial charted space structure on the model space is compatible with any groupoid -/
 instance has_groupoid_model_space (H : Type _) [TopologicalSpace H] (G : StructureGroupoid H) :
-    HasGroupoid H G where compatible := fun e e' he he' => by
+    HasGroupoid H G where compatible e e' he he' := by
     replace he : e ∈ atlas H H := he
     replace he' : e' ∈ atlas H H := he'
     rw [charted_space_self_atlas] at he he'
@@ -809,7 +822,7 @@ instance has_groupoid_continuous_groupoid : HasGroupoid M (continuousGroupoid H)
   ⟨by
     intro e e' he he'
     rw [continuousGroupoid, mem_groupoid_of_pregroupoid]
-    simp only [and_selfₓ]⟩
+    simp only [and_self_iff]⟩
 
 section MaximalAtlas
 
@@ -859,7 +872,7 @@ theorem StructureGroupoid.compatible_of_mem_maximal_atlas {e e' : LocalHomeomorp
       _ ≈ e.symm.restr s ≫ₕ e' := by simp [s, trans_of_set']
       _ ≈ (e.symm ≫ₕ e').restr s := by simp [restr_trans]
       
-  exact G.eq_on_source C (Setoidₓ.symm D)
+  exact G.eq_on_source C (Setoid.symm D)
 
 variable (G)
 
@@ -883,9 +896,9 @@ space `α`, then that local homeomorphism induces an `H`-charted space structure
 `open_embedding.singleton_charted_space`.) -/
 def singletonChartedSpace (h : e.Source = Set.Univ) : ChartedSpace H α where
   Atlas := {e}
-  chartAt := fun _ => e
-  mem_chart_source := fun _ => by simp only [h, mfld_simps]
-  chart_mem_atlas := fun _ => by tauto
+  chartAt _ := e
+  mem_chart_source _ := by simp only [h, mfld_simps]
+  chart_mem_atlas _ := by tauto
 
 @[simp, mfld_simps]
 theorem singleton_charted_space_chart_at_eq (h : e.Source = Set.Univ) {x : α} :
@@ -947,11 +960,11 @@ variable (s : Opens M)
 /-- An open subset of a charted space is naturally a charted space. -/
 instance : ChartedSpace H s where
   Atlas := ⋃ x : s, {@LocalHomeomorph.subtypeRestr _ _ _ _ (chartAt H x.1) s ⟨x⟩}
-  chartAt := fun x => @LocalHomeomorph.subtypeRestr _ _ _ _ (chartAt H x.1) s ⟨x⟩
-  mem_chart_source := fun x => by
+  chartAt x := @LocalHomeomorph.subtypeRestr _ _ _ _ (chartAt H x.1) s ⟨x⟩
+  mem_chart_source x := by
     simp only [mfld_simps]
     exact mem_chart_source H x.1
-  chart_mem_atlas := fun x => by
+  chart_mem_atlas x := by
     simp only [mem_Union, mem_singleton_iff]
     use x
 
@@ -1049,7 +1062,7 @@ def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') : 
           _ ≈ (c.symm ≫ₕ (f₁ ≫ₕ f₂) ≫ₕ c').restr s := by simp [eq_on_source.restr, trans_assoc]
           _ ≈ F₂ := by simp [F₂, feq]
           
-      have : F₂ ∈ G := G.eq_on_source A (Setoidₓ.symm this)
+      have : F₂ ∈ G := G.eq_on_source A (Setoid.symm this)
       exact this }
 
 end HasGroupoid

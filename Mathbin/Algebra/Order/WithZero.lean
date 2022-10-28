@@ -3,7 +3,8 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Group
+import Mathbin.Algebra.Order.Group.TypeTags
+import Mathbin.Algebra.Order.Monoid.WithZero
 
 /-!
 # Linearly ordered commutative groups and monoids with a zero element adjoined
@@ -62,23 +63,22 @@ def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedCommMonoidWithZero β :=
-  { LinearOrderₓ.lift f hf hsup hinf, hf.OrderedCommMonoid f one mul npow,
-    hf.CommMonoidWithZero f zero one mul npow with
+  { LinearOrder.lift f hf hsup hinf, hf.OrderedCommMonoid f one mul npow, hf.CommMonoidWithZero f zero one mul npow with
     zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
 
 @[simp]
-theorem zero_le' : 0 ≤ a := by simpa only [mul_zero, mul_oneₓ] using mul_le_mul_left' zero_le_one a
+theorem zero_le' : 0 ≤ a := by simpa only [mul_zero, mul_one] using mul_le_mul_left' zero_le_one a
 
 @[simp]
 theorem not_lt_zero' : ¬a < 0 :=
-  not_lt_of_leₓ zero_le'
+  not_lt_of_le zero_le'
 
 @[simp]
 theorem le_zero_iff : a ≤ 0 ↔ a = 0 :=
-  ⟨fun h => le_antisymmₓ h zero_le', fun h => h ▸ le_rflₓ⟩
+  ⟨fun h => le_antisymm h zero_le', fun h => h ▸ le_rfl⟩
 
 theorem zero_lt_iff : 0 < a ↔ a ≠ 0 :=
-  ⟨ne_of_gtₓ, fun h => lt_of_le_of_neₓ zero_le' h.symm⟩
+  ⟨ne_of_gt, fun h => lt_of_le_of_ne zero_le' h.symm⟩
 
 theorem ne_zero_of_lt (h : b < a) : a ≠ 0 := fun h1 => not_lt_zero' <| show b < 0 from h1 ▸ h
 
@@ -91,7 +91,7 @@ end LinearOrderedCommMonoid
 variable [LinearOrderedCommGroupWithZero α]
 
 theorem zero_lt_one₀ : (0 : α) < 1 :=
-  lt_of_le_of_neₓ zero_le_one zero_ne_one
+  lt_of_le_of_ne zero_le_one zero_ne_one
 
 -- TODO: Do we really need the following two?
 /-- Alias of `mul_le_one'` for unification. -/
@@ -122,10 +122,10 @@ theorem one_le_inv₀ (ha : a ≠ 0) : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
   @one_le_inv' _ _ _ _ <| Units.mk0 a ha
 
 theorem le_mul_inv_iff₀ (hc : c ≠ 0) : a ≤ b * c⁻¹ ↔ a * c ≤ b :=
-  ⟨fun h => inv_invₓ c ▸ mul_inv_le_of_le_mul h, le_mul_inv_of_mul_le hc⟩
+  ⟨fun h => inv_inv c ▸ mul_inv_le_of_le_mul h, le_mul_inv_of_mul_le hc⟩
 
 theorem mul_inv_le_iff₀ (hc : c ≠ 0) : a * c⁻¹ ≤ b ↔ a ≤ b * c :=
-  ⟨fun h => inv_invₓ c ▸ le_mul_inv_of_mul_le (inv_ne_zero hc) h, mul_inv_le_of_le_mul⟩
+  ⟨fun h => inv_inv c ▸ le_mul_inv_of_mul_le (inv_ne_zero hc) h, mul_inv_le_of_le_mul⟩
 
 theorem div_le_div₀ (a b c d : α) (hb : b ≠ 0) (hd : d ≠ 0) : a * b⁻¹ ≤ c * d⁻¹ ↔ a * d ≤ c * b :=
   if ha : a = 0 then by simp [ha]
@@ -157,7 +157,7 @@ theorem mul_lt_mul₀ (hab : a < b) (hcd : c < d) : a * c < b * d :=
 
 theorem mul_inv_lt_of_lt_mul₀ (h : x < y * z) : x * z⁻¹ < y := by
   contrapose! h
-  simpa only [inv_invₓ] using mul_inv_le_of_le_mul h
+  simpa only [inv_inv] using mul_inv_le_of_le_mul h
 
 theorem inv_mul_lt_of_lt_mul₀ (h : x < y * z) : y⁻¹ * x < z := by
   rw [mul_comm] at *
@@ -174,10 +174,10 @@ theorem inv_le_inv₀ (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ ≤ b⁻¹ ↔ b �
   show (Units.mk0 a ha)⁻¹ ≤ (Units.mk0 b hb)⁻¹ ↔ Units.mk0 b hb ≤ Units.mk0 a ha from inv_le_inv_iff
 
 theorem lt_of_mul_lt_mul_of_le₀ (h : a * b < c * d) (hc : 0 < c) (hh : c ≤ a) : b < d := by
-  have ha : a ≠ 0 := ne_of_gtₓ (lt_of_lt_of_leₓ hc hh)
-  simp_rw [← inv_le_inv₀ ha (ne_of_gtₓ hc)] at hh
-  have := mul_lt_mul_of_lt_of_le₀ hh (inv_ne_zero (ne_of_gtₓ hc)) h
-  simpa [inv_mul_cancel_left₀ ha, inv_mul_cancel_left₀ (ne_of_gtₓ hc)] using this
+  have ha : a ≠ 0 := ne_of_gt (lt_of_lt_of_le hc hh)
+  simp_rw [← inv_le_inv₀ ha (ne_of_gt hc)] at hh
+  have := mul_lt_mul_of_lt_of_le₀ hh (inv_ne_zero (ne_of_gt hc)) h
+  simpa [inv_mul_cancel_left₀ ha, inv_mul_cancel_left₀ (ne_of_gt hc)] using this
 
 theorem mul_le_mul_right₀ (hc : c ≠ 0) : a * c ≤ b * c ↔ a ≤ b :=
   ⟨le_of_le_mul_right hc, fun hab => mul_le_mul_right' hab _⟩
@@ -201,7 +201,7 @@ theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by rw [div
 Note that `order_iso.mul_left₀` refers to the `linear_ordered_field` version. -/
 @[simps (config := { simpRhs := true }) apply toEquiv]
 def OrderIso.mulLeft₀' {a : α} (ha : a ≠ 0) : α ≃o α :=
-  { Equivₓ.mulLeft₀ a ha with map_rel_iff' := fun x y => mul_le_mul_left₀ ha }
+  { Equiv.mulLeft₀ a ha with map_rel_iff' := fun x y => mul_le_mul_left₀ ha }
 
 theorem OrderIso.mul_left₀'_symm {a : α} (ha : a ≠ 0) :
     (OrderIso.mulLeft₀' ha).symm = OrderIso.mulLeft₀' (inv_ne_zero ha) := by
@@ -213,7 +213,7 @@ theorem OrderIso.mul_left₀'_symm {a : α} (ha : a ≠ 0) :
 Note that `order_iso.mul_right₀` refers to the `linear_ordered_field` version. -/
 @[simps (config := { simpRhs := true }) apply toEquiv]
 def OrderIso.mulRight₀' {a : α} (ha : a ≠ 0) : α ≃o α :=
-  { Equivₓ.mulRight₀ a ha with map_rel_iff' := fun _ _ => mul_le_mul_right₀ ha }
+  { Equiv.mulRight₀ a ha with map_rel_iff' := fun _ _ => mul_le_mul_right₀ ha }
 
 theorem OrderIso.mul_right₀'_symm {a : α} (ha : a ≠ 0) :
     (OrderIso.mulRight₀' ha).symm = OrderIso.mulRight₀' (inv_ne_zero ha) := by

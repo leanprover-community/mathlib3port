@@ -56,31 +56,31 @@ variable (α : Type _) {ι : Sort _} {κ : ι → Sort _}
 
 /-- A closure operator on the preorder `α` is a monotone function which is extensive (every `x`
 is less than its closure) and idempotent. -/
-structure ClosureOperator [Preorderₓ α] extends α →o α where
+structure ClosureOperator [Preorder α] extends α →o α where
   le_closure' : ∀ x, x ≤ to_fun x
   idempotent' : ∀ x, to_fun (to_fun x) = to_fun x
 
 namespace ClosureOperator
 
-instance [Preorderₓ α] : CoeFun (ClosureOperator α) fun _ => α → α :=
+instance [Preorder α] : CoeFun (ClosureOperator α) fun _ => α → α :=
   ⟨fun c => c.toFun⟩
 
 /-- See Note [custom simps projection] -/
-def Simps.apply [Preorderₓ α] (f : ClosureOperator α) : α → α :=
+def Simps.apply [Preorder α] (f : ClosureOperator α) : α → α :=
   f
 
 initialize_simps_projections ClosureOperator (to_order_hom_to_fun → apply, -toOrderHom)
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α]
+variable [PartialOrder α]
 
 /-- The identity function as a closure operator. -/
 @[simps]
 def id : ClosureOperator α where
   toOrderHom := OrderHom.id
-  le_closure' := fun _ => le_rflₓ
-  idempotent' := fun _ => rfl
+  le_closure' _ := le_rfl
+  idempotent' _ := rfl
 
 instance : Inhabited (ClosureOperator α) :=
   ⟨id α⟩
@@ -95,20 +95,20 @@ theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : �
 
 /-- Constructor for a closure operator using the weaker idempotency axiom: `f (f x) ≤ f x`. -/
 @[simps]
-def mk' (f : α → α) (hf₁ : Monotoneₓ f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) : ClosureOperator α where
+def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) : ClosureOperator α where
   toFun := f
   monotone' := hf₁
   le_closure' := hf₂
-  idempotent' := fun x => (hf₃ x).antisymm (hf₁ (hf₂ x))
+  idempotent' x := (hf₃ x).antisymm (hf₁ (hf₂ x))
 
 /-- Convenience constructor for a closure operator using the weaker minimality axiom:
 `x ≤ f y → f x ≤ f y`, which is sometimes easier to prove in practice. -/
 @[simps]
 def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f y → f x ≤ f y) : ClosureOperator α where
   toFun := f
-  monotone' := fun x y hxy => hmin (hxy.trans (hf y))
+  monotone' x y hxy := hmin (hxy.trans (hf y))
   le_closure' := hf
-  idempotent' := fun x => (hmin le_rflₓ).antisymm (hf _)
+  idempotent' x := (hmin le_rfl).antisymm (hf _)
 
 /-- Expanded out version of `mk₂`. `p` implies being closed. This constructor should be used when
 you already know a sufficient condition for being closed and using `mem_mk₃_closed` will avoid you
@@ -131,7 +131,7 @@ theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x �
   hmin hxy hy
 
 @[mono]
-theorem monotone : Monotoneₓ c :=
+theorem monotone : Monotone c :=
   c.monotone'
 
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
@@ -153,7 +153,7 @@ theorem mem_closed_iff (x : α) : x ∈ c.Closed ↔ c x = x :=
   Iff.rfl
 
 theorem mem_closed_iff_closure_le (x : α) : x ∈ c.Closed ↔ c x ≤ x :=
-  ⟨le_of_eqₓ, fun h => h.antisymm (c.le_closure x)⟩
+  ⟨le_of_eq, fun h => h.antisymm (c.le_closure x)⟩
 
 theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.Closed) : c x = x :=
   h
@@ -187,15 +187,15 @@ theorem eq_mk₃_closed (c : ClosureOperator α) :
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
 theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
     {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).Closed :=
-  (hmin le_rflₓ hx).antisymm (hf _)
+  (hmin le_rfl hx).antisymm (hf _)
 
-end PartialOrderₓ
+end PartialOrder
 
 variable {α}
 
 section OrderTop
 
-variable [PartialOrderₓ α] [OrderTop α] (c : ClosureOperator α)
+variable [PartialOrder α] [OrderTop α] (c : ClosureOperator α)
 
 @[simp]
 theorem closure_top : c ⊤ = ⊤ :=
@@ -234,14 +234,14 @@ variable [CompleteLattice α] (c : ClosureOperator α)
 
 @[simp]
 theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f i) :=
-  le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
+  le_antisymm ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
     c.Monotone <| supr_mono fun i => c.le_closure _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
-  le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
+  le_antisymm ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
     c.Monotone <| supr₂_mono fun i j => c.le_closure _
 
 end CompleteLattice
@@ -256,7 +256,7 @@ variable {α} {β : Type _}
 /-- A lower adjoint of `u` on the preorder `α` is a function `l` such that `l` and `u` form a Galois
 connection. It allows us to define closure operators whose output does not match the input. In
 practice, `u` is often `coe : β → α`. -/
-structure LowerAdjoint [Preorderₓ α] [Preorderₓ β] (u : β → α) where
+structure LowerAdjoint [Preorder α] [Preorder β] (u : β → α) where
   toFun : α → β
   gc' : GaloisConnection to_fun u
 
@@ -266,18 +266,18 @@ variable (α)
 
 /-- The identity function as a lower adjoint to itself. -/
 @[simps]
-protected def id [Preorderₓ α] : LowerAdjoint (id : α → α) where
-  toFun := fun x => x
+protected def id [Preorder α] : LowerAdjoint (id : α → α) where
+  toFun x := x
   gc' := GaloisConnection.id
 
 variable {α}
 
-instance [Preorderₓ α] : Inhabited (LowerAdjoint (id : α → α)) :=
+instance [Preorder α] : Inhabited (LowerAdjoint (id : α → α)) :=
   ⟨LowerAdjoint.id α⟩
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
+variable [Preorder α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 instance : CoeFun (LowerAdjoint u) fun _ => α → β where coe := toFun
 
@@ -295,7 +295,7 @@ theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α �
     exact h
 
 @[mono]
-theorem monotone : Monotoneₓ (u ∘ l) :=
+theorem monotone : Monotone (u ∘ l) :=
   l.gc.monotone_u.comp l.gc.monotone_l
 
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
@@ -303,20 +303,20 @@ inflationarity. -/
 theorem le_closure (x : α) : x ≤ u (l x) :=
   l.gc.le_u_l _
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
+variable [PartialOrder α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 /-- Every lower adjoint induces a closure operator given by the composition. This is the partial
 order version of the statement that every adjunction induces a monad. -/
 @[simps]
 def closureOperator : ClosureOperator α where
-  toFun := fun x => u (l x)
+  toFun x := u (l x)
   monotone' := l.Monotone
   le_closure' := l.le_closure
-  idempotent' := fun x => l.gc.u_l_u_eq_u (l x)
+  idempotent' x := l.gc.u_l_u_eq_u (l x)
 
 theorem idempotent (x : α) : u (l (u (l x))) = u (l x) :=
   l.ClosureOperator.idempotent _
@@ -324,11 +324,11 @@ theorem idempotent (x : α) : u (l (u (l x))) = u (l x) :=
 theorem le_closure_iff (x y : α) : x ≤ u (l y) ↔ u (l x) ≤ u (l y) :=
   l.ClosureOperator.le_closure_iff _ _
 
-end PartialOrderₓ
+end PartialOrder
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
+variable [Preorder α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 /-- An element `x` is closed for `l : lower_adjoint u` if it is a fixed point: `u (l x) = x` -/
 def Closed : Set α := fun x => u (l x) = x
@@ -339,11 +339,11 @@ theorem mem_closed_iff (x : α) : x ∈ l.Closed ↔ u (l x) = x :=
 theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ l.Closed) : u (l x) = x :=
   h
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α] [PartialOrderₓ β] {u : β → α} (l : LowerAdjoint u)
+variable [PartialOrder α] [PartialOrder β] {u : β → α} (l : LowerAdjoint u)
 
 theorem mem_closed_iff_closure_le (x : α) : x ∈ l.Closed ↔ u (l x) ≤ x :=
   l.ClosureOperator.mem_closed_iff_closure_le _
@@ -364,18 +364,18 @@ def toClosed (x : α) : l.Closed :=
 theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.Closed y) : u (l x) ≤ y ↔ x ≤ y :=
   l.ClosureOperator.closure_le_closed_iff_le x hy
 
-end PartialOrderₓ
+end PartialOrder
 
-theorem closure_top [PartialOrderₓ α] [OrderTop α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u) : u (l ⊤) = ⊤ :=
+theorem closure_top [PartialOrder α] [OrderTop α] [Preorder β] {u : β → α} (l : LowerAdjoint u) : u (l ⊤) = ⊤ :=
   l.ClosureOperator.closure_top
 
-theorem closure_inf_le [SemilatticeInf α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u) (x y : α) :
+theorem closure_inf_le [SemilatticeInf α] [Preorder β] {u : β → α} (l : LowerAdjoint u) (x y : α) :
     u (l (x ⊓ y)) ≤ u (l x) ⊓ u (l y) :=
   l.ClosureOperator.closure_inf_le x y
 
 section SemilatticeSup
 
-variable [SemilatticeSup α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
+variable [SemilatticeSup α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 theorem closure_sup_closure_le (x y : α) : u (l x) ⊔ u (l y) ≤ u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_le x y
@@ -393,13 +393,13 @@ end SemilatticeSup
 
 section CompleteLattice
 
-variable [CompleteLattice α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
+variable [CompleteLattice α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 theorem closure_supr_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
   l.ClosureOperator.closure_supr_closure _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
   l.ClosureOperator.closure_supr₂_closure _
 
@@ -420,7 +420,7 @@ theorem le_iff_subset (s : Set β) (S : α) : l s ≤ S ↔ s ⊆ S :=
 
 theorem mem_iff (s : Set β) (x : β) : x ∈ l s ↔ ∀ S : α, s ⊆ S → x ∈ S := by
   simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← l.le_iff_subset]
-  exact ⟨fun h S => h.trans, fun h => h _ le_rflₓ⟩
+  exact ⟨fun h S => h.trans, fun h => h _ le_rfl⟩
 
 theorem eq_of_le {s : Set β} {S : α} (h₁ : s ⊆ S) (h₂ : S ≤ l s) : l s = S :=
   ((l.le_iff_subset _ _).2 h₁).antisymm h₂
@@ -444,8 +444,8 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
 theorem closure_Union_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
   SetLike.coe_injective <| l.closure_supr_closure _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem closure_Union₂_closure (f : ∀ i, κ i → α) : l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
   SetLike.coe_injective <| l.closure_supr₂_closure _
@@ -461,7 +461,7 @@ variable {α}
 
 /-- Every Galois connection induces a lower adjoint. -/
 @[simps]
-def GaloisConnection.lowerAdjoint [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
+def GaloisConnection.lowerAdjoint [Preorder α] [Preorder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
     LowerAdjoint u where
   toFun := l
   gc' := gc
@@ -469,22 +469,22 @@ def GaloisConnection.lowerAdjoint [Preorderₓ α] [Preorderₓ β] {l : α → 
 /-- Every Galois connection induces a closure operator given by the composition. This is the partial
 order version of the statement that every adjunction induces a monad. -/
 @[simps]
-def GaloisConnection.closureOperator [PartialOrderₓ α] [Preorderₓ β] {l : α → β} {u : β → α}
-    (gc : GaloisConnection l u) : ClosureOperator α :=
+def GaloisConnection.closureOperator [PartialOrder α] [Preorder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
+    ClosureOperator α :=
   gc.LowerAdjoint.ClosureOperator
 
 /-- The set of closed elements has a Galois insertion to the underlying type. -/
-def ClosureOperator.gi [PartialOrderₓ α] (c : ClosureOperator α) : GaloisInsertion c.toClosed coe where
-  choice := fun x hx => ⟨x, hx.antisymm (c.le_closure x)⟩
-  gc := fun x y => c.closure_le_closed_iff_le _ y.2
-  le_l_u := fun x => c.le_closure _
-  choice_eq := fun x hx => le_antisymmₓ (c.le_closure x) hx
+def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) : GaloisInsertion c.toClosed coe where
+  choice x hx := ⟨x, hx.antisymm (c.le_closure x)⟩
+  gc x y := c.closure_le_closed_iff_le _ y.2
+  le_l_u x := c.le_closure _
+  choice_eq x hx := le_antisymm (c.le_closure x) hx
 
 /-- The Galois insertion associated to a closure operator can be used to reconstruct the closure
 operator.
 Note that the inverse in the opposite direction does not hold in general. -/
 @[simp]
-theorem closure_operator_gi_self [PartialOrderₓ α] (c : ClosureOperator α) : c.gi.gc.ClosureOperator = c := by
+theorem closure_operator_gi_self [PartialOrder α] (c : ClosureOperator α) : c.gi.gc.ClosureOperator = c := by
   ext x
   rfl
 

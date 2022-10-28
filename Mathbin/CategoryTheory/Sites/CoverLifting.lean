@@ -74,13 +74,13 @@ structure CoverLifting (G : C ⥤ D) : Prop where
   cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} (hS : S ∈ K (G.obj U)), S.FunctorPullback G ∈ J U
 
 /-- The identity functor on a site is cover-lifting. -/
-theorem id_cover_lifting : CoverLifting J J (𝟭 _) :=
+theorem idCoverLifting : CoverLifting J J (𝟭 _) :=
   ⟨fun _ _ h => by simpa using h⟩
 
 variable {J K}
 
 /-- The composition of two cover-lifting functors are cover-lifting -/
-theorem comp_cover_lifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E} (hv : CoverLifting K L G) :
+theorem compCoverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E} (hv : CoverLifting K L G) :
     CoverLifting J L (F ⋙ G) :=
   ⟨fun _ S h => hu.cover_lift (hv.cover_lift h)⟩
 
@@ -116,7 +116,7 @@ variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
 namespace RanIsSheafOfCoverLifting
 
-variable {G : C ⥤ D} (hu : CoverLifting J K G) (ℱ : Sheaf J A)
+variable {G : C ⥤ D} (hu : CoverLifting J K G) (ℱ : SheafCat J A)
 
 variable {X : A} {U : D} (S : Sieve U) (hS : S ∈ K U)
 
@@ -183,7 +183,7 @@ theorem get_section_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
     
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
-def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
+def gluedLimitCone : Limits.Cone (RanCat.diagram G.op ℱ.val (op U)) :=
   { x, π := { app := fun Y => getSection hu ℱ hS hx Y, naturality' := fun Y Z f => by tidy } }
 
 @[simp]
@@ -201,7 +201,7 @@ in order to be applied in the following lemmas easier.
 -/
 theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V)) (W)
     (H : ∀ {V'} {fV : G.obj V' ⟶ V} (hV), y ≫ ((ran G.op).obj ℱ.val).map fV.op = x (fV ≫ f) hV) :
-    y ≫ limit.π (Ran.diagram G.op ℱ.val (op V)) W =
+    y ≫ limit.π (RanCat.diagram G.op ℱ.val (op V)) W =
       (gluedLimitCone hu ℱ hS hx).π.app ((StructuredArrow.map f.op).obj W) :=
   by
   dsimp only [glued_limit_cone_π_app]
@@ -215,7 +215,7 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
     by
     convert H (show S ((G.map fV' ≫ W.hom.unop) ≫ f) by simpa only [category.assoc] using hV') using 2
     simp only [category.assoc]
-  simp only [Quiver.Hom.unop_op, Equivₓ.symm_symm, structured_arrow.map_obj_hom, unop_comp, Equivₓ.coe_fn_mk,
+  simp only [Quiver.Hom.unop_op, Equiv.symm_symm, structured_arrow.map_obj_hom, unop_comp, Equiv.coe_fn_mk,
     functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp, Ran_obj_map, nat_trans.id_app]
   erw [category.id_comp, limit.pre_π]
   congr
@@ -256,7 +256,7 @@ end RanIsSheafOfCoverLifting
 This result is basically https://stacks.math.columbia.edu/tag/00XK,
 but without the condition that `C` or `D` has pullbacks.
 -/
-theorem Ran_is_sheaf_of_cover_lifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ : Sheaf J A) :
+theorem ranIsSheafOfCoverLifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ : SheafCat J A) :
     Presheaf.IsSheaf K ((ran G.op).obj ℱ.val) := by
   intro X U S hS x hx
   constructor
@@ -272,11 +272,11 @@ theorem Ran_is_sheaf_of_cover_lifting {G : C ⥤ D} (hG : CoverLifting J K G) (�
 variable (A)
 
 /-- A cover-lifting functor induces a morphism of sites in the same direction as the functor. -/
-def Sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : Sheaf J A ⥤ Sheaf K A where
-  obj := fun ℱ => ⟨(ran G.op).obj ℱ.val, Ran_is_sheaf_of_cover_lifting hG ℱ⟩
-  map := fun _ _ f => ⟨(ran G.op).map f.val⟩
-  map_id' := fun ℱ => Sheaf.Hom.ext _ _ <| (ran G.op).map_id ℱ.val
-  map_comp' := fun _ _ _ f g => Sheaf.Hom.ext _ _ <| (ran G.op).map_comp f.val g.val
+def Sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : SheafCat J A ⥤ SheafCat K A where
+  obj ℱ := ⟨(ran G.op).obj ℱ.val, ranIsSheafOfCoverLifting hG ℱ⟩
+  map _ _ f := ⟨(ran G.op).map f.val⟩
+  map_id' ℱ := SheafCat.Hom.ext _ _ <| (ran G.op).map_id ℱ.val
+  map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ <| (ran G.op).map_comp f.val g.val
 
 /-- Given a functor between sites that is cover-preserving, cover-lifting, and compatible-preserving,
 the pullback and copullback along `G` are adjoint to each other
@@ -284,27 +284,27 @@ the pullback and copullback along `G` are adjoint to each other
 @[simps unit_app_val counit_app_val]
 noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPreserving J K G) (Hl : CoverLifting J K G)
     (Hc : CompatiblePreserving K G) : Sites.pullback A Hc Hp ⊣ Sites.copullback A Hl where
-  homEquiv := fun X Y =>
+  homEquiv X Y :=
     { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩,
       invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩,
       left_inv := fun f => by
         ext1
         dsimp
-        rw [Equivₓ.symm_apply_apply],
+        rw [Equiv.symm_apply_apply],
       right_inv := fun f => by
         ext1
         dsimp
-        rw [Equivₓ.apply_symm_apply] }
+        rw [Equiv.apply_symm_apply] }
   Unit :=
     { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩,
-      naturality' := fun _ _ f => Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
+      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
   counit :=
     { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩,
-      naturality' := fun _ _ f => Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
-  hom_equiv_unit' := fun X Y f => by
+      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
+  hom_equiv_unit' X Y f := by
     ext1
     apply (Ran.adjunction A G.op).hom_equiv_unit
-  hom_equiv_counit' := fun X Y f => by
+  hom_equiv_counit' X Y f := by
     ext1
     apply (Ran.adjunction A G.op).hom_equiv_counit
 

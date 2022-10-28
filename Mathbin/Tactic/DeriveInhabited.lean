@@ -17,7 +17,7 @@ instances for types in the core library.
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:
@@ -50,17 +50,17 @@ deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.T
   SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config, Tactic.DunfoldConfig, Tactic.DsimpConfig,
   Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig, Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg,
   Interactive.Loc, Tactic.UnfoldConfig, ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos,
-  Environment.ProjectionInfo, ReducibilityHints, CongrArgKind, ULift, Plift, StringImp, Stringₓ.IteratorImp,
+  Environment.ProjectionInfo, ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp,
   Rbnode.Color, Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=
-  ⟨BinTree.empty⟩
+  ⟨BinTree.Empty⟩
 
 instance : Inhabited Unsigned :=
   ⟨0⟩
 
-instance : Inhabited Stringₓ.Iterator :=
-  Stringₓ.IteratorImp.inhabited
+instance : Inhabited String.Iterator :=
+  String.IteratorImp.inhabited
 
 instance {α} : Inhabited (Rbnode α) :=
   ⟨Rbnode.leaf⟩

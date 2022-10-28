@@ -21,16 +21,16 @@ open Complex UpperHalfPlane
 open UpperHalfPlane
 
 -- mathport name: «expr↑ₘ »
-local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) _) _
+local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
 -- mathport name: «exprGL( , )⁺»
-local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Finₓ n) R
+local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
 
 -- mathport name: «exprSL( , )»
-local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
+local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 /-- A general version of the slash action of the space of modular forms.-/
-class SlashAction (β : Type _) (G : Type _) (α : Type _) (γ : Type _) [Groupₓ G] [Ringₓ α] [HasSmul γ α] where
+class SlashAction (β : Type _) (G : Type _) (α : Type _) (γ : Type _) [Group G] [Ring α] [HasSmul γ α] where
   map : β → G → α → α
   mul_zero : ∀ (k : β) (g : G), map k g 0 = 0
   one_mul : ∀ (k : β) (a : α), map k 1 a = a
@@ -39,9 +39,9 @@ class SlashAction (β : Type _) (G : Type _) (α : Type _) (γ : Type _) [Group�
   AddAction : ∀ (k : β) (g : G) (a b : α), map k g (a + b) = map k g a + map k g b
 
 /-- Slash_action induced by a monoid homomorphism.-/
-def monoidHomSlashAction {β : Type _} {G : Type _} {H : Type _} {α : Type _} {γ : Type _} [Groupₓ G] [Ringₓ α]
-    [HasSmul γ α] [Groupₓ H] [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ where
-  map := fun k g a => SlashAction.map γ k (h g) a
+def monoidHomSlashAction {β : Type _} {G : Type _} {H : Type _} {α : Type _} {γ : Type _} [Group G] [Ring α]
+    [HasSmul γ α] [Group H] [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ where
+  map k g a := SlashAction.map γ k (h g) a
   mul_zero := by
     intro k g
     apply SlashAction.mul_zero k (h g)
@@ -83,11 +83,11 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (
     Subtype.coe_mk] at *
   field_simp
   have :
-    (((↑(↑A : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ) *
-          ((↑(↑B : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ)) ^
+    (((↑(↑A : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) *
+          ((↑(↑B : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ)) ^
         (k - 1) =
-      ((↑(↑A : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ) ^ (k - 1) *
-        ((↑(↑B : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ) ^ (k - 1) :=
+      ((↑(↑A : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) ^ (k - 1) *
+        ((↑(↑B : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) ^ (k - 1) :=
     by simp_rw [← mul_zpow]
   simp_rw [this, ← mul_assoc, ← mul_zpow]
 

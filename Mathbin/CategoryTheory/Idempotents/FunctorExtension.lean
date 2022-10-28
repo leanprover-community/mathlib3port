@@ -47,15 +47,15 @@ namespace FunctorExtension₁
 `karoubi C ⥤ karoubi D` -/
 @[simps]
 def obj (F : C ⥤ Karoubi D) : Karoubi C ⥤ Karoubi D where
-  obj := fun P => ⟨(F.obj P.x).x, (F.map P.p).f, by simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
-  map := fun P Q f => ⟨(F.map f.f).f, by simpa only [F.map_comp, hom_ext] using F.congr_map f.comm⟩
+  obj P := ⟨(F.obj P.x).x, (F.map P.p).f, by simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
+  map P Q f := ⟨(F.map f.f).f, by simpa only [F.map_comp, hom_ext] using F.congr_map f.comm⟩
 
 /-- Extension of a natural transformation `φ` between functors
 `C ⥤ karoubi D` to a natural transformation between the
 extension of these functors to `karoubi C ⥤ karoubi D` -/
 @[simps]
 def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G where
-  app := fun P =>
+  app P :=
     { f := (F.map P.p).f ≫ (φ.app P.x).f,
       comm := by
         have h := φ.naturality P.p
@@ -63,7 +63,7 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G where
         simp only [hom_ext, karoubi.comp, F.map_comp] at h h'
         simp only [obj_obj_p, assoc, ← h]
         slice_rhs 1 3 => rw [h', h'] }
-  naturality' := fun P Q f => by
+  naturality' P Q f := by
     ext
     dsimp [obj]
     have h := φ.naturality f.f
@@ -82,11 +82,11 @@ variable (C D E)
 @[simps]
 def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D where
   obj := FunctorExtension₁.obj
-  map := fun F G => FunctorExtension₁.map
-  map_id' := fun F => by
+  map F G := FunctorExtension₁.map
+  map_id' F := by
     ext P
     exact comp_p (F.map P.p)
-  map_comp' := fun F G H φ φ' => by
+  map_comp' F G H φ φ' := by
     ext P
     simp only [comp, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
     have h := φ.naturality P.p

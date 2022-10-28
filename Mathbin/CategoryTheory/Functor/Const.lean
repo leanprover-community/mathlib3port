@@ -32,8 +32,8 @@ variable {C : Type u₂} [Category.{v₂} C]
 -/
 @[simps]
 def const : C ⥤ J ⥤ C where
-  obj := fun X => { obj := fun j => X, map := fun j j' f => 𝟙 X }
-  map := fun X Y f => { app := fun j => f }
+  obj X := { obj := fun j => X, map := fun j j' f => 𝟙 X }
+  map X Y f := { app := fun j => f }
 
 namespace Const
 
@@ -87,7 +87,7 @@ def constComp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F
 
 /-- If `J` is nonempty, then the constant functor over `J` is faithful. -/
 instance [Nonempty J] :
-    Faithful (const J : C ⥤ J ⥤ C) where map_injective' := fun X Y f g e => NatTrans.congr_app e (Classical.arbitrary J)
+    Faithful (const J : C ⥤ J ⥤ C) where map_injective' X Y f g e := NatTrans.congr_app e (Classical.arbitrary J)
 
 end
 

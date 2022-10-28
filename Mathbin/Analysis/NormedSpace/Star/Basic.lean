@@ -55,18 +55,18 @@ theorem nnnorm_star (x : E) : ∥star x∥₊ = ∥x∥₊ :=
 
 /-- The `star` map in a normed star group is a normed group homomorphism. -/
 def starNormedAddGroupHom : NormedAddGroupHom E E :=
-  { starAddEquiv with bound' := ⟨1, fun v => le_transₓ (norm_star _).le (one_mulₓ _).symm.le⟩ }
+  { starAddEquiv with bound' := ⟨1, fun v => le_trans (norm_star _).le (one_mul _).symm.le⟩ }
 
 /-- The `star` map in a normed star group is an isometry -/
-theorem star_isometry : Isometry (star : E → E) :=
-  show Isometry starAddEquiv from AddMonoidHomClass.isometry_of_norm starAddEquiv (show ∀ x, ∥x⋆∥ = ∥x∥ from norm_star)
+theorem starIsometry : Isometry (star : E → E) :=
+  show Isometry starAddEquiv from AddMonoidHomClass.isometryOfNorm starAddEquiv (show ∀ x, ∥x⋆∥ = ∥x∥ from norm_star)
 
 instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuousStar E :=
-  ⟨star_isometry.Continuous⟩
+  ⟨starIsometry.Continuous⟩
 
 end NormedStarGroup
 
-instance RingHomIsometric.star_ring_end [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
+instance RingHomIsometric.starRingEnd [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
     RingHomIsometric (starRingEnd E) :=
   ⟨norm_star⟩
 
@@ -75,7 +75,7 @@ for every `x`. -/
 class CstarRing (E : Type _) [NonUnitalNormedRing E] [StarRing E] : Prop where
   norm_star_mul_self : ∀ {x : E}, ∥x⋆ * x∥ = ∥x∥ * ∥x∥
 
-instance : CstarRing ℝ where norm_star_mul_self := fun x => by simp only [star, id.def, norm_mul]
+instance : CstarRing ℝ where norm_star_mul_self x := by simp only [star, id.def, norm_mul]
 
 namespace CstarRing
 
@@ -85,7 +85,7 @@ variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 
 -- see Note [lower instance priority]
 /-- In a C*-ring, star preserves the norm. -/
-instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
+instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
   ⟨by
     intro x
     by_cases htriv:x = 0
@@ -103,7 +103,7 @@ instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
           ∥x⋆∥ * ∥x⋆∥ = ∥x * x⋆∥ := by rw [← norm_star_mul_self, star_star]
           _ ≤ ∥x∥ * ∥x⋆∥ := norm_mul_le _ _
           
-      exact le_antisymmₓ (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)
+      exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)
       ⟩
 
 theorem norm_self_mul_star {x : E} : ∥x * x⋆∥ = ∥x∥ * ∥x∥ := by
@@ -145,31 +145,31 @@ inference involving Π-types. -/
 instance _root_.pi.star_ring' : StarRing (∀ i, R i) :=
   inferInstance
 
-variable [Fintypeₓ ι] [∀ i, CstarRing (R i)]
+variable [Fintype ι] [∀ i, CstarRing (R i)]
 
 instance _root_.prod.cstar_ring :
-    CstarRing (R₁ × R₂) where norm_star_mul_self := fun x => by
+    CstarRing (R₁ × R₂) where norm_star_mul_self x := by
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
-    refine' le_antisymmₓ _ _
-    · refine' max_leₓ _ _ <;> rw [sq_le_sq, abs_of_nonneg (norm_nonneg _)]
-      exact (le_max_leftₓ _ _).trans (le_abs_self _)
-      exact (le_max_rightₓ _ _).trans (le_abs_self _)
+    refine' le_antisymm _ _
+    · refine' max_le _ _ <;> rw [sq_le_sq, abs_of_nonneg (norm_nonneg _)]
+      exact (le_max_left _ _).trans (le_abs_self _)
+      exact (le_max_right _ _).trans (le_abs_self _)
       
     · rw [le_sup_iff]
-      rcases le_totalₓ ∥x.fst∥ ∥x.snd∥ with (h | h) <;> simp [h]
+      rcases le_total ∥x.fst∥ ∥x.snd∥ with (h | h) <;> simp [h]
       
 
 instance _root_.pi.cstar_ring :
-    CstarRing (∀ i, R i) where norm_star_mul_self := fun x => by
+    CstarRing (∀ i, R i) where norm_star_mul_self x := by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
     norm_cast
     exact
-      (Finsetₓ.comp_sup_eq_sup_comp_of_is_total (fun x : Nnreal => x ^ 2)
+      (Finset.comp_sup_eq_sup_comp_of_is_total (fun x : Nnreal => x ^ 2)
           (fun x y h => by simpa only [sq] using mul_le_mul' h h) (by simp)).symm
 
 instance _root_.pi.cstar_ring' : CstarRing (ι → R₁) :=
-  Pi.cstar_ring
+  Pi.cstarRing
 
 end ProdPi
 
@@ -180,7 +180,7 @@ variable [NormedRing E] [StarRing E] [CstarRing E]
 @[simp]
 theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
   have : 0 < ∥(1 : E)∥ := norm_pos_iff.mpr one_ne_zero
-  rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_oneₓ, star_one, one_mulₓ]
+  rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_one, star_one, one_mul]
 
 -- see Note [lower instance priority]
 instance (priority := 100) [Nontrivial E] : NormOneClass E :=
@@ -197,18 +197,18 @@ theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ∥U
 @[simp]
 theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ∥(U : E) * A∥ = ∥A∥ := by
   nontriviality E
-  refine' le_antisymmₓ _ _
+  refine' le_antisymm _ _
   · calc
       _ ≤ ∥(U : E)∥ * ∥A∥ := norm_mul_le _ _
-      _ = ∥A∥ := by rw [norm_coe_unitary, one_mulₓ]
+      _ = ∥A∥ := by rw [norm_coe_unitary, one_mul]
       
     
   · calc
-      _ = ∥(U : E)⋆ * U * A∥ := by rw [unitary.coe_star_mul_self U, one_mulₓ]
+      _ = ∥(U : E)⋆ * U * A∥ := by rw [unitary.coe_star_mul_self U, one_mul]
       _ ≤ ∥(U : E)⋆∥ * ∥(U : E) * A∥ := by
         rw [mul_assoc]
         exact norm_mul_le _ _
-      _ = ∥(U : E) * A∥ := by rw [norm_star, norm_coe_unitary, one_mulₓ]
+      _ = ∥(U : E) * A∥ := by rw [norm_star, norm_coe_unitary, one_mul]
       
     
 
@@ -238,9 +238,9 @@ end CstarRing
 theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : IsSelfAdjoint x)
     (n : ℕ) : ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n := by
   induction' n with k hk
-  · simp only [pow_zeroₓ, pow_oneₓ]
+  · simp only [pow_zero, pow_one]
     
-  · rw [pow_succₓ, pow_mul', sq]
+  · rw [pow_succ, pow_mul', sq]
     nth_rw 0 [← self_adjoint.mem_iff.mp hx]
     rw [← star_pow, CstarRing.nnnorm_star_mul_self, ← sq, hk, pow_mul']
     
@@ -251,7 +251,7 @@ theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E]
 
 section starₗᵢ
 
-variable [CommSemiringₓ 𝕜] [StarRing 𝕜]
+variable [CommSemiring 𝕜] [StarRing 𝕜]
 
 variable [SeminormedAddCommGroup E] [StarAddMonoid E] [NormedStarGroup E]
 

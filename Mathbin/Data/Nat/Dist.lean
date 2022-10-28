@@ -21,7 +21,7 @@ def dist (n m : ℕ) :=
 theorem dist.def (n m : ℕ) : dist n m = n - m + (m - n) :=
   rfl
 
-theorem dist_comm (n m : ℕ) : dist n m = dist m n := by simp [dist.def, add_commₓ]
+theorem dist_comm (n m : ℕ) : dist n m = dist m n := by simp [dist.def, add_comm]
 
 @[simp]
 theorem dist_self (n : ℕ) : dist n n = 0 := by simp [dist.def, tsub_self]
@@ -31,21 +31,21 @@ theorem eq_of_dist_eq_zero {n m : ℕ} (h : dist n m = 0) : n = m :=
   have : n ≤ m := tsub_eq_zero_iff_le.mp this
   have : m - n = 0 := Nat.eq_zero_of_add_eq_zero_left h
   have : m ≤ n := tsub_eq_zero_iff_le.mp this
-  le_antisymmₓ ‹n ≤ m› ‹m ≤ n›
+  le_antisymm ‹n ≤ m› ‹m ≤ n›
 
 theorem dist_eq_zero {n m : ℕ} (h : n = m) : dist n m = 0 := by rw [h, dist_self]
 
 theorem dist_eq_sub_of_le {n m : ℕ} (h : n ≤ m) : dist n m = m - n := by
-  rw [dist.def, tsub_eq_zero_iff_le.mpr h, zero_addₓ]
+  rw [dist.def, tsub_eq_zero_iff_le.mpr h, zero_add]
 
 theorem dist_eq_sub_of_le_right {n m : ℕ} (h : m ≤ n) : dist n m = n - m := by
   rw [dist_comm]
   apply dist_eq_sub_of_le h
 
 theorem dist_tri_left (n m : ℕ) : m ≤ dist n m + n :=
-  le_transₓ le_tsub_add (add_le_add_right (Nat.le_add_leftₓ _ _) _)
+  le_trans le_tsub_add (add_le_add_right (Nat.le_add_left _ _) _)
 
-theorem dist_tri_right (n m : ℕ) : m ≤ n + dist n m := by rw [add_commₓ] <;> apply dist_tri_left
+theorem dist_tri_right (n m : ℕ) : m ≤ n + dist n m := by rw [add_comm] <;> apply dist_tri_left
 
 theorem dist_tri_left' (n m : ℕ) : n ≤ dist n m + m := by rw [dist_comm] <;> apply dist_tri_left
 
@@ -65,7 +65,7 @@ theorem dist_add_add_right (n k m : ℕ) : dist (n + k) (m + k) = dist n m :=
     
 
 theorem dist_add_add_left (k n m : ℕ) : dist (k + n) (k + m) = dist n m := by
-  rw [add_commₓ k n, add_commₓ k m]
+  rw [add_comm k n, add_comm k m]
   apply dist_add_add_right
 
 theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m :=
@@ -76,7 +76,7 @@ theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m 
     
 
 theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k := by
-  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by simp [dist.def, add_commₓ, add_left_commₓ]
+  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by simp [dist.def, add_comm, add_left_comm]
   rw [this, dist.def]
   exact add_le_add tsub_le_tsub_add_tsub tsub_le_tsub_add_tsub
 
@@ -101,10 +101,10 @@ theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by sim
 theorem dist_pos_of_ne {i j : Nat} : i ≠ j → 0 < dist i j := fun hne =>
   Nat.ltByCases
     (fun this : i < j => by
-      rw [dist_eq_sub_of_le (le_of_ltₓ this)]
+      rw [dist_eq_sub_of_le (le_of_lt this)]
       apply tsub_pos_of_lt this)
     (fun this : i = j => by contradiction) fun this : i > j => by
-    rw [dist_eq_sub_of_le_right (le_of_ltₓ this)]
+    rw [dist_eq_sub_of_le_right (le_of_lt this)]
     apply tsub_pos_of_lt this
 
 end Nat

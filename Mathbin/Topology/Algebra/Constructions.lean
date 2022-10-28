@@ -74,7 +74,7 @@ namespace Units
 
 open MulOpposite
 
-variable [TopologicalSpace M] [Monoidₓ M] [TopologicalSpace X]
+variable [TopologicalSpace M] [Monoid M] [TopologicalSpace X]
 
 /-- The units of a monoid are equipped with a topology, via the embedding into `M × M`. -/
 @[to_additive "The additive units of a monoid are equipped with a topology, via the embedding into\n`M × M`."]

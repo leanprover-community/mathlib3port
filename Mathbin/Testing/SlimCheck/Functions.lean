@@ -81,16 +81,16 @@ def apply [DecidableEq α] : TotalFunction α β → α → β
 Creates a string for a given `finmap` and output, `x₀ ↦ y₀, .. xₙ ↦ yₙ`
 for each of the entries. The brackets are provided by the calling function.
 -/
-def reprAux [HasRepr α] [HasRepr β] (m : List (Σ_ : α, β)) : Stringₓ :=
-  Stringₓ.join <| List.qsort (fun x y => x < y) (m.map fun x => s!"{(reprₓ <| Sigma.fst x)} ↦ {reprₓ <| Sigma.snd x}, ")
+def reprAux [Repr α] [Repr β] (m : List (Σ_ : α, β)) : String :=
+  String.join <| List.qsort (fun x y => x < y) (m.map fun x => s!"{(repr <| Sigma.fst x)} ↦ {repr <| Sigma.snd x}, ")
 
 /-- Produce a string for a given `total_function`.
 The output is of the form `[x₀ ↦ f x₀, .. xₙ ↦ f xₙ, _ ↦ y]`.
 -/
-protected def repr [HasRepr α] [HasRepr β] : TotalFunction α β → Stringₓ
-  | total_function.with_default m y => s!"[{(reprAux m)}_ ↦ {HasRepr.repr y}]"
+protected def repr [Repr α] [Repr β] : TotalFunction α β → String
+  | total_function.with_default m y => s!"[{(reprAux m)}_ ↦ {Repr.repr y}]"
 
-instance (α : Type u) (β : Type v) [HasRepr α] [HasRepr β] : HasRepr (TotalFunction α β) :=
+instance (α : Type u) (β : Type v) [Repr α] [Repr β] : Repr (TotalFunction α β) :=
   ⟨TotalFunction.repr⟩
 
 /-- Create a `finmap` from a list of pairs. -/
@@ -103,7 +103,7 @@ variable [Sampleable α] [Sampleable β]
 
 /-- Redefine `sizeof` to follow the structure of `sampleable` instances. -/
 def Total.sizeof : TotalFunction α β → ℕ
-  | ⟨m, x⟩ => 1 + @sizeof _ Sampleable.wf m + sizeof x
+  | ⟨m, x⟩ => 1 + @sizeOf _ Sampleable.wf m + sizeOf x
 
 instance (priority := 2000) : SizeOf (TotalFunction α β) :=
   ⟨Total.sizeof⟩
@@ -115,16 +115,16 @@ protected def shrink : ShrinkFn (TotalFunction α β)
   | ⟨m, x⟩ =>
     (Sampleable.shrink (m, x)).map fun ⟨⟨m', x'⟩, h⟩ =>
       ⟨⟨List.dedupkeys m', x'⟩,
-        lt_of_le_of_ltₓ (by unfold_wf <;> refine' @List.sizeof_dedupkeys _ _ _ (@sampleable.wf _ _) _) h⟩
+        lt_of_le_of_lt (by unfold_wf <;> refine' @List.sizeof_dedupkeys _ _ _ (@sampleable.wf _ _) _) h⟩
 
-variable [HasRepr α] [HasRepr β]
+variable [Repr α] [Repr β]
 
-instance Pi.sampleableExt : SampleableExtₓ (α → β) where
+instance Pi.sampleableExt : SampleableExt (α → β) where
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.apply
   sample := do
-    let xs ← (Sampleable.sample (List (α × β)) : Genₓ (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Genₓ (ULift.{max u v} β))
+    let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -143,7 +143,7 @@ variable [DecidableEq α] [DecidableEq β]
 
 /-- The support of a zero default `total_function`. -/
 @[simp]
-def zeroDefaultSupp : TotalFunction α β → Finsetₓ α
+def zeroDefaultSupp : TotalFunction α β → Finset α
   | with_default A y => List.toFinset <| (A.dedupkeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
 
 /-- Create a finitely supported function from a total function by taking the default value to
@@ -154,12 +154,12 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
   mem_support_to_fun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [apply, zero_default_supp, List.mem_mapₓ, List.mem_filterₓ, exists_and_distrib_rightₓ, List.mem_to_finset,
+    simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_distrib_right, List.mem_to_finset,
       exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
       have := List.mem_lookup (List.nodupkeys_dedupkeys A) hval
-      rw [(_ : List.lookupₓ a A = od)]
+      rw [(_ : List.lookup a A = od)]
       · simpa
         
       · simpa [List.lookup_dedupkeys, WithTop.some_eq_coe]
@@ -168,8 +168,8 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
     · intro h
       use (A.lookup a).getOrElse (0 : β)
       rw [← List.lookup_dedupkeys] at h⊢
-      simp only [h, ← List.mem_lookup_iff A.nodupkeys_dedupkeys, and_trueₓ, not_false_iff, Option.mem_def]
-      cases List.lookupₓ a A.dedupkeys
+      simp only [h, ← List.mem_lookup_iff A.nodupkeys_dedupkeys, and_true_iff, not_false_iff, Option.mem_def]
+      cases List.lookup a A.dedupkeys
       · simpa using h
         
       · simp
@@ -178,22 +178,22 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
 
 variable [Sampleable α] [Sampleable β]
 
-instance Finsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExtₓ (α →₀ β) where
+instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β) where
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.applyFinsupp
   sample := do
-    let xs ← (Sampleable.sample (List (α × β)) : Genₓ (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Genₓ (ULift.{max u v} β))
+    let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
 -- TODO: support a non-constant codomain type
-instance Dfinsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExtₓ (Π₀ a : α, β) where
+instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β) where
   ProxyRepr := TotalFunction α β
   interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
   sample := do
-    let xs ← (Sampleable.sample (List (α × β)) : Genₓ (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Genₓ (ULift.{max u v} β))
+    let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -203,16 +203,16 @@ section SampleableExt
 
 open SampleableExt
 
-instance (priority := 2000) PiPred.sampleableExt [SampleableExtₓ (α → Bool)] : SampleableExtₓ.{u + 1} (α → Prop) where
+instance (priority := 2000) PiPred.sampleableExt [SampleableExt (α → Bool)] : SampleableExt.{u + 1} (α → Prop) where
   ProxyRepr := ProxyRepr (α → Bool)
-  interp := fun m x => interp (α → Bool) m x
+  interp m x := interp (α → Bool) m x
   sample := sample (α → Bool)
   shrink := shrink
 
-instance (priority := 2000) PiUncurry.sampleableExt [SampleableExtₓ (α × β → γ)] :
-    SampleableExtₓ.{imax (u + 1) (v + 1) w} (α → β → γ) where
+instance (priority := 2000) PiUncurry.sampleableExt [SampleableExt (α × β → γ)] :
+    SampleableExt.{imax (u + 1) (v + 1) w} (α → β → γ) where
   ProxyRepr := ProxyRepr (α × β → γ)
-  interp := fun m x y => interp (α × β → γ) m (x, y)
+  interp m x y := interp (α × β → γ) m (x, y)
   sample := sample (α × β → γ)
   shrink := shrink
 
@@ -233,7 +233,7 @@ rely on the association list API defined in `data.list.sigma`.
 inductive InjectiveFunction (α : Type u) : Type u
   |
   map_to_self (xs : List (Σ_ : α, α)) :
-    xs.map Sigma.fst ~ xs.map Sigma.snd → List.Nodupₓ (xs.map Sigma.snd) → injective_function
+    xs.map Sigma.fst ~ xs.map Sigma.snd → List.Nodup (xs.map Sigma.snd) → injective_function
 
 instance : Inhabited (InjectiveFunction α) :=
   ⟨⟨[], List.Perm.nil, List.nodup_nil⟩⟩
@@ -249,10 +249,10 @@ The output is of the form `[x₀ ↦ f x₀, .. xₙ ↦ f xₙ, x ↦ x]`.
 Unlike for `total_function`, the default value is not a constant
 but the identity function.
 -/
-protected def repr [HasRepr α] : InjectiveFunction α → Stringₓ
+protected def repr [Repr α] : InjectiveFunction α → String
   | injective_function.map_to_self m _ _ => s! "[{TotalFunction.reprAux m}x ↦ x]"
 
-instance (α : Type u) [HasRepr α] : HasRepr (InjectiveFunction α) :=
+instance (α : Type u) [Repr α] : Repr (InjectiveFunction α) :=
   ⟨InjectiveFunction.repr⟩
 
 /-- Interpret a list of pairs as a total function, defaulting to
@@ -260,11 +260,11 @@ the identity function when no entries are found for a given function -/
 def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
   ((xs.map Prod.toSigma).lookup x).getOrElse x
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
     List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
-  simp only [list.apply_id, List.lookupₓ, eq_rec_constantₓ, Prod.toSigma, List.map] <;> split_ifs <;> rfl
+  simp only [list.apply_id, List.lookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;> rfl
 
 open Function _Root_.List
 
@@ -272,7 +272,7 @@ open _Root_.Prod (toSigma)
 
 open _Root_.Nat
 
-theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs.length = ys.length)
+theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs.length = ys.length)
     (x y : α) (i : ℕ) (h₂ : xs.nth i = some x) : List.applyId.{u} (xs.zip ys) x = y ↔ ys.nth i = some y := by
   induction xs generalizing ys i
   case nil ys i h₁ h₂ => cases h₂
@@ -300,8 +300,8 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp
-theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs ~ ys) (x : α) :
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp -/
+theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) (x : α) :
     List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
   simp only [list.apply_id]
   cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
@@ -321,23 +321,23 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
     split_ifs  at h₃
     · subst x'
       subst val
-      simp only [mem_cons_iff, true_orₓ, eq_self_iff_true]
+      simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
       
     · cases' h₀ with _ _ h₀ h₅
       cases' h₂ with _ _ h₂ h₄
-      have h₆ := Nat.succ.injₓ h₁
+      have h₆ := Nat.succ.inj h₁
       specialize xs_ih h₅ ys h₃ h₄ h₆
-      simp only [Ne.symm h, xs_ih, mem_cons_iff, false_orₓ]
+      simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
       suffices : val ∈ ys
       tauto!
       erw [← Option.mem_def, mem_lookup_iff] at h₃
-      simp only [to_sigma, mem_map, heq_iff_eq, Prod.existsₓ] at h₃
+      simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
       rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
       subst a
       subst b
       apply (mem_zip h₃).2
       simp only [nodupkeys, keys, comp, Prod.fst_to_sigma, map_map]
-      rwa [map_fst_zip _ _ (le_of_eqₓ h₆)]
+      rwa [map_fst_zip _ _ (le_of_eq h₆)]
       
     
 
@@ -347,12 +347,12 @@ theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x �
   dsimp [list.apply_id]
   rw [lookup_eq_none.2]
   rfl
-  simp only [keys, not_exists, to_sigma, exists_and_distrib_rightₓ, exists_eq_right, mem_map, comp_app, map_map,
-    Prod.existsₓ]
+  simp only [keys, not_exists, to_sigma, exists_and_distrib_right, exists_eq_right, mem_map, comp_app, map_map,
+    Prod.exists]
   intro y hy
   exact h (mem_zip hy).1
 
-theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs ~ ys) :
+theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
     Injective.{u + 1, u + 1} (List.applyId (xs.zip ys)) := by
   intro x y h
   by_cases hx:x ∈ xs <;> by_cases hy:y ∈ xs
@@ -422,7 +422,7 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] : ShrinkFn (Σ
     let i ← LazyList.ofList <| List.finRange <| k / n
     have : ↑i * ↑n < xs.1.length :=
         Nat.lt_of_div_lt_div
-          (lt_of_le_of_ltₓ (by simp only [Nat.mul_div_cancelₓ, gt_iff_ltₓ, Finₓ.val_eq_coe, Pnat.pos]) i.2)
+          (lt_of_le_of_lt (by simp only [Nat.mul_div_cancel, gt_iff_lt, Fin.val_eq_coe, Pnat.pos]) i.2)
       pure
         ⟨perm.slice (i * n) n xs, by
           rcases xs with ⟨a, b, c, d⟩ <;>
@@ -430,7 +430,7 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] : ShrinkFn (Σ
               unfold_wf <;> simp only [perm.slice] <;> unfold_wf <;> apply List.sizeof_slice_lt _ _ n.2 _ this⟩
 
 instance [SizeOf α] : SizeOf (InjectiveFunction α) :=
-  ⟨fun ⟨xs, _, _⟩ => sizeof (xs.map Sigma.fst)⟩
+  ⟨fun ⟨xs, _, _⟩ => sizeOf (xs.map Sigma.fst)⟩
 
 /-- Shrink an injective function slicing a segment in the middle of the domain and removing
 the corresponding elements in the codomain, hence maintaining the property that
@@ -439,10 +439,10 @@ one is a permutation of the other.
 protected def shrink {α : Type} [SizeOf α] [DecidableEq α] : ShrinkFn (InjectiveFunction α)
   | ⟨xs, h₀, h₁⟩ => do
     let ⟨⟨xs', ys', h₀, h₁⟩, h₂⟩ ← InjectiveFunction.shrinkPerm ⟨_, _, h₀, h₁⟩
-    have h₃ : xs' ≤ ys' := le_of_eqₓ (perm.length_eq h₀)
-      have h₄ : ys' ≤ xs' := le_of_eqₓ (perm.length_eq h₀)
+    have h₃ : xs' ≤ ys' := le_of_eq (perm.length_eq h₀)
+      have h₄ : ys' ≤ xs' := le_of_eq (perm.length_eq h₀)
       pure
-        ⟨⟨(List.zipₓ xs' ys').map Prod.toSigma, by
+        ⟨⟨(List.zip xs' ys').map Prod.toSigma, by
             simp only [comp, map_fst_zip, map_snd_zip, *, Prod.fst_to_sigma, Prod.snd_to_sigma, map_map], by
             simp only [comp, map_snd_zip, *, Prod.snd_to_sigma, map_map]⟩,
           by
@@ -454,8 +454,8 @@ protected def shrink {α : Type} [SizeOf α] [DecidableEq α] : ShrinkFn (Inject
 
 /-- Create an injective function from one list and a permutation of that list. -/
 protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.Nodup) : InjectiveFunction α :=
-  have h₀ : xs.length ≤ ys.length := le_of_eqₓ h.length_eq
-  have h₁ : ys.length ≤ xs.length := le_of_eqₓ h.length_eq.symm
+  have h₀ : xs.length ≤ ys.length := le_of_eq h.length_eq
+  have h₁ : ys.length ≤ xs.length := le_of_eq h.length_eq.symm
   InjectiveFunction.map_to_self (List.toFinmap' (xs.zip ys))
     (by simp only [list.to_finmap', comp, map_fst_zip, map_snd_zip, *, Prod.fst_to_sigma, Prod.snd_to_sigma, map_map])
     (by simp only [list.to_finmap', comp, map_snd_zip, *, Prod.snd_to_sigma, map_map])
@@ -471,7 +471,7 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
     induction xs
     case nil => simp only [zip_nil_right, map_nil]
     case cons xs_hd xs_tl xs_ih =>
-    simp only [true_andₓ, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
+    simp only [true_and_iff, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
     exact xs_ih
   revert hperm hnodup
   rw [hxs]
@@ -482,13 +482,13 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   · rwa [← hxs, h₀, h₁] at hperm
     
 
-instance PiInjective.sampleableExt : SampleableExtₓ { f : ℤ → ℤ // Function.Injective f } where
+instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function.Injective f } where
   ProxyRepr := InjectiveFunction ℤ
-  interp := fun f => ⟨apply f, f.Injective⟩
+  interp f := ⟨apply f, f.Injective⟩
   sample :=
     gen.sized fun sz => do
       let xs' := Int.range (-(2 * sz + 2)) (2 * sz + 2)
-      let ys ← Genₓ.permutationOf xs'
+      let ys ← Gen.permutationOf xs'
       have Hinj : injective fun r : ℕ => -(2 * sz + 2 : ℤ) + ↑r := fun x y h =>
           Int.coe_nat_inj (add_right_injective _ h)
         let r : injective_function ℤ :=
@@ -501,18 +501,18 @@ end InjectiveFunction
 open Function
 
 instance Injective.testable (f : α → β)
-    [I : Testableₓ (NamedBinderₓ "x" <| ∀ x : α, NamedBinderₓ "y" <| ∀ y : α, NamedBinderₓ "H" <| f x = f y → x = y)] :
-    Testableₓ (Injective f) :=
+    [I : Testable (NamedBinder "x" <| ∀ x : α, NamedBinder "y" <| ∀ y : α, NamedBinder "H" <| f x = f y → x = y)] :
+    Testable (Injective f) :=
   I
 
-instance Monotone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-    [I : Testableₓ (NamedBinderₓ "x" <| ∀ x : α, NamedBinderₓ "y" <| ∀ y : α, NamedBinderₓ "H" <| x ≤ y → f x ≤ f y)] :
-    Testableₓ (Monotoneₓ f) :=
+instance Monotone.testable [Preorder α] [Preorder β] (f : α → β)
+    [I : Testable (NamedBinder "x" <| ∀ x : α, NamedBinder "y" <| ∀ y : α, NamedBinder "H" <| x ≤ y → f x ≤ f y)] :
+    Testable (Monotone f) :=
   I
 
-instance Antitone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-    [I : Testableₓ (NamedBinderₓ "x" <| ∀ x : α, NamedBinderₓ "y" <| ∀ y : α, NamedBinderₓ "H" <| x ≤ y → f y ≤ f x)] :
-    Testableₓ (Antitoneₓ f) :=
+instance Antitone.testable [Preorder α] [Preorder β] (f : α → β)
+    [I : Testable (NamedBinder "x" <| ∀ x : α, NamedBinder "y" <| ∀ y : α, NamedBinder "H" <| x ≤ y → f y ≤ f x)] :
+    Testable (Antitone f) :=
   I
 
 end SlimCheck

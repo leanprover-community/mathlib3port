@@ -41,8 +41,8 @@ localized [Real] notation "ψ" => goldenConj
 
 /-- The inverse of the golden ratio is the opposite of its conjugate. -/
 theorem inv_gold : φ⁻¹ = -ψ := by
-  have : 1 + Real.sqrt 5 ≠ 0 := ne_of_gtₓ (add_pos (by norm_num) <| real.sqrt_pos.mpr (by norm_num))
-  field_simp [sub_mul, mul_addₓ]
+  have : 1 + Real.sqrt 5 ≠ 0 := ne_of_gt (add_pos (by norm_num) <| real.sqrt_pos.mpr (by norm_num))
+  field_simp [sub_mul, mul_add]
   norm_num
 
 /-- The opposite of the golden ratio is the inverse of its conjugate. -/
@@ -91,16 +91,16 @@ theorem gold_pos : 0 < φ :=
   mul_pos (by apply add_pos <;> norm_num) <| inv_pos.2 zero_lt_two
 
 theorem gold_ne_zero : φ ≠ 0 :=
-  ne_of_gtₓ gold_pos
+  ne_of_gt gold_pos
 
 theorem one_lt_gold : 1 < φ := by
-  refine' lt_of_mul_lt_mul_left _ (le_of_ltₓ gold_pos)
+  refine' lt_of_mul_lt_mul_left _ (le_of_lt gold_pos)
   simp [← sq, gold_pos, zero_lt_one]
 
 theorem gold_conj_neg : ψ < 0 := by linarith [one_sub_gold_conj, one_lt_gold]
 
 theorem gold_conj_ne_zero : ψ ≠ 0 :=
-  ne_of_ltₓ gold_conj_neg
+  ne_of_lt gold_conj_neg
 
 theorem neg_one_lt_gold_conj : -1 < ψ := by
   rw [neg_lt, ← inv_gold]
@@ -134,7 +134,7 @@ theorem gold_conj_irrational : Irrational ψ := by
 
 section Fibrec
 
-variable {α : Type _} [CommSemiringₓ α]
+variable {α : Type _} [CommSemiring α]
 
 /-- The recurrence relation satisfied by the Fibonacci sequence. -/
 def fibRec : LinearRecurrence α where
@@ -146,9 +146,9 @@ section Poly
 open Polynomial
 
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
-theorem fib_rec_char_poly_eq {β : Type _} [CommRingₓ β] : fibRec.charPoly = X ^ 2 - (X + (1 : Polynomial β)) := by
+theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] : fibRec.charPoly = X ^ 2 - (X + (1 : Polynomial β)) := by
   rw [fibRec, LinearRecurrence.charPoly]
-  simp [Finsetₓ.sum_fin_eq_sum_range, Finsetₓ.sum_range_succ', monomial_eq_smul_X]
+  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', monomial_eq_smul_X]
 
 end Poly
 
@@ -157,8 +157,8 @@ theorem fib_is_sol_fib_rec : fibRec.IsSolution (fun x => x.fib : ℕ → α) := 
   rw [fibRec]
   intro n
   simp only
-  rw [Nat.fib_add_two, add_commₓ]
-  simp [Finsetₓ.sum_fin_eq_sum_range, Finsetₓ.sum_range_succ']
+  rw [Nat.fib_add_two, add_comm]
+  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ']
 
 /-- The geometric sequence `λ n, φ^n` is a solution of `fib_rec`. -/
 theorem geom_gold_is_sol_fib_rec : fibRec.IsSolution (pow φ) := by
@@ -172,7 +172,7 @@ theorem geom_gold_conj_is_sol_fib_rec : fibRec.IsSolution (pow ψ) := by
 
 end Fibrec
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- Binet's formula as a function equality. -/
 theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 := by
   rw [fib_rec.sol_eq_of_eq_init]

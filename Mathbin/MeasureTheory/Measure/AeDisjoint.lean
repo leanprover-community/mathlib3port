@@ -26,7 +26,7 @@ def AeDisjoint (s t : Set α) :=
 
 variable {μ} {s t u v : Set α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
 theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
@@ -68,11 +68,11 @@ protected theorem _root_.set.pairwise_disjoint.ae_disjoint {f : ι → Set α} {
     s.Pairwise (AeDisjoint μ on f) :=
   hf.mono' fun i j h => h.AeDisjoint
 
-theorem mono_ae (h : AeDisjoint μ s t) (hu : u ≤ᵐ[μ] s) (hv : v ≤ᵐ[μ] t) : AeDisjoint μ u v :=
+theorem monoAe (h : AeDisjoint μ s t) (hu : u ≤ᵐ[μ] s) (hv : v ≤ᵐ[μ] t) : AeDisjoint μ u v :=
   measure_mono_null_ae (hu.inter hv) h
 
 theorem mono (h : AeDisjoint μ s t) (hu : u ⊆ s) (hv : v ⊆ t) : AeDisjoint μ u v :=
-  h.mono_ae hu.EventuallyLe hv.EventuallyLe
+  h.monoAe hu.EventuallyLe hv.EventuallyLe
 
 @[simp]
 theorem Union_left_iff [Countable ι] {s : ι → Set α} : AeDisjoint μ (⋃ i, s i) t ↔ ∀ i, AeDisjoint μ (s i) t := by
@@ -84,16 +84,16 @@ theorem Union_right_iff [Countable ι] {t : ι → Set α} : AeDisjoint μ s (�
 
 @[simp]
 theorem union_left_iff : AeDisjoint μ (s ∪ t) u ↔ AeDisjoint μ s u ∧ AeDisjoint μ t u := by
-  simp [union_eq_Union, And.comm]
+  simp [union_eq_Union, and_comm]
 
 @[simp]
 theorem union_right_iff : AeDisjoint μ s (t ∪ u) ↔ AeDisjoint μ s t ∧ AeDisjoint μ s u := by
-  simp [union_eq_Union, And.comm]
+  simp [union_eq_Union, and_comm]
 
-theorem union_left (hs : AeDisjoint μ s u) (ht : AeDisjoint μ t u) : AeDisjoint μ (s ∪ t) u :=
+theorem unionLeft (hs : AeDisjoint μ s u) (ht : AeDisjoint μ t u) : AeDisjoint μ (s ∪ t) u :=
   union_left_iff.mpr ⟨hs, ht⟩
 
-theorem union_right (ht : AeDisjoint μ s t) (hu : AeDisjoint μ s u) : AeDisjoint μ s (t ∪ u) :=
+theorem unionRight (ht : AeDisjoint μ s t) (hu : AeDisjoint μ s u) : AeDisjoint μ s (t ∪ u) :=
   union_right_iff.2 ⟨ht, hu⟩
 
 theorem diff_ae_eq_left (h : AeDisjoint μ s t) : (s \ t : Set α) =ᵐ[μ] s :=
@@ -111,22 +111,22 @@ theorem measure_diff_right (h : AeDisjoint μ s t) : μ (t \ s) = μ t :=
 /-- If `s` and `t` are `μ`-a.e. disjoint, then `s \ u` and `t` are disjoint for some measurable null
 set `u`. -/
 theorem exists_disjoint_diff (h : AeDisjoint μ s t) : ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
-  ⟨ToMeasurable μ (s ∩ t), measurable_set_to_measurable _ _, (measure_to_measurable _).trans h,
-    disjoint_diff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
+  ⟨ToMeasurable μ (s ∩ t), measurableSetToMeasurable _ _, (measure_to_measurable _).trans h,
+    disjointDiff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 
-theorem of_null_right (h : μ t = 0) : AeDisjoint μ s t :=
+theorem ofNullRight (h : μ t = 0) : AeDisjoint μ s t :=
   measure_mono_null (inter_subset_right _ _) h
 
-theorem of_null_left (h : μ s = 0) : AeDisjoint μ s t :=
-  (of_null_right h).symm
+theorem ofNullLeft (h : μ s = 0) : AeDisjoint μ s t :=
+  (ofNullRight h).symm
 
 end AeDisjoint
 
-theorem ae_disjoint_compl_left : AeDisjoint μ (sᶜ) s :=
-  (@disjoint_compl_left _ _ s).AeDisjoint
+theorem aeDisjointComplLeft : AeDisjoint μ (sᶜ) s :=
+  (@disjointComplLeft _ _ s).AeDisjoint
 
-theorem ae_disjoint_compl_right : AeDisjoint μ s (sᶜ) :=
-  (@disjoint_compl_right _ _ s).AeDisjoint
+theorem aeDisjointComplRight : AeDisjoint μ s (sᶜ) :=
+  (@disjointComplRight _ _ s).AeDisjoint
 
 end MeasureTheory
 

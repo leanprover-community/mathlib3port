@@ -58,7 +58,7 @@ variable (α : Type u)
 
 /-- `free_comm_ring α` is the free commutative ring on the type `α`. -/
 def FreeCommRing (α : Type u) : Type u :=
-  FreeAbelianGroup <| Multiplicative <| Multiset α deriving CommRingₓ, Inhabited
+  FreeAbelianGroup <| Multiplicative <| Multiset α deriving CommRing, Inhabited
 
 namespace FreeCommRing
 
@@ -71,22 +71,22 @@ def of (x : α) : FreeCommRing α :=
 theorem of_injective : Function.Injective (of : α → FreeCommRing α) :=
   FreeAbelianGroup.of_injective.comp fun x y => (Multiset.coe_eq_coe.trans List.singleton_perm_singleton).mp
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on {C : FreeCommRing α → Prop} (z : FreeCommRing α) (hn1 : C (-1)) (hb : ∀ b, C (of b))
     (ha : ∀ x y, C x → C y → C (x + y)) (hm : ∀ x y, C x → C y → C (x * y)) : C z :=
   have hn : ∀ x, C x → C (-x) := fun x ih => neg_one_mul x ▸ hm _ _ hn1 ih
-  have h1 : C 1 := neg_negₓ (1 : FreeCommRing α) ▸ hn _ hn1
-  FreeAbelianGroup.induction_on z (add_left_negₓ (1 : FreeCommRing α) ▸ ha _ _ hn1 h1)
+  have h1 : C 1 := neg_neg (1 : FreeCommRing α) ▸ hn _ hn1
+  FreeAbelianGroup.induction_on z (add_left_neg (1 : FreeCommRing α) ▸ ha _ _ hn1 h1)
     (fun m => (Multiset.induction_on m h1) fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
 
 section lift
 
-variable {R : Type v} [CommRingₓ R] (f : α → R)
+variable {R : Type v} [CommRing R] (f : α → R)
 
 /-- A helper to implement `lift`. This is essentially `free_comm_monoid.lift`, but this does not
 currently exist. -/
 private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →* R) where
-  toFun := fun f =>
+  toFun f :=
     { toFun := fun s => (s.toAdd.map f).Prod,
       map_mul' := fun x y =>
         calc
@@ -96,9 +96,9 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
           _ = _ := Multiset.prod_add _ _
           ,
       map_one' := rfl }
-  invFun := fun F x => F (Multiplicative.ofAdd ({x} : Multiset α))
-  left_inv := fun f => funext fun x => show (Multiset.map f {x}).Prod = _ by simp
-  right_inv := fun F =>
+  invFun F x := F (Multiplicative.ofAdd ({x} : Multiset α))
+  left_inv f := funext fun x => show (Multiset.map f {x}).Prod = _ by simp
+  right_inv F :=
     MonoidHom.ext fun x =>
       let F' := F.toAdditive''
       let x' := x.toAdd
@@ -109,11 +109,11 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
 /-- Lift a map `α → R` to a additive group homomorphism `free_comm_ring α → R`.
 For a version producing a bundled homomorphism, see `lift_hom`. -/
 def lift : (α → R) ≃ (FreeCommRing α →+* R) :=
-  Equivₓ.trans liftToMultiset FreeAbelianGroup.liftMonoid
+  Equiv.trans liftToMultiset FreeAbelianGroup.liftMonoid
 
 @[simp]
 theorem lift_of (x : α) : lift f (of x) = f x :=
-  (FreeAbelianGroup.lift.of _ _).trans <| mul_oneₓ _
+  (FreeAbelianGroup.lift.of _ _).trans <| mul_one _
 
 @[simp]
 theorem lift_comp_of (f : FreeCommRing α →+* R) : lift (f ∘ of) = f :=
@@ -169,8 +169,8 @@ theorem is_supported_one : IsSupported 1 s :=
 
 theorem is_supported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
   Int.induction_on i is_supported_zero
-    (fun i hi => by rw [Int.cast_add, Int.cast_oneₓ] <;> exact is_supported_add hi is_supported_one) fun i hi => by
-    rw [Int.cast_sub, Int.cast_oneₓ] <;> exact is_supported_sub hi is_supported_one
+    (fun i hi => by rw [Int.cast_add, Int.cast_one] <;> exact is_supported_add hi is_supported_one) fun i hi => by
+    rw [Int.cast_sub, Int.cast_one] <;> exact is_supported_sub hi is_supported_one
 
 end IsSupported
 
@@ -201,7 +201,7 @@ theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
       norm_cast
       
     · use -1
-      rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_oneₓ]
+      rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
       
     · rintro _ ⟨z, hzs, rfl⟩ _ _
       use 0
@@ -253,7 +253,7 @@ theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite
       is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left s t)
         (is_supported_upwards hxt <| Set.subset_union_right s t)⟩
 
-theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finsetₓ α, IsSupported x ↑s :=
+theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, IsSupported x ↑s :=
   let ⟨s, hfs, hxs⟩ := exists_finite_support x
   ⟨hfs.toFinset, by rwa [Set.Finite.coe_to_finset]⟩
 
@@ -347,9 +347,9 @@ def subsingletonEquivFreeCommRing [Subsingleton α] : FreeRing α ≃+* FreeComm
           Functor.mapEquiv FreeAbelianGroup (Multiset.subsingletonEquiv α) :=
         coe_eq α
       rw [this]
-      apply Equivₓ.bijective)
+      apply Equiv.bijective)
 
-instance [Subsingleton α] : CommRingₓ (FreeRing α) :=
+instance [Subsingleton α] : CommRing (FreeRing α) :=
   { FreeRing.ring α with
     mul_comm := fun x y => by
       rw [← (subsingleton_equiv_free_comm_ring α).symm_apply_apply (y * x),

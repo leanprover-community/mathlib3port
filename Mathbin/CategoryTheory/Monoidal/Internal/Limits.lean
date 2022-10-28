@@ -64,7 +64,7 @@ the proposed cone over a functor `F : J ⥤ Mon_ C` is a limit cone.
 -/
 @[simps]
 def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
-  lift := fun s =>
+  lift s :=
     { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s),
       mul_hom' := by
         ext
@@ -74,10 +74,10 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
         slice_rhs 1 2 =>
         rw [← monoidal_category.tensor_comp, limit.lift_π]
         dsimp }
-  fac' := fun s h => by
+  fac' s h := by
     ext
     simp
-  uniq' := fun s m w => by
+  uniq' s m w := by
     ext
     dsimp
     simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
@@ -86,13 +86,13 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
 instance has_limits :
     HasLimits
       (Mon_
-        C) where HasLimitsOfShape := fun J 𝒥 =>
+        C) where HasLimitsOfShape J 𝒥 :=
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
 instance forgetPreservesLimits :
     PreservesLimits
       (Mon_.forget
-        C) where PreservesLimitsOfShape := fun J 𝒥 =>
+        C) where PreservesLimitsOfShape J 𝒥 :=
     { PreservesLimit := fun F : J ⥤ Mon_ C =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C)) (forget_map_cone_limit_cone_iso F).symm) }

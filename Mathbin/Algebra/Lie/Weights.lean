@@ -49,11 +49,11 @@ lie character, eigenvalue, eigenspace, weight, weight vector, root, root vector
 
 universe u v w w₁ w₂ w₃
 
-variable {R : Type u} {L : Type v} [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable {R : Type u} {L : Type v} [CommRing R] [LieRing L] [LieAlgebra R L]
 
 variable (H : LieSubalgebra R L) [LieAlgebra.IsNilpotent R H]
 
-variable (M : Type w) [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable (M : Type w) [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 namespace LieModule
 
@@ -84,17 +84,17 @@ variable (R)
 theorem exists_pre_weight_space_zero_le_ker_of_is_noetherian [IsNoetherian R M] (x : L) :
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker := by
   use (to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
-  simp only [← Module.End.generalized_eigenspace_zero, pre_weight_space, Pi.zero_apply, infi_le, ←
+  simp only [← Module.EndCat.generalized_eigenspace_zero, pre_weight_space, Pi.zero_apply, infi_le, ←
     (to_endomorphism R L M x).maximal_generalized_eigenspace_eq]
 
 variable {R} (L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k),
-    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k),
+    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]] -/
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
-protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroupₓ M₁]
-    [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂]
-    [LieModule R L M₂] [AddCommGroupₓ M₃] [Module R M₃] [LieRingModule L M₃] [LieModule R L M₃]
+protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroup M₁]
+    [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroup M₂] [Module R M₂] [LieRingModule L M₂]
+    [LieModule R L M₂] [AddCommGroup M₃] [Module R M₃] [LieRingModule L M₃] [LieModule R L M₃]
     (g : M₁ ⊗[R] M₂ →ₗ⁅R,L⁆ M₃) (χ₁ χ₂ : L → R) :
     ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (mapIncl (preWeightSpace M₁ χ₁) (preWeightSpace M₂ χ₂))).range ≤
       preWeightSpace M₃ (χ₁ + χ₂) :=
@@ -105,7 +105,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     TensorProduct.mapIncl, exists_imp_distrib, LinearMap.mem_range]
   rintro t rfl x
   -- Set up some notation.
-  let F : Module.End R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1
+  let F : Module.EndCat R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1
   change ∃ k, (F ^ k) (g _) = 0
   -- The goal is linear in `t` so use induction to reduce to the case that `t` is a pure tensor.
   apply t.induction_on
@@ -115,15 +115,15 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   swap
   · rintro t₁ t₂ ⟨k₁, hk₁⟩ ⟨k₂, hk₂⟩
     use max k₁ k₂
-    simp only [LieModuleHom.map_add, LinearMap.map_add, LinearMap.pow_map_zero_of_le (le_max_leftₓ k₁ k₂) hk₁,
-      LinearMap.pow_map_zero_of_le (le_max_rightₓ k₁ k₂) hk₂, add_zeroₓ]
+    simp only [LieModuleHom.map_add, LinearMap.map_add, LinearMap.pow_map_zero_of_le (le_max_left k₁ k₂) hk₁,
+      LinearMap.pow_map_zero_of_le (le_max_right k₁ k₂) hk₂, add_zero]
     
   -- Now the main argument: pure tensors.
   rintro ⟨m₁, hm₁⟩ ⟨m₂, hm₂⟩
   change ∃ k, (F ^ k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
   -- Eliminate `g` from the picture.
-  let f₁ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
-  let f₂ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
+  let f₁ : Module.EndCat R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
+  let f₂ : Module.EndCat R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
   have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
     ext m₁ m₂
     simp only [← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul, lie_tmul_right, tmul_smul,
@@ -151,10 +151,10 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul, algebra_tensor_module.curry_apply,
       LinearMap.to_fun_eq_coe, LinearMap.ltensor_tmul, curry_apply, LinearMap.coe_restrict_scalars_eq_coe]
   rw [hf_comm.add_pow']
-  simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finsetₓ.sum_apply, Submodule.coe_mk, LinearMap.coe_fn_sum,
+  simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finset.sum_apply, Submodule.coe_mk, LinearMap.coe_fn_sum,
     TensorProduct.map_tmul, LinearMap.smul_apply]
   -- The required sum is zero because each individual term is zero.
-  apply Finsetₓ.sum_eq_zero
+  apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
   -- Eliminate the binomial coefficients from the picture.
   suffices (f₁ ^ i * f₂ ^ j) (m₁ ⊗ₜ m₂) = 0 by
@@ -184,7 +184,7 @@ variable (M)
 def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
   { preWeightSpace M χ with
     lie_mem := fun x m hm => by
-      rw [← zero_addₓ χ]
+      rw [← zero_add χ]
       refine' lie_mem_pre_weight_space_of_mem_pre_weight_space _ hm
       suffices pre_weight_space L (0 : L → R) = ⊤ by simp only [this, Submodule.mem_top]
       exact LieAlgebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L }
@@ -284,8 +284,8 @@ abbrev IsRoot :=
 @[simp]
 theorem root_space_comap_eq_weight_space (χ : H → R) : (rootSpace H χ).comap H.incl' = weightSpace H χ := by
   ext x
-  let f : H → Module.End R L := fun y => to_endomorphism R H L y - χ y • 1
-  let g : H → Module.End R H := fun y => to_endomorphism R H H y - χ y • 1
+  let f : H → Module.EndCat R L := fun y => to_endomorphism R H L y - χ y • 1
+  let g : H → Module.EndCat R H := fun y => to_endomorphism R H H y - χ y • 1
   suffices
     (∀ y : H, ∃ k : ℕ, (f y ^ k).comp (H.incl : H →ₗ[R] L) x = 0) ↔
       ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y ^ k) x = 0
@@ -319,7 +319,7 @@ which is close to the deterministic timeout limit.
 -/
 def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ →ₗ[R] weightSpace M χ₂ →ₗ[R] weightSpace M χ₃ where
-  toFun := fun x =>
+  toFun x :=
     { toFun := fun m => ⟨⁅(x : L), (m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
       map_add' := fun m n => by
         simp only [LieSubmodule.coe_add, lie_add]
@@ -329,11 +329,11 @@ def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + 
         congr
         rw [LieSubmodule.coe_smul, lie_smul]
         rfl }
-  map_add' := fun x y => by
+  map_add' x y := by
     ext m <;>
       rw [LinearMap.add_apply, LinearMap.coe_mk, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk,
         LieSubmodule.coe_add, LieSubmodule.coe_add, add_lie, Subtype.coe_mk, Subtype.coe_mk]
-  map_smul' := fun t x => by
+  map_smul' t x := by
     simp only [RingHom.id_apply]
     ext m
     rw [LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk, LieSubmodule.coe_smul, smul_lie,
@@ -378,9 +378,9 @@ def zeroRootSubalgebra : LieSubalgebra R L :=
   { (rootSpace H 0 : Submodule R L) with
     lie_mem' := fun x y hx hy => by
       let xy : root_space H 0 ⊗[R] root_space H 0 := ⟨x, hx⟩ ⊗ₜ ⟨y, hy⟩
-      suffices (root_space_product R L H 0 0 0 (add_zeroₓ 0) xy : L) ∈ root_space H 0 by
+      suffices (root_space_product R L H 0 0 0 (add_zero 0) xy : L) ∈ root_space H 0 by
         rwa [root_space_product_tmul, Subtype.coe_mk, Subtype.coe_mk] at this
-      exact (root_space_product R L H 0 0 0 (add_zeroₓ 0) xy).property }
+      exact (root_space_product R L H 0 0 0 (add_zero 0) xy).property }
 
 @[simp]
 theorem coe_zero_root_subalgebra : (zeroRootSubalgebra R L H : Submodule R L) = rootSpace H 0 :=
@@ -398,8 +398,8 @@ theorem to_lie_submodule_le_root_space_zero : H.toLieSubmodule ≤ rootSpace H 0
   intro y
   obtain ⟨k, hk⟩ := (inferInstance : IsNilpotent R H)
   use k
-  let f : Module.End R H := to_endomorphism R H H y
-  let g : Module.End R L := to_endomorphism R H L y
+  let f : Module.EndCat R H := to_endomorphism R H H y
+  let g : Module.EndCat R L := to_endomorphism R H L y
   have hfg : g.comp (H : Submodule R L).Subtype = (H : Submodule R L).Subtype.comp f := by
     ext z
     simp only [to_endomorphism_apply_apply, Submodule.subtype_apply, LieSubalgebra.coe_bracket_of_module,
@@ -418,7 +418,7 @@ theorem le_zero_root_subalgebra : H ≤ zeroRootSubalgebra R L H := by
 
 @[simp]
 theorem zero_root_subalgebra_normalizer_eq_self : (zeroRootSubalgebra R L H).normalizer = zeroRootSubalgebra R L H := by
-  refine' le_antisymmₓ _ (LieSubalgebra.le_normalizer _)
+  refine' le_antisymm _ (LieSubalgebra.le_normalizer _)
   intro x hx
   rw [LieSubalgebra.mem_normalizer_iff] at hx
   rw [mem_zero_root_subalgebra]
@@ -445,7 +445,7 @@ theorem is_cartan_of_zero_root_subalgebra_eq (h : zeroRootSubalgebra R L H = H) 
 @[simp]
 theorem zero_root_subalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSubalgebra] [IsNoetherian R L] :
     zeroRootSubalgebra R L H = H := by
-  refine' le_antisymmₓ _ (le_zero_root_subalgebra R L H)
+  refine' le_antisymm _ (le_zero_root_subalgebra R L H)
   suffices root_space H 0 ≤ H.to_lie_submodule by exact fun x hx => this hx
   obtain ⟨k, hk⟩ := (root_space H 0).is_nilpotent_iff_exists_self_le_ucs.mp (by infer_instance)
   exact hk.trans (LieSubmodule.ucs_le_of_centralizer_eq_self (by simp) k)
@@ -475,7 +475,7 @@ def weightSpace' (χ : H → R) : LieSubmodule R (zeroRootSubalgebra R L H) M :=
       have hx : (x : L) ∈ root_space H 0 := by
         rw [← LieSubmodule.mem_coe_submodule, ← coe_zero_root_subalgebra]
         exact x.property
-      rw [← zero_addₓ χ]
+      rw [← zero_add χ]
       exact lie_mem_weight_space_of_mem_weight_space hx hm }
 
 @[simp]

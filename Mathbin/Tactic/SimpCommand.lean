@@ -63,7 +63,7 @@ unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
   let no_dflt ← only_flag
   let hs ← simp_arg_list
   let attr_names ← with_ident_list
-  let o ← optionalₓ (tk ":")
+  let o ← optional (tk ":")
   let e ← types.texpr
   let-- Retrieve the `pexpr`s parsed as part of the simp args, and collate them into a big list.
   hs_es := List.join <| hs.map <| Option.toList ∘ simp_arg_type.to_pexpr

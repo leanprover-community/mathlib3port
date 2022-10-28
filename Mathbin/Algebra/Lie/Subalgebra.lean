@@ -33,7 +33,7 @@ universe u v w w₁ w₂
 
 section LieSubalgebra
 
-variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L]
 
 /-- A Lie subalgebra of a Lie algebra is submodule that is closed under the Lie bracket.
 This is a sufficient condition for the subset itself to form a Lie algebra. -/
@@ -58,20 +58,20 @@ instance : Coe (LieSubalgebra R L) (Submodule R L) :=
 namespace LieSubalgebra
 
 instance : SetLike (LieSubalgebra R L) L where
-  coe := fun L' => L'
-  coe_injective' := fun L' L'' h => by
+  coe L' := L'
+  coe_injective' L' L'' h := by
     rcases L' with ⟨⟨⟩⟩
     rcases L'' with ⟨⟨⟩⟩
     congr
 
 instance : AddSubgroupClass (LieSubalgebra R L) L where
-  add_mem := fun L' _ _ => L'.add_mem'
-  zero_mem := fun L' => L'.zero_mem'
-  neg_mem := fun L' x hx => show -x ∈ (L' : Submodule R L) from neg_mem hx
+  add_mem L' _ _ := L'.add_mem'
+  zero_mem L' := L'.zero_mem'
+  neg_mem L' x hx := show -x ∈ (L' : Submodule R L) from neg_mem hx
 
 /-- A Lie subalgebra forms a new Lie ring. -/
 instance (L' : LieSubalgebra R L) : LieRing L' where
-  bracket := fun x y => ⟨⁅x.val, y.val⁆, L'.lie_mem' x.property y.property⟩
+  bracket x y := ⟨⁅x.val, y.val⁆, L'.lie_mem' x.property y.property⟩
   lie_add := by
     intros
     apply SetCoe.ext
@@ -91,7 +91,7 @@ instance (L' : LieSubalgebra R L) : LieRing L' where
 
 section
 
-variable {R₁ : Type _} [Semiringₓ R₁]
+variable {R₁ : Type _} [Semiring R₁]
 
 /-- A Lie subalgebra inherits module structures from `L`. -/
 instance [HasSmul R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalgebra R L) : Module R₁ L' :=
@@ -199,17 +199,17 @@ theorem coe_to_submodule : ((L' : Submodule R L) : Set L) = L' :=
 
 section LieModule
 
-variable {M : Type w} [AddCommGroupₓ M] [LieRingModule L M]
+variable {M : Type w} [AddCommGroup M] [LieRingModule L M]
 
-variable {N : Type w₁} [AddCommGroupₓ N] [LieRingModule L N] [Module R N] [LieModule R L N]
+variable {N : Type w₁} [AddCommGroup N] [LieRingModule L N] [Module R N] [LieModule R L N]
 
 /-- Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie ring module
 `M` of `L`, we may regard `M` as a Lie ring module of `L'` by restriction. -/
 instance : LieRingModule L' M where
-  bracket := fun x m => ⁅(x : L), m⁆
-  add_lie := fun x y m => add_lie x y m
-  lie_add := fun x y m => lie_add x y m
-  leibniz_lie := fun x y m => leibniz_lie x y m
+  bracket x m := ⁅(x : L), m⁆
+  add_lie x y m := add_lie x y m
+  lie_add x y m := lie_add x y m
+  leibniz_lie x y m := leibniz_lie x y m
 
 @[simp]
 theorem coe_bracket_of_module (x : L') (m : M) : ⁅x, m⁆ = ⁅(x : L), m⁆ :=
@@ -220,8 +220,8 @@ variable [Module R M] [LieModule R L M]
 /-- Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie module `M` of
 `L`, we may regard `M` as a Lie module of `L'` by restriction. -/
 instance : LieModule R L' M where
-  smul_lie := fun t x m => by simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
-  lie_smul := fun t x m => by simp only [coe_bracket_of_module, lie_smul]
+  smul_lie t x m := by simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
+  lie_smul t x m := by simp only [coe_bracket_of_module, lie_smul]
 
 /-- An `L`-equivariant map of Lie modules `M → N` is `L'`-equivariant for any Lie subalgebra
 `L' ⊆ L`. -/
@@ -375,9 +375,9 @@ section LatticeStructure
 
 open Set
 
-instance : PartialOrderₓ (LieSubalgebra R L) :=
+instance : PartialOrder (LieSubalgebra R L) :=
   { -- Overriding `le` like this gives a better defeq.
-      PartialOrderₓ.lift
+      PartialOrder.lift
       (coe : LieSubalgebra R L → Set L) coe_injective with
     le := fun N N' => ∀ ⦃x⦄, x ∈ N → x ∈ N' }
 
@@ -427,8 +427,8 @@ instance : HasInf (LieSubalgebra R L) :=
     { (K ⊓ K' : Submodule R L) with
       lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
-instance : HasInfₓ (LieSubalgebra R L) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+instance : HasInf (LieSubalgebra R L) :=
   ⟨fun S =>
     { inf
         "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
@@ -442,7 +442,7 @@ instance : HasInfₓ (LieSubalgebra R L) :=
 theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+/- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(inf S) : Submodule R L) =
@@ -474,16 +474,16 @@ instance : CompleteLattice (LieSubalgebra R L) :=
       rw [mem_bot] at h
       rw [h]
       exact N.zero_mem',
-    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := (· ⊓ ·), le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
+    top := ⊤, le_top := fun _ _ _ => trivial, inf := (· ⊓ ·), le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
     inf_le_left := fun _ _ _ => And.left, inf_le_right := fun _ _ _ => And.right }
 
-instance : AddCommMonoidₓ (LieSubalgebra R L) where
+instance : AddCommMonoid (LieSubalgebra R L) where
   add := (· ⊔ ·)
-  add_assoc := fun _ _ _ => sup_assoc
+  add_assoc _ _ _ := sup_assoc
   zero := ⊥
-  zero_add := fun _ => bot_sup_eq
-  add_zero := fun _ => sup_bot_eq
-  add_comm := fun _ _ => sup_comm
+  zero_add _ := bot_sup_eq
+  add_zero _ := sup_bot_eq
+  add_comm _ _ := sup_comm
 
 instance : CanonicallyOrderedAddMonoid (LieSubalgebra R L) :=
   { LieSubalgebra.addCommMonoid, LieSubalgebra.completeLattice with add_le_add_left := fun a b => sup_le_sup_left,
@@ -511,7 +511,7 @@ instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalg
   change x ∈ ⊥ at hx
   rw [LieSubalgebra.mem_bot] at hx
   subst hx
-  simp only [true_iffₓ, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
+  simp only [true_iff_iff, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
 
 theorem subsingleton_bot : Subsingleton ↥(⊥ : LieSubalgebra R L) :=
   show Subsingleton ((⊥ : LieSubalgebra R L) : Set L) by simp
@@ -629,7 +629,7 @@ theorem lie_span_mono {t : Set L} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L 
   exact Set.Subset.trans h subset_lie_span
 
 theorem lie_span_eq : lieSpan R L (K : Set L) = K :=
-  le_antisymmₓ (lie_span_le.mpr rfl.Subset) subset_lie_span
+  le_antisymm (lie_span_le.mpr rfl.Subset) subset_lie_span
 
 theorem coe_lie_span_submodule_eq_iff {p : Submodule R L} :
     (lieSpan R L (p : Set L) : Submodule R L) = p ↔ ∃ K : LieSubalgebra R L, ↑K = p := by
@@ -646,10 +646,10 @@ variable (R L)
 
 /-- `lie_span` forms a Galois insertion with the coercion from `lie_subalgebra` to `set`. -/
 protected def gi : GaloisInsertion (lieSpan R L : Set L → LieSubalgebra R L) coe where
-  choice := fun s _ => lieSpan R L s
-  gc := fun s t => lie_span_le
-  le_l_u := fun s => subset_lie_span
-  choice_eq := fun s h => rfl
+  choice s _ := lieSpan R L s
+  gc s t := lie_span_le
+  le_l_u s := subset_lie_span
+  choice_eq s h := rfl
 
 @[simp]
 theorem span_empty : lieSpan R L (∅ : Set L) = ⊥ :=
@@ -677,7 +677,7 @@ namespace LieEquiv
 
 variable {R : Type u} {L₁ : Type v} {L₂ : Type w}
 
-variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂]
+variable [CommRing R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂]
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=

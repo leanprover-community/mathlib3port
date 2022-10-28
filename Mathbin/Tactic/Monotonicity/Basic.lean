@@ -32,7 +32,7 @@ parameter (opt : MonoCfg)
 
 unsafe def compare (e₀ e₁ : expr) : tactic Unit := do
   if opt then do
-      guardₓ (¬e₀ ∧ ¬e₁)
+      guard (¬e₀ ∧ ¬e₁)
       unify e₀ e₁
     else is_def_eq e₀ e₁
 
@@ -41,7 +41,7 @@ unsafe def find_one_difference : List expr → List expr → tactic (List expr �
     let c ← try_core (compare x y)
     if c then Prod.map (cons x) id <$> find_one_difference xs ys
       else do
-        guardₓ (xs = ys)
+        guard (xs = ys)
         mzipWith' compare xs ys
         return ([], x, y, xs)
   | xs, ys => fail f! "find_one_difference: {xs }, {ys}"
@@ -55,7 +55,7 @@ def lastTwo {α : Type _} (l : List α) : Option (α × α) :=
 
 unsafe def match_imp : expr → tactic (expr × expr)
   | quote.1 ((%%ₓe₀) → %%ₓe₁) => do
-    guardₓ ¬e₁
+    guard ¬e₁
     return (e₀, e₁)
   | _ => failed
 
@@ -70,10 +70,10 @@ unsafe def same_operator : expr → expr → Bool
   | _, _ => false
 
 unsafe def get_operator (e : expr) : Option Name :=
-  (guardₓ ¬e.is_pi) >> pure e.get_app_fn.const_name
+  (guard ¬e.is_pi) >> pure e.get_app_fn.const_name
 
 unsafe def monotonicity.check_rel (l r : expr) : tactic (Option Name) := do
-  guardₓ (same_operator l r) <|> do
+  guard (same_operator l r) <|> do
       fail f! "{l } and {r} should be the f x and f y for some f"
   if l then pure none else pure r
 
@@ -85,9 +85,9 @@ unsafe instance mono_key.has_lt : LT MonoKey where lt := Prod.Lex (· < ·) (· 
 
 open Nat
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 unsafe def mono_head_candidates : ℕ → List expr → expr → tactic MonoKey
   | 0, _, h =>
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
@@ -95,7 +95,7 @@ unsafe def mono_head_candidates : ℕ → List expr → expr → tactic MonoKey
     (do
         let (rel, l, r) ←
           if h.is_arrow then pure (none, h.binding_domain, h.binding_body)
-            else guardₓ h.get_app_fn.is_constant >> Prod.mk (some h.get_app_fn.const_name) <$> lastTwo h.get_app_args
+            else guard h.get_app_fn.is_constant >> Prod.mk (some h.get_app_fn.const_name) <$> lastTwo h.get_app_args
         Prod.mk <$> monotonicity.check_rel l r <*> pure rel) <|>
       match xs with
       | [] => fail f! "oh? {h}"
@@ -108,8 +108,8 @@ unsafe def monotonicity.check (lm_n : Name) : tactic MonoKey := do
       (← do
         dbg_trace "[mono] Looking for relation in {← lm_t}")
   let s := simp_lemmas.mk
-  let s ← s.add_simp `` Monotoneₓ
-  let s ← s.add_simp `` StrictMonoₓ
+  let s ← s.add_simp `` Monotone
+  let s ← s.add_simp `` StrictMono
   let lm_t ← s.dsimplify [] lm_t { failIfUnchanged := false }
   when_tracing `mono.relation
       (← do
@@ -126,7 +126,7 @@ unsafe instance : has_to_format MonoSelection :=
 
 unsafe def side : lean.parser MonoSelection :=
   with_desc "expecting 'left', 'right' or 'both' (default)" <| do
-    let some n ← optionalₓ ident | pure MonoSelection.both
+    let some n ← optional ident | pure MonoSelection.both
     if n = `left then pure <| mono_selection.left
       else
         if n = `right then pure <| mono_selection.right

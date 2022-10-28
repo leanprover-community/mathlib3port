@@ -40,7 +40,7 @@ universe v
 
 noncomputable section
 
-variable {X : Top.{v}}
+variable {X : TopCat.{v}}
 
 variable (T : X → Type v)
 
@@ -54,7 +54,7 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Limits.Types
 
-namespace Top
+namespace TopCat
 
 /-- Given a topological space `X : Top` and a type family `T : X → Type`,
 a `P : prelocal_predicate T` consists of:
@@ -71,12 +71,12 @@ variable (X)
 /-- Continuity is a "prelocal" predicate on functions to a fixed topological space `T`.
 -/
 @[simps]
-def continuousPrelocal (T : Top.{v}) : PrelocalPredicate fun x : X => T where
-  pred := fun U f => Continuous f
-  res := fun U V i f h => Continuous.comp h (Opens.open_embedding_of_le i.le).Continuous
+def continuousPrelocal (T : TopCat.{v}) : PrelocalPredicate fun x : X => T where
+  pred U f := Continuous f
+  res U V i f h := Continuous.comp h (Opens.open_embedding_of_le i.le).Continuous
 
 /-- Satisfying the inhabited linter. -/
-instance inhabitedPrelocalPredicate (T : Top.{v}) : Inhabited (PrelocalPredicate fun x : X => T) :=
+instance inhabitedPrelocalPredicate (T : TopCat.{v}) : Inhabited (PrelocalPredicate fun x : X => T) :=
   ⟨continuousPrelocal X T⟩
 
 variable {X}
@@ -100,7 +100,7 @@ variable (X)
 
 /-- Continuity is a "local" predicate on functions to a fixed topological space `T`.
 -/
-def continuousLocal (T : Top.{v}) : LocalPredicate fun x : X => T :=
+def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
   { continuousPrelocal X T with
     locality := fun U f w => by
       apply continuous_iff_continuous_at.2
@@ -113,7 +113,7 @@ def continuousLocal (T : Top.{v}) : LocalPredicate fun x : X => T :=
       simpa using (opens.open_embedding_of_le i.le).continuous_at_iff.1 w }
 
 /-- Satisfying the inhabited linter. -/
-instance inhabitedLocalPredicate (T : Top.{v}) : Inhabited (LocalPredicate _) :=
+instance inhabitedLocalPredicate (T : TopCat.{v}) : Inhabited (LocalPredicate _) :=
   ⟨continuousLocal X T⟩
 
 variable {X T}
@@ -122,13 +122,13 @@ variable {X T}
 by asking that the condition from `P` holds locally near every point.
 -/
 def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : LocalPredicate T where
-  pred := fun U f => ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U)
-  res := fun V U i f w x => by
+  pred U f := ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U)
+  res V U i f w x := by
     specialize w (i x)
     rcases w with ⟨V', m', i', p⟩
     refine' ⟨V ⊓ V', ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩
     convert P.res (opens.inf_le_right V V') _ p
-  locality := fun U f w x => by
+  locality U f w x := by
     specialize w x
     rcases w with ⟨V, m, i, p⟩
     specialize p ⟨x.1, m⟩
@@ -146,8 +146,8 @@ theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate 
 -/
 @[simps]
 def subpresheafToTypes (P : PrelocalPredicate T) : Presheaf (Type v) X where
-  obj := fun U => { f : ∀ x : unop U, T x // P.pred f }
-  map := fun U V i f => ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩
+  obj U := { f : ∀ x : unop U, T x // P.pred f }
+  map U V i f := ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩
 
 namespace SubpresheafToTypes
 
@@ -156,9 +156,9 @@ variable (P : PrelocalPredicate T)
 /-- The natural transformation including the subpresheaf of functions satisfying a local predicate
 into the presheaf of all functions.
 -/
-def subtype : subpresheafToTypes P ⟶ presheafToTypes X T where app := fun U f => f.1
+def subtype : subpresheafToTypes P ⟶ presheafToTypes X T where app U f := f.1
 
-open Top.Presheaf
+open TopCat.Presheaf
 
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
@@ -271,7 +271,7 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
 the presheaf of functions satisfying `continuous_prelocal` is just the same thing as
 the presheaf of continuous functions.
 -/
-def subpresheafContinuousPrelocalIsoPresheafToTop (T : Top.{v}) :
+def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
     subpresheafToTypes (continuousPrelocal X T) ≅ presheafToTop X T :=
   NatIso.ofComponents
     (fun X =>
@@ -291,10 +291,10 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : Top.{v}) :
 
 /-- The sheaf of continuous functions on `X` with values in a space `T`.
 -/
-def sheafToTop (T : Top.{v}) : Sheaf (Type v) X :=
+def sheafToTop (T : TopCat.{v}) : Sheaf (Type v) X :=
   ⟨presheafToTop X T,
     Presheaf.is_sheaf_of_iso (subpresheafContinuousPrelocalIsoPresheafToTop T)
       (subpresheafToTypes.is_sheaf (continuousLocal X T))⟩
 
-end Top
+end TopCat
 

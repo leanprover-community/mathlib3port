@@ -21,26 +21,26 @@ unsafe def tidy_attribute : user_attribute where
 add_tactic_doc
   { Name := "tidy", category := DocCategory.attr, declNames := [`tactic.tidy.tidy_attribute], tags := ["search"] }
 
-unsafe def run_tactics : tactic Stringₓ := do
+unsafe def run_tactics : tactic String := do
   let names ← attribute.get_instances `tidy
   first (names name_to_tactic) <|> fail "no @[tidy] tactics succeeded"
 
 @[hint_tactic]
-unsafe def ext1_wrapper : tactic Stringₓ := do
+unsafe def ext1_wrapper : tactic String := do
   let ng ← num_goals
   ext1 [] { NewGoals := new_goals.all }
   let ng' ← num_goals
   return <| if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
-unsafe def default_tactics : List (tactic Stringₓ) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+unsafe def default_tactics : List (tactic String) :=
   [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial",
     (propositional_goal >> assumption) >> pure "assumption",
     intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.toString)), auto_cases,
@@ -51,14 +51,14 @@ unsafe def default_tactics : List (tactic Stringₓ) :=
 
 unsafe structure cfg where
   trace_result : Bool := false
-  trace_result_prefix : Stringₓ := "Try this: "
-  tactics : List (tactic Stringₓ) := default_tactics
+  trace_result_prefix : String := "Try this: "
+  tactics : List (tactic String) := default_tactics
 
 initialize
   registerTraceClass.1 `tidy
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `cfg
-unsafe def core (cfg : cfg := {  }) : tactic (List Stringₓ) := do
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `cfg -/
+unsafe def core (cfg : cfg := {  }) : tactic (List String) := do
   let results ← chain cfg.tactics
   when (cfg cfg.trace_result) <| trace (cfg ++ ", ".intercalate results)
   return results
@@ -89,7 +89,7 @@ can report a usable tactic script.)
 
 Tactics can also be added to the list by tagging them (locally) with the
 `[tidy]` attribute. -/
-unsafe def tidy (trace : parse <| optionalₓ (tk "?")) (cfg : tidy.cfg := {  }) :=
+unsafe def tidy (trace : parse <| optional (tk "?")) (cfg : tidy.cfg := {  }) :=
   tactic.tidy { cfg with trace_result := trace.isSome }
 
 end Interactive
@@ -105,7 +105,7 @@ the same name, replacing the hole with the tactic script `tidy` produces.
 unsafe def tidy_hole_cmd : hole_command where
   Name := "tidy"
   descr := "Use `tidy` to complete the goal."
-  action := fun _ => do
+  action _ := do
     let script ← tidy.core
     return [("begin " ++ ", ".intercalate script ++ " end", "by tidy")]
 

@@ -55,14 +55,14 @@ open Set Function Filter CauSeq UniformSpace
 
 /-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
-theorem Ratₓ.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace := by
+theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace := by
   ext s
   erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
   constructor <;> rintro ⟨ε, ε_pos, h⟩
   · use ε, by exact_mod_cast ε_pos
     intro a b hab
     apply h
-    rw [Ratₓ.dist_eq, abs_sub_comm] at hab
+    rw [Rat.dist_eq, abs_sub_comm] at hab
     exact_mod_cast hab
     
   · obtain ⟨ε', h', h''⟩ : ∃ ε' : ℚ, 0 < ε' ∧ (ε' : ℝ) < ε
@@ -70,8 +70,8 @@ theorem Ratₓ.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → �
     use ε', h'
     intro a b hab
     apply h
-    rw [Ratₓ.dist_eq, abs_sub_comm]
-    refine' lt_transₓ _ h''
+    rw [Rat.dist_eq, abs_sub_comm]
+    refine' lt_trans _ h''
     exact_mod_cast hab
     
 
@@ -83,9 +83,9 @@ def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace 
   complete := by infer_instance
   separation := by infer_instance
   UniformInducing := by
-    rw [Ratₓ.uniform_space_eq]
+    rw [Rat.uniform_space_eq]
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
-  dense := Ratₓ.dense_embedding_coe_real.dense
+  dense := Rat.dense_embedding_coe_real.dense
 
 namespace CompareReals
 
@@ -94,16 +94,16 @@ instead of the metric space one. We proved in rat.uniform_space_eq that they are
 but they are not definitionaly equal, so it would confuse the type class system (and probably
 also human readers). -/
 def Q :=
-  ℚ deriving CommRingₓ, Inhabited
+  ℚ deriving CommRing, Inhabited
 
 instance : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
 
 /-- Real numbers constructed as in Bourbaki. -/
-def Bourbakiℝ : Type :=
+def BourbakiℝCat : Type :=
   Completion Q deriving Inhabited
 
-instance Bourbaki.uniformSpace : UniformSpace Bourbakiℝ :=
+instance Bourbaki.uniformSpace : UniformSpace BourbakiℝCat :=
   Completion.uniformSpace Q
 
 /-- Bourbaki reals packaged as a completion of Q using the general theory. -/

@@ -64,7 +64,7 @@ variation of `n`.
 unsafe def get_unused_name_reserved (ns : List Name) (reserved : name_set) : tactic Name :=
   (first <|
       ns.map fun n => do
-        guardₓ ¬reserved n
+        guard ¬reserved n
         fail_if_success (resolve_name n)
         pure n) <|>
     do

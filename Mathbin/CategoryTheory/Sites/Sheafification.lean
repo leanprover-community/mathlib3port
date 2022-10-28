@@ -141,7 +141,7 @@ theorem res_mk_eq_mk_pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x :
   simp_rw [comp_apply]
   congr 1
   apply_fun meq.equiv P _
-  erw [Equivₓ.apply_symm_apply]
+  erw [Equiv.apply_symm_apply]
   ext i
   simp only [diagram_pullback_app, meq.pullback_apply, meq.equiv_apply, ← comp_apply]
   erw [multiequalizer.lift_ι, meq.equiv_symm_eq_apply]
@@ -304,7 +304,7 @@ def meqOfSep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
     (X : C) (S : J.cover X) (s : Meq (J.plusObj P) S) (T : ∀ I : S.arrow, J.cover I.y) (t : ∀ I : S.arrow, Meq P (T I))
     (ht : ∀ I : S.arrow, s I = mk (t I)) : Meq P (S.bind T) where
-  val := fun I => t I.fromMiddle I.toMiddle
+  val I := t I.fromMiddle I.toMiddle
   property := by
     intro II
     apply inj_of_sep P hsep
@@ -382,7 +382,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
 variable [ReflectsIsomorphisms (forget D)]
 
 /-- If `P` is separated, then `P⁺` is a sheaf. -/
-theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
+theorem isSheafOfSep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) :
     Presheaf.IsSheaf J (J.plusObj P) := by
   rw [presheaf.is_sheaf_iff_multiequalizer]
@@ -418,7 +418,7 @@ theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
 variable (J)
 
 /-- `P⁺⁺` is always a sheaf. -/
-theorem is_sheaf_plus_plus (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.plusObj (J.plusObj P)) := by
+theorem isSheafPlusPlus (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.plusObj (J.plusObj P)) := by
   apply is_sheaf_of_sep
   intro X S x y
   apply sep
@@ -546,21 +546,21 @@ variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
   [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)] [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
   [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
-theorem GrothendieckTopology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
-  GrothendieckTopology.Plus.is_sheaf_plus_plus _ _
+theorem GrothendieckTopology.sheafifyIsSheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
+  GrothendieckTopology.Plus.isSheafPlusPlus _ _
 
 variable (D)
 
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps]
-def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
-  obj := fun P => ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
-  map := fun P Q η => ⟨J.sheafifyMap η⟩
-  map_id' := fun P => Sheaf.Hom.ext _ _ <| J.sheafify_map_id _
-  map_comp' := fun P Q R f g => Sheaf.Hom.ext _ _ <| J.sheafify_map_comp _ _
+def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ SheafCat J D where
+  obj P := ⟨J.sheafify P, J.sheafifyIsSheaf P⟩
+  map P Q η := ⟨J.sheafifyMap η⟩
+  map_id' P := SheafCat.Hom.ext _ _ <| J.sheafify_map_id _
+  map_comp' P Q R f g := SheafCat.Hom.ext _ _ <| J.sheafify_map_comp _ _
 
 instance presheaf_to_Sheaf_preserves_zero_morphisms [Preadditive D] :
-    (presheafToSheaf J D).PreservesZeroMorphisms where map_zero' := fun F G => by
+    (presheafToSheaf J D).PreservesZeroMorphisms where map_zero' F G := by
     ext
     erw [colimit.ι_map, comp_zero, J.plus_map_zero, J.diagram_nat_trans_zero, zero_comp]
 
@@ -570,7 +570,7 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun P Q =>
         { toFun := fun e => J.toSheafify P ≫ e.val, invFun := fun e => ⟨J.sheafifyLift e Q.2⟩,
-          left_inv := fun e => Sheaf.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm,
+          left_inv := fun e => SheafCat.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm,
           right_inv := fun e => J.to_sheafify_sheafify_lift _ _ },
       hom_equiv_naturality_left_symm' := by
         intro P Q R η γ
@@ -585,10 +585,10 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
 instance sheafToPresheafIsRightAdjoint : IsRightAdjoint (sheafToPresheaf J D) :=
   ⟨_, sheafificationAdjunction J D⟩
 
-instance presheaf_mono_of_mono {F G : Sheaf J D} (f : F ⟶ G) [Mono f] : Mono f.1 :=
+instance presheaf_mono_of_mono {F G : SheafCat J D} (f : F ⟶ G) [Mono f] : Mono f.1 :=
   (sheafToPresheaf J D).map_mono _
 
-theorem Sheaf.Hom.mono_iff_presheaf_mono {F G : Sheaf J D} (f : F ⟶ G) : Mono f ↔ Mono f.1 :=
+theorem SheafCat.Hom.mono_iff_presheaf_mono {F G : SheafCat J D} (f : F ⟶ G) : Mono f ↔ Mono f.1 :=
   ⟨fun m => by
     skip
     infer_instance, fun m => by
@@ -599,7 +599,7 @@ variable {J D}
 
 /-- A sheaf `P` is isomorphic to its own sheafification. -/
 @[simps]
-def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val where
+def sheafificationIso (P : SheafCat J D) : P ≅ (presheafToSheaf J D).obj P.val where
   Hom := ⟨(J.isoSheafify P.2).Hom⟩
   inv := ⟨(J.isoSheafify P.2).inv⟩
   hom_inv_id' := by
@@ -609,7 +609,7 @@ def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val wh
     ext1
     apply (J.iso_sheafify P.2).inv_hom_id
 
-instance is_iso_sheafification_adjunction_counit (P : Sheaf J D) :
+instance is_iso_sheafification_adjunction_counit (P : SheafCat J D) :
     IsIso ((sheafificationAdjunction J D).counit.app P) :=
   is_iso_of_fully_faithful (sheafToPresheaf J D) _
 

@@ -30,7 +30,7 @@ decomposed as `S = LDLᴴ` where `L` is a lower-triangular matrix and `D` is a d
 
 variable {𝕜 : Type _} [IsROrC 𝕜]
 
-variable {n : Type _} [LinearOrderₓ n] [IsWellOrder n (· < ·)] [LocallyFiniteOrderBot n]
+variable {n : Type _} [LinearOrder n] [IsWellOrder n (· < ·)] [LocallyFiniteOrderBot n]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (n → 𝕜) (PiLp.innerProductSpace fun _ => 𝕜).toHasInner x y
@@ -39,7 +39,7 @@ open Matrix
 
 open Matrix
 
-variable {S : Matrix n n 𝕜} [Fintypeₓ n] (hS : S.PosDef)
+variable {S : Matrix n n 𝕜} [Fintype n] (hS : S.PosDef)
 
 /-- The inverse of the lower triangular matrix `L` of the LDL-decomposition. It is obtained by
 applying Gram-Schmidt-Orthogonalization w.r.t. the inner product induced by `Sᵀ` on the standard
@@ -72,7 +72,7 @@ noncomputable def LDL.diagEntries : n → 𝕜 := fun i => ⟪star (LDL.lowerInv
 
 /-- The diagonal matrix `D` of the LDL decomposition. -/
 noncomputable def LDL.diag : Matrix n n 𝕜 :=
-  Matrix.diagonalₓ (LDL.diagEntries hS)
+  Matrix.diagonal (LDL.diagEntries hS)
 
 theorem LDL.lower_inv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j = 0 := by
   rw [←

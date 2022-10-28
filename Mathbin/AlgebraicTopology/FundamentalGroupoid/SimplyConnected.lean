@@ -29,7 +29,7 @@ open ContinuousMap
 
 open ContinuousMap
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
 /-- A simply connected space is one whose fundamental groupoid is equivalent to `discrete unit` -/
 class SimplyConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
   equiv_unit : Nonempty (FundamentalGroupoid X ≌ Discrete Unit)
@@ -61,12 +61,13 @@ instance (priority := 100) : PathConnectedSpace X :=
   { Nonempty := unique_homotopic.1, Joined := fun x y => ⟨(unique_homotopic.2 x y).some.default.out⟩ }
 
 /-- In a simply connected space, any two paths are homotopic -/
-theorem paths_homotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
+theorem pathsHomotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
   simpa using @Subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
 
 instance (priority := 100) of_contractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
-    SimplyConnectedSpace Y where equiv_unit :=
-    let H : Top.of Y ≃ₕ Top.of Unit := (ContractibleSpace.hequiv_unit Y).some
+    SimplyConnectedSpace
+      Y where equiv_unit :=
+    let H : TopCat.of Y ≃ₕ TopCat.of Unit := (ContractibleSpace.hequiv_unit Y).some
     ⟨(FundamentalGroupoidFunctor.equivOfHomotopyEquiv H).trans FundamentalGroupoid.punitEquivDiscretePunit⟩
 
 end SimplyConnectedSpace
@@ -88,6 +89,6 @@ theorem simply_connected_iff_paths_homotopic {Y : Type _} [TopologicalSpace Y] :
 theorem simply_connected_iff_paths_homotopic' {Y : Type _} [TopologicalSpace Y] :
     SimplyConnectedSpace Y ↔ PathConnectedSpace Y ∧ ∀ {x y : Y} (p₁ p₂ : Path x y), Path.Homotopic p₁ p₂ := by
   convert simply_connected_iff_paths_homotopic
-  simp [Path.Homotopic.Quotient, Setoidₓ.eq_top_iff]
+  simp [Path.Homotopic.Quotient, Setoid.eq_top_iff]
   rfl
 

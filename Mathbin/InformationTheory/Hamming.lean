@@ -28,9 +28,9 @@ code.
 
 section HammingDistNorm
 
-open Finsetₓ Function
+open Finset Function
 
-variable {α ι : Type _} {β : ι → Type _} [Fintypeₓ ι] [∀ i, DecidableEq (β i)]
+variable {α ι : Type _} {β : ι → Type _} [Fintype ι] [∀ i, DecidableEq (β i)]
 
 variable {γ : ι → Type _} [∀ i, DecidableEq (γ i)]
 
@@ -55,7 +55,7 @@ theorem hamming_dist_comm (x y : ∀ i, β i) : hammingDist x y = hammingDist y 
 theorem hamming_dist_triangle (x y z : ∀ i, β i) : hammingDist x z ≤ hammingDist x y + hammingDist y z := by
   classical
   simp_rw [hammingDist]
-  refine' le_transₓ (card_mono _) (card_union_le _ _)
+  refine' le_trans (card_mono _) (card_union_le _ _)
   rw [← filter_or]
   refine' monotone_filter_right _ _
   intro i h
@@ -99,13 +99,13 @@ theorem hamming_dist_ne_zero {x y : ∀ i, β i} : hammingDist x y ≠ 0 ↔ x �
 /-- Corresponds to `dist_pos`. -/
 @[simp]
 theorem hamming_dist_pos {x y : ∀ i, β i} : 0 < hammingDist x y ↔ x ≠ y := by
-  rw [← hamming_dist_ne_zero, iff_not_comm, not_ltₓ, le_zero_iff]
+  rw [← hamming_dist_ne_zero, iff_not_comm, not_lt, le_zero_iff]
 
 @[simp]
 theorem hamming_dist_lt_one {x y : ∀ i, β i} : hammingDist x y < 1 ↔ x = y := by
   rw [Nat.lt_one_iff, hamming_dist_eq_zero]
 
-theorem hamming_dist_le_card_fintype {x y : ∀ i, β i} : hammingDist x y ≤ Fintypeₓ.card ι :=
+theorem hamming_dist_le_card_fintype {x y : ∀ i, β i} : hammingDist x y ≤ Fintype.card ι :=
   card_le_univ _
 
 theorem hamming_dist_comp_le_hamming_dist (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} :
@@ -114,7 +114,7 @@ theorem hamming_dist_comp_le_hamming_dist (f : ∀ i, γ i → β i) {x y : ∀ 
 
 theorem hamming_dist_comp (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} (hf : ∀ i, Injective (f i)) :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) = hammingDist x y := by
-  refine' le_antisymmₓ (hamming_dist_comp_le_hamming_dist _) _
+  refine' le_antisymm (hamming_dist_comp_le_hamming_dist _) _
   exact card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| hf i H2)
 
 theorem hamming_dist_smul_le_hamming_dist [∀ i, HasSmul α (β i)] {k : α} {x y : ∀ i, β i} :
@@ -172,7 +172,7 @@ theorem hamming_norm_pos_iff {x : ∀ i, β i} : 0 < hammingNorm x ↔ x ≠ 0 :
 theorem hamming_norm_lt_one {x : ∀ i, β i} : hammingNorm x < 1 ↔ x = 0 :=
   hamming_dist_lt_one
 
-theorem hamming_norm_le_card_fintype {x : ∀ i, β i} : hammingNorm x ≤ Fintypeₓ.card ι :=
+theorem hamming_norm_le_card_fintype {x : ∀ i, β i} : hammingNorm x ≤ Fintype.card ι :=
   hamming_dist_le_card_fintype
 
 theorem hamming_norm_comp_le_hamming_norm (f : ∀ i, γ i → β i) {x : ∀ i, γ i} (hf : ∀ i, f i 0 = 0) :
@@ -198,7 +198,7 @@ theorem hamming_norm_smul [Zero α] [∀ i, SmulWithZero α (β i)] {k : α} (hk
 end Zero
 
 /-- Corresponds to `dist_eq_norm`. -/
-theorem hamming_dist_eq_hamming_norm [∀ i, AddGroupₓ (β i)] (x y : ∀ i, β i) : hammingDist x y = hammingNorm (x - y) :=
+theorem hamming_dist_eq_hamming_norm [∀ i, AddGroup (β i)] (x y : ∀ i, β i) : hammingDist x y = hammingNorm (x - y) :=
   by simp_rw [hammingNorm, hammingDist, Pi.sub_apply, sub_ne_zero]
 
 end HammingDistNorm
@@ -221,14 +221,14 @@ variable {α ι : Type _} {β : ι → Type _}
 instance [∀ i, Inhabited (β i)] : Inhabited (Hamming β) :=
   ⟨fun i => default⟩
 
-instance [DecidableEq ι] [Fintypeₓ ι] [∀ i, Fintypeₓ (β i)] : Fintypeₓ (Hamming β) :=
+instance [DecidableEq ι] [Fintype ι] [∀ i, Fintype (β i)] : Fintype (Hamming β) :=
   Pi.fintype
 
 instance [Inhabited ι] [∀ i, Nonempty (β i)] [Nontrivial (β default)] : Nontrivial (Hamming β) :=
   Pi.nontrivial
 
-instance [Fintypeₓ ι] [∀ i, DecidableEq (β i)] : DecidableEq (Hamming β) :=
-  Fintypeₓ.decidablePiFintype
+instance [Fintype ι] [∀ i, DecidableEq (β i)] : DecidableEq (Hamming β) :=
+  Fintype.decidablePiFintype
 
 instance [∀ i, Zero (β i)] : Zero (Hamming β) :=
   Pi.hasZero
@@ -248,30 +248,30 @@ instance [∀ i, HasSmul α (β i)] : HasSmul α (Hamming β) :=
 instance [Zero α] [∀ i, Zero (β i)] [∀ i, SmulWithZero α (β i)] : SmulWithZero α (Hamming β) :=
   Pi.smulWithZero _
 
-instance [∀ i, AddMonoidₓ (β i)] : AddMonoidₓ (Hamming β) :=
+instance [∀ i, AddMonoid (β i)] : AddMonoid (Hamming β) :=
   Pi.addMonoid
 
-instance [∀ i, AddCommMonoidₓ (β i)] : AddCommMonoidₓ (Hamming β) :=
+instance [∀ i, AddCommMonoid (β i)] : AddCommMonoid (Hamming β) :=
   Pi.addCommMonoid
 
-instance [∀ i, AddCommGroupₓ (β i)] : AddCommGroupₓ (Hamming β) :=
+instance [∀ i, AddCommGroup (β i)] : AddCommGroup (Hamming β) :=
   Pi.addCommGroup
 
-instance (α) [Semiringₓ α] (β : ι → Type _) [∀ i, AddCommMonoidₓ (β i)] [∀ i, Module α (β i)] : Module α (Hamming β) :=
+instance (α) [Semiring α] (β : ι → Type _) [∀ i, AddCommMonoid (β i)] [∀ i, Module α (β i)] : Module α (Hamming β) :=
   Pi.module _ _ _
 
 /-! API to/from the type synonym. -/
 
 
 /-- `to_hamming` is the identity function to the `hamming` of a type.  -/
-@[matchPattern]
+@[match_pattern]
 def toHamming : (∀ i, β i) ≃ Hamming β :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 /-- `of_hamming` is the identity function from the `hamming` of a type.  -/
-@[matchPattern]
+@[match_pattern]
 def ofHamming : Hamming β ≃ ∀ i, β i :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 theorem to_hamming_symm_eq : (@toHamming _ β).symm = of_hamming :=
@@ -342,7 +342,7 @@ section
 /-! Instances equipping `hamming` with `hamming_norm` and `hamming_dist`. -/
 
 
-variable [Fintypeₓ ι] [∀ i, DecidableEq (β i)]
+variable [Fintype ι] [∀ i, DecidableEq (β i)]
 
 instance : HasDist (Hamming β) :=
   ⟨fun x y => hammingDist (ofHamming x) (ofHamming y)⟩
@@ -375,14 +375,14 @@ instance : PseudoMetricSpace (Hamming β) :=
         · rintro ⟨_, hε, hs⟩ ⟨_, _⟩ hab
           rw [mem_id_rel] at hab
           rw [hab]
-          refine' hs (lt_of_eq_of_ltₓ _ hε)
+          refine' hs (lt_of_eq_of_lt _ hε)
           exact_mod_cast hamming_dist_self _
           ,
     toBornology := ⟨⊥, bot_le⟩,
     cobounded_sets := by
       ext
       push_cast
-      refine' iff_of_true (filter.mem_sets.mpr Filter.mem_bot) ⟨Fintypeₓ.card ι, fun _ _ _ _ => _⟩
+      refine' iff_of_true (filter.mem_sets.mpr Filter.mem_bot) ⟨Fintype.card ι, fun _ _ _ _ => _⟩
       exact_mod_cast hamming_dist_le_card_fintype }
 
 @[simp, push_cast]
@@ -402,17 +402,17 @@ instance [∀ i, Zero (β i)] : HasNorm (Hamming β) :=
 theorem norm_eq_hamming_norm [∀ i, Zero (β i)] (x : Hamming β) : ∥x∥ = hammingNorm (ofHamming x) :=
   rfl
 
-instance [∀ i, AddCommGroupₓ (β i)] : SeminormedAddCommGroup (Hamming β) :=
+instance [∀ i, AddCommGroup (β i)] : SeminormedAddCommGroup (Hamming β) :=
   { Pi.addCommGroup with
     dist_eq := by
       push_cast
       exact_mod_cast hamming_dist_eq_hamming_norm }
 
 @[simp, push_cast]
-theorem nnnorm_eq_hamming_norm [∀ i, AddCommGroupₓ (β i)] (x : Hamming β) : ∥x∥₊ = hammingNorm (ofHamming x) :=
+theorem nnnorm_eq_hamming_norm [∀ i, AddCommGroup (β i)] (x : Hamming β) : ∥x∥₊ = hammingNorm (ofHamming x) :=
   rfl
 
-instance [∀ i, AddCommGroupₓ (β i)] : NormedAddCommGroup (Hamming β) :=
+instance [∀ i, AddCommGroup (β i)] : NormedAddCommGroup (Hamming β) :=
   { Hamming.seminormedAddCommGroup with }
 
 end

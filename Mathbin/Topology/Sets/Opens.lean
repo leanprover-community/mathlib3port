@@ -48,9 +48,9 @@ theorem val_eq_coe (U : Opens α) : U.1 = ↑U :=
 theorem coe_mk {α : Type _} [TopologicalSpace α] {U : Set α} {hU : IsOpen U} : ↑(⟨U, hU⟩ : Opens α) = U :=
   rfl
 
-instance : Subset (Opens α) where Subset := fun U V => (U : Set α) ⊆ V
+instance : HasSubset (Opens α) where Subset U V := (U : Set α) ⊆ V
 
-instance : Membership α (Opens α) where Mem := fun a U => a ∈ (U : Set α)
+instance : Membership α (Opens α) where Mem a U := a ∈ (U : Set α)
 
 @[simp]
 theorem subset_coe {U V : Opens α} : ((U : Set α) ⊆ (V : Set α)) = (U ⊆ V) :=
@@ -72,7 +72,7 @@ theorem ext {U V : Opens α} (h : (U : Set α) = V) : U = V :=
 theorem ext_iff {U V : Opens α} : (U : Set α) = V ↔ U = V :=
   Subtype.ext_iff.symm
 
-instance : PartialOrderₓ (Opens α) :=
+instance : PartialOrder (Opens α) :=
   Subtype.partialOrder _
 
 /-- The interior of a set, as an element of `opens`. -/
@@ -80,16 +80,16 @@ def interior (s : Set α) : Opens α :=
   ⟨Interior s, is_open_interior⟩
 
 theorem gc : GaloisConnection (coe : Opens α → Set α) interior := fun U s =>
-  ⟨fun h => interior_maximal h U.property, fun h => le_transₓ h interior_subset⟩
+  ⟨fun h => interior_maximal h U.property, fun h => le_trans h interior_subset⟩
 
 open OrderDual (ofDual toDual)
 
 /-- The galois coinsertion between sets and opens. -/
 def gi : GaloisCoinsertion Subtype.val (@interior α _) where
-  choice := fun s hs => ⟨s, interior_eq_iff_is_open.mp <| le_antisymmₓ interior_subset hs⟩
+  choice s hs := ⟨s, interior_eq_iff_is_open.mp <| le_antisymm interior_subset hs⟩
   gc := gc
-  u_l_le := fun _ => interior_subset
-  choice_eq := fun s hs => le_antisymmₓ hs interior_subset
+  u_l_le _ := interior_subset
+  choice_eq s hs := le_antisymm hs interior_subset
 
 instance : CompleteLattice (Opens α) :=
   CompleteLattice.copy (GaloisCoinsertion.liftCompleteLattice gi)
@@ -141,11 +141,11 @@ theorem coe_Sup {S : Set (Opens α)} : (↑(sup S) : Set α) = ⋃ i ∈ S, ↑i
   rfl
 
 @[simp, norm_cast]
-theorem coe_finset_sup (f : ι → Opens α) (s : Finsetₓ ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
+theorem coe_finset_sup (f : ι → Opens α) (s : Finset ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
   map_finset_sup (⟨⟨coe, coe_sup⟩, coe_bot⟩ : SupBotHom (Opens α) (Set α)) _ _
 
 @[simp, norm_cast]
-theorem coe_finset_inf (f : ι → Opens α) (s : Finsetₓ ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
+theorem coe_finset_inf (f : ι → Opens α) (s : Finset ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
   map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Opens α) (Set α)) _ _
 
 instance : Inter (Opens α) :=
@@ -240,7 +240,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (Us «expr ⊆ » B)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -278,22 +278,22 @@ theorem is_compact_element_iff (s : Opens α) : CompleteLattice.IsCompactElement
   · introv H hU hU'
     obtain ⟨t, ht⟩ := H ι (fun i => ⟨U i, hU i⟩) (by simpa)
     refine' ⟨t, Set.Subset.trans ht _⟩
-    rw [coe_finset_sup, Finsetₓ.sup_eq_supr]
+    rw [coe_finset_sup, Finset.sup_eq_supr]
     rfl
     
   · obtain ⟨t, ht⟩ := H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supr U) from hU)
     refine' ⟨t, Set.Subset.trans ht _⟩
     simp only [Set.Union_subset_iff]
     show ∀ i ∈ t, U i ≤ t.sup U
-    exact fun i => Finsetₓ.le_sup
+    exact fun i => Finset.le_sup
     
 
 /-- The preimage of an open set, as an open set. -/
 def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α) where
-  toFun := fun s => ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
-  map_Sup' := fun s =>
+  toFun s := ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
+  map_Sup' s :=
     ext <| by simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and', Union_Union_eq_right]
-  map_inf' := fun a b => rfl
+  map_inf' a b := rfl
   map_top' := rfl
 
 @[simp]
@@ -342,7 +342,7 @@ protected def equiv (f : α ≃ₜ β) : Opens α ≃ Opens β where
 @[simp]
 protected def orderIso (f : α ≃ₜ β) : Opens α ≃o Opens β where
   toEquiv := Opens.equiv f
-  map_rel_iff' := fun U V => f.symm.Surjective.preimage_subset_preimage_iff
+  map_rel_iff' U V := f.symm.Surjective.preimage_subset_preimage_iff
 
 end Opens
 

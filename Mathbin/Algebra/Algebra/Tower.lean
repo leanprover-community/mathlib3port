@@ -28,9 +28,9 @@ variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁) (M : Type v₁)
 
 namespace Algebra
 
-variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [CommSemiring R] [Semiring A] [Algebra R A]
 
-variable [AddCommMonoidₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
+variable [AddCommMonoid M] [Module R M] [Module A M] [IsScalarTower R A M]
 
 variable {A}
 
@@ -39,13 +39,13 @@ on the `R`-module `M`.
 
 This is a stronger version of `distrib_mul_action.to_linear_map`, and could also have been
 called `algebra.to_module_End`. -/
-def lsmul : A →ₐ[R] Module.End R M where
+def lsmul : A →ₐ[R] Module.EndCat R M where
   toFun := DistribMulAction.toLinearMap R M
   map_one' := LinearMap.ext fun _ => one_smul A _
-  map_mul' := fun a b => LinearMap.ext <| smul_assoc a b
+  map_mul' a b := LinearMap.ext <| smul_assoc a b
   map_zero' := LinearMap.ext fun _ => zero_smul A _
-  map_add' := fun a b => LinearMap.ext fun _ => add_smul _ _ _
-  commutes' := fun r => LinearMap.ext <| algebra_map_smul A r
+  map_add' a b := LinearMap.ext fun _ => add_smul _ _ _
+  commutes' r := LinearMap.ext <| algebra_map_smul A r
 
 @[simp]
 theorem lsmul_coe (a : A) : (lsmul R M a : M → M) = (· • ·) a :=
@@ -60,7 +60,7 @@ namespace IsScalarTower
 
 section Module
 
-variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable [HasSmul R M] [MulAction A M] [IsScalarTower R A M]
 
@@ -71,9 +71,9 @@ theorem algebra_map_smul (r : R) (x : M) : algebraMap R A r • x = r • x := b
 
 end Module
 
-section Semiringₓ
+section Semiring
 
-variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
+variable [CommSemiring R] [CommSemiring S] [Semiring A] [Semiring B]
 
 variable [Algebra R S] [Algebra S A] [Algebra S B]
 
@@ -107,7 +107,7 @@ instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
   (@IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _) fun _ => (IsScalarTower.algebra_map_apply R S A _ : _)
 
 @[ext]
-theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
+theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiring S] [Semiring A] (h1 h2 : Algebra S A)
     (h :
       ∀ (r : S) (x : A),
         (haveI := h1
@@ -115,7 +115,7 @@ theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A
           r • x) :
     h1 = h2 :=
   (Algebra.algebra_ext _ _) fun r => by
-    simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_oneₓ] using h r 1
+    simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_one] using h r 1
 
 /-- In a tower, the canonical map from the middle element to the top element is an
 algebra homomorphism over the bottom element. -/
@@ -153,18 +153,18 @@ instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A
   of_algebra_map_eq fun x => rfl
 
 @[nolint instance_priority]
-instance of_ring_hom {R A B : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B] [Algebra R A] [Algebra R B]
+instance of_ring_hom {R A B : Type _} [CommSemiring R] [CommSemiring A] [CommSemiring B] [Algebra R A] [Algebra R B]
     (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasSmul _ :=
   letI := (f : A →+* B).toAlgebra
   of_algebra_map_eq fun x => (f.commutes x).symm
 
-end Semiringₓ
+end Semiring
 
 end IsScalarTower
 
 section Homs
 
-variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
+variable [CommSemiring R] [CommSemiring S] [Semiring A] [Semiring B]
 
 variable [Algebra R S] [Algebra S A] [Algebra S B]
 
@@ -232,9 +232,9 @@ namespace Subalgebra
 
 open IsScalarTower
 
-section Semiringₓ
+section Semiring
 
-variable (R) {S A B} [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
+variable (R) {S A B} [CommSemiring R] [CommSemiring S] [Semiring A] [Semiring B]
 
 variable [Algebra R S] [Algebra S A] [Algebra R A] [Algebra S B] [Algebra R B]
 
@@ -275,19 +275,19 @@ This is a special case of `alg_hom.restrict_scalars` that can be helpful in elab
 def ofRestrictScalars (U : Subalgebra S A) (f : U →ₐ[S] B) : U.restrictScalars R →ₐ[R] B :=
   f.restrictScalars R
 
-end Semiringₓ
+end Semiring
 
 end Subalgebra
 
 namespace Algebra
 
-variable {R A} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable {R A} [CommSemiring R] [Semiring A] [Algebra R A]
 
-variable {M} [AddCommMonoidₓ M] [Module A M] [Module R M] [IsScalarTower R A M]
+variable {M} [AddCommMonoid M] [Module A M] [Module R M] [IsScalarTower R A M]
 
 theorem span_restrict_scalars_eq_span_of_surjective (h : Function.Surjective (algebraMap R A)) (s : Set M) :
     (Submodule.span A s).restrictScalars R = Submodule.span R s := by
-  refine' le_antisymmₓ (fun x hx => _) (Submodule.span_subset_span _ _ _)
+  refine' le_antisymm (fun x hx => _) (Submodule.span_subset_span _ _ _)
   refine' Submodule.span_induction hx _ _ _ _
   · exact fun x hx => Submodule.subset_span hx
     
@@ -311,7 +311,7 @@ namespace IsScalarTower
 
 open Subalgebra
 
-variable [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A]
+variable [CommSemiring R] [CommSemiring S] [CommSemiring A]
 
 variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
@@ -328,7 +328,7 @@ theorem adjoin_range_to_alg_hom (t : Set A) :
 
 end IsScalarTower
 
-section Semiringₓ
+section Semiring
 
 variable {R S A}
 
@@ -336,7 +336,7 @@ namespace Submodule
 
 section Module
 
-variable [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
+variable [Semiring R] [Semiring S] [AddCommMonoid A]
 
 variable [Module R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
@@ -384,7 +384,7 @@ theorem smul_mem_span_smul' {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S
     fun c x hx => smul_comm c k x ▸ smul_mem _ _ hx
 
 theorem span_smul {s : Set S} (hs : span R s = ⊤) (t : Set A) : span R (s • t) = (span S t).restrictScalars R :=
-  (le_antisymmₓ
+  (le_antisymm
       (span_le.2 fun x hx =>
         let ⟨p, q, hps, hqt, hpqx⟩ := Set.mem_smul.1 hx
         hpqx ▸ (span S t).smul_mem p (subset_span hqt)))
@@ -396,7 +396,7 @@ end Module
 
 section Algebra
 
-variable [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
+variable [CommSemiring R] [Semiring S] [AddCommMonoid A]
 
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
@@ -405,12 +405,12 @@ theorem span_algebra_map_image (a : Set R) :
     Submodule.span R (algebraMap R S '' a) = (Submodule.span R a).map (Algebra.linearMap R S) :=
   (Submodule.span_image <| Algebra.linearMap R S).trans rfl
 
-theorem span_algebra_map_image_of_tower {S T : Type _} [CommSemiringₓ S] [Semiringₓ T] [Module R S]
-    [IsScalarTower R S S] [Algebra R T] [Algebra S T] [IsScalarTower R S T] (a : Set S) :
+theorem span_algebra_map_image_of_tower {S T : Type _} [CommSemiring S] [Semiring T] [Module R S] [IsScalarTower R S S]
+    [Algebra R T] [Algebra S T] [IsScalarTower R S T] (a : Set S) :
     Submodule.span R (algebraMap S T '' a) = (Submodule.span R a).map ((Algebra.linearMap S T).restrictScalars R) :=
   (Submodule.span_image <| (Algebra.linearMap S T).restrictScalars R).trans rfl
 
-theorem map_mem_span_algebra_map_image {S T : Type _} [CommSemiringₓ S] [Semiringₓ T] [Algebra R S] [Algebra R T]
+theorem map_mem_span_algebra_map_image {S T : Type _} [CommSemiring S] [Semiring T] [Algebra R S] [Algebra R T]
     [Algebra S T] [IsScalarTower R S T] (x : S) (a : Set S) (hx : x ∈ Submodule.span R a) :
     algebraMap S T x ∈ Submodule.span R (algebraMap S T '' a) := by
   rw [span_algebra_map_image_of_tower, mem_map]
@@ -420,20 +420,20 @@ end Algebra
 
 end Submodule
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
 namespace Algebra
 
-variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [CommSemiring R] [Semiring A] [Algebra R A]
 
-variable [AddCommGroupₓ M] [Module A M] [Module R M] [IsScalarTower R A M]
+variable [AddCommGroup M] [Module A M] [Module R M] [IsScalarTower R A M]
 
 theorem lsmul_injective [NoZeroSmulDivisors A M] {x : A} (hx : x ≠ 0) : Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx
 
 end Algebra
 
-end Ringₓ
+end Ring
 

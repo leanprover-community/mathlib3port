@@ -42,16 +42,16 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 -/
 @[simps]
 def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙ H where
-  app := fun X => α.app (F.obj X)
-  naturality' := fun X Y f => by rw [functor.comp_map, functor.comp_map, α.naturality]
+  app X := α.app (F.obj X)
+  naturality' X Y f := by rw [functor.comp_map, functor.comp_map, α.naturality]
 
 /-- If `α : G ⟶ H` then
 `whisker_right α F : (G ⋙ F) ⟶ (G ⋙ F)` has components `F.map (α.app X)`.
 -/
 @[simps]
 def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H ⋙ F where
-  app := fun X => F.map (α.app X)
-  naturality' := fun X Y f => by rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
+  app X := F.map (α.app X)
+  naturality' X Y f := by rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
 
 variable (C D E)
 
@@ -62,8 +62,8 @@ variable (C D E)
 -/
 @[simps]
 def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
-  obj := fun F => { obj := fun G => F ⋙ G, map := fun G H α => whiskerLeft F α }
-  map := fun F G τ =>
+  obj F := { obj := fun G => F ⋙ G, map := fun G H α => whiskerLeft F α }
+  map F G τ :=
     { app := fun H =>
         { app := fun c => H.map (τ.app c),
           naturality' := fun X Y f => by
@@ -81,8 +81,8 @@ def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
 -/
 @[simps]
 def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
-  obj := fun H => { obj := fun F => F ⋙ H, map := fun _ _ α => whiskerRight α H }
-  map := fun G H τ =>
+  obj H := { obj := fun F => F ⋙ H, map := fun _ _ α => whiskerRight α H }
+  map G H τ :=
     { app := fun F =>
         { app := fun c => τ.app (F.obj c),
           naturality' := fun X Y f => by
@@ -98,7 +98,7 @@ variable {C} {D} {E}
 instance faithful_whiskering_right_obj {F : D ⥤ E} [Faithful F] :
     Faithful
       ((whiskeringRight C D E).obj
-        F) where map_injective' := fun G H α β hαβ =>
+        F) where map_injective' G H α β hαβ :=
     NatTrans.ext _ _ <| funext fun X => Functor.map_injective _ <| congr_fun (congr_arg NatTrans.app hαβ) X
 
 @[simp]
@@ -165,7 +165,7 @@ instance is_iso_whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [IsIs
 
 variable {B : Type u₄} [Category.{v₄} B]
 
-attribute [local elabWithoutExpectedType] whisker_left whisker_right
+attribute [local elab_without_expected_type] whisker_left whisker_right
 
 @[simp]
 theorem whisker_left_twice (F : B ⥤ C) (G : C ⥤ D) {H K : D ⥤ E} (α : H ⟶ K) :
@@ -218,6 +218,10 @@ and it's usually best to insert explicit associators.)
 def associator (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H ≅ F ⋙ G ⋙ H where
   Hom := { app := fun _ => 𝟙 _ }
   inv := { app := fun _ => 𝟙 _ }
+
+@[protected]
+theorem assoc (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H = F ⋙ G ⋙ H :=
+  rfl
 
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
     (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom = whiskerRight (rightUnitor F).Hom G := by

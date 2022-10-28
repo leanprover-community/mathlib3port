@@ -42,7 +42,7 @@ namespace CategoryTheory
 
 /-- A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is
     `R`-linear in both variables. -/
-class Linear (R : Type w) [Semiringₓ R] (C : Type u) [Category.{v} C] [Preadditive C] where
+class Linear (R : Type w) [Semiring R] (C : Type u) [Category.{v} C] [Preadditive C] where
   homModule : ∀ X Y : C, Module R (X ⟶ Y) := by infer_instance
   smul_comp' : ∀ (X Y Z : C) (r : R) (f : X ⟶ Y) (g : Y ⟶ Z), (r • f) ≫ g = r • f ≫ g := by obviously
   comp_smul' : ∀ (X Y Z : C) (f : X ⟶ Y) (r : R) (g : Y ⟶ Z), f ≫ (r • g) = r • f ≫ g := by obviously
@@ -67,29 +67,29 @@ namespace CategoryTheory.Linear
 variable {C : Type u} [Category.{v} C] [Preadditive C]
 
 instance preadditiveNatLinear : Linear ℕ C where
-  smul_comp' := fun X Y Z r f g => (Preadditive.rightComp X g).map_nsmul f r
-  comp_smul' := fun X Y Z f r g => (Preadditive.leftComp Z f).map_nsmul g r
+  smul_comp' X Y Z r f g := (Preadditive.rightComp X g).map_nsmul f r
+  comp_smul' X Y Z f r g := (Preadditive.leftComp Z f).map_nsmul g r
 
 instance preadditiveIntLinear : Linear ℤ C where
-  smul_comp' := fun X Y Z r f g => (Preadditive.rightComp X g).map_zsmul f r
-  comp_smul' := fun X Y Z f r g => (Preadditive.leftComp Z f).map_zsmul g r
+  smul_comp' X Y Z r f g := (Preadditive.rightComp X g).map_zsmul f r
+  comp_smul' X Y Z f r g := (Preadditive.leftComp Z f).map_zsmul g r
 
-section End
+section EndCat
 
 variable {R : Type w}
 
-instance [Semiringₓ R] [Linear R C] (X : C) : Module R (End X) := by
+instance [Semiring R] [Linear R C] (X : C) : Module R (EndCat X) := by
   dsimp [End]
   infer_instance
 
-instance [CommSemiringₓ R] [Linear R C] (X : C) : Algebra R (End X) :=
+instance [CommSemiring R] [Linear R C] (X : C) : Algebra R (EndCat X) :=
   Algebra.ofModule (fun r f g => comp_smul _ _ _ _ _ _) fun r f g => smul_comp _ _ _ _ _ _
 
-end End
+end EndCat
 
 section
 
-variable {R : Type w} [Semiringₓ R] [Linear R C]
+variable {R : Type w} [Semiring R] [Linear R C]
 
 section InducedCategory
 
@@ -98,9 +98,9 @@ universe u'
 variable {C} {D : Type u'} (F : D → C)
 
 instance InducedCategory.category : Linear.{w, v} R (InducedCategory C F) where
-  homModule := fun X Y => @Linear.homModule R _ C _ _ _ (F X) (F Y)
-  smul_comp' := fun P Q R f f' g => smul_comp' _ _ _ _ _ _
-  comp_smul' := fun P Q R f g g' => comp_smul' _ _ _ _ _ _
+  homModule X Y := @Linear.homModule R _ C _ _ _ (F X) (F Y)
+  smul_comp' P Q R f f' g := smul_comp' _ _ _ _ _ _
+  comp_smul' P Q R f g g' := comp_smul' _ _ _ _ _ _
 
 end InducedCategory
 
@@ -109,14 +109,14 @@ variable (R)
 /-- Composition by a fixed left argument as an `R`-linear map. -/
 @[simps]
 def leftComp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z where
-  toFun := fun g => f ≫ g
+  toFun g := f ≫ g
   map_add' := by simp
   map_smul' := by simp
 
 /-- Composition by a fixed right argument as an `R`-linear map. -/
 @[simps]
 def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z where
-  toFun := fun f => f ≫ g
+  toFun f := f ≫ g
   map_add' := by simp
   map_smul' := by simp
 
@@ -134,12 +134,12 @@ end
 
 section
 
-variable {S : Type w} [CommSemiringₓ S] [Linear S C]
+variable {S : Type w} [CommSemiring S] [Linear S C]
 
 /-- Composition as a bilinear map. -/
 @[simps]
 def comp (X Y Z : C) : (X ⟶ Y) →ₗ[S] (Y ⟶ Z) →ₗ[S] X ⟶ Z where
-  toFun := fun f => leftComp S Z f
+  toFun f := leftComp S Z f
   map_add' := by
     intros
     ext

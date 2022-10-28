@@ -96,12 +96,12 @@ namespace Walk
 variable {G}
 
 /-- Pattern to get `walk.nil` with the vertex as an explicit argument. -/
-@[matchPattern]
+@[match_pattern]
 abbrev nil' (u : V) : G.Walk u u :=
   walk.nil
 
 /-- Pattern to get `walk.cons` with the vertices as explicit arguments. -/
-@[matchPattern]
+@[match_pattern]
 abbrev cons' (u v w : V) (h : G.Adj u v) (p : G.Walk v w) : G.Walk u w :=
   Walk.cons h p
 
@@ -184,7 +184,7 @@ theorem get_vert_of_length_le {u v} (w : G.Walk u v) {i : ℕ} (hi : w.length �
   · cases i
     · cases hi
       
-    · exact IH (Nat.succ_le_succ_iffₓ.1 hi)
+    · exact IH (Nat.succ_le_succ_iff.1 hi)
       
     
 
@@ -299,7 +299,7 @@ theorem length_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (
 @[simp]
 theorem length_append : ∀ {u v w : V} (p : G.Walk u v) (q : G.Walk v w), (p.append q).length = p.length + q.length
   | _, _, _, nil, _ => by simp
-  | _, _, _, cons _ _, _ => by simp [length_append, add_left_commₓ, add_commₓ]
+  | _, _, _, cons _ _, _ => by simp [length_append, add_left_comm, add_comm]
 
 @[simp]
 protected theorem length_reverse_aux :
@@ -326,13 +326,13 @@ theorem exists_length_eq_zero_iff {u v : V} : (∃ p : G.Walk u v, p.length = 0)
 @[simp]
 theorem length_eq_zero_iff {u : V} {p : G.Walk u u} : p.length = 0 ↔ p = nil := by cases p <;> simp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `support` of a walk is the list of vertices it visits in order. -/
 def support : ∀ {u v : V}, G.Walk u v → List V
   | u, v, nil => [u]
   | u, v, cons h p => u::p.Support
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `darts` of a walk is the list of darts it visits in order. -/
 def darts : ∀ {u v : V}, G.Walk u v → List G.Dart
   | u, v, nil => []
@@ -347,7 +347,7 @@ def edges {u v : V} (p : G.Walk u v) : List (Sym2 V) :=
 theorem support_nil {u : V} : (nil : G.Walk u u).Support = [u] :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem support_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).Support = u::p.Support :=
   rfl
@@ -370,7 +370,7 @@ theorem tail_support_append {u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
     (p.append p').Support.tail = p.Support.tail ++ p'.Support.tail := by
   rw [support_append, List.tail_append_of_ne_nil _ _ (support_ne_nil _)]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem support_eq_cons {u v : V} (p : G.Walk u v) : p.Support = u::p.Support.tail := by cases p <;> simp
 
 @[simp]
@@ -386,7 +386,7 @@ theorem mem_support_nil_iff {u v : V} : u ∈ (nil : G.Walk v v).Support ↔ u =
 @[simp]
 theorem mem_tail_support_append_iff {t u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
     t ∈ (p.append p').Support.tail ↔ t ∈ p.Support.tail ∨ t ∈ p'.Support.tail := by
-  rw [tail_support_append, List.mem_appendₓ]
+  rw [tail_support_append, List.mem_append]
 
 @[simp]
 theorem end_mem_tail_support_of_ne {u v : V} (h : u ≠ v) (p : G.Walk u v) : v ∈ p.Support.tail := by
@@ -401,13 +401,13 @@ theorem mem_support_append_iff {t u v w : V} (p : G.Walk u v) (p' : G.Walk v w) 
 
 @[simp]
 theorem subset_support_append_left {V : Type u} {G : SimpleGraph V} {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
-    p.Support ⊆ (p.append q).Support := by simp only [walk.support_append, List.subset_append_leftₓ]
+    p.Support ⊆ (p.append q).Support := by simp only [walk.support_append, List.subset_append_left]
 
 @[simp]
 theorem subset_support_append_right {V : Type u} {G : SimpleGraph V} {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
     q.Support ⊆ (p.append q).Support := by
   intro h
-  simp (config := { contextual := true }) only [mem_support_append_iff, or_trueₓ, implies_true_iff]
+  simp (config := { contextual := true }) only [mem_support_append_iff, or_true_iff, imp_true_iff]
 
 theorem coe_support {u v : V} (p : G.Walk u v) : (p.Support : Multiset V) = {u} + p.Support.tail := by cases p <;> rfl
 
@@ -419,8 +419,8 @@ theorem coe_support_append' [DecidableEq V] {u v w : V} (p : G.Walk u v) (p' : G
     ((p.append p').Support : Multiset V) = p.Support + p'.Support - {v} := by
   rw [support_append, ← Multiset.coe_add]
   simp only [coe_support]
-  rw [add_commₓ {v}]
-  simp only [← add_assocₓ, add_tsub_cancel_right]
+  rw [add_comm {v}]
+  simp only [← add_assoc, add_tsub_cancel_right]
 
 theorem chain_adj_support : ∀ {u v w : V} (h : G.Adj u v) (p : G.Walk v w), List.Chain G.Adj u p.Support
   | _, _, _, h, nil => List.Chain.cons h List.Chain.nil
@@ -435,7 +435,7 @@ theorem chain_dart_adj_darts : ∀ {d : G.Dart} {v w : V} (h : d.snd = v) (p : G
   | _, _, _, h, cons h' p => List.Chain.cons h (chain_dart_adj_darts rfl p)
 
 theorem chain'_dart_adj_darts : ∀ {u v : V} (p : G.Walk u v), List.Chain' G.DartAdj p.darts
-  | _, _, nil => trivialₓ
+  | _, _, nil => trivial
   | _, _, cons h p => chain_dart_adj_darts rfl p
 
 /-- Every edge in a walk's edge list is an edge of the graph.
@@ -447,7 +447,7 @@ theorem edges_subset_edge_set : ∀ {u v : V} (p : G.Walk u v) ⦃e : Sym2 V⦄ 
 theorem darts_nil {u : V} : (nil : G.Walk u u).darts = [] :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem darts_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).darts = ⟨(u, v), h⟩::p.darts :=
   rfl
@@ -467,7 +467,7 @@ theorem darts_reverse {u v : V} (p : G.Walk u v) : p.reverse.darts = (p.darts.ma
 
 theorem mem_darts_reverse {u v : V} {d : G.Dart} {p : G.Walk u v} : d ∈ p.reverse.darts ↔ d.symm ∈ p.darts := by simp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : (u::p.darts.map Dart.snd) = p.Support := by
   induction p <;> simp! [*]
 
@@ -484,7 +484,7 @@ theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.Supp
 theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem edges_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).edges = ⟦(u, v)⟧::p.edges :=
   rfl
@@ -559,24 +559,24 @@ theorem edges_nodup_of_support_nodup {u v : V} {p : G.Walk u v} (h : p.Support.N
 structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
   edges_nodup : p.edges.Nodup
 
--- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
+/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.Nodup
 
--- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
+/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" : Prop where
   ne_nil : p ≠ nil
 
--- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
+/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.tail.Nodup
 
 theorem is_trail_def {u v : V} (p : G.Walk u v) : p.IsTrail ↔ p.edges.Nodup :=
@@ -624,7 +624,7 @@ theorem IsTrail.of_cons {u v w : V} {h : G.Adj u v} {p : G.Walk v w} : (cons h p
 
 @[simp]
 theorem cons_is_trail_iff {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
-    (cons h p).IsTrail ↔ p.IsTrail ∧ ⟦(u, v)⟧ ∉ p.edges := by simp [is_trail_def, and_comm]
+    (cons h p).IsTrail ↔ p.IsTrail ∧ ⟦(u, v)⟧ ∉ p.edges := by simp [is_trail_def, and_comm']
 
 theorem IsTrail.reverse {u v : V} (p : G.Walk u v) (h : p.IsTrail) : p.reverse.IsTrail := by
   simpa [is_trail_def] using h
@@ -673,7 +673,7 @@ theorem is_path_reverse_iff {u v : V} (p : G.Walk u v) : p.reverse.IsPath ↔ p.
 
 theorem IsPath.of_append_left {u v w : V} {p : G.Walk u v} {q : G.Walk v w} : (p.append q).IsPath → p.IsPath := by
   simp only [is_path_def, support_append]
-  exact List.Nodupₓ.of_append_left
+  exact List.Nodup.of_append_left
 
 theorem IsPath.of_append_right {u v w : V} {p : G.Walk u v} {q : G.Walk v w} (h : (p.append q).IsPath) : q.IsPath := by
   rw [← is_path_reverse_iff] at h⊢
@@ -732,7 +732,7 @@ theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : 
   · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
     
   · rintro ⟨q, r, rfl⟩
-    simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_selfₓ]
+    simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_self_iff]
     
 
 @[simp]
@@ -817,31 +817,31 @@ theorem support_drop_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Supp
 
 theorem darts_take_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUntil u h).darts ⊆ p.darts :=
   fun x hx => by
-  rw [← take_spec p h, darts_append, List.mem_appendₓ]
+  rw [← take_spec p h, darts_append, List.mem_append]
   exact Or.inl hx
 
 theorem darts_drop_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.dropUntil u h).darts ⊆ p.darts :=
   fun x hx => by
-  rw [← take_spec p h, darts_append, List.mem_appendₓ]
+  rw [← take_spec p h, darts_append, List.mem_append]
   exact Or.inr hx
 
 theorem edges_take_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUntil u h).edges ⊆ p.edges :=
-  List.map_subsetₓ _ (p.darts_take_until_subset h)
+  List.map_subset _ (p.darts_take_until_subset h)
 
 theorem edges_drop_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.dropUntil u h).edges ⊆ p.edges :=
-  List.map_subsetₓ _ (p.darts_drop_until_subset h)
+  List.map_subset _ (p.darts_drop_until_subset h)
 
 theorem length_take_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUntil u h).length ≤ p.length :=
   by
   have := congr_arg walk.length (p.take_spec h)
   rw [length_append] at this
-  exact Nat.Le.intro this
+  exact Nat.le.intro this
 
 theorem length_drop_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.dropUntil u h).length ≤ p.length :=
   by
   have := congr_arg walk.length (p.take_spec h)
-  rw [length_append, add_commₓ] at this
-  exact Nat.Le.intro this
+  rw [length_append, add_comm] at this
+  exact Nat.le.intro this
 
 protected theorem IsTrail.take_until {u v w : V} {p : G.Walk v w} (hc : p.IsTrail) (h : u ∈ p.Support) :
     (p.takeUntil u h).IsTrail :=
@@ -891,7 +891,7 @@ protected theorem IsCircuit.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCircuit)
     
   · intro hn
     have hn' := congr_arg length hn
-    rw [rotate, length_append, add_commₓ, ← length_append, take_spec] at hn'
+    rw [rotate, length_append, add_comm, ← length_append, take_spec] at hn'
     simpa using hn'
     
 
@@ -955,10 +955,10 @@ theorem nodup_support {u v : V} (p : G.Path u v) : (p : G.Walk u v).Support.Nodu
   (Walk.is_path_def _).mp p.property
 
 theorem loop_eq {v : V} (p : G.Path v v) : p = path.nil := by
-  obtain p | p := p
+  obtain ⟨_ | _, this⟩ := p
   · rfl
     
-  · simpa using p_property
+  · simpa
     
 
 theorem not_mem_edges_of_loop {v : V} {e : Sym2 V} {p : G.Path v v} : ¬e ∈ (p : G.Walk v v).edges := by simp [p.loop_eq]
@@ -1003,13 +1003,16 @@ theorem bypass_is_path {u v : V} (p : G.Walk u v) : p.bypass.IsPath := by
       
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.length := by
   induction p
   · rfl
     
   · simp only [bypass]
     split_ifs
-    · trans
+    · trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       apply length_drop_until_le
       rw [length_cons]
       exact le_add_right p_ih
@@ -1029,12 +1032,12 @@ theorem support_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.Support ⊆ 
     
   · simp! only
     split_ifs
-    · apply List.Subsetₓ.trans (support_drop_until_subset _ _)
-      apply List.subset_cons_of_subsetₓ
+    · apply List.Subset.trans (support_drop_until_subset _ _)
+      apply List.subset_cons_of_subset
       assumption
       
     · rw [support_cons]
-      apply List.cons_subset_consₓ
+      apply List.cons_subset_cons
       assumption
       
     
@@ -1048,16 +1051,16 @@ theorem darts_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.darts ⊆ p.da
     
   · simp! only
     split_ifs
-    · apply List.Subsetₓ.trans (darts_drop_until_subset _ _)
-      apply List.subset_cons_of_subsetₓ _ p_ih
+    · apply List.Subset.trans (darts_drop_until_subset _ _)
+      apply List.subset_cons_of_subset _ p_ih
       
     · rw [darts_cons]
-      exact List.cons_subset_consₓ _ p_ih
+      exact List.cons_subset_cons _ p_ih
       
     
 
 theorem edges_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.edges ⊆ p.edges :=
-  List.map_subsetₓ _ p.darts_bypass_subset
+  List.map_subset _ p.darts_bypass_subset
 
 theorem darts_to_path_subset {u v : V} (p : G.Walk u v) : (p.toPath : G.Walk u v).darts ⊆ p.darts :=
   darts_bypass_subset _
@@ -1146,7 +1149,7 @@ protected theorem IsPath.of_map {f : G →g G'} (hp : (p.map f).IsPath) : p.IsPa
     cases' hp with hp1 hp2
     refine' ⟨ih hp1, _⟩
     contrapose! hp2
-    exact List.mem_map_of_memₓ f hp2
+    exact List.mem_map_of_mem f hp2
     
 
 theorem map_is_path_iff_of_injective (hinj : Function.Injective f) : (p.map f).IsPath ↔ p.IsPath :=
@@ -1168,7 +1171,7 @@ theorem map_injective_of_injective {f : G →g G'} (hinj : Function.Injective f)
       
     · simp only [map_cons] at h
       cases hinj h.1
-      simp only [eq_self_iff_true, heq_iff_eq, true_andₓ]
+      simp only [eq_self_iff_true, heq_iff_eq, true_and_iff]
       apply ih
       simpa using h.2
       
@@ -1263,7 +1266,7 @@ theorem reachable_iff_nonempty_univ {u v : V} : G.Reachable u v ↔ (Set.Univ : 
   Set.nonempty_iff_univ_nonempty
 
 protected theorem Reachable.elim {p : Prop} {u v : V} (h : G.Reachable u v) (hp : G.Walk u v → p) : p :=
-  Nonempty.elimₓ h hp
+  Nonempty.elim h hp
 
 protected theorem Reachable.elim_path {p : Prop} {u v : V} (h : G.Reachable u v) (hp : G.Path u v → p) : p := by
   classical
@@ -1304,12 +1307,12 @@ theorem reachable_iff_refl_trans_gen (u v : V) : G.Reachable u v ↔ Relation.Re
 
 variable (G)
 
-theorem reachable_is_equivalence : Equivalenceₓ G.Reachable :=
-  mk_equivalence _ (@Reachable.refl _ G) (@Reachable.symm _ G) (@Reachable.trans _ G)
+theorem reachable_is_equivalence : Equivalence G.Reachable :=
+  mk _ (@Reachable.refl _ G) (@Reachable.symm _ G) (@Reachable.trans _ G)
 
 /-- The equivalence relation on vertices given by `simple_graph.reachable`. -/
-def reachableSetoid : Setoidₓ V :=
-  Setoidₓ.mk _ G.reachable_is_equivalence
+def reachableSetoid : Setoid V :=
+  Setoid.mk _ G.reachable_is_equivalence
 
 /-- A graph is preconnected if every pair of vertices is reachable from one another. -/
 def Preconnected : Prop :=
@@ -1361,12 +1364,12 @@ section ConnectedComponent
 
 variable {G}
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem ConnectedComponent.ind {β : G.ConnectedComponent → Prop} (h : ∀ v : V, β (G.connectedComponentMk v))
     (c : G.ConnectedComponent) : β c :=
   Quot.ind h c
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem ConnectedComponent.ind₂ {β : G.ConnectedComponent → G.ConnectedComponent → Prop}
     (h : ∀ v w : V, β (G.connectedComponentMk v) (G.connectedComponentMk w)) (c d : G.ConnectedComponent) : β c d :=
   Quot.induction_on₂ c d h
@@ -1377,12 +1380,12 @@ protected theorem ConnectedComponent.sound {v w : V} :
 
 protected theorem ConnectedComponent.exact {v w : V} :
     G.connectedComponentMk v = G.connectedComponentMk w → G.Reachable v w :=
-  @Quotientₓ.exact _ G.reachableSetoid _ _
+  @Quotient.exact _ G.reachableSetoid _ _
 
 @[simp]
 protected theorem ConnectedComponent.eq {v w : V} :
     G.connectedComponentMk v = G.connectedComponentMk w ↔ G.Reachable v w :=
-  @Quotientₓ.eq _ G.reachableSetoid _ _
+  @Quotient.eq _ G.reachableSetoid _ _
 
 /-- The `connected_component` specialization of `quot.lift`. Provides the stronger
 assumption that the vertices are connected by a path. -/
@@ -1434,7 +1437,7 @@ theorem set_walk_self_length_zero_eq (u : V) : { p : G.Walk u u | p.length = 0 }
 
 theorem set_walk_length_zero_eq_of_ne {u v : V} (h : u ≠ v) : { p : G.Walk u v | p.length = 0 } = ∅ := by
   ext p
-  simp only [Set.mem_set_of_eq, Set.mem_empty_iff_false, iff_falseₓ]
+  simp only [Set.mem_set_of_eq, Set.mem_empty_iff_false, iff_false_iff]
   exact fun h' => absurd (walk.eq_of_length_eq_zero h') h
 
 theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
@@ -1445,8 +1448,8 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
   cases' p with _ _ w _ huw pwv
   · simp [eq_comm]
     
-  · simp only [Nat.succ_eq_add_one, Set.mem_set_of_eq, walk.length_cons, add_left_injₓ, Set.mem_Union, Set.mem_image,
-      exists_propₓ]
+  · simp only [Nat.succ_eq_add_one, Set.mem_set_of_eq, walk.length_cons, add_left_inj, Set.mem_Union, Set.mem_image,
+      exists_prop]
     constructor
     · rintro rfl
       exact ⟨w, huw, pwv, rfl, rfl, HEq.rfl⟩
@@ -1456,7 +1459,7 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
       
     
 
-variable (G) [Fintypeₓ V] [DecidableRel G.Adj] [DecidableEq V]
+variable (G) [Fintype V] [DecidableRel G.Adj] [DecidableEq V]
 
 /-- The `finset` of length-`n` walks from `u` to `v`.
 This is used to give `{p : G.walk u v | p.length = n}` a `fintype` instance, and it
@@ -1464,14 +1467,14 @@ can also be useful as a recursive description of this set when `V` is finite.
 
 See `simple_graph.coe_finset_walk_length_eq` for the relationship between this `finset` and
 the set of length-`n` walks. -/
-def finsetWalkLength : ∀ (n : ℕ) (u v : V), Finsetₓ (G.Walk u v)
+def finsetWalkLength : ∀ (n : ℕ) (u v : V), Finset (G.Walk u v)
   | 0, u, v =>
     if h : u = v then by
       subst u
       exact {walk.nil}
     else ∅
   | n + 1, u, v =>
-    Finsetₓ.univ.bUnion fun w : V =>
+    Finset.univ.bUnion fun w : V =>
       if h : G.Adj u w then (finset_walk_length n w v).map ⟨fun p => Walk.cons h p, fun p q => by simp⟩ else ∅
 
 theorem coe_finset_walk_length_eq (n : ℕ) (u v : V) :
@@ -1479,13 +1482,13 @@ theorem coe_finset_walk_length_eq (n : ℕ) (u v : V) :
   induction' n with n ih generalizing u v
   · obtain rfl | huv := eq_or_ne u v <;> simp [finset_walk_length, set_walk_length_zero_eq_of_ne, *]
     
-  · simp only [finset_walk_length, set_walk_length_succ_eq, Finsetₓ.coe_bUnion, Finsetₓ.mem_coe, Finsetₓ.mem_univ,
+  · simp only [finset_walk_length, set_walk_length_succ_eq, Finset.coe_bUnion, Finset.mem_coe, Finset.mem_univ,
       Set.Union_true]
     ext p
-    simp only [Set.mem_Union, Finsetₓ.mem_coe, Set.mem_image, Set.mem_set_of_eq]
+    simp only [Set.mem_Union, Finset.mem_coe, Set.mem_image, Set.mem_set_of_eq]
     congr 2
     ext w
-    simp only [Set.ext_iff, Finsetₓ.mem_coe, Set.mem_set_of_eq] at ih
+    simp only [Set.ext_iff, Finset.mem_coe, Set.mem_set_of_eq] at ih
     split_ifs with huw <;> simp [huw, ih]
     
 
@@ -1497,8 +1500,8 @@ theorem Walk.length_eq_of_mem_finset_walk_length {n : ℕ} {u v : V} (p : G.Walk
 
 variable (G)
 
-instance fintypeSetWalkLength (u v : V) (n : ℕ) : Fintypeₓ { p : G.Walk u v | p.length = n } :=
-  (Fintypeₓ.subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finsetₓ.mem_coe, coe_finset_walk_length_eq]
+instance fintypeSetWalkLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.length = n } :=
+  (Fintype.subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 
 theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
     { p : G.Walk u v | p.length = n }.toFinset = G.finsetWalkLength n u v := by
@@ -1508,8 +1511,8 @@ theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
 /- See `simple_graph.adj_matrix_pow_apply_eq_card_walk` for the cardinality in terms of the `n`th
 power of the adjacency matrix. -/
 theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
-    Fintypeₓ.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
-  (Fintypeₓ.card_of_subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finsetₓ.mem_coe, coe_finset_walk_length_eq]
+    Fintype.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
+  (Fintype.card_of_subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 
 end WalkCounting
 

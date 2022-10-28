@@ -55,13 +55,14 @@ theorem eventually_nhds_zero_forall_closed_ball_subset (hK : ∀ i, IsClosed (K 
   apply hR
   calc
     edist z x ≤ edist z p.2 + edist p.2 x := edist_triangle _ _ _
-    _ ≤ p.1 + (R - p.1) := add_le_add hz <| le_transₓ hp.2 <| tsub_le_tsub_left hp.1.out.le _
-    _ = R := add_tsub_cancel_of_le (lt_transₓ hp.1 hrR).le
+    _ ≤ p.1 + (R - p.1) := add_le_add hz <| le_trans hp.2 <| tsub_le_tsub_left hp.1.out.le _
+    _ = R := add_tsub_cancel_of_le (lt_trans hp.1 hrR).le
     
 
 theorem exists_forall_closed_ball_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i)
     (hfin : LocallyFinite K) (x : X) :
-    ∃ r : ℝ, ∀ᶠ y in 𝓝 x, r ∈ Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | ClosedBall y r ⊆ U i } := by
+    ∃ r : ℝ, ∀ᶠ y in 𝓝 x, r ∈ IoiCat (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | ClosedBall y r ⊆ U i } :=
+  by
   have :=
     (ennreal.continuous_of_real.tendsto' 0 0 Ennreal.of_real_zero).Eventually
       (eventually_nhds_zero_forall_closed_ball_subset hK hU hKU hfin x).curry
@@ -70,7 +71,7 @@ theorem exists_forall_closed_ball_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU
   rwa [mem_preimage, mem_Inter₂]
 
 theorem exists_forall_closed_ball_subset_aux₂ (y : X) :
-    Convex ℝ (Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | ClosedBall y r ⊆ U i }) :=
+    Convex ℝ (IoiCat (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | ClosedBall y r ⊆ U i }) :=
   (convex_Ioi _).inter <|
     ord_connected.convex <|
       ord_connected.preimage_ennreal_of_real <|

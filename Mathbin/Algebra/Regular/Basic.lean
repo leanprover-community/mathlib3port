@@ -3,7 +3,8 @@ Copyright (c) 2021 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.Order.MonoidLemmas
+import Mathbin.Algebra.Group.Commute
+import Mathbin.Algebra.Order.Monoid.Lemmas
 import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Logic.Embedding
 
@@ -59,7 +60,7 @@ structure IsRegular (c : R) : Prop where
 attribute [to_additive] IsRegular
 
 @[to_additive]
-protected theorem MulLeCancellable.is_left_regular [PartialOrderₓ R] {a : R} (ha : MulLeCancellable a) :
+protected theorem MulLeCancellable.is_left_regular [PartialOrder R] {a : R} (ha : MulLeCancellable a) :
     IsLeftRegular a :=
   ha.Injective
 
@@ -71,9 +72,9 @@ theorem Commute.is_regular_iff {a : R} (ca : ∀ b, Commute a b) : IsRegular a �
 
 end Mul
 
-section Semigroupₓ
+section Semigroup
 
-variable [Semigroupₓ R] {a b : R}
+variable [Semigroup R] {a b : R}
 
 /-- In a semigroup, the product of left-regular elements is left-regular. -/
 @[to_additive "In an additive semigroup, the sum of add-left-regular elements is add-left.regular."]
@@ -138,11 +139,11 @@ theorem is_regular_mul_and_mul_iff : IsRegular (a * b) ∧ IsRegular (b * a) ↔
 theorem IsRegular.and_of_mul_of_mul (ab : IsRegular (a * b)) (ba : IsRegular (b * a)) : IsRegular a ∧ IsRegular b :=
   is_regular_mul_and_mul_iff.mp ⟨ab, ba⟩
 
-end Semigroupₓ
+end Semigroup
 
-section MulZeroClassₓ
+section MulZeroClass
 
-variable [MulZeroClassₓ R] {a b : R}
+variable [MulZeroClass R] {a b : R}
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
@@ -210,23 +211,23 @@ theorem not_is_right_regular_zero [nR : Nontrivial R] : ¬IsRightRegular (0 : R)
 /-- In a non-trivial ring, the element `0` is not regular -- with typeclasses. -/
 theorem not_is_regular_zero [Nontrivial R] : ¬IsRegular (0 : R) := fun h => IsRegular.ne_zero h rfl
 
-end MulZeroClassₓ
+end MulZeroClass
 
-section MulOneClassₓ
+section MulOneClass
 
-variable [MulOneClassₓ R]
+variable [MulOneClass R]
 
 /-- If multiplying by `1` on either side is the identity, `1` is regular. -/
 @[to_additive "If adding `0` on either side is the identity, `0` is regular."]
 theorem is_regular_one : IsRegular (1 : R) :=
-  ⟨fun a b ab => (one_mulₓ a).symm.trans (Eq.trans ab (one_mulₓ b)), fun a b ab =>
-    (mul_oneₓ a).symm.trans (Eq.trans ab (mul_oneₓ b))⟩
+  ⟨fun a b ab => (one_mul a).symm.trans (Eq.trans ab (one_mul b)), fun a b ab =>
+    (mul_one a).symm.trans (Eq.trans ab (mul_one b))⟩
 
-end MulOneClassₓ
+end MulOneClass
 
-section CommSemigroupₓ
+section CommSemigroup
 
-variable [CommSemigroupₓ R] {a b : R}
+variable [CommSemigroup R] {a b : R}
 
 /-- A product is regular if and only if the factors are. -/
 @[to_additive "A sum is add-regular if and only if the summands are."]
@@ -234,11 +235,11 @@ theorem is_regular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b :
   refine' Iff.trans _ is_regular_mul_and_mul_iff
   refine' ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
 
-end CommSemigroupₓ
+end CommSemigroup
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ R] {a b : R}
+variable [Monoid R] {a b : R}
 
 /-- An element admitting a left inverse is left-regular. -/
 @[to_additive "An element admitting a left additive opposite is add-left-regular."]
@@ -267,7 +268,7 @@ theorem IsUnit.is_regular (ua : IsUnit a) : IsRegular a := by
   rcases ua with ⟨a, rfl⟩
   exact Units.is_regular a
 
-end Monoidₓ
+end Monoid
 
 section LeftOrRightCancelSemigroup
 
@@ -278,7 +279,7 @@ by left multiplication by a fixed element.
       "The embedding of a left cancellative additive semigroup into itself\n   by left translation by a fixed element.",
   simps]
 def mulLeftEmbedding {G : Type _} [LeftCancelSemigroup G] (g : G) : G ↪ G where
-  toFun := fun h => g * h
+  toFun h := g * h
   inj' := mul_right_injective g
 
 /-- The embedding of a right cancellative semigroup into itself
@@ -288,7 +289,7 @@ by right multiplication by a fixed element.
       "The embedding of a right cancellative additive semigroup into itself\n   by right translation by a fixed element.",
   simps]
 def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G where
-  toFun := fun h => h * g
+  toFun h := h * g
   inj' := mul_left_injective g
 
 @[to_additive]

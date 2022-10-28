@@ -44,7 +44,7 @@ namespace AddMonoidAlgebra
 
 open Finsupp
 
-variable {R A : Type _} [Semiringₓ R]
+variable {R A : Type _} [Semiring R]
 
 /-- The coefficient of a monomial in a product `f * g` that can be reached in at most one way
 as a product of monomials in the supports of `f` and `g` is a product. -/
@@ -53,12 +53,12 @@ theorem mul_apply_add_eq_mul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {
     (f * g) (a0 + b0) = f a0 * g b0 := by
   classical
   rw [mul_apply]
-  refine' (Finsetₓ.sum_eq_single a0 _ _).trans _
-  · exact fun b H hb => Finsetₓ.sum_eq_zero fun x H1 => if_neg (h H H1 (Or.inl hb))
+  refine' (Finset.sum_eq_single a0 _ _).trans _
+  · exact fun b H hb => Finset.sum_eq_zero fun x H1 => if_neg (h H H1 (Or.inl hb))
     
   · exact fun af0 => by simp [not_mem_support_iff.mp af0]
     
-  · refine' (Finsetₓ.sum_eq_single b0 (fun b bg b0 => _) _).trans (if_pos rfl)
+  · refine' (Finset.sum_eq_single b0 (fun b bg b0 => _) _).trans (if_pos rfl)
     · by_cases af:a0 ∈ f.support
       · exact if_neg (h af bg (Or.inr b0))
         
@@ -73,15 +73,15 @@ section LeftOrRightOrderability
 
 theorem Left.exists_add_of_mem_support_single_mul [AddLeftCancelSemigroup A] {g : AddMonoidAlgebra R A} (a x : A)
     (hx : x ∈ (single a 1 * g : AddMonoidAlgebra R A).Support) : ∃ b ∈ g.Support, a + b = x := by
-  rwa [support_single_mul _ _ (fun y => by rw [one_mulₓ] : ∀ y : R, 1 * y = 0 ↔ _), Finsetₓ.mem_map] at hx
+  rwa [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _), Finset.mem_map] at hx
 
 theorem Right.exists_add_of_mem_support_single_mul [AddRightCancelSemigroup A] {f : AddMonoidAlgebra R A} (b x : A)
     (hx : x ∈ (f * single b 1 : AddMonoidAlgebra R A).Support) : ∃ a ∈ f.Support, a + b = x := by
-  rwa [support_mul_single _ _ (fun y => by rw [mul_oneₓ] : ∀ y : R, y * 1 = 0 ↔ _), Finsetₓ.mem_map] at hx
+  rwa [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _), Finset.mem_map] at hx
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a left-ordered add right
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
-theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigroup A] [LinearOrderₓ A]
+theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigroup A] [LinearOrder A]
     [CovariantClass A A (· + ·) (· < ·)] : NoZeroDivisors (AddMonoidAlgebra R A) :=
   ⟨fun f g fg => by
     contrapose! fg
@@ -91,42 +91,42 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
       right.exists_add_of_mem_support_single_mul gmin
         ((f * single gmin 1 : AddMonoidAlgebra R A).Support.min'
           (by rw [support_mul_single] <;> simp [support_nonempty_iff.mpr fg.1]))
-        (Finsetₓ.min'_mem _ _)
+        (Finset.min'_mem _ _)
     refine' ⟨a + gmin, mem_support_iff.mpr _⟩
     rw [mul_apply_add_eq_mul_of_forall_ne _]
     · refine' mul_ne_zero _ _
-      exacts[mem_support_iff.mp ha, mem_support_iff.mp (Finsetₓ.min'_mem _ _)]
+      exacts[mem_support_iff.mp ha, mem_support_iff.mp (Finset.min'_mem _ _)]
       
     · rw [H]
-      rintro b c bf cg (hb | hc) <;> refine' ne_of_gtₓ _
-      · refine' lt_of_lt_of_leₓ (_ : _ < b + gmin) _
-        · apply Finsetₓ.min'_lt_of_mem_erase_min'
+      rintro b c bf cg (hb | hc) <;> refine' ne_of_gt _
+      · refine' lt_of_lt_of_le (_ : _ < b + gmin) _
+        · apply Finset.min'_lt_of_mem_erase_min'
           rw [← H]
-          apply Finsetₓ.mem_erase_of_ne_of_mem
-          · simpa only [Ne.def, add_left_injₓ]
+          apply Finset.mem_erase_of_ne_of_mem
+          · simpa only [Ne.def, add_left_inj]
             
-          · rw [support_mul_single _ _ (fun y => by rw [mul_oneₓ] : ∀ y : R, y * 1 = 0 ↔ _)]
-            simpa only [Finsetₓ.mem_map, add_right_embedding_apply, add_left_injₓ, exists_propₓ, exists_eq_right]
+          · rw [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _)]
+            simpa only [Finset.mem_map, add_right_embedding_apply, add_left_inj, exists_prop, exists_eq_right]
             
           
         · haveI : CovariantClass A A (· + ·) (· ≤ ·) := Add.to_covariant_class_left A
-          exact add_le_add_left (Finsetₓ.min'_le _ _ cg) _
+          exact add_le_add_left (Finset.min'_le _ _ cg) _
           
         
-      · refine' lt_of_le_of_ltₓ (_ : _ ≤ b + gmin) _
-        · apply Finsetₓ.min'_le
-          rw [support_mul_single _ _ (fun y => by rw [mul_oneₓ] : ∀ y : R, y * 1 = 0 ↔ _)]
-          simp only [bf, Finsetₓ.mem_map, add_right_embedding_apply, add_left_injₓ, exists_propₓ, exists_eq_right]
+      · refine' lt_of_le_of_lt (_ : _ ≤ b + gmin) _
+        · apply Finset.min'_le
+          rw [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _)]
+          simp only [bf, Finset.mem_map, add_right_embedding_apply, add_left_inj, exists_prop, exists_eq_right]
           
         · refine' add_lt_add_left _ _
-          exact Finsetₓ.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hc, cg⟩)
+          exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hc, cg⟩)
           
         
       ⟩
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a right-ordered add left
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
-theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigroup A] [LinearOrderₓ A]
+theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigroup A] [LinearOrder A]
     [CovariantClass A A (Function.swap (· + ·)) (· < ·)] : NoZeroDivisors (AddMonoidAlgebra R A) :=
   ⟨fun f g fg => by
     contrapose! fg
@@ -136,35 +136,35 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
       left.exists_add_of_mem_support_single_mul fmin
         ((single fmin 1 * g : AddMonoidAlgebra R A).Support.min'
           (by rw [support_single_mul] <;> simp [support_nonempty_iff.mpr fg.2]))
-        (Finsetₓ.min'_mem _ _)
+        (Finset.min'_mem _ _)
     refine' ⟨fmin + a, mem_support_iff.mpr _⟩
     rw [mul_apply_add_eq_mul_of_forall_ne _]
     · refine' mul_ne_zero _ _
-      exacts[mem_support_iff.mp (Finsetₓ.min'_mem _ _), mem_support_iff.mp ha]
+      exacts[mem_support_iff.mp (Finset.min'_mem _ _), mem_support_iff.mp ha]
       
     · rw [H]
-      rintro b c bf cg (hb | hc) <;> refine' ne_of_gtₓ _
-      · refine' lt_of_le_of_ltₓ (_ : _ ≤ fmin + c) _
-        · apply Finsetₓ.min'_le
-          rw [support_single_mul _ _ (fun y => by rw [one_mulₓ] : ∀ y : R, 1 * y = 0 ↔ _)]
-          simp only [cg, Finsetₓ.mem_map, add_left_embedding_apply, add_right_injₓ, exists_propₓ, exists_eq_right]
+      rintro b c bf cg (hb | hc) <;> refine' ne_of_gt _
+      · refine' lt_of_le_of_lt (_ : _ ≤ fmin + c) _
+        · apply Finset.min'_le
+          rw [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _)]
+          simp only [cg, Finset.mem_map, add_left_embedding_apply, add_right_inj, exists_prop, exists_eq_right]
           
         · refine' add_lt_add_right _ _
-          exact Finsetₓ.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hb, bf⟩)
+          exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hb, bf⟩)
           
         
-      · refine' lt_of_lt_of_leₓ (_ : _ < fmin + c) _
-        · apply Finsetₓ.min'_lt_of_mem_erase_min'
+      · refine' lt_of_lt_of_le (_ : _ < fmin + c) _
+        · apply Finset.min'_lt_of_mem_erase_min'
           rw [← H]
-          apply Finsetₓ.mem_erase_of_ne_of_mem
-          · simpa only [Ne.def, add_right_injₓ]
+          apply Finset.mem_erase_of_ne_of_mem
+          · simpa only [Ne.def, add_right_inj]
             
-          · rw [support_single_mul _ _ (fun y => by rw [one_mulₓ] : ∀ y : R, 1 * y = 0 ↔ _)]
-            simpa only [Finsetₓ.mem_map, add_left_embedding_apply, add_right_injₓ, exists_propₓ, exists_eq_right]
+          · rw [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _)]
+            simpa only [Finset.mem_map, add_left_embedding_apply, add_right_inj, exists_prop, exists_eq_right]
             
           
         · haveI : CovariantClass A A (Function.swap (· + ·)) (· ≤ ·) := Add.to_covariant_class_right A
-          exact add_le_add_right (Finsetₓ.min'_le _ _ bf) _
+          exact add_le_add_right (Finset.min'_le _ _ bf) _
           
         
       ⟩

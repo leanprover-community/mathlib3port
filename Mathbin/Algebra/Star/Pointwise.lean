@@ -89,11 +89,11 @@ theorem compl_star [HasStar α] : (sᶜ)⋆ = s⋆ᶜ :=
 @[simp]
 instance [HasInvolutiveStar α] : HasInvolutiveStar (Set α) where
   star := HasStar.star
-  star_involutive := fun s => by simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
+  star_involutive s := by simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
 
 @[simp]
 theorem star_subset_star [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t⋆ ↔ s ⊆ t :=
-  Equivₓ.star.Surjective.preimage_subset_preimage_iff
+  Equiv.star.Surjective.preimage_subset_preimage_iff
 
 theorem star_subset [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆ t⋆ := by rw [← star_subset_star, star_star]
 
@@ -104,20 +104,20 @@ theorem star_singleton {β : Type _} [HasInvolutiveStar β] (x : β) : ({x} : Se
   ext1 y
   rw [mem_star, mem_singleton_iff, mem_singleton_iff, star_eq_iff_star_eq, eq_comm]
 
-protected theorem star_mul [Monoidₓ α] [StarSemigroup α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
+protected theorem star_mul [Monoid α] [StarSemigroup α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
   simp_rw [← image_star, ← image2_mul, image_image2, image2_image_left, image2_image_right, star_mul, image2_swap _ s t]
 
-protected theorem star_add [AddMonoidₓ α] [StarAddMonoid α] (s t : Set α) : (s + t)⋆ = s⋆ + t⋆ := by
+protected theorem star_add [AddMonoid α] [StarAddMonoid α] (s t : Set α) : (s + t)⋆ = s⋆ + t⋆ := by
   simp_rw [← image_star, ← image2_add, image_image2, image2_image_left, image2_image_right, star_add]
 
 @[simp]
 instance [HasStar α] [HasTrivialStar α] :
-    HasTrivialStar (Set α) where star_trivial := fun s => by
+    HasTrivialStar (Set α) where star_trivial s := by
     rw [← star_preimage]
     ext1
     simp [star_trivial]
 
-protected theorem star_inv [Groupₓ α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
+protected theorem star_inv [Group α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
   ext
   simp only [mem_star, mem_inv, star_inv]
 

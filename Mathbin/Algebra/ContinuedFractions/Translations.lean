@@ -52,10 +52,10 @@ theorem part_denom_eq_s_b {gp : Pair α} (s_nth_eq : g.s.nth n = some gp) : g.pa
   simp [partial_denominators, s_nth_eq]
 
 theorem exists_s_a_of_part_num {a : α} (nth_part_num_eq : g.partialNumerators.nth n = some a) :
-    ∃ gp, g.s.nth n = some gp ∧ gp.a = a := by simpa [partial_numerators, Seqₓₓ.map_nth] using nth_part_num_eq
+    ∃ gp, g.s.nth n = some gp ∧ gp.a = a := by simpa [partial_numerators, Seq.map_nth] using nth_part_num_eq
 
 theorem exists_s_b_of_part_denom {b : α} (nth_part_denom_eq : g.partialDenominators.nth n = some b) :
-    ∃ gp, g.s.nth n = some gp ∧ gp.b = b := by simpa [partial_denominators, Seqₓₓ.map_nth] using nth_part_denom_eq
+    ∃ gp, g.s.nth n = some gp ∧ gp.b = b := by simpa [partial_denominators, Seq.map_nth] using nth_part_denom_eq
 
 end General
 
@@ -131,7 +131,7 @@ theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
   simp [denom_eq_conts_b, first_continuant_eq zeroth_s_eq]
 
 @[simp]
-theorem zeroth_convergent'_aux_eq_zero {s : Seqₓₓ <| Pair K} : convergents'Aux s 0 = 0 :=
+theorem zeroth_convergent'_aux_eq_zero {s : Seq <| Pair K} : convergents'Aux s 0 = 0 :=
   rfl
 
 @[simp]

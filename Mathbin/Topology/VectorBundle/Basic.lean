@@ -52,16 +52,16 @@ variable (R 𝕜 : Type _) {B : Type _} (F : Type _) (E : B → Type _)
 
 section TopologicalVectorSpace
 
-variable [Semiringₓ R] [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoidₓ F]
+variable [Semiring R] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoid F]
   [Module R F] [TopologicalSpace B]
 
--- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
+/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
 /-- A pretrivialization for a (yet to be defined) topological vector bundle `total_space E` is a
 local equiv between sets of the form `proj ⁻¹' base_set` and `base_set × F` which respects the
 first coordinate, and is linear in each fiber. -/
 @[ext, nolint has_nonempty_instance]
 structure TopologicalVectorBundle.Pretrivialization extends
-  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure" where
+  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" where
   linear' : ∀ x ∈ base_set, IsLinearMap R fun y : E x => (to_fun (totalSpaceMk x y)).2
 
 instance : CoeFun (TopologicalVectorBundle.Pretrivialization R F E) _ :=
@@ -100,14 +100,14 @@ theorem coe_fst' (ex : x.proj ∈ e.BaseSet) : (e x).1 = x.proj :=
 protected theorem eq_on : EqOn (Prod.fst ∘ e) TotalSpace.proj e.Source := fun x hx => e.coe_fst hx
 
 theorem mk_proj_snd (ex : x ∈ e.Source) : (x.proj, (e x).2) = e x :=
-  Prod.extₓ (e.coe_fst ex).symm rfl
+  Prod.ext (e.coe_fst ex).symm rfl
 
 @[simp, mfld_simps]
 theorem coe_coe_fst (hb : b ∈ e.BaseSet) : (e y).1 = b :=
   e.coe_fst (e.mem_source.2 hb)
 
 theorem mk_proj_snd' (ex : x.proj ∈ e.BaseSet) : (x.proj, (e x).2) = e x :=
-  Prod.extₓ (e.coe_fst' ex).symm rfl
+  Prod.ext (e.coe_fst' ex).symm rfl
 
 theorem mem_target {x : B × F} : x ∈ e.Target ↔ x.1 ∈ e.BaseSet :=
   e.toFiberBundlePretrivialization.mem_target
@@ -132,7 +132,7 @@ theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : e (e.toLocalE
 
 @[simp, mfld_simps]
 theorem symm_apply_mk_proj (ex : x ∈ e.Source) : e.toLocalEquiv.symm (x.proj, (e x).2) = x := by
-  rw [← e.coe_fst ex, Prod.mk.etaₓ, ← e.coe_coe, e.to_local_equiv.left_inv ex]
+  rw [← e.coe_fst ex, Prod.mk.eta, ← e.coe_coe, e.to_local_equiv.left_inv ex]
 
 @[simp, mfld_simps]
 theorem preimage_symm_proj_base_set : e.toLocalEquiv.symm ⁻¹' (total_space.proj ⁻¹' e.BaseSet) ∩ e.Target = e.Target :=
@@ -189,12 +189,12 @@ protected def symmₗ (e : Pretrivialization R F E) (b : B) : F →ₗ[R] E b :=
 fibers and the model space. -/
 @[simps (config := { fullyApplied := false })]
 def linearEquivAt (e : Pretrivialization R F E) (b : B) (hb : b ∈ e.BaseSet) : E b ≃ₗ[R] F where
-  toFun := fun y => (e (totalSpaceMk b y)).2
+  toFun y := (e (totalSpaceMk b y)).2
   invFun := e.symm b
   left_inv := e.symm_apply_apply_mk hb
-  right_inv := fun v => by simp_rw [e.apply_mk_symm hb v]
-  map_add' := fun v w => (e.linear hb).map_add v w
-  map_smul' := fun c v => (e.linear hb).map_smul c v
+  right_inv v := by simp_rw [e.apply_mk_symm hb v]
+  map_add' v w := (e.linear hb).map_add v w
+  map_smul' c v := (e.linear hb).map_smul c v
 
 /-- A fiberwise linear map equal to `e` on `e.base_set`. -/
 protected def linearMapAt (e : Pretrivialization R F E) (b : B) : E b →ₗ[R] F :=
@@ -235,7 +235,7 @@ end TopologicalVectorBundle.Pretrivialization
 
 variable [TopologicalSpace (TotalSpace E)]
 
--- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
+/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
 /-- A structure extending local homeomorphisms, defining a local trivialization of the projection
 `proj : total_space E → B` with fiber `F`, as a local homeomorphism between `total_space E`
 and `B × F` defined between two sets of the form `proj ⁻¹' base_set` and `base_set × F`,
@@ -243,7 +243,7 @@ acting trivially on the first coordinate and linear in the fibers.
 -/
 @[ext, nolint has_nonempty_instance]
 structure TopologicalVectorBundle.Trivialization extends
-  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure" where
+  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" where
   linear' : ∀ x ∈ base_set, IsLinearMap R fun y : E x => (to_fun (totalSpaceMk x y)).2
 
 open TopologicalVectorBundle
@@ -293,10 +293,10 @@ theorem coe_fst' (ex : x.proj ∈ e.BaseSet) : (e x).1 = x.proj :=
 protected theorem eq_on : EqOn (Prod.fst ∘ e) TotalSpace.proj e.Source := fun x hx => e.coe_fst hx
 
 theorem mk_proj_snd (ex : x ∈ e.Source) : (x.proj, (e x).2) = e x :=
-  Prod.extₓ (e.coe_fst ex).symm rfl
+  Prod.ext (e.coe_fst ex).symm rfl
 
 theorem mk_proj_snd' (ex : x.proj ∈ e.BaseSet) : (x.proj, (e x).2) = e x :=
-  Prod.extₓ (e.coe_fst' ex).symm rfl
+  Prod.ext (e.coe_fst' ex).symm rfl
 
 theorem open_target : IsOpen e.Target := by
   rw [e.target_eq]
@@ -366,8 +366,8 @@ theorem apply_mk_symm (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) 
     e (totalSpaceMk b (e.symm b y)) = (b, y) :=
   e.toPretrivialization.apply_mk_symm hb y
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuous_on_symm (e : Trivialization R F E) :
     ContinuousOn (fun z : B × F => totalSpaceMk z.1 (e.symm z.1 z.2)) (e.BaseSet ×ˢ univ) := by
   have :
@@ -375,7 +375,7 @@ theorem continuous_on_symm (e : Trivialization R F E) :
       total_space_mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
     by
     rintro x ⟨hx : x.1 ∈ e.base_set, _⟩
-    simp_rw [e.mk_symm hx, Prod.mk.etaₓ]
+    simp_rw [e.mk_symm hx, Prod.mk.eta]
   refine' ContinuousOn.congr _ this
   rw [← e.target_eq]
   exact e.to_local_homeomorph.continuous_on_symm
@@ -495,11 +495,11 @@ open TopologicalVectorBundle
 
 variable (B)
 
-variable [NontriviallyNormedField R] [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module R (E x)] [NormedAddCommGroup F]
+variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [NormedAddCommGroup F]
   [NormedSpace R F] [TopologicalSpace B] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The valid transition functions for a topological vector bundle over `B` modelled on
 a normed space `F`: a transition function must be a local homeomorphism of `B × F` with source and
 target both `s ×ˢ univ`, which on this set is of the form `λ (b, v), (b, ε b v)` for some continuous
@@ -513,13 +513,13 @@ def ContinuousTransitions (e : LocalEquiv (B × F) (B × F)) : Prop :=
 
 variable {B}
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`total_space_mk_inducing] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`TrivializationAtlas] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`trivializationAt] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`mem_base_set_trivialization_at] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`trivialization_mem_atlas] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change] []
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (e e' «expr ∈ » trivialization_atlas)
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`total_space_mk_inducing] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`TrivializationAtlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`trivializationAt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`mem_base_set_trivialization_at] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`trivialization_mem_atlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change] [] -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (e e' «expr ∈ » trivialization_atlas) -/
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `topological_vector_bundle R F E`) if around every point there is a fiber bundle trivialization
@@ -646,13 +646,13 @@ end Trivialization
 
 section
 
-instance {B : Type _} {F : Type _} [AddCommMonoidₓ F] (b : B) : AddCommMonoidₓ (Bundle.Trivial B F b) :=
-  ‹AddCommMonoidₓ F›
+instance {B : Type _} {F : Type _} [AddCommMonoid F] (b : B) : AddCommMonoid (Bundle.Trivial B F b) :=
+  ‹AddCommMonoid F›
 
-instance {B : Type _} {F : Type _} [AddCommGroupₓ F] (b : B) : AddCommGroupₓ (Bundle.Trivial B F b) :=
-  ‹AddCommGroupₓ F›
+instance {B : Type _} {F : Type _} [AddCommGroup F] (b : B) : AddCommGroup (Bundle.Trivial B F b) :=
+  ‹AddCommGroup F›
 
-instance {B : Type _} {F : Type _} [AddCommMonoidₓ F] [Module R F] (b : B) : Module R (Bundle.Trivial B F b) :=
+instance {B : Type _} {F : Type _} [AddCommMonoid F] [Module R F] (b : B) : Module R (Bundle.Trivial B F b) :=
   ‹Module R F›
 
 end
@@ -663,30 +663,30 @@ variable (R B F)
 
 /-- Local trivialization for trivial bundle. -/
 def trivialization : Trivialization R F (Bundle.Trivial B F) where
-  toFun := fun x => (x.fst, x.snd)
-  invFun := fun y => ⟨y.fst, y.snd⟩
+  toFun x := (x.fst, x.snd)
+  invFun y := ⟨y.fst, y.snd⟩
   Source := Univ
   Target := Univ
-  map_source' := fun x h => mem_univ (x.fst, x.snd)
-  map_target' := fun y h => mem_univ ⟨y.fst, y.snd⟩
-  left_inv' := fun x h => Sigma.eq rfl rfl
-  right_inv' := fun x h => Prod.extₓ rfl rfl
+  map_source' x h := mem_univ (x.fst, x.snd)
+  map_target' y h := mem_univ ⟨y.fst, y.snd⟩
+  left_inv' x h := Sigma.eq rfl rfl
+  right_inv' x h := Prod.ext rfl rfl
   open_source := is_open_univ
   open_target := is_open_univ
   continuous_to_fun := by
     rw [← continuous_iff_continuous_on_univ, continuous_iff_le_induced]
     simp only [Prod.topologicalSpace, induced_inf, induced_compose]
-    exact le_rflₓ
+    exact le_rfl
   continuous_inv_fun := by
     rw [← continuous_iff_continuous_on_univ, continuous_iff_le_induced]
     simp only [Bundle.TotalSpace.topologicalSpace, induced_inf, induced_compose]
-    exact le_rflₓ
+    exact le_rfl
   BaseSet := Univ
   open_base_set := is_open_univ
   source_eq := rfl
   target_eq := by simp only [univ_prod_univ]
-  proj_to_fun := fun y hy => rfl
-  linear' := fun x hx => ⟨fun y z => rfl, fun c y => rfl⟩
+  proj_to_fun y hy := rfl
+  linear' x hx := ⟨fun y z => rfl, fun c y => rfl⟩
 
 theorem trivialization.coord_change (b : B) :
     (trivialization R B F).coordChange (trivialization R B F) b = ContinuousLinearEquiv.refl R F := by
@@ -704,12 +704,12 @@ theorem trivialization_target : (trivialization R B F).Target = univ :=
 
 instance topologicalVectorBundle : TopologicalVectorBundle R F (Bundle.Trivial B F) where
   TrivializationAtlas := {TrivialTopologicalVectorBundle.trivialization R B F}
-  trivializationAt := fun x => TrivialTopologicalVectorBundle.trivialization R B F
+  trivializationAt x := TrivialTopologicalVectorBundle.trivialization R B F
   mem_base_set_trivialization_at := mem_univ
-  trivialization_mem_atlas := fun x => mem_singleton _
-  total_space_mk_inducing := fun b =>
+  trivialization_mem_atlas x := mem_singleton _
+  total_space_mk_inducing b :=
     ⟨by
-      have : (fun x : trivialₓ B F b => x) = @id F := by
+      have : (fun x : trivial B F b => x) = @id F := by
         ext x
         rfl
       simp only [total_space.topological_space, induced_inf, induced_compose, Function.comp, total_space.proj,
@@ -764,14 +764,14 @@ structure TopologicalVectorBundleCore (ι : Type _) where
 /-- The trivial topological vector bundle core, in which all the changes of coordinates are the
 identity. -/
 def trivialTopologicalVectorBundleCore (ι : Type _) [Inhabited ι] : TopologicalVectorBundleCore R B F ι where
-  BaseSet := fun ι => Univ
-  is_open_base_set := fun i => is_open_univ
+  BaseSet ι := Univ
+  is_open_base_set i := is_open_univ
   indexAt := default
-  mem_base_set_at := fun x => mem_univ x
-  coordChange := fun i j x => ContinuousLinearMap.id R F
-  coord_change_self := fun i x hx v => rfl
-  coord_change_comp := fun i j k x hx v => rfl
-  coord_change_continuous := fun i j => continuous_on_const
+  mem_base_set_at x := mem_univ x
+  coordChange i j x := ContinuousLinearMap.id R F
+  coord_change_self i x hx v := rfl
+  coord_change_comp i j k x hx v := rfl
+  coord_change_continuous i j := continuous_on_const
 
 instance (ι : Type _) [Inhabited ι] : Inhabited (TopologicalVectorBundleCore R B F ι) :=
   ⟨trivialTopologicalVectorBundleCore R B F ι⟩
@@ -784,7 +784,7 @@ variable {R B F} {ι : Type _} (Z : TopologicalVectorBundleCore R B F ι)
 def toTopologicalFiberBundleCore : TopologicalFiberBundleCore ι B F :=
   { Z with coordChange := fun i j b => Z.coordChange i j b,
     coord_change_continuous := fun i j =>
-      is_bounded_bilinear_map_apply.Continuous.comp_continuous_on
+      isBoundedBilinearMapApply.Continuous.comp_continuous_on
         ((Z.coord_change_continuous i j).prod_map continuous_on_id) }
 
 instance toTopologicalFiberBundleCoreCoe :
@@ -819,12 +819,12 @@ def Fiber (x : B) :=
 instance topologicalSpaceFiber (x : B) : TopologicalSpace (Z.Fiber x) := by
   delta_instance topological_vector_bundle_core.fiber
 
-instance addCommMonoidFiber : ∀ x : B, AddCommMonoidₓ (Z.Fiber x) := by
+instance addCommMonoidFiber : ∀ x : B, AddCommMonoid (Z.Fiber x) := by
   delta_instance topological_vector_bundle_core.fiber
 
 instance moduleFiber : ∀ x : B, Module R (Z.Fiber x) := by delta_instance topological_vector_bundle_core.fiber
 
-instance addCommGroupFiber [AddCommGroupₓ F] : ∀ x : B, AddCommGroupₓ (Z.Fiber x) := by
+instance addCommGroupFiber [AddCommGroup F] : ∀ x : B, AddCommGroup (Z.Fiber x) := by
   delta_instance topological_vector_bundle_core.fiber
 
 /-- The projection from the total space of a topological fiber bundle core, on its base. -/
@@ -928,11 +928,11 @@ theorem local_triv_at_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = 
 theorem mem_local_triv_at_base_set : b ∈ (Z.localTrivAt b).BaseSet :=
   TopologicalFiberBundleCore.mem_local_triv_at_base_set Z b
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : TopologicalVectorBundle R F Z.Fiber where
-  total_space_mk_inducing := fun b =>
+  total_space_mk_inducing b :=
     ⟨by
-      refine' le_antisymmₓ _ fun s h => _
+      refine' le_antisymm _ fun s h => _
       · rw [← continuous_iff_le_induced]
         exact TopologicalFiberBundleCore.continuous_total_space_mk (↑Z) b
         
@@ -955,7 +955,7 @@ instance : TopologicalVectorBundle R F Z.Fiber where
   TrivializationAtlas := Set.Range Z.localTriv
   trivializationAt := Z.localTrivAt
   mem_base_set_trivialization_at := Z.mem_base_set_at
-  trivialization_mem_atlas := fun b => ⟨Z.indexAt b, rfl⟩
+  trivialization_mem_atlas b := ⟨Z.indexAt b, rfl⟩
   continuous_on_coord_change := by
     rintro _ ⟨i, rfl⟩ _ ⟨i', rfl⟩
     refine' (Z.coord_change_continuous i i').congr fun b hb => _
@@ -980,14 +980,14 @@ end
 
 section
 
-variable [NontriviallyNormedField R] [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module R (E x)] [NormedAddCommGroup F]
+variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [NormedAddCommGroup F]
   [NormedSpace R F] [TopologicalSpace B]
 
 open TopologicalSpace
 
 open TopologicalVectorBundle
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
 The total space is hence given a topology in such a way that there is a fiber bundle structure for
@@ -1041,7 +1041,7 @@ theorem mk_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivia
   · exact a.coord_change_apply he he' hb v
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Natural identification of `topological_vector_prebundle` as a `topological_fiber_prebundle`. -/
 def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) :
     TopologicalFiberPrebundle F (@TotalSpace.proj B E) :=
@@ -1062,7 +1062,7 @@ def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) :
         rw [e'.target_eq, e.source_eq]
         ext ⟨b, f⟩
         simp (config := { contextual := true }) only [-total_space.proj, And.congr_right_iff, e'.proj_symm_apply',
-          iff_selfₓ, implies_true_iff, mfld_simps]
+          iff_self_iff, imp_true_iff, mfld_simps]
       rw [H]
       refine' (continuous_on_fst.prod this).congr _
       rintro ⟨b, f⟩ ⟨hb, -⟩
@@ -1124,9 +1124,9 @@ def toTopologicalVectorBundle : @TopologicalVectorBundle R _ F E _ _ _ _ _ _ a.t
   total_space_mk_inducing := a.inducing_total_space_mk
   TrivializationAtlas :=
     { e | ∃ (e₀ : _)(he₀ : e₀ ∈ a.PretrivializationAtlas), e = a.trivializationOfMemPretrivializationAtlas he₀ }
-  trivializationAt := fun x => a.trivializationOfMemPretrivializationAtlas (a.pretrivialization_mem_atlas x)
+  trivializationAt x := a.trivializationOfMemPretrivializationAtlas (a.pretrivialization_mem_atlas x)
   mem_base_set_trivialization_at := a.mem_base_pretrivialization_at
-  trivialization_mem_atlas := fun x => ⟨_, a.pretrivialization_mem_atlas x, rfl⟩
+  trivialization_mem_atlas x := ⟨_, a.pretrivialization_mem_atlas x, rfl⟩
   continuous_on_coord_change := by
     rintro _ ⟨e, he, rfl⟩ _ ⟨e', he', rfl⟩
     refine' (a.continuous_on_coord_change he he').congr _

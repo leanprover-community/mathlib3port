@@ -108,8 +108,8 @@ variable {X Y : C} (f : J → (X ⟶ Y))
 common domain and codomain.
 -/
 def parallelFamily : WalkingParallelFamily J ⥤ C where
-  obj := fun x => WalkingParallelFamily.casesOn x X Y
-  map := fun x y h =>
+  obj x := WalkingParallelFamily.casesOn x X Y
+  map x y h :=
     match x, y, h with
     | _, _, id _ => 𝟙 _
     | _, _, line j => f j
@@ -311,10 +311,10 @@ Further, this bijection is natural in `Z`: see `trident.is_limit.hom_iso_natural
 @[simps]
 def Trident.IsLimit.homIso [Nonempty J] {t : Trident f} (ht : IsLimit t) (Z : C) :
     (Z ⟶ t.x) ≃ { h : Z ⟶ X // ∀ j₁ j₂, h ≫ f j₁ = h ≫ f j₂ } where
-  toFun := fun k => ⟨k ≫ t.ι, by simp⟩
-  invFun := fun h => (Trident.IsLimit.lift' ht _ h.Prop).1
-  left_inv := fun k => Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).Prop
-  right_inv := fun h => Subtype.ext (Trident.IsLimit.lift' ht _ _).Prop
+  toFun k := ⟨k ≫ t.ι, by simp⟩
+  invFun h := (Trident.IsLimit.lift' ht _ h.Prop).1
+  left_inv k := Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).Prop
+  right_inv h := Subtype.ext (Trident.IsLimit.lift' ht _ _).Prop
 
 /-- The bijection of `trident.is_limit.hom_iso` is natural in `Z`. -/
 theorem Trident.IsLimit.hom_iso_natural [Nonempty J] {t : Trident f} (ht : IsLimit t) {Z Z' : C} (q : Z' ⟶ Z)
@@ -329,10 +329,10 @@ point to `Z` are in bijection with morphisms `h : Z ⟶ X` such that
 @[simps]
 def Cotrident.IsColimit.homIso [Nonempty J] {t : Cotrident f} (ht : IsColimit t) (Z : C) :
     (t.x ⟶ Z) ≃ { h : Y ⟶ Z // ∀ j₁ j₂, f j₁ ≫ h = f j₂ ≫ h } where
-  toFun := fun k => ⟨t.π ≫ k, by simp⟩
-  invFun := fun h => (Cotrident.IsColimit.desc' ht _ h.Prop).1
-  left_inv := fun k => Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).Prop
-  right_inv := fun h => Subtype.ext (Cotrident.IsColimit.desc' ht _ _).Prop
+  toFun k := ⟨t.π ≫ k, by simp⟩
+  invFun h := (Cotrident.IsColimit.desc' ht _ h.Prop).1
+  left_inv k := Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).Prop
+  right_inv h := Subtype.ext (Cotrident.IsColimit.desc' ht _ _).Prop
 
 /-- The bijection of `cotrident.is_colimit.hom_iso` is natural in `Z`. -/
 theorem Cotrident.IsColimit.hom_iso_natural [Nonempty J] {t : Cotrident f} {Z Z' : C} (q : Z ⟶ Z') (ht : IsColimit t)
@@ -517,7 +517,7 @@ theorem wideEqualizer.hom_ext [Nonempty J] {W : C} {k l : W ⟶ wideEqualizer f}
 
 /-- A wide equalizer morphism is a monomorphism -/
 instance wideEqualizer.ι_mono [Nonempty J] :
-    Mono (wideEqualizer.ι f) where right_cancellation := fun Z h k w => wideEqualizer.hom_ext w
+    Mono (wideEqualizer.ι f) where right_cancellation Z h k w := wideEqualizer.hom_ext w
 
 end
 
@@ -602,7 +602,7 @@ theorem wideCoequalizer.hom_ext [Nonempty J] {W : C} {k l : wideCoequalizer f �
 
 /-- A wide coequalizer morphism is an epimorphism -/
 instance wideCoequalizer.π_epi [Nonempty J] :
-    Epi (wideCoequalizer.π f) where left_cancellation := fun Z h k w => wideCoequalizer.hom_ext w
+    Epi (wideCoequalizer.π f) where left_cancellation Z h k w := wideCoequalizer.hom_ext w
 
 end
 

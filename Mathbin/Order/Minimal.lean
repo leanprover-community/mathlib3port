@@ -172,7 +172,7 @@ theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : Minimals r s ⊆ t)
   obtain ⟨b, hb, hr⟩ := hs ha
   rwa [of_not_not fun hab => ht ha (h hb) hab hr]
 
-variable [PartialOrderₓ α]
+variable [PartialOrder α]
 
 theorem IsLeast.mem_minimals (h : IsLeast s a) : a ∈ Minimals (· ≤ ·) s :=
   ⟨h.1, fun b hb _ => h.2 hb⟩
@@ -189,7 +189,7 @@ theorem IsGreatest.maximals_eq (h : IsGreatest s a) : Maximals (· ≤ ·) s = {
 theorem IsAntichain.minimals_upper_closure (hs : IsAntichain (· ≤ ·) s) :
     Minimals (· ≤ ·) (upperClosure s : Set α) = s :=
   (hs.max_minimals fun a ⟨⟨b, hb, hba⟩, h⟩ => by rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba])
-    fun a ha => ⟨a, ⟨subset_upper_closure ha, fun b ⟨c, hc, hcb⟩ hba => by rwa [hs.eq' ha hc (hcb.trans hba)]⟩, le_rflₓ⟩
+    fun a ha => ⟨a, ⟨subset_upper_closure ha, fun b ⟨c, hc, hcb⟩ hba => by rwa [hs.eq' ha hc (hcb.trans hba)]⟩, le_rfl⟩
 
 theorem IsAntichain.maximals_lower_closure (hs : IsAntichain (· ≤ ·) s) :
     Maximals (· ≤ ·) (lowerClosure s : Set α) = s :=

@@ -55,7 +55,7 @@ theorem exp_log (hx : 0 < x) : exp (log x) = x := by
   exact abs_of_pos hx
 
 theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by
-  rw [exp_log_eq_abs (ne_of_ltₓ hx)]
+  rw [exp_log_eq_abs (ne_of_lt hx)]
   exact abs_of_neg hx
 
 theorem le_exp_log (x : ℝ) : x ≤ exp (log x) := by
@@ -71,7 +71,7 @@ theorem le_exp_log (x : ℝ) : x ≤ exp (log x) := by
 theorem log_exp (x : ℝ) : log (exp x) = x :=
   exp_injective <| exp_log (exp_pos x)
 
-theorem surj_on_log : SurjOn log (Ioi 0) Univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
+theorem surj_on_log : SurjOn log (IoiCat 0) Univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
 
 theorem log_surjective : Surjective log := fun x => ⟨exp x, log_exp x⟩
 
@@ -102,7 +102,7 @@ theorem sinh_log {x : ℝ} (hx : 0 < x) : sinh (log x) = (x - x⁻¹) / 2 := by 
 
 theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by rw [cosh_eq, exp_neg, exp_log hx]
 
-theorem surj_on_log' : SurjOn log (Iio 0) Univ := fun x _ =>
+theorem surj_on_log' : SurjOn log (IioCat 0) Univ := fun x _ =>
   ⟨-exp x, neg_lt_zero.2 <| exp_pos x, by rw [log_neg_eq_log, log_exp]⟩
 
 theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y :=
@@ -122,7 +122,7 @@ theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : log x ≤ log y ↔ x ≤ y := b
 
 theorem log_lt_log (hx : 0 < x) : x < y → log x < log y := by
   intro h
-  rwa [← exp_lt_exp, exp_log hx, exp_log (lt_transₓ hx h)]
+  rwa [← exp_lt_exp, exp_log hx, exp_log (lt_trans hx h)]
 
 theorem log_lt_log_iff (hx : 0 < x) (hy : 0 < y) : log x < log y ↔ x < y := by rw [← exp_lt_exp, exp_log hx, exp_log hy]
 
@@ -139,7 +139,7 @@ theorem log_pos_iff (hx : 0 < x) : 0 < log x ↔ 1 < x := by
   exact log_lt_log_iff zero_lt_one hx
 
 theorem log_pos (hx : 1 < x) : 0 < log x :=
-  (log_pos_iff (lt_transₓ zero_lt_one hx)).2 hx
+  (log_pos_iff (lt_trans zero_lt_one hx)).2 hx
 
 theorem log_neg_iff (h : 0 < x) : log x < 0 ↔ x < 1 := by
   rw [← log_one]
@@ -148,31 +148,31 @@ theorem log_neg_iff (h : 0 < x) : log x < 0 ↔ x < 1 := by
 theorem log_neg (h0 : 0 < x) (h1 : x < 1) : log x < 0 :=
   (log_neg_iff h0).2 h1
 
-theorem log_nonneg_iff (hx : 0 < x) : 0 ≤ log x ↔ 1 ≤ x := by rw [← not_ltₓ, log_neg_iff hx, not_ltₓ]
+theorem log_nonneg_iff (hx : 0 < x) : 0 ≤ log x ↔ 1 ≤ x := by rw [← not_lt, log_neg_iff hx, not_lt]
 
 theorem log_nonneg (hx : 1 ≤ x) : 0 ≤ log x :=
   (log_nonneg_iff (zero_lt_one.trans_le hx)).2 hx
 
-theorem log_nonpos_iff (hx : 0 < x) : log x ≤ 0 ↔ x ≤ 1 := by rw [← not_ltₓ, log_pos_iff hx, not_ltₓ]
+theorem log_nonpos_iff (hx : 0 < x) : log x ≤ 0 ↔ x ≤ 1 := by rw [← not_lt, log_pos_iff hx, not_lt]
 
 theorem log_nonpos_iff' (hx : 0 ≤ x) : log x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · simp [le_reflₓ, zero_le_one]
+  · simp [le_refl, zero_le_one]
     
   exact log_nonpos_iff hx
 
 theorem log_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : log x ≤ 0 :=
   (log_nonpos_iff' hx).2 h'x
 
-theorem strict_mono_on_log : StrictMonoOnₓ log (Set.Ioi 0) := fun x hx y hy hxy => log_lt_log hx hxy
+theorem strict_mono_on_log : StrictMonoOn log (Set.IoiCat 0) := fun x hx y hy hxy => log_lt_log hx hxy
 
-theorem strict_anti_on_log : StrictAntiOnₓ log (Set.Iio 0) := by
+theorem strict_anti_on_log : StrictAntiOn log (Set.IioCat 0) := by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← log_abs y, ← log_abs x]
   refine' log_lt_log (abs_pos.2 hy.ne) _
   rwa [abs_of_neg hy, abs_of_neg hx, neg_lt_neg_iff]
 
-theorem log_inj_on_pos : Set.InjOn log (Set.Ioi 0) :=
+theorem log_inj_on_pos : Set.InjOn log (Set.IoiCat 0) :=
   strict_mono_on_log.InjOn
 
 theorem eq_one_of_pos_of_log_eq_zero {x : ℝ} (h₁ : 0 < x) (h₂ : log x = 0) : x = 1 :=
@@ -185,7 +185,7 @@ theorem log_ne_zero_of_pos_of_ne_one {x : ℝ} (hx_pos : 0 < x) (hx : x ≠ 1) :
 theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 := by
   constructor
   · intro h
-    rcases lt_trichotomyₓ x 0 with (x_lt_zero | rfl | x_gt_zero)
+    rcases lt_trichotomy x 0 with (x_lt_zero | rfl | x_gt_zero)
     · refine' Or.inr (Or.inr (eq_neg_iff_eq_neg.mp _))
       rw [← log_neg_eq_log x] at h
       exact (eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h).symm
@@ -206,14 +206,14 @@ theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
     
-  rw [pow_succ'ₓ, log_mul (pow_ne_zero _ hx) hx, ih, Nat.cast_succₓ, add_mulₓ, one_mulₓ]
+  rw [pow_succ', log_mul (pow_ne_zero _ hx) hx, ih, Nat.cast_succ, add_mul, one_mul]
 
 @[simp]
 theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
   induction n
   · rw [Int.of_nat_eq_coe, zpow_coe_nat, log_pow, Int.cast_coe_nat]
     
-  rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_neg_succ_of_nat, Nat.cast_add_one, neg_mul_eq_neg_mulₓ]
+  rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_neg_succ_of_nat, Nat.cast_add_one, neg_mul_eq_neg_mul]
 
 theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 := by
   rw [eq_div_iff, mul_comm, ← Nat.cast_two, ← log_pow, sq_sqrt hx]
@@ -259,7 +259,7 @@ theorem continuous_log : Continuous fun x : { x : ℝ // x ≠ 0 } => log x :=
 
 @[continuity]
 theorem continuous_log' : Continuous fun x : { x : ℝ // 0 < x } => log x :=
-  continuous_on_iff_continuous_restrict.1 <| continuous_on_log.mono fun x hx => ne_of_gtₓ hx
+  continuous_on_iff_continuous_restrict.1 <| continuous_on_log.mono fun x hx => ne_of_gt hx
 
 theorem continuous_at_log (hx : x ≠ 0) : ContinuousAt log x :=
   (continuous_on_log x hx).ContinuousAt <| IsOpen.mem_nhds is_open_compl_singleton hx
@@ -272,13 +272,13 @@ theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
 
 open BigOperators
 
-theorem log_prod {α : Type _} (s : Finsetₓ α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
+theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
     log (∏ i in s, f i) = ∑ i in s, log (f i) := by
-  induction' s using Finsetₓ.cons_induction_on with a s ha ih
+  induction' s using Finset.cons_induction_on with a s ha ih
   · simp
     
-  · rw [Finsetₓ.forall_mem_cons] at hf
-    simp [ih hf.2, log_mul hf.1 (Finsetₓ.prod_ne_zero_iff.2 hf.2)]
+  · rw [Finset.forall_mem_cons] at hf
+    simp [ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
     
 
 theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun p t => t * log p := by
@@ -287,7 +287,7 @@ theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun
     
   nth_rw 0 [← Nat.factorization_prod_pow_eq_self hn]
   rw [Finsupp.prod, Nat.cast_prod, log_prod _ _ fun p hp => _, Finsupp.sum]
-  · simp_rw [Nat.cast_powₓ, log_pow]
+  · simp_rw [Nat.cast_pow, log_pow]
     
   · norm_cast
     exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).ne_zero
@@ -305,7 +305,7 @@ theorem is_o_pow_log_id_at_top {n : ℕ} : (fun x => log x ^ n) =o[at_top] id :=
   filter_upwards [eventually_ne_at_top (0 : ℝ)] with x h₁ h₂ using(h₁ h₂).elim
 
 theorem is_o_log_id_at_top : log =o[at_top] id :=
-  is_o_pow_log_id_at_top.congr_left fun x => pow_oneₓ _
+  is_o_pow_log_id_at_top.congr_left fun x => pow_one _
 
 end Real
 

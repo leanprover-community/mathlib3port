@@ -63,12 +63,12 @@ def buildLimit : Cone F where
 
 variable {i}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
 its construction are.
 -/
 def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : IsLimit (buildLimit s t hs ht i) where
-  lift := fun q => by
+  lift q := by
     refine' hi.lift (fork.of_ι _ _)
     · refine' t₁.lift (fan.mk _ fun j => _)
       apply q.π.app j
@@ -78,7 +78,7 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : 
       trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
       simp [hs, ht]
       
-  uniq' := fun q m w =>
+  uniq' q m w :=
     hi.hom_ext
       (i.equalizer_ext
         (t₁.hom_ext fun j => by
@@ -144,7 +144,7 @@ variable (G : C ⥤ D) [PreservesLimitsOfShape WalkingParallelPair G] [Preserves
 
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
 def preservesLimitOfPreservesEqualizersAndProduct :
-    PreservesLimitsOfShape J G where PreservesLimit := fun K => by
+    PreservesLimitsOfShape J G where PreservesLimit K := by
     let P := ∏ K.obj
     let Q := ∏ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.2
     let s : P ⟶ Q := pi.lift fun f => limit.π (discrete.functor K.obj) ⟨_⟩ ≫ K.map f.2
@@ -191,7 +191,7 @@ end
 
 /-- If G preserves equalizers and finite products, it preserves finite limits. -/
 def preservesFiniteLimitsOfPreservesEqualizersAndFiniteProducts [HasEqualizers C] [HasFiniteProducts C] (G : C ⥤ D)
-    [PreservesLimitsOfShape WalkingParallelPair G] [∀ (J : Type) [Fintypeₓ J], PreservesLimitsOfShape (Discrete J) G] :
+    [PreservesLimitsOfShape WalkingParallelPair G] [∀ (J : Type) [Fintype J], PreservesLimitsOfShape (Discrete J) G] :
     PreservesFiniteLimits G :=
   ⟨fun _ _ _ => preserves_limit_of_preserves_equalizers_and_product G⟩
 
@@ -199,7 +199,7 @@ def preservesFiniteLimitsOfPreservesEqualizersAndFiniteProducts [HasEqualizers C
 def preservesLimitsOfPreservesEqualizersAndProducts [HasEqualizers C] [HasProducts.{w} C] (G : C ⥤ D)
     [PreservesLimitsOfShape WalkingParallelPair G] [∀ J, PreservesLimitsOfShape (Discrete.{w} J) G] :
     PreservesLimitsOfSize.{w, w}
-      G where PreservesLimitsOfShape := fun J 𝒥 => preserves_limit_of_preserves_equalizers_and_product G
+      G where PreservesLimitsOfShape J 𝒥 := preserves_limit_of_preserves_equalizers_and_product G
 
 theorem has_finite_limits_of_has_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] : HasFiniteLimits C :=
   @has_finite_limits_of_has_equalizers_and_finite_products _
@@ -248,13 +248,13 @@ def buildColimit : Cocone F where
 
 variable {i}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
 -/
 def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColimit i) :
     IsColimit (buildColimit s t hs ht i) where
-  desc := fun q => by
+  desc q := by
     refine' hi.desc (cofork.of_π _ _)
     · refine' t₂.desc (cofan.mk _ fun j => _)
       apply q.ι.app j
@@ -264,7 +264,7 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
       trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
       simp [reassoc_of hs, reassoc_of ht]
       
-  uniq' := fun q m w =>
+  uniq' q m w :=
     hi.hom_ext
       (i.coequalizer_ext
         (t₂.hom_ext fun j => by
@@ -332,7 +332,7 @@ variable (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair G] [Preserv
 
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
 def preservesColimitOfPreservesCoequalizersAndCoproduct :
-    PreservesColimitsOfShape J G where PreservesColimit := fun K => by
+    PreservesColimitsOfShape J G where PreservesColimit K := by
     let P := ∐ K.obj
     let Q := ∐ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.1
     let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) ⟨_⟩
@@ -380,14 +380,14 @@ end
 /-- If G preserves coequalizers and finite coproducts, it preserves finite colimits. -/
 def preservesFiniteColimitsOfPreservesCoequalizersAndFiniteCoproducts [HasCoequalizers C] [HasFiniteCoproducts C]
     (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair G]
-    [∀ (J) [Fintypeₓ J], PreservesColimitsOfShape (Discrete.{0} J) G] : PreservesFiniteColimits G :=
+    [∀ (J) [Fintype J], PreservesColimitsOfShape (Discrete.{0} J) G] : PreservesFiniteColimits G :=
   ⟨fun _ _ _ => preserves_colimit_of_preserves_coequalizers_and_coproduct G⟩
 
 /-- If G preserves coequalizers and coproducts, it preserves all colimits. -/
 def preservesColimitsOfPreservesCoequalizersAndCoproducts [HasCoequalizers C] [HasCoproducts.{w} C] (G : C ⥤ D)
     [PreservesColimitsOfShape WalkingParallelPair G] [∀ J, PreservesColimitsOfShape (Discrete.{w} J) G] :
     PreservesColimitsOfSize.{w}
-      G where PreservesColimitsOfShape := fun J 𝒥 => preserves_colimit_of_preserves_coequalizers_and_coproduct G
+      G where PreservesColimitsOfShape J 𝒥 := preserves_colimit_of_preserves_coequalizers_and_coproduct G
 
 theorem has_finite_colimits_of_has_initial_and_pushouts [HasInitial C] [HasPushouts C] : HasFiniteColimits C :=
   @has_finite_colimits_of_has_coequalizers_and_finite_coproducts _

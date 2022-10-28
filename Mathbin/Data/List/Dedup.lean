@@ -55,13 +55,13 @@ theorem dedup_subset : ∀ l : List α, dedup l ⊆ l :=
 
 theorem subset_dedup (l : List α) : l ⊆ dedup l := fun a => mem_dedup.2
 
-theorem nodup_dedup : ∀ l : List α, Nodupₓ (dedup l) :=
+theorem nodup_dedup : ∀ l : List α, Nodup (dedup l) :=
   pairwise_pw_filter
 
-theorem dedup_eq_self {l : List α} : dedup l = l ↔ Nodupₓ l :=
+theorem dedup_eq_self {l : List α} : dedup l = l ↔ Nodup l :=
   pw_filter_eq_self
 
-protected theorem Nodupₓ.dedup {l : List α} (h : l.Nodup) : l.dedup = l :=
+protected theorem Nodup.dedup {l : List α} (h : l.Nodup) : l.dedup = l :=
   List.dedup_eq_self.2 h
 
 @[simp]
@@ -97,8 +97,8 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
       by_cases ha:a ∈ as
       · simp [dedup_cons_of_mem ha]
         
-      · simp only [dedup_cons_of_not_mem ha, List.filterₓ]
-        split_ifs with hp <;> simp [List.map_consₓ, List.sum_cons, List.count_eq_zero.2 ha, zero_addₓ]
+      · simp only [dedup_cons_of_not_mem ha, List.filter']
+        split_ifs with hp <;> simp [List.map_cons, List.sum_cons, List.count_eq_zero.2 ha, zero_add]
         
       
     · by_cases hp:p a
@@ -106,8 +106,8 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
         simp [hp, count_dedup]
         
       · refine' trans (List.sum_eq_zero fun n hn => _) (by simp [hp])
-        obtain ⟨a', ha'⟩ := List.mem_mapₓ.1 hn
-        simp only [(fun h => hp (h ▸ (List.mem_filterₓ.1 ha'.1).2) : a' ≠ a), if_false] at ha'
+        obtain ⟨a', ha'⟩ := List.mem_map.1 hn
+        simp only [(fun h => hp (h ▸ (List.mem_filter.1 ha'.1).2) : a' ≠ a), if_false] at ha'
         exact ha'.2.symm
         
       

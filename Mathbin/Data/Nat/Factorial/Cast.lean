@@ -24,12 +24,12 @@ variable (S : Type _)
 
 namespace Nat
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ S] (a b : ℕ)
+variable [Semiring S] (a b : ℕ)
 
 theorem cast_asc_factorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a + 1) := by
-  rw [← pochhammer_nat_eq_asc_factorial, pochhammer_eval_cast, Nat.cast_addₓ, Nat.cast_oneₓ]
+  rw [← pochhammer_nat_eq_asc_factorial, pochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
 
 theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) := by
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_desc_factorial]
@@ -37,21 +37,21 @@ theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a
   · simp_rw [desc_factorial_zero]
     
   simp_rw [add_succ, succ_sub_one]
-  obtain h | h := le_totalₓ a b
+  obtain h | h := le_total a b
   · rw [desc_factorial_of_lt (lt_succ_of_le h), desc_factorial_of_lt (lt_succ_of_le _)]
-    rw [tsub_eq_zero_iff_le.mpr h, zero_addₓ]
+    rw [tsub_eq_zero_iff_le.mpr h, zero_add]
     
   · rw [tsub_add_cancel_of_le h]
     
 
 theorem cast_factorial : (a ! : S) = (pochhammer S a).eval 1 := by
-  rw [← zero_asc_factorial, cast_asc_factorial, cast_zero, zero_addₓ]
+  rw [← zero_asc_factorial, cast_asc_factorial, cast_zero, zero_add]
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ S] (a b : ℕ)
+variable [Ring S] (a b : ℕ)
 
 /-- Convenience lemma. The `a - 1` is not using truncated substraction, as opposed to the definition
 of `nat.desc_factorial` as a natural. -/
@@ -64,7 +64,7 @@ theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) := by
       Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one, Polynomial.eval_one]
     
 
-end Ringₓ
+end Ring
 
 end Nat
 

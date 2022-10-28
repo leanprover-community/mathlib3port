@@ -18,91 +18,91 @@ universe u v
 
 open Function
 
-namespace Plift
+namespace PLift
 
 variable {α : Sort u} {β : Sort v}
 
-instance [Subsingleton α] : Subsingleton (Plift α) :=
-  Equivₓ.plift.Subsingleton
+instance [Subsingleton α] : Subsingleton (PLift α) :=
+  Equiv.plift.Subsingleton
 
-instance [Nonempty α] : Nonempty (Plift α) :=
-  Equivₓ.plift.Nonempty
+instance [Nonempty α] : Nonempty (PLift α) :=
+  Equiv.plift.Nonempty
 
-instance [Unique α] : Unique (Plift α) :=
-  Equivₓ.plift.unique
+instance [Unique α] : Unique (PLift α) :=
+  Equiv.plift.unique
 
-instance [DecidableEq α] : DecidableEq (Plift α) :=
-  Equivₓ.plift.DecidableEq
+instance [DecidableEq α] : DecidableEq (PLift α) :=
+  Equiv.plift.DecidableEq
 
-instance [IsEmpty α] : IsEmpty (Plift α) :=
-  Equivₓ.plift.isEmpty
+instance [IsEmpty α] : IsEmpty (PLift α) :=
+  Equiv.plift.isEmpty
 
 theorem up_injective : Injective (@up α) :=
-  Equivₓ.plift.symm.Injective
+  Equiv.plift.symm.Injective
 
 theorem up_surjective : Surjective (@up α) :=
-  Equivₓ.plift.symm.Surjective
+  Equiv.plift.symm.Surjective
 
 theorem up_bijective : Bijective (@up α) :=
-  Equivₓ.plift.symm.Bijective
+  Equiv.plift.symm.Bijective
 
 @[simp]
 theorem up_inj {x y : α} : up x = up y ↔ x = y :=
   up_injective.eq_iff
 
 theorem down_surjective : Surjective (@down α) :=
-  Equivₓ.plift.Surjective
+  Equiv.plift.Surjective
 
 theorem down_bijective : Bijective (@down α) :=
-  Equivₓ.plift.Bijective
+  Equiv.plift.Bijective
 
 @[simp]
-theorem forall {p : Plift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Plift.up x) :=
+theorem forall {p : PLift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (PLift.up x) :=
   up_surjective.forall
 
 @[simp]
-theorem exists {p : Plift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (Plift.up x) :=
+theorem exists {p : PLift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (PLift.up x) :=
   up_surjective.exists
 
-end Plift
+end PLift
 
 namespace ULift
 
 variable {α : Type u} {β : Type v}
 
 instance [Subsingleton α] : Subsingleton (ULift α) :=
-  Equivₓ.ulift.Subsingleton
+  Equiv.ulift.Subsingleton
 
 instance [Nonempty α] : Nonempty (ULift α) :=
-  Equivₓ.ulift.Nonempty
+  Equiv.ulift.Nonempty
 
 instance [Unique α] : Unique (ULift α) :=
-  Equivₓ.ulift.unique
+  Equiv.ulift.unique
 
 instance [DecidableEq α] : DecidableEq (ULift α) :=
-  Equivₓ.ulift.DecidableEq
+  Equiv.ulift.DecidableEq
 
 instance [IsEmpty α] : IsEmpty (ULift α) :=
-  Equivₓ.ulift.isEmpty
+  Equiv.ulift.isEmpty
 
 theorem up_injective : Injective (@up α) :=
-  Equivₓ.ulift.symm.Injective
+  Equiv.ulift.symm.Injective
 
 theorem up_surjective : Surjective (@up α) :=
-  Equivₓ.ulift.symm.Surjective
+  Equiv.ulift.symm.Surjective
 
 theorem up_bijective : Bijective (@up α) :=
-  Equivₓ.ulift.symm.Bijective
+  Equiv.ulift.symm.Bijective
 
 @[simp]
 theorem up_inj {x y : α} : up x = up y ↔ x = y :=
   up_injective.eq_iff
 
 theorem down_surjective : Surjective (@down α) :=
-  Equivₓ.ulift.Surjective
+  Equiv.ulift.Surjective
 
 theorem down_bijective : Bijective (@down α) :=
-  Equivₓ.ulift.Bijective
+  Equiv.ulift.Bijective
 
 @[simp]
 theorem forall {p : ULift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (ULift.up x) :=

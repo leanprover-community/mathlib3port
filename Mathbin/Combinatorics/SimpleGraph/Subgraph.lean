@@ -81,9 +81,9 @@ protected theorem Adj.symm {G' : Subgraph G} {u v : V} (h : G'.Adj u v) : G'.Adj
 /-- Coercion from `G' : subgraph G` to a `simple_graph ↥G'.verts`. -/
 @[simps]
 protected def coe (G' : Subgraph G) : SimpleGraph G'.Verts where
-  Adj := fun v w => G'.Adj v w
-  symm := fun v w h => G'.symm h
-  loopless := fun v h => loopless G v (G'.adj_sub h)
+  Adj v w := G'.Adj v w
+  symm v w h := G'.symm h
+  loopless v h := loopless G v (G'.adj_sub h)
 
 @[simp]
 theorem coe_adj_sub (G' : Subgraph G) (u v : G'.Verts) (h : G'.coe.Adj u v) : G.Adj u v :=
@@ -103,7 +103,7 @@ In general, this adds in all vertices from `V` as isolated vertices. -/
 protected def spanningCoe (G' : Subgraph G) : SimpleGraph V where
   Adj := G'.Adj
   symm := G'.symm
-  loopless := fun v hv => G.loopless v (G'.adj_sub hv)
+  loopless v hv := G.loopless v (G'.adj_sub hv)
 
 @[simp]
 theorem Adj.of_spanning_coe {G' : Subgraph G} {u v : G'.Verts} (h : G'.spanningCoe.Adj u v) : G.Adj u v :=
@@ -112,11 +112,11 @@ theorem Adj.of_spanning_coe {G' : Subgraph G} {u v : G'.Verts} (h : G'.spanningC
 /-- `spanning_coe` is equivalent to `coe` for a subgraph that `is_spanning`.  -/
 @[simps]
 def spanningCoeEquivCoeOfSpanning (G' : Subgraph G) (h : G'.IsSpanning) : G'.spanningCoe ≃g G'.coe where
-  toFun := fun v => ⟨v, h v⟩
-  invFun := fun v => v
-  left_inv := fun v => rfl
+  toFun v := ⟨v, h v⟩
+  invFun v := v
+  left_inv v := rfl
   right_inv := fun ⟨v, hv⟩ => rfl
-  map_rel_iff' := fun v w => Iff.rfl
+  map_rel_iff' v w := Iff.rfl
 
 /-- A subgraph is called an *induced subgraph* if vertices of `G'` are adjacent if
 they are adjacent in `G`. -/
@@ -147,19 +147,19 @@ theorem mem_neighbor_set (G' : Subgraph G) (v w : V) : w ∈ G'.NeighborSet v �
 
 /-- A subgraph as a graph has equivalent neighbor sets. -/
 def coeNeighborSetEquiv {G' : Subgraph G} (v : G'.Verts) : G'.coe.NeighborSet v ≃ G'.NeighborSet v where
-  toFun := fun w =>
+  toFun w :=
     ⟨w, by
       obtain ⟨w', hw'⟩ := w
       simpa using hw'⟩
-  invFun := fun w => ⟨⟨w, G'.edge_vert (G'.adj_symm w.2)⟩, by simpa using w.2⟩
-  left_inv := fun w => by simp
-  right_inv := fun w => by simp
+  invFun w := ⟨⟨w, G'.edge_vert (G'.adj_symm w.2)⟩, by simpa using w.2⟩
+  left_inv w := by simp
+  right_inv w := by simp
 
 /-- The edge set of `G'` consists of a subset of edges of `G`. -/
 def EdgeSet (G' : Subgraph G) : Set (Sym2 V) :=
   Sym2.FromRel G'.symm
 
-theorem edge_set_subset (G' : Subgraph G) : G'.EdgeSet ⊆ G.EdgeSet := fun e => Quotientₓ.ind (fun e h => G'.adj_sub h) e
+theorem edge_set_subset (G' : Subgraph G) : G'.EdgeSet ⊆ G.EdgeSet := fun e => Quotient.ind (fun e h => G'.adj_sub h) e
 
 @[simp]
 theorem mem_edge_set {G' : Subgraph G} {v w : V} : ⟦(v, w)⟧ ∈ G'.EdgeSet ↔ G'.Adj v w :=
@@ -167,7 +167,7 @@ theorem mem_edge_set {G' : Subgraph G} {v w : V} : ⟦(v, w)⟧ ∈ G'.EdgeSet �
 
 theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈ G'.EdgeSet) (hv : v ∈ e) :
     v ∈ G'.Verts := by
-  refine' Quotientₓ.ind (fun e he hv => _) e he hv
+  refine' Quotient.ind (fun e he hv => _) e he hv
   cases' e with v w
   simp only [mem_edge_set] at he
   cases' sym2.mem_iff.mp hv with h h <;> subst h
@@ -197,8 +197,8 @@ def copy (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.Verts) (adj' : V → V �
     Subgraph G where
   Verts := V''
   Adj := adj'
-  adj_sub := fun _ _ => hadj.symm ▸ G'.adj_sub
-  edge_vert := fun _ _ => hV.symm ▸ hadj.symm ▸ G'.edge_vert
+  adj_sub _ _ := hadj.symm ▸ G'.adj_sub
+  edge_vert _ _ := hV.symm ▸ hadj.symm ▸ G'.edge_vert
   symm := hadj.symm ▸ G'.symm
 
 theorem copy_eq (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.Verts) (adj' : V → V → Prop) (hadj : adj' = G'.Adj) :
@@ -209,33 +209,33 @@ theorem copy_eq (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.Verts) (adj' : V 
 def union (x y : Subgraph G) : Subgraph G where
   Verts := x.Verts ∪ y.Verts
   Adj := x.Adj ⊔ y.Adj
-  adj_sub := fun v w h => Or.cases_on h (fun h => x.adj_sub h) fun h => y.adj_sub h
-  edge_vert := fun v w h => Or.cases_on h (fun h => Or.inl (x.edge_vert h)) fun h => Or.inr (y.edge_vert h)
-  symm := fun v w h => by rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm]
+  adj_sub v w h := Or.cases_on h (fun h => x.adj_sub h) fun h => y.adj_sub h
+  edge_vert v w h := Or.cases_on h (fun h => Or.inl (x.edge_vert h)) fun h => Or.inr (y.edge_vert h)
+  symm v w h := by rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm]
 
 /-- The intersection of two subgraphs. -/
 def inter (x y : Subgraph G) : Subgraph G where
   Verts := x.Verts ∩ y.Verts
   Adj := x.Adj ⊓ y.Adj
-  adj_sub := fun v w h => x.adj_sub h.1
-  edge_vert := fun v w h => ⟨x.edge_vert h.1, y.edge_vert h.2⟩
-  symm := fun v w h => by rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm]
+  adj_sub v w h := x.adj_sub h.1
+  edge_vert v w h := ⟨x.edge_vert h.1, y.edge_vert h.2⟩
+  symm v w h := by rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm]
 
 /-- The `top` subgraph is `G` as a subgraph of itself. -/
 def top : Subgraph G where
   Verts := Set.Univ
   Adj := G.Adj
-  adj_sub := fun v w h => h
-  edge_vert := fun v w h => Set.mem_univ v
+  adj_sub v w h := h
+  edge_vert v w h := Set.mem_univ v
   symm := G.symm
 
 /-- The `bot` subgraph is the subgraph with no vertices or edges. -/
 def bot : Subgraph G where
   Verts := ∅
   Adj := ⊥
-  adj_sub := fun v w h => False.ndrec _ h
-  edge_vert := fun v w h => False.ndrec _ h
-  symm := fun u v h => h
+  adj_sub v w h := False.ndrec _ h
+  edge_vert v w h := False.ndrec _ h
+  symm u v h := h
 
 /-- The relation that one subgraph is a subgraph of another. -/
 def IsSubgraph (x y : Subgraph G) : Prop :=
@@ -245,27 +245,26 @@ instance : Lattice (Subgraph G) where
   le := IsSubgraph
   sup := union
   inf := inter
-  le_refl := fun x => ⟨rfl.Subset, fun _ _ h => h⟩
-  le_trans := fun x y z hxy hyz => ⟨hxy.1.trans hyz.1, fun _ _ h => hyz.2 (hxy.2 h)⟩
+  le_refl x := ⟨rfl.Subset, fun _ _ h => h⟩
+  le_trans x y z hxy hyz := ⟨hxy.1.trans hyz.1, fun _ _ h => hyz.2 (hxy.2 h)⟩
   le_antisymm := by
     intro x y hxy hyx
     ext1 v
     exact Set.Subset.antisymm hxy.1 hyx.1
     ext v w
     exact Iff.intro (fun h => hxy.2 h) fun h => hyx.2 h
-  sup_le := fun x y z hxy hyz =>
-    ⟨Set.union_subset hxy.1 hyz.1, fun v w h => h.casesOn (fun h => hxy.2 h) fun h => hyz.2 h⟩
-  le_sup_left := fun x y => ⟨Set.subset_union_left x.Verts y.Verts, fun v w h => Or.inl h⟩
-  le_sup_right := fun x y => ⟨Set.subset_union_right x.Verts y.Verts, fun v w h => Or.inr h⟩
-  le_inf := fun x y z hxy hyz => ⟨Set.subset_inter hxy.1 hyz.1, fun v w h => ⟨hxy.2 h, hyz.2 h⟩⟩
-  inf_le_left := fun x y => ⟨Set.inter_subset_left x.Verts y.Verts, fun v w h => h.1⟩
-  inf_le_right := fun x y => ⟨Set.inter_subset_right x.Verts y.Verts, fun v w h => h.2⟩
+  sup_le x y z hxy hyz := ⟨Set.union_subset hxy.1 hyz.1, fun v w h => h.casesOn (fun h => hxy.2 h) fun h => hyz.2 h⟩
+  le_sup_left x y := ⟨Set.subset_union_left x.Verts y.Verts, fun v w h => Or.inl h⟩
+  le_sup_right x y := ⟨Set.subset_union_right x.Verts y.Verts, fun v w h => Or.inr h⟩
+  le_inf x y z hxy hyz := ⟨Set.subset_inter hxy.1 hyz.1, fun v w h => ⟨hxy.2 h, hyz.2 h⟩⟩
+  inf_le_left x y := ⟨Set.inter_subset_left x.Verts y.Verts, fun v w h => h.1⟩
+  inf_le_right x y := ⟨Set.inter_subset_right x.Verts y.Verts, fun v w h => h.2⟩
 
 instance : BoundedOrder (Subgraph G) where
   top := top
   bot := bot
-  le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩
-  bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩
+  le_top x := ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩
+  bot_le x := ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩
 
 @[simps]
 instance subgraphInhabited : Inhabited (Subgraph G) :=
@@ -327,7 +326,7 @@ def _root_.simple_graph.to_subgraph (H : SimpleGraph V) (h : H ≤ G) : G.Subgra
   Verts := Set.Univ
   Adj := H.Adj
   adj_sub := h
-  edge_vert := fun v w h => Set.mem_univ v
+  edge_vert v w h := Set.mem_univ v
   symm := H.symm
 
 theorem support_mono {H H' : Subgraph G} (h : H ≤ H') : H.Support ⊆ H'.Support :=
@@ -341,20 +340,20 @@ theorem spanning_coe_le_of_le {H H' : Subgraph G} (h : H ≤ H') : H.spanningCoe
 
 /-- The top of the `subgraph G` lattice is equivalent to the graph itself. -/
 def topEquiv : (⊤ : Subgraph G).coe ≃g G where
-  toFun := fun v => ↑v
-  invFun := fun v => ⟨v, trivialₓ⟩
+  toFun v := ↑v
+  invFun v := ⟨v, trivial⟩
   left_inv := fun ⟨v, _⟩ => rfl
-  right_inv := fun v => rfl
-  map_rel_iff' := fun a b => Iff.rfl
+  right_inv v := rfl
+  map_rel_iff' a b := Iff.rfl
 
 /-- The bottom of the `subgraph G` lattice is equivalent to the empty graph on the empty
 vertex type. -/
 def botEquiv : (⊥ : Subgraph G).coe ≃g (⊥ : SimpleGraph Empty) where
-  toFun := fun v => v.property.elim
-  invFun := fun v => v.elim
+  toFun v := v.property.elim
+  invFun v := v.elim
   left_inv := fun ⟨_, h⟩ => h.elim
-  right_inv := fun v => v.elim
-  map_rel_iff' := fun a b => Iff.rfl
+  right_inv v := v.elim
+  map_rel_iff' a b := Iff.rfl
 
 theorem edge_set_mono {H₁ H₂ : Subgraph G} (h : H₁ ≤ H₂) : H₁.EdgeSet ≤ H₂.EdgeSet := fun e => Sym2.ind h.2 e
 
@@ -376,7 +375,7 @@ protected def map {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph) : G'.Sub
     rintro _ _ ⟨u, v, h, rfl, rfl⟩
     exact ⟨v, u, H.symm h, rfl, rfl⟩
 
-theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotoneₓ (Subgraph.map f) := by
+theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.map f) := by
   intro H H' h
   constructor
   · intro
@@ -392,7 +391,7 @@ theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotoneₓ (Subgrap
 @[simps]
 protected def comap {G' : SimpleGraph W} (f : G →g G') (H : G'.Subgraph) : G.Subgraph where
   Verts := f ⁻¹' H.Verts
-  Adj := fun u v => G.Adj u v ∧ H.Adj (f u) (f v)
+  Adj u v := G.Adj u v ∧ H.Adj (f u) (f v)
   adj_sub := by
     rintro v w ⟨ga, ha⟩
     exact ga
@@ -400,7 +399,7 @@ protected def comap {G' : SimpleGraph W} (f : G →g G') (H : G'.Subgraph) : G.S
     rintro v w ⟨ga, ha⟩
     simp [H.edge_vert ha]
 
-theorem comap_monotone {G' : SimpleGraph W} (f : G →g G') : Monotoneₓ (Subgraph.comap f) := by
+theorem comap_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.comap f) := by
   intro H H' h
   constructor
   · intro
@@ -408,7 +407,7 @@ theorem comap_monotone {G' : SimpleGraph W} (f : G →g G') : Monotoneₓ (Subgr
     apply h.1
     
   · intro v w
-    simp (config := { contextual := true }) only [comap_adj, and_imp, true_andₓ]
+    simp (config := { contextual := true }) only [comap_adj, and_imp, true_and_iff]
     intro
     apply h.2
     
@@ -419,7 +418,7 @@ theorem map_le_iff_le_comap {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph
   · simp only [comap_verts, Set.mem_preimage]
     exact h.1 ⟨v, hv, rfl⟩
     
-  · simp only [H.adj_sub hvw, comap_adj, true_andₓ]
+  · simp only [H.adj_sub hvw, comap_adj, true_and_iff]
     exact h.2 ⟨v, w, hvw, rfl, rfl⟩
     
   · simp only [map_verts, Set.mem_image, forall_exists_index, and_imp]
@@ -437,8 +436,8 @@ theorem map_le_iff_le_comap {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph
 the subgraphs as graphs. -/
 @[simps]
 def inclusion {x y : Subgraph G} (h : x ≤ y) : x.coe →g y.coe where
-  toFun := fun v => ⟨↑v, And.left h v.property⟩
-  map_rel' := fun v w hvw => h.2 hvw
+  toFun v := ⟨↑v, And.left h v.property⟩
+  map_rel' v w hvw := h.2 hvw
 
 theorem inclusion.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injective (inclusion h) := fun v w h => by
   simp only [inclusion, RelHom.coe_fn_mk, Subtype.mk_eq_mk] at h
@@ -447,8 +446,8 @@ theorem inclusion.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injectiv
 /-- There is an induced injective homomorphism of a subgraph of `G` into `G`. -/
 @[simps]
 protected def hom (x : Subgraph G) : x.coe →g G where
-  toFun := fun v => v
-  map_rel' := fun v w hvw => x.adj_sub hvw
+  toFun v := v
+  map_rel' v w hvw := x.adj_sub hvw
 
 theorem hom.injective {x : Subgraph G} : Function.Injective x.hom := fun v w h => Subtype.ext h
 
@@ -457,7 +456,7 @@ a spanning subgraph into `G`. -/
 @[simps]
 def spanningHom (x : Subgraph G) : x.spanningCoe →g G where
   toFun := id
-  map_rel' := fun v w hvw => x.adj_sub hvw
+  map_rel' v w hvw := x.adj_sub hvw
 
 theorem spanningHom.injective {x : Subgraph G} : Function.Injective x.spanningHom := fun v w h => h
 
@@ -469,60 +468,60 @@ instance NeighborSet.decidablePred (G' : Subgraph G) [h : DecidableRel G'.Adj] (
   h v
 
 /-- If a graph is locally finite at a vertex, then so is a subgraph of that graph. -/
-instance finiteAt {G' : Subgraph G} (v : G'.Verts) [DecidableRel G'.Adj] [Fintypeₓ (G.NeighborSet v)] :
-    Fintypeₓ (G'.NeighborSet v) :=
+instance finiteAt {G' : Subgraph G} (v : G'.Verts) [DecidableRel G'.Adj] [Fintype (G.NeighborSet v)] :
+    Fintype (G'.NeighborSet v) :=
   Set.fintypeSubset (G.NeighborSet v) (G'.neighbor_set_subset v)
 
 /-- If a subgraph is locally finite at a vertex, then so are subgraphs of that subgraph.
 
 This is not an instance because `G''` cannot be inferred. -/
 def finiteAtOfSubgraph {G' G'' : Subgraph G} [DecidableRel G'.Adj] (h : G' ≤ G'') (v : G'.Verts)
-    [hf : Fintypeₓ (G''.NeighborSet v)] : Fintypeₓ (G'.NeighborSet v) :=
+    [hf : Fintype (G''.NeighborSet v)] : Fintype (G'.NeighborSet v) :=
   Set.fintypeSubset (G''.NeighborSet v) (neighbor_set_subset_of_subgraph h v)
 
-instance (G' : Subgraph G) [Fintypeₓ G'.Verts] (v : V) [DecidablePred (· ∈ G'.NeighborSet v)] :
-    Fintypeₓ (G'.NeighborSet v) :=
+instance (G' : Subgraph G) [Fintype G'.Verts] (v : V) [DecidablePred (· ∈ G'.NeighborSet v)] :
+    Fintype (G'.NeighborSet v) :=
   Set.fintypeSubset G'.Verts (neighbor_set_subset_verts G' v)
 
-instance coeFiniteAt {G' : Subgraph G} (v : G'.Verts) [Fintypeₓ (G'.NeighborSet v)] : Fintypeₓ (G'.coe.NeighborSet v) :=
-  Fintypeₓ.ofEquiv _ (coeNeighborSetEquiv v).symm
+instance coeFiniteAt {G' : Subgraph G} (v : G'.Verts) [Fintype (G'.NeighborSet v)] : Fintype (G'.coe.NeighborSet v) :=
+  Fintype.ofEquiv _ (coeNeighborSetEquiv v).symm
 
-theorem IsSpanning.card_verts [Fintypeₓ V] {G' : Subgraph G} [Fintypeₓ G'.Verts] (h : G'.IsSpanning) :
-    G'.Verts.toFinset.card = Fintypeₓ.card V := by
+theorem IsSpanning.card_verts [Fintype V] {G' : Subgraph G} [Fintype G'.Verts] (h : G'.IsSpanning) :
+    G'.Verts.toFinset.card = Fintype.card V := by
   rw [is_spanning_iff] at h
   simpa [h]
 
 /-- The degree of a vertex in a subgraph. It's zero for vertices outside the subgraph. -/
-def degree (G' : Subgraph G) (v : V) [Fintypeₓ (G'.NeighborSet v)] : ℕ :=
-  Fintypeₓ.card (G'.NeighborSet v)
+def degree (G' : Subgraph G) (v : V) [Fintype (G'.NeighborSet v)] : ℕ :=
+  Fintype.card (G'.NeighborSet v)
 
-theorem finset_card_neighbor_set_eq_degree {G' : Subgraph G} {v : V} [Fintypeₓ (G'.NeighborSet v)] :
+theorem finset_card_neighbor_set_eq_degree {G' : Subgraph G} {v : V} [Fintype (G'.NeighborSet v)] :
     (G'.NeighborSet v).toFinset.card = G'.degree v := by rw [degree, Set.to_finset_card]
 
-theorem degree_le (G' : Subgraph G) (v : V) [Fintypeₓ (G'.NeighborSet v)] [Fintypeₓ (G.NeighborSet v)] :
+theorem degree_le (G' : Subgraph G) (v : V) [Fintype (G'.NeighborSet v)] [Fintype (G.NeighborSet v)] :
     G'.degree v ≤ G.degree v := by
   rw [← card_neighbor_set_eq_degree]
   exact Set.card_le_of_subset (G'.neighbor_set_subset v)
 
-theorem degree_le' (G' G'' : Subgraph G) (h : G' ≤ G'') (v : V) [Fintypeₓ (G'.NeighborSet v)]
-    [Fintypeₓ (G''.NeighborSet v)] : G'.degree v ≤ G''.degree v :=
+theorem degree_le' (G' G'' : Subgraph G) (h : G' ≤ G'') (v : V) [Fintype (G'.NeighborSet v)]
+    [Fintype (G''.NeighborSet v)] : G'.degree v ≤ G''.degree v :=
   Set.card_le_of_subset (neighbor_set_subset_of_subgraph h v)
 
 @[simp]
-theorem coe_degree (G' : Subgraph G) (v : G'.Verts) [Fintypeₓ (G'.coe.NeighborSet v)] [Fintypeₓ (G'.NeighborSet v)] :
+theorem coe_degree (G' : Subgraph G) (v : G'.Verts) [Fintype (G'.coe.NeighborSet v)] [Fintype (G'.NeighborSet v)] :
     G'.coe.degree v = G'.degree v := by
   rw [← card_neighbor_set_eq_degree]
-  exact Fintypeₓ.card_congr (coe_neighbor_set_equiv v)
+  exact Fintype.card_congr (coe_neighbor_set_equiv v)
 
 @[simp]
-theorem degree_spanning_coe {G' : G.Subgraph} (v : V) [Fintypeₓ (G'.NeighborSet v)]
-    [Fintypeₓ (G'.spanningCoe.NeighborSet v)] : G'.spanningCoe.degree v = G'.degree v := by
+theorem degree_spanning_coe {G' : G.Subgraph} (v : V) [Fintype (G'.NeighborSet v)]
+    [Fintype (G'.spanningCoe.NeighborSet v)] : G'.spanningCoe.degree v = G'.degree v := by
   rw [← card_neighbor_set_eq_degree, subgraph.degree]
   congr
 
-theorem degree_eq_one_iff_unique_adj {G' : Subgraph G} {v : V} [Fintypeₓ (G'.NeighborSet v)] :
+theorem degree_eq_one_iff_unique_adj {G' : Subgraph G} {v : V} [Fintype (G'.NeighborSet v)] :
     G'.degree v = 1 ↔ ∃! w : V, G'.Adj v w := by
-  rw [← finset_card_neighbor_set_eq_degree, Finsetₓ.card_eq_one, Finsetₓ.singleton_iff_unique_mem]
+  rw [← finset_card_neighbor_set_eq_degree, Finset.card_eq_one, Finset.singleton_iff_unique_mem]
   simp only [Set.mem_to_finset, mem_neighbor_set]
 
 /-! ## Subgraphs of subgraphs -/
@@ -544,7 +543,7 @@ theorem restrict_coe_subgraph {G' : G.Subgraph} (G'' : G'.coe.Subgraph) : G''.co
   · simp
     
   · simp only [Relation.Map, comap_adj, coe_adj, Subtype.coe_prop, hom_apply, map_adj, SetCoe.exists, Subtype.coe_mk,
-      exists_and_distrib_rightₓ, exists_eq_right_rightₓ, Subtype.coe_eta, exists_true_left, exists_eq_right,
+      exists_and_distrib_right, exists_eq_right_right, Subtype.coe_eta, exists_true_left, exists_eq_right,
       and_iff_right_iff_imp]
     apply G''.adj_sub
     
@@ -563,9 +562,9 @@ See also: `simple_graph.delete_edges`. -/
 def deleteEdges (G' : G.Subgraph) (s : Set (Sym2 V)) : G.Subgraph where
   Verts := G'.Verts
   Adj := G'.Adj \ Sym2.ToRel s
-  adj_sub := fun a b h' => G'.adj_sub h'.1
-  edge_vert := fun a b h' => G'.edge_vert h'.1
-  symm := fun a b => by simp [G'.adj_comm, Sym2.eq_swap]
+  adj_sub a b h' := G'.adj_sub h'.1
+  edge_vert a b h' := G'.edge_vert h'.1
+  symm a b := by simp [G'.adj_comm, Sym2.eq_swap]
 
 section DeleteEdges
 
@@ -581,7 +580,7 @@ theorem delete_edges_adj (v w : V) : (G'.deleteEdges s).Adj v w ↔ G'.Adj v w �
 
 @[simp]
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G'.deleteEdges s).deleteEdges s' = G'.deleteEdges (s ∪ s') :=
-  by ext <;> simp [and_assocₓ, not_or_distrib]
+  by ext <;> simp [and_assoc', not_or_distrib]
 
 @[simp]
 theorem delete_edges_empty_eq : G'.deleteEdges ∅ = G' := by ext <;> simp
@@ -601,7 +600,7 @@ theorem delete_edges_coe_eq (s : Set (Sym2 G'.Verts)) :
   · intro hs
     refine' Sym2.ind _
     rintro ⟨v', hv'⟩ ⟨w', hw'⟩
-    simp only [Sym2.map_pair_eq, Subtype.coe_mk, Quotientₓ.eq]
+    simp only [Sym2.map_pair_eq, Subtype.coe_mk, Quotient.eq]
     contrapose!
     rintro (_ | _) <;> simpa [Sym2.eq_swap]
     
@@ -617,7 +616,7 @@ theorem delete_edges_le : G'.deleteEdges s ≤ G' := by constructor <;> simp (co
 
 theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G'.deleteEdges s' ≤ G'.deleteEdges s := by
   constructor <;>
-    simp (config := { contextual := true }) only [delete_edges_verts, delete_edges_adj, true_andₓ, and_imp]
+    simp (config := { contextual := true }) only [delete_edges_verts, delete_edges_adj, true_and_iff, and_imp]
   exact fun v w hvw hs' hs => hs' (h hs)
 
 @[simp]
@@ -649,11 +648,11 @@ are induced from the subgraph `G'`. -/
 @[simps]
 def induce (G' : G.Subgraph) (s : Set V) : G.Subgraph where
   Verts := s
-  Adj := fun u v => u ∈ s ∧ v ∈ s ∧ G'.Adj u v
-  adj_sub := fun u v => by
+  Adj u v := u ∈ s ∧ v ∈ s ∧ G'.Adj u v
+  adj_sub u v := by
     rintro ⟨-, -, ha⟩
     exact G'.adj_sub ha
-  edge_vert := fun u v => by
+  edge_vert u v := by
     rintro ⟨h, -, -⟩
     exact h
 
@@ -669,7 +668,7 @@ theorem induce_mono (hg : G' ≤ G'') (hs : s ⊆ s') : G'.induce s ≤ G''.indu
   constructor
   · simp [hs]
     
-  · simp (config := { contextual := true }) only [induce_adj, true_andₓ, and_imp]
+  · simp (config := { contextual := true }) only [induce_adj, true_and_iff, and_imp]
     intro v w hv hw ha
     exact ⟨hs hv, hs hw, hg.2 ha⟩
     
@@ -690,7 +689,7 @@ theorem induce_self_verts : G'.induce G'.Verts = G' := by
   ext
   · simp
     
-  · constructor <;> simp (config := { contextual := true }) only [induce_adj, implies_true_iff, and_trueₓ]
+  · constructor <;> simp (config := { contextual := true }) only [induce_adj, imp_true_iff, and_true_iff]
     exact fun ha => ⟨G'.edge_vert ha, G'.edge_vert ha.symm⟩
     
 
@@ -710,11 +709,11 @@ theorem delete_verts_verts : (G'.deleteVerts s).Verts = G'.Verts \ s :=
   rfl
 
 theorem delete_verts_adj {u v : V} :
-    (G'.deleteVerts s).Adj u v ↔ u ∈ G'.Verts ∧ ¬u ∈ s ∧ v ∈ G'.Verts ∧ ¬v ∈ s ∧ G'.Adj u v := by simp [and_assocₓ]
+    (G'.deleteVerts s).Adj u v ↔ u ∈ G'.Verts ∧ ¬u ∈ s ∧ v ∈ G'.Verts ∧ ¬v ∈ s ∧ G'.Adj u v := by simp [and_assoc']
 
 @[simp]
 theorem delete_verts_delete_verts (s s' : Set V) : (G'.deleteVerts s).deleteVerts s' = G'.deleteVerts (s ∪ s') := by
-  ext <;> simp (config := { contextual := true }) [not_or_distrib, and_assocₓ]
+  ext <;> simp (config := { contextual := true }) [not_or_distrib, and_assoc']
 
 @[simp]
 theorem delete_verts_empty : G'.deleteVerts ∅ = G' := by simp [delete_verts]
@@ -727,7 +726,7 @@ theorem delete_verts_mono {G' G'' : G.Subgraph} (h : G' ≤ G'') : G'.deleteVert
 
 @[mono]
 theorem delete_verts_anti {s s' : Set V} (h : s ⊆ s') : G'.deleteVerts s' ≤ G'.deleteVerts s :=
-  induce_mono (le_reflₓ _) (Set.diff_subset_diff_right h)
+  induce_mono (le_refl _) (Set.diff_subset_diff_right h)
 
 @[simp]
 theorem delete_verts_inter_verts_left_eq : G'.deleteVerts (G'.Verts ∩ s) = G'.deleteVerts s := by

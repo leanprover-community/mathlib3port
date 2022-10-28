@@ -3,12 +3,8 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 -/
-import Mathbin.Analysis.Convex.Between
 import Mathbin.Analysis.InnerProductSpace.Projection
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathbin.Algebra.QuadraticDiscriminant
-import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 
 /-!
 # Euclidean spaces
@@ -21,12 +17,6 @@ inner product but not angles generally go in
 proofs or more geometrical content generally go in separate files.
 
 ## Main definitions
-
-* `inner_product_geometry.angle` is the undirected angle between two
-  vectors.
-
-* `euclidean_geometry.angle`, with notation `∠`, is the undirected
-  angle determined by three points.
 
 * `euclidean_geometry.orthogonal_projection` is the orthogonal
   projection of a point onto an affine subspace.
@@ -59,293 +49,7 @@ open BigOperators
 
 open Classical
 
-open Real
-
 open RealInnerProductSpace
-
-namespace InnerProductGeometry
-
-/-!
-### Geometrical results on real inner product spaces
-
-This section develops some geometrical definitions and results on real
-inner product spaces, where those definitions and results can most
-conveniently be developed in terms of vectors and then used to deduce
-corresponding results for Euclidean affine spaces.
--/
-
-
-variable {V : Type _} [InnerProductSpace ℝ V]
-
-/-- The undirected angle between two vectors. If either vector is 0,
-this is π/2. See `orientation.oangle` for the corresponding oriented angle
-definition. -/
-def angle (x y : V) : ℝ :=
-  Real.arccos (inner x y / (∥x∥ * ∥y∥))
-
-theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
-    ContinuousAt (fun y : V × V => angle y.1 y.2) x :=
-  Real.continuous_arccos.ContinuousAt.comp <|
-    continuous_inner.ContinuousAt.div
-      ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
-      (by simp [hx1, hx2])
-
-theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c • y) = angle x y := by
-  have : c * c ≠ 0 := mul_ne_zero hc hc
-  rw [angle, angle, real_inner_smul_left, inner_smul_right, norm_smul, norm_smul, Real.norm_eq_abs,
-    mul_mul_mul_commₓ _ ∥x∥, abs_mul_abs_self, ← mul_assoc c c, mul_div_mul_left _ _ this]
-
-@[simp]
-theorem _root_.linear_isometry.angle_map {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] (f : E →ₗᵢ[ℝ] F)
-    (u v : E) : angle (f u) (f v) = angle u v := by rw [angle, angle, f.inner_map_map, f.norm_map, f.norm_map]
-
-@[simp, norm_cast]
-theorem _root_.submodule.angle_coe {s : Submodule ℝ V} (x y : s) : angle (x : V) (y : V) = angle x y :=
-  s.subtypeₗᵢ.angle_map x y
-
-theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f' : E →L[ℝ] F}
-    (h : IsConformalMap f') (u v : E) : angle (f' u) (f' v) = angle u v := by
-  obtain ⟨c, hc, li, rfl⟩ := h
-  exact (angle_smul_smul hc _ _).trans (li.angle_map _ _)
-
-/-- If a real differentiable map `f` is conformal at a point `x`,
-    then it preserves the angles at that point. -/
-theorem ConformalAt.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f : E → F} {x : E}
-    {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) : angle (f' u) (f' v) = angle u v :=
-  let ⟨f₁, h₁, c⟩ := H
-  h₁.unique h ▸ IsConformalMap.preserves_angle c u v
-
-/-- The cosine of the angle between two vectors. -/
-theorem cos_angle (x y : V) : Real.cos (angle x y) = inner x y / (∥x∥ * ∥y∥) :=
-  Real.cos_arccos (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).1
-    (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).2
-
-/-- The angle between two vectors does not depend on their order. -/
-theorem angle_comm (x y : V) : angle x y = angle y x := by
-  unfold angle
-  rw [real_inner_comm, mul_comm]
-
-/-- The angle between the negation of two vectors. -/
-@[simp]
-theorem angle_neg_neg (x y : V) : angle (-x) (-y) = angle x y := by
-  unfold angle
-  rw [inner_neg_neg, norm_neg, norm_neg]
-
-/-- The angle between two vectors is nonnegative. -/
-theorem angle_nonneg (x y : V) : 0 ≤ angle x y :=
-  Real.arccos_nonneg _
-
-/-- The angle between two vectors is at most π. -/
-theorem angle_le_pi (x y : V) : angle x y ≤ π :=
-  Real.arccos_le_pi _
-
-/-- The angle between a vector and the negation of another vector. -/
-theorem angle_neg_right (x y : V) : angle x (-y) = π - angle x y := by
-  unfold angle
-  rw [← Real.arccos_neg, norm_neg, inner_neg_right, neg_div]
-
-/-- The angle between the negation of a vector and another vector. -/
-theorem angle_neg_left (x y : V) : angle (-x) y = π - angle x y := by rw [← angle_neg_neg, neg_negₓ, angle_neg_right]
-
-/-- The angle between the zero vector and a vector. -/
-@[simp]
-theorem angle_zero_left (x : V) : angle 0 x = π / 2 := by
-  unfold angle
-  rw [inner_zero_left, zero_div, Real.arccos_zero]
-
-/-- The angle between a vector and the zero vector. -/
-@[simp]
-theorem angle_zero_right (x : V) : angle x 0 = π / 2 := by
-  unfold angle
-  rw [inner_zero_right, zero_div, Real.arccos_zero]
-
-/-- The angle between a nonzero vector and itself. -/
-@[simp]
-theorem angle_self {x : V} (hx : x ≠ 0) : angle x x = 0 := by
-  unfold angle
-  rw [← real_inner_self_eq_norm_mul_norm, div_self fun h => hx (inner_self_eq_zero.1 h), Real.arccos_one]
-
-/-- The angle between a nonzero vector and its negation. -/
-@[simp]
-theorem angle_self_neg_of_nonzero {x : V} (hx : x ≠ 0) : angle x (-x) = π := by
-  rw [angle_neg_right, angle_self hx, sub_zero]
-
-/-- The angle between the negation of a nonzero vector and that
-vector. -/
-@[simp]
-theorem angle_neg_self_of_nonzero {x : V} (hx : x ≠ 0) : angle (-x) x = π := by
-  rw [angle_comm, angle_self_neg_of_nonzero hx]
-
-/-- The angle between a vector and a positive multiple of a vector. -/
-@[simp]
-theorem angle_smul_right_of_pos (x y : V) {r : ℝ} (hr : 0 < r) : angle x (r • y) = angle x y := by
-  unfold angle
-  rw [inner_smul_right, norm_smul, Real.norm_eq_abs, abs_of_nonneg (le_of_ltₓ hr), ← mul_assoc, mul_comm _ r, mul_assoc,
-    mul_div_mul_left _ _ (ne_of_gtₓ hr)]
-
-/-- The angle between a positive multiple of a vector and a vector. -/
-@[simp]
-theorem angle_smul_left_of_pos (x y : V) {r : ℝ} (hr : 0 < r) : angle (r • x) y = angle x y := by
-  rw [angle_comm, angle_smul_right_of_pos y x hr, angle_comm]
-
-/-- The angle between a vector and a negative multiple of a vector. -/
-@[simp]
-theorem angle_smul_right_of_neg (x y : V) {r : ℝ} (hr : r < 0) : angle x (r • y) = angle x (-y) := by
-  rw [← neg_negₓ r, neg_smul, angle_neg_right, angle_smul_right_of_pos x y (neg_pos_of_neg hr), angle_neg_right]
-
-/-- The angle between a negative multiple of a vector and a vector. -/
-@[simp]
-theorem angle_smul_left_of_neg (x y : V) {r : ℝ} (hr : r < 0) : angle (r • x) y = angle (-x) y := by
-  rw [angle_comm, angle_smul_right_of_neg y x hr, angle_comm]
-
-/-- The cosine of the angle between two vectors, multiplied by the
-product of their norms. -/
-theorem cos_angle_mul_norm_mul_norm (x y : V) : Real.cos (angle x y) * (∥x∥ * ∥y∥) = inner x y := by
-  rw [cos_angle, div_mul_cancel_of_imp]
-  simp (config := { contextual := true }) [or_imp_distrib]
-
-/-- The sine of the angle between two vectors, multiplied by the
-product of their norms. -/
-theorem sin_angle_mul_norm_mul_norm (x y : V) :
-    Real.sin (angle x y) * (∥x∥ * ∥y∥) = Real.sqrt (inner x x * inner y y - inner x y * inner x y) := by
-  unfold angle
-  rw [Real.sin_arccos (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).1
-      (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).2,
-    ← Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)), ← Real.sqrt_mul' _ (mul_self_nonneg _), sq,
-    Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)), real_inner_self_eq_norm_mul_norm,
-    real_inner_self_eq_norm_mul_norm]
-  by_cases h:∥x∥ * ∥y∥ = 0
-  · rw [show ∥x∥ * ∥x∥ * (∥y∥ * ∥y∥) = ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥) by ring, h, mul_zero, mul_zero, zero_sub]
-    cases' eq_zero_or_eq_zero_of_mul_eq_zero h with hx hy
-    · rw [norm_eq_zero] at hx
-      rw [hx, inner_zero_left, zero_mul, neg_zero]
-      
-    · rw [norm_eq_zero] at hy
-      rw [hy, inner_zero_right, zero_mul, neg_zero]
-      
-    
-  · field_simp [h]
-    ring_nf
-    
-
-/-- The angle between two vectors is zero if and only if they are
-nonzero and one is a positive multiple of the other. -/
-theorem angle_eq_zero_iff {x y : V} : angle x y = 0 ↔ x ≠ 0 ∧ ∃ r : ℝ, 0 < r ∧ y = r • x := by
-  rw [angle, ← real_inner_div_norm_mul_norm_eq_one_iff, Real.arccos_eq_zero, LE.le.le_iff_eqₓ, eq_comm]
-  exact (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).2
-
-/-- The angle between two vectors is π if and only if they are nonzero
-and one is a negative multiple of the other. -/
-theorem angle_eq_pi_iff {x y : V} : angle x y = π ↔ x ≠ 0 ∧ ∃ r : ℝ, r < 0 ∧ y = r • x := by
-  rw [angle, ← real_inner_div_norm_mul_norm_eq_neg_one_iff, Real.arccos_eq_pi, LE.le.le_iff_eqₓ]
-  exact (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).1
-
-/-- If the angle between two vectors is π, the angles between those
-vectors and a third vector add to π. -/
-theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = π) : angle x z + angle y z = π := by
-  rcases angle_eq_pi_iff.1 h with ⟨hx, ⟨r, ⟨hr, rfl⟩⟩⟩
-  rw [angle_smul_left_of_neg x z hr, angle_neg_left, add_sub_cancel'_right]
-
-/-- Two vectors have inner product 0 if and only if the angle between
-them is π/2. -/
-theorem inner_eq_zero_iff_angle_eq_pi_div_two (x y : V) : ⟪x, y⟫ = 0 ↔ angle x y = π / 2 :=
-  Iff.symm <| by simp (config := { contextual := true }) [angle, or_imp_distrib]
-
-/-- If the angle between two vectors is π, the inner product equals the negative product
-of the norms. -/
-theorem inner_eq_neg_mul_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ⟪x, y⟫ = -(∥x∥ * ∥y∥) := by
-  simp [← cos_angle_mul_norm_mul_norm, h]
-
-/-- If the angle between two vectors is 0, the inner product equals the product of the norms. -/
-theorem inner_eq_mul_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ⟪x, y⟫ = ∥x∥ * ∥y∥ := by
-  simp [← cos_angle_mul_norm_mul_norm, h]
-
-/-- The inner product of two non-zero vectors equals the negative product of their norms
-if and only if the angle between the two vectors is π. -/
-theorem inner_eq_neg_mul_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ⟪x, y⟫ = -(∥x∥ * ∥y∥) ↔ angle x y = π := by
-  refine' ⟨fun h => _, inner_eq_neg_mul_norm_of_angle_eq_pi⟩
-  have h₁ : ∥x∥ * ∥y∥ ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'
-  rw [angle, h, neg_div, div_self h₁, Real.arccos_neg_one]
-
-/-- The inner product of two non-zero vectors equals the product of their norms
-if and only if the angle between the two vectors is 0. -/
-theorem inner_eq_mul_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) : ⟪x, y⟫ = ∥x∥ * ∥y∥ ↔ angle x y = 0 :=
-  by
-  refine' ⟨fun h => _, inner_eq_mul_norm_of_angle_eq_zero⟩
-  have h₁ : ∥x∥ * ∥y∥ ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'
-  rw [angle, h, div_self h₁, Real.arccos_one]
-
-/-- If the angle between two vectors is π, the norm of their difference equals
-the sum of their norms. -/
-theorem norm_sub_eq_add_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ∥x - y∥ = ∥x∥ + ∥y∥ := by
-  rw [← sq_eq_sq (norm_nonneg (x - y)) (add_nonneg (norm_nonneg x) (norm_nonneg y))]
-  rw [norm_sub_pow_two_real, inner_eq_neg_mul_norm_of_angle_eq_pi h]
-  ring
-
-/-- If the angle between two vectors is 0, the norm of their sum equals
-the sum of their norms. -/
-theorem norm_add_eq_add_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ∥x + y∥ = ∥x∥ + ∥y∥ := by
-  rw [← sq_eq_sq (norm_nonneg (x + y)) (add_nonneg (norm_nonneg x) (norm_nonneg y))]
-  rw [norm_add_pow_two_real, inner_eq_mul_norm_of_angle_eq_zero h]
-  ring
-
-/-- If the angle between two vectors is 0, the norm of their difference equals
-the absolute value of the difference of their norms. -/
-theorem norm_sub_eq_abs_sub_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ∥x - y∥ = abs (∥x∥ - ∥y∥) := by
-  rw [← sq_eq_sq (norm_nonneg (x - y)) (abs_nonneg (∥x∥ - ∥y∥)), norm_sub_pow_two_real,
-    inner_eq_mul_norm_of_angle_eq_zero h, sq_abs (∥x∥ - ∥y∥)]
-  ring
-
-/-- The norm of the difference of two non-zero vectors equals the sum of their norms
-if and only the angle between the two vectors is π. -/
-theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x - y∥ = ∥x∥ + ∥y∥ ↔ angle x y = π := by
-  refine' ⟨fun h => _, norm_sub_eq_add_norm_of_angle_eq_pi⟩
-  rw [← inner_eq_neg_mul_norm_iff_angle_eq_pi hx hy]
-  obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x - y), add_nonneg (norm_nonneg x) (norm_nonneg y)
-  rw [← sq_eq_sq hxy₁ hxy₂, norm_sub_pow_two_real] at h
-  calc
-    inner x y = (∥x∥ ^ 2 + ∥y∥ ^ 2 - (∥x∥ + ∥y∥) ^ 2) / 2 := by linarith
-    _ = -(∥x∥ * ∥y∥) := by ring
-    
-
-/-- The norm of the sum of two non-zero vectors equals the sum of their norms
-if and only the angle between the two vectors is 0. -/
-theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x + y∥ = ∥x∥ + ∥y∥ ↔ angle x y = 0 := by
-  refine' ⟨fun h => _, norm_add_eq_add_norm_of_angle_eq_zero⟩
-  rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
-  obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x + y), add_nonneg (norm_nonneg x) (norm_nonneg y)
-  rw [← sq_eq_sq hxy₁ hxy₂, norm_add_pow_two_real] at h
-  calc
-    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by linarith
-    _ = ∥x∥ * ∥y∥ := by ring
-    
-
-/-- The norm of the difference of two non-zero vectors equals the absolute value
-of the difference of their norms if and only the angle between the two vectors is 0. -/
-theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x - y∥ = abs (∥x∥ - ∥y∥) ↔ angle x y = 0 := by
-  refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
-  rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
-  have h1 : ∥x - y∥ ^ 2 = (∥x∥ - ∥y∥) ^ 2 := by
-    rw [h]
-    exact sq_abs (∥x∥ - ∥y∥)
-  rw [norm_sub_pow_two_real] at h1
-  calc
-    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by linarith
-    _ = ∥x∥ * ∥y∥ := by ring
-    
-
-/-- The norm of the sum of two vectors equals the norm of their difference if and only if
-the angle between them is π/2. -/
-theorem norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (x y : V) : ∥x + y∥ = ∥x - y∥ ↔ angle x y = π / 2 := by
-  rw [← sq_eq_sq (norm_nonneg (x + y)) (norm_nonneg (x - y)), ← inner_eq_zero_iff_angle_eq_pi_div_two x y,
-    norm_add_pow_two_real, norm_sub_pow_two_real]
-  constructor <;> intro h <;> linarith
-
-end InnerProductGeometry
 
 namespace EuclideanGeometry
 
@@ -357,331 +61,30 @@ Euclidean affine spaces.
 -/
 
 
-open InnerProductGeometry
-
 variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
--- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" => @inner ℝ V _ x y
-
 include V
-
-/-- The undirected angle at `p2` between the line segments to `p1` and
-`p3`. If either of those points equals `p2`, this is π/2. Use
-`open_locale euclidean_geometry` to access the `∠ p1 p2 p3`
-notation. -/
-def angle (p1 p2 p3 : P) : ℝ :=
-  angle (p1 -ᵥ p2 : V) (p3 -ᵥ p2)
-
--- mathport name: angle
-localized [EuclideanGeometry] notation "∠" => EuclideanGeometry.angle
-
-theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
-    ContinuousAt (fun y : P × P × P => ∠ y.1 y.2.1 y.2.2) x := by
-  let f : P × P × P → V × V := fun y => (y.1 -ᵥ y.2.1, y.2.2 -ᵥ y.2.1)
-  have hf1 : (f x).1 ≠ 0 := by simp [hx12]
-  have hf2 : (f x).2 ≠ 0 := by simp [hx32]
-  exact
-    (InnerProductGeometry.continuous_at_angle hf1 hf2).comp
-      ((continuous_fst.vsub continuous_snd.fst).prod_mk (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
-
-@[simp]
-theorem _root_.affine_isometry.angle_map {V₂ P₂ : Type _} [InnerProductSpace ℝ V₂] [MetricSpace P₂]
-    [NormedAddTorsor V₂ P₂] (f : P →ᵃⁱ[ℝ] P₂) (p₁ p₂ p₃ : P) : ∠ (f p₁) (f p₂) (f p₃) = ∠ p₁ p₂ p₃ := by
-  simp_rw [angle, ← AffineIsometry.map_vsub, LinearIsometry.angle_map]
-
-@[simp, norm_cast]
-theorem _root_.affine_subspace.angle_coe {s : AffineSubspace ℝ P} (p₁ p₂ p₃ : s) :
-    haveI : Nonempty s := ⟨p₁⟩
-    ∠ (p₁ : P) (p₂ : P) (p₃ : P) = ∠ p₁ p₂ p₃ :=
-  haveI : Nonempty s := ⟨p₁⟩
-  s.subtypeₐᵢ.angle_map p₁ p₂ p₃
-
-/-- The angle at a point does not depend on the order of the other two
-points. -/
-theorem angle_comm (p1 p2 p3 : P) : ∠ p1 p2 p3 = ∠ p3 p2 p1 :=
-  angle_comm _ _
-
-/-- The angle at a point is nonnegative. -/
-theorem angle_nonneg (p1 p2 p3 : P) : 0 ≤ ∠ p1 p2 p3 :=
-  angle_nonneg _ _
-
-/-- The angle at a point is at most π. -/
-theorem angle_le_pi (p1 p2 p3 : P) : ∠ p1 p2 p3 ≤ π :=
-  angle_le_pi _ _
-
-/-- The angle ∠AAB at a point. -/
-theorem angle_eq_left (p1 p2 : P) : ∠ p1 p1 p2 = π / 2 := by
-  unfold angle
-  rw [vsub_self]
-  exact angle_zero_left _
-
-/-- The angle ∠ABB at a point. -/
-theorem angle_eq_right (p1 p2 : P) : ∠ p1 p2 p2 = π / 2 := by rw [angle_comm, angle_eq_left]
-
-/-- The angle ∠ABA at a point. -/
-theorem angle_eq_of_ne {p1 p2 : P} (h : p1 ≠ p2) : ∠ p1 p2 p1 = 0 :=
-  angle_self fun he => h (vsub_eq_zero_iff_eq.1 he)
-
-/-- If the angle ∠ABC at a point is π, the angle ∠BAC is 0. -/
-theorem angle_eq_zero_of_angle_eq_pi_left {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p1 p3 = 0 := by
-  unfold angle at h
-  rw [angle_eq_pi_iff] at h
-  rcases h with ⟨hp1p2, ⟨r, ⟨hr, hpr⟩⟩⟩
-  unfold angle
-  rw [angle_eq_zero_iff]
-  rw [← neg_vsub_eq_vsub_rev, neg_ne_zero] at hp1p2
-  use hp1p2, -r + 1, add_pos (neg_pos_of_neg hr) zero_lt_one
-  rw [add_smul, ← neg_vsub_eq_vsub_rev p1 p2, smul_neg]
-  simp [← hpr]
-
-/-- If the angle ∠ABC at a point is π, the angle ∠BCA is 0. -/
-theorem angle_eq_zero_of_angle_eq_pi_right {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p3 p1 = 0 := by
-  rw [angle_comm] at h
-  exact angle_eq_zero_of_angle_eq_pi_left h
-
-/-- If ∠BCD = π, then ∠ABC = ∠ABD. -/
-theorem angle_eq_angle_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) : ∠ p1 p2 p3 = ∠ p1 p2 p4 := by
-  unfold angle at *
-  rcases angle_eq_pi_iff.1 h with ⟨hp2p3, ⟨r, ⟨hr, hpr⟩⟩⟩
-  rw [eq_comm]
-  convert angle_smul_right_of_pos (p1 -ᵥ p2) (p3 -ᵥ p2) (add_pos (neg_pos_of_neg hr) zero_lt_one)
-  rw [add_smul, ← neg_vsub_eq_vsub_rev p2 p3, smul_neg, neg_smul, ← hpr]
-  simp
-
-/-- If ∠BCD = π, then ∠ACB + ∠ACD = π. -/
-theorem angle_add_angle_eq_pi_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) :
-    ∠ p1 p3 p2 + ∠ p1 p3 p4 = π := by
-  unfold angle at h
-  rw [angle_comm p1 p3 p2, angle_comm p1 p3 p4]
-  unfold angle
-  exact angle_add_angle_eq_pi_of_angle_eq_pi _ h
-
-/-- Vertical Angles Theorem: angles opposite each other, formed by two intersecting straight
-lines, are equal. -/
-theorem angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi {p1 p2 p3 p4 p5 : P} (hapc : ∠ p1 p5 p3 = π)
-    (hbpd : ∠ p2 p5 p4 = π) : ∠ p1 p5 p2 = ∠ p3 p5 p4 := by
-  linarith [angle_add_angle_eq_pi_of_angle_eq_pi p1 hbpd, angle_comm p4 p5 p1,
-    angle_add_angle_eq_pi_of_angle_eq_pi p4 hapc, angle_comm p4 p5 p3]
-
-/-- If ∠ABC = π then dist A B ≠ 0. -/
-theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p1 p2 ≠ 0 := by
-  by_contra heq
-  rw [dist_eq_zero] at heq
-  rw [HEq, angle_eq_left] at h
-  exact Real.pi_ne_zero (by linarith)
-
-/-- If ∠ABC = π then dist C B ≠ 0. -/
-theorem right_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p3 p2 ≠ 0 :=
-  left_dist_ne_zero_of_angle_eq_pi <| (angle_comm _ _ _).trans h
-
-/-- If ∠ABC = π, then (dist A C) = (dist A B) + (dist B C). -/
-theorem dist_eq_add_dist_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p1 p3 = dist p1 p2 + dist p3 p2 := by
-  rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
-  exact norm_sub_eq_add_norm_of_angle_eq_pi h
-
-/-- If A ≠ B and C ≠ B then ∠ABC = π if and only if (dist A C) = (dist A B) + (dist B C). -/
-theorem dist_eq_add_dist_iff_angle_eq_pi {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2) (hp3p2 : p3 ≠ p2) :
-    dist p1 p3 = dist p1 p2 + dist p3 p2 ↔ ∠ p1 p2 p3 = π := by
-  rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
-  exact
-    norm_sub_eq_add_norm_iff_angle_eq_pi (fun he => hp1p2 (vsub_eq_zero_iff_eq.1 he)) fun he =>
-      hp3p2 (vsub_eq_zero_iff_eq.1 he)
-
-/-- If ∠ABC = 0, then (dist A C) = abs ((dist A B) - (dist B C)). -/
-theorem dist_eq_abs_sub_dist_of_angle_eq_zero {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = 0) :
-    dist p1 p3 = abs (dist p1 p2 - dist p3 p2) := by
-  rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
-  exact norm_sub_eq_abs_sub_norm_of_angle_eq_zero h
-
-/-- If A ≠ B and C ≠ B then ∠ABC = 0 if and only if (dist A C) = abs ((dist A B) - (dist B C)). -/
-theorem dist_eq_abs_sub_dist_iff_angle_eq_zero {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2) (hp3p2 : p3 ≠ p2) :
-    dist p1 p3 = abs (dist p1 p2 - dist p3 p2) ↔ ∠ p1 p2 p3 = 0 := by
-  rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
-  exact
-    norm_sub_eq_abs_sub_norm_iff_angle_eq_zero (fun he => hp1p2 (vsub_eq_zero_iff_eq.1 he)) fun he =>
-      hp3p2 (vsub_eq_zero_iff_eq.1 he)
 
 /-- The midpoint of the segment AB is the same distance from A as it is from B. -/
 theorem dist_left_midpoint_eq_dist_right_midpoint (p1 p2 : P) :
     dist p1 (midpoint ℝ p1 p2) = dist p2 (midpoint ℝ p1 p2) := by
   rw [dist_left_midpoint p1 p2, dist_right_midpoint p1 p2]
 
-/-- If M is the midpoint of the segment AB, then ∠AMB = π. -/
-theorem angle_midpoint_eq_pi (p1 p2 : P) (hp1p2 : p1 ≠ p2) : ∠ p1 (midpoint ℝ p1 p2) p2 = π := by
-  have : p2 -ᵥ midpoint ℝ p1 p2 = -(p1 -ᵥ midpoint ℝ p1 p2) := by
-    rw [neg_vsub_eq_vsub_rev]
-    simp
-  simp [angle, this, hp1p2, -zero_lt_one]
-
-/-- If M is the midpoint of the segment AB and C is the same distance from A as it is from B
-then ∠CMA = π / 2. -/
-theorem angle_left_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p3 p1 = dist p3 p2) :
-    ∠ p3 (midpoint ℝ p1 p2) p1 = π / 2 := by
-  let m : P := midpoint ℝ p1 p2
-  have h1 : p3 -ᵥ p1 = p3 -ᵥ m - (p1 -ᵥ m) := (vsub_sub_vsub_cancel_right p3 p1 m).symm
-  have h2 : p3 -ᵥ p2 = p3 -ᵥ m + (p1 -ᵥ m) := by rw [left_vsub_midpoint, ← midpoint_vsub_right, vsub_add_vsub_cancel]
-  rw [dist_eq_norm_vsub V p3 p1, dist_eq_norm_vsub V p3 p2, h1, h2] at h
-  exact (norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (p3 -ᵥ m) (p1 -ᵥ m)).mp h.symm
-
-/-- If M is the midpoint of the segment AB and C is the same distance from A as it is from B
-then ∠CMB = π / 2. -/
-theorem angle_right_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p3 p1 = dist p3 p2) :
-    ∠ p3 (midpoint ℝ p1 p2) p2 = π / 2 := by
-  rw [midpoint_comm p1 p2, angle_left_midpoint_eq_pi_div_two_of_dist_eq h.symm]
-
-/-- If the second of three points is strictly between the other two, the angle at that point
-is π. -/
-theorem _root_.sbtw.angle₁₂₃_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₁ p₂ p₃ = π := by
-  rw [angle, angle_eq_pi_iff]
-  rcases h with ⟨⟨r, ⟨hr0, hr1⟩, hp₂⟩, hp₂p₁, hp₂p₃⟩
-  refine' ⟨vsub_ne_zero.2 hp₂p₁.symm, -(1 - r) / r, _⟩
-  have hr0' : r ≠ 0 := by
-    rintro rfl
-    rw [← hp₂] at hp₂p₁
-    simpa using hp₂p₁
-  have hr1' : r ≠ 1 := by
-    rintro rfl
-    rw [← hp₂] at hp₂p₃
-    simpa using hp₂p₃
-  replace hr0 := hr0.lt_of_ne hr0'.symm
-  replace hr1 := hr1.lt_of_ne hr1'
-  refine' ⟨div_neg_of_neg_of_pos (Left.neg_neg_iff.2 (sub_pos.2 hr1)) hr0, _⟩
-  rw [← hp₂, AffineMap.line_map_apply, vsub_vadd_eq_vsub_sub, vsub_vadd_eq_vsub_sub, vsub_self, zero_sub, smul_neg,
-    smul_smul, div_mul_cancel _ hr0', neg_smul, neg_negₓ, sub_eq_iff_eq_add, ← add_smul, sub_add_cancel, one_smul]
-
-/-- If the second of three points is strictly between the other two, the angle at that point
-(reversed) is π. -/
-theorem _root_.sbtw.angle₃₂₁_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₃ p₂ p₁ = π := by
-  rw [← h.angle₁₂₃_eq_pi, angle_comm]
-
-/-- The angle between three points is π if and only if the second point is strictly between the
-other two. -/
-theorem angle_eq_pi_iff_sbtw {p₁ p₂ p₃ : P} : ∠ p₁ p₂ p₃ = π ↔ Sbtw ℝ p₁ p₂ p₃ := by
-  refine' ⟨_, fun h => h.angle₁₂₃_eq_pi⟩
-  rw [angle, angle_eq_pi_iff]
-  rintro ⟨hp₁p₂, r, hr, hp₃p₂⟩
-  refine'
-    ⟨⟨1 / (1 - r),
-        ⟨div_nonneg zero_le_one (sub_nonneg.2 (hr.le.trans zero_le_one)),
-          (div_le_one (sub_pos.2 (hr.trans zero_lt_one))).2 ((le_sub_self_iff 1).2 hr.le)⟩,
-        _⟩,
-      (vsub_ne_zero.1 hp₁p₂).symm, _⟩
-  · rw [← eq_vadd_iff_vsub_eq] at hp₃p₂
-    rw [AffineMap.line_map_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ← neg_smul, smul_add,
-      smul_smul, ← add_smul, eq_comm, eq_vadd_iff_vsub_eq]
-    convert (one_smul ℝ (p₂ -ᵥ p₁)).symm
-    field_simp [(sub_pos.2 (hr.trans zero_lt_one)).Ne.symm]
-    abel
-    
-  · rw [ne_comm, ← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
-    exact ⟨hr.ne, hp₁p₂⟩
-    
-
-/-- If the second of three points is weakly between the other two, and not equal to the first,
-the angle at the first point is zero. -/
-theorem _root_.wbtw.angle₂₁₃_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p₁ p₂ p₃) (hp₂p₁ : p₂ ≠ p₁) : ∠ p₂ p₁ p₃ = 0 := by
-  rw [angle, angle_eq_zero_iff]
-  rcases h with ⟨r, ⟨hr0, hr1⟩, rfl⟩
-  have hr0' : r ≠ 0 := by
-    rintro rfl
-    simpa using hp₂p₁
-  replace hr0 := hr0.lt_of_ne hr0'.symm
-  refine' ⟨vsub_ne_zero.2 hp₂p₁, r⁻¹, inv_pos.2 hr0, _⟩
-  rw [AffineMap.line_map_apply, vadd_vsub_assoc, vsub_self, add_zeroₓ, smul_smul, inv_mul_cancel hr0', one_smul]
-
-/-- If the second of three points is strictly between the other two, the angle at the first point
-is zero. -/
-theorem _root_.sbtw.angle₂₁₃_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₂ p₁ p₃ = 0 :=
-  h.Wbtw.angle₂₁₃_eq_zero_of_ne h.ne_left
-
-/-- If the second of three points is weakly between the other two, and not equal to the first,
-the angle at the first point (reversed) is zero. -/
-theorem _root_.wbtw.angle₃₁₂_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p₁ p₂ p₃) (hp₂p₁ : p₂ ≠ p₁) : ∠ p₃ p₁ p₂ = 0 := by
-  rw [← h.angle₂₁₃_eq_zero_of_ne hp₂p₁, angle_comm]
-
-/-- If the second of three points is strictly between the other two, the angle at the first point
-(reversed) is zero. -/
-theorem _root_.sbtw.angle₃₁₂_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₃ p₁ p₂ = 0 :=
-  h.Wbtw.angle₃₁₂_eq_zero_of_ne h.ne_left
-
-/-- If the second of three points is weakly between the other two, and not equal to the third,
-the angle at the third point is zero. -/
-theorem _root_.wbtw.angle₂₃₁_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p₁ p₂ p₃) (hp₂p₃ : p₂ ≠ p₃) : ∠ p₂ p₃ p₁ = 0 :=
-  h.symm.angle₂₁₃_eq_zero_of_ne hp₂p₃
-
-/-- If the second of three points is strictly between the other two, the angle at the third point
-is zero. -/
-theorem _root_.sbtw.angle₂₃₁_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₂ p₃ p₁ = 0 :=
-  h.Wbtw.angle₂₃₁_eq_zero_of_ne h.ne_right
-
-/-- If the second of three points is weakly between the other two, and not equal to the third,
-the angle at the third point (reversed) is zero. -/
-theorem _root_.wbtw.angle₁₃₂_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p₁ p₂ p₃) (hp₂p₃ : p₂ ≠ p₃) : ∠ p₁ p₃ p₂ = 0 :=
-  h.symm.angle₃₁₂_eq_zero_of_ne hp₂p₃
-
-/-- If the second of three points is strictly between the other two, the angle at the third point
-(reversed) is zero. -/
-theorem _root_.sbtw.angle₁₃₂_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₁ p₃ p₂ = 0 :=
-  h.Wbtw.angle₁₃₂_eq_zero_of_ne h.ne_right
-
-/-- The angle between three points is zero if and only if one of the first and third points is
-weakly between the other two, and not equal to the second. -/
-theorem angle_eq_zero_iff_ne_and_wbtw {p₁ p₂ p₃ : P} :
-    ∠ p₁ p₂ p₃ = 0 ↔ p₁ ≠ p₂ ∧ Wbtw ℝ p₂ p₁ p₃ ∨ p₃ ≠ p₂ ∧ Wbtw ℝ p₂ p₃ p₁ := by
-  constructor
-  · rw [angle, angle_eq_zero_iff]
-    rintro ⟨hp₁p₂, r, hr0, hp₃p₂⟩
-    rcases le_or_ltₓ 1 r with (hr1 | hr1)
-    · refine' Or.inl ⟨vsub_ne_zero.1 hp₁p₂, r⁻¹, ⟨(inv_pos.2 hr0).le, inv_le_one hr1⟩, _⟩
-      rw [AffineMap.line_map_apply, hp₃p₂, smul_smul, inv_mul_cancel hr0.ne.symm, one_smul, vsub_vadd]
-      
-    · refine' Or.inr ⟨_, r, ⟨hr0.le, hr1.le⟩, _⟩
-      · rw [← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
-        exact ⟨hr0.ne.symm, hp₁p₂⟩
-        
-      · rw [AffineMap.line_map_apply, ← hp₃p₂, vsub_vadd]
-        
-      
-    
-  · rintro (⟨hp₁p₂, h⟩ | ⟨hp₃p₂, h⟩)
-    · exact h.angle₂₁₃_eq_zero_of_ne hp₁p₂
-      
-    · exact h.angle₃₁₂_eq_zero_of_ne hp₃p₂
-      
-    
-
-/-- The angle between three points is zero if and only if one of the first and third points is
-strictly between the other two, or those two points are equal but not equal to the second. -/
-theorem angle_eq_zero_iff_eq_and_ne_or_sbtw {p₁ p₂ p₃ : P} :
-    ∠ p₁ p₂ p₃ = 0 ↔ p₁ = p₃ ∧ p₁ ≠ p₂ ∨ Sbtw ℝ p₂ p₁ p₃ ∨ Sbtw ℝ p₂ p₃ p₁ := by
-  rw [angle_eq_zero_iff_ne_and_wbtw]
-  by_cases hp₁p₂:p₁ = p₂
-  · simp [hp₁p₂]
-    
-  by_cases hp₁p₃:p₁ = p₃
-  · simp [hp₁p₃]
-    
-  by_cases hp₃p₂:p₃ = p₂
-  · simp [hp₃p₂]
-    
-  simp [hp₁p₂, hp₁p₃, Ne.symm hp₁p₃, Sbtw, hp₃p₂]
-
 /-- The inner product of two vectors given with `weighted_vsub`, in
 terms of the pairwise distances. -/
-theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finsetₓ ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P) (h₁ : (∑ i in s₁, w₁ i) = 0)
-    {ι₂ : Type _} {s₂ : Finsetₓ ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P) (h₂ : (∑ i in s₂, w₂ i) = 0) :
-    inner (s₁.weightedVsub p₁ w₁) (s₂.weightedVsub p₂ w₂) =
+theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P) (h₁ : (∑ i in s₁, w₁ i) = 0)
+    {ι₂ : Type _} {s₂ : Finset ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P) (h₂ : (∑ i in s₂, w₂ i) = 0) :
+    ⟪s₁.weightedVsub p₁ w₁, s₂.weightedVsub p₂ w₂⟫ =
       (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (dist (p₁ i₁) (p₂ i₂) * dist (p₁ i₁) (p₂ i₂))) / 2 :=
   by
-  rw [Finsetₓ.weighted_vsub_apply, Finsetₓ.weighted_vsub_apply, inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
+  rw [Finset.weighted_vsub_apply, Finset.weighted_vsub_apply, inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
   simp_rw [vsub_sub_vsub_cancel_right]
   rcongr i₁ i₂ <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
 
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that
 combination. -/
-theorem dist_affine_combination {ι : Type _} {s : Finsetₓ ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑ i in s, w₁ i) = 1)
+theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑ i in s, w₁ i) = 1)
     (h₂ : (∑ i in s, w₂ i) = 1) : by
     have a₁ := s.affine_combination p w₁ <;>
       have a₂ := s.affine_combination p w₂ <;>
@@ -690,8 +93,8 @@ theorem dist_affine_combination {ι : Type _} {s : Finsetₓ ι} {w₁ w₂ : ι
             (-∑ i₁ in s, ∑ i₂ in s, (w₁ - w₂) i₁ * (w₁ - w₂) i₂ * (dist (p i₁) (p i₂) * dist (p i₁) (p i₂))) / 2 :=
   by
   rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ← inner_self_eq_norm_mul_norm,
-    Finsetₓ.affine_combination_vsub]
-  have h : (∑ i in s, (w₁ - w₂) i) = 0 := by simp_rw [Pi.sub_apply, Finsetₓ.sum_sub_distrib, h₁, h₂, sub_self]
+    Finset.affine_combination_vsub]
+  have h : (∑ i in s, (w₁ - w₂) i) = 0 := by simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]
   exact inner_weighted_vsub p h p h
 
 /-- Suppose that `c₁` is equidistant from `p₁` and `p₂`, and the same
@@ -735,19 +138,19 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
     rw [← mul_self_inj_of_nonneg dist_nonneg dist_nonneg, dist_smul_vadd_sq, ← sub_eq_zero, add_sub_assoc,
       dist_eq_norm_vsub V p₁ p₂, ← real_inner_self_eq_norm_mul_norm, sub_self]
   have hvi : ⟪v, v⟫ ≠ 0 := by simpa using hv
-  have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * inner v (p₁ -ᵥ p₂) * (2 * inner v (p₁ -ᵥ p₂)) := by
+  have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * ⟪v, p₁ -ᵥ p₂⟫ * (2 * ⟪v, p₁ -ᵥ p₂⟫) := by
     rw [discrim]
     ring
-  rw [quadratic_eq_zero_iff hvi hd, add_left_negₓ, zero_div, neg_mul_eq_neg_mulₓ, ← mul_sub_right_distrib,
-    sub_eq_add_neg, ← mul_two, mul_assoc, mul_div_assoc, mul_div_mul_left, mul_div_assoc]
+  rw [quadratic_eq_zero_iff hvi hd, add_left_neg, zero_div, neg_mul_eq_neg_mul, ← mul_sub_right_distrib, sub_eq_add_neg,
+    ← mul_two, mul_assoc, mul_div_assoc, mul_div_mul_left, mul_div_assoc]
   norm_num
 
 open AffineSubspace FiniteDimensional
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -760,7 +163,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hp₂c₁.symm) (hp₁c₂.trans hp₂c₂.symm)
   have hop : ⟪c₂ -ᵥ c₁, p -ᵥ p₁⟫ = 0 :=
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hpc₁.symm) (hp₁c₂.trans hpc₂.symm)
-  let b : Finₓ 2 → V := ![c₂ -ᵥ c₁, p₂ -ᵥ p₁]
+  let b : Fin 2 → V := ![c₂ -ᵥ c₁, p₂ -ᵥ p₁]
   have hb : LinearIndependent ℝ b := by
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
@@ -784,13 +187,13 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       · exact vsub_mem_direction hp₂s hp₁s
         
       
-    · rw [finrank_span_eq_card hb, Fintypeₓ.card_fin, hd]
+    · rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
       
   have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
     intro v hv
     have hr : Set.Range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
-      have hu : (Finsetₓ.univ : Finsetₓ (Finₓ 2)) = {0, 1} := by decide
-      rw [← Fintypeₓ.coe_image_univ, hu]
+      have hu : (Finset.univ : Finset (Fin 2)) = {0, 1} := by decide
+      rw [← Fintype.coe_image_univ, hu]
       simp
       rfl
     rw [← hbs, hr, Submodule.mem_span_insert] at hv
@@ -799,14 +202,14 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     rcases hv' with ⟨t₂, rfl⟩
     exact ⟨t₁, t₂, hv⟩
   rcases hv (p -ᵥ p₁) (vsub_mem_direction hps hp₁s) with ⟨t₁, t₂, hpt⟩
-  simp only [hpt, inner_add_right, inner_smul_right, ho, mul_zero, add_zeroₓ, mul_eq_zero, inner_self_eq_zero,
-    vsub_eq_zero_iff_eq, hc.symm, or_falseₓ] at hop
-  rw [hop, zero_smul, zero_addₓ, ← eq_vadd_iff_vsub_eq] at hpt
+  simp only [hpt, inner_add_right, inner_smul_right, ho, mul_zero, add_zero, mul_eq_zero, inner_self_eq_zero,
+    vsub_eq_zero_iff_eq, hc.symm, or_false_iff] at hop
+  rw [hop, zero_smul, zero_add, ← eq_vadd_iff_vsub_eq] at hpt
   subst hpt
   have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by simp [hp.symm]
   have hp₂ : dist ((1 : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁) c₁ = r₁ := by simp [hp₂c₁]
   rw [← hp₁c₁, dist_smul_vadd_eq_dist _ _ hp'] at hpc₁ hp₂
-  simp only [one_ne_zero, false_orₓ] at hp₂
+  simp only [one_ne_zero, false_or_iff] at hp₂
   rw [hp₂.symm] at hpc₁
   cases hpc₁ <;> simp [hpc₁]
 
@@ -835,7 +238,7 @@ def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpac
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
-        exact Submodule.is_compl_orthogonal_of_complete_space)
+        exact Submodule.isComplOrthogonalOfCompleteSpace)
 
 /-- The intersection of the subspace and the orthogonal subspace
 through the given point is the `orthogonal_projection_fn` of that
@@ -848,7 +251,7 @@ theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
-        exact Submodule.is_compl_orthogonal_of_complete_space)
+        exact Submodule.isComplOrthogonalOfCompleteSpace)
 
 /-- The `orthogonal_projection_fn` lies in the given subspace.  This
 lemma is only intended for use in setting up the bundled version and
@@ -883,14 +286,14 @@ points whose difference is that vector) is the `orthogonal_projection`
 for real inner product spaces, onto the direction of the affine
 subspace being projected onto. -/
 def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P →ᵃ[ℝ] s where
-  toFun := fun p => ⟨orthogonalProjectionFn s p, orthogonal_projection_fn_mem p⟩
+  toFun p := ⟨orthogonalProjectionFn s p, orthogonal_projection_fn_mem p⟩
   linear := orthogonalProjection s.direction
-  map_vadd' := fun p v => by
+  map_vadd' p v := by
     have hs : ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈ s :=
       vadd_mem_of_mem_direction (orthogonalProjection s.direction v).2 (orthogonal_projection_fn_mem p)
     have ho : ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈ mk' (v +ᵥ p) s.directionᗮ := by
       rw [← vsub_right_mem_direction_iff_mem (self_mem_mk' _ _) _, direction_mk', vsub_vadd_eq_vsub_sub,
-        vadd_vsub_assoc, add_commₓ, add_sub_assoc]
+        vadd_vsub_assoc, add_comm, add_sub_assoc]
       refine' Submodule.add_mem _ (orthogonal_projection_fn_vsub_mem_direction_orthogonal p) _
       rw [Submodule.mem_orthogonal']
       intro w hw
@@ -1062,8 +465,7 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
     dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) * dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) =
         ∥p1 -ᵥ p2 + (r1 - r2) • v∥ * ∥p1 -ᵥ p2 + (r1 - r2) • v∥ :=
       by
-      rw [dist_eq_norm_vsub V (r1 • v +ᵥ p1), vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, sub_smul, add_commₓ,
-        add_sub_assoc]
+      rw [dist_eq_norm_vsub V (r1 • v +ᵥ p1), vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, sub_smul, add_comm, add_sub_assoc]
     _ = ∥p1 -ᵥ p2∥ * ∥p1 -ᵥ p2∥ + ∥(r1 - r2) • v∥ * ∥(r1 - r2) • v∥ :=
       norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2) (Submodule.smul_mem _ _ hv))
@@ -1156,7 +558,7 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
   rw [reflection_apply, reflection_apply]
   constructor
   · intro h
-    rw [← @vsub_eq_zero_iff_eq V, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_commₓ, add_sub_assoc,
+    rw [← @vsub_eq_zero_iff_eq V, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_comm, add_sub_assoc,
       vsub_sub_vsub_cancel_right, ← two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p),
       smul_eq_zero] at h
     norm_num at h
@@ -1305,28 +707,28 @@ theorem Sphere.cospherical (s : Sphere P) : Cospherical (s : Set P) :=
   cospherical_iff_exists_sphere.2 ⟨s, Set.Subset.rfl⟩
 
 /-- A subset of a cospherical set is cospherical. -/
-theorem cospherical_subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Cospherical ps₂) : Cospherical ps₁ := by
+theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Cospherical ps₂) : Cospherical ps₁ := by
   rcases hc with ⟨c, r, hcr⟩
   exact ⟨c, r, fun p hp => hcr p (hs hp)⟩
 
 include V
 
 /-- The empty set is cospherical. -/
-theorem cospherical_empty : Cospherical (∅ : Set P) := by
+theorem cosphericalEmpty : Cospherical (∅ : Set P) := by
   use add_torsor.nonempty.some
   simp
 
 omit V
 
 /-- A single point is cospherical. -/
-theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) := by
+theorem cosphericalSingleton (p : P) : Cospherical ({p} : Set P) := by
   use p
   simp
 
 include V
 
 /-- Two points are cospherical. -/
-theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := by
+theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := by
   use (2⁻¹ : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁, (2⁻¹ : ℝ) * dist p₂ p₁
   intro p
   rw [Set.mem_insert_iff, Set.mem_singleton_iff]
@@ -1344,17 +746,17 @@ theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
     
 
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Finₓ 3 → P} (hps : Set.Range p ⊆ s)
+theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P} (hps : Set.Range p ⊆ s)
     (hpi : Function.Injective p) : AffineIndependent ℝ p := by
   rw [affine_independent_iff_not_collinear]
   intro hc
-  rw [collinear_iff_of_mem (Set.mem_range_self (0 : Finₓ 3))] at hc
+  rw [collinear_iff_of_mem (Set.mem_range_self (0 : Fin 3))] at hc
   rcases hc with ⟨v, hv⟩
   rw [Set.forall_range_iff] at hv
   have hv0 : v ≠ 0 := by
     intro h
     have he : p 1 = p 0 := by simpa [h] using hv 1
-    exact (by decide : (1 : Finₓ 3) ≠ 0) (hpi he)
+    exact (by decide : (1 : Fin 3) ≠ 0) (hpi he)
   rcases hs with ⟨c, r, hs⟩
   have hs' := fun i => hs (p i) (Set.mem_of_mem_of_subset (Set.mem_range_self _) hps)
   choose f hf using hv
@@ -1378,7 +780,7 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
     have hsdi := hsd i
     simpa [hfn0, hi] using hsdi
   have hf12 : f 1 = f 2 := by rw [hfn0' 1 (by decide), hfn0' 2 (by decide)]
-  exact (by decide : (1 : Finₓ 3) ≠ 2) (hfi hf12)
+  exact (by decide : (1 : Fin 3) ≠ 2) (hfi hf12)
 
 /-- Suppose that `p₁` and `p₂` lie in spheres `s₁` and `s₂`.  Then the vector between the centers
 of those spheres is orthogonal to that between `p₁` and `p₂`; this is a version of
@@ -1407,6 +809,28 @@ theorem eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two [FiniteDimensional ℝ 
     (hp₁s₂ : p₁ ∈ s₂) (hp₂s₂ : p₂ ∈ s₂) (hps₂ : p ∈ s₂) : p = p₁ ∨ p = p₂ :=
   eq_of_dist_eq_of_dist_eq_of_finrank_eq_two hd ((Sphere.center_ne_iff_ne_of_mem hps₁ hps₂).2 hs) hp hp₁s₁ hp₂s₁ hps₁
     hp₁s₂ hp₂s₂ hps₂
+
+/-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
+directly in terms of `cospherical` instead of using `concyclic`.) -/
+structure Concyclic (ps : Set P) : Prop where
+  Cospherical : Cospherical ps
+  Coplanar : Coplanar ℝ ps
+
+/-- A subset of a concyclic set is concyclic. -/
+theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concyclic ps₂) : Concyclic ps₁ :=
+  ⟨h.1.Subset hs, h.2.Subset hs⟩
+
+/-- The empty set is concyclic. -/
+theorem concyclicEmpty : Concyclic (∅ : Set P) :=
+  ⟨cosphericalEmpty, coplanarEmpty ℝ P⟩
+
+/-- A single point is concyclic. -/
+theorem concyclicSingleton (p : P) : Concyclic ({p} : Set P) :=
+  ⟨cosphericalSingleton p, coplanarSingleton ℝ p⟩
+
+/-- Two points are concyclic. -/
+theorem concyclicPair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
+  ⟨cosphericalPair p₁ p₂, coplanarPair ℝ p₁ p₂⟩
 
 end EuclideanGeometry
 

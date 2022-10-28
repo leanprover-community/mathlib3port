@@ -58,8 +58,8 @@ theorem sort_singleton (a : α) : sort r {a} = [a] :=
 
 end Sort
 
-instance [HasRepr α] : HasRepr (Multiset α) :=
-  ⟨fun s => "{" ++ Stringₓ.intercalate ", " ((s.map reprₓ).sort (· ≤ ·)) ++ "}"⟩
+instance [Repr α] : Repr (Multiset α) :=
+  ⟨fun s => "{" ++ String.intercalate ", " ((s.map repr).sort (· ≤ ·)) ++ "}"⟩
 
 end Multiset
 

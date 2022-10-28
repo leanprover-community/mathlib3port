@@ -43,16 +43,28 @@ namespace SemiconjBy
 protected theorem eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : a * x = y * a :=
   h
 
-section Semigroupₓ
+section Semigroup
 
-variable {S : Type u} [Semigroupₓ S] {a b x y z x' y' : S}
+variable {S : Type u} [Semigroup S] {a b x y z x' y' : S}
 
+/- warning: semiconj_by.mul_right -> SemiconjBy.mul_right is a dubious translation:
+lean 3 declaration is
+  forall {S : Type.{u}} [_inst_1 : Semigroup.{u} S] {a : S} {x : S} {y : S} {x' : S} {y' : S}, (SemiconjBy.{u} S (Semigroup.toHasMul.{u} S _inst_1) a x y) -> (SemiconjBy.{u} S (Semigroup.toHasMul.{u} S _inst_1) a x' y') -> (SemiconjBy.{u} S (Semigroup.toHasMul.{u} S _inst_1) a (HMul.hMul.{u u u} S S S (instHMul.{u} S (Semigroup.toHasMul.{u} S _inst_1)) x x') (HMul.hMul.{u u u} S S S (instHMul.{u} S (Semigroup.toHasMul.{u} S _inst_1)) y y'))
+but is expected to have type
+  forall {S : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.76 : Semigroup.{u} S] {a : S} {x : S} {y : S} {x' : S} {y' : S}, (SemiconjBy.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.76) a x y) -> (SemiconjBy.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.76) a x' y') -> (SemiconjBy.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.76) a (HMul.hMul.{u u u} S S S (instHMul.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.76)) x x') (HMul.hMul.{u u u} S S S (instHMul.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.76)) y y'))
+Case conversion may be inaccurate. Consider using '#align semiconj_by.mul_right SemiconjBy.mul_rightₓ'. -/
 /-- If `a` semiconjugates `x` to `y` and `x'` to `y'`,
 then it semiconjugates `x * x'` to `y * y'`. -/
 @[simp, to_additive "If `a` semiconjugates `x` to `y` and `x'` to `y'`, then it semiconjugates\n`x + x'` to `y + y'`."]
 theorem mul_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy a (x * x') (y * y') := by
   unfold SemiconjBy <;> assoc_rw [h.eq, h'.eq]
 
+/- warning: semiconj_by.mul_left -> SemiconjBy.mul_left is a dubious translation:
+lean 3 declaration is
+  forall {S : Type.{u}} [_inst_1 : Semigroup.{u} S] {a : S} {b : S} {x : S} {y : S} {z : S}, (SemiconjBy.{u} S (Semigroup.toHasMul.{u} S _inst_1) a y z) -> (SemiconjBy.{u} S (Semigroup.toHasMul.{u} S _inst_1) b x y) -> (SemiconjBy.{u} S (Semigroup.toHasMul.{u} S _inst_1) (HMul.hMul.{u u u} S S S (instHMul.{u} S (Semigroup.toHasMul.{u} S _inst_1)) a b) x z)
+but is expected to have type
+  forall {S : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.147 : Semigroup.{u} S] {a : S} {b : S} {x : S} {y : S} {z : S}, (SemiconjBy.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.147) a y z) -> (SemiconjBy.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.147) b x y) -> (SemiconjBy.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.147) (HMul.hMul.{u u u} S S S (instHMul.{u} S (Semigroup.toMul.{u} S inst._@.Mathlib.Algebra.Group.Semiconj._hyg.147)) a b) x z)
+Case conversion may be inaccurate. Consider using '#align semiconj_by.mul_left SemiconjBy.mul_leftₓ'. -/
 /-- If both `a` and `b` semiconjugate `x` to `y`, then so does `a * b`. -/
 @[to_additive "If both `a` and `b` semiconjugate `x` to `y`, then so does `a + b`."]
 theorem mul_left (ha : SemiconjBy a y z) (hb : SemiconjBy b x y) : SemiconjBy (a * b) x z := by
@@ -65,16 +77,28 @@ is transitive. -/
 protected theorem transitive : Transitive fun a b : S => ∃ c, SemiconjBy c a b := fun a b c ⟨x, hx⟩ ⟨y, hy⟩ =>
   ⟨y * x, hy.mul_left hx⟩
 
-end Semigroupₓ
+end Semigroup
 
-section MulOneClassₓ
+section MulOneClass
 
-variable {M : Type u} [MulOneClassₓ M]
+variable {M : Type u} [MulOneClass M]
 
+/- warning: semiconj_by.one_right -> SemiconjBy.one_right is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u}} [_inst_1 : MulOneClass.{u} M] (a : M), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M _inst_1) a (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1)) (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1))
+but is expected to have type
+  forall {M : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222 : MulOneClass.{u} M] (a : M), SemiconjBy.{u} M (MulOneClass.toMul.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222) a (OfNat.ofNat.{u} M 1 (One.toOfNat1.{u} M (MulOneClass.toOne.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222))) (OfNat.ofNat.{u} M 1 (One.toOfNat1.{u} M (MulOneClass.toOne.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222)))
+Case conversion may be inaccurate. Consider using '#align semiconj_by.one_right SemiconjBy.one_rightₓ'. -/
 /-- Any element semiconjugates `1` to `1`. -/
 @[simp, to_additive "Any element additively semiconjugates `0` to `0`."]
-theorem one_right (a : M) : SemiconjBy a 1 1 := by rw [SemiconjBy, mul_oneₓ, one_mulₓ]
+theorem one_right (a : M) : SemiconjBy a 1 1 := by rw [SemiconjBy, mul_one, one_mul]
 
+/- warning: semiconj_by.one_left -> SemiconjBy.one_left is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u}} [_inst_1 : MulOneClass.{u} M] (x : M), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M _inst_1) (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1)) x x
+but is expected to have type
+  forall {M : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.264 : MulOneClass.{u} M] (x : M), SemiconjBy.{u} M (MulOneClass.toMul.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.264) (OfNat.ofNat.{u} M 1 (One.toOfNat1.{u} M (MulOneClass.toOne.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.264))) x x
+Case conversion may be inaccurate. Consider using '#align semiconj_by.one_left SemiconjBy.one_leftₓ'. -/
 /-- One semiconjugates any element to itself. -/
 @[simp, to_additive "Zero additively semiconjugates any element to itself."]
 theorem one_left (x : M) : SemiconjBy 1 x x :=
@@ -86,11 +110,11 @@ generally, on ` mul_one_class` type) is reflexive. -/
       "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nmonoid (or, more generally, on a `add_zero_class` type) is reflexive."]
 protected theorem reflexive : Reflexive fun a b : M => ∃ c, SemiconjBy c a b := fun a => ⟨1, one_left a⟩
 
-end MulOneClassₓ
+end MulOneClass
 
-section Monoidₓ
+section Monoid
 
-variable {M : Type u} [Monoidₓ M]
+variable {M : Type u} [Monoid M]
 
 /-- If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
 @[to_additive
@@ -129,17 +153,23 @@ theorem units_of_coe {a x y : Mˣ} (h : SemiconjBy (a : M) x y) : SemiconjBy a x
 theorem units_coe_iff {a x y : Mˣ} : SemiconjBy (a : M) x y ↔ SemiconjBy a x y :=
   ⟨units_of_coe, units_coe⟩
 
+/- warning: semiconj_by.pow_right -> SemiconjBy.pow_right is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u}} [_inst_1 : Monoid.{u} M] {a : M} {x : M} {y : M}, (SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M _inst_1)) a x y) -> (forall (n : Nat), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M _inst_1)) a (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) x n) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) y n))
+but is expected to have type
+  forall {M : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.290 : Monoid.{u} M] {a : M} {x : M} {y : M}, (SemiconjBy.{u} M (MulOneClass.toMul.{u} M (Monoid.toMulOneClass.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.290)) a x y) -> (forall (n : Nat), SemiconjBy.{u} M (MulOneClass.toMul.{u} M (Monoid.toMulOneClass.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.290)) a (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.Pow.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.290)) x n) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.Pow.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.290)) y n))
+Case conversion may be inaccurate. Consider using '#align semiconj_by.pow_right SemiconjBy.pow_rightₓ'. -/
 @[simp, to_additive]
 theorem pow_right {a x y : M} (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a (x ^ n) (y ^ n) := by
   induction' n with n ih
-  · rw [pow_zeroₓ, pow_zeroₓ]
+  · rw [pow_zero, pow_zero]
     exact SemiconjBy.one_right _
     
-  · rw [pow_succₓ, pow_succₓ]
+  · rw [pow_succ, pow_succ]
     exact h.mul_right ih
     
 
-end Monoidₓ
+end Monoid
 
 section DivisionMonoid
 
@@ -147,7 +177,7 @@ variable [DivisionMonoid G] {a x y : G}
 
 @[simp, to_additive]
 theorem inv_inv_symm_iff : SemiconjBy a⁻¹ x⁻¹ y⁻¹ ↔ SemiconjBy a y x :=
-  inv_involutive.Injective.eq_iff.symm.trans <| by simp_rw [mul_inv_rev, inv_invₓ, eq_comm, SemiconjBy]
+  inv_involutive.Injective.eq_iff.symm.trans <| by simp_rw [mul_inv_rev, inv_inv, eq_comm, SemiconjBy]
 
 @[to_additive]
 theorem inv_inv_symm : SemiconjBy a x y → SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
@@ -155,13 +185,13 @@ theorem inv_inv_symm : SemiconjBy a x y → SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
 
 end DivisionMonoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ G] {a x y : G}
+variable [Group G] {a x y : G}
 
 @[simp, to_additive]
 theorem inv_right_iff : SemiconjBy a x⁻¹ y⁻¹ ↔ SemiconjBy a x y :=
-  @units_inv_right_iff G _ a ⟨x, x⁻¹, mul_inv_selfₓ x, inv_mul_selfₓ x⟩ ⟨y, y⁻¹, mul_inv_selfₓ y, inv_mul_selfₓ y⟩
+  @units_inv_right_iff G _ a ⟨x, x⁻¹, mul_inv_self x, inv_mul_self x⟩ ⟨y, y⁻¹, mul_inv_self y, inv_mul_self y⟩
 
 @[to_additive]
 theorem inv_right : SemiconjBy a x y → SemiconjBy a x⁻¹ y⁻¹ :=
@@ -169,7 +199,7 @@ theorem inv_right : SemiconjBy a x y → SemiconjBy a x⁻¹ y⁻¹ :=
 
 @[simp, to_additive]
 theorem inv_symm_left_iff : SemiconjBy a⁻¹ y x ↔ SemiconjBy a x y :=
-  @units_inv_symm_left_iff G _ ⟨a, a⁻¹, mul_inv_selfₓ a, inv_mul_selfₓ a⟩ _ _
+  @units_inv_symm_left_iff G _ ⟨a, a⁻¹, mul_inv_self a, inv_mul_self a⟩ _ _
 
 @[to_additive]
 theorem inv_symm_left : SemiconjBy a x y → SemiconjBy a⁻¹ y x :=
@@ -178,18 +208,18 @@ theorem inv_symm_left : SemiconjBy a x y → SemiconjBy a⁻¹ y x :=
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive "`a` semiconjugates `x` to `a + x + -a`."]
 theorem conj_mk (a x : G) : SemiconjBy a x (a * x * a⁻¹) := by
-  unfold SemiconjBy <;> rw [mul_assoc, inv_mul_selfₓ, mul_oneₓ]
+  unfold SemiconjBy <;> rw [mul_assoc, inv_mul_self, mul_one]
 
-end Groupₓ
+end Group
 
 end SemiconjBy
 
 @[simp, to_additive add_semiconj_by_iff_eq]
 theorem semiconj_by_iff_eq {M : Type u} [CancelCommMonoid M] {a x y : M} : SemiconjBy a x y ↔ x = y :=
-  ⟨fun h => mul_left_cancelₓ (h.trans (mul_comm _ _)), fun h => by rw [h, SemiconjBy, mul_comm]⟩
+  ⟨fun h => mul_left_cancel (h.trans (mul_comm _ _)), fun h => by rw [h, SemiconjBy, mul_comm]⟩
 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive "`a` semiconjugates `x` to `a + x + -a`."]
-theorem Units.mk_semiconj_by {M : Type u} [Monoidₓ M] (u : Mˣ) (x : M) : SemiconjBy (↑u) x (u * x * ↑u⁻¹) := by
+theorem Units.mk_semiconj_by {M : Type u} [Monoid M] (u : Mˣ) (x : M) : SemiconjBy (↑u) x (u * x * ↑u⁻¹) := by
   unfold SemiconjBy <;> rw [Units.inv_mul_cancel_right]
 

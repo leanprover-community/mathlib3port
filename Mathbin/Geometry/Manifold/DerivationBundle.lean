@@ -46,7 +46,7 @@ namespace PointedSmoothMap
 instance {x : M} : CoeFun C^∞⟮I, M; 𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
   ContMdiffMap.hasCoeToFun
 
-instance {x : M} : CommRingₓ C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
+instance {x : M} : CommRing C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
   SmoothMap.commRing
 
 instance {x : M} : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
@@ -76,7 +76,7 @@ theorem smul_def (x : M) (f : C^∞⟮I, M; 𝕜⟯⟨x⟩) (k : 𝕜) : f • k
 
 instance (x : M) :
     IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩
-      𝕜 where smul_assoc := fun k f h => by
+      𝕜 where smul_assoc k f h := by
     simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assoc]
 
 end PointedSmoothMap
@@ -119,15 +119,15 @@ differential takes `h : f x = y`. It is particularly handy to deal with situatio
 on where it has to be evaluated are equal but not definitionally equal. -/
 def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) :
     PointDerivation I x →ₗ[𝕜] PointDerivation I' y where
-  toFun := fun v =>
+  toFun v :=
     Derivation.mk'
       { toFun := fun g => v (g.comp f), map_add' := fun g g' => by rw [SmoothMap.add_comp, Derivation.map_add],
         map_smul' := fun k g => by simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by
       simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk, PointedSmoothMap.smul_def,
         ContMdiffMap.comp_apply, h]
-  map_smul' := fun k v => rfl
-  map_add' := fun v w => rfl
+  map_smul' k v := rfl
+  map_add' v w := rfl
 
 /-- The homogeneous differential as a linear map. -/
 def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) : PointDerivation I x →ₗ[𝕜] PointDerivation I' (f x) :=

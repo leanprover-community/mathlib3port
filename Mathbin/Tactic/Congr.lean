@@ -50,8 +50,8 @@ unsafe def convert_to_core (r : pexpr) : tactic Unit := do
   rewrite_target h
   swap
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to prove the goal by proof irrelevance, but avoids unifying universe metavariables
 to do so. -/
 unsafe def by_proof_irrel : tactic Unit := do
@@ -72,14 +72,14 @@ unsafe def congr' : Option ℕ → tactic Unit
       assumption <|>
         reflexivity Transparency.none <|>
           by_proof_irrel <|>
-            (guardₓ (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
+            (guard (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
 
 namespace Interactive
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Same as the `congr` tactic, but takes an optional argument which gives
 the depth of recursive applications.
 * This is useful when `congr` is too aggressive in breaking down the goal.
@@ -98,7 +98,7 @@ unsafe def congr' (n : parse (parser.optional (with_desc "n" small_nat))) :
   | none => tactic.congr' n
   | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p.join m $> ()))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Repeatedly and apply `congr'` and `ext`, using the given patterns as arguments for `ext`.
 
 There are two ways this tactic stops:
@@ -134,7 +134,7 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
           (tactic.congr' none >>
             (done <|> do
               let s ← target
-              guardₓ <| ¬expr.alpha_eqv s t)) |
+              guard <| ¬expr.alpha_eqv s t)) |
       skip
     done <|> rcongr (qs ps)
 
@@ -143,8 +143,8 @@ add_tactic_doc
     declNames := [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr],
     tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.congr' }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- The `exact e` and `refine e` tactics require a term `e` whose type is
 definitionally equal to the goal. `convert e` is similar to `refine e`,
 but the type of `e` is not required to exactly match the
@@ -206,8 +206,8 @@ add_tactic_doc
   { Name := "convert", category := DocCategory.tactic, declNames := [`tactic.interactive.convert],
     tags := ["congruence"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `convert_to g using n` attempts to change the current goal to `g`, but unlike `change`,
 it will generate equality proof obligations using `congr' n` to resolve discrepancies.
 `convert_to g` defaults to using `congr' 1`.
@@ -222,7 +222,7 @@ unsafe def convert_to (r : parse texpr) (n : parse (parser.optional (tk "using" 
   | some 0 => convert_to_core r
   | some o => convert_to_core r >> tactic.congr' o
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `ac_change g using n` is `convert_to g using n` followed by `ac_refl`. It is useful for
 rearranging/reassociating e.g. sums:
 ```lean

@@ -67,13 +67,13 @@ instance : SecondCountableTopology ℝ≥0 :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
 instance : OrderTopology ℝ≥0 :=
-  @order_topology_of_ord_connected _ _ _ _ (Ici 0) _
+  @order_topology_of_ord_connected _ _ _ _ (IciCat 0) _
 
 section coe
 
 variable {α : Type _}
 
-open Filter Finsetₓ
+open Filter Finset
 
 theorem _root_.continuous_real_to_nnreal : Continuous Real.toNnreal :=
   (continuous_id.max continuous_const).subtype_mk _
@@ -88,7 +88,7 @@ def _root_.continuous_map.coe_nnreal_real : C(ℝ≥0, ℝ) :=
 
 instance ContinuousMap.canLift {X : Type _} [TopologicalSpace X] :
     CanLift C(X, ℝ) C(X, ℝ≥0) ContinuousMap.coeNnrealReal.comp fun f =>
-      ∀ x, 0 ≤ f x where prf := fun f hf => ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, FunLike.ext' rfl⟩
+      ∀ x, 0 ≤ f x where prf f hf := ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, FunLike.ext' rfl⟩
 
 @[simp, norm_cast]
 theorem tendsto_coe {f : Filter α} {m : α → ℝ≥0} {x : ℝ≥0} :
@@ -114,7 +114,7 @@ theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : T
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_real_to_nnreal.Tendsto _).comp h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » 0)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 
@@ -190,7 +190,7 @@ theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0} (k : ℕ) (hf : Summable f) :
 
 theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
     (⨅ (n : ℝ) (h : 0 < n), f n) = ⨅ (n : ℝ≥0) (h : 0 < n), f n :=
-  le_antisymmₓ (infi_mono' fun r => ⟨r, le_rflₓ⟩) (infi₂_mono' fun r hr => ⟨⟨r, hr.le⟩, hr, le_rflₓ⟩)
+  le_antisymm (infi_mono' fun r => ⟨r, le_rfl⟩) (infi₂_mono' fun r hr => ⟨⟨r, hr.le⟩, hr, le_rfl⟩)
 
 end coe
 
@@ -206,13 +206,13 @@ theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) 
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
 theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α → ℝ≥0) :
-    Tendsto (fun s : Finsetₓ α => ∑' b : { x // x ∉ s }, f b) atTop (𝓝 0) := by
+    Tendsto (fun s : Finset α => ∑' b : { x // x ∉ s }, f b) atTop (𝓝 0) := by
   simp_rw [← tendsto_coe, coe_tsum, Nnreal.coe_zero]
   exact tendsto_tsum_compl_at_top_zero fun a : α => (f a : ℝ)
 
 /-- `x ↦ x ^ n` as an order isomorphism of `ℝ≥0`. -/
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
-  (StrictMonoₓ.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
+  (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
       strict_mono_on_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
     (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
 

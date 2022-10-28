@@ -27,16 +27,16 @@ namespace CategoryTheory
 
 universe u
 
-variable (M : Type _) [Monoidₓ M] (X : Type u) [MulAction M X]
+variable (M : Type _) [Monoid M] (X : Type u) [MulAction M X]
 
 /-- A multiplicative action M ↻ X viewed as a functor mapping the single object of M to X
   and an element `m : M` to the map `X → X` given by multiplication by `m`. -/
 @[simps]
 def actionAsFunctor : SingleObj M ⥤ Type u where
-  obj := fun _ => X
-  map := fun _ _ => (· • ·)
-  map_id' := fun _ => funext <| MulAction.one_smul
-  map_comp' := fun _ _ _ f g => funext fun x => (smul_smul g f x).symm
+  obj _ := X
+  map _ _ := (· • ·)
+  map_id' _ := funext <| MulAction.one_smul
+  map_comp' _ _ _ f g := funext fun x => (smul_smul g f x).symm
 
 /-- A multiplicative action M ↻ X induces a category strucure on X, where a morphism
  from x to y is a scalar taking x to y. Due to implementation details, the object type
@@ -65,7 +65,7 @@ variable {M X}
   has a more explicit type. -/
 protected def back : ActionCategory M X → X := fun x => x.snd
 
-instance : CoeTₓ X (ActionCategory M X) :=
+instance : CoeT X (ActionCategory M X) :=
   ⟨fun x => ⟨(), x⟩⟩
 
 @[simp]
@@ -80,7 +80,7 @@ variable (M X)
 /-- An object of the action category given by M ↻ X corresponds to an element of X. -/
 def objEquiv : X ≃ ActionCategory M X where
   toFun := coe
-  invFun := fun x => x.back
+  invFun x := x.back
   left_inv := coe_back
   right_inv := back_coe
 
@@ -91,13 +91,13 @@ instance [Inhabited X] : Inhabited (ActionCategory M X) :=
   ⟨show X from default⟩
 
 instance [Nonempty X] : Nonempty (ActionCategory M X) :=
-  Nonempty.mapₓ (objEquiv M X) inferInstance
+  Nonempty.map (objEquiv M X) inferInstance
 
 variable {X} (x : X)
 
 /-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
-def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* End (↑x : ActionCategory M X) :=
+def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* EndCat (↑x : ActionCategory M X) :=
   MulEquiv.refl _
 
 @[simp]
@@ -105,7 +105,7 @@ theorem stabilizer_iso_End_apply (f : Stabilizer.submonoid M x) : (stabilizerIso
   rfl
 
 @[simp]
-theorem stabilizer_iso_End_symm_apply (f : End _) : (stabilizerIsoEnd M x).invFun f = f :=
+theorem stabilizer_iso_End_symm_apply (f : EndCat _) : (stabilizerIsoEnd M x).invFun f = f :=
   rfl
 
 variable {M X}
@@ -122,15 +122,15 @@ instance [IsPretransitive M X] [Nonempty X] : IsConnected (ActionCategory M X) :
   zigzag_is_connected fun x y =>
     Relation.ReflTransGen.single <| Or.inl <| nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
 
-section Groupₓ
+section Group
 
-variable {G : Type _} [Groupₓ G] [MulAction G X]
+variable {G : Type _} [Group G] [MulAction G X]
 
 noncomputable instance : Groupoid (ActionCategory G X) :=
   CategoryTheory.groupoidOfElements _
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
-def endMulEquivSubgroup (H : Subgroup G) : End (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
+def endMulEquivSubgroup (H : Subgroup G) : EndCat (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
   MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr <| stabilizer_quotient H)
 
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
@@ -151,7 +151,7 @@ protected def cases {P : ∀ ⦃a b : ActionCategory G X⦄, (a ⟶ b) → Sort 
   cases inv_smul_eq_iff.mpr h.symm
   rfl
 
-variable {H : Type _} [Groupₓ H]
+variable {H : Type _} [Group H]
 
 /-- Given `G` acting on `X`, a functor from the corresponding action groupoid to a group `H`
     can be curried to a group homomorphism `G →* (X → H) ⋊ G`. -/
@@ -174,8 +174,8 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
     a functor from the action groupoid to `H`, provided that `φ g = (_, g)` for all `g`. -/
 @[simps]
 def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right = g) : ActionCategory G X ⥤ SingleObj H where
-  obj := fun _ => ()
-  map := fun a b f => (F f.val).left b.back
+  obj _ := ()
+  map a b f := (F f.val).left b.back
   map_id' := by
     intro x
     rw [action_category.id_val, F.map_one]
@@ -186,7 +186,7 @@ def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right
     refine' action_category.cases _
     simp [single_obj.comp_as_mul, sane]
 
-end Groupₓ
+end Group
 
 end ActionCategory
 

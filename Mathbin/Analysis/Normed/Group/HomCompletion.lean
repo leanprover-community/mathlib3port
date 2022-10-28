@@ -67,7 +67,7 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) : NormedAddGroupHom
       intro y
       apply completion.induction_on y
       · exact
-          is_closed_le (continuous_norm.comp <| f.to_add_monoid_hom.continuous_completion f.continuous)
+          isClosedLe (continuous_norm.comp <| f.to_add_monoid_hom.continuous_completion f.continuous)
             (continuous_const.mul continuous_norm)
         
       · intro x
@@ -98,7 +98,7 @@ def normedAddGroupHomCompletionHom : NormedAddGroupHom G H →+ NormedAddGroupHo
   map_zero' := by
     apply to_add_monoid_hom_injective
     exact AddMonoidHom.completion_zero
-  map_add' := fun f g => by
+  map_add' f g := by
     apply to_add_monoid_hom_injective
     exact f.to_add_monoid_hom.completion_add g.to_add_monoid_hom f.continuous g.continuous
 
@@ -136,7 +136,7 @@ theorem NormedAddGroupHom.zero_completion : (0 : NormedAddGroupHom G H).Completi
 def NormedAddCommGroup.toCompl : NormedAddGroupHom G (Completion G) where
   toFun := coe
   map_add' := Completion.toCompl.map_add
-  bound' := ⟨1, by simp [le_reflₓ]⟩
+  bound' := ⟨1, by simp [le_refl]⟩
 
 open NormedAddCommGroup
 
@@ -158,7 +158,7 @@ theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ∥f.Com
   apply f.completion.op_norm_eq_of_bounds (norm_nonneg _)
   · intro x
     apply completion.induction_on x
-    · apply is_closed_le
+    · apply isClosedLe
       continuity
       
     · intro g
@@ -185,7 +185,7 @@ theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
 theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (h : f.SurjectiveOnWith f.range C) :
     (f.Completion.ker : Set <| Completion G) = Closure (toCompl.comp <| incl f.ker).range := by
   rcases h.exists_pos with ⟨C', C'_pos, hC'⟩
-  apply le_antisymmₓ
+  apply le_antisymm
   · intro hatg hatg_in
     rw [SeminormedAddCommGroup.mem_closure_iff]
     intro ε ε_pos
@@ -247,7 +247,7 @@ variable {H : Type _} [SeminormedAddCommGroup H] [SeparatedSpace H] [CompleteSpa
 def NormedAddGroupHom.extension (f : NormedAddGroupHom G H) : NormedAddGroupHom (Completion G) H :=
   { f.toAddMonoidHom.extension f.Continuous with
     bound' := by
-      refine' ⟨∥f∥, fun v => completion.induction_on v (is_closed_le _ _) fun a => _⟩
+      refine' ⟨∥f∥, fun v => completion.induction_on v (isClosedLe _ _) fun a => _⟩
       · exact Continuous.comp continuous_norm completion.continuous_extension
         
       · exact Continuous.mul continuous_const continuous_norm

@@ -94,12 +94,12 @@ instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
 @[simp]
 theorem lift_mk {i : ℕ} : Cardinal.lift (#Sequence₂ a₀ a₁ a₂ i) = (#Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) := by
   rcases i with (_ | _ | _ | i) <;>
-    simp only [sequence₂, mk_ulift, mk_fintype, Fintypeₓ.card_of_is_empty, Nat.cast_zeroₓ, lift_zero]
+    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_is_empty, Nat.cast_zero, lift_zero]
 
 @[simp]
 theorem sum_card : (Cardinal.sum fun i => #Sequence₂ a₀ a₁ a₂ i) = (#a₀) + (#a₁) + (#a₂) := by
   rw [sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ]
-  simp [add_assocₓ]
+  simp [add_assoc]
 
 end Sequence₂
 
@@ -192,12 +192,12 @@ instance is_algebraic_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : Is
 
 instance subsingleton_mk₂_functions {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h0 : Subsingleton c] [h1 : Subsingleton f₁]
     [h2 : Subsingleton f₂] {n : ℕ} : Subsingleton ((Language.mk₂ c f₁ f₂ r₁ r₂).Functions n) :=
-  Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elimₓ x⟩
+  Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elim x⟩
 
 instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : Subsingleton r₁] [h2 : Subsingleton r₂]
     {n : ℕ} : Subsingleton ((Language.mk₂ c f₁ f₂ r₁ r₂).Relations n) :=
-  Nat.casesOn n ⟨fun x => Pempty.elimₓ x⟩ fun n =>
-    Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elimₓ x⟩
+  Nat.casesOn n ⟨fun x => Pempty.elim x⟩ fun n =>
+    Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elim x⟩
 
 @[simp]
 theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_add_card_relations]
@@ -221,15 +221,15 @@ theorem card_relations_sum (i : ℕ) :
 theorem card_sum : (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card := by
   simp only [card_eq_card_functions_add_card_relations, card_functions_sum, card_relations_sum, sum_add_distrib',
     lift_add, lift_sum, lift_lift]
-  rw [add_assocₓ, ← add_assocₓ (Cardinal.sum fun i => (#L'.functions i).lift),
-    add_commₓ (Cardinal.sum fun i => (#L'.functions i).lift), add_assocₓ, add_assocₓ]
+  rw [add_assoc, ← add_assoc (Cardinal.sum fun i => (#L'.functions i).lift),
+    add_comm (Cardinal.sum fun i => (#L'.functions i).lift), add_assoc, add_assoc]
 
 @[simp]
 theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
     (Language.mk₂ c f₁ f₂ r₁ r₂).card =
       Cardinal.lift.{v} (#c) + Cardinal.lift.{v} (#f₁) + Cardinal.lift.{v} (#f₂) + Cardinal.lift.{u} (#r₁) +
         Cardinal.lift.{u} (#r₂) :=
-  by simp [card_eq_card_functions_add_card_relations, add_assocₓ]
+  by simp [card_eq_card_functions_add_card_relations, add_assoc]
 
 variable (L) (M : Type w)
 
@@ -238,16 +238,16 @@ variable (L) (M : Type w)
   (modeled as `(fin n → M)`) to `M`, and a relation of arity `n` is a function from tuples of length
   `n` to `Prop`. -/
 @[ext]
-class Structure where
-  funMap : ∀ {n}, L.Functions n → (Finₓ n → M) → M
-  rel_map : ∀ {n}, L.Relations n → (Finₓ n → M) → Prop
+class StructureCat where
+  funMap : ∀ {n}, L.Functions n → (Fin n → M) → M
+  rel_map : ∀ {n}, L.Relations n → (Fin n → M) → Prop
 
-variable (N : Type w') [L.Structure M] [L.Structure N]
+variable (N : Type w') [L.StructureCat M] [L.StructureCat N]
 
-open Structure
+open StructureCat
 
 /-- Used for defining `first_order.language.Theory.Model.inhabited`. -/
-def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.Structure α :=
+def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.StructureCat α :=
   ⟨default, default⟩
 
 /-! ### Maps -/
@@ -282,13 +282,13 @@ structure Equiv extends M ≃ N where
 -- mathport name: language.equiv
 localized [FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
 
-variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]
+variable {L M N} {P : Type _} [L.StructureCat P] {Q : Type _} [L.StructureCat Q]
 
-instance : CoeTₓ L.Constants M :=
+instance : CoeT L.Constants M :=
   ⟨fun c => funMap c default⟩
 
-theorem fun_map_eq_coe_constants {c : L.Constants} {x : Finₓ 0 → M} : funMap c x = c :=
-  congr rfl (funext Finₓ.elim0)
+theorem fun_map_eq_coe_constants {c : L.Constants} {x : Fin 0 → M} : funMap c x = c :=
+  congr rfl (funext Fin.elim0)
 
 /-- Given a language with a nonempty type of constants, any structure will be nonempty. This cannot
   be a global instance, because `L` becomes a metavariable. -/
@@ -297,26 +297,26 @@ theorem nonempty_of_nonempty_constants [h : Nonempty L.Constants] : Nonempty M :
 
 /-- The function map for `first_order.language.Structure₂`. -/
 def funMap₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M) (f₂' : f₂ → M → M → M) :
-    ∀ {n}, (Language.mk₂ c f₁ f₂ r₁ r₂).Functions n → (Finₓ n → M) → M
+    ∀ {n}, (Language.mk₂ c f₁ f₂ r₁ r₂).Functions n → (Fin n → M) → M
   | 0, f, _ => c' f
   | 1, f, x => f₁' f (x 0)
   | 2, f, x => f₂' f (x 0) (x 1)
-  | n + 3, f, _ => Pempty.elimₓ f
+  | n + 3, f, _ => Pempty.elim f
 
 /-- The relation map for `first_order.language.Structure₂`. -/
 def RelMap₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (r₁' : r₁ → Set M) (r₂' : r₂ → M → M → Prop) :
-    ∀ {n}, (Language.mk₂ c f₁ f₂ r₁ r₂).Relations n → (Finₓ n → M) → Prop
-  | 0, r, _ => Pempty.elimₓ r
+    ∀ {n}, (Language.mk₂ c f₁ f₂ r₁ r₂).Relations n → (Fin n → M) → Prop
+  | 0, r, _ => Pempty.elim r
   | 1, r, x => x 0 ∈ r₁' r
   | 2, r, x => r₂' r (x 0) (x 1)
-  | n + 3, r, _ => Pempty.elimₓ r
+  | n + 3, r, _ => Pempty.elim r
 
 /-- A structure constructor to match `first_order.language₂`. -/
-protected def Structure.mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M) (f₂' : f₂ → M → M → M)
-    (r₁' : r₁ → Set M) (r₂' : r₂ → M → M → Prop) : (Language.mk₂ c f₁ f₂ r₁ r₂).Structure M :=
+protected def StructureCat.mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M)
+    (f₂' : f₂ → M → M → M) (r₁' : r₁ → Set M) (r₂' : r₂ → M → M → Prop) : (Language.mk₂ c f₁ f₂ r₁ r₂).StructureCat M :=
   ⟨fun _ => funMap₂ c' f₁' f₂', fun _ => RelMap₂ r₁' r₂'⟩
 
-namespace Structure
+namespace StructureCat
 
 variable {c f₁ f₂ : Type u} {r₁ r₂ : Type v}
 
@@ -325,57 +325,58 @@ variable {c' : c → M} {f₁' : f₁ → M → M} {f₂' : f₂ → M → M →
 variable {r₁' : r₁ → Set M} {r₂' : r₂ → M → M → Prop}
 
 @[simp]
-theorem fun_map_apply₀ (c₀ : c) {x : Finₓ 0 → M} :
-    @Structure.funMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 0 c₀ x = c' c₀ :=
+theorem fun_map_apply₀ (c₀ : c) {x : Fin 0 → M} :
+    @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 0 c₀ x = c' c₀ :=
   rfl
 
 @[simp]
-theorem fun_map_apply₁ (f : f₁) (x : M) : @Structure.funMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 1 f ![x] = f₁' f x :=
+theorem fun_map_apply₁ (f : f₁) (x : M) :
+    @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 1 f ![x] = f₁' f x :=
   rfl
 
 @[simp]
 theorem fun_map_apply₂ (f : f₂) (x y : M) :
-    @Structure.funMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 2 f ![x, y] = f₂' f x y :=
+    @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 2 f ![x, y] = f₂' f x y :=
   rfl
 
 @[simp]
 theorem rel_map_apply₁ (r : r₁) (x : M) :
-    @Structure.RelMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 1 r ![x] = (x ∈ r₁' r) :=
+    @StructureCat.RelMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 1 r ![x] = (x ∈ r₁' r) :=
   rfl
 
 @[simp]
 theorem rel_map_apply₂ (r : r₂) (x y : M) :
-    @Structure.RelMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 2 r ![x, y] = r₂' r x y :=
+    @StructureCat.RelMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 2 r ![x, y] = r₂' r x y :=
   rfl
 
-end Structure
+end StructureCat
 
 /-- `hom_class L F M N` states that `F` is a type of `L`-homomorphisms. You should extend this
   typeclass when you extend `first_order.language.hom`. -/
-class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N] [L.Structure M]
-  [L.Structure N] where
+class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
+  [L.StructureCat M] [L.StructureCat N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
 
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
 class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
-  [L.Structure M] [L.Structure N] where
+  [L.StructureCat M] [L.StructureCat N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
 
-instance (priority := 100) StrongHomClass.homClass {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N]
-    [StrongHomClass L F M N] : HomClass L F M N where
+instance (priority := 100) StrongHomClass.homClass {F M N} [L.StructureCat M] [L.StructureCat N]
+    [FunLike F M fun _ => N] [StrongHomClass L F M N] : HomClass L F M N where
   map_fun := StrongHomClass.map_fun
-  map_rel := fun φ n R x => (StrongHomClass.map_rel φ R x).2
+  map_rel φ n R x := (StrongHomClass.map_rel φ R x).2
 
 /-- Not an instance to avoid a loop. -/
-def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.Structure M] [L.Structure N]
+def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.StructureCat M] [L.StructureCat N]
     [FunLike F M fun _ => N] [HomClass L F M N] : StrongHomClass L F M N where
   map_fun := HomClass.map_fun
-  map_rel := fun φ n R x => (IsAlgebraic.empty_relations n).elim R
+  map_rel φ n R x := (IsAlgebraic.empty_relations n).elim R
 
-theorem HomClass.map_constants {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N] [HomClass L F M N]
+theorem HomClass.map_constants {F M N} [L.StructureCat M] [L.StructureCat N] [FunLike F M fun _ => N] [HomClass L F M N]
     (φ : F) (c : L.Constants) : φ c = c :=
   (HomClass.map_fun φ c default).trans (congr rfl (funext default))
 
@@ -383,7 +384,7 @@ namespace Hom
 
 instance funLike : FunLike (M →[L] N) M fun _ => N where
   coe := Hom.toFun
-  coe_injective' := fun f g h => by
+  coe_injective' f g h := by
     cases f
     cases g
     cases h
@@ -411,7 +412,7 @@ theorem ext_iff {f g : M →[L] N} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
 @[simp]
-theorem map_fun (φ : M →[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) :=
+theorem map_fun (φ : M →[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n → M) : φ (funMap f x) = funMap f (φ ∘ x) :=
   HomClass.map_fun φ f x
 
 @[simp]
@@ -419,7 +420,7 @@ theorem map_constants (φ : M →[L] N) (c : L.Constants) : φ c = c :=
   HomClass.map_constants φ c
 
 @[simp]
-theorem map_rel (φ : M →[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r x → RelMap r (φ ∘ x) :=
+theorem map_rel (φ : M →[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n → M) : RelMap r x → RelMap r (φ ∘ x) :=
   HomClass.map_rel φ r x
 
 variable (L) (M)
@@ -441,7 +442,7 @@ theorem id_apply (x : M) : id L M x = x :=
 @[trans]
 def comp (hnp : N →[L] P) (hmn : M →[L] N) : M →[L] P where
   toFun := hnp ∘ hmn
-  map_rel' := fun _ _ _ h => by simp [h]
+  map_rel' _ _ _ h := by simp [h]
 
 @[simp]
 theorem comp_apply (g : N →[L] P) (f : M →[L] N) (x : M) : g.comp f x = g (f x) :=
@@ -454,15 +455,15 @@ theorem comp_assoc (f : M →[L] N) (g : N →[L] P) (h : P →[L] Q) : (h.comp 
 end Hom
 
 /-- Any element of a `hom_class` can be realized as a first_order homomorphism. -/
-def HomClass.toHom {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N] [HomClass L F M N] : F → M →[L] N :=
-  fun φ => ⟨φ, fun _ => HomClass.map_fun φ, fun _ => HomClass.map_rel φ⟩
+def HomClass.toHom {F M N} [L.StructureCat M] [L.StructureCat N] [FunLike F M fun _ => N] [HomClass L F M N] :
+    F → M →[L] N := fun φ => ⟨φ, fun _ => HomClass.map_fun φ, fun _ => HomClass.map_rel φ⟩
 
 namespace Embedding
 
 instance embeddingLike : EmbeddingLike (M ↪[L] N) M N where
-  coe := fun f => f.toFun
-  injective' := fun f => f.toEmbedding.Injective
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  injective' f := f.toEmbedding.Injective
+  coe_injective' f g h := by
     cases f
     cases g
     simp only
@@ -477,7 +478,7 @@ instance hasCoeToFun : CoeFun (M ↪[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem map_fun (φ : M ↪[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) :=
+theorem map_fun (φ : M ↪[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n → M) : φ (funMap f x) = funMap f (φ ∘ x) :=
   HomClass.map_fun φ f x
 
 @[simp]
@@ -485,7 +486,7 @@ theorem map_constants (φ : M ↪[L] N) (c : L.Constants) : φ c = c :=
   HomClass.map_constants φ c
 
 @[simp]
-theorem map_rel (φ : M ↪[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
+theorem map_rel (φ : M ↪[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
   StrongHomClass.map_rel φ r x
 
 /-- A first-order embedding is also a first-order homomorphism. -/
@@ -566,18 +567,18 @@ theorem comp_to_hom (hnp : N ↪[L] P) (hmn : M ↪[L] N) : (hnp.comp hmn).toHom
 end Embedding
 
 /-- Any element of an injective `strong_hom_class` can be realized as a first_order embedding. -/
-def StrongHomClass.toEmbedding {F M N} [L.Structure M] [L.Structure N] [EmbeddingLike F M N] [StrongHomClass L F M N] :
-    F → M ↪[L] N := fun φ =>
+def StrongHomClass.toEmbedding {F M N} [L.StructureCat M] [L.StructureCat N] [EmbeddingLike F M N]
+    [StrongHomClass L F M N] : F → M ↪[L] N := fun φ =>
   ⟨⟨φ, EmbeddingLike.injective φ⟩, fun _ => StrongHomClass.map_fun φ, fun _ => StrongHomClass.map_rel φ⟩
 
-namespace Equivₓ
+namespace Equiv
 
 instance : EquivLike (M ≃[L] N) M N where
-  coe := fun f => f.toFun
-  inv := fun f => f.invFun
-  left_inv := fun f => f.left_inv
-  right_inv := fun f => f.right_inv
-  coe_injective' := fun f g h₁ h₂ => by
+  coe f := f.toFun
+  inv f := f.invFun
+  left_inv f := f.left_inv
+  right_inv f := f.right_inv
+  coe_injective' f g h₁ h₂ := by
     cases f
     cases g
     simp only
@@ -593,14 +594,14 @@ instance : StrongHomClass L (M ≃[L] N) M N where
 def symm (f : M ≃[L] N) : N ≃[L] M :=
   { f.toEquiv.symm with
     map_fun' := fun n f' x => by
-      simp only [Equivₓ.to_fun_as_coe]
-      rw [Equivₓ.symm_apply_eq]
+      simp only [Equiv.to_fun_as_coe]
+      rw [Equiv.symm_apply_eq]
       refine' Eq.trans _ (f.map_fun' f' (f.to_equiv.symm ∘ x)).symm
-      rw [← Function.comp.assoc, Equivₓ.to_fun_as_coe, Equivₓ.self_comp_symm, Function.comp.left_id],
+      rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id],
     map_rel' := fun n r x => by
-      simp only [Equivₓ.to_fun_as_coe]
+      simp only [Equiv.to_fun_as_coe]
       refine' (f.map_rel' r (f.to_equiv.symm ∘ x)).symm.trans _
-      rw [← Function.comp.assoc, Equivₓ.to_fun_as_coe, Equivₓ.self_comp_symm, Function.comp.left_id] }
+      rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id] }
 
 instance hasCoeToFun : CoeFun (M ≃[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
@@ -614,7 +615,7 @@ theorem symm_apply_apply (f : M ≃[L] N) (a : M) : f.symm (f a) = a :=
   f.toEquiv.symm_apply_apply a
 
 @[simp]
-theorem map_fun (φ : M ≃[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) :=
+theorem map_fun (φ : M ≃[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n → M) : φ (funMap f x) = funMap f (φ ∘ x) :=
   HomClass.map_fun φ f x
 
 @[simp]
@@ -622,7 +623,7 @@ theorem map_constants (φ : M ≃[L] N) (c : L.Constants) : φ c = c :=
   HomClass.map_constants φ c
 
 @[simp]
-theorem map_rel (φ : M ≃[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
+theorem map_rel (φ : M ≃[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
   StrongHomClass.map_rel φ r x
 
 /-- A first-order equivalence is also a first-order embedding. -/
@@ -668,7 +669,7 @@ variable (L) (M)
 
 /-- The identity equivalence from a structure to itself -/
 @[refl]
-def refl : M ≃[L] M where toEquiv := Equivₓ.refl M
+def refl : M ≃[L] M where toEquiv := Equiv.refl M
 
 variable {L} {M}
 
@@ -692,21 +693,21 @@ theorem comp_apply (g : N ≃[L] P) (f : M ≃[L] N) (x : M) : g.comp f x = g (f
 theorem comp_assoc (f : M ≃[L] N) (g : N ≃[L] P) (h : P ≃[L] Q) : (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 
-end Equivₓ
+end Equiv
 
 /-- Any element of a bijective `strong_hom_class` can be realized as a first_order isomorphism. -/
-def StrongHomClass.toEquiv {F M N} [L.Structure M] [L.Structure N] [EquivLike F M N] [StrongHomClass L F M N] :
+def StrongHomClass.toEquiv {F M N} [L.StructureCat M] [L.StructureCat N] [EquivLike F M N] [StrongHomClass L F M N] :
     F → M ≃[L] N := fun φ =>
   ⟨⟨φ, EquivLike.inv φ, EquivLike.left_inv φ, EquivLike.right_inv φ⟩, fun _ => HomClass.map_fun φ, fun _ =>
     StrongHomClass.map_rel φ⟩
 
 section SumStructure
 
-variable (L₁ L₂ : Language) (S : Type _) [L₁.Structure S] [L₂.Structure S]
+variable (L₁ L₂ : Language) (S : Type _) [L₁.StructureCat S] [L₂.StructureCat S]
 
-instance sumStructure : (L₁.Sum L₂).Structure S where
-  funMap := fun n => Sum.elim funMap funMap
-  rel_map := fun n => Sum.elim RelMap RelMap
+instance sumStructure : (L₁.Sum L₂).StructureCat S where
+  funMap n := Sum.elim funMap funMap
+  rel_map n := Sum.elim RelMap RelMap
 
 variable {L₁ L₂ S}
 
@@ -732,24 +733,24 @@ section Empty
 
 section
 
-variable [Language.empty.Structure M] [Language.empty.Structure N]
+variable [Language.empty.StructureCat M] [Language.empty.StructureCat N]
 
 @[simp]
 theorem empty.nonempty_embedding_iff :
     Nonempty (M ↪[language.empty] N) ↔ Cardinal.lift.{w'} (#M) ≤ Cardinal.lift.{w} (#N) :=
-  trans ⟨Nonempty.mapₓ fun f => f.toEmbedding, Nonempty.mapₓ fun f => { toEmbedding := f }⟩ Cardinal.lift_mk_le'.symm
+  trans ⟨Nonempty.map fun f => f.toEmbedding, Nonempty.map fun f => { toEmbedding := f }⟩ Cardinal.lift_mk_le'.symm
 
 @[simp]
 theorem empty.nonempty_equiv_iff :
     Nonempty (M ≃[language.empty] N) ↔ Cardinal.lift.{w'} (#M) = Cardinal.lift.{w} (#N) :=
-  trans ⟨Nonempty.mapₓ fun f => f.toEquiv, Nonempty.mapₓ fun f => { toEquiv := f }⟩ Cardinal.lift_mk_eq'.symm
+  trans ⟨Nonempty.map fun f => f.toEquiv, Nonempty.map fun f => { toEquiv := f }⟩ Cardinal.lift_mk_eq'.symm
 
 end
 
-instance emptyStructure : Language.empty.Structure M :=
+instance emptyStructure : Language.empty.StructureCat M :=
   ⟨fun _ => Empty.elim, fun _ => Empty.elim⟩
 
-instance : Unique (Language.empty.Structure M) :=
+instance : Unique (Language.empty.StructureCat M) :=
   ⟨⟨Language.emptyStructure⟩, fun a => by
     ext n f
     · exact Empty.elim f
@@ -778,17 +779,17 @@ end Language
 
 end FirstOrder
 
-namespace Equivₓ
+namespace Equiv
 
-open FirstOrder FirstOrder.Language FirstOrder.Language.Structure
+open FirstOrder FirstOrder.Language FirstOrder.Language.StructureCat
 
 open FirstOrder
 
-variable {L : Language} {M : Type _} {N : Type _} [L.Structure M]
+variable {L : Language} {M : Type _} {N : Type _} [L.StructureCat M]
 
 /-- A structure induced by a bijection. -/
 @[simps]
-def inducedStructure (e : M ≃ N) : L.Structure N :=
+def inducedStructure (e : M ≃ N) : L.StructureCat N :=
   ⟨fun n f x => e (funMap f (e.symm ∘ x)), fun n r x => RelMap r (e.symm ∘ x)⟩
 
 /-- A bijection as a first-order isomorphism with the induced structure on the codomain. -/
@@ -797,5 +798,5 @@ def inducedStructureEquiv (e : M ≃ N) : @Language.Equiv L M N _ (inducedStruct
   { e with map_fun' := fun n f x => by simp [← Function.comp.assoc e.symm e x],
     map_rel' := fun n r x => by simp [← Function.comp.assoc e.symm e x] }
 
-end Equivₓ
+end Equiv
 

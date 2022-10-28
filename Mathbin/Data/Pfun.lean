@@ -184,16 +184,16 @@ theorem bind_apply (f : α →. β) (g : β → α →. γ) (a : α) : f.bind g 
 /-- The monad `map` function, pointwise `part.map` -/
 def map (f : β → γ) (g : α →. β) : α →. γ := fun a => (g a).map f
 
-instance : Monadₓ (Pfun α) where
+instance : Monad (Pfun α) where
   pure := @Pfun.pure _
   bind := @Pfun.bind _
   map := @Pfun.map _
 
-instance : IsLawfulMonad (Pfun α) where
-  bind_pure_comp_eq_map := fun β γ f x => funext fun a => Part.bind_some_eq_map _ _
-  id_map := fun β f => by funext a <;> dsimp [Functor.map, Pfun.map] <;> cases f a <;> rfl
-  pure_bind := fun β γ x f => funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
-  bind_assoc := fun β γ δ f g k => funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
+instance : LawfulMonad (Pfun α) where
+  bind_pure_comp_eq_map β γ f x := funext fun a => Part.bind_some_eq_map _ _
+  id_map β f := by funext a <;> dsimp [Functor.map, Pfun.map] <;> cases f a <;> rfl
+  pure_bind β γ x f := funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
+  bind_assoc β γ δ f g k := funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
 
 theorem pure_defined (p : Set α) (x : β) : p ⊆ (@Pfun.pure α _ x).Dom :=
   p.subset_univ
@@ -275,7 +275,7 @@ theorem fix_fwd {f : α →. Sum β α} (a a' : α) (ha' : Sum.inr a' ∈ f a) :
     
 
 /-- A recursion principle for `pfun.fix`. -/
-@[elabAsElim]
+@[elab_as_elim]
 def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
     (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') : C a := by
   replace h := Part.mem_assert_iff.1 h
@@ -292,7 +292,7 @@ def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (
 /-- Another induction lemma for `b ∈ f.fix a` which allows one to prove a predicate `P` holds for
 `a` given that `f a` inherits `P` from `a` and `P` holds for preimages of `b`.
 -/
-@[elabAsElim]
+@[elab_as_elim]
 def fixInduction' (f : α →. Sum β α) (b : β) {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
     (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) : C a := by
@@ -461,25 +461,25 @@ theorem comp_id (f : α →. β) : f.comp (Pfun.id α) = f :=
 @[simp]
 theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.Preimage f.Dom := by
   ext
-  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_propₓ, ← exists_and_distrib_rightₓ]
+  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right]
   rw [exists_comm]
-  simp_rw [And.comm]
+  simp_rw [and_comm]
 
 @[simp]
 theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) : (f.comp g).Preimage s = g.Preimage (f.Preimage s) := by
   ext
-  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_propₓ, ← exists_and_distrib_rightₓ, ←
-    exists_and_distrib_leftₓ]
+  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
+    exists_and_distrib_left]
   rw [exists_comm]
-  simp_rw [and_assocₓ, And.comm]
+  simp_rw [and_assoc', and_comm]
 
 @[simp]
 theorem _root_.part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) : a.bind (f.comp g) = (a.bind g).bind f := by
   ext c
-  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_propₓ, ← exists_and_distrib_rightₓ, ←
-    exists_and_distrib_leftₓ]
+  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
+    exists_and_distrib_left]
   rw [exists_comm]
-  simp_rw [and_assocₓ]
+  simp_rw [and_assoc']
 
 @[simp]
 theorem comp_assoc (f : γ →. δ) (g : β →. γ) (h : α →. β) : (f.comp g).comp h = f.comp (g.comp h) :=
@@ -505,11 +505,14 @@ theorem prod_lift_apply (f : α →. β) (g : α →. γ) (x : α) :
     f.prodLift g x = ⟨(f x).Dom ∧ (g x).Dom, fun h => ((f x).get h.1, (g x).get h.2)⟩ :=
   rfl
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∃ , »((hp hq), «expr ∧ »(«expr = »((f x).get hp, y.1), «expr = »((g x).get hq, y.2)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem mem_prod_lift {f : α →. β} {g : α →. γ} {x : α} {y : β × γ} : y ∈ f.prodLift g x ↔ y.1 ∈ f x ∧ y.2 ∈ g x := by
-  trans ∃ hp hq, (f x).get hp = y.1 ∧ (g x).get hq = y.2
-  · simp only [prod_lift, Part.mem_mk_iff, And.exists, Prod.ext_iffₓ]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∃ , »((hp hq), «expr ∧ »(«expr = »((f x).get hp, y.1), «expr = »((g x).get hq, y.2)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+  · simp only [prod_lift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
     
-  · simpa only [exists_and_distrib_leftₓ, exists_and_distrib_rightₓ]
+  · simpa only [exists_and_distrib_left, exists_and_distrib_right]
     
 
 /-- Product of partial functions. -/
@@ -529,12 +532,15 @@ theorem prod_map_apply (f : α →. γ) (g : β →. δ) (x : α × β) :
     f.prod_map g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
   rfl
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∃ , »((hp hq), «expr ∧ »(«expr = »((f x.1).get hp, y.1), «expr = »((g x.2).get hq, y.2)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem mem_prod_map {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ × δ} :
     y ∈ f.prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 := by
-  trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
-  · simp only [prod_mapₓ, Part.mem_mk_iff, And.exists, Prod.ext_iffₓ]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∃ , »((hp hq), «expr ∧ »(«expr = »((f x.1).get hp, y.1), «expr = »((g x.2).get hq, y.2)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+  · simp only [prod_map, Part.mem_mk_iff, And.exists, Prod.ext_iff]
     
-  · simpa only [exists_and_distrib_leftₓ, exists_and_distrib_rightₓ]
+  · simpa only [exists_and_distrib_left, exists_and_distrib_right]
     
 
 @[simp]

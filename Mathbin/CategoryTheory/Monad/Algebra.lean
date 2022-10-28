@@ -31,7 +31,7 @@ universe v₁ u₁
 -- morphism levels before object levels. See note [category_theory universes].
 variable {C : Type u₁} [Category.{v₁} C]
 
-namespace Monadₓ
+namespace Monad
 
 /-- An Eilenberg-Moore algebra for a monad `T`.
     cf Definition 5.2.3 in [Riehl][riehl2017]. -/
@@ -118,14 +118,14 @@ variable (T : Monad C)
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the algebraic structure. -/
 @[simps]
 def forget : Algebra T ⥤ C where
-  obj := fun A => A.A
-  map := fun A B f => f.f
+  obj A := A.A
+  map A B f := f.f
 
 /-- The free functor from the Eilenberg-Moore category, constructing an algebra for any object. -/
 @[simps]
 def free : C ⥤ Algebra T where
-  obj := fun X => { A := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
-  map := fun X Y f => { f := T.map f, h' := T.μ.naturality _ }
+  obj X := { A := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
+  map X Y f := { f := T.map f, h' := T.μ.naturality _ }
 
 instance [Inhabited C] : Inhabited (Algebra T) :=
   ⟨(free T).obj default⟩
@@ -162,7 +162,7 @@ theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f
           simp },
       by tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms T.forget where reflects := fun A B => algebra_iso_of_iso T
+instance forget_reflects_iso : ReflectsIsomorphisms T.forget where reflects A B := algebra_iso_of_iso T
 
 instance forget_faithful : Faithful T.forget where
 
@@ -192,7 +192,7 @@ theorem of_right_adjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
 -/
 @[simps]
 def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra T₁ ⥤ Algebra T₂ where
-  obj := fun A =>
+  obj A :=
     { A := A.A, a := h.app A.A ≫ A.a,
       unit' := by
         dsimp
@@ -200,7 +200,7 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
       assoc' := by
         dsimp
         simp [A.assoc] }
-  map := fun A₁ A₂ f => { f := f.f }
+  map A₁ A₂ f := { f := f.f }
 
 /-- The identity monad morphism induces the identity functor from the category of algebras to itself.
 -/
@@ -268,7 +268,7 @@ theorem algebra_equiv_of_iso_monads_comp_forget {T₁ T₂ : Monad C} (h : T₁ 
     algebraFunctorOfMonadHom h ⋙ forget _ = forget _ :=
   rfl
 
-end Monadₓ
+end Monad
 
 namespace Comonad
 
@@ -355,15 +355,15 @@ variable (G : Comonad C)
 structure. -/
 @[simps]
 def forget : Coalgebra G ⥤ C where
-  obj := fun A => A.A
-  map := fun A B f => f.f
+  obj A := A.A
+  map A B f := f.f
 
 /-- The cofree functor from the Eilenberg-Moore category, constructing a coalgebra for any
 object. -/
 @[simps]
 def cofree : C ⥤ Coalgebra G where
-  obj := fun X => { A := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
-  map := fun X Y f => { f := G.map f, h' := (G.δ.naturality _).symm }
+  obj X := { A := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
+  map X Y f := { f := G.map f, h' := (G.δ.naturality _).symm }
 
 -- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
 -- those are added too
@@ -398,7 +398,7 @@ theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsI
           simp },
       by tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms G.forget where reflects := fun A B => coalgebra_iso_of_iso G
+instance forget_reflects_iso : ReflectsIsomorphisms G.forget where reflects A B := coalgebra_iso_of_iso G
 
 instance forget_faithful : Faithful (forget G) where
 

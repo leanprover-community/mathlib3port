@@ -180,7 +180,7 @@ theorem kernel_subobject_comp_le (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ 
 @[simp]
 theorem kernel_subobject_comp_mono (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [Mono h] :
     kernelSubobject (f ≫ h) = kernelSubobject f :=
-  le_antisymmₓ (le_kernel_subobject _ _ ((cancel_mono h).mp (by simp))) (kernel_subobject_comp_le f h)
+  le_antisymm (le_kernel_subobject _ _ ((cancel_mono h).mp (by simp))) (kernel_subobject_comp_le f h)
 
 instance kernel_subobject_comp_mono_is_iso (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [Mono h] :
     IsIso (Subobject.ofLe _ _ (kernel_subobject_comp_le f h)) := by
@@ -366,11 +366,11 @@ theorem image_subobject_mono (f : X ⟶ Y) [Mono f] : imageSubobject f = mk f :=
 /-- Precomposing by an isomorphism does not change the image subobject. -/
 theorem image_subobject_iso_comp [HasEqualizers C] {X' : C} (h : X' ⟶ X) [IsIso h] (f : X ⟶ Y) [HasImage f] :
     imageSubobject (h ≫ f) = imageSubobject f :=
-  le_antisymmₓ (image_subobject_comp_le h f) (Subobject.mk_le_mk_of_comm (inv (image.preComp h f)) (by simp))
+  le_antisymm (image_subobject_comp_le h f) (Subobject.mk_le_mk_of_comm (inv (image.preComp h f)) (by simp))
 
 theorem image_subobject_le {A B : C} {X : Subobject B} (f : A ⟶ B) [HasImage f] (h : A ⟶ X) (w : h ≫ X.arrow = f) :
     imageSubobject f ≤ X :=
-  Subobject.le_of_comm ((imageSubobjectIso f).Hom ≫ image.lift { i := (X : C), e := h, m := X.arrow }) (by simp)
+  Subobject.le_of_comm ((imageSubobjectIso f).Hom ≫ image.lift { I := (X : C), e := h, m := X.arrow }) (by simp)
 
 theorem image_subobject_le_mk {A B : C} {X : C} (g : X ⟶ B) [Mono g] (f : A ⟶ B) [HasImage f] (h : A ⟶ X)
     (w : h ≫ g = f) : imageSubobject f ≤ Subobject.mk g :=

@@ -173,10 +173,10 @@ theorem tendsto_iff_forall_compact_tendsto_uniformly_on' {ι : Type u₃} {p : F
     Filter.Tendsto F p (@nhds _ compactConvergenceTopology f) ↔
       ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K :=
   by
-  simp only [(has_basis_nhds_compact_convergence f).tendsto_right_iff, TendstoUniformlyOn, and_imp, Prod.forallₓ]
-  refine' forall_congrₓ fun K => _
+  simp only [(has_basis_nhds_compact_convergence f).tendsto_right_iff, TendstoUniformlyOn, and_imp, Prod.forall]
+  refine' forall_congr fun K => _
   rw [forall_swap]
-  exact forall₃_congrₓ fun hK V hV => Iff.rfl
+  exact forall₃_congr fun hK V hV => Iff.rfl
 
 /-- Any point of `compact_open.gen K U` is also an interior point wrt the topology of compact
 convergence.
@@ -195,7 +195,7 @@ topology.
 Since `compact_conv_nhd K V f` are a neighbourhood basis at `f` for each `f`, it follows that
 the compact-open topology is at least as fine as the topology of compact convergence. -/
 theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : V ∈ 𝓤 β) :
-    ∃ (ι : Sort (u₁ + 1))(_ : Fintypeₓ ι)(C : ι → Set α)(hC : ∀ i, IsCompact (C i))(U : ι → Set β)(hU :
+    ∃ (ι : Sort (u₁ + 1))(_ : Fintype ι)(C : ι → Set α)(hC : ∀ i, IsCompact (C i))(U : ι → Set β)(hU :
       ∀ i, IsOpen (U i)),
       (f ∈ ⋂ i, CompactOpen.Gen (C i) (U i)) ∧ (⋂ i, CompactOpen.Gen (C i) (U i)) ⊆ CompactConvNhd K V f :=
   by
@@ -205,7 +205,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
   have hU : ∀ x, IsOpen (U x) := fun x => f.continuous.is_open_preimage _ (is_open_ball _ hZ₄)
   have hUK : K ⊆ ⋃ x : K, U (x : K) := by
     intro x hx
-    simp only [exists_propₓ, mem_Union, Union_coe_set, mem_preimage]
+    simp only [exists_prop, mem_Union, Union_coe_set, mem_preimage]
     exact ⟨(⟨x, hx⟩ : K), by simp [hx, mem_ball_self (f x) hZ₁]⟩
   obtain ⟨t, ht⟩ := hK.elim_finite_subcover _ (fun x : K => hU x.val) hUK
   let C : t → Set α := fun i => K ∩ Closure (U ((i : K) : α))
@@ -230,7 +230,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
       _ ⊆ ball (f x) W := hZW
       
   refine'
-    ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right is_closed_closure, fun i => ball (f ((i : K) : α)) W, fun i =>
+    ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right isClosedClosure, fun i => ball (f ((i : K) : α)) W, fun i =>
       is_open_ball _ hW₄, by simp [compact_open.gen, hfC], fun g hg x hx => hW₃ (mem_comp_rel.mpr _)⟩
   simp only [mem_Inter, compact_open.gen, mem_set_of_eq, image_subset_iff] at hg
   obtain ⟨y, hy⟩ := mem_Union.mp (hC hx)
@@ -240,7 +240,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
 theorem compact_open_eq_compact_convergence :
     ContinuousMap.compactOpen = (compactConvergenceTopology : TopologicalSpace C(α, β)) := by
   rw [compact_convergence_topology, ContinuousMap.compactOpen]
-  refine' le_antisymmₓ _ _
+  refine' le_antisymm _ _
   · refine' fun X hX => is_open_iff_forall_mem_open.mpr fun f hf => _
     have hXf : X ∈ (compact_convergence_filter_basis f).filter := by
       rw [← nhds_compact_convergence]
@@ -252,7 +252,7 @@ theorem compact_open_eq_compact_convergence :
       ⟨⋂ i, compact_open.gen (C i) (U i), h₂.trans hXf, is_open_Inter fun i => ContinuousMap.is_open_gen (hC i) (hU i),
         h₁⟩
     
-  · simp only [le_generate_from_iff_subset_is_open, and_imp, exists_propₓ, forall_exists_index, set_of_subset_set_of]
+  · simp only [le_generate_from_iff_subset_is_open, and_imp, exists_prop, forall_exists_index, set_of_subset_set_of]
     rintro - K hK U hU rfl f hf
     obtain ⟨V, hV, hV', hVf⟩ := compact_conv_nhd_subset_compact_open f hK hU hf
     exact Filter.mem_of_superset (FilterBasis.mem_filter_of_mem _ ⟨⟨K, V⟩, ⟨hK, hV⟩, rfl⟩) hVf
@@ -270,7 +270,7 @@ theorem has_basis_compact_convergence_uniformity_aux :
   refine' Filter.has_basis_binfi_principal _ compact_conv_nhd_compact_entourage_nonempty
   rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
   refine' ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, _⟩
-  simp only [le_eq_subset, Prod.forallₓ, set_of_subset_set_of, ge_iff_leₓ, Order.Preimage, ← forall_and_distrib,
+  simp only [le_eq_subset, Prod.forall, set_of_subset_set_of, ge_iff_le, Order.Preimage, ← forall_and_distrib,
     mem_inter_iff, mem_union]
   exact fun f g => forall_imp fun x => by tauto!
 
@@ -279,24 +279,24 @@ theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
     X ∈ @compactConvergenceUniformity α β _ _ ↔
       ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β),
         { fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
-  by simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_propₓ, Prod.existsₓ, and_assocₓ]
+  by simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_prop, Prod.exists, and_assoc']
 
 /-- Note that we ensure the induced topology is definitionally the compact-open topology. -/
 instance compactConvergenceUniformSpace : UniformSpace C(α, β) where
   uniformity := compactConvergenceUniformity
   refl := by
-    simp only [compact_convergence_uniformity, and_imp, Filter.le_principal_iff, Prod.forallₓ, Filter.mem_principal,
+    simp only [compact_convergence_uniformity, and_imp, Filter.le_principal_iff, Prod.forall, Filter.mem_principal,
       mem_set_of_eq, le_infi_iff, id_rel_subset]
     exact fun K V hK hV f x hx => refl_mem_uniformity hV
   symm := by
-    simp only [compact_convergence_uniformity, and_imp, Prod.forallₓ, mem_set_of_eq, Prod.fst_swapₓ,
-      Filter.tendsto_principal, Prod.snd_swapₓ, Filter.tendsto_infi]
+    simp only [compact_convergence_uniformity, and_imp, Prod.forall, mem_set_of_eq, Prod.fst_swap,
+      Filter.tendsto_principal, Prod.snd_swap, Filter.tendsto_infi]
     intro K V hK hV
     obtain ⟨V', hV', hsymm, hsub⟩ := symm_of_uniformity hV
     let X := { fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ K → (fg.1 x, fg.2 x) ∈ V' }
     have hX : X ∈ compact_convergence_uniformity := (mem_compact_convergence_uniformity X).mpr ⟨K, V', hK, hV', by simp⟩
     exact Filter.eventually_of_mem hX fun fg hfg x hx => hsub (hsymm _ _ (hfg x hx))
-  comp := fun X hX => by
+  comp X hX := by
     obtain ⟨K, V, hK, hV, hX⟩ := (mem_compact_convergence_uniformity X).mp hX
     obtain ⟨V', hV', hcomp⟩ := comp_mem_uniformity_sets hV
     let h := fun s : Set (C(α, β) × C(α, β)) => s ○ s
@@ -309,10 +309,10 @@ instance compactConvergenceUniformSpace : UniformSpace C(α, β) where
     exact (mem_compact_convergence_uniformity _).mpr ⟨K, V', hK, hV', subset.refl _⟩
   is_open_uniformity := by
     rw [compact_open_eq_compact_convergence]
-    refine' fun Y => forall₂_congrₓ fun f hf => _
-    simp only [mem_compact_convergence_nhd_filter, mem_compact_convergence_uniformity, Prod.forallₓ,
+    refine' fun Y => forall₂_congr fun f hf => _
+    simp only [mem_compact_convergence_nhd_filter, mem_compact_convergence_uniformity, Prod.forall,
       set_of_subset_set_of, compact_conv_nhd]
-    refine' exists₄_congrₓ fun K V hK hV => ⟨_, fun hY g hg => hY f g hg rfl⟩
+    refine' exists₄_congr fun K V hK hV => ⟨_, fun hY g hg => hY f g hg rfl⟩
     rintro hY g₁ g₂ hg₁ rfl
     exact hY hg₁
 

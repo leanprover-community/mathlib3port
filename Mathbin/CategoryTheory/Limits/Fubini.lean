@@ -64,10 +64,10 @@ from a `diagram_of_cones`.
 -/
 @[simps]
 def DiagramOfCones.conePoints (D : DiagramOfCones F) : J ⥤ C where
-  obj := fun j => (D.obj j).x
-  map := fun j j' f => (D.map f).Hom
-  map_id' := fun j => D.id j
-  map_comp' := fun j₁ j₂ j₃ f g => D.comp f g
+  obj j := (D.obj j).x
+  map j j' f := (D.map f).Hom
+  map_id' j := D.id j
+  map_comp' j₁ j₂ j₃ f g := D.comp f g
 
 /-- Given a diagram `D` of limit cones over the `F.obj j`, and a cone over `uncurry.obj F`,
 we can construct a cone over the diagram consisting of the cone points from `D`.
@@ -105,7 +105,7 @@ def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) (c :
 -/
 def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) {c : Cone (uncurry.obj F)}
     (P : IsLimit c) : IsLimit (coneOfConeUncurry Q c) where
-  lift := fun s =>
+  lift s :=
     P.lift
       { x := s.x,
         π :=
@@ -128,11 +128,11 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
               simp only [category.id_comp] at n
               rw [n]
               simp } }
-  fac' := fun s j => by
+  fac' s j := by
     apply (Q j).hom_ext
     intro k
     simp
-  uniq' := fun s m w => by
+  uniq' s m w := by
     refine' P.uniq { x := s.X, π := _ } m _
     rintro ⟨j, k⟩
     dsimp
@@ -151,8 +151,8 @@ and the universal cone morphisms between these.
 -/
 @[simps]
 noncomputable def DiagramOfCones.mkOfHasLimits : DiagramOfCones F where
-  obj := fun j => Limit.cone (F.obj j)
-  map := fun j j' f => { Hom := lim.map (F.map f) }
+  obj j := Limit.cone (F.obj j)
+  map j j' f := { Hom := lim.map (F.map f) }
 
 -- Satisfying the inhabited linter.
 noncomputable instance diagramOfConesInhabited : Inhabited (DiagramOfCones F) :=
@@ -240,6 +240,8 @@ variable [HasLimit G]
 
 variable [HasLimit (curry.obj G ⋙ lim)]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr limit (uncurry.obj ((@curry J _ K _ C _).obj G))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- The Fubini theorem for a functor `G : J × K ⥤ C`,
 showing that the limit of `G` can be computed as
 the limit of the limits of the functors `G.obj (j, _)`.
@@ -247,7 +249,8 @@ the limit of the limits of the functors `G.obj (j, _)`.
 noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙ lim) := by
   have i : G ≅ uncurry.obj ((@curry J _ K _ C _).obj G) := currying.symm.unit_iso.app G
   haveI : limits.has_limit (uncurry.obj ((@curry J _ K _ C _).obj G)) := has_limit_of_iso i
-  trans limit (uncurry.obj ((@curry J _ K _ C _).obj G))
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr limit (uncurry.obj ((@curry J _ K _ C _).obj G))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   apply has_limit.iso_of_nat_iso i
   exact limit_uncurry_iso_limit_comp_lim ((@curry J _ K _ C _).obj G)
 

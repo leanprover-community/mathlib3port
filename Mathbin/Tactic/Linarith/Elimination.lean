@@ -65,7 +65,7 @@ unsafe def comp_source.flatten : CompSource → rb_map ℕ ℕ
   | comp_source.scale n c => (comp_source.flatten c).map fun v => v * n
 
 /-- Formats a `comp_source` for printing. -/
-def CompSource.toString : CompSource → Stringₓ
+def CompSource.toString : CompSource → String
   | comp_source.assump e => toString e
   | comp_source.add c1 c2 => comp_source.to_string c1 ++ " + " ++ comp_source.to_string c2
   | comp_source.scale n c => toString n ++ " * " ++ comp_source.to_string c
@@ -187,7 +187,7 @@ unsafe def elim_var (c1 c2 : Comp) (a : ℕ) : Option (ℕ × ℕ) :=
   let v1 := c1.coeffOf a
   let v2 := c2.coeffOf a
   if v1 * v2 < 0 then
-    let vlcm := Nat.lcmₓ v1.natAbs v2.natAbs
+    let vlcm := Nat.lcm v1.natAbs v2.natAbs
     let v1' := vlcm / v1.natAbs
     let v2' := vlcm / v2.natAbs
     some ⟨v1', v2'⟩
@@ -226,13 +226,13 @@ unsafe structure linarith_structure : Type where
   max_var : ℕ
   comps : rb_set pcomp
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler monad_except[monad_except] pcomp[linarith.pcomp]
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler monad_except[monad_except] pcomp[linarith.pcomp] -/
 /-- The linarith monad extends an exceptional monad with a `linarith_structure` state.
 An exception produces a contradictory `pcomp`.
 -/
 @[reducible]
 unsafe def linarith_monad : Type → Type :=
-  StateTₓ linarith_structure (ExceptTₓ pcomp id)deriving Monadₓ,
+  StateT linarith_structure (ExceptT pcomp id)deriving Monad,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler monad_except[monad_except] pcomp[linarith.pcomp]»
 
 /-- Returns the current max variable. -/
@@ -254,7 +254,7 @@ unsafe def validate : linarith_monad Unit := do
 and calls `validate` to check for a contradiction.
 -/
 unsafe def update (max_var : ℕ) (comps : rb_set pcomp) : linarith_monad Unit :=
-  StateTₓ.put ⟨max_var, comps⟩ >> validate
+  StateT.put ⟨max_var, comps⟩ >> validate
 
 /-- `split_set_by_var_sign a comps` partitions the set `comps` into three parts.
 * `pos` contains the elements of `comps` in which `a` has a positive coefficient.
@@ -301,7 +301,7 @@ This map represents that we can find a contradiction by taking the sum  `∑ (co
 -/
 unsafe def fourier_motzkin.produce_certificate : certificate_oracle := fun hyps max_var =>
   let state := mk_linarith_structure hyps max_var
-  match ExceptTₓ.run (StateTₓ.run (validate >> elim_all_vars) State) with
+  match ExceptT.run (StateT.run (validate >> elim_all_vars) State) with
   | Except.ok (a, _) => tactic.failed
   | Except.error contr => return contr.src.flatten
 

@@ -16,7 +16,7 @@ The main result is `tensor_algebra.graded_algebra`, which says that the tensor a
 
 namespace TensorAlgebra
 
-variable {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 open DirectSum
 
@@ -26,12 +26,12 @@ variable (R M)
 primarily an auxiliary construction used to provide `tensor_algebra.graded_algebra`. -/
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
   DirectSum.lof R ℕ (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1 ∘ₗ
-    (ι R).codRestrict _ fun m => by simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m
+    (ι R).codRestrict _ fun m => by simpa only [pow_one] using LinearMap.mem_range_self _ m
 
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι R M m =
       DirectSum.of (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1
-        ⟨ι R m, by simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m⟩ :=
+        ⟨ι R m, by simpa only [pow_one] using LinearMap.mem_range_self _ m⟩ :=
   rfl
 
 variable {R M}
@@ -46,7 +46,7 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
     fun i x => by
     cases' x with x hx
     dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
-    refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
+    refine' Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
       
@@ -55,7 +55,7 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
       
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
-      exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_commₓ _ _) rfl)
+      exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
       
 
 end TensorAlgebra

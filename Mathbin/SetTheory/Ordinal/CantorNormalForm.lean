@@ -37,7 +37,7 @@ open Order
 namespace Ordinal
 
 /-- Inducts on the base `b` expansion of an ordinal. -/
-@[elabAsElim]
+@[elab_as_elim]
 noncomputable def cNFRec (b : Ordinal) {C : Ordinal → Sort _} (H0 : C 0) (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) :
     ∀ o, C o
   | o =>
@@ -56,7 +56,7 @@ theorem CNF_rec_pos (b : Ordinal) {o : Ordinal} {C : Ordinal → Sort _} (ho : o
     (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @cNFRec b C H0 H o = H o ho (@cNFRec b C H0 H _) := by
   rw [CNF_rec, dif_neg ho]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The Cantor normal form of an ordinal `o` is the list of coefficients and exponents in the
 base-`b` expansion of `o`.
 
@@ -71,7 +71,7 @@ def cNF (b o : Ordinal) : List (Ordinal × Ordinal) :=
 theorem CNF_zero (b : Ordinal) : cNF b 0 = [] :=
   CNF_rec_zero b _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursive definition for the Cantor normal form. -/
 theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) : cNF b o = (log b o, o / b ^ log b o)::cNF b (o % b ^ log b o) :=
   CNF_rec_pos b ho _ _
@@ -106,7 +106,7 @@ theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF 
     
   · rw [CNF_ne_zero ho, List.mem_cons_iff]
     rintro (rfl | h)
-    · exact le_rflₓ
+    · exact le_rfl
       
     · exact (H h).trans (log_mono_right _ (mod_opow_log_lt_self b ho).le)
       
@@ -122,7 +122,7 @@ theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o 
   · simp
     
   · rcases eq_zero_or_pos b with (rfl | hb)
-    · rw [zero_CNF ho, List.mem_singletonₓ]
+    · rw [zero_CNF ho, List.mem_singleton]
       rintro rfl
       exact Ordinal.pos_iff_ne_zero.2 ho
       
@@ -158,15 +158,15 @@ theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) :
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
     
-  · cases' le_or_ltₓ b 1 with hb hb
+  · cases' le_or_lt b 1 with hb hb
     · simp [CNF_of_le_one hb ho]
       
-    · cases' lt_or_leₓ o b with hob hbo
+    · cases' lt_or_le o b with hob hbo
       · simp [CNF_of_lt ho hob]
         
-      · rw [CNF_ne_zero ho, List.map_consₓ, List.sorted_cons]
+      · rw [CNF_ne_zero ho, List.map_cons, List.sorted_cons]
         refine' ⟨fun a H => _, IH⟩
-        rw [List.mem_mapₓ] at H
+        rw [List.mem_map] at H
         rcases H with ⟨⟨a, a'⟩, H, rfl⟩
         exact (CNF_fst_le_log H).trans_lt (log_mod_opow_log_lt_log_self hb ho hbo)
         

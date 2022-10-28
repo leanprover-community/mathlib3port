@@ -174,9 +174,9 @@ variable {s t : Set ℝ}
 theorem IsOpen.re_prod_im (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
 
-theorem IsClosed.re_prod_im (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
+theorem IsClosed.reProdIm (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
 
-theorem Metric.Bounded.re_prod_im (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
-  equivRealProdₗ.antilipschitz.bounded_preimage (hs.Prod ht)
+theorem Metric.Bounded.reProdIm (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
+  equivRealProdₗ.antilipschitz.boundedPreimage (hs.Prod ht)
 

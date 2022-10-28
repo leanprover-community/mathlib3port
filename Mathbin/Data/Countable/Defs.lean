@@ -27,7 +27,7 @@ variable {α : Sort u} {β : Sort v}
 -/
 
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`exists_injective_nat] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`exists_injective_nat] [] -/
 /-- A type `α` is countable if there exists an injective map `α → ℕ`. -/
 @[mk_iff countable_iff_exists_injective]
 class Countable (α : Sort u) : Prop where
@@ -47,7 +47,7 @@ protected theorem Function.Surjective.countable [Countable α] {f : α → β} (
 
 theorem exists_surjective_nat (α : Sort u) [Nonempty α] [Countable α] : ∃ f : ℕ → α, Surjective f :=
   let ⟨f, hf⟩ := exists_injective_nat α
-  ⟨invFun f, inv_fun_surjectiveₓ hf⟩
+  ⟨invFun f, inv_fun_surjective hf⟩
 
 theorem countable_iff_exists_surjective [Nonempty α] : Countable α ↔ ∃ f : ℕ → α, Surjective f :=
   ⟨@exists_surjective_nat _ _, fun ⟨f, hf⟩ => hf.Countable⟩
@@ -55,19 +55,19 @@ theorem countable_iff_exists_surjective [Nonempty α] : Countable α ↔ ∃ f :
 theorem Countable.of_equiv (α : Sort _) [Countable α] (e : α ≃ β) : Countable β :=
   e.symm.Injective.Countable
 
-theorem Equivₓ.countable_iff (e : α ≃ β) : Countable α ↔ Countable β :=
+theorem Equiv.countable_iff (e : α ≃ β) : Countable α ↔ Countable β :=
   ⟨fun h => @Countable.of_equiv _ _ h e, fun h => @Countable.of_equiv _ _ h e.symm⟩
 
 instance {β : Type v} [Countable β] : Countable (ULift.{u} β) :=
-  Countable.of_equiv _ Equivₓ.ulift.symm
+  Countable.of_equiv _ Equiv.ulift.symm
 
 /-!
 ### Operations on `Sort*`s
 -/
 
 
-instance [Countable α] : Countable (Plift α) :=
-  Equivₓ.plift.Injective.Countable
+instance [Countable α] : Countable (PLift α) :=
+  Equiv.plift.Injective.Countable
 
 instance (priority := 100) Subsingleton.to_countable [Subsingleton α] : Countable α :=
   ⟨⟨fun _ => 0, fun x y h => Subsingleton.elim x y⟩⟩
@@ -75,8 +75,8 @@ instance (priority := 100) Subsingleton.to_countable [Subsingleton α] : Countab
 instance (priority := 500) [Countable α] {p : α → Prop} : Countable { x // p x } :=
   Subtype.val_injective.Countable
 
-instance {n : ℕ} : Countable (Finₓ n) :=
-  Function.Injective.countable (@Finₓ.eq_of_veq n)
+instance {n : ℕ} : Countable (Fin n) :=
+  Function.Injective.countable (@Fin.eq_of_veq n)
 
 instance (priority := 100) Finite.to_countable [Finite α] : Countable α :=
   let ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin α
@@ -86,18 +86,18 @@ instance : Countable PUnit.{u} :=
   Subsingleton.to_countable
 
 @[nolint instance_priority]
-instance Prop.countable (p : Prop) : Countable p :=
+instance PropCat.countable (p : Prop) : Countable p :=
   Subsingleton.to_countable
 
 instance Bool.countable : Countable Bool :=
   ⟨⟨fun b => cond b 0 1, Bool.injective_iff.2 Nat.one_ne_zero⟩⟩
 
-instance Prop.countable' : Countable Prop :=
-  Countable.of_equiv Bool Equivₓ.propEquivBool.symm
+instance PropCat.countable' : Countable Prop :=
+  Countable.of_equiv Bool Equiv.propEquivBool.symm
 
 instance (priority := 500) [Countable α] {r : α → α → Prop} : Countable (Quot r) :=
   (surjective_quot_mk r).Countable
 
-instance (priority := 500) [Countable α] {s : Setoidₓ α} : Countable (Quotientₓ s) :=
+instance (priority := 500) [Countable α] {s : Setoid α} : Countable (Quotient s) :=
   Quot.countable
 

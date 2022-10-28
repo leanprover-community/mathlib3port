@@ -43,7 +43,7 @@ variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 theorem HigherFacesVanish.inclusion_of_Moore_complex_map (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj => by
   dsimp [inclusion_of_Moore_complex_map]
-  rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ j (by simp only [Finsetₓ.mem_univ])), assoc,
+  rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ])), assoc,
     kernel_subobject_arrow_comp, comp_zero]
 
 theorem factors_normalized_Moore_complex_P_infty (n : ℕ) :

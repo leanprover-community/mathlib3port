@@ -35,20 +35,22 @@ variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 /-- A submodule of a module is one which is closed under vector operations.
   This is a sufficient condition for the subset of vectors in the submodule
   to themselves form a module. -/
-structure Submodule (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] extends AddSubmonoid M,
+structure Submodule (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] [Module R M] extends AddSubmonoid M,
   SubMulAction R M : Type v
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident submodule.to_add_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident submodule.to_sub_mul_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret a `submodule` as an `add_submonoid`. -/
+add_decl_doc Submodule.toAddSubmonoid
+
+/-- Reinterpret a `submodule` as an `sub_mul_action`. -/
+add_decl_doc Submodule.toSubMulAction
+
 namespace Submodule
 
-variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 instance : SetLike (Submodule R M) M where
   coe := Submodule.Carrier
-  coe_injective' := fun p q h => by cases p <;> cases q <;> congr
+  coe_injective' p q h := by cases p <;> cases q <;> congr
 
 instance : AddSubmonoidClass (Submodule R M) M where
   zero_mem := zero_mem'
@@ -82,7 +84,7 @@ equalities. -/
 protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) : Submodule R M where
   Carrier := s
   zero_mem' := hs.symm ▸ p.zero_mem'
-  add_mem' := fun _ _ => hs.symm ▸ p.add_mem'
+  add_mem' _ _ := hs.symm ▸ p.add_mem'
   smul_mem' := hs.symm ▸ p.smul_mem'
 
 @[simp]
@@ -100,13 +102,13 @@ theorem to_add_submonoid_eq : p.toAddSubmonoid = q.toAddSubmonoid ↔ p = q :=
   to_add_submonoid_injective.eq_iff
 
 @[mono]
-theorem to_add_submonoid_strict_mono : StrictMonoₓ (toAddSubmonoid : Submodule R M → AddSubmonoid M) := fun _ _ => id
+theorem to_add_submonoid_strict_mono : StrictMono (toAddSubmonoid : Submodule R M → AddSubmonoid M) := fun _ _ => id
 
 theorem to_add_submonoid_le : p.toAddSubmonoid ≤ q.toAddSubmonoid ↔ p ≤ q :=
   Iff.rfl
 
 @[mono]
-theorem to_add_submonoid_mono : Monotoneₓ (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
+theorem to_add_submonoid_mono : Monotone (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
   to_add_submonoid_strict_mono.Monotone
 
 @[simp]
@@ -121,10 +123,10 @@ theorem to_sub_mul_action_eq : p.toSubMulAction = q.toSubMulAction ↔ p = q :=
   to_sub_mul_action_injective.eq_iff
 
 @[mono]
-theorem to_sub_mul_action_strict_mono : StrictMonoₓ (toSubMulAction : Submodule R M → SubMulAction R M) := fun _ _ => id
+theorem to_sub_mul_action_strict_mono : StrictMono (toSubMulAction : Submodule R M → SubMulAction R M) := fun _ _ => id
 
 @[mono]
-theorem to_sub_mul_action_mono : Monotoneₓ (toSubMulAction : Submodule R M → SubMulAction R M) :=
+theorem to_sub_mul_action_mono : Monotone (toSubMulAction : Submodule R M → SubMulAction R M) :=
   to_sub_mul_action_strict_mono.Monotone
 
 @[simp]
@@ -135,9 +137,9 @@ end Submodule
 
 namespace Submodule
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [Semiringₓ R] [AddCommMonoidₓ M]
+variable [Semiring R] [AddCommMonoid M]
 
 -- We can infer the module structure implicitly from the bundled submodule,
 -- rather than via typeclass resolution.
@@ -166,14 +168,14 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
 theorem smul_of_tower_mem [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
   p.toSubMulAction.smul_of_tower_mem r h
 
-protected theorem sum_mem {t : Finsetₓ ι} {f : ι → M} : (∀ c ∈ t, f c ∈ p) → (∑ i in t, f i) ∈ p :=
+protected theorem sum_mem {t : Finset ι} {f : ι → M} : (∀ c ∈ t, f c ∈ p) → (∑ i in t, f i) ∈ p :=
   sum_mem
 
-theorem sum_smul_mem {t : Finsetₓ ι} {f : ι → M} (r : ι → R) (hyp : ∀ c ∈ t, f c ∈ p) : (∑ i in t, r i • f i) ∈ p :=
+theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c ∈ t, f c ∈ p) : (∑ i in t, r i • f i) ∈ p :=
   sum_mem fun i hi => smul_mem _ _ (hyp i hi)
 
 @[simp]
-theorem smul_mem_iff' [Groupₓ G] [MulAction G M] [HasSmul G R] [IsScalarTower G R M] (g : G) : g • x ∈ p ↔ x ∈ p :=
+theorem smul_mem_iff' [Group G] [MulAction G M] [HasSmul G R] [IsScalarTower G R M] (g : G) : g • x ∈ p ↔ x ∈ p :=
   p.toSubMulAction.smul_mem_iff' g
 
 instance : Add p :=
@@ -239,10 +241,10 @@ theorem coe_mem (x : p) : (x : M) ∈ p :=
 
 variable (p)
 
-instance : AddCommMonoidₓ p :=
+instance : AddCommMonoid p :=
   { p.toAddSubmonoid.toAddCommMonoid with add := (· + ·), zero := 0 }
 
-instance module' [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
+instance module' [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
   refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
     · intros
       apply SetCoe.ext
@@ -272,12 +274,12 @@ theorem injective_subtype : Injective p.Subtype :=
 
 /-- Note the `add_submonoid` version of this lemma is called `add_submonoid.coe_finset_sum`. -/
 @[simp]
-theorem coe_sum (x : ι → p) (s : Finsetₓ ι) : ↑(∑ i in s, x i) = ∑ i in s, (x i : M) :=
+theorem coe_sum (x : ι → p) (s : Finset ι) : ↑(∑ i in s, x i) = ∑ i in s, (x i : M) :=
   p.Subtype.map_sum
 
 section RestrictScalars
 
-variable (S) [Semiringₓ S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower S R M]
+variable (S) [Semiring S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower S R M]
 
 /-- `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
 corresponding to `V`, an `R`-submodule of the original `R`-module.
@@ -285,8 +287,8 @@ corresponding to `V`, an `R`-submodule of the original `R`-module.
 def restrictScalars (V : Submodule R M) : Submodule S M where
   Carrier := V
   zero_mem' := V.zero_mem
-  smul_mem' := fun c m h => V.smul_of_tower_mem c h
-  add_mem' := fun x y hx hy => V.add_mem hx hy
+  smul_mem' c m h := V.smul_of_tower_mem c h
+  add_mem' x y hx hy := V.add_mem hx hy
 
 @[simp]
 theorem coe_restrict_scalars (V : Submodule R M) : (V.restrictScalars S : Set M) = V :=
@@ -314,7 +316,7 @@ instance restrictScalars.origModule (p : Submodule R M) : Module R (p.restrictSc
   (by infer_instance : Module R p)
 
 instance (p : Submodule R M) :
-    IsScalarTower S R (p.restrictScalars S) where smul_assoc := fun r s x => Subtype.ext <| smul_assoc r s (x : M)
+    IsScalarTower S R (p.restrictScalars S) where smul_assoc r s x := Subtype.ext <| smul_assoc r s (x : M)
 
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/
@@ -322,7 +324,7 @@ the lattice of `S`-submodules. -/
 def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M where
   toFun := restrictScalars S
   inj' := restrict_scalars_injective S R M
-  map_rel_iff' := fun p q => by simp [SetLike.le_def]
+  map_rel_iff' p q := by simp [SetLike.le_def]
 
 /-- Turning `p : submodule R M` into an `S`-submodule gives the same module structure
 as turning it into a type and adding a module structure. -/
@@ -332,11 +334,11 @@ def restrictScalarsEquiv (p : Submodule R M) : p.restrictScalars S ≃ₗ[R] p :
 
 end RestrictScalars
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-section AddCommGroupₓ
+section AddCommGroup
 
-variable [Ringₓ R] [AddCommGroupₓ M]
+variable [Ring R] [AddCommGroup M]
 
 variable {module_M : Module R M}
 
@@ -372,13 +374,13 @@ theorem to_add_subgroup_eq : p.toAddSubgroup = p'.toAddSubgroup ↔ p = p' :=
   to_add_subgroup_injective.eq_iff
 
 @[mono]
-theorem to_add_subgroup_strict_mono : StrictMonoₓ (toAddSubgroup : Submodule R M → AddSubgroup M) := fun _ _ => id
+theorem to_add_subgroup_strict_mono : StrictMono (toAddSubgroup : Submodule R M → AddSubgroup M) := fun _ _ => id
 
 theorem to_add_subgroup_le : p.toAddSubgroup ≤ p'.toAddSubgroup ↔ p ≤ p' :=
   Iff.rfl
 
 @[mono]
-theorem to_add_subgroup_mono : Monotoneₓ (toAddSubgroup : Submodule R M → AddSubgroup M) :=
+theorem to_add_subgroup_mono : Monotone (toAddSubgroup : Submodule R M → AddSubgroup M) :=
   to_add_subgroup_strict_mono.Monotone
 
 omit module_M
@@ -406,16 +408,16 @@ theorem sub_mem_iff_left (hy : y ∈ p) : x - y ∈ p ↔ x ∈ p := by rw [sub_
 theorem sub_mem_iff_right (hx : x ∈ p) : x - y ∈ p ↔ y ∈ p := by
   rw [sub_eq_add_neg, p.add_mem_iff_right hx, p.neg_mem_iff]
 
-instance : AddCommGroupₓ p :=
+instance : AddCommGroup p :=
   { p.toAddSubgroup.toAddCommGroup with add := (· + ·), zero := 0, neg := Neg.neg }
 
-end AddCommGroupₓ
+end AddCommGroup
 
 section IsDomain
 
-variable [Ringₓ R] [IsDomain R]
+variable [Ring R] [IsDomain R]
 
-variable [AddCommGroupₓ M] [Module R M] {b : ι → M}
+variable [AddCommGroup M] [Module R M] {b : ι → M}
 
 theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) :
     x ∉ N := by
@@ -430,7 +432,7 @@ end IsDomain
 
 section OrderedMonoid
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 /-- A submodule of an `ordered_add_comm_monoid` is an `ordered_add_comm_monoid`. -/
 instance toOrderedAddCommMonoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
@@ -459,7 +461,7 @@ end OrderedMonoid
 
 section OrderedGroup
 
-variable [Ringₓ R]
+variable [Ring R]
 
 /-- A submodule of an `ordered_add_comm_group` is an `ordered_add_comm_group`. -/
 instance toOrderedAddCommGroup {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) : OrderedAddCommGroup S :=
@@ -479,7 +481,7 @@ end Submodule
 
 namespace Submodule
 
-variable [DivisionRing S] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [DivisionRing S] [Semiring R] [AddCommMonoid M] [Module R M]
 
 variable [HasSmul S R] [Module S M] [IsScalarTower S R M]
 
@@ -491,6 +493,6 @@ theorem smul_mem_iff (s0 : s ≠ 0) : s • x ∈ p ↔ x ∈ p :=
 end Submodule
 
 /-- Subspace of a vector space. Defined to equal `submodule`. -/
-abbrev Subspace (R : Type u) (M : Type v) [Field R] [AddCommGroupₓ M] [Module R M] :=
+abbrev Subspace (R : Type u) (M : Type v) [Field R] [AddCommGroup M] [Module R M] :=
   Submodule R M
 

@@ -19,15 +19,15 @@ open TensorProduct
 
 variable {R ι₁ ι₂ ι₃ ι₄ : Type _}
 
-variable [CommSemiringₓ R]
+variable [CommSemiring R]
 
 variable [DecidableEq ι₁] [DecidableEq ι₂] [DecidableEq ι₃] [DecidableEq ι₄]
 
-variable {N₁ : Type _} [AddCommMonoidₓ N₁] [Module R N₁]
+variable {N₁ : Type _} [AddCommMonoid N₁] [Module R N₁]
 
-variable {N₂ : Type _} [AddCommMonoidₓ N₂] [Module R N₂]
+variable {N₂ : Type _} [AddCommMonoid N₂] [Module R N₂]
 
-variable {N : Type _} [AddCommMonoidₓ N] [Module R N]
+variable {N : Type _} [AddCommMonoid N] [Module R N]
 
 /-- Given two multilinear maps `(ι₁ → N) → N₁` and `(ι₂ → N) → N₂`, this produces the map
 `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂` by taking the coproduct of the domain and the tensor product
@@ -45,9 +45,9 @@ https://leanprover.zulipchat.com/#narrow/stream/217875-Is-there.20code.20for.20X
 @[simps apply]
 def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
     MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) where
-  toFun := fun v => (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
-  map_add' := fun v i p q => by cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
-  map_smul' := fun v i c p => by cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
+  toFun v := (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
+  map_add' v i p q := by cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
+  map_smul' v i c p := by cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
 
 /-- A more bundled version of `multilinear_map.dom_coprod` that maps
 `((ι₁ → N) → N₁) ⊗ ((ι₂ → N) → N₂)` to `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂`. -/

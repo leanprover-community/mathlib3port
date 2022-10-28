@@ -91,15 +91,15 @@ theorem uniform_continuous_coe : UniformContinuous ι :=
 theorem continuous_coe : Continuous ι :=
   pkg.uniform_continuous_coe.Continuous
 
-@[elabAsElim]
-theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) : p a :=
-  is_closed_property pkg.dense hp ih a
+@[elab_as_elim]
+theorem inductionOn {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) : p a :=
+  isClosedProperty pkg.dense hp ih a
 
 variable {β : Type _}
 
 protected theorem funext [TopologicalSpace β] [T2Space β] {f g : hatα → β} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
-  funext fun a => pkg.induction_on a (is_closed_eq hf hg) h
+  funext fun a => pkg.induction_on a (isClosedEq hf hg) h
 
 variable [UniformSpace β]
 
@@ -143,7 +143,7 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
-    pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.Continuous) fun y =>
+    pkg.induction_on x (isClosedEq pkg.continuous_extend hf.Continuous) fun y =>
       pkg.extend_coe (hf.comp <| pkg.uniform_continuous_coe) y
 
 end Extend
@@ -258,7 +258,7 @@ local notation "ι'" => pkg'.coe
 /-- Products of completions -/
 protected def prod : AbstractCompletion (α × β) where
   Space := hatα × hatβ
-  coe := fun p => ⟨ι p.1, ι' p.2⟩
+  coe p := ⟨ι p.1, ι' p.2⟩
   uniformStruct := Prod.uniformSpace
   complete := by infer_instance
   separation := by infer_instance

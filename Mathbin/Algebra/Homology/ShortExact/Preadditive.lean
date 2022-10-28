@@ -36,7 +36,7 @@ variable [HasZeroMorphisms 𝒜] [HasKernels 𝒜] [HasImages 𝒜]
 /-- If `f : A ⟶ B` and `g : B ⟶ C` then `short_exact f g` is the proposition saying
   the resulting diagram `0 ⟶ A ⟶ B ⟶ C ⟶ 0` is an exact sequence. -/
 structure ShortExact : Prop where
-  [mono : Mono f]
+  [Mono : Mono f]
   [Epi : Epi g]
   exact : Exact f g
 
@@ -50,7 +50,7 @@ structure LeftSplit : Prop where
   exact : Exact f g
 
 theorem LeftSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
-  { mono := by
+  { Mono := by
       obtain ⟨φ, hφ⟩ := h.left_split
       haveI : mono (f ≫ φ) := by
         rw [hφ]
@@ -64,7 +64,7 @@ if there exists a morphism `φ : C ⟶ B` such that `f ≫ φ = 𝟙 A` and `f` 
 Such a sequence is automatically short exact (i.e., `g` is epi). -/
 structure RightSplit : Prop where
   RightSplit : ∃ χ : C ⟶ B, χ ≫ g = 𝟙 C
-  [mono : Mono f]
+  [Mono : Mono f]
   exact : Exact f g
 
 theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
@@ -74,7 +74,7 @@ theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) 
         rw [hχ]
         infer_instance
       exact epi_of_epi χ g,
-    mono := h.mono, exact := h.exact }
+    Mono := h.Mono, exact := h.exact }
 
 end HasZeroMorphisms
 
@@ -115,7 +115,7 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
         _ = (kernel_subobject g).arrow := category.comp_id _
         
       rw [← H, preadditive.comp_add]
-      simp only [add_zeroₓ, zero_comp, kernel_subobject_arrow_comp_assoc] }
+      simp only [add_zero, zero_comp, kernel_subobject_arrow_comp_assoc] }
 
 section
 
@@ -141,7 +141,7 @@ theorem Split.right_split (h : Split f g) : RightSplit f g :=
   { RightSplit := by
       obtain ⟨φ, χ, -, h1, -⟩ := h
       exact ⟨χ, h1⟩,
-    mono := by
+    Mono := by
       obtain ⟨φ, χ, h1, -⟩ := h
       have : mono (f ≫ φ) := by
         rw [h1]
@@ -158,7 +158,7 @@ theorem Split.map {𝒜 ℬ : Type _} [Category 𝒜] [Preadditive 𝒜] [Catego
     [Functor.Additive F] {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} (h : Split f g) : Split (F.map f) (F.map g) := by
   obtain ⟨φ, χ, h1, h2, h3, h4, h5⟩ := h
   refine' ⟨⟨F.map φ, F.map χ, _⟩⟩
-  simp only [← F.map_comp, ← F.map_id, ← F.map_add, F.map_zero, *, eq_self_iff_true, and_trueₓ]
+  simp only [← F.map_comp, ← F.map_id, ← F.map_add, F.map_zero, *, eq_self_iff_true, and_true_iff]
 
 /-- The sequence `A ⟶ A ⊞ B ⟶ B` is exact. -/
 theorem exact_inl_snd [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inl : A ⟶ A ⊞ B) biprod.snd :=
@@ -166,7 +166,7 @@ theorem exact_inl_snd [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.in
 
 /-- The sequence `B ⟶ A ⊞ B ⟶ A` is exact. -/
 theorem exact_inr_fst [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inr : B ⟶ A ⊞ B) biprod.fst :=
-  exact_of_split biprod.inr_fst ((add_commₓ _ _).trans biprod.total)
+  exact_of_split biprod.inr_fst ((add_comm _ _).trans biprod.total)
 
 end Preadditive
 
@@ -284,7 +284,7 @@ theorem retraction_ι_eq_id_sub : h.retraction ≫ f = 𝟙 _ - g ≫ h.section 
 
 @[reassoc]
 theorem π_section_eq_id_sub : g ≫ h.section = 𝟙 _ - h.retraction ≫ f :=
-  eq_sub_iff_add_eq.mpr ((add_commₓ _ _).trans h.split_add)
+  eq_sub_iff_add_eq.mpr ((add_comm _ _).trans h.split_add)
 
 theorem splittings_comm (h h' : Splitting f g) : h'.section ≫ h.retraction = -(h.section ≫ h'.retraction) := by
   haveI := h.mono
@@ -320,7 +320,7 @@ protected theorem exact : Exact f g := by
     
 
 protected theorem short_exact : ShortExact f g :=
-  { mono := h.mono, Epi := h.Epi, exact := h.exact }
+  { Mono := h.Mono, Epi := h.Epi, exact := h.exact }
 
 end Preadditive
 

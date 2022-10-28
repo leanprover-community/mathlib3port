@@ -57,17 +57,17 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
     (unique_arrow : ∀ ⦃a b c : V⦄ (e : a ⟶ c) (f : b ⟶ c), a = b ∧ HEq e f)
     (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) : Arborescence V where
   root := r
-  uniquePath := fun b =>
+  uniquePath b :=
     ⟨Classical.inhabitedOfNonempty
         (by
           rcases show ∃ n, height b < n from ⟨_, lt_add_one _⟩ with ⟨n, hn⟩
           induction' n with n ih generalizing b
-          · exact False.elim (Nat.not_lt_zeroₓ _ hn)
+          · exact False.elim (Nat.not_lt_zero _ hn)
             
           rcases root_or_arrow b with (⟨⟨⟩⟩ | ⟨a, ⟨e⟩⟩)
           · exact ⟨path.nil⟩
             
-          · rcases ih a (lt_of_lt_of_leₓ (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
+          · rcases ih a (lt_of_lt_of_le (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
             exact ⟨p.cons e⟩
             ),
       by
@@ -75,7 +75,7 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
         intro a b p
         induction' p with b c p e ih
         rfl
-        exact le_of_ltₓ (lt_of_le_of_ltₓ ih (height_lt e))
+        exact le_of_lt (lt_of_le_of_lt ih (height_lt e))
       suffices ∀ p q : path r b, p = q by
         intro p
         apply this
@@ -83,9 +83,9 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
       induction' p with a c p e ih <;> cases' q with b _ q f
       · rfl
         
-      · exact False.elim (lt_irreflₓ _ (lt_of_le_of_ltₓ (height_le q) (height_lt f)))
+      · exact False.elim (lt_irrefl _ (lt_of_le_of_lt (height_le q) (height_lt f)))
         
-      · exact False.elim (lt_irreflₓ _ (lt_of_le_of_ltₓ (height_le p) (height_lt e)))
+      · exact False.elim (lt_irrefl _ (lt_of_le_of_lt (height_le p) (height_lt e)))
         
       · rcases unique_arrow e f with ⟨⟨⟩, ⟨⟩⟩
         rw [ih]
@@ -107,7 +107,7 @@ noncomputable def shortestPath (b : V) : Path r b :=
 
 /-- The length of a path is at least the length of the shortest path -/
 theorem shortest_path_spec {a : V} (p : Path r a) : (shortestPath r a).length ≤ p.length :=
-  not_ltₓ.mp (WellFounded.not_lt_min (measure_wf _) Set.Univ _ trivialₓ)
+  not_lt.mp (WellFounded.not_lt_min (measure_wf _) Set.Univ _ trivial)
 
 /-- A subquiver which by construction is an arborescence. -/
 def GeodesicSubtree : WideSubquiver V := fun a b => { e | ∃ p : Path r a, shortestPath r b = p.cons e }
@@ -124,10 +124,10 @@ noncomputable instance geodesicArborescence : Arborescence (GeodesicSubtree r) :
       constructor <;> rfl)
     (by
       intro b
-      rcases hp : shortest_path r b with (_ | ⟨a, _, p, e⟩)
+      rcases hp : shortest_path r b with (_ | ⟨p, e⟩)
       · exact Or.inl rfl
         
-      · exact Or.inr ⟨a, ⟨⟨e, p, hp⟩⟩⟩
+      · exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩
         )
 
 end GeodesicSubtree

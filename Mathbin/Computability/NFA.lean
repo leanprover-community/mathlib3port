@@ -64,7 +64,7 @@ theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_appendₓ, List.foldl_cons, List.foldl_nil]
+  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
@@ -102,10 +102,10 @@ theorem to_DFA_correct : M.toDFA.Accepts = M.Accepts := by
     · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
       
 
-theorem pumping_lemma [Fintypeₓ σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintypeₓ.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintypeₓ.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   rw [← to_DFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
@@ -117,7 +117,7 @@ namespace DFA
 /-- `M.to_NFA` is an `NFA` constructed from a `DFA` `M` by using the same start and accept
   states and a transition function which sends `s` with input `a` to the singleton `M.step s a`. -/
 def toNFA (M : DFA α σ') : NFA α σ' where
-  step := fun s a => {M.step s a}
+  step s a := {M.step s a}
   start := {M.start}
   accept := M.accept
 

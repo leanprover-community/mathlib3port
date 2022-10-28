@@ -35,45 +35,45 @@ TODO : move as much as possible in this file to the setting of this weaker typec
 
 variable {α : Type u} [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] (a b d : α)
 
-theorem Icc_add_bij : BijOn (· + d) (Icc a b) (Icc (a + d) (b + d)) := by
+theorem Icc_add_bij : BijOn (· + d) (IccCat a b) (IccCat (a + d) (b + d)) := by
   refine'
-    ⟨fun _ h => ⟨add_le_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
+    ⟨fun _ h => ⟨add_le_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1
-  rw [mem_Icc, add_right_commₓ, add_le_add_iff_right, add_le_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_commₓ]⟩
+  rw [mem_Icc, add_right_comm, add_le_add_iff_right, add_le_add_iff_right] at h
+  exact ⟨a + c, h, by rw [add_right_comm]⟩
 
-theorem Ioo_add_bij : BijOn (· + d) (Ioo a b) (Ioo (a + d) (b + d)) := by
+theorem Ioo_add_bij : BijOn (· + d) (IooCat a b) (IooCat (a + d) (b + d)) := by
   refine'
-    ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
+    ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1.le
-  rw [mem_Ioo, add_right_commₓ, add_lt_add_iff_right, add_lt_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_commₓ]⟩
+  rw [mem_Ioo, add_right_comm, add_lt_add_iff_right, add_lt_add_iff_right] at h
+  exact ⟨a + c, h, by rw [add_right_comm]⟩
 
-theorem Ioc_add_bij : BijOn (· + d) (Ioc a b) (Ioc (a + d) (b + d)) := by
+theorem Ioc_add_bij : BijOn (· + d) (IocCat a b) (IocCat (a + d) (b + d)) := by
   refine'
-    ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
+    ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1.le
-  rw [mem_Ioc, add_right_commₓ, add_lt_add_iff_right, add_le_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_commₓ]⟩
+  rw [mem_Ioc, add_right_comm, add_lt_add_iff_right, add_le_add_iff_right] at h
+  exact ⟨a + c, h, by rw [add_right_comm]⟩
 
-theorem Ico_add_bij : BijOn (· + d) (Ico a b) (Ico (a + d) (b + d)) := by
+theorem Ico_add_bij : BijOn (· + d) (IcoCat a b) (IcoCat (a + d) (b + d)) := by
   refine'
-    ⟨fun _ h => ⟨add_le_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
+    ⟨fun _ h => ⟨add_le_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1
-  rw [mem_Ico, add_right_commₓ, add_le_add_iff_right, add_lt_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_commₓ]⟩
+  rw [mem_Ico, add_right_comm, add_le_add_iff_right, add_lt_add_iff_right] at h
+  exact ⟨a + c, h, by rw [add_right_comm]⟩
 
-theorem Ici_add_bij : BijOn (· + d) (Ici a) (Ici (a + d)) := by
-  refine' ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
+theorem Ici_add_bij : BijOn (· + d) (IciCat a) (IciCat (a + d)) := by
+  refine' ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h)
-  rw [mem_Ici, add_right_commₓ, add_le_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_commₓ]⟩
+  rw [mem_Ici, add_right_comm, add_le_add_iff_right] at h
+  exact ⟨a + c, h, by rw [add_right_comm]⟩
 
-theorem Ioi_add_bij : BijOn (· + d) (Ioi a) (Ioi (a + d)) := by
-  refine' ⟨fun x h => add_lt_add_right (mem_Ioi.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
+theorem Ioi_add_bij : BijOn (· + d) (IoiCat a) (IoiCat (a + d)) := by
+  refine' ⟨fun x h => add_lt_add_right (mem_Ioi.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ioi.mp h).le
-  rw [mem_Ioi, add_right_commₓ, add_lt_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_commₓ]⟩
+  rw [mem_Ioi, add_right_comm, add_lt_add_iff_right] at h
+  exact ⟨a + c, h, by rw [add_right_comm]⟩
 
 end HasExistsAddOfLe
 
@@ -87,32 +87,32 @@ variable {G : Type u} [OrderedAddCommGroup G] (a b c : G)
 
 
 @[simp]
-theorem preimage_const_add_Ici : (fun x => a + x) ⁻¹' Ici b = Ici (b - a) :=
+theorem preimage_const_add_Ici : (fun x => a + x) ⁻¹' IciCat b = IciCat (b - a) :=
   ext fun x => sub_le_iff_le_add'.symm
 
 @[simp]
-theorem preimage_const_add_Ioi : (fun x => a + x) ⁻¹' Ioi b = Ioi (b - a) :=
+theorem preimage_const_add_Ioi : (fun x => a + x) ⁻¹' IoiCat b = IoiCat (b - a) :=
   ext fun x => sub_lt_iff_lt_add'.symm
 
 @[simp]
-theorem preimage_const_add_Iic : (fun x => a + x) ⁻¹' Iic b = Iic (b - a) :=
+theorem preimage_const_add_Iic : (fun x => a + x) ⁻¹' IicCat b = IicCat (b - a) :=
   ext fun x => le_sub_iff_add_le'.symm
 
 @[simp]
-theorem preimage_const_add_Iio : (fun x => a + x) ⁻¹' Iio b = Iio (b - a) :=
+theorem preimage_const_add_Iio : (fun x => a + x) ⁻¹' IioCat b = IioCat (b - a) :=
   ext fun x => lt_sub_iff_add_lt'.symm
 
 @[simp]
-theorem preimage_const_add_Icc : (fun x => a + x) ⁻¹' Icc b c = Icc (b - a) (c - a) := by simp [← Ici_inter_Iic]
+theorem preimage_const_add_Icc : (fun x => a + x) ⁻¹' IccCat b c = IccCat (b - a) (c - a) := by simp [← Ici_inter_Iic]
 
 @[simp]
-theorem preimage_const_add_Ico : (fun x => a + x) ⁻¹' Ico b c = Ico (b - a) (c - a) := by simp [← Ici_inter_Iio]
+theorem preimage_const_add_Ico : (fun x => a + x) ⁻¹' IcoCat b c = IcoCat (b - a) (c - a) := by simp [← Ici_inter_Iio]
 
 @[simp]
-theorem preimage_const_add_Ioc : (fun x => a + x) ⁻¹' Ioc b c = Ioc (b - a) (c - a) := by simp [← Ioi_inter_Iic]
+theorem preimage_const_add_Ioc : (fun x => a + x) ⁻¹' IocCat b c = IocCat (b - a) (c - a) := by simp [← Ioi_inter_Iic]
 
 @[simp]
-theorem preimage_const_add_Ioo : (fun x => a + x) ⁻¹' Ioo b c = Ioo (b - a) (c - a) := by simp [← Ioi_inter_Iio]
+theorem preimage_const_add_Ioo : (fun x => a + x) ⁻¹' IooCat b c = IooCat (b - a) (c - a) := by simp [← Ioi_inter_Iio]
 
 /-!
 ### Preimages under `x ↦ x + a`
@@ -120,32 +120,32 @@ theorem preimage_const_add_Ioo : (fun x => a + x) ⁻¹' Ioo b c = Ioo (b - a) (
 
 
 @[simp]
-theorem preimage_add_const_Ici : (fun x => x + a) ⁻¹' Ici b = Ici (b - a) :=
+theorem preimage_add_const_Ici : (fun x => x + a) ⁻¹' IciCat b = IciCat (b - a) :=
   ext fun x => sub_le_iff_le_add.symm
 
 @[simp]
-theorem preimage_add_const_Ioi : (fun x => x + a) ⁻¹' Ioi b = Ioi (b - a) :=
+theorem preimage_add_const_Ioi : (fun x => x + a) ⁻¹' IoiCat b = IoiCat (b - a) :=
   ext fun x => sub_lt_iff_lt_add.symm
 
 @[simp]
-theorem preimage_add_const_Iic : (fun x => x + a) ⁻¹' Iic b = Iic (b - a) :=
+theorem preimage_add_const_Iic : (fun x => x + a) ⁻¹' IicCat b = IicCat (b - a) :=
   ext fun x => le_sub_iff_add_le.symm
 
 @[simp]
-theorem preimage_add_const_Iio : (fun x => x + a) ⁻¹' Iio b = Iio (b - a) :=
+theorem preimage_add_const_Iio : (fun x => x + a) ⁻¹' IioCat b = IioCat (b - a) :=
   ext fun x => lt_sub_iff_add_lt.symm
 
 @[simp]
-theorem preimage_add_const_Icc : (fun x => x + a) ⁻¹' Icc b c = Icc (b - a) (c - a) := by simp [← Ici_inter_Iic]
+theorem preimage_add_const_Icc : (fun x => x + a) ⁻¹' IccCat b c = IccCat (b - a) (c - a) := by simp [← Ici_inter_Iic]
 
 @[simp]
-theorem preimage_add_const_Ico : (fun x => x + a) ⁻¹' Ico b c = Ico (b - a) (c - a) := by simp [← Ici_inter_Iio]
+theorem preimage_add_const_Ico : (fun x => x + a) ⁻¹' IcoCat b c = IcoCat (b - a) (c - a) := by simp [← Ici_inter_Iio]
 
 @[simp]
-theorem preimage_add_const_Ioc : (fun x => x + a) ⁻¹' Ioc b c = Ioc (b - a) (c - a) := by simp [← Ioi_inter_Iic]
+theorem preimage_add_const_Ioc : (fun x => x + a) ⁻¹' IocCat b c = IocCat (b - a) (c - a) := by simp [← Ioi_inter_Iic]
 
 @[simp]
-theorem preimage_add_const_Ioo : (fun x => x + a) ⁻¹' Ioo b c = Ioo (b - a) (c - a) := by simp [← Ioi_inter_Iio]
+theorem preimage_add_const_Ioo : (fun x => x + a) ⁻¹' IooCat b c = IooCat (b - a) (c - a) := by simp [← Ioi_inter_Iio]
 
 /-!
 ### Preimages under `x ↦ -x`
@@ -153,32 +153,32 @@ theorem preimage_add_const_Ioo : (fun x => x + a) ⁻¹' Ioo b c = Ioo (b - a) (
 
 
 @[simp]
-theorem preimage_neg_Ici : -Ici a = Iic (-a) :=
+theorem preimage_neg_Ici : -IciCat a = IicCat (-a) :=
   ext fun x => le_neg
 
 @[simp]
-theorem preimage_neg_Iic : -Iic a = Ici (-a) :=
+theorem preimage_neg_Iic : -IicCat a = IciCat (-a) :=
   ext fun x => neg_le
 
 @[simp]
-theorem preimage_neg_Ioi : -Ioi a = Iio (-a) :=
+theorem preimage_neg_Ioi : -IoiCat a = IioCat (-a) :=
   ext fun x => lt_neg
 
 @[simp]
-theorem preimage_neg_Iio : -Iio a = Ioi (-a) :=
+theorem preimage_neg_Iio : -IioCat a = IoiCat (-a) :=
   ext fun x => neg_lt
 
 @[simp]
-theorem preimage_neg_Icc : -Icc a b = Icc (-b) (-a) := by simp [← Ici_inter_Iic, inter_comm]
+theorem preimage_neg_Icc : -IccCat a b = IccCat (-b) (-a) := by simp [← Ici_inter_Iic, inter_comm]
 
 @[simp]
-theorem preimage_neg_Ico : -Ico a b = Ioc (-b) (-a) := by simp [← Ici_inter_Iio, ← Ioi_inter_Iic, inter_comm]
+theorem preimage_neg_Ico : -IcoCat a b = IocCat (-b) (-a) := by simp [← Ici_inter_Iio, ← Ioi_inter_Iic, inter_comm]
 
 @[simp]
-theorem preimage_neg_Ioc : -Ioc a b = Ico (-b) (-a) := by simp [← Ioi_inter_Iic, ← Ici_inter_Iio, inter_comm]
+theorem preimage_neg_Ioc : -IocCat a b = IcoCat (-b) (-a) := by simp [← Ioi_inter_Iic, ← Ici_inter_Iio, inter_comm]
 
 @[simp]
-theorem preimage_neg_Ioo : -Ioo a b = Ioo (-b) (-a) := by simp [← Ioi_inter_Iio, inter_comm]
+theorem preimage_neg_Ioo : -IooCat a b = IooCat (-b) (-a) := by simp [← Ioi_inter_Iio, inter_comm]
 
 /-!
 ### Preimages under `x ↦ x - a`
@@ -186,28 +186,28 @@ theorem preimage_neg_Ioo : -Ioo a b = Ioo (-b) (-a) := by simp [← Ioi_inter_Ii
 
 
 @[simp]
-theorem preimage_sub_const_Ici : (fun x => x - a) ⁻¹' Ici b = Ici (b + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Ici : (fun x => x - a) ⁻¹' IciCat b = IciCat (b + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Ioi : (fun x => x - a) ⁻¹' Ioi b = Ioi (b + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Ioi : (fun x => x - a) ⁻¹' IoiCat b = IoiCat (b + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Iic : (fun x => x - a) ⁻¹' Iic b = Iic (b + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Iic : (fun x => x - a) ⁻¹' IicCat b = IicCat (b + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Iio : (fun x => x - a) ⁻¹' Iio b = Iio (b + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Iio : (fun x => x - a) ⁻¹' IioCat b = IioCat (b + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Icc : (fun x => x - a) ⁻¹' Icc b c = Icc (b + a) (c + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Icc : (fun x => x - a) ⁻¹' IccCat b c = IccCat (b + a) (c + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Ico : (fun x => x - a) ⁻¹' Ico b c = Ico (b + a) (c + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Ico : (fun x => x - a) ⁻¹' IcoCat b c = IcoCat (b + a) (c + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Ioc : (fun x => x - a) ⁻¹' Ioc b c = Ioc (b + a) (c + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Ioc : (fun x => x - a) ⁻¹' IocCat b c = IocCat (b + a) (c + a) := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem preimage_sub_const_Ioo : (fun x => x - a) ⁻¹' Ioo b c = Ioo (b + a) (c + a) := by simp [sub_eq_add_neg]
+theorem preimage_sub_const_Ioo : (fun x => x - a) ⁻¹' IooCat b c = IooCat (b + a) (c + a) := by simp [sub_eq_add_neg]
 
 /-!
 ### Preimages under `x ↦ a - x`
@@ -215,35 +215,35 @@ theorem preimage_sub_const_Ioo : (fun x => x - a) ⁻¹' Ioo b c = Ioo (b + a) (
 
 
 @[simp]
-theorem preimage_const_sub_Ici : (fun x => a - x) ⁻¹' Ici b = Iic (a - b) :=
+theorem preimage_const_sub_Ici : (fun x => a - x) ⁻¹' IciCat b = IicCat (a - b) :=
   ext fun x => le_sub
 
 @[simp]
-theorem preimage_const_sub_Iic : (fun x => a - x) ⁻¹' Iic b = Ici (a - b) :=
+theorem preimage_const_sub_Iic : (fun x => a - x) ⁻¹' IicCat b = IciCat (a - b) :=
   ext fun x => sub_le
 
 @[simp]
-theorem preimage_const_sub_Ioi : (fun x => a - x) ⁻¹' Ioi b = Iio (a - b) :=
+theorem preimage_const_sub_Ioi : (fun x => a - x) ⁻¹' IoiCat b = IioCat (a - b) :=
   ext fun x => lt_sub
 
 @[simp]
-theorem preimage_const_sub_Iio : (fun x => a - x) ⁻¹' Iio b = Ioi (a - b) :=
+theorem preimage_const_sub_Iio : (fun x => a - x) ⁻¹' IioCat b = IoiCat (a - b) :=
   ext fun x => sub_lt
 
 @[simp]
-theorem preimage_const_sub_Icc : (fun x => a - x) ⁻¹' Icc b c = Icc (a - c) (a - b) := by
+theorem preimage_const_sub_Icc : (fun x => a - x) ⁻¹' IccCat b c = IccCat (a - c) (a - b) := by
   simp [← Ici_inter_Iic, inter_comm]
 
 @[simp]
-theorem preimage_const_sub_Ico : (fun x => a - x) ⁻¹' Ico b c = Ioc (a - c) (a - b) := by
+theorem preimage_const_sub_Ico : (fun x => a - x) ⁻¹' IcoCat b c = IocCat (a - c) (a - b) := by
   simp [← Ioi_inter_Iic, ← Ici_inter_Iio, inter_comm]
 
 @[simp]
-theorem preimage_const_sub_Ioc : (fun x => a - x) ⁻¹' Ioc b c = Ico (a - c) (a - b) := by
+theorem preimage_const_sub_Ioc : (fun x => a - x) ⁻¹' IocCat b c = IcoCat (a - c) (a - b) := by
   simp [← Ioi_inter_Iic, ← Ici_inter_Iio, inter_comm]
 
 @[simp]
-theorem preimage_const_sub_Ioo : (fun x => a - x) ⁻¹' Ioo b c = Ioo (a - c) (a - b) := by
+theorem preimage_const_sub_Ioo : (fun x => a - x) ⁻¹' IooCat b c = IooCat (a - c) (a - b) := by
   simp [← Ioi_inter_Iio, inter_comm]
 
 /-!
@@ -252,28 +252,28 @@ theorem preimage_const_sub_Ioo : (fun x => a - x) ⁻¹' Ioo b c = Ioo (a - c) (
 
 
 @[simp]
-theorem image_const_add_Ici : (fun x => a + x) '' Ici b = Ici (a + b) := by simp [add_commₓ]
+theorem image_const_add_Ici : (fun x => a + x) '' IciCat b = IciCat (a + b) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Iic : (fun x => a + x) '' Iic b = Iic (a + b) := by simp [add_commₓ]
+theorem image_const_add_Iic : (fun x => a + x) '' IicCat b = IicCat (a + b) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Iio : (fun x => a + x) '' Iio b = Iio (a + b) := by simp [add_commₓ]
+theorem image_const_add_Iio : (fun x => a + x) '' IioCat b = IioCat (a + b) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Ioi : (fun x => a + x) '' Ioi b = Ioi (a + b) := by simp [add_commₓ]
+theorem image_const_add_Ioi : (fun x => a + x) '' IoiCat b = IoiCat (a + b) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Icc : (fun x => a + x) '' Icc b c = Icc (a + b) (a + c) := by simp [add_commₓ]
+theorem image_const_add_Icc : (fun x => a + x) '' IccCat b c = IccCat (a + b) (a + c) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Ico : (fun x => a + x) '' Ico b c = Ico (a + b) (a + c) := by simp [add_commₓ]
+theorem image_const_add_Ico : (fun x => a + x) '' IcoCat b c = IcoCat (a + b) (a + c) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Ioc : (fun x => a + x) '' Ioc b c = Ioc (a + b) (a + c) := by simp [add_commₓ]
+theorem image_const_add_Ioc : (fun x => a + x) '' IocCat b c = IocCat (a + b) (a + c) := by simp [add_comm]
 
 @[simp]
-theorem image_const_add_Ioo : (fun x => a + x) '' Ioo b c = Ioo (a + b) (a + c) := by simp [add_commₓ]
+theorem image_const_add_Ioo : (fun x => a + x) '' IooCat b c = IooCat (a + b) (a + c) := by simp [add_comm]
 
 /-!
 ### Images under `x ↦ x + a`
@@ -281,49 +281,49 @@ theorem image_const_add_Ioo : (fun x => a + x) '' Ioo b c = Ioo (a + b) (a + c) 
 
 
 @[simp]
-theorem image_add_const_Ici : (fun x => x + a) '' Ici b = Ici (b + a) := by simp
+theorem image_add_const_Ici : (fun x => x + a) '' IciCat b = IciCat (b + a) := by simp
 
 @[simp]
-theorem image_add_const_Iic : (fun x => x + a) '' Iic b = Iic (b + a) := by simp
+theorem image_add_const_Iic : (fun x => x + a) '' IicCat b = IicCat (b + a) := by simp
 
 @[simp]
-theorem image_add_const_Iio : (fun x => x + a) '' Iio b = Iio (b + a) := by simp
+theorem image_add_const_Iio : (fun x => x + a) '' IioCat b = IioCat (b + a) := by simp
 
 @[simp]
-theorem image_add_const_Ioi : (fun x => x + a) '' Ioi b = Ioi (b + a) := by simp
+theorem image_add_const_Ioi : (fun x => x + a) '' IoiCat b = IoiCat (b + a) := by simp
 
 @[simp]
-theorem image_add_const_Icc : (fun x => x + a) '' Icc b c = Icc (b + a) (c + a) := by simp
+theorem image_add_const_Icc : (fun x => x + a) '' IccCat b c = IccCat (b + a) (c + a) := by simp
 
 @[simp]
-theorem image_add_const_Ico : (fun x => x + a) '' Ico b c = Ico (b + a) (c + a) := by simp
+theorem image_add_const_Ico : (fun x => x + a) '' IcoCat b c = IcoCat (b + a) (c + a) := by simp
 
 @[simp]
-theorem image_add_const_Ioc : (fun x => x + a) '' Ioc b c = Ioc (b + a) (c + a) := by simp
+theorem image_add_const_Ioc : (fun x => x + a) '' IocCat b c = IocCat (b + a) (c + a) := by simp
 
 @[simp]
-theorem image_add_const_Ioo : (fun x => x + a) '' Ioo b c = Ioo (b + a) (c + a) := by simp
+theorem image_add_const_Ioo : (fun x => x + a) '' IooCat b c = IooCat (b + a) (c + a) := by simp
 
 /-!
 ### Images under `x ↦ -x`
 -/
 
 
-theorem image_neg_Ici : Neg.neg '' Ici a = Iic (-a) := by simp
+theorem image_neg_Ici : Neg.neg '' IciCat a = IicCat (-a) := by simp
 
-theorem image_neg_Iic : Neg.neg '' Iic a = Ici (-a) := by simp
+theorem image_neg_Iic : Neg.neg '' IicCat a = IciCat (-a) := by simp
 
-theorem image_neg_Ioi : Neg.neg '' Ioi a = Iio (-a) := by simp
+theorem image_neg_Ioi : Neg.neg '' IoiCat a = IioCat (-a) := by simp
 
-theorem image_neg_Iio : Neg.neg '' Iio a = Ioi (-a) := by simp
+theorem image_neg_Iio : Neg.neg '' IioCat a = IoiCat (-a) := by simp
 
-theorem image_neg_Icc : Neg.neg '' Icc a b = Icc (-b) (-a) := by simp
+theorem image_neg_Icc : Neg.neg '' IccCat a b = IccCat (-b) (-a) := by simp
 
-theorem image_neg_Ico : Neg.neg '' Ico a b = Ioc (-b) (-a) := by simp
+theorem image_neg_Ico : Neg.neg '' IcoCat a b = IocCat (-b) (-a) := by simp
 
-theorem image_neg_Ioc : Neg.neg '' Ioc a b = Ico (-b) (-a) := by simp
+theorem image_neg_Ioc : Neg.neg '' IocCat a b = IcoCat (-b) (-a) := by simp
 
-theorem image_neg_Ioo : Neg.neg '' Ioo a b = Ioo (-b) (-a) := by simp
+theorem image_neg_Ioo : Neg.neg '' IooCat a b = IooCat (-b) (-a) := by simp
 
 /-!
 ### Images under `x ↦ a - x`
@@ -331,35 +331,35 @@ theorem image_neg_Ioo : Neg.neg '' Ioo a b = Ioo (-b) (-a) := by simp
 
 
 @[simp]
-theorem image_const_sub_Ici : (fun x => a - x) '' Ici b = Iic (a - b) := by
+theorem image_const_sub_Ici : (fun x => a - x) '' IciCat b = IicCat (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Iic : (fun x => a - x) '' Iic b = Ici (a - b) := by
+theorem image_const_sub_Iic : (fun x => a - x) '' IicCat b = IciCat (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Ioi : (fun x => a - x) '' Ioi b = Iio (a - b) := by
+theorem image_const_sub_Ioi : (fun x => a - x) '' IoiCat b = IioCat (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Iio : (fun x => a - x) '' Iio b = Ioi (a - b) := by
+theorem image_const_sub_Iio : (fun x => a - x) '' IioCat b = IoiCat (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Icc : (fun x => a - x) '' Icc b c = Icc (a - c) (a - b) := by
+theorem image_const_sub_Icc : (fun x => a - x) '' IccCat b c = IccCat (a - c) (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Ico : (fun x => a - x) '' Ico b c = Ioc (a - c) (a - b) := by
+theorem image_const_sub_Ico : (fun x => a - x) '' IcoCat b c = IocCat (a - c) (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Ioc : (fun x => a - x) '' Ioc b c = Ico (a - c) (a - b) := by
+theorem image_const_sub_Ioc : (fun x => a - x) '' IocCat b c = IcoCat (a - c) (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_const_sub_Ioo : (fun x => a - x) '' Ioo b c = Ioo (a - c) (a - b) := by
+theorem image_const_sub_Ioo : (fun x => a - x) '' IooCat b c = IooCat (a - c) (a - b) := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 /-!
@@ -368,41 +368,41 @@ theorem image_const_sub_Ioo : (fun x => a - x) '' Ioo b c = Ioo (a - c) (a - b) 
 
 
 @[simp]
-theorem image_sub_const_Ici : (fun x => x - a) '' Ici b = Ici (b - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Ici : (fun x => x - a) '' IciCat b = IciCat (b - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Iic : (fun x => x - a) '' Iic b = Iic (b - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Iic : (fun x => x - a) '' IicCat b = IicCat (b - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Ioi : (fun x => x - a) '' Ioi b = Ioi (b - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Ioi : (fun x => x - a) '' IoiCat b = IoiCat (b - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Iio : (fun x => x - a) '' Iio b = Iio (b - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Iio : (fun x => x - a) '' IioCat b = IioCat (b - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Icc : (fun x => x - a) '' Icc b c = Icc (b - a) (c - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Icc : (fun x => x - a) '' IccCat b c = IccCat (b - a) (c - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Ico : (fun x => x - a) '' Ico b c = Ico (b - a) (c - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Ico : (fun x => x - a) '' IcoCat b c = IcoCat (b - a) (c - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Ioc : (fun x => x - a) '' Ioc b c = Ioc (b - a) (c - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Ioc : (fun x => x - a) '' IocCat b c = IocCat (b - a) (c - a) := by simp [sub_eq_neg_add]
 
 @[simp]
-theorem image_sub_const_Ioo : (fun x => x - a) '' Ioo b c = Ioo (b - a) (c - a) := by simp [sub_eq_neg_add]
+theorem image_sub_const_Ioo : (fun x => x - a) '' IooCat b c = IooCat (b - a) (c - a) := by simp [sub_eq_neg_add]
 
 /-!
 ### Bijections
 -/
 
 
-theorem Iic_add_bij : BijOn (· + a) (Iic b) (Iic (b + a)) := by
-  refine' ⟨fun x h => add_le_add_right (mem_Iic.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
-  simpa [add_commₓ a] using h
+theorem Iic_add_bij : BijOn (· + a) (IicCat b) (IicCat (b + a)) := by
+  refine' ⟨fun x h => add_le_add_right (mem_Iic.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
+  simpa [add_comm a] using h
 
-theorem Iio_add_bij : BijOn (· + a) (Iio b) (Iio (b + a)) := by
-  refine' ⟨fun x h => add_lt_add_right (mem_Iio.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
-  simpa [add_commₓ a] using h
+theorem Iio_add_bij : BijOn (· + a) (IioCat b) (IioCat (b + a)) := by
+  refine' ⟨fun x h => add_lt_add_right (mem_Iio.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h => _⟩
+  simpa [add_comm a] using h
 
 end OrderedAddCommGroup
 
@@ -416,168 +416,174 @@ section LinearOrderedField
 variable {k : Type u} [LinearOrderedField k]
 
 @[simp]
-theorem preimage_mul_const_Iio (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Iio a = Iio (a / c) :=
+theorem preimage_mul_const_Iio (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' IioCat a = IioCat (a / c) :=
   ext fun x => (lt_div_iff h).symm
 
 @[simp]
-theorem preimage_mul_const_Ioi (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Ioi a = Ioi (a / c) :=
+theorem preimage_mul_const_Ioi (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' IoiCat a = IoiCat (a / c) :=
   ext fun x => (div_lt_iff h).symm
 
 @[simp]
-theorem preimage_mul_const_Iic (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Iic a = Iic (a / c) :=
+theorem preimage_mul_const_Iic (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' IicCat a = IicCat (a / c) :=
   ext fun x => (le_div_iff h).symm
 
 @[simp]
-theorem preimage_mul_const_Ici (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Ici a = Ici (a / c) :=
+theorem preimage_mul_const_Ici (a : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' IciCat a = IciCat (a / c) :=
   ext fun x => (div_le_iff h).symm
 
 @[simp]
-theorem preimage_mul_const_Ioo (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Ioo a b = Ioo (a / c) (b / c) := by
-  simp [← Ioi_inter_Iio, h]
+theorem preimage_mul_const_Ioo (a b : k) {c : k} (h : 0 < c) :
+    (fun x => x * c) ⁻¹' IooCat a b = IooCat (a / c) (b / c) := by simp [← Ioi_inter_Iio, h]
 
 @[simp]
-theorem preimage_mul_const_Ioc (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Ioc a b = Ioc (a / c) (b / c) := by
-  simp [← Ioi_inter_Iic, h]
+theorem preimage_mul_const_Ioc (a b : k) {c : k} (h : 0 < c) :
+    (fun x => x * c) ⁻¹' IocCat a b = IocCat (a / c) (b / c) := by simp [← Ioi_inter_Iic, h]
 
 @[simp]
-theorem preimage_mul_const_Ico (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Ico a b = Ico (a / c) (b / c) := by
-  simp [← Ici_inter_Iio, h]
+theorem preimage_mul_const_Ico (a b : k) {c : k} (h : 0 < c) :
+    (fun x => x * c) ⁻¹' IcoCat a b = IcoCat (a / c) (b / c) := by simp [← Ici_inter_Iio, h]
 
 @[simp]
-theorem preimage_mul_const_Icc (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) ⁻¹' Icc a b = Icc (a / c) (b / c) := by
-  simp [← Ici_inter_Iic, h]
+theorem preimage_mul_const_Icc (a b : k) {c : k} (h : 0 < c) :
+    (fun x => x * c) ⁻¹' IccCat a b = IccCat (a / c) (b / c) := by simp [← Ici_inter_Iic, h]
 
 @[simp]
-theorem preimage_mul_const_Iio_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' Iio a = Ioi (a / c) :=
+theorem preimage_mul_const_Iio_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' IioCat a = IoiCat (a / c) :=
   ext fun x => (div_lt_iff_of_neg h).symm
 
 @[simp]
-theorem preimage_mul_const_Ioi_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' Ioi a = Iio (a / c) :=
+theorem preimage_mul_const_Ioi_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' IoiCat a = IioCat (a / c) :=
   ext fun x => (lt_div_iff_of_neg h).symm
 
 @[simp]
-theorem preimage_mul_const_Iic_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' Iic a = Ici (a / c) :=
+theorem preimage_mul_const_Iic_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' IicCat a = IciCat (a / c) :=
   ext fun x => (div_le_iff_of_neg h).symm
 
 @[simp]
-theorem preimage_mul_const_Ici_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' Ici a = Iic (a / c) :=
+theorem preimage_mul_const_Ici_of_neg (a : k) {c : k} (h : c < 0) : (fun x => x * c) ⁻¹' IciCat a = IicCat (a / c) :=
   ext fun x => (le_div_iff_of_neg h).symm
 
 @[simp]
 theorem preimage_mul_const_Ioo_of_neg (a b : k) {c : k} (h : c < 0) :
-    (fun x => x * c) ⁻¹' Ioo a b = Ioo (b / c) (a / c) := by simp [← Ioi_inter_Iio, h, inter_comm]
+    (fun x => x * c) ⁻¹' IooCat a b = IooCat (b / c) (a / c) := by simp [← Ioi_inter_Iio, h, inter_comm]
 
 @[simp]
 theorem preimage_mul_const_Ioc_of_neg (a b : k) {c : k} (h : c < 0) :
-    (fun x => x * c) ⁻¹' Ioc a b = Ico (b / c) (a / c) := by simp [← Ioi_inter_Iic, ← Ici_inter_Iio, h, inter_comm]
+    (fun x => x * c) ⁻¹' IocCat a b = IcoCat (b / c) (a / c) := by
+  simp [← Ioi_inter_Iic, ← Ici_inter_Iio, h, inter_comm]
 
 @[simp]
 theorem preimage_mul_const_Ico_of_neg (a b : k) {c : k} (h : c < 0) :
-    (fun x => x * c) ⁻¹' Ico a b = Ioc (b / c) (a / c) := by simp [← Ici_inter_Iio, ← Ioi_inter_Iic, h, inter_comm]
+    (fun x => x * c) ⁻¹' IcoCat a b = IocCat (b / c) (a / c) := by
+  simp [← Ici_inter_Iio, ← Ioi_inter_Iic, h, inter_comm]
 
 @[simp]
 theorem preimage_mul_const_Icc_of_neg (a b : k) {c : k} (h : c < 0) :
-    (fun x => x * c) ⁻¹' Icc a b = Icc (b / c) (a / c) := by simp [← Ici_inter_Iic, h, inter_comm]
+    (fun x => x * c) ⁻¹' IccCat a b = IccCat (b / c) (a / c) := by simp [← Ici_inter_Iic, h, inter_comm]
 
 @[simp]
-theorem preimage_const_mul_Iio (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Iio a = Iio (a / c) :=
+theorem preimage_const_mul_Iio (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IioCat a = IioCat (a / c) :=
   ext fun x => (lt_div_iff' h).symm
 
 @[simp]
-theorem preimage_const_mul_Ioi (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Ioi a = Ioi (a / c) :=
+theorem preimage_const_mul_Ioi (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IoiCat a = IoiCat (a / c) :=
   ext fun x => (div_lt_iff' h).symm
 
 @[simp]
-theorem preimage_const_mul_Iic (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Iic a = Iic (a / c) :=
+theorem preimage_const_mul_Iic (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IicCat a = IicCat (a / c) :=
   ext fun x => (le_div_iff' h).symm
 
 @[simp]
-theorem preimage_const_mul_Ici (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Ici a = Ici (a / c) :=
+theorem preimage_const_mul_Ici (a : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IciCat a = IciCat (a / c) :=
   ext fun x => (div_le_iff' h).symm
 
 @[simp]
-theorem preimage_const_mul_Ioo (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Ioo a b = Ioo (a / c) (b / c) := by
+theorem preimage_const_mul_Ioo (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IooCat a b = IooCat (a / c) (b / c) := by
   simp [← Ioi_inter_Iio, h]
 
 @[simp]
-theorem preimage_const_mul_Ioc (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Ioc a b = Ioc (a / c) (b / c) := by
+theorem preimage_const_mul_Ioc (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IocCat a b = IocCat (a / c) (b / c) := by
   simp [← Ioi_inter_Iic, h]
 
 @[simp]
-theorem preimage_const_mul_Ico (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Ico a b = Ico (a / c) (b / c) := by
+theorem preimage_const_mul_Ico (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IcoCat a b = IcoCat (a / c) (b / c) := by
   simp [← Ici_inter_Iio, h]
 
 @[simp]
-theorem preimage_const_mul_Icc (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' Icc a b = Icc (a / c) (b / c) := by
+theorem preimage_const_mul_Icc (a b : k) {c : k} (h : 0 < c) : (· * ·) c ⁻¹' IccCat a b = IccCat (a / c) (b / c) := by
   simp [← Ici_inter_Iic, h]
 
 @[simp]
-theorem preimage_const_mul_Iio_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Iio a = Ioi (a / c) := by
+theorem preimage_const_mul_Iio_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' IioCat a = IoiCat (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Iio_of_neg a h
 
 @[simp]
-theorem preimage_const_mul_Ioi_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ioi a = Iio (a / c) := by
+theorem preimage_const_mul_Ioi_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' IoiCat a = IioCat (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Ioi_of_neg a h
 
 @[simp]
-theorem preimage_const_mul_Iic_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Iic a = Ici (a / c) := by
+theorem preimage_const_mul_Iic_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' IicCat a = IciCat (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Iic_of_neg a h
 
 @[simp]
-theorem preimage_const_mul_Ici_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ici a = Iic (a / c) := by
+theorem preimage_const_mul_Ici_of_neg (a : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' IciCat a = IicCat (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Ici_of_neg a h
 
 @[simp]
-theorem preimage_const_mul_Ioo_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ioo a b = Ioo (b / c) (a / c) := by
+theorem preimage_const_mul_Ioo_of_neg (a b : k) {c : k} (h : c < 0) :
+    (· * ·) c ⁻¹' IooCat a b = IooCat (b / c) (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Ioo_of_neg a b h
 
 @[simp]
-theorem preimage_const_mul_Ioc_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ioc a b = Ico (b / c) (a / c) := by
+theorem preimage_const_mul_Ioc_of_neg (a b : k) {c : k} (h : c < 0) :
+    (· * ·) c ⁻¹' IocCat a b = IcoCat (b / c) (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Ioc_of_neg a b h
 
 @[simp]
-theorem preimage_const_mul_Ico_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Ico a b = Ioc (b / c) (a / c) := by
+theorem preimage_const_mul_Ico_of_neg (a b : k) {c : k} (h : c < 0) :
+    (· * ·) c ⁻¹' IcoCat a b = IocCat (b / c) (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Ico_of_neg a b h
 
 @[simp]
-theorem preimage_const_mul_Icc_of_neg (a b : k) {c : k} (h : c < 0) : (· * ·) c ⁻¹' Icc a b = Icc (b / c) (a / c) := by
+theorem preimage_const_mul_Icc_of_neg (a b : k) {c : k} (h : c < 0) :
+    (· * ·) c ⁻¹' IccCat a b = IccCat (b / c) (a / c) := by
   simpa only [mul_comm] using preimage_mul_const_Icc_of_neg a b h
 
-theorem image_mul_right_Icc' (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=
+theorem image_mul_right_Icc' (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' IccCat a b = IccCat (a * c) (b * c) :=
   ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
 
 theorem image_mul_right_Icc {a b c : k} (hab : a ≤ b) (hc : 0 ≤ c) :
-    (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) := by
-  cases eq_or_lt_of_leₓ hc
+    (fun x => x * c) '' IccCat a b = IccCat (a * c) (b * c) := by
+  cases eq_or_lt_of_le hc
   · subst c
     simp [(nonempty_Icc.2 hab).image_const]
     
   exact image_mul_right_Icc' a b ‹0 < c›
 
-theorem image_mul_left_Icc' {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' Icc b c = Icc (a * b) (a * c) := by
+theorem image_mul_left_Icc' {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' IccCat b c = IccCat (a * b) (a * c) := by
   convert image_mul_right_Icc' b c h using 1 <;> simp only [mul_comm _ a]
 
-theorem image_mul_left_Icc {a b c : k} (ha : 0 ≤ a) (hbc : b ≤ c) : (· * ·) a '' Icc b c = Icc (a * b) (a * c) := by
-  convert image_mul_right_Icc hbc ha using 1 <;> simp only [mul_comm _ a]
+theorem image_mul_left_Icc {a b c : k} (ha : 0 ≤ a) (hbc : b ≤ c) : (· * ·) a '' IccCat b c = IccCat (a * b) (a * c) :=
+  by convert image_mul_right_Icc hbc ha using 1 <;> simp only [mul_comm _ a]
 
-theorem image_mul_right_Ioo (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' Ioo a b = Ioo (a * c) (b * c) :=
+theorem image_mul_right_Ioo (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' IooCat a b = IooCat (a * c) (b * c) :=
   ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
 
-theorem image_mul_left_Ioo {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' Ioo b c = Ioo (a * b) (a * c) := by
+theorem image_mul_left_Ioo {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' IooCat b c = IooCat (a * b) (a * c) := by
   convert image_mul_right_Ioo b c h using 1 <;> simp only [mul_comm _ a]
 
 /-- The (pre)image under `inv` of `Ioo 0 a` is `Ioi a⁻¹`. -/
-theorem inv_Ioo_0_left {a : k} (ha : 0 < a) : (Ioo 0 a)⁻¹ = Ioi a⁻¹ := by
+theorem inv_Ioo_0_left {a : k} (ha : 0 < a) : (IooCat 0 a)⁻¹ = IoiCat a⁻¹ := by
   ext x
   exact
-    ⟨fun h => inv_invₓ x ▸ (inv_lt_inv ha h.1).2 h.2, fun h =>
-      ⟨inv_pos.2 <| (inv_pos.2 ha).trans h, inv_invₓ a ▸ (inv_lt_inv ((inv_pos.2 ha).trans h) (inv_pos.2 ha)).2 h⟩⟩
+    ⟨fun h => inv_inv x ▸ (inv_lt_inv ha h.1).2 h.2, fun h =>
+      ⟨inv_pos.2 <| (inv_pos.2 ha).trans h, inv_inv a ▸ (inv_lt_inv ((inv_pos.2 ha).trans h) (inv_pos.2 ha)).2 h⟩⟩
 
-theorem inv_Ioi {a : k} (ha : 0 < a) : (Ioi a)⁻¹ = Ioo 0 a⁻¹ := by
-  rw [inv_eq_iff_inv_eq, inv_Ioo_0_left (inv_pos.2 ha), inv_invₓ]
+theorem inv_Ioi {a : k} (ha : 0 < a) : (IoiCat a)⁻¹ = IooCat 0 a⁻¹ := by
+  rw [inv_eq_iff_inv_eq, inv_Ioo_0_left (inv_pos.2 ha), inv_inv]
 
 theorem image_const_mul_Ioi_zero {k : Type _} [LinearOrderedField k] {x : k} (hx : 0 < x) :
-    (fun y => x * y) '' Ioi (0 : k) = Ioi 0 := by
+    (fun y => x * y) '' IoiCat (0 : k) = IoiCat 0 := by
   erw [(Units.mk0 x hx.ne').mul_left.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx), zero_div]
 
 /-!
@@ -587,7 +593,7 @@ theorem image_const_mul_Ioi_zero {k : Type _} [LinearOrderedField k] {x : k} (hx
 
 @[simp]
 theorem image_affine_Icc' {a : k} (h : 0 < a) (b c d : k) :
-    (fun x => a * x + b) '' Icc c d = Icc (a * c + b) (a * d + b) := by
+    (fun x => a * x + b) '' IccCat c d = IccCat (a * c + b) (a * d + b) := by
   suffices (fun x => x + b) '' ((fun x => a * x) '' Icc c d) = Icc (a * c + b) (a * d + b) by
     rwa [Set.image_image] at this
   rw [image_mul_left_Icc' h, image_add_const_Icc]

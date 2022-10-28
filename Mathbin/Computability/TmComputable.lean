@@ -39,9 +39,9 @@ namespace Turing
 the namespace `turing.TM2` in `turing_machine.lean`), with an input and output stack,
  a main function, an initial state and some finiteness guarantees. -/
 structure FinTm2 where
-  {k : Type}
+  {K : Type}
   [kDecidableEq : DecidableEq K]
-  [kFin : Fintypeₓ K]
+  [kFin : Fintype K]
   -- index type of stacks
   (k₀ k₁ : K)
   -- input and output stack
@@ -49,14 +49,14 @@ structure FinTm2 where
   -- type of stack elements
   Λ : Type
   main : Λ
-  [ΛFin : Fintypeₓ Λ]
+  [ΛFin : Fintype Λ]
   -- type of function labels
   σ : Type
   initialState : σ
   -- type of states of the machine
-  [σFin : Fintypeₓ σ]
-  [Γk₀Fin : Fintypeₓ (Γ k₀)]
-  m : Λ → Turing.TM2.Stmt Γ Λ σ
+  [σFin : Fintype σ]
+  [Γk₀Fin : Fintype (Γ k₀)]
+  m : Λ → Turing.TM2Cat.Stmt Γ Λ σ
 
 -- the program itself, i.e. one function for every function label
 namespace FinTm2
@@ -65,7 +65,7 @@ section
 
 variable (tm : FinTm2)
 
-instance : DecidableEq tm.k :=
+instance : DecidableEq tm.K :=
   tm.kDecidableEq
 
 instance : Inhabited tm.σ :=
@@ -73,19 +73,19 @@ instance : Inhabited tm.σ :=
 
 /-- The type of statements (functions) corresponding to this TM. -/
 def Stmt : Type :=
-  Turing.TM2.Stmt tm.Γ tm.Λ tm.σ deriving Inhabited
+  Turing.TM2Cat.Stmt tm.Γ tm.Λ tm.σ deriving Inhabited
 
 /-- The type of configurations (functions) corresponding to this TM. -/
 def Cfg : Type :=
-  Turing.TM2.Cfg tm.Γ tm.Λ tm.σ
+  Turing.TM2Cat.Cfg tm.Γ tm.Λ tm.σ
 
 instance inhabitedCfg : Inhabited (Cfg tm) :=
-  Turing.TM2.Cfg.inhabited _ _ _
+  Turing.TM2Cat.Cfg.inhabited _ _ _
 
 /-- The step function corresponding to this TM. -/
 @[simp]
 def step : tm.Cfg → Option tm.Cfg :=
-  Turing.TM2.step tm.m
+  Turing.TM2Cat.step tm.m
 
 end
 
@@ -95,7 +95,7 @@ end FinTm2
 def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) : tm.Cfg where
   l := Option.some tm.main
   var := tm.initialState
-  stk := fun k =>
+  stk k :=
     @dite (List (tm.Γ k)) (k = tm.k₀) (tm.kDecidableEq k tm.k₀)
       (fun h => by
         rw [h]
@@ -106,7 +106,7 @@ def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) : tm.Cfg where
 def haltList (tm : FinTm2) (s : List (tm.Γ tm.k₁)) : tm.Cfg where
   l := Option.none
   var := tm.initialState
-  stk := fun k =>
+  stk k :=
     @dite (List (tm.Γ k)) (k = tm.k₁) (tm.kDecidableEq k tm.k₁)
       (fun h => by
         rw [h]
@@ -141,7 +141,7 @@ def EvalsTo.trans {σ : Type _} (f : σ → Option σ) (a : σ) (b : σ) (c : Op
 /-- Reflexivity of `evals_to_in_time` in 0 steps. -/
 @[refl]
 def EvalsToInTime.refl {σ : Type _} (f : σ → Option σ) (a : σ) : EvalsToInTime f a a 0 :=
-  ⟨EvalsTo.refl f a, le_reflₓ 0⟩
+  ⟨EvalsTo.refl f a, le_refl 0⟩
 
 /-- Transitivity of `evals_to_in_time` in the sum of the numbers of steps. -/
 @[trans]
@@ -205,20 +205,20 @@ def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncodi
     (h : Tm2ComputableInPolyTime ea eb f) : Tm2ComputableInTime ea eb f :=
   ⟨h.toTm2ComputableAux, fun n => h.time.eval n, h.outputsFun⟩
 
-open Turing.TM2.Stmt
+open Turing.TM2Cat.Stmt
 
 /-- A Turing machine computing the identity on α. -/
 def idComputer {α : Type} (ea : FinEncoding α) : FinTm2 where
-  k := Unit
+  K := Unit
   k₀ := ⟨⟩
   k₁ := ⟨⟩
-  Γ := fun _ => ea.Γ
+  Γ _ := ea.Γ
   Λ := Unit
   main := ⟨⟩
   σ := Unit
   initialState := ⟨⟩
   Γk₀Fin := ea.ΓFin
-  m := fun _ => halt
+  m _ := halt
 
 instance inhabitedFinTm2 : Inhabited FinTm2 :=
   ⟨idComputer Computability.inhabitedFinEncoding.default⟩
@@ -228,10 +228,10 @@ noncomputable section
 /-- A proof that the identity map on α is computable in polytime. -/
 def idComputableInPolyTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInPolyTime α α ea ea id where
   tm := idComputer ea
-  inputAlphabet := Equivₓ.cast rfl
-  outputAlphabet := Equivₓ.cast rfl
+  inputAlphabet := Equiv.cast rfl
+  outputAlphabet := Equiv.cast rfl
   time := 1
-  outputsFun := fun _ => { steps := 1, evals_in_steps := rfl, steps_le_m := by simp only [Polynomial.eval_one] }
+  outputsFun _ := { steps := 1, evals_in_steps := rfl, steps_le_m := by simp only [Polynomial.eval_one] }
 
 instance inhabitedTm2ComputableInPolyTime :
     Inhabited (Tm2ComputableInPolyTime (default : FinEncoding Bool) default id) :=
@@ -239,14 +239,14 @@ instance inhabitedTm2ComputableInPolyTime :
 
 instance inhabitedTm2OutputsInTime :
     Inhabited
-      (Tm2OutputsInTime (idComputer finEncodingBoolBool) (List.map (Equivₓ.cast rfl).invFun [false])
-        (some (List.map (Equivₓ.cast rfl).invFun [false])) _) :=
+      (Tm2OutputsInTime (idComputer finEncodingBoolBool) (List.map (Equiv.cast rfl).invFun [false])
+        (some (List.map (Equiv.cast rfl).invFun [false])) _) :=
   ⟨(idComputableInPolyTime finEncodingBoolBool).outputsFun false⟩
 
 instance inhabitedTm2Outputs :
     Inhabited
-      (Tm2Outputs (idComputer finEncodingBoolBool) (List.map (Equivₓ.cast rfl).invFun [false])
-        (some (List.map (Equivₓ.cast rfl).invFun [false]))) :=
+      (Tm2Outputs (idComputer finEncodingBoolBool) (List.map (Equiv.cast rfl).invFun [false])
+        (some (List.map (Equiv.cast rfl).invFun [false]))) :=
   ⟨Tm2OutputsInTime.toTm2Outputs Turing.inhabitedTm2OutputsInTime.default⟩
 
 instance inhabitedEvalsToInTime : Inhabited (EvalsToInTime (fun _ : Unit => some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=

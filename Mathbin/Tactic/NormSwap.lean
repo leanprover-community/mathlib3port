@@ -3,7 +3,7 @@ Copyright (c) 2021 Yakov Pechersky All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 import Mathbin.Tactic.NormFin
 
 /-!
@@ -17,7 +17,7 @@ Based on equality of these `nat`s, equality proofs are generated using either
 -/
 
 
-open Equivₓ Tactic Expr
+open Equiv Tactic Expr
 
 open NormNum
 
@@ -33,7 +33,7 @@ example : equiv.swap 1 2 1 = 2 := by norm_num
 @[norm_num]
 unsafe def eval : expr → tactic (expr × expr) := fun e => do
   let (swapt, fun_ty, coe_fn_inst, fexpr, c) ← e.match_app_coe_fn <|> fail "did not get an app coe_fn expr"
-  guardₓ (fexpr = `` Equivₓ.swap) <|> fail "coe_fn not of equiv.swap"
+  guard (fexpr = `` Equiv.swap) <|> fail "coe_fn not of equiv.swap"
   let [α, deceq_inst, a, b] ← pure fexpr.get_app_args <|> fail "swap did not have exactly two args applied"
   let na ←
     a.to_rat <|> do

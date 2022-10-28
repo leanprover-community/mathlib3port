@@ -59,38 +59,38 @@ Instead, we define graded orders by their grade function, without talking about 
 -/
 
 
-open Finsetₓ Nat OrderDual
+open Finset Nat OrderDual
 
 variable {𝕆 ℙ α β : Type _}
 
 /-- An `𝕆`-graded order is an order `α` equipped with a strictly monotone function `grade 𝕆 : α → 𝕆`
 which preserves order covering (`covby`). -/
-class GradeOrder (𝕆 α : Type _) [Preorderₓ 𝕆] [Preorderₓ α] where
+class GradeOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] where
   grade : α → 𝕆
-  grade_strict_mono : StrictMonoₓ grade
+  grade_strict_mono : StrictMono grade
   covby_grade ⦃a b : α⦄ : a ⋖ b → grade a ⋖ grade b
 
 /-- A `𝕆`-graded order where minimal elements have minimal grades. -/
-class GradeMinOrder (𝕆 α : Type _) [Preorderₓ 𝕆] [Preorderₓ α] extends GradeOrder 𝕆 α where
+class GradeMinOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends GradeOrder 𝕆 α where
   is_min_grade ⦃a : α⦄ : IsMin a → IsMin (grade a)
 
 /-- A `𝕆`-graded order where maximal elements have maximal grades. -/
-class GradeMaxOrder (𝕆 α : Type _) [Preorderₓ 𝕆] [Preorderₓ α] extends GradeOrder 𝕆 α where
+class GradeMaxOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends GradeOrder 𝕆 α where
   is_max_grade ⦃a : α⦄ : IsMax a → IsMax (grade a)
 
 /-- A `𝕆`-graded order where minimal elements have minimal grades and maximal elements have maximal
 grades. -/
-class GradeBoundedOrder (𝕆 α : Type _) [Preorderₓ 𝕆] [Preorderₓ α] extends GradeMinOrder 𝕆 α, GradeMaxOrder 𝕆 α
+class GradeBoundedOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends GradeMinOrder 𝕆 α, GradeMaxOrder 𝕆 α
 
-section Preorderₓ
+section Preorder
 
 -- grading
-variable [Preorderₓ 𝕆]
+variable [Preorder 𝕆]
 
-section Preorderₓ
+section Preorder
 
 -- graded order
-variable [Preorderₓ α]
+variable [Preorder α]
 
 section GradeOrder
 
@@ -106,7 +106,7 @@ protected theorem Covby.grade (h : a ⋖ b) : grade 𝕆 a ⋖ grade 𝕆 b :=
 
 variable {𝕆}
 
-theorem grade_strict_mono : StrictMonoₓ (grade 𝕆 : α → 𝕆) :=
+theorem grade_strict_mono : StrictMono (grade 𝕆 : α → 𝕆) :=
   GradeOrder.grade_strict_mono
 
 theorem covby_iff_lt_covby_grade : a ⋖ b ↔ a < b ∧ grade 𝕆 a ⋖ grade 𝕆 b :=
@@ -144,16 +144,16 @@ theorem is_max_grade_iff : IsMax (grade 𝕆 a) ↔ IsMax a :=
 
 end GradeMaxOrder
 
-end Preorderₓ
+end Preorder
 
 -- graded order
-theorem grade_mono [PartialOrderₓ α] [GradeOrder 𝕆 α] : Monotoneₓ (grade 𝕆 : α → 𝕆) :=
+theorem grade_mono [PartialOrder α] [GradeOrder 𝕆 α] : Monotone (grade 𝕆 : α → 𝕆) :=
   grade_strict_mono.Monotone
 
-section LinearOrderₓ
+section LinearOrder
 
 -- graded order
-variable [LinearOrderₓ α] [GradeOrder 𝕆 α] {a b : α}
+variable [LinearOrder α] [GradeOrder 𝕆 α] {a b : α}
 
 theorem grade_injective : Function.Injective (grade 𝕆 : α → 𝕆) :=
   grade_strict_mono.Injective
@@ -174,17 +174,17 @@ theorem grade_ne_grade_iff : grade 𝕆 a ≠ grade 𝕆 b ↔ a ≠ b :=
   grade_injective.ne_iff
 
 theorem grade_covby_grade_iff : grade 𝕆 a ⋖ grade 𝕆 b ↔ a ⋖ b :=
-  (covby_iff_lt_covby_grade.trans <| and_iff_right_of_impₓ fun h => grade_lt_grade_iff.1 h.1).symm
+  (covby_iff_lt_covby_grade.trans <| and_iff_right_of_imp fun h => grade_lt_grade_iff.1 h.1).symm
 
-end LinearOrderₓ
+end LinearOrder
 
 -- graded order
-end Preorderₓ
+end Preorder
 
 -- grading
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ 𝕆] [Preorderₓ α]
+variable [PartialOrder 𝕆] [Preorder α]
 
 @[simp]
 theorem grade_bot [OrderBot 𝕆] [OrderBot α] [GradeMinOrder 𝕆 α] : grade 𝕆 (⊥ : α) = ⊥ :=
@@ -194,19 +194,19 @@ theorem grade_bot [OrderBot 𝕆] [OrderBot α] [GradeMinOrder 𝕆 α] : grade 
 theorem grade_top [OrderTop 𝕆] [OrderTop α] [GradeMaxOrder 𝕆 α] : grade 𝕆 (⊤ : α) = ⊤ :=
   (is_max_top.grade _).eq_top
 
-end PartialOrderₓ
+end PartialOrder
 
 /-! ### Instances -/
 
 
-variable [Preorderₓ 𝕆] [Preorderₓ ℙ] [Preorderₓ α] [Preorderₓ β]
+variable [Preorder 𝕆] [Preorder ℙ] [Preorder α] [Preorder β]
 
-instance Preorderₓ.toGradeBoundedOrder : GradeBoundedOrder α α where
+instance Preorder.toGradeBoundedOrder : GradeBoundedOrder α α where
   grade := id
-  is_min_grade := fun _ => id
-  is_max_grade := fun _ => id
-  grade_strict_mono := strict_mono_idₓ
-  covby_grade := fun a b => id
+  is_min_grade _ := id
+  is_max_grade _ := id
+  grade_strict_mono := strict_mono_id
+  covby_grade a b := id
 
 @[simp]
 theorem grade_self (a : α) : grade α a = a :=
@@ -218,7 +218,7 @@ theorem grade_self (a : α) : grade α a = a :=
 instance [GradeOrder 𝕆 α] : GradeOrder 𝕆ᵒᵈ αᵒᵈ where
   grade := to_dual ∘ grade 𝕆 ∘ of_dual
   grade_strict_mono := grade_strict_mono.dual
-  covby_grade := fun a b h => (h.ofDual.grade _).toDual
+  covby_grade a b h := (h.ofDual.grade _).toDual
 
 instance [GradeMaxOrder 𝕆 α] : GradeMinOrder 𝕆ᵒᵈ αᵒᵈ :=
   { OrderDual.gradeOrder with is_min_grade := fun _ => IsMax.grade _ }
@@ -243,30 +243,30 @@ theorem grade_of_dual [GradeOrder 𝕆 α] (a : αᵒᵈ) : grade 𝕆 (ofDual a
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMonoₓ f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
+def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
     GradeOrder ℙ α where
   grade := f ∘ grade 𝕆
   grade_strict_mono := hf.comp grade_strict_mono
-  covby_grade := fun a b h => hcovby _ _ <| h.grade _
+  covby_grade a b h := hcovby _ _ <| h.grade _
 
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeMinOrder.liftLeft [GradeMinOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMonoₓ f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
+def GradeMinOrder.liftLeft [GradeMinOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
     (hmin : ∀ a, IsMin a → IsMin (f a)) : GradeMinOrder ℙ α :=
   { GradeOrder.liftLeft f hf hcovby with is_min_grade := fun a ha => hmin _ <| ha.grade _ }
 
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeMaxOrder.liftLeft [GradeMaxOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMonoₓ f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
+def GradeMaxOrder.liftLeft [GradeMaxOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
     (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeMaxOrder ℙ α :=
   { GradeOrder.liftLeft f hf hcovby with is_max_grade := fun a ha => hmax _ <| ha.grade _ }
 
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeBoundedOrder.liftLeft [GradeBoundedOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMonoₓ f)
+def GradeBoundedOrder.liftLeft [GradeBoundedOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f)
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmin : ∀ a, IsMin a → IsMin (f a)) (hmax : ∀ a, IsMax a → IsMax (f a)) :
     GradeBoundedOrder ℙ α :=
   { GradeMinOrder.liftLeft f hf hcovby hmin, GradeMaxOrder.liftLeft f hf hcovby hmax with }
@@ -274,30 +274,30 @@ def GradeBoundedOrder.liftLeft [GradeBoundedOrder 𝕆 α] (f : 𝕆 → ℙ) (h
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMonoₓ f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
+def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
     GradeOrder 𝕆 α where
   grade := grade 𝕆 ∘ f
   grade_strict_mono := grade_strict_mono.comp hf
-  covby_grade := fun a b h => (hcovby _ _ h).grade _
+  covby_grade a b h := (hcovby _ _ h).grade _
 
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeMinOrder.liftRight [GradeMinOrder 𝕆 β] (f : α → β) (hf : StrictMonoₓ f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
+def GradeMinOrder.liftRight [GradeMinOrder 𝕆 β] (f : α → β) (hf : StrictMono f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
     (hmin : ∀ a, IsMin a → IsMin (f a)) : GradeMinOrder 𝕆 α :=
   { GradeOrder.liftRight f hf hcovby with is_min_grade := fun a ha => (hmin _ ha).grade _ }
 
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeMaxOrder.liftRight [GradeMaxOrder 𝕆 β] (f : α → β) (hf : StrictMonoₓ f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
+def GradeMaxOrder.liftRight [GradeMaxOrder 𝕆 β] (f : α → β) (hf : StrictMono f) (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b)
     (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeMaxOrder 𝕆 α :=
   { GradeOrder.liftRight f hf hcovby with is_max_grade := fun a ha => (hmax _ ha).grade _ }
 
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
-def GradeBoundedOrder.liftRight [GradeBoundedOrder 𝕆 β] (f : α → β) (hf : StrictMonoₓ f)
+def GradeBoundedOrder.liftRight [GradeBoundedOrder 𝕆 β] (f : α → β) (hf : StrictMono f)
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmin : ∀ a, IsMin a → IsMin (f a)) (hmax : ∀ a, IsMax a → IsMax (f a)) :
     GradeBoundedOrder 𝕆 α :=
   { GradeMinOrder.liftRight f hf hcovby hmin, GradeMaxOrder.liftRight f hf hcovby hmax with }
@@ -309,19 +309,19 @@ def GradeBoundedOrder.liftRight [GradeBoundedOrder 𝕆 β] (f : α → β) (hf 
 /-- A `fin n`-graded order is also `ℕ`-graded. We do not mark this an instance because `n` is not
 inferrable. -/
 @[reducible]
-def GradeOrder.finToNat (n : ℕ) [GradeOrder (Finₓ n) α] : GradeOrder ℕ α :=
-  (GradeOrder.liftLeft (_ : Finₓ n → ℕ) Finₓ.coe_strict_mono) fun _ _ => Covby.coe_fin
+def GradeOrder.finToNat (n : ℕ) [GradeOrder (Fin n) α] : GradeOrder ℕ α :=
+  (GradeOrder.liftLeft (_ : Fin n → ℕ) Fin.coe_strict_mono) fun _ _ => Covby.coe_fin
 
 -- See note [reducible non-instances]
 /-- A `fin n`-graded order is also `ℕ`-graded. We do not mark this an instance because `n` is not
 inferrable. -/
 @[reducible]
-def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Finₓ n) α] : GradeMinOrder ℕ α :=
-  (GradeMinOrder.liftLeft (_ : Finₓ n → ℕ) Finₓ.coe_strict_mono fun _ _ => Covby.coe_fin) fun a h => by
+def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Fin n) α] : GradeMinOrder ℕ α :=
+  (GradeMinOrder.liftLeft (_ : Fin n → ℕ) Fin.coe_strict_mono fun _ _ => Covby.coe_fin) fun a h => by
     cases n
-    · exact ((@Finₓ.elim0 fun _ => False) <| grade (Finₓ 0) a).elim
+    · exact ((@Fin.elim0 fun _ => False) <| grade (Fin 0) a).elim
       
-    rw [h.eq_bot, Finₓ.bot_eq_zero]
+    rw [h.eq_bot, Fin.bot_eq_zero]
     exact is_min_bot
 
 instance GradeOrder.natToInt [GradeOrder ℕ α] : GradeOrder ℤ α :=

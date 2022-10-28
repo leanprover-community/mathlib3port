@@ -21,12 +21,12 @@ namespace Vector
 variable {α β : Type _} {n : ℕ} (a a' : α)
 
 @[simp]
-theorem nth_mem (i : Finₓ n) (v : Vector α n) : v.nth i ∈ v.toList := by
+theorem nth_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList := by
   rw [nth_eq_nth_le]
   exact List.nth_le_mem _ _ _
 
 theorem mem_iff_nth (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
-  simp only [List.mem_iff_nth_le, Finₓ.exists_iff, Vector.nth_eq_nth_le] <;>
+  simp only [List.mem_iff_nth_le, Fin.exists_iff, Vector.nth_eq_nth_le] <;>
     exact ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length], h⟩⟩
 
 theorem not_mem_nil : a ∉ (Vector.nil : Vector α 0).toList :=
@@ -60,10 +60,10 @@ theorem mem_of_mem_tail (v : Vector α n) (ha : a ∈ v.tail.toList) : a ∈ v.t
     
 
 theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) : b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by
-  rw [Vector.to_list_map, List.mem_mapₓ]
+  rw [Vector.to_list_map, List.mem_map]
 
 theorem not_mem_map_zero (b : β) (v : Vector α 0) (f : α → β) : b ∉ (v.map f).toList := by
-  simpa only [Vector.eq_nil v, Vector.map_nil, Vector.to_list_nil] using List.not_mem_nilₓ b
+  simpa only [Vector.eq_nil v, Vector.map_nil, Vector.to_list_nil] using List.not_mem_nil b
 
 theorem mem_map_succ_iff (b : β) (v : Vector α (n + 1)) (f : α → β) :
     b ∈ (v.map f).toList ↔ f v.head = b ∨ ∃ a : α, a ∈ v.tail.toList ∧ f a = b := by

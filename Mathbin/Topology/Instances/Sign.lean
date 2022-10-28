@@ -23,9 +23,9 @@ instance : DiscreteTopology SignType :=
 
 variable {α : Type _} [Zero α] [TopologicalSpace α]
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α] [DecidableRel ((· < ·) : α → α → Prop)] [OrderTopology α]
+variable [PartialOrder α] [DecidableRel ((· < ·) : α → α → Prop)] [OrderTopology α]
 
 theorem continuous_at_sign_of_pos {a : α} (h : 0 < a) : ContinuousAt sign a := by
   refine' (continuous_at_const : ContinuousAt (fun x => (1 : SignType)) a).congr _
@@ -37,11 +37,11 @@ theorem continuous_at_sign_of_neg {a : α} (h : a < 0) : ContinuousAt sign a := 
   rw [Filter.EventuallyEq, eventually_nhds_iff]
   exact ⟨{ x | x < 0 }, fun x hx => (sign_neg hx).symm, is_open_gt' 0, h⟩
 
-end PartialOrderₓ
+end PartialOrder
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [LinearOrderₓ α] [OrderTopology α]
+variable [LinearOrder α] [OrderTopology α]
 
 theorem continuous_at_sign_of_ne_zero {a : α} (h : a ≠ 0) : ContinuousAt sign a := by
   rcases h.lt_or_lt with (h_neg | h_pos)
@@ -50,5 +50,5 @@ theorem continuous_at_sign_of_ne_zero {a : α} (h : a ≠ 0) : ContinuousAt sign
   · exact continuous_at_sign_of_pos h_pos
     
 
-end LinearOrderₓ
+end LinearOrder
 

@@ -40,9 +40,9 @@ However if `C` and `D` are both large categories at the same universe level,
 this is a small category at the next higher level.
 -/
 instance Functor.category : Category.{max u₁ v₂} (C ⥤ D) where
-  Hom := fun F G => NatTrans F G
-  id := fun F => NatTrans.id F
-  comp := fun _ _ _ α β => vcomp α β
+  Hom F G := NatTrans F G
+  id F := NatTrans.id F
+  comp _ _ _ α β := vcomp α β
 
 variable {C D} {E : Type u₃} [Category.{v₃} E]
 
@@ -91,7 +91,7 @@ theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
 @[simps]
 def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I where
   app := fun X : C => β.app (F.obj X) ≫ I.map (α.app X)
-  naturality' := fun X Y f => by
+  naturality' X Y f := by
     rw [functor.comp_map, functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality, map_comp, assoc]
 
 -- mathport name: «expr ◫ »
@@ -121,13 +121,13 @@ namespace Functor
 /-- Flip the arguments of a bifunctor. See also `currying.lean`. -/
 @[simps]
 protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
-  obj := fun k =>
+  obj k :=
     { obj := fun j => (F.obj j).obj k, map := fun j j' f => (F.map f).app k,
       map_id' := fun X => by
         rw [CategoryTheory.Functor.map_id]
         rfl,
       map_comp' := fun X Y Z f g => by rw [map_comp, ← comp_app] }
-  map := fun c c' f => { app := fun j => (F.obj j).map f }
+  map c c' f := { app := fun j => (F.obj j).map f }
 
 end Functor
 

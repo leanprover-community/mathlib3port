@@ -78,7 +78,7 @@ theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A �
 
 instance (priority := 100) initial_mono_of_strict_initial_objects :
     InitialMonoClass
-      C where is_initial_mono_from := fun I A hI => { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
+      C where is_initial_mono_from I A hI := { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
 
 /-- If `I` is initial, then `X ⨯ I` is isomorphic to it. -/
 @[simps Hom]
@@ -176,7 +176,7 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)

@@ -52,7 +52,7 @@ protected theorem dist_eq (x y : α) : dist (x : Completion α) y = dist x y :=
 properties on α and extending them to `completion α` by continuity. -/
 protected theorem dist_self (x : Completion α) : dist x x = 0 := by
   apply induction_on x
-  · refine' is_closed_eq _ continuous_const
+  · refine' isClosedEq _ continuous_const
     exact completion.continuous_dist continuous_id continuous_id
     
   · intro a
@@ -62,17 +62,17 @@ protected theorem dist_self (x : Completion α) : dist x x = 0 := by
 protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
   apply induction_on₂ x y
   · exact
-      is_closed_eq (completion.continuous_dist continuous_fst continuous_snd)
+      isClosedEq (completion.continuous_dist continuous_fst continuous_snd)
         (completion.continuous_dist continuous_snd continuous_fst)
     
   · intro a b
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
-  · refine' is_closed_le _ (Continuous.add _ _) <;>
+  · refine' isClosedLe _ (Continuous.add _ _) <;>
       apply_rules [completion.continuous_dist, Continuous.fst, Continuous.snd, continuous_id]
     
   · intro a b c
@@ -80,7 +80,7 @@ protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y 
     exact dist_triangle a b c
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Elements of the uniformity (defined generally for completions) can be characterized in terms
 of the distance. -/
 protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α)) :
@@ -104,19 +104,19 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
           by ext <;> simp
         rw [this]
         apply IsClosed.union _ tclosed
-        exact is_closed_le continuous_const completion.uniform_continuous_dist.continuous
+        exact isClosedLe continuous_const completion.uniform_continuous_dist.continuous
         
       · intro x y
         rw [completion.dist_eq]
         by_cases h:ε ≤ dist x y
         · exact Or.inl h
           
-        · have Z := hε (not_leₓ.1 h)
+        · have Z := hε (not_le.1 h)
           simp only [Set.mem_set_of_eq] at Z
           exact Or.inr Z
           
         
-    simp only [not_le.mpr hxy, false_orₓ, not_leₓ] at this
+    simp only [not_le.mpr hxy, false_or_iff, not_le] at this
     exact ts this
     
   · /- Start from a set `s` containing an ε-neighborhood of the diagonal in `completion α`. To show
@@ -130,7 +130,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     let r : Set (ℝ × ℝ) := { p | dist p.1 p.2 < ε }
     have : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos
     have T := uniform_continuous_def.1 (@completion.uniform_continuous_dist α _) r this
-    simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_propₓ, Filter.mem_map, Set.mem_set_of_eq] at T
+    simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map, Set.mem_set_of_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩
     refine' mem_of_superset ht1 _
     have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε := by
@@ -138,7 +138,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
       have : ((a, b), (a, a)) ∈ t1 ×ˢ t2 := ⟨hab, refl_mem_uniformity ht2⟩
       have I := ht this
       simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I
-      exact lt_of_le_of_ltₓ (le_abs_self _) I
+      exact lt_of_le_of_lt (le_abs_self _) I
     show t1 ⊆ s
     · rintro ⟨a, b⟩ hp
       have : dist a b < ε := A a b hp
@@ -164,7 +164,7 @@ protected theorem uniformity_dist' : 𝓤 (Completion α) = ⨅ ε : { ε : ℝ 
   · simp [completion.mem_uniformity_dist, subset_def]
     
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
-    use ⟨min r p, lt_minₓ hr hp⟩
+    use ⟨min r p, lt_min hr hp⟩
     simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]
     
 
@@ -182,12 +182,12 @@ instance : MetricSpace (Completion α) where
   uniformity_dist := Completion.uniformity_dist
 
 /-- The embedding of a metric space in its completion is an isometry. -/
-theorem coe_isometry : Isometry (coe : α → Completion α) :=
-  Isometry.of_dist_eq Completion.dist_eq
+theorem coeIsometry : Isometry (coe : α → Completion α) :=
+  Isometry.ofDistEq Completion.dist_eq
 
 @[simp]
 protected theorem edist_eq (x y : α) : edist (x : Completion α) y = edist x y :=
-  coe_isometry x y
+  coeIsometry x y
 
 end UniformSpace.Completion
 

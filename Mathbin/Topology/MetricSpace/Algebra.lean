@@ -33,16 +33,16 @@ section HasLipschitzMul
 
 /-- Class `has_lipschitz_add M` says that the addition `(+) : X × X → X` is Lipschitz jointly in
 the two arguments. -/
-class HasLipschitzAdd [AddMonoidₓ β] : Prop where
+class HasLipschitzAdd [AddMonoid β] : Prop where
   lipschitz_add : ∃ C, LipschitzWith C fun p : β × β => p.1 + p.2
 
 /-- Class `has_lipschitz_mul M` says that the multiplication `(*) : X × X → X` is Lipschitz jointly
 in the two arguments. -/
 @[to_additive]
-class HasLipschitzMul [Monoidₓ β] : Prop where
+class HasLipschitzMul [Monoid β] : Prop where
   lipschitz_mul : ∃ C, LipschitzWith C fun p : β × β => p.1 * p.2
 
-variable [Monoidₓ β]
+variable [Monoid β]
 
 /-- The Lipschitz constant of a monoid `β` satisfying `has_lipschitz_mul` -/
 @[to_additive "The Lipschitz constant of an `add_monoid` `β` satisfying `has_lipschitz_add`"]
@@ -52,7 +52,7 @@ def HasLipschitzMul.c [_i : HasLipschitzMul β] : ℝ≥0 :=
 variable {β}
 
 @[to_additive]
-theorem lipschitz_with_lipschitz_const_mul_edist [_i : HasLipschitzMul β] :
+theorem lipschitzWithLipschitzConstMulEdist [_i : HasLipschitzMul β] :
     LipschitzWith (HasLipschitzMul.c β) fun p : β × β => p.1 * p.2 :=
   Classical.choose_spec _i.lipschitz_mul
 
@@ -62,50 +62,50 @@ variable [HasLipschitzMul β]
 theorem lipschitz_with_lipschitz_const_mul :
     ∀ p q : β × β, dist (p.1 * p.2) (q.1 * q.2) ≤ HasLipschitzMul.c β * dist p q := by
   rw [← lipschitz_with_iff_dist_le_mul]
-  exact lipschitz_with_lipschitz_const_mul_edist
+  exact lipschitzWithLipschitzConstMulEdist
 
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul β :=
-  ⟨lipschitz_with_lipschitz_const_mul_edist.Continuous⟩
+  ⟨lipschitzWithLipschitzConstMulEdist.Continuous⟩
 
 @[to_additive]
-instance Submonoid.has_lipschitz_mul (s : Submonoid β) :
+instance Submonoid.hasLipschitzMul (s : Submonoid β) :
     HasLipschitzMul s where lipschitz_mul :=
     ⟨HasLipschitzMul.c β, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
-      convert lipschitz_with_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
+      convert lipschitzWithLipschitzConstMulEdist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 
 @[to_additive]
-instance MulOpposite.has_lipschitz_mul :
+instance MulOpposite.hasLipschitzMul :
     HasLipschitzMul
       βᵐᵒᵖ where lipschitz_mul :=
     ⟨HasLipschitzMul.c β, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
-      (lipschitz_with_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
-        (congr_arg _ <| max_commₓ _ _)⟩
+      (lipschitzWithLipschitzConstMulEdist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
+        (congr_arg _ <| max_comm _ _)⟩
 
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy
-instance Real.has_lipschitz_add :
+instance Real.hasLipschitzAdd :
     HasLipschitzAdd ℝ where lipschitz_add :=
     ⟨2, by
       rw [lipschitz_with_iff_dist_le_mul]
       intro p q
       simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one, Nnreal.coe_bit0]
-      convert le_transₓ (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
+      convert le_trans (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
         
-      have := le_max_leftₓ (abs (p.1 - q.1)) (abs (p.2 - q.2))
-      have := le_max_rightₓ (abs (p.1 - q.1)) (abs (p.2 - q.2))
+      have := le_max_left (abs (p.1 - q.1)) (abs (p.2 - q.2))
+      have := le_max_right (abs (p.1 - q.1)) (abs (p.2 - q.2))
       linarith⟩
 
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
-instance Nnreal.has_lipschitz_add :
+instance Nnreal.hasLipschitzAdd :
     HasLipschitzAdd ℝ≥0 where lipschitz_add :=
     ⟨HasLipschitzAdd.c ℝ, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
-      convert lipschitz_with_lipschitz_const_add_edist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
+      convert lipschitzWithLipschitzConstAddEdist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 
 end HasLipschitzMul
 
@@ -154,27 +154,27 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
       have := dist_triangle b' b 0
       have := dist_comm (a • b') (a' • b')
       have := dist_comm a a'
-      have : dist a' a ≤ dist (a', b') (a, b) := le_max_leftₓ _ _
-      have : dist b' b ≤ dist (a', b') (a, b) := le_max_rightₓ _ _
+      have : dist a' a ≤ dist (a', b') (a, b) := le_max_left _ _
+      have : dist b' b ≤ dist (a', b') (a, b) := le_max_right _ _
       have := dist_smul_pair a b' b
       have := dist_pair_smul a a' b'
       nlinarith
       
-    · have : δ ≤ _ := min_le_rightₓ _ _
-      have : δ ≤ _ := min_le_leftₓ _ _
+    · have : δ ≤ _ := min_le_right _ _
+      have : δ ≤ _ := min_le_left _ _
       have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by rw [inv_mul_lt_iff] <;> nlinarith
       nlinarith
       
 
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
-instance Real.has_bounded_smul : HasBoundedSmul ℝ ℝ where
-  dist_smul_pair' := fun x y₁ y₂ => by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
-  dist_pair_smul' := fun x₁ x₂ y => by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
+instance Real.hasBoundedSmul : HasBoundedSmul ℝ ℝ where
+  dist_smul_pair' x y₁ y₂ := by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
+  dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 
-instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
-  dist_smul_pair' := fun x y₁ y₂ => by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
-  dist_pair_smul' := fun x₁ x₂ y => by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
+instance Nnreal.hasBoundedSmul : HasBoundedSmul ℝ≥0 ℝ≥0 where
+  dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
+  dist_pair_smul' x₁ x₂ y := by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
 instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
@@ -184,13 +184,13 @@ instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : Ha
 
 end HasBoundedSmul
 
-instance [Monoidₓ α] [HasLipschitzMul α] : HasLipschitzAdd (Additive α) :=
+instance [Monoid α] [HasLipschitzMul α] : HasLipschitzAdd (Additive α) :=
   ⟨@HasLipschitzMul.lipschitz_mul α _ _ _⟩
 
-instance [AddMonoidₓ α] [HasLipschitzAdd α] : HasLipschitzMul (Multiplicative α) :=
+instance [AddMonoid α] [HasLipschitzAdd α] : HasLipschitzMul (Multiplicative α) :=
   ⟨@HasLipschitzAdd.lipschitz_add α _ _ _⟩
 
 @[to_additive]
-instance [Monoidₓ α] [HasLipschitzMul α] : HasLipschitzMul αᵒᵈ :=
+instance [Monoid α] [HasLipschitzMul α] : HasLipschitzMul αᵒᵈ :=
   ‹HasLipschitzMul α›
 

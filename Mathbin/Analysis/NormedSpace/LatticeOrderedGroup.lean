@@ -51,8 +51,8 @@ theorem solid {α : Type _} [NormedLatticeAddCommGroup α] {a b : α} (h : |a| �
   NormedLatticeAddCommGroup.solid a b h
 
 instance : NormedLatticeAddCommGroup ℝ where
-  add_le_add_left := fun _ _ h _ => add_le_add le_rflₓ h
-  solid := fun _ _ => id
+  add_le_add_left _ _ h _ := add_le_add le_rfl h
+  solid _ _ := id
 
 -- see Note [lower instance priority]
 /-- A normed lattice ordered group is an ordered additive commutative group
@@ -68,10 +68,10 @@ open LatticeOrderedCommGroup
 theorem dual_solid (a b : α) (h : b ⊓ -b ≤ a ⊓ -a) : ∥a∥ ≤ ∥b∥ := by
   apply solid
   rw [abs_eq_sup_neg]
-  nth_rw 0 [← neg_negₓ a]
+  nth_rw 0 [← neg_neg a]
   rw [← neg_inf_eq_sup_neg]
   rw [abs_eq_sup_neg]
-  nth_rw 0 [← neg_negₓ b]
+  nth_rw 0 [← neg_neg b]
   rwa [← neg_inf_eq_sup_neg, neg_le_neg_iff, @inf_comm _ _ _ b, @inf_comm _ _ _ a]
 
 -- see Note [lower instance priority]
@@ -86,7 +86,7 @@ theorem norm_abs_eq_norm (a : α) : ∥|a|∥ = ∥a∥ :=
 
 theorem norm_inf_sub_inf_le_add_norm (a b c d : α) : ∥a ⊓ b - c ⊓ d∥ ≤ ∥a - c∥ + ∥b - d∥ := by
   rw [← norm_abs_eq_norm (a - c), ← norm_abs_eq_norm (b - d)]
-  refine' le_transₓ (solid _) (norm_add_le |a - c| |b - d|)
+  refine' le_trans (solid _) (norm_add_le |a - c| |b - d|)
   rw [abs_of_nonneg (|a - c| + |b - d|) (add_nonneg (abs_nonneg (a - c)) (abs_nonneg (b - d)))]
   calc
     |a ⊓ b - c ⊓ d| = |a ⊓ b - c ⊓ b + (c ⊓ b - c ⊓ d)| := by rw [sub_add_sub_cancel]
@@ -102,7 +102,7 @@ theorem norm_inf_sub_inf_le_add_norm (a b c d : α) : ∥a ⊓ b - c ⊓ d∥ �
 
 theorem norm_sup_sub_sup_le_add_norm (a b c d : α) : ∥a ⊔ b - c ⊔ d∥ ≤ ∥a - c∥ + ∥b - d∥ := by
   rw [← norm_abs_eq_norm (a - c), ← norm_abs_eq_norm (b - d)]
-  refine' le_transₓ (solid _) (norm_add_le |a - c| |b - d|)
+  refine' le_trans (solid _) (norm_add_le |a - c| |b - d|)
   rw [abs_of_nonneg (|a - c| + |b - d|) (add_nonneg (abs_nonneg (a - c)) (abs_nonneg (b - d)))]
   calc
     |a ⊔ b - c ⊔ d| = |a ⊔ b - c ⊔ b + (c ⊔ b - c ⊔ d)| := by rw [sub_add_sub_cancel]
@@ -157,28 +157,28 @@ theorem norm_sup_sub_sup_le_norm (x y z : α) : ∥x ⊔ z - y ⊔ z∥ ≤ ∥x
 theorem norm_inf_sub_inf_le_norm (x y z : α) : ∥x ⊓ z - y ⊓ z∥ ≤ ∥x - y∥ :=
   solid (abs_inf_sub_inf_le_abs x y z)
 
-theorem lipschitz_with_sup_right (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
-  LipschitzWith.of_dist_le_mul fun x y => by
-    rw [Nonneg.coe_one, one_mulₓ, dist_eq_norm, dist_eq_norm]
+theorem lipschitzWithSupRight (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
+  LipschitzWith.ofDistLeMul fun x y => by
+    rw [Nonneg.coe_one, one_mul, dist_eq_norm, dist_eq_norm]
     exact norm_sup_sub_sup_le_norm x y z
 
-theorem lipschitz_with_pos : LipschitzWith 1 (HasPosPart.pos : α → α) :=
-  lipschitz_with_sup_right 0
+theorem lipschitzWithPos : LipschitzWith 1 (PosPart.pos : α → α) :=
+  lipschitzWithSupRight 0
 
-theorem continuous_pos : Continuous (HasPosPart.pos : α → α) :=
-  LipschitzWith.continuous lipschitz_with_pos
+theorem continuous_pos : Continuous (PosPart.pos : α → α) :=
+  LipschitzWith.continuous lipschitzWithPos
 
-theorem continuous_neg' : Continuous (HasNegPart.neg : α → α) :=
+theorem continuous_neg' : Continuous (NegPart.neg : α → α) :=
   continuous_pos.comp continuous_neg
 
-theorem is_closed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } := by
-  suffices { x : E | 0 ≤ x } = HasNegPart.neg ⁻¹' {(0 : E)} by
+theorem isClosedNonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } := by
+  suffices { x : E | 0 ≤ x } = NegPart.neg ⁻¹' {(0 : E)} by
     rw [this]
-    exact IsClosed.preimage continuous_neg' is_closed_singleton
+    exact IsClosed.preimage continuous_neg' isClosedSingleton
   ext1 x
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_set_of_eq, neg_eq_zero_iff]
 
-theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G] [HasContinuousSub G]
+theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G] [HasContinuousSub G]
     (h : IsClosed { x : G | 0 ≤ x }) : IsClosed { p : G × G | p.fst ≤ p.snd } := by
   have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } := by
     ext1 p
@@ -187,7 +187,7 @@ theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [Topologica
   exact IsClosed.preimage (continuous_snd.sub continuous_fst) h
 
 -- See note [lower instance priority]
-instance (priority := 100) NormedLatticeAddCommGroup.order_closed_topology {E} [NormedLatticeAddCommGroup E] :
+instance (priority := 100) NormedLatticeAddCommGroup.orderClosedTopology {E} [NormedLatticeAddCommGroup E] :
     OrderClosedTopology E :=
-  ⟨is_closed_le_of_is_closed_nonneg is_closed_nonneg⟩
+  ⟨isClosedLeOfIsClosedNonneg isClosedNonneg⟩
 

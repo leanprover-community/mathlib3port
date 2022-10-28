@@ -29,7 +29,7 @@ categories. Furthermore, galois connections correspond to adjoint functors.
 
 universe u v
 
-namespace Preorderₓ
+namespace Preorder
 
 open CategoryTheory
 
@@ -42,28 +42,28 @@ See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
 
 See <https://stacks.math.columbia.edu/tag/00D3>.
 -/
-instance (priority := 100) smallCategory (α : Type u) [Preorderₓ α] : SmallCategory α where
-  Hom := fun U V => ULift (Plift (U ≤ V))
-  id := fun X => ⟨⟨le_refl X⟩⟩
-  comp := fun X Y Z f g => ⟨⟨le_trans _ _ _ f.down.down g.down.down⟩⟩
+instance (priority := 100) smallCategory (α : Type u) [Preorder α] : SmallCategory α where
+  Hom U V := ULift (PLift (U ≤ V))
+  id X := ⟨⟨le_refl X⟩⟩
+  comp X Y Z f g := ⟨⟨le_trans _ _ _ f.down.down g.down.down⟩⟩
 
-end Preorderₓ
+end Preorder
 
 namespace CategoryTheory
 
 open Opposite
 
-variable {X : Type u} [Preorderₓ X]
+variable {X : Type u} [Preorder X]
 
 /-- Express an inequality as a morphism in the corresponding preorder category.
 -/
 def homOfLe {x y : X} (h : x ≤ y) : x ⟶ y :=
-  ULift.up (Plift.up h)
+  ULift.up (PLift.up h)
 
 alias hom_of_le ← _root_.has_le.le.hom
 
 @[simp]
-theorem hom_of_le_refl {x : X} : (le_reflₓ x).Hom = 𝟙 x :=
+theorem hom_of_le_refl {x : X} : (le_refl x).Hom = 𝟙 x :=
   rfl
 
 @[simp]
@@ -102,16 +102,16 @@ end CategoryTheory
 
 section
 
-variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
+variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 
 /-- A monotone function between preorders induces a functor between the associated categories.
 -/
-def Monotoneₓ.functor {f : X → Y} (h : Monotoneₓ f) : X ⥤ Y where
+def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y where
   obj := f
-  map := fun x₁ x₂ g => (h g.le).Hom
+  map x₁ x₂ g := (h g.le).Hom
 
 @[simp]
-theorem Monotoneₓ.functor_obj {f : X → Y} (h : Monotoneₓ f) : h.Functor.obj = f :=
+theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.Functor.obj = f :=
   rfl
 
 /-- A galois connection between preorders induces an adjunction between the associated categories.
@@ -125,37 +125,37 @@ end
 
 namespace CategoryTheory
 
-section Preorderₓ
+section Preorder
 
-variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
+variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 
 /-- A functor between preorder categories is monotone.
 -/
 @[mono]
-theorem Functor.monotone (f : X ⥤ Y) : Monotoneₓ f.obj := fun x y hxy => (f.map hxy.Hom).le
+theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.Hom).le
 
 /-- An adjunction between preorder categories induces a galois connection.
 -/
 theorem Adjunction.gc {L : X ⥤ Y} {R : Y ⥤ X} (adj : L ⊣ R) : GaloisConnection L.obj R.obj := fun x y =>
   ⟨fun h => ((adj.homEquiv x y).toFun h.Hom).le, fun h => ((adj.homEquiv x y).invFun h.Hom).le⟩
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable {X : Type u} {Y : Type v} [PartialOrderₓ X] [PartialOrderₓ Y]
+variable {X : Type u} {Y : Type v} [PartialOrder X] [PartialOrder Y]
 
 theorem Iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
-  le_antisymmₓ f.Hom.le f.inv.le
+  le_antisymm f.Hom.le f.inv.le
 
 /-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
 def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y where
   toFun := e.Functor.obj
   invFun := e.inverse.obj
-  left_inv := fun a => (e.unitIso.app a).to_eq.symm
-  right_inv := fun b => (e.counitIso.app b).to_eq
-  map_rel_iff' := fun a a' =>
+  left_inv a := (e.unitIso.app a).to_eq.symm
+  right_inv b := (e.counitIso.app b).to_eq
+  map_rel_iff' a a' :=
     ⟨fun h => ((Equivalence.unit e).app a ≫ e.inverse.map h.Hom ≫ (Equivalence.unitInv e).app a').le, fun h : a ≤ a' =>
       (e.Functor.map h.Hom).le⟩
 
@@ -169,7 +169,7 @@ theorem Equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = 
 theorem Equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) : e.toOrderIso.symm y = e.inverse.obj y :=
   rfl
 
-end PartialOrderₓ
+end PartialOrder
 
 end CategoryTheory
 

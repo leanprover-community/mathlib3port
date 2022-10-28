@@ -134,14 +134,14 @@ theorem many_one_equiv_refl {α} [Primcodable α] (p : α → Prop) : ManyOneEqu
 @[symm]
 theorem ManyOneEquiv.symm {α β} [Primcodable α] [Primcodable β] {p : α → Prop} {q : β → Prop} :
     ManyOneEquiv p q → ManyOneEquiv q p :=
-  And.swap
+  And.symm
 
 @[trans]
 theorem ManyOneEquiv.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} : ManyOneEquiv p q → ManyOneEquiv q r → ManyOneEquiv p r
   | ⟨pq, qp⟩, ⟨qr, rq⟩ => ⟨pq.trans qr, rq.trans qp⟩
 
-theorem equivalence_of_many_one_equiv {α} [Primcodable α] : Equivalenceₓ (@ManyOneEquiv α α _ _) :=
+theorem equivalence_of_many_one_equiv {α} [Primcodable α] : Equivalence (@ManyOneEquiv α α _ _) :=
   ⟨many_one_equiv_refl, fun x y => ManyOneEquiv.symm, fun x y z => ManyOneEquiv.trans⟩
 
 @[refl]
@@ -151,14 +151,14 @@ theorem one_one_equiv_refl {α} [Primcodable α] (p : α → Prop) : OneOneEquiv
 @[symm]
 theorem OneOneEquiv.symm {α β} [Primcodable α] [Primcodable β] {p : α → Prop} {q : β → Prop} :
     OneOneEquiv p q → OneOneEquiv q p :=
-  And.swap
+  And.symm
 
 @[trans]
 theorem OneOneEquiv.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} : OneOneEquiv p q → OneOneEquiv q r → OneOneEquiv p r
   | ⟨pq, qp⟩, ⟨qr, rq⟩ => ⟨pq.trans qr, rq.trans qp⟩
 
-theorem equivalence_of_one_one_equiv {α} [Primcodable α] : Equivalenceₓ (@OneOneEquiv α α _ _) :=
+theorem equivalence_of_one_one_equiv {α} [Primcodable α] : Equivalence (@OneOneEquiv α α _ _) :=
   ⟨one_one_equiv_refl, fun x y => OneOneEquiv.symm, fun x y z => OneOneEquiv.trans⟩
 
 theorem OneOneEquiv.to_many_one {α β} [Primcodable α] [Primcodable β] {p : α → Prop} {q : β → Prop} :
@@ -166,13 +166,13 @@ theorem OneOneEquiv.to_many_one {α β} [Primcodable α] [Primcodable β] {p : �
   | ⟨pq, qp⟩ => ⟨pq.to_many_one, qp.to_many_one⟩
 
 /-- a computable bijection -/
-def Equivₓ.Computable {α β} [Primcodable α] [Primcodable β] (e : α ≃ β) :=
+def Equiv.Computable {α β} [Primcodable α] [Primcodable β] (e : α ≃ β) :=
   Computable e ∧ Computable e.symm
 
-theorem Equivₓ.Computable.symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} : e.Computable → e.symm.Computable :=
-  And.swap
+theorem Equiv.Computable.symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} : e.Computable → e.symm.Computable :=
+  And.symm
 
-theorem Equivₓ.Computable.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {e₁ : α ≃ β} {e₂ : β ≃ γ} :
+theorem Equiv.Computable.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {e₁ : α ≃ β} {e₂ : β ≃ γ} :
     e₁.Computable → e₂.Computable → (e₁.trans e₂).Computable
   | ⟨l₁, r₁⟩, ⟨l₂, r₂⟩ => ⟨l₂.comp l₁, r₁.comp r₂⟩
 
@@ -208,19 +208,19 @@ theorem OneOneEquiv.le_congr_right {α β γ} [Primcodable α] [Primcodable β] 
 
 theorem ManyOneEquiv.congr_left {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : ManyOneEquiv p q) : ManyOneEquiv p r ↔ ManyOneEquiv q r :=
-  and_congrₓ h.le_congr_left h.le_congr_right
+  and_congr h.le_congr_left h.le_congr_right
 
 theorem ManyOneEquiv.congr_right {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : ManyOneEquiv q r) : ManyOneEquiv p q ↔ ManyOneEquiv p r :=
-  and_congrₓ h.le_congr_right h.le_congr_left
+  and_congr h.le_congr_right h.le_congr_left
 
 theorem OneOneEquiv.congr_left {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : OneOneEquiv p q) : OneOneEquiv p r ↔ OneOneEquiv q r :=
-  and_congrₓ h.le_congr_left h.le_congr_right
+  and_congr h.le_congr_left h.le_congr_right
 
 theorem OneOneEquiv.congr_right {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : OneOneEquiv q r) : OneOneEquiv p q ↔ OneOneEquiv p r :=
-  and_congrₓ h.le_congr_right h.le_congr_left
+  and_congr h.le_congr_right h.le_congr_left
 
 @[simp]
 theorem Ulower.down_computable {α} [Primcodable α] : (Ulower.equiv α).Computable :=
@@ -287,23 +287,23 @@ theorem many_one_equiv_to_nat (p : Set α) (q : Set β) : ManyOneEquiv (ToNat p)
 
 /-- A many-one degree is an equivalence class of sets up to many-one equivalence. -/
 def ManyOneDegree : Type :=
-  Quotientₓ (⟨ManyOneEquiv, equivalence_of_many_one_equiv⟩ : Setoidₓ (Set ℕ))
+  Quotient (⟨ManyOneEquiv, equivalence_of_many_one_equiv⟩ : Setoid (Set ℕ))
 
 namespace ManyOneDegree
 
 /-- The many-one degree of a set on a primcodable type. -/
 def of (p : α → Prop) : ManyOneDegree :=
-  Quotientₓ.mk' (ToNat p)
+  Quotient.mk' (ToNat p)
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem ind_on {C : ManyOneDegree → Prop} (d : ManyOneDegree) (h : ∀ p : Set ℕ, C (of p)) : C d :=
-  Quotientₓ.induction_on' d h
+  Quotient.induction_on' d h
 
 /-- Lifts a function on sets of natural numbers to many-one degrees.
 -/
-@[elabAsElim, reducible]
+@[elab_as_elim, reducible]
 protected def liftOn {φ} (d : ManyOneDegree) (f : Set ℕ → φ) (h : ∀ p q, ManyOneEquiv p q → f p = f q) : φ :=
-  Quotientₓ.liftOn' d f h
+  Quotient.liftOn' d f h
 
 @[simp]
 protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ) (h : ∀ p q, ManyOneEquiv p q → f p = f q) :
@@ -312,7 +312,7 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ) (h : ∀ p 
 
 /-- Lifts a binary function on sets of natural numbers to many-one degrees.
 -/
-@[elabAsElim, reducible, simp]
+@[elab_as_elim, reducible, simp]
 protected def liftOn₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
     (h : ∀ p₁ p₂ q₁ q₂, ManyOneEquiv p₁ p₂ → ManyOneEquiv q₁ q₂ → f p₁ q₁ = f p₂ q₂) : φ :=
   d₁.liftOn (fun p => d₂.liftOn (f p) fun q₁ q₂ hq => h _ _ _ _ (by rfl) hq)
@@ -330,7 +330,7 @@ protected theorem lift_on₂_eq {φ} (p q : Set ℕ) (f : Set ℕ → Set ℕ �
   rfl
 
 @[simp]
-theorem of_eq_of {p : α → Prop} {q : β → Prop} : of p = of q ↔ ManyOneEquiv p q := by simp [of, Quotientₓ.eq']
+theorem of_eq_of {p : α → Prop} {q : β → Prop} : of p = of q ↔ ManyOneEquiv p q := by simp [of, Quotient.eq']
 
 instance : Inhabited ManyOneDegree :=
   ⟨of (∅ : Set ℕ)⟩
@@ -352,7 +352,7 @@ private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   intro hp hq
-  simp_all only [ManyOneEquiv, of_le_of, of_eq_of, true_andₓ]
+  simp_all only [ManyOneEquiv, of_le_of, of_eq_of, true_and_iff]
 
 private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ := by
   induction d₁ using ManyOneDegree.ind_on
@@ -360,11 +360,11 @@ private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d�
   induction d₃ using ManyOneDegree.ind_on
   apply ManyOneReducible.trans
 
-instance : PartialOrderₓ ManyOneDegree where
+instance : PartialOrder ManyOneDegree where
   le := (· ≤ ·)
-  le_refl := le_reflₓ
-  le_trans := fun _ _ _ => le_transₓ
-  le_antisymm := fun _ _ => le_antisymmₓ
+  le_refl := le_refl
+  le_trans _ _ _ := le_trans
+  le_antisymm _ _ := le_antisymm
 
 /-- The join of two degrees, induced by the disjoint union of two underlying sets. -/
 instance : Add ManyOneDegree :=

@@ -42,7 +42,7 @@ In particular, this number is bounded by `5 ^ dim` by a straightforward measure 
 
 universe u
 
-open Metric Set FiniteDimensional MeasureTheory Filter Finₓ
+open Metric Set FiniteDimensional MeasureTheory Filter Fin
 
 open Ennreal TopologicalSpace
 
@@ -59,10 +59,10 @@ variable [NormedSpace ℝ E] {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 /-- Rescaling a satellite configuration in a vector space, to put the basepoint at `0` and the base
 radius at `1`. -/
 def centerAndRescale : SatelliteConfig E N τ where
-  c := fun i => (a.R (last N))⁻¹ • (a.c i - a.c (last N))
-  R := fun i => (a.R (last N))⁻¹ * a.R i
-  rpos := fun i => mul_pos (inv_pos.2 (a.rpos _)) (a.rpos _)
-  h := fun i j hij => by
+  c i := (a.R (last N))⁻¹ • (a.c i - a.c (last N))
+  R i := (a.R (last N))⁻¹ * a.R i
+  rpos i := mul_pos (inv_pos.2 (a.rpos _)) (a.rpos _)
+  h i j hij := by
     rcases a.h i j hij with (H | H)
     · left
       constructor
@@ -90,7 +90,7 @@ def centerAndRescale : SatelliteConfig E N τ where
         exact H.2
         
       
-  hlast := fun i hi => by
+  hlast i hi := by
     have H := a.hlast i hi
     constructor
     · rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.2 (a.rpos _).le)]
@@ -103,9 +103,9 @@ def centerAndRescale : SatelliteConfig E N τ where
       refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (a.rpos _).le)
       exact H.2
       
-  inter := fun i hi => by
+  inter i hi := by
     have H := a.inter i hi
-    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.2 (a.rpos _).le), ← mul_addₓ]
+    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.2 (a.rpos _).le), ← mul_add]
     refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (a.rpos _).le)
     rw [dist_eq_norm] at H
     convert H using 2
@@ -124,20 +124,20 @@ end SatelliteConfig
 /-- The maximum cardinality of a `1`-separated set in the ball of radius `2`. This is also the
 optimal number of families in the Besicovitch covering theorem. -/
 def multiplicity (E : Type _) [NormedAddCommGroup E] :=
-  sup { N | ∃ s : Finsetₓ E, s.card = N ∧ (∀ c ∈ s, ∥c∥ ≤ 2) ∧ ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥ }
+  sup { N | ∃ s : Finset E, s.card = N ∧ (∀ c ∈ s, ∥c∥ ≤ 2) ∧ ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥ }
 
 section
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 /-- Any `1`-separated set in the ball of radius `2` has cardinality at most `5 ^ dim`. This is
 useful to show that the supremum in the definition of `besicovitch.multiplicity E` is
 well behaved. -/
-theorem card_le_of_separated (s : Finsetₓ E) (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥) :
+theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥) :
     s.card ≤ 5 ^ finrank ℝ E := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
-  let μ : Measureₓ E := measure.add_haar
+  let μ : Measure E := measure.add_haar
   let δ : ℝ := (1 : ℝ) / 2
   let ρ : ℝ := (5 : ℝ) / 2
   have ρpos : 0 < ρ := by norm_num [ρ]
@@ -154,7 +154,7 @@ theorem card_le_of_separated (s : Finsetₓ E) (hs : ∀ c ∈ s, ∥c∥ ≤ 2)
     calc
       δ + dist x 0 ≤ δ + 2 := by
         rw [dist_zero_right]
-        exact add_le_add le_rflₓ (hs x hx)
+        exact add_le_add le_rfl (hs x hx)
       _ = 5 / 2 := by norm_num [δ]
       
   have I :
@@ -162,9 +162,9 @@ theorem card_le_of_separated (s : Finsetₓ E) (hs : ∀ c ∈ s, ∥c∥ ≤ 2)
       Ennreal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) :=
     calc
       (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) = μ A := by
-        rw [hA, measure_bUnion_finset D fun c hc => measurable_set_ball]
+        rw [hA, measure_bUnion_finset D fun c hc => measurableSetBall]
         have I : 0 < δ := by norm_num [δ]
-        simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finsetₓ.sum_const, nsmul_eq_mul, div_pow, mul_assoc]
+        simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finset.sum_const, nsmul_eq_mul, div_pow, mul_assoc]
       _ ≤ μ (ball (0 : E) ρ) := measure_mono A_subset
       _ = Ennreal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) := by simp only [μ.add_haar_ball_of_pos _ ρpos]
       
@@ -182,7 +182,7 @@ theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E := by
     exact Besicovitch.card_le_of_separated s h.1 h.2
     
 
-theorem card_le_multiplicity {s : Finsetₓ E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥) :
+theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥) :
     s.card ≤ multiplicity E := by
   apply le_cSup
   · refine' ⟨5 ^ finrank ℝ E, _⟩
@@ -201,7 +201,7 @@ theorem exists_good_δ :
     ∃ δ : ℝ,
       0 < δ ∧
         δ < 1 ∧
-          ∀ s : Finsetₓ E, (∀ c ∈ s, ∥c∥ ≤ 2) → (∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - δ ≤ ∥c - d∥) → s.card ≤ multiplicity E :=
+          ∀ s : Finset E, (∀ c ∈ s, ∥c∥ ≤ 2) → (∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - δ ≤ ∥c - d∥) → s.card ≤ multiplicity E :=
   by
   /- This follows from a compactness argument: otherwise, one could extract a converging
     subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
@@ -210,17 +210,17 @@ theorem exists_good_δ :
   classical
   by_contra' h
   set N := multiplicity E + 1 with hN
-  have : ∀ δ : ℝ, 0 < δ → ∃ f : Finₓ N → E, (∀ i : Finₓ N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥f i - f j∥ := by
+  have : ∀ δ : ℝ, 0 < δ → ∃ f : Fin N → E, (∀ i : Fin N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥f i - f j∥ := by
     intro δ hδ
-    rcases lt_or_leₓ δ 1 with (hδ' | hδ')
+    rcases lt_or_le δ 1 with (hδ' | hδ')
     · rcases h δ hδ hδ' with ⟨s, hs, h's, s_card⟩
-      obtain ⟨f, f_inj, hfs⟩ : ∃ f : Finₓ N → E, Function.Injective f ∧ range f ⊆ ↑s := by
-        have : Fintypeₓ.card (Finₓ N) ≤ s.card := by
-          simp only [Fintypeₓ.card_fin]
+      obtain ⟨f, f_inj, hfs⟩ : ∃ f : Fin N → E, Function.Injective f ∧ range f ⊆ ↑s := by
+        have : Fintype.card (Fin N) ≤ s.card := by
+          simp only [Fintype.card_fin]
           exact s_card
         rcases Function.Embedding.exists_of_card_le_finset this with ⟨f, hf⟩
         exact ⟨f, f.injective, hf⟩
-      simp only [range_subset_iff, Finsetₓ.mem_coe] at hfs
+      simp only [range_subset_iff, Finset.mem_coe] at hfs
       refine' ⟨f, fun i => hs _ (hfs i), fun i j hij => h's _ (hfs i) _ (hfs j) (f_inj.ne hij)⟩
       
     · exact ⟨fun i => 0, fun i => by simp, fun i j hij => by simpa only [norm_zero, sub_nonpos, sub_self] ⟩
@@ -229,19 +229,19 @@ theorem exists_good_δ :
   -- in the image are separated by `1 - δ`.
   choose! F hF using this
   -- Choose a converging subsequence when `δ → 0`.
-  have : ∃ f : Finₓ N → E, (∀ i : Finₓ N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 ≤ ∥f i - f j∥ := by
+  have : ∃ f : Fin N → E, (∀ i : Fin N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 ≤ ∥f i - f j∥ := by
     obtain ⟨u, u_mono, zero_lt_u, hu⟩ :
       ∃ u : ℕ → ℝ, (∀ m n : ℕ, m < n → u n < u m) ∧ (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
       exists_seq_strict_anti_tendsto (0 : ℝ)
-    have A : ∀ n, F (u n) ∈ closed_ball (0 : Finₓ N → E) 2 := by
+    have A : ∀ n, F (u n) ∈ closed_ball (0 : Fin N → E) 2 := by
       intro n
-      simp only [pi_norm_le_iff zero_le_two, mem_closed_ball, dist_zero_right, (hF (u n) (zero_lt_u n)).left,
+      simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right, (hF (u n) (zero_lt_u n)).left,
         forall_const]
     obtain ⟨f, fmem, φ, φ_mono, hf⟩ :
-      ∃ f ∈ closed_ball (0 : Finₓ N → E) 2, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ tendsto ((F ∘ u) ∘ φ) at_top (𝓝 f) :=
+      ∃ f ∈ closed_ball (0 : Fin N → E) 2, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto ((F ∘ u) ∘ φ) at_top (𝓝 f) :=
       IsCompact.tendsto_subseq (is_compact_closed_ball _ _) A
     refine' ⟨f, fun i => _, fun i j hij => _⟩
-    · simp only [pi_norm_le_iff zero_le_two, mem_closed_ball, dist_zero_right] at fmem
+    · simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right] at fmem
       exact fmem i
       
     · have A : tendsto (fun n => ∥F (u (φ n)) i - F (u (φ n)) j∥) at_top (𝓝 ∥f i - f j∥) :=
@@ -258,15 +258,15 @@ theorem exists_good_δ :
     by_contra
     have : 1 ≤ ∥f i - f j∥ := h'f i j h
     simp only [hij, norm_zero, sub_self] at this
-    exact lt_irreflₓ _ (this.trans_lt zero_lt_one)
-  let s := Finsetₓ.image f Finsetₓ.univ
+    exact lt_irrefl _ (this.trans_lt zero_lt_one)
+  let s := Finset.image f Finset.univ
   have s_card : s.card = N := by
-    rw [Finsetₓ.card_image_of_injective _ finj]
-    exact Finsetₓ.card_fin N
+    rw [Finset.card_image_of_injective _ finj]
+    exact Finset.card_fin N
   have hs : ∀ c ∈ s, ∥c∥ ≤ 2 := by
-    simp only [hf, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finsetₓ.mem_univ, Finsetₓ.mem_image]
+    simp only [hf, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ, Finset.mem_image]
   have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥ := by
-    simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finsetₓ.mem_univ, Finsetₓ.mem_image, Ne.def,
+    simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ, Finset.mem_image, Ne.def,
       exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
     intro i j hij
     have : i ≠ j := fun h => by
@@ -275,7 +275,7 @@ theorem exists_good_δ :
     exact h'f i j this
   have : s.card ≤ multiplicity E := card_le_multiplicity hs h's
   rw [s_card, hN] at this
-  exact lt_irreflₓ _ ((Nat.lt_succ_selfₓ (multiplicity E)).trans_le this)
+  exact lt_irrefl _ ((Nat.lt_succ_self (multiplicity E)).trans_le this)
 
 /-- A small positive number such that any `1 - δ`-separated set in the ball of radius `2` has
 cardinality at most `besicovitch.multiplicity E`. -/
@@ -297,11 +297,11 @@ theorem one_lt_good_τ : 1 < goodτ E := by
 
 variable {E}
 
-theorem card_le_multiplicity_of_δ {s : Finsetₓ E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2)
+theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2)
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - goodδ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
   (Classical.choose_spec (exists_good_δ E)).2.2 s hs h's
 
-theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Finₓ n → E) (h : ∀ i, ∥f i∥ ≤ 2)
+theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ∥f i∥ ≤ 2)
     (h' : ∀ i j, i ≠ j → 1 - goodδ E ≤ ∥f i - f j∥) : n ≤ multiplicity E := by
   classical
   have finj : Function.Injective f := by
@@ -310,15 +310,15 @@ theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Finₓ n → E) (h : ∀ i, 
     have : 1 - good_δ E ≤ ∥f i - f j∥ := h' i j h
     simp only [hij, norm_zero, sub_self] at this
     linarith [good_δ_lt_one E]
-  let s := Finsetₓ.image f Finsetₓ.univ
+  let s := Finset.image f Finset.univ
   have s_card : s.card = n := by
-    rw [Finsetₓ.card_image_of_injective _ finj]
-    exact Finsetₓ.card_fin n
+    rw [Finset.card_image_of_injective _ finj]
+    exact Finset.card_fin n
   have hs : ∀ c ∈ s, ∥c∥ ≤ 2 := by
-    simp only [h, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finsetₓ.mem_univ, Finsetₓ.mem_image,
-      implies_true_iff]
+    simp only [h, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ, Finset.mem_image,
+      imp_true_iff]
   have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - good_δ E ≤ ∥c - d∥ := by
-    simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finsetₓ.mem_univ, Finsetₓ.mem_image, Ne.def,
+    simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ, Finset.mem_image, Ne.def,
       exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
     intro i j hij
     have : i ≠ j := fun h => by
@@ -350,7 +350,7 @@ where both of them are `> 2`.
 
 
 theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ)
-    (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) (i j : Finₓ N.succ) (inej : i ≠ j) : 1 - δ ≤ ∥a.c i - a.c j∥ := by
+    (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) (i j : Fin N.succ) (inej : i ≠ j) : 1 - δ ≤ ∥a.c i - a.c j∥ := by
   have ah : ∀ i j, i ≠ j → a.r i ≤ ∥a.c i - a.c j∥ ∧ a.r j ≤ τ * a.r i ∨ a.r j ≤ ∥a.c j - a.c i∥ ∧ a.r i ≤ τ * a.r j :=
     by simpa only [dist_eq_norm] using a.h
   have δnonneg : 0 ≤ δ := by linarith only [hτ, hδ1]
@@ -374,18 +374,18 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
     rw [inv_eq_one_div, div_le_iff τpos, ← lastr, mul_comm]
     exact a.hlast' k hτ
   rcases ah i j inej with (H | H)
-  · apply le_transₓ _ H.1
+  · apply le_trans _ H.1
     exact hτ' i
     
   · rw [norm_sub_rev]
-    apply le_transₓ _ H.1
+    apply le_trans _ H.1
     exact hτ' j
     
 
 variable [NormedSpace ℝ E]
 
 theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
-    (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) (i j : Finₓ N.succ)
+    (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) (i j : Fin N.succ)
     (inej : i ≠ j) (hi : ∥a.c i∥ ≤ 2) (hj : 2 < ∥a.c j∥) : 1 - δ ≤ ∥a.c i - (2 / ∥a.c j∥) • a.c j∥ := by
   have ah : ∀ i j, i ≠ j → a.r i ≤ ∥a.c i - a.c j∥ ∧ a.r j ≤ τ * a.r i ∨ a.r j ≤ ∥a.c j - a.c i∥ ∧ a.r i ≤ τ * a.r j :=
     by simpa only [dist_eq_norm] using a.h
@@ -394,7 +394,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
   have τpos : 0 < τ := _root_.zero_lt_one.trans_le hτ
   have hcrj : ∥a.c j∥ ≤ a.r j + 1 := by simpa only [lastc, lastr, dist_zero_right] using a.inter' j
   have I : a.r i ≤ 2 := by
-    rcases lt_or_leₓ i (last N) with (H | H)
+    rcases lt_or_le i (last N) with (H | H)
     · apply (a.hlast i H).1.trans
       simpa only [dist_eq_norm, lastc, sub_zero] using hi
       
@@ -422,7 +422,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         
     calc
       a.r j - δ ≤ a.r j - a.r j / 4 * δ := by
-        refine' sub_le_sub le_rflₓ _
+        refine' sub_le_sub le_rfl _
         refine' mul_le_of_le_one_left δnonneg _
         linarith only [C]
       _ = (1 - δ / 4) * a.r j := by ring
@@ -431,7 +431,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         rw [← mul_assoc]
         apply mul_le_mul_of_nonneg_right J (a.rpos _).le
       _ ≤ ∥a.c i - a.c j∥ := by
-        rw [one_mulₓ]
+        rw [one_mul]
         exact H.1
       
   set d := (2 / ∥a.c j∥) • a.c j with hd
@@ -449,7 +449,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
   linarith only [this]
 
 theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
-    (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (i j : Finₓ N.succ) (inej : i ≠ j)
+    (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (i j : Fin N.succ) (inej : i ≠ j)
     (hi : 2 < ∥a.c i∥) (hij : ∥a.c i∥ ≤ ∥a.c j∥) : 1 - δ ≤ ∥(2 / ∥a.c i∥) • a.c i - (2 / ∥a.c j∥) • a.c j∥ := by
   have ah : ∀ i j, i ≠ j → a.r i ≤ ∥a.c i - a.c j∥ ∧ a.r j ≤ τ * a.r i ∨ a.r j ≤ ∥a.c j - a.c i∥ ∧ a.r i ≤ τ * a.r j :=
     by simpa only [dist_eq_norm] using a.h
@@ -462,7 +462,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       intro iN
       change i = last N at iN
       rw [iN, lastc, norm_zero] at hi
-      exact lt_irreflₓ _ (zero_le_two.trans_lt hi)
+      exact lt_irrefl _ (zero_le_two.trans_lt hi)
     convert (a.hlast i this).1
     rw [dist_eq_norm, lastc, sub_zero]
   have hj : 2 < ∥a.c j∥ := hi.trans_le hij
@@ -474,9 +474,9 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       ∥a.c j - a.c i∥ ≤ ∥a.c j - d∥ + ∥d - a.c i∥ := by simp [← dist_eq_norm, dist_triangle]
       _ = ∥a.c j∥ - ∥a.c i∥ + ∥d - a.c i∥ := by
         nth_rw 0 [← one_smul ℝ (a.c j)]
-        rw [add_left_injₓ, hd, ← sub_smul, norm_smul, Real.norm_eq_abs, abs_of_nonneg, sub_mul, one_mulₓ,
+        rw [add_left_inj, hd, ← sub_smul, norm_smul, Real.norm_eq_abs, abs_of_nonneg, sub_mul, one_mul,
           div_mul_cancel _ (zero_le_two.trans_lt hj).ne']
-        rwa [sub_nonneg, div_le_iff (zero_lt_two.trans hj), one_mulₓ]
+        rwa [sub_nonneg, div_le_iff (zero_lt_two.trans hj), one_mul]
       
   have J : a.r j - ∥a.c j - a.c i∥ ≤ s / 2 * δ :=
     calc
@@ -512,8 +512,8 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
     (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :
-    ∃ c' : Finₓ N.succ → E, (∀ n, ∥c' n∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥c' i - c' j∥ := by
-  let c' : Finₓ N.succ → E := fun i => if ∥a.c i∥ ≤ 2 then a.c i else (2 / ∥a.c i∥) • a.c i
+    ∃ c' : Fin N.succ → E, (∀ n, ∥c' n∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥c' i - c' j∥ := by
+  let c' : Fin N.succ → E := fun i => if ∥a.c i∥ ≤ 2 then a.c i else (2 / ∥a.c i∥) • a.c i
   have norm_c'_le : ∀ i, ∥c' i∥ ≤ 2 := by
     intro i
     simp only [c']
@@ -523,26 +523,26 @@ theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (las
     by_cases hi:∥a.c i∥ = 0 <;> field_simp [norm_smul, hi]
   refine' ⟨c', fun n => norm_c'_le n, fun i j inej => _⟩
   -- up to exchanging `i` and `j`, one can assume `∥c i∥ ≤ ∥c j∥`.
-  wlog (discharger := tactic.skip) hij : ∥a.c i∥ ≤ ∥a.c j∥ := le_totalₓ ∥a.c i∥ ∥a.c j∥ using i j, j i
+  wlog (discharger := tactic.skip) hij : ∥a.c i∥ ≤ ∥a.c j∥ := le_total ∥a.c i∥ ∥a.c j∥ using i j, j i
   swap
   · intro i_ne_j
     rw [norm_sub_rev]
     exact this i_ne_j.symm
     
-  rcases le_or_ltₓ ∥a.c j∥ 2 with (Hj | Hj)
+  rcases le_or_lt ∥a.c j∥ 2 with (Hj | Hj)
   -- case `∥c j∥ ≤ 2` (and therefore also `∥c i∥ ≤ 2`)
   · simp_rw [c', Hj, hij.trans Hj, if_true]
     exact exists_normalized_aux1 a lastr hτ δ hδ1 hδ2 i j inej
     
   -- case `2 < ∥c j∥`
-  · have H'j : ∥a.c j∥ ≤ 2 ↔ False := by simpa only [not_leₓ, iff_falseₓ] using Hj
-    rcases le_or_ltₓ ∥a.c i∥ 2 with (Hi | Hi)
+  · have H'j : ∥a.c j∥ ≤ 2 ↔ False := by simpa only [not_le, iff_false_iff] using Hj
+    rcases le_or_lt ∥a.c i∥ 2 with (Hi | Hi)
     · -- case `∥c i∥ ≤ 2`
       simp_rw [c', Hi, if_true, H'j, if_false]
       exact exists_normalized_aux2 a lastc lastr hτ δ hδ1 hδ2 i j inej Hi Hj
       
     · -- case `2 < ∥c i∥`
-      have H'i : ∥a.c i∥ ≤ 2 ↔ False := by simpa only [not_leₓ, iff_falseₓ] using Hi
+      have H'i : ∥a.c i∥ ≤ 2 ↔ False := by simpa only [not_le, iff_false_iff] using Hi
       simp_rw [c', H'i, if_false, H'j, if_false]
       exact exists_normalized_aux3 a lastc lastr hτ δ hδ1 i j inej Hi hij
       
@@ -561,9 +561,9 @@ theorem is_empty_satellite_config_multiplicity : IsEmpty (SatelliteConfig E (mul
     intro a
     let b := a.center_and_rescale
     rcases b.exists_normalized a.center_and_rescale_center a.center_and_rescale_radius (one_lt_good_τ E).le (good_δ E)
-        le_rflₓ (good_δ_lt_one E).le with
+        le_rfl (good_δ_lt_one E).le with
       ⟨c', c'_le_two, hc'⟩
-    exact lt_irreflₓ _ ((Nat.lt_succ_selfₓ _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩
+    exact lt_irrefl _ ((Nat.lt_succ_self _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩
 
 instance (priority := 100) : HasBesicovitchCovering E :=
   ⟨⟨multiplicity E, goodτ E, one_lt_good_τ E, is_empty_satellite_config_multiplicity E⟩⟩

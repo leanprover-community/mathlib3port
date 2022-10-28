@@ -48,17 +48,17 @@ instance : LT (Upto p) :=
 satisfying `p`. -/
 protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
   | ⟨x, h⟩ => by
-    suffices upto.gt p = Measureₓ fun y : Nat.Upto p => x - y.val by
+    suffices upto.gt p = Measure fun y : Nat.Upto p => x - y.val by
       rw [this]
       apply measure_wf
     ext ⟨a, ha⟩ ⟨b, _⟩
-    dsimp [Measureₓ, InvImage, upto.gt]
+    dsimp [Measure, InvImage, upto.gt]
     rw [tsub_lt_tsub_iff_left_of_le]
-    exact le_of_not_ltₓ fun h' => ha _ h' h
+    exact le_of_not_lt fun h' => ha _ h' h
 
 /-- Zero is always a member of `nat.upto p` because it has no predecessors. -/
 def zero : Nat.Upto p :=
-  ⟨0, fun j h => False.elim (Nat.not_lt_zeroₓ _ h)⟩
+  ⟨0, fun j h => False.elim (Nat.not_lt_zero _ h)⟩
 
 /-- The successor of `n` is in `nat.upto p` provided that `n` doesn't satisfy `p`. -/
 def succ (x : Nat.Upto p) (h : ¬p x.val) : Nat.Upto p :=

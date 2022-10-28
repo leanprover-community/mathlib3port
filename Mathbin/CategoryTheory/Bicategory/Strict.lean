@@ -60,9 +60,9 @@ attribute [simp]
 -- see Note [lower instance priority]
 /-- Category structure on a strict bicategory -/
 instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Category B where
-  id_comp' := fun a b => Bicategory.Strict.id_comp
-  comp_id' := fun a b => Bicategory.Strict.comp_id
-  assoc' := fun a b c d => Bicategory.Strict.assoc
+  id_comp' a b := Bicategory.Strict.id_comp
+  comp_id' a b := Bicategory.Strict.comp_id
+  assoc' a b c d := Bicategory.Strict.assoc
 
 namespace Bicategory
 
@@ -70,13 +70,13 @@ variable {B}
 
 @[simp]
 theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g = h) :
-    f ◁ eqToHom η = eqToHom (congr_arg2ₓ (· ≫ ·) rfl η) := by
+    f ◁ eqToHom η = eqToHom (congr_arg2 (· ≫ ·) rfl η) := by
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
 
 @[simp]
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
-    eqToHom η ▷ h = eqToHom (congr_arg2ₓ (· ≫ ·) η rfl) := by
+    eqToHom η ▷ h = eqToHom (congr_arg2 (· ≫ ·) η rfl) := by
   cases η
   simp only [id_whisker_right, eq_to_hom_refl]
 

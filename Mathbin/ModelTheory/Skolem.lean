@@ -29,11 +29,11 @@ namespace FirstOrder
 
 namespace Language
 
-open Structure Cardinal
+open StructureCat Cardinal
 
 open Cardinal
 
-variable (L : Language.{u, v}) {M : Type w} [Nonempty M] [L.Structure M]
+variable (L : Language.{u, v}) {M : Type w} [Nonempty M] [L.StructureCat M]
 
 /-- A language consisting of Skolem functions for another language.
 Called `skolem₁` because it is the first step in building a Skolemization of a language. -/
@@ -45,7 +45,7 @@ variable {L}
 
 theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) = (#Σn, L.BoundedFormula Empty (n + 1)) := by
   simp only [card_functions_sum, skolem₁_functions, lift_id', mk_sigma, sum_add_distrib']
-  rw [add_commₓ, add_eq_max, max_eq_leftₓ]
+  rw [add_comm, add_eq_max, max_eq_left]
   · refine' sum_le_sum _ _ fun n => _
     rw [← lift_le, lift_lift, lift_mk_le]
     refine' ⟨⟨fun f => (func f default).bdEqual (func f default), fun f g h => _⟩⟩
@@ -56,24 +56,27 @@ theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) =
     exact infinite_iff.1 (Infinite.of_injective (fun n => ⟨n, ⊥⟩) fun x y xy => (Sigma.mk.inj xy).1)
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
   rw [card_functions_sum_skolem₁]
-  trans #Σn, L.bounded_formula Empty n
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · exact ⟨⟨Sigma.map Nat.succ fun _ => id, nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
     
   · refine' trans bounded_formula.card_le (lift_le.1 _)
-    simp only [mk_empty, lift_zero, lift_uzero, zero_addₓ]
+    simp only [mk_empty, lift_zero, lift_uzero, zero_add]
     
 
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
 choice. -/
-noncomputable instance skolem₁Structure : L.skolem₁.Structure M :=
-  ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Finₓ.snoc x a : _ → M), fun _ r => Empty.elim r⟩
+noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
+  ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Fin.snoc x a : _ → M), fun _ r => Empty.elim r⟩
 
 namespace Substructure
 
 theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) :
-    (Lhom.sumInl.substructureReduct S).IsElementary := by
+    (LhomCat.sumInl.substructureReduct S).IsElementary := by
   apply (Lhom.sum_inl.substructure_reduct S).is_elementary_of_exists
   intro n φ x a h
   let φ' : (L.sum L.skolem₁).Functions n := Lhom.sum_inr.on_function φ
@@ -83,7 +86,7 @@ theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) 
 
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
 noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) : L.ElementarySubstructure M :=
-  ⟨Lhom.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
+  ⟨LhomCat.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
 
 theorem coe_sort_elementary_skolem₁_reduct (S : (L.Sum L.skolem₁).Substructure M) :
     (S.elementarySkolem₁Reduct : Type w) = S :=
@@ -116,20 +119,20 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
   rw [← aleph_0_le_lift] at h1
   rw [← hs'] at *
   refine'
-    ⟨elementary_skolem₁_reduct (closure (L.sum L.skolem₁) (s ∪ Equivₓ.ulift '' s')),
+    ⟨elementary_skolem₁_reduct (closure (L.sum L.skolem₁) (s ∪ Equiv.ulift '' s')),
       (s.subset_union_left _).trans subset_closure, _⟩
   have h := mk_image_eq_lift _ s' equiv.ulift.injective
   rw [lift_umax, lift_id'] at h
   rw [coe_sort_elementary_skolem₁_reduct, ← h, lift_inj]
   refine'
-    le_antisymmₓ (lift_le.1 (lift_card_closure_le.trans _))
+    le_antisymm (lift_le.1 (lift_card_closure_le.trans _))
       (mk_le_mk_of_subset ((Set.subset_union_right _ _).trans subset_closure))
   rw [max_le_iff, aleph_0_le_lift, ← aleph_0_le_lift, h, add_eq_max, max_le_iff, lift_le]
   refine' ⟨h1, (mk_union_le _ _).trans _, (lift_le.2 card_functions_sum_skolem₁_le).trans _⟩
-  · rw [← lift_le, lift_add, h, add_commₓ, add_eq_max h1]
-    exact max_leₓ le_rflₓ h2
+  · rw [← lift_le, lift_add, h, add_comm, add_eq_max h1]
+    exact max_le le_rfl h2
     
-  · rw [lift_max, lift_aleph_0, max_le_iff, aleph_0_le_lift, and_comm, ← lift_le.{_, w'}, lift_lift, lift_lift, ←
+  · rw [lift_max, lift_aleph_0, max_le_iff, aleph_0_le_lift, and_comm', ← lift_le.{_, w'}, lift_lift, lift_lift, ←
       aleph_0_le_lift, h]
     refine' ⟨_, h1⟩
     simp only [← lift_lift, lift_umax, lift_umax']

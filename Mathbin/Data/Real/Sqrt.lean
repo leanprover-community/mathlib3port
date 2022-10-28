@@ -88,7 +88,7 @@ theorem sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x :=
 @[simp]
 theorem sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq x]
 
-theorem sqrt_mul (x y : ℝ≥0) : sqrt (x * y) = sqrt x * sqrt y := by rw [sqrt_eq_iff_sq_eq, mul_powₓ, sq_sqrt, sq_sqrt]
+theorem sqrt_mul (x y : ℝ≥0) : sqrt (x * y) = sqrt x * sqrt y := by rw [sqrt_eq_iff_sq_eq, mul_pow, sq_sqrt, sq_sqrt]
 
 /-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
 noncomputable def sqrtHom : ℝ≥0 →*₀ ℝ≥0 :=
@@ -110,15 +110,15 @@ namespace Real
 /-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
 def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
-  | 0 => Ratₓ.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
+  | 0 => Rat.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
   | n + 1 =>
     let s := sqrt_aux n
     max 0 <| (s + f (n + 1) / s) / 2
 
 theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Ratₓ.mk_nat_eq, Ratₓ.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
-  | n + 1 => le_max_leftₓ _ _
+    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
+  | n + 1 => le_max_left _ _
 
 /- TODO(Mario): finish the proof
 theorem sqrt_aux_converges (f : cau_seq ℚ abs) : ∃ h x, 0 ≤ x ∧ x * x = max 0 (mk f) ∧
@@ -171,7 +171,7 @@ theorem sqrt_mul_self (h : 0 ≤ x) : sqrt (x * x) = x :=
 theorem sqrt_eq_cases : sqrt x = y ↔ y * y = x ∧ 0 ≤ y ∨ x < 0 ∧ y = 0 := by
   constructor
   · rintro rfl
-    cases' le_or_ltₓ 0 x with hle hlt
+    cases' le_or_lt 0 x with hle hlt
     · exact Or.inl ⟨mul_self_sqrt hle, sqrt_nonneg x⟩
       
     · exact Or.inr ⟨hlt, sqrt_eq_zero_of_nonpos hlt.le⟩
@@ -190,7 +190,7 @@ theorem sqrt_eq_iff_mul_self_eq_of_pos (h : 0 < y) : sqrt x = y ↔ y * y = x :=
 theorem sqrt_eq_one : sqrt x = 1 ↔ x = 1 :=
   calc
     sqrt x = 1 ↔ 1 * 1 = x := sqrt_eq_iff_mul_self_eq_of_pos zero_lt_one
-    _ ↔ x = 1 := by rw [eq_comm, mul_oneₓ]
+    _ ↔ x = 1 := by rw [eq_comm, mul_one]
     
 
 @[simp]
@@ -219,7 +219,7 @@ theorem sqrt_le_sqrt_iff (hy : 0 ≤ y) : sqrt x ≤ sqrt y ↔ x ≤ y := by
 
 @[simp]
 theorem sqrt_lt_sqrt_iff (hx : 0 ≤ x) : sqrt x < sqrt y ↔ x < y :=
-  lt_iff_lt_of_le_iff_leₓ (sqrt_le_sqrt_iff hx)
+  lt_iff_lt_of_le_iff_le (sqrt_le_sqrt_iff hx)
 
 theorem sqrt_lt_sqrt_iff_of_pos (hy : 0 < y) : sqrt x < sqrt y ↔ x < y := by
   rw [sqrt, sqrt, Nnreal.coe_lt_coe, Nnreal.sqrt_lt_sqrt_iff, to_nnreal_lt_to_nnreal_iff hy]
@@ -236,7 +236,7 @@ theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
     Real.to_nnreal_le_to_nnreal_iff (mul_self_nonneg y), sq]
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
-  rw [← and_iff_right_of_impₓ fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
+  rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
   exact sqrt_le_left
 
 theorem sqrt_lt (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x < y ↔ x < y ^ 2 := by rw [← sqrt_lt_sqrt_iff hx, sqrt_sq hy]
@@ -247,10 +247,10 @@ theorem sqrt_lt' (hy : 0 < y) : sqrt x < y ↔ x < y ^ 2 := by
 /- note: if you want to conclude `x ≤ sqrt y`, then use `le_sqrt_of_sq_le`.
    if you have `x > 0`, consider using `le_sqrt'` -/
 theorem le_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
-  le_iff_le_iff_lt_iff_ltₓ.2 <| sqrt_lt hy hx
+  le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt hy hx
 
 theorem le_sqrt' (hx : 0 < x) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
-  le_iff_le_iff_lt_iff_ltₓ.2 <| sqrt_lt' hx
+  le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt' hx
 
 theorem abs_le_sqrt (h : x ^ 2 ≤ y) : abs x ≤ sqrt y := by rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
 
@@ -269,21 +269,21 @@ theorem le_sqrt_of_sq_le (h : x ^ 2 ≤ y) : x ≤ sqrt y :=
   ((sq_le ((sq_nonneg x).trans h)).mp h).2
 
 @[simp]
-theorem sqrt_inj (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = sqrt y ↔ x = y := by simp [le_antisymm_iffₓ, hx, hy]
+theorem sqrt_inj (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = sqrt y ↔ x = y := by simp [le_antisymm_iff, hx, hy]
 
 @[simp]
-theorem sqrt_eq_zero (h : 0 ≤ x) : sqrt x = 0 ↔ x = 0 := by simpa using sqrt_inj h le_rflₓ
+theorem sqrt_eq_zero (h : 0 ≤ x) : sqrt x = 0 ↔ x = 0 := by simpa using sqrt_inj h le_rfl
 
 theorem sqrt_eq_zero' : sqrt x = 0 ↔ x ≤ 0 := by
   rw [sqrt, Nnreal.coe_eq_zero, Nnreal.sqrt_eq_zero, Real.to_nnreal_eq_zero]
 
 theorem sqrt_ne_zero (h : 0 ≤ x) : sqrt x ≠ 0 ↔ x ≠ 0 := by rw [not_iff_not, sqrt_eq_zero h]
 
-theorem sqrt_ne_zero' : sqrt x ≠ 0 ↔ 0 < x := by rw [← not_leₓ, not_iff_not, sqrt_eq_zero']
+theorem sqrt_ne_zero' : sqrt x ≠ 0 ↔ 0 < x := by rw [← not_le, not_iff_not, sqrt_eq_zero']
 
 @[simp]
 theorem sqrt_pos : 0 < sqrt x ↔ 0 < x :=
-  lt_iff_lt_of_le_iff_leₓ (Iff.trans (by simp [le_antisymm_iffₓ, sqrt_nonneg]) sqrt_eq_zero')
+  lt_iff_lt_of_le_iff_le (Iff.trans (by simp [le_antisymm_iff, sqrt_nonneg]) sqrt_eq_zero')
 
 alias sqrt_pos ↔ _ sqrt_pos_of_pos
 
@@ -324,7 +324,7 @@ theorem sqrt_div (hx : 0 ≤ x) (y : ℝ) : sqrt (x / y) = sqrt x / sqrt y := by
 
 @[simp]
 theorem div_sqrt : x / sqrt x = sqrt x := by
-  cases le_or_ltₓ x 0
+  cases le_or_lt x 0
   · rw [sqrt_eq_zero'.mpr h, div_zero]
     
   · rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
@@ -362,7 +362,7 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
     simp
     
   · norm_cast
-    exact le_of_ltₓ (Nat.lt_succ_sqrt' a)
+    exact le_of_lt (Nat.lt_succ_sqrt' a)
     
 
 instance : StarOrderedRing ℝ :=

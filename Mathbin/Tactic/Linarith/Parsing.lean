@@ -95,7 +95,7 @@ unsafe def var (n : ℕ) : sum :=
 -- mathport name: exprexmap
 local notation "exmap" => List (expr × ℕ)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `linear_form_of_atom red map e` is the atomic case for `linear_form_of_expr`.
 If `e` appears with index `k` in `map`, it returns the singleton sum `var k`.
 Otherwise it updates `map`, adding `e` with index `n`, and returns the singleton sum `var n`.
@@ -172,8 +172,8 @@ unsafe def to_comp (red : Transparency) (e : expr) (e_map : exmap) (monom_map : 
   let ⟨nm, mm'⟩ := sum_to_lf comp' monom_map
   return ⟨⟨iq, mm'⟩, m', nm⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `to_comp_fold red e_map exprs monom_map` folds `to_comp` over `exprs`,
 updating `e_map` and `monom_map` as it goes.
  -/

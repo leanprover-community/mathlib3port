@@ -38,9 +38,9 @@ open Polynomial
 
 namespace Polynomial
 
-section Semiringₓ
+section Semiring
 
-variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable (R)
 
@@ -60,11 +60,11 @@ variable {R}
 theorem mem_ann_ideal_iff_aeval_eq_zero {a : A} {p : R[X]} : p ∈ annIdeal R a ↔ aeval a p = 0 :=
   Iff.rfl
 
-end Semiringₓ
+end Semiring
 
 section Field
 
-variable {𝕜 A : Type _} [Field 𝕜] [Ringₓ A] [Algebra 𝕜 A]
+variable {𝕜 A : Type _} [Field 𝕜] [Ring A] [Algebra 𝕜 A]
 
 variable (𝕜)
 
@@ -87,7 +87,7 @@ variable {𝕜}
 @[simp]
 theorem ann_ideal_generator_eq_zero_iff {a : A} : annIdealGenerator 𝕜 a = 0 ↔ annIdeal 𝕜 a = ⊥ := by
   simp only [ann_ideal_generator, mul_eq_zero, is_principal.eq_bot_iff_generator_eq_zero, Polynomial.C_eq_zero,
-    inv_eq_zero, Polynomial.leading_coeff_eq_zero, or_selfₓ]
+    inv_eq_zero, Polynomial.leading_coeff_eq_zero, or_self_iff]
 
 end
 

@@ -24,7 +24,7 @@ namespace SubMulAction
 
 section One
 
-variable [Monoidₓ R] [MulAction R M] [One M]
+variable [Monoid R] [MulAction R M] [One M]
 
 instance :
     One
@@ -45,12 +45,12 @@ end One
 
 section Mul
 
-variable [Monoidₓ R] [MulAction R M] [Mul M] [IsScalarTower R M M]
+variable [Monoid R] [MulAction R M] [Mul M] [IsScalarTower R M M]
 
 instance :
     Mul
       (SubMulAction R
-        M) where mul := fun p q =>
+        M) where mul p q :=
     { Carrier := Set.Image2 (· * ·) p q,
       smul_mem' := fun r m ⟨m₁, m₂, hm₁, hm₂, h⟩ =>
         h ▸ smul_mul_assoc r m₁ m₂ ▸ Set.mul_mem_mul (p.smul_mem _ hm₁) hm₂ }
@@ -64,16 +64,16 @@ theorem mem_mul {p q : SubMulAction R M} {x : M} : x ∈ p * q ↔ ∃ y z, y �
 
 end Mul
 
-section MulOneClassₓ
+section MulOneClass
 
-variable [Monoidₓ R] [MulAction R M] [MulOneClassₓ M] [IsScalarTower R M M] [SmulCommClass R M M]
+variable [Monoid R] [MulAction R M] [MulOneClass M] [IsScalarTower R M M] [SmulCommClass R M M]
 
-instance : MulOneClassₓ (SubMulAction R M) where
+instance : MulOneClass (SubMulAction R M) where
   mul := (· * ·)
   one := 1
-  mul_one := fun a => by
+  mul_one a := by
     ext
-    simp only [mem_mul, mem_one, mul_smul_comm, exists_and_distrib_leftₓ, exists_exists_eq_and, mul_oneₓ]
+    simp only [mem_mul, mem_one, mul_smul_comm, exists_and_distrib_left, exists_exists_eq_and, mul_one]
     constructor
     · rintro ⟨y, hy, r, rfl⟩
       exact smul_mem _ _ hy
@@ -81,44 +81,44 @@ instance : MulOneClassₓ (SubMulAction R M) where
     · intro hx
       exact ⟨x, hx, 1, one_smul _ _⟩
       
-  one_mul := fun a => by
+  one_mul a := by
     ext
-    simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_distrib_leftₓ, exists_exists_eq_and, one_mulₓ]
+    simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_distrib_left, exists_exists_eq_and, one_mul]
     refine' ⟨_, fun hx => ⟨1, x, hx, one_smul _ _⟩⟩
     rintro ⟨r, y, hy, rfl⟩
     exact smul_mem _ _ hy
 
-end MulOneClassₓ
+end MulOneClass
 
-section Semigroupₓ
+section Semigroup
 
-variable [Monoidₓ R] [MulAction R M] [Semigroupₓ M] [IsScalarTower R M M]
+variable [Monoid R] [MulAction R M] [Semigroup M] [IsScalarTower R M M]
 
-instance : Semigroupₓ (SubMulAction R M) where
+instance : Semigroup (SubMulAction R M) where
   mul := (· * ·)
-  mul_assoc := fun a b c => SetLike.coe_injective (mul_assoc (_ : Set _) _ _)
+  mul_assoc a b c := SetLike.coe_injective (mul_assoc (_ : Set _) _ _)
 
-end Semigroupₓ
+end Semigroup
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ R] [MulAction R M] [Monoidₓ M] [IsScalarTower R M M] [SmulCommClass R M M]
+variable [Monoid R] [MulAction R M] [Monoid M] [IsScalarTower R M M] [SmulCommClass R M M]
 
-instance : Monoidₓ (SubMulAction R M) :=
+instance : Monoid (SubMulAction R M) :=
   { SubMulAction.semigroup, SubMulAction.mulOneClass with mul := (· * ·), one := 1 }
 
 theorem coe_pow (p : SubMulAction R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n) = (p ^ n : Set M)
   | 0, hn => (hn rfl).elim
-  | 1, hn => by rw [pow_oneₓ, pow_oneₓ]
-  | n + 2, hn => by rw [pow_succₓ _ (n + 1), pow_succₓ _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
+  | 1, hn => by rw [pow_one, pow_one]
+  | n + 2, hn => by rw [pow_succ _ (n + 1), pow_succ _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
 
 theorem subset_coe_pow (p : SubMulAction R M) : ∀ {n : ℕ}, (p ^ n : Set M) ⊆ ↑(p ^ n)
   | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ]
+    rw [pow_zero, pow_zero]
     exact subset_coe_one
   | n + 1 => (coe_pow p n.succ_ne_zero).Superset
 
-end Monoidₓ
+end Monoid
 
 end SubMulAction
 

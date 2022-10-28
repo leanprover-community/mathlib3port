@@ -92,15 +92,15 @@ theorem intent_closure_Union (f : ι → Set α) : IntentClosure r (⋃ i, f i) 
 theorem extent_closure_Union (f : ι → Set β) : ExtentClosure r (⋃ i, f i) = ⋂ i, ExtentClosure r (f i) :=
   intent_closure_Union _ _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
     IntentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), IntentClosure r (f i j) :=
   (gc_intent_closure_extent_closure r).l_supr₂
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem extent_closure_Union₂ (f : ∀ i, κ i → Set β) :
     ExtentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), ExtentClosure r (f i j) :=
@@ -122,10 +122,10 @@ theorem extent_closure_intent_closure_extent_closure (t : Set β) :
     ExtentClosure r (IntentClosure r <| ExtentClosure r t) = ExtentClosure r t :=
   intent_closure_extent_closure_intent_closure _ t
 
-theorem intent_closure_anti : Antitoneₓ (IntentClosure r) :=
+theorem intent_closure_anti : Antitone (IntentClosure r) :=
   (gc_intent_closure_extent_closure r).monotone_l
 
-theorem extent_closure_anti : Antitoneₓ (ExtentClosure r) :=
+theorem extent_closure_anti : Antitone (ExtentClosure r) :=
   intent_closure_anti _
 
 /-! ### Concepts -/
@@ -203,11 +203,11 @@ theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
 
 @[simp]
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by
-  rw [ssubset_iff_subset_not_subset, lt_iff_le_not_leₓ, snd_subset_snd_iff, snd_subset_snd_iff]
+  rw [ssubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
 
-theorem strict_mono_fst : StrictMonoₓ (Prod.fst ∘ to_prod : Concept α β r → Set α) := fun c d => fst_ssubset_fst_iff.2
+theorem strict_mono_fst : StrictMono (Prod.fst ∘ to_prod : Concept α β r → Set α) := fun c d => fst_ssubset_fst_iff.2
 
-theorem strict_anti_snd : StrictAntiₓ (Prod.snd ∘ to_prod : Concept α β r → Set β) := fun c d => snd_ssubset_snd_iff.2
+theorem strict_anti_snd : StrictAnti (Prod.snd ∘ to_prod : Concept α β r → Set β) := fun c d => snd_ssubset_snd_iff.2
 
 instance : Lattice (Concept α β r) :=
   { Concept.semilatticeInf with sup := (· ⊔ ·), le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
@@ -217,18 +217,18 @@ instance : Lattice (Concept α β r) :=
       exact subset_inter }
 
 instance : BoundedOrder (Concept α β r) where
-  top := ⟨⟨Univ, IntentClosure r Univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivialₓ⟩
-  le_top := fun _ => subset_univ _
-  bot := ⟨⟨ExtentClosure r Univ, Univ⟩, eq_univ_of_forall fun b a ha => ha trivialₓ, rfl⟩
-  bot_le := fun _ => snd_subset_snd_iff.1 <| subset_univ _
+  top := ⟨⟨Univ, IntentClosure r Univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivial⟩
+  le_top _ := subset_univ _
+  bot := ⟨⟨ExtentClosure r Univ, Univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
+  bot_le _ := snd_subset_snd_iff.1 <| subset_univ _
 
-instance : HasSupₓ (Concept α β r) :=
+instance : HasSup (Concept α β r) :=
   ⟨fun S =>
     { fst := ExtentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd), snd := ⋂ c ∈ S, (c : Concept _ _ _).snd,
       closure_fst := by simp_rw [← closure_fst, ← intent_closure_Union₂, intent_closure_extent_closure_intent_closure],
       closure_snd := rfl }⟩
 
-instance : HasInfₓ (Concept α β r) :=
+instance : HasInf (Concept α β r) :=
   ⟨fun S =>
     { fst := ⋂ c ∈ S, (c : Concept _ _ _).fst, snd := IntentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst),
       closure_fst := rfl,
@@ -316,7 +316,7 @@ def swapEquiv : (Concept α β r)ᵒᵈ ≃o Concept β α (Function.swap r) whe
   invFun := to_dual ∘ swap
   left_inv := swap_swap
   right_inv := swap_swap
-  map_rel_iff' := fun c d => swap_le_swap_iff
+  map_rel_iff' c d := swap_le_swap_iff
 
 end Concept
 

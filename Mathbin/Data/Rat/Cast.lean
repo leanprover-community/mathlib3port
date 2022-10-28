@@ -30,9 +30,9 @@ open BigOperators
 
 variable {F ι α β : Type _}
 
-namespace Ratₓ
+namespace Rat
 
-open Ratₓ
+open Rat
 
 section WithDivRing
 
@@ -40,7 +40,7 @@ variable [DivisionRing α]
 
 @[simp]
 theorem cast_of_int (n : ℤ) : (ofInt n : α) = n :=
-  (cast_def _).trans <| show (n / (1 : ℕ) : α) = n by rw [Nat.cast_oneₓ, div_one]
+  (cast_def _).trans <| show (n / (1 : ℕ) : α) = n by rw [Nat.cast_one, div_one]
 
 @[simp, norm_cast]
 theorem cast_coe_int (n : ℤ) : ((n : ℚ) : α) = n := by rw [coe_int_eq_of_int, cast_of_int]
@@ -50,11 +50,11 @@ theorem cast_coe_nat (n : ℕ) : ((n : ℚ) : α) = n := by rw [← Int.cast_coe
 
 @[simp, norm_cast]
 theorem cast_zero : ((0 : ℚ) : α) = 0 :=
-  (cast_of_int _).trans Int.cast_zeroₓ
+  (cast_of_int _).trans Int.cast_zero
 
 @[simp, norm_cast]
 theorem cast_one : ((1 : ℚ) : α) = 1 :=
-  (cast_of_int _).trans Int.cast_oneₓ
+  (cast_of_int _).trans Int.cast_one
 
 theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a := by
   simpa only [cast_def] using (r.1.cast_commute a).div_left (r.2.cast_commute a)
@@ -79,31 +79,31 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     rw [d0, zero_mul] at this
     contradiction
   rw [num_denom'] at e
-  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
+  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_coe_nat] at this
   symm
   rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc, this, mul_assoc,
-    mul_inv_cancel b0, mul_oneₓ]
+    mul_inv_cancel b0, mul_one]
 
 @[norm_cast]
 theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m + n : ℚ) : α) = m + n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun (d₁0 : (d₁ : α) ≠ 0) (d₂0 : (d₂ : α) ≠ 0) => by
-    have d₁0' : (d₁ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₁0 <;> exact d₁0 Nat.cast_zeroₓ
-    have d₂0' : (d₂ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₂0 <;> exact d₂0 Nat.cast_zeroₓ
+    have d₁0' : (d₁ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₁0 <;> exact d₁0 Nat.cast_zero
+    have d₂0' : (d₂ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₂0 <;> exact d₂0 Nat.cast_zero
     rw [num_denom', num_denom', add_def d₁0' d₂0']
     suffices (n₁ * (d₂ * (d₂⁻¹ * d₁⁻¹)) + n₂ * (d₁ * d₂⁻¹) * d₁⁻¹ : α) = n₁ * d₁⁻¹ + n₂ * d₂⁻¹ by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
       · simpa [division_def, left_distrib, right_distrib, mul_inv_rev, d₁0, d₂0, mul_assoc]
         
       all_goals simp [d₁0, d₂0]
-    rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mulₓ, (Nat.cast_commute _ _).Eq]
+    rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mul, (Nat.cast_commute _ _).Eq]
     simp [d₁0, mul_assoc]
 
 @[simp, norm_cast]
 theorem cast_neg : ∀ n, ((-n : ℚ) : α) = -n
   | ⟨n, d, h, c⟩ => by
     simpa only [cast_def] using
-      show (↑(-n) / d : α) = -(n / d) by rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mulₓ]
+      show (↑(-n) / d : α) = -(n / d) by rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mul]
 
 @[norm_cast]
 theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.denom : α) ≠ 0) : ((m - n : ℚ) : α) = m - n :=
@@ -114,8 +114,8 @@ theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.den
 @[norm_cast]
 theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m * n : ℚ) : α) = m * n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun (d₁0 : (d₁ : α) ≠ 0) (d₂0 : (d₂ : α) ≠ 0) => by
-    have d₁0' : (d₁ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₁0 <;> exact d₁0 Nat.cast_zeroₓ
-    have d₂0' : (d₂ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₂0 <;> exact d₂0 Nat.cast_zeroₓ
+    have d₁0' : (d₁ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₁0 <;> exact d₁0 Nat.cast_zero
+    have d₂0' : (d₂ : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₂0 <;> exact d₂0 Nat.cast_zero
     rw [num_denom', num_denom', mul_def d₁0' d₂0']
     suffices (n₁ * (n₂ * d₂⁻¹ * d₁⁻¹) : α) = n₁ * (d₁⁻¹ * (n₂ * d₂⁻¹)) by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
@@ -137,14 +137,14 @@ theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
   cases n
   · simp [cast_inv_nat]
     
-  · simp only [Int.cast_neg_succ_of_nat, ← Nat.cast_succₓ, cast_neg, inv_neg, cast_inv_nat]
+  · simp only [Int.cast_neg_succ_of_nat, ← Nat.cast_succ, cast_neg, inv_neg, cast_inv_nat]
     
 
 @[norm_cast]
 theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.denom : α) ≠ 0 → ((n⁻¹ : ℚ) : α) = n⁻¹
   | ⟨n, d, h, c⟩ => fun (n0 : (n : α) ≠ 0) (d0 : (d : α) ≠ 0) => by
-    have n0' : (n : ℤ) ≠ 0 := fun e => by rw [e] at n0 <;> exact n0 Int.cast_zeroₓ
-    have d0' : (d : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d0 <;> exact d0 Nat.cast_zeroₓ
+    have n0' : (n : ℤ) ≠ 0 := fun e => by rw [e] at n0 <;> exact n0 Int.cast_zero
+    have d0' : (d : ℤ) ≠ 0 := Int.coe_nat_ne_zero.2 fun e => by rw [e] at d0 <;> exact d0 Nat.cast_zero
     rw [num_denom', inv_def]
     rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, inv_div] <;> simp [n0, d0]
 
@@ -161,8 +161,8 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num
 theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => by
     refine' ⟨fun h => _, congr_arg _⟩
-    have d₁0 : d₁ ≠ 0 := ne_of_gtₓ h₁
-    have d₂0 : d₂ ≠ 0 := ne_of_gtₓ h₂
+    have d₁0 : d₁ ≠ 0 := ne_of_gt h₁
+    have d₂0 : d₂ ≠ 0 := ne_of_gt h₂
     have d₁a : (d₁ : α) ≠ 0 := Nat.cast_ne_zero.2 d₁0
     have d₂a : (d₂ : α) ≠ 0 := Nat.cast_ne_zero.2 d₂0
     rw [num_denom', num_denom'] at h⊢
@@ -183,15 +183,15 @@ theorem cast_ne_zero [CharZero α] {n : ℚ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
 
 @[simp, norm_cast]
 theorem cast_add [CharZero α] (m n) : ((m + n : ℚ) : α) = m + n :=
-  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
+  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
 
 @[simp, norm_cast]
 theorem cast_sub [CharZero α] (m n) : ((m - n : ℚ) : α) = m - n :=
-  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
+  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
 
 @[simp, norm_cast]
 theorem cast_mul [CharZero α] (m n) : ((m * n : ℚ) : α) = m * n :=
-  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
+  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
 
 @[simp, norm_cast]
 theorem cast_bit0 [CharZero α] (n : ℚ) : ((bit0 n : ℚ) : α) = bit0 n :=
@@ -234,19 +234,19 @@ theorem cast_pow (q) (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
 
 @[simp, norm_cast]
 theorem cast_list_sum (s : List ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
-  map_list_sum (Ratₓ.castHom α) _
+  map_list_sum (Rat.castHom α) _
 
 @[simp, norm_cast]
 theorem cast_multiset_sum (s : Multiset ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
-  map_multiset_sum (Ratₓ.castHom α) _
+  map_multiset_sum (Rat.castHom α) _
 
 @[simp, norm_cast]
-theorem cast_sum (s : Finsetₓ ι) (f : ι → ℚ) : (↑(∑ i in s, f i) : α) = ∑ i in s, f i :=
-  map_sum (Ratₓ.castHom α) _ _
+theorem cast_sum (s : Finset ι) (f : ι → ℚ) : (↑(∑ i in s, f i) : α) = ∑ i in s, f i :=
+  map_sum (Rat.castHom α) _ _
 
 @[simp, norm_cast]
 theorem cast_list_prod (s : List ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
-  map_list_prod (Ratₓ.castHom α) _
+  map_list_prod (Rat.castHom α) _
 
 end WithDivRing
 
@@ -256,11 +256,11 @@ variable [Field α] [CharZero α]
 
 @[simp, norm_cast]
 theorem cast_multiset_prod (s : Multiset ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
-  map_multiset_prod (Ratₓ.castHom α) _
+  map_multiset_prod (Rat.castHom α) _
 
 @[simp, norm_cast]
-theorem cast_prod (s : Finsetₓ ι) (f : ι → ℚ) : (↑(∏ i in s, f i) : α) = ∏ i in s, f i :=
-  map_prod (Ratₓ.castHom α) _ _
+theorem cast_prod (s : Finset ι) (f : ι → ℚ) : (↑(∏ i in s, f i) : α) = ∏ i in s, f i :=
+  map_prod (Rat.castHom α) _ _
 
 end Field
 
@@ -269,15 +269,15 @@ section LinearOrderedField
 variable {K : Type _} [LinearOrderedField K]
 
 theorem cast_pos_of_pos {r : ℚ} (hr : 0 < r) : (0 : K) < r := by
-  rw [Ratₓ.cast_def]
+  rw [Rat.cast_def]
   exact div_pos (Int.cast_pos.2 <| num_pos_iff_pos.2 hr) (Nat.cast_pos.2 r.pos)
 
 @[mono]
-theorem cast_strict_mono : StrictMonoₓ (coe : ℚ → K) := fun m n => by
+theorem cast_strict_mono : StrictMono (coe : ℚ → K) := fun m n => by
   simpa only [sub_pos, cast_sub] using @cast_pos_of_pos K _ (n - m)
 
 @[mono]
-theorem cast_mono : Monotoneₓ (coe : ℚ → K) :=
+theorem cast_mono : Monotone (coe : ℚ → K) :=
   cast_strict_mono.Monotone
 
 /-- Coercion from `ℚ` as an order embedding. -/
@@ -319,42 +319,42 @@ theorem cast_abs {q : ℚ} : ((abs q : ℚ) : K) = abs q := by simp [abs_eq_max_
 open Set
 
 @[simp]
-theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' Icc (a : K) b = Icc a b := by
+theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' IccCat (a : K) b = IccCat a b := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' Ico (a : K) b = Ico a b := by
+theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' IcoCat (a : K) b = IcoCat a b := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' Ioc (a : K) b = Ioc a b := by
+theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' IocCat (a : K) b = IocCat a b := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' Ioo (a : K) b = Ioo a b := by
+theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' IooCat (a : K) b = IooCat a b := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' Ici (a : K) = Ici a := by
+theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' IciCat (a : K) = IciCat a := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' Iic (a : K) = Iic a := by
+theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' IicCat (a : K) = IicCat a := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' Ioi (a : K) = Ioi a := by
+theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' IoiCat (a : K) = IoiCat a := by
   ext x
   simp
 
 @[simp]
-theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' Iio (a : K) = Iio a := by
+theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' IioCat (a : K) = IioCat a := by
   ext x
   simp
 
@@ -371,9 +371,9 @@ theorem cast_eq_id : (coe : ℚ → ℚ) = id :=
 theorem cast_hom_rat : castHom ℚ = RingHom.id ℚ :=
   RingHom.ext cast_id
 
-end Ratₓ
+end Rat
 
-open Ratₓ
+open Rat
 
 @[simp]
 theorem map_rat_cast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] (f : F) (q : ℚ) : f q = q := by
@@ -381,11 +381,11 @@ theorem map_rat_cast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] 
 
 @[simp]
 theorem eq_rat_cast {k} [DivisionRing k] [RingHomClass F ℚ k] (f : F) (r : ℚ) : f r = r := by
-  rw [← map_rat_cast f, Ratₓ.cast_id]
+  rw [← map_rat_cast f, Rat.cast_id]
 
 namespace MonoidWithZeroHom
 
-variable {M₀ : Type _} [MonoidWithZeroₓ M₀] [MonoidWithZeroHomClass F ℚ M₀] {f g : F}
+variable {M₀ : Type _} [MonoidWithZero M₀] [MonoidWithZeroHomClass F ℚ M₀] {f g : F}
 
 include M₀
 
@@ -412,11 +412,11 @@ end MonoidWithZeroHom
 
 /-- Any two ring homomorphisms from `ℚ` to a semiring are equal. If the codomain is a division ring,
 then this lemma follows from `eq_rat_cast`. -/
-theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] [RingHomClass F ℚ R] (f g : F) : f = g :=
+theorem RingHom.ext_rat {R : Type _} [Semiring R] [RingHomClass F ℚ R] (f g : F) : f = g :=
   MonoidWithZeroHom.ext_rat' <|
     RingHom.congr_fun <| ((f : ℚ →+* R).comp (Int.castRingHom ℚ)).ext_int ((g : ℚ →+* R).comp (Int.castRingHom ℚ))
 
-instance Ratₓ.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
+instance Rat.subsingleton_ring_hom {R : Type _} [Semiring R] : Subsingleton (ℚ →+* R) :=
   ⟨RingHom.ext_rat⟩
 
 namespace MulOpposite
@@ -437,19 +437,19 @@ end MulOpposite
 
 section Smul
 
-namespace Ratₓ
+namespace Rat
 
 variable {K : Type _} [DivisionRing K]
 
 instance (priority := 100) distribSmul : DistribSmul ℚ K where
   smul := (· • ·)
-  smul_zero := fun a => by rw [smul_def, mul_zero]
-  smul_add := fun a x y => by simp only [smul_def, mul_addₓ, cast_add]
+  smul_zero a := by rw [smul_def, mul_zero]
+  smul_add a x y := by simp only [smul_def, mul_add, cast_add]
 
 instance is_scalar_tower_right : IsScalarTower ℚ K K :=
   ⟨fun a x y => by simp only [smul_def, smul_eq_mul, mul_assoc]⟩
 
-end Ratₓ
+end Rat
 
 end Smul
 

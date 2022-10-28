@@ -33,7 +33,7 @@ local infixl:50 " ∈+ " => List.Duplicate
 
 variable {l : List α} {x : α}
 
-theorem Memₓ.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
+theorem Mem.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
   Duplicate.cons_mem h
 
 theorem Duplicate.duplicate_cons (h : x ∈+ l) (y : α) : x ∈+ y :: l :=
@@ -55,9 +55,9 @@ theorem Duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
 
 @[simp]
 theorem duplicate_cons_self_iff : x ∈+ x :: l ↔ x ∈ l :=
-  ⟨Duplicate.mem_cons_self, Memₓ.duplicate_cons_self⟩
+  ⟨Duplicate.mem_cons_self, Mem.duplicate_cons_self⟩
 
-theorem Duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iffₓ x).mp (H ▸ h.Mem)
+theorem Duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iff x).mp (H ▸ h.Mem)
 
 @[simp]
 theorem not_duplicate_nil (x : α) : ¬x ∈+ [] := fun H => H.ne_nil rfl
@@ -130,14 +130,14 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
       
     
 
-theorem nodup_iff_forall_not_duplicate : Nodupₓ l ↔ ∀ x : α, ¬x ∈+ l := by
+theorem nodup_iff_forall_not_duplicate : Nodup l ↔ ∀ x : α, ¬x ∈+ l := by
   simp_rw [nodup_iff_sublist, duplicate_iff_sublist]
 
-theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l := by simp [nodup_iff_forall_not_duplicate]
+theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodup l := by simp [nodup_iff_forall_not_duplicate]
 
-theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
+theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodup l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
 
-theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ countₓ x l := by
+theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by
   simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
 
 instance decidableDuplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)

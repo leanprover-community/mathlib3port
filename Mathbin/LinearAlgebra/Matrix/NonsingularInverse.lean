@@ -57,14 +57,14 @@ variable {m : Type u} {n : Type u'} {α : Type v}
 
 open Matrix BigOperators
 
-open Equivₓ Equivₓ.Perm Finsetₓ
+open Equiv Equiv.Perm Finset
 
 /-! ### Matrices are `invertible` iff their determinants are -/
 
 
 section Invertible
 
-variable [Fintypeₓ n] [DecidableEq n] [CommRingₓ α]
+variable [Fintype n] [DecidableEq n] [CommRing α]
 
 /-- A copy of `inv_of_mul_self` using `⬝` not `*`. -/
 protected theorem inv_of_mul_self (A : Matrix n n α) [Invertible A] : ⅟ A ⬝ A = 1 :=
@@ -128,8 +128,8 @@ equivalence, although both sides of the equiv are subsingleton anyway. -/
 def invertibleEquivDetInvertible : Invertible A ≃ Invertible A.det where
   toFun := @detInvertibleOfInvertible _ _ _ _ _ A
   invFun := @invertibleOfDetInvertible _ _ _ _ _ A
-  left_inv := fun _ => Subsingleton.elim _ _
-  right_inv := fun _ => Subsingleton.elim _ _
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
 
 variable {A B}
 
@@ -206,7 +206,7 @@ theorem det_ne_zero_of_right_inverse [Nontrivial α] (h : A ⬝ B = 1) : A.det �
 
 end Invertible
 
-variable [Fintypeₓ n] [DecidableEq n] [CommRingₓ α]
+variable [Fintype n] [DecidableEq n] [CommRing α]
 
 variable (A : Matrix n n α) (B : Matrix n n α)
 
@@ -234,7 +234,7 @@ theorem nonsing_inv_apply (h : IsUnit A.det) : A⁻¹ = (↑h.Unit⁻¹ : α) �
 @[simp]
 theorem inv_of_eq_nonsing_inv [Invertible A] : ⅟ A = A⁻¹ := by
   letI := det_invertible_of_invertible A
-  rw [inv_def, Ringₓ.inverse_invertible, inv_of_eq]
+  rw [inv_def, Ring.inverse_invertible, inv_of_eq]
 
 /-- Coercing the result of `units.has_inv` is the same as coercing first and applying the
 nonsingular inverse. -/
@@ -247,7 +247,7 @@ theorem coe_units_inv (A : (Matrix n n α)ˣ) : ↑A⁻¹ = (A⁻¹ : Matrix n n
 theorem nonsing_inv_eq_ring_inverse : A⁻¹ = Ring.inverse A := by
   by_cases h_det:IsUnit A.det
   · cases (A.is_unit_iff_is_unit_det.mpr h_det).nonempty_invertible
-    rw [← inv_of_eq_nonsing_inv, Ringₓ.inverse_invertible]
+    rw [← inv_of_eq_nonsing_inv, Ring.inverse_invertible]
     
   · have h := mt A.is_unit_iff_is_unit_det.mp h_det
     rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_is_unit A h_det]
@@ -257,7 +257,7 @@ theorem transpose_nonsing_inv : A⁻¹ᵀ = Aᵀ⁻¹ := by
   rw [inv_def, inv_def, transpose_smul, det_transpose, adjugate_transpose]
 
 theorem conj_transpose_nonsing_inv [StarRing α] : A⁻¹ᴴ = Aᴴ⁻¹ := by
-  rw [inv_def, inv_def, conj_transpose_smul, det_conj_transpose, adjugate_conj_transpose, Ringₓ.inverse_star]
+  rw [inv_def, inv_def, conj_transpose_smul, det_conj_transpose, adjugate_conj_transpose, Ring.inverse_star]
 
 /-- The `nonsing_inv` of `A` is a right inverse. -/
 @[simp]
@@ -270,6 +270,13 @@ theorem mul_nonsing_inv (h : IsUnit A.det) : A ⬝ A⁻¹ = 1 := by
 theorem nonsing_inv_mul (h : IsUnit A.det) : A⁻¹ ⬝ A = 1 := by
   cases (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible
   rw [← inv_of_eq_nonsing_inv, Matrix.inv_of_mul_self]
+
+instance [Invertible A] : Invertible A⁻¹ := by
+  rw [← inv_of_eq_nonsing_inv]
+  infer_instance
+
+@[simp]
+theorem inv_inv_of_invertible [Invertible A] : A⁻¹⁻¹ = A := by simp only [← inv_of_eq_nonsing_inv, inv_of_inv_of]
 
 @[simp]
 theorem mul_nonsing_inv_cancel_right (B : Matrix m n α) (h : IsUnit A.det) : B ⬝ A ⬝ A⁻¹ = B := by
@@ -332,7 +339,7 @@ theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det := by
   by_cases h:IsUnit A.det
   · cases h.nonempty_invertible
     letI := invertible_of_det_invertible A
-    rw [Ringₓ.inverse_invertible, ← inv_of_eq_nonsing_inv, det_inv_of]
+    rw [Ring.inverse_invertible, ← inv_of_eq_nonsing_inv, det_inv_of]
     
   cases is_empty_or_nonempty n
   · rw [det_is_empty, det_is_empty, Ring.inverse_one]
@@ -411,8 +418,8 @@ theorem inv_zero : (0 : Matrix n n α)⁻¹ = 0 := by
   cases' subsingleton_or_nontrivial α with ht ht
   · simp
     
-  cases' (Fintypeₓ.card n).zero_le.eq_or_lt with hc hc
-  · rw [eq_comm, Fintypeₓ.card_eq_zero_iff] at hc
+  cases' (Fintype.card n).zero_le.eq_or_lt with hc hc
+  · rw [eq_comm, Fintype.card_eq_zero_iff] at hc
     haveI := hc
     ext i
     exact (IsEmpty.false i).elim
@@ -436,55 +443,55 @@ theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : (adjugate A)⁻¹ 
   rw [smul_mul, mul_adjugate, Units.smul_def, smul_smul, h.coe_inv_mul, one_smul]
 
 /-- `diagonal v` is invertible if `v` is -/
-def diagonalInvertible {α} [NonAssocSemiringₓ α] (v : n → α) [Invertible v] : Invertible (diagonalₓ v) :=
+def diagonalInvertible {α} [NonAssocSemiring α] (v : n → α) [Invertible v] : Invertible (diagonal v) :=
   Invertible.map (diagonalRingHom n α) v
 
-theorem inv_of_diagonal_eq {α} [Semiringₓ α] (v : n → α) [Invertible v] [Invertible (diagonalₓ v)] :
-    ⅟ (diagonalₓ v) = diagonalₓ (⅟ v) := by
+theorem inv_of_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Invertible (diagonal v)] :
+    ⅟ (diagonal v) = diagonal (⅟ v) := by
   letI := diagonal_invertible v
   convert (rfl : ⅟ (diagonal v) = _)
   convert Subsingleton.elim _ _
   apply Invertible.subsingleton
 
 /-- `v` is invertible if `diagonal v` is -/
-def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonalₓ v)] : Invertible v where
-  invOf := diag (⅟ (diagonalₓ v))
+def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : Invertible v where
+  invOf := diag (⅟ (diagonal v))
   inv_of_mul_self :=
     funext fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
-      rw [mul_assoc, prod_erase_mul _ _ (Finsetₓ.mem_univ _), ← det_diagonal]
+      rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_inv_of_self _
   mul_inv_of_self :=
     funext fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
-      rw [mul_left_commₓ, mul_prod_erase _ _ (Finsetₓ.mem_univ _), ← det_diagonal]
+      rw [mul_left_comm, mul_prod_erase _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_inv_of_self _
 
 /-- Together `matrix.diagonal_invertible` and `matrix.invertible_of_diagonal_invertible` form an
 equivalence, although both sides of the equiv are subsingleton anyway. -/
 @[simps]
-def diagonalInvertibleEquivInvertible (v : n → α) : Invertible (diagonalₓ v) ≃ Invertible v where
+def diagonalInvertibleEquivInvertible (v : n → α) : Invertible (diagonal v) ≃ Invertible v where
   toFun := @invertibleOfDiagonalInvertible _ _ _ _ _ _
   invFun := @diagonalInvertible _ _ _ _ _ _
-  left_inv := fun _ => Subsingleton.elim _ _
-  right_inv := fun _ => Subsingleton.elim _ _
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
 
 /-- When lowered to a prop, `matrix.diagonal_invertible_equiv_invertible` forms an `iff`. -/
 @[simp]
-theorem is_unit_diagonal {v : n → α} : IsUnit (diagonalₓ v) ↔ IsUnit v := by
+theorem is_unit_diagonal {v : n → α} : IsUnit (diagonal v) ↔ IsUnit v := by
   simp only [← nonempty_invertible_iff_is_unit, (diagonal_invertible_equiv_invertible v).nonempty_congr]
 
-theorem inv_diagonal (v : n → α) : (diagonalₓ v)⁻¹ = diagonalₓ (Ring.inverse v) := by
+theorem inv_diagonal (v : n → α) : (diagonal v)⁻¹ = diagonal (Ring.inverse v) := by
   rw [nonsing_inv_eq_ring_inverse]
   by_cases h:IsUnit v
   · have := is_unit_diagonal.mpr h
     cases this.nonempty_invertible
     cases h.nonempty_invertible
-    rw [Ringₓ.inverse_invertible, Ringₓ.inverse_invertible, inv_of_diagonal_eq]
+    rw [Ring.inverse_invertible, Ring.inverse_invertible, inv_of_diagonal_eq]
     
   · have := is_unit_diagonal.not.mpr h
     rw [Ring.inverse_non_unit _ h, Pi.zero_def, diagonal_zero, Ring.inverse_non_unit _ this]
@@ -502,10 +509,10 @@ theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ :
   simp only [inv_def]
   rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, det_mul, adjugate_mul_distrib, Ring.mul_inverse_rev]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A version of `list.prod_inv_reverse` for `matrix.has_inv`. -/
 theorem list_prod_inv_reverse : ∀ l : List (Matrix n n α), l.Prod⁻¹ = (l.reverse.map Inv.inv).Prod
-  | [] => by rw [List.reverse_nil, List.map_nilₓ, List.prod_nil, inv_one]
+  | [] => by rw [List.reverse_nil, List.map_nil, List.prod_nil, inv_one]
   | A::Xs => by
     rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.mul_eq_mul, Matrix.mul_eq_mul,
       mul_inv_rev, list_prod_inv_reverse]
@@ -528,7 +535,7 @@ theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → 
 
 section Det
 
-variable [Fintypeₓ m] [DecidableEq m]
+variable [Fintype m] [DecidableEq m]
 
 /-- A variant of `matrix.det_units_conj`. -/
 theorem det_conj {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) : det (M ⬝ N ⬝ M⁻¹) = det N := by
@@ -546,17 +553,17 @@ theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
     from_blocks A B C D =
       from_blocks 1 0 (C ⬝ ⅟ A) 1 ⬝ from_blocks A 0 0 (D - C ⬝ ⅟ A ⬝ B) ⬝ from_blocks 1 (⅟ A ⬝ B) 0 1 :=
     by
-    simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zeroₓ, zero_addₓ, Matrix.one_mul,
+    simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add, Matrix.one_mul,
       Matrix.mul_one, Matrix.inv_of_mul_self, Matrix.mul_inv_of_self_assoc, Matrix.mul_inv_of_mul_self_cancel,
       Matrix.mul_assoc, add_sub_cancel'_right]
   rw [this, det_mul, det_mul, det_from_blocks_zero₂₁, det_from_blocks_zero₂₁, det_from_blocks_zero₁₂, det_one, det_one,
-    one_mulₓ, one_mulₓ, mul_oneₓ]
+    one_mul, one_mul, mul_one]
 
 @[simp]
 theorem det_from_blocks_one₁₁ (B : Matrix m n α) (C : Matrix n m α) (D : Matrix n n α) :
     (Matrix.fromBlocks 1 B C D).det = det (D - C ⬝ B) := by
   haveI : Invertible (1 : Matrix m m α) := invertibleOne
-  rw [det_from_blocks₁₁, inv_of_one, Matrix.mul_one, det_one, one_mulₓ]
+  rw [det_from_blocks₁₁, inv_of_one, Matrix.mul_one, det_one, one_mul]
 
 /-- Determinant of a 2×2 block matrix, expanded around an invertible bottom right element in terms
 of the Schur complement. -/
@@ -571,7 +578,7 @@ theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
 theorem det_from_blocks_one₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α) :
     (Matrix.fromBlocks A B C 1).det = det (A - B ⬝ C) := by
   haveI : Invertible (1 : Matrix n n α) := invertibleOne
-  rw [det_from_blocks₂₂, inv_of_one, Matrix.mul_one, det_one, one_mulₓ]
+  rw [det_from_blocks₂₂, inv_of_one, Matrix.mul_one, det_one, one_mul]
 
 /-- The **Weinstein–Aronszajn identity**. Note the `1` on the LHS is of shape m×m, while the `1` on
 the RHS is of shape n×n. -/
@@ -583,7 +590,7 @@ theorem det_one_add_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 + 
 
 /-- Alternate statement of the **Weinstein–Aronszajn identity** -/
 theorem det_mul_add_one_comm (A : Matrix m n α) (B : Matrix n m α) : det (A ⬝ B + 1) = det (B ⬝ A + 1) := by
-  rw [add_commₓ, det_one_add_mul_comm, add_commₓ]
+  rw [add_comm, det_one_add_mul_comm, add_comm]
 
 theorem det_one_sub_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 - A ⬝ B) = det (1 - B ⬝ A) := by
   rw [sub_eq_add_neg, ← Matrix.neg_mul, det_one_add_mul_comm, Matrix.mul_neg, ← sub_eq_add_neg]
@@ -591,7 +598,7 @@ theorem det_one_sub_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 - 
 /-- A special case of the **Matrix determinant lemma** for when `A = I`.
 
 TODO: show this more generally. -/
-theorem det_one_add_col_mul_row (u v : m → α) : det (1 + colₓ u ⬝ rowₓ v) = 1 + v ⬝ᵥ u := by
+theorem det_one_add_col_mul_row (u v : m → α) : det (1 + col u ⬝ row v) = 1 + v ⬝ᵥ u := by
   rw [det_one_add_mul_comm, det_unique, Pi.add_apply, Pi.add_apply, Matrix.one_apply_eq, Matrix.row_mul_col_apply]
 
 end Det

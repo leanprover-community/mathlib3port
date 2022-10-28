@@ -46,7 +46,7 @@ inductively defined relation `free_algebra.rel`. Explicitly, the construction in
 -/
 
 
-variable (R : Type _) [CommSemiringₓ R]
+variable (R : Type _) [CommSemiring R]
 
 variable (X : Type _)
 
@@ -104,7 +104,7 @@ attribute [local instance]
 /-- Given a function from `X` to an `R`-algebra `A`, `lift_fun` provides a lift of `f` to a function
 from `pre R X` to `A`. This is mainly used in the construction of `free_algebra.lift`.
 -/
-def liftFun {A : Type _} [Semiringₓ A] [Algebra R A] (f : X → A) : Pre R X → A := fun t =>
+def liftFun {A : Type _} [Semiring A] [Algebra R A] (f : X → A) : Pre R X → A := fun t =>
   Pre.recOn t f (algebraMap _ _) (fun _ _ => (· + ·)) fun _ _ => (· * ·)
 
 /-- An inductively defined relation on `pre R X` used to force the initial algebra structure on
@@ -116,13 +116,13 @@ inductive Rel : Pre R X → Pre R X → Prop-- force `of_scalar` to be a central
   | mul_scalar {r s : R} : rel (↑(r * s)) (↑r * ↑s)
   | central_scalar {r : R} {a : Pre R X} : rel (r * a) (a * r)-- commutative additive semigroup
 
-  | add_assocₓ {a b c : Pre R X} : rel (a + b + c) (a + (b + c))
-  | add_commₓ {a b : Pre R X} : rel (a + b) (b + a)
-  | zero_addₓ {a : Pre R X} : rel (0 + a) a-- multiplicative monoid
+  | add_assoc {a b c : Pre R X} : rel (a + b + c) (a + (b + c))
+  | add_comm {a b : Pre R X} : rel (a + b) (b + a)
+  | zero_add {a : Pre R X} : rel (0 + a) a-- multiplicative monoid
 
   | mul_assoc {a b c : Pre R X} : rel (a * b * c) (a * (b * c))
-  | one_mulₓ {a : Pre R X} : rel (1 * a) a
-  | mul_oneₓ {a : Pre R X} : rel (a * 1) a-- distributivity
+  | one_mul {a : Pre R X} : rel (1 * a) a
+  | mul_one {a : Pre R X} : rel (a * 1) a-- distributivity
 
   | left_distrib {a b c : Pre R X} : rel (a * (b + c)) (a * b + a * c)
   | right_distrib {a b c : Pre R X} : rel ((a + b) * c) (a * c + b * c)-- other relations needed for semiring
@@ -147,7 +147,7 @@ namespace FreeAlgebra
 attribute [local instance]
   pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_smul
 
-instance : Semiringₓ (FreeAlgebra R X) where
+instance : Semiring (FreeAlgebra R X) where
   add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_compat_right) fun _ _ _ => Rel.add_compat_left
   add_assoc := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
@@ -190,20 +190,20 @@ instance : Semiringₓ (FreeAlgebra R X) where
 instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
-instance : HasSmul R (FreeAlgebra R X) where smul := fun r => Quot.map ((· * ·) ↑r) fun a b => Rel.mul_compat_right
+instance : HasSmul R (FreeAlgebra R X) where smul r := Quot.map ((· * ·) ↑r) fun a b => Rel.mul_compat_right
 
 instance : Algebra R (FreeAlgebra R X) where
-  toFun := fun r => Quot.mk _ r
+  toFun r := Quot.mk _ r
   map_one' := rfl
-  map_mul' := fun _ _ => Quot.sound Rel.mul_scalar
+  map_mul' _ _ := Quot.sound Rel.mul_scalar
   map_zero' := rfl
-  map_add' := fun _ _ => Quot.sound Rel.add_scalar
-  commutes' := fun _ => by
+  map_add' _ _ := Quot.sound Rel.add_scalar
+  commutes' _ := by
     rintro ⟨⟩
     exact Quot.sound rel.central_scalar
-  smul_def' := fun _ _ => rfl
+  smul_def' _ _ := rfl
 
-instance {S : Type _} [CommRingₓ S] : Ringₓ (FreeAlgebra S X) :=
+instance {S : Type _} [CommRing S] : Ring (FreeAlgebra S X) :=
   Algebra.semiringToRing S
 
 variable {X}
@@ -216,11 +216,11 @@ def ι : X → FreeAlgebra R X := fun m => Quot.mk _ m
 theorem quot_mk_eq_ι (m : X) : Quot.mk (FreeAlgebra.Rel R X) m = ι R m :=
   rfl
 
-variable {A : Type _} [Semiringₓ A] [Algebra R A]
+variable {A : Type _} [Semiring A] [Algebra R A]
 
 /-- Internal definition used to define `lift` -/
 private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
-  toFun := fun a =>
+  toFun a :=
     (Quot.liftOn a (liftFun _ _ f)) fun a b h => by
       induction h
       · exact (algebraMap R A).map_add h_r h_s
@@ -230,10 +230,10 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
       · apply Algebra.commutes
         
       · change _ + _ + _ = _ + (_ + _)
-        rw [add_assocₓ]
+        rw [add_assoc]
         
       · change _ + _ = _ + _
-        rw [add_commₓ]
+        rw [add_comm]
         
       · change algebraMap _ _ _ + lift_fun R X f _ = lift_fun R X f _
         simp
@@ -286,11 +286,11 @@ of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
 -/
 def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) where
   toFun := liftAux R
-  invFun := fun F => F ∘ ι R
-  left_inv := fun f => by
+  invFun F := F ∘ ι R
+  left_inv f := by
     ext
     rfl
-  right_inv := fun F => by
+  right_inv F := by
     ext x
     rcases x with ⟨⟩
     induction x
@@ -447,7 +447,7 @@ namespace FreeAlgebra
 If `C` holds for the `algebra_map` of `r : R` into `free_algebra R X`, the `ι` of `x : X`, and is
 preserved under addition and muliplication, then it holds for all of `free_algebra R X`.
 -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction {C : FreeAlgebra R X → Prop} (h_grade0 : ∀ r, C (algebraMap R (FreeAlgebra R X) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : FreeAlgebra R X) : C a := by

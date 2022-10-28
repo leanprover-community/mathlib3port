@@ -47,34 +47,35 @@ assumption from the Leibniz rule when `M` is cancellative.
 
 TODO: update this when bimodules are defined. -/
 @[protect_proj]
-structure Derivation (R : Type _) (A : Type _) [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] (M : Type _)
-  [AddCommMonoidₓ M] [Module A M] [Module R M] extends A →ₗ[R] M where
+structure Derivation (R : Type _) (A : Type _) [CommSemiring R] [CommSemiring A] [Algebra R A] (M : Type _)
+  [AddCommMonoid M] [Module A M] [Module R M] extends A →ₗ[R] M where
   map_one_eq_zero' : to_linear_map 1 = 0
   leibniz' (a b : A) : to_linear_map (a * b) = a • to_linear_map b + b • to_linear_map a
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident derivation.to_linear_map]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The `linear_map` underlying a `derivation`. -/
+add_decl_doc Derivation.toLinearMap
+
 namespace Derivation
 
 section
 
-variable {R : Type _} [CommSemiringₓ R]
+variable {R : Type _} [CommSemiring R]
 
-variable {A : Type _} [CommSemiringₓ A] [Algebra R A]
+variable {A : Type _} [CommSemiring A] [Algebra R A]
 
-variable {M : Type _} [AddCommMonoidₓ M] [Module A M] [Module R M]
+variable {M : Type _} [AddCommMonoid M] [Module A M] [Module R M]
 
 variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
 instance : AddMonoidHomClass (Derivation R A M) A M where
-  coe := fun D => D.toFun
-  coe_injective' := fun D1 D2 h => by
+  coe D := D.toFun
+  coe_injective' D1 D2 h := by
     cases D1
     cases D2
     congr
     exact FunLike.coe_injective h
-  map_add := fun D => D.toLinearMap.map_add'
-  map_zero := fun D => D.toLinearMap.map_zero
+  map_add D := D.toLinearMap.map_add'
+  map_zero D := D.toLinearMap.map_zero
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -124,7 +125,7 @@ theorem map_smul : D (r • a) = r • D a :=
 theorem leibniz : D (a * b) = a • D b + b • D a :=
   D.leibniz' _ _
 
-theorem map_sum {ι : Type _} (s : Finsetₓ ι) (f : ι → A) : D (∑ i in s, f i) = ∑ i in s, D (f i) :=
+theorem map_sum {ι : Type _} (s : Finset ι) (f : ι → A) : D (∑ i in s, f i) = ∑ i in s, D (f i) :=
   D.toLinearMap.map_sum
 
 @[simp]
@@ -138,7 +139,7 @@ theorem map_one_eq_zero : D 1 = 0 :=
 
 @[simp]
 theorem map_algebra_map : D (algebraMap R A r) = 0 := by
-  rw [← mul_oneₓ r, RingHom.map_mul, RingHom.map_one, ← smul_def, map_smul, map_one_eq_zero, smul_zero]
+  rw [← mul_one r, RingHom.map_mul, RingHom.map_one, ← smul_def, map_smul, map_one_eq_zero, smul_zero]
 
 @[simp]
 theorem map_coe_nat (n : ℕ) : D (n : A) = 0 := by rw [← nsmul_one, D.map_smul_of_tower n, map_one_eq_zero, smul_zero]
@@ -146,30 +147,30 @@ theorem map_coe_nat (n : ℕ) : D (n : A) = 0 := by rw [← nsmul_one, D.map_smu
 @[simp]
 theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
   induction' n with n ihn
-  · rw [pow_zeroₓ, map_one_eq_zero, zero_smul]
+  · rw [pow_zero, map_one_eq_zero, zero_smul]
     
   · rcases(zero_le n).eq_or_lt with (rfl | hpos)
-    · rw [pow_oneₓ, one_smul, pow_zeroₓ, one_smul]
+    · rw [pow_one, one_smul, pow_zero, one_smul]
       
-    · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succₓ, Nat.sub_add_cancelₓ hpos]
-      simp only [pow_succₓ, leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this, Nat.succ_eq_add_one,
-        Nat.add_succ_sub_one, add_zeroₓ, one_nsmul]
+    · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ, Nat.sub_add_cancel hpos]
+      simp only [pow_succ, leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this, Nat.succ_eq_add_one,
+        Nat.add_succ_sub_one, add_zero, one_nsmul]
       
     
 
 theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) := fun x hx =>
-  Algebra.adjoin_induction hx h (fun r => (D1.map_algebra_map r).trans (D2.map_algebra_map r).symm)
+  Algebra.adjoinInduction hx h (fun r => (D1.map_algebra_map r).trans (D2.map_algebra_map r).symm)
     (fun x y hx hy => by simp only [map_add, *]) fun x y hx hy => by simp only [leibniz, *]
 
 /-- If adjoin of a set is the whole algebra, then any two derivations equal on this set are equal
 on the whole algebra. -/
 theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D1 D2 s) : D1 = D2 :=
-  ext fun a => eq_on_adjoin h <| hs.symm ▸ trivialₓ
+  ext fun a => eq_on_adjoin h <| hs.symm ▸ trivial
 
 -- Data typeclasses
 instance : Zero (Derivation R A M) :=
   ⟨{ toLinearMap := 0, map_one_eq_zero' := rfl,
-      leibniz' := fun a b => by simp only [add_zeroₓ, LinearMap.zero_apply, smul_zero] }⟩
+      leibniz' := fun a b => by simp only [add_zero, LinearMap.zero_apply, smul_zero] }⟩
 
 @[simp]
 theorem coe_zero : ⇑(0 : Derivation R A M) = 0 :=
@@ -185,7 +186,7 @@ theorem zero_apply (a : A) : (0 : Derivation R A M) a = 0 :=
 instance : Add (Derivation R A M) :=
   ⟨fun D1 D2 =>
     { toLinearMap := D1 + D2, map_one_eq_zero' := by simp,
-      leibniz' := fun a b => by simp only [leibniz, LinearMap.add_apply, coe_fn_coe, smul_add, add_add_add_commₓ] }⟩
+      leibniz' := fun a b => by simp only [leibniz, LinearMap.add_apply, coe_fn_coe, smul_add, add_add_add_comm] }⟩
 
 @[simp]
 theorem coe_add (D1 D2 : Derivation R A M) : ⇑(D1 + D2) = D1 + D2 :=
@@ -203,7 +204,7 @@ instance : Inhabited (Derivation R A M) :=
 
 section Scalar
 
-variable {S : Type _} [Monoidₓ S] [DistribMulAction S M] [SmulCommClass R S M] [SmulCommClass S A M]
+variable {S : Type _} [Monoid S] [DistribMulAction S M] [SmulCommClass R S M] [SmulCommClass S A M]
 
 instance (priority := 100) : HasSmul S (Derivation R A M) :=
   ⟨fun r D =>
@@ -221,7 +222,7 @@ theorem coe_smul_linear_map (r : S) (D : Derivation R A M) : ↑(r • D) = (r �
 theorem smul_apply (r : S) (D : Derivation R A M) : (r • D) a = r • D a :=
   rfl
 
-instance : AddCommMonoidₓ (Derivation R A M) :=
+instance : AddCommMonoid (Derivation R A M) :=
   coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
 
 /-- `coe_fn` as an `add_monoid_hom`. -/
@@ -234,11 +235,11 @@ instance (priority := 100) : DistribMulAction S (Derivation R A M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
 instance [DistribMulAction Sᵐᵒᵖ M] [IsCentralScalar S M] :
-    IsCentralScalar S (Derivation R A M) where op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
+    IsCentralScalar S (Derivation R A M) where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
 end Scalar
 
-instance (priority := 100) {S : Type _} [Semiringₓ S] [Module S M] [SmulCommClass R S M] [SmulCommClass S A M] :
+instance (priority := 100) {S : Type _} [Semiring S] [Module S M] [SmulCommClass R S M] [SmulCommClass S A M] :
     Module S (Derivation R A M) :=
   Function.Injective.module S coeFnAddMonoidHom coe_injective coe_smul
 
@@ -247,23 +248,23 @@ instance [IsScalarTower R A M] : IsScalarTower R A (Derivation R A M) :=
 
 section PushForward
 
-variable {N : Type _} [AddCommMonoidₓ N] [Module A N] [Module R N] [IsScalarTower R A M] [IsScalarTower R A N]
+variable {N : Type _} [AddCommMonoid N] [Module A N] [Module R N] [IsScalarTower R A M] [IsScalarTower R A N]
 
 variable (f : M →ₗ[A] N) (e : M ≃ₗ[A] N)
 
 /-- We can push forward derivations using linear maps, i.e., the composition of a derivation with a
 linear map is a derivation. Furthermore, this operation is linear on the spaces of derivations. -/
 def _root_.linear_map.comp_der : Derivation R A M →ₗ[R] Derivation R A N where
-  toFun := fun D =>
+  toFun D :=
     { toLinearMap := (f : M →ₗ[R] N).comp (D : A →ₗ[R] M),
       map_one_eq_zero' := by simp only [LinearMap.comp_apply, coe_fn_coe, map_one_eq_zero, map_zero],
       leibniz' := fun a b => by
         simp only [coe_fn_coe, LinearMap.comp_apply, LinearMap.map_add, leibniz, LinearMap.coe_coe_is_scalar_tower,
           LinearMap.map_smul] }
-  map_add' := fun D₁ D₂ => by
+  map_add' D₁ D₂ := by
     ext
     exact LinearMap.map_add _ _ _
-  map_smul' := fun r D => by
+  map_smul' r D := by
     ext
     exact LinearMap.map_smul _ _ _
 
@@ -278,11 +279,11 @@ theorem coe_comp : (f.compDer D : A → N) = (f : M →ₗ[R] N).comp (D : A →
 /-- The composition of a derivation with a linear map as a bilinear map -/
 @[simps]
 def llcomp : (M →ₗ[A] N) →ₗ[A] Derivation R A M →ₗ[R] Derivation R A N where
-  toFun := fun f => f.compDer
-  map_add' := fun f₁ f₂ => by
+  toFun f := f.compDer
+  map_add' f₁ f₂ := by
     ext
     rfl
-  map_smul' := fun r D => by
+  map_smul' r D := by
     ext
     rfl
 
@@ -302,14 +303,14 @@ end
 
 section Cancel
 
-variable {R : Type _} [CommSemiringₓ R] {A : Type _} [CommSemiringₓ A] [Algebra R A] {M : Type _}
-  [AddCancelCommMonoid M] [Module R M] [Module A M]
+variable {R : Type _} [CommSemiring R] {A : Type _} [CommSemiring A] [Algebra R A] {M : Type _} [AddCancelCommMonoid M]
+  [Module R M] [Module A M]
 
 /-- Define `derivation R A M` from a linear map when `M` is cancellative by verifying the Leibniz
 rule. -/
 def mk' (D : A →ₗ[R] M) (h : ∀ a b, D (a * b) = a • D b + b • D a) : Derivation R A M where
   toLinearMap := D
-  map_one_eq_zero' := add_right_eq_selfₓ.1 <| by simpa only [one_smul, one_mulₓ] using (h 1 1).symm
+  map_one_eq_zero' := add_right_eq_self.1 <| by simpa only [one_smul, one_mul] using (h 1 1).symm
   leibniz' := h
 
 @[simp]
@@ -324,13 +325,13 @@ end Cancel
 
 section
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
-variable {A : Type _} [CommRingₓ A] [Algebra R A]
+variable {A : Type _} [CommRing A] [Algebra R A]
 
 section
 
-variable {M : Type _} [AddCommGroupₓ M] [Module A M] [Module R M]
+variable {M : Type _} [AddCommGroup M] [Module A M] [Module R M]
 
 variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
@@ -348,7 +349,7 @@ theorem leibniz_of_mul_eq_one {a b : A} (h : a * b = 1) : D a = -(a ^ 2) • D b
   refine' eq_neg_of_add_eq_zero_left _
   calc
     D a + a ^ 2 • D b = a • b • D a + a • a • D b := by simp only [smul_smul, h, one_smul, sq]
-    _ = a • D (a * b) := by rw [leibniz, smul_add, add_commₓ]
+    _ = a • D (a * b) := by rw [leibniz, smul_add, add_comm]
     _ = 0 := by rw [h, map_one_eq_zero, smul_zero]
     
 
@@ -365,7 +366,7 @@ theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Deriv
 
 instance : Neg (Derivation R A M) :=
   ⟨fun D =>
-    (mk' (-D)) fun a b => by simp only [LinearMap.neg_apply, smul_neg, neg_add_rev, leibniz, coe_fn_coe, add_commₓ]⟩
+    (mk' (-D)) fun a b => by simp only [LinearMap.neg_apply, smul_neg, neg_add_rev, leibniz, coe_fn_coe, add_comm]⟩
 
 @[simp]
 theorem coe_neg (D : Derivation R A M) : ⇑(-D) = -D :=
@@ -394,7 +395,7 @@ theorem coe_sub_linear_map (D1 D2 : Derivation R A M) : ↑(D1 - D2) = (D1 - D2 
 theorem sub_apply : (D1 - D2) a = D1 a - D2 a :=
   rfl
 
-instance : AddCommGroupₓ (Derivation R A M) :=
+instance : AddCommGroup (Derivation R A M) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 end
@@ -407,33 +408,33 @@ section LieStructures
 variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 
 /-- The commutator of derivations is again a derivation. -/
-instance : HasBracket (Derivation R A A) (Derivation R A A) :=
+instance : Bracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
-    (mk' ⁅(D1 : Module.End R A), (D2 : Module.End R A)⁆) fun a b => by
-      simp only [Ringₓ.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe, LinearMap.sub_apply]
+    (mk' ⁅(D1 : Module.EndCat R A), (D2 : Module.EndCat R A)⁆) fun a b => by
+      simp only [Ring.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe, LinearMap.sub_apply]
       ring⟩
 
 @[simp]
-theorem commutator_coe_linear_map : ↑⁅D1, D2⁆ = ⁅(D1 : Module.End R A), (D2 : Module.End R A)⁆ :=
+theorem commutator_coe_linear_map : ↑⁅D1, D2⁆ = ⁅(D1 : Module.EndCat R A), (D2 : Module.EndCat R A)⁆ :=
   rfl
 
 theorem commutator_apply : ⁅D1, D2⁆ a = D1 (D2 a) - D2 (D1 a) :=
   rfl
 
 instance : LieRing (Derivation R A A) where
-  add_lie := fun d e f => by
+  add_lie d e f := by
     ext a
     simp only [commutator_apply, add_apply, map_add]
     ring
-  lie_add := fun d e f => by
+  lie_add d e f := by
     ext a
     simp only [commutator_apply, add_apply, map_add]
     ring
-  lie_self := fun d => by
+  lie_self d := by
     ext a
     simp only [commutator_apply, add_apply, map_add]
     ring_nf
-  leibniz_lie := fun d e f => by
+  leibniz_lie d e f := by
     ext a
     simp only [commutator_apply, add_apply, sub_apply, map_sub]
     ring
@@ -454,7 +455,7 @@ section ToSquareZero
 
 universe u v w
 
-variable {R : Type u} {A : Type v} {B : Type w} [CommSemiringₓ R] [CommSemiringₓ A] [CommRingₓ B]
+variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A] [CommRing B]
 
 variable [Algebra R A] [Algebra R B] (I : Ideal B) (hI : I ^ 2 = ⊥)
 
@@ -520,14 +521,14 @@ theorem derivation_to_square_zero_of_lift_apply (f : A →ₐ[R] B)
 from `A` to `I` corresponds to a lift `A →ₐ[R] B` of the canonical map `A →ₐ[R] B ⧸ I`. -/
 def liftOfDerivationToSquareZero (f : Derivation R A I) : A →ₐ[R] B :=
   { (I.restrictScalars R).Subtype.comp f.toLinearMap + (IsScalarTower.toAlgHom R A B).toLinearMap with
-    map_one' := show (f 1 : B) + algebraMap A B 1 = 1 by rw [map_one, f.map_one_eq_zero, Submodule.coe_zero, zero_addₓ],
+    map_one' := show (f 1 : B) + algebraMap A B 1 = 1 by rw [map_one, f.map_one_eq_zero, Submodule.coe_zero, zero_add],
     map_mul' := fun x y => by
       have : (f x : B) * f y = 0 := by
         rw [← Ideal.mem_bot, ← hI, pow_two]
         convert Ideal.mul_mem_mul (f x).2 (f y).2 using 1
       dsimp
-      simp only [map_mul, f.leibniz, add_mulₓ, mul_addₓ, Submodule.coe_add, Submodule.coe_smul_of_tower,
-        Algebra.smul_def, this]
+      simp only [map_mul, f.leibniz, add_mul, mul_add, Submodule.coe_add, Submodule.coe_smul_of_tower, Algebra.smul_def,
+        this]
       ring,
     commutes' := fun r => by
       dsimp
@@ -542,7 +543,7 @@ theorem lift_of_derivation_to_square_zero_apply (f : Derivation R A I) (x : A) :
 @[simp]
 theorem lift_of_derivation_to_square_zero_mk_apply (d : Derivation R A I) (x : A) :
     Ideal.Quotient.mk I (liftOfDerivationToSquareZero I hI d x) = algebraMap A (B ⧸ I) x := by
-  rw [lift_of_derivation_to_square_zero_apply, map_add, ideal.quotient.eq_zero_iff_mem.mpr (d x).Prop, zero_addₓ]
+  rw [lift_of_derivation_to_square_zero_apply, map_add, ideal.quotient.eq_zero_iff_mem.mpr (d x).Prop, zero_add]
   rfl
 
 /-- Given a tower of algebras `R → A → B`, and a square-zero `I : ideal B`,
@@ -571,7 +572,7 @@ section KaehlerDifferential
 
 open TensorProduct
 
-variable (R S : Type _) [CommRingₓ R] [CommRingₓ S] [Algebra R S]
+variable (R S : Type _) [CommRing R] [CommRing S] [Algebra R S]
 
 /-- The kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`. -/
 abbrev KaehlerDifferential.ideal : Ideal (S ⊗[R] S) :=
@@ -584,7 +585,7 @@ theorem KaehlerDifferential.one_smul_sub_smul_one_mem_ideal (a : S) :
 
 variable {R}
 
-variable {M : Type _} [AddCommGroupₓ M] [Module R M] [Module S M] [IsScalarTower R S M]
+variable {M : Type _} [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
 
 /-- For a `R`-derivation `S → M`, this is the map `S ⊗[R] S →ₗ[S] M` sending `s ⊗ₜ t ↦ s • D t`. -/
 def Derivation.tensorProductTo (D : Derivation R S M) : S ⊗[R] S →ₗ[S] M :=
@@ -598,28 +599,28 @@ theorem Derivation.tensor_product_to_mul (D : Derivation R S M) (x y : S ⊗[R] 
       TensorProduct.lmul' R x • D.tensorProductTo y + TensorProduct.lmul' R y • D.tensorProductTo x :=
   by
   apply TensorProduct.induction_on x
-  · rw [zero_mul, map_zero, map_zero, zero_smul, smul_zero, add_zeroₓ]
+  · rw [zero_mul, map_zero, map_zero, zero_smul, smul_zero, add_zero]
     
   swap
   · rintro
-    simp only [add_mulₓ, map_add, add_smul, *, smul_add]
-    rw [add_add_add_commₓ]
+    simp only [add_mul, map_add, add_smul, *, smul_add]
+    rw [add_add_add_comm]
     
   intro x₁ x₂
   apply TensorProduct.induction_on y
-  · rw [mul_zero, map_zero, map_zero, zero_smul, smul_zero, add_zeroₓ]
+  · rw [mul_zero, map_zero, map_zero, zero_smul, smul_zero, add_zero]
     
   swap
   · rintro
-    simp only [mul_addₓ, map_add, add_smul, *, smul_add]
-    rw [add_add_add_commₓ]
+    simp only [mul_add, map_add, add_smul, *, smul_add]
+    rw [add_add_add_comm]
     
   intro x y
   simp only [tensor_product.tmul_mul_tmul, Derivation.tensorProductTo, TensorProduct.AlgebraTensorModule.lift_apply,
     TensorProduct.lift.tmul', tensor_product.lmul'_apply_tmul]
   dsimp
   rw [D.leibniz]
-  simp only [smul_smul, smul_add, mul_comm (x * y) x₁, mul_right_commₓ x₁ x₂, ← mul_assoc]
+  simp only [smul_smul, smul_add, mul_comm (x * y) x₁, mul_right_comm x₁ x₂, ← mul_assoc]
 
 variable (R S)
 
@@ -628,7 +629,7 @@ theorem KaehlerDifferential.submodule_span_range_eq_ideal :
     Submodule.span S (Set.Range fun s : S => (1 : S) ⊗ₜ[R] s - s ⊗ₜ[R] (1 : S)) =
       (KaehlerDifferential.ideal R S).restrictScalars S :=
   by
-  apply le_antisymmₓ
+  apply le_antisymm
   · rw [Submodule.span_le]
     rintro _ ⟨s, rfl⟩
     exact KaehlerDifferential.one_smul_sub_smul_one_mem_ideal _ _
@@ -644,7 +645,7 @@ theorem KaehlerDifferential.submodule_span_range_eq_ideal :
     · intro x y
       convert_to x • (1 ⊗ₜ y - y ⊗ₜ 1) ∈ _
       · rw [tensor_product.lmul'_apply_tmul, smul_sub, TensorProduct.smul_tmul', TensorProduct.smul_tmul', smul_eq_mul,
-          smul_eq_mul, mul_oneₓ]
+          smul_eq_mul, mul_one]
         
       · refine' Submodule.smul_mem _ x _
         apply Submodule.subset_span
@@ -659,7 +660,7 @@ theorem KaehlerDifferential.submodule_span_range_eq_ideal :
 
 theorem KaehlerDifferential.span_range_eq_ideal :
     Ideal.span (Set.Range fun s : S => (1 : S) ⊗ₜ[R] s - s ⊗ₜ[R] (1 : S)) = KaehlerDifferential.ideal R S := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · rw [Ideal.span_le]
     rintro _ ⟨s, rfl⟩
     exact KaehlerDifferential.one_smul_sub_smul_one_mem_ideal _ _
@@ -670,9 +671,9 @@ theorem KaehlerDifferential.span_range_eq_ideal :
     exact Submodule.subset_span
     
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S)
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R -/
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S -/
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S) -/
 /-- The module of Kähler differentials (Kahler differentials, Kaehler differentials).
 This is implemented as `I / I ^ 2` with `I` the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
 To view elements as a linear combination of the form `s • D s'`, use
@@ -682,7 +683,7 @@ We also provide the notation `Ω[S⁄R]` for `kaehler_differential R S`.
 Note that the slash is `\textfractionsolidus`.
 -/
 def KaehlerDifferential : Type _ :=
-  (KaehlerDifferential.ideal R S).Cotangent deriving AddCommGroupₓ,
+  (KaehlerDifferential.ideal R S).Cotangent deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R»,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S»,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S)»
@@ -732,7 +733,7 @@ def KaehlerDifferential.d : Derivation R S (Ω[S⁄R]) :=
           (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R b : _) using
         1
       simp only [AddSubgroupClass.coe_sub, Submodule.coe_add, Submodule.coe_mk, tensor_product.tmul_mul_tmul, mul_sub,
-        sub_mul, mul_comm b, Submodule.coe_smul_of_tower, smul_sub, TensorProduct.smul_tmul', smul_eq_mul, mul_oneₓ]
+        sub_mul, mul_comm b, Submodule.coe_smul_of_tower, smul_sub, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
       ring_nf }
 
 theorem KaehlerDifferential.D_apply (s : S) :
@@ -780,10 +781,10 @@ def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[S⁄R] →ₗ
     apply Submodule.smul_induction_on hx <;> clear hx x
     · rintro x (hx : _ = _) ⟨y, hy : _ = _⟩ -
       dsimp
-      rw [Derivation.tensor_product_to_mul, hx, hy, zero_smul, zero_smul, zero_addₓ]
+      rw [Derivation.tensor_product_to_mul, hx, hy, zero_smul, zero_smul, zero_add]
       
     · intro x y ex ey
-      rw [map_add, ex, ey, zero_addₓ]
+      rw [map_add, ex, ey, zero_add]
       
     
 
@@ -872,7 +873,7 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
       (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S :=
   by
   rw [AlgHom.ext_iff, AlgHom.ext_iff]
-  apply forall_congrₓ
+  apply forall_congr
   intro x
   have e₁ :
     (tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift (f x) =
@@ -883,7 +884,7 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
     rfl
   have e₂ : x = KaehlerDifferential.quotientCotangentIdealRingEquiv R S (IsScalarTower.toAlgHom R S _ x) :=
-    ((tensor_product.lmul'_apply_tmul x 1).trans (mul_oneₓ x)).symm
+    ((tensor_product.lmul'_apply_tmul x 1).trans (mul_one x)).symm
   constructor
   · intro e
     exact
@@ -911,13 +912,14 @@ def KaehlerDifferential.endEquivAuxEquiv :
     { f //
         (Ideal.Quotient.mkₐ R (KaehlerDifferential.ideal R S).cotangentIdeal).comp f = IsScalarTower.toAlgHom R S _ } ≃
       { f // (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S } :=
-  (Equivₓ.refl _).subtypeEquiv (KaehlerDifferential.End_equiv_aux R S)
+  (Equiv.refl _).subtypeEquiv (KaehlerDifferential.End_equiv_aux R S)
 
 /-- The endomorphisms of `Ω[S⁄R]` corresponds to sections of the surjection `S ⊗[R] S ⧸ J ^ 2 →ₐ[R] S`,
 with `J` being the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
 -/
 noncomputable def KaehlerDifferential.endEquiv :
-    Module.End S (Ω[S⁄R]) ≃ { f // (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S } :=
+    Module.EndCat S (Ω[S⁄R]) ≃
+      { f // (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S } :=
   (KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans <|
     (KaehlerDifferential.endEquivDerivation' R S).toEquiv.trans <|
       (derivationToSquareZeroEquivLift (KaehlerDifferential.ideal R S).cotangentIdeal

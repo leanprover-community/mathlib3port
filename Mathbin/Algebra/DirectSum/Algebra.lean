@@ -37,9 +37,9 @@ open DirectSum
 
 variable (R : Type uR) (A : ι → Type uA) {B : Type uB} [DecidableEq ι]
 
-variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (A i)] [∀ i, Module R (A i)]
+variable [CommSemiring R] [∀ i, AddCommMonoid (A i)] [∀ i, Module R (A i)]
 
-variable [AddMonoidₓ ι] [Gsemiring A]
+variable [AddMonoid ι] [Gsemiring A]
 
 section
 
@@ -54,25 +54,25 @@ class Galgebra where
 
 end
 
-variable [Semiringₓ B] [Galgebra R A] [Algebra R B]
+variable [Semiring B] [Galgebra R A] [Algebra R B]
 
 instance : Algebra R (⨁ i, A i) where
   toFun := (DirectSum.of A 0).comp Galgebra.toFun
   map_zero' := AddMonoidHom.map_zero _
   map_add' := AddMonoidHom.map_add _
   map_one' := (DirectSum.of A 0).congr_arg Galgebra.map_one
-  map_mul' := fun a b => by
+  map_mul' a b := by
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.map_mul a b)
-  commutes' := fun r x => by
+  commutes' r x := by
     change AddMonoidHom.mul (DirectSum.of _ _ _) x = add_monoid_hom.mul.flip (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
     ext i xi : 2
     dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.mul_apply, AddMonoidHom.flip_apply]
     rw [of_mul_of, of_mul_of]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.commutes r ⟨i, xi⟩)
-  smul_def' := fun r x => by
+  smul_def' r x := by
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
     ext i xi : 2
@@ -122,17 +122,17 @@ end DirectSum
 
 -/
 @[simps]
-instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A]
+instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A]
     [Algebra R A] : DirectSum.Galgebra R fun i : ι => A where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
-  map_mul := fun a b => Sigma.ext (zero_addₓ _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)
-  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_addₓ _).trans (add_zeroₓ _).symm) (heq_of_eq <| Algebra.commutes _ _)
-  smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_addₓ _).symm (heq_of_eq <| Algebra.smul_def _ _)
+  map_mul a b := Sigma.ext (zero_add _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)
+  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_add _).trans (add_zero _).symm) (heq_of_eq <| Algebra.commutes _ _)
+  smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_add _).symm (heq_of_eq <| Algebra.smul_def _ _)
 
 namespace Submodule
 
-variable {R A : Type _} [CommSemiringₓ R]
+variable {R A : Type _} [CommSemiring R]
 
 end Submodule
 

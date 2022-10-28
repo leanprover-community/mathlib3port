@@ -35,9 +35,9 @@ namespace FirstOrder
 
 namespace Language
 
-open Structure
+open StructureCat
 
-variable {L : Language.{u, v}} [∀ a, L.Structure (M a)]
+variable {L : Language.{u, v}} [∀ a, L.StructureCat (M a)]
 
 namespace Ultraproduct
 
@@ -68,10 +68,10 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
 
 variable {M} {u}
 
-instance structure : L.Structure ((u : Filter α).product M) :=
+instance structure : L.StructureCat ((u : Filter α).product M) :=
   language.quotient_structure
 
-theorem fun_map_cast {n : ℕ} (f : L.Functions n) (x : Finₓ n → ∀ a, M a) :
+theorem fun_map_cast {n : ℕ} (f : L.Functions n) (x : Fin n → ∀ a, M a) :
     (funMap f fun i => (x i : (u : Filter α).product M)) = fun a => funMap f fun i => x i a := by
   apply fun_map_quotient_mk
 
@@ -88,8 +88,12 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
 
 variable [∀ a : α, Nonempty (M a)]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,
+   φ.realize (λ i : β, (x i : (u : filter α).product M))
+   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormula β n) (x : β → ∀ a, M a)
-    (v : Finₓ n → ∀ a, M a) :
+    (v : Fin n → ∀ a, M a) :
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
       ∀ᶠ a : α in u, φ.realize (fun i : β => x i a) fun i => v i a :=
   by
@@ -100,7 +104,7 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
   · have h2 : ∀ a : α, (Sum.elim (fun i : β => x i a) fun i => v i a) = fun i => Sum.elim x v i a := fun a =>
       funext fun i => Sum.casesOn i (fun i => rfl) fun i => rfl
     simp only [bounded_formula.realize, (Sum.comp_elim coe x v).symm, h2, term_realize_cast]
-    exact Quotientₓ.eq'
+    exact Quotient.eq'
     
   · have h2 : ∀ a : α, (Sum.elim (fun i : β => x i a) fun i => v i a) = fun i => Sum.elim x v i a := fun a =>
       funext fun i => Sum.casesOn i (fun i => rfl) fun i => rfl
@@ -111,26 +115,25 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
     rw [Ultrafilter.eventually_imp]
     
   · simp only [bounded_formula.realize]
-    trans
-      ∀ m : ∀ a : α, M a,
-        φ.realize (fun i : β => (x i : (u : Filter α).product M)) (Finₓ.snoc (coe ∘ v) (↑m : (u : Filter α).product M))
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,\n   φ.realize (λ i : β, (x i : (u : filter α).product M))\n   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     · exact forall_quotient_iff
       
     have h' :
       ∀ (m : ∀ a, M a) (a : α),
-        (fun i : Finₓ (k + 1) => (Finₓ.snoc v m : _ → ∀ a, M a) i a) = Finₓ.snoc (fun i : Finₓ k => v i a) (m a) :=
+        (fun i : Fin (k + 1) => (Fin.snoc v m : _ → ∀ a, M a) i a) = Fin.snoc (fun i : Fin k => v i a) (m a) :=
       by
-      refine' fun m a => funext (Finₓ.reverseInduction _ fun i hi => _)
-      · simp only [Finₓ.snoc_last]
+      refine' fun m a => funext (Fin.reverseInduction _ fun i hi => _)
+      · simp only [Fin.snoc_last]
         
-      · simp only [Finₓ.snoc_cast_succ]
+      · simp only [Fin.snoc_cast_succ]
         
-    simp only [← Finₓ.comp_snoc, ih, h']
+    simp only [← Fin.comp_snoc, ih, h']
     refine' ⟨fun h => _, fun h m => _⟩
     · contrapose! h
       simp_rw [← Ultrafilter.eventually_not, not_forall] at h
       refine'
-        ⟨fun a : α => Classical.epsilon fun m : M a => ¬φ.realize (fun i => x i a) (Finₓ.snoc (fun i => v i a) m), _⟩
+        ⟨fun a : α => Classical.epsilon fun m : M a => ¬φ.realize (fun i => x i a) (Fin.snoc (fun i => v i a) m), _⟩
       rw [← Ultrafilter.eventually_not]
       exact Filter.mem_of_superset h fun a ha => Classical.epsilon_spec ha
       
@@ -144,8 +147,8 @@ theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a
   simp_rw [formula.realize, ← bounded_formula_realize_cast φ x, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Łoś's Theorem : A sentence is true in an ultraproduct if and only if the set of structures it is
   true in is in the ultrafilter. -/
 theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ ↔ ∀ᶠ a : α in u, M a ⊨ φ := by

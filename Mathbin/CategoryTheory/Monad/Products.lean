@@ -50,8 +50,8 @@ category.
 -/
 @[simps]
 def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X where
-  obj := fun A => Over.mk (A.a ≫ limits.prod.fst)
-  map := fun A₁ A₂ f =>
+  obj A := Over.mk (A.a ≫ limits.prod.fst)
+  map A₁ A₂ f :=
     Over.homMk f.f
       (by
         rw [over.mk_hom, ← f.h_assoc]
@@ -63,8 +63,8 @@ category.
 -/
 @[simps]
 def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X) where
-  obj := fun f => { A := f.left, a := prod.lift f.Hom (𝟙 _) }
-  map := fun f₁ f₂ g => { f := g.left }
+  obj f := { A := f.left, a := prod.lift f.Hom (𝟙 _) }
+  map f₁ f₂ g := { f := g.left }
 
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
@@ -107,8 +107,8 @@ category.
 -/
 @[simps]
 def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X where
-  obj := fun A => Under.mk (coprod.inl ≫ A.a)
-  map := fun A₁ A₂ f =>
+  obj A := Under.mk (coprod.inl ≫ A.a)
+  map A₁ A₂ f :=
     Under.homMk f.f
       (by
         rw [under.mk_hom, assoc, ← f.h]
@@ -120,8 +120,8 @@ category.
 -/
 @[simps]
 def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
-  obj := fun f => { A := f.right, a := coprod.desc f.Hom (𝟙 _) }
-  map := fun f₁ f₂ g => { f := g.right }
+  obj f := { A := f.right, a := coprod.desc f.Hom (𝟙 _) }
+  map f₁ f₂ g := { f := g.right }
 
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/

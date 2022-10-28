@@ -5,6 +5,7 @@ Authors: David Wärn, Scott Morrison
 -/
 import Mathbin.Combinatorics.Quiver.Basic
 import Mathbin.Data.List.Basic
+import Mathbin.Logic.Lemmas
 
 /-!
 # Paths in quivers
@@ -31,7 +32,7 @@ def Hom.toPath {V} [Quiver V] {a b : V} (e : a ⟶ b) : Path a b :=
 
 namespace Path
 
-variable {V : Type u} [Quiver V] {a b : V}
+variable {V : Type u} [Quiver V] {a b c : V}
 
 /-- The length of a path is the number of arrows it uses. -/
 def length {a : V} : ∀ {b : V}, Path a b → ℕ
@@ -80,6 +81,50 @@ theorem comp_assoc {a b c : V} :
   | c, p, q, path.nil => rfl
   | d, p, q, path.cons r e => by rw [comp_cons, comp_cons, comp_cons, comp_assoc]
 
+@[simp]
+theorem length_comp (p : Path a b) : ∀ {c} (q : Path b c), (p.comp q).length = p.length + q.length
+  | c, nil => rfl
+  | c, cons q h => congr_arg Nat.succ q.length_comp
+
+theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length = q₂.length) :
+    p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ := by
+  refine'
+    ⟨fun h => _, by
+      rintro ⟨rfl, rfl⟩
+      rfl⟩
+  induction' q₁ with d₁ e₁ q₁ f₁ ih generalizing q₂ <;> obtain _ | ⟨q₂, f₂⟩ := q₂
+  · exact ⟨h, rfl⟩
+    
+  · cases hq
+    
+  · cases hq
+    
+  simp only [comp_cons] at h
+  obtain rfl := h.1
+  obtain ⟨rfl, rfl⟩ := ih (Nat.succ_injective hq) h.2.1.Eq
+  rw [h.2.2.Eq]
+  exact ⟨rfl, rfl⟩
+
+theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
+    p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
+  ⟨fun h_eq => (comp_inj <| add_left_injective p₁.length <| by simpa [h] using congr_arg length h_eq).1 h_eq, by
+    rintro ⟨rfl, rfl⟩
+    rfl⟩
+
+theorem comp_injective_left (q : Path b c) : Injective fun p : Path a b => p.comp q := fun p₁ p₂ h =>
+  ((comp_inj rfl).1 h).1
+
+theorem comp_injective_right (p : Path a b) : Injective (p.comp : Path b c → Path a c) := fun q₁ q₂ h =>
+  ((comp_inj' rfl).1 h).2
+
+@[simp]
+theorem comp_inj_left {p₁ p₂ : Path a b} {q : Path b c} : p₁.comp q = p₂.comp q ↔ p₁ = p₂ :=
+  q.comp_injective_left.eq_iff
+
+@[simp]
+theorem comp_inj_right {p : Path a b} {q₁ q₂ : Path b c} : p.comp q₁ = p.comp q₂ ↔ q₁ = q₂ :=
+  p.comp_injective_right.eq_iff
+
 /-- Turn a path into a list. The list contains `a` at its head, but not `b` a priori. -/
 @[simp]
 def toList : ∀ {b : V}, Path a b → List V
@@ -122,8 +167,14 @@ open Quiver
 
 variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F : Prefunctor V W)
 
+/- warning: prefunctor.map_path -> Prefunctor.mapPath is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁ u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂ u₂} W] (F : Prefunctor.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁ u₁} V _inst_1 a b) -> (Quiver.Path.{v₂ u₂} W _inst_2 (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F b))
+but is expected to have type
+  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁ u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂ u₂} W] (F : Prefunctor.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁ u₁} V _inst_1 a b) -> (Quiver.Path.{v₂ u₂} W _inst_2 (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F b))
+Case conversion may be inaccurate. Consider using '#align prefunctor.map_path Prefunctor.mapPathₓ'. -/
 /-- The image of a path under a prefunctor. -/
-def mapPathₓ {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)
+def mapPath {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)
   | _, path.nil => Path.nil
   | _, path.cons p e => Path.cons (map_path p) (F.map e)
 

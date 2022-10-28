@@ -71,6 +71,8 @@ structure BoundedLatticeHom (α β : Type _) [Lattice α] [Lattice β] [BoundedO
   map_top' : to_fun ⊤ = ⊤
   map_bot' : to_fun ⊥ = ⊥
 
+section
+
 /-- `sup_hom_class F α β` states that `F` is a type of `⊔`-preserving morphisms.
 
 You should extend this class when you extend `sup_hom`. -/
@@ -111,6 +113,8 @@ class BoundedLatticeHomClass (F : Type _) (α β : outParam <| Type _) [Lattice 
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
 
+end
+
 export SupHomClass (map_sup)
 
 export InfHomClass (map_inf)
@@ -120,12 +124,12 @@ attribute [simp] map_top map_bot map_sup map_inf
 -- See note [lower instance priority]
 instance (priority := 100) SupHomClass.toOrderHomClass [SemilatticeSup α] [SemilatticeSup β] [SupHomClass F α β] :
     OrderHomClass F α β :=
-  ⟨fun f a b h => by rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h]⟩
+  { ‹SupHomClass F α β› with map_rel := fun f a b h => by rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h] }
 
 -- See note [lower instance priority]
 instance (priority := 100) InfHomClass.toOrderHomClass [SemilatticeInf α] [SemilatticeInf β] [InfHomClass F α β] :
     OrderHomClass F α β :=
-  ⟨fun f a b h => by rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h]⟩
+  { ‹InfHomClass F α β› with map_rel := fun f a b h => by rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h] }
 
 -- See note [lower instance priority]
 instance (priority := 100) SupBotHomClass.toBotHomClass [HasSup α] [HasSup β] [HasBot α] [HasBot β]
@@ -155,17 +159,19 @@ instance (priority := 100) BoundedLatticeHomClass.toInfTopHomClass [Lattice α] 
 -- See note [lower instance priority]
 instance (priority := 100) BoundedLatticeHomClass.toBoundedOrderHomClass [Lattice α] [Lattice β] [BoundedOrder α]
     [BoundedOrder β] [BoundedLatticeHomClass F α β] : BoundedOrderHomClass F α β :=
-  { ‹BoundedLatticeHomClass F α β› with }
+  { show OrderHomClass F α β from inferInstance, ‹BoundedLatticeHomClass F α β› with }
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupHomClass [SemilatticeSup α] [SemilatticeSup β] [OrderIsoClass F α β] :
     SupHomClass F α β :=
-  ⟨fun f a b => eq_of_forall_ge_iffₓ fun c => by simp only [← le_map_inv_iff, sup_le_iff]⟩
+  { show OrderHomClass F α β from inferInstance with
+    map_sup := fun f a b => eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, sup_le_iff] }
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toInfHomClass [SemilatticeInf α] [SemilatticeInf β] [OrderIsoClass F α β] :
     InfHomClass F α β :=
-  ⟨fun f a b => eq_of_forall_le_iffₓ fun c => by simp only [← map_inv_le_iff, le_inf_iff]⟩
+  { show OrderHomClass F α β from inferInstance with
+    map_inf := fun f a b => eq_of_forall_le_iff fun c => by simp only [← map_inv_le_iff, le_inf_iff] }
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupBotHomClass [SemilatticeSup α] [OrderBot α] [SemilatticeSup β]
@@ -189,13 +195,13 @@ instance (priority := 100) OrderIsoClass.toBoundedLatticeHomClass [Lattice α] [
 
 @[simp]
 theorem map_finset_sup [SemilatticeSup α] [OrderBot α] [SemilatticeSup β] [OrderBot β] [SupBotHomClass F α β] (f : F)
-    (s : Finsetₓ ι) (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
-  (Finsetₓ.cons_induction_on s (map_bot f)) fun i s _ h => by rw [Finsetₓ.sup_cons, Finsetₓ.sup_cons, map_sup, h]
+    (s : Finset ι) (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
+  (Finset.cons_induction_on s (map_bot f)) fun i s _ h => by rw [Finset.sup_cons, Finset.sup_cons, map_sup, h]
 
 @[simp]
 theorem map_finset_inf [SemilatticeInf α] [OrderTop α] [SemilatticeInf β] [OrderTop β] [InfTopHomClass F α β] (f : F)
-    (s : Finsetₓ ι) (g : ι → α) : f (s.inf g) = s.inf (f ∘ g) :=
-  (Finsetₓ.cons_induction_on s (map_top f)) fun i s _ h => by rw [Finsetₓ.inf_cons, Finsetₓ.inf_cons, map_inf, h]
+    (s : Finset ι) (g : ι → α) : f (s.inf g) = s.inf (f ∘ g) :=
+  (Finset.cons_induction_on s (map_top f)) fun i s _ h => by rw [Finset.inf_cons, Finset.inf_cons, map_inf, h]
 
 section BoundedLattice
 
@@ -221,7 +227,7 @@ include β
 
 /-- Special case of `map_compl` for boolean algebras. -/
 theorem map_compl' (a : α) : f (aᶜ) = f aᶜ :=
-  (is_compl_compl.map _).compl_eq.symm
+  (isComplCompl.map _).compl_eq.symm
 
 /-- Special case of `map_sdiff` for boolean algebras. -/
 theorem map_sdiff' (a b : α) : f (a \ b) = f a \ f b := by rw [sdiff_eq, sdiff_eq, map_inf, map_compl']
@@ -231,23 +237,23 @@ theorem map_symm_diff' (a b : α) : f (a ∆ b) = f a ∆ f b := by rw [symmDiff
 
 end BooleanAlgebra
 
-instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeTₓ F (SupHom α β) :=
+instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeT F (SupHom α β) :=
   ⟨fun f => ⟨f, map_sup f⟩⟩
 
-instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeTₓ F (InfHom α β) :=
+instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeT F (InfHom α β) :=
   ⟨fun f => ⟨f, map_inf f⟩⟩
 
-instance [HasSup α] [HasSup β] [HasBot α] [HasBot β] [SupBotHomClass F α β] : CoeTₓ F (SupBotHom α β) :=
+instance [HasSup α] [HasSup β] [HasBot α] [HasBot β] [SupBotHomClass F α β] : CoeT F (SupBotHom α β) :=
   ⟨fun f => ⟨f, map_bot f⟩⟩
 
-instance [HasInf α] [HasInf β] [HasTop α] [HasTop β] [InfTopHomClass F α β] : CoeTₓ F (InfTopHom α β) :=
+instance [HasInf α] [HasInf β] [HasTop α] [HasTop β] [InfTopHomClass F α β] : CoeT F (InfTopHom α β) :=
   ⟨fun f => ⟨f, map_top f⟩⟩
 
-instance [Lattice α] [Lattice β] [LatticeHomClass F α β] : CoeTₓ F (LatticeHom α β) :=
+instance [Lattice α] [Lattice β] [LatticeHomClass F α β] : CoeT F (LatticeHom α β) :=
   ⟨fun f => { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f }⟩
 
 instance [Lattice α] [Lattice β] [BoundedOrder α] [BoundedOrder β] [BoundedLatticeHomClass F α β] :
-    CoeTₓ F (BoundedLatticeHom α β) :=
+    CoeT F (BoundedLatticeHom α β) :=
   ⟨fun f => { (f : LatticeHom α β) with toFun := f, map_top' := map_top f, map_bot' := map_bot f }⟩
 
 /-! ### Supremum homomorphisms -/
@@ -263,7 +269,7 @@ variable [HasSup β] [HasSup γ] [HasSup δ]
 
 instance : SupHomClass (SupHom α β) α β where
   coe := SupHom.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe_injective' f g h := by cases f <;> cases g <;> congr
   map_sup := SupHom.map_sup'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -307,7 +313,7 @@ theorem id_apply (a : α) : SupHom.id α a = a :=
 /-- Composition of `sup_hom`s as a `sup_hom`. -/
 def comp (f : SupHom β γ) (g : SupHom α β) : SupHom α γ where
   toFun := f ∘ g
-  map_sup' := fun a b => by rw [comp_apply, map_sup, map_sup]
+  map_sup' a b := by rw [comp_apply, map_sup, map_sup]
 
 @[simp]
 theorem coe_comp (f : SupHom β γ) (g : SupHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -416,7 +422,7 @@ variable [HasInf β] [HasInf γ] [HasInf δ]
 
 instance : InfHomClass (InfHom α β) α β where
   coe := InfHom.toFun
-  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
+  coe_injective' f g h := by cases f <;> cases g <;> congr
   map_inf := InfHom.map_inf'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -460,7 +466,7 @@ theorem id_apply (a : α) : InfHom.id α a = a :=
 /-- Composition of `inf_hom`s as an `inf_hom`. -/
 def comp (f : InfHom β γ) (g : InfHom α β) : InfHom α γ where
   toFun := f ∘ g
-  map_inf' := fun a b => by rw [comp_apply, map_inf, map_inf]
+  map_inf' a b := by rw [comp_apply, map_inf, map_inf]
 
 @[simp]
 theorem coe_comp (f : InfHom β γ) (g : InfHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -572,13 +578,13 @@ def toBotHom (f : SupBotHom α β) : BotHom α β :=
   { f with }
 
 instance : SupBotHomClass (SupBotHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_sup := fun f => f.map_sup'
-  map_bot := fun f => f.map_bot'
+  map_sup f := f.map_sup'
+  map_bot f := f.map_bot'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -662,7 +668,7 @@ instance : SemilatticeSup (SupBotHom α β) :=
 
 instance : OrderBot (SupBotHom α β) where
   bot := ⟨⊥, rfl⟩
-  bot_le := fun f => bot_le
+  bot_le f := bot_le
 
 @[simp]
 theorem coe_sup (f g : SupBotHom α β) : ⇑(f ⊔ g) = f ⊔ g :=
@@ -698,13 +704,13 @@ def toTopHom (f : InfTopHom α β) : TopHom α β :=
   { f with }
 
 instance : InfTopHomClass (InfTopHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_inf := fun f => f.map_inf'
-  map_top := fun f => f.map_top'
+  map_inf f := f.map_inf'
+  map_top f := f.map_top'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -788,7 +794,7 @@ instance : SemilatticeInf (InfTopHom α β) :=
 
 instance : OrderTop (InfTopHom α β) where
   top := ⟨⊤, rfl⟩
-  le_top := fun f => le_top
+  le_top f := le_top
 
 @[simp]
 theorem coe_inf (f g : InfTopHom α β) : ⇑(f ⊓ g) = f ⊓ g :=
@@ -820,10 +826,10 @@ def toInfHom (f : LatticeHom α β) : InfHom α β :=
   { f with }
 
 instance : LatticeHomClass (LatticeHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
-  map_sup := fun f => f.map_sup'
-  map_inf := fun f => f.map_inf'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  map_sup f := f.map_sup'
+  map_inf f := f.map_inf'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -848,8 +854,8 @@ variable (α)
 /-- `id` as a `lattice_hom`. -/
 protected def id : LatticeHom α α where
   toFun := id
-  map_sup' := fun _ _ => rfl
-  map_inf' := fun _ _ => rfl
+  map_sup' _ _ := rfl
+  map_inf' _ _ := rfl
 
 instance : Inhabited (LatticeHom α α) :=
   ⟨LatticeHom.id α⟩
@@ -911,20 +917,20 @@ end LatticeHom
 
 namespace OrderHomClass
 
-variable (α β) [LinearOrderₓ α] [Lattice β] [OrderHomClass F α β]
+variable (α β) [LinearOrder α] [Lattice β] [OrderHomClass F α β]
 
 /-- An order homomorphism from a linear order is a lattice homomorphism. -/
 @[reducible]
 def toLatticeHomClass : LatticeHomClass F α β :=
   { ‹OrderHomClass F α β› with
     map_sup := fun f a b => by
-      obtain h | h := le_totalₓ a b
+      obtain h | h := le_total a b
       · rw [sup_eq_right.2 h, sup_eq_right.2 (OrderHomClass.mono f h : f a ≤ f b)]
         
       · rw [sup_eq_left.2 h, sup_eq_left.2 (OrderHomClass.mono f h : f b ≤ f a)]
         ,
     map_inf := fun f a b => by
-      obtain h | h := le_totalₓ a b
+      obtain h | h := le_total a b
       · rw [inf_eq_left.2 h, inf_eq_left.2 (OrderHomClass.mono f h : f a ≤ f b)]
         
       · rw [inf_eq_right.2 h, inf_eq_right.2 (OrderHomClass.mono f h : f b ≤ f a)]
@@ -966,12 +972,12 @@ def toBoundedOrderHom (f : BoundedLatticeHom α β) : BoundedOrderHom α β :=
   { f, (f.toLatticeHom : α →o β) with }
 
 instance : BoundedLatticeHomClass (BoundedLatticeHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
-  map_sup := fun f => f.map_sup'
-  map_inf := fun f => f.map_inf'
-  map_top := fun f => f.map_top'
-  map_bot := fun f => f.map_bot'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
+  map_sup f := f.map_sup'
+  map_inf f := f.map_inf'
+  map_top f := f.map_top'
+  map_bot f := f.map_bot'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -1070,10 +1076,10 @@ variable [HasSup α] [HasSup β] [HasSup γ]
 /-- Reinterpret a supremum homomorphism as an infimum homomorphism between the dual lattices. -/
 @[simps]
 protected def dual : SupHom α β ≃ InfHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f, f.map_sup'⟩
-  invFun := fun f => ⟨f, f.map_inf'⟩
-  left_inv := fun f => SupHom.ext fun _ => rfl
-  right_inv := fun f => InfHom.ext fun _ => rfl
+  toFun f := ⟨f, f.map_sup'⟩
+  invFun f := ⟨f, f.map_inf'⟩
+  left_inv f := SupHom.ext fun _ => rfl
+  right_inv f := InfHom.ext fun _ => rfl
 
 @[simp]
 theorem dual_id : (SupHom.id α).dual = InfHom.id _ :=
@@ -1101,10 +1107,10 @@ variable [HasInf α] [HasInf β] [HasInf γ]
 /-- Reinterpret an infimum homomorphism as a supremum homomorphism between the dual lattices. -/
 @[simps]
 protected def dual : InfHom α β ≃ SupHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f, f.map_inf'⟩
-  invFun := fun f => ⟨f, f.map_sup'⟩
-  left_inv := fun f => InfHom.ext fun _ => rfl
-  right_inv := fun f => SupHom.ext fun _ => rfl
+  toFun f := ⟨f, f.map_inf'⟩
+  invFun f := ⟨f, f.map_sup'⟩
+  left_inv f := InfHom.ext fun _ => rfl
+  right_inv f := SupHom.ext fun _ => rfl
 
 @[simp]
 theorem dual_id : (InfHom.id α).dual = SupHom.id _ :=
@@ -1132,10 +1138,10 @@ variable [HasSup α] [HasBot α] [HasSup β] [HasBot β] [HasSup γ] [HasBot γ]
 /-- Reinterpret a finitary supremum homomorphism as a finitary infimum homomorphism between the dual
 lattices. -/
 def dual : SupBotHom α β ≃ InfTopHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f.toSupHom.dual, f.map_bot'⟩
-  invFun := fun f => ⟨SupHom.dual.symm f.toInfHom, f.map_top'⟩
-  left_inv := fun f => SupBotHom.ext fun _ => rfl
-  right_inv := fun f => InfTopHom.ext fun _ => rfl
+  toFun f := ⟨f.toSupHom.dual, f.map_bot'⟩
+  invFun f := ⟨SupHom.dual.symm f.toInfHom, f.map_top'⟩
+  left_inv f := SupBotHom.ext fun _ => rfl
+  right_inv f := InfTopHom.ext fun _ => rfl
 
 @[simp]
 theorem dual_id : (SupBotHom.id α).dual = InfTopHom.id _ :=
@@ -1164,10 +1170,10 @@ variable [HasInf α] [HasTop α] [HasInf β] [HasTop β] [HasInf γ] [HasTop γ]
 lattices. -/
 @[simps]
 protected def dual : InfTopHom α β ≃ SupBotHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f.toInfHom.dual, f.map_top'⟩
-  invFun := fun f => ⟨InfHom.dual.symm f.toSupHom, f.map_bot'⟩
-  left_inv := fun f => InfTopHom.ext fun _ => rfl
-  right_inv := fun f => SupBotHom.ext fun _ => rfl
+  toFun f := ⟨f.toInfHom.dual, f.map_top'⟩
+  invFun f := ⟨InfHom.dual.symm f.toSupHom, f.map_bot'⟩
+  left_inv f := InfTopHom.ext fun _ => rfl
+  right_inv f := SupBotHom.ext fun _ => rfl
 
 @[simp]
 theorem dual_id : (InfTopHom.id α).dual = SupBotHom.id _ :=
@@ -1195,10 +1201,10 @@ variable [Lattice α] [Lattice β] [Lattice γ]
 /-- Reinterpret a lattice homomorphism as a lattice homomorphism between the dual lattices. -/
 @[simps]
 protected def dual : LatticeHom α β ≃ LatticeHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f.toInfHom.dual, f.map_sup'⟩
-  invFun := fun f => ⟨f.toInfHom.dual, f.map_sup'⟩
-  left_inv := fun f => ext fun a => rfl
-  right_inv := fun f => ext fun a => rfl
+  toFun f := ⟨f.toInfHom.dual, f.map_sup'⟩
+  invFun f := ⟨f.toInfHom.dual, f.map_sup'⟩
+  left_inv f := ext fun a => rfl
+  right_inv f := ext fun a => rfl
 
 @[simp]
 theorem dual_id : (LatticeHom.id α).dual = LatticeHom.id _ :=
@@ -1227,10 +1233,10 @@ variable [Lattice α] [BoundedOrder α] [Lattice β] [BoundedOrder β] [Lattice 
 bounded lattices. -/
 @[simps]
 protected def dual : BoundedLatticeHom α β ≃ BoundedLatticeHom αᵒᵈ βᵒᵈ where
-  toFun := fun f => ⟨f.toLatticeHom.dual, f.map_bot', f.map_top'⟩
-  invFun := fun f => ⟨LatticeHom.dual.symm f.toLatticeHom, f.map_bot', f.map_top'⟩
-  left_inv := fun f => ext fun a => rfl
-  right_inv := fun f => ext fun a => rfl
+  toFun f := ⟨f.toLatticeHom.dual, f.map_bot', f.map_top'⟩
+  invFun f := ⟨LatticeHom.dual.symm f.toLatticeHom, f.map_bot', f.map_top'⟩
+  left_inv f := ext fun a => rfl
+  right_inv f := ext fun a => rfl
 
 @[simp]
 theorem dual_id : (BoundedLatticeHom.id α).dual = BoundedLatticeHom.id _ :=

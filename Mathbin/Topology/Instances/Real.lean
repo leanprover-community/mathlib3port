@@ -30,7 +30,7 @@ universe u v w
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 instance : NoncompactSpace ℝ :=
-  Int.closed_embedding_coe_real.NoncompactSpace
+  Int.closedEmbeddingCoeReal.NoncompactSpace
 
 theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
@@ -53,22 +53,22 @@ instance : UniformAddGroup ℝ :=
 instance : TopologicalAddGroup ℝ := by infer_instance
 
 instance :
-    ProperSpace ℝ where is_compact_closed_ball := fun x r => by
+    ProperSpace ℝ where is_compact_closed_ball x r := by
     rw [Real.closed_ball_eq_Icc]
     apply is_compact_Icc
 
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)
-theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {IooCat a b}) :=
   is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo]) fun a v hav hv =>
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
-    ⟨Ioo q p, by
+    ⟨IooCat q p, by
       simp only [mem_Union]
-      exact ⟨q, p, Ratₓ.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
+      exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
 
 @[simp]
@@ -91,13 +91,13 @@ theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : �
     ⟨δ, δ0, fun a b h => Hδ (H _ a.2) (H _ b.2) h⟩
 
 theorem Real.uniform_continuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_ltₓ (abs_abs_sub_abs_le_abs_sub _ _)⟩
+  Metric.uniform_continuous_iff.2 fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
 
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
   rw [← abs_pos] at r0 <;>
     exact
       tendsto_of_uniform_continuous_subtype
-        (Real.uniform_continuous_inv { x | abs r / 2 < abs x } (half_pos r0) fun x h => le_of_ltₓ h)
+        (Real.uniform_continuous_inv { x | abs r / 2 < abs x } (half_pos r0) fun x h => le_of_lt h)
         (IsOpen.mem_nhds ((is_open_lt' (abs r / 2)).Preimage continuous_abs) (half_lt_self r0))
 
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
@@ -120,7 +120,7 @@ theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H 
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
       Hδ (H _ a.2).1 (H _ b.2).2 h₁ h₂⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuous_at.2 fun ⟨a₁, a₂⟩ =>
     tendsto_of_uniform_continuous_subtype
@@ -149,13 +149,13 @@ section
 
 theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   (Subset.antisymm
-      ((is_closed_ge' _).closure_subset_iff.2 (image_subset_iff.2 fun p h => le_of_ltₓ <| (@Ratₓ.cast_lt ℝ _ _ _).2 h)))
+      ((isClosedGe' _).closure_subset_iff.2 (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>
       let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
       let ⟨p, h₁, h₂⟩ := exists_rat_btwn ((lt_add_iff_pos_right x).2 ε0)
-      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_ltₓ <| sub_pos.2 h₁), sub_lt_iff_lt_add']), p,
-        Ratₓ.cast_lt.1 (@lt_of_le_of_ltₓ ℝ _ _ _ _ hx h₁), rfl⟩
+      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_lt <| sub_pos.2 h₁), sub_lt_iff_lt_add']), p,
+        Rat.cast_lt.1 (@lt_of_le_of_lt ℝ _ _ _ _ hx h₁), rfl⟩
 
 /- TODO(Mario): Put these back only if needed later
 lemma closure_of_rat_image_le_eq {q : ℚ} : closure ((coe:ℚ → ℝ) '' {x | q ≤ x}) = {r | ↑q ≤ r} :=
@@ -172,9 +172,9 @@ theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBe
     rw [Real.closed_ball_eq_Icc] at hr
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
-    fun h => bounded_of_bdd_above_of_bdd_below h.2 h.1⟩
+    fun h => boundedOfBddAboveOfBddBelow h.2 h.1⟩
 
-theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ Icc (inf s) (sup s) :=
+theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ IccCat (inf s) (sup s) :=
   subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1 (Real.bounded_iff_bdd_below_bdd_above.1 h).2
 
 end
@@ -195,11 +195,11 @@ theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
 /-- A continuous, periodic function has compact range. -/
 theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
     (hf : Continuous f) : IsCompact (Range f) := by
-  cases' lt_or_gt_of_neₓ hc with hneg hpos
+  cases' lt_or_gt_of_ne hc with hneg hpos
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 
 /-- A continuous, periodic function is bounded. -/
-theorem Periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
+theorem Periodic.boundedOfContinuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
     (hf : Continuous f) : Bounded (Range f) :=
   (hp.compact_of_continuous hc hf).Bounded
 
@@ -216,7 +216,7 @@ open Metric
 /-- Under the coercion from `ℤ` to `ℝ`, inverse images of compact sets are finite. -/
 theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) := by
   refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _
-  simp only [Filter.tendsto_at_top, eventually_cofinite, not_leₓ, ← mem_ball]
+  simp only [Filter.tendsto_at_top, eventually_cofinite, not_le, ← mem_ball]
   change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
   simp [Real.ball_eq_Ioo, Set.finite_Ioo]
 
@@ -258,12 +258,12 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
   suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, abs (x - g) < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos
   obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ := by
-    cases' lt_or_gt_of_neₓ g₀_ne with Hg₀ Hg₀
+    cases' lt_or_gt_of_ne g₀_ne with Hg₀ Hg₀
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
       
     · exact ⟨g₀, g₀_in, Hg₀⟩
       
-  obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a := ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_ltₓ hx.2⟩⟩
+  obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a := ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
   have a_notin : a ∉ G_pos := by
     intro H
     exact H' a ⟨H, ha.1⟩

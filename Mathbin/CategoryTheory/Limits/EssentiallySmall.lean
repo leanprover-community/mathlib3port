@@ -33,11 +33,11 @@ theorem has_colimits_of_shape_of_essentially_small [EssentiallySmall.{w₁} J] [
   has_colimits_of_shape_of_equivalence <| equivalence.symm <| equivSmallModel.{w₁} J
 
 theorem has_products_of_shape_of_small (β : Type w₂) [Small.{w₁} β] [HasProducts.{w₁} C] : HasProductsOfShape β C :=
-  has_limits_of_shape_of_equivalence <| discrete.equivalence <| Equivₓ.symm <| equivShrink β
+  has_limits_of_shape_of_equivalence <| discrete.equivalence <| Equiv.symm <| equivShrink β
 
 theorem has_coproducts_of_shape_of_small (β : Type w₂) [Small.{w₁} β] [HasCoproducts.{w₁} C] :
     HasCoproductsOfShape β C :=
-  has_colimits_of_shape_of_equivalence <| discrete.equivalence <| Equivₓ.symm <| equivShrink β
+  has_colimits_of_shape_of_equivalence <| discrete.equivalence <| Equiv.symm <| equivShrink β
 
 end CategoryTheory.Limits
 

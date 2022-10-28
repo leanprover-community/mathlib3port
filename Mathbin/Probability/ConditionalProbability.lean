@@ -60,7 +60,7 @@ open Ennreal
 
 open MeasureTheory MeasurableSpace
 
-variable {Ω : Type _} {m : MeasurableSpace Ω} (μ : Measureₓ Ω) {s t : Set Ω}
+variable {Ω : Type _} {m : MeasurableSpace Ω} (μ : Measure Ω) {s t : Set Ω}
 
 namespace ProbabilityTheory
 
@@ -69,7 +69,7 @@ section Definitions
 /-- The conditional probability measure of measure `μ` on set `s` is `μ` restricted to `s`
 and scaled by the inverse of `μ s` (to make it a probability measure):
 `(μ s)⁻¹ • μ.restrict s`. -/
-def cond (s : Set Ω) : Measureₓ Ω :=
+def cond (s : Set Ω) : Measure Ω :=
   (μ s)⁻¹ • μ.restrict s
 
 end Definitions
@@ -82,7 +82,7 @@ localized [ProbabilityTheory] notation:60 μ "[|" t "]" => ProbabilityTheory.con
 
 /-- The conditional probability measure of any finite measure on any set of positive measure
 is a probability measure. -/
-theorem cond_is_probability_measure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure <| μ[|s] :=
+theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure <| μ[|s] :=
   ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
@@ -131,7 +131,7 @@ theorem cond_cond_eq_cond_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hm
 
 theorem cond_mul_eq_inter' (hms : MeasurableSet s) (hcs : μ s ≠ 0) (hcs' : μ s ≠ ∞) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) := by
-  rw [cond_apply μ hms t, mul_comm, ← mul_assoc, Ennreal.mul_inv_cancel hcs hcs', one_mulₓ]
+  rw [cond_apply μ hms t, mul_comm, ← mul_assoc, Ennreal.mul_inv_cancel hcs hcs', one_mul]
 
 theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) :=

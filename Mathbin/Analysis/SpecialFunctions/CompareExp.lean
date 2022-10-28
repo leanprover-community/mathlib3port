@@ -67,8 +67,7 @@ theorem of_is_O_im_re_pow (hre : Tendsto re l atTop) (n : ℕ) (hr : im =O[l] fu
 
 theorem of_bounded_under_abs_im (hre : Tendsto re l atTop) (him : IsBoundedUnder (· ≤ ·) l fun z => abs z.im) :
     IsExpCmpFilter l :=
-  of_is_O_im_re_pow hre 0 <| by
-    simpa only [pow_zeroₓ] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
+  of_is_O_im_re_pow hre 0 <| by simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
 
 theorem of_bounded_under_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder (· ≤ ·) l im)
     (him_ge : IsBoundedUnder (· ≥ ·) l im) : IsExpCmpFilter l :=
@@ -92,11 +91,11 @@ theorem is_o_log_re_re (hl : IsExpCmpFilter l) : (fun z => Real.log z.re) =o[l] 
   Real.is_o_log_id_at_top.comp_tendsto hl.tendsto_re
 
 theorem is_o_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) : (fun z : ℂ => z.im ^ n) =o[l] fun z => Real.exp z.re :=
-  flip IsOₓ.of_pow two_ne_zero <|
+  flip IsO.of_pow two_ne_zero <|
     calc
       (fun z : ℂ => (z.im ^ n) ^ 2) = fun z => z.im ^ (2 * n) := by simp only [pow_mul']
       _ =O[l] fun z => Real.exp z.re := hl.is_O_im_pow_re _
-      _ = fun z => Real.exp z.re ^ 1 := by simp only [pow_oneₓ]
+      _ = fun z => Real.exp z.re ^ 1 := by simp only [pow_one]
       _ =o[l] fun z => Real.exp z.re ^ 2 :=
         (is_o_pow_pow_at_top_of_lt one_lt_two).comp_tendsto <| Real.tendsto_exp_at_top.comp hl.tendsto_re
       
@@ -117,20 +116,20 @@ theorem is_o_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o
           have hz' : 1 ≤ abs z := hz.trans (re_le_abs z)
           have hz₀ : 0 < abs z := one_pos.trans_le hz'
           have hm₀ : 0 < max z.re (abs z.im) := lt_max_iff.2 (Or.inl <| one_pos.trans_le hz)
-          rw [one_mulₓ, Real.norm_eq_abs, _root_.abs_of_nonneg (Real.log_nonneg hz')]
-          refine' le_transₓ _ (le_abs_self _)
-          rw [← Real.log_mul, Real.log_le_log, ← _root_.abs_of_nonneg (le_transₓ zero_le_one hz)]
+          rw [one_mul, Real.norm_eq_abs, _root_.abs_of_nonneg (Real.log_nonneg hz')]
+          refine' le_trans _ (le_abs_self _)
+          rw [← Real.log_mul, Real.log_le_log, ← _root_.abs_of_nonneg (le_trans zero_le_one hz)]
           exacts[abs_le_sqrt_two_mul_max z, one_pos.trans_le hz', mul_pos h2 hm₀, h2.ne', hm₀.ne']
     _ =o[l] re :=
-      IsOₓ.add (is_o_const_left.2 <| Or.inr <| hl.tendsto_abs_re) <|
+      IsO.add (is_o_const_left.2 <| Or.inr <| hl.tendsto_abs_re) <|
         is_o_iff_nat_mul_le.2 fun n => by
           filter_upwards [is_o_iff_nat_mul_le.1 hl.is_o_log_re_re n, hl.abs_im_pow_eventually_le_exp_re n,
             hl.tendsto_re.eventually_gt_at_top 1] with z hre him h₁
-          cases' le_totalₓ (abs z.im) z.re with hle hle
-          · rwa [max_eq_leftₓ hle]
+          cases' le_total (abs z.im) z.re with hle hle
+          · rwa [max_eq_left hle]
             
           · have H : 1 < abs z.im := h₁.trans_le hle
-            rwa [max_eq_rightₓ hle, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos (Real.log_pos H), ← Real.log_pow,
+            rwa [max_eq_right hle, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos (Real.log_pos H), ← Real.log_pow,
               Real.log_le_iff_le_exp (pow_pos (one_pos.trans H) _), abs_of_pos (one_pos.trans h₁)]
             
     
@@ -163,7 +162,7 @@ theorem is_o_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ <
     (fun z => z ^ a₁ * exp (b₁ * z)) =ᶠ[l] fun z => z ^ a₂ * exp (b₁ * z) * z ^ (a₁ - a₂) :=
       hl.eventually_ne.mono fun z hz => by
         simp only
-        rw [mul_right_commₓ, ← cpow_add _ _ hz, add_sub_cancel'_right]
+        rw [mul_right_comm, ← cpow_add _ _ hz, add_sub_cancel'_right]
     _ =o[l] fun z => z ^ a₂ * exp (b₁ * z) * exp (↑(b₂ - b₁) * z) :=
       (is_O_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_is_o <| hl.is_o_cpow_exp _ (sub_pos.2 hb)
     _ =ᶠ[l] fun z => z ^ a₂ * exp (b₂ * z) := by

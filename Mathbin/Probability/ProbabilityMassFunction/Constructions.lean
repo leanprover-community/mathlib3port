@@ -61,22 +61,22 @@ theorem map_comp (g : β → γ) : (p.map f).map g = p.map (g ∘ f) := by simp 
 
 theorem pure_map (a : α) : (pure a).map f = pure (f a) := by simp [map]
 
-section Measureₓ
+section Measure
 
 variable (s : Set β)
 
 @[simp]
 theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
-  simp [map, Set.indicatorₓ, to_outer_measure_apply p (f ⁻¹' s)]
+  simp [map, Set.indicator, to_outer_measure_apply p (f ⁻¹' s)]
 
 @[simp]
 theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f) (hs : MeasurableSet s) :
     (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) := by
   rw [to_measure_apply_eq_to_outer_measure_apply _ s hs,
-    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurable_set_preimage hf hs)]
+    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurableSetPreimage hf hs)]
   exact to_outer_measure_map_apply f p s
 
-end Measureₓ
+end Measure
 
 end Map
 
@@ -106,26 +106,26 @@ theorem mem_support_seq_iff : b ∈ (seq q p).Support ↔ ∃ f ∈ q.Support, b
 end Seq
 
 instance : IsLawfulFunctor Pmf where
-  map_const_eq := fun α β => rfl
-  id_map := fun α => bind_pure
-  comp_map := fun α β γ g h x => (map_comp _ _ _).symm
+  map_const_eq α β := rfl
+  id_map α := bind_pure
+  comp_map α β γ g h x := (map_comp _ _ _).symm
 
-instance : IsLawfulMonad Pmf where
-  bind_pure_comp_eq_map := fun α β f x => rfl
-  bind_map_eq_seq := fun α β f x => rfl
-  pure_bind := fun α β => pure_bind
-  bind_assoc := fun α β γ => bind_bind
+instance : LawfulMonad Pmf where
+  bind_pure_comp_eq_map α β f x := rfl
+  bind_map_eq_seq α β f x := rfl
+  pure_bind α β := pure_bind
+  bind_assoc α β γ := bind_bind
 
 section OfFinset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def ofFinset (f : α → ℝ≥0) (s : Finsetₓ α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
+def ofFinset (f : α → ℝ≥0) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s)
-variable {f : α → ℝ≥0} {s : Finsetₓ α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+variable {f : α → ℝ≥0} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
 theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
@@ -140,7 +140,7 @@ theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').Support �
 theorem of_finset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofFinset f s h h' a = 0 :=
   h' a ha
 
-section Measureₓ
+section Measure
 
 variable (t : Set α)
 
@@ -153,17 +153,17 @@ theorem to_measure_of_finset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
     (ofFinset f s h h').toMeasure t = ↑(∑' x, t.indicator f x) :=
   (to_measure_apply_eq_to_outer_measure_apply _ t ht).trans (to_outer_measure_of_finset_apply h h' t)
 
-end Measureₓ
+end Measure
 
 end OfFinset
 
 section OfFintype
 
 /-- Given a finite type `α` and a function `f : α → ℝ≥0` with sum 1, we get a `pmf`. -/
-def ofFintype [Fintypeₓ α] (f : α → ℝ≥0) (h : (∑ a, f a) = 1) : Pmf α :=
-  ofFinset f Finsetₓ.univ h fun a ha => absurd (Finsetₓ.mem_univ a) ha
+def ofFintype [Fintype α] (f : α → ℝ≥0) (h : (∑ a, f a) = 1) : Pmf α :=
+  ofFinset f Finset.univ h fun a ha => absurd (Finset.mem_univ a) ha
 
-variable [Fintypeₓ α] {f : α → ℝ≥0} (h : (∑ a, f a) = 1)
+variable [Fintype α] {f : α → ℝ≥0} (h : (∑ a, f a) = 1)
 
 @[simp]
 theorem of_fintype_apply (a : α) : ofFintype f h a = f a :=
@@ -176,7 +176,7 @@ theorem support_of_fintype : (ofFintype f h).Support = Function.Support f :=
 theorem mem_support_of_fintype_iff (a : α) : a ∈ (ofFintype f h).Support ↔ f a ≠ 0 :=
   Iff.rfl
 
-section Measureₓ
+section Measure
 
 variable (s : Set α)
 
@@ -189,7 +189,7 @@ theorem to_measure_of_fintype_apply [MeasurableSpace α] (hs : MeasurableSet s) 
     (ofFintype f h).toMeasure s = ↑(∑' x, s.indicator f x) :=
   (to_measure_apply_eq_to_outer_measure_apply _ s hs).trans (to_outer_measure_of_fintype_apply h s)
 
-end Measureₓ
+end Measure
 
 end OfFintype
 
@@ -261,8 +261,8 @@ theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=
 theorem support_bernoulli : (bernoulli p h).Support = { b | cond b (p ≠ 0) (p ≠ 1) } := by
   refine' Set.ext fun b => _
   induction b
-  · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_ff, Ne.def, tsub_eq_zero_iff_le, not_leₓ]
-    exact ⟨ne_of_ltₓ, lt_of_le_of_neₓ h⟩
+  · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_ff, Ne.def, tsub_eq_zero_iff_le, not_le]
+    exact ⟨ne_of_lt, lt_of_le_of_ne h⟩
     
   · simp only [mem_support_iff, bernoulli_apply, Bool.cond_tt, Set.mem_set_of_eq]
     

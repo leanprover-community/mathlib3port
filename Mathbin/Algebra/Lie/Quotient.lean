@@ -34,7 +34,7 @@ namespace LieSubmodule
 
 variable {R : Type u} {L : Type v} {M : Type w}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
+variable [CommRing R] [LieRing L] [LieAlgebra R L] [AddCommGroup M] [Module R M]
 
 variable [LieRingModule L M] [LieModule R L M]
 
@@ -44,20 +44,20 @@ variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 instance : HasQuotient M (LieSubmodule R L M) :=
   ⟨fun N => M ⧸ N.toSubmodule⟩
 
-namespace Quotientₓ
+namespace Quotient
 
 variable {N I}
 
-instance addCommGroup : AddCommGroupₓ (M ⧸ N) :=
+instance addCommGroup : AddCommGroup (M ⧸ N) :=
   Submodule.Quotient.addCommGroup _
 
-instance module' {S : Type _} [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
+instance module' {S : Type _} [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
   Submodule.Quotient.module' _
 
 instance module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
 
-instance is_central_scalar {S : Type _} [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R]
+instance is_central_scalar {S : Type _} [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R]
     [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S (M ⧸ N) :=
   Submodule.Quotient.is_central_scalar _
 
@@ -69,7 +69,7 @@ lie_submodule of the lie_module `N`. -/
 abbrev mk : M → M ⧸ N :=
   Submodule.Quotient.mk
 
-theorem is_quotient_mk (m : M) : Quotientₓ.mk' m = (mk m : M ⧸ N) :=
+theorem is_quotient_mk (m : M) : Quotient.mk' m = (mk m : M ⧸ N) :=
   rfl
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
@@ -81,30 +81,30 @@ variable (N)
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
-def actionAsEndoMap : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
+def actionAsEndoMap : L →ₗ⁅R⁆ Module.EndCat R (M ⧸ N) :=
   { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lieSubmoduleInvariant with
     map_lie' := fun x y => Submodule.linear_map_qext _ <| LinearMap.ext fun m => congr_arg mk <| lie_lie _ _ _ }
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
-instance actionAsEndoMapBracket : HasBracket L (M ⧸ N) :=
+instance actionAsEndoMapBracket : Bracket L (M ⧸ N) :=
   ⟨fun x n => actionAsEndoMap N x n⟩
 
 instance lieQuotientLieRingModule : LieRingModule L (M ⧸ N) :=
-  { LieRingModule.compLieHom _ (actionAsEndoMap N) with bracket := HasBracket.bracket }
+  { LieRingModule.compLieHom _ (actionAsEndoMap N) with bracket := Bracket.bracket }
 
 /-- The quotient of a Lie module by a Lie submodule, is a Lie module. -/
 instance lieQuotientLieModule : LieModule R L (M ⧸ N) :=
   LieModule.compLieHom _ (actionAsEndoMap N)
 
-instance lieQuotientHasBracket : HasBracket (L ⧸ I) (L ⧸ I) :=
+instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
   ⟨by
     intro x y
-    apply Quotientₓ.liftOn₂' x y fun x' y' => mk ⁅x', y'⁆
+    apply Quotient.liftOn₂' x y fun x' y' => mk ⁅x', y'⁆
     intro x₁ x₂ y₁ y₂ h₁ h₂
     apply (Submodule.Quotient.eq I.to_submodule).2
     rw [Submodule.quotient_rel_r_def] at h₁ h₂
-    have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
+    have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by simp [-lie_skew, sub_eq_add_neg, add_assoc]
     rw [h]
     apply Submodule.add_mem
     · apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
@@ -119,28 +119,28 @@ theorem mk_bracket (x y : L) : mk ⁅x, y⁆ = ⁅(mk x : L ⧸ I), (mk y : L �
 instance lieQuotientLieRing : LieRing (L ⧸ I) where
   add_lie := by
     intro x' y' z'
-    apply Quotientₓ.induction_on₃' x' y' z'
+    apply Quotient.induction_on₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply add_lie
   lie_add := by
     intro x' y' z'
-    apply Quotientₓ.induction_on₃' x' y' z'
+    apply Quotient.induction_on₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply lie_add
   lie_self := by
     intro x'
-    apply Quotientₓ.induction_on' x'
+    apply Quotient.induction_on' x'
     intro x
     rw [is_quotient_mk, ← mk_bracket]
     apply congr_arg
     apply lie_self
   leibniz_lie := by
     intro x' y' z'
-    apply Quotientₓ.induction_on₃' x' y' z'
+    apply Quotient.induction_on₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
@@ -149,7 +149,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
 instance lieQuotientLieAlgebra :
     LieAlgebra R (L ⧸ I) where lie_smul := by
     intro t x' y'
-    apply Quotientₓ.induction_on₂' x' y'
+    apply Quotient.induction_on₂' x' y'
     intro x y
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_smul]
     apply congr_arg
@@ -178,9 +178,9 @@ theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by rw [← LieM
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem lie_module_hom_ext ⦃f g : M ⧸ N →ₗ⁅R,L⁆ M⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
-  LieModuleHom.ext fun x => Quotientₓ.induction_on' x <| LieModuleHom.congr_fun h
+  LieModuleHom.ext fun x => Quotient.induction_on' x <| LieModuleHom.congr_fun h
 
-end Quotientₓ
+end Quotient
 
 end LieSubmodule
 
@@ -188,7 +188,7 @@ namespace LieHom
 
 variable {R L L' : Type _}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
+variable [CommRing R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
 
 variable (f : L →ₗ⁅R⁆ L')
 

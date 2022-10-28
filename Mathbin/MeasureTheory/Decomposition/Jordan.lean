@@ -53,8 +53,8 @@ finite measures. -/
 @[ext]
 structure JordanDecomposition (α : Type _) [MeasurableSpace α] where
   (posPart negPart : Measure α)
-  [pos_part_finite : IsFiniteMeasure pos_part]
-  [neg_part_finite : IsFiniteMeasure neg_part]
+  [posPartFinite : IsFiniteMeasure pos_part]
+  [negPartFinite : IsFiniteMeasure neg_part]
   MutuallySingular : pos_part ⊥ₘ neg_part
 
 attribute [instance] jordan_decomposition.pos_part_finite
@@ -63,27 +63,26 @@ attribute [instance] jordan_decomposition.neg_part_finite
 
 namespace JordanDecomposition
 
-open Measureₓ VectorMeasure
+open Measure VectorMeasure
 
 variable (j : JordanDecomposition α)
 
-instance : Zero (JordanDecomposition α) where zero := ⟨0, 0, MutuallySingular.zero_right⟩
+instance : Zero (JordanDecomposition α) where zero := ⟨0, 0, MutuallySingular.zeroRight⟩
 
 instance : Inhabited (JordanDecomposition α) where default := 0
 
 instance : HasInvolutiveNeg (JordanDecomposition α) where
-  neg := fun j => ⟨j.negPart, j.posPart, j.MutuallySingular.symm⟩
-  neg_neg := fun j => JordanDecomposition.ext _ _ rfl rfl
+  neg j := ⟨j.negPart, j.posPart, j.MutuallySingular.symm⟩
+  neg_neg j := JordanDecomposition.ext _ _ rfl rfl
 
 instance :
     HasSmul ℝ≥0
       (JordanDecomposition
-        α) where smul := fun r j =>
+        α) where smul r j :=
     ⟨r • j.posPart, r • j.negPart, MutuallySingular.smul _ (MutuallySingular.smul _ j.MutuallySingular.symm).symm⟩
 
 instance hasSmulReal :
-    HasSmul ℝ
-      (JordanDecomposition α) where smul := fun r j => if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
+    HasSmul ℝ (JordanDecomposition α) where smul r j := if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
 
 @[simp]
 theorem zero_pos_part : (0 : JordanDecomposition α).posPart = 0 :=
@@ -121,7 +120,7 @@ theorem real_smul_nonneg (r : ℝ) (hr : 0 ≤ r) : r • j = r.toNnreal • j :
   dif_pos hr
 
 theorem real_smul_neg (r : ℝ) (hr : r < 0) : r • j = -((-r).toNnreal • j) :=
-  dif_neg (not_leₓ.2 hr)
+  dif_neg (not_le.2 hr)
 
 theorem real_smul_pos_part_nonneg (r : ℝ) (hr : 0 ≤ r) : (r • j).posPart = r.toNnreal • j.posPart := by
   rw [real_smul_def, ← smul_pos_part, dif_pos hr]
@@ -130,10 +129,10 @@ theorem real_smul_neg_part_nonneg (r : ℝ) (hr : 0 ≤ r) : (r • j).negPart =
   rw [real_smul_def, ← smul_neg_part, dif_pos hr]
 
 theorem real_smul_pos_part_neg (r : ℝ) (hr : r < 0) : (r • j).posPart = (-r).toNnreal • j.negPart := by
-  rw [real_smul_def, ← smul_neg_part, dif_neg (not_leₓ.2 hr), neg_pos_part]
+  rw [real_smul_def, ← smul_neg_part, dif_neg (not_le.2 hr), neg_pos_part]
 
 theorem real_smul_neg_part_neg (r : ℝ) (hr : r < 0) : (r • j).negPart = (-r).toNnreal • j.posPart := by
-  rw [real_smul_def, ← smul_pos_part, dif_neg (not_leₓ.2 hr), neg_neg_part]
+  rw [real_smul_def, ← smul_pos_part, dif_neg (not_le.2 hr), neg_neg_part]
 
 /-- The signed measure associated with a Jordan decomposition. -/
 def toSignedMeasure : SignedMeasure α :=
@@ -179,7 +178,7 @@ end JordanDecomposition
 
 namespace SignedMeasure
 
-open Classical JordanDecomposition Measureₓ Set VectorMeasure
+open Classical JordanDecomposition Measure Set VectorMeasure
 
 variable {s : SignedMeasure α} {μ ν : Measure α} [IsFiniteMeasure μ] [IsFiniteMeasure ν]
 
@@ -191,7 +190,7 @@ def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
   let i := choose s.exists_compl_positive_negative
   let hi := choose_spec s.exists_compl_positive_negative
   { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1, negPart := s.toMeasureOfLeZero (iᶜ) hi.1.compl hi.2.2,
-    pos_part_finite := inferInstance, neg_part_finite := inferInstance,
+    posPartFinite := inferInstance, negPartFinite := inferInstance,
     MutuallySingular := by
       refine' ⟨iᶜ, hi.1.compl, _, _⟩
       · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.compl]
@@ -243,7 +242,7 @@ variable {u v w : Set α}
 theorem subset_positive_null_set (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w) (hsu : 0 ≤[u] s)
     (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) : s v = 0 := by
   have : s v + s (w \ v) = 0 := by
-    rw [← hw₁, ← of_union Set.disjoint_diff hv (hw.diff hv), Set.union_diff_self, Set.union_eq_self_of_subset_left hwt]
+    rw [← hw₁, ← of_union Set.disjointDiff hv (hw.diff hv), Set.union_diff_self, Set.union_eq_self_of_subset_left hwt]
     infer_instance
   have h₁ := nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu (hwt.trans hw₂))
   have h₂ := nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu ((w.diff_subset v).trans hw₂))
@@ -264,7 +263,7 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv
   rw [restrict_le_restrict_iff] at hsu hsv
   have a := hsu (hu.diff hv) (u.diff_subset v)
   have b := hsv (hv.diff hu) (v.diff_subset u)
-  erw [of_union (Set.disjoint_of_subset_left (u.diff_subset v) Set.disjoint_diff) (hu.diff hv) (hv.diff hu)] at hs
+  erw [of_union (Set.disjointOfSubsetLeft (u.diff_subset v) Set.disjointDiff) (hu.diff hv) (hv.diff hu)] at hs
   rw [zero_apply] at a b
   constructor
   all_goals first |linarith|infer_instance|assumption
@@ -291,7 +290,7 @@ theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : M
     of_diff_eq_zero_of_symm_diff_eq_zero_positive (hw.inter hu) (hw.inter hv)
       (restrict_le_restrict_subset _ _ hu hsu (w.inter_subset_right u))
       (restrict_le_restrict_subset _ _ hv hsv (w.inter_subset_right v)) hwuv
-  rw [← of_diff_of_diff_eq_zero (hw.inter hu) (hw.inter hv) hvu, huv, zero_addₓ]
+  rw [← of_diff_of_diff_eq_zero (hw.inter hu) (hw.inter hv) hvu, huv, zero_add]
 
 theorem of_inter_eq_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
     (hsu : s ≤[u] 0) (hsv : s ≤[v] 0) (hs : s (u ∆ v) = 0) : s (w ∩ u) = s (w ∩ v) := by
@@ -307,7 +306,7 @@ end SignedMeasure
 
 namespace JordanDecomposition
 
-open Measureₓ VectorMeasure SignedMeasure Function
+open Measure VectorMeasure SignedMeasure Function
 
 private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : JordanDecomposition α} (hj : j₁.posPart = j₂.posPart)
     (hj' : j₁.toSignedMeasure = j₂.toSignedMeasure) : j₁ = j₂ := by
@@ -349,10 +348,10 @@ theorem to_signed_measure_injective : injective <| @JordanDecomposition.toSigned
     conv_lhs => rw [← Set.inter_union_compl i S]
     rw [measure_union,
       show j₁.pos_part (i ∩ S) = 0 from nonpos_iff_eq_zero.1 (hS₄ ▸ measure_mono (Set.inter_subset_right _ _)),
-      zero_addₓ]
+      zero_add]
     · refine'
-        Set.disjoint_of_subset_left (Set.inter_subset_right _ _)
-          (Set.disjoint_of_subset_right (Set.inter_subset_right _ _) disjoint_compl_right)
+        Set.disjointOfSubsetLeft (Set.inter_subset_right _ _)
+          (Set.disjointOfSubsetRight (Set.inter_subset_right _ _) disjointComplRight)
       
     · exact hi.inter hS₁.compl
       
@@ -363,10 +362,10 @@ theorem to_signed_measure_injective : injective <| @JordanDecomposition.toSigned
     conv_lhs => rw [← Set.inter_union_compl i T]
     rw [measure_union,
       show j₂.pos_part (i ∩ T) = 0 from nonpos_iff_eq_zero.1 (hT₄ ▸ measure_mono (Set.inter_subset_right _ _)),
-      zero_addₓ]
+      zero_add]
     · exact
-        Set.disjoint_of_subset_left (Set.inter_subset_right _ _)
-          (Set.disjoint_of_subset_right (Set.inter_subset_right _ _) disjoint_compl_right)
+        Set.disjointOfSubsetLeft (Set.inter_subset_right _ _)
+          (Set.disjointOfSubsetRight (Set.inter_subset_right _ _) disjointComplRight)
       
     · exact hi.inter hT₁.compl
       
@@ -421,15 +420,15 @@ theorem to_jordan_decomposition_smul_real (s : SignedMeasure α) (r : ℝ) :
   · exact to_jordan_decomposition_smul_real_nonneg s r hr
     
   · ext1
-    · rw [real_smul_pos_part_neg _ _ (not_leₓ.1 hr), show r • s = -(-r • s) by rw [neg_smul, neg_negₓ],
+    · rw [real_smul_pos_part_neg _ _ (not_le.1 hr), show r • s = -(-r • s) by rw [neg_smul, neg_neg],
         to_jordan_decomposition_neg, neg_pos_part, to_jordan_decomposition_smul_real_nonneg, ← smul_neg_part,
         real_smul_nonneg]
-      all_goals exact Left.nonneg_neg_iff.2 (le_of_ltₓ (not_leₓ.1 hr))
+      all_goals exact Left.nonneg_neg_iff.2 (le_of_lt (not_le.1 hr))
       
-    · rw [real_smul_neg_part_neg _ _ (not_leₓ.1 hr), show r • s = -(-r • s) by rw [neg_smul, neg_negₓ],
+    · rw [real_smul_neg_part_neg _ _ (not_le.1 hr), show r • s = -(-r • s) by rw [neg_smul, neg_neg],
         to_jordan_decomposition_neg, neg_neg_part, to_jordan_decomposition_smul_real_nonneg, ← smul_pos_part,
         real_smul_nonneg]
-      all_goals exact Left.nonneg_neg_iff.2 (le_of_ltₓ (not_leₓ.1 hr))
+      all_goals exact Left.nonneg_neg_iff.2 (le_of_lt (not_le.1 hr))
       
     
 
@@ -444,7 +443,7 @@ theorem total_variation_zero : (0 : SignedMeasure α).totalVariation = 0 := by
   simp [total_variation, to_jordan_decomposition_zero]
 
 theorem total_variation_neg (s : SignedMeasure α) : (-s).totalVariation = s.totalVariation := by
-  simp [total_variation, to_jordan_decomposition_neg, add_commₓ]
+  simp [total_variation, to_jordan_decomposition_neg, add_comm]
 
 theorem null_of_total_variation_zero (s : SignedMeasure α) {i : Set α} (hs : s.totalVariation i = 0) : s i = 0 := by
   rw [total_variation, measure.coe_add, Pi.add_apply, add_eq_zero_iff] at hs
@@ -483,7 +482,7 @@ theorem total_variation_absolutely_continuous_iff (s : SignedMeasure α) (μ : M
     exacts[this.1, this.2]
     
   · refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
-    rw [total_variation, measure.add_apply, h.1 hS₂, h.2 hS₂, add_zeroₓ]
+    rw [total_variation, measure.add_apply, h.1 hS₂, h.2 hS₂, add_zero]
     
 
 -- TODO: Generalize to vector measures once total variation on vector measures is defined

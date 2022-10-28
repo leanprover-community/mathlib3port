@@ -42,7 +42,7 @@ symmetric square, unordered pairs, symmetric powers
 -/
 
 
-open Finsetₓ Fintypeₓ Function Sym
+open Finset Fintype Function Sym
 
 universe u
 
@@ -65,9 +65,9 @@ theorem Rel.symm {x y : α × α} : Rel α x y → Rel α y x := by rintro ⟨_,
 theorem Rel.trans {x y z : α × α} (a : Rel α x y) (b : Rel α y z) : Rel α x z := by
   casesm*rel _ _ _ <;> first |apply rel.refl|apply rel.swap
 
-theorem Rel.is_equivalence : Equivalenceₓ (Rel α) := by tidy <;> apply rel.trans <;> assumption
+theorem Rel.is_equivalence : Equivalence (Rel α) := by tidy <;> apply rel.trans <;> assumption
 
-instance Rel.setoid (α : Type u) : Setoidₓ (α × α) :=
+instance Rel.setoid (α : Type u) : Setoid (α × α) :=
   ⟨Rel α, Rel.is_equivalence⟩
 
 @[simp]
@@ -89,33 +89,33 @@ It is equivalent in a natural way to multisets of cardinality 2 (see
 -/
 @[reducible]
 def Sym2 (α : Type u) :=
-  Quotientₓ (Sym2.Rel.setoid α)
+  Quotient (Sym2.Rel.setoid α)
 
 namespace Sym2
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f ⟦(x, y)⟧) : ∀ i, f i :=
-  Quotientₓ.ind <| Prod.rec <| h
+  Quotient.ind <| Prod.rec <| h
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f ⟦(x, y)⟧) : f i :=
   i.ind hf
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 α) (j : Sym2 β)
     (hf : ∀ a₁ a₂ b₁ b₂, f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧) : f i j :=
-  Quotientₓ.induction_on₂ i j <| by
+  Quotient.induction_on₂ i j <| by
     rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩
     exact hf _ _ _ _
 
 protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
-  (surjective_quotient_mk _).exists.trans Prod.existsₓ
+  (surjective_quotient_mk _).exists.trans Prod.exists
 
 protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f ⟦(x, y)⟧ :=
-  (surjective_quotient_mk _).forall.trans Prod.forallₓ
+  (surjective_quotient_mk _).forall.trans Prod.forall
 
 theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ := by
-  rw [Quotientₓ.eq]
+  rw [Quotient.eq]
   apply rel.swap
 
 @[simp]
@@ -125,14 +125,14 @@ theorem mk_prod_swap_eq {p : α × α} : ⟦p.swap⟧ = ⟦p⟧ := by
 
 theorem congr_right {a b c : α} : ⟦(a, b)⟧ = ⟦(a, c)⟧ ↔ b = c := by
   constructor <;> intro h
-  · rw [Quotientₓ.eq] at h
+  · rw [Quotient.eq] at h
     cases h <;> rfl
     
   rw [h]
 
 theorem congr_left {a b c : α} : ⟦(b, a)⟧ = ⟦(c, a)⟧ ↔ b = c := by
   constructor <;> intro h
-  · rw [Quotientₓ.eq] at h
+  · rw [Quotient.eq] at h
     cases h <;> rfl
     
   rw [h]
@@ -142,19 +142,19 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
   cases p
   cases q
-  simp only [eq_iff, Prod.mk.inj_iffₓ, Prod.swap_prod_mkₓ]
+  simp only [eq_iff, Prod.mk.inj_iff, Prod.swap_prod_mk]
 
 /-- The universal property of `sym2`; symmetric functions of two arguments are equivalent to
 functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more convenient to use
 `sym2.from_rel` instead. -/
 def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } ≃ (Sym2 α → β) where
-  toFun := fun f =>
-    Quotientₓ.lift (uncurry ↑f) <| by
+  toFun f :=
+    Quotient.lift (uncurry ↑f) <| by
       rintro _ _ ⟨⟩
       exacts[rfl, f.prop _ _]
-  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_arg F eq_swap⟩
-  left_inv := fun f => Subtype.ext rfl
-  right_inv := fun F => funext <| Sym2.ind fun x y => rfl
+  invFun F := ⟨curry (F ∘ Quotient.mk), fun a₁ a₂ => congr_arg F eq_swap⟩
+  left_inv f := Subtype.ext rfl
+  right_inv F := funext <| Sym2.ind fun x y => rfl
 
 @[simp]
 theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
@@ -169,17 +169,17 @@ theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) : (lift.symm F
 def lift₂ :
     { f : α → α → β → β → γ // ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ } ≃
       (Sym2 α → Sym2 β → γ) where
-  toFun := fun f =>
-    Quotientₓ.lift₂ (fun (a : α × α) (b : β × β) => f.1 a.1 a.2 b.1 b.2)
+  toFun f :=
+    Quotient.lift₂ (fun (a : α × α) (b : β × β) => f.1 a.1 a.2 b.1 b.2)
       (by
         rintro _ _ _ _ ⟨⟩ ⟨⟩
         exacts[rfl, (f.2 _ _ _ _).2, (f.2 _ _ _ _).1, (f.2 _ _ _ _).1.trans (f.2 _ _ _ _).2])
-  invFun := fun F =>
+  invFun F :=
     ⟨fun a₁ a₂ b₁ b₂ => F ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧, fun a₁ a₂ b₁ b₂ => by
       constructor
-      exacts[congr_arg2ₓ F eq_swap rfl, congr_arg2ₓ F rfl eq_swap]⟩
-  left_inv := fun f => Subtype.ext rfl
-  right_inv := fun F => funext₂ fun a b => (Sym2.induction_on₂ a b) fun _ _ _ _ => rfl
+      exacts[congr_arg2 F eq_swap rfl, congr_arg2 F rfl eq_swap]⟩
+  left_inv f := Subtype.ext rfl
+  right_inv F := funext₂ fun a b => (Sym2.induction_on₂ a b) fun _ _ _ _ => rfl
 
 @[simp]
 theorem lift₂_mk
@@ -195,7 +195,7 @@ theorem coe_lift₂_symm_apply (F : Sym2 α → Sym2 β → γ) (a₁ a₂ : α)
 /-- The functor `sym2` is functorial, and this function constructs the induced maps.
 -/
 def map (f : α → β) : Sym2 α → Sym2 β :=
-  Quotientₓ.map (Prod.map f f)
+  Quotient.map (Prod.map f f)
     (by
       rintro _ _ h
       cases h
@@ -220,7 +220,7 @@ theorem map_pair_eq (f : α → β) (x y : α) : map f ⟦(x, y)⟧ = ⟦(f x, f
 
 theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) := by
   intro z z'
-  refine' Quotientₓ.ind₂ (fun z z' => _) z z'
+  refine' Quotient.ind₂ (fun z z' => _) z z'
   cases' z with x y
   cases' z' with x' y'
   repeat' rw [map_pair_eq, eq_iff]
@@ -260,10 +260,10 @@ theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
       apply mem_mk_right }
 
 theorem out_fst_mem (e : Sym2 α) : e.out.1 ∈ e :=
-  ⟨e.out.2, by rw [Prod.mk.etaₓ, e.out_eq]⟩
+  ⟨e.out.2, by rw [Prod.mk.eta, e.out_eq]⟩
 
 theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
-  ⟨e.out.1, by rw [eq_swap, Prod.mk.etaₓ, e.out_eq]⟩
+  ⟨e.out.1, by rw [eq_swap, Prod.mk.eta, e.out_eq]⟩
 
 theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ ⟦(a, b)⟧, p c) ↔ p a ∧ p b := by
   refine' ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => _⟩
@@ -308,19 +308,19 @@ protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z
   have hy := h y
   have hx' := h x'
   have hy' := h y'
-  simp only [mem_iff, eq_self_iff_true, or_trueₓ, iff_trueₓ, true_orₓ, true_iffₓ] at hx hy hx' hy'
+  simp only [mem_iff, eq_self_iff_true, or_true_iff, iff_true_iff, true_or_iff, true_iff_iff] at hx hy hx' hy'
   cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
   simp only [Sym2.eq_swap]
 
 instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
-  Quotientₓ.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
+  Quotient.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
 
 end Membership
 
 @[simp]
 theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ ∃ a, a ∈ z ∧ f a = b := by
   induction' z using Sym2.ind with x y
-  simp only [map, Quotientₓ.map_mk, Prod.map_mkₓ, mem_iff]
+  simp only [map, Quotient.map_mk, Prod.map_mk, mem_iff]
   constructor
   · rintro (rfl | rfl)
     · exact ⟨x, by simp⟩
@@ -354,7 +354,7 @@ of this diagonal in `sym2 α`.
 def diag (x : α) : Sym2 α :=
   ⟦(x, x)⟧
 
-theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun x y h => by cases Quotientₓ.exact h <;> rfl
+theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun x y h => by cases Quotient.exact h <;> rfl
 
 /-- A predicate for testing whether an element of `sym2 α` is on the diagonal.
 -/
@@ -381,7 +381,7 @@ theorem is_diag_iff_mem_range_diag (z : Sym2 α) : IsDiag z ↔ z ∈ Set.Range 
   ⟨IsDiag.mem_range_diag, fun ⟨i, hi⟩ => hi ▸ diag_is_diag i⟩
 
 instance IsDiag.decidablePred (α : Type u) [DecidableEq α] : DecidablePred (@IsDiag α) := by
-  refine' fun z => Quotientₓ.recOnSubsingleton z fun a => _
+  refine' fun z => Quotient.recOnSubsingleton z fun a => _
   erw [is_diag_iff_proj_eq]
   infer_instance
 
@@ -425,7 +425,7 @@ theorem mem_from_rel_irrefl_other_ne {sym : Symmetric r} (irrefl : Irreflexive r
   other_ne (from_rel_irreflexive.mp irrefl hz) h
 
 instance FromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] : DecidablePred (· ∈ Sym2.FromRel Sym) :=
-  fun z => Quotientₓ.recOnSubsingleton z fun x => h _ _
+  fun z => Quotient.recOnSubsingleton z fun x => h _ _
 
 /-- The inverse to `sym2.from_rel`. Given a set on `sym2 α`, give a symmetric relation on `α`
 (see `sym2.to_rel_symmetric`). -/
@@ -468,9 +468,9 @@ private theorem perm_card_two_iff {a₁ b₁ a₂ b₂ : α} : [a₁, b₁].Perm
 
 /-- The symmetric square is equivalent to length-2 vectors up to permutations.
 -/
-def sym2EquivSym' : Equivₓ (Sym2 α) (Sym' α 2) where
+def sym2EquivSym' : Equiv (Sym2 α) (Sym' α 2) where
   toFun :=
-    Quotientₓ.map (fun x : α × α => ⟨[x.1, x.2], rfl⟩)
+    Quotient.map (fun x : α × α => ⟨[x.1, x.2], rfl⟩)
       (by
         rintro _ _ ⟨_⟩
         · rfl
@@ -478,7 +478,7 @@ def sym2EquivSym' : Equivₓ (Sym2 α) (Sym' α 2) where
         apply List.Perm.swap'
         rfl)
   invFun :=
-    Quotientₓ.map fromVector
+    Quotient.map fromVector
       (by
         rintro ⟨x, hx⟩ ⟨y, hy⟩ h
         cases' x with _ x
@@ -510,8 +510,8 @@ def sym2EquivSym' : Equivₓ (Sym2 α) (Sym' α 2) where
           
         apply Sym2.Rel.swap)
   left_inv := by tidy
-  right_inv := fun x => by
-    refine' Quotientₓ.recOnSubsingleton x fun x => _
+  right_inv x := by
+    refine' Quotient.recOnSubsingleton x fun x => _
     · cases' x with x hx
       cases' x with _ x
       · simpa using hx
@@ -531,7 +531,7 @@ def sym2EquivSym' : Equivₓ (Sym2 α) (Sym' α 2) where
 /-- The symmetric square is equivalent to the second symmetric power.
 -/
 def equivSym (α : Type _) : Sym2 α ≃ Sym α 2 :=
-  Equivₓ.trans sym2EquivSym' symEquivSym'.symm
+  Equiv.trans sym2EquivSym' symEquivSym'.symm
 
 /-- The symmetric square is equivalent to multisets of cardinality
 two. (This is currently a synonym for `equiv_sym`, but it's provided
@@ -553,7 +553,7 @@ theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ R
   cases' x with x₁ x₂
   cases' y with y₁ y₂
   dsimp [rel_bool]
-  split_ifs <;> simp only [false_iffₓ, Bool.coe_sort_ff, Bool.of_to_bool_iff]
+  split_ifs <;> simp only [false_iff_iff, Bool.coe_sort_ff, Bool.of_to_bool_iff]
   rotate_left 2
   · contrapose! h
     cases h <;> cc
@@ -658,13 +658,13 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
   convert other_invol' ha hb
   rw [other_eq_other']
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finsetₓ α) :
-    ((s ×ˢ s).Image Quotientₓ.mk).filter IsDiag = s.diag.Image Quotientₓ.mk := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
+    ((s ×ˢ s).Image Quotient.mk).filter IsDiag = s.diag.Image Quotient.mk := by
   ext z
-  induction z using Quotientₓ.induction_on
+  induction z using Quotient.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_diag, exists_propₓ, mem_filter, Prod.existsₓ, mem_product]
+  simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab
@@ -675,13 +675,13 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finsetₓ α) :
     exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finsetₓ α) :
-    (((s ×ˢ s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.OffDiag.Image Quotientₓ.mk := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
+    (((s ×ˢ s).Image Quotient.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.OffDiag.Image Quotient.mk := by
   ext z
-  induction z using Quotientₓ.induction_on
+  induction z using Quotient.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_off_diag, exists_propₓ, mem_filter, Prod.existsₓ, mem_product]
+  simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab

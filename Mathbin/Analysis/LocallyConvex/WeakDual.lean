@@ -46,7 +46,7 @@ section BilinForm
 
 namespace LinearMap
 
-variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
+variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
 
 /-- Construct a seminorm from a linear form `f : E →ₗ[𝕜] 𝕜` over a normed field `𝕜` by
 `λ x, ∥f x∥` -/
@@ -80,7 +80,7 @@ end BilinForm
 
 section Topology
 
-variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
+variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
 
 variable [Nonempty ι]
 
@@ -103,18 +103,18 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     · have hU₃' : U'.nonempty := hU₁.nonempty_to_finset.mpr hU₃
       refine'
         ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd,
-          p.basis_sets_mem _ <| (Finsetₓ.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy, fun x hx y hy =>
+          p.basis_sets_mem _ <| (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy, fun x hx y hy =>
           _⟩
       simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
       rw [Seminorm.mem_ball_zero] at hx
       rw [← LinearMap.to_seminorm_family_apply]
       have hyU' : y ∈ U' := (Set.Finite.mem_to_finset hU₁).mpr hy
-      have hp : p y ≤ U'.sup p := Finsetₓ.le_sup hyU'
-      refine' lt_of_le_of_ltₓ (hp x) (lt_of_lt_of_leₓ hx _)
-      exact Finsetₓ.inf'_le _ hyU'
+      have hp : p y ≤ U'.sup p := Finset.le_sup hyU'
+      refine' lt_of_le_of_lt (hp x) (lt_of_lt_of_le hx _)
+      exact Finset.inf'_le _ hyU'
       
     rw [set.not_nonempty_iff_eq_empty.mp hU₃]
-    simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_trueₓ]
+    simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_true_iff]
     exact Exists.intro ((p 0).ball 0 1) (p.basis_sets_singleton_mem 0 one_pos)
     
   rintro U (hU : U ∈ p.basis_sets)
@@ -122,26 +122,26 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
   rcases hU with ⟨s, r, hr, hU⟩
   rw [hU]
   refine' ⟨(s, fun _ => r), ⟨by simp only [s.finite_to_set], fun y hy => hr⟩, fun x hx => _⟩
-  simp only [Set.mem_preimage, Set.mem_pi, Finsetₓ.mem_coe, mem_ball_zero_iff] at hx
+  simp only [Set.mem_preimage, Set.mem_pi, Finset.mem_coe, mem_ball_zero_iff] at hx
   simp only [id.def, Seminorm.mem_ball, sub_zero]
   refine' Seminorm.finset_sup_apply_lt hr fun y hy => _
   rw [LinearMap.to_seminorm_family_apply]
   exact hx y hy
 
-theorem LinearMap.weak_bilin_with_seminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
+theorem LinearMap.weakBilinWithSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     WithSeminorms (LinearMap.toSeminormFamily B : F → Seminorm 𝕜 (WeakBilin B)) :=
-  SeminormFamily.with_seminorms_of_has_basis _ B.has_basis_weak_bilin
+  SeminormFamily.withSeminormsOfHasBasis _ B.has_basis_weak_bilin
 
 end Topology
 
 section LocallyConvex
 
-variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
+variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
 
 variable [Nonempty ι] [NormedSpace ℝ 𝕜] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 
 instance {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} : LocallyConvexSpace ℝ (WeakBilin B) :=
-  B.weak_bilin_with_seminorms.to_locally_convex_space
+  B.weakBilinWithSeminorms.to_locally_convex_space
 
 end LocallyConvex
 

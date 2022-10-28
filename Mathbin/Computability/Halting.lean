@@ -76,7 +76,7 @@ open Nat.Partrec.Code
 theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     ∃ k : α →. σ, Partrec k ∧ ∀ a, (∀ x ∈ k a, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) := by
   let ⟨k, hk, H⟩ := Nat.Partrec.merge' (bind_decode₂_iff.1 hf) (bind_decode₂_iff.1 hg)
-  let k' := fun a => (k (encode a)).bind fun n => decode σ n
+  let k' a := (k (encode a)).bind fun n => decode σ n
   refine' ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (computable.decode.of_option.comp snd).to₂, fun a => _⟩
   suffices
   refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
@@ -84,13 +84,13 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     rw [bind_dom]
     have hk : (k (encode a)).Dom := (H _).2.2 (by simpa only [encodek₂, bind_some, coe_some] using h)
     exists hk
-    simp only [exists_propₓ, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
+    simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
     obtain ⟨a', ha', y, hy, e⟩ | ⟨a', ha', y, hy, e⟩ := (H _).1 _ ⟨hk, rfl⟩ <;>
       · simp only [e.symm, encodek]
         
     
   intro x h'
-  simp only [k', exists_propₓ, mem_coe, mem_bind_iff, Option.mem_def] at h'
+  simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
   obtain ⟨n, hn, hx⟩ := h'
   have := (H _).1 _ hn
   simp [mem_decode₂, encode_injective.eq_iff] at this
@@ -219,7 +219,7 @@ theorem halting_problem_re (n) : RePred fun c => (eval c n).Dom :=
   (eval_part.comp Computable.id (Computable.const _)).dom_re
 
 theorem halting_problem (n) : ¬ComputablePred fun c => (eval c n).Dom
-  | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
+  | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivial
 
 -- Post's theorem on the equivalence of r.e., co-r.e. sets and
 -- computable sets. The assumption that p is decidable is required
@@ -256,8 +256,8 @@ open Vector Part
 inductive Partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
   | prim {n f} : @Primrec' n f → @partrec' n f
   |
-  comp {m n f} (g : Finₓ n → Vector ℕ m →. ℕ) :
-    partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (mOfFnₓ fun i => g i v) >>= f
+  comp {m n f} (g : Fin n → Vector ℕ m →. ℕ) :
+    partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (mOfFn fun i => g i v) >>= f
   | rfind {n} {f : Vector ℕ (n + 1) → ℕ} : @partrec' (n + 1) f → partrec' fun v => rfind fun n => some (f (n ::ᵥ v) = 0)
 
 end Nat
@@ -294,8 +294,8 @@ theorem tail {n f} (hf : @Partrec' n f) : @Partrec' n.succ fun v => f v.tail :=
 
 protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
     @Partrec' n fun v => (f v).bind fun a => g (a ::ᵥ v) :=
-  (@comp n (n + 1) g (fun i => Finₓ.cases f (fun i v => some (v.nth i)) i) hg fun i => by
-        refine' Finₓ.cases _ (fun i => _) i <;> simp [*]
+  (@comp n (n + 1) g (fun i => Fin.cases f (fun i v => some (v.nth i)) i) hg fun i => by
+        refine' Fin.cases _ (fun i => _) i <;> simp [*]
         exact prim (Nat.Primrec'.nth _)).of_eq
     fun v => by simp [m_of_fn, Part.bind_assoc, pure]
 
@@ -315,7 +315,7 @@ theorem Vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim
 protected theorem nil {n} : @Vec n 0 fun _ => nil := fun i => i.elim0
 
 protected theorem cons {n m} {f : Vector ℕ n → ℕ} {g} (hf : @Partrec' n f) (hg : @Vec n m g) :
-    Vec fun v => f v ::ᵥ g v := fun i => Finₓ.cases (by simp [*]) (fun i => by simp only [hg i, nth_cons_succ]) i
+    Vec fun v => f v ::ᵥ g v := fun i => Fin.cases (by simp [*]) (fun i => by simp only [hg i, nth_cons_succ]) i
 
 theorem idv {n} : @Vec n n id :=
   Vec.prim Nat.Primrec'.idv
@@ -334,13 +334,13 @@ theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f
         ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq
     fun v =>
     Part.ext fun b => by
-      simp only [Nat.rfindOpt, exists_propₓ, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
+      simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
         Option.mem_def, Part.mem_coe]
-      refine' exists_congr fun a => (and_congrₓ (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
+      refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
       · congr
         funext n
         simp only [Part.some_inj, Pfun.coe_val]
-        cases f (n ::ᵥ v) <;> simp [Nat.succ_le_succₓ] <;> rfl
+        cases f (n ::ᵥ v) <;> simp [Nat.succ_le_succ] <;> rfl
         
       · have := Nat.rfind_spec h
         simp only [Pfun.coe_val, Part.mem_some_iff] at this

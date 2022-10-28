@@ -73,12 +73,12 @@ unsafe def guess_degree : expr → tactic expr
     let pe ← to_expr (pquote.1 (@natDegree (%%ₓR) (%%ₓinst))) true false
     pure <| expr.mk_app pe [e]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- `resolve_sum_step` assumes that the current goal is of the form `f.nat_degree ≤ d`, failing
 otherwise.  It tries to make progress on the goal by progressing into `f` if `f` is
 * a sum, difference, opposite, product, or a power;
@@ -105,24 +105,24 @@ unsafe def resolve_sum_step : tactic Unit := do
     | quote.1 (X ^ %%ₓn) => refine (pquote.1 ((nat_degree_X_pow_le (%%ₓn)).trans _))
     | app (quote.1 ⇑(@monomial (%%ₓR) (%%ₓinst) (%%ₓn))) x =>
       refine (pquote.1 ((nat_degree_monomial_le (%%ₓx)).trans _))
-    | app (quote.1 ⇑C) x => refine (pquote.1 ((nat_degree_C (%%ₓx)).le.trans (Nat.zero_leₓ (%%ₓtr))))
+    | app (quote.1 ⇑C) x => refine (pquote.1 ((nat_degree_C (%%ₓx)).le.trans (Nat.zero_le (%%ₓtr))))
     | quote.1 x => refine (pquote.1 (nat_degree_X_le.trans _))
-    | quote.1 Zero.zero => refine (pquote.1 (nat_degree_zero.le.trans (Nat.zero_leₓ _)))
-    | quote.1 One.one => refine (pquote.1 (nat_degree_one.le.trans (Nat.zero_leₓ _)))
+    | quote.1 Zero.zero => refine (pquote.1 (nat_degree_zero.le.trans (Nat.zero_le _)))
+    | quote.1 One.one => refine (pquote.1 (nat_degree_one.le.trans (Nat.zero_le _)))
     | quote.1 (bit0 (%%ₓa)) => refine (pquote.1 ((nat_degree_bit0 (%%ₓa)).trans _))
     | quote.1 (bit1 (%%ₓa)) => refine (pquote.1 ((nat_degree_bit1 (%%ₓa)).trans _))
     | quote.1 ((%%ₓtl1) ^ %%ₓn) => do
       refine (pquote.1 (nat_degree_pow_le.trans _))
       refine (pquote.1 (dite ((%%ₓn) = 0) (fun n0 : (%%ₓn) = 0 => by simp only [n0, zero_mul, zero_le]) _))
       let n0 ← get_unused_name "n0" >>= intro
-      refine (pquote.1 ((mul_comm _ _).le.trans ((Nat.le_div_iff_mul_le' (Nat.pos_of_ne_zeroₓ (%%ₓn0))).mp _)))
-      let lem1 ← to_expr (pquote.1 (Nat.mul_div_cancelₓ _ (Nat.pos_of_ne_zeroₓ (%%ₓn0)))) tt ff
-      let lem2 ← to_expr (pquote.1 (Nat.div_selfₓ (Nat.pos_of_ne_zeroₓ (%%ₓn0)))) tt ff
+      refine (pquote.1 ((mul_comm _ _).le.trans ((Nat.le_div_iff_mul_le' (Nat.pos_of_ne_zero (%%ₓn0))).mp _)))
+      let lem1 ← to_expr (pquote.1 (Nat.mul_div_cancel _ (Nat.pos_of_ne_zero (%%ₓn0)))) tt ff
+      let lem2 ← to_expr (pquote.1 (Nat.div_self (Nat.pos_of_ne_zero (%%ₓn0)))) tt ff
       focus1 (refine (pquote.1 ((%%ₓn0) rfl).elim) <|> rewrite_target lem1 <|> rewrite_target lem2) <|> skip
     | e =>
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `norm_assum` simply tries `norm_num` and `assumption`.
 It is used to try to discharge as many as possible of the side-goals of `compute_degree_le`.
 Several side-goals are of the form `m ≤ n`, for natural numbers `m, n` or of the form `c ≠ 0`,

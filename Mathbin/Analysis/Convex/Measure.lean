@@ -23,7 +23,7 @@ open FiniteDimensional (finrank)
 open TopologicalSpace Nnreal Ennreal
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
-  [FiniteDimensional ℝ E] (μ : Measureₓ E) [IsAddHaarMeasure μ] {s : Set E}
+  [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {s : Set E}
 
 namespace Convex
 
@@ -35,7 +35,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (Frontier s) = 0 := by
   · refine' measure_mono_null _ (add_haar_affine_subspace _ _ hspan)
     exact
       frontier_subset_closure.trans
-        (closure_minimal (subset_affine_span _ _) (affineSpan ℝ s).closed_of_finite_dimensional)
+        (closure_minimal (subset_affine_span _ _) (affineSpan ℝ s).closedOfFiniteDimensional)
     
   rw [← hs.interior_nonempty_iff_affine_span_eq_top] at hspan
   rcases hspan with ⟨x, hx⟩
@@ -87,8 +87,8 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (Frontier s) = 0 := by
 
 /-- A convex set in a finite dimensional real vector space is null measurable with respect to an
 additive Haar measure on this space. -/
-protected theorem null_measurable_set (hs : Convex ℝ s) : NullMeasurableSet s μ :=
-  null_measurable_set_of_null_frontier (hs.add_haar_frontier μ)
+protected theorem nullMeasurableSet (hs : Convex ℝ s) : NullMeasurableSet s μ :=
+  nullMeasurableSetOfNullFrontier (hs.add_haar_frontier μ)
 
 end Convex
 

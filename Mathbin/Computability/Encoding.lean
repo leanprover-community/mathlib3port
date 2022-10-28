@@ -43,9 +43,9 @@ theorem Encoding.encode_injective {α : Type u} (e : Encoding α) : Function.Inj
 
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
 structure FinEncoding (α : Type u) extends Encoding.{u, 0} α where
-  ΓFin : Fintypeₓ Γ
+  ΓFin : Fintype Γ
 
-instance {α : Type u} (e : FinEncoding α) : Fintypeₓ e.toEncoding.Γ :=
+instance {α : Type u} (e : FinEncoding α) : Fintype e.toEncoding.Γ :=
   e.ΓFin
 
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
@@ -55,7 +55,7 @@ inductive Γ'
   | bra
   | ket
   | comma
-  deriving DecidableEq, Fintypeₓ
+  deriving DecidableEq, Fintype
 
 instance inhabitedΓ' : Inhabited Γ' :=
   ⟨Γ'.blank⟩
@@ -67,7 +67,7 @@ def inclusionBoolΓ' : Bool → Γ' :=
 /-- An arbitrary section of the natural inclusion of bool in Γ'. -/
 def sectionΓ'Bool : Γ' → Bool
   | Γ'.bit b => b
-  | _ => arbitrary Bool
+  | _ => default Bool
 
 theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inclusionBoolΓ' := fun x =>
   Bool.casesOn x rfl rfl
@@ -75,8 +75,8 @@ theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inc
 theorem inclusion_bool_Γ'_injective : Function.Injective inclusionBoolΓ' :=
   Function.HasLeftInverse.injective (Exists.intro sectionΓ'Bool left_inverse_section_inclusion)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An encoding function of the positive binary numbers in bool. -/
 def encodePosNum : PosNum → List Bool
   | PosNum.one => [true]
@@ -92,8 +92,8 @@ def encodeNum : Num → List Bool
 def encodeNat (n : ℕ) : List Bool :=
   encodeNum n
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A decoding function from `list bool` to the positive binary numbers. -/
 def decodePosNum : List Bool → PosNum
   | ff::l => PosNum.bit0 (decode_pos_num l)
@@ -138,8 +138,8 @@ theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n := by
 def encodingNatBool : Encoding ℕ where
   Γ := Bool
   encode := encodeNat
-  decode := fun n => some (decodeNat n)
-  decode_encode := fun n => congr_arg _ (decode_encode_nat n)
+  decode n := some (decodeNat n)
+  decode_encode n := congr_arg _ (decode_encode_nat n)
 
 /-- A binary fin_encoding of ℕ in bool. -/
 def finEncodingNatBool : FinEncoding ℕ :=
@@ -148,16 +148,15 @@ def finEncodingNatBool : FinEncoding ℕ :=
 /-- A binary encoding of ℕ in Γ'. -/
 def encodingNatΓ' : Encoding ℕ where
   Γ := Γ'
-  encode := fun x => List.map inclusionBoolΓ' (encodeNat x)
-  decode := fun x => some (decodeNat (List.map sectionΓ'Bool x))
-  decode_encode := fun x =>
-    congr_arg _ <| by rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
+  encode x := List.map inclusionBoolΓ' (encodeNat x)
+  decode x := some (decodeNat (List.map sectionΓ'Bool x))
+  decode_encode x := congr_arg _ <| by rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
 def finEncodingNatΓ' : FinEncoding ℕ :=
   ⟨encodingNatΓ', Γ'.fintype⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A unary encoding function of ℕ in bool. -/
 def unaryEncodeNat : Nat → List Bool
   | 0 => []
@@ -174,19 +173,19 @@ theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n :
 def unaryFinEncodingNat : FinEncoding ℕ where
   Γ := Bool
   encode := unaryEncodeNat
-  decode := fun n => some (unaryDecodeNat n)
-  decode_encode := fun n => congr_arg _ (unary_decode_encode_nat n)
+  decode n := some (unaryDecodeNat n)
+  decode_encode n := congr_arg _ (unary_decode_encode_nat n)
   ΓFin := Bool.fintype
 
 /-- An encoding function of bool in bool. -/
 def encodeBool : Bool → List Bool :=
   List.ret
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A decoding function from `list bool` to bool. -/
 def decodeBool : List Bool → Bool
   | b::_ => b
-  | _ => arbitrary Bool
+  | _ => default Bool
 
 theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bool.casesOn b rfl rfl
 
@@ -194,8 +193,8 @@ theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bo
 def finEncodingBoolBool : FinEncoding Bool where
   Γ := Bool
   encode := encodeBool
-  decode := fun x => some (decodeBool x)
-  decode_encode := fun x => congr_arg _ (decode_encode_bool x)
+  decode x := some (decodeBool x)
+  decode_encode x := congr_arg _ (decode_encode_bool x)
   ΓFin := Bool.fintype
 
 instance inhabitedFinEncoding : Inhabited (FinEncoding Bool) :=
@@ -218,7 +217,7 @@ theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodab
     
 
 theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : (#α) ≤ ℵ₀ :=
-  haveI : Encodable e.Γ := Fintypeₓ.toEncodable _
+  haveI : Encodable e.Γ := Fintype.toEncodable _
   e.to_encoding.card_le_aleph_0
 
 end Computability

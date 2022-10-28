@@ -77,7 +77,7 @@ theorem symm_diff_def [HasSup α] [Sdiff α] (a b : α) : a ∆ b = a \ b ⊔ b 
 theorem bihimp_def [HasInf α] [HasHimp α] (a b : α) : a ⇔ b = (b ⇨ a) ⊓ (a ⇨ b) :=
   rfl
 
-theorem symm_diff_eq_xor (p q : Prop) : p ∆ q = Xorₓ p q :=
+theorem symm_diff_eq_xor (p q : Prop) : p ∆ q = Xor' p q :=
   rfl
 
 @[simp]
@@ -85,7 +85,7 @@ theorem bihimp_iff_iff {p q : Prop} : p ⇔ q ↔ (p ↔ q) :=
   (iff_iff_implies_and_implies _ _).symm.trans Iff.comm
 
 @[simp]
-theorem Bool.symm_diff_eq_bxor : ∀ p q : Bool, p ∆ q = bxor p q := by decide
+theorem Bool.symm_diff_eq_bxor : ∀ p q : Bool, p ∆ q = xor p q := by decide
 
 section GeneralizedCoheytingAlgebra
 
@@ -115,7 +115,7 @@ theorem bot_symm_diff : ⊥ ∆ a = a := by rw [symm_diff_comm, symm_diff_bot]
 
 @[simp]
 theorem symm_diff_eq_bot {a b : α} : a ∆ b = ⊥ ↔ a = b := by
-  simp_rw [symmDiff, sup_eq_bot_iff, sdiff_eq_bot_iff, le_antisymm_iffₓ]
+  simp_rw [symmDiff, sup_eq_bot_iff, sdiff_eq_bot_iff, le_antisymm_iff]
 
 theorem symm_diff_of_le {a b : α} (h : a ≤ b) : a ∆ b = b \ a := by rw [symmDiff, sdiff_eq_bot_iff.2 h, bot_sup_eq]
 
@@ -148,7 +148,7 @@ theorem symm_diff_sdiff_inf : a ∆ b \ (a ⊓ b) = a ∆ b := by
 theorem symm_diff_sdiff_eq_sup : a ∆ (b \ a) = a ⊔ b := by
   rw [symmDiff, sdiff_idem]
   exact
-    le_antisymmₓ (sup_le_sup sdiff_le sdiff_le)
+    le_antisymm (sup_le_sup sdiff_le sdiff_le)
       (sup_le le_sdiff_sup <| le_sdiff_sup.trans <| sup_le le_sup_right le_sdiff_sup)
 
 @[simp]
@@ -156,7 +156,7 @@ theorem sdiff_symm_diff_eq_sup : (a \ b) ∆ b = a ⊔ b := by rw [symm_diff_com
 
 @[simp]
 theorem symm_diff_sup_inf : a ∆ b ⊔ a ⊓ b = a ⊔ b := by
-  refine' le_antisymmₓ (sup_le symm_diff_le_sup inf_le_sup) _
+  refine' le_antisymm (sup_le symm_diff_le_sup inf_le_sup) _
   rw [sup_inf_left, symmDiff]
   refine' sup_le (le_inf le_sup_right _) (le_inf _ le_sup_right)
   · rw [sup_right_comm]
@@ -220,7 +220,7 @@ theorem le_bihimp {a b c : α} (hb : a ⊓ b ≤ c) (hc : a ⊓ c ≤ b) : a ≤
   le_inf (le_himp_iff.2 hc) <| le_himp_iff.2 hb
 
 theorem le_bihimp_iff {a b c : α} : a ≤ b ⇔ c ↔ a ⊓ b ≤ c ∧ a ⊓ c ≤ b := by
-  simp_rw [bihimp, le_inf_iff, le_himp_iff, And.comm]
+  simp_rw [bihimp, le_inf_iff, le_himp_iff, and_comm]
 
 @[simp]
 theorem inf_le_bihimp {a b : α} : a ⊓ b ≤ a ⇔ b :=
@@ -280,7 +280,7 @@ theorem top_symm_diff' : ⊤ ∆ a = ￢a := by simp [symmDiff]
 @[simp]
 theorem hnot_symm_diff_self : (￢a) ∆ a = ⊤ := by
   rw [eq_top_iff, symmDiff, hnot_sdiff, sup_sdiff_self]
-  exact codisjoint_hnot_left
+  exact codisjointHnotLeft
 
 @[simp]
 theorem symm_diff_hnot_self : a ∆ (￢a) = ⊤ := by rw [symm_diff_comm, hnot_symm_diff_self]
@@ -319,9 +319,9 @@ variable [GeneralizedBooleanAlgebra α] (a b c d : α)
 theorem sup_sdiff_symm_diff : (a ⊔ b) \ a ∆ b = a ⊓ b :=
   sdiff_eq_symm inf_le_sup (by rw [symm_diff_eq_sup_sdiff_inf])
 
-theorem disjoint_symm_diff_inf : Disjoint (a ∆ b) (a ⊓ b) := by
+theorem disjointSymmDiffInf : Disjoint (a ∆ b) (a ⊓ b) := by
   rw [symm_diff_eq_sup_sdiff_inf]
-  exact disjoint_sdiff_self_left
+  exact disjointSdiffSelfLeft
 
 theorem inf_symm_diff_distrib_left : a ⊓ b ∆ c = (a ⊓ b) ∆ (a ⊓ c) := by
   rw [symm_diff_eq_sup_sdiff_inf, inf_sdiff_distrib_left, inf_sup_left, inf_inf_distrib_left,
@@ -437,12 +437,12 @@ theorem symm_diff_eq_left : a ∆ b = a ↔ b = ⊥ :=
 @[simp]
 theorem symm_diff_eq_right : a ∆ b = b ↔ a = ⊥ := by rw [symm_diff_comm, symm_diff_eq_left]
 
-protected theorem Disjoint.symm_diff_left (ha : Disjoint a c) (hb : Disjoint b c) : Disjoint (a ∆ b) c := by
+protected theorem Disjoint.symmDiffLeft (ha : Disjoint a c) (hb : Disjoint b c) : Disjoint (a ∆ b) c := by
   rw [symm_diff_eq_sup_sdiff_inf]
-  exact (ha.sup_left hb).disjoint_sdiff_left
+  exact (ha.sup_left hb).disjointSdiffLeft
 
-protected theorem Disjoint.symm_diff_right (ha : Disjoint a b) (hb : Disjoint a c) : Disjoint a (b ∆ c) :=
-  (ha.symm.symm_diff_left hb.symm).symm
+protected theorem Disjoint.symmDiffRight (ha : Disjoint a b) (hb : Disjoint a c) : Disjoint a (b ∆ c) :=
+  (ha.symm.symmDiffLeft hb.symm).symm
 
 theorem symm_diff_eq_iff_sdiff_eq (ha : a ≤ c) : a ∆ b = c ↔ c \ a = b := by
   rw [← symm_diff_of_le ha]
@@ -462,8 +462,8 @@ section CogeneralizedBooleanAlgebra
 theorem inf_himp_bihimp : a ⇔ b ⇨ a ⊓ b = a ⊔ b :=
   @sup_sdiff_symm_diff αᵒᵈ _ _ _
 
-theorem codisjoint_bihimp_sup : Codisjoint (a ⇔ b) (a ⊔ b) :=
-  @disjoint_symm_diff_inf αᵒᵈ _ _ _
+theorem codisjointBihimpSup : Codisjoint (a ⇔ b) (a ⊔ b) :=
+  @disjointSymmDiffInf αᵒᵈ _ _ _
 
 @[simp]
 theorem himp_bihimp_left : a ⇨ a ⇔ b = a ⇨ b :=
@@ -550,11 +550,11 @@ theorem bihimp_eq_left : a ⇔ b = a ↔ b = ⊤ :=
 theorem bihimp_eq_right : a ⇔ b = b ↔ a = ⊤ :=
   @symm_diff_eq_right αᵒᵈ _ _ _
 
-protected theorem Codisjoint.bihimp_left (ha : Codisjoint a c) (hb : Codisjoint b c) : Codisjoint (a ⇔ b) c :=
-  (ha.inf_left hb).mono_left inf_le_bihimp
+protected theorem Codisjoint.bihimpLeft (ha : Codisjoint a c) (hb : Codisjoint b c) : Codisjoint (a ⇔ b) c :=
+  (ha.infLeft hb).mono_left inf_le_bihimp
 
-protected theorem Codisjoint.bihimp_right (ha : Codisjoint a b) (hb : Codisjoint a c) : Codisjoint a (b ⇔ c) :=
-  (ha.inf_right hb).mono_right inf_le_bihimp
+protected theorem Codisjoint.bihimpRight (ha : Codisjoint a b) (hb : Codisjoint a c) : Codisjoint a (b ⇔ c) :=
+  (ha.infRight hb).mono_right inf_le_bihimp
 
 end CogeneralizedBooleanAlgebra
 
@@ -590,7 +590,7 @@ theorem compl_bihimp_compl : aᶜ ⇔ bᶜ = a ⇔ b :=
 
 @[simp]
 theorem symm_diff_eq_top : a ∆ b = ⊤ ↔ IsCompl a b := by
-  rw [symm_diff_eq', ← compl_inf, inf_eq_top_iff, compl_eq_top, is_compl_iff, disjoint_iff, codisjoint_iff, And.comm]
+  rw [symm_diff_eq', ← compl_inf, inf_eq_top_iff, compl_eq_top, is_compl_iff, disjoint_iff, codisjoint_iff, and_comm]
 
 @[simp]
 theorem bihimp_eq_bot : a ⇔ b = ⊥ ↔ IsCompl a b := by

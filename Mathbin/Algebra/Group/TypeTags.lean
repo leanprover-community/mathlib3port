@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 import Mathbin.Data.Finite.Defs
 
 /-!
@@ -117,9 +117,9 @@ instance [Nontrivial α] : Nontrivial (Additive α) :=
 instance [Nontrivial α] : Nontrivial (Multiplicative α) :=
   Multiplicative.ofAdd.Injective.Nontrivial
 
-instance Additive.hasAdd [Mul α] : Add (Additive α) where add := fun x y => Additive.ofMul (x.toMul * y.toMul)
+instance Additive.hasAdd [Mul α] : Add (Additive α) where add x y := Additive.ofMul (x.toMul * y.toMul)
 
-instance [Add α] : Mul (Multiplicative α) where mul := fun x y => Multiplicative.ofAdd (x.toAdd + y.toAdd)
+instance [Add α] : Mul (Multiplicative α) where mul x y := Multiplicative.ofAdd (x.toAdd + y.toAdd)
 
 @[simp]
 theorem of_add_add [Add α] (x y : α) : Multiplicative.ofAdd (x + y) = Multiplicative.ofAdd x * Multiplicative.ofAdd y :=
@@ -137,29 +137,29 @@ theorem of_mul_mul [Mul α] (x y : α) : Additive.ofMul (x * y) = Additive.ofMul
 theorem to_mul_add [Mul α] (x y : Additive α) : (x + y).toMul = x.toMul * y.toMul :=
   rfl
 
-instance [Semigroupₓ α] : AddSemigroupₓ (Additive α) :=
+instance [Semigroup α] : AddSemigroup (Additive α) :=
   { Additive.hasAdd with add_assoc := @mul_assoc α _ }
 
-instance [AddSemigroupₓ α] : Semigroupₓ (Multiplicative α) :=
-  { Multiplicative.hasMul with mul_assoc := @add_assocₓ α _ }
+instance [AddSemigroup α] : Semigroup (Multiplicative α) :=
+  { Multiplicative.hasMul with mul_assoc := @add_assoc α _ }
 
-instance [CommSemigroupₓ α] : AddCommSemigroupₓ (Additive α) :=
+instance [CommSemigroup α] : AddCommSemigroup (Additive α) :=
   { Additive.addSemigroup with add_comm := @mul_comm _ _ }
 
-instance [AddCommSemigroupₓ α] : CommSemigroupₓ (Multiplicative α) :=
-  { Multiplicative.semigroup with mul_comm := @add_commₓ _ _ }
+instance [AddCommSemigroup α] : CommSemigroup (Multiplicative α) :=
+  { Multiplicative.semigroup with mul_comm := @add_comm _ _ }
 
 instance [LeftCancelSemigroup α] : AddLeftCancelSemigroup (Additive α) :=
-  { Additive.addSemigroup with add_left_cancel := @mul_left_cancelₓ _ _ }
+  { Additive.addSemigroup with add_left_cancel := @mul_left_cancel _ _ }
 
 instance [AddLeftCancelSemigroup α] : LeftCancelSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup with mul_left_cancel := @add_left_cancelₓ _ _ }
+  { Multiplicative.semigroup with mul_left_cancel := @add_left_cancel _ _ }
 
 instance [RightCancelSemigroup α] : AddRightCancelSemigroup (Additive α) :=
-  { Additive.addSemigroup with add_right_cancel := @mul_right_cancelₓ _ _ }
+  { Additive.addSemigroup with add_right_cancel := @mul_right_cancel _ _ }
 
 instance [AddRightCancelSemigroup α] : RightCancelSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup with mul_right_cancel := @add_right_cancelₓ _ _ }
+  { Multiplicative.semigroup with mul_right_cancel := @add_right_cancel _ _ }
 
 instance [One α] : Zero (Additive α) :=
   ⟨Additive.ofMul 1⟩
@@ -191,25 +191,25 @@ theorem of_add_eq_one {A : Type _} [Zero A] {x : A} : Multiplicative.ofAdd x = 1
 theorem to_add_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
   rfl
 
-instance [MulOneClassₓ α] : AddZeroClassₓ (Additive α) where
+instance [MulOneClass α] : AddZeroClass (Additive α) where
   zero := 0
   add := (· + ·)
-  zero_add := one_mulₓ
-  add_zero := mul_oneₓ
+  zero_add := one_mul
+  add_zero := mul_one
 
-instance [AddZeroClassₓ α] : MulOneClassₓ (Multiplicative α) where
+instance [AddZeroClass α] : MulOneClass (Multiplicative α) where
   one := 1
   mul := (· * ·)
-  one_mul := zero_addₓ
-  mul_one := add_zeroₓ
+  one_mul := zero_add
+  mul_one := add_zero
 
-instance [h : Monoidₓ α] : AddMonoidₓ (Additive α) :=
-  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := (· + ·), nsmul := @Monoidₓ.npow α h,
-    nsmul_zero' := Monoidₓ.npow_zero', nsmul_succ' := Monoidₓ.npow_succ' }
+instance [h : Monoid α] : AddMonoid (Additive α) :=
+  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := (· + ·), nsmul := @Monoid.npow α h,
+    nsmul_zero' := Monoid.npow_zero', nsmul_succ' := Monoid.npow_succ' }
 
-instance [h : AddMonoidₓ α] : Monoidₓ (Multiplicative α) :=
-  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := (· * ·), npow := @AddMonoidₓ.nsmul α h,
-    npow_zero' := AddMonoidₓ.nsmul_zero', npow_succ' := AddMonoidₓ.nsmul_succ' }
+instance [h : AddMonoid α] : Monoid (Multiplicative α) :=
+  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := (· * ·), npow := @AddMonoid.nsmul α h,
+    npow_zero' := AddMonoid.nsmul_zero', npow_succ' := AddMonoid.nsmul_succ' }
 
 instance [LeftCancelMonoid α] : AddLeftCancelMonoid (Additive α) :=
   { Additive.addMonoid, Additive.addLeftCancelSemigroup with zero := 0, add := (· + ·) }
@@ -223,10 +223,10 @@ instance [RightCancelMonoid α] : AddRightCancelMonoid (Additive α) :=
 instance [AddRightCancelMonoid α] : RightCancelMonoid (Multiplicative α) :=
   { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with one := 1, mul := (· * ·) }
 
-instance [CommMonoidₓ α] : AddCommMonoidₓ (Additive α) :=
+instance [CommMonoid α] : AddCommMonoid (Additive α) :=
   { Additive.addMonoid, Additive.addCommSemigroup with zero := 0, add := (· + ·) }
 
-instance [AddCommMonoidₓ α] : CommMonoidₓ (Multiplicative α) :=
+instance [AddCommMonoid α] : CommMonoid (Multiplicative α) :=
   { Multiplicative.monoid, Multiplicative.commSemigroup with one := 1, mul := (· * ·) }
 
 instance [Inv α] : Neg (Additive α) :=
@@ -251,10 +251,10 @@ theorem of_add_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = (Multiplicati
 theorem to_add_inv [Neg α] (x : Multiplicative α) : x⁻¹.toAdd = -x.toAdd :=
   rfl
 
-instance Additive.hasSub [Div α] : Sub (Additive α) where sub := fun x y => Additive.ofMul (x.toMul / y.toMul)
+instance Additive.hasSub [Div α] : Sub (Additive α) where sub x y := Additive.ofMul (x.toMul / y.toMul)
 
 instance Multiplicative.hasDiv [Sub α] :
-    Div (Multiplicative α) where div := fun x y => Multiplicative.ofAdd (x.toAdd - y.toAdd)
+    Div (Multiplicative α) where div x y := Multiplicative.ofAdd (x.toAdd - y.toAdd)
 
 @[simp]
 theorem of_add_sub [Sub α] (x y : α) : Multiplicative.ofAdd (x - y) = Multiplicative.ofAdd x / Multiplicative.ofAdd y :=
@@ -273,20 +273,20 @@ theorem to_mul_sub [Div α] (x y : Additive α) : (x - y).toMul = x.toMul / y.to
   rfl
 
 instance [HasInvolutiveInv α] : HasInvolutiveNeg (Additive α) :=
-  { Additive.hasNeg with neg_neg := @inv_invₓ _ _ }
+  { Additive.hasNeg with neg_neg := @inv_inv _ _ }
 
 instance [HasInvolutiveNeg α] : HasInvolutiveInv (Multiplicative α) :=
-  { Multiplicative.hasInv with inv_inv := @neg_negₓ _ _ }
+  { Multiplicative.hasInv with inv_inv := @neg_neg _ _ }
 
-instance [DivInvMonoidₓ α] : SubNegMonoidₓ (Additive α) :=
+instance [DivInvMonoid α] : SubNegMonoid (Additive α) :=
   { Additive.hasNeg, Additive.hasSub, Additive.addMonoid with sub_eq_add_neg := @div_eq_mul_inv α _,
-    zsmul := @DivInvMonoidₓ.zpow α _, zsmul_zero' := DivInvMonoidₓ.zpow_zero', zsmul_succ' := DivInvMonoidₓ.zpow_succ',
-    zsmul_neg' := DivInvMonoidₓ.zpow_neg' }
+    zsmul := @DivInvMonoid.zpow α _, zsmul_zero' := DivInvMonoid.zpow_zero', zsmul_succ' := DivInvMonoid.zpow_succ',
+    zsmul_neg' := DivInvMonoid.zpow_neg' }
 
-instance [SubNegMonoidₓ α] : DivInvMonoidₓ (Multiplicative α) :=
+instance [SubNegMonoid α] : DivInvMonoid (Multiplicative α) :=
   { Multiplicative.hasInv, Multiplicative.hasDiv, Multiplicative.monoid with div_eq_mul_inv := @sub_eq_add_neg α _,
-    zpow := @SubNegMonoidₓ.zsmul α _, zpow_zero' := SubNegMonoidₓ.zsmul_zero', zpow_succ' := SubNegMonoidₓ.zsmul_succ',
-    zpow_neg' := SubNegMonoidₓ.zsmul_neg' }
+    zpow := @SubNegMonoid.zsmul α _, zpow_zero' := SubNegMonoid.zsmul_zero', zpow_succ' := SubNegMonoid.zsmul_succ',
+    zpow_neg' := SubNegMonoid.zsmul_neg' }
 
 instance [DivisionMonoid α] : SubtractionMonoid (Additive α) :=
   { Additive.subNegMonoid, Additive.hasInvolutiveNeg with neg_add_rev := @mul_inv_rev _ _,
@@ -302,16 +302,16 @@ instance [DivisionCommMonoid α] : SubtractionCommMonoid (Additive α) :=
 instance [SubtractionCommMonoid α] : DivisionCommMonoid (Multiplicative α) :=
   { Multiplicative.divisionMonoid, Multiplicative.commSemigroup with }
 
-instance [Groupₓ α] : AddGroupₓ (Additive α) :=
-  { Additive.subNegMonoid with add_left_neg := @mul_left_invₓ α _ }
+instance [Group α] : AddGroup (Additive α) :=
+  { Additive.subNegMonoid with add_left_neg := @mul_left_inv α _ }
 
-instance [AddGroupₓ α] : Groupₓ (Multiplicative α) :=
-  { Multiplicative.divInvMonoid with mul_left_inv := @add_left_negₓ α _ }
+instance [AddGroup α] : Group (Multiplicative α) :=
+  { Multiplicative.divInvMonoid with mul_left_inv := @add_left_neg α _ }
 
-instance [CommGroupₓ α] : AddCommGroupₓ (Additive α) :=
+instance [CommGroup α] : AddCommGroup (Additive α) :=
   { Additive.addGroup, Additive.addCommMonoid with }
 
-instance [AddCommGroupₓ α] : CommGroupₓ (Multiplicative α) :=
+instance [AddCommGroup α] : CommGroup (Multiplicative α) :=
   { Multiplicative.group, Multiplicative.commMonoid with }
 
 open Multiplicative (ofAdd)
@@ -320,63 +320,61 @@ open Additive (ofMul)
 
 /-- Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
 @[simps]
-def AddMonoidHom.toMultiplicative [AddZeroClassₓ α] [AddZeroClassₓ β] :
+def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
     (α →+ β) ≃ (Multiplicative α →* Multiplicative β) where
-  toFun := fun f => ⟨fun a => ofAdd (f a.toAdd), f.2, f.3⟩
-  invFun := fun f => ⟨fun a => (f (ofAdd a)).toAdd, f.2, f.3⟩
-  left_inv := fun x => by
+  toFun f := ⟨fun a => ofAdd (f a.toAdd), f.2, f.3⟩
+  invFun f := ⟨fun a => (f (ofAdd a)).toAdd, f.2, f.3⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `α →* β` as `additive α →+ additive β`. -/
 @[simps]
-def MonoidHom.toAdditive [MulOneClassₓ α] [MulOneClassₓ β] : (α →* β) ≃ (Additive α →+ Additive β) where
-  toFun := fun f => ⟨fun a => ofMul (f a.toMul), f.2, f.3⟩
-  invFun := fun f => ⟨fun a => (f (ofMul a)).toMul, f.2, f.3⟩
-  left_inv := fun x => by
+def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] : (α →* β) ≃ (Additive α →+ Additive β) where
+  toFun f := ⟨fun a => ofMul (f a.toMul), f.2, f.3⟩
+  invFun f := ⟨fun a => (f (ofMul a)).toMul, f.2, f.3⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
 @[simps]
-def AddMonoidHom.toMultiplicative' [MulOneClassₓ α] [AddZeroClassₓ β] :
-    (Additive α →+ β) ≃ (α →* Multiplicative β) where
-  toFun := fun f => ⟨fun a => ofAdd (f (ofMul a)), f.2, f.3⟩
-  invFun := fun f => ⟨fun a => (f a.toMul).toAdd, f.2, f.3⟩
-  left_inv := fun x => by
+def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] : (Additive α →+ β) ≃ (α →* Multiplicative β) where
+  toFun f := ⟨fun a => ofAdd (f (ofMul a)), f.2, f.3⟩
+  invFun f := ⟨fun a => (f a.toMul).toAdd, f.2, f.3⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `α →* multiplicative β` as `additive α →+ β`. -/
 @[simps]
-def MonoidHom.toAdditive' [MulOneClassₓ α] [AddZeroClassₓ β] : (α →* Multiplicative β) ≃ (Additive α →+ β) :=
+def MonoidHom.toAdditive' [MulOneClass α] [AddZeroClass β] : (α →* Multiplicative β) ≃ (Additive α →+ β) :=
   AddMonoidHom.toMultiplicative'.symm
 
 /-- Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
 @[simps]
-def AddMonoidHom.toMultiplicative'' [AddZeroClassₓ α] [MulOneClassₓ β] :
-    (α →+ Additive β) ≃ (Multiplicative α →* β) where
-  toFun := fun f => ⟨fun a => (f a.toAdd).toMul, f.2, f.3⟩
-  invFun := fun f => ⟨fun a => ofMul (f (ofAdd a)), f.2, f.3⟩
-  left_inv := fun x => by
+def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] : (α →+ Additive β) ≃ (Multiplicative α →* β) where
+  toFun f := ⟨fun a => (f a.toAdd).toMul, f.2, f.3⟩
+  invFun f := ⟨fun a => ofMul (f (ofAdd a)), f.2, f.3⟩
+  left_inv x := by
     ext
     rfl
-  right_inv := fun x => by
+  right_inv x := by
     ext
     rfl
 
 /-- Reinterpret `multiplicative α →* β` as `α →+ additive β`. -/
 @[simps]
-def MonoidHom.toAdditive'' [AddZeroClassₓ α] [MulOneClassₓ β] : (Multiplicative α →* β) ≃ (α →+ Additive β) :=
+def MonoidHom.toAdditive'' [AddZeroClass α] [MulOneClass β] : (Multiplicative α →* β) ≃ (α →+ Additive β) :=
   AddMonoidHom.toMultiplicative''.symm
 
 /-- If `α` has some multiplicative structure and coerces to a function,

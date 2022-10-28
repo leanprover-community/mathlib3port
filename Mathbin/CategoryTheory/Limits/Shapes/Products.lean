@@ -203,7 +203,7 @@ theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C) (g : ∀ j, P ⟶ f j) :
     G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
@@ -221,7 +221,7 @@ theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C) (g : ∀ j, f j ⟶ P) :
     sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
@@ -244,10 +244,10 @@ abbrev HasCoproducts :=
 variable {C}
 
 theorem has_smallest_products_of_has_products [HasProducts.{w} C] : HasProducts.{0} C := fun J =>
-  has_limits_of_shape_of_equivalence (Discrete.equivalence Equivₓ.ulift : Discrete (ULift.{w} J) ≌ _)
+  has_limits_of_shape_of_equivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 
 theorem has_smallest_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C := fun J =>
-  has_colimits_of_shape_of_equivalence (Discrete.equivalence Equivₓ.ulift : Discrete (ULift.{w} J) ≌ _)
+  has_colimits_of_shape_of_equivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 
 theorem has_products_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
     (lf_is_limit : ∀ {J : Type w} (f : J → C), IsLimit (lf f)) : HasProducts.{w} C := fun J : Type w =>
@@ -295,7 +295,7 @@ instance (priority := 100) has_product_unique : HasProduct f :=
 def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where

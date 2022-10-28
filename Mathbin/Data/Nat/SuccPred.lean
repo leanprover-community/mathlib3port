@@ -25,20 +25,20 @@ instance : SuccOrder ℕ :=
 @[reducible]
 instance : PredOrder ℕ where
   pred := pred
-  pred_le := pred_leₓ
-  min_of_le_pred := fun a ha => by
+  pred_le := pred_le
+  min_of_le_pred a ha := by
     cases a
     · exact is_min_bot
       
     · exact (not_succ_le_self _ ha).elim
       
-  le_pred_of_lt := fun a b h => by
+  le_pred_of_lt a b h := by
     cases b
     · exact (a.not_lt_zero h).elim
       
     · exact le_of_succ_le_succ h
       
-  le_of_pred_lt := fun a b h => by
+  le_of_pred_lt a b h := by
     cases a
     · exact b.zero_le
       
@@ -80,8 +80,8 @@ protected theorem covby_iff_succ_eq {m n : ℕ} : m ⋖ n ↔ m + 1 = n :=
 end Nat
 
 @[simp, norm_cast]
-theorem Finₓ.coe_covby_iff {n : ℕ} {a b : Finₓ n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
-  and_congr_right'ₓ ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
+theorem Fin.coe_covby_iff {n : ℕ} {a b : Fin n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
+  and_congr_right' ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
 
-alias Finₓ.coe_covby_iff ↔ _ Covby.coe_fin
+alias Fin.coe_covby_iff ↔ _ Covby.coe_fin
 

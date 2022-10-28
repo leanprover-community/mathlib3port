@@ -19,19 +19,19 @@ Do the same for the lexicographic sum of orders.
 
 open Function Sum
 
-namespace Finsetₓ
+namespace Finset
 
 variable {α₁ α₂ β₁ β₂ γ₁ γ₂ : Type _}
 
 section SumLift₂
 
-variable (f f₁ g₁ : α₁ → β₁ → Finsetₓ γ₁) (g f₂ g₂ : α₂ → β₂ → Finsetₓ γ₂)
+variable (f f₁ g₁ : α₁ → β₁ → Finset γ₁) (g f₂ g₂ : α₂ → β₂ → Finset γ₂)
 
 /-- Lifts maps `α₁ → β₁ → finset γ₁` and `α₂ → β₂ → finset γ₂` to a map
 `α₁ ⊕ α₂ → β₁ ⊕ β₂ → finset (γ₁ ⊕ γ₂)`. Could be generalized to `alternative` functors if we can
 make sure to keep computability and universe polymorphism. -/
 @[simp]
-def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finsetₓ (Sum γ₁ γ₂)
+def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finset (Sum γ₁ γ₂)
   | inl a, inl b => (f a b).map Embedding.inl
   | inl a, inr b => ∅
   | inr a, inl b => ∅
@@ -63,14 +63,14 @@ theorem mem_sum_lift₂ :
     
 
 theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
-  rw [mem_sum_lift₂, or_iff_leftₓ]
-  simp only [exists_and_distrib_leftₓ, exists_eq_left']
+  rw [mem_sum_lift₂, or_iff_left]
+  simp only [exists_and_distrib_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
 
 theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
   rw [mem_sum_lift₂, or_iff_right]
-  simp only [exists_and_distrib_leftₓ, exists_eq_left']
+  simp only [exists_and_distrib_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inr_ne_inl h
 
@@ -108,9 +108,9 @@ theorem sum_lift₂_mono (h₁ : ∀ a b, f₁ a b ⊆ g₁ a b) (h₂ : ∀ a b
 
 end SumLift₂
 
-end Finsetₓ
+end Finset
 
-open Finsetₓ Function
+open Finset Function
 
 namespace Sum
 
@@ -121,7 +121,7 @@ variable {α β : Type _}
 
 section Disjoint
 
-variable [Preorderₓ α] [Preorderₓ β] [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+variable [Preorder α] [Preorder β] [LocallyFiniteOrder α] [LocallyFiniteOrder β]
 
 instance : LocallyFiniteOrder (Sum α β) where
   finsetIcc := sumLift₂ icc icc

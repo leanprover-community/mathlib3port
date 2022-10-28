@@ -32,14 +32,14 @@ exchanging the horizontal and vertical directions.
 -/
 @[simps]
 def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') : HomologicalComplex (HomologicalComplex V c') c where
-  x := fun i =>
+  x i :=
     { x := fun j => (C.x j).x i, d := fun j j' => (C.d j j').f i,
       shape' := fun j j' w => by
         rw [C.shape j j' w]
         simp,
       d_comp_d' := fun j₁ j₂ j₃ _ _ => congr_hom (C.d_comp_d j₁ j₂ j₃) i }
-  d := fun i i' => { f := fun j => (C.x j).d i i', comm' := fun j j' h => ((C.d j j').comm i i').symm }
-  shape' := fun i i' w => by
+  d i i' := { f := fun j => (C.x j).d i i', comm' := fun j j' h => ((C.d j j').comm i i').symm }
+  shape' i i' w := by
     ext j
     exact (C.X j).shape i i' w
 
@@ -48,8 +48,8 @@ variable (V c c')
 /-- Flipping a complex of complexes over the diagonal, as a functor. -/
 @[simps]
 def flip : HomologicalComplex (HomologicalComplex V c) c' ⥤ HomologicalComplex (HomologicalComplex V c') c where
-  obj := fun C => flipObj C
-  map := fun C D f => { f := fun i => { f := fun j => (f.f j).f i, comm' := fun j j' h => congr_hom (f.comm j j') i } }
+  obj C := flipObj C
+  map C D f := { f := fun i => { f := fun j => (f.f j).f i, comm' := fun j j' h => congr_hom (f.comm j j') i } }
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]

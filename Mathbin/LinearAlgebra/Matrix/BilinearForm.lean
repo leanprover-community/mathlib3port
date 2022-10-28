@@ -38,15 +38,15 @@ bilinear_form, matrix, basis
 -/
 
 
-variable {R : Type _} {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable {R : Type _} {M : Type _} [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable {R₁ : Type _} {M₁ : Type _} [Ringₓ R₁] [AddCommGroupₓ M₁] [Module R₁ M₁]
+variable {R₁ : Type _} {M₁ : Type _} [Ring R₁] [AddCommGroup M₁] [Module R₁ M₁]
 
-variable {R₂ : Type _} {M₂ : Type _} [CommSemiringₓ R₂] [AddCommMonoidₓ M₂] [Module R₂ M₂]
+variable {R₂ : Type _} {M₂ : Type _} [CommSemiring R₂] [AddCommMonoid M₂] [Module R₂ M₂]
 
-variable {R₃ : Type _} {M₃ : Type _} [CommRingₓ R₃] [AddCommGroupₓ M₃] [Module R₃ M₃]
+variable {R₃ : Type _} {M₃ : Type _} [CommRing R₃] [AddCommGroup M₃] [Module R₃ M₃]
 
-variable {V : Type _} {K : Type _} [Field K] [AddCommGroupₓ V] [Module K V]
+variable {V : Type _} {K : Type _} [Field K] [AddCommGroup V] [Module K V]
 
 variable {B : BilinForm R M} {B₁ : BilinForm R₁ M₁} {B₂ : BilinForm R₂ M₂}
 
@@ -56,42 +56,42 @@ variable {n o : Type _}
 
 open BigOperators
 
-open BilinForm Finsetₓ LinearMap Matrix
+open BilinForm Finset LinearMap Matrix
 
 open Matrix
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The map from `matrix n n R` to bilinear forms on `n → R`.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
-def Matrix.toBilin'Aux [Fintypeₓ n] (M : Matrix n n R₂) : BilinForm R₂ (n → R₂) where
-  bilin := fun v w => ∑ (i) (j), v i * M i j * w j
-  bilin_add_left := fun x y z => by simp only [Pi.add_apply, add_mulₓ, sum_add_distrib]
-  bilin_smul_left := fun a x y => by simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_sum]
-  bilin_add_right := fun x y z => by simp only [Pi.add_apply, mul_addₓ, sum_add_distrib]
-  bilin_smul_right := fun a x y => by simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_left_commₓ, mul_sum]
+def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) : BilinForm R₂ (n → R₂) where
+  bilin v w := ∑ (i) (j), v i * M i j * w j
+  bilin_add_left x y z := by simp only [Pi.add_apply, add_mul, sum_add_distrib]
+  bilin_smul_left a x y := by simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_sum]
+  bilin_add_right x y z := by simp only [Pi.add_apply, mul_add, sum_add_distrib]
+  bilin_smul_right a x y := by simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_left_comm, mul_sum]
 
-theorem Matrix.to_bilin'_aux_std_basis [Fintypeₓ n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
+theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
     M.toBilin'Aux (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) = M i j := by
   rw [Matrix.toBilin'Aux, coe_fn_mk, sum_eq_single i, sum_eq_single j]
-  · simp only [std_basis_same, std_basis_same, one_mulₓ, mul_oneₓ]
+  · simp only [std_basis_same, std_basis_same, one_mul, mul_one]
     
   · rintro j' - hj'
     apply mul_eq_zero_of_right
     exact std_basis_ne R₂ (fun _ => R₂) _ _ hj' 1
     
   · intros
-    have := Finsetₓ.mem_univ j
+    have := Finset.mem_univ j
     contradiction
     
   · rintro i' - hi'
-    refine' Finsetₓ.sum_eq_zero fun j _ => _
+    refine' Finset.sum_eq_zero fun j _ => _
     apply mul_eq_zero_of_left
     apply mul_eq_zero_of_left
     exact std_basis_ne R₂ (fun _ => R₂) _ _ hi' 1
     
   · intros
-    have := Finsetₓ.mem_univ i
+    have := Finset.mem_univ i
     contradiction
     
 
@@ -99,16 +99,16 @@ theorem Matrix.to_bilin'_aux_std_basis [Fintypeₓ n] [DecidableEq n] (M : Matri
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
 def BilinForm.toMatrixAux (b : n → M₂) : BilinForm R₂ M₂ →ₗ[R₂] Matrix n n R₂ where
-  toFun := fun B => of fun i j => B (b i) (b j)
-  map_add' := fun f g => rfl
-  map_smul' := fun f g => rfl
+  toFun B := of fun i j => B (b i) (b j)
+  map_add' f g := rfl
+  map_smul' f g := rfl
 
 @[simp]
 theorem BilinForm.to_matrix_aux_apply (B : BilinForm R₂ M₂) (b : n → M₂) (i j : n) :
     BilinForm.toMatrixAux b B i j = B (b i) (b j) :=
   rfl
 
-variable [Fintypeₓ n] [Fintypeₓ o]
+variable [Fintype n] [Fintype o]
 
 theorem to_bilin'_aux_to_matrix_aux [DecidableEq n] (B₂ : BilinForm R₂ (n → R₂)) :
     Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => stdBasis R₂ (fun _ => R₂) j 1) B₂) = B₂ := by
@@ -146,17 +146,17 @@ def Matrix.toBilin' : Matrix n n R₂ ≃ₗ[R₂] BilinForm R₂ (n → R₂) :
 theorem Matrix.to_bilin'_aux_eq (M : Matrix n n R₂) : Matrix.toBilin'Aux M = Matrix.toBilin' M :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem Matrix.to_bilin'_apply (M : Matrix n n R₂) (x y : n → R₂) :
     Matrix.toBilin' M x y = ∑ (i) (j), x i * M i j * y j :=
   rfl
 
 theorem Matrix.to_bilin'_apply' (M : Matrix n n R₂) (v w : n → R₂) :
     Matrix.toBilin' M v w = Matrix.dotProduct v (M.mulVec w) := by
-  simp_rw [Matrix.to_bilin'_apply, Matrix.dotProduct, Matrix.mulVecₓ, Matrix.dotProduct]
-  refine' Finsetₓ.sum_congr rfl fun _ _ => _
-  rw [Finsetₓ.mul_sum]
-  refine' Finsetₓ.sum_congr rfl fun _ _ => _
+  simp_rw [Matrix.to_bilin'_apply, Matrix.dotProduct, Matrix.mulVec, Matrix.dotProduct]
+  refine' Finset.sum_congr rfl fun _ _ => _
+  rw [Finset.mul_sum]
+  refine' Finset.sum_congr rfl fun _ _ => _
   rw [← mul_assoc]
 
 @[simp]
@@ -199,7 +199,7 @@ theorem BilinForm.to_matrix'_comp (B : BilinForm R₂ (n → R₂)) (l r : (o �
     rw [Finsupp.sum_fintype]
     · apply sum_congr rfl
       rintro j' -
-      simp only [smul_eq_mul, Pi.basis_fun_repr, mul_assoc, mul_comm, mul_left_commₓ, Pi.basis_fun_apply, of_apply]
+      simp only [smul_eq_mul, Pi.basis_fun_repr, mul_assoc, mul_comm, mul_left_comm, Pi.basis_fun_apply, of_apply]
       
     · intros
       simp only [zero_smul, smul_zero]
@@ -261,7 +261,7 @@ theorem BilinForm.to_matrix_apply (B : BilinForm R₂ M₂) (i j : n) : BilinFor
   rw [BilinForm.toMatrix, LinearEquiv.trans_apply, BilinForm.to_matrix'_apply, congr_apply, b.equiv_fun_symm_std_basis,
     b.equiv_fun_symm_std_basis]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Matrix.to_bilin_apply (M : Matrix n n R₂) (x y : M₂) :
     Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j := by
@@ -296,7 +296,7 @@ theorem Matrix.to_bilin_to_matrix (B : BilinForm R₂ M₂) : Matrix.toBilin b (
 theorem BilinForm.to_matrix_to_bilin (M : Matrix n n R₂) : BilinForm.toMatrix b (Matrix.toBilin b M) = M :=
   (BilinForm.toMatrix b).apply_symm_apply M
 
-variable {M₂' : Type _} [AddCommMonoidₓ M₂'] [Module R₂ M₂']
+variable {M₂' : Type _} [AddCommMonoid M₂'] [Module R₂ M₂']
 
 variable (c : Basis o R₂ M₂')
 
@@ -316,7 +316,7 @@ theorem BilinForm.to_matrix_comp (B : BilinForm R₂ M₂) (l r : M₂' →ₗ[R
     rw [Finsupp.sum_fintype]
     · apply sum_congr rfl
       rintro j' -
-      simp only [smul_eq_mul, LinearMap.to_matrix_apply, Basis.equiv_fun_apply, mul_assoc, mul_comm, mul_left_commₓ]
+      simp only [smul_eq_mul, LinearMap.to_matrix_apply, Basis.equiv_fun_apply, mul_assoc, mul_comm, mul_left_comm]
       
     · intros
       simp only [zero_smul, smul_zero]
@@ -364,7 +364,7 @@ section MatrixAdjoints
 
 open Matrix
 
-variable {n : Type _} [Fintypeₓ n]
+variable {n : Type _} [Fintype n]
 
 variable (b : Basis n R₃ M₃)
 
@@ -470,9 +470,9 @@ section Det
 
 open Matrix
 
-variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M₃] (B₃ : BilinForm A M₃)
+variable {A : Type _} [CommRing A] [IsDomain A] [Module A M₃] (B₃ : BilinForm A M₃)
 
-variable {ι : Type _} [DecidableEq ι] [Fintypeₓ ι]
+variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
 theorem _root_.matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι ι R₂} (b : Basis ι R₂ M₂) :
     M.toBilin'.Nondegenerate ↔ (Matrix.toBilin b M).Nondegenerate :=

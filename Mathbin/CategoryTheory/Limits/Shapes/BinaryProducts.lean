@@ -48,10 +48,10 @@ open WalkingPair
 /-- The equivalence swapping left and right.
 -/
 def WalkingPair.swap : walking_pair ≃ walking_pair where
-  toFun := fun j => WalkingPair.recOn j right left
-  invFun := fun j => WalkingPair.recOn j right left
-  left_inv := fun j => by cases j <;> rfl
-  right_inv := fun j => by cases j <;> rfl
+  toFun j := WalkingPair.recOn j right left
+  invFun j := WalkingPair.recOn j right left
+  left_inv j := by cases j <;> rfl
+  right_inv j := by cases j <;> rfl
 
 @[simp]
 theorem WalkingPair.swap_apply_left : WalkingPair.swap left = right :=
@@ -72,11 +72,11 @@ theorem WalkingPair.swap_symm_apply_ff : WalkingPair.swap.symm right = left :=
 /-- An equivalence from `walking_pair` to `bool`, sometimes useful when reindexing limits.
 -/
 def WalkingPair.equivBool : walking_pair ≃ Bool where
-  toFun := fun j => WalkingPair.recOn j true false
+  toFun j := WalkingPair.recOn j true false
   -- to match equiv.sum_equiv_sigma_bool
-  invFun := fun b => Bool.recOn b right left
-  left_inv := fun j => by cases j <;> rfl
-  right_inv := fun b => by cases b <;> rfl
+  invFun b := Bool.recOn b right left
+  left_inv j := by cases j <;> rfl
+  right_inv b := by cases b <;> rfl
 
 @[simp]
 theorem WalkingPair.equiv_bool_apply_left : WalkingPair.equivBool left = tt :=
@@ -130,7 +130,7 @@ attribute [local tidy] tactic.discrete_cases
 /-- The natural transformation between two functors out of the
  walking pair, specified by its
 components. -/
-def mapPair : F ⟶ G where app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j f g
+def mapPair : F ⟶ G where app j := Discrete.recOn j fun j => WalkingPair.casesOn j f g
 
 @[simp]
 theorem map_pair_left : (mapPair f g).app ⟨left⟩ = f :=
@@ -277,14 +277,14 @@ theorem BinaryCofan.mk_inl {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (Binary
 theorem BinaryCofan.mk_inr {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (BinaryCofan.mk ι₁ ι₂).inr = ι₂ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryFanMk {X Y : C} (c : BinaryFan X Y) : c ≅ BinaryFan.mk c.fst c.snd :=
   Cones.ext (Iso.refl _) fun j => by
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]" <;>
       cases j <;> tidy
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.inl c.inr :=
   Cocones.ext (Iso.refl _) fun j => by
@@ -846,8 +846,8 @@ variable {C} [HasBinaryProducts C]
 /-- The binary product functor. -/
 @[simps]
 def prod.functor : C ⥤ C ⥤ C where
-  obj := fun X => { obj := fun Y => X ⨯ Y, map := fun Y Z => prod.map (𝟙 X) }
-  map := fun Y Z f => { app := fun T => prod.map f (𝟙 T) }
+  obj X := { obj := fun Y => X ⨯ Y, map := fun Y Z => prod.map (𝟙 X) }
+  map Y Z f := { app := fun T => prod.map f (𝟙 T) }
 
 /-- The product functor can be decomposed. -/
 def prod.functorLeftComp (X Y : C) : prod.functor.obj (X ⨯ Y) ≅ prod.functor.obj Y ⋙ prod.functor.obj X :=
@@ -862,8 +862,8 @@ variable {C} [HasBinaryCoproducts C]
 /-- The binary coproduct functor. -/
 @[simps]
 def coprod.functor : C ⥤ C ⥤ C where
-  obj := fun X => { obj := fun Y => X ⨿ Y, map := fun Y Z => coprod.map (𝟙 X) }
-  map := fun Y Z f => { app := fun T => coprod.map f (𝟙 T) }
+  obj X := { obj := fun Y => X ⨿ Y, map := fun Y Z => coprod.map (𝟙 X) }
+  map Y Z f := { app := fun T => coprod.map f (𝟙 T) }
 
 /-- The coproduct functor can be decomposed. -/
 def coprod.functorLeftComp (X Y : C) : coprod.functor.obj (X ⨿ Y) ≅ coprod.functor.obj Y ⋙ coprod.functor.obj X :=
@@ -904,7 +904,7 @@ theorem prod_comparison_snd : prodComparison F A B ≫ Prod.snd = F.map prod.snd
 theorem prod_comparison_natural (f : A ⟶ A') (g : B ⟶ B') :
     F.map (prod.map f g) ≫ prodComparison F A' B' = prodComparison F A B ≫ prod.map (F.map f) (F.map g) := by
   rw [prod_comparison, prod_comparison, prod.lift_map, ← F.map_comp, ← F.map_comp, prod.comp_lift, ← F.map_comp,
-    Prod.map_fstₓ, ← F.map_comp, Prod.map_sndₓ]
+    Prod.map_fst, ← F.map_comp, Prod.map_snd]
 
 /-- The product comparison morphism from `F(A ⨯ -)` to `FA ⨯ F-`, whose components are given by
 `prod_comparison`.
@@ -912,8 +912,8 @@ theorem prod_comparison_natural (f : A ⟶ A') (g : B ⟶ B') :
 @[simps]
 def prodComparisonNatTrans [HasBinaryProducts C] [HasBinaryProducts D] (F : C ⥤ D) (A : C) :
     prod.functor.obj A ⋙ F ⟶ F ⋙ prod.functor.obj (F.obj A) where
-  app := fun B => prodComparison F A B
-  naturality' := fun B B' f => by simp [prod_comparison_natural]
+  app B := prodComparison F A B
+  naturality' B B' f := by simp [prod_comparison_natural]
 
 @[reassoc]
 theorem inv_prod_comparison_map_fst [IsIso (prodComparison F A B)] :
@@ -982,8 +982,8 @@ theorem coprod_comparison_natural (f : A ⟶ A') (g : B ⟶ B') :
 @[simps]
 def coprodComparisonNatTrans [HasBinaryCoproducts C] [HasBinaryCoproducts D] (F : C ⥤ D) (A : C) :
     F ⋙ coprod.functor.obj (F.obj A) ⟶ coprod.functor.obj A ⋙ F where
-  app := fun B => coprodComparison F A B
-  naturality' := fun B B' f => by simp [coprod_comparison_natural]
+  app B := coprodComparison F A B
+  naturality' B B' f := by simp [coprod_comparison_natural]
 
 @[reassoc]
 theorem map_inl_inv_coprod_comparison [IsIso (coprodComparison F A B)] :
@@ -1027,8 +1027,8 @@ def Over.coprodObj [HasBinaryCoproducts C] {A : C} : Over A → Over A ⥤ Over 
 /-- A category with binary coproducts has a functorial `sup` operation on over categories. -/
 @[simps]
 def Over.coprod [HasBinaryCoproducts C] {A : C} : Over A ⥤ Over A ⥤ Over A where
-  obj := fun f => Over.coprodObj f
-  map := fun f₁ f₂ k =>
+  obj f := Over.coprodObj f
+  map f₁ f₂ k :=
     { app := fun g =>
         Over.homMk (coprod.map k.left (𝟙 _))
           (by
@@ -1039,12 +1039,12 @@ def Over.coprod [HasBinaryCoproducts C] {A : C} : Over A ⥤ Over A ⥤ Over A w
           · dsimp
             simp
              }
-  map_id' := fun X => by
+  map_id' X := by
     ext <;>
       · dsimp
         simp
         
-  map_comp' := fun X Y Z f g => by
+  map_comp' X Y Z f g := by
     ext <;>
       · dsimp
         simp

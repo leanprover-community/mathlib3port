@@ -100,14 +100,14 @@ unsafe def reflected.subst₄ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β
 /-! ### Universe-polymorphic `has_reflect` instances -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `punit.reflect`. -/
 unsafe instance punit.reflect' [reflected_univ.{u}] : has_reflect PUnit.{u}
   | PUnit.unit => by
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]"
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `list.reflect`. -/
 unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] : has_reflect (List α)
   | [] =>
@@ -119,7 +119,7 @@ unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α
           reflected _ @List.cons.{u}).subst₃
       (quote.1 α) (quote.1 h) (list.reflect' t)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
 unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : Type v} [reflected _ α] [has_reflect α] :
     has_reflect (ULift.{u, v} α)
   | ULift.up x =>

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
 import Mathbin.AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf
-import Mathbin.AlgebraicGeometry.Spec
+import Mathbin.AlgebraicGeometry.SpecCat
 import Mathbin.RingTheory.GradedAlgebra.Radical
 
 /-!
@@ -77,24 +77,24 @@ open DirectSum BigOperators Pointwise BigOperators
 
 open DirectSum SetLike.GradedMonoid Localization
 
-open Finsetₓ hiding mk_zero
+open Finset hiding mk_zero
 
 variable {R A : Type _}
 
-variable [CommRingₓ R] [CommRingₓ A] [Algebra R A]
+variable [CommRing R] [CommRing A] [Algebra R A]
 
 variable (𝒜 : ℕ → Submodule R A)
 
 variable [GradedAlgebra 𝒜]
 
-open Top TopologicalSpace
+open TopCat TopologicalSpace
 
 open CategoryTheory Opposite
 
 open ProjectiveSpectrum.StructureSheaf
 
 -- mathport name: exprProj
-local notation "Proj" => Proj.toLocallyRingedSpace 𝒜
+local notation "Proj" => ProjCat.toLocallyRingedSpace 𝒜
 
 -- mathport name: «exprProj.T»
 -- `Proj` as a locally ringed space
@@ -119,11 +119,12 @@ local notation "sbo " f => PrimeSpectrum.basicOpen f
 
 -- mathport name: «exprSpec »
 -- basic open sets in `Spec`
-local notation "Spec " ring => Spec.locallyRingedSpaceObj (CommRingₓₓ.of Ringₓ)
+local notation "Spec " ring => SpecCat.locallyRingedSpaceObj (CommRingCat.of Ring)
 
 -- mathport name: «exprSpec.T »
 -- `Spec` as a locally ringed space
-local notation "Spec.T " ring => (Spec.locallyRingedSpaceObj (CommRingₓₓ.of Ringₓ)).toSheafedSpace.toPresheafedSpace.1
+local notation "Spec.T " ring =>
+  (SpecCat.locallyRingedSpaceObj (CommRingCat.of Ring)).toSheafedSpace.toPresheafedSpace.1
 
 -- mathport name: «exprA⁰_ »
 -- the underlying topological space of `Spec`
@@ -159,7 +160,7 @@ theorem MemCarrier.clear_denominator' [DecidableEq (Away f)] {z : Localization.A
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀ y ∈ c.Support.Image c, A),
       f ^ N • z =
         algebraMap A (Away f)
-          (∑ i in c.Support.attach, acd (c i) (Finsetₓ.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
+          (∑ i in c.Support.attach, acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
   by
   rw [← submodule_span_eq, Finsupp.span_eq_range_total, LinearMap.mem_range] at hz
   rcases hz with ⟨c, eq1⟩
@@ -177,7 +178,7 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f} (hz : 
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀ y ∈ c.Support.Image c, A),
       f ^ N • z.val =
         algebraMap A (Away f)
-          (∑ i in c.Support.attach, acd (c i) (Finsetₓ.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
+          (∑ i in c.Support.attach, acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
   MemCarrier.clear_denominator' x <| (mem_carrier_iff 𝒜 x z).mpr hz
 
 theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.powers f : Set A) := by
@@ -189,7 +190,7 @@ theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.
   · erw [x.1.IsPrime.pow_mem_iff_mem _ k_ineq] at hg1
     exact x.2 hg1
     
-  · erw [show k = 0 by linarith, pow_zeroₓ, ← Ideal.eq_top_iff_one] at hg1
+  · erw [show k = 0 by linarith, pow_zero, ← Ideal.eq_top_iff_one] at hg1
     apply x.1.IsPrime.1
     exact hg1
     
@@ -199,15 +200,15 @@ theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ := by
   classical
   contrapose! eq_top
   obtain ⟨c, N, acd, eq1⟩ := mem_carrier.clear_denominator _ x ((Ideal.eq_top_iff_one _).mp eq_top)
-  rw [Algebra.smul_def, HomogeneousLocalization.one_val, mul_oneₓ] at eq1
+  rw [Algebra.smul_def, HomogeneousLocalization.one_val, mul_one] at eq1
   change Localization.mk (f ^ N) 1 = mk (∑ _, _) 1 at eq1
   simp only [mk_eq_mk', IsLocalization.eq] at eq1
   rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
-  erw [mul_oneₓ, mul_oneₓ] at eq1
+  erw [mul_one, mul_one] at eq1
   change f ^ _ * f ^ _ = _ * f ^ _ at eq1
   rw [Set.not_disjoint_iff_nonempty_inter]
   refine'
-    ⟨f ^ N * f ^ M, eq1.symm ▸ mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _), ⟨N + M, by rw [pow_addₓ]⟩⟩
+    ⟨f ^ N * f ^ M, eq1.symm ▸ mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _), ⟨N + M, by rw [pow_add]⟩⟩
   generalize_proofs h
   exact (Classical.choose_spec h).1
 
@@ -233,22 +234,22 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
     rcases mem_carrier.clear_denominator' x hx12 with ⟨c, N, acd, eq1⟩
     simp only [Algebra.smul_def] at eq1
     change Localization.mk (f ^ N) 1 * (mk _ _ * mk _ _) = mk (∑ _, _) _ at eq1
-    simp only [Localization.mk_mul, one_mulₓ] at eq1
+    simp only [Localization.mk_mul, one_mul] at eq1
     simp only [mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
-    rw [Submonoid.coe_one, mul_oneₓ] at eq1
+    rw [Submonoid.coe_one, mul_one] at eq1
     change _ * _ * f ^ _ = _ * (f ^ _ * f ^ _) * f ^ _ at eq1
     rcases x.1.IsPrime.mem_or_mem (show a1 * a2 * f ^ N * f ^ M ∈ _ from _) with (h1 | rid2)
     rcases x.1.IsPrime.mem_or_mem h1 with (h1 | rid1)
     rcases x.1.IsPrime.mem_or_mem h1 with (h1 | h2)
     · left
       simp only [show (mk a1 ⟨f ^ n1, _⟩ : away f) = mk a1 1 * mk 1 ⟨f ^ n1, ⟨n1, rfl⟩⟩ by
-          rw [Localization.mk_mul, mul_oneₓ, one_mulₓ]]
+          rw [Localization.mk_mul, mul_one, one_mul]]
       exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h1, rfl⟩)
       
     · right
       simp only [show (mk a2 ⟨f ^ n2, _⟩ : away f) = mk a2 1 * mk 1 ⟨f ^ n2, ⟨n2, rfl⟩⟩ by
-          rw [Localization.mk_mul, mul_oneₓ, one_mulₓ]]
+          rw [Localization.mk_mul, mul_one, one_mul]]
       exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h2, rfl⟩)
       
     · exact False.elim (x.2 (x.1.IsPrime.mem_of_pow_mem N rid1))
@@ -268,7 +269,7 @@ forward map is continuous.
 -/
 theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ 𝒜 k) (b_mem2 : b ∈ Submonoid.powers f) :
     toFun 𝒜 f ⁻¹'
-        (@PrimeSpectrum.basicOpen (A⁰_ f) _ (Quotientₓ.mk' ⟨k, ⟨a, a_mem⟩, ⟨b, b_mem1⟩, b_mem2⟩) :
+        (@PrimeSpectrum.basicOpen (A⁰_ f) _ (Quotient.mk' ⟨k, ⟨a, a_mem⟩, ⟨b, b_mem1⟩, b_mem2⟩) :
           Set (PrimeSpectrum (HomogeneousLocalization.Away 𝒜 f))) =
       { x | x.1 ∈ (pbo f) ⊓ pbo a } :=
   by
@@ -284,7 +285,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
     dsimp
     rcases b_mem2 with ⟨k, hk⟩
     simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1 by
-        rw [mk_mul, one_mulₓ, mul_oneₓ]
+        rw [mk_mul, one_mul, mul_one]
         congr
         rw [hk]]
     exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨_, a_mem_y, rfl⟩)
@@ -298,9 +299,9 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
     rcases mem_carrier.clear_denominator 𝒜 _ rid with ⟨c, N, acd, eq1⟩
     rw [Algebra.smul_def] at eq1
     change Localization.mk (f ^ N) 1 * mk _ _ = mk (∑ _, _) _ at eq1
-    rw [mk_mul, one_mulₓ, mk_eq_mk', IsLocalization.eq] at eq1
+    rw [mk_mul, one_mul, mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
-    rw [Submonoid.coe_one, mul_oneₓ] at eq1
+    rw [Submonoid.coe_one, mul_one] at eq1
     simp only [Subtype.coe_mk] at eq1
     rcases y.1.IsPrime.mem_or_mem (show a * f ^ N * f ^ M ∈ _ from _) with (H1 | H3)
     rcases y.1.IsPrime.mem_or_mem H1 with (H1 | H2)
@@ -343,20 +344,22 @@ namespace FromSpec
 
 open GradedAlgebra SetLike
 
-open Finsetₓ hiding mk_zero
+open Finset hiding mk_zero
 
 open _Root_.HomogeneousLocalization
 
 variable {𝒜} {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def mem_tac : tactic Unit :=
   let b : tactic Unit := sorry
   b <|> sorry
 
 include f_deg
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
 /-- The function from `Spec A⁰_f` to `Proj|D(f)` is defined by `q ↦ {a | aᵢᵐ/fⁱ ∈ q}`, i.e. sending
 `q` a prime ideal in `A⁰_f` to the homogeneous prime relevant ideal containing only and all the
 elements `a : A` such that for every `i`, the degree 0 element formed by dividing the `m`-th power
@@ -372,7 +375,7 @@ The set `{a | aᵢᵐ/fⁱ ∈ q}`
 def Carrier (q : Spec.T A⁰_ f) : Set A :=
   { a |
     ∀ i,
-      (Quotientₓ.mk'
+      (Quotient.mk'
           ⟨m * i,
             ⟨proj 𝒜 i a ^ m, by
               run_tac
@@ -385,10 +388,12 @@ def Carrier (q : Spec.T A⁰_ f) : Set A :=
           A⁰_ f) ∈
         q.1 }
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
 theorem mem_carrier_iff (q : Spec.T A⁰_ f) (a : A) :
     a ∈ Carrier f_deg q ↔
       ∀ i,
-        (Quotientₓ.mk'
+        (Quotient.mk'
             ⟨m * i,
               ⟨proj 𝒜 i a ^ m, by
                 run_tac
@@ -422,25 +427,33 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
         rfl
         )
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
 theorem Carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ Carrier f_deg q) (hb : b ∈ Carrier f_deg q) :
     a + b ∈ Carrier f_deg q := by
   refine' fun i => (q.2.mem_or_mem _).elim id id
-  change (Quotientₓ.mk' ⟨_, _, _, _⟩ : A⁰_ f) ∈ q.1
+  change (Quotient.mk' ⟨_, _, _, _⟩ : A⁰_ f) ∈ q.1
   dsimp only [Subtype.coe_mk]
-  simp_rw [← pow_addₓ, map_add, add_pow, mul_comm, ← nsmul_eq_mul]
+  simp_rw [← pow_add, map_add, add_pow, mul_comm, ← nsmul_eq_mul]
   let g : ℕ → A⁰_ f := fun j =>
     (m + m).choose j •
       if h2 : m + m < j then 0
       else
         if h1 : j ≤ m then
-          Quotientₓ.mk'
+          Quotient.mk'
               ⟨m * i, ⟨proj 𝒜 i a ^ j * proj 𝒜 i b ^ (m - j), _⟩,
                 ⟨_, by
                   rw [mul_comm] <;>
                     run_tac
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩ *
-            Quotientₓ.mk'
+            Quotient.mk'
               ⟨m * i,
                 ⟨proj 𝒜 i b ^ m, by
                   run_tac
@@ -451,7 +464,7 @@ theorem Carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ Carrier f_deg
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩
         else
-          Quotientₓ.mk'
+          Quotient.mk'
               ⟨m * i,
                 ⟨proj 𝒜 i a ^ m, by
                   run_tac
@@ -461,7 +474,7 @@ theorem Carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ Carrier f_deg
                     run_tac
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩ *
-            Quotientₓ.mk'
+            Quotient.mk'
               ⟨m * i, ⟨proj 𝒜 i a ^ (j - m) * proj 𝒜 i b ^ (m + m - j), _⟩,
                 ⟨_, by
                   rw [mul_comm] <;>
@@ -472,7 +485,7 @@ theorem Carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ Carrier f_deg
   · rw [(_ : m * i = _)]
     run_tac
       mem_tac
-    rw [← add_smul, Nat.add_sub_of_leₓ h1]
+    rw [← add_smul, Nat.add_sub_of_le h1]
     rfl
     
   · rw [(_ : m * i = _)]
@@ -480,7 +493,7 @@ theorem Carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ Carrier f_deg
       mem_tac
     rw [← add_smul]
     congr
-    zify [le_of_not_ltₓ h2, le_of_not_leₓ h1]
+    zify [le_of_not_lt h2, le_of_not_le h1]
     abel
     
   convert_to (∑ i in range (m + m + 1), g i) ∈ q.1
@@ -493,23 +506,23 @@ theorem Carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ Carrier f_deg
   change _ = (algebraMap (HomogeneousLocalization.Away 𝒜 f) (Localization.Away f)) _
   dsimp only [Subtype.coe_mk]
   rw [map_sum, mk_sum]
-  apply Finsetₓ.sum_congr rfl fun j hj => _
+  apply Finset.sum_congr rfl fun j hj => _
   change _ = HomogeneousLocalization.val _
   rw [HomogeneousLocalization.smul_val]
   split_ifs with h2 h1
-  · exact ((Finsetₓ.mem_range.1 hj).not_le h2).elim
+  · exact ((Finset.mem_range.1 hj).not_le h2).elim
     
   all_goals
   simp only [mul_val, zero_val, val_mk', Subtype.coe_mk, mk_mul, ← smul_mk]
   congr 2
-  · rw [mul_assoc, ← pow_addₓ, add_commₓ (m - j), Nat.add_sub_assocₓ h1]
+  · rw [mul_assoc, ← pow_add, add_comm (m - j), Nat.add_sub_assoc h1]
     
-  · simp_rw [pow_addₓ]
+  · simp_rw [pow_add]
     rfl
     
-  · rw [← mul_assoc, ← pow_addₓ, Nat.add_sub_of_leₓ (le_of_not_leₓ h1)]
+  · rw [← mul_assoc, ← pow_add, Nat.add_sub_of_le (le_of_not_le h1)]
     
-  · simp_rw [pow_addₓ]
+  · simp_rw [pow_add]
     rfl
     
 
@@ -523,6 +536,8 @@ theorem Carrier.zero_mem : (0 : A) ∈ Carrier f_deg q := fun i => by
   simp_rw [map_zero, zero_pow hm]
   convert Localization.mk_zero _ using 1
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.3186643541.mem_tac -/
 theorem Carrier.smul_mem (c x : A) (hx : x ∈ Carrier f_deg q) : c • x ∈ Carrier f_deg q := by
   revert c
   refine' DirectSum.Decomposition.induction_on 𝒜 _ _ _
@@ -533,8 +548,8 @@ theorem Carrier.smul_mem (c x : A) (hx : x ∈ Carrier f_deg q) : c • x ∈ Ca
     simp_rw [Subtype.coe_mk, proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
     split_ifs
     · convert_to
-        (Quotientₓ.mk' ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, _⟩, ⟨n, rfl⟩⟩ *
-            Quotientₓ.mk'
+        (Quotient.mk' ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, _⟩, ⟨n, rfl⟩⟩ *
+            Quotient.mk'
               ⟨_,
                 ⟨proj 𝒜 (i - n) x ^ m, by
                   run_tac
@@ -543,10 +558,10 @@ theorem Carrier.smul_mem (c x : A) (hx : x ∈ Carrier f_deg q) : c • x ∈ Ca
             A⁰_ f) ∈
           q.1
       · erw [ext_iff_val, val_mk', mul_val, val_mk', val_mk', Subtype.coe_mk]
-        simp_rw [mul_powₓ, Subtype.coe_mk]
+        simp_rw [mul_pow, Subtype.coe_mk]
         rw [Localization.mk_mul]
         congr
-        erw [← pow_addₓ, Nat.add_sub_of_leₓ h]
+        erw [← pow_add, Nat.add_sub_of_le h]
         
       · exact Ideal.mul_mem_left _ _ (hx _)
         rw [smul_eq_mul, mul_comm]
@@ -568,7 +583,7 @@ theorem Carrier.smul_mem (c x : A) (hx : x ∈ Carrier f_deg q) : c • x ∈ Ca
 def Carrier.asIdeal : Ideal A where
   Carrier := Carrier f_deg q
   zero_mem' := Carrier.zero_mem f_deg hm q
-  add_mem' := fun a b => Carrier.add_mem f_deg q
+  add_mem' a b := Carrier.add_mem f_deg q
   smul_mem' := Carrier.smul_mem f_deg hm q
 
 theorem Carrier.asIdeal.homogeneous : (Carrier.asIdeal f_deg hm q).IsHomogeneous 𝒜 := fun i a ha j =>
@@ -600,11 +615,11 @@ theorem Carrier.asIdeal.prime : (Carrier.asIdeal f_deg hm q).IsPrime :=
   ((Carrier.asIdeal.homogeneous f_deg hm q).is_prime_of_homogeneous_mem_or_mem (Carrier.asIdeal.ne_top f_deg hm q))
     fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
     show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _ by
-      rw [← and_forall_ne nx, and_iff_leftₓ, ← and_forall_ne ny, and_iff_leftₓ]
+      rw [← and_forall_ne nx, and_iff_left, ← and_forall_ne ny, and_iff_left]
       · apply q.2.mem_or_mem
         convert hxy (nx + ny) using 1
         simp_rw [proj_apply, decompose_of_mem_same 𝒜 hnx, decompose_of_mem_same 𝒜 hny,
-          decompose_of_mem_same 𝒜 (mul_mem hnx hny), mul_powₓ, pow_addₓ]
+          decompose_of_mem_same 𝒜 (mul_mem hnx hny), mul_pow, pow_add]
         simpa only [ext_iff_val, val_mk', mul_val, mk_mul]
         
       all_goals

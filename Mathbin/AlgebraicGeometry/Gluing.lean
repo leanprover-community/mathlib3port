@@ -52,13 +52,13 @@ universe u
 
 open TopologicalSpace CategoryTheory Opposite
 
-open CategoryTheory.Limits AlgebraicGeometry.PresheafedSpace
+open CategoryTheory.Limits AlgebraicGeometry.PresheafedSpaceCat
 
 open CategoryTheory.GlueData
 
 namespace AlgebraicGeometry
 
-namespace Scheme
+namespace SchemeCat
 
 /-- A family of gluing data consists of
 1. An index type `J`
@@ -79,7 +79,7 @@ We can then glue the schemes `U i` together by identifying `V i j` with `V j i`,
 that the `U i`'s are open subschemes of the glued space.
 -/
 @[nolint has_nonempty_instance]
-structure GlueData extends CategoryTheory.GlueData Scheme where
+structure GlueData extends CategoryTheory.GlueData SchemeCat where
   f_open : ∀ i j, IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
@@ -94,12 +94,12 @@ include D
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of locally ringed spaces spaces associated to a family of glue data of schemes. -/
-abbrev toLocallyRingedSpaceGlueData : LocallyRingedSpace.GlueData :=
+abbrev toLocallyRingedSpaceGlueData : LocallyRingedSpaceCat.GlueData :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToLocallyRingedSpace }
 
 /-- (Implementation). The glued scheme of a glue data.
 This should not be used outside this file. Use `Scheme.glue_data.glued` instead. -/
-def gluedScheme : Scheme := by
+def gluedScheme : SchemeCat := by
   apply LocallyRingedSpace.is_open_immersion.Scheme D.to_LocallyRingedSpace_glue_data.to_glue_data.glued
   intro x
   obtain ⟨i, y, rfl⟩ := D.to_LocallyRingedSpace_glue_data.ι_jointly_surjective x
@@ -127,7 +127,7 @@ instance : HasMulticoequalizer 𝖣.diagram :=
   has_colimit_of_created _ forgetToLocallyRingedSpace
 
 /-- The glued scheme of a glued space. -/
-abbrev glued : Scheme :=
+abbrev glued : SchemeCat :=
   𝖣.glued
 
 /-- The immersion from `D.U i` into the glued space. -/
@@ -147,7 +147,7 @@ instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   infer_instance
 
 theorem ι_jointly_surjective (x : 𝖣.glued.Carrier) : ∃ (i : D.J)(y : (D.U i).Carrier), (D.ι i).1.base y = x :=
-  𝖣.ι_jointly_surjective (forget_to_Top ⋙ forget Top) x
+  𝖣.ι_jointly_surjective (forget_to_Top ⋙ forget TopCat) x
 
 @[simp, reassoc]
 theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j ≫ D.ι i :=
@@ -206,29 +206,29 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :
     Iff.trans _
       (D.to_LocallyRingedSpace_glue_data.to_SheafedSpace_glue_data.toPresheafedSpaceGlueData.toTopGlueData.ι_eq_iff_rel
         i j x y)
-  rw [← ((Top.mono_iff_injective D.iso_carrier.inv).mp inferInstance).eq_iff]
+  rw [← ((TopCat.mono_iff_injective D.iso_carrier.inv).mp inferInstance).eq_iff]
   simp_rw [← comp_apply, D.ι_iso_carrier_inv]
 
 theorem is_open_iff (U : Set D.glued.Carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
-  rw [← (Top.homeoOfIso D.iso_carrier.symm).is_open_preimage]
-  rw [Top.GlueData.is_open_iff]
-  apply forall_congrₓ
+  rw [← (TopCat.homeoOfIso D.iso_carrier.symm).is_open_preimage]
+  rw [TopCat.GlueData.is_open_iff]
+  apply forall_congr
   intro i
   erw [← Set.preimage_comp, ← coe_comp, ι_iso_carrier_inv]
 
 /-- The open cover of the glued space given by the glue data. -/
-def openCover (D : Scheme.GlueData) : OpenCover D.glued where
+def openCover (D : SchemeCat.GlueData) : OpenCover D.glued where
   J := D.J
   obj := D.U
   map := D.ι
-  f := fun x => (D.ι_jointly_surjective x).some
-  Covers := fun x => ⟨_, (D.ι_jointly_surjective x).some_spec.some_spec⟩
+  f x := (D.ι_jointly_surjective x).some
+  Covers x := ⟨_, (D.ι_jointly_surjective x).some_spec.some_spec⟩
 
 end GlueData
 
 namespace OpenCover
 
-variable {X : Scheme.{u}} (𝒰 : OpenCover.{u} X)
+variable {X : SchemeCat.{u}} (𝒰 : OpenCover.{u} X)
 
 /-- (Implementation) the transition maps in the glue data associated with an open cover. -/
 def gluedCoverT' (x y z : 𝒰.J) :
@@ -285,19 +285,19 @@ theorem glued_cover_cocycle (x y z : 𝒰.J) : gluedCoverT' 𝒰 x y z ≫ glued
 /-- The glue data associated with an open cover.
 The canonical isomorphism `𝒰.glued_cover.glued ⟶ X` is provided by `𝒰.from_glued`. -/
 @[simps]
-def gluedCover : Scheme.GlueData.{u} where
+def gluedCover : SchemeCat.GlueData.{u} where
   J := 𝒰.J
   U := 𝒰.obj
   V := fun ⟨x, y⟩ => pullback (𝒰.map x) (𝒰.map y)
-  f := fun x y => pullback.fst
-  f_id := fun x => inferInstance
-  t := fun x y => (pullbackSymmetry _ _).Hom
-  t_id := fun x => by simpa
-  t' := fun x y z => gluedCoverT' 𝒰 x y z
-  t_fac := fun x y z => by apply pullback.hom_ext <;> simp
+  f x y := pullback.fst
+  f_id x := inferInstance
+  t x y := (pullbackSymmetry _ _).Hom
+  t_id x := by simpa
+  t' x y z := gluedCoverT' 𝒰 x y z
+  t_fac x y z := by apply pullback.hom_ext <;> simp
   -- The `cocycle` field could have been `by tidy` but lean timeouts.
-  cocycle := fun x y z => glued_cover_cocycle 𝒰 x y z
-  f_open := fun x => inferInstance
+  cocycle x y z := glued_cover_cocycle 𝒰 x y z
+  f_open x := inferInstance
 
 /-- The canonical morphism from the gluing of an open cover of `X` into `X`.
 This is an isomorphism, as witnessed by an `is_iso` instance. -/
@@ -319,7 +319,7 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
   simp_rw [← comp_apply, ← SheafedSpace.comp_base, ← LocallyRingedSpace.comp_val] at h
   erw [ι_from_glued, ι_from_glued] at h
   let e :=
-    (Top.pullbackConeIsLimit _ _).conePointUniqueUpToIso
+    (TopCat.pullbackConeIsLimit _ _).conePointUniqueUpToIso
       (is_limit_of_has_pullback_of_preserves_limit Scheme.forget_to_Top (𝒰.map i) (𝒰.map j))
   rw [𝒰.glued_cover.ι_eq_iff]
   right
@@ -333,8 +333,8 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
     rfl
     
 
-instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.Carrier) : IsIso (PresheafedSpace.stalkMap 𝒰.fromGlued.val x) :=
-  by
+instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.Carrier) :
+    IsIso (PresheafedSpaceCat.stalkMap 𝒰.fromGlued.val x) := by
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
   have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_arg LocallyRingedSpace.hom.val <| 𝒰.ι_from_glued i) x
   erw [PresheafedSpace.stalk_map.comp] at this
@@ -366,7 +366,7 @@ theorem from_glued_open_embedding : OpenEmbedding 𝒰.fromGlued.1.base :=
   open_embedding_of_continuous_injective_open (by continuity) 𝒰.from_glued_injective 𝒰.from_glued_open_map
 
 instance : Epi 𝒰.fromGlued.val.base := by
-  rw [Top.epi_iff_surjective]
+  rw [TopCat.epi_iff_surjective]
   intro x
   obtain ⟨y, h⟩ := 𝒰.covers x
   use (𝒰.glued_cover.ι (𝒰.f x)).1.base y
@@ -375,7 +375,7 @@ instance : Epi 𝒰.fromGlued.val.base := by
   exact h
 
 instance from_glued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
-  SheafedSpace.IsOpenImmersion.of_stalk_iso _ 𝒰.from_glued_open_embedding
+  SheafedSpaceCat.IsOpenImmersion.of_stalk_iso _ 𝒰.from_glued_open_embedding
 
 instance : IsIso 𝒰.fromGlued := by
   apply
@@ -392,7 +392,7 @@ together into a morphism `X ⟶ Y`.
 Note:
 If `X` is exactly (defeq to) the gluing of `U i`, then using `multicoequalizer.desc` suffices.
 -/
-def glueMorphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
+def glueMorphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y) : X ⟶ Y := by
   refine' inv 𝒰.from_glued ≫ _
   fapply multicoequalizer.desc
@@ -403,13 +403,13 @@ def glueMorphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
   exact hf i j
 
 @[simp, reassoc]
-theorem ι_glue_morphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
+theorem ι_glue_morphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y) (x : 𝒰.J) :
     𝒰.map x ≫ 𝒰.glueMorphisms f hf = f x := by
   rw [← ι_from_glued, category.assoc]
   erw [is_iso.hom_inv_id_assoc, multicoequalizer.π_desc]
 
-theorem hom_ext {Y : Scheme} (f₁ f₂ : X ⟶ Y) (h : ∀ x, 𝒰.map x ≫ f₁ = 𝒰.map x ≫ f₂) : f₁ = f₂ := by
+theorem hom_ext {Y : SchemeCat} (f₁ f₂ : X ⟶ Y) (h : ∀ x, 𝒰.map x ≫ f₁ = 𝒰.map x ≫ f₂) : f₁ = f₂ := by
   rw [← cancel_epi 𝒰.from_glued]
   apply multicoequalizer.hom_ext
   intro x
@@ -419,7 +419,7 @@ theorem hom_ext {Y : Scheme} (f₁ f₂ : X ⟶ Y) (h : ∀ x, 𝒰.map x ≫ f�
 
 end OpenCover
 
-end Scheme
+end SchemeCat
 
 end AlgebraicGeometry
 

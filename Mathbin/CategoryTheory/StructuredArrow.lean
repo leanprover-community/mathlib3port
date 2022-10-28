@@ -95,7 +95,7 @@ theorem ext {A B : StructuredArrow S T} (f g : A ⟶ B) : f.right = g.right → 
 theorem ext_iff {A B : StructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.right = g.right :=
   ⟨fun h => h ▸ rfl, ext f g⟩
 
-instance proj_faithful : Faithful (proj S T) where map_injective' := fun X Y => ext
+instance proj_faithful : Faithful (proj S T) where map_injective' X Y := ext
 
 /-- The converse of this is true with additional assumptions, see `mono_iff_mono_right`. -/
 theorem mono_of_mono_right {A B : StructuredArrow S T} (f : A ⟶ B) [h : Mono f.right] : Mono f :=
@@ -151,8 +151,7 @@ theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
 
 instance proj_reflects_iso :
     ReflectsIsomorphisms
-      (proj S
-        T) where reflects := fun Y Z f t => ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
+      (proj S T) where reflects Y Z f t := ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
 
 open CategoryTheory.Limits
 
@@ -160,12 +159,12 @@ attribute [local tidy] tactic.discrete_cases
 
 /-- The identity structured arrow is initial. -/
 def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
-  desc := fun c =>
+  desc c :=
     homMk (T.preimage c.x.Hom)
       (by
         dsimp
         simp)
-  uniq' := fun c m _ => by
+  uniq' c m _ := by
     ext
     apply T.map_injective
     simpa only [hom_mk_right, T.image_preimage, ← w m] using (category.id_comp _).symm
@@ -180,8 +179,8 @@ def pre (S : D) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S (F ⋙ G) ⥤ St
 /-- The functor `(S, F) ⥤ (G(S), F ⋙ G)`. -/
 @[simps]
 def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ StructuredArrow (G.obj S) (F ⋙ G) where
-  obj := fun X => { right := X.right, Hom := G.map X.Hom }
-  map := fun X Y f => { right := f.right, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
+  obj X := { right := X.right, Hom := G.map X.Hom }
+  map X Y f := { right := f.right, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) := by
@@ -252,7 +251,7 @@ theorem ext {A B : CostructuredArrow S T} (f g : A ⟶ B) (h : f.left = g.left) 
 theorem ext_iff {A B : CostructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.left = g.left :=
   ⟨fun h => h ▸ rfl, ext f g⟩
 
-instance proj_faithful : Faithful (proj S T) where map_injective' := fun X Y => ext
+instance proj_faithful : Faithful (proj S T) where map_injective' X Y := ext
 
 theorem mono_of_mono_left {A B : CostructuredArrow S T} (f : A ⟶ B) [h : Mono f.left] : Mono f :=
   (proj S T).mono_of_mono_map h
@@ -308,8 +307,7 @@ theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
 
 instance proj_reflects_iso :
     ReflectsIsomorphisms
-      (proj S
-        T) where reflects := fun Y Z f t => ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
+      (proj S T) where reflects Y Z f t := ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
 
 open CategoryTheory.Limits
 
@@ -317,7 +315,7 @@ attribute [local tidy] tactic.discrete_cases
 
 /-- The identity costructured arrow is terminal. -/
 def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
-  lift := fun c =>
+  lift c :=
     homMk (S.preimage c.x.Hom)
       (by
         dsimp
@@ -338,8 +336,8 @@ def pre (F : B ⥤ C) (G : C ⥤ D) (S : D) : CostructuredArrow (F ⋙ G) S ⥤ 
 /-- The functor `(F, S) ⥤ (F ⋙ G, G(S))`. -/
 @[simps]
 def post (F : B ⥤ C) (G : C ⥤ D) (S : C) : CostructuredArrow F S ⥤ CostructuredArrow (F ⋙ G) (G.obj S) where
-  obj := fun X => { left := X.left, Hom := G.map X.Hom }
-  map := fun X Y f => { left := f.left, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
+  obj X := { left := X.left, Hom := G.map X.Hom }
+  map X Y f := { left := f.left, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) := by
@@ -360,8 +358,8 @@ category of structured arrows `d ⟶ F.obj c` to the category of costructured ar
 -/
 @[simps]
 def toCostructuredArrow (F : C ⥤ D) (d : D) : (StructuredArrow d F)ᵒᵖ ⥤ CostructuredArrow F.op (op d) where
-  obj := fun X => @CostructuredArrow.mk _ _ _ _ _ (op X.unop.right) F.op X.unop.Hom.op
-  map := fun X Y f =>
+  obj X := @CostructuredArrow.mk _ _ _ _ _ (op X.unop.right) F.op X.unop.Hom.op
+  map X Y f :=
     CostructuredArrow.homMk f.unop.right.op
       (by
         dsimp
@@ -374,8 +372,8 @@ category of structured arrows `op d ⟶ F.op.obj c` to the category of costructu
 -/
 @[simps]
 def toCostructuredArrow' (F : C ⥤ D) (d : D) : (StructuredArrow (op d) F.op)ᵒᵖ ⥤ CostructuredArrow F d where
-  obj := fun X => @CostructuredArrow.mk _ _ _ _ _ (unop X.unop.right) F X.unop.Hom.unop
-  map := fun X Y f =>
+  obj X := @CostructuredArrow.mk _ _ _ _ _ (unop X.unop.right) F X.unop.Hom.unop
+  map X Y f :=
     CostructuredArrow.homMk f.unop.right.unop
       (by
         dsimp
@@ -393,8 +391,8 @@ category of costructured arrows `F.obj c ⟶ d` to the category of structured ar
 -/
 @[simps]
 def toStructuredArrow (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ⥤ StructuredArrow (op d) F.op where
-  obj := fun X => @StructuredArrow.mk _ _ _ _ _ (op X.unop.left) F.op X.unop.Hom.op
-  map := fun X Y f =>
+  obj X := @StructuredArrow.mk _ _ _ _ _ (op X.unop.left) F.op X.unop.Hom.op
+  map X Y f :=
     StructuredArrow.homMk f.unop.left.op
       (by
         dsimp
@@ -407,8 +405,8 @@ category of costructured arrows `F.op.obj c ⟶ op d` to the category of structu
 -/
 @[simps]
 def toStructuredArrow' (F : C ⥤ D) (d : D) : (CostructuredArrow F.op (op d))ᵒᵖ ⥤ StructuredArrow d F where
-  obj := fun X => @StructuredArrow.mk _ _ _ _ _ (unop X.unop.left) F X.unop.Hom.unop
-  map := fun X Y f =>
+  obj X := @StructuredArrow.mk _ _ _ _ _ (unop X.unop.left) F X.unop.Hom.unop
+  map X Y f :=
     StructuredArrow.homMk f.unop.left.unop
       (by
         dsimp

@@ -24,6 +24,8 @@ and even an equivalence between C⋆-algebras.
 
 * `ideal.to_character_space` : constructs an element of the character space from a maximal ideal in
   a commutative complex Banach algebra
+* `weak_dual.character_space.comp_continuous_map`: The functorial map taking `ψ : A →⋆ₐ[ℂ] B` to a
+  continuous function `character_space ℂ B → character_space ℂ A` given by pre-composition with `ψ`.
 
 ## Main statements
 
@@ -61,8 +63,7 @@ section ComplexBanachAlgebra
 
 open Ideal
 
-variable {A : Type _} [NormedCommRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [NormOneClass A] (I : Ideal A)
-  [Ideal.IsMaximal I]
+variable {A : Type _} [NormedCommRing A] [NormedAlgebra ℂ A] [CompleteSpace A] (I : Ideal A) [Ideal.IsMaximal I]
 
 /-- Every maximal ideal in a commutative complex Banach algebra gives rise to a character on that
 algebra. In particular, the character, which may be identified as an algebra homomorphism due to
@@ -90,7 +91,7 @@ theorem WeakDual.CharacterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
   obtain ⟨M, hM, haM⟩ := (span {a}).exists_le_maximal (span_singleton_ne_top ha)
   exact
     ⟨M.to_character_space,
-      M.to_character_space_apply_eq_zero_of_mem (haM (mem_span_singleton.mpr ⟨1, (mul_oneₓ a).symm⟩))⟩
+      M.to_character_space_apply_eq_zero_of_mem (haM (mem_span_singleton.mpr ⟨1, (mul_one a).symm⟩))⟩
 
 /-- The Gelfand transform is spectrum-preserving. -/
 theorem Spectrum.gelfand_transform_eq (a : A) : Spectrum ℂ (gelfandTransform ℂ A a) = Spectrum ℂ a := by
@@ -99,9 +100,8 @@ theorem Spectrum.gelfand_transform_eq (a : A) : Spectrum ℂ (gelfandTransform �
   simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply] at hf
   exact (ContinuousMap.spectrum_eq_range (gelfand_transform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
 
-instance : Nonempty (CharacterSpace ℂ A) :=
-  haveI := NormOneClass.nontrivial A
-  ⟨Classical.choose <| WeakDual.CharacterSpace.exists_apply_eq_zero (zero_mem_nonunits.mpr zero_ne_one)⟩
+instance [Nontrivial A] : Nonempty (CharacterSpace ℂ A) :=
+  ⟨Classical.choose <| WeakDual.CharacterSpace.exists_apply_eq_zero <| zero_mem_nonunits.2 zero_ne_one⟩
 
 end ComplexBanachAlgebra
 
@@ -109,11 +109,12 @@ section ComplexCstarAlgebra
 
 variable (A : Type _) [NormedCommRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
 
-variable [StarRing A] [CstarRing A] [StarModule ℂ A] [Nontrivial A]
+variable [StarRing A] [CstarRing A] [StarModule ℂ A]
 
 /-- The Gelfand transform is an isometry when the algebra is a C⋆-algebra over `ℂ`. -/
-theorem gelfand_transform_isometry : Isometry (gelfandTransform ℂ A) := by
-  refine' AddMonoidHomClass.isometry_of_norm (gelfand_transform ℂ A) fun a => _
+theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) := by
+  nontriviality A
+  refine' AddMonoidHomClass.isometryOfNorm (gelfand_transform ℂ A) fun a => _
   have gt_map_star : gelfand_transform ℂ A (star a) = star (gelfand_transform ℂ A a) :=
     ContinuousMap.ext fun φ => map_star φ a
   /- By `spectrum.gelfand_transform_eq`, the spectra of `star a * a` and its
@@ -129,15 +130,15 @@ theorem gelfand_transform_isometry : Isometry (gelfandTransform ℂ A) := by
 
 /-- The Gelfand transform is bijective when the algebra is a C⋆-algebra over `ℂ`. -/
 theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A) := by
-  refine' ⟨(gelfand_transform_isometry A).Injective, _⟩
+  refine' ⟨(gelfandTransformIsometry A).Injective, _⟩
   suffices (gelfand_transform ℂ A).range = ⊤ by
     exact fun x => this.symm ▸ (gelfand_transform ℂ A).mem_range.mp (this.symm ▸ Algebra.mem_top)
   /- Because the `gelfand_transform ℂ A` is an isometry, it has closed range, and so by the
     Stone-Weierstrass theorem, it suffices to show that the image of the Gelfand transform separates
     points in `C(character_space ℂ A, ℂ)` and is closed under `star`. -/
   have h : (gelfand_transform ℂ A).range.topologicalClosure = (gelfand_transform ℂ A).range :=
-    le_antisymmₓ
-      (Subalgebra.topological_closure_minimal _ le_rflₓ (gelfand_transform_isometry A).ClosedEmbedding.closed_range)
+    le_antisymm
+      (Subalgebra.topological_closure_minimal _ le_rfl (gelfandTransformIsometry A).ClosedEmbedding.closedRange)
       (Subalgebra.subalgebra_topological_closure _)
   refine'
     h ▸ ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points _ (fun _ _ => _) fun f hf => _
@@ -161,4 +162,47 @@ theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A
     
 
 end ComplexCstarAlgebra
+
+section Functoriality
+
+namespace WeakDual
+
+namespace CharacterSpace
+
+variable {A B C : Type _}
+
+variable [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [StarRing A]
+
+variable [NormedRing B] [NormedAlgebra ℂ B] [CompleteSpace B] [StarRing B]
+
+variable [NormedRing C] [NormedAlgebra ℂ C] [CompleteSpace C] [StarRing C]
+
+/-- The functorial map taking `ψ : A →⋆ₐ[ℂ] B` to a continuous function
+`character_space ℂ B → character_space ℂ A` obtained by pre-composition with `ψ`. -/
+@[simps]
+noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) : C(CharacterSpace ℂ B, CharacterSpace ℂ A) where
+  toFun φ := equivAlgHom.symm ((equivAlgHom φ).comp ψ.toAlgHom)
+  continuous_to_fun :=
+    Continuous.subtype_mk (continuous_of_continuous_eval fun a => map_continuous <| gelfandTransform ℂ B (ψ a)) _
+
+variable (A)
+
+/-- `weak_dual.character_space.comp_continuous_map` sends the identity to the identity. -/
+@[simp]
+theorem comp_continuous_map_id : compContinuousMap (StarAlgHom.id ℂ A) = ContinuousMap.id (CharacterSpace ℂ A) :=
+  ContinuousMap.ext fun a => ext fun x => rfl
+
+variable {A}
+
+/-- `weak_dual.character_space.comp_continuous_map` is functorial. -/
+@[simp]
+theorem comp_continuous_map_comp (ψ₂ : B →⋆ₐ[ℂ] C) (ψ₁ : A →⋆ₐ[ℂ] B) :
+    compContinuousMap (ψ₂.comp ψ₁) = (compContinuousMap ψ₁).comp (compContinuousMap ψ₂) :=
+  ContinuousMap.ext fun a => ext fun x => rfl
+
+end CharacterSpace
+
+end WeakDual
+
+end Functoriality
 

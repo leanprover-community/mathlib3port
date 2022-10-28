@@ -92,7 +92,7 @@ variable {A : Type _} {B : Type _} [i : SetLike A B]
 
 include i
 
-instance : CoeTₓ A (Set B) :=
+instance : CoeT A (Set B) :=
   ⟨SetLike.Coe⟩
 
 instance (priority := 100) : Membership B A :=
@@ -158,8 +158,8 @@ protected theorem eta (x : p) (hx : (x : B) ∈ p) : (⟨x, hx⟩ : p) = x :=
 
 -- `dangerous_instance` does not know that `B` is used only as an `out_param`
 @[nolint dangerous_instance]
-instance (priority := 100) : PartialOrderₓ A :=
-  { PartialOrderₓ.lift (coe : A → Set B) coe_injective with le := fun H K => ∀ ⦃x⦄, x ∈ H → x ∈ K }
+instance (priority := 100) : PartialOrder A :=
+  { PartialOrder.lift (coe : A → Set B) coe_injective with le := fun H K => ∀ ⦃x⦄, x ∈ H → x ∈ K }
 
 theorem le_def {S T : A} : S ≤ T ↔ ∀ ⦃x : B⦄, x ∈ S → x ∈ T :=
   Iff.rfl
@@ -169,14 +169,14 @@ theorem coe_subset_coe {S T : A} : (S : Set B) ⊆ T ↔ S ≤ T :=
   Iff.rfl
 
 @[mono]
-theorem coe_mono : Monotoneₓ (coe : A → Set B) := fun a b => coe_subset_coe.mpr
+theorem coe_mono : Monotone (coe : A → Set B) := fun a b => coe_subset_coe.mpr
 
 @[simp, norm_cast]
 theorem coe_ssubset_coe {S T : A} : (S : Set B) ⊂ T ↔ S < T :=
   Iff.rfl
 
 @[mono]
-theorem coe_strict_mono : StrictMonoₓ (coe : A → Set B) := fun a b => coe_ssubset_coe.mpr
+theorem coe_strict_mono : StrictMono (coe : A → Set B) := fun a b => coe_ssubset_coe.mpr
 
 theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ x ∈ p, x ∉ q :=
   Set.not_subset
@@ -184,7 +184,7 @@ theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ x ∈ p, x ∉ q :=
 theorem exists_of_lt : p < q → ∃ x ∈ q, x ∉ p :=
   Set.exists_of_ssubset
 
-theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p := by rw [lt_iff_le_not_leₓ, not_le_iff_exists]
+theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p := by rw [lt_iff_le_not_le, not_le_iff_exists]
 
 end SetLike
 

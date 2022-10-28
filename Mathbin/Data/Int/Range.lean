@@ -20,7 +20,7 @@ This could be unified with `data.list.intervals`. See the TODOs there.
 
 namespace Int
 
-attribute [local semireducible] Int.Nonneg
+attribute [local semireducible] Int.NonNeg
 
 /-- List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
 def range (m n : ℤ) : List ℤ :=
@@ -28,18 +28,18 @@ def range (m n : ℤ) : List ℤ :=
 
 theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
-    let ⟨s, h1, h2⟩ := List.mem_mapₓ.1 H
+    let ⟨s, h1, h2⟩ := List.mem_map.1 H
     h2 ▸
-      ⟨le_add_of_nonneg_right trivialₓ,
+      ⟨le_add_of_nonneg_right trivial,
         add_lt_of_lt_sub_left <|
           match n - m, h1 with
           | (k : ℕ), h1 => by rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1⟩,
     fun ⟨h1, h2⟩ =>
-    List.mem_mapₓ.2
+    List.mem_map.2
       ⟨toNat (r - m),
         List.mem_range.2 <| by
           rw [← coe_nat_lt, to_nat_of_nonneg (sub_nonneg_of_le h1),
-              to_nat_of_nonneg (sub_nonneg_of_le (le_of_ltₓ (lt_of_le_of_ltₓ h1 h2)))] <;>
+              to_nat_of_nonneg (sub_nonneg_of_le (le_of_lt (lt_of_le_of_lt h1 h2)))] <;>
             exact sub_lt_sub_right h2 _,
         show m + _ = _ by rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
 

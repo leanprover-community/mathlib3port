@@ -76,8 +76,8 @@ def Groupoid.invEquiv : (X ⟶ Y) ≃ (Y ⟶ X) :=
   ⟨Groupoid.inv, Groupoid.inv, fun f => by simp, fun f => by simp⟩
 
 instance (priority := 100) groupoidHasInvolutiveReverse : Quiver.HasInvolutiveReverse C where
-  reverse' := fun X Y f => Groupoid.inv f
-  inv' := fun X Y f => by
+  reverse' X Y f := Groupoid.inv f
+  inv' X Y f := by
     dsimp [Quiver.reverse]
     simp
 
@@ -86,9 +86,17 @@ variable (X Y)
 /-- In a groupoid, isomorphisms are equivalent to morphisms. -/
 def Groupoid.isoEquivHom : (X ≅ Y) ≃ (X ⟶ Y) where
   toFun := Iso.hom
-  invFun := fun f => ⟨f, Groupoid.inv f⟩
-  left_inv := fun i => Iso.ext rfl
-  right_inv := fun f => rfl
+  invFun f := ⟨f, Groupoid.inv f⟩
+  left_inv i := Iso.ext rfl
+  right_inv f := rfl
+
+variable (C)
+
+/-- The functor from a groupoid `C` to its opposite sending every morphism to its inverse. -/
+@[simps]
+noncomputable def Groupoid.invFunctor : C ⥤ Cᵒᵖ where
+  obj := Opposite.op
+  map {X Y} f := (inv f).op
 
 end
 
@@ -98,11 +106,11 @@ variable {C : Type u} [Category.{v} C]
 
 /-- A category where every morphism `is_iso` is a groupoid. -/
 noncomputable def Groupoid.ofIsIso (all_is_iso : ∀ {X Y : C} (f : X ⟶ Y), IsIso f) :
-    Groupoid.{v} C where inv := fun X Y f => inv f
+    Groupoid.{v} C where inv X Y f := inv f
 
 /-- A category with a unique morphism between any two objects is a groupoid -/
 def Groupoid.ofHomUnique (all_unique : ∀ {X Y : C}, Unique (X ⟶ Y)) :
-    Groupoid.{v} C where inv := fun X Y f => all_unique.default
+    Groupoid.{v} C where inv X Y f := all_unique.default
 
 end
 
@@ -114,11 +122,10 @@ instance InducedCategory.groupoid {C : Type u} (D : Type u₂) [Groupoid.{v} D] 
 section
 
 instance groupoidPi {I : Type u} {J : I → Type u₂} [∀ i, Groupoid.{v} (J i)] :
-    Groupoid.{max u v}
-      (∀ i : I, J i) where inv := fun (x y : ∀ i, J i) (f : ∀ i, x i ⟶ y i) => fun i : I => Groupoid.inv (f i)
+    Groupoid.{max u v} (∀ i : I, J i) where inv (x y : ∀ i, J i) (f : ∀ i, x i ⟶ y i) := fun i : I => Groupoid.inv (f i)
 
 instance groupoidProd {α : Type u} {β : Type v} [Groupoid.{u₂} α] [Groupoid.{v₂} β] :
-    Groupoid.{max u₂ v₂} (α × β) where inv := fun (x y : α × β) (f : x ⟶ y) => (Groupoid.inv f.1, Groupoid.inv f.2)
+    Groupoid.{max u₂ v₂} (α × β) where inv (x y : α × β) (f : x ⟶ y) := (Groupoid.inv f.1, Groupoid.inv f.2)
 
 end
 

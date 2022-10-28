@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import Mathbin.AlgebraicGeometry.Gluing
 import Mathbin.CategoryTheory.Limits.Opposites
-import Mathbin.AlgebraicGeometry.AffineScheme
+import Mathbin.AlgebraicGeometry.AffineSchemeCat
 import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 
 /-!
@@ -30,18 +30,18 @@ noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
 
-namespace AlgebraicGeometry.Scheme
+namespace AlgebraicGeometry.SchemeCat
 
 namespace Pullback
 
 variable {C : Type u} [Category.{v} C]
 
-variable {X Y Z : Scheme.{u}} (𝒰 : OpenCover.{u} X) (f : X ⟶ Z) (g : Y ⟶ Z)
+variable {X Y Z : SchemeCat.{u}} (𝒰 : OpenCover.{u} X) (f : X ⟶ Z) (g : Y ⟶ Z)
 
 variable [∀ i, HasPullback (𝒰.map i ≫ f) g]
 
 /-- The intersection of `Uᵢ ×[Z] Y` and `Uⱼ ×[Z] Y` is given by (Uᵢ ×[Z] Y) ×[X] Uⱼ -/
-def v (i j : 𝒰.J) : Scheme :=
+def v (i j : 𝒰.J) : SchemeCat :=
   pullback ((pullback.fst : pullback (𝒰.map i ≫ f) g ⟶ _) ≫ 𝒰.map i) (𝒰.map j)
 
 /-- The canonical transition map `(Uᵢ ×[Z] Y) ×[X] Uⱼ ⟶ (Uⱼ ×[Z] Y) ×[X] Uᵢ` given by the fact
@@ -211,22 +211,22 @@ theorem cocycle (i j k : 𝒰.J) : t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t
 
 /-- Given `Uᵢ ×[Z] Y`, this is the glued fibered product `X ×[Z] Y`. -/
 @[simps]
-def gluing : Scheme.GlueData.{u} where
+def gluing : SchemeCat.GlueData.{u} where
   J := 𝒰.J
-  U := fun i => pullback (𝒰.map i ≫ f) g
+  U i := pullback (𝒰.map i ≫ f) g
   V := fun ⟨i, j⟩ => v 𝒰 f g i j
   -- `p⁻¹(Uᵢ ∩ Uⱼ)` where `p : Uᵢ ×[Z] Y ⟶ Uᵢ ⟶ X`.
-  f := fun i j => pullback.fst
-  f_id := fun i => inferInstance
+  f i j := pullback.fst
+  f_id i := inferInstance
   f_open := inferInstance
-  t := fun i j => t 𝒰 f g i j
-  t_id := fun i => t_id 𝒰 f g i
-  t' := fun i j k => t' 𝒰 f g i j k
-  t_fac := fun i j k => by
+  t i j := t 𝒰 f g i j
+  t_id i := t_id 𝒰 f g i
+  t' i j k := t' 𝒰 f g i j k
+  t_fac i j k := by
     apply pullback.hom_ext
     apply pullback.hom_ext
     all_goals simp only [t'_snd_fst_fst, t'_snd_fst_snd, t'_snd_snd, t_fst_fst, t_fst_snd, t_snd, category.assoc]
-  cocycle := fun i j k => cocycle 𝒰 f g i j k
+  cocycle i j k := cocycle 𝒰 f g i j k
 
 /-- The first projection from the glued scheme into `X`. -/
 def p1 : (gluing 𝒰 f g).glued ⟶ X := by
@@ -371,6 +371,8 @@ theorem pullback_fst_ι_to_V_snd (i j : 𝒰.J) : pullbackFstιToV 𝒰 f g i j 
   simp only [iso.trans_hom, pullback.congr_hom_hom, category.assoc, pullback.lift_snd, category.comp_id,
     pullback_right_pullback_fst_iso_hom_snd, pullback_symmetry_hom_comp_snd_assoc]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback_fst_ι_to_V 𝒰 f g i j, «expr ≫ »(fV 𝒰 f g j i, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- We show that the map `W ×[X] Uᵢ ⟶ Uᵢ ×[Z] Y ⟶ W` is the first projection, where the
 first map is given by the lift of `W ×[X] Uᵢ ⟶ Uᵢ` and `W ×[X] Uᵢ ⟶ W ⟶ Y`.
 
@@ -384,7 +386,8 @@ theorem lift_comp_ι (i : 𝒰.J) :
   apply ((gluing 𝒰 f g).OpenCover.pullbackCover pullback.fst).hom_ext
   intro j
   dsimp only [open_cover.pullback_cover]
-  trans pullback_fst_ι_to_V 𝒰 f g i j ≫ fV 𝒰 f g j i ≫ (gluing 𝒰 f g).ι _
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback_fst_ι_to_V 𝒰 f g i j, «expr ≫ »(fV 𝒰 f g j i, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · rw [← show _ = fV 𝒰 f g j i ≫ _ from (gluing 𝒰 f g).glue_condition j i]
     simp_rw [← category.assoc]
     congr 1
@@ -450,6 +453,8 @@ theorem pullback_p1_iso_inv_snd (i : 𝒰.J) : (pullbackP1Iso 𝒰 f g i).inv �
 theorem pullback_p1_iso_hom_ι (i : 𝒰.J) : (pullbackP1Iso 𝒰 f g i).Hom ≫ (gluing 𝒰 f g).ι i = pullback.fst := by
   rw [← pullback_p1_iso_inv_fst, iso.hom_inv_id_assoc]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback.snd, «expr ≫ »((pullback_p1_iso 𝒰 f g _).hom, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- The glued scheme (`(gluing 𝒰 f g).glued`) is indeed the pullback of `f` and `g`. -/
 def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
   apply pullback_cone.is_limit_aux'
@@ -466,7 +471,8 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
   rw [← cancel_epi (pullback_right_pullback_fst_iso (p1 𝒰 f g) (𝒰.map i) m ≪≫ pullback.congr_hom h₁ rfl).Hom,
     iso.trans_hom, category.assoc, pullback.congr_hom_hom, pullback.lift_fst_assoc, category.comp_id,
     pullback_right_pullback_fst_iso_hom_fst_assoc, pullback.condition]
-  trans pullback.snd ≫ (pullback_p1_iso 𝒰 f g _).Hom ≫ (gluing 𝒰 f g).ι _
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback.snd, «expr ≫ »((pullback_p1_iso 𝒰 f g _).hom, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · congr 1
     rw [← pullback_p1_iso_hom_ι]
     
@@ -484,21 +490,21 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
 theorem has_pullback_of_cover : HasPullback f g :=
   ⟨⟨⟨_, gluedIsLimit 𝒰 f g⟩⟩⟩
 
-instance affine_has_pullback {A B C : CommRingₓₓ} (f : spec.obj (Opposite.op A) ⟶ spec.obj (Opposite.op C))
+instance affine_has_pullback {A B C : CommRingCat} (f : spec.obj (Opposite.op A) ⟶ spec.obj (Opposite.op C))
     (g : spec.obj (Opposite.op B) ⟶ spec.obj (Opposite.op C)) : HasPullback f g := by
   rw [← Spec.image_preimage f, ← Spec.image_preimage g]
   exact ⟨⟨⟨_, is_limit_of_has_pullback_of_preserves_limit Spec (Spec.preimage f) (Spec.preimage g)⟩⟩⟩
 
-theorem affine_affine_has_pullback {B C : CommRingₓₓ} {X : Scheme} (f : X ⟶ spec.obj (Opposite.op C))
+theorem affine_affine_has_pullback {B C : CommRingCat} {X : SchemeCat} (f : X ⟶ spec.obj (Opposite.op C))
     (g : spec.obj (Opposite.op B) ⟶ spec.obj (Opposite.op C)) : HasPullback f g :=
   has_pullback_of_cover X.affineCover f g
 
-instance base_affine_has_pullback {C : CommRingₓₓ} {X Y : Scheme} (f : X ⟶ spec.obj (Opposite.op C))
+instance base_affine_has_pullback {C : CommRingCat} {X Y : SchemeCat} (f : X ⟶ spec.obj (Opposite.op C))
     (g : Y ⟶ spec.obj (Opposite.op C)) : HasPullback f g :=
   @has_pullback_symmetry _ _ _
     (@has_pullback_of_cover Y.affineCover g f fun i => @has_pullback_symmetry _ _ _ <| affine_affine_has_pullback _ _)
 
-instance left_affine_comp_pullback_has_pullback {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z) (i : Z.affineCover.J) :
+instance left_affine_comp_pullback_has_pullback {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) (i : Z.affineCover.J) :
     HasPullback ((Z.affineCover.pullbackCover f).map i ≫ f) g := by
   let Xᵢ := pullback f (Z.affine_cover.map i)
   let Yᵢ := pullback g (Z.affine_cover.map i)
@@ -512,14 +518,14 @@ instance left_affine_comp_pullback_has_pullback {X Y Z : Scheme} (f : X ⟶ Z) (
   rw [← pullback.condition] at this
   exact this
 
-instance {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z) : HasPullback f g :=
+instance {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) : HasPullback f g :=
   has_pullback_of_cover (Z.affineCover.pullbackCover f) f g
 
-instance : HasPullbacks Scheme :=
+instance : HasPullbacks SchemeCat :=
   has_pullbacks_of_has_limit_cospan _
 
-instance {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z) [IsAffine X] [IsAffine Y] [IsAffine Z] : IsAffine (pullback f g) :=
-  is_affine_of_iso
+instance {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) [IsAffine X] [IsAffine Y] [IsAffine Z] : IsAffine (pullback f g) :=
+  isAffineOfIso
     (pullback.map f g (spec.map (Γ.map f.op).op) (spec.map (Γ.map g.op).op) (ΓSpec.adjunction.Unit.app X)
         (ΓSpec.adjunction.Unit.app Y) (ΓSpec.adjunction.Unit.app Z) (ΓSpec.adjunction.Unit.naturality f)
         (ΓSpec.adjunction.Unit.naturality g) ≫
@@ -531,7 +537,7 @@ def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
   fapply
     ((gluing 𝒰 f g).OpenCover.pushforwardIso (limit.iso_limit_cone ⟨_, glued_is_limit 𝒰 f g⟩).inv).copy 𝒰.J
       (fun i => pullback (𝒰.map i ≫ f) g)
-      (fun i => pullback.map _ _ _ _ (𝒰.map i) (𝟙 _) (𝟙 _) (category.comp_id _) (by simp)) (Equivₓ.refl 𝒰.J) fun _ =>
+      (fun i => pullback.map _ _ _ _ (𝒰.map i) (𝟙 _) (𝟙 _) (category.comp_id _) (by simp)) (Equiv.refl 𝒰.J) fun _ =>
       iso.refl _
   rintro (i : 𝒰.J)
   change pullback.map _ _ _ _ _ _ _ _ _ = 𝟙 _ ≫ (gluing 𝒰 f g).ι i ≫ _
@@ -549,7 +555,7 @@ def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
 def openCoverOfRight (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
   fapply
     ((open_cover_of_left 𝒰 g f).pushforwardIso (pullback_symmetry _ _).Hom).copy 𝒰.J (fun i => pullback f (𝒰.map i ≫ g))
-      (fun i => pullback.map _ _ _ _ (𝟙 _) (𝒰.map i) (𝟙 _) (by simp) (category.comp_id _)) (Equivₓ.refl _) fun i =>
+      (fun i => pullback.map _ _ _ _ (𝟙 _) (𝒰.map i) (𝟙 _) (by simp) (category.comp_id _)) (Equiv.refl _) fun i =>
       pullback_symmetry _ _
   intro i
   dsimp [open_cover.bind]
@@ -563,7 +569,7 @@ def openCoverOfLeftRight (𝒰X : X.OpenCover) (𝒰Y : Y.OpenCover) (f : X ⟶ 
     ((open_cover_of_left 𝒰X f g).bind fun x => open_cover_of_right 𝒰Y (𝒰X.map x ≫ f) g).copy (𝒰X.J × 𝒰Y.J)
       (fun ij => pullback (𝒰X.map ij.1 ≫ f) (𝒰Y.map ij.2 ≫ g))
       (fun ij => pullback.map _ _ _ _ (𝒰X.map ij.1) (𝒰Y.map ij.2) (𝟙 _) (category.comp_id _) (category.comp_id _))
-      (Equivₓ.sigmaEquivProd _ _).symm fun _ => iso.refl _
+      (Equiv.sigmaEquivProd _ _).symm fun _ => iso.refl _
   rintro ⟨i, j⟩
   apply pullback.hom_ext <;> simpa
 
@@ -597,7 +603,7 @@ def openCoverOfBase (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
       (fun i => pullback (pullback.snd : pullback f (𝒰.map i) ⟶ _) (pullback.snd : pullback g (𝒰.map i) ⟶ _))
       (fun i =>
         pullback.map _ _ _ _ pullback.fst pullback.fst (𝒰.map i) pullback.condition.symm pullback.condition.symm)
-      ((Equivₓ.prodPunit 𝒰.J).symm.trans (Equivₓ.sigmaEquivProd 𝒰.J PUnit).symm) fun _ => iso.refl _
+      ((Equiv.prodPunit 𝒰.J).symm.trans (Equiv.sigmaEquivProd 𝒰.J PUnit).symm) fun _ => iso.refl _
   intro i
   change _ = _ ≫ _ ≫ _
   refine' Eq.trans _ (category.id_comp _).symm
@@ -609,11 +615,11 @@ def openCoverOfBase (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
 
 end Pullback
 
-end AlgebraicGeometry.Scheme
+end AlgebraicGeometry.SchemeCat
 
 namespace AlgebraicGeometry
 
-instance {X Y S X' Y' S' : Scheme} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' ⟶ S') (g' : Y' ⟶ S') (i₁ : X ⟶ X') (i₂ : Y ⟶ Y')
+instance {X Y S X' Y' S' : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' ⟶ S') (g' : Y' ⟶ S') (i₁ : X ⟶ X') (i₂ : Y ⟶ Y')
     (i₃ : S ⟶ S') (e₁ : f ≫ i₃ = i₁ ≫ f') (e₂ : g ≫ i₃ = i₂ ≫ g') [IsOpenImmersion i₁] [IsOpenImmersion i₂] [Mono i₃] :
     IsOpenImmersion (pullback.map f g f' g' i₁ i₂ i₃ e₁ e₂) := by
   rw [pullback_map_eq_pullback_fst_fst_iso_inv]

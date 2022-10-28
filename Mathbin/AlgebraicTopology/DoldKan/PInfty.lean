@@ -50,7 +50,7 @@ theorem P_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) : ((p (q + 1)).f n 
   · simp only [P_f_0_eq]
     
   · unfold P
-    simp only [add_right_eq_selfₓ, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id]
+    simp only [add_right_eq_self, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id]
     exact (higher_faces_vanish.of_P q n).comp_Hσ_eq_zero (nat.succ_le_iff.mp hqn)
     
 
@@ -90,8 +90,8 @@ variable (C)
 the functor `alternating_face_map_complex C`. -/
 @[simps]
 def natTransPInfty : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
-  app := fun _ => pInfty
-  naturality' := fun X Y f => by
+  app _ := pInfty
+  naturality' X Y f := by
     ext n
     exact P_infty_f_naturality n f
 

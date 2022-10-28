@@ -36,7 +36,7 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Copr
   · use i
     field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
     
-  · simp only [hn0, mul_right_commₓ _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff, mul_comm _ (i : ℂ), ←
+  · simp only [hn0, mul_right_comm _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff, mul_comm _ (i : ℂ), ←
       mul_assoc _ (i : ℂ), exists_imp_distrib, field_simps]
     norm_cast
     rintro l k hk
@@ -47,7 +47,7 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Copr
     
 
 theorem is_primitive_root_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
-  simpa only [Nat.cast_oneₓ, one_div] using is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
+  simpa only [Nat.cast_one, one_div] using is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
 
 theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
     IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ := by
@@ -58,8 +58,8 @@ theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
     exact is_primitive_root_exp_of_coprime i n hn hi
     
   intro h
-  obtain ⟨i, hi, rfl⟩ := (is_primitive_root_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zeroₓ hn)
-  refine' ⟨i, hi, ((is_primitive_root_exp n hn).pow_iff_coprime (Nat.pos_of_ne_zeroₓ hn) i).mp h, _⟩
+  obtain ⟨i, hi, rfl⟩ := (is_primitive_root_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zero hn)
+  refine' ⟨i, hi, ((is_primitive_root_exp n hn).pow_iff_coprime (Nat.pos_of_ne_zero hn) i).mp h, _⟩
   rw [← exp_nat_mul]
   congr 1
   field_simp [hn0, mul_comm (i : ℂ)]
@@ -85,7 +85,7 @@ theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
     field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
     
 
-theorem card_roots_of_unity (n : ℕ+) : Fintypeₓ.card (rootsOfUnity n ℂ) = n :=
+theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
   (is_primitive_root_exp n n.ne_zero).card_roots_of_unity
 
 theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := by
@@ -137,10 +137,10 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     rw [this]
     apply tsub_lt_self hn.bot_lt
     contrapose! h₂
-    rw [Nat.eq_zero_of_le_zeroₓ h₂, zero_mul]
+    rw [Nat.eq_zero_of_le_zero h₂, zero_mul]
     exact zero_le _
   rw [← Int.nat_abs_neg, neg_sub, Int.nat_abs_eq_iff]
-  exact Or.inl (Int.coe_nat_subₓ h.le).symm
+  exact Or.inl (Int.coe_nat_sub h.le).symm
   split_ifs with h₂
   · convert Complex.arg_cos_add_sin_mul_I _
     · push_cast
@@ -153,7 +153,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
       exact mul_nonneg (mul_nonneg i.cast_nonneg <| by simp [real.pi_pos.le]) (by simp)
       
     rw [← mul_rotate', mul_div_assoc]
-    rw [← mul_oneₓ n] at h₂
+    rw [← mul_one n] at h₂
     exact
       mul_le_of_le_one_right real.pi_pos.le ((div_le_iff' <| by exact_mod_cast pos_of_gt h).mpr <| by exact_mod_cast h₂)
     
@@ -168,14 +168,14 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     exact_mod_cast hn
     
   field_simp [hn]
-  refine' ⟨_, le_transₓ _ real.pi_pos.le⟩
+  refine' ⟨_, le_trans _ real.pi_pos.le⟩
   on_goal 2 =>
   rw [mul_div_assoc]
   exact
     mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr <| by exact_mod_cast h.le)
       (div_nonneg (by simp [real.pi_pos.le]) <| by simp)
   rw [← mul_rotate', mul_div_assoc, neg_lt, ← mul_neg, mul_lt_iff_lt_one_right Real.pi_pos, ← neg_div, ← neg_mul,
-    neg_sub, div_lt_iff, one_mulₓ, sub_mul, sub_lt, ← mul_sub_one]
+    neg_sub, div_lt_iff, one_mul, sub_mul, sub_lt, ← mul_sub_one]
   norm_num
   exact_mod_cast not_le.mp h₂
   · exact nat.cast_pos.mpr hn.bot_lt

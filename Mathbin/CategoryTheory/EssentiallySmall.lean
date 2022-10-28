@@ -142,21 +142,21 @@ variable (C) [LocallySmall.{w} C]
 
 @[simps]
 noncomputable instance : Category.{w} (ShrinkHoms C) where
-  hom := fun X Y => Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
-  id := fun X => equivShrink _ (𝟙 (fromShrinkHoms X))
-  comp := fun X Y Z f g => equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
+  hom X Y := Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
+  id X := equivShrink _ (𝟙 (fromShrinkHoms X))
+  comp X Y Z f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
 noncomputable def functor : C ⥤ ShrinkHoms C where
-  obj := fun X => toShrinkHoms X
-  map := fun X Y f => equivShrink (X ⟶ Y) f
+  obj X := toShrinkHoms X
+  map X Y f := equivShrink (X ⟶ Y) f
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
 noncomputable def inverse : ShrinkHoms C ⥤ C where
-  obj := fun X => fromShrinkHoms X
-  map := fun X Y f => (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
+  obj X := fromShrinkHoms X
+  map X Y f := (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
 
 /-- The categorical equivalence between `C` and `shrink_homs C`, when `C` is locally small.
 -/

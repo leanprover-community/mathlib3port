@@ -48,7 +48,7 @@ arithmetic functions, dirichlet convolution, divisors
 -/
 
 
-open Finsetₓ
+open Finset
 
 open BigOperators
 
@@ -117,10 +117,13 @@ end One
 
 end Zero
 
-instance natCoe [AddMonoidWithOneₓ R] : Coe (ArithmeticFunction ℕ) (ArithmeticFunction R) :=
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+instance natCoe [AddMonoidWithOne R] : Coe (ArithmeticFunction ℕ) (ArithmeticFunction R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℕ), by
-      trans ↑(f 0)
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       rfl
       simp⟩⟩
 
@@ -129,13 +132,16 @@ theorem nat_coe_nat (f : ArithmeticFunction ℕ) : (↑f : ArithmeticFunction �
   ext fun _ => cast_id _
 
 @[simp]
-theorem nat_coe_apply [AddMonoidWithOneₓ R] {f : ArithmeticFunction ℕ} {x : ℕ} : (f : ArithmeticFunction R) x = f x :=
+theorem nat_coe_apply [AddMonoidWithOne R] {f : ArithmeticFunction ℕ} {x : ℕ} : (f : ArithmeticFunction R) x = f x :=
   rfl
 
-instance intCoe [AddGroupWithOneₓ R] : Coe (ArithmeticFunction ℤ) (ArithmeticFunction R) :=
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+instance intCoe [AddGroupWithOne R] : Coe (ArithmeticFunction ℤ) (ArithmeticFunction R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℤ), by
-      trans ↑(f 0)
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       rfl
       simp⟩⟩
 
@@ -144,28 +150,28 @@ theorem int_coe_int (f : ArithmeticFunction ℤ) : (↑f : ArithmeticFunction �
   ext fun _ => Int.cast_id _
 
 @[simp]
-theorem int_coe_apply [AddGroupWithOneₓ R] {f : ArithmeticFunction ℤ} {x : ℕ} : (f : ArithmeticFunction R) x = f x :=
+theorem int_coe_apply [AddGroupWithOne R] {f : ArithmeticFunction ℤ} {x : ℕ} : (f : ArithmeticFunction R) x = f x :=
   rfl
 
 @[simp]
-theorem coe_coe [AddGroupWithOneₓ R] {f : ArithmeticFunction ℕ} :
+theorem coe_coe [AddGroupWithOne R] {f : ArithmeticFunction ℕ} :
     ((f : ArithmeticFunction ℤ) : ArithmeticFunction R) = f := by
   ext
   simp
 
 @[simp]
-theorem nat_coe_one [AddMonoidWithOneₓ R] : ((1 : ArithmeticFunction ℕ) : ArithmeticFunction R) = 1 := by
+theorem nat_coe_one [AddMonoidWithOne R] : ((1 : ArithmeticFunction ℕ) : ArithmeticFunction R) = 1 := by
   ext n
   simp [one_apply]
 
 @[simp]
-theorem int_coe_one [AddGroupWithOneₓ R] : ((1 : ArithmeticFunction ℤ) : ArithmeticFunction R) = 1 := by
+theorem int_coe_one [AddGroupWithOne R] : ((1 : ArithmeticFunction ℤ) : ArithmeticFunction R) = 1 := by
   ext n
   simp [one_apply]
 
-section AddMonoidₓ
+section AddMonoid
 
-variable [AddMonoidₓ R]
+variable [AddMonoid R]
 
 instance : Add (ArithmeticFunction R) :=
   ⟨fun f g => ⟨fun n => f n + g n, by simp⟩⟩
@@ -174,31 +180,30 @@ instance : Add (ArithmeticFunction R) :=
 theorem add_apply {f g : ArithmeticFunction R} {n : ℕ} : (f + g) n = f n + g n :=
   rfl
 
-instance : AddMonoidₓ (ArithmeticFunction R) :=
-  { ArithmeticFunction.hasZero R, ArithmeticFunction.hasAdd with
-    add_assoc := fun _ _ _ => ext fun _ => add_assocₓ _ _ _, zero_add := fun _ => ext fun _ => zero_addₓ _,
-    add_zero := fun _ => ext fun _ => add_zeroₓ _ }
+instance : AddMonoid (ArithmeticFunction R) :=
+  { ArithmeticFunction.hasZero R, ArithmeticFunction.hasAdd with add_assoc := fun _ _ _ => ext fun _ => add_assoc _ _ _,
+    zero_add := fun _ => ext fun _ => zero_add _, add_zero := fun _ => ext fun _ => add_zero _ }
 
-end AddMonoidₓ
+end AddMonoid
 
-instance [AddMonoidWithOneₓ R] : AddMonoidWithOneₓ (ArithmeticFunction R) :=
+instance [AddMonoidWithOne R] : AddMonoidWithOne (ArithmeticFunction R) :=
   { ArithmeticFunction.addMonoid, ArithmeticFunction.hasOne with
-    natCast := fun n => ⟨fun x => if x = 1 then (n : R) else 0, by simp⟩, nat_cast_zero := by ext <;> simp [Nat.castₓ],
-    nat_cast_succ := fun _ => by ext <;> by_cases x = 1 <;> simp [Nat.castₓ, *] }
+    natCast := fun n => ⟨fun x => if x = 1 then (n : R) else 0, by simp⟩, nat_cast_zero := by ext <;> simp [Nat.cast],
+    nat_cast_succ := fun _ => by ext <;> by_cases x = 1 <;> simp [Nat.cast, *] }
 
-instance [AddCommMonoidₓ R] : AddCommMonoidₓ (ArithmeticFunction R) :=
-  { ArithmeticFunction.addMonoid with add_comm := fun _ _ => ext fun _ => add_commₓ _ _ }
+instance [AddCommMonoid R] : AddCommMonoid (ArithmeticFunction R) :=
+  { ArithmeticFunction.addMonoid with add_comm := fun _ _ => ext fun _ => add_comm _ _ }
 
-instance [AddGroupₓ R] : AddGroupₓ (ArithmeticFunction R) :=
+instance [AddGroup R] : AddGroup (ArithmeticFunction R) :=
   { ArithmeticFunction.addMonoid with neg := fun f => ⟨fun n => -f n, by simp⟩,
-    add_left_neg := fun _ => ext fun _ => add_left_negₓ _ }
+    add_left_neg := fun _ => ext fun _ => add_left_neg _ }
 
-instance [AddCommGroupₓ R] : AddCommGroupₓ (ArithmeticFunction R) :=
+instance [AddCommGroup R] : AddCommGroup (ArithmeticFunction R) :=
   { ArithmeticFunction.addCommMonoid, ArithmeticFunction.addGroup with }
 
 section HasSmul
 
-variable {M : Type _} [Zero R] [AddCommMonoidₓ M] [HasSmul R M]
+variable {M : Type _} [Zero R] [AddCommMonoid M] [HasSmul R M]
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
@@ -214,40 +219,40 @@ end HasSmul
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
-instance [Semiringₓ R] : Mul (ArithmeticFunction R) :=
+instance [Semiring R] : Mul (ArithmeticFunction R) :=
   ⟨(· • ·)⟩
 
 @[simp]
-theorem mul_apply [Semiringₓ R] {f g : ArithmeticFunction R} {n : ℕ} :
+theorem mul_apply [Semiring R] {f g : ArithmeticFunction R} {n : ℕ} :
     (f * g) n = ∑ x in divisorsAntidiagonal n, f x.fst * g x.snd :=
   rfl
 
-theorem mul_apply_one [Semiringₓ R] {f g : ArithmeticFunction R} : (f * g) 1 = f 1 * g 1 := by simp
+theorem mul_apply_one [Semiring R] {f g : ArithmeticFunction R} : (f * g) 1 = f 1 * g 1 := by simp
 
 @[simp, norm_cast]
-theorem nat_coe_mul [Semiringₓ R] {f g : ArithmeticFunction ℕ} : (↑(f * g) : ArithmeticFunction R) = f * g := by
+theorem nat_coe_mul [Semiring R] {f g : ArithmeticFunction ℕ} : (↑(f * g) : ArithmeticFunction R) = f * g := by
   ext n
   simp
 
 @[simp, norm_cast]
-theorem int_coe_mul [Ringₓ R] {f g : ArithmeticFunction ℤ} : (↑(f * g) : ArithmeticFunction R) = f * g := by
+theorem int_coe_mul [Ring R] {f g : ArithmeticFunction ℤ} : (↑(f * g) : ArithmeticFunction R) = f * g := by
   ext n
   simp
 
 section Module
 
-variable {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable {M : Type _} [Semiring R] [AddCommMonoid M] [Module R M]
 
 theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) : (f * g) • h = f • g • h := by
   ext n
-  simp only [mul_apply, smul_apply, sum_smul, mul_smul, smul_sum, Finsetₓ.sum_sigma']
-  apply Finsetₓ.sum_bij
+  simp only [mul_apply, smul_apply, sum_smul, mul_smul, smul_sum, Finset.sum_sigma']
+  apply Finset.sum_bij
   pick_goal 5
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
     exact ⟨(k, l * j), (l, j)⟩
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
-    simp only [Finsetₓ.mem_sigma, mem_divisors_antidiagonal] at H⊢
+    simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H⊢
     rcases H with ⟨⟨rfl, n0⟩, rfl, i0⟩
     refine' ⟨⟨(mul_assoc _ _ _).symm, n0⟩, rfl, _⟩
     rw [mul_ne_zero_iff] at *
@@ -257,20 +262,20 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) : (f *
     simp only [mul_assoc]
     
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩ H₁ H₂
-    simp only [Finsetₓ.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iffₓ, add_commₓ, heq_iff_eq] at H₁ H₂⊢
+    simp only [Finset.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iff, add_comm, heq_iff_eq] at H₁ H₂⊢
     rintro rfl h2 rfl rfl
     exact ⟨⟨Eq.trans H₁.2.1.symm H₂.2.1, rfl⟩, rfl, rfl⟩
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
     refine' ⟨⟨(i * k, l), (i, k)⟩, _, _⟩
-    · simp only [Finsetₓ.mem_sigma, mem_divisors_antidiagonal] at H⊢
+    · simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H⊢
       rcases H with ⟨⟨rfl, n0⟩, rfl, j0⟩
       refine' ⟨⟨mul_assoc _ _ _, n0⟩, rfl, _⟩
       rw [mul_ne_zero_iff] at *
       exact ⟨n0.1, j0.1⟩
       
-    · simp only [true_andₓ, mem_divisors_antidiagonal, and_trueₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, Ne.def, mem_sigma,
-        heq_iff_eq] at H⊢
+    · simp only [true_and_iff, mem_divisors_antidiagonal, and_true_iff, Prod.mk.inj_iff, eq_self_iff_true, Ne.def,
+        mem_sigma, heq_iff_eq] at H⊢
       rw [H.2.1]
       
     
@@ -288,18 +293,18 @@ theorem one_smul' (b : ArithmeticFunction M) : (1 : ArithmeticFunction R) • b 
   intro y ymem ynmem
   have y1ne : y.fst ≠ 1 := by
     intro con
-    simp only [Con, mem_divisors_antidiagonal, one_mulₓ, Ne.def] at ymem
-    simp only [mem_singleton, Prod.ext_iffₓ] at ynmem
+    simp only [Con, mem_divisors_antidiagonal, one_mul, Ne.def] at ymem
+    simp only [mem_singleton, Prod.ext_iff] at ynmem
     tauto
   simp [y1ne]
 
 end Module
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
-instance : Monoidₓ (ArithmeticFunction R) :=
+instance : Monoid (ArithmeticFunction R) :=
   { ArithmeticFunction.hasOne, ArithmeticFunction.hasMul with one_mul := one_smul',
     mul_one := fun f => by
       ext
@@ -314,13 +319,13 @@ instance : Monoidₓ (ArithmeticFunction R) :=
       intro y ymem ynmem
       have y2ne : y.snd ≠ 1 := by
         intro con
-        simp only [Con, mem_divisors_antidiagonal, mul_oneₓ, Ne.def] at ymem
-        simp only [mem_singleton, Prod.ext_iffₓ] at ynmem
+        simp only [Con, mem_divisors_antidiagonal, mul_one, Ne.def] at ymem
+        simp only [mem_singleton, Prod.ext_iff] at ynmem
         tauto
       simp [y2ne],
     mul_assoc := mul_smul' }
 
-instance : Semiringₓ (ArithmeticFunction R) :=
+instance : Semiring (ArithmeticFunction R) :=
   { ArithmeticFunction.hasZero R, ArithmeticFunction.hasMul, ArithmeticFunction.hasAdd,
     ArithmeticFunction.addCommMonoid, ArithmeticFunction.addMonoidWithOne, ArithmeticFunction.monoid with
     zero_mul := fun f => by
@@ -331,37 +336,37 @@ instance : Semiringₓ (ArithmeticFunction R) :=
       simp only [mul_apply, sum_const_zero, mul_zero, zero_apply],
     left_distrib := fun a b c => by
       ext
-      simp only [← sum_add_distrib, mul_addₓ, mul_apply, add_apply],
+      simp only [← sum_add_distrib, mul_add, mul_apply, add_apply],
     right_distrib := fun a b c => by
       ext
-      simp only [← sum_add_distrib, add_mulₓ, mul_apply, add_apply] }
+      simp only [← sum_add_distrib, add_mul, mul_apply, add_apply] }
 
-end Semiringₓ
+end Semiring
 
-instance [CommSemiringₓ R] : CommSemiringₓ (ArithmeticFunction R) :=
+instance [CommSemiring R] : CommSemiring (ArithmeticFunction R) :=
   { ArithmeticFunction.semiring with
     mul_comm := fun f g => by
       ext
       rw [mul_apply, ← map_swap_divisors_antidiagonal, sum_map]
       simp [mul_comm] }
 
-instance [CommRingₓ R] : CommRingₓ (ArithmeticFunction R) :=
+instance [CommRing R] : CommRing (ArithmeticFunction R) :=
   { ArithmeticFunction.addCommGroup, ArithmeticFunction.commSemiring with }
 
-instance {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+instance {M : Type _} [Semiring R] [AddCommMonoid M] [Module R M] :
     Module (ArithmeticFunction R) (ArithmeticFunction M) where
   one_smul := one_smul'
   mul_smul := mul_smul'
-  smul_add := fun r x y => by
+  smul_add r x y := by
     ext
     simp only [sum_add_distrib, smul_add, smul_apply, add_apply]
-  smul_zero := fun r => by
+  smul_zero r := by
     ext
     simp only [smul_apply, sum_const_zero, smul_zero, zero_apply]
-  add_smul := fun r s x => by
+  add_smul r s x := by
     ext
     simp only [add_smul, sum_add_distrib, smul_apply, add_apply]
-  zero_smul := fun r => by
+  zero_smul r := by
     ext
     simp only [smul_apply, sum_const_zero, zero_smul, zero_apply]
 
@@ -381,14 +386,17 @@ theorem zeta_apply {x : ℕ} : ζ x = if x = 0 then 0 else 1 :=
 theorem zeta_apply_ne {x : ℕ} (h : x ≠ 0) : ζ x = 1 :=
   if_neg h
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp]
-theorem coe_zeta_mul_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} : (↑ζ * f) x = ∑ i in divisors x, f i := by
+theorem coe_zeta_mul_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} : (↑ζ * f) x = ∑ i in divisors x, f i := by
   rw [mul_apply]
-  trans ∑ i in divisors_antidiagonal x, f i.snd
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · apply sum_congr rfl
     intro i hi
     rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
-    rw [nat_coe_apply, zeta_apply_ne (left_ne_zero_of_mul h), cast_one, one_mulₓ]
+    rw [nat_coe_apply, zeta_apply_ne (left_ne_zero_of_mul h), cast_one, one_mul]
     
   · apply sum_bij fun i h => Prod.snd i
     · rintro ⟨a, b⟩ h
@@ -406,9 +414,9 @@ theorem coe_zeta_mul_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} 
       · rfl
         
       simp only [Prod.fst, Prod.snd] at *
-      apply Nat.eq_of_mul_eq_mul_rightₓ _ (Eq.trans h1.1 h2.1.symm)
+      apply Nat.eq_of_mul_eq_mul_right _ (Eq.trans h1.1 h2.1.symm)
       rcases h1 with ⟨rfl, h⟩
-      apply Nat.pos_of_ne_zeroₓ (right_ne_zero_of_mul h)
+      apply Nat.pos_of_ne_zero (right_ne_zero_of_mul h)
       
     · intro a ha
       rcases mem_divisors.1 ha with ⟨⟨b, rfl⟩, ne0⟩
@@ -417,10 +425,13 @@ theorem coe_zeta_mul_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} 
       
     
 
-theorem coe_zeta_smul_apply {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] {f : ArithmeticFunction M}
-    {x : ℕ} : ((↑ζ : ArithmeticFunction R) • f) x = ∑ i in divisors x, f i := by
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+theorem coe_zeta_smul_apply {M : Type _} [CommRing R] [AddCommGroup M] [Module R M] {f : ArithmeticFunction M} {x : ℕ} :
+    ((↑ζ : ArithmeticFunction R) • f) x = ∑ i in divisors x, f i := by
   rw [smul_apply]
-  trans ∑ i in divisors_antidiagonal x, f i.snd
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · apply sum_congr rfl
     intro i hi
     rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
@@ -442,9 +453,9 @@ theorem coe_zeta_smul_apply {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Mo
       · rfl
         
       simp only [Prod.fst, Prod.snd] at *
-      apply Nat.eq_of_mul_eq_mul_rightₓ _ (Eq.trans h1.1 h2.1.symm)
+      apply Nat.eq_of_mul_eq_mul_right _ (Eq.trans h1.1 h2.1.symm)
       rcases h1 with ⟨rfl, h⟩
-      apply Nat.pos_of_ne_zeroₓ (right_ne_zero_of_mul h)
+      apply Nat.pos_of_ne_zero (right_ne_zero_of_mul h)
       
     · intro a ha
       rcases mem_divisors.1 ha with ⟨⟨b, rfl⟩, ne0⟩
@@ -454,7 +465,7 @@ theorem coe_zeta_smul_apply {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Mo
     
 
 @[simp]
-theorem coe_mul_zeta_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} : (f * ζ) x = ∑ i in divisors x, f i := by
+theorem coe_mul_zeta_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} : (f * ζ) x = ∑ i in divisors x, f i := by
   apply MulOpposite.op_injective
   rw [op_sum]
   convert @coe_zeta_mul_apply Rᵐᵒᵖ _ { toFun := MulOpposite.op ∘ f, map_zero' := by simp } x
@@ -464,10 +475,10 @@ theorem coe_mul_zeta_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} 
   apply sum_congr rfl
   intro y hy
   by_cases h1:y.fst = 0
-  · simp [Function.comp_applyₓ, h1]
+  · simp [Function.comp_apply, h1]
     
-  · simp only [h1, mul_oneₓ, one_mulₓ, Prod.fst_swapₓ, Function.Embedding.coe_fn_mk, Prod.snd_swapₓ, if_false,
-      zeta_apply, ZeroHom.coe_mk, nat_coe_apply, cast_one]
+  · simp only [h1, mul_one, one_mul, Prod.fst_swap, Function.Embedding.coe_fn_mk, Prod.snd_swap, if_false, zeta_apply,
+      ZeroHom.coe_mk, nat_coe_apply, cast_one]
     
 
 theorem zeta_mul_apply {f : ArithmeticFunction ℕ} {x : ℕ} : (ζ * f) x = ∑ i in divisors x, f i := by
@@ -483,20 +494,20 @@ open ArithmeticFunction
 section Pmul
 
 /-- This is the pointwise product of `arithmetic_function`s. -/
-def pmul [MulZeroClassₓ R] (f g : ArithmeticFunction R) : ArithmeticFunction R :=
+def pmul [MulZeroClass R] (f g : ArithmeticFunction R) : ArithmeticFunction R :=
   ⟨fun x => f x * g x, by simp⟩
 
 @[simp]
-theorem pmul_apply [MulZeroClassₓ R] {f g : ArithmeticFunction R} {x : ℕ} : f.pmul g x = f x * g x :=
+theorem pmul_apply [MulZeroClass R] {f g : ArithmeticFunction R} {x : ℕ} : f.pmul g x = f x * g x :=
   rfl
 
 theorem pmul_comm [CommMonoidWithZero R] (f g : ArithmeticFunction R) : f.pmul g = g.pmul f := by
   ext
   simp [mul_comm]
 
-section NonAssocSemiringₓ
+section NonAssocSemiring
 
-variable [NonAssocSemiringₓ R]
+variable [NonAssocSemiring R]
 
 @[simp]
 theorem pmul_zeta (f : ArithmeticFunction R) : f.pmul ↑ζ = f := by
@@ -508,9 +519,9 @@ theorem zeta_pmul (f : ArithmeticFunction R) : (ζ : ArithmeticFunction R).pmul 
   ext x
   cases x <;> simp [Nat.succ_ne_zero]
 
-end NonAssocSemiringₓ
+end NonAssocSemiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 /-- This is the pointwise power of `arithmetic_function`s. -/
 def ppow (f : ArithmeticFunction R) (k : ℕ) : ArithmeticFunction R :=
@@ -518,37 +529,37 @@ def ppow (f : ArithmeticFunction R) (k : ℕ) : ArithmeticFunction R :=
   else
     ⟨fun x => f x ^ k, by
       rw [map_zero]
-      exact zero_pow (Nat.pos_of_ne_zeroₓ h0)⟩
+      exact zero_pow (Nat.pos_of_ne_zero h0)⟩
 
 @[simp]
 theorem ppow_zero {f : ArithmeticFunction R} : f.ppow 0 = ζ := by rw [ppow, dif_pos rfl]
 
 @[simp]
 theorem ppow_apply {f : ArithmeticFunction R} {k x : ℕ} (kpos : 0 < k) : f.ppow k x = f x ^ k := by
-  rw [ppow, dif_neg (ne_of_gtₓ kpos)]
+  rw [ppow, dif_neg (ne_of_gt kpos)]
   rfl
 
 theorem ppow_succ {f : ArithmeticFunction R} {k : ℕ} : f.ppow (k + 1) = f.pmul (f.ppow k) := by
   ext x
-  rw [ppow_apply (Nat.succ_posₓ k), pow_succₓ]
+  rw [ppow_apply (Nat.succ_pos k), pow_succ]
   induction k <;> simp
 
 theorem ppow_succ' {f : ArithmeticFunction R} {k : ℕ} {kpos : 0 < k} : f.ppow (k + 1) = (f.ppow k).pmul f := by
   ext x
-  rw [ppow_apply (Nat.succ_posₓ k), pow_succ'ₓ]
+  rw [ppow_apply (Nat.succ_pos k), pow_succ']
   induction k <;> simp
 
 end Pmul
 
 /-- Multiplicative functions -/
-def IsMultiplicative [MonoidWithZeroₓ R] (f : ArithmeticFunction R) : Prop :=
+def IsMultiplicative [MonoidWithZero R] (f : ArithmeticFunction R) : Prop :=
   f 1 = 1 ∧ ∀ {m n : ℕ}, m.Coprime n → f (m * n) = f m * f n
 
 namespace IsMultiplicative
 
-section MonoidWithZeroₓ
+section MonoidWithZero
 
-variable [MonoidWithZeroₓ R]
+variable [MonoidWithZero R]
 
 @[simp]
 theorem map_one {f : ArithmeticFunction R} (h : f.IsMultiplicative) : f 1 = 1 :=
@@ -559,28 +570,36 @@ theorem map_mul_of_coprime {f : ArithmeticFunction R} (hf : f.IsMultiplicative) 
     f (m * n) = f m * f n :=
   hf.2 h
 
-end MonoidWithZeroₓ
+end MonoidWithZero
 
 theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.ArithmeticFunction R}
-    (hf : f.IsMultiplicative) (s : Finsetₓ ι) (hs : (s : Set ι).Pairwise (coprime on g)) :
+    (hf : f.IsMultiplicative) (s : Finset ι) (hs : (s : Set ι).Pairwise (coprime on g)) :
     f (∏ i in s, g i) = ∏ i in s, f (g i) := by
   classical
-  induction' s using Finsetₓ.induction_on with a s has ih hs
+  induction' s using Finset.induction_on with a s has ih hs
   · simp [hf]
     
   rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs
   rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
   exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
 
-theorem nat_cast {f : ArithmeticFunction ℕ} [Semiringₓ R] (h : f.IsMultiplicative) :
+theorem nat_cast {f : ArithmeticFunction ℕ} [Semiring R] (h : f.IsMultiplicative) :
     IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
 
-theorem int_cast {f : ArithmeticFunction ℤ} [Ringₓ R] (h : f.IsMultiplicative) :
+theorem int_cast {f : ArithmeticFunction ℤ} [Ring R] (h : f.IsMultiplicative) :
     IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
 
-theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicative) (hg : g.IsMultiplicative) :
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicative) (hg : g.IsMultiplicative) :
     IsMultiplicative (f * g) :=
   ⟨by simp [hf, hg], by
     simp only [mul_apply]
@@ -596,7 +615,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
       · ring
         
       rw [Nat.mul_eq_zero] at *
-      apply not_orₓ ha hb
+      apply not_or_of_not ha hb
       
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
@@ -610,53 +629,56 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hab
       rcases hab with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hcd
-      simp only [Prod.mk.inj_iffₓ] at h
+      simp only [Prod.mk.inj_iff] at h
       ext <;> dsimp only
-      · trans Nat.gcdₓ (a1 * a2) (a1 * b1)
-        · rw [Nat.gcd_mul_leftₓ, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_oneₓ]
+      · trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        · rw [Nat.gcd_mul_left, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_one]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
-          rw [← hcd.1.1, h.1, Nat.gcd_mul_leftₓ, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_oneₓ]
+          rw [← hcd.1.1, h.1, Nat.gcd_mul_left, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_one]
           
         
-      · trans Nat.gcdₓ (a1 * a2) (a2 * b2)
-        · rw [mul_comm, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_oneₓ]
+      · trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        · rw [mul_comm, Nat.gcd_mul_left, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_one]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
-          rw [← hcd.1.1, h.2, mul_comm, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one,
-            mul_oneₓ]
+          rw [← hcd.1.1, h.2, mul_comm, Nat.gcd_mul_left, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one,
+            mul_one]
           
         
-      · trans Nat.gcdₓ (b1 * b2) (a1 * b1)
-        · rw [mul_comm, Nat.gcd_mul_rightₓ, cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mulₓ]
+      · trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        · rw [mul_comm, Nat.gcd_mul_right, cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mul]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
-          rw [← hcd.2.1, h.1, mul_comm c1 d1, Nat.gcd_mul_leftₓ,
-            cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, mul_oneₓ]
+          rw [← hcd.2.1, h.1, mul_comm c1 d1, Nat.gcd_mul_left,
+            cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, mul_one]
           
         
-      · trans Nat.gcdₓ (b1 * b2) (a2 * b2)
-        · rw [Nat.gcd_mul_rightₓ, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mulₓ]
+      · trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        · rw [Nat.gcd_mul_right, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mul]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
-          rw [← hcd.2.1, h.2, Nat.gcd_mul_rightₓ, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one,
-            one_mulₓ]
+          rw [← hcd.2.1, h.2, Nat.gcd_mul_right, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mul]
           
         
       
     · rintro ⟨b1, b2⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
       use ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
-      simp only [exists_propₓ, Prod.mk.inj_iffₓ, Ne.def, mem_product, mem_divisors_antidiagonal]
-      rw [← cop.gcd_mul _, ← cop.gcd_mul _, ← h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop h.1,
-        Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop.symm _]
+      simp only [exists_prop, Prod.mk.inj_iff, Ne.def, mem_product, mem_divisors_antidiagonal]
+      rw [← cop.gcd_mul _, ← cop.gcd_mul _, ← h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop h.1,
+        Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop.symm _]
       · rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h
         simp [h.2.1, h.2.2]
         
       rw [mul_comm n m, h.1]
       ⟩
 
-theorem pmul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicative) (hg : g.IsMultiplicative) :
+theorem pmul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicative) (hg : g.IsMultiplicative) :
     IsMultiplicative (f.pmul g) :=
   ⟨by simp [hf, hg], fun m n cop => by
     simp only [pmul_apply, hf.map_mul_of_coprime cop, hg.map_mul_of_coprime cop]
@@ -669,9 +691,9 @@ theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunct
   multiplicative_factorization f (fun _ _ => hf.2) hf.1 hn
 
 /-- A recapitulation of the definition of multiplicative that is simpler for proofs -/
-theorem iff_ne_zero [MonoidWithZeroₓ R] {f : ArithmeticFunction R} :
+theorem iff_ne_zero [MonoidWithZero R] {f : ArithmeticFunction R} :
     IsMultiplicative f ↔ f 1 = 1 ∧ ∀ {m n : ℕ}, m ≠ 0 → n ≠ 0 → m.Coprime n → f (m * n) = f m * f n := by
-  refine' and_congr_right'ₓ (forall₂_congrₓ fun m n => ⟨fun h _ _ => h, fun h hmn => _⟩)
+  refine' and_congr_right' (forall₂_congr fun m n => ⟨fun h _ _ => h, fun h hmn => _⟩)
   rcases eq_or_ne m 0 with (rfl | hm)
   · simp
     
@@ -694,7 +716,7 @@ theorem eq_iff_eq_on_prime_powers [CommMonoidWithZero R] (f : ArithmeticFunction
   · rw [hn, arithmetic_function.map_zero, arithmetic_function.map_zero]
     
   rw [multiplicative_factorization f hf hn, multiplicative_factorization g hg hn]
-  refine' Finsetₓ.prod_congr rfl _
+  refine' Finset.prod_congr rfl _
   simp only [support_factorization, List.mem_to_finset]
   intro p hp
   exact h p _ (Nat.prime_of_mem_factors hp)
@@ -720,7 +742,7 @@ theorem pow_apply {k n : ℕ} : pow k n = if k = 0 ∧ n = 0 then 0 else n ^ k :
   cases k
   · simp [pow]
     
-  simp [pow, (ne_of_ltₓ (Nat.succ_posₓ k)).symm]
+  simp [pow, (ne_of_lt (Nat.succ_pos k)).symm]
 
 theorem pow_zero_eq_zeta : pow 0 = ζ := by
   ext n
@@ -752,7 +774,7 @@ theorem zeta_mul_pow_eq_sigma {k : ℕ} : ζ * pow k = σ k := by
   contrapose! hx
   simp [hx]
 
-theorem is_multiplicative_one [MonoidWithZeroₓ R] : IsMultiplicative (1 : ArithmeticFunction R) :=
+theorem is_multiplicative_one [MonoidWithZero R] : IsMultiplicative (1 : ArithmeticFunction R) :=
   IsMultiplicative.iff_ne_zero.2
     ⟨by simp, by
       intro m n hm hn hmn
@@ -769,7 +791,7 @@ theorem is_multiplicative_zeta : IsMultiplicative ζ :=
 theorem is_multiplicative_id : IsMultiplicative ArithmeticFunction.id :=
   ⟨rfl, fun _ _ _ => rfl⟩
 
-theorem IsMultiplicative.ppow [CommSemiringₓ R] {f : ArithmeticFunction R} (hf : f.IsMultiplicative) {k : ℕ} :
+theorem IsMultiplicative.ppow [CommSemiring R] {f : ArithmeticFunction R} (hf : f.IsMultiplicative) {k : ℕ} :
     IsMultiplicative (f.ppow k) := by
   induction' k with k hi
   · exact is_multiplicative_zeta.nat_cast
@@ -807,7 +829,7 @@ theorem card_factors_eq_one_iff_prime {n : ℕ} : Ω n = 1 ↔ n.Prime := by
   rcases List.length_eq_one.1 h with ⟨x, hx⟩
   rw [← prod_factors n.succ_ne_zero, hx, List.prod_singleton]
   apply prime_of_mem_factors
-  rw [hx, List.mem_singletonₓ]
+  rw [hx, List.mem_singleton]
 
 theorem card_factors_mul {m n : ℕ} (m0 : m ≠ 0) (n0 : n ≠ 0) : Ω (m * n) = Ω m + Ω n := by
   rw [card_factors_apply, card_factors_apply, card_factors_apply, ← Multiset.coe_card, ← factors_eq,
@@ -849,7 +871,7 @@ theorem card_distinct_factors_apply {n : ℕ} : ω n = n.factors.dedup.length :=
 theorem card_distinct_factors_eq_card_factors_iff_squarefree {n : ℕ} (h0 : n ≠ 0) : ω n = Ω n ↔ Squarefree n := by
   rw [squarefree_iff_nodup_factors h0, card_distinct_factors_apply]
   constructor <;> intro h
-  · rw [← List.eq_of_sublist_of_length_eq n.factors.dedup_sublist h]
+  · rw [← n.factors.dedup_sublist.eq_of_length h]
     apply List.nodup_dedup
     
   · rw [h.dedup]
@@ -862,7 +884,7 @@ theorem card_distinct_factors_apply_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k
 
 @[simp]
 theorem card_distinct_factors_apply_prime {p : ℕ} (hp : p.Prime) : ω p = 1 := by
-  rw [← pow_oneₓ p, card_distinct_factors_apply_prime_pow hp one_ne_zero]
+  rw [← pow_one p, card_distinct_factors_apply_prime_pow hp one_ne_zero]
 
 /-- `μ` is the Möbius function. If `n` is squarefree with an even number of distinct prime factors,
   `μ n = 1`. If `n` is squarefree with an odd number of distinct prime factors, `μ n = -1`.
@@ -901,11 +923,11 @@ theorem moebius_ne_zero_iff_eq_or {n : ℕ} : μ n ≠ 0 ↔ μ n = 1 ∨ μ n =
     
 
 theorem moebius_apply_prime {p : ℕ} (hp : p.Prime) : μ p = -1 := by
-  rw [moebius_apply_of_squarefree hp.squarefree, card_factors_apply_prime hp, pow_oneₓ]
+  rw [moebius_apply_of_squarefree hp.squarefree, card_factors_apply_prime hp, pow_one]
 
 theorem moebius_apply_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) : μ (p ^ k) = if k = 1 then -1 else 0 := by
   split_ifs
-  · rw [h, pow_oneₓ, moebius_apply_prime hp]
+  · rw [h, pow_one, moebius_apply_prime hp]
     
   rw [moebius_eq_zero_of_not_squarefree]
   rw [squarefree_pow_iff hp.ne_one hk, not_and_distrib]
@@ -921,7 +943,7 @@ theorem is_multiplicative_moebius : IsMultiplicative μ := by
   rw [is_multiplicative.iff_ne_zero]
   refine' ⟨by simp, fun n m hn hm hnm => _⟩
   simp only [moebius, ZeroHom.coe_mk, squarefree_mul hnm, ite_and, card_factors_mul hn hm]
-  rw [pow_addₓ, mul_comm, ite_mul_zero_left, ite_mul_zero_right, mul_comm]
+  rw [pow_add, mul_comm, ite_mul_zero_left, ite_mul_zero_right, mul_comm]
 
 open UniqueFactorizationMonoid
 
@@ -931,8 +953,8 @@ theorem moebius_mul_coe_zeta : (μ * ζ : ArithmeticFunction ℤ) = 1 := by
   refine' rec_on_pos_prime_pos_coprime _ _ _ _ n
   · intro p n hp hn
     rw [coe_mul_zeta_apply, sum_divisors_prime_pow hp, sum_range_succ']
-    simp_rw [Function.Embedding.coe_fn_mk, pow_zeroₓ, moebius_apply_one,
-      moebius_apply_prime_pow hp (Nat.succ_ne_zero _), Nat.succ_inj', sum_ite_eq', mem_range, if_pos hn, add_left_negₓ]
+    simp_rw [Function.Embedding.coe_fn_mk, pow_zero, moebius_apply_one, moebius_apply_prime_pow hp (Nat.succ_ne_zero _),
+      Nat.succ_inj', sum_ite_eq', mem_range, if_pos hn, add_left_neg]
     rw [one_apply_ne]
     rw [Ne.def, pow_eq_one_iff]
     · exact hp.ne_one
@@ -954,16 +976,16 @@ theorem moebius_mul_coe_zeta : (μ * ζ : ArithmeticFunction ℤ) = 1 := by
 theorem coe_zeta_mul_moebius : (ζ * μ : ArithmeticFunction ℤ) = 1 := by rw [mul_comm, moebius_mul_coe_zeta]
 
 @[simp]
-theorem coe_moebius_mul_coe_zeta [Ringₓ R] : (μ * ζ : ArithmeticFunction R) = 1 := by
+theorem coe_moebius_mul_coe_zeta [Ring R] : (μ * ζ : ArithmeticFunction R) = 1 := by
   rw [← coe_coe, ← int_coe_mul, moebius_mul_coe_zeta, int_coe_one]
 
 @[simp]
-theorem coe_zeta_mul_coe_moebius [Ringₓ R] : (ζ * μ : ArithmeticFunction R) = 1 := by
+theorem coe_zeta_mul_coe_moebius [Ring R] : (ζ * μ : ArithmeticFunction R) = 1 := by
   rw [← coe_coe, ← int_coe_mul, coe_zeta_mul_moebius, int_coe_one]
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 instance : Invertible (ζ : ArithmeticFunction R) where
   invOf := μ
@@ -982,18 +1004,23 @@ theorem coe_zeta_unit : ((zetaUnit : (ArithmeticFunction R)ˣ) : ArithmeticFunct
 theorem inv_zeta_unit : ((zeta_unit⁻¹ : (ArithmeticFunction R)ˣ) : ArithmeticFunction R) = μ :=
   rfl
 
-end CommRingₓ
+end CommRing
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »(moebius(), g'), f')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- Möbius inversion for functions to an `add_comm_group`. -/
-theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroupₓ R] {f g : ℕ → R} :
+theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
     (∀ n : ℕ, 0 < n → (∑ i in n.divisors, f i) = g n) ↔
       ∀ n : ℕ, 0 < n → (∑ x : ℕ × ℕ in n.divisorsAntidiagonal, μ x.fst • g x.snd) = f n :=
   by
   let f' : arithmetic_function R := ⟨fun x => if x = 0 then 0 else f x, if_pos rfl⟩
   let g' : arithmetic_function R := ⟨fun x => if x = 0 then 0 else g x, if_pos rfl⟩
-  trans (ζ : arithmetic_function ℤ) • f' = g'
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · rw [ext_iff]
-    apply forall_congrₓ
+    apply forall_congr
     intro n
     cases n
     · simp
@@ -1001,9 +1028,10 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroupₓ R] {f g : ℕ → R} :
     rw [coe_zeta_smul_apply]
     simp only [n.succ_ne_zero, forall_prop_of_true, succ_pos', if_false, ZeroHom.coe_mk]
     rw [sum_congr rfl fun x hx => _]
-    rw [if_neg (ne_of_gtₓ (Nat.pos_of_mem_divisors hx))]
+    rw [if_neg (ne_of_gt (Nat.pos_of_mem_divisors hx))]
     
-  trans μ • g' = f'
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »(moebius(), g'), f')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · constructor <;> intro h
     · rw [← h, ← mul_smul, moebius_mul_coe_zeta, one_smul]
       
@@ -1011,28 +1039,28 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroupₓ R] {f g : ℕ → R} :
       
     
   · rw [ext_iff]
-    apply forall_congrₓ
+    apply forall_congr
     intro n
     cases n
     · simp
       
     simp only [n.succ_ne_zero, forall_prop_of_true, succ_pos', smul_apply, if_false, ZeroHom.coe_mk]
     rw [sum_congr rfl fun x hx => _]
-    rw [if_neg (ne_of_gtₓ (Nat.pos_of_mem_divisors (snd_mem_divisors_of_mem_antidiagonal hx)))]
+    rw [if_neg (ne_of_gt (Nat.pos_of_mem_divisors (snd_mem_divisors_of_mem_antidiagonal hx)))]
     
 
 /-- Möbius inversion for functions to a `ring`. -/
-theorem sum_eq_iff_sum_mul_moebius_eq [Ringₓ R] {f g : ℕ → R} :
+theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
     (∀ n : ℕ, 0 < n → (∑ i in n.divisors, f i) = g n) ↔
       ∀ n : ℕ, 0 < n → (∑ x : ℕ × ℕ in n.divisorsAntidiagonal, (μ x.fst : R) * g x.snd) = f n :=
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
-  apply forall_congrₓ
-  refine' fun a => imp_congr_rightₓ fun _ => ((sum_congr rfl) fun x hx => _).congr_left
+  apply forall_congr
+  refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 
 /-- Möbius inversion for functions to a `comm_group`. -/
-theorem prod_eq_iff_prod_pow_moebius_eq [CommGroupₓ R] {f g : ℕ → R} :
+theorem prod_eq_iff_prod_pow_moebius_eq [CommGroup R] {f g : ℕ → R} :
     (∀ n : ℕ, 0 < n → (∏ i in n.divisors, f i) = g n) ↔
       ∀ n : ℕ, 0 < n → (∏ x : ℕ × ℕ in n.divisorsAntidiagonal, g x.snd ^ μ x.fst) = f n :=
   @sum_eq_iff_sum_smul_moebius_eq (Additive R) _ _ _
@@ -1045,11 +1073,11 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
   by
   refine'
       Iff.trans
-        (Iff.trans (forall_congrₓ fun n => _)
+        (Iff.trans (forall_congr fun n => _)
           (@prod_eq_iff_prod_pow_moebius_eq Rˣ _ (fun n => if h : 0 < n then Units.mk0 (f n) (hf n h) else 1) fun n =>
             if h : 0 < n then Units.mk0 (g n) (hg n h) else 1))
-        (forall_congrₓ fun n => _) <;>
-    refine' imp_congr_rightₓ fun hn => _
+        (forall_congr fun n => _) <;>
+    refine' imp_congr_right fun hn => _
   · dsimp
     rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.coe_mk0, prod_congr rfl _]
     intro x hx

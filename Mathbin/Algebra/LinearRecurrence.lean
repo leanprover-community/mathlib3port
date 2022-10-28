@@ -38,24 +38,24 @@ properties of eigenvalues and eigenvectors.
 
 noncomputable section
 
-open Finsetₓ
+open Finset
 
 open BigOperators Polynomial
 
 /-- A "linear recurrence relation" over a commutative semiring is given by its
   order `n` and `n` coefficients. -/
-structure LinearRecurrence (α : Type _) [CommSemiringₓ α] where
+structure LinearRecurrence (α : Type _) [CommSemiring α] where
   order : ℕ
-  coeffs : Finₓ order → α
+  coeffs : Fin order → α
 
-instance (α : Type _) [CommSemiringₓ α] : Inhabited (LinearRecurrence α) :=
+instance (α : Type _) [CommSemiring α] : Inhabited (LinearRecurrence α) :=
   ⟨⟨0, default⟩⟩
 
 namespace LinearRecurrence
 
-section CommSemiringₓ
+section CommSemiring
 
-variable {α : Type _} [CommSemiringₓ α] (E : LinearRecurrence α)
+variable {α : Type _} [CommSemiring α] (E : LinearRecurrence α)
 
 /-- We say that a sequence `u` is solution of `linear_recurrence order coeffs` when we have
   `u (n + order) = ∑ i : fin order, coeffs i * u (n + i)` for any `n`. -/
@@ -64,61 +64,61 @@ def IsSolution (u : ℕ → α) :=
 
 /-- A solution of a `linear_recurrence` which satisfies certain initial conditions.
   We will prove this is the only such solution. -/
-def mkSol (init : Finₓ E.order → α) : ℕ → α
+def mkSol (init : Fin E.order → α) : ℕ → α
   | n =>
     if h : n < E.order then init ⟨n, h⟩
     else
-      ∑ k : Finₓ E.order,
+      ∑ k : Fin E.order,
         have : n - E.order + k < n := by
-          rw [add_commₓ, ← add_tsub_assoc_of_le (not_lt.mp h), tsub_lt_iff_left]
+          rw [add_comm, ← add_tsub_assoc_of_le (not_lt.mp h), tsub_lt_iff_left]
           · exact add_lt_add_right k.is_lt n
             
           · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h)
-            simp only [zero_addₓ]
+            simp only [zero_add]
             
         E.coeffs k * mk_sol (n - E.order + k)
 
 /-- `E.mk_sol` indeed gives solutions to `E`. -/
-theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.IsSolution (E.mkSol init) := fun n => by rw [mk_sol] <;> simp
+theorem is_sol_mk_sol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) := fun n => by rw [mk_sol] <;> simp
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
-theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, E.mkSol init n = init n := fun n => by
+theorem mk_sol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n := fun n => by
   rw [mk_sol]
-  simp only [n.is_lt, dif_pos, Finₓ.mk_coe, Finₓ.eta]
+  simp only [n.is_lt, dif_pos, Fin.mk_coe, Fin.eta]
 
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `∀ n, u n = E.mk_sol init n`. -/
-theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → α} (h : E.IsSolution u)
-    (heq : ∀ n : Finₓ E.order, u n = init n) : ∀ n, u n = E.mkSol init n
+theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} (h : E.IsSolution u)
+    (heq : ∀ n : Fin E.order, u n = init n) : ∀ n, u n = E.mkSol init n
   | n =>
     if h' : n < E.order then by rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
     else by
-      rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_ltₓ h'), h (n - E.order)]
+      rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
       simp [h']
       congr with k
       exact by
         have wf : n - E.order + k < n := by
-          rw [add_commₓ, ← add_tsub_assoc_of_le (not_lt.mp h'), tsub_lt_iff_left]
+          rw [add_comm, ← add_tsub_assoc_of_le (not_lt.mp h'), tsub_lt_iff_left]
           · exact add_lt_add_right k.is_lt n
             
           · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h')
-            simp only [zero_addₓ]
+            simp only [zero_add]
             
         rw [eq_mk_of_is_sol_of_eq_init]
 
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `u = E.mk_sol init`. This proves that `E.mk_sol init` is the only solution
   of `E` whose first `E.order` values are given by `init`. -/
-theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → α} (h : E.IsSolution u)
-    (heq : ∀ n : Finₓ E.order, u n = init n) : u = E.mkSol init :=
+theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Fin E.order → α} (h : E.IsSolution u)
+    (heq : ∀ n : Fin E.order, u n = init n) : u = E.mkSol init :=
   funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
 def solSpace : Submodule α (ℕ → α) where
   Carrier := { u | E.IsSolution u }
-  zero_mem' := fun n => by simp
-  add_mem' := fun u v hu hv n => by simp [mul_addₓ, sum_add_distrib, hu n, hv n]
-  smul_mem' := fun a u hu n => by simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl
+  zero_mem' n := by simp
+  add_mem' u v hu hv n := by simp [mul_add, sum_add_distrib, hu n, hv n]
+  smul_mem' a u hu n := by simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl
 
 /-- Defining property of the solution space : `u` is a solution
   iff it belongs to the solution space. -/
@@ -127,17 +127,17 @@ theorem is_sol_iff_mem_sol_space (u : ℕ → α) : E.IsSolution u ↔ u ∈ E.s
 
 /-- The function that maps a solution `u` of `E` to its first
   `E.order` terms as a `linear_equiv`. -/
-def toInit : E.solSpace ≃ₗ[α] Finₓ E.order → α where
-  toFun := fun u x => (u : ℕ → α) x
-  map_add' := fun u v => by
+def toInit : E.solSpace ≃ₗ[α] Fin E.order → α where
+  toFun u x := (u : ℕ → α) x
+  map_add' u v := by
     ext
     simp
-  map_smul' := fun a u => by
+  map_smul' a u := by
     ext
     simp
-  invFun := fun u => ⟨E.mkSol u, E.is_sol_mk_sol u⟩
-  left_inv := fun u => by ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
-  right_inv := fun u => Function.funext_iff.mpr fun n => E.mk_sol_eq_init u n
+  invFun u := ⟨E.mkSol u, E.is_sol_mk_sol u⟩
+  left_inv u := by ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
+  right_inv u := Function.funext_iff.mpr fun n => E.mk_sol_eq_init u n
 
 /-- Two solutions are equal iff they are equal on `range E.order`. -/
 theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSolution v) :
@@ -160,17 +160,17 @@ theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSol
 
 /-- `E.tuple_succ` maps `![s₀, s₁, ..., sₙ]` to `![s₁, ..., sₙ, ∑ (E.coeffs i) * sᵢ]`,
   where `n := E.order`. -/
-def tupleSucc : (Finₓ E.order → α) →ₗ[α] Finₓ E.order → α where
-  toFun := fun X i => if h : (i : ℕ) + 1 < E.order then X ⟨i + 1, h⟩ else ∑ i, E.coeffs i * X i
-  map_add' := fun x y => by
+def tupleSucc : (Fin E.order → α) →ₗ[α] Fin E.order → α where
+  toFun X i := if h : (i : ℕ) + 1 < E.order then X ⟨i + 1, h⟩ else ∑ i, E.coeffs i * X i
+  map_add' x y := by
     ext i
-    split_ifs <;> simp [h, mul_addₓ, sum_add_distrib]
-  map_smul' := fun x y => by
+    split_ifs <;> simp [h, mul_add, sum_add_distrib]
+  map_smul' x y := by
     ext i
     split_ifs <;> simp [h, mul_sum]
     exact sum_congr rfl fun x _ => by ac_rfl
 
-end CommSemiringₓ
+end CommSemiring
 
 section Field
 
@@ -182,30 +182,30 @@ theorem sol_space_dim : Module.rank α E.solSpace = E.order :=
 
 end Field
 
-section CommRingₓ
+section CommRing
 
-variable {α : Type _} [CommRingₓ α] (E : LinearRecurrence α)
+variable {α : Type _} [CommRing α] (E : LinearRecurrence α)
 
 /-- The characteristic polynomial of `E` is
 `X ^ E.order - ∑ i : fin E.order, (E.coeffs i) * X ^ i`. -/
 def charPoly : α[X] :=
-  Polynomial.monomial E.order 1 - ∑ i : Finₓ E.order, Polynomial.monomial i (E.coeffs i)
+  Polynomial.monomial E.order 1 - ∑ i : Fin E.order, Polynomial.monomial i (E.coeffs i)
 
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q := by
   rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
-  simp only [Polynomial.eval₂_finset_sum, one_mulₓ, RingHom.id_apply, Polynomial.eval₂_monomial, Polynomial.eval₂_sub]
+  simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial, Polynomial.eval₂_sub]
   constructor
   · intro h
     simpa [sub_eq_zero] using h 0
     
   · intro h n
-    simp only [pow_addₓ, sub_eq_zero.mp h, mul_sum]
+    simp only [pow_add, sub_eq_zero.mp h, mul_sum]
     exact sum_congr rfl fun _ _ => by ring
     
 
-end CommRingₓ
+end CommRing
 
 end LinearRecurrence
 

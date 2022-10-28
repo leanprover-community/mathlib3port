@@ -30,126 +30,126 @@ variable (C) (D)
 
 /-- Bundled left-exact functors. -/
 @[nolint has_nonempty_instance]
-def LeftExactFunctor :=
+def LeftExactFunctorCat :=
   FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteLimits F)deriving Category
 
 -- mathport name: «expr ⥤ₗ »
-infixr:26 " ⥤ₗ " => LeftExactFunctor
+infixr:26 " ⥤ₗ " => LeftExactFunctorCat
 
 /-- A left exact functor is in particular a functor. -/
-def LeftExactFunctor.forget : (C ⥤ₗ D) ⥤ C ⥤ D :=
+def LeftExactFunctorCat.forget : (C ⥤ₗ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Bundled right-exact functors. -/
 @[nolint has_nonempty_instance]
-def RightExactFunctor :=
+def RightExactFunctorCat :=
   FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteColimits F)deriving Category
 
 -- mathport name: «expr ⥤ᵣ »
-infixr:26 " ⥤ᵣ " => RightExactFunctor
+infixr:26 " ⥤ᵣ " => RightExactFunctorCat
 
 /-- A right exact functor is in particular a functor. -/
-def RightExactFunctor.forget : (C ⥤ᵣ D) ⥤ C ⥤ D :=
+def RightExactFunctorCat.forget : (C ⥤ᵣ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Bundled exact functors. -/
 @[nolint has_nonempty_instance]
-def ExactFunctor :=
+def ExactFunctorCat :=
   FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteLimits F) ∧ Nonempty (PreservesFiniteColimits F)deriving
   Category
 
 -- mathport name: «expr ⥤ₑ »
-infixr:26 " ⥤ₑ " => ExactFunctor
+infixr:26 " ⥤ₑ " => ExactFunctorCat
 
 /-- An exact functor is in particular a functor. -/
-def ExactFunctor.forget : (C ⥤ₑ D) ⥤ C ⥤ D :=
+def ExactFunctorCat.forget : (C ⥤ₑ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Turn an exact functor into a left exact functor. -/
-def LeftExactFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤ₗ D :=
+def LeftExactFunctorCat.ofExact : (C ⥤ₑ D) ⥤ C ⥤ₗ D :=
   FullSubcategory.map fun X => And.left deriving Full, Faithful
 
 /-- Turn an exact functor into a left exact functor. -/
-def RightExactFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤ᵣ D :=
+def RightExactFunctorCat.ofExact : (C ⥤ₑ D) ⥤ C ⥤ᵣ D :=
   FullSubcategory.map fun X => And.right deriving Full, Faithful
 
 variable {C D}
 
 @[simp]
-theorem LeftExactFunctor.of_exact_obj (F : C ⥤ₑ D) : (LeftExactFunctor.ofExact C D).obj F = ⟨F.1, F.2.1⟩ :=
+theorem LeftExactFunctorCat.of_exact_obj (F : C ⥤ₑ D) : (LeftExactFunctorCat.ofExact C D).obj F = ⟨F.1, F.2.1⟩ :=
   rfl
 
 @[simp]
-theorem RightExactFunctor.of_exact_obj (F : C ⥤ₑ D) : (RightExactFunctor.ofExact C D).obj F = ⟨F.1, F.2.2⟩ :=
+theorem RightExactFunctorCat.of_exact_obj (F : C ⥤ₑ D) : (RightExactFunctorCat.ofExact C D).obj F = ⟨F.1, F.2.2⟩ :=
   rfl
 
 @[simp]
-theorem LeftExactFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (LeftExactFunctor.ofExact C D).map α = α :=
+theorem LeftExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (LeftExactFunctorCat.ofExact C D).map α = α :=
   rfl
 
 @[simp]
-theorem RightExactFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (RightExactFunctor.ofExact C D).map α = α :=
+theorem RightExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (RightExactFunctorCat.ofExact C D).map α = α :=
   rfl
 
 @[simp]
-theorem LeftExactFunctor.forget_obj (F : C ⥤ₗ D) : (LeftExactFunctor.forget C D).obj F = F.1 :=
+theorem LeftExactFunctorCat.forget_obj (F : C ⥤ₗ D) : (LeftExactFunctorCat.forget C D).obj F = F.1 :=
   rfl
 
 @[simp]
-theorem RightExactFunctor.forget_obj (F : C ⥤ᵣ D) : (RightExactFunctor.forget C D).obj F = F.1 :=
+theorem RightExactFunctorCat.forget_obj (F : C ⥤ᵣ D) : (RightExactFunctorCat.forget C D).obj F = F.1 :=
   rfl
 
 @[simp]
-theorem ExactFunctor.forget_obj (F : C ⥤ₑ D) : (ExactFunctor.forget C D).obj F = F.1 :=
+theorem ExactFunctorCat.forget_obj (F : C ⥤ₑ D) : (ExactFunctorCat.forget C D).obj F = F.1 :=
   rfl
 
 @[simp]
-theorem LeftExactFunctor.forget_map {F G : C ⥤ₗ D} (α : F ⟶ G) : (LeftExactFunctor.forget C D).map α = α :=
+theorem LeftExactFunctorCat.forget_map {F G : C ⥤ₗ D} (α : F ⟶ G) : (LeftExactFunctorCat.forget C D).map α = α :=
   rfl
 
 @[simp]
-theorem RightExactFunctor.forget_map {F G : C ⥤ᵣ D} (α : F ⟶ G) : (RightExactFunctor.forget C D).map α = α :=
+theorem RightExactFunctorCat.forget_map {F G : C ⥤ᵣ D} (α : F ⟶ G) : (RightExactFunctorCat.forget C D).map α = α :=
   rfl
 
 @[simp]
-theorem ExactFunctor.forget_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (ExactFunctor.forget C D).map α = α :=
+theorem ExactFunctorCat.forget_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (ExactFunctorCat.forget C D).map α = α :=
   rfl
 
 /-- Turn a left exact functor into an object of the category `LeftExactFunctor C D`. -/
-def LeftExactFunctor.of (F : C ⥤ D) [PreservesFiniteLimits F] : C ⥤ₗ D :=
+def LeftExactFunctorCat.of (F : C ⥤ D) [PreservesFiniteLimits F] : C ⥤ₗ D :=
   ⟨F, ⟨inferInstance⟩⟩
 
 /-- Turn a right exact functor into an object of the category `RightExactFunctor C D`. -/
-def RightExactFunctor.of (F : C ⥤ D) [PreservesFiniteColimits F] : C ⥤ᵣ D :=
+def RightExactFunctorCat.of (F : C ⥤ D) [PreservesFiniteColimits F] : C ⥤ᵣ D :=
   ⟨F, ⟨inferInstance⟩⟩
 
 /-- Turn an exact functor into an object of the category `ExactFunctor C D`. -/
-def ExactFunctor.of (F : C ⥤ D) [PreservesFiniteLimits F] [PreservesFiniteColimits F] : C ⥤ₑ D :=
+def ExactFunctorCat.of (F : C ⥤ D) [PreservesFiniteLimits F] [PreservesFiniteColimits F] : C ⥤ₑ D :=
   ⟨F, ⟨⟨inferInstance⟩, ⟨inferInstance⟩⟩⟩
 
 @[simp]
-theorem LeftExactFunctor.of_fst (F : C ⥤ D) [PreservesFiniteLimits F] : (LeftExactFunctor.of F).obj = F :=
+theorem LeftExactFunctorCat.of_fst (F : C ⥤ D) [PreservesFiniteLimits F] : (LeftExactFunctorCat.of F).obj = F :=
   rfl
 
 @[simp]
-theorem RightExactFunctor.of_fst (F : C ⥤ D) [PreservesFiniteColimits F] : (RightExactFunctor.of F).obj = F :=
+theorem RightExactFunctorCat.of_fst (F : C ⥤ D) [PreservesFiniteColimits F] : (RightExactFunctorCat.of F).obj = F :=
   rfl
 
 @[simp]
-theorem ExactFunctor.of_fst (F : C ⥤ D) [PreservesFiniteLimits F] [PreservesFiniteColimits F] :
-    (ExactFunctor.of F).obj = F :=
+theorem ExactFunctorCat.of_fst (F : C ⥤ D) [PreservesFiniteLimits F] [PreservesFiniteColimits F] :
+    (ExactFunctorCat.of F).obj = F :=
   rfl
 
-theorem LeftExactFunctor.forget_obj_of (F : C ⥤ D) [PreservesFiniteLimits F] :
-    (LeftExactFunctor.forget C D).obj (LeftExactFunctor.of F) = F :=
+theorem LeftExactFunctorCat.forget_obj_of (F : C ⥤ D) [PreservesFiniteLimits F] :
+    (LeftExactFunctorCat.forget C D).obj (LeftExactFunctorCat.of F) = F :=
   rfl
 
-theorem RightExactFunctor.forget_obj_of (F : C ⥤ D) [PreservesFiniteColimits F] :
-    (RightExactFunctor.forget C D).obj (RightExactFunctor.of F) = F :=
+theorem RightExactFunctorCat.forget_obj_of (F : C ⥤ D) [PreservesFiniteColimits F] :
+    (RightExactFunctorCat.forget C D).obj (RightExactFunctorCat.of F) = F :=
   rfl
 
-theorem ExactFunctor.forget_obj_of (F : C ⥤ D) [PreservesFiniteLimits F] [PreservesFiniteColimits F] :
-    (ExactFunctor.forget C D).obj (ExactFunctor.of F) = F :=
+theorem ExactFunctorCat.forget_obj_of (F : C ⥤ D) [PreservesFiniteLimits F] [PreservesFiniteColimits F] :
+    (ExactFunctorCat.forget C D).obj (ExactFunctorCat.of F) = F :=
   rfl
 
 noncomputable instance (F : C ⥤ₗ D) : PreservesFiniteLimits F.obj :=

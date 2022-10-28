@@ -32,22 +32,22 @@ section Matrices
 
 open Matrix
 
-variable {R : Type u} [CommRingₓ R]
+variable {R : Type u} [CommRing R]
 
-variable {n : Type w} [DecidableEq n] [Fintypeₓ n]
+variable {n : Type w} [DecidableEq n] [Fintype n]
 
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the Lie algebra structures. -/
-def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
+def lieEquivMatrix' : Module.EndCat R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
   { LinearMap.toMatrix' with
     map_lie' := fun T S => by
       let f := @LinearMap.toMatrix' R _ n n _ _
       change f (T.comp S - S.comp T) = f T * f S - f S * f T
-      have h : ∀ T S : Module.End R _, f (T.comp S) = f T ⬝ f S := LinearMap.to_matrix'_comp
+      have h : ∀ T S : Module.EndCat R _, f (T.comp S) = f T ⬝ f S := LinearMap.to_matrix'_comp
       rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
 
 @[simp]
-theorem lie_equiv_matrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f = f.toMatrix' :=
+theorem lie_equiv_matrix'_apply (f : Module.EndCat R (n → R)) : lieEquivMatrix' f = f.toMatrix' :=
   rfl
 
 @[simp]
@@ -66,7 +66,7 @@ theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) : P.lieCon
 theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
   simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
-variable {m : Type w₁} [DecidableEq m] [Fintypeₓ m] (e : n ≃ m)
+variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 
 /-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/

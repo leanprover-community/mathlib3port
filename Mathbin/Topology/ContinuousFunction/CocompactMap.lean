@@ -29,6 +29,8 @@ structure CocompactMap (α : Type u) (β : Type v) [TopologicalSpace α] [Topolo
   Type max u v where
   cocompact_tendsto' : Tendsto to_fun (cocompact α) (cocompact β)
 
+section
+
 /-- `cocompact_map_class F α β` states that `F` is a type of cocompact continuous maps.
 
 You should also extend this typeclass when you extend `cocompact_map`. -/
@@ -36,11 +38,13 @@ class CocompactMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSp
   ContinuousMapClass F α β where
   cocompact_tendsto (f : F) : Tendsto f (cocompact α) (cocompact β)
 
+end
+
 namespace CocompactMapClass
 
 variable {F α β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CocompactMapClass F α β]
 
-instance : CoeTₓ F (CocompactMap α β) :=
+instance : CoeT F (CocompactMap α β) :=
   ⟨fun f => ⟨f, cocompact_tendsto f⟩⟩
 
 end CocompactMapClass
@@ -54,13 +58,13 @@ section Basics
 variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 instance : CocompactMapClass (CocompactMap α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_continuous := fun f => f.continuous_to_fun
-  cocompact_tendsto := fun f => f.cocompact_tendsto'
+  map_continuous f := f.continuous_to_fun
+  cocompact_tendsto f := f.cocompact_tendsto'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/

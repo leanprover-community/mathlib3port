@@ -5,7 +5,7 @@ Authors: Mario Carneiro, Johan Commelin
 -/
 import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 import Mathbin.Logic.Equiv.Option
 
 /-!
@@ -32,21 +32,21 @@ def WithOne (α) :=
 
 namespace WithOne
 
-instance [HasRepr α] : HasRepr (WithZero α) :=
+instance [Repr α] : Repr (WithZero α) :=
   ⟨fun o =>
     match o with
     | none => "0"
-    | some a => "↑" ++ reprₓ a⟩
+    | some a => "↑" ++ repr a⟩
 
 @[to_additive]
-instance [HasRepr α] : HasRepr (WithOne α) :=
+instance [Repr α] : Repr (WithOne α) :=
   ⟨fun o =>
     match o with
     | none => "1"
-    | some a => "↑" ++ reprₓ a⟩
+    | some a => "↑" ++ repr a⟩
 
 @[to_additive]
-instance : Monadₓ WithOne :=
+instance : Monad WithOne :=
   Option.monad
 
 @[to_additive]
@@ -64,7 +64,7 @@ instance [Inv α] : Inv (WithOne α) :=
 @[to_additive]
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithOne α) :=
   { WithOne.hasInv with
-    inv_inv := fun a => (Option.map_mapₓ _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 @[to_additive]
 instance [Inv α] : InvOneClass (WithOne α) :=
@@ -79,11 +79,11 @@ instance [Nonempty α] : Nontrivial (WithOne α) :=
   Option.nontrivial
 
 @[to_additive]
-instance : CoeTₓ α (WithOne α) :=
+instance : CoeT α (WithOne α) :=
   ⟨some⟩
 
 /-- Recursor for `with_one` using the preferred forms `1` and `↑a`. -/
-@[elabAsElim, to_additive "Recursor for `with_zero` using the preferred forms `0` and `↑a`."]
+@[elab_as_elim, to_additive "Recursor for `with_zero` using the preferred forms `0` and `↑a`."]
 def recOneCoe {C : WithOne α → Sort _} (h₁ : C 1) (h₂ : ∀ a : α, C a) : ∀ n : WithOne α, C n :=
   Option.rec h₁ h₂
 
@@ -117,13 +117,13 @@ theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 
 @[to_additive]
-instance canLift : CanLift (WithOne α) α coe fun a => a ≠ 1 where prf := fun a => ne_one_iff_exists.1
+instance canLift : CanLift (WithOne α) α coe fun a => a ≠ 1 where prf a := ne_one_iff_exists.1
 
 @[simp, norm_cast, to_additive]
 theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
   Option.some_inj
 
-@[elabAsElim, to_additive]
+@[elab_as_elim, to_additive]
 protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 → (∀ a : α, P a) → P x :=
   Option.casesOn
 
@@ -131,21 +131,21 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
 -- `with_one.mul_one_class._proof_{1,2}` have an ill-typed statement after `with_one` is made
 -- irreducible.
 @[to_additive]
-instance [Mul α] : MulOneClassₓ (WithOne α) where
+instance [Mul α] : MulOneClass (WithOne α) where
   mul := (· * ·)
   one := 1
   one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.lift_or_get_is_left_id _).1
   mul_one := show ∀ x : WithOne α, x * 1 = x from (Option.lift_or_get_is_right_id _).1
 
 @[to_additive]
-instance [Semigroupₓ α] : Monoidₓ (WithOne α) :=
+instance [Semigroup α] : Monoid (WithOne α) :=
   { WithOne.mulOneClass with mul_assoc := (Option.lift_or_get_assoc _).1 }
 
-example [Semigroupₓ α] : @Monoidₓ.toMulOneClass _ (@WithOne.monoid α _) = @WithOne.mulOneClass α _ :=
+example [Semigroup α] : @Monoid.toMulOneClass _ (@WithOne.monoid α _) = @WithOne.mulOneClass α _ :=
   rfl
 
 @[to_additive]
-instance [CommSemigroupₓ α] : CommMonoidₓ (WithOne α) :=
+instance [CommSemigroup α] : CommMonoid (WithOne α) :=
   { WithOne.monoid with mul_comm := (Option.lift_or_get_comm _).1 }
 
 section
@@ -156,33 +156,33 @@ section
 @[to_additive "`coe` as a bundled morphism", simps apply]
 def coeMulHom [Mul α] : α →ₙ* WithOne α where
   toFun := coe
-  map_mul' := fun x y => rfl
+  map_mul' x y := rfl
 
 end
 
 section lift
 
-variable [Mul α] [MulOneClassₓ β]
+variable [Mul α] [MulOneClass β]
 
 /-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
 def lift : (α →ₙ* β) ≃ (WithOne α →* β) where
-  toFun := fun f =>
+  toFun f :=
     { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
       map_mul' := fun x y =>
         (WithOne.cases_on x
             (by
-              rw [one_mulₓ]
-              exact (one_mulₓ _).symm))
+              rw [one_mul]
+              exact (one_mul _).symm))
           fun x =>
           (WithOne.cases_on y
               (by
-                rw [mul_oneₓ]
-                exact (mul_oneₓ _).symm))
+                rw [mul_one]
+                exact (mul_one _).symm))
             fun y => f.map_mul x y }
-  invFun := fun F => F.toMulHom.comp coeMulHom
-  left_inv := fun f => MulHom.ext fun x => rfl
-  right_inv := fun F => MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
+  invFun F := F.toMulHom.comp coeMulHom
+  left_inv f := MulHom.ext fun x => rfl
+  right_inv F := MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
 
 variable (f : α →ₙ* β)
 
@@ -277,7 +277,7 @@ instance [one : One α] : One (WithZero α) :=
 theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
   rfl
 
-instance [Mul α] : MulZeroClassₓ (WithZero α) :=
+instance [Mul α] : MulZeroClass (WithZero α) :=
   { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂, zero_mul := fun a => rfl,
     mul_zero := fun a => by cases a <;> rfl }
 
@@ -297,7 +297,7 @@ instance [Mul α] : NoZeroDivisors (WithZero α) :=
     rintro (a | a) (b | b) h
     exacts[Or.inl rfl, Or.inl rfl, Or.inr rfl, Option.noConfusion h]⟩
 
-instance [Semigroupₓ α] : SemigroupWithZeroₓ (WithZero α) :=
+instance [Semigroup α] : SemigroupWithZero (WithZero α) :=
   { WithZero.mulZeroClass with
     mul_assoc := fun a b c =>
       match a, b, c with
@@ -306,7 +306,7 @@ instance [Semigroupₓ α] : SemigroupWithZeroₓ (WithZero α) :=
       | some a, some b, none => rfl
       | some a, some b, some c => congr_arg some (mul_assoc _ _ _) }
 
-instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
+instance [CommSemigroup α] : CommSemigroup (WithZero α) :=
   { WithZero.semigroupWithZero with
     mul_comm := fun a b =>
       match a, b with
@@ -314,16 +314,16 @@ instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
       | some a, none => rfl
       | some a, some b => congr_arg some (mul_comm _ _) }
 
-instance [MulOneClassₓ α] : MulZeroOneClassₓ (WithZero α) :=
+instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
   { WithZero.mulZeroClass, WithZero.hasOne with
     one_mul := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| one_mulₓ _,
+      | some a => congr_arg some <| one_mul _,
     mul_one := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| mul_oneₓ _ }
+      | some a => congr_arg some <| mul_one _ }
 
 instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
@@ -336,18 +336,18 @@ instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
 theorem coe_pow [One α] [Pow α ℕ] {a : α} (n : ℕ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
   rfl
 
-instance [Monoidₓ α] : MonoidWithZeroₓ (WithZero α) :=
+instance [Monoid α] : MonoidWithZero (WithZero α) :=
   { WithZero.mulZeroOneClass, WithZero.semigroupWithZero with npow := fun n x => x ^ n,
     npow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_zeroₓ _,
+      | some x => congr_arg some <| pow_zero _,
     npow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_succₓ _ _ }
+      | some x => congr_arg some <| pow_succ _ _ }
 
-instance [CommMonoidₓ α] : CommMonoidWithZero (WithZero α) :=
+instance [CommMonoid α] : CommMonoidWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.commSemigroup with }
 
 /-- Given an inverse operation on `α` there is an inverse operation
@@ -365,7 +365,7 @@ theorem inv_zero [Inv α] : (0 : WithZero α)⁻¹ = 0 :=
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithZero α) :=
   { WithZero.hasInv with
-    inv_inv := fun a => (Option.map_mapₓ _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 instance [InvOneClass α] : InvOneClass (WithZero α) :=
   { WithZero.hasOne, WithZero.hasInv with inv_one := show ((1⁻¹ : α) : WithZero α) = 1 by simp }
@@ -386,10 +386,10 @@ instance [One α] [Pow α ℤ] : Pow (WithZero α) ℤ :=
     | some x, n => ↑(x ^ n)⟩
 
 @[simp, norm_cast]
-theorem coe_zpow [DivInvMonoidₓ α] {a : α} (n : ℤ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
+theorem coe_zpow [DivInvMonoid α] {a : α} (n : ℤ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
   rfl
 
-instance [DivInvMonoidₓ α] : DivInvMonoidₓ (WithZero α) :=
+instance [DivInvMonoid α] : DivInvMonoid (WithZero α) :=
   { WithZero.hasDiv, WithZero.hasInv, WithZero.monoidWithZero with
     div_eq_mul_inv := fun a b =>
       match a, b with
@@ -404,11 +404,11 @@ instance [DivInvMonoidₓ α] : DivInvMonoidₓ (WithZero α) :=
     zpow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoidₓ.zpow_succ' _ _,
+      | some x => congr_arg some <| DivInvMonoid.zpow_succ' _ _,
     zpow_neg' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoidₓ.zpow_neg' _ _ }
+      | some x => congr_arg some <| DivInvMonoid.zpow_neg' _ _ }
 
 instance [DivInvOneMonoid α] : DivInvOneMonoid (WithZero α) :=
   { WithZero.divInvMonoid, WithZero.invOneClass with }
@@ -431,36 +431,36 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
 instance [DivisionCommMonoid α] : DivisionCommMonoid (WithZero α) :=
   { WithZero.divisionMonoid, WithZero.commSemigroup with }
 
-section Groupₓ
+section Group
 
-variable [Groupₓ α]
+variable [Group α]
 
 /-- if `G` is a group then `with_zero G` is a group with zero. -/
-instance : GroupWithZeroₓ (WithZero α) :=
+instance : GroupWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.divInvMonoid, WithZero.nontrivial with inv_zero := inv_zero,
     mul_inv_cancel := fun a ha => by
       lift a to α using ha
       norm_cast
-      apply mul_right_invₓ }
+      apply mul_right_inv }
 
-end Groupₓ
+end Group
 
-instance [CommGroupₓ α] : CommGroupWithZero (WithZero α) :=
+instance [CommGroup α] : CommGroupWithZero (WithZero α) :=
   { WithZero.groupWithZero, WithZero.commMonoidWithZero with }
 
-instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithZero α) :=
+instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
   { WithZero.addMonoid, WithZero.hasOne with natCast := fun n => if n = 0 then 0 else (n.cast : α),
     nat_cast_zero := rfl,
     nat_cast_succ := fun n => by
       cases n
       show (((1 : ℕ) : α) : WithZero α) = 0 + 1
-      · rw [Nat.cast_oneₓ, coe_one, zero_addₓ]
+      · rw [Nat.cast_one, coe_one, zero_add]
         
       show (((n + 2 : ℕ) : α) : WithZero α) = ((n + 1 : ℕ) : α) + 1
-      · rw [Nat.cast_succₓ, coe_add, coe_one]
+      · rw [Nat.cast_succ, coe_add, coe_one]
          }
 
-instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
+instance [Semiring α] : Semiring (WithZero α) :=
   { WithZero.addMonoidWithOne, WithZero.addCommMonoid, WithZero.mulZeroClass, WithZero.monoidWithZero with
     left_distrib := fun a b c => by
       cases' a with a
@@ -477,12 +477,12 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
       exact congr_arg some (right_distrib _ _ _) }
 
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
-def unitsWithZeroEquiv [Groupₓ α] : (WithZero α)ˣ ≃* α where
-  toFun := fun a => unzero a.ne_zero
-  invFun := fun a => Units.mk0 a coe_ne_zero
-  left_inv := fun _ => Units.ext <| by simpa only [coe_unzero]
-  right_inv := fun _ => rfl
-  map_mul' := fun _ _ => coe_inj.mp <| by simpa only [coe_unzero, coe_mul]
+def unitsWithZeroEquiv [Group α] : (WithZero α)ˣ ≃* α where
+  toFun a := unzero a.ne_zero
+  invFun a := Units.mk0 a coe_ne_zero
+  left_inv _ := Units.ext <| by simpa only [coe_unzero]
+  right_inv _ := rfl
+  map_mul' _ _ := coe_inj.mp <| by simpa only [coe_unzero, coe_mul]
 
 end WithZero
 

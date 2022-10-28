@@ -43,11 +43,11 @@ theorem Set.restrict_preimage_open_embedding (s : Set β) (h : OpenEmbedding f) 
 
 alias Set.restrict_preimage_open_embedding ← OpenEmbedding.restrict_preimage
 
-theorem Set.restrict_preimage_closed_embedding (s : Set β) (h : ClosedEmbedding f) :
+theorem Set.restrictPreimageClosedEmbedding (s : Set β) (h : ClosedEmbedding f) :
     ClosedEmbedding (s.restrictPreimage f) :=
-  ⟨h.1.restrictPreimage s, (s.range_restrict_preimage f).symm ▸ inducing_coe.is_closed_preimage _ h.2⟩
+  ⟨h.1.restrictPreimage s, (s.range_restrict_preimage f).symm ▸ inducing_coe.isClosedPreimage _ h.2⟩
 
-alias Set.restrict_preimage_closed_embedding ← ClosedEmbedding.restrict_preimage
+alias Set.restrictPreimageClosedEmbedding ← ClosedEmbedding.restrictPreimage
 
 include hU
 
@@ -86,7 +86,7 @@ theorem inducing_iff_inducing_of_supr_eq_top (h : Continuous f) :
           rw [hU]
           triv)
     erw [← OpenEmbedding.map_nhds_eq (h.1 _ (U i).2).open_embedding_subtype_coe ⟨x, hi⟩]
-    rw [(H i) ⟨x, hi⟩, Filter.subtype_coe_map_comap, Function.comp_applyₓ, Subtype.coe_mk, inf_eq_left,
+    rw [(H i) ⟨x, hi⟩, Filter.subtype_coe_map_comap, Function.comp_apply, Subtype.coe_mk, inf_eq_left,
       Filter.le_principal_iff]
     exact Filter.preimage_mem_comap ((U i).2.mem_nhds hi)
     
@@ -95,7 +95,7 @@ theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
     Embedding f ↔ ∀ i, Embedding ((U i).1.restrictPreimage f) := by
   simp_rw [embedding_iff]
   rw [forall_and_distrib]
-  apply and_congrₓ
+  apply and_congr
   · apply inducing_iff_inducing_of_supr_eq_top <;> assumption
     
   · apply Set.injective_iff_injective_of_Union_eq_univ
@@ -107,7 +107,7 @@ theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
     OpenEmbedding f ↔ ∀ i, OpenEmbedding ((U i).1.restrictPreimage f) := by
   simp_rw [open_embedding_iff]
   rw [forall_and_distrib]
-  apply and_congrₓ
+  apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
     
   · simp_rw [Set.range_restrict_preimage]
@@ -118,7 +118,7 @@ theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) 
     ClosedEmbedding f ↔ ∀ i, ClosedEmbedding ((U i).1.restrictPreimage f) := by
   simp_rw [closed_embedding_iff]
   rw [forall_and_distrib]
-  apply and_congrₓ
+  apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
     
   · simp_rw [Set.range_restrict_preimage]

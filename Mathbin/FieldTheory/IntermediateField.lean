@@ -48,8 +48,9 @@ structure IntermediateField extends Subalgebra K L where
   neg_mem' : ∀ x ∈ carrier, -x ∈ carrier
   inv_mem' : ∀ x ∈ carrier, x⁻¹ ∈ carrier
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret an `intermediate_field` as a `subalgebra`. -/
+add_decl_doc IntermediateField.toSubalgebra
+
 variable {K L L'} (S : IntermediateField K L)
 
 namespace IntermediateField
@@ -64,11 +65,11 @@ instance : SetLike (IntermediateField K L) L :=
     congr ⟩
 
 instance : SubfieldClass (IntermediateField K L) L where
-  add_mem := fun s _ _ => s.add_mem'
-  zero_mem := fun s => s.zero_mem'
+  add_mem s _ _ := s.add_mem'
+  zero_mem s := s.zero_mem'
   neg_mem := neg_mem'
-  mul_mem := fun s _ _ => s.mul_mem'
-  one_mem := fun s => s.one_mem'
+  mul_mem s _ _ := s.mul_mem'
+  one_mem s := s.one_mem'
   inv_mem := inv_mem'
 
 @[simp]
@@ -187,12 +188,12 @@ protected theorem multiset_sum_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) →
 
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-protected theorem prod_mem {ι : Type _} {t : Finsetₓ ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
+protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
   prod_mem h
 
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-protected theorem sum_mem {ι : Type _} {t : Finsetₓ ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
+protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
   sum_mem h
 
 protected theorem pow_mem {x : L} (hx : x ∈ S) (n : ℤ) : x ^ n ∈ S :=
@@ -267,7 +268,7 @@ theorem to_subalgebra_to_intermediate_field' (S : Subalgebra K L) (hS : IsField 
 
 @[simp]
 theorem to_intermediate_field'_to_subalgebra (S : IntermediateField K L) :
-    S.toSubalgebra.toIntermediateField' (Field.to_is_field S) = S := by
+    S.toSubalgebra.toIntermediateField' (Field.toIsField S) = S := by
   ext
   rfl
 
@@ -283,53 +284,53 @@ instance toField : Field S :=
   S.toSubfield.toField
 
 @[simp, norm_cast]
-theorem coe_sum {ι : Type _} [Fintypeₓ ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
+theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
-  induction' Finsetₓ.univ using Finsetₓ.induction_on with i s hi H
+  induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
     
-  · rw [Finsetₓ.sum_insert hi, AddMemClass.coe_add, H, Finsetₓ.sum_insert hi]
+  · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
     
 
 @[simp, norm_cast]
-theorem coe_prod {ι : Type _} [Fintypeₓ ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
+theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
   classical
-  induction' Finsetₓ.univ using Finsetₓ.induction_on with i s hi H
+  induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
     
-  · rw [Finsetₓ.prod_insert hi, MulMemClass.coe_mul, H, Finsetₓ.prod_insert hi]
+  · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
     
 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
 
 
-instance module' {R} [Semiringₓ R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : Module R S :=
+instance module' {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : Module R S :=
   S.toSubalgebra.module'
 
 instance module : Module K S :=
   S.toSubalgebra.Module
 
-instance is_scalar_tower {R} [Semiringₓ R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
+instance is_scalar_tower {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
   S.toSubalgebra.IsScalarTower
 
 @[simp]
-theorem coe_smul {R} [Semiringₓ R] [HasSmul R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
+theorem coe_smul {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
     ↑(r • x) = (r • x : L) :=
   rfl
 
-instance algebra' {K'} [CommSemiringₓ K'] [HasSmul K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
+instance algebra' {K'} [CommSemiring K'] [HasSmul K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
   S.toSubalgebra.algebra'
 
 instance algebra : Algebra K S :=
   S.toSubalgebra.Algebra
 
-instance toAlgebra {R : Type _} [Semiringₓ R] [Algebra L R] : Algebra S R :=
+instance toAlgebra {R : Type _} [Semiring R] [Algebra L R] : Algebra S R :=
   S.toSubalgebra.toAlgebra
 
-instance is_scalar_tower_bot {R : Type _} [Semiringₓ R] [Algebra L R] : IsScalarTower S L R :=
+instance is_scalar_tower_bot {R : Type _} [Semiring R] [Algebra L R] : IsScalarTower S L R :=
   IsScalarTower.subalgebra _ _ _ S.toSubalgebra
 
-instance is_scalar_tower_mid {R : Type _} [Semiringₓ R] [Algebra L R] [Algebra K R] [IsScalarTower K L R] :
+instance is_scalar_tower_mid {R : Type _} [Semiring R] [Algebra L R] [Algebra K R] [IsScalarTower K L R] :
     IsScalarTower K S R :=
   IsScalarTower.subalgebra' _ _ _ S.toSubalgebra
 
@@ -417,7 +418,7 @@ theorem val_mk {x : L} (hx : x ∈ S) : S.val ⟨x, hx⟩ = x :=
 theorem range_val : S.val.range = S.toSubalgebra :=
   S.toSubalgebra.range_val
 
-theorem aeval_coe {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] (x : S) (P : R[X]) :
+theorem aeval_coe {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] (x : S) (P : R[X]) :
     aeval (x : L) P = aeval x P := by
   refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
   · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
@@ -427,7 +428,7 @@ theorem aeval_coe {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsSc
     rfl
     
 
-theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] {x : S} :
+theorem coe_is_integral_iff {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] {x : S} :
     IsIntegral R (x : L) ↔ IsIntegral R x := by
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨P, hPmo, hProot⟩ := h
@@ -451,12 +452,12 @@ theorem inclusion_injective {E F : IntermediateField K L} (hEF : E ≤ F) : Func
   Subalgebra.inclusion_injective hEF
 
 @[simp]
-theorem inclusion_self {E : IntermediateField K L} : inclusion (le_reflₓ E) = AlgHom.id K E :=
+theorem inclusion_self {E : IntermediateField K L} : inclusion (le_refl E) = AlgHom.id K E :=
   Subalgebra.inclusion_self
 
 @[simp]
 theorem inclusion_inclusion {E F G : IntermediateField K L} (hEF : E ≤ F) (hFG : F ≤ G) (x : E) :
-    inclusion hFG (inclusion hEF x) = inclusion (le_transₓ hEF hFG) x :=
+    inclusion hFG (inclusion hEF x) = inclusion (le_trans hEF hFG) x :=
   Subalgebra.inclusion_inclusion hEF hFG x
 
 @[simp]
@@ -537,10 +538,10 @@ section FiniteDimensional
 
 variable (F E : IntermediateField K L)
 
-instance finite_dimensional_left [FiniteDimensional K L] : FiniteDimensional K F :=
+instance finiteDimensionalLeft [FiniteDimensional K L] : FiniteDimensional K F :=
   left K F L
 
-instance finite_dimensional_right [FiniteDimensional K L] : FiniteDimensional F L :=
+instance finiteDimensionalRight [FiniteDimensional K L] : FiniteDimensional F L :=
   right K F L
 
 @[simp]
@@ -562,7 +563,7 @@ theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finra
   to_subalgebra_injective <| Subalgebra.to_submodule_injective <| eq_of_le_of_finrank_le h_le h_finrank
 
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=
-  eq_of_le_of_finrank_le h_le h_finrank.Ge
+  eq_of_le_of_finrank_le h_le h_finrank.ge
 
 theorem eq_of_le_of_finrank_le' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L ≤ finrank E L) :
     F = E := by
@@ -595,11 +596,11 @@ end IntermediateField
 
 /-- If `L/K` is algebraic, the `K`-subalgebras of `L` are all fields.  -/
 def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) : Subalgebra K L ≃o IntermediateField K L where
-  toFun := fun S => S.toIntermediateField fun x hx => S.inv_mem_of_algebraic (alg (⟨x, hx⟩ : S))
-  invFun := fun S => S.toSubalgebra
-  left_inv := fun S => to_subalgebra_to_intermediate_field _ _
+  toFun S := S.toIntermediateField fun x hx => S.inv_mem_of_algebraic (alg (⟨x, hx⟩ : S))
+  invFun S := S.toSubalgebra
+  left_inv S := to_subalgebra_to_intermediate_field _ _
   right_inv := to_intermediate_field_to_subalgebra
-  map_rel_iff' := fun S S' => Iff.rfl
+  map_rel_iff' S S' := Iff.rfl
 
 @[simp]
 theorem mem_subalgebra_equiv_intermediate_field (alg : Algebra.IsAlgebraic K L) {S : Subalgebra K L} {x : L} :

@@ -27,18 +27,18 @@ instance measureSpace : MeasureSpace ℂ :=
   ⟨Measure.map basisOneI.equivFun.symm volume⟩
 
 /-- Measurable equivalence between `ℂ` and `ℝ² = fin 2 → ℝ`. -/
-def measurableEquivPi : ℂ ≃ᵐ (Finₓ 2 → ℝ) :=
+def measurableEquivPi : ℂ ≃ᵐ (Fin 2 → ℝ) :=
   basisOneI.equivFun.toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv
 
 /-- Measurable equivalence between `ℂ` and `ℝ × ℝ`. -/
 def measurableEquivRealProd : ℂ ≃ᵐ ℝ × ℝ :=
   equivRealProdₗ.toHomeomorph.toMeasurableEquiv
 
-theorem volume_preserving_equiv_pi : MeasurePreserving measurableEquivPi :=
+theorem volumePreservingEquivPi : MeasurePreserving measurableEquivPi :=
   (measurableEquivPi.symm.Measurable.MeasurePreserving _).symm _
 
-theorem volume_preserving_equiv_real_prod : MeasurePreserving measurableEquivRealProd :=
-  (volume_preserving_fin_two_arrow ℝ).comp volume_preserving_equiv_pi
+theorem volumePreservingEquivRealProd : MeasurePreserving measurableEquivRealProd :=
+  (volumePreservingFinTwoArrow ℝ).comp volumePreservingEquivPi
 
 end Complex
 

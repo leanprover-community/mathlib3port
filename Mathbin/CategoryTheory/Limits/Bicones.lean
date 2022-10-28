@@ -46,11 +46,11 @@ inductive Bicone
 instance : Inhabited (Bicone J) :=
   ⟨Bicone.left⟩
 
-instance finBicone [Fintypeₓ J] : Fintypeₓ (Bicone J) where
-  elems := [Bicone.left, Bicone.right].toFinset ∪ Finsetₓ.image Bicone.diagram (Fintypeₓ.elems J)
-  complete := fun j => by
+instance finBicone [Fintype J] : Fintype (Bicone J) where
+  elems := [Bicone.left, Bicone.right].toFinset ∪ Finset.image Bicone.diagram (Fintype.elems J)
+  complete j := by
     cases j <;> simp
-    exact Fintypeₓ.complete j
+    exact Fintype.complete j
 
 variable [Category.{v₁} J]
 
@@ -71,8 +71,8 @@ instance BiconeHom.decidableEq {j k : Bicone J} : DecidableEq (BiconeHom J j k) 
 @[simps]
 instance biconeCategoryStruct : CategoryStruct (Bicone J) where
   Hom := BiconeHom J
-  id := fun j => Bicone.casesOn j BiconeHom.left_id BiconeHom.right_id fun k => BiconeHom.diagram (𝟙 k)
-  comp := fun X Y Z f g => by
+  id j := Bicone.casesOn j BiconeHom.left_id BiconeHom.right_id fun k => BiconeHom.diagram (𝟙 k)
+  comp X Y Z f g := by
     cases f
     exact g
     exact g
@@ -84,9 +84,9 @@ instance biconeCategoryStruct : CategoryStruct (Bicone J) where
     exact bicone_hom.diagram (f_f ≫ g_f)
 
 instance biconeCategory : Category (Bicone J) where
-  id_comp' := fun X Y f => by cases f <;> simp
-  comp_id' := fun X Y f => by cases f <;> simp
-  assoc' := fun W X Y Z f g h => by cases f <;> cases g <;> cases h <;> simp
+  id_comp' X Y f := by cases f <;> simp
+  comp_id' X Y f := by cases f <;> simp
+  assoc' W X Y Z f g h := by cases f <;> cases g <;> cases h <;> simp
 
 end Bicone
 
@@ -98,16 +98,16 @@ variable (J : Type v₁) [SmallCategory J]
 -/
 @[simps]
 def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) : Bicone J ⥤ C where
-  obj := fun X => Bicone.casesOn X c₁.x c₂.x fun j => F.obj j
-  map := fun X Y f => by
+  obj X := Bicone.casesOn X c₁.x c₂.x fun j => F.obj j
+  map X Y f := by
     cases f
     exact 𝟙 _
     exact 𝟙 _
     exact c₁.π.app f_1
     exact c₂.π.app f_1
     exact F.map f_f
-  map_id' := fun X => by cases X <;> simp
-  map_comp' := fun X Y Z f g => by
+  map_id' X := by cases X <;> simp
+  map_comp' X Y Z f g := by
     cases f
     exact (category.id_comp _).symm
     exact (category.id_comp _).symm
@@ -118,7 +118,7 @@ def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone
     cases g
     exact F.map_comp _ _
 
-instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintypeₓ (j ⟶ k) := by
+instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
   cases j <;> cases k
   exact
     { elems := {bicone_hom.left_id},
@@ -145,12 +145,12 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintypeₓ (j ⟶ k) :=
   exact { elems := ∅, complete := fun f => by cases f }
   exact { elems := ∅, complete := fun f => by cases f }
   exact
-    { elems := Finsetₓ.image bicone_hom.diagram (Fintypeₓ.elems (j ⟶ k)),
+    { elems := Finset.image bicone_hom.diagram (Fintype.elems (j ⟶ k)),
       complete := fun f => by
         cases f
-        simp only [Finsetₓ.mem_image]
+        simp only [Finset.mem_image]
         use f_f
-        simpa using Fintypeₓ.complete _ }
+        simpa using Fintype.complete _ }
 
 instance biconeSmallCategory : SmallCategory (Bicone J) :=
   CategoryTheory.biconeCategory J

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Data.Nat.Basic
-import Mathbin.Algebra.Order.Group
+import Mathbin.Algebra.Order.Group.Basic
 
 /-!
 # `with_bot ℕ`
@@ -21,7 +21,7 @@ theorem WithBot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 �
   | some n, some m =>
     show (n + m : WithBot ℕ) = (0 : ℕ) ↔ (n : WithBot ℕ) = (0 : ℕ) ∧ (m : WithBot ℕ) = (0 : ℕ) by
       rw [← WithBot.coe_add, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe,
-        add_eq_zero_iff' (Nat.zero_leₓ _) (Nat.zero_leₓ _)]
+        add_eq_zero_iff' (Nat.zero_le _) (Nat.zero_le _)]
 
 theorem WithBot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n = 1 ∧ m = 0
   | none, none => by decide
@@ -35,14 +35,14 @@ theorem WithBot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 �
 
 @[simp]
 theorem WithBot.coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
-  rw [← WithBot.coe_zero, WithBot.coe_le_coe] <;> exact Nat.zero_leₓ _
+  rw [← WithBot.coe_zero, WithBot.coe_le_coe] <;> exact Nat.zero_le _
 
 @[simp]
 theorem WithBot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
   Option.casesOn n (by decide) fun n => iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
 
 theorem WithBot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
-  refine' ⟨fun h => lt_of_lt_of_leₓ (with_bot.coe_lt_coe.mpr zero_lt_one) h, fun h => _⟩
+  refine' ⟨fun h => lt_of_lt_of_le (with_bot.coe_lt_coe.mpr zero_lt_one) h, fun h => _⟩
   induction x using WithBot.recBotCoe
   · exact (not_lt_bot h).elim
     

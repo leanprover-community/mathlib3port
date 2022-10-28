@@ -43,14 +43,14 @@ namespace SymAlg
 variable {α : Type _}
 
 /-- The element of `sym_alg α` that represents `a : α`. -/
-@[matchPattern, pp_nodot]
+@[match_pattern, pp_nodot]
 def sym : α ≃ αˢʸᵐ :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 /-- The element of `α` represented by `x : αˢʸᵐ`. -/
 @[pp_nodot]
 def unsym : αˢʸᵐ ≃ α :=
-  Equivₓ.refl _
+  Equiv.refl _
 
 @[simp]
 theorem unsym_sym (a : α) : unsym (sym a) = a :=
@@ -120,20 +120,20 @@ instance [IsEmpty α] : IsEmpty αˢʸᵐ :=
 @[to_additive]
 instance [One α] : One αˢʸᵐ where one := sym 1
 
-instance [Add α] : Add αˢʸᵐ where add := fun a b => sym (unsym a + unsym b)
+instance [Add α] : Add αˢʸᵐ where add a b := sym (unsym a + unsym b)
 
-instance [Sub α] : Sub αˢʸᵐ where sub := fun a b => sym (unsym a - unsym b)
+instance [Sub α] : Sub αˢʸᵐ where sub a b := sym (unsym a - unsym b)
 
-instance [Neg α] : Neg αˢʸᵐ where neg := fun a => sym (-unsym a)
+instance [Neg α] : Neg αˢʸᵐ where neg a := sym (-unsym a)
 
 -- Introduce the symmetrized multiplication
 instance [Add α] [Mul α] [One α] [Invertible (2 : α)] :
-    Mul αˢʸᵐ where mul := fun a b => sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
+    Mul αˢʸᵐ where mul a b := sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
 
 @[to_additive]
-instance [Inv α] : Inv αˢʸᵐ where inv := fun a => Sym <| (unsym a)⁻¹
+instance [Inv α] : Inv αˢʸᵐ where inv a := Sym <| (unsym a)⁻¹
 
-instance (R : Type _) [HasSmul R α] : HasSmul R αˢʸᵐ where smul := fun r a => sym (r • unsym a)
+instance (R : Type _) [HasSmul R α] : HasSmul R αˢʸᵐ where smul r a := sym (r • unsym a)
 
 @[simp, to_additive]
 theorem sym_one [One α] : sym (1 : α) = 1 :=
@@ -209,22 +209,22 @@ theorem unsym_ne_one_iff [One α] (a : αˢʸᵐ) : a.unsym ≠ (1 : α) ↔ a �
 theorem sym_ne_one_iff [One α] (a : α) : sym a ≠ (1 : αˢʸᵐ) ↔ a ≠ (1 : α) :=
   not_congr <| sym_eq_one_iff a
 
-instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ αˢʸᵐ :=
+instance [AddCommSemigroup α] : AddCommSemigroup αˢʸᵐ :=
   unsym_injective.AddCommSemigroup _ unsym_add
 
-instance [AddMonoidₓ α] : AddMonoidₓ αˢʸᵐ :=
+instance [AddMonoid α] : AddMonoid αˢʸᵐ :=
   unsym_injective.AddMonoid _ unsym_zero unsym_add fun _ _ => rfl
 
-instance [AddGroupₓ α] : AddGroupₓ αˢʸᵐ :=
+instance [AddGroup α] : AddGroup αˢʸᵐ :=
   unsym_injective.AddGroup _ unsym_zero unsym_add unsym_neg unsym_sub (fun _ _ => rfl) fun _ _ => rfl
 
-instance [AddCommMonoidₓ α] : AddCommMonoidₓ αˢʸᵐ :=
+instance [AddCommMonoid α] : AddCommMonoid αˢʸᵐ :=
   { SymAlg.addCommSemigroup, SymAlg.addMonoid with }
 
-instance [AddCommGroupₓ α] : AddCommGroupₓ αˢʸᵐ :=
+instance [AddCommGroup α] : AddCommGroup αˢʸᵐ :=
   { SymAlg.addCommMonoid, SymAlg.addGroup with }
 
-instance {R : Type _} [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Module R αˢʸᵐ :=
+instance {R : Type _} [Semiring R] [AddCommMonoid α] [Module R α] : Module R αˢʸᵐ :=
   Function.Injective.module R ⟨unsym, unsym_zero, unsym_add⟩ unsym_injective unsym_smul
 
 instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : Invertible (sym a) where
@@ -236,58 +236,58 @@ instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a
 theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : ⅟ (sym a) = sym (⅟ a) :=
   rfl
 
-instance [Semiringₓ α] [Invertible (2 : α)] : NonAssocSemiringₓ αˢʸᵐ :=
+instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
   { SymAlg.addCommMonoid with one := 1, mul := (· * ·), zero := 0,
-    zero_mul := fun _ => by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zeroₓ, mul_zero, sym_zero],
-    mul_zero := fun _ => by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zeroₓ, mul_zero, sym_zero],
-    mul_one := fun _ => by rw [mul_def, unsym_one, mul_oneₓ, one_mulₓ, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
-    one_mul := fun _ => by rw [mul_def, unsym_one, mul_oneₓ, one_mulₓ, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
+    zero_mul := fun _ => by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero],
+    mul_zero := fun _ => by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero],
+    mul_one := fun _ => by rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
+    one_mul := fun _ => by rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
     left_distrib := fun a b c =>
       match a, b, c with
       | Sym a, Sym b, Sym c => by
-        rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_addₓ a, add_mulₓ _ _ a, add_add_add_commₓ,
-          mul_addₓ],
+        rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_add a, add_mul _ _ a, add_add_add_comm,
+          mul_add],
     right_distrib := fun a b c =>
       match a, b, c with
       | Sym a, Sym b, Sym c => by
-        rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_addₓ c, add_mulₓ _ _ c, add_add_add_commₓ,
-          mul_addₓ] }
+        rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_add c, add_mul _ _ c, add_add_add_comm,
+          mul_add] }
 
 /-- The symmetrization of a real (unital, associative) algebra is a non-associative ring. -/
-instance [Ringₓ α] [Invertible (2 : α)] : NonAssocRing αˢʸᵐ :=
+instance [Ring α] [Invertible (2 : α)] : NonAssocRing αˢʸᵐ :=
   { SymAlg.nonAssocSemiring, SymAlg.addCommGroup with }
 
 /-! The squaring operation coincides for both multiplications -/
 
 
-theorem unsym_mul_self [Semiringₓ α] [Invertible (2 : α)] (a : αˢʸᵐ) : unsym (a * a) = unsym a * unsym a := by
+theorem unsym_mul_self [Semiring α] [Invertible (2 : α)] (a : αˢʸᵐ) : unsym (a * a) = unsym a * unsym a := by
   rw [mul_def, unsym_sym, ← two_mul, inv_of_mul_self_assoc]
 
-theorem sym_mul_self [Semiringₓ α] [Invertible (2 : α)] (a : α) : sym (a * a) = sym a * sym a := by
+theorem sym_mul_self [Semiring α] [Invertible (2 : α)] (a : α) : sym (a * a) = sym a * sym a := by
   rw [sym_mul_sym, ← two_mul, inv_of_mul_self_assoc]
 
-theorem mul_comm [Mul α] [AddCommSemigroupₓ α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) : a * b = b * a := by
-  rw [mul_def, mul_def, add_commₓ]
+theorem mul_comm [Mul α] [AddCommSemigroup α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) : a * b = b * a := by
+  rw [mul_def, mul_def, add_comm]
 
-instance [Ringₓ α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ where
+instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ where
   mul_comm := SymAlg.mul_comm
-  lmul_comm_rmul_rmul := fun a b => by
+  lmul_comm_rmul_rmul a b := by
     -- Rearrange LHS
     have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.inv_of_left.Eq
     rw [mul_def, mul_def a b, unsym_sym, ← mul_assoc, ← commute_half_left (unsym (a * a)), mul_assoc, mul_assoc, ←
-      mul_addₓ, ← mul_assoc, add_mulₓ, mul_addₓ (unsym (a * a)), ← add_assocₓ, ← mul_assoc, ← mul_assoc]
+      mul_add, ← mul_assoc, add_mul, mul_add (unsym (a * a)), ← add_assoc, ← mul_assoc, ← mul_assoc]
     -- Rearrange RHS
     nth_rw_rhs 0 [mul_def]
     nth_rw_rhs 0 [mul_def]
     nth_rw_rhs 2 [mul_def]
     rw [unsym_sym, sym_inj, ← mul_assoc, ← commute_half_left (unsym a), mul_assoc (⅟ 2) (unsym a),
-      mul_assoc (⅟ 2) _ (unsym a), ← mul_addₓ, ← mul_assoc]
-    nth_rw_rhs 0 [mul_addₓ (unsym a)]
-    rw [add_mulₓ, ← add_assocₓ, ← mul_assoc, ← mul_assoc]
+      mul_assoc (⅟ 2) _ (unsym a), ← mul_add, ← mul_assoc]
+    nth_rw_rhs 0 [mul_add (unsym a)]
+    rw [add_mul, ← add_assoc, ← mul_assoc, ← mul_assoc]
     rw [unsym_mul_self]
     rw [← mul_assoc, ← mul_assoc, ← mul_assoc, ← mul_assoc, ← sub_eq_zero, ← mul_sub]
     convert mul_zero (⅟ (2 : α) * ⅟ (2 : α))
-    rw [add_sub_add_right_eq_sub, add_assocₓ, add_assocₓ, add_sub_add_left_eq_sub, add_commₓ, add_sub_add_right_eq_sub,
+    rw [add_sub_add_right_eq_sub, add_assoc, add_assoc, add_sub_add_left_eq_sub, add_comm, add_sub_add_right_eq_sub,
       sub_eq_zero]
 
 end SymAlg

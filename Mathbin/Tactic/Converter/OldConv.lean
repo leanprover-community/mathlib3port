@@ -67,12 +67,12 @@ protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old
   pr           ← join_proofs r pr₁ pr₂,
   return ⟨b, e₂, pr⟩
   -/
-unsafe instance : Monadₓ old_conv where
+unsafe instance : Monad old_conv where
   map := @old_conv.map
   pure := @old_conv.pure
   bind := @old_conv.bind
 
-unsafe instance : Alternativeₓ old_conv :=
+unsafe instance : Alternative old_conv :=
   { old_conv.monad with failure := @old_conv.failed, orelse := @old_conv.orelse }
 
 unsafe def whnf (md : Transparency := reducible) : old_conv Unit := fun r e => do
@@ -99,7 +99,7 @@ unsafe def apply_lemmas (s : simp_lemmas) : old_conv Unit :=
 
 -- adapter for using iff-lemmas as eq-lemmas
 unsafe def apply_propext_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv Unit := fun r e => do
-  guardₓ (r = `eq)
+  guard (r = `eq)
   let (new_e, pr) ← s.rewrite e prove `iff
   let new_pr ← mk_app `propext [pr]
   return ⟨(), new_e, some new_pr⟩
@@ -140,7 +140,7 @@ unsafe def repeat : old_conv Unit → old_conv Unit
   | c, r, lhs =>
     (do
         let ⟨_, rhs₁, pr₁⟩ ← c r lhs
-        guardₓ ¬expr.alpha_eqv lhs rhs₁
+        guard ¬expr.alpha_eqv lhs rhs₁
         let ⟨_, rhs₂, pr₂⟩ ← repeat c r rhs₁
         let pr ← join_proofs r pr₁ pr₂
         return ⟨(), rhs₂, pr⟩) <|>
@@ -161,7 +161,7 @@ unsafe def match_expr (p : pexpr) : old_conv Unit := fun r e => do
   tactic.match_pattern new_p e >> return ⟨(), e, none⟩
 
 unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
-  guardₓ (r = `eq)
+  guard (r = `eq)
   let expr.lam n bi d b ← return lhs
   let aux_type := expr.pi n bi d (expr.const `true [])
   let (result, _) ←
@@ -177,12 +177,12 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
           | none => return ⟨(), rhs, none⟩
   return result
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `f_type
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `f_type -/
 unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => do
-  guardₓ (r = `eq)
+  guard (r = `eq)
   let expr.app f a ← return lhs
   let f_type ← infer_type f >>= tactic.whnf
-  guardₓ (f_type f_type.is_arrow)
+  guard (f_type f_type.is_arrow)
   let ⟨(), new_f, of⟩ ← mtry c_f r f
   let ⟨(), new_a, oa⟩ ← mtry c_a r a
   let rhs ← return <| new_f new_a

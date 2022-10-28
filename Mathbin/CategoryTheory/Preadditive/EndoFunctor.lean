@@ -28,7 +28,7 @@ open CategoryTheory.Limits Preadditive
 -/
 @[simps]
 instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) where
-  homGroup := fun A₁ A₂ =>
+  homGroup A₁ A₂ :=
     { add := fun α β =>
         { f := α.f + β.f, h' := by simp only [functor.map_add, add_comp, endofunctor.algebra.hom.h, comp_add] },
       zero := { f := 0, h' := by simp only [functor.map_zero, zero_comp, comp_zero] },
@@ -43,15 +43,15 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
       add_assoc := by
         intros
         ext
-        apply add_assocₓ,
+        apply add_assoc,
       zero_add := by
         intros
         ext
-        apply zero_addₓ,
+        apply zero_add,
       add_zero := by
         intros
         ext
-        apply add_zeroₓ,
+        apply add_zero,
       nsmul_zero' := by
         intros
         ext
@@ -81,11 +81,11 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
       add_left_neg := by
         intros
         ext
-        apply add_left_negₓ,
+        apply add_left_neg,
       add_comm := by
         intros
         ext
-        apply add_commₓ }
+        apply add_comm }
   add_comp' := by
     intros
     ext
@@ -99,7 +99,7 @@ instance Algebra.forget_additive : (Endofunctor.Algebra.forget F).Additive where
 
 @[simps]
 instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F) where
-  homGroup := fun A₁ A₂ =>
+  homGroup A₁ A₂ :=
     { add := fun α β =>
         { f := α.f + β.f, h' := by simp only [functor.map_add, comp_add, endofunctor.coalgebra.hom.h, add_comp] },
       zero := { f := 0, h' := by simp only [functor.map_zero, zero_comp, comp_zero] },
@@ -114,15 +114,15 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
       add_assoc := by
         intros
         ext
-        apply add_assocₓ,
+        apply add_assoc,
       zero_add := by
         intros
         ext
-        apply zero_addₓ,
+        apply zero_add,
       add_zero := by
         intros
         ext
-        apply add_zeroₓ,
+        apply add_zero,
       nsmul_zero' := by
         intros
         ext
@@ -152,11 +152,11 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
       add_left_neg := by
         intros
         ext
-        apply add_left_negₓ,
+        apply add_left_neg,
       add_comm := by
         intros
         ext
-        apply add_commₓ }
+        apply add_comm }
   add_comp' := by
     intros
     ext

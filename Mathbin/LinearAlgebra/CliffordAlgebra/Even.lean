@@ -35,13 +35,13 @@ choosing `S` to itself be a submodule of morphisms.
 
 namespace CliffordAlgebra
 
-variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable {Q : QuadraticForm R M}
 
 -- put this after `Q` since we want to talk about morphisms from `clifford_algebra Q` to `A` and
 -- that order is more natural
-variable {A B : Type _} [Ringₓ A] [Ringₓ B] [Algebra R A] [Algebra R B]
+variable {A B : Type _} [Ring A] [Ring B] [Algebra R A] [Algebra R B]
 
 open DirectSum
 
@@ -50,7 +50,7 @@ variable (Q)
 /-- The even submodule `clifford_algebra.even_odd Q 0` is also a subalgebra. -/
 def even : Subalgebra R (CliffordAlgebra Q) :=
   (evenOdd Q 0).toSubalgebra SetLike.GradedMonoid.one_mem fun x y hx hy =>
-    add_zeroₓ (0 : Zmod 2) ▸ SetLike.GradedMonoid.mul_mem hx hy
+    add_zero (0 : Zmod 2) ▸ SetLike.GradedMonoid.mul_mem hx hy
 
 @[simp]
 theorem even_to_submodule : (even Q).toSubmodule = evenOdd Q 0 :=
@@ -71,9 +71,8 @@ variable {A Q}
 @[simps]
 def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) : EvenHom Q B where
   bilin := g.bilin.compr₂ f.toLinearMap
-  contract := fun m => (f.congr_arg <| g.contract _).trans <| f.commutes _
-  contract_mid := fun m₁ m₂ m₃ =>
-    (f.map_mul _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| f.map_smul _ _
+  contract m := (f.congr_arg <| g.contract _).trans <| f.commutes _
+  contract_mid m₁ m₂ m₃ := (f.map_mul _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| f.map_smul _ _
 
 variable (Q)
 
@@ -83,19 +82,19 @@ def even.ι : EvenHom Q (even Q) where
   bilin :=
     LinearMap.mk₂ R (fun m₁ m₂ => ⟨ι Q m₁ * ι Q m₂, ι_mul_ι_mem_even_odd_zero _ _ _⟩)
       (fun _ _ _ => by
-        simp only [LinearMap.map_add, add_mulₓ]
+        simp only [LinearMap.map_add, add_mul]
         rfl)
       (fun _ _ _ => by
         simp only [LinearMap.map_smul, smul_mul_assoc]
         rfl)
       (fun _ _ _ => by
-        simp only [LinearMap.map_add, mul_addₓ]
+        simp only [LinearMap.map_add, mul_add]
         rfl)
       fun _ _ _ => by
       simp only [LinearMap.map_smul, mul_smul_comm]
       rfl
-  contract := fun m => Subtype.ext <| ι_sq_scalar Q m
-  contract_mid := fun m₁ m₂ m₃ =>
+  contract m := Subtype.ext <| ι_sq_scalar Q m
+  contract_mid m₁ m₂ m₃ :=
     Subtype.ext <|
       calc
         ι Q m₁ * ι Q m₂ * (ι Q m₂ * ι Q m₃) = ι Q m₁ * (ι Q m₂ * ι Q m₂ * ι Q m₃) := by simp only [mul_assoc]
@@ -119,11 +118,11 @@ theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr�
     exact (f.commutes r).trans (g.commutes r).symm
     
   · intro x y hx hy ihx ihy
-    have := congr_arg2ₓ (· + ·) ihx ihy
+    have := congr_arg2 (· + ·) ihx ihy
     exact (f.map_add _ _).trans (this.trans <| (g.map_add _ _).symm)
     
   · intro m₁ m₂ x hx ih
-    have := congr_arg2ₓ (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
+    have := congr_arg2 (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
     exact (f.map_mul _ _).trans (this.trans <| (g.map_mul _ _).symm)
     
 
@@ -151,17 +150,17 @@ private def f_fold : M →ₗ[R] A × s f →ₗ[R] A × s f :=
         -/
       (Acc.2 m, ⟨(LinearMap.mulRight R Acc.1).comp (f.bilin.flip m), Submodule.subset_span <| ⟨_, _, rfl⟩⟩))
     (fun m₁ m₂ a =>
-      Prod.extₓ (LinearMap.map_add _ m₁ m₂)
+      Prod.ext (LinearMap.map_add _ m₁ m₂)
         (Subtype.ext <|
           LinearMap.ext fun m₃ =>
-            show f.bilin m₃ (m₁ + m₂) * a.1 = f.bilin m₃ m₁ * a.1 + f.bilin m₃ m₂ * a.1 by rw [map_add, add_mulₓ]))
+            show f.bilin m₃ (m₁ + m₂) * a.1 = f.bilin m₃ m₁ * a.1 + f.bilin m₃ m₂ * a.1 by rw [map_add, add_mul]))
     (fun c m a =>
-      Prod.extₓ (LinearMap.map_smul _ c m)
+      Prod.ext (LinearMap.map_smul _ c m)
         (Subtype.ext <|
           LinearMap.ext fun m₃ =>
             show f.bilin m₃ (c • m) * a.1 = c • (f.bilin m₃ m * a.1) by rw [LinearMap.map_smul, smul_mul_assoc]))
-    (fun m a₁ a₂ => Prod.extₓ rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_addₓ _ _ _)) fun c m a =>
-    Prod.extₓ rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_smul_comm _ _ _)
+    (fun m a₁ a₂ => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_add _ _ _)) fun c m a =>
+    Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_smul_comm _ _ _)
 
 @[simp]
 private theorem fst_f_fold_f_fold (m₁ m₂ : M) (x : A × s f) : (fFold f m₁ (fFold f m₂ x)).fst = f.bilin m₁ m₂ * x.fst :=
@@ -189,7 +188,7 @@ private theorem f_fold_f_fold (m : M) (x : A × s f) : fFold f m (fFold f m x) =
       rw [mul_zero, smul_zero]
       
     · rintro x hx y hy ihx ihy
-      rw [LinearMap.add_apply, LinearMap.add_apply, mul_addₓ, smul_add, ihx, ihy]
+      rw [LinearMap.add_apply, LinearMap.add_apply, mul_add, smul_add, ihx, ihy]
       
     · rintro x hx c ihx
       rw [LinearMap.smul_apply, LinearMap.smul_apply, mul_smul_comm, ihx, smul_comm]
@@ -212,7 +211,7 @@ theorem aux_ι (m₁ m₂ : M) : aux f ((even.ι Q).bilin m₁ m₂) = f.bilin m
   (congr_arg Prod.fst (foldr_mul _ _ _ _ _ _)).trans
     (by
       rw [foldr_ι, foldr_ι]
-      exact mul_oneₓ _)
+      exact mul_one _)
 
 @[simp]
 theorem aux_algebra_map (r) (hr) : aux f ⟨algebraMap R _ r, hr⟩ = algebraMap R _ r :=
@@ -230,7 +229,7 @@ theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y := by
     exact Algebra.smul_def r _
     
   · intro x y hx hy ihx ihy
-    rw [LinearMap.map_add, Prod.fst_add, ihx, ihy, ← add_mulₓ, ← LinearMap.map_add]
+    rw [LinearMap.map_add, Prod.fst_add, ihx, ihy, ← add_mul, ← LinearMap.map_add]
     rfl
     
   · rintro m₁ m₂ x (hx : x ∈ Even Q) ih
@@ -250,10 +249,10 @@ bilinear map that sends duplicate arguments to the quadratic form, and contracts
 multiplication. -/
 @[simps symm_apply_bilin]
 def even.lift : EvenHom Q A ≃ (CliffordAlgebra.even Q →ₐ[R] A) where
-  toFun := fun f => AlgHom.ofLinearMap (aux f) (aux_one f) (aux_mul f)
-  invFun := fun F => (even.ι Q).compr₂ F
-  left_inv := fun f => EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι f
-  right_inv := fun F => even.alg_hom_ext Q <| EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι _
+  toFun f := AlgHom.ofLinearMap (aux f) (aux_one f) (aux_mul f)
+  invFun F := (even.ι Q).compr₂ F
+  left_inv f := EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι f
+  right_inv F := even.alg_hom_ext Q <| EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι _
 
 @[simp]
 theorem even.lift_ι (f : EvenHom Q A) (m₁ m₂ : M) : even.lift Q f ((even.ι Q).bilin m₁ m₂) = f.bilin m₁ m₂ :=

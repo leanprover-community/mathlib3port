@@ -61,7 +61,7 @@ def shift (x : 𝕎 R) (n : ℕ) : 𝕎 R :=
 theorem shift_coeff (x : 𝕎 R) (n k : ℕ) : (x.shift n).coeff k = x.coeff (n + k) :=
   rfl
 
-variable [hp : Fact p.Prime] [CommRingₓ R]
+variable [hp : Fact p.Prime] [CommRing R]
 
 include hp
 
@@ -69,11 +69,11 @@ theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i 
     verschiebung (x.shift k.succ) = x.shift k := by
   ext ⟨j⟩
   · rw [verschiebung_coeff_zero, shift_coeff, h]
-    apply Nat.lt_succ_selfₓ
+    apply Nat.lt_succ_self
     
   · simp only [verschiebung_coeff_succ, shift]
     congr 1
-    rw [Nat.add_succ, add_commₓ, Nat.add_succ, add_commₓ]
+    rw [Nat.add_succ, add_comm, Nat.add_succ, add_comm]
     
 
 theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i = 0) : x = (verschiebung^[n]) (x.shift n) :=
@@ -83,7 +83,7 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i
     
   · dsimp
     rw [verschiebung_shift]
-    · exact ih fun i hi => h _ (hi.trans (Nat.lt_succ_selfₓ _))
+    · exact ih fun i hi => h _ (hi.trans (Nat.lt_succ_self _))
       
     · exact h
       
@@ -96,10 +96,10 @@ theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) : ∃ n : ℕ, ∃ x' :
     apply hx
     ext i
     simp only [hall, zero_coeff]
-  let n := Nat.findₓ hex
+  let n := Nat.find hex
   use n, x.shift n
-  refine' ⟨Nat.find_specₓ hex, eq_iterate_verschiebung fun i hi => not_not.mp _⟩
-  exact Nat.find_minₓ hex hi
+  refine' ⟨Nat.find_spec hex, eq_iterate_verschiebung fun i hi => not_not.mp _⟩
+  exact Nat.find_min hex hi
 
 /-!
 ## Witt vectors over a domain

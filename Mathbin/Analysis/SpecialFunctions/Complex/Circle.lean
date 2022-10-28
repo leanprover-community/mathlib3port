@@ -46,40 +46,40 @@ noncomputable def argLocalEquiv : LocalEquiv circle ℝ where
   toFun := arg ∘ coe
   invFun := expMapCircle
   Source := Univ
-  Target := Ioc (-π) π
-  map_source' := fun z _ => ⟨neg_pi_lt_arg _, arg_le_pi _⟩
+  Target := IocCat (-π) π
+  map_source' z _ := ⟨neg_pi_lt_arg _, arg_le_pi _⟩
   map_target' := maps_to_univ _ _
-  left_inv' := fun z _ => exp_map_circle_arg z
-  right_inv' := fun x hx => arg_exp_map_circle hx.1 hx.2
+  left_inv' z _ := exp_map_circle_arg z
+  right_inv' x hx := arg_exp_map_circle hx.1 hx.2
 
 /-- `complex.arg` and `exp_map_circle` define an equivalence between `circle and `(-π, π]`. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def argEquiv : circle ≃ Ioc (-π) π where
-  toFun := fun z => ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
+noncomputable def argEquiv : circle ≃ IocCat (-π) π where
+  toFun z := ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
-  left_inv := fun z => argLocalEquiv.left_inv trivialₓ
-  right_inv := fun x => Subtype.ext <| argLocalEquiv.right_inv x.2
+  left_inv z := argLocalEquiv.left_inv trivial
+  right_inv x := Subtype.ext <| argLocalEquiv.right_inv x.2
 
 end circle
 
 theorem left_inverse_exp_map_circle_arg : LeftInverse expMapCircle (arg ∘ coe) :=
   exp_map_circle_arg
 
-theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (Ioc (-π) π) Univ :=
+theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (IocCat (-π) π) Univ :=
   circle.argLocalEquiv.symm.InvOn
 
-theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (Ioc (-π) π) Univ :=
+theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (IocCat (-π) π) Univ :=
   circle.argLocalEquiv.symm.SurjOn
 
 theorem exp_map_circle_eq_exp_map_circle {x y : ℝ} : expMapCircle x = expMapCircle y ↔ ∃ m : ℤ, x = y + m * (2 * π) :=
   by
   rw [Subtype.ext_iff, exp_map_circle_apply, exp_map_circle_apply, exp_eq_exp_iff_exists_int]
   refine' exists_congr fun n => _
-  rw [← mul_assoc, ← add_mulₓ, mul_left_inj' I_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul, ←
-    of_real_int_cast, ← of_real_mul, ← of_real_add, of_real_inj]
+  rw [← mul_assoc, ← add_mul, mul_left_inj' I_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul, ← of_real_int_cast,
+    ← of_real_mul, ← of_real_add, of_real_inj]
 
 theorem periodic_exp_map_circle : Periodic expMapCircle (2 * π) := fun z =>
-  exp_map_circle_eq_exp_map_circle.2 ⟨1, by rw [Int.cast_oneₓ, one_mulₓ]⟩
+  exp_map_circle_eq_exp_map_circle.2 ⟨1, by rw [Int.cast_one, one_mul]⟩
 
 @[simp]
 theorem exp_map_circle_two_pi : expMapCircle (2 * π) = 1 :=

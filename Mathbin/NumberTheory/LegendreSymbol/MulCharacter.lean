@@ -55,7 +55,7 @@ universe u v
 section Defi
 
 -- The domain of our multiplicative characters
-variable (R : Type u) [CommMonoidₓ R]
+variable (R : Type u) [CommMonoid R]
 
 -- The target
 variable (R' : Type v) [CommMonoidWithZero R']
@@ -67,7 +67,7 @@ structure MulChar extends MonoidHom R R' where
   map_nonunit' : ∀ a : R, ¬IsUnit a → to_fun a = 0
 
 /-- This is the corresponding extension of `monoid_hom_class`. -/
-class MulCharClass (F : Type _) (R R' : outParam <| Type _) [CommMonoidₓ R] [CommMonoidWithZero R'] extends
+class MulCharClass (F : Type _) (R R' : outParam <| Type _) [CommMonoid R] [CommMonoidWithZero R'] extends
   MonoidHomClass F R R' where
   map_nonunit : ∀ (χ : F) {a : R} (ha : ¬IsUnit a), χ a = 0
 
@@ -75,12 +75,12 @@ attribute [simp] MulCharClass.map_nonunit
 
 end Defi
 
-section Groupₓ
+section Group
 
 namespace MulChar
 
 -- The domain of our multiplicative characters
-variable {R : Type u} [CommMonoidₓ R]
+variable {R : Type u} [CommMonoid R]
 
 -- The target
 variable {R' : Type v} [CommMonoidWithZero R']
@@ -94,7 +94,7 @@ protected def Simps.apply (χ : MulChar R R') : R → R' :=
 
 initialize_simps_projections MulChar (to_monoid_hom_to_fun → apply, -toMonoidHom)
 
-section trivialₓ
+section trivial
 
 variable (R R')
 
@@ -114,7 +114,7 @@ noncomputable def trivial : MulChar R R' where
     simp only [IsUnit.mul_iff, boole_mul]
     split_ifs <;> tauto
 
-end trivialₓ
+end trivial
 
 @[simp]
 theorem coe_coe (χ : MulChar R R') : (χ.toMonoidHom : R → R') = χ :=
@@ -136,11 +136,11 @@ theorem ext' {χ χ' : MulChar R R'} (h : ∀ a, χ a = χ' a) : χ = χ' := by
   exact MonoidHom.ext h
 
 instance : MulCharClass (MulChar R R') R R' where
-  coe := fun χ => χ.toMonoidHom.toFun
-  coe_injective' := fun f g h => ext' fun a => congr_fun h a
-  map_mul := fun χ => χ.map_mul'
-  map_one := fun χ => χ.map_one'
-  map_nonunit := fun χ => χ.map_nonunit'
+  coe χ := χ.toMonoidHom.toFun
+  coe_injective' f g h := ext' fun a => congr_fun h a
+  map_mul χ := χ.map_mul'
+  map_one χ := χ.map_one'
+  map_nonunit χ := χ.map_nonunit'
 
 theorem map_nonunit (χ : MulChar R R') {a : R} (ha : ¬IsUnit a) : χ a = 0 :=
   χ.map_nonunit' a ha
@@ -188,7 +188,7 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
   map_mul' := by
     intro x y
     by_cases hx:IsUnit x
-    · simp only [hx, IsUnit.mul_iff, true_andₓ, dif_pos]
+    · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
       by_cases hy:IsUnit y
       · simp only [hy, dif_pos]
         have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
@@ -198,7 +198,7 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
       · simp only [hy, not_false_iff, dif_neg, mul_zero]
         
       
-    · simp only [hx, IsUnit.mul_iff, false_andₓ, not_false_iff, dif_neg, zero_mul]
+    · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, zero_mul]
       
   map_nonunit' := by
     intro a ha
@@ -250,11 +250,11 @@ protected theorem map_zero {R : Type u} [CommMonoidWithZero R] [Nontrivial R] (�
   rw [map_nonunit χ not_is_unit_zero]
 
 /-- If the domain is a ring `R`, then `χ (ring_char R) = 0`. -/
-theorem map_ring_char {R : Type u} [CommRingₓ R] [Nontrivial R] (χ : MulChar R R') : χ (ringChar R) = 0 := by
+theorem map_ring_char {R : Type u} [CommRing R] [Nontrivial R] (χ : MulChar R R') : χ (ringChar R) = 0 := by
   rw [ringChar.Nat.cast_ring_char, χ.map_zero]
 
 noncomputable instance hasOne : One (MulChar R R') :=
-  ⟨trivialₓ R R'⟩
+  ⟨trivial R R'⟩
 
 noncomputable instance inhabited : Inhabited (MulChar R R') :=
   ⟨1⟩
@@ -288,7 +288,7 @@ protected theorem mul_one (χ : MulChar R R') : χ * 1 = χ := by
 
 /-- The inverse of a multiplicative character. We define it as `inverse ∘ χ`. -/
 noncomputable def inv (χ : MulChar R R') : MulChar R R' :=
-  { MonoidWithZeroₓ.inverse.toMonoidHom.comp χ.toMonoidHom with toFun := fun a => MonoidWithZeroₓ.inverse (χ a),
+  { MonoidWithZero.inverse.toMonoidHom.comp χ.toMonoidHom with toFun := fun a => MonoidWithZero.inverse (χ a),
     map_nonunit' := fun a ha => by simp [map_nonunit _ ha] }
 
 noncomputable instance hasInv : Inv (MulChar R R') :=
@@ -331,7 +331,7 @@ theorem inv_mul (χ : MulChar R R') : χ⁻¹ * χ = 1 := by
   rw [coe_to_fun_mul, Pi.mul_apply, inv_apply_eq_inv, Ring.inverse_mul_cancel _ (IsUnit.map _ x.is_unit), one_apply_coe]
 
 /-- The commutative group structure on `mul_char R R'`. -/
-noncomputable instance commGroup : CommGroupₓ (MulChar R R') :=
+noncomputable instance commGroup : CommGroup (MulChar R R') :=
   { one := 1, mul := (· * ·), inv := Inv.inv, mul_left_inv := inv_mul,
     mul_assoc := by
       intro χ₁ χ₂ χ₃
@@ -346,9 +346,9 @@ noncomputable instance commGroup : CommGroupₓ (MulChar R R') :=
 /-- If `a` is a unit and `n : ℕ`, then `(χ ^ n) a = (χ a) ^ n`. -/
 theorem pow_apply_coe (χ : MulChar R R') (n : ℕ) (a : Rˣ) : (χ ^ n) a = χ a ^ n := by
   induction' n with n ih
-  · rw [pow_zeroₓ, pow_zeroₓ, one_apply_coe]
+  · rw [pow_zero, pow_zero, one_apply_coe]
     
-  · rw [pow_succₓ, pow_succₓ, mul_apply, ih]
+  · rw [pow_succ, pow_succ, mul_apply, ih]
     
 
 /-- If `n` is positive, then `(χ ^ n) a = (χ a) ^ n`. -/
@@ -361,7 +361,7 @@ theorem pow_apply' (χ : MulChar R R') {n : ℕ} (hn : 0 < n) (a : R) : (χ ^ n)
 
 end MulChar
 
-end Groupₓ
+end Group
 
 end DefinitionAndGroup
 
@@ -381,7 +381,7 @@ namespace MulChar
 
 universe u v w
 
-variable {R : Type u} [CommRingₓ R] {R' : Type v} [CommRingₓ R'] {R'' : Type w} [CommRingₓ R'']
+variable {R : Type u} [CommRing R] {R' : Type v} [CommRing R'] {R'' : Type w} [CommRing R'']
 
 /-- A multiplicative character is *nontrivial* if it takes a value `≠ 1` on a unit. -/
 def IsNontrivial (χ : MulChar R R') : Prop :=
@@ -435,7 +435,7 @@ theorem IsQuadratic.inv {χ : MulChar R R'} (hχ : χ.IsQuadratic) : χ⁻¹ = �
 
 /-- The square of a quadratic character is the trivial character. -/
 theorem IsQuadratic.sq_eq_one {χ : MulChar R R'} (hχ : χ.IsQuadratic) : χ ^ 2 = 1 := by
-  convert mul_left_invₓ _
+  convert mul_left_inv _
   rw [pow_two, hχ.inv]
 
 /-- The `p`th power of a quadratic character is itself, when `p` is the (prime) characteristic
@@ -455,32 +455,32 @@ theorem IsQuadratic.pow_char {χ : MulChar R R'} (hχ : χ.IsQuadratic) (p : ℕ
 /-- The `n`th power of a quadratic character is the trivial character, when `n` is even. -/
 theorem IsQuadratic.pow_even {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ} (hn : Even n) : χ ^ n = 1 := by
   obtain ⟨n, rfl⟩ := even_iff_two_dvd.mp hn
-  rw [pow_mulₓ, hχ.sq_eq_one, one_pow]
+  rw [pow_mul, hχ.sq_eq_one, one_pow]
 
 /-- The `n`th power of a quadratic character is itself, when `n` is odd. -/
 theorem IsQuadratic.pow_odd {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ} (hn : Odd n) : χ ^ n = χ := by
   obtain ⟨n, rfl⟩ := hn
-  rw [pow_addₓ, pow_oneₓ, hχ.pow_even (even_two_mul _), one_mulₓ]
+  rw [pow_add, pow_one, hχ.pow_even (even_two_mul _), one_mul]
 
 open BigOperators
 
 /-- The sum over all values of a nontrivial multiplicative character on a finite ring is zero
 (when the target is a domain). -/
-theorem IsNontrivial.sum_eq_zero [Fintypeₓ R] [IsDomain R'] {χ : MulChar R R'} (hχ : χ.IsNontrivial) : (∑ a, χ a) = 0 :=
+theorem IsNontrivial.sum_eq_zero [Fintype R] [IsDomain R'] {χ : MulChar R R'} (hχ : χ.IsNontrivial) : (∑ a, χ a) = 0 :=
   by
   rcases hχ with ⟨b, hb⟩
   refine' eq_zero_of_mul_eq_self_left hb _
-  simp only [Finsetₓ.mul_sum, ← map_mul]
-  exact Fintypeₓ.sum_bijective _ (Units.mul_left_bijective b) _ _ fun x => rfl
+  simp only [Finset.mul_sum, ← map_mul]
+  exact Fintype.sum_bijective _ (Units.mul_left_bijective b) _ _ fun x => rfl
 
 /-- The sum over all values of the trivial multiplicative character on a finite ring is
 the cardinality of its unit group. -/
-theorem sum_one_eq_card_units [Fintypeₓ R] [DecidableEq R] : (∑ a, (1 : MulChar R R') a) = Fintypeₓ.card Rˣ := by
+theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] : (∑ a, (1 : MulChar R R') a) = Fintype.card Rˣ := by
   calc
-    (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 := Finsetₓ.sum_congr rfl fun a _ => _
-    _ = ((Finsetₓ.univ : Finsetₓ R).filter IsUnit).card := Finsetₓ.sum_boole
+    (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 := Finset.sum_congr rfl fun a _ => _
+    _ = ((Finset.univ : Finset R).filter IsUnit).card := Finset.sum_boole
     _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _
-    _ = Fintypeₓ.card Rˣ := congr_arg _ (Finsetₓ.card_map _)
+    _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
     
   · split_ifs with h h
     · exact one_apply_coe h.unit
@@ -490,7 +490,7 @@ theorem sum_one_eq_card_units [Fintypeₓ R] [DecidableEq R] : (∑ a, (1 : MulC
     
   · congr
     ext a
-    simp only [Finsetₓ.mem_filter, Finsetₓ.mem_univ, true_andₓ, Finsetₓ.mem_map, Function.Embedding.coe_fn_mk,
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, Finset.mem_map, Function.Embedding.coe_fn_mk,
       exists_true_left, IsUnit]
     
 

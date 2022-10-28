@@ -17,7 +17,7 @@ and `monoid_algebra`.
 
 noncomputable section
 
-open Finsetₓ
+open Finset
 
 universe u₁ u₂ u₃ u₄ u₅
 
@@ -30,7 +30,7 @@ namespace Finsupp
 
 section
 
-variable [MulZeroClassₓ β]
+variable [MulZeroClass β]
 
 /-- The product of `f g : α →₀ β` is the finitely supported function
   whose value at `a` is `f a * g a`. -/
@@ -56,18 +56,18 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).
       simp
       
 
-instance : MulZeroClassₓ (α →₀ β) :=
+instance : MulZeroClass (α →₀ β) :=
   Finsupp.coe_fn_injective.MulZeroClass _ coe_zero coe_mul
 
 end
 
-instance [SemigroupWithZeroₓ β] : SemigroupWithZeroₓ (α →₀ β) :=
+instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
   Finsupp.coe_fn_injective.SemigroupWithZero _ coe_zero coe_mul
 
-instance [NonUnitalNonAssocSemiringₓ β] : NonUnitalNonAssocSemiringₓ (α →₀ β) :=
+instance [NonUnitalNonAssocSemiring β] : NonUnitalNonAssocSemiring (α →₀ β) :=
   Finsupp.coe_fn_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
-instance [NonUnitalSemiringₓ β] : NonUnitalSemiringₓ (α →₀ β) :=
+instance [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
   Finsupp.coe_fn_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalCommSemiring β] : NonUnitalCommSemiring (α →₀ β) :=
@@ -86,23 +86,22 @@ instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
 -- TODO can this be generalized in the direction of `pi.has_smul'`
 -- (i.e. dependent functions and finsupps)
 -- TODO in theory this could be generalised, we only really need `smul_zero` for the definition
-instance pointwiseScalar [Semiringₓ β] :
-    HasSmul (α → β) (α →₀ β) where smul := fun f g =>
+instance pointwiseScalar [Semiring β] :
+    HasSmul (α → β) (α →₀ β) where smul f g :=
     Finsupp.ofSupportFinite (fun a => f a • g a)
       (by
         apply Set.Finite.subset g.finite_support
-        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq,
-          Finsetₓ.mem_coe]
+        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq, Finset.mem_coe]
         intro x hx h
         apply hx
         rw [h, smul_zero])
 
 @[simp]
-theorem coe_pointwise_smul [Semiringₓ β] (f : α → β) (g : α →₀ β) : ⇑(f • g) = f • g :=
+theorem coe_pointwise_smul [Semiring β] (f : α → β) (g : α →₀ β) : ⇑(f • g) = f • g :=
   rfl
 
 /-- The pointwise multiplicative action of functions on finitely supported functions -/
-instance pointwiseModule [Semiringₓ β] : Module (α → β) (α →₀ β) :=
+instance pointwiseModule [Semiring β] : Module (α → β) (α →₀ β) :=
   Function.Injective.module _ coeFnAddHom coe_fn_injective coe_pointwise_smul
 
 end Finsupp

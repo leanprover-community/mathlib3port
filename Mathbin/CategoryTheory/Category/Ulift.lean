@@ -48,13 +48,13 @@ variable {C : Type u₁} [Category.{v₁} C]
 @[simps]
 def Ulift.upFunctor : C ⥤ ULift.{u₂} C where
   obj := ULift.up
-  map := fun X Y f => f
+  map X Y f := f
 
 /-- The functorial version of `ulift.down`. -/
 @[simps]
 def Ulift.downFunctor : ULift.{u₂} C ⥤ C where
   obj := ULift.down
-  map := fun X Y f => f
+  map X Y f := f
 
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
@@ -81,7 +81,7 @@ def Ulift.equivalence : C ≌ ULift.{u₂} C where
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
         simp }
-  functor_unit_iso_comp' := fun X => by
+  functor_unit_iso_comp' X := by
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
 
@@ -94,7 +94,7 @@ def UliftHom.{w, u} (C : Type u) :=
   C
 
 instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
-  ⟨(arbitrary C : C)⟩
+  ⟨(default C : C)⟩
 
 /-- The obvious function `ulift_hom C → C`. -/
 def UliftHom.objDown {C} (A : UliftHom C) : C :=
@@ -113,21 +113,21 @@ theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
   rfl
 
 instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
-  Hom := fun A B => ULift.{v₂} <| A.objDown ⟶ B.objDown
-  id := fun A => ⟨𝟙 _⟩
-  comp := fun A B C f g => ⟨f.down ≫ g.down⟩
+  Hom A B := ULift.{v₂} <| A.objDown ⟶ B.objDown
+  id A := ⟨𝟙 _⟩
+  comp A B C f g := ⟨f.down ≫ g.down⟩
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
 def UliftHom.up : C ⥤ UliftHom C where
   obj := UliftHom.objUp
-  map := fun X Y f => ⟨f⟩
+  map X Y f := ⟨f⟩
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
 def UliftHom.down : UliftHom C ⥤ C where
   obj := UliftHom.objDown
-  map := fun X Y f => f.down
+  map X Y f := f.down
 
 /-- The equivalence between `C` and `ulift_hom C`. -/
 def UliftHom.equiv : C ≌ UliftHom C where
@@ -153,21 +153,21 @@ def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
   ULift.{max w v} C
 
 instance : SmallCategory (AsSmall.{w₁} C) where
-  Hom := fun X Y => ULift.{max w₁ u₁} <| X.down ⟶ Y.down
-  id := fun X => ⟨𝟙 _⟩
-  comp := fun X Y Z f g => ⟨f.down ≫ g.down⟩
+  Hom X Y := ULift.{max w₁ u₁} <| X.down ⟶ Y.down
+  id X := ⟨𝟙 _⟩
+  comp X Y Z f g := ⟨f.down ≫ g.down⟩
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.up : C ⥤ AsSmall C where
-  obj := fun X => ⟨X⟩
-  map := fun X Y f => ⟨f⟩
+  obj X := ⟨X⟩
+  map X Y f := ⟨f⟩
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.down : AsSmall C ⥤ C where
-  obj := fun X => X.down
-  map := fun X Y f => f.down
+  obj X := X.down
+  map X Y f := f.down
 
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
@@ -184,7 +184,7 @@ def AsSmall.equiv : C ≌ AsSmall C where
       (by tidy)
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=
-  ⟨⟨arbitrary _⟩⟩
+  ⟨⟨default _⟩⟩
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (ULift.{u'} C) :=

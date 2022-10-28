@@ -87,7 +87,7 @@ open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional 
 
 variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]] -/
 /-- Hausdorff dimension of a set in an (e)metric space. -/
 noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]"
@@ -102,7 +102,7 @@ section Measurable
 
 variable [MeasurableSpace X] [BorelSpace X]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]] -/
 /-- Unfold the definition of `dimH` using `[measurable_space X] [borel_space X]` from the
 environment. -/
 theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0) (hd : μH[d] s = ∞), d := by
@@ -119,7 +119,7 @@ theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' : ℝ≥0, μH[d'] s = 
   (dimH_def s).trans_le <| supr₂_le H
 
 theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d : ℝ≥0} (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
-  le_of_not_ltₓ <| mt hausdorff_measure_of_lt_dimH h
+  le_of_not_lt <| mt hausdorff_measure_of_lt_dimH h
 
 theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d] s = ∞) : ↑d ≤ dimH s := by
   rw [dimH_def]
@@ -131,30 +131,30 @@ theorem hausdorff_measure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) 
   rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at hd'd
   exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_supr₂ d' h
 
-theorem measure_zero_of_dimH_lt {μ : Measureₓ X} {d : ℝ≥0} (h : μ ≪ μH[d]) {s : Set X} (hd : dimH s < d) : μ s = 0 :=
+theorem measure_zero_of_dimH_lt {μ : Measure X} {d : ℝ≥0} (h : μ ≪ μH[d]) {s : Set X} (hd : dimH s < d) : μ s = 0 :=
   h <| hausdorff_measure_of_dimH_lt hd
 
 theorem le_dimH_of_hausdorff_measure_ne_zero {s : Set X} {d : ℝ≥0} (h : μH[d] s ≠ 0) : ↑d ≤ dimH s :=
-  le_of_not_ltₓ <| mt hausdorff_measure_of_dimH_lt h
+  le_of_not_lt <| mt hausdorff_measure_of_dimH_lt h
 
 theorem dimH_of_hausdorff_measure_ne_zero_ne_top {d : ℝ≥0} {s : Set X} (h : μH[d] s ≠ 0) (h' : μH[d] s ≠ ∞) :
     dimH s = d :=
-  le_antisymmₓ (dimH_le_of_hausdorff_measure_ne_top h') (le_dimH_of_hausdorff_measure_ne_zero h)
+  le_antisymm (dimH_le_of_hausdorff_measure_ne_top h') (le_dimH_of_hausdorff_measure_ne_zero h)
 
 end Measurable
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]] -/
 @[mono]
 theorem dimH_mono {s t : Set X} (h : s ⊆ t) : dimH s ≤ dimH t := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]"
   exact dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top <| top_unique <| hd ▸ measure_mono h
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]] -/
 theorem dimH_subsingleton {s : Set X} (h : s.Subsingleton) : dimH s = 0 := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]"
-  apply le_antisymmₓ _ (zero_le _)
+  apply le_antisymm _ (zero_le _)
   refine' dimH_le_of_hausdorff_measure_ne_top _
-  exact ((hausdorff_measure_le_one_of_subsingleton h le_rflₓ).trans_lt Ennreal.one_lt_top).Ne
+  exact ((hausdorff_measure_le_one_of_subsingleton h le_rfl).trans_lt Ennreal.one_lt_top).Ne
 
 alias dimH_subsingleton ← Set.Subsingleton.dimH_zero
 
@@ -166,11 +166,11 @@ theorem dimH_empty : dimH (∅ : Set X) = 0 :=
 theorem dimH_singleton (x : X) : dimH ({x} : Set X) = 0 :=
   subsingleton_singleton.dimH_zero
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]] -/
 @[simp]
 theorem dimH_Union [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = ⨆ i, dimH (s i) := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr X]]"
-  refine' le_antisymmₓ (dimH_le fun d hd => _) (supr_le fun i => dimH_mono <| subset_Union _ _)
+  refine' le_antisymm (dimH_le fun d hd => _) (supr_le fun i => dimH_mono <| subset_Union _ _)
   contrapose! hd
   have : ∀ i, μH[d] (s i) = 0 := fun i => hausdorff_measure_of_dimH_lt ((le_supr (fun i => dimH (s i)) i).trans_lt hd)
   rw [measure_Union_null this]
@@ -200,10 +200,10 @@ theorem dimH_finite {s : Set X} (hs : s.Finite) : dimH s = 0 :=
 alias dimH_finite ← Set.Finite.dimH_zero
 
 @[simp]
-theorem dimH_coe_finset (s : Finsetₓ X) : dimH (s : Set X) = 0 :=
+theorem dimH_coe_finset (s : Finset X) : dimH (s : Set X) = 0 :=
   s.finite_to_set.dimH_zero
 
-alias dimH_coe_finset ← Finsetₓ.dimH_zero
+alias dimH_coe_finset ← Finset.dimH_zero
 
 /-!
 ### Hausdorff dimension as the supremum of local Hausdorff dimensions
@@ -231,12 +231,12 @@ theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over `x ∈ s` of the limit superiors of `dimH t` along
 `(𝓝[s] x).small_sets`. -/
-theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsupₓ (𝓝[s] x).smallSets dimH) = dimH s := by
-  refine' le_antisymmₓ (supr₂_le fun x hx => _) _
+theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup dimH (𝓝[s] x).smallSets) = dimH s := by
+  refine' le_antisymm (supr₂_le fun x hx => _) _
   · refine' Limsup_le_of_le (by infer_auto_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
     
-  · refine' le_of_forall_ge_of_denseₓ fun r hr => _
+  · refine' le_of_forall_ge_of_dense fun r hr => _
     rcases exists_mem_nhds_within_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
     refine' le_supr₂_of_le x hxs _
     rw [limsup_eq]
@@ -248,8 +248,8 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsupₓ (𝓝[s] x).smal
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over all `x` of the limit superiors of `dimH t` along
 `(𝓝[s] x).small_sets`. -/
-theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsupₓ (𝓝[s] x).smallSets dimH) = dimH s := by
-  refine' le_antisymmₓ (supr_le fun x => _) _
+theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsup dimH (𝓝[s] x).smallSets) = dimH s := by
+  refine' le_antisymm (supr_le fun x => _) _
   · refine' Limsup_le_of_le (by infer_auto_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
     
@@ -266,7 +266,7 @@ end
 
 variable {C K r : ℝ≥0} {f : X → Y} {s t : Set X}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[["[", expr X, ",", expr Y, "]"]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[["[", expr X, ",", expr Y, "]"]] -/
 /-- If `f` is a Hölder continuous map with exponent `r > 0`, then `dimH (f '' s) ≤ dimH s / r`. -/
 theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) : dimH (f '' s) ≤ dimH s / r := by
   trace
@@ -315,7 +315,7 @@ theorem dimH_range_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ�
     (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, HolderOnWith C r f s) : dimH (Range f) ≤ dimH (Univ : Set X) / r := by
   rw [← image_univ]
   refine' dimH_image_le_of_locally_holder_on hr fun x _ => _
-  simpa only [exists_propₓ, nhds_within_univ] using hf x
+  simpa only [exists_prop, nhds_within_univ] using hf x
 
 /-!
 ### Hausdorff dimension and Lipschitz continuity
@@ -353,11 +353,11 @@ theorem dimH_range_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X
     (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, LipschitzOnWith C f s) : dimH (Range f) ≤ dimH (Univ : Set X) := by
   rw [← image_univ]
   refine' dimH_image_le_of_locally_lipschitz_on fun x _ => _
-  simpa only [exists_propₓ, nhds_within_univ] using hf x
+  simpa only [exists_prop, nhds_within_univ] using hf x
 
 namespace AntilipschitzWith
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[["[", expr X, ",", expr Y, "]"]]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[["[", expr X, ",", expr Y, "]"]] -/
 theorem dimH_preimage_le (hf : AntilipschitzWith K f) (s : Set Y) : dimH (f ⁻¹' s) ≤ dimH s := by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[\"[\", expr X, \",\", expr Y, \"]\"]]"
@@ -381,7 +381,7 @@ end AntilipschitzWith
 
 
 theorem Isometry.dimH_image (hf : Isometry f) (s : Set X) : dimH (f '' s) = dimH s :=
-  le_antisymmₓ (hf.lipschitz.dimH_image_le _) (hf.antilipschitz.le_dimH_image _)
+  le_antisymm (hf.lipschitz.dimH_image_le _) (hf.antilipschitz.le_dimH_image _)
 
 namespace Isometric
 
@@ -404,7 +404,7 @@ variable {𝕜 E F : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup 
 
 @[simp]
 theorem dimH_image (e : E ≃L[𝕜] F) (s : Set E) : dimH (e '' s) = dimH s :=
-  le_antisymmₓ (e.lipschitz.dimH_image_le s) <| by
+  le_antisymm (e.lipschitz.dimH_image_le s) <| by
     simpa only [e.symm_image_image] using e.symm.lipschitz.dimH_image_le (e '' s)
 
 @[simp]
@@ -423,36 +423,35 @@ end ContinuousLinearEquiv
 
 namespace Real
 
-variable {E : Type _} [Fintypeₓ ι] [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+variable {E : Type _} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
-theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = Fintypeₓ.card ι := by
+theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = Fintype.card ι := by
   cases is_empty_or_nonempty ι
-  · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintypeₓ.card_eq_zero_iff]
+  · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
     exact fun x _ y _ => Subsingleton.elim x y
     
   · rw [← Ennreal.coe_nat]
-    have : μH[Fintypeₓ.card ι] (Metric.Ball x r) = Ennreal.ofReal ((2 * r) ^ Fintypeₓ.card ι) := by
+    have : μH[Fintype.card ι] (Metric.Ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by
       rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
     refine' dimH_of_hausdorff_measure_ne_zero_ne_top _ _ <;> rw [Nnreal.coe_nat_cast, this]
-    · simp [pow_pos (mul_pos zero_lt_two hr)]
+    · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
       
     · exact Ennreal.of_real_ne_top
       
     
 
-theorem dimH_ball_pi_fin {n : ℕ} (x : Finₓ n → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = n := by
-  rw [dimH_ball_pi x hr, Fintypeₓ.card_fin]
+theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = n := by
+  rw [dimH_ball_pi x hr, Fintype.card_fin]
 
-theorem dimH_univ_pi (ι : Type _) [Fintypeₓ ι] : dimH (Univ : Set (ι → ℝ)) = Fintypeₓ.card ι := by
+theorem dimH_univ_pi (ι : Type _) [Fintype ι] : dimH (Univ : Set (ι → ℝ)) = Fintype.card ι := by
   simp only [← Metric.Union_ball_nat_succ (0 : ι → ℝ), dimH_Union, dimH_ball_pi _ (Nat.cast_add_one_pos _), supr_const]
 
-theorem dimH_univ_pi_fin (n : ℕ) : dimH (Univ : Set (Finₓ n → ℝ)) = n := by rw [dimH_univ_pi, Fintypeₓ.card_fin]
+theorem dimH_univ_pi_fin (n : ℕ) : dimH (Univ : Set (Fin n → ℝ)) = n := by rw [dimH_univ_pi, Fintype.card_fin]
 
 theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finrank ℝ E := by
-  have e : E ≃L[ℝ] Finₓ (finrank ℝ E) → ℝ :=
-    ContinuousLinearEquiv.ofFinrankEq (FiniteDimensional.finrank_fin_fun ℝ).symm
+  have e : E ≃L[ℝ] Fin (finrank ℝ E) → ℝ := ContinuousLinearEquiv.ofFinrankEq (FiniteDimensional.finrank_fin_fun ℝ).symm
   rw [← e.dimH_image]
-  refine' le_antisymmₓ _ _
+  refine' le_antisymm _ _
   · exact (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)
     
   · have : e '' s ∈ 𝓝 (e x) := by
@@ -472,7 +471,7 @@ theorem dimH_univ_eq_finrank : dimH (Univ : Set E) = finrank ℝ E :=
   dimH_of_mem_nhds (@univ_mem _ (𝓝 0))
 
 theorem dimH_univ : dimH (Univ : Set ℝ) = 1 := by
-  rw [dimH_univ_eq_finrank ℝ, FiniteDimensional.finrank_self, Nat.cast_oneₓ]
+  rw [dimH_univ_eq_finrank ℝ, FiniteDimensional.finrank_self, Nat.cast_one]
 
 end Real
 

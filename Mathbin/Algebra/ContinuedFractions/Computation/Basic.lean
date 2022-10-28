@@ -82,8 +82,8 @@ variable {K}
 namespace IntFractPair
 
 /-- Make an `int_fract_pair` printable. -/
-instance [HasRepr K] : HasRepr (IntFractPair K) :=
-  ⟨fun p => "(b : " ++ reprₓ p.b ++ ", fract : " ++ reprₓ p.fr ++ ")"⟩
+instance [Repr K] : Repr (IntFractPair K) :=
+  ⟨fun p => "(b : " ++ repr p.b ++ ", fract : " ++ repr p.fr ++ ")"⟩
 
 instance inhabited [Inhabited K] : Inhabited (IntFractPair K) :=
   ⟨⟨0, default⟩⟩
@@ -135,16 +135,16 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 - `stream v 2 = some ⟨⌊0.5⁻¹⌋, 0.5⁻¹ - ⌊0.5⁻¹⌋⟩ = some ⟨⌊2⌋, 2 - ⌊2⌋⟩ = some ⟨2, 0⟩`
 - `stream v n = none`, for `n ≥ 3`
 -/
-protected def stream (v : K) : Streamₓ <| Option (IntFractPair K)
+protected def stream (v : K) : Stream <| Option (IntFractPair K)
   | 0 => some (IntFractPair.of v)
   | n + 1 => do
-    let ap_n ← Streamₓ n
+    let ap_n ← Stream n
     if ap_n = 0 then none else int_fract_pair.of ap_n⁻¹
 
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
-theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq := by
+theorem streamIsSeq (v : K) : (IntFractPair.stream v).IsSeq := by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
 
@@ -158,10 +158,10 @@ it. The setup of rewriting/simplification lemmas that make the definitions easy 
 -/
 protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
   ⟨IntFractPair.of v,--the head
-      Seqₓₓ.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
+      Seq.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
       -- head create a sequence from `int_fract_pair.stream`
       ⟨IntFractPair.stream v,-- the underlying stream
-          @stream_is_seq
+          @streamIsSeq
           _ _ _ v⟩⟩
 
 -- the proof that the stream is a sequence

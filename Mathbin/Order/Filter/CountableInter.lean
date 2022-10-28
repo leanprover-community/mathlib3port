@@ -103,7 +103,7 @@ def Filter.ofCountableInter (l : Set (Set α)) (hp : ∀ S : Set (Set α), S.Cou
   Sets := l
   univ_sets := @sInter_empty α ▸ hp _ countable_empty (empty_subset _)
   sets_of_superset := h_mono
-  inter_sets := fun s t hs ht =>
+  inter_sets s t hs ht :=
     sInter_pair s t ▸ hp _ ((countable_singleton _).insert _) (insert_subset.2 ⟨hs, singleton_subset_iff.2 ht⟩)
 
 instance Filter.countable_Inter_of_countable_Inter (l : Set (Set α))

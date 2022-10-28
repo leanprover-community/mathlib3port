@@ -30,8 +30,8 @@ open ZeroObject
 theorem is_iso_of_short_exact_of_is_iso_of_is_iso (h : ShortExact f g) (h' : ShortExact f' g') (i₁ : A ⟶ A')
     (i₂ : B ⟶ B') (i₃ : C ⟶ C') (comm₁ : i₁ ≫ f' = f ≫ i₂) (comm₂ : i₂ ≫ g' = g ≫ i₃) [IsIso i₁] [IsIso i₃] :
     IsIso i₂ := by
-  obtain ⟨_, _, _⟩ := h
-  obtain ⟨_, _, _⟩ := h'
+  obtain ⟨_⟩ := h
+  obtain ⟨_⟩ := h'
   skip
   refine'
       @abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso 𝒜 _ _ 0 _ _ _ 0 _ _ _ 0 f g 0 f' g' 0 i₁ i₂ i₃ _ comm₁

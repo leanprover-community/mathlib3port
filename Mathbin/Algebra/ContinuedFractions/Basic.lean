@@ -62,8 +62,8 @@ namespace GeneralizedContinuedFraction.Pair
 variable {α}
 
 /-- Make a `gcf.pair` printable. -/
-instance [HasRepr α] : HasRepr (Pair α) :=
-  ⟨fun p => "(a : " ++ reprₓ p.a ++ ", b : " ++ reprₓ p.b ++ ")"⟩
+instance [Repr α] : Repr (Pair α) :=
+  ⟨fun p => "(a : " ++ repr p.a ++ ", b : " ++ repr p.b ++ ")"⟩
 
 /-- Maps a function `f` on both components of a given pair. -/
 def map {β : Type _} (f : α → β) (gp : Pair α) : Pair β :=
@@ -108,7 +108,7 @@ For convenience, one often writes `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),
 -/
 structure GeneralizedContinuedFraction where
   h : α
-  s : Seqₓₓ <| Pair α
+  s : Seq <| Pair α
 
 variable {α}
 
@@ -116,17 +116,17 @@ namespace GeneralizedContinuedFraction
 
 /-- Constructs a generalized continued fraction without fractional part. -/
 def ofInteger (a : α) : GeneralizedContinuedFraction α :=
-  ⟨a, Seqₓₓ.nil⟩
+  ⟨a, Seq.nil⟩
 
 instance [Inhabited α] : Inhabited (GeneralizedContinuedFraction α) :=
   ⟨ofInteger default⟩
 
 /-- Returns the sequence of partial numerators `aᵢ` of `g`. -/
-def partialNumerators (g : GeneralizedContinuedFraction α) : Seqₓₓ α :=
+def partialNumerators (g : GeneralizedContinuedFraction α) : Seq α :=
   g.s.map Pair.a
 
 /-- Returns the sequence of partial denominators `bᵢ` of `g`. -/
-def partialDenominators (g : GeneralizedContinuedFraction α) : Seqₓₓ α :=
+def partialDenominators (g : GeneralizedContinuedFraction α) : Seq α :=
   g.s.map Pair.b
 
 /-- A gcf terminated at position `n` if its sequence terminates at position `n`. -/
@@ -152,12 +152,12 @@ variable {β : Type _} [Coe α β]
 
 /-- Coerce a gcf by elementwise coercion. -/
 instance hasCoeToGeneralizedContinuedFraction : Coe (GeneralizedContinuedFraction α) (GeneralizedContinuedFraction β) :=
-  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seqₓₓ <| Pair β)⟩⟩
+  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩⟩
 
 @[simp, norm_cast]
 theorem coe_to_generalized_continued_fraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
-      ⟨(g.h : β), (g.s.map coe : Seqₓₓ <| Pair β)⟩ :=
+      ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩ :=
   rfl
 
 end coe
@@ -321,7 +321,7 @@ def nextContinuants (a b : K) (ppred pred : Pair K) : Pair K :=
   ⟨nextNumerator a b ppred.a pred.a, nextDenominator a b ppred.b pred.b⟩
 
 /-- Returns the continuants `⟨Aₙ₋₁, Bₙ₋₁⟩` of `g`. -/
-def continuantsAux (g : GeneralizedContinuedFraction K) : Streamₓ (Pair K)
+def continuantsAux (g : GeneralizedContinuedFraction K) : Stream (Pair K)
   | 0 => ⟨1, 0⟩
   | 1 => ⟨g.h, 1⟩
   | n + 2 =>
@@ -330,25 +330,25 @@ def continuantsAux (g : GeneralizedContinuedFraction K) : Streamₓ (Pair K)
     | some gp => nextContinuants gp.a gp.b (continuants_aux n) (continuants_aux <| n + 1)
 
 /-- Returns the continuants `⟨Aₙ, Bₙ⟩` of `g`. -/
-def continuants (g : GeneralizedContinuedFraction K) : Streamₓ (Pair K) :=
+def continuants (g : GeneralizedContinuedFraction K) : Stream (Pair K) :=
   g.continuantsAux.tail
 
 /-- Returns the numerators `Aₙ` of `g`. -/
-def numerators (g : GeneralizedContinuedFraction K) : Streamₓ K :=
+def numerators (g : GeneralizedContinuedFraction K) : Stream K :=
   g.continuants.map Pair.a
 
 /-- Returns the denominators `Bₙ` of `g`. -/
-def denominators (g : GeneralizedContinuedFraction K) : Streamₓ K :=
+def denominators (g : GeneralizedContinuedFraction K) : Stream K :=
   g.continuants.map Pair.b
 
 /-- Returns the convergents `Aₙ / Bₙ` of `g`, where `Aₙ, Bₙ` are the nth continuants of `g`. -/
-def convergents (g : GeneralizedContinuedFraction K) : Streamₓ K := fun n : ℕ => g.numerators n / g.denominators n
+def convergents (g : GeneralizedContinuedFraction K) : Stream K := fun n : ℕ => g.numerators n / g.denominators n
 
 /-- Returns the approximation of the fraction described by the given sequence up to a given position n.
 For example, `convergents'_aux [(1, 2), (3, 4), (5, 6)] 2 = 1 / (2 + 3 / 4)` and
 `convergents'_aux [(1, 2), (3, 4), (5, 6)] 0 = 0`.
 -/
-def convergents'Aux : Seqₓₓ (Pair K) → ℕ → K
+def convergents'Aux : Seq (Pair K) → ℕ → K
   | s, 0 => 0
   | s, n + 1 =>
     match s.head with
@@ -375,7 +375,7 @@ protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} : g = g' ↔ 
 
 @[ext]
 protected theorem ext {g g' : GeneralizedContinuedFraction α} (hyp : g.h = g'.h ∧ g.s = g'.s) : g = g' :=
-  GeneralizedContinuedFraction.ext_iff.elim_right hyp
+  GeneralizedContinuedFraction.ext_iff.elimRight hyp
 
 end GeneralizedContinuedFraction
 

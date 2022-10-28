@@ -29,7 +29,7 @@ unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ 
               return (tac (replacer_core ns))) <|>
             do
             let tac ← mk_const n >>= eval (Option (tactic α) → tactic α)
-            return (tac (guardₓ (ns ≠ []) >> some (replacer_core ns)))
+            return (tac (guard (ns ≠ []) >> some (replacer_core ns)))
     tac
 
 unsafe def replacer (ntac : Name) {α : Type} [reflected _ α] (F : Type → Type)
@@ -117,7 +117,7 @@ same type, or the type `α → β → tactic γ → tactic γ` or
 @[user_command]
 unsafe def def_replacer_cmd (_ : parse <| tk "def_replacer") : lean.parser Unit := do
   let ntac ← ident
-  let ty ← optionalₓ (tk ":" *> types.texpr)
+  let ty ← optional (tk ":" *> types.texpr)
   match ty with
     | some p => do
       let t ← to_expr p

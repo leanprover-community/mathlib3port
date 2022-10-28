@@ -73,9 +73,8 @@ open Tactic
 by pulling back a morphism along `f`. -/
 @[simps]
 def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
-  obj := fun g => Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
-  map := fun g h k =>
-    Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition])) (by tidy)
+  obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
+  map g h k := Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition])) (by tidy)
 
 /-- `over.map f` is left adjoint to `over.pullback f`. -/
 def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
@@ -150,9 +149,8 @@ variable [HasPushouts C]
 by pushing a morphism forward along `f`. -/
 @[simps]
 def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
-  obj := fun g => Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
-  map := fun g h k =>
-    Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition])) (by tidy)
+  obj g := Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
+  map g h k := Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition])) (by tidy)
 
 end
 

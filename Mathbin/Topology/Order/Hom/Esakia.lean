@@ -37,52 +37,58 @@ open Function
 variable {F α β γ δ : Type _}
 
 /-- The type of pseudo-epimorphisms, aka p-morphisms, aka bounded maps, from `α` to `β`. -/
-structure PseudoEpimorphism (α β : Type _) [Preorderₓ α] [Preorderₓ β] extends α →o β where
+structure PseudoEpimorphism (α β : Type _) [Preorder α] [Preorder β] extends α →o β where
   exists_map_eq_of_map_le' ⦃a : α⦄ ⦃b : β⦄ : to_fun a ≤ b → ∃ c, a ≤ c ∧ to_fun c = b
 
 /-- The type of Esakia morphisms, aka continuous pseudo-epimorphisms, from `α` to `β`. -/
-structure EsakiaHom (α β : Type _) [TopologicalSpace α] [Preorderₓ α] [TopologicalSpace β] [Preorderₓ β] extends
+structure EsakiaHom (α β : Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] extends
   α →Co β where
   exists_map_eq_of_map_le' ⦃a : α⦄ ⦃b : β⦄ : to_fun a ≤ b → ∃ c, a ≤ c ∧ to_fun c = b
+
+section
 
 /-- `pseudo_epimorphism_class F α β` states that `F` is a type of `⊔`-preserving morphisms.
 
 You should extend this class when you extend `pseudo_epimorphism`. -/
-class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] extends
+class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] extends
   RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 
 /-- `esakia_hom_class F α β` states that `F` is a type of lattice morphisms.
 
 You should extend this class when you extend `esakia_hom`. -/
-class EsakiaHomClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Preorderₓ α] [TopologicalSpace β]
-  [Preorderₓ β] extends ContinuousOrderHomClass F α β where
+class EsakiaHomClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
+  [Preorder β] extends ContinuousOrderHomClass F α β where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
+
+end
 
 export PseudoEpimorphismClass (exists_map_eq_of_map_le)
 
 -- See note [lower instance priority]
-instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrderₓ α] [OrderTop α] [Preorderₓ β]
-    [OrderTop β] [PseudoEpimorphismClass F α β] : TopHomClass F α β :=
-  ⟨fun f => by
-    let ⟨b, h⟩ := exists_map_eq_of_map_le f (@le_top _ _ _ <| f ⊤)
-    rw [← top_le_iff.1 h.1, h.2]⟩
+instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrder α] [OrderTop α] [Preorder β] [OrderTop β]
+    [PseudoEpimorphismClass F α β] : TopHomClass F α β :=
+  { ‹PseudoEpimorphismClass F α β› with
+    map_top := fun f => by
+      let ⟨b, h⟩ := exists_map_eq_of_map_le f (@le_top _ _ _ <| f ⊤)
+      rw [← top_le_iff.1 h.1, h.2] }
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIsoClass.toPseudoEpimorphismClass [Preorderₓ α] [Preorderₓ β] [OrderIsoClass F α β] :
+instance (priority := 100) OrderIsoClass.toPseudoEpimorphismClass [Preorder α] [Preorder β] [OrderIsoClass F α β] :
     PseudoEpimorphismClass F α β :=
-  ⟨fun f a b h => ⟨EquivLike.inv f b, (le_map_inv_iff f).2 h, EquivLike.right_inv _ _⟩⟩
+  { OrderIsoClass.toOrderHomClass with
+    exists_map_eq_of_map_le := fun f a b h => ⟨EquivLike.inv f b, (le_map_inv_iff f).2 h, EquivLike.right_inv _ _⟩ }
 
 -- See note [lower instance priority]
-instance (priority := 100) EsakiaHomClass.toPseudoEpimorphismClass [TopologicalSpace α] [Preorderₓ α]
-    [TopologicalSpace β] [Preorderₓ β] [EsakiaHomClass F α β] : PseudoEpimorphismClass F α β :=
+instance (priority := 100) EsakiaHomClass.toPseudoEpimorphismClass [TopologicalSpace α] [Preorder α]
+    [TopologicalSpace β] [Preorder β] [EsakiaHomClass F α β] : PseudoEpimorphismClass F α β :=
   { ‹EsakiaHomClass F α β› with }
 
-instance [Preorderₓ α] [Preorderₓ β] [PseudoEpimorphismClass F α β] : CoeTₓ F (PseudoEpimorphism α β) :=
+instance [Preorder α] [Preorder β] [PseudoEpimorphismClass F α β] : CoeT F (PseudoEpimorphism α β) :=
   ⟨fun f => ⟨f, exists_map_eq_of_map_le f⟩⟩
 
-instance [TopologicalSpace α] [Preorderₓ α] [TopologicalSpace β] [Preorderₓ β] [EsakiaHomClass F α β] :
-    CoeTₓ F (EsakiaHom α β) :=
+instance [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] [EsakiaHomClass F α β] :
+    CoeT F (EsakiaHom α β) :=
   ⟨fun f => ⟨f, exists_map_eq_of_map_le f⟩⟩
 
 /-! ### Pseudo-epimorphisms -/
@@ -90,15 +96,15 @@ instance [TopologicalSpace α] [Preorderₓ α] [TopologicalSpace β] [Preorder�
 
 namespace PseudoEpimorphism
 
-variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ]
+variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ]
 
 instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_rel := fun f => f.monotone'
+  map_rel f := f.monotone'
   exists_map_eq_of_map_le := PseudoEpimorphism.exists_map_eq_of_map_le'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -190,22 +196,22 @@ end PseudoEpimorphism
 
 namespace EsakiaHom
 
-variable [TopologicalSpace α] [Preorderₓ α] [TopologicalSpace β] [Preorderₓ β] [TopologicalSpace γ] [Preorderₓ γ]
-  [TopologicalSpace δ] [Preorderₓ δ]
+variable [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] [TopologicalSpace γ] [Preorder γ]
+  [TopologicalSpace δ] [Preorder δ]
 
 /-- Reinterpret an `esakia_hom` as a `pseudo_epimorphism`. -/
 def toPseudoEpimorphism (f : EsakiaHom α β) : PseudoEpimorphism α β :=
   { f with }
 
 instance : EsakiaHomClass (EsakiaHom α β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
-  map_rel := fun f => f.monotone'
-  map_continuous := fun f => f.continuous_to_fun
-  exists_map_eq_of_map_le := fun f => f.exists_map_eq_of_map_le'
+  map_rel f := f.monotone'
+  map_continuous f := f.continuous_to_fun
+  exists_map_eq_of_map_le f := f.exists_map_eq_of_map_le'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/

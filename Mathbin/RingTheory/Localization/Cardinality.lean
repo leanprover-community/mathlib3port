@@ -29,7 +29,7 @@ universe u v
 
 namespace IsLocalization
 
-variable {R : Type u} [CommRingₓ R] (S : Submonoid R) {L : Type u} [CommRingₓ L] [Algebra R L] [IsLocalization S L]
+variable {R : Type u} [CommRing R] (S : Submonoid R) {L : Type u} [CommRing L] [Algebra R L] [IsLocalization S L]
 
 include S
 

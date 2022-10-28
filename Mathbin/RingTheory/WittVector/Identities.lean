@@ -28,7 +28,7 @@ In this file we derive common identities between the Frobenius and Verschiebung 
 
 namespace WittVector
 
-variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRingₓ R]
+variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRing R]
 
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
@@ -50,17 +50,17 @@ variable (p R)
 
 theorem coeff_p_pow [CharP R p] (i : ℕ) : (p ^ i : 𝕎 R).coeff i = 1 := by
   induction' i with i h
-  · simp only [one_coeff_zero, Ne.def, pow_zeroₓ]
+  · simp only [one_coeff_zero, Ne.def, pow_zero]
     
-  · rw [pow_succ'ₓ, ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h, one_pow]
+  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h, one_pow]
     
 
 theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : 𝕎 R).coeff j = 0 := by
   induction' i with i hi generalizing j
-  · rw [pow_zeroₓ, one_coeff_eq_of_pos]
-    exact Nat.pos_of_ne_zeroₓ hj
+  · rw [pow_zero, one_coeff_eq_of_pos]
+    exact Nat.pos_of_ne_zero hj
     
-  · rw [pow_succ'ₓ, ← frobenius_verschiebung, coeff_frobenius_char_p]
+  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p]
     cases j
     · rw [verschiebung_coeff_zero, zero_pow]
       exact Nat.Prime.pos hp.out
@@ -75,9 +75,9 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
 
 theorem coeff_p [CharP R p] (i : ℕ) : (p : 𝕎 R).coeff i = if i = 1 then 1 else 0 := by
   split_ifs with hi
-  · simpa only [hi, pow_oneₓ] using coeff_p_pow p R 1
+  · simpa only [hi, pow_one] using coeff_p_pow p R 1
     
-  · simpa only [pow_oneₓ] using coeff_p_pow_eq_zero p R hi
+  · simpa only [pow_one] using coeff_p_pow_eq_zero p R hi
     
 
 @[simp]
@@ -190,7 +190,7 @@ theorem iterate_verschiebung_mul_coeff (x y : 𝕎 R) (i j : ℕ) :
   · rw [iterate_verschiebung_mul]
     
   · convert iterate_verschiebung_coeff _ _ _ using 2
-    rw [zero_addₓ]
+    rw [zero_add]
     
   · apply mul_coeff_zero
     

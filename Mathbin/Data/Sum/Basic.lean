@@ -56,9 +56,9 @@ theorem exists {p : Sum α β → Prop} : (∃ x, p x) ↔ (∃ a, p (inl a)) �
     | Or.inl ⟨a, h⟩ => ⟨inl a, h⟩
     | Or.inr ⟨b, h⟩ => ⟨inr b, h⟩⟩
 
-theorem inl_injective : Function.Injective (inl : α → Sum α β) := fun x y => inl.injₓ
+theorem inl_injective : Function.Injective (inl : α → Sum α β) := fun x y => inl.inj
 
-theorem inr_injective : Function.Injective (inr : β → Sum α β) := fun x y => inr.injₓ
+theorem inr_injective : Function.Injective (inr : β → Sum α β) := fun x y => inr.inj
 
 section get
 
@@ -97,10 +97,10 @@ theorem get_right_eq_none_iff : x.getRight = none ↔ x.isLeft := by
 end get
 
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
-  ⟨inl.injₓ, congr_arg _⟩
+  ⟨inl.inj, congr_arg _⟩
 
 theorem inr.inj_iff {a b} : (inr a : Sum α β) = inr b ↔ a = b :=
-  ⟨inr.injₓ, congr_arg _⟩
+  ⟨inr.inj, congr_arg _⟩
 
 theorem inl_ne_inr {a : α} {b : β} : inl a ≠ inr b :=
   fun.
@@ -184,7 +184,7 @@ theorem update_elim_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : α → �
 @[simp]
 theorem update_inl_comp_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
     update f (inl i) x ∘ inl = update (f ∘ inl) i x :=
-  update_comp_eq_of_injectiveₓ _ inl_injective _ _
+  update_comp_eq_of_injective _ inl_injective _ _
 
 @[simp]
 theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : α} {x : γ} :
@@ -193,7 +193,7 @@ theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum
 @[simp]
 theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
     update f (inl i) x ∘ inr = f ∘ inr :=
-  (update_comp_eq_of_forall_neₓ _ _) fun _ => inr_ne_inl
+  (update_comp_eq_of_forall_ne _ _) fun _ => inr_ne_inl
 
 @[simp]
 theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -203,7 +203,7 @@ theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 @[simp]
 theorem update_inr_comp_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
     update f (inr i) x ∘ inl = f ∘ inl :=
-  (update_comp_eq_of_forall_neₓ _ _) fun _ => inl_ne_inr
+  (update_comp_eq_of_forall_ne _ _) fun _ => inl_ne_inr
 
 @[simp]
 theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -213,7 +213,7 @@ theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 @[simp]
 theorem update_inr_comp_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
     update f (inr i) x ∘ inr = update (f ∘ inr) i x :=
-  update_comp_eq_of_injectiveₓ _ inr_injective _ _
+  update_comp_eq_of_injective _ inr_injective _ _
 
 @[simp]
 theorem update_inr_apply_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : β} {x : γ} :
@@ -398,8 +398,8 @@ theorem Injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (h
   | inr x, inr y, h => congr_arg inr <| hg h
 
 theorem Injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
-  | inl x, inl y, h => congr_arg inl <| hf <| inl.injₓ h
-  | inr x, inr y, h => congr_arg inr <| hg <| inr.injₓ h
+  | inl x, inl y, h => congr_arg inl <| hf <| inl.inj h
+  | inr x, inr y, h => congr_arg inr <| hg <| inr.inj h
 
 theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
   | inl y =>
@@ -463,17 +463,17 @@ Abbreviations for the maps from the summands to `α ⊕ β ⊕ γ`. This is usef
 namespace Sum3
 
 /-- The map from the first summand into a ternary sum. -/
-@[matchPattern, simp, reducible]
+@[match_pattern, simp, reducible]
 def in₀ (a) : Sum α (Sum β γ) :=
   inl a
 
 /-- The map from the second summand into a ternary sum. -/
-@[matchPattern, simp, reducible]
+@[match_pattern, simp, reducible]
 def in₁ (b) : Sum α (Sum β γ) :=
   inr <| inl b
 
 /-- The map from the third summand into a ternary sum. -/
-@[matchPattern, simp, reducible]
+@[match_pattern, simp, reducible]
 def in₂ (c) : Sum α (Sum β γ) :=
   inr <| inr c
 

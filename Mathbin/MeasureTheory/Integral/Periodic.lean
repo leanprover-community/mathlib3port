@@ -1,32 +1,149 @@
 /-
 Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yury Kudryashov
+Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 -/
-import Mathbin.MeasureTheory.Group.FundamentalDomain
+import Mathbin.MeasureTheory.Measure.HaarQuotient
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Topology.Algebra.Order.Floor
 
 /-!
 # Integrals of periodic functions
 
-In this file we prove that `∫ x in t..t + T, f x = ∫ x in s..s + T, f x` for any (not necessarily
-measurable) function periodic function with period `T`.
+In this file we prove that the half-open interval `Ioc t (t + T)` in `ℝ` is a fundamental domain of
+the action of the subgroup `ℤ ∙ T` on `ℝ`.
+
+A consequence is `add_circle.measure_preserving_mk`: the covering map from `ℝ` to the "additive
+circle" `ℝ ⧸ (ℤ ∙ T)` is measure-preserving, with respect to the restriction of Lebesgue measure to
+`Ioc t (t + T)` (upstairs) and with respect to Haar measure (downstairs).
+
+Another consequence (`function.periodic.interval_integral_add_eq` and related declarations) is that
+`∫ x in t..t + T, f x = ∫ x in s..s + T, f x` for any (not necessarily measurable) function with
+period `T`.
 -/
 
 
-open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace
+open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgroup intervalIntegral
 
-open MeasureTheory
+open MeasureTheory Nnreal Ennreal
 
-theorem is_add_fundamental_domain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
-    (μ : Measureₓ ℝ := by exact MeasureTheory.MeasureSpace.volume) :
-    IsAddFundamentalDomain (AddSubgroup.zmultiples T) (Ioc t (t + T)) μ := by
+attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
+
+theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
+    (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
+    IsAddFundamentalDomain (AddSubgroup.zmultiples T) (IocCat t (t + T)) μ := by
   refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
   have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
-    (Equivₓ.ofInjective (fun n : ℤ => n • T) (zsmul_strict_mono_left hT).Injective).Bijective
+    (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strict_mono_left hT).Injective).Bijective
   refine' this.exists_unique_iff.2 _
-  simpa only [add_commₓ x] using exists_unique_add_zsmul_mem_Ioc hT x t
+  simpa only [add_comm x] using exists_unique_add_zsmul_mem_Ioc hT x t
+
+theorem isAddFundamentalDomainIoc' {T : ℝ} (hT : 0 < T) (t : ℝ)
+    (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
+    IsAddFundamentalDomain (AddSubgroup.zmultiples T).opposite (IocCat t (t + T)) μ := by
+  refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
+  have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
+    (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strict_mono_left hT).Injective).Bijective
+  refine' this.exists_unique_iff.2 _
+  simpa using exists_unique_add_zsmul_mem_Ioc hT x t
+
+namespace AddCircle
+
+variable (T : ℝ) [hT : Fact (0 < T)]
+
+include hT
+
+/-- Equip the "additive circle" `ℝ ⧸ (ℤ ∙ T)` with, as a standard measure, the Haar measure of total
+mass `T` -/
+noncomputable instance measureSpace : MeasureSpace (AddCircle T) :=
+  { AddCircle.measurableSpace with volume := Ennreal.ofReal T • addHaarMeasure ⊤ }
+
+@[simp]
+protected theorem measure_univ : volume (Set.Univ : Set (AddCircle T)) = Ennreal.ofReal T := by
+  dsimp [volume]
+  rw [← positive_compacts.coe_top]
+  simp [add_haar_measure_self, -positive_compacts.coe_top]
+
+instance isFiniteMeasure : IsFiniteMeasure (volume : Measure (AddCircle T)) where measure_univ_lt_top := by simp
+
+/-- The covering map from `ℝ` to the "additive circle" `ℝ ⧸ (ℤ ∙ T)` is measure-preserving,
+considered with respect to the standard measure (defined to be the Haar measure of total mass `T`)
+on the additive circle, and with respect to the restriction of Lebsegue measure on `ℝ` to an
+interval (t, t + T]. -/
+protected theorem measurePreservingMk (t : ℝ) :
+    MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (IocCat t (t + T))) :=
+  MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomainIoc' hT.out t) (⊤ : PositiveCompacts (AddCircle T))
+    (by simp) T.toNnreal (by simp [← Ennreal.of_real_coe_nnreal, Real.coe_to_nnreal T hT.out.le])
+
+/-- The integral of a measurable function over `add_circle T` is equal to the integral over an
+interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
+protected theorem lintegral_preimage (t : ℝ) {f : AddCircle T → ℝ≥0∞} (hf : Measurable f) :
+    (∫⁻ a in IocCat t (t + T), f a) = ∫⁻ b : AddCircle T, f b := by
+  rw [← lintegral_map hf AddCircle.measurableMk', (AddCircle.measurePreservingMk T t).map_eq]
+
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+
+/-- The integral of an almost-everywhere strongly measurable function over `add_circle T` is equal
+to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
+protected theorem integral_preimage (t : ℝ) {f : AddCircle T → E} (hf : AeStronglyMeasurable f volume) :
+    (∫ a in IocCat t (t + T), f a) = ∫ b : AddCircle T, f b := by
+  rw [← (AddCircle.measurePreservingMk T t).map_eq] at hf⊢
+  rw [integral_map add_circle.measurable_mk'.ae_measurable hf]
+
+/-- The integral of an almost-everywhere strongly measurable function over `add_circle T` is equal
+to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
+protected theorem interval_integral_preimage (t : ℝ) {f : AddCircle T → E} (hf : AeStronglyMeasurable f volume) :
+    (∫ a in t..t + T, f a) = ∫ b : AddCircle T, f b := by
+  rw [integral_of_le, AddCircle.integral_preimage T t hf]
+  linarith [hT.out]
+
+end AddCircle
+
+namespace UnitAddCircle
+
+private theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
+  ⟨zero_lt_one⟩
+
+attribute [local instance] fact_zero_lt_one
+
+noncomputable instance measureSpace : MeasureSpace UnitAddCircle :=
+  AddCircle.measureSpace 1
+
+@[simp]
+protected theorem measure_univ : volume (Set.Univ : Set UnitAddCircle) = 1 := by simp
+
+instance isFiniteMeasure : IsFiniteMeasure (volume : Measure UnitAddCircle) :=
+  AddCircle.isFiniteMeasure 1
+
+/-- The covering map from `ℝ` to the "unit additive circle" `ℝ ⧸ ℤ` is measure-preserving,
+considered with respect to the standard measure (defined to be the Haar measure of total mass 1)
+on the additive circle, and with respect to the restriction of Lebsegue measure on `ℝ` to an
+interval (t, t + 1]. -/
+protected theorem measurePreservingMk (t : ℝ) :
+    MeasurePreserving (coe : ℝ → UnitAddCircle) (volume.restrict (IocCat t (t + 1))) :=
+  AddCircle.measurePreservingMk 1 t
+
+/-- The integral of a measurable function over `unit_add_circle` is equal to the integral over an
+interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
+protected theorem lintegral_preimage (t : ℝ) {f : UnitAddCircle → ℝ≥0∞} (hf : Measurable f) :
+    (∫⁻ a in IocCat t (t + 1), f a) = ∫⁻ b : UnitAddCircle, f b :=
+  AddCircle.lintegral_preimage 1 t hf
+
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+
+/-- The integral of an almost-everywhere strongly measurable function over `unit_add_circle` is
+equal to the integral over an interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
+protected theorem integral_preimage (t : ℝ) {f : UnitAddCircle → E} (hf : AeStronglyMeasurable f volume) :
+    (∫ a in IocCat t (t + 1), f a) = ∫ b : UnitAddCircle, f b :=
+  AddCircle.integral_preimage 1 t hf
+
+/-- The integral of an almost-everywhere strongly measurable function over `unit_add_circle` is
+equal to the integral over an interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
+protected theorem interval_integral_preimage (t : ℝ) {f : UnitAddCircle → E} (hf : AeStronglyMeasurable f volume) :
+    (∫ a in t..t + 1, f a) = ∫ b : UnitAddCircle, f b :=
+  AddCircle.interval_integral_preimage 1 t hf
+
+end UnitAddCircle
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
@@ -34,22 +151,19 @@ namespace Function
 
 namespace Periodic
 
-open intervalIntegral
-
 variable {f : ℝ → E} {T : ℝ}
 
 /-- An auxiliary lemma for a more general `function.periodic.interval_integral_add_eq`. -/
 theorem interval_integral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : ℝ) :
     (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x := by
-  haveI : Encodable (AddSubgroup.zmultiples T) := (countable_range _).toEncodable
   simp only [integral_of_le, hT.le, le_add_iff_nonneg_right]
   haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume := ⟨fun c s hs => measure_preimage_add _ _ _⟩
-  exact (is_add_fundamental_domain_Ioc hT t).set_integral_eq (is_add_fundamental_domain_Ioc hT s) hf.map_vadd_zmultiples
+  exact (isAddFundamentalDomainIoc hT t).set_integral_eq (isAddFundamentalDomainIoc hT s) hf.map_vadd_zmultiples
 
 /-- If `f` is a periodic function with period `T`, then its integral over `[t, t + T]` does not
 depend on `t`. -/
 theorem interval_integral_add_eq (hf : Periodic f T) (t s : ℝ) : (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x := by
-  rcases lt_trichotomyₓ 0 T with (hT | rfl | hT)
+  rcases lt_trichotomy 0 T with (hT | rfl | hT)
   · exact hf.interval_integral_add_eq_of_pos hT t s
     
   · simp
@@ -73,14 +187,14 @@ theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     (∫ x in t..t + n • T, f x) = n • ∫ x in t..t + T, f x := by
   -- Reduce to the case `b = 0`
   suffices (∫ x in 0 ..n • T, f x) = n • ∫ x in 0 ..T, f x by
-    simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).interval_integral_add_eq t 0, zero_addₓ, this]
+    simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).interval_integral_add_eq t 0, zero_add, this]
   -- First prove it for natural numbers
   have : ∀ m : ℕ, (∫ x in 0 ..m • T, f x) = m • ∫ x in 0 ..T, f x := by
     intros
     induction' m with m ih
     · simp
       
-    · simp only [succ_nsmul', hf.interval_integral_add_eq_add 0 (m • T) h_int, ih, zero_addₓ]
+    · simp only [succ_nsmul', hf.interval_integral_add_eq_add 0 (m • T) h_int, ih, zero_add]
       
   -- Then prove it for all integers
   cases' n with n n
@@ -91,8 +205,8 @@ theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
       simp
       linarith
     rw [integral_symm, ← (hf.nsmul (n + 1)).funext, neg_inj]
-    simp_rw [integral_comp_add_right, h₀, zero_addₓ, this (n + 1), add_commₓ T,
-      hf.interval_integral_add_eq ((n + 1) • T) 0, zero_addₓ]
+    simp_rw [integral_comp_add_right, h₀, zero_add, this (n + 1), add_comm T,
+      hf.interval_integral_add_eq ((n + 1) • T) 0, zero_add]
     
 
 section RealValued
@@ -109,12 +223,12 @@ include hg h_int
 `t ↦ ∫ x in 0..t, g x` is bounded below by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
 theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
-    (inf ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤ ∫ x in 0 ..t, g x := by
+    (inf ((fun t => ∫ x in 0 ..t, g x) '' IccCat 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤ ∫ x in 0 ..t, g x := by
   let ε := Int.fract (t / T) * T
   conv_rhs =>
     rw [← Int.fract_div_mul_self_add_zsmul_eq T t (by linarith), ←
       integral_add_adjacent_intervals (h_int 0 ε) (h_int _ _)]
-  rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_addₓ,
+  rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
     (continuous_primitive h_int 0).ContinuousOn.Inf_image_Icc_le
@@ -124,12 +238,12 @@ theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
 `t ↦ ∫ x in 0..t, g x` is bounded above by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
 theorem integral_le_Sup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
-    (∫ x in 0 ..t, g x) ≤ sup ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x := by
+    (∫ x in 0 ..t, g x) ≤ sup ((fun t => ∫ x in 0 ..t, g x) '' IccCat 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x := by
   let ε := Int.fract (t / T) * T
   conv_lhs =>
     rw [← Int.fract_div_mul_self_add_zsmul_eq T t (by linarith), ←
       integral_add_adjacent_intervals (h_int 0 ε) (h_int _ _)]
-  rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_addₓ,
+  rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
     (continuous_primitive h_int 0).ContinuousOn.le_Sup_image_Icc

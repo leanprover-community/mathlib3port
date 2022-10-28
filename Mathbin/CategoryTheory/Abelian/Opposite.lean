@@ -25,8 +25,8 @@ attribute [local instance]
   has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts
 
 instance : Abelian Cᵒᵖ where
-  normalMonoOfMono := fun X Y f m => normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)
-  normalEpiOfEpi := fun X Y f m => normal_epi_of_normal_mono_unop _ (normal_mono_of_mono f.unop)
+  normalMonoOfMono X Y f m := normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)
+  normalEpiOfEpi X Y f m := normal_epi_of_normal_mono_unop _ (normal_mono_of_mono f.unop)
 
 section
 

@@ -39,19 +39,19 @@ variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
     ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
   rcases exists_extension_of_le_sublinear ⟨p, f⟩ (fun x => ∥f∥ * ∥x∥)
-      (fun c hc x => by simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_commₓ]) (fun x y => _)
-      fun x => le_transₓ (le_abs_self _) (f.le_op_norm _) with
+      (fun c hc x => by simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_comm]) (fun x y => _)
+      fun x => le_trans (le_abs_self _) (f.le_op_norm _) with
     ⟨g, g_eq, g_le⟩
   set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
   · refine' ⟨g', g_eq, _⟩
-    · apply le_antisymmₓ (g.mk_continuous_norm_le (norm_nonneg f) _)
+    · apply le_antisymm (g.mk_continuous_norm_le (norm_nonneg f) _)
       refine' f.op_norm_le_bound (norm_nonneg _) fun x => _
       dsimp at g_eq
       rw [← g_eq]
       apply g'.le_op_norm
       
     
-  · simp only [← mul_addₓ]
+  · simp only [← mul_add]
     exact mul_le_mul_of_nonneg_left (norm_add_le x y) (norm_nonneg f)
     
 
@@ -86,20 +86,20 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by rfl
     rw [this]
     apply ext
-    · simp only [add_zeroₓ, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
+    · simp only [add_zero, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
         of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re, mul_zero, sub_neg_eq_add,
         ContinuousLinearMap.map_smul]
       
     · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul, of_real_re,
-        mul_neg, mul_im, zero_addₓ, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
+        mul_neg, mul_im, zero_add, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
       
   -- And we derive the equality of the norms by bounding on both sides.
-  refine' ⟨h, le_antisymmₓ _ _⟩
+  refine' ⟨h, le_antisymm _ _⟩
   · calc
       ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
       _ = ∥fr∥ := hnormeq
       _ ≤ ∥re_clm∥ * ∥f∥ := ContinuousLinearMap.op_norm_comp_le _ _
-      _ = ∥f∥ := by rw [re_clm_norm, one_mulₓ]
+      _ = ∥f∥ := by rw [re_clm_norm, one_mul]
       
     
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x

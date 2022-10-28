@@ -28,7 +28,7 @@ open Pgame
 
 universe u
 
-instance Pgame.setoid : Setoidₓ Pgame :=
+instance Pgame.setoid : Setoid Pgame :=
   ⟨(· ≈ ·), equiv_refl, @Pgame.Equiv.symm, @Pgame.Equiv.trans⟩
 
 /-- The type of combinatorial games. In ZFC, a combinatorial game is constructed from
@@ -40,7 +40,7 @@ instance Pgame.setoid : Setoidₓ Pgame :=
   A combinatorial game is then constructed by quotienting by the equivalence
   `x ≈ y ↔ x ≤ y ∧ y ≤ x`. -/
 abbrev Game :=
-  Quotientₓ Pgame.setoid
+  Quotient Pgame.setoid
 
 namespace Game
 
@@ -48,7 +48,7 @@ instance : AddCommGroupWithOne Game where
   zero := ⟦0⟧
   one := ⟦1⟧
   neg := Quot.lift (fun x => ⟦-x⟧) fun x y h => Quot.sound ((@neg_equiv_neg_iff x y).2 h)
-  add := Quotientₓ.lift₂ (fun x y : Pgame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
+  add := Quotient.lift₂ (fun x y : Pgame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
   add_zero := by
     rintro ⟨x⟩
     exact Quot.sound (add_zero_equiv x)
@@ -68,28 +68,28 @@ instance : AddCommGroupWithOne Game where
 instance : Inhabited Game :=
   ⟨0⟩
 
-instance : PartialOrderₓ Game where
-  le := Quotientₓ.lift₂ (· ≤ ·) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
+instance : PartialOrder Game where
+  le := Quotient.lift₂ (· ≤ ·) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
   le_refl := by
     rintro ⟨x⟩
-    exact le_reflₓ x
+    exact le_refl x
   le_trans := by
     rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
-    exact @le_transₓ _ _ x y z
+    exact @le_trans _ _ x y z
   le_antisymm := by
     rintro ⟨x⟩ ⟨y⟩ h₁ h₂
     apply Quot.sound
     exact ⟨h₁, h₂⟩
-  lt := Quotientₓ.lift₂ (· < ·) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)
+  lt := Quotient.lift₂ (· < ·) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)
   lt_iff_le_not_le := by
     rintro ⟨x⟩ ⟨y⟩
-    exact @lt_iff_le_not_leₓ _ _ x y
+    exact @lt_iff_le_not_le _ _ x y
 
 /-- The less or fuzzy relation on games.
 
 If `0 ⧏ x` (less or fuzzy with), then Left can win `x` as the first player. -/
 def Lf : Game → Game → Prop :=
-  Quotientₓ.lift₂ Lf fun x₁ y₁ x₂ y₂ hx hy => propext (lf_congr hx hy)
+  Quotient.lift₂ Lf fun x₁ y₁ x₂ y₂ hx hy => propext (lf_congr hx hy)
 
 -- mathport name: «expr ⧏ »
 local infixl:50 " ⧏ " => Lf
@@ -110,7 +110,7 @@ instance : IsTrichotomous Game (· ⧏ ·) :=
   ⟨by
     rintro ⟨x⟩ ⟨y⟩
     change _ ∨ ⟦x⟧ = ⟦y⟧ ∨ _
-    rw [Quotientₓ.eq]
+    rw [Quotient.eq]
     apply lf_or_equiv_or_gf⟩
 
 /-! It can be useful to use these lemmas to turn `pgame` inequalities into `game` inequalities, as
@@ -127,13 +127,13 @@ theorem _root_.pgame.lt_iff_game_lt {x y : Pgame} : x < y ↔ ⟦x⟧ < ⟦y⟧ 
   Iff.rfl
 
 theorem _root_.pgame.equiv_iff_game_eq {x y : Pgame} : (x ≈ y) ↔ ⟦x⟧ = ⟦y⟧ :=
-  (@Quotientₓ.eq _ _ x y).symm
+  (@Quotient.eq _ _ x y).symm
 
 /-- The fuzzy, confused, or incomparable relation on games.
 
 If `x ∥ 0`, then the first player can always win `x`. -/
 def Fuzzy : Game → Game → Prop :=
-  Quotientₓ.lift₂ Fuzzy fun x₁ y₁ x₂ y₂ hx hy => propext (fuzzy_congr hx hy)
+  Quotient.lift₂ Fuzzy fun x₁ y₁ x₂ y₂ hx hy => propext (fuzzy_congr hx hy)
 
 -- mathport name: «expr ∥ »
 local infixl:50 " ∥ " => Fuzzy
@@ -191,7 +191,7 @@ theorem quot_sub (a b : Pgame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
 
 theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
     (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧) (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ := by
-  simp_rw [Quotientₓ.eq] at hl hr
+  simp_rw [Quotient.eq] at hl hr
   exact Quot.sound (equiv_of_mk_equiv L R hl hr)
 
 /-! Multiplicative operations can be defined at the level of pre-games,
@@ -229,7 +229,7 @@ theorem right_moves_mul :
 Even though these types are the same (not definitionally so), this is the preferred way to convert
 between them. -/
 def toLeftMovesMul {x y : Pgame} : Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) ≃ (x * y).LeftMoves :=
-  Equivₓ.cast (left_moves_mul x y).symm
+  Equiv.cast (left_moves_mul x y).symm
 
 /-- Turns a left and a right move for `x` and `y` into a right move for `x * y` and vice versa.
 
@@ -237,7 +237,7 @@ Even though these types are the same (not definitionally so), this is the prefer
 between them. -/
 def toRightMovesMul {x y : Pgame} :
     Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves) ≃ (x * y).RightMoves :=
-  Equivₓ.cast (right_moves_mul x y).symm
+  Equiv.cast (right_moves_mul x y).symm
 
 @[simp]
 theorem mk_mul_move_left_inl {xl xr yl yr} {xL xR yL yR} {i j} :
@@ -322,15 +322,15 @@ theorem right_moves_mul_cases {x y : Pgame} (k) {P : (x * y).RightMoves → Prop
 theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x * y⟧ = ⟦y * x⟧
   | mk xl xr xL xR, mk yl yr yL yR => by
     refine'
-      quot_eq_of_mk_quot_eq (Equivₓ.sumCongr (Equivₓ.prodComm _ _) (Equivₓ.prodComm _ _))
-        ((Equivₓ.sumComm _ _).trans (Equivₓ.sumCongr (Equivₓ.prodComm _ _) (Equivₓ.prodComm _ _))) _ _
+      quot_eq_of_mk_quot_eq (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _))
+        ((Equiv.sumComm _ _).trans (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _))) _ _
     all_goals rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp <;> rw [quot_mul_comm, quot_mul_comm (mk xl xr xL xR)]
-    any_goals rw [quot_mul_comm (xL i), add_commₓ]
-    any_goals rw [quot_mul_comm (xR i), add_commₓ]
+    any_goals rw [quot_mul_comm (xL i), add_comm]
+    any_goals rw [quot_mul_comm (xR i), add_comm]
 
 /-- `x * y` is equivalent to `y * x`. -/
 theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
-  Quotientₓ.exact <| quot_mul_comm _ _
+  Quotient.exact <| quot_mul_comm _ _
 
 instance is_empty_mul_zero_left_moves (x : Pgame.{u}) : IsEmpty (x * 0).LeftMoves := by
   cases x
@@ -358,7 +358,7 @@ theorem mul_zero_equiv (x : Pgame) : x * 0 ≈ 0 :=
 
 @[simp]
 theorem quot_mul_zero (x : Pgame) : ⟦x * 0⟧ = ⟦0⟧ :=
-  @Quotientₓ.sound _ _ (x * 0) _ x.mul_zero_equiv
+  @Quotient.sound _ _ (x * 0) _ x.mul_zero_equiv
 
 /-- `0 * x` has exactly the same moves as `0`. -/
 def zeroMulRelabelling (x : Pgame) : 0 * x ≡r 0 :=
@@ -370,7 +370,7 @@ theorem zero_mul_equiv (x : Pgame) : 0 * x ≈ 0 :=
 
 @[simp]
 theorem quot_zero_mul (x : Pgame) : ⟦0 * x⟧ = ⟦0⟧ :=
-  @Quotientₓ.sound _ _ (0 * x) _ x.zero_mul_equiv
+  @Quotient.sound _ _ (0 * x) _ x.zero_mul_equiv
 
 @[simp]
 theorem quot_neg_mul : ∀ x y : Pgame, ⟦-x * y⟧ = -⟦x * y⟧
@@ -480,7 +480,7 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
 
 /-- `x * (y + z)` is equivalent to `x * y + x * z.`-/
 theorem left_distrib_equiv (x y z : Pgame) : x * (y + z) ≈ x * y + x * z :=
-  Quotientₓ.exact <| quot_left_distrib _ _ _
+  Quotient.exact <| quot_left_distrib _ _ _
 
 @[simp]
 theorem quot_left_distrib_sub (x y z : Pgame) : ⟦x * (y - z)⟧ = ⟦x * y⟧ - ⟦x * z⟧ := by
@@ -493,7 +493,7 @@ theorem quot_right_distrib (x y z : Pgame) : ⟦(x + y) * z⟧ = ⟦x * z⟧ + �
 
 /-- `(x + y) * z` is equivalent to `x * z + y * z.`-/
 theorem right_distrib_equiv (x y z : Pgame) : (x + y) * z ≈ x * z + y * z :=
-  Quotientₓ.exact <| quot_right_distrib _ _ _
+  Quotient.exact <| quot_right_distrib _ _ _
 
 @[simp]
 theorem quot_right_distrib_sub (x y z : Pgame) : ⟦(y - z) * x⟧ = ⟦y * x⟧ - ⟦z * x⟧ := by
@@ -529,14 +529,14 @@ theorem quot_mul_one : ∀ x : Pgame, ⟦x * 1⟧ = ⟦x⟧
 
 /-- `x * 1` is equivalent to `x`. -/
 theorem mul_one_equiv (x : Pgame) : x * 1 ≈ x :=
-  Quotientₓ.exact <| quot_mul_one _
+  Quotient.exact <| quot_mul_one _
 
 @[simp]
 theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ := by rw [quot_mul_comm, quot_mul_one x]
 
 /-- `1 * x` is equivalent to `x`. -/
 theorem one_mul_equiv (x : Pgame) : 1 * x ≈ x :=
-  Quotientₓ.exact <| quot_one_mul _
+  Quotient.exact <| quot_one_mul _
 
 theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => by
@@ -623,7 +623,7 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
 
 /-- `x * y * z` is equivalent to `x * (y * z).`-/
 theorem mul_assoc_equiv (x y z : Pgame) : x * y * z ≈ x * (y * z) :=
-  Quotientₓ.exact <| quot_mul_assoc _ _ _
+  Quotient.exact <| quot_mul_assoc _ _ _
 
 /-- Because the two halves of the definition of `inv` produce more elements
 on each side, we have to define the two families inductively.
@@ -677,7 +677,7 @@ def inv' : Pgame → Pgame
     let l' := { i // 0 < L i }
     let L' : l' → Pgame := fun i => L i.1
     let IHl' : l' → Pgame := fun i => inv' (L i.1)
-    let IHr := fun i => inv' (R i)
+    let IHr i := inv' (R i)
     ⟨InvTy l' r false, InvTy l' r true, invVal L' R IHl' IHr, invVal L' R IHl' IHr⟩
 
 theorem zero_lf_inv' : ∀ x : Pgame, 0 ⧏ inv' x
@@ -689,10 +689,10 @@ theorem zero_lf_inv' : ∀ x : Pgame, 0 ⧏ inv' x
 def inv'Zero : inv' 0 ≡r 1 := by
   change mk _ _ _ _ ≡r 1
   refine' ⟨_, _, fun i => _, IsEmpty.elim _⟩
-  · apply Equivₓ.equivPunit (inv_ty _ _ _)
+  · apply Equiv.equivPunit (inv_ty _ _ _)
     infer_instance
     
-  · apply Equivₓ.equivPempty (inv_ty _ _ _)
+  · apply Equiv.equivPempty (inv_ty _ _ _)
     infer_instance
     
   · simp
@@ -708,12 +708,12 @@ theorem inv'_zero_equiv : inv' 0 ≈ 1 :=
 def inv'One : inv' 1 ≡r (1 : Pgame.{u}) := by
   change relabelling (mk _ _ _ _) 1
   have : IsEmpty { i : PUnit.{u + 1} // (0 : Pgame.{u}) < 0 } := by
-    rw [lt_self_iff_falseₓ]
+    rw [lt_self_iff_false]
     infer_instance
   refine' ⟨_, _, fun i => _, IsEmpty.elim _⟩ <;> dsimp
-  · apply Equivₓ.equivPunit
+  · apply Equiv.equivPunit
     
-  · apply Equivₓ.equivOfIsEmpty
+  · apply Equiv.equivOfIsEmpty
     
   · simp
     

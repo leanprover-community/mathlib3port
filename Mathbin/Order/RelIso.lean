@@ -50,6 +50,8 @@ structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Pr
 -- mathport name: «expr →r »
 infixl:25 " →r " => RelHom
 
+section
+
 /-- `rel_hom_class F r s` asserts that `F` is a type of functions such that all `f : F`
 satisfy `r a b → s (f a) (f b)`.
 
@@ -65,15 +67,17 @@ export RelHomClass (map_rel)
 -- The free parameters `r` and `s` are `out_param`s so this is not dangerous.
 attribute [nolint dangerous_instance] RelHomClass.toFunLike
 
+end
+
 namespace RelHomClass
 
 variable {F : Type _}
 
-theorem map_inf [SemilatticeInf α] [LinearOrderₓ β] [RelHomClass F ((· < ·) : β → β → Prop) ((· < ·) : α → α → Prop)]
+theorem map_inf [SemilatticeInf α] [LinearOrder β] [RelHomClass F ((· < ·) : β → β → Prop) ((· < ·) : α → α → Prop)]
     (a : F) (m n : β) : a (m ⊓ n) = a m ⊓ a n :=
-  (StrictMonoₓ.monotone fun x y => map_rel a).map_inf m n
+  (StrictMono.monotone fun x y => map_rel a).map_inf m n
 
-theorem map_sup [SemilatticeSup α] [LinearOrderₓ β] [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)]
+theorem map_sup [SemilatticeSup α] [LinearOrder β] [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)]
     (a : F) (m n : β) : a (m ⊔ n) = a m ⊔ a n :=
   @map_inf αᵒᵈ βᵒᵈ _ _ _ _ _ _ _
 
@@ -98,8 +102,8 @@ end RelHomClass
 namespace RelHom
 
 instance : RelHomClass (r →r s) r s where
-  coe := fun o => o.toFun
-  coe_injective' := fun f g h => by
+  coe o := o.toFun
+  coe_injective' f g h := by
     cases f
     cases g
     congr
@@ -198,7 +202,7 @@ infixl:25 " ↪r " => RelEmbedding
 def Subtype.relEmbedding {X : Type _} (r : X → X → Prop) (p : X → Prop) : (Subtype.val : Subtype p → X) ⁻¹'o r ↪r r :=
   ⟨Embedding.subtype p, fun x y => Iff.rfl⟩
 
-theorem preimage_equivalence {α β} (f : α → β) {s : β → β → Prop} (hs : Equivalenceₓ s) : Equivalenceₓ (f ⁻¹'o s) :=
+theorem preimage_equivalence {α β} (f : α → β) {s : β → β → Prop} (hs : Equivalence s) : Equivalence (f ⁻¹'o s) :=
   ⟨fun a => hs.1 _, fun a b h => hs.2.1 h, fun a b c h₁ h₂ => hs.2.2 h₁ h₂⟩
 
 namespace RelEmbedding
@@ -206,7 +210,7 @@ namespace RelEmbedding
 /-- A relation embedding is also a relation homomorphism -/
 def toRelHom (f : r ↪r s) : r →r s where
   toFun := f.toEmbedding.toFun
-  map_rel' := fun x y => (map_rel_iff' f).mpr
+  map_rel' x y := (map_rel_iff' f).mpr
 
 instance : Coe (r ↪r s) (r →r s) :=
   ⟨toRelHom⟩
@@ -218,11 +222,11 @@ instance : CoeFun (r ↪r s) fun _ => α → β :=
 -- TODO: define and instantiate a `rel_embedding_class` when `embedding_like` is defined
 instance : RelHomClass (r ↪r s) r s where
   coe := coeFn
-  coe_injective' := fun f g h => by
+  coe_injective' f g h := by
     rcases f with ⟨⟨⟩⟩
     rcases g with ⟨⟨⟩⟩
     congr
-  map_rel := fun f a b => Iff.mpr (map_rel_iff' f)
+  map_rel f a b := Iff.mpr (map_rel_iff' f)
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
@@ -320,7 +324,7 @@ protected theorem is_trans : ∀ (f : r ↪r s) [IsTrans β s], IsTrans α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b c h₁ h₂ => o.1 (H _ _ _ (o.2 h₁) (o.2 h₂))⟩
 
 protected theorem is_total : ∀ (f : r ↪r s) [IsTotal β s], IsTotal α r
-  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congrₓ o o).1 (H _ _)⟩
+  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o o).1 (H _ _)⟩
 
 protected theorem is_preorder : ∀ (f : r ↪r s) [IsPreorder β s], IsPreorder α r
   | f, H => { f.is_refl, f.is_trans with }
@@ -335,7 +339,7 @@ protected theorem is_strict_order : ∀ (f : r ↪r s) [IsStrictOrder β s], IsS
   | f, H => { f.is_irrefl, f.is_trans with }
 
 protected theorem is_trichotomous : ∀ (f : r ↪r s) [IsTrichotomous β s], IsTrichotomous α r
-  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congrₓ o (or_congrₓ f.inj'.eq_iff o)).1 (H _ _)⟩
+  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
 
 protected theorem is_strict_total_order : ∀ (f : r ↪r s) [IsStrictTotalOrder β s], IsStrictTotalOrder α r
   | f, H => { f.is_trichotomous, f.is_strict_order with }
@@ -355,22 +359,22 @@ protected theorem is_well_order : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellO
 
 /-- `quotient.out` as a relation embedding between the lift of a relation and the relation. -/
 @[simps]
-noncomputable def _root_.quotient.out_rel_embedding [s : Setoidₓ α] {r : α → α → Prop} (H) : Quotientₓ.lift₂ r H ↪r r :=
+noncomputable def _root_.quotient.out_rel_embedding [s : Setoid α] {r : α → α → Prop} (H) : Quotient.lift₂ r H ↪r r :=
   ⟨Embedding.quotientOut α, by
-    refine' fun x y => Quotientₓ.induction_on₂ x y fun a b => _
-    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotientₓ.mk_out⟩
+    refine' fun x y => Quotient.induction_on₂ x y fun a b => _
+    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk_out⟩
 
 /-- A relation is well founded iff its lift to a quotient is. -/
 @[simp]
-theorem _root_.well_founded_lift₂_iff [s : Setoidₓ α] {r : α → α → Prop} {H} :
-    WellFounded (Quotientₓ.lift₂ r H) ↔ WellFounded r :=
+theorem _root_.well_founded_lift₂_iff [s : Setoid α] {r : α → α → Prop} {H} :
+    WellFounded (Quotient.lift₂ r H) ↔ WellFounded r :=
   ⟨fun hr => by
-    suffices ∀ {x : Quotientₓ s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
+    suffices ∀ {x : Quotient s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
     · refine' fun x => hr.induction x _
       rintro x IH a rfl
       exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩
       ,
-    (Quotientₓ.outRelEmbedding H).WellFounded⟩
+    (Quotient.outRelEmbedding H).WellFounded⟩
 
 alias _root_.well_founded_lift₂_iff ↔ _root_.well_founded.of_quotient_lift₂ _root_.well_founded.quotient_lift₂
 
@@ -379,7 +383,7 @@ suffices to give a function together with a proof that it satisfies `s (f a) (f 
 -/
 def ofMapRelIff (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s (f a) (f b) ↔ r a b) : r ↪r s where
   toFun := f
-  inj' := fun x y h => antisymm ((hf _ _).1 (h ▸ refl _)) ((hf _ _).1 (h ▸ refl _))
+  inj' x y h := antisymm ((hf _ _).1 (h ▸ refl _)) ((hf _ _).1 (h ▸ refl _))
   map_rel_iff' := hf
 
 @[simp]
@@ -417,14 +421,14 @@ def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r
 def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.LiftRel r s where
   toFun := Sum.inl
   inj' := Sum.inl_injective
-  map_rel_iff' := fun a b => Sum.lift_rel_inl_inl
+  map_rel_iff' a b := Sum.lift_rel_inl_inl
 
 /-- `sum.inr` as a relation embedding into `sum.lift_rel r s`. -/
 @[simps]
 def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.LiftRel r s where
   toFun := Sum.inr
   inj' := Sum.inr_injective
-  map_rel_iff' := fun a b => Sum.lift_rel_inr_inr
+  map_rel_iff' a b := Sum.lift_rel_inr_inr
 
 /-- `sum.map` as a relation embedding between `sum.lift_rel` relations. -/
 @[simps]
@@ -438,14 +442,14 @@ def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftR
 def sumLexInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.Lex r s where
   toFun := Sum.inl
   inj' := Sum.inl_injective
-  map_rel_iff' := fun a b => Sum.lex_inl_inl
+  map_rel_iff' a b := Sum.lex_inl_inl
 
 /-- `sum.inr` as a relation embedding into `sum.lex r s`. -/
 @[simps]
 def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex r s where
   toFun := Sum.inr
   inj' := Sum.inr_injective
-  map_rel_iff' := fun a b => Sum.lex_inr_inr
+  map_rel_iff' a b := Sum.lex_inr_inr
 
 /-- `sum.map` as a relation embedding between `sum.lex` relations. -/
 @[simps]
@@ -458,22 +462,22 @@ def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u where
 @[simps]
 def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.Lex r s where
   toFun := Prod.mk a
-  inj' := Prod.mk.inj_leftₓ a
-  map_rel_iff' := fun b₁ b₂ => by simp [Prod.lex_defₓ, h]
+  inj' := Prod.mk.inj_left a
+  map_rel_iff' b₁ b₂ := by simp [Prod.lex_def, h]
 
 /-- `λ a, prod.mk a b` as a relation embedding. -/
 @[simps]
 def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod.Lex r s where
-  toFun := fun a => (a, b)
-  inj' := Prod.mk.inj_rightₓ b
-  map_rel_iff' := fun a₁ a₂ => by simp [Prod.lex_defₓ, h]
+  toFun a := (a, b)
+  inj' := Prod.mk.inj_right b
+  map_rel_iff' a₁ a₂ := by simp [Prod.lex_def, h]
 
 /-- `prod.map` as a relation embedding. -/
 @[simps]
 def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u where
   toFun := Prod.map f g
   inj' := f.Injective.prod_map g.Injective
-  map_rel_iff' := fun a b => by simp [Prod.lex_defₓ, f.map_rel_iff, g.map_rel_iff]
+  map_rel_iff' a b := by simp [Prod.lex_def, f.map_rel_iff, g.map_rel_iff]
 
 end RelEmbedding
 
@@ -507,8 +511,8 @@ instance : CoeFun (r ≃r s) fun _ => α → β :=
 -- TODO: define and instantiate a `rel_iso_class` when `equiv_like` is defined
 instance : RelHomClass (r ≃r s) r s where
   coe := coeFn
-  coe_injective' := Equivₓ.coe_fn_injective.comp to_equiv_injective
-  map_rel := fun f a b => Iff.mpr (map_rel_iff' f)
+  coe_injective' := Equiv.coe_fn_injective.comp to_equiv_injective
+  map_rel f a b := Iff.mpr (map_rel_iff' f)
 
 @[simp]
 theorem to_rel_embedding_eq_coe (f : r ≃r s) : f.toRelEmbedding = f :=
@@ -560,7 +564,7 @@ initialize_simps_projections RelIso (to_equiv_to_fun → apply, to_equiv_inv_fun
 /-- Identity map is a relation isomorphism. -/
 @[refl, simps apply]
 protected def refl (r : α → α → Prop) : r ≃r r :=
-  ⟨Equivₓ.refl _, fun a b => Iff.rfl⟩
+  ⟨Equiv.refl _, fun a b => Iff.rfl⟩
 
 /-- Composition of two relation isomorphisms is a relation isomorphism. -/
 @[trans, simps apply]
@@ -577,7 +581,7 @@ theorem default_def (r : α → α → Prop) : default = RelIso.refl r :=
 /-- A relation isomorphism between equal relations on equal types. -/
 @[simps toEquiv apply]
 protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β) (h₂ : HEq r s) : r ≃r s :=
-  ⟨Equivₓ.cast h₁, fun a b => by
+  ⟨Equiv.cast h₁, fun a b => by
     subst h₁
     rw [eq_of_heq h₂]
     rfl⟩
@@ -647,19 +651,19 @@ instance IsWellOrder.preimage {α : Type u} (r : α → α → Prop) [IsWellOrde
 
 instance IsWellOrder.ulift {α : Type u} (r : α → α → Prop) [IsWellOrder α r] :
     IsWellOrder (ULift α) (ULift.down ⁻¹'o r) :=
-  IsWellOrder.preimage r Equivₓ.ulift
+  IsWellOrder.preimage r Equiv.ulift
 
 /-- A surjective relation embedding is a relation isomorphism. -/
 @[simps apply]
 noncomputable def ofSurjective (f : r ↪r s) (H : Surjective f) : r ≃r s :=
-  ⟨Equivₓ.ofBijective f ⟨f.Injective, H⟩, fun a b => f.map_rel_iff⟩
+  ⟨Equiv.ofBijective f ⟨f.Injective, H⟩, fun a b => f.map_rel_iff⟩
 
 /-- Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
 lexicographic orders on the sum.
 -/
 def sumLexCongr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
     Sum.Lex r₁ r₂ ≃r Sum.Lex s₁ s₂ :=
-  ⟨Equivₓ.sumCongr e₁.toEquiv e₂.toEquiv, fun a b => by
+  ⟨Equiv.sumCongr e₁.toEquiv e₂.toEquiv, fun a b => by
     cases' e₁ with f hf <;> cases' e₂ with g hg <;> cases a <;> cases b <;> simp [hf, hg]⟩
 
 /-- Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
@@ -667,16 +671,16 @@ lexicographic orders on the product.
 -/
 def prodLexCongr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
     Prod.Lex r₁ r₂ ≃r Prod.Lex s₁ s₂ :=
-  ⟨Equivₓ.prodCongr e₁.toEquiv e₂.toEquiv, fun a b => by simp [Prod.lex_defₓ, e₁.map_rel_iff, e₂.map_rel_iff]⟩
+  ⟨Equiv.prodCongr e₁.toEquiv e₂.toEquiv, fun a b => by simp [Prod.lex_def, e₁.map_rel_iff, e₂.map_rel_iff]⟩
 
-instance : Groupₓ (r ≃r r) where
+instance : Group (r ≃r r) where
   one := RelIso.refl r
-  mul := fun f₁ f₂ => f₂.trans f₁
+  mul f₁ f₂ := f₂.trans f₁
   inv := RelIso.symm
-  mul_assoc := fun f₁ f₂ f₃ => rfl
-  one_mul := fun f => ext fun _ => rfl
-  mul_one := fun f => ext fun _ => rfl
-  mul_left_inv := fun f => ext f.symm_apply_apply
+  mul_assoc f₁ f₂ f₃ := rfl
+  one_mul f := ext fun _ => rfl
+  mul_one f := ext fun _ => rfl
+  mul_left_inv f := ext f.symm_apply_apply
 
 @[simp]
 theorem coe_one : ⇑(1 : r ≃r r) = id :=
@@ -699,17 +703,17 @@ theorem apply_inv_self (e : r ≃r r) (x) : e (e⁻¹ x) = x :=
 
 /-- Two relations on empty types are isomorphic. -/
 def relIsoOfIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] [IsEmpty β] : r ≃r s :=
-  ⟨Equivₓ.equivOfIsEmpty α β, isEmptyElim⟩
+  ⟨Equiv.equivOfIsEmpty α β, isEmptyElim⟩
 
 /-- Two irreflexive relations on a unique type are isomorphic. -/
 def relIsoOfUniqueOfIrrefl (r : α → α → Prop) (s : β → β → Prop) [IsIrrefl α r] [IsIrrefl β s] [Unique α] [Unique β] :
     r ≃r s :=
-  ⟨Equivₓ.equivOfUnique α β, fun x y => by simp [not_rel_of_subsingleton r, not_rel_of_subsingleton s]⟩
+  ⟨Equiv.equivOfUnique α β, fun x y => by simp [not_rel_of_subsingleton r, not_rel_of_subsingleton s]⟩
 
 /-- Two reflexive relations on a unique type are isomorphic. -/
 def relIsoOfUniqueOfRefl (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] [IsRefl β s] [Unique α] [Unique β] :
     r ≃r s :=
-  ⟨Equivₓ.equivOfUnique α β, fun x y => by simp [rel_of_subsingleton r, rel_of_subsingleton s]⟩
+  ⟨Equiv.equivOfUnique α β, fun x y => by simp [rel_of_subsingleton r, rel_of_subsingleton s]⟩
 
 end RelIso
 

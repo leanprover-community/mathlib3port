@@ -54,7 +54,7 @@ open Function
 /-- A Lie ring is an additive group with compatible product, known as the bracket, satisfying the
 Jacobi identity. -/
 @[protect_proj]
-class LieRing (L : Type v) extends AddCommGroupₓ L, HasBracket L L where
+class LieRing (L : Type v) extends AddCommGroup L, Bracket L L where
   add_lie : ∀ x y z : L, ⁅x + y, z⁆ = ⁅x, z⁆ + ⁅y, z⁆
   lie_add : ∀ x y z : L, ⁅x, y + z⁆ = ⁅x, y⁆ + ⁅x, z⁆
   lie_self : ∀ x : L, ⁅x, x⁆ = 0
@@ -63,14 +63,14 @@ class LieRing (L : Type v) extends AddCommGroupₓ L, HasBracket L L where
 /-- A Lie algebra is a module with compatible product, known as the bracket, satisfying the Jacobi
 identity. Forgetting the scalar multiplication, every Lie algebra is a Lie ring. -/
 @[protect_proj]
-class LieAlgebra (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] extends Module R L where
+class LieAlgebra (R : Type u) (L : Type v) [CommRing R] [LieRing L] extends Module R L where
   lie_smul : ∀ (t : R) (x y : L), ⁅x, t • y⁆ = t • ⁅x, y⁆
 
 /-- A Lie ring module is an additive group, together with an additive action of a
 Lie ring on this group, such that the Lie bracket acts as the commutator of endomorphisms.
 (For representations of Lie *algebras* see `lie_module`.) -/
 @[protect_proj]
-class LieRingModule (L : Type v) (M : Type w) [LieRing L] [AddCommGroupₓ M] extends HasBracket L M where
+class LieRingModule (L : Type v) (M : Type w) [LieRing L] [AddCommGroup M] extends Bracket L M where
   add_lie : ∀ (x y : L) (m : M), ⁅x + y, m⁆ = ⁅x, m⁆ + ⁅y, m⁆
   lie_add : ∀ (x : L) (m n : M), ⁅x, m + n⁆ = ⁅x, m⁆ + ⁅x, n⁆
   leibniz_lie : ∀ (x y : L) (m : M), ⁅x, ⁅y, m⁆⁆ = ⁅⁅x, y⁆, m⁆ + ⁅y, ⁅x, m⁆⁆
@@ -78,7 +78,7 @@ class LieRingModule (L : Type v) (M : Type w) [LieRing L] [AddCommGroupₓ M] ex
 /-- A Lie module is a module over a commutative ring, together with a linear action of a Lie
 algebra on this module, such that the Lie bracket acts as the commutator of endomorphisms. -/
 @[protect_proj]
-class LieModule (R : Type u) (L : Type v) (M : Type w) [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M]
+class LieModule (R : Type u) (L : Type v) (M : Type w) [CommRing R] [LieRing L] [LieAlgebra R L] [AddCommGroup M]
   [Module R M] [LieRingModule L M] where
   smul_lie : ∀ (t : R) (x : L) (m : M), ⁅t • x, m⁆ = t • ⁅x, m⁆
   lie_smul : ∀ (t : R) (x : L) (m : M), ⁅x, t • m⁆ = t • ⁅x, m⁆
@@ -87,11 +87,11 @@ section BasicProperties
 
 variable {R : Type u} {L : Type v} {M : Type w} {N : Type w₁}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable [CommRing R] [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable [AddCommGroupₓ N] [Module R N] [LieRingModule L N] [LieModule R L N]
+variable [AddCommGroup N] [Module R N] [LieRingModule L N] [LieModule R L N]
 
 variable (t : R) (x y z : L) (m n : M)
 
@@ -138,7 +138,7 @@ theorem lie_skew : -⁅y, x⁆ = ⁅x, y⁆ := by
 
 /-- Every Lie algebra is a module over itself. -/
 instance lieAlgebraSelfModule : LieModule R L L where
-  smul_lie := fun t x m => by rw [← lie_skew, ← lie_skew x m, LieAlgebra.lie_smul, smul_neg]
+  smul_lie t x m := by rw [← lie_skew, ← lie_skew x m, LieAlgebra.lie_smul, smul_neg]
   lie_smul := by apply LieAlgebra.lie_smul
 
 @[simp]
@@ -177,27 +177,27 @@ theorem lie_zsmul (a : ℤ) : ⁅x, a • m⁆ = a • ⁅x, m⁆ :=
 theorem lie_lie : ⁅⁅x, y⁆, m⁆ = ⁅x, ⁅y, m⁆⁆ - ⁅y, ⁅x, m⁆⁆ := by rw [leibniz_lie, add_sub_cancel]
 
 theorem lie_jacobi : ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y⁆⁆ = 0 := by
-  rw [← neg_negₓ ⁅x, y⁆, lie_neg z, lie_skew y x, ← lie_skew, lie_lie]
+  rw [← neg_neg ⁅x, y⁆, lie_neg z, lie_skew y x, ← lie_skew, lie_lie]
   abel
 
-instance LieRing.intLieAlgebra : LieAlgebra ℤ L where lie_smul := fun n x y => lie_zsmul x y n
+instance LieRing.intLieAlgebra : LieAlgebra ℤ L where lie_smul n x y := lie_zsmul x y n
 
 instance : LieRingModule L (M →ₗ[R] N) where
-  bracket := fun x f =>
+  bracket x f :=
     { toFun := fun m => ⁅x, f m⁆ - f ⁅x, m⁆,
       map_add' := fun m n => by
         simp only [lie_add, LinearMap.map_add]
         abel,
       map_smul' := fun t m => by simp only [smul_sub, LinearMap.map_smul, lie_smul, RingHom.id_apply] }
-  add_lie := fun x y f => by
+  add_lie x y f := by
     ext n
     simp only [add_lie, LinearMap.coe_mk, LinearMap.add_apply, LinearMap.map_add]
     abel
-  lie_add := fun x f g => by
+  lie_add x f g := by
     ext n
     simp only [LinearMap.coe_mk, lie_add, LinearMap.add_apply]
     abel
-  leibniz_lie := fun x y f => by
+  leibniz_lie x y f := by
     ext n
     simp only [lie_lie, LinearMap.coe_mk, LinearMap.map_sub, LinearMap.add_apply, lie_sub]
     abel
@@ -207,17 +207,17 @@ theorem LieHom.lie_apply (f : M →ₗ[R] N) (x : L) (m : M) : ⁅x, f⁆ m = �
   rfl
 
 instance : LieModule R L (M →ₗ[R] N) where
-  smul_lie := fun t x f => by
+  smul_lie t x f := by
     ext n
     simp only [smul_sub, smul_lie, LinearMap.smul_apply, LieHom.lie_apply, LinearMap.map_smul]
-  lie_smul := fun t x f => by
+  lie_smul t x f := by
     ext n
     simp only [smul_sub, LinearMap.smul_apply, LieHom.lie_apply, lie_smul]
 
 end BasicProperties
 
 /-- A morphism of Lie algebras is a linear map respecting the bracket operations. -/
-structure LieHom (R : Type u) (L : Type v) (L' : Type w) [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L']
+structure LieHom (R : Type u) (L : Type v) (L' : Type w) [CommRing R] [LieRing L] [LieAlgebra R L] [LieRing L']
   [LieAlgebra R L'] extends L →ₗ[R] L' where
   map_lie' : ∀ {x y : L}, to_fun ⁅x, y⁆ = ⁅to_fun x, to_fun y⁆
 
@@ -230,7 +230,7 @@ namespace LieHom
 
 variable {R : Type u} {L₁ : Type v} {L₂ : Type w} {L₃ : Type w₁}
 
-variable [CommRingₓ R]
+variable [CommRing R]
 
 variable [LieRing L₁] [LieAlgebra R L₁]
 
@@ -389,9 +389,9 @@ section ModulePullBack
 
 variable {R : Type u} {L₁ : Type v} {L₂ : Type w} (M : Type w₁)
 
-variable [CommRingₓ R] [LieRing L₁] [LieAlgebra R L₁] [LieRing L₂] [LieAlgebra R L₂]
+variable [CommRing R] [LieRing L₁] [LieAlgebra R L₁] [LieRing L₂] [LieAlgebra R L₂]
 
-variable [AddCommGroupₓ M] [LieRingModule L₂ M]
+variable [AddCommGroup M] [LieRingModule L₂ M]
 
 variable (f : L₁ →ₗ⁅R⁆ L₂)
 
@@ -402,10 +402,10 @@ include f
 See note [reducible non-instances]. -/
 @[reducible]
 def LieRingModule.compLieHom : LieRingModule L₁ M where
-  bracket := fun x m => ⁅f x, m⁆
-  lie_add := fun x => lie_add (f x)
-  add_lie := fun x y m => by simp only [LieHom.map_add, add_lie]
-  leibniz_lie := fun x y m => by simp only [lie_lie, sub_add_cancel, LieHom.map_lie]
+  bracket x m := ⁅f x, m⁆
+  lie_add x := lie_add (f x)
+  add_lie x y m := by simp only [LieHom.map_add, add_lie]
+  leibniz_lie x y m := by simp only [lie_lie, sub_add_cancel, LieHom.map_lie]
 
 theorem LieRingModule.comp_lie_hom_apply (x : L₁) (m : M) :
     haveI := LieRingModule.compLieHom M f
@@ -418,15 +418,15 @@ See note [reducible non-instances]. -/
 @[reducible]
 def LieModule.compLieHom [Module R M] [LieModule R L₂ M] :
     @LieModule R L₁ M _ _ _ _ _ (LieRingModule.compLieHom M f) where
-  smul_lie := fun t x m => by simp only [smul_lie, LieHom.map_smul]
-  lie_smul := fun t x m => by simp only [lie_smul]
+  smul_lie t x m := by simp only [smul_lie, LieHom.map_smul]
+  lie_smul t x m := by simp only [lie_smul]
 
 end ModulePullBack
 
 /-- An equivalence of Lie algebras is a morphism which is also a linear equivalence. We could
 instead define an equivalence to be a morphism which is also a (plain) equivalence. However it is
 more convenient to define via linear equivalence to get `.to_linear_equiv` for free. -/
-structure LieEquiv (R : Type u) (L : Type v) (L' : Type w) [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L']
+structure LieEquiv (R : Type u) (L : Type v) (L' : Type w) [CommRing R] [LieRing L] [LieAlgebra R L] [LieRing L']
   [LieAlgebra R L'] extends L →ₗ⁅R⁆ L' where
   invFun : L' → L
   left_inv : Function.LeftInverse inv_fun to_lie_hom.toFun
@@ -441,7 +441,7 @@ namespace LieEquiv
 
 variable {R : Type u} {L₁ : Type v} {L₂ : Type w} {L₃ : Type w₁}
 
-variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieRing L₃]
+variable [CommRing R] [LieRing L₁] [LieRing L₂] [LieRing L₃]
 
 variable [LieAlgebra R L₁] [LieAlgebra R L₂] [LieAlgebra R L₃]
 
@@ -571,9 +571,9 @@ section LieModuleMorphisms
 
 variable (R : Type u) (L : Type v) (M : Type w) (N : Type w₁) (P : Type w₂)
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable [CommRing R] [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P]
+variable [AddCommGroup M] [AddCommGroup N] [AddCommGroup P]
 
 variable [Module R M] [Module R N] [Module R P]
 
@@ -723,11 +723,11 @@ def inverse (f : M →ₗ⁅R,L⁆ N) (g : N → M) (h₁ : Function.LeftInverse
         _ = ⁅x, g n⁆ := h₁ _
          }
 
-instance : Add (M →ₗ⁅R,L⁆ N) where add := fun f g => { (f : M →ₗ[R] N) + (g : M →ₗ[R] N) with map_lie' := by simp }
+instance : Add (M →ₗ⁅R,L⁆ N) where add f g := { (f : M →ₗ[R] N) + (g : M →ₗ[R] N) with map_lie' := by simp }
 
-instance : Sub (M →ₗ⁅R,L⁆ N) where sub := fun f g => { (f : M →ₗ[R] N) - (g : M →ₗ[R] N) with map_lie' := by simp }
+instance : Sub (M →ₗ⁅R,L⁆ N) where sub f g := { (f : M →ₗ[R] N) - (g : M →ₗ[R] N) with map_lie' := by simp }
 
-instance : Neg (M →ₗ⁅R,L⁆ N) where neg := fun f => { -(f : M →ₗ[R] N) with map_lie' := by simp }
+instance : Neg (M →ₗ⁅R,L⁆ N) where neg f := { -(f : M →ₗ[R] N) with map_lie' := by simp }
 
 @[norm_cast, simp]
 theorem coe_add (f g : M →ₗ⁅R,L⁆ N) : ⇑(f + g) = f + g :=
@@ -751,7 +751,7 @@ theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
   rfl
 
 instance hasNsmul :
-    HasSmul ℕ (M →ₗ⁅R,L⁆ N) where smul := fun n f => { n • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
+    HasSmul ℕ (M →ₗ⁅R,L⁆ N) where smul n f := { n • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
 
 @[norm_cast, simp]
 theorem coe_nsmul (n : ℕ) (f : M →ₗ⁅R,L⁆ N) : ⇑(n • f) = n • f :=
@@ -761,7 +761,7 @@ theorem nsmul_apply (n : ℕ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (n • f) m = 
   rfl
 
 instance hasZsmul :
-    HasSmul ℤ (M →ₗ⁅R,L⁆ N) where smul := fun z f => { z • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
+    HasSmul ℤ (M →ₗ⁅R,L⁆ N) where smul z f := { z • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
 
 @[norm_cast, simp]
 theorem coe_zsmul (z : ℤ) (f : M →ₗ⁅R,L⁆ N) : ⇑(z • f) = z • f :=
@@ -770,10 +770,10 @@ theorem coe_zsmul (z : ℤ) (f : M →ₗ⁅R,L⁆ N) : ⇑(z • f) = z • f :
 theorem zsmul_apply (z : ℤ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (z • f) m = z • f m :=
   rfl
 
-instance : AddCommGroupₓ (M →ₗ⁅R,L⁆ N) :=
+instance : AddCommGroup (M →ₗ⁅R,L⁆ N) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ => coe_zsmul _ _
 
-instance : HasSmul R (M →ₗ⁅R,L⁆ N) where smul := fun t f => { t • (f : M →ₗ[R] N) with map_lie' := by simp }
+instance : HasSmul R (M →ₗ⁅R,L⁆ N) where smul t f := { t • (f : M →ₗ[R] N) with map_lie' := by simp }
 
 @[norm_cast, simp]
 theorem coe_smul (t : R) (f : M →ₗ⁅R,L⁆ N) : ⇑(t • f) = t • f :=
@@ -842,7 +842,7 @@ theorem coe_to_linear_equiv (e : M ≃ₗ⁅R,L⁆ N) : ((e : M ≃ₗ[R] N) : M
 theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N) → M ≃ N) := fun e₁ e₂ h => by
   rcases e₁ with ⟨⟨⟩⟩
   rcases e₂ with ⟨⟨⟩⟩
-  have inj := Equivₓ.mk.inj h
+  have inj := Equiv.mk.inj h
   dsimp at inj
   apply lie_module_equiv.mk.inj_eq.mpr
   constructor
@@ -855,7 +855,7 @@ theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N)
 
 @[ext]
 theorem ext (e₁ e₂ : M ≃ₗ⁅R,L⁆ N) (h : ∀ m, e₁ m = e₂ m) : e₁ = e₂ :=
-  to_equiv_injective (Equivₓ.ext h)
+  to_equiv_injective (Equiv.ext h)
 
 instance : One (M ≃ₗ⁅R,L⁆ M) :=
   ⟨{ (1 : M ≃ₗ[R] M) with map_lie' := fun x m => rfl }⟩

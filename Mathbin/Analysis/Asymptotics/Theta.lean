@@ -75,10 +75,6 @@ theorem IsTheta.trans_is_O {f : α → E} {g : α → F'} {k : α → G} (h₁ :
   h₁.1.trans h₂
 
 @[trans]
-theorem IsOₓ.trans_is_Theta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g) (h₂ : g =Θ[l] k) : f =o[l] k :=
-  h₁.trans_is_O h₂.1
-
-@[trans]
 theorem IsTheta.trans_is_o {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =o[l] k) : f =o[l] k :=
   h₁.1.trans_is_o h₂
 
@@ -102,7 +98,7 @@ alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 
 theorem is_Theta_of_norm_eventually_eq (h : (fun x => ∥f x∥) =ᶠ[l] fun x => ∥g x∥) : f =Θ[l] g :=
-  ⟨IsO.of_bound 1 <| by simpa only [one_mulₓ] using h.le, IsO.of_bound 1 <| by simpa only [one_mulₓ] using h.symm.le⟩
+  ⟨IsO.of_bound 1 <| by simpa only [one_mul] using h.le, IsO.of_bound 1 <| by simpa only [one_mul] using h.symm.le⟩
 
 theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ∥f' x∥) =ᶠ[l] g) : f' =Θ[l] g :=
   is_Theta_of_norm_eventually_eq <| h.mono fun x hx => by simp only [← hx, norm_norm]
@@ -155,7 +151,7 @@ theorem IsTheta.inv {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) : (fun
 
 @[simp]
 theorem is_Theta_inv {f : α → 𝕜} {g : α → 𝕜'} : ((fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹) ↔ f =Θ[l] g :=
-  ⟨fun h => by simpa only [inv_invₓ] using h.inv, IsTheta.inv⟩
+  ⟨fun h => by simpa only [inv_inv] using h.inv, IsTheta.inv⟩
 
 theorem IsTheta.div {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ : f₁ =Θ[l] g₁) (h₂ : f₂ =Θ[l] g₂) :
     (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
@@ -180,19 +176,19 @@ theorem is_Theta_const_const_iff [NeBot l] {c₁ : E''} {c₂ : F''} :
 
 @[simp]
 theorem is_Theta_zero_left : (fun x => (0 : E')) =Θ[l] g'' ↔ g'' =ᶠ[l] 0 := by
-  simp only [is_Theta, is_O_zero, is_O_zero_right_iff, true_andₓ]
+  simp only [is_Theta, is_O_zero, is_O_zero_right_iff, true_and_iff]
 
 @[simp]
 theorem is_Theta_zero_right : (f'' =Θ[l] fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 :=
   is_Theta_comm.trans is_Theta_zero_left
 
 theorem is_Theta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0) : (fun x => c • f' x) =Θ[l] g ↔ f' =Θ[l] g :=
-  and_congrₓ (is_O_const_smul_left hc) (is_O_const_smul_right hc)
+  and_congr (is_O_const_smul_left hc) (is_O_const_smul_right hc)
 
 alias is_Theta_const_smul_left ↔ is_Theta.of_const_smul_left is_Theta.const_smul_left
 
 theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0) : (f =Θ[l] fun x => c • g' x) ↔ f =Θ[l] g' :=
-  and_congrₓ (is_O_const_smul_right hc) (is_O_const_smul_left hc)
+  and_congr (is_O_const_smul_right hc) (is_O_const_smul_left hc)
 
 alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
 

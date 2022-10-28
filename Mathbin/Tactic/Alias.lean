@@ -61,7 +61,7 @@ unsafe def target.to_name : target → Name
   | target.backwards n => n
 
 /-- The docstring for an alias. Used by `alias` _and_ by `to_additive` -/
-unsafe def target.to_string : target → Stringₓ
+unsafe def target.to_string : target → String
   | target.plain n => s! "**Alias** of `{n}`."
   | target.forward n => s! "**Alias** of the forward direction of `{n}`."
   | target.backwards n => s! "**Alias** of the reverse direction of `{n}`."
@@ -74,7 +74,7 @@ unsafe def alias_attr : user_attribute Unit target where
   parser := failed
 
 /-- The core tactic which handles `alias d ← al`. Creates an alias `al` for declaration `d`. -/
-unsafe def alias_direct (doc : Option Stringₓ) (d : declaration) (al : Name) : tactic Unit := do
+unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : tactic Unit := do
   updateex_env fun env =>
       env
         (match d with
@@ -96,7 +96,7 @@ unsafe def mk_iff_mp_app (iffmp : Name) : expr → (ℕ → expr) → tactic exp
 
 /-- The core tactic which handles `alias d ↔ al _` or `alias d ↔ _ al`. `ns` is the current
 namespace, and `is_forward` is true if this is the forward implication (the first form). -/
-unsafe def alias_iff (doc : Option Stringₓ) (d : declaration) (ns al : Name) (is_forward : Bool) : tactic Unit :=
+unsafe def alias_iff (doc : Option String) (d : declaration) (ns al : Name) (is_forward : Bool) : tactic Unit :=
   if al = `_ then skip
   else
     let al := ns.append_namespace al
@@ -117,7 +117,7 @@ unsafe def make_left_right : Name → tactic (Name × Name)
     let buf : CharBuffer := s.toCharBuffer
     let parts := s.splitOn '_'
     let (left, _ :: right) ← pure <| parts.span (· ≠ "iff")
-    let pfx (a b : Stringₓ) := a.toList.isPrefixOf b.toList
+    let pfx (a b : String) := a.toList.isPrefixOf b.toList
     let (suffix', right') ← pure <| right.reverse.span fun s => pfx "left" s ∨ pfx "right" s
     let right := right'.reverse
     let suffix := suffix'.reverse

@@ -28,7 +28,7 @@ projection, idempotent
 
 variable {M N S M₀ M₁ R G G₀ : Type _}
 
-variable [Mul M] [Monoidₓ N] [Semigroupₓ S] [MulZeroClassₓ M₀] [MulOneClassₓ M₁] [NonAssocRing R] [Groupₓ G]
+variable [Mul M] [Monoid N] [Semigroup S] [MulZeroClass M₀] [MulOneClass M₁] [NonAssocRing R] [Group G]
   [CancelMonoidWithZero G₀]
 
 /-- An element `p` is said to be idempotent if `p * p = p`
@@ -52,34 +52,34 @@ theorem zero : IsIdempotentElem (0 : M₀) :=
   mul_zero _
 
 theorem one : IsIdempotentElem (1 : M₁) :=
-  mul_oneₓ _
+  mul_one _
 
 theorem one_sub {p : R} (h : IsIdempotentElem p) : IsIdempotentElem (1 - p) := by
-  rw [IsIdempotentElem, mul_sub, mul_oneₓ, sub_mul, one_mulₓ, h.eq, sub_self, sub_zero]
+  rw [IsIdempotentElem, mul_sub, mul_one, sub_mul, one_mul, h.eq, sub_self, sub_zero]
 
 @[simp]
 theorem one_sub_iff {p : R} : IsIdempotentElem (1 - p) ↔ IsIdempotentElem p :=
   ⟨fun h => sub_sub_cancel 1 p ▸ h.one_sub, IsIdempotentElem.one_sub⟩
 
 theorem pow {p : N} (n : ℕ) (h : IsIdempotentElem p) : IsIdempotentElem (p ^ n) :=
-  Nat.recOn n ((pow_zeroₓ p).symm ▸ one) fun n ih =>
+  Nat.recOn n ((pow_zero p).symm ▸ one) fun n ih =>
     show p ^ n.succ * p ^ n.succ = p ^ n.succ by
       nth_rw 2 [← h.eq]
-      rw [← sq, ← sq, ← pow_mulₓ, ← pow_mul']
+      rw [← sq, ← sq, ← pow_mul, ← pow_mul']
 
 theorem pow_succ_eq {p : N} (n : ℕ) (h : IsIdempotentElem p) : p ^ (n + 1) = p :=
-  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_oneₓ p) fun n ih => by rw [pow_succₓ, ih, h.eq]
+  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_one p) fun n ih => by rw [pow_succ, ih, h.eq]
 
 @[simp]
 theorem iff_eq_one {p : G} : IsIdempotentElem p ↔ p = 1 :=
-  Iff.intro (fun h => mul_left_cancelₓ ((mul_oneₓ p).symm ▸ h.Eq : p * p = p * 1)) fun h => h.symm ▸ one
+  Iff.intro (fun h => mul_left_cancel ((mul_one p).symm ▸ h.Eq : p * p = p * 1)) fun h => h.symm ▸ one
 
 @[simp]
 theorem iff_eq_zero_or_one {p : G₀} : IsIdempotentElem p ↔ p = 0 ∨ p = 1 := by
   refine'
     Iff.intro (fun h => or_iff_not_imp_left.mpr fun hp => _) fun h =>
       h.elim (fun hp => hp.symm ▸ zero) fun hp => hp.symm ▸ one
-  exact mul_left_cancel₀ hp (h.trans (mul_oneₓ p).symm)
+  exact mul_left_cancel₀ hp (h.trans (mul_one p).symm)
 
 /-! ### Instances on `subtype is_idempotent_elem` -/
 

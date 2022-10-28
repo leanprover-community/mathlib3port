@@ -3,7 +3,7 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 import Mathbin.Tactic.Basic
 
 /-!
@@ -36,42 +36,54 @@ functor, applicative, monad, simp
 -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:60:9: unsupported: weird string
-mk_simp_attribute monad_norm from functor_norm
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
+/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
+     [(Command.docComment
+       "/--"
+       "./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/")]
+     "register_simp_attr"
+     `monad_norm)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+/-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
+  register_simp_attr
+  monad_norm
 
-attribute [ext] ReaderTₓ.ext StateTₓ.ext ExceptTₓ.ext OptionTₓ.ext
+/- [mathport] port note: move this to another file, it won't work here -/
+attribute [monad_norm] functor_norm
 
-attribute [functor_norm] bind_assoc pure_bind bind_pureₓ
+attribute [ext] ReaderT.ext StateT.ext ExceptT.ext OptionT.ext
 
-attribute [monad_norm] seq_eq_bind_mapₓ
+attribute [functor_norm] bind_assoc pure_bind bind_pure
+
+attribute [monad_norm] seq_eq_bind_map
 
 universe u v
 
 @[monad_norm]
-theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monadₓ m] [IsLawfulMonad m] {α β : Type u} (f : α → β) (x : m α) :
+theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monad m] [LawfulMonad m] {α β : Type u} (f : α → β) (x : m α) :
     f <$> x = x >>= pure ∘ f := by rw [bind_pure_comp_eq_map]
 
 /-- run a `state_t` program and discard the final state -/
-def StateTₓ.eval {m : Type u → Type v} [Functor m] {σ α} (cmd : StateTₓ σ m α) (s : σ) : m α :=
+def StateT.eval {m : Type u → Type v} [Functor m] {σ α} (cmd : StateT σ m α) (s : σ) : m α :=
   Prod.fst <$> cmd.run s
 
 universe u₀ u₁ v₀ v₁
 
 /-- reduce the equivalence between two state monads to the equivalence between
 their respective function spaces -/
-def StateTₓ.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀} {α₂ σ₂ : Type u₁}
-    (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) : StateTₓ σ₁ m₁ α₁ ≃ StateTₓ σ₂ m₂ α₂ where
+def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀} {α₂ σ₂ : Type u₁}
+    (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) : StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_arg StateTₓ.mk <| F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_arg StateTₓ.mk <| F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.right_inv _
 
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
-def ReaderTₓ.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀} {α₂ ρ₂ : Type u₁}
-    (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderTₓ ρ₁ m₁ α₁ ≃ ReaderTₓ ρ₂ m₂ α₂ where
+def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀} {α₂ ρ₂ : Type u₁}
+    (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_arg ReaderTₓ.mk <| F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_arg ReaderTₓ.mk <| F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.right_inv _
 

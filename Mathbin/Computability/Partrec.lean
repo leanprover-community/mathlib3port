@@ -39,7 +39,7 @@ parameter (H : ∃ n, tt ∈ p n ∧ ∀ k < n, (p k).Dom)
 private def wf_lbp : WellFounded lbp :=
   ⟨by
     let ⟨n, pn⟩ := H
-    suffices ∀ m k, n ≤ k + m → Acc (lbp p) k by exact fun a => this _ _ (Nat.le_add_leftₓ _ _)
+    suffices ∀ m k, n ≤ k + m → Acc (lbp p) k by exact fun a => this _ _ (Nat.le_add_left _ _)
     intro m k kn
     induction' m with m IH generalizing k <;> refine' ⟨_, fun y r => _⟩ <;> rcases r with ⟨rfl, a⟩
     · injection mem_unique pn.1 (a _ kn)
@@ -49,13 +49,13 @@ private def wf_lbp : WellFounded lbp :=
 
 def rfindX : { n // tt ∈ p n ∧ ∀ m < n, ff ∈ p m } :=
   suffices ∀ k, (∀ n < k, ff ∈ p n) → { n // tt ∈ p n ∧ ∀ m < n, ff ∈ p m } from
-    this 0 fun n => (Nat.not_lt_zeroₓ _).elim
+    this 0 fun n => (Nat.not_lt_zero _).elim
   @WellFounded.fix _ _ lbp wf_lbp
     (by
       intro m IH al
       have pm : (p m).Dom := by
         rcases H with ⟨n, h₁, h₂⟩
-        rcases lt_trichotomyₓ m n with (h₃ | h₃ | h₃)
+        rcases lt_trichotomy m n with (h₃ | h₃ | h₃)
         · exact h₂ _ h₃
           
         · rw [h₃]
@@ -95,13 +95,13 @@ theorem rfind_dom {p : ℕ →. Bool} : (rfind p).Dom ↔ ∃ n, tt ∈ p n ∧ 
 theorem rfind_dom' {p : ℕ →. Bool} : (rfind p).Dom ↔ ∃ n, tt ∈ p n ∧ ∀ {m : ℕ}, m ≤ n → (p m).Dom :=
   exists_congr fun n =>
     and_congr_right fun pn =>
-      ⟨fun H m h => (Decidable.eq_or_lt_of_leₓ h).elim (fun e => e.symm ▸ pn.fst) (H _), fun H m h => H (le_of_ltₓ h)⟩
+      ⟨fun H m h => (Decidable.eq_or_lt_of_le h).elim (fun e => e.symm ▸ pn.fst) (H _), fun H m h => H (le_of_lt h)⟩
 
 @[simp]
 theorem mem_rfind {p : ℕ →. Bool} {n : ℕ} : n ∈ rfind p ↔ tt ∈ p n ∧ ∀ {m : ℕ}, m < n → ff ∈ p m :=
   ⟨fun h => ⟨rfind_spec h, @rfind_min _ _ h⟩, fun ⟨h₁, h₂⟩ => by
     let ⟨m, hm⟩ := dom_iff_mem.1 <| (@rfind_dom p).2 ⟨_, h₁, fun m mn => (h₂ mn).fst⟩
-    rcases lt_trichotomyₓ m n with (h | h | h)
+    rcases lt_trichotomy m n with (h | h | h)
     · injection mem_unique (h₂ h) (rfind_spec hm)
       
     · rwa [← h]
@@ -110,9 +110,9 @@ theorem mem_rfind {p : ℕ →. Bool} {n : ℕ} : n ∈ rfind p ↔ tt ∈ p n �
       ⟩
 
 theorem rfind_min' {p : ℕ → Bool} {m : ℕ} (pm : p m) : ∃ n ∈ rfind p, n ≤ m :=
-  have : tt ∈ (p : ℕ →. Bool) m := ⟨trivialₓ, pm⟩
+  have : tt ∈ (p : ℕ →. Bool) m := ⟨trivial, pm⟩
   let ⟨n, hn⟩ := dom_iff_mem.1 <| (@rfind_dom p).2 ⟨m, this, fun k h => ⟨⟩⟩
-  ⟨n, hn, not_ltₓ.1 fun h => by injection mem_unique this (rfind_min hn h)⟩
+  ⟨n, hn, not_lt.1 fun h => by injection mem_unique this (rfind_min hn h)⟩
 
 theorem rfind_zero_none (p : ℕ →. Bool) (p0 : p 0 = none) : rfind p = none :=
   eq_none_iff.2 fun a h =>
@@ -129,8 +129,8 @@ theorem rfind_opt_spec {α} {f : ℕ → Option α} {a} (h : a ∈ rfindOpt f) :
 theorem rfind_opt_dom {α} {f : ℕ → Option α} : (rfindOpt f).Dom ↔ ∃ n a, a ∈ f n :=
   ⟨fun h => (rfind_opt_spec ⟨h, rfl⟩).imp fun n h => ⟨_, h⟩, fun h => by
     have h' : ∃ n, (f n).isSome := h.imp fun n => Option.is_some_iff_exists.2
-    have s := Nat.find_specₓ h'
-    have fd : (rfind fun n => (f n).isSome).Dom := ⟨Nat.findₓ h', by simpa using s.symm, fun _ _ => trivialₓ⟩
+    have s := Nat.find_spec h'
+    have fd : (rfind fun n => (f n).isSome).Dom := ⟨Nat.find h', by simpa using s.symm, fun _ _ => trivial⟩
     refine' ⟨fd, _⟩
     have := rfind_spec (get_mem fd)
     simp at this⊢
@@ -143,7 +143,7 @@ theorem rfind_opt_mono {α} {f : ℕ → Option α} (H : ∀ {a m n}, m ≤ n �
   ⟨rfind_opt_spec, fun ⟨n, h⟩ => by
     have h' := rfind_opt_dom.2 ⟨_, _, h⟩
     cases' rfind_opt_spec ⟨h', rfl⟩ with k hk
-    have := (H (le_max_leftₓ _ _) h).symm.trans (H (le_max_rightₓ _ _) hk)
+    have := (H (le_max_left _ _) h).symm.trans (H (le_max_right _ _) hk)
     simp at this
     simp [this, get_mem]⟩
 
@@ -167,26 +167,26 @@ inductive Partrec : (ℕ →. ℕ) → Prop
 
 namespace Partrec
 
-theorem of_eq {f g : ℕ →. ℕ} (hf : Partrec f) (H : ∀ n, f n = g n) : Partrec g :=
+theorem ofEq {f g : ℕ →. ℕ} (hf : Partrec f) (H : ∀ n, f n = g n) : Partrec g :=
   (funext H : f = g) ▸ hf
 
-theorem of_eq_tot {f : ℕ →. ℕ} {g : ℕ → ℕ} (hf : Partrec f) (H : ∀ n, g n ∈ f n) : Partrec g :=
+theorem ofEqTot {f : ℕ →. ℕ} {g : ℕ → ℕ} (hf : Partrec f) (H : ∀ n, g n ∈ f n) : Partrec g :=
   hf.of_eq fun n => eq_some_iff.2 (H n)
 
-theorem of_primrec {f : ℕ → ℕ} (hf : Primrec f) : Partrec f := by
+theorem ofPrimrec {f : ℕ → ℕ} (hf : Primrec f) : Partrec f := by
   induction hf
   case zero => exact zero
   case succ => exact succ
   case left => exact left
   case right => exact right
   case pair f g hf hg pf pg =>
-  refine' (pf.pair pg).of_eq_tot fun n => _
-  simp [Seqₓ.seq]
+  refine' (pf.pair pg).ofEqTot fun n => _
+  simp [Seq.seq]
   case comp f g hf hg pf pg =>
-  refine' (pf.comp pg).of_eq_tot fun n => _
+  refine' (pf.comp pg).ofEqTot fun n => _
   simp
   case prec f g hf hg pf pg =>
-  refine' (pf.prec pg).of_eq_tot fun n => _
+  refine' (pf.prec pg).ofEqTot fun n => _
   simp
   induction' n.unpair.2 with m IH
   · simp
@@ -195,10 +195,10 @@ theorem of_primrec {f : ℕ → ℕ} (hf : Primrec f) : Partrec f := by
   exact ⟨_, IH, rfl⟩
 
 protected theorem some : Partrec some :=
-  of_primrec Primrec.id
+  ofPrimrec Primrec.id
 
 theorem none : Partrec fun n => none :=
-  (of_primrec (Nat.Primrec.const 1)).rfind.of_eq fun n => eq_none_iff.2 fun a ⟨h, e⟩ => by simpa using h
+  (ofPrimrec (Nat.Primrec.const 1)).rfind.of_eq fun n => eq_none_iff.2 fun a ⟨h, e⟩ => by simpa using h
 
 theorem prec' {f g h} (hf : Partrec f) (hg : Partrec g) (hh : Partrec h) :
     Partrec fun a =>
@@ -217,14 +217,14 @@ theorem ppred : Partrec fun n => ppred n :=
   have : Primrec₂ fun n m => if n = Nat.succ m then 0 else 1 :=
     (Primrec.ite (@PrimrecRel.comp _ _ _ _ _ _ _ Primrec.eq Primrec.fst (Primrec.succ.comp Primrec.snd))
         (Primrec.const 0) (Primrec.const 1)).to₂
-  (of_primrec (Primrec₂.unpaired'.2 this)).rfind.of_eq fun n => by
+  (ofPrimrec (Primrec₂.unpaired'.2 this)).rfind.of_eq fun n => by
     cases n <;> simp
     · exact eq_none_iff.2 fun a ⟨⟨m, h, _⟩, _⟩ => by simpa [show 0 ≠ m.succ by intro h <;> injection h] using h
       
     · refine' eq_some_iff.2 _
       simp
       intro m h
-      simp [ne_of_gtₓ h]
+      simp [ne_of_gt h]
       
 
 end Partrec
@@ -244,7 +244,7 @@ def Computable₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ] 
   Computable fun p : α × β => f p.1 p.2
 
 theorem Primrec.to_comp {α σ} [Primcodable α] [Primcodable σ] {f : α → σ} (hf : Primrec f) : Computable f :=
-  (Nat.Partrec.ppred.comp (Nat.Partrec.of_primrec hf)).of_eq fun n => by simp <;> cases decode α n <;> simp
+  (Nat.Partrec.ppred.comp (Nat.Partrec.ofPrimrec hf)).of_eq fun n => by simp <;> cases decode α n <;> simp
 
 theorem Primrec₂.to_comp {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ] {f : α → β → σ} (hf : Primrec₂ f) :
     Computable₂ f :=
@@ -353,7 +353,7 @@ theorem vector_nth' {n} : Computable (@Vector.nth α n) :=
 theorem vector_of_fn' {n} : Computable (@Vector.ofFn α n) :=
   Primrec.vector_of_fn'.to_comp
 
-theorem fin_app {n} : Computable₂ (@id (Finₓ n → σ)) :=
+theorem fin_app {n} : Computable₂ (@id (Fin n → σ)) :=
   Primrec.fin_app.to_comp
 
 protected theorem encode : Computable (@encode α _) :=
@@ -525,10 +525,10 @@ theorem bind_decode₂_iff {f : α →. σ} :
     fun h => map_encode_iff.1 <| by simpa [encodek₂] using (nat_iff.2 h).comp (@Computable.encode α _)⟩
 
 theorem vector_m_of_fn :
-    ∀ {n} {f : Finₓ n → α →. σ}, (∀ i, Partrec (f i)) → Partrec fun a : α => Vector.mOfFnₓ fun i => f i a
+    ∀ {n} {f : Fin n → α →. σ}, (∀ i, Partrec (f i)) → Partrec fun a : α => Vector.mOfFn fun i => f i a
   | 0, f, hf => const _
   | n + 1, f, hf => by
-    simp [Vector.mOfFnₓ] <;>
+    simp [Vector.mOfFn] <;>
       exact
         (hf 0).bind
           (Partrec.bind ((vector_m_of_fn fun i => hf i.succ).comp fst)
@@ -538,7 +538,7 @@ end Partrec
 
 @[simp]
 theorem Vector.m_of_fn_part_some {α n} :
-    ∀ f : Finₓ n → α, (Vector.mOfFnₓ fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
+    ∀ f : Fin n → α, (Vector.mOfFn fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
   Vector.m_of_fn_pure
 
 namespace Computable
@@ -552,8 +552,8 @@ theorem option_some_iff {f : α → σ} : (Computable fun a => some (f a)) ↔ C
 
 theorem bind_decode_iff {f : α → β → Option σ} : (Computable₂ fun a n => (decode β n).bind (f a)) ↔ Computable₂ f :=
   ⟨fun hf =>
-    (Nat.Partrec.of_eq
-        (((Partrec.nat_iff.2 (Nat.Partrec.ppred.comp <| Nat.Partrec.of_primrec <| Primcodable.prim β)).comp snd).bind
+    (Nat.Partrec.ofEq
+        (((Partrec.nat_iff.2 (Nat.Partrec.ppred.comp <| Nat.Partrec.ofPrimrec <| Primcodable.prim β)).comp snd).bind
           (Computable.comp hf fst).to₂.Partrec₂))
       fun n => by simp <;> cases decode α n.unpair.1 <;> simp <;> cases decode β n.unpair.2 <;> simp,
     fun hf => by
@@ -617,7 +617,7 @@ theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ
   suffices Computable₂ fun a n => (List.range n).map (f a) from
     option_some_iff.1 <|
       (list_nth.comp (this.comp fst (succ.comp snd)) snd).to₂.of_eq fun a => by
-        simp [List.nth_range (Nat.lt_succ_selfₓ a.2)] <;> rfl
+        simp [List.nth_range (Nat.lt_succ_self a.2)] <;> rfl
   option_some_iff.1 <|
     (nat_elim snd (const (Option.some []))
           (to₂ <|
@@ -631,11 +631,11 @@ theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ
         
       simp [IH, H, List.range_succ]
 
-theorem list_of_fn : ∀ {n} {f : Finₓ n → α → σ}, (∀ i, Computable (f i)) → Computable fun a => List.ofFnₓ fun i => f i a
+theorem list_of_fn : ∀ {n} {f : Fin n → α → σ}, (∀ i, Computable (f i)) → Computable fun a => List.ofFn fun i => f i a
   | 0, f, hf => const []
   | n + 1, f, hf => by simp [List.of_fn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
 
-theorem vector_of_fn {n} {f : Finₓ n → α → σ} (hf : ∀ i, Computable (f i)) :
+theorem vector_of_fn {n} {f : Fin n → α → σ} (hf : ∀ i, Computable (f i)) :
     Computable fun a => Vector.ofFn fun i => f i a :=
   (Partrec.vector_m_of_fn hf).of_eq fun a => by simp
 
@@ -696,7 +696,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
     · cases h₂
       
     rcases h₂ with (h₂ | ⟨a', am', fa'⟩)
-    · cases' h₁ (Nat.lt_succ_selfₓ _) with a' h
+    · cases' h₁ (Nat.lt_succ_self _) with a' h
       injection mem_unique h h₂
       
     · exact this _ _ am' (Pfun.mem_fix_iff.2 (Or.inl fa'))
@@ -707,7 +707,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
         ∃ n, Sum.inl b ∈ F a n ∧ ∀ m < n, ∀ (_ : k ≤ m), ∃ a₂, Sum.inr a₂ ∈ F a m
       by
       rcases this _ h 0 (by simp [F]) with ⟨n, hn₁, hn₂⟩
-      exact ⟨_, ⟨⟨_, hn₁⟩, fun m mn => hn₂ m mn (Nat.zero_leₓ _)⟩, hn₁⟩
+      exact ⟨_, ⟨⟨_, hn₁⟩, fun m mn => hn₂ m mn (Nat.zero_le _)⟩, hn₁⟩
     intro a₁ h₁
     apply Pfun.fixInduction h₁
     intro a₂ h₂ IH k hk
@@ -716,7 +716,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
       · simp [F]
         exact Or.inr ⟨_, hk, h₂⟩
         
-      · rwa [le_antisymmₓ (Nat.le_of_lt_succₓ mk) km]
+      · rwa [le_antisymm (Nat.le_of_lt_succ mk) km]
         
       
     · rcases IH _ am₃ k.succ _ with ⟨n, hn₁, hn₂⟩
@@ -739,7 +739,7 @@ theorem fix {f : α →. Sum σ α} (hf : Partrec f) : Partrec (Pfun.fix f) :=
   have hF : Partrec₂ F :=
     Partrec.nat_elim snd (sum_inr.comp fst).Partrec
       (sum_cases_right (snd.comp snd) (snd.comp <| snd.comp fst).to₂ (hf.comp snd).to₂).to₂
-  let p := fun a n => @Part.map _ Bool (fun s => Sum.casesOn s (fun _ => true) fun _ => false) (F a n)
+  let p a n := @Part.map _ Bool (fun s => Sum.casesOn s (fun _ => true) fun _ => false) (F a n)
   have hp : Partrec₂ p := hF.map ((sum_cases Computable.id (const true).to₂ (const false).to₂).comp snd).to₂
   (hp.rfind.bind (hF.bind (sum_cases_right snd snd.to₂ none.to₂).to₂).to₂).of_eq fun a =>
     ext fun b => by simp <;> apply fix_aux f

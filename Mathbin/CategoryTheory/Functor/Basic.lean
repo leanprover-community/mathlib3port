@@ -38,8 +38,9 @@ structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) := by obviously
   map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by obviously
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- The prefunctor between the underlying quivers. -/
+add_decl_doc functor.to_prefunctor
+
 end
 
 -- mathport name: «expr ⥤ »
@@ -66,8 +67,8 @@ variable (C : Type u₁) [Category.{v₁} C]
 -- We don't use `@[simps]` here because we want `C` implicit for the simp lemmas.
 /-- `𝟭 C` is the identity functor on a category `C`. -/
 protected def id : C ⥤ C where
-  obj := fun X => X
-  map := fun _ _ f => f
+  obj X := X
+  map _ _ f := f
 
 -- mathport name: «expr𝟭»
 notation "𝟭" => Functor.id
@@ -96,8 +97,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 -/
 @[simps obj]
 def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E where
-  obj := fun X => G.obj (F.obj X)
-  map := fun _ _ f => G.map (F.map f)
+  obj X := G.obj (F.obj X)
+  map _ _ f := G.map (F.map f)
 
 -- mathport name: «expr ⋙ »
 infixr:80 " ⋙ " => comp

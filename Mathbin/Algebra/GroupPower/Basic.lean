@@ -57,31 +57,37 @@ theorem ite_pow (P : Prop) [Decidable P] (a b : M) (c : ℕ) : (if P then a else
 
 end Pow
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
+variable [Monoid M] [Monoid N] [AddMonoid A] [AddMonoid B]
 
 @[simp, to_additive one_nsmul]
-theorem pow_oneₓ (a : M) : a ^ 1 = a := by rw [pow_succₓ, pow_zeroₓ, mul_oneₓ]
+theorem pow_one (a : M) : a ^ 1 = a := by rw [pow_succ, pow_zero, mul_one]
 
 /-- Note that most of the lemmas about powers of two refer to it as `sq`. -/
 @[to_additive two_nsmul, nolint to_additive_doc]
-theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succₓ, pow_oneₓ]
+theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succ, pow_one]
 
 alias pow_two ← sq
 
-theorem pow_three' (a : M) : a ^ 3 = a * a * a := by rw [pow_succ'ₓ, pow_two]
+theorem pow_three' (a : M) : a ^ 3 = a * a * a := by rw [pow_succ', pow_two]
 
-theorem pow_three (a : M) : a ^ 3 = a * (a * a) := by rw [pow_succₓ, pow_two]
+theorem pow_three (a : M) : a ^ 3 = a * (a * a) := by rw [pow_succ, pow_two]
 
 @[to_additive]
 theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
   Commute.pow_self a n
 
+/- warning: pow_add -> pow_add is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u}} [_inst_1 : Monoid.{u} M] (a : M) (m : Nat) (n : Nat), Eq.{succ u} M (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) a (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n)) (HMul.hMul.{u u u} M M M (instHMul.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M _inst_1))) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) a m) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) a n))
+but is expected to have type
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.62 : Monoid.{u_1} M] (a : M) (m : Nat) (n : Nat), Eq.{succ u_1} M (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.62)) a (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n)) (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.62))) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.62)) a m) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.62)) a n))
+Case conversion may be inaccurate. Consider using '#align pow_add pow_addₓ'. -/
 @[to_additive add_nsmul]
-theorem pow_addₓ (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
-  induction' n with n ih <;> [rw [Nat.add_zero, pow_zeroₓ, mul_oneₓ],
-    rw [pow_succ'ₓ, ← mul_assoc, ← ih, ← pow_succ'ₓ, Nat.add_assoc]]
+theorem pow_add (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
+  induction' n with n ih <;> [rw [Nat.add_zero, pow_zero, mul_one],
+    rw [pow_succ', ← mul_assoc, ← ih, ← pow_succ', Nat.add_assoc]]
 
 @[simp]
 theorem pow_boole (P : Prop) [Decidable P] (a : M) : (a ^ if P then 1 else 0) = if P then a else 1 := by simp
@@ -89,58 +95,64 @@ theorem pow_boole (P : Prop) [Decidable P] (a : M) : (a ^ if P then 1 else 0) = 
 -- the attributes are intentionally out of order. `smul_zero` proves `nsmul_zero`.
 @[to_additive nsmul_zero, simp]
 theorem one_pow (n : ℕ) : (1 : M) ^ n = 1 := by
-  induction' n with n ih <;> [exact pow_zeroₓ _, rw [pow_succₓ, ih, one_mulₓ]]
+  induction' n with n ih <;> [exact pow_zero _, rw [pow_succ, ih, one_mul]]
 
 @[to_additive mul_nsmul']
-theorem pow_mulₓ (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n := by
+theorem pow_mul (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n := by
   induction' n with n ih
-  · rw [Nat.mul_zero, pow_zeroₓ, pow_zeroₓ]
+  · rw [Nat.mul_zero, pow_zero, pow_zero]
     
-  · rw [Nat.mul_succ, pow_addₓ, pow_succ'ₓ, ih]
+  · rw [Nat.mul_succ, pow_add, pow_succ', ih]
     
 
 @[to_additive nsmul_left_comm]
-theorem pow_right_comm (a : M) (m n : ℕ) : (a ^ m) ^ n = (a ^ n) ^ m := by rw [← pow_mulₓ, Nat.mul_comm, pow_mulₓ]
+theorem pow_right_comm (a : M) (m n : ℕ) : (a ^ m) ^ n = (a ^ n) ^ m := by rw [← pow_mul, Nat.mul_comm, pow_mul]
 
 @[to_additive mul_nsmul]
-theorem pow_mul' (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ n) ^ m := by rw [Nat.mul_comm, pow_mulₓ]
+theorem pow_mul' (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ n) ^ m := by rw [Nat.mul_comm, pow_mul]
 
 @[to_additive nsmul_add_sub_nsmul]
 theorem pow_mul_pow_sub (a : M) {m n : ℕ} (h : m ≤ n) : a ^ m * a ^ (n - m) = a ^ n := by
-  rw [← pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]
+  rw [← pow_add, Nat.add_comm, tsub_add_cancel_of_le h]
 
 @[to_additive sub_nsmul_nsmul_add]
 theorem pow_sub_mul_pow (a : M) {m n : ℕ} (h : m ≤ n) : a ^ (n - m) * a ^ m = a ^ n := by
-  rw [← pow_addₓ, tsub_add_cancel_of_le h]
+  rw [← pow_add, tsub_add_cancel_of_le h]
 
 /-- If `x ^ n = 1`, then `x ^ m` is the same as `x ^ (m % n)` -/
 @[to_additive nsmul_eq_mod_nsmul "If `n • x = 0`, then `m • x` is the same as `(m % n) • x`"]
-theorem pow_eq_pow_mod {M : Type _} [Monoidₓ M] {x : M} (m : ℕ) {n : ℕ} (h : x ^ n = 1) : x ^ m = x ^ (m % n) := by
-  have t := congr_arg (fun a => x ^ a) (Nat.div_add_modₓ m n).symm
+theorem pow_eq_pow_mod {M : Type _} [Monoid M] {x : M} (m : ℕ) {n : ℕ} (h : x ^ n = 1) : x ^ m = x ^ (m % n) := by
+  have t := congr_arg (fun a => x ^ a) (Nat.div_add_mod m n).symm
   dsimp at t
-  rw [t, pow_addₓ, pow_mulₓ, h, one_pow, one_mulₓ]
+  rw [t, pow_add, pow_mul, h, one_pow, one_mul]
 
 @[to_additive bit0_nsmul]
 theorem pow_bit0 (a : M) (n : ℕ) : a ^ bit0 n = a ^ n * a ^ n :=
-  pow_addₓ _ _ _
+  pow_add _ _ _
 
 @[to_additive bit1_nsmul]
-theorem pow_bit1 (a : M) (n : ℕ) : a ^ bit1 n = a ^ n * a ^ n * a := by rw [bit1, pow_succ'ₓ, pow_bit0]
+theorem pow_bit1 (a : M) (n : ℕ) : a ^ bit1 n = a ^ n * a ^ n * a := by rw [bit1, pow_succ', pow_bit0]
 
 @[to_additive]
-theorem pow_mul_commₓ (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
+theorem pow_mul_comm (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
   Commute.pow_pow_self a m n
 
+/- warning: commute.mul_pow -> Commute.mul_pow is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u}} [_inst_1 : Monoid.{u} M] {a : M} {b : M}, (Commute.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M _inst_1)) a b) -> (forall (n : Nat), Eq.{succ u} M (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) (HMul.hMul.{u u u} M M M (instHMul.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M _inst_1))) a b) n) (HMul.hMul.{u u u} M M M (instHMul.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M _inst_1))) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) a n) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M _inst_1)) b n)))
+but is expected to have type
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262)) a b) -> (forall (n : Nat), Eq.{succ u_1} M (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262)) (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262))) a b) n) (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262))) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262)) a n) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.262)) b n)))
+Case conversion may be inaccurate. Consider using '#align commute.mul_pow Commute.mul_powₓ'. -/
 @[to_additive]
 theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
-  (Nat.recOn n (by simp only [pow_zeroₓ, one_mulₓ])) fun n ihn => by
-    simp only [pow_succₓ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
+  (Nat.recOn n (by simp only [pow_zero, one_mul])) fun n ihn => by
+    simp only [pow_succ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 
 @[to_additive bit0_nsmul']
 theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by rw [pow_bit0, (Commute.refl a).mul_pow]
 
 @[to_additive bit1_nsmul']
-theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by rw [bit1, pow_succ'ₓ, pow_bit0']
+theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by rw [bit1, pow_succ', pow_bit0']
 
 @[to_additive]
 theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n = 1 := by
@@ -148,7 +160,7 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
   · simp
     
   · calc
-      a ^ n.succ * b ^ n.succ = a ^ n * a * (b * b ^ n) := by rw [pow_succ'ₓ, pow_succₓ]
+      a ^ n.succ * b ^ n.succ = a ^ n * a * (b * b ^ n) := by rw [pow_succ', pow_succ]
       _ = a ^ n * (a * b) * b ^ n := by simp only [mul_assoc]
       _ = 1 := by simp [h, hn]
       
@@ -157,7 +169,7 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
 theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
   | 0, hn => (hn rfl).elim
   | n + 1, hn => by
-    rw [pow_succₓ]
+    rw [pow_succ]
     exact hxy.mul_right _
 
 alias dvd_pow ← Dvd.Dvd.pow
@@ -165,19 +177,25 @@ alias dvd_pow ← Dvd.Dvd.pow
 theorem dvd_pow_self (a : M) {n : ℕ} (hn : n ≠ 0) : a ∣ a ^ n :=
   dvd_rfl.pow hn
 
-end Monoidₓ
+end Monoid
 
 /-!
 ### Commutative (additive) monoid
 -/
 
 
-section CommMonoidₓ
+section CommMonoid
 
-variable [CommMonoidₓ M] [AddCommMonoidₓ A]
+variable [CommMonoid M] [AddCommMonoid A]
 
+/- warning: mul_pow -> mul_pow is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u}} [_inst_1 : CommMonoid.{u} M] (a : M) (b : M) (n : Nat), Eq.{succ u} M (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M (CommMonoid.toMonoid.{u} M _inst_1))) (HMul.hMul.{u u u} M M M (instHMul.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M (CommMonoid.toMonoid.{u} M _inst_1)))) a b) n) (HMul.hMul.{u u u} M M M (instHMul.{u} M (MulOneClass.toHasMul.{u} M (Monoid.toMulOneClass.{u} M (CommMonoid.toMonoid.{u} M _inst_1)))) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M (CommMonoid.toMonoid.{u} M _inst_1))) a n) (HPow.hPow.{u 0 u} M Nat M (instHPow.{u 0} M Nat (Monoid.hasPow.{u} M (CommMonoid.toMonoid.{u} M _inst_1))) b n))
+but is expected to have type
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.352 : CommMonoid.{u_1} M] (a : M) (b : M) (n : Nat), Eq.{succ u_1} M (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M (CommMonoid.toMonoid.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.352))) (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M (CommMonoid.toMonoid.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.352)))) a b) n) (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M (CommMonoid.toMonoid.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.352)))) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M (CommMonoid.toMonoid.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.352))) a n) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M (CommMonoid.toMonoid.{u_1} M inst._@.Mathlib.Algebra.GroupPower.Basic._hyg.352))) b n))
+Case conversion may be inaccurate. Consider using '#align mul_pow mul_powₓ'. -/
 @[to_additive nsmul_add]
-theorem mul_powₓ (a b : M) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
+theorem mul_pow (a b : M) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
   (Commute.all a b).mul_pow n
 
 /-- The `n`th power map on a commutative monoid for a natural `n`, considered as a morphism of
@@ -188,21 +206,21 @@ monoids. -/
 def powMonoidHom (n : ℕ) : M →* M where
   toFun := (· ^ n)
   map_one' := one_pow _
-  map_mul' := fun a b => mul_powₓ a b n
+  map_mul' a b := mul_pow a b n
 
 -- the below line causes the linter to complain :-/
 -- attribute [simps] pow_monoid_hom nsmul_add_monoid_hom
-end CommMonoidₓ
+end CommMonoid
 
-section DivInvMonoidₓ
+section DivInvMonoid
 
-variable [DivInvMonoidₓ G]
+variable [DivInvMonoid G]
 
 open Int
 
 @[simp, to_additive one_zsmul]
 theorem zpow_one (a : G) : a ^ (1 : ℤ) = a := by
-  convert pow_oneₓ a using 1
+  convert pow_one a using 1
   exact zpow_coe_nat a 1
 
 @[to_additive two_zsmul]
@@ -212,13 +230,13 @@ theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
 
 @[to_additive neg_one_zsmul]
 theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
-  (zpow_neg_succ_of_nat x 0).trans <| congr_arg Inv.inv (pow_oneₓ x)
+  (zpow_neg_succ_of_nat x 0).trans <| congr_arg Inv.inv (pow_one x)
 
 @[to_additive]
 theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ -(n : ℤ) = (a ^ n)⁻¹
   | n + 1, _ => zpow_neg_succ_of_nat _ _
 
-end DivInvMonoidₓ
+end DivInvMonoid
 
 section DivisionMonoid
 
@@ -226,8 +244,8 @@ variable [DivisionMonoid α] {a b : α}
 
 @[simp, to_additive]
 theorem inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
-  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, inv_one]
-  | n + 1 => by rw [pow_succ'ₓ, pow_succₓ, inv_pow, mul_inv_rev]
+  | 0 => by rw [pow_zero, pow_zero, inv_one]
+  | n + 1 => by rw [pow_succ', pow_succ, inv_pow, mul_inv_rev]
 
 -- the attributes are intentionally out of order. `smul_zero` proves `zsmul_zero`.
 @[to_additive zsmul_zero, simp]
@@ -237,12 +255,12 @@ theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
 
 @[simp, to_additive neg_zsmul]
 theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
-  | (n + 1 : ℕ) => DivInvMonoidₓ.zpow_neg' _ _
+  | (n + 1 : ℕ) => DivInvMonoid.zpow_neg' _ _
   | 0 => by
     change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹
     simp
   | -[1 + n] => by
-    rw [zpow_neg_succ_of_nat, inv_invₓ, ← zpow_coe_nat]
+    rw [zpow_neg_succ_of_nat, inv_inv, ← zpow_coe_nat]
     rfl
 
 @[to_additive neg_one_zsmul_add]
@@ -279,7 +297,7 @@ theorem mul_zpow (a b : α) : ∀ n : ℤ, (a * b) ^ n = a ^ n * b ^ n :=
   (Commute.all a b).mul_zpow
 
 @[simp, to_additive nsmul_sub]
-theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by simp only [div_eq_mul_inv, mul_powₓ, inv_pow]
+theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by simp only [div_eq_mul_inv, mul_pow, inv_pow]
 
 @[simp, to_additive zsmul_sub]
 theorem div_zpow (a b : α) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by simp only [div_eq_mul_inv, mul_zpow, inv_zpow]
@@ -292,17 +310,17 @@ homomorphism. -/
 def zpowGroupHom (n : ℤ) : α →* α where
   toFun := (· ^ n)
   map_one' := one_zpow n
-  map_mul' := fun a b => mul_zpow a b n
+  map_mul' a b := mul_zpow a b n
 
 end DivisionCommMonoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ G] [Groupₓ H] [AddGroupₓ A] [AddGroupₓ B]
+variable [Group G] [Group H] [AddGroup A] [AddGroup B]
 
 @[to_additive sub_nsmul]
 theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
-  eq_mul_inv_of_mul_eq <| by rw [← pow_addₓ, tsub_add_cancel_of_le h]
+  eq_mul_inv_of_mul_eq <| by rw [← pow_add, tsub_add_cancel_of_le h]
 
 @[to_additive]
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
@@ -310,39 +328,39 @@ theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^
 
 @[to_additive sub_nsmul_neg]
 theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
-  rw [pow_sub a⁻¹ h, inv_pow, inv_pow, inv_invₓ]
+  rw [pow_sub a⁻¹ h, inv_pow, inv_pow, inv_inv]
 
-end Groupₓ
+end Group
 
-theorem pow_dvd_pow [Monoidₓ R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ a ^ n :=
-  ⟨a ^ (n - m), by rw [← pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]⟩
+theorem pow_dvd_pow [Monoid R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ a ^ n :=
+  ⟨a ^ (n - m), by rw [← pow_add, Nat.add_comm, tsub_add_cancel_of_le h]⟩
 
-theorem pow_dvd_pow_of_dvd [CommMonoidₓ R] {a b : R} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
-  | 0 => by rw [pow_zeroₓ, pow_zeroₓ]
+theorem pow_dvd_pow_of_dvd [CommMonoid R] {a b : R} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
+  | 0 => by rw [pow_zero, pow_zero]
   | n + 1 => by
-    rw [pow_succₓ, pow_succₓ]
+    rw [pow_succ, pow_succ]
     exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
 
-theorem of_add_nsmul [AddMonoidₓ A] (x : A) (n : ℕ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
+theorem of_add_nsmul [AddMonoid A] (x : A) (n : ℕ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
   rfl
 
-theorem of_add_zsmul [SubNegMonoidₓ A] (x : A) (n : ℤ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
+theorem of_add_zsmul [SubNegMonoid A] (x : A) (n : ℤ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
   rfl
 
-theorem of_mul_pow [Monoidₓ A] (x : A) (n : ℕ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
+theorem of_mul_pow [Monoid A] (x : A) (n : ℕ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
   rfl
 
-theorem of_mul_zpow [DivInvMonoidₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
+theorem of_mul_zpow [DivInvMonoid G] (x : G) (n : ℤ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
   rfl
 
 @[simp, to_additive]
-theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
+theorem SemiconjBy.zpow_right [Group G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by simp [zpow_coe_nat, h.pow_right n]
   | -[1 + n] => by simp [(h.pow_right n.succ).inv_right]
 
 namespace Commute
 
-variable [Groupₓ G] {a b : G}
+variable [Group G] {a b : G}
 
 @[simp, to_additive]
 theorem zpow_right (h : Commute a b) (m : ℤ) : Commute a (b ^ m) :=

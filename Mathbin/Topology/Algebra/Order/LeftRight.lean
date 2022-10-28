@@ -27,29 +27,29 @@ open Set Filter
 
 open TopologicalSpace
 
-section PartialOrderₓ
+section PartialOrder
 
-variable {α β : Type _} [TopologicalSpace α] [PartialOrderₓ α] [TopologicalSpace β]
+variable {α β : Type _} [TopologicalSpace α] [PartialOrder α] [TopologicalSpace β]
 
 theorem continuous_within_at_Ioi_iff_Ici {a : α} {f : α → β} :
-    ContinuousWithinAt f (Ioi a) a ↔ ContinuousWithinAt f (Ici a) a := by
+    ContinuousWithinAt f (IoiCat a) a ↔ ContinuousWithinAt f (IciCat a) a := by
   simp only [← Ici_diff_left, continuous_within_at_diff_self]
 
 theorem continuous_within_at_Iio_iff_Iic {a : α} {f : α → β} :
-    ContinuousWithinAt f (Iio a) a ↔ ContinuousWithinAt f (Iic a) a :=
+    ContinuousWithinAt f (IioCat a) a ↔ ContinuousWithinAt f (IicCat a) a :=
   @continuous_within_at_Ioi_iff_Ici αᵒᵈ _ ‹TopologicalSpace α› _ _ _ f
 
 theorem nhds_left'_le_nhds_ne (a : α) : 𝓝[<] a ≤ 𝓝[≠] a :=
-  nhds_within_mono a fun y hy => ne_of_ltₓ hy
+  nhds_within_mono a fun y hy => ne_of_lt hy
 
 theorem nhds_right'_le_nhds_ne (a : α) : 𝓝[>] a ≤ 𝓝[≠] a :=
-  nhds_within_mono a fun y hy => ne_of_gtₓ hy
+  nhds_within_mono a fun y hy => ne_of_gt hy
 
-end PartialOrderₓ
+end PartialOrder
 
 section TopologicalSpace
 
-variable {α β : Type _} [TopologicalSpace α] [LinearOrderₓ α] [TopologicalSpace β]
+variable {α β : Type _} [TopologicalSpace α] [LinearOrder α] [TopologicalSpace β]
 
 theorem nhds_left_sup_nhds_right (a : α) : 𝓝[≤] a ⊔ 𝓝[≥] a = 𝓝 a := by
   rw [← nhds_within_union, Iic_union_Ici, nhds_within_univ]
@@ -63,11 +63,11 @@ theorem nhds_left_sup_nhds_right' (a : α) : 𝓝[≤] a ⊔ 𝓝[>] a = 𝓝 a 
 theorem nhds_left'_sup_nhds_right' (a : α) : 𝓝[<] a ⊔ 𝓝[>] a = 𝓝[≠] a := by rw [← nhds_within_union, Iio_union_Ioi]
 
 theorem continuous_at_iff_continuous_left_right {a : α} {f : α → β} :
-    ContinuousAt f a ↔ ContinuousWithinAt f (Iic a) a ∧ ContinuousWithinAt f (Ici a) a := by
+    ContinuousAt f a ↔ ContinuousWithinAt f (IicCat a) a ∧ ContinuousWithinAt f (IciCat a) a := by
   simp only [ContinuousWithinAt, ContinuousAt, ← tendsto_sup, nhds_left_sup_nhds_right]
 
 theorem continuous_at_iff_continuous_left'_right' {a : α} {f : α → β} :
-    ContinuousAt f a ↔ ContinuousWithinAt f (Iio a) a ∧ ContinuousWithinAt f (Ioi a) a := by
+    ContinuousAt f a ↔ ContinuousWithinAt f (IioCat a) a ∧ ContinuousWithinAt f (IoiCat a) a := by
   rw [continuous_within_at_Ioi_iff_Ici, continuous_within_at_Iio_iff_Iic, continuous_at_iff_continuous_left_right]
 
 end TopologicalSpace

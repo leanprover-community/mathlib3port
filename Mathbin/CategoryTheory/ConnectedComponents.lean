@@ -38,14 +38,14 @@ variable {C : Type u₂} [Category.{u₁} C]
 
 /-- This type indexes the connected components of the category `J`. -/
 def ConnectedComponents (J : Type u₁) [Category.{v₁} J] : Type u₁ :=
-  Quotientₓ (Zigzag.setoid J)
+  Quotient (Zigzag.setoid J)
 
 instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
-  ⟨Quotientₓ.mk' default⟩
+  ⟨Quotient.mk' default⟩
 
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
 def Component (j : ConnectedComponents J) : Type u₁ :=
-  FullSubcategory fun k => Quotientₓ.mk' k = j deriving Category
+  FullSubcategory fun k => Quotient.mk' k = j deriving Category
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -54,7 +54,7 @@ def Component.ι (j) : Component j ⥤ J :=
 
 /-- Each connected component of the category is nonempty. -/
 instance (j : ConnectedComponents J) : Nonempty (Component j) := by
-  apply Quotientₓ.induction_on' j
+  apply Quotient.induction_on' j
   intro k
   refine' ⟨⟨k, rfl⟩⟩
 
@@ -67,11 +67,11 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   apply is_connected_of_zigzag
   rintro ⟨j₁, hj₁⟩ ⟨j₂, rfl⟩
   -- We know that the underlying objects j₁ j₂ have some zigzag between them in `J`
-  have h₁₂ : zigzag j₁ j₂ := Quotientₓ.exact' hj₁
+  have h₁₂ : zigzag j₁ j₂ := Quotient.exact' hj₁
   -- Get an explicit zigzag as a list
   rcases List.exists_chain_of_relation_refl_trans_gen h₁₂ with ⟨l, hl₁, hl₂⟩
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
-  let f : ∀ x, zigzag x j₂ → component (Quotientₓ.mk' j₂) := fun x h => ⟨x, Quotientₓ.sound' h⟩
+  let f : ∀ x, zigzag x j₂ → component (Quotient.mk' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
   have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by
     intro i hi
@@ -118,25 +118,25 @@ instance : Full (decomposedTo J) where
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
     have : j' = k'
-    rw [← hX, ← hY, Quotientₓ.eq']
+    rw [← hX, ← hY, Quotient.eq']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
     refine' sigma.sigma_hom.mk f
   witness' := by
     rintro ⟨j', X, hX⟩ ⟨_, Y, rfl⟩ f
-    have : Quotientₓ.mk' Y = j' := by
-      rw [← hX, Quotientₓ.eq']
+    have : Quotient.mk' Y = j' := by
+      rw [← hX, Quotient.eq']
       exact Relation.ReflTransGen.single (Or.inr ⟨f⟩)
     subst this
     rfl
 
 instance :
     Faithful (decomposedTo J) where map_injective' := by
-    rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨_, _, _, f⟩ ⟨_, _, _, g⟩ e
+    rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨f⟩ ⟨g⟩ e
     change f = g at e
     subst e
 
-instance : EssSurj (decomposedTo J) where mem_ess_image := fun j => ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
+instance : EssSurj (decomposedTo J) where mem_ess_image j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
 
 instance : IsEquivalence (decomposedTo J) :=
   Equivalence.ofFullyFaithfullyEssSurj _

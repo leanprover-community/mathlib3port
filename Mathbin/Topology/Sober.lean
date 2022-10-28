@@ -58,8 +58,8 @@ theorem specializes (h : IsGenericPoint x S) (h' : y ∈ S) : x ⤳ y :=
 theorem mem (h : IsGenericPoint x S) : x ∈ S :=
   h.specializes_iff_mem.1 specializes_rfl
 
-protected theorem is_closed (h : IsGenericPoint x S) : IsClosed S :=
-  h.def ▸ is_closed_closure
+protected theorem isClosed (h : IsGenericPoint x S) : IsClosed S :=
+  h.def ▸ isClosedClosure
 
 protected theorem is_irreducible (h : IsGenericPoint x S) : IsIrreducible S :=
   h.def ▸ is_irreducible_singleton.closure
@@ -82,14 +82,14 @@ protected theorem image (h : IsGenericPoint x S) {f : α → β} (hf : Continuou
   rw [is_generic_point_def, ← h.def, ← image_singleton]
   exact
     subset.antisymm (closure_mono (image_subset _ subset_closure))
-      (closure_minimal (image_closure_subset_closure_image hf) is_closed_closure)
+      (closure_minimal (image_closure_subset_closure_image hf) isClosedClosure)
 
 end IsGenericPoint
 
 theorem is_generic_point_iff_forall_closed (hS : IsClosed S) (hxS : x ∈ S) :
     IsGenericPoint x S ↔ ∀ Z : Set α, IsClosed Z → x ∈ Z → S ⊆ Z := by
   have : Closure {x} ⊆ S := closure_minimal (singleton_subset_iff.2 hxS) hS
-  simp_rw [IsGenericPoint, subset_antisymm_iff, this, true_andₓ, Closure, subset_sInter_iff, mem_set_of_eq, and_imp,
+  simp_rw [IsGenericPoint, subset_antisymm_iff, this, true_and_iff, Closure, subset_sInter_iff, mem_set_of_eq, and_imp,
     singleton_subset_iff]
 
 end genericPoint
@@ -103,11 +103,11 @@ class QuasiSober (α : Type _) [TopologicalSpace α] : Prop where
 
 /-- A generic point of the closure of an irreducible space. -/
 noncomputable def IsIrreducible.genericPoint [QuasiSober α] {S : Set α} (hS : IsIrreducible S) : α :=
-  (QuasiSober.sober hS.closure is_closed_closure).some
+  (QuasiSober.sober hS.closure isClosedClosure).some
 
 theorem IsIrreducible.generic_point_spec [QuasiSober α] {S : Set α} (hS : IsIrreducible S) :
     IsGenericPoint hS.genericPoint (Closure S) :=
-  (QuasiSober.sober hS.closure is_closed_closure).some_spec
+  (QuasiSober.sober hS.closure isClosedClosure).some_spec
 
 @[simp]
 theorem IsIrreducible.generic_point_closure_eq [QuasiSober α] {S : Set α} (hS : IsIrreducible S) :
@@ -137,20 +137,20 @@ attribute [local instance] specializationOrder
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α where
-  toFun := fun s => s.Prop.1.genericPoint
-  invFun := fun x => ⟨Closure ({x} : Set α), is_irreducible_singleton.closure, is_closed_closure⟩
-  left_inv := fun s => Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
-  right_inv := fun x =>
+  toFun s := s.Prop.1.genericPoint
+  invFun x := ⟨Closure ({x} : Set α), is_irreducible_singleton.closure, isClosedClosure⟩
+  left_inv s := Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
+  right_inv x :=
     is_irreducible_singleton.closure.generic_point_spec.Eq
       (by
         convert is_generic_point_closure using 1
         rw [closure_closure])
-  map_rel_iff' := fun s t => by
+  map_rel_iff' s t := by
     change _ ⤳ _ ↔ _
     rw [specializes_iff_closure_subset]
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 
-theorem ClosedEmbedding.quasi_sober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] : QuasiSober α := by
+theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] : QuasiSober α := by
   constructor
   intro S hS hS'
   have hS'' := hS.image f hf.continuous.continuous_on
@@ -161,11 +161,11 @@ theorem ClosedEmbedding.quasi_sober {f : α → β} (hf : ClosedEmbedding f) [Qu
   apply set.image_injective.mpr hf.inj
   rw [← hx, ← hf.closure_image_eq, Set.image_singleton]
 
-theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiSober β] : QuasiSober α := by
+theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSober β] : QuasiSober α := by
   constructor
   intro S hS hS'
   have hS'' := hS.image f hf.continuous.continuous_on
-  obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure is_closed_closure
+  obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure isClosedClosure
   obtain ⟨T, hT, rfl⟩ := hf.to_inducing.is_closed_iff.mp hS'
   rw [Set.image_preimage_eq_inter_range] at hx hS''
   have hxT : x ∈ T := by
@@ -181,11 +181,11 @@ theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiS
   rw [hf.to_embedding.closure_eq_preimage_closure_image, Set.image_singleton, show _ = _ from hx]
   apply set.image_injective.mpr hf.inj
   ext z
-  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_iff, And.congr_left_iffₓ]
+  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_iff, And.congr_left_iff]
   exact fun hy => ⟨fun h => hT.closure_eq ▸ closure_mono (Set.inter_subset_left _ _) h, fun h => subset_closure ⟨h, hy⟩⟩
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/
-theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Set α)) [hS' : ∀ s : S, QuasiSober s]
+theorem quasiSoberOfOpenCover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Set α)) [hS' : ∀ s : S, QuasiSober s]
     (hS'' : ⋃₀S = ⊤) : QuasiSober α := by
   rw [quasi_sober_iff]
   intro t h h'
@@ -199,7 +199,7 @@ theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s 
   use H.generic_point
   have := continuous_subtype_coe.closure_preimage_subset _ H.generic_point_spec.mem
   rw [h'.closure_eq] at this
-  apply le_antisymmₓ
+  apply le_antisymm
   · apply h'.closure_subset_iff.mpr
     simpa using this
     
@@ -211,7 +211,7 @@ theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s 
   rw [← Subtype.image_preimage_coe]
   exact Set.image_subset _ subset_closure
 
-instance (priority := 100) T2Space.quasi_sober [T2Space α] : QuasiSober α := by
+instance (priority := 100) T2Space.quasiSober [T2Space α] : QuasiSober α := by
   constructor
   rintro S h -
   obtain ⟨x, rfl⟩ := is_irreducible_iff_singleton.mp h

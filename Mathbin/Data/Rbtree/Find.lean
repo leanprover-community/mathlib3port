@@ -11,7 +11,7 @@ namespace Rbnode
 
 variable {α : Type u}
 
-@[elabWithoutExpectedType]
+@[elab_without_expected_type]
 theorem find.induction {p : Rbnode α → Prop} (lt) [DecidableRel lt] (t x) (h₁ : p leaf)
     (h₂ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (red_node l y r))
     (h₃ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.eq), p (red_node l y r))
@@ -107,7 +107,7 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
     
 
 theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t := by
-  induction t <;> simp [mem_exact, mem, false_implies_iff] <;> intro h
+  induction t <;> simp [mem_exact, mem, false_imp_iff] <;> intro h
   all_goals
   cases_type*or.1
   simp [t_ih_lchild h]
@@ -203,7 +203,7 @@ theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
 
 theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (heqv : a ≈[lt]b), find lt t a = find lt t b := by
-  apply find.induction lt t a <;> intros <;> simp_all [mem, find, StrictWeakOrder.Equiv, true_implies_iff]
+  apply find.induction lt t a <;> intros <;> simp_all [mem, find, StrictWeakOrder.Equiv, true_imp_iff]
   iterate 2 
   · have : lt b y := lt_of_incomp_of_lt heqv.swap h
     simp [cmpUsing, find, *]

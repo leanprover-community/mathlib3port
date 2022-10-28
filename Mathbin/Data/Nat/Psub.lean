@@ -57,22 +57,22 @@ theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
   | n + 1, k => by
     dsimp
     apply option.bind_eq_some.trans
-    simp [psub_eq_some, add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
+    simp [psub_eq_some, add_comm, add_left_comm, Nat.succ_eq_add_one]
 
 theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
   cases s : psub m n <;> simp [eq_comm]
   · show m < n
-    refine' lt_of_not_geₓ fun h => _
+    refine' lt_of_not_ge fun h => _
     cases' le.dest h with k e
-    injection s.symm.trans (psub_eq_some.2 <| (add_commₓ _ _).trans e)
+    injection s.symm.trans (psub_eq_some.2 <| (add_comm _ _).trans e)
     
   · show n ≤ m
     rw [← psub_eq_some.1 s]
-    apply Nat.le_add_leftₓ
+    apply Nat.le_add_left
     
 
 theorem ppred_eq_pred {n} (h : 0 < n) : ppred n = some (pred n) :=
-  ppred_eq_some.2 <| succ_pred_eq_of_posₓ h
+  ppred_eq_some.2 <| succ_pred_eq_of_pos h
 
 theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
   psub_eq_some.2 <| tsub_add_cancel_of_le h
@@ -89,7 +89,7 @@ def psub' (m n : ℕ) : Option ℕ :=
   if n ≤ m then some (m - n) else none
 
 theorem psub'_eq_psub (m n) : psub' m n = psub m n := by
-  rw [psub'] <;> split_ifs <;> [exact (psub_eq_sub h).symm, exact (psub_eq_none.2 (not_leₓ.1 h)).symm]
+  rw [psub'] <;> split_ifs <;> [exact (psub_eq_sub h).symm, exact (psub_eq_none.2 (not_le.1 h)).symm]
 
 end Nat
 

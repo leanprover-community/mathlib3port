@@ -73,8 +73,8 @@ variable (F : OplaxFunctor B C)
 /-- The identity oplax natural transformation. -/
 @[simps]
 def id : OplaxNatTrans F F where
-  app := fun a => 𝟙 (F.obj a)
-  naturality := fun a b f => (ρ_ (F.map f)).Hom ≫ (λ_ (F.map f)).inv
+  app a := 𝟙 (F.obj a)
+  naturality a b f := (ρ_ (F.map f)).Hom ≫ (λ_ (F.map f)).inv
 
 instance : Inhabited (OplaxNatTrans F F) :=
   ⟨id F⟩
@@ -136,10 +136,10 @@ end
 /-- Vertical composition of oplax natural transformations. -/
 @[simps]
 def vcomp (η : OplaxNatTrans F G) (θ : OplaxNatTrans G H) : OplaxNatTrans F H where
-  app := fun a => η.app a ≫ θ.app a
-  naturality := fun a b f =>
+  app a := η.app a ≫ θ.app a
+  naturality a b f :=
     (α_ _ _ _).inv ≫ η.naturality f ▷ θ.app b ≫ (α_ _ _ _).Hom ≫ η.app a ◁ θ.naturality f ≫ (α_ _ _ _).inv
-  naturality_comp' := fun a b c f g => by
+  naturality_comp' a b c f g := by
     calc
       _ =
           _ ≫
@@ -169,7 +169,7 @@ variable (B C)
 instance : CategoryStruct (OplaxFunctor B C) where
   Hom := OplaxNatTrans
   id := OplaxNatTrans.id
-  comp := fun F G H => OplaxNatTrans.vcomp
+  comp F G H := OplaxNatTrans.vcomp
 
 end
 
@@ -200,7 +200,7 @@ variable (η)
 
 /-- The identity modification. -/
 @[simps]
-def id : Modification η η where app := fun a => 𝟙 (η.app a)
+def id : Modification η η where app a := 𝟙 (η.app a)
 
 instance : Inhabited (Modification η η) :=
   ⟨Modification.id η⟩
@@ -226,7 +226,7 @@ end
 
 /-- Vertical composition of modifications. -/
 @[simps]
-def vcomp (Γ : Modification η θ) (Δ : Modification θ ι) : Modification η ι where app := fun a => Γ.app a ≫ Δ.app a
+def vcomp (Γ : Modification η θ) (Δ : Modification θ ι) : Modification η ι where app a := Γ.app a ≫ Δ.app a
 
 end Modification
 
@@ -235,7 +235,7 @@ end Modification
 instance category (F G : OplaxFunctor B C) : Category (F ⟶ G) where
   Hom := Modification
   id := Modification.id
-  comp := fun η θ ι => Modification.vcomp
+  comp η θ ι := Modification.vcomp
 
 /-- Construct a modification isomorphism between oplax natural transformations
 by giving object level isomorphisms, and checking naturality only in the forward direction.

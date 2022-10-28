@@ -107,7 +107,7 @@ theorem countable_empty : (∅ : Set α).Countable :=
 
 @[simp]
 theorem countable_singleton (a : α) : ({a} : Set α).Countable :=
-  ⟨ofEquiv _ (Equivₓ.Set.singleton a)⟩
+  ⟨ofEquiv _ (Equiv.Set.singleton a)⟩
 
 theorem Countable.image {s : Set α} (hs : s.Countable) (f : α → β) : (f '' s).Countable := by
   rw [image_eq_range]
@@ -180,20 +180,20 @@ alias countable.sUnion_iff ↔ _ countable.sUnion
 
 @[simp]
 theorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by
-  simp [union_eq_Union, And.comm]
+  simp [union_eq_Union, and_comm]
 
 theorem Countable.union {s t : Set α} (hs : s.Countable) (ht : t.Countable) : (s ∪ t).Countable :=
   countable_union.2 ⟨hs, ht⟩
 
 @[simp]
 theorem countable_insert {s : Set α} {a : α} : (insert a s).Countable ↔ s.Countable := by
-  simp only [insert_eq, countable_union, countable_singleton, true_andₓ]
+  simp only [insert_eq, countable_union, countable_singleton, true_and_iff]
 
 theorem Countable.insert {s : Set α} (a : α) (h : s.Countable) : (insert a s).Countable :=
   countable_insert.2 h
 
 theorem Finite.countable {s : Set α} : s.Finite → s.Countable
-  | ⟨h⟩ => Trunc.nonempty (Fintypeₓ.truncEncodable s)
+  | ⟨h⟩ => Trunc.nonempty (Fintype.truncEncodable s)
 
 @[nontriviality]
 theorem Countable.of_subsingleton [Subsingleton α] (s : Set α) : s.Countable :=
@@ -202,17 +202,17 @@ theorem Countable.of_subsingleton [Subsingleton α] (s : Set α) : s.Countable :
 theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : s.Countable :=
   hs.Finite.Countable
 
-theorem countable_is_top (α : Type _) [PartialOrderₓ α] : { x : α | IsTop x }.Countable :=
+theorem countable_is_top (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
   (finite_is_top α).Countable
 
-theorem countable_is_bot (α : Type _) [PartialOrderₓ α] : { x : α | IsBot x }.Countable :=
+theorem countable_is_bot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
   (finite_is_bot α).Countable
 
 /-- The set of finite subsets of a countable set is countable. -/
 theorem countable_set_of_finite_subset {s : Set α} : s.Countable → { t | Set.Finite t ∧ t ⊆ s }.Countable
   | ⟨h⟩ => by
     skip
-    refine' countable.mono _ (countable_range fun t : Finsetₓ s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
+    refine' countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
     rintro t ⟨⟨ht⟩, ts⟩
     skip
     refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext fun a => _⟩
@@ -221,17 +221,17 @@ theorem countable_set_of_finite_subset {s : Set α} : s.Countable → { t | Set.
 theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
     (Pi Univ s).Countable :=
   haveI := fun a => (hs a).to_subtype
-  (Countable.of_equiv _ (Equivₓ.Set.univPi s).symm).to_set
+  (Countable.of_equiv _ (Equiv.Set.univPi s).symm).to_set
 
 theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
     { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by simpa only [← mem_univ_pi] using countable_univ_pi hs
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
     Set.Countable (s ×ˢ t) := by
   haveI : Countable s := hs.to_subtype
   haveI : Countable t := ht.to_subtype
-  exact (Countable.of_equiv _ <| (Equivₓ.Set.prod _ _).symm).to_set
+  exact (Countable.of_equiv _ <| (Equiv.Set.prod _ _).symm).to_set
 
 theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) (f : α → β → γ) :
     (Image2 f s t).Countable := by
@@ -240,6 +240,6 @@ theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Co
 
 end Set
 
-theorem Finsetₓ.countable_to_set (s : Finsetₓ α) : Set.Countable (↑s : Set α) :=
+theorem Finset.countable_to_set (s : Finset α) : Set.Countable (↑s : Set α) :=
   s.finite_to_set.Countable
 

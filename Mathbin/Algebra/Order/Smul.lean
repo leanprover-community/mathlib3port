@@ -52,24 +52,24 @@ variable {ι 𝕜 R M N : Type _}
 
 namespace OrderDual
 
-instance [Zero R] [AddZeroClassₓ M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
+instance [Zero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
   { OrderDual.hasSmul with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
     smul_zero := fun r => OrderDual.rec smul_zero r }
 
-instance [Monoidₓ R] [MulAction R M] : MulAction R Mᵒᵈ :=
+instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
   { OrderDual.hasSmul with one_smul := fun m => OrderDual.rec (one_smul _) m,
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
-instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
+instance [MonoidWithZero R] [AddMonoid M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
   { OrderDual.mulAction, OrderDual.smulWithZero with }
 
-instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R Mᵒᵈ where
-  smul_add := fun k a => OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
-  smul_zero := fun r => OrderDual.rec (@smul_zero _ M _ _) r
+instance [MonoidWithZero R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R Mᵒᵈ where
+  smul_add k a := OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
+  smul_zero r := OrderDual.rec (@smul_zero _ M _ _) r
 
 instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] : OrderedSmul R Mᵒᵈ where
-  smul_lt_smul_of_pos := fun a b => @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
-  lt_of_smul_lt_smul_of_pos := fun a b => @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
+  smul_lt_smul_of_pos a b := @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
+  lt_of_smul_lt_smul_of_pos a b := @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
 end OrderDual
 
@@ -104,7 +104,7 @@ theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) 
   hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
 
 theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
-  hc.eq_or_lt.elim (fun hc => False.elim <| lt_irreflₓ (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
+  hc.eq_or_lt.elim (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
     (OrderedSmul.lt_of_smul_lt_smul_of_pos h)
 
 theorem smul_lt_smul_iff_of_pos (hc : 0 < c) : c • a < c • b ↔ a < b :=
@@ -118,9 +118,9 @@ theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
 
 alias smul_pos_iff_of_pos ↔ _ smul_pos
 
-theorem monotone_smul_left (hc : 0 ≤ c) : Monotoneₓ (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonneg h hc
+theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonneg h hc
 
-theorem strict_mono_smul_left (hc : 0 < c) : StrictMonoₓ (HasSmul.smul c : M → M) := fun a b h =>
+theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_pos h hc
 
 theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • LowerBounds s ⊆ LowerBounds (c • s) :=
@@ -140,7 +140,7 @@ end OrderedSmul
 /-- To prove that a linear ordered monoid is an ordered module, it suffices to verify only the first
 axiom of `ordered_smul`. -/
 theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [SmulWithZero 𝕜 M]
-    (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMonoₓ fun a : M => c • a) : OrderedSmul 𝕜 M :=
+    (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMono fun a : M => c • a) : OrderedSmul 𝕜 M :=
   { smul_lt_smul_of_pos := fun a b c hab hc => h hc hab,
     lt_of_smul_lt_smul_of_pos := fun a b c hab hc => (h hc).lt_iff_lt.1 hab }
 
@@ -230,11 +230,11 @@ variable (M)
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
 def OrderIso.smulLeft (hc : 0 < c) : M ≃o M where
-  toFun := fun b => c • b
-  invFun := fun b => c⁻¹ • b
+  toFun b := c • b
+  invFun b := c⁻¹ • b
   left_inv := inv_smul_smul₀ hc.ne'
   right_inv := smul_inv_smul₀ hc.ne'
-  map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_pos hc
+  map_rel_iff' b₁ b₂ := smul_le_smul_iff_of_pos hc
 
 variable {M}
 
@@ -274,10 +274,10 @@ section NoZeroSmulDivisors
 
 variable [Zero R] [Zero M] [HasSmul R M] [NoZeroSmulDivisors R M] {a : R} {b : M}
 
-private theorem smul_ne_zero_of_pos_of_ne_zero [Preorderₓ R] (ha : 0 < a) (hb : b ≠ 0) : a • b ≠ 0 :=
+private theorem smul_ne_zero_of_pos_of_ne_zero [Preorder R] (ha : 0 < a) (hb : b ≠ 0) : a • b ≠ 0 :=
   smul_ne_zero ha.ne' hb
 
-private theorem smul_ne_zero_of_ne_zero_of_pos [Preorderₓ M] (ha : a ≠ 0) (hb : 0 < b) : a • b ≠ 0 :=
+private theorem smul_ne_zero_of_ne_zero_of_pos [Preorder M] (ha : a ≠ 0) (hb : 0 < b) : a • b ≠ 0 :=
   smul_ne_zero ha hb.ne'
 
 end NoZeroSmulDivisors

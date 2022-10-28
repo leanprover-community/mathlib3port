@@ -33,13 +33,13 @@ theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n := by
   intro m n hne
   rw [dist_eq]
   norm_cast
-  rwa [← zero_addₓ (1 : ℤ), Int.add_one_le_iffₓ, abs_pos, sub_ne_zero]
+  rwa [← zero_add (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
 
 theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℤ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 
-theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℤ → ℝ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℤ → ℝ) :=
+  closedEmbeddingOfPairwiseLeDist zero_lt_one pairwise_one_le_dist
 
 instance : MetricSpace ℤ :=
   Int.uniform_embedding_coe_real.comapMetricSpace _
@@ -50,10 +50,10 @@ theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x
 theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
   rfl
 
-theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : Ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
+theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : Ball x r = IooCat ⌊↑x - r⌋ ⌈↑x + r⌉ := by
   rw [← preimage_ball, Real.ball_eq_Ioo, preimage_Ioo]
 
-theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
+theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : ClosedBall x r = IccCat ⌈↑x - r⌉ ⌊↑x + r⌋ := by
   rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
 
 instance : ProperSpace ℤ :=

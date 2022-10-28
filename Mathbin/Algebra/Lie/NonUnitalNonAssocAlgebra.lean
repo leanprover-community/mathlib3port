@@ -35,7 +35,7 @@ lie algebra, non-unital, non-associative
 
 universe u v w
 
-variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L]
 
 /-- Type synonym for turning a `lie_ring` into a `non_unital_non_assoc_semiring`.
 
@@ -46,10 +46,10 @@ def CommutatorRing (L : Type v) : Type v :=
 
 /-- A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
-instance : NonUnitalNonAssocSemiringₓ (CommutatorRing L) :=
-  show NonUnitalNonAssocSemiringₓ L from
-    { (inferInstance : AddCommMonoidₓ L) with mul := HasBracket.bracket, left_distrib := lie_add,
-      right_distrib := add_lie, zero_mul := zero_lie, mul_zero := lie_zero }
+instance : NonUnitalNonAssocSemiring (CommutatorRing L) :=
+  show NonUnitalNonAssocSemiring L from
+    { (inferInstance : AddCommMonoid L) with mul := Bracket.bracket, left_distrib := lie_add, right_distrib := add_lie,
+      zero_mul := zero_lie, mul_zero := lie_zero }
 
 namespace LieAlgebra
 

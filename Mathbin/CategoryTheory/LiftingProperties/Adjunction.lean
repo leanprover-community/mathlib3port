@@ -45,10 +45,10 @@ theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ 
 /-- The liftings of a commutative are in bijection with the liftings of its (right)
 adjoint square. -/
 def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftStruct where
-  toFun := fun l =>
+  toFun l :=
     { l := adj.homEquiv _ _ l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left],
       fac_right' := by rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
-  invFun := fun l =>
+  invFun l :=
     { l := (adj.homEquiv _ _).symm l.l,
       fac_left' := by
         rw [← adjunction.hom_equiv_naturality_left_symm, l.fac_left]
@@ -62,7 +62,7 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
 theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq := by
   simp only [has_lift.iff]
-  exact Equivₓ.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
+  exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
 
 instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by
   rw [right_adjoint_has_lift_iff]
@@ -88,10 +88,10 @@ theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homE
 /-- The liftings of a commutative are in bijection with the liftings of its (left)
 adjoint square. -/
 def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct where
-  toFun := fun l =>
+  toFun l :=
     { l := (adj.homEquiv _ _).symm l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
       fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
-  invFun := fun l =>
+  invFun l :=
     { l := (adj.homEquiv _ _) l.l,
       fac_left' := by
         rw [← adj.hom_equiv_naturality_left, l.fac_left]
@@ -105,7 +105,7 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
 theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq := by
   simp only [has_lift.iff]
-  exact Equivₓ.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
+  exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
 
 instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by
   rw [left_adjoint_has_lift_iff]

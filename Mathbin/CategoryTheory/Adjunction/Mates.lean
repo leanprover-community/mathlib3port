@@ -76,21 +76,21 @@ This can be seen as a bijection of the 2-cells:
 Note that if one of the transformations is an iso, it does not imply the other is an iso.
 -/
 def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂) where
-  toFun := fun h =>
+  toFun h :=
     { app := fun X => adj₂.Unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _)),
       naturality' := fun X Y f => by
         dsimp
         rw [assoc, ← R₂.map_comp, assoc, ← H.map_comp, ← adj₁.counit_naturality, H.map_comp, ← functor.comp_map L₁, ←
           h.naturality_assoc]
         simp }
-  invFun := fun h =>
+  invFun h :=
     { app := fun X => L₂.map (G.map (adj₁.Unit.app _) ≫ h.app _) ≫ adj₂.counit.app _,
       naturality' := fun X Y f => by
         dsimp
         rw [← L₂.map_comp_assoc, ← G.map_comp_assoc, ← adj₁.unit_naturality, G.map_comp_assoc, ← functor.comp_map,
           h.naturality]
         simp }
-  left_inv := fun h => by
+  left_inv h := by
     ext X
     dsimp
     simp only [L₂.map_comp, assoc, adj₂.counit_naturality, adj₂.left_triangle_components_assoc, ← functor.comp_map G L₂,
@@ -98,7 +98,7 @@ def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R�
     dsimp
     simp
   -- See library note [dsimp, simp].
-  right_inv := fun h => by
+  right_inv h := by
     ext X
     dsimp
     simp [-functor.comp_map, ← functor.comp_map H, functor.comp_map R₁, -nat_trans.naturality, ← h.naturality,
@@ -171,7 +171,7 @@ theorem transfer_nat_trans_self_id : transferNatTransSelf adj₁ adj₁ (𝟙 _)
 -- See library note [dsimp, simp]
 @[simp]
 theorem transfer_nat_trans_self_symm_id : (transferNatTransSelf adj₁ adj₁).symm (𝟙 _) = 𝟙 _ := by
-  rw [Equivₓ.symm_apply_eq]
+  rw [Equiv.symm_apply_eq]
   simp
 
 theorem transfer_nat_trans_self_comp (f g) :
@@ -196,7 +196,7 @@ theorem transfer_nat_trans_self_symm_comp (f g) :
     (transferNatTransSelf adj₂ adj₁).symm f ≫ (transferNatTransSelf adj₃ adj₂).symm g =
       (transferNatTransSelf adj₃ adj₁).symm (g ≫ f) :=
   by
-  rw [Equivₓ.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]
+  rw [Equiv.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]
   simp
 
 theorem transfer_nat_trans_self_comm {f g} (gf : g ≫ f = 𝟙 _) :

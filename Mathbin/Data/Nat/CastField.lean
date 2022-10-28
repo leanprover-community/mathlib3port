@@ -28,7 +28,7 @@ theorem cast_div [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) 
   have : n ≠ 0 := by
     rintro rfl
     simpa using n_nonzero
-  rw [Nat.mul_div_cancel_leftₓ _ this.bot_lt, cast_mul, mul_div_cancel_left _ n_nonzero]
+  rw [Nat.mul_div_cancel_left _ this.bot_lt, cast_mul, mul_div_cancel_left _ n_nonzero]
 
 section LinearOrderedSemifield
 
@@ -37,10 +37,10 @@ variable [LinearOrderedSemifield α]
 /-- Natural division is always less than division in the field. -/
 theorem cast_div_le {m n : ℕ} : ((m / n : ℕ) : α) ≤ m / n := by
   cases n
-  · rw [cast_zero, div_zero, Nat.div_zeroₓ, cast_zero]
+  · rw [cast_zero, div_zero, Nat.div_zero, cast_zero]
     
-  rwa [le_div_iff, ← Nat.cast_mulₓ]
-  exact Nat.cast_le.2 (Nat.div_mul_le_selfₓ m n.succ)
+  rwa [le_div_iff, ← Nat.cast_mul]
+  exact Nat.cast_le.2 (Nat.div_mul_le_self m n.succ)
   · exact Nat.cast_pos.2 n.succ_pos
     
 

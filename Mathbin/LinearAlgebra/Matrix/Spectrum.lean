@@ -20,7 +20,7 @@ spectral theorem, diagonalization theorem
 
 namespace Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜] [DecidableEq 𝕜] {n : Type _} [Fintypeₓ n] [DecidableEq n]
+variable {𝕜 : Type _} [IsROrC 𝕜] [DecidableEq 𝕜] {n : Type _} [Fintype n] [DecidableEq n]
 
 variable {A : Matrix n n 𝕜}
 
@@ -34,17 +34,16 @@ variable (hA : A.IsHermitian)
 
 /-- The eigenvalues of a hermitian matrix, indexed by `fin (fintype.card n)` where `n` is the index
 type of the matrix. -/
-noncomputable def eigenvalues₀ : Finₓ (Fintypeₓ.card n) → ℝ :=
+noncomputable def eigenvalues₀ : Fin (Fintype.card n) → ℝ :=
   (is_hermitian_iff_is_symmetric.1 hA).Eigenvalues finrank_euclidean_space
 
 /-- The eigenvalues of a hermitian matrix, reusing the index `n` of the matrix entries. -/
-noncomputable def eigenvalues : n → ℝ := fun i =>
-  hA.eigenvalues₀ <| (Fintypeₓ.equivOfCardEq (Fintypeₓ.card_fin _)).symm i
+noncomputable def eigenvalues : n → ℝ := fun i => hA.eigenvalues₀ <| (Fintype.equivOfCardEq (Fintype.card_fin _)).symm i
 
 /-- A choice of an orthonormal basis of eigenvectors of a hermitian matrix. -/
 noncomputable def eigenvectorBasis : OrthonormalBasis n 𝕜 (EuclideanSpace 𝕜 n) :=
   ((is_hermitian_iff_is_symmetric.1 hA).eigenvectorBasis finrank_euclidean_space).reindex
-    (Fintypeₓ.equivOfCardEq (Fintypeₓ.card_fin _))
+    (Fintype.equivOfCardEq (Fintype.card_fin _))
 
 /-- A matrix whose columns are an orthonormal basis of eigenvectors of a hermitian matrix. -/
 noncomputable def eigenvectorMatrix : Matrix n n 𝕜 :=
@@ -71,7 +70,7 @@ theorem eigenvector_matrix_inv_apply (i j : n) : hA.eigenvectorMatrixInv i j = s
     LinearMap.coe_std_basis, OrthonormalBasis.repr_apply_apply]
   change inner (hA.eigenvector_basis i) (EuclideanSpace.single j 1) = _
   rw [EuclideanSpace.inner_single_right]
-  simp only [one_mulₓ, conj_transpose_apply, IsROrC.star_def]
+  simp only [one_mul, conj_transpose_apply, IsROrC.star_def]
 
 theorem conj_transpose_eigenvector_matrix_inv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix := by
   ext i j
@@ -84,18 +83,17 @@ theorem conj_transpose_eigenvector_matrix : hA.eigenvectorMatrixᴴ = hA.eigenve
 diagonalized by a change of basis.
 
 For the spectral theorem on linear maps, see `diagonalization_basis_apply_self_apply`. -/
-theorem spectral_theorem : hA.eigenvectorMatrixInv ⬝ A = diagonalₓ (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv :=
-  by
+theorem spectral_theorem : hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv := by
   rw [eigenvector_matrix_inv, basis_to_matrix_basis_fun_mul]
   ext i j
   convert
     @LinearMap.IsSymmetric.diagonalization_basis_apply_self_apply 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.to_lin'
-      (is_hermitian_iff_is_symmetric.1 hA) _ (Fintypeₓ.card n) finrank_euclidean_space (EuclideanSpace.single j 1)
-      ((Fintypeₓ.equivOfCardEq (Fintypeₓ.card_fin _)).symm i)
+      (is_hermitian_iff_is_symmetric.1 hA) _ (Fintype.card n) finrank_euclidean_space (EuclideanSpace.single j 1)
+      ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)
   · rw [eigenvector_basis, to_lin'_apply]
     simp only [Basis.toMatrix, Basis.coe_to_orthonormal_basis_repr, Basis.equiv_fun_apply]
     simp_rw [OrthonormalBasis.coe_to_basis_repr_apply, OrthonormalBasis.reindex_repr, EuclideanSpace.single,
-      PiLp.equiv_symm_apply', mul_vec_single, mul_oneₓ]
+      PiLp.equiv_symm_apply', mul_vec_single, mul_one]
     rfl
     
   · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]

@@ -64,7 +64,7 @@ unsafe def sort_variable_list (l : List (Name × BinderInfo × expr)) : List (ex
   (List.join <| l.map fun e => Prod.mk e.1 <$> e.2).qsort fun v u => binder_less_important v.2.1 u.2.1
 
 /-- Separate out the names of implicit variables (commonly instances with no name). -/
-unsafe def collect_implicit_names : List Name → List Stringₓ × List Stringₓ
+unsafe def collect_implicit_names : List Name → List String × List String
   | [] => ([], [])
   | n :: ns =>
     let n := toString n
@@ -72,7 +72,7 @@ unsafe def collect_implicit_names : List Name → List Stringₓ × List String�
     if n.front = '_' then (ns, n :: ins) else (n :: ns, ins)
 
 /-- Format an individual variable definition for printing. -/
-unsafe def format_variable : expr × BinderInfo × List Name → tactic Stringₓ
+unsafe def format_variable : expr × BinderInfo × List Name → tactic String
   | (e, bi, ns) => do
     let (l, r) := bi.brackets
     let e ← pp e
@@ -83,7 +83,7 @@ unsafe def format_variable : expr × BinderInfo × List Name → tactic String�
     return <| " ".intercalate <| ns ++ ins
 
 /-- Turn a list of triples of variable names, binder info, and types, into a pretty list. -/
-unsafe def compile_variable_list (l : List (Name × BinderInfo × expr)) : tactic Stringₓ :=
+unsafe def compile_variable_list (l : List (Name × BinderInfo × expr)) : tactic String :=
   " ".intercalate <$> (sort_variable_list l).mmap format_variable
 
 /-- Strips the namespace prefix `ns` from `n`. -/
@@ -98,47 +98,47 @@ unsafe def get_open_namespaces (ns : Name) : tactic (List Name) := do
 
 /-- Give a slightly friendlier name for `name.anonymous` in the context of your current namespace.
 -/
-private unsafe def explain_anonymous_name : Name → Stringₓ
+private unsafe def explain_anonymous_name : Name → String
   | Name.anonymous => "[root namespace]"
   | ns => toString ns
 
 /-- `#where` output helper which traces the current namespace. -/
-unsafe def build_str_namespace (ns : Name) : lean.parser Stringₓ :=
+unsafe def build_str_namespace (ns : Name) : lean.parser String :=
   return s! "namespace {explain_anonymous_name ns}"
 
 /-- `#where` output helper which traces the open namespaces. -/
-unsafe def build_str_open_namespaces (ns : Name) : tactic Stringₓ := do
+unsafe def build_str_open_namespaces (ns : Name) : tactic String := do
   let l ← get_open_namespaces ns
   let str := " ".intercalate <| l.map toString
   if l then return "" else return s! "open {str}"
 
 /-- `#where` output helper which traces the variables. -/
-unsafe def build_str_variables : lean.parser Stringₓ := do
+unsafe def build_str_variables : lean.parser String := do
   let l ← get_variables
   let str ← compile_variable_list l
   if l then return "" else return s! "variables {str}"
 
 /-- `#where` output helper which traces the includes. -/
-unsafe def build_str_includes : lean.parser Stringₓ := do
+unsafe def build_str_includes : lean.parser String := do
   let l ← get_included_variables
   let str := " ".intercalate <| l.map fun n => toString n.1
   if l then return "" else return s! "include {str}"
 
 /-- `#where` output helper which traces the namespace end. -/
-unsafe def build_str_end (ns : Name) : tactic Stringₓ :=
+unsafe def build_str_end (ns : Name) : tactic String :=
   return s! "end {explain_anonymous_name ns}"
 
 /-- `#where` output helper which traces newlines. -/
-private unsafe def append_nl (s : Stringₓ) (n : ℕ) : tactic Stringₓ :=
-  return <| s ++ (List.asStringₓ <| (List.range n).map fun _ => '\n')
+private unsafe def append_nl (s : String) (n : ℕ) : tactic String :=
+  return <| s ++ (List.asString <| (List.range n).map fun _ => '\n')
 
 /-- `#where` output helper which traces lines, adding a newline if nonempty. -/
-private unsafe def append_line (s : Stringₓ) (t : lean.parser Stringₓ) : lean.parser Stringₓ := do
+private unsafe def append_line (s : String) (t : lean.parser String) : lean.parser String := do
   let v ← t
   return <| s ++ v ++ if v = 0 then "" else "\n"
 
 /-- `#where` output main function. -/
-unsafe def build_msg : lean.parser Stringₓ := do
+unsafe def build_msg : lean.parser String := do
   let msg := ""
   let ns ← get_current_namespace
   let msg ← append_line msg <| build_str_namespace ns

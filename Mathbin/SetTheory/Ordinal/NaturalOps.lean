@@ -48,15 +48,15 @@ noncomputable section
 
 /-- A type synonym for ordinals with natural addition and multiplication. -/
 def NatOrdinal : Type _ :=
-  Ordinal deriving Zero, Inhabited, One, LinearOrderₓ, SuccOrder, HasWellFounded
+  Ordinal deriving Zero, Inhabited, One, LinearOrder, SuccOrder, HasWellFounded
 
 /-- The identity function between `ordinal` and `nat_ordinal`. -/
-@[matchPattern]
+@[match_pattern]
 def Ordinal.toNatOrdinal : Ordinal ≃o NatOrdinal :=
   OrderIso.refl _
 
 /-- The identity function between `nat_ordinal` and `ordinal`. -/
-@[matchPattern]
+@[match_pattern]
 def NatOrdinal.toOrdinal : NatOrdinal ≃o Ordinal :=
   OrderIso.refl _
 
@@ -152,7 +152,7 @@ theorem to_nat_ordinal_max : toNatOrdinal (max a b) = max a.toNatOrdinal b.toNat
   rfl
 
 @[simp]
-theorem to_nat_ordinal_min : (LinearOrderₓ.min a b).toNatOrdinal = LinearOrderₓ.min a.toNatOrdinal b.toNatOrdinal :=
+theorem to_nat_ordinal_min : (LinearOrder.min a b).toNatOrdinal = LinearOrder.min a.toNatOrdinal b.toNatOrdinal :=
   rfl
 
 /-- Natural addition on ordinals `a ♯ b`, also known as the Hessenberg sum, is recursively defined
@@ -179,30 +179,30 @@ theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < 
   simp [blsub_le_iff]
 
 theorem nadd_lt_nadd_left (h : b < c) (a) : a ♯ b < a ♯ c :=
-  lt_nadd_iff.2 (Or.inr ⟨b, h, le_rflₓ⟩)
+  lt_nadd_iff.2 (Or.inr ⟨b, h, le_rfl⟩)
 
 theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
-  lt_nadd_iff.2 (Or.inl ⟨b, h, le_rflₓ⟩)
+  lt_nadd_iff.2 (Or.inl ⟨b, h, le_rfl⟩)
 
 theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c := by
-  rcases lt_or_eq_of_leₓ h with (h | rfl)
+  rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_left h a).le
     
-  · exact le_rflₓ
+  · exact le_rfl
     
 
 theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
-  rcases lt_or_eq_of_leₓ h with (h | rfl)
+  rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_right h a).le
     
-  · exact le_rflₓ
+  · exact le_rfl
     
 
 variable (a b)
 
 theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
   | a, b => by
-    rw [nadd_def, nadd_def, max_commₓ]
+    rw [nadd_def, nadd_def, max_comm]
     congr <;> ext c hc <;> apply nadd_comm
 
 theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
@@ -210,7 +210,7 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i
       max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
         (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) :=
   by
-  apply (blsub_le_iff.2 fun i h => _).antisymm (max_leₓ _ _)
+  apply (blsub_le_iff.2 fun i h => _).antisymm (max_le _ _)
   · rcases lt_nadd_iff.1 h with (⟨a', ha', hi⟩ | ⟨b', hb', hi⟩)
     · exact lt_max_of_lt_left ((hf h (nadd_lt_nadd_right ha' b) hi).trans_lt (lt_blsub _ _ _))
       
@@ -224,7 +224,7 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i
 
 theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
   | a, b, c => by
-    rw [nadd_def a (b ♯ c), nadd_def, blsub_nadd_of_mono, blsub_nadd_of_mono, max_assocₓ]
+    rw [nadd_def a (b ♯ c), nadd_def, blsub_nadd_of_mono, blsub_nadd_of_mono, max_assoc]
     · congr <;> ext d hd <;> apply nadd_assoc
       
     · exact fun i j _ _ h => nadd_le_nadd_left h a
@@ -262,7 +262,7 @@ theorem nadd_nat (n : ℕ) : a ♯ n = a + n := by
   induction' n with n hn
   · simp
     
-  · rw [Nat.cast_succₓ, add_one_eq_succ, nadd_succ, add_succ, hn]
+  · rw [Nat.cast_succ, add_one_eq_succ, nadd_succ, add_succ, hn]
     
 
 @[simp]
@@ -305,8 +305,8 @@ instance : OrderedCancelAddCommMonoid NatOrdinal :=
     le_of_add_le_add_left := fun a b c => le_of_add_le_add_left, zero := 0, zero_add := zero_nadd,
     add_zero := nadd_zero, add_comm := nadd_comm }
 
-instance : AddMonoidWithOneₓ NatOrdinal :=
-  AddMonoidWithOneₓ.unary
+instance : AddMonoidWithOne NatOrdinal :=
+  AddMonoidWithOne.unary
 
 @[simp]
 theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
@@ -360,16 +360,16 @@ theorem nadd_le_nadd_iff_right : ∀ (a) {b c}, b ♯ a ≤ c ♯ a ↔ b ≤ c 
   @add_le_add_iff_right NatOrdinal _ _ _ _
 
 theorem nadd_left_cancel : ∀ {a b c}, a ♯ b = a ♯ c → b = c :=
-  @add_left_cancelₓ NatOrdinal _
+  @add_left_cancel NatOrdinal _
 
 theorem nadd_right_cancel : ∀ {a b c}, a ♯ b = c ♯ b → a = c :=
-  @add_right_cancelₓ NatOrdinal _
+  @add_right_cancel NatOrdinal _
 
 theorem nadd_left_cancel_iff : ∀ {a b c}, a ♯ b = a ♯ c ↔ b = c :=
-  @add_left_cancel_iffₓ NatOrdinal _
+  @add_left_cancel_iff NatOrdinal _
 
 theorem nadd_right_cancel_iff : ∀ {a b c}, b ♯ a = c ♯ a ↔ b = c :=
-  @add_right_cancel_iffₓ NatOrdinal _
+  @add_right_cancel_iff NatOrdinal _
 
 end Ordinal
 

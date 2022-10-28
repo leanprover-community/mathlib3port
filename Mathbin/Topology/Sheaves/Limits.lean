@@ -23,21 +23,21 @@ open CategoryTheory.Limits
 
 variable {C : Type u} [Category.{v} C] {J : Type v} [SmallCategory J]
 
-namespace Top
+namespace TopCat
 
-instance [HasLimits C] (X : Top) : HasLimits (Presheaf C X) :=
+instance [HasLimits C] (X : TopCat) : HasLimits (Presheaf C X) :=
   limits.functor_category_has_limits_of_size.{v, v}
 
-instance [HasColimits C] (X : Top) : HasColimitsOfSize.{v} (Presheaf C X) :=
+instance [HasColimits C] (X : TopCat) : HasColimitsOfSize.{v} (Presheaf C X) :=
   limits.functor_category_has_colimits_of_size
 
-instance [HasLimits C] (X : Top) : CreatesLimits (Sheaf.forget C X) :=
+instance [HasLimits C] (X : TopCat) : CreatesLimits (Sheaf.forget C X) :=
   Sheaf.category_theory.Sheaf_to_presheaf.category_theory.creates_limits.{u, v, v}
 
-instance [HasLimits C] (X : Top) : HasLimitsOfSize.{v} (Sheaf.{v} C X) :=
+instance [HasLimits C] (X : TopCat) : HasLimitsOfSize.{v} (Sheaf.{v} C X) :=
   has_limits_of_has_limits_creates_limits (Sheaf.forget C X)
 
-theorem is_sheaf_of_is_limit [HasLimits C] {X : Top} (F : J ⥤ Presheaf.{v} C X) (H : ∀ j, (F.obj j).IsSheaf)
+theorem is_sheaf_of_is_limit [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X) (H : ∀ j, (F.obj j).IsSheaf)
     {c : Cone F} (hc : IsLimit c) : c.x.IsSheaf := by
   let F' : J ⥤ sheaf C X := { obj := fun j => ⟨F.obj j, H j⟩, map := fun X Y f => ⟨F.map f⟩ }
   let e : F' ⋙ sheaf.forget C X ≅ F := nat_iso.of_components (fun _ => iso.refl _) (by tidy)
@@ -45,9 +45,9 @@ theorem is_sheaf_of_is_limit [HasLimits C] {X : Top} (F : J ⥤ Presheaf.{v} C X
     presheaf.is_sheaf_of_iso ((is_limit_of_preserves (sheaf.forget C X) (limit.is_limit F')).conePointsIsoOfNatIso hc e)
       (limit F').2
 
-theorem limit_is_sheaf [HasLimits C] {X : Top} (F : J ⥤ Presheaf.{v} C X) (H : ∀ j, (F.obj j).IsSheaf) :
+theorem limit_is_sheaf [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X) (H : ∀ j, (F.obj j).IsSheaf) :
     (limit F).IsSheaf :=
   is_sheaf_of_is_limit F H (limit.isLimit F)
 
-end Top
+end TopCat
 

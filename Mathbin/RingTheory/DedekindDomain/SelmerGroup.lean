@@ -71,7 +71,7 @@ open Classical DiscreteValuation nonZeroDivisors
 
 universe u v
 
-variable {R : Type u} [CommRingₓ R] [IsDomain R] [IsDedekindDomain R] {K : Type v} [Field K] [Algebra R K]
+variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R] {K : Type v} [Field K] [Algebra R K]
   [IsFractionRing R K] (v : HeightOneSpectrum R)
 
 /-! ### Valuations of non-zero elements -/
@@ -91,7 +91,7 @@ theorem valuation_of_ne_zero_to_fun_eq (x : Kˣ) : (v.valuationOfNeZeroToFun x :
   change _ = _ * _
   rw [Units.coe_inv]
   change _ = ite _ _ _ * (ite (coe _ = _) _ _)⁻¹
-  rw [IsLocalization.to_localization_map_sec, if_neg <| IsLocalization.sec_fst_ne_zero le_rflₓ x.ne_zero,
+  rw [IsLocalization.to_localization_map_sec, if_neg <| IsLocalization.sec_fst_ne_zero le_rfl x.ne_zero,
     if_neg <| nonZeroDivisors.coe_ne_zero _]
   any_goals exact IsDomain.to_nontrivial R
   rfl
@@ -102,7 +102,7 @@ def valuationOfNeZero : Kˣ →* Multiplicative ℤ where
   map_one' := by
     rw [← WithZero.coe_inj, valuation_of_ne_zero_to_fun_eq]
     exact map_one _
-  map_mul' := fun _ _ => by
+  map_mul' _ _ := by
     rw [← WithZero.coe_inj, WithZero.coe_mul]
     simp only [valuation_of_ne_zero_to_fun_eq]
     exact map_mul _ _ _
@@ -113,7 +113,7 @@ theorem valuation_of_ne_zero_eq (x : Kˣ) : (v.valuationOfNeZero x : ℤₘ₀) 
 
 @[simp]
 theorem valuation_of_unit_eq (x : Rˣ) : v.valuationOfNeZero (Units.map (algebraMap R K : R →* K) x) = 1 := by
-  rw [← WithZero.coe_inj, valuation_of_ne_zero_eq, Units.coe_map, eq_iff_le_not_ltₓ]
+  rw [← WithZero.coe_inj, valuation_of_ne_zero_eq, Units.coe_map, eq_iff_le_not_lt]
   constructor
   · exact v.valuation_le_one x
     
@@ -121,7 +121,7 @@ theorem valuation_of_unit_eq (x : Rˣ) : v.valuationOfNeZero (Units.map (algebra
     change ¬v.valuation (algebraMap R K x) < 1
     apply_fun v.int_valuation  at hx
     rw [map_one, map_mul] at hx
-    rw [not_ltₓ, ← hx, ← mul_oneₓ <| v.valuation _, valuation_of_algebra_map,
+    rw [not_lt, ← hx, ← mul_one <| v.valuation _, valuation_of_algebra_map,
       mul_le_mul_left₀ <| left_ne_zero_of_mul_eq_one hx]
     exact v.int_valuation_le_one _
     
@@ -149,13 +149,13 @@ end HeightOneSpectrum
 
 variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmerGroup : Subgroup <| K/n where
   Carrier := { x : K/n | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).valuationOfNeZeroMod n x = 1 }
-  one_mem' := fun _ _ => by rw [map_one]
-  mul_mem' := fun _ _ hx hy v hv => by rw [map_mul, hx v hv, hy v hv, one_mulₓ]
-  inv_mem' := fun _ hx v hv => by rw [map_inv, hx v hv, inv_one]
+  one_mem' _ _ := by rw [map_one]
+  mul_mem' _ _ hx hy v hv := by rw [map_mul, hx v hv, hy v hv, one_mul]
+  inv_mem' _ hx v hv := by rw [map_inv, hx v hv, inv_one]
 
 -- mathport name: «expr ⟮ , ⟯»
 localized [SelmerGroup] notation K "⟮" S "," n "⟯" => @selmerGroup _ _ _ _ K _ _ _ S n
@@ -166,9 +166,9 @@ theorem monotone (hS : S ≤ S') : K⟮S,n⟯ ≤ K⟮S',n⟯ := fun _ hx v => h
 
 /-- The multiplicative `v`-adic valuations on `K⟮S, n⟯` for all `v ∈ S`. -/
 def valuation : K⟮S,n⟯ →* S → Multiplicative (Zmod n) where
-  toFun := fun x v => (v : HeightOneSpectrum R).valuationOfNeZeroMod n (x : K/n)
+  toFun x v := (v : HeightOneSpectrum R).valuationOfNeZeroMod n (x : K/n)
   map_one' := funext fun v => map_one _
-  map_mul' := fun x y => funext fun v => map_mul _ x y
+  map_mul' x y := funext fun v => map_mul _ x y
 
 theorem valuation_ker_eq : valuation.ker = K⟮(∅ : Set <| HeightOneSpectrum R),n⟯.subgroupOf (K⟮S,n⟯) := by
   ext ⟨_, hx⟩
@@ -185,25 +185,24 @@ theorem valuation_ker_eq : valuation.ker = K⟮(∅ : Set <| HeightOneSpectrum R
 
 /-- The natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
 def fromUnit {n : ℕ} : Rˣ →* K⟮(∅ : Set <| HeightOneSpectrum R),n⟯ where
-  toFun := fun x =>
-    ⟨QuotientGroup.mk <| Units.map (algebraMap R K).toMonoidHom x, fun v _ => v.valuation_of_unit_mod_eq n x⟩
+  toFun x := ⟨QuotientGroup.mk <| Units.map (algebraMap R K).toMonoidHom x, fun v _ => v.valuation_of_unit_mod_eq n x⟩
   map_one' := by simpa only [map_one]
-  map_mul' := fun _ _ => by simpa only [map_mul]
+  map_mul' _ _ := by simpa only [map_mul]
 
 theorem from_unit_ker [hn : Fact <| 0 < n] : (@fromUnit R _ _ _ K _ _ _ n).ker = (powMonoidHom n : Rˣ →* Rˣ).range := by
   ext ⟨_, _, _, _⟩
   constructor
   · intro hx
-    rcases(QuotientGroup.eq_one_iff _).mp (Subtype.mk.injₓ hx) with ⟨⟨v, i, vi, iv⟩, hx⟩
+    rcases(QuotientGroup.eq_one_iff _).mp (Subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩
     have hv : ↑(_ ^ n : Kˣ) = algebraMap R K _ := congr_arg Units.val hx
     have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebraMap R K _ := congr_arg Units.inv hx
     rw [Units.coe_pow] at hv
     rw [← inv_pow, Units.inv_mk, Units.coe_pow] at hi
     rcases@IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ v _ hn.out
-        (hv.symm ▸ is_integral_algebra_map) with
+        (hv.symm ▸ isIntegralAlgebraMap) with
       ⟨v', rfl⟩
     rcases@IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ i _ hn.out
-        (hi.symm ▸ is_integral_algebra_map) with
+        (hi.symm ▸ isIntegralAlgebraMap) with
       ⟨i', rfl⟩
     rw [← map_mul, map_eq_one_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K] at vi
     rw [← map_mul, map_eq_one_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K] at iv

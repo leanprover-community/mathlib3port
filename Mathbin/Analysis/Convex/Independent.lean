@@ -42,13 +42,13 @@ independence, convex position
 
 open Affine BigOperators Classical
 
-open Finsetₓ Function
+open Finset Function
 
 variable {𝕜 E ι : Type _}
 
 section OrderedSemiring
 
-variable (𝕜) [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s t : Set E}
+variable (𝕜) [OrderedSemiring 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 
 /-- An indexed family is said to be convex independent if every point only belongs to convex hulls
 of sets containing it. -/
@@ -158,13 +158,13 @@ end OrderedSemiring
 
 section LinearOrderedField
 
-variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set E}
+variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s : Set E}
 
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/
 theorem convex_independent_iff_finset {p : ι → E} :
-    ConvexIndependent 𝕜 p ↔ ∀ (s : Finsetₓ ι) (x : ι), p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
+    ConvexIndependent 𝕜 p ↔ ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
-  · rwa [Finsetₓ.coe_image] at hx
+  · rwa [Finset.coe_image] at hx
     
   have hp : injective p := by
     rintro a b hab

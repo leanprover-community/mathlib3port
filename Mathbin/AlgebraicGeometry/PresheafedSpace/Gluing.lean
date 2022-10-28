@@ -58,7 +58,7 @@ noncomputable section
 
 open TopologicalSpace CategoryTheory Opposite
 
-open CategoryTheory.Limits AlgebraicGeometry.PresheafedSpace
+open CategoryTheory.Limits AlgebraicGeometry.PresheafedSpaceCat
 
 open CategoryTheory.GlueData
 
@@ -68,7 +68,7 @@ universe v u
 
 variable (C : Type u) [Category.{v} C]
 
-namespace PresheafedSpace
+namespace PresheafedSpaceCat
 
 /-- A family of gluing data consists of
 1. An index type `J`
@@ -89,7 +89,7 @@ We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, 
 that the `U i`'s are open subspaces of the glued space.
 -/
 @[nolint has_nonempty_instance]
-structure GlueData extends GlueData (PresheafedSpace.{v} C) where
+structure GlueData extends GlueData (PresheafedSpaceCat.{v} C) where
   f_open : ∀ i j, IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
@@ -109,20 +109,20 @@ local notation "π₂ " i ", " j ", " k => @pullback.snd _ _ _ _ _ (D.f i j) (D.
 
 -- mathport name: «exprπ₁⁻¹ , , »
 local notation "π₁⁻¹ " i ", " j ", " k =>
-  (PresheafedSpace.IsOpenImmersion.pullback_fst_of_right (D.f i j) (D.f i k)).invApp
+  (PresheafedSpaceCat.IsOpenImmersion.pullback_fst_of_right (D.f i j) (D.f i k)).invApp
 
 -- mathport name: «exprπ₂⁻¹ , , »
 local notation "π₂⁻¹ " i ", " j ", " k =>
-  (PresheafedSpace.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).invApp
+  (PresheafedSpaceCat.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).invApp
 
 /-- The glue data of topological spaces associated to a family of glue data of PresheafedSpaces. -/
-abbrev toTopGlueData : Top.GlueData :=
+abbrev toTopGlueData : TopCat.GlueData :=
   { f_open := fun i j => (D.f_open i j).base_open, toGlueData := 𝖣.mapGlueData (forget C) }
 
 theorem ι_open_embedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).base := by
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) _]
   exact
-    OpenEmbedding.comp (Top.homeoOfIso (𝖣.gluedIso (PresheafedSpace.forget _)).symm).OpenEmbedding
+    OpenEmbedding.comp (TopCat.homeoOfIso (𝖣.gluedIso (PresheafedSpace.forget _)).symm).OpenEmbedding
       (D.to_Top_glue_data.ι_open_embedding i)
 
 theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).Carrier) :
@@ -130,9 +130,9 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).Carrier) :
   have eq₁ : _ = (π₁ i, j, k).base := preserves_pullback.iso_hom_fst (forget C) _ _
   have eq₂ : _ = (π₂ i, j, k).base := preserves_pullback.iso_hom_snd (forget C) _ _
   rw [coe_to_fun_eq, coe_to_fun_eq, ← eq₁, ← eq₂, coe_comp, Set.image_comp, coe_comp, Set.preimage_comp,
-    Set.image_preimage_eq, Top.pullback_snd_image_fst_preimage]
+    Set.image_preimage_eq, TopCat.pullback_snd_image_fst_preimage]
   rfl
-  rw [← Top.epi_iff_surjective]
+  rw [← TopCat.epi_iff_surjective]
   infer_instance
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/0GiBUh6.png) commute. -/
@@ -179,7 +179,7 @@ theorem snd_inv_app_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k
   rintro x ⟨y, hy, eq⟩
   replace eq := concrete_category.congr_arg (𝖣.t i k).base Eq
   change ((π₂ i, j, k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq
-  rw [𝖣.t_inv, id_base, Top.id_app] at eq
+  rw [𝖣.t_inv, id_base, TopCat.id_app] at eq
   subst Eq
   use (inv (D.t' k i j)).base y
   change (inv (D.t' k i j) ≫ π₁ k, i, j).base y = _
@@ -218,11 +218,11 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).Carrier) :
   rw [𝖣.t_inv]
   · simp
     
-  · change Function.Bijective (Top.homeoOfIso (as_iso _))
+  · change Function.Bijective (TopCat.homeoOfIso (as_iso _))
     exact Homeomorph.bijective _
     infer_instance
     
-  · rw [← Top.mono_iff_injective]
+  · rw [← TopCat.mono_iff_injective]
     infer_instance
     
 
@@ -362,7 +362,7 @@ theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).Carrier) :
   rw [set.range_iff_surjective.mpr _]
   · simp
     
-  · rw [← Top.epi_iff_surjective]
+  · rw [← TopCat.epi_iff_surjective]
     infer_instance
     
 
@@ -426,7 +426,7 @@ instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).Carrier) :
 
 instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) where
   base_open := D.ι_open_embedding i
-  c_iso := fun U => by
+  c_iso U := by
     erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
     infer_instance
 
@@ -465,13 +465,13 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
       
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
-  𝖣.ι_jointly_surjective (PresheafedSpace.forget _ ⋙ CategoryTheory.forget Top) x
+  𝖣.ι_jointly_surjective (PresheafedSpaceCat.forget _ ⋙ CategoryTheory.forget TopCat) x
 
 end GlueData
 
-end PresheafedSpace
+end PresheafedSpaceCat
 
-namespace SheafedSpace
+namespace SheafedSpaceCat
 
 variable (C) [HasProducts.{v} C]
 
@@ -494,8 +494,8 @@ We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, 
 that the `U i`'s are open subspaces of the glued space.
 -/
 @[nolint has_nonempty_instance]
-structure GlueData extends GlueData (SheafedSpace.{v} C) where
-  f_open : ∀ i j, SheafedSpace.IsOpenImmersion (f i j)
+structure GlueData extends GlueData (SheafedSpaceCat.{v} C) where
+  f_open : ∀ i j, SheafedSpaceCat.IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
 
@@ -507,7 +507,7 @@ variable {C} (D : GlueData C)
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of presheafed spaces associated to a family of glue data of sheafed spaces. -/
-abbrev toPresheafedSpaceGlueData : PresheafedSpace.GlueData C :=
+abbrev toPresheafedSpaceGlueData : PresheafedSpaceCat.GlueData C :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToPresheafedSpace }
 
 variable [HasLimits C]
@@ -525,7 +525,7 @@ instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   infer_instance
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
-  𝖣.ι_jointly_surjective (SheafedSpace.forget _ ⋙ CategoryTheory.forget Top) x
+  𝖣.ι_jointly_surjective (SheafedSpaceCat.forget _ ⋙ CategoryTheory.forget TopCat) x
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -539,9 +539,9 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
 
 end GlueData
 
-end SheafedSpace
+end SheafedSpaceCat
 
-namespace LocallyRingedSpace
+namespace LocallyRingedSpaceCat
 
 /-- A family of gluing data consists of
 1. An index type `J`
@@ -562,8 +562,8 @@ We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, 
 that the `U i`'s are open subspaces of the glued space.
 -/
 @[nolint has_nonempty_instance]
-structure GlueData extends GlueData LocallyRingedSpace where
-  f_open : ∀ i j, LocallyRingedSpace.IsOpenImmersion (f i j)
+structure GlueData extends GlueData LocallyRingedSpaceCat where
+  f_open : ∀ i j, LocallyRingedSpaceCat.IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
 
@@ -575,7 +575,7 @@ variable (D : GlueData)
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of ringed spaces associated to a family of glue data of locally ringed spaces. -/
-abbrev toSheafedSpaceGlueData : SheafedSpace.GlueData CommRingₓₓ :=
+abbrev toSheafedSpaceGlueData : SheafedSpaceCat.GlueData CommRingCat :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToSheafedSpace }
 
 /-- The gluing as locally ringed spaces is isomorphic to the gluing as ringed spaces. -/
@@ -595,7 +595,7 @@ instance (i j k : D.J) : PreservesLimit (cospan (𝖣.f i j) (𝖣.f i k)) forge
   inferInstance
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).1.base y = x :=
-  𝖣.ι_jointly_surjective ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _) ⋙ forget Top) x
+  𝖣.ι_jointly_surjective ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpaceCat.forget _) ⋙ forget TopCat) x
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -609,7 +609,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
 
 end GlueData
 
-end LocallyRingedSpace
+end LocallyRingedSpaceCat
 
 end AlgebraicGeometry
 

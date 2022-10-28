@@ -15,13 +15,13 @@ open Submodule
 
 open Polynomial
 
-variable {R : Type _} [Ringₓ R]
+variable {R : Type _} [Ring R]
 
-variable {M : Type _} [AddCommGroupₓ M] [Module R M] (U U₁ U₂ : Submodule R M)
+variable {M : Type _} [AddCommGroup M] [Module R M] (U U₁ U₂ : Submodule R M)
 
 variable {x x₁ x₂ y y₁ y₂ z z₁ z₂ : M}
 
-variable {N : Type _} [AddCommGroupₓ N] [Module R N] (V V₁ V₂ : Submodule R N)
+variable {N : Type _} [AddCommGroup N] [Module R N] (V V₁ V₂ : Submodule R N)
 
 /-- A predicate saying two elements of a module are equivalent modulo a submodule. -/
 def Smodeq (x y : M) : Prop :=
@@ -85,7 +85,7 @@ theorem map (hxy : x ≡ y [SMOD U]) (f : M →ₗ[R] N) : f x ≡ f y [SMOD U.m
 theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V.comap f] :=
   (Submodule.Quotient.eq _).2 <| show f (x - y) ∈ V from (f.map_sub x y).symm ▸ (Submodule.Quotient.eq _).1 hxy
 
-theorem eval {R : Type _} [CommRingₓ R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
+theorem eval {R : Type _} [CommRing R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
     f.eval x ≡ f.eval y [SMOD I] := by
   rw [Smodeq.def] at h⊢
   show Ideal.Quotient.mk I (f.eval x) = Ideal.Quotient.mk I (f.eval y)

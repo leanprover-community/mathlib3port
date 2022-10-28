@@ -82,19 +82,19 @@ This is useful when considering the associated polynomial endofunctor.
 -/
 @[simps]
 def natαEquivPunitSumPunit : nat_α ≃ Sum PUnit.{u + 1} PUnit where
-  toFun := fun c =>
+  toFun c :=
     match c with
     | nat_α.zero => inl unit
     | nat_α.succ => inr unit
-  invFun := fun b =>
+  invFun b :=
     match b with
     | inl x => Natα.zero
     | inr x => Natα.succ
-  left_inv := fun c =>
+  left_inv c :=
     match c with
     | nat_α.zero => rfl
     | nat_α.succ => rfl
-  right_inv := fun b =>
+  right_inv b :=
     match b with
     | inl star => rfl
     | inr star => rfl
@@ -133,10 +133,10 @@ instance (hd : γ) : Inhabited (Listβ γ (Listα.cons hd)) :=
 /-- The isomorphism from lists to the `W_type` construction of lists -/
 @[simp]
 def ofList : List γ → WType (Listβ γ)
-  | List.nil => ⟨Listα.nil, Pempty.elimₓ⟩
+  | List.nil => ⟨Listα.nil, Pempty.elim⟩
   | List.cons hd tl => ⟨Listα.cons hd, fun _ => of_list tl⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The isomorphism from the `W_type` construction of lists to lists -/
 @[simp]
 def toList : WType (Listβ γ) → List γ
@@ -166,16 +166,16 @@ def equivList : WType (Listβ γ) ≃ List γ where
 This is useful when considering the associated polynomial endofunctor
 -/
 def listαEquivPunitSum : Listα γ ≃ Sum PUnit.{v + 1} γ where
-  toFun := fun c =>
+  toFun c :=
     match c with
     | list_α.nil => Sum.inl PUnit.unit
     | list_α.cons x => Sum.inr x
   invFun := Sum.elim (fun _ => Listα.nil) fun x => Listα.cons x
-  left_inv := fun c =>
+  left_inv c :=
     match c with
     | list_α.nil => rfl
     | list_α.cons x => rfl
-  right_inv := fun x =>
+  right_inv x :=
     match x with
     | Sum.inl PUnit.unit => rfl
     | Sum.inr x => rfl

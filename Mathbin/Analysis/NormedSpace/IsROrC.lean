@@ -60,7 +60,7 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
   have r_ne_zero : (r : 𝕜) ≠ 0 := is_R_or_C.of_real_ne_zero.mpr r_pos.ne'
   have eq : f z = ∥z∥ / r * f z₁ := by
     rw [hz₁, LinearMap.map_smul, smul_eq_mul]
-    rw [← mul_assoc, ← mul_assoc, div_mul_cancel _ r_ne_zero, mul_inv_cancel, one_mulₓ]
+    rw [← mul_assoc, ← mul_assoc, div_mul_cancel _ r_ne_zero, mul_inv_cancel, one_mul]
     simp only [z_zero, IsROrC.of_real_eq_zero, norm_eq_zero, Ne.def, not_false_iff]
   rw [Eq, norm_mul, norm_div, IsROrC.norm_coe_norm, IsROrC.norm_of_nonneg r_pos.le, div_mul_eq_mul_div,
     div_mul_eq_mul_div, mul_comm]

@@ -72,8 +72,8 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
 theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ AntilipschitzWith C B♯ := by
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
   refine' ⟨C⁻¹.toNnreal, real.to_nnreal_pos.mpr (inv_pos.mpr C_pos), _⟩
-  refine' ContinuousLinearMap.antilipschitz_of_bound B♯ _
-  simp_rw [Real.coe_to_nnreal', max_eq_left_of_ltₓ (inv_pos.mpr C_pos), ← inv_mul_le_iff (inv_pos.mpr C_pos)]
+  refine' ContinuousLinearMap.antilipschitzOfBound B♯ _
+  simp_rw [Real.coe_to_nnreal', max_eq_left_of_lt (inv_pos.mpr C_pos), ← inv_mul_le_iff (inv_pos.mpr C_pos)]
   simpa using below_bound
 
 theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ := by
@@ -81,7 +81,7 @@ theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ := by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.injective
 
-theorem closed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) := by
+theorem closedRange (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) := by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.is_closed_range B♯.UniformContinuous
 
@@ -93,7 +93,7 @@ theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ := by
   rcases coercive with ⟨C, C_pos, coercivity⟩
   obtain rfl : w = 0 := by
     rw [← norm_eq_zero, ← mul_self_eq_zero, ← mul_right_inj' C_pos.ne', mul_zero, ← mul_assoc]
-    apply le_antisymmₓ
+    apply le_antisymm
     · calc
         C * ∥w∥ * ∥w∥ ≤ B w w := coercivity w
         _ = ⟪B♯ w, w⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B w w).symm

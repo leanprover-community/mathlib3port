@@ -38,11 +38,10 @@ open TensorProduct
 /-- Homogenous tensor powers $M^{\otimes n}$. `⨂[R]^n M` is a shorthand for
 `⨂[R] (i : fin n), M`. -/
 @[reducible]
-protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] :
-    Type _ :=
-  ⨂[R] i : Finₓ n, M
+protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiring R] [AddCommMonoid M] [Module R M] : Type _ :=
+  ⨂[R] i : Fin n, M
 
-variable {R : Type _} {M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable {R : Type _} {M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 -- mathport name: tensor_power
 localized [TensorProduct] notation:100 "⨂[" R "]^" n:arg => TensorPower R n
@@ -54,12 +53,12 @@ open TensorProduct DirectSum
 open PiTensorProduct
 
 /-- As a graded monoid, `⨂[R]^i M` has a `1 : ⨂[R]^0 M`. -/
-instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod R Finₓ.elim0
+instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod R Fin.elim0
 
 -- mathport name: exprₜ1
 local notation "ₜ1" => @GradedMonoid.GhasOne.one ℕ (fun i => (⨂[R]^i) M) _ _
 
-theorem ghas_one_def : ₜ1 = tprod R Finₓ.elim0 :=
+theorem ghas_one_def : ₜ1 = tprod R Fin.elim0 :=
   rfl
 
 /-- A variant of `pi_tensor_prod.tmul_equiv` with the result indexed by `fin (n + m)`. -/
@@ -67,7 +66,7 @@ def mulEquiv {n m : ℕ} : (⨂[R]^n) M ⊗[R] (⨂[R]^m) M ≃ₗ[R] (⨂[R]^(n
   (tmulEquiv R M).trans (reindex R M finSumFinEquiv)
 
 /-- As a graded monoid, `⨂[R]^i M` has a `(*) : ⨂[R]^i M → ⨂[R]^j M → ⨂[R]^(i + j) M`. -/
-instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul := fun i j a b => mulEquiv (a ⊗ₜ b)
+instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul i j a b := mulEquiv (a ⊗ₜ b)
 
 -- mathport name: «expr ₜ* »
 local infixl:70 " ₜ* " => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _

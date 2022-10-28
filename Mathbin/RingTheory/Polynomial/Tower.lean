@@ -24,9 +24,9 @@ variable (R A B : Type _)
 
 namespace Polynomial
 
-section Semiringₓ
+section Semiring
 
-variable [CommSemiringₓ R] [CommSemiringₓ A] [Semiringₓ B]
+variable [CommSemiring R] [CommSemiring A] [Semiring B]
 
 variable [Algebra R A] [Algebra A B] [Algebra R B]
 
@@ -38,11 +38,11 @@ variable {R B}
 theorem aeval_map_algebra_map (x : B) (p : R[X]) : aeval x (map (algebraMap R A) p) = aeval x p := by
   rw [aeval_def, aeval_def, eval₂_map, IsScalarTower.algebra_map_eq R A B]
 
-end Semiringₓ
+end Semiring
 
-section CommSemiringₓ
+section CommSemiring
 
-variable [CommSemiringₓ R] [CommSemiringₓ A] [Semiringₓ B]
+variable [CommSemiring R] [CommSemiring A] [Semiring B]
 
 variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
@@ -55,7 +55,7 @@ theorem aeval_algebra_map_apply (x : A) (p : R[X]) : aeval (algebraMap A B x) p 
 theorem aeval_algebra_map_eq_zero_iff [NoZeroSmulDivisors A B] [Nontrivial B] (x : A) (p : R[X]) :
     aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
   rw [aeval_algebra_map_apply, Algebra.algebra_map_eq_smul_one, smul_eq_zero, iff_false_intro (@one_ne_zero B _ _),
-    or_falseₓ]
+    or_false_iff]
 
 variable {B}
 
@@ -63,7 +63,7 @@ theorem aeval_algebra_map_eq_zero_iff_of_injective {x : A} {p : R[X]} (h : Funct
     aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
   rw [aeval_algebra_map_apply, ← (algebraMap A B).map_zero, h.eq_iff]
 
-end CommSemiringₓ
+end CommSemiring
 
 end Polynomial
 
@@ -71,15 +71,15 @@ namespace Subalgebra
 
 open Polynomial
 
-section CommSemiringₓ
+section CommSemiring
 
-variable {R A} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
+variable {R A} [CommSemiring R] [CommSemiring A] [Algebra R A]
 
 @[simp]
 theorem aeval_coe (S : Subalgebra R A) (x : S) (p : R[X]) : aeval (x : A) p = aeval x p :=
   aeval_algebra_map_apply A x p
 
-end CommSemiringₓ
+end CommSemiring
 
 end Subalgebra
 

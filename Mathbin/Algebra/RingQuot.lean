@@ -24,11 +24,11 @@ Since everything runs in parallel for quotients of `R`-algebras, we do that case
 
 universe u₁ u₂ u₃ u₄
 
-variable {R : Type u₁} [Semiringₓ R]
+variable {R : Type u₁} [Semiring R]
 
-variable {S : Type u₂} [CommSemiringₓ S]
+variable {S : Type u₂} [CommSemiring S]
 
-variable {A : Type u₃} [Semiringₓ A] [Algebra S A]
+variable {A : Type u₃} [Semiring A] [Algebra S A]
 
 namespace RingQuot
 
@@ -43,16 +43,16 @@ inductive Rel (r : R → R → Prop) : R → R → Prop
   | mul_right ⦃a b c⦄ : rel b c → rel (a * b) (a * c)
 
 theorem Rel.add_right {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r b c) : Rel r (a + b) (a + c) := by
-  rw [add_commₓ a b, add_commₓ a c]
+  rw [add_comm a b, add_comm a c]
   exact rel.add_left h
 
-theorem Rel.neg {R : Type u₁} [Ringₓ R] {r : R → R → Prop} ⦃a b : R⦄ (h : Rel r a b) : Rel r (-a) (-b) := by
+theorem Rel.neg {R : Type u₁} [Ring R] {r : R → R → Prop} ⦃a b : R⦄ (h : Rel r a b) : Rel r (-a) (-b) := by
   simp only [neg_eq_neg_one_mul a, neg_eq_neg_one_mul b, rel.mul_right h]
 
-theorem Rel.sub_left {R : Type u₁} [Ringₓ R] {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r a b) : Rel r (a - c) (b - c) :=
-  by simp only [sub_eq_add_neg, h.add_left]
+theorem Rel.sub_left {R : Type u₁} [Ring R] {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r a b) : Rel r (a - c) (b - c) := by
+  simp only [sub_eq_add_neg, h.add_left]
 
-theorem Rel.sub_right {R : Type u₁} [Ringₓ R] {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r b c) : Rel r (a - b) (a - c) :=
+theorem Rel.sub_right {R : Type u₁} [Ring R] {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r b c) : Rel r (a - b) (a - c) :=
   by simp only [sub_eq_add_neg, h.neg.add_right]
 
 theorem Rel.smul {r : A → A → Prop} (k : S) ⦃a b : A⦄ (h : Rel r a b) : Rel r (k • a) (k • b) := by
@@ -83,10 +83,10 @@ private irreducible_def add : RingQuot r → RingQuot r → RingQuot r
 private irreducible_def mul : RingQuot r → RingQuot r → RingQuot r
   | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ (· * ·) Rel.mul_right Rel.mul_left a b⟩
 
-private irreducible_def neg {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r
+private irreducible_def neg {R : Type u₁} [Ring R] (r : R → R → Prop) : RingQuot r → RingQuot r
   | ⟨a⟩ => ⟨Quot.map (fun a => -a) Rel.neg a⟩
 
-private irreducible_def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def sub {R : Type u₁} [Ring R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
   | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ Sub.sub Rel.sub_right Rel.sub_left a b⟩
 
 private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
@@ -96,10 +96,10 @@ private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
           -- note we can't define a `rel.pow` as `rel` isn't reflexive so `rel r 1 1` isn't true
           dsimp only
           induction n
-          · rw [pow_zeroₓ, pow_zeroₓ]
+          · rw [pow_zero, pow_zero]
             
-          · rw [pow_succₓ, pow_succₓ]
-            simpa only [mul] using congr_arg2ₓ (fun x y => mul r ⟨x⟩ ⟨y⟩) (Quot.sound h) n_ih
+          · rw [pow_succ, pow_succ]
+            simpa only [mul] using congr_arg2 (fun x y => mul r ⟨x⟩ ⟨y⟩) (Quot.sound h) n_ih
             )
         a⟩
 
@@ -121,10 +121,10 @@ instance : Mul (RingQuot r) :=
 instance : Pow (RingQuot r) ℕ :=
   ⟨fun x n => npow r n x⟩
 
-instance {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : Neg (RingQuot r) :=
+instance {R : Type u₁} [Ring R] (r : R → R → Prop) : Neg (RingQuot r) :=
   ⟨neg r⟩
 
-instance {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : Sub (RingQuot r) :=
+instance {R : Type u₁} [Ring R] (r : R → R → Prop) : Sub (RingQuot r) :=
   ⟨sub r⟩
 
 instance [Algebra S R] : HasSmul S (RingQuot r) :=
@@ -150,12 +150,12 @@ theorem pow_quot {a} {n : ℕ} : (⟨Quot.mk _ a⟩ ^ n : RingQuot r) = ⟨Quot.
   show npow r _ _ = _
   rw [npow]
 
-theorem neg_quot {R : Type u₁} [Ringₓ R] (r : R → R → Prop) {a} : (-⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (-a)⟩ := by
+theorem neg_quot {R : Type u₁} [Ring R] (r : R → R → Prop) {a} : (-⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (-a)⟩ := by
   show neg r _ = _
   rw [neg]
   rfl
 
-theorem sub_quot {R : Type u₁} [Ringₓ R] (r : R → R → Prop) {a b} :
+theorem sub_quot {R : Type u₁} [Ring R] (r : R → R → Prop) {a b} :
     (⟨Quot.mk _ a⟩ - ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a - b)⟩ := by
   show sub r _ _ = _
   rw [sub]
@@ -166,17 +166,17 @@ theorem smul_quot [Algebra S R] {n : S} {a : R} : (n • ⟨Quot.mk _ a⟩ : Rin
   rw [smul]
   rfl
 
-instance (r : R → R → Prop) : Semiringₓ (RingQuot r) where
+instance (r : R → R → Prop) : Semiring (RingQuot r) where
   add := (· + ·)
   mul := (· * ·)
   zero := 0
   one := 1
   natCast := natCast r
-  nat_cast_zero := by simp [Nat.castₓ, nat_cast, ← zero_quot]
-  nat_cast_succ := by simp [Nat.castₓ, nat_cast, ← one_quot, add_quot]
+  nat_cast_zero := by simp [Nat.cast, nat_cast, ← zero_quot]
+  nat_cast_succ := by simp [Nat.cast, nat_cast, ← one_quot, add_quot]
   add_assoc := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [add_quot, add_assocₓ]
+    simp [add_quot, add_assoc]
   zero_add := by
     rintro ⟨⟨⟩⟩
     simp [add_quot, ← zero_quot]
@@ -191,7 +191,7 @@ instance (r : R → R → Prop) : Semiringₓ (RingQuot r) where
     simp [mul_quot, ← zero_quot]
   add_comm := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [add_quot, add_commₓ]
+    simp [add_quot, add_comm]
   mul_assoc := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp [mul_quot, mul_assoc]
@@ -207,22 +207,22 @@ instance (r : R → R → Prop) : Semiringₓ (RingQuot r) where
   right_distrib := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp [mul_quot, add_quot, right_distrib]
-  npow := fun n x => x ^ n
+  npow n x := x ^ n
   npow_zero' := by
     rintro ⟨⟨⟩⟩
     simp [pow_quot, ← one_quot]
   npow_succ' := by
     rintro n ⟨⟨⟩⟩
-    simp [pow_quot, mul_quot, pow_succₓ]
+    simp [pow_quot, mul_quot, pow_succ]
   nsmul := (· • ·)
   nsmul_zero' := by
     rintro ⟨⟨⟩⟩
     simp [smul_quot, ← zero_quot]
   nsmul_succ' := by
     rintro n ⟨⟨⟩⟩
-    simp [smul_quot, add_quot, add_mulₓ, add_commₓ]
+    simp [smul_quot, add_quot, add_mul, add_comm]
 
-instance {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : Ringₓ (RingQuot r) :=
+instance {R : Type u₁} [Ring R] (r : R → R → Prop) : Ring (RingQuot r) :=
   { RingQuot.semiring r with neg := Neg.neg,
     add_left_neg := by
       rintro ⟨⟨⟩⟩
@@ -237,18 +237,18 @@ instance {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : Ringₓ (RingQuot 
       simp [smul_quot, ← zero_quot],
     zsmul_succ' := by
       rintro n ⟨⟨⟩⟩
-      simp [smul_quot, add_quot, add_mulₓ, add_commₓ],
+      simp [smul_quot, add_quot, add_mul, add_comm],
     zsmul_neg' := by
       rintro n ⟨⟨⟩⟩
-      simp [smul_quot, neg_quot, add_mulₓ] }
+      simp [smul_quot, neg_quot, add_mul] }
 
-instance {R : Type u₁} [CommSemiringₓ R] (r : R → R → Prop) : CommSemiringₓ (RingQuot r) :=
+instance {R : Type u₁} [CommSemiring R] (r : R → R → Prop) : CommSemiring (RingQuot r) :=
   { RingQuot.semiring r with
     mul_comm := by
       rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
       simp [mul_quot, mul_comm] }
 
-instance {R : Type u₁} [CommRingₓ R] (r : R → R → Prop) : CommRingₓ (RingQuot r) :=
+instance {R : Type u₁} [CommRing R] (r : R → R → Prop) : CommRing (RingQuot r) :=
   { RingQuot.commSemiring r, RingQuot.ring r with }
 
 instance (r : R → R → Prop) : Inhabited (RingQuot r) :=
@@ -256,22 +256,22 @@ instance (r : R → R → Prop) : Inhabited (RingQuot r) :=
 
 instance [Algebra S R] (r : R → R → Prop) : Algebra S (RingQuot r) where
   smul := (· • ·)
-  toFun := fun r => ⟨Quot.mk _ (algebraMap S R r)⟩
+  toFun r := ⟨Quot.mk _ (algebraMap S R r)⟩
   map_one' := by simp [← one_quot]
   map_mul' := by simp [mul_quot]
   map_zero' := by simp [← zero_quot]
   map_add' := by simp [add_quot]
-  commutes' := fun r => by
+  commutes' r := by
     rintro ⟨⟨a⟩⟩
     simp [Algebra.commutes, mul_quot]
-  smul_def' := fun r => by
+  smul_def' r := by
     rintro ⟨⟨a⟩⟩
     simp [smul_quot, Algebra.smul_def, mul_quot]
 
 /-- The quotient map from a ring to its quotient, as a homomorphism of rings.
 -/
 def mkRingHom (r : R → R → Prop) : R →+* RingQuot r where
-  toFun := fun x => ⟨Quot.mk _ x⟩
+  toFun x := ⟨Quot.mk _ x⟩
   map_one' := by simp [← one_quot]
   map_mul' := by simp [mul_quot]
   map_zero' := by simp [← zero_quot]
@@ -286,19 +286,19 @@ theorem mk_ring_hom_surjective (r : R → R → Prop) : Function.Surjective (mkR
   simp
 
 @[ext]
-theorem ring_quot_ext {T : Type u₄} [Semiringₓ T] {r : R → R → Prop} (f g : RingQuot r →+* T)
+theorem ring_quot_ext {T : Type u₄} [Semiring T] {r : R → R → Prop} (f g : RingQuot r →+* T)
     (w : f.comp (mkRingHom r) = g.comp (mkRingHom r)) : f = g := by
   ext
   rcases mk_ring_hom_surjective r x with ⟨x, rfl⟩
   exact (RingHom.congr_fun w x : _)
 
-variable {T : Type u₄} [Semiringₓ T]
+variable {T : Type u₄} [Semiring T]
 
 /-- Any ring homomorphism `f : R →+* T` which respects a relation `r : R → R → Prop`
 factors uniquely through a morphism `ring_quot r →+* T`.
 -/
 def lift {r : R → R → Prop} : { f : R →+* T // ∀ ⦃x y⦄, r x y → f x = f y } ≃ (RingQuot r →+* T) where
-  toFun := fun f' =>
+  toFun f' :=
     let f := (f' : R →+* T)
     { toFun := fun x =>
         Quot.lift f
@@ -318,15 +318,15 @@ def lift {r : R → R → Prop} : { f : R →+* T // ∀ ⦃x y⦄, r x y → f 
       map_mul' := by
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
         simp [mul_quot, f.map_mul x y] }
-  invFun := fun F =>
+  invFun F :=
     ⟨F.comp (mkRingHom r), fun x y h => by
       dsimp
       rw [mk_ring_hom_rel h]⟩
-  left_inv := fun f => by
+  left_inv f := by
     ext
     simp
     rfl
-  right_inv := fun F => by
+  right_inv F := by
     ext
     simp
     rfl
@@ -350,7 +350,7 @@ theorem eq_lift_comp_mk_ring_hom {r : R → R → Prop} (f : RingQuot r →+* T)
           rw [mk_ring_hom_rel h]⟩ :=
   (lift.apply_symm_apply f).symm
 
-section CommRingₓ
+section CommRing
 
 /-!
 We now verify that in the case of a commutative ring, the `ring_quot` construction
@@ -358,7 +358,7 @@ agrees with the quotient by the appropriate ideal.
 -/
 
 
-variable {B : Type u₁} [CommRingₓ B]
+variable {B : Type u₁} [CommRing B]
 
 /-- The universal ring homomorphism from `ring_quot r` to `B ⧸ ideal.of_rel r`. -/
 def ringQuotToIdealQuotient (r : B → B → Prop) : RingQuot r →+* B ⧸ Ideal.ofRel r :=
@@ -406,7 +406,7 @@ def ringQuotEquivIdealQuotient (r : B → B → Prop) : RingQuot r ≃+* B ⧸ I
       ext
       rfl)
 
-end CommRingₓ
+end CommRing
 
 section StarRing
 
@@ -438,7 +438,7 @@ theorem star'_quot (hr : ∀ a b, r a b → r (star a) (star b)) {a} :
   rfl
 
 /-- Transfer a star_ring instance through a quotient, if the quotient is invariant to `star` -/
-def starRing {R : Type u₁} [Semiringₓ R] [StarRing R] (r : R → R → Prop) (hr : ∀ a b, r a b → r (star a) (star b)) :
+def starRing {R : Type u₁} [Semiring R] [StarRing R] (r : R → R → Prop) (hr : ∀ a b, r a b → r (star a) (star b)) :
     StarRing (RingQuot r) where
   star := star' r hr
   star_involutive := by
@@ -475,7 +475,7 @@ theorem mk_alg_hom_surjective (s : A → A → Prop) : Function.Surjective (mkAl
   use a
   rfl
 
-variable {B : Type u₄} [Semiringₓ B] [Algebra S B]
+variable {B : Type u₄} [Semiring B] [Algebra S B]
 
 @[ext]
 theorem ring_quot_ext' {s : A → A → Prop} (f g : RingQuot s →ₐ[S] B)
@@ -488,7 +488,7 @@ theorem ring_quot_ext' {s : A → A → Prop} (f g : RingQuot s →ₐ[S] B)
 factors uniquely through a morphism `ring_quot s →ₐ[S]  B`.
 -/
 def liftAlgHom {s : A → A → Prop} : { f : A →ₐ[S] B // ∀ ⦃x y⦄, s x y → f x = f y } ≃ (RingQuot s →ₐ[S] B) where
-  toFun := fun f' =>
+  toFun f' :=
     let f := (f' : A →ₐ[S] B)
     { toFun := fun x =>
         Quot.lift f
@@ -511,15 +511,15 @@ def liftAlgHom {s : A → A → Prop} : { f : A →ₐ[S] B // ∀ ⦃x y⦄, s 
       commutes' := by
         rintro x
         simp [← one_quot, smul_quot, Algebra.algebra_map_eq_smul_one] }
-  invFun := fun F =>
+  invFun F :=
     ⟨F.comp (mkAlgHom S s), fun _ _ h => by
       dsimp
       erw [mk_alg_hom_rel S h]⟩
-  left_inv := fun f => by
+  left_inv f := by
     ext
     simp
     rfl
-  right_inv := fun F => by
+  right_inv F := by
     ext
     simp
     rfl

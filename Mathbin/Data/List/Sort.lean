@@ -32,7 +32,7 @@ variable {α : Type uu} {r : α → α → Prop} {a : α} {l : List α}
 /-- `sorted r l` is the same as `pairwise r l`, preferred in the case that `r`
   is a `<` or `≤`-like relation (transitive and antisymmetric or asymmetric) -/
 def Sorted :=
-  @Pairwiseₓ
+  @Pairwise
 
 instance decidableSorted [DecidableRel r] (l : List α) : Decidable (Sorted r l) :=
   List.decidablePairwise _
@@ -54,7 +54,7 @@ theorem rel_of_sorted_cons {a : α} {l : List α} : Sorted r (a :: l) → ∀ b 
 theorem sorted_cons {a : α} {l : List α} : Sorted r (a :: l) ↔ (∀ b ∈ l, r a b) ∧ Sorted r l :=
   pairwise_cons
 
-protected theorem Sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : List α} (h : Sorted r l) : Nodupₓ l :=
+protected theorem Sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : List α} (h : Sorted r l) : Nodup l :=
   h.Nodup
 
 theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~ l₂) (s₁ : Sorted r l₁) (s₂ : Sorted r l₂) :
@@ -72,7 +72,7 @@ theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~
     have : ∀ (x : α) (h : x ∈ u₂), x = a := fun x m =>
       antisymm ((pairwise_append.1 s₂).2.2 _ m a (mem_cons_self _ _)) (h₁ _ (by simp [m]))
     rw [(@eq_repeat _ a (length u₂ + 1) (a :: u₂)).2, (@eq_repeat _ a (length u₂ + 1) (u₂ ++ [a])).2] <;>
-      constructor <;> simp [iff_true_intro this, or_comm]
+      constructor <;> simp [iff_true_intro this, or_comm']
     
 
 theorem sublist_of_subperm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ <+~ l₂) (s₁ : l₁.Sorted r)
@@ -90,15 +90,15 @@ theorem Sorted.rel_nth_le_of_lt {l : List α} (h : l.Sorted r) {a b : ℕ} (ha :
 
 theorem Sorted.rel_nth_le_of_le [IsRefl α r] {l : List α} (h : l.Sorted r) {a b : ℕ} (ha : a < l.length)
     (hb : b < l.length) (hab : a ≤ b) : r (l.nthLe a ha) (l.nthLe b hb) := by
-  cases' eq_or_lt_of_leₓ hab with H H
+  cases' eq_or_lt_of_le hab with H H
   · subst H
     exact refl _
     
   · exact h.rel_nth_le_of_lt _ _ H
     
 
-theorem Sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {k : ℕ} {x y : α}
-    (hx : x ∈ List.takeₓ k l) (hy : y ∈ List.dropₓ k l) : r x y := by
+theorem Sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {k : ℕ} {x y : α} (hx : x ∈ List.take k l)
+    (hy : y ∈ List.drop k l) : r x y := by
   obtain ⟨iy, hiy, rfl⟩ := nth_le_of_mem hy
   obtain ⟨ix, hix, rfl⟩ := nth_le_of_mem hx
   rw [nth_le_take', nth_le_drop']
@@ -106,6 +106,21 @@ theorem Sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {
   exact h.rel_nth_le_of_lt _ _ (ix.lt_add_right _ _ (lt_min_iff.mp hix).left)
 
 end Sorted
+
+section Monotone
+
+variable {n : ℕ} {α : Type uu} [Preorder α] {f : Fin n → α}
+
+/-- A tuple is monotone if and only if the list obtained from it is sorted. -/
+theorem monotone_iff_of_fn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) := by
+  simp_rw [sorted, pairwise_iff_nth_le, length_of_fn, nth_le_of_fn', monotone_iff_forall_lt]
+  exact ⟨fun h i j hj hij => h <| fin.mk_lt_mk.mpr hij, fun h ⟨i, _⟩ ⟨j, hj⟩ hij => h i j hj hij⟩
+
+/-- The list obtained from a monotone tuple is sorted. -/
+theorem Monotone.of_fn_sorted (h : Monotone f) : (ofFn f).Sorted (· ≤ ·) :=
+  monotone_iff_of_fn_sorted.1 h
+
+end Monotone
 
 section Sort
 
@@ -166,9 +181,9 @@ theorem perm_ordered_insert (a) : ∀ l : List α, orderedInsert r a l ~ a :: l
       simpa [ordered_insert, h] using ((perm_ordered_insert l).cons _).trans (perm.swap _ _ _)]
 
 theorem ordered_insert_count [DecidableEq α] (L : List α) (a b : α) :
-    countₓ a (L.orderedInsert r b) = countₓ a L + if a = b then 1 else 0 := by
+    count a (L.orderedInsert r b) = count a L + if a = b then 1 else 0 := by
   rw [(L.perm_ordered_insert r b).count_eq, count_cons]
-  split_ifs <;> simp only [Nat.succ_eq_add_one, add_zeroₓ]
+  split_ifs <;> simp only [Nat.succ_eq_add_one, add_zero]
 
 theorem perm_insertion_sort : ∀ l : List α, insertionSort r l ~ l
   | [] => Perm.nil
@@ -239,13 +254,13 @@ theorem split_cons_of_eq (a : α) {l l₁ l₂ : List α} (h : split l = (l₁, 
   rw [split, h] <;> rfl
 
 theorem length_split_le : ∀ {l l₁ l₂ : List α}, split l = (l₁, l₂) → length l₁ ≤ length l ∧ length l₂ ≤ length l
-  | [], _, _, rfl => ⟨Nat.le_reflₓ 0, Nat.le_reflₓ 0⟩
+  | [], _, _, rfl => ⟨Nat.le_refl 0, Nat.le_refl 0⟩
   | a :: l, l₁', l₂', h => by
     cases' e : split l with l₁ l₂
     injection (split_cons_of_eq _ e).symm.trans h
     substs l₁' l₂'
     cases' length_split_le e with h₁ h₂
-    exact ⟨Nat.succ_le_succₓ h₂, Nat.le_succ_of_leₓ h₁⟩
+    exact ⟨Nat.succ_le_succ h₂, Nat.le_succ_of_le h₁⟩
 
 theorem length_split_lt {a b} {l l₁ l₂ : List α} (h : split (a :: b :: l) = (l₁, l₂)) :
     length l₁ < length (a :: b :: l) ∧ length l₂ < length (a :: b :: l) := by
@@ -253,7 +268,7 @@ theorem length_split_lt {a b} {l l₁ l₂ : List α} (h : split (a :: b :: l) =
   injection (split_cons_of_eq _ (split_cons_of_eq _ e)).symm.trans h
   substs l₁ l₂
   cases' length_split_le e with h₁ h₂
-  exact ⟨Nat.succ_le_succₓ (Nat.succ_le_succₓ h₁), Nat.succ_le_succₓ (Nat.succ_le_succₓ h₂)⟩
+  exact ⟨Nat.succ_le_succ (Nat.succ_le_succ h₁), Nat.succ_le_succ (Nat.succ_le_succ h₂)⟩
 
 theorem perm_split : ∀ {l l₁ l₂ : List α}, split l = (l₁, l₂) → l ~ l₁ ++ l₂
   | [], _, _, rfl => Perm.refl _
@@ -334,7 +349,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
     by_cases a ≼ b
     · suffices ∀ (b' : α) (_ : b' ∈ merge r l (b :: l')), r a b' by simpa [merge, h, h₁.of_cons.merge h₂]
       intro b' bm
-      rcases show b' = b ∨ b' ∈ l ∨ b' ∈ l' by simpa [Or.left_comm] using (perm_merge _ _ _).Subset bm with
+      rcases show b' = b ∨ b' ∈ l ∨ b' ∈ l' by simpa [or_left_comm] using (perm_merge _ _ _).Subset bm with
         (be | bl | bl')
       · subst b'
         assumption

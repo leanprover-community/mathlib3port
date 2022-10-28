@@ -36,7 +36,7 @@ theorem norm_coe_nat (n : ℕ) : ∥(n : ℤ)∥ = n :=
 
 @[simp]
 theorem to_nat_add_to_nat_neg_eq_nnnorm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ∥n∥₊ := by
-  rw [← Nat.cast_addₓ, to_nat_add_to_nat_neg_eq_nat_abs, Nnreal.coe_nat_abs]
+  rw [← Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, Nnreal.coe_nat_abs]
 
 @[simp]
 theorem to_nat_add_to_nat_neg_eq_norm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ∥n∥ := by

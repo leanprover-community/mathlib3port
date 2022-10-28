@@ -67,7 +67,7 @@ def IsPrecongr {α : Typevec n} (r : q.p.M α → q.p.M α → Prop) : Prop :=
   ∀ ⦃x y⦄, r x y → abs (appendFun id (Quot.mk r) <$$> M.dest q.p x) = abs (appendFun id (Quot.mk r) <$$> M.dest q.p y)
 
 /-- Equivalence relation on M-types representing a value of type `cofix F` -/
-def Mcongr {α : Typevec n} (x y : q.p.M α) : Prop :=
+def McongrCat {α : Typevec n} (x y : q.p.M α) : Prop :=
   ∃ r, IsPrecongr r ∧ r x y
 
 /-- Greatest fixed point of functor F. The result is a functor with one fewer parameters
@@ -78,7 +78,7 @@ cofix F a b = F a b (cofix F a b)
 ```
 -/
 def Cofix (F : Typevec (n + 1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
-  Quot (@Mcongr _ F _ q α)
+  Quot (@McongrCat _ F _ q α)
 
 instance {α : Typevec n} [Inhabited q.p.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (Cofix F α) :=
   ⟨Quot.mk _ default⟩
@@ -89,11 +89,11 @@ def mrepr {α : Typevec n} : q.p.M α → q.p.M α :=
 
 /-- the map function for the functor `cofix F` -/
 def Cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
-  Quot.lift (fun x : q.p.M α => Quot.mk Mcongr (g <$$> x))
+  Quot.lift (fun x : q.p.M α => Quot.mk McongrCat (g <$$> x))
     (by
       rintro aa₁ aa₂ ⟨r, pr, ra₁a₂⟩
       apply Quot.sound
-      let r' := fun b₁ b₂ => ∃ a₁ a₂ : q.P.M α, r a₁ a₂ ∧ b₁ = g <$$> a₁ ∧ b₂ = g <$$> a₂
+      let r' b₁ b₂ := ∃ a₁ a₂ : q.P.M α, r a₁ a₂ ∧ b₁ = g <$$> a₁ ∧ b₂ = g <$$> a₂
       use r'
       constructor
       · show is_precongr r'
@@ -122,7 +122,7 @@ def Cofix.corec {α : Typevec n} {β : Type u} (g : β → F (α.Append1 β)) : 
 
 /-- Destructor for `cofix F` -/
 def Cofix.dest {α : Typevec n} : Cofix F α → F (α.Append1 (Cofix F α)) :=
-  Quot.lift (fun x => appendFun id (Quot.mk Mcongr) <$$> abs (M.dest q.p x))
+  Quot.lift (fun x => appendFun id (Quot.mk McongrCat) <$$> abs (M.dest q.p x))
     (by
       rintro x y ⟨r, pr, rxy⟩
       dsimp
@@ -141,22 +141,22 @@ def Cofix.abs {α} : q.p.M α → Cofix F α :=
 
 /-- Representation function for `cofix F α` -/
 def Cofix.repr {α} : Cofix F α → q.p.M α :=
-  M.corec _ <| reprₓ ∘ cofix.dest
+  M.corec _ <| repr ∘ cofix.dest
 
 /-- Corecursor for `cofix F` -/
 def Cofix.corec'₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (β → X) → F (α.Append1 X)) (x : β) : Cofix F α :=
   Cofix.corec (fun x => g id) x
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- More flexible corecursor for `cofix F`. Allows the return of a fully formed
 value instead of making a recursive call -/
 def Cofix.corec' {α : Typevec n} {β : Type u} (g : β → F (α.Append1 (Sum (Cofix F α) β))) (x : β) : Cofix F α :=
   let f : (α ::: Cofix F α) ⟹ (α ::: Sum (Cofix F α) β) := id ::: Sum.inl
   Cofix.corec (Sum.elim (Mvfunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Corecursor for `cofix F`. The shape allows recursive calls to
 look like recursive calls. -/
 def Cofix.corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α ::: X)) (x : β) :
@@ -203,7 +203,7 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
   clear y
   intro y rxy
   apply Quot.sound
-  let r' := fun x y => r (Quot.mk _ x) (Quot.mk _ y)
+  let r' x y := r (Quot.mk _ x) (Quot.mk _ y)
   have : is_precongr r' := by
     intro a b r'ab
     have h₀ :
@@ -334,7 +334,7 @@ theorem Cofix.dest_mk {α : Typevec n} (x : F (α.Append1 <| Cofix F α)) : Cofi
 theorem Cofix.ext {α : Typevec n} (x y : Cofix F α) (h : x.dest = y.dest) : x = y := by
   rw [← cofix.mk_dest x, h, cofix.mk_dest]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Cofix.ext_mk {α : Typevec n} (x y : F (α ::: Cofix F α)) (h : Cofix.mk x = Cofix.mk y) : x = y := by
   rw [← cofix.dest_mk x, h, cofix.dest_mk]
 
@@ -360,16 +360,16 @@ theorem liftr_map {α β : Typevec n} {F' : Typevec n → Type u} [Mvfunctor F']
 
 open Function
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' → ι' → Prop) (x : F (α ::: ι))
     (f g : ι → ι') (hh : ∀ x : ι, R (f x) (g x)) : Liftr' (relLast' _ R) ((id ::: f) <$$> x) ((id ::: g) <$$> x) :=
   let h : ι → { x : ι' × ι' // uncurry R x } := fun x => ⟨(f x, g x), hh x⟩
@@ -397,8 +397,8 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
     rfl
   liftr_map _ _ _ _ (toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b) hh
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → ι → Prop) (x : F (α ::: ι)) (f : ι → ι)
     (hh : ∀ x : ι, R (f x) x) : Liftr' (relLast' _ R) ((id ::: f) <$$> x) x := by
   have := liftr_map_last R x f id hh
@@ -406,7 +406,7 @@ theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → 
 
 end LiftrMap
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := by
   let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x
   refine' cofix.bisim₂ R _ _ _ rfl
@@ -433,7 +433,7 @@ theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := b
       erw [subtype_val_diag_sub]
       
     ext1
-    simp only [cofix.abs, Prod.mk.inj_iffₓ, prod_mapₓ, Function.comp_app, last_fun_append_fun, last_fun_subtype_val,
+    simp only [cofix.abs, Prod.mk.inj_iff, prod_map, Function.comp_app, last_fun_append_fun, last_fun_subtype_val,
       last_fun_comp, last_fun_split_fun]
     dsimp [drop_fun_rel_last, last_fun, prod.diag]
     constructor <;> rfl
@@ -449,7 +449,7 @@ open Tactic
 
 omit q
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- tactic for proof by bisimulation -/
 unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Unit := do
   let e ← to_expr e
@@ -470,7 +470,7 @@ unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Uni
   refine (pquote.1 (Cofix.bisim₂ (%%ₓR) _ _ _ ⟨_, rfl, rfl⟩))
   let f (a b : Name) : Name := if a = `_ then b else a
   let ids := (ids ++ List.repeat `_ 5).zipWith f [`a, `b, `x, `Ha, `Hb]
-  let (ids₀, w::ids₁) ← pure <| List.splitAtₓ 2 ids
+  let (ids₀, w::ids₁) ← pure <| List.splitAt 2 ids
   intro_lst ids₀
   let h ← intro1
   let [(_, [w, h], _)] ← cases_core h [w]
@@ -482,8 +482,8 @@ run_cmd
 
 end Tactic
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem corec_roll {α : Typevec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F (α ::: X)) :
     Cofix.corec (g ∘ f) x₀ = Cofix.corec (Mvfunctor.map (id ::: f) ∘ g) (f x₀) := by
   mv_bisim x₀
@@ -512,7 +512,7 @@ theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Appen
     simp [Mvfunctor.id_map]
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.Append1 X))
     (x : β)
     (h : ∀ (X Y) (f : Cofix F α → X) (f' : β → X) (k : X → Y), g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :
@@ -520,10 +520,10 @@ theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix 
 
 instance mvqpfCofix : Mvqpf (Cofix F) where
   p := q.p.mp
-  abs := fun α => Quot.mk Mcongr
-  repr := fun α => Cofix.repr
-  abs_repr := fun α => Cofix.abs_repr
-  abs_map := fun α β g x => rfl
+  abs α := Quot.mk McongrCat
+  repr α := Cofix.repr
+  abs_repr α := Cofix.abs_repr
+  abs_map α β g x := rfl
 
 end Mvqpf
 

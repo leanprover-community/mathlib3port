@@ -31,12 +31,12 @@ universe u v w
 
 variable {α : Type u}
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_one] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_add] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
 /-- Predicate for semiring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
-structure IsSemiringHom {α : Type u} {β : Type v} [Semiringₓ α] [Semiringₓ β] (f : α → β) : Prop where
+structure IsSemiringHom {α : Type u} {β : Type v} [Semiring α] [Semiring β] (f : α → β) : Prop where
   map_zero : f 0 = 0
   map_one : f 1 = 1
   map_add : ∀ {x y}, f (x + y) = f x + f y
@@ -44,7 +44,7 @@ structure IsSemiringHom {α : Type u} {β : Type v} [Semiringₓ α] [Semiring�
 
 namespace IsSemiringHom
 
-variable {β : Type v} [Semiringₓ α] [Semiringₓ β]
+variable {β : Type v} [Semiring α] [Semiring β]
 
 variable {f : α → β} (hf : IsSemiringHom f) {x y : α}
 
@@ -52,7 +52,7 @@ variable {f : α → β} (hf : IsSemiringHom f) {x y : α}
 theorem id : IsSemiringHom (@id α) := by refine' { .. } <;> intros <;> rfl
 
 /-- The composition of two semiring homomorphisms is a semiring homomorphism. -/
-theorem comp (hf : IsSemiringHom f) {γ} [Semiringₓ γ] {g : β → γ} (hg : IsSemiringHom g) : IsSemiringHom (g ∘ f) :=
+theorem comp (hf : IsSemiringHom f) {γ} [Semiring γ] {g : β → γ} (hg : IsSemiringHom g) : IsSemiringHom (g ∘ f) :=
   { map_zero := by simpa [map_zero hf] using map_zero hg, map_one := by simpa [map_one hf] using map_one hg,
     map_add := fun x y => by simp [map_add hf, map_add hg], map_mul := fun x y => by simp [map_mul hf, map_mul hg] }
 
@@ -66,21 +66,21 @@ theorem to_is_monoid_hom (hf : IsSemiringHom f) : IsMonoidHom f :=
 
 end IsSemiringHom
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_one] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_add] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
 /-- Predicate for ring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
-structure IsRingHom {α : Type u} {β : Type v} [Ringₓ α] [Ringₓ β] (f : α → β) : Prop where
+structure IsRingHom {α : Type u} {β : Type v} [Ring α] [Ring β] (f : α → β) : Prop where
   map_one : f 1 = 1
   map_mul : ∀ {x y}, f (x * y) = f x * f y
   map_add : ∀ {x y}, f (x + y) = f x + f y
 
 namespace IsRingHom
 
-variable {β : Type v} [Ringₓ α] [Ringₓ β]
+variable {β : Type v} [Ring α] [Ring β]
 
 /-- A map of rings that is a semiring homomorphism is also a ring homomorphism. -/
-theorem of_semiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
+theorem ofSemiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
   { H with }
 
 variable {f : α → β} (hf : IsRingHom f) {x y : α}
@@ -107,13 +107,13 @@ theorem id : IsRingHom (@id α) := by refine' { .. } <;> intros <;> rfl
 
 -- see Note [no instance on morphisms]
 /-- The composition of two ring homomorphisms is a ring homomorphism. -/
-theorem comp (hf : IsRingHom f) {γ} [Ringₓ γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
+theorem comp (hf : IsRingHom f) {γ} [Ring γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
   { map_add := fun x y => by simp [map_add hf] <;> rw [map_add hg] <;> rfl,
     map_mul := fun x y => by simp [map_mul hf] <;> rw [map_mul hg] <;> rfl,
     map_one := by simp [map_one hf] <;> exact map_one hg }
 
 /-- A ring homomorphism is also a semiring homomorphism. -/
-theorem to_is_semiring_hom (hf : IsRingHom f) : IsSemiringHom f :=
+theorem toIsSemiringHom (hf : IsRingHom f) : IsSemiringHom f :=
   { ‹IsRingHom f› with map_zero := map_zero hf }
 
 theorem to_is_add_group_hom (hf : IsRingHom f) : IsAddGroupHom f :=
@@ -121,7 +121,7 @@ theorem to_is_add_group_hom (hf : IsRingHom f) : IsAddGroupHom f :=
 
 end IsRingHom
 
-variable {β : Type v} {γ : Type w} [rα : Semiringₓ α] [rβ : Semiringₓ β]
+variable {β : Type v} {γ : Type w} [rα : Semiring α] [rβ : Semiring β]
 
 namespace RingHom
 
@@ -137,13 +137,13 @@ def of {f : α → β} (hf : IsSemiringHom f) : α →+* β :=
 theorem coe_of {f : α → β} (hf : IsSemiringHom f) : ⇑(of hf) = f :=
   rfl
 
-theorem to_is_semiring_hom (f : α →+* β) : IsSemiringHom f :=
+theorem toIsSemiringHom (f : α →+* β) : IsSemiringHom f :=
   { map_zero := f.map_zero, map_one := f.map_one, map_add := f.map_add, map_mul := f.map_mul }
 
 end
 
-theorem to_is_ring_hom {α γ} [Ringₓ α] [Ringₓ γ] (g : α →+* γ) : IsRingHom g :=
-  IsRingHom.of_semiring g.to_is_semiring_hom
+theorem toIsRingHom {α γ} [Ring α] [Ring γ] (g : α →+* γ) : IsRingHom g :=
+  IsRingHom.ofSemiring g.toIsSemiringHom
 
 end RingHom
 

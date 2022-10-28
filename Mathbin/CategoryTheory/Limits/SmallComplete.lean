@@ -35,6 +35,8 @@ universe u
 
 variable {C : Type u} [SmallCategory C] [HasProducts.{u} C]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«expr ⟶ »(X, yp))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual
@@ -50,12 +52,13 @@ instance {X Y : C} : Subsingleton (X ⟶ Y) :=
       exact ⟨_, _, r_ne_s⟩
     let md := ΣZ W : C, Z ⟶ W
     let α := #md
-    apply not_le_of_ltₓ (Cardinal.cantor α)
+    apply not_le_of_lt (Cardinal.cantor α)
     let yp : C := ∏ fun f : md => Y
-    trans #X ⟶ yp
-    · apply le_transₓ (Cardinal.power_le_power_right z)
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«expr ⟶ »(X, yp))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    · apply le_trans (Cardinal.power_le_power_right z)
       rw [Cardinal.power_def]
-      apply le_of_eqₓ
+      apply le_of_eq
       rw [Cardinal.eq]
       refine' ⟨⟨pi.lift, fun f k => f ≫ pi.π _ k, _, _⟩⟩
       · intro f

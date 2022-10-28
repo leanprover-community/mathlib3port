@@ -20,7 +20,7 @@ open Pointwise
 
 section inv_neg
 
-variable {G : Type _} [Groupₓ G] [Preorderₓ G] [CovariantClass G G (· * ·) (· ≤ ·)]
+variable {G : Type _} [Group G] [Preorder G] [CovariantClass G G (· * ·) (· ≤ ·)]
   [CovariantClass G G (swap (· * ·)) (· ≤ ·)] {s : Set G} {a : G}
 
 @[simp, to_additive]
@@ -65,9 +65,9 @@ theorem IsLub.inv (h : IsLub s a) : IsGlb s⁻¹ a⁻¹ :=
 
 end inv_neg
 
-section mul_addₓ
+section mul_add
 
-variable {M : Type _} [Mul M] [Preorderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)]
+variable {M : Type _} [Mul M] [Preorder M] [CovariantClass M M (· * ·) (· ≤ ·)]
   [CovariantClass M M (swap (· * ·)) (· ≤ ·)]
 
 @[to_additive]
@@ -96,13 +96,13 @@ theorem BddAbove.mul {s t : Set M} (hs : BddAbove s) (ht : BddAbove t) : BddAbov
 theorem BddBelow.mul {s t : Set M} (hs : BddBelow s) (ht : BddBelow t) : BddBelow (s * t) :=
   (hs.mul ht).mono (subset_lower_bounds_mul s t)
 
-end mul_addₓ
+end mul_add
 
 section ConditionallyCompleteLattice
 
 section Right
 
-variable {ι G : Type _} [Groupₓ G] [ConditionallyCompleteLattice G] [CovariantClass G G (Function.swap (· * ·)) (· ≤ ·)]
+variable {ι G : Type _} [Group G] [ConditionallyCompleteLattice G] [CovariantClass G G (Function.swap (· * ·)) (· ≤ ·)]
   [Nonempty ι] {f : ι → G}
 
 @[to_additive]
@@ -117,7 +117,7 @@ end Right
 
 section Left
 
-variable {ι G : Type _} [Groupₓ G] [ConditionallyCompleteLattice G] [CovariantClass G G (· * ·) (· ≤ ·)] [Nonempty ι]
+variable {ι G : Type _} [Group G] [ConditionallyCompleteLattice G] [CovariantClass G G (· * ·) (· ≤ ·)] [Nonempty ι]
   {f : ι → G}
 
 @[to_additive]

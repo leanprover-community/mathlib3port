@@ -37,9 +37,9 @@ attribute [local tidy] tactic.case_bash
 /-- If `C` has finite coproducts, a functor `discrete α ⥤ C` lifts to a functor
     `finset (discrete α) ⥤ C` by taking coproducts. -/
 @[simps]
-def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) : Finsetₓ (Discrete α) ⥤ C where
-  obj := fun s => ∐ fun x : s => F.obj x
-  map := fun s t h => Sigma.desc fun y => Sigma.ι (fun x : t => F.obj x) ⟨y, h.down.down y.2⟩
+def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) : Finset (Discrete α) ⥤ C where
+  obj s := ∐ fun x : s => F.obj x
+  map s t h := Sigma.desc fun y => Sigma.ι (fun x : t => F.obj x) ⟨y, h.down.down y.2⟩
 
 /-- If `C` has finite coproducts and filtered colimits, we can construct arbitrary coproducts by
     taking the colimit of the diagram formed by the coproducts of finite sets over the indexing
@@ -51,7 +51,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
     { x := colimit (liftToFinset F),
       ι :=
         discrete.nat_trans fun j =>
-          @Sigma.ι _ _ _ (fun x : ({j} : Finsetₓ (Discrete α)) => F.obj x) _ ⟨j, by simp⟩ ≫
+          @Sigma.ι _ _ _ (fun x : ({j} : Finset (Discrete α)) => F.obj x) _ ⟨j, by simp⟩ ≫
             colimit.ι (liftToFinset F) {j} }
   IsColimit :=
     { desc := fun s =>
@@ -59,7 +59,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
       uniq' := fun s m h => by
         ext t ⟨⟨j, hj⟩⟩
         convert h j using 1
-        · simp [← colimit.w (lift_to_finset F) ⟨⟨Finsetₓ.singleton_subset_iff.2 hj⟩⟩]
+        · simp [← colimit.w (lift_to_finset F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]
           rfl
           
         · tidy

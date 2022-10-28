@@ -32,7 +32,7 @@ We define the variance of a real-valued random variable as `Var[X] = 𝔼[(X - �
 -/
 
 
-open MeasureTheory Filter Finsetₓ
+open MeasureTheory Filter Finset
 
 noncomputable section
 
@@ -42,15 +42,15 @@ namespace ProbabilityTheory
 
 /-- The `ℝ≥0∞`-valued variance of a real-valued random variable defined as the Lebesgue integral of
 `(X - 𝔼[X])^2`. -/
-def evariance {Ω : Type _} {m : MeasurableSpace Ω} (X : Ω → ℝ) (μ : Measureₓ Ω) : ℝ≥0∞ :=
+def evariance {Ω : Type _} {m : MeasurableSpace Ω} (X : Ω → ℝ) (μ : Measure Ω) : ℝ≥0∞ :=
   ∫⁻ ω, ∥X ω - μ[X]∥₊ ^ 2 ∂μ
 
 /-- The `ℝ`-valued variance of a real-valued random variable defined by applying `ennreal.to_real`
 to `evariance`. -/
-def variance {Ω : Type _} {m : MeasurableSpace Ω} (X : Ω → ℝ) (μ : Measureₓ Ω) : ℝ :=
+def variance {Ω : Type _} {m : MeasurableSpace Ω} (X : Ω → ℝ) (μ : Measure Ω) : ℝ :=
   (evariance X μ).toReal
 
-variable {Ω : Type _} {m : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measureₓ Ω}
+variable {Ω : Type _} {m : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measure Ω}
 
 theorem _root_.measure_theory.mem_ℒp.evariance_lt_top [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) : evariance X μ < ∞ := by
   have := Ennreal.pow_lt_top (hX.sub <| mem_ℒp_const <| μ[X]).2 2
@@ -78,7 +78,7 @@ theorem evariance_lt_top_iff_mem_ℒp [IsFiniteMeasure μ] (hX : AeStronglyMeasu
     evariance X μ < ∞ ↔ Memℒp X 2 μ := by
   refine' ⟨_, MeasureTheory.Memℒp.evariance_lt_top⟩
   contrapose
-  rw [not_ltₓ, top_le_iff]
+  rw [not_lt, top_le_iff]
   exact evariance_eq_top hX
 
 theorem _root_.measure_theory.mem_ℒp.of_real_variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
@@ -88,7 +88,7 @@ theorem _root_.measure_theory.mem_ℒp.of_real_variance_eq [IsFiniteMeasure μ] 
 
 include m
 
-theorem evariance_eq_lintegral_of_real (X : Ω → ℝ) (μ : Measureₓ Ω) :
+theorem evariance_eq_lintegral_of_real (X : Ω → ℝ) (μ : Measure Ω) :
     evariance X μ = ∫⁻ ω, Ennreal.ofReal ((X ω - μ[X]) ^ 2) ∂μ := by
   rw [evariance]
   congr
@@ -119,7 +119,7 @@ theorem _root_.measure_theory.mem_ℒp.variance_eq [IsFiniteMeasure μ] (hX : Me
     
   · exact integral_nonneg fun ω => pow_two_nonneg _
     
-  · convert (hX.sub <| mem_ℒp_const (μ[X])).integrable_norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
+  · convert (hX.sub <| mem_ℒp_const (μ[X])).integrableNormRpow Ennreal.two_ne_zero Ennreal.two_ne_top
     ext ω
     simp only [Pi.sub_apply, Real.norm_eq_abs, Ennreal.to_real_bit0, Ennreal.one_to_real, Real.rpow_two, pow_bit0_abs]
     
@@ -141,14 +141,14 @@ theorem evariance_eq_zero_iff (hX : AeMeasurable X μ) : evariance X μ = 0 ↔ 
   · measurability
     
 
-theorem evariance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measureₓ Ω) :
+theorem evariance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measure Ω) :
     evariance (fun ω => c * X ω) μ = Ennreal.ofReal (c ^ 2) * evariance X μ := by
   rw [evariance, evariance, ← lintegral_const_mul' _ _ ennreal.of_real_lt_top.ne]
   congr
   ext1 ω
   rw [Ennreal.ofReal, ← Ennreal.coe_pow, ← Ennreal.coe_pow, ← Ennreal.coe_mul]
   congr
-  rw [← sq_abs, ← Real.rpow_two, Real.to_nnreal_rpow_of_nonneg (abs_nonneg _), Nnreal.rpow_two, ← mul_powₓ,
+  rw [← sq_abs, ← Real.rpow_two, Real.to_nnreal_rpow_of_nonneg (abs_nonneg _), Nnreal.rpow_two, ← mul_pow,
     Real.to_nnreal_mul_nnnorm _ (abs_nonneg _)]
   conv_rhs => rw [← nnnorm_norm, norm_mul, norm_abs_eq_norm, ← norm_mul, nnnorm_norm, mul_sub]
   congr
@@ -159,20 +159,20 @@ theorem evariance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measureₓ Ω) :
 localized [ProbabilityTheory] notation "eVar[" X "]" => ProbabilityTheory.evariance X MeasureTheory.MeasureSpace.volume
 
 @[simp]
-theorem variance_zero (μ : Measureₓ Ω) : variance 0 μ = 0 := by
+theorem variance_zero (μ : Measure Ω) : variance 0 μ = 0 := by
   simp only [variance, evariance_zero, Ennreal.zero_to_real]
 
-theorem variance_nonneg (X : Ω → ℝ) (μ : Measureₓ Ω) : 0 ≤ variance X μ :=
+theorem variance_nonneg (X : Ω → ℝ) (μ : Measure Ω) : 0 ≤ variance X μ :=
   Ennreal.to_real_nonneg
 
-theorem variance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measureₓ Ω) : variance (fun ω => c * X ω) μ = c ^ 2 * variance X μ := by
+theorem variance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measure Ω) : variance (fun ω => c * X ω) μ = c ^ 2 * variance X μ := by
   rw [variance, evariance_mul, Ennreal.to_real_mul, Ennreal.to_real_of_real (sq_nonneg _)]
   rfl
 
-theorem variance_smul (c : ℝ) (X : Ω → ℝ) (μ : Measureₓ Ω) : variance (c • X) μ = c ^ 2 * variance X μ :=
+theorem variance_smul (c : ℝ) (X : Ω → ℝ) (μ : Measure Ω) : variance (c • X) μ = c ^ 2 * variance X μ :=
   variance_mul c X μ
 
-theorem variance_smul' {A : Type _} [CommSemiringₓ A] [Algebra A ℝ] (c : A) (X : Ω → ℝ) (μ : Measureₓ Ω) :
+theorem variance_smul' {A : Type _} [CommSemiring A] [Algebra A ℝ] (c : A) (X : Ω → ℝ) (μ : Measure Ω) :
     variance (c • X) μ = c ^ 2 • variance X μ := by
   convert variance_smul (algebraMap A ℝ c) X μ
   · ext1 x
@@ -188,7 +188,7 @@ omit m
 
 variable [MeasureSpace Ω]
 
-theorem variance_def' [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) :
+theorem variance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) :
     Var[X] = 𝔼[X ^ 2] - 𝔼[X] ^ 2 := by
   rw [hX.variance_eq, sub_sq', integral_sub', integral_add']
   rotate_left
@@ -204,11 +204,11 @@ theorem variance_def' [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X : Ω → �
   · exact ((hX.integrable one_le_two).const_mul 2).mul_const' _
     
   simp only [integral_mul_right, Pi.pow_apply, Pi.mul_apply, Pi.bit0_apply, Pi.one_apply,
-    integral_const (integral ℙ X ^ 2), integral_mul_left (2 : ℝ), one_mulₓ, variance, Pi.pow_apply, measure_univ,
+    integral_const (integral ℙ X ^ 2), integral_mul_left (2 : ℝ), one_mul, variance, Pi.pow_apply, measure_univ,
     Ennreal.one_to_real, Algebra.id.smul_eq_mul]
   ring
 
-theorem variance_le_expectation_sq [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X : Ω → ℝ} (hm : AeStronglyMeasurable X ℙ) :
+theorem variance_le_expectation_sq [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hm : AeStronglyMeasurable X ℙ) :
     Var[X] ≤ 𝔼[X ^ 2] := by
   by_cases hX:mem_ℒp X 2
   · rw [variance_def' hX]
@@ -233,10 +233,10 @@ theorem variance_le_expectation_sq [IsProbabilityMeasure (ℙ : Measureₓ Ω)] 
     
   · exact ae_of_all _ fun x => sq_nonneg _
     
-  · exact (AeMeasurable.pow_const (hm.ae_measurable.sub_const _) _).AeStronglyMeasurable
+  · exact (AeMeasurable.powConst (hm.ae_measurable.sub_const _) _).AeStronglyMeasurable
     
 
-theorem evariance_def' [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X : Ω → ℝ} (hX : AeStronglyMeasurable X ℙ) :
+theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : AeStronglyMeasurable X ℙ) :
     eVar[X] = (∫⁻ ω, ∥X ω∥₊ ^ 2) - Ennreal.ofReal (𝔼[X] ^ 2) := by
   by_cases hℒ:mem_ℒp X 2
   · rw [← hℒ.of_real_variance_eq, variance_def' hℒ, Ennreal.of_real_sub _ (sq_nonneg _)]
@@ -254,9 +254,9 @@ theorem evariance_def' [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X : Ω → 
     refine' ⟨_, Ennreal.of_real_ne_top⟩
     rw [mem_ℒp, not_and] at hℒ
     specialize hℒ hX
-    simp only [snorm_eq_lintegral_rpow_nnnorm Ennreal.two_ne_zero Ennreal.two_ne_top, not_ltₓ, top_le_iff,
+    simp only [snorm_eq_lintegral_rpow_nnnorm Ennreal.two_ne_zero Ennreal.two_ne_top, not_lt, top_le_iff,
       Ennreal.to_real_bit0, Ennreal.one_to_real, Ennreal.rpow_two, one_div, Ennreal.rpow_eq_top_iff, inv_lt_zero,
-      inv_pos, zero_lt_bit0, zero_lt_one, and_trueₓ, or_iff_not_imp_left, not_and_distrib] at hℒ
+      inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff, or_iff_not_imp_left, not_and_distrib] at hℒ
     exact hℒ fun _ => zero_le_two
     
 
@@ -280,19 +280,19 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable 
 
 /-- *Chebyshev's inequality* : one can control the deviation probability of a real random variable
 from its expectation in terms of the variance. -/
-theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measureₓ Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) {c : ℝ}
-    (hc : 0 < c) : ℙ { ω | c ≤ abs (X ω - 𝔼[X]) } ≤ Ennreal.ofReal (Var[X] / c ^ 2) := by
+theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) {c : ℝ} (hc : 0 < c) :
+    ℙ { ω | c ≤ abs (X ω - 𝔼[X]) } ≤ Ennreal.ofReal (Var[X] / c ^ 2) := by
   rw [Ennreal.of_real_div_of_pos (sq_pos_of_ne_zero _ hc.ne.symm), hX.of_real_variance_eq]
   convert @meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
-  · simp only [Real.coe_to_nnreal', max_le_iff, abs_nonneg, and_trueₓ]
+  · simp only [Real.coe_to_nnreal', max_le_iff, abs_nonneg, and_true_iff]
     
   · rw [Ennreal.of_real_pow hc.le]
     rfl
     
 
 /-- The variance of the sum of two independent random variables is the sum of the variances. -/
-theorem IndepFunₓ.variance_add [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X Y : Ω → ℝ} (hX : Memℒp X 2) (hY : Memℒp Y 2)
-    (h : IndepFunₓ X Y) : Var[X + Y] = Var[X] + Var[Y] :=
+theorem IndepFun.variance_add [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : Ω → ℝ} (hX : Memℒp X 2) (hY : Memℒp Y 2)
+    (h : IndepFun X Y) : Var[X + Y] = Var[X] + Var[Y] :=
   calc
     Var[X + Y] = 𝔼[fun a => X a ^ 2 + Y a ^ 2 + 2 * X a * Y a] - 𝔼[X + Y] ^ 2 := by
       simp [variance_def' (hX.add hY), add_sq']
@@ -322,12 +322,12 @@ theorem IndepFunₓ.variance_add [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {X
 
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
-theorem IndepFunₓ.variance_sum [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {ι : Type _} {X : ι → Ω → ℝ} {s : Finsetₓ ι}
-    (hs : ∀ i ∈ s, Memℒp (X i) 2) (h : Set.Pairwise ↑s fun i j => IndepFunₓ (X i) (X j)) :
+theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Type _} {X : ι → Ω → ℝ} {s : Finset ι}
+    (hs : ∀ i ∈ s, Memℒp (X i) 2) (h : Set.Pairwise ↑s fun i j => IndepFun (X i) (X j)) :
     Var[∑ i in s, X i] = ∑ i in s, Var[X i] := by
   classical
-  induction' s using Finsetₓ.induction_on with k s ks IH
-  · simp only [Finsetₓ.sum_empty, variance_zero]
+  induction' s using Finset.induction_on with k s ks IH
+  · simp only [Finset.sum_empty, variance_zero]
     
   rw [variance_def' (mem_ℒp_finset_sum' _ hs), sum_insert ks, sum_insert ks]
   simp only [add_sq']
@@ -368,7 +368,7 @@ theorem IndepFunₓ.variance_sum [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {�
         variance_def' (mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi))]
       ring
     _ = Var[X k] + Var[∑ i in s, X i] := by
-      simp only [mul_assoc, integral_mul_left, Pi.mul_apply, Pi.bit0_apply, Pi.one_apply, sum_apply, add_right_eq_selfₓ,
+      simp only [mul_assoc, integral_mul_left, Pi.mul_apply, Pi.bit0_apply, Pi.one_apply, sum_apply, add_right_eq_self,
         mul_sum]
       rw [integral_finset_sum s fun i hi => _]
       swap
@@ -381,7 +381,7 @@ theorem IndepFunₓ.variance_sum [IsProbabilityMeasure (ℙ : Measureₓ Ω)] {�
         
       rw [integral_finset_sum s fun i hi => mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)), mul_sum,
         mul_sum, ← sum_sub_distrib]
-      apply Finsetₓ.sum_eq_zero fun i hi => _
+      apply Finset.sum_eq_zero fun i hi => _
       rw [integral_mul_left, indep_fun.integral_mul', sub_self]
       · apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
         exact fun hki => ks (hki.symm ▸ hi)

@@ -35,8 +35,8 @@ possible turns remaining from this state.
 -/
 class State (S : Type u) where
   turnBound : S → ℕ
-  l : S → Finsetₓ S
-  r : S → Finsetₓ S
+  l : S → Finset S
+  r : S → Finset S
   left_bound : ∀ {s t : S} (m : t ∈ L s), turn_bound t < turn_bound s
   right_bound : ∀ {s t : S} (m : t ∈ R s), turn_bound t < turn_bound s
 
@@ -48,19 +48,19 @@ theorem turn_bound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s 
   intro h
   have t := state.left_bound m
   rw [h] at t
-  exact Nat.not_succ_le_zeroₓ _ t
+  exact Nat.not_succ_le_zero _ t
 
 theorem turn_bound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s ≠ 0 := by
   intro h
   have t := state.right_bound m
   rw [h] at t
-  exact Nat.not_succ_le_zeroₓ _ t
+  exact Nat.not_succ_le_zero _ t
 
 theorem turn_bound_of_left {s t : S} (m : t ∈ l s) (n : ℕ) (h : turnBound s ≤ n + 1) : turnBound t ≤ n :=
-  Nat.le_of_lt_succₓ (Nat.lt_of_lt_of_leₓ (left_bound m) h)
+  Nat.le_of_lt_succ (Nat.lt_of_lt_of_le (left_bound m) h)
 
 theorem turn_bound_of_right {s t : S} (m : t ∈ r s) (n : ℕ) (h : turnBound s ≤ n + 1) : turnBound t ≤ n :=
-  Nat.le_of_lt_succₓ (Nat.lt_of_lt_of_leₓ (right_bound m) h)
+  Nat.le_of_lt_succ (Nat.lt_of_lt_of_le (right_bound m) h)
 
 /-- Construct a `pgame` from a state and a (not necessarily optimal) bound on the number of
 turns remaining.
@@ -168,7 +168,7 @@ has itself been constructed using `of_state_aux`.
 def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : LeftMoves (ofStateAux n s h)) :
     Relabelling (moveLeft (ofStateAux n s h) t)
       (ofStateAux (n - 1) ((leftMovesOfStateAux n h) t : S)
-        (turn_bound_of_left ((leftMovesOfStateAux n h) t).2 (n - 1) (Nat.le_transₓ h le_tsub_add))) :=
+        (turn_bound_of_left ((leftMovesOfStateAux n h) t).2 (n - 1) (Nat.le_trans h le_tsub_add))) :=
   by
   induction n
   · have t' := (left_moves_of_state_aux 0 h) t
@@ -178,12 +178,15 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : LeftMo
   · rfl
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- The relabelling showing `move_left` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
 def relabellingMoveLeft (s : S) (t : LeftMoves (ofState s)) :
     Relabelling (moveLeft (ofState s) t) (ofState ((leftMovesOfState s).toFun t : S)) := by
-  trans
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   apply relabelling_move_left_aux
   apply of_state_aux_relabelling
 
@@ -193,7 +196,7 @@ has itself been constructed using `of_state_aux`.
 def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : RightMoves (ofStateAux n s h)) :
     Relabelling (moveRight (ofStateAux n s h) t)
       (ofStateAux (n - 1) ((rightMovesOfStateAux n h) t : S)
-        (turn_bound_of_right ((rightMovesOfStateAux n h) t).2 (n - 1) (Nat.le_transₓ h le_tsub_add))) :=
+        (turn_bound_of_right ((rightMovesOfStateAux n h) t).2 (n - 1) (Nat.le_trans h le_tsub_add))) :=
   by
   induction n
   · have t' := (right_moves_of_state_aux 0 h) t
@@ -203,23 +206,25 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : Right
   · rfl
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- The relabelling showing `move_right` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
 def relabellingMoveRight (s : S) (t : RightMoves (ofState s)) :
     Relabelling (moveRight (ofState s) t) (ofState ((rightMovesOfState s).toFun t : S)) := by
-  trans
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   apply relabelling_move_right_aux
   apply of_state_aux_relabelling
 
-instance fintypeLeftMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintypeₓ (LeftMoves (ofStateAux n s h)) :=
-  by
-  apply Fintypeₓ.ofEquiv _ (left_moves_of_state_aux _ _).symm
+instance fintypeLeftMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (LeftMoves (ofStateAux n s h)) := by
+  apply Fintype.ofEquiv _ (left_moves_of_state_aux _ _).symm
   infer_instance
 
-instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintypeₓ (RightMoves (ofStateAux n s h)) :=
+instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (RightMoves (ofStateAux n s h)) :=
   by
-  apply Fintypeₓ.ofEquiv _ (right_moves_of_state_aux _ _).symm
+  apply Fintype.ofEquiv _ (right_moves_of_state_aux _ _).symm
   infer_instance
 
 instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short (ofStateAux n s h)

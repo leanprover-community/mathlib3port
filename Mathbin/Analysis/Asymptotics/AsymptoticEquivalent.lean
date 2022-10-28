@@ -99,10 +99,10 @@ theorem IsEquivalent.symm (h : u ~[l] v) : v ~[l] u :=
 theorem IsEquivalent.trans {l : Filter α} {u v w : α → β} (huv : u ~[l] v) (hvw : v ~[l] w) : u ~[l] w :=
   (huv.IsO.trans_is_O hvw.IsO).triangle hvw.IsO
 
-theorem IsEquivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) : w ~[l] v :=
+theorem IsEquivalent.congrLeft {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) : w ~[l] v :=
   huv.congr' (huw.sub (EventuallyEq.refl _ _)) (EventuallyEq.refl _ _)
 
-theorem IsEquivalent.congr_right {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) : u ~[l] w :=
+theorem IsEquivalent.congrRight {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) : u ~[l] w :=
   (huv.symm.congr_left hvw).symm
 
 theorem is_equivalent_zero_iff_eventually_zero : u ~[l] 0 ↔ u =ᶠ[l] 0 := by
@@ -146,16 +146,16 @@ theorem IsEquivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (�
 theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) : Tendsto u l (𝓝 c) ↔ Tendsto v l (𝓝 c) :=
   ⟨huv.tendsto_nhds, huv.symm.tendsto_nhds⟩
 
-theorem IsEquivalent.add_is_o (huv : u ~[l] v) (hwv : w =o[l] v) : u + w ~[l] v := by
+theorem IsEquivalent.addIsO (huv : u ~[l] v) (hwv : w =o[l] v) : u + w ~[l] v := by
   simpa only [is_equivalent, add_sub_right_comm] using huv.add hwv
 
-theorem IsEquivalent.sub_is_o (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] v := by
+theorem IsEquivalent.subIsO (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] v := by
   simpa only [sub_eq_add_neg] using huv.add_is_o hwv.neg_left
 
-theorem IsOₓ.add_is_equivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
-  add_commₓ v u ▸ hv.add_is_o hu
+theorem IsO.addIsEquivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
+  add_comm v u ▸ hv.add_is_o hu
 
-theorem IsOₓ.is_equivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
+theorem IsO.isEquivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
   huv
 
 theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x := by
@@ -175,10 +175,10 @@ variable {α β : Type _} [NormedField β] {t u v w : α → β} {l : Filter α}
 theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v := by
   rw [is_equivalent, is_o_iff_exists_eq_mul]
   constructor <;> rintro ⟨φ, hφ, h⟩ <;> [use φ + 1, use φ - 1] <;> constructor
-  · conv in 𝓝 _ => rw [← zero_addₓ (1 : β)]
+  · conv in 𝓝 _ => rw [← zero_add (1 : β)]
     exact hφ.add tendsto_const_nhds
     
-  · convert h.add (eventually_eq.refl l v) <;> ext <;> simp [add_mulₓ]
+  · convert h.add (eventually_eq.refl l v) <;> ext <;> simp [add_mul]
     
   · conv in 𝓝 _ => rw [← sub_self (1 : β)]
     exact hφ.sub tendsto_const_nhds
@@ -189,13 +189,12 @@ theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ 
 theorem IsEquivalent.exists_eq_mul (huv : u ~[l] v) : ∃ (φ : α → β)(hφ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v :=
   is_equivalent_iff_exists_eq_mul.mp huv
 
-theorem is_equivalent_of_tendsto_one (hz : ∀ᶠ x in l, v x = 0 → u x = 0) (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
-  by
+theorem isEquivalentOfTendstoOne (hz : ∀ᶠ x in l, v x = 0 → u x = 0) (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v := by
   rw [is_equivalent_iff_exists_eq_mul]
   refine' ⟨u / v, huv, hz.mono fun x hz' => (div_mul_cancel_of_imp hz').symm⟩
 
-theorem is_equivalent_of_tendsto_one' (hz : ∀ x, v x = 0 → u x = 0) (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
-  is_equivalent_of_tendsto_one (eventually_of_forall hz) huv
+theorem isEquivalentOfTendstoOne' (hz : ∀ x, v x = 0 → u x = 0) (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
+  isEquivalentOfTendstoOne (eventually_of_forall hz) huv
 
 theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) : u ~[l] v ↔ Tendsto (u / v) l (𝓝 1) := by
   constructor
@@ -305,6 +304,6 @@ open Asymptotics
 
 variable {α β : Type _} [NormedAddCommGroup β]
 
-theorem Filter.EventuallyEq.is_equivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
-  IsEquivalent.congr_right (is_o_refl_left _ _) h
+theorem Filter.EventuallyEq.isEquivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
+  IsEquivalent.congrRight (is_o_refl_left _ _) h
 

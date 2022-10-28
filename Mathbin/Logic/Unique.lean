@@ -55,7 +55,7 @@ structure Unique (α : Sort u) extends Inhabited α where
 attribute [class] Unique
 
 theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a : α, True :=
-  ⟨fun ⟨u⟩ => ⟨u.default, trivialₓ, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ => ⟨⟨⟨a⟩, fun _ => h _ trivialₓ⟩⟩⟩
+  ⟨fun ⟨u⟩ => ⟨u.default, trivial, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ => ⟨⟨⟨a⟩, fun _ => h _ trivial⟩⟩⟩
 
 theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) : Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
   ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩, fun ⟨a, ha, he⟩ =>
@@ -72,11 +72,11 @@ See note [reducible non-instances]. -/
 @[reducible]
 def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) : Unique α where
   default := a
-  uniq := fun _ => Subsingleton.elim _ _
+  uniq _ := Subsingleton.elim _ _
 
 instance PUnit.unique : Unique PUnit.{u} where
   default := PUnit.unit
-  uniq := fun x => punit_eq x _
+  uniq x := subsingleton x _
 
 @[simp]
 theorem PUnit.default_eq_star : (default : PUnit) = PUnit.unit :=
@@ -85,26 +85,26 @@ theorem PUnit.default_eq_star : (default : PUnit) = PUnit.unit :=
 /-- Every provable proposition is unique, as all proofs are equal. -/
 def uniqueProp {p : Prop} (h : p) : Unique p where
   default := h
-  uniq := fun x => rfl
+  uniq x := rfl
 
 instance : Unique True :=
-  uniqueProp trivialₓ
+  uniqueProp trivial
 
-theorem Finₓ.eq_zero : ∀ n : Finₓ 1, n = 0
-  | ⟨n, hn⟩ => Finₓ.eq_of_veq (Nat.eq_zero_of_le_zeroₓ (Nat.le_of_lt_succₓ hn))
+theorem Fin.eq_zero : ∀ n : Fin 1, n = 0
+  | ⟨n, hn⟩ => Fin.eq_of_veq (Nat.eq_zero_of_le_zero (Nat.le_of_lt_succ hn))
 
-instance {n : ℕ} : Inhabited (Finₓ n.succ) :=
+instance {n : ℕ} : Inhabited (Fin n.succ) :=
   ⟨0⟩
 
-instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Finₓ (1 + n)) :=
+instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Fin (1 + n)) :=
   ⟨⟨0, Nat.zero_lt_one_add n⟩⟩
 
 @[simp]
-theorem Finₓ.default_eq_zero (n : ℕ) : (default : Finₓ n.succ) = 0 :=
+theorem Fin.default_eq_zero (n : ℕ) : (default : Fin n.succ) = 0 :=
   rfl
 
-instance Finₓ.unique : Unique (Finₓ 1) :=
-  { Finₓ.inhabited with uniq := Finₓ.eq_zero }
+instance Fin.unique : Unique (Fin 1) :=
+  { Fin.inhabited with uniq := Fin.eq_zero }
 
 namespace Unique
 
@@ -132,7 +132,7 @@ theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ p default :=
   ⟨fun h => h _, fun h x => by rwa [Unique.eq_default x]⟩
 
 theorem exists_iff {p : α → Prop} : Exists p ↔ p default :=
-  ⟨fun ⟨a, ha⟩ => eq_default a ▸ ha, Exists.introₓ default⟩
+  ⟨fun ⟨a, ha⟩ => eq_default a ▸ ha, Exists.intro default⟩
 
 end
 
@@ -172,7 +172,7 @@ instance Pi.unique {β : α → Sort v} [∀ a, Unique (β a)] : Unique (∀ a, 
 /-- There is a unique function on an empty domain. -/
 instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a) where
   default := isEmptyElim
-  uniq := fun f => funext isEmptyElim
+  uniq f := funext isEmptyElim
 
 theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by
   ext x

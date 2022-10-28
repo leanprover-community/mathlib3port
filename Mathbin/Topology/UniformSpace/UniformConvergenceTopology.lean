@@ -137,9 +137,9 @@ noncomputable section
 
 open TopologicalSpace Classical uniformity Filter
 
-attribute [-instance] Pi.uniformSpace
+attribute [-instance] PiCat.uniformSpace
 
-attribute [-instance] Pi.topologicalSpace
+attribute [-instance] PiCat.topologicalSpace
 
 open Set Filter
 
@@ -202,7 +202,7 @@ protected theorem gc : GaloisConnection lower_adjoint fun 𝓕 => UniformConverg
     _ ↔ ∀ U ∈ 𝓕, UniformConvergence.Gen α β U ∈ 𝓐 := image_subset_iff
     _ ↔ ∀ U ∈ 𝓕, { uv | ∀ x, (uv, x) ∈ { t : ((α → β) × (α → β)) × α | (t.1.1 t.2, t.1.2 t.2) ∈ U } } ∈ 𝓐 := Iff.rfl
     _ ↔ ∀ U ∈ 𝓕, { uvx : ((α → β) × (α → β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U } ∈ 𝓐 ×ᶠ (⊤ : Filter α) :=
-      forall₂_congrₓ fun U hU => mem_prod_top.symm
+      forall₂_congr fun U hU => mem_prod_top.symm
     _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
     
 
@@ -274,7 +274,7 @@ variable {β}
 
 /-- If `u₁` and `u₂` are two uniform structures on `γ` and `u₁ ≤ u₂`, then
 `𝒰(α, γ, u₁) ≤ 𝒰(α, γ, u₂)`. -/
-protected theorem mono : Monotoneₓ (@UniformConvergence.uniformSpace α γ) := fun u₁ u₂ hu =>
+protected theorem mono : Monotone (@UniformConvergence.uniformSpace α γ) := fun u₁ u₂ hu =>
   (UniformConvergence.gc α γ).monotone_u hu
 
 /-- If `u` is a family of uniform structures on `γ`, then
@@ -347,7 +347,7 @@ protected theorem postcomp_uniform_inducing [UniformSpace γ] {f : γ → β} (h
 /-- Turn a uniform isomorphism `(γ, uγ) ≃ᵤ (β, uβ)` into a uniform isomorphism
 `(α → γ, 𝒰(α, γ, uγ)) ≃ᵤ (α → β, 𝒰(α, β, uβ))` by post-composing. -/
 protected def congrRight [UniformSpace γ] (e : γ ≃ᵤ β) : (α → γ) ≃ᵤ (α → β) :=
-  { Equivₓ.piCongrRight fun a => e.toEquiv with
+  { Equiv.piCongrRight fun a => e.toEquiv with
     uniform_continuous_to_fun := UniformConvergence.postcomp_uniform_continuous e.UniformContinuous,
     uniform_continuous_inv_fun := UniformConvergence.postcomp_uniform_continuous e.symm.UniformContinuous }
 
@@ -367,11 +367,11 @@ protected theorem precomp_uniform_continuous {f : γ → α} : UniformContinuous
 /-- Turn a bijection `γ ≃ α` into a uniform isomorphism
 `(γ → β, 𝒰(γ, β, uβ)) ≃ᵤ (α → β, 𝒰(α, β, uβ))` by pre-composing. -/
 protected def congrLeft (e : γ ≃ α) : (γ → β) ≃ᵤ (α → β) :=
-  { Equivₓ.arrowCongr e (Equivₓ.refl _) with uniform_continuous_to_fun := UniformConvergence.precomp_uniform_continuous,
+  { Equiv.arrowCongr e (Equiv.refl _) with uniform_continuous_to_fun := UniformConvergence.precomp_uniform_continuous,
     uniform_continuous_inv_fun := UniformConvergence.precomp_uniform_continuous }
 
 /-- The topology of uniform convergence is T₂. -/
-theorem t2_space [T2Space β] : T2Space (α → β) :=
+theorem t2Space [T2Space β] : T2Space (α → β) :=
   { t2 := by
       letI : UniformSpace (α → β) := 𝒰(α, β, _)
       letI : TopologicalSpace (α → β) := UniformConvergence.topologicalSpace α β
@@ -381,7 +381,7 @@ theorem t2_space [T2Space β] : T2Space (α → β) :=
 
 /-- The uniform structure of uniform convergence is finer than that of pointwise convergence,
 aka the product uniform structure. -/
-protected theorem le_Pi : 𝒰(α, β, _) ≤ Pi.uniformSpace fun _ => β := by
+protected theorem le_Pi : 𝒰(α, β, _) ≤ PiCat.uniformSpace fun _ => β := by
   -- By definition of the product uniform structure, this is just `uniform_continuous_eval`.
   rw [le_iff_uniform_continuous_id, uniform_continuous_pi]
   intro x
@@ -403,11 +403,11 @@ protected def uniformEquivProdArrow [UniformSpace γ] : (α → β × γ) ≃ᵤ
         -- But `uβ × uγ` is defined as `comap fst uβ ⊓ comap snd uγ`, so we just have to apply
         -- `uniform_convergence.inf_eq` and `uniform_convergence.comap_eq`, which leaves us to check
         -- that some square commutes.
-        Equivₓ.arrowProdEquivProdArrow
+        Equiv.arrowProdEquivProdArrow
         _ _ _).toUniformEquivOfUniformInducing
     (by
       constructor
-      change comap (Prod.map (Equivₓ.arrowProdEquivProdArrow _ _ _) (Equivₓ.arrowProdEquivProdArrow _ _ _)) _ = _
+      change comap (Prod.map (Equiv.arrowProdEquivProdArrow _ _ _) (Equiv.arrowProdEquivProdArrow _ _ _)) _ = _
       rw [← uniformity_comap rfl]
       congr
       rw [Prod.uniformSpace, Prod.uniformSpace, UniformSpace.comap_inf, UniformConvergence.inf_eq]
@@ -422,22 +422,22 @@ attribute [-instance] UniformConvergence.uniformSpace
 isomorphism between `(α → (Π i, δ i), 𝒰(α, (Π i, δ i), (Π i, uδ i)))` and
 `((Π i, α → δ i), (Π i, 𝒰(α, δ i, uδ i)))`. -/
 protected def uniformEquivPiComm :
-    @UniformEquiv (α → ∀ i, δ i) (∀ i, α → δ i) 𝒰(α, ∀ i, δ i, Pi.uniformSpace δ)
-      (@Pi.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _)) :=
+    @UniformEquiv (α → ∀ i, δ i) (∀ i, α → δ i) 𝒰(α, ∀ i, δ i, PiCat.uniformSpace δ)
+      (@PiCat.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _)) :=
   -- Denote `φ` this bijection. We want to show that
     -- `comap φ (Π i, 𝒰(α, δ i, uδ i)) = 𝒰(α, (Π i, δ i), (Π i, uδ i))`.
     -- But `Π i, uδ i` is defined as `⨅ i, comap (eval i) (uδ i)`, so we just have to apply
     -- `uniform_convergence.infi_eq` and `uniform_convergence.comap_eq`, which leaves us to check
     -- that some square commutes.
-    @Equivₓ.toUniformEquivOfUniformInducing
-    _ _ 𝒰(α, ∀ i, δ i, Pi.uniformSpace δ) (@Pi.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _))
-    (Equivₓ.piComm _)
+    @Equiv.toUniformEquivOfUniformInducing
+    _ _ 𝒰(α, ∀ i, δ i, PiCat.uniformSpace δ) (@PiCat.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _))
+    (Equiv.piComm _)
     (by
       constructor
       change comap (Prod.map Function.swap Function.swap) _ = _
       rw [← uniformity_comap rfl]
       congr
-      rw [Pi.uniformSpace, UniformSpace.of_core_eq_to_core, Pi.uniformSpace, UniformSpace.of_core_eq_to_core,
+      rw [PiCat.uniformSpace, UniformSpace.of_core_eq_to_core, PiCat.uniformSpace, UniformSpace.of_core_eq_to_core,
         UniformSpace.comap_infi, UniformConvergence.infi_eq]
       refine' infi_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformConvergence.comap_eq])
@@ -523,8 +523,8 @@ protected theorem has_basis_uniformity_of_basis_aux₁ {p : ι → Prop} {s : ι
 
 protected theorem has_basis_uniformity_of_basis_aux₂ (h : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {s : ι → Set (β × β)}
     (hb : HasBasis (𝓤 β) p s) :
-    DirectedOn ((fun s : Set α => (UniformConvergence.uniformSpace s β).comap (s.restrict : (α → β) → s → β)) ⁻¹'o Ge)
-      𝔖 :=
+    DirectedOn
+      ((fun s : Set α => (UniformConvergence.uniformSpace s β).comap (s.restrict : (α → β) → s → β)) ⁻¹'o GE.ge) 𝔖 :=
   h.mono fun s t hst =>
     ((UniformConvergenceOn.has_basis_uniformity_of_basis_aux₁ α β hb _).le_basis_iff
           (UniformConvergenceOn.has_basis_uniformity_of_basis_aux₁ α β hb _)).mpr
@@ -659,7 +659,7 @@ protected theorem postcomp_uniform_inducing [UniformSpace γ] {f : γ → β} (h
 /-- Turn a uniform isomorphism `(γ, uγ) ≃ᵤ (β, uβ)` into a uniform isomorphism
 `(α → γ, 𝒱(α, γ, 𝔖, uγ)) ≃ᵤ (α → β, 𝒱(α, β, 𝔖, uβ))` by post-composing. -/
 protected def congrRight [UniformSpace γ] (e : γ ≃ᵤ β) : @UniformEquiv (α → γ) (α → β) 𝒱(α, γ, 𝔖, _) 𝒱(α, β, 𝔖, _) :=
-  { Equivₓ.piCongrRight fun a => e.toEquiv with
+  { Equiv.piCongrRight fun a => e.toEquiv with
     uniform_continuous_to_fun := UniformConvergenceOn.postcomp_uniform_continuous e.UniformContinuous,
     uniform_continuous_inv_fun := UniformConvergenceOn.postcomp_uniform_continuous e.symm.UniformContinuous }
 
@@ -697,7 +697,7 @@ protected theorem precomp_uniform_continuous {𝔗 : Set (Set γ)} {f : γ → �
 by pre-composing. -/
 protected def congrLeft {𝔗 : Set (Set γ)} (e : γ ≃ α) (he : 𝔗 ⊆ Image e ⁻¹' 𝔖) (he' : 𝔖 ⊆ Preimage e ⁻¹' 𝔗) :
     @UniformEquiv (γ → β) (α → β) 𝒱(γ, β, 𝔗, _) 𝒱(α, β, 𝔖, _) :=
-  { Equivₓ.arrowCongr e (Equivₓ.refl _) with
+  { Equiv.arrowCongr e (Equiv.refl _) with
     uniform_continuous_to_fun :=
       UniformConvergenceOn.precomp_uniform_continuous
         (by
@@ -708,7 +708,7 @@ protected def congrLeft {𝔗 : Set (Set γ)} (e : γ ≃ α) (he : 𝔗 ⊆ Ima
     uniform_continuous_inv_fun := UniformConvergenceOn.precomp_uniform_continuous he }
 
 /-- If `𝔖` covers `α`, then the topology of `𝔖`-convergence is T₂. -/
-theorem t2_space_of_covering [T2Space β] (h : ⋃₀𝔖 = univ) : @T2Space _ (UniformConvergenceOn.topologicalSpace α β 𝔖) :=
+theorem t2SpaceOfCovering [T2Space β] (h : ⋃₀𝔖 = univ) : @T2Space _ (UniformConvergenceOn.topologicalSpace α β 𝔖) :=
   { t2 := by
       letI : UniformSpace (α → β) := 𝒱(α, β, 𝔖, _)
       letI : TopologicalSpace (α → β) := UniformConvergenceOn.topologicalSpace α β 𝔖
@@ -719,7 +719,7 @@ theorem t2_space_of_covering [T2Space β] (h : ⋃₀𝔖 = univ) : @T2Space _ (
 
 /-- If `𝔖` covers `α`, then the uniform structure of `𝔖`-convergence is finer than that of
 pointwise convergence. -/
-protected theorem le_Pi_of_covering (h : ⋃₀𝔖 = univ) : 𝒱(α, β, 𝔖, _) ≤ Pi.uniformSpace fun _ => β := by
+protected theorem le_Pi_of_covering (h : ⋃₀𝔖 = univ) : 𝒱(α, β, 𝔖, _) ≤ PiCat.uniformSpace fun _ => β := by
   rw [le_iff_uniform_continuous_id, uniform_continuous_pi]
   intro x
   obtain ⟨s : Set α, hs : s ∈ 𝔖, hxs : x ∈ s⟩ := sUnion_eq_univ_iff.mp h x
@@ -731,9 +731,9 @@ protected theorem tendsto_iff_tendsto_uniformly_on :
     Tendsto F p (@nhds _ (UniformConvergenceOn.topologicalSpace α β 𝔖) f) ↔ ∀ s ∈ 𝔖, TendstoUniformlyOn F f p s := by
   letI : UniformSpace (α → β) := 𝒱(α, β, 𝔖, _)
   rw [UniformConvergenceOn.topological_space_eq, nhds_infi, tendsto_infi]
-  refine' forall_congrₓ fun s => _
+  refine' forall_congr fun s => _
   rw [nhds_infi, tendsto_infi]
-  refine' forall_congrₓ fun hs => _
+  refine' forall_congr fun hs => _
   rw [nhds_induced, tendsto_comap_iff, tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe,
     UniformConvergence.tendsto_iff_tendsto_uniformly]
   rfl
@@ -751,11 +751,11 @@ protected def uniformEquivProdArrow [UniformSpace γ] :
     -- that some square commutes.
     -- We could also deduce this from `uniform_convergence.uniform_equiv_prod_arrow`, but it turns out
     -- to be more annoying.
-    @Equivₓ.toUniformEquivOfUniformInducing
-    _ _ 𝒱(α, β × γ, 𝔖, _) (@Prod.uniformSpace _ _ 𝒱(α, β, 𝔖, _) 𝒱(α, γ, 𝔖, _)) (Equivₓ.arrowProdEquivProdArrow _ _ _)
+    @Equiv.toUniformEquivOfUniformInducing
+    _ _ 𝒱(α, β × γ, 𝔖, _) (@Prod.uniformSpace _ _ 𝒱(α, β, 𝔖, _) 𝒱(α, γ, 𝔖, _)) (Equiv.arrowProdEquivProdArrow _ _ _)
     (by
       constructor
-      change comap (Prod.map (Equivₓ.arrowProdEquivProdArrow _ _ _) (Equivₓ.arrowProdEquivProdArrow _ _ _)) _ = _
+      change comap (Prod.map (Equiv.arrowProdEquivProdArrow _ _ _) (Equiv.arrowProdEquivProdArrow _ _ _)) _ = _
       rw [← uniformity_comap rfl]
       congr
       rw [Prod.uniformSpace, Prod.uniformSpace, UniformSpace.comap_inf, UniformConvergenceOn.inf_eq]
@@ -768,8 +768,8 @@ variable (𝔖) (δ : ι → Type _) [∀ i, UniformSpace (δ i)]
 isomorphism between `(α → (Π i, δ i), 𝒱(α, (Π i, δ i), 𝔖, (Π i, uδ i)))` and
 `((Π i, α → δ i), (Π i, 𝒱(α, δ i, 𝔖, uδ i)))`. -/
 protected def uniformEquivPiComm :
-    @UniformEquiv (α → ∀ i, δ i) (∀ i, α → δ i) 𝒱(α, ∀ i, δ i, 𝔖, Pi.uniformSpace δ)
-      (@Pi.uniformSpace ι (fun i => α → δ i) fun i => 𝒱(α, δ i, 𝔖, _)) :=
+    @UniformEquiv (α → ∀ i, δ i) (∀ i, α → δ i) 𝒱(α, ∀ i, δ i, 𝔖, PiCat.uniformSpace δ)
+      (@PiCat.uniformSpace ι (fun i => α → δ i) fun i => 𝒱(α, δ i, 𝔖, _)) :=
   -- Denote `φ` this bijection. We want to show that
     -- `comap φ (Π i, 𝒱(α, δ i, 𝔖, uδ i)) = 𝒱(α, (Π i, δ i), 𝔖, (Π i, uδ i))`.
     -- But `Π i, uδ i` is defined as `⨅ i, comap (eval i) (uδ i)`, so we just have to apply
@@ -777,15 +777,15 @@ protected def uniformEquivPiComm :
     -- that some square commutes.
     -- We could also deduce this from `uniform_convergence.uniform_equiv_Pi_comm`, but it turns out
     -- to be more annoying.
-    @Equivₓ.toUniformEquivOfUniformInducing
-    _ _ 𝒱(α, ∀ i, δ i, 𝔖, Pi.uniformSpace δ) (@Pi.uniformSpace ι (fun i => α → δ i) fun i => 𝒱(α, δ i, 𝔖, _))
-    (Equivₓ.piComm _)
+    @Equiv.toUniformEquivOfUniformInducing
+    _ _ 𝒱(α, ∀ i, δ i, 𝔖, PiCat.uniformSpace δ) (@PiCat.uniformSpace ι (fun i => α → δ i) fun i => 𝒱(α, δ i, 𝔖, _))
+    (Equiv.piComm _)
     (by
       constructor
       change comap (Prod.map Function.swap Function.swap) _ = _
       rw [← uniformity_comap rfl]
       congr
-      rw [Pi.uniformSpace, UniformSpace.of_core_eq_to_core, Pi.uniformSpace, UniformSpace.of_core_eq_to_core,
+      rw [PiCat.uniformSpace, UniformSpace.of_core_eq_to_core, PiCat.uniformSpace, UniformSpace.of_core_eq_to_core,
         UniformSpace.comap_infi, UniformConvergenceOn.infi_eq]
       refine' infi_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformConvergenceOn.comap_eq])

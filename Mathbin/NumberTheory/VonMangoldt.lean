@@ -35,7 +35,7 @@ namespace Nat
 
 namespace ArithmeticFunction
 
-open Finsetₓ
+open Finset
 
 open ArithmeticFunction
 
@@ -101,13 +101,13 @@ theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
   · simp
     
   · intro p k hp
-    rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finsetₓ.sum_range_succ', pow_zeroₓ, von_mangoldt_apply_one]
+    rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finset.sum_range_succ', pow_zero, von_mangoldt_apply_one]
     simp [von_mangoldt_apply_pow (Nat.succ_ne_zero _), von_mangoldt_apply_prime hp]
     
   intro a b ha' hb' hab ha hb
   simp only [von_mangoldt_apply, ← sum_filter] at ha hb⊢
   rw [mul_divisors_filter_prime_pow hab, filter_union, sum_union (disjoint_divisors_filter_prime_pow hab), ha, hb,
-    Nat.cast_mulₓ, Real.log_mul (cast_ne_zero.2 (pos_of_gt ha').ne') (cast_ne_zero.2 (pos_of_gt hb').ne')]
+    Nat.cast_mul, Real.log_mul (cast_ne_zero.2 (pos_of_gt ha').ne') (cast_ne_zero.2 (pos_of_gt hb').ne')]
 
 @[simp]
 theorem von_mangoldt_mul_zeta : Λ * ζ = log := by
@@ -122,7 +122,7 @@ theorem zeta_mul_von_mangoldt : (ζ : ArithmeticFunction ℝ) * Λ = log := by
 
 @[simp]
 theorem log_mul_moebius_eq_von_mangoldt : log * μ = Λ := by
-  rw [← von_mangoldt_mul_zeta, mul_assoc, coe_zeta_mul_coe_moebius, mul_oneₓ]
+  rw [← von_mangoldt_mul_zeta, mul_assoc, coe_zeta_mul_coe_moebius, mul_one]
 
 @[simp]
 theorem moebius_mul_log_eq_von_mangoldt : (μ : ArithmeticFunction ℝ) * log = Λ := by
@@ -131,7 +131,7 @@ theorem moebius_mul_log_eq_von_mangoldt : (μ : ArithmeticFunction ℝ) * log = 
 
 theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * log d) = -Λ n := by
   simp only [← log_mul_moebius_eq_von_mangoldt, mul_comm log, mul_apply, log_apply, int_coe_apply, ←
-    Finsetₓ.sum_neg_distrib, neg_mul_eq_mul_neg]
+    Finset.sum_neg_distrib, neg_mul_eq_mul_neg]
   rw [sum_divisors_antidiagonal fun i j => (μ i : ℝ) * -Real.log j]
   have :
     (∑ i : ℕ in n.divisors, (μ i : ℝ) * -Real.log (n / i : ℕ)) =

@@ -36,7 +36,7 @@ unsafe def prove_unsat_lin_comb (ks : List Nat) (ts : List Term) : tactic expr :
   let x2 ← prove_forall_mem_eq_zero as
   to_expr (pquote.1 (unsat_lin_comb_of (%%ₓquote.1 ks) (%%ₓquote.1 ts) (%%ₓx1) (%%ₓx2)))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a (([],les) : clause), return the expr of a term (t : clause.unsat ([],les)). -/
 unsafe def prove_unsat_ef : Clause → tactic expr
   | (_::_, _) => failed
@@ -51,7 +51,7 @@ unsafe def prove_unsat (c : Clause) : tactic expr := do
   let x ← prove_unsat_ef (eqElim ee c)
   return (quote.1 (unsat_of_unsat_eq_elim (%%ₓquote.1 ee) (%%ₓquote.1 c) (%%ₓx)))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs)  -/
 unsafe def prove_unsats : List Clause → tactic expr
   | [] => return (quote.1 Clauses.unsat_nil)

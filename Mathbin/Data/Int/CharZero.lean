@@ -19,7 +19,7 @@ open Nat
 namespace Int
 
 @[simp]
-theorem cast_eq_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) = 0 ↔ n = 0 :=
+theorem cast_eq_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 0 ↔ n = 0 :=
   ⟨fun h => by
     cases n
     · rw [Int.cast_of_nat] at h
@@ -31,20 +31,20 @@ theorem cast_eq_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) 
     fun h => by rw [h, cast_zero]⟩
 
 @[simp, norm_cast]
-theorem cast_inj [AddGroupWithOneₓ α] [CharZero α] {m n : ℤ} : (m : α) = n ↔ m = n := by
+theorem cast_inj [AddGroupWithOne α] [CharZero α] {m n : ℤ} : (m : α) = n ↔ m = n := by
   rw [← sub_eq_zero, ← cast_sub, cast_eq_zero, sub_eq_zero]
 
-theorem cast_injective [AddGroupWithOneₓ α] [CharZero α] : Function.Injective (coe : ℤ → α)
+theorem cast_injective [AddGroupWithOne α] [CharZero α] : Function.Injective (coe : ℤ → α)
   | m, n => cast_inj.1
 
-theorem cast_ne_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
+theorem cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 
 @[simp, norm_cast]
 theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) : ((m / n : ℤ) : k) = m / n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp [Int.div_zeroₓ]
+  · simp [Int.div_zero]
     
   · exact cast_div n_dvd (cast_ne_zero.mpr hn)
     

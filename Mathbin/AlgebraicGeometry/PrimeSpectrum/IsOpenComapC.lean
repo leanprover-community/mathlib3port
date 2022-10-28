@@ -23,7 +23,7 @@ namespace AlgebraicGeometry
 
 namespace Polynomial
 
-variable {R : Type _} [CommRingₓ R] {f : R[X]}
+variable {R : Type _} [CommRing R] {f : R[X]}
 
 /-- Given a polynomial `f ∈ R[x]`, `image_of_Df` is the subset of `Spec R` where at least one
 of the coefficients of `f` does not vanish.  Lemma `image_of_Df_eq_comap_C_compl_zero_locus`

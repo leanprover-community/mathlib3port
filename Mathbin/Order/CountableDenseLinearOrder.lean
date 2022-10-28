@@ -38,38 +38,38 @@ namespace Order
     suppose `lo`, `hi`, are finite subssets with all of `lo` strictly
     before `hi`. Then there is an element of `α` strictly between `lo`
     and `hi`. -/
-theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α]
-    [nonem : Nonempty α] (lo hi : Finsetₓ α) (lo_lt_hi : ∀ x ∈ lo, ∀ y ∈ hi, x < y) :
+theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α]
+    [nonem : Nonempty α] (lo hi : Finset α) (lo_lt_hi : ∀ x ∈ lo, ∀ y ∈ hi, x < y) :
     ∃ m : α, (∀ x ∈ lo, x < m) ∧ ∀ y ∈ hi, m < y :=
   if nlo : lo.Nonempty then
     if nhi : hi.Nonempty then
       -- both sets are nonempty, use densely_ordered
         Exists.elim
-        (exists_between (lo_lt_hi _ (Finsetₓ.max'_mem _ nlo) _ (Finsetₓ.min'_mem _ nhi))) fun m hm =>
-        ⟨m, fun x hx => lt_of_le_of_ltₓ (Finsetₓ.le_max' lo x hx) hm.1, fun y hy =>
-          lt_of_lt_of_leₓ hm.2 (Finsetₓ.min'_le hi y hy)⟩
+        (exists_between (lo_lt_hi _ (Finset.max'_mem _ nlo) _ (Finset.min'_mem _ nhi))) fun m hm =>
+        ⟨m, fun x hx => lt_of_le_of_lt (Finset.le_max' lo x hx) hm.1, fun y hy =>
+          lt_of_lt_of_le hm.2 (Finset.min'_le hi y hy)⟩
     else-- upper set is empty, use `no_max_order`
         Exists.elim
-        (exists_gt (Finsetₓ.max' lo nlo)) fun m hm =>
-        ⟨m, fun x hx => lt_of_le_of_ltₓ (Finsetₓ.le_max' lo x hx) hm, fun y hy => (nhi ⟨y, hy⟩).elim⟩
+        (exists_gt (Finset.max' lo nlo)) fun m hm =>
+        ⟨m, fun x hx => lt_of_le_of_lt (Finset.le_max' lo x hx) hm, fun y hy => (nhi ⟨y, hy⟩).elim⟩
   else
     if nhi : hi.Nonempty then
       -- lower set is empty, use `no_min_order`
         Exists.elim
-        (exists_lt (Finsetₓ.min' hi nhi)) fun m hm =>
-        ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => lt_of_lt_of_leₓ hm (Finsetₓ.min'_le hi y hy)⟩
+        (exists_lt (Finset.min' hi nhi)) fun m hm =>
+        ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => lt_of_lt_of_le hm (Finset.min'_le hi y hy)⟩
     else-- both sets are empty, use nonempty
           nonem.elim
         fun m => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => (nhi ⟨y, hy⟩).elim⟩
 
-variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
+variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (p q «expr ∈ » f)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (p q «expr ∈ » f) -/
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
 def PartialIso : Type _ :=
-  { f : Finsetₓ (α × β) //
+  { f : Finset (α × β) //
     ∀ (p q) (_ : p ∈ f) (_ : q ∈ f), cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
 
 namespace PartialIso
@@ -77,8 +77,8 @@ namespace PartialIso
 instance : Inhabited (PartialIso α β) :=
   ⟨⟨∅, fun p h q => h.elim⟩⟩
 
-instance : Preorderₓ (PartialIso α β) :=
-  Subtype.preorderₓ _
+instance : Preorder (PartialIso α β) :=
+  Subtype.preorder _
 
 variable {α β}
 
@@ -98,17 +98,17 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
       ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).Image Prod.snd, x < y :=
     by
     intro x hx y hy
-    rw [Finsetₓ.mem_image] at hx hy
+    rw [Finset.mem_image] at hx hy
     rcases hx with ⟨p, hp1, rfl⟩
     rcases hy with ⟨q, hq1, rfl⟩
-    rw [Finsetₓ.mem_filter] at hp1 hq1
+    rw [Finset.mem_filter] at hp1 hq1
     rw [← lt_iff_lt_of_cmp_eq_cmp (f.prop _ hp1.1 _ hq1.1)]
-    exact lt_transₓ hp1.right hq1.right
+    exact lt_trans hp1.right hq1.right
   cases' exists_between_finsets _ _ this with b hb
   use b
   rintro ⟨p1, p2⟩ hp
   have : p1 ≠ a := fun he => h ⟨p2, he ▸ hp⟩
-  cases' lt_or_gt_of_neₓ this with hl hr
+  cases' lt_or_gt_of_ne this with hl hr
   · have : p1 < a ∧ p2 < b := ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
     rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this
     cc
@@ -120,27 +120,27 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : PartialIso α β → PartialIso β α :=
-  (Subtype.map (Finsetₓ.image (Equivₓ.prodComm _ _))) fun f hf p hp q hq =>
+  (Subtype.map (Finset.image (Equiv.prodComm _ _))) fun f hf p hp q hq =>
     Eq.symm <|
-      hf ((Equivₓ.prodComm α β).symm p)
+      hf ((Equiv.prodComm α β).symm p)
         (by
-          rw [← Finsetₓ.mem_coe, Finsetₓ.coe_image, Equivₓ.image_eq_preimage] at hp
-          rwa [← Finsetₓ.mem_coe])
-        ((Equivₓ.prodComm α β).symm q)
+          rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp
+          rwa [← Finset.mem_coe])
+        ((Equiv.prodComm α β).symm q)
         (by
-          rw [← Finsetₓ.mem_coe, Finsetₓ.coe_image, Equivₓ.image_eq_preimage] at hq
-          rwa [← Finsetₓ.mem_coe])
+          rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq
+          rwa [← Finset.mem_coe])
 
 variable (β)
 
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) : Cofinal (PartialIso α β) where
-  Carrier := fun f => ∃ b : β, (a, b) ∈ f.val
-  mem_gt := fun f => by
+  Carrier f := ∃ b : β, (a, b) ∈ f.val
+  mem_gt f := by
     cases' exists_across f a with b a_b
-    refine' ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finsetₓ.mem_insert_self _ _⟩, Finsetₓ.subset_insert _ _⟩
-    rw [Finsetₓ.mem_insert] at hp hq
+    refine' ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
+    rw [Finset.mem_insert] at hp hq
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
     · simp only [cmp_self_eq_eq]
       
@@ -158,17 +158,17 @@ variable (α) {β}
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
     Cofinal (PartialIso α β) where
-  Carrier := fun f => ∃ a, (a, b) ∈ f.val
-  mem_gt := fun f => by
+  Carrier f := ∃ a, (a, b) ∈ f.val
+  mem_gt f := by
     rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
     refine' ⟨f'.comm, ⟨a, _⟩, _⟩
     · change (a, b) ∈ f'.val.image _
-      rwa [← Finsetₓ.mem_coe, Finsetₓ.coe_image, Equivₓ.image_eq_preimage]
+      rwa [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage]
       
     · change _ ⊆ f'.val.image _
-      rw [← Finsetₓ.coe_subset, Finsetₓ.coe_image, ← Equivₓ.subset_image]
+      rw [← Finset.coe_subset, Finset.coe_image, ← Equiv.subset_image]
       change f.val.image _ ⊆ _ at hl
-      rwa [← Finsetₓ.coe_subset, Finsetₓ.coe_image] at hl
+      rwa [← Finset.coe_subset, Finset.coe_image] at hl
       
 
 variable {α}
@@ -195,9 +195,9 @@ variable (α β)
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] : Nonempty (α ↪o β) := by
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
-  haveI : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
-  let our_ideal : ideal (partial_iso α _) := ideal_of_cofinals default (defined_at_left (Set.Ioo x y))
-  let F := fun a => fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
+  haveI : Nonempty (Set.IooCat x y) := ⟨⟨a, ha⟩⟩
+  let our_ideal : ideal (partial_iso α _) := ideal_of_cofinals default (defined_at_left (Set.IooCat x y))
+  let F a := fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
   refine'
     ⟨RelEmbedding.trans (OrderEmbedding.ofStrictMono (fun a => (F a).val) fun a₁ a₂ => _) (OrderEmbedding.subtype _)⟩
   rcases(F a₁).Prop with ⟨f, hf, ha₁⟩
@@ -210,8 +210,8 @@ theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α
     [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] : Nonempty (α ≃o β) :=
   let to_cofinal : Sum α β → Cofinal (PartialIso α β) := fun p => Sum.recOn p (definedAtLeft β) (definedAtRight α)
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
-  let F := fun a => funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
-  let G := fun b => invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
+  let F a := funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
+  let G b := invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
   ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) fun a b => by
       rcases(F a).Prop with ⟨f, hf, ha⟩
       rcases(G b).Prop with ⟨g, hg, hb⟩

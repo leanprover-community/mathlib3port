@@ -88,7 +88,7 @@ theorem norm_eq {x : ℝ} : ∥(x : AddCircle p)∥ = abs (x - round (p⁻¹ * x
   rw [quotient_norm_eq, abs_sub_round_eq_min]
   have h₁ : BddBelow (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }) := ⟨0, by simp [mem_lower_bounds]⟩
   have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨abs x, ⟨x, rfl, rfl⟩⟩
-  apply le_antisymmₓ
+  apply le_antisymm
   · simp only [le_min_iff, Real.norm_eq_abs, cInf_le_iff h₁ h₂]
     intro b h
     refine'

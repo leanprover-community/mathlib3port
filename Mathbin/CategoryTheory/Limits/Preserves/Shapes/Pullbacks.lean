@@ -72,7 +72,7 @@ def isLimitOfHasPullbackOfPreservesLimit [HasPullback f g] :
 
 /-- If `F` preserves the pullback of `f, g`, it also preserves the pullback of `g, f`. -/
 def preservesPullbackSymmetry :
-    PreservesLimit (cospan g f) G where preserves := fun c hc => by
+    PreservesLimit (cospan g f) G where preserves c hc := by
     apply (is_limit.postcompose_hom_equiv (diagramIsoCospan.{v₂} _) _).toFun
     apply is_limit.of_iso_limit _ (pullback_cone.iso_mk _).symm
     apply pullback_cone.flip_is_limit
@@ -158,7 +158,7 @@ def isColimitOfHasPushoutOfPreservesColimit [HasPushout f g] :
 
 /-- If `F` preserves the pushout of `f, g`, it also preserves the pushout of `g, f`. -/
 def preservesPushoutSymmetry :
-    PreservesColimit (span g f) G where preserves := fun c hc => by
+    PreservesColimit (span g f) G where preserves c hc := by
     apply (is_colimit.precompose_hom_equiv (diagramIsoSpan.{v₂} _).symm _).toFun
     apply is_colimit.of_iso_colimit _ (pushout_cocone.iso_mk _).symm
     apply pushout_cocone.flip_is_colimit

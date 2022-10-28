@@ -31,7 +31,7 @@ open CategoryTheory.Limits
 universe v u v₁ v₂ u₁ u₂
 
 -- morphism levels before object levels. See note [category_theory universes].
-namespace Monadₓ
+namespace Monad
 
 variable {C : Type u₁} [Category.{v₁} C]
 
@@ -45,7 +45,7 @@ variable (D : J ⥤ Algebra T) (c : Cone (D ⋙ T.forget)) (t : IsLimit c)
 
 /-- (Impl) The natural transformation used to define the new cone -/
 @[simps]
-def γ : D ⋙ T.forget ⋙ ↑T ⟶ D ⋙ T.forget where app := fun j => (D.obj j).a
+def γ : D ⋙ T.forget ⋙ ↑T ⟶ D ⋙ T.forget where app j := (D.obj j).a
 
 /-- (Impl) This new cone is used to construct the algebra structure -/
 @[simps π_app]
@@ -85,7 +85,7 @@ def liftedCone : Cone D where
 /-- (Impl) Prove that the lifted cone is limiting. -/
 @[simps]
 def liftedConeIsLimit : IsLimit (liftedCone D c t) where
-  lift := fun s =>
+  lift s :=
     { f := t.lift ((forget T).mapCone s),
       h' :=
         t.hom_ext fun j => by
@@ -93,7 +93,7 @@ def liftedConeIsLimit : IsLimit (liftedCone D c t) where
           rw [category.assoc, category.assoc, t.fac, new_cone_π_app, ← functor.map_comp_assoc, t.fac,
             functor.map_cone_π_app]
           apply (s.π.app j).h }
-  uniq' := fun s m J => by
+  uniq' s m J := by
     ext1
     apply t.hom_ext
     intro j
@@ -106,7 +106,7 @@ end ForgetCreatesLimits
 noncomputable instance forgetCreatesLimits :
     CreatesLimitsOfSize
       (forget
-        T) where CreatesLimitsOfShape := fun J 𝒥 =>
+        T) where CreatesLimitsOfShape J 𝒥 :=
     { CreatesLimit := fun D =>
         creates_limit_of_reflects_iso fun c t =>
           { liftedCone := forget_creates_limits.lifted_cone D c t,
@@ -136,7 +136,7 @@ The natural transformation given by the algebra structure maps, used to construc
 apex `colimit (D ⋙ forget T)`.
  -/
 @[simps]
-def γ : (D ⋙ forget T) ⋙ ↑T ⟶ D ⋙ forget T where app := fun j => (D.obj j).a
+def γ : (D ⋙ forget T) ⋙ ↑T ⟶ D ⋙ forget T where app j := (D.obj j).a
 
 /-- (Impl)
 A cocone for the diagram `(D ⋙ forget T) ⋙ T` found by composing the natural transformation `γ`
@@ -203,14 +203,14 @@ def liftedCocone : Cocone D where
 /-- (Impl) Prove that the lifted cocone is colimiting. -/
 @[simps]
 def liftedCoconeIsColimit : IsColimit (liftedCocone c t) where
-  desc := fun s =>
+  desc s :=
     { f := t.desc ((forget T).mapCocone s),
       h' :=
         (isColimitOfPreserves (T : C ⥤ C) t).hom_ext fun j => by
           dsimp
           rw [← functor.map_comp_assoc, ← category.assoc, t.fac, commuting, category.assoc, t.fac]
           apply algebra.hom.h }
-  uniq' := fun s m J => by
+  uniq' s m J := by
     ext1
     apply t.hom_ext
     intro j
@@ -238,10 +238,10 @@ noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T) [PreservesColi
       validLift := Cocones.ext (Iso.refl _) (by tidy), makesColimit := liftedCoconeIsColimit _ _ }
 
 noncomputable instance forgetCreatesColimitsOfShape [PreservesColimitsOfShape J (T : C ⥤ C)] :
-    CreatesColimitsOfShape J (forget T) where CreatesColimit := fun K => by infer_instance
+    CreatesColimitsOfShape J (forget T) where CreatesColimit K := by infer_instance
 
 noncomputable instance forgetCreatesColimits [PreservesColimitsOfSize.{v, u} (T : C ⥤ C)] :
-    CreatesColimitsOfSize.{v, u} (forget T) where CreatesColimitsOfShape := fun J 𝒥₁ => by infer_instance
+    CreatesColimitsOfSize.{v, u} (forget T) where CreatesColimitsOfShape J 𝒥₁ := by infer_instance
 
 /-- For `D : J ⥤ algebra T`, `D ⋙ forget T` has a colimit, then `D` has a colimit provided colimits
 of shape `J` are preserved by `T`.
@@ -250,7 +250,7 @@ theorem forget_creates_colimits_of_monad_preserves [PreservesColimitsOfShape J (
     [HasColimit (D ⋙ forget T)] : HasColimit D :=
   has_colimit_of_created D (forget T)
 
-end Monadₓ
+end Monad
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
@@ -300,7 +300,7 @@ noncomputable def monadicCreatesColimitsOfShapeOfPreservesColimitsOfShape (R : D
 noncomputable def monadicCreatesColimitsOfPreservesColimits (R : D ⥤ C) [MonadicRightAdjoint R]
     [PreservesColimitsOfSize.{v, u} R] :
     CreatesColimitsOfSize.{v, u}
-      R where CreatesColimitsOfShape := fun J 𝒥₁ => monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape _
+      R where CreatesColimitsOfShape J 𝒥₁ := monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape _
 
 section
 
@@ -335,7 +335,7 @@ theorem has_colimits_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfSi
 limit.
 -/
 noncomputable def leftAdjointPreservesTerminalOfReflective (R : D ⥤ C) [Reflective R] :
-    PreservesLimitsOfShape (Discrete.{v} Pempty) (leftAdjoint R) where PreservesLimit := fun K => by
+    PreservesLimitsOfShape (Discrete.{v} Pempty) (leftAdjoint R) where PreservesLimit K := by
     let F := Functor.empty.{v} D
     apply preserves_limit_of_iso_diagram _ (functor.empty_ext (F ⋙ R) _)
     fconstructor

@@ -25,33 +25,33 @@ namespace MvPolynomial
 
 section TwoUniverses
 
-variable {σ : Type u} {R : Type v} [CommSemiringₓ R]
+variable {σ : Type u} {R : Type v} [CommSemiring R]
 
 @[simp]
 theorem cardinal_mk_eq_max_lift [Nonempty σ] [Nontrivial R] :
     (#MvPolynomial σ R) = max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ := by
-  haveI : Infinite (σ →₀ ℕ) := infinite_iff.2 ((le_max_rightₓ _ _).trans (mk_finsupp_nat σ).Ge)
+  haveI : Infinite (σ →₀ ℕ) := infinite_iff.2 ((le_max_right _ _).trans (mk_finsupp_nat σ).ge)
   refine' (mk_finsupp_lift_of_infinite _ R).trans _
-  rw [mk_finsupp_nat, max_assocₓ, lift_max, lift_aleph_0, max_commₓ]
+  rw [mk_finsupp_nat, max_assoc, lift_max, lift_aleph_0, max_comm]
 
 @[simp]
 theorem cardinal_mk_eq_lift [IsEmpty σ] : (#MvPolynomial σ R) = Cardinal.lift.{u} (#R) :=
-  ((isEmptyRingEquiv R σ).toEquiv.trans Equivₓ.ulift.{u}.symm).cardinal_eq
+  ((isEmptyRingEquiv R σ).toEquiv.trans Equiv.ulift.{u}.symm).cardinal_eq
 
-theorem cardinal_lift_mk_le_max {σ : Type u} {R : Type v} [CommSemiringₓ R] :
+theorem cardinal_lift_mk_le_max {σ : Type u} {R : Type v} [CommSemiring R] :
     (#MvPolynomial σ R) ≤ max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ := by
   cases subsingleton_or_nontrivial R
   · exact (mk_eq_one _).trans_le (le_max_of_le_right one_le_aleph_0)
     
   cases is_empty_or_nonempty σ
-  · exact cardinal_mk_eq_lift.trans_le (le_max_of_le_left <| le_max_leftₓ _ _)
+  · exact cardinal_mk_eq_lift.trans_le (le_max_of_le_left <| le_max_left _ _)
     
   · exact cardinal_mk_eq_max_lift.le
     
 
 end TwoUniverses
 
-variable {σ R : Type u} [CommSemiringₓ R]
+variable {σ R : Type u} [CommSemiring R]
 
 theorem cardinal_mk_eq_max [Nonempty σ] [Nontrivial R] : (#MvPolynomial σ R) = max (max (#R) (#σ)) ℵ₀ := by simp
 

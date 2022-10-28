@@ -34,7 +34,7 @@ namespace TopologicalSpace
 /-- The type of compact sets of a topological space. -/
 structure Compacts (α : Type _) [TopologicalSpace α] where
   Carrier : Set α
-  compact' : IsCompact carrier
+  is_compact' : IsCompact carrier
 
 namespace Compacts
 
@@ -42,18 +42,18 @@ variable {α}
 
 instance : SetLike (Compacts α) α where
   coe := Compacts.Carrier
-  coe_injective' := fun s t h => by
+  coe_injective' s t h := by
     cases s
     cases t
     congr
 
-theorem compact (s : Compacts α) : IsCompact (s : Set α) :=
-  s.compact'
+protected theorem is_compact (s : Compacts α) : IsCompact (s : Set α) :=
+  s.is_compact'
 
 instance (K : Compacts α) : CompactSpace K :=
-  is_compact_iff_compact_space.1 K.compact
+  is_compact_iff_compact_space.1 K.IsCompact
 
-instance : CanLift (Set α) (Compacts α) coe IsCompact where prf := fun K hK => ⟨⟨K, hK⟩, rfl⟩
+instance : CanLift (Set α) (Compacts α) coe IsCompact where prf K hK := ⟨⟨K, hK⟩, rfl⟩
 
 @[ext]
 protected theorem ext {s t : Compacts α} (h : (s : Set α) = t) : s = t :=
@@ -68,10 +68,10 @@ theorem carrier_eq_coe (s : Compacts α) : s.Carrier = s :=
   rfl
 
 instance : HasSup (Compacts α) :=
-  ⟨fun s t => ⟨s ∪ t, s.compact.union t.compact⟩⟩
+  ⟨fun s t => ⟨s ∪ t, s.IsCompact.union t.IsCompact⟩⟩
 
 instance [T2Space α] : HasInf (Compacts α) :=
-  ⟨fun s t => ⟨s ∩ t, s.compact.inter t.compact⟩⟩
+  ⟨fun s t => ⟨s ∩ t, s.IsCompact.inter t.IsCompact⟩⟩
 
 instance [CompactSpace α] : HasTop (Compacts α) :=
   ⟨⟨Univ, compact_univ⟩⟩
@@ -112,11 +112,11 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
   rfl
 
 @[simp]
-theorem coe_finset_sup {ι : Type _} {s : Finsetₓ ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
+theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
   by
   classical
-  refine' Finsetₓ.induction_on s rfl fun a s _ h => _
-  simp_rw [Finsetₓ.sup_insert, coe_sup, sup_eq_union]
+  refine' Finset.induction_on s rfl fun a s _ h => _
+  simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
   congr
 
 /-- The image of a compact set under a continuous function. -/
@@ -132,10 +132,10 @@ theorem coe_map {f : α → β} (hf : Continuous f) (s : Compacts α) : (s.map f
 protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
   toFun := Compacts.map f f.Continuous
   invFun := Compacts.map _ f.symm.Continuous
-  left_inv := fun s => by
+  left_inv s := by
     ext1
     simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
-  right_inv := fun s => by
+  right_inv s := by
     ext1
     simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
 
@@ -143,13 +143,13 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
   congr_fun (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
 protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β) where
   Carrier := K ×ˢ L
-  compact' := IsCompact.prod K.2 L.2
+  is_compact' := IsCompact.prod K.2 L.2
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
@@ -166,21 +166,21 @@ structure NonemptyCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 namespace NonemptyCompacts
 
 instance : SetLike (NonemptyCompacts α) α where
-  coe := fun s => s.Carrier
-  coe_injective' := fun s t h => by
+  coe s := s.Carrier
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
 
-theorem compact (s : NonemptyCompacts α) : IsCompact (s : Set α) :=
-  s.compact'
+protected theorem is_compact (s : NonemptyCompacts α) : IsCompact (s : Set α) :=
+  s.is_compact'
 
 protected theorem nonempty (s : NonemptyCompacts α) : (s : Set α).Nonempty :=
   s.nonempty'
 
 /-- Reinterpret a nonempty compact as a closed set. -/
 def toCloseds [T2Space α] (s : NonemptyCompacts α) : Closeds α :=
-  ⟨s, s.compact.IsClosed⟩
+  ⟨s, s.IsCompact.IsClosed⟩
 
 @[ext]
 protected theorem ext {s t : NonemptyCompacts α} (h : (s : Set α) = t) : s = t :=
@@ -217,10 +217,10 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : NonemptyCompacts α
 /-- In an inhabited space, the type of nonempty compact subsets is also inhabited, with
 default element the singleton set containing the default element. -/
 instance [Inhabited α] : Inhabited (NonemptyCompacts α) :=
-  ⟨{ Carrier := {default}, compact' := is_compact_singleton, nonempty' := singleton_nonempty _ }⟩
+  ⟨{ Carrier := {default}, is_compact' := is_compact_singleton, nonempty' := singleton_nonempty _ }⟩
 
 instance to_compact_space {s : NonemptyCompacts α} : CompactSpace s :=
-  is_compact_iff_compact_space.1 s.compact
+  is_compact_iff_compact_space.1 s.IsCompact
 
 instance to_nonempty {s : NonemptyCompacts α} : Nonempty s :=
   s.Nonempty.to_subtype
@@ -229,7 +229,7 @@ instance to_nonempty {s : NonemptyCompacts α} : Nonempty s :=
 protected def prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : NonemptyCompacts (α × β) :=
   { K.toCompacts.Prod L.toCompacts with nonempty' := K.Nonempty.Prod L.Nonempty }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
@@ -247,14 +247,14 @@ structure PositiveCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 namespace PositiveCompacts
 
 instance : SetLike (PositiveCompacts α) α where
-  coe := fun s => s.Carrier
-  coe_injective' := fun s t h => by
+  coe s := s.Carrier
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
 
-theorem compact (s : PositiveCompacts α) : IsCompact (s : Set α) :=
-  s.compact'
+protected theorem is_compact (s : PositiveCompacts α) : IsCompact (s : Set α) :=
+  s.is_compact'
 
 theorem interior_nonempty (s : PositiveCompacts α) : (Interior (s : Set α)).Nonempty :=
   s.interior_nonempty'
@@ -318,7 +318,7 @@ protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : Positiv
       simp only [compacts.carrier_eq_coe, compacts.coe_prod, interior_prod_eq]
       exact K.interior_nonempty.prod L.interior_nonempty }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
@@ -331,32 +331,32 @@ end PositiveCompacts
 /-- The type of compact open sets of a topological space. This is useful in non Hausdorff contexts,
 in particular spectral spaces. -/
 structure CompactOpens (α : Type _) [TopologicalSpace α] extends Compacts α where
-  open' : IsOpen carrier
+  is_open' : IsOpen carrier
 
 namespace CompactOpens
 
 instance : SetLike (CompactOpens α) α where
-  coe := fun s => s.Carrier
-  coe_injective' := fun s t h => by
+  coe s := s.Carrier
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
 
-theorem compact (s : CompactOpens α) : IsCompact (s : Set α) :=
-  s.compact'
+protected theorem is_compact (s : CompactOpens α) : IsCompact (s : Set α) :=
+  s.is_compact'
 
-theorem open (s : CompactOpens α) : IsOpen (s : Set α) :=
-  s.open'
+protected theorem is_open (s : CompactOpens α) : IsOpen (s : Set α) :=
+  s.is_open'
 
 /-- Reinterpret a compact open as an open. -/
 @[simps]
 def toOpens (s : CompactOpens α) : Opens α :=
-  ⟨s, s.open⟩
+  ⟨s, s.IsOpen⟩
 
 /-- Reinterpret a compact open as a clopen. -/
 @[simps]
 def toClopens [T2Space α] (s : CompactOpens α) : Clopens α :=
-  ⟨s, s.open, s.compact.IsClosed⟩
+  ⟨s, s.IsOpen, s.IsCompact.IsClosed⟩
 
 @[ext]
 protected theorem ext {s t : CompactOpens α} (h : (s : Set α) = t) : s = t :=
@@ -367,7 +367,7 @@ theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
   rfl
 
 instance : HasSup (CompactOpens α) :=
-  ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.open.union t.open⟩⟩
+  ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.IsOpen.union t.IsOpen⟩⟩
 
 instance [QuasiSeparatedSpace α] : HasInf (CompactOpens α) :=
   ⟨fun U V =>
@@ -383,10 +383,10 @@ instance : HasBot (CompactOpens α) :=
   ⟨⟨⊥, is_open_empty⟩⟩
 
 instance [T2Space α] : Sdiff (CompactOpens α) :=
-  ⟨fun s t => ⟨⟨s \ t, s.compact.diff t.open⟩, s.open.sdiff t.compact.IsClosed⟩⟩
+  ⟨fun s t => ⟨⟨s \ t, s.IsCompact.diff t.IsOpen⟩, s.IsOpen.sdiff t.IsCompact.IsClosed⟩⟩
 
 instance [T2Space α] [CompactSpace α] : HasCompl (CompactOpens α) :=
-  ⟨fun s => ⟨⟨sᶜ, s.open.is_closed_compl.IsCompact⟩, s.compact.IsClosed.is_open_compl⟩⟩
+  ⟨fun s => ⟨⟨sᶜ, s.IsOpen.isClosedCompl.IsCompact⟩, s.IsCompact.IsClosed.is_open_compl⟩⟩
 
 instance : SemilatticeSup (CompactOpens α) :=
   SetLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
@@ -433,7 +433,7 @@ instance : Inhabited (CompactOpens α) :=
 /-- The image of a compact open under a continuous open map. -/
 @[simps]
 def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpens α) : CompactOpens β :=
-  ⟨s.toCompacts.map f hf, hf' _ s.open⟩
+  ⟨s.toCompacts.map f hf, hf' _ s.IsOpen⟩
 
 @[simp]
 theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpens α) :
@@ -442,9 +442,9 @@ theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : Com
 
 /-- The product of two `compact_opens`, as a `compact_opens` in the product space. -/
 protected def prod (K : CompactOpens α) (L : CompactOpens β) : CompactOpens (α × β) :=
-  { K.toCompacts.Prod L.toCompacts with open' := K.open.Prod L.open }
+  { K.toCompacts.Prod L.toCompacts with is_open' := K.IsOpen.Prod L.IsOpen }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl

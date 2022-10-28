@@ -41,14 +41,14 @@ theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤
 
 variable [MonoidalCategory.{v} C]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
   ε := limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } }
-  μ := fun F G =>
+  μ F G :=
     limit.lift (F ⊗ G)
       { x := limit F ⊗ limit G,
         π :=
@@ -56,12 +56,12 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
             naturality' := fun j j' f => by
               dsimp
               simp only [category.id_comp, ← tensor_comp, limit.w] } }
-  μ_natural' := fun X Y X' Y' f g => by
+  μ_natural' X Y X' Y' f g := by
     ext
     dsimp
     simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map, nat_trans.comp_app,
       category.assoc, ← tensor_comp, lim_map_π]
-  associativity' := fun X Y Z => by
+  associativity' X Y Z := by
     ext
     dsimp
     simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map, nat_trans.comp_app,
@@ -78,7 +78,7 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
     dsimp
     dsimp
     simp
-  left_unitality' := fun X => by
+  left_unitality' X := by
     ext
     dsimp
     simp
@@ -89,7 +89,7 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
     dsimp
     slice_rhs 2 3 => rw [left_unitor_naturality]
     simp
-  right_unitality' := fun X => by
+  right_unitality' X := by
     ext
     dsimp
     simp
@@ -120,9 +120,9 @@ theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α 
 theorem lim_lax_ε : (@limLax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem lim_lax_μ (F G : J ⥤ C) :
     (@limLax J _ C _ _ _).μ F G =

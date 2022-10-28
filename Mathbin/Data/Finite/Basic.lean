@@ -47,7 +47,7 @@ namespace Finite
 
 -- see Note [lower instance priority]
 instance (priority := 100) of_subsingleton {α : Sort _} [Subsingleton α] : Finite α :=
-  of_injective (Function.const α ()) <| Function.injective_of_subsingletonₓ _
+  of_injective (Function.const α ()) <| Function.injective_of_subsingleton _
 
 -- Higher priority for `Prop`s
 @[nolint instance_priority]
@@ -55,22 +55,22 @@ instance prop (p : Prop) : Finite p :=
   Finite.of_subsingleton
 
 instance [Finite α] [Finite β] : Finite (α × β) := by
-  haveI := Fintypeₓ.ofFinite α
-  haveI := Fintypeₓ.ofFinite β
+  haveI := Fintype.ofFinite α
+  haveI := Fintype.ofFinite β
   infer_instance
 
 instance {α β : Sort _} [Finite α] [Finite β] : Finite (PProd α β) :=
-  of_equiv _ Equivₓ.pprodEquivProdPlift.symm
+  of_equiv _ Equiv.pprodEquivProdPlift.symm
 
 theorem prod_left (β) [Finite (α × β)] [Nonempty β] : Finite α :=
   of_surjective (Prod.fst : α × β → α) Prod.fst_surjective
 
 theorem prod_right (α) [Finite (α × β)] [Nonempty α] : Finite β :=
-  of_surjective (Prod.snd : α × β → β) Prod.snd_surjectiveₓ
+  of_surjective (Prod.snd : α × β → β) Prod.snd_surjective
 
 instance [Finite α] [Finite β] : Finite (Sum α β) := by
-  haveI := Fintypeₓ.ofFinite α
-  haveI := Fintypeₓ.ofFinite β
+  haveI := Fintype.ofFinite α
+  haveI := Fintype.ofFinite β
   infer_instance
 
 theorem sum_left (β) [Finite (Sum α β)] : Finite α :=
@@ -80,12 +80,12 @@ theorem sum_right (α) [Finite (Sum α β)] : Finite β :=
   of_injective (Sum.inr : β → Sum α β) Sum.inr_injective
 
 instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σa, β a) := by
-  letI := Fintypeₓ.ofFinite α
-  letI := fun a => Fintypeₓ.ofFinite (β a)
+  letI := Fintype.ofFinite α
+  letI := fun a => Fintype.ofFinite (β a)
   infer_instance
 
 instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ'i, π i) :=
-  of_equiv _ (Equivₓ.psigmaEquivSigmaPlift π).symm
+  of_equiv _ (Equiv.psigmaEquivSigmaPlift π).symm
 
 instance [Finite α] : Finite (Set α) := by
   cases nonempty_fintype α
@@ -98,18 +98,18 @@ instance Subtype.finite {α : Sort _} [Finite α] {p : α → Prop} : Finite { x
   Finite.of_injective coe Subtype.coe_injective
 
 instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite (β a)] : Finite (∀ a, β a) := by
-  haveI := Fintypeₓ.ofFinite (Plift α)
-  haveI := fun a => Fintypeₓ.ofFinite (Plift (β a))
-  exact Finite.of_equiv (∀ a : Plift α, Plift (β (Equivₓ.plift a))) (Equivₓ.piCongr Equivₓ.plift fun _ => Equivₓ.plift)
+  haveI := Fintype.ofFinite (PLift α)
+  haveI := fun a => Fintype.ofFinite (PLift (β a))
+  exact Finite.of_equiv (∀ a : PLift α, PLift (β (Equiv.plift a))) (Equiv.piCongr Equiv.plift fun _ => Equiv.plift)
 
 instance Vector.finite {α : Type _} [Finite α] {n : ℕ} : Finite (Vector α n) := by
-  haveI := Fintypeₓ.ofFinite α
+  haveI := Fintype.ofFinite α
   infer_instance
 
 instance Quot.finite {α : Sort _} [Finite α] (r : α → α → Prop) : Finite (Quot r) :=
   Finite.of_surjective _ (surjective_quot_mk r)
 
-instance Quotientₓ.finite {α : Sort _} [Finite α] (s : Setoidₓ α) : Finite (Quotientₓ s) :=
+instance Quotient.finite {α : Sort _} [Finite α] (s : Setoid α) : Finite (Quotient s) :=
   Quot.finite _
 
 instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪ β) := by
@@ -121,13 +121,13 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
     exact Finite.of_injective _ FunLike.coe_injective
     
 
-instance Equivₓ.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
-  (Finite.of_injective Equivₓ.toEmbedding) fun e₁ e₂ h => Equivₓ.ext <| by convert FunLike.congr_fun h
+instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
+  (Finite.of_injective Equiv.toEmbedding) fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
 
-instance Equivₓ.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=
-  Finite.of_equiv _ ⟨Equivₓ.symm, Equivₓ.symm, Equivₓ.symm_symm, Equivₓ.symm_symm⟩
+instance Equiv.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=
+  Finite.of_equiv _ ⟨Equiv.symm, Equiv.symm, Equiv.symm_symm, Equiv.symm_symm⟩
 
 instance [Finite α] {n : ℕ} : Finite (Sym α n) := by
-  haveI := Fintypeₓ.ofFinite α
+  haveI := Fintype.ofFinite α
   infer_instance
 

@@ -30,12 +30,12 @@ open nonZeroDivisors
 This definition uses `fraction_ring R` to denote `Frac(R)`. See `is_integrally_closed_iff`
 if you want to choose another field of fractions for `R`.
 -/
-class IsIntegrallyClosed (R : Type _) [CommRingₓ R] [IsDomain R] : Prop where
+class IsIntegrallyClosed (R : Type _) [CommRing R] [IsDomain R] : Prop where
   algebra_map_eq_of_integral : ∀ {x : FractionRing R}, IsIntegral R x → ∃ y, algebraMap R (FractionRing R) y = x
 
 section Iff
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R]
+variable {R : Type _} [CommRing R] [IsDomain R]
 
 variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
@@ -64,7 +64,7 @@ theorem is_integrally_closed_iff_is_integral_closure : IsIntegrallyClosed R ↔ 
       refine' ⟨IsFractionRing.injective _ _, fun x => ⟨cl, _⟩⟩
       rintro ⟨y, y_eq⟩
       rw [← y_eq]
-      exact is_integral_algebra_map
+      exact isIntegralAlgebraMap
       
     · rintro ⟨-, cl⟩ x hx
       exact cl.mp hx
@@ -74,7 +74,7 @@ end Iff
 
 namespace IsIntegrallyClosed
 
-variable {R : Type _} [CommRingₓ R] [id : IsDomain R] [iic : IsIntegrallyClosed R]
+variable {R : Type _} [CommRing R] [id : IsDomain R] [iic : IsIntegrallyClosed R]
 
 variable {K : Type _} [Field K] [Algebra R K] [ifr : IsFractionRing R K]
 
@@ -88,7 +88,7 @@ theorem is_integral_iff {x : K} : IsIntegral R x ↔ ∃ y : R, algebraMap R K y
 
 theorem exists_algebra_map_eq_of_is_integral_pow {x : K} {n : ℕ} (hn : 0 < n) (hx : IsIntegral R <| x ^ n) :
     ∃ y : R, algebraMap R K y = x :=
-  is_integral_iff.mp <| is_integral_of_pow hn hx
+  is_integral_iff.mp <| isIntegralOfPow hn hx
 
 omit iic ifr
 
@@ -128,14 +128,14 @@ namespace integralClosure
 
 open IsIntegrallyClosed
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R]
+variable {R : Type _} [CommRing R] [IsDomain R]
 
 variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
 variable {L : Type _} [Field L] [Algebra K L] [Algebra R L] [IsScalarTower R K L]
 
 -- Can't be an instance because you need to supply `K`.
-theorem is_integrally_closed_of_finite_extension [FiniteDimensional K L] : IsIntegrallyClosed (integralClosure R L) :=
+theorem isIntegrallyClosedOfFiniteExtension [FiniteDimensional K L] : IsIntegrallyClosed (integralClosure R L) :=
   letI : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L
   (integral_closure_eq_bot_iff L).mp integral_closure_idem
 

@@ -86,26 +86,26 @@ theorem lower_ne_upper (i) : I.lower i ≠ I.upper i :=
   (I.lower_lt_upper i).Ne
 
 instance : Membership (ι → ℝ) (Box ι) :=
-  ⟨fun x I => ∀ i, x i ∈ Ioc (I.lower i) (I.upper i)⟩
+  ⟨fun x I => ∀ i, x i ∈ IocCat (I.lower i) (I.upper i)⟩
 
-instance : CoeTₓ (Box ι) (Set <| ι → ℝ) :=
+instance : CoeT (Box ι) (Set <| ι → ℝ) :=
   ⟨fun I => { x | x ∈ I }⟩
 
 @[simp]
-theorem mem_mk {l u x : ι → ℝ} {H} : x ∈ mk l u H ↔ ∀ i, x i ∈ Ioc (l i) (u i) :=
+theorem mem_mk {l u x : ι → ℝ} {H} : x ∈ mk l u H ↔ ∀ i, x i ∈ IocCat (l i) (u i) :=
   Iff.rfl
 
 @[simp, norm_cast]
 theorem mem_coe : x ∈ (I : Set (ι → ℝ)) ↔ x ∈ I :=
   Iff.rfl
 
-theorem mem_def : x ∈ I ↔ ∀ i, x i ∈ Ioc (I.lower i) (I.upper i) :=
+theorem mem_def : x ∈ I ↔ ∀ i, x i ∈ IocCat (I.lower i) (I.upper i) :=
   Iff.rfl
 
-theorem mem_univ_Ioc {I : Box ι} : (x ∈ pi Univ fun i => Ioc (I.lower i) (I.upper i)) ↔ x ∈ I :=
+theorem mem_univ_Ioc {I : Box ι} : (x ∈ pi Univ fun i => IocCat (I.lower i) (I.upper i)) ↔ x ∈ I :=
   mem_univ_pi
 
-theorem coe_eq_pi : (I : Set (ι → ℝ)) = pi Univ fun i => Ioc (I.lower i) (I.upper i) :=
+theorem coe_eq_pi : (I : Set (ι → ℝ)) = pi Univ fun i => IocCat (I.lower i) (I.upper i) :=
   Set.ext fun x => mem_univ_Ioc.symm
 
 @[simp]
@@ -133,7 +133,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 
 theorem le_tfae :
     Tfae
-      [I ≤ J, (I : Set (ι → ℝ)) ⊆ J, Icc I.lower I.upper ⊆ Icc J.lower J.upper,
+      [I ≤ J, (I : Set (ι → ℝ)) ⊆ J, IccCat I.lower I.upper ⊆ IccCat J.lower J.upper,
         J.lower ≤ I.lower ∧ I.upper ≤ J.upper] :=
   by
   tfae_have 1 ↔ 2
@@ -161,7 +161,7 @@ theorem injective_coe : Injective (coe : Box ι → Set (ι → ℝ)) := by
   rintro ⟨l₁, u₁, h₁⟩ ⟨l₂, u₂, h₂⟩ h
   simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h
   congr
-  exacts[le_antisymmₓ h.2.1 h.1.1, le_antisymmₓ h.1.2 h.2.2]
+  exacts[le_antisymm h.2.1 h.1.1, le_antisymm h.1.2 h.2.2]
 
 @[simp, norm_cast]
 theorem coe_inj : (I : Set (ι → ℝ)) = J ↔ I = J :=
@@ -174,38 +174,38 @@ theorem ext (H : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
 theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
   mt coe_inj.2 <| h.Ne I.coe_ne_empty
 
-instance : PartialOrderₓ (Box ι) :=
-  { PartialOrderₓ.lift (coe : Box ι → Set (ι → ℝ)) injective_coe with le := (· ≤ ·) }
+instance : PartialOrder (Box ι) :=
+  { PartialOrder.lift (coe : Box ι → Set (ι → ℝ)) injective_coe with le := (· ≤ ·) }
 
 /-- Closed box corresponding to `I : box_integral.box ι`. -/
 protected def icc : Box ι ↪o Set (ι → ℝ) :=
-  OrderEmbedding.ofMapLeIff (fun I : Box ι => Icc I.lower I.upper) fun I J => (le_tfae I J).out 2 0
+  OrderEmbedding.ofMapLeIff (fun I : Box ι => IccCat I.lower I.upper) fun I J => (le_tfae I J).out 2 0
 
-theorem Icc_def : I.Icc = Icc I.lower I.upper :=
+theorem Icc_def : I.IccCat = IccCat I.lower I.upper :=
   rfl
 
 @[simp]
-theorem upper_mem_Icc (I : Box ι) : I.upper ∈ I.Icc :=
+theorem upper_mem_Icc (I : Box ι) : I.upper ∈ I.IccCat :=
   right_mem_Icc.2 I.lower_le_upper
 
 @[simp]
-theorem lower_mem_Icc (I : Box ι) : I.lower ∈ I.Icc :=
+theorem lower_mem_Icc (I : Box ι) : I.lower ∈ I.IccCat :=
   left_mem_Icc.2 I.lower_le_upper
 
-protected theorem is_compact_Icc (I : Box ι) : IsCompact I.Icc :=
+protected theorem is_compact_Icc (I : Box ι) : IsCompact I.IccCat :=
   is_compact_Icc
 
-theorem Icc_eq_pi : I.Icc = pi Univ fun i => Icc (I.lower i) (I.upper i) :=
+theorem Icc_eq_pi : I.IccCat = pi Univ fun i => IccCat (I.lower i) (I.upper i) :=
   (pi_univ_Icc _ _).symm
 
-theorem le_iff_Icc : I ≤ J ↔ I.Icc ⊆ J.Icc :=
+theorem le_iff_Icc : I ≤ J ↔ I.IccCat ⊆ J.IccCat :=
   (le_tfae I J).out 0 2
 
-theorem antitone_lower : Antitoneₓ fun I : Box ι => I.lower := fun I J H => (le_iff_bounds.1 H).1
+theorem antitone_lower : Antitone fun I : Box ι => I.lower := fun I J H => (le_iff_bounds.1 H).1
 
-theorem monotone_upper : Monotoneₓ fun I : Box ι => I.upper := fun I J H => (le_iff_bounds.1 H).2
+theorem monotone_upper : Monotone fun I : Box ι => I.upper := fun I J H => (le_iff_bounds.1 H).2
 
-theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, fun i => (hx i).2⟩
+theorem coe_subset_Icc : ↑I ⊆ I.IccCat := fun x hx => ⟨fun i => (hx i).1.le, fun i => (hx i).2⟩
 
 /-!
 ### Supremum of two boxes
@@ -217,7 +217,7 @@ theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, 
 instance : HasSup (Box ι) :=
   ⟨fun I J =>
     ⟨I.lower ⊓ J.lower, I.upper ⊔ J.upper, fun i =>
-      (min_le_leftₓ _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_leftₓ _ _)⟩⟩
+      (min_le_left _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_left _ _)⟩⟩
 
 instance : SemilatticeSup (Box ι) :=
   { Box.partialOrder, Box.hasSup with le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
@@ -232,7 +232,7 @@ In this section we define coercion from `with_bot (box ι)` to `set (ι → ℝ)
 -/
 
 
-instance withBotCoe : CoeTₓ (WithBot (Box ι)) (Set (ι → ℝ)) :=
+instance withBotCoe : CoeT (WithBot (Box ι)) (Set (ι → ℝ)) :=
   ⟨fun o => o.elim ∅ coe⟩
 
 @[simp, norm_cast]
@@ -266,7 +266,7 @@ theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)
 
 @[simp, norm_cast]
 theorem with_bot_coe_inj {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) = J ↔ I = J := by
-  simp only [subset.antisymm_iff, ← le_antisymm_iffₓ, with_bot_coe_subset_iff]
+  simp only [subset.antisymm_iff, ← le_antisymm_iff, with_bot_coe_subset_iff]
 
 /-- Make a `with_bot (box ι)` from a pair of corners `l u : ι → ℝ`. If `l i < u i` for all `i`,
 then the result is `⟨l, u, _⟩ : box ι`, otherwise it is `⊥`. In any case, the result interpreted
@@ -292,7 +292,7 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
     
 
 @[simp]
-theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi Univ fun i => Ioc (l i) (u i) := by
+theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi Univ fun i => IocCat (l i) (u i) := by
   rw [mk']
   split_ifs
   · exact coe_eq_pi _
@@ -351,32 +351,32 @@ theorem not_disjoint_coe_iff_nonempty_inter : ¬Disjoint (I : WithBot (Box ι)) 
 /-- Face of a box in `ℝⁿ⁺¹ = fin (n + 1) → ℝ`: the box in `ℝⁿ = fin n → ℝ` with corners at
 `I.lower ∘ fin.succ_above i` and `I.upper ∘ fin.succ_above i`. -/
 @[simps (config := { simpRhs := true })]
-def face {n} (I : Box (Finₓ (n + 1))) (i : Finₓ (n + 1)) : Box (Finₓ n) :=
-  ⟨I.lower ∘ Finₓ.succAbove i, I.upper ∘ Finₓ.succAbove i, fun j => I.lower_lt_upper _⟩
+def face {n} (I : Box (Fin (n + 1))) (i : Fin (n + 1)) : Box (Fin n) :=
+  ⟨I.lower ∘ Fin.succAbove i, I.upper ∘ Fin.succAbove i, fun j => I.lower_lt_upper _⟩
 
 @[simp]
-theorem face_mk {n} (l u : Finₓ (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : Finₓ (n + 1)) :
-    face ⟨l, u, h⟩ i = ⟨l ∘ Finₓ.succAbove i, u ∘ Finₓ.succAbove i, fun j => h _⟩ :=
+theorem face_mk {n} (l u : Fin (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : Fin (n + 1)) :
+    face ⟨l, u, h⟩ i = ⟨l ∘ Fin.succAbove i, u ∘ Fin.succAbove i, fun j => h _⟩ :=
   rfl
 
 @[mono]
-theorem face_mono {n} {I J : Box (Finₓ (n + 1))} (h : I ≤ J) (i : Finₓ (n + 1)) : face I i ≤ face J i := fun x hx i =>
+theorem face_mono {n} {I J : Box (Fin (n + 1))} (h : I ≤ J) (i : Fin (n + 1)) : face I i ≤ face J i := fun x hx i =>
   Ioc_subset_Ioc ((le_iff_bounds.1 h).1 _) ((le_iff_bounds.1 h).2 _) (hx _)
 
-theorem monotone_face {n} (i : Finₓ (n + 1)) : Monotoneₓ fun I => face I i := fun I J h => face_mono h i
+theorem monotone_face {n} (i : Fin (n + 1)) : Monotone fun I => face I i := fun I J h => face_mono h i
 
-theorem maps_to_insert_nth_face_Icc {n} (I : Box (Finₓ (n + 1))) {i : Finₓ (n + 1)} {x : ℝ}
-    (hx : x ∈ Icc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).Icc I.Icc := fun y hy =>
-  Finₓ.insert_nth_mem_Icc.2 ⟨hx, hy⟩
+theorem maps_to_insert_nth_face_Icc {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
+    (hx : x ∈ IccCat (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).IccCat I.IccCat := fun y hy =>
+  Fin.insert_nth_mem_Icc.2 ⟨hx, hy⟩
 
-theorem maps_to_insert_nth_face {n} (I : Box (Finₓ (n + 1))) {i : Finₓ (n + 1)} {x : ℝ}
-    (hx : x ∈ Ioc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i) I := fun y hy => by
-  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Finₓ.insert_nth_apply_same,
-    Finₓ.insert_nth_apply_succ_above, true_andₓ]
+theorem maps_to_insert_nth_face {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
+    (hx : x ∈ IocCat (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i) I := fun y hy => by
+  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Fin.insert_nth_apply_same, Fin.insert_nth_apply_succ_above,
+    true_and_iff]
 
-theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n + 1) → ℝ) → X} {I : Box (Finₓ (n + 1))}
-    (h : ContinuousOn f I.Icc) {i : Finₓ (n + 1)} {x : ℝ} (hx : x ∈ Icc (I.lower i) (I.upper i)) :
-    ContinuousOn (f ∘ i.insertNth x) (I.face i).Icc :=
+theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) → ℝ) → X} {I : Box (Fin (n + 1))}
+    (h : ContinuousOn f I.IccCat) {i : Fin (n + 1)} {x : ℝ} (hx : x ∈ IccCat (I.lower i) (I.upper i)) :
+    ContinuousOn (f ∘ i.insertNth x) (I.face i).IccCat :=
   h.comp (continuous_on_const.fin_insert_nth i continuous_on_id) (I.maps_to_insert_nth_face_Icc hx)
 
 /-!
@@ -386,24 +386,24 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n + 1)
 
 /-- The interior of a box. -/
 protected def ioo : Box ι →o Set (ι → ℝ) where
-  toFun := fun I => pi Univ fun i => Ioo (I.lower i) (I.upper i)
-  monotone' := fun I J h => pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
+  toFun I := pi Univ fun i => IooCat (I.lower i) (I.upper i)
+  monotone' I J h := pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
 
-theorem Ioo_subset_coe (I : Box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivialₓ)
+theorem Ioo_subset_coe (I : Box ι) : I.IooCat ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivial)
 
-protected theorem Ioo_subset_Icc (I : Box ι) : I.Ioo ⊆ I.Icc :=
+protected theorem Ioo_subset_Icc (I : Box ι) : I.IooCat ⊆ I.IccCat :=
   I.Ioo_subset_coe.trans coe_subset_Icc
 
-theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotoneₓ J)
+theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotone J)
     (hl : Tendsto (lower ∘ J) atTop (𝓝 I.lower)) (hu : Tendsto (upper ∘ J) atTop (𝓝 I.upper)) :
-    (⋃ n, (J n).Ioo) = I.Ioo :=
-  have hl' : ∀ i, Antitoneₓ fun n => (J n).lower i := fun i =>
-    (monotone_evalₓ i).comp_antitone (antitone_lower.comp_monotone hJ)
-  have hu' : ∀ i, Monotoneₓ fun n => (J n).upper i := fun i => (monotone_evalₓ i).comp (monotone_upper.comp hJ)
+    (⋃ n, (J n).IooCat) = I.IooCat :=
+  have hl' : ∀ i, Antitone fun n => (J n).lower i := fun i =>
+    (monotone_eval i).comp_antitone (antitone_lower.comp_monotone hJ)
+  have hu' : ∀ i, Monotone fun n => (J n).upper i := fun i => (monotone_eval i).comp (monotone_upper.comp hJ)
   calc
-    (⋃ n, (J n).Ioo) = pi Univ fun i => ⋃ n, Ioo ((J n).lower i) ((J n).upper i) :=
-      Union_univ_pi_of_monotone fun i => (hl' i).Ioo (hu' i)
-    _ = I.Ioo :=
+    (⋃ n, (J n).IooCat) = pi Univ fun i => ⋃ n, IooCat ((J n).lower i) ((J n).upper i) :=
+      Union_univ_pi_of_monotone fun i => (hl' i).IooCat (hu' i)
+    _ = I.IooCat :=
       pi_congr rfl fun i hi =>
         Union_Ioo_of_mono_of_is_glb_of_is_lub (hl' i) (hu' i)
           (is_glb_of_tendsto_at_top (hl' i) (tendsto_pi_nhds.1 hl _))
@@ -412,7 +412,7 @@ theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ :
 
 theorem exists_seq_mono_tendsto (I : Box ι) :
     ∃ J : ℕ →o Box ι,
-      (∀ n, (J n).Icc ⊆ I.Ioo) ∧ Tendsto (lower ∘ J) atTop (𝓝 I.lower) ∧ Tendsto (upper ∘ J) atTop (𝓝 I.upper) :=
+      (∀ n, (J n).IccCat ⊆ I.IooCat) ∧ Tendsto (lower ∘ J) atTop (𝓝 I.lower) ∧ Tendsto (upper ∘ J) atTop (𝓝 I.upper) :=
   by
   choose a b ha_anti hb_mono ha_mem hb_mem hab ha_tendsto hb_tendsto using fun i =>
     exists_seq_strict_anti_strict_mono_tendsto (I.lower_lt_upper i)
@@ -424,13 +424,13 @@ theorem exists_seq_mono_tendsto (I : Box ι) :
 
 section Distortion
 
-variable [Fintypeₓ ι]
+variable [Fintype ι]
 
 /-- The distortion of a box `I` is the maximum of the ratios of the lengths of its edges.
 It is defined as the maximum of the ratios
 `nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/
 def distortion (I : Box ι) : ℝ≥0 :=
-  Finsetₓ.univ.sup fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
+  Finset.univ.sup fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J := by
@@ -438,7 +438,7 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
   congr 1 with i
   have : 0 < r := by
     by_contra hr
-    have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_ltₓ.1 hr)
+    have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
     rw [← h] at this
     exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
   simp_rw [Nnreal.finset_sup_div, div_div_div_cancel_right _ ((map_ne_zero Real.nnabs).2 this.ne')]
@@ -448,7 +448,7 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
   calc
     nndist I.lower I.upper = nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
       (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
-    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finsetₓ.le_sup <| Finsetₓ.mem_univ i) _
+    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
     
 
 theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
@@ -457,7 +457,7 @@ theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ 
     I.nndist_le_distortion_mul i
 
 theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.distortion ≤ c) :
-    diam I.Icc ≤ c * (I.upper i - I.lower i) :=
+    diam I.IccCat ≤ c * (I.upper i - I.lower i) :=
   have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
   (diam_le_of_forall_dist_le this) fun x hx y hy =>
     calc

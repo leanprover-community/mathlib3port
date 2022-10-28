@@ -32,16 +32,16 @@ namespace Mllist
 variable {α β : Type u} {m : Type u → Type u}
 
 /-- Construct an `mllist` recursively. -/
-unsafe def fix [Alternativeₓ m] (f : α → m α) : α → mllist m α
+unsafe def fix [Alternative m] (f : α → m α) : α → mllist m α
   | x => cons <| (fun a => (some x, fix a)) <$> f x <|> pure (some x, nil)
 
-variable [Monadₓ m]
+variable [Monad m]
 
 /-- Repeatedly apply a function `f : α → m (α × list β)` to an initial `a : α`,
 accumulating the elements of the resulting `list β` as a single monadic lazy list.
 
 (This variant allows starting with a specified `list β` of elements, as well. )-/
-unsafe def fixl_with [Alternativeₓ m] (f : α → m (α × List β)) : α → List β → mllist m β
+unsafe def fixl_with [Alternative m] (f : α → m (α × List β)) : α → List β → mllist m β
   | s, b :: rest => cons <| pure (some b, fixl_with s rest)
   | s, [] =>
     cons <|
@@ -54,7 +54,7 @@ unsafe def fixl_with [Alternativeₓ m] (f : α → m (α × List β)) : α → 
 
 /-- Repeatedly apply a function `f : α → m (α × list β)` to an initial `a : α`,
 accumulating the elements of the resulting `list β` as a single monadic lazy list. -/
-unsafe def fixl [Alternativeₓ m] (f : α → m (α × List β)) (s : α) : mllist m β :=
+unsafe def fixl [Alternative m] (f : α → m (α × List β)) (s : α) : mllist m β :=
   fixl_with f s []
 
 /-- Deconstruct an `mllist`, returning inside the monad an optional pair `α × mllist m α`
@@ -125,7 +125,7 @@ unsafe def filter {α : Type u} (p : α → Prop) [DecidablePred p] : mllist m �
 
 /-- Filter a `mllist` using a function which returns values in the (alternative) monad.
 Whenever the function "succeeds", we accept the element, and reject otherwise. -/
-unsafe def mfilter [Alternativeₓ m] {α β : Type u} (p : α → m β) : mllist m α → mllist m α
+unsafe def mfilter [Alternative m] {α β : Type u} (p : α → m β) : mllist m α → mllist m α
   | nil => nil
   | cons l =>
     cons <| do
@@ -146,7 +146,7 @@ unsafe def filter_map {α β : Type u} (f : α → Option β) : mllist m α → 
 
 /-- Filter and transform a `mllist` using a function that returns values inside the monad.
 We discard elements where the function fails. -/
-unsafe def mfilter_map [Alternativeₓ m] {α β : Type u} (f : α → m β) : mllist m α → mllist m β
+unsafe def mfilter_map [Alternative m] {α β : Type u} (f : α → m β) : mllist m α → mllist m β
   | nil => nil
   | cons l =>
     cons <| do
@@ -193,7 +193,7 @@ unsafe def enum {α : Type u} : mllist m α → mllist m (ℕ × α) :=
   enum_from 0
 
 /-- The infinite monadic lazy list of natural numbers.-/
-unsafe def range {m : Type → Type} [Alternativeₓ m] : mllist m ℕ :=
+unsafe def range {m : Type → Type} [Alternative m] : mllist m ℕ :=
   mllist.fix (fun n => pure (n + 1)) 0
 
 /-- Add one element to the end of a monadic lazy list. -/
@@ -215,13 +215,13 @@ unsafe def monad_lift {α} (x : m α) : mllist m α :=
   cons <| (flip Prod.mk nil ∘ some) <$> x
 
 /-- Return the head of a monadic lazy list, as a value in the monad. -/
-unsafe def head [Alternativeₓ m] {α} (L : mllist m α) : m α := do
+unsafe def head [Alternative m] {α} (L : mllist m α) : m α := do
   let some (r, _) ← L.uncons | failure
   return r
 
 /-- Apply a function returning values inside the monad to a monadic lazy list,
 returning only the first successful result. -/
-unsafe def mfirst [Alternativeₓ m] {α β} (L : mllist m α) (f : α → m β) : m β :=
+unsafe def mfirst [Alternative m] {α β} (L : mllist m α) (f : α → m β) : m β :=
   (L.mfilter_map f).head
 
 end Mllist

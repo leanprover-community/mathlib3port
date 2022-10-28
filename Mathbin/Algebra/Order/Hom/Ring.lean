@@ -39,12 +39,13 @@ When possible, instead of parametrizing results over `(f : order_ring_hom α β)
 you should parametrize over `(F : Type*) [order_ring_hom_class F α β] (f : F)`.
 
 When you extend this structure, make sure to extend `order_ring_hom_class`. -/
-structure OrderRingHom (α β : Type _) [NonAssocSemiringₓ α] [Preorderₓ α] [NonAssocSemiringₓ β] [Preorderₓ β] extends
+structure OrderRingHom (α β : Type _) [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β] [Preorder β] extends
   α →+* β where
-  monotone' : Monotoneₓ to_fun
+  monotone' : Monotone to_fun
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident order_ring_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Reinterpret an ordered ring homomorphism as a ring homomorphism. -/
+add_decl_doc OrderRingHom.toRingHom
+
 -- mathport name: «expr →+*o »
 infixl:25 " →+*o " => OrderRingHom
 
@@ -62,9 +63,9 @@ infixl:25 " ≃+*o " => OrderRingIso
 
 /-- `order_ring_hom_class F α β` states that `F` is a type of ordered semiring homomorphisms.
 You should extend this typeclass when you extend `order_ring_hom`. -/
-class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [NonAssocSemiringₓ α] [Preorderₓ α]
-  [NonAssocSemiringₓ β] [Preorderₓ β] extends RingHomClass F α β where
-  Monotone (f : F) : Monotoneₓ f
+class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β]
+  [Preorder β] extends RingHomClass F α β where
+  Monotone (f : F) : Monotone f
 
 /-- `order_ring_iso_class F α β` states that `F` is a type of ordered semiring isomorphisms.
 You should extend this class when you extend `order_ring_iso`. -/
@@ -73,13 +74,13 @@ class OrderRingIsoClass (F : Type _) (α β : outParam (Type _)) [Mul α] [Add �
   map_le_map_iff (f : F) {a b : α} : f a ≤ f b ↔ a ≤ b
 
 -- See note [lower priority instance]
-instance (priority := 100) OrderRingHomClass.toOrderAddMonoidHomClass [NonAssocSemiringₓ α] [Preorderₓ α]
-    [NonAssocSemiringₓ β] [Preorderₓ β] [OrderRingHomClass F α β] : OrderAddMonoidHomClass F α β :=
+instance (priority := 100) OrderRingHomClass.toOrderAddMonoidHomClass [NonAssocSemiring α] [Preorder α]
+    [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] : OrderAddMonoidHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
 
 -- See note [lower priority instance]
-instance (priority := 100) OrderRingHomClass.toOrderMonoidWithZeroHomClass [NonAssocSemiringₓ α] [Preorderₓ α]
-    [NonAssocSemiringₓ β] [Preorderₓ β] [OrderRingHomClass F α β] : OrderMonoidWithZeroHomClass F α β :=
+instance (priority := 100) OrderRingHomClass.toOrderMonoidWithZeroHomClass [NonAssocSemiring α] [Preorder α]
+    [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] : OrderMonoidWithZeroHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
 
 -- See note [lower instance priority]
@@ -88,15 +89,15 @@ instance (priority := 100) OrderRingIsoClass.toOrderIsoClass [Mul α] [Add α] [
   { ‹OrderRingIsoClass F α β› with }
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderRingIsoClass.toOrderRingHomClass [NonAssocSemiringₓ α] [Preorderₓ α]
-    [NonAssocSemiringₓ β] [Preorderₓ β] [OrderRingIsoClass F α β] : OrderRingHomClass F α β :=
+instance (priority := 100) OrderRingIsoClass.toOrderRingHomClass [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β]
+    [Preorder β] [OrderRingIsoClass F α β] : OrderRingHomClass F α β :=
   { ‹OrderRingIsoClass F α β› with Monotone := fun f => OrderHomClass.mono f }
 
-instance [NonAssocSemiringₓ α] [Preorderₓ α] [NonAssocSemiringₓ β] [Preorderₓ β] [OrderRingHomClass F α β] :
-    CoeTₓ F (α →+*o β) :=
+instance [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] :
+    CoeT F (α →+*o β) :=
   ⟨fun f => ⟨f, OrderHomClass.mono f⟩⟩
 
-instance [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] [OrderRingIsoClass F α β] : CoeTₓ F (α ≃+*o β) :=
+instance [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] [OrderRingIsoClass F α β] : CoeT F (α ≃+*o β) :=
   ⟨fun f => ⟨f, fun a b => map_le_map_iff f⟩⟩
 
 /-! ### Ordered ring homomorphisms -/
@@ -104,11 +105,11 @@ instance [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] [OrderRingIsoClass 
 
 namespace OrderRingHom
 
-variable [NonAssocSemiringₓ α] [Preorderₓ α]
+variable [NonAssocSemiring α] [Preorder α]
 
-section Preorderₓ
+section Preorder
 
-variable [NonAssocSemiringₓ β] [Preorderₓ β] [NonAssocSemiringₓ γ] [Preorderₓ γ] [NonAssocSemiringₓ δ] [Preorderₓ δ]
+variable [NonAssocSemiring β] [Preorder β] [NonAssocSemiring γ] [Preorder γ] [NonAssocSemiring δ] [Preorder δ]
 
 /-- Reinterpret an ordered ring homomorphism as an ordered additive monoid homomorphism. -/
 def toOrderAddMonoidHom (f : α →+*o β) : α →+o β :=
@@ -119,13 +120,13 @@ def toOrderMonoidWithZeroHom (f : α →+*o β) : α →*₀o β :=
   { f with }
 
 instance : OrderRingHomClass (α →+*o β) α β where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
-  map_mul := fun f => f.map_mul'
-  map_one := fun f => f.map_one'
-  map_add := fun f => f.map_add'
-  map_zero := fun f => f.map_zero'
-  Monotone := fun f => f.monotone'
+  coe f := f.toFun
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  map_mul f := f.map_mul'
+  map_one f := f.map_one'
+  map_add f := f.map_add'
+  map_zero f := f.map_zero'
+  Monotone f := f.monotone'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -240,15 +241,15 @@ theorem cancel_right {f₁ f₂ : β →+*o γ} {g : α →+*o β} (hg : Surject
 theorem cancel_left {f : β →+*o γ} {g₁ g₂ : α →+*o β} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
   ⟨fun h => ext fun a => hf <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
-end Preorderₓ
+end Preorder
 
-variable [NonAssocSemiringₓ β]
+variable [NonAssocSemiring β]
 
-instance [Preorderₓ β] : Preorderₓ (OrderRingHom α β) :=
-  Preorderₓ.lift (coeFn : _ → α → β)
+instance [Preorder β] : Preorder (OrderRingHom α β) :=
+  Preorder.lift (coeFn : _ → α → β)
 
-instance [PartialOrderₓ β] : PartialOrderₓ (OrderRingHom α β) :=
-  PartialOrderₓ.lift _ FunLike.coe_injective
+instance [PartialOrder β] : PartialOrder (OrderRingHom α β) :=
+  PartialOrder.lift _ FunLike.coe_injective
 
 end OrderRingHom
 
@@ -266,17 +267,17 @@ def toOrderIso (f : α ≃+*o β) : α ≃o β :=
   ⟨f.toRingEquiv.toEquiv, fun _ _ => f.map_le_map_iff'⟩
 
 instance : OrderRingIsoClass (α ≃+*o β) α β where
-  coe := fun f => f.toFun
-  inv := fun f => f.invFun
-  coe_injective' := fun f g h₁ h₂ => by
+  coe f := f.toFun
+  inv f := f.invFun
+  coe_injective' f g h₁ h₂ := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_add := fun f => f.map_add'
-  map_mul := fun f => f.map_mul'
-  map_le_map_iff := fun f _ _ => f.map_le_map_iff'
-  left_inv := fun f => f.left_inv
-  right_inv := fun f => f.right_inv
+  map_add f := f.map_add'
+  map_mul f := f.map_mul'
+  map_le_map_iff f _ _ := f.map_le_map_iff'
+  left_inv f := f.left_inv
+  right_inv f := f.right_inv
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -374,9 +375,9 @@ theorem symm_bijective : Bijective (OrderRingIso.symm : α ≃+*o β → β ≃+
 
 end LE
 
-section NonAssocSemiringₓ
+section NonAssocSemiring
 
-variable [NonAssocSemiringₓ α] [Preorderₓ α] [NonAssocSemiringₓ β] [Preorderₓ β] [NonAssocSemiringₓ γ] [Preorderₓ γ]
+variable [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β] [Preorder β] [NonAssocSemiring γ] [Preorder γ]
 
 /-- Reinterpret an ordered ring isomorphism as an ordered ring homomorphism. -/
 def toOrderRingHom (f : α ≃+*o β) : α →+*o β :=
@@ -397,7 +398,7 @@ theorem coe_to_order_ring_hom_refl : (OrderRingIso.refl α : α →+*o α) = Ord
 theorem to_order_ring_hom_injective : Injective (toOrderRingHom : α ≃+*o β → α →+*o β) := fun f g h =>
   FunLike.coe_injective <| by convert FunLike.ext'_iff.1 h
 
-end NonAssocSemiringₓ
+end NonAssocSemiring
 
 end OrderRingIso
 
@@ -423,7 +424,7 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h
     rw [← map_rat_cast f] at hf
     rw [← map_rat_cast g] at hg
-    exact (lt_asymmₓ ((OrderHomClass.mono g).reflect_lt hg) <| (OrderHomClass.mono f).reflect_lt hf).elim⟩
+    exact (lt_asymm ((OrderHomClass.mono g).reflect_lt hg) <| (OrderHomClass.mono f).reflect_lt hf).elim⟩
 
 /-- There is at most one ordered ring isomorphism between a linear ordered field and an archimedean
 linear ordered field. -/

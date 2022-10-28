@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.RepresentationTheory.Rep
-import Mathbin.Algebra.Category.FinVect
+import Mathbin.RepresentationTheory.RepCat
+import Mathbin.Algebra.Category.FinVectCat
 import Mathbin.RepresentationTheory.Basic
 
 /-!
@@ -33,29 +33,29 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Command.lean:278:31: unsupported: @[derive] abbrev
+/- ./././Mathport/Syntax/Translate/Command.lean:291:31: unsupported: @[derive] abbrev -/
 --, has_limits, has_colimits
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
-abbrev FdRep (k G : Type u) [Field k] [Monoidₓ G] :=
-  Action (FinVect.{u} k) (Mon.of G)
+abbrev FdRep (k G : Type u) [Field k] [Monoid G] :=
+  ActionCat (FinVectCat.{u} k) (MonCat.of G)
 
 namespace FdRep
 
-variable {k G : Type u} [Field k] [Monoidₓ G]
+variable {k G : Type u} [Field k] [Monoid G]
 
 instance : CoeSort (FdRep k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
 
-instance (V : FdRep k G) : AddCommGroupₓ V := by
-  change AddCommGroupₓ ((forget₂ (FdRep k G) (FinVect k)).obj V).obj
+instance (V : FdRep k G) : AddCommGroup V := by
+  change AddCommGroup ((forget₂ (FdRep k G) (FinVectCat k)).obj V).obj
   infer_instance
 
 instance (V : FdRep k G) : Module k V := by
-  change Module k ((forget₂ (FdRep k G) (FinVect k)).obj V).obj
+  change Module k ((forget₂ (FdRep k G) (FinVectCat k)).obj V).obj
   infer_instance
 
 instance (V : FdRep k G) : FiniteDimensional k V := by
-  change FiniteDimensional k ((forget₂ (FdRep k G) (FinVect k)).obj V).obj
+  change FiniteDimensional k ((forget₂ (FdRep k G) (FinVectCat k)).obj V).obj
   infer_instance
 
 /-- The monoid homomorphism corresponding to the action of `G` onto `V : fdRep k G`. -/
@@ -64,11 +64,11 @@ def ρ (V : FdRep k G) : G →* V →ₗ[k] V :=
 
 /-- The underlying `linear_equiv` of an isomorphism of representations. -/
 def isoToLinearEquiv {V W : FdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
-  FinVect.isoToLinearEquiv ((Action.forget (FinVect k) (Mon.of G)).mapIso i)
+  FinVectCat.isoToLinearEquiv ((ActionCat.forget (FinVectCat k) (MonCat.of G)).mapIso i)
 
 theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) : W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) := by
-  rw [FdRep.isoToLinearEquiv, ← FinVect.Iso.conj_eq_conj, iso.conj_apply]
-  rw [iso.eq_inv_comp ((Action.forget (FinVect k) (Mon.of G)).mapIso i)]
+  rw [FdRep.isoToLinearEquiv, ← FinVectCat.Iso.conj_eq_conj, iso.conj_apply]
+  rw [iso.eq_inv_comp ((ActionCat.forget (FinVectCat k) (MonCat.of G)).mapIso i)]
   exact (i.hom.comm g).symm
 
 -- This works well with the new design for representations:
@@ -77,10 +77,11 @@ example (V : FdRep k G) : G →* V →ₗ[k] V :=
 
 /-- Lift an unbundled representation to `fdRep`. -/
 @[simps ρ]
-def of {V : Type u} [AddCommGroupₓ V] [Module k V] [FiniteDimensional k V] (ρ : Representation k G V) : FdRep k G :=
-  ⟨FinVect.of k V, ρ⟩
+def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (ρ : Representation k G V) : FdRep k G :=
+  ⟨FinVectCat.of k V, ρ⟩
 
-instance : HasForget₂ (FdRep k G) (Rep k G) where forget₂ := (forget₂ (FinVect k) (ModuleCat k)).mapAction (Mon.of G)
+instance :
+    HasForget₂ (FdRep k G) (RepCat k G) where forget₂ := (forget₂ (FinVectCat k) (ModuleCat k)).mapAction (MonCat.of G)
 
 -- Verify that the monoidal structure is available.
 example : MonoidalCategory (FdRep k G) := by infer_instance
@@ -89,11 +90,11 @@ end FdRep
 
 namespace FdRep
 
-variable {k G : Type u} [Field k] [Groupₓ G]
+variable {k G : Type u} [Field k] [Group G]
 
 -- Verify that the rigid structure is available when the monoid is a group.
 noncomputable instance : RightRigidCategory (FdRep k G) := by
-  change right_rigid_category (Action (FinVect k) (Groupₓₓ.of G))
+  change right_rigid_category (ActionCat (FinVectCat k) (GroupCat.of G))
   infer_instance
 
 end FdRep
@@ -102,24 +103,24 @@ namespace FdRep
 
 open Representation
 
-variable {k G V W : Type u} [Field k] [Groupₓ G]
+variable {k G V W : Type u} [Field k] [Group G]
 
-variable [AddCommGroupₓ V] [Module k V] [AddCommGroupₓ W] [Module k W]
+variable [AddCommGroup V] [Module k V] [AddCommGroup W] [Module k W]
 
 variable [FiniteDimensional k V] [FiniteDimensional k W]
 
 variable (ρV : Representation k G V) (ρW : Representation k G W)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
 noncomputable def dualTensorIsoLinHomAux : (FdRep.of ρV.dual ⊗ FdRep.of ρW).V ≅ (FdRep.of (linHom ρV ρW)).V :=
   (dualTensorHomEquiv k V W).toFinVectIso
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- When `V` and `W` are finite dimensional representations of a group `G`, the isomorphism
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
 noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ FdRep.of ρW ≅ FdRep.of (linHom ρV ρW) := by
-  apply Action.mkIso (dual_tensor_iso_lin_hom_aux ρV ρW)
+  apply ActionCat.mkIso (dual_tensor_iso_lin_hom_aux ρV ρW)
   convert dual_tensor_hom_comm ρV ρW
 
 @[simp]

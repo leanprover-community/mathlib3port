@@ -28,7 +28,7 @@ noncomputable section
 
 /-- If `E` is a finite dimensional space over `ℝ`, then `to_euclidean` is a continuous `ℝ`-linear
 equivalence between `E` and the Euclidean space of the same dimension. -/
-def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Finₓ <| FiniteDimensional.finrank ℝ E) :=
+def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Fin <| FiniteDimensional.finrank ℝ E) :=
   ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm
 
 namespace Euclidean
@@ -54,7 +54,7 @@ theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
     ClosedBall x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
   rfl
 
-theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun y (hy : _ < _) => le_of_ltₓ hy
+theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun y (hy : _ < _) => le_of_lt hy
 
 theorem is_open_ball {x : E} {r : ℝ} : IsOpen (Ball x r) :=
   Metric.is_open_ball.Preimage toEuclidean.Continuous
@@ -70,14 +70,14 @@ theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (ClosedBall x r) :=
   rw [closed_ball_eq_image]
   exact (is_compact_closed_ball _ _).Image to_euclidean.symm.continuous
 
-theorem is_closed_closed_ball {x : E} {r : ℝ} : IsClosed (ClosedBall x r) :=
+theorem isClosedClosedBall {x : E} {r : ℝ} : IsClosed (ClosedBall x r) :=
   is_compact_closed_ball.IsClosed
 
 theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : Closure (Ball x r) = ClosedBall x r := by
   rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h, closed_ball_eq_preimage]
 
 theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ Ball x R) :
-    ∃ r ∈ Ioo 0 R, s ⊆ Ball x r := by
+    ∃ r ∈ IooCat 0 R, s ⊆ Ball x r := by
   rw [ball_eq_preimage, ← image_subset_iff] at h
   rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
   exact ⟨r, hr, image_subset_iff.1 hsr⟩
@@ -100,7 +100,7 @@ end Euclidean
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E} {n : ℕ∞}
 
-theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
+theorem ContDiff.euclideanDist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by
   simp only [Euclidean.dist]
   apply @ContDiff.dist ℝ

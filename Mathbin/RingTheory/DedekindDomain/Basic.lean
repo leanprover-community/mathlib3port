@@ -38,25 +38,25 @@ dedekind domain, dedekind ring
 -/
 
 
-variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [Field K]
+variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
 open nonZeroDivisors Polynomial
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
-def Ringₓ.DimensionLeOne : Prop :=
+def Ring.DimensionLeOne : Prop :=
   ∀ (p) (_ : p ≠ (⊥ : Ideal R)), p.IsPrime → p.IsMaximal
 
-open Ideal Ringₓ
+open Ideal Ring
 
-namespace Ringₓ
+namespace Ring
 
 theorem DimensionLeOne.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] : DimensionLeOne A :=
   fun p nonzero prime =>
   haveI := Prime
   IsPrime.to_maximal_ideal nonzero
 
-theorem DimensionLeOne.is_integral_closure (B : Type _) [CommRingₓ B] [IsDomain B] [Nontrivial R] [Algebra R A]
+theorem DimensionLeOne.is_integral_closure (B : Type _) [CommRing B] [IsDomain B] [Nontrivial R] [Algebra R A]
     [Algebra R B] [Algebra B A] [IsScalarTower R B A] [IsIntegralClosure B R A] (h : DimensionLeOne R) :
     DimensionLeOne B := fun p ne_bot prime =>
   is_integral_closure.is_maximal_of_is_maximal_comap A p (h _ (is_integral_closure.comap_ne_bot A ne_bot) inferInstance)
@@ -65,7 +65,7 @@ theorem DimensionLeOne.integral_closure [Nontrivial R] [IsDomain A] [Algebra R A
     DimensionLeOne (integralClosure R A) :=
   h.IsIntegralClosure R A (integralClosure R A)
 
-end Ringₓ
+end Ring
 
 variable [IsDomain A]
 
@@ -87,7 +87,7 @@ class IsDedekindDomain : Prop where
   IsIntegrallyClosed : IsIntegrallyClosed A
 
 -- See library note [lower instance priority]
-attribute [instance] IsDedekindDomain.is_noetherian_ring IsDedekindDomain.is_integrally_closed
+attribute [instance] IsDedekindDomain.is_noetherian_ring IsDedekindDomain.isIntegrallyClosed
 
 /-- An integral domain is a Dedekind domain iff and only if it is
 Noetherian, has dimension ≤ 1, and is integrally closed in a given fraction field.
@@ -99,7 +99,7 @@ theorem is_dedekind_domain_iff (K : Type _) [Field K] [Algebra A K] [IsFractionR
     ⟨hr, hd, (is_integrally_closed_iff K).mpr @hi⟩⟩
 
 -- See library note [lower instance priority]
-instance (priority := 100) IsPrincipalIdealRing.is_dedekind_domain [IsPrincipalIdealRing A] : IsDedekindDomain A :=
-  ⟨PrincipalIdealRing.is_noetherian_ring, Ringₓ.DimensionLeOne.principal_ideal_ring A,
-    UniqueFactorizationMonoid.is_integrally_closed⟩
+instance (priority := 100) IsPrincipalIdealRing.isDedekindDomain [IsPrincipalIdealRing A] : IsDedekindDomain A :=
+  ⟨PrincipalIdealRing.is_noetherian_ring, Ring.DimensionLeOne.principal_ideal_ring A,
+    UniqueFactorizationMonoid.isIntegrallyClosed⟩
 

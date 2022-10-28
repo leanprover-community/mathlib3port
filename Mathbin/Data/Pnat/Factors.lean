@@ -23,8 +23,8 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
  gives an equivalence between this set and ℕ+, as we will formalize
  below. -/
 def PrimeMultiset :=
-  Multiset Nat.Primes deriving Inhabited, HasRepr, CanonicallyOrderedAddMonoid, DistribLattice, SemilatticeSup,
-  OrderBot, Sub, HasOrderedSub
+  Multiset Nat.Primes deriving Inhabited, Repr, CanonicallyOrderedAddMonoid, DistribLattice, SemilatticeSup, OrderBot,
+  Sub, HasOrderedSub
 
 namespace PrimeMultiset
 
@@ -180,7 +180,7 @@ theorem prod_add (u v : PrimeMultiset) : (u + v).Prod = u.Prod * v.Prod := by
 theorem prod_smul (d : ℕ) (u : PrimeMultiset) : (d • u).Prod = u.Prod ^ d := by
   induction' d with d ih
   rfl
-  rw [succ_nsmul, prod_add, ih, Nat.succ_eq_add_one, pow_succₓ, mul_comm]
+  rw [succ_nsmul, prod_add, ih, Nat.succ_eq_add_one, pow_succ, mul_comm]
 
 end PrimeMultiset
 
@@ -298,7 +298,7 @@ namespace Pnat
 /-- The gcd and lcm operations on positive integers correspond
  to the inf and sup operations on multisets. -/
 theorem factor_multiset_gcd (m n : ℕ+) : factorMultiset (gcd m n) = factorMultiset m ⊓ factorMultiset n := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · apply le_inf_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr
     exact gcd_dvd_left m n
     exact gcd_dvd_right m n
@@ -310,7 +310,7 @@ theorem factor_multiset_gcd (m n : ℕ+) : factorMultiset (gcd m n) = factorMult
     
 
 theorem factor_multiset_lcm (m n : ℕ+) : factorMultiset (lcm m n) = factorMultiset m ⊔ factorMultiset n := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · rw [← PrimeMultiset.prod_dvd_iff, prod_factor_multiset]
     apply lcm_dvd <;> rw [← factor_multiset_le_iff']
     exact le_sup_left
@@ -330,7 +330,7 @@ theorem count_factor_multiset (m : ℕ+) (p : Nat.Primes) (k : ℕ) : (p : ℕ+)
   congr 2
   apply multiset.eq_repeat.mpr
   constructor
-  · rw [Multiset.card_nsmul, PrimeMultiset.card_of_prime, mul_oneₓ]
+  · rw [Multiset.card_nsmul, PrimeMultiset.card_of_prime, mul_one]
     
   · intro q h
     rw [PrimeMultiset.ofPrime, Multiset.nsmul_singleton _ k] at h

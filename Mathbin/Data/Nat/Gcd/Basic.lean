@@ -16,236 +16,245 @@ namespace Nat
 /-! ### `gcd` -/
 
 
-theorem gcd_dvdₓ (m n : ℕ) : gcdₓ m n ∣ m ∧ gcdₓ m n ∣ n :=
-  gcdₓ.induction m n (fun n => by rw [gcd_zero_left] <;> exact ⟨dvd_zero n, dvd_refl n⟩) fun m n npos => by
+theorem gcd_dvd (m n : ℕ) : gcd m n ∣ m ∧ gcd m n ∣ n :=
+  gcd.induction m n (fun n => by rw [gcd_zero_left] <;> exact ⟨dvd_zero n, dvd_refl n⟩) fun m n npos => by
     rw [← gcd_rec] <;> exact fun ⟨IH₁, IH₂⟩ => ⟨IH₂, (dvd_mod_iff IH₂).1 IH₁⟩
 
-theorem gcd_dvd_leftₓ (m n : ℕ) : gcdₓ m n ∣ m :=
-  (gcd_dvdₓ m n).left
+theorem gcd_dvd_left (m n : ℕ) : gcd m n ∣ m :=
+  (gcd_dvd m n).left
 
-theorem gcd_dvd_rightₓ (m n : ℕ) : gcdₓ m n ∣ n :=
-  (gcd_dvdₓ m n).right
+theorem gcd_dvd_right (m n : ℕ) : gcd m n ∣ n :=
+  (gcd_dvd m n).right
 
-theorem gcd_le_leftₓ {m} (n) (h : 0 < m) : gcdₓ m n ≤ m :=
-  le_of_dvdₓ h <| gcd_dvd_leftₓ m n
+theorem gcd_le_left {m} (n) (h : 0 < m) : gcd m n ≤ m :=
+  le_of_dvd h <| gcd_dvd_left m n
 
-theorem gcd_le_rightₓ (m) {n} (h : 0 < n) : gcdₓ m n ≤ n :=
-  le_of_dvdₓ h <| gcd_dvd_rightₓ m n
+theorem gcd_le_right (m) {n} (h : 0 < n) : gcd m n ≤ n :=
+  le_of_dvd h <| gcd_dvd_right m n
 
-theorem dvd_gcdₓ {m n k : ℕ} : k ∣ m → k ∣ n → k ∣ gcdₓ m n :=
-  gcdₓ.induction m n (fun n _ kn => by rw [gcd_zero_left] <;> exact kn) fun n m mpos IH H1 H2 => by
+/- warning: nat.dvd_gcd -> Nat.dvd_gcd is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {k : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd k m) -> (Dvd.Dvd.{0} Nat Nat.hasDvd k n) -> (Dvd.Dvd.{0} Nat Nat.hasDvd k (Nat.gcd m n))
+but is expected to have type
+  forall {k : Nat} {m : Nat} {n : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat k m) -> (Dvd.dvd.{0} Nat Nat.instDvdNat k n) -> (Dvd.dvd.{0} Nat Nat.instDvdNat k (Nat.gcd m n))
+Case conversion may be inaccurate. Consider using '#align nat.dvd_gcd Nat.dvd_gcdₓ'. -/
+theorem dvd_gcd {m n k : ℕ} : k ∣ m → k ∣ n → k ∣ gcd m n :=
+  gcd.induction m n (fun n _ kn => by rw [gcd_zero_left] <;> exact kn) fun n m mpos IH H1 H2 => by
     rw [gcd_rec] <;> exact IH ((dvd_mod_iff H1).2 H2) H1
 
-theorem dvd_gcd_iffₓ {m n k : ℕ} : k ∣ gcdₓ m n ↔ k ∣ m ∧ k ∣ n :=
-  Iff.intro (fun h => ⟨h.trans (gcd_dvdₓ m n).left, h.trans (gcd_dvdₓ m n).right⟩) fun h => dvd_gcdₓ h.left h.right
+/- warning: nat.dvd_gcd_iff -> Nat.dvd_gcd_iff is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {k : Nat}, Iff (Dvd.Dvd.{0} Nat Nat.hasDvd k (Nat.gcd m n)) (And (Dvd.Dvd.{0} Nat Nat.hasDvd k m) (Dvd.Dvd.{0} Nat Nat.hasDvd k n))
+but is expected to have type
+  forall {k : Nat} {m : [mdata borrowed:1 Nat]} {n : [mdata borrowed:1 Nat]}, Iff (Dvd.dvd.{0} Nat Nat.instDvdNat k (Nat.gcd m n)) (And (Dvd.dvd.{0} Nat Nat.instDvdNat k m) (Dvd.dvd.{0} Nat Nat.instDvdNat k n))
+Case conversion may be inaccurate. Consider using '#align nat.dvd_gcd_iff Nat.dvd_gcd_iffₓ'. -/
+theorem dvd_gcd_iff {m n k : ℕ} : k ∣ gcd m n ↔ k ∣ m ∧ k ∣ n :=
+  Iff.intro (fun h => ⟨h.trans (gcd_dvd m n).left, h.trans (gcd_dvd m n).right⟩) fun h => dvd_gcd h.left h.right
 
-theorem gcd_commₓ (m n : ℕ) : gcdₓ m n = gcdₓ n m :=
-  dvd_antisymm (dvd_gcdₓ (gcd_dvd_rightₓ m n) (gcd_dvd_leftₓ m n)) (dvd_gcdₓ (gcd_dvd_rightₓ n m) (gcd_dvd_leftₓ n m))
+theorem gcd_comm (m n : ℕ) : gcd m n = gcd n m :=
+  dvd_antisymm (dvd_gcd (gcd_dvd_right m n) (gcd_dvd_left m n)) (dvd_gcd (gcd_dvd_right n m) (gcd_dvd_left n m))
 
-theorem gcd_eq_left_iff_dvdₓ {m n : ℕ} : m ∣ n ↔ gcdₓ m n = m :=
-  ⟨fun h => by rw [gcd_rec, mod_eq_zero_of_dvd h, gcd_zero_left], fun h => h ▸ gcd_dvd_rightₓ m n⟩
+theorem gcd_eq_left_iff_dvd {m n : ℕ} : m ∣ n ↔ gcd m n = m :=
+  ⟨fun h => by rw [gcd_rec, mod_eq_zero_of_dvd h, gcd_zero_left], fun h => h ▸ gcd_dvd_right m n⟩
 
-theorem gcd_eq_right_iff_dvdₓ {m n : ℕ} : m ∣ n ↔ gcdₓ n m = m := by rw [gcd_comm] <;> apply gcd_eq_left_iff_dvd
+theorem gcd_eq_right_iff_dvd {m n : ℕ} : m ∣ n ↔ gcd n m = m := by rw [gcd_comm] <;> apply gcd_eq_left_iff_dvd
 
-theorem gcd_assocₓ (m n k : ℕ) : gcdₓ (gcdₓ m n) k = gcdₓ m (gcdₓ n k) :=
+theorem gcd_assoc (m n k : ℕ) : gcd (gcd m n) k = gcd m (gcd n k) :=
   dvd_antisymm
-    (dvd_gcdₓ ((gcd_dvd_leftₓ (gcdₓ m n) k).trans (gcd_dvd_leftₓ m n))
-      (dvd_gcdₓ ((gcd_dvd_leftₓ (gcdₓ m n) k).trans (gcd_dvd_rightₓ m n)) (gcd_dvd_rightₓ (gcdₓ m n) k)))
-    (dvd_gcdₓ (dvd_gcdₓ (gcd_dvd_leftₓ m (gcdₓ n k)) ((gcd_dvd_rightₓ m (gcdₓ n k)).trans (gcd_dvd_leftₓ n k)))
-      ((gcd_dvd_rightₓ m (gcdₓ n k)).trans (gcd_dvd_rightₓ n k)))
+    (dvd_gcd ((gcd_dvd_left (gcd m n) k).trans (gcd_dvd_left m n))
+      (dvd_gcd ((gcd_dvd_left (gcd m n) k).trans (gcd_dvd_right m n)) (gcd_dvd_right (gcd m n) k)))
+    (dvd_gcd (dvd_gcd (gcd_dvd_left m (gcd n k)) ((gcd_dvd_right m (gcd n k)).trans (gcd_dvd_left n k)))
+      ((gcd_dvd_right m (gcd n k)).trans (gcd_dvd_right n k)))
 
 @[simp]
-theorem gcd_one_rightₓ (n : ℕ) : gcdₓ n 1 = 1 :=
-  Eq.trans (gcd_commₓ n 1) <| gcd_one_leftₓ n
+theorem gcd_one_right (n : ℕ) : gcd n 1 = 1 :=
+  Eq.trans (gcd_comm n 1) <| gcd_one_left n
 
-theorem gcd_mul_leftₓ (m n k : ℕ) : gcdₓ (m * n) (m * k) = m * gcdₓ n k :=
-  gcdₓ.induction n k (fun k => by repeat' first |rw [mul_zero]|rw [gcd_zero_left]) fun k n H IH => by
+theorem gcd_mul_left (m n k : ℕ) : gcd (m * n) (m * k) = m * gcd n k :=
+  gcd.induction n k (fun k => by repeat' first |rw [mul_zero]|rw [gcd_zero_left]) fun k n H IH => by
     rwa [← mul_mod_mul_left, ← gcd_rec, ← gcd_rec] at IH
 
-theorem gcd_mul_rightₓ (m n k : ℕ) : gcdₓ (m * n) (k * n) = gcdₓ m k * n := by
+theorem gcd_mul_right (m n k : ℕ) : gcd (m * n) (k * n) = gcd m k * n := by
   rw [mul_comm m n, mul_comm k n, mul_comm (gcd m k) n, gcd_mul_left]
 
-theorem gcd_pos_of_pos_leftₓ {m : ℕ} (n : ℕ) (mpos : 0 < m) : 0 < gcdₓ m n :=
-  pos_of_dvd_of_posₓ (gcd_dvd_leftₓ m n) mpos
+theorem gcd_pos_of_pos_left {m : ℕ} (n : ℕ) (mpos : 0 < m) : 0 < gcd m n :=
+  pos_of_dvd_of_pos (gcd_dvd_left m n) mpos
 
-theorem gcd_pos_of_pos_rightₓ (m : ℕ) {n : ℕ} (npos : 0 < n) : 0 < gcdₓ m n :=
-  pos_of_dvd_of_posₓ (gcd_dvd_rightₓ m n) npos
+theorem gcd_pos_of_pos_right (m : ℕ) {n : ℕ} (npos : 0 < n) : 0 < gcd m n :=
+  pos_of_dvd_of_pos (gcd_dvd_right m n) npos
 
-theorem eq_zero_of_gcd_eq_zero_leftₓ {m n : ℕ} (H : gcdₓ m n = 0) : m = 0 :=
-  Or.elim (Nat.eq_zero_or_posₓ m) id fun H1 : 0 < m => absurd (Eq.symm H) (ne_of_ltₓ (gcd_pos_of_pos_leftₓ _ H1))
+theorem eq_zero_of_gcd_eq_zero_left {m n : ℕ} (H : gcd m n = 0) : m = 0 :=
+  Or.elim (Nat.eq_zero_or_pos m) id fun H1 : 0 < m => absurd (Eq.symm H) (ne_of_lt (gcd_pos_of_pos_left _ H1))
 
-theorem eq_zero_of_gcd_eq_zero_rightₓ {m n : ℕ} (H : gcdₓ m n = 0) : n = 0 := by
+theorem eq_zero_of_gcd_eq_zero_right {m n : ℕ} (H : gcd m n = 0) : n = 0 := by
   rw [gcd_comm] at H <;> exact eq_zero_of_gcd_eq_zero_left H
 
 @[simp]
-theorem gcd_eq_zero_iffₓ {i j : ℕ} : gcdₓ i j = 0 ↔ i = 0 ∧ j = 0 := by
+theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
   constructor
   · intro h
     exact ⟨eq_zero_of_gcd_eq_zero_left h, eq_zero_of_gcd_eq_zero_right h⟩
     
   · rintro ⟨rfl, rfl⟩
-    exact Nat.gcd_zero_rightₓ 0
+    exact Nat.gcd_zero_right 0
     
 
-theorem gcd_divₓ {m n k : ℕ} (H1 : k ∣ m) (H2 : k ∣ n) : gcdₓ (m / k) (n / k) = gcdₓ m n / k :=
-  Or.elim (Nat.eq_zero_or_posₓ k) (fun k0 => by rw [k0, Nat.div_zeroₓ, Nat.div_zeroₓ, Nat.div_zeroₓ, gcd_zero_right])
+theorem gcd_div {m n k : ℕ} (H1 : k ∣ m) (H2 : k ∣ n) : gcd (m / k) (n / k) = gcd m n / k :=
+  Or.elim (Nat.eq_zero_or_pos k) (fun k0 => by rw [k0, Nat.div_zero, Nat.div_zero, Nat.div_zero, gcd_zero_right])
     fun H3 =>
-    Nat.eq_of_mul_eq_mul_rightₓ H3 <| by
-      rw [Nat.div_mul_cancelₓ (dvd_gcd H1 H2), ← gcd_mul_right, Nat.div_mul_cancelₓ H1, Nat.div_mul_cancelₓ H2]
+    Nat.eq_of_mul_eq_mul_right H3 <| by
+      rw [Nat.div_mul_cancel (dvd_gcd H1 H2), ← gcd_mul_right, Nat.div_mul_cancel H1, Nat.div_mul_cancel H2]
 
 theorem gcd_greatest {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) (hd : ∀ e : ℕ, e ∣ a → e ∣ b → e ∣ d) : d = a.gcd b :=
-  (dvd_antisymm (hd _ (gcd_dvd_leftₓ a b) (gcd_dvd_rightₓ a b)) (dvd_gcdₓ hda hdb)).symm
+  (dvd_antisymm (hd _ (gcd_dvd_left a b) (gcd_dvd_right a b)) (dvd_gcd hda hdb)).symm
 
-theorem gcd_dvd_gcd_of_dvd_leftₓ {m k : ℕ} (n : ℕ) (H : m ∣ k) : gcdₓ m n ∣ gcdₓ k n :=
-  dvd_gcdₓ ((gcd_dvd_leftₓ m n).trans H) (gcd_dvd_rightₓ m n)
+theorem gcd_dvd_gcd_of_dvd_left {m k : ℕ} (n : ℕ) (H : m ∣ k) : gcd m n ∣ gcd k n :=
+  dvd_gcd ((gcd_dvd_left m n).trans H) (gcd_dvd_right m n)
 
-theorem gcd_dvd_gcd_of_dvd_rightₓ {m k : ℕ} (n : ℕ) (H : m ∣ k) : gcdₓ n m ∣ gcdₓ n k :=
-  dvd_gcdₓ (gcd_dvd_leftₓ n m) ((gcd_dvd_rightₓ n m).trans H)
+theorem gcd_dvd_gcd_of_dvd_right {m k : ℕ} (n : ℕ) (H : m ∣ k) : gcd n m ∣ gcd n k :=
+  dvd_gcd (gcd_dvd_left n m) ((gcd_dvd_right n m).trans H)
 
-theorem gcd_dvd_gcd_mul_leftₓ (m n k : ℕ) : gcdₓ m n ∣ gcdₓ (k * m) n :=
-  gcd_dvd_gcd_of_dvd_leftₓ _ (dvd_mul_left _ _)
+theorem gcd_dvd_gcd_mul_left (m n k : ℕ) : gcd m n ∣ gcd (k * m) n :=
+  gcd_dvd_gcd_of_dvd_left _ (dvd_mul_left _ _)
 
-theorem gcd_dvd_gcd_mul_rightₓ (m n k : ℕ) : gcdₓ m n ∣ gcdₓ (m * k) n :=
-  gcd_dvd_gcd_of_dvd_leftₓ _ (dvd_mul_right _ _)
+theorem gcd_dvd_gcd_mul_right (m n k : ℕ) : gcd m n ∣ gcd (m * k) n :=
+  gcd_dvd_gcd_of_dvd_left _ (dvd_mul_right _ _)
 
-theorem gcd_dvd_gcd_mul_left_rightₓ (m n k : ℕ) : gcdₓ m n ∣ gcdₓ m (k * n) :=
-  gcd_dvd_gcd_of_dvd_rightₓ _ (dvd_mul_left _ _)
+theorem gcd_dvd_gcd_mul_left_right (m n k : ℕ) : gcd m n ∣ gcd m (k * n) :=
+  gcd_dvd_gcd_of_dvd_right _ (dvd_mul_left _ _)
 
-theorem gcd_dvd_gcd_mul_right_rightₓ (m n k : ℕ) : gcdₓ m n ∣ gcdₓ m (n * k) :=
-  gcd_dvd_gcd_of_dvd_rightₓ _ (dvd_mul_right _ _)
+theorem gcd_dvd_gcd_mul_right_right (m n k : ℕ) : gcd m n ∣ gcd m (n * k) :=
+  gcd_dvd_gcd_of_dvd_right _ (dvd_mul_right _ _)
 
-theorem gcd_eq_leftₓ {m n : ℕ} (H : m ∣ n) : gcdₓ m n = m :=
-  dvd_antisymm (gcd_dvd_leftₓ _ _) (dvd_gcdₓ dvd_rfl H)
+theorem gcd_eq_left {m n : ℕ} (H : m ∣ n) : gcd m n = m :=
+  dvd_antisymm (gcd_dvd_left _ _) (dvd_gcd dvd_rfl H)
 
-theorem gcd_eq_rightₓ {m n : ℕ} (H : n ∣ m) : gcdₓ m n = n := by rw [gcd_comm, gcd_eq_left H]
+theorem gcd_eq_right {m n : ℕ} (H : n ∣ m) : gcd m n = n := by rw [gcd_comm, gcd_eq_left H]
 
 -- Lemmas where one argument is a multiple of the other
 @[simp]
-theorem gcd_mul_left_leftₓ (m n : ℕ) : gcdₓ (m * n) n = n :=
-  dvd_antisymm (gcd_dvd_rightₓ _ _) (dvd_gcdₓ (dvd_mul_left _ _) dvd_rfl)
+theorem gcd_mul_left_left (m n : ℕ) : gcd (m * n) n = n :=
+  dvd_antisymm (gcd_dvd_right _ _) (dvd_gcd (dvd_mul_left _ _) dvd_rfl)
 
 @[simp]
-theorem gcd_mul_left_rightₓ (m n : ℕ) : gcdₓ n (m * n) = n := by rw [gcd_comm, gcd_mul_left_left]
+theorem gcd_mul_left_right (m n : ℕ) : gcd n (m * n) = n := by rw [gcd_comm, gcd_mul_left_left]
 
 @[simp]
-theorem gcd_mul_right_leftₓ (m n : ℕ) : gcdₓ (n * m) n = n := by rw [mul_comm, gcd_mul_left_left]
+theorem gcd_mul_right_left (m n : ℕ) : gcd (n * m) n = n := by rw [mul_comm, gcd_mul_left_left]
 
 @[simp]
-theorem gcd_mul_right_rightₓ (m n : ℕ) : gcdₓ n (n * m) = n := by rw [gcd_comm, gcd_mul_right_left]
+theorem gcd_mul_right_right (m n : ℕ) : gcd n (n * m) = n := by rw [gcd_comm, gcd_mul_right_left]
 
 -- Lemmas for repeated application of `gcd`
 @[simp]
-theorem gcd_gcd_self_right_leftₓ (m n : ℕ) : gcdₓ m (gcdₓ m n) = gcdₓ m n :=
-  dvd_antisymm (gcd_dvd_rightₓ _ _) (dvd_gcdₓ (gcd_dvd_leftₓ _ _) dvd_rfl)
+theorem gcd_gcd_self_right_left (m n : ℕ) : gcd m (gcd m n) = gcd m n :=
+  dvd_antisymm (gcd_dvd_right _ _) (dvd_gcd (gcd_dvd_left _ _) dvd_rfl)
 
 @[simp]
-theorem gcd_gcd_self_right_rightₓ (m n : ℕ) : gcdₓ m (gcdₓ n m) = gcdₓ n m := by
-  rw [gcd_comm n m, gcd_gcd_self_right_left]
+theorem gcd_gcd_self_right_right (m n : ℕ) : gcd m (gcd n m) = gcd n m := by rw [gcd_comm n m, gcd_gcd_self_right_left]
 
 @[simp]
-theorem gcd_gcd_self_left_rightₓ (m n : ℕ) : gcdₓ (gcdₓ n m) m = gcdₓ n m := by rw [gcd_comm, gcd_gcd_self_right_right]
+theorem gcd_gcd_self_left_right (m n : ℕ) : gcd (gcd n m) m = gcd n m := by rw [gcd_comm, gcd_gcd_self_right_right]
 
 @[simp]
-theorem gcd_gcd_self_left_leftₓ (m n : ℕ) : gcdₓ (gcdₓ m n) m = gcdₓ m n := by
-  rw [gcd_comm m n, gcd_gcd_self_left_right]
+theorem gcd_gcd_self_left_left (m n : ℕ) : gcd (gcd m n) m = gcd m n := by rw [gcd_comm m n, gcd_gcd_self_left_right]
 
 -- Lemmas where one argument consists of addition of a multiple of the other
 @[simp]
-theorem gcd_add_mul_right_right (m n k : ℕ) : gcdₓ m (n + k * m) = gcdₓ m n := by
+theorem gcd_add_mul_right_right (m n k : ℕ) : gcd m (n + k * m) = gcd m n := by
   simp [gcd_rec m (n + k * m), gcd_rec m n]
 
 @[simp]
-theorem gcd_add_mul_left_right (m n k : ℕ) : gcdₓ m (n + m * k) = gcdₓ m n := by
-  simp [gcd_rec m (n + m * k), gcd_rec m n]
+theorem gcd_add_mul_left_right (m n k : ℕ) : gcd m (n + m * k) = gcd m n := by simp [gcd_rec m (n + m * k), gcd_rec m n]
 
 @[simp]
-theorem gcd_mul_right_add_right (m n k : ℕ) : gcdₓ m (k * m + n) = gcdₓ m n := by simp [add_commₓ _ n]
+theorem gcd_mul_right_add_right (m n k : ℕ) : gcd m (k * m + n) = gcd m n := by simp [add_comm _ n]
 
 @[simp]
-theorem gcd_mul_left_add_right (m n k : ℕ) : gcdₓ m (m * k + n) = gcdₓ m n := by simp [add_commₓ _ n]
+theorem gcd_mul_left_add_right (m n k : ℕ) : gcd m (m * k + n) = gcd m n := by simp [add_comm _ n]
 
 @[simp]
-theorem gcd_add_mul_right_left (m n k : ℕ) : gcdₓ (m + k * n) n = gcdₓ m n := by
+theorem gcd_add_mul_right_left (m n k : ℕ) : gcd (m + k * n) n = gcd m n := by
   rw [gcd_comm, gcd_add_mul_right_right, gcd_comm]
 
 @[simp]
-theorem gcd_add_mul_left_left (m n k : ℕ) : gcdₓ (m + n * k) n = gcdₓ m n := by
+theorem gcd_add_mul_left_left (m n k : ℕ) : gcd (m + n * k) n = gcd m n := by
   rw [gcd_comm, gcd_add_mul_left_right, gcd_comm]
 
 @[simp]
-theorem gcd_mul_right_add_left (m n k : ℕ) : gcdₓ (k * n + m) n = gcdₓ m n := by
+theorem gcd_mul_right_add_left (m n k : ℕ) : gcd (k * n + m) n = gcd m n := by
   rw [gcd_comm, gcd_mul_right_add_right, gcd_comm]
 
 @[simp]
-theorem gcd_mul_left_add_left (m n k : ℕ) : gcdₓ (n * k + m) n = gcdₓ m n := by
+theorem gcd_mul_left_add_left (m n k : ℕ) : gcd (n * k + m) n = gcd m n := by
   rw [gcd_comm, gcd_mul_left_add_right, gcd_comm]
 
 -- Lemmas where one argument consists of an addition of the other
 @[simp]
-theorem gcd_add_self_right (m n : ℕ) : gcdₓ m (n + m) = gcdₓ m n :=
-  Eq.trans (by rw [one_mulₓ]) (gcd_add_mul_right_right m n 1)
+theorem gcd_add_self_right (m n : ℕ) : gcd m (n + m) = gcd m n :=
+  Eq.trans (by rw [one_mul]) (gcd_add_mul_right_right m n 1)
 
 @[simp]
-theorem gcd_add_self_left (m n : ℕ) : gcdₓ (m + n) n = gcdₓ m n := by rw [gcd_comm, gcd_add_self_right, gcd_comm]
+theorem gcd_add_self_left (m n : ℕ) : gcd (m + n) n = gcd m n := by rw [gcd_comm, gcd_add_self_right, gcd_comm]
 
 @[simp]
-theorem gcd_self_add_left (m n : ℕ) : gcdₓ (m + n) m = gcdₓ n m := by rw [add_commₓ, gcd_add_self_left]
+theorem gcd_self_add_left (m n : ℕ) : gcd (m + n) m = gcd n m := by rw [add_comm, gcd_add_self_left]
 
 @[simp]
-theorem gcd_self_add_right (m n : ℕ) : gcdₓ m (m + n) = gcdₓ m n := by rw [add_commₓ, gcd_add_self_right]
+theorem gcd_self_add_right (m n : ℕ) : gcd m (m + n) = gcd m n := by rw [add_comm, gcd_add_self_right]
 
 /-! ### `lcm` -/
 
 
-theorem lcm_commₓ (m n : ℕ) : lcmₓ m n = lcmₓ n m := by delta lcm <;> rw [mul_comm, gcd_comm]
+theorem lcm_comm (m n : ℕ) : lcm m n = lcm n m := by delta lcm <;> rw [mul_comm, gcd_comm]
 
 @[simp]
-theorem lcm_zero_leftₓ (m : ℕ) : lcmₓ 0 m = 0 := by delta lcm <;> rw [zero_mul, Nat.zero_divₓ]
+theorem lcm_zero_left (m : ℕ) : lcm 0 m = 0 := by delta lcm <;> rw [zero_mul, Nat.zero_div]
 
 @[simp]
-theorem lcm_zero_rightₓ (m : ℕ) : lcmₓ m 0 = 0 :=
-  lcm_commₓ 0 m ▸ lcm_zero_leftₓ m
+theorem lcm_zero_right (m : ℕ) : lcm m 0 = 0 :=
+  lcm_comm 0 m ▸ lcm_zero_left m
 
 @[simp]
-theorem lcm_one_leftₓ (m : ℕ) : lcmₓ 1 m = m := by delta lcm <;> rw [one_mulₓ, gcd_one_left, Nat.div_oneₓ]
+theorem lcm_one_left (m : ℕ) : lcm 1 m = m := by delta lcm <;> rw [one_mul, gcd_one_left, Nat.div_one]
 
 @[simp]
-theorem lcm_one_rightₓ (m : ℕ) : lcmₓ m 1 = m :=
-  lcm_commₓ 1 m ▸ lcm_one_leftₓ m
+theorem lcm_one_right (m : ℕ) : lcm m 1 = m :=
+  lcm_comm 1 m ▸ lcm_one_left m
 
 @[simp]
-theorem lcm_selfₓ (m : ℕ) : lcmₓ m m = m :=
-  Or.elim (Nat.eq_zero_or_posₓ m) (fun h => by rw [h, lcm_zero_left]) fun h => by
-    delta lcm <;> rw [gcd_self, Nat.mul_div_cancelₓ _ h]
+theorem lcm_self (m : ℕ) : lcm m m = m :=
+  Or.elim (Nat.eq_zero_or_pos m) (fun h => by rw [h, lcm_zero_left]) fun h => by
+    delta lcm <;> rw [gcd_self, Nat.mul_div_cancel _ h]
 
-theorem dvd_lcm_leftₓ (m n : ℕ) : m ∣ lcmₓ m n :=
-  Dvd.intro (n / gcdₓ m n) (Nat.mul_div_assocₓ _ <| gcd_dvd_rightₓ m n).symm
+theorem dvd_lcm_left (m n : ℕ) : m ∣ lcm m n :=
+  Dvd.intro (n / gcd m n) (Nat.mul_div_assoc _ <| gcd_dvd_right m n).symm
 
-theorem dvd_lcm_rightₓ (m n : ℕ) : n ∣ lcmₓ m n :=
-  lcm_commₓ n m ▸ dvd_lcm_leftₓ n m
+theorem dvd_lcm_right (m n : ℕ) : n ∣ lcm m n :=
+  lcm_comm n m ▸ dvd_lcm_left n m
 
-theorem gcd_mul_lcmₓ (m n : ℕ) : gcdₓ m n * lcmₓ m n = m * n := by
-  delta lcm <;> rw [Nat.mul_div_cancel'ₓ ((gcd_dvd_left m n).trans (dvd_mul_right m n))]
+theorem gcd_mul_lcm (m n : ℕ) : gcd m n * lcm m n = m * n := by
+  delta lcm <;> rw [Nat.mul_div_cancel' ((gcd_dvd_left m n).trans (dvd_mul_right m n))]
 
-theorem lcm_dvdₓ {m n k : ℕ} (H1 : m ∣ k) (H2 : n ∣ k) : lcmₓ m n ∣ k :=
-  Or.elim (Nat.eq_zero_or_posₓ k) (fun h => by rw [h] <;> exact dvd_zero _) fun kpos =>
-    dvd_of_mul_dvd_mul_leftₓ (gcd_pos_of_pos_leftₓ n (pos_of_dvd_of_posₓ H1 kpos)) <| by
+theorem lcm_dvd {m n k : ℕ} (H1 : m ∣ k) (H2 : n ∣ k) : lcm m n ∣ k :=
+  Or.elim (Nat.eq_zero_or_pos k) (fun h => by rw [h] <;> exact dvd_zero _) fun kpos =>
+    dvd_of_mul_dvd_mul_left (gcd_pos_of_pos_left n (pos_of_dvd_of_pos H1 kpos)) <| by
       rw [gcd_mul_lcm, ← gcd_mul_right, mul_comm n k] <;> exact dvd_gcd (mul_dvd_mul_left _ H2) (mul_dvd_mul_right H1 _)
 
-theorem lcm_dvd_mul (m n : ℕ) : lcmₓ m n ∣ m * n :=
-  lcm_dvdₓ (dvd_mul_right _ _) (dvd_mul_left _ _)
+theorem lcm_dvd_mul (m n : ℕ) : lcm m n ∣ m * n :=
+  lcm_dvd (dvd_mul_right _ _) (dvd_mul_left _ _)
 
-theorem lcm_dvd_iff {m n k : ℕ} : lcmₓ m n ∣ k ↔ m ∣ k ∧ n ∣ k :=
-  ⟨fun h => ⟨(dvd_lcm_leftₓ _ _).trans h, (dvd_lcm_rightₓ _ _).trans h⟩, and_imp.2 lcm_dvdₓ⟩
+theorem lcm_dvd_iff {m n k : ℕ} : lcm m n ∣ k ↔ m ∣ k ∧ n ∣ k :=
+  ⟨fun h => ⟨(dvd_lcm_left _ _).trans h, (dvd_lcm_right _ _).trans h⟩, and_imp.2 lcm_dvd⟩
 
-theorem lcm_assocₓ (m n k : ℕ) : lcmₓ (lcmₓ m n) k = lcmₓ m (lcmₓ n k) :=
+theorem lcm_assoc (m n k : ℕ) : lcm (lcm m n) k = lcm m (lcm n k) :=
   dvd_antisymm
-    (lcm_dvdₓ (lcm_dvdₓ (dvd_lcm_leftₓ m (lcmₓ n k)) ((dvd_lcm_leftₓ n k).trans (dvd_lcm_rightₓ m (lcmₓ n k))))
-      ((dvd_lcm_rightₓ n k).trans (dvd_lcm_rightₓ m (lcmₓ n k))))
-    (lcm_dvdₓ ((dvd_lcm_leftₓ m n).trans (dvd_lcm_leftₓ (lcmₓ m n) k))
-      (lcm_dvdₓ ((dvd_lcm_rightₓ m n).trans (dvd_lcm_leftₓ (lcmₓ m n) k)) (dvd_lcm_rightₓ (lcmₓ m n) k)))
+    (lcm_dvd (lcm_dvd (dvd_lcm_left m (lcm n k)) ((dvd_lcm_left n k).trans (dvd_lcm_right m (lcm n k))))
+      ((dvd_lcm_right n k).trans (dvd_lcm_right m (lcm n k))))
+    (lcm_dvd ((dvd_lcm_left m n).trans (dvd_lcm_left (lcm m n) k))
+      (lcm_dvd ((dvd_lcm_right m n).trans (dvd_lcm_left (lcm m n) k)) (dvd_lcm_right (lcm m n) k)))
 
-theorem lcm_ne_zeroₓ {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) : lcmₓ m n ≠ 0 := by
+theorem lcm_ne_zero {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) : lcm m n ≠ 0 := by
   intro h
   simpa [h, hm, hn] using gcd_mul_lcm m n
 
@@ -258,26 +267,32 @@ See also `nat.coprime_of_dvd` and `nat.coprime_of_dvd'` to prove `nat.coprime m 
 
 instance (m n : ℕ) : Decidable (Coprime m n) := by unfold coprime <;> infer_instance
 
-theorem coprime_iff_gcd_eq_oneₓ {m n : ℕ} : Coprime m n ↔ gcdₓ m n = 1 :=
+theorem coprime_iff_gcd_eq_one {m n : ℕ} : Coprime m n ↔ gcd m n = 1 :=
   Iff.rfl
 
-theorem Coprime.gcd_eq_one {m n : ℕ} (h : Coprime m n) : gcdₓ m n = 1 :=
+theorem Coprime.gcd_eq_one {m n : ℕ} (h : Coprime m n) : gcd m n = 1 :=
   h
 
-theorem Coprime.lcm_eq_mul {m n : ℕ} (h : Coprime m n) : lcmₓ m n = m * n := by
-  rw [← one_mulₓ (lcm m n), ← h.gcd_eq_one, gcd_mul_lcm]
+theorem Coprime.lcm_eq_mul {m n : ℕ} (h : Coprime m n) : lcm m n = m * n := by
+  rw [← one_mul (lcm m n), ← h.gcd_eq_one, gcd_mul_lcm]
 
 theorem Coprime.symm {m n : ℕ} : Coprime n m → Coprime m n :=
-  (gcd_commₓ m n).trans
+  (gcd_comm m n).trans
 
-theorem coprime_commₓ {m n : ℕ} : Coprime n m ↔ Coprime m n :=
+/- warning: nat.coprime_comm -> Nat.coprime_comm is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (Nat.Coprime n m) (Nat.Coprime m n)
+but is expected to have type
+  forall {n : Nat} {m : Nat}, Iff (Nat.coprime n m) (Nat.coprime m n)
+Case conversion may be inaccurate. Consider using '#align nat.coprime_comm Nat.coprime_commₓ'. -/
+theorem coprime_comm {m n : ℕ} : Coprime n m ↔ Coprime m n :=
   ⟨Coprime.symm, Coprime.symm⟩
 
 theorem Coprime.symmetric : Symmetric Coprime := fun m n => Coprime.symm
 
 theorem Coprime.dvd_of_dvd_mul_right {m n k : ℕ} (H1 : Coprime k n) (H2 : k ∣ m * n) : k ∣ m := by
-  let t := dvd_gcdₓ (dvd_mul_left k m) H2
-  rwa [gcd_mul_left, H1.gcd_eq_one, mul_oneₓ] at t
+  let t := dvd_gcd (dvd_mul_left k m) H2
+  rwa [gcd_mul_left, H1.gcd_eq_one, mul_one] at t
 
 theorem Coprime.dvd_of_dvd_mul_left {m n k : ℕ} (H1 : Coprime k m) (H2 : k ∣ m * n) : k ∣ n := by
   rw [mul_comm] at H2 <;> exact H1.dvd_of_dvd_mul_right H2
@@ -288,32 +303,37 @@ theorem Coprime.dvd_mul_right {m n k : ℕ} (H : Coprime k n) : k ∣ m * n ↔ 
 theorem Coprime.dvd_mul_left {m n k : ℕ} (H : Coprime k m) : k ∣ m * n ↔ k ∣ n :=
   ⟨H.dvd_of_dvd_mul_left, fun h => dvd_mul_of_dvd_right h m⟩
 
-theorem Coprime.gcd_mul_left_cancel {k : ℕ} (m : ℕ) {n : ℕ} (H : Coprime k n) : gcdₓ (k * m) n = gcdₓ m n :=
-  have H1 : Coprime (gcdₓ (k * m) n) k := by rw [coprime, gcd_assoc, H.symm.gcd_eq_one, gcd_one_right]
-  dvd_antisymm (dvd_gcdₓ (H1.dvd_of_dvd_mul_left (gcd_dvd_leftₓ _ _)) (gcd_dvd_rightₓ _ _))
-    (gcd_dvd_gcd_mul_leftₓ _ _ _)
+theorem Coprime.gcd_mul_left_cancel {k : ℕ} (m : ℕ) {n : ℕ} (H : Coprime k n) : gcd (k * m) n = gcd m n :=
+  have H1 : Coprime (gcd (k * m) n) k := by rw [coprime, gcd_assoc, H.symm.gcd_eq_one, gcd_one_right]
+  dvd_antisymm (dvd_gcd (H1.dvd_of_dvd_mul_left (gcd_dvd_left _ _)) (gcd_dvd_right _ _)) (gcd_dvd_gcd_mul_left _ _ _)
 
-theorem Coprime.gcd_mul_right_cancel (m : ℕ) {k n : ℕ} (H : Coprime k n) : gcdₓ (m * k) n = gcdₓ m n := by
+theorem Coprime.gcd_mul_right_cancel (m : ℕ) {k n : ℕ} (H : Coprime k n) : gcd (m * k) n = gcd m n := by
   rw [mul_comm m k, H.gcd_mul_left_cancel m]
 
-theorem Coprime.gcd_mul_left_cancel_right {k m : ℕ} (n : ℕ) (H : Coprime k m) : gcdₓ m (k * n) = gcdₓ m n := by
+theorem Coprime.gcd_mul_left_cancel_right {k m : ℕ} (n : ℕ) (H : Coprime k m) : gcd m (k * n) = gcd m n := by
   rw [gcd_comm m n, gcd_comm m (k * n), H.gcd_mul_left_cancel n]
 
-theorem Coprime.gcd_mul_right_cancel_right {k m : ℕ} (n : ℕ) (H : Coprime k m) : gcdₓ m (n * k) = gcdₓ m n := by
+theorem Coprime.gcd_mul_right_cancel_right {k m : ℕ} (n : ℕ) (H : Coprime k m) : gcd m (n * k) = gcd m n := by
   rw [mul_comm n k, H.gcd_mul_left_cancel_right n]
 
-theorem coprime_div_gcd_div_gcdₓ {m n : ℕ} (H : 0 < gcdₓ m n) : Coprime (m / gcdₓ m n) (n / gcdₓ m n) := by
-  rw [coprime_iff_gcd_eq_one, gcd_div (gcd_dvd_left m n) (gcd_dvd_right m n), Nat.div_selfₓ H]
+theorem coprime_div_gcd_div_gcd {m n : ℕ} (H : 0 < gcd m n) : Coprime (m / gcd m n) (n / gcd m n) := by
+  rw [coprime_iff_gcd_eq_one, gcd_div (gcd_dvd_left m n) (gcd_dvd_right m n), Nat.div_self H]
 
-theorem not_coprime_of_dvd_of_dvdₓ {m n d : ℕ} (dgt1 : 1 < d) (Hm : d ∣ m) (Hn : d ∣ n) : ¬Coprime m n := fun co =>
-  not_lt_of_geₓ (le_of_dvdₓ zero_lt_one <| by rw [← co.gcd_eq_one] <;> exact dvd_gcd Hm Hn) dgt1
+/- warning: nat.not_coprime_of_dvd_of_dvd -> Nat.not_coprime_of_dvd_of_dvd is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {d : Nat}, (LT.lt.{0} Nat Nat.hasLt (One.one.{0} Nat Nat.hasOne) d) -> (Dvd.Dvd.{0} Nat Nat.hasDvd d m) -> (Dvd.Dvd.{0} Nat Nat.hasDvd d n) -> (Not (Nat.Coprime m n))
+but is expected to have type
+  forall {d : Nat} {m : Nat} {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) d) -> (Dvd.dvd.{0} Nat Nat.instDvdNat d m) -> (Dvd.dvd.{0} Nat Nat.instDvdNat d n) -> (Not (Nat.coprime m n))
+Case conversion may be inaccurate. Consider using '#align nat.not_coprime_of_dvd_of_dvd Nat.not_coprime_of_dvd_of_dvdₓ'. -/
+theorem not_coprime_of_dvd_of_dvd {m n d : ℕ} (dgt1 : 1 < d) (Hm : d ∣ m) (Hn : d ∣ n) : ¬Coprime m n := fun co =>
+  not_lt_of_ge (le_of_dvd zero_lt_one <| by rw [← co.gcd_eq_one] <;> exact dvd_gcd Hm Hn) dgt1
 
-theorem exists_coprimeₓ {m n : ℕ} (H : 0 < gcdₓ m n) : ∃ m' n', Coprime m' n' ∧ m = m' * gcdₓ m n ∧ n = n' * gcdₓ m n :=
-  ⟨_, _, coprime_div_gcd_div_gcdₓ H, (Nat.div_mul_cancelₓ (gcd_dvd_leftₓ m n)).symm,
-    (Nat.div_mul_cancelₓ (gcd_dvd_rightₓ m n)).symm⟩
+theorem exists_coprime {m n : ℕ} (H : 0 < gcd m n) : ∃ m' n', Coprime m' n' ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
+  ⟨_, _, coprime_div_gcd_div_gcd H, (Nat.div_mul_cancel (gcd_dvd_left m n)).symm,
+    (Nat.div_mul_cancel (gcd_dvd_right m n)).symm⟩
 
-theorem exists_coprime'ₓ {m n : ℕ} (H : 0 < gcdₓ m n) : ∃ g m' n', 0 < g ∧ Coprime m' n' ∧ m = m' * g ∧ n = n' * g :=
-  let ⟨m', n', h⟩ := exists_coprimeₓ H
+theorem exists_coprime' {m n : ℕ} (H : 0 < gcd m n) : ∃ g m' n', 0 < g ∧ Coprime m' n' ∧ m = m' * g ∧ n = n' * g :=
+  let ⟨m', n', h⟩ := exists_coprime H
   ⟨_, m', n', H, h⟩
 
 @[simp]
@@ -321,7 +341,7 @@ theorem coprime_add_self_right {m n : ℕ} : Coprime m (n + m) ↔ Coprime m n :
   rw [coprime, coprime, gcd_add_self_right]
 
 @[simp]
-theorem coprime_self_add_right {m n : ℕ} : Coprime m (m + n) ↔ Coprime m n := by rw [add_commₓ, coprime_add_self_right]
+theorem coprime_self_add_right {m n : ℕ} : Coprime m (m + n) ↔ Coprime m n := by rw [add_comm, coprime_add_self_right]
 
 @[simp]
 theorem coprime_add_self_left {m n : ℕ} : Coprime (m + n) n ↔ Coprime m n := by rw [coprime, coprime, gcd_add_self_left]
@@ -392,41 +412,47 @@ theorem Coprime.coprime_div_left {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ 
     simpa [dvd] using cmn
     
   · rcases dvd with ⟨k, rfl⟩
-    rw [Nat.mul_div_cancel_leftₓ _ (Nat.pos_of_ne_zeroₓ a_split)]
+    rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero a_split)]
     exact coprime.coprime_mul_left cmn
     
 
 theorem Coprime.coprime_div_right {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ n) : Coprime m (n / a) :=
   (Coprime.coprime_div_left cmn.symm dvd).symm
 
-theorem coprime_mul_iff_leftₓ {k m n : ℕ} : Coprime (m * n) k ↔ Coprime m k ∧ Coprime n k :=
+/- warning: nat.coprime_mul_iff_left -> Nat.coprime_mul_iff_left is a dubious translation:
+lean 3 declaration is
+  forall {k : Nat} {m : Nat} {n : Nat}, Iff (Nat.Coprime (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n) k) (And (Nat.Coprime m k) (Nat.Coprime n k))
+but is expected to have type
+  forall {m : Nat} {n : Nat} {k : Nat}, Iff (Nat.coprime (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n) k) (And (Nat.coprime m k) (Nat.coprime n k))
+Case conversion may be inaccurate. Consider using '#align nat.coprime_mul_iff_left Nat.coprime_mul_iff_leftₓ'. -/
+theorem coprime_mul_iff_left {k m n : ℕ} : Coprime (m * n) k ↔ Coprime m k ∧ Coprime n k :=
   ⟨fun h => ⟨Coprime.coprime_mul_right h, Coprime.coprime_mul_left h⟩, fun ⟨h, _⟩ => by
     rwa [coprime_iff_gcd_eq_one, coprime.gcd_mul_left_cancel n h]⟩
 
-theorem coprime_mul_iff_rightₓ {k m n : ℕ} : Coprime k (m * n) ↔ Coprime k m ∧ Coprime k n := by
+theorem coprime_mul_iff_right {k m n : ℕ} : Coprime k (m * n) ↔ Coprime k m ∧ Coprime k n := by
   simpa only [coprime_comm] using coprime_mul_iff_left
 
-theorem Coprime.gcd_left (k : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime (gcdₓ k m) n :=
-  hmn.coprime_dvd_left <| gcd_dvd_rightₓ k m
+theorem Coprime.gcd_left (k : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime (gcd k m) n :=
+  hmn.coprime_dvd_left <| gcd_dvd_right k m
 
-theorem Coprime.gcd_right (k : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime m (gcdₓ k n) :=
-  hmn.coprime_dvd_right <| gcd_dvd_rightₓ k n
+theorem Coprime.gcd_right (k : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime m (gcd k n) :=
+  hmn.coprime_dvd_right <| gcd_dvd_right k n
 
-theorem Coprime.gcd_both (k l : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime (gcdₓ k m) (gcdₓ l n) :=
+theorem Coprime.gcd_both (k l : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime (gcd k m) (gcd l n) :=
   (hmn.gcd_left k).gcd_right l
 
 theorem Coprime.mul_dvd_of_dvd_of_dvd {a n m : ℕ} (hmn : Coprime m n) (hm : m ∣ a) (hn : n ∣ a) : m * n ∣ a :=
   let ⟨k, hk⟩ := hm
   hk.symm ▸ mul_dvd_mul_left _ (hmn.symm.dvd_of_dvd_mul_left (hk ▸ hn))
 
-theorem coprime_one_leftₓ : ∀ n, Coprime 1 n :=
+theorem coprime_one_left : ∀ n, Coprime 1 n :=
   gcd_one_left
 
-theorem coprime_one_rightₓ : ∀ n, Coprime n 1 :=
+theorem coprime_one_right : ∀ n, Coprime n 1 :=
   gcd_one_right
 
 theorem Coprime.pow_left {m k : ℕ} (n : ℕ) (H1 : Coprime m k) : Coprime (m ^ n) k :=
-  Nat.recOn n (coprime_one_leftₓ _) fun n IH => H1.mul IH
+  Nat.recOn n (coprime_one_left _) fun n IH => H1.mul IH
 
 theorem Coprime.pow_right {m k : ℕ} (n : ℕ) (H1 : Coprime k m) : Coprime k (m ^ n) :=
   (H1.symm.pow_left n).symm
@@ -437,20 +463,20 @@ theorem Coprime.pow {k l : ℕ} (m n : ℕ) (H1 : Coprime k l) : Coprime (k ^ m)
 @[simp]
 theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) : Nat.Coprime (a ^ n) b ↔ Nat.Coprime a b := by
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero hn.ne'
-  rw [pow_succₓ, Nat.coprime_mul_iff_leftₓ]
+  rw [pow_succ, Nat.coprime_mul_iff_left]
   exact ⟨And.left, fun hab => ⟨hab, hab.pow_left _⟩⟩
 
 @[simp]
 theorem coprime_pow_right_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) : Nat.Coprime a (b ^ n) ↔ Nat.Coprime a b := by
-  rw [Nat.coprime_commₓ, coprime_pow_left_iff hn, Nat.coprime_commₓ]
+  rw [Nat.coprime_comm, coprime_pow_left_iff hn, Nat.coprime_comm]
 
 theorem Coprime.eq_one_of_dvd {k m : ℕ} (H : Coprime k m) (d : k ∣ m) : k = 1 := by rw [← H.gcd_eq_one, gcd_eq_left d]
 
 @[simp]
-theorem coprime_zero_leftₓ (n : ℕ) : Coprime 0 n ↔ n = 1 := by simp [coprime]
+theorem coprime_zero_left (n : ℕ) : Coprime 0 n ↔ n = 1 := by simp [coprime]
 
 @[simp]
-theorem coprime_zero_rightₓ (n : ℕ) : Coprime n 0 ↔ n = 1 := by simp [coprime]
+theorem coprime_zero_right (n : ℕ) : Coprime n 0 ↔ n = 1 := by simp [coprime]
 
 theorem not_coprime_zero_zero : ¬Coprime 0 0 := by simp
 
@@ -461,12 +487,12 @@ theorem coprime_one_left_iff (n : ℕ) : Coprime 1 n ↔ True := by simp [coprim
 theorem coprime_one_right_iff (n : ℕ) : Coprime n 1 ↔ True := by simp [coprime]
 
 @[simp]
-theorem coprime_selfₓ (n : ℕ) : Coprime n n ↔ n = 1 := by simp [coprime]
+theorem coprime_self (n : ℕ) : Coprime n n ↔ n = 1 := by simp [coprime]
 
-theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b ∣ c) : gcdₓ (a * b) c = b := by
+theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b ∣ c) : gcd (a * b) c = b := by
   rcases exists_eq_mul_left_of_dvd b_dvd_c with ⟨d, rfl⟩
   rw [gcd_mul_right]
-  convert one_mulₓ b
+  convert one_mul b
   exact coprime.coprime_mul_right_right hac
 
 theorem Coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.Coprime n) (hmn : m * n = 0) : m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 :=
@@ -482,14 +508,14 @@ def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) : { d : { m' // m' �
   obtain rfl : m = 0 := eq_zero_of_gcd_eq_zero_right h0
   exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
   case succ tmp =>
-  have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succₓ _ <;> clear h0 tmp
-  have hd : gcd k m * (k / gcd k m) = k := Nat.mul_div_cancel'ₓ (gcd_dvd_left k m)
+  have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succ _ <;> clear h0 tmp
+  have hd : gcd k m * (k / gcd k m) = k := Nat.mul_div_cancel' (gcd_dvd_left k m)
   refine' ⟨⟨⟨gcd k m, gcd_dvd_right k m⟩, ⟨k / gcd k m, _⟩⟩, hd.symm⟩
   apply dvd_of_mul_dvd_mul_left hpos
   rw [hd, ← gcd_mul_right]
   exact dvd_gcd (dvd_mul_right _ _) H
 
-theorem gcd_mul_dvd_mul_gcdₓ (k m n : ℕ) : gcdₓ k (m * n) ∣ gcdₓ k m * gcdₓ k n := by
+theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n := by
   rcases prod_dvd_and_dvd_of_dvd_prod <| gcd_dvd_right k (m * n) with ⟨⟨⟨m', hm'⟩, ⟨n', hn'⟩⟩, h⟩
   replace h : gcd k (m * n) = m' * n' := h
   rw [h]
@@ -502,23 +528,31 @@ theorem gcd_mul_dvd_mul_gcdₓ (k m n : ℕ) : gcdₓ k (m * n) ∣ gcdₓ k m *
     exact dvd_gcd hn'k hn'
     
 
-theorem Coprime.gcd_mul (k : ℕ) {m n : ℕ} (h : Coprime m n) : gcdₓ k (m * n) = gcdₓ k m * gcdₓ k n :=
-  dvd_antisymm (gcd_mul_dvd_mul_gcdₓ k m n)
-    ((h.gcd_both k k).mul_dvd_of_dvd_of_dvd (gcd_dvd_gcd_mul_right_rightₓ _ _ _) (gcd_dvd_gcd_mul_left_rightₓ _ _ _))
+theorem Coprime.gcd_mul (k : ℕ) {m n : ℕ} (h : Coprime m n) : gcd k (m * n) = gcd k m * gcd k n :=
+  dvd_antisymm (gcd_mul_dvd_mul_gcd k m n)
+    ((h.gcd_both k k).mul_dvd_of_dvd_of_dvd (gcd_dvd_gcd_mul_right_right _ _ _) (gcd_dvd_gcd_mul_left_right _ _ _))
 
 theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b := by
   refine' ⟨fun h => _, fun h => pow_dvd_pow_of_dvd h _⟩
-  cases' Nat.eq_zero_or_posₓ (gcd a b) with g0 g0
+  cases' Nat.eq_zero_or_pos (gcd a b) with g0 g0
   · simp [eq_zero_of_gcd_eq_zero_right g0]
     
   rcases exists_coprime' g0 with ⟨g, a', b', g0', co, rfl, rfl⟩
-  rw [mul_powₓ, mul_powₓ] at h
+  rw [mul_pow, mul_pow] at h
   replace h := dvd_of_mul_dvd_mul_right (pow_pos g0' _) h
   have := pow_dvd_pow a' n0
-  rw [pow_oneₓ, (co.pow n n).eq_one_of_dvd h] at this
+  rw [pow_one, (co.pow n n).eq_one_of_dvd h] at this
   simp [eq_one_of_dvd_one this]
 
-theorem gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ {a b c d : ℕ} (cop : c.Coprime d) (h : a * b = c * d) :
+/- warning: nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul -> Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat} {c : Nat} {d : Nat}, (Nat.Coprime c d) -> (Eq.{1} Nat (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c d)) -> (Eq.{1} Nat (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.gcd a c) (Nat.gcd b c)) c)
+but is expected to have type
+  forall {c : Nat} {d : Nat} {a : Nat} {b : Nat}, (Nat.coprime c d) -> (Eq.{1} Nat (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) c d)) -> (Eq.{1} Nat (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.gcd a c) (Nat.gcd b c)) c)
+Case conversion may be inaccurate. Consider using '#align nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ'. -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr c.gcd «expr * »(a, b)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.Coprime d) (h : a * b = c * d) :
     a.gcd c * b.gcd c = c := by
   apply dvd_antisymm
   · apply Nat.Coprime.dvd_of_dvd_mul_right (Nat.Coprime.mul (cop.gcd_left _) (cop.gcd_left _))
@@ -526,7 +560,8 @@ theorem gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ {a b c d : ℕ} (cop : c.Coprime
     apply mul_dvd_mul (gcd_dvd _ _).1 (gcd_dvd _ _).1
     
   · rw [gcd_comm a _, gcd_comm b _]
-    trans c.gcd (a * b)
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr c.gcd «expr * »(a, b)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     rw [h, gcd_mul_right_right d c]
     apply gcd_mul_dvd_mul_gcd
     
@@ -548,8 +583,8 @@ theorem Coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : Coprime m n) (ha : a �
     cop.dvd_of_dvd_mul_right
       ((Nat.dvd_add_iff_right (dvd_mul_left m (n * x))).mpr ((congr_arg _ h).mpr (dvd_mul_right m n)))
   rw [mul_comm, mul_ne_zero_iff, ← one_le_iff_ne_zero] at ha hb
-  refine' mul_ne_zero hb.2 ha.2 (eq_zero_of_mul_eq_self_left (ne_of_gtₓ (add_le_add ha.1 hb.1)) _)
-  rw [← mul_assoc, ← h, add_mulₓ, add_mulₓ, mul_comm _ n, ← mul_assoc, mul_comm y]
+  refine' mul_ne_zero hb.2 ha.2 (eq_zero_of_mul_eq_self_left (ne_of_gt (add_le_add ha.1 hb.1)) _)
+  rw [← mul_assoc, ← h, add_mul, add_mul, mul_comm _ n, ← mul_assoc, mul_comm y]
 
 end Nat
 

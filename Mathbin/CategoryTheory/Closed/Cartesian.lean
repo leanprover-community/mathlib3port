@@ -229,8 +229,8 @@ end Pre
 
 /-- The internal hom functor given by the cartesian closed structure. -/
 def internalHom [CartesianClosed C] : Cᵒᵖ ⥤ C ⥤ C where
-  obj := fun X => exp X.unop
-  map := fun X Y f => pre f.unop
+  obj X := exp X.unop
+  map X Y f := pre f.unop
 
 /-- If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
 @[simps]
@@ -314,7 +314,7 @@ Note we didn't require any coherence between the choice of finite products here,
 along the `prod_comparison` isomorphism.
 -/
 def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
-    CartesianClosed D where closed' := fun X =>
+    CartesianClosed D where closed' X :=
     { isAdj := by
         haveI q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj

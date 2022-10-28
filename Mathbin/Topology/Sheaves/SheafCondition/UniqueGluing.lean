@@ -37,11 +37,11 @@ isomorphism-reflecting functor leaves the sheaf condition invariant, as shown in
 
 noncomputable section
 
-open Top
+open TopCat
 
-open Top.Presheaf
+open TopCat.Presheaf
 
-open Top.Presheaf.SheafConditionEqualizerProducts
+open TopCat.Presheaf.SheafConditionEqualizerProducts
 
 open CategoryTheory
 
@@ -57,7 +57,7 @@ universe u v
 
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C]
 
-namespace Top
+namespace TopCat
 
 namespace Presheaf
 
@@ -65,7 +65,7 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 /-- A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
 agree, for all `i` and `j`
@@ -94,13 +94,13 @@ end
 
 section TypeValued
 
-variable {X : Top.{v}} (F : Presheaf (Type v) X) {ι : Type v} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Presheaf (Type v) X) {ι : Type v} (U : ι → Opens X)
 
 /-- For presheaves of types, terms of `pi_opens F U` are just families of sections.
 -/
 def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
   Limits.IsLimit.conePointUniqueUpToIso (limit.isLimit (Discrete.functor fun i : ι => F.obj (op (U i))))
-    (Types.productLimitCone fun i : ι => F.obj (op (U i))).IsLimit
+    (Types.productLimitCone.{v, v} fun i : ι => F.obj (op (U i))).IsLimit
 
 /-- Under the isomorphism `pi_opens_iso_sections_family`, compatibility of sections is the same
 as being equalized by the arrows `left_res` and `right_res` of the equalizer diagram.
@@ -202,7 +202,7 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 variable [HasLimits C] [ReflectsIsomorphisms (forget C)] [PreservesLimits (forget C)]
 
-variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 /-- For presheaves valued in a concrete category, whose forgetful functor reflects isomorphisms and
 preserves limits, the sheaf condition in terms of unique gluings is equivalent to the usual one
@@ -229,7 +229,7 @@ variable [HasLimits C] [ReflectsIsomorphisms (ConcreteCategory.forget C)]
 
 variable [PreservesLimits (ConcreteCategory.forget C)]
 
-variable {X : Top.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
 
 /-- A more convenient way of obtaining a unique gluing of sections for a sheaf.
 -/
@@ -243,7 +243,7 @@ which can be more convenient in practice.
 theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ supr U)
     (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
     ∃! s : F.1.obj (op V), ∀ i : ι, F.1.map (iUV i).op s = sf i := by
-  have V_eq_supr_U : V = supr U := le_antisymmₓ hcover (supr_le fun i => (iUV i).le)
+  have V_eq_supr_U : V = supr U := le_antisymm hcover (supr_le fun i => (iUV i).le)
   obtain ⟨gl, gl_spec, gl_uniq⟩ := F.exists_unique_gluing U sf h
   refine' ⟨F.1.map (eq_to_hom V_eq_supr_U).op gl, _, _⟩
   · intro i
@@ -259,6 +259,8 @@ theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcove
       
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gl]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (supr U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t := by
@@ -268,7 +270,8 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (supr U)))
     simp_rw [← comp_apply, ← F.1.map_comp]
     rfl
   obtain ⟨gl, -, gl_uniq⟩ := F.exists_unique_gluing U sf sf_compatible
-  trans gl
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gl]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · apply gl_uniq
     intro i
     rfl
@@ -284,7 +287,7 @@ which can be more convenient in practice.
 -/
 theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ supr U) (s t : F.1.obj (op V))
     (h : ∀ i, F.1.map (iUV i).op s = F.1.map (iUV i).op t) : s = t := by
-  have V_eq_supr_U : V = supr U := le_antisymmₓ hcover (supr_le fun i => (iUV i).le)
+  have V_eq_supr_U : V = supr U := le_antisymm hcover (supr_le fun i => (iUV i).le)
   suffices F.1.map (eq_to_hom V_eq_supr_U.symm).op s = F.1.map (eq_to_hom V_eq_supr_U.symm).op t by
     convert congr_arg (F.1.map (eq_to_hom V_eq_supr_U).op) this <;>
       rw [← comp_apply, ← F.1.map_comp, eq_to_hom_op, eq_to_hom_op, eq_to_hom_trans, eq_to_hom_refl, F.1.map_id,
@@ -300,7 +303,7 @@ theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : 
   fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
   · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
     
-  · refine' le_transₓ hcover _
+  · refine' le_trans hcover _
     rw [sup_le_iff]
     constructor
     · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
@@ -315,5 +318,5 @@ end
 
 end Sheaf
 
-end Top
+end TopCat
 

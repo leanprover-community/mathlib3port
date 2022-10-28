@@ -26,16 +26,16 @@ unsafe def distrib_not : tactic Unit := do
             | quote.1 (_ ≠ _) => replace h (pquote.1 (mt Iff.to_eq (%%ₓh)))
             | quote.1 (_ = _) => replace h (pquote.1 (Eq.to_iff (%%ₓh)))
             | quote.1 ¬(_ ∧ _) =>
-              replace h (pquote.1 (Decidable.not_and_distrib'ₓ.mp (%%ₓh))) <|>
+              replace h (pquote.1 (Decidable.not_and_distrib'.mp (%%ₓh))) <|>
                 replace h (pquote.1 (Decidable.not_and_distrib.mp (%%ₓh)))
             | quote.1 ¬(_ ∨ _) => replace h (pquote.1 (not_or_distrib.mp (%%ₓh)))
             | quote.1 ¬_ ≠ _ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
             | quote.1 ¬¬_ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
             | quote.1 ¬(_ → (_ : Prop)) => replace h (pquote.1 (Decidable.not_imp.mp (%%ₓh)))
-            | quote.1 ¬(_ ↔ _) => replace h (pquote.1 (Decidable.not_iffₓ.mp (%%ₓh)))
+            | quote.1 ¬(_ ↔ _) => replace h (pquote.1 (Decidable.not_iff.mp (%%ₓh)))
             | quote.1 (_ ↔ _) =>
-              replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_notₓ.mp (%%ₓh))) <|>
-                replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_notₓ.mp (%%ₓh).symm)) <|> () <$ tactic.cases h
+              replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh))) <|>
+                replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh).symm)) <|> () <$ tactic.cases h
             | quote.1 (_ → _) => replace h (pquote.1 (Decidable.not_or_of_imp (%%ₓh)))
             | _ => failed
 
@@ -155,9 +155,9 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
                 return p'
               else unify a' b' >> add_refl r a' *> mk_mapp `rfl [none, a]
             | (_, _) => do
-              guardₓ <| a' ∧ a' = b'
+              guard <| a' ∧ a' = b'
               let (a'', pa') ← add_symm_proof r a'
-              guardₓ <| expr.alpha_eqv a'' b'
+              guard <| expr.alpha_eqv a'' b'
               pure pa'
         let p' ← mk_eq_trans pa p
         add_edge r a' b' p'
@@ -235,7 +235,7 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
                   (constructor_matching (some ()) [pquote.1 (_ ∧ _), pquote.1 (_ ↔ _), pquote.1 True]))
                 (try (assumption_with r))
             let gs' ← get_goals
-            guardₓ (gs ≠ gs'))
+            guard (gs ≠ gs'))
     do
     when cfg (classical tt)
     andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg
@@ -244,7 +244,7 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
 namespace Interactive
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 setup_tactic_parser
 

@@ -44,9 +44,9 @@ as this avoids us having to duplicate API.
 
 universe u1 u2 u3
 
-variable (R : Type u1) [CommRingₓ R]
+variable (R : Type u1) [CommRing R]
 
-variable (M : Type u2) [AddCommGroupₓ M] [Module R M]
+variable (M : Type u2) [AddCommGroup M] [Module R M]
 
 /-- The exterior algebra of an `R`-module `M`.
 -/
@@ -71,7 +71,7 @@ variable {R}
 theorem ι_sq_zero (m : M) : ι R m * ι R m = 0 :=
   (CliffordAlgebra.ι_sq_scalar _ m).trans <| map_zero _
 
-variable {A : Type _} [Semiringₓ A] [Algebra R A]
+variable {A : Type _} [Semiring A] [Algebra R A]
 
 @[simp]
 theorem comp_ι_sq_zero (g : ExteriorAlgebra R M →ₐ[R] A) (m : M) : g (ι R m) * g (ι R m) = 0 := by
@@ -85,7 +85,7 @@ from `exterior_algebra R M` to `A`.
 -/
 @[simps symmApply]
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) :=
-  Equivₓ.trans (Equivₓ.subtypeEquiv (Equivₓ.refl _) <| by simp) <| CliffordAlgebra.lift _
+  Equiv.trans (Equiv.subtypeEquiv (Equiv.refl _) <| by simp) <| CliffordAlgebra.lift _
 
 @[simp]
 theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) : (lift R ⟨f, cond⟩).toLinearMap.comp (ι R) = f :=
@@ -114,7 +114,7 @@ theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A} (h : f.toLinearMap.comp 
 /-- If `C` holds for the `algebra_map` of `r : R` into `exterior_algebra R M`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `exterior_algebra R M`.
 -/
-@[elabAsElim]
+@[elab_as_elim]
 theorem induction {C : ExteriorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (ExteriorAlgebra R M) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : ExteriorAlgebra R M) : C a :=
@@ -186,7 +186,7 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
   refine' ⟨fun h => _, _⟩
   · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := to_triv_sq_zero_ext_ι _
     rw [h, AlgHom.commutes] at hf0
-    have : r = 0 ∧ 0 = x := Prod.ext_iffₓ.1 hf0
+    have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm
     
   · rintro ⟨rfl, rfl⟩
@@ -199,7 +199,7 @@ theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
   exact one_ne_zero ∘ And.right
 
 /-- The generators of the exterior algebra are disjoint from its scalars. -/
-theorem ι_range_disjoint_one :
+theorem ιRangeDisjointOne :
     Disjoint (LinearMap.range (ι R : M →ₗ[R] ExteriorAlgebra R M)) (1 : Submodule R (ExteriorAlgebra R M)) := by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
@@ -209,12 +209,12 @@ theorem ι_range_disjoint_one :
 @[simp]
 theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
   calc
-    _ = ι R (x + y) * ι R (x + y) := by simp [mul_addₓ, add_mulₓ]
+    _ = ι R (x + y) * ι R (x + y) := by simp [mul_add, add_mul]
     _ = _ := ι_sq_zero _
     
 
-theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
-    (ι R <| f i) * (List.ofFnₓ fun i => ι R <| f i).Prod = 0 := by
+theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) : (ι R <| f i) * (List.ofFn fun i => ι R <| f i).Prod = 0 :=
+  by
   induction' n with n hn
   · exact i.elim0
     
@@ -222,11 +222,11 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
     by_cases h:i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
+    · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Fin.succ i) (i.pred h))
       simp only at hn
-      rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
+      rw [Fin.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
-      rw [← add_mulₓ, ι_add_mul_swap, zero_mul]
+      rw [← add_mul, ι_add_mul_swap, zero_mul]
       
     
 
@@ -236,14 +236,14 @@ variable (R)
 
 This is a special case of `multilinear_map.mk_pi_algebra_fin`, and the exterior algebra version of
 `tensor_algebra.tprod`. -/
-def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
+def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
   let F := (MultilinearMap.mkPiAlgebraFin R n (ExteriorAlgebra R M)).compLinearMap fun i => ι R
   { -- one of the repeated terms is on the left
     -- ignore the left-most term and induct on the remaining ones, decrementing indices
     F with
     map_eq_zero_of_eq' := fun f x y hfxy hxy => by
       rw [MultilinearMap.comp_linear_map_apply, MultilinearMap.mk_pi_algebra_fin_apply]
-      wlog h : x < y := lt_or_gt_of_neₓ hxy using x y
+      wlog h : x < y := lt_or_gt_of_ne hxy using x y
       clear hxy
       induction' n with n hn generalizing x y
       · exact x.elim0
@@ -251,14 +251,14 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
       · rw [List.of_fn_succ, List.prod_cons]
         by_cases hx:x = 0
         · rw [hx] at hfxy h
-          rw [hfxy, ← Finₓ.succ_pred y (ne_of_ltₓ h).symm]
-          exact ι_mul_prod_list (f ∘ Finₓ.succ) _
+          rw [hfxy, ← Fin.succ_pred y (ne_of_lt h).symm]
+          exact ι_mul_prod_list (f ∘ Fin.succ) _
           
         · convert mul_zero _
           refine'
-            hn (fun i => f <| Finₓ.succ i) (x.pred hx) (y.pred (ne_of_ltₓ <| lt_of_le_of_ltₓ x.zero_le h).symm)
+            hn (fun i => f <| Fin.succ i) (x.pred hx) (y.pred (ne_of_lt <| lt_of_le_of_lt x.zero_le h).symm)
               (fin.pred_lt_pred_iff.mpr h) _
-          simp only [Finₓ.succ_pred]
+          simp only [Fin.succ_pred]
           exact hfxy
           
         ,
@@ -266,15 +266,15 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
 
 variable {R}
 
-theorem ι_multi_apply {n : ℕ} (v : Finₓ n → M) : ιMulti R n v = (List.ofFnₓ fun i => ι R (v i)).Prod :=
+theorem ι_multi_apply {n : ℕ} (v : Fin n → M) : ιMulti R n v = (List.ofFn fun i => ι R (v i)).Prod :=
   rfl
 
 @[simp]
-theorem ι_multi_zero_apply (v : Finₓ 0 → M) : ιMulti R 0 v = 1 :=
+theorem ι_multi_zero_apply (v : Fin 0 → M) : ιMulti R 0 v = 1 :=
   rfl
 
 @[simp]
-theorem ι_multi_succ_apply {n : ℕ} (v : Finₓ n.succ → M) : ιMulti R _ v = ι R (v 0) * ιMulti R _ (Matrix.vecTail v) :=
+theorem ι_multi_succ_apply {n : ℕ} (v : Fin n.succ → M) : ιMulti R _ v = ι R (v 0) * ιMulti R _ (Matrix.vecTail v) :=
   (congr_arg List.prod (List.of_fn_succ _)).trans List.prod_cons
 
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :

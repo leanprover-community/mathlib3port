@@ -55,12 +55,12 @@ protected def prod (f : Filter α) (g : Filter β) : Filter (α × β) :=
 -- mathport name: filter.prod
 localized [Filter] infixl:60 " ×ᶠ " => Filter.prod
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_mem_prod {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} (hs : s ∈ f) (ht : t ∈ g) :
     s ×ˢ t ∈ f ×ᶠ g :=
   inter_mem_inf (preimage_mem_comap hs) (preimage_mem_comap ht)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} : s ∈ f ×ᶠ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, t₁ ×ˢ t₂ ⊆ s :=
   by
   simp only [Filter.prod]
@@ -72,7 +72,7 @@ theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} : s �
     exact mem_inf_of_inter (preimage_mem_comap ht₁) (preimage_mem_comap ht₂) h
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} [f.ne_bot] [g.ne_bot] :
     s ×ˢ t ∈ f ×ᶠ g ↔ s ∈ f ∧ t ∈ g :=
@@ -86,7 +86,7 @@ theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter 
 theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
     s ∈ f ×ᶠ 𝓟 t ↔ { a | ∀ b ∈ t, (a, b) ∈ s } ∈ f := by
   rw [← @exists_mem_subset_iff _ f, mem_prod_iff]
-  refine' exists₂_congrₓ fun u u_in => ⟨_, fun h => ⟨t, mem_principal_self t, _⟩⟩
+  refine' exists₂_congr fun u u_in => ⟨_, fun h => ⟨t, mem_principal_self t, _⟩⟩
   · rintro ⟨v, v_in, hv⟩ a a_in b b_in
     exact hv (mk_mem_prod a_in <| v_in b_in)
     
@@ -149,7 +149,7 @@ theorem Eventually.prod_mk {la : Filter α} {pa : α → Prop} (ha : ∀ᶠ x in
 
 theorem EventuallyEq.prod_map {δ} {la : Filter α} {fa ga : α → γ} (ha : fa =ᶠ[la] ga) {lb : Filter β} {fb gb : β → δ}
     (hb : fb =ᶠ[lb] gb) : Prod.map fa fb =ᶠ[la ×ᶠ lb] Prod.map ga gb :=
-  (Eventually.prod_mk ha hb).mono fun x h => Prod.extₓ h.1 h.2
+  (Eventually.prod_mk ha hb).mono fun x h => Prod.ext h.1 h.2
 
 theorem EventuallyLe.prod_map {δ} [LE γ] [LE δ] {la : Filter α} {fa ga : α → γ} (ha : fa ≤ᶠ[la] ga) {lb : Filter β}
     {fb gb : β → δ} (hb : fb ≤ᶠ[lb] gb) : Prod.map fa fb ≤ᶠ[la ×ᶠ lb] Prod.map ga gb :=
@@ -170,13 +170,13 @@ theorem Eventually.diag_of_prod_left {f : Filter α} {g : Filter γ} {p : (α ×
     (∀ᶠ x in f ×ᶠ f ×ᶠ g, p x) → ∀ᶠ x : α × γ in f ×ᶠ g, p ((x.1, x.1), x.2) := by
   intro h
   obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
-  refine' (ht.diag_of_prod.prod_mk hs).mono fun x hx => by simp only [hst hx.1 hx.2, Prod.mk.etaₓ]
+  refine' (ht.diag_of_prod.prod_mk hs).mono fun x hx => by simp only [hst hx.1 hx.2, Prod.mk.eta]
 
 theorem Eventually.diag_of_prod_right {f : Filter α} {g : Filter γ} {p : α × γ × γ → Prop} :
     (∀ᶠ x in f ×ᶠ (g ×ᶠ g), p x) → ∀ᶠ x : α × γ in f ×ᶠ g, p (x.1, x.2, x.2) := by
   intro h
   obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
-  refine' (ht.prod_mk hs.diag_of_prod).mono fun x hx => by simp only [hst hx.1 hx.2, Prod.mk.etaₓ]
+  refine' (ht.prod_mk hs.diag_of_prod).mono fun x hx => by simp only [hst hx.1 hx.2, Prod.mk.eta]
 
 theorem tendsto_diag : Tendsto (fun i => (i, i)) f (f ×ᶠ f) :=
   tendsto_iff_eventually.mpr fun _ hpr => hpr.diag_of_prod
@@ -205,7 +205,7 @@ theorem prod_comap_comap_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β�
   simp only [Filter.prod, comap_comap, eq_self_iff_true, comap_inf]
 
 theorem prod_comm' : f ×ᶠ g = comap Prod.swap (g ×ᶠ f) := by
-  simp only [Filter.prod, comap_comap, (· ∘ ·), inf_comm, Prod.fst_swapₓ, eq_self_iff_true, Prod.snd_swapₓ, comap_inf]
+  simp only [Filter.prod, comap_comap, (· ∘ ·), inf_comm, Prod.fst_swap, eq_self_iff_true, Prod.snd_swap, comap_inf]
 
 theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f) := by
   rw [prod_comm', ← map_swap_eq_comap_swap]
@@ -213,7 +213,7 @@ theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f)
 
 @[simp]
 theorem map_fst_prod (f : Filter α) (g : Filter β) [NeBot g] : map Prod.fst (f ×ᶠ g) = f := by
-  refine' le_antisymmₓ tendsto_fst fun s hs => _
+  refine' le_antisymm tendsto_fst fun s hs => _
   rw [mem_map, mem_prod_iff] at hs
   rcases hs with ⟨t₁, h₁, t₂, h₂, hs⟩
   rw [← image_subset_iff, fst_image_prod] at hs
@@ -243,20 +243,20 @@ theorem eventually_swap_iff {p : α × β → Prop} : (∀ᶠ x : α × β in f 
   simpa
 
 theorem prod_assoc (f : Filter α) (g : Filter β) (h : Filter γ) :
-    map (Equivₓ.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) = f ×ᶠ (g ×ᶠ h) := by
+    map (Equiv.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) = f ×ᶠ (g ×ᶠ h) := by
   simp_rw [← comap_equiv_symm, Filter.prod, comap_inf, comap_comap, inf_assoc, Function.comp,
-    Equivₓ.prod_assoc_symm_apply]
+    Equiv.prod_assoc_symm_apply]
 
 theorem prod_assoc_symm (f : Filter α) (g : Filter β) (h : Filter γ) :
-    map (Equivₓ.prodAssoc α β γ).symm (f ×ᶠ (g ×ᶠ h)) = f ×ᶠ g ×ᶠ h := by
-  simp_rw [map_equiv_symm, Filter.prod, comap_inf, comap_comap, inf_assoc, Function.comp, Equivₓ.prod_assoc_apply]
+    map (Equiv.prodAssoc α β γ).symm (f ×ᶠ (g ×ᶠ h)) = f ×ᶠ g ×ᶠ h := by
+  simp_rw [map_equiv_symm, Filter.prod, comap_inf, comap_comap, inf_assoc, Function.comp, Equiv.prod_assoc_apply]
 
 theorem tendsto_prod_assoc {f : Filter α} {g : Filter β} {h : Filter γ} :
-    Tendsto (Equivₓ.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) (f ×ᶠ (g ×ᶠ h)) :=
+    Tendsto (Equiv.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) (f ×ᶠ (g ×ᶠ h)) :=
   (prod_assoc f g h).le
 
 theorem tendsto_prod_assoc_symm {f : Filter α} {g : Filter β} {h : Filter γ} :
-    Tendsto (Equivₓ.prodAssoc α β γ).symm (f ×ᶠ (g ×ᶠ h)) (f ×ᶠ g ×ᶠ h) :=
+    Tendsto (Equiv.prodAssoc α β γ).symm (f ×ᶠ (g ×ᶠ h)) (f ×ᶠ g ×ᶠ h) :=
   (prod_assoc_symm f g h).le
 
 /-- A useful lemma when dealing with uniformities. -/
@@ -268,12 +268,12 @@ theorem tendsto_swap4_prod {f : Filter α} {g : Filter β} {h : Filter γ} {k : 
     Tendsto (fun p : (α × β) × γ × δ => ((p.1.1, p.2.1), (p.1.2, p.2.2))) (f ×ᶠ g ×ᶠ (h ×ᶠ k)) (f ×ᶠ h ×ᶠ (g ×ᶠ k)) :=
   map_swap4_prod.le
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_map_map_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β₁ : Type w} {β₂ : Type x} {f₁ : Filter α₁}
     {f₂ : Filter α₂} {m₁ : α₁ → β₁} {m₂ : α₂ → β₂} :
     map m₁ f₁ ×ᶠ map m₂ f₂ = map (fun p : α₁ × α₂ => (m₁ p.1, m₂ p.2)) (f₁ ×ᶠ f₂) :=
-  le_antisymmₓ
+  le_antisymm
     (fun s hs =>
       let ⟨s₁, hs₁, s₂, hs₂, h⟩ := mem_prod_iff.mp hs
       Filter.sets_of_superset _ (prod_mem_prod (image_mem_map hs₁) (image_mem_map hs₂)) <|
@@ -281,7 +281,7 @@ theorem prod_map_map_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β₁ : 
           (m₁ '' s₁) ×ˢ (m₂ '' s₂) = (fun p : α₁ × α₂ => (m₁ p.1, m₂ p.2)) '' s₁ ×ˢ s₂ := Set.prod_image_image_eq
           _ ⊆ _ := by rwa [image_subset_iff]
           )
-    ((Tendsto.comp le_rflₓ tendsto_fst).prod_mk (Tendsto.comp le_rflₓ tendsto_snd))
+    ((Tendsto.comp le_rfl tendsto_fst).prod_mk (Tendsto.comp le_rfl tendsto_snd))
 
 theorem prod_map_map_eq' {α₁ : Type _} {α₂ : Type _} {β₁ : Type _} {β₂ : Type _} (f : α₁ → α₂) (g : β₁ → β₂)
     (F : Filter α₁) (G : Filter β₁) : map f F ×ᶠ map g G = map (Prod.map f g) (F ×ᶠ G) :=
@@ -316,7 +316,7 @@ theorem prod_bot {f : Filter α} : f ×ᶠ (⊥ : Filter β) = ⊥ := by simp [F
 @[simp]
 theorem bot_prod {g : Filter β} : (⊥ : Filter α) ×ᶠ g = ⊥ := by simp [Filter.prod]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem prod_principal_principal {s : Set α} {t : Set β} : 𝓟 s ×ᶠ 𝓟 t = 𝓟 (s ×ˢ t) := by
   simp only [Filter.prod, comap_principal, principal_eq_iff_eq, comap_principal, inf_principal] <;> rfl
@@ -358,17 +358,17 @@ theorem prod_ne_bot {f : Filter α} {g : Filter β} : NeBot (f ×ᶠ g) ↔ NeBo
 theorem NeBot.prod {f : Filter α} {g : Filter β} (hf : NeBot f) (hg : NeBot g) : NeBot (f ×ᶠ g) :=
   prod_ne_bot.2 ⟨hf, hg⟩
 
-instance prod_ne_bot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] : NeBot (f ×ᶠ g) :=
+instance prodNeBot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] : NeBot (f ×ᶠ g) :=
   hf.Prod hg
 
 theorem tendsto_prod_iff {f : α × β → γ} {x : Filter α} {y : Filter β} {z : Filter γ} :
     Filter.Tendsto f (x ×ᶠ y) z ↔ ∀ W ∈ z, ∃ U ∈ x, ∃ V ∈ y, ∀ x y, x ∈ U → y ∈ V → f (x, y) ∈ W := by
-  simp only [tendsto_def, mem_prod_iff, prod_sub_preimage_iff, exists_propₓ, iff_selfₓ]
+  simp only [tendsto_def, mem_prod_iff, prod_sub_preimage_iff, exists_prop, iff_self_iff]
 
 theorem tendsto_prod_iff' {f : Filter α} {g : Filter β} {g' : Filter γ} {s : α → β × γ} :
     Tendsto s f (g ×ᶠ g') ↔ Tendsto (fun n => (s n).1) f g ∧ Tendsto (fun n => (s n).2) f g' := by
   unfold Filter.prod
-  simp only [tendsto_inf, tendsto_comap_iff, iff_selfₓ]
+  simp only [tendsto_inf, tendsto_comap_iff, iff_self_iff]
 
 end Prod
 
@@ -406,14 +406,14 @@ theorem coprod_ne_bot_iff : (f.coprod g).ne_bot ↔ f.ne_bot ∧ Nonempty β ∨
   simp [Filter.coprod]
 
 @[instance]
-theorem coprod_ne_bot_left [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
+theorem coprodNeBotLeft [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
   coprod_ne_bot_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
 
 @[instance]
-theorem coprod_ne_bot_right [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
+theorem coprodNeBotRight [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
   coprod_ne_bot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 ((sᶜ ×ˢ tᶜ)ᶜ) := by
   rw [Filter.coprod, comap_principal, comap_principal, sup_principal, Set.prod_eq, compl_inter, preimage_compl,
     preimage_compl, compl_compl, compl_compl]
@@ -428,8 +428,8 @@ theorem map_prod_map_coprod_le.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {�
   rintro ⟨⟨u₁, hu₁, h₁⟩, u₂, hu₂, h₂⟩
   refine' ⟨⟨m₁ ⁻¹' u₁, hu₁, fun _ hx => h₁ _⟩, ⟨m₂ ⁻¹' u₂, hu₂, fun _ hx => h₂ _⟩⟩ <;> convert hx
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Characterization of the coproduct of the `filter.map`s of two principal filters `𝓟 {a}` and
 `𝓟 {i}`, the first under the constant function `λ a, b` and the second under the identity function.
 Together with the next lemma, `map_prod_map_const_id_principal_coprod_principal`, this provides an
@@ -439,7 +439,7 @@ theorem map_const_principal_coprod_map_id_principal {α β ι : Type _} (a : α)
   simp only [map_principal, Filter.coprod, comap_principal, sup_principal, image_singleton, image_id, prod_univ,
     univ_prod]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Characterization of the `filter.map` of the coproduct of two principal filters `𝓟 {a}` and
 `𝓟 {i}`, under the `prod.map` of two functions, respectively the constant function `λ a, b` and the
 identity function.  Together with the previous lemma,

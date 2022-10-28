@@ -18,7 +18,7 @@ open Filter Set Function OrderDual
 
 open TopologicalSpace Filter Interval
 
-variable {X : Type _} [LinearOrderₓ X] [TopologicalSpace X] [OrderTopology X] {a b c : X} {s t : Set X}
+variable {X : Type _} [LinearOrder X] [TopologicalSpace X] [OrderTopology X] {a b c : X} {s t : Set X}
 
 namespace Set
 
@@ -44,7 +44,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (C
     replace hac : a < c :=
       hac.lt_of_ne
         (Ne.symm <|
-          ne_of_mem_of_not_memₓ hc <|
+          ne_of_mem_of_not_mem hc <|
             disjoint_left.1 (disjoint_left_ord_separating_set.mono_right ord_connected_section_subset) ha)
     refine' mem_of_superset (Ico_mem_nhds_within_Ici (left_mem_Ico.2 hac)) fun x hx hx' => _
     refine' hx.2.Ne (eq_of_mem_ord_connected_section_of_interval_subset hx' hc _)
@@ -58,7 +58,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (C
         rw [interval_of_ge (hx.2.trans this).le]
         exact ⟨hx.2.le, this.le⟩
       refine' lt_of_not_le fun hyc => _
-      have hya : y < a := not_leₓ.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
+      have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
       exact hxy (Icc_subset_interval ⟨hya.le, hx.1⟩) ha
       
     
@@ -91,8 +91,8 @@ end Set
 open Set
 
 /-- A linear order with order topology is a completely normal Hausdorff topological space. -/
-instance (priority := 100) OrderTopology.t5_space : T5Space X :=
+instance (priority := 100) OrderTopology.t5Space : T5Space X :=
   ⟨fun s t h₁ h₂ =>
     Filter.disjoint_iff.2
-      ⟨OrdT5Nhd s t, ord_t5_nhd_mem_nhds_set h₂, OrdT5Nhd t s, ord_t5_nhd_mem_nhds_set h₁.symm, disjoint_ord_t5_nhd⟩⟩
+      ⟨OrdT5Nhd s t, ord_t5_nhd_mem_nhds_set h₂, OrdT5Nhd t s, ord_t5_nhd_mem_nhds_set h₁.symm, disjointOrdT5Nhd⟩⟩
 

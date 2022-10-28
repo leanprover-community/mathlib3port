@@ -35,30 +35,30 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 
 universe u v w
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`cond] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
-class ValuationRing (A : Type u) [CommRingₓ A] [IsDomain A] : Prop where
+class ValuationRing (A : Type u) [CommRing A] [IsDomain A] : Prop where
   cond : ∀ a b : A, ∃ c : A, a * c = b ∨ b * c = a
 
 namespace ValuationRing
 
 section
 
-variable (A : Type u) [CommRingₓ A]
+variable (A : Type u) [CommRing A]
 
 variable (K : Type v) [Field K] [Algebra A K]
 
 /-- The value group of the valuation ring `A`. -/
 def ValueGroup : Type v :=
-  Quotientₓ (MulAction.orbitRel Aˣ K)
+  Quotient (MulAction.orbitRel Aˣ K)
 
 instance : Inhabited (ValueGroup A K) :=
-  ⟨Quotientₓ.mk' 0⟩
+  ⟨Quotient.mk' 0⟩
 
 instance : LE (ValueGroup A K) :=
   LE.mk fun x y =>
-    Quotientₓ.liftOn₂' x y (fun a b => ∃ c : A, c • b = a)
+    Quotient.liftOn₂' x y (fun a b => ∃ c : A, c • b = a)
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
         ext
@@ -74,21 +74,21 @@ instance : LE (ValueGroup A K) :=
           erw [← he, ← mul_smul, ← mul_smul]
           congr 1
           rw [mul_comm]
-          simp only [← mul_assoc, ← Units.coe_mul, mul_inv_selfₓ, one_mulₓ]
+          simp only [← mul_assoc, ← Units.coe_mul, mul_inv_self, one_mul]
           )
 
 instance : Zero (ValueGroup A K) :=
-  ⟨Quotientₓ.mk' 0⟩
+  ⟨Quotient.mk' 0⟩
 
 instance : One (ValueGroup A K) :=
-  ⟨Quotientₓ.mk' 1⟩
+  ⟨Quotient.mk' 1⟩
 
 instance : Mul (ValueGroup A K) :=
   Mul.mk fun x y =>
-    Quotientₓ.liftOn₂' x y (fun a b => Quotientₓ.mk' <| a * b)
+    Quotient.liftOn₂' x y (fun a b => Quotient.mk' <| a * b)
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
-        apply Quotientₓ.sound'
+        apply Quotient.sound'
         dsimp
         use c * d
         simp only [mul_smul, Algebra.smul_def, Units.smul_def, RingHom.map_mul, Units.coe_mul]
@@ -96,10 +96,10 @@ instance : Mul (ValueGroup A K) :=
 
 instance : Inv (ValueGroup A K) :=
   Inv.mk fun x =>
-    Quotientₓ.liftOn' x (fun a => Quotientₓ.mk' a⁻¹)
+    Quotient.liftOn' x (fun a => Quotient.mk' a⁻¹)
       (by
         rintro _ a ⟨b, rfl⟩
-        apply Quotientₓ.sound'
+        apply Quotient.sound'
         use b⁻¹
         dsimp
         rw [Units.smul_def, Units.smul_def, Algebra.smul_def, Algebra.smul_def, mul_inv, map_units_inv])
@@ -153,10 +153,10 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
         use f
         rw [mul_comm]
         rw [← mul_smul, Algebra.smul_def] at hf
-        nth_rw 1 [← one_mulₓ b]  at hf
+        nth_rw 1 [← one_mul b]  at hf
         rw [← (algebraMap A K).map_one] at hf
         exact IsFractionRing.injective _ _ (CancelCommMonoidWithZero.mul_right_cancel_of_ne_zero hb hf).symm
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       use this.unit, rfl,
     le_total := ValuationRing.le_total _ _,
     decidableLe := by
@@ -164,24 +164,24 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       infer_instance,
     mul_assoc := by
       rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       rw [mul_assoc]
-      apply Setoidₓ.refl',
+      apply Setoid.refl',
     one_mul := by
       rintro ⟨a⟩
-      apply Quotientₓ.sound'
-      rw [one_mulₓ]
-      apply Setoidₓ.refl',
+      apply Quotient.sound'
+      rw [one_mul]
+      apply Setoid.refl',
     mul_one := by
       rintro ⟨a⟩
-      apply Quotientₓ.sound'
-      rw [mul_oneₓ]
-      apply Setoidₓ.refl',
+      apply Quotient.sound'
+      rw [mul_one]
+      apply Setoid.refl',
     mul_comm := by
       rintro ⟨a⟩ ⟨b⟩
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       rw [mul_comm]
-      apply Setoidₓ.refl',
+      apply Setoid.refl',
     mul_le_mul_left := by
       rintro ⟨a⟩ ⟨b⟩ ⟨c, rfl⟩ ⟨d⟩
       use c
@@ -189,28 +189,28 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       ring,
     zero_mul := by
       rintro ⟨a⟩
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       rw [zero_mul]
-      apply Setoidₓ.refl',
+      apply Setoid.refl',
     mul_zero := by
       rintro ⟨a⟩
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       rw [mul_zero]
-      apply Setoidₓ.refl',
+      apply Setoid.refl',
     zero_le_one := ⟨0, by rw [zero_smul]⟩,
     exists_pair_ne := by
       use 0, 1
       intro c
-      obtain ⟨d, hd⟩ := Quotientₓ.exact' c
+      obtain ⟨d, hd⟩ := Quotient.exact' c
       apply_fun fun t => d⁻¹ • t  at hd
       simpa using hd,
     inv_zero := by
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       rw [inv_zero]
-      apply Setoidₓ.refl',
+      apply Setoid.refl',
     mul_inv_cancel := by
       rintro ⟨a⟩ ha
-      apply Quotientₓ.sound'
+      apply Quotient.sound'
       use 1
       simp only [one_smul]
       apply (mul_inv_cancel _).symm
@@ -221,10 +221,10 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
 
 /-- Any valuation ring induces a valuation on its fraction field. -/
 def valuation : Valuation K (ValueGroup A K) where
-  toFun := Quotientₓ.mk'
+  toFun := Quotient.mk'
   map_zero' := rfl
   map_one' := rfl
-  map_mul' := fun _ _ => rfl
+  map_mul' _ _ := rfl
   map_add_le_max' := by
     intro a b
     obtain ⟨xa, ya, hya, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective a
@@ -233,7 +233,7 @@ def valuation : Valuation K (ValueGroup A K) where
     have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
     obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
     dsimp
-    · apply le_transₓ _ (le_max_leftₓ _ _)
+    · apply le_trans _ (le_max_left _ _)
       use c + 1
       rw [Algebra.smul_def]
       field_simp
@@ -241,7 +241,7 @@ def valuation : Valuation K (ValueGroup A K) where
       congr 1
       ring
       
-    · apply le_transₓ _ (le_max_rightₓ _ _)
+    · apply le_trans _ (le_max_right _ _)
       use c + 1
       rw [Algebra.smul_def]
       field_simp
@@ -254,11 +254,11 @@ theorem mem_integer_iff (x : K) : x ∈ (valuation A K).integer ↔ ∃ a : A, a
   constructor
   · rintro ⟨c, rfl⟩
     use c
-    rw [Algebra.smul_def, mul_oneₓ]
+    rw [Algebra.smul_def, mul_one]
     
   · rintro ⟨c, rfl⟩
     use c
-    rw [Algebra.smul_def, mul_oneₓ]
+    rw [Algebra.smul_def, mul_one]
     
 
 /-- The valuation ring `A` is isomorphic to the ring of integers of its associated valuation. -/
@@ -300,23 +300,23 @@ end
 
 section
 
-variable (A : Type u) [CommRingₓ A] [IsDomain A] [ValuationRing A]
+variable (A : Type u) [CommRing A] [IsDomain A] [ValuationRing A]
 
 instance (priority := 100) : LocalRing A :=
-  LocalRing.of_is_unit_or_is_unit_one_sub_self
+  LocalRing.ofIsUnitOrIsUnitOneSubSelf
     (by
       intro a
       obtain ⟨c, h | h⟩ := ValuationRing.cond a (1 - a)
       · left
         apply is_unit_of_mul_eq_one _ (c + 1)
-        simp [mul_addₓ, h]
+        simp [mul_add, h]
         
       · right
         apply is_unit_of_mul_eq_one _ (c + 1)
-        simp [mul_addₓ, h]
+        simp [mul_add, h]
         )
 
-instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrderₓ (Ideal A) :=
+instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrder (Ideal A) :=
   { (inferInstance : CompleteLattice (Ideal A)) with
     le_total := by
       intro α β
@@ -343,7 +343,7 @@ end
 
 section
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R] {K : Type _}
+variable {R : Type _} [CommRing R] [IsDomain R] {K : Type _}
 
 variable [Field K] [Algebra R K] [IsFractionRing R K]
 
@@ -357,7 +357,7 @@ theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
 
 theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
   classical
-  refine' ⟨fun _ => ⟨le_totalₓ⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
+  refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
   have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
   simp_rw [Ideal.span_singleton_le_span_singleton] at this
   exact this.symm
@@ -369,7 +369,7 @@ theorem dvd_total [h : ValuationRing R] (x y : R) : x ∣ y ∨ y ∣ x :=
 
 theorem unique_irreducible [ValuationRing R] ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible q) : Associated p q := by
   have := dvd_total p q
-  rw [Irreducible.dvd_comm hp hq, or_selfₓ] at this
+  rw [Irreducible.dvd_comm hp hq, or_self_iff] at this
   exact associated_of_dvd_dvd (Irreducible.dvd_symm hq hp this) this
 
 variable (R)
@@ -423,7 +423,7 @@ instance (priority := 100) [ValuationRing R] : IsBezout R := by
   rw [IsBezout.iff_span_pair_is_principal]
   intro x y
   rw [Ideal.span_insert]
-  cases le_totalₓ (Ideal.span {x} : Ideal R) (Ideal.span {y})
+  cases le_total (Ideal.span {x} : Ideal R) (Ideal.span {y})
   · erw [sup_eq_right.mpr h]
     exact ⟨⟨_, rfl⟩⟩
     
@@ -465,7 +465,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
   right
   all_goals exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (is_unit_of_mul_is_unit_right h') _) _
 
-protected theorem tfae (R : Type u) [CommRingₓ R] [IsDomain R] :
+protected theorem tfae (R : Type u) [CommRing R] [IsDomain R] :
     Tfae
       [ValuationRing R, ∀ x : FractionRing R, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹,
         IsTotal R (· ∣ ·), IsTotal (Ideal R) (· ≤ ·), LocalRing R ∧ IsBezout R] :=
@@ -486,8 +486,8 @@ protected theorem tfae (R : Type u) [CommRingₓ R] [IsDomain R] :
 
 end
 
-theorem _root_.function.surjective.valuation_ring {R S : Type _} [CommRingₓ R] [IsDomain R] [ValuationRing R]
-    [CommRingₓ S] [IsDomain S] (f : R →+* S) (hf : Function.Surjective f) : ValuationRing S :=
+theorem _root_.function.surjective.valuation_ring {R S : Type _} [CommRing R] [IsDomain R] [ValuationRing R]
+    [CommRing S] [IsDomain S] (f : R →+* S) (hf : Function.Surjective f) : ValuationRing S :=
   ⟨fun a b => by
     obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := hf a, hf b
     obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b
@@ -495,17 +495,17 @@ theorem _root_.function.surjective.valuation_ring {R S : Type _} [CommRingₓ R]
 
 section
 
-variable {𝒪 : Type u} {K : Type v} {Γ : Type w} [CommRingₓ 𝒪] [IsDomain 𝒪] [Field K] [Algebra 𝒪 K]
+variable {𝒪 : Type u} {K : Type v} {Γ : Type w} [CommRing 𝒪] [IsDomain 𝒪] [Field K] [Algebra 𝒪 K]
   [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) (hh : v.Integers 𝒪)
 
 include hh
 
 /-- If `𝒪` satisfies `v.integers 𝒪` where `v` is a valuation on a field, then `𝒪`
 is a valuation ring. -/
-theorem of_integers : ValuationRing 𝒪 := by
+theorem ofIntegers : ValuationRing 𝒪 := by
   constructor
   intro a b
-  cases le_totalₓ (v (algebraMap 𝒪 K a)) (v (algebraMap 𝒪 K b))
+  cases le_total (v (algebraMap 𝒪 K a)) (v (algebraMap 𝒪 K b))
   · obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
     use c
     exact Or.inr hc.symm
@@ -522,7 +522,7 @@ section
 variable (K : Type u) [Field K]
 
 /-- A field is a valuation ring. -/
-instance (priority := 100) of_field : ValuationRing K := by
+instance (priority := 100) ofField : ValuationRing K := by
   constructor
   intro a b
   by_cases b = 0
@@ -540,10 +540,10 @@ end
 
 section
 
-variable (A : Type u) [CommRingₓ A] [IsDomain A] [DiscreteValuationRing A]
+variable (A : Type u) [CommRing A] [IsDomain A] [DiscreteValuationRing A]
 
 /-- A DVR is a valuation ring. -/
-instance (priority := 100) of_discrete_valuation_ring : ValuationRing A := by
+instance (priority := 100) ofDiscreteValuationRing : ValuationRing A := by
   constructor
   intro a b
   by_cases ha:a = 0
@@ -559,18 +559,18 @@ instance (priority := 100) of_discrete_valuation_ring : ValuationRing A := by
   obtain ⟨ϖ, hϖ⟩ := DiscreteValuationRing.exists_irreducible A
   obtain ⟨m, u, rfl⟩ := DiscreteValuationRing.eq_unit_mul_pow_irreducible ha hϖ
   obtain ⟨n, v, rfl⟩ := DiscreteValuationRing.eq_unit_mul_pow_irreducible hb hϖ
-  cases' le_totalₓ m n with h h
+  cases' le_total m n with h h
   · use (u⁻¹ * v : Aˣ) * ϖ ^ (n - m)
     left
     simp_rw [mul_comm (u : A), Units.coe_mul, ← mul_assoc, mul_assoc _ (u : A)]
-    simp only [Units.mul_inv, mul_oneₓ, mul_comm _ (v : A), mul_assoc, ← pow_addₓ]
+    simp only [Units.mul_inv, mul_one, mul_comm _ (v : A), mul_assoc, ← pow_add]
     congr 2
     linarith
     
   · use (v⁻¹ * u : Aˣ) * ϖ ^ (m - n)
     right
     simp_rw [mul_comm (v : A), Units.coe_mul, ← mul_assoc, mul_assoc _ (v : A)]
-    simp only [Units.mul_inv, mul_oneₓ, mul_comm _ (u : A), mul_assoc, ← pow_addₓ]
+    simp only [Units.mul_inv, mul_one, mul_comm _ (u : A), mul_assoc, ← pow_add]
     congr 2
     linarith
     

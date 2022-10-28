@@ -72,7 +72,7 @@ variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAdd
 
 /-- A closed ball in a strictly convex space is strictly convex. -/
 theorem strict_convex_closed_ball [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) : StrictConvex 𝕜 (ClosedBall x r) := by
-  cases' le_or_ltₓ r 0 with hr hr
+  cases' le_or_lt r 0 with hr hr
   · exact (subsingleton_closed_ball x hr).StrictConvex
     
   rw [← vadd_closed_ball_zero]
@@ -81,14 +81,14 @@ theorem strict_convex_closed_ball [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) :
 variable [NormedSpace ℝ E]
 
 /-- A real normed vector space is strictly convex provided that the unit ball is strictly convex. -/
-theorem StrictConvexSpace.of_strict_convex_closed_unit_ball [LinearMap.CompatibleSmul E E 𝕜 ℝ]
+theorem StrictConvexSpace.ofStrictConvexClosedUnitBall [LinearMap.CompatibleSmul E E 𝕜 ℝ]
     (h : StrictConvex 𝕜 (ClosedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
   ⟨fun r hr => by simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
 
 /-- If `∥x + y∥ = ∥x∥ + ∥y∥` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. -/
-theorem StrictConvexSpace.of_norm_add (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + ∥y∥ → SameRay ℝ x y) : StrictConvexSpace ℝ E := by
-  refine' StrictConvexSpace.of_strict_convex_closed_unit_ball ℝ fun x hx y hy hne a b ha hb hab => _
+theorem StrictConvexSpace.ofNormAdd (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + ∥y∥ → SameRay ℝ x y) : StrictConvexSpace ℝ E := by
+  refine' StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ fun x hx y hy hne a b ha hb hab => _
   have hx' := hx
   have hy' := hy
   rw [← closure_closed_ball, closure_eq_interior_union_frontier, frontier_closed_ball (0 : E) one_ne_zero] at hx hy
@@ -105,9 +105,9 @@ theorem StrictConvexSpace.of_norm_add (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + 
   have hb' : ∥b∥ = b := Real.norm_of_nonneg hb.le
   calc
     ∥a • x + b • y∥ < ∥a • x∥ + ∥b • y∥ := (norm_add_le _ _).lt_of_ne fun H => hne _
-    _ = 1 := by simpa only [norm_smul, hx₁, hy₁, mul_oneₓ, ha', hb']
+    _ = 1 := by simpa only [norm_smul, hx₁, hy₁, mul_one, ha', hb']
     
-  simpa only [norm_smul, hx₁, hy₁, ha', hb', mul_oneₓ, smul_comm a, smul_right_inj ha.ne', smul_right_inj hb.ne'] using
+  simpa only [norm_smul, hx₁, hy₁, ha', hb', mul_one, smul_comm a, smul_right_inj ha.ne', smul_right_inj hb.ne'] using
     (h _ _ H).norm_smul_eq.symm
 
 theorem StrictConvexSpace.of_norm_add_lt_aux {a b c d : ℝ} (ha : 0 < a) (hab : a + b = 1) (hc : 0 < c) (hd : 0 < d)
@@ -129,27 +129,27 @@ theorem StrictConvexSpace.of_norm_add_lt_aux {a b c d : ℝ} (ha : 0 < a) (hab :
       add_lt_add_of_lt_of_le (mul_lt_mul_of_pos_left hxy h₁) (mul_le_mul_of_nonneg_left hy h₂)
     _ = 1 := by
       nth_rw 0 [← hab]
-      rw [mul_addₓ, div_mul_cancel _ ha.ne', mul_oneₓ, add_add_sub_cancel, hcd]
+      rw [mul_add, div_mul_cancel _ ha.ne', mul_one, add_add_sub_cancel, hcd]
     
 
 /-- Strict convexity is equivalent to `∥a • x + b • y∥ < 1` for all `x` and `y` of norm at most `1`
 and all strictly positive `a` and `b` such that `a + b = 1`. This shows that we only need to check
 it for fixed `a` and `b`. -/
-theorem StrictConvexSpace.of_norm_add_lt {a b : ℝ} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1)
+theorem StrictConvexSpace.ofNormAddLt {a b : ℝ} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1)
     (h : ∀ x y : E, ∥x∥ ≤ 1 → ∥y∥ ≤ 1 → x ≠ y → ∥a • x + b • y∥ < 1) : StrictConvexSpace ℝ E := by
-  refine' StrictConvexSpace.of_strict_convex_closed_unit_ball _ fun x hx y hy hxy c d hc hd hcd => _
+  refine' StrictConvexSpace.ofStrictConvexClosedUnitBall _ fun x hx y hy hxy c d hc hd hcd => _
   rw [interior_closed_ball (0 : E) one_ne_zero, mem_ball_zero_iff]
   rw [mem_closed_ball_zero_iff] at hx hy
-  obtain hca | hac := le_totalₓ c a
+  obtain hca | hac := le_total c a
   · exact StrictConvexSpace.of_norm_add_lt_aux ha hab hc hd hcd hca hy (h _ _ hx hy hxy)
     
-  rw [add_commₓ] at hab hcd⊢
+  rw [add_comm] at hab hcd⊢
   refine' StrictConvexSpace.of_norm_add_lt_aux hb hab hd hc hcd _ hx _
   · refine' le_of_add_le_add_right (hcd.trans_le _)
     rw [← hab]
     exact add_le_add_left hac _
     
-  · rw [add_commₓ]
+  · rw [add_comm]
     exact h _ _ hx hy hxy
     
 
@@ -245,14 +245,14 @@ theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y =
     (hyz : dist y z = (1 - r) * dist x z) : y = AffineMap.lineMap x z r := by
   have : y -ᵥ x ∈ [(0 : E) -[ℝ] z -ᵥ x] := by
     rw [← dist_add_dist_eq_iff, dist_zero_left, dist_vsub_cancel_right, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy,
-      hyz, ← add_mulₓ, add_sub_cancel'_right, one_mulₓ]
+      hyz, ← add_mul, add_sub_cancel'_right, one_mul]
   rcases eq_or_ne x z with (rfl | hne)
   · obtain rfl : y = x := by simpa
     simp
     
   · rw [← dist_ne_zero] at hne
     rcases this with ⟨a, b, ha, hb, hab, H⟩
-    rw [smul_zero, zero_addₓ] at H
+    rw [smul_zero, zero_add] at H
     have H' := congr_arg norm H
     rw [norm_smul, Real.norm_of_nonneg hb, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy, mul_left_inj' hne] at H'
     rw [AffineMap.line_map_apply, ← H', H, vsub_vadd]

@@ -73,23 +73,23 @@ instance : CoeFun (Pretopology C) fun _ => ∀ X : C, Set (Presieve X) :=
 
 variable {C}
 
-instance : LE (Pretopology C) where le := fun K₁ K₂ => (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂
+instance : LE (Pretopology C) where le K₁ K₂ := (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂
 
 theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂ :=
   Iff.rfl
 
 variable (C)
 
-instance : PartialOrderₓ (Pretopology C) :=
-  { Pretopology.hasLe with le_refl := fun K => le_def.mpr le_rflₓ,
-    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
-    le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => Pretopology.ext _ _ (le_antisymmₓ h₁₂ h₂₁) }
+instance : PartialOrder (Pretopology C) :=
+  { Pretopology.hasLe with le_refl := fun K => le_def.mpr le_rfl,
+    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃),
+    le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => Pretopology.ext _ _ (le_antisymm h₁₂ h₂₁) }
 
 instance : OrderTop (Pretopology C) where
   top :=
     { Coverings := fun _ => Set.Univ, has_isos := fun _ _ _ _ => Set.mem_univ _,
       pullbacks := fun _ _ _ _ _ => Set.mem_univ _, Transitive := fun _ _ _ _ _ => Set.mem_univ _ }
-  le_top := fun K X S hS => Set.mem_univ _
+  le_top K X S hS := Set.mem_univ _
 
 instance : Inhabited (Pretopology C) :=
   ⟨⊤⟩
@@ -100,9 +100,9 @@ instance : Inhabited (Pretopology C) :=
 See <https://stacks.math.columbia.edu/tag/00ZC>, or [MM92] Chapter III, Section 2, Equation (2).
 -/
 def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
-  Sieves := fun X S => ∃ R ∈ K X, R ≤ (S : Presieve _)
-  top_mem' := fun X => ⟨Presieve.Singleton (𝟙 _), K.has_isos _, fun _ _ _ => ⟨⟩⟩
-  pullback_stable' := fun X Y S g => by
+  Sieves X S := ∃ R ∈ K X, R ≤ (S : Presieve _)
+  top_mem' X := ⟨Presieve.Singleton (𝟙 _), K.has_isos _, fun _ _ _ => ⟨⟩⟩
+  pullback_stable' X Y S g := by
     rintro ⟨R, hR, RS⟩
     refine' ⟨_, K.pullbacks g _ hR, _⟩
     rw [← sieve.sets_iff_generate, sieve.pullback_arrows_comm]
@@ -123,12 +123,12 @@ theorem mem_to_grothendieck (K : Pretopology C) (X S) : S ∈ toGrothendieck C K
 See [MM92] Chapter III, Section 2, Equations (3,4).
 -/
 def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
-  Coverings := fun X R => Sieve.generate R ∈ J X
-  has_isos := fun X Y f i => J.covering_of_eq_top (by simp)
-  pullbacks := fun X Y f R hR => by
+  Coverings X R := Sieve.generate R ∈ J X
+  has_isos X Y f i := J.covering_of_eq_top (by simp)
+  pullbacks X Y f R hR := by
     rw [Set.mem_def, sieve.pullback_arrows_comm]
     apply J.pullback_stable f hR
-  Transitive := fun X S Ti hS hTi => by
+  Transitive X S Ti hS hTi := by
     apply J.transitive hS
     intro Y f
     rintro ⟨Z, g, f, hf, rfl⟩
@@ -140,7 +140,7 @@ def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
 
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
 def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
-  gc := fun K J => by
+  gc K J := by
     constructor
     · intro h X R hR
       exact h _ ⟨_, hR, sieve.le_generate R⟩
@@ -149,9 +149,9 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
       apply J.superset_covering _ (h _ hR)
       rwa [sieve.gi_generate.gc]
       
-  le_l_u := fun J X S hS => ⟨S, J.superset_covering S.le_generate hS, le_rflₓ⟩
-  choice := fun x hx => toGrothendieck C x
-  choice_eq := fun _ _ => rfl
+  le_l_u J X S hS := ⟨S, J.superset_covering S.le_generate hS, le_rfl⟩
+  choice x hx := toGrothendieck C x
+  choice_eq _ _ := rfl
 
 /-- The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
 also known as the indiscrete, coarse, or chaotic topology.
@@ -159,9 +159,9 @@ also known as the indiscrete, coarse, or chaotic topology.
 See <https://stacks.math.columbia.edu/tag/07GE>
 -/
 def trivial : Pretopology C where
-  Coverings := fun X S => ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.Singleton f
-  has_isos := fun X Y f i => ⟨_, _, i, rfl⟩
-  pullbacks := fun X Y f S => by
+  Coverings X S := ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.Singleton f
+  has_isos X Y f i := ⟨_, _, i, rfl⟩
+  pullbacks X Y f S := by
     rintro ⟨Z, g, i, rfl⟩
     refine' ⟨pullback g f, pullback.snd, _, _⟩
     · skip
@@ -197,7 +197,7 @@ def trivial : Pretopology C where
 
 instance : OrderBot (Pretopology C) where
   bot := trivial C
-  bot_le := fun K X R => by
+  bot_le K X R := by
     rintro ⟨Y, f, hf, rfl⟩
     exact K.has_isos f
 

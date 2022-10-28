@@ -34,11 +34,11 @@ universe u v w
 
 namespace Finsupp
 
-section Ringₓ
+section Ring
 
 variable {R : Type _} {M : Type _} {ι : Type _}
 
-variable [Ringₓ R] [AddCommGroupₓ M] [Module R M]
+variable [Ring R] [AddCommGroup M] [Module R M]
 
 theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M} (hf : ∀ i, LinearIndependent R (f i)) :
     LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) := by
@@ -46,7 +46,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
   · intro i
     have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) := by
       rw [ker_lsingle]
-      exact disjoint_bot_right
+      exact disjointBotRight
     apply (hf i).map h_disjoint
     
   · intro i t ht hit
@@ -62,13 +62,13 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
       
     
 
-end Ringₓ
+end Ring
 
-section Semiringₓ
+section Semiring
 
 variable {R : Type _} {M : Type _} {ι : Type _}
 
-variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 open LinearMap Submodule
 
@@ -79,7 +79,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
           support := g.support.Sigma fun i => ((b i).repr (g i)).support,
           mem_support_to_fun := fun ix => by
-            simp only [Finsetₓ.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
+            simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
             intro b hg
             simpa [hg] using b },
       invFun := fun g =>
@@ -87,8 +87,8 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
           support := g.support.Image Sigma.fst,
           mem_support_to_fun := fun i => by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
-            simp only [exists_propₓ, LinearEquiv.map_zero, comap_domain_apply, zero_apply, exists_and_distrib_rightₓ,
-              mem_support_iff, exists_eq_right, Sigma.exists, Finsetₓ.mem_image, not_forall] },
+            simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply, exists_and_distrib_right,
+              mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image, not_forall] },
       left_inv := fun g => by
         ext i
         rw [← (b i).repr.Injective.eq_iff]
@@ -119,7 +119,7 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
       · cases h
         simp only [basis_repr, single_eq_same, Basis.repr_self, Basis.Finsupp.single_apply_left sigma_mk_injective]
         
-      simp only [basis_repr, single_apply, h, false_andₓ, if_false, LinearEquiv.map_zero, zero_apply]
+      simp only [basis_repr, single_apply, h, false_and_iff, if_false, LinearEquiv.map_zero, zero_apply]
 
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
@@ -130,13 +130,13 @@ protected def basisSingleOne : Basis ι R (ι →₀ R) :=
 theorem coe_basis_single_one : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
   funext fun i => Basis.apply_eq_iff.mpr rfl
 
-end Semiringₓ
+end Semiring
 
 section Dim
 
 variable {K : Type u} {V : Type v} {ι : Type v}
 
-variable [Field K] [AddCommGroupₓ V] [Module K V]
+variable [Field K] [AddCommGroup V] [Module K V]
 
 theorem dim_eq : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V := by
   let bs := Basis.ofVectorSpace K V
@@ -152,13 +152,13 @@ variable {K : Type u} {V V₁ V₂ : Type v} {V' : Type w}
 
 variable [Field K]
 
-variable [AddCommGroupₓ V] [Module K V]
+variable [AddCommGroup V] [Module K V]
 
-variable [AddCommGroupₓ V₁] [Module K V₁]
+variable [AddCommGroup V₁] [Module K V₁]
 
-variable [AddCommGroupₓ V₂] [Module K V₂]
+variable [AddCommGroup V₂] [Module K V₂]
 
-variable [AddCommGroupₓ V'] [Module K V']
+variable [AddCommGroup V'] [Module K V']
 
 open Module
 
@@ -169,8 +169,8 @@ theorem equiv_of_dim_eq_lift_dim (h : Cardinal.lift.{w} (Module.rank K V) = Card
   let m := Basis.ofVectorSpace K V
   let m' := Basis.ofVectorSpace K V'
   rw [← Cardinal.lift_inj.1 m.mk_eq_dim, ← Cardinal.lift_inj.1 m'.mk_eq_dim] at h
-  rcases Quotientₓ.exact h with ⟨e⟩
-  let e := (equiv.ulift.symm.trans e).trans Equivₓ.ulift
+  rcases Quotient.exact h with ⟨e⟩
+  let e := (equiv.ulift.symm.trans e).trans Equiv.ulift
   exact ⟨m.repr ≪≫ₗ Finsupp.domLcongr e ≪≫ₗ m'.repr.symm⟩
 
 /-- Two `K`-vector spaces are equivalent if their dimension is the same. -/
@@ -179,7 +179,7 @@ def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[
   exact Classical.choice (equiv_of_dim_eq_lift_dim (Cardinal.lift_inj.2 h))
 
 /-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
-def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Finₓ n → K := by
+def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fin n → K := by
   have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by simp
   have hn := Cardinal.lift_inj.{v, u}.2 hn
   rw [this] at hn
@@ -192,14 +192,14 @@ section Module
 
 open Module
 
-variable (K V : Type u) [Field K] [AddCommGroupₓ V] [Module K V]
+variable (K V : Type u) [Field K] [AddCommGroup V] [Module K V]
 
 theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : (#V) = (#K) ^ Module.rank K V := by
   let s := Basis.OfVectorSpaceIndex K V
   let hs := Basis.ofVectorSpace K V
   calc
-    (#V) = (#s →₀ K) := Quotientₓ.sound ⟨hs.repr.to_equiv⟩
-    _ = (#s → K) := Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩
+    (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩
+    _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFintype⟩
     _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
     
 
@@ -214,13 +214,13 @@ namespace Basis
 
 variable {R M n : Type _}
 
-variable [DecidableEq n] [Fintypeₓ n]
+variable [DecidableEq n] [Fintype n]
 
-variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 theorem _root_.finset.sum_single_ite (a : R) (i : n) :
-    (Finsetₓ.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a := by
-  rw [Finsetₓ.sum_congr_set {i} (fun x : n => Finsupp.single x (ite (i = x) a 0)) fun _ => Finsupp.single i a]
+    (Finset.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a := by
+  rw [Finset.sum_congr_set {i} (fun x : n => Finsupp.single x (ite (i = x) a 0)) fun _ => Finsupp.single i a]
   · simp
     
   · intro x hx
@@ -240,7 +240,7 @@ theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
   apply_fun b.repr
   simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply,
     repr_self, Finsupp.smul_single', boole_mul]
-  exact Finsetₓ.sum_single_ite 1 i
+  exact Finset.sum_single_ite 1 i
 
 end Basis
 

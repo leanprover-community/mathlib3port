@@ -48,11 +48,11 @@ variable {Ω : Type _} [MeasurableSpace Ω]
 
 This is a probability measure when `s` is finite and nonempty and is given by
 `probability_theory.cond_count_is_probability_measure`. -/
-def condCount (s : Set Ω) : Measureₓ Ω :=
+def condCount (s : Set Ω) : Measure Ω :=
   measure.count[|s]
 
 @[simp]
-theorem cond_count_empty_meas : (condCount ∅ : Measureₓ Ω) = 0 := by simp [cond_count]
+theorem cond_count_empty_meas : (condCount ∅ : Measure Ω) = 0 := by simp [cond_count]
 
 theorem cond_count_empty {s : Set Ω} : condCount s ∅ = 0 := by simp
 
@@ -60,18 +60,18 @@ theorem finite_of_cond_count_ne_zero {s t : Set Ω} (h : condCount s t ≠ 0) : 
   by_contra hs'
   simpa [cond_count, cond, measure.count_apply_infinite hs'] using h
 
-theorem cond_count_univ [Fintypeₓ Ω] {s : Set Ω} : condCount Set.Univ s = Measure.count s / Fintypeₓ.card Ω := by
+theorem cond_count_univ [Fintype Ω] {s : Set Ω} : condCount Set.Univ s = Measure.count s / Fintype.card Ω := by
   rw [cond_count, cond_apply _ MeasurableSet.univ, ← Ennreal.div_eq_inv_mul, Set.univ_inter]
   congr
-  rw [← Finsetₓ.coe_univ, measure.count_apply, finset.univ.tsum_subtype' fun _ => (1 : Ennreal)]
-  · simp [Finsetₓ.card_univ]
+  rw [← Finset.coe_univ, measure.count_apply, finset.univ.tsum_subtype' fun _ => (1 : Ennreal)]
+  · simp [Finset.card_univ]
     
-  · exact (@Finsetₓ.coe_univ Ω _).symm ▸ MeasurableSet.univ
+  · exact (@Finset.coe_univ Ω _).symm ▸ MeasurableSet.univ
     
 
 variable [MeasurableSingletonClass Ω]
 
-theorem cond_count_is_probability_measure {s : Set Ω} (hs : s.Finite) (hs' : s.Nonempty) :
+theorem condCountIsProbabilityMeasure {s : Set Ω} (hs : s.Finite) (hs' : s.Nonempty) :
     IsProbabilityMeasure (condCount s) :=
   { measure_univ := by
       rw [cond_count, cond_apply _ hs.measurable_set, Set.inter_univ, Ennreal.inv_mul_cancel]
@@ -81,7 +81,7 @@ theorem cond_count_is_probability_measure {s : Set Ω} (hs : s.Finite) (hs' : s.
          }
 
 theorem cond_count_singleton (ω : Ω) (t : Set Ω) [Decidable (ω ∈ t)] : condCount {ω} t = if ω ∈ t then 1 else 0 := by
-  rw [cond_count, cond_apply _ (measurable_set_singleton ω), measure.count_singleton, inv_one, one_mulₓ]
+  rw [cond_count, cond_apply _ (measurable_set_singleton ω), measure.count_singleton, inv_one, one_mul]
   split_ifs
   · rw [(by simpa : ({ω} : Set Ω) ∩ t = {ω}), measure.count_singleton]
     
@@ -103,7 +103,7 @@ theorem cond_count_self (hs : s.Finite) (hs' : s.Nonempty) : condCount s s = 1 :
 theorem cond_count_eq_one_of (hs : s.Finite) (hs' : s.Nonempty) (ht : s ⊆ t) : condCount s t = 1 := by
   haveI := cond_count_is_probability_measure hs hs'
   refine' eq_of_le_of_not_lt prob_le_one _
-  rw [not_ltₓ, ← cond_count_self hs hs']
+  rw [not_lt, ← cond_count_self hs hs']
   exact measure_mono ht
 
 theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t := by
@@ -114,10 +114,10 @@ theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t := by
         exact one_ne_zero)
   rw [cond_count, cond_apply _ hsf.measurable_set, mul_comm] at h
   replace h := Ennreal.eq_inv_of_mul_eq_one_left h
-  rw [inv_invₓ, measure.count_apply_finite _ hsf, measure.count_apply_finite _ (hsf.inter_of_left _), Nat.cast_inj] at h
+  rw [inv_inv, measure.count_apply_finite _ hsf, measure.count_apply_finite _ (hsf.inter_of_left _), Nat.cast_inj] at h
   suffices s ∩ t = s by exact this ▸ fun x hx => hx.2
   rw [← @Set.Finite.to_finset_inj _ _ _ (hsf.inter_of_left _) hsf]
-  exact Finsetₓ.eq_of_subset_of_card_le (Set.Finite.to_finset_subset.2 (s.inter_subset_left t)) h.symm.le
+  exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_subset.2 (s.inter_subset_left t)) h.symm.le
 
 theorem cond_count_eq_zero_iff (hs : s.Finite) : condCount s t = 0 ↔ s ∩ t = ∅ := by
   simp [cond_count, cond_apply _ hs.measurable_set, measure.count_apply_eq_top, Set.not_infinite.2 hs,
@@ -133,7 +133,7 @@ theorem cond_count_inter (hs : s.Finite) : condCount s (t ∩ u) = condCount (s 
     
   rw [cond_count, cond_count, cond_apply _ hs.measurable_set, cond_apply _ hs.measurable_set,
     cond_apply _ (hs.inter_of_left _).MeasurableSet, mul_comm _ (measure.count (s ∩ t)), ← mul_assoc,
-    mul_comm _ (measure.count (s ∩ t)), ← mul_assoc, Ennreal.mul_inv_cancel, one_mulₓ, mul_comm, Set.inter_assoc]
+    mul_comm _ (measure.count (s ∩ t)), ← mul_assoc, Ennreal.mul_inv_cancel, one_mul, mul_comm, Set.inter_assoc]
   · rwa [← measure.count_eq_zero_iff] at hst
     
   · exact (measure.count_apply_lt_top.2 <| hs.inter_of_left _).Ne
@@ -146,11 +146,11 @@ theorem cond_count_inter' (hs : s.Finite) : condCount s (t ∩ u) = condCount (s
 theorem cond_count_union (hs : s.Finite) (htu : Disjoint t u) : condCount s (t ∪ u) = condCount s t + condCount s u :=
   by
   rw [cond_count, cond_apply _ hs.measurable_set, cond_apply _ hs.measurable_set, cond_apply _ hs.measurable_set,
-    Set.inter_union_distrib_left, measure_union, mul_addₓ]
+    Set.inter_union_distrib_left, measure_union, mul_add]
   exacts[htu.mono inf_le_right inf_le_right, (hs.inter_of_left _).MeasurableSet]
 
 theorem cond_count_compl (t : Set Ω) (hs : s.Finite) (hs' : s.Nonempty) : condCount s t + condCount s (tᶜ) = 1 := by
-  rw [← cond_count_union hs disjoint_compl_right, Set.union_compl_self,
+  rw [← cond_count_union hs disjointComplRight, Set.union_compl_self,
     (cond_count_is_probability_measure hs hs').measure_univ]
 
 theorem cond_count_disjoint_union (hs : s.Finite) (ht : t.Finite) (hst : Disjoint s t) :
@@ -169,7 +169,7 @@ theorem cond_count_disjoint_union (hs : s.Finite) (ht : t.Finite) (hst : Disjoin
     rw [Set.union_inter_cancel_left, Set.union_inter_cancel_right, mul_comm (measure.count (s ∪ t))⁻¹,
       mul_comm (measure.count (s ∪ t))⁻¹, ← mul_assoc, ← mul_assoc, mul_comm _ (measure.count s),
       mul_comm _ (measure.count t), ← mul_assoc, ← mul_assoc]
-  rw [Ennreal.mul_inv_cancel, Ennreal.mul_inv_cancel, one_mulₓ, one_mulₓ, ← add_mulₓ, ← measure_union,
+  rw [Ennreal.mul_inv_cancel, Ennreal.mul_inv_cancel, one_mul, one_mul, ← add_mul, ← measure_union,
     Set.union_inter_distrib_right, mul_comm]
   exacts[hst.mono inf_le_left inf_le_left, (ht.inter_of_left _).MeasurableSet, measure.count_ne_zero ht',
     (measure.count_apply_lt_top.2 ht).Ne, measure.count_ne_zero hs', (measure.count_apply_lt_top.2 hs).Ne]

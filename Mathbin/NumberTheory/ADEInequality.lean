@@ -102,7 +102,7 @@ def sumInv (pqr : Multiset ℕ+) : ℚ :=
   Multiset.sum <| pqr.map fun x => x⁻¹
 
 theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
-  simp only [sum_inv, coe_coe, add_zeroₓ, insert_eq_cons, add_assocₓ, map_cons, sum_cons, map_singleton, sum_singleton]
+  simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons, map_singleton, sum_singleton]
 
 /-- A multiset `pqr` of positive natural numbers is `admissible`
 if it is equal to `A' q r`, or `D' r`, or one of `E6`, `E7`, or `E8`. -/
@@ -136,12 +136,12 @@ theorem admissible_E8 : Admissible e8 :=
 theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr := by
   rw [admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
-  · rw [← H, A', sum_inv_pqr, add_assocₓ]
-    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_oneₓ, coe_coe]
+  · rw [← H, A', sum_inv_pqr, add_assoc]
+    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_one, coe_coe]
     apply add_pos <;> simp only [Pnat.pos, Nat.cast_pos, inv_pos]
     
   · rw [← H, D', sum_inv_pqr]
-    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_oneₓ, coe_coe, Pnat.coe_bit0, Nat.cast_bit0]
+    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_one, coe_coe, Pnat.coe_bit0, Nat.cast_bit0]
     norm_num
     
   all_goals
@@ -165,9 +165,9 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   contrapose! H
   rw [sum_inv_pqr]
   have h4r := H.trans hqr
-  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_oneₓ, coe_coe]
+  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_one, coe_coe]
   calc
-    (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rflₓ _) _
+    (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rfl _) _
     _ = 1 := by norm_num
     
   all_goals rw [inv_le_inv _ h4] <;> [assumption_mod_cast, norm_num]
@@ -176,9 +176,9 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
   have h6 : (0 : ℚ) < 6 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
-  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_bit1, Nat.cast_oneₓ, Pnat.coe_bit1, coe_coe]
+  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_bit1, Nat.cast_one, Pnat.coe_bit1, coe_coe]
   calc
-    (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rflₓ le_rflₓ) _
+    (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _
     _ = 1 := by norm_num
     
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast, norm_num]

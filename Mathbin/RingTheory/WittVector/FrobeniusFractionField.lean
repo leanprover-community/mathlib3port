@@ -58,43 +58,43 @@ whose variable represents the `n`th coefficient of `x` in `x * a`.
 -/
 
 
-section CommRingₓ
+section CommRing
 
 include hp
 
-variable {k : Type _} [CommRingₓ k] [CharP k p]
+variable {k : Type _} [CommRing k] [CharP k p]
 
 open Polynomial
 
 /-- The root of this polynomial determines the `n+1`st coefficient of our solution. -/
-def succNthDefiningPoly (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) : Polynomial k :=
+def succNthDefiningPoly (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) : Polynomial k :=
   X ^ p * c (a₁.coeff 0 ^ p ^ (n + 1)) - X * c (a₂.coeff 0 ^ p ^ (n + 1)) +
     c
       (a₁.coeff (n + 1) * (bs 0 ^ p) ^ p ^ (n + 1) + nthRemainder p n (fun v => bs v ^ p) (truncateFun (n + 1) a₁) -
           a₂.coeff (n + 1) * bs 0 ^ p ^ (n + 1) -
         nthRemainder p n bs (truncateFun (n + 1) a₂))
 
-theorem succ_nth_defining_poly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0)
+theorem succ_nth_defining_poly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0)
     (ha₂ : a₂.coeff 0 ≠ 0) : (succNthDefiningPoly p n a₁ a₂ bs).degree = p := by
   have : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1))).degree = p := by
     rw [degree_mul, degree_C]
-    · simp only [Nat.cast_with_bot, add_zeroₓ, degree_X, degree_pow, Nat.smul_one_eq_coe]
+    · simp only [Nat.cast_with_bot, add_zero, degree_X, degree_pow, Nat.smul_one_eq_coe]
       
     · exact pow_ne_zero _ ha₁
       
   have : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1)) - X * C (a₂.coeff 0 ^ p ^ (n + 1))).degree = p := by
     rw [degree_sub_eq_left_of_degree_lt, this]
-    rw [this, degree_mul, degree_C, degree_X, add_zeroₓ]
+    rw [this, degree_mul, degree_C, degree_X, add_zero]
     · exact_mod_cast hp.out.one_lt
       
     · exact pow_ne_zero _ ha₂
       
   rw [succ_nth_defining_poly, degree_add_eq_left_of_degree_lt, this]
-  apply lt_of_le_of_ltₓ degree_C_le
+  apply lt_of_le_of_lt degree_C_le
   rw [this]
   exact_mod_cast hp.out.pos
 
-end CommRingₓ
+end CommRing
 
 section IsAlgClosed
 
@@ -102,19 +102,19 @@ include hp
 
 variable {k : Type _} [Field k] [CharP k p] [IsAlgClosed k]
 
-theorem root_exists (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
+theorem root_exists (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     ∃ b : k, (succNthDefiningPoly p n a₁ a₂ bs).IsRoot b :=
   IsAlgClosed.exists_root _ <| by simp [succ_nth_defining_poly_degree p n a₁ a₂ bs ha₁ ha₂, hp.out.ne_zero]
 
 /-- This is the `n+1`st coefficient of our solution, projected from `root_exists`. -/
-def succNthVal (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : k :=
+def succNthVal (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : k :=
   Classical.choose (root_exists p n a₁ a₂ bs ha₁ ha₂)
 
-theorem succ_nth_val_spec (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
+theorem succ_nth_val_spec (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     (succNthDefiningPoly p n a₁ a₂ bs).IsRoot (succNthVal p n a₁ a₂ bs ha₁ ha₂) :=
   Classical.choose_spec (root_exists p n a₁ a₂ bs ha₁ ha₂)
 
-theorem succ_nth_val_spec' (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
+theorem succ_nth_val_spec' (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     succNthVal p n a₁ a₂ bs ha₁ ha₂ ^ p * a₁.coeff 0 ^ p ^ (n + 1) + a₁.coeff (n + 1) * (bs 0 ^ p) ^ p ^ (n + 1) +
         nthRemainder p n (fun v => bs v ^ p) (truncateFun (n + 1) a₁) =
       succNthVal p n a₁ a₂ bs ha₁ ha₂ * a₂.coeff 0 ^ p ^ (n + 1) + a₂.coeff (n + 1) * bs 0 ^ p ^ (n + 1) +
@@ -139,7 +139,7 @@ include hp
 variable {k : Type _} [Field k] [IsAlgClosed k]
 
 theorem solution_pow (a₁ a₂ : 𝕎 k) : ∃ x : k, x ^ (p - 1) = a₂.coeff 0 / a₁.coeff 0 :=
-  IsAlgClosed.exists_pow_nat_eq _ <| by linarith [hp.out.one_lt, le_of_ltₓ hp.out.one_lt]
+  IsAlgClosed.exists_pow_nat_eq _ <| by linarith [hp.out.one_lt, le_of_lt hp.out.one_lt]
 
 /-- The base case (0th coefficient) of our solution vector. -/
 def solution (a₁ a₂ : 𝕎 k) : k :=
@@ -154,7 +154,7 @@ theorem solution_nonzero {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (ha�
   rw [h, zero_pow] at this
   · simpa [ha₁, ha₂] using _root_.div_eq_zero_iff.mp this.symm
     
-  · linarith [hp.out.one_lt, le_of_ltₓ hp.out.one_lt]
+  · linarith [hp.out.one_lt, le_of_lt hp.out.one_lt]
     
 
 theorem solution_spec' {a₁ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (a₂ : 𝕎 k) :
@@ -167,7 +167,7 @@ theorem solution_spec' {a₁ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (a₂ : 𝕎
   congr
   skip
   rw [hq]
-  rw [pow_succ'ₓ, hq', this]
+  rw [pow_succ', hq', this]
   field_simp [ha₁, mul_comm]
 
 end RecursionBase
@@ -209,13 +209,13 @@ theorem frobenius_frobenius_rotation {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 
     apply solution_spec' _ ha₁
     
   · simp only [nth_remainder_spec, WittVector.coeff_frobenius_char_p, frobenius_rotation_coeff, frobenius_rotation,
-      Finₓ.val_eq_coe]
-    have := succ_nth_val_spec' p n a₁ a₂ (fun i : Finₓ (n + 1) => frobenius_rotation_coeff p ha₁ ha₂ i.val) ha₁ ha₂
-    simp only [frobenius_rotation_coeff, Finₓ.val_eq_coe, Finₓ.val_zero] at this
+      Fin.val_eq_coe]
+    have := succ_nth_val_spec' p n a₁ a₂ (fun i : Fin (n + 1) => frobenius_rotation_coeff p ha₁ ha₂ i.val) ha₁ ha₂
+    simp only [frobenius_rotation_coeff, Fin.val_eq_coe, Fin.val_zero] at this
     convert this using 4
     apply TruncatedWittVector.ext
     intro i
-    simp only [Finₓ.val_eq_coe, WittVector.coeff_truncate_fun, WittVector.coeff_frobenius_char_p]
+    simp only [Fin.val_eq_coe, WittVector.coeff_truncate_fun, WittVector.coeff_frobenius_char_p]
     rfl
     
 

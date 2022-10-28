@@ -59,7 +59,7 @@ def freshIndex : Preterm → Nat
 def addOne (t : Preterm) : Preterm :=
   t +* &1
 
-def repr : Preterm → Stringₓ
+def repr : Preterm → String
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
@@ -79,13 +79,13 @@ def canonize : Preterm → Term
 
 @[simp]
 theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
-  | &i => by simp only [preterm.val, add_zeroₓ, term.val, canonize, coeffs.val_nil]
+  | &i => by simp only [preterm.val, add_zero, term.val, canonize, coeffs.val_nil]
   | i ** n => by
-    simp only [coeffs.val_set, canonize, preterm.val, zero_addₓ, term.val]
+    simp only [coeffs.val_set, canonize, preterm.val, zero_add, term.val]
     split_ifs with h1 h2
-    · simp only [one_mulₓ, h1]
+    · simp only [one_mul, h1]
       
-    · simp only [neg_mul, one_mulₓ, h2]
+    · simp only [neg_mul, one_mul, h2]
       
     · rw [mul_comm]
       

@@ -87,8 +87,8 @@ attribute [simp, reassoc] comma_morphism.w
 
 instance commaCategory : Category (Comma L R) where
   Hom := CommaMorphism
-  id := fun X => { left := 𝟙 X.left, right := 𝟙 X.right }
-  comp := fun X Y Z f g => { left := f.left ≫ g.left, right := f.right ≫ g.right }
+  id X := { left := 𝟙 X.left, right := 𝟙 X.right }
+  comp X Y Z f g := { left := f.left ≫ g.left, right := f.right ≫ g.right }
 
 namespace Comma
 
@@ -119,21 +119,21 @@ variable (L) (R)
 /-- The functor sending an object `X` in the comma category to `X.left`. -/
 @[simps]
 def fst : Comma L R ⥤ A where
-  obj := fun X => X.left
-  map := fun _ _ f => f.left
+  obj X := X.left
+  map _ _ f := f.left
 
 /-- The functor sending an object `X` in the comma category to `X.right`. -/
 @[simps]
 def snd : Comma L R ⥤ B where
-  obj := fun X => X.right
-  map := fun _ _ f => f.right
+  obj X := X.right
+  map _ _ f := f.right
 
 /-- We can interpret the commutative square constituting a morphism in the comma category as a
     natural transformation between the functors `fst ⋙ L` and `snd ⋙ R` from the comma category
     to `T`, where the components are given by the morphism that constitutes an object of the comma
     category. -/
 @[simps]
-def natTrans : fst L R ⋙ L ⟶ snd L R ⋙ R where app := fun X => X.Hom
+def natTrans : fst L R ⋙ L ⟶ snd L R ⋙ R where app X := X.Hom
 
 @[simp]
 theorem eq_to_hom_left (X Y : Comma L R) (H : X = Y) :
@@ -177,8 +177,8 @@ def isoMk {X Y : Comma L₁ R₁} (l : X.left ≅ Y.left) (r : X.right ≅ Y.rig
 /-- A natural transformation `L₁ ⟶ L₂` induces a functor `comma L₂ R ⥤ comma L₁ R`. -/
 @[simps]
 def mapLeft (l : L₁ ⟶ L₂) : Comma L₂ R ⥤ Comma L₁ R where
-  obj := fun X => { left := X.left, right := X.right, Hom := l.app X.left ≫ X.Hom }
-  map := fun X Y f => { left := f.left, right := f.right }
+  obj X := { left := X.left, right := X.right, Hom := l.app X.left ≫ X.Hom }
+  map X Y f := { left := f.left, right := f.right }
 
 /-- The functor `comma L R ⥤ comma L R` induced by the identity natural transformation on `L` is
     naturally isomorphic to the identity functor. -/
@@ -198,8 +198,8 @@ def mapLeftComp (l : L₁ ⟶ L₂) (l' : L₂ ⟶ L₃) : mapLeft R (l ≫ l') 
 /-- A natural transformation `R₁ ⟶ R₂` induces a functor `comma L R₁ ⥤ comma L R₂`. -/
 @[simps]
 def mapRight (r : R₁ ⟶ R₂) : Comma L R₁ ⥤ Comma L R₂ where
-  obj := fun X => { left := X.left, right := X.right, Hom := X.Hom ≫ r.app X.right }
-  map := fun X Y f => { left := f.left, right := f.right }
+  obj X := { left := X.left, right := X.right, Hom := X.Hom ≫ r.app X.right }
+  map X Y f := { left := f.left, right := f.right }
 
 /-- The functor `comma L R ⥤ comma L R` induced by the identity natural transformation on `R` is
     naturally isomorphic to the identity functor. -/
@@ -225,20 +225,20 @@ variable {C : Type u₄} [Category.{v₄} C] {D : Type u₅} [Category.{v₅} D]
 /-- The functor `(F ⋙ L, R) ⥤ (L, R)` -/
 @[simps]
 def preLeft (F : C ⥤ A) (L : A ⥤ T) (R : B ⥤ T) : Comma (F ⋙ L) R ⥤ Comma L R where
-  obj := fun X => { left := F.obj X.left, right := X.right, Hom := X.Hom }
-  map := fun X Y f => { left := F.map f.left, right := f.right, w' := by simpa using f.w }
+  obj X := { left := F.obj X.left, right := X.right, Hom := X.Hom }
+  map X Y f := { left := F.map f.left, right := f.right, w' := by simpa using f.w }
 
 /-- The functor `(F ⋙ L, R) ⥤ (L, R)` -/
 @[simps]
 def preRight (L : A ⥤ T) (F : C ⥤ B) (R : B ⥤ T) : Comma L (F ⋙ R) ⥤ Comma L R where
-  obj := fun X => { left := X.left, right := F.obj X.right, Hom := X.Hom }
-  map := fun X Y f => { left := f.left, right := F.map f.right, w' := by simp }
+  obj X := { left := X.left, right := F.obj X.right, Hom := X.Hom }
+  map X Y f := { left := f.left, right := F.map f.right, w' := by simp }
 
 /-- The functor `(L, R) ⥤ (L ⋙ F, R ⋙ F)` -/
 @[simps]
 def post (L : A ⥤ T) (R : B ⥤ T) (F : T ⥤ C) : Comma L R ⥤ Comma (L ⋙ F) (R ⋙ F) where
-  obj := fun X => { left := X.left, right := X.right, Hom := F.map X.Hom }
-  map := fun X Y f => { left := f.left, right := f.right, w' := by simp only [functor.comp_map, ← F.map_comp, f.w] }
+  obj X := { left := X.left, right := X.right, Hom := F.map X.Hom }
+  map X Y f := { left := f.left, right := f.right, w' := by simp only [functor.comp_map, ← F.map_comp, f.w] }
 
 end
 

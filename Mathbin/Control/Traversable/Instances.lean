@@ -23,15 +23,15 @@ open Functor
 
 variable {F G : Type u → Type u}
 
-variable [Applicativeₓ F] [Applicativeₓ G]
+variable [Applicative F] [Applicative G]
 
-variable [IsLawfulApplicative F] [IsLawfulApplicative G]
+variable [LawfulApplicative F] [LawfulApplicative G]
 
-theorem Option.id_traverse {α} (x : Option α) : Option.traverseₓₓ id.mk x = x := by cases x <;> rfl
+theorem Option.id_traverse {α} (x : Option α) : Option.traverse id.mk x = x := by cases x <;> rfl
 
 @[nolint unused_arguments]
 theorem Option.comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Option α) :
-    Option.traverseₓₓ (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Option.traverseₓₓ f <$> Option.traverseₓₓ g x) := by
+    Option.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Option.traverse f <$> Option.traverse g x) := by
   cases x <;> simp! [functor_norm] <;> rfl
 
 theorem Option.traverse_eq_map_id {α β} (f : α → β) (x : Option α) : traverse (id.mk ∘ f) x = id.mk (f <$> x) := by
@@ -39,8 +39,8 @@ theorem Option.traverse_eq_map_id {α β} (f : α → β) (x : Option α) : trav
 
 variable (η : ApplicativeTransformation F G)
 
-theorem Option.naturality {α β} (f : α → F β) (x : Option α) :
-    η (Option.traverseₓₓ f x) = Option.traverseₓₓ (@η _ ∘ f) x := by cases' x with x <;> simp! [*, functor_norm]
+theorem Option.naturality {α β} (f : α → F β) (x : Option α) : η (Option.traverse f x) = Option.traverse (@η _ ∘ f) x :=
+  by cases' x with x <;> simp! [*, functor_norm]
 
 end Option
 
@@ -52,29 +52,29 @@ namespace List
 
 variable {F G : Type u → Type u}
 
-variable [Applicativeₓ F] [Applicativeₓ G]
+variable [Applicative F] [Applicative G]
 
 section
 
-variable [IsLawfulApplicative F] [IsLawfulApplicative G]
+variable [LawfulApplicative F] [LawfulApplicative G]
 
-open Applicativeₓ Functor List
+open Applicative Functor List
 
-protected theorem id_traverse {α} (xs : List α) : List.traverseₓ id.mk xs = xs := by
+protected theorem id_traverse {α} (xs : List α) : List.traverse id.mk xs = xs := by
   induction xs <;> simp! [*, functor_norm] <;> rfl
 
 @[nolint unused_arguments]
 protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : List α) :
-    List.traverseₓ (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (List.traverseₓ f <$> List.traverseₓ g x) := by
+    List.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (List.traverse f <$> List.traverse g x) := by
   induction x <;> simp! [*, functor_norm] <;> rfl
 
-protected theorem traverse_eq_map_id {α β} (f : α → β) (x : List α) : List.traverseₓ (id.mk ∘ f) x = id.mk (f <$> x) :=
+protected theorem traverse_eq_map_id {α β} (f : α → β) (x : List α) : List.traverse (id.mk ∘ f) x = id.mk (f <$> x) :=
   by induction x <;> simp! [*, functor_norm] <;> rfl
 
 variable (η : ApplicativeTransformation F G)
 
-protected theorem naturality {α β} (f : α → F β) (x : List α) : η (List.traverseₓ f x) = List.traverseₓ (@η _ ∘ f) x :=
-  by induction x <;> simp! [*, functor_norm]
+protected theorem naturality {α β} (f : α → F β) (x : List α) : η (List.traverse f x) = List.traverse (@η _ ∘ f) x := by
+  induction x <;> simp! [*, functor_norm]
 
 open Nat
 
@@ -96,7 +96,7 @@ theorem traverse_nil : traverse f ([] : List α') = (pure [] : F (List β')) :=
 theorem traverse_cons (a : α') (l : List α') : traverse f (a :: l) = (· :: ·) <$> f a <*> traverse f l :=
   rfl
 
-variable [IsLawfulApplicative F]
+variable [LawfulApplicative F]
 
 @[simp]
 theorem traverse_append : ∀ as bs : List α', traverse f (as ++ bs) = (· ++ ·) <$> traverse f as <*> traverse f bs
@@ -124,36 +124,36 @@ variable {σ : Type u}
 
 variable {F G : Type u → Type u}
 
-variable [Applicativeₓ F] [Applicativeₓ G]
+variable [Applicative F] [Applicative G]
 
-open Applicativeₓ Functor
+open Applicative Functor
 
 open List (cons)
 
 protected theorem traverse_map {α β γ : Type u} (g : α → β) (f : β → G γ) (x : Sum σ α) :
-    Sum.traverseₓ f (g <$> x) = Sum.traverseₓ (f ∘ g) x := by
-  cases x <;> simp [Sum.traverseₓ, id_map, functor_norm] <;> rfl
+    Sum.traverse f (g <$> x) = Sum.traverse (f ∘ g) x := by
+  cases x <;> simp [Sum.traverse, id_map, functor_norm] <;> rfl
 
-variable [IsLawfulApplicative F] [IsLawfulApplicative G]
+variable [LawfulApplicative F] [LawfulApplicative G]
 
-protected theorem id_traverse {σ α} (x : Sum σ α) : Sum.traverseₓ id.mk x = x := by cases x <;> rfl
+protected theorem id_traverse {σ α} (x : Sum σ α) : Sum.traverse id.mk x = x := by cases x <;> rfl
 
 @[nolint unused_arguments]
 protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Sum σ α) :
-    Sum.traverseₓ (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Sum.traverseₓ f <$> Sum.traverseₓ g x) := by
-  cases x <;> simp! [Sum.traverseₓ, map_id, functor_norm] <;> rfl
+    Sum.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Sum.traverse f <$> Sum.traverse g x) := by
+  cases x <;> simp! [Sum.traverse, map_id, functor_norm] <;> rfl
 
-protected theorem traverse_eq_map_id {α β} (f : α → β) (x : Sum σ α) : Sum.traverseₓ (id.mk ∘ f) x = id.mk (f <$> x) :=
+protected theorem traverse_eq_map_id {α β} (f : α → β) (x : Sum σ α) : Sum.traverse (id.mk ∘ f) x = id.mk (f <$> x) :=
   by induction x <;> simp! [*, functor_norm] <;> rfl
 
 protected theorem map_traverse {α β γ} (g : α → G β) (f : β → γ) (x : Sum σ α) :
-    (· <$> ·) f <$> Sum.traverseₓ g x = Sum.traverseₓ ((· <$> ·) f ∘ g) x := by
-  cases x <;> simp [Sum.traverseₓ, id_map, functor_norm] <;> congr <;> rfl
+    (· <$> ·) f <$> Sum.traverse g x = Sum.traverse ((· <$> ·) f ∘ g) x := by
+  cases x <;> simp [Sum.traverse, id_map, functor_norm] <;> congr <;> rfl
 
 variable (η : ApplicativeTransformation F G)
 
-protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) : η (Sum.traverseₓ f x) = Sum.traverseₓ (@η _ ∘ f) x :=
-  by cases x <;> simp! [Sum.traverseₓ, functor_norm]
+protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) : η (Sum.traverse f x) = Sum.traverse (@η _ ∘ f) x := by
+  cases x <;> simp! [Sum.traverse, functor_norm]
 
 end Traverse
 

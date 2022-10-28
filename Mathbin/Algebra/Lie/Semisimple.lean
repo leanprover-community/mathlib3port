@@ -30,15 +30,15 @@ lie algebra, radical, simple, semisimple
 universe u v w w₁ w₂
 
 /-- A Lie module is irreducible if it is zero or its only non-trivial Lie submodule is itself. -/
-class LieModule.IsIrreducible (R : Type u) (L : Type v) (M : Type w) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
-  [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M] : Prop where
+class LieModule.IsIrreducible (R : Type u) (L : Type v) (M : Type w) [CommRing R] [LieRing L] [LieAlgebra R L]
+  [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M] : Prop where
   Irreducible : ∀ N : LieSubmodule R L M, N ≠ ⊥ → N = ⊤
 
 namespace LieAlgebra
 
 variable (R : Type u) (L : Type v)
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+variable [CommRing R] [LieRing L] [LieAlgebra R L]
 
 /-- A Lie algebra is simple if it is irreducible as a Lie module over itself via the adjoint
 action, and it is non-Abelian. -/
@@ -77,11 +77,13 @@ theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ :=
   apply h
   infer_instance
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in obtain #[["@", "⟨", "⟨", ident h₁, "⟩", ",", ident h₂, "⟩", ":=", expr id h]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- A simple Lie algebra is semisimple. -/
 instance (priority := 100) is_semisimple_of_is_simple [h : IsSimple R L] : IsSemisimple R L := by
   rw [is_semisimple_iff_no_abelian_ideals]
   intro I hI
-  obtain ⟨⟨h₁⟩, h₂⟩ := id h
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in obtain #[[\"@\", \"⟨\", \"⟨\", ident h₁, \"⟩\", \",\", ident h₂, \"⟩\", \":=\", expr id h]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
   by_contra contra
   rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI
   exact h₂ hI

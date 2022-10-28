@@ -57,7 +57,7 @@ open LinearMap
 
 section
 
-variable (n : Type u) [DecidableEq n] [Fintypeₓ n] (R : Type v) [CommRingₓ R]
+variable (n : Type u) [DecidableEq n] [Fintype n] (R : Type v) [CommRing R]
 
 /-- `special_linear_group n R` is the group of `n` by `n` `R`-matrices with determinant equal to 1.
 -/
@@ -67,11 +67,11 @@ def SpecialLinearGroup :=
 end
 
 -- mathport name: special_linear_group.fin
-localized [MatrixGroups] notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
+localized [MatrixGroups] notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 namespace SpecialLinearGroup
 
-variable {n : Type u} [DecidableEq n] [Fintypeₓ n] {R : Type v} [CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
 
 instance hasCoeToMatrix : Coe (SpecialLinearGroup n R) (Matrix n n R) :=
   ⟨fun A => A.val⟩
@@ -95,13 +95,12 @@ instance hasInv : Inv (SpecialLinearGroup n R) :=
   ⟨fun A => ⟨adjugate A, by rw [det_adjugate, A.prop, one_pow]⟩⟩
 
 instance hasMul : Mul (SpecialLinearGroup n R) :=
-  ⟨fun A B => ⟨A.1 ⬝ B.1, by erw [det_mul, A.2, B.2, one_mulₓ]⟩⟩
+  ⟨fun A B => ⟨A.1 ⬝ B.1, by erw [det_mul, A.2, B.2, one_mul]⟩⟩
 
 instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 
-instance :
-    Pow (SpecialLinearGroup n R) ℕ where pow := fun x n => ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+instance : Pow (SpecialLinearGroup n R) ℕ where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
@@ -143,10 +142,10 @@ theorem row_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) (i : n) : ↑ₘ
 
 end CoeLemmas
 
-instance : Monoidₓ (SpecialLinearGroup n R) :=
+instance : Monoid (SpecialLinearGroup n R) :=
   Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul coe_pow
 
-instance : Groupₓ (SpecialLinearGroup n R) :=
+instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
     mul_left_inv := fun A => by
       ext1
@@ -154,12 +153,12 @@ instance : Groupₓ (SpecialLinearGroup n R) :=
 
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
 def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
-  toFun := fun A =>
+  toFun A :=
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
-      (by rw [← to_lin'_mul, ← coe_mul, mul_right_invₓ, coe_one, to_lin'_one])
-      (by rw [← to_lin'_mul, ← coe_mul, mul_left_invₓ, coe_one, to_lin'_one])
+      (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
+      (by rw [← to_lin'_mul, ← coe_mul, mul_left_inv, coe_one, to_lin'_one])
   map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
-  map_mul' := fun A B => LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
+  map_mul' A B := LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
 
 theorem to_lin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
     SpecialLinearGroup.toLin' A v = Matrix.toLin' (↑ₘA) v :=
@@ -184,18 +183,18 @@ def toGL : SpecialLinearGroup n R →* GeneralLinearGroup R (n → R) :=
 theorem coe_to_GL (A : SpecialLinearGroup n R) : ↑A.toGL = A.toLin'.toLinearMap :=
   rfl
 
-variable {S : Type _} [CommRingₓ S]
+variable {S : Type _} [CommRing S]
 
 /-- A ring homomorphism from `R` to `S` induces a group homomorphism from
 `special_linear_group n R` to `special_linear_group n S`. -/
 @[simps]
 def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S where
-  toFun := fun g =>
+  toFun g :=
     ⟨f.mapMatrix ↑g, by
       rw [← f.map_det]
       simp [g.2]⟩
   map_one' := Subtype.ext <| f.mapMatrix.map_one
-  map_mul' := fun x y => Subtype.ext <| f.mapMatrix.map_mul x y
+  map_mul' x y := Subtype.ext <| f.mapMatrix.map_mul x y
 
 section cast
 
@@ -212,12 +211,12 @@ end cast
 
 section Neg
 
-variable [Fact (Even (Fintypeₓ.card n))]
+variable [Fact (Even (Fintype.card n))]
 
 /-- Formal operation of negation on special linear group on even cardinality `n` given by negating
 each element. -/
 instance : Neg (SpecialLinearGroup n R) :=
-  ⟨fun g => ⟨-g, by simpa [(Fact.out <| Even <| Fintypeₓ.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
+  ⟨fun g => ⟨-g, by simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
 
 @[simp]
 theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(g : Matrix n n R) :=
@@ -236,7 +235,7 @@ section SpecialCases
 
 theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]] = 1 := by
   rw [Matrix.det_fin_two, mul_comm]
-  simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_negₓ]
+  simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_neg]
   have := A.2
   rw [Matrix.det_fin_two] at this
   convert this
@@ -254,7 +253,7 @@ end SpecialCases
 section CoeFnInstance
 
 /-- This instance is here for convenience, but is not the simp-normal form. -/
-instance : CoeFun (SpecialLinearGroup n R) fun _ => n → n → R where coe := fun A => A.val
+instance : CoeFun (SpecialLinearGroup n R) fun _ => n → n → R where coe A := A.val
 
 @[simp]
 theorem coe_fn_eq_coe (s : SpecialLinearGroup n R) : ⇑s = ↑ₘs :=

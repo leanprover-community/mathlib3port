@@ -3,11 +3,11 @@ Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 -/
-import Mathbin.Algebra.Category.Ring.FilteredColimits
+import Mathbin.Algebra.Category.RingCat.FilteredColimits
 import Mathbin.AlgebraicGeometry.SheafedSpace
 import Mathbin.Topology.Sheaves.Stalks
-import Mathbin.Algebra.Category.Ring.Colimits
-import Mathbin.Algebra.Category.Ring.Limits
+import Mathbin.Algebra.Category.RingCat.Colimits
+import Mathbin.Algebra.Category.RingCat.Limits
 
 /-!
 # Ringed spaces
@@ -28,21 +28,21 @@ open TopologicalSpace
 
 open Opposite
 
-open Top
+open TopCat
 
-open Top.Presheaf
+open TopCat.Presheaf
 
 namespace AlgebraicGeometry
 
 /-- The type of Ringed spaces, as an abbreviation for `SheafedSpace CommRing`. -/
-abbrev RingedSpace : Type _ :=
-  SheafedSpace CommRingₓₓ
+abbrev RingedSpaceCat : Type _ :=
+  SheafedSpaceCat CommRingCat
 
-namespace RingedSpace
+namespace RingedSpaceCat
 
-open SheafedSpace
+open SheafedSpaceCat
 
-variable (X : RingedSpace.{v})
+variable (X : RingedSpaceCat.{v})
 
 /-- If the germ of a section `f` is a unit in the stalk at `x`, then `f` must be a unit on some small
 neighborhood around `x`.
@@ -165,8 +165,8 @@ theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj
 -- This should fire before `basic_open_res`.
 @[simp]
 theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
-    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpace.basicOpen X (unop U) f := by
-  apply le_antisymmₓ
+    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpaceCat.basicOpen X (unop U) f := by
+  apply le_antisymm
   · rw [X.basic_open_res i f]
     exact inf_le_right
     
@@ -188,14 +188,14 @@ theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
   exact IsUnit.mul_iff
 
 theorem basic_open_of_is_unit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUnit f) : X.basicOpen f = U := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · exact X.basic_open_subset f
     
   intro x hx
   erw [X.mem_basic_open f (⟨x, hx⟩ : U)]
   exact RingHom.is_unit_map _ hf
 
-end RingedSpace
+end RingedSpaceCat
 
 end AlgebraicGeometry
 

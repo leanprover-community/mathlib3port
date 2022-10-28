@@ -13,7 +13,7 @@ This file shows that taking `tensor_product`s commutes with taking `direct_sum`s
 -/
 
 
-section Ringₓ
+section Ring
 
 namespace TensorProduct
 
@@ -25,7 +25,7 @@ open LinearMap
 
 attribute [local ext] TensorProduct.ext
 
-variable (R : Type _) [CommRingₓ R]
+variable (R : Type _) [CommRing R]
 
 variable (ι₁ : Type _) (ι₂ : Type _)
 
@@ -33,7 +33,7 @@ variable [DecidableEq ι₁] [DecidableEq ι₂]
 
 variable (M₁ : ι₁ → Type _) (M₂ : ι₂ → Type _)
 
-variable [∀ i₁, AddCommGroupₓ (M₁ i₁)] [∀ i₂, AddCommGroupₓ (M₂ i₂)]
+variable [∀ i₁, AddCommGroup (M₁ i₁)] [∀ i₂, AddCommGroup (M₂ i₂)]
 
 variable [∀ i₁, Module R (M₁ i₁)] [∀ i₂, Module R (M₂ i₂)]
 
@@ -61,5 +61,5 @@ theorem direct_sum_lof_tmul_lof (i₁ : ι₁) (m₁ : M₁ i₁) (i₂ : ι₂)
 
 end TensorProduct
 
-end Ringₓ
+end Ring
 

@@ -154,9 +154,9 @@ end
 variable {B}
 
 instance homCategory (a b : B) : Category (Hom a b) where
-  Hom := fun f g => Quot (@Rel _ _ _ _ f g)
-  id := fun f => Quot.mk Rel (Hom₂.id f)
-  comp := fun f g h => Quot.map₂ Hom₂.vcomp Rel.vcomp_right Rel.vcomp_left
+  Hom f g := Quot (@Rel _ _ _ _ f g)
+  id f := Quot.mk Rel (Hom₂.id f)
+  comp f g h := Quot.map₂ Hom₂.vcomp Rel.vcomp_right Rel.vcomp_left
   id_comp' := by
     rintro f g ⟨η⟩
     exact Quot.sound (rel.id_comp η)
@@ -171,10 +171,10 @@ instance homCategory (a b : B) : Category (Hom a b) where
 instance bicategory : Bicategory (FreeBicategory B) where
   Hom := fun a b : B => Hom a b
   id := Hom.id
-  comp := fun a b c => Hom.comp
+  comp a b c := Hom.comp
   homCategory := FreeBicategory.homCategory
-  whiskerLeft := fun a b c f g h η => Quot.map (Hom₂.whisker_left f) (Rel.whisker_left f g h) η
-  whisker_left_id' := fun a b c f g => Quot.sound (Rel.whisker_left_id f g)
+  whiskerLeft a b c f g h η := Quot.map (Hom₂.whisker_left f) (Rel.whisker_left f g h) η
+  whisker_left_id' a b c f g := Quot.sound (Rel.whisker_left_id f g)
   whisker_left_comp' := by
     rintro a b c f g h i ⟨η⟩ ⟨θ⟩
     exact Quot.sound (rel.whisker_left_comp f η θ)
@@ -184,8 +184,8 @@ instance bicategory : Bicategory (FreeBicategory B) where
   comp_whisker_left' := by
     rintro a b c d f g h h' ⟨η⟩
     exact Quot.sound (rel.comp_whisker_left f g η)
-  whiskerRight := fun a b c f g η h => Quot.map (Hom₂.whisker_right h) (Rel.whisker_right f g h) η
-  id_whisker_right' := fun a b c f g => Quot.sound (Rel.id_whisker_right f g)
+  whiskerRight a b c f g η h := Quot.map (Hom₂.whisker_right h) (Rel.whisker_right f g h) η
+  id_whisker_right' a b c f g := Quot.sound (Rel.id_whisker_right f g)
   comp_whisker_right' := by
     rintro a b c f g h ⟨η⟩ ⟨θ⟩ i
     exact Quot.sound (rel.comp_whisker_right i η θ)
@@ -201,18 +201,18 @@ instance bicategory : Bicategory (FreeBicategory B) where
   whisker_exchange' := by
     rintro a b c f g h i ⟨η⟩ ⟨θ⟩
     exact Quot.sound (rel.whisker_exchange η θ)
-  associator := fun a b c d f g h =>
+  associator a b c d f g h :=
     { Hom := Quot.mk Rel (Hom₂.associator f g h), inv := Quot.mk Rel (Hom₂.associator_inv f g h),
       hom_inv_id' := Quot.sound (Rel.associator_hom_inv f g h),
       inv_hom_id' := Quot.sound (Rel.associator_inv_hom f g h) }
-  leftUnitor := fun a b f =>
+  leftUnitor a b f :=
     { Hom := Quot.mk Rel (Hom₂.left_unitor f), inv := Quot.mk Rel (Hom₂.left_unitor_inv f),
       hom_inv_id' := Quot.sound (Rel.left_unitor_hom_inv f), inv_hom_id' := Quot.sound (Rel.left_unitor_inv_hom f) }
-  rightUnitor := fun a b f =>
+  rightUnitor a b f :=
     { Hom := Quot.mk Rel (Hom₂.right_unitor f), inv := Quot.mk Rel (Hom₂.right_unitor_inv f),
       hom_inv_id' := Quot.sound (Rel.right_unitor_hom_inv f), inv_hom_id' := Quot.sound (Rel.right_unitor_inv_hom f) }
-  pentagon' := fun a b c d e f g h i => Quot.sound (Rel.pentagon f g h i)
-  triangle' := fun a b c f g => Quot.sound (Rel.triangle f g)
+  pentagon' a b c d e f g h i := Quot.sound (Rel.pentagon f g h i)
+  triangle' a b c f g := Quot.sound (Rel.triangle f g)
 
 variable {a b c d : FreeBicategory B}
 
@@ -271,7 +271,7 @@ theorem mk_right_unitor_inv : Quot.mk _ (Hom₂.right_unitor_inv f) = (ρ_ f).in
 @[simps]
 def of : Prefunctor B (FreeBicategory B) where
   obj := id
-  map := fun a b => Hom.of
+  map a b := Hom.of
 
 end
 
@@ -281,20 +281,26 @@ variable {B : Type u₁} [Quiver.{v₁ + 1} B] {C : Type u₂} [CategoryStruct.{
 
 variable (F : Prefunctor B C)
 
+/- warning: category_theory.free_bicategory.lift_hom -> CategoryTheory.FreeBicategory.liftHom is a dubious translation:
+lean 3 declaration is
+  forall {B : Type.{u₁}} [_inst_1 : Quiver.{succ v₁ u₁} B] {C : Type.{u₂}} [_inst_2 : CategoryTheory.CategoryStruct.{v₂ u₂} C] (F : Prefunctor.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2)) {a : B} {b : B}, (CategoryTheory.FreeBicategory.Hom.{v₁ u₁} B _inst_1 a b) -> (Quiver.Hom.{succ v₂ u₂} C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2) F a) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2) F b))
+but is expected to have type
+  forall {B : Type.{u₁}} [_inst_1 : Quiver.{succ v₁ u₁} B] {C : Type.{u₂}} [_inst_2 : CategoryTheory.CategoryStruct.{v₂ u₂} C] (F : Prefunctor.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2)) {a : B} {b : B}, (CategoryTheory.FreeBicategory.Hom.{v₁ u₁} B _inst_1 a b) -> (Quiver.Hom.{succ v₂ u₂} C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2) F a) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C _inst_2) F b))
+Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.lift_hom CategoryTheory.FreeBicategory.liftHomₓ'. -/
 /-- Auxiliary definition for `lift`. -/
 @[simp]
-def liftHomₓ : ∀ {a b : B}, Hom a b → (F.obj a ⟶ F.obj b)
+def liftHom : ∀ {a b : B}, Hom a b → (F.obj a ⟶ F.obj b)
   | _, _, hom.of f => F.map f
   | _, _, hom.id a => 𝟙 (F.obj a)
   | _, _, hom.comp f g => lift_hom f ≫ lift_hom g
 
 @[simp]
-theorem lift_hom_id (a : FreeBicategory B) : liftHomₓ F (𝟙 a) = 𝟙 (F.obj a) :=
+theorem lift_hom_id (a : FreeBicategory B) : liftHom F (𝟙 a) = 𝟙 (F.obj a) :=
   rfl
 
 @[simp]
 theorem lift_hom_comp {a b c : FreeBicategory B} (f : a ⟶ b) (g : b ⟶ c) :
-    liftHomₓ F (f ≫ g) = liftHomₓ F f ≫ liftHomₓ F g :=
+    liftHom F (f ≫ g) = liftHom F f ≫ liftHom F g :=
   rfl
 
 end
@@ -305,9 +311,15 @@ variable {B : Type u₁} [Quiver.{v₁ + 1} B] {C : Type u₂} [Bicategory.{w₂
 
 variable (F : Prefunctor B C)
 
+/- warning: category_theory.free_bicategory.lift_hom₂ -> CategoryTheory.FreeBicategory.liftHom₂ is a dubious translation:
+lean 3 declaration is
+  forall {B : Type.{u₁}} [_inst_1 : Quiver.{succ v₁ u₁} B] {C : Type.{u₂}} [_inst_2 : CategoryTheory.Bicategory.{w₂ v₂ u₂} C] (F : Prefunctor.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2))) {a : B} {b : B} {f : CategoryTheory.FreeBicategory.Hom.{v₁ u₁} B _inst_1 a b} {g : CategoryTheory.FreeBicategory.Hom.{v₁ u₁} B _inst_1 a b}, (CategoryTheory.FreeBicategory.Hom₂.{v₁ u₁} B _inst_1 a b f g) -> (Quiver.Hom.{succ w₂ v₂} (Quiver.Hom.{succ v₂ u₂} C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F a) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F b)) (CategoryTheory.CategoryStruct.toQuiver.{w₂ v₂} (Quiver.Hom.{succ v₂ u₂} C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F a) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F b)) (CategoryTheory.Category.toCategoryStruct.{w₂ v₂} (Quiver.Hom.{succ v₂ u₂} C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F a) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F b)) (CategoryTheory.Bicategory.homCategory.{w₂ v₂ u₂} C _inst_2 (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F a) (Prefunctor.obj.{succ v₁ succ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2)) F b)))) (CategoryTheory.FreeBicategory.liftHom.{v₁ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2) F a b f) (CategoryTheory.FreeBicategory.liftHom.{v₁ v₂ u₁ u₂} B _inst_1 C (CategoryTheory.Bicategory.toCategoryStruct.{w₂ v₂ u₂} C _inst_2) F a b g))
+but is expected to have type
+  PUnit.{(max (max (max (max (succ (succ u₁)) (succ (succ u₂))) (succ (succ v₁))) (succ (succ v₂))) (succ (succ w₂)))}
+Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.lift_hom₂ CategoryTheory.FreeBicategory.liftHom₂ₓ'. -/
 /-- Auxiliary definition for `lift`. -/
 @[simp]
-def liftHom₂ₓ : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → (liftHomₓ F f ⟶ liftHomₓ F g)
+def liftHom₂ : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → (liftHom F f ⟶ liftHom F g)
   | _, _, _, _, hom₂.id _ => 𝟙 _
   | _, _, _, _, hom₂.associator _ _ _ => (α_ _ _ _).Hom
   | _, _, _, _, hom₂.associator_inv _ _ _ => (α_ _ _ _).inv
@@ -316,12 +328,12 @@ def liftHom₂ₓ : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → (liftHomₓ F 
   | _, _, _, _, hom₂.right_unitor _ => (ρ_ _).Hom
   | _, _, _, _, hom₂.right_unitor_inv _ => (ρ_ _).inv
   | _, _, _, _, hom₂.vcomp η θ => lift_hom₂ η ≫ lift_hom₂ θ
-  | _, _, _, _, hom₂.whisker_left f η => liftHomₓ F f ◁ lift_hom₂ η
-  | _, _, _, _, hom₂.whisker_right h η => lift_hom₂ η ▷ liftHomₓ F h
+  | _, _, _, _, hom₂.whisker_left f η => liftHom F f ◁ lift_hom₂ η
+  | _, _, _, _, hom₂.whisker_right h η => lift_hom₂ η ▷ liftHom F h
 
 attribute [local simp] whisker_exchange
 
-theorem lift_hom₂_congr {a b : B} {f g : Hom a b} {η θ : Hom₂ f g} (H : Rel η θ) : liftHom₂ₓ F η = liftHom₂ₓ F θ := by
+theorem lift_hom₂_congr {a b : B} {f g : Hom a b} {η θ : Hom₂ f g} (H : Rel η θ) : liftHom₂ F η = liftHom₂ F θ := by
   induction H <;> tidy
 
 /-- A prefunctor from a quiver `B` to a bicategory `C` can be lifted to a pseudofunctor from
@@ -330,10 +342,10 @@ theorem lift_hom₂_congr {a b : B} {f g : Hom a b} {η θ : Hom₂ f g} (H : Re
 @[simps]
 def lift : Pseudofunctor (FreeBicategory B) C where
   obj := F.obj
-  map := fun a b => liftHomₓ F
-  map₂ := fun a b f g => Quot.lift (liftHom₂ₓ F) fun η θ H => lift_hom₂_congr F H
-  map_id := fun a => Iso.refl _
-  map_comp := fun a b c f g => Iso.refl _
+  map a b := liftHom F
+  map₂ a b f g := Quot.lift (liftHom₂ F) fun η θ H => lift_hom₂_congr F H
+  map_id a := Iso.refl _
+  map_comp a b c f g := Iso.refl _
 
 end
 

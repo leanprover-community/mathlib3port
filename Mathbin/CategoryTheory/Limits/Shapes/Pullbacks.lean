@@ -38,17 +38,17 @@ abbrev WalkingCospan : Type :=
   WidePullbackShape WalkingPair
 
 /-- The left point of the walking cospan. -/
-@[matchPattern]
+@[match_pattern]
 abbrev WalkingCospan.left : WalkingCospan :=
   some WalkingPair.left
 
 /-- The right point of the walking cospan. -/
-@[matchPattern]
+@[match_pattern]
 abbrev WalkingCospan.right : WalkingCospan :=
   some WalkingPair.right
 
 /-- The central point of the walking cospan. -/
-@[matchPattern]
+@[match_pattern]
 abbrev WalkingCospan.one : WalkingCospan :=
   none
 
@@ -59,17 +59,17 @@ abbrev WalkingSpan : Type :=
   WidePushoutShape WalkingPair
 
 /-- The left point of the walking span. -/
-@[matchPattern]
+@[match_pattern]
 abbrev WalkingSpan.left : WalkingSpan :=
   some WalkingPair.left
 
 /-- The right point of the walking span. -/
-@[matchPattern]
+@[match_pattern]
 abbrev WalkingSpan.right : WalkingSpan :=
   some WalkingPair.right
 
 /-- The central point of the walking span. -/
-@[matchPattern]
+@[match_pattern]
 abbrev WalkingSpan.zero : WalkingSpan :=
   none
 
@@ -80,17 +80,17 @@ abbrev Hom : WalkingCospan → WalkingCospan → Type :=
   wide_pullback_shape.hom
 
 /-- The left arrow of the walking cospan. -/
-@[matchPattern]
+@[match_pattern]
 abbrev Hom.inl : left ⟶ one :=
   WidePullbackShape.Hom.term _
 
 /-- The right arrow of the walking cospan. -/
-@[matchPattern]
+@[match_pattern]
 abbrev Hom.inr : right ⟶ one :=
   WidePullbackShape.Hom.term _
 
 /-- The identity arrows of the walking cospan. -/
-@[matchPattern]
+@[match_pattern]
 abbrev Hom.id (X : WalkingCospan) : X ⟶ X :=
   WidePullbackShape.Hom.id X
 
@@ -105,17 +105,17 @@ abbrev Hom : WalkingSpan → WalkingSpan → Type :=
   wide_pushout_shape.hom
 
 /-- The left arrow of the walking span. -/
-@[matchPattern]
+@[match_pattern]
 abbrev Hom.fst : zero ⟶ left :=
   WidePushoutShape.Hom.init _
 
 /-- The right arrow of the walking span. -/
-@[matchPattern]
+@[match_pattern]
 abbrev Hom.snd : zero ⟶ right :=
   WidePushoutShape.Hom.init _
 
 /-- The identity arrows of the walking span. -/
-@[matchPattern]
+@[match_pattern]
 abbrev Hom.id (X : WalkingSpan) : X ⟶ X :=
   WidePushoutShape.Hom.id X
 
@@ -2113,9 +2113,12 @@ noncomputable def pullbackAssoc :
     pullback (pullback.snd ≫ f₃ : pullback f₁ f₂ ⟶ _) f₄ ≅ pullback f₁ (pullback.fst ≫ f₂ : pullback f₃ f₄ ⟶ _) :=
   (pullbackPullbackLeftIsPullback f₁ f₂ f₃ f₄).conePointUniqueUpToIso (pullbackPullbackRightIsPullback f₁ f₂ f₃ f₄)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₁'(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp, reassoc]
 theorem pullback_assoc_inv_fst_fst : (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫ pullback.fst ≫ pullback.fst = pullback.fst := by
-  trans l₁' ≫ pullback.fst
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₁'(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   rw [← category.assoc]
   congr 1
   exact is_limit.cone_point_unique_up_to_iso_inv_comp _ _ walking_cospan.left
@@ -2125,18 +2128,24 @@ theorem pullback_assoc_inv_fst_fst : (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫
 theorem pullback_assoc_hom_fst : (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.fst = pullback.fst ≫ pullback.fst := by
   rw [← iso.eq_inv_comp, pullback_assoc_inv_fst_fst]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp, reassoc]
 theorem pullback_assoc_hom_snd_fst :
     (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
-  trans l₂ ≫ pullback.fst
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   rw [← category.assoc]
   congr 1
   exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
   exact pullback.lift_fst _ _ _
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp, reassoc]
 theorem pullback_assoc_hom_snd_snd : (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.snd = pullback.snd := by
-  trans l₂ ≫ pullback.snd
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   rw [← category.assoc]
   congr 1
   exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
@@ -2305,28 +2314,37 @@ noncomputable def pushoutAssoc :
     pushout (g₃ ≫ pushout.inr : _ ⟶ pushout g₁ g₂) g₄ ≅ pushout g₁ (g₂ ≫ pushout.inl : _ ⟶ pushout g₃ g₄) :=
   (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).coconePointUniqueUpToIso (pushoutPushoutRightIsPushout g₁ g₂ g₃ g₄)
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₁(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp, reassoc]
 theorem inl_inl_pushout_assoc_hom : pushout.inl ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl := by
-  trans f₁ ≫ l₁
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₁(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · congr 1
     exact (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _ walking_cospan.left
     
   · exact pushout.inl_desc _ _ _
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₂(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp, reassoc]
 theorem inr_inl_pushout_assoc_hom :
     pushout.inr ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl ≫ pushout.inr := by
-  trans f₂ ≫ l₁
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₂(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · congr 1
     exact (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _ walking_cospan.left
     
   · exact pushout.inr_desc _ _ _
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₄(), exprl₂'())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 @[simp, reassoc]
 theorem inr_inr_pushout_assoc_inv : pushout.inr ≫ pushout.inr ≫ (pushoutAssoc g₁ g₂ g₃ g₄).inv = pushout.inr := by
-  trans f₄ ≫ l₂'
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₄(), exprl₂'())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · congr 1
     exact
       (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_inv
@@ -2395,8 +2413,8 @@ variable {C}
 pullbacks. This is right adjoint to `over.map` (TODO) -/
 @[simps (config := { rhsMd := semireducible, simpRhs := true }) obj_left obj_hom mapLeft]
 def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
-  obj := fun g => Over.mk (pullback.snd : pullback g.Hom f ⟶ _)
-  map := fun g₁ g₂ i => Over.homMk (pullback.map _ _ _ _ i.left (𝟙 _) (𝟙 _) (by simp) (by simp)) (by simp)
+  obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ _)
+  map g₁ g₂ i := Over.homMk (pullback.map _ _ _ _ i.left (𝟙 _) (𝟙 _) (by simp) (by simp)) (by simp)
 
 end CategoryTheory.Limits
 

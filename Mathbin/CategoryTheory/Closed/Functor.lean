@@ -122,7 +122,7 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
     transferNatTransSelf (h.comp (exp.adjunction A)) ((exp.adjunction (F.obj A)).comp h) (frobeniusMorphism F h A) =
       expComparison F A :=
   by
-  rw [← Equivₓ.eq_symm_apply]
+  rw [← Equiv.eq_symm_apply]
   ext B : 2
   dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
   simp only [id_comp, comp_id]
@@ -160,7 +160,7 @@ products, then it is full and faithful.
 -/
 def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
     [PreservesLimitsOfShape (Discrete WalkingPair) L] :
-    CartesianClosedFunctor F where comparison_iso := fun A => exp_comparison_iso_of_frobenius_morphism_iso F h _
+    CartesianClosedFunctor F where comparison_iso A := exp_comparison_iso_of_frobenius_morphism_iso F h _
 
 end CategoryTheory
 

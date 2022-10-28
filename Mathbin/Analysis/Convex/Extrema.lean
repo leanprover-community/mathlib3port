@@ -16,7 +16,7 @@ a global minimum, and likewise for concave functions.
 -/
 
 
-variable {E β : Type _} [AddCommGroupₓ E] [TopologicalSpace E] [Module ℝ E] [TopologicalAddGroup E]
+variable {E β : Type _} [AddCommGroup E] [TopologicalSpace E] [Module ℝ E] [TopologicalAddGroup E]
   [HasContinuousSmul ℝ E] [OrderedAddCommGroup β] [Module ℝ β] [OrderedSmul ℝ β] {s : Set E}
 
 open Set Filter Function
@@ -26,12 +26,12 @@ open Classical TopologicalSpace
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
-    (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) : IsMinOn f (Icc a b) a := by
+    (h_local_min : IsLocalMinOn f (IccCat a b) a) (h_conv : ConvexOn ℝ (IccCat a b) f) : IsMinOn f (IccCat a b) a := by
   rintro c hc
   dsimp only [mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
-  · exact le_rflₓ
+  · exact le_rfl
     
   have H₁ : ∀ᶠ y in 𝓝[>] a, f a ≤ f y := h_local_min.filter_mono (nhds_within_mono _ Ioi_subset_Ici_self)
   have H₂ : ∀ᶠ y in 𝓝[>] a, y ∈ Ioc a c := Ioc_mem_nhds_within_Ioi (left_mem_Ico.2 a_lt_c)

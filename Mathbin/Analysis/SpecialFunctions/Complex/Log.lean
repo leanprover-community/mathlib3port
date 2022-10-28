@@ -37,7 +37,7 @@ theorem log_im_le_pi (x : ℂ) : (log x).im ≤ π := by simp only [log_im, arg_
 
 theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
   rw [log, exp_add_mul_I, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp, Real.exp_log (abs.pos hx),
-    mul_addₓ, of_real_div, of_real_div, mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), ← mul_assoc,
+    mul_add, of_real_div, of_real_div, mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), ← mul_assoc,
     mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), re_add_im]
 
 @[simp]
@@ -79,7 +79,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     rcases exists_unique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
     use -n
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
-    have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_addₓ] using hn
+    have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
     
   · rintro ⟨n, rfl⟩

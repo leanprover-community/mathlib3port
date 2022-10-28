@@ -73,9 +73,9 @@ variable (α) [Nonempty α]
 
 /-- The two-pointing of constant functions. -/
 def pi : TwoPointing (α → β) where
-  fst := fun _ => q.fst
-  snd := fun _ => q.snd
-  fst_ne_snd := fun h => q.fst_ne_snd <| by convert congr_fun h (Classical.arbitrary α)
+  fst _ := q.fst
+  snd _ := q.snd
+  fst_ne_snd h := q.fst_ne_snd <| by convert congr_fun h (Classical.arbitrary α)
 
 @[simp]
 theorem pi_fst : (q.pi α).fst = const α q.fst :=
@@ -91,7 +91,7 @@ end Pi
 def prod : TwoPointing (α × β) where
   fst := (p.fst, q.fst)
   snd := (p.snd, q.snd)
-  fst_ne_snd := fun h => p.fst_ne_snd (congr_arg Prod.fst h)
+  fst_ne_snd h := p.fst_ne_snd (congr_arg Prod.fst h)
 
 @[simp]
 theorem prod_fst : (p.Prod q).fst = (p.fst, q.fst) :=

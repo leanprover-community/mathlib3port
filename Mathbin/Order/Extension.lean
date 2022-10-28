@@ -57,7 +57,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
   refine' ⟨s, { Total := _ }, rs⟩
   intro x y
   by_contra' h
-  let s' := fun x' y' => s x' y' ∨ s x' x ∧ s y y'
+  let s' x' y' := s x' y' ∨ s x' x ∧ s y y'
   rw [← hs₂ s' _ fun _ _ => Or.inl] at h
   · apply h.1 (Or.inr ⟨refl _, refl _⟩)
     
@@ -88,7 +88,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
 def LinearExtension (α : Type u) : Type u :=
   α
 
-noncomputable instance {α : Type u} [PartialOrderₓ α] : LinearOrderₓ (LinearExtension α) where
+noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α) where
   le := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some
   le_refl := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.1.1
   le_trans := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.2.1
@@ -97,10 +97,10 @@ noncomputable instance {α : Type u} [PartialOrderₓ α] : LinearOrderₓ (Line
   decidableLe := Classical.decRel _
 
 /-- The embedding of `α` into `linear_extension α` as a relation homomorphism. -/
-def toLinearExtension {α : Type u} [PartialOrderₓ α] :
+def toLinearExtension {α : Type u} [PartialOrder α] :
     ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop) where
-  toFun := fun x => x
-  map_rel' := fun a b => (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
+  toFun x := x
+  map_rel' a b := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
 
 instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=
   ⟨(default : α)⟩

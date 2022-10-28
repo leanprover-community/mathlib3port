@@ -21,12 +21,12 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits Linear
 
-variable {R : Type _} [Semiringₓ R]
+variable {R : Type _} [Semiring R]
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive D] [Linear R D]
 
 instance functorCategoryLinear : Linear R (C ⥤ D) where
-  homModule := fun F G =>
+  homModule F G :=
     { smul := fun r α =>
         { app := fun X => r • α.app X,
           naturality' := by
@@ -73,9 +73,9 @@ variable {F G : C ⥤ D}
 as group homomorphism -/
 @[simps]
 def appLinearMap (X : C) : (F ⟶ G) →ₗ[R] F.obj X ⟶ G.obj X where
-  toFun := fun α => α.app X
-  map_add' := fun _ _ => rfl
-  map_smul' := fun _ _ => rfl
+  toFun α := α.app X
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 @[simp]
 theorem app_smul (X : C) (r : R) (α : F ⟶ G) : (r • α).app X = r • α.app X :=

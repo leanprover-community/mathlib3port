@@ -47,7 +47,7 @@ theorem eq_leaf_of_min_eq_none {t : Rbnode α} : t.min = none → t = leaf := by
     rfl
     
   all_goals
-  cases t_lchild <;> simp [Rbnode.min, false_implies_iff] <;> intro h
+  cases t_lchild <;> simp [Rbnode.min, false_imp_iff] <;> intro h
   all_goals
   have := t_ih_lchild h
   contradiction
@@ -58,7 +58,7 @@ theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
     rfl
     
   all_goals
-  cases t_rchild <;> simp [Rbnode.max, false_implies_iff] <;> intro h
+  cases t_rchild <;> simp [Rbnode.max, false_imp_iff] <;> intro h
   all_goals
   have := t_ih_rchild h
   contradiction

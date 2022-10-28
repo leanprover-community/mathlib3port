@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
 import Mathbin.CategoryTheory.MorphismProperty
-import Mathbin.CategoryTheory.Category.Quiv
+import Mathbin.CategoryTheory.Category.QuivCat
 
 /-!
 
@@ -67,7 +67,7 @@ inverses of the morphisms in `W`. -/
 structure LocQuiver (W : MorphismProperty C) where
   obj : C
 
-instance : Quiver (LocQuiver W) where Hom := fun A B => Sum (A.obj ⟶ B.obj) { f : B.obj ⟶ A.obj // W f }
+instance : Quiver (LocQuiver W) where Hom A B := Sum (A.obj ⟶ B.obj) { f : B.obj ⟶ A.obj // W f }
 
 /-- The object in the path category of `loc_quiver W` attached to an object in
 the category `C` -/
@@ -107,10 +107,10 @@ def Localization :=
 
 /-- The obvious functor `C ⥤ W.localization` -/
 def q : C ⥤ W.Localization where
-  obj := fun X => (Quotient.functor _).obj (Paths.of.obj ⟨X⟩)
-  map := fun X Y f => (Quotient.functor _).map (ψ₁ W f)
-  map_id' := fun X => Quotient.sound _ (Relations.id X)
-  map_comp' := fun X Z Y f g => Quotient.sound _ (Relations.comp f g)
+  obj X := (Quotient.functor _).obj (Paths.of.obj ⟨X⟩)
+  map X Y f := (Quotient.functor _).map (ψ₁ W f)
+  map_id' X := Quotient.sound _ (Relations.id X)
+  map_comp' X Z Y f g := Quotient.sound _ (Relations.comp f g)
 
 end MorphismProperty
 
@@ -143,7 +143,7 @@ include G hG
 /-- The lifting of a functor to the path category of `loc_quiver W` -/
 @[simps]
 def liftToPathCategory : Paths (LocQuiver W) ⥤ D :=
-  Quiv.lift
+  QuivCat.lift
     { obj := fun X => G.obj X.obj,
       map := fun X Y => by
         rintro (f | ⟨g, hg⟩)
@@ -207,8 +207,8 @@ localization with respect to a morphism_property `W` -/
 @[simps]
 def objEquiv : C ≃ W.Localization where
   toFun := W.q.obj
-  invFun := fun X => X.as.obj
-  left_inv := fun X => rfl
+  invFun X := X.as.obj
+  left_inv X := rfl
   right_inv := by
     rintro ⟨⟨X⟩⟩
     rfl
@@ -283,7 +283,7 @@ can be obtained from a natural transformation `W.Q ⋙ F₁ ⟶ W.Q ⋙ F₂`. -
 @[simps]
 def natTransExtension {F₁ F₂ : W.Localization ⥤ D} (τ : W.q ⋙ F₁ ⟶ W.q ⋙ F₂) : F₁ ⟶ F₂ where
   app := NatTransExtension.app τ
-  naturality' := fun X Y f => by
+  naturality' X Y f := by
     have h :=
       morphism_property_is_top' (morphism_property.naturality_property (nat_trans_extension.app τ)) _
         (morphism_property.naturality_property.is_stable_under_inverse _)
@@ -324,16 +324,16 @@ def functor : (W.Localization ⥤ D) ⥤ W.FunctorsInverting D :=
 `construction.lift`. -/
 @[simps]
 def inverse : W.FunctorsInverting D ⥤ W.Localization ⥤ D where
-  obj := fun G => lift G.obj G.property
-  map := fun G₁ G₂ τ => natTransExtension (eqToHom (by rw [fac]) ≫ τ ≫ eqToHom (by rw [fac]))
-  map_id' := fun G =>
+  obj G := lift G.obj G.property
+  map G₁ G₂ τ := natTransExtension (eqToHom (by rw [fac]) ≫ τ ≫ eqToHom (by rw [fac]))
+  map_id' G :=
     nat_trans_hcomp_injective
       (by
         rw [nat_trans_extension_hcomp]
         ext X
         simpa only [nat_trans.comp_app, eq_to_hom_app, eq_to_hom_refl, comp_id, id_comp, nat_trans.hcomp_id_app,
           nat_trans.id_app, Functor.map_id] )
-  map_comp' := fun G₁ G₂ G₃ τ₁ τ₂ =>
+  map_comp' G₁ G₂ G₃ τ₁ τ₂ :=
     nat_trans_hcomp_injective
       (by
         ext X
@@ -380,7 +380,7 @@ def whiskeringLeftEquivalence : W.Localization ⥤ D ≌ W.FunctorsInverting D w
   inverse := WhiskeringLeftEquivalence.inverse W D
   unitIso := WhiskeringLeftEquivalence.unitIso W D
   counitIso := WhiskeringLeftEquivalence.counitIso W D
-  functor_unit_iso_comp' := fun F => by
+  functor_unit_iso_comp' F := by
     ext X
     simpa only [eq_to_hom_app, whiskering_left_equivalence.unit_iso_hom, whiskering_left_equivalence.counit_iso_hom,
       eq_to_hom_map, eq_to_hom_trans, eq_to_hom_refl]

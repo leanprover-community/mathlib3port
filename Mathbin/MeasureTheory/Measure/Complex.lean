@@ -58,10 +58,10 @@ def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
 /-- Given `s` and `t` signed measures, `s + it` is a complex measure-/
 @[simps]
 def _root_.measure_theory.signed_measure.to_complex_measure (s t : SignedMeasure α) : ComplexMeasure α where
-  measureOf' := fun i => ⟨s i, t i⟩
+  measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
-  not_measurable' := fun i hi => by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
-  m_Union' := fun f hf hfdisj => (Complex.has_sum_iff _ _).2 ⟨s.m_Union hf hfdisj, t.m_Union hf hfdisj⟩
+  not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
+  m_Union' f hf hfdisj := (Complex.has_sum_iff _ _).2 ⟨s.m_Union hf hfdisj, t.m_Union hf hfdisj⟩
 
 theorem _root_.measure_theory.signed_measure.to_complex_measure_apply {s t : SignedMeasure α} {i : Set α} :
     s.toComplexMeasure t i = ⟨s i, t i⟩ :=
@@ -83,14 +83,14 @@ theorem _root_.measure_theory.signed_measure.im_to_complex_measure (s t : Signed
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure α where
-  toFun := fun c => ⟨c.re, c.im⟩
+  toFun c := ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
-  left_inv := fun c => c.to_complex_measure_to_signed_measure
-  right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iffₓ.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
+  left_inv c := c.to_complex_measure_to_signed_measure
+  right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iff.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
 
 section
 
-variable {R : Type _} [Semiringₓ R] [Module R ℝ]
+variable {R : Type _} [Semiring R] [Module R ℝ]
 
 variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 

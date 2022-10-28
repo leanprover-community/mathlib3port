@@ -5,6 +5,10 @@ Authors: Patrick Lutz, Oliver Nash
 -/
 
 /-!
+THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+https://github.com/leanprover-community/mathlib4/pull/480
+Any changes to this file require a corresponding PR to mathlib4.
+
 # Bracket Notation
 
 This file provides notation which can be used for the Lie bracket, for the commutator of two
@@ -33,9 +37,9 @@ these are the Unicode "square with quill" brackets rather than the usual square 
 
   3. for binary operations on substructures, like the commutator `⁅H, K⁆` of two subgroups `H` and
      `K` of a group. -/
-class HasBracket (L M : Type _) where
+class Bracket (L M : Type _) where
   bracket : L → M → M
 
 -- mathport name: «expr⁅ , ⁆»
-notation "⁅" x ", " y "⁆" => HasBracket.bracket x y
+notation "⁅" x ", " y "⁆" => Bracket.bracket x y
 

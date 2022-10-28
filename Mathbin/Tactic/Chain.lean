@@ -26,15 +26,14 @@ inductive TacticScript (α : Type) : Type
   | base : α → tactic_script
   | work (index : ℕ) (first : α) (later : List tactic_script) (closed : Bool) : tactic_script
 
-unsafe def tactic_script.to_string : TacticScript Stringₓ → Stringₓ
+unsafe def tactic_script.to_string : TacticScript String → String
   | tactic_script.base a => a
   | tactic_script.work n a l c =>
     "work_on_goal " ++ toString (n + 1) ++ " { " ++ ", ".intercalate (a :: l.map tactic_script.to_string) ++ " }"
 
-unsafe instance : HasToString (TacticScript Stringₓ) where toString := fun s => s.toString
+unsafe instance : ToString (TacticScript String) where toString s := s.toString
 
-unsafe instance tactic_script_unit_has_to_string :
-    HasToString (TacticScript Unit) where toString := fun s => "[chain tactic]"
+unsafe instance tactic_script_unit_has_to_string : ToString (TacticScript Unit) where toString s := "[chain tactic]"
 
 unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α := do
   let type ← infer_type g
@@ -48,7 +47,7 @@ unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α
       let a ← tac m
       (do
             let val ← instantiate_mvars m
-            guardₓ (val = [])
+            guard (val = [])
             let c ← new_aux_decl_name
             let gs ← get_goals
             set_goals [g]
@@ -96,13 +95,12 @@ mutual
         chain_iter later_goals (g :: stuck_goals)
 end
 
-unsafe def chain_core {α : Type} [HasToString (TacticScript α)] (tactics : List (tactic α)) : tactic (List Stringₓ) :=
-  do
+unsafe def chain_core {α : Type} [ToString (TacticScript α)] (tactics : List (tactic α)) : tactic (List String) := do
   let results ← get_goals >>= chain_many (first tactics)
   when results (fail "`chain` tactic made no progress")
   return (results toString)
 
-variable [HasToString (TacticScript α)] [has_to_format α]
+variable [ToString (TacticScript α)] [has_to_format α]
 
 initialize
   registerTraceClass.1 `chain
@@ -123,7 +121,7 @@ unsafe def trace_output (t : tactic α) : tactic α := do
   trace f! "new target: {tgt}"
   pure r
 
-unsafe def chain (tactics : List (tactic α)) : tactic (List Stringₓ) :=
+unsafe def chain (tactics : List (tactic α)) : tactic (List String) :=
   chain_core (if is_trace_enabled_for `chain then tactics.map trace_output else tactics)
 
 end Tactic

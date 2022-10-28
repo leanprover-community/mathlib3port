@@ -41,7 +41,7 @@ inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀
 
 theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
   constructor
-  · rintro (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩)
+  · rintro (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
     · exact Or.inl hij
       
     · exact Or.inr ⟨rfl, hab⟩
@@ -59,11 +59,11 @@ theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
 
 instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
     [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
-  decidableOfDecidableOfIff inferInstance lex_iff.symm
+  decidable_of_decidable_of_iff inferInstance lex_iff.symm
 
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i} (h : Lex r₁ s₁ a b) :
     Lex r₂ s₂ a b := by
-  obtain ⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩ := h
+  obtain ⟨a, b, hij⟩ | ⟨a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
   · exact lex.right _ _ (hs _ _ _ hab)
@@ -80,7 +80,7 @@ instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
 
 instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :=
   ⟨by
-    rintro _ (⟨i, j, a, b, hi⟩ | ⟨i, a, b, ha⟩)
+    rintro _ (⟨a, b, hi⟩ | ⟨a, b, ha⟩)
     · exact irrefl _ hi
       
     · exact irrefl _ ha
@@ -88,7 +88,7 @@ instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :
 
 instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
   ⟨by
-    rintro _ _ _ (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩) (⟨_, k, _, c, hk⟩ | ⟨_, _, c, hc⟩)
+    rintro _ _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, c, hk⟩ | ⟨_, c, hc⟩)
     · exact lex.left _ _ (trans hij hk)
       
     · exact lex.left _ _ hij
@@ -100,7 +100,7 @@ instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
 
 instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
   ⟨by
-    rintro _ _ (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩)
+    rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
     · exact lex.left _ _ (symm hij)
       
     · exact lex.right _ _ (symm hab)
@@ -110,7 +110,7 @@ attribute [local instance] IsAsymm.is_irrefl
 
 instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s) :=
   ⟨by
-    rintro _ _ (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩) (⟨_, _, _, _, hji⟩ | ⟨_, _, _, hba⟩)
+    rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, _, hji⟩ | ⟨_, _, hba⟩)
     · exact (asymm hij hji).elim
       
     · exact (irrefl _ hij).elim
@@ -163,7 +163,7 @@ variable {ι : Sort _} {α : ι → Sort _} {r r₁ r₂ : ι → ι → Prop} {
 
 theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
   constructor
-  · rintro (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩)
+  · rintro (⟨a, b, hij⟩ | ⟨i, hab⟩)
     · exact Or.inl hij
       
     · exact Or.inr ⟨rfl, hab⟩
@@ -181,11 +181,11 @@ theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 =
 
 instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
     [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
-  decidableOfDecidableOfIff inferInstance lex_iff.symm
+  decidable_of_decidable_of_iff inferInstance lex_iff.symm
 
 theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b)
     (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ'i, α i} (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
-  obtain ⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩ := h
+  obtain ⟨a, b, hij⟩ | ⟨i, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
   · exact lex.right _ (hs _ _ _ hab)

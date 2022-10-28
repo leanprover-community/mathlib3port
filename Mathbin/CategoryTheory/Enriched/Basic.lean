@@ -40,18 +40,18 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ./././Mathport/Syntax/Translate/Command.lean:339:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Command.lean:353:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,
@@ -75,25 +75,25 @@ variable (V) {C : Type u₁} [EnrichedCategory V C]
 def eId (X : C) : 𝟙_ V ⟶ X ⟶[V] X :=
   EnrichedCategory.id X
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The composition `V`-morphism for a `V`-enriched category.
 -/
 def eComp (X Y Z : C) : ((X ⟶[V] Y) ⊗ Y ⟶[V] Z) ⟶ X ⟶[V] Z :=
   EnrichedCategory.comp X Y Z
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- We don't just use `restate_axiom` here; that would leave `V` as an implicit argument.
 @[simp, reassoc]
 theorem e_id_comp (X Y : C) : (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.id_comp X Y
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem e_comp_id (X Y : C) : (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.comp_id X Y
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem e_assoc (W X Y Z : C) :
     (α_ _ _ _).inv ≫ (eComp V W X Y ⊗ 𝟙 _) ≫ eComp V W Y Z = (𝟙 _ ⊗ eComp V X Y Z) ≫ eComp V W X Z :=
@@ -115,13 +115,13 @@ instance (F : LaxMonoidalFunctor V W) : EnrichedCategory W (TransportEnrichment 
   Hom := fun X Y : C => F.obj (X ⟶[V] Y)
   id := fun X : C => F.ε ≫ F.map (eId V X)
   comp := fun X Y Z : C => F.μ _ _ ≫ F.map (eComp V X Y Z)
-  id_comp := fun X Y => by
+  id_comp X Y := by
     rw [comp_tensor_id, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_id,
       F.left_unitality_inv_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp, e_id_comp, F.to_functor.map_id]
-  comp_id := fun X Y => by
+  comp_id X Y := by
     rw [id_tensor_comp, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_id,
       F.right_unitality_inv_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp, e_comp_id, F.to_functor.map_id]
-  assoc := fun P Q R S => by
+  assoc P Q R S := by
     rw [comp_tensor_id, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_id, ←
       F.associativity_inv_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp, e_assoc, id_tensor_comp,
       category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_comp]
@@ -132,34 +132,35 @@ end
 -/
 def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Type v) C] : Category.{v} C where
   Hom := 𝒞.Hom
-  id := fun X => eId (Type v) X PUnit.unit
-  comp := fun X Y Z f g => eComp (Type v) X Y Z ⟨f, g⟩
-  id_comp' := fun X Y f => congr_fun (e_id_comp (Type v) X Y) f
-  comp_id' := fun X Y f => congr_fun (e_comp_id (Type v) X Y) f
-  assoc' := fun W X Y Z f g h => (congr_fun (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
+  id X := eId (Type v) X PUnit.unit
+  comp X Y Z f g := eComp (Type v) X Y Z ⟨f, g⟩
+  id_comp' X Y f := congr_fun (e_id_comp (Type v) X Y) f
+  comp_id' X Y f := congr_fun (e_comp_id (Type v) X Y) f
+  assoc' W X Y Z f g h := (congr_fun (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
 
 /-- Construct a `Type v`-enriched category from an honest category.
 -/
 def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : EnrichedCategory (Type v) C where
   Hom := 𝒞.Hom
-  id := fun X p => 𝟙 X
-  comp := fun X Y Z p => p.1 ≫ p.2
-  id_comp := fun X Y => by
+  id X p := 𝟙 X
+  comp X Y Z p := p.1 ≫ p.2
+  id_comp X Y := by
     ext
     simp
-  comp_id := fun X Y => by
+  comp_id X Y := by
     ext
     simp
-  assoc := fun W X Y Z => by
+  assoc W X Y Z := by
     ext ⟨f, g, h⟩
     simp
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr 𝒞, "with", "@", "⟨", "@", "⟨", "⟨", "⟩", "⟩", "⟩"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- We verify that an enriched category in `Type u` is just the same thing as an honest category.
 -/
 def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v) C ≃ Category.{v} C where
-  toFun := fun 𝒞 => category_of_enriched_category_Type C
-  invFun := fun 𝒞 => enriched_category_Type_of_category C
-  left_inv := fun 𝒞 => by
+  toFun 𝒞 := category_of_enriched_category_Type C
+  invFun 𝒞 := enriched_category_Type_of_category C
+  left_inv 𝒞 := by
     cases 𝒞
     dsimp [enriched_category_Type_of_category]
     congr
@@ -169,8 +170,9 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
     · ext X Y Z ⟨f, g⟩
       rfl
       
-  right_inv := fun 𝒞 => by
-    rcases 𝒞 with ⟨⟨⟨⟩⟩⟩
+  right_inv 𝒞 := by
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr 𝒞, \"with\", \"@\", \"⟨\", \"@\", \"⟨\", \"⟨\", \"⟩\", \"⟩\", \"⟩\"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
     dsimp
     congr
 
@@ -255,7 +257,7 @@ theorem forget_enrichment_id (X : ForgetEnrichment W C) :
 theorem forget_enrichment_id' (X : C) : ForgetEnrichment.homOf W (eId W X) = 𝟙 (ForgetEnrichment.of W X : C) :=
   (forget_enrichment_id W (ForgetEnrichment.of W X)).symm
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Composition in the "underlying" category of an enriched category. -/
 @[simp]
 theorem forget_enrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g : Y ⟶ Z) :
@@ -265,7 +267,7 @@ theorem forget_enrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g :
 
 end
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A `V`-functor `F` between `V`-enriched categories
 has a `V`-morphism from `X ⟶[V] Y` to `F.obj X ⟶[V] F.obj Y`,
 satisfying the usual axioms.
@@ -288,8 +290,8 @@ attribute [simp, reassoc] enriched_functor.map_comp
 /-- The identity enriched functor. -/
 @[simps]
 def EnrichedFunctor.id (C : Type u₁) [EnrichedCategory V C] : EnrichedFunctor V C C where
-  obj := fun X => X
-  map := fun X Y => 𝟙 _
+  obj X := X
+  map X Y := 𝟙 _
 
 instance : Inhabited (EnrichedFunctor V C C) :=
   ⟨EnrichedFunctor.id V C⟩
@@ -298,8 +300,8 @@ instance : Inhabited (EnrichedFunctor V C C) :=
 @[simps]
 def EnrichedFunctor.comp {C : Type u₁} {D : Type u₂} {E : Type u₃} [EnrichedCategory V C] [EnrichedCategory V D]
     [EnrichedCategory V E] (F : EnrichedFunctor V C D) (G : EnrichedFunctor V D E) : EnrichedFunctor V C E where
-  obj := fun X => G.obj (F.obj X)
-  map := fun X Y => F.map _ _ ≫ G.map _ _
+  obj X := G.obj (F.obj X)
+  map X Y := F.map _ _ ≫ G.map _ _
 
 section
 
@@ -310,10 +312,10 @@ by mapping the `(𝟙_ W)`-shaped morphisms.
 -/
 def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C] [EnrichedCategory W D]
     (F : EnrichedFunctor W C D) : ForgetEnrichment W C ⥤ ForgetEnrichment W D where
-  obj := fun X => ForgetEnrichment.of W (F.obj (ForgetEnrichment.to W X))
-  map := fun X Y f =>
+  obj X := ForgetEnrichment.of W (F.obj (ForgetEnrichment.to W X))
+  map X Y f :=
     ForgetEnrichment.homOf W (ForgetEnrichment.homTo W f ≫ F.map (ForgetEnrichment.to W X) (ForgetEnrichment.to W Y))
-  map_comp' := fun X Y Z f g => by
+  map_comp' X Y Z f g := by
     dsimp
     apply_fun forget_enrichment.hom_to W
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp, forget_enrichment.hom_to_hom_of,
@@ -378,8 +380,8 @@ coming from the ambient braiding on `V`.)
 -/
 
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The type of `A`-graded natural transformations between `V`-functors `F` and `G`.
 This is the type of morphisms in `V` from `A` to the `V`-object of natural transformations.
 -/
@@ -398,8 +400,8 @@ the `V`-object of natural transformations from `F` to `G`.
 -/
 @[simps]
 def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max u₁ w where
-  obj := fun A => GradedNatTrans ((Center.ofBraided V).obj (unop A)) F G
-  map := fun A A' f σ =>
+  obj A := GradedNatTrans ((Center.ofBraided V).obj (unop A)) F G
+  map A A' f σ :=
     { app := fun X => f.unop ≫ σ.app X,
       naturality := fun X Y => by
         have p := σ.naturality X Y
@@ -421,10 +423,10 @@ is just the same thing as an honest functor.
 @[simps]
 def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Type v) C] {D : Type u₂}
     [𝒟 : EnrichedCategory (Type v) D] : EnrichedFunctor (Type v) C D ≃ C ⥤ D where
-  toFun := fun F =>
+  toFun F :=
     { obj := fun X => F.obj X, map := fun X Y f => F.map X Y f, map_id' := fun X => congr_fun (F.map_id X) PUnit.unit,
       map_comp' := fun X Y Z f g => congr_fun (F.map_comp X Y Z) ⟨f, g⟩ }
-  invFun := fun F =>
+  invFun F :=
     { obj := fun X => F.obj X, map := fun X Y f => F.map f,
       map_id' := fun X => by
         ext ⟨⟩
@@ -432,10 +434,10 @@ def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Ty
       map_comp' := fun X Y Z => by
         ext ⟨f, g⟩
         exact F.map_comp f g }
-  left_inv := fun F => by
+  left_inv F := by
     cases F
     simp
-  right_inv := fun F => by
+  right_inv F := by
     cases F
     simp
 

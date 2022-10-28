@@ -25,13 +25,13 @@ open Cardinal
 
 namespace Module.Free
 
-section Ringₓ
+section Ring
 
-variable [Ringₓ R] [StrongRankCondition R]
+variable [Ring R] [StrongRankCondition R]
 
-variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
+variable [AddCommGroup M] [Module R M] [Module.Free R M]
 
-variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
+variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 /-- The rank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem rank_eq_card_choose_basis_index : Module.rank R M = (#ChooseBasisIndex R M) :=
@@ -53,20 +53,20 @@ theorem rank_prod : Module.rank R (M × N) = lift.{w, v} (Module.rank R M) + lif
 
 /-- If `M` and `N` lie in the same universe, the rank of `M × N` is
   `(module.rank R M) + (module.rank R N)`. -/
-theorem rank_prod' (N : Type v) [AddCommGroupₓ N] [Module R N] [Module.Free R N] :
+theorem rank_prod' (N : Type v) [AddCommGroup N] [Module R N] [Module.Free R N] :
     Module.rank R (M × N) = Module.rank R M + Module.rank R N := by simp
 
 /-- The rank of the direct sum is the sum of the ranks. -/
 @[simp]
-theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
+theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroup (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
-  let B := fun i => choose_basis R (M i)
+  let B i := choose_basis R (M i)
   let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
   simp [← b.mk_eq_dim'', fun i => (B i).mk_eq_dim'']
 
 /-- The rank of a finite product is the sum of the ranks. -/
 @[simp]
-theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
+theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι, AddCommGroup (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
   cases nonempty_fintype ι
   rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
@@ -92,15 +92,15 @@ theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] : Module.rank R (Matri
 @[simp]
 theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = (#m) * (#n) := by simp
 
-end Ringₓ
+end Ring
 
-section CommRingₓ
+section CommRing
 
-variable [CommRingₓ R] [StrongRankCondition R]
+variable [CommRing R] [StrongRankCondition R]
 
-variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
+variable [AddCommGroup M] [Module R M] [Module.Free R M]
 
-variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
+variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 /-- The rank of `M ⊗[R] N` is `(module.rank R M).lift * (module.rank R N).lift`. -/
 @[simp]
@@ -108,17 +108,17 @@ theorem rank_tensor_product :
     Module.rank R (M ⊗[R] N) = lift.{w, v} (Module.rank R M) * lift.{v, w} (Module.rank R N) := by
   let ιM := choose_basis_index R M
   let ιN := choose_basis_index R N
-  have h₁ := LinearEquiv.lift_dim_eq (TensorProduct.congr (reprₓ R M) (reprₓ R N))
+  have h₁ := LinearEquiv.lift_dim_eq (TensorProduct.congr (repr R M) (repr R N))
   let b : Basis (ιM × ιN) R (_ →₀ R) := Finsupp.basisSingleOne
   rw [LinearEquiv.dim_eq (finsuppTensorFinsupp' R ιM ιN), ← b.mk_eq_dim, mk_prod] at h₁
   rw [lift_inj.1 h₁, rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N]
 
 /-- If `M` and `N` lie in the same universe, the rank of `M ⊗[R] N` is
   `(module.rank R M) * (module.rank R N)`. -/
-theorem rank_tensor_product' (N : Type v) [AddCommGroupₓ N] [Module R N] [Module.Free R N] :
+theorem rank_tensor_product' (N : Type v) [AddCommGroup N] [Module R N] [Module.Free R N] :
     Module.rank R (M ⊗[R] N) = Module.rank R M * Module.rank R N := by simp
 
-end CommRingₓ
+end CommRing
 
 end Module.Free
 

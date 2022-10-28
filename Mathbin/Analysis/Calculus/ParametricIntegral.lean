@@ -58,7 +58,7 @@ open TopologicalSpace MeasureTheory Filter Metric
 
 open TopologicalSpace Filter
 
-variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E]
+variable {α : Type _} [MeasurableSpace α] {μ : Measure α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] {H : Type _} [NormedAddCommGroup H] [NormedSpace 𝕜 H]
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming `F x₀` is
@@ -172,10 +172,10 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' 
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
 derivative norm uniformly bounded by an integrable function (the ball radius is independent of `a`),
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_fderiv_at_integral_of_dominated_of_fderiv_le {F : H → α → E} {F' : H → α → H →L[𝕜] E} {x₀ : H}
-    {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
-    (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable (F' x₀) μ)
-    (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, ∥F' x a∥ ≤ bound a) (bound_integrable : Integrable (bound : α → ℝ) μ)
+theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H → α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
+    {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
+    (hF'_meas : AeStronglyMeasurable (F' x₀) μ) (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, ∥F' x a∥ ≤ bound a)
+    (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, HasFderivAt (fun x => F x a) (F' x a) x) :
     HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ := by
   letI : NormedSpace ℝ H := NormedSpace.restrictScalars ℝ 𝕜 H
@@ -185,8 +185,8 @@ theorem has_fderiv_at_integral_of_dominated_of_fderiv_le {F : H → α → E} {F
     apply (h_diff.and h_bound).mono
     rintro a ⟨ha_deriv, ha_bound⟩
     refine'
-      (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_fderiv_within_le
-        (fun x x_in => (ha_deriv x x_in).HasFderivWithinAt) fun x x_in => _
+      (convex_ball _ _).lipschitzOnWithOfNnnormHasFderivWithinLe (fun x x_in => (ha_deriv x x_in).HasFderivWithinAt)
+        fun x x_in => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact (has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀).2
@@ -208,7 +208,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
     hF'_int key
   replace hF'_int : integrable F' μ
   · rw [← integrable_norm_iff hm] at hF'_int
-    simpa only [L, (· ∘ ·), integrable_norm_iff, hF'_meas, one_mulₓ, norm_one, ContinuousLinearMap.comp_apply,
+    simpa only [L, (· ∘ ·), integrable_norm_iff, hF'_meas, one_mul, norm_one, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.coe_restrict_scalarsL', ContinuousLinearMap.norm_restrict_scalars,
       ContinuousLinearMap.norm_smul_rightL_apply] using hF'_int
     
@@ -233,8 +233,8 @@ theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → 
     apply (h_diff.and h_bound).mono
     rintro a ⟨ha_deriv, ha_bound⟩
     refine'
-      (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_deriv_within_le
-        (fun x x_in => (ha_deriv x x_in).HasDerivWithinAt) fun x x_in => _
+      (convex_ball _ _).lipschitzOnWithOfNnnormHasDerivWithinLe (fun x x_in => (ha_deriv x x_in).HasDerivWithinAt)
+        fun x x_in => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀

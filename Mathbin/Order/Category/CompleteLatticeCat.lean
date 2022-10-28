@@ -1,0 +1,89 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
+import Mathbin.Order.Category.BoundedLatticeCat
+import Mathbin.Order.Hom.CompleteLattice
+
+/-!
+# The category of complete lattices
+
+This file defines `CompleteLattice`, the category of complete lattices.
+-/
+
+
+universe u
+
+open CategoryTheory
+
+/-- The category of complete lattices. -/
+def CompleteLatticeCat :=
+  Bundled CompleteLattice
+
+namespace CompleteLatticeCat
+
+instance : CoeSort CompleteLatticeCat (Type _) :=
+  bundled.has_coe_to_sort
+
+instance (X : CompleteLatticeCat) : CompleteLattice X :=
+  X.str
+
+/-- Construct a bundled `CompleteLattice` from a `complete_lattice`. -/
+def of (α : Type _) [CompleteLattice α] : CompleteLatticeCat :=
+  Bundled.of α
+
+@[simp]
+theorem coe_of (α : Type _) [CompleteLattice α] : ↥(of α) = α :=
+  rfl
+
+instance : Inhabited CompleteLatticeCat :=
+  ⟨of PUnit⟩
+
+instance : BundledHom @CompleteLatticeHom where
+  toFun _ _ _ _ := coeFn
+  id := @CompleteLatticeHom.id
+  comp := @CompleteLatticeHom.comp
+  hom_ext X Y _ _ := FunLike.coe_injective
+
+instance : LargeCategory.{u} CompleteLatticeCat :=
+  BundledHom.category CompleteLatticeHom
+
+instance : ConcreteCategory CompleteLatticeCat :=
+  BundledHom.concreteCategory CompleteLatticeHom
+
+instance hasForgetToBoundedLattice : HasForget₂ CompleteLatticeCat BoundedLatticeCat where
+  forget₂ := { obj := fun X => BoundedLatticeCat.of X, map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
+  forget_comp := rfl
+
+/-- Constructs an isomorphism of complete lattices from an order isomorphism between them. -/
+@[simps]
+def Iso.mk {α β : CompleteLatticeCat.{u}} (e : α ≃o β) : α ≅ β where
+  Hom := e
+  inv := e.symm
+  hom_inv_id' := by
+    ext
+    exact e.symm_apply_apply _
+  inv_hom_id' := by
+    ext
+    exact e.apply_symm_apply _
+
+/-- `order_dual` as a functor. -/
+@[simps]
+def dual : CompleteLatticeCat ⥤ CompleteLatticeCat where
+  obj X := of Xᵒᵈ
+  map X Y := CompleteLatticeHom.dual
+
+/-- The equivalence between `CompleteLattice` and itself induced by `order_dual` both ways. -/
+@[simps Functor inverse]
+def dualEquiv : CompleteLatticeCat ≌ CompleteLatticeCat :=
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+
+end CompleteLatticeCat
+
+theorem CompleteLattice_dual_comp_forget_to_BoundedLattice :
+    CompleteLatticeCat.dual ⋙ forget₂ CompleteLatticeCat BoundedLatticeCat =
+      forget₂ CompleteLatticeCat BoundedLatticeCat ⋙ BoundedLatticeCat.dual :=
+  rfl
+

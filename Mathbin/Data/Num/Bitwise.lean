@@ -212,19 +212,19 @@ namespace Nzsnum
 -- mathport name: nznum.bit
 notation a "::" b => bit a b
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Sign of a `nzsnum`. -/
 def sign : Nzsnum → Bool
-  | msb b => bnot b
+  | msb b => not b
   | b::p => sign p
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Bitwise `not` for `nzsnum`. -/
-@[matchPattern]
+@[match_pattern]
 def not : Nzsnum → Nzsnum
-  | msb b => msb (bnot b)
-  | b::p => bnot b::Not p
+  | msb b => msb (not b)
+  | b::p => not b::Not p
 
 -- mathport name: «expr~ »
 prefix:100 "~" => not
@@ -237,17 +237,17 @@ def bit0 : Nzsnum → Nzsnum :=
 def bit1 : Nzsnum → Nzsnum :=
   bit true
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `head` of a `nzsnum` is the boolean value of its LSB. -/
 def head : Nzsnum → Bool
   | msb b => b
   | b::p => b
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `tail` of a `nzsnum` is the `snum` obtained by removing the LSB.
       Edge cases: `tail 1 = 0` and `tail (-2) = -1`. -/
 def tail : Nzsnum → Snum
-  | msb b => Snum.zero (bnot b)
+  | msb b => Snum.zero (not b)
   | b::p => p
 
 end Nzsnum
@@ -262,16 +262,16 @@ def sign : Snum → Bool
   | nz p => p.sign
 
 /-- Bitwise `not` for `snum`. -/
-@[matchPattern]
+@[match_pattern]
 def not : Snum → Snum
-  | zero z => zero (bnot z)
+  | zero z => zero (not z)
   | nz p => ~p
 
 -- mathport name: snum.not
 prefix:0 "~" => not
 
 /-- Add a bit at the end of a `snum`. This mimics `nzsnum.bit`. -/
-@[matchPattern]
+@[match_pattern]
 def bit : Bool → Snum → Snum
   | b, zero z => if b = z then zero b else msb b
   | b, nz p => p.bit b
@@ -287,11 +287,11 @@ def bit0 : Snum → Snum :=
 def bit1 : Snum → Snum :=
   bit true
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem bit_zero (b) : (b::zero b) = zero b := by cases b <;> rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem bit_one (b) : (b::zero (bnot b)) = msb b := by cases b <;> rfl
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem bit_one (b) : (b::zero (not b)) = msb b := by cases b <;> rfl
 
 end Snum
 
@@ -299,11 +299,11 @@ namespace Nzsnum
 
 open Snum
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A dependent induction principle for `nzsnum`, with base cases
       `0 : snum` and `(-1) : snum`. -/
 def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b::p)) : ∀ p : Nzsnum, C p
-  | msb b => by rw [← bit_one] <;> exact s b (Snum.zero (bnot b)) (z (bnot b))
+  | msb b => by rw [← bit_one] <;> exact s b (Snum.zero (not b)) (z (not b))
   | bit b p => s b p (drec' p)
 
 end Nzsnum
@@ -323,7 +323,7 @@ def tail : Snum → Snum
   | zero z => zero z
   | nz p => p.tail
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A dependent induction principle for `snum` which avoids relying on `nzsnum`. -/
 def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b::p)) : ∀ p, C p
   | zero b => z b
@@ -339,21 +339,21 @@ def testBit : Nat → Snum → Bool
   | 0, p => head p
   | n + 1, p => test_bit n (tail p)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The successor of a `snum` (i.e. the operation adding one). -/
 def succ : Snum → Snum :=
   rec' (fun b => cond b 0 1) fun b p succp => cond b (ff::succp) (tt::p)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The predecessor of a `snum` (i.e. the operation of removing one). -/
 def pred : Snum → Snum :=
   rec' (fun b => cond b (~1) (~0)) fun b p predp => cond b (ff::p) (tt::predp)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The opposite of a `snum`. -/
 protected def neg (n : Snum) : Snum :=
   succ (~n)
@@ -378,8 +378,8 @@ def bits : Snum → ∀ n, Vector Bool n
   | p, 0 => Vector.nil
   | p, n + 1 => head p ::ᵥ bits (tail p) n
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def cadd : Snum → Snum → Bool → Snum :=
   (rec' fun a p c => czadd c a p) fun a p IH =>
     (rec' fun b c => czadd c b (a::p)) fun b q _ c => Bitvec.xor3 a b c::IH q (Bitvec.carry a b c)

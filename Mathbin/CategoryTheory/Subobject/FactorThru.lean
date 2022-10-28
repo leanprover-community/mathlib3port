@@ -54,7 +54,7 @@ namespace Subobject
 Given `h : P.factors f`, you can recover the morphism as `P.factor_thru f h`.
 -/
 def Factors {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : Prop :=
-  Quotientₓ.liftOn' P (fun P => P.Factors f)
+  Quotient.liftOn' P (fun P => P.Factors f)
     (by
       rintro P Q ⟨h⟩
       apply propext
@@ -86,7 +86,7 @@ theorem factors_comp_arrow {X Y : C} {P : Subobject Y} (f : X ⟶ P) : P.Factors
 theorem factors_of_factors_right {X Y Z : C} {P : Subobject Z} (f : X ⟶ Y) {g : Y ⟶ Z} (h : P.Factors g) :
     P.Factors (f ≫ g) := by
   revert P
-  refine' Quotientₓ.ind' _
+  refine' Quotient.ind' _
   intro P
   rintro ⟨g, rfl⟩
   exact ⟨f ≫ g, by simp⟩

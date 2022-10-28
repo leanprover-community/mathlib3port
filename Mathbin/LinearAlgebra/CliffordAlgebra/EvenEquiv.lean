@@ -34,7 +34,7 @@ This file provides some notable isomorphisms regarding the even subalgebra, `cli
 
 namespace CliffordAlgebra
 
-variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable (Q : QuadraticForm R M)
 
@@ -61,7 +61,7 @@ def v : M →ₗ[R] CliffordAlgebra (q' Q) :=
 
 theorem ι_eq_v_add_smul_e0 (m : M) (r : R) : ι (q' Q) (m, r) = v Q m + r • e0 Q := by
   rw [e0, v, LinearMap.comp_apply, LinearMap.inl_apply, ← LinearMap.map_smul, Prod.smul_mk, smul_zero, smul_eq_mul,
-    mul_oneₓ, ← LinearMap.map_add, Prod.mk_add_mk, zero_addₓ, add_zeroₓ]
+    mul_one, ← LinearMap.map_add, Prod.mk_add_mk, zero_add, add_zero]
 
 theorem e0_mul_e0 : e0 Q * e0 Q = -1 :=
   (ι_sq_scalar _ _).trans <| by simp
@@ -72,7 +72,7 @@ theorem v_sq_scalar (m : M) : v Q m * v Q m = algebraMap _ _ (Q m) :=
 theorem neg_e0_mul_v (m : M) : -(e0 Q * v Q m) = v Q m * e0 Q := by
   refine' neg_eq_of_add_eq_zero_right ((ι_mul_ι_add_swap _ _).trans _)
   dsimp [QuadraticForm.polar]
-  simp only [add_zeroₓ, mul_zero, mul_oneₓ, zero_addₓ, neg_zero, QuadraticForm.map_zero, add_sub_cancel, sub_self,
+  simp only [add_zero, mul_zero, mul_one, zero_add, neg_zero, QuadraticForm.map_zero, add_sub_cancel, sub_self,
     map_zero, zero_sub]
 
 theorem neg_v_mul_e0 (m : M) : -(v Q m * e0 Q) = e0 Q * v Q m := by
@@ -81,7 +81,7 @@ theorem neg_v_mul_e0 (m : M) : -(v Q m * e0 Q) = e0 Q * v Q m := by
 
 @[simp]
 theorem e0_mul_v_mul_e0 (m : M) : e0 Q * v Q m * e0 Q = v Q m := by
-  rw [← neg_v_mul_e0, ← neg_mul, mul_assoc, e0_mul_e0, mul_neg_one, neg_negₓ]
+  rw [← neg_v_mul_e0, ← neg_mul, mul_assoc, e0_mul_e0, mul_neg_one, neg_neg]
 
 @[simp]
 theorem reverse_v (m : M) : reverse (v Q m) = v Q m :=
@@ -172,7 +172,7 @@ theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
                   e0 Q * v Q m₁ * (e0 Q * v Q m₂) + r₁ • e0 Q * v Q m₂ - r₂ • e0 Q * v Q m₁ -
                     algebraMap R _ (r₁ * r₂) :=
                 by
-                rw [mul_sub, add_mulₓ, add_mulₓ, ← Algebra.commutes, ← Algebra.smul_def, ← map_mul, ← Algebra.smul_def,
+                rw [mul_sub, add_mul, add_mul, ← Algebra.commutes, ← Algebra.smul_def, ← map_mul, ← Algebra.smul_def,
                   sub_add_eq_sub_sub, smul_mul_assoc, smul_mul_assoc]
               _ = v Q m₁ * v Q m₂ + r₁ • e0 Q * v Q m₂ + v Q m₁ * r₂ • e0 Q + r₁ • e0 Q * r₂ • e0 Q := by
                 have h1 : e0 Q * v Q m₁ * (e0 Q * v Q m₂) = v Q m₁ * v Q m₂ := by rw [← mul_assoc, e0_mul_v_mul_e0]
@@ -182,7 +182,7 @@ theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
                   rw [Algebra.algebra_map_eq_smul_one, smul_mul_smul, e0_mul_e0, smul_neg]
                 rw [sub_eq_add_neg, sub_eq_add_neg, h1, h2, h3]
               _ = ι _ (m₁, r₁) * ι _ (m₂, r₂) := by
-                rw [ι_eq_v_add_smul_e0, ι_eq_v_add_smul_e0, mul_addₓ, add_mulₓ, add_mulₓ, add_assocₓ]
+                rw [ι_eq_v_add_smul_e0, ι_eq_v_add_smul_e0, mul_add, add_mul, add_mul, add_assoc]
               
 
 theorem of_even_comp_to_even : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
@@ -193,7 +193,7 @@ theorem of_even_comp_to_even : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
         _ = (ι Q 0 + algebraMap R _ 1) * (ι Q m - algebraMap R _ 0) := by
           simp_rw [to_even_ι]
           exact of_even_ι Q _ _
-        _ = ι Q m := by rw [map_one, map_zero, map_zero, sub_zero, zero_addₓ, one_mulₓ]
+        _ = ι Q m := by rw [map_one, map_zero, map_zero, sub_zero, zero_add, one_mul]
         
 
 /-- Any clifford algebra is isomorphic to the even subalgebra of a clifford algebra with an extra
@@ -223,7 +223,7 @@ def evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) : CliffordAlgebra.even Q �
   even.lift Q
     { bilin := -(even.ι Q' : _).bilin,
       contract := fun m => by
-        simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticForm.neg_apply, map_neg, neg_negₓ],
+        simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticForm.neg_apply, map_neg, neg_neg],
       contract_mid := fun m₁ m₂ m₃ => by
         simp_rw [LinearMap.neg_apply, neg_mul_neg, even_hom.contract_mid, h, QuadraticForm.neg_apply, smul_neg,
           neg_smul] }
@@ -238,14 +238,14 @@ theorem even_to_neg_comp_even_to_neg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' 
   ext m₁ m₂ : 4
   dsimp only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
     AlgHom.id_apply]
-  rw [even_to_neg_ι, map_neg, even_to_neg_ι, neg_negₓ]
+  rw [even_to_neg_ι, map_neg, even_to_neg_ι, neg_neg]
 
 /-- The even subalgebras of the algebras with quadratic form `Q` and `-Q` are isomorphic.
 
 Stated another way, `𝒞ℓ⁺(p,q,r)` and `𝒞ℓ⁺(q,p,r)` are isomorphic. -/
 @[simps]
 def evenEquivEvenNeg : CliffordAlgebra.even Q ≃ₐ[R] CliffordAlgebra.even (-Q) :=
-  AlgEquiv.ofAlgHom (evenToNeg Q _ rfl) (evenToNeg (-Q) _ (neg_negₓ _).symm) (even_to_neg_comp_even_to_neg _ _ _ _)
+  AlgEquiv.ofAlgHom (evenToNeg Q _ rfl) (evenToNeg (-Q) _ (neg_neg _).symm) (even_to_neg_comp_even_to_neg _ _ _ _)
     (even_to_neg_comp_even_to_neg _ _ _ _)
 
 end CliffordAlgebra

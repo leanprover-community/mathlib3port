@@ -44,28 +44,28 @@ include h
 with `field_simp` given a proof that these denominators are non-zero, so we record the most usual
 ones. -/
 theorem pos : 0 < p :=
-  lt_transₓ zero_lt_one h.one_lt
+  lt_trans zero_lt_one h.one_lt
 
 theorem nonneg : 0 ≤ p :=
-  le_of_ltₓ h.Pos
+  le_of_lt h.Pos
 
 theorem ne_zero : p ≠ 0 :=
-  ne_of_gtₓ h.Pos
+  ne_of_gt h.Pos
 
 theorem sub_one_pos : 0 < p - 1 :=
   sub_pos.2 h.one_lt
 
 theorem sub_one_ne_zero : p - 1 ≠ 0 :=
-  ne_of_gtₓ h.sub_one_pos
+  ne_of_gt h.sub_one_pos
 
 theorem one_div_pos : 0 < 1 / p :=
   one_div_pos.2 h.Pos
 
 theorem one_div_nonneg : 0 ≤ 1 / p :=
-  le_of_ltₓ h.one_div_pos
+  le_of_lt h.one_div_pos
 
 theorem one_div_ne_zero : 1 / p ≠ 0 :=
-  ne_of_gtₓ h.one_div_pos
+  ne_of_gt h.one_div_pos
 
 theorem conj_eq : q = p / (p - 1) := by
   have := h.inv_add_inv_conj
@@ -78,14 +78,14 @@ theorem conjugate_eq : conjugateExponent p = q :=
 theorem sub_one_mul_conj : (p - 1) * q = p :=
   mul_comm q (p - 1) ▸ (eq_div_iff h.sub_one_ne_zero).1 h.conj_eq
 
-theorem mul_eq_add : p * q = p + q := by simpa only [sub_mul, sub_eq_iff_eq_add, one_mulₓ] using h.sub_one_mul_conj
+theorem mul_eq_add : p * q = p + q := by simpa only [sub_mul, sub_eq_iff_eq_add, one_mul] using h.sub_one_mul_conj
 
 @[symm]
 protected theorem symm : q.IsConjugateExponent p :=
   { one_lt := by
       rw [h.conj_eq]
       exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p),
-    inv_add_inv_conj := by simpa [add_commₓ] using h.inv_add_inv_conj }
+    inv_add_inv_conj := by simpa [add_comm] using h.inv_add_inv_conj }
 
 theorem div_conj_eq_sub_one : p / q = p - 1 := by
   field_simp [h.symm.ne_zero]
@@ -106,9 +106,9 @@ theorem inv_add_inv_conj_ennreal : 1 / Ennreal.ofReal p + 1 / Ennreal.ofReal q =
 end IsConjugateExponent
 
 theorem is_conjugate_exponent_iff {p q : ℝ} (h : 1 < p) : p.IsConjugateExponent q ↔ q = p / (p - 1) :=
-  ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gtₓ (lt_transₓ zero_lt_one h)] ⟩⟩
+  ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gt (lt_trans zero_lt_one h)] ⟩⟩
 
-theorem is_conjugate_exponent_conjugate_exponent {p : ℝ} (h : 1 < p) : p.IsConjugateExponent (conjugateExponent p) :=
+theorem isConjugateExponentConjugateExponent {p : ℝ} (h : 1 < p) : p.IsConjugateExponent (conjugateExponent p) :=
   (is_conjugate_exponent_iff h).2 rfl
 
 end Real

@@ -5,7 +5,7 @@ Authors: Yakov Pechersky
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.GroupTheory.Perm.Sign
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Defs
 
 /-! # Equivalence between fintypes
 
@@ -26,7 +26,7 @@ sides of the equivalence are `fintype`s.
 -/
 
 
-variable {α β : Type _} [Fintypeₓ α] [DecidableEq β] (e : Equivₓ.Perm α) (f : α ↪ β)
+variable {α β : Type _} [Fintype α] [DecidableEq β] (e : Equiv.Perm α) (f : α ↪ β)
 
 /-- Computably turn an embedding `f : α ↪ β` into an equiv `α ≃ set.range f`,
 if `α` is a `fintype`. Has poor computational performance, due to exhaustive searching in
@@ -42,9 +42,9 @@ theorem Function.Embedding.to_equiv_range_apply (a : α) : f.toEquivRange a = �
 
 @[simp]
 theorem Function.Embedding.to_equiv_range_symm_apply_self (a : α) :
-    f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by simp [Equivₓ.symm_apply_eq]
+    f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by simp [Equiv.symm_apply_eq]
 
-theorem Function.Embedding.to_equiv_range_eq_of_injective : f.toEquivRange = Equivₓ.ofInjective f f.Injective := by
+theorem Function.Embedding.to_equiv_range_eq_of_injective : f.toEquivRange = Equiv.ofInjective f f.Injective := by
   ext
   simp
 
@@ -55,27 +55,26 @@ When a better `α ≃ set.range f` is known, use `equiv.perm.via_set_range`.
 When `[fintype α]` is not available, a noncomputable version is available as
 `equiv.perm.via_embedding`.
 -/
-def Equivₓ.Perm.viaFintypeEmbedding : Equivₓ.Perm β :=
+def Equiv.Perm.viaFintypeEmbedding : Equiv.Perm β :=
   e.extendDomain f.toEquivRange
 
 @[simp]
-theorem Equivₓ.Perm.via_fintype_embedding_apply_image (a : α) : e.viaFintypeEmbedding f (f a) = f (e a) := by
-  rw [Equivₓ.Perm.viaFintypeEmbedding]
-  convert Equivₓ.Perm.extend_domain_apply_image e _ _
+theorem Equiv.Perm.via_fintype_embedding_apply_image (a : α) : e.viaFintypeEmbedding f (f a) = f (e a) := by
+  rw [Equiv.Perm.viaFintypeEmbedding]
+  convert Equiv.Perm.extend_domain_apply_image e _ _
 
-theorem Equivₓ.Perm.via_fintype_embedding_apply_mem_range {b : β} (h : b ∈ Set.Range f) :
+theorem Equiv.Perm.via_fintype_embedding_apply_mem_range {b : β} (h : b ∈ Set.Range f) :
     e.viaFintypeEmbedding f b = f (e (f.invOfMemRange ⟨b, h⟩)) := by
-  simpa [Equivₓ.Perm.viaFintypeEmbedding, Equivₓ.Perm.extend_domain_apply_subtype, h]
+  simpa [Equiv.Perm.viaFintypeEmbedding, Equiv.Perm.extend_domain_apply_subtype, h]
 
-theorem Equivₓ.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b ∉ Set.Range f) :
-    e.viaFintypeEmbedding f b = b := by
-  rwa [Equivₓ.Perm.viaFintypeEmbedding, Equivₓ.Perm.extend_domain_apply_not_subtype]
+theorem Equiv.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b ∉ Set.Range f) :
+    e.viaFintypeEmbedding f b = b := by rwa [Equiv.Perm.viaFintypeEmbedding, Equiv.Perm.extend_domain_apply_not_subtype]
 
 @[simp]
-theorem Equivₓ.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintypeₓ β] :
-    Equivₓ.Perm.sign (e.viaFintypeEmbedding f) = Equivₓ.Perm.sign e := by simp [Equivₓ.Perm.viaFintypeEmbedding]
+theorem Equiv.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintype β] :
+    Equiv.Perm.sign (e.viaFintypeEmbedding f) = Equiv.Perm.sign e := by simp [Equiv.Perm.viaFintypeEmbedding]
 
-namespace Equivₓ
+namespace Equiv
 
 variable {p q : α → Prop} [DecidablePred p] [DecidablePred q]
 
@@ -85,7 +84,7 @@ is an equivalence between the complement of those subtypes.
 See also `equiv.compl`, for a computable version when a term of type
 `{e' : α ≃ α // ∀ x : {x // p x}, e' x = e x}` is known. -/
 noncomputable def toCompl (e : { x // p x } ≃ { x // q x }) : { x // ¬p x } ≃ { x // ¬q x } :=
-  Classical.choice (Fintypeₓ.card_eq.mp (Fintypeₓ.card_compl_eq_card_compl _ _ (Fintypeₓ.card_congr e)))
+  Classical.choice (Fintype.card_eq.mp (Fintype.card_compl_eq_card_compl _ _ (Fintype.card_congr e)))
 
 /-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.extend_subtype`
 is a permutation of `α` acting like `e` on the subtypes and doing something arbitrary outside.
@@ -97,7 +96,7 @@ noncomputable abbrev extendSubtype (e : { x // p x } ≃ { x // q x }) : Perm α
 theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : e.extendSubtype x = e ⟨x, hx⟩ :=
   by
   dsimp only [extend_subtype]
-  simp only [subtype_congr, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
+  simp only [subtype_congr, Equiv.trans_apply, Equiv.sum_congr_apply]
   rw [sum_compl_apply_symm_of_pos _ _ hx, Sum.map_inl, sum_compl_apply_inl]
 
 theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : q (e.extendSubtype x) := by
@@ -107,12 +106,12 @@ theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : 
 theorem extend_subtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :
     e.extendSubtype x = e.toCompl ⟨x, hx⟩ := by
   dsimp only [extend_subtype]
-  simp only [subtype_congr, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
+  simp only [subtype_congr, Equiv.trans_apply, Equiv.sum_congr_apply]
   rw [sum_compl_apply_symm_of_neg _ _ hx, Sum.map_inr, sum_compl_apply_inr]
 
 theorem extend_subtype_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) : ¬q (e.extendSubtype x) := by
   convert (e.to_compl ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_not_mem _ hx, Subtype.val_eq_coe]
 
-end Equivₓ
+end Equiv
 

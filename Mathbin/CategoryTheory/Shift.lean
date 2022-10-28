@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin, Andrew Yang
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
-import Mathbin.CategoryTheory.Monoidal.End
+import Mathbin.CategoryTheory.Monoidal.EndCat
 import Mathbin.CategoryTheory.Monoidal.Discrete
 
 /-!
@@ -44,10 +44,10 @@ section EqToHom
 
 variable {A C}
 
-variable [AddMonoidₓ A] (F : MonoidalFunctor (Discrete A) (C ⥤ C))
+variable [AddMonoid A] (F : MonoidalFunctor (Discrete A) (C ⥤ C))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem eq_to_hom_μ_app {i j i' j' : A} (h₁ : i = i') (h₂ : j = j') (X : C) :
     eqToHom (by rw [h₁, h₂] : (F.obj ⟨i⟩ ⊗ F.obj ⟨j⟩).obj X = (F.obj ⟨i'⟩ ⊗ F.obj ⟨j'⟩).obj X) ≫ (F.μ ⟨i'⟩ ⟨j'⟩).app X =
@@ -71,17 +71,17 @@ variable {A C}
 /-- A monoidal functor from a group `A` into `C ⥤ C` induces
 a self-equivalence of `C` for each `n : A`. -/
 @[simps Functor inverse unit_iso_hom unit_iso_inv counit_iso_hom counit_iso_inv]
-def addNegEquiv [AddGroupₓ A] (F : MonoidalFunctor (Discrete A) (C ⥤ C)) (n : A) : C ≌ C :=
-  equivOfTensorIsoUnit F ⟨n⟩ ⟨(-n : A)⟩ (Discrete.eqToIso (add_neg_selfₓ n)) (Discrete.eqToIso (neg_add_selfₓ n))
+def addNegEquiv [AddGroup A] (F : MonoidalFunctor (Discrete A) (C ⥤ C)) (n : A) : C ≌ C :=
+  equivOfTensorIsoUnit F ⟨n⟩ ⟨(-n : A)⟩ (Discrete.eqToIso (add_neg_self n)) (Discrete.eqToIso (neg_add_self n))
     (Subsingleton.elim _ _)
 
 section Defs
 
-variable (A C) [AddMonoidₓ A]
+variable (A C) [AddMonoid A]
 
 /-- A category has a shift indexed by an additive monoid `A`
 if there is a monoidal functor from `A` to `C ⥤ C`. -/
-class HasShift (C : Type u) (A : Type _) [Category.{v} C] [AddMonoidₓ A] where
+class HasShift (C : Type u) (A : Type _) [Category.{v} C] [AddMonoid A] where
   shift : MonoidalFunctor (Discrete A) (C ⥤ C)
 
 /-- A helper structure to construct the shift functor `(discrete A) ⥤ (C ⥤ C)`. -/
@@ -97,7 +97,7 @@ structure ShiftMkCore where
             eqToHom
               (by
                 congr 2
-                exact add_assocₓ _ _ _) =
+                exact add_assoc _ _ _) =
         (μ m₂ m₃).Hom.app ((F m₁).obj X) ≫ (μ m₁ (m₂ + m₃)).Hom.app X := by
     obviously
   left_unitality :
@@ -106,7 +106,7 @@ structure ShiftMkCore where
         eqToHom
           (by
             dsimp
-            rw [zero_addₓ]) := by
+            rw [zero_add]) := by
     obviously
   right_unitality :
     ∀ (n : A) (X : C),
@@ -114,7 +114,7 @@ structure ShiftMkCore where
         eqToHom
           (by
             dsimp
-            rw [add_zeroₓ]) := by
+            rw [add_zero]) := by
     obviously
 
 section
@@ -185,9 +185,9 @@ notation f "⟦" n "⟧'" => (shiftFunctor _ n).map f
 
 end Defs
 
-section AddMonoidₓ
+section AddMonoid
 
-variable {C A} [AddMonoidₓ A] [HasShift C A] (X Y : C) (f : X ⟶ Y)
+variable {C A} [AddMonoid A] [HasShift C A] (X Y : C) (f : X ⟶ Y)
 
 @[simp]
 theorem HasShift.shift_obj_obj (n : A) (X : C) : (HasShift.shift.obj ⟨n⟩).obj X = X⟦n⟧ :=
@@ -245,11 +245,11 @@ theorem shift_zero' : f⟦(0 : A)⟧' = (shiftZero A X).Hom ≫ f ≫ (shiftZero
   symm
   apply nat_iso.naturality_2
 
-end AddMonoidₓ
+end AddMonoid
 
-section AddGroupₓ
+section AddGroup
 
-variable (C) {A} [AddGroupₓ A] [HasShift C A]
+variable (C) {A} [AddGroup A] [HasShift C A]
 
 variable (X Y : C) (f : X ⟶ Y)
 
@@ -264,11 +264,11 @@ theorem shift_functor_inv (i : A) : (shiftFunctor C i).inv = shiftFunctor C (-i)
 
 /-- Shifting by `i` and then shifting by `-i` is the identity. -/
 abbrev shiftFunctorCompShiftFunctorNeg (i : A) : shiftFunctor C i ⋙ shiftFunctor C (-i) ≅ 𝟭 C :=
-  unitOfTensorIsoUnit (shiftMonoidalFunctor C A) ⟨i⟩ ⟨(-i : A)⟩ (Discrete.eqToIso (add_neg_selfₓ i))
+  unitOfTensorIsoUnit (shiftMonoidalFunctor C A) ⟨i⟩ ⟨(-i : A)⟩ (Discrete.eqToIso (add_neg_self i))
 
 /-- Shifting by `-i` and then shifting by `i` is the identity. -/
 abbrev shiftFunctorNegCompShiftFunctor (i : A) : shiftFunctor C (-i) ⋙ shiftFunctor C i ≅ 𝟭 C :=
-  unitOfTensorIsoUnit (shiftMonoidalFunctor C A) ⟨(-i : A)⟩ ⟨i⟩ (Discrete.eqToIso (neg_add_selfₓ i))
+  unitOfTensorIsoUnit (shiftMonoidalFunctor C A) ⟨(-i : A)⟩ ⟨i⟩ (Discrete.eqToIso (neg_add_self i))
 
 section
 
@@ -285,7 +285,7 @@ instance shiftFunctorFull (i : A) : Full (shiftFunctor C i) :=
 
 /-- Shifting by `n` is an essentially surjective functor. -/
 instance shift_functor_ess_surj (i : A) :
-    EssSurj (shiftFunctor C i) where mem_ess_image := fun Y => ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
+    EssSurj (shiftFunctor C i) where mem_ess_image Y := ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
 
 end
 
@@ -349,11 +349,11 @@ variable [HasZeroMorphisms C]
 theorem shift_zero_eq_zero (X Y : C) (n : A) : (0 : X ⟶ Y)⟦n⟧' = (0 : X⟦n⟧ ⟶ Y⟦n⟧) :=
   CategoryTheory.Functor.map_zero _ _ _
 
-end AddGroupₓ
+end AddGroup
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable {C A} [AddCommMonoidₓ A] [HasShift C A]
+variable {C A} [AddCommMonoid A] [HasShift C A]
 
 variable (X Y : C) (f : X ⟶ Y)
 
@@ -361,7 +361,7 @@ variable (X Y : C) (f : X ⟶ Y)
 def shiftComm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
   (shiftAdd X i j).symm ≪≫
     ((shiftMonoidalFunctor C A).toFunctor.mapIso
-            (discrete.eq_to_iso <| add_commₓ i j : (⟨i + j⟩ : Discrete A) ≅ ⟨j + i⟩)).app
+            (discrete.eq_to_iso <| add_comm i j : (⟨i + j⟩ : Discrete A) ≅ ⟨j + i⟩)).app
         X ≪≫
       shiftAdd X j i
 
@@ -385,9 +385,9 @@ theorem shift_comm' (i j : A) : f⟦i⟧'⟦j⟧' = (shiftComm _ _ _).Hom ≫ f�
 theorem shift_comm_hom_comp (i j : A) : (shiftComm X i j).Hom ≫ f⟦j⟧'⟦i⟧' = f⟦i⟧'⟦j⟧' ≫ (shiftComm Y i j).Hom := by
   rw [shift_comm', ← shift_comm_symm, iso.symm_hom, iso.inv_hom_id_assoc]
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-variable {D : Type _} [Category D] [AddMonoidₓ A] [HasShift D A]
+variable {D : Type _} [Category D] [AddMonoid A] [HasShift D A]
 
 variable (F : C ⥤ D) [Full F] [Faithful F]
 
@@ -436,7 +436,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
         erw [(shift_functor D m₃).map_id, category.id_comp]
         erw [((shift_monoidal_functor D A).μIso ⟨m₁ + m₂⟩ ⟨m₃⟩).inv_hom_id_app_assoc]
         congr 1
-        have := dcongr_arg (fun a => (i a).inv.app X) (add_assocₓ m₁ m₂ m₃)
+        have := dcongr_arg (fun a => (i a).inv.app X) (add_assoc m₁ m₂ m₃)
         dsimp at this
         simp [this],
       left_unitality := by
@@ -452,7 +452,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
         simp only [← (shift_functor D n).map_comp_assoc, iso.inv_hom_id_app]
         dsimp
         simp only [category.id_comp, μ_inv_hom_app_assoc, CategoryTheory.Functor.map_id]
-        have := dcongr_arg (fun a => (i a).inv.app X) (zero_addₓ n)
+        have := dcongr_arg (fun a => (i a).inv.app X) (zero_add n)
         dsimp at this
         simp [this],
       right_unitality := by
@@ -462,7 +462,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
         simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_app_assoc, eq_to_iso.inv,
           eq_to_hom_app, eq_to_hom_map, CategoryTheory.Functor.map_comp, functor.image_preimage, obj_zero_map_μ_app,
           ε_hom_inv_app_assoc]
-        have := dcongr_arg (fun a => (i a).inv.app X) (add_zeroₓ n)
+        have := dcongr_arg (fun a => (i a).inv.app X) (add_zero n)
         dsimp at this
         simp [this] }
 

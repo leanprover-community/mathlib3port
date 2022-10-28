@@ -32,9 +32,9 @@ open Polynomial
 
 open Polynomial
 
-section Semiringₓ
+section Semiring
 
-variable (S : Type u) [Semiringₓ S]
+variable (S : Type u) [Semiring S]
 
 /-- `pochhammer S n` is the polynomial `X * (X+1) * ... * (X + n - 1)`,
 with coefficients in the semiring `S`.
@@ -54,7 +54,7 @@ theorem pochhammer_succ_left (n : ℕ) : pochhammer S (n + 1) = X * (pochhammer 
 
 section
 
-variable {S} {T : Type v} [Semiringₓ T]
+variable {S} {T : Type v} [Semiring T]
 
 @[simp]
 theorem pochhammer_map (f : S →+* T) (n : ℕ) : (pochhammer S n).map f = pochhammer T n := by
@@ -94,31 +94,31 @@ theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n 
     
   · conv_lhs =>
       rw [pochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← pochhammer_succ_left, add_comp, X_comp, nat_cast_comp,
-        add_assocₓ, add_commₓ (1 : ℕ[X]), ← Nat.cast_succₓ]
+        add_assoc, add_comm (1 : ℕ[X]), ← Nat.cast_succ]
     
 
-theorem pochhammer_succ_eval {S : Type _} [Semiringₓ S] (n : ℕ) (k : S) :
+theorem pochhammer_succ_eval {S : Type _} [Semiring S] (n : ℕ) (k : S) :
     (pochhammer S (n + 1)).eval k = (pochhammer S n).eval k * (k + n) := by
-  rw [pochhammer_succ_right, mul_addₓ, eval_add, eval_mul_X, ← Nat.cast_comm, ← C_eq_nat_cast, eval_C_mul,
-    Nat.cast_comm, ← mul_addₓ]
+  rw [pochhammer_succ_right, mul_add, eval_add, eval_mul_X, ← Nat.cast_comm, ← C_eq_nat_cast, eval_C_mul, Nat.cast_comm,
+    ← mul_add]
 
 theorem pochhammer_succ_comp_X_add_one (n : ℕ) :
     (pochhammer S (n + 1)).comp (X + 1) = pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (X + 1) := by
   suffices (pochhammer ℕ (n + 1)).comp (X + 1) = pochhammer ℕ (n + 1) + (n + 1) * (pochhammer ℕ n).comp (X + 1) by
     simpa [map_comp] using congr_arg (Polynomial.map (Nat.castRingHom S)) this
   nth_rw 1 [pochhammer_succ_left]
-  rw [← add_mulₓ, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp, add_commₓ ↑n, ←
-    add_assocₓ]
+  rw [← add_mul, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp, add_comm ↑n, ←
+    add_assoc]
 
 theorem Polynomial.mul_X_add_nat_cast_comp {p q : S[X]} {n : ℕ} : (p * (X + n)).comp q = p.comp q * (q + n) := by
-  rw [mul_addₓ, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_addₓ]
+  rw [mul_add, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_add]
 
 theorem pochhammer_mul (n m : ℕ) : pochhammer S n * (pochhammer S m).comp (X + n) = pochhammer S (n + m) := by
   induction' m with m ih
   · simp
     
-  · rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih, Nat.succ_eq_add_one, ← add_assocₓ,
-      pochhammer_succ_right, Nat.cast_addₓ, add_assocₓ]
+  · rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih, Nat.succ_eq_add_one, ← add_assoc,
+      pochhammer_succ_right, Nat.cast_add, add_assoc]
     
 
 theorem pochhammer_nat_eq_asc_factorial (n : ℕ) : ∀ k, (pochhammer ℕ k).eval (n + 1) = n.ascFactorial k
@@ -126,7 +126,7 @@ theorem pochhammer_nat_eq_asc_factorial (n : ℕ) : ∀ k, (pochhammer ℕ k).ev
   | t + 1 => by
     rw [pochhammer_succ_right, eval_mul, pochhammer_nat_eq_asc_factorial t]
     suffices n.asc_factorial t * (n + 1 + t) = n.asc_factorial (t + 1) by simpa
-    rw [Nat.asc_factorial_succ, add_right_commₓ, mul_comm]
+    rw [Nat.asc_factorial_succ, add_right_comm, mul_comm]
 
 theorem pochhammer_nat_eq_desc_factorial (a b : ℕ) : (pochhammer ℕ b).eval a = (a + b - 1).descFactorial b := by
   cases b
@@ -134,40 +134,40 @@ theorem pochhammer_nat_eq_desc_factorial (a b : ℕ) : (pochhammer ℕ b).eval a
     
   rw [Nat.add_succ, Nat.succ_sub_succ, tsub_zero]
   cases a
-  · rw [pochhammer_ne_zero_eval_zero _ b.succ_ne_zero, zero_addₓ, Nat.desc_factorial_of_lt b.lt_succ_self]
+  · rw [pochhammer_ne_zero_eval_zero _ b.succ_ne_zero, zero_add, Nat.desc_factorial_of_lt b.lt_succ_self]
     
   · rw [Nat.succ_add, ← Nat.add_succ, Nat.add_desc_factorial_eq_asc_factorial, pochhammer_nat_eq_asc_factorial]
     
 
-end Semiringₓ
+end Semiring
 
-section OrderedSemiring
+section StrictOrderedSemiring
 
-variable {S : Type _} [OrderedSemiring S] [Nontrivial S]
+variable {S : Type _} [StrictOrderedSemiring S] [Nontrivial S]
 
 theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s := by
   induction' n with n ih
-  · simp only [Nat.nat_zero_eq_zero, pochhammer_zero, eval_one]
+  · simp only [Nat.zero_eq, pochhammer_zero, eval_one]
     exact zero_lt_one
     
-  · rw [pochhammer_succ_right, mul_addₓ, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_X, Nat.cast_comm, ←
-      mul_addₓ]
-    exact mul_pos ih (lt_of_lt_of_leₓ h ((le_add_iff_nonneg_right _).mpr (Nat.cast_nonneg n)))
+  · rw [pochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_X, Nat.cast_comm, ←
+      mul_add]
+    exact mul_pos ih (lt_of_lt_of_le h ((le_add_iff_nonneg_right _).mpr (Nat.cast_nonneg n)))
     
 
-end OrderedSemiring
+end StrictOrderedSemiring
 
 section Factorial
 
 open Nat
 
-variable (S : Type _) [Semiringₓ S] (r n : ℕ)
+variable (S : Type _) [Semiring S] (r n : ℕ)
 
 @[simp]
-theorem pochhammer_eval_one (S : Type _) [Semiringₓ S] (n : ℕ) : (pochhammer S n).eval (1 : S) = (n ! : S) := by
+theorem pochhammer_eval_one (S : Type _) [Semiring S] (n : ℕ) : (pochhammer S n).eval (1 : S) = (n ! : S) := by
   rw_mod_cast [pochhammer_nat_eq_asc_factorial, Nat.zero_asc_factorial]
 
-theorem factorial_mul_pochhammer (S : Type _) [Semiringₓ S] (r n : ℕ) :
+theorem factorial_mul_pochhammer (S : Type _) [Semiring S] (r n : ℕ) :
     (r ! : S) * (pochhammer S n).eval (r + 1) = (r + n)! := by
   rw_mod_cast [pochhammer_nat_eq_asc_factorial, Nat.factorial_mul_asc_factorial]
 
@@ -175,15 +175,15 @@ theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n
   | 0 => by
     by_cases h:r = 0
-    · simp only [h, zero_mul, zero_addₓ]
+    · simp only [h, zero_mul, zero_add]
       
     · simp only [pochhammer_eval_zero, zero_mul, if_neg h, mul_zero]
       
-  | k + 1 => by simp only [pochhammer_nat_eq_asc_factorial, Nat.succ_asc_factorial, add_right_commₓ]
+  | k + 1 => by simp only [pochhammer_nat_eq_asc_factorial, Nat.succ_asc_factorial, add_right_comm]
 
 theorem pochhammer_eval_succ (r n : ℕ) :
     (n : S) * (pochhammer S r).eval (n + 1 : S) = (n + r) * (pochhammer S r).eval n := by
-  exact_mod_cast congr_arg Nat.castₓ (pochhammer_nat_eval_succ r n)
+  exact_mod_cast congr_arg Nat.cast (pochhammer_nat_eval_succ r n)
 
 end Factorial
 

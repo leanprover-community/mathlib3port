@@ -28,17 +28,17 @@ variable {M R : Type _}
 
 namespace Subring
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ M] [Ringₓ R] [MulSemiringAction M R]
+variable [Monoid M] [Ring R] [MulSemiringAction M R]
 
 /-- The action on a subring corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction M (Subring R) where
-  smul := fun a S => S.map (MulSemiringAction.toRingHom _ _ a)
-  one_smul := fun S => (congr_arg (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
+  smul a S := S.map (MulSemiringAction.toRingHom _ _ a)
+  one_smul S := (congr_arg (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
+  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subring.pointwiseMulAction
 
@@ -68,11 +68,11 @@ theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) : r ∈ m 
 instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
   ⟨fun a S => (congr_arg fun f => S.map f) <| RingHom.ext <| op_smul_eq_smul _⟩
 
-end Monoidₓ
+end Monoid
 
-section Groupₓ
+section Group
 
-variable [Groupₓ M] [Ringₓ R] [MulSemiringAction M R]
+variable [Group M] [Ring R] [MulSemiringAction M R]
 
 open Pointwise
 
@@ -99,11 +99,11 @@ theorem subset_pointwise_smul_iff {a : M} {S T : Subring R} : S ≤ a • T ↔ 
 /-! TODO: add `equiv_smul` like we have for subgroup. -/
 
 
-end Groupₓ
+end Group
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable [GroupWithZeroₓ M] [Ringₓ R] [MulSemiringAction M R]
+variable [GroupWithZero M] [Ring R] [MulSemiringAction M R]
 
 open Pointwise
 
@@ -127,7 +127,7 @@ theorem pointwise_smul_le_iff₀ {a : M} (ha : a ≠ 0) {S T : Subring R} : a �
 theorem le_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) {S T : Subring R} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff₀ ha
 
-end GroupWithZeroₓ
+end GroupWithZero
 
 end Subring
 

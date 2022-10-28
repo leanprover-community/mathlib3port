@@ -30,18 +30,18 @@ section SchurZassenhausAbelian
 
 open MulOpposite MulAction Subgroup.LeftTransversals MemLeftTransversals
 
-variable {G : Type _} [Groupₓ G] (H : Subgroup G) [IsCommutative H] [Fintypeₓ (G ⧸ H)]
+variable {G : Type _} [Group G] (H : Subgroup G) [IsCommutative H] [Fintype (G ⧸ H)]
   (α β : LeftTransversals (H : Set G))
 
 /-- The quotient of the transversals of an abelian normal `N` by the `diff` relation. -/
 def QuotientDiff :=
-  Quotientₓ
-    (Setoidₓ.mk (fun α β => diff (MonoidHom.id H) α β = 1)
+  Quotient
+    (Setoid.mk (fun α β => diff (MonoidHom.id H) α β = 1)
       ⟨fun α => diff_self (MonoidHom.id H) α, fun α β h => by rw [← diff_inv, h, inv_one], fun α β γ h h' => by
-        rw [← diff_mul_diff, h, h', one_mulₓ]⟩)
+        rw [← diff_mul_diff, h, h', one_mul]⟩)
 
 instance : Inhabited H.QuotientDiff :=
-  Quotientₓ.inhabited _
+  Quotient.inhabited _
 
 theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
     diff (MonoidHom.id H) (g • α) (g • β) =
@@ -51,14 +51,14 @@ theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
   let ϕ : H →* H :=
     { toFun := fun h =>
         ⟨g.unop⁻¹ * h * g.unop, hH.mem_comm ((congr_arg (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩,
-      map_one' := by rw [Subtype.ext_iff, coe_mk, coe_one, mul_oneₓ, inv_mul_selfₓ],
+      map_one' := by rw [Subtype.ext_iff, coe_mk, coe_one, mul_one, inv_mul_self],
       map_mul' := fun h₁ h₂ => by
         rw [Subtype.ext_iff, coe_mk, coe_mul, coe_mul, coe_mk, coe_mk, mul_assoc, mul_assoc, mul_assoc, mul_assoc,
           mul_assoc, mul_inv_cancel_left] }
   refine'
     Eq.trans
-      (Finsetₓ.prod_bij' (fun q _ => g⁻¹ • q) (fun q _ => Finsetₓ.mem_univ _) (fun q _ => Subtype.ext _)
-        (fun q _ => g • q) (fun q _ => Finsetₓ.mem_univ _) (fun q _ => smul_inv_smul g q) fun q _ => inv_smul_smul g q)
+      (Finset.prod_bij' (fun q _ => g⁻¹ • q) (fun q _ => Finset.mem_univ _) (fun q _ => Subtype.ext _)
+        (fun q _ => g • q) (fun q _ => Finset.mem_univ _) (fun q _ => smul_inv_smul g q) fun q _ => inv_smul_smul g q)
       (map_prod ϕ _ _).symm
   simp_rw [MonoidHom.id_apply, MonoidHom.coe_mk, coe_mk, smul_apply_eq_smul_apply_inv_smul, smul_eq_mul_unop,
     mul_inv_rev, mul_assoc]
@@ -66,54 +66,53 @@ theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
 variable {H} [Normal H]
 
 instance : MulAction G H.QuotientDiff where
-  smul := fun g =>
-    Quotientₓ.map' (fun α => op g⁻¹ • α) fun α β h =>
+  smul g :=
+    Quotient.map' (fun α => op g⁻¹ • α) fun α β h =>
       Subtype.ext
         (by
           rwa [smul_diff_smul', coe_mk, coe_one, mul_eq_one_iff_eq_inv, mul_right_eq_self, ← coe_one, ←
             Subtype.ext_iff])
-  mul_smul := fun g₁ g₂ q =>
-    Quotientₓ.induction_on' q fun T =>
-      congr_arg Quotientₓ.mk' (by rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
-  one_smul := fun q =>
-    Quotientₓ.induction_on' q fun T => congr_arg Quotientₓ.mk' (by rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
+  mul_smul g₁ g₂ q :=
+    Quotient.induction_on' q fun T =>
+      congr_arg Quotient.mk' (by rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
+  one_smul q := Quotient.induction_on' q fun T => congr_arg Quotient.mk' (by rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
 
 theorem smul_diff' (h : H) : diff (MonoidHom.id H) α (op (h : G) • β) = diff (MonoidHom.id H) α β * h ^ H.index := by
-  rw [diff, diff, index_eq_card, ← Finsetₓ.card_univ, ← Finsetₓ.prod_const, ← Finsetₓ.prod_mul_distrib]
-  refine' Finsetₓ.prod_congr rfl fun q _ => _
-  simp_rw [Subtype.ext_iff, MonoidHom.id_apply, coe_mul, coe_mk, mul_assoc, mul_right_injₓ]
-  rw [smul_apply_eq_smul_apply_inv_smul, smul_eq_mul_unop, unop_op, mul_left_injₓ, ← Subtype.ext_iff,
-    Equivₓ.apply_eq_iff_eq, inv_smul_eq_iff]
+  rw [diff, diff, index_eq_card, ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]
+  refine' Finset.prod_congr rfl fun q _ => _
+  simp_rw [Subtype.ext_iff, MonoidHom.id_apply, coe_mul, coe_mk, mul_assoc, mul_right_inj]
+  rw [smul_apply_eq_smul_apply_inv_smul, smul_eq_mul_unop, unop_op, mul_left_inj, ← Subtype.ext_iff,
+    Equiv.apply_eq_iff_eq, inv_smul_eq_iff]
   exact self_eq_mul_right.mpr ((QuotientGroup.eq_one_iff _).mpr h.2)
 
-variable [Fintypeₓ H]
+variable [Fintype H]
 
-theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Fintypeₓ.card H) H.index) (α : H.QuotientDiff) (h : H) :
+theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Fintype.card H) H.index) (α : H.QuotientDiff) (h : H) :
     h • α = α → h = 1 :=
-  (Quotientₓ.induction_on' α) fun α hα =>
+  (Quotient.induction_on' α) fun α hα =>
     (powCoprime hH).Injective <|
       calc
         h ^ H.index = diff (MonoidHom.id H) (op ((h⁻¹ : H) : G) • α) α := by
-          rw [← diff_inv, smul_diff', diff_self, one_mulₓ, inv_pow, inv_invₓ]
-        _ = 1 ^ H.index := (Quotientₓ.exact' hα).trans (one_pow H.index).symm
+          rw [← diff_inv, smul_diff', diff_self, one_mul, inv_pow, inv_inv]
+        _ = 1 ^ H.index := (Quotient.exact' hα).trans (one_pow H.index).symm
         
 
-theorem exists_smul_eq (hH : Nat.Coprime (Fintypeₓ.card H) H.index) (α β : H.QuotientDiff) : ∃ h : H, h • α = β :=
-  Quotientₓ.induction_on' α
-    (Quotientₓ.induction_on' β fun β α =>
-      exists_imp_exists (fun n => Quotientₓ.sound')
+theorem exists_smul_eq (hH : Nat.Coprime (Fintype.card H) H.index) (α β : H.QuotientDiff) : ∃ h : H, h • α = β :=
+  Quotient.induction_on' α
+    (Quotient.induction_on' β fun β α =>
+      imp (fun n => Quotient.sound')
         ⟨(powCoprime hH).symm (diff (MonoidHom.id H) β α),
           (diff_inv _ _ _).symm.trans
             (inv_eq_one.mpr
               ((smul_diff' β α ((powCoprime hH).symm (diff (MonoidHom.id H) β α))⁻¹).trans
-                (by rw [inv_pow, ← pow_coprime_apply hH, Equivₓ.apply_symm_apply, mul_inv_selfₓ])))⟩)
+                (by rw [inv_pow, ← pow_coprime_apply hH, Equiv.apply_symm_apply, mul_inv_self])))⟩)
 
-theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff} (hH : Nat.Coprime (Fintypeₓ.card H) H.index) :
+theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff} (hH : Nat.Coprime (Fintype.card H) H.index) :
     IsComplement' H (stabilizer G α) :=
   is_complement'_stabilizer α (eq_one_of_smul_eq_one hH α) fun g => exists_smul_eq hH (g • α) α
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Fintypeₓ.card H) H.index) :
+private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Fintype.card H) H.index) :
     ∃ K : Subgroup G, IsComplement' H K :=
   nonempty_of_inhabited.elim fun α => ⟨stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
 
@@ -132,11 +131,11 @@ The proof is by contradiction. We assume that `G` is a minimal counterexample to
 -/
 
 
-variable {G : Type u} [Groupₓ G] [Fintypeₓ G] {N : Subgroup G} [Normal N] (h1 : Nat.Coprime (Fintypeₓ.card N) N.index)
+variable {G : Type u} [Group G] [Fintype G] {N : Subgroup G} [Normal N] (h1 : Nat.Coprime (Fintype.card N) N.index)
   (h2 :
-    ∀ (G' : Type u) [Groupₓ G'] [Fintypeₓ G'],
-      ∀ (hG'3 : Fintypeₓ.card G' < Fintypeₓ.card G) {N' : Subgroup G'} [N'.Normal]
-        (hN : Nat.Coprime (Fintypeₓ.card N') N'.index), ∃ H' : Subgroup G', is_complement' N' H')
+    ∀ (G' : Type u) [Group G'] [Fintype G'],
+      ∀ (hG'3 : Fintype.card G' < Fintype.card G) {N' : Subgroup G'} [N'.Normal]
+        (hN : Nat.Coprime (Fintype.card N') N'.index), ∃ H' : Subgroup G', is_complement' N' H')
   (h3 : ∀ H : Subgroup G, ¬IsComplement' N H)
 
 include h1 h2 h3
@@ -165,34 +164,33 @@ private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ := by
   have h4 : (N.comap K.subtype).index = N.index := by
     rw [← N.relindex_top_right, ← hK]
     exact relindex_eq_relindex_sup K N
-  have h5 : Fintypeₓ.card K < Fintypeₓ.card G := by
+  have h5 : Fintype.card K < Fintype.card G := by
     rw [← K.index_mul_card]
-    exact lt_mul_of_one_lt_left Fintypeₓ.card_pos (one_lt_index_of_ne_top h3)
-  have h6 : Nat.Coprime (Fintypeₓ.card (N.comap K.subtype)) (N.comap K.subtype).index := by
+    exact lt_mul_of_one_lt_left Fintype.card_pos (one_lt_index_of_ne_top h3)
+  have h6 : Nat.Coprime (Fintype.card (N.comap K.subtype)) (N.comap K.subtype).index := by
     rw [h4]
     exact h1.coprime_dvd_left (card_comap_dvd_of_injective N K.subtype Subtype.coe_injective)
   obtain ⟨H, hH⟩ := h2 K h5 h6
-  replace hH : Fintypeₓ.card (H.map K.subtype) = N.index :=
+  replace hH : Fintype.card (H.map K.subtype) = N.index :=
     ((Set.card_image_of_injective _ Subtype.coe_injective).trans
-          (Nat.mul_left_injective Fintypeₓ.card_pos
+          (Nat.mul_left_injective Fintype.card_pos
             (hH.symm.card_mul.trans (N.comap K.subtype).index_mul_card.symm))).trans
       h4
-  have h7 : Fintypeₓ.card N * Fintypeₓ.card (H.map K.subtype) = Fintypeₓ.card G := by
-    rw [hH, ← N.index_mul_card, mul_comm]
-  have h8 : (Fintypeₓ.card N).Coprime (Fintypeₓ.card (H.map K.subtype)) := by rwa [hH]
+  have h7 : Fintype.card N * Fintype.card (H.map K.subtype) = Fintype.card G := by rw [hH, ← N.index_mul_card, mul_comm]
+  have h8 : (Fintype.card N).Coprime (Fintype.card (H.map K.subtype)) := by rwa [hH]
   exact ⟨H.map K.subtype, is_complement'_of_coprime h7 h8⟩
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K = N := by
-  have : Function.Surjective (QuotientGroup.mk' K) := Quotientₓ.surjective_quotient_mk'
+  have : Function.Surjective (QuotientGroup.mk' K) := Quotient.surjective_quotient_mk'
   have h4 := step1 h1 h2 h3
   contrapose! h4
-  have h5 : Fintypeₓ.card (G ⧸ K) < Fintypeₓ.card G := by
+  have h5 : Fintype.card (G ⧸ K) < Fintype.card G := by
     rw [← index_eq_card, ← K.index_mul_card]
-    refine' lt_mul_of_one_lt_right (Nat.pos_of_ne_zeroₓ index_ne_zero_of_finite) (K.one_lt_card_iff_ne_bot.mpr h4.1)
-  have h6 : Nat.Coprime (Fintypeₓ.card (N.map (QuotientGroup.mk' K))) (N.map (QuotientGroup.mk' K)).index := by
+    refine' lt_mul_of_one_lt_right (Nat.pos_of_ne_zero index_ne_zero_of_finite) (K.one_lt_card_iff_ne_bot.mpr h4.1)
+  have h6 : Nat.Coprime (Fintype.card (N.map (QuotientGroup.mk' K))) (N.map (QuotientGroup.mk' K)).index := by
     have index_map := N.index_map_eq this (by rwa [QuotientGroup.ker_mk])
-    have index_pos : 0 < N.index := Nat.pos_of_ne_zeroₓ index_ne_zero_of_finite
+    have index_pos : 0 < N.index := Nat.pos_of_ne_zero index_ne_zero_of_finite
     rw [index_map]
     refine' h1.coprime_dvd_left _
     rw [← Nat.mul_dvd_mul_iff_left index_pos, index_mul_card, ← index_map, index_mul_card]
@@ -207,7 +205,7 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
   · rw [← comap_top (QuotientGroup.mk' K)]
     intro hH'
     rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff, QuotientGroup.ker_mk] at hH
-    · exact h4.2 (le_antisymmₓ hK hH)
+    · exact h4.2 (le_antisymm hK hH)
       
     
 
@@ -220,21 +218,21 @@ private theorem step3 (K : Subgroup N) [(K.map N.Subtype).Normal] : K = ⊥ ∨ 
   skip
   rhs
   rw [← N.subtype_range, N.subtype.range_eq_map]
-  have inj := map_injective (show Function.Injective N.subtype from Subtype.coe_injective)
+  have inj := map_injective N.subtype_injective
   rwa [inj.eq_iff, inj.eq_iff] at key
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem step4 : (Fintypeₓ.card N).minFac.Prime :=
+private theorem step4 : (Fintype.card N).minFac.Prime :=
   Nat.min_fac_prime (N.one_lt_card_iff_ne_bot.mpr (step0 h1 h2 h3)).ne'
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem step5 {P : Sylow (Fintypeₓ.card N).minFac N} : P.1 ≠ ⊥ :=
-  haveI : Fact (Fintypeₓ.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
-  P.ne_bot_of_dvd_card (Fintypeₓ.card N).min_fac_dvd
+private theorem step5 {P : Sylow (Fintype.card N).minFac N} : P.1 ≠ ⊥ :=
+  haveI : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
+  P.ne_bot_of_dvd_card (Fintype.card N).min_fac_dvd
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem step6 : IsPGroup (Fintypeₓ.card N).minFac N := by
-  haveI : Fact (Fintypeₓ.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
+private theorem step6 : IsPGroup (Fintype.card N).minFac N := by
+  haveI : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
   refine' sylow.nonempty.elim fun P => P.2.ofSurjective P.1.Subtype _
   rw [← MonoidHom.range_top_iff_surjective, subtype_range]
   haveI : (P.1.map N.subtype).Normal :=
@@ -244,20 +242,20 @@ private theorem step6 : IsPGroup (Fintypeₓ.card N).minFac N := by
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 theorem step7 : IsCommutative N := by
   haveI := N.bot_or_nontrivial.resolve_left (step0 h1 h2 h3)
-  haveI : Fact (Fintypeₓ.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
+  haveI : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
   exact
     ⟨⟨fun g h =>
         eq_top_iff.mp ((step3 h1 h2 h3 N.center).resolve_left (step6 h1 h2 h3).bot_lt_center.ne') (mem_top h) g⟩⟩
 
 end SchurZassenhausInduction
 
-variable {n : ℕ} {G : Type u} [Groupₓ G]
+variable {n : ℕ} {G : Type u} [Group G]
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem exists_right_complement'_of_coprime_aux' [Fintypeₓ G] (hG : Fintypeₓ.card G = n) {N : Subgroup G}
-    [N.Normal] (hN : Nat.Coprime (Fintypeₓ.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H := by
+private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Fintype.card G = n) {N : Subgroup G}
+    [N.Normal] (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H := by
   revert G
-  apply Nat.strong_induction_onₓ n
+  apply Nat.strong_induction_on n
   rintro n ih G _ _ rfl N _ hN
   refine' not_forall_not.mp fun h3 => _
   haveI :=
@@ -266,13 +264,13 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintypeₓ G] (hG : Fi
         apply ih _ hG'
         rfl)
       h3
-  exact not_exists_of_forall_notₓ h3 (exists_right_complement'_of_coprime_aux hN)
+  exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (right) complement of `H`. -/
-theorem exists_right_complement'_of_coprime_of_fintype [Fintypeₓ G] {N : Subgroup G} [N.Normal]
-    (hN : Nat.Coprime (Fintypeₓ.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H :=
+theorem exists_right_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
+    (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H :=
   exists_right_complement'_of_coprime_aux' rfl hN
 
 /-- **Schur-Zassenhaus** for normal subgroups:
@@ -281,12 +279,12 @@ theorem exists_right_complement'_of_coprime_of_fintype [Fintypeₓ G] {N : Subgr
 theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Nat.Coprime (Nat.card N) N.index) :
     ∃ H : Subgroup G, IsComplement' N H := by
   by_cases hN1:Nat.card N = 0
-  · rw [hN1, Nat.coprime_zero_leftₓ, index_eq_one] at hN
+  · rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN
     rw [hN]
     exact ⟨⊥, is_complement'_top_bot⟩
     
   by_cases hN2:N.index = 0
-  · rw [hN2, Nat.coprime_zero_rightₓ] at hN
+  · rw [hN2, Nat.coprime_zero_right] at hN
     haveI := (cardinal.to_nat_eq_one_iff_unique.mp hN).1
     rw [N.eq_bot_of_subsingleton]
     exact ⟨⊤, is_complement'_bot_top⟩
@@ -294,15 +292,15 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Na
   have hN3 : Nat.card G ≠ 0 := by
     rw [← N.card_mul_index]
     exact mul_ne_zero hN1 hN2
-  haveI := (cardinal.lt_aleph_0_iff_fintype.mp (lt_of_not_geₓ (mt Cardinal.to_nat_apply_of_aleph_0_le hN3))).some
+  haveI := (cardinal.lt_aleph_0_iff_fintype.mp (lt_of_not_ge (mt Cardinal.to_nat_apply_of_aleph_0_le hN3))).some
   rw [Nat.card_eq_fintype_card] at hN
   exact exists_right_complement'_of_coprime_of_fintype hN
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (left) complement of `H`. -/
-theorem exists_left_complement'_of_coprime_of_fintype [Fintypeₓ G] {N : Subgroup G} [N.Normal]
-    (hN : Nat.Coprime (Fintypeₓ.card N) N.index) : ∃ H : Subgroup G, IsComplement' H N :=
+theorem exists_left_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
+    (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' H N :=
   Exists.imp (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime_of_fintype hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:

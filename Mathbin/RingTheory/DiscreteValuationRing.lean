@@ -50,41 +50,45 @@ open Ideal LocalRing
 
 /-- An integral domain is a *discrete valuation ring* (DVR) if it's a local PID which
   is not a field. -/
-class DiscreteValuationRing (R : Type u) [CommRingₓ R] [IsDomain R] extends IsPrincipalIdealRing R, LocalRing R :
+class DiscreteValuationRing (R : Type u) [CommRing R] [IsDomain R] extends IsPrincipalIdealRing R, LocalRing R :
   Prop where
   not_a_field' : maximalIdeal R ≠ ⊥
 
 namespace DiscreteValuationRing
 
-variable (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R]
+variable (R : Type u) [CommRing R] [IsDomain R] [DiscreteValuationRing R]
 
 theorem not_a_field : maximalIdeal R ≠ ⊥ :=
   not_a_field'
+
+/-- A discrete valuation ring `R` is not a field. -/
+theorem not_is_field : ¬IsField R :=
+  Ring.not_is_field_iff_exists_prime.mpr ⟨_, not_a_field R, IsMaximal.is_prime' (maximalIdeal R)⟩
 
 variable {R}
 
 open PrincipalIdealRing
 
+theorem irreducible_of_span_eq_maximal_ideal {R : Type _} [CommRing R] [LocalRing R] [IsDomain R] (ϖ : R) (hϖ : ϖ ≠ 0)
+    (h : maximalIdeal R = Ideal.span {ϖ}) : Irreducible ϖ := by
+  have h2 : ¬IsUnit ϖ := show ϖ ∈ maximal_ideal R from h.symm ▸ Submodule.mem_span_singleton_self ϖ
+  refine' ⟨h2, _⟩
+  intro a b hab
+  by_contra' h
+  obtain ⟨ha : a ∈ maximal_ideal R, hb : b ∈ maximal_ideal R⟩ := h
+  rw [h, mem_span_singleton'] at ha hb
+  rcases ha with ⟨a, rfl⟩
+  rcases hb with ⟨b, rfl⟩
+  rw [show a * ϖ * (b * ϖ) = ϖ * (ϖ * (a * b)) by ring] at hab
+  apply hϖ
+  apply eq_zero_of_mul_eq_self_right _ hab.symm
+  exact fun hh => h2 (is_unit_of_dvd_one ϖ ⟨_, hh.symm⟩)
+
 /-- An element of a DVR is irreducible iff it is a uniformizer, that is, generates the
   maximal ideal of R -/
 theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R = Ideal.span {ϖ} :=
-  ⟨fun hϖ => (eq_maximal_ideal (is_maximal_of_irreducible hϖ)).symm, by
-    intro h
-    have h2 : ¬IsUnit ϖ := show ϖ ∈ maximal_ideal R from h.symm ▸ Submodule.mem_span_singleton_self ϖ
-    refine' ⟨h2, _⟩
-    intro a b hab
-    by_contra' h
-    obtain ⟨ha : a ∈ maximal_ideal R, hb : b ∈ maximal_ideal R⟩ := h
-    rw [h, mem_span_singleton'] at ha hb
-    rcases ha with ⟨a, rfl⟩
-    rcases hb with ⟨b, rfl⟩
-    rw [show a * ϖ * (b * ϖ) = ϖ * (ϖ * (a * b)) by ring] at hab
-    have h3 := eq_zero_of_mul_eq_self_right _ hab.symm
-    · apply not_a_field R
-      simp [h, h3]
-      
-    · exact fun hh => h2 (is_unit_of_dvd_one ϖ ⟨_, hh.symm⟩)
-      ⟩
+  ⟨fun hϖ => (eq_maximal_ideal (is_maximal_of_irreducible hϖ)).symm, fun h =>
+    irreducible_of_span_eq_maximal_ideal ϖ (fun e => not_a_field R <| by rwa [h, span_singleton_eq_bot]) h⟩
 
 theorem _root_.irreducible.maximal_ideal_eq {ϖ : R} (h : Irreducible ϖ) : maximalIdeal R = Ideal.span {ϖ} :=
   (irreducible_iff_uniformizer _).mp h
@@ -101,11 +105,11 @@ theorem exists_prime : ∃ ϖ : R, Prime ϖ :=
   (exists_irreducible R).imp fun _ => PrincipalIdealRing.irreducible_iff_prime.1
 
 /-- an integral domain is a DVR iff it's a PID with a unique non-zero prime ideal -/
-theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRingₓ R] [IsDomain R] :
+theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRing R] [IsDomain R] :
     DiscreteValuationRing R ↔ IsPrincipalIdealRing R ∧ ∃! P : Ideal R, P ≠ ⊥ ∧ IsPrime P := by
   constructor
   · intro RDVR
-    rcases id RDVR with ⟨RPID, Rlocal, Rnotafield⟩
+    rcases id RDVR with ⟨Rlocal⟩
     constructor
     assumption
     skip
@@ -129,7 +133,7 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRingₓ R] [IsDomain R]
       
     
   · rintro ⟨RPID, Punique⟩
-    haveI : LocalRing R := LocalRing.of_unique_nonzero_prime Punique
+    haveI : LocalRing R := LocalRing.ofUniqueNonzeroPrime Punique
     refine' { not_a_field' := _ }
     rcases Punique with ⟨P, ⟨hP1, hP2⟩, hP3⟩
     have hPM : P ≤ maximal_ideal R := le_maximal_ideal hP2.1
@@ -149,12 +153,12 @@ namespace DiscreteValuationRing
 variable (R : Type _)
 
 /-- Alternative characterisation of discrete valuation rings. -/
-def HasUnitMulPowIrreducibleFactorization [CommRingₓ R] : Prop :=
+def HasUnitMulPowIrreducibleFactorization [CommRing R] : Prop :=
   ∃ p : R, Irreducible p ∧ ∀ {x : R}, x ≠ 0 → ∃ n : ℕ, Associated (p ^ n) x
 
 namespace HasUnitMulPowIrreducibleFactorization
 
-variable {R} [CommRingₓ R] (hR : HasUnitMulPowIrreducibleFactorization R)
+variable {R} [CommRing R] (hR : HasUnitMulPowIrreducibleFactorization R)
 
 include hR
 
@@ -165,21 +169,21 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
   intro p hp
   obtain ⟨n, hn⟩ := hR hp.ne_zero
   have : Irreducible (ϖ ^ n) := hn.symm.irreducible hp
-  rcases lt_trichotomyₓ n 1 with (H | rfl | H)
+  rcases lt_trichotomy n 1 with (H | rfl | H)
   · obtain rfl : n = 0 := by
       clear hn this
       revert H n
       exact by decide
-    simpa only [not_irreducible_one, pow_zeroₓ] using this
+    simpa only [not_irreducible_one, pow_zero] using this
     
-  · simpa only [pow_oneₓ] using hn.symm
+  · simpa only [pow_one] using hn.symm
     
   · obtain ⟨n, rfl⟩ : ∃ k, n = 1 + k + 1 := Nat.exists_eq_add_of_lt H
-    rw [pow_succₓ] at this
+    rw [pow_succ] at this
     rcases this.is_unit_or_is_unit rfl with (H0 | H0)
     · exact (hϖ.not_unit H0).elim
       
-    · rw [add_commₓ, pow_succₓ] at H0
+    · rw [add_comm, pow_succ] at H0
       exact (hϖ.not_unit (is_unit_of_mul_is_unit_left H0)).elim
       
     
@@ -189,10 +193,10 @@ variable [IsDomain R]
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p` is a unique factorization domain.
 See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
-theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
+theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
   let p := Classical.choose hR
   let spec := Classical.choose_spec hR
-  UniqueFactorizationMonoid.of_exists_prime_factors fun x hx => by
+  UniqueFactorizationMonoid.ofExistsPrimeFactors fun x hx => by
     use Multiset.repeat p (Classical.choose (spec.2 hx))
     constructor
     · intro q hq
@@ -202,19 +206,19 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
       intro a b h
       by_cases ha:a = 0
       · rw [ha]
-        simp only [true_orₓ, dvd_zero]
+        simp only [true_or_iff, dvd_zero]
         
       obtain ⟨m, u, rfl⟩ := spec.2 ha
-      rw [mul_assoc, mul_left_commₓ, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
+      rw [mul_assoc, mul_left_comm, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
       rw [IsUnit.dvd_mul_right (Units.is_unit _)]
       by_cases hm:m = 0
-      · simp only [hm, one_mulₓ, pow_zeroₓ] at h⊢
+      · simp only [hm, one_mul, pow_zero] at h⊢
         right
         exact h
         
       left
       obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm
-      rw [pow_succₓ]
+      rw [pow_succ]
       apply dvd_mul_of_dvd_left dvd_rfl _
       
     · rw [Multiset.prod_repeat]
@@ -236,14 +240,14 @@ theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p
   congr 1
   symm
   rw [Multiset.eq_repeat]
-  simp only [true_andₓ, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
+  simp only [true_and_iff, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
   rintro _ q hq rfl
   rw [Associates.mk_eq_mk_iff_associated]
   apply h₂ (hfx.1 _ hq) hp
 
 end HasUnitMulPowIrreducibleFactorization
 
-theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDomain R] [UniqueFactorizationMonoid R]
+theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
     (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
     IsPrincipalIdealRing R := by
   constructor
@@ -260,9 +264,9 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDom
     refine' ⟨n, _⟩
     simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hxI
   constructor
-  use p ^ Nat.findₓ ex
+  use p ^ Nat.find ex
   show I = Ideal.span _
-  apply le_antisymmₓ
+  apply le_antisymm
   · intro r hr
     by_cases hr0:r = 0
     · simp only [hr0, Submodule.zero_mem]
@@ -270,18 +274,18 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDom
     obtain ⟨n, u, rfl⟩ := H hr0
     simp only [mem_span_singleton, Units.is_unit, IsUnit.dvd_mul_right]
     apply pow_dvd_pow
-    apply Nat.find_min'ₓ
+    apply Nat.find_min'
     simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hr
     
   · erw [Submodule.span_singleton_le_iff_mem]
-    exact Nat.find_specₓ ex
+    exact Nat.find_spec ex
     
 
 /-- A unique factorization domain with at least one irreducible element
 in which all irreducible elements are associated
 is a discrete valuation ring.
 -/
-theorem of_ufd_of_unique_irreducible {R : Type u} [CommRingₓ R] [IsDomain R] [UniqueFactorizationMonoid R]
+theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
     (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
     DiscreteValuationRing R := by
   rw [iff_pid_with_one_nonzero_prime]
@@ -307,7 +311,7 @@ theorem of_ufd_of_unique_irreducible {R : Type u} [CommRingₓ R] [IsDomain R] [
 such that every nonzero element is associated to a power of `p`
 is a discrete valuation ring.
 -/
-theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRingₓ R] [IsDomain R]
+theorem ofHasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDomain R]
     (hR : HasUnitMulPowIrreducibleFactorization R) : DiscreteValuationRing R := by
   letI : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
@@ -316,13 +320,13 @@ theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRingₓ 
 
 section
 
-variable [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R]
+variable [CommRing R] [IsDomain R] [DiscreteValuationRing R]
 
 variable {R}
 
 theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
     ∃ n : ℕ, Associated x (ϖ ^ n) := by
-  have : WfDvdMonoid R := IsNoetherianRing.wf_dvd_monoid
+  have : WfDvdMonoid R := IsNoetherianRing.wfDvdMonoid
   cases' WfDvdMonoid.exists_factors x hx with fx hfx
   use fx.card
   have H := hfx.2
@@ -330,7 +334,7 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
   rw [← H, ← Associates.prod_mk, Associates.mk_pow, ← Multiset.prod_repeat]
   congr 1
   rw [Multiset.eq_repeat]
-  simp only [true_andₓ, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
+  simp only [true_and_iff, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
   rintro _ _ _ rfl
   rw [Associates.mk_eq_mk_iff_associated]
   refine' associated_of_irreducible _ _ hirr
@@ -363,7 +367,7 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
     rw [Multiset.prod_repeat, Multiset.prod_repeat, Associated]
     refine' ⟨u * v⁻¹, _⟩
     simp only [Units.coe_mul]
-    rw [mul_left_commₓ, ← mul_assoc, h, mul_right_commₓ, Units.mul_inv, one_mulₓ]
+    rw [mul_left_comm, ← mul_assoc, h, mul_right_comm, Units.mul_inv, one_mul]
   have := Multiset.card_eq_card_of_rel (UniqueFactorizationMonoid.factors_unique _ _ key)
   · simpa only [Multiset.card_repeat]
     
@@ -392,7 +396,7 @@ theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Rˣ) (m 
 open multiplicity
 
 /-- The `part_enat`-valued additive valuation on a DVR -/
-noncomputable def addVal (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R PartEnat :=
+noncomputable def addVal (R : Type u) [CommRing R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R PartEnat :=
   AddValuation (Classical.choose_spec (exists_prime R))
 
 theorem add_val_def (r : R) (u : Rˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : addVal R r = n := by
@@ -414,7 +418,7 @@ theorem add_val_one : addVal R 1 = 0 :=
 
 @[simp]
 theorem add_val_uniformizer {ϖ : R} (hϖ : Irreducible ϖ) : addVal R ϖ = 1 := by
-  simpa only [one_mulₓ, eq_self_iff_true, Units.coe_one, pow_oneₓ, forall_true_left, Nat.cast_oneₓ] using
+  simpa only [one_mul, eq_self_iff_true, Units.coe_one, pow_one, forall_true_left, Nat.cast_one] using
     add_val_def ϖ 1 hϖ 1
 
 @[simp]
@@ -462,10 +466,10 @@ theorem add_val_add {a b : R} : min (addVal R a) (addVal R b) ≤ addVal R (a + 
 
 end
 
-instance (R : Type _) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] :
-    IsHausdorff (maximalIdeal R) R where haus' := fun x hx => by
+instance (R : Type _) [CommRing R] [IsDomain R] [DiscreteValuationRing R] :
+    IsHausdorff (maximalIdeal R) R where haus' x hx := by
     obtain ⟨ϖ, hϖ⟩ := exists_irreducible R
-    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_oneₓ, Smodeq.zero, hϖ.maximal_ideal_eq, Ideal.span_singleton_pow,
+    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, Smodeq.zero, hϖ.maximal_ideal_eq, Ideal.span_singleton_pow,
       Ideal.mem_span_singleton, ← add_val_le_iff_dvd, hϖ.add_val_pow] at hx
     rwa [← add_val_eq_top_iff, PartEnat.eq_top_iff_forall_le]
 

@@ -68,7 +68,7 @@ variable [HasSmul M X] [HasContinuousSmul M X]
 @[to_additive]
 instance (priority := 100) HasContinuousSmul.has_continuous_const_smul :
     HasContinuousConstSmul M
-      X where continuous_const_smul := fun _ => continuous_smul.comp (continuous_const.prod_mk continuous_id)
+      X where continuous_const_smul _ := continuous_smul.comp (continuous_const.prod_mk continuous_id)
 
 @[to_additive]
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X} (hf : Tendsto f l (𝓝 c))
@@ -112,9 +112,9 @@ instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
 
 end HasSmul
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ M] [MulAction M X] [HasContinuousSmul M X]
+variable [Monoid M] [MulAction M X] [HasContinuousSmul M X]
 
 @[to_additive]
 instance Units.has_continuous_smul :
@@ -123,7 +123,7 @@ instance Units.has_continuous_smul :
     show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 
-end Monoidₓ
+end Monoid
 
 @[to_additive]
 instance [HasSmul M X] [HasSmul M Y] [HasContinuousSmul M X] [HasContinuousSmul M Y] : HasContinuousSmul M (X × Y) :=
@@ -167,7 +167,7 @@ end LatticeOps
 
 section AddTorsor
 
-variable (G : Type _) (P : Type _) [AddGroupₓ G] [AddTorsor G P] [TopologicalSpace G]
+variable (G : Type _) (P : Type _) [AddGroup G] [AddTorsor G P] [TopologicalSpace G]
 
 variable [PreconnectedSpace G] [TopologicalSpace P] [HasContinuousVadd G P]
 
@@ -178,9 +178,9 @@ it loops for a group as a torsor over itself. -/
 protected theorem AddTorsor.connected_space : ConnectedSpace P :=
   { is_preconnected_univ := by
       convert
-        is_preconnected_univ.image (Equivₓ.vaddConst (Classical.arbitrary P) : G → P)
+        is_preconnected_univ.image (Equiv.vaddConst (Classical.arbitrary P) : G → P)
           (continuous_id.vadd continuous_const).ContinuousOn
-      rw [Set.image_univ, Equivₓ.range_eq_univ],
+      rw [Set.image_univ, Equiv.range_eq_univ],
     to_nonempty := inferInstance }
 
 end AddTorsor

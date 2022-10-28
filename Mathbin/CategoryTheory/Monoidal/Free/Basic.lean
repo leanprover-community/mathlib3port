@@ -112,7 +112,7 @@ inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
 /-- We say that two formal morphisms in the free monoidal category are equivalent if they become
     equal if we apply the relations that are true in a monoidal category. Note that we will prove
     that there is only one equivalence class -- this is the monoidal coherence theorem. -/
-def setoidHom (X Y : F C) : Setoidₓ (X ⟶ᵐ Y) :=
+def setoidHom (X Y : F C) : Setoid (X ⟶ᵐ Y) :=
   ⟨HomEquiv, ⟨fun f => HomEquiv.refl f, fun f g => HomEquiv.symm f g, fun f g h hfg hgh => HomEquiv.trans hfg hgh⟩⟩
 
 attribute [instance] setoid_hom
@@ -122,50 +122,49 @@ section
 open FreeMonoidalCategory.HomEquiv
 
 instance categoryFreeMonoidalCategory : Category.{u} (F C) where
-  Hom := fun X Y => Quotientₓ (FreeMonoidalCategory.setoidHom X Y)
-  id := fun X => ⟦FreeMonoidalCategory.Hom.id _⟧
-  comp := fun X Y Z f g =>
-    Quotientₓ.map₂ Hom.comp
+  Hom X Y := Quotient (FreeMonoidalCategory.setoidHom X Y)
+  id X := ⟦FreeMonoidalCategory.Hom.id _⟧
+  comp X Y Z f g :=
+    Quotient.map₂ Hom.comp
       (by
         intro f f' hf g g' hg
         exact comp hf hg)
       f g
   id_comp' := by
     rintro X Y ⟨f⟩
-    exact Quotientₓ.sound (id_comp f)
+    exact Quotient.sound (id_comp f)
   comp_id' := by
     rintro X Y ⟨f⟩
-    exact Quotientₓ.sound (comp_id f)
+    exact Quotient.sound (comp_id f)
   assoc' := by
     rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
-    exact Quotientₓ.sound (assoc f g h)
+    exact Quotient.sound (assoc f g h)
 
 instance : MonoidalCategory (F C) where
-  tensorObj := fun X Y => FreeMonoidalCategory.tensor X Y
-  tensorHom := fun X₁ Y₁ X₂ Y₂ =>
-    Quotientₓ.map₂ Hom.tensor <| by
+  tensorObj X Y := FreeMonoidalCategory.tensor X Y
+  tensorHom X₁ Y₁ X₂ Y₂ :=
+    Quotient.map₂ Hom.tensor <| by
       intro _ _ h _ _ h'
       exact hom_equiv.tensor h h'
-  tensor_id' := fun X Y => Quotientₓ.sound tensor_id
-  tensor_comp' := fun X₁ Y₁ Z₁ X₂ Y₂ Z₂ => by
+  tensor_id' X Y := Quotient.sound tensor_id
+  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
-    exact Quotientₓ.sound (tensor_comp _ _ _ _)
+    exact Quotient.sound (tensor_comp _ _ _ _)
   tensorUnit := FreeMonoidalCategory.unit
-  associator := fun X Y Z =>
-    ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotientₓ.sound α_hom_inv, Quotientₓ.sound α_inv_hom⟩
-  associator_naturality' := fun X₁ X₂ X₃ Y₁ Y₂ Y₃ => by
+  associator X Y Z := ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotient.sound α_hom_inv, Quotient.sound α_inv_hom⟩
+  associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ := by
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
-    exact Quotientₓ.sound (associator_naturality _ _ _)
-  leftUnitor := fun X => ⟨⟦Hom.l_hom X⟧, ⟦Hom.l_inv X⟧, Quotientₓ.sound l_hom_inv, Quotientₓ.sound l_inv_hom⟩
-  left_unitor_naturality' := fun X Y => by
+    exact Quotient.sound (associator_naturality _ _ _)
+  leftUnitor X := ⟨⟦Hom.l_hom X⟧, ⟦Hom.l_inv X⟧, Quotient.sound l_hom_inv, Quotient.sound l_inv_hom⟩
+  left_unitor_naturality' X Y := by
     rintro ⟨f⟩
-    exact Quotientₓ.sound (l_naturality _)
-  rightUnitor := fun X => ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotientₓ.sound ρ_hom_inv, Quotientₓ.sound ρ_inv_hom⟩
-  right_unitor_naturality' := fun X Y => by
+    exact Quotient.sound (l_naturality _)
+  rightUnitor X := ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
+  right_unitor_naturality' X Y := by
     rintro ⟨f⟩
-    exact Quotientₓ.sound (ρ_naturality _)
-  pentagon' := fun W X Y Z => Quotientₓ.sound pentagon
-  triangle' := fun X Y => Quotientₓ.sound triangle
+    exact Quotient.sound (ρ_naturality _)
+  pentagon' W X Y Z := Quotient.sound pentagon
+  triangle' X Y := Quotient.sound triangle
 
 @[simp]
 theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) : ⟦f.comp g⟧ = @CategoryStruct.comp (F C) _ _ _ _ ⟦f⟧ ⟦g⟧ :=
@@ -204,7 +203,7 @@ theorem mk_l_hom {X : F C} : ⟦Hom.l_hom X⟧ = (λ_ X).Hom :=
 theorem mk_l_inv {X : F C} : ⟦Hom.l_inv X⟧ = (λ_ X).inv :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
   rfl
@@ -217,9 +216,15 @@ section Functor
 
 variable {D : Type u'} [Category.{v'} D] [MonoidalCategory D] (f : C → D)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- warning: category_theory.free_monoidal_category.project_obj -> CategoryTheory.FreeMonoidalCategory.projectObj is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v' u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v' u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
+but is expected to have type
+  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v' u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v' u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
+Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObjₓ'. -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
-def projectObjₓ : F C → D
+def projectObj : F C → D
   | free_monoidal_category.of X => f X
   | free_monoidal_category.unit => 𝟙_ D
   | free_monoidal_category.tensor X Y => project_obj X ⊗ project_obj Y
@@ -228,10 +233,16 @@ section
 
 open Hom
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- warning: category_theory.free_monoidal_category.project_map_aux -> CategoryTheory.FreeMonoidalCategory.projectMapAux is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v' u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v' u'} D _inst_1] (f : C -> D) {X : CategoryTheory.FreeMonoidalCategory.{u} C} {Y : CategoryTheory.FreeMonoidalCategory.{u} C}, (CategoryTheory.FreeMonoidalCategory.Hom.{u} C X Y) -> (Quiver.Hom.{succ v' u'} D (CategoryTheory.CategoryStruct.toQuiver.{v' u'} D (CategoryTheory.Category.toCategoryStruct.{v' u'} D _inst_1)) (CategoryTheory.FreeMonoidalCategory.projectObj.{v' u u'} C D _inst_1 _inst_2 f X) (CategoryTheory.FreeMonoidalCategory.projectObj.{v' u u'} C D _inst_1 _inst_2 f Y))
+but is expected to have type
+  PUnit.{(max (max (succ (succ u)) (succ (succ u'))) (succ (succ v')))}
+Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAuxₓ'. -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 @[simp]
-def projectMapAuxₓ : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y)
+def projectMapAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObj f X ⟶ projectObj f Y)
   | _, _, id _ => 𝟙 _
   | _, _, α_hom _ _ _ => (α_ _ _ _).Hom
   | _, _, α_inv _ _ _ => (α_ _ _ _).inv
@@ -243,8 +254,8 @@ def projectMapAuxₓ : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObjₓ f X ⟶ 
   | _, _, hom.tensor f g => project_map_aux f ⊗ project_map_aux g
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
-def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y) :=
-  Quotientₓ.lift (projectMapAuxₓ f)
+def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :=
+  Quotient.lift (projectMapAux f)
     (by
       intro f g h
       induction' h with
@@ -304,10 +315,10 @@ end
 /-- If `D` is a monoidal category and we have a function `C → D`, then we have a functor from the
     free monoidal category over `C` to the category `D`. -/
 def project : MonoidalFunctor (F C) D where
-  obj := projectObjₓ f
+  obj := projectObj f
   map := projectMap f
   ε := 𝟙 _
-  μ := fun X Y => 𝟙 _
+  μ X Y := 𝟙 _
 
 end Functor
 

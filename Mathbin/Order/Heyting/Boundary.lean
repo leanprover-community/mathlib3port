@@ -88,7 +88,7 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b)
   simp only [boundary, sup_inf_left, sup_inf_right, sup_right_idem, le_inf_iff, sup_assoc, @sup_comm _ _ _ a]
   refine' ⟨⟨⟨_, _⟩, _⟩, ⟨_, _⟩, _⟩ <;> try exact le_sup_of_le_left inf_le_left <;> refine' inf_le_of_right_le _
   · rw [hnot_le_iff_codisjoint_right, codisjoint_left_comm]
-    exact codisjoint_hnot_left
+    exact codisjointHnotLeft
     
   · refine' le_sup_of_le_right _
     rw [hnot_le_iff_codisjoint_right]
@@ -100,7 +100,7 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b
   exact boundary_le_boundary_sup_sup_boundary_inf_left
 
 theorem boundary_sup_sup_boundary_inf (a b : α) : ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) = ∂ a ⊔ ∂ b :=
-  le_antisymmₓ (sup_le boundary_sup_le boundary_inf_le) <|
+  le_antisymm (sup_le boundary_sup_le boundary_inf_le) <|
     sup_le boundary_le_boundary_sup_sup_boundary_inf_left boundary_le_boundary_sup_sup_boundary_inf_right
 
 @[simp]

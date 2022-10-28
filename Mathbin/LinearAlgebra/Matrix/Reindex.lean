@@ -26,7 +26,7 @@ matrix, reindex
 
 namespace Matrix
 
-open Equivₓ
+open Equiv
 
 open Matrix
 
@@ -34,9 +34,9 @@ variable {l m n o : Type _} {l' m' n' o' : Type _} {m'' n'' : Type _}
 
 variable (R A : Type _)
 
-section AddCommMonoidₓ
+section AddCommMonoid
 
-variable [Semiringₓ R] [AddCommMonoidₓ A] [Module R A]
+variable [Semiring R] [AddCommMonoid A] [Module R A]
 
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types,
 `matrix.reindex`, is a linear equivalence. -/
@@ -54,8 +54,7 @@ theorem reindex_linear_equiv_symm (eₘ : m ≃ m') (eₙ : n ≃ n') :
   rfl
 
 @[simp]
-theorem reindex_linear_equiv_refl_refl :
-    reindexLinearEquiv R A (Equivₓ.refl m) (Equivₓ.refl n) = LinearEquiv.refl R _ :=
+theorem reindex_linear_equiv_refl_refl : reindexLinearEquiv R A (Equiv.refl m) (Equiv.refl n) = LinearEquiv.refl R _ :=
   LinearEquiv.ext fun _ => rfl
 
 theorem reindex_linear_equiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
@@ -82,27 +81,27 @@ theorem reindex_linear_equiv_one [DecidableEq m] [DecidableEq m'] [One A] (e : m
     reindexLinearEquiv R A e e (1 : Matrix m m A) = 1 :=
   submatrix_one_equiv e.symm
 
-end AddCommMonoidₓ
+end AddCommMonoid
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R] [Semiringₓ A] [Module R A]
+variable [Semiring R] [Semiring A] [Module R A]
 
-theorem reindex_linear_equiv_mul [Fintypeₓ n] [Fintypeₓ n'] (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o') (M : Matrix m n A)
+theorem reindex_linear_equiv_mul [Fintype n] [Fintype n'] (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o') (M : Matrix m n A)
     (N : Matrix n o A) :
     reindexLinearEquiv R A eₘ eₙ M ⬝ reindexLinearEquiv R A eₙ eₒ N = reindexLinearEquiv R A eₘ eₒ (M ⬝ N) :=
   submatrix_mul_equiv M N _ _ _
 
-theorem mul_reindex_linear_equiv_one [Fintypeₓ n] [DecidableEq o] (e₁ : o ≃ n) (e₂ : o ≃ n') (M : Matrix m n A) :
-    M.mul (reindexLinearEquiv R A e₁ e₂ 1) = reindexLinearEquiv R A (Equivₓ.refl m) (e₁.symm.trans e₂) M :=
-  haveI := Fintypeₓ.ofEquiv _ e₁.symm
+theorem mul_reindex_linear_equiv_one [Fintype n] [DecidableEq o] (e₁ : o ≃ n) (e₂ : o ≃ n') (M : Matrix m n A) :
+    M.mul (reindexLinearEquiv R A e₁ e₂ 1) = reindexLinearEquiv R A (Equiv.refl m) (e₁.symm.trans e₂) M :=
+  haveI := Fintype.ofEquiv _ e₁.symm
   mul_submatrix_one _ _ _
 
-end Semiringₓ
+end Semiring
 
 section Algebra
 
-variable [CommSemiringₓ R] [Fintypeₓ n] [Fintypeₓ m] [DecidableEq m] [DecidableEq n]
+variable [CommSemiring R] [Fintype n] [Fintype m] [DecidableEq m] [DecidableEq n]
 
 /-- For square matrices with coefficients in commutative semirings, the natural map that reindexes
 a matrix's rows and columns with equivalent types, `matrix.reindex`, is an equivalence of algebras.
@@ -121,7 +120,7 @@ theorem reindex_alg_equiv_symm (e : m ≃ n) : (reindexAlgEquiv R e).symm = rein
   rfl
 
 @[simp]
-theorem reindex_alg_equiv_refl : reindexAlgEquiv R (Equivₓ.refl m) = AlgEquiv.refl :=
+theorem reindex_alg_equiv_refl : reindexAlgEquiv R (Equiv.refl m) = AlgEquiv.refl :=
   AlgEquiv.ext fun _ => rfl
 
 theorem reindex_alg_equiv_mul (e : m ≃ n) (M : Matrix m m R) (N : Matrix m m R) :
@@ -134,15 +133,15 @@ end Algebra
 
 For the `simp` version of this lemma, see `det_submatrix_equiv_self`.
 -/
-theorem det_reindex_linear_equiv_self [CommRingₓ R] [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n]
-    (e : m ≃ n) (M : Matrix m m R) : det (reindexLinearEquiv R R e e M) = det M :=
+theorem det_reindex_linear_equiv_self [CommRing R] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] (e : m ≃ n)
+    (M : Matrix m m R) : det (reindexLinearEquiv R R e e M) = det M :=
   det_reindex_self e M
 
 /-- Reindexing both indices along the same equivalence preserves the determinant.
 
 For the `simp` version of this lemma, see `det_submatrix_equiv_self`.
 -/
-theorem det_reindex_alg_equiv [CommRingₓ R] [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n] (e : m ≃ n)
+theorem det_reindex_alg_equiv [CommRing R] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] (e : m ≃ n)
     (A : Matrix m m R) : det (reindexAlgEquiv R e A) = det A :=
   det_reindex_self e A
 

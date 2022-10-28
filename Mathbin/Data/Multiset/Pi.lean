@@ -18,9 +18,15 @@ variable {α : Type _}
 
 open Function
 
+/- warning: multiset.pi.empty -> Multiset.Pi.empty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} (δ : α -> Type.{u_2}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))) -> (δ a)
+but is expected to have type
+  forall {α : Type.{u_1}} (δ : α -> Type.{_aux_param_0}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))) -> (δ a)
+Case conversion may be inaccurate. Consider using '#align multiset.pi.empty Multiset.Pi.emptyₓ'. -/
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/
-def Pi.emptyₓ (δ : α → Type _) : ∀ a ∈ (0 : Multiset α), δ a :=
+def Pi.empty (δ : α → Type _) : ∀ a ∈ (0 : Multiset α), δ a :=
   fun.
 
 variable [DecidableEq α] {δ : α → Type _}
@@ -50,7 +56,7 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
-  m.recOn {Pi.emptyₓ δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
+  m.recOn {Pi.empty δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
       by_cases eq:a = a'
@@ -73,7 +79,7 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, �
         )
 
 @[simp]
-theorem pi_zero (t : ∀ a, Multiset (δ a)) : pi 0 t = {Pi.emptyₓ δ} :=
+theorem pi_zero (t : ∀ a, Multiset (δ a)) : pi 0 t = {Pi.empty δ} :=
   rfl
 
 @[simp]
@@ -96,8 +102,8 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
 theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = prod (m.map fun a => card (t a)) :=
   Multiset.induction_on m (by simp) (by simp (config := { contextual := true }) [mul_comm])
 
-protected theorem Nodupₓ.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
-    Nodupₓ s → (∀ a ∈ s, Nodupₓ (t a)) → Nodupₓ (pi s t) :=
+protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
+    Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
     (by
       intro a s ih hs ht

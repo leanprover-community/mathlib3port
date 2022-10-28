@@ -64,7 +64,7 @@ def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : C
 def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     Cone F ⥤ Cone (widePullbackDiagramOfDiagramOver B F) where
   obj := conesEquivInverseObj B F
-  map := fun c₁ c₂ f =>
+  map c₁ c₂ f :=
     { Hom := f.Hom.left,
       w' := fun j => by
         cases j
@@ -81,10 +81,10 @@ attribute [local tidy] tactic.discrete_cases
 @[simps]
 def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F where
-  obj := fun c =>
+  obj c :=
     { x := Over.mk (c.π.app none),
       π := { app := fun ⟨j⟩ => Over.homMk (c.π.app (some j)) (by apply c.w (wide_pullback_shape.hom.term j)) } }
-  map := fun c₁ c₂ f => { Hom := Over.homMk f.Hom }
+  map c₁ c₂ f := { Hom := Over.homMk f.Hom }
 
 attribute [local tidy] tactic.case_bash
 

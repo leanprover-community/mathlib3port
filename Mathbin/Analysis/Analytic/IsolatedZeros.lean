@@ -9,6 +9,7 @@ import Mathbin.Analysis.Calculus.FderivAnalytic
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Topology.Algebra.InfiniteSum
+import Mathbin.Analysis.Analytic.Uniqueness
 
 /-!
 # Principle of isolated zeros
@@ -35,14 +36,14 @@ open Filter Function Nat FormalMultilinearSeries Emetric Set
 open TopologicalSpace BigOperators
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {s : E}
-  {p q : FormalMultilinearSeries 𝕜 𝕜 E} {f g : 𝕜 → E} {n : ℕ} {z z₀ : 𝕜} {y : Finₓ n → 𝕜}
+  {p q : FormalMultilinearSeries 𝕜 𝕜 E} {f g : 𝕜 → E} {n : ℕ} {z z₀ : 𝕜} {y : Fin n → 𝕜}
 
 namespace HasSum
 
 variable {a : ℕ → E}
 
 theorem has_sum_at_zero (a : ℕ → E) : HasSum (fun n => (0 : 𝕜) ^ n • a n) (a 0) := by
-  convert has_sum_single 0 fun b h => _ <;> first |simp [Nat.pos_of_ne_zeroₓ h]|simp
+  convert has_sum_single 0 fun b h => _ <;> first |simp [Nat.pos_of_ne_zero h]|simp
 
 theorem exists_has_sum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a m) s) (ha : ∀ k < n, a k = 0) :
     ∃ t : E, z ^ n • t = s ∧ HasSum (fun m => z ^ m • a (m + n)) t := by
@@ -54,11 +55,11 @@ theorem exists_has_sum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a 
     exact ⟨a n, by simp [h, hn, this], by simpa [h] using has_sum_at_zero fun m => a (m + n)⟩
     
   · refine' ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul] , _⟩
-    have h1 : (∑ i in Finsetₓ.range n, z ^ i • a i) = 0 :=
-      Finsetₓ.sum_eq_zero fun k hk => by simp [ha k (finset.mem_range.mp hk)]
+    have h1 : (∑ i in Finset.range n, z ^ i • a i) = 0 :=
+      Finset.sum_eq_zero fun k hk => by simp [ha k (finset.mem_range.mp hk)]
     have h2 : HasSum (fun m => z ^ (m + n) • a (m + n)) s := by simpa [h1] using (has_sum_nat_add_iff' n).mpr hs
     convert @HasSum.const_smul E ℕ 𝕜 _ _ _ _ _ _ _ (z⁻¹ ^ n) h2
-    · field_simp [pow_addₓ, smul_smul]
+    · field_simp [pow_add, smul_smul]
       
     · simp only [inv_pow]
       
@@ -68,8 +69,7 @@ end HasSum
 
 namespace HasFpowerSeriesAt
 
-theorem has_fpower_series_dslope_fslope (hp : HasFpowerSeriesAt f p z₀) : HasFpowerSeriesAt (dslope f z₀) p.fslope z₀ :=
-  by
+theorem hasFpowerSeriesDslopeFslope (hp : HasFpowerSeriesAt f p z₀) : HasFpowerSeriesAt (dslope f z₀) p.fslope z₀ := by
   have hpd : deriv f z₀ = p.coeff 1 := hp.deriv
   have hp0 : p.coeff 0 = f z₀ := hp.coeff_zero 1
   simp only [has_fpower_series_at_iff, apply_eq_pow_smul_coeff, coeff_fslope] at hp⊢
@@ -77,14 +77,14 @@ theorem has_fpower_series_dslope_fslope (hp : HasFpowerSeriesAt f p z₀) : HasF
   by_cases h:x = 0
   · convert has_sum_single 0 _ <;> intros <;> simp [*]
     
-  · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ'ₓ]
+  · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ']
     suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
       simpa [dslope, slope, h, smul_smul, hxx] using this
     · simpa [hp0] using ((has_sum_nat_add_iff' 1).mpr hx).const_smul
       
     
 
-theorem has_fpower_series_iterate_dslope_fslope (n : ℕ) (hp : HasFpowerSeriesAt f p z₀) :
+theorem hasFpowerSeriesIterateDslopeFslope (n : ℕ) (hp : HasFpowerSeriesAt f p z₀) :
     HasFpowerSeriesAt ((swap dslope z₀^[n]) f) ((fslope^[n]) p) z₀ := by
   induction' n with n ih generalizing f p
   · exact hp
@@ -133,46 +133,50 @@ theorem eventually_eq_zero_or_eventually_ne_zero (hf : AnalyticAt 𝕜 f z₀) :
   · exact Or.inr (hp.locally_ne_zero h)
     
 
+theorem eventually_eq_or_eventually_ne (hf : AnalyticAt 𝕜 f z₀) (hg : AnalyticAt 𝕜 g z₀) :
+    (∀ᶠ z in 𝓝 z₀, f z = g z) ∨ ∀ᶠ z in 𝓝[≠] z₀, f z ≠ g z := by
+  simpa [sub_eq_zero] using (hf.sub hg).eventually_eq_zero_or_eventually_ne_zero
+
 theorem frequently_zero_iff_eventually_zero {f : 𝕜 → E} {w : 𝕜} (hf : AnalyticAt 𝕜 f w) :
     (∃ᶠ z in 𝓝[≠] w, f z = 0) ↔ ∀ᶠ z in 𝓝 w, f z = 0 :=
   ⟨hf.eventually_eq_zero_or_eventually_ne_zero.resolve_right, fun h => (h.filter_mono nhds_within_le_nhds).Frequently⟩
+
+theorem frequently_eq_iff_eventually_eq (hf : AnalyticAt 𝕜 f z₀) (hg : AnalyticAt 𝕜 g z₀) :
+    (∃ᶠ z in 𝓝[≠] z₀, f z = g z) ↔ ∀ᶠ z in 𝓝 z₀, f z = g z := by
+  simpa [sub_eq_zero] using frequently_zero_iff_eventually_zero (hf.sub hg)
 
 end AnalyticAt
 
 namespace AnalyticOn
 
-variable {U : Set 𝕜} {w : 𝕜}
+variable {U : Set 𝕜}
 
-theorem eq_on_of_preconnected_of_frequently_eq (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) (hw : w ∈ U)
-    (hfw : ∃ᶠ z in 𝓝[≠] w, f z = 0) : EqOn f 0 U := by
-  by_contra
-  simp only [eq_on, not_forall] at h
-  obtain ⟨x, hx1, hx2⟩ := h
-  let u := { z | f =ᶠ[𝓝 z] 0 }
-  have hu : IsOpen u := is_open_set_of_eventually_nhds
-  have hu' : (U ∩ u).Nonempty := ⟨w, hw, (hf w hw).frequently_zero_iff_eventually_zero.mp hfw⟩
-  let v := { z | ∀ᶠ w in 𝓝[≠] z, f w ≠ 0 }
-  have hv : IsOpen v := by apply is_open_set_of_eventually_nhds_within
-  have hv' : (U ∩ v).Nonempty := ⟨x, hx1, ((hf x hx1).ContinuousAt.eventually_ne hx2).filter_mono nhds_within_le_nhds⟩
-  have huv : U ⊆ u ∪ v := fun z hz => (hf z hz).eventually_eq_zero_or_eventually_ne_zero
-  have huv' : u ∩ v = ∅ := by
-    ext z
-    simp only [mem_inter_iff, mem_empty_iff_false, iff_falseₓ, not_and]
-    exact fun h => (h.filter_mono nhds_within_le_nhds).Frequently
-  simpa [huv'] using hU u v hu hv huv hu' hv'
+/-- The *principle of isolated zeros* for an analytic function, global version: if a function is
+analytic on a connected set `U` and vanishes in arbitrary neighborhoods of a point `z₀ ∈ U`, then
+it is identically zero in `U`.
+For higher-dimensional versions requiring that the function vanishes in a neighborhood of `z₀`,
+see `eq_on_zero_of_preconnected_of_eventually_eq_zero`. -/
+theorem eq_on_zero_of_preconnected_of_frequently_eq_zero (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) (h₀ : z₀ ∈ U)
+    (hfw : ∃ᶠ z in 𝓝[≠] z₀, f z = 0) : EqOn f 0 U :=
+  hf.eq_on_zero_of_preconnected_of_eventually_eq_zero hU h₀ ((hf z₀ h₀).frequently_zero_iff_eventually_zero.1 hfw)
 
-theorem eq_on_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) (hw : w ∈ U)
-    (hfw : w ∈ Closure ({ z | f z = 0 } \ {w})) : EqOn f 0 U :=
-  hf.eq_on_of_preconnected_of_frequently_eq hU hw (mem_closure_ne_iff_frequently_within.mp hfw)
+theorem eq_on_zero_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) (h₀ : z₀ ∈ U)
+    (hfz₀ : z₀ ∈ Closure ({ z | f z = 0 } \ {z₀})) : EqOn f 0 U :=
+  hf.eq_on_zero_of_preconnected_of_frequently_eq_zero hU h₀ (mem_closure_ne_iff_frequently_within.mp hfz₀)
 
-theorem eq_on_of_preconnected_of_frequently_eq' (hf : AnalyticOn 𝕜 f U) (hg : AnalyticOn 𝕜 g U) (hU : IsPreconnected U)
-    (hw : w ∈ U) (hfg : ∃ᶠ z in 𝓝[≠] w, f z = g z) : EqOn f g U := by
-  have hfg' : ∃ᶠ z in 𝓝[≠] w, (f - g) z = 0 := hfg.mono fun z h => by rw [Pi.sub_apply, h, sub_self]
-  simpa [sub_eq_zero] using fun z hz => (hf.sub hg).eq_on_of_preconnected_of_frequently_eq hU hw hfg' hz
+/-- The *identity principle* for analytic functions, global version: if two functions are
+analytic on a connected set `U` and coincide at points which accumulate to a point `z₀ ∈ U`, then
+they coincide globally in `U`.
+For higher-dimensional versions requiring that the functions coincide in a neighborhood of `z₀`,
+see `eq_on_of_preconnected_of_eventually_eq`. -/
+theorem eq_on_of_preconnected_of_frequently_eq (hf : AnalyticOn 𝕜 f U) (hg : AnalyticOn 𝕜 g U) (hU : IsPreconnected U)
+    (h₀ : z₀ ∈ U) (hfg : ∃ᶠ z in 𝓝[≠] z₀, f z = g z) : EqOn f g U := by
+  have hfg' : ∃ᶠ z in 𝓝[≠] z₀, (f - g) z = 0 := hfg.mono fun z h => by rw [Pi.sub_apply, h, sub_self]
+  simpa [sub_eq_zero] using fun z hz => (hf.sub hg).eq_on_zero_of_preconnected_of_frequently_eq_zero hU h₀ hfg' hz
 
-theorem eq_on_of_preconnected_of_mem_closure' (hf : AnalyticOn 𝕜 f U) (hg : AnalyticOn 𝕜 g U) (hU : IsPreconnected U)
-    (hw : w ∈ U) (hfw : w ∈ Closure ({ z | f z = g z } \ {w})) : EqOn f g U :=
-  hf.eq_on_of_preconnected_of_frequently_eq' hg hU hw (mem_closure_ne_iff_frequently_within.mp hfw)
+theorem eq_on_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hg : AnalyticOn 𝕜 g U) (hU : IsPreconnected U)
+    (h₀ : z₀ ∈ U) (hfg : z₀ ∈ Closure ({ z | f z = g z } \ {z₀})) : EqOn f g U :=
+  hf.eq_on_of_preconnected_of_frequently_eq hg hU h₀ (mem_closure_ne_iff_frequently_within.mp hfg)
 
 end AnalyticOn
 

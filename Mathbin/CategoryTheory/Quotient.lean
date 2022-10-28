@@ -46,7 +46,7 @@ structure Quotient where
 instance [Inhabited C] : Inhabited (Quotient r) :=
   ⟨{ as := default }⟩
 
-namespace Quotientₓ
+namespace Quotient
 
 /-- Generates the closure of a family of relations w.r.t. composition from left and right. -/
 inductive CompClosure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
@@ -82,19 +82,19 @@ theorem comp_mk {a b c : Quotient r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :
 
 instance category : Category (Quotient r) where
   Hom := Hom r
-  id := fun a => Quot.mk _ (𝟙 a.as)
+  id a := Quot.mk _ (𝟙 a.as)
   comp := comp r
 
 /-- The functor from a category to its quotient. -/
 @[simps]
 def functor : C ⥤ Quotient r where
-  obj := fun a => { as := a }
-  map := fun _ _ f => Quot.mk _ f
+  obj a := { as := a }
+  map _ _ f := Quot.mk _ f
 
-noncomputable instance : Full (functor r) where preimage := fun X Y f => Quot.out f
+noncomputable instance : Full (functor r) where preimage X Y f := Quot.out f
 
 instance :
-    EssSurj (functor r) where mem_ess_image := fun Y =>
+    EssSurj (functor r) where mem_ess_image Y :=
     ⟨Y.as,
       ⟨eqToIso
           (by
@@ -128,7 +128,7 @@ theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) : (functor 
     · apply trans <;> assumption
       
     
-  · apply Quotientₓ.sound
+  · apply Quotient.sound
     
 
 variable {D : Type _} [Category D] (F : C ⥤ D) (H : ∀ (x y : C) (f₁ f₂ : x ⟶ y), r f₁ f₂ → F.map f₁ = F.map f₂)
@@ -138,13 +138,13 @@ include H
 /-- The induced functor on the quotient category. -/
 @[simps]
 def lift : Quotient r ⥤ D where
-  obj := fun a => F.obj a.as
-  map := fun a b hf =>
+  obj a := F.obj a.as
+  map a b hf :=
     Quot.liftOn hf (fun f => F.map f)
       (by
-        rintro _ _ ⟨_, _, _, _, _, _, h⟩
+        rintro _ _ ⟨_, _, _, _, h⟩
         simp [H _ _ _ _ h])
-  map_id' := fun a => F.map_id a.as
+  map_id' a := F.map_id a.as
   map_comp' := by
     rintro a b c ⟨f⟩ ⟨g⟩
     exact F.map_comp f g
@@ -159,7 +159,7 @@ theorem lift_spec : functor r ⋙ lift r F H = F := by
     simp
     
 
-theorem lift_spec_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H := by
+theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H := by
   subst_vars
   apply functor.hext
   · rintro X
@@ -193,7 +193,7 @@ theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) : (lift r F H).map ((functo
   dsimp
   simp
 
-end Quotientₓ
+end Quotient
 
 end CategoryTheory
 

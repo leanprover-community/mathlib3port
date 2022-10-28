@@ -32,17 +32,17 @@ bilinear, tensor, tensor product
 -/
 
 
-section Semiringₓ
+section Semiring
 
-variable {R : Type _} [CommSemiringₓ R]
+variable {R : Type _} [CommSemiring R]
 
-variable {R' : Type _} [Monoidₓ R']
+variable {R' : Type _} [Monoid R']
 
-variable {R'' : Type _} [Semiringₓ R'']
+variable {R'' : Type _} [Semiring R'']
 
 variable {M : Type _} {N : Type _} {P : Type _} {Q : Type _} {S : Type _}
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P] [AddCommMonoidₓ Q] [AddCommMonoidₓ S]
+variable [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q] [AddCommMonoid S]
 
 variable [Module R M] [Module R N] [Module R P] [Module R Q] [Module R S]
 
@@ -73,7 +73,7 @@ inductive Eqv : FreeAddMonoid (M × N) → FreeAddMonoid (M × N) → Prop
   of_add_right :
     ∀ (m : M) (n₁ n₂ : N), eqv (FreeAddMonoid.of (m, n₁) + FreeAddMonoid.of (m, n₂)) (FreeAddMonoid.of (m, n₁ + n₂))
   | of_smul : ∀ (r : R) (m : M) (n : N), eqv (FreeAddMonoid.of (r • m, n)) (FreeAddMonoid.of (m, r • n))
-  | add_commₓ : ∀ x y, eqv (x + y) (y + x)
+  | add_comm : ∀ x y, eqv (x + y) (y + x)
 
 end
 
@@ -98,13 +98,13 @@ namespace TensorProduct
 
 section Module
 
-instance : AddZeroClassₓ (M ⊗[R] N) :=
+instance : AddZeroClass (M ⊗[R] N) :=
   { (addConGen (TensorProduct.Eqv R M N)).AddMonoid with }
 
-instance : AddCommSemigroupₓ (M ⊗[R] N) :=
+instance : AddCommSemigroup (M ⊗[R] N) :=
   { (addConGen (TensorProduct.Eqv R M N)).AddMonoid with
     add_comm := fun x y =>
-      (AddCon.induction_on₂ x y) fun x y => Quotientₓ.sound' <| AddConGen.Rel.of _ _ <| Eqv.add_comm _ _ }
+      (AddCon.induction_on₂ x y) fun x y => Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.add_comm _ _ }
 
 instance : Inhabited (M ⊗[R] N) :=
   ⟨0⟩
@@ -124,7 +124,7 @@ infixl:100 " ⊗ₜ " => tmul _
 -- mathport name: «expr ⊗ₜ[ ] »
 notation:100 x " ⊗ₜ[" R "] " y:100 => tmul R x y
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on {C : M ⊗[R] N → Prop} (z : M ⊗[R] N) (C0 : C 0) (C1 : ∀ {x y}, C <| x ⊗ₜ[R] y)
     (Cp : ∀ {x y}, C x → C y → C (x + y)) : C z :=
   (AddCon.induction_on z) fun x =>
@@ -136,23 +136,23 @@ variable (M)
 
 @[simp]
 theorem zero_tmul (n : N) : (0 : M) ⊗ₜ[R] n = 0 :=
-  Quotientₓ.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_left _
+  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_left _
 
 variable {M}
 
 theorem add_tmul (m₁ m₂ : M) (n : N) : (m₁ + m₂) ⊗ₜ n = m₁ ⊗ₜ n + m₂ ⊗ₜ[R] n :=
-  Eq.symm <| Quotientₓ.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_add_left _ _ _
+  Eq.symm <| Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_add_left _ _ _
 
 variable (N)
 
 @[simp]
 theorem tmul_zero (m : M) : m ⊗ₜ[R] (0 : N) = 0 :=
-  Quotientₓ.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_right _
+  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_right _
 
 variable {N}
 
 theorem tmul_add (m : M) (n₁ n₂ : N) : m ⊗ₜ (n₁ + n₂) = m ⊗ₜ n₁ + m ⊗ₜ[R] n₂ :=
-  Eq.symm <| Quotientₓ.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_add_right _ _ _
+  Eq.symm <| Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_add_right _ _ _
 
 section
 
@@ -181,7 +181,7 @@ instance (priority := 100) CompatibleSmul.isScalarTower [HasSmul R' R] [IsScalar
     conv_lhs => rw [← one_smul R m]
     conv_rhs => rw [← one_smul R n]
     rw [← smul_assoc, ← smul_assoc]
-    exact Quotientₓ.sound' <| AddConGen.Rel.of _ _ <| eqv.of_smul _ _ _⟩
+    exact Quotient.sound' <| AddConGen.Rel.of _ _ <| eqv.of_smul _ _ _⟩
 
 /-- `smul` can be moved from one side of the product to the other .-/
 theorem smul_tmul [DistribMulAction R' N] [CompatibleSmul R R' M N] (r : R') (m : M) (n : N) :
@@ -226,7 +226,7 @@ instance leftHasSmul : HasSmul R' (M ⊗[R] N) :=
         | _, _, eqv.of_add_right m n₁ n₂ =>
           (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, smul.aux_of, tmul_add]
         | _, _, eqv.of_smul s m n => (AddCon.ker_rel _).2 <| by rw [smul.aux_of, smul.aux_of, ← smul_comm, smul_tmul]
-        | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_commₓ]⟩
+        | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]⟩
 
 instance : HasSmul R (M ⊗[R] N) :=
   TensorProduct.leftHasSmul
@@ -240,7 +240,7 @@ protected theorem smul_add (r : R') (x y : M ⊗[R] N) : r • (x + y) = r • x
 protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
   have : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x (by rw [TensorProduct.smul_zero]) (fun m n => by rw [this, zero_smul, zero_tmul])
-    fun x y ihx ihy => by rw [TensorProduct.smul_add, ihx, ihy, add_zeroₓ]
+    fun x y ihx ihy => by rw [TensorProduct.smul_add, ihx, ihy, add_zero]
 
 protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
   have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
@@ -249,12 +249,12 @@ protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
 
 protected theorem add_smul (r s : R'') (x : M ⊗[R] N) : (r + s) • x = r • x + s • x :=
   have : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
-  TensorProduct.induction_on x (by simp_rw [TensorProduct.smul_zero, add_zeroₓ])
+  TensorProduct.induction_on x (by simp_rw [TensorProduct.smul_zero, add_zero])
     (fun m n => by simp_rw [this, add_smul, add_tmul]) fun x y ihx ihy => by
     simp_rw [TensorProduct.smul_add]
-    rw [ihx, ihy, add_add_add_commₓ]
+    rw [ihx, ihy, add_add_add_comm]
 
-instance : AddCommMonoidₓ (M ⊗[R] N) :=
+instance : AddCommMonoid (M ⊗[R] N) :=
   { TensorProduct.addCommSemigroup _ _, TensorProduct.addZeroClass _ _ with nsmul := fun n v => n • v,
     nsmul_zero' := by simp [TensorProduct.zero_smul],
     nsmul_succ' := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul] }
@@ -293,14 +293,14 @@ instance : Module R (M ⊗[R] N) :=
 instance [Module R''ᵐᵒᵖ M] [IsCentralScalar R'' M] :
     IsCentralScalar R''
       (M ⊗[R]
-        N) where op_smul_eq_smul := fun r x =>
+        N) where op_smul_eq_smul r x :=
     TensorProduct.induction_on x (by rw [smul_zero, smul_zero])
       (fun x y => by rw [smul_tmul', smul_tmul', op_smul_eq_smul]) fun x y hx hy => by rw [smul_add, smul_add, hx, hy]
 
 section
 
 -- Like `R'`, `R'₂` provides a `distrib_mul_action R'₂ (M ⊗[R] N)`
-variable {R'₂ : Type _} [Monoidₓ R'₂] [DistribMulAction R'₂ M]
+variable {R'₂ : Type _} [Monoid R'₂] [DistribMulAction R'₂ M]
 
 variable [SmulCommClass R R'₂ M] [HasSmul R'₂ R']
 
@@ -350,22 +350,20 @@ section
 
 open BigOperators
 
-theorem sum_tmul {α : Type _} (s : Finsetₓ α) (m : α → M) (n : N) : (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n :=
-  by
+theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
   classical
-  induction' s using Finsetₓ.induction with a s has ih h
+  induction' s using Finset.induction with a s has ih h
   · simp
     
-  · simp [Finsetₓ.sum_insert has, add_tmul, ih]
+  · simp [Finset.sum_insert has, add_tmul, ih]
     
 
-theorem tmul_sum (m : M) {α : Type _} (s : Finsetₓ α) (n : α → N) : (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a :=
-  by
+theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) : (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by
   classical
-  induction' s using Finsetₓ.induction with a s has ih h
+  induction' s using Finset.induction with a s has ih h
   · simp
     
-  · simp [Finsetₓ.sum_insert has, tmul_add, ih]
+  · simp [Finset.sum_insert has, tmul_add, ih]
     
 
 end
@@ -375,7 +373,7 @@ variable (R M N)
 /-- The simple (aka pure) elements span the tensor product. -/
 theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ := by
   ext t
-  simp only [Submodule.mem_top, iff_trueₓ]
+  simp only [Submodule.mem_top, iff_true_iff]
   apply t.induction_on
   · exact Submodule.zero_mem _
     
@@ -390,7 +388,7 @@ theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ
 @[simp]
 theorem map₂_mk_top_top_eq_top : Submodule.map₂ (mk R M N) ⊤ ⊤ = ⊤ := by
   rw [← top_le_iff, ← span_tmul_eq_top, Submodule.map₂_eq_span_image2]
-  exact Submodule.span_mono fun _ ⟨m, n, h⟩ => ⟨m, n, trivialₓ, trivialₓ, h⟩
+  exact Submodule.span_mono fun _ ⟨m, n, h⟩ => ⟨m, n, trivial, trivial, h⟩
 
 end Module
 
@@ -417,10 +415,10 @@ def liftAux : M ⊗[R] N →+ P :=
         (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, FreeAddMonoid.lift_eval_of, (f m).map_add]
       | _, _, eqv.of_smul r m n =>
         (AddCon.ker_rel _).2 <| by simp_rw [FreeAddMonoid.lift_eval_of, f.map_smul₂, (f m).map_smul]
-      | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_commₓ]
+      | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 
 theorem lift_aux_tmul (m n) : liftAux f (m ⊗ₜ n) = f m n :=
-  zero_addₓ _
+  zero_add _
 
 variable {f}
 
@@ -442,7 +440,7 @@ variable {f}
 
 @[simp]
 theorem lift.tmul (x y) : lift f (x ⊗ₜ y) = f x y :=
-  zero_addₓ _
+  zero_add _
 
 @[simp]
 theorem lift.tmul' (x y) : (lift f).1 (x ⊗ₜ y) = f x y :=
@@ -560,7 +558,7 @@ variable (R M)
 -/
 protected def lid : R ⊗ M ≃ₗ[R] M :=
   LinearEquiv.ofLinear (lift <| LinearMap.lsmul R M) (mk R R M 1) (LinearMap.ext fun _ => by simp)
-    (ext' fun r m => by simp <;> rw [← tmul_smul, ← smul_tmul, smul_eq_mul, mul_oneₓ])
+    (ext' fun r m => by simp <;> rw [← tmul_smul, ← smul_tmul, smul_eq_mul, mul_one])
 
 end
 
@@ -670,9 +668,9 @@ section
 
 variable {P' Q' : Type _}
 
-variable [AddCommMonoidₓ P'] [Module R P']
+variable [AddCommMonoid P'] [Module R P']
 
-variable [AddCommMonoidₓ Q'] [Module R Q']
+variable [AddCommMonoid Q'] [Module R Q']
 
 theorem map_comp (f₂ : P →ₗ[R] P') (f₁ : M →ₗ[R] P) (g₂ : Q →ₗ[R] Q') (g₁ : N →ₗ[R] Q) :
     map (f₂.comp f₁) (g₂.comp g₁) = (map f₂ g₂).comp (map f₁ g₁) :=
@@ -699,9 +697,9 @@ theorem map_mul (f₁ f₂ : M →ₗ[R] M) (g₁ g₂ : N →ₗ[R] N) : map (f
 @[simp]
 protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) : map f g ^ n = map (f ^ n) (g ^ n) := by
   induction' n with n ih
-  · simp only [pow_zeroₓ, map_one]
+  · simp only [pow_zero, map_one]
     
-  · simp only [pow_succ'ₓ, ih, map_mul]
+  · simp only [pow_succ', ih, map_mul]
     
 
 theorem map_add_left (f₁ f₂ : M →ₗ[R] P) (g : N →ₗ[R] Q) : map (f₁ + f₂) g = map f₁ g + map f₂ g := by
@@ -882,21 +880,21 @@ attribute [local ext] TensorProduct.ext
 /-- `ltensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
 def ltensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P where
   toFun := ltensor M
-  map_add' := fun f g => by
+  map_add' f g := by
     ext x y
     simp only [compr₂_apply, mk_apply, add_apply, ltensor_tmul, tmul_add]
-  map_smul' := fun r f => by
+  map_smul' r f := by
     dsimp
     ext x y
     simp only [compr₂_apply, mk_apply, tmul_smul, smul_apply, ltensor_tmul]
 
 /-- `rtensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
 def rtensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M where
-  toFun := fun f => f.rtensor M
-  map_add' := fun f g => by
+  toFun f := f.rtensor M
+  map_add' f g := by
     ext x y
     simp only [compr₂_apply, mk_apply, add_apply, rtensor_tmul, add_tmul]
-  map_smul' := fun r f => by
+  map_smul' r f := by
     dsimp
     ext x y
     simp only [compr₂_apply, mk_apply, smul_tmul, tmul_smul, smul_apply, rtensor_tmul]
@@ -947,10 +945,10 @@ theorem rtensor_comp : (g.comp f).rtensor M = (g.rtensor M).comp (f.rtensor M) :
 theorem rtensor_comp_apply (x : N ⊗[R] M) : (g.comp f).rtensor M x = (g.rtensor M) ((f.rtensor M) x) := by
   rw [rtensor_comp, coe_comp]
 
-theorem ltensor_mul (f g : Module.End R N) : (f * g).ltensor M = f.ltensor M * g.ltensor M :=
+theorem ltensor_mul (f g : Module.EndCat R N) : (f * g).ltensor M = f.ltensor M * g.ltensor M :=
   ltensor_comp M f g
 
-theorem rtensor_mul (f g : Module.End R N) : (f * g).rtensor M = f.rtensor M * g.rtensor M :=
+theorem rtensor_mul (f g : Module.EndCat R N) : (f * g).rtensor M = f.rtensor M * g.rtensor M :=
   rtensor_comp M f g
 
 variable (N)
@@ -1011,15 +1009,15 @@ theorem ltensor_pow (f : N →ₗ[R] N) (n : ℕ) : f.ltensor M ^ n = (f ^ n).lt
 
 end LinearMap
 
-end Semiringₓ
+end Semiring
 
-section Ringₓ
+section Ring
 
-variable {R : Type _} [CommSemiringₓ R]
+variable {R : Type _} [CommSemiring R]
 
 variable {M : Type _} {N : Type _} {P : Type _} {Q : Type _} {S : Type _}
 
-variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P] [AddCommGroupₓ Q] [AddCommGroupₓ S]
+variable [AddCommGroup M] [AddCommGroup N] [AddCommGroup P] [AddCommGroup Q] [AddCommGroup S]
 
 variable [Module R M] [Module R N] [Module R P] [Module R Q] [Module R S]
 
@@ -1055,31 +1053,31 @@ instance :
         | _, _, eqv.of_add_right m n₁ n₂ =>
           (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, neg.aux_of, tmul_add]
         | _, _, eqv.of_smul s m n => (AddCon.ker_rel _).2 <| by simp_rw [neg.aux_of, tmul_smul s, smul_tmul', smul_neg]
-        | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_commₓ]
+        | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 
 protected theorem add_left_neg (x : M ⊗[R] N) : -x + x = 0 :=
   TensorProduct.induction_on x
     (by
-      rw [add_zeroₓ]
+      rw [add_zero]
       apply (neg.aux R).map_zero)
     (fun x y => by
       convert (add_tmul (-x) x y).symm
-      rw [add_left_negₓ, zero_tmul])
+      rw [add_left_neg, zero_tmul])
     fun x y hx hy => by
-    unfold Neg.neg SubNegMonoidₓ.neg
+    unfold Neg.neg SubNegMonoid.neg
     rw [AddMonoidHom.map_add]
     ac_change -x + x + (-y + y) = 0
-    rw [hx, hy, add_zeroₓ]
+    rw [hx, hy, add_zero]
 
-instance : AddCommGroupₓ (M ⊗[R] N) :=
+instance : AddCommGroup (M ⊗[R] N) :=
   { TensorProduct.addCommMonoid with neg := Neg.neg, sub := _, sub_eq_add_neg := fun _ _ => rfl,
     add_left_neg := fun x => TensorProduct.add_left_neg x, zsmul := fun n v => n • v,
     zsmul_zero' := by simp [TensorProduct.zero_smul],
     zsmul_succ' := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul],
     zsmul_neg' := fun n x => by
       change (-n.succ : ℤ) • x = -(((n : ℤ) + 1) • x)
-      rw [← zero_addₓ (-↑n.succ • x), ← TensorProduct.add_left_neg (↑n.succ • x), add_assocₓ, ← add_smul, ←
-        sub_eq_add_neg, sub_self, zero_smul, add_zeroₓ]
+      rw [← zero_add (-↑n.succ • x), ← TensorProduct.add_left_neg (↑n.succ • x), add_assoc, ← add_smul, ←
+        sub_eq_add_neg, sub_self, zero_smul, add_zero]
       rfl }
 
 theorem neg_tmul (m : M) (n : N) : (-m) ⊗ₜ n = -m ⊗ₜ[R] n :=
@@ -1107,7 +1105,7 @@ instance CompatibleSmul.int : CompatibleSmul R ℤ M N :=
     Int.induction_on r (by simp) (fun r ih => by simpa [add_smul, tmul_add, add_tmul] using ih) fun r ih => by
       simpa [sub_smul, tmul_sub, sub_tmul] using ih⟩
 
-instance CompatibleSmul.unit {S} [Monoidₓ S] [DistribMulAction S M] [DistribMulAction S N] [CompatibleSmul R S M N] :
+instance CompatibleSmul.unit {S} [Monoid S] [DistribMulAction S M] [DistribMulAction S N] [CompatibleSmul R S M N] :
     CompatibleSmul R Sˣ M N :=
   ⟨fun s m n => (CompatibleSmul.smul_tmul (s : S) m n : _)⟩
 
@@ -1131,5 +1129,5 @@ theorem rtensor_neg (f : N →ₗ[R] P) : (-f).rtensor M = -f.rtensor M := by si
 
 end LinearMap
 
-end Ringₓ
+end Ring
 

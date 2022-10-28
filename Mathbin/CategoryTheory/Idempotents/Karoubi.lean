@@ -60,7 +60,7 @@ theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqT
   cases Q
   dsimp at h_X h_p
   subst h_X
-  simpa only [true_andₓ, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using h_p
+  simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using h_p
 
 /-- A morphism `P ⟶ Q` in the category `karoubi C` is a morphism in the underlying category
 `C` which satisfies a relation, which in the preadditive case, expresses that it induces a
@@ -97,8 +97,8 @@ theorem comp_proof {P Q R : Karoubi C} (g : Hom Q R) (f : Hom P Q) : f.f ≫ g.f
 /-- The category structure on the karoubi envelope of a category. -/
 instance : Category (Karoubi C) where
   Hom := Karoubi.Hom
-  id := fun P => ⟨P.p, by repeat' rw [P.idem]⟩
-  comp := fun P Q R f g => ⟨f.f ≫ g.f, Karoubi.comp_proof g f⟩
+  id P := ⟨P.p, by repeat' rw [P.idem]⟩
+  comp P Q R f g := ⟨f.f ≫ g.f, Karoubi.comp_proof g f⟩
 
 @[simp]
 theorem comp {P Q R : Karoubi C} (f : P ⟶ Q) (g : Q ⟶ R) : f ≫ g = ⟨f.f ≫ g.f, comp_proof g f⟩ := by rfl
@@ -108,7 +108,7 @@ theorem id_eq {P : Karoubi C} : 𝟙 P = ⟨P.p, by repeat' rw [P.idem]⟩ := by
 
 /-- It is possible to coerce an object of `C` into an object of `karoubi C`.
 See also the functor `to_karoubi`. -/
-instance coe : CoeTₓ C (Karoubi C) :=
+instance coe : CoeT C (Karoubi C) :=
   ⟨fun X => ⟨X, 𝟙 X, by rw [comp_id]⟩⟩
 
 @[simp]
@@ -129,39 +129,39 @@ end Karoubi
 formal direct factor of `X` given by `𝟙 X`. -/
 @[simps]
 def toKaroubi : C ⥤ Karoubi C where
-  obj := fun X => ⟨X, 𝟙 X, by rw [comp_id]⟩
-  map := fun X Y f => ⟨f, by simp only [comp_id, id_comp]⟩
+  obj X := ⟨X, 𝟙 X, by rw [comp_id]⟩
+  map X Y f := ⟨f, by simp only [comp_id, id_comp]⟩
 
-instance : Full (toKaroubi C) where preimage := fun X Y f => f.f
+instance : Full (toKaroubi C) where preimage X Y f := f.f
 
 instance : Faithful (toKaroubi C) where
 
 variable {C}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
 @[simps]
-instance [Preadditive C] {P Q : Karoubi C} : AddCommGroupₓ (P ⟶ Q) where
-  add := fun f g =>
+instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q) where
+  add f g :=
     ⟨f.f + g.f, by
       rw [add_comp, comp_add]
       congr
       exacts[f.comm, g.comm]⟩
   zero := ⟨0, by simp only [comp_zero, zero_comp]⟩
-  zero_add := fun f => by
+  zero_add f := by
     ext
-    simp only [zero_addₓ]
-  add_zero := fun f => by
+    simp only [zero_add]
+  add_zero f := by
     ext
-    simp only [add_zeroₓ]
-  add_assoc := fun f g h' => by simp only [add_assocₓ]
-  add_comm := fun f g => by
+    simp only [add_zero]
+  add_assoc f g h' := by simp only [add_assoc]
+  add_comm f g := by
     ext
-    apply_rules [add_commₓ]
-  neg := fun f => ⟨-f.f, by simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
-  add_left_neg := fun f => by
+    apply_rules [add_comm]
+  neg f := ⟨-f.f, by simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
+  add_left_neg f := by
     ext
-    apply_rules [add_left_negₓ]
+    apply_rules [add_left_neg]
 
 namespace Karoubi
 
@@ -171,12 +171,12 @@ theorem hom_eq_zero_iff [Preadditive C] {P Q : Karoubi C} {f : Hom P Q} : f = 0 
 /-- The map sending `f : P ⟶ Q` to `f.f : P.X ⟶ Q.X` is additive. -/
 @[simps]
 def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x ⟶ Q.x) where
-  toFun := fun f => f.f
+  toFun f := f.f
   map_zero' := rfl
-  map_add' := fun f g => rfl
+  map_add' f g := rfl
 
 @[simp]
-theorem sum_hom [Preadditive C] {P Q : Karoubi C} {α : Type _} (s : Finsetₓ α) (f : α → (P ⟶ Q)) :
+theorem sum_hom [Preadditive C] {P Q : Karoubi C} {α : Type _} (s : Finset α) (f : α → (P ⟶ Q)) :
     (∑ x in s, f x).f = ∑ x in s, (f x).f :=
   AddMonoidHom.map_sum (inclusionHom P Q) f s
 
@@ -184,11 +184,11 @@ end Karoubi
 
 /-- The category `karoubi C` is preadditive if `C` is. -/
 instance [Preadditive C] : Preadditive (Karoubi C) where
-  homGroup := fun P Q => by infer_instance
-  add_comp' := fun P Q R f g h => by
+  homGroup P Q := by infer_instance
+  add_comp' P Q R f g h := by
     ext
     simp only [add_comp, quiver.hom.add_comm_group_add_f, karoubi.comp]
-  comp_add' := fun P Q R f g h => by
+  comp_add' P Q R f g h := by
     ext
     simp only [comp_add, quiver.hom.add_comm_group_add_f, karoubi.comp]
 

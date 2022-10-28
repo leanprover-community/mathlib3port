@@ -36,7 +36,7 @@ namespace CreatesConnected
 diagram legs to the specific object.
 -/
 def natTransInOver {B : C} (F : J ⥤ Over B) :
-    F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B where app := fun j => (F.obj j).Hom
+    F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B where app j := (F.obj j).Hom
 
 attribute [local tidy] tactic.case_bash
 
@@ -54,12 +54,12 @@ theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B
 /-- (Impl) Show that the raised cone is a limit. -/
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)} (t : IsLimit c) :
     IsLimit (raiseCone c) where
-  lift := fun s =>
+  lift s :=
     Over.homMk (t.lift ((forget B).mapCone s))
       (by
         dsimp
         simp)
-  uniq' := fun s m K => by
+  uniq' s m K := by
     ext1
     apply t.hom_ext
     intro j
@@ -71,7 +71,7 @@ end CreatesConnected
 instance forgetCreatesConnectedLimits [IsConnected J] {B : C} :
     CreatesLimitsOfShape J
       (forget
-        B) where CreatesLimit := fun K =>
+        B) where CreatesLimit K :=
     createsLimitOfReflectsIso fun c t =>
       { liftedCone := CreatesConnected.raiseCone c,
         validLift := eqToIso (CreatesConnected.raised_cone_lowers_to_original c t),
@@ -79,7 +79,7 @@ instance forgetCreatesConnectedLimits [IsConnected J] {B : C} :
 
 /-- The over category has any connected limit which the original category has. -/
 instance has_connected_limits {B : C} [IsConnected J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (Over B) where HasLimit := fun F => has_limit_of_created F (forget B)
+    HasLimitsOfShape J (Over B) where HasLimit F := has_limit_of_created F (forget B)
 
 end CategoryTheory.Over
 

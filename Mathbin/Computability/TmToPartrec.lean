@@ -80,9 +80,9 @@ inductive Code
   | fix : code → code
   deriving DecidableEq, Inhabited
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The semantics of the `code` primitives, as partial functions `list ℕ →. list ℕ`. By convention
 we functions that return a single result return a singleton `[n]`, or in some cases `n :: v` where
 `v` will be ignored by a subsequent function.
@@ -205,13 +205,13 @@ def prec (f g : Code) : Code :=
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident cg, ",", ident hg, "⟩", ":", expr «expr∃ , »((c : code),
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident cg, ",", ident hg, "⟩", ":", expr «expr∃ , »((c : code),
     ∀ v : vector exprℕ() m,
-    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]
-theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vector ℕ m →. ℕ}
+    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]] -/
+theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
-    ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFnₓ fun i => g i v) >>= f) := by
+    ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFn fun i => g i v) >>= f) := by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident cg, \",\", ident hg, \"⟩\", \":\", expr «expr∃ , »((c : code),\n    ∀ v : vector exprℕ() m,\n    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]"
   · obtain ⟨cf, hf⟩ := hf
@@ -222,39 +222,39 @@ theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vect
     
   clear hf f
   induction' n with n IH
-  · exact ⟨nil, fun v => by simp [Vector.mOfFnₓ] <;> rfl⟩
+  · exact ⟨nil, fun v => by simp [Vector.mOfFn] <;> rfl⟩
     
   · obtain ⟨cg, hg₁⟩ := hg 0
     obtain ⟨cl, hl⟩ := IH fun i => hg i.succ
     exact
       ⟨cons cg cl, fun v => by
-        simp [Vector.mOfFnₓ, hg₁, map_bind, seq_bind_eq, bind_assoc, (· ∘ ·), hl, -Subtype.val_eq_coe]
+        simp [Vector.mOfFn, hg₁, map_bind, seq_bind_eq, bind_assoc, (· ∘ ·), hl, -Subtype.val_eq_coe]
         rfl⟩
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v := by
   induction' hf with n f hf
@@ -262,7 +262,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
   case prim.zero => exact ⟨zero', fun ⟨[], _⟩ => rfl⟩
   case prim.succ => exact ⟨succ, fun ⟨[v], _⟩ => rfl⟩
   case prim.nth n i =>
-  refine' Finₓ.succRec (fun n => _) (fun n i IH => _) i
+  refine' Fin.succRec (fun n => _) (fun n i IH => _) i
   · exact ⟨head, fun ⟨List.cons a as, _⟩ => by simp <;> rfl⟩
     
   · obtain ⟨c, h⟩ := IH
@@ -297,15 +297,15 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     by
     rw [(_ : Pfun.fix _ _ = pure _)]
     swap
-    exact Part.eq_some_iff.2 (this 0 n (zero_addₓ n))
-    simp only [List.headₓ, pure_bind, List.tail_cons]
+    exact Part.eq_some_iff.2 (this 0 n (zero_add n))
+    simp only [List.head', pure_bind, List.tail_cons]
   intro a b e
   induction' b with b IH generalizing a e
   · refine' Pfun.mem_fix_iff.2 (Or.inl <| Part.eq_some_iff.1 _)
     simp only [hg, ← e, pure_bind, List.tail_cons]
     rfl
     
-  · refine' Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, IH (a + 1) (by rwa [add_right_commₓ])⟩)
+  · refine' Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, IH (a + 1) (by rwa [add_right_comm])⟩)
     simp only [hg, eval, pure_bind, Nat.elim_succ, List.tail]
     exact Part.mem_some_iff.2 rfl
     
@@ -317,8 +317,8 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
   simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Pfun.coe_val, show ∀ x, pure x = [x] from fun _ => rfl] at
     hf⊢
   refine' Part.ext fun x => _
-  simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_propₓ, eval,
-    List.headₓ, pred_eval, Part.map_some, Bool.ff_eq_to_bool_iff, Part.mem_bind_iff, List.length, Part.mem_map_iff,
+  simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_prop, eval,
+    List.head', pred_eval, Part.map_some, Bool.ff_eq_to_bool_iff, Part.mem_bind_iff, List.length, Part.mem_map_iff,
     Nat.mem_rfind, List.tail, Bool.tt_eq_to_bool_iff, Part.mem_some_iff, Part.map_bind]
   constructor
   · rintro ⟨v', h1, rfl⟩
@@ -343,7 +343,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     have := Pfun.mem_fix_iff.1 h2
     simp only [hf, Part.bind_some] at this
     split_ifs  at this
-    · simp only [List.headₓ, exists_false, or_falseₓ, Part.mem_some_iff, List.tail_cons, false_andₓ] at this
+    · simp only [List.head', exists_false, or_false_iff, Part.mem_some_iff, List.tail_cons, false_and_iff] at this
       subst this
       exact ⟨_, ⟨h, hm⟩, rfl⟩
       
@@ -367,9 +367,9 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     induction' n with n IH
     · exact this
       
-    refine' IH (fun m h' => hm (Nat.lt_succ_of_ltₓ h')) (Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, this⟩))
-    simp only [hf, hm n.lt_succ_self, Part.bind_some, List.headₓ, eq_self_iff_true, if_false, Part.mem_some_iff,
-      and_selfₓ, List.tail_cons]
+    refine' IH (fun m h' => hm (Nat.lt_succ_of_lt h')) (Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, this⟩))
+    simp only [hf, hm n.lt_succ_self, Part.bind_some, List.head', eq_self_iff_true, if_false, Part.mem_some_iff,
+      and_self_iff, List.tail_cons]
     
 
 end Code
@@ -420,8 +420,8 @@ inductive Cont
   | fix : Code → cont → cont
   deriving Inhabited
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The semantics of a continuation. -/
 def Cont.eval : Cont → List ℕ →. List ℕ
   | cont.halt => pure
@@ -444,8 +444,8 @@ inductive Cfg
   | ret : Cont → List ℕ → cfg
   deriving Inhabited
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Evaluating `c : code` in a continuation `k : cont` and input `v : list ℕ`. This goes by
 recursion on `c`, building an augmented continuation and a value to pass to it.
 
@@ -471,7 +471,7 @@ def stepNormal : Code → Cont → List ℕ → Cfg
   | code.case f g, k, v => v.head.elim (step_normal f k v.tail) fun y _ => step_normal g k (y::v.tail)
   | code.fix f, k, v => step_normal f (Cont.fix f k) v
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Evaluating a continuation `k : cont` on input `v : list ℕ`. This is the second part of
 evaluation, when we receive results from continuations built by `step_normal`.
 
@@ -532,7 +532,7 @@ def Cfg.then : Cfg → Cont → Cfg
   | cfg.halt v, k' => stepRet k' v
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:325:16: warning: unsupported simp config option: constructor_eq
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:325:16: warning: unsupported simp config option: constructor_eq -/
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
@@ -600,7 +600,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
             c = cfg.then c' (cont.fix f k) →
               reaches step (step_normal f cont.halt v) c' →
                 ∃ v₁ ∈ f.eval v,
-                  ∃ v₂ ∈ if List.headₓ v₁ = 0 then pure v₁.tail else f.fix.eval v₁.tail, x ∈ eval step (cfg.ret k v₂)
+                  ∃ v₂ ∈ if List.head' v₁ = 0 then pure v₁.tail else f.fix.eval v₁.tail, x ∈ eval step (cfg.ret k v₂)
       by
       intro h
       obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ := this _ h _ _ (step_normal_then _ cont.halt _ _) refl_trans_gen.refl
@@ -624,7 +624,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       refine' ⟨v', h₁, _⟩
       rw [step_ret] at h
       revert h
-      by_cases he:v'.head = 0 <;> simp only [exists_propₓ, if_pos, if_false, he] <;> intro h
+      by_cases he:v'.head = 0 <;> simp only [exists_prop, if_pos, if_false, he] <;> intro h
       · refine' ⟨_, Part.mem_some _, _⟩
         rw [reaches_eval]
         exact h
@@ -871,20 +871,20 @@ inductive Γ'
   | cons
   | bit0
   | bit1
-  deriving DecidableEq, Inhabited, Fintypeₓ
+  deriving DecidableEq, Inhabited, Fintype
 
 /-- The four stacks used by the program. `main` is used to store the input value in `tr_normal`
 mode and the output value in `Λ'.ret` mode, while `stack` is used to keep all the data for the
 continuations. `rev` is used to store reversed lists when transferring values between stacks, and
 `aux` is only used once in `cons₁`. See the section documentation. -/
-inductive K'
+inductive K'Cat
   | main
   | rev
   | aux
   | stack
   deriving DecidableEq, Inhabited
 
-open K'
+open K'Cat
 
 /-- Continuations as in `to_partrec.cont` but with the data removed. This is done because we want
 the set of all continuations in the program to be finite (so that it can ultimately be encoded into
@@ -904,10 +904,10 @@ inductive Cont'
 accessible states, we are careful to be non-recursive (although loops are okay). See the section
 documentation for a description of all the programs. -/
 inductive Λ'
-  | move (p : Γ' → Bool) (k₁ k₂ : K') (q : Λ')
-  | clear (p : Γ' → Bool) (k : K') (q : Λ')
+  | move (p : Γ' → Bool) (k₁ k₂ : K'Cat) (q : Λ')
+  | clear (p : Γ' → Bool) (k : K'Cat) (q : Λ')
   | copy (q : Λ')
-  | push (k : K') (s : Option Γ' → Option Γ') (q : Λ')
+  | push (k : K'Cat) (s : Option Γ' → Option Γ') (q : Λ')
   | read (f : Option Γ' → Λ')
   | succ (q : Λ')
   | pred (q₁ q₂ : Λ')
@@ -926,13 +926,13 @@ instance : DecidableEq Λ' := fun a b => by
 
 /-- The type of TM2 statements used by this machine. -/
 def Stmt' :=
-  TM2.Stmt (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
+  TM2Cat.Stmt (fun _ : K'Cat => Γ') Λ' (Option Γ')deriving Inhabited
 
 /-- The type of TM2 configurations used by this machine. -/
 def Cfg' :=
-  TM2.Cfg (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
+  TM2Cat.Cfg (fun _ : K'Cat => Γ') Λ' (Option Γ')deriving Inhabited
 
-open TM2.Stmt
+open TM2Cat.Stmt
 
 /-- A predicate that detects the end of a natural number, either `Γ'.cons` or `Γ'.Cons` (or
 implicitly the end of the list), for use in predicate-taking functions like `move` and `clear`. -/
@@ -944,17 +944,17 @@ def natEnd : Γ' → Bool
 
 /-- Pop a value from the stack and place the result in local store. -/
 @[simp]
-def pop' (k : K') : Stmt' → Stmt' :=
+def pop' (k : K'Cat) : Stmt' → Stmt' :=
   pop k fun x v => v
 
 /-- Peek a value from the stack and place the result in local store. -/
 @[simp]
-def peek' (k : K') : Stmt' → Stmt' :=
+def peek' (k : K'Cat) : Stmt' → Stmt' :=
   peek k fun x v => v
 
 /-- Push the value in the local store to the given stack. -/
 @[simp]
-def push' (k : K') : Stmt' → Stmt' :=
+def push' (k : K'Cat) : Stmt' → Stmt' :=
   push k fun x => x.iget
 
 /-- Move everything from the `rev` stack to the `main` stack (reversed). -/
@@ -972,7 +972,7 @@ def move₂ (p k₁ k₂ q) :=
 
 /-- Assuming `tr_list v` is on the front of stack `k`, remove it, and push `v.head` onto `main`.
 See the section documentation. -/
-def head (k : K') (q : Λ') : Λ' :=
+def head (k : K'Cat) (q : Λ') : Λ' :=
   Λ'.move natEnd k rev <|
     (Λ'.push rev fun _ => some Γ'.cons) <|
       Λ'.read fun s => (if s = some Γ'.Cons then id else Λ'.clear (fun x => x = Γ'.Cons) k) <| unrev q
@@ -1034,8 +1034,8 @@ def trCont : Cont → Cont'
   | cont.comp c k => Cont'.comp c (tr_cont k)
   | cont.fix c k => Cont'.fix c (tr_cont k)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- We use `pos_num` to define the translation of binary natural numbers. A natural number is
 represented as a little-endian list of `bit0` and `bit1` elements:
 
@@ -1071,14 +1071,14 @@ def trNat (n : ℕ) : List Γ' :=
   trNum n
 
 @[simp]
-theorem tr_nat_zero : trNat 0 = [] := by rw [tr_nat, Nat.cast_zeroₓ] <;> rfl
+theorem tr_nat_zero : trNat 0 = [] := by rw [tr_nat, Nat.cast_zero] <;> rfl
 
 @[simp]
 theorem tr_nat_default : trNat default = [] :=
   tr_nat_zero
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Lists are translated with a `cons` after each encoded number.
 For example:
 
@@ -1092,8 +1092,8 @@ def trList : List ℕ → List Γ'
   | [] => []
   | n::ns => trNat n ++ Γ'.cons::tr_list ns
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Lists of lists are translated with a `Cons` after each encoded list.
 For example:
 
@@ -1108,8 +1108,8 @@ def trLlist : List (List ℕ) → List Γ'
   | [] => []
   | l::ls => trList l ++ Γ'.Cons::tr_llist ls
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The data part of a continuation is a list of lists, which is encoded on the `stack` stack
 using `tr_llist`. -/
 @[simp]
@@ -1130,42 +1130,42 @@ represent the stack data as four lists rather than as a function `K' → list Γ
 rewrites easier. The theorems `K'.elim_update_main` et. al. show how such a function is updated
 after an `update` to one of the components. -/
 @[simp]
-def K'.elim (a b c d : List Γ') : K' → List Γ'
+def K'Cat.elim (a b c d : List Γ') : K'Cat → List Γ'
   | K'.main => a
   | K'.rev => b
   | K'.aux => c
   | K'.stack => d
 
 @[simp]
-theorem K'.elim_update_main {a b c d a'} : update (K'.elim a b c d) main a' = K'.elim a' b c d := by
+theorem K'Cat.elim_update_main {a b c d a'} : update (K'Cat.elim a b c d) main a' = K'Cat.elim a' b c d := by
   funext x <;> cases x <;> rfl
 
 @[simp]
-theorem K'.elim_update_rev {a b c d b'} : update (K'.elim a b c d) rev b' = K'.elim a b' c d := by
+theorem K'Cat.elim_update_rev {a b c d b'} : update (K'Cat.elim a b c d) rev b' = K'Cat.elim a b' c d := by
   funext x <;> cases x <;> rfl
 
 @[simp]
-theorem K'.elim_update_aux {a b c d c'} : update (K'.elim a b c d) aux c' = K'.elim a b c' d := by
+theorem K'Cat.elim_update_aux {a b c d c'} : update (K'Cat.elim a b c d) aux c' = K'Cat.elim a b c' d := by
   funext x <;> cases x <;> rfl
 
 @[simp]
-theorem K'.elim_update_stack {a b c d d'} : update (K'.elim a b c d) stack d' = K'.elim a b c d' := by
+theorem K'Cat.elim_update_stack {a b c d d'} : update (K'Cat.elim a b c d) stack d' = K'Cat.elim a b c d' := by
   funext x <;> cases x <;> rfl
 
 /-- The halting state corresponding to a `list ℕ` output value. -/
 def halt (v : List ℕ) : Cfg' :=
-  ⟨none, none, K'.elim (trList v) [] [] []⟩
+  ⟨none, none, K'Cat.elim (trList v) [] [] []⟩
 
 /-- The `cfg` states map to `cfg'` states almost one to one, except that in normal operation the
 local store contains an arbitrary garbage value. To make the final theorem cleaner we explicitly
 clear it in the halt state so that there is exactly one configuration corresponding to output `v`.
 -/
 def TrCfg : Cfg → Cfg' → Prop
-  | cfg.ret k v, c' => ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩
+  | cfg.ret k v, c' => ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'Cat.elim (trList v) [] [] (trContStack k)⟩
   | cfg.halt v, c' => c' = halt v
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- This could be a general list definition, but it is also somewhat specialized to this
 application. `split_at_pred p L` will search `L` for the first element satisfying `p`.
 If it is found, say `L = l₁ ++ a :: l₂` where `a` satisfies `p` but `l₁` does not, then it returns
@@ -1177,12 +1177,12 @@ def splitAtPred {α} (p : α → Bool) : List α → List α × Option α × Lis
       let ⟨l₁, o, l₂⟩ := split_at_pred as
       ⟨a::l₁, o, l₂⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem split_at_pred_eq {α} (p : α → Bool) :
     ∀ L l₁ o l₂,
       (∀ x ∈ l₁, p x = ff) →
-        Option.elimₓ (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a::l₂) o → splitAtPred p L = (l₁, o, l₂)
+        Option.elim (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a::l₂) o → splitAtPred p L = (l₁, o, l₂)
   | [], _, none, _, _, ⟨rfl, rfl⟩ => rfl
   | [], l₁, some o, l₂, h₁, ⟨h₂, h₃⟩ => by simp at h₃ <;> contradiction
   | a::L, l₁, o, l₂, h₁, h₂ => by
@@ -1204,9 +1204,9 @@ theorem split_at_pred_eq {α} (p : α → Bool) :
 theorem split_at_pred_ff {α} (L : List α) : splitAtPred (fun _ => false) L = (L, none, []) :=
   split_at_pred_eq _ _ _ _ _ (fun _ _ => rfl) ⟨rfl, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ k₂) (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
-    Reaches₁ (TM2.step tr) ⟨some (Λ'.move p k₁ k₂ q), s, S⟩
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ : k₁ ≠ k₂) (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
+    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.move p k₁ k₂ q), s, S⟩
       ⟨some q, o, update (update S k₁ L₂) k₂ (L₁.reverseCore (S k₂))⟩ :=
   by
   induction' L₁ with a L₁ IH generalizing S s
@@ -1245,37 +1245,37 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁
     simp [e₂]
     convert @IH (update (update S k₁ Sk) k₂ (a::S k₂)) _ _ using 2 <;>
       simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseCore]
-    simp [Function.update_commₓ h₁.symm]
+    simp [Function.update_comm h₁.symm]
     
 
-theorem unrev_ok {q s} {S : K' → List Γ'} :
-    Reaches₁ (TM2.step tr) ⟨some (unrev q), s, S⟩
+theorem unrev_ok {q s} {S : K'Cat → List Γ'} :
+    Reaches₁ (TM2Cat.step tr) ⟨some (unrev q), s, S⟩
       ⟨some q, none, update (update S rev []) main (List.reverseCore (S rev) (S main))⟩ :=
   move_ok (by decide) <| split_at_pred_ff _
 
-theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ rev ∧ k₂ ≠ rev ∧ k₁ ≠ k₂) (h₂ : S rev = [])
+theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ : k₁ ≠ rev ∧ k₂ ≠ rev ∧ k₁ ≠ k₂) (h₂ : S rev = [])
     (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
-    Reaches₁ (TM2.step tr) ⟨some (move₂ p k₁ k₂ q), s, S⟩
+    Reaches₁ (TM2Cat.step tr) ⟨some (move₂ p k₁ k₂ q), s, S⟩
       ⟨some q, none, update (update S k₁ (o.elim id List.cons L₂)) k₂ (L₁ ++ S k₂)⟩ :=
   by
   refine' (move_ok h₁.1 e).trans (trans_gen.head rfl _)
-  cases o <;> simp only [Option.elimₓ, tr, id.def]
+  cases o <;> simp only [Option.elim, tr, id.def]
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
-    simp only [Function.update_commₓ h₁.1, Function.update_idemₓ]
+    simp only [Function.update_comm h₁.1, Function.update_idem]
     rw [show update S rev [] = S by rw [← h₂, Function.update_eq_self]]
     simp only [Function.update_noteq h₁.2.2.symm, Function.update_noteq h₁.2.1, Function.update_noteq h₁.1.symm,
       List.reverse_core_eq, h₂, Function.update_same, List.append_nil, List.reverse_reverse]
     
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
-    simp only [h₂, Function.update_commₓ h₁.1, List.reverse_core_eq, Function.update_same, List.append_nil,
-      Function.update_idemₓ]
+    simp only [h₂, Function.update_comm h₁.1, List.reverse_core_eq, Function.update_same, List.append_nil,
+      Function.update_idem]
     rw [show update S rev [] = S by rw [← h₂, Function.update_eq_self]]
     simp only [Function.update_noteq h₁.1.symm, Function.update_noteq h₁.2.2.symm, Function.update_noteq h₁.2.1,
       Function.update_same, List.reverse_reverse]
     
 
-theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p (S k) = (L₁, o, L₂)) :
-    Reaches₁ (TM2.step tr) ⟨some (Λ'.clear p k q), s, S⟩ ⟨some q, o, update S k L₂⟩ := by
+theorem clear_ok {p k q s L₁ o L₂} {S : K'Cat → List Γ'} (e : splitAtPred p (S k) = (L₁, o, L₂)) :
+    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.clear p k q), s, S⟩ ⟨some q, o, update S k L₂⟩ := by
   induction' L₁ with a L₁ IH generalizing S s
   · refine' trans_gen.head' rfl _
     simp
@@ -1309,8 +1309,8 @@ theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p 
     
 
 theorem copy_ok (q s a b c d) :
-    Reaches₁ (TM2.step tr) ⟨some (Λ'.copy q), s, K'.elim a b c d⟩
-      ⟨some q, none, K'.elim (List.reverseCore b a) [] c (List.reverseCore b d)⟩ :=
+    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.copy q), s, K'Cat.elim a b c d⟩
+      ⟨some q, none, K'Cat.elim (List.reverseCore b a) [] c (List.reverseCore b d)⟩ :=
   by
   induction' b with x b IH generalizing a d s
   · refine' trans_gen.single _
@@ -1334,7 +1334,7 @@ theorem tr_num_nat_end : ∀ (n), ∀ x ∈ trNum n, natEnd x = ff
 theorem tr_nat_nat_end (n) : ∀ x ∈ trNat n, natEnd x = ff :=
   tr_num_nat_end _
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tr_list_ne_Cons : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.Cons
   | a::l, x, h => by
     simp [tr_list] at h
@@ -1348,8 +1348,8 @@ theorem tr_list_ne_Cons : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.Cons
       
 
 theorem head_main_ok {q s L} {c d : List Γ'} :
-    Reaches₁ (TM2.step tr) ⟨some (head main q), s, K'.elim (trList L) [] c d⟩
-      ⟨some q, none, K'.elim (trList [L.head]) [] c d⟩ :=
+    Reaches₁ (TM2Cat.step tr) ⟨some (head main q), s, K'Cat.elim (trList L) [] c d⟩
+      ⟨some q, none, K'Cat.elim (trList [L.head]) [] c d⟩ :=
   by
   let o : Option Γ' := List.casesOn L none fun _ _ => some Γ'.cons
   refine'
@@ -1365,12 +1365,12 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
   convert unrev_ok
   simp [List.reverse_core_eq]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem head_stack_ok {q s L₁ L₂ L₃} :
-    Reaches₁ (TM2.step tr) ⟨some (head stack q), s, K'.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons::L₃)⟩
-      ⟨some q, none, K'.elim (trList (L₂.head::L₁)) [] [] L₃⟩ :=
+    Reaches₁ (TM2Cat.step tr) ⟨some (head stack q), s, K'Cat.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons::L₃)⟩
+      ⟨some q, none, K'Cat.elim (trList (L₂.head::L₁)) [] [] L₃⟩ :=
   by
   cases' L₂ with a L₂
   · refine'
@@ -1397,11 +1397,11 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
     simp [List.reverse_core_eq]
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem succ_ok {q s n} {c d : List Γ'} :
-    Reaches₁ (TM2.step tr) ⟨some (Λ'.succ q), s, K'.elim (trList [n]) [] c d⟩
-      ⟨some q, none, K'.elim (trList [n.succ]) [] c d⟩ :=
+    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.succ q), s, K'Cat.elim (trList [n]) [] c d⟩
+      ⟨some q, none, K'Cat.elim (trList [n.succ]) [] c d⟩ :=
   by
   simp [tr_nat, Num.add_one]
   cases' (n : Num) with a
@@ -1444,18 +1444,18 @@ theorem succ_ok {q s n} {c d : List Γ'} :
     rfl
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     ∃ s',
-      Reaches₁ (TM2.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'.elim (trList v) [] c d⟩
-        (v.head.elim ⟨some q₁, s', K'.elim (trList v.tail) [] c d⟩ fun n _ =>
-          ⟨some q₂, s', K'.elim (trList (n::v.tail)) [] c d⟩) :=
+      Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'Cat.elim (trList v) [] c d⟩
+        (v.head.elim ⟨some q₁, s', K'Cat.elim (trList v.tail) [] c d⟩ fun n _ =>
+          ⟨some q₂, s', K'Cat.elim (trList (n::v.tail)) [] c d⟩) :=
   by
   rcases v with (_ | ⟨_ | n, v⟩)
   · refine' ⟨none, trans_gen.single _⟩
@@ -1504,7 +1504,7 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
 theorem tr_normal_respects (c k v s) :
     ∃ b₂,
       TrCfg (stepNormal c k v) b₂ ∧
-        Reaches₁ (TM2.step tr) ⟨some (trNormal c (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
+        Reaches₁ (TM2Cat.step tr) ⟨some (trNormal c (trCont k)), s, K'Cat.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
   by
   induction c generalizing k v s
   case zero' =>
@@ -1539,12 +1539,12 @@ theorem tr_normal_respects (c k v s) :
     
   case fix f IH => apply IH
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tr_ret_respects (k v s) :
     ∃ b₂,
       TrCfg (stepRet k v) b₂ ∧
-        Reaches₁ (TM2.step tr) ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
+        Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.ret (trCont k)), s, K'Cat.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
   by
   induction k generalizing v s
   case halt => exact ⟨_, rfl, trans_gen.single rfl⟩
@@ -1586,7 +1586,7 @@ theorem tr_ret_respects (k v s) :
     cases n
     · simp
       
-    rw [tr_list, List.headₓ, tr_nat, Nat.cast_succₓ, Num.add_one, Num.succ, List.tail]
+    rw [tr_list, List.head', tr_nat, Nat.cast_succ, Num.add_one, Num.succ, List.tail]
     cases (n : Num).succ' <;> exact ⟨rfl, rfl⟩
   by_cases v.head = 0 <;> simp [h] at this⊢
   · obtain ⟨c, h₁, h₂⟩ := IH v.tail (tr_list v).head'
@@ -1607,18 +1607,18 @@ theorem tr_ret_respects (k v s) :
       
     
 
-theorem tr_respects : Respects step (TM2.step tr) TrCfg
+theorem tr_respects : Respects step (TM2Cat.step tr) TrCfg
   | cfg.ret k v, _, ⟨s, rfl⟩ => tr_ret_respects _ _ _
   | cfg.halt v, _, rfl => rfl
 
 /-- The initial state, evaluating function `c` on input `v`. -/
 def init (c : Code) (v : List ℕ) : Cfg' :=
-  ⟨some (trNormal c Cont'.halt), none, K'.elim (trList v) [] [] []⟩
+  ⟨some (trNormal c Cont'.halt), none, K'Cat.elim (trList v) [] [] []⟩
 
-theorem tr_init (c v) : ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2.step tr) (init c v) b :=
+theorem tr_init (c v) : ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2Cat.step tr) (init c v) b :=
   tr_normal_respects _ _ _ _
 
-theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v := by
+theorem tr_eval (c v) : eval (TM2Cat.step tr) (init c v) = halt <$> Code.eval c v := by
   obtain ⟨i, h₁, h₂⟩ := tr_init c v
   refine' Part.ext fun x => _
   rw [reaches_eval h₂.to_refl]
@@ -1637,10 +1637,10 @@ theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v :
     
 
 /-- The set of machine states reachable via downward label jumps, discounting jumps via `ret`. -/
-def trStmts₁ : Λ' → Finsetₓ Λ'
+def trStmts₁ : Λ' → Finset Λ'
   | Q@(Λ'.move p k₁ k₂ q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.push k f q) => insert Q <| tr_stmts₁ q
-  | Q@(Λ'.read q) => insert Q <| Finsetₓ.univ.bUnion fun s => tr_stmts₁ (q s)
+  | Q@(Λ'.read q) => insert Q <| Finset.univ.bUnion fun s => tr_stmts₁ (q s)
   | Q@(Λ'.clear p k q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.copy q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.succ q) => insert Q <| insert (unrev q) <| tr_stmts₁ q
@@ -1649,9 +1649,9 @@ def trStmts₁ : Λ' → Finsetₓ Λ'
 
 theorem tr_stmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trStmts₁ q := by
   induction q <;>
-    simp (config := { contextual := true }) only [tr_stmts₁, Finsetₓ.mem_insert, Finsetₓ.mem_union, or_imp_distrib,
-      Finsetₓ.mem_singleton, Finsetₓ.Subset.refl, imp_true_iff, true_andₓ]
-  iterate 4 exact fun h => Finsetₓ.Subset.trans (q_ih h) (Finsetₓ.subset_insert _ _)
+    simp (config := { contextual := true }) only [tr_stmts₁, Finset.mem_insert, Finset.mem_union, or_imp_distrib,
+      Finset.mem_singleton, Finset.Subset.refl, imp_true_iff, true_and_iff]
+  iterate 4 exact fun h => Finset.Subset.trans (q_ih h) (Finset.subset_insert _ _)
   · simp
     intro s h x h'
     simp
@@ -1659,7 +1659,7 @@ theorem tr_stmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trS
     
   · constructor
     · rintro rfl
-      apply Finsetₓ.subset_insert
+      apply Finset.subset_insert
       
     · intro h x h'
       simp
@@ -1669,7 +1669,7 @@ theorem tr_stmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trS
   · refine' ⟨fun h x h' => _, fun h x h' => _, fun h x h' => _⟩ <;> simp
     · exact Or.inr (Or.inr <| Or.inl <| q_ih_q₁ h h')
       
-    · cases' Finsetₓ.mem_insert.1 h' with h' h' <;> simp [h', unrev]
+    · cases' Finset.mem_insert.1 h' with h' h' <;> simp [h', unrev]
       
     · exact Or.inr (Or.inr <| Or.inr <| q_ih_q₂ h h')
       
@@ -1677,13 +1677,13 @@ theorem tr_stmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trS
 
 theorem tr_stmts₁_self (q) : q ∈ trStmts₁ q := by
   induction q <;>
-    · first |apply Finsetₓ.mem_singleton_self|apply Finsetₓ.mem_insert_self
+    · first |apply Finset.mem_singleton_self|apply Finset.mem_insert_self
       
 
 /-- The (finite!) set of machine states visited during the course of evaluation of `c`,
 including the state `ret k` but not any states after that (that is, the states visited while
 evaluating `k`). -/
-def codeSupp' : Code → Cont' → Finsetₓ Λ'
+def codeSupp' : Code → Cont' → Finset Λ'
   | c@code.zero', k => trStmts₁ (trNormal c k)
   | c@code.succ, k => trStmts₁ (trNormal c k)
   | c@code.tail, k => trStmts₁ (trNormal c k)
@@ -1704,11 +1704,11 @@ def codeSupp' : Code → Cont' → Finsetₓ Λ'
 
 @[simp]
 theorem code_supp'_self (c k) : trStmts₁ (trNormal c k) ⊆ codeSupp' c k := by
-  cases c <;> first |rfl|exact Finsetₓ.subset_union_left _ _
+  cases c <;> first |rfl|exact Finset.subset_union_left _ _
 
 /-- The (finite!) set of machine states visited during the course of evaluation of a continuation
 `k`, not including the initial state `ret k`. -/
-def contSupp : Cont' → Finsetₓ Λ'
+def contSupp : Cont' → Finset Λ'
   | cont'.cons₁ fs k =>
     trStmts₁
         (move₂ (fun _ => false) main aux <|
@@ -1723,12 +1723,12 @@ def contSupp : Cont' → Finsetₓ Λ'
 continuation `k`. This is actually closed under forward simulation (see `tr_supports`), and the
 existence of this set means that the machine constructed in this section is in fact a proper
 Turing machine, with a finite set of states. -/
-def codeSupp (c : Code) (k : Cont') : Finsetₓ Λ' :=
+def codeSupp (c : Code) (k : Cont') : Finset Λ' :=
   codeSupp' c k ∪ contSupp k
 
 @[simp]
 theorem code_supp_self (c k) : trStmts₁ (trNormal c k) ⊆ codeSupp c k :=
-  Finsetₓ.Subset.trans (code_supp'_self _ _) (Finsetₓ.subset_union_left _ _)
+  Finset.Subset.trans (code_supp'_self _ _) (Finset.subset_union_left _ _)
 
 @[simp]
 theorem code_supp_zero (k) : codeSupp Code.zero' k = trStmts₁ (trNormal Code.zero' k) ∪ contSupp k :=
@@ -1745,23 +1745,23 @@ theorem code_supp_tail (k) : codeSupp Code.tail k = trStmts₁ (trNormal Code.ta
 @[simp]
 theorem code_supp_cons (f fs k) :
     codeSupp (Code.cons f fs) k = trStmts₁ (trNormal (Code.cons f fs) k) ∪ codeSupp f (Cont'.cons₁ fs k) := by
-  simp [code_supp, code_supp', cont_supp, Finsetₓ.union_assoc]
+  simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
 
 @[simp]
 theorem code_supp_comp (f g k) :
     codeSupp (Code.comp f g) k = trStmts₁ (trNormal (Code.comp f g) k) ∪ codeSupp g (Cont'.comp f k) := by
-  simp [code_supp, code_supp', cont_supp, Finsetₓ.union_assoc]
-  rw [← Finsetₓ.union_assoc _ _ (cont_supp k), Finsetₓ.union_eq_right_iff_subset.2 (code_supp'_self _ _)]
+  simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
+  rw [← Finset.union_assoc _ _ (cont_supp k), Finset.union_eq_right_iff_subset.2 (code_supp'_self _ _)]
 
 @[simp]
 theorem code_supp_case (f g k) :
     codeSupp (Code.case f g) k = trStmts₁ (trNormal (Code.case f g) k) ∪ (codeSupp f k ∪ codeSupp g k) := by
-  simp [code_supp, code_supp', cont_supp, Finsetₓ.union_assoc, Finsetₓ.union_left_comm]
+  simp [code_supp, code_supp', cont_supp, Finset.union_assoc, Finset.union_left_comm]
 
 @[simp]
 theorem code_supp_fix (f k) :
     codeSupp (Code.fix f) k = trStmts₁ (trNormal (Code.fix f) k) ∪ codeSupp f (Cont'.fix f k) := by
-  simp [code_supp, code_supp', cont_supp, Finsetₓ.union_assoc, Finsetₓ.union_left_comm, Finsetₓ.union_left_idem]
+  simp [code_supp, code_supp', cont_supp, Finset.union_assoc, Finset.union_left_comm, Finset.union_left_idem]
 
 @[simp]
 theorem cont_supp_cons₁ (fs k) :
@@ -1771,7 +1771,7 @@ theorem cont_supp_cons₁ (fs k) :
             move₂ (fun s => s = Γ'.Cons) stack main <|
               move₂ (fun _ => false) aux stack <| trNormal fs (Cont'.cons₂ k)) ∪
         codeSupp fs (Cont'.cons₂ k) :=
-  by simp [code_supp, code_supp', cont_supp, Finsetₓ.union_assoc]
+  by simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
 
 @[simp]
 theorem cont_supp_cons₂ (k) : contSupp (Cont'.cons₂ k) = trStmts₁ (head stack <| Λ'.ret k) ∪ contSupp k :=
@@ -1782,7 +1782,7 @@ theorem cont_supp_comp (f k) : contSupp (Cont'.comp f k) = codeSupp f k :=
   rfl
 
 theorem cont_supp_fix (f k) : contSupp (Cont'.fix f k) = codeSupp f (Cont'.fix f k) := by
-  simp (config := { contextual := true }) [code_supp, code_supp', cont_supp, Finsetₓ.union_assoc, Finsetₓ.subset_iff]
+  simp (config := { contextual := true }) [code_supp, code_supp', cont_supp, Finset.union_assoc, Finset.subset_iff]
 
 @[simp]
 theorem cont_supp_halt : contSupp Cont'.halt = ∅ :=
@@ -1791,7 +1791,7 @@ theorem cont_supp_halt : contSupp Cont'.halt = ∅ :=
 /-- The statement `Λ'.supports S q` means that `cont_supp k ⊆ S` for any `ret k`
 reachable from `q`.
 (This is a technical condition used in the proof that the machine is supported.) -/
-def Λ'.Supports (S : Finsetₓ Λ') : Λ' → Prop
+def Λ'.Supports (S : Finset Λ') : Λ' → Prop
   | Q@(Λ'.move p k₁ k₂ q) => Λ'.supports q
   | Q@(Λ'.push k f q) => Λ'.supports q
   | Q@(Λ'.read q) => ∀ s, Λ'.supports (q s)
@@ -1807,54 +1807,54 @@ the proof, and denotes the full set of states in the machine, while `K` is a sub
 currently proving a property about. The predicate asserts that every state in `K` is closed in `S`
 under forward simulation, i.e. stepping forward through evaluation starting from any state in `K`
 stays entirely within `S`. -/
-def Supports (K S : Finsetₓ Λ') :=
-  ∀ q ∈ K, TM2.SupportsStmt S (tr q)
+def Supports (K S : Finset Λ') :=
+  ∀ q ∈ K, TM2Cat.SupportsStmt S (tr q)
 
-theorem supports_insert {K S q} : Supports (insert q K) S ↔ TM2.SupportsStmt S (tr q) ∧ Supports K S := by
+theorem supports_insert {K S q} : Supports (insert q K) S ↔ TM2Cat.SupportsStmt S (tr q) ∧ Supports K S := by
   simp [supports]
 
-theorem supports_singleton {S q} : Supports {q} S ↔ TM2.SupportsStmt S (tr q) := by simp [supports]
+theorem supports_singleton {S q} : Supports {q} S ↔ TM2Cat.SupportsStmt S (tr q) := by simp [supports]
 
 theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K₁ S ∧ Supports K₂ S := by
   simp [supports, or_imp_distrib, forall_and_distrib]
 
-theorem supports_bUnion {K : Option Γ' → Finsetₓ Λ'} {S} : Supports (Finsetₓ.univ.bUnion K) S ↔ ∀ a, Supports (K a) S :=
+theorem supports_bUnion {K : Option Γ' → Finset Λ'} {S} : Supports (Finset.univ.bUnion K) S ↔ ∀ a, Supports (K a) S :=
   by simp [supports] <;> apply forall_swap
 
 theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S := fun _ => by
   dsimp only <;> split_ifs <;> exact H
 
-theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) := by
+theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2Cat.SupportsStmt S (tr (Λ'.ret k)) := by
   have W := fun {q} => tr_stmts₁_self q
   cases k
   case halt => trivial
   case cons₁ =>
-  rw [cont_supp_cons₁, Finsetₓ.union_subset_iff] at H₁
+  rw [cont_supp_cons₁, Finset.union_subset_iff] at H₁
   exact fun _ => H₁.1 W
   case cons₂ =>
-  rw [cont_supp_cons₂, Finsetₓ.union_subset_iff] at H₁
+  rw [cont_supp_cons₂, Finset.union_subset_iff] at H₁
   exact fun _ => H₁.1 W
   case comp =>
   rw [cont_supp_comp] at H₁
   exact fun _ => H₁ (code_supp_self _ _ W)
   case fix =>
   rw [cont_supp_fix] at H₁
-  have L := @Finsetₓ.mem_union_left
-  have R := @Finsetₓ.mem_union_right
+  have L := @Finset.mem_union_left
+  have R := @Finset.mem_union_right
   intro s
   dsimp only
   cases nat_end s.iget
   · refine' H₁ (R _ <| L _ <| R _ <| R _ <| L _ W)
     
-  · exact H₁ (R _ <| L _ <| R _ <| R _ <| R _ <| Finsetₓ.mem_singleton_self _)
+  · exact H₁ (R _ <| L _ <| R _ <| R _ <| R _ <| Finset.mem_singleton_self _)
     
 
 theorem tr_stmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmts₁ q ⊆ S) : Supports (trStmts₁ q) S := by
   have W := fun {q} => tr_stmts₁_self q
   induction q <;> simp [tr_stmts₁] at HS₁⊢
   any_goals
-  cases' Finsetₓ.insert_subset.1 HS₁ with h₁ h₂
-  first |have h₃ := h₂ W|try simp [Finsetₓ.subset_iff] at h₂
+  cases' Finset.insert_subset.1 HS₁ with h₁ h₂
+  first |have h₃ := h₂ W|try simp [Finset.subset_iff] at h₂
   · exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₁⟩, q_ih H₁ h₂⟩
     
   -- move
@@ -1890,75 +1890,75 @@ theorem tr_stmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmt
 
 theorem tr_stmts₁_supports' {S q K} (H₁ : (q : Λ').Supports S) (H₂ : trStmts₁ q ∪ K ⊆ S) (H₃ : K ⊆ S → Supports K S) :
     Supports (trStmts₁ q ∪ K) S := by
-  simp [Finsetₓ.union_subset_iff] at H₂
+  simp [Finset.union_subset_iff] at H₂
   exact supports_union.2 ⟨tr_stmts₁_supports H₁ H₂.1, H₃ H₂.2⟩
 
 theorem tr_normal_supports {S c k} (Hk : codeSupp c k ⊆ S) : (trNormal c k).Supports S := by
   induction c generalizing k <;> simp [Λ'.supports, head]
-  case zero' => exact Finsetₓ.union_subset_right Hk
+  case zero' => exact Finset.union_subset_right Hk
   case succ =>
   intro
-  split_ifs <;> exact Finsetₓ.union_subset_right Hk
-  case tail => exact Finsetₓ.union_subset_right Hk
+  split_ifs <;> exact Finset.union_subset_right Hk
+  case tail => exact Finset.union_subset_right Hk
   case cons f fs IHf IHfs =>
   apply IHf
   rw [code_supp_cons] at Hk
-  exact Finsetₓ.union_subset_right Hk
+  exact Finset.union_subset_right Hk
   case comp f g IHf IHg =>
   apply IHg
   rw [code_supp_comp] at Hk
-  exact Finsetₓ.union_subset_right Hk
+  exact Finset.union_subset_right Hk
   case case f g IHf IHg =>
-  simp only [code_supp_case, Finsetₓ.union_subset_iff] at Hk
+  simp only [code_supp_case, Finset.union_subset_iff] at Hk
   exact ⟨IHf Hk.2.1, IHg Hk.2.2⟩
   case fix f IHf =>
   apply IHf
   rw [code_supp_fix] at Hk
-  exact Finsetₓ.union_subset_right Hk
+  exact Finset.union_subset_right Hk
 
 theorem code_supp'_supports {S c k} (H : codeSupp c k ⊆ S) : Supports (codeSupp' c k) S := by
   induction c generalizing k
-  iterate 3 exact tr_stmts₁_supports (tr_normal_supports H) (Finsetₓ.Subset.trans (code_supp_self _ _) H)
+  iterate 3 exact tr_stmts₁_supports (tr_normal_supports H) (Finset.Subset.trans (code_supp_self _ _) H)
   case cons f fs IHf IHfs =>
   have H' := H
-  simp only [code_supp_cons, Finsetₓ.union_subset_iff] at H'
-  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finsetₓ.union_subset_left H) fun h => _
+  simp only [code_supp_cons, Finset.union_subset_iff] at H'
+  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _
   refine' supports_union.2 ⟨IHf H'.2, _⟩
-  refine' tr_stmts₁_supports' (tr_normal_supports _) (Finsetₓ.union_subset_right h) fun h => _
-  · simp only [code_supp, Finsetₓ.union_subset_iff, cont_supp] at h H⊢
+  refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
+  · simp only [code_supp, Finset.union_subset_iff, cont_supp] at h H⊢
     exact ⟨h.2.2.1, h.2.2.2, H.2⟩
     
   refine' supports_union.2 ⟨IHfs _, _⟩
   · rw [code_supp, cont_supp_cons₁] at H'
-    exact Finsetₓ.union_subset_right (Finsetₓ.union_subset_right H'.2)
+    exact Finset.union_subset_right (Finset.union_subset_right H'.2)
     
-  exact tr_stmts₁_supports (head_supports <| Finsetₓ.union_subset_right H) (Finsetₓ.union_subset_right h)
+  exact tr_stmts₁_supports (head_supports <| Finset.union_subset_right H) (Finset.union_subset_right h)
   case comp f g IHf IHg =>
   have H' := H
   rw [code_supp_comp] at H'
-  have H' := Finsetₓ.union_subset_right H'
-  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finsetₓ.union_subset_left H) fun h => _
+  have H' := Finset.union_subset_right H'
+  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _
   refine' supports_union.2 ⟨IHg H', _⟩
-  refine' tr_stmts₁_supports' (tr_normal_supports _) (Finsetₓ.union_subset_right h) fun h => _
-  · simp only [code_supp', code_supp, Finsetₓ.union_subset_iff, cont_supp] at h H⊢
+  refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
+  · simp only [code_supp', code_supp, Finset.union_subset_iff, cont_supp] at h H⊢
     exact ⟨h.2.2, H.2⟩
     
-  exact IHf (Finsetₓ.union_subset_right H')
+  exact IHf (Finset.union_subset_right H')
   case case f g IHf IHg =>
   have H' := H
-  simp only [code_supp_case, Finsetₓ.union_subset_iff] at H'
-  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finsetₓ.union_subset_left H) fun h => _
+  simp only [code_supp_case, Finset.union_subset_iff] at H'
+  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _
   exact supports_union.2 ⟨IHf H'.2.1, IHg H'.2.2⟩
   case fix f IHf =>
   have H' := H
-  simp only [code_supp_fix, Finsetₓ.union_subset_iff] at H'
-  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finsetₓ.union_subset_left H) fun h => _
+  simp only [code_supp_fix, Finset.union_subset_iff] at H'
+  refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _
   refine' supports_union.2 ⟨IHf H'.2, _⟩
-  refine' tr_stmts₁_supports' (tr_normal_supports _) (Finsetₓ.union_subset_right h) fun h => _
-  · simp only [code_supp', code_supp, Finsetₓ.union_subset_iff, cont_supp, tr_stmts₁, Finsetₓ.insert_subset] at h H⊢
+  refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
+  · simp only [code_supp', code_supp, Finset.union_subset_iff, cont_supp, tr_stmts₁, Finset.insert_subset] at h H⊢
     exact ⟨h.1, ⟨H.1.1, h⟩, H.2⟩
     
-  exact supports_singleton.2 (ret_supports <| Finsetₓ.union_subset_right H)
+  exact supports_singleton.2 (ret_supports <| Finset.union_subset_right H)
 
 theorem cont_supp_supports {S k} (H : contSupp k ⊆ S) : Supports (contSupp k) S := by
   induction k
@@ -1967,34 +1967,34 @@ theorem cont_supp_supports {S k} (H : contSupp k ⊆ S) : Supports (contSupp k) 
   case cons₁ f k IH =>
   have H₁ := H
   rw [cont_supp_cons₁] at H₁
-  have H₂ := Finsetₓ.union_subset_right H₁
+  have H₂ := Finset.union_subset_right H₁
   refine' tr_stmts₁_supports' (tr_normal_supports H₂) H₁ fun h => _
   refine' supports_union.2 ⟨code_supp'_supports H₂, _⟩
-  simp only [code_supp, cont_supp_cons₂, Finsetₓ.union_subset_iff] at H₂
-  exact tr_stmts₁_supports' (head_supports H₂.2.2) (Finsetₓ.union_subset_right h) IH
+  simp only [code_supp, cont_supp_cons₂, Finset.union_subset_iff] at H₂
+  exact tr_stmts₁_supports' (head_supports H₂.2.2) (Finset.union_subset_right h) IH
   case cons₂ k IH =>
   have H' := H
   rw [cont_supp_cons₂] at H'
-  exact tr_stmts₁_supports' (head_supports <| Finsetₓ.union_subset_right H') H' IH
+  exact tr_stmts₁_supports' (head_supports <| Finset.union_subset_right H') H' IH
   case comp f k IH =>
   have H' := H
   rw [cont_supp_comp] at H'
-  have H₂ := Finsetₓ.union_subset_right H'
+  have H₂ := Finset.union_subset_right H'
   exact supports_union.2 ⟨code_supp'_supports H', IH H₂⟩
   case fix f k IH =>
   rw [cont_supp] at H
-  exact supports_union.2 ⟨code_supp'_supports H, IH (Finsetₓ.union_subset_right H)⟩
+  exact supports_union.2 ⟨code_supp'_supports H, IH (Finset.union_subset_right H)⟩
 
 theorem code_supp_supports {S c k} (H : codeSupp c k ⊆ S) : Supports (codeSupp c k) S :=
-  supports_union.2 ⟨code_supp'_supports H, cont_supp_supports (Finsetₓ.union_subset_right H)⟩
+  supports_union.2 ⟨code_supp'_supports H, cont_supp_supports (Finset.union_subset_right H)⟩
 
 /-- The set `code_supp c k` is a finite set that witnesses the effective finiteness of the `tr`
 Turing machine. Starting from the initial state `tr_normal c k`, forward simulation uses only
 states in `code_supp c k`, so this is a finite state machine. Even though the underlying type of
 state labels `Λ'` is infinite, for a given partial recursive function `c` and continuation `k`,
 only finitely many states are accessed, corresponding roughly to subterms of `c`. -/
-theorem tr_supports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
-  ⟨code_supp_self _ _ (tr_stmts₁_self _), fun l' => code_supp_supports (Finsetₓ.Subset.refl _) _⟩
+theorem tr_supports (c k) : @TM2Cat.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
+  ⟨code_supp_self _ _ (tr_stmts₁_self _), fun l' => code_supp_supports (Finset.Subset.refl _) _⟩
 
 end
 

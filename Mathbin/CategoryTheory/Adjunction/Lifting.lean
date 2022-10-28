@@ -154,10 +154,10 @@ noncomputable def constructLeftAdjoint [∀ X : B, RegularEpi (adj₁.counit.app
   refine' adjunction.left_adjoint_of_equiv (fun X Y => construct_left_adjoint_equiv R _ adj₁ adj₂ Y X) _
   intro X Y Y' g h
   rw [construct_left_adjoint_equiv_apply, construct_left_adjoint_equiv_apply, Function.comp_app, Function.comp_app,
-    Equivₓ.trans_apply, Equivₓ.trans_apply, Equivₓ.trans_apply, Equivₓ.trans_apply, Equivₓ.symm_apply_eq,
-    Subtype.ext_iff, cofork.is_colimit.hom_iso_natural, Equivₓ.apply_symm_apply, Equivₓ.subtype_equiv_apply,
-    Equivₓ.subtype_equiv_apply, Equivₓ.subtype_equiv_apply, Equivₓ.subtype_equiv_apply, Subtype.coe_mk, Subtype.coe_mk,
-    Subtype.coe_mk, Subtype.coe_mk, ← adj₁.hom_equiv_naturality_right_symm, cofork.is_colimit.hom_iso_natural,
+    Equiv.trans_apply, Equiv.trans_apply, Equiv.trans_apply, Equiv.trans_apply, Equiv.symm_apply_eq, Subtype.ext_iff,
+    cofork.is_colimit.hom_iso_natural, Equiv.apply_symm_apply, Equiv.subtype_equiv_apply, Equiv.subtype_equiv_apply,
+    Equiv.subtype_equiv_apply, Equiv.subtype_equiv_apply, Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk,
+    Subtype.coe_mk, ← adj₁.hom_equiv_naturality_right_symm, cofork.is_colimit.hom_iso_natural,
     adj₂.hom_equiv_naturality_right, functor.comp_map]
 
 end LiftAdjoint
@@ -175,7 +175,7 @@ noncomputable def adjointTriangleLift {U : B ⥤ C} {F : C ⥤ B} (R : A ⥤ B) 
   left := LiftAdjoint.constructLeftAdjoint R _ adj₁ (Adjunction.ofRightAdjoint _)
   adj := Adjunction.adjunctionOfEquivLeft _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_right_adjoint R']]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_right_adjoint R']] -/
 /-- If `R ⋙ U` has a left adjoint, the domain of `R` has reflexive coequalizers and `U` is a monadic
 functor, then `R` has a left adjoint.
 This is a special case of `adjoint_triangle_lift` which is often more useful in practice.

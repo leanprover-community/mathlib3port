@@ -41,9 +41,9 @@ theorem cInf_one : inf (1 : Set α) = 1 :=
 
 end One
 
-section Groupₓ
+section Group
 
-variable [Groupₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {s t : Set α}
+variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {s t : Set α}
 
 @[to_additive]
 theorem cSup_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : sup s⁻¹ = (inf s)⁻¹ := by
@@ -77,7 +77,7 @@ theorem cInf_div (hs₀ : s.Nonempty) (hs₁ : BddBelow s) (ht₀ : t.Nonempty) 
     inf (s / t) = inf s / sup t := by
   rw [div_eq_mul_inv, cInf_mul hs₀ hs₁ ht₀.inv ht₁.inv, cInf_inv ht₀ ht₁, div_eq_mul_inv]
 
-end Groupₓ
+end Group
 
 end ConditionallyCompleteLattice
 
@@ -99,9 +99,9 @@ theorem Inf_one : inf (1 : Set α) = 1 :=
 
 end One
 
-section Groupₓ
+section Group
 
-variable [Groupₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (s t : Set α)
+variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (s t : Set α)
 
 @[to_additive]
 theorem Sup_inv (s : Set α) : sup s⁻¹ = (inf s)⁻¹ := by
@@ -129,7 +129,7 @@ theorem Sup_div : sup (s / t) = sup s / inf t := by simp_rw [div_eq_mul_inv, Sup
 @[to_additive]
 theorem Inf_div : inf (s / t) = inf s / sup t := by simp_rw [div_eq_mul_inv, Inf_mul, Inf_inv]
 
-end Groupₓ
+end Group
 
 end CompleteLattice
 
@@ -141,7 +141,7 @@ open Set
 
 include hr
 
-theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) := by
+theorem smul_Ioo : r • IooCat a b = IooCat (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioo]
   constructor
@@ -153,10 +153,10 @@ theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) := by
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(lt_div_iff' hr).mpr a_left, (div_lt_iff' hr).mpr a_right⟩, _⟩
-    rw [mul_div_cancel' _ (ne_of_gtₓ hr)]
+    rw [mul_div_cancel' _ (ne_of_gt hr)]
     
 
-theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) := by
+theorem smul_Icc : r • IccCat a b = IccCat (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Icc]
   constructor
@@ -168,10 +168,10 @@ theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) := by
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(le_div_iff' hr).mpr a_left, (div_le_iff' hr).mpr a_right⟩, _⟩
-    rw [mul_div_cancel' _ (ne_of_gtₓ hr)]
+    rw [mul_div_cancel' _ (ne_of_gt hr)]
     
 
-theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) := by
+theorem smul_Ico : r • IcoCat a b = IcoCat (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ico]
   constructor
@@ -183,10 +183,10 @@ theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) := by
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(le_div_iff' hr).mpr a_left, (div_lt_iff' hr).mpr a_right⟩, _⟩
-    rw [mul_div_cancel' _ (ne_of_gtₓ hr)]
+    rw [mul_div_cancel' _ (ne_of_gt hr)]
     
 
-theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) := by
+theorem smul_Ioc : r • IocCat a b = IocCat (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioc]
   constructor
@@ -198,10 +198,10 @@ theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) := by
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(lt_div_iff' hr).mpr a_left, (div_le_iff' hr).mpr a_right⟩, _⟩
-    rw [mul_div_cancel' _ (ne_of_gtₓ hr)]
+    rw [mul_div_cancel' _ (ne_of_gt hr)]
     
 
-theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by
+theorem smul_Ioi : r • IoiCat a = IoiCat (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
@@ -212,10 +212,10 @@ theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by
     use x / r
     constructor
     exact (lt_div_iff' hr).mpr h
-    exact mul_div_cancel' _ (ne_of_gtₓ hr)
+    exact mul_div_cancel' _ (ne_of_gt hr)
     
 
-theorem smul_Iio : r • Iio a = Iio (r • a) := by
+theorem smul_Iio : r • IioCat a = IioCat (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
@@ -226,10 +226,10 @@ theorem smul_Iio : r • Iio a = Iio (r • a) := by
     use x / r
     constructor
     exact (div_lt_iff' hr).mpr h
-    exact mul_div_cancel' _ (ne_of_gtₓ hr)
+    exact mul_div_cancel' _ (ne_of_gt hr)
     
 
-theorem smul_Ici : r • Ici a = Ici (r • a) := by
+theorem smul_Ici : r • IciCat a = IciCat (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
@@ -240,10 +240,10 @@ theorem smul_Ici : r • Ici a = Ici (r • a) := by
     use x / r
     constructor
     exact (le_div_iff' hr).mpr h
-    exact mul_div_cancel' _ (ne_of_gtₓ hr)
+    exact mul_div_cancel' _ (ne_of_gt hr)
     
 
-theorem smul_Iic : r • Iic a = Iic (r • a) := by
+theorem smul_Iic : r • IicCat a = IicCat (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
@@ -254,7 +254,7 @@ theorem smul_Iic : r • Iic a = Iic (r • a) := by
     use x / r
     constructor
     exact (div_le_iff' hr).mpr h
-    exact mul_div_cancel' _ (ne_of_gtₓ hr)
+    exact mul_div_cancel' _ (ne_of_gt hr)
     
 
 end LinearOrderedField

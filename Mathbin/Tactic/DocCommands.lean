@@ -29,14 +29,20 @@ information.
 -/
 
 
+/- warning: string.hash -> String.hash is a dubious translation:
+lean 3 declaration is
+  String -> Nat
+but is expected to have type
+  ([mdata borrowed:1 String]) -> UInt64
+Case conversion may be inaccurate. Consider using '#align string.hash String.hashₓ'. -/
 /-- A rudimentary hash function on strings. -/
-def Stringₓ.hash (s : Stringₓ) : ℕ :=
+def String.hash (s : String) : ℕ :=
   s.fold 1 fun h c => (33 * h + c.val) % unsignedSz
 
 /-- Get the last component of a name, and convert it to a string. -/
-unsafe def name.last : Name → Stringₓ
+unsafe def name.last : Name → String
   | Name.mk_string s _ => s
-  | Name.mk_numeral n _ => reprₓ n
+  | Name.mk_numeral n _ => repr n
   | anonymous => "[anonymous]"
 
 open Tactic
@@ -85,7 +91,7 @@ unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] 
 `library_note.<note_name>` with `note` as the docstring and tags it with the `library_note`
 attribute.
 -/
-unsafe def tactic.add_library_note (note_name note : Stringₓ) : tactic Unit := do
+unsafe def tactic.add_library_note (note_name note : String) : tactic Unit := do
   let decl_name := mkStrName `library_note note_name
   add_decl <| mk_reflected_definition decl_name ()
   add_doc_string decl_name note
@@ -104,13 +110,13 @@ library_note "note id"
 @[user_command]
 unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "library_note")) : parser Unit := do
   let note_name ← parser.pexpr
-  let note_name ← eval_pexpr Stringₓ note_name
+  let note_name ← eval_pexpr String note_name
   let some doc_string ← pure mi.doc_string | fail "library_note requires a doc string"
   add_library_note note_name doc_string
 
 /-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
-unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
+unsafe def tactic.get_library_notes : tactic (List (String × String)) :=
   attribute.get_instances `library_note >>= List.mmap fun dcl => Prod.mk dcl.last <$> doc_string dcl
 
 /-! ### The `add_tactic_doc_entry` command -/
@@ -125,7 +131,7 @@ inductive DocCategory
   deriving DecidableEq, has_reflect
 
 /-- Format a `doc_category` -/
-unsafe def doc_category.to_string : DocCategory → Stringₓ
+unsafe def doc_category.to_string : DocCategory → String
   | DocCategory.tactic => "tactic"
   | DocCategory.cmd => "command"
   | DocCategory.hole_cmd => "hole_command"
@@ -136,20 +142,20 @@ unsafe instance : has_to_format DocCategory :=
 
 /-- The information used to generate a tactic doc entry -/
 structure TacticDocEntry where
-  Name : Stringₓ
+  Name : String
   category : DocCategory
   declNames : List Name
-  tags : List Stringₓ := []
+  tags : List String := []
   inheritDescriptionFrom : Option Name := none
   deriving has_reflect
 
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
-unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) (desc : Stringₓ) : json :=
+unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) (desc : String) : json :=
   json.object
     [("name", d.Name), ("category", d.category.toString), ("decl_names", d.declNames.map (json.of_string ∘ toString)),
       ("tags", d.tags.map json.of_string), ("description", desc)]
 
-unsafe instance tactic_doc_entry.has_to_string : HasToString (TacticDocEntry × Stringₓ) :=
+unsafe instance tactic_doc_entry.has_to_string : ToString (TacticDocEntry × String) :=
   ⟨fun ⟨doc, desc⟩ => json.unparse (doc.to_json desc)⟩
 
 /-- A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
@@ -161,7 +167,7 @@ unsafe def tactic_doc_entry_attr : user_attribute where
   parser := failed
 
 /-- Collects everything in the environment tagged with the attribute `tactic_doc`. -/
-unsafe def tactic.get_tactic_doc_entries : tactic (List (TacticDocEntry × Stringₓ)) :=
+unsafe def tactic.get_tactic_doc_entries : tactic (List (TacticDocEntry × String)) :=
   attribute.get_instances `tactic_doc >>=
     List.mmap fun dcl => Prod.mk <$> (mk_const dcl >>= eval_expr TacticDocEntry) <*> doc_string dcl
 
@@ -170,7 +176,7 @@ with `tde` as its body and tags it with the `tactic_doc`
 attribute. If `tde.decl_names` has exactly one entry `` `decl`` and
 if `tde.description` is the empty string, `add_tactic_doc` uses the doc
 string of `decl` as the description. -/
-unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option Stringₓ) : tactic Unit := do
+unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option String) : tactic Unit := do
   let desc ←
     doc <|> do
         let inh_id ←

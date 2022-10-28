@@ -33,7 +33,7 @@ theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg := 
   rcases eq_or_ne y 0 with (rfl | hy)
   · simp
     
-  simp only [hx, hy, false_orₓ, same_ray_iff_norm_smul_eq, arg_eq_arg_iff hx hy]
+  simp only [hx, hy, false_or_iff, same_ray_iff_norm_smul_eq, arg_eq_arg_iff hx hy]
   field_simp [hx, hy]
   rw [mul_comm, eq_comm]
 
@@ -53,14 +53,14 @@ theorem abs_add_eq_iff : (x + y).abs = x.abs + y.abs ↔ x = 0 ∨ y = 0 ∨ x.a
 theorem abs_sub_eq_iff : (x - y).abs = abs (x.abs - y.abs) ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
   same_ray_iff_norm_sub.symm.trans same_ray_iff
 
-theorem same_ray_of_arg_eq (h : x.arg = y.arg) : SameRay ℝ x y :=
+theorem sameRayOfArgEq (h : x.arg = y.arg) : SameRay ℝ x y :=
   same_ray_iff.mpr <| Or.inr <| Or.inr h
 
 theorem abs_add_eq (h : x.arg = y.arg) : (x + y).abs = x.abs + y.abs :=
-  (same_ray_of_arg_eq h).norm_add
+  (sameRayOfArgEq h).norm_add
 
 theorem abs_sub_eq (h : x.arg = y.arg) : (x - y).abs = ∥x.abs - y.abs∥ :=
-  (same_ray_of_arg_eq h).norm_sub
+  (sameRayOfArgEq h).norm_sub
 
 end Complex
 

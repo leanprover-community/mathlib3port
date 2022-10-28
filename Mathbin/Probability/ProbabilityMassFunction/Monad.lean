@@ -49,7 +49,7 @@ theorem mem_support_pure_iff : a' ∈ (pure a).Support ↔ a' = a := by simp
 instance [Inhabited α] : Inhabited (Pmf α) :=
   ⟨pure default⟩
 
-section Measureₓ
+section Measure
 
 variable (s : Set α)
 
@@ -70,7 +70,7 @@ theorem to_measure_pure_apply [MeasurableSpace α] (hs : MeasurableSet s) :
     (pure a).toMeasure s = if a ∈ s then 1 else 0 :=
   (to_measure_apply_eq_to_outer_measure_apply (pure a) s hs).trans (to_outer_measure_pure_apply a s)
 
-end Measureₓ
+end Measure
 
 end Pure
 
@@ -121,16 +121,16 @@ theorem bind_bind : (p.bind f).bind g = p.bind fun a => (f a).bind g := by
   ext1 b
   simp only [ennreal.coe_eq_coe.symm, coe_bind_apply, ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
   rw [Ennreal.tsum_comm]
-  simp [mul_assoc, mul_left_commₓ, mul_comm]
+  simp [mul_assoc, mul_left_comm, mul_comm]
 
 theorem bind_comm (p : Pmf α) (q : Pmf β) (f : α → β → Pmf γ) :
     (p.bind fun a => q.bind (f a)) = q.bind fun b => p.bind fun a => f a b := by
   ext1 b
   simp only [ennreal.coe_eq_coe.symm, coe_bind_apply, ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
   rw [Ennreal.tsum_comm]
-  simp [mul_assoc, mul_left_commₓ, mul_comm]
+  simp [mul_assoc, mul_left_comm, mul_comm]
 
-section Measureₓ
+section Measure
 
 variable (s : Set β)
 
@@ -160,13 +160,13 @@ theorem to_measure_bind_apply [MeasurableSpace β] (hs : MeasurableSet s) :
     ((to_outer_measure_bind_apply p f s).trans
       (tsum_congr fun a => congr_arg (fun x => p a * x) (to_measure_apply_eq_to_outer_measure_apply (f a) s hs).symm))
 
-end Measureₓ
+end Measure
 
 end Bind
 
-instance : Monadₓ Pmf where
-  pure := fun A a => pure a
-  bind := fun A B pa pb => pa.bind pb
+instance : Monad Pmf where
+  pure A a := pure a
+  bind A B pa pb := pa.bind pb
 
 section BindOnSupport
 
@@ -174,7 +174,7 @@ protected theorem BindOnSupport.summable (p : Pmf α) (f : ∀ a ∈ p.Support, 
     Summable fun a : α => p a * if h : p a = 0 then 0 else f a h b := by
   refine' Nnreal.summable_of_le (fun a => _) p.summable_coe
   split_ifs
-  · refine' (mul_zero (p a)).symm ▸ le_of_eqₓ h.symm
+  · refine' (mul_zero (p a)).symm ▸ le_of_eq h.symm
     
   · suffices p a * f a h b ≤ p a * 1 by simpa
     exact mul_le_mul_of_nonneg_left ((f a h).coe_le_one _) (p a).2
@@ -282,7 +282,7 @@ theorem bind_on_support_comm (p : Pmf α) (q : Pmf β) (f : ∀ a ∈ p.Support,
   refine' trans Ennreal.tsum_comm (tsum_congr fun b => tsum_congr fun a => _)
   split_ifs with h1 h2 h2 <;> ring
 
-section Measureₓ
+section Measure
 
 variable (s : Set β)
 
@@ -329,7 +329,7 @@ theorem to_measure_bind_on_support_apply [MeasurableSpace β] (hs : MeasurableSe
           (congr_arg (dite (p a = 0) fun _ => 0) <|
             funext fun h => symm <| to_measure_apply_eq_to_outer_measure_apply (f a h) s hs)))
 
-end Measureₓ
+end Measure
 
 end BindOnSupport
 

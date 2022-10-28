@@ -35,13 +35,13 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ∥g i x∥ ≤ n }
   -- each of these sets is closed
   have hc : ∀ n : ℕ, IsClosed (e n) := fun i =>
-    is_closed_Inter fun i => is_closed_le (Continuous.norm (g i).cont) continuous_const
+    isClosedInter fun i => isClosedLe (Continuous.norm (g i).cont) continuous_const
   -- the union is the entire space; this is where we use `h`
   have hU : (⋃ n : ℕ, e n) = univ := by
     refine' eq_univ_of_forall fun x => _
     cases' h x with C hC
     obtain ⟨m, hm⟩ := exists_nat_ge C
-    exact ⟨e m, mem_range_self m, mem_Inter.mpr fun i => le_transₓ (hC i) hm⟩
+    exact ⟨e m, mem_range_self m, mem_Inter.mpr fun i => le_trans (hC i) hm⟩
   -- apply the Baire category theorem to conclude that for some `m : ℕ`, `e m` contains some `x`
   rcases nonempty_interior_of_Union_of_closed hc hU with ⟨m, x, hx⟩
   rcases metric.is_open_iff.mp is_open_interior x hx with ⟨ε, ε_pos, hε⟩
@@ -60,7 +60,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     ∥g i y∥ = ∥g i (y + x) - g i x∥ := by rw [ContinuousLinearMap.map_add, add_sub_cancel]
     _ ≤ ∥g i (y + x)∥ + ∥g i x∥ := norm_sub_le _ _
     _ ≤ m + m :=
-      add_le_add (real_norm_le (y + x) (by rwa [add_commₓ, add_mem_ball_iff_norm]) i)
+      add_le_add (real_norm_le (y + x) (by rwa [add_comm, add_mem_ball_iff_norm]) i)
         (real_norm_le x (Metric.mem_ball_self ε_pos) i)
     _ = (m + m : ℕ) := (m.cast_add m).symm
     _ ≤ (m + m : ℕ) * (∥y∥ / (ε / ∥k∥)) :=
@@ -122,7 +122,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
     cases' metric.tendsto_at_top.mp (tendsto_pi_nhds.mp h x) ε ε_pos with n hn
     have lt_ε : ∥g n x - f x∥ < ε := by
       rw [← dist_eq_norm]
-      exact hn n (le_reflₓ n)
+      exact hn n (le_refl n)
     calc
       ∥f x∥ ≤ ∥g n x∥ + ∥g n x - f x∥ := norm_le_insert _ _
       _ < ∥g n∥ * ∥x∥ + ε := by linarith [lt_ε, (g n).le_op_norm x]

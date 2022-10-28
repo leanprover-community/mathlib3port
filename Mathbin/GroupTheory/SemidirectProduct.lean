@@ -31,7 +31,7 @@ group, semidirect product
 -/
 
 
-variable (N : Type _) (G : Type _) {H : Type _} [Groupₓ N] [Groupₓ G] [Groupₓ H]
+variable (N : Type _) (G : Type _) {H : Type _} [Group N] [Group G] [Group H]
 
 /-- The semidirect product of groups `N` and `G`, given a map `φ` from `G` to the automorphism
   group of `N`. It the product of sets with the group operation
@@ -69,9 +69,9 @@ private theorem mul_one_aux (a : N ⋊[φ] G) : mulAux a oneAux = a := by cases 
 private theorem one_mul_aux (a : N ⋊[φ] G) : mulAux oneAux a = a := by cases a <;> simp [mul_aux, one_aux]
 
 private theorem mul_left_inv_aux (a : N ⋊[φ] G) : mulAux (invAux a) a = one_aux := by
-  simp only [mul_aux, inv_aux, one_aux, ← MulEquiv.map_mul, mul_left_invₓ] <;> simp
+  simp only [mul_aux, inv_aux, one_aux, ← MulEquiv.map_mul, mul_left_inv] <;> simp
 
-instance : Groupₓ (N ⋊[φ] G) where
+instance : Group (N ⋊[φ] G) where
   one := oneAux
   inv := invAux
   mul := mulAux
@@ -109,7 +109,7 @@ theorem mul_right (a b : N ⋊[φ] G) : (a * b).right = a.right * b.right :=
 
 /-- The canonical map `N →* N ⋊[φ] G` sending `n` to `⟨n, 1⟩` -/
 def inl : N →* N ⋊[φ] G where
-  toFun := fun n => ⟨n, 1⟩
+  toFun n := ⟨n, 1⟩
   map_one' := rfl
   map_mul' := by intros <;> ext <;> simp
 
@@ -130,7 +130,7 @@ theorem inl_inj {n₁ n₂ : N} : (inl n₁ : N ⋊[φ] G) = inl n₂ ↔ n₁ =
 
 /-- The canonical map `G →* N ⋊[φ] G` sending `g` to `⟨1, g⟩` -/
 def inr : G →* N ⋊[φ] G where
-  toFun := fun g => ⟨1, g⟩
+  toFun g := ⟨1, g⟩
   map_one' := rfl
   map_mul' := by intros <;> ext <;> simp
 
@@ -152,7 +152,7 @@ theorem inr_inj {g₁ g₂ : G} : (inr g₁ : N ⋊[φ] G) = inr g₂ ↔ g₁ =
 theorem inl_aut (g : G) (n : N) : (inl (φ g n) : N ⋊[φ] G) = inr g * inl n * inr g⁻¹ := by ext <;> simp
 
 theorem inl_aut_inv (g : G) (n : N) : (inl ((φ g)⁻¹ n) : N ⋊[φ] G) = inr g⁻¹ * inl n * inr g := by
-  rw [← MonoidHom.map_inv, inl_aut, inv_invₓ]
+  rw [← MonoidHom.map_inv, inl_aut, inv_inv]
 
 @[simp]
 theorem mk_eq_inl_mul_inr (g : G) (n : N) : (⟨n, g⟩ : N ⋊[φ] G) = inl n * inr g := by ext <;> simp
@@ -164,7 +164,7 @@ theorem inl_left_mul_inr_right (x : N ⋊[φ] G) : inl x.left * inr x.right = x 
 def rightHom : N ⋊[φ] G →* G where
   toFun := SemidirectProduct.right
   map_one' := rfl
-  map_mul' := fun _ _ => rfl
+  map_mul' _ _ := rfl
 
 @[simp]
 theorem right_hom_eq_right : (rightHom : N ⋊[φ] G → G) = right :=
@@ -186,7 +186,7 @@ theorem right_hom_surjective : Function.Surjective (rightHom : N ⋊[φ] G → G
   Function.surjective_iff_has_right_inverse.2 ⟨inr, right_hom_inr⟩
 
 theorem range_inl_eq_ker_right_hom : (inl : N →* N ⋊[φ] G).range = rightHom.ker :=
-  le_antisymmₓ (fun _ => by simp (config := { contextual := true }) [MonoidHom.mem_ker, eq_comm]) fun x hx =>
+  le_antisymm (fun _ => by simp (config := { contextual := true }) [MonoidHom.mem_ker, eq_comm]) fun x hx =>
     ⟨x.left, by ext <;> simp_all [MonoidHom.mem_ker]⟩
 
 section lift
@@ -196,9 +196,9 @@ variable (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMono
 /-- Define a group hom `N ⋊[φ] G →* H`, by defining maps `N →* H` and `G →* H`  -/
 def lift (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁) :
     N ⋊[φ] G →* H where
-  toFun := fun a => f₁ a.1 * f₂ a.2
+  toFun a := f₁ a.1 * f₂ a.2
   map_one' := by simp
-  map_mul' := fun a b => by
+  map_mul' a b := by
     have := fun n g => MonoidHom.ext_iff.1 (h n) g
     simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom] at this
     simp [this, mul_assoc]
@@ -230,15 +230,15 @@ end lift
 
 section Map
 
-variable {N₁ : Type _} {G₁ : Type _} [Groupₓ N₁] [Groupₓ G₁] {φ₁ : G₁ →* MulAut N₁}
+variable {N₁ : Type _} {G₁ : Type _} [Group N₁] [Group G₁] {φ₁ : G₁ →* MulAut N₁}
 
 /-- Define a map from `N ⋊[φ] G` to `N₁ ⋊[φ₁] G₁` given maps `N →* N₁` and `G →* G₁` that
   satisfy a commutativity condition `∀ n g, f₁ (φ g n) = φ₁ (f₂ g) (f₁ n)`.  -/
 def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁) :
     N ⋊[φ] G →* N₁ ⋊[φ₁] G₁ where
-  toFun := fun x => ⟨f₁ x.1, f₂ x.2⟩
+  toFun x := ⟨f₁ x.1, f₂ x.2⟩
   map_one' := by simp
-  map_mul' := fun x y => by
+  map_mul' x y := by
     replace h := MonoidHom.ext_iff.1 (h x.right) y.left
     ext <;> simp_all
 

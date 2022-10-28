@@ -91,10 +91,10 @@ class Initial (F : C ⥤ D) : Prop where
 attribute [instance] initial.out
 
 instance final_op_of_initial (F : C ⥤ D) [Initial F] :
-    Final F.op where out := fun d => is_connected_of_equivalent (costructuredArrowOpEquivalence F (unop d))
+    Final F.op where out d := is_connected_of_equivalent (costructuredArrowOpEquivalence F (unop d))
 
 instance initial_op_of_final (F : C ⥤ D) [Final F] :
-    Initial F.op where out := fun d => is_connected_of_equivalent (structuredArrowOpEquivalence F (unop d))
+    Initial F.op where out d := is_connected_of_equivalent (structuredArrowOpEquivalence F (unop d))
 
 theorem final_of_initial_op (F : C ⥤ D) [Initial F.op] : Final F :=
   { out := fun d =>
@@ -187,7 +187,7 @@ variable {F G}
 -/
 @[simps]
 def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
-  obj := fun c =>
+  obj c :=
     { x := c.x,
       ι :=
         { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X),
@@ -206,7 +206,7 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
               
             · rw [← functor.map_comp_assoc]
                } }
-  map := fun X Y f => { Hom := f.Hom }
+  map X Y f := { Hom := f.Hom }
 
 @[simp]
 theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
@@ -426,7 +426,7 @@ variable {F G}
 -/
 @[simps]
 def extendCone : Cone (F ⋙ G) ⥤ Cone G where
-  obj := fun c =>
+  obj c :=
     { x := c.x,
       π :=
         { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d),
@@ -447,7 +447,7 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G where
               
             · rw [← functor.map_comp]
                } }
-  map := fun X Y f => { Hom := f.Hom }
+  map X Y f := { Hom := f.Hom }
 
 @[simp]
 theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :

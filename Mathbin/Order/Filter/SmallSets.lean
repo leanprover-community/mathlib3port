@@ -49,28 +49,28 @@ theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set
 theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets ↔ ∀ t ∈ lb, ∀ᶠ x in la, f x ⊆ t :=
   (has_basis_small_sets lb).tendsto_right_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 
 theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
-  eventually_small_sets.trans <| exists₂_congrₓ fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
+  eventually_small_sets.trans <| exists₂_congr fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s «expr ⊆ » t)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem frequently_small_sets {p : Set α → Prop} : (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.has_basis_small_sets.frequently_iff
 
 theorem frequently_small_sets_mem (l : Filter α) : ∃ᶠ s in l.smallSets, s ∈ l :=
   frequently_small_sets.2 fun t ht => ⟨t, Subset.rfl, ht⟩
 
-theorem HasAntitoneBasis.tendsto_small_sets {ι} [Preorderₓ ι] {s : ι → Set α} (hl : l.HasAntitoneBasis s) :
+theorem HasAntitoneBasis.tendsto_small_sets {ι} [Preorder ι] {s : ι → Set α} (hl : l.HasAntitoneBasis s) :
     Tendsto s atTop l.smallSets :=
   tendsto_small_sets_iff.2 fun t ht => hl.eventually_subset ht
 
 @[mono]
-theorem monotone_small_sets : Monotoneₓ (@smallSets α) :=
-  monotone_lift' monotone_idₓ monotone_constₓ
+theorem monotone_small_sets : Monotone (@smallSets α) :=
+  monotone_lift' monotone_id monotone_const
 
 @[simp]
 theorem small_sets_bot : (⊥ : Filter α).smallSets = pure ∅ := by
@@ -95,7 +95,7 @@ theorem small_sets_infi {f : ι → Filter α} : (infi f).smallSets = ⨅ i, (f 
 theorem small_sets_inf (l₁ l₂ : Filter α) : (l₁ ⊓ l₂).smallSets = l₁.smallSets ⊓ l₂.smallSets :=
   lift'_inf _ _ powerset_inter
 
-instance small_sets_ne_bot (l : Filter α) : NeBot l.smallSets :=
+instance smallSetsNeBot (l : Filter α) : NeBot l.smallSets :=
   (lift'_ne_bot_iff monotone_powerset).2 fun _ _ => powerset_nonempty
 
 theorem Tendsto.small_sets_mono {s t : α → Set β} (ht : Tendsto t la lb.smallSets) (hst : ∀ᶠ x in la, s x ⊆ t x) :
@@ -120,7 +120,7 @@ theorem eventually_small_sets_eventually {p : α → Prop} :
   calc
     _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x := eventually_small_sets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
     _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
-    _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
+    _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm', mem_inter_iff, ← and_imp]
     
 
 @[simp]

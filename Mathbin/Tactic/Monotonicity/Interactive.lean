@@ -19,7 +19,7 @@ open Interactive.Types
 open Tactic
 
 -- mathport name: parser.optional
-local postfix:1024 "?" => optionalₓ
+local postfix:1024 "?" => optional
 
 -- mathport name: parser.many
 local postfix:1024 "*" => many
@@ -29,6 +29,7 @@ unsafe inductive mono_function (elab : Bool := true)
   | assoc : expr elab → Option (expr elab) → Option (expr elab) → mono_function
   | assoc_comm : expr elab → expr elab → mono_function
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 unsafe instance : DecidableEq mono_function := by
   run_tac
     mk_dec_eq_instance
@@ -208,7 +209,7 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
   let (a, c, i, f) ← check_ac l
   if a then
       if c then do
-        let (s, ls, rs) ← Monadₓ.join (match_ac <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
+        let (s, ls, rs) ← Monad.join (match_ac <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
         let (l', l_id) ← fold_assoc f i ls
         let (r', r_id) ← fold_assoc f i rs
         let s' ← fold_assoc1 f s
@@ -216,7 +217,7 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
       else do
         let-- a ∧ ¬ c
           (pre, ls, rs, suff)
-          ← Monadₓ.join (match_assoc <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
+          ← Monad.join (match_assoc <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
         let (l', l_id) ← fold_assoc f i ls
         let (r', r_id) ← fold_assoc f i rs
         let pre' := fold_assoc1 f pre
@@ -298,7 +299,7 @@ unsafe instance has_to_tactic_format_mono_law :
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁ -/
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
   Prod.snd <$>
@@ -332,7 +333,7 @@ unsafe def match_rule (pat : expr) (r : Name) : tactic expr := do
   let t ← infer_type r'
   let t ←
     expr.dsimp t { failIfUnchanged := false } true []
-        [simp_arg_type.expr (pquote.1 Monotoneₓ), simp_arg_type.expr (pquote.1 StrictMonoₓ)]
+        [simp_arg_type.expr (pquote.1 Monotone), simp_arg_type.expr (pquote.1 StrictMono)]
   match_rule_head pat [] r' t
 
 unsafe def find_lemma (pat : expr) : List Name → tactic (List expr)
@@ -376,7 +377,7 @@ unsafe def side_conditions (e : expr) : tactic format := do
       f! "{r }:
         {format.join ts}"
 
-open Monadₓ
+open Monad
 
 /-- tactic-facing function, similar to `interactive.tactic.generalize` with the
 exception that meta variables -/
@@ -422,7 +423,7 @@ unsafe def solve_mvar (v : expr) (tac : tactic Unit) : tactic Unit := do
   done
   set_goals <| gs
 
-def List.minimumOn {α β} [LinearOrderₓ β] (f : α → β) : List α → List α
+def List.minimumOn {α β} [LinearOrder β] (f : α → β) : List α → List α
   | [] => []
   | x :: xs =>
     Prod.snd <|
@@ -519,10 +520,10 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 
@@ -652,7 +653,7 @@ add_tactic_doc
   { Name := "ac_mono", category := DocCategory.tactic, declNames := [`tactic.interactive.ac_mono],
     tags := ["monotonicity"] }
 
-attribute [mono] And.impₓ Or.impₓ
+attribute [mono] And.imp Or.imp
 
 end Tactic.Interactive
 

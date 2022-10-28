@@ -29,7 +29,7 @@ namespace Matrix
 
 open FiniteDimensional
 
-variable {m n o K : Type _} [m_fin : Fintypeₓ m] [Fintypeₓ n] [Fintypeₓ o]
+variable {m n o K : Type _} [m_fin : Fintype m] [Fintype n] [Fintype o]
 
 variable [DecidableEq n] [DecidableEq o] [Field K]
 
@@ -40,39 +40,39 @@ noncomputable def rank : ℕ :=
   finrank K A.toLin'.range
 
 @[simp]
-theorem rank_one : rank (1 : Matrix n n K) = Fintypeₓ.card n := by
+theorem rank_one : rank (1 : Matrix n n K) = Fintype.card n := by
   rw [rank, to_lin'_one, LinearMap.range_id, finrank_top, Module.Free.finrank_pi]
 
 @[simp]
 theorem rank_zero : rank (0 : Matrix n n K) = 0 := by rw [rank, LinearEquiv.map_zero, LinearMap.range_zero, finrank_bot]
 
-theorem rank_le_card_width : A.rank ≤ Fintypeₓ.card n := by
+theorem rank_le_card_width : A.rank ≤ Fintype.card n := by
   convert le_of_add_le_left A.to_lin'.finrank_range_add_finrank_ker.le
   exact (Module.Free.finrank_pi K).symm
 
-theorem rank_le_width {m n : ℕ} (A : Matrix (Finₓ m) (Finₓ n) K) : A.rank ≤ n :=
-  A.rank_le_card_width.trans <| (Fintypeₓ.card_fin n).le
+theorem rank_le_width {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ n :=
+  A.rank_le_card_width.trans <| (Fintype.card_fin n).le
 
 theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank := by
   refine' LinearMap.finrank_le_finrank_of_injective (Submodule.of_le_injective _)
   rw [to_lin'_mul]
   exact LinearMap.range_comp_le_range _ _
 
-theorem rank_unit (A : (Matrix n n K)ˣ) : (A : Matrix n n K).rank = Fintypeₓ.card n := by
-  refine' le_antisymmₓ (rank_le_card_width A) _
+theorem rank_unit (A : (Matrix n n K)ˣ) : (A : Matrix n n K).rank = Fintype.card n := by
+  refine' le_antisymm (rank_le_card_width A) _
   have := rank_mul_le (A : Matrix n n K) (↑A⁻¹ : Matrix n n K)
-  rwa [← mul_eq_mul, ← Units.coe_mul, mul_inv_selfₓ, Units.coe_one, rank_one] at this
+  rwa [← mul_eq_mul, ← Units.coe_mul, mul_inv_self, Units.coe_one, rank_one] at this
 
-theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintypeₓ.card n := by
+theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.card n := by
   obtain ⟨A, rfl⟩ := h
   exact rank_unit A
 
 include m_fin
 
-theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [Module K M₁] [Module K M₂]
+theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂] [Module K M₁] [Module K M₂]
     (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) : A.rank = finrank K (toLin v₂ v₁ A).range := by
-  let e₁ := (Pi.basisFun K m).Equiv v₁ (Equivₓ.refl _)
-  let e₂ := (Pi.basisFun K n).Equiv v₂ (Equivₓ.refl _)
+  let e₁ := (Pi.basisFun K m).Equiv v₁ (Equiv.refl _)
+  let e₂ := (Pi.basisFun K n).Equiv v₂ (Equiv.refl _)
   have range_e₂ : (e₂ : (n → K) →ₗ[K] M₂).range = ⊤ := by
     rw [LinearMap.range_eq_top]
     exact e₂.surjective
@@ -86,16 +86,16 @@ theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroupₓ M₁]
   have aux₂ := Basis.equiv_apply (Pi.basisFun K n) i v₂
   rw [to_lin_eq_to_lin'] at aux₁
   rw [Pi.basis_fun_apply, LinearMap.coe_std_basis] at aux₁ aux₂
-  simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equivₓ.refl_apply, aux₁, aux₂, LinearMap.coe_single,
+  simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂, LinearMap.coe_single,
     to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 
-theorem rank_le_card_height : A.rank ≤ Fintypeₓ.card m :=
+theorem rank_le_card_height : A.rank ≤ Fintype.card m :=
   (Submodule.finrank_le _).trans (Module.Free.finrank_pi K).le
 
 omit m_fin
 
-theorem rank_le_height {m n : ℕ} (A : Matrix (Finₓ m) (Finₓ n) K) : A.rank ≤ m :=
-  A.rank_le_card_height.trans <| (Fintypeₓ.card_fin m).le
+theorem rank_le_height {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ m :=
+  A.rank_le_card_height.trans <| (Fintype.card_fin m).le
 
 end Matrix
 

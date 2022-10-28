@@ -54,20 +54,20 @@ theorem epi_of_epi_map (F : C ⥤ D) [ReflectsEpimorphisms F] {X Y : C} {f : X �
   ReflectsEpimorphisms.reflects f h
 
 instance preserves_monomorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [PreservesMonomorphisms F] [PreservesMonomorphisms G] :
-    PreservesMonomorphisms (F ⋙ G) where preserves := fun X Y f h => by
+    PreservesMonomorphisms (F ⋙ G) where preserves X Y f h := by
     rw [comp_map]
     exact inferInstance
 
 instance preserves_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms F] [PreservesEpimorphisms G] :
-    PreservesEpimorphisms (F ⋙ G) where preserves := fun X Y f h => by
+    PreservesEpimorphisms (F ⋙ G) where preserves X Y f h := by
     rw [comp_map]
     exact inferInstance
 
 instance reflects_monomorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsMonomorphisms F] [ReflectsMonomorphisms G] :
-    ReflectsMonomorphisms (F ⋙ G) where reflects := fun X Y f h => F.mono_of_mono_map (G.mono_of_mono_map h)
+    ReflectsMonomorphisms (F ⋙ G) where reflects X Y f h := F.mono_of_mono_map (G.mono_of_mono_map h)
 
 instance reflects_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsEpimorphisms F] [ReflectsEpimorphisms G] :
-    ReflectsEpimorphisms (F ⋙ G) where reflects := fun X Y f h => F.epi_of_epi_map (G.epi_of_epi_map h)
+    ReflectsEpimorphisms (F ⋙ G) where reflects X Y f h := F.epi_of_epi_map (G.epi_of_epi_map h)
 
 theorem preserves_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms (F ⋙ G)]
     [ReflectsEpimorphisms G] : PreservesEpimorphisms F :=
@@ -129,7 +129,7 @@ theorem preserves_epimorphsisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj :
       ⟨by
         intro Z g h H
         replace H := congr_arg (adj.hom_equiv X Z) H
-        rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equivₓ.apply_eq_iff_eq] at H⟩ }
+        rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equiv.apply_eq_iff_eq] at H⟩ }
 
 instance (priority := 100) preserves_epimorphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
     PreservesEpimorphisms F :=
@@ -141,7 +141,7 @@ theorem preserves_monomorphisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj :
         intro Z g h H
         replace H := congr_arg (adj.hom_equiv Z Y).symm H
         rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono,
-          Equivₓ.apply_eq_iff_eq] at H⟩ }
+          Equiv.apply_eq_iff_eq] at H⟩ }
 
 instance (priority := 100) preserves_monomorphisms_of_is_right_adjoint (F : C ⥤ D) [IsRightAdjoint F] :
     PreservesMonomorphisms F :=
@@ -149,12 +149,12 @@ instance (priority := 100) preserves_monomorphisms_of_is_right_adjoint (F : C �
 
 instance (priority := 100) reflects_monomorphisms_of_faithful (F : C ⥤ D) [Faithful F] :
     ReflectsMonomorphisms
-      F where reflects := fun X Y f hf =>
+      F where reflects X Y f hf :=
     ⟨fun Z g h hgh => F.map_injective ((cancel_mono (F.map f)).1 (by rw [← F.map_comp, hgh, F.map_comp]))⟩
 
 instance (priority := 100) reflects_epimorphisms_of_faithful (F : C ⥤ D) [Faithful F] :
     ReflectsEpimorphisms
-      F where reflects := fun X Y f hf =>
+      F where reflects X Y f hf :=
     ⟨fun Z g h hgh => F.map_injective ((cancel_epi (F.map f)).1 (by rw [← F.map_comp, hgh, F.map_comp]))⟩
 
 section
@@ -163,8 +163,8 @@ variable (F : C ⥤ D) {X Y : C} (f : X ⟶ Y)
 
 /-- If `F` is a fully faithful functor, split epimorphisms are preserved and reflected by `F`. -/
 def splitEpiEquiv [Full F] [Faithful F] : SplitEpi f ≃ SplitEpi (F.map f) where
-  toFun := fun f => f.map F
-  invFun := fun s => by
+  toFun f := f.map F
+  invFun s := by
     refine' ⟨F.preimage s.section_, _⟩
     apply F.map_injective
     simp only [map_comp, image_preimage, map_id]
@@ -184,8 +184,8 @@ theorem is_split_epi_iff [Full F] [Faithful F] : IsSplitEpi (F.map f) ↔ IsSpli
 
 /-- If `F` is a fully faithful functor, split monomorphisms are preserved and reflected by `F`. -/
 def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) where
-  toFun := fun f => f.map F
-  invFun := fun s => by
+  toFun f := f.map F
+  invFun s := by
     refine' ⟨F.preimage s.retraction, _⟩
     apply F.map_injective
     simp only [map_comp, image_preimage, map_id]

@@ -41,14 +41,14 @@ variable {C : Type u} [Category.{v} C]
 
 open Injective
 
-namespace InjectiveResolution
+namespace InjectiveResolutionCat
 
 section
 
 variable [HasZeroMorphisms C] [HasZeroObject C] [HasEqualizers C] [HasImages C]
 
 /-- Auxiliary construction for `desc`. -/
-def descFZero {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
+def descFZero {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) :
     J.cocomplex.x 0 ⟶ I.cocomplex.x 0 :=
   factorThru (f ≫ I.ι.f 0) (J.ι.f 0)
 
@@ -59,17 +59,17 @@ section Abelian
 variable [Abelian C]
 
 /-- Auxiliary construction for `desc`. -/
-def descFOne {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
+def descFOne {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) :
     J.cocomplex.x 1 ⟶ I.cocomplex.x 1 :=
   Exact.desc (descFZero f I J ≫ I.cocomplex.d 0 1) (J.ι.f 0) (J.cocomplex.d 0 1) (Abelian.Exact.op _ _ J.exact₀)
     (by simp [← category.assoc, desc_f_zero])
 
 @[simp]
-theorem desc_f_one_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
+theorem desc_f_one_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) :
     J.cocomplex.d 0 1 ≫ descFOne f I J = descFZero f I J ≫ I.cocomplex.d 0 1 := by simp [desc_f_zero, desc_f_one]
 
 /-- Auxiliary construction for `desc`. -/
-def descFSucc {Y Z : C} (I : InjectiveResolution Y) (J : InjectiveResolution Z) (n : ℕ)
+def descFSucc {Y Z : C} (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) (n : ℕ)
     (g : J.cocomplex.x n ⟶ I.cocomplex.x n) (g' : J.cocomplex.x (n + 1) ⟶ I.cocomplex.x (n + 1))
     (w : J.cocomplex.d n (n + 1) ≫ g' = g ≫ I.cocomplex.d n (n + 1)) :
     Σ'g'' : J.cocomplex.x (n + 2) ⟶ I.cocomplex.x (n + 2),
@@ -79,13 +79,14 @@ def descFSucc {Y Z : C} (I : InjectiveResolution Y) (J : InjectiveResolution Z) 
     by simp⟩
 
 /-- A morphism in `C` descends to a chain map between injective resolutions. -/
-def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) : J.cocomplex ⟶ I.cocomplex :=
+def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) :
+    J.cocomplex ⟶ I.cocomplex :=
   CochainComplex.mkHom _ _ (descFZero f _ _) (descFOne f _ _) (desc_f_one_zero_comm f I J).symm fun n ⟨g, g', w⟩ =>
     ⟨(descFSucc I J n g g' w.symm).1, (descFSucc I J n g g' w.symm).2.symm⟩
 
 /-- The resolution maps intertwine the descent of a morphism and that morphism. -/
 @[simp, reassoc]
-theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
+theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) :
     J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι := by
   ext n
   rcases n with (_ | _ | n) <;>
@@ -96,19 +97,19 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : I
 -- Now that we've checked this property of the descent,
 -- we can seal away the actual definition.
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
-def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
+def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolutionCat Y} {J : InjectiveResolutionCat Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = 0) : I.cocomplex.x 1 ⟶ J.cocomplex.x 0 :=
   Exact.desc (f.f 0) (I.ι.f 0) (I.cocomplex.d 0 1) (Abelian.Exact.op _ _ I.exact₀)
     (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
-def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
+def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolutionCat Y} {J : InjectiveResolutionCat Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = (0 : _ ⟶ J.cocomplex)) : I.cocomplex.x 2 ⟶ J.cocomplex.x 1 :=
   Exact.desc (f.f 1 - descHomotopyZeroZero f comm ≫ J.cocomplex.d 0 1) (I.cocomplex.d 0 1) (I.cocomplex.d 1 2)
     (Abelian.Exact.op _ _ (I.exact _)) (by simp [desc_homotopy_zero_zero, ← category.assoc])
 
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
-def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
+def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolutionCat Y} {J : InjectiveResolutionCat Z}
     (f : I.cocomplex ⟶ J.cocomplex) (n : ℕ) (g : I.cocomplex.x (n + 1) ⟶ J.cocomplex.x n)
     (g' : I.cocomplex.x (n + 2) ⟶ J.cocomplex.x (n + 1))
     (w : f.f (n + 1) = I.cocomplex.d (n + 1) (n + 2) ≫ g' + g ≫ J.cocomplex.d n (n + 1)) :
@@ -122,30 +123,30 @@ def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
           simp only [add_sub_cancel]])
 
 /-- Any descent of the zero morphism is homotopic to zero. -/
-def descHomotopyZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z} (f : I.cocomplex ⟶ J.cocomplex)
-    (comm : I.ι ≫ f = 0) : Homotopy f 0 :=
+def descHomotopyZero {Y Z : C} {I : InjectiveResolutionCat Y} {J : InjectiveResolutionCat Z}
+    (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = 0) : Homotopy f 0 :=
   Homotopy.mkCoinductive _ (descHomotopyZeroZero f comm) (by simp [desc_homotopy_zero_zero])
     (descHomotopyZeroOne f comm) (by simp [desc_homotopy_zero_one]) fun n ⟨g, g', w⟩ =>
-    ⟨descHomotopyZeroSucc f n g g' (by simp only [w, add_commₓ]), by simp [desc_homotopy_zero_succ, w]⟩
+    ⟨descHomotopyZeroSucc f n g g' (by simp only [w, add_comm]), by simp [desc_homotopy_zero_succ, w]⟩
 
 /-- Two descents of the same morphism are homotopic. -/
-def descHomotopy {Y Z : C} (f : Y ⟶ Z) {I : InjectiveResolution Y} {J : InjectiveResolution Z}
+def descHomotopy {Y Z : C} (f : Y ⟶ Z) {I : InjectiveResolutionCat Y} {J : InjectiveResolutionCat Z}
     (g h : I.cocomplex ⟶ J.cocomplex) (g_comm : I.ι ≫ g = (CochainComplex.single₀ C).map f ≫ J.ι)
     (h_comm : I.ι ≫ h = (CochainComplex.single₀ C).map f ≫ J.ι) : Homotopy g h :=
   Homotopy.equivSubZero.invFun (descHomotopyZero _ (by simp [g_comm, h_comm]))
 
 /-- The descent of the identity morphism is homotopic to the identity cochain map. -/
-def descIdHomotopy (X : C) (I : InjectiveResolution X) : Homotopy (desc (𝟙 X) I I) (𝟙 I.cocomplex) := by
+def descIdHomotopy (X : C) (I : InjectiveResolutionCat X) : Homotopy (desc (𝟙 X) I I) (𝟙 I.cocomplex) := by
   apply desc_homotopy (𝟙 X) <;> simp
 
 /-- The descent of a composition is homotopic to the composition of the descents. -/
-def descCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (I : InjectiveResolution X) (J : InjectiveResolution Y)
-    (K : InjectiveResolution Z) : Homotopy (desc (f ≫ g) K I) (desc f J I ≫ desc g K J) := by
+def descCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (I : InjectiveResolutionCat X) (J : InjectiveResolutionCat Y)
+    (K : InjectiveResolutionCat Z) : Homotopy (desc (f ≫ g) K I) (desc f J I ≫ desc g K J) := by
   apply desc_homotopy (f ≫ g) <;> simp
 
 -- We don't care about the actual definitions of these homotopies.
 /-- Any two injective resolutions are homotopy equivalent. -/
-def homotopyEquiv {X : C} (I J : InjectiveResolution X) : HomotopyEquiv I.cocomplex J.cocomplex where
+def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) : HomotopyEquiv I.cocomplex J.cocomplex where
   Hom := desc (𝟙 X) J I
   inv := desc (𝟙 X) I J
   homotopyHomInvId :=
@@ -154,16 +155,16 @@ def homotopyEquiv {X : C} (I J : InjectiveResolution X) : HomotopyEquiv I.cocomp
     (descCompHomotopy (𝟙 X) (𝟙 X) J I J).symm.trans <| by simpa [category.id_comp] using desc_id_homotopy _ _
 
 @[simp, reassoc]
-theorem homotopy_equiv_hom_ι {X : C} (I J : InjectiveResolution X) : I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by
+theorem homotopy_equiv_hom_ι {X : C} (I J : InjectiveResolutionCat X) : I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by
   simp [HomotopyEquiv]
 
 @[simp, reassoc]
-theorem homotopy_equiv_inv_ι {X : C} (I J : InjectiveResolution X) : J.ι ≫ (homotopyEquiv I J).inv = I.ι := by
+theorem homotopy_equiv_inv_ι {X : C} (I J : InjectiveResolutionCat X) : J.ι ≫ (homotopyEquiv I J).inv = I.ι := by
   simp [HomotopyEquiv]
 
 end Abelian
 
-end InjectiveResolution
+end InjectiveResolutionCat
 
 section
 
@@ -183,7 +184,7 @@ abbrev injectiveResolution.ι (Z : C) [HasInjectiveResolution Z] :
 -/
 abbrev injectiveResolution.desc {X Y : C} (f : X ⟶ Y) [HasInjectiveResolution X] [HasInjectiveResolution Y] :
     injectiveResolution X ⟶ injectiveResolution Y :=
-  InjectiveResolution.desc f _ _
+  InjectiveResolutionCat.desc f _ _
 
 variable (C) [HasInjectiveResolutions C]
 
@@ -192,13 +193,13 @@ if considered with target the homotopy category
 (`ℕ`-indexed cochain complexes and chain maps up to homotopy).
 -/
 def injectiveResolutions : C ⥤ HomotopyCategory C (ComplexShape.up ℕ) where
-  obj := fun X => (HomotopyCategory.quotient _ _).obj (injectiveResolution X)
-  map := fun X Y f => (HomotopyCategory.quotient _ _).map (injectiveResolution.desc f)
-  map_id' := fun X => by
+  obj X := (HomotopyCategory.quotient _ _).obj (injectiveResolution X)
+  map X Y f := (HomotopyCategory.quotient _ _).map (injectiveResolution.desc f)
+  map_id' X := by
     rw [← (HomotopyCategory.quotient _ _).map_id]
     apply HomotopyCategory.eq_of_homotopy
     apply InjectiveResolution.desc_id_homotopy
-  map_comp' := fun X Y Z f g => by
+  map_comp' X Y Z f g := by
     rw [← (HomotopyCategory.quotient _ _).map_comp]
     apply HomotopyCategory.eq_of_homotopy
     apply InjectiveResolution.desc_comp_homotopy
@@ -214,7 +215,7 @@ theorem exact_f_d {X Y : C} (f : X ⟶ Y) : Exact f (d f) :=
 
 end
 
-namespace InjectiveResolution
+namespace InjectiveResolutionCat
 
 /-!
 Our goal is to define `InjectiveResolution.of Z : InjectiveResolution Z`.
@@ -237,7 +238,7 @@ def ofCocomplex (Z : C) : CochainComplex C ℕ :=
 /-- In any abelian category with enough injectives,
 `InjectiveResolution.of Z` constructs an injective resolution of the object `Z`.
 -/
-irreducible_def of (Z : C) : InjectiveResolution Z :=
+irreducible_def of (Z : C) : InjectiveResolutionCat Z :=
   { cocomplex := ofCocomplex Z,
     ι :=
       CochainComplex.mkHom _ _ (Injective.ι Z) 0
@@ -256,13 +257,13 @@ irreducible_def of (Z : C) : InjectiveResolution Z :=
         · simp
           apply exact_f_d
           ,
-    mono := Injective.ι_mono Z }
+    Mono := Injective.ι_mono Z }
 
 instance (priority := 100) (Z : C) : HasInjectiveResolution Z where out := ⟨of Z⟩
 
-instance (priority := 100) : HasInjectiveResolutions C where out := fun _ => inferInstance
+instance (priority := 100) : HasInjectiveResolutions C where out _ := inferInstance
 
-end InjectiveResolution
+end InjectiveResolutionCat
 
 end CategoryTheory
 

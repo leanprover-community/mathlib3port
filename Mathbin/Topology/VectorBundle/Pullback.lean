@@ -26,9 +26,9 @@ variable {B' : Type _} (f : B' → B)
 instance [∀ x : B, TopologicalSpace (E' x)] : ∀ x : B', TopologicalSpace ((f *ᵖ E') x) := by
   delta_instance bundle.pullback
 
-instance [∀ x : B, AddCommMonoidₓ (E' x)] : ∀ x : B', AddCommMonoidₓ ((f *ᵖ E') x) := by delta_instance bundle.pullback
+instance [∀ x : B, AddCommMonoid (E' x)] : ∀ x : B', AddCommMonoid ((f *ᵖ E') x) := by delta_instance bundle.pullback
 
-instance [Semiringₓ R] [∀ x : B, AddCommMonoidₓ (E' x)] [∀ x, Module R (E' x)] : ∀ x : B', Module R ((f *ᵖ E') x) := by
+instance [Semiring R] [∀ x : B, AddCommMonoid (E' x)] [∀ x, Module R (E' x)] : ∀ x : B', Module R ((f *ᵖ E') x) := by
   delta_instance bundle.pullback
 
 variable [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)]
@@ -56,37 +56,37 @@ theorem inducing_pullback_total_space_embedding (f : B' → B) : Inducing (@pull
   rfl
 
 variable (F) [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B]
-  [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module 𝕜 (E x)]
+  [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]
 
 theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] {f : B' → B}
     {x : B'} : Continuous (@totalSpaceMk _ (f *ᵖ E) x) := by
   simp only [continuous_iff_le_induced, Pullback.TotalSpace.topologicalSpace, induced_compose, induced_inf,
     Function.comp, total_space_mk, total_space.proj, induced_const, top_inf_eq, pullbackTopology]
-  exact le_of_eqₓ (TopologicalVectorBundle.total_space_mk_inducing 𝕜 F E (f x)).induced
+  exact le_of_eq (TopologicalVectorBundle.total_space_mk_inducing 𝕜 F E (f x)).induced
 
 variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A vector bundle trivialization can be pulled back to a trivialization on the pullback bundle. -/
 def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E) (f : K) :
     Trivialization 𝕜 F ((f : B' → B) *ᵖ E) where
-  toFun := fun z => (z.proj, (e (Pullback.lift f z)).2)
-  invFun := fun y => @totalSpaceMk _ (f *ᵖ E) y.1 (e.symm (f y.1) y.2)
+  toFun z := (z.proj, (e (Pullback.lift f z)).2)
+  invFun y := @totalSpaceMk _ (f *ᵖ E) y.1 (e.symm (f y.1) y.2)
   Source := Pullback.lift f ⁻¹' e.Source
   BaseSet := f ⁻¹' e.BaseSet
   Target := (f ⁻¹' e.BaseSet) ×ˢ univ
-  map_source' := fun x h => by
+  map_source' x h := by
     simp_rw [e.source_eq, mem_preimage, pullback.proj_lift] at h
-    simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_trueₓ, mem_preimage, h]
-  map_target' := fun y h => by
+    simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_true_iff, mem_preimage, h]
+  map_target' y h := by
     rw [mem_prod, mem_preimage] at h
     simp_rw [e.source_eq, mem_preimage, pullback.proj_lift, h.1]
-  left_inv' := fun x h => by
+  left_inv' x h := by
     simp_rw [mem_preimage, e.mem_source, pullback.proj_lift] at h
     simp_rw [pullback.lift, e.symm_apply_apply_mk h, total_space.eta]
-  right_inv' := fun x h => by
-    simp_rw [mem_prod, mem_preimage, mem_univ, and_trueₓ] at h
-    simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.etaₓ]
+  right_inv' x h := by
+    simp_rw [mem_prod, mem_preimage, mem_univ, and_true_iff] at h
+    simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
   open_source := by
     simp_rw [e.source_eq, ← preimage_comp]
     exact ((map_continuous f).comp <| Pullback.continuous_proj E f).is_open_preimage _ e.open_base_set
@@ -108,18 +108,18 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
     rw [e.source_eq]
     rfl
   target_eq := rfl
-  proj_to_fun := fun y h => rfl
-  linear' := fun x h => e.linear h
+  proj_to_fun y h := rfl
+  linear' x h := e.linear h
 
 instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] (f : K) :
     TopologicalVectorBundle 𝕜 F ((f : B' → B) *ᵖ E) where
-  total_space_mk_inducing := fun x =>
+  total_space_mk_inducing x :=
     inducing_of_inducing_compose (Pullback.continuous_total_space_mk 𝕜 F E) (Pullback.continuous_lift E f)
       (total_space_mk_inducing 𝕜 F E (f x))
   TrivializationAtlas := (fun e : Trivialization 𝕜 F E => e.Pullback f) '' TrivializationAtlas 𝕜 F E
-  trivializationAt := fun x => (trivializationAt 𝕜 F E (f x)).Pullback f
-  mem_base_set_trivialization_at := fun x => mem_base_set_trivialization_at 𝕜 F E (f x)
-  trivialization_mem_atlas := fun x => mem_image_of_mem _ (trivialization_mem_atlas 𝕜 F E (f x))
+  trivializationAt x := (trivializationAt 𝕜 F E (f x)).Pullback f
+  mem_base_set_trivialization_at x := mem_base_set_trivialization_at 𝕜 F E (f x)
+  trivialization_mem_atlas x := mem_image_of_mem _ (trivialization_mem_atlas 𝕜 F E (f x))
   continuous_on_coord_change := by
     rintro _ ⟨e, he, rfl⟩ _ ⟨e', he', rfl⟩
     refine' ((continuous_on_coord_change e he e' he').comp (map_continuous f).ContinuousOn fun b hb => hb).congr _

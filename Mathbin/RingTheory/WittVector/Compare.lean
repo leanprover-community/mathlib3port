@@ -39,18 +39,18 @@ include hp
 
 namespace TruncatedWittVector
 
-variable (p) (n : ℕ) (R : Type _) [CommRingₓ R]
+variable (p) (n : ℕ) (R : Type _) [CommRing R]
 
 theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n) (hpi : (p ^ i : TruncatedWittVector p n R) = 0) :
     i = n := by
   contrapose! hpi
-  replace hin := lt_of_le_of_neₓ hin hpi
+  replace hin := lt_of_le_of_ne hin hpi
   clear hpi
   have : (↑p ^ i : TruncatedWittVector p n R) = WittVector.truncate n (↑p ^ i) := by rw [RingHom.map_pow, map_nat_cast]
   rw [this, ext_iff, not_forall]
   clear this
   use ⟨i, hin⟩
-  rw [WittVector.coeff_truncate, coeff_zero, Finₓ.coe_mk, WittVector.coeff_p_pow]
+  rw [WittVector.coeff_truncate, coeff_zero, Fin.coe_mk, WittVector.coeff_p_pow]
   haveI : Nontrivial R := CharP.nontrivial_of_char_ne_one hp.1.ne_one
   exact one_ne_zero
 
@@ -58,7 +58,7 @@ section Iso
 
 variable (p n) {R}
 
-theorem card_zmod : Fintypeₓ.card (TruncatedWittVector p n (Zmod p)) = p ^ n := by rw [card, Zmod.card]
+theorem card_zmod : Fintype.card (TruncatedWittVector p n (Zmod p)) = p ^ n := by rw [card, Zmod.card]
 
 theorem char_p_zmod : CharP (TruncatedWittVector p n (Zmod p)) (p ^ n) :=
   char_p_of_prime_pow_injective _ _ _ (card_zmod _ _) (eq_of_le_of_cast_pow_eq_zero p n (Zmod p))

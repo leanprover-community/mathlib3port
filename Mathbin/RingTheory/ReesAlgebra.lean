@@ -27,7 +27,7 @@ implies that the rees algebra over a noetherian ring is still noetherian.
 
 universe u v
 
-variable {R M : Type u} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (I : Ideal R)
+variable {R M : Type u} [CommRing R] [AddCommGroup M] [Module R M] (I : Ideal R)
 
 open Polynomial
 
@@ -37,13 +37,13 @@ open Polynomial BigOperators
 falls in `I ^ i`. -/
 def reesAlgebra : Subalgebra R R[X] where
   Carrier := { f | ∀ i, f.coeff i ∈ I ^ i }
-  mul_mem' := fun f g hf hg i => by
+  mul_mem' f g hf hg i := by
     rw [coeff_mul]
     apply Ideal.sum_mem
     rintro ⟨j, k⟩ e
-    rw [← finset.nat.mem_antidiagonal.mp e, pow_addₓ]
+    rw [← finset.nat.mem_antidiagonal.mp e, pow_add]
     exact Ideal.mul_mem_mul (hf j) (hg k)
-  one_mem' := fun i => by
+  one_mem' i := by
     rw [coeff_one]
     split_ifs
     · subst h
@@ -51,11 +51,11 @@ def reesAlgebra : Subalgebra R R[X] where
       
     · simp
       
-  add_mem' := fun f g hf hg i => by
+  add_mem' f g hf hg i := by
     rw [coeff_add]
     exact Ideal.add_mem _ (hf i) (hg i)
-  zero_mem' := fun i => Ideal.zero_mem _
-  algebra_map_mem' := fun r i => by
+  zero_mem' i := Ideal.zero_mem _
+  algebra_map_mem' r i := by
     rw [algebra_map_apply, coeff_C]
     split_ifs
     · subst h
@@ -68,7 +68,7 @@ theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff
   Iff.rfl
 
 theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.Support, f.coeff i ∈ I ^ i := by
-  apply forall_congrₓ
+  apply forall_congr
   intro a
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]
   exact fun e => e.symm ▸ (I ^ a).zero_mem
@@ -81,7 +81,7 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
   induction' n with n hn generalizing r
   · exact Subalgebra.algebra_map_mem _ _
     
-  · rw [pow_succₓ] at hr
+  · rw [pow_succ] at hr
     apply Submodule.smul_induction_on hr
     · intro r hr s hs
       rw [Nat.succ_eq_one_add, smul_eq_mul, ← monomial_mul_monomial]
@@ -95,10 +95,10 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
 
 theorem adjoin_monomial_eq_rees_algebra :
     Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) = reesAlgebra I := by
-  apply le_antisymmₓ
+  apply le_antisymm
   · apply Algebra.adjoin_le _
     rintro _ ⟨r, hr, rfl⟩
-    exact rees_algebra.monomial_mem.mpr (by rwa [pow_oneₓ])
+    exact rees_algebra.monomial_mem.mpr (by rwa [pow_one])
     
   · intro p hp
     rw [p.as_sum_support]
@@ -114,7 +114,7 @@ theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by
   obtain ⟨s, hs⟩ := hI
   rw [← adjoin_monomial_eq_rees_algebra, ← hs]
   use s.image (monomial 1)
-  rw [Finsetₓ.coe_image]
+  rw [Finset.coe_image]
   change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
   rw [Submodule.map_span, Algebra.adjoin_span]
 

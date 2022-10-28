@@ -7,6 +7,7 @@ import Mathbin.Algebra.Homology.Additive
 import Mathbin.AlgebraicTopology.MooreComplex
 import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.CategoryTheory.Preadditive.Opposite
+import Mathbin.Tactic.EquivRw
 
 /-!
 
@@ -63,7 +64,7 @@ variable (Y : SimplicialObject C)
 sum of the face maps -/
 @[simp]
 def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
-  ∑ i : Finₓ (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
+  ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
 
 /-- ## The chain complex relation `d ≫ d`
 -/
@@ -71,58 +72,58 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- we start by expanding d ≫ d as a double sum
   dsimp
   rw [comp_sum]
-  let d_l := fun j : Finₓ (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
-  let d_r := fun i : Finₓ (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
-  rw [show (fun i => (∑ j : Finₓ (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Finₓ (n + 3), d_l j ≫ d_r i by
+  let d_l := fun j : Fin (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
+  let d_r := fun i : Fin (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
+  rw [show (fun i => (∑ j : Fin (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Fin (n + 3), d_l j ≫ d_r i by
       ext i
       rw [sum_comp]]
-  rw [← Finsetₓ.sum_product']
+  rw [← Finset.sum_product']
   -- then, we decompose the index set P into a subet S and its complement Sᶜ
-  let P := Finₓ (n + 2) × Finₓ (n + 3)
+  let P := Fin (n + 2) × Fin (n + 3)
   let S := finset.univ.filter fun ij : P => (ij.2 : ℕ) ≤ (ij.1 : ℕ)
   let term := fun ij : P => d_l ij.2 ≫ d_r ij.1
-  erw [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by rw [Finsetₓ.sum_add_sum_compl]]
-  rw [← eq_neg_iff_add_eq_zero, ← Finsetₓ.sum_neg_distrib]
+  erw [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by rw [Finset.sum_add_sum_compl]]
+  rw [← eq_neg_iff_add_eq_zero, ← Finset.sum_neg_distrib]
   /- we are reduced to showing that two sums are equal, and this is obtained
     by constructing a bijection φ : S -> Sᶜ, which maps (i,j) to (j,i+1),
     and by comparing the terms -/
   let φ : ∀ ij : P, ij ∈ S → P := fun ij hij =>
-    (Finₓ.castLt ij.2 (lt_of_le_of_ltₓ (finset.mem_filter.mp hij).right (Finₓ.is_lt ij.1)), ij.1.succ)
-  apply Finsetₓ.sum_bij φ
+    (Fin.castLt ij.2 (lt_of_le_of_lt (finset.mem_filter.mp hij).right (Fin.is_lt ij.1)), ij.1.succ)
+  apply Finset.sum_bij φ
   · -- φ(S) is contained in Sᶜ
     intro ij hij
-    simp only [Finsetₓ.mem_univ, Finsetₓ.compl_filter, Finsetₓ.mem_filter, true_andₓ, Finₓ.coe_succ,
-      Finₓ.coe_cast_lt] at hij⊢
+    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.coe_succ, Fin.coe_cast_lt] at
+      hij⊢
     linarith
     
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
-    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_addₓ, neg_mul, mul_oneₓ,
-      Finₓ.coe_cast_lt, Finₓ.coe_succ, pow_oneₓ, mul_neg, neg_negₓ]
-    let jj : Finₓ (n + 2) := (φ (i, j) hij).1
+    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul, mul_one,
+      Fin.coe_cast_lt, Fin.coe_succ, pow_one, mul_neg, neg_neg]
+    let jj : Fin (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by
-      rw [← Finₓ.coe_fin_le]
+      rw [← Fin.coe_fin_le]
       simpa using hij
-    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Finₓ.cast_succ_cast_lt, mul_comm]
+    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.cast_succ_cast_lt, mul_comm]
     
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
-    rw [Prod.mk.inj_iffₓ]
+    rw [Prod.mk.inj_iff]
     refine' ⟨by simpa using congr_arg Prod.snd h, _⟩
-    have h1 := congr_arg Finₓ.castSucc (congr_arg Prod.fst h)
-    simpa [Finₓ.cast_succ_cast_lt] using h1
+    have h1 := congr_arg Fin.castSucc (congr_arg Prod.fst h)
+    simpa [Fin.cast_succ_cast_lt] using h1
     
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
-    simp only [true_andₓ, Finsetₓ.mem_univ, Finsetₓ.compl_filter, not_leₓ, Finsetₓ.mem_filter] at hij'
-    refine' ⟨(j'.pred _, Finₓ.castSucc i'), _, _⟩
+    simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at hij'
+    refine' ⟨(j'.pred _, Fin.castSucc i'), _, _⟩
     · intro H
-      simpa only [H, Nat.not_lt_zeroₓ, Finₓ.coe_zero] using hij'
+      simpa only [H, Nat.not_lt_zero, Fin.coe_zero] using hij'
       
-    · simpa only [true_andₓ, Finsetₓ.mem_univ, Finₓ.coe_cast_succ, Finₓ.coe_pred, Finsetₓ.mem_filter] using
-        Nat.le_pred_of_ltₓ hij'
+    · simpa only [true_and_iff, Finset.mem_univ, Fin.coe_cast_succ, Fin.coe_pred, Finset.mem_filter] using
+        Nat.le_pred_of_lt hij'
       
-    · simp only [Prod.mk.inj_iffₓ, Finₓ.succ_pred, Finₓ.cast_lt_cast_succ]
+    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.cast_lt_cast_succ]
       constructor <;> rfl
       
     
@@ -142,7 +143,7 @@ theorem obj_X (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.ob
 
 @[simp]
 theorem obj_d_eq (X : SimplicialObject C) (n : ℕ) :
-    (AlternatingFaceMapComplex.obj X).d (n + 1) n = ∑ i : Finₓ (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i := by
+    (AlternatingFaceMapComplex.obj X).d (n + 1) n = ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i := by
   apply ChainComplex.of_d
 
 variable {X} {Y}
@@ -152,7 +153,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _ (fun n => f.app (op [n])) fun n => by
     dsimp
     rw [comp_sum, sum_comp]
-    apply Finsetₓ.sum_congr rfl fun x h => _
+    apply Finset.sum_congr rfl fun x h => _
     rw [comp_zsmul, zsmul_comp]
     congr 1
     symm
@@ -169,7 +170,7 @@ variable (C : Type _) [Category C] [Preadditive C]
 /-- The alternating face map complex, as a functor -/
 def alternatingFaceMapComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   obj := AlternatingFaceMapComplex.obj
-  map := fun X Y f => AlternatingFaceMapComplex.map f
+  map X Y f := AlternatingFaceMapComplex.map f
 
 variable {C}
 
@@ -210,6 +211,27 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
       
     
 
+namespace AlternatingFaceMapComplex
+
+/-- The natural transformation which gives the augmentation of the alternating face map
+complex attached to an augmented simplicial object. -/
+@[simps]
+def ε [Limits.HasZeroObject C] :
+    simplicial_object.augmented.drop ⋙ AlgebraicTopology.alternatingFaceMapComplex C ⟶
+      simplicial_object.augmented.point ⋙ ChainComplex.single₀ C where
+  app X := by
+    equiv_rw ChainComplex.toSingle₀Equiv _ _
+    refine' ⟨X.hom.app (op [0]), _⟩
+    dsimp
+    simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero, one_zsmul,
+      Fin.coe_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
+    apply add_right_neg
+  naturality' X Y f := by
+    ext
+    exact congr_app f.w _
+
+end AlternatingFaceMapComplex
+
 /-!
 ## Construction of the natural inclusion of the normalized Moore complex
 -/
@@ -227,25 +249,25 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
              zero on the normalized_Moore_complex -/
     simp only [alternating_face_map_complex.obj_d]
     rw [comp_sum]
-    let t := fun j : Finₓ (n + 2) => (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
+    let t := fun j : Fin (n + 2) => (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
     have def_t :
-      ∀ j : Finₓ (n + 2), t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) := by
+      ∀ j : Fin (n + 2), t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) := by
       intro j
       rfl
-    rw [Finₓ.sum_univ_succ t]
-    have null : ∀ j : Finₓ (n + 1), t j.succ = 0 := by
+    rw [Fin.sum_univ_succ t]
+    have null : ∀ j : Fin (n + 1), t j.succ = 0 := by
       intro j
       rw [def_t, comp_zsmul, ← zsmul_zero ((-1 : ℤ) ^ (j.succ : ℕ))]
       apply congr_arg
       rw [normalized_Moore_complex.obj_X]
-      rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ j (by simp only [Finsetₓ.mem_univ]))]
+      rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ]))]
       slice_lhs 2 3 => rw [kernel_subobject_arrow_comp (X.δ j.succ)]
       simp only [comp_zero]
-    rw [Fintypeₓ.sum_eq_zero _ null]
-    simp only [add_zeroₓ]
+    rw [Fintype.sum_eq_zero _ null]
+    simp only [add_zero]
     -- finally, we study the remaining term which is induced by X.δ 0
     let eq := def_t 0
-    rw [show (-1 : ℤ) ^ ((0 : Finₓ (n + 2)) : ℕ) = 1 by ring] at eq
+    rw [show (-1 : ℤ) ^ ((0 : Fin (n + 2)) : ℕ) = 1 by ring] at eq
     rw [one_smul] at eq
     rw [Eq]
     cases n <;> dsimp <;> simp
@@ -271,7 +293,7 @@ variable (X Y : CosimplicialObject C)
 sum of the coface maps -/
 @[simp]
 def objD (n : ℕ) : X.obj [n] ⟶ X.obj [n + 1] :=
-  ∑ i : Finₓ (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
+  ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
 
 theorem d_eq_unop_d (n : ℕ) :
     objD X n = (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).Functor.obj (op X)) n).unop := by
@@ -292,7 +314,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   CochainComplex.ofHom _ _ _ _ _ _ (fun n => f.app [n]) fun n => by
     dsimp
     rw [comp_sum, sum_comp]
-    apply Finsetₓ.sum_congr rfl fun x h => _
+    apply Finset.sum_congr rfl fun x h => _
     rw [comp_zsmul, zsmul_comp]
     congr 1
     symm
@@ -306,7 +328,7 @@ variable (C)
 @[simps]
 def alternatingCofaceMapComplex : CosimplicialObject C ⥤ CochainComplex C ℕ where
   obj := AlternatingCofaceMapComplex.obj
-  map := fun X Y f => AlternatingCofaceMapComplex.map f
+  map X Y f := AlternatingCofaceMapComplex.map f
 
 end AlgebraicTopology
 

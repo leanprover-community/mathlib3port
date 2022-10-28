@@ -76,24 +76,24 @@ instance OrderDual.no_max_order (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrd
   ⟨fun a => @exists_lt α _ _ a⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) NoMinOrder.to_no_bot_order (α : Type _) [Preorderₓ α] [NoMinOrder α] : NoBotOrder α :=
-  ⟨fun a => (exists_lt a).imp fun _ => not_le_of_ltₓ⟩
+instance (priority := 100) NoMinOrder.to_no_bot_order (α : Type _) [Preorder α] [NoMinOrder α] : NoBotOrder α :=
+  ⟨fun a => (exists_lt a).imp fun _ => not_le_of_lt⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorderₓ α] [NoMaxOrder α] : NoTopOrder α :=
-  ⟨fun a => (exists_gt a).imp fun _ => not_le_of_ltₓ⟩
+instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorder α] [NoMaxOrder α] : NoTopOrder α :=
+  ⟨fun a => (exists_gt a).imp fun _ => not_le_of_lt⟩
 
-theorem NoBotOrder.to_no_min_order (α : Type _) [LinearOrderₓ α] [NoBotOrder α] : NoMinOrder α :=
+theorem NoBotOrder.to_no_min_order (α : Type _) [LinearOrder α] [NoBotOrder α] : NoMinOrder α :=
   { exists_lt := by
       convert fun a : α => exists_not_ge a
-      simp_rw [not_leₓ] }
+      simp_rw [not_le] }
 
-theorem NoTopOrder.to_no_max_order (α : Type _) [LinearOrderₓ α] [NoTopOrder α] : NoMaxOrder α :=
+theorem NoTopOrder.to_no_max_order (α : Type _) [LinearOrder α] [NoTopOrder α] : NoMaxOrder α :=
   { exists_gt := by
       convert fun a : α => exists_not_le a
-      simp_rw [not_leₓ] }
+      simp_rw [not_le] }
 
-theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrderₓ α] : NoBotOrder α ↔ NoMinOrder α :=
+theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrder α] : NoBotOrder α ↔ NoMinOrder α :=
   ⟨fun h =>
     haveI := h
     NoBotOrder.to_no_min_order α,
@@ -101,7 +101,7 @@ theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrderₓ α] : NoBotO
     haveI := h
     NoMinOrder.to_no_bot_order α⟩
 
-theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrderₓ α] : NoTopOrder α ↔ NoMaxOrder α :=
+theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrder α] : NoTopOrder α ↔ NoMaxOrder α :=
   ⟨fun h =>
     haveI := h
     NoTopOrder.to_no_max_order α,
@@ -110,10 +110,10 @@ theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrderₓ α] : NoTopO
     NoMaxOrder.to_no_top_order α⟩
 
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
-  (Acc.recOnₓ h) fun x _ => (exists_lt x).recOn
+  (Acc.recOn h) fun x _ => (exists_lt x).recOn
 
 theorem NoMaxOrder.not_acc [LT α] [NoMaxOrder α] (a : α) : ¬Acc (· > ·) a := fun h =>
-  (Acc.recOnₓ h) fun x _ => (exists_gt x).recOn
+  (Acc.recOn h) fun x _ => (exists_gt x).recOn
 
 section LE
 
@@ -209,9 +209,9 @@ alias is_max_of_dual_iff ↔ _ IsMin.of_dual
 
 end LE
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ α] {a b : α}
+variable [Preorder α] {a b : α}
 
 theorem IsBot.mono (ha : IsBot a) (h : b ≤ a) : IsBot b := fun c => h.trans <| ha _
 
@@ -242,10 +242,10 @@ theorem is_max_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
 
 @[simp]
-theorem not_is_min_iff : ¬IsMin a ↔ ∃ b, b < a := by simp_rw [lt_iff_le_not_leₓ, IsMin, not_forall, exists_propₓ]
+theorem not_is_min_iff : ¬IsMin a ↔ ∃ b, b < a := by simp_rw [lt_iff_le_not_le, IsMin, not_forall, exists_prop]
 
 @[simp]
-theorem not_is_max_iff : ¬IsMax a ↔ ∃ b, a < b := by simp_rw [lt_iff_le_not_leₓ, IsMax, not_forall, exists_propₓ]
+theorem not_is_max_iff : ¬IsMax a ↔ ∃ b, a < b := by simp_rw [lt_iff_le_not_le, IsMax, not_forall, exists_prop]
 
 @[simp]
 theorem not_is_min [NoMinOrder α] (a : α) : ¬IsMin a :=
@@ -271,11 +271,11 @@ protected theorem is_max (a : α) : IsMax a :=
 
 end Subsingleton
 
-end Preorderₓ
+end Preorder
 
-section PartialOrderₓ
+section PartialOrder
 
-variable [PartialOrderₓ α] {a b : α}
+variable [PartialOrder α] {a b : α}
 
 protected theorem IsMin.eq_of_le (ha : IsMin a) (h : b ≤ a) : b = a :=
   h.antisymm <| ha h
@@ -289,11 +289,11 @@ protected theorem IsMax.eq_of_le (ha : IsMax a) (h : a ≤ b) : a = b :=
 protected theorem IsMax.eq_of_ge (ha : IsMax a) (h : a ≤ b) : b = a :=
   h.antisymm' <| ha h
 
-end PartialOrderₓ
+end PartialOrder
 
 section Prod
 
-variable [Preorderₓ α] [Preorderₓ β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : α × β}
+variable [Preorder α] [Preorder β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : α × β}
 
 theorem IsBot.prod_mk (ha : IsBot a) (hb : IsBot b) : IsBot (a, b) := fun c => ⟨ha _, hb _⟩
 
@@ -311,17 +311,13 @@ theorem IsTop.fst (hx : IsTop x) : IsTop x.1 := fun c => (hx (c, x.2)).1
 
 theorem IsTop.snd (hx : IsTop x) : IsTop x.2 := fun c => (hx (x.1, c)).2
 
-theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc =>
-  (hx <| show (c, x.2) ≤ x from (and_iff_leftₓ le_rflₓ).2 hc).1
+theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc => (hx <| show (c, x.2) ≤ x from (and_iff_left le_rfl).2 hc).1
 
-theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc =>
-  (hx <| show (x.1, c) ≤ x from (and_iff_right le_rflₓ).2 hc).2
+theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc => (hx <| show (x.1, c) ≤ x from (and_iff_right le_rfl).2 hc).2
 
-theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc =>
-  (hx <| show x ≤ (c, x.2) from (and_iff_leftₓ le_rflₓ).2 hc).1
+theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc => (hx <| show x ≤ (c, x.2) from (and_iff_left le_rfl).2 hc).1
 
-theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc =>
-  (hx <| show x ≤ (x.1, c) from (and_iff_right le_rflₓ).2 hc).2
+theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc => (hx <| show x ≤ (x.1, c) from (and_iff_right le_rfl).2 hc).2
 
 theorem Prod.is_bot_iff : IsBot x ↔ IsBot x.1 ∧ IsBot x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩

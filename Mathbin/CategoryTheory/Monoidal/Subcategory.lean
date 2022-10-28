@@ -32,7 +32,7 @@ open Iso
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C] (P : C → Prop)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A property `C → Prop` is a monoidal predicate if it is closed under `𝟙_` and `⊗`.
 -/
 class MonoidalPredicate : Prop where
@@ -47,32 +47,32 @@ open MonoidalPredicate
 
 variable [MonoidalPredicate P]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- When `P` is a monoidal predicate, the full subcategory for `P` inherits the monoidal structure of
   `C`.
 -/
 instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P) where
-  tensorObj := fun X Y => ⟨X.1 ⊗ Y.1, prop_tensor X.2 Y.2⟩
-  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => by
+  tensorObj X Y := ⟨X.1 ⊗ Y.1, prop_tensor X.2 Y.2⟩
+  tensorHom X₁ Y₁ X₂ Y₂ f g := by
     change X₁.1 ⊗ X₂.1 ⟶ Y₁.1 ⊗ Y₂.1
     change X₁.1 ⟶ Y₁.1 at f
     change X₂.1 ⟶ Y₂.1 at g
     exact f ⊗ g
   tensorUnit := ⟨𝟙_ C, prop_id⟩
-  associator := fun X Y Z =>
+  associator X Y Z :=
     ⟨(α_ X.1 Y.1 Z.1).Hom, (α_ X.1 Y.1 Z.1).inv, hom_inv_id (α_ X.1 Y.1 Z.1), inv_hom_id (α_ X.1 Y.1 Z.1)⟩
-  leftUnitor := fun X => ⟨(λ_ X.1).Hom, (λ_ X.1).inv, hom_inv_id (λ_ X.1), inv_hom_id (λ_ X.1)⟩
-  rightUnitor := fun X => ⟨(ρ_ X.1).Hom, (ρ_ X.1).inv, hom_inv_id (ρ_ X.1), inv_hom_id (ρ_ X.1)⟩
-  tensor_id' := fun X Y => tensor_id X.1 Y.1
-  tensor_comp' := fun X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ => tensor_comp f₁ f₂ g₁ g₂
-  associator_naturality' := fun X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ => associator_naturality f₁ f₂ f₃
-  left_unitor_naturality' := fun X Y f => left_unitor_naturality f
-  right_unitor_naturality' := fun X Y f => right_unitor_naturality f
-  pentagon' := fun W X Y Z => pentagon W.1 X.1 Y.1 Z.1
-  triangle' := fun X Y => triangle X.1 Y.1
+  leftUnitor X := ⟨(λ_ X.1).Hom, (λ_ X.1).inv, hom_inv_id (λ_ X.1), inv_hom_id (λ_ X.1)⟩
+  rightUnitor X := ⟨(ρ_ X.1).Hom, (ρ_ X.1).inv, hom_inv_id (ρ_ X.1), inv_hom_id (ρ_ X.1)⟩
+  tensor_id' X Y := tensor_id X.1 Y.1
+  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ := tensor_comp f₁ f₂ g₁ g₂
+  associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ := associator_naturality f₁ f₂ f₃
+  left_unitor_naturality' X Y f := left_unitor_naturality f
+  right_unitor_naturality' X Y f := right_unitor_naturality f
+  pentagon' W X Y Z := pentagon W.1 X.1 Y.1 Z.1
+  triangle' X Y := triangle X.1 Y.1
 
 /-- The forgetful monoidal functor from a full monoidal subcategory into the original category
 ("forgetting" the condition).
@@ -81,7 +81,7 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P) where
 def fullMonoidalSubcategoryInclusion : MonoidalFunctor (FullSubcategory P) C where
   toFunctor := fullSubcategoryInclusion P
   ε := 𝟙 _
-  μ := fun X Y => 𝟙 _
+  μ X Y := 𝟙 _
 
 instance fullMonoidalSubcategory.full : Full (fullMonoidalSubcategoryInclusion P).toFunctor :=
   FullSubcategory.full P
@@ -97,10 +97,10 @@ subcategories. -/
 def fullMonoidalSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) : MonoidalFunctor (FullSubcategory P) (FullSubcategory P') where
   toFunctor := FullSubcategory.map h
   ε := 𝟙 _
-  μ := fun X Y => 𝟙 _
+  μ X Y := 𝟙 _
 
 instance fullMonoidalSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
-    Full (fullMonoidalSubcategory.map h).toFunctor where preimage := fun X Y f => f
+    Full (fullMonoidalSubcategory.map h).toFunctor where preimage X Y f := f
 
 instance fullMonoidalSubcategory.map_faithful (h : ∀ ⦃X⦄, P X → P' X) :
     Faithful (fullMonoidalSubcategory.map h).toFunctor where
@@ -122,7 +122,7 @@ instance fullBraidedSubcategory : BraidedCategory (FullSubcategory P) :=
 @[simps]
 def fullBraidedSubcategoryInclusion : BraidedFunctor (FullSubcategory P) C where
   toMonoidalFunctor := fullMonoidalSubcategoryInclusion P
-  braided' := fun X Y => by
+  braided' X Y := by
     rw [is_iso.eq_inv_comp]
     tidy
 
@@ -139,7 +139,7 @@ subcategories. -/
 @[simps]
 def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) : BraidedFunctor (FullSubcategory P) (FullSubcategory P') where
   toMonoidalFunctor := fullMonoidalSubcategory.map h
-  braided' := fun X Y => by
+  braided' X Y := by
     rw [is_iso.eq_inv_comp]
     tidy
 
@@ -179,9 +179,9 @@ variable [ClosedPredicate P]
 instance fullMonoidalClosedSubcategory :
     MonoidalClosed
       (FullSubcategory
-        P) where closed' := fun X =>
+        P) where closed' X :=
     { isAdj :=
-        { right := FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y => prop_ihom X.2 Y.2,
+        { right := FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y => propIhom X.2 Y.2,
           adj :=
             Adjunction.mkOfUnitCounit
               { Unit :=

@@ -31,7 +31,7 @@ universe u v
 
 /-- The free ring over a type `α`. -/
 def FreeRing (α : Type u) : Type u :=
-  FreeAbelianGroup <| FreeMonoid α deriving Ringₓ, Inhabited
+  FreeAbelianGroup <| FreeMonoid α deriving Ring, Inhabited
 
 namespace FreeRing
 
@@ -44,17 +44,17 @@ def of (x : α) : FreeRing α :=
 theorem of_injective : Function.Injective (of : α → FreeRing α) :=
   FreeAbelianGroup.of_injective.comp FreeMonoid.of_injective
 
-@[elabAsElim]
+@[elab_as_elim]
 protected theorem induction_on {C : FreeRing α → Prop} (z : FreeRing α) (hn1 : C (-1)) (hb : ∀ b, C (of b))
     (ha : ∀ x y, C x → C y → C (x + y)) (hm : ∀ x y, C x → C y → C (x * y)) : C z :=
   have hn : ∀ x, C x → C (-x) := fun x ih => neg_one_mul x ▸ hm _ _ hn1 ih
-  have h1 : C 1 := neg_negₓ (1 : FreeRing α) ▸ hn _ hn1
-  FreeAbelianGroup.induction_on z (add_left_negₓ (1 : FreeRing α) ▸ ha _ _ hn1 h1)
+  have h1 : C 1 := neg_neg (1 : FreeRing α) ▸ hn _ hn1
+  FreeAbelianGroup.induction_on z (add_left_neg (1 : FreeRing α) ▸ ha _ _ hn1 h1)
     (fun m => (List.recOn m h1) fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
 
 section lift
 
-variable {R : Type v} [Ringₓ R] (f : α → R)
+variable {R : Type v} [Ring R] (f : α → R)
 
 /-- The ring homomorphism `free_ring α →+* R` induced from a map `α → R`. -/
 def lift : (α → R) ≃ (FreeRing α →+* R) :=

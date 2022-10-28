@@ -41,7 +41,7 @@ incidence matrix for each `simple_graph α` has the same type.
 -/
 
 
-open Finsetₓ Matrix SimpleGraph Sym2
+open Finset Matrix SimpleGraph Sym2
 
 open BigOperators Matrix
 
@@ -62,14 +62,14 @@ theorem inc_matrix_apply [Zero R] [One R] {a : α} {e : Sym2 α} : G.incMatrix R
 theorem inc_matrix_apply' [Zero R] [One R] [DecidableEq α] [DecidableRel G.Adj] {a : α} {e : Sym2 α} :
     G.incMatrix R a e = if e ∈ G.IncidenceSet a then 1 else 0 := by convert rfl
 
-section MulZeroOneClassₓ
+section MulZeroOneClass
 
-variable [MulZeroOneClassₓ R] {a b : α} {e : Sym2 α}
+variable [MulZeroOneClass R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_apply_mul_inc_matrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.IncidenceSet a ∩ G.IncidenceSet b).indicator 1 e := by
   classical
-  simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_oneₓ, Set.mem_inter_iff]
+  simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_one, Set.mem_inter_iff]
 
 theorem inc_matrix_apply_mul_inc_matrix_apply_of_not_adj (hab : a ≠ b) (h : ¬G.Adj a b) :
     G.incMatrix R a e * G.incMatrix R b e = 0 := by
@@ -93,11 +93,11 @@ theorem inc_matrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.Incidenc
   convert one_ne_zero.ite_eq_left_iff
   assumption
 
-end MulZeroOneClassₓ
+end MulZeroOneClass
 
-section NonAssocSemiringₓ
+section NonAssocSemiring
 
-variable [Fintypeₓ α] [NonAssocSemiringₓ R] {a b : α} {e : Sym2 α}
+variable [Fintype α] [NonAssocSemiring R] {a b : α} {e : Sym2 α}
 
 theorem sum_inc_matrix_apply [DecidableEq α] [DecidableRel G.Adj] : (∑ e, G.incMatrix R a e) = G.degree a := by
   simp [inc_matrix_apply', sum_boole, Set.filter_mem_univ_eq_to_finset]
@@ -113,10 +113,10 @@ theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.EdgeSet → (∑ a, G.inc
   intro a b h
   rw [mem_edge_set] at h
   rw [← Nat.cast_two, ← card_doubleton h.ne]
-  simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_andₓ]
+  simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_and_iff]
   congr 2
   ext e
-  simp only [mem_filter, mem_univ, true_andₓ, mem_insert, mem_singleton]
+  simp only [mem_filter, mem_univ, true_and_iff, mem_insert, mem_singleton]
 
 theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.EdgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
   sum_eq_zero fun a _ => G.inc_matrix_of_not_mem_incidence_set fun he => h he.1
@@ -124,7 +124,7 @@ theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.EdgeSet) : (∑ a,
 theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
     ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.EdgeSet then 2 else 0 := by
   classical
-  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mulₓ, sum_boole, and_selfₓ]
+  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mul, sum_boole, and_self_iff]
   split_ifs with h
   · revert h
     refine' e.ind _
@@ -141,22 +141,22 @@ theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
     simp [mk_mem_incidence_set_iff, G.mem_edge_set.not.mp h]
     
 
-end NonAssocSemiringₓ
+end NonAssocSemiring
 
-section Semiringₓ
+section Semiring
 
-variable [Fintypeₓ (Sym2 α)] [Semiringₓ R] {a b : α} {e : Sym2 α}
+variable [Fintype (Sym2 α)] [Semiring R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
   classical
   simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply, Set.indicator_apply,
     Pi.one_apply, sum_boole]
-  convert Nat.cast_oneₓ
+  convert Nat.cast_one
   convert card_singleton ⟦(a, b)⟧
   rw [← coe_eq_singleton, coe_filter_univ]
   exact G.incidence_set_inter_incidence_set_of_adj h
 
-theorem inc_matrix_mul_transpose [Fintypeₓ α] [DecidableEq α] [DecidableRel G.Adj] :
+theorem inc_matrix_mul_transpose [Fintype α] [DecidableEq α] [DecidableRel G.Adj] :
     G.incMatrix R ⬝ (G.incMatrix R)ᵀ = fun a b => if a = b then G.degree a else if G.Adj a b then 1 else 0 := by
   ext a b
   split_ifs with h h'
@@ -169,7 +169,7 @@ theorem inc_matrix_mul_transpose [Fintypeₓ α] [DecidableEq α] [DecidableRel 
       sum_const_zero]
     
 
-end Semiringₓ
+end Semiring
 
 end SimpleGraph
 

@@ -21,9 +21,9 @@ algebra hierarchy.
 
 variable {R : Type _} {a b : R}
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ R]
+variable [Monoid R]
 
 /-- Any power of a left-regular element is left-regular. -/
 theorem IsLeftRegular.pow (n : ℕ) (rla : IsLeftRegular a) : IsLeftRegular (a ^ n) := by
@@ -41,13 +41,13 @@ theorem IsRegular.pow (n : ℕ) (ra : IsRegular a) : IsRegular (a ^ n) :=
 /-- An element `a` is left-regular if and only if a positive power of `a` is left-regular. -/
 theorem IsLeftRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsLeftRegular (a ^ n) ↔ IsLeftRegular a := by
   refine' ⟨_, IsLeftRegular.pow n⟩
-  rw [← Nat.succ_pred_eq_of_posₓ n0, pow_succ'ₓ]
+  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ']
   exact IsLeftRegular.of_mul
 
 /-- An element `a` is right-regular if and only if a positive power of `a` is right-regular. -/
 theorem IsRightRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsRightRegular (a ^ n) ↔ IsRightRegular a := by
   refine' ⟨_, IsRightRegular.pow n⟩
-  rw [← Nat.succ_pred_eq_of_posₓ n0, pow_succₓ]
+  rw [← Nat.succ_pred_eq_of_pos n0, pow_succ]
   exact IsRightRegular.of_mul
 
 /-- An element `a` is regular if and only if a positive power of `a` is regular. -/
@@ -55,5 +55,5 @@ theorem IsRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsRegular (a ^ n) ↔ IsRegul
   ⟨fun h => ⟨(IsLeftRegular.pow_iff n0).mp h.left, (IsRightRegular.pow_iff n0).mp h.right⟩, fun h =>
     ⟨IsLeftRegular.pow n h.left, IsRightRegular.pow n h.right⟩⟩
 
-end Monoidₓ
+end Monoid
 

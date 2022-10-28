@@ -29,7 +29,7 @@ theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β �
       intro s os lfs
       suffices ∃ a : ℕ, ∀ b : ℕ, b ≥ a → f b ∈ s by simpa using this
       rcases Metric.is_open_iff.1 os _ lfs with ⟨ε, ⟨hε, hεs⟩⟩
-      cases' Setoidₓ.symm (CauSeq.equiv_lim f) _ hε with N hN
+      cases' Setoid.symm (CauSeq.equiv_lim f) _ hε with N hN
       exists N
       intro b hb
       apply hεs
@@ -48,13 +48,13 @@ variable [NormedField β]
 -/
 instance NormedField.is_absolute_value : IsAbsoluteValue (norm : β → ℝ) where
   abv_nonneg := norm_nonneg
-  abv_eq_zero := fun _ => norm_eq_zero
+  abv_eq_zero _ := norm_eq_zero
   abv_add := norm_add_le
   abv_mul := norm_mul
 
 open Metric
 
-theorem CauchySeq.is_cau_seq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f := by
+theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f := by
   cases' cauchy_iff.1 hf with hf1 hf2
   intro ε hε
   rcases hf2 { x | dist x.1 x.2 < ε } (dist_mem_uniformity hε) with ⟨t, ⟨ht, htsub⟩⟩
@@ -64,14 +64,14 @@ theorem CauchySeq.is_cau_seq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm
   intro j hj
   rw [← dist_eq_norm]
   apply @htsub (f j, f N)
-  apply Set.mk_mem_prod <;> solve_by_elim [le_reflₓ]
+  apply Set.mk_mem_prod <;> solve_by_elim [le_refl]
 
-theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
+theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f := by
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩
   rcases mem_uniformity_dist.1 hs with ⟨ε, ⟨hε, hεs⟩⟩
   cases' CauSeq.cauchy₂ f hε with N hN
   exists { n | n ≥ N }.Image f
-  simp only [exists_propₓ, mem_at_top_sets, mem_map, mem_image, ge_iff_leₓ, mem_set_of_eq]
+  simp only [exists_prop, mem_at_top_sets, mem_map, mem_image, ge_iff_le, mem_set_of_eq]
   constructor
   · exists N
     intro b hb
@@ -88,7 +88,7 @@ theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
 
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem cau_seq_iff_cauchy_seq {α : Type u} [NormedField α] {u : ℕ → α} : IsCauSeq norm u ↔ CauchySeq u :=
-  ⟨fun h => CauSeq.cauchy_seq ⟨u, h⟩, fun h => h.IsCauSeq⟩
+  ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
 
 -- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by

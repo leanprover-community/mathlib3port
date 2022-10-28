@@ -44,25 +44,25 @@ open MulAction Subgroup
 
 variable {M G G₀ R K}
 
-instance : ∀ [Groupₓ G], Groupₓ (ConjAct G) :=
+instance : ∀ [Group G], Group (ConjAct G) :=
   id
 
-instance : ∀ [DivInvMonoidₓ G], DivInvMonoidₓ (ConjAct G) :=
+instance : ∀ [DivInvMonoid G], DivInvMonoid (ConjAct G) :=
   id
 
-instance : ∀ [GroupWithZeroₓ G], GroupWithZeroₓ (ConjAct G) :=
+instance : ∀ [GroupWithZero G], GroupWithZero (ConjAct G) :=
   id
 
-instance : ∀ [Fintypeₓ G], Fintypeₓ (ConjAct G) :=
+instance : ∀ [Fintype G], Fintype (ConjAct G) :=
   id
 
 @[simp]
-theorem card [Fintypeₓ G] : Fintypeₓ.card (ConjAct G) = Fintypeₓ.card G :=
+theorem card [Fintype G] : Fintype.card (ConjAct G) = Fintype.card G :=
   rfl
 
-section DivInvMonoidₓ
+section DivInvMonoid
 
-variable [DivInvMonoidₓ G]
+variable [DivInvMonoid G]
 
 instance : Inhabited (ConjAct G) :=
   ⟨1⟩
@@ -123,20 +123,20 @@ theorem of_conj_act_mul (x y : ConjAct G) : ofConjAct (x * y) = ofConjAct x * of
 theorem to_conj_act_mul (x y : G) : toConjAct (x * y) = toConjAct x * toConjAct y :=
   rfl
 
-instance : HasSmul (ConjAct G) G where smul := fun g h => ofConjAct g * h * (ofConjAct g)⁻¹
+instance : HasSmul (ConjAct G) G where smul g h := ofConjAct g * h * (ofConjAct g)⁻¹
 
 theorem smul_def (g : ConjAct G) (h : G) : g • h = ofConjAct g * h * (ofConjAct g)⁻¹ :=
   rfl
 
-end DivInvMonoidₓ
+end DivInvMonoid
 
 section Units
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ M]
+variable [Monoid M]
 
-instance hasUnitsScalar : HasSmul (ConjAct Mˣ) M where smul := fun g h => ofConjAct g * h * ↑(ofConjAct g)⁻¹
+instance hasUnitsScalar : HasSmul (ConjAct Mˣ) M where smul g h := ofConjAct g * h * ↑(ofConjAct g)⁻¹
 
 theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * ↑(ofConjAct g)⁻¹ :=
   rfl
@@ -150,30 +150,30 @@ instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
 
 instance units_smul_comm_class [HasSmul α M] [SmulCommClass α M M] [IsScalarTower α M M] :
     SmulCommClass α (ConjAct Mˣ)
-      M where smul_comm := fun a um m => by rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
+      M where smul_comm a um m := by rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
 
 instance units_smul_comm_class' [HasSmul α M] [SmulCommClass M α M] [IsScalarTower α M M] :
     SmulCommClass (ConjAct Mˣ) α M :=
   haveI : SmulCommClass α M M := SmulCommClass.symm _ _ _
   SmulCommClass.symm _ _ _
 
-end Monoidₓ
+end Monoid
 
-section Semiringₓ
+section Semiring
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
 instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
   { ConjAct.unitsMulDistribMulAction with smul := (· • ·), smul_zero := by simp [units_smul_def],
-    smul_add := by simp [units_smul_def, mul_addₓ, add_mulₓ] }
+    smul_add := by simp [units_smul_def, mul_add, add_mul] }
 
-end Semiringₓ
+end Semiring
 
 end Units
 
-section GroupWithZeroₓ
+section GroupWithZero
 
-variable [GroupWithZeroₓ G₀]
+variable [GroupWithZero G₀]
 
 @[simp]
 theorem of_conj_act_zero : ofConjAct (0 : ConjAct G₀) = 0 :=
@@ -189,15 +189,14 @@ instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
 
 instance smul_comm_class₀ [HasSmul α G₀] [SmulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
-    SmulCommClass α (ConjAct G₀)
-      G₀ where smul_comm := fun a ug g => by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+    SmulCommClass α (ConjAct G₀) G₀ where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 
 instance smul_comm_class₀' [HasSmul α G₀] [SmulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
     SmulCommClass (ConjAct G₀) α G₀ :=
   haveI := SmulCommClass.symm G₀ α G₀
   SmulCommClass.symm _ _ _
 
-end GroupWithZeroₓ
+end GroupWithZero
 
 section DivisionRing
 
@@ -205,11 +204,11 @@ variable [DivisionRing K]
 
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
   { ConjAct.mulAction₀ with smul := (· • ·), smul_zero := by simp [smul_def],
-    smul_add := by simp [smul_def, mul_addₓ, add_mulₓ] }
+    smul_add := by simp [smul_def, mul_add, add_mul] }
 
 end DivisionRing
 
-variable [Groupₓ G]
+variable [Group G]
 
 instance : MulDistribMulAction (ConjAct G) G where
   smul := (· • ·)
@@ -219,8 +218,7 @@ instance : MulDistribMulAction (ConjAct G) G where
   mul_smul := by simp [smul_def, mul_assoc]
 
 instance smul_comm_class [HasSmul α G] [SmulCommClass α G G] [IsScalarTower α G G] :
-    SmulCommClass α (ConjAct G)
-      G where smul_comm := fun a ug g => by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+    SmulCommClass α (ConjAct G) G where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 
 instance smul_comm_class' [HasSmul α G] [SmulCommClass G α G] [IsScalarTower α G G] : SmulCommClass (ConjAct G) α G :=
   haveI := SmulCommClass.symm G α G
@@ -258,7 +256,7 @@ theorem _root_.mul_aut.conj_normal_apply {H : Subgroup G} [H.Normal] (g : G) (h 
 theorem _root_.mul_aut.conj_normal_symm_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g := by
   change _ * _⁻¹⁻¹ = _
-  rw [inv_invₓ]
+  rw [inv_inv]
   rfl
 
 @[simp]

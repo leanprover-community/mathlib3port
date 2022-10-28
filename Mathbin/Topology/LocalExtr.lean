@@ -40,9 +40,9 @@ open Set Filter
 
 open TopologicalSpace Filter
 
-section Preorderₓ
+section Preorder
 
-variable [Preorderₓ β] [Preorderₓ γ] (f : α → β) (s : Set α) (a : α)
+variable [Preorder β] [Preorder γ] (f : α → β) (s : Set α) (a : α)
 
 /-- `is_local_min_on f s a` means that `f a ≤ f x` for all `x ∈ s` in some neighborhood of `a`. -/
 def IsLocalMinOn :=
@@ -117,11 +117,11 @@ theorem IsExtrOn.localize (hf : IsExtrOn f s a) : IsLocalExtrOn f s a :=
 
 theorem IsLocalMinOn.is_local_min (hf : IsLocalMinOn f s a) (hs : s ∈ 𝓝 a) : IsLocalMin f a :=
   have : 𝓝 a ≤ 𝓟 s := le_principal_iff.2 hs
-  hf.filter_mono <| le_inf le_rflₓ this
+  hf.filter_mono <| le_inf le_rfl this
 
 theorem IsLocalMaxOn.is_local_max (hf : IsLocalMaxOn f s a) (hs : s ∈ 𝓝 a) : IsLocalMax f a :=
   have : 𝓝 a ≤ 𝓟 s := le_principal_iff.2 hs
-  hf.filter_mono <| le_inf le_rflₓ this
+  hf.filter_mono <| le_inf le_rfl this
 
 theorem IsLocalExtrOn.is_local_extr (hf : IsLocalExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocalExtr f a :=
   hf.elim (fun hf => (hf.IsLocalMin hs).is_extr) fun hf => (hf.IsLocalMax hs).is_extr
@@ -173,59 +173,57 @@ theorem is_local_extr_const {b : β} : IsLocalExtr (fun _ => b) a :=
 /-! ### Composition with (anti)monotone functions -/
 
 
-theorem IsLocalMin.comp_mono (hf : IsLocalMin f a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMin (g ∘ f) a :=
+theorem IsLocalMin.comp_mono (hf : IsLocalMin f a) {g : β → γ} (hg : Monotone g) : IsLocalMin (g ∘ f) a :=
   hf.comp_mono hg
 
-theorem IsLocalMax.comp_mono (hf : IsLocalMax f a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMax (g ∘ f) a :=
+theorem IsLocalMax.comp_mono (hf : IsLocalMax f a) {g : β → γ} (hg : Monotone g) : IsLocalMax (g ∘ f) a :=
   hf.comp_mono hg
 
-theorem IsLocalExtr.comp_mono (hf : IsLocalExtr f a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalExtr (g ∘ f) a :=
+theorem IsLocalExtr.comp_mono (hf : IsLocalExtr f a) {g : β → γ} (hg : Monotone g) : IsLocalExtr (g ∘ f) a :=
   hf.comp_mono hg
 
-theorem IsLocalMin.comp_antitone (hf : IsLocalMin f a) {g : β → γ} (hg : Antitoneₓ g) : IsLocalMax (g ∘ f) a :=
+theorem IsLocalMin.comp_antitone (hf : IsLocalMin f a) {g : β → γ} (hg : Antitone g) : IsLocalMax (g ∘ f) a :=
   hf.comp_antitone hg
 
-theorem IsLocalMax.comp_antitone (hf : IsLocalMax f a) {g : β → γ} (hg : Antitoneₓ g) : IsLocalMin (g ∘ f) a :=
+theorem IsLocalMax.comp_antitone (hf : IsLocalMax f a) {g : β → γ} (hg : Antitone g) : IsLocalMin (g ∘ f) a :=
   hf.comp_antitone hg
 
-theorem IsLocalExtr.comp_antitone (hf : IsLocalExtr f a) {g : β → γ} (hg : Antitoneₓ g) : IsLocalExtr (g ∘ f) a :=
+theorem IsLocalExtr.comp_antitone (hf : IsLocalExtr f a) {g : β → γ} (hg : Antitone g) : IsLocalExtr (g ∘ f) a :=
   hf.comp_antitone hg
 
-theorem IsLocalMinOn.comp_mono (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMinOn (g ∘ f) s a :=
+theorem IsLocalMinOn.comp_mono (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Monotone g) : IsLocalMinOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsLocalMaxOn.comp_mono (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMaxOn (g ∘ f) s a :=
+theorem IsLocalMaxOn.comp_mono (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Monotone g) : IsLocalMaxOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsLocalExtrOn.comp_mono (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalExtrOn (g ∘ f) s a :=
+theorem IsLocalExtrOn.comp_mono (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Monotone g) : IsLocalExtrOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsLocalMinOn.comp_antitone (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Antitoneₓ g) :
-    IsLocalMaxOn (g ∘ f) s a :=
+theorem IsLocalMinOn.comp_antitone (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Antitone g) : IsLocalMaxOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsLocalMaxOn.comp_antitone (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Antitoneₓ g) :
-    IsLocalMinOn (g ∘ f) s a :=
+theorem IsLocalMaxOn.comp_antitone (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Antitone g) : IsLocalMinOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Antitoneₓ g) :
+theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Antitone g) :
     IsLocalExtrOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsLocalMin.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
+theorem IsLocalMin.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMin f a) {g : α → γ} (hg : IsLocalMin g a) : IsLocalMin (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 
-theorem IsLocalMax.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
+theorem IsLocalMax.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMax f a) {g : α → γ} (hg : IsLocalMax g a) : IsLocalMax (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
-theorem IsLocalMinOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
+theorem IsLocalMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMinOn f s a) {g : α → γ} (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 
-theorem IsLocalMaxOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
+theorem IsLocalMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMaxOn f s a) {g : α → γ} (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 
@@ -272,7 +270,7 @@ theorem IsLocalExtrOn.comp_continuous_on [TopologicalSpace δ] {t : Set α} {s :
   hf.elim (fun hf => (hf.comp_continuous_on hst hg hb).is_extr) fun hf =>
     (IsLocalMaxOn.comp_continuous_on hf hst hg hb).is_extr
 
-end Preorderₓ
+end Preorder
 
 /-! ### Pointwise addition -/
 
@@ -376,9 +374,9 @@ end SemilatticeInf
 /-! ### Pointwise `min`/`max` -/
 
 
-section LinearOrderₓ
+section LinearOrder
 
-variable [LinearOrderₓ β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
+variable [LinearOrder β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsLocalMin.min (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => min (f x) (g x)) a :=
   hf.min hg
@@ -408,14 +406,14 @@ theorem IsLocalMaxOn.max (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
 
-end LinearOrderₓ
+end LinearOrder
 
 section Eventually
 
 /-! ### Relation with `eventually` comparisons of two functions -/
 
 
-variable [Preorderₓ β] {s : Set α}
+variable [Preorder β] {s : Set α}
 
 theorem Filter.EventuallyLe.is_local_max_on {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f) (hfga : f a = g a)
     (h : IsLocalMaxOn f s a) : IsLocalMaxOn g s a :=

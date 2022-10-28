@@ -47,7 +47,7 @@ to a functor into the category of monoid objects.
 -/
 @[simps]
 def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D where
-  obj := fun A =>
+  obj A :=
     { obj := fun X =>
         { x := A.x.obj X, one := A.one.app X, mul := A.mul.app X, one_mul' := congr_app A.one_mul X,
           mul_one' := congr_app A.mul_one X, mul_assoc' := congr_app A.mul_assoc X },
@@ -68,7 +68,7 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D where
         ext
         dsimp
         rw [functor.map_comp] }
-  map := fun A B f =>
+  map A B f :=
     { app := fun X => { Hom := f.Hom.app X, one_hom' := congr_app f.OneHom X, mul_hom' := congr_app f.MulHom X } }
 
 /-- Functor translating a functor into the category of monoid objects
@@ -76,7 +76,7 @@ to a monoid object in the functor category
 -/
 @[simps]
 def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D) where
-  obj := fun F =>
+  obj F :=
     { x := F ⋙ Mon_.forget D, one := { app := fun X => (F.obj X).one }, mul := { app := fun X => (F.obj X).mul },
       one_mul' := by
         ext X
@@ -87,7 +87,7 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D) where
       mul_assoc' := by
         ext X
         exact (F.obj X).mul_assoc }
-  map := fun F G α =>
+  map F G α :=
     { Hom := { app := fun X => (α.app X).Hom, naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) },
       one_hom' := by
         ext x
@@ -162,23 +162,23 @@ to a functor into the category of commutative monoid objects.
 -/
 @[simps]
 def functor : CommMon_ (C ⥤ D) ⥤ C ⥤ CommMon_ D where
-  obj := fun A =>
+  obj A :=
     { (monFunctorCategoryEquivalence C D).Functor.obj A.toMon_ with
       obj := fun X =>
         { ((monFunctorCategoryEquivalence C D).Functor.obj A.toMon_).obj X with mul_comm' := congr_app A.mul_comm X } }
-  map := fun A B f => { app := fun X => ((monFunctorCategoryEquivalence C D).Functor.map f).app X }
+  map A B f := { app := fun X => ((monFunctorCategoryEquivalence C D).Functor.map f).app X }
 
 /-- Functor translating a functor into the category of commutative monoid objects
 to a commutative monoid object in the functor category
 -/
 @[simps]
 def inverse : (C ⥤ CommMon_ D) ⥤ CommMon_ (C ⥤ D) where
-  obj := fun F =>
+  obj F :=
     { (monFunctorCategoryEquivalence C D).inverse.obj (F ⋙ CommMon_.forget₂Mon_ D) with
       mul_comm' := by
         ext X
         exact (F.obj X).mul_comm }
-  map := fun F G α => (monFunctorCategoryEquivalence C D).inverse.map (whiskerRight α _)
+  map F G α := (monFunctorCategoryEquivalence C D).inverse.map (whiskerRight α _)
 
 /-- The unit for the equivalence `CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D`.
 -/

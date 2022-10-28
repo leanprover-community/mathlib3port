@@ -53,7 +53,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 open BigOperators ComplexConjugate
 
-open Module.End
+open Module.EndCat
 
 namespace LinearMap
 
@@ -76,7 +76,7 @@ theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : HasEigenvalue T μ) : conj μ
   simpa [hv₂, inner_smul_left, inner_smul_right, hv₁] using hT v v
 
 /-- The eigenspaces of a self-adjoint operator are mutually orthogonal. -/
-theorem orthogonal_family_eigenspaces :
+theorem orthogonalFamilyEigenspaces :
     @OrthogonalFamily 𝕜 _ _ _ _ (fun μ => eigenspace T μ) _ fun μ => (eigenspace T μ).subtypeₗᵢ := by
   rintro μ ν hμν ⟨v, hv⟩ ⟨w, hw⟩
   by_cases hv':v = 0
@@ -87,9 +87,9 @@ theorem orthogonal_family_eigenspaces :
   refine' Or.resolve_left _ hμν.symm
   simpa [inner_smul_left, inner_smul_right, hv, hw, H] using (hT v w).symm
 
-theorem orthogonal_family_eigenspaces' :
+theorem orthogonalFamilyEigenspaces' :
     @OrthogonalFamily 𝕜 _ _ _ _ (fun μ : Eigenvalues T => eigenspace T μ) _ fun μ => (eigenspace T μ).subtypeₗᵢ :=
-  hT.orthogonal_family_eigenspaces.comp Subtype.coe_injective
+  hT.orthogonalFamilyEigenspaces.comp Subtype.coe_injective
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space is an invariant subspace of the operator. -/
@@ -105,7 +105,7 @@ theorem orthogonal_supr_eigenspaces (μ : 𝕜) : eigenspace (T.restrict hT.orth
   set p : Submodule 𝕜 E := (⨆ μ, eigenspace T μ)ᗮ
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
   have H₂ : p ≤ (eigenspace T μ)ᗮ := Submodule.orthogonal_le (le_supr _ _)
-  exact (eigenspace T μ).orthogonal_disjoint.mono_right H₂
+  exact (eigenspace T μ).orthogonalDisjoint.mono_right H₂
 
 /-! ### Finite-dimensional theory -/
 
@@ -129,19 +129,19 @@ include dec_𝕜
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` give
 an internal direct sum decomposition of `E`. -/
 theorem direct_sum_is_internal : DirectSum.IsInternal fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.orthogonal_family_eigenspaces'.is_internal_iff.mpr hT.orthogonal_supr_eigenspaces_eq_bot'
+  hT.orthogonalFamilyEigenspaces'.is_internal_iff.mpr hT.orthogonal_supr_eigenspaces_eq_bot'
 
 section Version1
 
 /-- Isometry from an inner product space `E` to the direct sum of the eigenspaces of some
 self-adjoint operator `T` on `E`. -/
 noncomputable def diagonalization : E ≃ₗᵢ[𝕜] PiLp 2 fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.direct_sum_is_internal.isometryL2OfOrthogonalFamily hT.orthogonal_family_eigenspaces'
+  hT.direct_sum_is_internal.isometryL2OfOrthogonalFamily hT.orthogonalFamilyEigenspaces'
 
 @[simp]
 theorem diagonalization_symm_apply (w : PiLp 2 fun μ : Eigenvalues T => eigenspace T μ) :
     hT.diagonalization.symm w = ∑ μ, w μ :=
-  hT.direct_sum_is_internal.isometry_L2_of_orthogonal_family_symm_apply hT.orthogonal_family_eigenspaces' w
+  hT.direct_sum_is_internal.isometry_L2_of_orthogonal_family_symm_apply hT.orthogonalFamilyEigenspaces' w
 
 /-- *Diagonalization theorem*, *spectral theorem*; version 1: A self-adjoint operator `T` on a
 finite-dimensional inner product space `E` acts diagonally on the decomposition of `E` into the
@@ -171,17 +171,17 @@ finite-dimensional inner product space `E`.
 
 TODO Postcompose with a permutation so that these eigenvectors are listed in increasing order of
 eigenvalue. -/
-noncomputable def eigenvectorBasis : OrthonormalBasis (Finₓ n) 𝕜 E :=
-  hT.direct_sum_is_internal.subordinateOrthonormalBasis hn hT.orthogonal_family_eigenspaces'
+noncomputable def eigenvectorBasis : OrthonormalBasis (Fin n) 𝕜 E :=
+  hT.direct_sum_is_internal.subordinateOrthonormalBasis hn hT.orthogonalFamilyEigenspaces'
 
 /-- The sequence of real eigenvalues associated to the standard orthonormal basis of eigenvectors
 for a self-adjoint operator `T` on `E`.
 
 TODO Postcompose with a permutation so that these eigenvalues are listed in increasing order. -/
-noncomputable def eigenvalues (i : Finₓ n) : ℝ :=
-  @IsROrC.re 𝕜 _ <| hT.direct_sum_is_internal.subordinateOrthonormalBasisIndex hn i hT.orthogonal_family_eigenspaces'
+noncomputable def eigenvalues (i : Fin n) : ℝ :=
+  @IsROrC.re 𝕜 _ <| hT.direct_sum_is_internal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamilyEigenspaces'
 
-theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
+theorem has_eigenvector_eigenvector_basis (i : Fin n) :
     HasEigenvector T (hT.Eigenvalues hn i) (hT.eigenvectorBasis hn i) := by
   let v : E := hT.eigenvector_basis hn i
   let μ : 𝕜 := hT.direct_sum_is_internal.subordinate_orthonormal_basis_index hn i hT.orthogonal_family_eigenspaces'
@@ -196,28 +196,28 @@ theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
     exact hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)
   simpa [re_μ] using key
 
-theorem has_eigenvalue_eigenvalues (i : Finₓ n) : HasEigenvalue T (hT.Eigenvalues hn i) :=
-  Module.End.has_eigenvalue_of_has_eigenvector (hT.has_eigenvector_eigenvector_basis hn i)
+theorem has_eigenvalue_eigenvalues (i : Fin n) : HasEigenvalue T (hT.Eigenvalues hn i) :=
+  Module.EndCat.has_eigenvalue_of_has_eigenvector (hT.has_eigenvector_eigenvector_basis hn i)
 
 @[simp]
-theorem apply_eigenvector_basis (i : Finₓ n) :
+theorem apply_eigenvector_basis (i : Fin n) :
     T (hT.eigenvectorBasis hn i) = (hT.Eigenvalues hn i : 𝕜) • hT.eigenvectorBasis hn i :=
   mem_eigenspace_iff.mp (hT.has_eigenvector_eigenvector_basis hn i).1
 
 /-- *Diagonalization theorem*, *spectral theorem*; version 2: A self-adjoint operator `T` on a
 finite-dimensional inner product space `E` acts diagonally on the identification of `E` with
 Euclidean space induced by an orthonormal basis of eigenvectors of `T`. -/
-theorem diagonalization_basis_apply_self_apply (v : E) (i : Finₓ n) :
+theorem diagonalization_basis_apply_self_apply (v : E) (i : Fin n) :
     (hT.eigenvectorBasis hn).repr (T v) i = hT.Eigenvalues hn i * (hT.eigenvectorBasis hn).repr v i := by
   suffices
-    ∀ w : EuclideanSpace 𝕜 (Finₓ n),
+    ∀ w : EuclideanSpace 𝕜 (Fin n),
       T ((hT.eigenvector_basis hn).repr.symm w) = (hT.eigenvector_basis hn).repr.symm fun i => hT.eigenvalues hn i * w i
     by
     simpa [OrthonormalBasis.sum_repr_symm] using
       congr_arg (fun v => (hT.eigenvector_basis hn).repr v i) (this ((hT.eigenvector_basis hn).repr v))
   intro w
   simp_rw [← OrthonormalBasis.sum_repr_symm, LinearMap.map_sum, LinearMap.map_smul, apply_eigenvector_basis]
-  apply Fintypeₓ.sum_congr
+  apply Fintype.sum_congr
   intro a
   rw [smul_smul, mul_comm]
 
@@ -230,7 +230,7 @@ end LinearMap
 section Nonneg
 
 @[simp]
-theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] E} (h : v ∈ Module.End.eigenspace T μ) :
+theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] E} (h : v ∈ Module.EndCat.eigenspace T μ) :
     ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by simp only [mem_eigenspace_iff.mp h, inner_smul_right, inner_self_eq_norm_sq_to_K]
 
 theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)

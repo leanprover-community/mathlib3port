@@ -71,11 +71,11 @@ theorem log_nat_cast (b : ℕ) (n : ℕ) : log b (n : R) = Nat.log b n := by
   · simp [log_of_right_le_one _ _, Nat.log_zero_right]
     
   · have : 1 ≤ (n.succ : R) := by simp
-    simp [log_of_one_le_right _ this, ← Nat.cast_succₓ]
+    simp [log_of_one_le_right _ this, ← Nat.cast_succ]
     
 
 theorem log_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : log b r = 0 := by
-  cases le_totalₓ 1 r
+  cases le_total 1 r
   · rw [log_of_one_le_right _ h, Nat.log_of_left_le_one hb, Int.coe_nat_zero]
     
   · rw [log_of_right_le_one _ h, Nat.clog_of_left_le_one hb, Int.coe_nat_zero, neg_zero]
@@ -87,74 +87,74 @@ theorem log_of_right_le_zero (b : ℕ) {r : R} (hr : r ≤ 0) : log b r = 0 := b
     neg_zero]
 
 theorem zpow_log_le_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) : (b : R) ^ log b r ≤ r := by
-  cases' le_totalₓ 1 r with hr1 hr1
+  cases' le_total 1 r with hr1 hr1
   · rw [log_of_one_le_right _ hr1]
-    refine' le_transₓ _ (Nat.floor_le hr.le)
-    rw [zpow_coe_nat, ← Nat.cast_powₓ, Nat.cast_le]
+    refine' le_trans _ (Nat.floor_le hr.le)
+    rw [zpow_coe_nat, ← Nat.cast_pow, Nat.cast_le]
     exact Nat.pow_log_le_self hb (nat.floor_pos.mpr hr1)
     
-  · rw [log_of_right_le_one _ hr1, zpow_neg, zpow_coe_nat, ← Nat.cast_powₓ]
+  · rw [log_of_right_le_one _ hr1, zpow_neg, zpow_coe_nat, ← Nat.cast_pow]
     apply inv_le_of_inv_le hr
     refine' (Nat.le_ceil _).trans (Nat.cast_le.2 _)
     exact Nat.le_pow_clog hb _
     
 
 theorem lt_zpow_succ_log_self {b : ℕ} (hb : 1 < b) (r : R) : r < (b : R) ^ (log b r + 1) := by
-  cases' le_or_ltₓ r 0 with hr hr
-  · rw [log_of_right_le_zero _ hr, zero_addₓ, zpow_one]
+  cases' le_or_lt r 0 with hr hr
+  · rw [log_of_right_le_zero _ hr, zero_add, zpow_one]
     exact hr.trans_lt (zero_lt_one.trans_le <| by exact_mod_cast hb.le)
     
-  cases' le_or_ltₓ 1 r with hr1 hr1
+  cases' le_or_lt 1 r with hr1 hr1
   · rw [log_of_one_le_right _ hr1]
-    rw [Int.coe_nat_add_one_out, zpow_coe_nat, ← Nat.cast_powₓ]
+    rw [Int.coe_nat_add_one_out, zpow_coe_nat, ← Nat.cast_pow]
     apply Nat.lt_of_floor_lt
     exact Nat.lt_pow_succ_log_self hb _
     
   · rw [log_of_right_le_one _ hr1.le]
     have hcri : 1 < r⁻¹ := one_lt_inv hr hr1
     have : 1 ≤ Nat.clog b ⌈r⁻¹⌉₊ :=
-      Nat.succ_le_of_ltₓ (Nat.clog_pos hb <| Nat.one_lt_cast.1 <| hcri.trans_le (Nat.le_ceil _))
-    rw [neg_add_eq_sub, ← neg_sub, ← Int.coe_nat_one, ← Int.coe_nat_subₓ this, zpow_neg, zpow_coe_nat,
-      lt_inv hr (pow_pos (nat.cast_pos.mpr <| zero_lt_one.trans hb) _), ← Nat.cast_powₓ]
+      Nat.succ_le_of_lt (Nat.clog_pos hb <| Nat.one_lt_cast.1 <| hcri.trans_le (Nat.le_ceil _))
+    rw [neg_add_eq_sub, ← neg_sub, ← Int.coe_nat_one, ← Int.coe_nat_sub this, zpow_neg, zpow_coe_nat,
+      lt_inv hr (pow_pos (nat.cast_pos.mpr <| zero_lt_one.trans hb) _), ← Nat.cast_pow]
     refine' Nat.lt_ceil.1 _
     exact Nat.pow_pred_clog_lt_self hb <| Nat.one_lt_cast.1 <| hcri.trans_le <| Nat.le_ceil _
     
 
 @[simp]
 theorem log_zero_right (b : ℕ) : log b (0 : R) = 0 :=
-  log_of_right_le_zero b le_rflₓ
+  log_of_right_le_zero b le_rfl
 
 @[simp]
 theorem log_one_right (b : ℕ) : log b (1 : R) = 0 := by
-  rw [log_of_one_le_right _ le_rflₓ, Nat.floor_one, Nat.log_one_right, Int.coe_nat_zero]
+  rw [log_of_one_le_right _ le_rfl, Nat.floor_one, Nat.log_one_right, Int.coe_nat_zero]
 
 theorem log_zpow {b : ℕ} (hb : 1 < b) (z : ℤ) : log b (b ^ z : R) = z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [log_of_one_le_right _ (one_le_zpow_of_nonneg _ <| Int.coe_nat_nonneg _), zpow_coe_nat, ← Nat.cast_powₓ,
+  · rw [log_of_one_le_right _ (one_le_zpow_of_nonneg _ <| Int.coe_nat_nonneg _), zpow_coe_nat, ← Nat.cast_pow,
       Nat.floor_coe, Nat.log_pow hb]
     exact_mod_cast hb.le
     
-  · rw [log_of_right_le_one _ (zpow_le_one_of_nonpos _ <| neg_nonpos.mpr (Int.coe_nat_nonneg _)), zpow_neg, inv_invₓ,
-      zpow_coe_nat, ← Nat.cast_powₓ, Nat.ceil_coe, Nat.clog_pow _ _ hb]
+  · rw [log_of_right_le_one _ (zpow_le_one_of_nonpos _ <| neg_nonpos.mpr (Int.coe_nat_nonneg _)), zpow_neg, inv_inv,
+      zpow_coe_nat, ← Nat.cast_pow, Nat.ceil_coe, Nat.clog_pow _ _ hb]
     exact_mod_cast hb.le
     
 
 @[mono]
 theorem log_mono_right {b : ℕ} {r₁ r₂ : R} (h₀ : 0 < r₁) (h : r₁ ≤ r₂) : log b r₁ ≤ log b r₂ := by
-  cases' le_or_ltₓ b 1 with hb hb
+  cases' le_or_lt b 1 with hb hb
   · rw [log_of_left_le_one hb, log_of_left_le_one hb]
     
-  cases' le_totalₓ r₁ 1 with h₁ h₁ <;> cases' le_totalₓ r₂ 1 with h₂ h₂
-  · rw [log_of_right_le_one _ h₁, log_of_right_le_one _ h₂, neg_le_neg_iff, Int.coe_nat_leₓ]
+  cases' le_total r₁ 1 with h₁ h₁ <;> cases' le_total r₂ 1 with h₂ h₂
+  · rw [log_of_right_le_one _ h₁, log_of_right_le_one _ h₂, neg_le_neg_iff, Int.coe_nat_le]
     exact Nat.clog_mono_right _ (Nat.ceil_mono <| inv_le_inv_of_le h₀ h)
     
   · rw [log_of_right_le_one _ h₁, log_of_one_le_right _ h₂]
     exact (neg_nonpos.mpr (Int.coe_nat_nonneg _)).trans (Int.coe_nat_nonneg _)
     
-  · obtain rfl := le_antisymmₓ h (h₂.trans h₁)
+  · obtain rfl := le_antisymm h (h₂.trans h₁)
     rfl
     
-  · rw [log_of_one_le_right _ h₁, log_of_one_le_right _ h₂, Int.coe_nat_leₓ]
+  · rw [log_of_one_le_right _ h₁, log_of_one_le_right _ h₂, Int.coe_nat_le]
     exact Nat.log_mono_right (Nat.floor_mono h)
     
 
@@ -164,7 +164,7 @@ variable (R)
 def zpowLogGi {b : ℕ} (hb : 1 < b) :
     GaloisCoinsertion
       (fun z : ℤ => Subtype.mk ((b : R) ^ z) <| zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z)
-      fun r : Set.Ioi (0 : R) => Int.log b (r : R) :=
+      fun r : Set.IoiCat (0 : R) => Int.log b (r : R) :=
   GaloisCoinsertion.monotoneIntro (fun r₁ r₂ => log_mono_right r₁.Prop)
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strict_mono <| by exact_mod_cast hb).Monotone hz)
     (fun r => Subtype.coe_le_coe.mp <| zpow_log_le_self hb r.Prop) fun _ => log_zpow hb _
@@ -196,32 +196,32 @@ theorem clog_of_right_le_one (b : ℕ) {r : R} (hr : r ≤ 1) : clog b r = -Nat.
 
 theorem clog_of_right_le_zero (b : ℕ) {r : R} (hr : r ≤ 0) : clog b r = 0 := by
   rw [clog, if_neg (hr.trans_lt zero_lt_one).not_le, neg_eq_zero, Int.coe_nat_eq_zero, Nat.log_eq_zero_iff]
-  cases' le_or_ltₓ b 1 with hb hb
+  cases' le_or_lt b 1 with hb hb
   · exact Or.inr hb
     
-  · refine' Or.inl (lt_of_le_of_ltₓ _ hb)
+  · refine' Or.inl (lt_of_le_of_lt _ hb)
     exact Nat.floor_le_one_of_le_one ((inv_nonpos.2 hr).trans zero_le_one)
     
 
 @[simp]
 theorem clog_inv (b : ℕ) (r : R) : clog b r⁻¹ = -log b r := by
-  cases' lt_or_leₓ 0 r with hrp hrp
-  · obtain hr | hr := le_totalₓ 1 r
-    · rw [clog_of_right_le_one _ (inv_le_one hr), log_of_one_le_right _ hr, inv_invₓ]
+  cases' lt_or_le 0 r with hrp hrp
+  · obtain hr | hr := le_total 1 r
+    · rw [clog_of_right_le_one _ (inv_le_one hr), log_of_one_le_right _ hr, inv_inv]
       
-    · rw [clog_of_one_le_right _ (one_le_inv hrp hr), log_of_right_le_one _ hr, neg_negₓ]
+    · rw [clog_of_one_le_right _ (one_le_inv hrp hr), log_of_right_le_one _ hr, neg_neg]
       
     
   · rw [clog_of_right_le_zero _ (inv_nonpos.mpr hrp), log_of_right_le_zero _ hrp, neg_zero]
     
 
 @[simp]
-theorem log_inv (b : ℕ) (r : R) : log b r⁻¹ = -clog b r := by rw [← inv_invₓ r, clog_inv, neg_negₓ, inv_invₓ]
+theorem log_inv (b : ℕ) (r : R) : log b r⁻¹ = -clog b r := by rw [← inv_inv r, clog_inv, neg_neg, inv_inv]
 
 -- note this is useful for writing in reverse
-theorem neg_log_inv_eq_clog (b : ℕ) (r : R) : -log b r⁻¹ = clog b r := by rw [log_inv, neg_negₓ]
+theorem neg_log_inv_eq_clog (b : ℕ) (r : R) : -log b r⁻¹ = clog b r := by rw [log_inv, neg_neg]
 
-theorem neg_clog_inv_eq_log (b : ℕ) (r : R) : -clog b r⁻¹ = log b r := by rw [clog_inv, neg_negₓ]
+theorem neg_clog_inv_eq_log (b : ℕ) (r : R) : -clog b r⁻¹ = log b r := by rw [clog_inv, neg_neg]
 
 @[simp, norm_cast]
 theorem clog_nat_cast (b : ℕ) (n : ℕ) : clog b (n : R) = Nat.clog b n := by
@@ -229,14 +229,14 @@ theorem clog_nat_cast (b : ℕ) (n : ℕ) : clog b (n : R) = Nat.clog b n := by
   · simp [clog_of_right_le_one _ _, Nat.clog_zero_right]
     
   · have : 1 ≤ (n.succ : R) := by simp
-    simp [clog_of_one_le_right _ this, ← Nat.cast_succₓ]
+    simp [clog_of_one_le_right _ this, ← Nat.cast_succ]
     
 
 theorem clog_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : clog b r = 0 := by
   rw [← neg_log_inv_eq_clog, log_of_left_le_one hb, neg_zero]
 
 theorem self_le_zpow_clog {b : ℕ} (hb : 1 < b) (r : R) : r ≤ (b : R) ^ clog b r := by
-  cases' le_or_ltₓ r 0 with hr hr
+  cases' le_or_lt r 0 with hr hr
   · rw [clog_of_right_le_zero _ hr, zpow_zero]
     exact hr.trans zero_le_one
     
@@ -255,14 +255,14 @@ theorem zpow_pred_clog_lt_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) : (b 
 
 @[simp]
 theorem clog_zero_right (b : ℕ) : clog b (0 : R) = 0 :=
-  clog_of_right_le_zero _ le_rflₓ
+  clog_of_right_le_zero _ le_rfl
 
 @[simp]
 theorem clog_one_right (b : ℕ) : clog b (1 : R) = 0 := by
-  rw [clog_of_one_le_right _ le_rflₓ, Nat.ceil_one, Nat.clog_one_right, Int.coe_nat_zero]
+  rw [clog_of_one_le_right _ le_rfl, Nat.ceil_one, Nat.clog_one_right, Int.coe_nat_zero]
 
 theorem clog_zpow {b : ℕ} (hb : 1 < b) (z : ℤ) : clog b (b ^ z : R) = z := by
-  rw [← neg_log_inv_eq_clog, ← zpow_neg, log_zpow hb, neg_negₓ]
+  rw [← neg_log_inv_eq_clog, ← zpow_neg, log_zpow hb, neg_neg]
 
 @[mono]
 theorem clog_mono_right {b : ℕ} {r₁ r₂ : R} (h₀ : 0 < r₁) (h : r₁ ≤ r₂) : clog b r₁ ≤ clog b r₂ := by
@@ -273,7 +273,7 @@ variable (R)
 
 /-- Over suitable subtypes, `int.clog` and `zpow` form a galois insertion -/
 def clogZpowGi {b : ℕ} (hb : 1 < b) :
-    GaloisInsertion (fun r : Set.Ioi (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
+    GaloisInsertion (fun r : Set.IoiCat (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
       ⟨(b : R) ^ z, zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z⟩ :=
   GaloisInsertion.monotoneIntro
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strict_mono <| by exact_mod_cast hb).Monotone hz)

@@ -92,27 +92,27 @@ def freshIndex : Preform → Nat
 theorem holds_constant {v w : Nat → Nat} : ∀ p : Preform, (∀ x < p.freshIndex, v x = w x) → (p.Holds v ↔ p.Holds w)
   | t =* s, h1 => by
     simp only [holds]
-    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
-    apply le_max_leftₓ
-    apply le_max_rightₓ
+    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
+    apply le_max_left
+    apply le_max_right
   | t ≤* s, h1 => by
     simp only [holds]
-    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
-    apply le_max_leftₓ
-    apply le_max_rightₓ
+    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
+    apply le_max_left
+    apply le_max_right
   | ¬* p, h1 => by
-    apply not_iff_not_of_iff
+    apply not_congr
     apply holds_constant p h1
   | p ∨* q, h1 => by
     simp only [holds]
-    apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
-    apply le_max_leftₓ
-    apply le_max_rightₓ
+    apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
+    apply le_max_left
+    apply le_max_right
   | p ∧* q, h1 => by
     simp only [holds]
-    apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
-    apply le_max_leftₓ
-    apply le_max_rightₓ
+    apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
+    apply le_max_left
+    apply le_max_right
 
 /-- All valuations satisfy argument -/
 def Valid (p : Preform) : Prop :=
@@ -132,7 +132,7 @@ def Equiv (p q : Preform) : Prop :=
 
 theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by
   intro h1 h2
-  apply exists_imp_exists h1 h2
+  apply Exists.imp h1 h2
 
 theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
   constructor <;> intro h1
@@ -146,14 +146,14 @@ theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
 def Unsat (p : Preform) : Prop :=
   ¬Sat p
 
-def repr : Preform → Stringₓ
+def repr : Preform → String
   | t =* s => "(" ++ t.repr ++ " = " ++ s.repr ++ ")"
   | t ≤* s => "(" ++ t.repr ++ " ≤ " ++ s.repr ++ ")"
   | ¬* p => "¬" ++ p.repr
   | p ∨* q => "(" ++ p.repr ++ " ∨ " ++ q.repr ++ ")"
   | p ∧* q => "(" ++ p.repr ++ " ∧ " ++ q.repr ++ ")"
 
-instance hasRepr : HasRepr Preform :=
+instance hasRepr : Repr Preform :=
   ⟨repr⟩
 
 unsafe instance has_to_format : has_to_format Preform :=
@@ -171,7 +171,7 @@ theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
   intro h
   assumption
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

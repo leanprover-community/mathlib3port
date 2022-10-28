@@ -36,7 +36,7 @@ universe u v w w₁ w₂
 
 variable (R : Type u) (L : Type v) (M : Type w) {L' : Type w₁}
 
-variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
+variable [CommRing R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
 
 variable (I J : LieIdeal R L) {f : L' →ₗ⁅R⁆ L}
 
@@ -76,7 +76,7 @@ local notation "D" => derivedSeriesOfIdeal R L
 
 theorem derived_series_of_ideal_add (k l : ℕ) : D (k + l) I = D k (D l I) := by
   induction' k with k ih
-  · rw [zero_addₓ, derived_series_of_ideal_zero]
+  · rw [zero_add, derived_series_of_ideal_zero]
     
   · rw [Nat.succ_add k l, derived_series_of_ideal_succ, derived_series_of_ideal_succ, ih]
     
@@ -89,27 +89,27 @@ theorem derived_series_of_ideal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I �
     rw [h₂, derived_series_of_ideal_zero]
     exact h₁
     
-  · have h : l = k.succ ∨ l ≤ k := by rwa [le_iff_eq_or_ltₓ, Nat.lt_succ_iff] at h₂
+  · have h : l = k.succ ∨ l ≤ k := by rwa [le_iff_eq_or_lt, Nat.lt_succ_iff] at h₂
     cases h
     · rw [h, derived_series_of_ideal_succ, derived_series_of_ideal_succ]
-      exact LieSubmodule.mono_lie _ _ _ _ (ih (le_reflₓ k)) (ih (le_reflₓ k))
+      exact LieSubmodule.mono_lie _ _ _ _ (ih (le_refl k)) (ih (le_refl k))
       
     · rw [derived_series_of_ideal_succ]
-      exact le_transₓ (LieSubmodule.lie_le_left _ _) (ih h)
+      exact le_trans (LieSubmodule.lie_le_left _ _) (ih h)
       
     
 
 theorem derived_series_of_ideal_succ_le (k : ℕ) : D (k + 1) I ≤ D k I :=
-  derived_series_of_ideal_le (le_reflₓ I) k.le_succ
+  derived_series_of_ideal_le (le_refl I) k.le_succ
 
 theorem derived_series_of_ideal_le_self (k : ℕ) : D k I ≤ I :=
-  derived_series_of_ideal_le (le_reflₓ I) (zero_le k)
+  derived_series_of_ideal_le (le_refl I) (zero_le k)
 
 theorem derived_series_of_ideal_mono {I J : LieIdeal R L} (h : I ≤ J) (k : ℕ) : D k I ≤ D k J :=
-  derived_series_of_ideal_le h (le_reflₓ k)
+  derived_series_of_ideal_le h (le_refl k)
 
 theorem derived_series_of_ideal_antitone {k l : ℕ} (h : l ≤ k) : D k I ≤ D l I :=
-  derived_series_of_ideal_le (le_reflₓ I) h
+  derived_series_of_ideal_le (le_refl I) h
 
 theorem derived_series_of_ideal_add_le_add (J : LieIdeal R L) (k l : ℕ) : D (k + l) (I + J) ≤ D k I + D l J := by
   let D₁ : LieIdeal R L →o LieIdeal R L :=
@@ -128,7 +128,7 @@ theorem abelian_iff_derived_one_eq_bot : IsLieAbelian I ↔ derivedSeriesOfIdeal
 
 theorem abelian_iff_derived_succ_eq_bot (I : LieIdeal R L) (k : ℕ) :
     IsLieAbelian (derivedSeriesOfIdeal R L k I) ↔ derivedSeriesOfIdeal R L (k + 1) I = ⊥ := by
-  rw [add_commₓ, derived_series_of_ideal_add I 1 k, abelian_iff_derived_one_eq_bot]
+  rw [add_comm, derived_series_of_ideal_add I 1 k, abelian_iff_derived_one_eq_bot]
 
 end LieAlgebra
 
@@ -175,7 +175,7 @@ theorem derived_series_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ deriv
   · simp only [derived_series_def, derived_series_of_ideal_zero, le_top]
     
   · simp only [derived_series_def, derived_series_of_ideal_succ] at ih⊢
-    exact le_transₓ (map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ ih ih)
+    exact le_trans (map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ ih ih)
     
 
 theorem derived_series_map_eq (k : ℕ) (h : Function.Surjective f) :

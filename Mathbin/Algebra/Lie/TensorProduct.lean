@@ -18,7 +18,7 @@ lie module, tensor product, universal property
 
 universe u v w w₁ w₂ w₃
 
-variable {R : Type u} [CommRingₓ R]
+variable {R : Type u} [CommRing R]
 
 open LieModule
 
@@ -32,30 +32,30 @@ variable {L : Type v} {M : Type w} {N : Type w₁} {P : Type w₂} {Q : Type w�
 
 variable [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable [AddCommGroupₓ N] [Module R N] [LieRingModule L N] [LieModule R L N]
+variable [AddCommGroup N] [Module R N] [LieRingModule L N] [LieModule R L N]
 
-variable [AddCommGroupₓ P] [Module R P] [LieRingModule L P] [LieModule R L P]
+variable [AddCommGroup P] [Module R P] [LieRingModule L P] [LieModule R L P]
 
-variable [AddCommGroupₓ Q] [Module R Q] [LieRingModule L Q] [LieModule R L Q]
+variable [AddCommGroup Q] [Module R Q] [LieRingModule L Q] [LieModule R L Q]
 
 attribute [local ext] TensorProduct.ext
 
 /-- It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
-def hasBracketAux (x : L) : Module.End R (M ⊗[R] N) :=
+def hasBracketAux (x : L) : Module.EndCat R (M ⊗[R] N) :=
   (toEndomorphism R L M x).rtensor N + (toEndomorphism R L N x).ltensor M
 
 /-- The tensor product of two Lie modules is a Lie ring module. -/
 instance lieRingModule : LieRingModule L (M ⊗[R] N) where
-  bracket := fun x => hasBracketAux x
-  add_lie := fun x y t => by
+  bracket x := hasBracketAux x
+  add_lie x y t := by
     simp only [has_bracket_aux, LinearMap.ltensor_add, LinearMap.rtensor_add, LieHom.map_add, LinearMap.add_apply]
     abel
-  lie_add := fun x => LinearMap.map_add _
-  leibniz_lie := fun x y t => by
+  lie_add x := LinearMap.map_add _
+  leibniz_lie x y t := by
     suffices
       (has_bracket_aux x).comp (has_bracket_aux y) =
         has_bracket_aux ⁅x, y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
@@ -72,11 +72,11 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N) where
 
 /-- The tensor product of two Lie modules is a Lie module. -/
 instance lieModule : LieModule R L (M ⊗[R] N) where
-  smul_lie := fun c x t => by
+  smul_lie c x t := by
     change has_bracket_aux (c • x) _ = c • has_bracket_aux _ _
     simp only [has_bracket_aux, smul_add, LinearMap.rtensor_smul, LinearMap.smul_apply, LinearMap.ltensor_smul,
       LieHom.map_smul, LinearMap.add_apply]
-  lie_smul := fun c x => LinearMap.map_smul _ c
+  lie_smul c x := LinearMap.map_smul _ c
 
 @[simp]
 theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x, m ⊗ₜ[R] n⁆ = ⁅x, m⁆ ⊗ₜ n + m ⊗ₜ ⁅x, n⁆ :=
@@ -166,7 +166,7 @@ variable (R) (L : Type v) (M : Type w)
 
 variable [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 /-- The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
 def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
@@ -195,7 +195,7 @@ variable {L : Type v} {M : Type w}
 
 variable [LieRing L] [LieAlgebra R L]
 
-variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
+variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 variable (I : LieIdeal R L) (N : LieSubmodule R L M)
 

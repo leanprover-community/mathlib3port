@@ -56,7 +56,7 @@ theorem Prime.ne_zero {n : ℕ} (h : Prime n) : n ≠ 0 :=
   Irreducible.ne_zero h
 
 theorem Prime.pos {p : ℕ} (pp : Prime p) : 0 < p :=
-  Nat.pos_of_ne_zeroₓ pp.ne_zero
+  Nat.pos_of_ne_zero pp.ne_zero
 
 theorem Prime.two_le : ∀ {p : ℕ}, Prime p → 2 ≤ p
   | 0, h => (not_prime_zero h).elim
@@ -78,9 +78,9 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   rw [Nat.is_unit_iff, Nat.is_unit_iff] at this
   apply Or.imp_right _ this
   rintro rfl
-  rw [hn, mul_oneₓ]
+  rw [hn, mul_one]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ∣ » p)
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ∣ » p) -/
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1
@@ -88,7 +88,7 @@ theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p)
   simp only [Nat.is_unit_iff]
   apply Or.imp_right _ (h.2 a _)
   · rintro rfl
-    rw [← Nat.mul_right_inj (pos_of_gt h1), ← hab, mul_oneₓ]
+    rw [← Nat.mul_right_inj (pos_of_gt h1), ← hab, mul_one]
     
   · rw [hab]
     exact dvd_mul_right _ _
@@ -97,15 +97,15 @@ theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p)
 theorem prime_def_lt {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m < p, m ∣ p → m = 1 :=
   prime_def_lt''.trans <|
     and_congr_right fun p2 =>
-      forall_congrₓ fun m =>
-        ⟨fun h l d => (h d).resolve_right (ne_of_ltₓ l), fun h d =>
-          (le_of_dvdₓ (le_of_succ_leₓ p2) d).lt_or_eq_dec.imp_left fun l => h l d⟩
+      forall_congr fun m =>
+        ⟨fun h l d => (h d).resolve_right (ne_of_lt l), fun h d =>
+          (le_of_dvd (le_of_succ_le p2) d).lt_or_eq_dec.imp_left fun l => h l d⟩
 
 theorem prime_def_lt' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m → m < p → ¬m ∣ p :=
   prime_def_lt.trans <|
     and_congr_right fun p2 =>
-      forall_congrₓ fun m =>
-        ⟨fun h m2 l d => not_lt_of_geₓ m2 ((h l d).symm ▸ by decide), fun h l d => by
+      forall_congr fun m =>
+        ⟨fun h m2 l d => not_lt_of_ge m2 ((h l d).symm ▸ by decide), fun h l d => by
           rcases m with (_ | _ | m)
           · rw [eq_zero_of_zero_dvd d] at p2
             revert p2
@@ -119,16 +119,16 @@ theorem prime_def_lt' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m → m <
 theorem prime_def_le_sqrt {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m → m ≤ sqrt p → ¬m ∣ p :=
   prime_def_lt'.trans <|
     and_congr_right fun p2 =>
-      ⟨fun a m m2 l => a m m2 <| lt_of_le_of_ltₓ l <| sqrt_lt_self p2, fun a =>
+      ⟨fun a m m2 l => a m m2 <| lt_of_le_of_lt l <| sqrt_lt_self p2, fun a =>
         have : ∀ {m k}, m ≤ k → 1 < m → p ≠ m * k := fun m k mk m1 e =>
-          a m m1 (le_sqrt.2 (e.symm ▸ Nat.mul_le_mul_leftₓ m mk)) ⟨k, e⟩
+          a m m1 (le_sqrt.2 (e.symm ▸ Nat.mul_le_mul_left m mk)) ⟨k, e⟩
         fun m m2 l ⟨k, e⟩ => by
-        cases' le_totalₓ m k with mk km
+        cases' le_total m k with mk km
         · exact this mk m2 e
           
         · rw [mul_comm] at e
           refine' this km (lt_of_mul_lt_mul_right _ (zero_le m)) e
-          rwa [one_mulₓ, ← e]
+          rwa [one_mul, ← e]
           ⟩
 
 theorem prime_of_coprime (n : ℕ) (h1 : 1 < n) (h : ∀ m < n, m ≠ 0 → n.Coprime m) : Prime n := by
@@ -160,13 +160,13 @@ theorem Prime.pred_pos {p : ℕ} (pp : Prime p) : 0 < pred p :=
   lt_pred_iff.2 pp.one_lt
 
 theorem succ_pred_prime {p : ℕ} (pp : Prime p) : succ (pred p) = p :=
-  succ_pred_eq_of_posₓ pp.Pos
+  succ_pred_eq_of_pos pp.Pos
 
 theorem dvd_prime {p m : ℕ} (pp : Prime p) : m ∣ p ↔ m = 1 ∨ m = p :=
   ⟨fun d => pp.eq_one_or_self_of_dvd m d, fun h => h.elim (fun e => e.symm ▸ one_dvd _) fun e => e.symm ▸ dvd_rfl⟩
 
 theorem dvd_prime_two_le {p m : ℕ} (pp : Prime p) (H : 2 ≤ m) : m ∣ p ↔ m = p :=
-  (dvd_prime pp).trans <| or_iff_right_of_imp <| Not.elim <| ne_of_gtₓ H
+  (dvd_prime pp).trans <| or_iff_right_of_imp <| Not.elim <| ne_of_gt H
 
 theorem prime_dvd_prime_iff_eq {p q : ℕ} (pp : p.Prime) (qp : q.Prime) : p ∣ q ↔ p = q :=
   dvd_prime_two_le qp (Prime.two_le pp)
@@ -175,7 +175,7 @@ theorem Prime.not_dvd_one {p : ℕ} (pp : Prime p) : ¬p ∣ 1 :=
   pp.not_dvd_one
 
 theorem not_prime_mul {a b : ℕ} (a1 : 1 < a) (b1 : 1 < b) : ¬Prime (a * b) := fun h =>
-  ne_of_ltₓ (Nat.mul_lt_mul_of_pos_leftₓ b1 (lt_of_succ_ltₓ a1)) <| by
+  ne_of_lt (Nat.mul_lt_mul_of_pos_left b1 (lt_of_succ_lt a1)) <| by
     simpa using (dvd_prime_two_le h a1).1 (dvd_mul_right _ _)
 
 theorem not_prime_mul' {a b n : ℕ} (h : a * b = n) (h₁ : 1 < a) (h₂ : 1 < b) : ¬Prime n := by
@@ -183,7 +183,7 @@ theorem not_prime_mul' {a b n : ℕ} (h : a * b = n) (h₁ : 1 < a) (h₂ : 1 < 
   exact not_prime_mul h₁ h₂
 
 theorem prime_mul_iff {a b : ℕ} : Nat.Prime (a * b) ↔ a.Prime ∧ b = 1 ∨ b.Prime ∧ a = 1 := by
-  simp only [iff_selfₓ, irreducible_mul_iff, ← irreducible_iff_nat_prime, Nat.is_unit_iff]
+  simp only [iff_self_iff, irreducible_mul_iff, ← irreducible_iff_nat_prime, Nat.is_unit_iff]
 
 theorem Prime.dvd_iff_eq {p a : ℕ} (hp : p.Prime) (a1 : a ≠ 1) : a ∣ p ↔ p = a := by
   refine'
@@ -194,7 +194,7 @@ theorem Prime.dvd_iff_eq {p a : ℕ} (hp : p.Prime) (a1 : a ≠ 1) : a ∣ p ↔
   rintro ⟨j, hj⟩
   rw [hj] at hp⊢
   rcases prime_mul_iff.mp hp with (⟨h, rfl⟩ | ⟨h, rfl⟩)
-  · exact mul_oneₓ _
+  · exact mul_one _
     
   · exact (a1 rfl).elim
     
@@ -202,7 +202,7 @@ theorem Prime.dvd_iff_eq {p a : ℕ} (hp : p.Prime) (a1 : a ≠ 1) : a ∣ p ↔
 section MinFac
 
 theorem min_fac_lemma (n k : ℕ) (h : ¬n < k * k) : sqrt n - k < sqrt n + 2 - k :=
-  (tsub_lt_tsub_iff_right <| le_sqrt.2 <| le_of_not_gtₓ h).2 <| Nat.lt_add_of_pos_rightₓ (by decide)
+  (tsub_lt_tsub_iff_right <| le_sqrt.2 <| le_of_not_gt h).2 <| Nat.lt_add_of_pos_right (by decide)
 
 /-- If `n < k * k`, then `min_fac_aux n k = n`, if `k | n`, then `min_fac_aux n k = k`.
   Otherwise, `min_fac_aux n k = min_fac_aux n (k+2)` using well-founded recursion.
@@ -246,8 +246,8 @@ theorem min_fac_aux_has_prop {n : ℕ} (n2 : 2 ≤ n) :
     rw [min_fac_aux]
     by_cases h:n < k * k <;> simp [h]
     · have pp : Prime n :=
-        prime_def_le_sqrt.2 ⟨n2, fun m m2 l d => not_lt_of_geₓ l <| lt_of_lt_of_leₓ (sqrt_lt.2 h) (a m m2 d)⟩
-      exact ⟨n2, dvd_rfl, fun m m2 d => le_of_eqₓ ((dvd_prime_two_le pp m2).1 d).symm⟩
+        prime_def_le_sqrt.2 ⟨n2, fun m m2 l d => not_lt_of_ge l <| lt_of_lt_of_le (sqrt_lt.2 h) (a m m2 d)⟩
+      exact ⟨n2, dvd_rfl, fun m m2 d => le_of_eq ((dvd_prime_two_le pp m2).1 d).symm⟩
       
     have k2 : 2 ≤ k := by
       subst e
@@ -258,31 +258,31 @@ theorem min_fac_aux_has_prop {n : ℕ} (n2 : 2 ≤ n) :
     · refine'
         have := min_fac_lemma n k h
         min_fac_aux_has_prop (k + 2) (i + 1) (by simp [e, left_distrib]) fun m m2 d => _
-      cases' Nat.eq_or_lt_of_leₓ (a m m2 d) with me ml
+      cases' Nat.eq_or_lt_of_le (a m m2 d) with me ml
       · subst me
         contradiction
         
-      apply (Nat.eq_or_lt_of_leₓ ml).resolve_left
+      apply (Nat.eq_or_lt_of_le ml).resolve_left
       intro me
       rw [← me, e] at d
       change 2 * (i + 2) ∣ n at d
-      have := a _ le_rflₓ (dvd_of_mul_right_dvd d)
+      have := a _ le_rfl (dvd_of_mul_right_dvd d)
       rw [e] at this
       exact absurd this (by decide)
       
 
 theorem min_fac_has_prop {n : ℕ} (n1 : n ≠ 1) : MinFacProp n (minFac n) := by
   by_cases n0:n = 0
-  · simp [n0, min_fac_prop, Ge]
+  · simp [n0, min_fac_prop, GE.ge]
     
   have n2 : 2 ≤ n := by
     revert n0 n1
     rcases n with (_ | _ | _) <;> exact by decide
   simp [min_fac_eq]
   by_cases d2:2 ∣ n <;> simp [d2]
-  · exact ⟨le_rflₓ, d2, fun k k2 d => k2⟩
+  · exact ⟨le_rfl, d2, fun k k2 d => k2⟩
     
-  · refine' min_fac_aux_has_prop n2 3 0 rfl fun m m2 d => (Nat.eq_or_lt_of_leₓ m2).resolve_left (mt _ d2)
+  · refine' min_fac_aux_has_prop n2 3 0 rfl fun m m2 d => (Nat.eq_or_lt_of_le m2).resolve_left (mt _ d2)
     exact fun e => e.symm ▸ d
     
 
@@ -291,34 +291,34 @@ theorem min_fac_dvd (n : ℕ) : minFac n ∣ n :=
 
 theorem min_fac_prime {n : ℕ} (n1 : n ≠ 1) : Prime (minFac n) :=
   let ⟨f2, fd, a⟩ := min_fac_has_prop n1
-  prime_def_lt'.2 ⟨f2, fun m m2 l d => not_le_of_gtₓ l (a m m2 (d.trans fd))⟩
+  prime_def_lt'.2 ⟨f2, fun m m2 l d => not_le_of_gt l (a m m2 (d.trans fd))⟩
 
 theorem min_fac_le_of_dvd {n : ℕ} : ∀ {m : ℕ}, 2 ≤ m → m ∣ n → minFac n ≤ m := by
-  by_cases n1:n = 1 <;> [exact fun m m2 d => n1.symm ▸ le_transₓ (by decide) m2, exact (min_fac_has_prop n1).2.2]
+  by_cases n1:n = 1 <;> [exact fun m m2 d => n1.symm ▸ le_trans (by decide) m2, exact (min_fac_has_prop n1).2.2]
 
 theorem min_fac_pos (n : ℕ) : 0 < minFac n := by
   by_cases n1:n = 1 <;> [exact n1.symm ▸ by decide, exact (min_fac_prime n1).Pos]
 
 theorem min_fac_le {n : ℕ} (H : 0 < n) : minFac n ≤ n :=
-  le_of_dvdₓ H (min_fac_dvd n)
+  le_of_dvd H (min_fac_dvd n)
 
 theorem le_min_fac {m n : ℕ} : n = 1 ∨ m ≤ minFac n ↔ ∀ p, Prime p → p ∣ n → m ≤ p :=
   ⟨fun h p pp d =>
-    h.elim (by rintro rfl <;> cases pp.not_dvd_one d) fun h => le_transₓ h <| min_fac_le_of_dvd pp.two_le d, fun H =>
+    h.elim (by rintro rfl <;> cases pp.not_dvd_one d) fun h => le_trans h <| min_fac_le_of_dvd pp.two_le d, fun H =>
     or_iff_not_imp_left.2 fun n1 => H _ (min_fac_prime n1) (min_fac_dvd _)⟩
 
 theorem le_min_fac' {m n : ℕ} : n = 1 ∨ m ≤ minFac n ↔ ∀ p, 2 ≤ p → p ∣ n → m ≤ p :=
   ⟨fun h p (pp : 1 < p) d =>
-    h.elim (by rintro rfl <;> cases not_le_of_ltₓ pp (le_of_dvd (by decide) d)) fun h =>
-      le_transₓ h <| min_fac_le_of_dvd pp d,
+    h.elim (by rintro rfl <;> cases not_le_of_lt pp (le_of_dvd (by decide) d)) fun h =>
+      le_trans h <| min_fac_le_of_dvd pp d,
     fun H => le_min_fac.2 fun p pp d => H p pp.two_le d⟩
 
 theorem prime_def_min_fac {p : ℕ} : Prime p ↔ 2 ≤ p ∧ minFac p = p :=
   ⟨fun pp =>
     ⟨pp.two_le,
-      let ⟨f2, fd, a⟩ := min_fac_has_prop <| ne_of_gtₓ pp.one_lt
-      ((dvd_prime pp).1 fd).resolve_left (ne_of_gtₓ f2)⟩,
-    fun ⟨p2, e⟩ => e ▸ min_fac_prime (ne_of_gtₓ p2)⟩
+      let ⟨f2, fd, a⟩ := min_fac_has_prop <| ne_of_gt pp.one_lt
+      ((dvd_prime pp).1 fd).resolve_left (ne_of_gt f2)⟩,
+    fun ⟨p2, e⟩ => e ▸ min_fac_prime (ne_of_gt p2)⟩
 
 @[simp]
 theorem Prime.min_fac_eq {p : ℕ} (hp : Prime p) : minFac p = p :=
@@ -336,20 +336,20 @@ instance decidablePrime (p : ℕ) : Decidable (Prime p) :=
 
 theorem not_prime_iff_min_fac_lt {n : ℕ} (n2 : 2 ≤ n) : ¬Prime n ↔ minFac n < n :=
   (not_congr <| prime_def_min_fac.trans <| and_iff_right n2).trans <|
-    (lt_iff_le_and_neₓ.trans <| and_iff_right <| min_fac_le <| le_of_succ_leₓ n2).symm
+    (lt_iff_le_and_ne.trans <| and_iff_right <| min_fac_le <| le_of_succ_le n2).symm
 
 theorem min_fac_le_div {n : ℕ} (pos : 0 < n) (np : ¬Prime n) : minFac n ≤ n / minFac n :=
   match min_fac_dvd n with
   | ⟨0, h0⟩ => absurd Pos <| by rw [h0, mul_zero] <;> exact by decide
   | ⟨1, h1⟩ => by
-    rw [mul_oneₓ] at h1
-    rw [prime_def_min_fac, not_and_distrib, ← h1, eq_self_iff_true, not_true, or_falseₓ, not_leₓ] at np
-    rw [le_antisymmₓ (le_of_lt_succ np) (succ_le_of_lt Pos), min_fac_one, Nat.div_oneₓ]
+    rw [mul_one] at h1
+    rw [prime_def_min_fac, not_and_distrib, ← h1, eq_self_iff_true, not_true, or_false_iff, not_le] at np
+    rw [le_antisymm (le_of_lt_succ np) (succ_le_of_lt Pos), min_fac_one, Nat.div_one]
   | ⟨x + 2, hx⟩ => by
     conv_rhs =>
     congr
     rw [hx]
-    rw [Nat.mul_div_cancel_leftₓ _ (min_fac_pos _)]
+    rw [Nat.mul_div_cancel_left _ (min_fac_pos _)]
     exact min_fac_le_of_dvd (by decide) ⟨min_fac n, by rwa [mul_comm]⟩
 
 /-- The square of the smallest prime factor of a composite number `n` is at most `n`.
@@ -358,8 +358,8 @@ theorem min_fac_sq_le_self {n : ℕ} (w : 0 < n) (h : ¬Prime n) : minFac n ^ 2 
   have t : minFac n ≤ n / minFac n := min_fac_le_div w h
   calc
     minFac n ^ 2 = minFac n * minFac n := sq (minFac n)
-    _ ≤ n / minFac n * minFac n := Nat.mul_le_mul_rightₓ (minFac n) t
-    _ ≤ n := div_mul_le_selfₓ n (minFac n)
+    _ ≤ n / minFac n * minFac n := Nat.mul_le_mul_right (minFac n) t
+    _ ≤ n := div_mul_le_self n (minFac n)
     
 
 @[simp]
@@ -383,23 +383,23 @@ theorem min_fac_eq_two_iff (n : ℕ) : minFac n = 2 ↔ 2 ∣ n := by
     rw [h]
     
   · intro h
-    have ub := min_fac_le_of_dvd (le_reflₓ 2) h
+    have ub := min_fac_le_of_dvd (le_refl 2) h
     have lb := min_fac_pos n
     apply ub.eq_or_lt.resolve_right fun h' => _
-    have := le_antisymmₓ (Nat.succ_le_of_ltₓ lb) (lt_succ_iff.mp h')
+    have := le_antisymm (Nat.succ_le_of_lt lb) (lt_succ_iff.mp h')
     rw [eq_comm, Nat.min_fac_eq_one_iff] at this
     subst this
-    exact not_lt_of_leₓ (le_of_dvd zero_lt_one h) one_lt_two
+    exact not_lt_of_le (le_of_dvd zero_lt_one h) one_lt_two
     
 
 end MinFac
 
 theorem exists_dvd_of_not_prime {n : ℕ} (n2 : 2 ≤ n) (np : ¬Prime n) : ∃ m, m ∣ n ∧ m ≠ 1 ∧ m ≠ n :=
-  ⟨minFac n, min_fac_dvd _, ne_of_gtₓ (min_fac_prime (ne_of_gtₓ n2)).one_lt,
-    ne_of_ltₓ <| (not_prime_iff_min_fac_lt n2).1 np⟩
+  ⟨minFac n, min_fac_dvd _, ne_of_gt (min_fac_prime (ne_of_gt n2)).one_lt,
+    ne_of_lt <| (not_prime_iff_min_fac_lt n2).1 np⟩
 
 theorem exists_dvd_of_not_prime2 {n : ℕ} (n2 : 2 ≤ n) (np : ¬Prime n) : ∃ m, m ∣ n ∧ 2 ≤ m ∧ m < n :=
-  ⟨minFac n, min_fac_dvd _, (min_fac_prime (ne_of_gtₓ n2)).two_le, (not_prime_iff_min_fac_lt n2).1 np⟩
+  ⟨minFac n, min_fac_dvd _, (min_fac_prime (ne_of_gt n2)).two_le, (not_prime_iff_min_fac_lt n2).1 np⟩
 
 theorem exists_prime_and_dvd {n : ℕ} (hn : n ≠ 1) : ∃ p, Prime p ∧ p ∣ n :=
   ⟨minFac n, min_fac_prime hn, min_fac_dvd _⟩
@@ -408,10 +408,10 @@ theorem exists_prime_and_dvd {n : ℕ} (hn : n ≠ 1) : ∃ p, Prime p ∧ p ∣
 Here given in the form: for every `n`, there exists a prime number `p ≥ n`. -/
 theorem exists_infinite_primes (n : ℕ) : ∃ p, n ≤ p ∧ Prime p :=
   let p := minFac (n ! + 1)
-  have f1 : n ! + 1 ≠ 1 := ne_of_gtₓ <| succ_lt_succ <| factorial_pos _
+  have f1 : n ! + 1 ≠ 1 := ne_of_gt <| succ_lt_succ <| factorial_pos _
   have pp : Prime p := min_fac_prime f1
   have np : n ≤ p :=
-    le_of_not_geₓ fun h =>
+    le_of_not_ge fun h =>
       have h₁ : p ∣ n ! := dvd_factorial (min_fac_pos _) h
       have h₂ : p ∣ 1 := (Nat.dvd_add_iff_right h₁).2 (min_fac_dvd _)
       pp.not_dvd_one h₂
@@ -430,10 +430,10 @@ theorem infinite_set_of_prime : { p | Prime p }.Infinite :=
 
 theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
   p.mod_two_eq_zero_or_one.imp_left fun h =>
-    ((hp.eq_one_or_self_of_dvd 2 (dvd_of_mod_eq_zeroₓ h)).resolve_left (by decide)).symm
+    ((hp.eq_one_or_self_of_dvd 2 (dvd_of_mod_eq_zero h)).resolve_left (by decide)).symm
 
 theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
-  Or.imp_right (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_arg _ h)⟩) hp.eq_two_or_odd
+  Or.imp_right (fun h => ⟨p / 2, (div_add_mod p 2).symm.trans (congr_arg _ h)⟩) hp.eq_two_or_odd
 
 theorem Prime.even_iff {p : ℕ} (hp : Prime p) : Even p ↔ p = 2 := by
   rw [even_iff_two_dvd, prime_dvd_prime_iff_eq prime_two hp, eq_comm]
@@ -455,12 +455,12 @@ theorem coprime_of_dvd {m n : ℕ} (H : ∀ k, Prime k → k ∣ m → ¬k ∣ n
     
 
 theorem coprime_of_dvd' {m n : ℕ} (H : ∀ k, Prime k → k ∣ m → k ∣ n → k ∣ 1) : Coprime m n :=
-  coprime_of_dvd fun k kp km kn => not_le_of_gtₓ kp.one_lt <| le_of_dvdₓ zero_lt_one <| H k kp km kn
+  coprime_of_dvd fun k kp km kn => not_le_of_gt kp.one_lt <| le_of_dvd zero_lt_one <| H k kp km kn
 
 theorem factors_lemma {k} : (k + 2) / minFac (k + 2) < k + 2 :=
-  div_lt_selfₓ (by decide) (min_fac_prime (by decide)).one_lt
+  div_lt_self (by decide) (min_fac_prime (by decide)).one_lt
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `factors n` is the prime factorization of `n`, listed in increasing order. -/
 def factors : ℕ → List ℕ
   | 0 => []
@@ -498,7 +498,7 @@ theorem prod_factors : ∀ {n}, n ≠ 0 → List.prod (factors n) = n
       have h₁ : n / m ≠ 0 := fun h => by
         have : n = 0 * m := (Nat.div_eq_iff_eq_mul_left (min_fac_pos _) (min_fac_dvd _)).1 h
         rw [zero_mul] at this <;> exact (show k + 2 ≠ 0 by decide) this
-      rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel'ₓ (min_fac_dvd _)]
+      rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel' (min_fac_dvd _)]
 
 theorem factors_prime {p : ℕ} (hp : Nat.Prime p) : p.factors = [p] := by
   have : p = p - 2 + 2 := (tsub_eq_iff_eq_add_of_le hp.two_le).mp rfl
@@ -508,7 +508,7 @@ theorem factors_prime {p : ℕ} (hp : Nat.Prime p) : p.factors = [p] := by
   constructor
   · exact this
     
-  · simp only [this, Nat.factors, Nat.div_selfₓ (Nat.Prime.pos hp)]
+  · simp only [this, Nat.factors, Nat.div_self (Nat.Prime.pos hp)]
     
 
 theorem factors_chain : ∀ {n a}, (∀ p, Prime p → p ∣ n → a ≤ p) → List.Chain (· ≤ ·) a (factors n)
@@ -524,14 +524,14 @@ theorem factors_chain : ∀ {n a}, (∀ p, Prime p → p ∣ n → a ≤ p) → 
 theorem factors_chain_2 (n) : List.Chain (· ≤ ·) 2 (factors n) :=
   factors_chain fun p pp _ => pp.two_le
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_chain' (n) : List.Chain' (· ≤ ·) (factors n) :=
   @List.Chain'.tail _ _ (_::_) (factors_chain_2 _)
 
 theorem factors_sorted (n : ℕ) : List.Sorted (· ≤ ·) (factors n) :=
   List.chain'_iff_pairwise.1 (factors_chain' _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `factors` can be constructed inductively by extracting `min_fac`, for sufficiently large `n`. -/
 theorem factors_add_two (n : ℕ) : factors (n + 2) = minFac (n + 2)::factors ((n + 2) / minFac (n + 2)) := by
   rw [factors]
@@ -574,7 +574,7 @@ theorem Prime.not_coprime_iff_dvd {m n : ℕ} : ¬Coprime m n ↔ ∃ p, Prime p
     
   · intro h
     cases' h with p hp
-    apply Nat.not_coprime_of_dvd_of_dvdₓ (prime.one_lt hp.1) hp.2.1 hp.2.2
+    apply Nat.not_coprime_of_dvd_of_dvd (prime.one_lt hp.1) hp.2.1 hp.2.2
     
 
 theorem Prime.dvd_mul {p m n : ℕ} (pp : Prime p) : p ∣ m * n ↔ p ∣ m ∨ p ∣ n :=
@@ -593,16 +593,16 @@ theorem Prime.dvd_of_dvd_pow {p m n : ℕ} (pp : Prime p) (h : p ∣ m ^ n) : p 
   induction' n with n IH
   · exact pp.not_dvd_one.elim h
     
-  · rw [pow_succₓ] at h
+  · rw [pow_succ] at h
     exact (pp.dvd_mul.1 h).elim id IH
     
 
 theorem Prime.pow_not_prime {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun hp =>
   (hp.eq_one_or_self_of_dvd x <| dvd_trans ⟨x, sq _⟩ (pow_dvd_pow _ hn)).elim
     (fun hx1 => hp.ne_one <| hx1.symm ▸ one_pow _) fun hxn =>
-    lt_irreflₓ x <|
+    lt_irrefl x <|
       calc
-        x = x ^ 1 := (pow_oneₓ _).symm
+        x = x ^ 1 := (pow_one _).symm
         _ < x ^ n := Nat.pow_right_strict_mono (hxn.symm ▸ hp.two_le) hn
         _ = x := hxn.symm
         
@@ -616,9 +616,9 @@ theorem Prime.eq_one_of_pow {x n : ℕ} (h : (x ^ n).Prime) : n = 1 :=
   not_imp_not.mp Prime.pow_not_prime' h
 
 theorem Prime.pow_eq_iff {p a k : ℕ} (hp : p.Prime) : a ^ k = p ↔ a = p ∧ k = 1 := by
-  refine' ⟨fun h => _, fun h => by rw [h.1, h.2, pow_oneₓ]⟩
+  refine' ⟨fun h => _, fun h => by rw [h.1, h.2, pow_one]⟩
   rw [← h] at hp
-  rw [← h, hp.eq_one_of_pow, eq_self_iff_true, and_trueₓ, pow_oneₓ]
+  rw [← h, hp.eq_one_of_pow, eq_self_iff_true, and_true_iff, pow_one]
 
 theorem pow_min_fac {n k : ℕ} (hk : k ≠ 0) : (n ^ k).minFac = n.minFac := by
   rcases eq_or_ne n 1 with (rfl | hn)
@@ -648,7 +648,7 @@ theorem Prime.mul_eq_prime_sq_iff {x y p : ℕ} (hp : p.Prime) (hx : x ≠ 1) (h
     fun ⟨h₁, h₂⟩ => h₁.symm ▸ h₂.symm ▸ (sq _).symm⟩
 
 theorem Prime.dvd_factorial : ∀ {n p : ℕ} (hp : Prime p), p ∣ n ! ↔ p ≤ n
-  | 0, p, hp => iff_of_false hp.not_dvd_one (not_le_of_ltₓ hp.Pos)
+  | 0, p, hp => iff_of_false hp.not_dvd_one (not_le_of_lt hp.Pos)
   | n + 1, p, hp => by
     rw [factorial_succ, hp.dvd_mul, prime.dvd_factorial hp]
     exact
@@ -668,7 +668,7 @@ theorem coprime_or_dvd_of_prime {p} (pp : Prime p) (i : ℕ) : Coprime p i ∨ p
   rw [pp.dvd_iff_not_coprime] <;> apply em
 
 theorem coprime_of_lt_prime {n p} (n_pos : 0 < n) (hlt : n < p) (pp : Prime p) : Coprime p n :=
-  (coprime_or_dvd_of_prime pp n).resolve_right fun h => lt_le_antisymmₓ hlt (le_of_dvdₓ n_pos h)
+  (coprime_or_dvd_of_prime pp n).resolve_right fun h => lt_le_antisymm hlt (le_of_dvd n_pos h)
 
 theorem eq_or_coprime_of_le_prime {n p} (n_pos : 0 < n) (hle : n ≤ p) (pp : Prime p) : p = n ∨ Coprime p n :=
   hle.eq_or_lt.imp Eq.symm fun h => coprime_of_lt_prime n_pos h pp
@@ -688,7 +688,7 @@ theorem eq_prime_pow_of_dvd_least_prime_pow {a p k : ℕ} (pp : Prime p) (h₁ :
     a = p ^ (k + 1) := by
   obtain ⟨l, ⟨h, rfl⟩⟩ := (dvd_prime_pow pp).1 h₂
   congr
-  exact le_antisymmₓ h (not_leₓ.1 ((not_congr (pow_dvd_pow_iff_le_right (prime.one_lt pp))).1 h₁))
+  exact le_antisymm h (not_le.1 ((not_congr (pow_dvd_pow_iff_le_right (prime.one_lt pp))).1 h₁))
 
 theorem ne_one_iff_exists_prime_dvd : ∀ {n}, n ≠ 1 ↔ ∃ p : ℕ, p.Prime ∧ p ∣ n
   | 0 => by simpa using Exists.intro 2 Nat.prime_two
@@ -696,7 +696,7 @@ theorem ne_one_iff_exists_prime_dvd : ∀ {n}, n ≠ 1 ↔ ∃ p : ℕ, p.Prime 
   | n + 2 => by
     let a := n + 2
     let ha : a ≠ 1 := Nat.succ_succ_ne_one n
-    simp only [true_iffₓ, Ne.def, not_false_iff, ha]
+    simp only [true_iff_iff, Ne.def, not_false_iff, ha]
     exact ⟨a.min_fac, Nat.min_fac_prime ha, a.min_fac_dvd⟩
 
 theorem eq_one_iff_not_exists_prime_dvd {n : ℕ} : n = 1 ↔ ∀ p : ℕ, p.Prime → ¬p ∣ n := by
@@ -765,7 +765,7 @@ theorem perm_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) : (a * b).fac
   · rw [List.prod_append, prod_factors ha, prod_factors hb]
     
   · intro p hp
-    rw [List.mem_appendₓ] at hp
+    rw [List.mem_append] at hp
     cases hp <;> exact prime_of_mem_factors hp
     
 
@@ -815,12 +815,12 @@ end
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {m n k l : ℕ} (hpm : p ^ k ∣ m)
     (hpn : p ^ l ∣ n) (hpmn : p ^ (k + l + 1) ∣ m * n) : p ^ (k + 1) ∣ m ∨ p ^ (l + 1) ∣ n :=
-  have hpd : p ^ (k + l) * p ∣ m * n := by rwa [pow_succ'ₓ] at hpmn
+  have hpd : p ^ (k + l) * p ∣ m * n := by rwa [pow_succ'] at hpmn
   have hpd2 : p ∣ m * n / p ^ (k + l) := dvd_div_of_mul_dvd hpd
-  have hpd3 : p ∣ m * n / (p ^ k * p ^ l) := by simpa [pow_addₓ] using hpd2
+  have hpd3 : p ∣ m * n / (p ^ k * p ^ l) := by simpa [pow_add] using hpd2
   have hpd4 : p ∣ m / p ^ k * (n / p ^ l) := by simpa [Nat.div_mul_div_comm hpm hpn] using hpd3
   have hpd5 : p ∣ m / p ^ k ∨ p ∣ n / p ^ l := (Prime.dvd_mul p_prime).1 hpd4
-  suffices p ^ k * p ∣ m ∨ p ^ l * p ∣ n by rwa [pow_succ'ₓ, pow_succ'ₓ]
+  suffices p ^ k * p ∣ m ∨ p ^ l * p ∣ n by rwa [pow_succ', pow_succ']
   hpd5.elim (fun this : p ∣ m / p ^ k => Or.inl <| mul_dvd_of_dvd_div hpm this) fun this : p ∣ n / p ^ l =>
     Or.inr <| mul_dvd_of_dvd_div hpn this
 
@@ -840,8 +840,8 @@ def Primes :=
 
 namespace Primes
 
-instance : HasRepr Nat.Primes :=
-  ⟨fun p => reprₓ p.val⟩
+instance : Repr Nat.Primes :=
+  ⟨fun p => repr p.val⟩
 
 instance inhabitedPrimes : Inhabited Primes :=
   ⟨⟨2, prime_two⟩⟩
@@ -853,15 +853,13 @@ theorem coe_nat_inj (p q : Nat.Primes) : (p : ℕ) = (q : ℕ) → p = q := fun 
 
 end Primes
 
-instance monoid.primePow {α : Type _} [Monoidₓ α] : Pow α Primes :=
+instance monoid.primePow {α : Type _} [Monoid α] : Pow α Primes :=
   ⟨fun x p => x ^ p.val⟩
 
 end Nat
 
 /-! ### Primality prover -/
 
-
-open NormNum
 
 namespace Tactic
 
@@ -878,16 +876,16 @@ def MinFacHelper (n k : ℕ) : Prop :=
   0 < k ∧ bit1 k ≤ Nat.minFac (bit1 n)
 
 theorem MinFacHelper.n_pos {n k : ℕ} (h : MinFacHelper n k) : 0 < n :=
-  pos_iff_ne_zero.2 fun e => by rw [e] at h <;> exact not_le_of_ltₓ (Nat.bit1_lt h.1) h.2
+  pos_iff_ne_zero.2 fun e => by rw [e] at h <;> exact not_le_of_lt (Nat.bit1_lt h.1) h.2
 
 theorem min_fac_ne_bit0 {n k : ℕ} : Nat.minFac (bit1 n) ≠ bit0 k := by
   rw [bit0_eq_two_mul]
   refine' fun e => absurd ((Nat.dvd_add_iff_right _).2 (dvd_trans ⟨_, e⟩ (Nat.min_fac_dvd _))) _ <;> simp
 
 theorem min_fac_helper_0 (n : ℕ) (h : 0 < n) : MinFacHelper n 1 := by
-  refine' ⟨zero_lt_one, lt_of_le_of_neₓ _ min_fac_ne_bit0.symm⟩
+  refine' ⟨zero_lt_one, lt_of_le_of_ne _ min_fac_ne_bit0.symm⟩
   rw [Nat.succ_le_iff]
-  refine' lt_of_le_of_neₓ (Nat.min_fac_pos _) fun e => Nat.not_prime_one _
+  refine' lt_of_le_of_ne (Nat.min_fac_pos _) fun e => Nat.not_prime_one _
   rw [e]
   exact Nat.min_fac_prime (Nat.bit1_lt h).ne'
 
@@ -895,11 +893,11 @@ theorem min_fac_helper_1 {n k k' : ℕ} (e : k + 1 = k') (np : Nat.minFac (bit1 
     MinFacHelper n k' := by
   rw [← e]
   refine'
-    ⟨Nat.succ_posₓ _, (lt_of_le_of_neₓ (lt_of_le_of_neₓ _ _ : k + 1 + k < _) min_fac_ne_bit0.symm : bit0 (k + 1) < _)⟩
-  · rw [add_right_commₓ]
+    ⟨Nat.succ_pos _, (lt_of_le_of_ne (lt_of_le_of_ne _ _ : k + 1 + k < _) min_fac_ne_bit0.symm : bit0 (k + 1) < _)⟩
+  · rw [add_right_comm]
     exact h.2
     
-  · rw [add_right_commₓ]
+  · rw [add_right_comm]
     exact np.symm
     
 
@@ -908,29 +906,31 @@ theorem min_fac_helper_2 (n k k' : ℕ) (e : k + 1 = k') (np : ¬Nat.Prime (bit1
   refine' min_fac_helper_1 e _ h
   intro e₁
   rw [← e₁] at np
-  exact np (Nat.min_fac_prime <| ne_of_gtₓ <| Nat.bit1_lt h.n_pos)
+  exact np (Nat.min_fac_prime <| ne_of_gt <| Nat.bit1_lt h.n_pos)
 
 theorem min_fac_helper_3 (n k k' c : ℕ) (e : k + 1 = k') (nc : bit1 n % bit1 k = c) (c0 : 0 < c)
     (h : MinFacHelper n k) : MinFacHelper n k' := by
   refine' min_fac_helper_1 e _ h
-  refine' mt _ (ne_of_gtₓ c0)
+  refine' mt _ (ne_of_gt c0)
   intro e₁
-  rw [← nc, ← Nat.dvd_iff_mod_eq_zeroₓ, ← e₁]
+  rw [← nc, ← Nat.dvd_iff_mod_eq_zero, ← e₁]
   apply Nat.min_fac_dvd
 
 theorem min_fac_helper_4 (n k : ℕ) (hd : bit1 n % bit1 k = 0) (h : MinFacHelper n k) : Nat.minFac (bit1 n) = bit1 k :=
   by
-  rw [← Nat.dvd_iff_mod_eq_zeroₓ] at hd
-  exact le_antisymmₓ (Nat.min_fac_le_of_dvd (Nat.bit1_lt h.1) hd) h.2
+  rw [← Nat.dvd_iff_mod_eq_zero] at hd
+  exact le_antisymm (Nat.min_fac_le_of_dvd (Nat.bit1_lt h.1) hd) h.2
 
 theorem min_fac_helper_5 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1 n < k') (h : MinFacHelper n k) :
     Nat.minFac (bit1 n) = bit1 n := by
   refine' (Nat.prime_def_min_fac.1 (Nat.prime_def_le_sqrt.2 ⟨Nat.bit1_lt h.n_pos, _⟩)).2
   rw [← e] at hd
   intro m m2 hm md
-  have := le_transₓ h.2 (le_transₓ (Nat.min_fac_le_of_dvd m2 md) hm)
+  have := le_trans h.2 (le_trans (Nat.min_fac_le_of_dvd m2 md) hm)
   rw [Nat.le_sqrt] at this
-  exact not_le_of_ltₓ hd this
+  exact not_le_of_lt hd this
+
+open _Root_.NormNum
 
 /-- Given `e` a natural numeral and `d : nat` a factor of it, return `⊢ ¬ prime e`. -/
 unsafe def prove_non_prime (e : expr) (n d₁ : ℕ) : tactic expr := do
@@ -940,7 +940,7 @@ unsafe def prove_non_prime (e : expr) (n d₁ : ℕ) : tactic expr := do
   let d₂ := n / d₁
   let e₂ := reflect d₂
   let (c, e', p) ← prove_mul_nat c e₁ e₂
-  guardₓ (expr.alpha_eqv e' e)
+  guard (expr.alpha_eqv e' e)
   let (c, p₂) ← prove_lt_nat c (quote.1 1) e₂
   return <| (quote.1 @Nat.not_prime_mul').mk_app [e₁, e₂, e, p, p₁, p₂]
 
@@ -996,36 +996,36 @@ def FactorsHelper (n p : ℕ) (l : List ℕ) : Prop :=
 
 theorem factors_helper_nil (a : ℕ) : FactorsHelper 1 a [] := fun pa => ⟨List.Chain.nil, by rintro _ ⟨⟩, List.prod_nil⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_cons' (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a ≤ b) (h₃ : Nat.minFac b = b)
     (H : FactorsHelper m b l) : FactorsHelper n a (b::l) := fun pa =>
-  have pb : b.Prime := Nat.prime_def_min_fac.2 ⟨le_transₓ pa.two_le h₂, h₃⟩
+  have pb : b.Prime := Nat.prime_def_min_fac.2 ⟨le_trans pa.two_le h₂, h₃⟩
   let ⟨f₁, f₂, f₃⟩ := H pb
   ⟨List.Chain.cons h₂ f₁, fun c h => h.elim (fun e => e.symm ▸ pb) (f₂ _), by rw [List.prod_cons, f₃, h₁]⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_cons (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a < b) (h₃ : Nat.minFac b = b)
     (H : FactorsHelper m b l) : FactorsHelper n a (b::l) :=
   factors_helper_cons' _ _ _ _ _ h₁ h₂.le h₃ H
 
 theorem factors_helper_sn (n a : ℕ) (h₁ : a < n) (h₂ : Nat.minFac n = n) : FactorsHelper n a [n] :=
-  factors_helper_cons _ _ _ _ _ (mul_oneₓ _) h₁ h₂ (factors_helper_nil _)
+  factors_helper_cons _ _ _ _ _ (mul_one _) h₁ h₂ (factors_helper_nil _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_same (n m a : ℕ) (l : List ℕ) (h : a * m = n) (H : FactorsHelper m a l) :
-    FactorsHelper n a (a::l) := fun pa => factors_helper_cons' _ _ _ _ _ h le_rflₓ (Nat.prime_def_min_fac.1 pa).2 H pa
+    FactorsHelper n a (a::l) := fun pa => factors_helper_cons' _ _ _ _ _ h le_rfl (Nat.prime_def_min_fac.1 pa).2 H pa
 
 theorem factors_helper_same_sn (a : ℕ) : FactorsHelper a a [a] :=
-  factors_helper_same _ _ _ _ (mul_oneₓ _) (factors_helper_nil _)
+  factors_helper_same _ _ _ _ (mul_one _) (factors_helper_nil _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : Nat.factors n = l :=
   let ⟨h₁, h₂, h₃⟩ := H Nat.prime_two
   have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_::_) h₁)
   (List.eq_of_perm_of_sorted (Nat.factors_unique h₃ h₂) this (Nat.factors_sorted _)).symm
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given `n` and `a` natural numerals, returns `(l, ⊢ factors_helper n a l)`. -/
 unsafe def prove_factors_aux : instance_cache → expr → expr → ℕ → ℕ → tactic (instance_cache × expr × expr)
   | c, en, ea, n, a =>
@@ -1119,7 +1119,7 @@ theorem pow_succ_factors_to_finset (n k : ℕ) : (n ^ (k + 1)).factors.toFinset 
   induction' k with k ih
   · simp
     
-  rw [pow_succₓ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finsetₓ.union_idempotent]
+  rw [pow_succ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
 
 theorem pow_factors_to_finset (n : ℕ) {k : ℕ} (hk : k ≠ 0) : (n ^ k).factors.toFinset = n.factors.toFinset := by
   cases k
@@ -1132,7 +1132,7 @@ theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) : (p ^
   simp [pow_factors_to_finset p hk, factors_prime hp]
 
 /-- The sets of factors of coprime `a` and `b` are disjoint -/
-theorem coprime_factors_disjoint {a b : ℕ} (hab : a.Coprime b) : List.Disjointₓ a.factors b.factors := by
+theorem coprime_factors_disjoint {a b : ℕ} (hab : a.Coprime b) : List.Disjoint a.factors b.factors := by
   intro q hqa hqb
   apply not_prime_one
   rw [← eq_one_of_dvd_coprimes hab (dvd_of_mem_factors hqa) (dvd_of_mem_factors hqb)]
@@ -1177,10 +1177,10 @@ end Nat
 
 namespace Int
 
-theorem prime_two : Prime (2 : ℤ) :=
+theorem primeTwo : Prime (2 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_two
 
-theorem prime_three : Prime (3 : ℤ) :=
+theorem primeThree : Prime (3 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_three
 
 end Int

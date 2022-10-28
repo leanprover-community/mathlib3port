@@ -21,7 +21,7 @@ def mkMemName (sub : Name) : Name → Name
   | mk_string n _ => mk_string (n ++ "_mem") sub
   | n => n
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop
@@ -40,7 +40,7 @@ unsafe def derive_field_subtype : tactic Unit := do
       let val ← mk_app field args
       let subname ←
         local_context >>=
-            List.mfirstₓ fun h => do
+            List.mfirst fun h => do
               let (expr.const n _, args) ← get_app_fn_args <$> infer_type h
               is_def_eq s args reducible
               return n

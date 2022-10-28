@@ -81,7 +81,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   have hf' : ∀ᶠ z : E in 𝓝 (chart_at E p p), DifferentiableAt ℂ (f ∘ (chart_at E p).symm) z := by
     refine' Filter.eventually_of_mem key₂ fun z hz => _
     have H₁ : (chart_at E p).symm z ∈ (chart_at E p).Source := (chart_at E p).map_target hz
-    have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).Source := trivialₓ
+    have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).Source := trivial
     have H := (mdifferentiable_at_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
     simp only [differentiable_within_at_univ, mfld_simps] at H
     simpa [LocalHomeomorph.right_inv _ hz] using H.2

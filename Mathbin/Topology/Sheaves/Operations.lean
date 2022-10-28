@@ -1,0 +1,120 @@
+/-
+Copyright (c) 2022 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
+import Mathbin.CategoryTheory.Sites.CompatibleSheafification
+import Mathbin.Algebra.Category.RingCat.Instances
+import Mathbin.Algebra.Category.RingCat.FilteredColimits
+import Mathbin.Algebra.Category.GroupCat.Limits
+import Mathbin.RingTheory.Localization.Basic
+import Mathbin.Topology.Sheaves.Sheafify
+import Mathbin.Topology.Sheaves.SheafCondition.Sites
+
+/-!
+
+# Operations on sheaves
+
+## Main definition
+
+- `submonoid_presheaf` : A subpresheaf with a submonoid structure on each of the components.
+- `localization_presheaf` : The localization of a presheaf of commrings at a `submonoid_presheaf`.
+- `total_quotient_presheaf` : The presheaf of total quotient rings.
+
+-/
+
+
+open nonZeroDivisors
+
+open TopologicalSpace Opposite CategoryTheory
+
+universe v u w
+
+namespace TopCat
+
+namespace Presheaf
+
+variable {X : TopCat.{w}} {C : Type u} [Category.{v} C] [ConcreteCategory C]
+
+attribute [local instance] concrete_category.has_coe_to_sort
+
+/-- A subpresheaf with a submonoid structure on each of the components. -/
+structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomClass (X ⟶ Y) X Y] (F : X.Presheaf C) where
+  obj : ∀ U, Submonoid (F.obj U)
+  map : ∀ {U V : (Opens X)ᵒᵖ} (i : U ⟶ V), obj U ≤ (obj V).comap (F.map i)
+
+variable {F : X.Presheaf CommRingCat.{w}} (G : F.SubmonoidPresheaf)
+
+/-- The localization of a presheaf of `CommRing`s with respect to a `submonoid_presheaf`. -/
+protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf CommRingCat where
+  obj U := CommRingCat.of <| Localization (G.obj U)
+  map U V i := CommRingCat.ofHom <| IsLocalization.map _ (F.map i) (G.map i)
+  map_id' U := by
+    apply IsLocalization.ring_hom_ext (G.obj U)
+    any_goals
+    dsimp
+    infer_instance
+    refine' (IsLocalization.map_comp _).trans _
+    rw [F.map_id]
+    rfl
+  map_comp' U V W i j := by
+    refine' Eq.trans _ (IsLocalization.map_comp_map _ _).symm
+    ext
+    dsimp
+    congr
+    rw [F.map_comp]
+    rfl
+
+/-- The map into the localization presheaf. -/
+def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf where
+  app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
+  naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
+
+instance : Epi G.toLocalizationPresheaf :=
+  @NatTrans.epi_of_epi_app _ _ G.toLocalizationPresheaf fun U => Localization.epi' (G.obj U)
+
+variable (F)
+
+/-- Given a submonoid at each of the stalks, we may define a submonoid presheaf consisting of
+sections whose restriction onto each stalk falls in the given submonoid. -/
+@[simps]
+noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)) : F.SubmonoidPresheaf where
+  obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
+  map U V i := by
+    intro s hs
+    simp only [Submonoid.mem_comap, Submonoid.mem_infi] at hs⊢
+    intro x
+    change (F.map i.unop.op ≫ F.germ x) s ∈ _
+    rw [F.germ_res]
+    exact hs _
+
+noncomputable instance : Inhabited F.SubmonoidPresheaf :=
+  ⟨F.submonoidPresheafOfStalk fun _ => ⊥⟩
+
+/-- The localization of a presheaf of `CommRing`s at locally non-zero-divisor sections. -/
+noncomputable def totalQuotientPresheaf : X.Presheaf CommRingCat.{w} :=
+  (F.submonoidPresheafOfStalk fun x => (F.stalk x)⁰).localizationPresheaf
+
+/-- The map into the presheaf of total quotient rings -/
+noncomputable def toTotalQuotientPresheaf : F ⟶ F.totalQuotientPresheaf :=
+  SubmonoidPresheaf.toLocalizationPresheaf _ deriving Epi
+
+instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf := by
+  apply (config := { instances := false }) nat_trans.mono_of_mono_app
+  intro U
+  apply concrete_category.mono_of_injective
+  apply IsLocalization.injective _
+  pick_goal 3
+  · exact Localization.isLocalization
+    
+  intro s hs t e
+  apply section_ext F (unop U)
+  intro x
+  rw [map_zero]
+  apply submonoid.mem_infi.mp hs x
+  rw [← map_mul, e, map_zero]
+
+end Presheaf
+
+end TopCat
+

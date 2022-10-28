@@ -7,7 +7,7 @@ import Mathbin.Algebra.Homology.Exact
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Preadditive.Yoneda
-import Mathbin.Algebra.Category.Module.EpiMono
+import Mathbin.Algebra.Category.ModuleCat.EpiMono
 
 /-!
 # Projective objects and categories with enough projectives
@@ -81,7 +81,7 @@ section
 open ZeroObject
 
 instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] :
-    Projective (0 : C) where Factors := fun E X f e epi => by
+    Projective (0 : C) where Factors E X f e epi := by
     use 0
     ext
 
@@ -98,17 +98,17 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Projective P ↔ Projective Q :=
 
 /-- The axiom of choice says that every type is a projective object in `Type`. -/
 instance (X : Type u) :
-    Projective X where Factors := fun E X' f e epi =>
+    Projective X where Factors E X' f e epi :=
     ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some, by
       ext x
       exact ((epi_iff_surjective _).mp epi (f x)).some_spec⟩
 
-instance Type.enough_projectives : EnoughProjectives (Type u) where presentation := fun X => ⟨{ P := X, f := 𝟙 X }⟩
+instance TypeCat.enough_projectives : EnoughProjectives (Type u) where presentation X := ⟨{ P := X, f := 𝟙 X }⟩
 
 instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] :
     Projective
       (P ⨿
-        Q) where Factors := fun E X' f e epi =>
+        Q) where Factors E X' f e epi :=
     ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by tidy⟩
 
 section
@@ -116,19 +116,19 @@ section
 attribute [local tidy] tactic.discrete_cases
 
 instance {β : Type v} (g : β → C) [HasCoproduct g] [∀ b, Projective (g b)] :
-    Projective (∐ g) where Factors := fun E X' f e epi => ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by tidy⟩
+    Projective (∐ g) where Factors E X' f e epi := ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by tidy⟩
 
 end
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Projective P] [Projective Q] :
     Projective
       (P ⊞
-        Q) where Factors := fun E X' f e epi =>
+        Q) where Factors E X' f e epi :=
     ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by tidy⟩
 
 instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀ b, Projective (g b)] :
     Projective
-      (⨁ g) where Factors := fun E X' f e epi => ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by tidy⟩
+      (⨁ g) where Factors E X' f e epi := ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by tidy⟩
 
 theorem projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
     Projective P ↔ (coyoneda.obj (op P)).PreservesEpimorphisms :=

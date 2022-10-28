@@ -72,10 +72,10 @@ protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
   | quote.1 ((%%ₓe₁) / %%ₓe₂) => do
     let m ← e₁.toNat
     let n ← e₂.toNat
-    if c : m n then if h : 1 < n then return ⟨m, n, lt_transₓ zero_lt_one h, c⟩ else none else none
+    if c : m n then if h : 1 < n then return ⟨m, n, lt_trans zero_lt_one h, c⟩ else none else none
   | e => do
     let n ← e.toNat
-    return (Ratₓ.ofInt n)
+    return (Rat.ofInt n)
 
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral, the quotient of two numerals,

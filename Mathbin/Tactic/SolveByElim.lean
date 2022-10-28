@@ -174,7 +174,7 @@ unsafe def solve_by_elim_aux (opt : basic_opt) (original_goals : List expr) (lem
           solve_by_elim_trace (opt - n) "success!" <|>
         do
         -- Otherwise, if there's more time left,
-              guardₓ
+              guard
               (n > 0) <|>
             solve_by_elim_trace opt "🛑 aborting, hit depth limit" >> failed
         -- run the `pre_apply` tactic, then
@@ -260,7 +260,7 @@ setup_tactic_parser
 
 namespace Interactive
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `apply_assumption` looks for an assumption of the form `... → ∀ _, ... → head`
 where `head` matches the current goal.
 
@@ -288,7 +288,7 @@ add_tactic_doc
   { Name := "apply_assumption", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_assumption],
     tags := ["context management", "lemma application"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `solve_by_elim` calls `apply` on the main goal to find an assumption whose head matches
 and then repeatedly calls `apply` on the generated subgoals until no subgoals remain,
 performing at most `max_depth` recursive steps.

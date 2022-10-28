@@ -71,7 +71,7 @@ def Const (α : Type _) (β : Type _) :=
 
 /-- `const.mk` is the canonical map `α → const α β` (the identity), and
 it can be used as a pattern to extract this value. -/
-@[matchPattern]
+@[match_pattern]
 def Const.mk {α β} (x : α) : Const α β :=
   x
 
@@ -112,7 +112,7 @@ def AddConst (α : Type _) :=
 
 /-- `add_const.mk` is the canonical map `α → add_const α β`, which is the identity,
 where `add_const α β = const α β`. It can be used as a pattern to extract this value. -/
-@[matchPattern]
+@[match_pattern]
 def AddConst.mk {α β} (x : α) : AddConst α β :=
   x
 
@@ -137,7 +137,7 @@ def Comp (F : Type u → Type w) (G : Type v → Type u) (α : Type v) : Type w 
 
 /-- Construct a term of `comp F G α` from a term of `F (G α)`, which is the same type.
 Can be used as a pattern to extract a term of `F (G α)`. -/
-@[matchPattern]
+@[match_pattern]
 def Comp.mk {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : F (G α)) : Comp F G α :=
   x
 
@@ -201,7 +201,7 @@ open Functor
 
 variable {F : Type u → Type w} {G : Type v → Type u}
 
-variable [Applicativeₓ F] [Applicativeₓ G]
+variable [Applicative F] [Applicative G]
 
 /-- The `<*>` operation for the composition of applicative functors. -/
 protected def seq {α β : Type v} : Comp F G (α → β) → Comp F G α → Comp F G β
@@ -210,7 +210,7 @@ protected def seq {α β : Type v} : Comp F G (α → β) → Comp F G α → Co
 instance : Pure (Comp F G) :=
   ⟨fun _ x => comp.mk <| pure <| pure x⟩
 
-instance : Seqₓ (Comp F G) :=
+instance : Seq (Comp F G) :=
   ⟨fun _ _ f x => Comp.seq f x⟩
 
 @[simp]
@@ -222,7 +222,7 @@ protected theorem run_seq {α β : Type v} (f : Comp F G (α → β)) (x : Comp 
     (f <*> x).run = (· <*> ·) <$> f.run <*> x.run :=
   rfl
 
-instance : Applicativeₓ (Comp F G) :=
+instance : Applicative (Comp F G) :=
   { Comp.hasPure with map := @Comp.map F G _ _, seq := @Comp.seq F G _ _ }
 
 end Comp

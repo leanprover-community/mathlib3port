@@ -44,21 +44,21 @@ inductive FiniteInterClosure : Set (Set α)
 /-- Defines `has_finite_inter` for `finite_inter_closure S`. -/
 def finiteInterClosureHasFiniteInter : HasFiniteInter (FiniteInterClosure S) where
   univ_mem := FiniteInterClosure.univ
-  inter_mem := fun _ h _ => FiniteInterClosure.inter h
+  inter_mem _ h _ := FiniteInterClosure.inter h
 
 variable {S}
 
-theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finsetₓ (Set α)) : ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
+theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
   classical
-  refine' Finsetₓ.induction_on F (fun _ => _) _
+  refine' Finset.induction_on F (fun _ => _) _
   · simp [cond.univ_mem]
     
   · intro a s h1 h2 h3
     suffices a ∩ ⋂₀ ↑s ∈ S by simpa
-    exact cond.inter_mem (h3 (Finsetₓ.mem_insert_self a s)) (h2 fun x hx => h3 <| Finsetₓ.mem_insert_of_mem hx)
+    exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S))
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
     (_ : P ∈ FiniteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
   induction' H with S h T1 T2 _ _ h1 h2

@@ -87,7 +87,7 @@ unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_w
   (do
       let lhs_is_local := lhs_whnf.is_local_constant
       let rhs_is_local := rhs_whnf.is_local_constant
-      guardₓ <| lhs_is_local ∨ rhs_is_local
+      guard <| lhs_is_local ∨ rhs_is_local
       let t := if lhs_is_local then (const `eq [u]) type lhs_whnf rhs else (const `eq [u]) type lhs rhs_whnf
       change_core t (some equ)
       let equ ← get_local equ.local_pp_name
@@ -182,9 +182,9 @@ unsafe def get_sizeof (type : expr) : tactic pexpr := do
   resolve_name <| n ++ `sizeof
 
 theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
-  apply ne_of_gtₓ
-  apply Nat.lt_add_of_pos_rightₓ
-  apply Nat.pos_of_ne_zeroₓ
+  apply ne_of_gt
+  apply Nat.lt_add_of_pos_right
+  apply Nat.pos_of_ne_zero
   contradiction
 
 -- Linarith could prove this, but I want to avoid that dependency.
@@ -212,7 +212,7 @@ unsafe def contradict_n_eq_n_plus_m (md : Transparency) (equ lhs rhs : expr) : t
         ("contradict_n_eq_n_plus_m:\nexpected {lhs_e} and {rhs_e} to be definitionally " ++
           "equal at transparency {md}.")
   let common := lhs_e
-  guardₓ (lhs_n ≠ rhs_n) <|> fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
+  guard (lhs_n ≠ rhs_n) <|> fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
   let-- Ensure that lhs_n is bigger than rhs_n. Swap lhs and rhs if that's not
     -- already the case.
     ⟨equ, lhs_n, rhs_n⟩
@@ -235,10 +235,11 @@ unsafe def unify_cyclic : unification_step := fun equ type _ _ _ lhs_whnf rhs_wh
     -- Derive a contradiction (if indeed `sizeof lhs ≠ sizeof rhs`).
     do
       let sizeof ← get_sizeof type
-      let hyp_lhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓlhs_whnf)))
-      let hyp_rhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓrhs_whnf)))
+      let hyp_lhs ← to_expr (pquote.1 ((%%ₓSizeOf.sizeOf) (%%ₓlhs_whnf)))
+      let hyp_rhs ← to_expr (pquote.1 ((%%ₓSizeOf.sizeOf) (%%ₓrhs_whnf)))
       let hyp_type ← to_expr (pquote.1 (@Eq ℕ (%%ₓhyp_lhs) (%%ₓhyp_rhs)))
-      let hyp_proof ← to_expr (pquote.1 (@congr_arg (%%ₓtype) ℕ (%%ₓlhs_whnf) (%%ₓrhs_whnf) (%%ₓsizeof) (%%ₓequ)))
+      let hyp_proof ←
+        to_expr (pquote.1 (@congr_arg (%%ₓtype) ℕ (%%ₓlhs_whnf) (%%ₓrhs_whnf) (%%ₓSizeOf.sizeOf) (%%ₓequ)))
       let hyp_name ← mk_fresh_name
       let hyp ← note hyp_name hyp_type hyp_proof
       let falso ← contradict_n_eq_n_plus_m semireducible hyp hyp_lhs hyp_rhs
@@ -271,9 +272,9 @@ end UnifyEquations
 
 open UnifyEquations
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
 /-- If `equ` is the display name of a local constant with type `t = u` or `t == u`,
 then `unify_equation_once equ` simplifies it once using
 `unify_equations.unify_homogeneous` or `unify_equations.unify_heterogeneous`.

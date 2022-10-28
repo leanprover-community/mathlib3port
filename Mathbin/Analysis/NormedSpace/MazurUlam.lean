@@ -80,7 +80,7 @@ theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y �
   replace : c ≤ 0
   · linarith
     
-  refine' fun e hx hy => dist_le_zero.1 (le_transₓ _ this)
+  refine' fun e hx hy => dist_le_zero.1 (le_trans _ this)
   exact le_csupr h_bdd ⟨e, hx, hy⟩
 
 include F

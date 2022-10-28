@@ -29,8 +29,8 @@ universe v₁ u₁
 -- morphism levels before object levels. See note [category_theory universes].
 variable (C : Type u₁) [Category.{v₁} C]
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`η'] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`μ'] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`η'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`μ'] [] -/
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -44,8 +44,8 @@ structure Monad extends C ⥤ C where
   left_unit' : ∀ X : C, η'.app (to_functor.obj X) ≫ μ'.app _ = 𝟙 _ := by obviously
   right_unit' : ∀ X : C, to_functor.map (η'.app X) ≫ μ'.app _ = 𝟙 _ := by obviously
 
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`ε'] []
--- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`δ'] []
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`ε'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`δ'] [] -/
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)
@@ -170,35 +170,35 @@ attribute [simp, reassoc] comonad_hom.app_ε comonad_hom.app_δ
 
 instance : Category (Monad C) where
   Hom := MonadHom
-  id := fun M => { toNatTrans := 𝟙 (M : C ⥤ C) }
-  comp := fun _ _ _ f g =>
+  id M := { toNatTrans := 𝟙 (M : C ⥤ C) }
+  comp _ _ _ f g :=
     { toNatTrans :=
         { app := fun X => f.app X ≫ g.app X,
           naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
-  id_comp' := fun _ _ _ => by
+  id_comp' _ _ _ := by
     ext
     apply id_comp
-  comp_id' := fun _ _ _ => by
+  comp_id' _ _ _ := by
     ext
     apply comp_id
-  assoc' := fun _ _ _ _ _ _ _ => by
+  assoc' _ _ _ _ _ _ _ := by
     ext
     apply assoc
 
 instance : Category (Comonad C) where
   Hom := ComonadHom
-  id := fun M => { toNatTrans := 𝟙 (M : C ⥤ C) }
-  comp := fun _ _ _ f g =>
+  id M := { toNatTrans := 𝟙 (M : C ⥤ C) }
+  comp _ _ _ f g :=
     { toNatTrans :=
         { app := fun X => f.app X ≫ g.app X,
           naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
-  id_comp' := fun _ _ _ => by
+  id_comp' _ _ _ := by
     ext
     apply id_comp
-  comp_id' := fun _ _ _ => by
+  comp_id' _ _ _ := by
     ext
     apply comp_id
-  assoc' := fun _ _ _ _ _ _ _ => by
+  assoc' _ _ _ _ _ _ _ := by
     ext
     apply assoc
 
@@ -258,8 +258,8 @@ variable (C)
 -/
 @[simps]
 def monadToFunctor : Monad C ⥤ C ⥤ C where
-  obj := fun T => T
-  map := fun M N f => f.toNatTrans
+  obj T := T
+  map M N f := f.toNatTrans
 
 instance : Faithful (monadToFunctor C) where
 
@@ -270,7 +270,7 @@ theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C)
   rfl
 
 instance :
-    ReflectsIsomorphisms (monadToFunctor C) where reflects := fun M N f i => by
+    ReflectsIsomorphisms (monadToFunctor C) where reflects M N f i := by
     skip
     convert is_iso.of_iso (monad_iso.mk (as_iso ((monad_to_functor C).map f)) f.app_η f.app_μ)
     ext <;> rfl
@@ -279,8 +279,8 @@ instance :
 -/
 @[simps]
 def comonadToFunctor : Comonad C ⥤ C ⥤ C where
-  obj := fun G => G
-  map := fun M N f => f.toNatTrans
+  obj G := G
+  map M N f := f.toNatTrans
 
 instance : Faithful (comonadToFunctor C) where
 
@@ -291,7 +291,7 @@ theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C 
   rfl
 
 instance :
-    ReflectsIsomorphisms (comonadToFunctor C) where reflects := fun M N f i => by
+    ReflectsIsomorphisms (comonadToFunctor C) where reflects M N f i := by
     skip
     convert is_iso.of_iso (comonad_iso.mk (as_iso ((comonad_to_functor C).map f)) f.app_ε f.app_δ)
     ext <;> rfl
@@ -312,7 +312,7 @@ def ComonadIso.toNatIso {M N : Comonad C} (h : M ≅ N) : (M : C ⥤ C) ≅ N :=
 
 variable (C)
 
-namespace Monadₓ
+namespace Monad
 
 /-- The identity monad. -/
 @[simps]
@@ -324,7 +324,7 @@ def id : Monad C where
 instance : Inhabited (Monad C) :=
   ⟨Monad.id C⟩
 
-end Monadₓ
+end Monad
 
 namespace Comonad
 

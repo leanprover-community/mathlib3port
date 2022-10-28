@@ -34,7 +34,7 @@ def reorderGoals {α} (gs : List (Bool × α)) : NewGoals → List α
   | new_goals.non_dep_first =>
     let ⟨dep, non_dep⟩ := gs.partition (coe ∘ Prod.fst)
     non_dep.map Prod.snd ++ dep.map Prod.snd
-  | new_goals.non_dep_only => (gs.filter (coe ∘ bnot ∘ Prod.fst)).map Prod.snd
+  | new_goals.non_dep_only => (gs.filter (coe ∘ not ∘ Prod.fst)).map Prod.snd
   | new_goals.all => gs.map Prod.snd
 
 private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) : tactic Bool :=
@@ -50,7 +50,7 @@ private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg) 
   mwhen (has_opt_auto_param_inst_for_apply ms) <| do
     let gs ← get_goals
     ms fun m =>
-        mwhen (bnot <$> is_assigned m.2) <|
+        mwhen (not <$> is_assigned m.2) <|
           ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >> when cfg (try apply_auto_param)
     set_goals gs
 
@@ -97,8 +97,8 @@ unsafe def eapply' (e : expr) : tactic (List (Name × expr)) :=
 
 /-- `relation_tactic` finds a proof rule for the relation found in the goal and uses `apply'`
 to make one proof step. -/
-private unsafe def relation_tactic (md : Transparency) (op_for : environment → Name → Option Name)
-    (tac_name : Stringₓ) : tactic Unit := do
+private unsafe def relation_tactic (md : Transparency) (op_for : environment → Name → Option Name) (tac_name : String) :
+    tactic Unit := do
   let tgt ← target >>= instantiate_mvars
   let env ← get_env
   let r := expr.get_app_fn tgt
@@ -184,7 +184,7 @@ unsafe def symmetry' : parse location → tactic Unit
   | l@loc.wildcard => l.try_apply symmetry_hyp tactic.symmetry'
   | loc.ns hs => (Loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Similar to `transitivity` with the difference that `apply'` is used instead of `apply`.
 -/
 unsafe def transitivity' (q : parse (parser.optional texpr)) : tactic Unit :=

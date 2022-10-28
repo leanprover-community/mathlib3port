@@ -48,13 +48,13 @@ alias Real.convex_iff_is_preconnected ↔ _ IsPreconnected.convex
 
 section StdSimplex
 
-variable [Fintypeₓ ι]
+variable [Fintype ι]
 
 /-- Every vector in `std_simplex 𝕜 ι` has `max`-norm at most `1`. -/
 theorem std_simplex_subset_closed_ball : StdSimplex ℝ ι ⊆ Metric.ClosedBall 0 1 := by
   intro f hf
   rw [Metric.mem_closed_ball, dist_zero_right]
-  refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 <| Finsetₓ.sup_le fun x hx => _
+  refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 <| Finset.sup_le fun x hx => _
   change abs (f x) ≤ 1
   rw [abs_of_nonneg <| hf.1 x]
   exact (mem_Icc_of_mem_std_simplex hf x).2
@@ -62,18 +62,18 @@ theorem std_simplex_subset_closed_ball : StdSimplex ℝ ι ⊆ Metric.ClosedBall
 variable (ι)
 
 /-- `std_simplex ℝ ι` is bounded. -/
-theorem bounded_std_simplex : Metric.Bounded (StdSimplex ℝ ι) :=
+theorem boundedStdSimplex : Metric.Bounded (StdSimplex ℝ ι) :=
   (Metric.bounded_iff_subset_ball 0).2 ⟨1, std_simplex_subset_closed_ball⟩
 
 /-- `std_simplex ℝ ι` is closed. -/
-theorem is_closed_std_simplex : IsClosed (StdSimplex ℝ ι) :=
+theorem isClosedStdSimplex : IsClosed (StdSimplex ℝ ι) :=
   (std_simplex_eq_inter ℝ ι).symm ▸
-    IsClosed.inter (is_closed_Inter fun i => is_closed_le continuous_const (continuous_apply i))
-      (is_closed_eq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
+    IsClosed.inter (isClosedInter fun i => isClosedLe continuous_const (continuous_apply i))
+      (isClosedEq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
 
 /-- `std_simplex ℝ ι` is compact. -/
 theorem compact_std_simplex : IsCompact (StdSimplex ℝ ι) :=
-  Metric.compact_iff_closed_bounded.2 ⟨is_closed_std_simplex ι, bounded_std_simplex ι⟩
+  Metric.compact_iff_closed_bounded.2 ⟨isClosedStdSimplex ι, boundedStdSimplex ι⟩
 
 end StdSimplex
 
@@ -82,7 +82,7 @@ end StdSimplex
 
 section HasContinuousConstSmul
 
-variable {𝕜 : Type _} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
+variable {𝕜 : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
   [HasContinuousConstSmul 𝕜 E]
 
 /-- If `s` is a convex set, then `a • interior s + b • closure s ⊆ interior s` for all `0 < a`,
@@ -112,15 +112,15 @@ theorem Convex.combo_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜
 `0 < b`, `a + b = 1`. See also `convex.combo_self_interior_subset_interior` for a weaker version. -/
 theorem Convex.combo_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜} (ha : 0 ≤ a) (hb : 0 < b)
     (hab : a + b = 1) : a • Closure s + b • Interior s ⊆ Interior s := by
-  rw [add_commₓ]
-  exact hs.combo_interior_closure_subset_interior hb ha (add_commₓ a b ▸ hab)
+  rw [add_comm]
+  exact hs.combo_interior_closure_subset_interior hb ha (add_comm a b ▸ hab)
 
 /-- If `s` is a convex set, then `a • s + b • interior s ⊆ interior s` for all `0 ≤ a`, `0 < b`,
 `a + b = 1`. See also `convex.combo_closure_interior_subset_interior` for a stronger version. -/
 theorem Convex.combo_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜} (ha : 0 ≤ a) (hb : 0 < b)
     (hab : a + b = 1) : a • s + b • Interior s ⊆ Interior s := by
-  rw [add_commₓ]
-  exact hs.combo_interior_self_subset_interior hb ha (add_commₓ a b ▸ hab)
+  rw [add_comm]
+  exact hs.combo_interior_self_subset_interior hb ha (add_comm a b ▸ hab)
 
 theorem Convex.combo_interior_closure_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ Interior s)
     (hy : y ∈ Closure s) {a b : 𝕜} (ha : 0 < a) (hb : 0 ≤ b) (hab : a + b = 1) : a • x + b • y ∈ Interior s :=
@@ -159,23 +159,23 @@ theorem Convex.open_segment_self_interior_subset_interior {s : Set E} (hs : Conv
 /-- If `x ∈ closure s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`.
 -/
 theorem Convex.add_smul_sub_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ Closure s)
-    (hy : y ∈ Interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • (y - x) ∈ Interior s := by
-  simpa only [sub_smul, smul_sub, one_smul, add_sub, add_commₓ] using
+    (hy : y ∈ Interior s) {t : 𝕜} (ht : t ∈ IocCat (0 : 𝕜) 1) : x + t • (y - x) ∈ Interior s := by
+  simpa only [sub_smul, smul_sub, one_smul, add_sub, add_comm] using
     hs.combo_interior_closure_mem_interior hy hx ht.1 (sub_nonneg.mpr ht.2) (add_sub_cancel'_right _ _)
 
 /-- If `x ∈ s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`. -/
 theorem Convex.add_smul_sub_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : y ∈ Interior s)
-    {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • (y - x) ∈ Interior s :=
+    {t : 𝕜} (ht : t ∈ IocCat (0 : 𝕜) 1) : x + t • (y - x) ∈ Interior s :=
   hs.add_smul_sub_mem_interior' (subset_closure hx) hy ht
 
 /-- If `x ∈ closure s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ Closure s)
-    (hy : x + y ∈ Interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ Interior s := by
+    (hy : x + y ∈ Interior s) {t : 𝕜} (ht : t ∈ IocCat (0 : 𝕜) 1) : x + t • y ∈ Interior s := by
   simpa only [add_sub_cancel'] using hs.add_smul_sub_mem_interior' hx hy ht
 
 /-- If `x ∈ s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : x + y ∈ Interior s)
-    {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ Interior s :=
+    {t : 𝕜} (ht : t ∈ IocCat (0 : 𝕜) 1) : x + t • y ∈ Interior s :=
   hs.add_smul_mem_interior' (subset_closure hx) hy ht
 
 /-- In a topological vector space, the interior of a convex set is convex. -/
@@ -193,7 +193,7 @@ end HasContinuousConstSmul
 
 section HasContinuousSmul
 
-variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul ℝ E]
+variable [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul ℝ E]
 
 /-- Convex hull of a finite set is compact. -/
 theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (convexHull ℝ s) := by
@@ -203,7 +203,7 @@ theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (
   apply LinearMap.continuous_on_pi
 
 /-- Convex hull of a finite set is closed. -/
-theorem Set.Finite.is_closed_convex_hull [T2Space E] {s : Set E} (hs : s.Finite) : IsClosed (convexHull ℝ s) :=
+theorem Set.Finite.isClosedConvexHull [T2Space E] {s : Set E} (hs : s.Finite) : IsClosed (convexHull ℝ s) :=
   hs.compact_convex_hull.IsClosed
 
 open AffineMap
@@ -262,7 +262,7 @@ protected theorem Convex.is_preconnected {s : Set E} (h : Convex ℝ s) : IsPrec
 Not an instance, because it creates enormous TC subproblems (turn on `pp.all`).
 -/
 protected theorem TopologicalAddGroup.path_connected : PathConnectedSpace E :=
-  path_connected_space_iff_univ.mpr <| convex_univ.IsPathConnected ⟨(0 : E), trivialₓ⟩
+  path_connected_space_iff_univ.mpr <| convex_univ.IsPathConnected ⟨(0 : E), trivial⟩
 
 end HasContinuousSmul
 
@@ -305,21 +305,13 @@ theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (Thickenin
   exact hs.add (convex_ball 0 _)
 
 theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (Cthickening δ s) := by
-  obtain hδ | hδ := le_totalₓ 0 δ
+  obtain hδ | hδ := le_total 0 δ
   · rw [cthickening_eq_Inter_thickening hδ]
     exact convex_Inter₂ fun _ _ => hs.thickening _
     
   · rw [cthickening_of_nonpos hδ]
     exact hs.closure
     
-
-/-- If `s`, `t` are disjoint convex sets, `s` is compact and `t` is closed then we can find open
-disjoint convex sets containing them. -/
-theorem Disjoint.exists_open_convexes (disj : Disjoint s t) (hs₁ : Convex ℝ s) (hs₂ : IsCompact s) (ht₁ : Convex ℝ t)
-    (ht₂ : IsClosed t) : ∃ u v, IsOpen u ∧ IsOpen v ∧ Convex ℝ u ∧ Convex ℝ v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v :=
-  let ⟨δ, hδ, hst⟩ := disj.exists_thickenings hs₂ ht₂
-  ⟨_, _, is_open_thickening, is_open_thickening, hs₁.Thickening _, ht₁.Thickening _, self_subset_thickening hδ _,
-    self_subset_thickening hδ _, hst⟩
 
 /-- Given a point `x` in the convex hull of `s` and a point `y`, there exists a point
 of `s` at distance at least `dist x y` from `y`. -/
@@ -334,7 +326,7 @@ theorem convex_hull_exists_dist_ge2 {s t : Set E} {x y : E} (hx : x ∈ convexHu
   rcases convex_hull_exists_dist_ge hx y with ⟨x', hx', Hx'⟩
   rcases convex_hull_exists_dist_ge hy x' with ⟨y', hy', Hy'⟩
   use x', hx', y', hy'
-  exact le_transₓ Hx' (dist_comm y x' ▸ dist_comm y' x' ▸ Hy')
+  exact le_trans Hx' (dist_comm y x' ▸ dist_comm y' x' ▸ Hy')
 
 /-- Emetric diameter of the convex hull of a set `s` equals the emetric diameter of `s. -/
 @[simp]
@@ -342,7 +334,7 @@ theorem convex_hull_ediam (s : Set E) : Emetric.diam (convexHull ℝ s) = Emetri
   refine' (Emetric.diam_le fun x hx y hy => _).antisymm (Emetric.diam_mono <| subset_convex_hull ℝ s)
   rcases convex_hull_exists_dist_ge2 hx hy with ⟨x', hx', y', hy', H⟩
   rw [edist_dist]
-  apply le_transₓ (Ennreal.of_real_le_of_real H)
+  apply le_trans (Ennreal.of_real_le_of_real H)
   rw [← edist_dist]
   exact Emetric.edist_le_diam_of_mem hx' hy'
 

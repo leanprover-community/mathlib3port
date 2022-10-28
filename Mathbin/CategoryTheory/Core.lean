@@ -36,9 +36,9 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 instance coreCategory : Groupoid.{v₁} (Core C) where
   Hom := fun X Y : C => X ≅ Y
-  inv := fun X Y f => Iso.symm f
-  id := fun X => Iso.refl X
-  comp := fun X Y Z f g => Iso.trans f g
+  inv X Y f := Iso.symm f
+  id X := Iso.refl X
+  comp X Y Z f g := Iso.trans f g
 
 namespace Core
 
@@ -55,7 +55,7 @@ variable (C)
 /-- The core of a category is naturally included in the category. -/
 def inclusion : Core C ⥤ C where
   obj := id
-  map := fun X Y f => f.Hom
+  map X Y f := f.Hom
 
 instance : Faithful (inclusion C) where
 
@@ -65,8 +65,8 @@ variable {C} {G : Type u₂} [Groupoid.{v₂} G]
 -- (consider the two functors from [0] to [1], and the natural transformation between them).
 /-- A functor from a groupoid to a category C factors through the core of C. -/
 noncomputable def functorToCore (F : G ⥤ C) : G ⥤ Core C where
-  obj := fun X => F.obj X
-  map := fun X Y f => ⟨F.map f, F.map (inv f)⟩
+  obj X := F.obj X
+  map X Y f := ⟨F.map f, F.map (inv f)⟩
 
 /-- We can functorially associate to any functor from a groupoid to the core of a category `C`,
 a functor from the groupoid to `C`, simply by composing with the embedding `core C ⥤ C`.
@@ -81,14 +81,14 @@ to a categorical functor `core (Type u₁) ⥤ core (Type u₂)`.
 -/
 def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u₁) ⥤ Core (Type u₂) where
   obj := m
-  map := fun α β f => (EquivFunctor.mapEquiv m f.toEquiv).toIso
+  map α β f := (EquivFunctor.mapEquiv m f.toEquiv).toIso
   -- These are not very pretty.
-  map_id' := fun α => by
+  map_id' α := by
     ext
     exact congr_fun (EquivFunctor.map_refl _) x
-  map_comp' := fun α β γ f g => by
+  map_comp' α β γ f g := by
     ext
-    simp only [EquivFunctor.map_equiv_apply, Equivₓ.to_iso_hom, Function.comp_app, core.comp_hom, types_comp]
+    simp only [EquivFunctor.map_equiv_apply, Equiv.to_iso_hom, Function.comp_app, core.comp_hom, types_comp]
     erw [iso.to_equiv_comp, EquivFunctor.map_trans]
 
 end CategoryTheory

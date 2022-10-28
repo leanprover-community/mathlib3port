@@ -56,8 +56,8 @@ that `rel.core` generalizes `set.preimage`. -/
 def rmap (r : Rel α β) (l : Filter α) : Filter β where
   Sets := { s | r.Core s ∈ l }
   univ_sets := by simp
-  sets_of_superset := fun s t hs st => mem_of_superset hs <| Rel.core_mono _ st
-  inter_sets := fun s t hs ht => by simp [Rel.core_inter, inter_mem hs ht]
+  sets_of_superset s t hs st := mem_of_superset hs <| Rel.core_mono _ st
+  inter_sets s t hs ht := by simp [Rel.core_inter, inter_mem hs ht]
 
 theorem rmap_sets (r : Rel α β) (l : Filter α) : (l.rmap r).Sets = r.Core ⁻¹' l.Sets :=
   rfl

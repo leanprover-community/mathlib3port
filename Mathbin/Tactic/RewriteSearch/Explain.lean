@@ -47,10 +47,10 @@ def toList : List α :=
   [p.l, p.R]
 
 /-- Convert the pair to a readable string format. -/
-def toString [HasToString α] (p : DirPair α) : Stringₓ :=
+def toString [ToString α] (p : DirPair α) : String :=
   toString p.l ++ "-" ++ toString p.R
 
-instance hasToString [HasToString α] : HasToString (DirPair α) :=
+instance hasToString [ToString α] : ToString (DirPair α) :=
   ⟨toString⟩
 
 end DirPair
@@ -60,7 +60,7 @@ private unsafe def nth_rule (rs : List (expr × Bool)) (i : ℕ) : expr × Bool 
   (rs.nth i).iget
 
 /-- Convert a rule into the string of Lean code used to refer to this rule. -/
-private unsafe def pp_rule (r : expr × Bool) : tactic Stringₓ := do
+private unsafe def pp_rule (r : expr × Bool) : tactic String := do
   let pp ← pp r.1
   return <| (if r.2 then "←" else "") ++ toString pp
 
@@ -68,16 +68,16 @@ private unsafe def how.to_rewrite (rs : List (expr × Bool)) : how → Option (e
   | h => nth_rule rs h.rule_index
 
 /-- Explain a single rewrite using `nth_rewrite`. -/
-private unsafe def explain_using_location (rs : List (expr × Bool)) (s : Side) : how → tactic (Option Stringₓ)
+private unsafe def explain_using_location (rs : List (expr × Bool)) (s : Side) : how → tactic (Option String)
   | h => do
     let rule ← pp_rule <| nth_rule rs h.rule_index
     return <| some ("nth_rewrite_" ++ s ++ " " ++ toString h ++ " " ++ rule)
 
 /-- Explain a list of rewrites using `nth_rewrite`. -/
 private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s : Side) (steps : List how) :
-    tactic Stringₓ := do
+    tactic String := do
   let rules ← steps.mmap fun h : how => Option.toList <$> explain_using_location rs s h
-  return <| Stringₓ.intercalate ",\n  " rules
+  return <| String.intercalate ",\n  " rules
 
 namespace UsingConv
 
@@ -88,7 +88,7 @@ inductive AppAddr
 
 open AppAddr
 
-private unsafe def app_addr.to_string : AppAddr → Stringₓ
+private unsafe def app_addr.to_string : AppAddr → String
   | node c => "(node " ++ ((c.toList.filterMap id).map app_addr.to_string).toString ++ ")"
   | rw rws => "(rw " ++ rws.toString ++ ")"
 
@@ -135,11 +135,11 @@ private unsafe def splice_in (a : Option AppAddr) (rws : List ℕ) (s : List Exp
   splice_in_aux rws a <$> to_congr_form s
 
 /-- Construct a single `erw` tactic for the given rules. -/
-private unsafe def build_rw_tactic (rs : List (expr × Bool)) (hs : List ℕ) : tactic Stringₓ := do
+private unsafe def build_rw_tactic (rs : List (expr × Bool)) (hs : List ℕ) : tactic String := do
   let rws ← (hs.map <| nth_rule rs).mmap pp_rule
-  return <| "erw [" ++ Stringₓ.intercalate ", " rws ++ "]"
+  return <| "erw [" ++ String.intercalate ", " rws ++ "]"
 
-private unsafe def explain_tree_aux (rs : List (expr × Bool)) : AppAddr → tactic (Option (List Stringₓ))
+private unsafe def explain_tree_aux (rs : List (expr × Bool)) : AppAddr → tactic (Option (List String))
   | app_addr.rw rws => (fun a => some [a]) <$> build_rw_tactic rs rws
   | app_addr.node ⟨func, arg⟩ => do
     let sf ←
@@ -158,18 +158,18 @@ private unsafe def explain_tree_aux (rs : List (expr × Bool)) : AppAddr → tac
         | (some sf, some sa) => (["congr"].append sf).append (["skip"].append sf)
 
 /-- Construct a string of Lean code that does a rewrite for the provided tree. -/
-private unsafe def explain_tree (rs : List (expr × Bool)) (tree : AppAddr) : tactic (List Stringₓ) :=
+private unsafe def explain_tree (rs : List (expr × Bool)) (tree : AppAddr) : tactic (List String) :=
   List.join <$> Option.toList <$> explain_tree_aux rs tree
 
 /-- Gather all rewrites into trees, then generate a line of code for each tree.
 The return value has one `conv_x` tactic on each line.
 -/
 private unsafe def explanation_lines (rs : List (expr × Bool)) (s : Side) :
-    Option AppAddr → List how → tactic (List Stringₓ)
+    Option AppAddr → List how → tactic (List String)
   | none, [] => return []
   | some tree, [] => do
     let tacs ← explain_tree rs tree
-    return <| if tacs = 0 then [] else ["conv_" ++ s ++ " { " ++ Stringₓ.intercalate ", " tacs ++ " }"]
+    return <| if tacs = 0 then [] else ["conv_" ++ s ++ " { " ++ String.intercalate ", " tacs ++ " }"]
   | tree, h :: rest => do
     let (new_tree, rest_if_fail) ←
       match h.addr with
@@ -186,13 +186,13 @@ private unsafe def explanation_lines (rs : List (expr × Bool)) (s : Side) :
         return <| line ++ lines
 
 /-- Explain a list of rewrites using `conv_x` tactics. -/
-unsafe def explain_rewrites (rs : List (expr × Bool)) (s : Side) (hows : List how) : tactic Stringₓ :=
-  Stringₓ.intercalate ",\n  " <$> explanation_lines rs s none hows
+unsafe def explain_rewrites (rs : List (expr × Bool)) (s : Side) (hows : List how) : tactic String :=
+  String.intercalate ",\n  " <$> explanation_lines rs s none hows
 
 end UsingConv
 
-private unsafe def explain_rewrites_concisely (steps : List (expr × Bool)) (needs_refl : Bool) : tactic Stringₓ := do
-  let rules ← Stringₓ.intercalate ", " <$> steps.mmap pp_rule
+private unsafe def explain_rewrites_concisely (steps : List (expr × Bool)) (needs_refl : Bool) : tactic String := do
+  let rules ← String.intercalate ", " <$> steps.mmap pp_rule
   return <| "erw [" ++ rules ++ "]" ++ if needs_refl then ", refl" else ""
 
 /-- Fails if we can't just use rewrite.
@@ -210,12 +210,12 @@ unsafe def proof_unit.rewrites (u : proof_unit) (rs : List (expr × Bool)) : Lis
   u.steps.filterMap <| how.to_rewrite rs
 
 /-- Construct an explanation string from a proof unit. -/
-unsafe def proof_unit.explain (u : proof_unit) (rs : List (expr × Bool)) (explain_using_conv : Bool) : tactic Stringₓ :=
+unsafe def proof_unit.explain (u : proof_unit) (rs : List (expr × Bool)) (explain_using_conv : Bool) : tactic String :=
   if explain_using_conv then using_conv.explain_rewrites rs u.Side u.steps
   else using_location.explain_rewrites rs u.Side u.steps
 
 private unsafe def explain_proof_full (rs : List (expr × Bool)) (explain_using_conv : Bool) :
-    List proof_unit → tactic Stringₓ
+    List proof_unit → tactic String
   | [] => return ""
   | u :: rest => do
     let head
@@ -227,10 +227,10 @@ private unsafe def explain_proof_full (rs : List (expr × Bool)) (explain_using_
     let unit_expl ← u.explain rs explain_using_conv
     let rest_expl ← explain_proof_full rest
     let expls := (head ++ [unit_expl, rest_expl]).filter fun t => ¬t.length = 0
-    return <| Stringₓ.intercalate ",\n  " expls
+    return <| String.intercalate ",\n  " expls
 
 private unsafe def explain_proof_concisely (rules : List (expr × Bool)) (proof : expr) (l : List proof_unit) :
-    tactic Stringₓ := do
+    tactic String := do
   let rws : List (expr × Bool) :=
     List.join <|
       l.map fun u => do

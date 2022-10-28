@@ -21,13 +21,13 @@ open Set Filter
 
 open Real
 
-theorem has_strict_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x := by
+theorem hasStrictDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x := by
   convert (has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
   rw [← sin_sq_add_cos_sq x]
   ring
 
-theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 2) x :=
-  (has_strict_deriv_at_tan h).HasDerivAt
+theorem hasDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 2) x :=
+  (hasStrictDerivAtTan h).HasDerivAt
 
 open TopologicalSpace
 
@@ -49,18 +49,18 @@ theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 := by
 
 @[simp]
 theorem differentiable_at_tan {x : ℂ} : DifferentiableAt ℂ tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h => (has_deriv_at_tan h).DifferentiableAt⟩
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h => (hasDerivAtTan h).DifferentiableAt⟩
 
 @[simp]
 theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
   if h : cos x = 0 then by
     have : ¬DifferentiableAt ℂ tan x := mt differentiable_at_tan.1 (not_not.2 h)
     simp [deriv_zero_of_not_differentiable_at this, h, sq]
-  else (has_deriv_at_tan h).deriv
+  else (hasDerivAtTan h).deriv
 
 @[simp]
 theorem cont_diff_at_tan {x : ℂ} {n : ℕ∞} : ContDiffAt ℂ n tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, cont_diff_sin.ContDiffAt.div cont_diff_cos.ContDiffAt⟩
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, contDiffSin.ContDiffAt.div contDiffCos.ContDiffAt⟩
 
 end Complex
 

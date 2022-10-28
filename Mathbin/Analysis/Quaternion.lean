@@ -49,7 +49,7 @@ instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
     { inner := HasInner.inner, conj_sym := fun x y => by simp [inner_def, mul_comm],
       nonneg_re := fun x => norm_sq_nonneg, definite := fun x => norm_sq_eq_zero.1,
-      add_left := fun x y z => by simp only [inner_def, add_mulₓ, add_re],
+      add_left := fun x y z => by simp only [inner_def, add_mul, add_re],
       smul_left := fun x y r => by simp [inner_def] }
 
 theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ∥a∥ * ∥a∥ := by rw [← inner_self, real_inner_self_eq_norm_mul_norm]
@@ -66,13 +66,13 @@ theorem nnnorm_coe (a : ℝ) : ∥(a : ℍ)∥₊ = ∥a∥₊ :=
   Subtype.ext <| norm_coe a
 
 noncomputable instance : NormedDivisionRing ℍ where
-  dist_eq := fun _ _ => rfl
-  norm_mul' := fun a b => by
+  dist_eq _ _ := rfl
+  norm_mul' a b := by
     simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
     exact Real.sqrt_mul norm_sq_nonneg _
 
 noncomputable instance : NormedAlgebra ℝ ℍ where
-  norm_smul_le := fun a x => (norm_smul a x).le
+  norm_smul_le a x := (norm_smul a x).le
   toAlgebra := Quaternion.algebra
 
 instance : Coe ℂ ℍ :=
@@ -122,7 +122,7 @@ def ofComplex : ℂ →ₐ[ℝ] ℍ where
   map_zero' := rfl
   map_add' := coe_complex_add
   map_mul' := coe_complex_mul
-  commutes' := fun x => rfl
+  commutes' x := rfl
 
 @[simp]
 theorem coe_of_complex : ⇑of_complex = coe :=

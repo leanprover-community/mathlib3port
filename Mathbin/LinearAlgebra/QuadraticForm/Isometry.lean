@@ -24,9 +24,9 @@ variable {ι R K M M₁ M₂ M₃ V : Type _}
 
 namespace QuadraticForm
 
-variable [Semiringₓ R]
+variable [Semiring R]
 
-variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
+variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂] [AddCommMonoid M₃]
 
 variable [Module R M] [Module R M₁] [Module R M₂] [Module R M₃]
 
@@ -108,7 +108,7 @@ theorem trans (h : Q₁.Equivalent Q₂) (h' : Q₂.Equivalent Q₃) : Q₁.Equi
 
 end Equivalent
 
-variable [Fintypeₓ ι] {v : Basis ι R M}
+variable [Fintype ι] {v : Basis ι R M}
 
 /-- A quadratic form composed with a `linear_equiv` is isometric to itself. -/
 def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
@@ -122,11 +122,11 @@ def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q
 noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) : Isometry Q (Q.basis_repr v) :=
   isometryOfCompLinearEquiv Q v.equivFun.symm
 
-variable [Field K] [Invertible (2 : K)] [AddCommGroupₓ V] [Module K V]
+variable [Field K] [Invertible (2 : K)] [AddCommGroup V] [Module K V]
 
 /-- Given an orthogonal basis, a quadratic form is isometric with a weighted sum of squares. -/
 noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
-    (v : Basis (Finₓ (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrtho v) :
+    (v : Basis (Fin (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrtho v) :
     Q.Isometry (weightedSumSquares K fun i => Q (v i)) := by
   let iso := Q.isometry_basis_repr v
   refine' ⟨iso, fun m => _⟩
@@ -138,13 +138,13 @@ variable [FiniteDimensional K V]
 open BilinForm
 
 theorem equivalent_weighted_sum_squares (Q : QuadraticForm K V) :
-    ∃ w : Finₓ (FiniteDimensional.finrank K V) → K, Equivalent Q (weightedSumSquares K w) :=
+    ∃ w : Fin (FiniteDimensional.finrank K V) → K, Equivalent Q (weightedSumSquares K w) :=
   let ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
   ⟨_, ⟨Q.isometryWeightedSumSquares v hv₁⟩⟩
 
 theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticForm K V)
     (hQ : (associated Q).Nondegenerate) :
-    ∃ w : Finₓ (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) := by
+    ∃ w : Fin (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) := by
   obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
   have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ
   simp_rw [is_ortho, associated_eq_self_apply] at hv₂

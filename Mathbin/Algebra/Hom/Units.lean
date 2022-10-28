@@ -30,7 +30,7 @@ universe u v w
 
 namespace Units
 
-variable {α : Type _} {M : Type u} {N : Type v} {P : Type w} [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
+variable {α : Type _} {M : Type u} {N : Type v} {P : Type w} [Monoid M] [Monoid N] [Monoid P]
 
 /-- The group homomorphism on units induced by a `monoid_hom`. -/
 @[to_additive "The `add_group` homomorphism on `add_unit`s induced by an `add_monoid_hom`."]
@@ -99,7 +99,7 @@ this map is a monoid homomorphism too. -/
 def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →* Nˣ where
   toFun := g
   map_one' := Units.ext <| (h 1).symm ▸ f.map_one
-  map_mul' := fun x y => Units.ext <| by simp only [h, coe_mul, f.map_mul]
+  map_mul' x y := Units.ext <| by simp only [h, coe_mul, f.map_mul]
 
 @[simp, to_additive]
 theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : (liftRight f g h x : N) = f x :=
@@ -107,11 +107,11 @@ theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x
 
 @[simp, to_additive]
 theorem mul_lift_right_inv {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : f x * ↑(liftRight f g h x)⁻¹ = 1 :=
-  by rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
+  by rw [Units.mul_inv_eq_iff_eq_mul, one_mul, coe_lift_right]
 
 @[simp, to_additive]
 theorem lift_right_inv_mul {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : ↑(liftRight f g h x)⁻¹ * f x = 1 :=
-  by rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
+  by rw [Units.inv_mul_eq_iff_eq_mul, mul_one, coe_lift_right]
 
 end Units
 
@@ -122,12 +122,12 @@ then its image lies in the units of `M`,
 and `f.to_hom_units` is the corresponding monoid homomorphism from `G` to `Mˣ`. -/
 @[to_additive
       "If `f` is a homomorphism from an additive group `G` to an additive monoid `M`,\nthen its image lies in the `add_units` of `M`,\nand `f.to_hom_units` is the corresponding homomorphism from `G` to `add_units M`."]
-def toHomUnits {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G →* Mˣ :=
-  Units.liftRight f (fun g => ⟨f g, f g⁻¹, map_mul_eq_one f (mul_inv_selfₓ _), map_mul_eq_one f (inv_mul_selfₓ _)⟩)
+def toHomUnits {G M : Type _} [Group G] [Monoid M] (f : G →* M) : G →* Mˣ :=
+  Units.liftRight f (fun g => ⟨f g, f g⁻¹, map_mul_eq_one f (mul_inv_self _), map_mul_eq_one f (inv_mul_self _)⟩)
     fun g => rfl
 
 @[simp]
-theorem coe_to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) (g : G) : (f.toHomUnits g : M) = f g :=
+theorem coe_to_hom_units {G M : Type _} [Group G] [Monoid M] (f : G →* M) (g : G) : (f.toHomUnits g : M) = f g :=
   rfl
 
 end MonoidHom
@@ -136,9 +136,9 @@ namespace IsUnit
 
 variable {F G α M N : Type _}
 
-section Monoidₓ
+section Monoid
 
-variable [Monoidₓ M] [Monoidₓ N]
+variable [Monoid M] [Monoid N]
 
 @[to_additive]
 theorem map [MonoidHomClass F M N] (f : F) {x : M} (h : IsUnit x) : IsUnit (f x) := by
@@ -172,7 +172,7 @@ theorem mul_lift_right_inv (f : M →* N) (h : ∀ x, IsUnit (f x)) (x) : f x * 
 theorem lift_right_inv_mul (f : M →* N) (h : ∀ x, IsUnit (f x)) (x) : ↑(IsUnit.liftRight f h x)⁻¹ * f x = 1 :=
   Units.lift_right_inv_mul (fun y => rfl) x
 
-end Monoidₓ
+end Monoid
 
 section DivisionMonoid
 
@@ -318,11 +318,11 @@ protected theorem mul_div_mul_left (h : IsUnit c) (a b : α) : c * a / (c * b) =
 
 @[to_additive]
 protected theorem mul_eq_mul_of_div_eq_div (hb : IsUnit b) (hd : IsUnit d) (a c : α) (h : a / b = c / d) :
-    a * d = c * b := by rw [← mul_oneₓ a, ← hb.div_self, ← mul_comm_div, h, div_mul_eq_mul_div, hd.div_mul_cancel]
+    a * d = c * b := by rw [← mul_one a, ← hb.div_self, ← mul_comm_div, h, div_mul_eq_mul_div, hd.div_mul_cancel]
 
 @[to_additive]
 protected theorem div_eq_div_iff (hb : IsUnit b) (hd : IsUnit d) : a / b = c / d ↔ a * d = c * b := by
-  rw [← (hb.mul hd).mul_left_inj, ← mul_assoc, hb.div_mul_cancel, ← mul_assoc, mul_right_commₓ, hd.div_mul_cancel]
+  rw [← (hb.mul hd).mul_left_inj, ← mul_assoc, hb.div_mul_cancel, ← mul_assoc, mul_right_comm, hd.div_mul_cancel]
 
 @[to_additive]
 protected theorem div_div_cancel (h : IsUnit a) : a / (a / b) = b := by rw [div_div_eq_mul_div, h.mul_div_cancel_left]

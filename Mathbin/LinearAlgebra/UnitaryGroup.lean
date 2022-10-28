@@ -45,9 +45,9 @@ open Matrix
 
 section
 
-variable (n : Type u) [DecidableEq n] [Fintypeₓ n]
+variable (n : Type u) [DecidableEq n] [Fintype n]
 
-variable (α : Type v) [CommRingₓ α] [StarRing α]
+variable (α : Type v) [CommRing α] [StarRing α]
 
 /-- `unitary_group n` is the group of `n` by `n` matrices where the star-transpose is the inverse.
 -/
@@ -56,9 +56,9 @@ abbrev unitaryGroup :=
 
 end
 
-variable {n : Type u} [DecidableEq n] [Fintypeₓ n]
+variable {n : Type u} [DecidableEq n] [Fintype n]
 
-variable {α : Type v} [CommRingₓ α] [StarRing α]
+variable {α : Type v} [CommRing α] [StarRing α]
 
 theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 := by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
@@ -80,7 +80,7 @@ namespace UnitaryGroup
 instance coeMatrix : Coe (unitaryGroup n α) (Matrix n n α) :=
   ⟨Subtype.val⟩
 
-instance coeFun : CoeFun (unitaryGroup n α) fun _ => n → n → α where coe := fun A => A.val
+instance coeFun : CoeFun (unitaryGroup n α) fun _ => n → n → α where coe A := A.val
 
 /-- `to_lin' A` is matrix multiplication of vectors by `A`, as a linear map.
 
@@ -145,12 +145,12 @@ def toLinearEquiv (A : unitaryGroup n α) : (n → α) ≃ₗ[α] n → α :=
     left_inv := fun x =>
       calc
         (toLin' A⁻¹).comp (toLin' A) x = (toLin' (A⁻¹ * A)) x := by rw [← to_lin'_mul]
-        _ = x := by rw [mul_left_invₓ, to_lin'_one, id_apply]
+        _ = x := by rw [mul_left_inv, to_lin'_one, id_apply]
         ,
     right_inv := fun x =>
       calc
         (toLin' A).comp (toLin' A⁻¹) x = toLin' (A * A⁻¹) x := by rw [← to_lin'_mul]
-        _ = x := by rw [mul_right_invₓ, to_lin'_one, id_apply]
+        _ = x := by rw [mul_right_inv, to_lin'_one, id_apply]
          }
 
 /-- `to_GL` is the map from the unitary group to the general linear group -/
@@ -181,7 +181,7 @@ end UnitaryGroup
 
 section OrthogonalGroup
 
-variable (n) (β : Type v) [CommRingₓ β]
+variable (n) (β : Type v) [CommRing β]
 
 attribute [local instance] starRingOfComm
 

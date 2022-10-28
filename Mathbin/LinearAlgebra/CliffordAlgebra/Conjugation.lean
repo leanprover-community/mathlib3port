@@ -31,9 +31,9 @@ https://en.wikipedia.org/wiki/Clifford_algebra#Antiautomorphisms
 -/
 
 
-variable {R : Type _} [CommRingₓ R]
+variable {R : Type _} [CommRing R]
 
-variable {M : Type _} [AddCommGroupₓ M] [Module R M]
+variable {M : Type _} [AddCommGroup M] [Module R M]
 
 variable {Q : QuadraticForm R M}
 
@@ -142,19 +142,19 @@ end Reverse
 
 section List
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
 taking the product of the reverse of that list. -/
 theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).Prod = (l.map <| ι Q).reverse.Prod
   | [] => by simp
   | x::xs => by simp [reverse_prod_map_ι xs]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
 theorem involute_prod_map_ι : ∀ l : List M, involute (l.map <| ι Q).Prod = (-1 : R) ^ l.length • (l.map <| ι Q).Prod
   | [] => by simp
-  | x::xs => by simp [pow_addₓ, involute_prod_map_ι xs]
+  | x::xs => by simp [pow_add, involute_prod_map_ι xs]
 
 end List
 

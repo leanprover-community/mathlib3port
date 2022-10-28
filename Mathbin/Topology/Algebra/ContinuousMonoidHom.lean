@@ -23,7 +23,7 @@ open Pointwise
 
 open Function
 
-variable (F A B C D E : Type _) [Monoidₓ A] [Monoidₓ B] [Monoidₓ C] [Monoidₓ D] [CommGroupₓ E] [TopologicalSpace A]
+variable (F A B C D E : Type _) [Monoid A] [Monoid B] [Monoid C] [Monoid D] [CommGroup E] [TopologicalSpace A]
   [TopologicalSpace B] [TopologicalSpace C] [TopologicalSpace D] [TopologicalSpace E] [TopologicalGroup E]
 
 /-- The type of continuous additive monoid homomorphisms from `A` to `B`.
@@ -32,7 +32,7 @@ When possible, instead of parametrizing results over `(f : continuous_add_monoid
 you should parametrize over `(F : Type*) [continuous_add_monoid_hom_class F A B] (f : F)`.
 
 When you extend this structure, make sure to extend `continuous_add_monoid_hom_class`. -/
-structure ContinuousAddMonoidHom (A B : Type _) [AddMonoidₓ A] [AddMonoidₓ B] [TopologicalSpace A]
+structure ContinuousAddMonoidHom (A B : Type _) [AddMonoid A] [AddMonoid B] [TopologicalSpace A]
   [TopologicalSpace B] extends A →+ B where
   continuous_to_fun : Continuous to_fun
 
@@ -46,11 +46,13 @@ When you extend this structure, make sure to extend `continuous_add_monoid_hom_c
 structure ContinuousMonoidHom extends A →* B where
   continuous_to_fun : Continuous to_fun
 
+section
+
 /-- `continuous_add_monoid_hom_class F A B` states that `F` is a type of continuous additive monoid
 homomorphisms.
 
 You should also extend this typeclass when you extend `continuous_add_monoid_hom`. -/
-class ContinuousAddMonoidHomClass (A B : Type _) [AddMonoidₓ A] [AddMonoidₓ B] [TopologicalSpace A]
+class ContinuousAddMonoidHomClass (A B : Type _) [AddMonoid A] [AddMonoid B] [TopologicalSpace A]
   [TopologicalSpace B] extends AddMonoidHomClass F A B where
   map_continuous (f : F) : Continuous f
 
@@ -62,10 +64,16 @@ You should also extend this typeclass when you extend `continuous_monoid_hom`. -
 class ContinuousMonoidHomClass extends MonoidHomClass F A B where
   map_continuous (f : F) : Continuous f
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident continuous_monoid_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident continuous_add_monoid_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+attribute [to_additive ContinuousAddMonoidHomClass.toAddMonoidHomClass] ContinuousMonoidHomClass.toMonoidHomClass
+
+end
+
+/-- Reinterpret a `continuous_monoid_hom` as a `monoid_hom`. -/
+add_decl_doc ContinuousMonoidHom.toMonoidHom
+
+/-- Reinterpret a `continuous_add_monoid_hom` as an `add_monoid_hom`. -/
+add_decl_doc ContinuousAddMonoidHom.toAddMonoidHom
+
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) ContinuousMonoidHomClass.toContinuousMapClass [ContinuousMonoidHomClass F A B] :
@@ -78,14 +86,14 @@ variable {A B C D E}
 
 @[to_additive]
 instance : ContinuousMonoidHomClass (ContinuousMonoidHom A B) A B where
-  coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
+  coe f := f.toFun
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_mul := fun f => f.map_mul'
-  map_one := fun f => f.map_one'
-  map_continuous := fun f => f.continuous_to_fun
+  map_mul f := f.map_mul'
+  map_one f := f.map_one'
+  map_continuous f := f.continuous_to_fun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -190,15 +198,15 @@ def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) : Continu
   (mul E).comp (f.prod_map g)
 
 @[to_additive]
-instance : CommGroupₓ (ContinuousMonoidHom A E) where
-  mul := fun f g => (mul E).comp (f.Prod g)
-  mul_comm := fun f g => ext fun x => mul_comm (f x) (g x)
-  mul_assoc := fun f g h => ext fun x => mul_assoc (f x) (g x) (h x)
+instance : CommGroup (ContinuousMonoidHom A E) where
+  mul f g := (mul E).comp (f.Prod g)
+  mul_comm f g := ext fun x => mul_comm (f x) (g x)
+  mul_assoc f g h := ext fun x => mul_assoc (f x) (g x) (h x)
   one := one A E
-  one_mul := fun f => ext fun x => one_mulₓ (f x)
-  mul_one := fun f => ext fun x => mul_oneₓ (f x)
-  inv := fun f => (inv E).comp f
-  mul_left_inv := fun f => ext fun x => mul_left_invₓ (f x)
+  one_mul f := ext fun x => one_mul (f x)
+  mul_one f := ext fun x => mul_one (f x)
+  inv f := (inv E).comp f
+  mul_left_inv f := ext fun x => mul_left_inv (f x)
 
 @[to_additive]
 instance : TopologicalSpace (ContinuousMonoidHom A B) :=
@@ -214,10 +222,10 @@ theorem inducing_to_continuous_map : Inducing (toContinuousMap : ContinuousMonoi
 theorem embedding_to_continuous_map : Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨inducing_to_continuous_map A B, to_continuous_map_injective⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (U V W)
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (U V W) -/
 @[to_additive]
-theorem closed_embedding_to_continuous_map [HasContinuousMul B] [T2Space B] :
+theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
     ClosedEmbedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨embedding_to_continuous_map A B,
     ⟨by
@@ -300,27 +308,27 @@ variable (E)
 @[to_additive "`continuous_add_monoid_hom _ f` is a functor."]
 def compLeft (f : ContinuousMonoidHom A B) :
     ContinuousMonoidHom (ContinuousMonoidHom B E) (ContinuousMonoidHom A E) where
-  toFun := fun g => g.comp f
+  toFun g := g.comp f
   map_one' := rfl
-  map_mul' := fun g h => rfl
+  map_mul' g h := rfl
   continuous_to_fun := f.continuous_comp_left
 
 variable (A) {E}
 
 /-- `continuous_monoid_hom f _` is a functor. -/
 @[to_additive "`continuous_add_monoid_hom f _` is a functor."]
-def compRight {B : Type _} [CommGroupₓ B] [TopologicalSpace B] [TopologicalGroup B] (f : ContinuousMonoidHom B E) :
+def compRight {B : Type _} [CommGroup B] [TopologicalSpace B] [TopologicalGroup B] (f : ContinuousMonoidHom B E) :
     ContinuousMonoidHom (ContinuousMonoidHom A B) (ContinuousMonoidHom A E) where
-  toFun := fun g => f.comp g
+  toFun g := f.comp g
   map_one' := ext fun a => map_one f
-  map_mul' := fun g h => ext fun a => map_mul f (g a) (h a)
+  map_mul' g h := ext fun a => map_mul f (g a) (h a)
   continuous_to_fun := f.continuous_comp_right
 
 end ContinuousMonoidHom
 
 /-- The Pontryagin dual of `A` is the group of continuous homomorphism `A → circle`. -/
 def PontryaginDual :=
-  ContinuousMonoidHom A circle deriving TopologicalSpace, T2Space, CommGroupₓ, TopologicalGroup, Inhabited
+  ContinuousMonoidHom A circle deriving TopologicalSpace, T2Space, CommGroup, TopologicalGroup, Inhabited
 
 variable {A B C D E}
 

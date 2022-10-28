@@ -20,23 +20,23 @@ It also contains basic results about congruence subgroups.
 
 
 -- mathport name: «exprSL( , )»
-local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
+local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 attribute [-instance] Matrix.SpecialLinearGroup.hasCoeToFun
 
 -- mathport name: «expr↑ₘ »
-local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) _) _
+local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
 open Matrix.SpecialLinearGroup Matrix
 
 variable (N : ℕ)
 
 -- mathport name: «exprSLMOD( )»
-local notation "SLMOD(" N ")" => @Matrix.SpecialLinearGroup.map (Finₓ 2) _ _ _ _ _ _ (Int.castRingHom (Zmod N))
+local notation "SLMOD(" N ")" => @Matrix.SpecialLinearGroup.map (Fin 2) _ _ _ _ _ _ (Int.castRingHom (Zmod N))
 
 @[simp]
 theorem SL_reduction_mod_hom_val (N : ℕ) (γ : SL(2, ℤ)) :
-    ∀ i j : Finₓ 2, (SLMOD(N) γ : Matrix (Finₓ 2) (Finₓ 2) (Zmod N)) i j = ((↑ₘγ i j : ℤ) : Zmod N) := fun i j => rfl
+    ∀ i j : Fin 2, (SLMOD(N) γ : Matrix (Fin 2) (Fin 2) (Zmod N)) i j = ((↑ₘγ i j : ℤ) : Zmod N) := fun i j => rfl
 
 /-- The full level `N` congruence subgroup of `SL(2,ℤ)` of matrices that reduce to the identity
 modulo `N`.-/
@@ -46,8 +46,8 @@ def gamma (N : ℕ) : Subgroup SL(2, ℤ) :=
 theorem Gamma_mem' (N : ℕ) (γ : SL(2, ℤ)) : γ ∈ gamma N ↔ SLMOD(N) γ = 1 :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
 theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
     γ ∈ gamma N ↔
@@ -75,8 +75,8 @@ theorem Gamma_one_top : gamma 1 = ⊤ := by
   ext
   simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem Gamma_zero_bot : gamma 0 = ⊥ := by
   ext
   simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Int.cast_id, Subgroup.mem_bot]
@@ -120,7 +120,7 @@ theorem Gamma0_det (N : ℕ) (A : gamma0 N) : (A.1.1.det : Zmod N) = 1 := by sim
 /-- The group homomorphism from `Gamma0` to `zmod N` given by mapping a matrix to its lower
 right-hand entry. -/
 def gamma0Map (N : ℕ) : gamma0 N →* Zmod N where
-  toFun := fun g => ((↑ₘg 1 1 : ℤ) : Zmod N)
+  toFun g := ((↑ₘg 1 1 : ℤ) : Zmod N)
   map_one' := by simp
   map_mul' := by
     intro A B
@@ -154,8 +154,8 @@ theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : gamma0 N) :
     simp only [gamma0Map, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Gamma1_mem', MonoidHom.coe_mk,
       Subtype.val_eq_coe, Int.cast_sub, Int.cast_mul] at *
     rw [hA, ha] at adet
-    simp only [mul_oneₓ, mul_zero, sub_zero] at adet
-    simp only [adet, hA, ha, eq_self_iff_true, and_selfₓ]
+    simp only [mul_one, mul_zero, sub_zero] at adet
+    simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
     
   · intro ha
     simp only [Gamma1_mem', gamma0Map, MonoidHom.coe_mk, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply]
@@ -204,16 +204,16 @@ def IsCongruenceSubgroup (Γ : Subgroup SL(2, ℤ)) : Prop :=
 theorem is_congruence_subgroup_trans (H K : Subgroup SL(2, ℤ)) (h : H ≤ K) (h2 : IsCongruenceSubgroup H) :
     IsCongruenceSubgroup K := by
   obtain ⟨N, hN⟩ := h2
-  refine' ⟨N, le_transₓ hN h⟩
+  refine' ⟨N, le_trans hN h⟩
 
 theorem Gamma_is_cong_sub (N : ℕ+) : IsCongruenceSubgroup (gamma N) :=
-  ⟨N, by simp only [le_reflₓ]⟩
+  ⟨N, by simp only [le_refl]⟩
 
 theorem Gamma1_is_congruence (N : ℕ+) : IsCongruenceSubgroup (gamma1 N) := by
   refine' ⟨N, _⟩
   intro A hA
   simp only [Gamma1_mem, Gamma_mem] at *
-  simp only [hA, eq_self_iff_true, and_selfₓ]
+  simp only [hA, eq_self_iff_true, and_self_iff]
 
 theorem Gamma0_is_congruence (N : ℕ+) : IsCongruenceSubgroup (gamma0 N) :=
   is_congruence_subgroup_trans _ _ (Gamma1_in_Gamma0 N) (Gamma1_is_congruence N)

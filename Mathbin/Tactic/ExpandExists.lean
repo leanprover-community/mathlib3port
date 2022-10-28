@@ -128,7 +128,7 @@ unsafe def parse_exists : parse_ctx_exists → expr → tactic Unit
 unsafe def parse_pis : parse_ctx → expr → tactic Unit
   | ctx,
     pi n bi ty body =>-- When making a declaration, wrap in an equivalent pi expression.
-    let decl := fun is_theorem name type val => ctx.decl is_theorem Name (pi n bi ty type) (lam n bi (to_pexpr ty) val)
+    let decl is_theorem name type val := ctx.decl is_theorem Name (pi n bi ty type) (lam n bi (to_pexpr ty) val)
     parse_pis { ctx with decl, pis_depth := ctx.pis_depth + 1 } body
   | ctx, app (app (const "Exists" [lvl]) type) p =>
     let with_args := fun e : expr => (List.range ctx.pis_depth).foldr (fun n (e : expr) => e (var n)) e

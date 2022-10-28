@@ -13,16 +13,16 @@ especially properties of `finset.univ : finset (fin n)`.
 -/
 
 
-open Finsetₓ
+open Finset
 
-open Fintypeₓ
+open Fintype
 
-namespace Finₓ
+namespace Fin
 
 variable {α β : Type _} {n : ℕ}
 
 @[simp]
-theorem Ioi_zero_eq_map : ioi (0 : Finₓ n.succ) = univ.map (Finₓ.succEmbedding _).toEmbedding := by
+theorem Ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).toEmbedding := by
   ext i
   simp only [mem_Ioi, mem_map, mem_univ, Function.Embedding.coe_fn_mk, exists_true_left]
   constructor
@@ -38,9 +38,9 @@ theorem Ioi_zero_eq_map : ioi (0 : Finₓ n.succ) = univ.map (Finₓ.succEmbeddi
     
 
 @[simp]
-theorem Ioi_succ (i : Finₓ n) : ioi i.succ = (ioi i).map (Finₓ.succEmbedding _).toEmbedding := by
+theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).toEmbedding := by
   ext i
-  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_andₓ, Function.Embedding.coe_fn_mk, exists_true_left]
+  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coe_fn_mk, exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
@@ -53,14 +53,14 @@ theorem Ioi_succ (i : Finₓ n) : ioi i.succ = (ioi i).map (Finₓ.succEmbedding
     simpa
     
 
-theorem card_filter_univ_succ' (p : Finₓ (n + 1) → Prop) [DecidablePred p] :
-    (univ.filter p).card = ite (p 0) 1 0 + (univ.filter (p ∘ Finₓ.succ)).card := by
-  rw [Finₓ.univ_succ, filter_cons, card_disj_union, map_filter, card_map]
+theorem card_filter_univ_succ' (p : Fin (n + 1) → Prop) [DecidablePred p] :
+    (univ.filter p).card = ite (p 0) 1 0 + (univ.filter (p ∘ Fin.succ)).card := by
+  rw [Fin.univ_succ, filter_cons, card_disj_union, map_filter, card_map]
   split_ifs <;> simp
 
-theorem card_filter_univ_succ (p : Finₓ (n + 1) → Prop) [DecidablePred p] :
-    (univ.filter p).card = if p 0 then (univ.filter (p ∘ Finₓ.succ)).card + 1 else (univ.filter (p ∘ Finₓ.succ)).card :=
-  (card_filter_univ_succ' p).trans (by split_ifs <;> simp [add_commₓ 1])
+theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
+    (univ.filter p).card = if p 0 then (univ.filter (p ∘ Fin.succ)).card + 1 else (univ.filter (p ∘ Fin.succ)).card :=
+  (card_filter_univ_succ' p).trans (by split_ifs <;> simp [add_comm 1])
 
 theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
     (univ.filter fun i => a = v.nth i).card = v.toList.count a := by
@@ -68,8 +68,8 @@ theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : V
   · simp
     
   · simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp, Vector.nth_cons_succ,
-      hxs, List.count_cons', add_commₓ (ite (a = x) 1 0)]
+      hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
     
 
-end Finₓ
+end Fin
 

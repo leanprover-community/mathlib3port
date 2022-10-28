@@ -16,18 +16,18 @@ finite and calculates the cardinality of its finite intervals.
 -/
 
 
-open Dfinsupp Finsetₓ
+open Dfinsupp Finset
 
 open BigOperators Pointwise
 
 variable {ι : Type _} {α : ι → Type _}
 
-namespace Finsetₓ
+namespace Finset
 
-variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finsetₓ ι} {f : Π₀ i, α i} {t : ∀ i, Finsetₓ (α i)}
+variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finset ι} {f : Π₀ i, α i} {t : ∀ i, Finset (α i)}
 
 /-- Finitely supported product of finsets. -/
-def dfinsupp (s : Finsetₓ ι) (t : ∀ i, Finsetₓ (α i)) : Finsetₓ (Π₀ i, α i) :=
+def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   (s.pi t).map
     ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
       refine' (mk_injective _).comp fun f g h => _
@@ -35,7 +35,7 @@ def dfinsupp (s : Finsetₓ ι) (t : ∀ i, Finsetₓ (α i)) : Finsetₓ (Π₀
       convert congr_fun h ⟨i, hi⟩⟩
 
 @[simp]
-theorem card_dfinsupp (s : Finsetₓ ι) (t : ∀ i, Finsetₓ (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
+theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 
 variable [∀ i, DecidableEq (α i)]
@@ -56,12 +56,12 @@ theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ 
 /-- When `t` is supported on `s`, `f ∈ s.dfinsupp t` precisely means that `f` is pointwise in `t`.
 -/
 @[simp]
-theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finsetₓ (α i)} (ht : t.support ⊆ s) :
+theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.support ⊆ s) :
     f ∈ s.Dfinsupp t ↔ ∀ i, f i ∈ t i := by
   refine'
     mem_dfinsupp_iff.trans
       (forall_and_distrib.symm.trans <|
-        forall_congrₓ fun i =>
+        forall_congr fun i =>
           ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi:i ∈ s
     · exact h.2 hi
@@ -73,9 +73,9 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finsetₓ (α i)} (ht :
   · rwa [H, mem_zero] at h
     
 
-end Finsetₓ
+end Finset
 
-open Finsetₓ
+open Finset
 
 namespace Dfinsupp
 
@@ -84,8 +84,8 @@ section BundledSingleton
 variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
-def singleton (f : Π₀ i, α i) : Π₀ i, Finsetₓ (α i) where
-  toFun := fun i => {f i}
+def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) where
+  toFun i := {f i}
   support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
 
 theorem mem_singleton_apply_iff : a ∈ f.singleton i ↔ a = f i :=
@@ -95,12 +95,11 @@ end BundledSingleton
 
 section BundledIcc
 
-variable [∀ i, Zero (α i)] [∀ i, PartialOrderₓ (α i)] [∀ i, LocallyFiniteOrder (α i)] {f g : Π₀ i, α i} {i : ι}
-  {a : α i}
+variable [∀ i, Zero (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFiniteOrder (α i)] {f g : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
-def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finsetₓ (α i) where
-  toFun := fun i => icc (f i) (g i)
+def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
+  toFun i := icc (f i) (g i)
   support' :=
     f.support'.bind fun fs =>
       g.support'.map fun gs =>
@@ -137,17 +136,17 @@ variable [∀ i, Zero (α i)] [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
 /-- Given a finitely supported function `f : Π₀ i, finset (α i)`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
-def pi (f : Π₀ i, Finsetₓ (α i)) : Finsetₓ (Π₀ i, α i) :=
+def pi (f : Π₀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   f.support.Dfinsupp f
 
 @[simp]
-theorem mem_pi {f : Π₀ i, Finsetₓ (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
+theorem mem_pi {f : Π₀ i, Finset (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
   mem_dfinsupp_iff_of_support_subset <| Subset.refl _
 
 @[simp]
-theorem card_pi (f : Π₀ i, Finsetₓ (α i)) : f.pi.card = f.Prod fun i => (f i).card := by
+theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i).card := by
   rw [pi, card_dfinsupp]
-  exact Finsetₓ.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
+  exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
 
 end Pi
 
@@ -155,7 +154,7 @@ section LocallyFinite
 
 variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
-variable [∀ i, PartialOrderₓ (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
+variable [∀ i, PartialOrder (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
   LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g) fun f g x => by
@@ -164,6 +163,9 @@ instance : LocallyFiniteOrder (Π₀ i, α i) :=
     rfl
 
 variable (f g : Π₀ i, α i)
+
+theorem Icc_eq : icc f g = (f.support ∪ g.support).Dfinsupp (f.rangeIcc g) :=
+  rfl
 
 theorem card_Icc : (icc f g).card = ∏ i in f.support ∪ g.support, (icc (f i) (g i)).card :=
   card_dfinsupp _ _

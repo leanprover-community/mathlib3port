@@ -38,11 +38,11 @@ local notation "|" x "|" => Complex.abs x
 /-- An element of the unit circle defines a `linear_isometry_equiv` from `ℂ` to itself, by
 rotation. -/
 def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ where
-  toFun := fun a =>
+  toFun a :=
     { DistribMulAction.toLinearEquiv ℝ ℂ a with
-      norm_map' := fun x => show |a * x| = |x| by rw [map_mul, abs_coe_circle, one_mulₓ] }
+      norm_map' := fun x => show |a * x| = |x| by rw [map_mul, abs_coe_circle, one_mul] }
   map_one' := LinearIsometryEquiv.ext <| one_smul _
-  map_mul' := fun _ _ => LinearIsometryEquiv.ext <| mul_smul _ _
+  map_mul' _ _ := LinearIsometryEquiv.ext <| mul_smul _ _
 
 @[simp]
 theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
@@ -61,7 +61,7 @@ theorem rotation_ne_conj_lie (a : circle) : rotation a ≠ conj_lie := by
   intro h
   have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
   have hI : rotation a I = conj I := LinearIsometryEquiv.congr_fun h I
-  rw [rotation_apply, RingHom.map_one, mul_oneₓ] at h1
+  rw [rotation_apply, RingHom.map_one, mul_one] at h1
   rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI
   exact one_ne_zero hI
 
@@ -88,7 +88,7 @@ theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗ�
   have h₁ := f.norm_map z
   simp only [Complex.abs_def, norm_eq_abs] at h₁
   rwa [Real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _), norm_sq_apply (f z), norm_sq_apply z, h₂,
-    add_left_cancel_iffₓ, mul_self_eq_mul_self_iff] at h₁
+    add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁
 
 theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : z + conj z = f z + conj (f z) := by
   have : ∥f z - 1∥ = ∥z - 1∥ := by rw [← f.norm_map (z - 1), f.map_sub, h]
@@ -96,19 +96,19 @@ theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   simp only [norm_eq_abs, ← norm_sq_eq_abs] at this
   rw [← of_real_inj, ← mul_conj, ← mul_conj] at this
   rw [RingHom.map_sub, RingHom.map_sub] at this
-  simp only [sub_mul, mul_sub, one_mulₓ, mul_oneₓ] at this
+  simp only [sub_mul, mul_sub, one_mul, mul_one] at this
   rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs, LinearIsometry.norm_map] at this
   rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs] at this
-  simp only [sub_sub, sub_right_inj, mul_oneₓ, of_real_pow, RingHom.map_one, norm_eq_abs] at this
+  simp only [sub_sub, sub_right_inj, mul_one, of_real_pow, RingHom.map_one, norm_eq_abs] at this
   simp only [add_sub, sub_left_inj] at this
-  rw [add_commₓ, ← this, add_commₓ]
+  rw [add_comm, ← this, add_comm]
 
 theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : (f z).re = z.re := by
   apply LinearIsometry.re_apply_eq_re_of_add_conj_eq
   intro z
   apply LinearIsometry.im_apply_eq_im h
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) : f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conj_lie :=
   by
   have h0 : f I = I ∨ f I = -I := by
@@ -139,8 +139,8 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f
   · exact eq_mul_of_inv_mul_eq h₂
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The matrix representation of `rotation a` is equal to the conformal matrix
 `!![re a, -im a; im a, re a]`. -/
 theorem to_matrix_rotation (a : circle) :

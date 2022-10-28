@@ -12,15 +12,15 @@ Presheaves on punit satisfy sheaf condition iff its value at empty set is a term
 -/
 
 
-namespace Top.Presheaf
+namespace TopCat.Presheaf
 
 universe u v w
 
-open CategoryTheory CategoryTheory.Limits Top Opposite
+open CategoryTheory CategoryTheory.Limits TopCat Opposite
 
 variable {C : Type u} [Category.{v} C]
 
-theorem is_sheaf_of_is_terminal_of_indiscrete {X : Top.{w}} (hind : X.str = ⊤) (F : Presheaf C X)
+theorem is_sheaf_of_is_terminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤) (F : Presheaf C X)
     (it : is_terminal <| F.obj <| op ⊥) : F.IsSheaf := fun c U s hs => by
   obtain rfl | hne := eq_or_ne U ⊥
   · intro _ _
@@ -38,7 +38,7 @@ theorem is_sheaf_of_is_terminal_of_indiscrete {X : Top.{w}} (hind : X.str = ⊤)
     obtain he | ⟨⟨x⟩⟩ := is_empty_or_nonempty X
     · exact (hne <| TopologicalSpace.Opens.ext_iff.1 <| Set.univ_eq_empty_iff.2 he).elim
       
-    obtain ⟨U, f, hf, hm⟩ := hs x trivialₓ
+    obtain ⟨U, f, hf, hm⟩ := hs x trivial
     obtain rfl | rfl := U.eq_bot_or_top hind
     · cases hm
       
@@ -46,17 +46,17 @@ theorem is_sheaf_of_is_terminal_of_indiscrete {X : Top.{w}} (hind : X.str = ⊤)
       
     
 
-theorem is_sheaf_iff_is_terminal_of_indiscrete {X : Top.{w}} (hind : X.str = ⊤) (F : Presheaf C X) :
+theorem is_sheaf_iff_is_terminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤) (F : Presheaf C X) :
     F.IsSheaf ↔ Nonempty (is_terminal <| F.obj <| op ⊥) :=
   ⟨fun h => ⟨Sheaf.isTerminalOfEmpty ⟨F, h⟩⟩, fun ⟨it⟩ => is_sheaf_of_is_terminal_of_indiscrete hind F it⟩
 
-theorem is_sheaf_on_punit_of_is_terminal (F : Presheaf C (Top.of PUnit)) (it : is_terminal <| F.obj <| op ⊥) :
+theorem is_sheaf_on_punit_of_is_terminal (F : Presheaf C (TopCat.of PUnit)) (it : is_terminal <| F.obj <| op ⊥) :
     F.IsSheaf :=
   is_sheaf_of_is_terminal_of_indiscrete (@Subsingleton.elim (TopologicalSpace PUnit) _ _ _) F it
 
-theorem is_sheaf_on_punit_iff_is_terminal (F : Presheaf C (Top.of PUnit)) :
+theorem is_sheaf_on_punit_iff_is_terminal (F : Presheaf C (TopCat.of PUnit)) :
     F.IsSheaf ↔ Nonempty (is_terminal <| F.obj <| op ⊥) :=
   ⟨fun h => ⟨Sheaf.isTerminalOfEmpty ⟨F, h⟩⟩, fun ⟨it⟩ => is_sheaf_on_punit_of_is_terminal F it⟩
 
-end Top.Presheaf
+end TopCat.Presheaf
 

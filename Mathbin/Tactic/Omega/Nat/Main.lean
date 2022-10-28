@@ -23,9 +23,9 @@ run_cmd
   mk_simp_attr `sugar_nat
 
 attribute [sugar_nat]
-  Ne not_leₓ not_ltₓ Nat.lt_iff_add_one_le Nat.succ_eq_add_one or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ mul_comm one_mulₓ mul_oneₓ imp_iff_not_or iff_iff_not_or_and_or_not
+  Ne not_le not_lt Nat.lt_iff_add_one_le Nat.succ_eq_add_one or_false_iff false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul mul_comm one_mul mul_one imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 
@@ -39,8 +39,8 @@ theorem univ_close_of_unsat_neg_elim_not (m) (p : Preform) : (negElim (¬* p)).U
 
 /-- Return expr of proof that argument is free of subtractions -/
 unsafe def preterm.prove_sub_free : Preterm → tactic expr
-  | &m => return (quote.1 trivialₓ)
-  | m ** n => return (quote.1 trivialₓ)
+  | &m => return (quote.1 trivial)
+  | m ** n => return (quote.1 trivial)
   | t +* s => do
     let x ← preterm.prove_sub_free t
     let y ← preterm.prove_sub_free s
@@ -49,8 +49,8 @@ unsafe def preterm.prove_sub_free : Preterm → tactic expr
 
 /-- Return expr of proof that argument is free of negations -/
 unsafe def prove_neg_free : Preform → tactic expr
-  | t =* s => return (quote.1 trivialₓ)
-  | t ≤* s => return (quote.1 trivialₓ)
+  | t =* s => return (quote.1 trivial)
+  | t ≤* s => return (quote.1 trivial)
   | p ∨* q => do
     let x ← prove_neg_free p
     let y ← prove_neg_free q
@@ -150,16 +150,16 @@ unsafe def to_exprform : expr → tactic exprform
 unsafe def exprterm.exprs : exprterm → List expr
   | exprterm.cst _ => []
   | exprterm.exp _ x => [x]
-  | exprterm.add t s => List.unionₓ t.exprs s.exprs
-  | exprterm.sub t s => List.unionₓ t.exprs s.exprs
+  | exprterm.add t s => List.union t.exprs s.exprs
+  | exprterm.sub t s => List.union t.exprs s.exprs
 
 /-- List of all unreified exprs -/
 unsafe def exprform.exprs : exprform → List expr
-  | exprform.eq t s => List.unionₓ t.exprs s.exprs
-  | exprform.le t s => List.unionₓ t.exprs s.exprs
+  | exprform.eq t s => List.union t.exprs s.exprs
+  | exprform.le t s => List.union t.exprs s.exprs
   | exprform.not p => p.exprs
-  | exprform.or p q => List.unionₓ p.exprs q.exprs
-  | exprform.and p q => List.unionₓ p.exprs q.exprs
+  | exprform.or p q => List.union p.exprs q.exprs
+  | exprform.and p q => List.union p.exprs q.exprs
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
@@ -225,12 +225,12 @@ unsafe def wff : expr → tactic Unit
   | quote.1 ((%%ₓpx) ∧ %%ₓqx) => wff px >> wff qx
   | quote.1 ((%%ₓpx) ↔ %%ₓqx) => wff px >> wff qx
   | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monadₓ.cond (if expr.has_var px then return true else is_prop px) (wff px >> wff qx) (eq_nat px >> wff qx)
+    Monad.cond (if expr.has_var px then return true else is_prop px) (wff px >> wff qx) (eq_nat px >> wff qx)
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
   | quote.1 (@Eq (%%ₓdx) _ _) => eq_nat dx
-  | quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
-  | quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
+  | quote.1 (@ge (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
+  | quote.1 (@gt (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
   | quote.1 (@Ne (%%ₓdx) _ _) => eq_nat dx
   | quote.1 True => skip
   | quote.1 False => skip

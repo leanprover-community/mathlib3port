@@ -40,7 +40,7 @@ open Cardinal
 
 variable (F : Type u) (K : Type v) (A : Type w)
 
-variable [Field F] [Field K] [AddCommGroupₓ A]
+variable [Field F] [Field K] [AddCommGroup A]
 
 variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
@@ -56,7 +56,7 @@ theorem dim_mul_dim' :
 
 /-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem dim_mul_dim (F : Type u) (K A : Type v) [Field F] [Field K] [AddCommGroupₓ A] [Algebra F K] [Module K A]
+theorem dim_mul_dim (F : Type u) (K A : Type v) [Field F] [Field K] [AddCommGroup A] [Algebra F K] [Module K A]
     [Module F A] [IsScalarTower F K A] : Module.rank F K * Module.rank K A = Module.rank F A := by
   convert dim_mul_dim' F K A <;> rw [lift_id]
 
@@ -75,9 +75,9 @@ theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensiona
 
 Note this cannot be an instance as Lean cannot infer `L`.
 -/
-theorem left (L : Type _) [Ringₓ L] [Nontrivial L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
+theorem left (L : Type _) [Ring L] [Nontrivial L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
     [FiniteDimensional F L] : FiniteDimensional F K :=
-  FiniteDimensional.of_injective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
+  FiniteDimensional.ofInjective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
 
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
   let ⟨⟨b, hb⟩⟩ := hf
@@ -93,20 +93,20 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
   · skip
     let b := Basis.ofVectorSpace F K
     let c := Basis.ofVectorSpace K A
-    rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c), Fintypeₓ.card_prod]
+    rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c), Fintype.card_prod]
     
   · rw [finrank_of_infinite_dimensional hA, mul_zero, finrank_of_infinite_dimensional]
     exact mt (@right F K A _ _ _ _ _ _ _) hA
     
 
-instance linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroupₓ V] [Module F V] [AddCommGroupₓ W]
+instance linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V] [AddCommGroup W]
     [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] : FiniteDimensional F (V →ₗ[F] W) :=
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
   (Matrix.toLin b c).FiniteDimensional
 
-theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroupₓ V] [Module F V]
-    [AddCommGroupₓ W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
+theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
     finrank F (V →ₗ[F] W) = finrank F V * finrank F W := by
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
@@ -116,12 +116,12 @@ theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [Add
 -- TODO: generalize by removing [finite_dimensional F K]
 -- V = ⊕F,
 -- (V →ₗ[F] K) = ((⊕F) →ₗ[F] K) = (⊕ (F →ₗ[F] K)) = ⊕K
-instance linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K] [FiniteDimensional F K]
-    [AddCommGroupₓ V] [Module F V] [FiniteDimensional F V] : FiniteDimensional K (V →ₗ[F] K) :=
+instance linearMap' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K] [FiniteDimensional F K]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V] : FiniteDimensional K (V →ₗ[F] K) :=
   right F _ _
 
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
-    [FiniteDimensional F K] [AddCommGroupₓ V] [Module F V] [FiniteDimensional F V] :
+    [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :
     finrank K (V →ₗ[F] K) = finrank F V :=
   (Nat.mul_right_inj <| show 0 < finrank F K from finrank_pos).1 <|
     calc
