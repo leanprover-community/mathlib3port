@@ -922,7 +922,7 @@ instance : DecidableEq Λ' := fun a b => by
       apply Decidable.isFalse
       rintro ⟨⟨⟩⟩
       done
-  all_goals exact decidableOfIff' _ (by simp [Function.funext_iff])
+  all_goals exact decidable_of_iff' _ (by simp [Function.funext_iff])
 
 /-- The type of TM2 statements used by this machine. -/
 def Stmt' :=
@@ -1182,7 +1182,7 @@ def splitAtPred {α} (p : α → Bool) : List α → List α × Option α × Lis
 theorem split_at_pred_eq {α} (p : α → Bool) :
     ∀ L l₁ o l₂,
       (∀ x ∈ l₁, p x = ff) →
-        Option.elim (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a::l₂) o → splitAtPred p L = (l₁, o, l₂)
+        Option.elim' (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a::l₂) o → splitAtPred p L = (l₁, o, l₂)
   | [], _, none, _, _, ⟨rfl, rfl⟩ => rfl
   | [], l₁, some o, l₂, h₁, ⟨h₂, h₃⟩ => by simp at h₃ <;> contradiction
   | a::L, l₁, o, l₂, h₁, h₂ => by
@@ -1259,7 +1259,7 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ 
       ⟨some q, none, update (update S k₁ (o.elim id List.cons L₂)) k₂ (L₁ ++ S k₂)⟩ :=
   by
   refine' (move_ok h₁.1 e).trans (trans_gen.head rfl _)
-  cases o <;> simp only [Option.elim, tr, id.def]
+  cases o <;> simp only [Option.elim', tr, id.def]
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
     simp only [Function.update_comm h₁.1, Function.update_idem]
     rw [show update S rev [] = S by rw [← h₂, Function.update_eq_self]]
@@ -1649,7 +1649,7 @@ def trStmts₁ : Λ' → Finset Λ'
 
 theorem tr_stmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trStmts₁ q := by
   induction q <;>
-    simp (config := { contextual := true }) only [tr_stmts₁, Finset.mem_insert, Finset.mem_union, or_imp_distrib,
+    simp (config := { contextual := true }) only [tr_stmts₁, Finset.mem_insert, Finset.mem_union, or_imp,
       Finset.mem_singleton, Finset.Subset.refl, imp_true_iff, true_and_iff]
   iterate 4 exact fun h => Finset.Subset.trans (q_ih h) (Finset.subset_insert _ _)
   · simp
@@ -1816,7 +1816,7 @@ theorem supports_insert {K S q} : Supports (insert q K) S ↔ TM2Cat.SupportsStm
 theorem supports_singleton {S q} : Supports {q} S ↔ TM2Cat.SupportsStmt S (tr q) := by simp [supports]
 
 theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K₁ S ∧ Supports K₂ S := by
-  simp [supports, or_imp_distrib, forall_and_distrib]
+  simp [supports, or_imp, forall_and]
 
 theorem supports_bUnion {K : Option Γ' → Finset Λ'} {S} : Supports (Finset.univ.bUnion K) S ↔ ∀ a, Supports (K a) S :=
   by simp [supports] <;> apply forall_swap

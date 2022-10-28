@@ -194,7 +194,7 @@ unsafe def forall_eq_elim : binder_eq_elim where
     return (d, expr.lam n bi d bd)
   adapt_rel := propext'
   apply_comm := applyc `` forall_comm
-  applyCongr := congr_binder `` forall_congr
+  applyCongr := congr_binder `` forall_congr'
   apply_elim_eq := apply' `` forall_elim_eq_left <|> apply' `` forall_elim_eq_right
 
 unsafe def supr_eq_elim : binder_eq_elim where

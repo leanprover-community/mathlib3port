@@ -19,7 +19,7 @@ namespace Complex
 
 open Set Filter
 
-open Real TopologicalSpace
+open Real TopologicalSpace ComplexConjugate
 
 /-- Inverse of the `exp` function. Returns values such that `(log x).im > - π` and `(log x).im ≤ π`.
   `log 0 = 0`-/
@@ -59,6 +59,13 @@ theorem of_real_log {x : ℝ} (hx : 0 ≤ x) : (x.log : ℂ) = log x :=
 
 theorem log_of_real_re (x : ℝ) : (log (x : ℂ)).re = Real.log x := by simp [log_re]
 
+theorem log_of_real_mul {r : ℝ} (hr : 0 < r) {x : ℂ} (hx : x ≠ 0) : log (r * x) = Real.log r + log x := by
+  replace hx := complex.abs.ne_zero_iff.mpr hx
+  simp_rw [log, map_mul, abs_of_real, arg_real_mul _ hr, abs_of_pos hr, Real.log_mul hr.ne' hx, of_real_add, add_assoc]
+
+theorem log_mul_of_real (r : ℝ) (hr : 0 < r) (x : ℂ) (hx : x ≠ 0) : log (x * r) = Real.log r + log x := by
+  rw [mul_comm, log_of_real_mul hr hx, add_comm]
+
 @[simp]
 theorem log_zero : log 0 = 0 := by simp [log]
 
@@ -70,6 +77,35 @@ theorem log_neg_one : log (-1) = π * I := by simp [log]
 theorem log_I : log i = π / 2 * I := by simp [log]
 
 theorem log_neg_I : log (-I) = -(π / 2) * I := by simp [log]
+
+theorem log_conj_eq_ite (x : ℂ) : log (conj x) = if x.arg = π then log x else conj (log x) := by
+  simp_rw [log, abs_conj, arg_conj, map_add, map_mul, conj_of_real]
+  split_ifs with hx
+  · rw [hx]
+    
+  simp_rw [of_real_neg, conj_I, mul_neg, neg_mul]
+
+theorem log_conj (x : ℂ) (h : x.arg ≠ π) : log (conj x) = conj (log x) := by rw [log_conj_eq_ite, if_neg h]
+
+theorem log_inv_eq_ite (x : ℂ) : log x⁻¹ = if x.arg = π then -conj (log x) else -log x := by
+  by_cases hx:x = 0
+  · simp [hx]
+    
+  rw [inv_def, log_mul_of_real, Real.log_inv, of_real_neg, ← sub_eq_neg_add, log_conj_eq_ite]
+  · simp_rw [log, map_add, map_mul, conj_of_real, conj_I, norm_sq_eq_abs, Real.log_pow, Nat.cast_two, of_real_mul,
+      of_real_bit0, of_real_one, neg_add, mul_neg, two_mul, neg_neg]
+    split_ifs
+    · rw [add_sub_right_comm, sub_add_cancel']
+      
+    · rw [add_sub_right_comm, sub_add_cancel']
+      
+    
+  · rwa [inv_pos, Complex.norm_sq_pos]
+    
+  · rwa [map_ne_zero]
+    
+
+theorem log_inv (x : ℂ) (hx : x.arg ≠ π) : log x⁻¹ = -log x := by rw [log_inv_eq_ite, if_neg hx]
 
 theorem two_pi_I_ne_zero : (2 * π * I : ℂ) ≠ 0 := by norm_num [Real.pi_ne_zero, I_ne_zero]
 

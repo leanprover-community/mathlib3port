@@ -310,7 +310,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
     (hs : (f.range.filter fun x => x ≠ 0) ⊆ s) : f.integral μ = ∑ x in s, (μ (f ⁻¹' {x})).toReal • x := by
   rw [simple_func.integral_eq_sum_filter, Finset.sum_subset hs]
   rintro x - hx
-  rw [Finset.mem_filter, not_and_distrib, Ne.def, not_not] at hx
+  rw [Finset.mem_filter, not_and_or, Ne.def, not_not] at hx
   rcases hx with (hx | rfl) <;> [skip, simp]
   rw [simple_func.mem_range] at hx
   rw [preimage_eq_empty] <;> simp [Set.disjoint_singleton_left, hx]
@@ -1169,7 +1169,7 @@ theorem integral_const (c : E) : (∫ x : α, c ∂μ) = (μ Univ).toReal • c 
     · simp [hc, integral_zero]
       
     · have : ¬integrable (fun x : α => c) μ := by
-        simp only [integrable_const_iff, not_or_distrib]
+        simp only [integrable_const_iff, not_or]
         exact ⟨hc, hμ.not_lt⟩
       simp [integral_undef, *]
       

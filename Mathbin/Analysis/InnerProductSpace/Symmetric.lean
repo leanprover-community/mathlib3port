@@ -55,14 +55,13 @@ def IsSymmetric (T : E →ₗ[𝕜] E) : Prop :=
 
 section Real
 
-variable
-  -- Todo: Generalize this to `is_R_or_C`.
-  ()
+variable ()
 
-/-- An operator `T` on a `ℝ`-inner product space is symmetric if and only if it is
-`bilin_form.is_self_adjoint` with respect to the bilinear form given by the inner product. -/
-theorem is_symmetric_iff_bilin_form (T : E' →ₗ[ℝ] E') : IsSymmetric T ↔ bilinFormOfRealInner.IsSelfAdjoint T := by
-  simp [is_symmetric, BilinForm.IsSelfAdjoint, BilinForm.IsAdjointPair]
+/-- An operator `T` on an inner product space is symmetric if and only if it is
+`linear_map.is_self_adjoint` with respect to the sesquilinear form given by the inner product. -/
+theorem is_symmetric_iff_sesq_form (T : E →ₗ[𝕜] E) :
+    T.IsSymmetric ↔ @LinearMap.IsSelfAdjoint 𝕜 E _ _ _ (starRingEnd 𝕜) sesqFormOfInner T :=
+  ⟨fun h x y => (h y x).symm, fun h x y => (h y x).symm⟩
 
 end Real
 

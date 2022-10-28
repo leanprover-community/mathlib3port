@@ -210,7 +210,7 @@ theorem has_finite_limits_of_has_terminal_and_pullbacks [HasTerminal C] [HasPull
 
 /-- If G preserves terminal objects and pullbacks, it preserves all finite limits. -/
 def preservesFiniteLimitsOfPreservesTerminalAndPullbacks [HasTerminal C] [HasPullbacks C] (G : C ⥤ D)
-    [PreservesLimitsOfShape (Discrete.{0} Pempty) G] [PreservesLimitsOfShape WalkingCospan G] :
+    [PreservesLimitsOfShape (Discrete.{0} PEmpty) G] [PreservesLimitsOfShape WalkingCospan G] :
     PreservesFiniteLimits G := by
   haveI : has_finite_limits C := has_finite_limits_of_has_terminal_and_pullbacks
   haveI : preserves_limits_of_shape (discrete walking_pair) G :=
@@ -398,7 +398,7 @@ theorem has_finite_colimits_of_has_initial_and_pushouts [HasInitial C] [HasPusho
 
 /-- If G preserves initial objects and pushouts, it preserves all finite colimits. -/
 def preservesFiniteColimitsOfPreservesInitialAndPushouts [HasInitial C] [HasPushouts C] (G : C ⥤ D)
-    [PreservesColimitsOfShape (Discrete.{0} Pempty) G] [PreservesColimitsOfShape WalkingSpan G] :
+    [PreservesColimitsOfShape (Discrete.{0} PEmpty) G] [PreservesColimitsOfShape WalkingSpan G] :
     PreservesFiniteColimits G := by
   haveI : has_finite_colimits C := has_finite_colimits_of_has_initial_and_pushouts
   haveI : preserves_colimits_of_shape (discrete walking_pair) G :=

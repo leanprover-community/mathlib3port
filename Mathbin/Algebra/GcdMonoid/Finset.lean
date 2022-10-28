@@ -56,7 +56,7 @@ theorem lcm_empty : (∅ : Finset β).lcm f = 1 :=
 @[simp]
 theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b ∈ s, f b ∣ a := by
   apply Iff.trans Multiset.lcm_dvd
-  simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
+  simp only [Multiset.mem_map, and_imp, exists_imp]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
 theorem lcm_dvd {a : α} : (∀ b ∈ s, f b ∣ a) → s.lcm f ∣ a :=
@@ -125,7 +125,7 @@ theorem gcd_empty : (∅ : Finset β).gcd f = 0 :=
 
 theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b ∈ s, a ∣ f b := by
   apply Iff.trans Multiset.dvd_gcd
-  simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
+  simp only [Multiset.mem_map, and_imp, exists_imp]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
 theorem gcd_dvd {b : β} (hb : b ∈ s) : s.gcd f ∣ f b :=

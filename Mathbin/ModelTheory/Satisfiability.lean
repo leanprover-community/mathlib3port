@@ -107,7 +107,7 @@ theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.TheoryCat} : T.IsSatis
             ⟨{⟨φ, hφ⟩}, fun s h' =>
               Theory.realize_sentence_of_mem (s.map (Function.Embedding.subtype fun x => x ∈ T)) _⟩)
       simp only [Finset.coe_map, Function.Embedding.coe_subtype, Set.mem_image, Finset.mem_coe, Subtype.exists,
-        Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+        Subtype.coe_mk, exists_and_right, exists_eq_right]
       exact ⟨hφ, h' (Finset.mem_singleton_self _)⟩
     exact ⟨Model.of T M'⟩⟩
 
@@ -278,12 +278,12 @@ variable {T}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem models_formula_iff {φ : L.Formula α} : T ⊨ φ ↔ ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M), φ.realize v :=
-  forall_congr fun M => forall_congr fun v => Unique.forall_iff
+  forall_congr' fun M => forall_congr' fun v => Unique.forall_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem models_sentence_iff {φ : L.Sentence} : T ⊨ φ ↔ ∀ M : ModelCat.{u, v, max u v} T, M ⊨ φ :=
-  models_formula_iff.trans (forall_congr fun M => Unique.forall_iff)
+  models_formula_iff.trans (forall_congr' fun M => Unique.forall_iff)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem models_sentence_of_mem {φ : L.Sentence} (h : φ ∈ T) : T ⊨ φ :=
@@ -377,7 +377,7 @@ def semanticallyEquivalentSetoid (T : L.TheoryCat) : Setoid (L.BoundedFormula α
 protected theorem SemanticallyEquivalent.all {φ ψ : L.BoundedFormula α (n + 1)} (h : T.SemanticallyEquivalent φ ψ) :
     T.SemanticallyEquivalent φ.all ψ.all := by
   simp_rw [semantically_equivalent, models_bounded_formula, bounded_formula.realize_iff, bounded_formula.realize_all]
-  exact fun M v xs => forall_congr fun a => h.realize_bd_iff
+  exact fun M v xs => forall_congr' fun a => h.realize_bd_iff
 
 protected theorem SemanticallyEquivalent.ex {φ ψ : L.BoundedFormula α (n + 1)} (h : T.SemanticallyEquivalent φ ψ) :
     T.SemanticallyEquivalent φ.ex ψ.ex := by

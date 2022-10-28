@@ -482,7 +482,7 @@ theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by
 
 theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b := by
   rw [one_lt_card]
-  simp only [exists_prop, exists_and_distrib_left]
+  simp only [exists_prop, exists_and_left]
 
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   classical
@@ -499,7 +499,7 @@ theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c �
     
 
 theorem two_lt_card : 2 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, ∃ c ∈ s, a ≠ b ∧ a ≠ c ∧ b ≠ c := by
-  simp_rw [two_lt_card_iff, exists_prop, exists_and_distrib_left]
+  simp_rw [two_lt_card_iff, exists_prop, exists_and_left]
 
 theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧ b ≠ a := by
   obtain ⟨x, hx, y, hy, hxy⟩ := finset.one_lt_card.mp hs
@@ -531,7 +531,7 @@ theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x
   · rw [card_eq_succ]
     simp_rw [card_eq_two]
     rintro ⟨a, _, abc, rfl, b, c, bc, rfl⟩
-    rw [mem_insert, mem_singleton, not_or_distrib] at abc
+    rw [mem_insert, mem_singleton, not_or] at abc
     exact ⟨a, b, c, abc.1, abc.2, bc, rfl⟩
     
   · rintro ⟨x, y, z, xy, xz, yz, rfl⟩

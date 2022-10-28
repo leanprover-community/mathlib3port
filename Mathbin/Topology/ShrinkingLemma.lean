@@ -198,7 +198,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
       
     
   · intro j hj
-    rw [mem_insert_iff, not_or_distrib] at hj
+    rw [mem_insert_iff, not_or] at hj
     rw [update_noteq hj.1, v.apply_eq hj.2]
     
   · refine' ⟨subset_insert _ _, fun j hj => _⟩

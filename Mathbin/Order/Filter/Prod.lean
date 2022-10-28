@@ -226,7 +226,7 @@ theorem map_snd_prod (f : Filter α) (g : Filter β) [NeBot f] : map Prod.snd (f
 @[simp]
 theorem prod_le_prod {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} [NeBot f₁] [NeBot g₁] :
     f₁ ×ᶠ g₁ ≤ f₂ ×ᶠ g₂ ↔ f₁ ≤ f₂ ∧ g₁ ≤ g₂ :=
-  ⟨fun h => ⟨map_fst_prod f₁ g₁ ▸ tendsto_fst.mono_left h, map_snd_prod f₁ g₁ ▸ tendsto_snd.mono_left h⟩, fun h =>
+  ⟨fun h => ⟨map_fst_prod f₁ g₁ ▸ tendsto_fst.monoLeft h, map_snd_prod f₁ g₁ ▸ tendsto_snd.monoLeft h⟩, fun h =>
     prod_mono h.1 h.2⟩
 
 @[simp]
@@ -353,7 +353,7 @@ theorem prod_eq_bot {f : Filter α} {g : Filter β} : f ×ᶠ g = ⊥ ↔ f = �
     
 
 theorem prod_ne_bot {f : Filter α} {g : Filter β} : NeBot (f ×ᶠ g) ↔ NeBot f ∧ NeBot g := by
-  simp only [ne_bot_iff, Ne, prod_eq_bot, not_or_distrib]
+  simp only [ne_bot_iff, Ne, prod_eq_bot, not_or]
 
 theorem NeBot.prod {f : Filter α} {g : Filter β} (hf : NeBot f) (hg : NeBot g) : NeBot (f ×ᶠ g) :=
   prod_ne_bot.2 ⟨hf, hg⟩

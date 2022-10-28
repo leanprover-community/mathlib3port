@@ -1441,7 +1441,7 @@ instance (priority := 100) toOrderedCommSemiring : OrderedCommSemiring α :=
     mul_le_mul_of_nonneg_right := fun a b c h _ => mul_le_mul_right' h _ }
 
 @[simp]
-theorem mul_pos : 0 < a * b ↔ 0 < a ∧ 0 < b := by simp only [pos_iff_ne_zero, Ne.def, mul_eq_zero, not_or_distrib]
+theorem mul_pos : 0 < a * b ↔ 0 < a ∧ 0 < b := by simp only [pos_iff_ne_zero, Ne.def, mul_eq_zero, not_or]
 
 end CanonicallyOrderedCommSemiring
 

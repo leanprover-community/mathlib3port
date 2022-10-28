@@ -502,7 +502,7 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f 
   constructor <;> intro h
   · intro a h' b
     replace h := h b
-    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
+    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
     apply h _ h'
     
   · intro b h'

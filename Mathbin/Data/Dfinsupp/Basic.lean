@@ -964,11 +964,11 @@ theorem support_eq_empty {f : Π₀ i, β i} : f.support = ∅ ↔ f = 0 :=
   ⟨fun H => ext <| by simpa [Finset.ext_iff] using H, by simp (config := { contextual := true })⟩
 
 instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
-  decidableOfIff _ <| support_eq_empty.trans eq_comm
+  decidable_of_iff _ <| support_eq_empty.trans eq_comm
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} : ↑f.support ⊆ s ↔ ∀ (i) (_ : i ∉ s), f i = 0 := by
-  simp [Set.subset_def] <;> exact forall_congr fun i => not_imp_comm
+  simp [Set.subset_def] <;> exact forall_congr' fun i => not_imp_comm
 
 theorem support_single_ne_zero {i : ι} {b : β i} (hb : b ≠ 0) : (single i b).support = {i} := by
   ext j
@@ -1083,7 +1083,7 @@ theorem support_smul {γ : Type w} [Semiring γ] [∀ i, AddCommMonoid (β i)] [
   support_map_range
 
 instance [∀ i, Zero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀ i, β i) := fun f g =>
-  decidableOfIff (f.support = g.support ∧ ∀ i ∈ f.support, f i = g i)
+  decidable_of_iff (f.support = g.support ∧ ∀ i ∈ f.support, f i = g i)
     ⟨fun ⟨h₁, h₂⟩ =>
       ext fun i =>
         if h : i ∈ f.support then h₂ i h

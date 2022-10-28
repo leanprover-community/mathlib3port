@@ -935,7 +935,7 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
           let ⟨i, hi⟩ := h_cover x
           ⟨i, hi, hx⟩,
           fun ⟨i, hi, hx⟩ => hx⟩
-      simpa [and_comm, @and_left_comm (c _ _), ← exists_and_distrib_right]
+      simpa [and_comm, @and_left_comm (c _ _), ← exists_and_right]
     rwa [this]
 
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
@@ -1282,7 +1282,7 @@ theorem is_open_map_sigma {f : Sigma σ → α} : IsOpenMap f ↔ ∀ i, IsOpenM
 
 theorem is_open_map_sigma_map {f₁ : ι → κ} {f₂ : ∀ i, σ i → τ (f₁ i)} :
     IsOpenMap (Sigma.map f₁ f₂) ↔ ∀ i, IsOpenMap (f₂ i) :=
-  is_open_map_sigma.trans <| forall_congr fun i => (@open_embedding_sigma_mk _ _ _ (f₁ i)).is_open_map_iff.symm
+  is_open_map_sigma.trans <| forall_congr' fun i => (@open_embedding_sigma_mk _ _ _ (f₁ i)).is_open_map_iff.symm
 
 theorem inducing_sigma_map {f₁ : ι → κ} {f₂ : ∀ i, σ i → τ (f₁ i)} (h₁ : Injective f₁) :
     Inducing (Sigma.map f₁ f₂) ↔ ∀ i, Inducing (f₂ i) := by
@@ -1291,11 +1291,11 @@ theorem inducing_sigma_map {f₁ : ι → κ} {f₂ : ∀ i, σ i → τ (f₁ i
 
 theorem embedding_sigma_map {f₁ : ι → κ} {f₂ : ∀ i, σ i → τ (f₁ i)} (h : Injective f₁) :
     Embedding (Sigma.map f₁ f₂) ↔ ∀ i, Embedding (f₂ i) := by
-  simp only [embedding_iff, injective.sigma_map, inducing_sigma_map h, forall_and_distrib, h.sigma_map_iff]
+  simp only [embedding_iff, injective.sigma_map, inducing_sigma_map h, forall_and, h.sigma_map_iff]
 
 theorem open_embedding_sigma_map {f₁ : ι → κ} {f₂ : ∀ i, σ i → τ (f₁ i)} (h : Injective f₁) :
     OpenEmbedding (Sigma.map f₁ f₂) ↔ ∀ i, OpenEmbedding (f₂ i) := by
-  simp only [open_embedding_iff_embedding_open, is_open_map_sigma_map, embedding_sigma_map h, forall_and_distrib]
+  simp only [open_embedding_iff_embedding_open, is_open_map_sigma_map, embedding_sigma_map h, forall_and]
 
 end Sigma
 

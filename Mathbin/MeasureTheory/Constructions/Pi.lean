@@ -112,7 +112,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
       by
       ext
       simp_rw [mem_univ_pi]
-      apply forall_congr
+      apply forall_congr'
       intro i'
       by_cases i' = i
       · subst h

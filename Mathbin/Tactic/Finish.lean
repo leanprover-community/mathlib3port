@@ -116,10 +116,10 @@ theorem not_not_eq : (¬¬p) = p :=
   propext not_not
 
 theorem not_and_eq : (¬(p ∧ q)) = (¬p ∨ ¬q) :=
-  propext not_and_distrib
+  propext not_and_or
 
 theorem not_or_eq : (¬(p ∨ q)) = (¬p ∧ ¬q) :=
-  propext not_or_distrib
+  propext not_or
 
 theorem not_forall_eq : (¬∀ x, s x) = ∃ x, ¬s x :=
   propext not_forall
@@ -136,8 +136,8 @@ theorem Classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
 end
 
 def commonNormalizeLemmaNames : List Name :=
-  [`` bex_def, `` forall_and_distrib, `` exists_imp_distrib, `` or_assoc, `` or_comm, `` or_left_comm, `` and_assoc,
-    `` and_comm, `` and_left_comm]
+  [`` bex_def, `` forall_and, `` exists_imp, `` or_assoc, `` or_comm, `` or_left_comm, `` and_assoc, `` and_comm,
+    `` and_left_comm]
 
 def classicalNormalizeLemmaNames : List Name :=
   common_normalize_lemma_names ++ [`` classical.implies_iff_not_or]

@@ -43,7 +43,7 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
   haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_lt hgt).symm⟩
   have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
-    rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_coe_nat, ←
+    rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_ofNat, ←
       Int.coe_cast_ring_hom, eval₂_hom, Int.coe_cast_ring_hom, Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
     apply Int.dvd_nat_abs.1
     exact_mod_cast min_fac_dvd (eval (↑b) (cyclotomic k ℤ)).natAbs

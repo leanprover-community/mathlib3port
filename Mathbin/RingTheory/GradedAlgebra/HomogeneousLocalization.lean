@@ -346,7 +346,7 @@ instance :
       by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [num_add, denom_add, ← Localization.add_mk]
-      convert congr_arg2 (· + ·) h h' <;> erw [Localization.add_mk] <;> rfl
+      convert congr_arg₂ (· + ·) h h' <;> erw [Localization.add_mk] <;> rfl
 
 instance : Sub (HomogeneousLocalization 𝒜 x) where sub z1 z2 := z1 + -z2
 
@@ -360,7 +360,7 @@ instance :
       by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [num_mul, denom_mul]
-      convert congr_arg2 (· * ·) h h' <;> erw [Localization.mk_mul] <;> rfl
+      convert congr_arg₂ (· * ·) h h' <;> erw [Localization.mk_mul] <;> rfl
 
 instance : One (HomogeneousLocalization 𝒜 x) where one := Quotient.mk' 1
 

@@ -161,7 +161,7 @@ theorem eq_one_or_one_lt : a = 1 ∨ 1 < a :=
 
 @[simp, to_additive add_pos_iff]
 theorem one_lt_mul_iff : 1 < a * b ↔ 1 < a ∨ 1 < b := by
-  simp only [one_lt_iff_ne_one, Ne.def, mul_eq_one_iff, not_and_distrib]
+  simp only [one_lt_iff_ne_one, Ne.def, mul_eq_one_iff, not_and_or]
 
 @[to_additive]
 theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b := by
@@ -186,10 +186,10 @@ theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
 
 @[to_additive]
 theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c := by
-  simp_rw [lt_iff_le_and_ne, and_comm', le_iff_exists_mul, ← exists_and_distrib_left, exists_prop]
+  simp_rw [lt_iff_le_and_ne, and_comm', le_iff_exists_mul, ← exists_and_left, exists_prop]
   apply exists_congr
   intro c
-  rw [And.congr_left_iff, gt_iff_lt]
+  rw [and_congr_left_iff, gt_iff_lt]
   rintro rfl
   constructor
   · rw [one_lt_iff_ne_one]

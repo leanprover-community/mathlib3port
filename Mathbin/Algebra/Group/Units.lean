@@ -112,7 +112,7 @@ theorem ext_iff {a b : αˣ} : a = b ↔ (a : α) = b :=
   eq_iff.symm
 
 @[to_additive]
-instance [DecidableEq α] : DecidableEq αˣ := fun a b => decidableOfIff' _ ext_iff
+instance [DecidableEq α] : DecidableEq αˣ := fun a b => decidable_of_iff' _ ext_iff
 
 @[simp, to_additive]
 theorem mk_coe (u : αˣ) (y h₁ h₂) : mk (u : α) y h₁ h₂ = u :=

@@ -120,7 +120,7 @@ theorem integral_sum_disj_union (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[�
     integralSum f vol (π₁.disjUnion π₂ h) = integralSum f vol π₁ + integralSum f vol π₂ := by
   refine'
     (prepartition.sum_disj_union_boxes h _).trans
-      (congr_arg2 (· + ·) ((sum_congr rfl) fun J hJ => _) ((sum_congr rfl) fun J hJ => _))
+      (congr_arg₂ (· + ·) ((sum_congr rfl) fun J hJ => _) ((sum_congr rfl) fun J hJ => _))
   · rw [disj_union_tag_of_mem_left _ hJ]
     
   · rw [disj_union_tag_of_mem_right _ hJ]
@@ -215,8 +215,8 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
   rw [integrable_iff_cauchy, cauchy_map_iff',
     (l.has_basis_to_filter_Union_top _).prod_self.tendsto_iff uniformity_basis_dist_le]
   refine' forall₂_congr fun ε ε0 => exists_congr fun r => _
-  simp only [exists_prop, Prod.forall, Set.mem_Union, exists_imp_distrib, prod_mk_mem_set_prod_eq, and_imp,
-    mem_inter_iff, mem_set_of_eq]
+  simp only [exists_prop, Prod.forall, Set.mem_Union, exists_imp, prod_mk_mem_set_prod_eq, and_imp, mem_inter_iff,
+    mem_set_of_eq]
   exact
     and_congr Iff.rfl
       ⟨fun H c₁ c₂ π₁ π₂ h₁ hU₁ h₂ hU₂ => H π₁ π₂ c₁ h₁ hU₁ c₂ h₂ hU₂, fun H π₁ π₂ c₁ h₁ hU₁ c₂ h₂ hU₂ =>
@@ -224,7 +224,7 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
 
 theorem HasIntegral.mono {l₁ l₂ : IntegrationParams} (h : HasIntegral I l₁ f vol y) (hl : l₂ ≤ l₁) :
     HasIntegral I l₂ f vol y :=
-  h.mono_left <| IntegrationParams.to_filter_Union_mono _ hl _
+  h.monoLeft <| IntegrationParams.to_filter_Union_mono _ hl _
 
 protected theorem Integrable.hasIntegral (h : Integrable I l f vol) : HasIntegral I l f vol (integral I l f vol) := by
   rw [integral, dif_pos h]

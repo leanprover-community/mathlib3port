@@ -173,7 +173,7 @@ theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
 theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ} (hr : 1 < r) :
     (fun n => n ^ k : ℕ → R) =o[at_top] fun n => r ^ n := by
   have : tendsto (fun x : ℝ => x ^ k) (𝓝[>] 1) (𝓝 1) :=
-    ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).mono_left inf_le_left
+    ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).monoLeft inf_le_left
   obtain ⟨r' : ℝ, hr' : r' ^ k < r, h1 : 1 < r'⟩ := ((this.eventually (gt_mem_nhds hr)).And self_mem_nhds_within).exists
   have h0 : 0 ≤ r' := zero_le_one.trans h1.le
   suffices : (fun n => n ^ k : ℕ → R) =O[at_top] fun n : ℕ => (r' ^ k) ^ n

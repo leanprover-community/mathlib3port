@@ -219,7 +219,7 @@ theorem wbtw_comm {x y z : P} : Wbtw R x y z ↔ Wbtw R z y x := by rw [Wbtw, Wb
 alias wbtw_comm ↔ Wbtw.symm _
 
 theorem sbtw_comm {x y z : P} : Sbtw R x y z ↔ Sbtw R z y x := by
-  rw [Sbtw, Sbtw, wbtw_comm, ← and_assoc', ← and_assoc', And.right_comm]
+  rw [Sbtw, Sbtw, wbtw_comm, ← and_assoc', ← and_assoc', and_right_comm]
 
 alias sbtw_comm ↔ Sbtw.symm _
 

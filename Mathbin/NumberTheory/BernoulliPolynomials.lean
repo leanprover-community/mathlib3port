@@ -156,7 +156,7 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
     rw [← sum_flip _, sum_range_succ]
     simp only [tsub_self, tsub_zero, choose_zero_right, cast_one, mul_one, pow_zero, add_tsub_cancel_right]
     apply sum_congr rfl fun x hx => _
-    apply congr_arg2 _ (congr_arg2 _ _ _) rfl
+    apply congr_arg₂ _ (congr_arg₂ _ _ _) rfl
     · rw [Nat.sub_sub_self (mem_range_le hx)]
       
     · rw [← choose_symm (mem_range_le hx)]

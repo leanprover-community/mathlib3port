@@ -9,6 +9,7 @@ import Mathbin.Algebra.Module.Submodule.Bilinear
 import Mathbin.Algebra.Module.Opposites
 import Mathbin.Data.Finset.Pointwise
 import Mathbin.Data.Set.Semiring
+import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.GroupTheory.GroupAction.SubMulAction.Pointwise
 
 /-!

@@ -69,11 +69,11 @@ noncomputable def terminalIso : ⊤_ Type u ≅ PUnit :=
 
 /-- The category of types has `pempty` as an initial object. -/
 def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u)) where
-  Cocone := { x := Pempty, ι := by tidy }
+  Cocone := { x := PEmpty, ι := by tidy }
   IsColimit := by tidy
 
 /-- The initial object in `Type u` is `pempty`. -/
-noncomputable def initialIso : ⊥_ Type u ≅ Pempty :=
+noncomputable def initialIso : ⊥_ Type u ≅ PEmpty :=
   colimit.isoColimitCocone initialColimitCocone
 
 open CategoryTheory.Limits.WalkingPair

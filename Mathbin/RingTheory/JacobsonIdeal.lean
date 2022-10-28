@@ -293,7 +293,7 @@ variable [CommRing R]
 
 theorem jacobson_bot_polynomial_le_Inf_map_maximal :
     jacobson (⊥ : Ideal R[X]) ≤ inf (map (c : R →+* R[X]) '' { J : Ideal R | J.IsMaximal }) := by
-  refine' le_Inf fun J => exists_imp_distrib.2 fun j hj => _
+  refine' le_Inf fun J => exists_imp.2 fun j hj => _
   haveI : j.is_maximal := hj.1
   refine' trans (jacobson_mono bot_le) (le_of_eq _ : J.jacobson ≤ J)
   suffices (⊥ : Ideal (Polynomial (R ⧸ j))).jacobson = ⊥ by

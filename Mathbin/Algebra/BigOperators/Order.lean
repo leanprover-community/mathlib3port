@@ -368,7 +368,7 @@ theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i �
         · simp [Finset.insert_subset, h, ht]
           
         · intro x hx h'x
-          simp only [mem_insert, not_or_distrib] at h'x
+          simp only [mem_insert, not_or] at h'x
           exact hle x hx h'x.2
           
       

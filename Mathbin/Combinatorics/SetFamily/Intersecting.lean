@@ -102,7 +102,7 @@ protected theorem Intersecting.is_upper_set (hs : s.Intersecting) (h : ∀ t : S
   rw [h (insert b s) _ (subset_insert _ _)]
   · exact mem_insert _ _
     
-  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
+  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.monoLeft hab
 
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecting)
@@ -113,7 +113,7 @@ theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecti
   · exact mem_insert_self _ _
     
   rw [coe_insert]
-  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
+  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.monoLeft hab
 
 end SemilatticeInf
 

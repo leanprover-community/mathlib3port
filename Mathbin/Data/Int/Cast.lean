@@ -123,6 +123,19 @@ theorem cast_le_neg_one_of_neg (h : a < 0) : (a : α) ≤ -1 := by
   rw [← Int.cast_one, ← Int.cast_neg, cast_le]
   exact Int.le_sub_one_of_lt h
 
+variable (α) {n}
+
+theorem cast_le_neg_one_or_one_le_cast_of_ne_zero (hn : n ≠ 0) : (n : α) ≤ -1 ∨ 1 ≤ (n : α) := by
+  rcases lt_trichotomy n 0 with (h | rfl | h)
+  · exact Or.inl (cast_le_neg_one_of_neg h)
+    
+  · contradiction
+    
+  · exact Or.inr (cast_one_le_of_pos h)
+    
+
+variable {α} (n)
+
 theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : abs x ≤ 1) : (0 : α) ≤ n * x + n * n := by
   have hnx : 0 < n → 0 ≤ x + n := fun hn => by
     convert add_le_add (neg_le_of_abs_le hx) (cast_one_le_of_pos hn)
@@ -143,7 +156,7 @@ theorem cast_nat_abs : (n.natAbs : α) = abs n := by
   cases n
   · simp
     
-  · simp only [Int.natAbs, Int.cast_neg_succ_of_nat, abs_neg, ← Nat.cast_succ, Nat.abs_cast]
+  · simp only [Int.natAbs, Int.cast_negSucc, abs_neg, ← Nat.cast_succ, Nat.abs_cast]
     
 
 end LinearOrderedRing
@@ -275,7 +288,7 @@ end NonAssocRing
 
 /- warning: int.cast_id -> Int.cast_id is a dubious translation:
 lean 3 declaration is
-  forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Int Int (HasLiftT.mk.{1 1} Int Int (CoeTₓ.coe.{1 1} Int Int (Int.castCoe.{0} Int (AddGroupWithOne.toHasIntCast.{0} Int (NonAssocRing.toAddGroupWithOne.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))))) n) n
+  forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Int Int (HasLiftT.mk.{1 1} Int Int (CoeTCₓ.coe.{1 1} Int Int (Int.castCoe.{0} Int (AddGroupWithOne.toHasIntCast.{0} Int (NonAssocRing.toAddGroupWithOne.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))))) n) n
 but is expected to have type
   forall {n : Int}, Eq.{1} Int (Int.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int (CommRing.toRing.{0} Int Int.instCommRingInt)) n) n
 Case conversion may be inaccurate. Consider using '#align int.cast_id Int.cast_idₓ'. -/

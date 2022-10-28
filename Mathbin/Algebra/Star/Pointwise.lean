@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
 import Mathbin.Algebra.Star.Basic
-import Mathbin.Data.Set.Pointwise
+import Mathbin.Data.Set.Pointwise.Basic
 
 /-!
 # Pointwise star operation on sets

@@ -582,7 +582,7 @@ theorem perm_option_to_list {o₁ o₂ : Option α} : o₁.toList ~ o₂.toList 
     
   · cases p.length_eq
     
-  · exact Option.mem_to_list.1 (p.symm.subset <| by simp)
+  · exact Option.mem_toList.1 (p.symm.subset <| by simp)
     
 
 theorem subperm_cons (a : α) {l₁ l₂ : List α} : a :: l₁ <+~ a :: l₂ ↔ l₁ <+~ l₂ :=
@@ -832,7 +832,7 @@ theorem subperm_ext_iff {l₁ l₂ : List α} : l₁ <+~ l₂ ↔ ∀ x ∈ l₁
   convert (subperm_append_right _).mpr nil_subperm using 1
 
 instance decidableSubperm : DecidableRel ((· <+~ ·) : List α → List α → Prop) := fun l₁ l₂ =>
-  decidableOfIff _ List.subperm_ext_iff.symm
+  decidable_of_iff _ List.subperm_ext_iff.symm
 
 @[simp]
 theorem subperm_singleton_iff {α} {l : List α} {a : α} : [a] <+~ l ↔ a ∈ l :=
@@ -856,7 +856,7 @@ instance decidablePerm : ∀ l₁ l₂ : List α, Decidable (l₁ ~ l₂)
   | [], b :: l₂ => is_false fun h => by have := h.nil_eq <;> contradiction
   | a :: l₁, l₂ =>
     haveI := decidable_perm l₁ (l₂.erase a)
-    decidableOfIff' _ cons_perm_iff_perm_erase
+    decidable_of_iff' _ cons_perm_iff_perm_erase
 
 -- @[congr]
 theorem Perm.dedup {l₁ l₂ : List α} (p : l₁ ~ l₂) : dedup l₁ ~ dedup l₂ :=
@@ -1420,7 +1420,7 @@ theorem nodup_permutations'_aux_of_not_mem (s : List α) (x : α) (hx : x ∉ s)
   induction' s with y s IH
   · simp
     
-  · simp only [not_or_distrib, mem_cons_iff] at hx
+  · simp only [not_or, mem_cons_iff] at hx
     simp only [not_and, exists_eq_right_right, mem_map, permutations'_aux, nodup_cons]
     refine' ⟨fun _ => Ne.symm hx.left, _⟩
     rw [nodup_map_iff]

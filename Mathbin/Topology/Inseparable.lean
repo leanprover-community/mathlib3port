@@ -155,7 +155,7 @@ theorem specializes_of_nhds_within (h₁ : 𝓝[s] x ≤ 𝓝[s] y) (h₂ : x �
       
 
 theorem Specializes.map_of_continuous_at (h : x ⤳ y) (hy : ContinuousAt f y) : f x ⤳ f y :=
-  specializes_iff_pure.2 fun s hs => mem_pure.2 <| mem_preimage.1 <| mem_of_mem_nhds <| hy.mono_left h hs
+  specializes_iff_pure.2 fun s hs => mem_pure.2 <| mem_preimage.1 <| mem_of_mem_nhds <| hy.monoLeft h hs
 
 theorem Specializes.map (h : x ⤳ y) (hf : Continuous f) : f x ⤳ f y :=
   h.map_of_continuous_at hf.ContinuousAt
@@ -235,13 +235,13 @@ theorem Specializes.antisymm (h₁ : x ⤳ y) (h₂ : y ⤳ x) : x ~ y :=
   le_antisymm h₁ h₂
 
 theorem inseparable_iff_forall_open : (x ~ y) ↔ ∀ s : Set X, IsOpen s → (x ∈ s ↔ y ∈ s) := by
-  simp only [inseparable_iff_specializes_and, specializes_iff_forall_open, ← forall_and_distrib, ← iff_def, Iff.comm]
+  simp only [inseparable_iff_specializes_and, specializes_iff_forall_open, ← forall_and, ← iff_def, Iff.comm]
 
 theorem not_inseparable_iff_exists_open : ¬(x ~ y) ↔ ∃ s : Set X, IsOpen s ∧ Xor' (x ∈ s) (y ∈ s) := by
   simp [inseparable_iff_forall_open, ← xor_iff_not_iff]
 
 theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s → (x ∈ s ↔ y ∈ s) := by
-  simp only [inseparable_iff_specializes_and, specializes_iff_forall_closed, ← forall_and_distrib, ← iff_def]
+  simp only [inseparable_iff_specializes_and, specializes_iff_forall_closed, ← forall_and, ← iff_def]
 
 theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ Closure ({y} : Set X) ∧ y ∈ Closure ({x} : Set X) :=
   inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm']

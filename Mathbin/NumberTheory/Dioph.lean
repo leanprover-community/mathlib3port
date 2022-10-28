@@ -53,7 +53,7 @@ Matiyasevic's theorem, Hilbert's tenth problem
 open Fin2 Function Nat Sum
 
 -- mathport name: «expr ::ₒ »
-local infixr:67 " ::ₒ " => Option.elim
+local infixr:67 " ::ₒ " => Option.elim'
 
 -- mathport name: «expr ⊗ »
 local infixr:65 " ⊗ " => Sum.elim
@@ -289,7 +289,7 @@ variable {α β γ : Type u} {S S' : Set (α → ℕ)}
 theorem ext (d : Dioph S) (H : ∀ v, v ∈ S ↔ v ∈ S') : Dioph S' := by rwa [← Set.ext H]
 
 theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v, S v ↔ p v = 0) : Dioph S :=
-  ⟨Pempty, p.map inl, fun v => (h v).trans ⟨fun h => ⟨Pempty.rec _, h⟩, fun ⟨t, ht⟩ => ht⟩⟩
+  ⟨PEmpty, p.map inl, fun v => (h v).trans ⟨fun h => ⟨PEmpty.rec _, h⟩, fun ⟨t, ht⟩ => ht⟩⟩
 
 theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x) (p : Poly (Sum α β))
     (v : α → ℕ) : (∃ t, p (v ⊗ t) = 0) ↔ ∃ t, p.map (inl ⊗ inr ∘ f) (v ⊗ t) = 0 := by
@@ -480,7 +480,7 @@ theorem vec_ex1_dioph (n) {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph
   (ext (ex1_dioph <| reindex_dioph _ (none::some) d)) fun v =>
     exists_congr fun x => by
       dsimp
-      rw [show Option.elim x v ∘ cons none some = x::v from funext fun s => by cases' s with a b <;> rfl]
+      rw [show Option.elim' x v ∘ cons none some = x::v from funext fun s => by cases' s with a b <;> rfl]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem dioph_fn_vec (f : Vector3 ℕ n → ℕ) : DiophFn f ↔ Dioph { v | f (v ∘ fs) = v fz } :=

@@ -58,8 +58,8 @@ namespace LhomCat
 protected def mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (φ₀ : c → L'.Constants) (φ₁ : f₁ → L'.Functions 1)
     (φ₂ : f₂ → L'.Functions 2) (φ₁' : r₁ → L'.Relations 1) (φ₂' : r₂ → L'.Relations 2) :
     Language.mk₂ c f₁ f₂ r₁ r₂ →ᴸ L' :=
-  ⟨fun n => Nat.casesOn n φ₀ fun n => Nat.casesOn n φ₁ fun n => Nat.casesOn n φ₂ fun _ => Pempty.elim, fun n =>
-    Nat.casesOn n Pempty.elim fun n => Nat.casesOn n φ₁' fun n => Nat.casesOn n φ₂' fun _ => Pempty.elim⟩
+  ⟨fun n => Nat.casesOn n φ₀ fun n => Nat.casesOn n φ₁ fun n => Nat.casesOn n φ₂ fun _ => PEmpty.elim, fun n =>
+    Nat.casesOn n PEmpty.elim fun n => Nat.casesOn n φ₁' fun n => Nat.casesOn n φ₂' fun _ => PEmpty.elim⟩
 
 variable (ϕ : L →ᴸ L')
 
@@ -115,10 +115,10 @@ theorem mk₂_funext {c f₁ f₂ : Type u} {r₁ r₂ : Type v} {F G : Language
   LhomCat.funext
     (funext fun n =>
       Nat.casesOn n (funext h0) fun n =>
-        Nat.casesOn n (funext h1) fun n => Nat.casesOn n (funext h2) fun n => funext fun f => Pempty.elim f)
+        Nat.casesOn n (funext h1) fun n => Nat.casesOn n (funext h2) fun n => funext fun f => PEmpty.elim f)
     (funext fun n =>
-      Nat.casesOn n (funext fun r => Pempty.elim r) fun n =>
-        Nat.casesOn n (funext h1') fun n => Nat.casesOn n (funext h2') fun n => funext fun r => Pempty.elim r)
+      Nat.casesOn n (funext fun r => PEmpty.elim r) fun n =>
+        Nat.casesOn n (funext h1') fun n => Nat.casesOn n (funext h2') fun n => funext fun r => PEmpty.elim r)
 
 /-- The composition of two language homomorphisms. -/
 @[simps]
@@ -324,7 +324,7 @@ variable (α : Type u')
 /-- A language with constants indexed by a type. -/
 @[simp]
 def constantsOn : Language.{u', 0} :=
-  Language.mk₂ α Pempty Pempty Pempty Pempty
+  Language.mk₂ α PEmpty PEmpty PEmpty PEmpty
 
 variable {α}
 
@@ -338,19 +338,19 @@ instance is_relational_constants_on [ie : IsEmpty α] : IsRelational (constantsO
   language.is_relational_mk₂
 
 instance is_empty_functions_constants_on_succ {n : ℕ} : IsEmpty ((constantsOn α).Functions (n + 1)) :=
-  Nat.casesOn n Pempty.is_empty fun n => Nat.casesOn n Pempty.is_empty fun _ => Pempty.is_empty
+  Nat.casesOn n PEmpty.is_empty fun n => Nat.casesOn n PEmpty.is_empty fun _ => PEmpty.is_empty
 
 theorem card_constants_on : (constantsOn α).card = (#α) := by simp
 
 /-- Gives a `constants_on α` structure to a type by assigning each constant a value. -/
 def constantsOn.structure (f : α → M) : (constantsOn α).StructureCat M :=
-  StructureCat.mk₂ f Pempty.elim Pempty.elim Pempty.elim Pempty.elim
+  StructureCat.mk₂ f PEmpty.elim PEmpty.elim PEmpty.elim PEmpty.elim
 
 variable {β : Type v'}
 
 /-- A map between index types induces a map between constant languages. -/
 def LhomCat.constantsOnMap (f : α → β) : constantsOn α →ᴸ constantsOn β :=
-  LhomCat.mk₂ f Pempty.elim Pempty.elim Pempty.elim Pempty.elim
+  LhomCat.mk₂ f PEmpty.elim PEmpty.elim PEmpty.elim PEmpty.elim
 
 theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ : β → M} (h : fβ ∘ f = fα) :
     @LhomCat.IsExpansionOn _ _ (LhomCat.constantsOnMap f) M (constantsOn.structure fα) (constantsOn.structure fβ) := by

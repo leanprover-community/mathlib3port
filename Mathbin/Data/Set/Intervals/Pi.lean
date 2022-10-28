@@ -33,7 +33,7 @@ theorem pi_univ_Iic : (Pi Univ fun i => IicCat (x i)) = IicCat x :=
 
 @[simp]
 theorem pi_univ_Icc : (Pi Univ fun i => IccCat (x i) (y i)) = IccCat x y :=
-  ext fun y => by simp [Pi.le_def, forall_and_distrib]
+  ext fun y => by simp [Pi.le_def, forall_and]
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
@@ -119,7 +119,7 @@ theorem Icc_diff_pi_univ_Ioo_subset (x y x' y' : ∀ i, α i) :
       (⋃ i : ι, IccCat x (update y i (x' i))) ∪ ⋃ i : ι, IccCat (update x i (y' i)) y :=
   by
   rintro a ⟨⟨hxa, hay⟩, ha'⟩
-  simpa [le_update_iff, update_le_iff, hxa, hay, hxa _, hay _, ← exists_or_distrib, not_and_distrib] using ha'
+  simpa [le_update_iff, update_le_iff, hxa, hay, hxa _, hay _, ← exists_or, not_and_or] using ha'
 
 /-- If `x`, `y`, `z` are functions `Π i : ι, α i`, then
 the set difference between the box `[x, z]` and the product of the intervals `(y i, z i]`
@@ -131,7 +131,7 @@ of the faces of `[x, y]` adjacent to `x`. -/
 theorem Icc_diff_pi_univ_Ioc_subset (x y z : ∀ i, α i) :
     (IccCat x z \ Pi Univ fun i => IocCat (y i) (z i)) ⊆ ⋃ i : ι, IccCat x (update z i (y i)) := by
   rintro a ⟨⟨hax, haz⟩, hay⟩
-  simpa [not_and_distrib, hax, le_update_iff, haz _] using hay
+  simpa [not_and_or, hax, le_update_iff, haz _] using hay
 
 end Set
 

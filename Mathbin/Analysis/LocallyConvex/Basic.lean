@@ -124,7 +124,7 @@ theorem Absorbent.absorbs (hs : Absorbent 𝕜 s) {x : E} : Absorbs 𝕜 s {x} :
   absorbent_iff_forall_absorbs_singleton.1 hs _
 
 theorem absorbent_iff_nonneg_lt : Absorbent 𝕜 A ↔ ∀ x, ∃ r, 0 ≤ r ∧ ∀ ⦃a : 𝕜⦄, r < ∥a∥ → x ∈ a • A :=
-  forall_congr fun x =>
+  forall_congr' fun x =>
     ⟨fun ⟨r, hr, hx⟩ => ⟨r, hr.le, fun a ha => hx a ha.le⟩, fun ⟨r, hr, hx⟩ =>
       ⟨r + 1, add_pos_of_nonneg_of_pos hr zero_lt_one, fun a ha =>
         hx ((lt_add_of_pos_right r zero_lt_one).trans_le ha)⟩⟩

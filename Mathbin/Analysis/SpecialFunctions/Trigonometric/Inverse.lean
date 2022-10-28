@@ -256,6 +256,23 @@ theorem cos_arcsin (x : ℝ) : cos (arcsin x) = sqrt (1 - x ^ 2) := by
     sqrt_mul_self (cos_arcsin_nonneg _)] at this
   rw [this, sin_arcsin hx₁ hx₂]
 
+-- The junk values for `arcsin` and `sqrt` make this true even outside `[-1, 1]`.
+theorem tan_arcsin (x : ℝ) : tan (arcsin x) = x / sqrt (1 - x ^ 2) := by
+  rw [tan_eq_sin_div_cos, cos_arcsin]
+  by_cases hx₁:-1 ≤ x
+  swap
+  · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
+    rw [h]
+    simp
+    
+  by_cases hx₂:x ≤ 1
+  swap
+  · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
+    rw [h]
+    simp
+    
+  rw [sin_arcsin hx₁ hx₂]
+
 /-- Inverse of the `cos` function, returns values in the range `0 ≤ arccos x` and `arccos x ≤ π`.
   It defaults to `π` on `(-∞, -1)` and to `0` to `(1, ∞)`. -/
 @[pp_nodot]
@@ -349,6 +366,21 @@ theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := 
 @[continuity]
 theorem continuous_arccos : Continuous arccos :=
   continuous_const.sub continuous_arcsin
+
+-- The junk values for `arccos` and `sqrt` make this true even outside `[-1, 1]`.
+theorem tan_arccos (x : ℝ) : tan (arccos x) = sqrt (1 - x ^ 2) / x := by
+  rw [arccos, tan_pi_div_two_sub, tan_arcsin, inv_div]
+
+-- The junk values for `arccos` and `sqrt` make this true even for `1 < x`.
+theorem arccos_eq_arcsin {x : ℝ} (h : 0 ≤ x) : arccos x = arcsin (sqrt (1 - x ^ 2)) :=
+  (arcsin_eq_of_sin_eq (sin_arccos _)
+      ⟨(Left.neg_nonpos_iff.2 (div_nonneg pi_pos.le (by norm_num))).trans (arccos_nonneg _),
+        arccos_le_pi_div_two.2 h⟩).symm
+
+-- The junk values for `arcsin` and `sqrt` make this true even for `1 < x`.
+theorem arcsin_eq_arccos {x : ℝ} (h : 0 ≤ x) : arcsin x = arccos (sqrt (1 - x ^ 2)) := by
+  rw [eq_comm, ← cos_arcsin]
+  exact arccos_cos (arcsin_nonneg.2 h) ((arcsin_le_pi_div_two _).trans (div_le_self pi_pos.le one_le_two))
 
 end Real
 

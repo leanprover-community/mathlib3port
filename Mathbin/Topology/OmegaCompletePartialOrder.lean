@@ -97,7 +97,7 @@ theorem not_below_is_open : IsOpen (NotBelow y) := by
   intro z
   rw [ωSup_le_iff]
   simp only [ωSup_le_iff, NotBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_app,
-    exists_imp_distrib, not_forall]
+    exists_imp, not_forall]
 
 end NotBelow
 

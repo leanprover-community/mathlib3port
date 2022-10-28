@@ -60,7 +60,7 @@ theorem eq_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v = a :
   ⟨fun h => h.symm ▸ ⟨head_cons a v', tail_cons a v'⟩, fun h => trans (cons_head_tail v).symm (by rw [h.1, h.2])⟩
 
 theorem ne_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v ≠ a ::ᵥ v' ↔ v.head ≠ a ∨ v.tail ≠ v' := by
-  rw [Ne.def, eq_cons_iff a v v', not_and_distrib]
+  rw [Ne.def, eq_cons_iff a v v', not_and_or]
 
 theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), v = a ::ᵥ as :=
   ⟨v.head, v.tail, (eq_cons_iff v.head v v.tail).2 ⟨rfl, rfl⟩⟩

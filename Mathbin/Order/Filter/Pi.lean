@@ -150,7 +150,7 @@ theorem map_eval_pi (f : ∀ i, Filter (α i)) [∀ i, NeBot (f i)] (i : ι) : m
 
 @[simp]
 theorem pi_le_pi [∀ i, NeBot (f₁ i)] : pi f₁ ≤ pi f₂ ↔ ∀ i, f₁ i ≤ f₂ i :=
-  ⟨fun h i => map_eval_pi f₁ i ▸ (tendsto_eval_pi _ _).mono_left h, pi_mono⟩
+  ⟨fun h i => map_eval_pi f₁ i ▸ (tendsto_eval_pi _ _).monoLeft h, pi_mono⟩
 
 @[simp]
 theorem pi_inj [∀ i, NeBot (f₁ i)] : pi f₁ = pi f₂ ↔ f₁ = f₂ := by
@@ -184,14 +184,14 @@ theorem compl_mem_Coprod {s : Set (∀ i, α i)} : sᶜ ∈ Filter.coprod f ↔ 
   simp only [Filter.coprod, mem_supr, compl_mem_comap]
 
 theorem Coprod_ne_bot_iff' : NeBot (Filter.coprod f) ↔ (∀ i, Nonempty (α i)) ∧ ∃ d, NeBot (f d) := by
-  simp only [Filter.coprod, supr_ne_bot, ← exists_and_distrib_left, ← comap_eval_ne_bot_iff']
+  simp only [Filter.coprod, supr_ne_bot, ← exists_and_left, ← comap_eval_ne_bot_iff']
 
 @[simp]
 theorem Coprod_ne_bot_iff [∀ i, Nonempty (α i)] : NeBot (Filter.coprod f) ↔ ∃ d, NeBot (f d) := by
   simp [Coprod_ne_bot_iff', *]
 
 theorem Coprod_eq_bot_iff' : Filter.coprod f = ⊥ ↔ (∃ i, IsEmpty (α i)) ∨ f = ⊥ := by
-  simpa [not_and_distrib, funext_iff] using not_congr Coprod_ne_bot_iff'
+  simpa [not_and_or, funext_iff] using not_congr Coprod_ne_bot_iff'
 
 @[simp]
 theorem Coprod_eq_bot_iff [∀ i, Nonempty (α i)] : Filter.coprod f = ⊥ ↔ f = ⊥ := by

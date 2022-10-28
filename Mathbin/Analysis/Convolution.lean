@@ -437,7 +437,7 @@ theorem support_convolution_subset_swap : Support (f ⋆[L, μ] g) ⊆ Support g
   intro x h2x
   by_contra hx
   apply h2x
-  simp_rw [Set.mem_add, not_exists, not_and_distrib, nmem_support] at hx
+  simp_rw [Set.mem_add, not_exists, not_and_or, nmem_support] at hx
   rw [convolution_def]
   convert integral_zero G F
   ext t

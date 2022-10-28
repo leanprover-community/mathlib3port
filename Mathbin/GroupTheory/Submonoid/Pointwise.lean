@@ -3,8 +3,9 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Set.Pointwise
+import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.GroupTheory.Submonoid.Membership
+import Mathbin.Order.WellFoundedSet
 
 /-! # Pointwise instances on `submonoid`s and `add_submonoid`s
 
@@ -46,7 +47,60 @@ variable {α : Type _} {G : Type _} {M : Type _} {R : Type _} {A : Type _}
 
 variable [Monoid M] [AddMonoid A]
 
+/-! Some lemmas about pointwise multiplication and submonoids. Ideally we put these in
+  `group_theory.submonoid.basic`, but currently we cannot because that file is imported by this. -/
+
+
 namespace Submonoid
+
+open Pointwise
+
+variable {s t u : Set M}
+
+@[to_additive]
+theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : s * t ⊆ S := by
+  rintro _ ⟨p, q, hp, hq, rfl⟩
+  exact Submonoid.mul_mem _ (hs hp) (ht hq)
+
+@[to_additive]
+theorem mul_subset_closure (hs : s ⊆ u) (ht : t ⊆ u) : s * t ⊆ Submonoid.closure u :=
+  mul_subset (Subset.trans hs Submonoid.subset_closure) (Subset.trans ht Submonoid.subset_closure)
+
+@[to_additive]
+theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s := by
+  ext x
+  refine' ⟨_, fun h => ⟨x, 1, h, s.one_mem, mul_one x⟩⟩
+  rintro ⟨a, b, ha, hb, rfl⟩
+  exact s.mul_mem ha hb
+
+@[to_additive]
+theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
+  Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
+    hx ▸
+      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
+        (SetLike.le_def.mp le_sup_right <| subset_closure ht)
+
+@[to_additive]
+theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
+  le_antisymm
+    (sup_le (fun h hh => subset_closure ⟨h, 1, hh, K.one_mem, mul_one h⟩) fun k hk =>
+      subset_closure ⟨1, k, H.one_mem, hk, one_mul k⟩)
+    (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
+
+@[to_additive]
+theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [IsScalarTower M N N] (r : M) (s : Set N)
+    {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) := by
+  apply @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx
+  · intro x hx
+    exact ⟨1, subset_closure ⟨_, hx, by rw [pow_one]⟩⟩
+    
+  · exact ⟨0, by simpa using one_mem _⟩
+    
+  · rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
+    use nx + ny
+    convert mul_mem hx hy
+    rw [pow_add, smul_mul_assoc, mul_smul, mul_comm, ← smul_mul_assoc, mul_comm]
+    
 
 variable [Group G]
 

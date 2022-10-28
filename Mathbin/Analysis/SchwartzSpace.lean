@@ -7,6 +7,7 @@ import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.LocallyConvex.WithSeminorms
 import Mathbin.Topology.Algebra.UniformFilterBasis
+import Mathbin.Topology.ContinuousFunction.Bounded
 import Mathbin.Tactic.Positivity
 
 /-!
@@ -95,6 +96,11 @@ theorem decay (f : 𝓢(E, F)) (k n : ℕ) : ∃ (C : ℝ)(hC : 0 < C), ∀ x, �
 /-- Every Schwartz function is smooth. -/
 theorem smooth (f : 𝓢(E, F)) (n : ℕ∞) : ContDiff ℝ n f :=
   f.smooth'.ofLe le_top
+
+/-- Every Schwartz function is continuous. -/
+@[continuity, protected]
+theorem continuous (f : 𝓢(E, F)) : Continuous f :=
+  (f.smooth 0).Continuous
 
 @[ext]
 theorem ext {f g : 𝓢(E, F)} (h : ∀ x, (f : E → F) x = g x) : f = g :=
@@ -360,6 +366,10 @@ theorem norm_pow_mul_le_seminorm (f : 𝓢(E, F)) (k : ℕ) (x₀ : E) : ∥x₀
   have := SchwartzMap.le_seminorm 𝕜 k 0 f x₀
   rwa [norm_iterated_fderiv_zero] at this
 
+theorem norm_le_seminorm (f : 𝓢(E, F)) (x₀ : E) : ∥f x₀∥ ≤ (SchwartzMap.seminorm 𝕜 0 0) f := by
+  have := norm_pow_mul_le_seminorm 𝕜 f 0 x₀
+  rwa [pow_zero, one_mul] at this
+
 end Seminorms
 
 section Topology
@@ -373,6 +383,14 @@ variable (𝕜 E F)
 
 /-- The family of Schwartz seminorms. -/
 def _root_.schwartz_seminorm_family : SeminormFamily 𝕜 𝓢(E, F) (ℕ × ℕ) := fun n => Seminorm 𝕜 n.1 n.2
+
+@[simp]
+theorem schwartz_seminorm_family_apply (n k : ℕ) : schwartzSeminormFamily 𝕜 E F (n, k) = SchwartzMap.seminorm 𝕜 n k :=
+  rfl
+
+@[simp]
+theorem schwartz_seminorm_family_apply_zero : schwartzSeminormFamily 𝕜 E F 0 = SchwartzMap.seminorm 𝕜 0 0 :=
+  rfl
 
 instance : TopologicalSpace 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.topology'
@@ -401,7 +419,75 @@ instance : UniformAddGroup 𝓢(E, F) :=
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
   (schwartzWithSeminorms ℝ E F).to_locally_convex_space
 
+instance : TopologicalSpace.FirstCountableTopology 𝓢(E, F) :=
+  (schwartzWithSeminorms ℝ E F).first_countable
+
 end Topology
+
+section BoundedContinuousFunction
+
+/-! ### Inclusion into the space of bounded continuous functions -/
+
+
+open BoundedContinuousFunction
+
+/-- Schwartz functions as bounded continuous functions-/
+def toBoundedContinuousFunction (f : 𝓢(E, F)) : E →ᵇ F :=
+  BoundedContinuousFunction.ofNormedAddCommGroup f (SchwartzMap.continuous f) (SchwartzMap.seminorm ℝ 0 0 f)
+    (norm_le_seminorm ℝ f)
+
+@[simp]
+theorem to_bounded_continuous_function_apply (f : 𝓢(E, F)) (x : E) : f.toBoundedContinuousFunction x = f x :=
+  rfl
+
+variable (𝕜 E F)
+
+variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
+
+/-- The inclusion map from Schwartz functions to bounded continuous functions as a linear map. -/
+def toBoundedContinuousFunctionLm : 𝓢(E, F) →ₗ[𝕜] E →ᵇ F where
+  toFun f := f.toBoundedContinuousFunction
+  map_add' f g := by
+    ext
+    exact add_apply
+  map_smul' a f := by
+    ext
+    exact smul_apply
+
+@[simp]
+theorem to_bounded_continuous_function_lm_apply (f : 𝓢(E, F)) (x : E) : toBoundedContinuousFunctionLm 𝕜 E F f x = f x :=
+  rfl
+
+/-- The inclusion map from Schwartz functions to bounded continuous functions as a continuous linear
+map. -/
+def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
+  { toBoundedContinuousFunctionLm 𝕜 E F with
+    cont := by
+      change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
+      refine'
+        Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F) (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i =>
+          ⟨{0}, 1, one_ne_zero, fun f => _⟩
+      rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_norm_seminorm, schwartz_seminorm_family_apply_zero,
+        BoundedContinuousFunction.norm_le (map_nonneg _ _)]
+      intro x
+      exact norm_le_seminorm 𝕜 _ _ }
+
+@[simp]
+theorem to_bounded_continuous_function_clm_apply (f : 𝓢(E, F)) (x : E) :
+    toBoundedContinuousFunctionClm 𝕜 E F f x = f x :=
+  rfl
+
+variable {E}
+
+/-- The Dirac delta distribution -/
+def delta (x : E) : 𝓢(E, F) →L[𝕜] F :=
+  (BoundedContinuousFunction.evalClm 𝕜 x).comp (toBoundedContinuousFunctionClm 𝕜 E F)
+
+@[simp]
+theorem delta_apply (x₀ : E) (f : 𝓢(E, F)) : delta 𝕜 F x₀ f = f x₀ :=
+  rfl
+
+end BoundedContinuousFunction
 
 end SchwartzMap
 

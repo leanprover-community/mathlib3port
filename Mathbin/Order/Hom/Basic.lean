@@ -113,7 +113,7 @@ export OrderIsoClass (map_le_map_iff)
 
 attribute [simp] map_le_map_iff
 
-instance [LE α] [LE β] [OrderIsoClass F α β] : CoeT F (α ≃o β) :=
+instance [LE α] [LE β] [OrderIsoClass F α β] : CoeTC F (α ≃o β) :=
   ⟨fun f => ⟨f, fun _ _ => map_le_map_iff f⟩⟩
 
 -- See note [lower instance priority]
@@ -128,7 +128,7 @@ protected theorem monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_
 
 protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
 
-instance : CoeT F (α →o β) :=
+instance : CoeTC F (α →o β) :=
   ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono _ }⟩
 
 end OrderHomClass
@@ -366,7 +366,7 @@ def prodIso : (α →o β × γ) ≃o (α →o β) × (α →o γ) where
   invFun f := f.1.Prod f.2
   left_inv f := by ext <;> rfl
   right_inv f := by ext <;> rfl
-  map_rel_iff' f g := forall_and_distrib.symm
+  map_rel_iff' f g := forall_and.symm
 
 /-- `prod.map` of two `order_hom`s as a `order_hom`. -/
 @[simps]

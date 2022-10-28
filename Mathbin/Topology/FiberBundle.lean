@@ -250,7 +250,7 @@ theorem preimage_symm_proj_inter (s : Set B) :
     e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.BaseSet ×ˢ univ = (s ∩ e.BaseSet) ×ˢ univ := by
   ext ⟨x, y⟩
   suffices x ∈ e.base_set → (proj (e.to_local_equiv.symm (x, y)) ∈ s ↔ x ∈ s) by
-    simpa only [prod_mk_mem_set_prod_eq, mem_inter_iff, and_true_iff, mem_univ, And.congr_left_iff]
+    simpa only [prod_mk_mem_set_prod_eq, mem_inter_iff, and_true_iff, mem_univ, and_congr_left_iff]
   intro h
   rw [e.proj_symm_apply' h]
 
@@ -749,7 +749,7 @@ such that `proj p ≤ a` and is equal to `e'` otherwise. -/
 noncomputable def piecewiseLeOfEq [LinearOrder B] [OrderTopology B] (e e' : Trivialization F proj) (a : B)
     (He : a ∈ e.BaseSet) (He' : a ∈ e'.BaseSet) (Heq : ∀ p, proj p = a → e p = e' p) : Trivialization F proj :=
   e.piecewise e' (IicCat a)
-    (Set.ext fun x => And.congr_left_iff.2 fun hx => by simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
+    (Set.ext fun x => and_congr_left_iff.2 fun hx => by simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
     fun p hp => Heq p <| frontier_Iic_subset _ hp.2
 
 /-- Given two bundle trivializations `e`, `e'` of a topological fiber bundle `proj : Z → B` over a
@@ -783,8 +783,8 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.B
       exact H ⟨hx.1.1, hx.2.1⟩
   BaseSet := e.BaseSet ∪ e'.BaseSet
   open_base_set := IsOpen.union e.open_base_set e'.open_base_set
-  source_eq := congr_arg2 (· ∪ ·) e.source_eq e'.source_eq
-  target_eq := (congr_arg2 (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm
+  source_eq := congr_arg₂ (· ∪ ·) e.source_eq e'.source_eq
+  target_eq := (congr_arg₂ (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm
   proj_to_fun := by
     rintro p (hp | hp')
     · show (e.source.piecewise e e' p).1 = proj p

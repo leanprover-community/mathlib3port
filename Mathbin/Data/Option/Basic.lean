@@ -39,7 +39,14 @@ variable {α β γ δ : Type _}
 theorem coe_def : (coe : α → Option α) = some :=
   rfl
 
+theorem some_eq_coe (a : α) : some a = a :=
+  rfl
+
 theorem some_ne_none (x : α) : some x ≠ none := fun h => Option.noConfusion h
+
+@[simp]
+theorem coe_ne_none (a : α) : (a : Option α) ≠ none :=
+  fun.
 
 protected theorem forall {p : Option α → Prop} : (∀ x, p x) ↔ p none ∧ ∀ x, p (some x) :=
   ⟨fun h => ⟨h _, fun x => h _⟩, fun h x => Option.casesOn x h.1 h.2⟩
@@ -99,7 +106,7 @@ theorem some_injective (α : Type _) : Function.Injective (@some α) := fun _ _ 
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Function.Injective.{succ u_1 succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, (Function.injective.{succ u_1 succ u_2} α β f) -> (Function.injective.{succ u_1 succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Function.Injective.{succ u_1 succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1 u_2} α β f))
 Case conversion may be inaccurate. Consider using '#align option.map_injective Option.map_injectiveₓ'. -/
 /-- `option.map f` is injective if `f` is injective. -/
 theorem map_injective {f : α → β} (Hf : Function.Injective f) : Function.Injective (Option.map f)
@@ -612,7 +619,7 @@ theorem get_or_else_default_eq_iget [Inhabited α] (o : Option α) : o.getOrElse
 lean 3 declaration is
   forall {α : Type.{u_1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u_1} α p] {a : α} {b : α}, Iff (Eq.{succ u_1} (Option.{u_1} α) (Option.guard.{u_1} α p (fun (a : α) => _inst_1 a) a) (Option.some.{u_1} α b)) (And (Eq.{succ u_1} α a b) (p a))
 but is expected to have type
-  forall {α._@.Std.Data.Option.Lemmas._hyg.3204 : Type.{u_1}} {p : α._@.Std.Data.Option.Lemmas._hyg.3204 -> Prop} {a : α._@.Std.Data.Option.Lemmas._hyg.3204} {b : α._@.Std.Data.Option.Lemmas._hyg.3204} [inst._@.Std.Data.Option.Lemmas._hyg.3180 : DecidablePred.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 p], Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3204) (Option.guard.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 p (fun (a : α._@.Std.Data.Option.Lemmas._hyg.3204) => inst._@.Std.Data.Option.Lemmas._hyg.3180 a) a) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 b)) (And (Eq.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.3204 a b) (p a))
+  forall {α._@.Std.Data.Option.Lemmas._hyg.3208 : Type.{u_1}} {p : α._@.Std.Data.Option.Lemmas._hyg.3208 -> Prop} {a : α._@.Std.Data.Option.Lemmas._hyg.3208} {b : α._@.Std.Data.Option.Lemmas._hyg.3208} [inst._@.Std.Data.Option.Lemmas._hyg.3184 : DecidablePred.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.3208 p], Iff (Eq.{succ u_1} (Option.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3208) (Option.guard.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3208 p (fun (a : α._@.Std.Data.Option.Lemmas._hyg.3208) => inst._@.Std.Data.Option.Lemmas._hyg.3184 a) a) (Option.some.{u_1} α._@.Std.Data.Option.Lemmas._hyg.3208 b)) (And (Eq.{succ u_1} α._@.Std.Data.Option.Lemmas._hyg.3208 a b) (p a))
 Case conversion may be inaccurate. Consider using '#align option.guard_eq_some Option.guard_eq_someₓ'. -/
 @[simp]
 theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} : guard p a = some b ↔ a = b ∧ p a := by
@@ -630,21 +637,9 @@ theorem lift_or_get_choice {f : α → α → α} (h : ∀ a b, f a b = a ∨ f 
   | none, some b => Or.inr rfl
   | some a, some b => by simpa [lift_or_get] using h a b
 
-/- warning: option.lift_or_get_none_left -> Option.lift_or_get_none_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {f : α -> α -> α} {b : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.liftOrGet.{u_1} α f (Option.none.{u_1} α) b) b
-but is expected to have type
-  forall {α : Type.{u_1}} {f : α -> α -> α} {b : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.lift_or_get.{u_1} α f (Option.none.{u_1} α) b) b
-Case conversion may be inaccurate. Consider using '#align option.lift_or_get_none_left Option.lift_or_get_none_leftₓ'. -/
 @[simp]
 theorem lift_or_get_none_left {f} {b : Option α} : liftOrGet f none b = b := by cases b <;> rfl
 
-/- warning: option.lift_or_get_none_right -> Option.lift_or_get_none_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {f : α -> α -> α} {a : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.liftOrGet.{u_1} α f a (Option.none.{u_1} α)) a
-but is expected to have type
-  forall {α : Type.{u_1}} {f : α -> α -> α} {a : Option.{u_1} α}, Eq.{succ u_1} (Option.{u_1} α) (Option.lift_or_get.{u_1} α f a (Option.none.{u_1} α)) a
-Case conversion may be inaccurate. Consider using '#align option.lift_or_get_none_right Option.lift_or_get_none_rightₓ'. -/
 @[simp]
 theorem lift_or_get_none_right {f} {a : Option α} : liftOrGet f a none = a := by cases a <;> rfl
 
@@ -737,7 +732,7 @@ theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
 
 @[simp]
-theorem elim_none_some (f : Option α → β) : Option.elim (f none) (f ∘ some) = f :=
+theorem elim_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=
   funext fun o => by cases o <;> rfl
 
 end Option

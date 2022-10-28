@@ -380,7 +380,7 @@ theorem induction_on {C : α ⧸ s → Prop} (x : α ⧸ s) (H : ∀ z, C (Quoti
   Quotient.induction_on' x H
 
 @[to_additive]
-instance : CoeT α (α ⧸ s) :=
+instance : CoeTC α (α ⧸ s) :=
   ⟨mk⟩
 
 -- note [use has_coe_t]
@@ -394,7 +394,11 @@ theorem quotient_lift_on_coe {β} (f : α → β) (h) (x : α) : Quotient.liftOn
 
 @[to_additive]
 theorem forall_coe {C : α ⧸ s → Prop} : (∀ x : α ⧸ s, C x) ↔ ∀ x : α, C x :=
-  ⟨fun hx x => hx _, Quot.ind⟩
+  mk_surjective.forall
+
+@[to_additive]
+theorem exists_coe {C : α ⧸ s → Prop} : (∃ x : α ⧸ s, C x) ↔ ∃ x : α, C x :=
+  mk_surjective.exists
 
 @[to_additive]
 instance (s : Subgroup α) : Inhabited (α ⧸ s) :=
@@ -538,7 +542,7 @@ def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) : s ⧸ H.su
   inj' :=
     Quotient.ind₂' <| by
       intro a b h
-      simpa only [Quotient.map'_mk', QuotientGroup.eq'] using h
+      simpa only [Quotient.map'_mk', eq'] using h
 
 @[simp, to_additive]
 theorem quotient_subgroup_of_embedding_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) (g : s) :
@@ -548,7 +552,7 @@ theorem quotient_subgroup_of_embedding_of_le_apply_mk (H : Subgroup α) (h : s �
 /-- If `s ≤ t`, then there is a map `H ⧸ s.subgroup_of H → H ⧸ t.subgroup_of H`. -/
 @[to_additive "If `s ≤ t`, then there is an map\n  `H ⧸ s.add_subgroup_of H → H ⧸ t.add_subgroup_of H`."]
 def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) : H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
-  Quotient.map' id fun a b => by
+  (Quotient.map' id) fun a b => by
     simp_rw [left_rel_eq]
     apply h
 
@@ -557,19 +561,41 @@ theorem quotient_subgroup_of_map_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) 
     quotientSubgroupOfMapOfLe H h (QuotientGroup.mk g) = QuotientGroup.mk g :=
   rfl
 
+/-- If `s ≤ t`, then there is a map `α ⧸ s → α ⧸ t`. -/
+@[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]
+def quotientMapOfLe (h : s ≤ t) : α ⧸ s → α ⧸ t :=
+  (Quotient.map' id) fun a b => by
+    simp_rw [left_rel_eq]
+    apply h
+
+@[simp, to_additive]
+theorem quotient_map_of_le_apply_mk (h : s ≤ t) (g : α) : quotientMapOfLe h (QuotientGroup.mk g) = QuotientGroup.mk g :=
+  rfl
+
 /-- The natural embedding `H ⧸ (⨅ i, f i).subgroup_of H ↪ Π i, H ⧸ (f i).subgroup_of H`. -/
-@[to_additive "There is an embedding\n  `H ⧸ (⨅ i, f i).add_subgroup_of H) ↪ Π i, H ⧸ (f i).add_subgroup_of H`."]
-def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) :
+@[to_additive "The natural embedding\n  `H ⧸ (⨅ i, f i).add_subgroup_of H) ↪ Π i, H ⧸ (f i).add_subgroup_of H`.", simps]
+def quotientInfiSubgroupOfEmbedding {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) :
     H ⧸ (⨅ i, f i).subgroupOf H ↪ ∀ i, H ⧸ (f i).subgroupOf H where
   toFun q i := quotientSubgroupOfMapOfLe H (infi_le f i) q
   inj' :=
     Quotient.ind₂' <| by
-      simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, QuotientGroup.eq', mem_subgroup_of, mem_infi,
-        imp_self, forall_const]
+      simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, eq', mem_subgroup_of, mem_infi, imp_self,
+        forall_const]
 
 @[simp, to_additive]
-theorem quotient_infi_embedding_apply_mk {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) (g : H) (i : ι) :
-    quotientInfiEmbedding f H (QuotientGroup.mk g) i = QuotientGroup.mk g :=
+theorem quotient_infi_subgroup_of_embedding_apply_mk {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) (g : H)
+    (i : ι) : quotientInfiSubgroupOfEmbedding f H (QuotientGroup.mk g) i = QuotientGroup.mk g :=
+  rfl
+
+/-- The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`. -/
+@[to_additive "The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`.", simps]
+def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) : (α ⧸ ⨅ i, f i) ↪ ∀ i, α ⧸ f i where
+  toFun q i := quotientMapOfLe (infi_le f i) q
+  inj' := Quotient.ind₂' <| by simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]
+
+@[simp, to_additive]
+theorem quotient_infi_embedding_apply_mk {ι : Type _} (f : ι → Subgroup α) (g : α) (i : ι) :
+    quotientInfiEmbedding f (QuotientGroup.mk g) i = QuotientGroup.mk g :=
   rfl
 
 @[to_additive]

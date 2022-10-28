@@ -115,7 +115,7 @@ instance aeIsMeasurablyGenerated : IsMeasurablyGenerated μ.ae :=
 /-- See also `measure_theory.ae_restrict_interval_oc_iff`. -/
 theorem ae_interval_oc_iff [LinearOrder α] {a b : α} {P : α → Prop} :
     (∀ᵐ x ∂μ, x ∈ Ι a b → P x) ↔ (∀ᵐ x ∂μ, x ∈ IocCat a b → P x) ∧ ∀ᵐ x ∂μ, x ∈ IocCat b a → P x := by
-  simp only [interval_oc_eq_union, mem_union, or_imp_distrib, eventually_and]
+  simp only [interval_oc_eq_union, mem_union, or_imp, eventually_and]
 
 theorem measure_union (hd : Disjoint s₁ s₂) (h : MeasurableSet s₂) : μ (s₁ ∪ s₂) = μ s₁ + μ s₂ :=
   measure_union₀ h.NullMeasurableSet hd.AeDisjoint
@@ -746,7 +746,7 @@ theorem measure_eq_left_of_subset_of_measure_add_eq {s t : Set α} (h : (μ + ν
       _ ≤ μ s + ν t := add_le_add le_rfl (measure_mono h')
       
   apply Ennreal.le_of_add_le_add_right _ this
-  simp only [not_or_distrib, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at h
+  simp only [not_or, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at h
   exact h.2
 
 theorem measure_eq_right_of_subset_of_measure_add_eq {s t : Set α} (h : (μ + ν) t ≠ ∞) (h' : s ⊆ t)
@@ -760,7 +760,7 @@ theorem measure_to_measurable_add_inter_left {s t : Set α} (hs : MeasurableSet 
   · refine' measure_eq_left_of_subset_of_measure_add_eq _ (subset_to_measurable _ _) (measure_to_measurable t).symm
     rwa [measure_to_measurable t]
     
-  · simp only [not_or_distrib, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at ht
+  · simp only [not_or, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at ht
     exact ht.1
     
 
@@ -1900,7 +1900,7 @@ theorem monoRight (h : QuasiMeasurePreserving f μa μb) (ha : μb ≪ μb') : Q
 
 @[mono]
 theorem mono (ha : μa' ≪ μa) (hb : μb ≪ μb') (h : QuasiMeasurePreserving f μa μb) : QuasiMeasurePreserving f μa' μb' :=
-  (h.mono_left ha).mono_right hb
+  (h.monoLeft ha).monoRight hb
 
 protected theorem comp {g : β → γ} {f : α → β} (hg : QuasiMeasurePreserving g μb μc)
     (hf : QuasiMeasurePreserving f μa μb) : QuasiMeasurePreserving (g ∘ f) μa μc :=
@@ -1919,7 +1919,7 @@ theorem ae_map_le (h : QuasiMeasurePreserving f μa μb) : (μa.map f).ae ≤ μ
   h.2.ae_le
 
 theorem tendsto_ae (h : QuasiMeasurePreserving f μa μb) : Tendsto f μa.ae μb.ae :=
-  (tendsto_ae_map h.AeMeasurable).mono_right h.ae_map_le
+  (tendsto_ae_map h.AeMeasurable).monoRight h.ae_map_le
 
 theorem ae (h : QuasiMeasurePreserving f μa μb) {p : β → Prop} (hg : ∀ᵐ x ∂μb, p x) : ∀ᵐ x ∂μa, p (f x) :=
   h.tendsto_ae hg
@@ -1955,6 +1955,16 @@ theorem liminf_preimage_iterate_ae_eq {f : α → α} (hf : QuasiMeasurePreservi
   convert hf.limsup_preimage_iterate_ae_eq hs
   ext1 n
   simp only [← Set.preimage_iterate_eq, comp_app, preimage_compl]
+
+/-- By replacing a measurable set that is almost invariant with the `limsup` of its preimages, we
+obtain a measurable set that is almost equal and strictly invariant.
+
+(The `liminf` would work just as well.) -/
+theorem exists_preimage_eq_of_preimage_ae {f : α → α} (h : QuasiMeasurePreserving f μ μ) (hs : MeasurableSet s)
+    (hs' : f ⁻¹' s =ᵐ[μ] s) : ∃ t : Set α, MeasurableSet t ∧ t =ᵐ[μ] s ∧ f ⁻¹' t = t :=
+  ⟨limsup (fun n => (Preimage f^[n]) s) atTop,
+    MeasurableSet.measurableSetLimsup fun n => @preimage_iterate_eq α f n ▸ h.Measurable.iterate n hs,
+    h.limsup_preimage_iterate_ae_eq hs', (CompleteLatticeHom.setPreimage f).apply_limsup_iterate s⟩
 
 end QuasiMeasurePreserving
 
@@ -1994,7 +2004,7 @@ theorem NullMeasurableSet.preimage {ν : Measure β} {f : α → β} {t : Set β
   ⟨f ⁻¹' ToMeasurable ν t, hf.Measurable (measurableSetToMeasurable _ _), hf.ae_eq ht.to_measurable_ae_eq.symm⟩
 
 theorem NullMeasurableSet.monoAc (h : NullMeasurableSet s μ) (hle : ν ≪ μ) : NullMeasurableSet s ν :=
-  h.Preimage <| (QuasiMeasurePreserving.id μ).mono_left hle
+  h.Preimage <| (QuasiMeasurePreserving.id μ).monoLeft hle
 
 theorem NullMeasurableSet.mono (h : NullMeasurableSet s μ) (hle : ν ≤ μ) : NullMeasurableSet s ν :=
   h.monoAc hle.AbsolutelyContinuous
@@ -2158,7 +2168,7 @@ theorem ae_add_measure_iff {p : α → Prop} {ν} : (∀ᵐ x ∂μ + ν, p x) �
 
 theorem ae_eq_comp' {ν : Measure β} {f : α → β} {g g' : β → δ} (hf : AeMeasurable f μ) (h : g =ᵐ[ν] g')
     (h2 : μ.map f ≪ ν) : g ∘ f =ᵐ[μ] g' ∘ f :=
-  (tendsto_ae_map hf).mono_right h2.ae_le h
+  (tendsto_ae_map hf).monoRight h2.ae_le h
 
 theorem Measure.QuasiMeasurePreserving.ae_eq_comp {ν : Measure β} {f : α → β} {g g' : β → δ}
     (hf : QuasiMeasurePreserving f μ ν) (h : g =ᵐ[ν] g') : g ∘ f =ᵐ[μ] g' ∘ f :=

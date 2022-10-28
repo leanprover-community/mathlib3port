@@ -151,8 +151,8 @@ instance : CompleteBooleanAlgebra (Set α) :=
   { Set.booleanAlgebra with sup := sup, inf := inf, le_Sup := fun s t t_in a a_in => ⟨t, ⟨t_in, a_in⟩⟩,
     Sup_le := fun s t h a ⟨t', ⟨t'_in, a_in⟩⟩ => h t' t'_in a_in,
     le_Inf := fun s t h a a_in t' t'_in => h t' t'_in a_in, Inf_le := fun s t t_in a h => h _ t_in,
-    infi_sup_le_sup_Inf := fun s S x => Iff.mp <| by simp [forall_or_distrib_left],
-    inf_Sup_le_supr_inf := fun s S x => Iff.mp <| by simp [exists_and_distrib_left] }
+    infi_sup_le_sup_Inf := fun s S x => Iff.mp <| by simp [forall_or_left],
+    inf_Sup_le_supr_inf := fun s S x => Iff.mp <| by simp [exists_and_left] }
 
 /-- `set.image` is monotone. See `set.image_image` for the statement in terms of `⊆`. -/
 theorem monotone_image {f : α → β} : Monotone (Image f) := fun s t => image_subset _
@@ -474,7 +474,7 @@ theorem diff_Inter (s : Set β) (t : ι → Set β) : (s \ ⋂ i, t i) = ⋃ i, 
 
 theorem directed_on_Union {r} {f : ι → Set α} (hd : Directed (· ⊆ ·) f) (h : ∀ x, DirectedOn r (f x)) :
     DirectedOn r (⋃ x, f x) := by
-  simp only [DirectedOn, exists_prop, mem_Union, exists_imp_distrib] <;>
+  simp only [DirectedOn, exists_prop, mem_Union, exists_imp] <;>
     exact fun a₁ b₁ fb₁ a₂ b₂ fb₂ =>
       let ⟨z, zb₁, zb₂⟩ := hd b₁ b₂
       let ⟨x, xf, xa₁, xa₂⟩ := h z a₁ (zb₁ fb₁) a₂ (zb₂ fb₂)
@@ -1234,7 +1234,7 @@ theorem surjective_iff_surjective_of_Union_eq_univ : Surjective f ↔ ∀ i, Sur
   exact ⟨_, congr_arg Subtype.val (H i ⟨x, hi⟩).some_spec⟩
 
 theorem bijective_iff_bijective_of_Union_eq_univ : Bijective f ↔ ∀ i, Bijective ((U i).restrictPreimage f) := by
-  simp_rw [bijective, forall_and_distrib, injective_iff_injective_of_Union_eq_univ hU,
+  simp_rw [bijective, forall_and, injective_iff_injective_of_Union_eq_univ hU,
     surjective_iff_surjective_of_Union_eq_univ hU]
 
 end
@@ -1359,7 +1359,7 @@ section Image
 
 theorem image_Union {f : α → β} {s : ι → Set α} : (f '' ⋃ i, s i) = ⋃ i, f '' s i := by
   ext1 x
-  simp [image, ← exists_and_distrib_right, @exists_swap α]
+  simp [image, ← exists_and_right, @exists_swap α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1488,7 +1488,7 @@ theorem Union_prod {ι ι' α β} (s : ι → Set α) (t : ι' → Set β) :
 theorem Union_prod_of_monotone [SemilatticeSup α] {s : α → Set β} {t : α → Set γ} (hs : Monotone s) (ht : Monotone t) :
     (⋃ x, s x ×ˢ t x) = (⋃ x, s x) ×ˢ ⋃ x, t x := by
   ext ⟨z, w⟩
-  simp only [mem_prod, mem_Union, exists_imp_distrib, and_imp, iff_def]
+  simp only [mem_prod, mem_Union, exists_imp, and_imp, iff_def]
   constructor
   · intro x hz hw
     exact ⟨⟨x, hz⟩, x, hw⟩
@@ -1751,10 +1751,10 @@ theorem _root_.disjoint.ne_of_mem (h : Disjoint s t) {x y} (hx : x ∈ s) (hy : 
   disjoint_iff_forall_ne.mp h x hx y hy
 
 theorem disjointOfSubsetLeft (h : s ⊆ u) (d : Disjoint u t) : Disjoint s t :=
-  d.mono_left h
+  d.monoLeft h
 
 theorem disjointOfSubsetRight (h : t ⊆ u) (d : Disjoint s u) : Disjoint s t :=
-  d.mono_right h
+  d.monoRight h
 
 theorem disjointOfSubset {s t u v : Set α} (h1 : s ⊆ u) (h2 : t ⊆ v) (d : Disjoint u v) : Disjoint s t :=
   d.mono h1 h2

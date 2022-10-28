@@ -302,7 +302,7 @@ theorem cont_mdiff_on_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f :
 @[simp]
 theorem cont_mdiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : M' → M} (hm : m ≤ n) :
     ContMdiff I' J m (h ∘ f) ↔ ContMdiff I' I m f :=
-  forall_congr fun x => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
+  forall_congr' fun x => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
 
 theorem toLocalHomeomorphMdifferentiable (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) :
     h.toHomeomorph.toLocalHomeomorph.Mdifferentiable I J :=

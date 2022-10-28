@@ -90,5 +90,5 @@ include 𝕜
 
 theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (Sphere (0 : E) r) :=
   letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
-  set.nonempty_coe_sort.mpr (normed_space.sphere_nonempty.mpr hr)
+  (normed_space.sphere_nonempty.mpr hr).coeSort
 

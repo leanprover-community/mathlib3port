@@ -3,7 +3,7 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 -/
-import Mathbin.Data.Nat.Basic
+import Mathbin.Data.Nat.Order
 import Mathbin.Algebra.Order.Positive.Ring
 
 /-!
@@ -162,7 +162,7 @@ theorem pos (n : ℕ+) : 0 < (n : ℕ) :=
 theorem eq {m n : ℕ+} : (m : ℕ) = n → m = n :=
   Subtype.eq
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_inj {m n : ℕ+} : (m : ℕ) = n ↔ m = n :=
   SetCoe.ext_iff
 
@@ -173,7 +173,7 @@ theorem coe_injective : Function.Injective (coe : ℕ+ → ℕ) :=
 theorem mk_coe (n h) : ((⟨n, h⟩ : ℕ+) : ℕ) = n :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem add_coe (m n : ℕ+) : ((m + n : ℕ+) : ℕ) = m + n :=
   rfl
 
@@ -282,11 +282,11 @@ theorem bit1_le_bit0 (n m : ℕ+) : bit1 n ≤ bit0 m ↔ bit1 (n : ℕ) ≤ bit
 theorem bit1_le_bit1 (n m : ℕ+) : bit1 n ≤ bit1 m ↔ bit1 (n : ℕ) ≤ bit1 (m : ℕ) :=
   Iff.rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem one_coe : ((1 : ℕ+) : ℕ) = 1 :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem mul_coe (m n : ℕ+) : ((m * n : ℕ+) : ℕ) = m * n :=
   rfl
 
@@ -300,7 +300,7 @@ def coeMonoidHom : ℕ+ →* ℕ where
 theorem coe_coe_monoid_hom : (coeMonoidHom : ℕ+ → ℕ) = coe :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 :=
   Subtype.coe_injective.eq_iff' one_coe
 
@@ -314,15 +314,15 @@ theorem lt_add_left (n m : ℕ+) : n < m + n :=
 theorem lt_add_right (n m : ℕ+) : n < n + m :=
   (lt_add_left n m).trans_eq (add_comm _ _)
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_bit0 (a : ℕ+) : ((bit0 a : ℕ+) : ℕ) = bit0 (a : ℕ) :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_bit1 (a : ℕ+) : ((bit1 a : ℕ+) : ℕ) = bit1 (a : ℕ) :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem pow_coe (m : ℕ+) (n : ℕ) : ((m ^ n : ℕ+) : ℕ) = (m : ℕ) ^ n :=
   rfl
 

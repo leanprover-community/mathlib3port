@@ -6,6 +6,7 @@ Authors: Mario Carneiro
 import Mathbin.Data.Nat.Basic
 import Mathbin.Data.Nat.Cast.Defs
 import Mathbin.Algebra.Group.Pi
+import Mathbin.Algebra.Order.Ring
 import Mathbin.Tactic.PiInstances
 import Mathbin.Data.Sum.Basic
 
@@ -38,7 +39,7 @@ theorem coe_cast_add_monoid_hom [AddMonoidWithOne α] : (castAddMonoidHom α : �
 
 /- warning: nat.cast_mul -> Nat.cast_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : NonAssocSemiring.{u_1} α] (m : Nat) (n : Nat), Eq.{succ u_1} α ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (Distrib.toHasMul.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α _inst_1)))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) m) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) n))
+  forall {α : Type.{u_1}} [_inst_1 : NonAssocSemiring.{u_1} α] (m : Nat) (n : Nat), Eq.{succ u_1} α ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (Distrib.toHasMul.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α _inst_1)))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) m) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) n))
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.188 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188))) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188)))) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188))) m) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188))) n))
 Case conversion may be inaccurate. Consider using '#align nat.cast_mul Nat.cast_mulₓ'. -/
@@ -105,7 +106,7 @@ theorem one_lt_cast {n : ℕ} : 1 < (n : α) ↔ 1 < n := by rw [← cast_one, c
 theorem one_le_cast {n : ℕ} : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [← cast_one, cast_le]
 
 @[simp, norm_cast]
-theorem cast_lt_one {n : ℕ} : (n : α) < 1 ↔ n = 0 := by rw [← cast_one, cast_lt, lt_succ_iff, le_zero_iff]
+theorem cast_lt_one {n : ℕ} : (n : α) < 1 ↔ n = 0 := by rw [← cast_one, cast_lt, lt_succ_iff] <;> exact le_bot_iff
 
 @[simp, norm_cast]
 theorem cast_le_one {n : ℕ} : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le]
@@ -137,8 +138,8 @@ variable [AddMonoidWithOne α] [AddMonoidWithOne β]
 
 instance : AddMonoidWithOne (α × β) :=
   { Prod.addMonoid, Prod.hasOne with natCast := fun n => (n, n),
-    nat_cast_zero := congr_arg2 Prod.mk Nat.cast_zero Nat.cast_zero,
-    nat_cast_succ := fun n => congr_arg2 Prod.mk (Nat.cast_succ _) (Nat.cast_succ _) }
+    nat_cast_zero := congr_arg₂ Prod.mk Nat.cast_zero Nat.cast_zero,
+    nat_cast_succ := fun n => congr_arg₂ Prod.mk (Nat.cast_succ _) (Nat.cast_succ _) }
 
 @[simp]
 theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n := by induction n <;> simp [*]
@@ -221,7 +222,7 @@ end RingHom
 
 /- warning: nat.cast_id -> Nat.cast_id is a dubious translation:
 lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Nat (HasLiftT.mk.{1 1} Nat Nat (CoeTₓ.coe.{1 1} Nat Nat (Nat.castCoe.{0} Nat (AddMonoidWithOne.toHasNatCast.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))))))) n) n
+  forall (n : Nat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Nat (HasLiftT.mk.{1 1} Nat Nat (CoeTCₓ.coe.{1 1} Nat Nat (Nat.castCoe.{0} Nat (AddMonoidWithOne.toHasNatCast.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))))))) n) n
 but is expected to have type
   forall {n : Nat}, Eq.{1} Nat (Nat.cast.{0} Nat (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat (CommSemiring.toSemiring.{0} Nat Nat.instCommSemiringNat)))) n) n
 Case conversion may be inaccurate. Consider using '#align nat.cast_id Nat.cast_idₓ'. -/

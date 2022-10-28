@@ -131,7 +131,7 @@ def cast : ∀ {n : ℕ}, Zmod n → R
   | n + 1 => fun i => i.val
 
 -- see Note [coercion into rings]
-instance (priority := 900) (n : ℕ) : CoeT (Zmod n) R :=
+instance (priority := 900) (n : ℕ) : CoeTC (Zmod n) R :=
   ⟨cast⟩
 
 @[simp]
@@ -175,7 +175,7 @@ theorem int_cast_zmod_cast (a : Zmod n) : ((a : ℤ) : Zmod n) = a := by
   cases n
   · rw [Int.cast_id a, Int.cast_id a]
     
-  · rw [coe_coe, Int.cast_coe_nat, Fin.coe_coe_eq_self]
+  · rw [coe_coe, Int.cast_ofNat, Fin.coe_coe_eq_self]
     
 
 theorem int_cast_right_inverse : Function.RightInverse (coe : Zmod n → ℤ) (coe : ℤ → Zmod n) :=
@@ -422,7 +422,7 @@ theorem val_int_cast {n : ℕ} (a : ℤ) [NeZero n] : ↑(a : Zmod n).val = a % 
   have hle : (0 : ℤ) ≤ ↑(a : Zmod n).val := Int.coe_nat_nonneg _
   have hlt : ↑(a : Zmod n).val < (n : ℤ) := int.coe_nat_lt.mpr (Zmod.val_lt a)
   refine' (Int.mod_eq_of_lt hle hlt).symm.trans _
-  rw [← Zmod.int_coe_eq_int_coe_iff', Int.cast_coe_nat, Zmod.nat_cast_val, Zmod.cast_id]
+  rw [← Zmod.int_coe_eq_int_coe_iff', Int.cast_ofNat, Zmod.nat_cast_val, Zmod.cast_id]
 
 theorem coe_int_cast {n : ℕ} (a : ℤ) : ↑(a : Zmod n) = a % n := by
   cases n
@@ -482,7 +482,7 @@ theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : Zmod p) [NeZero p] : ↑n =
     rw [val_int_cast, Int.mod_add_div]
     
   · rintro ⟨k, rfl⟩
-    rw [Int.cast_add, Int.cast_mul, Int.cast_coe_nat, Int.cast_coe_nat, nat_cast_val, Zmod.nat_cast_self, zero_mul,
+    rw [Int.cast_add, Int.cast_mul, Int.cast_ofNat, Int.cast_ofNat, nat_cast_val, Zmod.nat_cast_self, zero_mul,
       add_zero, cast_id]
     
 
@@ -503,7 +503,7 @@ attribute [local semireducible] Int.NonNeg
 
 @[simp]
 theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} (h : 0 ≤ z), (z.toNat : Zmod p) = z
-  | (n : ℕ), h => by simp only [Int.cast_coe_nat, Int.to_nat_coe_nat]
+  | (n : ℕ), h => by simp only [Int.cast_ofNat, Int.to_nat_coe_nat]
   | -[1 + n], h => False.elim h
 
 theorem val_injective (n : ℕ) [NeZero n] : Function.Injective (Zmod.val : Zmod n → ℕ) := by
@@ -726,9 +726,9 @@ theorem neg_eq_self_mod_two (a : Zmod 2) : -a = a := by
 @[simp]
 theorem nat_abs_mod_two (a : ℤ) : (a.natAbs : Zmod 2) = a := by
   cases a
-  · simp only [Int.nat_abs_of_nat, Int.cast_coe_nat, Int.of_nat_eq_coe]
+  · simp only [Int.nat_abs_of_nat, Int.cast_ofNat, Int.of_nat_eq_coe]
     
-  · simp only [neg_eq_self_mod_two, Nat.cast_succ, Int.natAbs, Int.cast_neg_succ_of_nat]
+  · simp only [neg_eq_self_mod_two, Nat.cast_succ, Int.natAbs, Int.cast_negSucc]
     
 
 @[simp]
@@ -783,9 +783,9 @@ theorem coe_val_min_abs : ∀ {n : ℕ} (x : Zmod n), (x.valMinAbs : Zmod n) = x
   | k@(n + 1), x => by
     rw [val_min_abs_def_pos]
     split_ifs
-    · rw [Int.cast_coe_nat, nat_cast_zmod_val]
+    · rw [Int.cast_ofNat, nat_cast_zmod_val]
       
-    · rw [Int.cast_sub, Int.cast_coe_nat, nat_cast_zmod_val, Int.cast_coe_nat, nat_cast_self, sub_zero]
+    · rw [Int.cast_sub, Int.cast_ofNat, nat_cast_zmod_val, Int.cast_ofNat, nat_cast_self, sub_zero]
       
 
 theorem nat_abs_val_min_abs_le {n : ℕ} [NeZero n] (x : Zmod n) : x.valMinAbs.natAbs ≤ n / 2 := by
@@ -847,8 +847,8 @@ theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
   split_ifs
   · rw [Int.nat_abs_of_nat, nat_cast_zmod_val]
     
-  · rw [← Int.cast_coe_nat, Int.of_nat_nat_abs_of_nonpos this, Int.cast_neg, Int.cast_sub]
-    rw [Int.cast_coe_nat, Int.cast_coe_nat, nat_cast_self, sub_zero, nat_cast_zmod_val]
+  · rw [← Int.cast_ofNat, Int.of_nat_nat_abs_of_nonpos this, Int.cast_neg, Int.cast_sub]
+    rw [Int.cast_ofNat, Int.cast_ofNat, nat_cast_self, sub_zero, nat_cast_zmod_val]
     
 
 @[simp]

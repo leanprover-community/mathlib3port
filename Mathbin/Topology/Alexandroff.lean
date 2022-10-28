@@ -67,7 +67,7 @@ def infty : Alexandroff X :=
 -- mathport name: alexandroff.infty
 localized [Alexandroff] notation "∞" => Alexandroff.infty
 
-instance : CoeT X (Alexandroff X) :=
+instance : CoeTC X (Alexandroff X) :=
   ⟨Option.some⟩
 
 instance : Inhabited (Alexandroff X) :=
@@ -295,8 +295,7 @@ theorem tendsto_nhds_infty' {α : Type _} {f : Alexandroff X → α} {l : Filter
 theorem tendsto_nhds_infty {α : Type _} {f : Alexandroff X → α} {l : Filter α} :
     Tendsto f (𝓝 ∞) l ↔ ∀ s ∈ l, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
   tendsto_nhds_infty'.trans <| by
-    simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and_distrib, and_assoc',
-      exists_prop]
+    simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and, and_assoc', exists_prop]
 
 theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ Tendsto (f ∘ coe) (coclosedCompact X) (𝓝 (f ∞)) :=
@@ -357,7 +356,7 @@ instance :
     CompactSpace (Alexandroff X) where compact_univ := by
     have : tendsto (coe : X → Alexandroff X) (cocompact X) (𝓝 ∞) := by
       rw [nhds_infty_eq]
-      exact (tendsto_map.mono_left cocompact_le_coclosed_compact).mono_right le_sup_left
+      exact (tendsto_map.mono_left cocompact_le_coclosed_compact).monoRight le_sup_left
     convert ← this.is_compact_insert_range_of_cocompact continuous_coe
     exact insert_none_range_some X
 

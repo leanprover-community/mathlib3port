@@ -204,8 +204,8 @@ theorem aleph'_limit {o : Ordinal} (ho : IsLimit o) : aleph' o = ⨆ a : IioCat 
 @[simp]
 theorem aleph'_omega : aleph' ω = ℵ₀ :=
   eq_of_forall_ge_iff fun c => by
-    simp only [aleph'_le_of_limit omega_is_limit, lt_omega, exists_imp_distrib, aleph_0_le]
-    exact forall_swap.trans (forall_congr fun n => by simp only [forall_eq, aleph'_nat])
+    simp only [aleph'_le_of_limit omega_is_limit, lt_omega, exists_imp, aleph_0_le]
+    exact forall_swap.trans (forall_congr' fun n => by simp only [forall_eq, aleph'_nat])
 
 /-- `aleph'` and `aleph_idx` form an equivalence between `ordinal` and `cardinal` -/
 @[simp]

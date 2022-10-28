@@ -321,7 +321,7 @@ protected theorem mvPolynomial (ι : Type u_2) [Finite ι] : FinitePresentation 
 
 /-- `R` is finitely presented as `R`-algebra. -/
 theorem self : FinitePresentation R R :=
-  equiv (FinitePresentation.mvPolynomial R Pempty) (MvPolynomial.isEmptyAlgEquiv R Pempty)
+  equiv (FinitePresentation.mvPolynomial R PEmpty) (MvPolynomial.isEmptyAlgEquiv R PEmpty)
 
 /-- `R[X]` is finitely presented as `R`-algebra. -/
 theorem polynomial : FinitePresentation R R[X] :=

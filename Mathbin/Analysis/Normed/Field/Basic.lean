@@ -717,7 +717,7 @@ theorem Int.norm_eq_abs (n : ℤ) : ∥n∥ = abs n :=
 theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0) = ∥n∥₊ :=
   Nnreal.eq <|
     calc
-      ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_coe_nat, Nnreal.coe_nat_cast]
+      ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_ofNat, Nnreal.coe_nat_cast]
       _ = abs n := by simp only [← Int.abs_eq_nat_abs, Int.cast_abs]
       _ = ∥n∥ := rfl
       
@@ -910,4 +910,93 @@ instance RingHomIsometric.ids : RingHomIsometric (RingHom.id R₁) :=
   ⟨fun x => rfl⟩
 
 end RingHomIsometric
+
+section Induced
+
+variable {F : Type _} (R S : Type _)
+
+/-- A non-unital ring homomorphism from an `non_unital_ring` to a `non_unital_semi_normed_ring`
+induces a `non_unital_semi_normed_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NonUnitalSemiNormedRing.induced [NonUnitalRing R] [NonUnitalSemiNormedRing S] [NonUnitalRingHomClass F R S]
+    (f : F) : NonUnitalSemiNormedRing R :=
+  { SeminormedAddCommGroup.induced R S f with
+    norm_mul := fun x y => by
+      unfold norm
+      exact (map_mul f x y).symm ▸ norm_mul_le (f x) (f y) }
+
+/-- An injective non-unital ring homomorphism from an `non_unital_ring` to a
+`non_unital_normed_ring` induces a `non_unital_normed_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NonUnitalNormedRing.induced [NonUnitalRing R] [NonUnitalNormedRing S] [NonUnitalRingHomClass F R S] (f : F)
+    (hf : Function.Injective f) : NonUnitalNormedRing R :=
+  { NonUnitalSemiNormedRing.induced R S f, NormedAddCommGroup.induced R S f hf with }
+
+/-- A non-unital ring homomorphism from an `ring` to a `semi_normed_ring` induces a
+`semi_normed_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def SemiNormedRing.induced [Ring R] [SemiNormedRing S] [NonUnitalRingHomClass F R S] (f : F) : SemiNormedRing R :=
+  { NonUnitalSemiNormedRing.induced R S f, SeminormedAddCommGroup.induced R S f with }
+
+/-- An injective non-unital ring homomorphism from an `ring` to a `normed_ring` induces a
+`normed_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NormedRing.induced [Ring R] [NormedRing S] [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Injective f) :
+    NormedRing R :=
+  { NonUnitalSemiNormedRing.induced R S f, NormedAddCommGroup.induced R S f hf with }
+
+/-- A non-unital ring homomorphism from a `comm_ring` to a `semi_normed_ring` induces a
+`semi_normed_comm_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def SemiNormedCommRing.induced [CommRing R] [SemiNormedRing S] [NonUnitalRingHomClass F R S] (f : F) :
+    SemiNormedCommRing R :=
+  { NonUnitalSemiNormedRing.induced R S f, SeminormedAddCommGroup.induced R S f with mul_comm := mul_comm }
+
+/-- An injective non-unital ring homomorphism from an `comm_ring` to a `normed_ring` induces a
+`normed_comm_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NormedCommRing.induced [CommRing R] [NormedRing S] [NonUnitalRingHomClass F R S] (f : F)
+    (hf : Function.Injective f) : NormedCommRing R :=
+  { SemiNormedCommRing.induced R S f, NormedAddCommGroup.induced R S f hf with }
+
+/-- An injective non-unital ring homomorphism from an `division_ring` to a `normed_ring` induces a
+`normed_division_ring` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnitalRingHomClass F R S] (f : F)
+    (hf : Function.Injective f) : NormedDivisionRing R :=
+  { NormedAddCommGroup.induced R S f hf with
+    norm_mul' := fun x y => by
+      unfold norm
+      exact (map_mul f x y).symm ▸ norm_mul (f x) (f y) }
+
+/-- An injective non-unital ring homomorphism from an `field` to a `normed_ring` induces a
+`normed_field` structure on the domain.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NormedField.induced [Field R] [NormedField S] [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Injective f) :
+    NormedField R :=
+  { NormedDivisionRing.induced R S f hf with }
+
+/-- A ring homomorphism from a `ring R` to a `semi_normed_ring S` which induces the norm structure
+`semi_normed_ring.induced` makes `R` satisfy `∥(1 : R)∥ = 1` whenever `∥(1 : S)∥ = 1`. -/
+theorem NormOneClass.induced {F : Type _} (R S : Type _) [Ring R] [SemiNormedRing S] [NormOneClass S]
+    [RingHomClass F R S] (f : F) : @NormOneClass R (SemiNormedRing.induced R S f).toHasNorm _ :=
+  { norm_one := (congr_arg norm (map_one f)).trans norm_one }
+
+end Induced
 

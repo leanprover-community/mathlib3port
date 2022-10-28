@@ -249,7 +249,7 @@ theorem changeForm.zero_proof : (0 : BilinForm R M).toQuadraticForm = Q - Q :=
 
 /-- Auxiliary lemma used as an argument to `clifford_algebra.change_form` -/
 theorem changeForm.add_proof : (B + B').toQuadraticForm = Q'' - Q :=
-  (congr_arg2 (· + ·) h h').trans <| sub_add_sub_cancel' _ _ _
+  (congr_arg₂ (· + ·) h h').trans <| sub_add_sub_cancel' _ _ _
 
 /-- Auxiliary lemma used as an argument to `clifford_algebra.change_form` -/
 theorem changeForm.neg_proof : (-B).toQuadraticForm = Q - Q' :=

@@ -121,7 +121,7 @@ theorem tangent_cone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) : TangentConeAt �
   refine' ⟨c, d, _, ctop, clim⟩
   suffices : tendsto (fun n => x + d n) at_top (𝓝[t] x)
   exact tendsto_principal.1 (tendsto_inf.1 this).2
-  refine' (tendsto_inf.2 ⟨_, tendsto_principal.2 ds⟩).mono_right h
+  refine' (tendsto_inf.2 ⟨_, tendsto_principal.2 ds⟩).monoRight h
   simpa only [add_zero] using tendsto_const_nhds.add (TangentConeAt.lim_zero at_top ctop clim)
 
 /-- Tangent cone of `s` at `x` depends only on `𝓝[s] x`. -/

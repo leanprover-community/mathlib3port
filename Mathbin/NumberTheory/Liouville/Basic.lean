@@ -50,14 +50,14 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
       abs_of_pos bq0, one_mul,
       ←-- ... and revert to integers
       Int.cast_pow,
-      ← Int.cast_mul, ← Int.cast_coe_nat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ← Int.cast_abs, ←
-      Int.cast_mul, Int.cast_lt] at a1
+      ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ← Int.cast_abs, ← Int.cast_mul,
+      Int.cast_lt] at a1
     
   -- At a0, clear denominators...
   replace a0 : ¬a * q - ↑b * p = 0
   · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero,
       ←-- ... and revert to integers
-      Int.cast_coe_nat,
+      Int.cast_ofNat,
       ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0
     
   -- Actually, `q` is a natural number

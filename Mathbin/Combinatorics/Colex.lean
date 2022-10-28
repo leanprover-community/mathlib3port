@@ -183,13 +183,13 @@ instance [LinearOrder α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
 
 instance decidableLt [LinearOrder α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
   show ∀ A B : Finset α, Decidable (A.toColex < B.toColex) from fun A B =>
-    decidableOfIff' (∃ k ∈ B, (∀ x ∈ A ∪ B, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
+    decidable_of_iff' (∃ k ∈ B, (∀ x ∈ A ∪ B, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
       (by
         rw [Colex.lt_def]
         apply exists_congr
-        simp only [mem_union, exists_prop, or_imp_distrib, and_comm' (_ ∈ B), and_assoc']
+        simp only [mem_union, exists_prop, or_imp, and_comm' (_ ∈ B), and_assoc']
         intro k
-        refine' and_congr_left' (forall_congr _)
+        refine' and_congr_left' (forall_congr' _)
         tauto)
 
 instance [LinearOrder α] : LinearOrder (Finset.Colex α) :=

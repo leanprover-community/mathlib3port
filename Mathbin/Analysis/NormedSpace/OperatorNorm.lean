@@ -455,6 +455,75 @@ theorem lipschitzApply (x : E) : LipschitzWith ∥x∥₊ fun f : E →SL[σ₁�
 
 end
 
+section SupCat
+
+variable [RingHomIsometric σ₁₂]
+
+theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ≥0} (hr : r < ∥f∥₊) : ∃ x, r * ∥x∥₊ < ∥f x∥₊ := by
+  simpa only [not_forall, not_le, Set.mem_set_of] using
+    not_mem_of_lt_cInf (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ∥f x∥₊ ≤ c * ∥x∥₊ }) (OrderBot.bdd_below _)
+
+theorem exists_mul_lt_of_lt_op_norm (f : E →SL[σ₁₂] F) {r : ℝ} (hr₀ : 0 ≤ r) (hr : r < ∥f∥) : ∃ x, r * ∥x∥ < ∥f x∥ := by
+  lift r to ℝ≥0 using hr₀
+  exact f.exists_mul_lt_apply_of_lt_op_nnnorm hr
+
+theorem exists_lt_apply_of_lt_op_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) {r : ℝ≥0} (hr : r < ∥f∥₊) : ∃ x : E, ∥x∥₊ < 1 ∧ r < ∥f x∥₊ := by
+  obtain ⟨y, hy⟩ := f.exists_mul_lt_apply_of_lt_op_nnnorm hr
+  have hy' : ∥y∥₊ ≠ 0 :=
+    nnnorm_ne_zero_iff.2 fun heq => by simpa only [HEq, nnnorm_zero, map_zero, not_lt_zero'] using hy
+  have hfy : ∥f y∥₊ ≠ 0 := (zero_le'.trans_lt hy).ne'
+  rw [← inv_inv ∥f y∥₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero hfy), mul_assoc, mul_comm ∥y∥₊, ← mul_assoc, ←
+    Nnreal.lt_inv_iff_mul_lt hy'] at hy
+  obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 hy
+  refine' ⟨k • y, (nnnorm_smul k y).symm ▸ (Nnreal.lt_inv_iff_mul_lt hy').1 hk₂, _⟩
+  have : ∥σ₁₂ k∥₊ = ∥k∥₊ := Subtype.ext RingHomIsometric.is_iso
+  rwa [map_smulₛₗ f, nnnorm_smul, ← Nnreal.div_lt_iff hfy, div_eq_mul_inv, this]
+
+theorem exists_lt_apply_of_lt_op_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) {r : ℝ} (hr : r < ∥f∥) : ∃ x : E, ∥x∥ < 1 ∧ r < ∥f x∥ := by
+  by_cases hr₀:r < 0
+  · exact ⟨0, by simpa using hr₀⟩
+    
+  · lift r to ℝ≥0 using not_lt.1 hr₀
+    exact f.exists_lt_apply_of_lt_op_nnnorm hr
+    
+
+theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥₊) '' Ball 0 1) = ∥f∥₊ := by
+  refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).Image _) _ fun ub hub => _
+  · rintro - ⟨x, hx, rfl⟩
+    simpa only [mul_one] using f.le_op_norm_of_le (mem_ball_zero_iff.1 hx).le
+    
+  · obtain ⟨x, hx, hxf⟩ := f.exists_lt_apply_of_lt_op_nnnorm hub
+    exact ⟨_, ⟨x, mem_ball_zero_iff.2 hx, rfl⟩, hxf⟩
+    
+
+theorem Sup_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥) '' Ball 0 1) = ∥f∥ := by
+  simpa only [Nnreal.coe_Sup, Set.image_image] using Nnreal.coe_eq.2 f.Sup_unit_ball_eq_nnnorm
+
+theorem Sup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥₊) '' ClosedBall 0 1) = ∥f∥₊ := by
+  have hbdd : ∀ y ∈ (fun x => ∥f x∥₊) '' closed_ball 0 1, y ≤ ∥f∥₊ := by
+    rintro - ⟨x, hx, rfl⟩
+    exact f.unit_le_op_norm x (mem_closed_ball_zero_iff.1 hx)
+  refine' le_antisymm (cSup_le ((nonempty_closed_ball.mpr zero_le_one).Image _) hbdd) _
+  rw [← Sup_unit_ball_eq_nnnorm]
+  exact cSup_le_cSup ⟨∥f∥₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).Image _) (Set.image_subset _ ball_subset_closed_ball)
+
+theorem Sup_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥) '' ClosedBall 0 1) = ∥f∥ := by
+  simpa only [Nnreal.coe_Sup, Set.image_image] using Nnreal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
+
+end SupCat
+
 section
 
 theorem op_norm_ext [RingHomIsometric σ₁₃] (f : E →SL[σ₁₂] F) (g : E →SL[σ₁₃] G) (h : ∀ x, ∥f x∥ = ∥g x∥) : ∥f∥ = ∥g∥ :=

@@ -165,11 +165,11 @@ def emptyProd (α : Type _) : Empty × α ≃ Empty :=
   equivEmpty _
 
 /-- `pempty` type is a right absorbing element for type product up to an equivalence. -/
-def prodPempty (α : Type _) : α × Pempty ≃ Pempty :=
+def prodPempty (α : Type _) : α × PEmpty ≃ PEmpty :=
   equivPempty _
 
 /-- `pempty` type is a left absorbing element for type product up to an equivalence. -/
-def pemptyProd (α : Type _) : Pempty × α ≃ Pempty :=
+def pemptyProd (α : Type _) : PEmpty × α ≃ PEmpty :=
   equivPempty _
 
 end

@@ -255,7 +255,7 @@ theorem mul_indicator_preimage_of_not_mem (s : Set α) (f : α → M) {t : Set M
 @[to_additive]
 theorem mem_range_mul_indicator {r : M} {s : Set α} {f : α → M} :
     r ∈ Range (mulIndicator s f) ↔ r = 1 ∧ s ≠ univ ∨ r ∈ f '' s := by
-  simp [mul_indicator, ite_eq_iff, exists_or_distrib, eq_univ_iff_forall, and_comm', or_comm', @eq_comm _ r 1]
+  simp [mul_indicator, ite_eq_iff, exists_or, eq_univ_iff_forall, and_comm', or_comm', @eq_comm _ r 1]
 
 @[to_additive]
 theorem mul_indicator_rel_mul_indicator {r : M → M → Prop} (h1 : r 1 1) (ha : a ∈ s → r (f a) (g a)) :
@@ -469,7 +469,7 @@ theorem _root_.finset.prod_mul_indicator_eq_prod_filter (s : Finset ι) (f : ι 
   refine' (Finset.prod_filter_mul_prod_filter_not s (fun i => g i ∈ t i) _).symm.trans _
   refine' Eq.trans _ (mul_one _)
   exact
-    congr_arg2 (· * ·) ((Finset.prod_congr rfl) fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
+    congr_arg₂ (· * ·) ((Finset.prod_congr rfl) fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
       (Finset.prod_eq_one fun x hx => mul_indicator_of_not_mem (Finset.mem_filter.1 hx).2 _)
 
 @[to_additive]

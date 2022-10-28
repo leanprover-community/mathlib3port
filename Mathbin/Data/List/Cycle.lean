@@ -562,7 +562,7 @@ theorem not_mem_nil : ∀ a, a ∉ @nil α :=
   not_mem_nil
 
 instance [DecidableEq α] : DecidableEq (Cycle α) := fun s₁ s₂ =>
-  Quotient.recOnSubsingleton₂' s₁ s₂ fun l₁ l₂ => decidableOfIff' _ Quotient.eq'
+  Quotient.recOnSubsingleton₂' s₁ s₂ fun l₁ l₂ => decidable_of_iff' _ Quotient.eq'
 
 instance [DecidableEq α] (x : α) (s : Cycle α) : Decidable (x ∈ s) :=
   Quotient.recOnSubsingleton' s fun l => List.decidableMem x l
@@ -637,7 +637,7 @@ theorem nontrivial_coe_nodup_iff {l : List α} (hl : l.Nodup) : Nontrivial (l : 
     
   · simp only [mem_cons_iff, exists_prop, mem_coe_iff, List.length, Ne.def, Nat.succ_le_succ_iff, zero_le, iff_true_iff]
     refine' ⟨hd, hd', _, by simp⟩
-    simp only [not_or_distrib, mem_cons_iff, nodup_cons] at hl
+    simp only [not_or, mem_cons_iff, nodup_cons] at hl
     exact hl.left.left
     
 
@@ -757,7 +757,7 @@ def decidableNontrivialCoe : ∀ l : List α, Decidable (Nontrivial (l : Cycle �
   | [x] => isFalse (by simp [Nontrivial])
   | x::y::l =>
     if h : x = y then
-      @decidableOfIff' _ (Nontrivial (x::l : Cycle α)) (by simp [h, Nontrivial]) (decidable_nontrivial_coe (x::l))
+      @decidable_of_iff' _ (Nontrivial (x::l : Cycle α)) (by simp [h, Nontrivial]) (decidable_nontrivial_coe (x::l))
     else isTrue ⟨x, y, h, by simp, by simp⟩
 
 instance {s : Cycle α} : Decidable (Nontrivial s) :=

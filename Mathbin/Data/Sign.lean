@@ -188,7 +188,7 @@ def cast : SignType → α
   | Pos => 1
   | neg => -1
 
-instance : CoeT SignType α :=
+instance : CoeTC SignType α :=
   ⟨cast⟩
 
 @[simp]

@@ -455,7 +455,7 @@ theorem neBotOfLe {f g : Filter α} [hf : NeBot f] (hg : f ≤ g) : NeBot g :=
   hf.mono hg
 
 @[simp]
-theorem sup_ne_bot {f g : Filter α} : NeBot (f ⊔ g) ↔ NeBot f ∨ NeBot g := by simp [ne_bot_iff, not_and_distrib]
+theorem sup_ne_bot {f g : Filter α} : NeBot (f ⊔ g) ↔ NeBot f ∨ NeBot g := by simp [ne_bot_iff, not_and_or]
 
 theorem not_disjoint_self_iff : ¬Disjoint f f ↔ f.ne_bot := by rw [disjoint_self, ne_bot_iff]
 
@@ -669,15 +669,16 @@ theorem eq_top_of_ne_bot [Subsingleton α] (l : Filter α) [NeBot l] : l = ⊤ :
 theorem forall_mem_nonempty_iff_ne_bot {f : Filter α} : (∀ s : Set α, s ∈ f → s.Nonempty) ↔ NeBot f :=
   ⟨fun h => ⟨fun hf => empty_not_nonempty (h ∅ <| hf.symm ▸ mem_bot)⟩, @nonempty_of_mem _ _⟩
 
+instance [Nonempty α] : Nontrivial (Filter α) :=
+  ⟨⟨⊤, ⊥,
+      ne_bot.ne <| forall_mem_nonempty_iff_ne_bot.1 fun s hs => by rwa [mem_top.1 hs, ← nonempty_iff_univ_nonempty]⟩⟩
+
 theorem nontrivial_iff_nonempty : Nontrivial (Filter α) ↔ Nonempty α :=
-  ⟨fun ⟨⟨f, g, hfg⟩⟩ =>
-    by_contra fun h =>
-      hfg <|
-        haveI : IsEmpty α := not_nonempty_iff.1 h
-        Subsingleton.elim _ _,
-    fun ⟨x⟩ =>
-    ⟨⟨⊤, ⊥,
-        ne_bot.ne <| forall_mem_nonempty_iff_ne_bot.1 fun s hs => by rwa [mem_top.1 hs, ← nonempty_iff_univ_nonempty]⟩⟩⟩
+  ⟨fun h =>
+    by_contra fun h' =>
+      haveI := not_nonempty_iff.1 h'
+      not_subsingleton (Filter α) inferInstance,
+    @Filter.nontrivial α⟩
 
 theorem eq_Inf_of_mem_iff_exists_mem {S : Set (Filter α)} {l : Filter α} (h : ∀ {s}, s ∈ l ↔ ∃ f ∈ S, s ∈ f) :
     l = inf S :=
@@ -701,9 +702,9 @@ theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : N
   let u :=
     { Sets := ⋃ i, (f i).Sets, univ_sets := by simp only [mem_Union] <;> exact ⟨i, univ_mem⟩,
       sets_of_superset := by
-        simp only [mem_Union, exists_imp_distrib] <;> intro x y i hx hxy <;> exact ⟨i, mem_of_superset hx hxy⟩,
+        simp only [mem_Union, exists_imp] <;> intro x y i hx hxy <;> exact ⟨i, mem_of_superset hx hxy⟩,
       inter_sets := by
-        simp only [mem_Union, exists_imp_distrib]
+        simp only [mem_Union, exists_imp]
         intro x y a hx b hy
         rcases h a b with ⟨c, ha, hb⟩
         exact ⟨c, inter_mem (ha hx) (hb hy)⟩ }
@@ -750,7 +751,7 @@ instance : DistribLattice (Filter α) :=
   { Filter.completeLattice with
     le_sup_inf := by
       intro x y z s
-      simp only [and_assoc', mem_inf_iff, mem_sup, exists_prop, exists_imp_distrib, and_imp]
+      simp only [and_assoc', mem_inf_iff, mem_sup, exists_prop, exists_imp, and_imp]
       rintro hs t₁ ht₁ t₂ ht₂ rfl
       exact
         ⟨t₁, x.sets_of_superset hs (inter_subset_left t₁ t₂), ht₁, t₂, x.sets_of_superset hs (inter_subset_right t₁ t₂),
@@ -799,15 +800,22 @@ theorem infiNeBotOfDirected' {f : ι → Filter α} [Nonempty ι] (hd : Directed
 /-- If `f : ι → filter α` is directed, `α` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed'` for a version assuming `nonempty ι` instead of `nonempty α`. -/
 theorem infiNeBotOfDirected {f : ι → Filter α} [hn : Nonempty α] (hd : Directed (· ≥ ·) f) (hb : ∀ i, NeBot (f i)) :
-    NeBot (infi f) :=
-  if hι : Nonempty ι then @infiNeBotOfDirected' _ _ _ hι hd hb
-  else
-    ⟨fun h : infi f = ⊥ =>
-      have : univ ⊆ (∅ : Set α) := by
-        rw [← principal_mono, principal_univ, principal_empty, ← h]
-        exact le_infi fun i => False.elim <| hι ⟨i⟩
-      let ⟨x⟩ := hn
-      this (mem_univ x)⟩
+    NeBot (infi f) := by
+  cases is_empty_or_nonempty ι
+  · constructor
+    simp [infi_of_empty f, top_ne_bot]
+    
+  · exact infi_ne_bot_of_directed' hd hb
+    
+
+theorem infNeBotOfDirected' {s : Set (Filter α)} (hne : s.Nonempty) (hd : DirectedOn (· ≥ ·) s) (hbot : ⊥ ∉ s) :
+    NeBot (inf s) :=
+  (Inf_eq_infi' s).symm ▸
+    @infiNeBotOfDirected' _ _ _ hne.to_subtype hd.directed_coe fun ⟨f, hf⟩ => ⟨ne_of_mem_of_not_mem hf hbot⟩
+
+theorem infNeBotOfDirected [Nonempty α] {s : Set (Filter α)} (hd : DirectedOn (· ≥ ·) s) (hbot : ⊥ ∉ s) :
+    NeBot (inf s) :=
+  (Inf_eq_infi' s).symm ▸ infiNeBotOfDirected hd.directed_coe fun ⟨f, hf⟩ => ⟨ne_of_mem_of_not_mem hf hbot⟩
 
 theorem infi_ne_bot_iff_of_directed' {f : ι → Filter α} [Nonempty ι] (hd : Directed (· ≥ ·) f) :
     NeBot (infi f) ↔ ∀ i, NeBot (f i) :=
@@ -1131,7 +1139,7 @@ theorem frequently_const {f : Filter α} [NeBot f] {p : Prop} : (∃ᶠ x in f, 
 @[simp]
 theorem frequently_or_distrib {f : Filter α} {p q : α → Prop} :
     (∃ᶠ x in f, p x ∨ q x) ↔ (∃ᶠ x in f, p x) ∨ ∃ᶠ x in f, q x := by
-  simp only [Filter.Frequently, ← not_and_distrib, not_or_distrib, eventually_and]
+  simp only [Filter.Frequently, ← not_and_or, not_or, eventually_and]
 
 theorem frequently_or_distrib_left {f : Filter α} [NeBot f] {p : Prop} {q : α → Prop} :
     (∃ᶠ x in f, p ∨ q x) ↔ p ∨ ∃ᶠ x in f, q x := by simp
@@ -1175,7 +1183,7 @@ theorem frequently_principal {a : Set α} {p : α → Prop} : (∃ᶠ x in 𝓟 
   simp [Filter.Frequently, not_forall]
 
 theorem frequently_sup {p : α → Prop} {f g : Filter α} : (∃ᶠ x in f ⊔ g, p x) ↔ (∃ᶠ x in f, p x) ∨ ∃ᶠ x in g, p x := by
-  simp only [Filter.Frequently, eventually_sup, not_and_distrib]
+  simp only [Filter.Frequently, eventually_sup, not_and_or]
 
 @[simp]
 theorem frequently_Sup {p : α → Prop} {fs : Set (Filter α)} : (∃ᶠ x in sup fs, p x) ↔ ∃ f ∈ fs, ∃ᶠ x in f, p x := by
@@ -1885,7 +1893,7 @@ theorem comapNeBot {f : Filter β} {m : α → β} (hm : ∀ t ∈ f, ∃ a, m a
   comap_ne_bot_iff.mpr hm
 
 theorem comap_ne_bot_iff_frequently {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ ∃ᶠ y in f, y ∈ Range m := by
-  simp [comap_ne_bot_iff, frequently_iff, ← exists_and_distrib_left, and_comm]
+  simp [comap_ne_bot_iff, frequently_iff, ← exists_and_left, and_comm]
 
 theorem comap_ne_bot_iff_compl_range {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ Range mᶜ ∉ f :=
   comap_ne_bot_iff_frequently
@@ -1984,8 +1992,7 @@ instance mapNeBot [hf : NeBot f] : NeBot (f.map m) :=
 theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀ (comap f F).Sets = ⋂ U ∈ F, f ⁻¹' U := by
   ext x
   suffices (∀ (A : Set α) (B : Set β), B ∈ F → f ⁻¹' B ⊆ A → x ∈ A) ↔ ∀ B : Set β, B ∈ F → f x ∈ B by
-    simp only [mem_sInter, mem_Inter, Filter.mem_sets, mem_comap, this, and_imp, exists_prop, mem_preimage,
-      exists_imp_distrib]
+    simp only [mem_sInter, mem_Inter, Filter.mem_sets, mem_comap, this, and_imp, exists_prop, mem_preimage, exists_imp]
   constructor
   · intro h U U_in
     simpa only [subset.refl, forall_prop_of_true, mem_preimage] using h (f ⁻¹' U) U U_in
@@ -2447,7 +2454,7 @@ theorem tendsto_infi {f : α → β} {x : Filter α} {y : ι → Filter β} : Te
 
 theorem tendsto_infi' {f : α → β} {x : ι → Filter α} {y : Filter β} (i : ι) (hi : Tendsto f (x i) y) :
     Tendsto f (⨅ i, x i) y :=
-  hi.mono_left <| infi_le _ _
+  hi.monoLeft <| infi_le _ _
 
 @[simp]
 theorem tendsto_sup {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} :

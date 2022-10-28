@@ -151,7 +151,7 @@ theorem Separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : Is
 theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finset ι} :
     (∀ x ∈ s, ∀ y ∈ s, x ≠ y → IsCoprime (f x) (f y)) → (∀ x ∈ s, (f x).Separable) → (∏ x in s, f x).Separable :=
   (Finset.induction_on s fun _ _ => separable_one) fun a s has ih h1 h2 => by
-    simp_rw [Finset.forall_mem_insert, forall_and_distrib] at h1 h2
+    simp_rw [Finset.forall_mem_insert, forall_and] at h1 h2
     rw [prod_insert has]
     exact
       h2.1.mul (ih h1.2.2 h2.2)

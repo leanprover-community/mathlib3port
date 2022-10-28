@@ -101,7 +101,7 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
-    refine' decidableOfIff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
+    refine' decidable_of_iff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
     · rcases h with (h | ⟨rfl, h⟩)
       · exact lex.rel h
         

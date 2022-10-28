@@ -189,7 +189,7 @@ also called `coe_to_submodule` in theorem names.
 
 This map is available as a ring hom, called `fractional_ideal.coe_ideal_hom`.
 -/
-instance coeToFractionalIdeal : CoeT (Ideal R) (FractionalIdeal S P) :=
+instance coeToFractionalIdeal : CoeTC (Ideal R) (FractionalIdeal S P) :=
   ⟨fun I => ⟨coeSubmodule P I, isFractionalOfLeOne _ (by simpa using coe_submodule_mono P (le_top : I ≤ ⊤))⟩⟩
 
 @[simp, norm_cast]

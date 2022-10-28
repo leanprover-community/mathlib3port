@@ -190,11 +190,11 @@ def castNum [z : Zero α] : Num → α
   | Num.pos p => castPosNum p
 
 -- see Note [coercion into rings]
-instance (priority := 900) posNumCoe : CoeT PosNum α :=
+instance (priority := 900) posNumCoe : CoeTC PosNum α :=
   ⟨castPosNum⟩
 
 -- see Note [coercion into rings]
-instance (priority := 900) numNatCoe [z : Zero α] : CoeT Num α :=
+instance (priority := 900) numNatCoe [z : Zero α] : CoeTC Num α :=
   ⟨castNum⟩
 
 instance : Repr PosNum :=
@@ -669,7 +669,7 @@ def castZnum : Znum → α
   | Znum.neg p => -p
 
 -- see Note [coercion into rings]
-instance (priority := 900) znumCoe : CoeT Znum α :=
+instance (priority := 900) znumCoe : CoeTC Znum α :=
   ⟨castZnum⟩
 
 instance : Repr Znum :=

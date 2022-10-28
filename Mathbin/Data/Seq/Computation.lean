@@ -33,7 +33,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 def return (a : α) : Computation α :=
   ⟨Stream.const (some a), fun n a' => id⟩
 
-instance : CoeT α (Computation α) :=
+instance : CoeTC α (Computation α) :=
   ⟨return⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -840,7 +840,7 @@ theorem terminates_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) : Termin
   simp only [terminates_iff, exists_congr h]
 
 theorem promises_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) (a) : c₁ ~> a ↔ c₂ ~> a :=
-  forall_congr fun a' => imp_congr (h a') Iff.rfl
+  forall_congr' fun a' => imp_congr (h a') Iff.rfl
 
 theorem get_equiv {c₁ c₂ : Computation α} (h : c₁ ~ c₂) [Terminates c₁] [Terminates c₂] : get c₁ = get c₂ :=
   get_eq_of_mem _ <| (h _).2 <| get_mem _
@@ -991,8 +991,8 @@ theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) : LiftRel R (
 @[simp]
 theorem lift_rel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     LiftRel R (think ca) cb ↔ LiftRel R ca cb :=
-  and_congr (forall_congr fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
-    (forall_congr fun b => imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
+  and_congr (forall_congr' fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
+    (forall_congr' fun b => imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
 
 @[simp]
 theorem lift_rel_think_right (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
@@ -1005,8 +1005,8 @@ theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a ∈ ca, 
 
 theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β} (ha : ca ~ ca')
     (hb : cb ~ cb') : LiftRel R ca cb ↔ LiftRel R ca' cb' :=
-  and_congr (forall_congr fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
-    (forall_congr fun b => imp_congr (hb _) <| exists_congr fun a => and_congr (ha _) Iff.rfl)
+  and_congr (forall_congr' fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
+    (forall_congr' fun b => imp_congr (hb _) <| exists_congr fun a => and_congr (ha _) Iff.rfl)
 
 theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α} {s2 : Computation β} {f1 : α → γ}
     {f2 : β → δ} (h1 : LiftRel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) :=

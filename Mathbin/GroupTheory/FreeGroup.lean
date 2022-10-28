@@ -150,7 +150,7 @@ theorem not_step_singleton : ∀ {p : α × Bool}, ¬Step [p] L
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Step.cons_cons_iff : ∀ {p : α × Bool}, Step (p::L₁) (p::L₂) ↔ Step L₁ L₂ := by
-  simp (config := { contextual := true }) [step.cons_left_iff, iff_def, or_imp_distrib]
+  simp (config := { contextual := true }) [step.cons_left_iff, iff_def, or_imp]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Step.append_left_iff : ∀ L, Step (L ++ L₁) (L ++ L₂) ↔ Step L₁ L₂

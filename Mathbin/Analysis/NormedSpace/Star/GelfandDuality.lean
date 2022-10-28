@@ -107,16 +107,19 @@ end ComplexBanachAlgebra
 
 section ComplexCstarAlgebra
 
-variable (A : Type _) [NormedCommRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
+variable {A : Type _} [NormedCommRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
 
 variable [StarRing A] [CstarRing A] [StarModule ℂ A]
+
+theorem gelfand_transform_map_star (a : A) : gelfandTransform ℂ A (star a) = star (gelfandTransform ℂ A a) :=
+  ContinuousMap.ext fun φ => map_star φ a
+
+variable (A)
 
 /-- The Gelfand transform is an isometry when the algebra is a C⋆-algebra over `ℂ`. -/
 theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) := by
   nontriviality A
   refine' AddMonoidHomClass.isometryOfNorm (gelfand_transform ℂ A) fun a => _
-  have gt_map_star : gelfand_transform ℂ A (star a) = star (gelfand_transform ℂ A a) :=
-    ContinuousMap.ext fun φ => map_star φ a
   /- By `spectrum.gelfand_transform_eq`, the spectra of `star a * a` and its
     `gelfand_transform` coincide. Therefore, so do their spectral radii, and since they are
     self-adjoint, so also do their norms. Applying the C⋆-property of the norm and taking square
@@ -124,8 +127,8 @@ theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) := by
   have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) := by
     unfold spectralRadius
     rw [Spectrum.gelfand_transform_eq]
-  simp only [map_mul, gt_map_star, (IsSelfAdjoint.star_mul_self _).spectral_radius_eq_nnnorm, Ennreal.coe_eq_coe,
-    CstarRing.nnnorm_star_mul_self, ← sq] at this
+  simp only [map_mul, (IsSelfAdjoint.star_mul_self _).spectral_radius_eq_nnnorm, gelfand_transform_map_star a,
+    Ennreal.coe_eq_coe, CstarRing.nnnorm_star_mul_self, ← sq] at this
   simpa only [Function.comp_app, Nnreal.sqrt_sq] using congr_arg ((coe : ℝ≥0 → ℝ) ∘ ⇑Nnreal.sqrt) this
 
 /-- The Gelfand transform is bijective when the algebra is a C⋆-algebra over `ℂ`. -/
@@ -154,12 +157,17 @@ theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A
     `weak_dual.star_hom_class`, which is a nontrivial result. -/
   · obtain ⟨f, ⟨a, rfl⟩, rfl⟩ := subalgebra.mem_map.mp hf
     refine' ⟨star a, ContinuousMap.ext fun ψ => _⟩
-    simpa only [gelfand_transform_apply_apply, map_star, RingHom.coe_monoid_hom, AlgEquiv.coe_alg_hom,
-      RingHom.to_monoid_hom_eq_coe, AlgEquiv.to_alg_hom_eq_coe, RingHom.to_fun_eq_coe, ContinuousMap.coe_mk,
-      IsROrC.conj_ae_coe, AlgHom.coe_to_ring_hom, MonoidHom.to_fun_eq_coe, RingHom.comp_left_continuous_apply,
-      MonoidHom.comp_left_continuous_apply, ContinuousMap.comp_apply, AlgHom.to_ring_hom_eq_coe,
-      AlgHom.comp_left_continuous_apply]
+    simpa only [gelfand_transform_map_star a, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom]
     
+
+/-- The Gelfand transform as a `star_alg_equiv` between a commutative unital C⋆-algebra over `ℂ`
+and the continuous functions on its `character_space`. -/
+@[simps]
+noncomputable def gelfandStarTransform : A ≃⋆ₐ[ℂ] C(CharacterSpace ℂ A, ℂ) :=
+  StarAlgEquiv.ofBijective
+    (show A →⋆ₐ[ℂ] C(CharacterSpace ℂ A, ℂ) from
+      { gelfandTransform ℂ A with map_star' := fun x => gelfand_transform_map_star x })
+    (gelfand_transform_bijective A)
 
 end ComplexCstarAlgebra
 

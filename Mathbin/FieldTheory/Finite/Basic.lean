@@ -207,7 +207,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if 
     show 1 ≤ q
     exact fintype.card_pos_iff.mpr ⟨0⟩
   rw [← forall_pow_eq_one_iff, MonoidHom.ext_iff]
-  apply forall_congr
+  apply forall_congr'
   intro x
   rw [Units.ext_iff, Units.coe_pow, Units.coe_one, MonoidHom.one_apply]
   rfl

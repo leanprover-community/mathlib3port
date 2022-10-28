@@ -9,7 +9,6 @@ import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
 import Mathbin.Analysis.NormedSpace.Banach
-import Mathbin.LinearAlgebra.BilinearForm
 import Mathbin.LinearAlgebra.SesquilinearForm
 
 /-!
@@ -456,20 +455,13 @@ theorem inner_smul_real_right {x y : E} {r : ℝ} : ⟪x, (r : 𝕜) • y⟫ = 
   rw [inner_smul_right, Algebra.smul_def]
   rfl
 
-/-- The inner product as a sesquilinear form. -/
+/-- The inner product as a sesquilinear form.
+
+Note that in the case `𝕜 = ℝ` this is a bilinear form. -/
 @[simps]
 def sesqFormOfInner : E →ₗ[𝕜] E →ₗ⋆[𝕜] 𝕜 :=
   LinearMap.mk₂'ₛₗ (RingHom.id 𝕜) (starRingEnd _) (fun x y => ⟪y, x⟫) (fun x y z => inner_add_right)
     (fun r x y => inner_smul_right) (fun x y z => inner_add_left) fun r x y => inner_smul_left
-
-/-- The real inner product as a bilinear form. -/
-@[simps]
-def bilinFormOfRealInner : BilinForm ℝ F where
-  bilin := inner
-  bilin_add_left x y z := inner_add_left
-  bilin_smul_left a x y := inner_smul_left
-  bilin_add_right x y z := inner_add_right
-  bilin_smul_right a x y := inner_smul_right
 
 /-- An inner product with a sum on the left. -/
 theorem sum_inner {ι : Type _} (s : Finset ι) (f : ι → E) (x : E) : ⟪∑ i in s, f i, x⟫ = ∑ i in s, ⟪f i, x⟫ :=
@@ -1170,7 +1162,7 @@ for all `x`.
 -/
 theorem ext_inner_map (S T : V →ₗ[ℂ] V) : (∀ x : V, ⟪S x, x⟫_ℂ = ⟪T x, x⟫_ℂ) ↔ S = T := by
   rw [← sub_eq_zero, ← inner_map_self_eq_zero]
-  refine' forall_congr fun x => _
+  refine' forall_congr' fun x => _
   rw [LinearMap.sub_apply, inner_sub_left, sub_eq_zero]
 
 end Complex

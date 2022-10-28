@@ -398,7 +398,7 @@ def avoid (b : α) : Finpartition (a \ b) :=
 
 @[simp]
 theorem mem_avoid : c ∈ (P.avoid b).parts ↔ ∃ d ∈ P.parts, ¬d ≤ b ∧ d \ b = c := by
-  simp only [avoid, of_erase_parts, mem_erase, Ne.def, mem_image, exists_prop, ← exists_and_distrib_left,
+  simp only [avoid, of_erase_parts, mem_erase, Ne.def, mem_image, exists_prop, ← exists_and_left,
     @and_left_comm (c ≠ ⊥)]
   refine' exists_congr fun d => and_congr_right' <| and_congr_left _
   rintro rfl
@@ -534,7 +534,7 @@ theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
     
   rw [subset_iff]
   simp only [mem_erase, mem_sdiff, mem_powerset, mem_image, exists_prop, mem_filter, and_assoc', Finset.Nonempty,
-    exists_imp_distrib, and_imp, mem_atomise, forall_apply_eq_imp_iff₂]
+    exists_imp, and_imp, mem_atomise, forall_apply_eq_imp_iff₂]
   rintro P' i hi P PQ rfl hy₂ j hj
   refine' ⟨P.erase t, erase_subset_erase _ PQ, _⟩
   simp only [insert_erase (((mem_filter.1 hi).2 _ ht).2 <| hy₂ hi), filter_congr_decidable]

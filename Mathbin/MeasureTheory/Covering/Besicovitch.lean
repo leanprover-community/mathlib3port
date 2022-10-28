@@ -286,7 +286,7 @@ theorem last_step_nonempty : { i | ¬∃ b : β, p.c b ∉ p.UnionUpTo i ∧ p.r
 theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.UnionUpTo p.lastStep := by
   have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step := by
     have : p.last_step ∈ { i | ¬∃ b : β, p.c b ∉ p.Union_up_to i ∧ p.R i ≤ p.τ * p.r b } := Inf_mem p.last_step_nonempty
-    simpa only [not_exists, mem_set_of_eq, not_and_distrib, not_le, not_not_mem]
+    simpa only [not_exists, mem_set_of_eq, not_and_or, not_le, not_not_mem]
   by_contra
   rcases A x with (H | H)
   · exact h H
@@ -518,7 +518,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
       simpa only [Union_up_to, exists_prop, mem_Union, mem_ball, Subtype.exists, Subtype.coe_mk] using
         p.mem_Union_up_to_last_step b
     simp only [exists_prop, mem_Union, mem_ball, mem_singleton_iff, bUnion_and', exists_eq_left, Union_exists,
-      exists_and_distrib_left]
+      exists_and_left]
     exact ⟨⟨p.color a, p.color_lt ha.1 hN⟩, a, rfl, ha⟩
     
 
@@ -581,7 +581,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
       have : x ∈ range a.c := by simpa only [Subtype.range_coe_subtype, set_of_mem_eq]
       simpa only [mem_Union] using hu' this
     refine' mem_Union.2 ⟨i, ⟨hx, _⟩⟩
-    simp only [v, exists_prop, mem_Union, SetCoe.exists, exists_and_distrib_right, Subtype.coe_mk]
+    simp only [v, exists_prop, mem_Union, SetCoe.exists, exists_and_right, Subtype.coe_mk]
     exact ⟨y, ⟨y.2, by simpa only [Subtype.coe_eta] ⟩, ball_subset_closed_ball h'⟩
   have S : (∑ i : Fin N, μ s / N) ≤ ∑ i, μ (s ∩ v i) :=
     calc
@@ -789,7 +789,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
     intro n
     induction' n with n IH
     · simp only [u, P, Prod.forall, id.def, Function.iterate_zero]
-      simp only [Finset.not_mem_empty, IsEmpty.forall_iff, Finset.coe_empty, forall_2_true_iff, and_self_iff,
+      simp only [Finset.not_mem_empty, IsEmpty.forall_iff, Finset.coe_empty, forall₂_true_iff, and_self_iff,
         pairwise_disjoint_empty]
       
     · rw [u_succ]

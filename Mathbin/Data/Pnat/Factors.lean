@@ -58,7 +58,7 @@ theorem coe_coe_nat_monoid_hom : (coeNatMonoidHom : PrimeMultiset → Multiset �
   rfl
 
 theorem coe_nat_injective : Function.Injective (coe : PrimeMultiset → Multiset ℕ) :=
-  Multiset.map_injective Nat.Primes.coe_nat_inj
+  Multiset.map_injective Nat.Primes.coe_nat_injective
 
 theorem coe_nat_of_prime (p : Nat.Primes) : (ofPrime p : Multiset ℕ) = {p} :=
   rfl
@@ -83,7 +83,7 @@ theorem coe_coe_pnat_monoid_hom : (coePnatMonoidHom : PrimeMultiset → Multiset
   rfl
 
 theorem coe_pnat_injective : Function.Injective (coe : PrimeMultiset → Multiset ℕ+) :=
-  Multiset.map_injective Nat.Primes.coe_pnat_inj
+  Multiset.map_injective Nat.Primes.coe_pnat_injective
 
 theorem coe_pnat_of_prime (p : Nat.Primes) : (ofPrime p : Multiset ℕ+) = {(p : ℕ+)} :=
   rfl

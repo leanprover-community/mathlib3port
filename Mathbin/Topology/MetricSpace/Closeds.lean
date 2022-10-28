@@ -210,7 +210,7 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
     -- `F` is finite
     · apply @finite.of_finite_image _ _ F coe
       · apply fs.finite_subsets.subset fun b => _
-        simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib]
+        simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp]
         intro x hx hx'
         rwa [hx'] at hx
         

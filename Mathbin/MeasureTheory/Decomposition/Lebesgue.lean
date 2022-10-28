@@ -612,7 +612,7 @@ theorem haveLebesgueDecompositionOfFiniteMeasure [IsFiniteMeasure μ] [IsFiniteM
           Ennreal.to_real_add, Ennreal.to_real_le_to_real, measure.coe_smul, Pi.smul_apply,
           with_density_apply _ (hA.inter hE₁), show ε • ν (A ∩ E) = (ε : ℝ≥0∞) * ν (A ∩ E) by rfl, ←
           set_lintegral_const, ← lintegral_add_left measurableConst] at this
-        · rw [Ne.def, Ennreal.add_eq_top, not_or_distrib]
+        · rw [Ne.def, Ennreal.add_eq_top, not_or]
           exact ⟨ne_of_lt (measure_lt_top _ _), ne_of_lt (measure_lt_top _ _)⟩
           
         · exact ne_of_lt (measure_lt_top _ _)
@@ -807,7 +807,7 @@ theorem not_have_lebesgue_decomposition_iff (s : SignedMeasure α) (μ : Measure
     ¬s.HaveLebesgueDecomposition μ ↔
       ¬s.toJordanDecomposition.posPart.HaveLebesgueDecomposition μ ∨
         ¬s.toJordanDecomposition.negPart.HaveLebesgueDecomposition μ :=
-  ⟨fun h => not_or_of_imp fun hp hn => h ⟨hp, hn⟩, fun h hl => (not_and_distrib.2 h) ⟨hl.1, hl.2⟩⟩
+  ⟨fun h => not_or_of_imp fun hp hn => h ⟨hp, hn⟩, fun h hl => (not_and_or.2 h) ⟨hl.1, hl.2⟩⟩
 
 -- `infer_instance` directly does not work
 -- see Note [lower instance priority]

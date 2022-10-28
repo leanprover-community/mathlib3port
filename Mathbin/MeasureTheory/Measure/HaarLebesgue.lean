@@ -211,7 +211,7 @@ theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedAddCommGrou
   have Cg : Continuous g := LinearMap.continuous_of_finite_dimensional g
   have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finite_dimensional
   rw [← map_map Cesymm.measurable (Cg.comp Ce).Measurable, ← map_map Cg.measurable Ce.measurable]
-  haveI : is_add_haar_measure (map e μ) := is_add_haar_measure_map μ e.to_add_equiv Ce Cesymm
+  haveI : is_add_haar_measure (map e μ) := (e : E ≃+ (ι → ℝ)).isAddHaarMeasureMap μ Ce Cesymm
   have ecomp : e.symm ∘ e = id := by
     ext x
     simp only [id.def, Function.comp_app, LinearEquiv.symm_apply_apply]
@@ -560,7 +560,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E
       
   have B : tendsto (fun r : ℝ => R * r) (𝓝[>] 0) (𝓝[>] (R * 0)) := by
     apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
-    · exact (tendsto_const_nhds.mul tendsto_id).mono_left nhds_within_le_nhds
+    · exact (tendsto_const_nhds.mul tendsto_id).monoLeft nhds_within_le_nhds
       
     · filter_upwards [self_mem_nhds_within]
       intro r rpos

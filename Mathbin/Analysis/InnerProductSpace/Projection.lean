@@ -879,7 +879,7 @@ theorem reflection_sub [CompleteSpace F] {v w : F} (h : ∥v∥ = ∥w∥) : ref
     apply mem_orthogonal_singleton_of_inner_left
     rw [real_inner_add_sub_eq_zero_iff]
     exact h
-  convert congr_arg2 (· + ·) h₂ h₁ using 1
+  convert congr_arg₂ (· + ·) h₂ h₁ using 1
   · simp
     
   · abel

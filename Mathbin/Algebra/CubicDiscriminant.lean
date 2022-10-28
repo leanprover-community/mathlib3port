@@ -137,16 +137,16 @@ theorem ne_zero (h0 : ¬P.a = 0 ∨ ¬P.b = 0 ∨ ¬P.c = 0 ∨ ¬P.d = 0) : P.t
   exact ⟨rfl, rfl, rfl, rfl⟩
 
 theorem ne_zero_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly ≠ 0 :=
-  (or_imp_distrib.mp ne_zero).1 ha
+  (or_imp.mp ne_zero).1 ha
 
 theorem ne_zero_of_b_ne_zero (hb : P.b ≠ 0) : P.toPoly ≠ 0 :=
-  (or_imp_distrib.mp (or_imp_distrib.mp ne_zero).2).1 hb
+  (or_imp.mp (or_imp.mp ne_zero).2).1 hb
 
 theorem ne_zero_of_c_ne_zero (hc : P.c ≠ 0) : P.toPoly ≠ 0 :=
-  (or_imp_distrib.mp (or_imp_distrib.mp (or_imp_distrib.mp ne_zero).2).2).1 hc
+  (or_imp.mp (or_imp.mp (or_imp.mp ne_zero).2).2).1 hc
 
 theorem ne_zero_of_d_ne_zero (hd : P.d ≠ 0) : P.toPoly ≠ 0 :=
-  (or_imp_distrib.mp (or_imp_distrib.mp (or_imp_distrib.mp ne_zero).2).2).2 hd
+  (or_imp.mp (or_imp.mp (or_imp.mp ne_zero).2).2).2 hd
 
 end Coeff
 

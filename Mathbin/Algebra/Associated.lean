@@ -188,7 +188,7 @@ theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
   refine' or_iff_not_imp_right.2 fun H => _
   simp [h, irreducible_iff] at H⊢
   refine' fun a b h => Classical.by_contradiction fun o => _
-  simp [not_or_distrib] at o
+  simp [not_or] at o
   exact H _ o.1 _ o.2 h.symm
 
 protected theorem Prime.irreducible [CancelCommMonoidWithZero α] {p : α} (hp : Prime p) : Irreducible p :=
@@ -234,7 +234,7 @@ section
 variable [Monoid α]
 
 theorem irreducible_units_mul (a : αˣ) (b : α) : Irreducible (↑a * b) ↔ Irreducible b := by
-  simp only [irreducible_iff, Units.is_unit_units_mul, And.congr_right_iff]
+  simp only [irreducible_iff, Units.is_unit_units_mul, and_congr_right_iff]
   refine' fun hu => ⟨fun h A B HAB => _, fun h A B HAB => _⟩
   · rw [← a.is_unit_units_mul]
     apply h
@@ -250,7 +250,7 @@ theorem irreducible_is_unit_mul {a b : α} (h : IsUnit a) : Irreducible (a * b) 
   ha ▸ irreducible_units_mul a b
 
 theorem irreducible_mul_units (a : αˣ) (b : α) : Irreducible (b * ↑a) ↔ Irreducible b := by
-  simp only [irreducible_iff, Units.is_unit_mul_units, And.congr_right_iff]
+  simp only [irreducible_iff, Units.is_unit_mul_units, and_congr_right_iff]
   refine' fun hu => ⟨fun h A B HAB => _, fun h A B HAB => _⟩
   · rw [← Units.is_unit_mul_units B a]
     apply h
@@ -442,7 +442,7 @@ theorem dvd_dvd_iff_associated [CancelMonoidWithZero α] {a b : α} : a ∣ b �
   ⟨fun ⟨h1, h2⟩ => associated_of_dvd_dvd h1 h2, Associated.dvd_dvd⟩
 
 instance [CancelMonoidWithZero α] [DecidableRel ((· ∣ ·) : α → α → Prop)] : DecidableRel ((· ~ᵤ ·) : α → α → Prop) :=
-  fun a b => decidableOfIff _ dvd_dvd_iff_associated
+  fun a b => decidable_of_iff _ dvd_dvd_iff_associated
 
 theorem Associated.dvd_iff_dvd_left [Monoid α] {a b c : α} (h : a ~ᵤ b) : a ∣ c ↔ b ∣ c :=
   let ⟨u, hu⟩ := h
@@ -788,7 +788,7 @@ instance : BoundedOrder (Associates α) :=
   { Associates.orderTop, Associates.orderBot with }
 
 instance [DecidableRel ((· ∣ ·) : α → α → Prop)] : DecidableRel ((· ∣ ·) : Associates α → Associates α → Prop) :=
-  fun a b => Quotient.recOnSubsingleton₂ a b fun a b => decidableOfIff' _ mk_dvd_mk
+  fun a b => Quotient.recOnSubsingleton₂ a b fun a b => decidable_of_iff' _ mk_dvd_mk
 
 theorem Prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} (h : p ≤ a * b) : p ≤ a ∨ p ≤ b :=
   hp.2.2 a b h
@@ -803,7 +803,7 @@ theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by
     rfl
     apply and_congr
     rfl
-    apply forall_congr
+    apply forall_congr'
     intro a
     exact forall_associated
     

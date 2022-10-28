@@ -192,7 +192,7 @@ theorem ne_one_of_map {R S F : Type _} [One R] [One S] [OneHomClass F R S] {f : 
   ne_of_apply_ne f <| ne_of_ne_of_eq hx (map_one f).symm
 
 @[to_additive]
-instance [OneHomClass F M N] : CoeT F (OneHom M N) :=
+instance [OneHomClass F M N] : CoeTC F (OneHom M N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f }⟩
 
 @[simp, to_additive]
@@ -240,7 +240,7 @@ theorem map_mul [MulHomClass F M N] (f : F) (x y : M) : f (x * y) = f x * f y :=
   MulHomClass.map_mul f x y
 
 @[to_additive]
-instance [MulHomClass F M N] : CoeT F (M →ₙ* N) :=
+instance [MulHomClass F M N] : CoeTC F (M →ₙ* N) :=
   ⟨fun f => { toFun := f, map_mul' := map_mul f }⟩
 
 @[simp, to_additive]
@@ -286,7 +286,7 @@ instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N where
   map_one := MonoidHom.map_one'
 
 @[to_additive]
-instance [MonoidHomClass F M N] : CoeT F (M →* N) :=
+instance [MonoidHomClass F M N] : CoeTC F (M →* N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_mul' := map_mul f }⟩
 
 @[simp, to_additive]
@@ -394,7 +394,7 @@ instance MonoidWithZeroHom.monoidWithZeroHomClass : MonoidWithZeroHomClass (M �
   map_one := MonoidWithZeroHom.map_one'
   map_zero := MonoidWithZeroHom.map_zero'
 
-instance [MonoidWithZeroHomClass F M N] : CoeT F (M →*₀ N) :=
+instance [MonoidWithZeroHomClass F M N] : CoeTC F (M →*₀ N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f }⟩
 
 @[simp]
@@ -1244,7 +1244,7 @@ For the implication, see `injective_iff_map_eq_one`. -/
       "A homomorphism from an additive group to an additive monoid is injective iff its\nkernel is trivial, stated as an iff on the triviality of the kernel. For the implication, see\n`injective_iff_map_eq_zero`."]
 theorem _root_.injective_iff_map_eq_one' {G H} [Group G] [MulOneClass H] [MonoidHomClass F G H] (f : F) :
     Function.Injective f ↔ ∀ a, f a = 1 ↔ a = 1 :=
-  (injective_iff_map_eq_one f).trans <| forall_congr fun a => ⟨fun h => ⟨h, fun H => H.symm ▸ map_one f⟩, Iff.mp⟩
+  (injective_iff_map_eq_one f).trans <| forall_congr' fun a => ⟨fun h => ⟨h, fun H => H.symm ▸ map_one f⟩, Iff.mp⟩
 
 include mM
 

@@ -83,7 +83,7 @@ theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ 
 
 @[simp]
 theorem sum_right {ι : Type _} [Countable ι] {ν : ι → Measure α} : μ ⊥ₘ sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
-  comm.trans <| sum_left.trans <| forall_congr fun i => comm
+  comm.trans <| sum_left.trans <| forall_congr' fun i => comm
 
 @[simp]
 theorem add_left_iff : μ₁ + μ₂ ⊥ₘ ν ↔ μ₁ ⊥ₘ ν ∧ μ₂ ⊥ₘ ν := by

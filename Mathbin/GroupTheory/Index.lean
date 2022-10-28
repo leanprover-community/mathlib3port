@@ -131,6 +131,44 @@ theorem relindex_dvd_of_le_left (hHK : H ≤ K) : K.relindex L ∣ H.relindex L 
   rw [← inf_relindex_right H L, ← inf_relindex_right K L]
   exact relindex_mul_relindex (H ⊓ L) (K ⊓ L) L (inf_le_inf_right L hHK) inf_le_right
 
+/-- A subgroup has index two if and only if there exists `a` such that for all `b`, exactly one
+of `b * a` and `b` belong to `H`. -/
+@[to_additive
+      "/-- An additive subgroup has index two if and only if there exists `a` such that for\nall `b`, exactly one of `b + a` and `b` belong to `H`. -/"]
+theorem index_eq_two_iff : H.index = 2 ↔ ∃ a, ∀ b, Xor' (b * a ∈ H) (b ∈ H) := by
+  simp only [index, Nat.card_eq_two_iff' ((1 : G) : G ⧸ H), ExistsUnique, inv_mem_iff, QuotientGroup.exists_coe,
+    QuotientGroup.forall_coe, Ne.def, QuotientGroup.eq, mul_one, xor_iff_iff_not]
+  refine' exists_congr fun a => ⟨fun ha b => ⟨fun hba hb => _, fun hb => _⟩, fun ha => ⟨_, fun b hb => _⟩⟩
+  · exact ha.1 ((mul_mem_cancel_left hb).1 hba)
+    
+  · exact inv_inv b ▸ ha.2 _ (mt inv_mem_iff.1 hb)
+    
+  · rw [← inv_mem_iff, ← ha, inv_mul_self]
+    exact one_mem _
+    
+  · rwa [ha, inv_mem_iff]
+    
+
+@[to_additive]
+theorem mul_mem_iff_of_index_two (h : H.index = 2) {a b : G} : a * b ∈ H ↔ (a ∈ H ↔ b ∈ H) := by
+  by_cases ha:a ∈ H
+  · simp only [ha, true_iff_iff, mul_mem_cancel_left ha]
+    
+  by_cases hb:b ∈ H
+  · simp only [hb, iff_true_iff, mul_mem_cancel_right hb]
+    
+  simp only [ha, hb, iff_self_iff, iff_true_iff]
+  rcases index_eq_two_iff.1 h with ⟨c, hc⟩
+  refine' (hc _).Or.resolve_left _
+  rwa [mul_assoc, mul_mem_cancel_right ((hc _).Or.resolve_right hb)]
+
+@[to_additive]
+theorem mul_self_mem_of_index_two (h : H.index = 2) (a : G) : a * a ∈ H := by rw [mul_mem_iff_of_index_two h]
+
+@[to_additive two_smul_mem_of_index_two]
+theorem sq_mem_of_index_two (h : H.index = 2) (a : G) : a ^ 2 ∈ H :=
+  (pow_two a).symm ▸ mul_self_mem_of_index_two h a
+
 variable (H K)
 
 @[simp, to_additive]
@@ -232,6 +270,10 @@ theorem relindex_eq_zero_of_le_right (hKL : K ≤ L) (hHK : H.relindex K = 0) : 
   Finite.card_eq_zero_of_embedding (quotientSubgroupOfEmbeddingOfLe H hKL) hHK
 
 @[to_additive]
+theorem index_eq_zero_of_relindex_eq_zero (h : H.relindex K = 0) : H.index = 0 :=
+  H.relindex_top_right.symm.trans (relindex_eq_zero_of_le_right le_top h)
+
+@[to_additive]
 theorem relindex_le_of_le_left (hHK : H ≤ K) (hHL : H.relindex L ≠ 0) : K.relindex L ≤ H.relindex L :=
   Nat.le_of_dvd (Nat.pos_of_ne_zero hHL) (relindex_dvd_of_le_left L hHK)
 
@@ -273,13 +315,13 @@ theorem relindex_infi_ne_zero {ι : Type _} [hι : Finite ι] {f : ι → Subgro
     (⨅ i, f i).relindex L ≠ 0 :=
   haveI := Fintype.ofFinite ι
   (finset.prod_ne_zero_iff.mpr fun i hi => hf i) ∘
-    nat.card_pi.symm.trans ∘ Finite.card_eq_zero_of_embedding (quotient_infi_embedding f L)
+    nat.card_pi.symm.trans ∘ Finite.card_eq_zero_of_embedding (quotient_infi_subgroup_of_embedding f L)
 
 @[to_additive]
 theorem relindex_infi_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
     (⨅ i, f i).relindex L ≤ ∏ i, (f i).relindex L :=
   le_of_le_of_eq
-    (Finite.card_le_of_embedding' (quotientInfiEmbedding f L) fun h =>
+    (Finite.card_le_of_embedding' (quotientInfiSubgroupOfEmbedding f L) fun h =>
       let ⟨i, hi, h⟩ := Finset.prod_eq_zero_iff.mp (Nat.card_pi.symm.trans h)
       relindex_eq_zero_of_le_left (infi_le f i) h)
     Nat.card_pi

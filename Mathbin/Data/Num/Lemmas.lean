@@ -47,7 +47,7 @@ theorem to_nat_to_int (n : PosNum) : ((n : ℕ) : ℤ) = n :=
 
 @[simp, norm_cast]
 theorem cast_to_int [AddGroupWithOne α] (n : PosNum) : ((n : ℤ) : α) = n := by
-  rw [← to_nat_to_int, Int.cast_coe_nat, cast_to_nat]
+  rw [← to_nat_to_int, Int.cast_ofNat, cast_to_nat]
 
 theorem succ_to_nat : ∀ n, (succ n : ℕ) = n + 1
   | 1 => rfl
@@ -443,7 +443,7 @@ theorem to_nat_to_int (n : Num) : ((n : ℕ) : ℤ) = n :=
 
 @[simp, norm_cast]
 theorem cast_to_int {α} [AddGroupWithOne α] (n : Num) : ((n : ℤ) : α) = n := by
-  rw [← to_nat_to_int, Int.cast_coe_nat, cast_to_nat]
+  rw [← to_nat_to_int, Int.cast_ofNat, cast_to_nat]
 
 theorem to_of_nat : ∀ n : ℕ, ((n : Num) : ℕ) = n
   | 0 => by rw [Nat.cast_zero, cast_zero]
@@ -1428,7 +1428,7 @@ theorem of_int_cast [AddGroupWithOne α] (n : ℤ) : ((n : Znum) : α) = n := by
 
 @[simp, norm_cast]
 theorem of_nat_cast [AddGroupWithOne α] (n : ℕ) : ((n : Znum) : α) = n := by
-  rw [← Int.cast_coe_nat, of_int_cast, Int.cast_coe_nat]
+  rw [← Int.cast_ofNat, of_int_cast, Int.cast_ofNat]
 
 @[simp, norm_cast]
 theorem dvd_to_int (m n : Znum) : (m : ℤ) ∣ n ↔ m ∣ n :=
@@ -1577,7 +1577,7 @@ but is expected to have type
   PUnit.{1}
 Case conversion may be inaccurate. Consider using '#align num.decidable_dvd Num.decidableDvdₓ'. -/
 instance decidableDvd : DecidableRel ((· ∣ ·) : Num → Num → Prop)
-  | a, b => decidableOfIff' _ dvd_iff_mod_eq_zero
+  | a, b => decidable_of_iff' _ dvd_iff_mod_eq_zero
 
 end Num
 
@@ -1630,7 +1630,7 @@ theorem dvd_iff_mod_eq_zero {m n : Znum} : m ∣ n ↔ n % m = 0 := by
   rw [← dvd_to_int, Int.dvd_iff_mod_eq_zero, ← to_int_inj, mod_to_int] <;> rfl
 
 instance : DecidableRel ((· ∣ ·) : Znum → Znum → Prop)
-  | a, b => decidableOfIff' _ dvd_iff_mod_eq_zero
+  | a, b => decidable_of_iff' _ dvd_iff_mod_eq_zero
 
 end Znum
 

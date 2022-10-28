@@ -465,7 +465,7 @@ variable [NoZeroSmulDivisors R M]
 @[simp]
 theorem same_ray_smul_right_iff {v : M} {r : R} : SameRay R v (r • v) ↔ 0 ≤ r ∨ v = 0 :=
   ⟨fun hrv => or_iff_not_imp_left.2 fun hr => eq_zero_of_same_ray_neg_smul_right (not_le.1 hr) hrv,
-    or_imp_distrib.2 ⟨sameRayNonnegSmulRight v, fun h => h.symm ▸ SameRay.zeroLeft _⟩⟩
+    or_imp.2 ⟨sameRayNonnegSmulRight v, fun h => h.symm ▸ SameRay.zeroLeft _⟩⟩
 
 /-- A nonzero vector is in the same ray as a multiple of itself if and only if that multiple
 is positive. -/
@@ -548,7 +548,7 @@ theorem same_ray_or_same_ray_neg_iff_not_linear_independent {x y : M} :
     · exfalso
       simpa [hm0, hy, hm1.ne] using hm
       
-    · refine' False.elim (not_and_distrib.2 hmne ⟨hm0, hm1⟩)
+    · refine' False.elim (not_and_or.2 hmne ⟨hm0, hm1⟩)
       
     · exfalso
       simpa [hm0, hy, hm1.ne.symm] using hm

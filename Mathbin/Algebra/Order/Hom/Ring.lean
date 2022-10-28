@@ -94,10 +94,10 @@ instance (priority := 100) OrderRingIsoClass.toOrderRingHomClass [NonAssocSemiri
   { ‹OrderRingIsoClass F α β› with Monotone := fun f => OrderHomClass.mono f }
 
 instance [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] :
-    CoeT F (α →+*o β) :=
+    CoeTC F (α →+*o β) :=
   ⟨fun f => ⟨f, OrderHomClass.mono f⟩⟩
 
-instance [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] [OrderRingIsoClass F α β] : CoeT F (α ≃+*o β) :=
+instance [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] [OrderRingIsoClass F α β] : CoeTC F (α ≃+*o β) :=
   ⟨fun f => ⟨f, fun a b => map_le_map_iff f⟩⟩
 
 /-! ### Ordered ring homomorphisms -/

@@ -136,7 +136,7 @@ unsafe def linter.has_nonempty_instance : linter where
     "TYPES ARE MISSING NONEMPTY INSTANCES.\nThe following types should have an associated instance of the class\n`nonempty`, or if computably possible `inhabited` or `unique`:"
   is_fast := false
 
-attribute [nolint has_nonempty_instance] Pempty
+attribute [nolint has_nonempty_instance] PEmpty
 
 /-- Checks whether an instance can never be applied. -/
 private unsafe def impossible_instance (d : declaration) : tactic (Option String) := do

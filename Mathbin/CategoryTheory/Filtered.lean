@@ -246,7 +246,7 @@ theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
   dsimp
   simp only [category.comp_id]
   apply w
-  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
+  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_left, exists_prop_of_true, Finset.mem_image]
   exact ⟨j, rfl, j', g, by simp⟩
 
 /-- An arbitrary choice of cocone over `F : J ⥤ C`, for `fin_category J` and `is_filtered C`.
@@ -603,7 +603,7 @@ theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
   simp only [category.id_comp]
   symm
   apply w
-  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
+  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_left, exists_prop_of_true, Finset.mem_image]
   exact ⟨j, rfl, j', g, by simp⟩
 
 /-- An arbitrary choice of cone over `F : J ⥤ C`, for `fin_category J` and `is_cofiltered C`.

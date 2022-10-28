@@ -49,9 +49,18 @@ theorem Set.restrictPreimageClosedEmbedding (s : Set β) (h : ClosedEmbedding f)
 
 alias Set.restrictPreimageClosedEmbedding ← ClosedEmbedding.restrictPreimage
 
+theorem Set.restrict_preimage_is_closed_map (s : Set β) (H : IsClosedMap f) : IsClosedMap (s.restrictPreimage f) := by
+  rintro t ⟨u, hu, e⟩
+  refine' ⟨⟨_, (H _ (IsOpen.isClosedCompl hu)).1, _⟩⟩
+  rw [← (congr_arg HasCompl.compl e).trans (compl_compl t)]
+  simp only [Set.preimage_compl, compl_inj_iff]
+  ext ⟨x, hx⟩
+  suffices (∃ y, y ∉ u ∧ f y = x) ↔ ∃ y, f y ∈ s ∧ y ∉ u ∧ f y = x by simpa [Set.restrictPreimage, ← Subtype.coe_inj]
+  exact ⟨fun ⟨a, b, c⟩ => ⟨a, c.symm ▸ hx, b, c⟩, fun ⟨a, _, b, c⟩ => ⟨a, b, c⟩⟩
+
 include hU
 
-theorem open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen (s ∩ U i) := by
+theorem is_open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen (s ∩ U i) := by
   constructor
   · exact fun H i => H.inter (U i).2
     
@@ -63,13 +72,24 @@ theorem open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen 
     exact is_open_Union H
     
 
-theorem open_iff_coe_preimage_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen (coe ⁻¹' s : Set (U i)) := by
+theorem is_open_iff_coe_preimage_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen (coe ⁻¹' s : Set (U i)) := by
   simp_rw [(U _).2.open_embedding_subtype_coe.open_iff_image_open, Set.image_preimage_eq_inter_range, Subtype.range_coe]
-  apply open_iff_inter_of_supr_eq_top
+  apply is_open_iff_inter_of_supr_eq_top
   assumption
 
-theorem closed_iff_coe_preimage_of_supr_eq_top (s : Set β) : IsClosed s ↔ ∀ i, IsClosed (coe ⁻¹' s : Set (U i)) := by
-  simpa using open_iff_coe_preimage_of_supr_eq_top hU (sᶜ)
+theorem is_closed_iff_coe_preimage_of_supr_eq_top (s : Set β) : IsClosed s ↔ ∀ i, IsClosed (coe ⁻¹' s : Set (U i)) := by
+  simpa using is_open_iff_coe_preimage_of_supr_eq_top hU (sᶜ)
+
+theorem is_closed_map_iff_is_closed_map_of_supr_eq_top :
+    IsClosedMap f ↔ ∀ i, IsClosedMap ((U i).1.restrictPreimage f) := by
+  refine' ⟨fun h i => Set.restrict_preimage_is_closed_map _ h, _⟩
+  rintro H s hs
+  rw [is_closed_iff_coe_preimage_of_supr_eq_top hU]
+  intro i
+  convert H i _ ⟨⟨_, hs.1, eq_compl_comm.mpr rfl⟩⟩
+  ext ⟨x, hx⟩
+  suffices (∃ y, y ∈ s ∧ f y = x) ↔ ∃ y, f y ∈ U i ∧ y ∈ s ∧ f y = x by simpa [Set.restrictPreimage, ← Subtype.coe_inj]
+  exact ⟨fun ⟨a, b, c⟩ => ⟨a, c.symm ▸ hx, b, c⟩, fun ⟨a, _, b, c⟩ => ⟨a, b, c⟩⟩
 
 theorem inducing_iff_inducing_of_supr_eq_top (h : Continuous f) :
     Inducing f ↔ ∀ i, Inducing ((U i).1.restrictPreimage f) := by
@@ -94,7 +114,7 @@ theorem inducing_iff_inducing_of_supr_eq_top (h : Continuous f) :
 theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
     Embedding f ↔ ∀ i, Embedding ((U i).1.restrictPreimage f) := by
   simp_rw [embedding_iff]
-  rw [forall_and_distrib]
+  rw [forall_and]
   apply and_congr
   · apply inducing_iff_inducing_of_supr_eq_top <;> assumption
     
@@ -106,22 +126,22 @@ theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
 theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
     OpenEmbedding f ↔ ∀ i, OpenEmbedding ((U i).1.restrictPreimage f) := by
   simp_rw [open_embedding_iff]
-  rw [forall_and_distrib]
+  rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
     
   · simp_rw [Set.range_restrict_preimage]
-    apply open_iff_coe_preimage_of_supr_eq_top hU
+    apply is_open_iff_coe_preimage_of_supr_eq_top hU
     
 
 theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) :
     ClosedEmbedding f ↔ ∀ i, ClosedEmbedding ((U i).1.restrictPreimage f) := by
   simp_rw [closed_embedding_iff]
-  rw [forall_and_distrib]
+  rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
     
   · simp_rw [Set.range_restrict_preimage]
-    apply closed_iff_coe_preimage_of_supr_eq_top hU
+    apply is_closed_iff_coe_preimage_of_supr_eq_top hU
     
 

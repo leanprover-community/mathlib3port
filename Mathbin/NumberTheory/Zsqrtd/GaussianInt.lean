@@ -139,7 +139,7 @@ theorem coe_nat_abs_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
 
 @[simp]
 theorem nat_cast_nat_abs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
-  rw [← Int.cast_coe_nat, coe_nat_abs_norm]
+  rw [← Int.cast_ofNat, coe_nat_abs_norm]
 
 theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs + x.im.natAbs * x.im.natAbs :=
   Int.coe_nat_inj <| by
@@ -284,7 +284,7 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime] 
     mt norm_eq_one_iff.2 <| by
       rw [norm_nat_cast, Int.nat_abs_mul, Nat.mul_eq_one_iff] <;> exact fun h => (ne_of_lt hp.1.one_lt).symm h.1
   have hab : ∃ a b, (p : ℤ[i]) = a * b ∧ ¬IsUnit a ∧ ¬IsUnit b := by
-    simpa [irreducible_iff, hpu, not_forall, not_or_distrib] using hpi
+    simpa [irreducible_iff, hpu, not_forall, not_or] using hpi
   let ⟨a, b, hpab, hau, hbu⟩ := hab
   have hnap : (norm a).natAbs = p :=
     ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 <| by

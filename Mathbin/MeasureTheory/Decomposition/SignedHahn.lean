@@ -301,7 +301,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     intro n
     convert hn (n + 1) <;>
       · ext l
-        simp only [exists_prop, Set.mem_Union, And.congr_left_iff]
+        simp only [exists_prop, Set.mem_Union, and_congr_left_iff]
         exact fun _ => nat.lt_succ_iff.symm
         
   have h₁ : s i = s A + ∑' l, s (restrict_nonpos_seq s i l) := by

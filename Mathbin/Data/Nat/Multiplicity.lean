@@ -59,7 +59,7 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
         congr_arg card <|
           Finset.ext fun i => by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @PartEnat.coe_le_coe i, PartEnat.coe_get, ←
-              pow_dvd_iff_le_multiplicity, And.right_comm]
+              pow_dvd_iff_le_multiplicity, and_right_comm]
             refine' (and_iff_left_of_imp fun h => _).symm
             cases m
             · rw [zero_pow, zero_dvd_iff] at h

@@ -150,6 +150,13 @@ theorem coe_one : ((1 : ℤ_[p]) : ℚ_[p]) = 1 :=
 theorem coe_zero : ((0 : ℤ_[p]) : ℚ_[p]) = 0 :=
   rfl
 
+theorem coe_eq_zero (z : ℤ_[p]) : (z : ℚ_[p]) = 0 ↔ z = 0 :=
+  ⟨fun h => by
+    rw [← coe_zero] at h
+    exact subtype.coe_inj.mp h, fun h => by
+    rw [h]
+    exact coe_zero⟩
+
 instance : AddCommGroup ℤ_[p] :=
   (by infer_instance : AddCommGroup (subring p))
 
@@ -624,6 +631,52 @@ instance :
       
 
 end Dvr
+
+section FractionRing
+
+instance algebra : Algebra ℤ_[p] ℚ_[p] :=
+  RingHom.toAlgebra PadicInt.Coe.ringHom
+
+@[simp]
+theorem algebra_map_apply (x : ℤ_[p]) : algebraMap ℤ_[p] ℚ_[p] x = x :=
+  rfl
+
+instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p] where
+  map_units := fun ⟨x, hx⟩ => by
+    rw [SetLike.coe_mk, algebra_map_apply, is_unit_iff_ne_zero, Ne.def, PadicInt.coe_eq_zero]
+    exact mem_non_zero_divisors_iff_ne_zero.mp hx
+  surj x := by
+    by_cases hx:∥x∥ ≤ 1
+    · use (⟨x, hx⟩, 1)
+      rw [Submonoid.coe_one, map_one, mul_one]
+      rfl
+      
+    · set n := Int.toNat (-x.valuation) with hn
+      have hn_coe : (n : ℤ) = -x.valuation := by
+        rw [hn, Int.to_nat_of_nonneg]
+        rw [Right.nonneg_neg_iff]
+        rw [Padic.norm_le_one_iff_val_nonneg] at hx
+        exact le_of_lt (not_le.mp hx)
+      set a := x * p ^ n with ha
+      have ha_norm : ∥a∥ = 1 := by
+        have hx : x ≠ 0 := by
+          intro h0
+          rw [h0, norm_zero] at hx
+          exact hx zero_le_one
+        rw [ha, padicNormE.mul, ← zpow_coe_nat, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ← zpow_add', hn_coe,
+          neg_neg, add_left_neg, zpow_zero]
+        exact Or.inl (nat.cast_ne_zero.mpr (NeZero.ne p))
+      use (⟨a, le_of_eq ha_norm⟩, ⟨(p ^ n : ℤ_[p]), mem_non_zero_divisors_iff_ne_zero.mpr (NeZero.ne _)⟩)
+      simp only [SetLike.coe_mk, map_pow, map_nat_cast, algebra_map_apply, PadicInt.coe_pow, PadicInt.coe_nat_cast,
+        Subtype.coe_mk]
+      
+  eq_iff_exists x y := by
+    rw [algebra_map_apply, algebra_map_apply, Subtype.coe_inj]
+    refine' ⟨fun h => ⟨1, by rw [h]⟩, _⟩
+    rintro ⟨⟨c, hc⟩, h⟩
+    exact (mul_eq_mul_right_iff.mp h).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc)
+
+end FractionRing
 
 end PadicInt
 

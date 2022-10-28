@@ -109,7 +109,7 @@ theorem upper_central_series_step_eq_comap_center :
     upperCentralSeriesStep H = Subgroup.comap (mk' H) (center (G ⧸ H)) := by
   ext
   rw [mem_comap, mem_center_iff, forall_coe]
-  apply forall_congr
+  apply forall_congr'
   intro y
   rw [coe_mk', ← QuotientGroup.coe_mul, ← QuotientGroup.coe_mul, eq_comm, eq_iff_div_mem, div_eq_mul_inv, mul_inv_rev,
     mul_assoc]
@@ -145,7 +145,7 @@ theorem upper_central_series_one : upperCentralSeries G 1 = center G := by
   ext
   simp only [upperCentralSeries, upperCentralSeriesAux, upperCentralSeriesStep, center, Set.Center, mem_mk, mem_bot,
     Set.mem_set_of_eq]
-  exact forall_congr fun y => by rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul, eq_comm]
+  exact forall_congr' fun y => by rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul, eq_comm]
 
 /-- The `n+1`st term of the upper central series `H i` has underlying set equal to the `x` such
 that `⁅x,G⁆ ⊆ H n`-/
@@ -438,7 +438,7 @@ instance Subgroup.is_nilpotent (H : Subgroup G) [hG : IsNilpotent G] : IsNilpote
   rcases hG with ⟨n, hG⟩
   use n
   have := lower_central_series_map_subtype_le H n
-  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp_distrib] at this
+  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp] at this
   exact eq_bot_iff.mpr fun x hx => Subtype.ext (this x hx)
 
 /-- A the nilpotency class of a subgroup is less or equal the the nilpotency class of the group -/
@@ -448,7 +448,7 @@ theorem Subgroup.nilpotency_class_le (H : Subgroup G) [hG : IsNilpotent G] :
   apply Nat.find_mono
   intro n hG
   have := lower_central_series_map_subtype_le H n
-  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp_distrib] at this
+  simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp] at this
   exact eq_bot_iff.mpr fun x hx => Subtype.ext (this x hx)
 
 instance (priority := 100) is_nilpotent_of_subsingleton [Subsingleton G] : IsNilpotent G :=

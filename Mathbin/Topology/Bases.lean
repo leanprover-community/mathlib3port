@@ -68,34 +68,59 @@ structure IsTopologicalBasis (s : Set (Set α)) : Prop where
   sUnion_eq : ⋃₀s = univ
   eq_generate_from : t = generateFrom s
 
-/-- If a family of sets `s` generates the topology, then nonempty intersections of finite
+theorem IsTopologicalBasis.insert_empty {s : Set (Set α)} (h : IsTopologicalBasis s) :
+    IsTopologicalBasis (insert ∅ s) := by
+  refine' ⟨_, by rw [sUnion_insert, empty_union, h.sUnion_eq], _⟩
+  · rintro t₁ (rfl | h₁) t₂ (rfl | h₂) x ⟨hx₁, hx₂⟩
+    · cases hx₁
+      
+    · cases hx₁
+      
+    · cases hx₂
+      
+    obtain ⟨t₃, h₃, hs⟩ := h.exists_subset_inter _ h₁ _ h₂ x ⟨hx₁, hx₂⟩
+    exact ⟨t₃, Or.inr h₃, hs⟩
+    
+  · rw [h.eq_generate_from]
+    refine' le_antisymm (le_generate_from fun t => _) (generate_from_mono <| subset_insert ∅ s)
+    rintro (rfl | ht)
+    · convert is_open_empty
+      
+    · exact generate_open.basic t ht
+      
+    
+
+theorem IsTopologicalBasis.diff_empty {s : Set (Set α)} (h : IsTopologicalBasis s) : IsTopologicalBasis (s \ {∅}) := by
+  refine' ⟨_, by rw [sUnion_diff_singleton_empty, h.sUnion_eq], _⟩
+  · rintro t₁ ⟨h₁, -⟩ t₂ ⟨h₂, -⟩ x hx
+    obtain ⟨t₃, h₃, hs⟩ := h.exists_subset_inter _ h₁ _ h₂ x hx
+    exact ⟨t₃, ⟨h₃, ne_empty_iff_nonempty.2 ⟨x, hs.1⟩⟩, hs⟩
+    
+  · rw [h.eq_generate_from]
+    refine' le_antisymm (generate_from_mono <| diff_subset s _) (le_generate_from fun t ht => _)
+    obtain rfl | he := eq_or_ne t ∅
+    · convert is_open_empty
+      
+    exact generate_open.basic t ⟨ht, he⟩
+    
+
+/-- If a family of sets `s` generates the topology, then intersections of finite
 subcollections of `s` form a topological basis. -/
 theorem is_topological_basis_of_subbasis {s : Set (Set α)} (hs : t = generateFrom s) :
-    IsTopologicalBasis ((fun f => ⋂₀ f) '' { f : Set (Set α) | f.Finite ∧ f ⊆ s ∧ (⋂₀ f).Nonempty }) := by
-  refine' ⟨_, _, _⟩
-  · rintro _ ⟨t₁, ⟨hft₁, ht₁b, ht₁⟩, rfl⟩ _ ⟨t₂, ⟨hft₂, ht₂b, ht₂⟩, rfl⟩ x h
-    have : ⋂₀ (t₁ ∪ t₂) = ⋂₀ t₁ ∩ ⋂₀ t₂ := sInter_union t₁ t₂
-    exact ⟨_, ⟨t₁ ∪ t₂, ⟨hft₁.union hft₂, union_subset ht₁b ht₂b, this.symm ▸ ⟨x, h⟩⟩, this⟩, h, subset.rfl⟩
+    IsTopologicalBasis ((fun f => ⋂₀ f) '' { f : Set (Set α) | f.Finite ∧ f ⊆ s }) := by
+  refine' ⟨_, _, hs.trans (le_antisymm (le_generate_from _) <| generate_from_mono fun t ht => _)⟩
+  · rintro _ ⟨t₁, ⟨hft₁, ht₁b⟩, rfl⟩ _ ⟨t₂, ⟨hft₂, ht₂b⟩, rfl⟩ x h
+    exact ⟨_, ⟨_, ⟨hft₁.union hft₂, union_subset ht₁b ht₂b⟩, sInter_union t₁ t₂⟩, h, subset.rfl⟩
     
   · rw [sUnion_image, Union₂_eq_univ_iff]
-    intro x
-    have : x ∈ ⋂₀ ∅ := by
-      rw [sInter_empty]
-      exact mem_univ x
-    exact ⟨∅, ⟨finite_empty, empty_subset _, x, this⟩, this⟩
+    exact fun x => ⟨∅, ⟨finite_empty, empty_subset _⟩, sInter_empty.substr <| mem_univ x⟩
     
-  · rw [hs]
-    apply le_antisymm <;> apply le_generate_from
-    · rintro _ ⟨t, ⟨hft, htb, ht⟩, rfl⟩
-      exact @is_open_sInter _ (generate_from s) _ hft fun s hs => generate_open.basic _ <| htb hs
-      
-    · intro t ht
-      rcases t.eq_empty_or_nonempty with (rfl | hne)
-      · apply @is_open_empty _ _
-        
-      rw [← sInter_singleton t] at hne⊢
-      exact generate_open.basic _ ⟨{t}, ⟨finite_singleton t, singleton_subset_iff.2 ht, hne⟩, rfl⟩
-      
+  · rintro _ ⟨t, ⟨hft, htb⟩, rfl⟩
+    apply is_open_sInter
+    exacts[hft, fun s hs => generate_open.basic _ <| htb hs]
+    
+  · rw [← sInter_singleton t]
+    exact ⟨{t}, ⟨finite_singleton t, singleton_subset_iff.2 ht⟩, rfl⟩
     
 
 /-- If a family of open sets `s` is such that every open neighbourhood contains some
@@ -539,16 +564,10 @@ protected theorem IsTopologicalBasis.second_countable_topology {b : Set (Set α)
 variable (α)
 
 theorem exists_countable_basis [SecondCountableTopology α] :
-    ∃ b : Set (Set α), b.Countable ∧ ∅ ∉ b ∧ IsTopologicalBasis b :=
-  let ⟨b, hb₁, hb₂⟩ := SecondCountableTopology.is_open_generated_countable α
-  let b' := (fun s => ⋂₀ s) '' { s : Set (Set α) | s.Finite ∧ s ⊆ b ∧ (⋂₀ s).Nonempty }
-  ⟨b',
-    ((countable_set_of_finite_subset hb₁).mono
-          (by
-            simp only [← and_assoc']
-            apply inter_subset_left)).Image
-      _,
-    fun ⟨s, ⟨_, _, hn⟩, hp⟩ => absurd hn (not_nonempty_iff_eq_empty.2 hp), is_topological_basis_of_subbasis hb₂⟩
+    ∃ b : Set (Set α), b.Countable ∧ ∅ ∉ b ∧ IsTopologicalBasis b := by
+  obtain ⟨b, hb₁, hb₂⟩ := second_countable_topology.is_open_generated_countable α
+  refine' ⟨_, _, not_mem_diff_of_mem _, (is_topological_basis_of_subbasis hb₂).diff_empty⟩
+  exacts[((countable_set_of_finite_subset hb₁).Image _).mono (diff_subset _ _), rfl]
 
 /-- A countable topological basis of `α`. -/
 def CountableBasis [SecondCountableTopology α] : Set (Set α) :=

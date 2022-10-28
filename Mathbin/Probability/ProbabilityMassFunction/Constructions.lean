@@ -238,10 +238,10 @@ theorem support_filter : (p.filter s h).Support = s ∩ p.Support :=
   Set.ext fun x => mem_support_filter_iff _
 
 theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.Support := by
-  erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_distrib]
+  erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_or]
 
 theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.Support := by
-  rw [Ne.def, filter_apply_eq_zero_iff, not_or_distrib, not_not, not_not]
+  rw [Ne.def, filter_apply_eq_zero_iff, not_or, not_not, not_not]
 
 end Filter
 

@@ -102,7 +102,7 @@ theorem empty_not_mem_classes {r : Setoid α} : ∅ ∉ r.Classes := fun ⟨y, h
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
 /-- Equivalence classes partition the type. -/
 theorem classes_eqv_classes {r : Setoid α} (a) : ∃! (b : _)(_ : b ∈ r.Classes), a ∈ b :=
-  ExistsUnique.intro2 { x | r.Rel x a } (r.mem_classes a) (r.refl' _) <| by
+  ExistsUnique.intro₂ { x | r.Rel x a } (r.mem_classes a) (r.refl' _) <| by
     rintro _ ⟨y, rfl⟩ ha
     ext x
     exact ⟨fun hx => r.trans' hx (r.symm' ha), fun hx => r.trans' hx ha⟩
@@ -146,7 +146,7 @@ theorem eqvClassesDisjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ α) (H : c.PairwiseDisjoint id)
     (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
   let ⟨b, hc, ha⟩ := Set.mem_sUnion.1 <| show a ∈ _ by rw [hu] <;> exact Set.mem_univ a
-  (ExistsUnique.intro2 b hc ha) fun b' hc' ha' => H.elim_set hc' hc a ha' ha
+  (ExistsUnique.intro₂ b hc ha) fun b' hc' ha' => H.elim_set hc' hc a ha' ha
 
 /-- Makes an equivalence relation from a set of disjoints sets covering α. -/
 def setoidOfDisjointUnion {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ α) (H : c.PairwiseDisjoint id) : Setoid α :=

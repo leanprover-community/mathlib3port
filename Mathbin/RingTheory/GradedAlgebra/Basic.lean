@@ -248,7 +248,7 @@ def GradedRing.projZeroRingHom : A →+* A where
               decompose_of_mem_same 𝒜 (show c' ∈ 𝒜 0 from (add_eq_zero_iff.mp h).2 ▸ hc')]
             
           · rw [decompose_of_mem_ne 𝒜 (mul_mem hc hc') h]
-            cases' show i ≠ 0 ∨ j ≠ 0 by rwa [add_eq_zero_iff, not_and_distrib] at h with h' h'
+            cases' show i ≠ 0 ∨ j ≠ 0 by rwa [add_eq_zero_iff, not_and_or] at h with h' h'
             · simp only [decompose_of_mem_ne 𝒜 hc h', zero_mul]
               
             · simp only [decompose_of_mem_ne 𝒜 hc' h', mul_zero]

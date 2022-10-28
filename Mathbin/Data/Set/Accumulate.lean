@@ -43,7 +43,7 @@ theorem bUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, Accumulate s y)
 
 theorem Union_accumulate [Preorder α] : (⋃ x, Accumulate s x) = ⋃ x, s x := by
   apply subset.antisymm
-  · simp only [subset_def, mem_Union, exists_imp_distrib, mem_accumulate]
+  · simp only [subset_def, mem_Union, exists_imp, mem_accumulate]
     intro z x x' hx'x hz
     exact ⟨x', hz⟩
     

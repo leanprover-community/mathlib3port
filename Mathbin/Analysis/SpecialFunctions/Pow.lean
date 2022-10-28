@@ -124,8 +124,7 @@ theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by simp
   | -[1 + n] => by
     rw [zpow_neg_succ_of_nat] <;>
-      simp only [Int.neg_succ_of_nat_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_coe_nat,
-        cpow_nat_cast]
+      simp only [Int.neg_succ_of_nat_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_ofNat, cpow_nat_cast]
 
 theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ)) ^ n = x := by
   suffices im (log x * n⁻¹) ∈ Ioc (-π) π by
@@ -502,7 +501,7 @@ theorem rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z := by
 theorem rpow_add' (hx : 0 ≤ x) (h : y + z ≠ 0) : x ^ (y + z) = x ^ y * x ^ z := by
   rcases hx.eq_or_lt with (rfl | pos)
   · rw [zero_rpow h, zero_eq_mul]
-    have : y ≠ 0 ∨ z ≠ 0 := not_and_distrib.1 fun ⟨hy, hz⟩ => h <| hy.symm ▸ hz.symm ▸ zero_add 0
+    have : y ≠ 0 ∨ z ≠ 0 := not_and_or.1 fun ⟨hy, hz⟩ => h <| hy.symm ▸ hz.symm ▸ zero_add 0
     exact this.imp zero_rpow zero_rpow
     
   · exact rpow_add Pos _ _
@@ -1183,7 +1182,7 @@ assumptions about `p.2`. -/
 theorem continuous_at_cpow_of_re_pos {p : ℂ × ℂ} (h₁ : 0 ≤ p.1.re ∨ p.1.im ≠ 0) (h₂ : 0 < p.2.re) :
     ContinuousAt (fun x : ℂ × ℂ => x.1 ^ x.2) p := by
   cases' p with z w
-  rw [← not_lt_zero_iff, lt_iff_le_and_ne, not_and_distrib, Ne.def, not_not, not_le_zero_iff] at h₁
+  rw [← not_lt_zero_iff, lt_iff_le_and_ne, not_and_or, Ne.def, not_not, not_le_zero_iff] at h₁
   rcases h₁ with (h₁ | (rfl : z = 0))
   exacts[continuous_at_cpow h₁, continuous_at_cpow_zero_of_re_pos h₂]
 

@@ -59,7 +59,7 @@ def of (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] [TotallyDi
   ⟨⟨⟨X⟩⟩⟩
 
 instance : Inhabited ProfiniteCat :=
-  ⟨ProfiniteCat.of Pempty⟩
+  ⟨ProfiniteCat.of PEmpty⟩
 
 instance category : Category ProfiniteCat :=
   InducedCategory.category toCompHaus

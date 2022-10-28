@@ -59,7 +59,7 @@ variable {G : Type _} [Group G] [TopologicalSpace G]
 variable {U V : OpenSubgroup G} {g : G}
 
 @[to_additive]
-instance hasCoeSet : CoeT (OpenSubgroup G) (Set G) :=
+instance hasCoeSet : CoeTC (OpenSubgroup G) (Set G) :=
   ⟨fun U => U.1⟩
 
 @[to_additive]
@@ -67,11 +67,11 @@ instance : Membership G (OpenSubgroup G) :=
   ⟨fun g U => g ∈ (U : Set G)⟩
 
 @[to_additive]
-instance hasCoeSubgroup : CoeT (OpenSubgroup G) (Subgroup G) :=
+instance hasCoeSubgroup : CoeTC (OpenSubgroup G) (Subgroup G) :=
   ⟨toSubgroup⟩
 
 @[to_additive]
-instance hasCoeOpens : CoeT (OpenSubgroup G) (Opens G) :=
+instance hasCoeOpens : CoeTC (OpenSubgroup G) (Opens G) :=
   ⟨fun U => ⟨U, U.is_open'⟩⟩
 
 @[simp, norm_cast, to_additive]

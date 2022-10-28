@@ -182,7 +182,7 @@ theorem core_mono : Monotone r.Core :=
   r.core_subset
 
 theorem core_inter (s t : Set β) : r.Core (s ∩ t) = r.Core s ∩ r.Core t :=
-  Set.ext (by simp [mem_core, imp_and_distrib, forall_and_distrib])
+  Set.ext (by simp [mem_core, imp_and, forall_and])
 
 theorem core_union (s t : Set β) : r.Core s ∪ r.Core t ⊆ r.Core (s ∪ t) :=
   r.core_mono.le_map_sup s t

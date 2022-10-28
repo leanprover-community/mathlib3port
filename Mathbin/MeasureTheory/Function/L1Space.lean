@@ -833,7 +833,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜]
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) : Integrable (fun x => f x • c) μ ↔ Integrable f μ := by
-  simp_rw [integrable, ae_strongly_measurable_smul_const_iff hc, And.congr_right_iff, has_finite_integral, nnnorm_smul,
+  simp_rw [integrable, ae_strongly_measurable_smul_const_iff hc, and_congr_right_iff, has_finite_integral, nnnorm_smul,
     Ennreal.coe_mul]
   intro hf
   rw [lintegral_mul_const' _ _ Ennreal.coe_ne_top, Ennreal.mul_lt_top_iff]

@@ -68,7 +68,7 @@ theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
 theorem TotalSpace.eta (z : TotalSpace E) : totalSpaceMk z.proj z.2 = z :=
   Sigma.eta z
 
-instance {x : B} : CoeT (E x) (TotalSpace E) :=
+instance {x : B} : CoeTC (E x) (TotalSpace E) :=
   ⟨totalSpaceMk x⟩
 
 @[simp]

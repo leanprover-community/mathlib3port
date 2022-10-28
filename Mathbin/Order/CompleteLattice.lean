@@ -1259,7 +1259,7 @@ theorem supr_ge_eq_supr_nat_add (u : ℕ → α) (n : ℕ) : (⨆ i ≥ n, u i) 
       le_Sup
         ⟨i - n, by
           dsimp only
-          rw [tsub_add_cancel_of_le hi]⟩
+          rw [Nat.sub_add_cancel hi]⟩
     
   · exact fun i => le_Sup ⟨i + n, supr_pos (Nat.le_add_left _ _)⟩
     

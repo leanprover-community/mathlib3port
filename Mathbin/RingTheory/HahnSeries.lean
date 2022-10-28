@@ -9,6 +9,7 @@ import Mathbin.RingTheory.Valuation.Basic
 import Mathbin.Algebra.Module.Pi
 import Mathbin.RingTheory.PowerSeries.Basic
 import Mathbin.Data.Finsupp.Pwo
+import Mathbin.Data.Finset.MulAntidiagonal
 
 /-!
 # Hahn Series
@@ -1049,7 +1050,7 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
     classical
     refine' sum_filter_ne_zero.symm.trans (((sum_congr _) fun _ _ => rfl).trans sum_filter_ne_zero)
     ext m
-    simp only [nat.mem_antidiagonal, mem_add_antidiagonal, And.congr_left_iff, mem_filter, mem_support]
+    simp only [nat.mem_antidiagonal, mem_add_antidiagonal, and_congr_left_iff, mem_filter, mem_support]
     rintro h
     rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 
@@ -1150,7 +1151,7 @@ def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R �
     simp_rw [mul_coeff]
     refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
     ext m
-    simp only [And.congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support, Finsupp.mem_antidiagonal]
+    simp only [and_congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support, Finsupp.mem_antidiagonal]
     rintro h
     rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 
@@ -1447,7 +1448,7 @@ instance :
         apply (x.is_pwo_support.add s.is_pwo_Union_support).mono
         refine' Set.Subset.trans (Set.Union_mono fun a => support_mul_subset_add_support) _
         intro g
-        simp only [Set.mem_Union, exists_imp_distrib]
+        simp only [Set.mem_Union, exists_imp]
         exact fun a ha => (Set.add_subset_add (Set.Subset.refl _) (Set.subset_Union _ a)) ha,
       finite_co_support' := fun g => by
         refine'

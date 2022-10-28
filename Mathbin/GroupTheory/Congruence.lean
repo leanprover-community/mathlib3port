@@ -208,7 +208,7 @@ protected def Quotient :=
 
 See Note [use has_coe_t]. -/
 @[to_additive "Coercion from a type with an addition to its quotient by an additive congruence\nrelation"]
-instance (priority := 0) : CoeT M c.Quotient :=
+instance (priority := 0) : CoeTC M c.Quotient :=
   ⟨@Quotient.mk _ c.toSetoid⟩
 
 -- Lower the priority since it unifies with any quotient type.
@@ -434,7 +434,7 @@ theorem con_gen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
 theorem sup_eq_con_gen (c d : Con M) : c ⊔ d = conGen fun x y => c x y ∨ d x y := by
   rw [con_gen_eq]
   apply congr_arg Inf
-  simp only [le_def, or_imp_distrib, ← forall_and_distrib]
+  simp only [le_def, or_imp, ← forall_and]
 
 /-- The supremum of two congruence relations equals the smallest congruence relation containing
     the supremum of the underlying binary operations. -/
@@ -661,6 +661,10 @@ theorem mk'_surjective : Surjective c.mk' :=
 @[simp, to_additive]
 theorem coe_mk' : (c.mk' : M → c.Quotient) = coe :=
   rfl
+
+@[simp, to_additive]
+theorem mrange_mk' : c.mk'.mrange = ⊤ :=
+  MonoidHom.mrange_top_iff_surjective.2 mk'_surjective
 
 /-- The elements related to `x ∈ M`, `M` a monoid, by the kernel of a monoid homomorphism are
     those in the preimage of `f(x)` under `f`. -/

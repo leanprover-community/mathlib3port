@@ -213,7 +213,7 @@ namespace Rat
   division ring. If the field has positive characteristic `p`,
   we define `1 / p = 1 / 0 = 0` for consistency with our
   division by zero convention. -/
-instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeT ℚ K :=
+instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTC ℚ K :=
   ⟨HasRatCast.ratCast⟩
 
 theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=

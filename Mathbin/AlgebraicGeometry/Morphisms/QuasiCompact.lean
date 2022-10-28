@@ -5,6 +5,7 @@ Authors: Andrew Yang
 -/
 import Mathbin.AlgebraicGeometry.Morphisms.Basic
 import Mathbin.Topology.Spectral.Hom
+import Mathbin.AlgebraicGeometry.Limits
 
 /-!
 # Quasi-compact morphisms
@@ -104,7 +105,7 @@ theorem quasi_compact_iff_affine_property : QuasiCompact f ↔ TargetAffineLocal
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · exact ⟨fun h U => h U U.Prop, fun h U hU => h ⟨U, hU⟩⟩
     
-  apply forall_congr
+  apply forall_congr'
   exact fun _ => is_compact_iff_compact_space
 
 theorem quasi_compact_eq_affine_property : @QuasiCompact = TargetAffineLocally QuasiCompact.affineProperty := by
@@ -118,7 +119,7 @@ theorem is_compact_basic_open (X : SchemeCat) {U : Opens X.Carrier} (hU : IsComp
   obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union _).mp ⟨hU, U.prop⟩
   let g : s → X.affine_opens := by
     intro V
-    use V.1 ∩ X.basic_open f
+    use V.1 ⊓ X.basic_open f
     have : V.1.1 ⟶ U := by
       apply hom_of_le
       change _ ⊆ (U : Set X.carrier)
@@ -129,7 +130,7 @@ theorem is_compact_basic_open (X : SchemeCat) {U : Opens X.Carrier} (hU : IsComp
     exact is_affine_open.basic_open_is_affine V.1.Prop _
   haveI : Finite s := hs.to_subtype
   refine' ⟨Set.Range g, Set.finite_range g, _⟩
-  refine' (set.inter_eq_right_iff_subset.mpr (RingedSpace.basic_open_subset _ _)).symm.trans _
+  refine' (set.inter_eq_right_iff_subset.mpr (RingedSpace.basic_open_le _ _)).symm.trans _
   rw [e, Set.Union₂_inter]
   apply le_antisymm <;> apply Set.Union₂_subset
   · intro i hi
@@ -179,6 +180,9 @@ theorem QuasiCompact.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) 
           ∀ i, CompactSpace (f.1.base ⁻¹' (U i).1)] :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_open_cover_tfae f
 
+theorem QuasiCompact.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiCompact :=
+  quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal
+
 theorem QuasiCompact.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
       [QuasiCompact f,
@@ -194,6 +198,9 @@ theorem quasi_compact_over_affine_iff {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine 
     QuasiCompact f ↔ CompactSpace X.Carrier :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_target_iff f
 
+theorem compact_space_iff_quasi_compact (X : SchemeCat) : CompactSpace X.Carrier ↔ QuasiCompact (terminal.from X) :=
+  (quasi_compact_over_affine_iff _).symm
+
 theorem QuasiCompact.affine_open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     [∀ i, IsAffine (𝒰.obj i)] (f : X ⟶ Y) : QuasiCompact f ↔ ∀ i, CompactSpace (pullback f (𝒰.map i)).Carrier :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_open_cover_iff f 𝒰
@@ -208,6 +215,34 @@ theorem quasi_compact_respects_iso : MorphismProperty.RespectsIso @QuasiCompact 
 
 theorem quasi_compact_stable_under_composition : MorphismProperty.StableUnderComposition @QuasiCompact :=
   fun _ _ _ _ _ _ _ => inferInstance
+
+attribute [-simp] PresheafedSpace.as_coe SheafedSpace.as_coe
+
+theorem QuasiCompact.affine_property_stable_under_base_change : QuasiCompact.affineProperty.StableUnderBaseChange := by
+  intro X Y S _ _ f g h
+  rw [quasi_compact.affine_property] at h⊢
+  skip
+  let 𝒰 := Scheme.pullback.open_cover_of_right Y.affine_cover.finite_subcover f g
+  have : Finite 𝒰.J := by
+    dsimp [𝒰]
+    infer_instance
+  have : ∀ i, CompactSpace (𝒰.obj i).Carrier := by
+    intro i
+    dsimp
+    infer_instance
+  exact 𝒰.compact_space
+
+theorem quasi_compact_stable_under_base_change : MorphismProperty.StableUnderBaseChange @QuasiCompact :=
+  quasi_compact_eq_affine_property.symm ▸
+    QuasiCompact.affinePropertyIsLocal.StableUnderBaseChange QuasiCompact.affine_property_stable_under_base_change
+
+variable {Z : SchemeCat.{u}}
+
+instance (f : X ⟶ Z) (g : Y ⟶ Z) [QuasiCompact g] : QuasiCompact (pullback.fst : pullback f g ⟶ X) :=
+  quasi_compact_stable_under_base_change.fst f g inferInstance
+
+instance (f : X ⟶ Z) (g : Y ⟶ Z) [QuasiCompact f] : QuasiCompact (pullback.snd : pullback f g ⟶ Y) :=
+  quasi_compact_stable_under_base_change.snd f g inferInstance
 
 @[elab_as_elim]
 theorem compact_open_induction_on {P : Opens X.Carrier → Prop} (S : Opens X.Carrier) (hS : IsCompact S.1) (h₁ : P ⊥)

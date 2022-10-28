@@ -5,6 +5,7 @@ Authors: Patrick Massot, Simon Hudon
 
 A tactic pushing negations into an expression
 -/
+import Mathbin.Tactic.Core
 import Mathbin.Logic.Basic
 
 open Tactic Expr
@@ -35,10 +36,10 @@ theorem not_and_eq : (¬(p ∧ q)) = (p → ¬q) :=
   propext not_and
 
 theorem not_and_distrib_eq : (¬(p ∧ q)) = (¬p ∨ ¬q) :=
-  propext not_and_distrib
+  propext not_and_or
 
 theorem not_or_eq : (¬(p ∨ q)) = (¬p ∧ ¬q) :=
-  propext not_or_distrib
+  propext not_or
 
 theorem not_forall_eq : (¬∀ x, s x) = ∃ x, ¬s x :=
   propext not_forall
@@ -240,4 +241,58 @@ unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse name_w
 add_tactic_doc
   { Name := "contrapose", category := DocCategory.tactic, declNames := [`tactic.interactive.contrapose],
     tags := ["logic"] }
+
+/-!
+## `#push_neg` command
+A user command to run `push_neg`. Mostly copied from the `#norm_num` and `#simp` commands.
+-/
+
+
+namespace Tactic
+
+open Lean.Parser
+
+open Interactive.Types
+
+setup_tactic_parser
+
+/-- The syntax is `#push_neg e`, where `e` is an expression,
+which will print the `push_neg` form of `e`.
+
+`#push_neg` understands local variables, so you can use them to
+introduce parameters.
+-/
+@[user_command]
+unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
+  let e ← texpr
+  let/- Synthesize a `tactic_state` including local variables as hypotheses under which
+         `normalize_negations` may be safely called with expected behaviour given the `variables` in the
+         environment. -/
+    (ts, _)
+    ← synthesize_tactic_state_with_variables_as_hyps [e]
+  let result
+    ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
+        lean.parser.of_tactic
+        fun _ =>
+        (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
+                 hypotheses added to the `ts : tactic_state` which we are using. -/
+          do
+            let e ← to_expr e
+            let-- Run `push_neg` on the expression.
+              (e_neg, _)
+              ← normalize_negations e
+            /- Run a `simp` to change any `¬ a = b` to `a ≠ b`; report the result, or, if the `simp` fails
+                      (because no `¬ a = b` appear in the expression), return what `push_neg` gave. -/
+                  Prod.fst <$>
+                  e_neg { eta := ff } failed tt [] [simp_arg_type.expr (pquote.1 PushNeg.not_eq)] <|>
+                pure e_neg)
+          ts
+  -- Trace the result.
+      trace
+      result
+
+add_tactic_doc
+  { Name := "#push_neg", category := DocCategory.cmd, declNames := [`tactic.push_neg_cmd], tags := ["logic"] }
+
+end Tactic
 

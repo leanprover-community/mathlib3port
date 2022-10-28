@@ -462,7 +462,7 @@ theorem cont_mdiff_at_iff_target {f : N → Z.toTopologicalVectorBundleCore.Tota
         ContMdiffAt J 𝓘(𝕜, E × E') n (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
   by
   let Z' := Z.to_topological_vector_bundle_core
-  rw [cont_mdiff_at_iff_target, And.congr_left_iff]
+  rw [cont_mdiff_at_iff_target, and_congr_left_iff]
   refine' fun hf => ⟨fun h => Z'.continuous_proj.continuous_at.comp h, fun h => _⟩
   exact
     (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).toFiberBundleTrivialization.continuous_at_of_comp_left h
@@ -472,7 +472,7 @@ theorem smooth_iff_target {f : N → Z.toTopologicalVectorBundleCore.TotalSpace}
     Smooth J (I.Prod 𝓘(𝕜, E')) f ↔
       Continuous (Bundle.TotalSpace.proj ∘ f) ∧
         ∀ x, SmoothAt J 𝓘(𝕜, E × E') (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
-  by simp_rw [Smooth, SmoothAt, ContMdiff, Z.cont_mdiff_at_iff_target, forall_and_distrib, continuous_iff_continuous_at]
+  by simp_rw [Smooth, SmoothAt, ContMdiff, Z.cont_mdiff_at_iff_target, forall_and, continuous_iff_continuous_at]
 
 theorem contMdiffProj : ContMdiff (I.Prod 𝓘(𝕜, E')) I n Z.toTopologicalVectorBundleCore.proj := by
   intro x

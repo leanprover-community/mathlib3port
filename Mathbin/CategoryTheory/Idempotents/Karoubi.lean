@@ -108,7 +108,7 @@ theorem id_eq {P : Karoubi C} : 𝟙 P = ⟨P.p, by repeat' rw [P.idem]⟩ := by
 
 /-- It is possible to coerce an object of `C` into an object of `karoubi C`.
 See also the functor `to_karoubi`. -/
-instance coe : CoeT C (Karoubi C) :=
+instance coe : CoeTC C (Karoubi C) :=
   ⟨fun X => ⟨X, 𝟙 X, by rw [comp_id]⟩⟩
 
 @[simp]

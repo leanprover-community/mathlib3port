@@ -271,7 +271,7 @@ section AddCommMonoid
 variable [AddCommMonoid E] [SmulWithZero 𝕜 E] {s : Set E}
 
 theorem star_convex_zero_iff : StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s := by
-  refine' forall_congr fun x => forall_congr fun hx => ⟨fun h a ha₀ ha₁ => _, fun h a b ha hb hab => _⟩
+  refine' forall_congr' fun x => forall_congr' fun hx => ⟨fun h a ha₀ ha₁ => _, fun h a b ha hb hab => _⟩
   · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_add, smul_zero] using
       h (sub_nonneg_of_le ha₁) ha₀
     

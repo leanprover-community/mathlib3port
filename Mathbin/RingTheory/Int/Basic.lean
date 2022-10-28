@@ -187,7 +187,7 @@ theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.na
 
 /-- If `gcd a (m * n) ≠ 1`, then `gcd a m ≠ 1` or `gcd a n ≠ 1`. -/
 theorem gcd_ne_one_iff_gcd_mul_right_ne_one {a : ℤ} {m n : ℕ} : a.gcd (m * n) ≠ 1 ↔ a.gcd m ≠ 1 ∨ a.gcd n ≠ 1 := by
-  simp only [gcd_eq_one_iff_coprime, ← not_and_distrib, not_iff_not, IsCoprime.mul_right_iff]
+  simp only [gcd_eq_one_iff_coprime, ← not_and_or, not_iff_not, IsCoprime.mul_right_iff]
 
 /-- If `gcd a (m * n) = 1`, then `gcd a m = 1`. -/
 theorem gcd_eq_one_of_gcd_mul_right_eq_one_left {a : ℤ} {m n : ℕ} (h : a.gcd (m * n) = 1) : a.gcd m = 1 :=
@@ -305,10 +305,10 @@ theorem finite_int_iff {a b : ℤ} : Finite a b ↔ a.natAbs ≠ 1 ∧ b ≠ 0 :
   rw [finite_int_iff_nat_abs_finite, finite_nat_iff, pos_iff_ne_zero, Int.nat_abs_ne_zero]
 
 instance decidableNat : DecidableRel fun a b : ℕ => (multiplicity a b).Dom := fun a b =>
-  decidableOfIff _ finite_nat_iff.symm
+  decidable_of_iff _ finite_nat_iff.symm
 
 instance decidableInt : DecidableRel fun a b : ℤ => (multiplicity a b).Dom := fun a b =>
-  decidableOfIff _ finite_int_iff.symm
+  decidable_of_iff _ finite_int_iff.symm
 
 end multiplicity
 

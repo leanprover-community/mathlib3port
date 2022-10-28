@@ -617,7 +617,7 @@ variable [PseudoEmetricSpace β] {f : α → β}
 theorem tendsto_nhds_within_nhds_within {t : Set β} {a b} :
     Tendsto f (𝓝[s] a) (𝓝[t] b) ↔ ∀ ε > 0, ∃ δ > 0, ∀ ⦃x⦄, x ∈ s → edist x a < δ → f x ∈ t ∧ edist (f x) b < ε :=
   (nhds_within_basis_eball.tendsto_iff nhds_within_basis_eball).trans <|
-    forall₂_congr fun ε hε => exists₂_congr fun δ hδ => forall_congr fun x => by simp <;> itauto
+    forall₂_congr fun ε hε => exists₂_congr fun δ hδ => forall_congr' fun x => by simp <;> itauto
 
 theorem tendsto_nhds_within_nhds {a b} :
     Tendsto f (𝓝[s] a) (𝓝 b) ↔ ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → edist x a < δ → edist (f x) b < ε := by
@@ -827,7 +827,7 @@ theorem diam_Union_mem_option {ι : Type _} (o : Option ι) (s : ι → Set α) 
 theorem diam_insert : diam (insert x s) = max (⨆ y ∈ s, edist x y) (diam s) :=
   eq_of_forall_ge_iff fun d => by
     simp only [diam_le_iff, ball_insert_iff, edist_self, edist_comm x, max_le_iff, supr_le_iff, zero_le, true_and_iff,
-      forall_and_distrib, and_self_iff, ← and_assoc']
+      forall_and, and_self_iff, ← and_assoc']
 
 theorem diam_pair : diam ({x, y} : Set α) = edist x y := by
   simp only [supr_singleton, diam_insert, diam_singleton, Ennreal.max_zero_right]

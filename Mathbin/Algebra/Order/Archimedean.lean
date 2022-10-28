@@ -110,7 +110,7 @@ theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x
 
 theorem exists_int_gt (x : α) : ∃ n : ℤ, x < n :=
   let ⟨n, h⟩ := exists_nat_gt x
-  ⟨n, by rwa [Int.cast_coe_nat]⟩
+  ⟨n, by rwa [Int.cast_ofNat]⟩
 
 theorem exists_int_lt (x : α) : ∃ n : ℤ, (n : α) < x :=
   let ⟨n, h⟩ := exists_int_gt (-x)
@@ -228,7 +228,7 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
     exact one_ne_zero
     
   · intro H
-    rw [Rat.coe_nat_num, Int.cast_coe_nat, Nat.cast_eq_zero] at H
+    rw [Rat.coe_nat_num, Int.cast_ofNat, Nat.cast_eq_zero] at H
     subst H
     cases n0
     

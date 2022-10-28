@@ -80,10 +80,10 @@ instance mul [Zero M] [Mul M] [NoZeroDivisors M] [NeZero x] [NeZero y] : NeZero 
 instance char_zero [NeZero n] [AddMonoidWithOne M] [CharZero M] : NeZero (n : M) :=
   ⟨Nat.cast_ne_zero.mpr out⟩
 
-instance coe_trans [Zero M] [Coe R S] [CoeT S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
+instance coe_trans [Zero M] [Coe R S] [CoeTC S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
   ⟨h.out⟩
 
-theorem trans [Zero M] [Coe R S] [CoeT S M] (h : NeZero ((r : S) : M)) : NeZero (r : M) :=
+theorem trans [Zero M] [Coe R S] [CoeTC S M] (h : NeZero ((r : S) : M)) : NeZero (r : M) :=
   ⟨h.out⟩
 
 theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : NeZero r :=

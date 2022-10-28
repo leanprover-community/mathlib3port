@@ -782,7 +782,7 @@ theorem is_multiplicative_one [MonoidWithZero R] : IsMultiplicative (1 : Arithme
       · simp
         
       rw [one_apply_ne, one_apply_ne hm', zero_mul]
-      rw [Ne.def, Nat.mul_eq_one_iff, not_and_distrib]
+      rw [Ne.def, Nat.mul_eq_one_iff, not_and_or]
       exact Or.inl hm'⟩
 
 theorem is_multiplicative_zeta : IsMultiplicative ζ :=
@@ -930,7 +930,7 @@ theorem moebius_apply_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) : μ (
   · rw [h, pow_one, moebius_apply_prime hp]
     
   rw [moebius_eq_zero_of_not_squarefree]
-  rw [squarefree_pow_iff hp.ne_one hk, not_and_distrib]
+  rw [squarefree_pow_iff hp.ne_one hk, not_and_or]
   exact Or.inr h
 
 theorem moebius_apply_is_prime_pow_not_prime {n : ℕ} (hn : IsPrimePow n) (hn' : ¬n.Prime) : μ n = 0 := by
@@ -1020,7 +1020,7 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · rw [ext_iff]
-    apply forall_congr
+    apply forall_congr'
     intro n
     cases n
     · simp
@@ -1039,7 +1039,7 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
       
     
   · rw [ext_iff]
-    apply forall_congr
+    apply forall_congr'
     intro n
     cases n
     · simp
@@ -1055,7 +1055,7 @@ theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
       ∀ n : ℕ, 0 < n → (∑ x : ℕ × ℕ in n.divisorsAntidiagonal, (μ x.fst : R) * g x.snd) = f n :=
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
-  apply forall_congr
+  apply forall_congr'
   refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 
@@ -1073,10 +1073,10 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
   by
   refine'
       Iff.trans
-        (Iff.trans (forall_congr fun n => _)
+        (Iff.trans (forall_congr' fun n => _)
           (@prod_eq_iff_prod_pow_moebius_eq Rˣ _ (fun n => if h : 0 < n then Units.mk0 (f n) (hf n h) else 1) fun n =>
             if h : 0 < n then Units.mk0 (g n) (hg n h) else 1))
-        (forall_congr fun n => _) <;>
+        (forall_congr' fun n => _) <;>
     refine' imp_congr_right fun hn => _
   · dsimp
     rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.coe_mk0, prod_congr rfl _]

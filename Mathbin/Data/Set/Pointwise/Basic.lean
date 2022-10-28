@@ -3,10 +3,9 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 -/
-import Mathbin.Algebra.Module.Basic
 import Mathbin.Data.Fin.Tuple.Basic
-import Mathbin.GroupTheory.Submonoid.Basic
-import Mathbin.Order.WellFoundedSet
+import Mathbin.Data.Set.Finite
+import Mathbin.Algebra.Module.Basic
 
 /-!
 # Pointwise operations of sets
@@ -675,7 +674,7 @@ localized [Pointwise] attribute [instance] Set.monoid Set.addMonoid
 
 @[to_additive]
 instance decidableMemMul [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
-    DecidablePred (· ∈ s * t) := fun _ => decidableOfIff _ mem_mul.symm
+    DecidablePred (· ∈ s * t) := fun _ => decidable_of_iff _ mem_mul.symm
 
 @[to_additive]
 instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) : DecidablePred (· ∈ s ^ n) := by
@@ -722,7 +721,7 @@ theorem mem_prod_list_of_fn {a : α} {s : Fin n → Set α} :
   · simp_rw [List.of_fn_zero, List.prod_nil, Fin.exists_fin_zero_pi, eq_comm, Set.mem_one]
     
   · simp_rw [List.of_fn_succ, List.prod_cons, Fin.exists_fin_succ_pi, Fin.cons_zero, Fin.cons_succ, mem_mul, @ih,
-      exists_and_distrib_left, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk, exists_prop]
+      exists_and_left, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk, exists_prop]
     
 
 @[to_additive]
@@ -731,7 +730,7 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
       ∃ l' : List (Σs : Set α, ↥s), List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
   by
   induction' l using List.ofFnRec with n f
-  simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', and_left_comm, exists_and_distrib_left,
+  simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', and_left_comm, exists_and_left,
     exists_eq_left, heq_iff_eq, Function.comp, mem_prod_list_of_fn]
   constructor
   · rintro ⟨fi, rfl⟩
@@ -1027,116 +1026,6 @@ theorem bdd_above_mul [OrderedCommMonoid α] {A B : Set α} : BddAbove A → Bdd
   exact mul_le_mul' (hbA hxa) (hbB hxb)
 
 open Pointwise
-
-section BigOperators
-
-open BigOperators
-
-variable {ι : Type _} [CommMonoid α]
-
-/-- The n-ary version of `set.mem_mul`. -/
-@[to_additive " The n-ary version of `set.mem_add`. "]
-theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
-    (a ∈ ∏ i in t, f i) ↔ ∃ (g : ι → α)(hg : ∀ {i}, i ∈ t → g i ∈ f i), (∏ i in t, g i) = a := by
-  classical
-  induction' t using Finset.induction_on with i is hi ih generalizing a
-  · simp_rw [Finset.prod_empty, Set.mem_one]
-    exact ⟨fun h => ⟨fun i => a, fun i => False.elim, h.symm⟩, fun ⟨f, _, hf⟩ => hf.symm⟩
-    
-  rw [Finset.prod_insert hi, Set.mem_mul]
-  simp_rw [Finset.prod_insert hi]
-  simp_rw [ih]
-  constructor
-  · rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
-    refine' ⟨Function.update g i x, fun j hj => _, _⟩
-    obtain rfl | hj := finset.mem_insert.mp hj
-    · rw [Function.update_same]
-      exact hx
-      
-    · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
-      exact hg hj
-      
-    rw [Finset.prod_update_of_not_mem hi, Function.update_same]
-    
-  · rintro ⟨g, hg, rfl⟩
-    exact ⟨g i, is.prod g, hg (is.mem_insert_self _), ⟨g, fun i hi => hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩
-    
-
-/-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
-@[to_additive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
-theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
-    (a ∈ ∏ i, f i) ↔ ∃ (g : ι → α)(hg : ∀ i, g i ∈ f i), (∏ i, g i) = a := by
-  rw [mem_finset_prod]
-  simp
-
-/-- An n-ary version of `set.mul_mem_mul`. -/
-@[to_additive " An n-ary version of `set.add_mem_add`. "]
-theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
-    (t.map g).Prod ∈ (t.map f).Prod := by
-  induction' t with h tl ih
-  · simp_rw [List.map_nil, List.prod_nil, Set.mem_one]
-    
-  · simp_rw [List.map_cons, List.prod_cons]
-    exact mul_mem_mul (hg h <| List.mem_cons_self _ _) (ih fun i hi => hg i <| List.mem_cons_of_mem _ hi)
-    
-
-/-- An n-ary version of `set.mul_subset_mul`. -/
-@[to_additive " An n-ary version of `set.add_subset_add`. "]
-theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
-    (t.map f₁).Prod ⊆ (t.map f₂).Prod := by
-  induction' t with h tl ih
-  · rfl
-    
-  · simp_rw [List.map_cons, List.prod_cons]
-    exact mul_subset_mul (hf h <| List.mem_cons_self _ _) (ih fun i hi => hf i <| List.mem_cons_of_mem _ hi)
-    
-
-@[to_additive]
-theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) : (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
-  (map_list_prod (singletonMonoidHom : M →* Set M) _).symm
-
-/-- An n-ary version of `set.mul_mem_mul`. -/
-@[to_additive " An n-ary version of `set.add_mem_add`. "]
-theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
-    (t.map g).Prod ∈ (t.map f).Prod := by
-  induction t using Quotient.induction_on
-  simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
-  exact list_prod_mem_list_prod _ _ _ hg
-
-/-- An n-ary version of `set.mul_subset_mul`. -/
-@[to_additive " An n-ary version of `set.add_subset_add`. "]
-theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
-    (t.map f₁).Prod ⊆ (t.map f₂).Prod := by
-  induction t using Quotient.induction_on
-  simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
-  exact list_prod_subset_list_prod _ _ _ hf
-
-@[to_additive]
-theorem multiset_prod_singleton {M : Type _} [CommMonoid M] (s : Multiset M) :
-    (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
-  (map_multiset_prod (singletonMonoidHom : M →* Set M) _).symm
-
-/-- An n-ary version of `set.mul_mem_mul`. -/
-@[to_additive " An n-ary version of `set.add_mem_add`. "]
-theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
-    (∏ i in t, g i) ∈ ∏ i in t, f i :=
-  multiset_prod_mem_multiset_prod _ _ _ hg
-
-/-- An n-ary version of `set.mul_subset_mul`. -/
-@[to_additive " An n-ary version of `set.add_subset_add`. "]
-theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
-    (∏ i in t, f₁ i) ⊆ ∏ i in t, f₂ i :=
-  multiset_prod_subset_multiset_prod _ _ _ hf
-
-@[to_additive]
-theorem finset_prod_singleton {M ι : Type _} [CommMonoid M] (s : Finset ι) (I : ι → M) :
-    (∏ i : ι in s, ({I i} : Set M)) = {∏ i : ι in s, I i} :=
-  (map_prod (singletonMonoidHom : M →* Set M) _ _).symm
-
-/-! TODO: define `decidable_mem_finset_prod` and `decidable_mem_finset_sum`. -/
-
-
-end BigOperators
 
 /-! ### Translation/scaling of sets -/
 
@@ -1858,61 +1747,6 @@ open Set
 
 open Pointwise
 
-/-! Some lemmas about pointwise multiplication and submonoids. Ideally we put these in
-  `group_theory.submonoid.basic`, but currently we cannot because that file is imported by this. -/
-
-
-namespace Submonoid
-
-variable {M : Type _} [Monoid M] {s t u : Set M}
-
-@[to_additive]
-theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : s * t ⊆ S := by
-  rintro _ ⟨p, q, hp, hq, rfl⟩
-  exact Submonoid.mul_mem _ (hs hp) (ht hq)
-
-@[to_additive]
-theorem mul_subset_closure (hs : s ⊆ u) (ht : t ⊆ u) : s * t ⊆ Submonoid.closure u :=
-  mul_subset (Subset.trans hs Submonoid.subset_closure) (Subset.trans ht Submonoid.subset_closure)
-
-@[to_additive]
-theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s := by
-  ext x
-  refine' ⟨_, fun h => ⟨x, 1, h, s.one_mem, mul_one x⟩⟩
-  rintro ⟨a, b, ha, hb, rfl⟩
-  exact s.mul_mem ha hb
-
-@[to_additive]
-theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
-  Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
-    hx ▸
-      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
-        (SetLike.le_def.mp le_sup_right <| subset_closure ht)
-
-@[to_additive]
-theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
-  le_antisymm
-    (sup_le (fun h hh => subset_closure ⟨h, 1, hh, K.one_mem, mul_one h⟩) fun k hk =>
-      subset_closure ⟨1, k, H.one_mem, hk, one_mul k⟩)
-    (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
-
-@[to_additive]
-theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [IsScalarTower M N N] (r : M) (s : Set N)
-    {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) := by
-  apply @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx
-  · intro x hx
-    exact ⟨1, subset_closure ⟨_, hx, by rw [pow_one]⟩⟩
-    
-  · exact ⟨0, by simpa using one_mem _⟩
-    
-  · rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
-    use nx + ny
-    convert mul_mem hx hy
-    rw [pow_add, smul_mul_assoc, mul_smul, mul_comm, ← smul_mul_assoc, mul_comm]
-    
-
-end Submonoid
-
 namespace Group
 
 theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
@@ -1969,184 +1803,4 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_left]
 
 end Group
-
-namespace Set
-
-variable {s t : Set α}
-
-@[to_additive]
-theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) := by
-  rw [← image_mul_prod]
-  exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
-
-variable [LinearOrderedCancelCommMonoid α]
-
-@[to_additive]
-theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
-  (hs.IsPwo.mul ht.IsPwo).IsWf
-
-@[to_additive]
-theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Nonempty) :
-    (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn := by
-  refine' le_antisymm (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _
-  rw [is_wf.le_min_iff]
-  rintro _ ⟨x, y, hx, hy, rfl⟩
-  exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy)
-
-end Set
-
-/-! ### Multiplication antidiagonal -/
-
-
-namespace Set
-
-section Mul
-
-variable [Mul α] {s s₁ s₂ t t₁ t₂ : Set α} {a : α} {x : α × α}
-
-/-- `set.mul_antidiagonal s t a` is the set of all pairs of an element in `s` and an element in `t`
-that multiply to `a`. -/
-@[to_additive
-      "`set.add_antidiagonal s t a` is the set of all pairs of an element in `s` and an\nelement in `t` that add to `a`."]
-def MulAntidiagonal (s t : Set α) (a : α) : Set (α × α) :=
-  { x | x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a }
-
-@[simp, to_additive]
-theorem mem_mul_antidiagonal : x ∈ MulAntidiagonal s t a ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a :=
-  Iff.rfl
-
-@[to_additive]
-theorem mul_antidiagonal_mono_left (h : s₁ ⊆ s₂) : MulAntidiagonal s₁ t a ⊆ MulAntidiagonal s₂ t a := fun x hx =>
-  ⟨h hx.1, hx.2.1, hx.2.2⟩
-
-@[to_additive]
-theorem mul_antidiagonal_mono_right (h : t₁ ⊆ t₂) : MulAntidiagonal s t₁ a ⊆ MulAntidiagonal s t₂ a := fun x hx =>
-  ⟨hx.1, h hx.2.1, hx.2.2⟩
-
-end Mul
-
-@[simp, to_additive]
-theorem swap_mem_mul_antidiagonal [CommSemigroup α] {s t : Set α} {a : α} {x : α × α} :
-    x.swap ∈ Set.MulAntidiagonal s t a ↔ x ∈ Set.MulAntidiagonal t s a := by simp [mul_comm, and_left_comm]
-
-namespace MulAntidiagonal
-
-section CancelCommMonoid
-
-variable [CancelCommMonoid α] {s t : Set α} {a : α} {x y : MulAntidiagonal s t a}
-
-@[to_additive]
-theorem fst_eq_fst_iff_snd_eq_snd : (x : α × α).1 = (y : α × α).1 ↔ (x : α × α).2 = (y : α × α).2 :=
-  ⟨fun h =>
-    mul_left_cancel
-      (y.Prop.2.2.trans <| by
-          rw [← h]
-          exact x.2.2.2.symm).symm,
-    fun h =>
-    mul_right_cancel
-      (y.Prop.2.2.trans <| by
-          rw [← h]
-          exact x.2.2.2.symm).symm⟩
-
-@[to_additive]
-theorem eq_of_fst_eq_fst (h : (x : α × α).fst = (y : α × α).fst) : x = y :=
-  Subtype.ext <| Prod.ext h <| fst_eq_fst_iff_snd_eq_snd.1 h
-
-@[to_additive]
-theorem eq_of_snd_eq_snd (h : (x : α × α).snd = (y : α × α).snd) : x = y :=
-  Subtype.ext <| Prod.ext (fst_eq_fst_iff_snd_eq_snd.2 h) h
-
-end CancelCommMonoid
-
-section OrderedCancelCommMonoid
-
-variable [OrderedCancelCommMonoid α] (s t : Set α) (a : α) {x y : MulAntidiagonal s t a}
-
-@[to_additive]
-theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × α).1) (h₂ : (x : α × α).2 ≤ (y : α × α).2) :
-    x = y :=
-  eq_of_fst_eq_fst <|
-    h₁.eq_of_not_lt fun hlt =>
-      (mul_lt_mul_of_lt_of_le hlt h₂).Ne <| (mem_mul_antidiagonal.1 x.2).2.2.trans (mem_mul_antidiagonal.1 y.2).2.2.symm
-
-variable {s t}
-
-@[to_additive]
-theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (MulAntidiagonal s t a).Finite := by
-  refine' not_infinite.1 fun h => _
-  have h1 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.fst ⁻¹'o (· ≤ ·)) := fun f hf =>
-    hs (Prod.fst ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).1
-  have h2 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.snd ⁻¹'o (· ≤ ·)) := fun f hf =>
-    ht (Prod.snd ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).2.1
-  obtain ⟨g, hg⟩ := h1.exists_monotone_subseq (fun n => h.nat_embedding _ n) fun n => (h.nat_embedding _ n).2
-  obtain ⟨m, n, mn, h2'⟩ := h2 (fun x => (h.nat_embedding _) (g x)) fun n => (h.nat_embedding _ _).2
-  refine' mn.ne (g.injective <| (h.nat_embedding _).Injective _)
-  exact eq_of_fst_le_fst_of_snd_le_snd _ _ _ (hg _ _ mn.le) h2'
-
-end OrderedCancelCommMonoid
-
-@[to_additive]
-theorem finite_of_is_wf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf) (a) :
-    (MulAntidiagonal s t a).Finite :=
-  finite_of_is_pwo hs.IsPwo ht.IsPwo a
-
-end MulAntidiagonal
-
-end Set
-
-namespace Finset
-
-variable [OrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsPwo) (ht : t.IsPwo) (a : α)
-
-/-- `finset.mul_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in `s` and an
-element in `t` that multiply to `a`, but its construction requires proofs that `s` and `t` are
-well-ordered. -/
-@[to_additive
-      "`finset.add_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in\n`s` and an element in `t` that add to `a`, but its construction requires proofs that `s` and `t` are\nwell-ordered."]
-noncomputable def mulAntidiagonal : Finset (α × α) :=
-  (Set.MulAntidiagonal.finite_of_is_pwo hs ht a).toFinset
-
-variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
-
-@[simp, to_additive]
-theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a := by
-  simp [mul_antidiagonal, and_rotate]
-
-@[to_additive]
-theorem mul_antidiagonal_mono_left (h : u ⊆ s) : mulAntidiagonal hu ht a ⊆ mulAntidiagonal hs ht a :=
-  Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_left h
-
-@[to_additive]
-theorem mul_antidiagonal_mono_right (h : u ⊆ t) : mulAntidiagonal hs hu a ⊆ mulAntidiagonal hs ht a :=
-  Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_right h
-
-@[simp, to_additive]
-theorem swap_mem_mul_antidiagonal : x.swap ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
-  simp [mul_comm, and_left_comm]
-
-@[to_additive]
-theorem support_mul_antidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t := fun a ⟨b, hb⟩ => by
-  rw [mem_mul_antidiagonal] at hb
-  exact ⟨b.1, b.2, hb⟩
-
-@[to_additive]
-theorem is_pwo_support_mul_antidiagonal : { a | (mulAntidiagonal hs ht a).Nonempty }.IsPwo :=
-  (hs.mul ht).mono support_mul_antidiagonal_subset_mul
-
-@[to_additive]
-theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf)
-    (hns : s.Nonempty) (hnt : t.Nonempty) :
-    mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} := by
-  ext ⟨a, b⟩
-  simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]
-  constructor
-  · rintro ⟨has, hat, hst⟩
-    obtain rfl := (hs.min_le hns has).eq_of_not_lt fun hlt => (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
-    exact ⟨rfl, mul_left_cancel hst⟩
-    
-  · rintro ⟨rfl, rfl⟩
-    exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
-    
-
-end Finset
 

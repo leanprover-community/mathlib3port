@@ -88,11 +88,11 @@ theorem interedgesDisjointRight (s : Finset α) {t t' : Finset β} (ht : Disjoin
 
 theorem interedges_bUnion_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
     interedges r (s.bUnion f) t = s.bUnion fun a => interedges r (f a) t :=
-  ext fun a => by simp only [mem_bUnion, mem_interedges_iff, exists_and_distrib_right]
+  ext fun a => by simp only [mem_bUnion, mem_interedges_iff, exists_and_right]
 
 theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
     interedges r s (t.bUnion f) = t.bUnion fun b => interedges r s (f b) :=
-  ext fun a => by simp only [mem_interedges_iff, mem_bUnion, ← exists_and_distrib_left, ← exists_and_distrib_right]
+  ext fun a => by simp only [mem_interedges_iff, mem_bUnion, ← exists_and_left, ← exists_and_right]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem interedges_bUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :

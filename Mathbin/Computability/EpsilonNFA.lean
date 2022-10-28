@@ -170,7 +170,7 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.e
   ext S s
   simp only [step_set, εNFA.StepSet, exists_prop, Set.mem_Union, Set.bind_def]
   apply exists_congr
-  simp only [And.congr_right_iff]
+  simp only [and_congr_right_iff]
   intro t ht
   rw [M.to_ε_NFA_ε_closure]
   rfl

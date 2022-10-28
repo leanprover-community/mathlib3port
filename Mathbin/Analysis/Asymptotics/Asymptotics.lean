@@ -508,7 +508,7 @@ theorem IsOWith.insert [TopologicalSpace α] {x : α} {s : Set α} {C : ℝ} {g 
 theorem is_o_insert [TopologicalSpace α] {x : α} {s : Set α} {g : α → E'} {g' : α → F'} (h : g x = 0) :
     g =o[𝓝[insert x s] x] g' ↔ g =o[𝓝[s] x] g' := by
   simp_rw [is_o]
-  refine' forall_congr fun c => forall_congr fun hc => _
+  refine' forall_congr' fun c => forall_congr' fun hc => _
   rw [is_O_with_insert]
   rw [h, norm_zero]
   exact mul_nonneg hc.le (norm_nonneg _)

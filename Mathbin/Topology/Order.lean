@@ -344,7 +344,7 @@ theorem discrete_topology_iff_nhds [TopologicalSpace α] : DiscreteTopology α �
 
 theorem discrete_topology_iff_nhds_ne [TopologicalSpace α] : DiscreteTopology α ↔ ∀ x : α, 𝓝[≠] x = ⊥ := by
   rw [discrete_topology_iff_nhds]
-  apply forall_congr fun x => _
+  apply forall_congr' fun x => _
   rw [nhdsWithin, inf_principal_eq_bot, compl_compl]
   constructor <;> intro h
   · rw [h]
@@ -521,10 +521,10 @@ instance : TopologicalSpace Empty :=
 instance : DiscreteTopology Empty :=
   ⟨rfl⟩
 
-instance : TopologicalSpace Pempty :=
+instance : TopologicalSpace PEmpty :=
   ⊥
 
-instance : DiscreteTopology Pempty :=
+instance : DiscreteTopology PEmpty :=
   ⟨rfl⟩
 
 instance : TopologicalSpace PUnit :=
@@ -570,7 +570,7 @@ theorem le_induced_generate_from {α β} [t : TopologicalSpace α] {b : Set (Set
     (h : ∀ a : Set β, a ∈ b → IsOpen (f ⁻¹' a)) : t ≤ induced f (generateFrom b) := by
   rw [induced_generate_from_eq]
   apply le_generate_from
-  simp only [mem_image, and_imp, forall_apply_eq_imp_iff₂, exists_imp_distrib]
+  simp only [mem_image, and_imp, forall_apply_eq_imp_iff₂, exists_imp]
   exact h
 
 /-- This construction is left adjoint to the operation sending a topology on `α`
@@ -646,8 +646,8 @@ theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : Topolog
 theorem le_nhds_adjoint_iff {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ b, b ≠ a → t.IsOpen {b} := by
   change _ ↔ _ ∧ ∀ b : α, b ≠ a → IsOpen {b}
-  rw [le_nhds_adjoint_iff', And.congr_right_iff]
-  apply fun h => forall_congr fun b => _
+  rw [le_nhds_adjoint_iff', and_congr_right_iff]
+  apply fun h => forall_congr' fun b => _
   rw [@is_open_singleton_iff_nhds_eq_pure α t b]
 
 theorem nhds_infi {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} : @nhds α (infi t) a = ⨅ i, @nhds α (t i) a :=

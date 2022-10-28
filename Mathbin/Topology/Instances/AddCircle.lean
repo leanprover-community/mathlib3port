@@ -3,6 +3,7 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
+import Mathbin.GroupTheory.Divisible
 import Mathbin.Algebra.Order.Floor
 import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Topology.Instances.Real
@@ -125,6 +126,18 @@ theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' IccCat 0 p = univ := 
   refine' eq_univ_iff_forall.mpr fun x => _
   let y := equiv_Ico p x
   exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩
+
+instance : DivisibleBy (AddCircle p) ℤ where
+  div x n := (↑((n : 𝕜)⁻¹ * (equivIco p x : 𝕜)) : AddCircle p)
+  div_zero x := by simp only [algebraMap.coe_zero, QuotientAddGroup.coe_zero, inv_zero, zero_mul]
+  div_cancel n x hn := by
+    replace hn : (n : 𝕜) ≠ 0
+    · norm_cast
+      assumption
+      
+    change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p x)) = x
+    rw [← map_zsmul, ← smul_mul_assoc, zsmul_eq_mul, mul_inv_cancel hn, one_mul]
+    exact (equiv_Ico p).symm_apply_apply x
 
 end LinearOrderedField
 

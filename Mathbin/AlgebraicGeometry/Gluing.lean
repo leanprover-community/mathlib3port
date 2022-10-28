@@ -212,7 +212,7 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :
 theorem is_open_iff (U : Set D.glued.Carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
   rw [← (TopCat.homeoOfIso D.iso_carrier.symm).is_open_preimage]
   rw [TopCat.GlueData.is_open_iff]
-  apply forall_congr
+  apply forall_congr'
   intro i
   erw [← Set.preimage_comp, ← coe_comp, ι_iso_carrier_inv]
 

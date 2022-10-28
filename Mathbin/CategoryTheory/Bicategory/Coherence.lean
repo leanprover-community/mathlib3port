@@ -158,7 +158,7 @@ case whisker_left _ _ _ _ _ _ _ ih =>
   apply congr_fun ih
   case whisker_right _ _ _ _ _ _ _ ih =>
   funext
-  apply congr_arg2 _ (congr_fun ih p) rfl
+  apply congr_arg₂ _ (congr_fun ih p) rfl
   all_goals
   funext
   rfl

@@ -37,7 +37,7 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
         exact Real.exp_pos x,
       map_target' := fun z h =>
         suffices 0 ≤ z.re ∨ z.im ≠ 0 by
-          simpa [log_im, neg_pi_lt_arg, (arg_le_pi _).lt_iff_ne, arg_eq_pi_iff, not_and_distrib]
+          simpa [log_im, neg_pi_lt_arg, (arg_le_pi _).lt_iff_ne, arg_eq_pi_iff, not_and_or]
         h.imp (fun h => le_of_lt h) id,
       left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2),
       right_inv' := fun x hx =>

@@ -274,7 +274,7 @@ instance : AddGroupWithOne (CauSeq β abv) :=
   { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_arg const Nat.cast_zero,
     nat_cast_succ := fun n => congr_arg const (Nat.cast_succ n), intCast := fun n => const n,
     int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_neg_succ_of_nat n) }
+    int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_negSucc n) }
 
 instance : Ring (CauSeq β abv) := by
   refine_struct

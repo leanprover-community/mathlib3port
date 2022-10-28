@@ -3,7 +3,7 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 -/
-import Mathbin.Algebra.Group.ToAdditive
+import Mathbin.Tactic.ToAdditive
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Data.Prod.Basic
 import Mathbin.Logic.Unique
@@ -275,7 +275,7 @@ theorem extend_one [One γ] (f : α → β) : Function.extend f (1 : α → γ) 
 @[to_additive]
 theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extend f (g₁ * g₂) (e₁ * e₂) = Function.extend f g₁ e₁ * Function.extend f g₂ e₂ :=
-  funext fun _ => by convert (apply_dite2 (· * ·) _ _ _ _ _).symm
+  funext fun _ => by convert (apply_dite₂ (· * ·) _ _ _ _ _).symm
 
 @[to_additive]
 theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
@@ -285,7 +285,7 @@ theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
 @[to_additive]
 theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extend f (g₁ / g₂) (e₁ / e₂) = Function.extend f g₁ e₁ / Function.extend f g₂ e₂ :=
-  funext fun _ => by convert (apply_dite2 (· / ·) _ _ _ _ _).symm
+  funext fun _ => by convert (apply_dite₂ (· / ·) _ _ _ _ _).symm
 
 end Extend
 

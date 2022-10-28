@@ -88,7 +88,7 @@ theorem lower_ne_upper (i) : I.lower i ≠ I.upper i :=
 instance : Membership (ι → ℝ) (Box ι) :=
   ⟨fun x I => ∀ i, x i ∈ IocCat (I.lower i) (I.upper i)⟩
 
-instance : CoeT (Box ι) (Set <| ι → ℝ) :=
+instance : CoeTC (Box ι) (Set <| ι → ℝ) :=
   ⟨fun I => { x | x ∈ I }⟩
 
 @[simp]
@@ -232,7 +232,7 @@ In this section we define coercion from `with_bot (box ι)` to `set (ι → ℝ)
 -/
 
 
-instance withBotCoe : CoeT (WithBot (Box ι)) (Set (ι → ℝ)) :=
+instance withBotCoe : CoeTC (WithBot (Box ι)) (Set (ι → ℝ)) :=
   ⟨fun o => o.elim ∅ coe⟩
 
 @[simp, norm_cast]

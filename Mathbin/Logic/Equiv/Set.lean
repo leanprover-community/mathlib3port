@@ -194,7 +194,7 @@ protected def empty (α) : (∅ : Set α) ≃ Empty :=
   equivEmpty _
 
 /-- An empty set is equivalent to a `pempty` type. -/
-protected def pempty (α) : (∅ : Set α) ≃ Pempty :=
+protected def pempty (α) : (∅ : Set α) ≃ PEmpty :=
   equivPempty _
 
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
@@ -544,8 +544,8 @@ theorem preimage_pi_equiv_pi_subtype_prod_symm_pi {α : Type _} {β : α → Typ
       (Pi Univ fun i : { i // p i } => s i) ×ˢ Pi Univ fun i : { i // ¬p i } => s i :=
   by
   ext ⟨f, g⟩
-  simp only [mem_preimage, mem_univ_pi, prod_mk_mem_set_prod_eq, Subtype.forall, ← forall_and_distrib]
-  refine' forall_congr fun i => _
+  simp only [mem_preimage, mem_univ_pi, prod_mk_mem_set_prod_eq, Subtype.forall, ← forall_and]
+  refine' forall_congr' fun i => _
   dsimp only [Subtype.coe_mk]
   by_cases hi:p i <;> simp [hi]
 

@@ -59,7 +59,7 @@ theorem log_eq_one_iff {b n : ℕ} : log b n = 1 ↔ n < b * b ∧ 1 < b ∧ b �
   refine' ⟨fun h_log => _, _⟩
   · have bound : 1 < b ∧ b ≤ n := by
       contrapose h_log
-      rw [not_and_distrib, not_lt, not_le, or_comm', ← log_eq_zero_iff] at h_log
+      rw [not_and_or, not_lt, not_le, or_comm', ← log_eq_zero_iff] at h_log
       rw [h_log]
       exact Nat.zero_ne_one
     cases' bound with one_lt_b b_le_n

@@ -123,7 +123,7 @@ instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomCl
   { ‹OrderMonoidHomClass F α β› with map_rel := OrderMonoidHomClass.monotone }
 
 @[to_additive]
-instance [OrderMonoidHomClass F α β] : CoeT F (α →*o β) :=
+instance [OrderMonoidHomClass F α β] : CoeTC F (α →*o β) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_mul' := map_mul f, monotone' := OrderMonoidHomClass.monotone _ }⟩
 
 end Monoid
@@ -165,7 +165,7 @@ instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass [Or
     OrderMonoidHomClass F α β :=
   { ‹OrderMonoidWithZeroHomClass F α β› with }
 
-instance [OrderMonoidWithZeroHomClass F α β] : CoeT F (α →*₀o β) :=
+instance [OrderMonoidWithZeroHomClass F α β] : CoeTC F (α →*₀o β) :=
   ⟨fun f =>
     { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f,
       monotone' := OrderMonoidWithZeroHomClass.monotone _ }⟩

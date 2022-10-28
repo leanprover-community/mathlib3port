@@ -623,7 +623,7 @@ instance : Monoid Ordinal.{u} where
           ⟨⟨prodAssoc _ _ _, fun a b => by
               rcases a with ⟨⟨a₁, a₂⟩, a₃⟩
               rcases b with ⟨⟨b₁, b₂⟩, b₃⟩
-              simp [Prod.lex_def, and_or_distrib_left, or_assoc', and_assoc']⟩⟩
+              simp [Prod.lex_def, and_or_left, or_assoc', and_assoc']⟩⟩
   mul_one a :=
     (induction_on a) fun α r _ =>
       Quotient.sound
@@ -1663,7 +1663,7 @@ theorem is_normal_iff_lt_succ_and_bsup_eq {f} :
 
 theorem is_normal_iff_lt_succ_and_blsub_eq {f} :
     IsNormal f ↔ (∀ a, f a < f (succ a)) ∧ ∀ o, IsLimit o → (blsub o fun x _ => f x) = f o := by
-  rw [is_normal_iff_lt_succ_and_bsup_eq, And.congr_right_iff]
+  rw [is_normal_iff_lt_succ_and_bsup_eq, and_congr_right_iff]
   intro h
   constructor <;> intro H o ho <;> have := H o ho <;> rwa [← bsup_eq_blsub_of_lt_succ_limit ho fun a _ => h a] at *
 

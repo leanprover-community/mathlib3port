@@ -123,10 +123,10 @@ def Empty (V) : Type u :=
   V
 
 instance emptyQuiver (V : Type u) : Quiver.{u} (Empty V) :=
-  ⟨fun a b => Pempty⟩
+  ⟨fun a b => PEmpty⟩
 
 @[simp]
-theorem empty_arrow {V : Type u} (a b : Empty V) : (a ⟶ b) = Pempty :=
+theorem empty_arrow {V : Type u} (a b : Empty V) : (a ⟶ b) = PEmpty :=
   rfl
 
 end Quiver

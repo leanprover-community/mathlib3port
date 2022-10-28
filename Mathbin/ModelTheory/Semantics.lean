@@ -309,8 +309,7 @@ theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs 
   induction' l with φ l ih
   · simp
     
-  · simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iff, or_and_distrib_right, exists_or_distrib,
-      exists_eq_left]
+  · simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iff, or_and_right, exists_or, exists_eq_left]
     
 
 @[simp]
@@ -394,7 +393,7 @@ theorem realize_lift_at {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → 
     
   · have h : k + 1 + n' = k + n' + 1 := by rw [add_assoc, add_comm 1 n', ← add_assoc]
     simp only [map_term_rel, realize, realize_cast_le_of_eq h, ih3 (hmn.trans k.succ.le_succ)]
-    refine' forall_congr fun x => iff_eq_eq.mpr (congr rfl (funext (Fin.lastCases _ fun i => _)))
+    refine' forall_congr' fun x => iff_eq_eq.mpr (congr rfl (funext (Fin.lastCases _ fun i => _)))
     · simp only [Function.comp_app, coe_last, snoc_last]
       by_cases k < m
       · rw [if_pos h]
@@ -488,7 +487,7 @@ theorem realize_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQf 
   induction' hψ with _ _ hψ _ _ hψ ih _ _ hψ ih <;> intro φ hφ
   · rw [hψ.to_prenex_imp_right]
     
-  · refine' trans (forall_congr fun _ => ih hφ.lift_at) _
+  · refine' trans (forall_congr' fun _ => ih hφ.lift_at) _
     simp only [realize_imp, realize_lift_at_one_self, snoc_comp_cast_succ, realize_all]
     exact ⟨fun h1 a h2 => h1 h2 a, fun h1 h2 a => h1 a h2⟩
     
@@ -532,7 +531,7 @@ theorem realize_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ
         
       
     
-  · refine' trans (forall_congr fun _ => ih hψ.lift_at) _
+  · refine' trans (forall_congr' fun _ => ih hψ.lift_at) _
     simp
     
 
@@ -547,7 +546,7 @@ theorem realize_to_prenex (φ : L.BoundedFormula α n) {v : α → M} :
     infer_instance
     
   · rw [realize_all, to_prenex, realize_all]
-    exact forall_congr fun a => h
+    exact forall_congr' fun a => h
     
 
 end BoundedFormula
@@ -845,7 +844,7 @@ theorem realize_to_formula (φ : L.BoundedFormula α n) (v : Sum α (Fin n) → 
   · rw [to_formula, formula.realize, realize_imp, ← formula.realize, ih1, ← formula.realize, ih2, realize_imp]
     
   · rw [to_formula, formula.realize, realize_all, realize_all]
-    refine' forall_congr fun a => _
+    refine' forall_congr' fun a => _
     have h := ih3 (Sum.elim (v ∘ Sum.inl) (snoc (v ∘ Sum.inr) a))
     simp only [Sum.elim_comp_inl, Sum.elim_comp_inr] at h
     rw [← h, realize_relabel, formula.realize]
@@ -926,33 +925,33 @@ variable {r : L.Relations 2}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_reflexive : M ⊨ r.Reflexive ↔ Reflexive fun x y : M => RelMap r ![x, y] :=
-  forall_congr fun _ => realize_rel₂
+  forall_congr' fun _ => realize_rel₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_irreflexive : M ⊨ r.Irreflexive ↔ Irreflexive fun x y : M => RelMap r ![x, y] :=
-  forall_congr fun _ => not_congr realize_rel₂
+  forall_congr' fun _ => not_congr realize_rel₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_symmetric : M ⊨ r.Symmetric ↔ Symmetric fun x y : M => RelMap r ![x, y] :=
-  forall_congr fun _ => forall_congr fun _ => imp_congr realize_rel₂ realize_rel₂
+  forall_congr' fun _ => forall_congr' fun _ => imp_congr realize_rel₂ realize_rel₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_antisymmetric : M ⊨ r.antisymmetric ↔ AntiSymmetric fun x y : M => RelMap r ![x, y] :=
-  forall_congr fun _ => forall_congr fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ Iff.rfl)
+  forall_congr' fun _ => forall_congr' fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ Iff.rfl)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_transitive : M ⊨ r.Transitive ↔ Transitive fun x y : M => RelMap r ![x, y] :=
-  forall_congr fun _ =>
-    forall_congr fun _ => forall_congr fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ realize_rel₂)
+  forall_congr' fun _ =>
+    forall_congr' fun _ => forall_congr' fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ realize_rel₂)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_total : M ⊨ r.Total ↔ Total fun x y : M => RelMap r ![x, y] :=
-  forall_congr fun _ => forall_congr fun _ => realize_sup.trans (or_congr realize_rel₂ realize_rel₂)
+  forall_congr' fun _ => forall_congr' fun _ => realize_sup.trans (or_congr realize_rel₂ realize_rel₂)
 
 end Relations
 

@@ -61,7 +61,7 @@ theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s 
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=
-  forall_congr fun x => not_imp_comm
+  forall_congr' fun x => not_imp_comm
 
 @[to_additive]
 theorem mul_support_disjoint_iff {f : α → M} {s : Set α} : Disjoint (MulSupport f) s ↔ EqOn f 1 s := by
@@ -159,7 +159,7 @@ theorem mul_support_comp_eq_preimage (g : β → M) (f : α → β) : MulSupport
 
 @[to_additive support_prod_mk]
 theorem mul_support_prod_mk (f : α → M) (g : α → N) : (MulSupport fun x => (f x, g x)) = MulSupport f ∪ MulSupport g :=
-  Set.ext fun x => by simp only [mul_support, not_and_distrib, mem_union, mem_set_of_eq, Prod.mk_eq_one, Ne.def]
+  Set.ext fun x => by simp only [mul_support, not_and_or, mem_union, mem_set_of_eq, Prod.mk_eq_one, Ne.def]
 
 @[to_additive support_prod_mk']
 theorem mul_support_prod_mk' (f : α → M × N) :

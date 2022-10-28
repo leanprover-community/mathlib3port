@@ -152,8 +152,8 @@ theorem reduce_to_affine_nbhd (P : ∀ (X : SchemeCat) (x : X.Carrier), Prop)
     
   apply h₁
 
-theorem eq_zero_of_basic_open_empty {X : SchemeCat} [hX : IsReduced X] {U : Opens X.Carrier} (s : X.Presheaf.obj (op U))
-    (hs : X.basicOpen s = ∅) : s = 0 := by
+theorem eq_zero_of_basic_open_eq_bot {X : SchemeCat} [hX : IsReduced X] {U : Opens X.Carrier}
+    (s : X.Presheaf.obj (op U)) (hs : X.basicOpen s = ⊥) : s = 0 := by
   apply TopCat.Presheaf.section_ext X.sheaf U
   simp_rw [RingHom.map_zero]
   revert X U hX s
@@ -162,7 +162,7 @@ theorem eq_zero_of_basic_open_empty {X : SchemeCat} [hX : IsReduced X] {U : Open
     obtain ⟨V, hx, i, H⟩ := hx x
     specialize H (X.presheaf.map i.op s)
     erw [Scheme.basic_open_res] at H
-    rw [hs, ← subtype.coe_injective.eq_iff, opens.empty_eq, opens.inter_eq, inf_bot_eq] at H
+    rw [hs, ← subtype.coe_injective.eq_iff, inf_bot_eq] at H
     specialize H rfl ⟨x, hx⟩
     erw [TopCat.Presheaf.germ_res_apply] at H
     exact H
@@ -202,7 +202,7 @@ theorem eq_zero_of_basic_open_empty {X : SchemeCat} [hX : IsReduced X] {U : Open
 @[simp]
 theorem basic_open_eq_bot_iff {X : SchemeCat} [IsReduced X] {U : Opens X.Carrier} (s : X.Presheaf.obj <| op U) :
     X.basicOpen s = ⊥ ↔ s = 0 := by
-  refine' ⟨eq_zero_of_basic_open_empty s, _⟩
+  refine' ⟨eq_zero_of_basic_open_eq_bot s, _⟩
   rintro rfl
   simp
 
@@ -234,7 +234,7 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.Carri
   by_contra H
   replace H : ¬IsPreirreducible (⊤ : Set X.carrier) := fun h =>
     H { to_preirreducible_space := ⟨h⟩, to_nonempty := inferInstance }
-  simp_rw [is_preirreducible_iff_closed_union_closed, not_forall, not_or_distrib] at H
+  simp_rw [is_preirreducible_iff_closed_union_closed, not_forall, not_or] at H
   rcases H with ⟨S, T, hS, hT, h₁, h₂, h₃⟩
   erw [not_forall] at h₂ h₃
   simp_rw [not_forall] at h₂ h₃

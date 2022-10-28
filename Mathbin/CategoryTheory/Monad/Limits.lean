@@ -335,7 +335,7 @@ theorem has_colimits_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfSi
 limit.
 -/
 noncomputable def leftAdjointPreservesTerminalOfReflective (R : D ⥤ C) [Reflective R] :
-    PreservesLimitsOfShape (Discrete.{v} Pempty) (leftAdjoint R) where PreservesLimit K := by
+    PreservesLimitsOfShape (Discrete.{v} PEmpty) (leftAdjoint R) where PreservesLimit K := by
     let F := Functor.empty.{v} D
     apply preserves_limit_of_iso_diagram _ (functor.empty_ext (F ⋙ R) _)
     fconstructor

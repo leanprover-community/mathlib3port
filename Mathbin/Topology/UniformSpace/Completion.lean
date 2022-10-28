@@ -329,7 +329,7 @@ instance : T3Space (Completion α) :=
   separatedT3
 
 /-- Automatic coercion from `α` to its completion. Not always injective. -/
-instance : CoeT α (Completion α) :=
+instance : CoeTC α (Completion α) :=
   ⟨Quotient.mk ∘ pure_cauchy⟩
 
 -- note [use has_coe_t]

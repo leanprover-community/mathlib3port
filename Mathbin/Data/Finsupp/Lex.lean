@@ -3,9 +3,10 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Data.Pi.Lex
 import Mathbin.Data.Finsupp.Order
 import Mathbin.Data.Finsupp.NeLocus
+import Mathbin.Data.Dfinsupp.Lex
+import Mathbin.Data.Finsupp.ToDfinsupp
 
 /-!
 # Lexicographic order on finitely supported functions
@@ -25,7 +26,7 @@ variable [Zero N]
 /-- `finsupp.lex r s` is the lexicographic relation on `α →₀ N`, where `α` is ordered by `r`,
 and `N` is ordered by `s`.
 
-The type synonym `_root_.lex (α →₀ N)` has an order given by `finsupp.lex (<) (<)`.
+The type synonym `lex (α →₀ N)` has an order given by `finsupp.lex (<) (<)`.
 -/
 protected def Lex (r : α → α → Prop) (s : N → N → Prop) (x y : α →₀ N) : Prop :=
   Pi.Lex r (fun _ => s) x y
@@ -38,8 +39,20 @@ theorem lex_def {r : α → α → Prop} {s : N → N → Prop} {a b : α →₀
     Finsupp.Lex r s a b ↔ ∃ j, (∀ d, r d j → a d = b d) ∧ s (a j) (b j) :=
   Iff.rfl
 
+theorem lex_eq_inv_image_dfinsupp_lex (r : α → α → Prop) (s : N → N → Prop) :
+    Finsupp.Lex r s = InvImage ((Dfinsupp.Lex r) fun a => s) toDfinsupp :=
+  rfl
+
 instance [LT α] [LT N] : LT (Lex (α →₀ N)) :=
   ⟨fun f g => Finsupp.Lex (· < ·) (· < ·) (ofLex f) (ofLex g)⟩
+
+theorem lex_lt_of_lt_of_preorder [Preorder N] (r) [IsStrictOrder α r] {x y : α →₀ N} (hlt : x < y) :
+    ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i :=
+  Dfinsupp.lex_lt_of_lt_of_preorder r (id hlt : x.toDfinsupp < y.toDfinsupp)
+
+theorem lex_lt_of_lt [PartialOrder N] (r) [IsStrictOrder α r] {x y : α →₀ N} (hlt : x < y) :
+    Pi.Lex r (fun i => (· < ·)) x y :=
+  Dfinsupp.lex_lt_of_lt r (id hlt : x.toDfinsupp < y.toDfinsupp)
 
 instance Lex.is_strict_order [LinearOrder α] [PartialOrder N] : IsStrictOrder (Lex (α →₀ N)) (· < ·) :=
   let i : IsStrictOrder (Lex (α → N)) (· < ·) := Pi.Lex.is_strict_order
@@ -54,62 +67,14 @@ instance Lex.partialOrder [PartialOrder N] : PartialOrder (Lex (α →₀ N)) :=
   PartialOrder.lift (fun x => toLex ⇑(ofLex x)) Finsupp.coe_fn_injective
 
 --fun_like.coe_injective
-section LinearOrder
-
-variable [LinearOrder N]
-
-/-- Auxiliary helper to case split computably. There is no need for this to be public, as it
-can be written with `or.by_cases` on `lt_trichotomy` once the instances below are constructed. -/
-private def lt_trichotomy_rec {P : Lex (α →₀ N) → Lex (α →₀ N) → Sort _}
-    (h_lt : ∀ {f g}, toLex f < toLex g → P (toLex f) (toLex g))
-    (h_eq : ∀ {f g}, toLex f = toLex g → P (toLex f) (toLex g))
-    (h_gt : ∀ {f g}, toLex g < toLex f → P (toLex f) (toLex g)) : ∀ f g, P f g :=
-  Lex.rec fun f =>
-    Lex.rec fun g =>
-      match (motive := ∀ y, (f.neLocus g).min = y → _) _, rfl with
-      | ⊤, h => h_eq (Finsupp.ne_locus_eq_empty.mp (Finset.min_eq_top.mp h))
-      | (wit : α), h =>
-        have hne : f wit ≠ g wit := mem_ne_locus.mp (Finset.mem_of_min h)
-        hne.lt_or_lt.byCases
-          (fun hwit => h_lt ⟨wit, fun j hj => mem_ne_locus.not_left.mp (Finset.not_mem_of_lt_min hj h), hwit⟩)
-          fun hwit =>
-          h_gt
-            ⟨wit, fun j hj => by
-              refine' mem_ne_locus.not_left.mp (Finset.not_mem_of_lt_min hj _)
-              rwa [ne_locus_comm], hwit⟩
-
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
-irreducible_def Lex.decidableLe : @DecidableRel (Lex (α →₀ N)) (· ≤ ·) :=
-  ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
-    is_false fun h' => (lt_irrefl _ (h.trans_le h')).elim
-
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
-irreducible_def Lex.decidableLt : @DecidableRel (Lex (α →₀ N)) (· < ·) :=
-  ltTrichotomyRec (fun f g h => isTrue h) (fun f g h => isFalse h.not_lt) fun f g h => isFalse h.asymm
-
 /-- The linear order on `finsupp`s obtained by the lexicographic ordering. -/
-instance Lex.linearOrder : LinearOrder (Lex (α →₀ N)) :=
-  { Lex.partialOrder with
-    le_total := ltTrichotomyRec (fun f g h => Or.inl h.le) (fun f g h => Or.inl h.le) fun f g h => Or.inr h.le,
-    decidableLt := by infer_instance, decidableLe := by infer_instance, DecidableEq := by infer_instance }
-
-end LinearOrder
+instance Lex.linearOrder [LinearOrder N] : LinearOrder (Lex (α →₀ N)) :=
+  { Lex.partialOrder, LinearOrder.lift' (toLex ∘ to_dfinsupp ∘ ofLex) finsuppEquivDfinsupp.Injective with }
 
 variable [PartialOrder N]
 
-theorem Lex.le_of_forall_le {a b : Lex (α →₀ N)} (h : ∀ i, ofLex a i ≤ ofLex b i) : a ≤ b :=
-  le_of_lt_or_eq <|
-    or_iff_not_imp_right.2 fun hne => by
-      classical <;>
-        exact
-          ⟨Finset.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
-            not_mem_ne_locus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,
-            (h _).lt_of_ne (mem_ne_locus.1 <| Finset.min'_mem _ _)⟩
-
-theorem Lex.le_of_of_lex_le {a b : Lex (α →₀ N)} (h : ofLex a ≤ ofLex b) : a ≤ b :=
-  Lex.le_of_forall_le h
-
-theorem to_lex_monotone : Monotone (@toLex (α →₀ N)) := fun _ _ => Lex.le_of_forall_le
+theorem to_lex_monotone : Monotone (@toLex (α →₀ N)) := fun a b h =>
+  Dfinsupp.to_lex_monotone (id h : ∀ i, ofLex (toDfinsupp a) i ≤ ofLex (toDfinsupp b) i)
 
 theorem lt_of_forall_lt_of_lt (a b : Lex (α →₀ N)) (i : α) :
     (∀ j < i, ofLex a j = ofLex b j) → ofLex a i < ofLex b i → a < b := fun h1 h2 => ⟨i, h1, h2⟩

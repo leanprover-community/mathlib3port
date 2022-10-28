@@ -362,7 +362,7 @@ theorem div_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a / b ≠ 0 := by
 theorem div_eq_zero_iff : a / b = 0 ↔ a = 0 ∨ b = 0 := by simp [div_eq_mul_inv]
 
 theorem div_ne_zero_iff : a / b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
-  div_eq_zero_iff.Not.trans not_or_distrib
+  div_eq_zero_iff.Not.trans not_or
 
 theorem Ring.inverse_eq_inv (a : G₀) : Ring.inverse a = a⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0

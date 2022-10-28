@@ -44,10 +44,10 @@ variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] 
 def FixedBy.subfield : Subfield F where
   Carrier := FixedBy M F m
   zero_mem' := smul_zero m
-  add_mem' x y hx hy := (smul_add m x y).trans <| congr_arg2 _ hx hy
+  add_mem' x y hx hy := (smul_add m x y).trans <| congr_arg₂ _ hx hy
   neg_mem' x hx := (smul_neg m x).trans <| congr_arg _ hx
   one_mem' := smul_one m
-  mul_mem' x y hx hy := (smul_mul' m x y).trans <| congr_arg2 _ hx hy
+  mul_mem' x y hx hy := (smul_mul' m x y).trans <| congr_arg₂ _ hx hy
   inv_mem' x hx := (smul_inv'' m x).trans <| congr_arg _ hx
 
 section InvariantSubfields

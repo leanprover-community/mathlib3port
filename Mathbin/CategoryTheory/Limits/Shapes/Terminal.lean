@@ -47,7 +47,7 @@ abbrev IsInitial (X : C) :=
   IsColimit (asEmptyCocone X)
 
 /-- An object `Y` is terminal iff for every `X` there is a unique morphism `X ⟶ Y`. -/
-def isTerminalEquivUnique (F : Discrete.{0} Pempty.{1} ⥤ C) (Y : C) :
+def isTerminalEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (Y : C) :
     IsLimit (⟨Y, by tidy⟩ : Cone F) ≃ ∀ X : C, Unique (X ⟶ Y) where
   toFun t X := { default := t.lift ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
   invFun u := { lift := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
@@ -67,7 +67,7 @@ def IsTerminal.ofIso {Y Z : C} (hY : IsTerminal Y) (i : Y ≅ Z) : IsTerminal Z 
   IsLimit.ofIsoLimit hY { Hom := { Hom := i.Hom }, inv := { Hom := i.inv } }
 
 /-- An object `X` is initial iff for every `Y` there is a unique morphism `X ⟶ Y`. -/
-def isInitialEquivUnique (F : Discrete.{0} Pempty.{1} ⥤ C) (X : C) :
+def isInitialEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (X : C) :
     IsColimit (⟨X, by tidy⟩ : Cocone F) ≃ ∀ Y : C, Unique (X ⟶ Y) where
   toFun t X := { default := t.desc ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
   invFun u := { desc := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
@@ -152,17 +152,17 @@ variable (C)
 Use `has_terminal_of_unique` to construct instances.
 -/
 abbrev HasTerminal :=
-  HasLimitsOfShape (Discrete.{0} Pempty) C
+  HasLimitsOfShape (Discrete.{0} PEmpty) C
 
 /-- A category has an initial object if it has a colimit over the empty diagram.
 Use `has_initial_of_unique` to construct instances.
 -/
 abbrev HasInitial :=
-  HasColimitsOfShape (Discrete.{0} Pempty) C
+  HasColimitsOfShape (Discrete.{0} PEmpty) C
 
 section Univ
 
-variable (X : C) {F₁ : Discrete.{w} Pempty ⥤ C} {F₂ : Discrete.{w'} Pempty ⥤ C}
+variable (X : C) {F₁ : Discrete.{w} PEmpty ⥤ C} {F₂ : Discrete.{w'} PEmpty ⥤ C}
 
 /-- Being terminal is independent of the empty diagram, its universe, and the cone over it,
     as long as the cone points are isomorphic. -/
@@ -184,8 +184,8 @@ def isLimitEmptyConeEquiv (c₁ : Cone F₁) (c₂ : Cone F₂) (h : c₁.x ≅ 
 theorem has_terminal_change_diagram (h : HasLimit F₁) : HasLimit F₂ :=
   ⟨⟨⟨⟨limit F₁, by tidy⟩, isLimitChangeEmptyCone C (limit.isLimit F₁) _ (eqToIso rfl)⟩⟩⟩
 
-theorem has_terminal_change_universe [h : HasLimitsOfShape (Discrete.{w} Pempty) C] :
-    HasLimitsOfShape (Discrete.{w'} Pempty) C :=
+theorem has_terminal_change_universe [h : HasLimitsOfShape (Discrete.{w} PEmpty) C] :
+    HasLimitsOfShape (Discrete.{w'} PEmpty) C :=
   { HasLimit := fun J =>
       has_terminal_change_diagram C
         (let f := h.1
@@ -212,8 +212,8 @@ def isColimitEmptyCoconeEquiv (c₁ : Cocone F₁) (c₂ : Cocone F₂) (h : c�
 theorem has_initial_change_diagram (h : HasColimit F₁) : HasColimit F₂ :=
   ⟨⟨⟨⟨colimit F₁, by tidy⟩, isColimitChangeEmptyCocone C (colimit.isColimit F₁) _ (eqToIso rfl)⟩⟩⟩
 
-theorem has_initial_change_universe [h : HasColimitsOfShape (Discrete.{w} Pempty) C] :
-    HasColimitsOfShape (Discrete.{w'} Pempty) C :=
+theorem has_initial_change_universe [h : HasColimitsOfShape (Discrete.{w} PEmpty) C] :
+    HasColimitsOfShape (Discrete.{w'} PEmpty) C :=
   { HasColimit := fun J =>
       has_initial_change_diagram C
         (let f := h.1

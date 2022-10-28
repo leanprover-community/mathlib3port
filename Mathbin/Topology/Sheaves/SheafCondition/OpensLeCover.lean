@@ -203,7 +203,7 @@ in terms of a limit diagram over all `{ V : opens X // ∃ i, V ≤ U i }`
 is equivalent to the reformulation
 in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
-theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections {X : TopCat.{v}} (F : Presheaf C X) :
+theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections :
     F.IsSheafOpensLeCover ↔ F.IsSheafPairwiseIntersections :=
   forall₂_congr fun ι U =>
     Equiv.nonempty_congr <|
@@ -345,6 +345,12 @@ theorem is_sheaf_iff_is_sheaf_opens_le_cover : F.IsSheaf ↔ F.IsSheafOpensLeCov
     rw [← (is_limit_opens_le_equiv_generate₂ F S hS).nonempty_congr]
     apply h
     
+
+/-- The sheaf condition in terms of an equalizer diagram is equivalent
+to the reformulation in terms of a limit diagram over `U i` and `U i ⊓ U j`.
+-/
+theorem is_sheaf_iff_is_sheaf_pairwise_intersections : F.IsSheaf ↔ F.IsSheafPairwiseIntersections := by
+  rw [is_sheaf_iff_is_sheaf_opens_le_cover, is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections]
 
 end
 

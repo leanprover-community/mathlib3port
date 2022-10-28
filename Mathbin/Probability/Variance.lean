@@ -256,7 +256,7 @@ theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ
     specialize hℒ hX
     simp only [snorm_eq_lintegral_rpow_nnnorm Ennreal.two_ne_zero Ennreal.two_ne_top, not_lt, top_le_iff,
       Ennreal.to_real_bit0, Ennreal.one_to_real, Ennreal.rpow_two, one_div, Ennreal.rpow_eq_top_iff, inv_lt_zero,
-      inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff, or_iff_not_imp_left, not_and_distrib] at hℒ
+      inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff, or_iff_not_imp_left, not_and_or] at hℒ
     exact hℒ fun _ => zero_le_two
     
 

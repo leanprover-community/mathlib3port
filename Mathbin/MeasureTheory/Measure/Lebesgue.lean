@@ -556,7 +556,7 @@ theorem ae_restrict_of_ae_restrict_inter_Ioo {μ : Measure ℝ} [HasNoAtoms μ] 
     by_cases h'x:x ∈ ⋃ i : ↥s × ↥s, T i
     · rw [← hA] at h'x
       obtain ⟨p, pA, xp⟩ : ∃ p : ↥s × ↥s, p ∈ A ∧ x ∈ T p := by
-        simpa only [mem_Union, exists_prop, SetCoe.exists, exists_and_distrib_right] using h'x
+        simpa only [mem_Union, exists_prop, SetCoe.exists, exists_and_right] using h'x
       right
       exact mem_bUnion pA ⟨hx, xp⟩
       
@@ -608,7 +608,7 @@ theorem ae_of_mem_of_ae_of_mem_inter_Ioo {μ : Measure ℝ} [HasNoAtoms μ] {s :
   by_cases Hx:x ∈ ⋃ i : ↥s × ↥s, T i
   · rw [← hA] at Hx
     obtain ⟨p, pA, xp⟩ : ∃ p : ↥s × ↥s, p ∈ A ∧ x ∈ T p := by
-      simpa only [mem_Union, exists_prop, SetCoe.exists, exists_and_distrib_right] using Hx
+      simpa only [mem_Union, exists_prop, SetCoe.exists, exists_and_right] using Hx
     apply h'x p pA ⟨xs, xp⟩
     
   · exact False.elim (hx ⟨xs, Hx⟩)

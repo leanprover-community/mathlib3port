@@ -99,6 +99,10 @@ noncomputable def Real.Angle.expMapCircle (θ : Real.Angle) : circle :=
 theorem Real.Angle.exp_map_circle_coe (x : ℝ) : Real.Angle.expMapCircle x = expMapCircle x :=
   rfl
 
+theorem Real.Angle.coe_exp_map_circle (θ : Real.Angle) : (θ.expMapCircle : ℂ) = θ.cos + θ.sin * I := by
+  induction θ using Real.Angle.induction_on
+  simp [Complex.exp_mul_I]
+
 @[simp]
 theorem Real.Angle.exp_map_circle_zero : Real.Angle.expMapCircle 0 = 1 := by
   rw [← Real.Angle.coe_zero, Real.Angle.exp_map_circle_coe, exp_map_circle_zero]

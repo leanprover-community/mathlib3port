@@ -65,7 +65,7 @@ def const (X : TopCat) (Z : C) : PresheafedSpaceCat C where
   Presheaf := { obj := fun U => Z, map := fun U V f => 𝟙 Z }
 
 instance [Inhabited C] : Inhabited (PresheafedSpaceCat C) :=
-  ⟨const (TopCat.of Pempty) default⟩
+  ⟨const (TopCat.of PEmpty) default⟩
 
 /-- A morphism between presheafed spaces `X` and `Y` consists of a continuous map
     `f` between the underlying topological spaces, and a (notice contravariant!) map

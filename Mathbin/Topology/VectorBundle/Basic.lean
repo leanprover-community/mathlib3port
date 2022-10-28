@@ -1061,7 +1061,7 @@ def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) :
         by
         rw [e'.target_eq, e.source_eq]
         ext ⟨b, f⟩
-        simp (config := { contextual := true }) only [-total_space.proj, And.congr_right_iff, e'.proj_symm_apply',
+        simp (config := { contextual := true }) only [-total_space.proj, and_congr_right_iff, e'.proj_symm_apply',
           iff_self_iff, imp_true_iff, mfld_simps]
       rw [H]
       refine' (continuous_on_fst.prod this).congr _

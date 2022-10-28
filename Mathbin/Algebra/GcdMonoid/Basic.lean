@@ -594,7 +594,7 @@ theorem lcm_dvd_iff [GcdMonoid α] {a b c : α} : lcm a b ∣ c ↔ a ∣ c ∧ 
       simp (config := { contextual := true }) only [iff_def, lcm_zero_left, lcm_zero_right, zero_dvd_iff, dvd_zero,
         eq_self_iff_true, and_true_iff, imp_true_iff]
     
-  · obtain ⟨h1, h2⟩ := not_or_distrib.1 this
+  · obtain ⟨h1, h2⟩ := not_or.1 this
     have h : gcd a b ≠ 0 := fun H => h1 ((gcd_eq_zero_iff _ _).1 H).1
     rw [← mul_dvd_mul_iff_left h, (gcd_mul_lcm a b).dvd_iff_dvd_left, ← (gcd_mul_right' c a b).dvd_iff_dvd_right,
       dvd_gcd_iff, mul_comm b c, mul_dvd_mul_iff_left h1, mul_dvd_mul_iff_right h2, and_comm']
@@ -765,6 +765,34 @@ instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoi
   norm_unit_zero := rfl
   norm_unit_mul x y hx hy := (mul_one 1).symm
   norm_unit_coe_units u := Subsingleton.elim _ _
+
+instance uniqueNormalizationMonoidOfUniqueUnits : Unique (NormalizationMonoid α) where
+  default := normalizationMonoidOfUniqueUnits
+  uniq := fun ⟨u, _, _, _⟩ => by simpa only [(Subsingleton.elim _ _ : u = fun _ => 1)]
+
+instance subsingleton_gcd_monoid_of_unique_units : Subsingleton (GcdMonoid α) :=
+  ⟨fun g₁ g₂ => by
+    have hgcd : g₁.gcd = g₂.gcd := by
+      ext a b
+      refine' associated_iff_eq.mp (associated_of_dvd_dvd _ _) <;> apply dvd_gcd (gcd_dvd_left _ _) (gcd_dvd_right _ _)
+    have hlcm : g₁.lcm = g₂.lcm := by
+      ext a b
+      refine' associated_iff_eq.mp (associated_of_dvd_dvd _ _) <;>
+        apply lcm_dvd_iff.2 ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩
+    cases g₁
+    cases g₂
+    dsimp only at hgcd hlcm
+    simp only [hgcd, hlcm]⟩
+
+instance subsingleton_normalized_gcd_monoid_of_unique_units : Subsingleton (NormalizedGcdMonoid α) :=
+  ⟨by
+    intro a b
+    cases' a with a_norm a_gcd
+    cases' b with b_norm b_gcd
+    have := Subsingleton.elim a_gcd b_gcd
+    subst this
+    have := Subsingleton.elim a_norm b_norm
+    subst this⟩
 
 @[simp]
 theorem norm_unit_eq_one (x : α) : normUnit x = 1 :=

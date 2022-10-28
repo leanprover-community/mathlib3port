@@ -37,7 +37,7 @@ theorem mem_center_iff [Mul M] {z : M} : z ∈ Center M ↔ ∀ g, g * z = z * g
   Iff.rfl
 
 instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ Center M) := fun _ =>
-  decidableOfIff' _ (mem_center_iff M)
+  decidable_of_iff' _ (mem_center_iff M)
 
 @[simp, to_additive zero_mem_add_center]
 theorem one_mem_center [MulOneClass M] : (1 : M) ∈ Set.Center M := by simp [mem_center_iff]
@@ -130,7 +130,7 @@ theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
 
 @[to_additive]
 instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
-  decidableOfIff' _ mem_center_iff
+  decidable_of_iff' _ mem_center_iff
 
 /-- The center of a semigroup is commutative. -/
 @[to_additive "The center of an additive semigroup is commutative."]

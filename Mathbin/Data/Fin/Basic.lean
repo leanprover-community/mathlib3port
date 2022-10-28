@@ -1161,6 +1161,9 @@ theorem pred_succ (i : Fin n) {h : i.succ ≠ 0} : i.succ.pred h = i := by
   cases i
   rfl
 
+theorem pred_eq_iff_eq_succ {n : ℕ} (i : Fin (n + 1)) (hi : i ≠ 0) (j : Fin n) : i.pred hi = j ↔ i = j.succ :=
+  ⟨fun h => by simp only [← h, Fin.succ_pred], fun h => by simp only [h, Fin.pred_succ]⟩
+
 @[simp]
 theorem pred_mk_succ (i : ℕ) (h : i < n + 1) :
     Fin.pred ⟨i + 1, add_lt_add_right h 1⟩ (ne_of_vne (ne_of_gt (mk_succ_pos i h))) = ⟨i, h⟩ := by
@@ -1354,7 +1357,7 @@ theorem forall_fin_two {p : Fin 2 → Prop} : (∀ i, p i) ↔ p 0 ∧ p 1 :=
   forall_fin_succ.trans <| and_congr_right fun _ => forall_fin_one
 
 theorem exists_fin_two {p : Fin 2 → Prop} : (∃ i, p i) ↔ p 0 ∨ p 1 :=
-  exists_fin_succ.trans <| or_congr_right' exists_fin_one
+  exists_fin_succ.trans <| or_congr_right exists_fin_one
 
 theorem fin_two_eq_of_eq_zero_iff {a b : Fin 2} (h : a = 0 ↔ b = 0) : a = b := by
   revert a b

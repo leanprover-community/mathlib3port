@@ -276,10 +276,10 @@ section PartialOrder
 variable [PartialOrder α] {s : Set α}
 
 theorem is_upper_set_iff_forall_lt : IsUpperSet s ↔ ∀ ⦃a b : α⦄, a < b → a ∈ s → b ∈ s :=
-  forall_congr fun a => by simp [le_iff_eq_or_lt, or_imp_distrib, forall_and_distrib]
+  forall_congr' fun a => by simp [le_iff_eq_or_lt, or_imp, forall_and]
 
 theorem is_lower_set_iff_forall_lt : IsLowerSet s ↔ ∀ ⦃a b : α⦄, b < a → a ∈ s → b ∈ s :=
-  forall_congr fun a => by simp [le_iff_eq_or_lt, or_imp_distrib, forall_and_distrib]
+  forall_congr' fun a => by simp [le_iff_eq_or_lt, or_imp, forall_and]
 
 theorem is_upper_set_iff_Ioi_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → IoiCat a ⊆ s := by
   simp [is_upper_set_iff_forall_lt, subset_def, @forall_swap (_ ∈ s)]
@@ -1282,22 +1282,22 @@ theorem lower_closure_eq_bot_iff : lowerClosure s = ⊥ ↔ s = ∅ :=
 @[simp]
 theorem upper_closure_union (s t : Set α) : upperClosure (s ∪ t) = upperClosure s ⊓ upperClosure t := by
   ext
-  simp [or_and_distrib_right, exists_or_distrib]
+  simp [or_and_right, exists_or]
 
 @[simp]
 theorem lower_closure_union (s t : Set α) : lowerClosure (s ∪ t) = lowerClosure s ⊔ lowerClosure t := by
   ext
-  simp [or_and_distrib_right, exists_or_distrib]
+  simp [or_and_right, exists_or]
 
 @[simp]
 theorem upper_closure_Union (f : ι → Set α) : upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) := by
   ext
-  simp [← exists_and_distrib_right, @exists_comm α]
+  simp [← exists_and_right, @exists_comm α]
 
 @[simp]
 theorem lower_closure_Union (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) := by
   ext
-  simp [← exists_and_distrib_right, @exists_comm α]
+  simp [← exists_and_right, @exists_comm α]
 
 @[simp]
 theorem upper_closure_sUnion (S : Set (Set α)) : upperClosure (⋃₀S) = ⨅ s ∈ S, upperClosure s := by

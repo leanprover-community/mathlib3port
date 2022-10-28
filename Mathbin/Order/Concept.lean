@@ -78,7 +78,7 @@ theorem extent_closure_empty : ExtentClosure r ∅ = univ :=
 
 @[simp]
 theorem intent_closure_union (s₁ s₂ : Set α) : IntentClosure r (s₁ ∪ s₂) = IntentClosure r s₁ ∩ IntentClosure r s₂ :=
-  Set.ext fun _ => ball_or_left_distrib
+  Set.ext fun _ => ball_or_left
 
 @[simp]
 theorem extent_closure_union (t₁ t₂ : Set β) : ExtentClosure r (t₁ ∪ t₂) = ExtentClosure r t₁ ∩ ExtentClosure r t₂ :=

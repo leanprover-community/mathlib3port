@@ -56,7 +56,7 @@ theorem cauchySeqFinsetOfNormBoundedEventually {f : ι → E} {g : ι → ℝ} (
   refine' ⟨s ∪ h.to_finset, fun t ht => _⟩
   have : ∀ i ∈ t, ∥f i∥ ≤ g i := by
     intro i hi
-    simp only [disjoint_left, mem_union, not_or_distrib, h.mem_to_finset, Set.mem_compl_iff, not_not] at ht
+    simp only [disjoint_left, mem_union, not_or, h.mem_to_finset, Set.mem_compl_iff, not_not] at ht
     exact (ht hi).2
   calc
     ∥∑ i in t, f i∥ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this

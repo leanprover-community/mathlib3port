@@ -141,7 +141,7 @@ instance finsupp : Module.Free R (ι →₀ M) :=
 variable {ι}
 
 instance (priority := 100) ofSubsingleton [Subsingleton N] : Module.Free R N :=
-  ofBasis (Basis.empty N : Basis Pempty R N)
+  ofBasis (Basis.empty N : Basis PEmpty R N)
 
 instance (priority := 100) ofSubsingleton' [Subsingleton R] : Module.Free R N :=
   letI := Module.subsingleton R N

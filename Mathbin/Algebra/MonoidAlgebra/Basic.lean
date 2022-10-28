@@ -112,10 +112,10 @@ instance : NonUnitalNonAssocSemiring (MonoidAlgebra k G) :=
   { Finsupp.addCommMonoid with zero := 0, mul := (· * ·), add := (· + ·),
     left_distrib := fun f g h => by
       simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-        forall_3_true_iff, sum_add],
+        forall₃_true_iff, sum_add],
     right_distrib := fun f g h => by
       simp only [mul_def, sum_add_index, add_mul, zero_mul, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-        forall_3_true_iff, sum_zero, sum_add],
+        forall₃_true_iff, sum_zero, sum_add],
     zero_mul := fun f => by simp only [mul_def, sum_zero_index],
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero] }
 
@@ -139,8 +139,8 @@ instance : NonUnitalSemiring (MonoidAlgebra k G) :=
   { MonoidAlgebra.nonUnitalNonAssocSemiring with zero := 0, mul := (· * ·), add := (· + ·),
     mul_assoc := fun f g h => by
       simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall_3_true_iff, add_mul, mul_add, add_assoc, mul_assoc, zero_mul,
-        mul_zero, sum_zero, sum_add] }
+        eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul, mul_add, add_assoc, mul_assoc, zero_mul, mul_zero,
+        sum_zero, sum_add] }
 
 end Semigroup
 
@@ -905,10 +905,10 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
   { Finsupp.addCommMonoid with zero := 0, mul := (· * ·), add := (· + ·),
     left_distrib := fun f g h => by
       simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-        forall_3_true_iff, sum_add],
+        forall₃_true_iff, sum_add],
     right_distrib := fun f g h => by
       simp only [mul_def, sum_add_index, add_mul, mul_zero, zero_mul, single_zero, single_add, eq_self_iff_true,
-        forall_true_iff, forall_3_true_iff, sum_zero, sum_add],
+        forall_true_iff, forall₃_true_iff, sum_zero, sum_add],
     zero_mul := fun f => by simp only [mul_def, sum_zero_index],
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero], nsmul := fun n f => n • f,
     nsmul_zero' := by
@@ -956,8 +956,8 @@ instance : NonUnitalSemiring (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.nonUnitalNonAssocSemiring with zero := 0, mul := (· * ·), add := (· + ·),
     mul_assoc := fun f g h => by
       simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall_3_true_iff, add_mul, mul_add, add_assoc, mul_assoc, zero_mul,
-        mul_zero, sum_zero, sum_add] }
+        eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul, mul_add, add_assoc, mul_assoc, zero_mul, mul_zero,
+        sum_zero, sum_add] }
 
 end Semigroup
 

@@ -20,7 +20,7 @@ def finZeroEquiv : Fin 0 ≃ Empty :=
   Equiv.equivEmpty _
 
 /-- Equivalence between `fin 0` and `pempty`. -/
-def finZeroEquiv' : Fin 0 ≃ Pempty.{u} :=
+def finZeroEquiv' : Fin 0 ≃ PEmpty.{u} :=
   Equiv.equivPempty _
 
 /-- Equivalence between `fin 1` and `unit`. -/

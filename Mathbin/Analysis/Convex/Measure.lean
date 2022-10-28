@@ -81,7 +81,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (Frontier s) = 0 := by
   -- Taking the limit as `r → 1`, we get `μ (closure s) ≤ μ (interior s)`.
   refine' ge_of_tendsto _ this
   refine'
-    (((Ennreal.continuous_mul_const hb).comp (ennreal.continuous_coe.comp (continuous_pow d))).tendsto' _ _ _).mono_left
+    (((Ennreal.continuous_mul_const hb).comp (ennreal.continuous_coe.comp (continuous_pow d))).tendsto' _ _ _).monoLeft
       nhds_within_le_nhds
   simp
 

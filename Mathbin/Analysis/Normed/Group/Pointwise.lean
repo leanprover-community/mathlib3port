@@ -166,8 +166,8 @@ variable {ε δ s t x y}
 theorem IsCompact.add_closed_ball_zero (hs : IsCompact s) (hδ : 0 ≤ δ) : s + ClosedBall 0 δ = Cthickening δ s := by
   rw [hs.cthickening_eq_bUnion_closed_ball hδ]
   ext x
-  simp only [mem_add, dist_eq_norm, exists_prop, mem_Union, mem_closed_ball, exists_and_distrib_left,
-    mem_closed_ball_zero_iff, ← eq_sub_iff_add_eq', exists_eq_right]
+  simp only [mem_add, dist_eq_norm, exists_prop, mem_Union, mem_closed_ball, exists_and_left, mem_closed_ball_zero_iff,
+    ← eq_sub_iff_add_eq', exists_eq_right]
 
 theorem IsCompact.sub_closed_ball_zero (hs : IsCompact s) (hδ : 0 ≤ δ) : s - ClosedBall 0 δ = Cthickening δ s := by
   simp [sub_eq_add_neg, hs.add_closed_ball_zero hδ]

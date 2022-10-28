@@ -8,6 +8,7 @@ import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.OpenPos
 import Mathbin.MeasureTheory.Constructions.Prod
+import Mathbin.Topology.ContinuousFunction.CocompactMap
 
 /-!
 # Measures on Groups
@@ -91,8 +92,18 @@ theorem measurePreservingMulLeft (μ : Measure G) [IsMulLeftInvariant μ] (g : G
   ⟨measurableConstMul g, map_mul_left_eq_self μ g⟩
 
 @[to_additive]
+theorem MeasurePreserving.mulLeft (μ : Measure G) [IsMulLeftInvariant μ] (g : G) {X : Type _} [MeasurableSpace X]
+    {μ' : Measure X} {f : X → G} (hf : MeasurePreserving f μ' μ) : MeasurePreserving (fun x => g * f x) μ' μ :=
+  (measurePreservingMulLeft μ g).comp hf
+
+@[to_additive]
 theorem measurePreservingMulRight (μ : Measure G) [IsMulRightInvariant μ] (g : G) : MeasurePreserving (· * g) μ μ :=
   ⟨measurableMulConst g, map_mul_right_eq_self μ g⟩
+
+@[to_additive]
+theorem MeasurePreserving.mulRight (μ : Measure G) [IsMulRightInvariant μ] (g : G) {X : Type _} [MeasurableSpace X]
+    {μ' : Measure X} {f : X → G} (hf : MeasurePreserving f μ' μ) : MeasurePreserving (fun x => f x * g) μ' μ :=
+  (measurePreservingMulRight μ g).comp hf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map (((«expr * »)) g) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
@@ -103,7 +114,7 @@ theorem forall_measure_preimage_mul_iff (μ : Measure G) :
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map (((«expr * »)) g) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · simp_rw [measure.ext_iff]
-    refine' forall_congr fun g => forall_congr fun A => forall_congr fun hA => _
+    refine' forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => _
     rw [map_apply (measurable_const_mul g) hA]
     
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
@@ -117,7 +128,7 @@ theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map ((«expr * » g)) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · simp_rw [measure.ext_iff]
-    refine' forall_congr fun g => forall_congr fun A => forall_congr fun hA => _
+    refine' forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => _
     rw [map_apply (measurable_mul_const g) hA]
     
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
@@ -474,29 +485,37 @@ theorem isHaarMeasureOfIsCompactNonemptyInterior [TopologicalGroup G] [BorelSpac
   { lt_top_of_is_compact := fun L hL => measure_lt_top_of_is_compact_of_is_mul_left_invariant' h'K h' hL,
     toIsOpenPosMeasure := isOpenPosMeasureOfMulLeftInvariantOfCompact K hK h }
 
-/-- The image of a Haar measure under a group homomorphism which is also a homeomorphism is again
-a Haar measure. -/
+open Filter
+
+/-- The image of a Haar measure under a continuous surjective proper group homomorphism is again
+a Haar measure. See also `mul_equiv.is_haar_measure_map`. -/
 @[to_additive
-      "The image of an additive Haar measure under an additive group homomorphism which is\nalso a homeomorphism is again an additive Haar measure."]
+      "The image of an additive Haar measure under a continuous surjective proper additive\ngroup homomorphism is again an additive Haar measure. See also\n`add_equiv.is_add_haar_measure_map`."]
 theorem isHaarMeasureMap [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group H] [TopologicalSpace H]
-    [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H] (f : G ≃* H) (hf : Continuous f)
-    (hfsymm : Continuous f.symm) : IsHaarMeasure (Measure.map f μ) :=
+    [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H] (f : G →* H) (hf : Continuous f)
+    (h_surj : Surjective f) (h_prop : Tendsto f (cocompact G) (cocompact H)) : IsHaarMeasure (Measure.map f μ) :=
   { toIsMulLeftInvariant := by
       constructor
       intro h
       rw [map_map (continuous_mul_left h).Measurable hf.measurable]
-      conv_rhs => rw [← map_mul_left_eq_self μ (f.symm h)]
+      obtain ⟨g, rfl⟩ := h_surj h
+      conv_rhs => rw [← map_mul_left_eq_self μ g]
       rw [map_map hf.measurable (continuous_mul_left _).Measurable]
       congr 2
       ext y
-      simp only [MulEquiv.apply_symm_apply, comp_app, MulEquiv.map_mul],
+      simp only [comp_app, map_mul],
     lt_top_of_is_compact := by
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]
-      have : f.symm '' K = f ⁻¹' K := Equiv.image_eq_preimage _ _
-      rw [← this]
-      exact IsCompact.measure_lt_top (hK.image hfsymm),
-    toIsOpenPosMeasure := hf.isOpenPosMeasureMap f.Surjective }
+      exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).compact_preimage hK),
+    toIsOpenPosMeasure := hf.isOpenPosMeasureMap h_surj }
+
+/-- A convenience wrapper for `measure_theory.measure.is_haar_measure_map`. -/
+@[to_additive "A convenience wrapper for `measure_theory.measure.is_add_haar_measure_map`."]
+theorem _root_.mul_equiv.is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group H]
+    [TopologicalSpace H] [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H] (e : G ≃* H)
+    (he : Continuous e) (hesymm : Continuous e.symm) : IsHaarMeasure (Measure.map e μ) :=
+  isHaarMeasureMap μ (e : G →* H) he e.Surjective ({ e with } : G ≃ₜ H).toCocompactMap.cocompact_tendsto'
 
 /-- A Haar measure on a σ-compact space is σ-finite.
 
@@ -513,8 +532,6 @@ instance {G : Type _} [Group G] [TopologicalSpace G] {mG : MeasurableSpace G} {H
     [SigmaFinite μ] [SigmaFinite ν] [HasMeasurableMul G] [HasMeasurableMul H] : IsHaarMeasure (μ.Prod ν) where
 
 open TopologicalSpace
-
-open Filter
 
 /-- If the neutral element of a group is not isolated, then a Haar measure on this group has
 no atoms.

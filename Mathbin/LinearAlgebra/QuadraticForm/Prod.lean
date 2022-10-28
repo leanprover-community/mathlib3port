@@ -58,7 +58,7 @@ from a pair of isometries between the left and right parts. -/
 def Isometry.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₁' : QuadraticForm R N₁}
     {Q₂' : QuadraticForm R N₂} (e₁ : Q₁.Isometry Q₁') (e₂ : Q₂.Isometry Q₂') :
     (Q₁.Prod Q₂).Isometry (Q₁'.Prod Q₂') where
-  map_app' x := congr_arg2 (· + ·) (e₁.map_app x.1) (e₂.map_app x.2)
+  map_app' x := congr_arg₂ (· + ·) (e₁.map_app x.1) (e₂.map_app x.2)
   toLinearEquiv := LinearEquiv.prod e₁.toLinearEquiv e₂.toLinearEquiv
 
 theorem Equivalent.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₁' : QuadraticForm R N₁}

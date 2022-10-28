@@ -73,7 +73,7 @@ theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).va
   apply subset.trans (vars_mul _ _)
   apply union_subset
   · apply subset.trans (vars_pow _ _)
-    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_coe_nat, eq_int_cast]
+    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_ofNat, eq_int_cast]
     rw [this, vars_C]
     apply empty_subset
     
@@ -131,7 +131,7 @@ theorem mul_poly_of_interest_aux1 (n : ℕ) :
       rw [Finsupp.support_eq_singleton]
       simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne.def]
       exact pow_ne_zero _ hp.out.ne_zero
-    simp only [bind₁_monomial, hsupp, Int.cast_coe_nat, prod_singleton, eq_int_cast, Finsupp.single_eq_same, C_pow,
+    simp only [bind₁_monomial, hsupp, Int.cast_ofNat, prod_singleton, eq_int_cast, Finsupp.single_eq_same, C_pow,
       mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true]
     
   · simp only [map_mul, bind₁_X_right]
@@ -154,7 +154,7 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   by
   -- a useful auxiliary fact
   have mvpz : (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) = MvPolynomial.c (↑p ^ (n + 1)) := by
-    simp only [Int.cast_coe_nat, eq_int_cast, C_pow, eq_self_iff_true]
+    simp only [Int.cast_ofNat, eq_int_cast, C_pow, eq_self_iff_true]
   -- unfold definitions and peel off the last entries of the sums.
   rw [witt_poly_prod, wittPolynomial, AlgHom.map_sum, AlgHom.map_sum, sum_range_succ]
   -- these are sums up to `n+2`, so be careful to only unfold to `n+1`.
@@ -170,7 +170,7 @@ conv_lhs =>
   conv_rhs => rw [sum_range_succ]
   -- the rest is equal with proper unfolding and `ring`
   simp only [rename_monomial, monomial_eq_C_mul_X, map_mul, rename_C, pow_one, rename_X, mvpz]
-  simp only [Int.cast_coe_nat, map_pow, eq_int_cast, rename_X, pow_one, tsub_self, pow_zero]
+  simp only [Int.cast_ofNat, map_pow, eq_int_cast, rename_X, pow_one, tsub_self, pow_zero]
   ring
 
 include hp
@@ -211,7 +211,7 @@ theorem poly_of_interest_vars_eq (n : ℕ) :
             x (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)))).vars :=
   by
   have : (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p ^ (n + 1) : ℤ) := by
-    simp only [Int.cast_coe_nat, eq_int_cast, C_pow, eq_self_iff_true]
+    simp only [Int.cast_ofNat, eq_int_cast, C_pow, eq_self_iff_true]
   rw [poly_of_interest, this, vars_C_mul]
   apply pow_ne_zero
   exact_mod_cast hp.out.ne_zero
@@ -229,7 +229,7 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
   simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pair, aeval_X,
     Matrix.cons_val_one, map_mul, Matrix.cons_val_zero, map_sub]
   rw [sub_sub, add_comm (_ * _), ← sub_sub]
-  have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by rw [eq_int_cast, Int.cast_coe_nat]
+  have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by rw [eq_int_cast, Int.cast_ofNat]
   have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by
     intros
     rw [mvpz, MvPolynomial.eval₂_C]

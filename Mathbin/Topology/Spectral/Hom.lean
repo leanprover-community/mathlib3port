@@ -77,7 +77,7 @@ instance (priority := 100) SpectralMapClass.toContinuousMapClass [TopologicalSpa
     [SpectralMapClass F α β] : ContinuousMapClass F α β :=
   { ‹SpectralMapClass F α β› with map_continuous := fun f => (map_spectral f).Continuous }
 
-instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] : CoeT F (SpectralMap α β) :=
+instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] : CoeTC F (SpectralMap α β) :=
   ⟨fun f => ⟨_, map_spectral f⟩⟩
 
 /-! ### Spectral maps -/

@@ -402,8 +402,10 @@ open SheafConditionPairwiseIntersections
 
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of a limit diagram over `U i` and `U i ⊓ U j`.
+A more general version `is_sheaf_iff_is_sheaf_pairwise_intersections` without
+the `has_products` assumption is available in a later file.
 -/
-theorem is_sheaf_iff_is_sheaf_pairwise_intersections (F : Presheaf C X) : F.IsSheaf ↔ F.IsSheafPairwiseIntersections :=
+theorem is_sheaf_iff_is_sheaf_pairwise_intersections' (F : Presheaf C X) : F.IsSheaf ↔ F.IsSheafPairwiseIntersections :=
   (is_sheaf_iff_is_sheaf_equalizer_products F).trans <|
     Iff.intro (fun h ι U => ⟨isLimitMapConeOfIsLimitSheafConditionFork F U (h U).some⟩) fun h ι U =>
       ⟨isLimitSheafConditionForkOfIsLimitMapCone F U (h U).some⟩
@@ -414,7 +416,7 @@ consisting of the `U i` and `U i ⊓ U j`.
 -/
 theorem is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections (F : Presheaf C X) :
     F.IsSheaf ↔ F.IsSheafPreservesLimitPairwiseIntersections := by
-  rw [is_sheaf_iff_is_sheaf_pairwise_intersections]
+  rw [is_sheaf_iff_is_sheaf_pairwise_intersections']
   constructor
   · intro h ι U
     exact ⟨preserves_limit_of_preserves_limit_cone (pairwise.cocone_is_colimit U).op (h U).some⟩
@@ -476,7 +478,8 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
       exacts[Or.inl h, Or.inr h]
       
   refine'
-    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift ⟨s.X, { app := _, naturality' := _ }⟩ ≫
+    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections'.mp F.2 ι).some.lift
+        ⟨s.X, { app := _, naturality' := _ }⟩ ≫
       F.1.map (eq_to_hom hι).op
   · apply Opposite.rec
     rintro ((_ | _) | (_ | _))
@@ -503,14 +506,14 @@ theorem inter_union_pullback_cone_lift_left :
   dsimp
   erw [category.assoc, ← F.1.map_comp]
   exact
-    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
+    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections'.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.left))
 
 theorem inter_union_pullback_cone_lift_right :
     interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_right).op = s.snd := by
   erw [category.assoc, ← F.1.map_comp]
   exact
-    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
+    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections'.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.right))
 
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
@@ -536,7 +539,7 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
     
   · intro m h₁ h₂
     rw [← cancel_mono (F.1.map (eq_to_hom hι.symm).op)]
-    apply (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.hom_ext
+    apply (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections'.mp F.2 ι).some.hom_ext
     apply Opposite.rec
     rintro ((_ | _) | (_ | _)) <;> rw [category.assoc, category.assoc]
     · erw [← F.1.map_comp]

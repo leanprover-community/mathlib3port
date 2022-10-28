@@ -217,7 +217,7 @@ theorem Sylow.smul_subtype {P : Sylow p G} {H : Subgroup G} (hP : ↑P ≤ H) (h
 theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P ↔ g ∈ (P : Subgroup G).normalizer := by
   rw [eq_comm, SetLike.ext_iff, ← inv_mem_iff, mem_normalizer_iff, inv_inv]
   exact
-    forall_congr fun h =>
+    forall_congr' fun h =>
       iff_congr Iff.rfl
         ⟨fun ⟨a, b, c⟩ => (congr_arg _ c).mp ((congr_arg (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b),
           fun hh => ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
@@ -247,7 +247,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
     cases nonempty_fintype (Sylow p G)
     have H := fun {R : Sylow p G} {S : orbit G P} =>
       calc
-        S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) := forall_congr fun a => Subtype.ext_iff
+        S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) := forall_congr' fun a => Subtype.ext_iff
         _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
         _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
         

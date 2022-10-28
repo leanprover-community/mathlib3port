@@ -26,7 +26,7 @@ unsafe def tac_induction : auto_cases_tac :=
 /-- Find an `auto_cases_tac` which matches the given `type : expr`. -/
 unsafe def find_tac : expr → Option auto_cases_tac
   | quote.1 Empty => tac_cases
-  | quote.1 Pempty => tac_cases
+  | quote.1 PEmpty => tac_cases
   | quote.1 False => tac_cases
   | quote.1 Unit => tac_cases
   | quote.1 PUnit => tac_cases

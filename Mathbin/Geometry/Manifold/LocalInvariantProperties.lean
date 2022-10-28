@@ -83,7 +83,7 @@ namespace LocalInvariantProp
 
 theorem congr_set {s t : Set H} {x : H} {f : H → H'} (hu : s =ᶠ[𝓝 x] t) : P f s x ↔ P f t x := by
   obtain ⟨o, host, ho, hxo⟩ := mem_nhds_iff.mp hu.mem_iff
-  simp_rw [subset_def, mem_set_of, ← And.congr_left_iff, ← mem_inter_iff, ← Set.ext_iff] at host
+  simp_rw [subset_def, mem_set_of, ← and_congr_left_iff, ← mem_inter_iff, ← Set.ext_iff] at host
   rw [hG.is_local ho hxo, host, ← hG.is_local ho hxo]
 
 theorem is_local_nhds {s u : Set H} {x : H} {f : H → H'} (hu : u ∈ 𝓝[s] x) : P f s x ↔ P f (s ∩ u) x :=
@@ -182,7 +182,7 @@ def LiftProp (P : (H → H') → Set H → H → Prop) (f : M → M') :=
 
 theorem lift_prop_iff {P : (H → H') → Set H → H → Prop} {f : M → M'} :
     LiftProp P f ↔ Continuous f ∧ ∀ x, P (chartAt H' (f x) ∘ f ∘ (chartAt H x).symm) Univ (chartAt H x x) := by
-  simp_rw [lift_prop, lift_prop_at_iff, forall_and_distrib, continuous_iff_continuous_at]
+  simp_rw [lift_prop, lift_prop_at_iff, forall_and, continuous_iff_continuous_at]
 
 end ChartedSpace
 
@@ -302,7 +302,7 @@ theorem lift_prop_within_at_indep_chart_source [HasGroupoid M G] (he : e ∈ G.M
 /-- A version of `lift_prop_within_at_indep_chart`, only for the target. -/
 theorem lift_prop_within_at_indep_chart_target [HasGroupoid M' G'] (hf : f ∈ G'.MaximalAtlas M') (xf : g x ∈ f.Source) :
     LiftPropWithinAt P g s x ↔ ContinuousWithinAt g s x ∧ LiftPropWithinAt P (f ∘ g) s x := by
-  rw [lift_prop_within_at_self_target, lift_prop_within_at, And.congr_right_iff]
+  rw [lift_prop_within_at_self_target, lift_prop_within_at, and_congr_right_iff]
   intro hg
   simp_rw [(f.continuous_at xf).comp_continuous_within_at hg, true_and_iff]
   exact

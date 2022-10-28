@@ -164,7 +164,7 @@ theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
 
 theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ * l₂ ≤ m₁ * m₂ := by
   intro h₁ h₂ x hx
-  simp only [mul_def, exists_and_distrib_left, mem_image2, image_prod] at hx⊢
+  simp only [mul_def, exists_and_left, mem_image2, image_prod] at hx⊢
   tauto
 
 theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ + l₂ ≤ m₁ + m₂ :=

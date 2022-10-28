@@ -139,7 +139,7 @@ theorem singleton_prod_singleton : ({a} : Set α) ×ˢ ({b} : Set β) = {(a, b)}
 @[simp]
 theorem union_prod : (s₁ ∪ s₂) ×ˢ t = s₁ ×ˢ t ∪ s₂ ×ˢ t := by
   ext ⟨x, y⟩
-  simp [or_and_distrib_right]
+  simp [or_and_right]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -147,7 +147,7 @@ theorem union_prod : (s₁ ∪ s₂) ×ˢ t = s₁ ×ˢ t ∪ s₂ ×ˢ t := by
 @[simp]
 theorem prod_union : s ×ˢ (t₁ ∪ t₂) = s ×ˢ t₁ ∪ s ×ˢ t₂ := by
   ext ⟨x, y⟩
-  simp [and_or_distrib_left]
+  simp [and_or_left]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -160,13 +160,13 @@ theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem insert_prod : insert a s ×ˢ t = Prod.mk a '' t ∪ s ×ˢ t := by
   ext ⟨x, y⟩
-  simp (config := { contextual := true }) [image, iff_def, or_imp_distrib, Imp.swap]
+  simp (config := { contextual := true }) [image, iff_def, or_imp, Imp.swap]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t := by
   ext ⟨x, y⟩
-  simp (config := { contextual := true }) [image, iff_def, or_imp_distrib, Imp.swap]
+  simp (config := { contextual := true }) [image, iff_def, or_imp, Imp.swap]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -250,7 +250,7 @@ theorem image_swap_prod : Prod.swap '' t ×ˢ s = s ×ˢ t := by rw [image_swap_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_image_image_eq {m₁ : α → γ} {m₂ : β → δ} :
     (m₁ '' s) ×ˢ (m₂ '' t) = (fun p : α × β => (m₁ p.1, m₂ p.2)) '' s ×ˢ t :=
-  ext <| by simp [-exists_and_distrib_right, exists_and_distrib_right.symm, and_left_comm, and_assoc, and_comm]
+  ext <| by simp [-exists_and_right, exists_and_distrib_right.symm, and_left_comm, and_assoc, and_comm]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_range_range_eq {m₁ : α → γ} {m₂ : β → δ} :
@@ -291,7 +291,7 @@ theorem prod_nonempty_iff : (s ×ˢ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_empty_iff : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
-  simp only [not_nonempty_iff_eq_empty.symm, prod_nonempty_iff, not_and_distrib]
+  simp only [not_nonempty_iff_eq_empty.symm, prod_nonempty_iff, not_and_or]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_sub_preimage_iff {W : Set γ} {f : α × β → γ} : s ×ˢ t ⊆ f ⁻¹' W ↔ ∀ a b, a ∈ s → b ∈ t → f (a, b) ∈ W := by
@@ -423,6 +423,17 @@ theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s
 @[simp]
 theorem image2_mk_eq_prod : Image2 Prod.mk s t = s ×ˢ t :=
   ext <| by simp
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem image2_curry (f : α × β → γ) (s : Set α) (t : Set β) : Image2 (fun a b => f (a, b)) s t = (s ×ˢ t).Image f := by
+  rw [← image2_mk_eq_prod, image_image2]
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem image_uncurry_prod (f : α → β → γ) (s : Set α) (t : Set β) : uncurry f '' s ×ˢ t = Image2 f s t := by
+  rw [← image2_curry]
+  rfl
 
 section Mono
 
@@ -610,7 +621,7 @@ theorem pi_univ (s : Set ι) : (Pi s fun i => (Univ : Set (α i))) = univ :=
 theorem pi_mono (h : ∀ i ∈ s, t₁ i ⊆ t₂ i) : Pi s t₁ ⊆ Pi s t₂ := fun x hx i hi => h i hi <| hx i hi
 
 theorem pi_inter_distrib : (s.pi fun i => t i ∩ t₁ i) = s.pi t ∩ s.pi t₁ :=
-  ext fun x => by simp only [forall_and_distrib, mem_pi, mem_inter_iff]
+  ext fun x => by simp only [forall_and, mem_pi, mem_inter_iff]
 
 theorem pi_congr (h : s₁ = s₂) (h' : ∀ i ∈ s₁, t₁ i = t₂ i) : s₁.pi t₁ = s₂.pi t₂ :=
   h ▸ ext fun x => forall₂_congr fun i hi => h' i hi ▸ Iff.rfl
@@ -631,7 +642,7 @@ theorem pi_eq_empty_iff : s.pi t = ∅ ↔ ∃ i, IsEmpty (α i) ∨ i ∈ s ∧
   rw [← not_nonempty_iff_eq_empty, pi_nonempty_iff]
   push_neg
   refine' exists_congr fun i => _
-  cases is_empty_or_nonempty (α i) <;> simp [*, forall_and_distrib, eq_empty_iff_forall_not_mem]
+  cases is_empty_or_nonempty (α i) <;> simp [*, forall_and, eq_empty_iff_forall_not_mem]
 
 @[simp]
 theorem univ_pi_eq_empty_iff : Pi Univ t = ∅ ↔ ∃ i, t i = ∅ := by
@@ -659,7 +670,7 @@ theorem range_dcomp (f : ∀ i, α i → β i) :
 @[simp]
 theorem insert_pi (i : ι) (s : Set ι) (t : ∀ i, Set (α i)) : Pi (insert i s) t = eval i ⁻¹' t i ∩ Pi s t := by
   ext
-  simp [pi, or_imp_distrib, forall_and_distrib]
+  simp [pi, or_imp, forall_and]
 
 @[simp]
 theorem singleton_pi (i : ι) (t : ∀ i, Set (α i)) : Pi {i} t = eval i ⁻¹' t i := by
@@ -685,7 +696,7 @@ theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : 
     by_cases p i <;> simp_all
     
 
-theorem union_pi : (s₁ ∪ s₂).pi t = s₁.pi t ∩ s₂.pi t := by simp [pi, or_imp_distrib, forall_and_distrib, set_of_and]
+theorem union_pi : (s₁ ∪ s₂).pi t = s₁.pi t ∩ s₂.pi t := by simp [pi, or_imp, forall_and, set_of_and]
 
 @[simp]
 theorem pi_inter_compl (s : Set ι) : Pi s t ∩ Pi (sᶜ) t = Pi Univ t := by rw [← union_pi, union_compl_self]
@@ -777,7 +788,7 @@ theorem univ_pi_ite (s : Set ι) [DecidablePred (· ∈ s)] (t : ∀ i, Set (α 
     (Pi Univ fun i => if i ∈ s then t i else Univ) = s.pi t := by
   ext
   simp_rw [mem_univ_pi]
-  refine' forall_congr fun i => _
+  refine' forall_congr' fun i => _
   split_ifs <;> simp [h]
 
 end Pi

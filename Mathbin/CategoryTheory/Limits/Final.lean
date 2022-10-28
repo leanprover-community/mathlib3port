@@ -58,7 +58,7 @@ Dualise condition 3 above and the implications 2 ⇒ 3 and 3 ⇒ 1 to initial fu
 
 noncomputable section
 
-universe v u
+universe v v₁ v₂ v₃ u₁ u₂ u₃
 
 namespace CategoryTheory
 
@@ -68,9 +68,11 @@ open Opposite
 
 open CategoryTheory.Limits
 
-variable {C : Type v} [SmallCategory C]
+section ArbitraryUniverse
 
-variable {D : Type v} [SmallCategory D]
+variable {C : Type u₁} [Category.{v₁} C]
+
+variable {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
 is connected.
@@ -139,7 +141,7 @@ variable (F : C ⥤ D) [Final F]
 instance (d : D) : Nonempty (StructuredArrow d F) :=
   is_connected.is_nonempty
 
-variable {E : Type u} [Category.{v} E] (G : D ⥤ E)
+variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 
 /-- When `F : C ⥤ D` is cofinal, we denote by `lift F d` an arbitrary choice of object in `C` such that
 there exists a morphism `d ⟶ F.obj (lift F d)`.
@@ -319,6 +321,14 @@ def colimitIso' [HasColimit (F ⋙ G)] : colimit (F ⋙ G) ≅ colimit G :=
 
 end
 
+end Final
+
+end ArbitraryUniverse
+
+namespace Final
+
+variable {C : Type v} [Category.{v} C] {D : Type v} [Category.{v} D] (F : C ⥤ D) [Final F]
+
 /-- If the universal morphism `colimit (F ⋙ coyoneda.obj (op d)) ⟶ colimit (coyoneda.obj (op d))`
 is an isomorphism (as it always is when `F` is cofinal),
 then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
@@ -373,12 +383,12 @@ end Final
 
 namespace Initial
 
-variable (F : C ⥤ D) [Initial F]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] (F : C ⥤ D) [Initial F]
 
 instance (d : D) : Nonempty (CostructuredArrow F d) :=
   is_connected.is_nonempty
 
-variable {E : Type u} [Category.{v} E] (G : D ⥤ E)
+variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 
 /-- When `F : C ⥤ D` is initial, we denote by `lift F d` an arbitrary choice of object in `C` such that
 there exists a morphism `F.obj (lift F d) ⟶ d`.

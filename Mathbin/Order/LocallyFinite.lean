@@ -141,7 +141,7 @@ def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorder α] [DecidableRel ((· ≤
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a,
     finsetIoo := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a ∧ ¬b ≤ x, finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc', lt_iff_le_not_le],
-    finset_mem_Ioc := fun a b x => by rw [Finset.mem_filter, mem_Icc, And.right_comm, lt_iff_le_not_le],
+    finset_mem_Ioc := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_not_le],
     finset_mem_Ioo := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_not_le, lt_iff_le_not_le] }
 
@@ -154,7 +154,7 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrder α] [DecidableEq α] (f
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => a ≠ x,
     finsetIoo := fun a b => (finset_Icc a b).filter fun x => a ≠ x ∧ x ≠ b, finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc', lt_iff_le_and_ne],
-    finset_mem_Ioc := fun a b x => by rw [Finset.mem_filter, mem_Icc, And.right_comm, lt_iff_le_and_ne],
+    finset_mem_Ioc := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_and_ne],
     finset_mem_Ioo := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_and_ne, lt_iff_le_and_ne] }
 
@@ -195,7 +195,7 @@ variable {α β : Type _}
 -- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
-This is not an instance as it would be not be defeq to more specific instances. -/
+This is not an instance as it would not be defeq to more specific instances. -/
 @[reducible]
 protected def _root_.is_empty.to_locally_finite_order [Preorder α] [IsEmpty α] : LocallyFiniteOrder α where
   finsetIcc := isEmptyElim
@@ -210,7 +210,7 @@ protected def _root_.is_empty.to_locally_finite_order [Preorder α] [IsEmpty α]
 -- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
-This is not an instance as it would be not be defeq to more specific instances. -/
+This is not an instance as it would not be defeq to more specific instances. -/
 @[reducible]
 protected def _root_.is_empty.to_locally_finite_order_top [Preorder α] [IsEmpty α] : LocallyFiniteOrderTop α where
   finsetIci := isEmptyElim
@@ -221,7 +221,7 @@ protected def _root_.is_empty.to_locally_finite_order_top [Preorder α] [IsEmpty
 -- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
-This is not an instance as it would be not be defeq to more specific instances. -/
+This is not an instance as it would not be defeq to more specific instances. -/
 @[reducible]
 protected def _root_.is_empty.to_locally_finite_order_bot [Preorder α] [IsEmpty α] : LocallyFiniteOrderBot α where
   finsetIic := isEmptyElim

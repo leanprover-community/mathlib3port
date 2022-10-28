@@ -76,7 +76,7 @@ theorem mk.eta {R : Type _} {c₁ c₂} : ∀ a : ℍ[R,c₁,c₂], mk a.1 a.2 a
 
 variable {R : Type _} [CommRing R] {c₁ c₂ : R} (r x y z : R) (a b c : ℍ[R,c₁,c₂])
 
-instance : CoeT R ℍ[R,c₁,c₂] :=
+instance : CoeTC R ℍ[R,c₁,c₂] :=
   ⟨fun x => ⟨x, 0, 0, 0⟩⟩
 
 @[simp]
@@ -186,7 +186,7 @@ instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
   { QuaternionAlgebra.addCommGroup with natCast := fun n => ((n : R) : ℍ[R,c₁,c₂]), nat_cast_zero := by simp,
     nat_cast_succ := by simp, intCast := fun n => ((n : R) : ℍ[R,c₁,c₂]),
     int_cast_of_nat := fun _ => congr_arg coe (Int.cast_of_nat _),
-    int_cast_neg_succ_of_nat := fun n => show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_coe_nat, coe_neg], one := 1 }
+    int_cast_neg_succ_of_nat := fun n => show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_ofNat, coe_neg], one := 1 }
 
 instance : Ring ℍ[R,c₁,c₂] := by
   refine_struct
@@ -429,7 +429,7 @@ variable {R : Type _} [CommRing R] (r x y z : R) (a b c : ℍ[R])
 
 export QuaternionAlgebra (re imI imJ imK)
 
-instance : CoeT R ℍ[R] :=
+instance : CoeTC R ℍ[R] :=
   QuaternionAlgebra.hasCoeT
 
 instance : Ring ℍ[R] :=

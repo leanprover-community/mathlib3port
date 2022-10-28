@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Data.Set.Intervals.Disjoint
+import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.Tactic.FieldSimp
 
@@ -372,7 +373,7 @@ theorem Union_Ioo_of_mono_of_is_glb_of_is_lub (hf : Antitone f) (hg : Monotone g
     (hb : IsLub (Range g) b) : (⋃ x, IooCat (f x) (g x)) = IooCat a b :=
   calc
     (⋃ x, IooCat (f x) (g x)) = (⋃ x, IoiCat (f x)) ∩ ⋃ x, IioCat (g x) := Union_inter_of_monotone hf.IoiCat hg.IioCat
-    _ = IoiCat a ∩ IioCat b := congr_arg2 (· ∩ ·) ha.Union_Ioi_eq hb.Union_Iio_eq
+    _ = IoiCat a ∩ IioCat b := congr_arg₂ (· ∩ ·) ha.Union_Ioi_eq hb.Union_Iio_eq
     
 
 end UnionCat

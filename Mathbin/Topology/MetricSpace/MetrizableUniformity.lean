@@ -241,7 +241,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     by_cases H:∃ n, (x₁, x₄) ∉ U n
     · refine' (dif_pos H).trans_le _
       rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
-      simp only [le_max_iff, hle_d, ← not_and_distrib]
+      simp only [le_max_iff, hle_d, ← not_and_or]
       rintro ⟨h₁₂, h₂₃, h₃₄⟩
       refine' Nat.find_spec H (hU_comp (lt_add_one <| Nat.find H) _)
       exact ⟨x₂, h₁₂, x₃, h₂₃, h₃₄⟩

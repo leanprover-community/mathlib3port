@@ -47,7 +47,7 @@ end
 
 export ContinuousOpenMapClass (map_open)
 
-instance [TopologicalSpace α] [TopologicalSpace β] [ContinuousOpenMapClass F α β] : CoeT F (α →CO β) :=
+instance [TopologicalSpace α] [TopologicalSpace β] [ContinuousOpenMapClass F α β] : CoeTC F (α →CO β) :=
   ⟨fun f => ⟨f, map_open f⟩⟩
 
 /-! ### Continuous open maps -/

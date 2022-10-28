@@ -376,7 +376,7 @@ theorem condexp_strongly_measurable_mul {f g : α → ℝ} (hf : strongly_measur
     
   haveI : sigma_finite (μ.trim hm) := hμm
   obtain ⟨sets, sets_prop, h_univ⟩ := hf.exists_spanning_measurable_set_norm_le hm μ
-  simp_rw [forall_and_distrib] at sets_prop
+  simp_rw [forall_and] at sets_prop
   obtain ⟨h_meas, h_finite, h_norm⟩ := sets_prop
   suffices ∀ n, ∀ᵐ x ∂μ, x ∈ sets n → (μ[f * g|m]) x = f x * (μ[g|m]) x by
     rw [← ae_all_iff] at this

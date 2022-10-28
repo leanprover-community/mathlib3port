@@ -61,7 +61,7 @@ theorem HasBasis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α}
     {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i))
     (gm : Monotone g) : (f.lift g).HasBasis (fun i : Σi, β i => p i.1 ∧ pg i.1 i.2) fun i : Σi, β i => sg i.1 i.2 := by
   refine' ⟨fun t => (hf.mem_lift_iff hg gm).trans _⟩
-  simp [Sigma.exists, and_assoc', exists_and_distrib_left]
+  simp [Sigma.exists, and_assoc', exists_and_left]
 
 theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ t ∈ f, s ∈ g t :=
   (f.basis_sets.mem_lift_iff (fun s => (g s).basis_sets) hg).trans <| by simp only [id, exists_mem_subset_iff]
@@ -183,13 +183,13 @@ theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β
     · rw [hg]
       exact le_inf (infi₂_le_of_le i s <| infi_le _ hs) ht
       
-  simp only [mem_lift_sets (Monotone.of_map_inf hg), exists_imp_distrib]
+  simp only [mem_lift_sets (Monotone.of_map_inf hg), exists_imp]
   exact fun t ht hs => H t ht hs
 
 theorem lift_infi_of_directed [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β} (hf : Directed (· ≥ ·) f)
     (hg : Monotone g) : (infi f).lift g = ⨅ i, (f i).lift g :=
   lift_infi_le.antisymm fun s => by
-    simp only [mem_lift_sets hg, exists_imp_distrib, mem_infi_of_directed hf]
+    simp only [mem_lift_sets hg, exists_imp, mem_infi_of_directed hf]
     exact fun t i ht hs => mem_infi_of_mem i <| mem_lift ht hs
 
 theorem lift_infi_of_map_univ {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t)

@@ -1295,8 +1295,7 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
       ext x
       have : 0 = f x ∨ 0 < f x := eq_or_lt_of_le bot_le
       rw [eq_comm] at this
-      simp only [← and_or_distrib_left, this, mem_singleton_iff, mem_inter_iff, and_true_iff, mem_union, mem_Ioi,
-        mem_preimage]
+      simp only [← and_or_left, this, mem_singleton_iff, mem_inter_iff, and_true_iff, mem_union, mem_Ioi, mem_preimage]
       
     · apply disjoint_left.2 fun x hx h'x => _
       have : 0 < f x := h'x.2

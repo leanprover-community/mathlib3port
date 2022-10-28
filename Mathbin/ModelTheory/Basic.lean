@@ -73,7 +73,7 @@ def Sequence₂ (a₀ a₁ a₂ : Type u) : ℕ → Type u
   | 0 => a₀
   | 1 => a₁
   | 2 => a₂
-  | _ => Pempty
+  | _ => PEmpty
 
 namespace Sequence₂
 
@@ -89,7 +89,7 @@ instance inhabited₂ [h : Inhabited a₂] : Inhabited (Sequence₂ a₀ a₁ a�
   h
 
 instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
-  Pempty.is_empty
+  PEmpty.is_empty
 
 @[simp]
 theorem lift_mk {i : ℕ} : Cardinal.lift (#Sequence₂ a₀ a₁ a₂ i) = (#Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) := by
@@ -109,7 +109,7 @@ namespace Language
 unary and binary relations. -/
 @[simps]
 protected def mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) : Language :=
-  ⟨Sequence₂ c f₁ f₂, Sequence₂ Pempty r₁ r₂⟩
+  ⟨Sequence₂ c f₁ f₂, Sequence₂ PEmpty r₁ r₂⟩
 
 /-- The empty language has no symbols. -/
 protected def empty : Language :=
@@ -184,20 +184,20 @@ instance is_algebraic_sum [L.IsAlgebraic] [L'.IsAlgebraic] : IsAlgebraic (L.Sum 
 
 instance is_relational_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h0 : IsEmpty c] [h1 : IsEmpty f₁] [h2 : IsEmpty f₂] :
     IsRelational (Language.mk₂ c f₁ f₂ r₁ r₂) :=
-  ⟨fun n => Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => Pempty.is_empty⟩
+  ⟨fun n => Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => PEmpty.is_empty⟩
 
 instance is_algebraic_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : IsEmpty r₁] [h2 : IsEmpty r₂] :
     IsAlgebraic (Language.mk₂ c f₁ f₂ r₁ r₂) :=
-  ⟨fun n => Nat.casesOn n Pempty.is_empty fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => Pempty.is_empty⟩
+  ⟨fun n => Nat.casesOn n PEmpty.is_empty fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => PEmpty.is_empty⟩
 
 instance subsingleton_mk₂_functions {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h0 : Subsingleton c] [h1 : Subsingleton f₁]
     [h2 : Subsingleton f₂] {n : ℕ} : Subsingleton ((Language.mk₂ c f₁ f₂ r₁ r₂).Functions n) :=
-  Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elim x⟩
+  Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => PEmpty.elim x⟩
 
 instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : Subsingleton r₁] [h2 : Subsingleton r₂]
     {n : ℕ} : Subsingleton ((Language.mk₂ c f₁ f₂ r₁ r₂).Relations n) :=
-  Nat.casesOn n ⟨fun x => Pempty.elim x⟩ fun n =>
-    Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elim x⟩
+  Nat.casesOn n ⟨fun x => PEmpty.elim x⟩ fun n =>
+    Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => PEmpty.elim x⟩
 
 @[simp]
 theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_add_card_relations]
@@ -284,7 +284,7 @@ localized [FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equ
 
 variable {L M N} {P : Type _} [L.StructureCat P] {Q : Type _} [L.StructureCat Q]
 
-instance : CoeT L.Constants M :=
+instance : CoeTC L.Constants M :=
   ⟨fun c => funMap c default⟩
 
 theorem fun_map_eq_coe_constants {c : L.Constants} {x : Fin 0 → M} : funMap c x = c :=
@@ -301,15 +301,15 @@ def funMap₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' 
   | 0, f, _ => c' f
   | 1, f, x => f₁' f (x 0)
   | 2, f, x => f₂' f (x 0) (x 1)
-  | n + 3, f, _ => Pempty.elim f
+  | n + 3, f, _ => PEmpty.elim f
 
 /-- The relation map for `first_order.language.Structure₂`. -/
 def RelMap₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (r₁' : r₁ → Set M) (r₂' : r₂ → M → M → Prop) :
     ∀ {n}, (Language.mk₂ c f₁ f₂ r₁ r₂).Relations n → (Fin n → M) → Prop
-  | 0, r, _ => Pempty.elim r
+  | 0, r, _ => PEmpty.elim r
   | 1, r, x => x 0 ∈ r₁' r
   | 2, r, x => r₂' r (x 0) (x 1)
-  | n + 3, r, _ => Pempty.elim r
+  | n + 3, r, _ => PEmpty.elim r
 
 /-- A structure constructor to match `first_order.language₂`. -/
 protected def StructureCat.mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M)

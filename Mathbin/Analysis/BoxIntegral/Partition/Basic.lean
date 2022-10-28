@@ -396,7 +396,7 @@ theorem of_with_bot_mono {boxes₁ : Finset (WithBot (Box ι))} {le_of_mem₁ : 
 theorem sum_of_with_bot {M : Type _} [AddCommMonoid M] (boxes : Finset (WithBot (Box ι)))
     (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) (f : Box ι → M) :
-    (∑ J in (ofWithBot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑ J in boxes, Option.elim 0 f J :=
+    (∑ J in (ofWithBot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑ J in boxes, Option.elim' 0 f J :=
   Finset.sum_erase_none _ _
 
 /-- Restrict a prepartition to a box. -/
@@ -629,7 +629,7 @@ theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.Union
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (J «expr ∈ » π) -/
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J := by
   rcases h x hx with ⟨J, h, hx⟩
-  exact ExistsUnique.intro2 J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
+  exact ExistsUnique.intro₂ J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
 
 theorem nonempty_boxes (h : π.IsPartition) : π.boxes.Nonempty :=
   let ⟨J, hJ, _⟩ := h _ I.upper_mem

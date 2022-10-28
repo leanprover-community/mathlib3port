@@ -465,7 +465,7 @@ theorem infi_mul_left' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = �
     rw [H.2, mul_zero, ← bot_eq_zero, infi_eq_bot]
     exact fun b hb => ⟨i, by rwa [hi, mul_zero, ← bot_eq_zero]⟩
     
-  · rw [not_and_distrib] at H
+  · rw [not_and_or] at H
     cases is_empty_or_nonempty ι
     · rw [infi_of_empty, infi_of_empty, mul_top, if_neg]
       exact mt h0 (not_nonempty_iff.2 ‹_›)
@@ -680,7 +680,7 @@ theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x 
 theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hf : liminf (fun i => (∥x i∥₊ : ℝ≥0∞)) l ≠ ∞) (hbdd : ¬IsBoundedUnder (· ≤ ·) l fun i => abs (x i)) :
     ∃ a b : ℚ, a < b ∧ (∃ᶠ i in l, x i < a) ∧ ∃ᶠ i in l, ↑b < x i := by
-  rw [is_bounded_under_le_abs, not_and_distrib] at hbdd
+  rw [is_bounded_under_le_abs, not_and_or] at hbdd
   obtain hbdd | hbdd := hbdd
   · obtain ⟨R, hR⟩ := exists_frequently_lt_of_liminf_ne_top hf
     obtain ⟨q, hq⟩ := exists_rat_gt R
@@ -1245,7 +1245,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
       have : b n ≤ δ :=
         Sup_le
           (by
-            simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib, Prod.exists]
+            simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp, Prod.exists]
             intro d p q hp hq hd
             rw [← hd]
             exact le_of_lt (hN p (le_trans hn hp) q (le_trans hn hq)))

@@ -139,7 +139,7 @@ theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0) 
     T (⋃ i ∈ sι, S i) = ∑ i in sι, T (S i) := by
   revert hSp h_disj
   refine' Finset.induction_on sι _ _
-  · simp only [Finset.not_mem_empty, IsEmpty.forall_iff, Union_false, Union_empty, sum_empty, forall_2_true_iff,
+  · simp only [Finset.not_mem_empty, IsEmpty.forall_iff, Union_false, Union_empty, sum_empty, forall₂_true_iff,
       imp_true_iff, forall_true_left, not_false_iff, T_empty]
     
   intro a s has h hps h_disj
@@ -1550,7 +1550,7 @@ theorem set_to_fun_top_smul_measure (hT : DominatedFinMeasAdditive (∞ • μ) 
   refine' set_to_fun_measure_zero' hT fun s hs hμs => _
   rw [lt_top_iff_ne_top] at hμs
   simp only [true_and_iff, measure.smul_apply, WithTop.mul_eq_top_iff, eq_self_iff_true, top_ne_zero, Ne.def,
-    not_false_iff, not_or_distrib, not_not, smul_eq_mul] at hμs
+    not_false_iff, not_or, not_not, smul_eq_mul] at hμs
   simp only [hμs.right, measure.smul_apply, mul_zero, smul_eq_mul]
 
 theorem set_to_fun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (hT : DominatedFinMeasAdditive μ T C)

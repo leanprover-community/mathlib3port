@@ -133,7 +133,7 @@ theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicator s f x ∂�
     (∫ x, indicator s f x ∂μ) = (∫ x in s, indicator s f x ∂μ) + ∫ x in sᶜ, indicator s f x ∂μ :=
       (integral_add_compl hs (hfi.indicator hs)).symm
     _ = (∫ x in s, f x ∂μ) + ∫ x in sᶜ, 0 ∂μ :=
-      congr_arg2 (· + ·) (integral_congr_ae (indicator_ae_eq_restrict hs))
+      congr_arg₂ (· + ·) (integral_congr_ae (indicator_ae_eq_restrict hs))
         (integral_congr_ae (indicator_ae_eq_restrict_compl hs))
     _ = ∫ x in s, f x ∂μ := by simp
     

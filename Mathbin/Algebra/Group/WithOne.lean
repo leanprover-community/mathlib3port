@@ -79,7 +79,7 @@ instance [Nonempty α] : Nontrivial (WithOne α) :=
   Option.nontrivial
 
 @[to_additive]
-instance : CoeT α (WithOne α) :=
+instance : CoeTC α (WithOne α) :=
   ⟨some⟩
 
 /-- Recursor for `with_one` using the preferred forms `1` and `↑a`. -/
@@ -134,19 +134,19 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
 instance [Mul α] : MulOneClass (WithOne α) where
   mul := (· * ·)
   one := 1
-  one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.lift_or_get_is_left_id _).1
-  mul_one := show ∀ x : WithOne α, x * 1 = x from (Option.lift_or_get_is_right_id _).1
+  one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.liftOrGet_isLeftId _).1
+  mul_one := show ∀ x : WithOne α, x * 1 = x from (Option.liftOrGet_isRightId _).1
 
 @[to_additive]
 instance [Semigroup α] : Monoid (WithOne α) :=
-  { WithOne.mulOneClass with mul_assoc := (Option.lift_or_get_assoc _).1 }
+  { WithOne.mulOneClass with mul_assoc := (Option.liftOrGet_isAssociative _).1 }
 
 example [Semigroup α] : @Monoid.toMulOneClass _ (@WithOne.monoid α _) = @WithOne.mulOneClass α _ :=
   rfl
 
 @[to_additive]
 instance [CommSemigroup α] : CommMonoid (WithOne α) :=
-  { WithOne.monoid with mul_comm := (Option.lift_or_get_comm _).1 }
+  { WithOne.monoid with mul_comm := (Option.liftOrGet_isCommutative _).1 }
 
 section
 

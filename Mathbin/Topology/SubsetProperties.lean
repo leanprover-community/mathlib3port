@@ -189,7 +189,7 @@ theorem IsCompact.elim_nhds_subcover (hs : IsCompact s) (U : α → Set α) (hU 
 neighborhood filter of each point of this set is disjoint with `l`. -/
 theorem IsCompact.disjoint_nhds_set_left {l : Filter α} (hs : IsCompact s) :
     Disjoint (𝓝ˢ s) l ↔ ∀ x ∈ s, Disjoint (𝓝 x) l := by
-  refine' ⟨fun h x hx => h.mono_left <| nhds_le_nhds_set hx, fun H => _⟩
+  refine' ⟨fun h x hx => h.monoLeft <| nhds_le_nhds_set hx, fun H => _⟩
   choose! U hxU hUl using fun x hx => (nhds_basis_opens x).disjoint_iff_left.1 (H x hx)
   choose hxU hUo using hxU
   rcases hs.elim_nhds_subcover U fun x hx => (hUo x hx).mem_nhds (hxU x hx) with ⟨t, hts, hst⟩
@@ -1410,7 +1410,7 @@ theorem IsClopen.prod {s : Set α} {t : Set β} (hs : IsClopen s) (ht : IsClopen
   ⟨hs.1.Prod ht.1, hs.2.Prod ht.2⟩
 
 theorem is_clopen_Union {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) : IsClopen (⋃ i, s i) :=
-  ⟨is_open_Union (forall_and_distrib.1 h).1, isClosedUnion (forall_and_distrib.1 h).2⟩
+  ⟨is_open_Union (forall_and.1 h).1, isClosedUnion (forall_and.1 h).2⟩
 
 theorem is_clopen_bUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite) (h : ∀ i ∈ s, IsClopen <| f i) :
     IsClopen (⋃ i ∈ s, f i) :=
@@ -1421,7 +1421,7 @@ theorem is_clopen_bUnion_finset {β : Type _} {s : Finset β} {f : β → Set α
   is_clopen_bUnion s.finite_to_set h
 
 theorem is_clopen_Inter {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) : IsClopen (⋂ i, s i) :=
-  ⟨is_open_Inter (forall_and_distrib.1 h).1, isClosedInter (forall_and_distrib.1 h).2⟩
+  ⟨is_open_Inter (forall_and.1 h).1, isClosedInter (forall_and.1 h).2⟩
 
 theorem is_clopen_bInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α} (h : ∀ i ∈ s, IsClopen (f i)) :
     IsClopen (⋂ i ∈ s, f i) :=

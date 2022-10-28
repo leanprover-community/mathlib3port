@@ -42,6 +42,12 @@ theorem seq_eq_set_seq (s : Set (α → β)) (t : Set α) : s <*> t = s.seq t :=
 theorem pure_def (a : α) : (pure a : Set α) = {a} :=
   rfl
 
+/-- `set.image2` in terms of monadic operations. Note that this can't be taken as the definition
+because of the lack of universe polymorphism. -/
+theorem image2_def {α β γ : Type _} (f : α → β → γ) (s : Set α) (t : Set β) : Image2 f s t = f <$> s <*> t := by
+  ext
+  simp
+
 instance : LawfulMonad Set where
   id_map α := image_id
   comp_map α β γ f g s := image_comp _ _ _

@@ -50,8 +50,7 @@ instance : SecondCountableTopology Ereal :=
       ⟨⋃ q : ℚ, {{ a : Ereal | a < (q : ℝ) }, { a : Ereal | ((q : ℝ) : Ereal) < a }},
         countable_Union fun a => (countable_singleton _).insert _, _⟩
     refine'
-      le_antisymm
-        (le_generate_from <| by simp (config := { contextual := true }) [or_imp_distrib, is_open_lt', is_open_gt']) _
+      le_antisymm (le_generate_from <| by simp (config := { contextual := true }) [or_imp, is_open_lt', is_open_gt']) _
     apply le_generate_from fun s h => _
     rcases h with ⟨a, hs | hs⟩ <;>
         [rw [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : Ereal) < b } by
@@ -144,10 +143,10 @@ theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤}ᶜ : Set E
   ContinuousAt.continuous_within_at
     (tendsto_to_real
       (by
-        simp [not_or_distrib] at ha
+        simp [not_or] at ha
         exact ha.2)
       (by
-        simp [not_or_distrib] at ha
+        simp [not_or] at ha
         exact ha.1))
 
 /-- The set of finite `ereal` numbers is homeomorphic to `ℝ`. -/

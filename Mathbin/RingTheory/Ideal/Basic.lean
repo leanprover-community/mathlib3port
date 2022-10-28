@@ -201,7 +201,7 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » I) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » I) -/
 theorem not_is_prime_iff {I : Ideal α} : ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
-  simp_rw [Ideal.is_prime_iff, not_and_distrib, Ne.def, not_not, not_forall, not_or_distrib]
+  simp_rw [Ideal.is_prime_iff, not_and_or, Ne.def, not_not, not_forall, not_or]
   exact
     or_congr Iff.rfl ⟨fun ⟨x, y, hxy, hx, hy⟩ => ⟨x, hx, y, hy, hxy⟩, fun ⟨x, hx, y, hy, hxy⟩ => ⟨x, y, hxy, hx, hy⟩⟩
 
@@ -226,7 +226,7 @@ theorem is_maximal_iff {I : Ideal α} :
     I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ (J : Ideal α) (x), I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
   is_maximal_def.trans <|
     and_congr I.ne_top_iff_one <|
-      forall_congr fun J => by
+      forall_congr' fun J => by
         rw [lt_iff_le_not_le] <;>
           exact
             ⟨fun H x h hx₁ hx₂ => J.eq_top_iff_one.1 <| H ⟨h, not_subset.2 ⟨_, hx₂, hx₁⟩⟩, fun H ⟨h₁, h₂⟩ =>

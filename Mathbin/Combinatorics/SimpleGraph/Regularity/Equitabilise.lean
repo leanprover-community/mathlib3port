@@ -54,7 +54,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     subst hs
     exact ⟨Finpartition.empty _, by simp, by simp [Unique.eq_default P], by simp [hab.2]⟩
     
-  simp_rw [not_and_distrib, ← Ne.def, ← pos_iff_ne_zero] at hab
+  simp_rw [not_and_or, ← Ne.def, ← pos_iff_ne_zero] at hab
   -- `n` will be the size of the smallest part
   set n := if 0 < a then m else m + 1 with hn
   -- Some easy facts about it
@@ -124,7 +124,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       refine'
         (card_le_of_subset fun i => _).trans
           (hR₂ (u \ t) <| P.mem_avoid.2 ⟨u, hu₁, fun i => hut <| i.antisymm htu, rfl⟩)
-      simp only [not_exists, mem_bUnion, and_imp, mem_union, mem_filter, mem_sdiff, id.def, not_or_distrib]
+      simp only [not_exists, mem_bUnion, and_imp, mem_union, mem_filter, mem_sdiff, id.def, not_or]
       exact fun hi₁ hi₂ hi₃ => ⟨⟨hi₁, hi₂⟩, fun x hx hx' => hi₃ _ hx <| hx'.trans <| sdiff_subset _ _⟩
       
     · apply sdiff_subset_sdiff subset.rfl (bUnion_subset_bUnion_of_subset_left _ _)

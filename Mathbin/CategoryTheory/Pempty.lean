@@ -22,30 +22,30 @@ namespace Functor
 variable (C : Type u) [Category.{v} C]
 
 /-- Equivalence between two empty categories. -/
-def emptyEquivalence : Discrete.{w} Pempty ≌ Discrete.{v} Pempty :=
-  Equivalence.mk { obj := Pempty.elim ∘ discrete.as, map := fun x => x.as.elim }
-    { obj := Pempty.elim ∘ discrete.as, map := fun x => x.as.elim } (by tidy) (by tidy)
+def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
+  Equivalence.mk { obj := PEmpty.elim ∘ discrete.as, map := fun x => x.as.elim }
+    { obj := PEmpty.elim ∘ discrete.as, map := fun x => x.as.elim } (by tidy) (by tidy)
 
 /-- The canonical functor out of the empty category. -/
-def empty : Discrete.{w} Pempty ⥤ C :=
-  Discrete.functor Pempty.elim
+def empty : Discrete.{w} PEmpty ⥤ C :=
+  Discrete.functor PEmpty.elim
 
 variable {C}
 
 /-- Any two functors out of the empty category are isomorphic. -/
-def emptyExt (F G : Discrete.{w} Pempty ⥤ C) : F ≅ G :=
+def emptyExt (F G : Discrete.{w} PEmpty ⥤ C) : F ≅ G :=
   Discrete.natIso fun x => x.as.elim
 
 /-- Any functor out of the empty category is isomorphic to the canonical functor from the empty
 category.
 -/
-def uniqueFromEmpty (F : Discrete.{w} Pempty ⥤ C) : F ≅ empty C :=
+def uniqueFromEmpty (F : Discrete.{w} PEmpty ⥤ C) : F ≅ empty C :=
   emptyExt _ _
 
 /-- Any two functors out of the empty category are *equal*. You probably want to use
 `empty_ext` instead of this.
 -/
-theorem empty_ext' (F G : Discrete.{w} Pempty ⥤ C) : F = G :=
+theorem empty_ext' (F G : Discrete.{w} PEmpty ⥤ C) : F = G :=
   Functor.ext (fun x => x.as.elim) fun x _ _ => x.as.elim
 
 end Functor

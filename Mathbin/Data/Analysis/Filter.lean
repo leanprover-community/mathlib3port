@@ -274,7 +274,7 @@ theorem le_iff {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : f ≤ g ↔
 
 theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ : l₁.Realizer) (L₂ : l₂.Realizer) :
     Tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x ∈ L₁.f a, f x ∈ L₂.f b :=
-  (le_iff (L₁.map f) L₂).trans <| forall_congr fun b => exists_congr fun a => image_subset_iff
+  (le_iff (L₁.map f) L₂).trans <| forall_congr' fun b => exists_congr fun a => image_subset_iff
 
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
   classical

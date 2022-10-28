@@ -209,7 +209,7 @@ section
 variable [DecidableEq α]
 
 instance hasDecidableEq [∀ a, DecidableEq (β a)] : DecidableEq (Finmap β)
-  | s₁, s₂ => decidableOfIff _ ext_iff
+  | s₁, s₂ => decidable_of_iff _ ext_iff
 
 /-! ### lookup -/
 
@@ -241,7 +241,7 @@ theorem lookup_singleton_eq {a : α} {b : β a} : (singleton a b).lookup a = som
   rw [singleton, lookup_to_finmap, Alist.singleton, Alist.lookup, lookup_cons_eq]
 
 instance (a : α) (s : Finmap β) : Decidable (a ∈ s) :=
-  decidableOfIff _ lookup_is_some
+  decidable_of_iff _ lookup_is_some
 
 theorem mem_iff {a : α} {s : Finmap β} : a ∈ s ↔ ∃ b, s.lookup a = some b :=
   (induction_on s) fun s => Iff.trans List.mem_keys <| exists_congr fun b => (mem_lookup_iff s.Nodupkeys).symm
@@ -291,7 +291,7 @@ def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
   s.foldl (fun x y z => x ∨ f y z)
     (by
       intros
-      simp [Or.right_comm])
+      simp [or_right_comm])
     false
 
 /-- `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
@@ -299,7 +299,7 @@ def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
   s.foldl (fun x y z => x ∧ f y z)
     (by
       intros
-      simp [And.right_comm])
+      simp [and_right_comm])
     false
 
 /-! ### erase -/
@@ -329,7 +329,7 @@ theorem mem_erase {a a' : α} {s : Finmap β} : a' ∈ erase a s ↔ a' ≠ a �
   (induction_on s) fun s => by simp
 
 theorem not_mem_erase_self {a : α} {s : Finmap β} : ¬a ∈ erase a s := by
-  rw [mem_erase, not_and_distrib, not_not] <;> left <;> rfl
+  rw [mem_erase, not_and_or, not_not] <;> left <;> rfl
 
 @[simp]
 theorem lookup_erase (a) (s : Finmap β) : lookup a (erase a s) = none :=
@@ -394,8 +394,8 @@ theorem to_finmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 
 theorem mem_list_to_finmap (a : α) (xs : List (Sigma β)) : a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs := by
   induction' xs with x xs <;> [skip, cases x] <;>
-    simp only [to_finmap_cons, *, not_mem_empty, exists_or_distrib, not_mem_nil, to_finmap_nil, exists_false,
-        mem_cons_iff, mem_insert, exists_and_distrib_left] <;>
+    simp only [to_finmap_cons, *, not_mem_empty, exists_or, not_mem_nil, to_finmap_nil, exists_false, mem_cons_iff,
+        mem_insert, exists_and_left] <;>
       apply or_congr _ Iff.rfl
   conv =>
   lhs
@@ -517,7 +517,7 @@ variable [DecidableEq α]
 instance : DecidableRel (@Disjoint α β) := fun x y => by dsimp only [Disjoint] <;> infer_instance
 
 theorem disjoint_union_left (x y z : Finmap β) : Disjoint (x ∪ y) z ↔ Disjoint x z ∧ Disjoint y z := by
-  simp [Disjoint, Finmap.mem_union, or_imp_distrib, forall_and_distrib]
+  simp [Disjoint, Finmap.mem_union, or_imp, forall_and]
 
 theorem disjoint_union_right (x y z : Finmap β) : Disjoint x (y ∪ z) ↔ Disjoint x y ∧ Disjoint x z := by
   rw [disjoint.symm_iff, disjoint_union_left, disjoint.symm_iff _ x, disjoint.symm_iff _ x]

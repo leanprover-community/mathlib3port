@@ -90,7 +90,7 @@ section Sized
 variable [Fintype α] {𝒜 : Finset (Finset α)} {s : Finset α} {r : ℕ}
 
 theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : Set (Finset α)).Sized r :=
-  forall_congr fun A => by rw [mem_powerset_len_univ_iff, mem_coe]
+  forall_congr' fun A => by rw [mem_powerset_len_univ_iff, mem_coe]
 
 alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
 

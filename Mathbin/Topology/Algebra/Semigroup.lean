@@ -68,8 +68,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       apply Set.univ_nonempty
       
     convert
-      @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ (set.nonempty_coe_sort.mpr hcnemp)
-        (coe : c → Set M) _ _ _ _
+      @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.set_of_mem_eq]
       
     · refine' DirectedOn.directed_coe (IsChain.directed_on hc.symm)

@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 -/
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.Hom.Ring
+import Mathbin.Data.Nat.Order
 
 /-!
 # Power operations on monoids with zero, semirings, and rings
@@ -213,7 +214,7 @@ protected theorem Commute.sq_eq_sq_iff_eq_or_eq_neg (h : Commute a b) : a ^ 2 = 
 theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by rw [← (Commute.one_right a).sq_eq_sq_iff_eq_or_eq_neg, one_pow]
 
 theorem sq_ne_one_iff : a ^ 2 ≠ 1 ↔ a ≠ 1 ∧ a ≠ -1 :=
-  sq_eq_one_iff.Not.trans not_or_distrib
+  sq_eq_one_iff.Not.trans not_or
 
 end Ring
 

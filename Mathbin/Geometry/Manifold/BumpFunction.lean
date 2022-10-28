@@ -109,7 +109,7 @@ theorem support_eq_symm_image : Support f = (extChartAt I c).symm '' (Ball (extC
   rw [f.support_eq_inter_preimage, ← ext_chart_at_source I, ← (extChartAt I c).symm_image_target_inter_eq', inter_comm]
   congr 1 with y
   exact
-    And.congr_right_iff.2 fun hy => ⟨fun h => ext_chart_at_target_subset_range _ _ h, fun h => f.ball_subset ⟨hy, h⟩⟩
+    and_congr_right_iff.2 fun hy => ⟨fun h => ext_chart_at_target_subset_range _ _ h, fun h => f.ball_subset ⟨hy, h⟩⟩
 
 theorem support_subset_source : Support f ⊆ (chartAt H c).Source := by
   rw [f.support_eq_inter_preimage, ← ext_chart_at_source I]

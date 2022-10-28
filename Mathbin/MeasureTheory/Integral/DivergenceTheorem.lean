@@ -122,7 +122,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ (I : Bo
       (fun x hx => Hc _ hx.2) fun x hx => Hd _ ⟨hx.1, fun h => hx.2 ⟨h, hx.1⟩⟩
   rw [continuous_on_pi] at Hc
   refine' (A.unique B).trans ((sum_congr rfl) fun i hi => _)
-  refine' congr_arg2 Sub.sub _ _
+  refine' congr_arg₂ Sub.sub _ _
   · have := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (I.lower_le_upper i))
     have := (this.integrable_on_compact (box.is_compact_Icc _)).monoSet box.coe_subset_Icc
     exact (this.has_box_integral ⊥ rfl).integral_eq

@@ -87,7 +87,7 @@ variable {C}
 
 /-- A functor that preserves terminal objects and pullbacks preserves binary products. -/
 noncomputable def preservesBinaryProductsOfPreservesTerminalAndPullbacks [HasTerminal C] [HasPullbacks C]
-    [PreservesLimitsOfShape (Discrete.{0} Pempty) F] [PreservesLimitsOfShape WalkingCospan F] :
+    [PreservesLimitsOfShape (Discrete.{0} PEmpty) F] [PreservesLimitsOfShape WalkingCospan F] :
     PreservesLimitsOfShape (Discrete WalkingPair) F :=
   ⟨fun K =>
     preservesLimitOfPreservesLimitCone (limitConeOfTerminalAndPullbacks K).2
@@ -164,7 +164,7 @@ variable {C}
 
 /-- A functor that preserves initial objects and pushouts preserves binary coproducts. -/
 noncomputable def preservesBinaryCoproductsOfPreservesInitialAndPushouts [HasInitial C] [HasPushouts C]
-    [PreservesColimitsOfShape (Discrete.{0} Pempty) F] [PreservesColimitsOfShape WalkingSpan F] :
+    [PreservesColimitsOfShape (Discrete.{0} PEmpty) F] [PreservesColimitsOfShape WalkingSpan F] :
     PreservesColimitsOfShape (Discrete WalkingPair) F :=
   ⟨fun K =>
     preservesColimitOfPreservesColimitCocone (colimitCoconeOfInitialAndPushouts K).2

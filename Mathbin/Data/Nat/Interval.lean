@@ -300,3 +300,38 @@ theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftE
 
 end Finset
 
+section Induction
+
+variable {P : ℕ → Prop} (h : ∀ n, P (n + 1) → P n)
+
+include h
+
+theorem Nat.decreasing_induction_of_not_bdd_above (hP : ¬BddAbove { x | P x }) (n : ℕ) : P n :=
+  let ⟨m, hm, hl⟩ := not_bdd_above_iff.1 hP n
+  decreasingInduction h hl.le hm
+
+theorem Nat.decreasing_induction_of_infinite (hP : { x | P x }.Infinite) (n : ℕ) : P n :=
+  Nat.decreasing_induction_of_not_bdd_above h (mt BddAbove.finite hP) n
+
+theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x → P x → ∃ y, x < y ∧ P y) (n : ℕ) : P n := by
+  apply Nat.decreasing_induction_of_infinite h fun hf => _
+  obtain ⟨m, hP, hm⟩ := hf.exists_maximal_wrt id _ ⟨seed, hs⟩
+  obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt fun hl => hl.Ne <| hm seed hs hl.le) hP
+  exact hl.ne (hm y hy hl.le)
+
+theorem Nat.cauchy_induction (seed : ℕ) (hs : P seed) (f : ℕ → ℕ) (hf : ∀ x, seed ≤ x → P x → x < f x ∧ P (f x))
+    (n : ℕ) : P n :=
+  seed.cauchy_induction' h hs (fun x hl hx => ⟨f x, hf x hl hx⟩) n
+
+theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ) (hm : ∀ x, seed < x → P x → P (k * x))
+    (n : ℕ) : P n := by
+  apply Nat.cauchy_induction h _ hs ((· * ·) k) fun x hl hP => ⟨_, hm x hl hP⟩
+  convert (mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
+  rw [one_mul]
+
+theorem Nat.cauchy_induction_two_mul (seed : ℕ) (hs : P seed.succ) (hm : ∀ x, seed < x → P x → P (2 * x)) (n : ℕ) :
+    P n :=
+  Nat.cauchy_induction_mul h 2 seed one_lt_two hs hm n
+
+end Induction
+

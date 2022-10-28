@@ -318,7 +318,7 @@ instance decidableNF : DecidablePred NF
     have := decidable_NF e
     have := decidable_NF a
     skip
-    apply decidableOfIff (NF e ∧ NF a ∧ top_below e a)
+    apply decidable_of_iff (NF e ∧ NF a ∧ top_below e a)
     abstract 
     rw [← and_congr_right fun h => @NF_below_iff_top_below _ h _]
     exact ⟨fun ⟨h₁, h₂⟩ => NF.oadd h₁ n h₂, fun h => ⟨h.fst, h.snd'⟩⟩

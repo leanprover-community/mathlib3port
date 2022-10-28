@@ -209,7 +209,7 @@ theorem mem_cons {α} (x y : α) (ys : Thunk' (LazyList α)) : x ∈ @LazyList.c
 
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk' (LazyList α)} :
     (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
-  simp only [Membership.Mem, LazyList.Mem, or_imp_distrib, forall_and_distrib, forall_eq]
+  simp only [Membership.Mem, LazyList.Mem, or_imp, forall_and, forall_eq]
 
 /-! ### map for partial functions -/
 

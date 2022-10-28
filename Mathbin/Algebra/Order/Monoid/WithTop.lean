@@ -85,7 +85,7 @@ theorem add_eq_top : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
   cases a <;> cases b <;> simp [none_eq_top, some_eq_coe, ← WithTop.coe_add, ← WithZero.coe_add]
 
 theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
-  add_eq_top.Not.trans not_or_distrib
+  add_eq_top.Not.trans not_or
 
 theorem add_lt_top [PartialOrder α] {a b : WithTop α} : a + b < ⊤ ↔ a < ⊤ ∧ b < ⊤ := by
   simp_rw [lt_top_iff_ne_top, add_ne_top]
@@ -93,7 +93,7 @@ theorem add_lt_top [PartialOrder α] {a b : WithTop α} : a + b < ⊤ ↔ a < �
 theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
   | none, b, c => by simp [none_eq_top]
   | some a, none, c => by simp [none_eq_top]
-  | some a, some b, c => by simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_left, exists_eq_left]
+  | some a, some b, c => by simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_left, exists_eq_left]
 
 @[simp]
 theorem add_coe_eq_top_iff {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by

@@ -51,7 +51,7 @@ theorem comp_injective {g : ι' → ι} (hf : LocallyFinite f) (hg : Injective g
 
 theorem _root_.locally_finite_iff_small_sets :
     LocallyFinite f ↔ ∀ x, ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
-  forall_congr fun x =>
+  forall_congr' fun x =>
     Iff.symm <| eventually_small_sets' fun s t hst ht => ht.Subset fun i hi => hi.mono <| inter_subset_inter_right _ hst
 
 protected theorem eventually_small_sets (hf : LocallyFinite f) (x : X) :
@@ -148,8 +148,8 @@ theorem Equiv.locally_finite_comp_iff (e : ι' ≃ ι) : LocallyFinite (f ∘ e)
 
 theorem locally_finite_sum {f : Sum ι ι' → Set X} :
     LocallyFinite f ↔ LocallyFinite (f ∘ Sum.inl) ∧ LocallyFinite (f ∘ Sum.inr) := by
-  simp only [locally_finite_iff_small_sets, ← forall_and_distrib, ← finite_preimage_inl_and_inr, preimage_set_of_eq,
-    (· ∘ ·), eventually_and]
+  simp only [locally_finite_iff_small_sets, ← forall_and, ← finite_preimage_inl_and_inr, preimage_set_of_eq, (· ∘ ·),
+    eventually_and]
 
 theorem LocallyFinite.sum_elim {g : ι' → Set X} (hf : LocallyFinite f) (hg : LocallyFinite g) :
     LocallyFinite (Sum.elim f g) :=
@@ -160,6 +160,6 @@ theorem locally_finite_option {f : Option ι → Set X} : LocallyFinite f ↔ Lo
     locally_finite_of_finite, and_true_iff]
   rfl
 
-theorem LocallyFinite.option_elim (hf : LocallyFinite f) (s : Set X) : LocallyFinite (Option.elim s f) :=
+theorem LocallyFinite.option_elim (hf : LocallyFinite f) (s : Set X) : LocallyFinite (Option.elim' s f) :=
   locally_finite_option.2 hf
 

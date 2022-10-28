@@ -99,7 +99,7 @@ def TerminatedAt (s : Seq α) (n : ℕ) : Prop :=
 
 /-- It is decidable whether a sequence terminates at a given position. -/
 instance terminatedAtDecidable (s : Seq α) (n : ℕ) : Decidable (s.TerminatedAt n) :=
-  decidableOfIff' (s.nth n).isNone <| by unfold terminated_at <;> cases s.nth n <;> simp
+  decidable_of_iff' (s.nth n).isNone <| by unfold terminated_at <;> cases s.nth n <;> simp
 
 /-- A sequence terminates if there is some position `n` at which it has terminated. -/
 def Terminates (s : Seq α) : Prop :=

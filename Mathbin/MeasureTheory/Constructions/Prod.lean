@@ -437,7 +437,7 @@ instance {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {mα : Mea
   set L := (Prod.fst '' K) ×ˢ (Prod.snd '' K) with hL
   have : K ⊆ L := by
     rintro ⟨x, y⟩ hxy
-    simp only [prod_mk_mem_set_prod_eq, mem_image, Prod.exists, exists_and_distrib_right, exists_eq_right]
+    simp only [prod_mk_mem_set_prod_eq, mem_image, Prod.exists, exists_and_right, exists_eq_right]
     exact ⟨⟨y, hxy⟩, ⟨x, hxy⟩⟩
   apply lt_of_le_of_lt (measure_mono this)
   rw [hL, prod_prod]
@@ -843,7 +843,7 @@ theorem has_finite_integral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMea
     ennnorm_eq_of_real to_real_nonneg, of_real_norm_eq_coe_nnnorm]
   -- this fact is probably too specialized to be its own lemma
   have : ∀ {p q r : Prop} (h1 : r → p), (r ↔ p ∧ q) ↔ p → (r ↔ q) := fun p q r h1 => by
-    rw [← And.congr_right_iff, and_iff_right_of_imp h1]
+    rw [← and_congr_right_iff, and_iff_right_of_imp h1]
   rw [this]
   · intro h2f
     rw [lintegral_congr_ae]

@@ -223,7 +223,7 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
   | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty => by
     skip
     constructor
-    · refine' @decidableOfIff' _ _ mk_le_mk (id _)
+    · refine' @decidable_of_iff' _ _ mk_le_mk (id _)
       apply @And.decidable _ _ _ _
       · apply @Fintype.decidableForallFintype xl _ _ (by infer_instance)
         intro i
@@ -234,7 +234,7 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
         
       
-    · refine' @decidableOfIff' _ _ mk_lf_mk (id _)
+    · refine' @decidable_of_iff' _ _ mk_lf_mk (id _)
       apply @Or.decidable _ _ _ _
       · apply @Fintype.decidableExistsFintype yl _ _ (by infer_instance)
         intro i

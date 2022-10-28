@@ -76,7 +76,7 @@ theorem of_hom_apply {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) (x : X) : 
 
 @[to_additive]
 instance : Inhabited MagmaCat :=
-  ⟨MagmaCat.of Pempty⟩
+  ⟨MagmaCat.of PEmpty⟩
 
 @[to_additive]
 instance (M : MagmaCat) : Mul M :=
@@ -132,7 +132,7 @@ theorem of_hom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y
 
 @[to_additive]
 instance : Inhabited SemigroupCat :=
-  ⟨SemigroupCat.of Pempty⟩
+  ⟨SemigroupCat.of PEmpty⟩
 
 @[to_additive]
 instance (M : SemigroupCat) : Semigroup M :=

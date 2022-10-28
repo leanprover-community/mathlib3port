@@ -275,7 +275,7 @@ theorem snorm'_const' [IsFiniteMeasure μ] (c : F) (hc_ne_zero : c ≠ 0) (hq_ne
       
     rw [one_div, mul_inv_cancel hq_ne_zero]
     
-  · rw [Ne.def, Ennreal.rpow_eq_top_iff, not_or_distrib, not_and_distrib, not_and_distrib]
+  · rw [Ne.def, Ennreal.rpow_eq_top_iff, not_or, not_and_or, not_and_or]
     constructor
     · left
       rwa [Ennreal.coe_eq_zero, nnnorm_eq_zero]
@@ -1924,7 +1924,7 @@ theorem mem_ℒp_norm_rpow_iff {q : ℝ≥0∞} {f : α → E} (hf : AeStronglyM
   · ext x
     rw [Real.norm_eq_abs, Real.abs_rpow_of_nonneg (norm_nonneg _), ← Real.rpow_mul (abs_nonneg _), Ennreal.to_real_inv,
       mul_inv_cancel, abs_of_nonneg (norm_nonneg _), Real.rpow_one]
-    simp [Ennreal.to_real_eq_zero_iff, not_or_distrib, q_zero, q_top]
+    simp [Ennreal.to_real_eq_zero_iff, not_or, q_zero, q_top]
     
   · rw [div_eq_mul_inv, inv_inv, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel q_zero q_top, mul_one]
     

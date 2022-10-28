@@ -3,7 +3,7 @@ Copyright (c) 2021 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Topology.Sheaves.SheafCondition.PairwiseIntersections
+import Mathbin.Topology.Sheaves.SheafCondition.OpensLeCover
 
 /-!
 # functors between categories of sheaves
@@ -19,7 +19,7 @@ TODO: pullback for presheaves and sheaves
 
 noncomputable section
 
-universe v u u₁
+universe w v u
 
 open CategoryTheory
 
@@ -27,11 +27,11 @@ open CategoryTheory.Limits
 
 open TopologicalSpace
 
-variable {C : Type u₁} [Category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
-variable {X Y : TopCat.{v}} (f : X ⟶ Y)
+variable {X Y : TopCat.{w}} (f : X ⟶ Y)
 
-variable ⦃ι : Type v⦄ {U : ι → Opens Y}
+variable ⦃ι : Type w⦄ {U : ι → Opens Y}
 
 namespace TopCat
 
@@ -72,8 +72,6 @@ end Presheaf.SheafConditionPairwiseIntersections
 namespace Sheaf
 
 open Presheaf
-
-variable [HasProducts.{v} C]
 
 /-- The pushforward of a sheaf (by a continuous map) is a sheaf.
 -/

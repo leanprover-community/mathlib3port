@@ -238,7 +238,7 @@ theorem Ico_filter_lt_of_right_le [DecidablePred (· < c)] (hbc : b ≤ c) : (ic
 
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) : (ico a b).filter (· < c) = ico a c := by
   ext x
-  rw [mem_filter, mem_Ico, mem_Ico, And.right_comm]
+  rw [mem_filter, mem_Ico, mem_Ico, and_right_comm]
   exact and_iff_left_of_imp fun h => h.2.trans_le hcb
 
 theorem Ico_filter_le_of_le_left {a b c : α} [DecidablePred ((· ≤ ·) c)] (hca : c ≤ a) :
@@ -466,7 +466,7 @@ theorem Icc_eq_cons_Ioc (h : a ≤ b) : icc a b = (ioc a b).cons a left_not_mem_
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) : ((ico a b).filter fun x => x ≤ a) = {a} :=
   by
   ext x
-  rw [mem_filter, mem_Ico, mem_singleton, And.right_comm, ← le_antisymm_iff, eq_comm]
+  rw [mem_filter, mem_Ico, mem_singleton, and_right_comm, ← le_antisymm_iff, eq_comm]
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by
@@ -603,7 +603,7 @@ theorem Iio_filter_lt {α} [LinearOrder α] [LocallyFiniteOrderBot α] (a b : α
 theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b := by
   cases le_total a c
   · ext x
-    rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, max_eq_right h, And.right_comm, not_and, not_lt]
+    rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, max_eq_right h, and_right_comm, not_and, not_lt]
     exact and_congr_left' ⟨fun hx => hx.2 hx.1, fun hx => ⟨h.trans hx, fun _ => hx⟩⟩
     
   · rw [Ico_eq_empty_of_le h, sdiff_empty, max_eq_left h]

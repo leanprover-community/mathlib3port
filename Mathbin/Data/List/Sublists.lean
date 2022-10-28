@@ -184,7 +184,7 @@ theorem sublists_aux_ne_nil : ∀ l : List α, [] ∉ sublistsAux l cons
     induction sublists_aux l cons <;> intro
     · rwa [foldr]
       
-    simp only [foldr, mem_cons_iff, false_or_iff, not_or_distrib]
+    simp only [foldr, mem_cons_iff, false_or_iff, not_or]
     exact ⟨ne_of_not_mem_cons this, ih (not_mem_of_not_mem_cons this)⟩
 
 @[simp]

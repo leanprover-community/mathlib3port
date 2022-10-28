@@ -47,8 +47,8 @@ open Classical Affine BigOperators
 
 open Set
 
-variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
-  {A B C : Set E} {X : Finset E} {x : E}
+variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
+  {l : E →L[𝕜] 𝕜} {A B C : Set E} {X : Finset E} {x : E}
 
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
@@ -180,7 +180,8 @@ protected theorem isClosed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B)
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace
   exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
 
-protected theorem is_compact [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
+protected theorem is_compact [OrderClosedTopology 𝕜] [T2Space E] (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) :
+    IsCompact B :=
   compact_of_is_closed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
 
 end IsExposed

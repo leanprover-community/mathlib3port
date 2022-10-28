@@ -86,7 +86,7 @@ def Prime (n : PosNum) : Prop :=
 instance decidablePrime : DecidablePred PosNum.Prime
   | 1 => Decidable.isFalse Nat.not_prime_one
   | bit0 n =>
-    decidableOfIff' (n = 1)
+    decidable_of_iff' (n = 1)
       (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans <| eq_comm.trans _)
         · exact bit0_le_bit0.2 (to_nat_pos _)
@@ -94,7 +94,7 @@ instance decidablePrime : DecidablePred PosNum.Prime
         rw [← min_fac_to_nat, to_nat_inj]
         exact ⟨bit0.inj, congr_arg _⟩)
   | bit1 n =>
-    decidableOfIff' (minFacAux (bit1 n) n 1 = bit1 n)
+    decidable_of_iff' (minFacAux (bit1 n) n 1 = bit1 n)
       (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans _)
         · exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)

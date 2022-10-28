@@ -1023,7 +1023,7 @@ namespace MvPolynomial
 
 theorem is_noetherian_ring_fin_0 [IsNoetherianRing R] : IsNoetherianRing (MvPolynomial (Fin 0) R) :=
   is_noetherian_ring_of_ring_equiv R
-    ((MvPolynomial.isEmptyRingEquiv R Pempty).symm.trans (renameEquiv R finZeroEquiv'.symm).toRingEquiv)
+    ((MvPolynomial.isEmptyRingEquiv R PEmpty).symm.trans (renameEquiv R finZeroEquiv'.symm).toRingEquiv)
 
 theorem is_noetherian_ring_fin [IsNoetherianRing R] : ∀ {n : ℕ}, IsNoetherianRing (MvPolynomial (Fin n) R)
   | 0 => is_noetherian_ring_fin_0

@@ -228,21 +228,37 @@ theorem ceil_le : ⌈a⌉₊ ≤ n ↔ a ≤ n :=
 theorem lt_ceil : n < ⌈a⌉₊ ↔ (n : α) < a :=
   lt_iff_lt_of_le_iff_le ceil_le
 
+@[simp]
+theorem add_one_le_ceil_iff : n + 1 ≤ ⌈a⌉₊ ↔ (n : α) < a := by rw [← Nat.lt_ceil, Nat.add_one_le_iff]
+
+@[simp]
+theorem one_le_ceil_iff : 1 ≤ ⌈a⌉₊ ↔ 0 < a := by rw [← zero_add 1, Nat.add_one_le_ceil_iff, Nat.cast_zero]
+
+theorem ceil_le_floor_add_one (a : α) : ⌈a⌉₊ ≤ ⌊a⌋₊ + 1 := by
+  rw [ceil_le, Nat.cast_add, Nat.cast_one]
+  exact (lt_floor_add_one a).le
+
 theorem le_ceil (a : α) : a ≤ ⌈a⌉₊ :=
   ceil_le.1 le_rfl
+
+@[simp]
+theorem ceil_int_cast {α : Type _} [LinearOrderedRing α] [FloorSemiring α] (z : ℤ) : ⌈(z : α)⌉₊ = z.toNat :=
+  eq_of_forall_ge_iff fun a => by
+    simp
+    norm_cast
+
+@[simp]
+theorem ceil_nat_cast (n : ℕ) : ⌈(n : α)⌉₊ = n :=
+  eq_of_forall_ge_iff fun a => by rw [ceil_le, cast_le]
 
 theorem ceil_mono : Monotone (ceil : α → ℕ) :=
   gc_ceil_coe.monotone_l
 
 @[simp]
-theorem ceil_coe (n : ℕ) : ⌈(n : α)⌉₊ = n :=
-  eq_of_forall_ge_iff fun a => ceil_le.trans Nat.cast_le
+theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 := by rw [← Nat.cast_zero, ceil_nat_cast]
 
 @[simp]
-theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 := by rw [← Nat.cast_zero, ceil_coe]
-
-@[simp]
-theorem ceil_one : ⌈(1 : α)⌉₊ = 1 := by rw [← Nat.cast_one, ceil_coe]
+theorem ceil_one : ⌈(1 : α)⌉₊ = 1 := by rw [← Nat.cast_one, ceil_nat_cast]
 
 @[simp]
 theorem ceil_eq_zero : ⌈a⌉₊ = 0 ↔ a ≤ 0 := by rw [← le_zero_iff, ceil_le, Nat.cast_zero]
@@ -583,17 +599,17 @@ theorem floor_add_one (a : α) : ⌊a + 1⌋ = ⌊a⌋ + 1 := by
 theorem floor_int_add (z : ℤ) (a : α) : ⌊↑z + a⌋ = z + ⌊a⌋ := by simpa only [add_comm] using floor_add_int a z
 
 @[simp]
-theorem floor_add_nat (a : α) (n : ℕ) : ⌊a + n⌋ = ⌊a⌋ + n := by rw [← Int.cast_coe_nat, floor_add_int]
+theorem floor_add_nat (a : α) (n : ℕ) : ⌊a + n⌋ = ⌊a⌋ + n := by rw [← Int.cast_ofNat, floor_add_int]
 
 @[simp]
-theorem floor_nat_add (n : ℕ) (a : α) : ⌊↑n + a⌋ = n + ⌊a⌋ := by rw [← Int.cast_coe_nat, floor_int_add]
+theorem floor_nat_add (n : ℕ) (a : α) : ⌊↑n + a⌋ = n + ⌊a⌋ := by rw [← Int.cast_ofNat, floor_int_add]
 
 @[simp]
 theorem floor_sub_int (a : α) (z : ℤ) : ⌊a - z⌋ = ⌊a⌋ - z :=
   Eq.trans (by rw [Int.cast_neg, sub_eq_add_neg]) (floor_add_int _ _)
 
 @[simp]
-theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n := by rw [← Int.cast_coe_nat, floor_sub_int]
+theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n := by rw [← Int.cast_ofNat, floor_sub_int]
 
 theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α] [FloorRing α] {a b : α}
     (h : ⌊a⌋ = ⌊b⌋) : abs (a - b) < 1 := by
@@ -606,6 +622,9 @@ theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α
 
 theorem floor_eq_iff : ⌊a⌋ = z ↔ ↑z ≤ a ∧ a < z + 1 := by
   rw [le_antisymm_iff, le_floor, ← Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_one, and_comm]
+
+@[simp]
+theorem floor_eq_zero_iff : ⌊a⌋ = 0 ↔ a ∈ IcoCat (0 : α) 1 := by simp [floor_eq_iff]
 
 theorem floor_eq_on_Ico (n : ℤ) : ∀ a ∈ Set.IcoCat (n : α) (n + 1), ⌊a⌋ = n := fun a ⟨h₀, h₁⟩ =>
   floor_eq_iff.mpr ⟨h₀, h₁⟩
@@ -856,7 +875,7 @@ theorem ceil_add_int (a : α) (z : ℤ) : ⌈a + z⌉ = ⌈a⌉ + z := by
   rw [← neg_inj, neg_add', ← floor_neg, ← floor_neg, neg_add', floor_sub_int]
 
 @[simp]
-theorem ceil_add_nat (a : α) (n : ℕ) : ⌈a + n⌉ = ⌈a⌉ + n := by rw [← Int.cast_coe_nat, ceil_add_int]
+theorem ceil_add_nat (a : α) (n : ℕ) : ⌈a + n⌉ = ⌈a⌉ + n := by rw [← Int.cast_ofNat, ceil_add_int]
 
 @[simp]
 theorem ceil_add_one (a : α) : ⌈a + 1⌉ = ⌈a⌉ + 1 := by
@@ -890,6 +909,9 @@ theorem ceil_nonneg (ha : 0 ≤ a) : 0 ≤ ⌈a⌉ := by exact_mod_cast ha.trans
 
 theorem ceil_eq_iff : ⌈a⌉ = z ↔ ↑z - 1 < a ∧ a ≤ z := by
   rw [← ceil_le, ← Int.cast_one, ← Int.cast_sub, ← lt_ceil, Int.sub_one_lt_iff, le_antisymm_iff, and_comm]
+
+@[simp]
+theorem ceil_eq_zero_iff : ⌈a⌉ = 0 ↔ a ∈ IocCat (-1 : α) 0 := by simp [ceil_eq_iff]
 
 theorem ceil_eq_on_Ioc (z : ℤ) : ∀ a ∈ Set.IocCat (z - 1 : α) z, ⌈a⌉ = z := fun a ⟨h₀, h₁⟩ => ceil_eq_iff.mpr ⟨h₀, h₁⟩
 
@@ -1002,7 +1024,7 @@ theorem round_int_cast (n : ℤ) : round (n : α) = n := by simp [round]
 
 @[simp]
 theorem round_add_int (x : α) (y : ℤ) : round (x + y) = round x + y := by
-  rw [round, round, Int.fract_add_int, Int.floor_add_int, Int.ceil_add_int, ← apply_ite2, if_t_t]
+  rw [round, round, Int.fract_add_int, Int.floor_add_int, Int.ceil_add_int, ← apply_ite₂, if_t_t]
 
 @[simp]
 theorem round_add_one (a : α) : round (a + 1) = round a + 1 := by
@@ -1022,11 +1044,11 @@ theorem round_sub_one (a : α) : round (a - 1) = round a - 1 := by
 
 @[simp]
 theorem round_add_nat (x : α) (y : ℕ) : round (x + y) = round x + y := by
-  rw [round, round, fract_add_nat, Int.floor_add_nat, Int.ceil_add_nat, ← apply_ite2, if_t_t]
+  rw [round, round, fract_add_nat, Int.floor_add_nat, Int.ceil_add_nat, ← apply_ite₂, if_t_t]
 
 @[simp]
 theorem round_sub_nat (x : α) (y : ℕ) : round (x - y) = round x - y := by
-  rw [sub_eq_add_neg, ← Int.cast_coe_nat]
+  rw [sub_eq_add_neg, ← Int.cast_ofNat]
   norm_cast
   rw [round_add_int, sub_eq_add_neg]
 
@@ -1047,17 +1069,17 @@ theorem abs_sub_round_eq_min (x : α) : abs (x - round x) = min (fract x) (1 - f
     rw [if_neg (not_lt.mpr hx), if_neg (not_lt.mpr hx), abs_sub_comm, ceil_sub_self_eq this.ne.symm, abs_one_sub_fract]
     
 
-theorem abs_sub_round_le_abs_self (x : α) : abs (x - round x) ≤ abs x := by
+theorem round_le (x : α) (z : ℤ) : abs (x - round x) ≤ abs (x - z) := by
   rw [abs_sub_round_eq_min, min_le_iff]
-  rcases le_or_gt 0 x with (hx | (hx : x < 0)) <;> [left, right]
-  · conv_rhs => rw [abs_eq_self.mpr hx, ← fract_add_floor x]
-    simpa only [le_add_iff_nonneg_right, cast_nonneg] using floor_nonneg.mpr hx
+  rcases le_or_lt (z : α) x with (hx | hx) <;> [left, right]
+  · conv_rhs => rw [abs_eq_self.mpr (sub_nonneg.mpr hx), ← fract_add_floor x, add_sub_assoc]
+    simpa only [le_add_iff_nonneg_right, sub_nonneg, cast_le] using le_floor.mpr hx
     
-  · rw [abs_eq_neg_self.mpr hx.le]
+  · rw [abs_eq_neg_self.mpr (sub_neg.mpr hx).le]
     conv_rhs => rw [← fract_add_floor x]
-    simp only [neg_add_rev, le_add_neg_iff_add_le, sub_add_cancel]
+    rw [add_sub_assoc, add_comm, neg_add, neg_sub, le_add_neg_iff_add_le, sub_add_cancel, le_sub]
     norm_cast
-    exact le_neg.mp <| floor_le_neg_one_iff.mpr hx
+    exact floor_le_sub_one_iff.mpr hx
     
 
 end LinearOrderedRing
@@ -1080,6 +1102,17 @@ theorem round_eq (x : α) : round x = ⌊x + 1 / 2⌋ := by
       add_comm _ ⌊x⌋, add_right_inj, ceil_eq_iff, this, cast_one, sub_self]
     constructor <;> linarith [fract_lt_one x]
     
+
+@[simp]
+theorem round_two_inv : round (2⁻¹ : α) = 1 := by simp only [round_eq, ← one_div, add_halves', floor_one]
+
+@[simp]
+theorem round_neg_two_inv : round (-2⁻¹ : α) = 0 := by simp only [round_eq, ← one_div, add_left_neg, floor_zero]
+
+@[simp]
+theorem round_eq_zero_iff {x : α} : round x = 0 ↔ x ∈ IcoCat (-(1 / 2)) ((1 : α) / 2) := by
+  rw [round_eq, floor_eq_zero_iff, add_mem_Ico_iff_left]
+  norm_num
 
 theorem abs_sub_round (x : α) : abs (x - round x) ≤ 1 / 2 := by
   rw [round_eq, abs_sub_le_iff]
@@ -1162,8 +1195,8 @@ instance (priority := 100) _root_.floor_ring.to_floor_semiring : FloorSemiring �
   floor a := ⌊a⌋.toNat
   ceil a := ⌈a⌉.toNat
   floor_of_neg a ha := Int.to_nat_of_nonpos (Int.floor_nonpos ha.le)
-  gc_floor a n ha := by rw [Int.le_to_nat_iff (Int.floor_nonneg.2 ha), Int.le_floor, Int.cast_coe_nat]
-  gc_ceil a n := by rw [Int.to_nat_le, Int.ceil_le, Int.cast_coe_nat]
+  gc_floor a n ha := by rw [Int.le_to_nat_iff (Int.floor_nonneg.2 ha), Int.le_floor, Int.cast_ofNat]
+  gc_ceil a n := by rw [Int.to_nat_le, Int.ceil_le, Int.cast_ofNat]
 
 theorem Int.floor_to_nat (a : α) : ⌊a⌋.toNat = ⌊a⌋₊ :=
   rfl
@@ -1185,13 +1218,13 @@ theorem Nat.cast_floor_eq_int_floor (ha : 0 ≤ a) : (⌊a⌋₊ : ℤ) = ⌊a�
   rw [← Int.floor_to_nat, Int.to_nat_of_nonneg (Int.floor_nonneg.2 ha)]
 
 theorem Nat.cast_floor_eq_cast_int_floor (ha : 0 ≤ a) : (⌊a⌋₊ : α) = ⌊a⌋ := by
-  rw [← Nat.cast_floor_eq_int_floor ha, Int.cast_coe_nat]
+  rw [← Nat.cast_floor_eq_int_floor ha, Int.cast_ofNat]
 
 theorem Nat.cast_ceil_eq_int_ceil (ha : 0 ≤ a) : (⌈a⌉₊ : ℤ) = ⌈a⌉ := by
   rw [← Int.ceil_to_nat, Int.to_nat_of_nonneg (Int.ceil_nonneg ha)]
 
 theorem Nat.cast_ceil_eq_cast_int_ceil (ha : 0 ≤ a) : (⌈a⌉₊ : α) = ⌈a⌉ := by
-  rw [← Nat.cast_ceil_eq_int_ceil ha, Int.cast_coe_nat]
+  rw [← Nat.cast_ceil_eq_int_ceil ha, Int.cast_ofNat]
 
 end FloorRingToSemiring
 

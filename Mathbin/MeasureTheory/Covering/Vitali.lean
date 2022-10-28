@@ -349,7 +349,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     have k_closed : IsClosed k := isClosedBUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k := by
       simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index, SetCoe.exists, not_and,
-        exists_and_distrib_right, Subtype.coe_mk]
+        exists_and_right, Subtype.coe_mk]
       intro b hbv h'b h'z
       have : z ∈ (s \ ⋃ a ∈ u, B a) ∩ ⋃ a ∈ u, B a := mem_inter (mem_of_mem_inter_left hz) (mem_bUnion (vu hbv) h'z)
       simpa only [diff_inter_self]

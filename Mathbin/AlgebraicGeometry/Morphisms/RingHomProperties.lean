@@ -102,7 +102,6 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
     convert (X.basic_open_res (Scheme.Γ.map f.op r) (hom_of_le le_top).op).symm using 1
     rw [opens.open_embedding_obj_top, opens.open_embedding_obj_top, inf_comm, Scheme.Γ_map_op, ←
       Scheme.preimage_basic_open]
-    rfl
     
   · apply IsLocalization.ring_hom_ext (Submonoid.powers r) _
     swap
@@ -172,7 +171,7 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
     AffineLocally (@P) f ↔
       ∀ (U : Y.AffineOpens) (V : X.AffineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1), P (f.appLe e) :=
   by
-  apply forall_congr
+  apply forall_congr'
   intro U
   delta source_affine_locally
   simp_rw [op_comp, Scheme.Γ.map_comp, Γ_map_morphism_restrict, category.assoc, Scheme.Γ_map_op, hP.cancel_left_is_iso]
@@ -347,7 +346,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
     swap
     · refine' X.presheaf.map (@hom_of_le _ _ ((IsOpenMap.functor _).obj _) ((IsOpenMap.functor _).obj _) _).op
       rw [unop_op, unop_op, opens.open_embedding_obj_top, opens.open_embedding_obj_top]
-      exact X.basic_open_subset _
+      exact X.basic_open_le _
       
     · rw [op_comp, op_comp, functor.map_comp, functor.map_comp]
       refine' (Eq.trans _ (category.assoc _ _ _).symm : _)
@@ -486,7 +485,7 @@ theorem affine_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : Scheme
     [∀ i j, IsAffine ((𝒰' i).obj j)] :
     AffineLocally (@P) f ↔ ∀ i j, P (SchemeCat.Γ.map ((𝒰' i).map j ≫ pullback.snd).op) :=
   (hP.isLocalSourceAffineLocally.affine_open_cover_iff f 𝒰).trans
-    (forall_congr fun i => hP.source_affine_open_cover_iff _ (𝒰' i))
+    (forall_congr' fun i => hP.source_affine_open_cover_iff _ (𝒰' i))
 
 theorem source_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} X) :
     AffineLocally (@P) f ↔ ∀ i, AffineLocally (@P) (𝒰.map i ≫ f) := by

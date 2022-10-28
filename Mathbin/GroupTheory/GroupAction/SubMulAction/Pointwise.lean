@@ -73,7 +73,7 @@ instance : MulOneClass (SubMulAction R M) where
   one := 1
   mul_one a := by
     ext
-    simp only [mem_mul, mem_one, mul_smul_comm, exists_and_distrib_left, exists_exists_eq_and, mul_one]
+    simp only [mem_mul, mem_one, mul_smul_comm, exists_and_left, exists_exists_eq_and, mul_one]
     constructor
     · rintro ⟨y, hy, r, rfl⟩
       exact smul_mem _ _ hy
@@ -83,7 +83,7 @@ instance : MulOneClass (SubMulAction R M) where
       
   one_mul a := by
     ext
-    simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_distrib_left, exists_exists_eq_and, one_mul]
+    simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_left, exists_exists_eq_and, one_mul]
     refine' ⟨_, fun hx => ⟨1, x, hx, one_smul _ _⟩⟩
     rintro ⟨r, y, hy, rfl⟩
     exact smul_mem _ _ hy

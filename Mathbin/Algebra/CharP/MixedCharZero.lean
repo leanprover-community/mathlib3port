@@ -183,7 +183,7 @@ theorem EqualCharZero.pnat_coe_is_unit [h : Fact (∀ I : Ideal R, I ≠ ⊤ →
   exact Ideal.subset_span (Set.mem_singleton _)
 
 /-- Internal: Not intended to be used outside this local construction. -/
-noncomputable instance EqualCharZero.pnatHasCoeUnits [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeT ℕ+ Rˣ :=
+noncomputable instance EqualCharZero.pnatHasCoeUnits [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeTC ℕ+ Rˣ :=
   ⟨fun n => (EqualCharZero.pnat_coe_is_unit R n).Unit⟩
 
 /-- Internal: Not intended to be used outside this local construction. -/
@@ -217,7 +217,7 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
         repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr * »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-        · simp_rw [Int.cast_mul, Int.cast_coe_nat, coe_coe, Rat.coe_pnat_denom]
+        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnat_denom]
           ring
           
         rw [Rat.mul_num_denom' a b]
@@ -228,7 +228,7 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
         repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr + »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-        · simp_rw [Int.cast_mul, Int.cast_coe_nat, coe_coe, Rat.coe_pnat_denom]
+        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnat_denom]
           ring
           
         rw [Rat.add_num_denom' a b]

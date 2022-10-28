@@ -65,7 +65,7 @@ protected def id : StieltjesFunction where
 @[simp]
 theorem id_left_lim (x : ℝ) : leftLim StieltjesFunction.id x = x :=
   tendsto_nhds_unique (StieltjesFunction.id.mono.tendsto_left_lim x) <|
-    continuous_at_id.Tendsto.mono_left nhds_within_le_nhds
+    continuous_at_id.Tendsto.monoLeft nhds_within_le_nhds
 
 instance : Inhabited StieltjesFunction :=
   ⟨StieltjesFunction.id⟩

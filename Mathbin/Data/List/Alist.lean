@@ -152,7 +152,7 @@ theorem perm_lookup {a : α} {s₁ s₂ : Alist β} (p : s₁.entries ~ s₂.ent
   perm_lookup _ s₁.Nodupkeys s₂.Nodupkeys p
 
 instance (a : α) (s : Alist β) : Decidable (a ∈ s) :=
-  decidableOfIff _ lookup_is_some
+  decidable_of_iff _ lookup_is_some
 
 /-! ### replace -/
 
@@ -345,7 +345,7 @@ theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ �
 
 theorem union_assoc {s₁ s₂ s₃ : Alist β} : (s₁ ∪ s₂ ∪ s₃).entries ~ (s₁ ∪ (s₂ ∪ s₃)).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)
-    (by simp [Decidable.not_or_iff_and_not, or_assoc', and_or_distrib_left, and_assoc'])
+    (by simp [Decidable.not_or_iff_and_not, or_assoc', and_or_left, and_assoc'])
 
 end
 

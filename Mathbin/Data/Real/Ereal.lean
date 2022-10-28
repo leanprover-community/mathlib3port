@@ -472,7 +472,7 @@ def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ ℝ where
   left_inv := fun ⟨x, hx⟩ =>
     Subtype.eq <| by
       lift x to ℝ
-      · simpa [not_or_distrib, and_comm'] using hx
+      · simpa [not_or, and_comm'] using hx
         
       · simp
         
@@ -564,7 +564,7 @@ theorem add_eq_top_iff {x y : Ereal} : x + y = ⊤ ↔ x = ⊤ ∨ y = ⊤ := by
   induction x using Ereal.rec <;> induction y using Ereal.rec <;> simp [← Ereal.coe_add]
 
 @[simp]
-theorem add_lt_top_iff {x y : Ereal} : x + y < ⊤ ↔ x < ⊤ ∧ y < ⊤ := by simp [lt_top_iff_ne_top, not_or_distrib]
+theorem add_lt_top_iff {x y : Ereal} : x + y < ⊤ ↔ x < ⊤ ∧ y < ⊤ := by simp [lt_top_iff_ne_top, not_or]
 
 /-! ### Negation -/
 

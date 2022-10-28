@@ -45,7 +45,7 @@ theorem coe_eq_coe {l₁ l₂ : List α} : (l₁ : Multiset α) = l₂ ↔ l₁ 
   Quotient.eq
 
 instance hasDecidableEq [DecidableEq α] : DecidableEq (Multiset α)
-  | s₁, s₂ => (Quotient.recOnSubsingleton₂ s₁ s₂) fun l₁ l₂ => decidableOfIff' _ Quotient.eq
+  | s₁, s₂ => (Quotient.recOnSubsingleton₂ s₁ s₂) fun l₁ l₂ => decidable_of_iff' _ Quotient.eq
 
 /-- defines a size for a multiset by referring to the size of the underlying list -/
 protected def sizeof [SizeOf α] (s : Multiset α) : ℕ :=
@@ -338,8 +338,7 @@ theorem ssubset_cons {s : Multiset α} {a : α} (ha : a ∉ s) : s ⊂ a ::ₘ s
   ⟨subset_cons _ _, fun h => ha <| h <| mem_cons_self _ _⟩
 
 @[simp]
-theorem cons_subset {a : α} {s t : Multiset α} : a ::ₘ s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
-  simp [subset_iff, or_imp_distrib, forall_and_distrib]
+theorem cons_subset {a : α} {s t : Multiset α} : a ::ₘ s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by simp [subset_iff, or_imp, forall_and]
 
 theorem cons_subset_cons {a : α} {s t : Multiset α} : s ⊆ t → a ::ₘ s ⊆ a ::ₘ t :=
   (Quotient.induction_on₂ s t) fun _ _ => cons_subset_cons _
@@ -1271,7 +1270,7 @@ variable {m : Multiset α}
 /-- If `p` is a decidable predicate,
 so is the predicate that all elements of a multiset satisfy `p`. -/
 protected def decidableForallMultiset {p : α → Prop} [hp : ∀ a, Decidable (p a)] : Decidable (∀ a ∈ m, p a) :=
-  Quotient.recOnSubsingleton m fun l => decidableOfIff (∀ a ∈ l, p a) <| by simp
+  Quotient.recOnSubsingleton m fun l => decidable_of_iff (∀ a ∈ l, p a) <| by simp
 
 instance decidableDforallMultiset {p : ∀ a ∈ m, Prop} [hp : ∀ (a) (h : a ∈ m), Decidable (p a h)] :
     Decidable (∀ (a) (h : a ∈ m), p a h) :=
@@ -1280,12 +1279,12 @@ instance decidableDforallMultiset {p : ∀ a ∈ m, Prop} [hp : ∀ (a) (h : a �
 
 /-- decidable equality for functions whose domain is bounded by multisets -/
 instance decidableEqPiMultiset {β : α → Type _} [h : ∀ a, DecidableEq (β a)] : DecidableEq (∀ a ∈ m, β a) := fun f g =>
-  decidableOfIff (∀ (a) (h : a ∈ m), f a h = g a h) (by simp [Function.funext_iff])
+  decidable_of_iff (∀ (a) (h : a ∈ m), f a h = g a h) (by simp [Function.funext_iff])
 
 /-- If `p` is a decidable predicate,
 so is the existence of an element in a multiset satisfying `p`. -/
 protected def decidableExistsMultiset {p : α → Prop} [DecidablePred p] : Decidable (∃ x ∈ m, p x) :=
-  Quotient.recOnSubsingleton m fun l => decidableOfIff (∃ a ∈ l, p a) <| by simp
+  Quotient.recOnSubsingleton m fun l => decidable_of_iff (∃ a ∈ l, p a) <| by simp
 
 instance decidableDexistsMultiset {p : ∀ a ∈ m, Prop} [hp : ∀ (a) (h : a ∈ m), Decidable (p a h)] :
     Decidable (∃ (a : _)(h : a ∈ m), p a h) :=
@@ -2410,7 +2409,7 @@ theorem disjoint_singleton {l : Multiset α} {a : α} : Disjoint l {a} ↔ a ∉
 
 @[simp]
 theorem disjoint_add_left {s t u : Multiset α} : Disjoint (s + t) u ↔ Disjoint s u ∧ Disjoint t u := by
-  simp [Disjoint, or_imp_distrib, forall_and_distrib]
+  simp [Disjoint, or_imp, forall_and]
 
 @[simp]
 theorem disjoint_add_right {s t u : Multiset α} : Disjoint s (t + u) ↔ Disjoint s t ∧ Disjoint s u := by
@@ -2429,11 +2428,11 @@ theorem inter_eq_zero_iff_disjoint [DecidableEq α] {s t : Multiset α} : s ∩ 
 
 @[simp]
 theorem disjoint_union_left [DecidableEq α] {s t u : Multiset α} : Disjoint (s ∪ t) u ↔ Disjoint s u ∧ Disjoint t u :=
-  by simp [Disjoint, or_imp_distrib, forall_and_distrib]
+  by simp [Disjoint, or_imp, forall_and]
 
 @[simp]
 theorem disjoint_union_right [DecidableEq α] {s t u : Multiset α} : Disjoint s (t ∪ u) ↔ Disjoint s t ∧ Disjoint s u :=
-  by simp [Disjoint, or_imp_distrib, forall_and_distrib]
+  by simp [Disjoint, or_imp, forall_and]
 
 theorem add_eq_union_iff_disjoint [DecidableEq α] {s t : Multiset α} : s + t = s ∪ t ↔ Disjoint s t := by
   simp_rw [← inter_eq_zero_iff_disjoint, ext, count_add, count_union, count_inter, count_zero, Nat.min_eq_zero_iff,
@@ -2461,6 +2460,12 @@ theorem pairwise_coe_iff_pairwise {r : α → α → Prop} (hr : Symmetric r) {l
     Multiset.Pairwise r l ↔ l.Pairwise r :=
   Iff.intro (fun ⟨l', Eq, h⟩ => ((Quotient.exact Eq).pairwise_iff hr).2 h) fun h => ⟨l, rfl, h⟩
 
+theorem map_set_pairwise {f : α → β} {r : β → β → Prop} {m : Multiset α}
+    (h : { a | a ∈ m }.Pairwise fun a₁ a₂ => r (f a₁) (f a₂)) : { b | b ∈ m.map f }.Pairwise r := fun b₁ h₁ b₂ h₂ hn =>
+  by
+  obtain ⟨⟨a₁, H₁, rfl⟩, a₂, H₂, rfl⟩ := Multiset.mem_map.1 h₁, Multiset.mem_map.1 h₂
+  exact h H₁ H₂ (mt (congr_arg f) hn)
+
 end Multiset
 
 namespace Multiset
@@ -2472,7 +2477,7 @@ variable (p : α → Prop) [DecidablePred p] (l : Multiset α)
 /-- Given a proof `hp` that there exists a unique `a ∈ l` such that `p a`, `choose_x p l hp` returns
 that `a` together with proofs of `a ∈ l` and `p a`. -/
 def chooseX : ∀ hp : ∃! a, a ∈ l ∧ p a, { a // a ∈ l ∧ p a } :=
-  Quotient.recOn l (fun l' ex_unique => List.chooseX p l' (exists_of_exists_unique ex_unique))
+  Quotient.recOn l (fun l' ex_unique => List.chooseX p l' (exists ex_unique))
     (by
       intros
       funext hp

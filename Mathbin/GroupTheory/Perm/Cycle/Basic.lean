@@ -381,7 +381,7 @@ theorem SameCycle.nat'' [Finite β] {f : Perm β} {x y : β} (h : SameCycle f x 
     
 
 instance [Fintype α] (f : Perm α) : DecidableRel (SameCycle f) := fun x y =>
-  decidableOfIff (∃ n ∈ List.range (Fintype.card (Perm α)), (f ^ n) x = y)
+  decidable_of_iff (∃ n ∈ List.range (Fintype.card (Perm α)), (f ^ n) x = y)
     ⟨fun ⟨n, _, hn⟩ => ⟨n, hn⟩, fun ⟨i, hi⟩ =>
       ⟨(i % orderOf f).natAbs,
         List.mem_range.2
@@ -1043,7 +1043,7 @@ theorem Disjoint.cycle_factors_finset_mul_eq_union {f g : Perm α} (h : Disjoint
     cycleFactorsFinset (f * g) = cycleFactorsFinset f ∪ cycleFactorsFinset g := by
   rw [cycle_factors_finset_eq_finset]
   refine' ⟨_, _, _⟩
-  · simp [or_imp_distrib, mem_cycle_factors_finset_iff, forall_swap]
+  · simp [or_imp, mem_cycle_factors_finset_iff, forall_swap]
     
   · rw [coe_union, Set.pairwise_union_of_symmetric disjoint.symmetric]
     exact

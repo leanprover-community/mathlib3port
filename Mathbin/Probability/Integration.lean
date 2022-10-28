@@ -280,7 +280,7 @@ theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable
   · have I : ¬(integrable X μ ∧ integrable Y μ) := by
       rintro ⟨HX, HY⟩
       exact h (hXY.integrable_mul HX HY)
-    rw [not_and_distrib] at I
+    rw [not_and_or] at I
     cases I <;> simp [integral_undef, I, h]
     
 

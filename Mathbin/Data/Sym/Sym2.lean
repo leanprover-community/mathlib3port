@@ -177,7 +177,7 @@ def lift₂ :
   invFun F :=
     ⟨fun a₁ a₂ b₁ b₂ => F ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧, fun a₁ a₂ b₁ b₂ => by
       constructor
-      exacts[congr_arg2 F eq_swap rfl, congr_arg2 F rfl eq_swap]⟩
+      exacts[congr_arg₂ F eq_swap rfl, congr_arg₂ F rfl eq_swap]⟩
   left_inv f := Subtype.ext rfl
   right_inv F := funext₂ fun a b => (Sym2.induction_on₂ a b) fun _ _ _ _ => rfl
 
@@ -313,7 +313,7 @@ protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z
   simp only [Sym2.eq_swap]
 
 instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
-  Quotient.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
+  Quotient.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidable_of_iff' _ mem_iff
 
 end Membership
 
@@ -412,6 +412,16 @@ theorem from_rel_proj_prop {sym : Symmetric r} {z : α × α} : ⟦z⟧ ∈ From
 @[simp]
 theorem from_rel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ FromRel Sym ↔ r a b :=
   Iff.rfl
+
+theorem from_rel_bot : FromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ := by
+  apply Set.eq_empty_of_forall_not_mem fun e => _
+  refine' e.ind _
+  simp [-Set.bot_eq_empty, PropCat.bot_eq_false]
+
+theorem from_rel_top : FromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.Univ := by
+  apply Set.eq_univ_of_forall fun e => _
+  refine' e.ind _
+  simp [-Set.top_eq_univ, PropCat.top_eq_true]
 
 theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ FromRel Sym → ¬IsDiag z :=
   { mp := fun h =>
@@ -569,7 +579,7 @@ theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ R
 /-- Given `[decidable_eq α]` and `[fintype α]`, the following instance gives `fintype (sym2 α)`.
 -/
 instance (α : Type _) [DecidableEq α] : DecidableRel (Sym2.Rel α) := fun x y =>
-  decidableOfBool (relBool x y) (rel_bool_spec x y)
+  decidable_of_bool (relBool x y) (rel_bool_spec x y)
 
 /-! ### The other element of an element of the symmetric square -/
 

@@ -146,7 +146,7 @@ original, or it's not in the original but it's the compression of something in t
 theorem mem_compression : s ∈ 𝓓 a 𝒜 ↔ s ∈ 𝒜 ∧ s.erase a ∈ 𝒜 ∨ s ∉ 𝒜 ∧ insert a s ∈ 𝒜 := by
   simp_rw [compression, mem_disj_union, mem_filter, mem_image, and_comm' (s ∉ 𝒜)]
   refine'
-    or_congr_right'
+    or_congr_right
       (and_congr_left fun hs => ⟨_, fun h => ⟨_, h, erase_insert <| insert_ne_self.1 <| ne_of_mem_of_not_mem h hs⟩⟩)
   rintro ⟨t, ht, rfl⟩
   rwa [insert_erase (erase_ne_self.1 (ne_of_mem_of_not_mem ht hs).symm)]

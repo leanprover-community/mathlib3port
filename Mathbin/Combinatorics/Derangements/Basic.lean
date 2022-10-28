@@ -62,7 +62,7 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
     _ ≃ { f : Perm α // ∃ h : ∀ a, ¬p a → a ∈ FixedPoints f, ∀ a, a ∈ FixedPoints f → ¬p a } :=
       subtypeSubtypeEquivSubtypeExists _ _
     _ ≃ { f : Perm α // ∀ a, ¬p a ↔ a ∈ FixedPoints f } :=
-      subtypeEquivRight fun f => by simp_rw [exists_prop, ← forall_and_distrib, ← iff_iff_implies_and_implies]
+      subtypeEquivRight fun f => by simp_rw [exists_prop, ← forall_and, ← iff_iff_implies_and_implies]
     
 
 /-- The set of permutations that fix either `a` or nothing is equivalent to the sum of:

@@ -261,7 +261,7 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
 /-- The `p`-adic norm of an integer `m` is one iff `p` doesn't divide `m`. -/
 theorem int_eq_one_iff (m : ℤ) : padicNorm p m = 1 ↔ ¬(p : ℤ) ∣ m := by
   nth_rw 1 [← pow_one p]
-  simp only [dvd_iff_norm_le, Int.cast_coe_nat, Nat.cast_one, zpow_neg, zpow_one, not_le]
+  simp only [dvd_iff_norm_le, Int.cast_ofNat, Nat.cast_one, zpow_neg, zpow_one, not_le]
   constructor
   · intro h
     rw [h, inv_lt_one_iff_of_pos] <;> norm_cast
@@ -294,10 +294,10 @@ theorem of_nat (m : ℕ) : padicNorm p m ≤ 1 :=
 
 /-- The `p`-adic norm of a natural `m` is one iff `p` doesn't divide `m`. -/
 theorem nat_eq_one_iff (m : ℕ) : padicNorm p m = 1 ↔ ¬p ∣ m := by
-  simp only [← Int.coe_nat_dvd, ← int_eq_one_iff, Int.cast_coe_nat]
+  simp only [← Int.coe_nat_dvd, ← int_eq_one_iff, Int.cast_ofNat]
 
 theorem nat_lt_one_iff (m : ℕ) : padicNorm p m < 1 ↔ p ∣ m := by
-  simp only [← Int.coe_nat_dvd, ← int_lt_one_iff, Int.cast_coe_nat]
+  simp only [← Int.coe_nat_dvd, ← int_lt_one_iff, Int.cast_ofNat]
 
 open BigOperators
 

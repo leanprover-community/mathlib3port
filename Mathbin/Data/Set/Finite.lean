@@ -948,7 +948,7 @@ theorem Infinite.diff {s t : Set α} (hs : s.Infinite) (ht : t.Finite) : (s \ t)
 
 @[simp]
 theorem infinite_union {s t : Set α} : (s ∪ t).Infinite ↔ s.Infinite ∨ t.Infinite := by
-  simp only [Set.Infinite, finite_union, not_and_distrib]
+  simp only [Set.Infinite, finite_union, not_and_or]
 
 theorem infinite_of_infinite_image (f : α → β) {s : Set α} (hs : (f '' s).Infinite) : s.Infinite :=
   mt (Finite.image f) hs
@@ -1156,10 +1156,8 @@ theorem Finite.bdd_above_bUnion {I : Set β} {S : β → Set α} (H : I.Finite) 
   Finite.induction_on H (by simp only [bUnion_empty, bdd_above_empty, ball_empty_iff]) fun a s ha _ hs => by
     simp only [bUnion_insert, ball_insert_iff, bdd_above_union, hs]
 
-theorem infinite_of_not_bdd_above : ¬BddAbove s → s.Infinite := by
-  contrapose!
-  rw [not_infinite]
-  apply finite.bdd_above
+theorem infinite_of_not_bdd_above : ¬BddAbove s → s.Infinite :=
+  mt Finite.bdd_above
 
 end
 

@@ -354,7 +354,7 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
   rw [add_rmatch_iff, ih₁, ih₂]
   rfl
   case comp P Q ih₁ ih₂ =>
-  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_distrib_left, Set.mem_image2, Set.image_prod]
+  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_left, Set.mem_image2, Set.image_prod]
   constructor
   · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
     rw [ih₁] at hmatch₁

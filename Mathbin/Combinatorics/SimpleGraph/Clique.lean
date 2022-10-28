@@ -62,7 +62,7 @@ theorem is_clique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
     
 
 instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
-  decidableOfIff' _ G.is_clique_iff
+  decidable_of_iff' _ G.is_clique_iff
 
 variable {G H}
 
@@ -98,7 +98,7 @@ theorem is_n_clique_iff : G.IsNClique n s ↔ G.IsClique s ∧ s.card = n :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 
 instance [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {s : Finset α} : Decidable (G.IsNClique n s) :=
-  decidableOfIff' _ G.is_n_clique_iff
+  decidable_of_iff' _ G.is_n_clique_iff
 
 variable {G H}
 

@@ -37,7 +37,7 @@ variable [TopologicalSpace α]
 
 @[simp]
 theorem nhds_bind_nhds_within {a : α} {s : Set α} : ((𝓝 a).bind fun x => 𝓝[s] x) = 𝓝[s] a :=
-  bind_inf_principal.trans <| congr_arg2 _ nhds_bind_nhds rfl
+  bind_inf_principal.trans <| congr_arg₂ _ nhds_bind_nhds rfl
 
 @[simp]
 theorem eventually_nhds_nhds_within {a : α} {s : Set α} {p : α → Prop} :
@@ -163,7 +163,7 @@ theorem Filter.Eventually.self_of_nhds_within {p : α → Prop} {s : Set α} {x 
 
 theorem tendsto_const_nhds_within {l : Filter β} {s : Set α} {a : α} (ha : a ∈ s) :
     Tendsto (fun x : β => a) l (𝓝[s] a) :=
-  tendsto_const_pure.mono_right <| pure_le_nhds_within ha
+  tendsto_const_pure.monoRight <| pure_le_nhds_within ha
 
 theorem nhds_within_restrict'' {a : α} (s : Set α) {t : Set α} (h : t ∈ 𝓝[s] a) : 𝓝[s] a = 𝓝[s ∩ t] a :=
   le_antisymm (le_inf inf_le_left (le_principal_iff.mpr (inter_mem self_mem_nhds_within h)))
@@ -291,15 +291,15 @@ theorem map_nhds_within (f : α → β) (a : α) (s : Set α) :
 
 theorem tendsto_nhds_within_mono_left {f : α → β} {a : α} {s t : Set α} {l : Filter β} (hst : s ⊆ t)
     (h : Tendsto f (𝓝[t] a) l) : Tendsto f (𝓝[s] a) l :=
-  h.mono_left <| nhds_within_mono a hst
+  h.monoLeft <| nhds_within_mono a hst
 
 theorem tendsto_nhds_within_mono_right {f : β → α} {l : Filter β} {a : α} {s t : Set α} (hst : s ⊆ t)
     (h : Tendsto f l (𝓝[s] a)) : Tendsto f l (𝓝[t] a) :=
-  h.mono_right (nhds_within_mono a hst)
+  h.monoRight (nhds_within_mono a hst)
 
 theorem tendsto_nhds_within_of_tendsto_nhds {f : α → β} {a : α} {s : Set α} {l : Filter β} (h : Tendsto f (𝓝 a) l) :
     Tendsto f (𝓝[s] a) l :=
-  h.mono_left inf_le_left
+  h.monoLeft inf_le_left
 
 theorem eventually_mem_of_tendsto_nhds_within {f : β → α} {a : α} {s : Set α} {l : Filter β}
     (h : Tendsto f l (𝓝[s] a)) : ∀ᶠ i in l, f i ∈ s := by
@@ -308,7 +308,7 @@ theorem eventually_mem_of_tendsto_nhds_within {f : β → α} {a : α} {s : Set 
 
 theorem tendsto_nhds_of_tendsto_nhds_within {f : β → α} {a : α} {s : Set α} {l : Filter β} (h : Tendsto f l (𝓝[s] a)) :
     Tendsto f l (𝓝 a) :=
-  h.mono_right nhds_within_le_nhds
+  h.monoRight nhds_within_le_nhds
 
 theorem principal_subtype {α : Type _} (s : Set α) (t : Set { x // x ∈ s }) :
     𝓟 t = comap coe (𝓟 ((coe : s → α) '' t)) := by rw [comap_principal, Set.preimage_image_eq _ Subtype.coe_injective]
@@ -357,7 +357,7 @@ theorem tendsto_nhds_within_of_tendsto_nhds_of_eventually_within {a : α} {l : F
 
 @[simp]
 theorem tendsto_nhds_within_range {a : α} {l : Filter β} {f : β → α} : Tendsto f l (𝓝[Range f] a) ↔ Tendsto f l (𝓝 a) :=
-  ⟨fun h => h.mono_right inf_le_left, fun h =>
+  ⟨fun h => h.monoRight inf_le_left, fun h =>
     tendsto_inf.2 ⟨h, tendsto_principal.2 <| eventually_of_forall mem_range_self⟩⟩
 
 theorem Filter.EventuallyEq.eq_of_nhds_within {s : Set α} {f g : α → β} {a : α} (h : f =ᶠ[𝓝[s] a] g) (hmem : a ∈ s) :
@@ -540,11 +540,11 @@ theorem continuous_iff_continuous_on_univ {f : α → β} : Continuous f ↔ Con
 
 theorem ContinuousWithinAt.mono {f : α → β} {s t : Set α} {x : α} (h : ContinuousWithinAt f t x) (hs : s ⊆ t) :
     ContinuousWithinAt f s x :=
-  h.mono_left (nhds_within_mono x hs)
+  h.monoLeft (nhds_within_mono x hs)
 
 theorem ContinuousWithinAt.mono_of_mem {f : α → β} {s t : Set α} {x : α} (h : ContinuousWithinAt f t x)
     (hs : t ∈ 𝓝[s] x) : ContinuousWithinAt f s x :=
-  h.mono_left (nhds_within_le_of_mem hs)
+  h.monoLeft (nhds_within_le_of_mem hs)
 
 theorem continuous_within_at_inter' {f : α → β} {s t : Set α} {x : α} (h : t ∈ 𝓝[s] x) :
     ContinuousWithinAt f (s ∩ t) x ↔ ContinuousWithinAt f s x := by
@@ -695,7 +695,7 @@ theorem ContinuousOn.comp {g : β → γ} {f : α → β} {s : Set α} {t : Set 
   ContinuousWithinAt.comp (hg _ (h hx)) (hf x hx) h
 
 theorem ContinuousOn.mono {f : α → β} {s t : Set α} (hf : ContinuousOn f s) (h : t ⊆ s) : ContinuousOn f t :=
-  fun x hx => (hf x (h hx)).mono_left (nhds_within_mono _ h)
+  fun x hx => (hf x (h hx)).monoLeft (nhds_within_mono _ h)
 
 theorem antitone_continuous_on {f : α → β} : Antitone (ContinuousOn f) := fun s t hst hf => hf.mono hst
 

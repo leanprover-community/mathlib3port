@@ -170,7 +170,7 @@ instance ExtensionOf.inhabited :
       toFun :=
         { toFun := fun x => f x.2.some,
           map_add' := fun x y => by
-            have eq1 : _ + _ = (x + y).1 := congr_arg2 (· + ·) x.2.some_spec y.2.some_spec
+            have eq1 : _ + _ = (x + y).1 := congr_arg₂ (· + ·) x.2.some_spec y.2.some_spec
             rw [← map_add, ← (x + y).2.some_spec] at eq1
             rw [← Fact.out (Function.Injective i) eq1, map_add],
           map_smul' := fun r x => by

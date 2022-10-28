@@ -289,6 +289,10 @@ def Ideal.closure (S : Ideal α) : Ideal α :=
 theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = Closure S :=
   rfl
 
+@[simp]
+theorem Ideal.closure_eq_of_is_closed (S : Ideal α) [hS : IsClosed (S : Set α)] : S.closure = S :=
+  Ideal.ext <| Set.ext_iff.mp hS.closure_eq
+
 end TopologicalRing
 
 section TopologicalRing

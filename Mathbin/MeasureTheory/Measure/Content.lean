@@ -220,6 +220,8 @@ theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
   bsupr_mono fun K hK => hK.trans h2
 
+section OuterMeasure
+
 /-- Extending a content on compact sets to an outer measure on all sets. -/
 protected def outerMeasure : OuterMeasure G :=
   inducedOuterMeasure (fun U hU => μ.innerContent ⟨U, hU⟩) is_open_empty μ.inner_content_empty
@@ -363,6 +365,56 @@ instance regular [LocallyCompactSpace G] : μ.Measure.regular := by
   rcases hr with ⟨K, hKU, hr⟩
   refine' ⟨K, hKU, K.2, hr.trans_le _⟩
   exact (μ.le_outer_measure_compacts K).trans (le_to_measure_apply _ _ _)
+
+end OuterMeasure
+
+section RegularContents
+
+/-- A content `μ` is called regular if for every compact set `K`,
+  `μ(K) = inf {μ(K') : K ⊂ int K' ⊂ K'`. See Paul Halmos (1950), Measure Theory, §54-/
+def ContentRegular :=
+  ∀ ⦃K : TopologicalSpace.Compacts G⦄,
+    μ K = ⨅ (K' : TopologicalSpace.Compacts G) (hK : (K : Set G) ⊆ Interior (K' : Set G)), μ K'
+
+theorem content_regular_exists_compact (H : ContentRegular μ) (K : TopologicalSpace.Compacts G) {ε : Nnreal}
+    (hε : ε ≠ 0) : ∃ K' : TopologicalSpace.Compacts G, K.Carrier ⊆ Interior K'.Carrier ∧ μ K' ≤ μ K + ε := by
+  by_contra hc
+  simp only [not_exists, not_and, not_le] at hc
+  have lower_bound_infi :
+    μ K + ε ≤ ⨅ (K' : TopologicalSpace.Compacts G) (h : (K : Set G) ⊆ Interior (K' : Set G)), μ K' :=
+    le_infi fun K' => le_infi fun K'_hyp => le_of_lt (hc K' K'_hyp)
+  rw [← H] at lower_bound_infi
+  exact
+    (lt_self_iff_false (μ K)).mp
+      (lt_of_le_of_lt' lower_bound_infi (Ennreal.lt_add_right (ne_top_of_lt (μ.lt_top K)) (ennreal.coe_ne_zero.mpr hε)))
+
+variable [MeasurableSpace G] [T2Space G] [BorelSpace G]
+
+/-- If `μ` is a regular content, then the measure induced by `μ` will agree with `μ`
+  on compact sets.-/
+theorem measure_eq_content_of_regular (H : MeasureTheory.Content.ContentRegular μ) (K : TopologicalSpace.Compacts G) :
+    μ.Measure ↑K = μ K := by
+  refine' le_antisymm _ _
+  · apply Ennreal.le_of_forall_pos_le_add
+    intro ε εpos content_K_finite
+    obtain ⟨K', K'_hyp⟩ := content_regular_exists_compact μ H K (ne_bot_of_gt εpos)
+    calc
+      μ.measure ↑K ≤ μ.measure (Interior ↑K') := _
+      _ ≤ μ K' := _
+      _ ≤ μ K + ε := K'_hyp.right
+      
+    · rw [μ.measure_apply is_open_interior.MeasurableSet, μ.measure_apply K.is_compact.measurable_set]
+      exact μ.outer_measure.mono K'_hyp.left
+      
+    · rw [μ.measure_apply (IsOpen.measurableSet is_open_interior)]
+      exact μ.outer_measure_interior_compacts K'
+      
+    
+  · rw [μ.measure_apply (IsCompact.measurableSet K.is_compact)]
+    exact μ.le_outer_measure_compacts K
+    
+
+end RegularContents
 
 end Content
 

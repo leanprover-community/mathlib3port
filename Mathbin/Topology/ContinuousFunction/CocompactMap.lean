@@ -24,7 +24,10 @@ open Filter Set
 tends to the cocompact filter along the cocompact filter. Functions for which preimages of compact
 sets are compact always satisfy this property, and the converse holds for cocompact continuous maps
 when the codomain is Hausdorff (see `cocompact_map.tendsto_of_forall_preimage` and
-`cocompact_map.compact_preimage`) -/
+`cocompact_map.compact_preimage`).
+
+Cocompact maps thus generalise proper maps, with which they correspond when the codomain is
+Hausdorff. -/
 structure CocompactMap (α : Type u) (β : Type v) [TopologicalSpace α] [TopologicalSpace β] extends ContinuousMap α β :
   Type max u v where
   cocompact_tendsto' : Tendsto to_fun (cocompact α) (cocompact β)
@@ -44,7 +47,7 @@ namespace CocompactMapClass
 
 variable {F α β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CocompactMapClass F α β]
 
-instance : CoeT F (CocompactMap α β) :=
+instance : CoeTC F (CocompactMap α β) :=
   ⟨fun f => ⟨f, cocompact_tendsto f⟩⟩
 
 end CocompactMapClass
@@ -155,4 +158,15 @@ theorem compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ 
 end Basics
 
 end CocompactMap
+
+/-- A homemomorphism is a cocompact map. -/
+@[simps]
+def Homeomorph.toCocompactMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ₜ β) :
+    CocompactMap α β where
+  toFun := f
+  continuous_to_fun := f.Continuous
+  cocompact_tendsto' := by
+    refine' CocompactMap.tendsto_of_forall_preimage fun K hK => _
+    erw [K.preimage_equiv_eq_image_symm]
+    exact hK.image f.symm.continuous
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Mathbin.Topology.UniformSpace.Basic
+import Mathbin.Topology.UniformSpace.Cauchy
 
 /-!
 # Uniform convergence
@@ -174,7 +175,7 @@ theorem TendstoUniformlyOnFilter.mono_right {p'' : Filter α} (h : TendstoUnifor
 theorem TendstoUniformlyOn.mono {s' : Set α} (h : TendstoUniformlyOn F f p s) (h' : s' ⊆ s) :
     TendstoUniformlyOn F f p s' :=
   tendsto_uniformly_on_iff_tendsto_uniformly_on_filter.mpr
-    (h.TendstoUniformlyOnFilter.mono_right (le_principal_iff.mpr <| mem_principal.mpr h'))
+    (h.TendstoUniformlyOnFilter.monoRight (le_principal_iff.mpr <| mem_principal.mpr h'))
 
 theorem TendstoUniformlyOnFilter.congr {F' : ι → α → β} (hf : TendstoUniformlyOnFilter F f p p')
     (hff' : ∀ᶠ n : ι × α in p ×ᶠ p', F n.fst n.snd = F' n.fst n.snd) : TendstoUniformlyOnFilter F' f p p' := by
@@ -469,6 +470,15 @@ theorem UniformCauchySeqOn.prod' {β' : Type _} [UniformSpace β'] {F' : ι → 
   have hh : tendsto (fun x : ι => (x, x)) p (p ×ᶠ p) := tendsto_diag
   exact (hh.prod_map hh).Eventually ((h.prod h') u hu)
 
+/-- If a sequence of functions is uniformly Cauchy on a set, then the values at each point form
+a Cauchy sequence. -/
+theorem UniformCauchySeqOn.cauchy_map [hp : NeBot p] (hf : UniformCauchySeqOn F p s) (hx : x ∈ s) :
+    Cauchy (map (fun i => F i x) p) := by
+  simp only [cauchy_map_iff, hp, true_and_iff]
+  intro u hu
+  rw [mem_map]
+  filter_upwards [hf u hu] with p hp using hp x hx
+
 section SeqTendsto
 
 theorem tendsto_uniformly_on_of_seq_tendsto_uniformly_on {l : Filter ι} [l.IsCountablyGenerated]
@@ -611,7 +621,7 @@ theorem tendsto_locally_uniformly_iff_tendsto_uniformly_of_compact_space [Compac
   rw [← eventually_all] at hU
   refine' hU.mono fun i hi x => _
   specialize ht (mem_univ x)
-  simp only [exists_prop, mem_Union, SetCoe.exists, exists_and_distrib_right, Subtype.coe_mk] at ht
+  simp only [exists_prop, mem_Union, SetCoe.exists, exists_and_right, Subtype.coe_mk] at ht
   obtain ⟨y, ⟨hy₁, hy₂⟩, hy₃⟩ := ht
   exact hi ⟨⟨y, hy₁⟩, hy₂⟩ x hy₃
 

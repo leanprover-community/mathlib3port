@@ -294,7 +294,7 @@ protected theorem compose [Preorder α] [Preorder β] [Preorder γ] {l1 : α →
 protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [∀ i, Preorder (α i)] [∀ i, Preorder (β i)]
     (l : ∀ i, α i → β i) (u : ∀ i, β i → α i) (gc : ∀ i, GaloisConnection (l i) (u i)) :
     GaloisConnection (fun (a : ∀ i, α i) i => l i (a i)) fun b i => u i (b i) := fun a b =>
-  forall_congr fun i => gc i (a i) (b i)
+  forall_congr' fun i => gc i (a i) (b i)
 
 end Constructions
 

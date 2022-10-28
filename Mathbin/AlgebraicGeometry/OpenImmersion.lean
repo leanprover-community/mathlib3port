@@ -9,6 +9,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import Mathbin.Topology.Sheaves.Functors
 import Mathbin.AlgebraicGeometry.SchemeCat
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
+import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.Algebra.Category.RingCat.Instances
 
 /-!
@@ -1596,14 +1597,13 @@ abbrev Hom.opensFunctor {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f] 
 theorem image_basic_open {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f] {U : Opens X.Carrier}
     (r : X.Presheaf.obj (op U)) : H.base_open.IsOpenMap.Functor.obj (X.basicOpen r) = Y.basicOpen (H.invApp U r) := by
   have e := Scheme.preimage_basic_open f (H.inv_app U r)
-  rw [PresheafedSpace.is_open_immersion.inv_app_app_apply, Scheme.basic_open_res, opens.inter_eq, inf_eq_right.mpr _] at
-    e
+  rw [PresheafedSpace.is_open_immersion.inv_app_app_apply, Scheme.basic_open_res, inf_eq_right.mpr _] at e
   rw [← e]
   ext1
   refine' set.image_preimage_eq_inter_range.trans _
   erw [Set.inter_eq_left_iff_subset]
-  refine' Set.Subset.trans (Scheme.basic_open_subset _ _) (Set.image_subset_range _ _)
-  refine' le_trans (Scheme.basic_open_subset _ _) (le_of_eq _)
+  refine' Set.Subset.trans (Scheme.basic_open_le _ _) (Set.image_subset_range _ _)
+  refine' le_trans (Scheme.basic_open_le _ _) (le_of_eq _)
   ext1
   exact (Set.preimage_image_eq _ H.base_open.inj).symm
 
@@ -1673,6 +1673,11 @@ theorem SchemeCat.OpenCover.Union_range {X : SchemeCat} (𝒰 : X.OpenCover) :
   intro x
   rw [Set.mem_Union]
   exact ⟨𝒰.f x, 𝒰.covers x⟩
+
+theorem SchemeCat.OpenCover.supr_opens_range {X : SchemeCat} (𝒰 : X.OpenCover) : (⨆ i, (𝒰.map i).opensRange) = ⊤ :=
+  opens.ext <| by
+    rw [opens.coe_supr]
+    exact 𝒰.Union_range
 
 theorem SchemeCat.OpenCover.compact_space {X : SchemeCat} (𝒰 : X.OpenCover) [Finite 𝒰.J]
     [H : ∀ i, CompactSpace (𝒰.obj i).Carrier] : CompactSpace X.Carrier := by
@@ -1756,6 +1761,14 @@ theorem morphism_restrict_ι {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.Carrie
     (f ∣_ U) ≫ Y.ofRestrict U.OpenEmbedding = X.ofRestrict _ ≫ f := by
   delta morphism_restrict
   rw [category.assoc, pullback.condition.symm, pullback_restrict_iso_restrict_inv_fst_assoc]
+
+theorem is_pullback_morphism_restrict {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.Carrier) :
+    IsPullback (f ∣_ U) (X.ofRestrict _) (Y.ofRestrict _) f := by
+  delta morphism_restrict
+  nth_rw 0 [← category.id_comp f]
+  refine'
+    (is_pullback.of_horiz_is_iso ⟨_⟩).paste_horiz (is_pullback.of_has_pullback f (Y.of_restrict U.open_embedding)).flip
+  rw [pullback_restrict_iso_restrict_inv_fst, category.comp_id]
 
 theorem morphism_restrict_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (U : Opens Z.Carrier) :
     (f ≫ g) ∣_ U = ((f ∣_ (Opens.map g.val.base).obj U) ≫ g ∣_ U : _) := by
@@ -1887,7 +1900,7 @@ def morphismRestrictRestrictBasicOpen {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens
   ext1
   dsimp [opens.map, opens.inclusion]
   rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset, Subtype.range_coe]
-  exact Y.basic_open_subset r
+  exact Y.basic_open_le r
 
 instance {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.Carrier) [IsOpenImmersion f] : IsOpenImmersion (f ∣_ U) := by
   delta morphism_restrict

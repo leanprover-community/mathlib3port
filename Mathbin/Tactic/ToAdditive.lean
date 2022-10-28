@@ -249,6 +249,7 @@ unsafe def tr : Bool → List String → List String
   | is_comm, "comm" :: s => tr true s
   | is_comm, "root" :: s => add_comm_prefix is_comm "div" :: tr false s
   | is_comm, "rootable" :: s => add_comm_prefix is_comm "divisible" :: tr false s
+  | is_comm, "prods" :: s => add_comm_prefix is_comm "sums" :: tr false s
   | is_comm, x :: s => add_comm_prefix is_comm x :: tr false s
   | tt, [] => ["comm"]
   | ff, [] => []
@@ -577,7 +578,7 @@ attribute [to_additive] Mul One Inv Div
 -- the following types are supported by `@[to_additive]` and mapped to themselves.
 attribute [to_additive Empty] Empty
 
-attribute [to_additive Pempty] Pempty
+attribute [to_additive PEmpty] PEmpty
 
 attribute [to_additive PUnit] PUnit
 

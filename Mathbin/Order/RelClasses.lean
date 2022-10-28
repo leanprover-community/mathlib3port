@@ -185,7 +185,7 @@ def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable ¬r x y] 
       | _, Or.inr (Or.inl rfl) => Or.inl (Or.inl rfl)
       | _, Or.inr (Or.inr h) => Or.inr (Or.inr h),
     decidableLe := fun x y =>
-      decidableOfIff (¬r y x)
+      decidable_of_iff (¬r y x)
         ⟨fun h => ((trichotomous_of r y x).resolve_left h).imp Eq.symm id, fun h =>
           h.elim (fun h => h ▸ irrefl_of _ _) (asymm_of r)⟩ }
 

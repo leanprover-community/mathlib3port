@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bryan Gin-ge Chen, Yaël Dillies
 -/
 import Mathbin.Order.BooleanAlgebra
+import Mathbin.Logic.Equiv.Basic
 
 /-!
 # Symmetric difference and bi-implication
@@ -551,10 +552,10 @@ theorem bihimp_eq_right : a ⇔ b = b ↔ a = ⊤ :=
   @symm_diff_eq_right αᵒᵈ _ _ _
 
 protected theorem Codisjoint.bihimpLeft (ha : Codisjoint a c) (hb : Codisjoint b c) : Codisjoint (a ⇔ b) c :=
-  (ha.infLeft hb).mono_left inf_le_bihimp
+  (ha.infLeft hb).monoLeft inf_le_bihimp
 
 protected theorem Codisjoint.bihimpRight (ha : Codisjoint a b) (hb : Codisjoint a c) : Codisjoint a (b ⇔ c) :=
-  (ha.infRight hb).mono_right inf_le_bihimp
+  (ha.infRight hb).monoRight inf_le_bihimp
 
 end CogeneralizedBooleanAlgebra
 

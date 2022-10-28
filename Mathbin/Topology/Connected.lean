@@ -470,7 +470,7 @@ theorem is_preconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set
 @[simp]
 theorem is_connected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (π i)} :
     IsConnected (Pi Univ s) ↔ ∀ i, IsConnected (s i) := by
-  simp only [IsConnected, ← univ_pi_nonempty_iff, forall_and_distrib, And.congr_right_iff]
+  simp only [IsConnected, ← univ_pi_nonempty_iff, forall_and, and_congr_right_iff]
   refine' fun hne => ⟨fun hc i => _, is_preconnected_univ_pi⟩
   rw [← eval_image_univ_pi hne]
   exact hc.image _ (continuous_apply _).ContinuousOn
@@ -801,7 +801,7 @@ theorem frontier_eq_empty_iff [PreconnectedSpace α] {s : Set α} : Frontier s =
   is_clopen_iff_frontier_eq_empty.symm.trans is_clopen_iff
 
 theorem nonempty_frontier_iff [PreconnectedSpace α] {s : Set α} : (Frontier s).Nonempty ↔ s.Nonempty ∧ s ≠ univ := by
-  simp only [← ne_empty_iff_nonempty, Ne.def, frontier_eq_empty_iff, not_or_distrib]
+  simp only [← ne_empty_iff_nonempty, Ne.def, frontier_eq_empty_iff, not_or]
 
 theorem Subtype.preconnected_space {s : Set α} (h : IsPreconnected s) : PreconnectedSpace s :=
   { is_preconnected_univ := by
@@ -1312,7 +1312,7 @@ theorem totally_disconnected_space_iff_connected_component_subsingleton :
 theorem totally_disconnected_space_iff_connected_component_singleton :
     TotallyDisconnectedSpace α ↔ ∀ x : α, ConnectedComponent x = {x} := by
   rw [totally_disconnected_space_iff_connected_component_subsingleton]
-  apply forall_congr fun x => _
+  apply forall_congr' fun x => _
   rw [subsingleton_iff_singleton]
   exact mem_connected_component
 
@@ -1401,7 +1401,7 @@ def connectedComponentSetoid (α : Type _) [TopologicalSpace α] : Setoid α :=
 def ConnectedComponents (α : Type u) [TopologicalSpace α] :=
   Quotient (connectedComponentSetoid α)
 
-instance : CoeT α (ConnectedComponents α) :=
+instance : CoeTC α (ConnectedComponents α) :=
   ⟨Quotient.mk'⟩
 
 namespace ConnectedComponents

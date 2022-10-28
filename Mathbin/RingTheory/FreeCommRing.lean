@@ -369,8 +369,8 @@ def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ
     (by ext <;> simp)
 
 /-- The free commutative ring on the empty type is isomorphic to `ℤ`. -/
-def freeCommRingPemptyEquivInt : FreeCommRing Pempty.{u + 1} ≃+* ℤ :=
-  RingEquiv.trans (freeCommRingEquivMvPolynomialInt _) (MvPolynomial.isEmptyRingEquiv _ Pempty)
+def freeCommRingPemptyEquivInt : FreeCommRing PEmpty.{u + 1} ≃+* ℤ :=
+  RingEquiv.trans (freeCommRingEquivMvPolynomialInt _) (MvPolynomial.isEmptyRingEquiv _ PEmpty)
 
 /-- The free commutative ring on a type with one term is isomorphic to `ℤ[X]`. -/
 def freeCommRingPunitEquivPolynomialInt : FreeCommRing PUnit.{u + 1} ≃+* Polynomial ℤ :=
@@ -379,7 +379,7 @@ def freeCommRingPunitEquivPolynomialInt : FreeCommRing PUnit.{u + 1} ≃+* Polyn
 open FreeRing
 
 /-- The free ring on the empty type is isomorphic to `ℤ`. -/
-def freeRingPemptyEquivInt : FreeRing Pempty.{u + 1} ≃+* ℤ :=
+def freeRingPemptyEquivInt : FreeRing PEmpty.{u + 1} ≃+* ℤ :=
   RingEquiv.trans (subsingletonEquivFreeCommRing _) freeCommRingPemptyEquivInt
 
 /-- The free ring on a type with one term is isomorphic to `ℤ[X]`. -/

@@ -143,7 +143,7 @@ theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a
   Iff.rfl
 
 @[simp]
-theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by simp [mem_def, or_and_distrib_right, exists_or_distrib]
+theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by simp [mem_def, or_and_right, exists_or]
 
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ := by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
@@ -354,7 +354,7 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) : sizeOf (⟨b, a⟩ : Lists �
 mutual
   @[instance]
   def Equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)
-    | ⟨ff, l₁⟩, ⟨ff, l₂⟩ => decidableOfIff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
+    | ⟨ff, l₁⟩, ⟨ff, l₂⟩ => decidable_of_iff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
     | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => is_false <| by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => is_false <| by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨tt, l₂⟩ => by
@@ -374,7 +374,7 @@ mutual
           run_tac
             default_dec_tac
         subset.decidable l₂ l₁
-      exact decidableOfIff' _ equiv.antisymm_iff
+      exact decidable_of_iff' _ equiv.antisymm_iff
   @[instance]
   def Subset.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists' α true, Decidable (l₁ ⊆ l₂)
     | Lists'.nil, l₂ => isTrue Subset.nil
@@ -389,7 +389,7 @@ mutual
           run_tac
             default_dec_tac
         subset.decidable l₁ l₂
-      exact decidableOfIff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
+      exact decidable_of_iff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
   @[instance]
   def Mem.decidable [DecidableEq α] : ∀ (a : Lists α) (l : Lists' α true), Decidable (a ∈ l)
     | a, Lists'.nil => is_false <| by rintro ⟨_, ⟨⟩, _⟩
@@ -404,7 +404,7 @@ mutual
           run_tac
             default_dec_tac
         mem.decidable a l₂
-      refine' decidableOfIff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
+      refine' decidable_of_iff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
       rw [← Lists'.mem_cons]
       rfl
 end

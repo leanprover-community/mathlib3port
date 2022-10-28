@@ -227,6 +227,10 @@ noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
     let ⟨y, hy⟩ := hf x
     ⟨f <| RootableBy.root y n, (by rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
 
+@[to_additive DivisibleBy.surjective_smul]
+theorem RootableBy.surjective_pow (A α : Type _) [Monoid A] [Pow A α] [Zero α] [RootableBy A α] {n : α} (hn : n ≠ 0) :
+    Function.Surjective fun a : A => a ^ n := fun a => ⟨RootableBy.root a n, RootableBy.root_cancel a hn⟩
+
 end Hom
 
 section Quotient

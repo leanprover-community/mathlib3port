@@ -106,7 +106,7 @@ theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : 
 theorem is_prime_pow_pow_iff {n k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) ↔ IsPrimePow n := by
   simp only [is_prime_pow_iff_unique_prime_dvd]
   apply exists_unique_congr
-  simp only [And.congr_right_iff]
+  simp only [and_congr_right_iff]
   intro p hp
   exact ⟨hp.dvd_of_dvd_pow, fun t => t.trans (dvd_pow_self _ hk)⟩
 
@@ -125,9 +125,9 @@ theorem Nat.Coprime.is_prime_pow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (
   simp only [hp.pow_dvd_iff_le_factorization (mul_ne_zero ha hb), Nat.factorization_mul ha hb,
     hp.pow_dvd_iff_le_factorization ha, hp.pow_dvd_iff_le_factorization hb, Pi.add_apply, Finsupp.coe_add]
   have : a.factorization p = 0 ∨ b.factorization p = 0 := by
-    rw [← Finsupp.not_mem_support_iff, ← Finsupp.not_mem_support_iff, ← not_and_distrib, ← Finset.mem_inter]
+    rw [← Finsupp.not_mem_support_iff, ← Finsupp.not_mem_support_iff, ← not_and_or, ← Finset.mem_inter]
     exact fun t => Nat.factorizationDisjointOfCoprime hab t
-  cases this <;> simp [this, imp_or_distrib]
+  cases this <;> simp [this, imp_or]
 
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     (a * b).divisors.filter IsPrimePow = (a.divisors ∪ b.divisors).filter IsPrimePow := by
@@ -140,7 +140,7 @@ theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     simp [hab, Finset.filter_singleton, not_is_prime_pow_one]
     
   ext n
-  simp only [ha, hb, Finset.mem_union, Finset.mem_filter, Nat.mul_eq_zero, and_true_iff, Ne.def, And.congr_left_iff,
+  simp only [ha, hb, Finset.mem_union, Finset.mem_filter, Nat.mul_eq_zero, and_true_iff, Ne.def, and_congr_left_iff,
     not_false_iff, Nat.mem_divisors, or_self_iff]
   apply hab.is_prime_pow_dvd_mul
 

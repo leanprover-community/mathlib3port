@@ -83,7 +83,7 @@ theorem primeOfAleph0Le (ha : ℵ₀ ≤ a) : Prime a := by
   rwa [mul_eq_max' <| ha.trans <| habc, max_def, if_pos h] at hbc
 
 theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := by
-  rw [irreducible_iff, not_and_distrib]
+  rw [irreducible_iff, not_and_or]
   refine' Or.inr fun h => _
   simpa [mul_aleph_0_eq ha, is_unit_iff, (one_lt_aleph_0.trans_le ha).ne', one_lt_aleph_0.ne'] using h a ℵ₀
 

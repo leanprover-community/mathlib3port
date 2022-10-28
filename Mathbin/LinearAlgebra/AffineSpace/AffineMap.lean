@@ -411,7 +411,7 @@ theorem surjective_iff_linear_surjective (f : P1 →ᵃ[k] P2) : Function.Surjec
 
 theorem image_vsub_image {s t : Set P1} (f : P1 →ᵃ[k] P2) : f '' s -ᵥ f '' t = f.linear '' (s -ᵥ t) := by
   ext v
-  simp only [Set.mem_vsub, Set.mem_image, exists_exists_and_eq_and, exists_and_distrib_left, ← f.linear_map_vsub]
+  simp only [Set.mem_vsub, Set.mem_image, exists_exists_and_eq_and, exists_and_left, ← f.linear_map_vsub]
   constructor
   · rintro ⟨x, hx, y, hy, hv⟩
     exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩

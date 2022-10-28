@@ -6,7 +6,7 @@ Authors: Nicolò Cavalleri, Andrew Yang
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.RingTheory.Ideal.Cotangent
-import Mathbin.RingTheory.TensorProduct
+import Mathbin.RingTheory.IsTensorProduct
 import Mathbin.RingTheory.Ideal.Cotangent
 
 /-!
@@ -30,6 +30,8 @@ This file defines derivation. A derivation `D` from the `R`-algebra `A` to the `
 - `kaehler_differential.span_range_derivation`: The image of `D` spans `Ω[S⁄R]` as an `S`-module.
 - `kaehler_differential.linear_map_equiv_derivation`:
   The isomorphism `Hom_R(Ω[S⁄R], M) ≃ₗ[S] Der_R(S, M)`.
+- `kaehler_differential.map`: Given a map between the arrows `R → A` and `S → B`, we have an
+  `A`-linear map `Ω[A⁄R] → Ω[B⁄S]`.
 
 ## Future project
 
@@ -298,6 +300,23 @@ def _root_.linear_equiv.comp_der : Derivation R A M ≃ₗ[R] Derivation R A N :
       exact e.apply_symm_apply (D a) }
 
 end PushForward
+
+section RestrictScalars
+
+variable {S : Type _} [CommSemiring S]
+
+variable [Algebra S A] [Module S M] [LinearMap.CompatibleSmul A M R S]
+
+variable (R)
+
+/-- If `A` is both an `R`-algebra and an `S`-algebra; `M` is both an `R`-module and an `S`-module,
+then an `S`-derivation `A → M` is also an `R`-derivation if it is also `R`-linear. -/
+protected def restrictScalars (d : Derivation S A M) : Derivation R A M where
+  map_one_eq_zero' := d.map_one_eq_zero
+  leibniz' := d.leibniz
+  toLinearMap := d.toLinearMap.restrictScalars R
+
+end RestrictScalars
 
 end
 
@@ -671,8 +690,6 @@ theorem KaehlerDifferential.span_range_eq_ideal :
     exact Submodule.subset_span
     
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R -/
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S -/
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S) -/
 /-- The module of Kähler differentials (Kahler differentials, Kaehler differentials).
 This is implemented as `I / I ^ 2` with `I` the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
@@ -684,8 +701,6 @@ Note that the slash is `\textfractionsolidus`.
 -/
 def KaehlerDifferential : Type _ :=
   (KaehlerDifferential.ideal R S).Cotangent deriving AddCommGroup,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R»,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S»,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S)»
 
 -- mathport name: «exprΩ[ ⁄ ]»
@@ -694,20 +709,32 @@ notation:100 "Ω[" S "⁄" R "]" => KaehlerDifferential R S
 instance : Nonempty (Ω[S⁄R]) :=
   ⟨0⟩
 
+instance KaehlerDifferential.module' {R' : Type _} [CommRing R'] [Algebra R' S] : Module R' (Ω[S⁄R]) :=
+  (Module.compHom (KaehlerDifferential.ideal R S).Cotangent (algebraMap R' S) : _)
+
 instance : IsScalarTower S (S ⊗[R] S) (Ω[S⁄R]) :=
   Ideal.Cotangent.is_scalar_tower _
 
-instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R S (Ω[S⁄R]) :=
-  haveI : IsScalarTower R S (KaehlerDifferential.ideal R S) := by
-    constructor
-    intro x y z
-    ext1
-    exact smul_assoc x y z.1
-  Submodule.Quotient.is_scalar_tower _ _
+instance KaehlerDifferential.is_scalar_tower_of_tower {R₁ R₂ : Type _} [CommRing R₁] [CommRing R₂] [Algebra R₁ S]
+    [Algebra R₂ S] [Algebra R₁ R₂] [IsScalarTower R₁ R₂ S] : IsScalarTower R₁ R₂ (Ω[S⁄R]) := by
+  convert RestrictScalars.is_scalar_tower R₁ R₂ (Ω[S⁄R]) using 1
+  ext x m
+  show algebraMap R₁ S x • m = algebraMap R₂ S (algebraMap R₁ R₂ x) • m
+  rw [← IsScalarTower.algebra_map_apply]
+
+instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R (S ⊗[R] S) (Ω[S⁄R]) := by
+  convert RestrictScalars.is_scalar_tower R (S ⊗[R] S) (Ω[S⁄R]) using 1
+  ext x m
+  show algebraMap R S x • m = algebraMap R (S ⊗[R] S) x • m
+  simp_rw [IsScalarTower.algebra_map_apply R S (S ⊗[R] S), IsScalarTower.algebra_map_smul]
+
+/-- The quotient map `I → Ω[S⁄R]` with `I` being the kernel of `S ⊗[R] S → S`. -/
+def KaehlerDifferential.fromIdeal : KaehlerDifferential.ideal R S →ₗ[S ⊗[R] S] Ω[S⁄R] :=
+  (KaehlerDifferential.ideal R S).toCotangent
 
 /-- (Implementation) The underlying linear map of the derivation into `Ω[S⁄R]`. -/
 def KaehlerDifferential.dLinearMap : S →ₗ[R] Ω[S⁄R] :=
-  ((KaehlerDifferential.ideal R S).toCotangent.restrictScalars R).comp
+  ((KaehlerDifferential.fromIdeal R S).restrictScalars R).comp
     ((TensorProduct.includeRight.toLinearMap - TensorProduct.includeLeft.toLinearMap : S →ₗ[R] S ⊗[R] S).codRestrict
       ((KaehlerDifferential.ideal R S).restrictScalars R) (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R) :
       _ →ₗ[R] _)
@@ -873,7 +900,7 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
       (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S :=
   by
   rw [AlgHom.ext_iff, AlgHom.ext_iff]
-  apply forall_congr
+  apply forall_congr'
   intro x
   have e₁ :
     (tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift (f x) =
@@ -925,6 +952,71 @@ noncomputable def KaehlerDifferential.endEquiv :
       (derivationToSquareZeroEquivLift (KaehlerDifferential.ideal R S).cotangentIdeal
             (KaehlerDifferential.ideal R S).cotangent_ideal_square).trans <|
         KaehlerDifferential.endEquivAuxEquiv R S
+
+section ExactSequence
+
+/- We have the commutative diagram
+A --→ B
+↑     ↑
+|     |
+R --→ S -/
+variable (A B : Type _) [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
+
+variable [Algebra A B] [Algebra S B] [IsScalarTower R A B] [IsScalarTower R S B]
+
+variable {R B}
+
+/-- For a tower `R → A → B` and an `R`-derivation `B → M`, we may compose with `A → B` to obtain an
+`R`-derivation `A → M`. -/
+def Derivation.compAlgebraMap [Module A M] [Module B M] [IsScalarTower A B M] (d : Derivation R B M) :
+    Derivation R A M where
+  map_one_eq_zero' := by simp
+  leibniz' a b := by simp
+  toLinearMap := d.toLinearMap.comp (IsScalarTower.toAlgHom R A B).toLinearMap
+
+variable (R B)
+
+/-- The map `Ω[A⁄R] →ₗ[A] Ω[B⁄R]` given a square
+A --→ B
+↑     ↑
+|     |
+R --→ S -/
+def KaehlerDifferential.map : Ω[A⁄R] →ₗ[A] Ω[B⁄S] :=
+  Derivation.liftKaehlerDifferential (((KaehlerDifferential.d S B).restrictScalars R).comp_algebra_map A)
+
+theorem KaehlerDifferential.map_comp_der :
+    (KaehlerDifferential.map R S A B).compDer (KaehlerDifferential.d R A) =
+      ((KaehlerDifferential.d S B).restrictScalars R).comp_algebra_map A :=
+  Derivation.lift_kaehler_differential_comp _
+
+theorem KaehlerDifferential.map_D (x : A) :
+    KaehlerDifferential.map R S A B (KaehlerDifferential.d R A x) = KaehlerDifferential.d S B (algebraMap A B x) :=
+  Derivation.congr_fun (KaehlerDifferential.map_comp_der R S A B) x
+
+open IsScalarTower (toAlgHom)
+
+theorem KaehlerDifferential.map_surjective_of_surjective (h : Function.Surjective (algebraMap A B)) :
+    Function.Surjective (KaehlerDifferential.map R S A B) := by
+  rw [← LinearMap.range_eq_top, _root_.eq_top_iff, ← @Submodule.restrict_scalars_top B A, ←
+    KaehlerDifferential.span_range_derivation, ← Submodule.span_eq_restrict_scalars _ _ _ _ h, Submodule.span_le]
+  rintro _ ⟨x, rfl⟩
+  obtain ⟨y, rfl⟩ := h x
+  rw [← KaehlerDifferential.map_D R S A B]
+  exact ⟨_, rfl⟩
+
+/-- The lift of the map `Ω[A⁄R] →ₗ[A] Ω[B⁄R]` to the base change along `A → B`.
+This is the first map in the exact sequence `B ⊗[A] Ω[A⁄R] → Ω[B⁄R] → Ω[B⁄A] → 0`. -/
+noncomputable def KaehlerDifferential.mapBaseChange : B ⊗[A] Ω[A⁄R] →ₗ[B] Ω[B⁄R] :=
+  (TensorProduct.isBaseChange A (Ω[A⁄R]) B).lift (KaehlerDifferential.map R R A B)
+
+@[simp]
+theorem KaehlerDifferential.map_base_change_tmul (x : B) (y : Ω[A⁄R]) :
+    KaehlerDifferential.mapBaseChange R A B (x ⊗ₜ y) = x • KaehlerDifferential.map R R A B y := by
+  conv_lhs => rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul', LinearMap.map_smul]
+  congr 1
+  exact IsBaseChange.lift_eq _ _ _
+
+end ExactSequence
 
 end KaehlerDifferential
 

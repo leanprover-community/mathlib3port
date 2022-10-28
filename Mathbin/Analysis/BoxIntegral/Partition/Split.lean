@@ -61,8 +61,8 @@ def splitLower (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 theorem coe_split_lower : (splitLower I i x : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } := by
   rw [split_lower, coe_mk']
   ext y
-  simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and_distrib, ← Pi.le_def,
-    le_update_iff, le_min_iff, and_assoc', and_forall_ne i, mem_def]
+  simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and, ← Pi.le_def, le_update_iff,
+    le_min_iff, and_assoc', and_forall_ne i, mem_def]
   rw [and_comm' (y i ≤ x), Pi.le_def]
 
 theorem split_lower_le : I.splitLower i x ≤ I :=
@@ -95,7 +95,7 @@ def splitUpper (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 theorem coe_split_upper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ { y | x < y i } := by
   rw [split_upper, coe_mk']
   ext y
-  simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and_distrib,
+  simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and,
     forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc' (x < y i), and_forall_ne i, mem_def]
   exact and_comm' _ _
 
@@ -176,7 +176,7 @@ theorem split_of_not_mem_Ioo (h : x ∉ IooCat (I.lower i) (I.upper i)) : split 
   rcases mem_top.1 hJ with rfl
   clear hJ
   rw [mem_boxes, mem_split_iff]
-  rw [mem_Ioo, not_and_distrib, not_lt, not_lt] at h
+  rw [mem_Ioo, not_and_or, not_lt, not_lt] at h
   cases h <;> [right, left]
   · rwa [eq_comm, box.split_upper_eq_self]
     

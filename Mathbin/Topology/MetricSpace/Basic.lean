@@ -532,7 +532,7 @@ theorem ballDisjointClosedBall (h : δ + ε ≤ dist x y) : Disjoint (Ball x δ)
   (closed_ball_disjoint_ball <| by rwa [add_comm, dist_comm]).symm
 
 theorem ballDisjointBall (h : δ + ε ≤ dist x y) : Disjoint (Ball x δ) (Ball y ε) :=
-  (closedBallDisjointBall h).mono_left ball_subset_closed_ball
+  (closedBallDisjointBall h).monoLeft ball_subset_closed_ball
 
 theorem closedBallDisjointClosedBall (h : δ + ε < dist x y) : Disjoint (ClosedBall x δ) (ClosedBall y ε) := fun a ha =>
   h.not_le <| (dist_triangle_left _ _ _).trans <| add_le_add ha.1 ha.2
@@ -934,7 +934,7 @@ theorem mem_nhds_within_iff {t : Set α} : s ∈ 𝓝[t] x ↔ ∃ ε > 0, Ball 
 theorem tendsto_nhds_within_nhds_within [PseudoMetricSpace β] {t : Set β} {f : α → β} {a b} :
     Tendsto f (𝓝[s] a) (𝓝[t] b) ↔ ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → f x ∈ t ∧ dist (f x) b < ε :=
   (nhds_within_basis_ball.tendsto_iff nhds_within_basis_ball).trans <|
-    forall₂_congr fun ε hε => exists₂_congr fun δ hδ => forall_congr fun x => by simp <;> itauto
+    forall₂_congr fun ε hε => exists₂_congr fun δ hδ => forall_congr' fun x => by simp <;> itauto
 
 theorem tendsto_nhds_within_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
     Tendsto f (𝓝[s] a) (𝓝 b) ↔ ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) b < ε := by
@@ -959,7 +959,7 @@ theorem continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
 
 theorem continuous_iff [PseudoMetricSpace β] {f : α → β} :
     Continuous f ↔ ∀ (b), ∀ ε > 0, ∃ δ > 0, ∀ a, dist a b < δ → dist (f a) (f b) < ε :=
-  continuous_iff_continuous_at.trans <| forall_congr fun b => tendsto_nhds_nhds
+  continuous_iff_continuous_at.trans <| forall_congr' fun b => tendsto_nhds_nhds
 
 theorem tendsto_nhds {f : Filter β} {u : β → α} {a : α} : Tendsto u f (𝓝 a) ↔ ∀ ε > 0, ∀ᶠ x in f, dist (u x) a < ε :=
   nhds_basis_ball.tendsto_right_iff
@@ -976,7 +976,7 @@ theorem continuous_on_iff' [TopologicalSpace β] {f : β → α} {s : Set β} :
 
 theorem continuous_iff' [TopologicalSpace β] {f : β → α} :
     Continuous f ↔ ∀ (a), ∀ ε > 0, ∀ᶠ x in 𝓝 a, dist (f x) (f a) < ε :=
-  continuous_iff_continuous_at.trans <| forall_congr fun b => tendsto_nhds
+  continuous_iff_continuous_at.trans <| forall_congr' fun b => tendsto_nhds
 
 theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, dist (u n) a < ε :=
@@ -1555,7 +1555,7 @@ instance Prod.pseudoMetricSpaceMax : PseudoMetricSpace (α × β) :=
           Prod.edist_eq]).replaceBornology
     fun s => by
     simp only [← is_bounded_image_fst_and_snd, is_bounded_iff_eventually, ball_image_iff, ← eventually_and, ←
-      forall_and_distrib, ← max_le_iff]
+      forall_and, ← max_le_iff]
     rfl
 
 theorem Prod.dist_eq {x y : α × β} : dist x y = max (dist x.1 y.1) (dist x.2 y.2) :=
@@ -1696,10 +1696,10 @@ theorem closed_ball_zero' (x : α) : ClosedBall x 0 = Closure {x} :=
     (closure_minimal (singleton_subset_iff.2 (dist_self x).le) isClosedBall)
 
 theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀ r > 0, (Ball x r ∩ s).Nonempty :=
-  forall_congr fun x => by simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_iff, mem_ball', and_comm']
+  forall_congr' fun x => by simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_iff, mem_ball', and_comm']
 
 theorem dense_range_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀ r > 0, ∃ y, dist x (f y) < r :=
-  forall_congr fun x => by simp only [mem_closure_iff, exists_range_iff]
+  forall_congr' fun x => by simp only [mem_closure_iff, exists_range_iff]
 
 /-- If a set `s` is separable, then the corresponding subtype is separable in a metric space.
 This is not obvious, as the countable set whose closure covers `s` does not need in general to
@@ -2156,7 +2156,7 @@ theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
 
 /-- A finite union of bounded sets is bounded -/
 theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : I.Finite) : Bounded (⋃ i ∈ I, s i) ↔ ∀ i ∈ I, Bounded (s i) :=
-  (Finite.induction_on H (by simp)) fun x I _ _ IH => by simp [or_imp_distrib, forall_and_distrib, IH]
+  (Finite.induction_on H (by simp)) fun x I _ _ IH => by simp [or_imp, forall_and, IH]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2215,7 +2215,7 @@ theorem _root_.cauchy_seq.bounded_range {f : ℕ → α} (hf : CauchySeq f) : Bo
 
 theorem boundedRangeOfTendstoCofinite {f : β → α} {a : α} (hf : Tendsto f cofinite (𝓝 a)) : Bounded (Range f) :=
   bounded_range_of_tendsto_cofinite_uniformity <|
-    (hf.prod_map hf).mono_right <| nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
+    (hf.prod_map hf).monoRight <| nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
 
 /-- In a compact space, all sets are bounded -/
 theorem boundedOfCompactSpace [CompactSpace α] : Bounded s :=

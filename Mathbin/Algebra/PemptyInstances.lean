@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Mathbin.Algebra.Group.Defs
-import Mathbin.Algebra.Group.ToAdditive
+import Mathbin.Tactic.ToAdditive
 
 /-!
 # Instances on pempty
@@ -17,7 +17,7 @@ that it is a semigroup.
 universe u
 
 @[to_additive]
-instance semigroupPempty : Semigroup Pempty.{u + 1} where
+instance semigroupPempty : Semigroup PEmpty.{u + 1} where
   mul x y := by cases x
   mul_assoc x y z := by cases x
 

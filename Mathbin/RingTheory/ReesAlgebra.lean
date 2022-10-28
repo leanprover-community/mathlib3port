@@ -68,7 +68,7 @@ theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff
   Iff.rfl
 
 theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.Support, f.coeff i ∈ I ^ i := by
-  apply forall_congr
+  apply forall_congr'
   intro a
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]
   exact fun e => e.symm ▸ (I ^ a).zero_mem

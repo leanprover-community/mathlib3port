@@ -6,8 +6,6 @@ Authors: Rémi Bottinelli
 import Mathbin.CategoryTheory.Category.Basic
 import Mathbin.CategoryTheory.Functor.Basic
 import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Combinatorics.Quiver.Basic
-import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.Logic.Relation
 import Mathbin.Tactic.NthRewrite.Default
 import Mathbin.CategoryTheory.PathCategory
@@ -75,10 +73,10 @@ inductive RedStep : HomRel (Paths (Quiver.Symmetrify V))
   | step (X Z : Quiver.Symmetrify V) (f : X ⟶ Z) : red_step (𝟙 X) (f.toPath ≫ (Quiver.reverse f).toPath)
 
 /-- The underlying vertices of the free groupoid -/
-def _root_.category_theory.free_groupoid (V) [Q : Quiver.{v + 1} V] :=
+def _root_.category_theory.free_groupoid (V) [Q : Quiver V] :=
   Quotient (@RedStep V Q)
 
-instance {V} [Q : Quiver.{v + 1} V] [h : Nonempty V] : Nonempty (FreeGroupoid V) :=
+instance {V} [Q : Quiver V] [h : Nonempty V] : Nonempty (FreeGroupoid V) :=
   ⟨⟨h.some⟩⟩
 
 theorem congr_reverse {X Y : paths <| Quiver.Symmetrify V} (p q : X ⟶ Y) :
@@ -143,7 +141,7 @@ instance : Groupoid (FreeGroupoid V) where
   comp_inv' X Y p := (Quot.induction_on p) fun pp => congr_comp_reverse pp
 
 /-- The inclusion of the quiver on `V` to the underlying quiver on `free_groupoid V`-/
-def of (V) [Quiver.{v + 1} V] : Prefunctor V (FreeGroupoid V) where
+def of (V) [Quiver V] : Prefunctor V (FreeGroupoid V) where
   obj X := ⟨X⟩
   map X Y f := Quot.mk _ f.toPosPath
 
@@ -185,7 +183,7 @@ theorem lift_unique (φ : Prefunctor V V') (Φ : FreeGroupoid V ⥤ V') (hΦ : (
     exact hΦ
     
   · rintro X Y f
-    simp [← functor.to_prefunctor_comp, Prefunctor.comp_map, paths.of_map, inv_eq_inv]
+    simp only [← functor.to_prefunctor_comp, Prefunctor.comp_map, paths.of_map, inv_eq_inv]
     change
       Φ.map (inv ((quotient.functor red_step).toPrefunctor.map f.to_path)) =
         inv (Φ.map ((quotient.functor red_step).toPrefunctor.map f.to_path))

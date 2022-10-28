@@ -376,6 +376,15 @@ theorem _root_.is_R_or_C.re_eq_complex_re : ⇑(IsROrC.re : ℂ →+ ℝ) = Comp
 theorem _root_.is_R_or_C.im_eq_complex_im : ⇑(IsROrC.im : ℂ →+ ℝ) = Complex.im :=
   rfl
 
+section ComplexOrder
+
+open ComplexOrder
+
+theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑∥z∥ := by
+  rw [eq_re_of_real_le hz, IsROrC.norm_of_real, Real.norm_of_nonneg (Complex.le_def.2 hz).1]
+
+end ComplexOrder
+
 section
 
 variable {α β γ : Type _} [AddCommMonoid α] [TopologicalSpace α] [AddCommMonoid γ] [TopologicalSpace γ]

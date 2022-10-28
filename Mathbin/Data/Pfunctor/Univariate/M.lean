@@ -620,7 +620,7 @@ theorem eq_of_bisim [Nonempty (M F)] (bisim : IsBisimulation R) : ∀ s₁ s₂,
   · have H := nth_of_bisim R bisim _ _ ps Hr h
     exact H.left
     
-  · rw [not_or_distrib] at h
+  · rw [not_or] at h
     cases' h with h₀ h₁
     simp only [iselect_eq_default, *, not_false_iff]
     

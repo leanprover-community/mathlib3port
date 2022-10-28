@@ -245,7 +245,7 @@ theorem squarefree_iff_min_sq_fac {n : ℕ} : Squarefree n ↔ n.minSqFac = none
   · rwa [H] at this
     
 
-instance : DecidablePred (Squarefree : ℕ → Prop) := fun n => decidableOfIff' _ squarefree_iff_min_sq_fac
+instance : DecidablePred (Squarefree : ℕ → Prop) := fun n => decidable_of_iff' _ squarefree_iff_min_sq_fac
 
 theorem squarefree_two : Squarefree 2 := by rw [squarefree_iff_nodup_factors] <;> norm_num
 
@@ -354,9 +354,9 @@ theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefre
 and generalizes to arbitrary commutative monoids. See `squarefree.of_mul_left` and
 `squarefree.of_mul_right` above for auxiliary lemmas. -/
 theorem squarefree_mul {m n : ℕ} (hmn : m.Coprime n) : Squarefree (m * n) ↔ Squarefree m ∧ Squarefree n := by
-  simp only [squarefree_iff_prime_squarefree, ← sq, ← forall_and_distrib]
+  simp only [squarefree_iff_prime_squarefree, ← sq, ← forall_and]
   refine' ball_congr fun p hp => _
-  simp only [hmn.is_prime_pow_dvd_mul (hp.is_prime_pow.pow two_ne_zero), not_or_distrib]
+  simp only [hmn.is_prime_pow_dvd_mul (hp.is_prime_pow.pow two_ne_zero), not_or]
 
 end Nat
 

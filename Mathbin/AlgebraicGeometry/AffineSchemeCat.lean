@@ -291,7 +291,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : SchemeCat} {U : Opens X.Carrier} 
       (X.basic_open f : Set X.carrier) :=
     by
     rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset, hU.from_Spec_range]
-    exact Scheme.basic_open_subset _ _
+    exact Scheme.basic_open_le _ _
   rw [Scheme.hom.opens_range_coe, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
   refine' (congr_arg coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
@@ -316,7 +316,7 @@ theorem IsAffineOpen.map_restrict_basic_open {X : SchemeCat} (r : X.Presheaf.obj
   apply (is_affine_open_iff_of_is_open_immersion (X.of_restrict (X.basic_open r).OpenEmbedding) _).mp
   delta PresheafedSpace.is_open_immersion.open_functor
   dsimp
-  rw [opens.functor_obj_map_obj, opens.open_embedding_obj_top, inf_comm, ← opens.inter_eq, ←
+  rw [opens.functor_obj_map_obj, opens.open_embedding_obj_top, inf_comm, ←
     Scheme.basic_open_res _ _ (hom_of_le le_top).op]
   exact hU.basic_open_is_affine _
 
@@ -364,8 +364,8 @@ theorem is_basis_basic_open (X : SchemeCat) [IsAffine X] :
     exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
     
 
-theorem IsAffineOpen.exists_basic_open_subset {X : SchemeCat} {U : Opens X.Carrier} (hU : IsAffineOpen U)
-    {V : Opens X.Carrier} (x : V) (h : ↑x ∈ U) : ∃ f : X.Presheaf.obj (op U), X.basicOpen f ⊆ V ∧ ↑x ∈ X.basicOpen f :=
+theorem IsAffineOpen.exists_basic_open_le {X : SchemeCat} {U : Opens X.Carrier} (hU : IsAffineOpen U)
+    {V : Opens X.Carrier} (x : V) (h : ↑x ∈ U) : ∃ f : X.Presheaf.obj (op U), X.basicOpen f ≤ V ∧ ↑x ∈ X.basicOpen f :=
   by
   haveI : is_affine _ := hU
   obtain ⟨_, ⟨_, ⟨r, rfl⟩, rfl⟩, h₁, h₂⟩ :=
@@ -389,7 +389,7 @@ theorem IsAffineOpen.exists_basic_open_subset {X : SchemeCat} {U : Opens X.Carri
 
 instance {X : SchemeCat} {U : Opens X.Carrier} (f : X.Presheaf.obj (op U)) :
     Algebra (X.Presheaf.obj (op U)) (X.Presheaf.obj (op <| X.basicOpen f)) :=
-  (X.Presheaf.map (hom_of_le <| RingedSpaceCat.basic_open_subset _ f : _ ⟶ U).op).toAlgebra
+  (X.Presheaf.map (hom_of_le <| RingedSpaceCat.basic_open_le _ f : _ ⟶ U).op).toAlgebra
 
 theorem IsAffineOpen.opens_map_from_Spec_basic_open {X : SchemeCat} {U : Opens X.Carrier} (hU : IsAffineOpen U)
     (f : X.Presheaf.obj (op U)) :
@@ -423,7 +423,7 @@ instance {X : SchemeCat} {U : Opens X.Carrier} (hU : IsAffineOpen U) (f : X.Pres
   apply (config := { instances := false }) is_iso.comp_is_iso
   · apply PresheafedSpace.is_open_immersion.is_iso_of_subset
     rw [hU.from_Spec_range]
-    exact RingedSpace.basic_open_subset _ _
+    exact RingedSpace.basic_open_le _ _
     
   infer_instance
 
@@ -479,11 +479,11 @@ theorem basic_open_basic_open_is_basic_open {X : SchemeCat} {U : Opens X.Carrier
     Submonoid.left_inv_le_is_unit _
       (IsLocalization.toInvSubmonoid (Submonoid.powers f) (X.presheaf.obj (op <| X.basic_open f)) _).Prop
 
-theorem exists_basic_open_subset_affine_inter {X : SchemeCat} {U V : Opens X.Carrier} (hU : IsAffineOpen U)
+theorem exists_basic_open_le_affine_inter {X : SchemeCat} {U V : Opens X.Carrier} (hU : IsAffineOpen U)
     (hV : IsAffineOpen V) (x : X.Carrier) (hx : x ∈ U ∩ V) :
     ∃ (f : X.Presheaf.obj <| op U)(g : X.Presheaf.obj <| op V), X.basicOpen f = X.basicOpen g ∧ x ∈ X.basicOpen f := by
-  obtain ⟨f, hf₁, hf₂⟩ := hU.exists_basic_open_subset ⟨x, hx.2⟩ hx.1
-  obtain ⟨g, hg₁, hg₂⟩ := hV.exists_basic_open_subset ⟨x, hf₂⟩ hx.2
+  obtain ⟨f, hf₁, hf₂⟩ := hU.exists_basic_open_le ⟨x, hx.2⟩ hx.1
+  obtain ⟨g, hg₁, hg₂⟩ := hV.exists_basic_open_le ⟨x, hf₂⟩ hx.2
   obtain ⟨f', hf'⟩ := basic_open_basic_open_is_basic_open hU f (X.presheaf.map (hom_of_le hf₁ : _ ⟶ V).op g)
   replace hf' := (hf'.trans (RingedSpace.basic_open_res _ _ _)).trans (inf_eq_right.mpr hg₁)
   exact ⟨f', g, hf', hf'.symm ▸ hg₂⟩
@@ -631,7 +631,7 @@ theorem IsAffineOpen.basic_open_union_eq_self_iff {X : SchemeCat} {U : Opens X.C
     refine' le_antisymm _ h
     simp only [Set.Union_subset_iff, SetCoe.forall, opens.supr_def, Set.le_eq_subset, Subtype.coe_mk]
     intro x hx
-    exact X.basic_open_subset x
+    exact X.basic_open_le x
     
   · simp only [opens.supr_def, Subtype.coe_mk, Set.preimage_Union, Subtype.val_eq_coe]
     congr 3
@@ -654,7 +654,7 @@ theorem IsAffineOpen.self_le_basic_open_union_iff {X : SchemeCat} {U : Opens X.C
   refine' ⟨fun h => le_antisymm h _, le_of_eq⟩
   simp only [supr_le_iff, SetCoe.forall]
   intro x hx
-  exact X.basic_open_subset x
+  exact X.basic_open_le x
 
 /-- Let `P` be a predicate on the affine open sets of `X` satisfying
 1. If `P` holds on `U`, then `P` holds on the basic open set of every section on `U`.
@@ -677,7 +677,7 @@ theorem of_affine_open_cover {X : SchemeCat} (V : X.AffineOpens) (S : Set X.Affi
     have : ↑x ∈ (Set.Univ : Set X.carrier) := trivial
     rw [← hS] at this
     obtain ⟨W, hW⟩ := set.mem_Union.mp this
-    obtain ⟨f, g, e, hf⟩ := exists_basic_open_subset_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
+    obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
     refine' ⟨f, hf, _⟩
     convert hP₁ _ g (hS' W) using 1
     ext1

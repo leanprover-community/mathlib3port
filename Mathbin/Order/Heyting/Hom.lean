@@ -177,15 +177,15 @@ theorem map_symm_diff (a b : α) : f (a ∆ b) = f a ∆ f b := by simp_rw [symm
 
 end CoheytingAlgebra
 
-instance [HeytingAlgebra α] [HeytingAlgebra β] [HeytingHomClass F α β] : CoeT F (HeytingHom α β) :=
+instance [HeytingAlgebra α] [HeytingAlgebra β] [HeytingHomClass F α β] : CoeTC F (HeytingHom α β) :=
   ⟨fun f =>
     { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_bot' := map_bot f, map_himp' := map_himp f }⟩
 
-instance [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingHomClass F α β] : CoeT F (CoheytingHom α β) :=
+instance [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingHomClass F α β] : CoeTC F (CoheytingHom α β) :=
   ⟨fun f =>
     { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_top' := map_top f, map_sdiff' := map_sdiff f }⟩
 
-instance [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingHomClass F α β] : CoeT F (BiheytingHom α β) :=
+instance [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingHomClass F α β] : CoeTC F (BiheytingHom α β) :=
   ⟨fun f =>
     { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_himp' := map_himp f, map_sdiff' := map_sdiff f }⟩
 

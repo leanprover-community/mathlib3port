@@ -42,6 +42,12 @@ theorem not_nonempty_iff_imp_false {α : Sort _} : ¬Nonempty α ↔ α → Fals
 theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
+/- warning: nonempty_psigma -> nonempty_psigma is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (Nonempty.{(max 1 u_1 u_2)} (PSigma.{u_1 u_2} α β)) (Exists.{u_1} α (fun (a : α) => Nonempty.{u_2} (β a)))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (Nonempty.{(max (max 1 u_2) u_1)} (PSigma.{u_1 u_2} α β)) (Exists.{u_1} α (fun (a : α) => Nonempty.{u_2} (β a)))
+Case conversion may be inaccurate. Consider using '#align nonempty_psigma nonempty_psigmaₓ'. -/
 @[simp]
 theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
@@ -50,12 +56,6 @@ theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃
 theorem nonempty_subtype {α} {p : α → Prop} : Nonempty (Subtype p) ↔ ∃ a : α, p a :=
   Iff.intro (fun ⟨⟨a, h⟩⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a, h⟩⟩
 
-/- warning: nonempty_prod -> nonempty_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (Nonempty.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β)) (And (Nonempty.{succ u_1} α) (Nonempty.{succ u_2} β))
-but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (Nonempty.{(max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β)) (And (Nonempty.{succ u_1} α) (Nonempty.{succ u_2} β))
-Case conversion may be inaccurate. Consider using '#align nonempty_prod nonempty_prodₓ'. -/
 @[simp]
 theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
@@ -70,12 +70,6 @@ Case conversion may be inaccurate. Consider using '#align nonempty_pprod nonempt
 theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
 
-/- warning: nonempty_sum -> nonempty_sum is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (Nonempty.{(max (succ u_1) (succ u_2))} (Sum.{u_1 u_2} α β)) (Or (Nonempty.{succ u_1} α) (Nonempty.{succ u_2} β))
-but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (Nonempty.{(max (succ u_2) (succ u_1))} (Sum.{u_1 u_2} α β)) (Or (Nonempty.{succ u_1} α) (Nonempty.{succ u_2} β))
-Case conversion may be inaccurate. Consider using '#align nonempty_sum nonempty_sumₓ'. -/
 @[simp]
 theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
@@ -186,12 +180,24 @@ instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
 instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty (∀ i, α i) :=
   ⟨fun _ => Classical.arbitrary _⟩
 
+/- warning: classical.nonempty_pi -> Classical.nonempty_pi is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}}, Iff (Nonempty.{(imax u_1 u_2)} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u_2} (α i))
+but is expected to have type
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}}, Iff (Nonempty.{(imax u_1 u_2)} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u_2} (α i))
+Case conversion may be inaccurate. Consider using '#align classical.nonempty_pi Classical.nonempty_piₓ'. -/
 theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
   ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
 
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=
   ⟨fun x => False.elim <| not_nonempty_iff_imp_false.mp h x⟩
 
+/- warning: function.surjective.nonempty -> Function.Surjective.nonempty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_2} β] {f : α -> β}, (Function.Surjective.{succ u_1 succ u_2} α β f) -> (Nonempty.{succ u_1} α)
+but is expected to have type
+  forall {α : Sort.{u_2}} {β : Sort.{u_1}} [h : Nonempty.{u_1} β] {f : α -> β}, (Function.Surjective.{u_2 u_1} α β f) -> (Nonempty.{u_2} α)
+Case conversion may be inaccurate. Consider using '#align function.surjective.nonempty Function.Surjective.nonemptyₓ'. -/
 theorem Function.Surjective.nonempty [h : Nonempty β] {f : α → β} (hf : Function.Surjective f) : Nonempty α :=
   let ⟨y⟩ := h
   let ⟨x, hx⟩ := hf y

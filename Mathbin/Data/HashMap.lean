@@ -279,7 +279,7 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
     · subst i
       rw [bkts', Array'.read_write, hfl]
       have := @valid.idx _ _ _ v bidx a
-      simp only [hl, List.mem_append, or_imp_distrib, forall_and_distrib] at this⊢
+      simp only [hl, List.mem_append, or_imp, forall_and] at this⊢
       exact ⟨⟨this.1.1, hal _⟩, this.2⟩
       
     · rw [bkts', Array'.read_write_of_ne _ _ h]
@@ -476,7 +476,7 @@ theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} 
           c.fst ∉ l.map Sigma.fst ∧
             c.fst ∉ (BucketArray.asList t).map Sigma.fst ∧
               (l.map Sigma.fst).Disjoint ((BucketArray.asList t).map Sigma.fst)
-      by simpa [List.nodup_append, not_or_distrib, and_comm', and_left_comm] using nd with
+      by simpa [List.nodup_append, not_or, and_comm', and_left_comm] using nd with
     ⟨nd1, nd2, nm1, nm2, dj⟩
   have v' := v.insert _ _ c.2 fun Hc => nm2 <| (v.contains_aux_iff _ c.1).1 Hc
   apply IH _ _ v'
@@ -534,10 +534,10 @@ theorem mem_insert :
       by_cases h:a = a'
       · subst a'
         suffices b = b' ∨ Sigma.mk a b' ∈ u ∨ Sigma.mk a b' ∈ w ↔ b = b' by simpa [eq_comm, or_left_comm]
-        refine' or_iff_left_of_imp (Not.elim <| not_or_distrib.2 _)
+        refine' or_iff_left_of_imp (Not.elim <| not_or.2 _)
         rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩)
         · have na := (not_congr <| v.contains_aux_iff _ _).1 Hnc
-          simp [hl, not_or_distrib] at na
+          simp [hl, not_or] at na
           simp [na]
           
         · have nd' := v.as_list_nodup _
@@ -632,10 +632,10 @@ theorem mem_erase :
           Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w ↔
             (¬a = a' ∧ a' = a) ∧ HEq b' b ∨ ¬a = a' ∧ (Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w) :=
           by simp [eq_comm, not_and_self_iff, and_iff_right_of_imp this]
-        simpa [hl, show bkts'.as_list = _ from hfl, and_or_distrib_left, and_comm', and_left_comm, or_left_comm]
+        simpa [hl, show bkts'.as_list = _ from hfl, and_or_left, and_comm', and_left_comm, or_left_comm]
       rintro m rfl
       revert m
-      apply not_or_distrib.2
+      apply not_or.2
       have nd' := v.as_list_nodup _
       simp [hl, List.nodup_append] at nd'
       simp [nd']

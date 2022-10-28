@@ -129,7 +129,7 @@ instance group [Group α] : Group (ULift α) :=
 instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
   { ULift.addMonoidWithOne, ULift.addGroup with intCast := fun n => ⟨n⟩,
     int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _),
-    int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_neg_succ_of_nat _) }
+    int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_negSucc _) }
 
 @[simp]
 theorem int_cast_down [AddGroupWithOne α] (n : ℤ) : (n : ULift α).down = n :=

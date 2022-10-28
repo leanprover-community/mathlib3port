@@ -1138,7 +1138,7 @@ currying and uncurrying. -/
 def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M) := by
   refine' ⟨Finsupp.curry, Finsupp.uncurry, fun f => _, fun f => _⟩ <;>
     simp only [Finsupp.curry, Finsupp.uncurry, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index,
-      single_zero, single_add, eq_self_iff_true, forall_true_iff, forall_3_true_iff, Prod.mk.eta,
+      single_zero, single_add, eq_self_iff_true, forall_true_iff, forall₃_true_iff, Prod.mk.eta,
       (single_sum _ _ _).symm, sum_single]
 
 theorem filter_curry (f : α × β →₀ M) (p : α → Prop) : (f.filter fun a : α × β => p a.1).curry = f.curry.filter p := by
@@ -1576,8 +1576,7 @@ def splitSupport : Finset ι :=
 theorem mem_split_support_iff_nonzero (i : ι) : i ∈ splitSupport l ↔ split l i ≠ 0 := by
   rw [split_support, mem_image, Ne.def, ← support_eq_empty, ← Ne.def, ← Finset.nonempty_iff_ne_empty, split,
     comap_domain, Finset.Nonempty]
-  simp only [exists_prop, Finset.mem_preimage, exists_and_distrib_right, exists_eq_right, mem_support_iff, Sigma.exists,
-    Ne.def]
+  simp only [exists_prop, Finset.mem_preimage, exists_and_right, exists_eq_right, mem_support_iff, Sigma.exists, Ne.def]
 
 /-- Given `l`, a finitely supported function from the sigma type `Σ i, αs i` to `β` and
 an `ι`-indexed family `g` of functions from `(αs i →₀ β)` to `γ`, `split_comp` defines a

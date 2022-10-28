@@ -47,10 +47,6 @@ matrices, permutation matrices being the extreme points.
 
 See chapter 8 of [Barry Simon, *Convexity*][simon2011]
 
-## TODO
-
-* Both theorems are currently stated for normed `ℝ`-spaces due to our version of geometric
-  Hahn-Banach. They are more generally true in a LCTVS without changes to the proofs.
 -/
 
 
@@ -58,13 +54,13 @@ open Set
 
 open Classical
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
+variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Space E] [TopologicalAddGroup E]
+  [HasContinuousSmul ℝ E] [LocallyConvexSpace ℝ E] {s : Set E}
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident t, ",", "⟨", "⟨", ident x, ",", ident hxt, "⟩", ",", ident htclos, ",", ident hst, "⟩", ",", ident hBmin, "⟩", ":", expr «expr∃ , »((t «expr ∈ » S),
     ∀ u «expr ∈ » S,
     «expr ⊆ »(u, t) → «expr = »(u, t))]] -/
-/-- **Krein-Milman lemma**: In a LCTVS (currently only in normed `ℝ`-spaces), any nonempty compact
-set has an extreme point. -/
+/-- **Krein-Milman lemma**: In a LCTVS, any nonempty compact set has an extreme point. -/
 theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) : (s.ExtremePoints ℝ).Nonempty := by
   let S : Set (Set E) := { t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t }
   trace
@@ -97,8 +93,8 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   obtain htu | hut := hF.total t.mem u.mem
   exacts[⟨t, subset.rfl, htu⟩, ⟨u, hut, subset.rfl⟩]
 
-/-- **Krein-Milman theorem**: In a LCTVS (currently only in normed `ℝ`-spaces), any compact convex
-set is the closure of the convex hull of its extreme points. -/
+/-- **Krein-Milman theorem**: In a LCTVS, any compact convex set is the closure of the convex hull
+    of its extreme points. -/
 theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Convex ℝ s) :
     Closure (convexHull ℝ <| s.ExtremePoints ℝ) = s := by
   apply (closure_minimal (convex_hull_min extreme_points_subset hAconv) hscomp.is_closed).antisymm

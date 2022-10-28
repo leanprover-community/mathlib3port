@@ -78,7 +78,7 @@ theorem sup_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f 
 @[simp]
 protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b ∈ s, f b ≤ a := by
   apply Iff.trans Multiset.sup_le
-  simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
+  simp only [Multiset.mem_map, and_imp, exists_imp]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
 @[simp]

@@ -1191,7 +1191,7 @@ theorem countable_of_isolated_left [SecondCountableTopology α] :
   convert @countable_of_isolated_right αᵒᵈ _ _ _ _
   have : ∀ x y : α, Ioo x y = { z | z < y ∧ x < z } := by
     simp_rw [and_comm', Ioo]
-    simp only [eq_self_iff_true, forall_2_true_iff]
+    simp only [eq_self_iff_true, forall₂_true_iff]
   simp_rw [this]
   rfl
 
@@ -1935,7 +1935,7 @@ theorem tendsto_inv_at_top_zero' : Tendsto (fun r : α => r⁻¹) atTop (𝓝[>]
   exact ⟨inv_pos.2 this, (inv_le this hb).2 hx⟩
 
 theorem tendsto_inv_at_top_zero : Tendsto (fun r : α => r⁻¹) atTop (𝓝 0) :=
-  tendsto_inv_at_top_zero'.mono_right inf_le_left
+  tendsto_inv_at_top_zero'.monoRight inf_le_left
 
 theorem Filter.Tendsto.div_at_top [HasContinuousMul α] {f g : β → α} {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a))
     (hg : Tendsto g l atTop) : Tendsto (fun x => f x / g x) l (𝓝 0) := by
@@ -2680,7 +2680,7 @@ theorem Monotone.map_Sup_of_continuous_at' {f : α → β} {s : Set α} (Cf : Co
               is_lub_Sup
               _).is_lub_of_tendsto
           (fun x hx y hy xy => Mf xy) hs <|
-        Cf.mono_left inf_le_left).Sup_eq.symm
+        Cf.monoLeft inf_le_left).Sup_eq.symm
 
 /-- A monotone function `f` sending `bot` to `bot` and continuous at the supremum of a set sends
 this supremum to the supremum of the image of this set. -/

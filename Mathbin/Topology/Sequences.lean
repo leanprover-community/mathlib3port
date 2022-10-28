@@ -343,7 +343,7 @@ theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := 
     exact H x x_in hx
   cases' seq_of_forall_finite_exists this with u hu
   clear h this
-  simp [forall_and_distrib] at hu
+  simp [forall_and] at hu
   cases' hu with u_in hu
   use u, u_in
   clear u_in

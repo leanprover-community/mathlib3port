@@ -296,7 +296,7 @@ theorem cont_mdiff_within_at_iff' :
           ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' (s ∩ f ⁻¹' (extChartAt I' (f x)).Source))
           (extChartAt I x x) :=
   by
-  rw [cont_mdiff_within_at_iff, And.congr_right_iff]
+  rw [cont_mdiff_within_at_iff, and_congr_right_iff]
   set e := extChartAt I x
   set e' := extChartAt I' (f x)
   refine' fun hc => cont_diff_within_at_congr_nhds _
@@ -365,7 +365,7 @@ theorem cont_mdiff_within_at_iff_of_mem_source' {x' : M} {y : M'} (hx : x' ∈ (
   refine' (cont_mdiff_within_at_iff_of_mem_source hx hy).trans _
   rw [← ext_chart_at_source I] at hx
   rw [← ext_chart_at_source I'] at hy
-  rw [And.congr_right_iff]
+  rw [and_congr_right_iff]
   set e := extChartAt I x
   set e' := extChartAt I' (f x)
   refine' fun hc => cont_diff_within_at_congr_nhds _
@@ -535,7 +535,7 @@ theorem cont_mdiff_on_iff_target :
   by
   inhabit E'
   simp only [cont_mdiff_on_iff, ModelWithCorners.source_eq, chart_at_self_eq, LocalHomeomorph.refl_local_equiv,
-    LocalEquiv.refl_trans, extChartAt.equations._eqn_1, Set.preimage_univ, Set.inter_univ, And.congr_right_iff]
+    LocalEquiv.refl_trans, extChartAt.equations._eqn_1, Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
   intro h
   constructor
   · refine' fun h' y => ⟨_, fun x _ => h' x y⟩
@@ -1140,7 +1140,7 @@ alias cont_mdiff_at_iff_cont_diff_at ↔ ContMdiffAt.contDiffAt ContDiffAt.contM
 
 theorem cont_mdiff_on_iff_cont_diff_on {f : E → E'} {s : Set E} :
     ContMdiffOn 𝓘(𝕜, E) 𝓘(𝕜, E') n f s ↔ ContDiffOn 𝕜 n f s :=
-  forall_congr <| by simp [cont_mdiff_within_at_iff_cont_diff_within_at]
+  forall_congr' <| by simp [cont_mdiff_within_at_iff_cont_diff_within_at]
 
 alias cont_mdiff_on_iff_cont_diff_on ↔ ContMdiffOn.contDiffOn ContDiffOn.contMdiffOn
 
@@ -1413,8 +1413,8 @@ variable {ι : Type _} [Fintype ι] {Fi : ι → Type _} [∀ i, NormedAddCommGr
 
 theorem cont_mdiff_within_at_pi_space :
     ContMdiffWithinAt I 𝓘(𝕜, ∀ i, Fi i) n φ s x ↔ ∀ i, ContMdiffWithinAt I 𝓘(𝕜, Fi i) n (fun x => φ x i) s x := by
-  simp only [cont_mdiff_within_at_iff, continuous_within_at_pi, cont_diff_within_at_pi, forall_and_distrib,
-    writtenInExtChartAt, ext_chart_model_space_eq_id, (· ∘ ·), LocalEquiv.refl_coe, id]
+  simp only [cont_mdiff_within_at_iff, continuous_within_at_pi, cont_diff_within_at_pi, forall_and, writtenInExtChartAt,
+    ext_chart_model_space_eq_id, (· ∘ ·), LocalEquiv.refl_coe, id]
 
 theorem cont_mdiff_on_pi_space :
     ContMdiffOn I 𝓘(𝕜, ∀ i, Fi i) n φ s ↔ ∀ i, ContMdiffOn I 𝓘(𝕜, Fi i) n (fun x => φ x i) s :=

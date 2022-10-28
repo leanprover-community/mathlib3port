@@ -5,6 +5,7 @@ Authors: Floris van Doorn
 -/
 import Mathbin.MeasureTheory.Measure.Content
 import Mathbin.MeasureTheory.Group.Prod
+import Mathbin.GroupTheory.Divisible
 
 /-!
 # Haar measure
@@ -254,7 +255,7 @@ theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (Interior V).N
   rintro g₁ h1g₁ ⟨g₂, h1g₂, h2g₂⟩ ⟨g₃, h1g₃, h2g₃⟩
   simp only [mem_preimage] at h1g₃ h1g₂
   apply @h g₁⁻¹
-  constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_distrib_left]
+  constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_left]
   · refine' ⟨_, h2g₂, (g₁ * g₂)⁻¹, _, _⟩
     simp only [inv_inv, h1g₂]
     simp only [mul_inv_rev, mul_inv_cancel_left]
@@ -795,17 +796,16 @@ end Group
 section CommGroup
 
 variable {G : Type _} [CommGroup G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G] [MeasurableSpace G]
-  [BorelSpace G] [LocallyCompactSpace G] [SecondCountableTopology G]
+  [BorelSpace G] [SecondCountableTopology G] (μ : Measure G) [IsHaarMeasure μ]
 
 /-- Any Haar measure is invariant under inversion in an abelian group. -/
 @[to_additive "Any additive Haar measure is invariant under negation in an abelian group."]
-instance (priority := 100) IsHaarMeasure.isInvInvariant (μ : Measure G) [IsHaarMeasure μ] : IsInvInvariant μ := by
+instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] : IsInvInvariant μ := by
   -- the image measure is a Haar measure. By uniqueness up to multiplication, it is of the form
   -- `c μ`. Applying again inversion, one gets the measure `c^2 μ`. But since inversion is an
   -- involution, this is also `μ`. Hence, `c^2 = 1`, which implies `c = 1`.
   constructor
-  haveI : is_haar_measure (measure.map Inv.inv μ) :=
-    is_haar_measure_map μ (MulEquiv.inv G) continuous_inv continuous_inv
+  haveI : is_haar_measure (measure.map Inv.inv μ) := (MulEquiv.inv G).isHaarMeasureMap μ continuous_inv continuous_inv
   obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map Inv.inv μ = c • μ :=
     is_haar_measure_eq_smul_is_haar_measure _ _
   have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ := by simp only [hc, smul_smul, pow_two, measure.map_smul]
@@ -824,6 +824,28 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant (μ : Measure G) [IsHaar
       this
   have : c = 1 := (Ennreal.pow_strict_mono two_ne_zero).Injective this
   rw [measure.inv, hc, this, one_smul]
+
+@[to_additive]
+theorem measurePreservingZpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn : n ≠ 0) :
+    MeasurePreserving (fun g : G => g ^ n) μ μ :=
+  { Measurable := (continuous_zpow n).Measurable,
+    map_eq := by
+      let f := @zpowGroupHom G _ n
+      have hf : Continuous f := continuous_zpow n
+      haveI : (μ.map f).IsHaarMeasure := is_haar_measure_map μ f hf (RootableBy.surjective_pow G ℤ hn) (by simp)
+      obtain ⟨C, -, -, hC⟩ := is_haar_measure_eq_smul_is_haar_measure (μ.map f) μ
+      suffices C = 1 by rwa [this, one_smul] at hC
+      have h_univ : (μ.map f) univ = μ univ := by
+        rw [map_apply_of_ae_measurable hf.measurable.ae_measurable MeasurableSet.univ, preimage_univ]
+      have hμ₀ : μ univ ≠ 0 := is_open_pos_measure.open_pos univ is_open_univ univ_nonempty
+      have hμ₁ : μ univ ≠ ∞ := compact_space.is_finite_measure.measure_univ_lt_top.ne
+      rwa [hC, smul_apply, Algebra.id.smul_eq_mul, mul_comm, ← Ennreal.eq_div_iff hμ₀ hμ₁, Ennreal.div_self hμ₀ hμ₁] at
+        h_univ }
+
+@[to_additive]
+theorem MeasurePreserving.zpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn : n ≠ 0) {X : Type _} [MeasurableSpace X]
+    {μ' : Measure X} {f : X → G} (hf : MeasurePreserving f μ' μ) : MeasurePreserving (fun x => f x ^ n) μ' μ :=
+  (measurePreservingZpow μ hn).comp hf
 
 end CommGroup
 

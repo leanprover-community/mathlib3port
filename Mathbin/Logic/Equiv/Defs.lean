@@ -70,7 +70,7 @@ structure Equiv (α : Sort _) (β : Sort _) where
 -- mathport name: «expr ≃ »
 infixl:25 " ≃ " => Equiv
 
-instance {F} [EquivLike F α β] : CoeT F (α ≃ β) :=
+instance {F} [EquivLike F α β] : CoeTC F (α ≃ β) :=
   ⟨fun f =>
     { toFun := f, invFun := EquivLike.inv f, left_inv := EquivLike.left_inv f, right_inv := EquivLike.right_inv f }⟩
 
@@ -436,7 +436,7 @@ def equivEmpty (α : Sort u) [IsEmpty α] : α ≃ Empty :=
   equivOfIsEmpty α _
 
 /-- If `α` is an empty type, then it is equivalent to the `pempty` type in any universe. -/
-def equivPempty (α : Sort v) [IsEmpty α] : α ≃ Pempty.{u} :=
+def equivPempty (α : Sort v) [IsEmpty α] : α ≃ PEmpty.{u} :=
   equivOfIsEmpty α _
 
 /-- `α` is equivalent to an empty type iff `α` is empty. -/
@@ -444,7 +444,7 @@ def equivEmptyEquiv (α : Sort u) : α ≃ Empty ≃ IsEmpty α :=
   ⟨fun e => Function.is_empty e, @equivEmpty α, fun e => ext fun x => (e x).elim, fun p => rfl⟩
 
 /-- The `Sort` of proofs of a false proposition is equivalent to `pempty`. -/
-def propEquivPempty {p : Prop} (h : ¬p) : p ≃ Pempty :=
+def propEquivPempty {p : Prop} (h : ¬p) : p ≃ PEmpty :=
   @equivPempty p <| IsEmpty.prop_iff.2 h
 
 /-- If both `α` and `β` have a unique element, then `α ≃ β`. -/
@@ -623,7 +623,7 @@ def emptyArrowEquivPunit (α : Sort _) : (Empty → α) ≃ PUnit.{u} :=
   arrowPunitOfIsEmpty _ _
 
 /-- The sort of maps from `pempty` is equivalent to `punit`. -/
-def pemptyArrowEquivPunit (α : Sort _) : (Pempty → α) ≃ PUnit.{u} :=
+def pemptyArrowEquivPunit (α : Sort _) : (PEmpty → α) ≃ PUnit.{u} :=
   arrowPunitOfIsEmpty _ _
 
 /-- The sort of maps from `false` is equivalent to `punit`. -/

@@ -122,7 +122,7 @@ theorem differentiable_within_at_dslope_of_ne (h : b ≠ a) :
   exact mem_nhds_within_of_mem_nhds (is_open_ne.mem_nhds h)
 
 theorem differentiable_on_dslope_of_nmem (h : a ∉ s) : DifferentiableOn 𝕜 (dslope f a) s ↔ DifferentiableOn 𝕜 f s :=
-  forall_congr fun x => forall_congr fun hx => differentiable_within_at_dslope_of_ne <| ne_of_mem_of_not_mem hx h
+  forall_congr' fun x => forall_congr' fun hx => differentiable_within_at_dslope_of_ne <| ne_of_mem_of_not_mem hx h
 
 theorem differentiable_at_dslope_of_ne (h : b ≠ a) : DifferentiableAt 𝕜 (dslope f a) b ↔ DifferentiableAt 𝕜 f b := by
   simp only [← differentiable_within_at_univ, differentiable_within_at_dslope_of_ne h]

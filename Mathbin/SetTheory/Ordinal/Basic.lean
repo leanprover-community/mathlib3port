@@ -110,7 +110,7 @@ attribute [instance] WellOrder.wo
 namespace WellOrder
 
 instance : Inhabited WellOrder :=
-  ⟨⟨Pempty, _, EmptyRelation.is_well_order⟩⟩
+  ⟨⟨PEmpty, _, EmptyRelation.is_well_order⟩⟩
 
 @[simp]
 theorem eta (o : WellOrder) : mk o.α o.R o.wo = o := by
@@ -420,7 +420,7 @@ theorem card_le_card {o₁ o₂ : Ordinal} : o₁ ≤ o₂ → card o₁ ≤ car
   (induction_on o₁) fun α r _ => (induction_on o₂) fun β s _ ⟨⟨⟨f, _⟩, _⟩⟩ => ⟨f⟩
 
 instance : Zero Ordinal :=
-  ⟨type <| @EmptyRelation Pempty⟩
+  ⟨type <| @EmptyRelation PEmpty⟩
 
 instance : Inhabited Ordinal :=
   ⟨0⟩
@@ -440,7 +440,7 @@ theorem type_ne_zero_iff_nonempty [IsWellOrder α r] : type r ≠ 0 ↔ Nonempty
 theorem type_ne_zero_of_nonempty (r) [IsWellOrder α r] [h : Nonempty α] : type r ≠ 0 :=
   type_ne_zero_iff_nonempty.2 h
 
-theorem type_pempty : type (@EmptyRelation Pempty) = 0 :=
+theorem type_pempty : type (@EmptyRelation PEmpty) = 0 :=
   rfl
 
 theorem type_empty : type (@EmptyRelation Empty) = 0 :=
@@ -701,9 +701,9 @@ instance : AddMonoidWithOne Ordinal.{u} where
   zero := 0
   one := 1
   zero_add o :=
-    (induction_on o) fun α r _ => Eq.symm <| Quotient.sound ⟨⟨(emptySum Pempty α).symm, fun a b => Sum.lex_inr_inr⟩⟩
+    (induction_on o) fun α r _ => Eq.symm <| Quotient.sound ⟨⟨(emptySum PEmpty α).symm, fun a b => Sum.lex_inr_inr⟩⟩
   add_zero o :=
-    (induction_on o) fun α r _ => Eq.symm <| Quotient.sound ⟨⟨(sumEmpty α Pempty).symm, fun a b => Sum.lex_inl_inl⟩⟩
+    (induction_on o) fun α r _ => Eq.symm <| Quotient.sound ⟨⟨(sumEmpty α PEmpty).symm, fun a b => Sum.lex_inl_inl⟩⟩
   add_assoc o₁ o₂ o₃ :=
     (Quotient.induction_on₃ o₁ o₂ o₃) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ =>
       Quot.sound

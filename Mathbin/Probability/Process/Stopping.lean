@@ -345,7 +345,7 @@ theorem measurable_space_mono (hτ : IsStoppingTime f τ) (hπ : IsStoppingTime 
   · exact (hs i).inter (hπ i)
     
   · ext
-    simp only [Set.mem_inter_iff, iff_self_and, And.congr_left_iff, Set.mem_set_of_eq]
+    simp only [Set.mem_inter_iff, iff_self_and, and_congr_left_iff, Set.mem_set_of_eq]
     intro hle' _
     exact le_trans (hle _) hle'
     
@@ -430,7 +430,7 @@ theorem measurable_set_inter_eq_iff (hτ : IsStoppingTime f τ) (s : Set Ω) (i 
   have : ∀ j, { ω : Ω | τ ω = i } ∩ { ω : Ω | τ ω ≤ j } = { ω : Ω | τ ω = i } ∩ { ω | i ≤ j } := by
     intro j
     ext1 ω
-    simp only [Set.mem_inter_iff, Set.mem_set_of_eq, And.congr_right_iff]
+    simp only [Set.mem_inter_iff, Set.mem_set_of_eq, and_congr_right_iff]
     intro hxi
     rw [hxi]
   constructor <;> intro h
@@ -574,7 +574,7 @@ protected theorem measurable_space_le_of_countable_range (hτ : IsStoppingTime f
       
     · rintro ⟨i, hx⟩
       simp only [Set.mem_range, Set.Union_exists, Set.mem_Union, Set.mem_inter_iff, Set.mem_set_of_eq, exists_prop,
-        exists_and_distrib_right] at hx
+        exists_and_right] at hx
       exact hx.1.2
       
     
@@ -638,7 +638,7 @@ theorem measurableSetInterLe [TopologicalSpace ι] [SecondCountableTopology ι] 
     simp only [min_le_iff, Set.mem_inter_iff, Set.mem_set_of_eq, le_min_iff, le_refl, true_and_iff, and_true_iff,
       true_or_iff, or_true_iff]
     by_cases hτi:τ ω ≤ i
-    · simp only [hτi, true_or_iff, and_true_iff, And.congr_right_iff]
+    · simp only [hτi, true_or_iff, and_true_iff, and_congr_right_iff]
       intro hx
       constructor <;> intro h
       · exact Or.inl h
@@ -693,7 +693,7 @@ theorem measurableSetLeStoppingTime [TopologicalSpace ι] [SecondCountableTopolo
   intro j
   have : { ω | τ ω ≤ π ω } ∩ { ω | τ ω ≤ j } = { ω | min (τ ω) j ≤ min (π ω) j } ∩ { ω | τ ω ≤ j } := by
     ext1 ω
-    simp only [Set.mem_inter_iff, Set.mem_set_of_eq, min_le_iff, le_min_iff, le_refl, and_true_iff, And.congr_left_iff]
+    simp only [Set.mem_inter_iff, Set.mem_set_of_eq, min_le_iff, le_min_iff, le_refl, and_true_iff, and_congr_left_iff]
     intro h
     simp only [h, or_self_iff, and_true_iff]
     by_cases hj:j ≤ π ω
@@ -887,7 +887,7 @@ theorem measurableStoppedValue [MetrizableSpace β] [MeasurableSpace β] [BorelS
     rw [this]
     exact ((h_str_meas i).Measurable ht).inter (hτ.measurable_set_le i)
   ext1 ω
-  simp only [stopped_value, Set.mem_inter_iff, Set.mem_preimage, Set.mem_set_of_eq, And.congr_left_iff]
+  simp only [stopped_value, Set.mem_inter_iff, Set.mem_preimage, Set.mem_set_of_eq, and_congr_left_iff]
   intro h
   rw [min_eq_left h]
 
@@ -1079,7 +1079,7 @@ theorem IsStoppingTime.piecewiseOfLe (hτ_st : IsStoppingTime 𝒢 τ) (hη_st :
   intro n
   have : { ω | s.piecewise τ η ω ≤ n } = s ∩ { ω | τ ω ≤ n } ∪ sᶜ ∩ { ω | η ω ≤ n } := by
     ext1 ω
-    simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_set_of_eq, And.congr_right_iff]
+    simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_set_of_eq, and_congr_right_iff]
     by_cases hx:ω ∈ s <;> simp [hx]
   rw [this]
   by_cases hin:i ≤ n

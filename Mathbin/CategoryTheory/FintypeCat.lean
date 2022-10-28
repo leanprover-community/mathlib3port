@@ -41,7 +41,7 @@ def of (X : Type _) [Fintype X] : FintypeCat :=
   Bundled.of X
 
 instance : Inhabited FintypeCat :=
-  ⟨⟨Pempty⟩⟩
+  ⟨⟨PEmpty⟩⟩
 
 instance {X : FintypeCat} : Fintype X :=
   X.2

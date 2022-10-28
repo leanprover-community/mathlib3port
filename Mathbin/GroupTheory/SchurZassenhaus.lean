@@ -85,9 +85,7 @@ theorem smul_diff' (h : H) : diff (MonoidHom.id H) α (op (h : G) • β) = diff
     Equiv.apply_eq_iff_eq, inv_smul_eq_iff]
   exact self_eq_mul_right.mpr ((QuotientGroup.eq_one_iff _).mpr h.2)
 
-variable [Fintype H]
-
-theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Fintype.card H) H.index) (α : H.QuotientDiff) (h : H) :
+theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Nat.card H) H.index) (α : H.QuotientDiff) (h : H) :
     h • α = α → h = 1 :=
   (Quotient.induction_on' α) fun α hα =>
     (powCoprime hH).Injective <|
@@ -97,7 +95,7 @@ theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Fintype.card H) H.index) (α : 
         _ = 1 ^ H.index := (Quotient.exact' hα).trans (one_pow H.index).symm
         
 
-theorem exists_smul_eq (hH : Nat.Coprime (Fintype.card H) H.index) (α β : H.QuotientDiff) : ∃ h : H, h • α = β :=
+theorem exists_smul_eq (hH : Nat.Coprime (Nat.card H) H.index) (α β : H.QuotientDiff) : ∃ h : H, h • α = β :=
   Quotient.induction_on' α
     (Quotient.induction_on' β fun β α =>
       imp (fun n => Quotient.sound')
@@ -107,12 +105,12 @@ theorem exists_smul_eq (hH : Nat.Coprime (Fintype.card H) H.index) (α β : H.Qu
               ((smul_diff' β α ((powCoprime hH).symm (diff (MonoidHom.id H) β α))⁻¹).trans
                 (by rw [inv_pow, ← pow_coprime_apply hH, Equiv.apply_symm_apply, mul_inv_self])))⟩)
 
-theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff} (hH : Nat.Coprime (Fintype.card H) H.index) :
+theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff} (hH : Nat.Coprime (Nat.card H) H.index) :
     IsComplement' H (stabilizer G α) :=
   is_complement'_stabilizer α (eq_one_of_smul_eq_one hH α) fun g => exists_smul_eq hH (g • α) α
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Fintype.card H) H.index) :
+private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Nat.card H) H.index) :
     ∃ K : Subgroup G, IsComplement' H K :=
   nonempty_of_inhabited.elim fun α => ⟨stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
 
@@ -264,6 +262,7 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
         apply ih _ hG'
         rfl)
       h3
+  rw [← Nat.card_eq_fintype_card] at hN
   exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:

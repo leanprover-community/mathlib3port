@@ -14,7 +14,7 @@ tag=$(sed '/^def tag /!d;s/.*"\(.*\)"$/\1/' lakefile.lean)
 popd
 
 # We specify a suffix for `-i` for macos compatibility.
-sed -i .bak '
+sed -i.bak '
   /^def tag / s/"\(.*\)"$/"'$tag'"/;
   /^require lean3port / s/@"\([^"]*\)"$/@"'$lean3port_rev'"/
 ' lakefile.lean

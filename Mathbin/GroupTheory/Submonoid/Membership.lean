@@ -379,20 +379,58 @@ theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.natAbs) (m : ℕ) : log (pow x 
 theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (f : F) (m : M) :
     (powers m).map f = powers (f m) := by simp only [powers_eq_closure, map_mclosure f, Set.image_singleton]
 
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive "If all the elements of a set `s` commute, then `closure s` forms an additive\ncommutative monoid."]
-def closureCommMonoidOfComm {s : Set M} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) : CommMonoid (closure s) :=
+def closureCommMonoidOfComm {s : Set M} (hcomm : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a * b = b * a) :
+    CommMonoid (closure s) :=
   { (closure s).toMonoid with
     mul_comm := fun x y => by
       ext
       simp only [Submonoid.coe_mul]
       exact
-        closure_induction₂ x.prop y.prop hcomm (fun x => by simp only [mul_one, one_mul])
-          (fun x => by simp only [mul_one, one_mul])
-          (fun x y z h₁ h₂ => by rw [mul_assoc, h₂, ← mul_assoc, h₁, mul_assoc]) fun x y z h₁ h₂ => by
-          rw [← mul_assoc, h₁, mul_assoc, h₂, ← mul_assoc] }
+        closure_induction₂ x.prop y.prop hcomm Commute.one_left Commute.one_right (fun x y z => Commute.mul_left)
+          fun x y z => Commute.mul_right }
 
 end Submonoid
+
+@[to_additive]
+theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [HasSmul N α] [MulAction M α] {s : Set M}
+    (htop : Submonoid.closure s = ⊤) (hs : ∀ x ∈ s, ∀ (y : N) (z : α), (x • y) • z = x • y • z) : IsScalarTower M N α :=
+  by
+  refine'
+    ⟨fun x =>
+      Submonoid.closure_induction_left
+        (show x ∈ Submonoid.closure s by
+          rw [htop]
+          apply Submonoid.mem_top)
+        _ _⟩
+  · intro y z
+    rw [one_smul, one_smul]
+    
+  · clear x
+    intro x hx x' hx' y z
+    rw [mul_smul, mul_smul, hs x hx, hx']
+    
+
+@[to_additive]
+theorem SmulCommClass.of_mclosure_eq_top {N α} [Monoid M] [HasSmul N α] [MulAction M α] {s : Set M}
+    (htop : Submonoid.closure s = ⊤) (hs : ∀ x ∈ s, ∀ (y : N) (z : α), x • y • z = y • x • z) : SmulCommClass M N α :=
+  by
+  refine'
+    ⟨fun x =>
+      Submonoid.closure_induction_left
+        (show x ∈ Submonoid.closure s by
+          rw [htop]
+          apply Submonoid.mem_top)
+        _ _⟩
+  · intro y z
+    rw [one_smul, one_smul]
+    
+  · clear x
+    intro x hx x' hx' y z
+    rw [mul_smul, mul_smul, hx', hs x hx]
+    
 
 namespace Submonoid
 

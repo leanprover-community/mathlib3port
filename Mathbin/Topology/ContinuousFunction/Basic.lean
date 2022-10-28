@@ -59,7 +59,7 @@ theorem map_continuous_at (f : F) (a : α) : ContinuousAt f a :=
 theorem map_continuous_within_at (f : F) (s : Set α) (a : α) : ContinuousWithinAt f s a :=
   (map_continuous f).ContinuousWithinAt
 
-instance : CoeT F C(α, β) :=
+instance : CoeTC F C(α, β) :=
   ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f }⟩
 
 end ContinuousMapClass

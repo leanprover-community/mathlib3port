@@ -49,7 +49,7 @@ class NoetherianSpace : Prop where
 theorem noetherian_space_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, IsCompact (s : Set α) := by
   rw [noetherian_space_iff, CompleteLattice.well_founded_iff_is_Sup_finite_compact,
     CompleteLattice.is_Sup_finite_compact_iff_all_elements_compact]
-  exact forall_congr opens.is_compact_element_iff
+  exact forall_congr' opens.is_compact_element_iff
 
 instance (priority := 100) NoetherianSpace.compact_space [h : NoetherianSpace α] : CompactSpace α :=
   is_compact_univ_iff.mp ((noetherian_space_iff_opens α).mp h ⊤)

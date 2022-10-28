@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 -/
 import Mathbin.Order.Filter.Cofinite
-import Mathbin.Order.Zorn
+import Mathbin.Order.ZornAtoms
 
 /-!
 # Ultrafilters
@@ -28,6 +28,12 @@ open Set Filter Function
 
 open Classical Filter
 
+/-- `filter α` is an atomic type: for every filter there exists an ultrafilter that is less than or
+equal to this filter. -/
+instance : IsAtomic (Filter α) :=
+  IsAtomic.of_is_chain_bounded fun c hc hne hb =>
+    ⟨inf c, (infNeBotOfDirected' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne, fun x hx => Inf_le hx⟩
+
 /-- An ultrafilter is a minimal (maximal in the set order) proper filter. -/
 @[protect_proj]
 structure Ultrafilter (α : Type _) extends Filter α where
@@ -38,7 +44,7 @@ namespace Ultrafilter
 
 variable {f g : Ultrafilter α} {s t : Set α} {p q : α → Prop}
 
-instance : CoeT (Ultrafilter α) (Filter α) :=
+instance : CoeTC (Ultrafilter α) (Filter α) :=
   ⟨Ultrafilter.toFilter⟩
 
 instance : Membership (Set α) (Ultrafilter α) :=
@@ -49,6 +55,9 @@ theorem unique (f : Ultrafilter α) {g : Filter α} (h : g ≤ f) (hne : NeBot g
 
 instance neBot (f : Ultrafilter α) : NeBot (f : Filter α) :=
   f.neBot'
+
+protected theorem is_atom (f : Ultrafilter α) : IsAtom (f : Filter α) :=
+  ⟨f.ne_bot.Ne, fun g hgf => by_contra fun hg => hgf.Ne <| f.unique hgf.le ⟨hg⟩⟩
 
 @[simp, norm_cast]
 theorem mem_coe : s ∈ (f : Filter α) ↔ s ∈ f :=
@@ -107,6 +116,12 @@ def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultra
   neBot' := ⟨fun hf => by simpa [hf] using h⟩
   le_of_le g hg hgf s hs := (h s).1 fun hsc => compl_not_mem hs (hgf hsc)
 
+/-- If `f : filter α` is an atom, then it is an ultrafilter. -/
+def ofAtom (f : Filter α) (hf : IsAtom f) : Ultrafilter α where
+  toFilter := f
+  neBot' := ⟨hf.1⟩
+  le_of_le g hg := (is_atom_iff.1 hf).2 g hg.Ne
+
 theorem nonempty_of_mem (hs : s ∈ f) : s.Nonempty :=
   nonempty_of_mem hs
 
@@ -119,7 +134,7 @@ theorem empty_not_mem : ∅ ∉ f :=
 
 @[simp]
 theorem le_sup_iff {u : Ultrafilter α} {f g : Filter α} : ↑u ≤ f ⊔ g ↔ ↑u ≤ f ∨ ↑u ≤ g :=
-  not_iff_not.1 <| by simp only [← disjoint_iff_not_le, not_or_distrib, disjoint_sup_right]
+  not_iff_not.1 <| by simp only [← disjoint_iff_not_le, not_or, disjoint_sup_right]
 
 @[simp]
 theorem union_mem_iff : s ∪ t ∈ f ↔ s ∈ f ∨ t ∈ f := by
@@ -141,8 +156,7 @@ theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) �
   simp only [imp_iff_not_or, eventually_or, eventually_not]
 
 theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
-  (Finite.induction_on hs (by simp)) fun a s ha hs his => by
-    simp [union_mem_iff, his, or_and_distrib_right, exists_or_distrib]
+  (Finite.induction_on hs (by simp)) fun a s ha hs his => by simp [union_mem_iff, his, or_and_right, exists_or]
 
 theorem finite_bUnion_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
     (⋃ i ∈ is, s i) ∈ f ↔ ∃ i ∈ is, s i ∈ f := by
@@ -278,22 +292,9 @@ instance is_lawful_monad : LawfulMonad Ultrafilter where
 end
 
 /-- The ultrafilter lemma: Any proper filter is contained in an ultrafilter. -/
-theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u ≤ f := by
-  let τ := { f' // ne_bot f' ∧ f' ≤ f }
-  let r : τ → τ → Prop := fun t₁ t₂ => t₂.val ≤ t₁.val
-  haveI := nonempty_of_ne_bot f
-  let top : τ := ⟨f, h, le_refl f⟩
-  let sup : ∀ c : Set τ, IsChain r c → τ := fun c hc =>
-    ⟨⨅ a : { a : τ // a ∈ insert top c }, a.1,
-      infi_ne_bot_of_directed (IsChain.directed <| hc.insert fun ⟨b, _, hb⟩ _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
-      infi_le_of_le ⟨top, mem_insert _ _⟩ le_rfl⟩
-  have : ∀ (c) (hc : IsChain r c) (a) (ha : a ∈ c), r a (sup c hc) := fun c hc a ha =>
-    infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ le_rfl
-  have : ∃ u : τ, ∀ a : τ, r u a → r a u :=
-    exists_maximal_of_chains_bounded (fun c hc => ⟨sup c hc, this c hc⟩) fun f₁ f₂ f₃ h₁ h₂ => le_trans h₂ h₁
-  cases' this with uτ hmin
-  exact
-    ⟨⟨uτ.val, uτ.property.left, fun g hg₁ hg₂ => hmin ⟨g, hg₁, le_trans hg₂ uτ.property.right⟩ hg₂⟩, uτ.property.right⟩
+theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u ≤ f :=
+  let ⟨u, hu, huf⟩ := (eq_bot_or_exists_atom_le f).resolve_left h.Ne
+  ⟨ofAtom u hu, huf⟩
 
 alias exists_le ← _root_.filter.exists_ultrafilter_le
 
@@ -323,6 +324,9 @@ namespace Filter
 variable {f : Filter α} {s : Set α} {a : α}
 
 open Ultrafilter
+
+theorem is_atom_pure : IsAtom (pure a : Filter α) :=
+  (pure a : Ultrafilter α).IsAtom
 
 protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure a :=
   ⟨Ultrafilter.unique (pure a), le_of_eq⟩

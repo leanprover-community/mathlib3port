@@ -149,7 +149,7 @@ theorem coe_vanishing_ideal (t : Set (PrimeSpectrum R)) :
     (vanishingIdeal t : Set R) = { f : R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.asIdeal } := by
   ext f
   rw [vanishing_ideal, SetLike.mem_coe, Submodule.mem_infi]
-  apply forall_congr
+  apply forall_congr'
   intro x
   rw [Submodule.mem_infi]
 
@@ -743,8 +743,8 @@ theorem is_compact_basic_open (f : R) : IsCompact (basicOpen f : Set (PrimeSpect
 @[simp]
 theorem basic_open_eq_bot_iff (f : R) : basicOpen f = ⊥ ↔ IsNilpotent f := by
   rw [← subtype.coe_injective.eq_iff, basic_open_eq_zero_locus_compl]
-  simp only [Set.eq_univ_iff_forall, TopologicalSpace.Opens.empty_eq, Set.singleton_subset_iff,
-    TopologicalSpace.Opens.coe_bot, nilpotent_iff_mem_prime, Set.compl_empty_iff, mem_zero_locus, SetLike.mem_coe]
+  simp only [Set.eq_univ_iff_forall, Set.singleton_subset_iff, TopologicalSpace.Opens.coe_bot, nilpotent_iff_mem_prime,
+    Set.compl_empty_iff, mem_zero_locus, SetLike.mem_coe]
   exact Subtype.forall
 
 theorem localization_away_comap_range (S : Type v) [CommRing S] [Algebra R S] (r : R) [IsLocalization.Away r S] :

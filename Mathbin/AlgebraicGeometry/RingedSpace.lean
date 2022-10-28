@@ -129,13 +129,13 @@ theorem mem_top_basic_open (f : X.Presheaf.obj (op ⊤)) (x : X) :
     x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ ⟨x, show x ∈ (⊤ : Opens X) by trivial⟩ f) :=
   mem_basic_open X f ⟨x, _⟩
 
-theorem basic_open_subset {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ⊆ U := by
+theorem basic_open_le {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ≤ U := by
   rintro _ ⟨x, hx, rfl⟩
   exact x.2
 
 /-- The restriction of a section `f` to the basic open of `f` is a unit. -/
 theorem is_unit_res_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) :
-    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basic_open_subset f)).op f) := by
+    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basic_open_le f)).op f) := by
   apply is_unit_of_is_unit_germ
   rintro ⟨_, ⟨x, hx, rfl⟩⟩
   convert hx
@@ -144,7 +144,7 @@ theorem is_unit_res_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) :
 
 @[simp]
 theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
-    @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ∩ @basicOpen X (unop U) f := by
+    @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ⊓ @basicOpen X (unop U) f := by
   induction U using Opposite.rec
   induction V using Opposite.rec
   let g := i.unop
@@ -189,7 +189,7 @@ theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
 
 theorem basic_open_of_is_unit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUnit f) : X.basicOpen f = U := by
   apply le_antisymm
-  · exact X.basic_open_subset f
+  · exact X.basic_open_le f
     
   intro x hx
   erw [X.mem_basic_open f (⟨x, hx⟩ : U)]

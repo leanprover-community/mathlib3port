@@ -242,7 +242,7 @@ protected theorem ae_strongly_measurable_on_iff {β : Type _} [TopologicalSpace 
     _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g⁻¹ • (g⁻¹⁻¹ • s ∩ t))) := inv_surjective.forall
     _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g⁻¹ • (g • s ∩ t))) := by simp only [inv_inv]
     _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g • s ∩ t)) := by
-      refine' forall_congr fun g => _
+      refine' forall_congr' fun g => _
       have he : MeasurableEmbedding ((· • ·) g⁻¹ : α → α) := measurableEmbeddingConstSmul _
       rw [← image_smul, ← ((measure_preserving_smul g⁻¹ μ).restrictImageEmb he _).ae_strongly_measurable_comp_iff he]
       simp only [(· ∘ ·), hf]

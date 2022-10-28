@@ -39,8 +39,8 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
   rw [det_apply]
   refine' (nat_degree_sum_le _ _).trans _
   refine' Multiset.max_nat_le_of_forall_le _ _ _
-  simp only [forall_apply_eq_imp_iff', true_and_iff, Function.comp_app, Multiset.map_map, Multiset.mem_map,
-    exists_imp_distrib, Finset.mem_univ_val]
+  simp only [forall_apply_eq_imp_iff', true_and_iff, Function.comp_app, Multiset.map_map, Multiset.mem_map, exists_imp,
+    Finset.mem_univ_val]
   intro g
   calc
     nat_degree (sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤

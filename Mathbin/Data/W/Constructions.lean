@@ -124,7 +124,7 @@ instance : Inhabited (Listα γ) :=
 
 /-- The arities of each constructor for lists, `nil` takes no arguments, `cons hd` takes one -/
 def Listβ : Listα γ → Type u
-  | list_α.nil => Pempty
+  | list_α.nil => PEmpty
   | list_α.cons hd => PUnit
 
 instance (hd : γ) : Inhabited (Listβ γ (Listα.cons hd)) :=
@@ -133,7 +133,7 @@ instance (hd : γ) : Inhabited (Listβ γ (Listα.cons hd)) :=
 /-- The isomorphism from lists to the `W_type` construction of lists -/
 @[simp]
 def ofList : List γ → WType (Listβ γ)
-  | List.nil => ⟨Listα.nil, Pempty.elim⟩
+  | List.nil => ⟨Listα.nil, PEmpty.elim⟩
   | List.cons hd tl => ⟨Listα.cons hd, fun _ => of_list tl⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

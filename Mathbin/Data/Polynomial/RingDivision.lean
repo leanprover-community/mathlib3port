@@ -466,7 +466,7 @@ theorem roots_smul_nonzero (p : R[X]) {r : R} (hr : r ≠ 0) : (r • p).roots =
 
 theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
   (List.recOn L fun _ => roots_one) fun hd tl ih H => by
-    rw [List.mem_cons_iff, not_or_distrib] at H
+    rw [List.mem_cons_iff, not_or] at H
     rw [List.prod_cons, roots_mul (mul_ne_zero (Ne.symm H.1) <| List.prod_ne_zero H.2), ← Multiset.cons_coe,
       Multiset.cons_bind, ih H.2]
 

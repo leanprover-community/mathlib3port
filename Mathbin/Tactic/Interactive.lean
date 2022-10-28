@@ -43,7 +43,7 @@ add_tactic_doc
 /-- Unfold coercion-related definitions -/
 unsafe def unfold_coes (loc : parse location) : tactic Unit :=
   unfold
-    [`` coe, `` coeT, `` CoeT.coe, `` coeB, `` Coe.coe, `` lift, `` HasLift.lift, `` liftT, `` HasLiftT.lift, `` coeFn,
+    [`` coe, `` coeT, `` CoeTC.coe, `` coeB, `` Coe.coe, `` lift, `` HasLift.lift, `` liftT, `` HasLiftT.lift, `` coeFn,
       `` CoeFun.coe, `` coeSort, `` CoeSort.coe]
     loc
 

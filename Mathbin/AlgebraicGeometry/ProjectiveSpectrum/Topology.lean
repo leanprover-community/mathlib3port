@@ -113,7 +113,7 @@ theorem coe_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) :
     (vanishingIdeal t : Set A) = { f | ∀ x : ProjectiveSpectrum 𝒜, x ∈ t → f ∈ x.asHomogeneousIdeal } := by
   ext f
   rw [vanishing_ideal, SetLike.mem_coe, ← HomogeneousIdeal.mem_iff, HomogeneousIdeal.to_ideal_infi, Submodule.mem_infi]
-  apply forall_congr fun x => _
+  apply forall_congr' fun x => _
   rw [HomogeneousIdeal.to_ideal_infi, Submodule.mem_infi, HomogeneousIdeal.mem_iff]
 
 theorem mem_vanishing_ideal (t : Set (ProjectiveSpectrum 𝒜)) (f : A) :

@@ -636,7 +636,7 @@ theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcente
     weighted_vsub_vadd_affine_combination, affine_combination_vsub, weighted_vsub_apply, sum_points_with_circumcenter]
   simp_rw [Pi.sub_apply, Pi.add_apply, Pi.sub_apply, sub_smul, add_smul, sub_smul, centroid_weights_with_circumcenter,
     circumcenter_weights_with_circumcenter, reflection_circumcenter_weights_with_circumcenter, ite_smul, zero_smul,
-    sub_zero, apply_ite2 (· + ·), add_zero, ← add_smul, hc, zero_sub, neg_smul, sub_self, add_zero]
+    sub_zero, apply_ite₂ (· + ·), add_zero, ← add_smul, hc, zero_sub, neg_smul, sub_self, add_zero]
   convert sum_const_zero
   norm_num
 

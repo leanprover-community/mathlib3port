@@ -118,7 +118,7 @@ theorem maximal_ideal_unique : ∃! I : Ideal R, I.IsMaximal :=
 variable {R}
 
 theorem eq_maximal_ideal {I : Ideal R} (hI : I.IsMaximal) : I = maximalIdeal R :=
-  unique_of_exists_unique (maximal_ideal_unique R) hI <| maximalIdeal.is_maximal R
+  unique (maximal_ideal_unique R) hI <| maximalIdeal.is_maximal R
 
 theorem le_maximal_ideal {J : Ideal R} (hJ : J ≠ ⊤) : J ≤ maximalIdeal R := by
   rcases Ideal.exists_le_maximal J hJ with ⟨M, hM1, hM2⟩
@@ -348,6 +348,7 @@ noncomputable def map (f : R →+* S) [IsLocalRingHom f] : ResidueField R →+* 
 
 /-- Applying `residue_field.map` to the identity ring homomorphism gives the identity
 ring homomorphism. -/
+@[simp]
 theorem map_id : LocalRing.ResidueField.map (RingHom.id R) = RingHom.id (LocalRing.ResidueField R) :=
   Ideal.Quotient.ring_hom_ext <| RingHom.ext fun x => rfl
 
@@ -355,6 +356,44 @@ theorem map_id : LocalRing.ResidueField.map (RingHom.id R) = RingHom.id (LocalRi
 theorem map_comp (f : T →+* R) (g : R →+* S) [IsLocalRingHom f] [IsLocalRingHom g] :
     LocalRing.ResidueField.map (g.comp f) = (LocalRing.ResidueField.map g).comp (LocalRing.ResidueField.map f) :=
   Ideal.Quotient.ring_hom_ext <| RingHom.ext fun x => rfl
+
+theorem map_id_apply (x : ResidueField R) : map (RingHom.id R) x = x :=
+  FunLike.congr_fun map_id x
+
+@[simp]
+theorem map_map (f : R →+* S) (g : S →+* T) (x : ResidueField R) [IsLocalRingHom f] [IsLocalRingHom g] :
+    map g (map f x) = map (g.comp f) x :=
+  FunLike.congr_fun (map_comp f g).symm x
+
+/-- A ring isomorphism defines an isomorphism of residue fields. -/
+@[simps apply]
+noncomputable def mapEquiv (f : R ≃+* S) : LocalRing.ResidueField R ≃+* LocalRing.ResidueField S where
+  toFun := map (f : R →+* S)
+  invFun := map (f.symm : S →+* R)
+  left_inv x := by simp only [map_map, RingEquiv.symm_comp, map_id, RingHom.id_apply]
+  right_inv x := by simp only [map_map, RingEquiv.comp_symm, map_id, RingHom.id_apply]
+  map_mul' := RingHom.map_mul _
+  map_add' := RingHom.map_add _
+
+@[simp]
+theorem mapEquiv.symm (f : R ≃+* S) : (mapEquiv f).symm = mapEquiv f.symm :=
+  rfl
+
+@[simp]
+theorem map_equiv_trans (e₁ : R ≃+* S) (e₂ : S ≃+* T) : mapEquiv (e₁.trans e₂) = (mapEquiv e₁).trans (mapEquiv e₂) :=
+  RingEquiv.to_ring_hom_injective <| map_comp (e₁ : R →+* S) (e₂ : S →+* T)
+
+@[simp]
+theorem map_equiv_refl : mapEquiv (RingEquiv.refl R) = RingEquiv.refl _ :=
+  RingEquiv.to_ring_hom_injective map_id
+
+/-- The group homomorphism from `ring_aut R` to `ring_aut k` where `k`
+is the residue field of `R`. -/
+@[simps]
+noncomputable def mapAut : RingAut R →* RingAut (LocalRing.ResidueField R) where
+  toFun := mapEquiv
+  map_mul' e₁ e₂ := map_equiv_trans e₂ e₁
+  map_one' := map_equiv_refl
 
 end ResidueField
 

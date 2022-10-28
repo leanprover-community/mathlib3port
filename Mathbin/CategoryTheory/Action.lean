@@ -65,7 +65,7 @@ variable {M X}
   has a more explicit type. -/
 protected def back : ActionCategory M X → X := fun x => x.snd
 
-instance : CoeT X (ActionCategory M X) :=
+instance : CoeTC X (ActionCategory M X) :=
   ⟨fun x => ⟨(), x⟩⟩
 
 @[simp]

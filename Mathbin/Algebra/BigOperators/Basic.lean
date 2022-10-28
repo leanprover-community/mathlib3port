@@ -769,18 +769,18 @@ theorem prod_apply_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p}
     _ =
         (∏ x in (s.filter p).attach, h (if hx : p x.1 then f x.1 hx else g x.1 hx)) *
           ∏ x in (s.filter fun x => ¬p x).attach, h (if hx : p x.1 then f x.1 hx else g x.1 hx) :=
-      congr_arg2 _ prod_attach.symm prod_attach.symm
+      congr_arg₂ _ prod_attach.symm prod_attach.symm
     _ =
         (∏ x in (s.filter p).attach, h (f x.1 (mem_filter.mp x.2).2)) *
           ∏ x in (s.filter fun x => ¬p x).attach, h (g x.1 (mem_filter.mp x.2).2) :=
-      congr_arg2 _ (prod_congr rfl fun x hx => congr_arg h (dif_pos (mem_filter.mp x.2).2))
+      congr_arg₂ _ (prod_congr rfl fun x hx => congr_arg h (dif_pos (mem_filter.mp x.2).2))
         (prod_congr rfl fun x hx => congr_arg h (dif_neg (mem_filter.mp x.2).2))
     
 
 @[to_additive]
 theorem prod_apply_ite {s : Finset α} {p : α → Prop} {hp : DecidablePred p} (f g : α → γ) (h : γ → β) :
     (∏ x in s, h (if p x then f x else g x)) = (∏ x in s.filter p, h (f x)) * ∏ x in s.filter fun x => ¬p x, h (g x) :=
-  trans (prod_apply_dite _ _ _) (congr_arg2 _ (@prod_attach _ _ _ _ (h ∘ f)) (@prod_attach _ _ _ _ (h ∘ g)))
+  trans (prod_apply_dite _ _ _) (congr_arg₂ _ (@prod_attach _ _ _ _ (h ∘ f)) (@prod_attach _ _ _ _ (h ∘ g)))
 
 @[to_additive]
 theorem prod_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p} (f : ∀ x : α, p x → β) (g : ∀ x : α, ¬p x → β) :
@@ -1190,7 +1190,7 @@ theorem prod_involution {s : Finset α} {f : α → β} :
               ih' ▸
                 Eq.symm
                   (prod_subset hmem fun y hy hy₁ =>
-                    have : y = x ∨ y = g x hx := by simpa [hy, not_and_distrib, or_comm'] using hy₁
+                    have : y = x ∨ y = g x hx := by simpa [hy, not_and_or, or_comm'] using hy₁
                     this.elim (fun hy => hy.symm ▸ hx1) fun hy => h x hx ▸ hy ▸ hx1.symm ▸ (one_mul _).symm)
             else by
               rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ←
@@ -1488,7 +1488,7 @@ theorem mem_sum {f : α → Multiset β} (s : Finset α) (b : β) : (b ∈ ∑ x
   classical
   refine' s.induction_on (by simp) _
   · intro a t hi ih
-    simp [sum_insert hi, ih, or_and_distrib_right, exists_or_distrib]
+    simp [sum_insert hi, ih, or_and_right, exists_or]
     
 
 section ProdEqZero
@@ -1610,7 +1610,7 @@ theorem disjoint_list_sum_left {a : Multiset α} {l : List (Multiset α)} :
   · simp only [zero_disjoint, List.not_mem_nil, IsEmpty.forall_iff, forall_const, List.sum_nil]
     
   · simp_rw [List.sum_cons, disjoint_add_left, List.mem_cons_iff, forall_eq_or_imp]
-    simp [And.congr_left_iff, iff_self_iff, ih]
+    simp [and_congr_left_iff, iff_self_iff, ih]
     
 
 theorem disjoint_list_sum_right {a : Multiset α} {l : List (Multiset α)} :
@@ -1629,7 +1629,7 @@ theorem disjoint_sum_right {a : Multiset α} {i : Multiset (Multiset α)} :
 theorem disjoint_finset_sum_left {β : Type _} {i : Finset β} {f : β → Multiset α} {a : Multiset α} :
     Multiset.Disjoint (i.Sum f) a ↔ ∀ b ∈ i, Multiset.Disjoint (f b) a := by
   convert (@disjoint_sum_left _ a) (map f i.val)
-  simp [Finset.mem_def, And.congr_left_iff, iff_self_iff]
+  simp [Finset.mem_def, and_congr_left_iff, iff_self_iff]
 
 theorem disjoint_finset_sum_right {β : Type _} {i : Finset β} {f : β → Multiset α} {a : Multiset α} :
     Multiset.Disjoint a (i.Sum f) ↔ ∀ b ∈ i, Multiset.Disjoint a (f b) := by
@@ -1664,8 +1664,7 @@ theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β →
       eq_self_iff_true]
     
   · simp_rw [Finset.sum_cons hz, Finset.sup_cons, Finset.mem_cons, Multiset.sup_eq_union, forall_eq_or_imp, Ne.def,
-      eq_self_iff_true, not_true, IsEmpty.forall_iff, true_and_iff, imp_and_distrib, forall_and_distrib, ← hr,
-      @eq_comm _ z]
+      eq_self_iff_true, not_true, IsEmpty.forall_iff, true_and_iff, imp_and, forall_and, ← hr, @eq_comm _ z]
     have := fun x (_ : x ∈ i) => ne_of_mem_of_not_mem H hz
     simp (config := { contextual := true }) only [this, not_false_iff, true_imp_iff]
     simp_rw [← disjoint_finset_sum_left, ← disjoint_finset_sum_right, disjoint_comm, ← and_assoc', and_self_iff]

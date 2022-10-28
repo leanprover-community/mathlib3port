@@ -134,7 +134,7 @@ as a term of `tropical R` via `trop x`. -/
 @[simp]
 def tropRec {F : ∀ X : Tropical R, Sort v} (h : ∀ X, F (trop X)) : ∀ X, F X := fun X => h (untrop X)
 
-instance [DecidableEq R] : DecidableEq (Tropical R) := fun x y => decidableOfIff _ injective_untrop.eq_iff
+instance [DecidableEq R] : DecidableEq (Tropical R) := fun x y => decidable_of_iff _ injective_untrop.eq_iff
 
 section Order
 

@@ -821,7 +821,7 @@ def Contravariant.toRightCancelSemigroup [ContravariantClass α α (swap (· * �
 theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
     [ContravariantClass α α (· * ·) (· ≤ ·)] [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α} (hac : a ≤ c)
     (hbd : b ≤ d) : a * b = c * d ↔ a = c ∧ b = d := by
-  refine' ⟨fun h => _, fun h => congr_arg2 (· * ·) h.1 h.2⟩
+  refine' ⟨fun h => _, fun h => congr_arg₂ (· * ·) h.1 h.2⟩
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, mul_left_cancel'' h⟩
     
@@ -834,7 +834,7 @@ theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
 theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
     (hac : a ≤ c) (hbd : b ≤ d) : a * b = c * d ↔ a = c ∧ b = d := by
-  refine' ⟨fun h => _, fun h => congr_arg2 (· * ·) h.1 h.2⟩
+  refine' ⟨fun h => _, fun h => congr_arg₂ (· * ·) h.1 h.2⟩
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, mul_left_cancel'' h⟩
     

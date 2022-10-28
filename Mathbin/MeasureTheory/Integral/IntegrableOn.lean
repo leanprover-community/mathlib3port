@@ -156,7 +156,7 @@ theorem integrable_on_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set
   · simp
     
   · intro a s ha hs hf
-    simp [hf, or_imp_distrib, forall_and_distrib]
+    simp [hf, or_imp, forall_and]
     
 
 @[simp]

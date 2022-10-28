@@ -6,7 +6,7 @@ Authors: Paul A. Reichert
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Real.Nnreal
-import Mathbin.Data.Set.Pointwise
+import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Topology.SubsetProperties
 
 /-!

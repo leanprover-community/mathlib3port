@@ -575,7 +575,7 @@ theorem AffineIndependent.affine_independent_of_not_mem_span {p : ι → P} {i :
       (Subtype.range_coe : _ = { x | x ≠ i }), ← Set.range_comp, ← s.affine_combination_subtype_eq_filter]
     exact affine_combination_mem_affine_span hw' p'
     
-  · rw [not_and_distrib, not_not] at his
+  · rw [not_and_or, not_not] at his
     let w' : { y // y ≠ i } → k := fun x => w x
     have hw' : (∑ x in s', w' x) = 0 := by
       simp_rw [Finset.sum_subtype_eq_sum_filter]

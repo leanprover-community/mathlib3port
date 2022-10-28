@@ -717,12 +717,12 @@ theorem bounded_by_eq_self (m : OuterMeasure α) : boundedBy m = m :=
   ext fun s => bounded_by_eq _ m.empty' (fun t ht => m.mono' ht) m.UnionCat
 
 theorem le_bounded_by {μ : OuterMeasure α} : μ ≤ boundedBy m ↔ ∀ s, μ s ≤ m s := by
-  rw [bounded_by, le_of_function, forall_congr]
+  rw [bounded_by, le_of_function, forall_congr']
   intro s
   cases' s.eq_empty_or_nonempty with h h <;> simp [h, empty_not_nonempty]
 
 theorem le_bounded_by' {μ : OuterMeasure α} : μ ≤ boundedBy m ↔ ∀ s : Set α, s.Nonempty → μ s ≤ m s := by
-  rw [le_bounded_by, forall_congr]
+  rw [le_bounded_by, forall_congr']
   intro s
   cases' s.eq_empty_or_nonempty with h h <;> simp [h]
 
@@ -774,7 +774,7 @@ def IsCaratheodory (s : Set α) : Prop :=
   ∀ t, m t = m (t ∩ s) + m (t \ s)
 
 theorem is_caratheodory_iff_le' {s : Set α} : is_caratheodory s ↔ ∀ t, m (t ∩ s) + m (t \ s) ≤ m t :=
-  forall_congr fun t => le_antisymm_iff.trans <| and_iff_right <| le_inter_add_diff _
+  forall_congr' fun t => le_antisymm_iff.trans <| and_iff_right <| le_inter_add_diff _
 
 @[simp]
 theorem isCaratheodoryEmpty : is_caratheodory ∅ := by simp [is_caratheodory, m.empty, diff_empty]
@@ -1198,7 +1198,7 @@ variable {m P0 m0}
 
 theorem le_induced_outer_measure {μ : OuterMeasure α} :
     μ ≤ inducedOuterMeasure m P0 m0 ↔ ∀ (s) (hs : P s), μ s ≤ m s hs :=
-  le_of_function.trans <| forall_congr fun s => le_infi_iff
+  le_of_function.trans <| forall_congr' fun s => le_infi_iff
 
 /-- If `P u` is `false` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = induced_outer_measure m P0 m0`.
@@ -1359,13 +1359,13 @@ theorem trim_mono : Monotone (trim : OuterMeasure α → OuterMeasure α) := fun
   infi₂_mono fun f hs => Ennreal.tsum_le_tsum fun b => infi_mono fun hf => H _
 
 theorem le_trim_iff {m₁ m₂ : OuterMeasure α} : m₁ ≤ m₂.trim ↔ ∀ s, MeasurableSet s → m₁ s ≤ m₂ s :=
-  le_of_function.trans <| forall_congr fun s => le_infi_iff
+  le_of_function.trans <| forall_congr' fun s => le_infi_iff
 
 theorem trim_le_trim_iff {m₁ m₂ : OuterMeasure α} : m₁.trim ≤ m₂.trim ↔ ∀ s, MeasurableSet s → m₁ s ≤ m₂ s :=
   le_trim_iff.trans <| forall₂_congr fun s hs => by rw [trim_eq _ hs]
 
 theorem trim_eq_trim_iff {m₁ m₂ : OuterMeasure α} : m₁.trim = m₂.trim ↔ ∀ s, MeasurableSet s → m₁ s = m₂ s := by
-  simp only [le_antisymm_iff, trim_le_trim_iff, forall_and_distrib]
+  simp only [le_antisymm_iff, trim_le_trim_iff, forall_and]
 
 theorem trim_eq_infi (s : Set α) : m.trim s = ⨅ (t) (st : s ⊆ t) (ht : MeasurableSet t), m t := by
   simp (config := { singlePass := true }) only [infi_comm]
@@ -1464,8 +1464,8 @@ theorem trim_supr {ι} [Countable ι] (μ : ι → OuterMeasure α) : trim (⨆ 
   ext1 s
   haveI : Countable (Option <| PLift ι) := @Option.countable (PLift ι) _
   obtain ⟨t, hst, ht, hμt⟩ :=
-    exists_measurable_superset_forall_eq_trim (Option.elim (⨆ i, μ (PLift.down i)) (μ ∘ PLift.down)) s
-  simp only [Option.forall, Option.elim] at hμt
+    exists_measurable_superset_forall_eq_trim (Option.elim' (⨆ i, μ (PLift.down i)) (μ ∘ PLift.down)) s
+  simp only [Option.forall, Option.elim'] at hμt
   simp only [supr_apply, ← hμt.1, ← hμt.2]
 
 /-- The trimmed property of a measure μ states that `μ.to_outer_measure.trim = μ.to_outer_measure`.

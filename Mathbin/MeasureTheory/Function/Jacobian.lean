@@ -215,7 +215,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
         rcases s_subset x xs with ⟨n, z, hnz⟩
         exact False.elim z.2
         
-      · exact nonempty_coe_sort.2 hT
+      · exact hT.coe_sort
         
     inhabit ℕ × T × ℕ
     exact ⟨_, Encodable.surjective_decode_iget _⟩

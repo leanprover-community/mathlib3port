@@ -118,7 +118,7 @@ theorem irrational_sqrt_rat_iff (q : ℚ) : Irrational (sqrt q) ↔ Rat.sqrt q *
         fun h => H2 h.2
 
 instance (q : ℚ) : Decidable (Irrational (sqrt q)) :=
-  decidableOfIff' _ (irrational_sqrt_rat_iff q)
+  decidable_of_iff' _ (irrational_sqrt_rat_iff q)
 
 /-!
 ### Dot-style operations on `irrational`

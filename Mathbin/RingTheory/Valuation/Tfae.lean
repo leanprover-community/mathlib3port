@@ -222,7 +222,7 @@ theorem DiscreteValuationRing.tfae [IsNoetherianRing R] [LocalRing R] [IsDomain 
   · rintro ⟨h₁, h₂⟩
     exact
       ⟨inferInstance, fun I hI hI' =>
-        unique_of_exists_unique h₂ ⟨ne_bot, inferInstance⟩ ⟨hI, hI'⟩ ▸ maximal_ideal.is_maximal R, h₁⟩
+        ExistsUnique.unique h₂ ⟨ne_bot, inferInstance⟩ ⟨hI, hI'⟩ ▸ maximal_ideal.is_maximal R, h₁⟩
     
   tfae_have 3 → 5
   · intro h

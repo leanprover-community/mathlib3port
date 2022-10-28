@@ -611,7 +611,7 @@ def IsBadSeq (r : α → α → Prop) (s : Set α) (f : ℕ → α) : Prop :=
   (∀ n, f n ∈ s) ∧ ∀ m n : ℕ, m < n → ¬r (f m) (f n)
 
 theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) : s.PartiallyWellOrderedOn r ↔ ∀ f, ¬IsBadSeq r s f :=
-  forall_congr fun f => by simp [is_bad_seq]
+  forall_congr' fun f => by simp [is_bad_seq]
 
 /-- This indicates that every bad sequence `g` that agrees with `f` on the first `n`
   terms has `rk (f n) ≤ rk (g n)`. -/

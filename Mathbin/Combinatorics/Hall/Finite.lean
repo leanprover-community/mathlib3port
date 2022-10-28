@@ -54,8 +54,7 @@ theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty
   · have ha' : s'.card < (s'.bUnion fun x => t x).card := by
       convert ha he fun h => by simpa [← h] using mem_univ x using 2
       ext x
-      simp only [mem_image, mem_bUnion, exists_prop, SetCoe.exists, exists_and_distrib_right, exists_eq_right,
-        Subtype.coe_mk]
+      simp only [mem_image, mem_bUnion, exists_prop, SetCoe.exists, exists_and_right, exists_eq_right, Subtype.coe_mk]
     rw [← erase_bUnion]
     by_cases hb:a ∈ s'.bUnion fun x => t x
     · rw [card_erase_of_mem hb]
@@ -137,8 +136,8 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} 
     s'.card ≤ (s'.bUnion fun x' => t x' \ s.bUnion t).card := by
   haveI := Classical.decEq ι
   have disj : Disjoint s (s'.image coe) := by
-    simp only [disjoint_left, not_exists, mem_image, exists_prop, SetCoe.exists, exists_and_distrib_right,
-      exists_eq_right, Subtype.coe_mk]
+    simp only [disjoint_left, not_exists, mem_image, exists_prop, SetCoe.exists, exists_and_right, exists_eq_right,
+      Subtype.coe_mk]
     intro x hx hc h
     exact absurd hx hc
   have : s'.card = (s ∪ s'.image coe).card - s.card := by simp [disj, card_image_of_injective _ Subtype.coe_injective]
@@ -147,8 +146,7 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} 
   rw [← card_sdiff]
   · refine' (card_le_of_subset _).trans le_rfl
     intro t
-    simp only [mem_bUnion, mem_sdiff, not_exists, mem_image, and_imp, mem_union, exists_and_distrib_right,
-      exists_imp_distrib]
+    simp only [mem_bUnion, mem_sdiff, not_exists, mem_image, and_imp, mem_union, exists_and_right, exists_imp]
     rintro x (hx | ⟨x', hx', rfl⟩) rat hs
     · exact (hs x hx rat).elim
       

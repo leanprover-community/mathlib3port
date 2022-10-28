@@ -8,6 +8,10 @@ import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.Ext
 
 /-!
+THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+https://github.com/leanprover-community/mathlib4/pull/449
+Any changes to this file require a corresponding PR to mathlib4.
+
 # Sigma types
 
 This file proves basic results about sigma types.
@@ -134,6 +138,12 @@ end Sigma
 theorem sigma_mk_injective {i : α} : Function.Injective (@Sigma.mk α β i)
   | _, _, rfl => rfl
 
+/- warning: function.injective.sigma_map -> Function.Injective.sigma_map is a dubious translation:
+lean 3 declaration is
+  forall {α₁ : Type.{u_2}} {α₂ : Type.{u_3}} {β₁ : α₁ -> Type.{u_5}} {β₂ : α₂ -> Type.{u_6}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Injective.{succ u_2 succ u_3} α₁ α₂ f₁) -> (forall (a : α₁), Function.Injective.{succ u_5 succ u_6} (β₁ a) (β₂ (f₁ a)) (f₂ a)) -> (Function.Injective.{(max (succ u_2) (succ u_5)) (max (succ u_3) (succ u_6))} (Sigma.{u_2 u_5} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_3 u_6} α₂ β₂) (Sigma.map.{u_2 u_3 u_5 u_6} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂))
+but is expected to have type
+  forall {α₁ : Type.{u_1}} {α₂ : Type.{u_2}} {β₁ : α₁ -> Type.{u_3}} {β₂ : α₂ -> Type.{u_4}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Injective.{succ u_1 succ u_2} α₁ α₂ f₁) -> (forall (a : α₁), Function.Injective.{succ u_3 succ u_4} (β₁ a) (β₂ (f₁ a)) (f₂ a)) -> (Function.Injective.{(max (succ u_3) (succ u_1)) (max (succ u_4) (succ u_2))} (Sigma.{u_1 u_3} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_2 u_4} α₂ β₂) (Sigma.map.{u_1 u_2 u_3 u_4} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂))
+Case conversion may be inaccurate. Consider using '#align function.injective.sigma_map Function.Injective.sigma_mapₓ'. -/
 theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Injective f₁)
     (h₂ : ∀ a, Function.Injective (f₂ a)) : Function.Injective (Sigma.map f₁ f₂)
   | ⟨i, x⟩, ⟨j, y⟩, h => by
@@ -143,14 +153,32 @@ theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β�
     exact h₂ i (sigma_mk_injective h)
     rfl
 
+/- warning: function.injective.of_sigma_map -> Function.Injective.of_sigma_map is a dubious translation:
+lean 3 declaration is
+  forall {α₁ : Type.{u_2}} {α₂ : Type.{u_3}} {β₁ : α₁ -> Type.{u_5}} {β₂ : α₂ -> Type.{u_6}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Injective.{(max (succ u_2) (succ u_5)) (max (succ u_3) (succ u_6))} (Sigma.{u_2 u_5} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_3 u_6} α₂ β₂) (Sigma.map.{u_2 u_3 u_5 u_6} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂)) -> (forall (a : α₁), Function.Injective.{succ u_5 succ u_6} (β₁ a) (β₂ (f₁ a)) (f₂ a))
+but is expected to have type
+  forall {α₁ : Type.{u_2}} {α₂ : Type.{u_4}} {β₁ : α₁ -> Type.{u_1}} {β₂ : α₂ -> Type.{u_3}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Injective.{(max (succ u_1) (succ u_2)) (max (succ u_3) (succ u_4))} (Sigma.{u_2 u_1} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_4 u_3} α₂ β₂) (Sigma.map.{u_2 u_4 u_1 u_3} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂)) -> (forall (a : α₁), Function.Injective.{succ u_1 succ u_3} (β₁ a) (β₂ (f₁ a)) (f₂ a))
+Case conversion may be inaccurate. Consider using '#align function.injective.of_sigma_map Function.Injective.of_sigma_mapₓ'. -/
 theorem Function.Injective.of_sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h : Function.Injective (Sigma.map f₁ f₂)) (a : α₁) : Function.Injective (f₂ a) := fun x y hxy =>
   sigma_mk_injective <| @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (heq_iff_eq.2 hxy))
 
+/- warning: function.injective.sigma_map_iff -> Function.Injective.sigma_map_iff is a dubious translation:
+lean 3 declaration is
+  forall {α₁ : Type.{u_2}} {α₂ : Type.{u_3}} {β₁ : α₁ -> Type.{u_5}} {β₂ : α₂ -> Type.{u_6}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Injective.{succ u_2 succ u_3} α₁ α₂ f₁) -> (Iff (Function.Injective.{(max (succ u_2) (succ u_5)) (max (succ u_3) (succ u_6))} (Sigma.{u_2 u_5} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_3 u_6} α₂ β₂) (Sigma.map.{u_2 u_3 u_5 u_6} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂)) (forall (a : α₁), Function.Injective.{succ u_5 succ u_6} (β₁ a) (β₂ (f₁ a)) (f₂ a)))
+but is expected to have type
+  forall {α₁ : Type.{u_1}} {α₂ : Type.{u_2}} {β₁ : α₁ -> Type.{u_3}} {β₂ : α₂ -> Type.{u_4}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Injective.{succ u_1 succ u_2} α₁ α₂ f₁) -> (Iff (Function.Injective.{(max (succ u_3) (succ u_1)) (max (succ u_4) (succ u_2))} (Sigma.{u_1 u_3} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_2 u_4} α₂ β₂) (Sigma.map.{u_1 u_2 u_3 u_4} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂)) (forall (a : α₁), Function.Injective.{succ u_3 succ u_4} (β₁ a) (β₂ (f₁ a)) (f₂ a)))
+Case conversion may be inaccurate. Consider using '#align function.injective.sigma_map_iff Function.Injective.sigma_map_iffₓ'. -/
 theorem Function.Injective.sigma_map_iff {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Injective f₁) :
     Function.Injective (Sigma.map f₁ f₂) ↔ ∀ a, Function.Injective (f₂ a) :=
   ⟨fun h => h.of_sigma_map, h₁.sigma_map⟩
 
+/- warning: function.surjective.sigma_map -> Function.Surjective.sigma_map is a dubious translation:
+lean 3 declaration is
+  forall {α₁ : Type.{u_2}} {α₂ : Type.{u_3}} {β₁ : α₁ -> Type.{u_5}} {β₂ : α₂ -> Type.{u_6}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Surjective.{succ u_2 succ u_3} α₁ α₂ f₁) -> (forall (a : α₁), Function.Surjective.{succ u_5 succ u_6} (β₁ a) (β₂ (f₁ a)) (f₂ a)) -> (Function.Surjective.{(max (succ u_2) (succ u_5)) (max (succ u_3) (succ u_6))} (Sigma.{u_2 u_5} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_3 u_6} α₂ β₂) (Sigma.map.{u_2 u_3 u_5 u_6} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂))
+but is expected to have type
+  forall {α₁ : Type.{u_1}} {α₂ : Type.{u_2}} {β₁ : α₁ -> Type.{u_3}} {β₂ : α₂ -> Type.{u_4}} {f₁ : α₁ -> α₂} {f₂ : forall (a : α₁), (β₁ a) -> (β₂ (f₁ a))}, (Function.Surjective.{succ u_1 succ u_2} α₁ α₂ f₁) -> (forall (a : α₁), Function.Surjective.{succ u_3 succ u_4} (β₁ a) (β₂ (f₁ a)) (f₂ a)) -> (Function.Surjective.{(max (succ u_3) (succ u_1)) (max (succ u_4) (succ u_2))} (Sigma.{u_1 u_3} α₁ (fun (a : α₁) => β₁ a)) (Sigma.{u_2 u_4} α₂ β₂) (Sigma.map.{u_1 u_2 u_3 u_4} α₁ α₂ (fun (a : α₁) => β₁ a) β₂ f₁ f₂))
+Case conversion may be inaccurate. Consider using '#align function.surjective.sigma_map Function.Surjective.sigma_mapₓ'. -/
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Surjective f₁)
     (h₂ : ∀ a, Function.Surjective (f₂ a)) : Function.Surjective (Sigma.map f₁ f₂) := by
   simp only [Function.Surjective, Sigma.forall, h₁.forall]

@@ -60,7 +60,7 @@ theorem LocallyConvexSpace.convex_basis_zero [LocallyConvexSpace 𝕜 E] :
 
 theorem locally_convex_space_iff_exists_convex_subset :
     LocallyConvexSpace 𝕜 E ↔ ∀ x : E, ∀ U ∈ 𝓝 x, ∃ S ∈ 𝓝 x, Convex 𝕜 S ∧ S ⊆ U :=
-  (locally_convex_space_iff 𝕜 E).trans (forall_congr fun x => has_basis_self)
+  (locally_convex_space_iff 𝕜 E).trans (forall_congr' fun x => has_basis_self)
 
 end Semimodule
 

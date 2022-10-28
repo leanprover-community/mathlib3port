@@ -92,7 +92,7 @@ variable (p)
 @[is_poly]
 theorem verschiebungFunIsPoly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr := by
   use verschiebung_poly
-  simp only [aeval_verschiebung_poly', eq_self_iff_true, forall_3_true_iff]
+  simp only [aeval_verschiebung_poly', eq_self_iff_true, forall₃_true_iff]
 
 variable {p}
 

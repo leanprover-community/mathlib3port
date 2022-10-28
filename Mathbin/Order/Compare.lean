@@ -163,8 +163,9 @@ theorem cmp_of_dual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) : cmp 
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
 def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering) (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
   { ‹Preorder α› with le_antisymm := fun a b => (h a b).le_antisymm, le_total := fun a b => (h a b).le_total,
-    decidableLe := fun a b => decidableOfIff _ (h a b).ne_gt, decidableLt := fun a b => decidableOfIff _ (h a b).eq_lt,
-    DecidableEq := fun a b => decidableOfIff _ (h a b).eq_eq }
+    decidableLe := fun a b => decidable_of_iff _ (h a b).ne_gt,
+    decidableLt := fun a b => decidable_of_iff _ (h a b).eq_lt,
+    DecidableEq := fun a b => decidable_of_iff _ (h a b).eq_eq }
 
 variable [LinearOrder α] (x y : α)
 

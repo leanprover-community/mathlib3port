@@ -37,7 +37,7 @@ def of (C : Type u) [Quiver.{v + 1} C] : QuivCat.{v, u} :=
   Bundled.of C
 
 instance : Inhabited QuivCat :=
-  ⟨QuivCat.of (Quiver.Empty Pempty)⟩
+  ⟨QuivCat.of (Quiver.Empty PEmpty)⟩
 
 /-- Category structure on `Quiv` -/
 instance category : LargeCategory.{max v u} QuivCat.{v, u} where

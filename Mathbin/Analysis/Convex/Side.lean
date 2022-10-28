@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
 import Mathbin.Analysis.Convex.Between
+import Mathbin.Analysis.Convex.Topology
 
 /-!
 # Sides of affine subspaces
@@ -390,7 +391,7 @@ theorem w_same_side_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h 
 
 theorem s_same_side_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
     s.SSameSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) := by
-  rw [s_same_side, and_comm', w_same_side_iff_exists_left h, and_assoc', And.congr_right_iff]
+  rw [s_same_side, and_comm', w_same_side_iff_exists_left h, and_assoc', and_congr_right_iff]
   intro hx
   rw [or_iff_right hx]
 
@@ -444,13 +445,13 @@ theorem w_opp_side_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h :
 
 theorem s_opp_side_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
     s.SOppSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) := by
-  rw [s_opp_side, and_comm', w_opp_side_iff_exists_left h, and_assoc', And.congr_right_iff]
+  rw [s_opp_side, and_comm', w_opp_side_iff_exists_left h, and_assoc', and_congr_right_iff]
   intro hx
   rw [or_iff_right hx]
 
 theorem s_opp_side_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
     s.SOppSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) := by
-  rw [s_opp_side, and_comm', w_opp_side_iff_exists_right h, and_assoc', And.congr_right_iff, And.congr_right_iff]
+  rw [s_opp_side, and_comm', w_opp_side_iff_exists_right h, and_assoc', and_congr_right_iff, and_congr_right_iff]
   rintro hx hy
   rw [or_iff_right hy]
 
@@ -543,7 +544,7 @@ theorem w_same_side_and_w_opp_side_iff {s : AffineSubspace R P} {x y : P} :
   · rintro ⟨hs, ho⟩
     rw [w_opp_side_comm] at ho
     by_contra h
-    rw [not_or_distrib] at h
+    rw [not_or] at h
     exact h.1 (w_opp_side_self_iff.1 (hs.trans_w_opp_side ho h.2))
     
   · rintro (h | h)
@@ -765,6 +766,126 @@ theorem sOppSidePointReflection {s : AffineSubspace R P} {x y : P} (hx : x ∈ s
   rwa [← h]
 
 end LinearOrderedField
+
+section Normed
+
+variable [SeminormedAddCommGroup V] [NormedSpace ℝ V] [PseudoMetricSpace P]
+
+variable [NormedAddTorsor V P]
+
+include V
+
+theorem is_connected_set_of_w_same_side {s : AffineSubspace ℝ P} (x : P) (h : (s : Set P).Nonempty) :
+    IsConnected { y | s.WSameSide x y } := by
+  obtain ⟨p, hp⟩ := h
+  haveI : Nonempty s := ⟨⟨p, hp⟩⟩
+  by_cases hx:x ∈ s
+  · convert is_connected_univ
+    · simp [w_same_side_of_left_mem, hx]
+      
+    · exact AddTorsor.connected_space V P
+      
+    
+  · rw [set_of_w_same_side_eq_image2 hx hp, ← Set.image_prod]
+    refine'
+      (is_connected_Ici.prod (is_connected_iff_connected_space.2 _)).Image _
+        ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
+    convert AddTorsor.connected_space s.direction s
+    
+
+theorem is_preconnected_set_of_w_same_side (s : AffineSubspace ℝ P) (x : P) : IsPreconnected { y | s.WSameSide x y } :=
+  by
+  rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
+  · convert is_preconnected_empty
+    rw [coe_eq_bot_iff] at h
+    simp only [h, not_w_same_side_bot]
+    rfl
+    
+  · exact (is_connected_set_of_w_same_side x h).IsPreconnected
+    
+
+theorem is_connected_set_of_s_same_side {s : AffineSubspace ℝ P} {x : P} (hx : x ∉ s) (h : (s : Set P).Nonempty) :
+    IsConnected { y | s.SSameSide x y } := by
+  obtain ⟨p, hp⟩ := h
+  haveI : Nonempty s := ⟨⟨p, hp⟩⟩
+  rw [set_of_s_same_side_eq_image2 hx hp, ← Set.image_prod]
+  refine'
+    (is_connected_Ioi.prod (is_connected_iff_connected_space.2 _)).Image _
+      ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
+  convert AddTorsor.connected_space s.direction s
+
+theorem is_preconnected_set_of_s_same_side (s : AffineSubspace ℝ P) (x : P) : IsPreconnected { y | s.SSameSide x y } :=
+  by
+  rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
+  · convert is_preconnected_empty
+    rw [coe_eq_bot_iff] at h
+    simp only [h, not_s_same_side_bot]
+    rfl
+    
+  · by_cases hx:x ∈ s
+    · convert is_preconnected_empty
+      simp only [hx, s_same_side, not_true, false_and_iff, and_false_iff]
+      rfl
+      
+    · exact (is_connected_set_of_s_same_side hx h).IsPreconnected
+      
+    
+
+theorem is_connected_set_of_w_opp_side {s : AffineSubspace ℝ P} (x : P) (h : (s : Set P).Nonempty) :
+    IsConnected { y | s.WOppSide x y } := by
+  obtain ⟨p, hp⟩ := h
+  haveI : Nonempty s := ⟨⟨p, hp⟩⟩
+  by_cases hx:x ∈ s
+  · convert is_connected_univ
+    · simp [w_opp_side_of_left_mem, hx]
+      
+    · exact AddTorsor.connected_space V P
+      
+    
+  · rw [set_of_w_opp_side_eq_image2 hx hp, ← Set.image_prod]
+    refine'
+      (is_connected_Iic.prod (is_connected_iff_connected_space.2 _)).Image _
+        ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
+    convert AddTorsor.connected_space s.direction s
+    
+
+theorem is_preconnected_set_of_w_opp_side (s : AffineSubspace ℝ P) (x : P) : IsPreconnected { y | s.WOppSide x y } := by
+  rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
+  · convert is_preconnected_empty
+    rw [coe_eq_bot_iff] at h
+    simp only [h, not_w_opp_side_bot]
+    rfl
+    
+  · exact (is_connected_set_of_w_opp_side x h).IsPreconnected
+    
+
+theorem is_connected_set_of_s_opp_side {s : AffineSubspace ℝ P} {x : P} (hx : x ∉ s) (h : (s : Set P).Nonempty) :
+    IsConnected { y | s.SOppSide x y } := by
+  obtain ⟨p, hp⟩ := h
+  haveI : Nonempty s := ⟨⟨p, hp⟩⟩
+  rw [set_of_s_opp_side_eq_image2 hx hp, ← Set.image_prod]
+  refine'
+    (is_connected_Iio.prod (is_connected_iff_connected_space.2 _)).Image _
+      ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
+  convert AddTorsor.connected_space s.direction s
+
+theorem is_preconnected_set_of_s_opp_side (s : AffineSubspace ℝ P) (x : P) : IsPreconnected { y | s.SOppSide x y } := by
+  rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
+  · convert is_preconnected_empty
+    rw [coe_eq_bot_iff] at h
+    simp only [h, not_s_opp_side_bot]
+    rfl
+    
+  · by_cases hx:x ∈ s
+    · convert is_preconnected_empty
+      simp only [hx, s_opp_side, not_true, false_and_iff, and_false_iff]
+      rfl
+      
+    · exact (is_connected_set_of_s_opp_side hx h).IsPreconnected
+      
+    
+
+end Normed
 
 end AffineSubspace
 

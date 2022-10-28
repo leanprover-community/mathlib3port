@@ -181,7 +181,7 @@ theorem Multiset.to_enum_finset_filter_eq (m : Multiset α) (x : α) :
     (m.toEnumFinset.filter fun p => x = p.1) = (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩ := by
   ext ⟨y, i⟩
   simp only [eq_comm, Finset.mem_filter, Multiset.mem_to_enum_finset, Finset.mem_map, Finset.mem_range,
-    Function.Embedding.coe_fn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right', And.congr_left_iff]
+    Function.Embedding.coe_fn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right', and_congr_left_iff]
   rintro rfl
   rfl
 

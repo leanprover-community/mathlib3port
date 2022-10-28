@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.Order.Lattice
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Data.Option.Basic
 
 /-!
 # ⊤ and ⊥, bounded lattices and variants
@@ -476,7 +476,7 @@ theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B 
 instance PropCat.distribLattice : DistribLattice Prop :=
   { PropCat.partialOrder with sup := Or, le_sup_left := @Or.inl, le_sup_right := @Or.inr,
     sup_le := fun a b c => Or.ndrec, inf := And, inf_le_left := @And.left, inf_le_right := @And.right,
-    le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha), le_sup_inf := fun a b c => or_and_distrib_left.2 }
+    le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha), le_sup_inf := fun a b c => or_and_left.2 }
 
 /-- Propositions form a bounded order. -/
 instance PropCat.boundedOrder : BoundedOrder Prop where
@@ -484,6 +484,12 @@ instance PropCat.boundedOrder : BoundedOrder Prop where
   le_top a Ha := True.intro
   bot := False
   bot_le := @False.elim
+
+theorem PropCat.bot_eq_false : (⊥ : Prop) = False :=
+  rfl
+
+theorem PropCat.top_eq_true : (⊤ : Prop) = True :=
+  rfl
 
 instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
   ⟨fun p q => by
@@ -673,7 +679,7 @@ instance [Repr α] : Repr (WithBot α) :=
     | none => "⊥"
     | some a => "↑" ++ repr a⟩
 
-instance : CoeT α (WithBot α) :=
+instance : CoeTC α (WithBot α) :=
   ⟨some⟩
 
 instance : HasBot (WithBot α) :=
@@ -1061,7 +1067,7 @@ instance [Repr α] : Repr (WithTop α) :=
     | none => "⊤"
     | some a => "↑" ++ repr a⟩
 
-instance : CoeT α (WithTop α) :=
+instance : CoeTC α (WithTop α) :=
   ⟨some⟩
 
 instance : HasTop (WithTop α) :=
@@ -1828,16 +1834,16 @@ theorem Disjoint.monoRight : b ≤ c → Disjoint a c → Disjoint a b :=
 variable (c)
 
 theorem Disjoint.infLeft (h : Disjoint a b) : Disjoint (a ⊓ c) b :=
-  h.mono_left inf_le_left
+  h.monoLeft inf_le_left
 
 theorem Disjoint.infLeft' (h : Disjoint a b) : Disjoint (c ⊓ a) b :=
-  h.mono_left inf_le_right
+  h.monoLeft inf_le_right
 
 theorem Disjoint.infRight (h : Disjoint a b) : Disjoint a (b ⊓ c) :=
-  h.mono_right inf_le_left
+  h.monoRight inf_le_left
 
 theorem Disjoint.infRight' (h : Disjoint a b) : Disjoint a (c ⊓ b) :=
-  h.mono_right inf_le_right
+  h.monoRight inf_le_right
 
 variable {c}
 
@@ -1955,16 +1961,16 @@ theorem Codisjoint.monoRight : b ≤ c → Codisjoint a b → Codisjoint a c :=
 variable (c)
 
 theorem Codisjoint.supLeft (h : Codisjoint a b) : Codisjoint (a ⊔ c) b :=
-  h.mono_left le_sup_left
+  h.monoLeft le_sup_left
 
 theorem Codisjoint.supLeft' (h : Codisjoint a b) : Codisjoint (c ⊔ a) b :=
-  h.mono_left le_sup_right
+  h.monoLeft le_sup_right
 
 theorem Codisjoint.supRight (h : Codisjoint a b) : Codisjoint a (b ⊔ c) :=
-  h.mono_right le_sup_left
+  h.monoRight le_sup_left
 
 theorem Codisjoint.supRight' (h : Codisjoint a b) : Codisjoint a (c ⊔ b) :=
-  h.mono_right le_sup_right
+  h.monoRight le_sup_right
 
 variable {c}
 

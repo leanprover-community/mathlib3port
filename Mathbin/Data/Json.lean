@@ -143,7 +143,7 @@ unsafe instance {α : Type} [non_null_json_serializable α] (p : α → Prop) [D
 
 /-- Note this only makes sense on types which do not themselves serialize to `null` -/
 unsafe instance {α} [non_null_json_serializable α] : json_serializable (Option α) where
-  to_json := Option.elim json.null to_json
+  to_json := Option.elim' json.null to_json
   of_json j := do
     of_json PUnit j >> pure none <|> some <$> of_json α j
 
@@ -222,7 +222,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
           to_expr (pquote.1 (exception fun o => f!"field {%%ₓquote.1 fname} is required" : exceptional (%%ₓt)))
     to_expr
         (pquote.1
-          (Option.mmap (of_json _) (%%ₓfj) >>= Option.elim (%%ₓwithout_field) (%%ₓwith_field) : exceptional (%%ₓt)))
+          (Option.mapM (of_json _) (%%ₓfj) >>= Option.elim' (%%ₓwithout_field) (%%ₓwith_field) : exceptional (%%ₓt)))
   | vars,
     (fname, none) :: js =>-- try a default value
         of_json_helper

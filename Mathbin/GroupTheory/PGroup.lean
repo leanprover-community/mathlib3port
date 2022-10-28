@@ -35,7 +35,7 @@ variable {p} {G}
 namespace IsPGroup
 
 theorem iff_order_of [hp : Fact p.Prime] : IsPGroup p G ↔ ∀ g : G, ∃ k : ℕ, orderOf g = p ^ k :=
-  forall_congr fun g =>
+  forall_congr' fun g =>
     ⟨fun ⟨k, hk⟩ => imp (fun j => Exists.snd) ((Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hk)),
       imp fun k hk => by rw [← hk, pow_order_of_eq_one]⟩
 

@@ -836,7 +836,7 @@ theorem prod_eq_prod_of_nonempty {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂
   haveI : Nonempty γ := ⟨y⟩
   haveI : Nonempty δ := ⟨e₂ y⟩
   simp_rw [LocalHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iff,
-    Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forall, forall_const, forall_forall_const, and_assoc',
+    Set.prod_eq_prod_iff_of_nonempty h, forall_and, Prod.forall, forall_const, forall_forall_const, and_assoc',
     and_left_comm]
 
 theorem prod_eq_prod_of_nonempty' {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}

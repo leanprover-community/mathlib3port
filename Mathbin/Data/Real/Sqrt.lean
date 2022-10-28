@@ -236,7 +236,7 @@ theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
     Real.to_nnreal_le_to_nnreal_iff (mul_self_nonneg y), sq]
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
-  rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
+  rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, and_congr_right_iff]
   exact sqrt_le_left
 
 theorem sqrt_lt (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x < y ↔ x < y ^ 2 := by rw [← sqrt_lt_sqrt_iff hx, sqrt_sq hy]

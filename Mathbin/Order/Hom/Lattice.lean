@@ -237,23 +237,23 @@ theorem map_symm_diff' (a b : α) : f (a ∆ b) = f a ∆ f b := by rw [symmDiff
 
 end BooleanAlgebra
 
-instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeT F (SupHom α β) :=
+instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeTC F (SupHom α β) :=
   ⟨fun f => ⟨f, map_sup f⟩⟩
 
-instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeT F (InfHom α β) :=
+instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeTC F (InfHom α β) :=
   ⟨fun f => ⟨f, map_inf f⟩⟩
 
-instance [HasSup α] [HasSup β] [HasBot α] [HasBot β] [SupBotHomClass F α β] : CoeT F (SupBotHom α β) :=
+instance [HasSup α] [HasSup β] [HasBot α] [HasBot β] [SupBotHomClass F α β] : CoeTC F (SupBotHom α β) :=
   ⟨fun f => ⟨f, map_bot f⟩⟩
 
-instance [HasInf α] [HasInf β] [HasTop α] [HasTop β] [InfTopHomClass F α β] : CoeT F (InfTopHom α β) :=
+instance [HasInf α] [HasInf β] [HasTop α] [HasTop β] [InfTopHomClass F α β] : CoeTC F (InfTopHom α β) :=
   ⟨fun f => ⟨f, map_top f⟩⟩
 
-instance [Lattice α] [Lattice β] [LatticeHomClass F α β] : CoeT F (LatticeHom α β) :=
+instance [Lattice α] [Lattice β] [LatticeHomClass F α β] : CoeTC F (LatticeHom α β) :=
   ⟨fun f => { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f }⟩
 
 instance [Lattice α] [Lattice β] [BoundedOrder α] [BoundedOrder β] [BoundedLatticeHomClass F α β] :
-    CoeT F (BoundedLatticeHom α β) :=
+    CoeTC F (BoundedLatticeHom α β) :=
   ⟨fun f => { (f : LatticeHom α β) with toFun := f, map_top' := map_top f, map_bot' := map_bot f }⟩
 
 /-! ### Supremum homomorphisms -/

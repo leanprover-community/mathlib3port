@@ -48,6 +48,84 @@ variable {C}
 
 namespace Presheaf
 
+attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
+
+/-- Tag lemmas to use in `Top.presheaf.restrict_tac`.  -/
+@[user_attribute]
+unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit where
+  Name := `sheaf_restrict
+  descr := "tag lemmas to use in `Top.presheaf.restrict_tac`"
+  cache_cfg :=
+    { mk_cache := fun ns =>
+        pure fun t => do
+          let ctx ← tactic.local_context
+          ctx (tactic.focus1 ∘ (tactic.apply' >=> fun _ => tactic.done) >=> fun _ => t) <|>
+              ns
+                (tactic.focus1 ∘ (tactic.resolve_name >=> tactic.to_expr >=> tactic.apply' >=> fun _ => tactic.done) >=>
+                  fun _ => t),
+      dependencies := [] }
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/-- A tactic to discharge goals of type `U ≤ V` for `Top.presheaf.restrict_open` -/
+unsafe def restrict_tac : ∀ n : ℕ, tactic Unit
+  | 0 => tactic.fail "`restrict_tac` failed"
+  | n + 1 => Monad.join (restrict_attr.get_cache <*> pure tactic.done) <|> sorry
+
+/-- A tactic to discharge goals of type `U ≤ V` for `Top.presheaf.restrict_open`.
+Defaults to three iterations. -/
+unsafe def restrict_tac' :=
+  restrict_tac 3
+
+attribute [sheaf_restrict] bot_le le_top le_refl inf_le_left inf_le_right le_sup_left le_sup_right
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic Top.presheaf.restrict_tac' -/
+example {X : TopCat} {v w x y z : Opens X} (h₀ : v ≤ x) (h₁ : x ≤ z ⊓ w) (h₂ : x ≤ y ⊓ z) : v ≤ y := by
+  run_tac
+    restrict_tac'
+
+/-- The restriction of a section along an inclusion of open sets.
+For `x : F.obj (op V)`, we provide the notation `x |_ₕ i` (`h` stands for `hom`) for `i : U ⟶ V`,
+and the notation `x |_ₗ U ⟪i⟫` (`l` stands for `le`) for `i : U ≤ V`.
+-/
+def restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] {F : X.Presheaf C} {V : Opens X}
+    (x : F.obj (op V)) {U : Opens X} (h : U ⟶ V) : F.obj (op U) :=
+  F.map h.op x
+
+-- mathport name: «expr |_ₕ »
+localized [AlgebraicGeometry] infixl:80 " |_ₕ " => TopCat.Presheaf.restrict
+
+-- mathport name: «expr |_ₗ ⟪ ⟫»
+localized [AlgebraicGeometry]
+  notation:80 x " |_ₗ " U " ⟪" e "⟫ " => @TopCat.Presheaf.restrict _ _ _ _ _ _ x U (@homOfLe (Opens _) _ U _ e)
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic Top.presheaf.restrict_tac' -/
+/-- The restriction of a section along an inclusion of open sets.
+For `x : F.obj (op V)`, we provide the notation `x |_ U`, where the proof `U ≤ V` is inferred by
+the tactic `Top.presheaf.restrict_tac'` -/
+abbrev restrictOpen {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] {F : X.Presheaf C} {V : Opens X}
+    (x : F.obj (op V)) (U : Opens X)
+    (e : U ≤ V := by
+      run_tac
+        Top.presheaf.restrict_tac') :
+    F.obj (op U) :=
+  x |_ₗ U ⟪e⟫
+
+-- mathport name: «expr |_ »
+localized [AlgebraicGeometry] infixl:80 " |_ " => TopCat.Presheaf.restrictOpen
+
+@[simp]
+theorem restrict_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] {F : X.Presheaf C}
+    {U V W : Opens X} (e₁ : U ≤ V) (e₂ : V ≤ W) (x : F.obj (op W)) : x |_ V |_ U = x |_ U := by
+  delta restrict_open restrict
+  rw [← comp_apply, ← functor.map_comp]
+  rfl
+
+@[simp]
+theorem map_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] {F G : X.Presheaf C} (e : F ⟶ G)
+    {U V : Opens X} (h : U ≤ V) (x : F.obj (op V)) : e.app _ (x |_ U) = e.app _ x |_ U := by
+  delta restrict_open restrict
+  rw [← comp_apply, nat_trans.naturality, comp_apply]
+
 /-- Pushforward a presheaf on `X` along a continuous map `f : X ⟶ Y`, obtaining a presheaf
 on `Y`. -/
 def pushforwardObj {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) : Y.Presheaf C :=

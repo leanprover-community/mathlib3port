@@ -39,7 +39,7 @@ theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ Centralizer S ↔ ∀ m ∈ 
 
 @[to_additive decidable_mem_add_centralizer]
 instance decidableMemCentralizer [Mul M] [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
-    DecidablePred (· ∈ Centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
+    DecidablePred (· ∈ Centralizer S) := fun _ => decidable_of_iff' _ mem_centralizer_iff
 
 variable (S)
 
@@ -127,7 +127,7 @@ theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z
 
 @[to_additive]
 instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
-    DecidablePred (· ∈ centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
+    DecidablePred (· ∈ centralizer S) := fun _ => decidable_of_iff' _ mem_centralizer_iff
 
 @[to_additive]
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=

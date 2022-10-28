@@ -112,11 +112,11 @@ theorem singleton_sigma_singleton {a : ∀ i, α i} : (({i} : Set ι).Sigma fun 
 
 @[simp]
 theorem union_sigma : (s₁ ∪ s₂).Sigma t = s₁.Sigma t ∪ s₂.Sigma t :=
-  ext fun _ => or_and_distrib_right
+  ext fun _ => or_and_right
 
 @[simp]
 theorem sigma_union : (s.Sigma fun i => t₁ i ∪ t₂ i) = s.Sigma t₁ ∪ s.Sigma t₂ :=
-  ext fun _ => and_or_distrib_left
+  ext fun _ => and_or_left
 
 theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
   ext ⟨x, y⟩

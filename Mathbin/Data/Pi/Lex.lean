@@ -53,6 +53,17 @@ theorem to_lex_apply (x : ∀ i, β i) (i : ι) : toLex x i = x i :=
 theorem of_lex_apply (x : Lex (∀ i, β i)) (i : ι) : ofLex x i = x i :=
   rfl
 
+theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i} (hlt : x < y) :
+    ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i :=
+  let h' := Pi.lt_def.1 hlt
+  let ⟨i, hi, hl⟩ := hwf.has_min _ h'.2
+  ⟨i, fun j hj => ⟨h'.1 j, not_not.1 fun h => hl j (lt_of_le_not_le (h'.1 j) h) hj⟩, hi⟩
+
+theorem lex_lt_of_lt [∀ i, PartialOrder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i} (hlt : x < y) :
+    Pi.Lex r (fun i => (· < ·)) x y := by
+  simp_rw [Pi.Lex, le_antisymm_iff]
+  exact lex_lt_of_lt_of_preorder hwf hlt
+
 theorem is_trichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r) :
     IsTrichotomous (∀ i, β i) (Pi.Lex r @s) :=
   { trichotomous := fun a b => by
@@ -91,30 +102,23 @@ noncomputable instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, Linea
   @linearOrderOfSTO (Πₗ i, β i) (· < ·) { to_is_trichotomous := is_trichotomous_lex _ _ IsWellFounded.wf }
     (Classical.decRel _)
 
-theorem Lex.le_of_forall_le [LinearOrder ι] [hwf : IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)]
-    {a b : Lex (∀ i, β i)} (h : ∀ i, a i ≤ b i) : a ≤ b :=
+theorem to_lex_monotone [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] :
+    Monotone (@toLex (∀ i, β i)) := fun a b h =>
   or_iff_not_imp_left.2 fun hne =>
-    let ⟨i, hi, hl⟩ := hwf.to_is_well_founded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
+    let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
     ⟨i, fun j hj => by
       contrapose! hl
       exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 
-theorem Lex.le_of_of_lex_le [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] {a b : Lex (∀ i, β i)}
-    (h : ofLex a ≤ ofLex b) : a ≤ b :=
-  Lex.le_of_forall_le h
-
-theorem to_lex_monotone [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] :
-    Monotone (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
-
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] [∀ a, OrderBot (β a)] :
     OrderBot (Lex (∀ a, β a)) where
   bot := toLex ⊥
-  bot_le f := Lex.le_of_of_lex_le bot_le
+  bot_le f := to_lex_monotone bot_le
 
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] [∀ a, OrderTop (β a)] :
     OrderTop (Lex (∀ a, β a)) where
   top := toLex ⊤
-  le_top f := Lex.le_of_of_lex_le le_top
+  le_top f := to_lex_monotone le_top
 
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)] [∀ a, BoundedOrder (β a)] :
     BoundedOrder (Lex (∀ a, β a)) :=

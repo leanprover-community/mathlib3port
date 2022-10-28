@@ -60,7 +60,7 @@ theorem ff_eq_to_bool_iff {p : Prop} [Decidable p] : ff = decide p ↔ ¬p :=
   eq_comm.trans (to_bool_ff_iff _)
 
 @[simp]
-theorem to_bool_not (p : Prop) [Decidable p] : (decide ¬p) = not (decide p) := by by_cases p <;> simp [*]
+theorem to_bool_not (p : Prop) [Decidable p] : (decide ¬p) = !decide p := by by_cases p <;> simp [*]
 
 @[simp]
 theorem to_bool_and (p q : Prop) [Decidable p] [Decidable q] : decide (p ∧ q) = (p && q) := by
@@ -157,12 +157,16 @@ theorem bor_band_distrib_left (a b c : Bool) : (a || b && c) = ((a || b) && (a |
 theorem bor_band_distrib_right (a b c : Bool) : (a && b || c) = ((a || c) && (b || c)) := by cases c <;> simp
 
 @[simp]
-theorem bnot_false : not false = tt :=
+theorem bnot_ff : !ff = tt :=
   rfl
 
 @[simp]
-theorem bnot_true : not true = ff :=
+theorem bnot_tt : !tt = ff :=
   rfl
+
+theorem eq_bnot_iff : ∀ {a b : Bool}, a = !b ↔ a ≠ b := by decide
+
+theorem bnot_eq_iff : ∀ {a b : Bool}, !a = b ↔ a ≠ b := by decide
 
 @[simp]
 theorem not_eq_bnot : ∀ {a b : Bool}, ¬a = !b ↔ a = b := by decide
@@ -176,12 +180,18 @@ theorem ne_bnot {a b : Bool} : a ≠ !b ↔ a = b :=
 theorem bnot_ne {a b : Bool} : !a ≠ b ↔ a = b :=
   bnot_not_eq
 
+theorem bnot_ne_self : ∀ b : Bool, !b ≠ b := by decide
+
+theorem self_ne_bnot : ∀ b : Bool, b ≠ !b := by decide
+
+theorem eq_or_eq_bnot : ∀ a b, a = b ∨ a = !b := by decide
+
 @[simp]
 theorem bnot_iff_not : ∀ {b : Bool}, !b ↔ ¬b := by decide
 
-theorem eq_tt_of_bnot_eq_ff : ∀ {a : Bool}, not a = ff → a = tt := by decide
+theorem eq_tt_of_bnot_eq_ff : ∀ {a : Bool}, !a = ff → a = tt := by decide
 
-theorem eq_ff_of_bnot_eq_tt : ∀ {a : Bool}, not a = tt → a = ff := by decide
+theorem eq_ff_of_bnot_eq_tt : ∀ {a : Bool}, !a = tt → a = ff := by decide
 
 @[simp]
 theorem band_bnot_self : ∀ x, (x && !x) = ff := by decide

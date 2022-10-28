@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.Data.Set.Pointwise
+import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Algebra.BigOperators.Pi
 

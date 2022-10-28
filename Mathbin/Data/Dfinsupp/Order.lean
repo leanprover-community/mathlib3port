@@ -148,7 +148,7 @@ protected theorem bot_eq_zero : (⊥ : Π₀ i, α i) = 0 :=
   rfl
 
 @[simp]
-theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and_distrib]
+theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and]
 
 section Le
 
@@ -164,7 +164,7 @@ theorem le_iff : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
 variable (α)
 
 instance decidableLe [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@LE.le (Π₀ i, α i) _) := fun f g =>
-  decidableOfIff _ le_iff.symm
+  decidable_of_iff _ le_iff.symm
 
 variable {α}
 
@@ -195,7 +195,7 @@ variable (α)
 
 instance : HasOrderedSub (Π₀ i, α i) :=
   ⟨fun n m k =>
-    forall_congr fun i => by
+    forall_congr' fun i => by
       rw [add_apply, tsub_apply]
       exact tsub_le_iff_right⟩
 
@@ -240,13 +240,13 @@ variable [∀ i, CanonicallyLinearOrderedAddMonoid (α i)] [DecidableEq ι] {f g
 theorem support_inf : (f ⊓ g).support = f.support ∩ g.support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
-  simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
+  simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or]
 
 @[simp]
 theorem support_sup : (f ⊔ g).support = f.support ∪ g.support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
-  rw [_root_.sup_eq_bot_iff, not_and_distrib]
+  rw [_root_.sup_eq_bot_iff, not_and_or]
 
 theorem disjoint_iff : Disjoint f g ↔ Disjoint f.support g.support := by
   rw [disjoint_iff, disjoint_iff, Dfinsupp.bot_eq_zero, ← Dfinsupp.support_eq_empty, Dfinsupp.support_inf]

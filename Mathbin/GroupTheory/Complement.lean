@@ -354,7 +354,7 @@ instance : MulAction F (LeftTransversals (H : Set G)) where
 theorem smul_to_fun (f : F) (T : LeftTransversals (H : Set G)) (g : G) :
     (f • toFun T.2 g : G) = toFun (f • T).2 (f • g) :=
   Subtype.ext_iff.mp <|
-    @unique_of_exists_unique (↥(f • T)) (fun s => (↑s)⁻¹ * f • g ∈ H)
+    @unique (↥(f • T)) (fun s => (↑s)⁻¹ * f • g ∈ H)
       (mem_left_transversals_iff_exists_unique_inv_mul_mem.mp (f • T).2 (f • g))
       ⟨f • toFun T.2 g, Set.smul_mem_smul_set (Subtype.coe_prop _)⟩ (toFun (f • T).2 (f • g))
       (QuotientAction.inv_mul_mem f (inv_to_fun_mul_mem T.2 g)) (inv_to_fun_mul_mem (f • T).2 (f • g))

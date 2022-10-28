@@ -133,7 +133,7 @@ theorem Union_bUnion_tagged (π : Prepartition I) (πi : ∀ J, TaggedPrepartiti
 
 theorem forall_bUnion_tagged (p : (ι → ℝ) → Box ι → Prop) (π : Prepartition I) (πi : ∀ J, TaggedPrepartition J) :
     (∀ J ∈ π.bUnionTagged πi, p ((π.bUnionTagged πi).Tag J) J) ↔ ∀ J ∈ π, ∀ J' ∈ πi J, p ((πi J).Tag J') J' := by
-  simp only [bex_imp_distrib, mem_bUnion_tagged]
+  simp only [bex_imp, mem_bUnion_tagged]
   refine' ⟨fun H J hJ J' hJ' => _, fun H J' J hJ hJ' => _⟩
   · rw [← π.tag_bUnion_tagged hJ hJ']
     exact H J' J hJ hJ'

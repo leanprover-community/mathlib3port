@@ -395,7 +395,7 @@ theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
 @[simp]
 theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q := by
   ext1
-  rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_coe_nat,
+  rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
     Int.nat_abs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
   exact Rat.num_div_denom q
 

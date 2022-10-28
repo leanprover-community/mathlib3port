@@ -121,7 +121,7 @@ protected theorem bot_eq_zero : (⊥ : ι →₀ α) = 0 :=
   rfl
 
 @[simp]
-theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and_distrib]
+theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and]
 
 theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.Support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
@@ -131,7 +131,7 @@ theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀ i ∈ f.Support, f i ≤ g
   le_iff' f g <| Subset.refl _
 
 instance decidableLe [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
-  decidableOfIff _ (le_iff f g).symm
+  decidable_of_iff _ (le_iff f g).symm
 
 @[simp]
 theorem single_le_iff {i : ι} {x : α} {f : ι →₀ α} : single i x ≤ f ↔ x ≤ f i :=
@@ -145,7 +145,7 @@ instance tsub : Sub (ι →₀ α) :=
   ⟨zipWith (fun m n => m - n) (tsub_self 0)⟩
 
 instance : HasOrderedSub (ι →₀ α) :=
-  ⟨fun n m k => forall_congr fun x => tsub_le_iff_right⟩
+  ⟨fun n m k => forall_congr' fun x => tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
   { Finsupp.orderBot, Finsupp.orderedAddCommMonoid with
@@ -185,13 +185,13 @@ variable [CanonicallyLinearOrderedAddMonoid α] [DecidableEq ι] {f g : ι →�
 theorem support_inf : (f ⊓ g).Support = f.Support ∩ g.Support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
-  simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
+  simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or]
 
 @[simp]
 theorem support_sup : (f ⊔ g).Support = f.Support ∪ g.Support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
-  rw [_root_.sup_eq_bot_iff, not_and_distrib]
+  rw [_root_.sup_eq_bot_iff, not_and_or]
 
 theorem disjoint_iff : Disjoint f g ↔ Disjoint f.Support g.Support := by
   rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty, Finsupp.support_inf]

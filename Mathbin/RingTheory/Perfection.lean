@@ -36,7 +36,7 @@ using the `p`-th power maps `M → M` indexed by the natural numbers, implemente
 def Monoid.perfection (M : Type u₁) [CommMonoid M] (p : ℕ) : Submonoid (ℕ → M) where
   Carrier := { f | ∀ n, f (n + 1) ^ p = f n }
   one_mem' n := one_pow _
-  mul_mem' f g hf hg n := (mul_pow _ _ _).trans <| congr_arg2 _ (hf n) (hg n)
+  mul_mem' f g hf hg n := (mul_pow _ _ _).trans <| congr_arg₂ _ (hf n) (hg n)
 
 /-- The perfection of a ring `R` with characteristic `p`, as a subsemiring,
 defined to be the projective limit of `R` using the Frobenius maps `R → R`
@@ -44,7 +44,7 @@ indexed by the natural numbers, implemented as `{ f : ℕ → R | ∀ n, f (n + 
 def Ring.perfectionSubsemiring (R : Type u₁) [CommSemiring R] (p : ℕ) [hp : Fact p.Prime] [CharP R p] :
     Subsemiring (ℕ → R) :=
   { Monoid.perfection R p with zero_mem' := fun n => zero_pow <| hp.1.Pos,
-    add_mem' := fun f g hf hg n => (frobenius_add R p _ _).trans <| congr_arg2 _ (hf n) (hg n) }
+    add_mem' := fun f g hf hg n => (frobenius_add R p _ _).trans <| congr_arg₂ _ (hf n) (hg n) }
 
 /-- The perfection of a ring `R` with characteristic `p`, as a subring,
 defined to be the projective limit of `R` using the Frobenius maps `R → R`

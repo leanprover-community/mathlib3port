@@ -105,14 +105,14 @@ theorem product_subset_product_right (ht : t ⊆ t') : s ×ˢ t ⊆ s ×ˢ t' :=
 theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = s.bUnion fun a => t.Image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm, exists_and_distrib_left,
+    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm, exists_and_left,
       exists_eq_right, exists_eq_left]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = t.bUnion fun b => s.Image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm, exists_and_distrib_left,
+    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm, exists_and_left,
       exists_eq_right, exists_eq_left]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -205,8 +205,7 @@ theorem nonempty_product : (s ×ˢ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem product_eq_empty {s : Finset α} {t : Finset β} : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
-  rw [← not_nonempty_iff_eq_empty, nonempty_product, not_and_distrib, not_nonempty_iff_eq_empty,
-    not_nonempty_iff_eq_empty]
+  rw [← not_nonempty_iff_eq_empty, nonempty_product, not_and_or, not_nonempty_iff_eq_empty, not_nonempty_iff_eq_empty]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -230,7 +229,7 @@ theorem singleton_product_singleton {a : α} {b : β} : ({a} : Finset α) ×ˢ (
 @[simp]
 theorem union_product [DecidableEq α] [DecidableEq β] : (s ∪ s') ×ˢ t = s ×ˢ t ∪ s' ×ˢ t := by
   ext ⟨x, y⟩
-  simp only [or_and_distrib_right, mem_union, mem_product]
+  simp only [or_and_right, mem_union, mem_product]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -238,7 +237,7 @@ theorem union_product [DecidableEq α] [DecidableEq β] : (s ∪ s') ×ˢ t = s 
 @[simp]
 theorem product_union [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∪ t') = s ×ˢ t ∪ s ×ˢ t' := by
   ext ⟨x, y⟩
-  simp only [and_or_distrib_left, mem_union, mem_product]
+  simp only [and_or_left, mem_union, mem_product]
 
 end Prod
 
@@ -335,7 +334,7 @@ theorem product_sdiff_off_diag : s ×ˢ s \ s.OffDiag = s.diag := by
   rw [← diag_union_off_diag, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _)]
 
 theorem diag_inter : (s ∩ t).diag = s.diag ∩ t.diag :=
-  ext fun x => by simpa only [mem_diag, mem_inter] using and_and_distrib_right _ _ _
+  ext fun x => by simpa only [mem_diag, mem_inter] using and_and_right _ _ _
 
 theorem off_diag_inter : (s ∩ t).OffDiag = s.OffDiag ∩ t.OffDiag :=
   coe_injective <| by
@@ -344,7 +343,7 @@ theorem off_diag_inter : (s ∩ t).OffDiag = s.OffDiag ∩ t.OffDiag :=
 
 theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag := by
   ext ⟨i, j⟩
-  simp only [mem_diag, mem_union, or_and_distrib_right]
+  simp only [mem_diag, mem_union, or_and_right]
 
 variable {s t}
 

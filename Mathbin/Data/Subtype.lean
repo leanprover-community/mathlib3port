@@ -144,7 +144,7 @@ theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → P
 
 /- warning: subtype.restrict_def -> Subtype.restrict_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Type.{u_2}} (f : α -> β) (p : α -> Prop), Eq.{(max (max 1 u_1) (succ u_2))} ((Subtype.{u_1} α p) -> β) (Subtype.restrict.{u_1 u_2} α (fun (ᾰ : α) => β) p f) (Function.comp.{(max 1 u_1) u_1 succ u_2} (Subtype.{u_1} α p) α β f ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{(max 1 u_1) u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTₓ.coe.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTₓ.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x)))))))
+  forall {α : Sort.{u_1}} {β : Type.{u_2}} (f : α -> β) (p : α -> Prop), Eq.{(max (max 1 u_1) (succ u_2))} ((Subtype.{u_1} α p) -> β) (Subtype.restrict.{u_1 u_2} α (fun (ᾰ : α) => β) p f) (Function.comp.{(max 1 u_1) u_1 succ u_2} (Subtype.{u_1} α p) α β f ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{(max 1 u_1) u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTCₓ.coe.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTCₓ.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x)))))))
 but is expected to have type
   forall {α : Sort.{u_1}} {β : Type.{u_2}} (f : α -> β) (p : α -> Prop), Eq.{(max u_1 (succ u_2))} ((Subtype.{u_1} α p) -> β) (Subtype.restrict.{u_1 u_2} α (fun (x : α) => β) f p) (Function.comp.{(max 1 u_1) u_1 succ u_2} (Subtype.{u_1} α p) α β f (Subtype.val.{u_1} α p))
 Case conversion may be inaccurate. Consider using '#align subtype.restrict_def Subtype.restrict_defₓ'. -/
@@ -154,7 +154,7 @@ theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict p f = 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Type.{u_2}} {f : α -> β} (p : α -> Prop), (Function.Injective.{u_1 succ u_2} α β f) -> (Function.Injective.{(max 1 u_1) succ u_2} (Subtype.{u_1} α p) β (Subtype.restrict.{u_1 u_2} α (fun (ᾰ : α) => β) p f))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Type.{u_2}} {f : α -> β} (p : α -> Prop), (Function.injective.{u_1 succ u_2} α β f) -> (Function.injective.{(max 1 u_1) succ u_2} (Subtype.{u_1} α p) β (Subtype.restrict.{u_1 u_2} α (fun (x : α) => β) f p))
+  forall {α : Sort.{u_1}} {β : Type.{u_2}} {f : α -> β} (p : α -> Prop), (Function.Injective.{u_1 succ u_2} α β f) -> (Function.Injective.{(max 1 u_1) succ u_2} (Subtype.{u_1} α p) β (Subtype.restrict.{u_1 u_2} α (fun (x : α) => β) f p))
 Case conversion may be inaccurate. Consider using '#align subtype.restrict_injective Subtype.restrict_injectiveₓ'. -/
 theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrict p f) :=
   h.comp coe_injective
@@ -174,7 +174,7 @@ def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α �
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Injective.{u_1 u_2} α β f) -> (Function.Injective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.injective.{u_1 u_2} α β f) -> (Function.injective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Injective.{u_1 u_2} α β f) -> (Function.Injective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 Case conversion may be inaccurate. Consider using '#align subtype.coind_injective Subtype.coind_injectiveₓ'. -/
 theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
     Injective (coind f h) := fun x y hxy => hf <| by apply congr_arg Subtype.val hxy
@@ -183,7 +183,7 @@ theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Surjective.{u_1 u_2} α β f) -> (Function.Surjective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.surjective.{u_1 u_2} α β f) -> (Function.surjective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Surjective.{u_1 u_2} α β f) -> (Function.Surjective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 Case conversion may be inaccurate. Consider using '#align subtype.coind_surjective Subtype.coind_surjectiveₓ'. -/
 theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
     Surjective (coind f h) := fun x =>
@@ -194,7 +194,7 @@ theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Bijective.{u_1 u_2} α β f) -> (Function.Bijective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.bijective.{u_1 u_2} α β f) -> (Function.bijective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Bijective.{u_1 u_2} α β f) -> (Function.Bijective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 Case conversion may be inaccurate. Consider using '#align subtype.coind_bijective Subtype.coind_bijectiveₓ'. -/
 theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Bijective f) :
     Bijective (coind f h) :=
@@ -222,7 +222,7 @@ theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {p : α -> Prop} {q : β -> Prop} {f : α -> β} (h : forall (a : α), (p a) -> (q (f a))), (Function.Injective.{u_1 u_2} α β f) -> (Function.Injective.{(max 1 u_1) (max 1 u_2)} (Subtype.{u_1} α (fun (a : α) => p a)) (Subtype.{u_2} β q) (Subtype.map.{u_1 u_2} α β (fun (a : α) => p a) q f h))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {p : α -> Prop} {q : β -> Prop} {f : α -> β} (h : forall (a : α), (p a) -> (q (f a))), (Function.injective.{u_1 u_2} α β f) -> (Function.injective.{(max 1 u_1) (max 1 u_2)} (Subtype.{u_1} α (fun (a : α) => p a)) (Subtype.{u_2} β q) (Subtype.map.{u_1 u_2} α β (fun (a : α) => p a) q f h))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {p : α -> Prop} {q : β -> Prop} {f : α -> β} (h : forall (a : α), (p a) -> (q (f a))), (Function.Injective.{u_1 u_2} α β f) -> (Function.Injective.{(max 1 u_1) (max 1 u_2)} (Subtype.{u_1} α (fun (a : α) => p a)) (Subtype.{u_2} β q) (Subtype.map.{u_1 u_2} α β (fun (a : α) => p a) q f h))
 Case conversion may be inaccurate. Consider using '#align subtype.map_injective Subtype.map_injectiveₓ'. -/
 theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : Injective f) :
     Injective (map f h) :=
@@ -236,9 +236,9 @@ instance [HasEquiv α] (p : α → Prop) : HasEquiv (Subtype p) :=
 
 /- warning: subtype.equiv_iff -> Subtype.equiv_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} [_inst_1 : HasEquivₓ.{u_1} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquivₓ.Equiv.{(max 1 u_1)} (Subtype.{u_1} α p) (Subtype.hasEquiv.{u_1} α _inst_1 p) s t) (HasEquivₓ.Equiv.{u_1} α _inst_1 ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{(max 1 u_1) u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTₓ.coe.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTₓ.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x))))) s) ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{(max 1 u_1) u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTₓ.coe.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTₓ.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x))))) t))
+  forall {α : Sort.{u_1}} [_inst_1 : HasEquivₓ.{u_1} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquivₓ.Equiv.{(max 1 u_1)} (Subtype.{u_1} α p) (Subtype.hasEquiv.{u_1} α _inst_1 p) s t) (HasEquivₓ.Equiv.{u_1} α _inst_1 ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{(max 1 u_1) u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTCₓ.coe.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTCₓ.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x))))) s) ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{(max 1 u_1) u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTCₓ.coe.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (CoeTCₓ.mk.{(max 1 u_1) u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x))))) t))
 but is expected to have type
-  forall {α : Sort.{u_1}} [inst._@.Mathlib.Data.Subtype._hyg.1730 : HasEquiv.{u_1 0} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquiv.Equiv.{(max 1 u_1) 0} (Subtype.{u_1} α p) (Subtype.instHasEquivSubtype.{u_1 0} α inst._@.Mathlib.Data.Subtype._hyg.1730 p) s t) (HasEquiv.Equiv.{u_1 0} α inst._@.Mathlib.Data.Subtype._hyg.1730 (Subtype.val.{u_1} α p s) (Subtype.val.{u_1} α p t))
+  forall {α : Sort.{u_1}} [inst._@.Mathlib.Data.Subtype._hyg.1731 : HasEquiv.{u_1 0} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquiv.Equiv.{(max 1 u_1) 0} (Subtype.{u_1} α p) (Subtype.instHasEquivSubtype.{u_1 0} α inst._@.Mathlib.Data.Subtype._hyg.1731 p) s t) (HasEquiv.Equiv.{u_1 0} α inst._@.Mathlib.Data.Subtype._hyg.1731 (Subtype.val.{u_1} α p s) (Subtype.val.{u_1} α p t))
 Case conversion may be inaccurate. Consider using '#align subtype.equiv_iff Subtype.equiv_iffₓ'. -/
 theorem equiv_iff [HasEquiv α] {p : α → Prop} {s t : Subtype p} : s ≈ t ↔ (s : α) ≈ (t : α) :=
   Iff.rfl

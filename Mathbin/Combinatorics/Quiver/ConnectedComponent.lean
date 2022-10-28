@@ -168,7 +168,7 @@ variable {V}
 protected def mk : V → WeaklyConnectedComponent V :=
   Quotient.mk'
 
-instance : CoeT V (WeaklyConnectedComponent V) :=
+instance : CoeTC V (WeaklyConnectedComponent V) :=
   ⟨WeaklyConnectedComponent.mk⟩
 
 instance [Inhabited V] : Inhabited (WeaklyConnectedComponent V) :=

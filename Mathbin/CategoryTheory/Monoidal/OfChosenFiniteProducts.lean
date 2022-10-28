@@ -169,7 +169,7 @@ attribute [local tidy] tactic.discrete_cases
 def BinaryFan.leftUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan s.x X}
     (Q : IsLimit t) : t.x ≅ X where
   Hom := t.snd
-  inv := Q.lift (BinaryFan.mk (P.lift { x, π := { app := Discrete.rec (Pempty.rec _) } }) (𝟙 X))
+  inv := Q.lift (BinaryFan.mk (P.lift { x, π := { app := Discrete.rec (PEmpty.rec _) } }) (𝟙 X))
   hom_inv_id' := by
     apply Q.hom_ext
     rintro ⟨⟨⟩⟩
@@ -185,7 +185,7 @@ def BinaryFan.leftUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s
 def BinaryFan.rightUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan X s.x}
     (Q : IsLimit t) : t.x ≅ X where
   Hom := t.fst
-  inv := Q.lift (BinaryFan.mk (𝟙 X) (P.lift { x, π := { app := Discrete.rec (Pempty.rec _) } }))
+  inv := Q.lift (BinaryFan.mk (𝟙 X) (P.lift { x, π := { app := Discrete.rec (PEmpty.rec _) } }))
   hom_inv_id' := by
     apply Q.hom_ext
     rintro ⟨⟨⟩⟩

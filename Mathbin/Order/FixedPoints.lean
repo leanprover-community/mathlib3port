@@ -199,7 +199,7 @@ theorem le_prev_fixed {x : α} (hx : f x ≤ x) {y : FixedPoints f} (h : ↑y �
 
 theorem le_map_sup_fixed_points (x y : FixedPoints f) : (x ⊔ y : α) ≤ f (x ⊔ y) :=
   calc
-    (x ⊔ y : α) = f x ⊔ f y := congr_arg2 (· ⊔ ·) x.2.symm y.2.symm
+    (x ⊔ y : α) = f x ⊔ f y := congr_arg₂ (· ⊔ ·) x.2.symm y.2.symm
     _ ≤ f (x ⊔ y) := f.mono.le_map_sup x y
     
 

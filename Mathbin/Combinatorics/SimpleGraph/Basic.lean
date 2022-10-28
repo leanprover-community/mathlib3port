@@ -662,7 +662,7 @@ theorem compl_eq_delete_edges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.EdgeS
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') :=
   by
   ext
-  simp [and_assoc', not_or_distrib]
+  simp [and_assoc', not_or]
 
 @[simp]
 theorem delete_edges_empty_eq : G.deleteEdges ∅ = G := by

@@ -831,9 +831,9 @@ theorem zero_le_real {x : ℝ} : (0 : ℂ) ≤ (x : ℂ) ↔ 0 ≤ x :=
 theorem zero_lt_real {x : ℝ} : (0 : ℂ) < (x : ℂ) ↔ 0 < x :=
   real_lt_real
 
-theorem not_le_iff {z w : ℂ} : ¬z ≤ w ↔ w.re < z.re ∨ z.im ≠ w.im := by rw [le_def, not_and_distrib, not_le]
+theorem not_le_iff {z w : ℂ} : ¬z ≤ w ↔ w.re < z.re ∨ z.im ≠ w.im := by rw [le_def, not_and_or, not_le]
 
-theorem not_lt_iff {z w : ℂ} : ¬z < w ↔ w.re ≤ z.re ∨ z.im ≠ w.im := by rw [lt_def, not_and_distrib, not_lt]
+theorem not_lt_iff {z w : ℂ} : ¬z < w ↔ w.re ≤ z.re ∨ z.im ≠ w.im := by rw [lt_def, not_and_or, not_lt]
 
 theorem not_le_zero_iff {z : ℂ} : ¬z ≤ 0 ↔ 0 < z.re ∨ z.im ≠ 0 :=
   not_le_iff
@@ -841,11 +841,16 @@ theorem not_le_zero_iff {z : ℂ} : ¬z ≤ 0 ↔ 0 < z.re ∨ z.im ≠ 0 :=
 theorem not_lt_zero_iff {z : ℂ} : ¬z < 0 ↔ 0 ≤ z.re ∨ z.im ≠ 0 :=
   not_lt_iff
 
+theorem eq_re_of_real_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re := by
+  ext
+  rfl
+  simp only [← (Complex.le_def.1 hz).2, Complex.zero_im, Complex.of_real_im]
+
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a strictly ordered ring.
 -/
 protected def strictOrderedCommRing : StrictOrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
-    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2 (· + ·) rfl h.2⟩,
+    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg₂ (· + ·) rfl h.2⟩,
     mul_pos := fun z w hz hw => by simp [lt_def, mul_re, mul_im, ← hz.2, ← hw.2, mul_pos hz.1 hw.1] }
 
 localized [ComplexOrder] attribute [instance] Complex.strictOrderedCommRing

@@ -163,7 +163,7 @@ theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ := by
 
 @[simp]
 theorem sym_nonempty : (s.Sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by
-  simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_distrib, not_ne_iff]
+  simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_or, not_ne_iff]
 
 alias sym2_nonempty ↔ _ nonempty.sym2
 
@@ -180,11 +180,39 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by
   ext m
-  simp only [mem_inter, mem_sym_iff, imp_and_distrib, forall_and_distrib]
+  simp only [mem_inter, mem_sym_iff, imp_and, forall_and]
 
 @[simp]
 theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=
   union_subset (sym_mono (subset_union_left s t) n) (sym_mono (subset_union_right s t) n)
+
+theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ s.Sym (n - i)) :
+    m.fill a i ∈ (insert a s).Sym n :=
+  mem_sym_iff.2 fun b hb => mem_insert.2 <| (Sym.mem_fill_iff.1 hb).imp And.right <| mem_sym_iff.1 h b
+
+theorem sym_filter_ne_mem (a : α) (h : m ∈ s.Sym n) : (m.filter_ne a).2 ∈ (s.erase a).Sym (n - (m.filter_ne a).1) :=
+  mem_sym_iff.2 fun b H => mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
+
+/-- If `a` does not belong to the finset `s`, then the `n`th symmetric power of `{a} ∪ s` is
+  in 1-1 correspondence with the disjoint union of the `n - i`th symmetric powers of `s`,
+  for `0 ≤ i ≤ n`. -/
+@[simps]
+def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.Sym (n - i) where
+  toFun m := ⟨_, (m.1.filter_ne a).2, by convert sym_filter_ne_mem a m.2 <;> rw [erase_insert h]⟩
+  invFun m := ⟨m.2.1.fill a m.1, sym_fill_mem a m.2.2⟩
+  left_inv m := Subtype.ext <| m.1.fill_filter_ne a
+  right_inv := fun ⟨i, m, hm⟩ => by
+    refine' (_ : id.injective).sigma_map (fun i => _) _
+    · exact fun i => Sym α (n - i)
+      
+    swap
+    · exact fun _ _ => id
+      
+    swap
+    · exact Subtype.coe_injective
+      
+    refine' Eq.trans _ (Sym.filter_ne_fill a _ _)
+    exacts[rfl, h ∘ mem_sym_iff.1 hm a]
 
 end Sym
 

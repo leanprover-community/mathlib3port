@@ -158,7 +158,7 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b�
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (a : α), Function.Injective.{succ u_2 (max (succ u_1) (succ u_2))} β (Prod.{u_1 u_2} α β) (Prod.mk.{u_1 u_2} α β a)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (a : α), Function.injective.{succ u_2 (max (succ u_1) (succ u_2))} β (Prod.{u_1 u_2} α β) (Prod.mk.{u_1 u_2} α β a)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (a : α), Function.Injective.{succ u_2 (max (succ u_1) (succ u_2))} β (Prod.{u_1 u_2} α β) (Prod.mk.{u_1 u_2} α β a)
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_left Prod.mk.inj_leftₓ'. -/
 theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
   intro b₁ b₂ h
@@ -168,7 +168,7 @@ theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : 
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (b : β), Function.Injective.{succ u_1 (max (succ u_1) (succ u_2))} α (Prod.{u_1 u_2} α β) (fun (a : α) => Prod.mk.{u_1 u_2} α β a b)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (b : β), Function.injective.{succ u_1 (max (succ u_1) (succ u_2))} α (Prod.{u_1 u_2} α β) (fun (a : α) => Prod.mk.{u_1 u_2} α β a b)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (b : β), Function.Injective.{succ u_1 (max (succ u_1) (succ u_2))} α (Prod.{u_1 u_2} α β) (fun (a : α) => Prod.mk.{u_1 u_2} α β a b)
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_right Prod.mk.inj_rightₓ'. -/
 theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
@@ -220,7 +220,7 @@ theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := f
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_1} α], Function.Surjective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_1} α], Function.surjective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_1} α], Function.Surjective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.snd_surjective Prod.snd_surjectiveₓ'. -/
 theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
@@ -230,7 +230,7 @@ theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Data.Prod._hyg.1274 : Subsingleton.{succ u_1} α], Function.injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Data.Prod._hyg.1274 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.snd_injective Prod.snd_injectiveₓ'. -/
 theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => ext (Subsingleton.elim _ _) h
 
@@ -299,7 +299,7 @@ theorem swap_right_inverse : Function.RightInverse (@swap α β) swap :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Injective.{(max (succ u_1) (succ u_2)) (max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.injective.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Injective.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.swap_injective Prod.swap_injectiveₓ'. -/
 theorem swap_injective : Function.Injective (@swap α β) :=
   swap_left_inverse.Injective
@@ -308,7 +308,7 @@ theorem swap_injective : Function.Injective (@swap α β) :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Surjective.{(max (succ u_1) (succ u_2)) (max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.surjective.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Surjective.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.swap_surjective Prod.swap_surjectiveₓ'. -/
 theorem swap_surjective : Function.Surjective (@swap α β) :=
   swap_left_inverse.Surjective
@@ -317,7 +317,7 @@ theorem swap_surjective : Function.Surjective (@swap α β) :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Bijective.{(max (succ u_1) (succ u_2)) (max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.bijective.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Bijective.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.{u_2 u_1} β α) (Prod.swap.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.swap_bijective Prod.swap_bijectiveₓ'. -/
 theorem swap_bijective : Function.Bijective (@swap α β) :=
   ⟨swap_injective, swap_surjective⟩
@@ -430,9 +430,21 @@ namespace Function
 
 variable {f : α → γ} {g : β → δ} {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ}
 
+/- warning: function.injective.prod_map -> Function.Injective.prod_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {δ : Type.{u_4}} {f : α -> γ} {g : β -> δ}, (Function.Injective.{succ u_1 succ u_3} α γ f) -> (Function.Injective.{succ u_2 succ u_4} β δ g) -> (Function.Injective.{(max (succ u_1) (succ u_2)) (max (succ u_3) (succ u_4))} (Prod.{u_1 u_2} α β) (Prod.{u_3 u_4} γ δ) (Prod.map.{u_1 u_3 u_2 u_4} α γ β δ f g))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_3}} {γ : Type.{u_2}} {δ : Type.{u_4}} {f : α -> γ} {g : β -> δ}, (Function.Injective.{succ u_1 succ u_2} α γ f) -> (Function.Injective.{succ u_3 succ u_4} β δ g) -> (Function.Injective.{(max (succ u_3) (succ u_1)) (max (succ u_4) (succ u_2))} (Prod.{u_1 u_3} α β) (Prod.{u_2 u_4} γ δ) (Prod.map.{u_1 u_2 u_3 u_4} α γ β δ f g))
+Case conversion may be inaccurate. Consider using '#align function.injective.prod_map Function.Injective.prod_mapₓ'. -/
 theorem Injective.prod_map (hf : Injective f) (hg : Injective g) : Injective (map f g) := fun x y h =>
   ext (hf (ext_iff.1 h).1) (hg <| (ext_iff.1 h).2)
 
+/- warning: function.surjective.prod_map -> Function.Surjective.prod_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {δ : Type.{u_4}} {f : α -> γ} {g : β -> δ}, (Function.Surjective.{succ u_1 succ u_3} α γ f) -> (Function.Surjective.{succ u_2 succ u_4} β δ g) -> (Function.Surjective.{(max (succ u_1) (succ u_2)) (max (succ u_3) (succ u_4))} (Prod.{u_1 u_2} α β) (Prod.{u_3 u_4} γ δ) (Prod.map.{u_1 u_3 u_2 u_4} α γ β δ f g))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_3}} {γ : Type.{u_2}} {δ : Type.{u_4}} {f : α -> γ} {g : β -> δ}, (Function.Surjective.{succ u_1 succ u_2} α γ f) -> (Function.Surjective.{succ u_3 succ u_4} β δ g) -> (Function.Surjective.{(max (succ u_3) (succ u_1)) (max (succ u_4) (succ u_2))} (Prod.{u_1 u_3} α β) (Prod.{u_2 u_4} γ δ) (Prod.map.{u_1 u_2 u_3 u_4} α γ β δ f g))
+Case conversion may be inaccurate. Consider using '#align function.surjective.prod_map Function.Surjective.prod_mapₓ'. -/
 theorem Surjective.prod_map (hf : Surjective f) (hg : Surjective g) : Surjective (map f g) := fun p =>
   let ⟨x, hx⟩ := hf p.1
   let ⟨y, hy⟩ := hg p.2

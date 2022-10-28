@@ -214,7 +214,7 @@ def skyscraperPresheafStalkOfNotSpecializesIsTerminal [HasColimits C] {y : X} (h
     IsTerminal ((skyscraperPresheaf p₀ A).stalk y) :=
   IsTerminal.ofIso terminalIsTerminal <| (skyscraperPresheafStalkOfNotSpecializes _ _ h).symm
 
-theorem skyscraper_presheaf_is_sheaf [HasProducts.{u} C] : (skyscraperPresheaf p₀ A).IsSheaf := by
+theorem skyscraper_presheaf_is_sheaf : (skyscraperPresheaf p₀ A).IsSheaf := by
   classical <;>
     exact
       (presheaf.is_sheaf_iso_iff (eq_to_iso <| skyscraper_presheaf_eq_pushforward p₀ A)).mpr
@@ -229,14 +229,14 @@ theorem skyscraper_presheaf_is_sheaf [HasProducts.{u} C] : (skyscraperPresheaf p
 /-- The skyscraper presheaf supported at `p₀` with value `A` is the sheaf that assigns `A` to all opens
 `U` that contain `p₀` and assigns `*` otherwise.
 -/
-def skyscraperSheaf [HasProducts.{u} C] : Sheaf C X :=
+def skyscraperSheaf : Sheaf C X :=
   ⟨skyscraperPresheaf p₀ A, skyscraper_presheaf_is_sheaf _ _⟩
 
 /-- Taking skyscraper sheaf at a point is functorial: `c ↦ skyscraper p₀ c` defines a functor by
 sending every `f : a ⟶ b` to the natural transformation `α` defined as: `α(U) = f : a ⟶ b` if
 `p₀ ∈ U` and the unique morphism to a terminal object in `C` if `p₀ ∉ U`.
 -/
-def skyscraperSheafFunctor [HasProducts.{u} C] : C ⥤ Sheaf C X where
+def skyscraperSheafFunctor : C ⥤ Sheaf C X where
   obj c := skyscraperSheaf p₀ c
   map a b f := Sheaf.hom.mk <| (skyscraperPresheafFunctor p₀).map f
   map_id' c := SheafCat.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_id _
@@ -382,7 +382,7 @@ instance [HasColimits C] : IsLeftAdjoint (Presheaf.stalkFunctor C p₀) :=
 
 /-- Taking stalks of a sheaf is the left adjoint functor to `skyscraper_sheaf_functor`
 -/
-def stalkSkyscraperSheafAdjunction [HasColimits C] [HasProducts.{u} C] :
+def stalkSkyscraperSheafAdjunction [HasColimits C] :
     Sheaf.forget C X ⋙ Presheaf.stalkFunctor _ p₀ ⊣ skyscraperSheafFunctor p₀ where
   homEquiv 𝓕 c :=
     ⟨fun f => ⟨toSkyscraperPresheaf p₀ f⟩, fun g => fromStalk p₀ g.1, from_stalk_to_skyscraper p₀, fun g => by
@@ -399,7 +399,7 @@ def stalkSkyscraperSheafAdjunction [HasColimits C] [HasProducts.{u} C] :
     exact (skyscraperPresheafStalkAdjunction p₀).hom_equiv_unit
   hom_equiv_counit' 𝓐 c f := (skyscraperPresheafStalkAdjunction p₀).hom_equiv_counit
 
-instance [HasColimits C] [HasProducts.{u} C] : IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
+instance [HasColimits C] : IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
   ⟨_, stalkSkyscraperSheafAdjunction _⟩
 
 end

@@ -194,14 +194,14 @@ theorem nonzero_iff_exists {f : α →₀ M} : f ≠ 0 ↔ ∃ a : α, f a ≠ 0
 theorem card_support_eq_zero {f : α →₀ M} : card f.Support = 0 ↔ f = 0 := by simp
 
 instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) := fun f g =>
-  decidableOfIff (f.Support = g.Support ∧ ∀ a ∈ f.Support, f a = g a) ext_iff'.symm
+  decidable_of_iff (f.Support = g.Support ∧ ∀ a ∈ f.Support, f a = g a) ext_iff'.symm
 
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
   f.fun_support_eq.symm ▸ f.Support.finite_to_set
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.Support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 := by
-  simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr fun a => not_imp_comm
+  simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
 
 /-- Given `fintype α`, `equiv_fun_on_fintype` is the `equiv` between `α →₀ β` and `α → β`.
   (All functions on a finite type are finitely supported.) -/
@@ -309,7 +309,7 @@ theorem single_apply_eq_zero {a x : α} {b : M} : single a b x = 0 ↔ x = a →
 theorem single_apply_ne_zero {a x : α} {b : M} : single a b x ≠ 0 ↔ x = a ∧ b ≠ 0 := by simp [single_apply_eq_zero]
 
 theorem mem_support_single (a a' : α) (b : M) : a ∈ (single a' b).Support ↔ a = a' ∧ b ≠ 0 := by
-  simp [single_apply_eq_zero, not_or_distrib]
+  simp [single_apply_eq_zero, not_or]
 
 theorem eq_single_iff {f : α →₀ M} {a b} : f = single a b ↔ f.Support ⊆ {a} ∧ f a = b := by
   refine' ⟨fun h => h.symm ▸ ⟨support_single_subset, single_eq_same⟩, _⟩
@@ -749,7 +749,7 @@ variable [Zero M] [Zero N] [Zero P]
 def zipWith (f : M → N → P) (hf : f 0 0 = 0) (g₁ : α →₀ M) (g₂ : α →₀ N) : α →₀ P :=
   (onFinset (g₁.Support ∪ g₂.Support) fun a => f (g₁ a) (g₂ a)) fun a H => by
     simp only [mem_union, mem_support_iff, Ne]
-    rw [← not_and_distrib]
+    rw [← not_and_or]
     rintro ⟨h₁, h₂⟩
     rw [h₁, h₂] at H
     exact H hf

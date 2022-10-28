@@ -694,7 +694,7 @@ theorem _root_.strongly_measurable_of_strongly_measurable_union_cover {m : Measu
             ((ht.subtype_image ((hd.approx n).measurableSetFiber x)).diff hs)
         ext1 y
         simp only [mem_union, mem_preimage, mem_singleton_iff, mem_image, SetCoe.exists, Subtype.coe_mk,
-          exists_and_distrib_right, exists_eq_right, mem_diff]
+          exists_and_right, exists_eq_right, mem_diff]
         by_cases hy:y ∈ s
         · rw [dif_pos hy]
           simp only [hy, exists_true_left, not_true, and_false_iff, or_false_iff]

@@ -81,7 +81,7 @@ directly. -/
 instance : CoeFun C₀(α, β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-instance : CoeT F C₀(α, β) :=
+instance : CoeTC F C₀(α, β) :=
   ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f, zero_at_infty' := zero_at_infty f }⟩
 
 @[simp]
@@ -418,19 +418,9 @@ section NormedSpace
 
 variable [NormedAddCommGroup β] {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 
-/-- The natural inclusion `to_bcf : C₀(α, β) → (α →ᵇ β)` realized as an additive monoid
-homomorphism. -/
-def toBcfAddMonoidHom : C₀(α, β) →+ α →ᵇ β where
-  toFun := toBcf
-  map_zero' := rfl
-  map_add' x y := rfl
-
-@[simp]
-theorem coe_to_bcf_add_monoid_hom (f : C₀(α, β)) : (f.toBcfAddMonoidHom : α → β) = f :=
-  rfl
-
 noncomputable instance : NormedAddCommGroup C₀(α, β) :=
-  NormedAddCommGroup.induced toBcfAddMonoidHom (to_bcf_injective α β)
+  NormedAddCommGroup.induced C₀(α, β) (α →ᵇ β) (⟨toBcf, rfl, fun x y => rfl⟩ : C₀(α, β) →+ α →ᵇ β)
+    (to_bcf_injective α β)
 
 @[simp]
 theorem norm_to_bcf_eq_norm {f : C₀(α, β)} : ∥f.toBcf∥ = ∥f∥ :=

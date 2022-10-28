@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yury G. Kudryashov
+Authors: Yury G. Kudryashov, Winston Yin
 -/
 import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.Topology.MetricSpace.Contracting
@@ -11,13 +11,18 @@ import Mathbin.Topology.MetricSpace.Contracting
 
 In this file we prove that an ordinary differential equation $\dot x=v(t, x)$ such that $v$ is
 Lipschitz continuous in $x$ and continuous in $t$ has a local solution, see
-`exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous`.
+`exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof`.
+
+As a corollary, we prove that a time-independent locally continuously differentiable ODE has a
+local solution.
 
 ## Implementation notes
 
 In order to split the proof into small lemmas, we introduce a structure `picard_lindelof` that holds
 all assumptions of the main theorem. This structure and lemmas in the `picard_lindelof` namespace
-should be treated as private implementation details.
+should be treated as private implementation details. This is not to be confused with the `Prop`-
+valued structure `is_picard_lindelof`, which holds the long hypotheses of the Picard-Lindelöf
+theorem for actual use as part of the public API.
 
 We only prove existence of a solution in this file. For uniqueness see `ODE_solution_unique` and
 related theorems in `analysis.ODE.gronwall`.
@@ -38,19 +43,34 @@ noncomputable section
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-/-- This structure holds arguments of the Picard-Lipschitz (Cauchy-Lipschitz) theorem. Unless you
-want to use one of the auxiliary lemmas, use
-`exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous` instead of using this structure. -/
+/-- `Prop` structure holding the hypotheses of the Picard-Lindelöf theorem.
+
+The similarly named `picard_lindelof` structure is part of the internal API for convenience, so as
+not to constantly invoke choice, but is not intended for public use. -/
+structure IsPicardLindelof {E : Type _} [NormedAddCommGroup E] (v : ℝ → E → E) (t_min t₀ t_max : ℝ) (x₀ : E) (L : ℝ≥0)
+  (R C : ℝ) : Prop where
+  ht₀ : t₀ ∈ IccCat t_min t_max
+  hR : 0 ≤ R
+  lipschitz : ∀ t ∈ IccCat t_min t_max, LipschitzOnWith L (v t) (ClosedBall x₀ R)
+  cont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t : ℝ => v t x) (IccCat t_min t_max)
+  norm_le : ∀ t ∈ IccCat t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥v t x∥ ≤ C
+  C_mul_le_R : (C : ℝ) * LinearOrder.max (t_max - t₀) (t₀ - t_min) ≤ R
+
+/-- This structure holds arguments of the Picard-Lipschitz (Cauchy-Lipschitz) theorem. It is part of
+the internal API for convenience, so as not to constantly invoke choice. Unless you want to use one
+of the auxiliary lemmas, use `exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous` instead
+of using this structure.
+
+The similarly named `is_picard_lindelof` is a bundled `Prop` holding the long hypotheses of the
+Picard-Lindelöf theorem as named arguments. It is used as part of the public API.
+-/
 structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] where
   toFun : ℝ → E → E
   (tMin tMax : ℝ)
   t₀ : IccCat t_min t_max
   x₀ : E
   (c r l : ℝ≥0)
-  lipschitz' : ∀ t ∈ IccCat t_min t_max, LipschitzOnWith L (to_fun t) (ClosedBall x₀ R)
-  cont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => to_fun t x) (IccCat t_min t_max)
-  norm_le' : ∀ t ∈ IccCat t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥to_fun t x∥ ≤ C
-  C_mul_le_R : (C : ℝ) * max (t_max - t₀) (t₀ - t_min) ≤ R
+  isPl : IsPicardLindelof to_fun t_min t₀ t_max x₀ L R C
 
 namespace PicardLindelof
 
@@ -60,8 +80,13 @@ instance : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
   ⟨toFun⟩
 
 instance : Inhabited (PicardLindelof E) :=
-  ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0, fun t ht => (LipschitzWith.const 0).LipschitzOnWith _, fun _ _ => by
-      simpa only [Pi.zero_apply] using continuous_on_const, fun t ht x hx => norm_zero.le, (zero_mul _).le⟩⟩
+  ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0,
+      { ht₀ := by
+          rw [Subtype.coe_mk, Icc_self]
+          exact mem_singleton _,
+        hR := by rfl, lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _,
+        cont := fun _ _ => by simpa only [Pi.zero_apply] using continuous_on_const,
+        norm_le := fun t ht x hx => norm_zero.le, C_mul_le_R := (zero_mul _).le }⟩⟩
 
 theorem t_min_le_t_max : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2
@@ -71,17 +96,17 @@ protected theorem nonempty_Icc : (IccCat v.tMin v.tMax).Nonempty :=
 
 protected theorem lipschitzOnWith {t} (ht : t ∈ IccCat v.tMin v.tMax) :
     LipschitzOnWith v.l (v t) (ClosedBall v.x₀ v.r) :=
-  v.lipschitz' t ht
+  v.isPl.lipschitz t ht
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem continuous_on : ContinuousOn (uncurry v) (IccCat v.tMin v.tMax ×ˢ ClosedBall v.x₀ v.r) :=
   have : ContinuousOn (uncurry (flip v)) (ClosedBall v.x₀ v.r ×ˢ IccCat v.tMin v.tMax) :=
-    continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.cont v.lipschitz'
+    continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.isPl.cont v.isPl.lipschitz
   this.comp continuous_swap.ContinuousOn preimage_swap_prod.symm.Subset
 
 theorem norm_le {t : ℝ} (ht : t ∈ IccCat v.tMin v.tMax) {x : E} (hx : x ∈ ClosedBall v.x₀ v.r) : ∥v t x∥ ≤ v.c :=
-  v.norm_le' _ ht _ hx
+  v.isPl.norm_le _ ht _ hx
 
 /-- The maximum of distances from `t₀` to the endpoints of `[t_min, t_max]`. -/
 def tDist : ℝ :=
@@ -173,7 +198,7 @@ protected theorem mem_closed_ball (t : IccCat v.tMin v.tMax) : f t ∈ ClosedBal
     dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by rw [f.map_t₀']
     _ ≤ v.c * dist t v.t₀ := f.lipschitz.dist_le_mul _ _
     _ ≤ v.c * v.tDist := mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.c.2
-    _ ≤ v.r := v.C_mul_le_R
+    _ ≤ v.r := v.isPl.C_mul_le_R
     
 
 /-- Given a curve $γ \colon [t_{\min}, t_{\max}] → E$, `v_comp` is the function
@@ -303,7 +328,8 @@ theorem exists_fixed : ∃ f : v.FunSpace, f.next = f :=
 
 end
 
-/-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
+/-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. Use
+`exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof` instead for the public API. -/
 theorem exists_solution :
     ∃ f : ℝ → E, f v.t₀ = v.x₀ ∧ ∀ t ∈ IccCat v.tMin v.tMax, HasDerivWithinAt f (v t (f t)) (IccCat v.tMin v.tMax) t :=
   by
@@ -318,16 +344,95 @@ theorem exists_solution :
 
 end PicardLindelof
 
+theorem IsPicardLindelof.norm_le₀ {E : Type _} [NormedAddCommGroup E] {v : ℝ → E → E} {t_min t₀ t_max : ℝ} {x₀ : E}
+    {C R : ℝ} {L : ℝ≥0} (hpl : IsPicardLindelof v t_min t₀ t_max x₀ L R C) : ∥v t₀ x₀∥ ≤ C :=
+  hpl.norm_le t₀ hpl.ht₀ x₀ <| mem_closed_ball_self hpl.hR
+
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
-theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] {v : ℝ → E → E}
-    {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ IccCat t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0}
-    (Hlip : ∀ t ∈ IccCat t_min t_max, LipschitzOnWith L (v t) (ClosedBall x₀ R))
-    (Hcont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => v t x) (IccCat t_min t_max))
-    (Hnorm : ∀ t ∈ IccCat t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥v t x∥ ≤ C)
-    (Hmul_le : C * max (t_max - t₀) (t₀ - t_min) ≤ R) :
+theorem exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof [CompleteSpace E] {v : ℝ → E → E} {t_min t₀ t_max : ℝ}
+    (x₀ : E) {C R : ℝ} {L : ℝ≥0} (hpl : IsPicardLindelof v t_min t₀ t_max x₀ L R C) :
     ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ IccCat t_min t_max, HasDerivWithinAt f (v t (f t)) (IccCat t_min t_max) t := by
-  lift C to ℝ≥0 using (norm_nonneg _).trans <| Hnorm t₀ ht₀ x₀ (mem_closed_ball_self hR)
-  lift R to ℝ≥0 using hR
-  lift t₀ to Icc t_min t_max using ht₀
-  exact PicardLindelof.exists_solution ⟨v, t_min, t_max, t₀, x₀, C, R, L, Hlip, Hcont, Hnorm, Hmul_le⟩
+  lift C to ℝ≥0 using (norm_nonneg _).trans hpl.norm_le₀
+  lift t₀ to Icc t_min t_max using hpl.ht₀
+  exact PicardLindelof.exists_solution ⟨v, t_min, t_max, t₀, x₀, C, ⟨R, hpl.hR⟩, L, { hpl with ht₀ := t₀.property }⟩
+
+variable [ProperSpace E] {v : E → E} (t₀ : ℝ) (x₀ : E)
+
+/-- A time-independent, locally continuously differentiable ODE satisfies the hypotheses of the
+  Picard-Lindelöf theorem. -/
+theorem exists_is_picard_lindelof_const_of_cont_diff_on_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s) (hs : s ∈ 𝓝 x₀) :
+    ∃ ε > (0 : ℝ), ∃ L R C, IsPicardLindelof (fun t => v) (t₀ - ε) t₀ (t₀ + ε) x₀ L R C := by
+  -- extract Lipschitz constant
+  obtain ⟨L, s', hs', hlip⟩ :=
+    ContDiffAt.exists_lipschitz_on_with ((hv.cont_diff_within_at (mem_of_mem_nhds hs)).ContDiffAt hs)
+  -- radius of closed ball in which v is bounded
+  obtain ⟨r, hr : 0 < r, hball⟩ := metric.mem_nhds_iff.mp (inter_sets (𝓝 x₀) hs hs')
+  have hr' := (half_pos hr).le
+  obtain ⟨C, hC⟩ :=
+    (is_compact_closed_ball x₀ (r / 2)).bdd_above_image
+      (-- uses proper_space E
+        hv.continuous_on.norm.mono
+        (subset_inter_iff.mp ((closed_ball_subset_ball (half_lt_self hr)).trans hball)).left)
+  have hC' : 0 ≤ C := by
+    apply (norm_nonneg (v x₀)).trans
+    apply hC
+    exact ⟨x₀, ⟨mem_closed_ball_self hr', rfl⟩⟩
+  set ε := if C = 0 then 1 else r / 2 / C with hε
+  have hε0 : 0 < ε := by
+    rw [hε]
+    split_ifs
+    · exact zero_lt_one
+      
+    · exact div_pos (half_pos hr) (lt_of_le_of_ne hC' (Ne.symm h))
+      
+  refine' ⟨ε, hε0, L, r / 2, C, _⟩
+  exact
+    { ht₀ := by
+        rw [← Real.closed_ball_eq_Icc]
+        exact mem_closed_ball_self hε0.le,
+      hR := (half_pos hr).le,
+      lipschitz := fun t ht =>
+        hlip.mono (subset_inter_iff.mp (subset_trans (closed_ball_subset_ball (half_lt_self hr)) hball)).2,
+      cont := fun x hx => continuous_on_const, norm_le := fun t ht x hx => hC ⟨x, hx, rfl⟩,
+      C_mul_le_R := by
+        rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
+        split_ifs
+        · rwa [← h] at hr'
+          
+        · exact (mul_div_cancel' (r / 2) h).le
+           }
+
+/-- A time-independent, locally continuously differentiable ODE admits a solution in some open
+interval. -/
+theorem exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s) (hs : s ∈ 𝓝 x₀) :
+    ∃ ε > (0 : ℝ), ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ IooCat (t₀ - ε) (t₀ + ε), f t ∈ s ∧ HasDerivAt f (v (f t)) t := by
+  obtain ⟨ε, hε, L, R, C, hpl⟩ := exists_is_picard_lindelof_const_of_cont_diff_on_nhds t₀ x₀ hv hs
+  obtain ⟨f, hf1, hf2⟩ := exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof x₀ hpl
+  have hf2' : ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t := fun t ht =>
+    (hf2 t (Ioo_subset_Icc_self ht)).HasDerivAt (Icc_mem_nhds ht.1 ht.2)
+  have h : f ⁻¹' s ∈ 𝓝 t₀ := by
+    have := hf2' t₀ (mem_Ioo.mpr ⟨sub_lt_self _ hε, lt_add_of_pos_right _ hε⟩)
+    apply ContinuousAt.preimage_mem_nhds this.continuous_at
+    rw [hf1]
+    exact hs
+  rw [Metric.mem_nhds_iff] at h
+  obtain ⟨r, hr1, hr2⟩ := h
+  refine'
+    ⟨min r ε, lt_min hr1 hε, f, hf1, fun t ht =>
+      ⟨_,
+        hf2' t
+          (mem_of_mem_of_subset ht
+            (Ioo_subset_Ioo (sub_le_sub_left (min_le_right _ _) _) (add_le_add_left (min_le_right _ _) _)))⟩⟩
+  rw [← Set.mem_preimage]
+  apply Set.mem_of_mem_of_subset _ hr2
+  apply Set.mem_of_mem_of_subset ht
+  rw [← Real.ball_eq_Ioo]
+  exact Metric.ball_subset_ball (min_le_left _ _)
+
+/-- A time-independent, continuously differentiable ODE admits a solution in some open interval. -/
+theorem exists_forall_deriv_at_Ioo_eq_of_cont_diff (hv : ContDiff ℝ 1 v) :
+    ∃ ε > (0 : ℝ), ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ IooCat (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t :=
+  let ⟨ε, hε, f, hf1, hf2⟩ :=
+    exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds t₀ x₀ hv.ContDiffOn (IsOpen.mem_nhds is_open_univ (mem_univ _))
+  ⟨ε, hε, f, hf1, fun t ht => (hf2 t ht).2⟩
 

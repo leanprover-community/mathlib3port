@@ -654,7 +654,7 @@ theorem char_buf_eq_done {cb' : CharBuffer} :
   · simp [pure_eq_done, mmap'_eq_done, -Buffer.length_to_list, List.nil_prefix]
     
   · simp only [ch_eq_done, and_comm, and_assoc, and_left_comm, hl, mmap', and_then_eq_bind, bind_eq_done, List.length,
-      exists_and_distrib_left, exists_const]
+      exists_and_left, exists_const]
     constructor
     · rintro ⟨np, h, rfl, rfl, hn, rfl⟩
       simp only [add_comm, add_left_comm, h, true_and_iff, eq_self_iff_true, and_true_iff]
@@ -682,7 +682,7 @@ theorem one_of_eq_done {cs : List Char} :
 theorem one_of'_eq_done {cs : List Char} :
     oneOf' cs cb n = done n' u ↔ ∃ hn : n < cb.size, cb.read ⟨n, hn⟩ ∈ cs ∧ n' = n + 1 := by
   simp only [one_of', one_of_eq_done, eps_eq_done, and_comm, and_then_eq_bind, bind_eq_done, exists_eq_left,
-    exists_and_distrib_left]
+    exists_and_left]
   constructor
   · rintro ⟨c, hc, rfl, hn, rfl⟩
     exact ⟨rfl, hn, hc⟩
@@ -749,7 +749,7 @@ theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {er
   by
   have : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc
   simp only [foldr, foldr_core_succ_eq_fail, this, and_left_comm, foldr_core_zero_eq_fail, ne_iff_lt_iff_le,
-    exists_and_distrib_right, exists_eq_left, And.congr_left_iff, exists_and_distrib_left]
+    exists_and_right, exists_eq_left, and_congr_left_iff, exists_and_left]
   rintro (h | ⟨⟨a, h⟩, rfl⟩)
   · exact mono.of_fail h
     
@@ -810,8 +810,8 @@ theorem foldl_eq_fail_iff_mono_at_end {f : β → α → β} {p : Parser α} {er
       n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Dlist.empty) :=
   by
   have : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc
-  simp only [foldl, foldl_core_succ_eq_fail, this, and_left_comm, ne_iff_lt_iff_le, exists_eq_left,
-    exists_and_distrib_right, And.congr_left_iff, exists_and_distrib_left, foldl_core_zero_eq_fail]
+  simp only [foldl, foldl_core_succ_eq_fail, this, and_left_comm, ne_iff_lt_iff_le, exists_eq_left, exists_and_right,
+    and_congr_left_iff, exists_and_left, foldl_core_zero_eq_fail]
   rintro (h | ⟨⟨a, h⟩, rfl⟩)
   · exact mono.of_fail h
     
@@ -866,13 +866,13 @@ theorem many'_eq_done {p : Parser α} :
           many p cb n = done n' (a::l) ∧
             p cb n = done np a ∧ foldrCore List.cons p [] (Buffer.size cb - n) cb np = done n' l :=
   by
-  simp only [many', eps_eq_done, many, foldr, and_then_eq_bind, exists_and_distrib_right, bind_eq_done, exists_eq_right]
+  simp only [many', eps_eq_done, many, foldr, and_then_eq_bind, exists_and_right, bind_eq_done, exists_eq_right]
   constructor
   · rintro ⟨_ | ⟨hd, tl⟩, hl⟩
     · exact Or.inl hl
       
     · have hl2 := hl
-      simp only [foldr_core_eq_done, or_false_iff, exists_and_distrib_left, and_false_iff, false_and_iff,
+      simp only [foldr_core_eq_done, or_false_iff, exists_and_left, and_false_iff, false_and_iff,
         exists_eq_right_right] at hl
       obtain ⟨np, hp, h⟩ := hl
       refine' Or.inr ⟨np, _, _, hl2, hp, h⟩
@@ -1044,8 +1044,7 @@ theorem sat_iff {p : Char → Prop} [DecidablePred p] : Static (sat p) ↔ ∀ c
     exact zero_ne_one (of_done this)
     
   · contrapose!
-    simp only [Iff, sat_eq_done, and_imp, exists_prop, exists_and_distrib_right, exists_and_distrib_left,
-      exists_imp_distrib, not_forall]
+    simp only [Iff, sat_eq_done, and_imp, exists_prop, exists_and_right, exists_and_left, exists_imp, not_forall]
     rintro _ _ _ a h hne rfl hp -
     exact ⟨a, hp⟩
     
@@ -1947,7 +1946,7 @@ theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List 
   · simpa using hx
     
   constructor
-  · simp only [many1_eq_done, and_imp, exists_imp_distrib]
+  · simp only [many1_eq_done, and_imp, exists_imp]
     intro np hp hm
     have : np = n + 1 := step.of_done hp
     have hn : n < cb.size := bounded.of_done hp
@@ -1968,7 +1967,7 @@ theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List 
       simpa [Nat.sub_succ, many_eq_done, hp, hk, foldr_core_eq_done, hp'] using hf
       
     
-  · simp only [many_eq_done, many1_eq_done, and_imp, exists_imp_distrib]
+  · simp only [many_eq_done, many1_eq_done, and_imp, exists_imp]
     intro np hp hm
     have : np = n + 1 := step.of_done hp
     have hn : n < cb.size := bounded.of_done hp
@@ -2035,14 +2034,14 @@ instance seq {f : Parser (α → β)} [f.Prog] [p.mono] : (f <*> p).Prog :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mmap {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a::l).mmap f).Prog := by
   constructor
-  simp only [and_imp, bind_eq_done, return_eq_pure, mmap, exists_imp_distrib, pure_eq_done]
+  simp only [and_imp, bind_eq_done, return_eq_pure, mmap, exists_imp, pure_eq_done]
   rintro _ _ _ _ _ _ h _ _ hp rfl rfl
   exact lt_of_lt_of_le (of_done h) (mono.of_done hp)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mmap' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a::l).mmap' f).Prog := by
   constructor
-  simp only [and_imp, bind_eq_done, mmap', exists_imp_distrib, and_then_eq_bind]
+  simp only [and_imp, bind_eq_done, mmap', exists_imp, and_then_eq_bind]
   intro _ _ _ _ _ _ h hm
   exact lt_of_lt_of_le (of_done h) (mono.of_done hm)
 
@@ -2223,7 +2222,7 @@ theorem many1_length_of_done [p.mono] [p.step] [p.Bounded] {l : List α} (h : ma
     obtain ⟨_, hp, h⟩ := h
     obtain rfl := step.of_done hp
     cases tl
-    · simp only [many_eq_done_nil, add_left_inj, exists_and_distrib_right, self_eq_add_right] at h
+    · simp only [many_eq_done_nil, add_left_inj, exists_and_right, self_eq_add_right] at h
       rcases h with ⟨rfl, -⟩
       simp
       
@@ -2240,7 +2239,7 @@ theorem many1_bounded_of_done [p.step] [p.Bounded] {l : List α} (h : many1 p cb
     obtain ⟨np, hp, h⟩ := h
     obtain rfl := step.of_done hp
     cases tl
-    · simp only [many_eq_done_nil, exists_and_distrib_right] at h
+    · simp only [many_eq_done_nil, exists_and_right] at h
       simpa [← h.left] using bounded.of_done hp
       
     · rw [← many1_eq_done_iff_many_eq_done] at h
@@ -2344,7 +2343,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     -- that the `n`th character of `cb`, let's say `c`, when converted to a `ℕ` via
     -- `char.to_nat c - '0'.to_nat`, must be equal to the resulting value, `lhd` in our case.
     simp only [digit_eq_done, Buffer.read_eq_nth_le_to_list, hx, Buffer.length_to_list, true_and_iff, add_left_inj,
-      List.length, List.nthLe, eq_self_iff_true, exists_and_distrib_left, Fin.coe_mk] at hp
+      List.length, List.nthLe, eq_self_iff_true, exists_and_left, Fin.coe_mk] at hp
     rcases hp with ⟨_, hn, rfl, _, _⟩
     -- But we already know the list corresponding to `cb : char_buffer` from position `n` and on
     -- is equal to `(chd :: ctl) : list char`, so our `c` above must satisfy `c = chd`.
@@ -2380,7 +2379,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
   -- in reverse.
   rcases hdm with (rfl | hdm)
   · -- Case that `ltl = []`.
-    simp only [many1_eq_done, many_eq_done_nil, exists_and_distrib_right] at hp
+    simp only [many1_eq_done, many_eq_done_nil, exists_and_right] at hp
     -- This means we must have failed parsing with `parser.digit` at some other position,
     -- which we prove must be `n + 1` via the `step` property.
     obtain ⟨_, hp, rfl, hp'⟩ := hp
@@ -2470,8 +2469,8 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
   -- We break done the success of `parser.nat` into the `parser.digit` success and throw away
   -- the resulting value given by `parser.nat`, and focus solely on the `list ℕ` generated by
   -- `parser.digit.many1`.
-  simp only [Nat, pure_eq_done, and_left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
-    exists_and_distrib_left] at h
+  simp only [Nat, pure_eq_done, and_left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left, exists_and_left] at
+    h
   obtain ⟨xs, h, -⟩ := h
   -- We want to avoid having to make statements about the `cb : char_buffer` itself. Instead, we
   -- induct on the `xs : list ℕ` that `parser.digit.many1` produced.
@@ -2492,7 +2491,7 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
   -- The main lemma here is `digit_eq_done`, which already proves the necessary conditions about
   -- the character at hand. What is left to do is properly unpack the information.
   simp only [digit_eq_done, and_comm, and_left_comm, digit_eq_fail, true_and_iff, exists_eq_left, eq_self_iff_true,
-    exists_and_distrib_left, exists_and_distrib_left] at hp
+    exists_and_left, exists_and_left] at hp
   obtain ⟨rfl, -, hn, ge0, le9, rfl⟩ := hp
   -- Let's now consider a position `k` between `n` and `n'`, excluding `n'`.
   intro hn k hk hk'
@@ -2509,7 +2508,7 @@ theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
     -- position `k` was not "numeric" or we are out of bounds. More importantly, when `many`
     -- successfully produces a `[]`, it does not progress the parser head, so we have that
     -- `n + 1 = n'`. This will lead to a contradiction because now we have `n < k` and `k < n + 1`.
-    simp only [many_eq_done_nil, exists_and_distrib_right] at h
+    simp only [many_eq_done_nil, exists_and_right] at h
     -- Extract out just the `n + 1 = n'`.
     obtain ⟨rfl, -⟩ := h
     -- Form the contradictory hypothesis, and discharge the goal.
@@ -2543,8 +2542,8 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
   -- We deal with the case of `n'` is "out-of-bounds" right away by requiring that
   -- `∀ (hn : n' < cb.size)`. Thus we only have to prove the lemma for the cases where `n'` is still
   -- "in-bounds".
-  simp only [Nat, pure_eq_done, and_left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
-    exists_and_distrib_left] at h
+  simp only [Nat, pure_eq_done, and_left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left, exists_and_left] at
+    h
   obtain ⟨xs, h, -⟩ := h
   -- We want to avoid having to make statements about the `cb : char_buffer` itself. Instead, we
   -- induct on the `xs : list ℕ` that `parser.digit.many1` produced.
@@ -2561,14 +2560,14 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
   cases tl
   · -- Case where `tl = []`, so we parsed in only `hd`. That must mean that `parser.digit` failed
     -- at `n + 1`.
-    simp only [many1_eq_done, many_eq_done_nil, and_left_comm, exists_and_distrib_right, exists_eq_left] at h
+    simp only [many1_eq_done, many_eq_done_nil, and_left_comm, exists_and_right, exists_eq_left] at h
     -- We throw away the success information of what happened at position `n`, and we do not need
     -- the "error" value that the failure produced.
     obtain ⟨-, _, h⟩ := h
     -- If `parser.digit` failed at `n + 1`, then either we hit a non-numeric character, or
     -- we are out of bounds. `digit_eq_fail` provides us with those two cases.
     simp only [digit_eq_done, and_comm, and_left_comm, digit_eq_fail, true_and_iff, exists_eq_left, eq_self_iff_true,
-      exists_and_distrib_left] at h
+      exists_and_left] at h
     obtain ⟨rfl, h⟩ | ⟨h, -⟩ := h
     · -- First case: we are still in bounds, but the character is not numeric. We must prove
       -- that we are still in bounds. But we know that from our initial requirement.
@@ -2632,8 +2631,7 @@ theorem nat_eq_done {val : ℕ} :
     have H := h
     -- We unwrap the `parser.nat` success down to the `many1` success, throwing away other info.
     rw [Nat] at h
-    simp only [decorate_error_eq_done, bind_eq_done, pure_eq_done, and_left_comm, exists_eq_left,
-      exists_and_distrib_left] at h
+    simp only [decorate_error_eq_done, bind_eq_done, pure_eq_done, and_left_comm, exists_eq_left, exists_and_left] at h
     obtain ⟨_, h, -⟩ := h
     -- Now we get our existential witness that `n' ≤ cb.size`.
     replace h := many1_bounded_of_done h
@@ -2650,7 +2648,7 @@ theorem nat_eq_done {val : ℕ} :
   -- and the fold function of the digits.
   rw [Nat]
   simp only [and_left_comm, pure_eq_done, hv, decorate_error_eq_done, List.map_reverse, bind_eq_done, exists_eq_left,
-    exists_and_distrib_left]
+    exists_and_left]
   -- We won't actually need the `val : ℕ` itself, since it is entirely characterized by the
   -- underlying characters. Instead, we will induct over the `list char` of characters from
   -- position `n` onwards, showing that if we could have provided a list at `n`, we could have
@@ -2797,7 +2795,7 @@ theorem nat_eq_done {val : ℕ} :
       -- parse ended because of a good reason: either we are out of bounds or we hit a nonnumeric
       -- character.
       simp only [many1_eq_done, many_eq_done_nil, digit_eq_fail, natm, and_comm, and_left_comm, hdigit, true_and_iff,
-        mul_one, Nat.of_digits_singleton, List.take, exists_eq_left, exists_and_distrib_right, add_tsub_cancel_left,
+        mul_one, Nat.of_digits_singleton, List.take, exists_eq_left, exists_and_right, add_tsub_cancel_left,
         eq_self_iff_true, List.reverse_singleton, zero_add, List.foldr, List.map]
       -- We take the route of proving that we hit a nonnumeric character, since we already have
       -- a hypothesis that says that characters at `n'` and past it are nonnumeric. (Note, by now

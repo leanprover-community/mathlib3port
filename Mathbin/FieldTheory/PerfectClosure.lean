@@ -349,7 +349,7 @@ theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) := by
   apply r.intro
 
 theorem int_cast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
-  induction x <;> simp only [Int.cast_of_nat, Int.cast_neg_succ_of_nat, nat_cast K p 0] <;> rfl
+  induction x <;> simp only [Int.cast_of_nat, Int.cast_negSucc, nat_cast K p 0] <;> rfl
 
 theorem nat_cast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y := by
   constructor <;> intro H

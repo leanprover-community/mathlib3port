@@ -485,7 +485,7 @@ theorem adjoin_le_integral_closure {x : A} (hx : IsIntegral R x) : Algebra.adjoi
 
 theorem le_integral_closure_iff_is_integral {S : Subalgebra R A} : S ≤ integralClosure R A ↔ Algebra.IsIntegral R S :=
   SetLike.forall.symm.trans
-    (forall_congr fun x =>
+    (forall_congr' fun x =>
       show IsIntegral R (algebraMap S A x) ↔ IsIntegral R x from is_integral_algebra_map_iff Subtype.coe_injective)
 
 theorem is_integral_sup {S T : Subalgebra R A} :

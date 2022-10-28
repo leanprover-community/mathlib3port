@@ -336,7 +336,7 @@ theorem coeff_iterate_derivative_as_prod_Ico {k} (p : R[X]) :
   · intro m
     rw [Function.iterate_succ_apply', coeff_derivative, ih (m + 1), ← Nat.cast_add_one, ← nsmul_eq_mul', smul_smul,
       mul_comm]
-    apply congr_arg2
+    apply congr_arg₂
     · have set_eq : Ico m.succ (m + k.succ.succ) = Ico (m + 1).succ (m + 1 + k.succ) ∪ {m + 1} := by
         simp_rw [← Nat.Ico_succ_singleton, union_comm, Nat.succ_eq_add_one, add_comm (k + 1), add_assoc]
         rw [Ico_union_Ico_eq_Ico] <;> simp_rw [add_le_add_iff_left, le_add_self]
@@ -397,7 +397,7 @@ theorem iterate_derivative_mul {n} (p q : R[X]) :
       rw [sum_range_succ' _ n.succ, Nat.choose_zero_right, tsub_zero]
     
   congr
-  refine' (sum_range_succ' _ _).trans (congr_arg2 (· + ·) _ _)
+  refine' (sum_range_succ' _ _).trans (congr_arg₂ (· + ·) _ _)
   · rw [sum_range_succ, Nat.choose_succ_self, zero_smul, add_zero]
     refine' sum_congr rfl fun k hk => _
     rw [mem_range] at hk

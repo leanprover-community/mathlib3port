@@ -279,7 +279,7 @@ theorem coeff_eq_zero_of_nat_degree_lt {p : R[X]} {n : ℕ} (h : p.natDegree < n
 theorem ext_iff_nat_degree_le {p q : R[X]} {n : ℕ} (hp : p.natDegree ≤ n) (hq : q.natDegree ≤ n) :
     p = q ↔ ∀ i ≤ n, p.coeff i = q.coeff i := by
   refine' Iff.trans Polynomial.ext_iff _
-  refine' forall_congr fun i => ⟨fun h _ => h, fun h => _⟩
+  refine' forall_congr' fun i => ⟨fun h _ => h, fun h => _⟩
   refine' (le_or_lt i n).elim h fun k => _
   refine' (coeff_eq_zero_of_nat_degree_lt (hp.trans_lt k)).trans (coeff_eq_zero_of_nat_degree_lt (hq.trans_lt k)).symm
 

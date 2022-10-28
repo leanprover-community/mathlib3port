@@ -1114,6 +1114,15 @@ theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ �
 theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ < p ^ n ↔ ∥x∥ ≤ p ^ (n - 1) := by
   rw [norm_le_pow_iff_norm_lt_pow_add_one, sub_add_cancel]
 
+theorem norm_le_one_iff_val_nonneg (x : ℚ_[p]) : ∥x∥ ≤ 1 ↔ 0 ≤ x.Valuation := by
+  by_cases hx:x = 0
+  · simp only [hx, norm_zero, valuation_zero, zero_le_one, le_refl]
+    
+  · rw [norm_eq_pow_val hx, ← zpow_zero (p : ℝ), zpow_le_iff_le (nat.one_lt_cast.mpr (Nat.Prime.one_lt' p).1),
+      Right.neg_nonpos_iff]
+    infer_instance
+    
+
 end NormLeIff
 
 end Padic

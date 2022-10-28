@@ -46,7 +46,7 @@ theorem pow_half_zero : powHalf 0 = 1 :=
 
 theorem pow_half_left_moves (n) : (powHalf n).LeftMoves = PUnit := by cases n <;> rfl
 
-theorem pow_half_zero_right_moves : (powHalf 0).RightMoves = Pempty :=
+theorem pow_half_zero_right_moves : (powHalf 0).RightMoves = PEmpty :=
   rfl
 
 theorem pow_half_succ_right_moves (n) : (powHalf (n + 1)).RightMoves = PUnit :=
@@ -62,7 +62,7 @@ theorem pow_half_succ_move_right (n i) : (powHalf (n + 1)).moveRight i = powHalf
 instance uniquePowHalfLeftMoves (n) : Unique (powHalf n).LeftMoves := by cases n <;> exact PUnit.unique
 
 instance is_empty_pow_half_zero_right_moves : IsEmpty (powHalf 0).RightMoves :=
-  Pempty.is_empty
+  PEmpty.is_empty
 
 instance uniquePowHalfSuccRightMoves (n) : Unique (powHalf (n + 1)).RightMoves :=
   PUnit.unique

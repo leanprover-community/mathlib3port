@@ -221,7 +221,7 @@ theorem disjoint_sdiff_iff_le (hz : z ≤ y) (hx : x ≤ y) : Disjoint z (y \ x)
         rw [sup_sdiff_cancel_right hx]
         refine' le_trans (sup_le_sup_left sdiff_le z) _
         rw [sup_eq_right.2 hz]),
-    fun H => disjointSdiffSelfRight.mono_left H⟩
+    fun H => disjointSdiffSelfRight.monoLeft H⟩
 
 -- cf. `is_compl.le_left_iff` and `is_compl.le_right_iff`
 theorem le_iff_disjoint_sdiff (hz : z ≤ y) (hx : x ≤ y) : z ≤ x ↔ Disjoint z (y \ x) :=
@@ -290,7 +290,7 @@ theorem sdiff_lt (hx : y ≤ x) (hy : y ≠ ⊥) : x \ y < x := by
 
 @[simp]
 theorem le_sdiff_iff : x ≤ y \ x ↔ x = ⊥ :=
-  ⟨fun h => disjoint_self.1 (disjointSdiffSelfRight.mono_right h), fun h => h.le.trans bot_le⟩
+  ⟨fun h => disjoint_self.1 (disjointSdiffSelfRight.monoRight h), fun h => h.le.trans bot_le⟩
 
 theorem sdiff_lt_sdiff_right (h : x < y) (hz : z ≤ x) : x \ z < y \ z :=
   (sdiff_le_sdiff_right h.le).lt_of_not_le fun h' => h.not_le <| le_sdiff_sup.trans <| sup_le_of_le_sdiff_right h' hz

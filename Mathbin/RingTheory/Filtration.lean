@@ -258,7 +258,7 @@ theorem mem_submodule (f : PolynomialModule R M) : f ∈ F.Submodule ↔ ∀ i, 
 
 theorem inf_submodule : (F ⊓ F').Submodule = F.Submodule ⊓ F'.Submodule := by
   ext
-  exact forall_and_distrib
+  exact forall_and
 
 variable (I M)
 

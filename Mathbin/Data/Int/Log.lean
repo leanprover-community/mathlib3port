@@ -135,7 +135,7 @@ theorem log_zpow {b : ℕ} (hb : 1 < b) (z : ℤ) : log b (b ^ z : R) = z := by
     exact_mod_cast hb.le
     
   · rw [log_of_right_le_one _ (zpow_le_one_of_nonpos _ <| neg_nonpos.mpr (Int.coe_nat_nonneg _)), zpow_neg, inv_inv,
-      zpow_coe_nat, ← Nat.cast_pow, Nat.ceil_coe, Nat.clog_pow _ _ hb]
+      zpow_coe_nat, ← Nat.cast_pow, Nat.ceil_nat_cast, Nat.clog_pow _ _ hb]
     exact_mod_cast hb.le
     
 

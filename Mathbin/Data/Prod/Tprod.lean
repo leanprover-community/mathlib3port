@@ -166,7 +166,7 @@ theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk 
     -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
     rw [Set.Tprod, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
     simp_rw [mem_set_of_eq, mem_cons_iff]
-    rw [forall_eq_or_imp, And.congr_right_iff]
+    rw [forall_eq_or_imp, and_congr_right_iff]
     exact fun _ => this
 
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l) (t : ∀ i, Set (α i)) :

@@ -184,7 +184,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
     _ = _ := by
       have h1 : Set.InjOn (· * p) (range (p ^ n)) := fun x _ y _ => (Nat.mul_left_inj hp.Pos).1
       have h2 : (range (p ^ n)).Image (· * p) ⊆ range (p ^ (n + 1)) := fun a => by
-        simp only [mem_image, mem_range, exists_imp_distrib]
+        simp only [mem_image, mem_range, exists_imp]
         rintro b h rfl
         rw [pow_succ']
         exact (mul_lt_mul_right hp.pos).2 h

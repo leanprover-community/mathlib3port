@@ -67,6 +67,12 @@ theorem norm_coe_mul (x : ℝ) (t : ℝ) : ∥(↑(t * x) : AddCircle (t * p))�
     exact aux hw
     
 
+theorem norm_neg_period (x : ℝ) : ∥(x : AddCircle (-p))∥ = ∥(x : AddCircle p)∥ := by
+  suffices ∥(↑(-1 * x) : AddCircle (-1 * p))∥ = ∥(x : AddCircle p)∥ by
+    rw [← this, neg_one_mul]
+    simp
+  simp only [norm_coe_mul, abs_neg, abs_one, one_mul]
+
 @[simp]
 theorem norm_eq_of_zero {x : ℝ} : ∥(x : AddCircle (0 : ℝ))∥ = abs x := by
   suffices { y : ℝ | (y : AddCircle (0 : ℝ)) = (x : AddCircle (0 : ℝ)) } = {x} by
@@ -109,7 +115,110 @@ theorem norm_eq {x : ℝ} : ∥(x : AddCircle p)∥ = abs (x - round (p⁻¹ * x
         rw [hz]
         abel : x = b - z),
       fract_sub_int, ← abs_sub_round_eq_min]
-    exact abs_sub_round_le_abs_self _
+    convert round_le b 0
+    simp
+    
+
+theorem norm_le_half_period {x : AddCircle p} (hp : p ≠ 0) : ∥x∥ ≤ abs p / 2 := by
+  obtain ⟨x⟩ := x
+  change ∥(x : AddCircle p)∥ ≤ abs p / 2
+  rw [norm_eq, ← mul_le_mul_left (abs_pos.mpr (inv_ne_zero hp)), ← abs_mul, mul_sub, mul_left_comm, ← mul_div_assoc, ←
+    abs_mul, inv_mul_cancel hp, mul_one, abs_one]
+  exact abs_sub_round (p⁻¹ * x)
+
+@[simp]
+theorem norm_half_period_eq : ∥(↑(p / 2) : AddCircle p)∥ = abs p / 2 := by
+  rcases eq_or_ne p 0 with (rfl | hp)
+  · simp
+    
+  rw [norm_eq, ← mul_div_assoc, inv_mul_cancel hp, one_div, round_two_inv, algebraMap.coe_one, one_mul,
+    (by linarith : p / 2 - p = -(p / 2)), abs_neg, abs_div, abs_two]
+
+theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ∥(x : AddCircle p)∥ = abs x ↔ abs x ≤ abs p / 2 := by
+  refine' ⟨fun hx => hx ▸ norm_le_half_period p hp, fun hx => _⟩
+  suffices ∀ p : ℝ, 0 < p → abs x ≤ p / 2 → ∥(x : AddCircle p)∥ = abs x by
+    rcases lt_trichotomy 0 p with (hp | rfl | hp)
+    · rw [abs_eq_self.mpr hp.le] at hx
+      exact this p hp hx
+      
+    · contradiction
+      
+    · rw [← norm_neg_period]
+      rw [abs_eq_neg_self.mpr hp.le] at hx
+      exact this (-p) (neg_pos.mpr hp) hx
+      
+  clear hx
+  intro p hp hx
+  rcases eq_or_ne x (p / 2) with (rfl | hx')
+  · simp [abs_div, abs_two]
+    
+  suffices round (p⁻¹ * x) = 0 by simp [norm_eq, this]
+  rw [round_eq_zero_iff]
+  obtain ⟨hx₁, hx₂⟩ := abs_le.mp hx
+  replace hx₂ := Ne.lt_of_le hx' hx₂
+  constructor
+  · rwa [← mul_le_mul_left hp, ← mul_assoc, mul_inv_cancel hp.ne.symm, one_mul, mul_neg, ← mul_div_assoc, mul_one]
+    
+  · rwa [← mul_lt_mul_left hp, ← mul_assoc, mul_inv_cancel hp.ne.symm, one_mul, ← mul_div_assoc, mul_one]
+    
+
+open Metric
+
+theorem closed_ball_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {ε : ℝ} (hε : abs p / 2 ≤ ε) :
+    ClosedBall x ε = univ :=
+  eq_univ_iff_forall.mpr fun x => by
+    simpa only [mem_closed_ball, dist_eq_norm] using (norm_le_half_period p hp).trans hε
+
+@[simp]
+theorem coe_real_preimage_closed_ball_period_zero (x ε : ℝ) :
+    coe ⁻¹' ClosedBall (x : AddCircle (0 : ℝ)) ε = ClosedBall x ε := by
+  ext y <;> simp [dist_eq_norm, ← QuotientAddGroup.coe_sub]
+
+theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
+    coe ⁻¹' ClosedBall (x : AddCircle p) ε = ⋃ z : ℤ, ClosedBall (x + z • p) ε := by
+  rcases eq_or_ne p 0 with (rfl | hp)
+  · simp [Union_const]
+    
+  ext y
+  simp only [dist_eq_norm, mem_preimage, mem_closed_ball, zsmul_eq_mul, mem_Union, Real.norm_eq_abs, ←
+    QuotientAddGroup.coe_sub, norm_eq, ← sub_sub]
+  refine' ⟨fun h => ⟨round (p⁻¹ * (y - x)), h⟩, _⟩
+  rintro ⟨n, hn⟩
+  rw [← mul_le_mul_left (abs_pos.mpr <| inv_ne_zero hp), ← abs_mul, mul_sub, mul_comm _ p, inv_mul_cancel_left₀ hp] at
+    hn⊢
+  exact (round_le (p⁻¹ * (y - x)) n).trans hn
+
+theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : s ⊆ ClosedBall x (abs p / 2)) :
+    coe ⁻¹' ClosedBall (x : AddCircle p) ε ∩ s = if ε < abs p / 2 then ClosedBall x ε ∩ s else s := by
+  cases' le_or_lt (abs p / 2) ε with hε hε
+  · rcases eq_or_ne p 0 with (rfl | hp)
+    · simp only [abs_zero, zero_div] at hε
+      simp only [not_lt.mpr hε, coe_real_preimage_closed_ball_period_zero, abs_zero, zero_div, if_false,
+        inter_eq_right_iff_subset]
+      exact hs.trans (closed_ball_subset_closed_ball <| by simp [hε])
+      
+    simp [closed_ball_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
+    
+  · suffices ∀ z : ℤ, closed_ball (x + z • p) ε ∩ s = if z = 0 then closed_ball x ε ∩ s else ∅ by
+      simp [-zsmul_eq_mul, ← QuotientAddGroup.coe_zero, coe_real_preimage_closed_ball_eq_Union, Union_inter, Union_ite,
+        this, hε]
+    intro z
+    simp only [Real.closed_ball_eq_Icc, zero_sub, zero_add] at hs⊢
+    rcases eq_or_ne z 0 with (rfl | hz)
+    · simp
+      
+    simp only [hz, zsmul_eq_mul, if_false, eq_empty_iff_forall_not_mem]
+    rintro y ⟨⟨hy₁, hy₂⟩, hy₀⟩
+    obtain ⟨hy₃, hy₄⟩ := hs hy₀
+    rcases lt_trichotomy 0 p with (hp | rfl | hp)
+    · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz' <;> nlinarith [hz', abs_eq_self.mpr hp.le]
+      
+    · simp only [mul_zero, add_zero, abs_zero, zero_div] at hy₁ hy₂ hε
+      linarith
+      
+    · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz' <;>
+        nlinarith [hz', abs_eq_neg_self.mpr hp.le]
+      
     
 
 end AddCircle

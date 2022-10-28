@@ -124,7 +124,7 @@ theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n) (no_prime 
   rw [Finset.mem_range, lt_succ_iff] at hx h2x
   rw [not_le, div_lt_iff_lt_mul' three_pos, mul_comm x] at h2x
   replace no_prime := not_exists.mp no_prime x
-  rw [← and_assoc', not_and', not_and_distrib, not_lt] at no_prime
+  rw [← and_assoc', not_and', not_and_or, not_lt] at no_prime
   cases' no_prime hx with h h
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
     

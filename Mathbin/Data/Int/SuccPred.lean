@@ -67,6 +67,13 @@ instance : IsPredArchimedean ℤ :=
 protected theorem covby_iff_succ_eq {m n : ℤ} : m ⋖ n ↔ m + 1 = n :=
   succ_eq_iff_covby.symm
 
+@[simp]
+theorem sub_one_covby (z : ℤ) : z - 1 ⋖ z := by rw [Int.covby_iff_succ_eq, sub_add_cancel]
+
+@[simp]
+theorem covby_add_one (z : ℤ) : z ⋖ z + 1 :=
+  Int.covby_iff_succ_eq.mpr rfl
+
 end Int
 
 @[simp, norm_cast]

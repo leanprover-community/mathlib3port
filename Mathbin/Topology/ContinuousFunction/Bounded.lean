@@ -77,7 +77,7 @@ directly. -/
 instance : CoeFun (α →ᵇ β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-instance [BoundedContinuousMapClass F α β] : CoeT F (α →ᵇ β) :=
+instance [BoundedContinuousMapClass F α β] : CoeTC F (α →ᵇ β) :=
   ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f, map_bounded' := map_bounded f }⟩
 
 @[simp]
@@ -518,7 +518,7 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   · haveI : CompactSpace s := is_compact_iff_compact_space.1 hs
     refine'
       arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) fun x ε ε0 =>
-        Bex.imp_right (fun U U_nhds hU y hy z hz f hf => _) (H x ε ε0)
+        BEx.imp_right (fun U U_nhds hU y hy z hz f hf => _) (H x ε ε0)
     calc
       dist (f y) (f z) = dist (F f y) (F f z) := rfl
       _ < ε := hU y hy z hz (F f) hf
@@ -547,7 +547,7 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
         ⟨g x, in_s g x gA, lt_of_le_of_lt (dist_coe_le_dist _) dist_fg⟩)
     fun x ε ε0 =>
     show ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U), ∀ f : α →ᵇ β, f ∈ Closure A → dist (f y) (f z) < ε by
-      refine' Bex.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
+      refine' BEx.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
       rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
       replace dist_fg := fun x => lt_of_le_of_lt (dist_coe_le_dist x) dist_fg
       calc

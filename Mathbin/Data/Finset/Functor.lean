@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Scott Morrison
 -/
 import Mathbin.Data.Finset.Lattice
+import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Multiset.Functor
 
 /-!
@@ -78,6 +79,12 @@ theorem seq_left_def (s : Finset α) (t : Finset β) : s <* t = if t = ∅ then 
 @[simp]
 theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then ∅ else t :=
   rfl
+
+/-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
+because of the lack of universe polymorphism. -/
+theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) : image₂ f s t = f <$> s <*> t := by
+  ext
+  simp [mem_sup]
 
 instance : LawfulApplicative Finset :=
   { Finset.is_lawful_functor with

@@ -115,7 +115,7 @@ theorem to_matrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] 
   classical
   intro f g
   refine' not_imp_not.1 _
-  simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp_distrib]
+  simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp]
   intro i hi
   use i
   cases' hf : f i with fi

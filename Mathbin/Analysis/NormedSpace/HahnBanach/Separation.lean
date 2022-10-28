@@ -41,27 +41,24 @@ variable {𝕜 E : Type _}
 /-- Given a set `s` which is a convex neighbourhood of `0` and a point `x₀` outside of it, there is
 a continuous linear functional `f` separating `x₀` and `s`, in the sense that it sends `x₀` to 1 and
 all of `s` to values strictly below `1`. -/
-theorem separate_convex_open_set [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E} (hs₀ : (0 : E) ∈ s)
-    (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) {x₀ : E} (hx₀ : x₀ ∉ s) : ∃ f : E →L[ℝ] ℝ, f x₀ = 1 ∧ ∀ x ∈ s, f x < 1 := by
+theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [TopologicalAddGroup E] [Module ℝ E]
+    [HasContinuousSmul ℝ E] {s : Set E} (hs₀ : (0 : E) ∈ s) (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) {x₀ : E}
+    (hx₀ : x₀ ∉ s) : ∃ f : E →L[ℝ] ℝ, f x₀ = 1 ∧ ∀ x ∈ s, f x < 1 := by
   let f : E →ₗ.[ℝ] ℝ := LinearPmap.mkSpanSingleton x₀ 1 (ne_of_mem_of_not_mem hs₀ hx₀).symm
-  obtain ⟨r, hr, hrs⟩ :=
-    Metric.mem_nhds_iff.1 (Filter.inter_mem (hs₂.mem_nhds hs₀) <| hs₂.neg.mem_nhds <| by rwa [mem_neg, neg_zero])
   obtain ⟨φ, hφ₁, hφ₂⟩ :=
     exists_extension_of_le_sublinear f (gauge s) (fun c hc => gauge_smul_of_nonneg hc.le)
       (gauge_add_le hs₁ <| absorbentNhdsZero <| hs₂.mem_nhds hs₀) _
-  · refine' ⟨(φ.mk_continuous r⁻¹) fun x => _, _, _⟩
-    · rw [Real.norm_eq_abs, abs_le, neg_le, ← LinearMap.map_neg]
-      nth_rw 0 [← norm_neg x]
-      suffices ∀ x, φ x ≤ r⁻¹ * ∥x∥ by exact ⟨this _, this _⟩
-      refine' fun x => (hφ₂ _).trans _
-      rw [← div_eq_inv_mul, ← gauge_ball hr]
-      exact gauge_mono (absorbentBallZero hr) (hrs.trans <| inter_subset_left _ _) x
-      
-    · dsimp
-      rw [← Submodule.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁, LinearPmap.mk_span_singleton'_apply_self]
-      
-    · exact fun x hx => (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ hx)
-      
+  have hφ₃ : φ x₀ = 1 := by
+    rw [← Submodule.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁, LinearPmap.mk_span_singleton'_apply_self]
+  have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx => (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ hx)
+  · refine' ⟨⟨φ, _⟩, hφ₃, hφ₄⟩
+    refine'
+      φ.continuous_of_nonzero_on_open _ (hs₂.vadd (-x₀)) (nonempty.vadd_set ⟨0, hs₀⟩)
+        (vadd_set_subset_iff.mpr fun x hx => _)
+    change φ (-x₀ + x) ≠ 0
+    rw [map_add, map_neg]
+    specialize hφ₄ x hx
+    linarith
     
   rintro ⟨x, hx⟩
   obtain ⟨y, rfl⟩ := Submodule.mem_span_singleton.1 hx
@@ -71,13 +68,12 @@ theorem separate_convex_open_set [SeminormedAddCommGroup E] [NormedSpace ℝ E] 
   · exact h.trans (gauge_nonneg _)
     
   · rw [gauge_smul_of_nonneg h.le, smul_eq_mul, le_mul_iff_one_le_right h]
-    exact
-      one_le_gauge_of_not_mem (hs₁.star_convex hs₀)
-        ((absorbentBallZero hr).Subset <| hrs.trans <| inter_subset_left _ _).Absorbs hx₀
+    exact one_le_gauge_of_not_mem (hs₁.star_convex hs₀) (absorbentNhdsZero <| hs₂.mem_nhds hs₀).Absorbs hx₀
     infer_instance
     
 
-variable [NormedAddCommGroup E] [NormedSpace ℝ E] {s t : Set E} {x y : E}
+variable [TopologicalSpace E] [AddCommGroup E] [TopologicalAddGroup E] [Module ℝ E] [HasContinuousSmul ℝ E]
+  {s t : Set E} {x y : E}
 
 /-- A version of the **Hahn-Banach theorem**: given disjoint convex sets `s`, `t` where `s` is open,
 there is a continuous linear functional which separates them. -/
@@ -145,6 +141,8 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
   rintro rfl
   exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
 
+variable [LocallyConvexSpace ℝ E]
+
 /-- A version of the **Hahn-Banach theorem**: given disjoint convex sets `s`, `t` where `s` is
 compact and `t` is closed, there is a continuous linear functional which strongly separates them. -/
 theorem geometric_hahn_banach_compact_closed (hs₁ : Convex ℝ s) (hs₂ : IsCompact s) (ht₁ : Convex ℝ t)
@@ -185,8 +183,8 @@ theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClo
       (disjoint_singleton_right.2 disj)
   ⟨f, s, ha, hst.trans <| hb x <| mem_singleton _⟩
 
-/-- Special case of `normed_space.eq_iff_forall_dual_eq`. -/
-theorem geometric_hahn_banach_point_point (hxy : x ≠ y) : ∃ f : E →L[ℝ] ℝ, f x < f y := by
+/-- See also `normed_space.eq_iff_forall_dual_eq`. -/
+theorem geometric_hahn_banach_point_point [T1Space E] (hxy : x ≠ y) : ∃ f : E →L[ℝ] ℝ, f x < f y := by
   obtain ⟨f, s, t, hs, st, ht⟩ :=
     geometric_hahn_banach_compact_closed (convex_singleton x) is_compact_singleton (convex_singleton y)
       isClosedSingleton (disjoint_singleton.2 hxy)

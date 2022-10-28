@@ -117,7 +117,7 @@ theorem degree_mod_by_monic_lt [Nontrivial R] : ∀ (p : R[X]) {q : R[X]} (hq : 
       rw [if_pos h]
       exact this
     else
-      Or.cases_on (not_and_distrib.1 h)
+      Or.cases_on (not_and_or.1 h)
         (by
           unfold mod_by_monic div_mod_by_monic_aux
           rw [dif_pos hq, if_neg h]
@@ -411,7 +411,7 @@ The algorithm is "compute `p %ₘ q` and compare to `0`".
 See `polynomial.mod_by_monic` for the algorithm that computes `%ₘ`.
 -/
 def decidableDvdMonic (p : R[X]) (hq : Monic q) : Decidable (q ∣ p) :=
-  decidableOfIff (p %ₘ q = 0) (dvd_iff_mod_by_monic_eq_zero hq)
+  decidable_of_iff (p %ₘ q = 0) (dvd_iff_mod_by_monic_eq_zero hq)
 
 open Classical
 

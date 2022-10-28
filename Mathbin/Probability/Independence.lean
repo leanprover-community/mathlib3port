@@ -142,12 +142,14 @@ end Definitions
 
 section Indep
 
+@[symm]
 theorem IndepSets.symm {s₁ s₂ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measure Ω} (h : IndepSets s₁ s₂ μ) :
     IndepSets s₂ s₁ μ := by
   intro t1 t2 ht1 ht2
   rw [Set.inter_comm, mul_comm]
   exact h t2 t1 ht2 ht1
 
+@[symm]
 theorem Indep.symm {m₁ m₂ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measure Ω} (h : Indep m₁ m₂ μ) :
     Indep m₂ m₁ μ :=
   IndepSets.symm h
@@ -220,6 +222,13 @@ theorem IndepSets.union [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set
   cases' ht1 with n ht1
   exact hyp n t1 t2 ht1 ht2
 
+theorem IndepSets.bUnion [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set (Set Ω)} {μ : Measure Ω} {u : Set ι}
+    (hyp : ∀ n ∈ u, IndepSets (s n) s' μ) : IndepSets (⋃ n ∈ u, s n) s' μ := by
+  intro t1 t2 ht1 ht2
+  simp_rw [Set.mem_Union] at ht1
+  rcases ht1 with ⟨n, hpn, ht1⟩
+  exact hyp n hpn t1 t2 ht1 ht2
+
 theorem IndepSets.inter [MeasurableSpace Ω] {s₁ s' : Set (Set Ω)} (s₂ : Set (Set Ω)) {μ : Measure Ω}
     (h₁ : IndepSets s₁ s' μ) : IndepSets (s₁ ∩ s₂) s' μ := fun t1 t2 ht1 ht2 =>
   h₁ t1 t2 ((Set.mem_inter_iff _ _ _).mp ht1).left ht2
@@ -236,6 +245,12 @@ theorem IndepSets.inter [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set
   intro t1 t2 ht1 ht2
   cases' h with n h
   exact h t1 t2 (set.mem_Inter.mp ht1 n) ht2
+
+theorem IndepSets.bInter [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set (Set Ω)} {μ : Measure Ω} {u : Set ι}
+    (h : ∃ n ∈ u, IndepSets (s n) s' μ) : IndepSets (⋂ n ∈ u, s n) s' μ := by
+  intro t1 t2 ht1 ht2
+  rcases h with ⟨n, hn, h⟩
+  exact h t1 t2 (Set.bInter_subset_of_mem hn ht1) ht2
 
 theorem indep_sets_singleton_iff [MeasurableSpace Ω] {s t : Set Ω} {μ : Measure Ω} :
     IndepSets {s} {t} μ ↔ μ (s ∩ t) = μ s * μ t :=
@@ -345,6 +360,11 @@ theorem IndepSets.indep {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {�
   rw [measure.restrict_apply ht1, measure.smul_apply, smul_eq_mul, mul_comm]
   exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
 
+theorem IndepSets.indep' {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ] {p1 p2 : Set (Set Ω)}
+    (hp1m : ∀ s ∈ p1, MeasurableSet s) (hp2m : ∀ s ∈ p2, MeasurableSet s) (hp1 : IsPiSystem p1) (hp2 : IsPiSystem p2)
+    (hyp : IndepSets p1 p2 μ) : Indep (generateFrom p1) (generateFrom p2) μ :=
+  hyp.indep (generate_from_le hp1m) (generate_from_le hp2m) hp1 hp2 rfl rfl
+
 variable {m0 : MeasurableSpace Ω} {μ : Measure Ω}
 
 theorem indepSetsPiUnionInterOfDisjoint [IsProbabilityMeasure μ] {s : ι → Set (Set Ω)} {S T : Set ι}
@@ -384,6 +404,25 @@ theorem indepSetsPiUnionInterOfDisjoint [IsProbabilityMeasure μ] {s : ι → Se
   simp_rw [h_P_inter, h_μg, Finset.prod_mul_distrib, Finset.prod_ite_mem (p1 ∪ p2) p1 fun x => μ (f1 x),
     Finset.union_inter_cancel_left, Finset.prod_ite_mem (p1 ∪ p2) p2 fun x => μ (f2 x), Finset.union_inter_cancel_right,
     ht1_eq, ← h_indep p1 ht1_m, ht2_eq, ← h_indep p2 ht2_m]
+
+theorem IndepSet.indepGenerateFromOfDisjoint [IsProbabilityMeasure μ] {s : ι → Set Ω} (hsm : ∀ n, MeasurableSet (s n))
+    (hs : IndepSet s μ) (S T : Set ι) (hST : Disjoint S T) :
+    Indep (generateFrom { t | ∃ n ∈ S, s n = t }) (generateFrom { t | ∃ k ∈ T, s k = t }) μ := by
+  rw [← generate_from_pi_Union_Inter_singleton_left, ← generate_from_pi_Union_Inter_singleton_left]
+  refine'
+    indep_sets.indep' (fun t ht => generate_from_pi_Union_Inter_le _ _ _ _ (measurable_set_generate_from ht))
+      (fun t ht => generate_from_pi_Union_Inter_le _ _ _ _ (measurable_set_generate_from ht)) _ _ _
+  · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
+    
+  · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
+    
+  · exact is_pi_system_pi_Union_Inter _ (fun k => IsPiSystem.singleton _) _
+    
+  · exact is_pi_system_pi_Union_Inter _ (fun k => IsPiSystem.singleton _) _
+    
+  · classical
+    exact indep_sets_pi_Union_Inter_of_disjoint (Indep.Indep_sets (fun n => rfl) hs) hST
+    
 
 theorem indepSuprOfDisjoint [IsProbabilityMeasure μ] {m : ι → MeasurableSpace Ω} (h_le : ∀ i, m i ≤ m0)
     (h_indep : IndepCat m μ) {S T : Set ι} (hST : Disjoint S T) : Indep (⨆ i ∈ S, m i) (⨆ i ∈ T, m i) μ := by
@@ -427,7 +466,7 @@ theorem indepSuprOfAntitone [SemilatticeInf ι] {Ω} {m : ι → MeasurableSpace
     (hm : Antitone m) : Indep (⨆ i, m i) m' μ :=
   indepSuprOfDirectedLe h_indep h_le h_le' (directed_of_inf hm)
 
-theorem IndepSets.piUnionInterSingleton {π : ι → Set (Set Ω)} {a : ι} {S : Finset ι} (hp_ind : IndepSets π μ)
+theorem IndepSets.piUnionInterOfNotMem {π : ι → Set (Set Ω)} {a : ι} {S : Finset ι} (hp_ind : IndepSets π μ)
     (haS : a ∉ S) : IndepSets (PiUnionInter π S) (π a) μ := by
   rintro t1 t2 ⟨s, hs_mem, ft1, hft1_mem, ht1_eq⟩ ht2_mem_pia
   rw [Finset.coe_subset] at hs_mem
@@ -493,7 +532,7 @@ theorem IndepSets.indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace Ω
     have hm_p : m_p ≤ m0 := generate_from_pi_Union_Inter_le π h_le' S
     exact
       indep_sets.indep hm_p (h_le a) hp (h_pi a) hS_eq_generate (h_generate a)
-        (h_ind.pi_Union_Inter_singleton ha_notin_S)
+        (h_ind.pi_Union_Inter_of_not_mem ha_notin_S)
   refine' h_indep.symm (f a) (⋂ n ∈ S, f n) (hf_m a (Finset.mem_insert_self a S)) _
   have h_le_p : ∀ i ∈ S, m i ≤ m_p := by
     intro n hn
@@ -625,6 +664,7 @@ theorem indep_fun_iff_indep_set_preimage {mβ : MeasurableSpace β} {mβ' : Meas
   · rwa [← indep_set_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
     
 
+@[symm]
 theorem IndepFun.symm {mβ : MeasurableSpace β} {f g : Ω → β} (hfg : IndepFun f g μ) : IndepFun g f μ :=
   hfg.symm
 

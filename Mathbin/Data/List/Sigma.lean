@@ -153,7 +153,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁
           
         · rw [or_iff_right h'] at h
           rw [h, mem_cons_iff]
-          exact or_congr_right' (mem_erase_of_ne h').symm
+          exact or_congr_right (mem_erase_of_ne h').symm
           
         
       
@@ -402,7 +402,7 @@ theorem kerase_cons_ne {a} {s : Sigma β} {l : List (Sigma β)} (h : a ≠ s.1) 
 @[simp]
 theorem kerase_of_not_mem_keys {a} {l : List (Sigma β)} (h : a ∉ l.keys) : kerase a l = l := by
   induction' l with _ _ ih <;> [rfl,
-    · simp [not_or_distrib] at h
+    · simp [not_or] at h
       simp [h.1, ih h.2]
       ]
 
@@ -512,7 +512,7 @@ theorem kerase_append_left {a} : ∀ {l₁ l₂ : List (Sigma β)}, a ∈ l₁.k
 
 theorem kerase_append_right {a} : ∀ {l₁ l₂ : List (Sigma β)}, a ∉ l₁.keys → kerase a (l₁ ++ l₂) = l₁ ++ kerase a l₂
   | [], _, h => rfl
-  | _ :: l₁, l₂, h => by simp [not_or_distrib] at h <;> simp [h.1, kerase_append_right h.2]
+  | _ :: l₁, l₂, h => by simp [not_or] at h <;> simp [h.1, kerase_append_right h.2]
 
 theorem kerase_comm (a₁ a₂) (l : List (Sigma β)) : kerase a₂ (kerase a₁ l) = kerase a₁ (kerase a₂ l) :=
   if h : a₁ = a₂ then by simp [h]
@@ -686,7 +686,7 @@ theorem Nodupkeys.kunion (nd₁ : l₁.Nodupkeys) (nd₂ : l₂.Nodupkeys) : (ku
   case nil => simp only [nil_kunion, nd₂]
   case cons s l₁ ih =>
   simp at nd₁
-  simp [not_or_distrib, nd₁.1, nd₂, ih nd₁.2 (nd₂.kerase s.1)]
+  simp [not_or, nd₁.1, nd₂, ih nd₁.2 (nd₂.kerase s.1)]
 
 theorem Perm.kunion_right {l₁ l₂ : List (Sigma β)} (p : l₁ ~ l₂) (l) : kunion l₁ l ~ kunion l₂ l := by
   induction p generalizing l
@@ -723,7 +723,7 @@ theorem lookup_kunion_right {a} {l₁ l₂ : List (Sigma β)} (h : a ∉ l₁.ke
   induction l₁ generalizing l₂
   case nil => simp
   case cons _ _ ih =>
-  simp [not_or_distrib] at h
+  simp [not_or] at h
   simp [h.1, ih h.2]
 
 @[simp]
@@ -746,7 +746,7 @@ theorem mem_lookup_kunion_middle {a} {b : β a} {l₁ l₂ l₃ : List (Sigma β
     (h₂ : a ∉ keys l₂) : b ∈ lookup a (kunion (kunion l₁ l₂) l₃) :=
   match mem_lookup_kunion.mp h₁ with
   | Or.inl h => mem_lookup_kunion.mpr (Or.inl (mem_lookup_kunion.mpr (Or.inl h)))
-  | Or.inr h => mem_lookup_kunion.mpr <| Or.inr ⟨mt mem_keys_kunion.mp (not_or_distrib.mpr ⟨h.1, h₂⟩), h.2⟩
+  | Or.inr h => mem_lookup_kunion.mpr <| Or.inr ⟨mt mem_keys_kunion.mp (not_or.mpr ⟨h.1, h₂⟩), h.2⟩
 
 end List
 

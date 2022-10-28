@@ -262,7 +262,7 @@ theorem gcd_eq_zero_iff {i j : ℤ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
     
 
 theorem gcd_pos_iff {i j : ℤ} : 0 < gcd i j ↔ i ≠ 0 ∨ j ≠ 0 :=
-  pos_iff_ne_zero.trans <| gcd_eq_zero_iff.Not.trans not_and_distrib
+  pos_iff_ne_zero.trans <| gcd_eq_zero_iff.Not.trans not_and_or
 
 theorem gcd_div {i j k : ℤ} (H1 : k ∣ i) (H2 : k ∣ j) : gcd (i / k) (j / k) = gcd i j / natAbs k := by
   rw [gcd, nat_abs_div i k H1, nat_abs_div j k H2] <;>

@@ -366,7 +366,7 @@ theorem of_is_empty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ 
 
 /-- Principal segment from the empty relation on `pempty` to the empty relation on `punit`. -/
 @[reducible]
-def pemptyToPunit : @EmptyRelation Pempty ≺i @EmptyRelation PUnit :=
+def pemptyToPunit : @EmptyRelation PEmpty ≺i @EmptyRelation PUnit :=
   (@ofIsEmpty _ _ EmptyRelation _ _ PUnit.unit) fun x => not_false
 
 end PrincipalSeg

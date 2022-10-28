@@ -91,6 +91,11 @@ attribute [refl] walk.nil
 instance Walk.inhabited (v : V) : Inhabited (G.Walk v v) :=
   ⟨Walk.nil⟩
 
+/-- The one-edge walk associated to a pair of adjacent vertices. -/
+@[match_pattern, reducible]
+def Adj.toWalk {G : SimpleGraph V} {u v : V} (h : G.Adj u v) : G.Walk u v :=
+  Walk.cons h Walk.nil
+
 namespace Walk
 
 variable {G}
@@ -1272,6 +1277,12 @@ protected theorem Reachable.elim_path {p : Prop} {u v : V} (h : G.Reachable u v)
   classical
   exact h.elim fun q => hp q.toPath
 
+protected theorem Walk.reachable {G : SimpleGraph V} {u v : V} (p : G.Walk u v) : G.Reachable u v :=
+  ⟨p⟩
+
+protected theorem Adj.reachable {u v : V} (h : G.Adj u v) : G.Reachable u v :=
+  h.toWalk.Reachable
+
 @[refl]
 protected theorem Reachable.refl (u : V) : G.Reachable u u := by
   fconstructor
@@ -1305,6 +1316,10 @@ theorem reachable_iff_refl_trans_gen (u v : V) : G.Reachable u v ↔ Relation.Re
       
     
 
+protected theorem Reachable.map {G : SimpleGraph V} {G' : SimpleGraph V'} (f : G →g G') {u v : V}
+    (h : G.Reachable u v) : G'.Reachable (f u) (f v) :=
+  h.elim fun p => ⟨p.map f⟩
+
 variable (G)
 
 theorem reachable_is_equivalence : Equivalence G.Reachable :=
@@ -1320,7 +1335,7 @@ def Preconnected : Prop :=
 
 theorem Preconnected.map {G : SimpleGraph V} {H : SimpleGraph V'} (f : G →g H) (hf : Surjective f)
     (hG : G.Preconnected) : H.Preconnected :=
-  hf.forall₂.2 fun a b => (hG _ _).map <| Walk.map _
+  hf.forall₂.2 fun a b => Nonempty.map (Walk.map _) <| hG _ _
 
 theorem Iso.preconnected_iff {G : SimpleGraph V} {H : SimpleGraph V'} (e : G ≃g H) : G.Preconnected ↔ H.Preconnected :=
   ⟨Preconnected.map e.toHom e.toEquiv.Surjective, Preconnected.map e.symm.toHom e.symm.toEquiv.Surjective⟩
@@ -1417,6 +1432,24 @@ variable {G}
 /-- A subgraph is connected if it is connected as a simple graph. -/
 abbrev Subgraph.Connected (H : G.Subgraph) : Prop :=
   H.coe.Connected
+
+theorem singleton_subgraph_connected {v : V} : (G.singletonSubgraph v).Connected := by
+  constructor
+  rintro ⟨a, ha⟩ ⟨b, hb⟩
+  simp only [singleton_subgraph_verts, Set.mem_singleton_iff] at ha hb
+  subst_vars
+
+@[simp]
+theorem subgraph_of_adj_connected {v w : V} (hvw : G.Adj v w) : (G.subgraphOfAdj hvw).Connected := by
+  constructor
+  rintro ⟨a, ha⟩ ⟨b, hb⟩
+  simp only [subgraph_of_adj_verts, Set.mem_insert_iff, Set.mem_singleton_iff] at ha hb
+  obtain rfl | rfl := ha <;>
+    obtain rfl | rfl := hb <;>
+      first
+        |rfl|· apply adj.reachable
+          simp
+          
 
 theorem Preconnected.set_univ_walk_nonempty (hconn : G.Preconnected) (u v : V) :
     (Set.Univ : Set (G.Walk u v)).Nonempty := by

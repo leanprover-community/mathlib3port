@@ -15,11 +15,13 @@ about this type.
 -/
 
 
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ() -/
 /-- Extended natural numbers `ℕ∞ = with_top ℕ`. -/
 def Enat : Type :=
   WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrder, OrderBot,
   OrderTop, HasBot, HasTop, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub, CompleteLinearOrder,
-  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, HasWellFounded
+  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, HasWellFounded, CharZero,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 
 -- mathport name: «exprℕ∞»
 notation "ℕ∞" => Enat
@@ -75,8 +77,26 @@ theorem to_nat_top : toNat ⊤ = 0 :=
 theorem coe_to_nat_eq_self : ↑n.toNat = n ↔ n ≠ ⊤ :=
   WithTop.recTopCoe (by simp) (by simp) n
 
-theorem coe_to_nat_le_self (n : ℕ∞) : ↑n.toNat ≤ n :=
+alias coe_to_nat_eq_self ↔ _ coe_to_nat
+
+theorem coe_to_nat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
   WithTop.recTopCoe le_top (fun k => le_rfl) n
+
+theorem to_nat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n := by
+  lift m to ℕ using hm
+  lift n to ℕ using hn
+  rfl
+
+theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n := by
+  lift n to ℕ using hn
+  induction m using WithTop.recTopCoe
+  · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
+    
+  · rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
+    
+
+theorem to_nat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : m.toNat = n ↔ m = n := by
+  induction m using WithTop.recTopCoe <;> simp [hn.symm]
 
 @[simp]
 theorem succ_def (m : ℕ∞) : Order.succ m = m + 1 := by cases m <;> rfl

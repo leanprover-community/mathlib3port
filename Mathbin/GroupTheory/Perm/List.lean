@@ -73,7 +73,7 @@ theorem form_perm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPe
   · simp
     
   · specialize IH x z (mt (mem_cons_of_mem y) h)
-    simp only [not_or_distrib, mem_cons_iff] at h
+    simp only [not_or, mem_cons_iff] at h
     simp [IH, swap_apply_of_ne_of_ne, h]
     
 

@@ -26,13 +26,13 @@ TODO: This is just the beginning; a lot of rules are missing
 -/
 
 
+open Function
+
+open OrderDual (toDual ofDual)
+
 variable {α β : Type _}
 
 namespace Set
-
-open Set
-
-open OrderDual (toDual ofDual)
 
 section Preorder
 
@@ -558,7 +558,7 @@ theorem Icc_eq_singleton_iff : IccCat a b = {c} ↔ a = c ∧ b = c := by
 
 @[simp]
 theorem Icc_diff_left : IccCat a b \ {a} = IocCat a b :=
-  ext fun x => by simp [lt_iff_le_and_ne, eq_comm, And.right_comm]
+  ext fun x => by simp [lt_iff_le_and_ne, eq_comm, and_right_comm]
 
 @[simp]
 theorem Icc_diff_right : IccCat a b \ {b} = IcoCat a b :=
@@ -566,7 +566,7 @@ theorem Icc_diff_right : IccCat a b \ {b} = IcoCat a b :=
 
 @[simp]
 theorem Ico_diff_left : IcoCat a b \ {a} = IooCat a b :=
-  ext fun x => by simp [And.right_comm, ← lt_iff_le_and_ne, eq_comm]
+  ext fun x => by simp [and_right_comm, ← lt_iff_le_and_ne, eq_comm]
 
 @[simp]
 theorem Ioc_diff_right : IocCat a b \ {b} = IooCat a b :=
@@ -655,7 +655,7 @@ theorem Iio_insert : insert a (IioCat a) = IicCat a :=
 
 @[simp]
 theorem Ioi_insert : insert a (IoiCat a) = IciCat a :=
-  ext fun _ => (or_congr_left' eq_comm).trans le_iff_eq_or_lt.symm
+  ext fun _ => (or_congr_left eq_comm).trans le_iff_eq_or_lt.symm
 
 theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : IoiCat a ⊆ s) (hc : s ⊆ IciCat a) :
     s ∈ ({IciCat a, IoiCat a} : Set (Set α)) :=
@@ -709,6 +709,16 @@ theorem _root_.is_max.Ici_eq (h : IsMax a) : IciCat a = {a} :=
 
 theorem _root_.is_min.Iic_eq (h : IsMin a) : IicCat a = {a} :=
   h.toDual.Ici_eq
+
+theorem Ici_injective : Injective (IciCat : α → Set α) := fun a b => eq_of_forall_ge_iff ∘ Set.ext_iff.1
+
+theorem Iic_injective : Injective (IicCat : α → Set α) := fun a b => eq_of_forall_le_iff ∘ Set.ext_iff.1
+
+theorem Ici_inj : IciCat a = IciCat b ↔ a = b :=
+  Ici_injective.eq_iff
+
+theorem Iic_inj : IicCat a = IicCat b ↔ a = b :=
+  Iic_injective.eq_iff
 
 end PartialOrder
 
@@ -841,6 +851,16 @@ theorem Iic_diff_Iio : IicCat b \ IioCat a = IccCat a b := by rw [diff_eq, compl
 
 @[simp]
 theorem Iio_diff_Iio : IioCat b \ IioCat a = IcoCat a b := by rw [diff_eq, compl_Iio, inter_comm, Ici_inter_Iio]
+
+theorem Ioi_injective : Injective (IoiCat : α → Set α) := fun a b => eq_of_forall_gt_iff ∘ Set.ext_iff.1
+
+theorem Iio_injective : Injective (IioCat : α → Set α) := fun a b => eq_of_forall_lt_iff ∘ Set.ext_iff.1
+
+theorem Ioi_inj : IoiCat a = IoiCat b ↔ a = b :=
+  Ioi_injective.eq_iff
+
+theorem Iio_inj : IioCat a = IioCat b ↔ a = b :=
+  Iio_injective.eq_iff
 
 theorem Ico_subset_Ico_iff (h₁ : a₁ < b₁) : IcoCat a₁ b₁ ⊆ IcoCat a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
   ⟨fun h =>

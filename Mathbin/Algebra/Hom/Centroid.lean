@@ -65,7 +65,7 @@ class CentroidHomClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssoc
 
 export CentroidHomClass (map_mul_left map_mul_right)
 
-instance [NonUnitalNonAssocSemiring α] [CentroidHomClass F α] : CoeT F (CentroidHom α) :=
+instance [NonUnitalNonAssocSemiring α] [CentroidHomClass F α] : CoeTC F (CentroidHom α) :=
   ⟨fun f => { (f : α →+ α) with toFun := f, map_mul_left' := map_mul_left f, map_mul_right' := map_mul_right f }⟩
 
 /-! ### Centroid homomorphisms -/

@@ -85,7 +85,7 @@ open ComplexConjugate
 
 /- The priority must be set at 900 to ensure that coercions are tried in the right order.
 See Note [coercion into rings], or `data/nat/cast.lean` for more details. -/
-noncomputable instance (priority := 900) algebraMapCoe : CoeT ℝ K :=
+noncomputable instance (priority := 900) algebraMapCoe : CoeTC ℝ K :=
   ⟨algebraMap ℝ K⟩
 
 theorem of_real_alg (x : ℝ) : (x : K) = x • (1 : K) :=

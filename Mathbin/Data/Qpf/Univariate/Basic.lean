@@ -704,7 +704,7 @@ theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.Lift
     rw [supp_preservation_iff_uniform] at h'
     dsimp only [supp_preservation, supp] at h
     rwa [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Pfunctor.liftp_iff'] <;> try assumption
-    · simp only [image_univ, mem_range, exists_imp_distrib]
+    · simp only [image_univ, mem_range, exists_imp]
       constructor <;> intros <;> subst_vars <;> solve_by_elim
       
     

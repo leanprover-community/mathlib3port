@@ -139,7 +139,7 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G
   · simp (config := { contextual := true }) only [mem_filter, one_mul, MonoidHom.map_mul, mem_univ, mul_right_inv,
       eq_self_iff_true, MonoidHom.map_mul_inv, and_self_iff, forall_true_iff]
     
-  · simp only [mul_left_inj, imp_self, forall_2_true_iff]
+  · simp only [mul_left_inj, imp_self, forall₂_true_iff]
     
   · simp only [true_and_iff, mem_filter, mem_univ] at hg
     simp only [hg, mem_filter, one_mul, MonoidHom.map_mul, mem_univ, mul_right_inv, eq_self_iff_true,
@@ -166,13 +166,13 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
     (∑ g : G, f g) = ∑ g : G, f.to_hom_units g := rfl
     _ = ∑ u : Rˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
       sum_comp (coe : Rˣ → R) f.to_hom_units
-    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u := sum_congr rfl fun u hu => congr_arg2 _ _ rfl
+    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u := sum_congr rfl fun u hu => congr_arg₂ _ _ rfl
     -- remaining goal 1, proven below
         _ =
         ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
       Finset.sum_subtype _ (by simp) _
     _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) := smul_sum.symm
-    _ = c • 0 := congr_arg2 _ rfl _
+    _ = c • 0 := congr_arg₂ _ rfl _
     -- remaining goal 2, proven below
         _ =
         0 :=

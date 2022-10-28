@@ -886,7 +886,7 @@ theorem coe_mker (f : F) : (mker f : Set M) = (f : M → N) ⁻¹' {1} :=
 
 @[to_additive]
 instance decidableMemMker [DecidableEq N] (f : F) : DecidablePred (· ∈ mker f) := fun x =>
-  decidableOfIff (f x = 1) (mem_mker f)
+  decidable_of_iff (f x = 1) (mem_mker f)
 
 omit mc
 

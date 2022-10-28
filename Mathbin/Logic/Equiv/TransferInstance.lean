@@ -257,9 +257,9 @@ protected def addMonoidWithOne [AddMonoidWithOne β] : AddMonoidWithOne α :=
 @[reducible]
 protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
   { e.AddMonoidWithOne, e.AddGroup with intCast := fun n => e.symm n,
-    int_cast_of_nat := fun n => by rw [Int.cast_coe_nat] <;> rfl,
+    int_cast_of_nat := fun n => by rw [Int.cast_ofNat] <;> rfl,
     int_cast_neg_succ_of_nat := fun n =>
-      congr_arg e.symm <| (Int.cast_neg_succ_of_nat _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
+      congr_arg e.symm <| (Int.cast_negSucc _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 
 /-- Transfer `non_assoc_semiring` across an `equiv` -/
 @[reducible]

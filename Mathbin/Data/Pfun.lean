@@ -461,23 +461,21 @@ theorem comp_id (f : α →. β) : f.comp (Pfun.id α) = f :=
 @[simp]
 theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.Preimage f.Dom := by
   ext
-  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right]
+  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right]
   rw [exists_comm]
   simp_rw [and_comm]
 
 @[simp]
 theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) : (f.comp g).Preimage s = g.Preimage (f.Preimage s) := by
   ext
-  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
-    exists_and_distrib_left]
+  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right, ← exists_and_left]
   rw [exists_comm]
   simp_rw [and_assoc', and_comm]
 
 @[simp]
 theorem _root_.part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) : a.bind (f.comp g) = (a.bind g).bind f := by
   ext c
-  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
-    exists_and_distrib_left]
+  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right, ← exists_and_left]
   rw [exists_comm]
   simp_rw [and_assoc']
 
@@ -512,7 +510,7 @@ theorem mem_prod_lift {f : α →. β} {g : α →. γ} {x : α} {y : β × γ} 
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∃ , »((hp hq), «expr ∧ »(«expr = »((f x).get hp, y.1), «expr = »((g x).get hq, y.2)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · simp only [prod_lift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
     
-  · simpa only [exists_and_distrib_left, exists_and_distrib_right]
+  · simpa only [exists_and_left, exists_and_right]
     
 
 /-- Product of partial functions. -/
@@ -540,7 +538,7 @@ theorem mem_prod_map {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ ×
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∃ , »((hp hq), «expr ∧ »(«expr = »((f x.1).get hp, y.1), «expr = »((g x.2).get hq, y.2)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   · simp only [prod_map, Part.mem_mk_iff, And.exists, Prod.ext_iff]
     
-  · simpa only [exists_and_distrib_left, exists_and_distrib_right]
+  · simpa only [exists_and_left, exists_and_right]
     
 
 @[simp]

@@ -53,7 +53,7 @@ def factorization (n : ℕ) : ℕ →₀ ℕ where
     rcases eq_or_ne n 0 with (rfl | hn0)
     · simp
       
-    simp only [mem_factors hn0, mem_to_finset, Ne.def, ite_eq_right_iff, not_forall, exists_prop, And.congr_right_iff]
+    simp only [mem_factors hn0, mem_to_finset, Ne.def, ite_eq_right_iff, not_forall, exists_prop, and_congr_right_iff]
     rintro p hp
     haveI := fact_iff.mpr hp
     exact dvd_iff_padic_val_nat_ne_zero hn0
@@ -132,7 +132,7 @@ theorem factorization_eq_zero_iff (n p : ℕ) : n.factorization p = 0 ↔ ¬p.Pr
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
     
-  · simp [hn, Nat.mem_factors, not_and_distrib]
+  · simp [hn, Nat.mem_factors, not_and_or]
     
 
 @[simp]
@@ -658,7 +658,7 @@ theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
   · simp
     
   ext x
-  simp only [mem_Icc, Finset.mem_filter, mem_Ico, and_assoc', And.congr_right_iff, pp.pow_dvd_iff_le_factorization hn,
+  simp only [mem_Icc, Finset.mem_filter, mem_Ico, and_assoc', and_congr_right_iff, pp.pow_dvd_iff_le_factorization hn,
     iff_and_self]
   exact fun H1 H2 => lt_of_le_of_lt H2 (factorization_lt p hn)
 
@@ -668,7 +668,7 @@ theorem factorization_eq_card_pow_dvd (n : ℕ) {p : ℕ} (pp : p.Prime) :
 theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
     ((ico 1 n).filter fun i => p ^ i ∣ n) = (icc 1 b).filter fun i => p ^ i ∣ n := by
   ext x
-  simp only [Finset.mem_filter, mem_Ico, mem_Icc, And.congr_left_iff, And.congr_right_iff]
+  simp only [Finset.mem_filter, mem_Ico, mem_Icc, and_congr_left_iff, and_congr_right_iff]
   rintro h1 -
   simp [lt_of_pow_dvd_right hn pp.two_le h1, (pow_le_iff_le_right pp.two_le).1 ((le_of_dvd hn.bot_lt h1).trans hb)]
 

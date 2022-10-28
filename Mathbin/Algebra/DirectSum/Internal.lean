@@ -70,7 +70,7 @@ theorem SetLike.int_cast_mem_graded [Zero ι] [AddGroupWithOne R] [SetLike σ R]
   · rw [Int.cast_of_nat]
     exact SetLike.nat_cast_mem_graded _ _
     
-  · rw [Int.cast_neg_succ_of_nat]
+  · rw [Int.cast_negSucc]
     exact neg_mem (SetLike.nat_cast_mem_graded _ _)
     
 
@@ -108,7 +108,7 @@ instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A
     DirectSum.Gring fun i => A i :=
   { SetLike.gsemiring A with intCast := fun z => ⟨z, SetLike.int_cast_mem_graded _ _⟩,
     int_cast_of_nat := fun n => Subtype.ext <| Int.cast_of_nat _,
-    int_cast_neg_succ_of_nat := fun n => Subtype.ext <| Int.cast_neg_succ_of_nat n }
+    int_cast_neg_succ_of_nat := fun n => Subtype.ext <| Int.cast_negSucc n }
 
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
 instance gcommRing [AddCommMonoid ι] [CommRing R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)

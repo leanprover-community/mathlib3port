@@ -67,7 +67,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.with_t
 @[simp, nolint has_nonempty_instance]
 def Hom : WithTerminal C → WithTerminal C → Type v
   | of X, of Y => X ⟶ Y
-  | star, of X => Pempty
+  | star, of X => PEmpty
   | _, star => PUnit
 
 /- warning: category_theory.with_terminal.id -> CategoryTheory.WithTerminal.id is a dubious translation:
@@ -93,8 +93,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.with_t
 def comp : ∀ {X Y Z : WithTerminal C}, Hom X Y → Hom Y Z → Hom X Z
   | of X, of Y, of Z => fun f g => f ≫ g
   | of X, _, star => fun f g => PUnit.unit
-  | star, of X, _ => fun f g => Pempty.elim f
-  | _, star, of Y => fun f g => Pempty.elim g
+  | star, of X, _ => fun f g => PEmpty.elim f
+  | _, star, of Y => fun f g => PEmpty.elim g
   | star, star, star => fun _ _ => PUnit.unit
 
 instance : Category.{v} (WithTerminal C) where
@@ -234,7 +234,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.with_i
 @[simp, nolint has_nonempty_instance]
 def Hom : WithInitial C → WithInitial C → Type v
   | of X, of Y => X ⟶ Y
-  | of X, _ => Pempty
+  | of X, _ => PEmpty
   | star, _ => PUnit
 
 /- warning: category_theory.with_initial.id -> CategoryTheory.WithInitial.id is a dubious translation:
@@ -260,8 +260,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.with_i
 def comp : ∀ {X Y Z : WithInitial C}, Hom X Y → Hom Y Z → Hom X Z
   | of X, of Y, of Z => fun f g => f ≫ g
   | star, _, of X => fun f g => PUnit.unit
-  | _, of X, star => fun f g => Pempty.elim g
-  | of Y, star, _ => fun f g => Pempty.elim f
+  | _, of X, star => fun f g => PEmpty.elim g
+  | of Y, star, _ => fun f g => PEmpty.elim f
   | star, star, star => fun _ _ => PUnit.unit
 
 instance : Category.{v} (WithInitial C) where

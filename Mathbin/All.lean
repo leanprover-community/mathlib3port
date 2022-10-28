@@ -150,9 +150,9 @@ import Mathbin.Algebra.Group.OrderSynonym
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Group.Semiconj
-import Mathbin.Algebra.Group.ToAdditive
 import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Group.Ulift
+import Mathbin.Algebra.Group.UniqueProds
 import Mathbin.Algebra.Group.Units
 import Mathbin.Algebra.Group.WithOne
 import Mathbin.Algebra.GroupPower.Basic
@@ -359,7 +359,9 @@ import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
 import Mathbin.AlgebraicGeometry.Morphisms.Basic
 import Mathbin.AlgebraicGeometry.Morphisms.FiniteType
 import Mathbin.AlgebraicGeometry.Morphisms.QuasiCompact
+import Mathbin.AlgebraicGeometry.Morphisms.QuasiSeparated
 import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
+import Mathbin.AlgebraicGeometry.Morphisms.UniversallyClosed
 import Mathbin.AlgebraicGeometry.OpenImmersion
 import Mathbin.AlgebraicGeometry.PresheafedSpace
 import Mathbin.AlgebraicGeometry.PresheafedSpace.Gluing
@@ -1126,7 +1128,9 @@ import Mathbin.Data.Countable.Defs
 import Mathbin.Data.Countable.Small
 import Mathbin.Data.Dfinsupp.Basic
 import Mathbin.Data.Dfinsupp.Interval
+import Mathbin.Data.Dfinsupp.Lex
 import Mathbin.Data.Dfinsupp.Multiset
+import Mathbin.Data.Dfinsupp.NeLocus
 import Mathbin.Data.Dfinsupp.Order
 import Mathbin.Data.Dlist.Basic
 import Mathbin.Data.Dlist.Instances
@@ -1160,6 +1164,7 @@ import Mathbin.Data.Finset.Functor
 import Mathbin.Data.Finset.Interval
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Finset.LocallyFinite
+import Mathbin.Data.Finset.MulAntidiagonal
 import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Finset.NatAntidiagonal
 import Mathbin.Data.Finset.NoncommProd
@@ -1346,6 +1351,7 @@ import Mathbin.Data.Nat.Log
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Nat.Multiplicity
 import Mathbin.Data.Nat.Nth
+import Mathbin.Data.Nat.Order
 import Mathbin.Data.Nat.Pairing
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Nat.PartEnat
@@ -1367,6 +1373,7 @@ import Mathbin.Data.Num.Prime
 import Mathbin.Data.Opposite
 import Mathbin.Data.Option.Basic
 import Mathbin.Data.Option.Defs
+import Mathbin.Data.Option.NAry
 import Mathbin.Data.Ordmap.Ordnode
 import Mathbin.Data.Ordmap.Ordset
 import Mathbin.Data.Part
@@ -1506,9 +1513,11 @@ import Mathbin.Data.Set.Intervals.SurjOn
 import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.Data.Set.Intervals.WithBotTop
 import Mathbin.Data.Set.Lattice
+import Mathbin.Data.Set.MulAntidiagonal
 import Mathbin.Data.Set.Opposite
 import Mathbin.Data.Set.Pairwise
-import Mathbin.Data.Set.Pointwise
+import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.Data.Set.Prod
 import Mathbin.Data.Set.Semiring
 import Mathbin.Data.Set.Sigma
@@ -1555,6 +1564,7 @@ import Mathbin.Deprecated.Submonoid
 import Mathbin.Deprecated.Subring
 import Mathbin.Dynamics.Circle.RotationNumber.TranslationNumber
 import Mathbin.Dynamics.Ergodic.Conservative
+import Mathbin.Dynamics.Ergodic.Ergodic
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.Dynamics.FixedPoints.Basic
 import Mathbin.Dynamics.FixedPoints.Topology
@@ -2174,6 +2184,7 @@ import Mathbin.Order.UpperLower
 import Mathbin.Order.WellFounded
 import Mathbin.Order.WellFoundedSet
 import Mathbin.Order.Zorn
+import Mathbin.Order.ZornAtoms
 import Mathbin.Probability.CondCount
 import Mathbin.Probability.ConditionalExpectation
 import Mathbin.Probability.ConditionalProbability
@@ -2536,6 +2547,7 @@ import Mathbin.Tactic.SwapVar
 import Mathbin.Tactic.Tauto
 import Mathbin.Tactic.Tfae
 import Mathbin.Tactic.Tidy
+import Mathbin.Tactic.ToAdditive
 import Mathbin.Tactic.Transfer
 import Mathbin.Tactic.TransformDecl
 import Mathbin.Tactic.Transport

@@ -183,11 +183,11 @@ def spec : CommRingCatᵒᵖ ⥤ Scheme where
 -/
 @[simps]
 def empty.{u} : SchemeCat.{u} where
-  Carrier := TopCat.of Pempty
+  Carrier := TopCat.of PEmpty
   Presheaf := (CategoryTheory.Functor.const _).obj (CommRingCat.of PUnit)
   IsSheaf := Presheaf.isSheafOfIsTerminal _ CommRingCat.punitIsTerminal
-  LocalRing x := Pempty.elim x
-  local_affine x := Pempty.elim x
+  LocalRing x := PEmpty.elim x
+  local_affine x := PEmpty.elim x
 
 instance : EmptyCollection SchemeCat :=
   ⟨empty⟩
@@ -235,7 +235,7 @@ theorem mem_basic_open_top (f : X.Presheaf.obj (op ⊤)) (x : X.Carrier) :
   RingedSpaceCat.mem_basic_open _ f ⟨x, trivial⟩
 
 @[simp]
-theorem basic_open_res (i : op U ⟶ op V) : X.basicOpen (X.Presheaf.map i f) = V ∩ X.basicOpen f :=
+theorem basic_open_res (i : op U ⟶ op V) : X.basicOpen (X.Presheaf.map i f) = V ⊓ X.basicOpen f :=
   RingedSpaceCat.basic_open_res _ i f
 
 -- This should fire before `basic_open_res`.
@@ -243,8 +243,9 @@ theorem basic_open_res (i : op U ⟶ op V) : X.basicOpen (X.Presheaf.map i f) = 
 theorem basic_open_res_eq (i : op U ⟶ op V) [IsIso i] : X.basicOpen (X.Presheaf.map i f) = X.basicOpen f :=
   RingedSpaceCat.basic_open_res_eq _ i f
 
-theorem basic_open_subset : X.basicOpen f ⊆ U :=
-  RingedSpaceCat.basic_open_subset _ _
+@[sheaf_restrict]
+theorem basic_open_le : X.basicOpen f ≤ U :=
+  RingedSpaceCat.basic_open_le _ _
 
 @[simp]
 theorem preimage_basic_open {X Y : SchemeCat} (f : X ⟶ Y) {U : Opens Y.Carrier} (r : Y.Presheaf.obj <| op U) :
@@ -252,7 +253,7 @@ theorem preimage_basic_open {X Y : SchemeCat} (f : X ⟶ Y) {U : Opens Y.Carrier
   LocallyRingedSpaceCat.preimage_basic_open f r
 
 @[simp]
-theorem basic_open_zero (U : Opens X.Carrier) : X.basicOpen (0 : X.Presheaf.obj <| op U) = ∅ :=
+theorem basic_open_zero (U : Opens X.Carrier) : X.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ :=
   LocallyRingedSpaceCat.basic_open_zero _ U
 
 @[simp]

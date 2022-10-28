@@ -224,7 +224,7 @@ instance : Inhabited IntegrationParams :=
 
 instance : DecidableRel ((· ≤ ·) : IntegrationParams → IntegrationParams → Prop) := fun _ _ => And.decidable
 
-instance : DecidableEq IntegrationParams := fun x y => decidableOfIff _ (ext_iff x y).symm
+instance : DecidableEq IntegrationParams := fun x y => decidable_of_iff _ (ext_iff x y).symm
 
 /-- The `box_integral.integration_params` corresponding to the Riemann integral. In the
 corresponding filter, we require that the diameters of all boxes `J` of a tagged partition are
@@ -398,7 +398,7 @@ theorem RCond.mono {ι : Type _} {r : (ι → ℝ) → ioi (0 : ℝ)} (h : l₁ 
   hr (le_iff_imp.1 h.1 hR)
 
 theorem RCond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)} (h₁ : l.RCond r₁) (h₂ : l.RCond r₂) :
-    l.RCond fun x => min (r₁ x) (r₂ x) := fun hR x => congr_arg2 min (h₁ hR x) (h₂ hR x)
+    l.RCond fun x => min (r₁ x) (r₂ x) := fun hR x => congr_arg₂ min (h₁ hR x) (h₂ hR x)
 
 @[mono]
 theorem to_filter_distortion_mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) :

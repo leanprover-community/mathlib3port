@@ -327,7 +327,7 @@ instance : ProperSpace ℍ := by
 theorem isometryVerticalLine (a : ℝ) : Isometry fun y => mk ⟨a, exp y⟩ (exp_pos y) := by
   refine' Isometry.ofDistEq fun y₁ y₂ => _
   rw [dist_of_re_eq]
-  exacts[congr_arg2 _ (log_exp _) (log_exp _), rfl]
+  exacts[congr_arg₂ _ (log_exp _) (log_exp _), rfl]
 
 theorem isometryRealVadd (a : ℝ) : Isometry ((· +ᵥ ·) a : ℍ → ℍ) :=
   Isometry.ofDistEq fun y₁ y₂ => by simp only [dist_eq, coe_vadd, vadd_im, dist_add_left]

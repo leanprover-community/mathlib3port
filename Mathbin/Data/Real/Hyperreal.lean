@@ -24,7 +24,7 @@ namespace Hyperreal
 -- mathport name: «exprℝ*»
 notation "ℝ*" => Hyperreal
 
-noncomputable instance : CoeT ℝ ℝ* :=
+noncomputable instance : CoeTC ℝ ℝ* :=
   ⟨fun x => (↑x : Germ _ _)⟩
 
 @[simp, norm_cast]
@@ -236,8 +236,8 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Inf
 theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sup { y : ℝ | (y : ℝ*) < x }) :=
   let S : Set ℝ := { y : ℝ | (y : ℝ*) < x }
   let R : _ := sup S
-  have hnile := not_forall.mp (not_or_distrib.mp hni).1
-  have hnige := not_forall.mp (not_or_distrib.mp hni).2
+  have hnile := not_forall.mp (not_or.mp hni).1
+  have hnige := not_forall.mp (not_or.mp hni).2
   Exists.dcases_on hnile <|
     (Exists.dcases_on hnige) fun r₁ hr₁ r₂ hr₂ =>
       have HR₁ : S.Nonempty := ⟨r₁ - 1, lt_of_lt_of_le (coe_lt_coe.2 <| sub_one_lt _) (not_lt.mp hr₁)⟩
@@ -496,10 +496,10 @@ theorem infinite_neg_add_infinite_neg {x y : ℝ*} : InfiniteNeg x → InfiniteN
   infinite_neg_add_not_infinite_pos hx (not_infinite_pos_of_infinite_neg hy)
 
 theorem infinite_pos_add_not_infinite {x y : ℝ*} : InfinitePos x → ¬Infinite y → InfinitePos (x + y) := fun hx hy =>
-  infinite_pos_add_not_infinite_neg hx (not_or_distrib.mp hy).2
+  infinite_pos_add_not_infinite_neg hx (not_or.mp hy).2
 
 theorem infinite_neg_add_not_infinite {x y : ℝ*} : InfiniteNeg x → ¬Infinite y → InfiniteNeg (x + y) := fun hx hy =>
-  infinite_neg_add_not_infinite_pos hx (not_or_distrib.mp hy).1
+  infinite_neg_add_not_infinite_pos hx (not_or.mp hy).1
 
 theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTop) : InfinitePos (ofSeq f) := fun r =>
   have hf' := tendsto_at_top_at_top.mp hf
@@ -527,15 +527,15 @@ theorem not_infinite_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : 
 
 theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ, (r : ℝ*) < x ∧ x < s :=
   ⟨fun hni =>
-    Exists.dcases_on (not_forall.mp (not_or_distrib.mp hni).1) <|
-      (Exists.dcases_on (not_forall.mp (not_or_distrib.mp hni).2)) fun r hr s hs => by
+    Exists.dcases_on (not_forall.mp (not_or.mp hni).1) <|
+      (Exists.dcases_on (not_forall.mp (not_or.mp hni).2)) fun r hr s hs => by
         rw [not_lt] at hr hs <;>
           exact
             ⟨r - 1, s + 1, ⟨lt_of_lt_of_le (by rw [sub_eq_add_neg] <;> norm_num) hr, lt_of_le_of_lt hs (by norm_num)⟩⟩,
     fun hrs =>
     (Exists.dcases_on hrs) fun r hr =>
       (Exists.dcases_on hr) fun s hs =>
-        not_or_distrib.mpr ⟨not_forall.mpr ⟨s, lt_asymm hs.2⟩, not_forall.mpr ⟨r, lt_asymm hs.1⟩⟩⟩
+        not_or.mpr ⟨not_forall.mpr ⟨s, lt_asymm hs.2⟩, not_forall.mpr ⟨r, lt_asymm hs.1⟩⟩⟩
 
 theorem not_infinite_real (r : ℝ) : ¬Infinite r := by
   rw [not_infinite_iff_exist_lt_gt] <;> exact ⟨r - 1, r + 1, coe_lt_coe.2 <| sub_one_lt r, coe_lt_coe.2 <| lt_add_one r⟩

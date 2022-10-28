@@ -131,7 +131,7 @@ theorem quasilinear_on_iff_mem_interval :
   by
   rw [QuasilinearOn, quasiconvex_on_iff_le_max, quasiconcave_on_iff_min_le, and_and_and_comm, and_self_iff]
   apply and_congr_right'
-  simp_rw [← forall_and_distrib, interval, mem_Icc, and_comm']
+  simp_rw [← forall_and, interval, mem_Icc, and_comm']
 
 theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) := by
   refine' fun x hx y hy a b ha hb hab => _

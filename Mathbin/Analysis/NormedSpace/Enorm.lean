@@ -123,7 +123,7 @@ noncomputable instance : HasTop (Enorm 𝕜 V) :=
         split_ifs with hxy hx hy hy hx hy hy <;> try simp [*]
         simpa [hx, hy] using hxy,
       map_smul_le' := fun c x => by
-        split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or_distrib] at hcx
+        split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or] at hcx
         · simp only [mul_zero, le_refl]
           
         · have : c = 0 := by tauto

@@ -118,11 +118,11 @@ theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr�
     exact (f.commutes r).trans (g.commutes r).symm
     
   · intro x y hx hy ihx ihy
-    have := congr_arg2 (· + ·) ihx ihy
+    have := congr_arg₂ (· + ·) ihx ihy
     exact (f.map_add _ _).trans (this.trans <| (g.map_add _ _).symm)
     
   · intro m₁ m₂ x hx ih
-    have := congr_arg2 (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
+    have := congr_arg₂ (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
     exact (f.map_mul _ _).trans (this.trans <| (g.map_mul _ _).symm)
     
 

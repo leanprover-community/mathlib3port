@@ -113,7 +113,7 @@ theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
   by
   have h0 : f I = I ∨ f I = -I := by
     have : |f I| = 1 := by simpa using f.norm_map Complex.i
-    simp only [ext_iff, ← and_or_distrib_left, neg_re, I_re, neg_im, neg_zero]
+    simp only [ext_iff, ← and_or_left, neg_re, I_re, neg_im, neg_zero]
     constructor
     · rw [← I_re]
       exact @LinearIsometry.re_apply_eq_re f.to_linear_isometry h I

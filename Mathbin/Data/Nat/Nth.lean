@@ -268,7 +268,7 @@ theorem nth_count_eq_Inf {n : ℕ} : nth p (count p n) = inf { i : ℕ | p i ∧
   rw [nth]
   congr
   ext a
-  simp only [Set.mem_set_of_eq, And.congr_right_iff]
+  simp only [Set.mem_set_of_eq, and_congr_right_iff]
   intro hpa
   refine' ⟨fun h => _, fun hn k hk => lt_of_lt_of_le _ hn⟩
   · by_contra ha

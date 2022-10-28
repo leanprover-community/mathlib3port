@@ -59,7 +59,7 @@ instance [DecidableEq ι] [DecidableEq α] : Decidable (SupIndep s f) := by
   apply @Finset.decidableForallOfDecidableSubsets _ _ _ _
   intro t ht
   apply @Finset.decidableDforallFinset _ _ _ _
-  exact fun i hi => @Implies.decidable _ _ _ (decidableOfIff' (_ = ⊥) disjoint_iff)
+  exact fun i hi => @Implies.decidable _ _ _ (decidable_of_iff' (_ = ⊥) disjoint_iff)
 
 theorem SupIndep.subset (ht : t.SupIndep f) (h : s ⊆ t) : s.SupIndep f := fun u hu i hi => ht (hu.trans h) (h hi)
 
@@ -75,7 +75,7 @@ theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDis
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem sup_indep_iff_disjoint_erase [DecidableEq ι] : s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.erase i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
-    (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
+    (hs i hi).monoRight (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
 
 @[simp]
 theorem sup_indep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
@@ -92,8 +92,8 @@ theorem sup_indep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     · convert h.symm using 1
       have : ({i, k} : Finset ι).erase k = {i} := by
         ext
-        rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_distrib_left, Ne.def, not_and_self_iff,
-          or_false_iff, and_iff_right_of_imp]
+        rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_left, Ne.def, not_and_self_iff, or_false_iff,
+          and_iff_right_of_imp]
         rintro rfl
         exact hij
       rw [this, Finset.sup_singleton]
@@ -166,7 +166,7 @@ variable {s : Set α} (hs : SetIndependent s)
 theorem setIndependentEmpty : SetIndependent (∅ : Set α) := fun x hx => (Set.not_mem_empty x hx).elim
 
 theorem SetIndependent.mono {t : Set α} (hst : t ⊆ s) : SetIndependent t := fun a ha =>
-  (hs (hst ha)).mono_right (Sup_le_Sup (diff_subset_diff_left hst))
+  (hs (hst ha)).monoRight (Sup_le_Sup (diff_subset_diff_left hst))
 
 /-- If the elements of a set are independent, then any pair within that set is disjoint. -/
 theorem SetIndependent.pairwiseDisjoint : s.PairwiseDisjoint id := fun x hx y hy h =>
@@ -239,7 +239,7 @@ theorem independentEmpty (t : Empty → α) : Independent t :=
   fun.
 
 @[simp]
-theorem independentPempty (t : Pempty → α) : Independent t :=
+theorem independentPempty (t : PEmpty → α) : Independent t :=
   fun.
 
 /-- If the elements of a set are independent, then any pair within that set is disjoint. -/
@@ -253,7 +253,7 @@ theorem Independent.mono {s t : ι → α} (hs : Independent s) (hst : t ≤ s) 
 another indepedendent indexed family. -/
 theorem Independent.comp {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : Independent t) (hf : Injective f) :
     Independent (t ∘ f) := fun i =>
-  (ht (f i)).mono_right <| by
+  (ht (f i)).monoRight <| by
     refine' (supr_mono fun i => _).trans (supr_comp_le _ f)
     exact supr_const_mono hf.ne
 
@@ -262,7 +262,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
   intro i
   obtain ⟨i', rfl⟩ := hf i
   rw [← hf.supr_comp]
-  exact (ht i').mono_right (bsupr_mono fun j' hij => mt (congr_arg f) hij)
+  exact (ht i').monoRight (bsupr_mono fun j' hij => mt (congr_arg f) hij)
 
 theorem Independent.setIndependentRange (ht : Independent t) : set_independent <| Range t := by
   rw [set_independent_iff]
@@ -274,7 +274,7 @@ theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ �
   by_contra' contra
   apply h_ne_bot j
   suffices t j ≤ ⨆ (k) (hk : k ≠ i), t k by
-    replace ht := (ht i).mono_right this
+    replace ht := (ht i).monoRight this
     rwa [h, disjoint_self] at ht
   replace contra : j ≠ i
   · exact Ne.symm contra
@@ -301,7 +301,7 @@ theorem independent_pair {i j : ι} (hij : i ≠ j) (huniv : ∀ k, k = i ∨ k 
 another indepedendent indexed family. -/
 theorem Independent.mapOrderIso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β] (f : α ≃o β)
     {a : ι → α} (ha : Independent a) : Independent (f ∘ a) := fun i =>
-  ((ha i).mapOrderIso f).mono_right (f.Monotone.le_map_supr₂ _)
+  ((ha i).mapOrderIso f).monoRight (f.Monotone.le_map_supr₂ _)
 
 @[simp]
 theorem independent_map_order_iso_iff {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β] (f : α ≃o β)

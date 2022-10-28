@@ -804,7 +804,7 @@ theorem insert.def (a : α) (l : List α) : insert a l = if a ∈ l then l else 
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l) -> (Eq.{succ u_1} (List.{u_1} α) (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) l)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17457 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{succ u_1} (List.{u_1} α) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17457 a b) a l) l)
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17459 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{succ u_1} (List.{u_1} α) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17459 a b) a l) l)
 Case conversion may be inaccurate. Consider using '#align list.insert_of_mem List.insert_of_memₓ'. -/
 @[simp]
 theorem insert_of_mem (h : a ∈ l) : insert a l = l := by simp only [insert.def, if_pos h]
@@ -813,7 +813,7 @@ theorem insert_of_mem (h : a ∈ l) : insert a l = l := by simp only [insert.def
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)) -> (Eq.{succ u_1} (List.{u_1} α) (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) (List.cons.{u_1} α a l))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17489 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{succ u_1} (List.{u_1} α) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17489 a b) a l) (List.cons.{u_1} α a l))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17491 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{succ u_1} (List.{u_1} α) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17491 a b) a l) (List.cons.{u_1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.insert_of_not_mem List.insert_of_not_memₓ'. -/
 @[simp]
 theorem insert_of_not_mem (h : a ∉ l) : insert a l = a :: l := by
@@ -823,7 +823,7 @@ theorem insert_of_not_mem (h : a ∉ l) : insert a l = a :: l := by
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u_1} α], Iff (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) b l)) (Or (Eq.{succ u_1} α a b) (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17540 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, Iff (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17540 a b) b l)) (Or (Eq.{succ u_1} α a b) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17542 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, Iff (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17542 a b) b l)) (Or (Eq.{succ u_1} α a b) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
 Case conversion may be inaccurate. Consider using '#align list.mem_insert_iff List.mem_insert_iffₓ'. -/
 @[simp]
 theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
@@ -856,7 +856,7 @@ theorem mem_insert_self (a : α) (l : List α) : a ∈ l.insert a :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l) -> (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) b l))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17801 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17801 a b) b l))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17803 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17803 a b) b l))
 Case conversion may be inaccurate. Consider using '#align list.mem_insert_of_mem List.mem_insert_of_memₓ'. -/
 theorem mem_insert_of_mem (h : a ∈ l) : a ∈ insert b l :=
   mem_insert_iff.2 (Or.inr h)
@@ -865,7 +865,7 @@ theorem mem_insert_of_mem (h : a ∈ l) : a ∈ insert b l :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) b l)) -> (Or (Eq.{succ u_1} α a b) (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17845 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17845 a b) b l)) -> (Or (Eq.{succ u_1} α a b) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17847 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17847 a b) b l)) -> (Or (Eq.{succ u_1} α a b) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
 Case conversion may be inaccurate. Consider using '#align list.eq_or_mem_of_mem_insert List.eq_or_mem_of_mem_insertₓ'. -/
 theorem eq_or_mem_of_mem_insert (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
   mem_insert_iff.1 h
@@ -874,7 +874,7 @@ theorem eq_or_mem_of_mem_insert (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l) -> (Eq.{1} Nat (List.length.{u_1} α (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (List.length.{u_1} α l))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17889 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17889 a b) a l)) (List.length.{u_1} α l))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17891 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17891 a b) a l)) (List.length.{u_1} α l))
 Case conversion may be inaccurate. Consider using '#align list.length_insert_of_mem List.length_insert_of_memₓ'. -/
 @[simp]
 theorem length_insert_of_mem (h : a ∈ l) : (insert a l).length = l.length :=
@@ -884,7 +884,7 @@ theorem length_insert_of_mem (h : a ∈ l) : (insert a l).length = l.length :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u_1} α l) (One.one.{0} Nat Nat.hasOne)))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17949 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17949 a b) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u_1} α l) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17951 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17951 a b) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u_1} α l) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align list.length_insert_of_not_mem List.length_insert_of_not_memₓ'. -/
 @[simp]
 theorem length_insert_of_not_mem (h : a ∉ l) : (insert a l).length = l.length + 1 :=

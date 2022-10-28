@@ -66,7 +66,7 @@ theorem comp_zero [HasZeroMorphisms C] {X Y : C} {f : X ⟶ Y} {Z : C} : f ≫ (
 theorem zero_comp [HasZeroMorphisms C] {X : C} {Y Z : C} {f : Y ⟶ Z} : (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) :=
   HasZeroMorphisms.zero_comp X f
 
-instance hasZeroMorphismsPempty : HasZeroMorphisms (Discrete Pempty) where HasZero := by tidy
+instance hasZeroMorphismsPempty : HasZeroMorphisms (Discrete PEmpty) where HasZero := by tidy
 
 instance hasZeroMorphismsPunit : HasZeroMorphisms (Discrete PUnit) where HasZero := by tidy
 

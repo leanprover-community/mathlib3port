@@ -212,7 +212,7 @@ theorem vector_ex_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f
 theorem vector_all_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
   | 0, f => ⟨fun f0 v => v.nilElim f0, fun al => al []⟩
   | succ n, f =>
-    (forall_congr fun x => vector_all_iff_forall fun v => f (x::v)).trans
+    (forall_congr' fun x => vector_all_iff_forall fun v => f (x::v)).trans
       ⟨fun al v => v.consElim al, fun al x v => al (x::v)⟩
 
 /-- `vector_allp p v` is equivalent to `∀ i, p (v i)`, but unfolds directly to a conjunction,

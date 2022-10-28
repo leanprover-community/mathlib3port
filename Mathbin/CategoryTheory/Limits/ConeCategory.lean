@@ -77,9 +77,9 @@ theorem has_limits_of_shape_iff_is_left_adjoint_const :
     HasLimitsOfShape J C ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) :=
   calc
     HasLimitsOfShape J C ↔ ∀ F : J ⥤ C, HasLimit F := ⟨fun h => h.HasLimit, fun h => has_limits_of_shape.mk⟩
-    _ ↔ ∀ F : J ⥤ C, HasTerminal (Cone F) := forall_congr has_limit_iff_has_terminal_cone
+    _ ↔ ∀ F : J ⥤ C, HasTerminal (Cone F) := forall_congr' has_limit_iff_has_terminal_cone
     _ ↔ ∀ F : J ⥤ C, HasTerminal (CostructuredArrow (const J) F) :=
-      forall_congr fun F => (Cone.equivCostructuredArrow F).has_terminal_iff
+      forall_congr' fun F => (Cone.equivCostructuredArrow F).has_terminal_iff
     _ ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) := nonempty_is_left_adjoint_iff_has_terminal_costructured_arrow.symm
     
 
@@ -145,9 +145,9 @@ theorem has_colimits_of_shape_iff_is_right_adjoint_const :
     HasColimitsOfShape J C ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) :=
   calc
     HasColimitsOfShape J C ↔ ∀ F : J ⥤ C, HasColimit F := ⟨fun h => h.HasColimit, fun h => has_colimits_of_shape.mk⟩
-    _ ↔ ∀ F : J ⥤ C, HasInitial (Cocone F) := forall_congr has_colimit_iff_has_initial_cocone
+    _ ↔ ∀ F : J ⥤ C, HasInitial (Cocone F) := forall_congr' has_colimit_iff_has_initial_cocone
     _ ↔ ∀ F : J ⥤ C, HasInitial (StructuredArrow F (const J)) :=
-      forall_congr fun F => (Cocone.equivStructuredArrow F).has_initial_iff
+      forall_congr' fun F => (Cocone.equivStructuredArrow F).has_initial_iff
     _ ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) := nonempty_is_right_adjoint_iff_has_initial_structured_arrow.symm
     
 

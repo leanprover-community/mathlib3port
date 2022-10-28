@@ -420,7 +420,7 @@ theorem ker_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : ker (prod f g) 
   rw [ker, ← prod_bot, comap_prod_prod] <;> rfl
 
 theorem range_prod_le (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : range (prod f g) ≤ (range f).Prod (range g) := by
-  simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp_distrib]
+  simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp]
   rintro _ x rfl
   exact ⟨⟨x, rfl⟩, ⟨x, rfl⟩⟩
 
@@ -686,7 +686,7 @@ variable [Module R M] [Module R M₂] [Module R M₃]
 theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f ⊔ ker g = ⊤) :
     range (prod f g) = (range f).Prod (range g) := by
   refine' le_antisymm (f.range_prod_le g) _
-  simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp_distrib, and_imp, Prod.forall,
+  simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp, and_imp, Prod.forall,
     Pi.prod]
   rintro _ _ x rfl y rfl
   simp only [Prod.mk.inj_iff, ← sub_mem_ker_iff]

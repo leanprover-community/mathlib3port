@@ -1040,7 +1040,7 @@ def sigmaEquivSigmaPi (n : ℕ) :
   invFun i :=
     ⟨{ blocks := (ofFn fun j => (i.2 j).blocks).join,
         blocks_pos := by
-          simp only [and_imp, List.mem_join, exists_imp_distrib, forall_mem_of_fn_iff]
+          simp only [and_imp, List.mem_join, exists_imp, forall_mem_of_fn_iff]
           exact fun i j hj => Composition.blocks_pos _ hj,
         blocks_sum := by simp [sum_of_fn, Composition.blocks_sum, Composition.sum_blocks_fun] },
       { blocks := ofFn fun j => (i.2 j).length,

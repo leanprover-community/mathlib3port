@@ -54,8 +54,7 @@ theorem singleton_join (a) : join ({a} : Multiset (Multiset α)) = a :=
 
 @[simp]
 theorem mem_join {a S} : a ∈ @join α S ↔ ∃ s ∈ S, a ∈ s :=
-  Multiset.induction_on S (by simp) <| by
-    simp (config := { contextual := true }) [or_and_distrib_right, exists_or_distrib]
+  Multiset.induction_on S (by simp) <| by simp (config := { contextual := true }) [or_and_right, exists_or]
 
 @[simp]
 theorem card_join (S) : card (@join α S) = sum (map card S) :=
@@ -111,8 +110,7 @@ theorem bind_singleton (f : α → β) : (s.bind fun x => ({f x} : Multiset β))
 
 @[simp]
 theorem mem_bind {b s} {f : α → Multiset β} : b ∈ bind s f ↔ ∃ a ∈ s, b ∈ f a := by
-  simp [bind] <;>
-    simp [-exists_and_distrib_right, exists_and_distrib_right.symm] <;> rw [exists_swap] <;> simp [and_assoc']
+  simp [bind] <;> simp [-exists_and_right, exists_and_distrib_right.symm] <;> rw [exists_swap] <;> simp [and_assoc']
 
 @[simp]
 theorem card_bind : (s.bind f).card = (s.map (card ∘ f)).Sum := by simp [bind]

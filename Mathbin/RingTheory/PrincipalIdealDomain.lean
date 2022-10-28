@@ -182,7 +182,7 @@ instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain :
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∉ { x : R | x ∈ S ∧ x ≠ 0 } := fun h₁ =>
                       WellFounded.not_lt_min wf _ h h₁ (mod_lt x hmin.2)
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 := by
-                      simp only [not_and_distrib, Set.mem_set_of_eq, not_ne_iff] at this
+                      simp only [not_and_or, Set.mem_set_of_eq, not_ne_iff] at this
                       cases this
                       cases this ((mod_mem_iff hmin.1).2 hx)
                       exact this

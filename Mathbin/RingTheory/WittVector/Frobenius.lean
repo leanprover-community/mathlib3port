@@ -168,7 +168,7 @@ theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)
 
 theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (frobeniusPoly p n) = frobeniusPolyRat p n :=
   by
-  rw [frobenius_poly, RingHom.map_add, RingHom.map_mul, RingHom.map_pow, map_C, map_X, eq_int_cast, Int.cast_coe_nat,
+  rw [frobenius_poly, RingHom.map_add, RingHom.map_mul, RingHom.map_pow, map_C, map_X, eq_int_cast, Int.cast_ofNat,
     frobenius_poly_rat]
   apply Nat.strong_induction_on n
   clear n
@@ -202,7 +202,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
   rw [← C_eq_coe_nat]
   simp only [← RingHom.map_pow, ← C_mul]
   rw [C_inj]
-  simp only [inv_of_eq_inv, eq_int_cast, inv_pow, Int.cast_coe_nat, Nat.cast_mul, Int.cast_mul]
+  simp only [inv_of_eq_inv, eq_int_cast, inv_pow, Int.cast_ofNat, Nat.cast_mul, Int.cast_mul]
   rw [Rat.coe_nat_div _ _ (map_frobenius_poly.key₁ p (n - i) j hj)]
   simp only [Nat.cast_pow, pow_add, pow_one]
   suffices
@@ -219,7 +219,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
 
 theorem frobenius_poly_zmod (n : ℕ) : MvPolynomial.map (Int.castRingHom (Zmod p)) (frobeniusPoly p n) = x n ^ p := by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
-  simp only [Int.cast_coe_nat, add_zero, eq_int_cast, Zmod.nat_cast_self, zero_mul, C_0]
+  simp only [Int.cast_ofNat, add_zero, eq_int_cast, Zmod.nat_cast_self, zero_mul, C_0]
 
 @[simp]
 theorem bind₁_frobenius_poly_witt_polynomial (n : ℕ) :

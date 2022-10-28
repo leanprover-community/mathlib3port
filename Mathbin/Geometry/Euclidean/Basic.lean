@@ -667,7 +667,7 @@ theorem dist_of_mem_subset_mk_sphere {p c : P} {ps : Set P} {r : ℝ} (hp : p �
   dist_of_mem_subset_sphere hp hps
 
 theorem Sphere.ne_iff {s₁ s₂ : Sphere P} : s₁ ≠ s₂ ↔ s₁.Center ≠ s₂.Center ∨ s₁.radius ≠ s₂.radius := by
-  rw [← not_and_distrib, ← sphere.ext_iff]
+  rw [← not_and_or, ← sphere.ext_iff]
 
 theorem Sphere.center_eq_iff_eq_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p ∈ s₁) (hs₂ : p ∈ s₂) :
     s₁.Center = s₂.Center ↔ s₁ = s₂ := by

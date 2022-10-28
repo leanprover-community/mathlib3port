@@ -246,7 +246,7 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] (S : ι → Submodule R M)
     ((supr S : Submodule R M) : Set M) = ⋃ i, S i := by
   refine' subset.antisymm _ (Union_subset <| le_supr S)
   suffices (span R (⋃ i, (S i : Set M)) : Set M) ⊆ ⋃ i : ι, ↑(S i) by simpa only [span_Union, span_eq] using this
-  refine' fun x hx => span_induction hx (fun _ => id) _ _ _ <;> simp only [mem_Union, exists_imp_distrib]
+  refine' fun x hx => span_induction hx (fun _ => id) _ _ _ <;> simp only [mem_Union, exists_imp]
   · exact hι.elim fun i => ⟨i, (S i).zero_mem⟩
     
   · intro x y i hi j hj
@@ -411,7 +411,7 @@ theorem mem_span_singleton_trans {x y z : M} (hxy : x ∈ R ∙ y) (hyz : y ∈ 
 theorem mem_span_insert {y} : x ∈ span R (insert y s) ↔ ∃ a : R, ∃ z ∈ span R s, x = a • y + z := by
   simp only [← union_singleton, span_union, mem_sup, mem_span_singleton, exists_prop, exists_exists_eq_and]
   rw [exists_comm]
-  simp only [eq_comm, add_comm, exists_and_distrib_left]
+  simp only [eq_comm, add_comm, exists_and_left]
 
 theorem span_insert (x) (s : Set M) : span R (insert x s) = span R ({x} : Set M) ⊔ span R s := by
   rw [insert_eq, span_union]

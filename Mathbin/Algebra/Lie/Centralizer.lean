@@ -70,7 +70,7 @@ theorem le_centralizer : N ≤ N.Centralizer := by
 
 theorem centralizer_inf : (N₁ ⊓ N₂).Centralizer = N₁.Centralizer ⊓ N₂.Centralizer := by
   ext
-  simp [← forall_and_distrib]
+  simp [← forall_and]
 
 @[mono]
 theorem monotone_centalizer : Monotone (centralizer : LieSubmodule R L M → LieSubmodule R L M) := by

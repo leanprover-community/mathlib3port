@@ -665,7 +665,7 @@ theorem LipschitzOnWith.compHasBoundedVariationOn {f : E → F} {C : ℝ≥0} {t
 theorem LipschitzOnWith.compHasLocallyBoundedVariationOn {f : E → F} {C : ℝ≥0} {t : Set E} (hf : LipschitzOnWith C f t)
     {g : α → E} {s : Set α} (hg : MapsTo g s t) (h : HasLocallyBoundedVariationOn g s) :
     HasLocallyBoundedVariationOn (f ∘ g) s := fun x y xs ys =>
-  hf.compHasBoundedVariationOn (hg.mono_left (inter_subset_left _ _)) (h x y xs ys)
+  hf.compHasBoundedVariationOn (hg.monoLeft (inter_subset_left _ _)) (h x y xs ys)
 
 theorem LipschitzWith.compHasBoundedVariationOn {f : E → F} {C : ℝ≥0} (hf : LipschitzWith C f) {g : α → E} {s : Set α}
     (h : HasBoundedVariationOn g s) : HasBoundedVariationOn (f ∘ g) s :=

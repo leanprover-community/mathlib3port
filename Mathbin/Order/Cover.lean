@@ -106,11 +106,11 @@ theorem apply_wcovby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e 
 
 @[simp]
 theorem to_dual_wcovby_to_dual_iff : toDual b ⩿ toDual a ↔ a ⩿ b :=
-  and_congr_right' <| forall_congr fun c => forall_swap
+  and_congr_right' <| forall_congr' fun c => forall_swap
 
 @[simp]
 theorem of_dual_wcovby_of_dual_iff {a b : αᵒᵈ} : ofDual a ⩿ ofDual b ↔ b ⩿ a :=
-  and_congr_right' <| forall_congr fun c => forall_swap
+  and_congr_right' <| forall_congr' fun c => forall_swap
 
 alias to_dual_wcovby_to_dual_iff ↔ _ Wcovby.to_dual
 
@@ -181,11 +181,11 @@ theorem densely_ordered_iff_forall_not_covby : DenselyOrdered α ↔ ∀ a b : �
 
 @[simp]
 theorem to_dual_covby_to_dual_iff : toDual b ⋖ toDual a ↔ a ⋖ b :=
-  and_congr_right' <| forall_congr fun c => forall_swap
+  and_congr_right' <| forall_congr' fun c => forall_swap
 
 @[simp]
 theorem of_dual_covby_of_dual_iff {a b : αᵒᵈ} : ofDual a ⋖ ofDual b ↔ b ⋖ a :=
-  and_congr_right' <| forall_congr fun c => forall_swap
+  and_congr_right' <| forall_congr' fun c => forall_swap
 
 alias to_dual_covby_to_dual_iff ↔ _ Covby.to_dual
 
@@ -310,6 +310,10 @@ theorem Covby.unique_left (ha : a ⋖ c) (hb : b ⋖ c) : a = b :=
 
 theorem Covby.unique_right (hb : a ⋖ b) (hc : a ⋖ c) : b = c :=
   (hb.ge_of_gt hc.lt).antisymm <| hc.ge_of_gt hb.lt
+
+/-- If `a`, `b`, `c` are consecutive and `a < x < c` then `x = b`. -/
+theorem Covby.eq_of_between {x : α} (hab : a ⋖ b) (hbc : b ⋖ c) (hax : a < x) (hxc : x < c) : x = b :=
+  le_antisymm (le_of_not_lt fun h => hbc.2 h hxc) (le_of_not_lt <| hab.2 hax)
 
 end LinearOrder
 

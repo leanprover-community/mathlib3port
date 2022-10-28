@@ -1759,7 +1759,7 @@ theorem mem_center_iff {z : G} : z ∈ center G ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
 instance decidableMemCenter [DecidableEq G] [Fintype G] : DecidablePred (· ∈ center G) := fun _ =>
-  decidableOfIff' _ mem_center_iff
+  decidable_of_iff' _ mem_center_iff
 
 @[to_additive]
 instance center_characteristic : (center G).Characteristic := by
@@ -1874,7 +1874,7 @@ theorem le_normalizer_comap (f : N →* G) : H.normalizer.comap f ≤ (H.comap f
 /-- The image of the normalizer is contained in the normalizer of the image. -/
 @[to_additive "The image of the normalizer is contained in the normalizer of the image."]
 theorem le_normalizer_map (f : G →* N) : H.normalizer.map f ≤ (H.map f).normalizer := fun _ => by
-  simp only [and_imp, exists_prop, mem_map, exists_imp_distrib, mem_normalizer_iff]
+  simp only [and_imp, exists_prop, mem_map, exists_imp, mem_normalizer_iff]
   rintro x hx rfl n
   constructor
   · rintro ⟨y, hy, rfl⟩
@@ -1899,7 +1899,7 @@ variable {G}
 This may be easier to work with, as it avoids inequalities and negations.  -/
 theorem _root_.normalizer_condition_iff_only_full_group_self_normalizing :
     NormalizerCondition G ↔ ∀ H : Subgroup G, H.normalizer = H → H = ⊤ := by
-  apply forall_congr
+  apply forall_congr'
   intro H
   simp only [lt_iff_le_and_ne, le_normalizer, true_and_iff, le_top, Ne.def]
   tauto!
@@ -2291,7 +2291,7 @@ theorem eq_iff (f : G →* N) {x y : G} : f x = f y ↔ y⁻¹ * x ∈ f.ker := 
 
 @[to_additive]
 instance decidableMemKer [DecidableEq M] (f : G →* M) : DecidablePred (· ∈ f.ker) := fun x =>
-  decidableOfIff (f x = 1) f.mem_ker
+  decidable_of_iff (f x = 1) f.mem_ker
 
 @[to_additive]
 theorem comap_ker (g : N →* P) (f : G →* N) : g.ker.comap f = (g.comp f).ker :=

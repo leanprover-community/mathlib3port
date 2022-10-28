@@ -329,7 +329,7 @@ theorem symm_image_eq (h : e.IsImage s t) : e.symm '' (e.Target ∩ t) = e.Sourc
   h.symm.image_eq
 
 theorem iff_preimage_eq : e.IsImage s t ↔ e.Source ∩ e ⁻¹' t = e.Source ∩ s := by
-  simp only [is_image, Set.ext_iff, mem_inter_iff, And.congr_right_iff, mem_preimage]
+  simp only [is_image, Set.ext_iff, mem_inter_iff, and_congr_right_iff, mem_preimage]
 
 alias iff_preimage_eq ↔ preimage_eq of_preimage_eq
 
@@ -403,7 +403,7 @@ theorem symm_image_target_inter_eq' (s : Set β) : e.symm '' (e.Target ∩ s) = 
   e.symm.image_source_inter_eq' _
 
 theorem source_inter_preimage_inv_preimage (s : Set α) : e.Source ∩ e ⁻¹' (e.symm ⁻¹' s) = e.Source ∩ s :=
-  Set.ext fun x => And.congr_right_iff.2 fun hx => by simp only [mem_preimage, e.left_inv hx]
+  Set.ext fun x => and_congr_right_iff.2 fun hx => by simp only [mem_preimage, e.left_inv hx]
 
 theorem source_inter_preimage_target_inter (s : Set β) : e.Source ∩ e ⁻¹' (e.Target ∩ s) = e.Source ∩ e ⁻¹' s :=
   ext fun x => ⟨fun hx => ⟨hx.1, hx.2.2⟩, fun hx => ⟨hx.1, e.map_source hx.1, hx.2⟩⟩

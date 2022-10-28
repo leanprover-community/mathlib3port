@@ -110,7 +110,7 @@ theorem eq_zero_of_mul_self_eq_zero (h : a * a = 0) : a = 0 :=
 
 @[field_simps]
 theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
-  mt eq_zero_or_eq_zero_of_mul_eq_zero <| not_or_distrib.mpr ⟨ha, hb⟩
+  mt eq_zero_or_eq_zero_of_mul_eq_zero <| not_or.mpr ⟨ha, hb⟩
 
 end Mul
 
@@ -132,7 +132,7 @@ theorem zero_eq_mul : 0 = a * b ↔ a = 0 ∨ b = 0 := by rw [eq_comm, mul_eq_ze
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
 theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
-  mul_eq_zero.Not.trans not_or_distrib
+  mul_eq_zero.Not.trans not_or
 
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/

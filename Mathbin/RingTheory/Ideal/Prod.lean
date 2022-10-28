@@ -127,7 +127,7 @@ theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Id
 
 theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ := by
   contrapose!
-  simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or_distrib]
+  simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or]
   exact fun ⟨hI, hJ⟩ hIJ => ⟨⟨0, 1⟩, ⟨1, 0⟩, by simp, by simp [hJ], by simp [hI]⟩
 
 /-- Classification of prime ideals in product rings: the prime ideals of `R × S` are precisely the

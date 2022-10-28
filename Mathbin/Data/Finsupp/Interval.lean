@@ -62,7 +62,7 @@ def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
   toFun i := icc (f i) (g i)
   Support := f.Support ∪ g.Support
   mem_support_to_fun i := by
-    rw [mem_union, ← not_iff_not, not_or_distrib, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
+    rw [mem_union, ← not_iff_not, not_or, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
     exact Icc_eq_singleton_iff.symm
 
 theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
@@ -76,7 +76,7 @@ instance : LocallyFiniteOrder (ι →₀ α) :=
   LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.Support ∪ g.Support).Finsupp <| f.rangeIcc g) fun f g x => by
     refine' (mem_finsupp_iff_of_support_subset <| subset.rfl).trans _
     simp_rw [mem_range_Icc_apply_iff]
-    exact forall_and_distrib
+    exact forall_and
 
 theorem Icc_eq : icc f g = (f.Support ∪ g.Support).Finsupp (f.rangeIcc g) :=
   rfl

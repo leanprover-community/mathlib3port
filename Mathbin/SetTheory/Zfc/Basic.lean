@@ -323,7 +323,7 @@ instance : Coe PSet (Set PSet) :=
 
 /-- The empty pre-set -/
 protected def empty : PSet :=
-  ⟨_, Pempty.elim⟩
+  ⟨_, PEmpty.elim⟩
 
 instance : EmptyCollection PSet :=
   ⟨PSet.empty⟩
@@ -332,7 +332,7 @@ instance : Inhabited PSet :=
   ⟨∅⟩
 
 instance : IsEmpty (Type ∅) :=
-  Pempty.is_empty
+  PEmpty.is_empty
 
 @[simp]
 theorem mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=

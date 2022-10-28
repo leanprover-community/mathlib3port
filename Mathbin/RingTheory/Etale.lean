@@ -66,7 +66,7 @@ variable {R A}
 
 theorem FormallyEtale.iff_unramified_and_smooth : FormallyEtale R A ↔ FormallyUnramified R A ∧ FormallySmooth R A := by
   rw [formally_unramified_iff, formally_smooth_iff, formally_etale_iff]
-  simp_rw [← forall_and_distrib]
+  simp_rw [← forall_and]
   rfl
 
 instance (priority := 100) FormallyEtale.toUnramified [h : FormallyEtale R A] : FormallyUnramified R A :=

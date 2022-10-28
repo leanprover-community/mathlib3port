@@ -278,6 +278,17 @@ theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εp
 
 end SeminormedAddCommGroup
 
+/-- A linear map from a `module` to a `normed_space` induces a `normed_space` structure on the
+domain, using the `seminormed_add_comm_group.induced` norm.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NormedSpace.induced {F : Type _} (α β γ : Type _) [NormedField α] [AddCommGroup β] [Module α β]
+    [SeminormedAddCommGroup γ] [NormedSpace α γ] [LinearMapClass F α β γ] (f : F) :
+    @NormedSpace α β _ (SeminormedAddCommGroup.induced β γ f) where norm_smul_le a b := by
+    unfold norm
+    exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
+
 section NormedAddCommGroup
 
 variable [NormedField α]
@@ -486,6 +497,17 @@ instance Pi.normedAlgebra {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedRin
   { Pi.normedSpace, Pi.algebra _ E with }
 
 end NormedAlgebra
+
+/-- A non-unital algebra homomorphism from an `algebra` to a `normed_algebra` induces a
+`normed_algebra` structure on the domain, using the `semi_normed_ring.induced` norm.
+
+See note [reducible non-instances] -/
+@[reducible]
+def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Ring β] [Algebra α β] [SemiNormedRing γ]
+    [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
+    @NormedAlgebra α β _ (SemiNormedRing.induced β γ f) where norm_smul_le a b := by
+    unfold norm
+    exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
 
 section RestrictScalars
 

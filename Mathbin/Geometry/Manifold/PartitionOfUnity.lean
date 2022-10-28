@@ -494,7 +494,7 @@ theorem Emetric.exists_smooth_forall_closed_ball_subset {M} [EmetricSpace M] [Ch
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
     ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Emetric.ClosedBall x (Ennreal.ofReal (δ x)) ⊆ U i :=
   by
-  simpa only [mem_inter_iff, forall_and_distrib, mem_preimage, mem_Inter, @forall_swap ι M] using
+  simpa only [mem_inter_iff, forall_and, mem_preimage, mem_Inter, @forall_swap ι M] using
     exists_smooth_forall_mem_convex_of_local_const I Emetric.exists_forall_closed_ball_subset_aux₂
       (Emetric.exists_forall_closed_ball_subset_aux₁ hK hU hKU hfin)
 

@@ -181,7 +181,7 @@ theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = inf { s : Setoid
 theorem sup_eq_eqv_gen (r s : Setoid α) : r ⊔ s = EqvGen.setoid fun x y => r.Rel x y ∨ s.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
-  simp only [le_def, or_imp_distrib, ← forall_and_distrib]
+  simp only [le_def, or_imp, ← forall_and]
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
@@ -192,7 +192,7 @@ theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.setoid (r.Rel ⊔ s.Rel) :=
 theorem Sup_eq_eqv_gen (S : Set (Setoid α)) : sup S = EqvGen.setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
-  simp only [UpperBounds, le_def, and_imp, exists_imp_distrib]
+  simp only [UpperBounds, le_def, and_imp, exists_imp]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
 
@@ -387,14 +387,14 @@ end Setoid
 @[simp]
 theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) ↔ s = ⊤ := by
   simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply, forall_const]
-  refine' (surjective_quotient_mk _).forall.trans (forall_congr fun a => _)
-  refine' (surjective_quotient_mk _).forall.trans (forall_congr fun b => _)
+  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun a => _)
+  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun b => _)
   exact Quotient.eq'
 
 theorem Quot.subsingleton_iff (r : α → α → Prop) : Subsingleton (Quot r) ↔ EqvGen r = ⊤ := by
   simp only [subsingleton_iff, _root_.eq_top_iff, Pi.le_def, Pi.top_apply, forall_const]
-  refine' (surjective_quot_mk _).forall.trans (forall_congr fun a => _)
-  refine' (surjective_quot_mk _).forall.trans (forall_congr fun b => _)
+  refine' (surjective_quot_mk _).forall.trans (forall_congr' fun a => _)
+  refine' (surjective_quot_mk _).forall.trans (forall_congr' fun b => _)
   rw [Quot.eq]
   simp only [forall_const, le_Prop_eq]
 

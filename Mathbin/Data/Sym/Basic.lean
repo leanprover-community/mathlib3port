@@ -400,7 +400,7 @@ theorem append_comm (s : Sym α n') (s' : Sym α n') : s.append s' = Sym.cast (a
   simp [append, add_comm]
 
 @[simp, norm_cast]
-theorem coe_append (s : Sym α n') (s' : Sym α n') : (s.append s' : Multiset α) = s + s' :=
+theorem coe_append (s : Sym α n) (s' : Sym α n') : (s.append s' : Multiset α) = s + s' :=
   rfl
 
 theorem mem_append_iff {s' : Sym α m} : a ∈ s.append s' ↔ a ∈ s ∨ a ∈ s' :=
@@ -411,26 +411,58 @@ This is a convenience wrapper for `m.append (repeat a i)` that adjusts the term 
 def fill (a : α) (i : Fin (n + 1)) (m : Sym α (n - i)) : Sym α n :=
   Sym.cast (Nat.sub_add_cancel i.is_le) (m.append (repeat a i))
 
-theorem mem_fill_iff (a b : α) (i : Fin (n + 1)) (s : Sym α (n - i)) :
+theorem coe_fill {a : α} {i : Fin (n + 1)} {m : Sym α (n - i)} : (fill a i m : Multiset α) = m + repeat a i :=
+  rfl
+
+theorem mem_fill_iff {a b : α} {i : Fin (n + 1)} {s : Sym α (n - i)} :
     a ∈ Sym.fill b i s ↔ (i : ℕ) ≠ 0 ∧ a = b ∨ a ∈ s := by rw [fill, mem_cast, mem_append_iff, or_comm', mem_repeat]
+
+open Multiset
 
 /-- Remove every `a` from a given `sym α n`.
 Yields the number of copies `i` and a term of `sym α (n - i)`. -/
 def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym α (n - i) :=
-  ⟨⟨m.1.count a, (Multiset.count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩, m.1.filter ((· ≠ ·) a),
+  ⟨⟨m.1.count a, (count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩, m.1.filter ((· ≠ ·) a),
     eq_tsub_of_add_eq <|
       Eq.trans
         (by
-          rw [← Multiset.countp_eq_card_filter, add_comm]
-          exact (Multiset.card_eq_countp_add_countp _ _).symm)
+          rw [← countp_eq_card_filter, add_comm]
+          exact (card_eq_countp_add_countp _ _).symm)
         m.2⟩
 
-theorem sigma_sub_ext (m₁ m₂ : Σi : Fin (n + 1), Sym α (n - i)) (h : (m₁.2 : Multiset α) = m₂.2) : m₁ = m₂ :=
+theorem sigma_sub_ext {m₁ m₂ : Σi : Fin (n + 1), Sym α (n - i)} (h : (m₁.2 : Multiset α) = m₂.2) : m₁ = m₂ :=
   Sigma.subtype_ext
     (Fin.ext <| by
       rw [← Nat.sub_sub_self m₁.1.is_le, ← Nat.sub_sub_self m₂.1.is_le, ← m₁.2.2, ← m₂.2.2, Subtype.val_eq_coe,
         Subtype.val_eq_coe, h])
     h
+
+theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) : (m.filterNe a).2.fill a (m.filterNe a).1 = m :=
+  Subtype.ext
+    (by
+      dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.coe_mk]
+      ext b
+      rw [count_add, count_filter, Sym.coe_repeat, count_repeat]
+      obtain rfl | h := eq_or_ne a b
+      · rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]
+        rfl
+        
+      · rw [if_pos h, if_neg h.symm, add_zero]
+        rfl
+        )
+
+theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α (n - i)) (h : a ∉ m.2) :
+    (m.2.fill a m.1).filterNe a = m :=
+  sigma_sub_ext
+    (by
+      dsimp only [filter_ne, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
+      rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
+      · intro b hb
+        rw [mem_filter, Sym.mem_coe, mem_repeat] at hb
+        exact hb.2 hb.1.2.symm
+        
+      · exact fun b hb => (hb.ne_of_not_mem h).symm
+        )
 
 end Sym
 

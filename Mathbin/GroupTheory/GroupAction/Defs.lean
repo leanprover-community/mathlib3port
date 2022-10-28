@@ -496,6 +496,16 @@ theorem SmulCommClass.of_mul_smul_one {M N} [Monoid N] [HasSmul M N] (H : ∀ (x
     SmulCommClass M N N :=
   ⟨fun x y z => by rw [← H x z, smul_eq_mul, ← H, smul_eq_mul, mul_assoc]⟩
 
+/-- If the multiplicative action of `M` on `N` is compatible with multiplication on `N`, then
+`λ x, x • 1` is a monoid homomorphism from `M` to `N`. -/
+@[to_additive
+      "If the additive action of `M` on `N` is compatible with addition on `N`, then\n`λ x, x +ᵥ 0` is an additive monoid homomorphism from `M` to `N`.",
+  simps]
+def smulOneHom {M N} [Monoid M] [Monoid N] [MulAction M N] [IsScalarTower M N N] : M →* N where
+  toFun x := x • 1
+  map_one' := one_smul _ _
+  map_mul' x y := by rw [smul_one_mul, smul_smul]
+
 end CompatibleScalar
 
 /-- Typeclass for scalar multiplication that preserves `0` on the right. -/

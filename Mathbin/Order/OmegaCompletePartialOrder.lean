@@ -75,7 +75,7 @@ def bind {β γ} (f : α →o Part β) (g : α →o β → Part γ) : α →o Pa
   toFun x := f x >>= g x
   monotone' := by
     intro x y h a
-    simp only [and_imp, exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, exists_imp_distrib]
+    simp only [and_imp, exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, exists_imp]
     intro b hb ha
     refine' ⟨b, f.monotone h _ hb, g.monotone h _ _ ha⟩
 
@@ -417,7 +417,7 @@ instance : OmegaCompletePartialOrder (α × β) where
 theorem ωSup_zip (c₀ : Chain α) (c₁ : Chain β) : ωSup (c₀.zip c₁) = (ωSup c₀, ωSup c₁) := by
   apply eq_of_forall_ge_iff
   rintro ⟨z₁, z₂⟩
-  simp [ωSup_le_iff, forall_and_distrib]
+  simp [ωSup_le_iff, forall_and]
 
 end Prod
 
@@ -479,8 +479,8 @@ variable {α β : Type _} [OmegaCompletePartialOrder α] [CompleteLinearOrder β
 
 theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g) : Continuous (f ⊓ g) := by
   refine' fun c => eq_of_forall_ge_iff fun z => _
-  simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_distrib_left, ← forall_or_distrib_right,
-    Function.comp_app, chain.map_coe, OrderHom.has_inf_inf_coe]
+  simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_left, ← forall_or_right, Function.comp_app, chain.map_coe,
+    OrderHom.has_inf_inf_coe]
   exact
     ⟨fun h _ => h _ _, fun h i j =>
       (h (max i j)).imp (le_trans <| f.mono <| c.mono <| le_max_left _ _)
@@ -570,7 +570,7 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     ωSup (c.map (f.bind g)) = ωSup (c.map f) >>= ωSup (c.map g) := by
   apply eq_of_forall_ge_iff
   intro x
-  simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp_distrib]
+  simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp]
   constructor <;> intro h'''
   · intro b hb
     apply ωSup_le _ _ _

@@ -380,9 +380,9 @@ This is an intermediate result used to prove
 theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
     Independent p ↔ ∀ (i) (x : p i) (v : Π₀ i : ι, ↥(p i)), lsum ℕ (fun i => (p i).Subtype) (erase i v) = x → x = 0 :=
   by
-  simp_rw [CompleteLattice.independent_def, Submodule.disjoint_def, Submodule.mem_bsupr_iff_exists_dfinsupp,
-    exists_imp_distrib, filter_ne_eq_erase]
-  apply forall_congr fun i => _
+  simp_rw [CompleteLattice.independent_def, Submodule.disjoint_def, Submodule.mem_bsupr_iff_exists_dfinsupp, exists_imp,
+    filter_ne_eq_erase]
+  apply forall_congr' fun i => _
   refine' subtype.forall'.trans _
   simp_rw [Submodule.coe_eq_zero]
   rfl

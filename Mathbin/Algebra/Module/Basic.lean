@@ -512,7 +512,7 @@ variable [Zero R] [Zero M] [SmulWithZero R M] [NoZeroSmulDivisors R M] {c : R} {
 theorem smul_eq_zero : c • x = 0 ↔ c = 0 ∨ x = 0 :=
   ⟨eq_zero_or_eq_zero_of_smul_eq_zero, fun h => h.elim (fun h => h.symm ▸ zero_smul R x) fun h => h.symm ▸ smul_zero c⟩
 
-theorem smul_ne_zero_iff : c • x ≠ 0 ↔ c ≠ 0 ∧ x ≠ 0 := by rw [Ne.def, smul_eq_zero, not_or_distrib]
+theorem smul_ne_zero_iff : c • x ≠ 0 ↔ c ≠ 0 ∧ x ≠ 0 := by rw [Ne.def, smul_eq_zero, not_or]
 
 end SmulWithZero
 

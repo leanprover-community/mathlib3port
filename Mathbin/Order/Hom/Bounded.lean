@@ -113,14 +113,14 @@ theorem map_eq_top_iff [LE α] [OrderTop α] [PartialOrder β] [OrderTop β] [Or
 theorem map_eq_bot_iff [LE α] [OrderBot α] [PartialOrder β] [OrderBot β] [OrderIsoClass F α β] (f : F) {a : α} :
     f a = ⊥ ↔ a = ⊥ := by rw [← map_bot f, (EquivLike.injective f).eq_iff]
 
-instance [HasTop α] [HasTop β] [TopHomClass F α β] : CoeT F (TopHom α β) :=
+instance [HasTop α] [HasTop β] [TopHomClass F α β] : CoeTC F (TopHom α β) :=
   ⟨fun f => ⟨f, map_top f⟩⟩
 
-instance [HasBot α] [HasBot β] [BotHomClass F α β] : CoeT F (BotHom α β) :=
+instance [HasBot α] [HasBot β] [BotHomClass F α β] : CoeTC F (BotHom α β) :=
   ⟨fun f => ⟨f, map_bot f⟩⟩
 
 instance [Preorder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] [BoundedOrderHomClass F α β] :
-    CoeT F (BoundedOrderHom α β) :=
+    CoeTC F (BoundedOrderHom α β) :=
   ⟨fun f => { (f : α →o β) with toFun := f, map_top' := map_top f, map_bot' := map_bot f }⟩
 
 /-! ### Top homomorphisms -/

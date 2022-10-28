@@ -255,28 +255,28 @@ unsafe def pgame_wf_tac :=
 
 /-- The pre-game `zero` is defined by `0 = { | }`. -/
 instance : Zero Pgame :=
-  ⟨⟨Pempty, Pempty, Pempty.elim, Pempty.elim⟩⟩
+  ⟨⟨PEmpty, PEmpty, PEmpty.elim, PEmpty.elim⟩⟩
 
 @[simp]
-theorem zero_left_moves : LeftMoves 0 = Pempty :=
+theorem zero_left_moves : LeftMoves 0 = PEmpty :=
   rfl
 
 @[simp]
-theorem zero_right_moves : RightMoves 0 = Pempty :=
+theorem zero_right_moves : RightMoves 0 = PEmpty :=
   rfl
 
 instance is_empty_zero_left_moves : IsEmpty (LeftMoves 0) :=
-  Pempty.is_empty
+  PEmpty.is_empty
 
 instance is_empty_zero_right_moves : IsEmpty (RightMoves 0) :=
-  Pempty.is_empty
+  PEmpty.is_empty
 
 instance : Inhabited Pgame :=
   ⟨0⟩
 
 /-- The pre-game `one` is defined by `1 = { 0 | }`. -/
 instance : One Pgame :=
-  ⟨⟨PUnit, Pempty, fun _ => 0, Pempty.elim⟩⟩
+  ⟨⟨PUnit, PEmpty, fun _ => 0, PEmpty.elim⟩⟩
 
 @[simp]
 theorem one_left_moves : LeftMoves 1 = PUnit :=
@@ -287,14 +287,14 @@ theorem one_move_left (x) : moveLeft 1 x = 0 :=
   rfl
 
 @[simp]
-theorem one_right_moves : RightMoves 1 = Pempty :=
+theorem one_right_moves : RightMoves 1 = PEmpty :=
   rfl
 
 instance uniqueOneLeftMoves : Unique (LeftMoves 1) :=
   PUnit.unique
 
 instance is_empty_one_right_moves : IsEmpty (RightMoves 1) :=
-  Pempty.is_empty
+  PEmpty.is_empty
 
 /-! ### Pre-game order relations -/
 
@@ -363,8 +363,8 @@ theorem lf_iff_exists_le {x y : Pgame} : x ⧏ y ↔ (∃ i, x ≤ y.moveLeft i)
 private theorem not_le_lf {x y : Pgame} : (¬x ≤ y ↔ y ⧏ x) ∧ (¬x ⧏ y ↔ y ≤ x) := by
   induction' x with xl xr xL xR IHxl IHxr generalizing y
   induction' y with yl yr yL yR IHyl IHyr
-  simp only [mk_le_mk, mk_lf_mk, IHxl, IHxr, IHyl, IHyr, not_and_distrib, not_or_distrib, not_forall, not_exists,
-    and_comm', or_comm', iff_self_iff, and_self_iff]
+  simp only [mk_le_mk, mk_lf_mk, IHxl, IHxr, IHyl, IHyr, not_and_or, not_or, not_forall, not_exists, and_comm',
+    or_comm', iff_self_iff, and_self_iff]
 
 @[simp]
 protected theorem not_le {x y : Pgame} : ¬x ≤ y ↔ y ⧏ x :=
@@ -702,7 +702,7 @@ theorem lt_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x < y₁ ↔ x < y�
   lt_congr equiv_rfl hy
 
 theorem lt_or_equiv_of_le {x y : Pgame} (h : x ≤ y) : x < y ∨ (x ≈ y) :=
-  and_or_distrib_left.mp ⟨h, (em <| y ≤ x).swap.imp_left Pgame.not_le.1⟩
+  and_or_left.mp ⟨h, (em <| y ≤ x).swap.imp_left Pgame.not_le.1⟩
 
 theorem lf_or_equiv_or_gf (x y : Pgame) : x ⧏ y ∨ (x ≈ y) ∨ y ⧏ x := by
   by_cases h:x ⧏ y
@@ -1069,7 +1069,7 @@ private theorem neg_le_lf_neg_iff : ∀ {x y : Pgame.{u}}, (-y ≤ -x ↔ x ≤ 
     simp_rw [neg_def, mk_le_mk, mk_lf_mk, ← neg_def]
     constructor
     · rw [and_comm']
-      apply and_congr <;> exact forall_congr fun _ => neg_le_lf_neg_iff.2
+      apply and_congr <;> exact forall_congr' fun _ => neg_le_lf_neg_iff.2
       
     · rw [or_comm']
       apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
@@ -1185,7 +1185,7 @@ instance is_empty_right_moves_add (x y : Pgame.{u}) [IsEmpty x.RightMoves] [IsEm
 /-- `x + 0` has exactly the same moves as `x`. -/
 def addZeroRelabelling : ∀ x : Pgame.{u}, x + 0 ≡r x
   | ⟨xl, xr, xL, xR⟩ => by
-    refine' ⟨Equiv.sumEmpty xl Pempty, Equiv.sumEmpty xr Pempty, _, _⟩ <;>
+    refine' ⟨Equiv.sumEmpty xl PEmpty, Equiv.sumEmpty xr PEmpty, _, _⟩ <;>
       rintro (⟨i⟩ | ⟨⟨⟩⟩) <;> apply add_zero_relabelling
 
 /-- `x + 0` is equivalent to `x`. -/
@@ -1195,7 +1195,7 @@ theorem add_zero_equiv (x : Pgame.{u}) : x + 0 ≈ x :=
 /-- `0 + x` has exactly the same moves as `x`. -/
 def zeroAddRelabelling : ∀ x : Pgame.{u}, 0 + x ≡r x
   | ⟨xl, xr, xL, xR⟩ => by
-    refine' ⟨Equiv.emptySum Pempty xl, Equiv.emptySum Pempty xr, _, _⟩ <;>
+    refine' ⟨Equiv.emptySum PEmpty xl, Equiv.emptySum PEmpty xr, _, _⟩ <;>
       rintro (⟨⟨⟩⟩ | ⟨i⟩) <;> apply zero_add_relabelling
 
 /-- `0 + x` is equivalent to `x`. -/
@@ -1289,7 +1289,7 @@ theorem right_moves_add_cases {x y : Pgame} (k) {P : (x + y).RightMoves → Prop
     
 
 instance is_empty_nat_right_moves : ∀ n : ℕ, IsEmpty (RightMoves n)
-  | 0 => Pempty.is_empty
+  | 0 => PEmpty.is_empty
   | n + 1 => by
     haveI := is_empty_nat_right_moves n
     rw [Pgame.nat_succ, right_moves_add]

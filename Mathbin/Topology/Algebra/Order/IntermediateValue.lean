@@ -122,7 +122,7 @@ theorem IsPreconnected.intermediate_value_Ioc {s : Set X} (hs : IsPreconnected s
     [NeBot l] (hl : l ≤ 𝓟 s) {f : X → α} (hf : ContinuousOn f s) {v : α} (ht : Tendsto f l (𝓝 v)) :
     IocCat v (f a) ⊆ f '' s := fun y h =>
   bex_def.1 <|
-    (Bex.imp_right fun x _ => Eq.symm) <|
+    (BEx.imp_right fun x _ => Eq.symm) <|
       hs.intermediate_value₂_eventually₁ ha hl continuous_on_const hf h.2 (eventually_le_of_tendsto_lt h.1 ht)
 
 theorem IsPreconnected.intermediate_value_Ioo {s : Set X} (hs : IsPreconnected s) {l₁ l₂ : Filter X} [NeBot l₁]
@@ -140,7 +140,7 @@ theorem IsPreconnected.intermediate_value_Iic {s : Set X} (hs : IsPreconnected s
     [NeBot l] (hl : l ≤ 𝓟 s) {f : X → α} (hf : ContinuousOn f s) (ht : Tendsto f l atBot) : IicCat (f a) ⊆ f '' s :=
   fun y h =>
   bex_def.1 <|
-    (Bex.imp_right fun x _ => Eq.symm) <|
+    (BEx.imp_right fun x _ => Eq.symm) <|
       hs.intermediate_value₂_eventually₁ ha hl continuous_on_const hf h (tendsto_at_bot.1 ht y)
 
 theorem IsPreconnected.intermediate_value_Ioi {s : Set X} (hs : IsPreconnected s) {l₁ l₂ : Filter X} [NeBot l₁]
@@ -479,10 +479,10 @@ theorem set_of_is_preconnected_eq_of_ordered :
           {Univ, ∅}) :=
   by
   refine' subset.antisymm set_of_is_preconnected_subset_of_ordered _
-  simp only [subset_def, -mem_range, forall_range_iff, uncurry, or_imp_distrib, forall_and_distrib, mem_union,
-    mem_set_of_eq, insert_eq, mem_singleton_iff, forall_eq, forall_true_iff, and_true_iff, is_preconnected_Icc,
-    is_preconnected_Ico, is_preconnected_Ioc, is_preconnected_Ioo, is_preconnected_Ioi, is_preconnected_Iio,
-    is_preconnected_Ici, is_preconnected_Iic, is_preconnected_univ, is_preconnected_empty]
+  simp only [subset_def, -mem_range, forall_range_iff, uncurry, or_imp, forall_and, mem_union, mem_set_of_eq, insert_eq,
+    mem_singleton_iff, forall_eq, forall_true_iff, and_true_iff, is_preconnected_Icc, is_preconnected_Ico,
+    is_preconnected_Ioc, is_preconnected_Ioo, is_preconnected_Ioi, is_preconnected_Iio, is_preconnected_Ici,
+    is_preconnected_Iic, is_preconnected_univ, is_preconnected_empty]
 
 /-!
 ### Intermediate Value Theorem on an interval

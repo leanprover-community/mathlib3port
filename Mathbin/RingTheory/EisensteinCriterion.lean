@@ -109,7 +109,7 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       clear * - hmnd hmp hnq
       contrapose hmnd
       apply ne_of_lt
-      rw [not_and_distrib] at hmnd
+      rw [not_and_or] at hmnd
       cases hmnd
       · exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
         

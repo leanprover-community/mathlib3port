@@ -390,11 +390,11 @@ theorem all_dual {P : α → Prop} : ∀ {t : Ordnode α}, All P (dual t) ↔ Al
 
 theorem all_iff_forall {P : α → Prop} : ∀ {t}, All P t ↔ ∀ x, Emem x t → P x
   | nil => (iff_true_intro <| by rintro _ ⟨⟩).symm
-  | node _ l x r => by simp [all, emem, all_iff_forall, any, or_imp_distrib, forall_and_distrib]
+  | node _ l x r => by simp [all, emem, all_iff_forall, any, or_imp, forall_and]
 
 theorem any_iff_exists {P : α → Prop} : ∀ {t}, Any P t ↔ ∃ x, Emem x t ∧ P x
   | nil => ⟨by rintro ⟨⟩, by rintro ⟨_, ⟨⟩, _⟩⟩
-  | node _ l x r => by simp [any, emem, any_iff_exists, or_and_distrib_right, exists_or_distrib]
+  | node _ l x r => by simp [any, emem, any_iff_exists, or_and_right, exists_or]
 
 theorem emem_iff_all {x : α} {t} : Emem x t ↔ ∀ P, All P t → P x :=
   ⟨fun h P al => all_iff_forall.1 al _ h, fun H => H _ <| all_iff_forall.2 fun _ => id⟩
@@ -835,12 +835,12 @@ theorem Bounded.weak {t : Ordnode α} {o₁ o₂} (h : Bounded t o₁ o₂) : Bo
 theorem Bounded.mono_left {x y : α} (xy : x ≤ y) : ∀ {t : Ordnode α} {o}, Bounded t (↑y) o → Bounded t (↑x) o
   | nil, none, h => ⟨⟩
   | nil, some z, h => lt_of_le_of_lt xy h
-  | node s l z r, o, ⟨ol, Or⟩ => ⟨ol.mono_left, Or⟩
+  | node s l z r, o, ⟨ol, Or⟩ => ⟨ol.monoLeft, Or⟩
 
 theorem Bounded.mono_right {x y : α} (xy : x ≤ y) : ∀ {t : Ordnode α} {o}, Bounded t o ↑x → Bounded t o ↑y
   | nil, none, h => ⟨⟩
   | nil, some z, h => lt_of_lt_of_le h xy
-  | node s l z r, o, ⟨ol, Or⟩ => ⟨ol, Or.mono_right⟩
+  | node s l z r, o, ⟨ol, Or⟩ => ⟨ol, Or.monoRight⟩
 
 theorem Bounded.to_lt : ∀ {t : Ordnode α} {x y : α}, Bounded t x y → x < y
   | nil, x, y, h => h
@@ -854,12 +854,12 @@ theorem Bounded.to_nil {t : Ordnode α} : ∀ {o₁ o₂}, Bounded t o₁ o₂ �
 theorem Bounded.trans_left {t₁ t₂ : Ordnode α} {x : α} :
     ∀ {o₁ o₂}, Bounded t₁ o₁ ↑x → Bounded t₂ (↑x) o₂ → Bounded t₂ o₁ o₂
   | none, o₂, h₁, h₂ => h₂.weak_left
-  | some y, o₂, h₁, h₂ => h₂.mono_left (le_of_lt h₁.to_lt)
+  | some y, o₂, h₁, h₂ => h₂.monoLeft (le_of_lt h₁.to_lt)
 
 theorem Bounded.trans_right {t₁ t₂ : Ordnode α} {x : α} :
     ∀ {o₁ o₂}, Bounded t₁ o₁ ↑x → Bounded t₂ (↑x) o₂ → Bounded t₁ o₁ o₂
   | o₁, none, h₁, h₂ => h₁.weak_right
-  | o₁, some y, h₁, h₂ => h₁.mono_right (le_of_lt h₂.to_lt)
+  | o₁, some y, h₁, h₂ => h₁.monoRight (le_of_lt h₂.to_lt)
 
 theorem Bounded.mem_lt : ∀ {t o} {x : α}, Bounded t o ↑x → All (· < x) t
   | nil, o, x, _ => ⟨⟩
@@ -905,10 +905,10 @@ def Valid (t : Ordnode α) : Prop :=
   Valid' ⊥ t ⊤
 
 theorem Valid'.mono_left {x y : α} (xy : x ≤ y) {t : Ordnode α} {o} (h : Valid' (↑y) t o) : Valid' (↑x) t o :=
-  ⟨h.1.mono_left xy, h.2, h.3⟩
+  ⟨h.1.monoLeft xy, h.2, h.3⟩
 
 theorem Valid'.mono_right {x y : α} (xy : x ≤ y) {t : Ordnode α} {o} (h : Valid' o t ↑x) : Valid' o t ↑y :=
-  ⟨h.1.mono_right xy, h.2, h.3⟩
+  ⟨h.1.monoRight xy, h.2, h.3⟩
 
 theorem Valid'.trans_left {t₁ t₂ : Ordnode α} {x : α} {o₁ o₂} (h : Bounded t₁ o₁ ↑x) (H : Valid' (↑x) t₂ o₂) :
     Valid' o₁ t₂ o₂ :=
@@ -1304,7 +1304,7 @@ theorem Valid'.glue_aux {l r o₁ o₂} (hl : Valid' o₁ l o₂) (hr : Valid' o
     suffices H
     refine' ⟨valid'.balance_r v (hr.of_gt _ _) H, _⟩
     · refine' find_max'_all lx lr hl.1.2.to_nil (sep.2.2.imp _)
-      exact fun x h => hr.1.2.to_nil.mono_left (le_of_lt h.2.1)
+      exact fun x h => hr.1.2.to_nil.monoLeft (le_of_lt h.2.1)
       
     · exact @find_max'_all _ (fun a => all (· > a) (node rs rl rx rr)) lx lr sep.2.1 sep.2.2
       
@@ -1320,7 +1320,7 @@ theorem Valid'.glue_aux {l r o₁ o₂} (hl : Valid' o₁ l o₂) (hr : Valid' o
     suffices H
     refine' ⟨valid'.balance_l (hl.of_lt _ _) v H, _⟩
     · refine' @find_min'_all _ (fun a => bounded nil o₁ ↑a) rl rx (sep.2.1.1.imp _) hr.1.1.to_nil
-      exact fun y h => hl.1.1.to_nil.mono_right (le_of_lt h)
+      exact fun y h => hl.1.1.to_nil.monoRight (le_of_lt h)
       
     · exact
         @find_min'_all _ (fun a => all (· < a) (node ls ll lx lr)) rl rx
@@ -1636,7 +1636,7 @@ def Empty (s : Ordset α) : Prop :=
 theorem empty_iff {s : Ordset α} : s = ∅ ↔ s.1.Empty :=
   ⟨fun h => by cases h <;> exact rfl, fun h => by cases s <;> cases s_val <;> [exact rfl, cases h]⟩
 
-instance : DecidablePred (@Empty α _) := fun s => decidableOfIff' _ empty_iff
+instance : DecidablePred (@Empty α _) := fun s => decidable_of_iff' _ empty_iff
 
 /-- O(log n). Insert an element into the set, preserving balance and the BST property.
   If an equivalent element is already in the set, this replaces it. -/

@@ -523,15 +523,15 @@ theorem IsSheafFor.hom_ext {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S) (t�
 /-- `P` is a sheaf for `R` iff it is separated for `R` and there exists an amalgamation. -/
 theorem is_separated_for_and_exists_is_amalgamation_iff_sheaf_for :
     (IsSeparatedFor P R ∧ ∀ x : FamilyOfElements P R, x.Compatible → ∃ t, x.IsAmalgamation t) ↔ IsSheafFor P R := by
-  rw [is_separated_for, ← forall_and_distrib]
-  apply forall_congr
+  rw [is_separated_for, ← forall_and]
+  apply forall_congr'
   intro x
   constructor
   · intro z hx
     exact exists_unique_of_exists_of_unique (z.2 hx) z.1
     
   · intro h
-    refine' ⟨_, exists_of_exists_unique ∘ h⟩
+    refine' ⟨_, ExistsUnique.exists ∘ h⟩
     intro t₁ t₂ ht₁ ht₂
     apply (h _).unique ht₁ ht₂
     exact is_compatible_of_exists_amalgamation x ⟨_, ht₂⟩

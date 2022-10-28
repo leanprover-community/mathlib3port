@@ -961,15 +961,17 @@ end SeminormedGroup
 
 section Induced
 
+variable (E F)
+
 -- See note [reducible non-instances]
 /-- A group homomorphism from a `group` to a `seminormed_group` induces a `seminormed_group`
 structure on the domain. -/
 @[reducible,
   to_additive
       "A group homomorphism from an `add_group` to a `seminormed_add_group` induces a\n`seminormed_add_group` structure on the domain."]
-def SeminormedGroup.induced [Group E] [SeminormedGroup F] (f : E →* F) : SeminormedGroup E :=
+def SeminormedGroup.induced [Group E] [SeminormedGroup F] [MonoidHomClass 𝓕 E F] (f : 𝓕) : SeminormedGroup E :=
   { PseudoMetricSpace.induced f _ with norm := fun x => ∥f x∥,
-    dist_eq := fun x y => by simpa only [MonoidHom.map_div, ← dist_eq_norm_div] }
+    dist_eq := fun x y => by simpa only [map_div, ← dist_eq_norm_div] }
 
 -- See note [reducible non-instances]
 /-- A group homomorphism from a `comm_group` to a `seminormed_group` induces a
@@ -977,8 +979,9 @@ def SeminormedGroup.induced [Group E] [SeminormedGroup F] (f : E →* F) : Semin
 @[reducible,
   to_additive
       "A group homomorphism from an `add_comm_group` to a `seminormed_add_group` induces a\n`seminormed_add_comm_group` structure on the domain."]
-def SeminormedCommGroup.induced [CommGroup E] [SeminormedGroup F] (f : E →* F) : SeminormedCommGroup E :=
-  { SeminormedGroup.induced f with }
+def SeminormedCommGroup.induced [CommGroup E] [SeminormedGroup F] [MonoidHomClass 𝓕 E F] (f : 𝓕) :
+    SeminormedCommGroup E :=
+  { SeminormedGroup.induced E F f with }
 
 -- See note [reducible non-instances].
 /-- An injective group homomorphism from a `group` to a `normed_group` induces a `normed_group`
@@ -986,8 +989,8 @@ structure on the domain. -/
 @[reducible,
   to_additive
       "An injective group homomorphism from an `add_group` to a `normed_add_group` induces a\n`normed_add_group` structure on the domain."]
-def NormedGroup.induced [Group E] [NormedGroup F] (f : E →* F) (h : Injective f) : NormedGroup E :=
-  { SeminormedGroup.induced f, MetricSpace.induced f h _ with }
+def NormedGroup.induced [Group E] [NormedGroup F] [MonoidHomClass 𝓕 E F] (f : 𝓕) (h : Injective f) : NormedGroup E :=
+  { SeminormedGroup.induced E F f, MetricSpace.induced f h _ with }
 
 -- See note [reducible non-instances].
 /-- An injective group homomorphism from an `comm_group` to a `normed_group` induces a
@@ -995,8 +998,9 @@ def NormedGroup.induced [Group E] [NormedGroup F] (f : E →* F) (h : Injective 
 @[reducible,
   to_additive
       "An injective group homomorphism from an `comm_group` to a `normed_comm_group` induces a\n`normed_comm_group` structure on the domain."]
-def NormedCommGroup.induced [CommGroup E] [NormedGroup F] (f : E →* F) (h : Injective f) : NormedCommGroup E :=
-  { SeminormedGroup.induced f, MetricSpace.induced f h _ with }
+def NormedCommGroup.induced [CommGroup E] [NormedGroup F] [MonoidHomClass 𝓕 E F] (f : 𝓕) (h : Injective f) :
+    NormedCommGroup E :=
+  { SeminormedGroup.induced E F f, MetricSpace.induced f h _ with }
 
 end Induced
 
@@ -1465,19 +1469,19 @@ end HasNnnorm
 
 @[to_additive]
 instance seminormedGroup [SeminormedGroup E] : SeminormedGroup (ULift E) :=
-  SeminormedGroup.induced ⟨ULift.down, rfl, fun _ _ => rfl⟩
+  SeminormedGroup.induced _ _ (⟨ULift.down, rfl, fun _ _ => rfl⟩ : ULift E →* E)
 
 @[to_additive]
 instance seminormedCommGroup [SeminormedCommGroup E] : SeminormedCommGroup (ULift E) :=
-  SeminormedCommGroup.induced ⟨ULift.down, rfl, fun _ _ => rfl⟩
+  SeminormedCommGroup.induced _ _ (⟨ULift.down, rfl, fun _ _ => rfl⟩ : ULift E →* E)
 
 @[to_additive]
 instance normedGroup [NormedGroup E] : NormedGroup (ULift E) :=
-  NormedGroup.induced ⟨ULift.down, rfl, fun _ _ => rfl⟩ down_injective
+  NormedGroup.induced _ _ (⟨ULift.down, rfl, fun _ _ => rfl⟩ : ULift E →* E) down_injective
 
 @[to_additive]
 instance normedCommGroup [NormedCommGroup E] : NormedCommGroup (ULift E) :=
-  NormedCommGroup.induced ⟨ULift.down, rfl, fun _ _ => rfl⟩ down_injective
+  NormedCommGroup.induced _ _ (⟨ULift.down, rfl, fun _ _ => rfl⟩ : ULift E →* E) down_injective
 
 end ULift
 
@@ -1812,7 +1816,7 @@ variable [SeminormedGroup E] {s : Subgroup E}
 with the restriction of the norm. -/
 @[to_additive "A subgroup of a seminormed group is also a seminormed group,\nwith the restriction of the norm."]
 instance seminormedGroup : SeminormedGroup s :=
-  SeminormedGroup.induced s.Subtype
+  SeminormedGroup.induced _ _ s.Subtype
 
 /-- If `x` is an element of a subgroup `s` of a seminormed group `E`, its norm in `s` is equal to
 its norm in `E`. -/
@@ -1836,15 +1840,15 @@ end SeminormedGroup
 
 @[to_additive]
 instance seminormedCommGroup [SeminormedCommGroup E] {s : Subgroup E} : SeminormedCommGroup s :=
-  SeminormedCommGroup.induced s.Subtype
+  SeminormedCommGroup.induced _ _ s.Subtype
 
 @[to_additive]
 instance normedGroup [NormedGroup E] {s : Subgroup E} : NormedGroup s :=
-  NormedGroup.induced s.Subtype Subtype.coe_injective
+  NormedGroup.induced _ _ s.Subtype Subtype.coe_injective
 
 @[to_additive]
 instance normedCommGroup [NormedCommGroup E] {s : Subgroup E} : NormedCommGroup s :=
-  NormedCommGroup.induced s.Subtype Subtype.coe_injective
+  NormedCommGroup.induced _ _ s.Subtype Subtype.coe_injective
 
 end Subgroup
 
@@ -1858,7 +1862,7 @@ namespace Submodule
 -/
 instance seminormedAddCommGroup {_ : Ring 𝕜} [SeminormedAddCommGroup E] {_ : Module 𝕜 E} (s : Submodule 𝕜 E) :
     SeminormedAddCommGroup s :=
-  SeminormedAddCommGroup.induced s.Subtype.toAddMonoidHom
+  SeminormedAddCommGroup.induced _ _ s.Subtype.toAddMonoidHom
 
 -- See note [implicit instance arguments].
 /-- If `x` is an element of a submodule `s` of a normed group `E`, its norm in `s` is equal to its

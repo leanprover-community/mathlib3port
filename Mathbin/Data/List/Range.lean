@@ -43,7 +43,7 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_le (Nat.le_add_right _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
     (mem_cons_iff _ _ _).trans <| by
-      simp only [mem_range', or_and_distrib_left, or_iff_right_of_imp this, l, add_right_comm] <;> rfl
+      simp only [mem_range', or_and_left, or_iff_right_of_imp this, l, add_right_comm] <;> rfl
 
 theorem map_add_range' (a) : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
   | s, 0 => rfl
@@ -156,7 +156,7 @@ theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) : Chain' r (range
     
 
 theorem chain_range_succ (r : ℕ → ℕ → Prop) (n a : ℕ) : Chain r a (range n.succ) ↔ r a 0 ∧ ∀ m < n, r m m.succ := by
-  rw [range_succ_eq_map, chain_cons, And.congr_right_iff, ← chain'_range_succ, range_succ_eq_map]
+  rw [range_succ_eq_map, chain_cons, and_congr_right_iff, ← chain'_range_succ, range_succ_eq_map]
   exact fun _ => Iff.rfl
 
 theorem range_add (a : ℕ) : ∀ b, range (a + b) = range a ++ (range b).map fun x => a + x

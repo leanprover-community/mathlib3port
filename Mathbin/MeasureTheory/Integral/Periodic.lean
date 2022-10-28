@@ -64,6 +64,9 @@ protected theorem measure_univ : volume (Set.Univ : Set (AddCircle T)) = Ennreal
   rw [← positive_compacts.coe_top]
   simp [add_haar_measure_self, -positive_compacts.coe_top]
 
+instance : IsAddHaarMeasure (volume : Measure (AddCircle T)) :=
+  IsAddHaarMeasure.smul _ (by simp [hT.out]) Ennreal.of_real_ne_top
+
 instance isFiniteMeasure : IsFiniteMeasure (volume : Measure (AddCircle T)) where measure_univ_lt_top := by simp
 
 /-- The covering map from `ℝ` to the "additive circle" `ℝ ⧸ (ℤ ∙ T)` is measure-preserving,
@@ -74,6 +77,37 @@ protected theorem measurePreservingMk (t : ℝ) :
     MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (IocCat t (t + T))) :=
   MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomainIoc' hT.out t) (⊤ : PositiveCompacts (AddCircle T))
     (by simp) T.toNnreal (by simp [← Ennreal.of_real_coe_nnreal, Real.coe_to_nnreal T hT.out.le])
+
+theorem volume_closed_ball {x : AddCircle T} (ε : ℝ) :
+    volume (Metric.ClosedBall x ε) = Ennreal.ofReal (min T (2 * ε)) := by
+  have hT' : abs T = T := abs_eq_self.mpr hT.out.le
+  let I := Ioc (-(T / 2)) (T / 2)
+  have h₁ : ε < T / 2 → Metric.ClosedBall (0 : ℝ) ε ∩ I = Metric.ClosedBall (0 : ℝ) ε := by
+    intro hε
+    rw [inter_eq_left_iff_subset, Real.closed_ball_eq_Icc, zero_sub, zero_add]
+    rintro y ⟨hy₁, hy₂⟩
+    constructor <;> linarith
+  have h₂ : coe ⁻¹' Metric.ClosedBall (0 : AddCircle T) ε ∩ I = if ε < T / 2 then Metric.ClosedBall (0 : ℝ) ε else I :=
+    by
+    conv_rhs => rw [← if_ctx_congr (Iff.rfl : ε < T / 2 ↔ ε < T / 2) h₁ fun _ => rfl, ← hT']
+    apply coe_real_preimage_closed_ball_inter_eq
+    simpa only [hT', Real.closed_ball_eq_Icc, zero_add, zero_sub] using Ioc_subset_Icc_self
+  rw [add_haar_closed_ball_center]
+  simp only [restrict_apply' measurableSetIoc, (by linarith : -(T / 2) + T = T / 2), h₂, ←
+    (AddCircle.measurePreservingMk T (-(T / 2))).measure_preimage measurableSetClosedBall]
+  by_cases hε:ε < T / 2
+  · simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
+    
+  · simp [hε, min_eq_left (by linarith : T ≤ 2 * ε)]
+    
+
+instance : IsDoublingMeasure (volume : Measure (AddCircle T)) := by
+  refine' ⟨⟨Real.toNnreal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
+  simp only [volume_closed_ball]
+  erw [← Ennreal.of_real_mul zero_le_two]
+  apply Ennreal.of_real_le_of_real
+  rw [mul_min_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
+  exact min_le_min (by linarith [hT.out]) (le_refl _)
 
 /-- The integral of a measurable function over `add_circle T` is equal to the integral over an
 interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/

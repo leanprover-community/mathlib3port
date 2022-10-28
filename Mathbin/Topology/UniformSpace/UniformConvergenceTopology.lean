@@ -731,9 +731,9 @@ protected theorem tendsto_iff_tendsto_uniformly_on :
     Tendsto F p (@nhds _ (UniformConvergenceOn.topologicalSpace α β 𝔖) f) ↔ ∀ s ∈ 𝔖, TendstoUniformlyOn F f p s := by
   letI : UniformSpace (α → β) := 𝒱(α, β, 𝔖, _)
   rw [UniformConvergenceOn.topological_space_eq, nhds_infi, tendsto_infi]
-  refine' forall_congr fun s => _
+  refine' forall_congr' fun s => _
   rw [nhds_infi, tendsto_infi]
-  refine' forall_congr fun hs => _
+  refine' forall_congr' fun hs => _
   rw [nhds_induced, tendsto_comap_iff, tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe,
     UniformConvergence.tendsto_iff_tendsto_uniformly]
   rfl

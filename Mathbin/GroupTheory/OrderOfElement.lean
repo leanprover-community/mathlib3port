@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Julian Kuelshammer
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
-import Mathbin.Data.Set.Pointwise
+import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.Index
 
@@ -588,7 +588,6 @@ theorem order_eq_card_zpowers : orderOf x = Fintype.card (zpowers x) :=
 
 open QuotientGroup
 
--- TODO: use cardinal theory, introduce `card : set G → ℕ`, or setup decidability for cosets
 @[to_additive add_order_of_dvd_card_univ]
 theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   classical
@@ -608,16 +607,24 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
       
   exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
 
+@[to_additive add_order_of_dvd_nat_card]
+theorem order_of_dvd_nat_card {G : Type _} [Group G] {x : G} : orderOf x ∣ Nat.card G := by
+  cases' fintypeOrInfinite G with h h
+  · simp only [Nat.card_eq_fintype_card, order_of_dvd_card_univ]
+    
+  · simp only [card_eq_zero_of_infinite, dvd_zero]
+    
+
+@[simp, to_additive card_nsmul_eq_zero']
+theorem pow_card_eq_one' {G : Type _} [Group G] {x : G} : x ^ Nat.card G = 1 :=
+  order_of_dvd_iff_pow_eq_one.mp order_of_dvd_nat_card
+
 @[simp, to_additive card_nsmul_eq_zero]
-theorem pow_card_eq_one : x ^ Fintype.card G = 1 := by
-  let ⟨m, hm⟩ := @order_of_dvd_card_univ _ x _ _
-  simp [hm, pow_mul, pow_order_of_eq_one]
+theorem pow_card_eq_one : x ^ Fintype.card G = 1 := by rw [← Nat.card_eq_fintype_card, pow_card_eq_one']
 
 @[to_additive]
-theorem Subgroup.pow_index_mem {G : Type _} [Group G] (H : Subgroup G) [Finite (G ⧸ H)] [Normal H] (g : G) :
-    g ^ index H ∈ H := by
-  cases nonempty_fintype (G ⧸ H)
-  rw [← eq_one_iff, QuotientGroup.coe_pow H, index_eq_card, pow_card_eq_one]
+theorem Subgroup.pow_index_mem {G : Type _} [Group G] (H : Subgroup G) [Normal H] (g : G) : g ^ index H ∈ H := by
+  rw [← eq_one_iff, QuotientGroup.coe_pow H, index, pow_card_eq_one']
 
 @[to_additive]
 theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
@@ -629,24 +636,25 @@ theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
 
 /-- If `gcd(|G|,n)=1` then the `n`th power map is a bijection -/
 @[to_additive "If `gcd(|G|,n)=1` then the smul by `n` is a bijection", simps]
-def powCoprime (h : Nat.Coprime (Fintype.card G) n) : G ≃ G where
+noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).Coprime n) : G ≃ G where
   toFun g := g ^ n
-  invFun g := g ^ Nat.gcdB (Fintype.card G) n
+  invFun g := g ^ (Nat.card G).gcdB n
   left_inv g := by
-    have key : g ^ _ = g ^ _ := congr_arg (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
-    rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_one, pow_card_eq_one,
-      one_zpow, one_mul, eq_comm] at key
+    have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
+    rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_one,
+      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
   right_inv g := by
-    have key : g ^ _ = g ^ _ := congr_arg (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
+    have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
     rwa [zpow_add, zpow_mul, zpow_mul', zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_one,
-      pow_card_eq_one, one_zpow, one_mul, eq_comm] at key
+      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
 
 @[simp, to_additive]
-theorem pow_coprime_one (h : Nat.Coprime (Fintype.card G) n) : powCoprime h 1 = 1 :=
+theorem pow_coprime_one {G : Type _} [Group G] (h : (Nat.card G).Coprime n) : powCoprime h 1 = 1 :=
   one_pow n
 
 @[simp, to_additive]
-theorem pow_coprime_inv (h : Nat.Coprime (Fintype.card G) n) {g : G} : powCoprime h g⁻¹ = (powCoprime h g)⁻¹ :=
+theorem pow_coprime_inv {G : Type _} [Group G] (h : (Nat.card G).Coprime n) {g : G} :
+    powCoprime h g⁻¹ = (powCoprime h g)⁻¹ :=
   inv_pow g n
 
 @[to_additive add_inf_eq_bot_of_coprime]
@@ -684,13 +692,13 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
     (hS2 : S * S = S) : Submonoid M :=
   have pow_mem : ∀ a : M, a ∈ S → ∀ n : ℕ, a ^ (n + 1) ∈ S := fun a ha =>
     Nat.rec (by rwa [zero_add, pow_one]) fun n ih =>
-      (congr_arg2 (· ∈ ·) (pow_succ a (n + 1)).symm hS2).mp (Set.mul_mem_mul ha ih)
+      (congr_arg₂ (· ∈ ·) (pow_succ a (n + 1)).symm hS2).mp (Set.mul_mem_mul ha ih)
   { Carrier := S,
     one_mem' := by
       obtain ⟨a, ha⟩ := hS1
       rw [← pow_order_of_eq_one a, ← tsub_add_cancel_of_le (succ_le_of_lt (order_of_pos a))]
       exact pow_mem a ha (orderOf a - 1),
-    mul_mem' := fun a b ha hb => (congr_arg2 (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
+    mul_mem' := fun a b ha hb => (congr_arg₂ (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
 
 /-- A nonempty idempotent subset of a finite group is a subgroup -/
 @[to_additive "A nonempty idempotent subset of a finite add group is a subgroup"]

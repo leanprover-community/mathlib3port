@@ -75,7 +75,7 @@ theorem disjointAtBotPrincipalIci [Preorder α] [NoMinOrder α] (x : α) : Disjo
   @disjointAtTopPrincipalIic αᵒᵈ _ _ _
 
 theorem disjointPureAtTop [Preorder α] [NoMaxOrder α] (x : α) : Disjoint (pure x) atTop :=
-  Disjoint.symm ((disjointAtTopPrincipalIic x).mono_right <| le_principal_iff.2 le_rfl)
+  Disjoint.symm ((disjointAtTopPrincipalIic x).monoRight <| le_principal_iff.2 le_rfl)
 
 theorem disjointPureAtBot [Preorder α] [NoMinOrder α] (x : α) : Disjoint (pure x) atBot :=
   @disjointPureAtTop αᵒᵈ _ _ _
@@ -984,7 +984,7 @@ theorem tendsto_at_bot_principal [Nonempty β] [SemilatticeInf β] {f : β → �
 /-- A function `f` grows to `+∞` independent of an order-preserving embedding `e`. -/
 theorem tendsto_at_top_at_top [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β} :
     Tendsto f atTop atTop ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → b ≤ f a :=
-  Iff.trans tendsto_infi <| forall_congr fun b => tendsto_at_top_principal
+  Iff.trans tendsto_infi <| forall_congr' fun b => tendsto_at_top_principal
 
 theorem tendsto_at_top_at_bot [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β} :
     Tendsto f atTop atBot ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → f a ≤ b :=
@@ -1015,12 +1015,12 @@ theorem tendsto_at_bot_at_bot_of_monotone [Preorder α] [Preorder β] {f : α �
 theorem tendsto_at_top_at_top_iff_of_monotone [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β}
     (hf : Monotone f) : Tendsto f atTop atTop ↔ ∀ b : β, ∃ a : α, b ≤ f a :=
   tendsto_at_top_at_top.trans <|
-    forall_congr fun b => exists_congr fun a => ⟨fun h => h a (le_refl a), fun h a' ha' => le_trans h <| hf ha'⟩
+    forall_congr' fun b => exists_congr fun a => ⟨fun h => h a (le_refl a), fun h a' ha' => le_trans h <| hf ha'⟩
 
 theorem tendsto_at_bot_at_bot_iff_of_monotone [Nonempty α] [SemilatticeInf α] [Preorder β] {f : α → β}
     (hf : Monotone f) : Tendsto f atBot atBot ↔ ∀ b : β, ∃ a : α, f a ≤ b :=
   tendsto_at_bot_at_bot.trans <|
-    forall_congr fun b => exists_congr fun a => ⟨fun h => h a (le_refl a), fun h a' ha' => le_trans (hf ha') h⟩
+    forall_congr' fun b => exists_congr fun a => ⟨fun h => h a (le_refl a), fun h a' ha' => le_trans (hf ha') h⟩
 
 alias tendsto_at_top_at_top_of_monotone ← _root_.monotone.tendsto_at_top_at_top
 
@@ -1417,7 +1417,7 @@ theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α} 
   have : ∀ t : Set ℕ, t.Finite → ∀ᶠ n in at_top, ∀ m ∈ t, m < n ∧ r m n := fun t ht =>
     (eventually_all_finite ht).2 fun m hm => (eventually_gt_at_top m).And (hr _)
   rcases seq_of_forall_finite_exists fun t ht => (this t ht).exists with ⟨φ, hφ⟩
-  simp only [ball_image_iff, forall_and_distrib, mem_Iio] at hφ
+  simp only [ball_image_iff, forall_and, mem_Iio] at hφ
   exact ⟨φ, forall_swap.2 hφ.1, forall_swap.2 hφ.2⟩
 
 /-- If `f` is a nontrivial countably generated filter, then there exists a sequence that converges
@@ -1448,7 +1448,7 @@ theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [
 theorem tendsto_iff_forall_eventually_mem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
     Tendsto x l f ↔ ∀ s ∈ f, ∀ᶠ n in l, x n ∈ s := by
   rw [tendsto_def]
-  refine' forall_congr fun s => imp_congr_right fun hsf => _
+  refine' forall_congr' fun s => imp_congr_right fun hsf => _
   rfl
 
 theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :

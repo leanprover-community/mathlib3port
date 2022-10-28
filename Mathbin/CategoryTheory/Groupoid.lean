@@ -81,6 +81,10 @@ instance (priority := 100) groupoidHasInvolutiveReverse : Quiver.HasInvolutiveRe
     dsimp [Quiver.reverse]
     simp
 
+@[simp]
+theorem Groupoid.reverse_eq_inv (f : X ⟶ Y) : Quiver.reverse f = Groupoid.inv f :=
+  rfl
+
 variable (X Y)
 
 /-- In a groupoid, isomorphisms are equivalent to morphisms. -/

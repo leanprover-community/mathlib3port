@@ -244,7 +244,7 @@ theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.
     have h_l_support' : l'.support = l_support' := by
       rw [← Finset.erase_insert hμ₀, ← h_l_support]
       ext a
-      have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := not_or_distrib
+      have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := not_or
       simp only [l', Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_apply, Dfinsupp.mem_support_iff,
         Finset.mem_erase, id.def, LinearMap.id_coe, LinearMap.smul_apply, Ne.def, smul_eq_zero, sub_eq_zero, this]
     -- The entries of `l'` add up to `0`.

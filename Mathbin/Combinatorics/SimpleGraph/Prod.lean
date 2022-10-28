@@ -74,7 +74,7 @@ def boxProdComm : G □ H ≃g H □ G :=
 @[simps]
 def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
   ⟨Equiv.prodAssoc _ _ _, fun x y => by
-    simp only [box_prod_adj, Equiv.prod_assoc_apply, or_and_distrib_right, or_assoc', Prod.ext_iff, and_assoc',
+    simp only [box_prod_adj, Equiv.prod_assoc_apply, or_and_right, or_assoc', Prod.ext_iff, and_assoc',
       @and_comm (x.1.1 = _)]⟩
 
 /-- The embedding of `G` into `G □ H` given by `b`. -/

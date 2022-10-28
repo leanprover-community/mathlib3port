@@ -295,7 +295,7 @@ theorem lift_monotone : Monotone lift :=
   lift_strict_mono.Monotone
 
 instance : Zero Cardinal.{u} :=
-  ⟨#Pempty⟩
+  ⟨#PEmpty⟩
 
 instance : Inhabited Cardinal.{u} :=
   ⟨0⟩
@@ -426,8 +426,8 @@ instance : CommSemiring Cardinal.{u} where
   one := 1
   add := (· + ·)
   mul := (· * ·)
-  zero_add a := (induction_on a) fun α => mk_congr <| Equiv.emptySum Pempty α
-  add_zero a := (induction_on a) fun α => mk_congr <| Equiv.sumEmpty α Pempty
+  zero_add a := (induction_on a) fun α => mk_congr <| Equiv.emptySum PEmpty α
+  add_zero a := (induction_on a) fun α => mk_congr <| Equiv.sumEmpty α PEmpty
   add_assoc a b c := (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.sumAssoc α β γ
   add_comm a b := (induction_on₂ a b) fun α β => mk_congr <| Equiv.sumComm α β
   zero_mul a := (induction_on a) fun α => mk_congr <| Equiv.pemptyProd α
@@ -463,7 +463,7 @@ theorem zero_power {a : Cardinal} : a ≠ 0 → (0^a) = 0 :=
     mk_eq_zero_iff.2 <|
       is_empty_pi.2 <|
         let ⟨a⟩ := mk_ne_zero_iff.1 HEq
-        ⟨a, Pempty.is_empty⟩
+        ⟨a, PEmpty.is_empty⟩
 
 theorem power_ne_zero {a : Cardinal} (b) : a ≠ 0 → (a^b) ≠ 0 :=
   (induction_on₂ a b) fun α β h =>
@@ -1119,7 +1119,7 @@ theorem add_lt_aleph_0_iff {a b : Cardinal} : a + b < ℵ₀ ↔ a < ℵ₀ ∧ 
     add_lt_aleph_0 h1 h2⟩
 
 theorem aleph_0_le_add_iff {a b : Cardinal} : ℵ₀ ≤ a + b ↔ ℵ₀ ≤ a ∨ ℵ₀ ≤ b := by
-  simp only [← not_lt, add_lt_aleph_0_iff, not_and_distrib]
+  simp only [← not_lt, add_lt_aleph_0_iff, not_and_or]
 
 /-- See also `cardinal.nsmul_lt_aleph_0_iff_of_ne_zero` if you already have `n ≠ 0`. -/
 theorem nsmul_lt_aleph_0_iff {n : ℕ} {a : Cardinal} : n • a < ℵ₀ ↔ n = 0 ∨ a < ℵ₀ := by
@@ -1164,12 +1164,12 @@ theorem mul_lt_aleph_0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0
 /-- See also `cardinal.aleph_0_le_mul_iff`. -/
 theorem aleph_0_le_mul_iff {a b : Cardinal} : ℵ₀ ≤ a * b ↔ a ≠ 0 ∧ b ≠ 0 ∧ (ℵ₀ ≤ a ∨ ℵ₀ ≤ b) := by
   let h := (@mul_lt_aleph_0_iff a b).Not
-  rwa [not_lt, not_or_distrib, not_or_distrib, not_and_distrib, not_lt, not_lt] at h
+  rwa [not_lt, not_or, not_or, not_and_or, not_lt, not_lt] at h
 
 /-- See also `cardinal.aleph_0_le_mul_iff'`. -/
 theorem aleph_0_le_mul_iff' {a b : Cardinal.{u}} : ℵ₀ ≤ a * b ↔ a ≠ 0 ∧ ℵ₀ ≤ b ∨ ℵ₀ ≤ a ∧ b ≠ 0 := by
   have : ∀ {a : Cardinal.{u}}, ℵ₀ ≤ a → a ≠ 0 := fun a => ne_bot_of_le_ne_bot aleph_0_ne_zero
-  simp only [aleph_0_le_mul_iff, and_or_distrib_left, and_iff_right_of_imp this, @and_left_comm (a ≠ 0)]
+  simp only [aleph_0_le_mul_iff, and_or_left, and_iff_right_of_imp this, @and_left_comm (a ≠ 0)]
   simp only [and_comm, or_comm]
 
 theorem mul_lt_aleph_0_iff_of_ne_zero {a b : Cardinal} (ha : a ≠ 0) (hb : b ≠ 0) : a * b < ℵ₀ ↔ a < ℵ₀ ∧ b < ℵ₀ := by
@@ -1420,7 +1420,7 @@ theorem mk_empty : (#Empty) = 0 :=
   mk_eq_zero _
 
 @[simp]
-theorem mk_pempty : (#Pempty) = 0 :=
+theorem mk_pempty : (#PEmpty) = 0 :=
   mk_eq_zero _
 
 @[simp]
@@ -1616,13 +1616,13 @@ theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α →
   rw [lift_mk_le.{v, u, 0}]
   refine' ⟨⟨_, _⟩⟩
   · rintro ⟨y, hy⟩
-    rcases Classical.subtypeOfExists (h hy) with ⟨x, rfl⟩
+    rcases Classical.subtype_of_exists (h hy) with ⟨x, rfl⟩
     exact ⟨x, hy⟩
     
   rintro ⟨y, hy⟩ ⟨y', hy'⟩
   dsimp
-  rcases Classical.subtypeOfExists (h hy) with ⟨x, rfl⟩
-  rcases Classical.subtypeOfExists (h hy') with ⟨x', rfl⟩
+  rcases Classical.subtype_of_exists (h hy) with ⟨x, rfl⟩
+  rcases Classical.subtype_of_exists (h hy') with ⟨x', rfl⟩
   simp
   intro hxx'
   rw [hxx']
@@ -1705,7 +1705,7 @@ theorem three_le {α : Type _} (h : 3 ≤ (#α)) (x : α) (y : α) : ∃ z : α,
   have : ↑(2 : ℕ) < (#α)
   rwa [← succ_le_iff, ← Cardinal.nat_succ]
   have := exists_not_mem_of_length_lt [x, y] this
-  simpa [not_or_distrib] using this
+  simpa [not_or] using this
 
 /-- The function `a ^< b`, defined as the supremum of `a ^ c` for `c < b`. -/
 def powerlt (a b : Cardinal.{u}) : Cardinal.{u} :=

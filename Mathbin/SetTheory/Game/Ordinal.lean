@@ -32,19 +32,19 @@ namespace Ordinal
 /-- Converts an ordinal into the corresponding pre-game. -/
 noncomputable def toPgame : Ordinal.{u} → Pgame.{u}
   | o =>
-    ⟨o.out.α, Pempty, fun x =>
+    ⟨o.out.α, PEmpty, fun x =>
       let hwf := Ordinal.typein_lt_self x
       (typein (· < ·) x).toPgame,
-      Pempty.elim⟩
+      PEmpty.elim⟩
 
-theorem to_pgame_def (o : Ordinal) : o.toPgame = ⟨o.out.α, Pempty, fun x => (typein (· < ·) x).toPgame, Pempty.elim⟩ :=
+theorem to_pgame_def (o : Ordinal) : o.toPgame = ⟨o.out.α, PEmpty, fun x => (typein (· < ·) x).toPgame, PEmpty.elim⟩ :=
   by rw [to_pgame]
 
 @[simp]
 theorem to_pgame_left_moves (o : Ordinal) : o.toPgame.LeftMoves = o.out.α := by rw [to_pgame, left_moves]
 
 @[simp]
-theorem to_pgame_right_moves (o : Ordinal) : o.toPgame.RightMoves = Pempty := by rw [to_pgame, right_moves]
+theorem to_pgame_right_moves (o : Ordinal) : o.toPgame.RightMoves = PEmpty := by rw [to_pgame, right_moves]
 
 instance is_empty_zero_to_pgame_left_moves : IsEmpty (toPgame 0).LeftMoves := by
   rw [to_pgame_left_moves]

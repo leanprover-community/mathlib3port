@@ -92,7 +92,7 @@ variable {A : Type _} {B : Type _} [i : SetLike A B]
 
 include i
 
-instance : CoeT A (Set B) :=
+instance : CoeTC A (Set B) :=
   ⟨SetLike.Coe⟩
 
 instance (priority := 100) : Membership B A :=

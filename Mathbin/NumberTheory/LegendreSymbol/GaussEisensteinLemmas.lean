@@ -182,7 +182,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
     _ = (∑ x in ico 1 (p / 2).succ, ((a * x : ℕ) : Zmod p).val : ℕ) + (∑ x in ico 1 (p / 2).succ, a * x / p : ℕ) := by
       simp only [val_nat_cast] <;> simp [sum_add_distrib, mul_sum.symm, Nat.cast_add, Nat.cast_mul, Nat.cast_sum, hp2]
     _ = _ :=
-      congr_arg2 (· + ·)
+      congr_arg₂ (· + ·)
         (calc
           ((∑ x in ico 1 (p / 2).succ, ((a * x : ℕ) : Zmod p).val : ℕ) : Zmod 2) =
               ∑ x in ico 1 (p / 2).succ,

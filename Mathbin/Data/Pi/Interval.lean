@@ -26,7 +26,7 @@ namespace Pi
 instance : LocallyFiniteOrder (∀ i, α i) :=
   LocallyFiniteOrder.ofIcc _ (fun a b => pi_finset fun i => icc (a i) (b i)) fun a b x => by
     simp_rw [mem_pi_finset, mem_Icc]
-    exact forall_and_distrib
+    exact forall_and
 
 variable (a b : ∀ i, α i)
 

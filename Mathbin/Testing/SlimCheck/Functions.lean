@@ -154,7 +154,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
   mem_support_to_fun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_distrib_right, List.mem_to_finset,
+    simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_right, List.mem_to_finset,
       exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
@@ -347,8 +347,7 @@ theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x �
   dsimp [list.apply_id]
   rw [lookup_eq_none.2]
   rfl
-  simp only [keys, not_exists, to_sigma, exists_and_distrib_right, exists_eq_right, mem_map, comp_app, map_map,
-    Prod.exists]
+  simp only [keys, not_exists, to_sigma, exists_and_right, exists_eq_right, mem_map, comp_app, map_map, Prod.exists]
   intro y hy
   exact h (mem_zip hy).1
 

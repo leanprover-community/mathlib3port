@@ -117,7 +117,7 @@ instance : AddGroupWithOne Cauchy :=
   { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zero,
     nat_cast_succ := fun n => congr_arg mk (Nat.cast_succ n), intCast := fun n => mk n,
     int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_neg_succ_of_nat n), one := 1 }
+    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_negSucc n), one := 1 }
 
 @[simp]
 theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=

@@ -292,7 +292,7 @@ theorem union_lower_bounds_subset_lower_bounds_inter : LowerBounds s ∪ LowerBo
 
 theorem is_least_union_iff {a : α} {s t : Set α} :
     IsLeast (s ∪ t) a ↔ IsLeast s a ∧ a ∈ LowerBounds t ∨ a ∈ LowerBounds s ∧ IsLeast t a := by
-  simp [IsLeast, lower_bounds_union, or_and_distrib_right, and_comm' (a ∈ t), and_assoc']
+  simp [IsLeast, lower_bounds_union, or_and_right, and_comm' (a ∈ t), and_assoc']
 
 theorem is_greatest_union_iff :
     IsGreatest (s ∪ t) a ↔ IsGreatest s a ∧ a ∈ UpperBounds t ∨ a ∈ UpperBounds s ∧ IsGreatest t a :=
@@ -617,8 +617,8 @@ theorem bdd_above_iff_subset_Iic : BddAbove s ↔ ∃ a, s ⊆ IicCat a :=
   Iff.rfl
 
 theorem bdd_below_bdd_above_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ IccCat a b := by
-  simp only [Ici_inter_Iic.symm, subset_inter_iff, bdd_below_iff_subset_Ici, bdd_above_iff_subset_Iic,
-    exists_and_distrib_left, exists_and_distrib_right]
+  simp only [Ici_inter_Iic.symm, subset_inter_iff, bdd_below_iff_subset_Ici, bdd_above_iff_subset_Iic, exists_and_left,
+    exists_and_right]
 
 /-!
 #### Univ

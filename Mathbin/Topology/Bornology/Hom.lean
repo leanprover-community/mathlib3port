@@ -49,7 +49,7 @@ theorem IsBounded.image [Bornology α] [Bornology β] [LocallyBoundedMapClass F 
     (hs : IsBounded s) : IsBounded (f '' s) :=
   comap_cobounded_le_iff.1 (comap_cobounded_le f) hs
 
-instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] : CoeT F (LocallyBoundedMap α β) :=
+instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] : CoeTC F (LocallyBoundedMap α β) :=
   ⟨fun f => ⟨f, comap_cobounded_le f⟩⟩
 
 namespace LocallyBoundedMap

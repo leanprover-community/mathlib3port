@@ -1236,7 +1236,7 @@ theorem exists_of_linear_independent_of_finite_span {t : Finset V} (hs : LinearI
         (by simp (config := { contextual := true }) [Set.ext_iff]) (by rwa [Eq]))
   intro u h
   exact
-    ⟨u, subset.trans h.1 (by simp (config := { contextual := true }) [subset_def, and_imp, or_imp_distrib]), h.2.1, by
+    ⟨u, subset.trans h.1 (by simp (config := { contextual := true }) [subset_def, and_imp, or_imp]), h.2.1, by
       simp only [h.2.2, Eq]⟩
 
 theorem exists_finite_card_le_of_finite_of_linear_independent_of_span (ht : t.Finite)

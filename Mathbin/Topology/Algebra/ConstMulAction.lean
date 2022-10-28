@@ -103,6 +103,14 @@ instance MulOpposite.has_continuous_const_smul : HasContinuousConstSmul M αᵐ�
   ⟨fun c => MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.const_smul c⟩
 
 @[to_additive]
+instance : HasContinuousConstSmul M αᵒᵈ :=
+  ‹HasContinuousConstSmul M α›
+
+@[to_additive]
+instance OrderDual.has_continuous_const_smul' : HasContinuousConstSmul Mᵒᵈ α :=
+  ‹HasContinuousConstSmul M α›
+
+@[to_additive]
 instance [HasSmul M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M (α × β) :=
   ⟨fun _ => (continuous_fst.const_smul _).prod_mk (continuous_snd.const_smul _)⟩
 
@@ -196,6 +204,10 @@ theorem IsClosed.smul {s : Set α} (hs : IsClosed s) (c : G) : IsClosed (c • s
 @[to_additive]
 theorem closure_smul (c : G) (s : Set α) : Closure (c • s) = c • Closure s :=
   ((Homeomorph.smul c).image_closure s).symm
+
+@[to_additive]
+theorem Dense.smul (c : G) {s : Set α} (hs : Dense s) : Dense (c • s) := by
+  rw [dense_iff_closure_eq] at hs⊢ <;> rw [closure_smul, hs, smul_set_univ]
 
 @[to_additive]
 theorem interior_smul (c : G) (s : Set α) : Interior (c • s) = c • Interior s :=
@@ -351,7 +363,7 @@ export ProperlyDiscontinuousVadd (finite_disjoint_inter_image)
 
 /-- The quotient map by a group action is open, i.e. the quotient by a group action is an open
   quotient. -/
-@[to_additive "The quotient map by a group action is open, i.e. the quotient by a group \naction is an open quotient. "]
+@[to_additive "The quotient map by a group action is open, i.e. the quotient by a group\naction is an open quotient. "]
 theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
     IsOpenMap (Quotient.mk : T → Quotient (MulAction.orbitRel Γ T)) := by
   intro U hU

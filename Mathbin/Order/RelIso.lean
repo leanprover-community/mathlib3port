@@ -421,14 +421,14 @@ def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r
 def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.LiftRel r s where
   toFun := Sum.inl
   inj' := Sum.inl_injective
-  map_rel_iff' a b := Sum.lift_rel_inl_inl
+  map_rel_iff' a b := Sum.liftRel_inl_inl
 
 /-- `sum.inr` as a relation embedding into `sum.lift_rel r s`. -/
 @[simps]
 def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.LiftRel r s where
   toFun := Sum.inr
   inj' := Sum.inr_injective
-  map_rel_iff' a b := Sum.lift_rel_inr_inr
+  map_rel_iff' a b := Sum.liftRel_inr_inr
 
 /-- `sum.map` as a relation embedding between `sum.lift_rel` relations. -/
 @[simps]

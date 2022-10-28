@@ -602,5 +602,41 @@ theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTarge
   ext _ _ f
   exact ((hP.diagonal_affine_open_cover_tfae f).out 0 1).trans ((hP.diagonal.affine_open_cover_tfae f).out 1 0)
 
+theorem universallyIsLocalAtTarget (P : MorphismProperty SchemeCat)
+    (hP :
+      ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y),
+        (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f) :
+    PropertyIsLocalAtTarget P.Universally := by
+  refine'
+    ⟨P.universally_respects_iso, fun X Y f U =>
+      P.universally_stable_under_base_change (is_pullback_morphism_restrict f U).flip, _⟩
+  intro X Y f 𝒰 h X' Y' i₁ i₂ f' H
+  apply hP _ (𝒰.pullback_cover i₂)
+  intro i
+  dsimp
+  apply h i (pullback.lift (pullback.fst ≫ i₁) (pullback.snd ≫ pullback.snd) _) pullback.snd
+  swap
+  · rw [category.assoc, category.assoc, ← pullback.condition, ← pullback.condition_assoc, H.w]
+    
+  refine' (is_pullback.of_right _ (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback _ _)).flip
+  rw [pullback.lift_fst, ← pullback.condition]
+  exact (is_pullback.of_has_pullback _ _).paste_horiz H.flip
+
+theorem universallyIsLocalAtTargetOfMorphismRestrict (P : MorphismProperty SchemeCat) (hP₁ : P.RespectsIso)
+    (hP₂ :
+      ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.Carrier) (hU : supr U = ⊤),
+        (∀ i, P (f ∣_ U i)) → P f) :
+    PropertyIsLocalAtTarget P.Universally :=
+  universallyIsLocalAtTarget P
+    (by
+      intro X Y f 𝒰 h𝒰
+      apply hP₂ f (fun i : 𝒰.J => (𝒰.map i).opensRange) 𝒰.supr_opens_range
+      simp_rw [hP₁.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]
+      exact h𝒰)
+
+/-- `topologically P` holds for a morphism if the underlying topological map satisfies `P`. -/
+def MorphismProperty.Topologically (P : ∀ {α β : Type u} [TopologicalSpace α] [TopologicalSpace β] (f : α → β), Prop) :
+    MorphismProperty SchemeCat.{u} := fun X Y f => P f.1.base
+
 end AlgebraicGeometry
 

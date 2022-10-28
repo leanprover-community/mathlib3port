@@ -566,7 +566,7 @@ namespace MvPolynomial
 theorem is_jacobson_mv_polynomial_fin {R : Type _} [CommRing R] [H : IsJacobson R] :
     ∀ n : ℕ, IsJacobson (MvPolynomial (Fin n) R)
   | 0 =>
-    (is_jacobson_iso ((renameEquiv R (Equiv.equivPempty (Fin 0))).toRingEquiv.trans (isEmptyRingEquiv R Pempty))).mpr H
+    (is_jacobson_iso ((renameEquiv R (Equiv.equivPempty (Fin 0))).toRingEquiv.trans (isEmptyRingEquiv R PEmpty))).mpr H
   | n + 1 =>
     (is_jacobson_iso (finSuccEquiv R n).toRingEquiv).2
       (Polynomial.is_jacobson_polynomial_iff_is_jacobson.2 (is_jacobson_mv_polynomial_fin n))

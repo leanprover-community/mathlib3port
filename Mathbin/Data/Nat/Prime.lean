@@ -97,14 +97,14 @@ theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p)
 theorem prime_def_lt {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m < p, m ∣ p → m = 1 :=
   prime_def_lt''.trans <|
     and_congr_right fun p2 =>
-      forall_congr fun m =>
+      forall_congr' fun m =>
         ⟨fun h l d => (h d).resolve_right (ne_of_lt l), fun h d =>
           (le_of_dvd (le_of_succ_le p2) d).lt_or_eq_dec.imp_left fun l => h l d⟩
 
 theorem prime_def_lt' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m → m < p → ¬m ∣ p :=
   prime_def_lt.trans <|
     and_congr_right fun p2 =>
-      forall_congr fun m =>
+      forall_congr' fun m =>
         ⟨fun h m2 l d => not_lt_of_ge m2 ((h l d).symm ▸ by decide), fun h l d => by
           rcases m with (_ | _ | m)
           · rw [eq_zero_of_zero_dvd d] at p2
@@ -150,7 +150,7 @@ section
   -/
 @[local instance]
 def decidablePrime1 (p : ℕ) : Decidable (Prime p) :=
-  decidableOfIff' _ prime_def_lt'
+  decidable_of_iff' _ prime_def_lt'
 
 theorem prime_two : Prime 2 := by decide
 
@@ -332,7 +332,7 @@ you should not use `dec_trivial`, but rather `by norm_num`, which is
 much faster.
 -/
 instance decidablePrime (p : ℕ) : Decidable (Prime p) :=
-  decidableOfIff' _ prime_def_min_fac
+  decidable_of_iff' _ prime_def_min_fac
 
 theorem not_prime_iff_min_fac_lt {n : ℕ} (n2 : 2 ≤ n) : ¬Prime n ↔ minFac n < n :=
   (not_congr <| prime_def_min_fac.trans <| and_iff_right n2).trans <|
@@ -343,7 +343,7 @@ theorem min_fac_le_div {n : ℕ} (pos : 0 < n) (np : ¬Prime n) : minFac n ≤ n
   | ⟨0, h0⟩ => absurd Pos <| by rw [h0, mul_zero] <;> exact by decide
   | ⟨1, h1⟩ => by
     rw [mul_one] at h1
-    rw [prime_def_min_fac, not_and_distrib, ← h1, eq_self_iff_true, not_true, or_false_iff, not_le] at np
+    rw [prime_def_min_fac, not_and_or, ← h1, eq_self_iff_true, not_true, or_false_iff, not_le] at np
     rw [le_antisymm (le_of_lt_succ np) (succ_le_of_lt Pos), min_fac_one, Nat.div_one]
   | ⟨x + 2, hx⟩ => by
     conv_rhs =>
@@ -849,12 +849,16 @@ instance inhabitedPrimes : Inhabited Primes :=
 instance coeNat : Coe Nat.Primes ℕ :=
   ⟨Subtype.val⟩
 
-theorem coe_nat_inj (p q : Nat.Primes) : (p : ℕ) = (q : ℕ) → p = q := fun h => Subtype.eq h
+theorem coe_nat_injective : Function.Injective (coe : Nat.Primes → ℕ) :=
+  Subtype.coe_injective
+
+theorem coe_nat_inj (p q : Nat.Primes) : (p : ℕ) = (q : ℕ) ↔ p = q :=
+  Subtype.ext_iff.symm
 
 end Primes
 
 instance monoid.primePow {α : Type _} [Monoid α] : Pow α Primes :=
-  ⟨fun x p => x ^ p.val⟩
+  ⟨fun x p => x ^ (p : ℕ)⟩
 
 end Nat
 
@@ -1104,8 +1108,8 @@ namespace Nat
 
 theorem mem_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) {p : ℕ} :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∨ p ∈ b.factors := by
-  rw [mem_factors (mul_ne_zero ha hb), mem_factors ha, mem_factors hb, ← and_or_distrib_left]
-  simpa only [And.congr_right_iff] using prime.dvd_mul
+  rw [mem_factors (mul_ne_zero ha hb), mem_factors ha, mem_factors hb, ← and_or_left]
+  simpa only [and_congr_right_iff] using prime.dvd_mul
 
 /-- If `a`, `b` are positive, the prime divisors of `a * b` are the union of those of `a` and `b` -/
 theorem factors_mul_to_finset {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :

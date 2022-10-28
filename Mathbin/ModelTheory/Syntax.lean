@@ -1105,7 +1105,7 @@ theorem distinct_constants_theory_eq_Union (s : Set α) :
   refine' congr rfl (congr (congr rfl _) rfl)
   ext ⟨i, j⟩
   simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
-    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
   refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
   · simp
     

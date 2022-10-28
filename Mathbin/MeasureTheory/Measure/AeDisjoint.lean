@@ -112,7 +112,7 @@ theorem measure_diff_right (h : AeDisjoint μ s t) : μ (t \ s) = μ t :=
 set `u`. -/
 theorem exists_disjoint_diff (h : AeDisjoint μ s t) : ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
   ⟨ToMeasurable μ (s ∩ t), measurableSetToMeasurable _ _, (measure_to_measurable _).trans h,
-    disjointDiff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
+    disjointDiff.symm.monoLeft fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 
 theorem ofNullRight (h : μ t = 0) : AeDisjoint μ s t :=
   measure_mono_null (inter_subset_right _ _) h

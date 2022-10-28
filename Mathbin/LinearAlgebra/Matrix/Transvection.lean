@@ -552,7 +552,7 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
   -- last column, we will first put this nonzero coefficient in last position, and then argue as
   -- above.
   push_neg  at hM
-  simp [not_and_distrib, is_two_block_diagonal, to_blocks₁₂, to_blocks₂₁, ← Matrix.ext_iff] at H
+  simp [not_and_or, is_two_block_diagonal, to_blocks₁₂, to_blocks₂₁, ← Matrix.ext_iff] at H
   have : ∃ i : Fin r, M (inl i) (inr star) ≠ 0 ∨ M (inr star) (inl i) ≠ 0 := by
     cases H
     · contrapose! H

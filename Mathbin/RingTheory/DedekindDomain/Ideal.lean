@@ -328,7 +328,7 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
   letI := Classical.decEq (Ideal A)
   have := Multiset.map_erase PrimeSpectrum.asIdeal Subtype.coe_injective P Z
   obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
-    rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or_distrib, ← this] at hprodZ
+    rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ← this] at hprodZ
   -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
   have hPM' := (IsDedekindDomain.dimension_le_one _ hP0 P.is_prime).eq_of_le hM.ne_top hPM
   subst hPM'

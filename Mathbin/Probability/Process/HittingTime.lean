@@ -264,7 +264,7 @@ theorem isStoppingTimeHittingIsStoppingTime [ConditionallyCompleteLinearOrder ι
         ⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n } :=
     by
     ext x
-    simp [← exists_or_distrib, ← or_and_distrib_right, le_or_lt]
+    simp [← exists_or, ← or_and_right, le_or_lt]
   have h₂ : (⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) = ∅ := by
     ext x
     simp only [gt_iff_lt, Set.mem_Union, Set.mem_inter_iff, Set.mem_set_of_eq, exists_prop, Set.mem_empty_iff_false,

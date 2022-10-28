@@ -2100,7 +2100,7 @@ theorem lintegral_max {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measur
   have hm : MeasurableSet { x | f x ≤ g x } := measurableSetLe hf hg
   rw [← lintegral_add_compl (fun x => max (f x) (g x)) hm]
   simp only [← compl_set_of, ← not_le]
-  refine' congr_arg2 (· + ·) (set_lintegral_congr_fun hm _) (set_lintegral_congr_fun hm.compl _)
+  refine' congr_arg₂ (· + ·) (set_lintegral_congr_fun hm _) (set_lintegral_congr_fun hm.compl _)
   exacts[ae_of_all _ fun x => max_eq_right, ae_of_all _ fun x hx => max_eq_left (not_le.1 hx).le]
 
 theorem set_lintegral_max {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g) (s : Set α) :

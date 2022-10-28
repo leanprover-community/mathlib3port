@@ -138,7 +138,7 @@ theorem mem_id_rel {a b : α} : (a, b) ∈ @IdRel α ↔ a = b :=
 
 @[simp]
 theorem id_rel_subset {s : Set (α × α)} : IdRel ⊆ s ↔ ∀ a, (a, a) ∈ s := by
-  simp [subset_def] <;> exact forall_congr fun a => by simp
+  simp [subset_def] <;> exact forall_congr' fun a => by simp
 
 /-- The composition of relations -/
 def CompRel {α : Type u} (r₁ r₂ : Set (α × α)) :=
@@ -551,7 +551,7 @@ theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β ×
 
 theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α := by
   refine' ⟨_, fun hs => _⟩
-  · simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp_distrib]
+  · simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp]
     intro t ts ht xt
     filter_upwards [ht x xt] using fun y h eq => ts (h Eq)
     
@@ -1663,11 +1663,11 @@ theorem continuous_on_iff'_left [TopologicalSpace β] {f : β → α} {s : Set �
 
 theorem continuous_iff'_right [TopologicalSpace β] {f : β → α} :
     Continuous f ↔ ∀ b, Tendsto (fun x => (f b, f x)) (𝓝 b) (𝓤 α) :=
-  continuous_iff_continuous_at.trans <| forall_congr fun b => tendsto_nhds_right
+  continuous_iff_continuous_at.trans <| forall_congr' fun b => tendsto_nhds_right
 
 theorem continuous_iff'_left [TopologicalSpace β] {f : β → α} :
     Continuous f ↔ ∀ b, Tendsto (fun x => (f x, f b)) (𝓝 b) (𝓤 α) :=
-  continuous_iff_continuous_at.trans <| forall_congr fun b => tendsto_nhds_left
+  continuous_iff_continuous_at.trans <| forall_congr' fun b => tendsto_nhds_left
 
 end Uniform
 

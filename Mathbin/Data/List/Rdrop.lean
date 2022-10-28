@@ -146,7 +146,7 @@ theorem drop_while_eq_self_iff : dropWhile' p l = l ↔ ∀ hl : 0 < l.length, �
 theorem rdrop_while_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p (l.last hl) := by
   simp only [rdrop_while, reverse_eq_iff, length_reverse, Ne.def, drop_while_eq_self_iff, last_eq_nth_le, ←
     length_eq_zero, pos_iff_ne_zero]
-  refine' forall_congr _
+  refine' forall_congr' _
   intro h
   rw [nth_le_reverse']
   · simp

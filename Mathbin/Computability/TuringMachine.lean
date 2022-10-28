@@ -808,7 +808,7 @@ theorem tr_reaches_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (
     rcases refl_trans_gen.cases_head ce with (rfl | ⟨d', cd', de⟩)
     · have := H ee
       revert this
-      cases' eg : f₁ e₁ with g₁ <;> simp only [respects, and_imp, exists_imp_distrib]
+      cases' eg : f₁ e₁ with g₁ <;> simp only [respects, and_imp, exists_imp]
       · intro c0
         cases cd.symm.trans c0
         
@@ -866,7 +866,7 @@ theorem frespects_eq {σ₁ σ₂} {f₂ : σ₂ → Option σ₂} {tr : σ₁ �
 
 theorem fun_respects {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂} :
     (Respects f₁ f₂ fun a b => tr a = b) ↔ ∀ ⦃a₁⦄, Frespects f₂ tr (tr a₁) (f₁ a₁) :=
-  forall_congr fun a₁ => by cases f₁ a₁ <;> simp only [frespects, respects, exists_eq_left', forall_eq']
+  forall_congr' fun a₁ => by cases f₁ a₁ <;> simp only [frespects, respects, exists_eq_left', forall_eq']
 
 theorem tr_eval' {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂)
     (H : Respects f₁ f₂ fun a b => tr a = b) (a₁) : eval f₂ (tr a₁) = tr <$> eval f₁ a₁ :=
@@ -1224,7 +1224,7 @@ noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt)
   (S.bUnion fun q => stmts₁ (M q)).insertNone
 
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) : some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
-  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 
 variable [Inhabited Λ]
@@ -1236,7 +1236,7 @@ def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀ q ∈ S, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
-  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 
 theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
@@ -2072,7 +2072,7 @@ noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt)
   (S.bUnion fun q => stmts₁ (M q)).insertNone
 
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) : some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
-  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 
 variable [Inhabited Λ]
@@ -2083,7 +2083,7 @@ def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀ q ∈ S, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
-  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
+  simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 
 theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :

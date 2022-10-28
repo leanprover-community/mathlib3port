@@ -102,7 +102,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   -- Unpack the statement of the goal.
   intro m₃
   simp only [LieModuleHom.coe_to_linear_map, Pi.add_apply, Function.comp_app, mem_pre_weight_space, LinearMap.coe_comp,
-    TensorProduct.mapIncl, exists_imp_distrib, LinearMap.mem_range]
+    TensorProduct.mapIncl, exists_imp, LinearMap.mem_range]
   rintro t rfl x
   -- Set up some notation.
   let F : Module.EndCat R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1

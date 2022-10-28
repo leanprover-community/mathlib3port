@@ -94,7 +94,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
   · rw [if_pos]
     exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
     
-  · rw [mem_Icc, not_and_distrib, not_le, not_le] at h₁
+  · rw [mem_Icc, not_and_or, not_le, not_le] at h₁
     cases h₁
     · replace hθ := hθ.1
       have hcos : Real.cos θ < 0 := by
@@ -226,7 +226,7 @@ theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 := by
     
 
 theorem arg_lt_pi_iff {z : ℂ} : arg z < π ↔ 0 ≤ z.re ∨ z.im ≠ 0 := by
-  rw [(arg_le_pi z).lt_iff_ne, not_iff_comm, not_or_distrib, not_le, not_not, arg_eq_pi_iff]
+  rw [(arg_le_pi z).lt_iff_ne, not_iff_comm, not_or, not_le, not_not, arg_eq_pi_iff]
 
 theorem arg_of_real_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=
   arg_eq_pi_iff.2 ⟨hx, rfl⟩
@@ -346,8 +346,7 @@ theorem neg_pi_div_two_le_arg_iff {z : ℂ} : -(π / 2) ≤ arg z ↔ 0 ≤ re z
 
 @[simp]
 theorem abs_arg_le_pi_div_two_iff {z : ℂ} : abs (arg z) ≤ π / 2 ↔ 0 ≤ re z := by
-  rw [abs_le, arg_le_pi_div_two_iff, neg_pi_div_two_le_arg_iff, ← or_and_distrib_left, ← not_le, and_not_self_iff,
-    or_false_iff]
+  rw [abs_le, arg_le_pi_div_two_iff, neg_pi_div_two_le_arg_iff, ← or_and_left, ← not_le, and_not_self_iff, or_false_iff]
 
 @[simp]
 theorem arg_conj_coe_angle (x : ℂ) : (arg (conj x) : Real.Angle) = -arg x := by

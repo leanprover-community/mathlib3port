@@ -64,7 +64,7 @@ def inl [Zero A] (r : R) : Unitization R A :=
   (r, 0)
 
 /-- The canonical inclusion `A → unitization R A`. -/
-instance [Zero R] : CoeT A (Unitization R A) where coe a := (0, a)
+instance [Zero R] : CoeTC A (Unitization R A) where coe a := (0, a)
 
 /-- The canonical projection `unitization R A → R`. -/
 def fst (x : Unitization R A) : R :=

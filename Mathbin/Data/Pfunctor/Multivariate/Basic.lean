@@ -64,7 +64,7 @@ instance : IsLawfulMvfunctor P.Obj where
 
 /-- Constant functor where the input object does not affect the output -/
 def const (n : ℕ) (A : Type u) : Mvpfunctor n :=
-  { A, B := fun a i => Pempty }
+  { A, B := fun a i => PEmpty }
 
 section Const
 
@@ -72,7 +72,7 @@ variable (n) {A : Type u} {α β : Typevec.{u} n}
 
 /-- Constructor for the constant functor -/
 def const.mk (x : A) {α} : (const n A).Obj α :=
-  ⟨x, fun i a => Pempty.elim a⟩
+  ⟨x, fun i a => PEmpty.elim a⟩
 
 variable {n A}
 

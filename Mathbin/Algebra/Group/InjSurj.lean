@@ -240,8 +240,8 @@ protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul 
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₁ :=
   { hf.AddGroup f zero add neg sub nsmul zsmul, hf.AddMonoidWithOne f zero one add nsmul nat_cast with intCast := coe,
-    int_cast_of_nat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_coe_nat]),
-    int_cast_neg_succ_of_nat := fun n => hf (by erw [int_cast, neg, nat_cast, Int.cast_neg, Int.cast_coe_nat]) }
+    int_cast_of_nat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_ofNat]),
+    int_cast_neg_succ_of_nat := fun n => hf (by erw [int_cast, neg, nat_cast, Int.cast_neg, Int.cast_ofNat]) }
 
 /-- A type endowed with `1`, `*` and `⁻¹` is a commutative group,
 if it admits an injective map that preserves `1`, `*` and `⁻¹` to a commutative group.
@@ -387,9 +387,9 @@ protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₂ :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.AddGroup f zero add neg sub nsmul zsmul with intCast := coe,
-    int_cast_of_nat := fun n => by rw [← int_cast, Int.cast_coe_nat, nat_cast],
+    int_cast_of_nat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast],
     int_cast_neg_succ_of_nat := fun n => by
-      rw [← int_cast, Int.cast_neg, Int.cast_coe_nat, neg, nat_cast]
+      rw [← int_cast, Int.cast_neg, Int.cast_ofNat, neg, nat_cast]
       rfl }
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a commutative group,

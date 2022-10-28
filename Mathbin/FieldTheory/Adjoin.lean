@@ -235,11 +235,11 @@ theorem adjoin.range_algebra_map_subset : Set.Range (algebraMap F E) ⊆ adjoin 
   rw [← hf]
   exact adjoin.algebra_map_mem F S f
 
-instance adjoin.fieldCoe : CoeT F (adjoin F S) where coe x := ⟨algebraMap F E x, adjoin.algebra_map_mem F S x⟩
+instance adjoin.fieldCoe : CoeTC F (adjoin F S) where coe x := ⟨algebraMap F E x, adjoin.algebra_map_mem F S x⟩
 
 theorem subset_adjoin : S ⊆ adjoin F S := fun x hx => Subfield.subset_closure (Or.inr hx)
 
-instance adjoin.setCoe : CoeT S (adjoin F S) where coe x := ⟨x, subset_adjoin F S (Subtype.mem x)⟩
+instance adjoin.setCoe : CoeTC S (adjoin F S) where coe x := ⟨x, subset_adjoin F S (Subtype.mem x)⟩
 
 @[mono]
 theorem adjoin.mono (T : Set E) (h : S ⊆ T) : adjoin F S ≤ adjoin F T :=

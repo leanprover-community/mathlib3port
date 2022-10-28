@@ -71,7 +71,7 @@ theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
 /-- An encodable type has decidable equality. Not set as an instance because this is usually not the
 best way to infer decidability. -/
 def decidableEqOfEncodable (α) [Encodable α] : DecidableEq α
-  | a, b => decidableOfIff _ encode_inj
+  | a, b => decidable_of_iff _ encode_inj
 
 /-- If `α` is encodable and there is an injection `f : β → α`, then `β` is encodable as well. -/
 def ofLeftInjection [Encodable α] (f : β → α) (finv : α → Option β) (linv : ∀ b, finv (f b) = some b) : Encodable β :=
@@ -178,7 +178,7 @@ theorem encodek₂ [Encodable α] (a : α) : decode₂ α (encode a) = some a :=
 
 /-- The encoding function has decidable range. -/
 def decidableRangeEncode (α : Type _) [Encodable α] : DecidablePred (· ∈ Set.Range (@encode α _)) := fun x =>
-  decidableOfIff (Option.isSome (decode₂ α x))
+  decidable_of_iff (Option.isSome (decode₂ α x))
     ⟨fun h => ⟨Option.get h, by rw [← decode₂_is_partial_inv (Option.get h), Option.some_get]⟩, fun ⟨n, hn⟩ => by
       rw [← hn, encodek₂] <;> exact rfl⟩
 

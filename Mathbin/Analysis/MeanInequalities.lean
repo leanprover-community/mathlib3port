@@ -355,10 +355,10 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjuga
     simp_rw [f', g', div_mul_div_comm, ← sum_div] at this
     rwa [div_le_iff, one_mul] at this
     refine' mul_ne_zero _ _
-    · rw [Ne.def, rpow_eq_zero_iff, not_and_distrib]
+    · rw [Ne.def, rpow_eq_zero_iff, not_and_or]
       exact Or.inl hF_zero
       
-    · rw [Ne.def, rpow_eq_zero_iff, not_and_distrib]
+    · rw [Ne.def, rpow_eq_zero_iff, not_and_or]
       exact Or.inl hG_zero
       
   refine' inner_le_Lp_mul_Lp_of_norm_le_one s f' g' hpq (le_of_eq _) (le_of_eq _)
@@ -693,7 +693,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
     
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤
   · simpa [Ennreal.rpow_eq_top_iff, asymm hpq.pos, asymm hpq.symm.pos, hpq.pos, hpq.symm.pos, Ennreal.sum_eq_top_iff,
-      not_or_distrib] using H'
+      not_or] using H'
     
   have :=
     Ennreal.coe_le_coe.2
@@ -732,7 +732,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
     
   have pos : 0 < p := lt_of_lt_of_le zero_lt_one hp
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤
-  · simpa [Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, not_or_distrib] using H'
+  · simpa [Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, not_or] using H'
     
   have :=
     Ennreal.coe_le_coe.2

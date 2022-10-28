@@ -860,3 +860,29 @@ theorem comp_star_alg_hom'_comp (g : C(Y, Z)) (f : C(X, Y)) :
 
 end ContinuousMap
 
+namespace Homeomorph
+
+variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
+
+variable (𝕜 : Type _) [CommSemiring 𝕜]
+
+variable (A : Type _) [TopologicalSpace A] [Semiring A] [TopologicalSemiring A] [StarRing A]
+
+variable [HasContinuousStar A] [Algebra 𝕜 A]
+
+/-- `continuous_map.comp_star_alg_hom'` as a `star_alg_equiv` when the continuous map `f` is
+actually a homeomorphism. -/
+@[simps]
+def compStarAlgEquiv' (f : X ≃ₜ Y) : C(Y, A) ≃⋆ₐ[𝕜] C(X, A) :=
+  { f.toContinuousMap.compStarAlgHom' 𝕜 A with toFun := (f : C(X, Y)).compStarAlgHom' 𝕜 A,
+    invFun := (f.symm : C(Y, X)).compStarAlgHom' 𝕜 A,
+    left_inv := fun g => by
+      simp only [ContinuousMap.comp_star_alg_hom'_apply, ContinuousMap.comp_assoc, to_continuous_map_comp_symm,
+        ContinuousMap.comp_id],
+    right_inv := fun g => by
+      simp only [ContinuousMap.comp_star_alg_hom'_apply, ContinuousMap.comp_assoc, symm_comp_to_continuous_map,
+        ContinuousMap.comp_id],
+    map_smul' := fun k a => map_smul (f.toContinuousMap.compStarAlgHom' 𝕜 A) k a }
+
+end Homeomorph
+

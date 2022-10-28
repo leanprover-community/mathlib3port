@@ -273,7 +273,7 @@ theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
 
 /- warning: rat.num_denom_cases_on -> Rat.numDenomCasesOn is a dubious translation:
 lean 3 declaration is
-  forall {C : Rat -> Sort.{u}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (Zero.zero.{0} Nat Nat.hasZero) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Int (HasLiftT.mk.{1 1} Nat Int (CoeTₓ.coe.{1 1} Nat Int (CoeTₓ.mk.{1 1} Nat Int Int.ofNat))) d)))) -> (C a)
+  forall {C : Rat -> Sort.{u}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (Zero.zero.{0} Nat Nat.hasZero) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Int (HasLiftT.mk.{1 1} Nat Int (CoeTCₓ.coe.{1 1} Nat Int (CoeTCₓ.mk.{1 1} Nat Int Int.ofNat))) d)))) -> (C a)
 but is expected to have type
   PUnit.{(imax (succ u) 1 (imax 1 1 u) u)}
 Case conversion may be inaccurate. Consider using '#align rat.num_denom_cases_on Rat.numDenomCasesOnₓ'. -/
@@ -775,7 +775,7 @@ theorem coe_int_div_eq_mk {n d : ℤ} : (n : ℚ) / ↑d = n /. d := by
   exact mk_div_mk_cancel_left one_ne_zero n d
 
 @[simp]
-theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r := by rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
+theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r := by rw [← Int.cast_ofNat, ← mk_eq_div, num_denom]
 
 theorem exists_eq_mul_div_num_and_eq_mul_div_denom (n : ℤ) {d : ℤ} (d_ne_zero : d ≠ 0) :
     ∃ c : ℤ, n = c * ((n : ℚ) / d).num ∧ (d : ℤ) = c * ((n : ℚ) / d).denom :=
@@ -844,13 +844,13 @@ theorem denom_eq_one_iff (r : ℚ) : r.denom = 1 ↔ ↑r.num = r :=
 instance canLift : CanLift ℚ ℤ coe fun q => q.denom = 1 :=
   ⟨fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
 
-theorem coe_nat_eq_mk (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_coe_nat, coe_int_eq_mk]
+theorem coe_nat_eq_mk (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_ofNat, coe_int_eq_mk]
 
 @[simp, norm_cast]
-theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_coe_nat, coe_int_num]
+theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_ofNat, coe_int_num]
 
 @[simp, norm_cast]
-theorem coe_nat_denom (n : ℕ) : (n : ℚ).denom = 1 := by rw [← Int.cast_coe_nat, coe_int_denom]
+theorem coe_nat_denom (n : ℕ) : (n : ℚ).denom = 1 := by rw [← Int.cast_ofNat, coe_int_denom]
 
 -- Will be subsumed by `int.coe_inj` after we have defined
 -- `linear_ordered_field ℚ` (which implies characteristic zero).
@@ -948,14 +948,14 @@ theorem inv_coe_int_denom_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.denom
   exact Nat.coprime_one_left _
 
 theorem inv_coe_nat_denom_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.denom = a := by
-  rw [← Int.coe_nat_eq_coe_nat_iff, ← Int.cast_coe_nat a, inv_coe_int_denom_of_pos]
+  rw [← Int.coe_nat_eq_coe_nat_iff, ← Int.cast_ofNat a, inv_coe_int_denom_of_pos]
   rwa [← Nat.cast_zero, Nat.cast_lt]
 
 @[simp]
 theorem inv_coe_int_num (a : ℤ) : (a : ℚ)⁻¹.num = Int.sign a := by
   induction a using Int.induction_on <;>
     simp [← Int.neg_succ_of_nat_coe', Int.neg_succ_of_nat_coe, -neg_add_rev, Rat.inv_neg, Int.coe_nat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_num_of_pos, -Int.cast_neg_succ_of_nat, @eq_comm ℤ 1, Int.sign_eq_one_of_pos]
+      -Nat.cast_succ, inv_coe_nat_num_of_pos, -Int.cast_negSucc, @eq_comm ℤ 1, Int.sign_eq_one_of_pos]
 
 @[simp]
 theorem inv_coe_nat_num (a : ℕ) : (a : ℚ)⁻¹.num = Int.sign a :=
@@ -965,7 +965,7 @@ theorem inv_coe_nat_num (a : ℕ) : (a : ℚ)⁻¹.num = Int.sign a :=
 theorem inv_coe_int_denom (a : ℤ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a.natAbs := by
   induction a using Int.induction_on <;>
     simp [← Int.neg_succ_of_nat_coe', Int.neg_succ_of_nat_coe, -neg_add_rev, Rat.inv_neg, Int.coe_nat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_denom_of_pos, -Int.cast_neg_succ_of_nat]
+      -Nat.cast_succ, inv_coe_nat_denom_of_pos, -Int.cast_negSucc]
 
 @[simp]
 theorem inv_coe_nat_denom (a : ℕ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a := by simpa using inv_coe_int_denom a

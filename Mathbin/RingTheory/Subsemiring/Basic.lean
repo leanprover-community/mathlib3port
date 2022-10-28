@@ -585,7 +585,7 @@ theorem mem_center_iff {R} [Semiring R] {z : R} : z ∈ center R ↔ ∀ g, g * 
   Iff.rfl
 
 instance decidableMemCenter {R} [Semiring R] [DecidableEq R] [Fintype R] : DecidablePred (· ∈ center R) := fun _ =>
-  decidableOfIff' _ mem_center_iff
+  decidable_of_iff' _ mem_center_iff
 
 @[simp]
 theorem center_eq_top (R) [CommSemiring R] : center R = ⊤ :=

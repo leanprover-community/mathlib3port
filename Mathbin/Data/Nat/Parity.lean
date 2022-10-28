@@ -50,7 +50,7 @@ theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=
   Or.imp_right odd_iff_not_even.2 <| em <| Even n
 
 theorem even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
-  simpa only [← two_mul, exists_or_distrib, ← Odd, ← Even] using even_or_odd n
+  simpa only [← two_mul, exists_or, ← Odd, ← Even] using even_or_odd n
 
 theorem even_xor_odd (n : ℕ) : Xor' (Even n) (Odd n) := by
   cases' even_or_odd n with h
@@ -72,9 +72,9 @@ theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
   even_iff_two_dvd.symm.Not.trans not_even_iff
 
-instance : DecidablePred (Even : ℕ → Prop) := fun n => decidableOfIff _ even_iff.symm
+instance : DecidablePred (Even : ℕ → Prop) := fun n => decidable_of_iff _ even_iff.symm
 
-instance : DecidablePred (Odd : ℕ → Prop) := fun n => decidableOfIff _ odd_iff_not_even.symm
+instance : DecidablePred (Odd : ℕ → Prop) := fun n => decidable_of_iff _ odd_iff_not_even.symm
 
 /- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 [PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
@@ -123,7 +123,7 @@ theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;>
     cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Nat.mul_mod] <;> norm_num
 
-theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by simp [not_or_distrib, parity_simps]
+theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by simp [not_or, parity_simps]
 
 theorem Odd.of_mul_left (h : Odd (m * n)) : Odd m :=
   (odd_mul.mp h).1

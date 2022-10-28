@@ -48,7 +48,7 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).
   intro a h
   simp only [mul_apply, mem_support_iff] at h
   simp only [mem_support_iff, mem_inter, Ne.def]
-  rw [← not_or_distrib]
+  rw [← not_or]
   intro w
   apply h
   cases w <;>

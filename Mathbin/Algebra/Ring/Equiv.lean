@@ -82,7 +82,7 @@ instance (priority := 100) toNonUnitalRingHomClass (F R S : Type _) [NonUnitalNo
 
 end RingEquivClass
 
-instance [Mul α] [Add α] [Mul β] [Add β] [RingEquivClass F α β] : CoeT F (α ≃+* β) :=
+instance [Mul α] [Add α] [Mul β] [Add β] [RingEquivClass F α β] : CoeTC F (α ≃+* β) :=
   ⟨fun f =>
     { toFun := f, invFun := EquivLike.inv f, left_inv := EquivLike.left_inv f, right_inv := EquivLike.right_inv f,
       map_mul' := map_mul f, map_add' := map_add f }⟩

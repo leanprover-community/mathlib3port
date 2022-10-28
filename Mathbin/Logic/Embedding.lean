@@ -192,7 +192,7 @@ def coeWithTop {α} : α ↪ WithTop α :=
 `option α ↪ β`. -/
 @[simps]
 def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option α ↪ β :=
-  ⟨Option.elim x f, Option.injective_iff.2 ⟨f.2, h⟩⟩
+  ⟨Option.elim' x f, Option.injective_iff.2 ⟨f.2, h⟩⟩
 
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]

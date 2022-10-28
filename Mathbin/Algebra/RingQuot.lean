@@ -99,7 +99,7 @@ private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
           · rw [pow_zero, pow_zero]
             
           · rw [pow_succ, pow_succ]
-            simpa only [mul] using congr_arg2 (fun x y => mul r ⟨x⟩ ⟨y⟩) (Quot.sound h) n_ih
+            simpa only [mul] using congr_arg₂ (fun x y => mul r ⟨x⟩ ⟨y⟩) (Quot.sound h) n_ih
             )
         a⟩
 

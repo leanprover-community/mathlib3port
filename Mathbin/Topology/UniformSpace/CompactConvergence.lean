@@ -174,7 +174,7 @@ theorem tendsto_iff_forall_compact_tendsto_uniformly_on' {ι : Type u₃} {p : F
       ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K :=
   by
   simp only [(has_basis_nhds_compact_convergence f).tendsto_right_iff, TendstoUniformlyOn, and_imp, Prod.forall]
-  refine' forall_congr fun K => _
+  refine' forall_congr' fun K => _
   rw [forall_swap]
   exact forall₃_congr fun hK V hV => Iff.rfl
 
@@ -270,8 +270,8 @@ theorem has_basis_compact_convergence_uniformity_aux :
   refine' Filter.has_basis_binfi_principal _ compact_conv_nhd_compact_entourage_nonempty
   rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
   refine' ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, _⟩
-  simp only [le_eq_subset, Prod.forall, set_of_subset_set_of, ge_iff_le, Order.Preimage, ← forall_and_distrib,
-    mem_inter_iff, mem_union]
+  simp only [le_eq_subset, Prod.forall, set_of_subset_set_of, ge_iff_le, Order.Preimage, ← forall_and, mem_inter_iff,
+    mem_union]
   exact fun f g => forall_imp fun x => by tauto!
 
 /-- An intermediate lemma. Usually `mem_compact_convergence_entourage_iff` is more useful. -/

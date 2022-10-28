@@ -731,7 +731,7 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
 
 theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : Injective f)
     (hf : ↑p.vars ⊆ Set.Range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
-  ⟨bind₁ (fun i : σ => Option.elim 0 x <| partialInv f i) p, by
+  ⟨bind₁ (fun i : σ => Option.elim' 0 x <| partialInv f i) p, by
     show (rename f).toRingHom.comp _ p = RingHom.id _ p
     refine' hom_congr_vars _ _ _
     · ext1

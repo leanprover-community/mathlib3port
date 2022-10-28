@@ -36,6 +36,48 @@ universe u u' u'' v
 
 variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 
+/-- `smul_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
+scalar action of `R` on `M`. -/
+class SmulMemClass (S : Type _) (R M : outParam <| Type _) [HasSmul R M] [SetLike S M] where
+  smul_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r • m ∈ s
+
+/-- `vadd_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
+additive action of `R` on `M`. -/
+class VaddMemClass (S : Type _) (R M : outParam <| Type _) [HasVadd R M] [SetLike S M] where
+  vadd_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r +ᵥ m ∈ s
+
+attribute [to_additive] SmulMemClass
+
+namespace SetLike
+
+variable [HasSmul R M] [SetLike S M] [hS : SmulMemClass S R M] (s : S)
+
+include hS
+
+open SmulMemClass
+
+-- lower priority so other instances are found first
+/-- A subset closed under the scalar action inherits that action. -/
+@[to_additive "A subset closed under the additive action inherits that action."]
+instance (priority := 900) hasSmul : HasSmul R s :=
+  ⟨fun r x => ⟨r • x.1, smul_mem r x.2⟩⟩
+
+-- lower priority so later simp lemmas are used first; to appease simp_nf
+@[simp, norm_cast, to_additive]
+protected theorem coe_smul (r : R) (x : s) : (↑(r • x) : M) = r • x :=
+  rfl
+
+-- lower priority so later simp lemmas are used first; to appease simp_nf
+@[simp, to_additive]
+theorem mk_smul_mk (r : R) (x : M) (hx : x ∈ s) : r • (⟨x, hx⟩ : s) = ⟨r • x, smul_mem r hx⟩ :=
+  rfl
+
+@[to_additive]
+theorem smul_def (r : R) (x : s) : r • x = ⟨r • x, smul_mem r x.2⟩ :=
+  rfl
+
+end SetLike
+
 /-- A sub_mul_action is a set which is closed under scalar multiplication.  -/
 structure SubMulAction (R : Type u) (M : Type v) [HasSmul R M] : Type v where
   Carrier : Set M
@@ -47,6 +89,8 @@ variable [HasSmul R M]
 
 instance : SetLike (SubMulAction R M) M :=
   ⟨SubMulAction.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
+
+instance : SmulMemClass (SubMulAction R M) R M where smul_mem := smul_mem'
 
 @[simp]
 theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.Carrier ↔ x ∈ (p : Set M) :=
@@ -115,6 +159,29 @@ theorem subtype_eq_val : (SubMulAction.subtype p : p → M) = Subtype.val :=
   rfl
 
 end HasSmul
+
+namespace SmulMemClass
+
+variable [Monoid R] [MulAction R M] {A : Type _} [SetLike A M]
+
+variable [hA : SmulMemClass A R M] (S' : A)
+
+include hA
+
+-- Prefer subclasses of `mul_action` over `smul_mem_class`.
+/-- A `sub_mul_action` of a `mul_action` is a `mul_action`.  -/
+instance (priority := 75) toMulAction : MulAction R S' :=
+  Subtype.coe_injective.MulAction coe (SetLike.coe_smul S')
+
+/-- The natural `mul_action_hom` over `R` from a `sub_mul_action` of `M` to `M`. -/
+protected def subtype : S' →[R] M :=
+  ⟨coe, fun _ _ => rfl⟩
+
+@[simp]
+protected theorem coe_subtype : (smulMemClass.subtype S' : S' → M) = coe :=
+  rfl
+
+end SmulMemClass
 
 section MulActionMonoid
 

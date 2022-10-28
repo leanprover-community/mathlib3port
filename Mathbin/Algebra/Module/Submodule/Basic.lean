@@ -32,6 +32,10 @@ universe u'' u' u v w
 
 variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 
+/-- `submodule_class S R M` says `S` is a type of submodules `s ≤ M`. -/
+class SubmoduleClass (S : Type _) (R M : outParam <| Type _) [AddZeroClass M] [HasSmul R M] [SetLike S M]
+  [AddSubmonoidClass S M] extends SmulMemClass S R M
+
 /-- A submodule of a module is one which is closed under vector operations.
   This is a sufficient condition for the subset of vectors in the submodule
   to themselves form a module. -/
@@ -55,6 +59,8 @@ instance : SetLike (Submodule R M) M where
 instance : AddSubmonoidClass (Submodule R M) M where
   zero_mem := zero_mem'
   add_mem := add_mem'
+
+instance : SubmoduleClass (Submodule R M) R M where smul_mem := smul_mem'
 
 @[simp]
 theorem mem_to_add_submonoid (p : Submodule R M) (x : M) : x ∈ p.toAddSubmonoid ↔ x ∈ p :=
@@ -134,6 +140,28 @@ theorem coe_to_sub_mul_action (p : Submodule R M) : (p.toSubMulAction : Set M) =
   rfl
 
 end Submodule
+
+namespace SubmoduleClass
+
+variable [Semiring R] [AddCommMonoid M] [Module R M] {A : Type _} [SetLike A M] [AddSubmonoidClass A M]
+  [hA : SubmoduleClass A R M] (S' : A)
+
+include hA
+
+-- Prefer subclasses of `module` over `submodule_class`.
+/-- A submodule of a `module` is a `module`.  -/
+instance (priority := 75) toModule : Module R S' :=
+  Subtype.coe_injective.Module R (AddSubmonoidClass.subtype S') (SetLike.coe_smul S')
+
+/-- The natural `R`-linear map from a submodule of an `R`-module `M` to `M`. -/
+protected def subtype : S' →ₗ[R] M :=
+  ⟨coe, fun _ _ => rfl, fun _ _ => rfl⟩
+
+@[simp]
+protected theorem coe_subtype : (SubmoduleClass.subtype S' : S' → M) = coe :=
+  rfl
+
+end SubmoduleClass
 
 namespace Submodule
 

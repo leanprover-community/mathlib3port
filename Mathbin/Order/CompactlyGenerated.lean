@@ -309,7 +309,7 @@ theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α �
   replace contra : ∃ x : α, x ∈ s ∧ x ≠ ⊥ ∧ x ∉ t
   · have : (s \ (insert ⊥ t : Finset α)).Infinite := contra.diff (Finset.finite_to_set _)
     obtain ⟨x, hx₁, hx₂⟩ := this.nonempty
-    exact ⟨x, hx₁, by simpa [not_or_distrib] using hx₂⟩
+    exact ⟨x, hx₁, by simpa [not_or] using hx₂⟩
     
   obtain ⟨x, hx₀, hx₁, hx₂⟩ := contra
   replace hs : x ⊓ Sup s = ⊥

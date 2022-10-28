@@ -175,13 +175,13 @@ theorem EqOn.image_eq (heq : EqOn f₁ f₂ s) : f₁ '' s = f₂ '' s :=
   image_congr HEq
 
 theorem EqOn.inter_preimage_eq (heq : EqOn f₁ f₂ s) (t : Set β) : s ∩ f₁ ⁻¹' t = s ∩ f₂ ⁻¹' t :=
-  ext fun x => And.congr_right_iff.2 fun hx => by rw [mem_preimage, mem_preimage, HEq hx]
+  ext fun x => and_congr_right_iff.2 fun hx => by rw [mem_preimage, mem_preimage, HEq hx]
 
 theorem EqOn.mono (hs : s₁ ⊆ s₂) (hf : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ s₁ := fun x hx => hf (hs hx)
 
 @[simp]
 theorem eq_on_union : EqOn f₁ f₂ (s₁ ∪ s₂) ↔ EqOn f₁ f₂ s₁ ∧ EqOn f₁ f₂ s₂ :=
-  ball_or_left_distrib
+  ball_or_left
 
 theorem EqOn.union (h₁ : EqOn f₁ f₂ s₁) (h₂ : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ (s₁ ∪ s₂) :=
   eq_on_union.2 ⟨h₁, h₂⟩
@@ -1036,8 +1036,8 @@ theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁
     (piecewise_eq_on_compl s f₁ f₂).symm.mono (inter_subset_right _ _)]
 
 theorem eq_on_piecewise {f f' g : α → β} {t} : EqOn (s.piecewise f f') g t ↔ EqOn f g (t ∩ s) ∧ EqOn f' g (t ∩ sᶜ) := by
-  simp only [eq_on, ← forall_and_distrib]
-  refine' forall_congr fun a => _
+  simp only [eq_on, ← forall_and]
+  refine' forall_congr' fun a => _
   by_cases a ∈ s <;> simp [*]
 
 theorem EqOn.piecewise_ite' {f f' g : α → β} {t t'} (h : EqOn f g (t ∩ s)) (h' : EqOn f' g (t' ∩ sᶜ)) :
@@ -1099,8 +1099,8 @@ theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ 
 theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s')] :
     Pi s (s'.piecewise t t') = Pi (s ∩ s') t ∩ Pi (s \ s') t' := by
   ext x
-  simp only [mem_pi, mem_inter_iff, ← forall_and_distrib]
-  refine' forall_congr fun i => _
+  simp only [mem_pi, mem_inter_iff, ← forall_and]
+  refine' forall_congr' fun i => _
   by_cases hi:i ∈ s' <;> simp [*]
 
 theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s)] :

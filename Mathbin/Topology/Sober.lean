@@ -181,7 +181,7 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
   rw [hf.to_embedding.closure_eq_preimage_closure_image, Set.image_singleton, show _ = _ from hx]
   apply set.image_injective.mpr hf.inj
   ext z
-  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_iff, And.congr_left_iff]
+  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_iff, and_congr_left_iff]
   exact fun hy => ⟨fun h => hT.closure_eq ▸ closure_mono (Set.inter_subset_left _ _) h, fun h => subset_closure ⟨h, hy⟩⟩
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/

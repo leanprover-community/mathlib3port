@@ -172,7 +172,7 @@ theorem CauchySeq.compTendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [None
 
 theorem CauchySeq.compInjective [SemilatticeSup β] [NoMaxOrder β] [Nonempty β] {u : ℕ → α} (hu : CauchySeq u)
     {f : β → ℕ} (hf : Injective f) : CauchySeq (u ∘ f) :=
-  hu.compTendsto <| Nat.cofinite_eq_at_top ▸ hf.tendsto_cofinite.mono_left at_top_le_cofinite
+  hu.compTendsto <| Nat.cofinite_eq_at_top ▸ hf.tendsto_cofinite.monoLeft at_top_le_cofinite
 
 theorem Function.Bijective.cauchy_seq_comp_iff {f : ℕ → ℕ} (hf : Bijective f) (u : ℕ → α) :
     CauchySeq (u ∘ f) ↔ CauchySeq u := by
@@ -283,7 +283,7 @@ theorem is_complete_iff_ultrafilter' {s : Set α} :
   is_complete_iff_ultrafilter.trans <| by simp only [le_principal_iff, Ultrafilter.mem_coe]
 
 protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsComplete t) : IsComplete (s ∪ t) := by
-  simp only [is_complete_iff_ultrafilter', Ultrafilter.union_mem_iff, or_imp_distrib] at *
+  simp only [is_complete_iff_ultrafilter', Ultrafilter.union_mem_iff, or_imp] at *
   exact fun l hl =>
     ⟨fun hsl => (hs l hl hsl).imp fun x hx => ⟨Or.inl hx.fst, hx.snd⟩, fun htl =>
       (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩

@@ -71,6 +71,10 @@ theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.
 theorem IsAtom.of_is_atom_coe_Iic {a : Set.IicCat x} (ha : IsAtom a) : IsAtom (a : α) :=
   ⟨fun con => ha.1 (Subtype.ext con), fun b hba => Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
 
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
+theorem is_atom_iff {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
+  and_congr Iff.rfl <| forall_congr' fun b => by simp only [Ne.def, @not_imp_comm (b = ⊥), not_imp, lt_iff_le_not_le]
+
 end Preorder
 
 variable [PartialOrder α] [OrderBot α] {a b x : α}
@@ -120,6 +124,10 @@ theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ 
 
 theorem IsCoatom.of_is_coatom_coe_Ici {a : Set.IciCat x} (ha : IsCoatom a) : IsCoatom (a : α) :=
   @IsAtom.of_is_atom_coe_Iic αᵒᵈ _ _ x a ha
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
+theorem is_coatom_iff {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
+  @is_atom_iff αᵒᵈ _ _ _
 
 end Preorder
 
@@ -220,11 +228,11 @@ theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x
   ⟨@IsAtomic.Set.IicCat.is_atomic _ _ _, fun h =>
     ⟨fun x =>
       ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.IicCat x)).imp Subtype.mk_eq_mk.1
-        (exists_imp_exists' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
+        (imp' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
 
 theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.IciCat x) :=
   is_atomic_dual_iff_is_coatomic.symm.trans <|
-    is_atomic_iff_forall_is_atomic_Iic.trans <| forall_congr fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
+    is_atomic_iff_forall_is_atomic_Iic.trans <| forall_congr' fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
 
 section WellFounded
 

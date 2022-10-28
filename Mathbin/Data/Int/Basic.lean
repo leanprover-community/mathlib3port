@@ -969,7 +969,7 @@ theorem dvd_nat_abs {a b : ℤ} : a ∣ b.natAbs ↔ a ∣ b :=
 lean 3 declaration is
   DecidableRel.{1} Int (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup))
 but is expected to have type
-  DecidableRel.{1} Int (fun (a._@.Std.Data.Int.DivMod._hyg.13639 : Int) (a._@.Std.Data.Int.DivMod._hyg.13640 : Int) => Dvd.dvd.{0} Int Int.instDvdInt a._@.Std.Data.Int.DivMod._hyg.13639 a._@.Std.Data.Int.DivMod._hyg.13640)
+  DecidableRel.{1} Int (fun (x._@.Std.Data.Int.DivMod._hyg.13536 : Int) (x._@.Std.Data.Int.DivMod._hyg.13538 : Int) => Dvd.dvd.{0} Int Int.instDvdInt x._@.Std.Data.Int.DivMod._hyg.13536 x._@.Std.Data.Int.DivMod._hyg.13538)
 Case conversion may be inaccurate. Consider using '#align int.decidable_dvd Int.decidableDvdₓ'. -/
 instance decidableDvd : @DecidableRel ℤ (· ∣ ·) := fun a n =>
   decidable_of_decidable_of_iff (by infer_instance) (dvd_iff_mod_eq_zero _ _).symm

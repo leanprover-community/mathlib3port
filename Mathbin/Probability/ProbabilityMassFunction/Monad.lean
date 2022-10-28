@@ -97,7 +97,7 @@ theorem bind_apply (b : β) : p.bind f b = ∑' a, p a * f a b :=
 
 @[simp]
 theorem support_bind : (p.bind f).Support = { b | ∃ a ∈ p.Support, b ∈ (f a).Support } :=
-  Set.ext fun b => by simp [mem_support_iff, tsum_eq_zero_iff (bind.summable p f b), not_or_distrib]
+  Set.ext fun b => by simp [mem_support_iff, tsum_eq_zero_iff (bind.summable p f b), not_or]
 
 theorem mem_support_bind_iff (b : β) : b ∈ (p.bind f).Support ↔ ∃ a ∈ p.Support, b ∈ (f a).Support := by simp
 
@@ -208,8 +208,8 @@ theorem bind_on_support_apply (b : β) : p.bindOnSupport f b = ∑' a, p a * if 
 theorem support_bind_on_support :
     (p.bindOnSupport f).Support = { b | ∃ (a : α)(h : a ∈ p.Support), b ∈ (f a h).Support } := by
   refine' Set.ext fun b => _
-  simp only [tsum_eq_zero_iff (bind_on_support.summable p f b), not_or_distrib, mem_support_iff, bind_on_support_apply,
-    Ne.def, not_forall, mul_eq_zero]
+  simp only [tsum_eq_zero_iff (bind_on_support.summable p f b), not_or, mem_support_iff, bind_on_support_apply, Ne.def,
+    not_forall, mul_eq_zero]
   exact
     ⟨fun hb =>
       let ⟨a, ⟨ha, ha'⟩⟩ := hb

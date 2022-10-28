@@ -37,8 +37,8 @@ instance sum : Category.{v₁} (Sum C D) where
   Hom X Y :=
     match X, Y with
     | inl X, inl Y => X ⟶ Y
-    | inl X, inr Y => Pempty
-    | inr X, inl Y => Pempty
+    | inl X, inr Y => PEmpty
+    | inr X, inl Y => PEmpty
     | inr X, inr Y => X ⟶ Y
   id X :=
     match X with

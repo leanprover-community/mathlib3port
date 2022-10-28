@@ -27,8 +27,8 @@ class IsEmpty (α : Sort _) : Prop where
 instance : IsEmpty Empty :=
   ⟨Empty.elim⟩
 
-instance : IsEmpty Pempty :=
-  ⟨Pempty.elim⟩
+instance : IsEmpty PEmpty :=
+  ⟨PEmpty.elim⟩
 
 instance : IsEmpty False :=
   ⟨id⟩
@@ -165,11 +165,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_prod is_empty_prodₓ'. -/
 @[simp]
 theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_prod, not_and_distrib]
+  simp only [← not_nonempty_iff, nonempty_prod, not_and_or]
 
 @[simp]
 theorem is_empty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_pprod, not_and_distrib]
+  simp only [← not_nonempty_iff, nonempty_pprod, not_and_or]
 
 /- warning: is_empty_sum -> is_empty_sum is a dubious translation:
 lean 3 declaration is
@@ -179,7 +179,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_sum is_empty_sumₓ'. -/
 @[simp]
 theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_sum, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_sum, not_or]
 
 /- warning: is_empty_psum -> is_empty_psum is a dubious translation:
 lean 3 declaration is
@@ -189,7 +189,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_psum is_empty_psumₓ'. -/
 @[simp]
 theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_psum, not_or]
 
 /- warning: is_empty_ulift -> is_empty_ulift is a dubious translation:
 lean 3 declaration is

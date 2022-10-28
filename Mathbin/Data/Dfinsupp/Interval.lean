@@ -61,7 +61,7 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
   refine'
     mem_dfinsupp_iff.trans
       (forall_and_distrib.symm.trans <|
-        forall_congr fun i =>
+        forall_congr' fun i =>
           ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi:i ∈ s
     · exact h.2 hi
@@ -159,7 +159,7 @@ variable [∀ i, PartialOrder (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFinite
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
   LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g) fun f g x => by
     refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
-    simp_rw [mem_range_Icc_apply_iff, forall_and_distrib]
+    simp_rw [mem_range_Icc_apply_iff, forall_and]
     rfl
 
 variable (f g : Π₀ i, α i)

@@ -127,7 +127,7 @@ def falling : Finset (Finset α) :=
 variable {𝒜 k} {s : Finset α}
 
 theorem mem_falling : s ∈ falling k 𝒜 ↔ (∃ t ∈ 𝒜, s ⊆ t) ∧ s.card = k := by
-  simp_rw [falling, mem_sup, mem_powerset_len, exists_and_distrib_right]
+  simp_rw [falling, mem_sup, mem_powerset_len, exists_and_right]
 
 variable (𝒜 k)
 

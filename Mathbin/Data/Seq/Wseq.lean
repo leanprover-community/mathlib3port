@@ -1055,7 +1055,7 @@ theorem mem_congr {s t : Wseq α} (h : s ~ t) (a) : a ∈ s ↔ a ∈ t :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem productive_congr {s t : Wseq α} (h : s ~ t) : Productive s ↔ Productive t := by
-  simp only [productive_iff] <;> exact forall_congr fun n => terminates_congr <| nth_congr h _
+  simp only [productive_iff] <;> exact forall_congr' fun n => terminates_congr <| nth_congr h _
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

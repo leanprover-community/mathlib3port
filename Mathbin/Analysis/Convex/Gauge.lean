@@ -120,8 +120,11 @@ theorem gauge_nonneg (x : E) : 0 ≤ gauge s x :=
 
 theorem gauge_neg (symmetric : ∀ x ∈ s, -x ∈ s) (x : E) : gauge s (-x) = gauge s x := by
   have : ∀ x, -x ∈ s ↔ x ∈ s := fun x => ⟨fun h => by simpa using Symmetric _ h, Symmetric x⟩
-  rw [gauge_def', gauge_def']
-  simp_rw [smul_neg, this]
+  simp_rw [gauge_def', smul_neg, this]
+
+theorem gauge_neg_set_neg (x : E) : gauge (-s) (-x) = gauge s x := by simp_rw [gauge_def', smul_neg, neg_mem_neg]
+
+theorem gauge_neg_set_eq_gauge_neg (x : E) : gauge (-s) x = gauge s (-x) := by rw [← gauge_neg_set_neg, neg_neg]
 
 theorem gauge_le_of_mem (ha : 0 ≤ a) (hx : x ∈ a • s) : gauge s x ≤ a := by
   obtain rfl | ha' := ha.eq_or_lt

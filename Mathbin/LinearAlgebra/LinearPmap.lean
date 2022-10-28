@@ -696,11 +696,11 @@ theorem exists_unique_from_graph {g : Submodule R (E × F)}
 /-- Auxiliary definition to unfold the existential quantifier. -/
 noncomputable def valFromGraph {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
     {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) : F :=
-  (exists_of_exists_unique (exists_unique_from_graph hg ha)).some
+  (exists (exists_unique_from_graph hg ha)).some
 
 theorem val_from_graph_mem {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
     {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) : (a, valFromGraph hg ha) ∈ g :=
-  (exists_of_exists_unique (exists_unique_from_graph hg ha)).some_spec
+  (exists (exists_unique_from_graph hg ha)).some_spec
 
 /-- Define a `linear_pmap` from its graph. -/
 noncomputable def toLinearPmap (g : Submodule R (E × F))
@@ -740,7 +740,7 @@ theorem to_linear_pmap_graph_eq (g : Submodule R (E × F))
   rw [LinearPmap.mem_graph_iff]
   cases x
   have hx_fst : x_fst ∈ g.map (LinearMap.fst R E F) := by
-    simp only [mem_map, LinearMap.fst_apply, Prod.exists, exists_and_distrib_right, exists_eq_right]
+    simp only [mem_map, LinearMap.fst_apply, Prod.exists, exists_and_right, exists_eq_right]
     exact ⟨x_snd, hx⟩
   refine' ⟨⟨x_fst, hx_fst⟩, Subtype.coe_mk x_fst hx_fst, _⟩
   exact (exists_unique_from_graph hg hx_fst).unique (val_from_graph_mem hg hx_fst) hx

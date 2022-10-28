@@ -228,9 +228,9 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _} [∀ i, Co
 instance PropCat.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { PropCat.booleanAlgebra, PropCat.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
-      Iff.mp <| by simp only [forall_or_distrib_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq],
+      Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq],
     inf_Sup_le_supr_inf := fun p s =>
-      Iff.mp <| by simp only [CompleteLattice.sup, exists_and_distrib_left, inf_Prop_eq, supr_Prop_eq] }
+      Iff.mp <| by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, supr_Prop_eq] }
 
 section CompleteBooleanAlgebra
 

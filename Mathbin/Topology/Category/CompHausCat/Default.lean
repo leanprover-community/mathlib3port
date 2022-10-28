@@ -40,7 +40,7 @@ structure CompHausCat where
 namespace CompHausCat
 
 instance : Inhabited CompHausCat :=
-  ⟨{ toTop := { α := Pempty } }⟩
+  ⟨{ toTop := { α := PEmpty } }⟩
 
 instance : CoeSort CompHausCat (Type _) :=
   ⟨fun X => X.toTop⟩

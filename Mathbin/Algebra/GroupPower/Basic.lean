@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 -/
 import Mathbin.Algebra.Divisibility
 import Mathbin.Algebra.Group.Commute
+import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -113,11 +114,11 @@ theorem pow_mul' (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ n) ^ m := by rw [Nat.m
 
 @[to_additive nsmul_add_sub_nsmul]
 theorem pow_mul_pow_sub (a : M) {m n : ℕ} (h : m ≤ n) : a ^ m * a ^ (n - m) = a ^ n := by
-  rw [← pow_add, Nat.add_comm, tsub_add_cancel_of_le h]
+  rw [← pow_add, Nat.add_comm, Nat.sub_add_cancel h]
 
 @[to_additive sub_nsmul_nsmul_add]
 theorem pow_sub_mul_pow (a : M) {m n : ℕ} (h : m ≤ n) : a ^ (n - m) * a ^ m = a ^ n := by
-  rw [← pow_add, tsub_add_cancel_of_le h]
+  rw [← pow_add, Nat.sub_add_cancel h]
 
 /-- If `x ^ n = 1`, then `x ^ m` is the same as `x ^ (m % n)` -/
 @[to_additive nsmul_eq_mod_nsmul "If `n • x = 0`, then `m • x` is the same as `(m % n) • x`"]
@@ -320,7 +321,7 @@ variable [Group G] [Group H] [AddGroup A] [AddGroup B]
 
 @[to_additive sub_nsmul]
 theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
-  eq_mul_inv_of_mul_eq <| by rw [← pow_add, tsub_add_cancel_of_le h]
+  eq_mul_inv_of_mul_eq <| by rw [← pow_add, Nat.sub_add_cancel h]
 
 @[to_additive]
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
@@ -333,7 +334,7 @@ theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ 
 end Group
 
 theorem pow_dvd_pow [Monoid R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ a ^ n :=
-  ⟨a ^ (n - m), by rw [← pow_add, Nat.add_comm, tsub_add_cancel_of_le h]⟩
+  ⟨a ^ (n - m), by rw [← pow_add, Nat.add_comm, Nat.sub_add_cancel h]⟩
 
 theorem pow_dvd_pow_of_dvd [CommMonoid R] {a b : R} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
   | 0 => by rw [pow_zero, pow_zero]

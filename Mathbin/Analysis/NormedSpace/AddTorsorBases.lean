@@ -113,8 +113,8 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
       _ < ε := half_lt_self hε
       
   have hεyq : ∀ (y) (_ : y ∉ s), ε / 2 / dist y q ≠ 0 := by
-    simp only [Ne.def, div_eq_zero_iff, or_false_iff, dist_eq_zero, bit0_eq_zero, one_ne_zero, not_or_distrib,
-      ne_of_gt hε, true_and_iff, not_false_iff]
+    simp only [Ne.def, div_eq_zero_iff, or_false_iff, dist_eq_zero, bit0_eq_zero, one_ne_zero, not_or, ne_of_gt hε,
+      true_and_iff, not_false_iff]
     exact fun y h1 h2 => h1 (h2.symm ▸ hq)
   classical
   let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)

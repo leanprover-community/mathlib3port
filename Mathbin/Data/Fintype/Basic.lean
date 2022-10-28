@@ -115,6 +115,10 @@ theorem coe_univ : ↑(univ : Finset α) = (Set.Univ : Set α) := by ext <;> sim
 @[simp, norm_cast]
 theorem coe_eq_univ : (s : Set α) = Set.Univ ↔ s = univ := by rw [← coe_univ, coe_inj]
 
+theorem Nonempty.eq_univ [Subsingleton α] : s.Nonempty → s = univ := by
+  rintro ⟨x, hx⟩
+  refine' eq_univ_of_forall fun y => by rwa [Subsingleton.elim y x]
+
 theorem univ_nonempty_iff : (univ : Finset α).Nonempty ↔ Nonempty α := by
   rw [← coe_nonempty, coe_univ, Set.nonempty_iff_univ_nonempty]
 
@@ -142,6 +146,9 @@ instance : OrderTop (Finset α) where
 @[simp]
 theorem top_eq_univ : (⊤ : Finset α) = univ :=
   rfl
+
+theorem ssubset_univ_iff {s : Finset α} : s ⊂ univ ↔ s ≠ univ :=
+  @lt_top_iff_ne_top _ _ _ s
 
 section BooleanAlgebra
 
@@ -205,7 +212,7 @@ theorem compl_erase : s.erase aᶜ = insert a (sᶜ) := by
 @[simp]
 theorem compl_insert : insert a sᶜ = sᶜ.erase a := by
   ext
-  simp only [not_or_distrib, mem_insert, iff_self_iff, mem_compl, mem_erase]
+  simp only [not_or, mem_insert, iff_self_iff, mem_compl, mem_erase]
 
 @[simp]
 theorem insert_compl_self (x : α) : insert x ({x}ᶜ : Finset α) = univ := by
@@ -302,13 +309,13 @@ open Finset Function
 namespace Fintype
 
 instance decidablePiFintype {α} {β : α → Type _} [∀ a, DecidableEq (β a)] [Fintype α] : DecidableEq (∀ a, β a) :=
-  fun f g => decidableOfIff (∀ a ∈ Fintype.elems α, f a = g a) (by simp [Function.funext_iff, Fintype.complete])
+  fun f g => decidable_of_iff (∀ a ∈ Fintype.elems α, f a = g a) (by simp [Function.funext_iff, Fintype.complete])
 
 instance decidableForallFintype {p : α → Prop} [DecidablePred p] [Fintype α] : Decidable (∀ a, p a) :=
-  decidableOfIff (∀ a ∈ @univ α _, p a) (by simp)
+  decidable_of_iff (∀ a ∈ @univ α _, p a) (by simp)
 
 instance decidableExistsFintype {p : α → Prop} [DecidablePred p] [Fintype α] : Decidable (∃ a, p a) :=
-  decidableOfIff (∃ a ∈ @univ α _, p a) (by simp)
+  decidable_of_iff (∃ a ∈ @univ α _, p a) (by simp)
 
 instance decidableMemRangeFintype [Fintype α] [DecidableEq β] (f : α → β) : DecidablePred (· ∈ Set.Range f) := fun x =>
   Fintype.decidableExistsFintype
@@ -316,28 +323,28 @@ instance decidableMemRangeFintype [Fintype α] [DecidableEq β] (f : α → β) 
 section BundledHoms
 
 instance decidableEqEquivFintype [DecidableEq β] [Fintype α] : DecidableEq (α ≃ β) := fun a b =>
-  decidableOfIff (a.1 = b.1) Equiv.coe_fn_injective.eq_iff
+  decidable_of_iff (a.1 = b.1) Equiv.coe_fn_injective.eq_iff
 
 instance decidableEqEmbeddingFintype [DecidableEq β] [Fintype α] : DecidableEq (α ↪ β) := fun a b =>
-  decidableOfIff ((a : α → β) = b) Function.Embedding.coe_injective.eq_iff
+  decidable_of_iff ((a : α → β) = b) Function.Embedding.coe_injective.eq_iff
 
 @[to_additive]
 instance decidableEqOneHomFintype [DecidableEq β] [Fintype α] [One α] [One β] : DecidableEq (OneHom α β) := fun a b =>
-  decidableOfIff ((a : α → β) = b) (Injective.eq_iff OneHom.coe_inj)
+  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff OneHom.coe_inj)
 
 @[to_additive]
 instance decidableEqMulHomFintype [DecidableEq β] [Fintype α] [Mul α] [Mul β] : DecidableEq (α →ₙ* β) := fun a b =>
-  decidableOfIff ((a : α → β) = b) (Injective.eq_iff MulHom.coe_inj)
+  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MulHom.coe_inj)
 
 @[to_additive]
 instance decidableEqMonoidHomFintype [DecidableEq β] [Fintype α] [MulOneClass α] [MulOneClass β] :
-    DecidableEq (α →* β) := fun a b => decidableOfIff ((a : α → β) = b) (Injective.eq_iff MonoidHom.coe_inj)
+    DecidableEq (α →* β) := fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidHom.coe_inj)
 
 instance decidableEqMonoidWithZeroHomFintype [DecidableEq β] [Fintype α] [MulZeroOneClass α] [MulZeroOneClass β] :
-    DecidableEq (α →*₀ β) := fun a b => decidableOfIff ((a : α → β) = b) (Injective.eq_iff MonoidWithZeroHom.coe_inj)
+    DecidableEq (α →*₀ β) := fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidWithZeroHom.coe_inj)
 
 instance decidableEqRingHomFintype [DecidableEq β] [Fintype α] [Semiring α] [Semiring β] : DecidableEq (α →+* β) :=
-  fun a b => decidableOfIff ((a : α → β) = b) (Injective.eq_iff RingHom.coe_inj)
+  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff RingHom.coe_inj)
 
 end BundledHoms
 
@@ -674,7 +681,7 @@ theorem to_finset_of_finset {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔
 Using this as an instance leads to potential loops with `subtype.fintype` under certain decidability
 assumptions, so it should only be declared a local instance. -/
 def decidableMemOfFintype [DecidableEq α] (s : Set α) [Fintype s] (a) : Decidable (a ∈ s) :=
-  decidableOfIff _ mem_to_finset
+  decidable_of_iff _ mem_to_finset
 
 -- We use an arbitrary `[fintype s]` instance here,
 -- not necessarily coming from a `[fintype α]`.
@@ -743,13 +750,20 @@ theorem to_finset_off_diag {s : Set α} [DecidableEq α] [Fintype s] [Fintype s.
     s.OffDiag.toFinset = s.toFinset.OffDiag :=
   Finset.ext <| by simp
 
+@[simp]
+theorem to_finset_eq_univ [Fintype α] {s : Set α} [Fintype s] : s.toFinset = Finset.univ ↔ s = Set.Univ := by
+  rw [← coe_inj, coe_to_finset, coe_univ]
+
 /- TODO Without the coercion arrow (`↥`) there is an elaboration bug;
 it essentially infers `fintype.{v} (set.univ.{u} : set α)` with `v` and `u` distinct.
 Reported in leanprover-community/lean#672 -/
 @[simp]
-theorem to_finset_univ [Fintype ↥(Set.Univ : Set α)] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ := by
-  ext
-  simp
+theorem to_finset_univ [Fintype ↥(Set.Univ : Set α)] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ :=
+  to_finset_eq_univ.2 rfl
+
+@[simp]
+theorem to_finset_ssubset_univ [Fintype α] {s : Set α} [Fintype s] : s.toFinset ⊂ Finset.univ ↔ s ⊂ univ := by
+  rw [← coe_ssubset, coe_to_finset, coe_univ]
 
 @[simp]
 theorem to_finset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.Range f)] :
@@ -907,11 +921,11 @@ theorem Fintype.card_empty : Fintype.card Empty = 0 :=
   rfl
 
 @[simp]
-theorem Fintype.univ_pempty : @univ Pempty _ = ∅ :=
+theorem Fintype.univ_pempty : @univ PEmpty _ = ∅ :=
   rfl
 
 @[simp]
-theorem Fintype.card_pempty : Fintype.card Pempty = 0 :=
+theorem Fintype.card_pempty : Fintype.card PEmpty = 0 :=
   rfl
 
 instance : Fintype Unit :=
@@ -970,7 +984,7 @@ theorem univ_option (α : Type _) [Fintype α] : (univ : Finset (Option α)) = i
 
 @[simp]
 theorem Fintype.card_option {α : Type _} [Fintype α] : Fintype.card (Option α) = Fintype.card α + 1 :=
-  (Finset.card_cons _).trans <| congr_arg2 _ (card_map _) rfl
+  (Finset.card_cons _).trans <| congr_arg₂ _ (card_map _) rfl
 
 /-- If `option α` is a `fintype` then so is `α` -/
 def fintypeOfOption {α : Type _} [Fintype (Option α)] : Fintype α :=
@@ -1617,7 +1631,7 @@ def piFinset (t : ∀ a, Finset (δ a)) : Finset (∀ a, δ a) :=
 @[simp]
 theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFinset t ↔ ∀ a, f a ∈ t a := by
   constructor
-  · simp only [pi_finset, mem_map, and_imp, forall_prop_of_true, exists_prop, mem_univ, exists_imp_distrib, mem_pi]
+  · simp only [pi_finset, mem_map, and_imp, forall_prop_of_true, exists_prop, mem_univ, exists_imp, mem_pi]
     rintro g hg hgf a
     rw [← hgf]
     exact hg a
@@ -2352,7 +2366,7 @@ namespace Fintype
 
 /-- A recursor principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
-def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P Pempty)
+def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P PEmpty)
     (h_option : ∀ {α} [Fintype α] [DecidableEq α], P α → P (Option α)) (α : Type u) [Fintype α] [DecidableEq α] :
     Trunc (P α) := by
   suffices ∀ n : ℕ, Trunc (P (ULift <| Fin n)) by
@@ -2363,7 +2377,7 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
     exact of_equiv (equiv.ulift.trans e.symm) h
   intro n
   induction' n with n ih
-  · have : card Pempty = card (ULift (Fin 0)) := by simp only [card_fin, card_pempty, card_ulift]
+  · have : card PEmpty = card (ULift (Fin 0)) := by simp only [card_fin, card_pempty, card_ulift]
     apply Trunc.bind (trunc_equiv_of_card_eq this)
     intro e
     apply Trunc.mk
@@ -2381,7 +2395,7 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 @[elab_as_elim]
 theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
-    (of_equiv : ∀ (α β) [Fintype β] (e : α ≃ β), @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›) (h_empty : P Pempty)
+    (of_equiv : ∀ (α β) [Fintype β] (e : α ≃ β), @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›) (h_empty : P PEmpty)
     (h_option : ∀ (α) [Fintype α], P α → P (Option α)) (α : Type u) [Fintype α] : P α := by
   obtain ⟨p⟩ :=
     @trunc_rec_empty_option (fun α => ∀ h, @P α h) (fun α β e hα hβ => @of_equiv α β hβ e (hα _))
@@ -2397,7 +2411,7 @@ end Fintype
 
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
-theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P Pempty)
+theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P PEmpty)
     (h_option : ∀ {α} [Fintype α], P α → P (Option α)) (α : Type u) [Finite α] : P α := by
   cases nonempty_fintype α
   refine' Fintype.induction_empty_option _ _ _ α

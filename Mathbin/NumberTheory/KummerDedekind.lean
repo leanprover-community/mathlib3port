@@ -70,7 +70,7 @@ def conductor (x : S) : Ideal S where
 variable {R} {x : S}
 
 theorem conductor_eq_of_eq {y : S} (h : (R<x> : Set S) = R<y>) : conductor R x = conductor R y :=
-  Ideal.ext fun a => forall_congr fun b => Set.ext_iff.mp h _
+  Ideal.ext fun a => forall_congr' fun b => Set.ext_iff.mp h _
 
 theorem conductor_subset_adjoin : (conductor R x : Set S) ⊆ R<x> := fun y hy => by simpa only [mul_one] using hy 1
 

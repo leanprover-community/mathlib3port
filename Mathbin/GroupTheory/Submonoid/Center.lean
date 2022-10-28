@@ -54,7 +54,7 @@ theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
 instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
-  decidableOfIff' _ mem_center_iff
+  decidable_of_iff' _ mem_center_iff
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoid (center M) :=

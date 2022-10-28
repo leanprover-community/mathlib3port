@@ -37,7 +37,7 @@ theorem dedup_cons_of_not_mem' {a : α} {l : List α} (h : a ∉ dedup l) : dedu
 @[simp]
 theorem mem_dedup {a : α} {l : List α} : a ∈ dedup l ↔ a ∈ l := by
   simpa only [dedup, forall_mem_ne, not_not] using
-    not_congr (@forall_mem_pw_filter α (· ≠ ·) _ (fun x y z xz => not_and_distrib.1 <| mt (And.ndrec Eq.trans) xz) a l)
+    not_congr (@forall_mem_pw_filter α (· ≠ ·) _ (fun x y z xz => not_and_or.1 <| mt (And.ndrec Eq.trans) xz) a l)
 
 @[simp]
 theorem dedup_cons_of_mem {a : α} {l : List α} (h : a ∈ l) : dedup (a :: l) = dedup l :=

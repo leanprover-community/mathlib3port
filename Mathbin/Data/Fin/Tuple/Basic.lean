@@ -190,7 +190,7 @@ theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Fin n.succ �
 
 theorem le_cons [∀ i, Preorder (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Fin n, α i.succ} :
     q ≤ cons x p ↔ q 0 ≤ x ∧ tail q ≤ p :=
-  forall_fin_succ.trans <| and_congr Iff.rfl <| forall_congr fun j => by simp [tail]
+  forall_fin_succ.trans <| and_congr Iff.rfl <| forall_congr' fun j => by simp [tail]
 
 theorem cons_le [∀ i, Preorder (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Fin n, α i.succ} :
     cons x p ≤ q ↔ x ≤ q 0 ∧ p ≤ tail q :=
@@ -205,7 +205,7 @@ theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Fin n, α i.succ} 
       s x₀ y₀ ∨ x₀ = y₀ ∧ Pi.Lex (· < ·) (fun i : Fin n => @s i.succ) x y :=
   by
   simp_rw [Pi.Lex, Fin.exists_fin_succ, Fin.cons_succ, Fin.cons_zero, Fin.forall_fin_succ]
-  simp [and_assoc', exists_and_distrib_left]
+  simp [and_assoc', exists_and_left]
 
 theorem range_fin_succ {α} (f : Fin (n + 1) → α) : Set.Range f = insert (f 0) (Set.Range (Fin.tail f)) :=
   Set.ext fun y => exists_fin_succ.trans <| eq_comm.Or Iff.rfl

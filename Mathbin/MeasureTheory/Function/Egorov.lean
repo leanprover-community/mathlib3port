@@ -160,7 +160,7 @@ theorem tendsto_uniformly_on_diff_Union_not_convergent_seq (hε : 0 < ε) (hf : 
   rw [eventually_at_top]
   refine' ⟨egorov.not_convergent_seq_lt_index (half_pos hε) hf hg hsm hs hfg N, fun n hn x hx => _⟩
   simp only [mem_diff, egorov.Union_not_convergent_seq, not_exists, mem_Union, mem_inter_iff, not_and,
-    exists_and_distrib_left] at hx
+    exists_and_left] at hx
   obtain ⟨hxs, hx⟩ := hx
   specialize hx hxs N
   rw [egorov.mem_not_convergent_seq_iff] at hx

@@ -80,7 +80,7 @@ class NonUnitalRingHomClass (F : Type _) (α β : outParam (Type _)) [NonUnitalN
 
 variable [NonUnitalNonAssocSemiring α] [NonUnitalNonAssocSemiring β] [NonUnitalRingHomClass F α β]
 
-instance : CoeT F (α →ₙ+* β) :=
+instance : CoeTC F (α →ₙ+* β) :=
   ⟨fun f => { toFun := f, map_zero' := map_zero f, map_mul' := map_mul f, map_add' := map_add f }⟩
 
 end NonUnitalRingHomClass
@@ -337,7 +337,7 @@ variable [NonAssocSemiring α] [NonAssocSemiring β] [RingHomClass F α β]
 @[simp]
 theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by simp [bit1]
 
-instance : CoeT F (α →+* β) :=
+instance : CoeTC F (α →+* β) :=
   ⟨fun f =>
     { toFun := f, map_zero' := map_zero f, map_one' := map_one f, map_mul' := map_mul f, map_add' := map_add f }⟩
 

@@ -183,7 +183,7 @@ theorem norm_combo_lt_of_ne (hx : ∥x∥ ≤ r) (hy : ∥y∥ ≤ r) (hne : x �
 /-- In a strictly convex space, if `x` and `y` are not in the same ray, then `∥x + y∥ < ∥x∥ +
 ∥y∥`. -/
 theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x + y∥ < ∥x∥ + ∥y∥ := by
-  simp only [same_ray_iff_inv_norm_smul_eq, not_or_distrib, ← Ne.def] at h
+  simp only [same_ray_iff_inv_norm_smul_eq, not_or, ← Ne.def] at h
   rcases h with ⟨hx, hy, hne⟩
   rw [← norm_pos_iff] at hx hy
   have hxy : 0 < ∥x∥ + ∥y∥ := add_pos hx hy

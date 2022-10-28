@@ -434,7 +434,7 @@ instance : HasInf (LieSubalgebra R L) :=
         "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
-          exists_imp_distrib] at *
+          exists_imp] at *
         intro K hK
         exact K.lie_mem (hx K hK) (hy K hK) }⟩
 
@@ -454,7 +454,7 @@ theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
 theorem Inf_coe (S : Set (LieSubalgebra R L)) : (↑(inf S) : Set L) = ⋂ s ∈ S, (s : Set L) := by
   rw [← coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
   ext x
-  simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
+  simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp]
 
 theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGlb S (inf S) := by
   have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' := by

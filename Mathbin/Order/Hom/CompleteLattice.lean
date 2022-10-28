@@ -130,16 +130,16 @@ instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLatt
     [OrderIsoClass F α β] : CompleteLatticeHomClass F α β :=
   { OrderIsoClass.toSupHomClass, OrderIsoClass.toLatticeHomClass, show InfHomClass F α β from inferInstance with }
 
-instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeT F (SupHom α β) :=
+instance [HasSup α] [HasSup β] [SupHomClass F α β] : CoeTC F (SupHom α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
 
-instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeT F (InfHom α β) :=
+instance [HasInf α] [HasInf β] [InfHomClass F α β] : CoeTC F (InfHom α β) :=
   ⟨fun f => ⟨f, map_Inf f⟩⟩
 
-instance [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] : CoeT F (FrameHom α β) :=
+instance [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] : CoeTC F (FrameHom α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
 
-instance [CompleteLattice α] [CompleteLattice β] [CompleteLatticeHomClass F α β] : CoeT F (CompleteLatticeHom α β) :=
+instance [CompleteLattice α] [CompleteLattice β] [CompleteLatticeHomClass F α β] : CoeTC F (CompleteLatticeHom α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
 
 /-! ### Supremum homomorphisms -/

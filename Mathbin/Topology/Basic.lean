@@ -359,7 +359,7 @@ theorem closure_minimal {s t : Set α} (h₁ : s ⊆ t) (h₂ : IsClosed t) : Cl
   sInter_subset_of_mem ⟨h₂, h₁⟩
 
 theorem Disjoint.closureLeft {s t : Set α} (hd : Disjoint s t) (ht : IsOpen t) : Disjoint (Closure s) t :=
-  disjointComplLeft.mono_left <| closure_minimal hd.subset_compl_right ht.isClosedCompl
+  disjointComplLeft.monoLeft <| closure_minimal hd.subset_compl_right ht.isClosedCompl
 
 theorem Disjoint.closureRight {s t : Set α} (hd : Disjoint s t) (hs : IsOpen s) : Disjoint s (Closure t) :=
   (hd.symm.closureLeft hs).symm
@@ -472,6 +472,11 @@ theorem Filter.HasBasis.lift'_closure {l : Filter α} {p : ι → Prop} {s : ι 
 theorem Filter.HasBasis.lift'_closure_eq_self {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : l.HasBasis p s)
     (hc : ∀ i, p i → IsClosed (s i)) : l.lift' Closure = l :=
   le_antisymm (h.ge_iff.2 fun i hi => (hc i hi).closure_eq ▸ mem_lift' (h.mem_of_mem hi)) l.le_lift'_closure
+
+@[simp]
+theorem Filter.lift'_closure_eq_bot {l : Filter α} : l.lift' Closure = ⊥ ↔ l = ⊥ :=
+  ⟨fun h => bot_unique <| h ▸ l.le_lift'_closure, fun h =>
+    h.symm ▸ by rw [lift'_bot (monotone_closure _), closure_empty, principal_empty]⟩
 
 /-- A set is dense in a topological space if every point belongs to its closure. -/
 def Dense (s : Set α) : Prop :=
@@ -744,7 +749,7 @@ for a variant using open sets around `a` instead. -/
 theorem nhds_basis_opens' (a : α) : (𝓝 a).HasBasis (fun s : Set α => s ∈ 𝓝 a ∧ IsOpen s) fun x => x := by
   convert nhds_basis_opens a
   ext s
-  exact And.congr_left_iff.2 IsOpen.mem_nhds_iff
+  exact and_congr_left_iff.2 IsOpen.mem_nhds_iff
 
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of `s`:
 it contains an open set containing `s`. -/
@@ -847,11 +852,11 @@ theorem tendsto_at_bot_of_eventually_const {ι : Type _} [SemilatticeInf ι] [No
 theorem pure_le_nhds : pure ≤ (𝓝 : α → Filter α) := fun a s hs => mem_pure.2 <| mem_of_mem_nhds hs
 
 theorem tendsto_pure_nhds {α : Type _} [TopologicalSpace β] (f : α → β) (a : α) : Tendsto f (pure a) (𝓝 (f a)) :=
-  (tendsto_pure_pure f a).mono_right (pure_le_nhds _)
+  (tendsto_pure_pure f a).monoRight (pure_le_nhds _)
 
 theorem OrderTop.tendsto_at_top_nhds {α : Type _} [PartialOrder α] [OrderTop α] [TopologicalSpace β] (f : α → β) :
     Tendsto f atTop (𝓝 <| f ⊤) :=
-  (tendsto_at_top_pure f).mono_right (pure_le_nhds _)
+  (tendsto_at_top_pure f).monoRight (pure_le_nhds _)
 
 @[simp]
 instance nhdsNeBot {a : α} : NeBot (𝓝 a) :=
@@ -967,7 +972,7 @@ theorem is_open_iff_nhds {s : Set α} : IsOpen s ↔ ∀ a ∈ s, 𝓝 a ≤ �
     
 
 theorem is_open_iff_mem_nhds {s : Set α} : IsOpen s ↔ ∀ a ∈ s, s ∈ 𝓝 a :=
-  is_open_iff_nhds.trans <| forall_congr fun _ => imp_congr_right fun _ => le_principal_iff
+  is_open_iff_nhds.trans <| forall_congr' fun _ => imp_congr_right fun _ => le_principal_iff
 
 /-- A set `s` is open iff for every point `x` in `s` and every `y` close to `x`, `y` is in `s`. -/
 theorem is_open_iff_eventually {s : Set α} : IsOpen s ↔ ∀ x, x ∈ s → ∀ᶠ y in 𝓝 x, y ∈ s :=
@@ -996,7 +1001,7 @@ alias mem_closure_iff_frequently ↔ _ Filter.Frequently.mem_closure
 to `s` then `x` is in `s`. -/
 theorem is_closed_iff_frequently {s : Set α} : IsClosed s ↔ ∀ x, (∃ᶠ y in 𝓝 x, y ∈ s) → x ∈ s := by
   rw [← closure_subset_iff_is_closed]
-  apply forall_congr fun x => _
+  apply forall_congr' fun x => _
   rw [mem_closure_iff_frequently]
 
 /-- The set of cluster points of a filter is closed. In particular, the set of limit points

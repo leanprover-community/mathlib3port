@@ -27,6 +27,10 @@ def FreeMonoid (α) :=
 
 namespace FreeMonoid
 
+@[to_additive]
+instance [DecidableEq α] : DecidableEq (FreeMonoid α) :=
+  List.decidableEq
+
 /-- The identity equivalence between `free_monoid α` and `list α`. -/
 @[to_additive "The identity equivalence between `free_add_monoid α` and `list α`."]
 def toList : FreeMonoid α ≃ List α :=
@@ -213,6 +217,12 @@ def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β where
 theorem smul_def (f : α → β → β) (l : FreeMonoid α) (b : β) :
     haveI := mk_mul_action f
     l • b = l.to_list.foldr f b :=
+  rfl
+
+@[to_additive]
+theorem of_list_smul (f : α → β → β) (l : List α) (b : β) :
+    haveI := mk_mul_action f
+    of_list l • b = l.foldr f b :=
   rfl
 
 @[simp, to_additive]

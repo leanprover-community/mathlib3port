@@ -1559,7 +1559,7 @@ theorem add_thirds (a : ℝ≥0∞) : a / 3 + a / 3 + a / 3 = a := by
 theorem div_zero_iff : a / b = 0 ↔ a = 0 ∨ b = ∞ := by simp [div_eq_mul_inv]
 
 @[simp]
-theorem div_pos_iff : 0 < a / b ↔ a ≠ 0 ∧ b ≠ ∞ := by simp [pos_iff_ne_zero, not_or_distrib]
+theorem div_pos_iff : 0 < a / b ↔ a ≠ 0 ∧ b ≠ ∞ := by simp [pos_iff_ne_zero, not_or]
 
 theorem half_pos {a : ℝ≥0∞} (h : a ≠ 0) : 0 < a / 2 := by simp [h]
 

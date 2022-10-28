@@ -49,13 +49,13 @@ section Initial
 /-- The map from the empty scheme. -/
 @[simps]
 def SchemeCat.emptyTo (X : SchemeCat.{u}) : ∅ ⟶ X :=
-  ⟨{ base := ⟨fun x => Pempty.elim x, by continuity⟩, c := { app := fun U => CommRingCat.punitIsTerminal.from _ } },
-    fun x => Pempty.elim x⟩
+  ⟨{ base := ⟨fun x => PEmpty.elim x, by continuity⟩, c := { app := fun U => CommRingCat.punitIsTerminal.from _ } },
+    fun x => PEmpty.elim x⟩
 
 @[ext]
 theorem SchemeCat.empty_ext {X : SchemeCat.{u}} (f g : ∅ ⟶ X) : f = g := by
   ext a
-  exact Pempty.elim a
+  exact PEmpty.elim a
 
 theorem SchemeCat.eq_empty_to {X : SchemeCat.{u}} (f : ∅ ⟶ X) : f = SchemeCat.emptyTo X :=
   SchemeCat.empty_ext f (SchemeCat.emptyTo X)
@@ -72,7 +72,7 @@ theorem empty_is_initial_to : emptyIsInitial.to = Scheme.empty_to :=
   rfl
 
 instance : IsEmpty SchemeCat.empty.Carrier :=
-  show IsEmpty Pempty by infer_instance
+  show IsEmpty PEmpty by infer_instance
 
 instance Spec_punit_is_empty : IsEmpty (SchemeCat.spec.obj (op <| CommRingCat.of PUnit)).Carrier :=
   ⟨PrimeSpectrum.punit⟩

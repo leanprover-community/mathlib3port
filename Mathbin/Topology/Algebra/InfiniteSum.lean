@@ -300,7 +300,7 @@ theorem has_sum_sum {f : γ → β → α} {a : γ → α} {s : Finset γ} :
   Finset.induction_on s (by simp only [has_sum_zero, sum_empty, forall_true_iff])
     (by
       simp (config := { contextual := true }) only [HasSum.add, sum_insert, mem_insert, forall_eq_or_imp,
-        forall_2_true_iff, not_false_iff, forall_true_iff])
+        forall₂_true_iff, not_false_iff, forall_true_iff])
 
 theorem summable_sum {f : γ → β → α} {s : Finset γ} (hf : ∀ i ∈ s, Summable (f i)) :
     Summable fun b => ∑ i in s, f i b :=
@@ -389,7 +389,7 @@ theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : (∑' b : β, (0 : α)) = 0 
   intro x hx
   contrapose! hx
   simp only [HasSum, tendsto_nhds, Finset.sum_const_zero, Filter.mem_at_top_sets, ge_iff_le, Finset.le_eq_subset,
-    Set.mem_preimage, not_forall, not_exists, exists_prop, exists_and_distrib_right]
+    Set.mem_preimage, not_forall, not_exists, exists_prop, exists_and_right]
   refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
   · simpa using hx
     

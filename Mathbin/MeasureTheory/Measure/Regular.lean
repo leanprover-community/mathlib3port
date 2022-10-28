@@ -324,7 +324,7 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
     μ (⋃ n, U n) ≤ ∑' n, μ (U n) := measure_Union_le _
     _ ≤ ∑' n, μ (A n) + δ n := Ennreal.tsum_le_tsum fun n => (hU n).le
     _ = (∑' n, μ (A n)) + ∑' n, δ n := Ennreal.tsum_add
-    _ = μ (⋃ n, A n) + ∑' n, δ n := congr_arg2 (· + ·) (measure_Union hAd hAm).symm rfl
+    _ = μ (⋃ n, A n) + ∑' n, δ n := congr_arg₂ (· + ·) (measure_Union hAd hAm).symm rfl
     _ < r := hδε
     
 

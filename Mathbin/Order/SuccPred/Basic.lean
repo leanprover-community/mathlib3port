@@ -644,7 +644,7 @@ theorem pred_eq_iff_covby : pred b = a ↔ a ⋖ b :=
     exact pred_covby _, Covby.pred_eq⟩
 
 theorem Ioi_pred_eq_insert (a : α) : IoiCat (pred a) = insert a (IoiCat a) :=
-  ext fun _ => pred_lt_iff_eq_or_lt.trans <| or_congr_left' eq_comm
+  ext fun _ => pred_lt_iff_eq_or_lt.trans <| or_congr_left eq_comm
 
 theorem Ico_pred_right_eq_insert (h : a ≤ b) : IocCat (pred a) b = insert a (IocCat a b) := by
   simp_rw [← Ioi_inter_Iic, Ioi_pred_eq_insert, insert_inter_of_mem (mem_Iic.2 h)]

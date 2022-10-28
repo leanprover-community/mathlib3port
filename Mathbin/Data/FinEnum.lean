@@ -76,8 +76,8 @@ noncomputable def ofInjective {α β} (f : α → β) [DecidableEq α] [FinEnum 
       use f x
       simp only [h, Function.partial_inv_left])
 
-instance pempty : FinEnum Pempty :=
-  ofList [] fun x => Pempty.elim x
+instance pempty : FinEnum PEmpty :=
+  ofList [] fun x => PEmpty.elim x
 
 instance empty : FinEnum Empty :=
   ofList [] fun x => Empty.elim x

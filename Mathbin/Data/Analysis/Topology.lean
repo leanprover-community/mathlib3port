@@ -119,7 +119,7 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     IsClosed s ↔ ∀ a, (∀ b, a ∈ F.f b → ∃ z, z ∈ F.f b ∩ s) → a ∈ s :=
   is_open_compl_iff.symm.trans <|
     F.is_open_iff.trans <|
-      forall_congr fun a =>
+      forall_congr' fun a =>
         show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀ z ∈ F.f b, z ∉ s) ↔ _ by
           haveI := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm']
 

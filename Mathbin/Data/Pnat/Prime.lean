@@ -19,13 +19,16 @@ namespace Nat.Primes
 instance coePnat : Coe Nat.Primes ℕ+ :=
   ⟨fun p => ⟨(p : ℕ), p.property.Pos⟩⟩
 
+@[norm_cast]
 theorem coe_pnat_nat (p : Nat.Primes) : ((p : ℕ+) : ℕ) = p :=
   rfl
 
-theorem coe_pnat_inj (p q : Nat.Primes) : (p : ℕ+) = (q : ℕ+) → p = q := fun h => by
-  replace h : ((p : ℕ+) : ℕ) = ((q : ℕ+) : ℕ) := congr_arg Subtype.val h
-  rw [coePnatNat, coePnatNat] at h
-  exact Subtype.eq h
+theorem coe_pnat_injective : Function.Injective (coe : Nat.Primes → ℕ+) := fun p q h =>
+  Subtype.ext (congr_arg Subtype.val h : _)
+
+@[norm_cast]
+theorem coe_pnat_inj (p q : Nat.Primes) : (p : ℕ+) = (q : ℕ+) ↔ p = q :=
+  coe_pnat_injective.eq_iff
 
 end Nat.Primes
 
@@ -46,11 +49,11 @@ def lcm (n m : ℕ+) : ℕ+ :=
     rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_comm] at h
     exact pos_of_dvd_of_pos (Dvd.intro (Nat.gcd (n : ℕ) (m : ℕ)) rfl) h⟩
 
-@[simp]
+@[simp, norm_cast]
 theorem gcd_coe (n m : ℕ+) : (gcd n m : ℕ) = Nat.gcd n m :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem lcm_coe (n m : ℕ+) : (lcm n m : ℕ) = Nat.lcm n m :=
   rfl
 
@@ -136,7 +139,7 @@ section Coprime
 def Coprime (m n : ℕ+) : Prop :=
   m.gcd n = 1
 
-@[simp]
+@[simp, norm_cast]
 theorem coprime_coe {m n : ℕ+} : Nat.Coprime ↑m ↑n ↔ m.Coprime n := by
   unfold coprime
   unfold Nat.Coprime

@@ -146,7 +146,7 @@ theorem Disjoint.mul_apply_eq_iff {σ τ : Perm α} (hστ : Disjoint σ τ) {a 
     
 
 theorem Disjoint.mul_eq_one_iff {σ τ : Perm α} (hστ : Disjoint σ τ) : σ * τ = 1 ↔ σ = 1 ∧ τ = 1 := by
-  simp_rw [ext_iff, one_apply, hστ.mul_apply_eq_iff, forall_and_distrib]
+  simp_rw [ext_iff, one_apply, hστ.mul_apply_eq_iff, forall_and]
 
 theorem Disjoint.zpow_disjoint_zpow {σ τ : Perm α} (hστ : Disjoint σ τ) (m n : ℤ) : Disjoint (σ ^ m) (τ ^ n) := fun x =>
   Or.imp (fun h => zpow_apply_eq_self_of_apply_eq_self h m) (fun h => zpow_apply_eq_self_of_apply_eq_self h n) (hστ x)
@@ -280,7 +280,7 @@ theorem support_congr (h : f.support ⊆ g.support) (h' : ∀ x ∈ g.support, f
     
 
 theorem support_mul_le (f g : Perm α) : (f * g).support ≤ f.support ⊔ g.support := fun x => by
-  rw [sup_eq_union, mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_distrib, not_imp_not]
+  rw [sup_eq_union, mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_or, not_imp_not]
   rintro ⟨hf, hg⟩
   rw [hg, hf]
 
@@ -331,14 +331,14 @@ theorem pow_eq_on_of_mem_support (h : ∀ x ∈ f.support ∩ g.support, f x = g
     
 
 theorem disjoint_iff_disjoint_support : Disjoint f g ↔ Disjoint f.support g.support := by
-  simp [disjoint_iff_eq_or_eq, disjoint_iff, Finset.ext_iff, not_and_distrib]
+  simp [disjoint_iff_eq_or_eq, disjoint_iff, Finset.ext_iff, not_and_or]
 
 theorem Disjoint.disjointSupport (h : Disjoint f g) : Disjoint f.support g.support :=
   disjoint_iff_disjoint_support.1 h
 
 theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).support = f.support ∪ g.support := by
   refine' le_antisymm (support_mul_le _ _) fun a => _
-  rw [mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_distrib, not_imp_not]
+  rw [mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_or, not_imp_not]
   exact
     (h a).elim (fun hf h => ⟨hf, f.apply_eq_iff_eq.mp (h.trans hf.symm)⟩) fun hg h =>
       ⟨(congr_arg f hg).symm.trans h, hg⟩
@@ -509,7 +509,7 @@ theorem card_support_eq_zero {f : Perm α} : f.support.card = 0 ↔ f = 1 := by
   rw [Finset.card_eq_zero, support_eq_empty_iff]
 
 theorem one_lt_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 1 < f.support.card := by
-  simp_rw [one_lt_card_iff, mem_support, ← not_or_distrib]
+  simp_rw [one_lt_card_iff, mem_support, ← not_or]
   contrapose! h
   ext a
   specialize h (f a) a

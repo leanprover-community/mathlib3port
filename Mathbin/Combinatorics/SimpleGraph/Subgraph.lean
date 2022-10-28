@@ -62,9 +62,31 @@ structure Subgraph {V : Type u} (G : SimpleGraph V) where
   edge_vert : ∀ {v w : V}, adj v w → v ∈ verts
   symm : Symmetric adj := by obviously
 
+variable {V : Type u} {W : Type v}
+
+/-- The one-vertex subgraph. -/
+@[simps]
+protected def singletonSubgraph (G : SimpleGraph V) (v : V) : G.Subgraph where
+  Verts := {v}
+  Adj := ⊥
+  adj_sub := by simp [-Set.bot_eq_empty]
+  edge_vert := by simp [-Set.bot_eq_empty]
+
+/-- The one-edge subgraph. -/
+@[simps]
+def subgraphOfAdj (G : SimpleGraph V) {v w : V} (hvw : G.Adj v w) : G.Subgraph where
+  Verts := {v, w}
+  Adj a b := ⟦(v, w)⟧ = ⟦(a, b)⟧
+  adj_sub a b h := by
+    rw [← G.mem_edge_set, ← h]
+    exact hvw
+  edge_vert a b h := by
+    apply_fun fun e => a ∈ e  at h
+    simpa using h
+
 namespace Subgraph
 
-variable {V : Type u} {W : Type v} {G : SimpleGraph V}
+variable {G : SimpleGraph V}
 
 protected theorem loopless (G' : Subgraph G) : Irreflexive G'.Adj := fun v h => G.loopless v (G'.adj_sub h)
 
@@ -78,6 +100,18 @@ theorem adj_symm (G' : Subgraph G) {u v : V} (h : G'.Adj u v) : G'.Adj v u :=
 protected theorem Adj.symm {G' : Subgraph G} {u v : V} (h : G'.Adj u v) : G'.Adj v u :=
   G'.symm h
 
+protected theorem Adj.adj_sub {H : G.Subgraph} {u v : V} (h : H.Adj u v) : G.Adj u v :=
+  H.adj_sub h
+
+protected theorem Adj.fst_mem {H : G.Subgraph} {u v : V} (h : H.Adj u v) : u ∈ H.Verts :=
+  H.edge_vert h
+
+protected theorem Adj.snd_mem {H : G.Subgraph} {u v : V} (h : H.Adj u v) : v ∈ H.Verts :=
+  h.symm.fst_mem
+
+protected theorem Adj.ne {H : G.Subgraph} {u v : V} (h : H.Adj u v) : u ≠ v :=
+  h.adj_sub.Ne
+
 /-- Coercion from `G' : subgraph G` to a `simple_graph ↥G'.verts`. -/
 @[simps]
 protected def coe (G' : Subgraph G) : SimpleGraph G'.Verts where
@@ -88,6 +122,11 @@ protected def coe (G' : Subgraph G) : SimpleGraph G'.Verts where
 @[simp]
 theorem coe_adj_sub (G' : Subgraph G) (u v : G'.Verts) (h : G'.coe.Adj u v) : G.Adj u v :=
   G'.adj_sub h
+
+-- Given `h : H.adj u v`, then `h.coe : H.coe.adj ⟨u, _⟩ ⟨v, _⟩`.
+protected theorem Adj.coe {H : G.Subgraph} {u v : V} (h : H.Adj u v) :
+    H.coe.Adj ⟨u, H.edge_vert h⟩ ⟨v, H.edge_vert h.symm⟩ :=
+  h
 
 /-- A subgraph is called a *spanning subgraph* if it contains all the vertices of `G`. --/
 def IsSpanning (G' : Subgraph G) : Prop :=
@@ -524,7 +563,139 @@ theorem degree_eq_one_iff_unique_adj {G' : Subgraph G} {v : V} [Fintype (G'.Neig
   rw [← finset_card_neighbor_set_eq_degree, Finset.card_eq_one, Finset.singleton_iff_unique_mem]
   simp only [Set.mem_to_finset, mem_neighbor_set]
 
-/-! ## Subgraphs of subgraphs -/
+end Subgraph
+
+section MkProperties
+
+/-! ### Properties of `singleton_subgraph` and `subgraph_of_adj` -/
+
+
+variable {G : SimpleGraph V} {G' : SimpleGraph W}
+
+instance nonempty_singleton_subgraph_verts (v : V) : Nonempty (G.singletonSubgraph v).Verts :=
+  ⟨⟨v, Set.mem_singleton v⟩⟩
+
+@[simp]
+theorem singleton_subgraph_le_iff (v : V) (H : G.Subgraph) : G.singletonSubgraph v ≤ H ↔ v ∈ H.Verts := by
+  refine' ⟨fun h => h.1 (Set.mem_singleton v), _⟩
+  intro h
+  constructor
+  · simp [h]
+    
+  · simp [-Set.bot_eq_empty]
+    
+
+@[simp]
+theorem map_singleton_subgraph (f : G →g G') {v : V} :
+    Subgraph.map f (G.singletonSubgraph v) = G'.singletonSubgraph (f v) := by
+  ext <;>
+    simp only [Relation.Map, subgraph.map_adj, singleton_subgraph_adj, Pi.bot_apply, exists_and_left,
+      and_iff_left_iff_imp, IsEmpty.forall_iff, subgraph.map_verts, singleton_subgraph_verts, Set.image_singleton]
+
+@[simp]
+theorem neighbor_set_singleton_subgraph (v w : V) : (G.singletonSubgraph v).NeighborSet w = ∅ := by
+  ext u
+  rfl
+
+@[simp]
+theorem edge_set_singleton_subgraph (v : V) : (G.singletonSubgraph v).EdgeSet = ∅ :=
+  Sym2.from_rel_bot
+
+theorem eq_singleton_subgraph_iff_verts_eq (H : G.Subgraph) {v : V} : H = G.singletonSubgraph v ↔ H.Verts = {v} := by
+  refine' ⟨fun h => by simp [h], fun h => _⟩
+  ext
+  · rw [h, singleton_subgraph_verts]
+    
+  · simp only [PropCat.bot_eq_false, singleton_subgraph_adj, Pi.bot_apply, iff_false_iff]
+    intro ha
+    have ha1 := ha.fst_mem
+    have ha2 := ha.snd_mem
+    rw [h, Set.mem_singleton_iff] at ha1 ha2
+    subst_vars
+    exact ha.ne rfl
+    
+
+instance nonempty_subgraph_of_adj_verts {v w : V} (hvw : G.Adj v w) : Nonempty (G.subgraphOfAdj hvw).Verts :=
+  ⟨⟨v, by simp⟩⟩
+
+@[simp]
+theorem edge_set_subgraph_of_adj {v w : V} (hvw : G.Adj v w) : (G.subgraphOfAdj hvw).EdgeSet = {⟦(v, w)⟧} := by
+  ext e
+  refine' e.ind _
+  simp only [eq_comm, Set.mem_singleton_iff, subgraph.mem_edge_set, subgraph_of_adj_adj, iff_self_iff, forall₂_true_iff]
+
+theorem subgraph_of_adj_symm {v w : V} (hvw : G.Adj v w) : G.subgraphOfAdj hvw.symm = G.subgraphOfAdj hvw := by
+  ext <;> simp [or_comm', and_comm']
+
+@[simp]
+theorem map_subgraph_of_adj (f : G →g G') {v w : V} (hvw : G.Adj v w) :
+    Subgraph.map f (G.subgraphOfAdj hvw) = G'.subgraphOfAdj (f.map_adj hvw) := by
+  ext
+  · simp only [subgraph.map_verts, subgraph_of_adj_verts, Set.mem_image, Set.mem_insert_iff, Set.mem_singleton_iff]
+    constructor
+    · rintro ⟨u, rfl | rfl, rfl⟩ <;> simp
+      
+    · rintro (rfl | rfl)
+      · use v
+        simp
+        
+      · use w
+        simp
+        
+      
+    
+  · simp only [Relation.Map, subgraph.map_adj, subgraph_of_adj_adj, Quotient.eq, Sym2.rel_iff]
+    constructor
+    · rintro ⟨a, b, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl, rfl⟩ <;> simp
+      
+    · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+      · use v, w
+        simp
+        
+      · use w, v
+        simp
+        
+      
+    
+
+theorem neighbor_set_subgraph_of_adj_subset {u v w : V} (hvw : G.Adj v w) :
+    (G.subgraphOfAdj hvw).NeighborSet u ⊆ {v, w} :=
+  (G.subgraphOfAdj hvw).neighbor_set_subset_verts _
+
+@[simp]
+theorem neighbor_set_fst_subgraph_of_adj {v w : V} (hvw : G.Adj v w) : (G.subgraphOfAdj hvw).NeighborSet v = {w} := by
+  ext u
+  suffices w = u ↔ u = w by simpa [hvw.ne.symm] using this
+  rw [eq_comm]
+
+@[simp]
+theorem neighbor_set_snd_subgraph_of_adj {v w : V} (hvw : G.Adj v w) : (G.subgraphOfAdj hvw).NeighborSet w = {v} := by
+  rw [subgraph_of_adj_symm hvw.symm]
+  exact neighbor_set_fst_subgraph_of_adj hvw.symm
+
+@[simp]
+theorem neighbor_set_subgraph_of_adj_of_ne_of_ne {u v w : V} (hvw : G.Adj v w) (hv : u ≠ v) (hw : u ≠ w) :
+    (G.subgraphOfAdj hvw).NeighborSet u = ∅ := by
+  ext
+  simp [hv.symm, hw.symm]
+
+theorem neighbor_set_subgraph_of_adj [DecidableEq V] {u v w : V} (hvw : G.Adj v w) :
+    (G.subgraphOfAdj hvw).NeighborSet u = (if u = v then {w} else ∅) ∪ if u = w then {v} else ∅ := by
+  split_ifs <;> subst_vars <;> simp [*]
+
+theorem singleton_subgraph_fst_le_subgraph_of_adj {u v : V} {h : G.Adj u v} :
+    G.singletonSubgraph u ≤ G.subgraphOfAdj h := by constructor <;> simp [-Set.bot_eq_empty]
+
+theorem singleton_subgraph_snd_le_subgraph_of_adj {u v : V} {h : G.Adj u v} :
+    G.singletonSubgraph v ≤ G.subgraphOfAdj h := by constructor <;> simp [-Set.bot_eq_empty]
+
+end MkProperties
+
+namespace Subgraph
+
+variable {G : SimpleGraph V}
+
+/-! ### Subgraphs of subgraphs -/
 
 
 /-- Given a subgraph of a subgraph of `G`, construct a subgraph of `G`. -/
@@ -543,7 +714,7 @@ theorem restrict_coe_subgraph {G' : G.Subgraph} (G'' : G'.coe.Subgraph) : G''.co
   · simp
     
   · simp only [Relation.Map, comap_adj, coe_adj, Subtype.coe_prop, hom_apply, map_adj, SetCoe.exists, Subtype.coe_mk,
-      exists_and_distrib_right, exists_eq_right_right, Subtype.coe_eta, exists_true_left, exists_eq_right,
+      exists_and_right, exists_eq_right_right, Subtype.coe_eta, exists_true_left, exists_eq_right,
       and_iff_right_iff_imp]
     apply G''.adj_sub
     
@@ -552,7 +723,7 @@ theorem coe_subgraph_injective (G' : G.Subgraph) :
     Function.Injective (Subgraph.coeSubgraph : G'.coe.Subgraph → G.Subgraph) :=
   Function.LeftInverse.injective restrict_coe_subgraph
 
-/-! ## Edge deletion -/
+/-! ### Edge deletion -/
 
 
 /-- Given a subgraph `G'` and a set of vertex pairs, remove all of the corresponding edges
@@ -580,7 +751,7 @@ theorem delete_edges_adj (v w : V) : (G'.deleteEdges s).Adj v w ↔ G'.Adj v w �
 
 @[simp]
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G'.deleteEdges s).deleteEdges s' = G'.deleteEdges (s ∪ s') :=
-  by ext <;> simp [and_assoc', not_or_distrib]
+  by ext <;> simp [and_assoc', not_or]
 
 @[simp]
 theorem delete_edges_empty_eq : G'.deleteEdges ∅ = G' := by ext <;> simp
@@ -594,7 +765,7 @@ theorem delete_edges_coe_eq (s : Set (Sym2 G'.Verts)) :
     G'.coe.deleteEdges s = (G'.deleteEdges (Sym2.map coe '' s)).coe := by
   ext ⟨v, hv⟩ ⟨w, hw⟩
   simp only [SimpleGraph.delete_edges_adj, coe_adj, Subtype.coe_mk, delete_edges_adj, Set.mem_image, not_exists,
-    not_and, And.congr_right_iff]
+    not_and, and_congr_right_iff]
   intro h
   constructor
   · intro hs
@@ -636,7 +807,7 @@ theorem spanning_coe_delete_edges_le (G' : G.Subgraph) (s : Set (Sym2 V)) :
 
 end DeleteEdges
 
-/-! ## Induced subgraphs -/
+/-! ### Induced subgraphs -/
 
 
 /- Given a subgraph, we can change its vertex set while removing any invalid edges, which
@@ -693,6 +864,25 @@ theorem induce_self_verts : G'.induce G'.Verts = G' := by
     exact fun ha => ⟨G'.edge_vert ha, G'.edge_vert ha.symm⟩
     
 
+theorem singleton_subgraph_eq_induce {v : V} : G.singletonSubgraph v = (⊤ : G.Subgraph).induce {v} := by
+  ext <;> simp (config := { contextual := true }) [-Set.bot_eq_empty, PropCat.bot_eq_false]
+
+theorem subgraph_of_adj_eq_induce {v w : V} (hvw : G.Adj v w) : G.subgraphOfAdj hvw = (⊤ : G.Subgraph).induce {v, w} :=
+  by
+  ext
+  · simp
+    
+  · constructor
+    · intro h
+      simp only [subgraph_of_adj_adj, Quotient.eq, Sym2.rel_iff] at h
+      obtain ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ := h <;> simp [hvw, hvw.symm]
+      
+    · intro h
+      simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj_iff] at h
+      obtain ⟨rfl | rfl, rfl | rfl, ha⟩ := h <;> first |exact (ha.ne rfl).elim|simp
+      
+    
+
 end Induce
 
 /-- Given a subgraph and a set of vertices, delete all the vertices from the subgraph,
@@ -713,7 +903,7 @@ theorem delete_verts_adj {u v : V} :
 
 @[simp]
 theorem delete_verts_delete_verts (s s' : Set V) : (G'.deleteVerts s).deleteVerts s' = G'.deleteVerts (s ∪ s') := by
-  ext <;> simp (config := { contextual := true }) [not_or_distrib, and_assoc']
+  ext <;> simp (config := { contextual := true }) [not_or, and_assoc']
 
 @[simp]
 theorem delete_verts_empty : G'.deleteVerts ∅ = G' := by simp [delete_verts]

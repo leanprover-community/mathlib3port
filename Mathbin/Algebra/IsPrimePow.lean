@@ -84,7 +84,7 @@ theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
   simpa using Nat.pow_le_pow_of_le_right hp.pos hk
 
 instance {n : ℕ} : Decidable (IsPrimePow n) :=
-  decidableOfIff' _ (is_prime_pow_nat_iff_bounded n)
+  decidable_of_iff' _ (is_prime_pow_nat_iff_bounded n)
 
 theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m ≠ 1) : IsPrimePow m := by
   rw [is_prime_pow_nat_iff] at hn⊢

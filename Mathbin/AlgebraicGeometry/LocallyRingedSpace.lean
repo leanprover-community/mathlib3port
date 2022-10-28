@@ -258,10 +258,10 @@ theorem preimage_basic_open {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) {U : Ope
 -- This actually holds for all ringed spaces with nontrivial stalks.
 @[simp]
 theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.Carrier) :
-    X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ∅ := by
+    X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ := by
   ext
-  simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.empty_eq, TopologicalSpace.Opens.mem_coe, opens.coe_bot,
-    iff_false_iff, RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
+  simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
+    RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
   rintro ⟨⟨y, _⟩, h, e⟩
   exact @zero_ne_one (X.presheaf.stalk y) _ _ h
 

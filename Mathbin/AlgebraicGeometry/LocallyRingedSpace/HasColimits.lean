@@ -166,7 +166,7 @@ theorem image_basic_open_image_preimage :
       SheafedSpace.congr_app (coequalizer.condition f.1 g.1), comp_apply]
     erw [X.to_RingedSpace.basic_open_res]
     apply inf_eq_right.mpr
-    refine' (RingedSpace.basic_open_subset _ _).trans _
+    refine' (RingedSpace.basic_open_le _ _).trans _
     rw [coequalizer.condition f.1 g.1]
     exact fun _ h => h
     
@@ -193,7 +193,7 @@ instance coequalizerπStalkIsLocalRingHom (x : Y) :
     Subtype.eq hV.symm
   have V_open : IsOpen ((coequalizer.π f.val g.val).base '' V.val) := image_basic_open_image_open f g U s
   have VleU : (⟨(coequalizer.π f.val g.val).base '' V.val, V_open⟩ : TopologicalSpace.Opens _) ≤ U :=
-    set.image_subset_iff.mpr (Y.to_RingedSpace.basic_open_subset _)
+    set.image_subset_iff.mpr (Y.to_RingedSpace.basic_open_le _)
   have hxV : x ∈ V := ⟨⟨_, hU⟩, ha, rfl⟩
   erw [←
     (coequalizer f.val g.val).Presheaf.germ_res_apply (hom_of_le VleU)

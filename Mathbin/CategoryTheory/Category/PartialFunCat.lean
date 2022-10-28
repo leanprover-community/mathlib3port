@@ -106,7 +106,7 @@ be computable because `= option.none` is decidable while the domain of a general
 noncomputable def partialFunToPointed : PartialFunCat ⥤ PointedCat := by
   classical <;>
     exact
-      { obj := fun X => ⟨Option X, none⟩, map := fun X Y f => ⟨Option.elim none fun a => (f a).toOption, rfl⟩,
+      { obj := fun X => ⟨Option X, none⟩, map := fun X Y f => ⟨Option.elim' none fun a => (f a).toOption, rfl⟩,
         map_id' := fun X =>
           PointedCat.Hom.ext _ _ <| funext fun o => (Option.recOn o rfl) fun a => Part.some_to_option _,
         map_comp' := fun X Y Z f g =>
@@ -139,13 +139,13 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
             exact eq_comm)
         ((nat_iso.of_components fun X =>
             PointedCat.Iso.mk
-              { toFun := Option.elim X.point Subtype.val,
+              { toFun := Option.elim' X.point Subtype.val,
                 invFun := fun a => if h : a = X.point then none else some ⟨_, h⟩,
                 left_inv := fun a =>
                   (Option.recOn a (dif_pos rfl)) fun a =>
-                    (dif_neg a.2).trans <| by simp only [Option.elim, Subtype.val_eq_coe, Subtype.coe_eta],
+                    (dif_neg a.2).trans <| by simp only [Option.elim', Subtype.val_eq_coe, Subtype.coe_eta],
                 right_inv := fun a => by
-                  change Option.elim _ _ (dite _ _ _) = _
+                  change Option.elim' _ _ (dite _ _ _) = _
                   split_ifs
                   · rw [h]
                     rfl
@@ -159,7 +159,7 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
               (Option.recOn a f.map_point.symm) fun a => by
                 unfold_projs
                 dsimp
-                change Option.elim _ _ _ = _
+                change Option.elim' _ _ _ = _
                 rw [Part.elim_to_option]
                 split_ifs
                 · rfl

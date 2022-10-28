@@ -206,7 +206,7 @@ instance :
         E) where sup p q :=
     { p.toAddGroupSeminorm ⊔ q.toAddGroupSeminorm with toFun := p ⊔ q,
       smul' := fun x v =>
-        (congr_arg2 max (map_smul_eq_mul p x v) (map_smul_eq_mul q x v)).trans <|
+        (congr_arg₂ max (map_smul_eq_mul p x v) (map_smul_eq_mul q x v)).trans <|
           (mul_max_of_nonneg _ _ <| norm_nonneg x).symm }
 
 @[simp]
@@ -447,7 +447,7 @@ noncomputable instance :
           obtain rfl | h := s.eq_empty_or_nonempty
           · simp [Real.csupr_empty]
             
-          haveI : Nonempty ↥s := nonempty_coe_sort.mpr h
+          haveI : Nonempty ↥s := h.coe_sort
           simp only [supr_apply]
           refine'
               csupr_le fun i =>
@@ -487,7 +487,7 @@ protected theorem coe_supr_eq {ι : Type _} {p : ι → Seminorm 𝕜 E} (hp : B
 private theorem seminorm.is_lub_Sup (s : Set (Seminorm 𝕜 E)) (hs₁ : BddAbove s) (hs₂ : s.Nonempty) : IsLub s (sup s) :=
   by
   refine' ⟨fun p hp x => _, fun p hp x => _⟩ <;>
-    haveI : Nonempty ↥s := nonempty_coe_sort.mpr hs₂ <;> rw [Seminorm.coe_Sup_eq hs₁, supr_apply]
+    haveI : Nonempty ↥s := hs₂.coe_sort <;> rw [Seminorm.coe_Sup_eq hs₁, supr_apply]
   · rcases hs₁ with ⟨q, hq⟩
     exact le_csupr ⟨q x, forall_range_iff.mpr fun i : s => hq i.2 x⟩ ⟨p, hp⟩
     

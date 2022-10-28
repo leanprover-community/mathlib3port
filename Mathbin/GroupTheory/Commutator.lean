@@ -78,7 +78,7 @@ theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,
 
 theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.Centralizer := by
   rw [eq_bot_iff, commutator_le]
-  refine' forall_congr fun p => forall_congr fun hp => forall_congr fun q => forall_congr fun hq => _
+  refine' forall_congr' fun p => forall_congr' fun hp => forall_congr' fun q => forall_congr' fun hq => _
   rw [mem_bot, commutator_element_eq_one_iff_mul_comm, eq_comm]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/

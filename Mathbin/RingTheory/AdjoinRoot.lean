@@ -124,7 +124,7 @@ def root : AdjoinRoot f :=
 
 variable {f}
 
-instance hasCoeT : CoeT R (AdjoinRoot f) :=
+instance hasCoeT : CoeTC R (AdjoinRoot f) :=
   ⟨of f⟩
 
 /-- Two `R`-`alg_hom` from `adjoin_root f` to the same `R`-algebra are the same iff

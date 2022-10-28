@@ -191,7 +191,7 @@ theorem left_mem_interval_oc : a ∈ Ι a b ↔ b < a := by simp [mem_interval_o
 theorem right_mem_interval_oc : b ∈ Ι a b ↔ a < b := by simp [mem_interval_oc]
 
 theorem forall_interval_oc_iff {P : α → Prop} : (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ IocCat a b, P x) ∧ ∀ x ∈ IocCat b a, P x :=
-  by simp only [interval_oc_eq_union, mem_union, or_imp_distrib, forall_and_distrib]
+  by simp only [interval_oc_eq_union, mem_union, or_imp, forall_and]
 
 theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α} (h : [a, b] ⊆ [c, d]) :
     Ι a b ⊆ Ι c d :=

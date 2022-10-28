@@ -186,11 +186,35 @@ theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = 
     · simp at * <;> linarith
       
 
+theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
+    δ i ≫ δ j = δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) ≫ δ i.cast_succ := by
+  rw [← δ_comp_δ]
+  · rw [Fin.succ_pred]
+    
+  · simpa only [Fin.le_iff_coe_le_coe, ← Nat.lt_succ_iff, Nat.succ_eq_add_one, ← Fin.coe_succ, j.succ_pred,
+      Fin.lt_iff_coe_lt_coe] using H
+    
+
+theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
+    δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_coe_le_coe.mp H) j.is_lt)) ≫ δ j.succ = δ j ≫ δ i := by
+  rw [δ_comp_δ]
+  · rfl
+    
+  · exact H
+    
+
 /-- The special case of the first simplicial identity -/
+@[reassoc]
 theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : δ i ≫ δ i.cast_succ = δ i ≫ δ i.succ :=
   (δ_comp_δ (le_refl i)).symm
 
+@[reassoc]
+theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast_succ) : δ i ≫ δ j = δ i ≫ δ i.succ := by
+  subst H
+  rw [δ_comp_δ_self]
+
 /-- The second simplicial identity -/
+@[reassoc]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
     δ i.cast_succ ≫ σ j.succ = σ j ≫ δ i := by
   ext k
@@ -234,6 +258,7 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
   all_goals try first |rfl|simp at * <;> linarith
 
 /-- The first part of the third simplicial identity -/
+@[reassoc]
 theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [n] := by
   ext j
   suffices
@@ -250,7 +275,13 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [
     · simp at * <;> linarith
       
 
+@[reassoc]
+theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) : δ j ≫ σ i = 𝟙 [n] := by
+  subst H
+  rw [δ_comp_σ_self]
+
 /-- The second part of the third simplicial identity -/
+@[reassoc]
 theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : δ i.succ ≫ σ i = 𝟙 [n] := by
   ext j
   rcases i with ⟨i, _⟩
@@ -261,7 +292,13 @@ theorem δ_comp_σ_succ {n} {i : Fin (n + 1)} : δ i.succ ≫ σ i = 𝟙 [n] :=
     · simp at * <;> linarith
       
 
+@[reassoc]
+theorem δ_comp_σ_succ' {n} (j : Fin (n + 2)) (i : Fin (n + 1)) (H : j = i.succ) : δ j ≫ σ i = 𝟙 [n] := by
+  subst H
+  rw [δ_comp_σ_succ]
+
 /-- The fourth simplicial identity -/
+@[reassoc]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
     δ i.succ ≫ σ j.cast_succ = σ j ≫ δ i := by
   ext k
@@ -300,9 +337,27 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_suc
   -- Hope for the best from `linarith`:
   all_goals simp at h_1 h_2⊢ <;> linarith
 
+@[reassoc]
+theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < i) :
+    δ i ≫ σ j =
+      σ
+          (j.cast_lt
+            ((add_lt_add_iff_right 1).mp
+              (lt_of_lt_of_le (by simpa only [Fin.val_eq_coe, ← Fin.coe_succ] using fin.lt_iff_coe_lt_coe.mp H)
+                i.is_le))) ≫
+        δ (i.pred fun hi => by simpa only [Fin.not_lt_zero, hi] using H) :=
+  by
+  rw [← δ_comp_σ_of_gt]
+  · simpa only [Fin.succ_pred]
+    
+  · rw [Fin.cast_succ_cast_lt, ← Fin.succ_lt_succ_iff, Fin.succ_pred]
+    exact H
+    
+
 attribute [local simp] Fin.pred_mk
 
 /-- The fifth simplicial identity -/
+@[reassoc]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫ σ j = σ j.succ ≫ σ i := by
   ext k
   dsimp [σ, Fin.predAbove]

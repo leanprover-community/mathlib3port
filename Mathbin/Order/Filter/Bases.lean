@@ -343,7 +343,7 @@ theorem as_basis_filter (f : Filter α) : f.asBasis.filter = f := by ext t <;> e
 theorem has_basis_self {l : Filter α} {P : Set α → Prop} :
     HasBasis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t ∈ l, ∃ r ∈ l, P r ∧ r ⊆ t := by
   simp only [has_basis_iff, exists_prop, id, and_assoc']
-  exact forall_congr fun s => ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
+  exact forall_congr' fun s => ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
 
 theorem HasBasis.comp_of_surjective (h : l.HasBasis p s) {g : ι' → ι} (hg : Function.Surjective g) :
     l.HasBasis (p ∘ g) (s ∘ g) :=
@@ -497,8 +497,8 @@ theorem HasBasis.sup' (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
   ⟨by
     intro t
     simp only [mem_sup, hl.mem_iff, hl'.mem_iff, PProd.exists, union_subset_iff, exists_prop, and_assoc',
-      exists_and_distrib_left]
-    simp only [← and_assoc', exists_and_distrib_right, and_comm']⟩
+      exists_and_left]
+    simp only [← and_assoc', exists_and_right, and_comm']⟩
 
 theorem HasBasis.sup {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p' : ι' → Prop} {s' : ι' → Set α}
     (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
@@ -509,7 +509,7 @@ theorem has_basis_supr {ι : Sort _} {ι' : ι → Type _} {l : ι → Filter α
     (hl : ∀ i, (l i).HasBasis (p i) (s i)) :
     (⨆ i, l i).HasBasis (fun f : ∀ i, ι' i => ∀ i, p i (f i)) fun f : ∀ i, ι' i => ⋃ i, s i (f i) :=
   has_basis_iff.mpr fun t => by
-    simp only [has_basis_iff, (hl _).mem_iff, Classical.skolem, forall_and_distrib, Union_subset_iff, mem_supr]
+    simp only [has_basis_iff, (hl _).mem_iff, Classical.skolem, forall_and, Union_subset_iff, mem_supr]
 
 theorem HasBasis.sup_principal (hl : l.HasBasis p s) (t : Set α) : (l ⊔ 𝓟 t).HasBasis p fun i => s i ∪ t :=
   ⟨fun u => by
@@ -670,7 +670,7 @@ theorem comap_has_basis (f : α → β) (l : Filter β) : HasBasis (comap f l) (
   ⟨fun t => mem_comap⟩
 
 theorem HasBasis.forall_mem_mem (h : HasBasis l p s) {x : α} : (∀ t ∈ l, x ∈ t) ↔ ∀ i, p i → x ∈ s i := by
-  simp only [h.mem_iff, exists_imp_distrib]
+  simp only [h.mem_iff, exists_imp]
   exact ⟨fun h i hi => h (s i) i hi subset.rfl, fun h t i hi ht => ht (h i hi)⟩
 
 protected theorem HasBasis.binfi_mem [CompleteLattice β] {f : Set α → β} (h : HasBasis l p s) (hf : Monotone f) :

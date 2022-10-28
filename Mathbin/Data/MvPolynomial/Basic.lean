@@ -1099,7 +1099,7 @@ theorem C_dvd_iff_map_hom_eq_zero (q : R →+* S₁) (r : R) (hr : ∀ r' : R, q
 theorem map_map_range_eq_iff (f : R →+* S₁) (g : S₁ → R) (hg : g 0 = 0) (φ : MvPolynomial σ S₁) :
     map f (Finsupp.mapRange g hg φ) = φ ↔ ∀ d, f (g (coeff d φ)) = coeff d φ := by
   rw [MvPolynomial.ext_iff]
-  apply forall_congr
+  apply forall_congr'
   intro m
   rw [coeff_map]
   apply eq_iff_eq_cancel_right.mpr

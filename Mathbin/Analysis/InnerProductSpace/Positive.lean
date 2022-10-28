@@ -98,8 +98,8 @@ variable {E' : Type _} [InnerProductSpace ℂ E'] [CompleteSpace E']
 
 theorem is_positive_iff_complex (T : E' →L[ℂ] E') :
     IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ := by
-  simp_rw [is_positive, forall_and_distrib, is_self_adjoint_iff_is_symmetric,
-    LinearMap.is_symmetric_iff_inner_map_self_real, eq_conj_iff_re]
+  simp_rw [is_positive, forall_and, is_self_adjoint_iff_is_symmetric, LinearMap.is_symmetric_iff_inner_map_self_real,
+    eq_conj_iff_re]
   rfl
 
 end Complex

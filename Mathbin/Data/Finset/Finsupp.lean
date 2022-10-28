@@ -60,7 +60,7 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.Supp
   refine'
     mem_finsupp_iff.trans
       (forall_and_distrib.symm.trans <|
-        forall_congr fun i =>
+        forall_congr' fun i =>
           ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi:i ∈ s
     · exact h.2 hi

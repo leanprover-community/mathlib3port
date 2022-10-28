@@ -520,10 +520,10 @@ instance [CommMonoid α] : CommRing (FreeAbelianGroup α) :=
         rw [add_mul, mul_add, ih1, ih2]
          }
 
-instance pemptyUnique : Unique (FreeAbelianGroup Pempty) where
+instance pemptyUnique : Unique (FreeAbelianGroup PEmpty) where
   default := 0
   uniq x :=
-    FreeAbelianGroup.induction_on x rfl (fun x => Pempty.elim x) (fun x => Pempty.elim x)
+    FreeAbelianGroup.induction_on x rfl (fun x => PEmpty.elim x) (fun x => PEmpty.elim x)
       (by
         rintro - - rfl rfl
         simp)

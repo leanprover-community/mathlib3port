@@ -382,7 +382,7 @@ instance Prod.generalizedHeytingAlgebra [GeneralizedHeytingAlgebra β] : General
 instance Pi.generalizedHeytingAlgebra {α : ι → Type _} [∀ i, GeneralizedHeytingAlgebra (α i)] :
     GeneralizedHeytingAlgebra (∀ i, α i) := by
   pi_instance
-  exact fun a b c => forall_congr fun i => le_himp_iff
+  exact fun a b c => forall_congr' fun i => le_himp_iff
 
 end GeneralizedHeytingAlgebra
 
@@ -402,10 +402,10 @@ theorem sdiff_le : a \ b ≤ a :=
   sdiff_le_iff.2 le_sup_right
 
 theorem Disjoint.disjointSdiffLeft (h : Disjoint a b) : Disjoint (a \ c) b :=
-  h.mono_left sdiff_le
+  h.monoLeft sdiff_le
 
 theorem Disjoint.disjointSdiffRight (h : Disjoint a b) : Disjoint a (b \ c) :=
-  h.mono_right sdiff_le
+  h.monoRight sdiff_le
 
 @[simp]
 theorem sdiff_le_iff_left : a \ b ≤ b ↔ a ≤ b := by rw [sdiff_le_iff, sup_idem]
@@ -590,7 +590,7 @@ instance Prod.generalizedCoheytingAlgebra [GeneralizedCoheytingAlgebra β] : Gen
 instance Pi.generalizedCoheytingAlgebra {α : ι → Type _} [∀ i, GeneralizedCoheytingAlgebra (α i)] :
     GeneralizedCoheytingAlgebra (∀ i, α i) := by
   pi_instance
-  exact fun a b c => forall_congr fun i => sdiff_le_iff
+  exact fun a b c => forall_congr' fun i => sdiff_le_iff
 
 end GeneralizedCoheytingAlgebra
 
@@ -650,10 +650,10 @@ theorem disjointComplRight : Disjoint a (aᶜ) :=
   disjointComplLeft.symm
 
 theorem LE.le.disjointComplLeft (h : b ≤ a) : Disjoint (aᶜ) b :=
-  disjointComplLeft.mono_right h
+  disjointComplLeft.monoRight h
 
 theorem LE.le.disjointComplRight (h : a ≤ b) : Disjoint a (bᶜ) :=
-  disjointComplRight.mono_left h
+  disjointComplRight.monoLeft h
 
 theorem IsCompl.compl_eq (h : IsCompl a b) : aᶜ = b :=
   h.1.le_compl_left.antisymm' <| Disjoint.le_of_codisjoint disjointComplLeft h.2
@@ -746,7 +746,7 @@ instance Prod.heytingAlgebra [HeytingAlgebra β] : HeytingAlgebra (α × β) :=
 
 instance Pi.heytingAlgebra {α : ι → Type _} [∀ i, HeytingAlgebra (α i)] : HeytingAlgebra (∀ i, α i) := by
   pi_instance
-  exact fun a b c => forall_congr fun i => le_himp_iff
+  exact fun a b c => forall_congr' fun i => le_himp_iff
 
 end HeytingAlgebra
 
@@ -798,10 +798,10 @@ theorem codisjointHnotLeft : Codisjoint (￢a) a :=
   codisjointHnotRight.symm
 
 theorem LE.le.codisjointHnotLeft (h : a ≤ b) : Codisjoint (￢a) b :=
-  codisjointHnotLeft.mono_right h
+  codisjointHnotLeft.monoRight h
 
 theorem LE.le.codisjointHnotRight (h : b ≤ a) : Codisjoint a (￢b) :=
-  codisjointHnotRight.mono_left h
+  codisjointHnotRight.monoLeft h
 
 theorem IsCompl.hnot_eq (h : IsCompl a b) : ￢a = b :=
   h.2.hnot_le_right.antisymm <| Disjoint.le_of_codisjoint h.1.symm codisjointHnotRight
@@ -894,7 +894,7 @@ instance Prod.coheytingAlgebra [CoheytingAlgebra β] : CoheytingAlgebra (α × �
 
 instance Pi.coheytingAlgebra {α : ι → Type _} [∀ i, CoheytingAlgebra (α i)] : CoheytingAlgebra (∀ i, α i) := by
   pi_instance
-  exact fun a b c => forall_congr fun i => sdiff_le_iff
+  exact fun a b c => forall_congr' fun i => sdiff_le_iff
 
 end CoheytingAlgebra
 

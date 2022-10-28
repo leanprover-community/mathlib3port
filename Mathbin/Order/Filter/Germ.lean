@@ -93,7 +93,7 @@ namespace Product
 
 variable {ε : α → Type _}
 
-instance : CoeT (∀ a, ε a) (l.product ε) :=
+instance : CoeTC (∀ a, ε a) (l.product ε) :=
   ⟨Quotient.mk'⟩
 
 instance [∀ a, Inhabited (ε a)] : Inhabited (l.product ε) :=
@@ -103,7 +103,7 @@ end Product
 
 namespace Germ
 
-instance : CoeT (α → β) (Germ l β) :=
+instance : CoeTC (α → β) (Germ l β) :=
   ⟨Quotient.mk'⟩
 
 instance : HasLiftT β (Germ l β) :=

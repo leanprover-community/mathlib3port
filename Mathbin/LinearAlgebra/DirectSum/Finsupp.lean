@@ -69,7 +69,7 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
         simp [h1]
         
       · simp only [h1, if_false]
-        simp only [Prod.mk.inj_iff, not_and_distrib] at h1
+        simp only [Prod.mk.inj_iff, not_and_or] at h1
         cases h1 <;> simp [h1]
         
       

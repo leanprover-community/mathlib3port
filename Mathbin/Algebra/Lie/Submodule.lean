@@ -380,7 +380,7 @@ instance : HasInf (LieSubmodule R L M) :=
         "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
-          exists_imp_distrib] at *
+          exists_imp] at *
         intro N hN
         apply N.lie_mem (h N hN) }⟩
 
@@ -400,7 +400,7 @@ theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
 theorem Inf_coe (S : Set (LieSubmodule R L M)) : (↑(inf S) : Set M) = ⋂ s ∈ S, (s : Set M) := by
   rw [← LieSubmodule.coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
   ext m
-  simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
+  simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp]
 
 theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGlb S (inf S) := by
   have h : ∀ N N' : LieSubmodule R L M, (N : Set M) ≤ N' ↔ N ≤ N' := by
@@ -848,7 +848,7 @@ theorem is_ideal_morphism_def : f.IsIdealMorphism ↔ (f.idealRange : LieSubalge
 theorem is_ideal_morphism_iff : f.IsIdealMorphism ↔ ∀ (x : L') (y : L), ∃ z : L, ⁅x, f y⁆ = f z := by
   simp only [is_ideal_morphism_def, ideal_range_eq_lie_span_range, ← LieSubalgebra.coe_to_submodule_eq_iff, ←
     f.range.coe_to_submodule, LieIdeal.coe_to_lie_subalgebra_to_submodule, LieSubmodule.coe_lie_span_submodule_eq_iff,
-    LieSubalgebra.mem_coe_submodule, mem_range, exists_imp_distrib, Submodule.exists_lie_submodule_coe_eq_iff]
+    LieSubalgebra.mem_coe_submodule, mem_range, exists_imp, Submodule.exists_lie_submodule_coe_eq_iff]
   constructor
   · intro h x y
     obtain ⟨z, hz⟩ := h x (f y) y rfl

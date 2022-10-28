@@ -143,6 +143,16 @@ theorem noncomm_prod_cons' (s : Multiset α) (a : α) (comm) :
       
     
 
+@[to_additive]
+theorem noncomm_prod_add (s t : Multiset α) (comm) :
+    noncommProd (s + t) comm =
+      noncommProd s (comm.mono <| subset_of_le <| s.le_add_right t) *
+        noncommProd t (comm.mono <| subset_of_le <| t.le_add_left s) :=
+  by
+  rcases s with ⟨⟩
+  rcases t with ⟨⟩
+  simp
+
 @[protected, to_additive]
 theorem noncomm_prod_map_aux [MonoidHomClass F α β] (s : Multiset α) (comm : { x | x ∈ s }.Pairwise Commute) (f : F) :
     { x | x ∈ s.map f }.Pairwise Commute := by

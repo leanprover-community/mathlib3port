@@ -39,6 +39,9 @@ def Pairwise (r : α → α → Prop) :=
 
 theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h <| hr i j hij
 
+protected theorem Pairwise.eq (h : Pairwise r) : ¬r a b → a = b :=
+  not_imp_comm.1 <| h _ _
+
 theorem pairwise_on_bool (hr : Symmetric r) {a b : α} : Pairwise (r on fun c => cond c a b) ↔ r a b := by
   simpa [Pairwise, Function.onFun] using @hr a b
 
@@ -153,7 +156,7 @@ theorem pairwise_eq_iff_exists_eq [Nonempty ι] (s : Set α) (f : α → ι) :
 
 theorem pairwise_union : (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀ a ∈ s, ∀ b ∈ t, a ≠ b → r a b ∧ r b a :=
   by
-  simp only [Set.Pairwise, mem_union, or_imp_distrib, forall_and_distrib]
+  simp only [Set.Pairwise, mem_union, or_imp, forall_and]
   exact
     ⟨fun H => ⟨H.1.1, H.2.2, H.2.1, fun x hx y hy hne => H.1.2 y hy x hx hne.symm⟩, fun H =>
       ⟨⟨H.1, fun x hx y hy hne => H.2.2.2 y hy x hx hne.symm⟩, H.2.2.1, H.2.1⟩⟩
@@ -404,4 +407,26 @@ end Set
 
 theorem pairwise_disjoint_fiber (f : ι → α) : Pairwise (Disjoint on fun a : α => f ⁻¹' {a}) :=
   Set.pairwise_univ.1 <| Set.pairwiseDisjointFiber f Univ
+
+section
+
+variable {f : ι → Set α} {s t : Set ι}
+
+theorem Set.PairwiseDisjoint.subset_of_bUnion_subset_bUnion (h₀ : (s ∪ t).PairwiseDisjoint f)
+    (h₁ : ∀ i ∈ s, (f i).Nonempty) (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t := by
+  rintro i hi
+  obtain ⟨a, hai⟩ := h₁ i hi
+  obtain ⟨j, hj, haj⟩ := mem_Union₂.1 (h <| mem_Union₂_of_mem hi hai)
+  rwa [h₀.eq (subset_union_left _ _ hi) (subset_union_right _ _ hj) (not_disjoint_iff.2 ⟨a, hai, haj⟩)]
+
+theorem Pairwise.subset_of_bUnion_subset_bUnion (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i ∈ s, (f i).Nonempty)
+    (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t :=
+  Set.PairwiseDisjoint.subset_of_bUnion_subset_bUnion (h₀.set_pairwise _) h₁ h
+
+theorem Pairwise.bUnion_injective (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i, (f i).Nonempty) :
+    Injective fun s : Set ι => ⋃ i ∈ s, f i := fun s t h =>
+  ((h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) <| h.Subset).antisymm <|
+    (h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) <| h.Superset
+
+end
 

@@ -388,12 +388,12 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C (hx 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none (hx : AlgebraicIndependent R x) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x none) = Polynomial.x := by
-  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim, Polynomial.map_X]
+  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim', Polynomial.map_X]
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some (hx : AlgebraicIndependent R x) (i) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x (some i)) = Polynomial.c (hx.aevalEquiv (x i)) := by
-  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim, Polynomial.map_C,
+  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim', Polynomial.map_C,
     RingHom.coe_coe]
 
 theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin (hx : AlgebraicIndependent R x)
@@ -412,10 +412,10 @@ theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_ad
       IsScalarTower.algebra_map_apply R (adjoin R (range x)) A]
     
   · rintro (⟨⟩ | ⟨i⟩)
-    · rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_X, Option.elim]
+    · rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_X, Option.elim']
       
     · rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_C, hx.algebra_map_aeval_equiv,
-        aeval_X, aeval_X, Option.elim]
+        aeval_X, aeval_X, Option.elim']
       
     
 

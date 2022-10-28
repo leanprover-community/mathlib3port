@@ -89,7 +89,7 @@ class ValuationClass extends MonoidWithZeroHomClass F R Γ₀ where
 
 export ValuationClass (map_add_le_max)
 
-instance [ValuationClass F R Γ₀] : CoeT F (Valuation R Γ₀) :=
+instance [ValuationClass F R Γ₀] : CoeTC F (Valuation R Γ₀) :=
   ⟨fun f =>
     { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f,
       map_add_le_max' := map_add_le_max f }⟩
