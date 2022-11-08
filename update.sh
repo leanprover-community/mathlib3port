@@ -5,6 +5,7 @@ echo and creates a bump commit.
 
 set -ex
 
+lake print-paths
 pushd lean_packages/lean3port
 git fetch origin
 git checkout origin/master
