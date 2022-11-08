@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Rat.Defs
-import Mathbin.Algebra.GroupWithZero.Power
 
 /-!
 # Division (semi)rings and (semi)fields
@@ -100,16 +99,6 @@ class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, Ha
 -- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.toDivisionSemiring [DivisionRing α] : DivisionSemiring α :=
   { ‹DivisionRing α›, (inferInstance : Semiring α) with }
-
-section DivisionRing
-
-variable [DivisionRing α]
-
-@[simp]
-theorem zpow_bit1_neg (x : α) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
-  rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
-
-end DivisionRing
 
 /-- A `semifield` is a `comm_semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj]

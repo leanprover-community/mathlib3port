@@ -192,7 +192,7 @@ theorem PseudoMetricSpace.ext {α : Type _} {m m' : PseudoMetricSpace α} (h : m
   dsimp at h
   subst h
   congr
-  · ext x y : 2
+  · ext (x y) : 2
     dsimp at m_edist_dist m'_edist_dist
     simp [m_edist_dist, m'_edist_dist]
     
@@ -318,7 +318,7 @@ theorem dist_le_range_sum_of_dist_le {f : ℕ → α} (n : ℕ) {d : ℕ → ℝ
 
 theorem swap_dist : Function.swap (@dist α _) = dist := by funext x y <;> exact dist_comm _ _
 
-theorem abs_dist_sub_le (x y z : α) : abs (dist x z - dist y z) ≤ dist x y :=
+theorem abs_dist_sub_le (x y z : α) : |dist x z - dist y z| ≤ dist x y :=
   abs_sub_le_iff.2 ⟨sub_le_iff_le_add.2 (dist_triangle _ _ _), sub_le_iff_le_add.2 (dist_triangle_left _ _ _)⟩
 
 theorem dist_nonneg {x y : α} : 0 ≤ dist x y :=
@@ -337,7 +337,7 @@ unsafe def _root_.tactic.positivity_dist : expr → tactic strictness
 end
 
 @[simp]
-theorem abs_dist {a b : α} : abs (dist a b) = dist a b :=
+theorem abs_dist {a b : α} : |dist a b| = dist a b :=
   abs_of_nonneg dist_nonneg
 
 /-- A version of `has_dist` that takes value in `ℝ≥0`. -/
@@ -745,12 +745,12 @@ theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
     UniformContinuous f ↔ ∀ ε > 0, ∃ δ > 0, ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
   uniformity_basis_dist.uniform_continuous_iff uniformity_basis_dist
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔ ∀ ε > 0, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔ ∀ ε > 0, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
   Metric.uniformity_basis_dist_le.uniform_continuous_on_iff Metric.uniformity_basis_dist_le
@@ -807,7 +807,7 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
   simp only [Set.mem_Union, Set.mem_range]
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε := by
   intro ε ε_pos
@@ -849,7 +849,7 @@ theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → �
   rw [← tendsto_uniformly_on_univ, tendsto_uniformly_on_iff]
   simp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
@@ -1191,12 +1191,12 @@ section Real
 
 /-- Instantiate the reals as a pseudometric space. -/
 instance Real.pseudoMetricSpace : PseudoMetricSpace ℝ where
-  dist x y := abs (x - y)
+  dist x y := |x - y|
   dist_self := by simp [abs_zero]
   dist_comm x y := abs_sub_comm _ _
   dist_triangle x y z := abs_sub_le _ _ _
 
-theorem Real.dist_eq (x y : ℝ) : dist x y = abs (x - y) :=
+theorem Real.dist_eq (x y : ℝ) : dist x y = |x - y| :=
   rfl
 
 theorem Real.nndist_eq (x y : ℝ) : nndist x y = Real.nnabs (x - y) :=
@@ -1205,7 +1205,7 @@ theorem Real.nndist_eq (x y : ℝ) : nndist x y = Real.nnabs (x - y) :=
 theorem Real.nndist_eq' (x y : ℝ) : nndist x y = Real.nnabs (y - x) :=
   nndist_comm _ _
 
-theorem Real.dist_0_eq_abs (x : ℝ) : dist x 0 = abs x := by simp [Real.dist_eq]
+theorem Real.dist_0_eq_abs (x : ℝ) : dist x 0 = |x| := by simp [Real.dist_eq]
 
 theorem Real.dist_left_le_of_mem_interval {x y z : ℝ} (h : y ∈ Interval x z) : dist x y ≤ dist x z := by
   simpa only [dist_comm x] using abs_sub_left_of_mem_interval h
@@ -1229,10 +1229,10 @@ instance : OrderTopology ℝ :=
   order_topology_of_nhds_abs fun x => by simp only [nhds_basis_ball.eq_binfi, ball, Real.dist_eq, abs_sub_comm]
 
 theorem Real.ball_eq_Ioo (x r : ℝ) : Ball x r = IooCat (x - r) (x + r) :=
-  Set.ext fun y => by rw [mem_ball, dist_comm, Real.dist_eq, abs_sub_lt_iff, mem_Ioo, ← sub_lt_iff_lt_add', sub_lt]
+  Set.ext fun y => by rw [mem_ball, dist_comm, Real.dist_eq, abs_sub_lt_iff, mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm]
 
 theorem Real.closed_ball_eq_Icc {x r : ℝ} : ClosedBall x r = IccCat (x - r) (x + r) := by
-  ext y <;> rw [mem_closed_ball, dist_comm, Real.dist_eq, abs_sub_le_iff, mem_Icc, ← sub_le_iff_le_add', sub_le]
+  ext y <;> rw [mem_closed_ball, dist_comm, Real.dist_eq, abs_sub_le_iff, mem_Icc, ← sub_le_iff_le_add', sub_le_comm]
 
 theorem Real.Ioo_eq_ball (x y : ℝ) : IooCat x y = Ball ((x + y) / 2) ((y - x) / 2) := by
   rw [Real.ball_eq_Ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ← add_div, add_assoc,
@@ -1307,7 +1307,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
@@ -1365,14 +1365,10 @@ theorem cauchySeqOfLeTendsto0 {s : β → α} (b : β → ℝ) (h : ∀ n m N : 
     (h₀ : Tendsto b atTop (𝓝 0)) : CauchySeq s :=
   cauchySeqOfLeTendsto0' b (fun n m hnm => h _ _ _ le_rfl hnm) h₀
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident R, ",", ident R0, ",", ident H, "⟩", ":", expr «expr∃ , »((R «expr > » 0),
-    ∀ n,
-    «expr < »(dist (u n) (u N), R))]] -/
 /-- A Cauchy sequence on the natural numbers is bounded. -/
 theorem cauchy_seq_bdd {u : ℕ → α} (hu : CauchySeq u) : ∃ R > 0, ∀ m n, dist (u m) (u n) < R := by
   rcases Metric.cauchy_seq_iff'.1 hu 1 zero_lt_one with ⟨N, hN⟩
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident R, \",\", ident R0, \",\", ident H, \"⟩\", \":\", expr «expr∃ , »((R «expr > » 0),\n    ∀ n,\n    «expr < »(dist (u n) (u N), R))]]"
+  rsuffices ⟨R, R0, H⟩ : ∃ R > 0, ∀ n, dist (u n) (u N) < R
   · exact ⟨_, add_pos R0 R0, fun m n => lt_of_le_of_lt (dist_triangle_right _ _ _) (add_lt_add (H m) (H n))⟩
     
   let R := Finset.sup (Finset.range N) fun n => nndist (u n) (u N)
@@ -1493,7 +1489,7 @@ section Nnreal
 instance : PseudoMetricSpace ℝ≥0 :=
   Subtype.pseudoMetricSpace
 
-theorem Nnreal.dist_eq (a b : ℝ≥0) : dist a b = abs ((a : ℝ) - b) :=
+theorem Nnreal.dist_eq (a b : ℝ≥0) : dist a b = |(a : ℝ) - b| :=
   rfl
 
 theorem Nnreal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) := by
@@ -1886,7 +1882,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
 theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : Set α} (hs : IsCompact s) {e : ℝ}
@@ -1967,7 +1963,7 @@ instance (priority := 100) properOfCompact [CompactSpace α] : ProperSpace α :=
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball) fun x ε ε0 => is_compact_closed_ball _ _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
@@ -2059,7 +2055,7 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
@@ -2302,11 +2298,13 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
 -- Does not work as a simp-lemma, since {x, y} reduces to (insert y {x})
 theorem diam_pair : diam ({x, y} : Set α) = dist x y := by simp only [diam, Emetric.diam_pair, dist_edist]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr ne_of_lt, ",", expr edist_lt_top, ",", expr max_lt, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 -- Does not work as a simp-lemma, since {x, y, z} reduces to (insert z (insert y {x}))
 theorem diam_triple : Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (dist x z)) (dist y z) := by
   simp only [Metric.diam, Emetric.diam_triple, dist_edist]
-  rw [Ennreal.to_real_max, Ennreal.to_real_max] <;> apply_rules [ne_of_lt, edist_lt_top, max_lt]
+  rw [Ennreal.to_real_max, Ennreal.to_real_max] <;>
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr ne_of_lt, \",\", expr edist_lt_top, \",\", expr max_lt, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 /-- If the distance between any two points in a set is bounded by some constant `C`,
 then `ennreal.of_real C`  bounds the emetric diameter of this set. -/
@@ -2368,7 +2366,7 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
   rw [Ennreal.to_real_le_to_real (bounded.mono h ht).ediam_ne_top ht.ediam_ne_top]
   exact Emetric.diam_mono h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_nonneg, ",", expr diam_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
 any two points in each of the sets. This lemma is true without any side condition, since it is
 obviously true if `s ∪ t` is unbounded. -/
@@ -2382,7 +2380,8 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) : diam (s ∪ t) �
     exact Emetric.diam_union xs yt
     
   · rw [diam_eq_zero_of_unbounded H]
-    apply_rules [add_nonneg, diam_nonneg, dist_nonneg]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr diam_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
 
 /-- If two sets intersect, the diameter of the union is bounded by the sum of the diameters. -/

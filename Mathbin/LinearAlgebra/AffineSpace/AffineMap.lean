@@ -3,13 +3,11 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Algebra.AddTorsor
-import Mathbin.Data.Set.Intervals.UnorderedInterval
+import Mathbin.Data.Set.Pointwise.Interval
 import Mathbin.LinearAlgebra.AffineSpace.Basic
 import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.LinearAlgebra.Pi
 import Mathbin.LinearAlgebra.Prod
-import Mathbin.Tactic.Abel
 
 /-!
 # Affine maps

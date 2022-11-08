@@ -109,7 +109,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
         ext
         simp,
       uniq' := fun s m w => by
-        ext x j
+        ext (x j)
         dsimp only [has_limit.lift]
         simp only [LinearMap.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }

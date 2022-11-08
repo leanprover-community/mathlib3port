@@ -99,7 +99,7 @@ theorem Coloring.mem_color_classes {v : V} : C.ColorClass (C v) ∈ C.ColorClass
   ⟨v, rfl⟩
 
 theorem Coloring.color_classes_finite [Finite α] : C.ColorClasses.Finite :=
-  Set.finite_coe_iff.1 <| Setoid.finite_classes_ker _
+  Setoid.finite_classes_ker _
 
 theorem Coloring.card_color_classes_le [Fintype α] [Fintype C.ColorClasses] :
     Fintype.card C.ColorClasses ≤ Fintype.card α :=
@@ -364,7 +364,8 @@ theorem CompleteBipartiteGraph.chromatic_number {V W : Type _} [Nonempty V] [Non
     · exact ⟨_, he'⟩
       
     · exfalso
-      cases b <;> simp only [eq_tt_eq_not_eq_ff, eq_ff_eq_not_eq_tt] at he he' <;> rw [he, he'] at hn <;> contradiction
+      cases b <;>
+        simp only [eq_tt_eq_not_eq_ff, Bool.eq_false_eq_not_eq_true] at he he' <;> rw [he, he'] at hn <;> contradiction
       
     
 

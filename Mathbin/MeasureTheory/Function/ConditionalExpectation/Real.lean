@@ -71,13 +71,13 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
     exact zero_le _
     
   calc
-    snorm (μ[f|m]) 1 μ ≤ snorm (μ[abs f|m]) 1 μ := by
+    snorm (μ[f|m]) 1 μ ≤ snorm (μ[|f||m]) 1 μ := by
       refine' snorm_mono_ae _
       filter_upwards [@condexp_mono _ m m0 _ _ _ _ _ _ _ _ hf hf.abs
-          (@ae_of_all _ m0 _ μ (fun x => le_abs_self (f x) : ∀ x, f x ≤ abs (f x))),
+          (@ae_of_all _ m0 _ μ (fun x => le_abs_self (f x) : ∀ x, f x ≤ |f x|)),
         eventually_le.trans (condexp_neg f).symm.le
           (@condexp_mono _ m m0 _ _ _ _ _ _ _ _ hf.neg hf.abs
-            (@ae_of_all _ m0 _ μ (fun x => neg_le_abs_self (f x) : ∀ x, -f x ≤ abs (f x))))] with x hx₁ hx₂
+            (@ae_of_all _ m0 _ μ (fun x => neg_le_abs_self (f x) : ∀ x, -f x ≤ |f x|)))] with x hx₁ hx₂
       exact abs_le_abs hx₁ hx₂
     _ = snorm f 1 μ := by
       rw [snorm_one_eq_lintegral_nnnorm, snorm_one_eq_lintegral_nnnorm, ←
@@ -87,16 +87,15 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
       simp_rw [Real.norm_eq_abs]
       rw [← @integral_condexp _ _ _ _ _ m m0 μ _ hm hsig hf.abs]
       refine' integral_congr_ae _
-      have : 0 ≤ᵐ[μ] μ[abs f|m] := by
+      have : 0 ≤ᵐ[μ] μ[|f||m] := by
         rw [← @condexp_zero α ℝ _ _ _ m m0 μ]
         exact
-          condexp_mono (integrable_zero _ _ _) hf.abs
-            (@ae_of_all _ m0 _ μ (fun x => abs_nonneg (f x) : ∀ x, 0 ≤ abs (f x)))
+          condexp_mono (integrable_zero _ _ _) hf.abs (@ae_of_all _ m0 _ μ (fun x => abs_nonneg (f x) : ∀ x, 0 ≤ |f x|))
       filter_upwards [this] with x hx
       exact abs_eq_self.2 hx
     
 
-theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, abs ((μ[f|m]) x) ∂μ) ≤ ∫ x, abs (f x) ∂μ := by
+theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) ≤ ∫ x, |f x| ∂μ := by
   by_cases hm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm, Pi.zero_apply, abs_zero, integral_zero]
@@ -129,7 +128,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, abs ((μ[f|m]) x) ∂
     
 
 theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
-    (∫ x in s, abs ((μ[f|m]) x) ∂μ) ≤ ∫ x in s, abs (f x) ∂μ := by
+    (∫ x in s, |(μ[f|m]) x| ∂μ) ≤ ∫ x in s, |f x| ∂μ := by
   by_cases hnm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hnm, Pi.zero_apply, abs_zero, integral_zero]
@@ -140,13 +139,13 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
   · simp only [condexp_undef hfint, Pi.zero_apply, abs_zero, integral_const, Algebra.id.smul_eq_mul, mul_zero]
     exact integral_nonneg fun x => abs_nonneg _
     
-  have : (∫ x in s, abs ((μ[f|m]) x) ∂μ) = ∫ x, abs ((μ[s.indicator f|m]) x) ∂μ := by
+  have : (∫ x in s, |(μ[f|m]) x| ∂μ) = ∫ x, |(μ[s.indicator f|m]) x| ∂μ := by
     rw [← integral_indicator]
     swap
     · exact hnm _ hs
       
     refine' integral_congr_ae _
-    have : (fun x => abs ((μ[s.indicator f|m]) x)) =ᵐ[μ] fun x => abs (s.indicator (μ[f|m]) x) :=
+    have : (fun x => |(μ[s.indicator f|m]) x|) =ᵐ[μ] fun x => |s.indicator (μ[f|m]) x| :=
       eventually_eq.fun_comp (condexp_indicator hfint hs) _
     refine' eventually_eq.trans (eventually_of_forall fun x => _) this.symm
     rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
@@ -161,8 +160,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
 
 /-- If the real valued function `f` is bounded almost everywhere by `R`, then so is its conditional
 expectation. -/
-theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x ∂μ, abs (f x) ≤ R) :
-    ∀ᵐ x ∂μ, abs ((μ[f|m]) x) ≤ R := by
+theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x ∂μ, |f x| ≤ R) : ∀ᵐ x ∂μ, |(μ[f|m]) x| ≤ R := by
   by_cases hnm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hnm, Pi.zero_apply, abs_zero]
@@ -178,8 +176,7 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
   by_contra h
   change μ _ ≠ 0 at h
   simp only [← zero_lt_iff, Set.compl_def, Set.mem_set_of_eq, not_le] at h
-  suffices (μ { x | ↑R < abs ((μ[f|m]) x) }).toReal * ↑R < (μ { x | ↑R < abs ((μ[f|m]) x) }).toReal * ↑R by
-    exact this.ne rfl
+  suffices (μ { x | ↑R < |(μ[f|m]) x| }).toReal * ↑R < (μ { x | ↑R < |(μ[f|m]) x| }).toReal * ↑R by exact this.ne rfl
   refine' lt_of_lt_of_le (set_integral_gt_gt R.coe_nonneg _ _ h.ne.symm) _
   · simp_rw [← Real.norm_eq_abs]
     exact (strongly_measurable_condexp.mono hnm).Measurable.norm
@@ -194,7 +191,7 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
   refine' set_integral_mono_ae hfint.abs.integrable_on _ _
   · refine'
       ⟨ae_strongly_measurable_const,
-        lt_of_le_of_lt _ (integrable_condexp.integrable_on : integrable_on (μ[f|m]) { x | ↑R < abs ((μ[f|m]) x) } μ).2⟩
+        lt_of_le_of_lt _ (integrable_condexp.integrable_on : integrable_on (μ[f|m]) { x | ↑R < |(μ[f|m]) x| } μ).2⟩
     refine'
       set_lintegral_mono (Measurable.nnnorm _).coeNnrealEnnreal
         (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coeNnrealEnnreal fun x hx => _

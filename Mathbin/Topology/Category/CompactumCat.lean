@@ -191,7 +191,7 @@ private theorem basic_inter {X : CompactumCat} (A B : Set X) : Basic (A ∩ B) =
 
 private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ Cl A := fun a ha => ⟨X.incl a, ha, by simp⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : CompactumCat} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -258,7 +258,7 @@ theorem isClosedCl {X : CompactumCat} (A : Set X) : IsClosed (Cl A) := by
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))

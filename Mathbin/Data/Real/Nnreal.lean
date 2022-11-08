@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Order.Nonneg
+import Mathbin.Algebra.Order.Nonneg.Field
 import Mathbin.Data.Real.Pointwise
 import Mathbin.Tactic.Positivity
 
@@ -168,7 +168,7 @@ protected theorem coe_two : ((2 : ℝ≥0) : ℝ) = 2 :=
 
 @[simp, norm_cast]
 protected theorem coe_sub {r₁ r₂ : ℝ≥0} (h : r₂ ≤ r₁) : ((r₁ - r₂ : ℝ≥0) : ℝ) = r₁ - r₂ :=
-  max_eq_left <| le_sub.2 <| by simp [show (r₂ : ℝ) ≤ r₁ from h]
+  max_eq_left <| le_sub_comm.2 <| by simp [show (r₂ : ℝ) ≤ r₁ from h]
 
 @[simp, norm_cast]
 protected theorem coe_eq_zero (r : ℝ≥0) : ↑r = (0 : ℝ) ↔ r = 0 := by rw [← Nnreal.coe_zero, Nnreal.coe_eq]
@@ -790,7 +790,7 @@ theorem inv_lt_inv {x y : ℝ≥0} (hx : x ≠ 0) (h : x < y) : y⁻¹ < x⁻¹ 
 end Inv
 
 @[simp]
-theorem abs_eq (x : ℝ≥0) : abs (x : ℝ) = x :=
+theorem abs_eq (x : ℝ≥0) : |(x : ℝ)| = x :=
   abs_of_nonneg x.property
 
 section Csupr
@@ -898,7 +898,7 @@ namespace Real
 /-- The absolute value on `ℝ` as a map to `ℝ≥0`. -/
 @[pp_nodot]
 def nnabs : ℝ →*₀ ℝ≥0 where
-  toFun x := ⟨abs x, abs_nonneg x⟩
+  toFun x := ⟨|x|, abs_nonneg x⟩
   map_zero' := by
     ext
     simp
@@ -910,7 +910,7 @@ def nnabs : ℝ →*₀ ℝ≥0 where
     simp [abs_mul]
 
 @[norm_cast, simp]
-theorem coe_nnabs (x : ℝ) : (nnabs x : ℝ) = abs x :=
+theorem coe_nnabs (x : ℝ) : (nnabs x : ℝ) = |x| :=
   rfl
 
 @[simp]
@@ -920,7 +920,7 @@ theorem nnabs_of_nonneg {x : ℝ} (h : 0 ≤ x) : nnabs x = toNnreal x := by
 
 theorem nnabs_coe (x : ℝ≥0) : nnabs x = x := by simp
 
-theorem coe_to_nnreal_le (x : ℝ) : (toNnreal x : ℝ) ≤ abs x :=
+theorem coe_to_nnreal_le (x : ℝ) : (toNnreal x : ℝ) ≤ |x| :=
   max_le (le_abs_self _) (abs_nonneg _)
 
 theorem cast_nat_abs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n := by

@@ -145,7 +145,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       ac_rfl
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -233,7 +233,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
       refine' (mul_le_mul_of_nonneg_right _ <| norm_nonneg _).trans hδ
-      have : ∀ j, abs (J.upper j - J.lower j) ≤ 2 * δ := by
+      have : ∀ j, |J.upper j - J.lower j| ≤ 2 * δ := by
         intro j
         calc
           dist (J.upper j) (J.lower j) ≤ dist J.upper J.lower := dist_le_pi_dist _ _ _
@@ -242,7 +242,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
           _ = 2 * δ := (two_mul δ).symm
           
       calc
-        (∏ j, abs (J.upper j - J.lower j)) ≤ ∏ j : Fin (n + 1), 2 * δ :=
+        (∏ j, |J.upper j - J.lower j|) ≤ ∏ j : Fin (n + 1), 2 * δ :=
           prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j
         _ = (2 * δ) ^ (n + 1) := by simp
         

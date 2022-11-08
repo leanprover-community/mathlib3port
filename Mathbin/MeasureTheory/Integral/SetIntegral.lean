@@ -484,7 +484,7 @@ section TendstoMono
 
 variable {μ : Measure α} [NormedAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α} {f : α → E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) : Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) := by
   let bound : α → ℝ := indicator (s 0) fun a => ∥f a∥
@@ -505,7 +505,7 @@ theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) 
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
     
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
 
 end TendstoMono
@@ -655,7 +655,7 @@ theorem ContinuousAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMea
     (hfm : StronglyMeasurableAtFilter f (𝓝 a) μ) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets)
     (m : ι → ℝ := fun i => (μ (s i)).toReal) (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finiteAtNhds a) hs m hsμ
+  (ha.monoLeft inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finiteAtNhds a) hs m hsμ
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure, `f` is continuous on a measurable set `t`, and `a ∈ t`, then `∫ x in (s i), f x ∂μ =

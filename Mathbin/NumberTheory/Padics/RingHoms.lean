@@ -77,11 +77,11 @@ theorem mod_part_lt_p : modPart p r < p := by
   convert Int.mod_lt _ _
   · simp
     
-  · exact_mod_cast hp_prime.1.ne_zero
+  · exact_mod_cast hp_prime.1.NeZero
     
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
-  Int.mod_nonneg _ <| by exact_mod_cast hp_prime.1.ne_zero
+  Int.mod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
 
 theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
   rw [is_unit_iff]

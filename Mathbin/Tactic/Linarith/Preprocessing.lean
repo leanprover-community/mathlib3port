@@ -34,7 +34,7 @@ namespace Linarith
 
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -114,8 +114,8 @@ unsafe def is_nat_prop : expr → Bool
   | quote.1 (@Eq ℕ (%%ₓ_) _) => true
   | quote.1 (@LE.le ℕ (%%ₓ_) _ _) => true
   | quote.1 (@LT.lt ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@ge ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@gt ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@GE.ge ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@GT.gt ℕ (%%ₓ_) _ _) => true
   | quote.1 ¬%%ₓp => is_nat_prop p
   | _ => false
 
@@ -124,9 +124,9 @@ or the negation of a weak inequality between integers.
 -/
 unsafe def is_strict_int_prop : expr → Bool
   | quote.1 (@LT.lt ℤ (%%ₓ_) _ _) => true
-  | quote.1 (@gt ℤ (%%ₓ_) _ _) => true
+  | quote.1 (@GT.gt ℤ (%%ₓ_) _ _) => true
   | quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => true
-  | quote.1 ¬@ge ℤ (%%ₓ_) _ _ => true
+  | quote.1 ¬@GE.ge ℤ (%%ₓ_) _ _ => true
   | _ => false
 
 private unsafe def filter_comparisons_aux : expr → Bool

@@ -281,7 +281,7 @@ theorem prod_union [DecidableEq α] (h : Disjoint s₁ s₂) : (∏ x in s₁ �
 theorem prod_filter_mul_prod_filter_not (s : Finset α) (p : α → Prop) [DecidablePred p] [DecidablePred fun x => ¬p x]
     (f : α → β) : ((∏ x in s.filter p, f x) * ∏ x in s.filter fun x => ¬p x, f x) = ∏ x in s, f x := by
   haveI := Classical.decEq α
-  rw [← prod_union (filter_inter_filter_neg_eq p s).le, filter_union_filter_neg_eq]
+  rw [← prod_union (disjoint_filter_filter_neg _ _ p), filter_union_filter_neg_eq]
 
 section ToList
 
@@ -345,39 +345,14 @@ theorem prod_sdiff [DecidableEq α] (h : s₁ ⊆ s₂) : ((∏ x in s₂ \ s₁
   rw [← prod_union sdiff_disjoint, sdiff_union_of_subset h]
 
 @[simp, to_additive]
-theorem prod_sum_elim [DecidableEq (Sum α γ)] (s : Finset α) (t : Finset γ) (f : α → β) (g : γ → β) :
-    (∏ x in s.map Function.Embedding.inl ∪ t.map Function.Embedding.inr, Sum.elim f g x) =
-      (∏ x in s, f x) * ∏ x in t, g x :=
-  by
-  rw [prod_union, prod_map, prod_map]
-  · simp only [Sum.elim_inl, Function.Embedding.inl_apply, Function.Embedding.inr_apply, Sum.elim_inr]
-    
-  · simp only [disjoint_left, Finset.mem_map, Finset.mem_map]
-    rintro _ ⟨i, hi, rfl⟩ ⟨j, hj, H⟩
-    cases H
-    
+theorem prod_disj_sum (s : Finset α) (t : Finset γ) (f : Sum α γ → β) :
+    (∏ x in s.disjSum t, f x) = (∏ x in s, f (Sum.inl x)) * ∏ x in t, f (Sum.inr x) := by
+  rw [← map_inl_disj_union_map_inr, prod_disj_union, prod_map, prod_map]
+  rfl
 
-@[simp, to_additive]
-theorem prod_on_sum [Fintype α] [Fintype γ] (f : Sum α γ → β) :
-    (∏ x : Sum α γ, f x) = (∏ x : α, f (Sum.inl x)) * ∏ x : γ, f (Sum.inr x) := by
-  haveI := Classical.decEq (Sum α γ)
-  convert prod_sum_elim univ univ (fun x => f (Sum.inl x)) fun x => f (Sum.inr x)
-  · ext a
-    constructor
-    · intro x
-      cases a
-      · simp only [mem_union, mem_map, mem_univ, Function.Embedding.inl_apply, or_false_iff, exists_true_left,
-          exists_apply_eq_apply, Function.Embedding.inr_apply, exists_false]
-        
-      · simp only [mem_union, mem_map, mem_univ, Function.Embedding.inl_apply, false_or_iff, exists_true_left,
-          exists_false, Function.Embedding.inr_apply, exists_apply_eq_apply]
-        
-      
-    · simp only [mem_univ, imp_true_iff]
-      
-    
-  · simp only [Sum.elim_comp_inl_inr]
-    
+@[to_additive]
+theorem prod_sum_elim (s : Finset α) (t : Finset γ) (f : α → β) (g : γ → β) :
+    (∏ x in s.disjSum t, Sum.elim f g x) = (∏ x in s, f x) * ∏ x in t, g x := by simp
 
 @[to_additive]
 theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs : Set.PairwiseDisjoint (↑s) t) :
@@ -493,7 +468,7 @@ theorem prod_finset_product_right' (r : Finset (α × γ)) (s : Finset γ) (t : 
     (∏ p in r, f p.1 p.2) = ∏ c in s, ∏ a in t c, f a c :=
   prod_finset_product_right r s t h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 @[to_additive]
 theorem prod_fiberwise_of_maps_to [DecidableEq γ] {s : Finset α} {t : Finset γ} {g : α → γ} (h : ∀ x ∈ s, g x ∈ t)
     (f : α → β) : (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) = ∏ x in s, f x := by
@@ -1655,8 +1630,8 @@ theorem add_eq_union_left_of_le {x y z : Multiset α} (h : y ≤ x) : z + x = z 
 theorem add_eq_union_right_of_le {x y z : Multiset α} (h : z ≤ y) : x + y = x ∪ z ↔ y = z ∧ x.Disjoint y := by
   simpa only [and_comm'] using add_eq_union_left_of_le h
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∈ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » i) -/
 theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β → Multiset α} :
     i.Sum f = i.sup f ↔ ∀ (x y) (_ : x ∈ i) (_ : y ∈ i), x ≠ y → Multiset.Disjoint (f x) (f y) := by
   induction' i using Finset.cons_induction_on with z i hz hr
@@ -1679,26 +1654,11 @@ theorem sup_powerset_len {α : Type _} [DecidableEq α] (x : Multiset α) :
 
 @[simp]
 theorem to_finset_sum_count_eq (s : Multiset α) : (∑ a in s.toFinset, s.count a) = s.card :=
-  Multiset.induction_on s rfl fun a s ih =>
-    calc
-      (∑ x in toFinset (a ::ₘ s), count x (a ::ₘ s)) =
-          ∑ x in toFinset (a ::ₘ s), (if x = a then 1 else 0) + count x s :=
-        (Finset.sum_congr rfl) fun _ _ => by
-          split_ifs <;> [simp only [h, count_cons_self, Nat.one_add], simp only [count_cons_of_ne h, zero_add]]
-      _ = card (a ::ₘ s) := by
-        by_cases a ∈ s.to_finset
-        · have : (∑ x in s.to_finset, ite (x = a) 1 0) = ∑ x in {a}, ite (x = a) 1 0 := by
-            rw [Finset.sum_ite_eq', if_pos h, Finset.sum_singleton, if_pos rfl]
-          rw [to_finset_cons, Finset.insert_eq_of_mem h, Finset.sum_add_distrib, ih, this, Finset.sum_singleton,
-            if_pos rfl, add_comm, card_cons]
-          
-        · have ha : a ∉ s := by rwa [mem_to_finset] at h
-          have : (∑ x in to_finset s, ite (x = a) 1 0) = ∑ x in to_finset s, 0 :=
-            Finset.sum_congr rfl fun x hx => if_neg <| by rintro rfl <;> cc
-          rw [to_finset_cons, Finset.sum_insert h, if_pos rfl, Finset.sum_add_distrib, this, Finset.sum_const_zero, ih,
-            count_eq_zero_of_not_mem ha, zero_add, add_comm, card_cons]
-          
-      
+  calc
+    (∑ a in s.toFinset, s.count a) = ∑ a in s.toFinset, s.count a • 1 := by simp only [smul_eq_mul, mul_one]
+    _ = (s.map fun _ => 1).Sum := (Finset.sum_multiset_map_count _ _).symm
+    _ = s.card := by simp
+    
 
 theorem count_sum' {s : Finset β} {a : α} {f : β → Multiset α} : count a (∑ x in s, f x) = ∑ x in s, count a (f x) := by
   dsimp only [Finset.sum]
@@ -1706,22 +1666,7 @@ theorem count_sum' {s : Finset β} {a : α} {f : β → Multiset α} : count a (
 
 @[simp]
 theorem to_finset_sum_count_nsmul_eq (s : Multiset α) : (∑ a in s.toFinset, s.count a • {a}) = s := by
-  apply ext'
-  intro b
-  rw [count_sum']
-  have h : count b s = count b (count b s • {b}) := by rw [count_nsmul, count_singleton_self, mul_one]
-  rw [h]
-  clear h
-  apply Finset.sum_eq_single b
-  · intro c h hcb
-    rw [count_nsmul]
-    convert mul_zero (count c s)
-    apply count_eq_zero.mpr
-    exact finset.not_mem_singleton.mpr (Ne.symm hcb)
-    
-  · intro hb
-    rw [count_eq_zero_of_not_mem (mt mem_to_finset.2 hb), count_nsmul, zero_mul]
-    
+  rw [← Finset.sum_multiset_map_count, Multiset.sum_map_singleton]
 
 theorem exists_smul_of_dvd_count (s : Multiset α) {k : ℕ} (h : ∀ a : α, a ∈ s → k ∣ Multiset.count a s) :
     ∃ u : Multiset α, s = k • u := by

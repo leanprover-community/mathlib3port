@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
-import Mathbin.CategoryTheory.Monoidal.Category
+import Mathbin.CategoryTheory.Monoidal.Functor
 
 /-!
 # Preadditive monoidal categories
@@ -55,7 +55,7 @@ restate_axiom monoidal_preadditive.add_tensor'
 
 attribute [simp] monoidal_preadditive.tensor_zero monoidal_preadditive.zero_tensor
 
-variable [MonoidalPreadditive C]
+variable {C} [MonoidalPreadditive C]
 
 attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
 
@@ -66,6 +66,29 @@ instance tensor_right_additive (X : C) : (tensorRight X).Additive where
 instance tensoring_left_additive (X : C) : ((tensoringLeft C).obj X).Additive where
 
 instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive where
+
+/-- A faithful additive monoidal functor to a monoidal preadditive category
+ensures that the domain is monoidal preadditive. -/
+def monoidalPreadditiveOfFaithful {D : Type _} [Category D] [Preadditive D] [MonoidalCategory D]
+    (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] : MonoidalPreadditive D where
+  tensor_zero' := by
+    intros
+    apply F.to_functor.map_injective
+    simp [F.map_tensor]
+  zero_tensor' := by
+    intros
+    apply F.to_functor.map_injective
+    simp [F.map_tensor]
+  tensor_add' := by
+    intros
+    apply F.to_functor.map_injective
+    simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
+      monoidal_preadditive.tensor_add]
+  add_tensor' := by
+    intros
+    apply F.to_functor.map_injective
+    simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
+      monoidal_preadditive.add_tensor]
 
 open BigOperators
 

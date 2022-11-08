@@ -58,11 +58,15 @@ variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCom
 
 include s_conv xs hx hf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_within_at.sub, ",", expr has_deriv_within_at.add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.const_add, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_mul_const, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_mul_const, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_mul_const, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_id', ",", expr has_deriv_at.pow, ",", expr has_deriv_at.mul_const, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one can
 Taylor-expand to order two the function `f` on the segment `[x + h v, x + h (v + w)]`, giving a
@@ -112,15 +116,19 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
   -- check that `g'` is the derivative of `g`, by a straightforward computation
   have g_deriv : ∀ t ∈ Icc (0 : ℝ) 1, HasDerivWithinAt g (g' t) (Icc 0 1) t := by
     intro t ht
-    apply_rules [HasDerivWithinAt.sub, HasDerivWithinAt.add]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_within_at.sub, \",\", expr has_deriv_within_at.add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     · refine' (hf _ _).compHasDerivWithinAt _ _
       · exact xt_mem t ht
         
-      apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.constAdd, HasDerivAt.smulConst, hasDerivAtMulConst]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.const_add, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
-    · apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smulConst, hasDerivAtMulConst]
+    · trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
-    · apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smulConst, hasDerivAtMulConst]
+    · trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
     · suffices H :
         HasDerivWithinAt (fun u => ((u * h) ^ 2 / 2) • f'' w w)
@@ -129,8 +137,8 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         simp only [one_mul, Nat.cast_bit0, pow_one, Nat.cast_one]
         ring
         
-      apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smulConst, hasDerivAtId', HasDerivAt.pow,
-        HasDerivAt.mulConst]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_id', \",\", expr has_deriv_at.pow, \",\", expr has_deriv_at.mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
   -- check that `g'` is uniformly bounded, with a suitable bound `ε * ((∥v∥ + ∥w∥) * ∥w∥) * h^2`.
   have g'_bound : ∀ t ∈ Ico (0 : ℝ) 1, ∥g' t∥ ≤ ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 := by

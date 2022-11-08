@@ -25,22 +25,32 @@ attribute [simp] nonempty_of_inhabited
 instance (priority := 20) Zero.nonempty [Zero α] : Nonempty α :=
   ⟨0⟩
 
+#print One.nonempty /-
 instance (priority := 20) One.nonempty [One α] : Nonempty α :=
   ⟨1⟩
+-/
 
+#print exists_true_iff_nonempty /-
 theorem exists_true_iff_nonempty {α : Sort _} : (∃ a : α, True) ↔ Nonempty α :=
   Iff.intro (fun ⟨a, _⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨a, trivial⟩
+-/
 
+#print nonempty_Prop /-
 @[simp]
 theorem nonempty_Prop {p : Prop} : Nonempty p ↔ p :=
   Iff.intro (fun ⟨h⟩ => h) fun h => ⟨h⟩
+-/
 
+#print not_nonempty_iff_imp_false /-
 theorem not_nonempty_iff_imp_false {α : Sort _} : ¬Nonempty α ↔ α → False :=
   ⟨fun h a => h ⟨a⟩, fun h ⟨a⟩ => h a⟩
+-/
 
+#print nonempty_sigma /-
 @[simp]
 theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
+-/
 
 /- warning: nonempty_psigma -> nonempty_psigma is a dubious translation:
 lean 3 declaration is
@@ -52,13 +62,17 @@ Case conversion may be inaccurate. Consider using '#align nonempty_psigma nonemp
 theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
+#print nonempty_subtype /-
 @[simp]
 theorem nonempty_subtype {α} {p : α → Prop} : Nonempty (Subtype p) ↔ ∃ a : α, p a :=
   Iff.intro (fun ⟨⟨a, h⟩⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a, h⟩⟩
+-/
 
+#print nonempty_prod /-
 @[simp]
 theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
+-/
 
 /- warning: nonempty_pprod -> nonempty_pprod is a dubious translation:
 lean 3 declaration is
@@ -70,6 +84,7 @@ Case conversion may be inaccurate. Consider using '#align nonempty_pprod nonempt
 theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
 
+#print nonempty_sum /-
 @[simp]
 theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
@@ -81,6 +96,7 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
     match h with
     | Or.inl ⟨a⟩ => ⟨Sum.inl a⟩
     | Or.inr ⟨b⟩ => ⟨Sum.inr b⟩
+-/
 
 /- warning: nonempty_psum -> nonempty_psum is a dubious translation:
 lean 3 declaration is
@@ -113,17 +129,23 @@ Case conversion may be inaccurate. Consider using '#align nonempty_ulift nonempt
 theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 
+#print nonempty_plift /-
 @[simp]
 theorem nonempty_plift {α} : Nonempty (PLift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
+-/
 
+#print Nonempty.forall /-
 @[simp]
 theorem Nonempty.forall {α} {p : Nonempty α → Prop} : (∀ h : Nonempty α, p h) ↔ ∀ a, p ⟨a⟩ :=
   Iff.intro (fun h a => h _) fun h ⟨a⟩ => h _
+-/
 
+#print Nonempty.exists /-
 @[simp]
 theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, p h) ↔ ∃ a, p ⟨a⟩ :=
   Iff.intro (fun ⟨⟨a⟩, h⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a⟩, h⟩
+-/
 
 /-- Using `classical.choice`, lifts a (`Prop`-valued) `nonempty` instance to a (`Type`-valued)
   `inhabited` instance. `classical.inhabited_of_nonempty` already exists, in
@@ -132,15 +154,19 @@ theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, 
 noncomputable def Classical.inhabitedOfNonempty' {α} [h : Nonempty α] : Inhabited α :=
   ⟨Classical.choice h⟩
 
+#print Nonempty.some /-
 /-- Using `classical.choice`, extracts a term from a `nonempty` type. -/
 @[reducible]
 protected noncomputable def Nonempty.some {α} (h : Nonempty α) : α :=
   Classical.choice h
+-/
 
+#print Classical.arbitrary /-
 /-- Using `classical.choice`, extracts a term from a `nonempty` type. -/
 @[reducible]
 protected noncomputable def Classical.arbitrary (α) [h : Nonempty α] : α :=
   Classical.choice h
+-/
 
 /- warning: nonempty.map -> Nonempty.map is a dubious translation:
 lean 3 declaration is
@@ -171,8 +197,10 @@ Case conversion may be inaccurate. Consider using '#align nonempty.congr Nonempt
 protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonempty α ↔ Nonempty β :=
   ⟨Nonempty.map f, Nonempty.map g⟩
 
+#print Nonempty.elim_to_inhabited /-
 theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) : p :=
   h.elim <| f ∘ Inhabited.mk
+-/
 
 instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
   h.elim fun g => h2.elim fun g2 => ⟨⟨g, g2⟩⟩
@@ -189,8 +217,10 @@ Case conversion may be inaccurate. Consider using '#align classical.nonempty_pi 
 theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
   ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
 
+#print subsingleton_of_not_nonempty /-
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=
   ⟨fun x => False.elim <| not_nonempty_iff_imp_false.mp h x⟩
+-/
 
 /- warning: function.surjective.nonempty -> Function.Surjective.nonempty is a dubious translation:
 lean 3 declaration is

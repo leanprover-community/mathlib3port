@@ -214,7 +214,7 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
                     A).flip.compHom.comp
             (mulHom A)).flip
     from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
-  ext ai ax bi bx ci cx : 6
+  ext (ai ax bi bx ci cx) : 6
   dsimp only [coe_comp, Function.comp_app, comp_hom_apply_apply, flip_apply, flip_hom_apply]
   rw [mul_hom_of_of, mul_hom_of_of, mul_hom_of_of, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_assoc (GradedMonoid.mk ai ax) ⟨bi, bx⟩ ⟨ci, cx⟩)
@@ -506,7 +506,7 @@ def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GhasOne.one = 1)
       exact hone,
     map_mul' := by
       rw [(to_add_monoid f).map_mul_iff]
-      ext xi xv yi yv : 4
+      ext (xi xv yi yv) : 4
       show to_add_monoid f (of A xi xv * of A yi yv) = to_add_monoid f (of A xi xv) * to_add_monoid f (of A yi yv)
       rw [of_mul_of, to_add_monoid_of, to_add_monoid_of, to_add_monoid_of]
       exact hmul _ _ }
@@ -538,11 +538,11 @@ def liftRingHom :
       simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
       rw [← F.map_mul, of_mul_of]⟩
   left_inv f := by
-    ext xi xv
+    ext (xi xv)
     exact to_add_monoid_of (fun _ => f.1) xi xv
   right_inv F := by
     apply RingHom.coe_add_monoid_hom_injective
-    ext xi xv
+    ext (xi xv)
     simp only [RingHom.coe_add_monoid_hom_mk, DirectSum.to_add_monoid_of, AddMonoidHom.mk_coe, AddMonoidHom.comp_apply,
       to_semiring_coe_add_monoid_hom]
 

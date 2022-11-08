@@ -160,7 +160,7 @@ instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Alg
     IsGalois.ofSeparableSplittingField
       (galois_poly_separable p (Fintype.card K')
         (let ⟨n, hp, hn⟩ := FiniteField.card K' p
-        hn.symm ▸ dvd_pow_self p n.ne_zero))
+        hn.symm ▸ dvd_pow_self p n.NeZero))
 
 /-- Any finite field is (possibly non canonically) isomorphic to some Galois field. -/
 def algEquivGaloisField (h : Fintype.card K = p ^ n) : K ≃ₐ[Zmod p] GaloisField p n :=

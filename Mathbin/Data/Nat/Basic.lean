@@ -92,26 +92,13 @@ instance : Distrib ℕ :=
 instance : Semiring ℕ :=
   inferInstance
 
-instance Nat.orderBot : OrderBot ℕ where
-  bot := 0
-  bot_le := Nat.zero_le
-
-instance Nat.Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s where
-  bot := ⟨Nat.find (nonempty_subtype.1 h), Nat.find_spec (nonempty_subtype.1 h)⟩
-  bot_le x := Nat.find_min' _ x.2
-
-instance Nat.Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
-  { Subtype.linearOrder s, LinearOrder.toLattice with }
-
-theorem Nat.Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
-    ((⊥ : s) : ℕ) = Nat.find (nonempty_subtype.1 h) :=
-  rfl
-
 protected theorem Nat.nsmul_eq_mul (m n : ℕ) : m • n = m * n :=
   rfl
 
+#print Nat.eq_of_mul_eq_mul_right /-
 theorem Nat.eq_of_mul_eq_mul_right {n m k : ℕ} (Hm : 0 < m) (H : n * m = k * m) : n = k := by
   rw [mul_comm n m, mul_comm k m] at H <;> exact Nat.eq_of_mul_eq_mul_left Hm H
+-/
 
 instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
   { (inferInstance : CommMonoidWithZero ℕ) with
@@ -124,44 +111,6 @@ attribute [simp]
 variable {m n k : ℕ}
 
 namespace Nat
-
-/-!
-### Recursion and `set.range`
--/
-
-
-section Set
-
-open Set
-
-theorem zero_union_range_succ : {0} ∪ Range succ = univ := by
-  ext n
-  cases n <;> simp
-
-@[simp]
-protected theorem range_succ : Range succ = { i | 0 < i } := by ext (_ | i) <;> simp [succ_pos]
-
-variable {α : Type _}
-
-theorem range_of_succ (f : ℕ → α) : {f 0} ∪ Range (f ∘ succ) = Range f := by
-  rw [← image_singleton, range_comp, ← image_union, zero_union_range_succ, image_univ]
-
-theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
-    (Set.Range fun n => Nat.rec x f n : Set α) = {x} ∪ Set.Range fun n => Nat.rec (f 0 x) (f ∘ succ) n := by
-  convert (range_of_succ _).symm
-  ext n
-  induction' n with n ihn
-  · rfl
-    
-  · dsimp at ihn⊢
-    rw [ihn]
-    
-
-theorem range_cases_on {α : Type _} (x : α) (f : ℕ → α) :
-    (Set.Range fun n => Nat.casesOn n x f : Set α) = {x} ∪ Set.Range f :=
-  (range_of_succ _).symm
-
-end Set
 
 /-! ### The units of the natural numbers as a `monoid` and `add_monoid` -/
 
@@ -194,7 +143,9 @@ instance uniqueAddUnits : Unique (AddUnits ℕ) where
 theorem _root_.has_lt.lt.nat_succ_le {n m : ℕ} (h : n < m) : succ n ≤ m :=
   succ_le_of_lt h
 
+#print Nat.succ_eq_one_add /-
 theorem succ_eq_one_add (n : ℕ) : n.succ = 1 + n := by rw [Nat.succ_eq_add_one, Nat.add_comm]
+-/
 
 theorem eq_of_lt_succ_of_not_lt {a b : ℕ} (h1 : a < b + 1) (h2 : ¬a < b) : a = b :=
   have h3 : a ≤ b := le_of_lt_succ h1
@@ -203,14 +154,18 @@ theorem eq_of_lt_succ_of_not_lt {a b : ℕ} (h1 : a < b + 1) (h2 : ¬a < b) : a 
 theorem eq_of_le_of_lt_succ {n m : ℕ} (h₁ : n ≤ m) (h₂ : m < n + 1) : m = n :=
   Nat.le_antisymm (le_of_succ_le_succ h₂) h₁
 
+#print Nat.one_add /-
 theorem one_add (n : ℕ) : 1 + n = succ n := by simp [add_comm]
+-/
 
 @[simp]
 theorem succ_pos' {n : ℕ} : 0 < succ n :=
   succ_pos n
 
+#print Nat.succ_inj' /-
 theorem succ_inj' {n m : ℕ} : succ n = succ m ↔ n = m :=
   ⟨succ.inj, congr_arg _⟩
+-/
 
 theorem succ_injective : Function.Injective Nat.succ := fun x y => succ.inj
 
@@ -225,8 +180,10 @@ theorem succ_succ_ne_one (n : ℕ) : n.succ.succ ≠ 1 :=
 theorem one_lt_succ_succ (n : ℕ) : 1 < n.succ.succ :=
   succ_lt_succ <| succ_pos n
 
+#print Nat.succ_le_succ_iff /-
 theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
   ⟨le_of_succ_le_succ, succ_le_succ⟩
+-/
 
 theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) := by
   by_cases h1:m ≤ n
@@ -343,7 +300,7 @@ theorem pred_sub (n m : ℕ) : pred n - m = pred (n - m) := by rw [← Nat.sub_o
 
 /- warning: nat.le_pred_of_lt -> Nat.le_pred_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt m n) -> (LE.le.{0} Nat Nat.hasLe m (HSub.hSub.{0 0 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (One.one.{0} Nat Nat.hasOne)))
+  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt m n) -> (LE.le.{0} Nat Nat.hasLe m (HSub.hSub.{0 0 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
   forall {m : Nat} {n : Nat}, (LT.lt.{0} Nat instLTNat m n) -> (LE.le.{0} Nat instLENat m (HSub.hSub.{0 0 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align nat.le_pred_of_lt Nat.le_pred_of_ltₓ'. -/
@@ -524,8 +481,8 @@ extend from `P i` to both `P (2 * i)` and `P (2 * i + 1)`, then we have `P n` fo
 This is nothing more than a wrapper around `nat.binary_rec`, to avoid having to switch to
 dealing with `bit0` and `bit1`. -/
 @[elab_as_elim]
-def evenOddRec (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i)) (h_odd : ∀ i, P i → P (2 * i + 1)) :
-    P n := by
+def evenOddRec {P : ℕ → Sort _} (h0 : P 0) (h_even : ∀ (n) (ih : P n), P (2 * n))
+    (h_odd : ∀ (n) (ih : P n), P (2 * n + 1)) (n : ℕ) : P n := by
   refine' @binary_rec P h0 (fun b i hi => _) n
   cases b
   · simpa [bit, bit0_val i] using h_even i hi
@@ -535,13 +492,13 @@ def evenOddRec (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i �
 
 @[simp]
 theorem even_odd_rec_zero (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
-    (h_odd : ∀ i, P i → P (2 * i + 1)) : @evenOddRec 0 P h0 h_even h_odd = h0 :=
+    (h_odd : ∀ i, P i → P (2 * i + 1)) : @evenOddRec _ h0 h_even h_odd 0 = h0 :=
   binary_rec_zero _ _
 
 @[simp]
 theorem even_odd_rec_even (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
     (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
-    @evenOddRec (2 * n) P h0 h_even h_odd = h_even n (evenOddRec n P h0 h_even h_odd) := by
+    @evenOddRec _ h0 h_even h_odd (2 * n) = h_even n (evenOddRec h0 h_even h_odd n) := by
   convert binary_rec_eq _ ff n
   · exact (bit0_eq_two_mul _).symm
     
@@ -556,7 +513,7 @@ theorem even_odd_rec_even (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : �
 @[simp]
 theorem even_odd_rec_odd (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
     (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
-    @evenOddRec (2 * n + 1) P h0 h_even h_odd = h_odd n (evenOddRec n P h0 h_even h_odd) := by
+    @evenOddRec _ h0 h_even h_odd (2 * n + 1) = h_odd n (evenOddRec h0 h_even h_odd n) := by
   convert binary_rec_eq _ tt n
   · exact (bit0_eq_two_mul _).symm
     
@@ -704,8 +661,10 @@ theorem mod_eq_iff_lt {a b : ℕ} (h : b ≠ 0) : a % b = a ↔ a < b := by
 theorem mod_succ_eq_iff_lt {a b : ℕ} : a % b.succ = a ↔ a < b.succ :=
   mod_eq_iff_lt (succ_ne_zero _)
 
+#print Nat.div_add_mod /-
 theorem div_add_mod (m k : ℕ) : k * (m / k) + m % k = m :=
   (Nat.add_comm _ _).trans (mod_add_div _ _)
+-/
 
 theorem mod_add_div' (m k : ℕ) : m % k + m / k * k = m := by
   rw [mul_comm]
@@ -739,18 +698,26 @@ theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m :
   rcases h with ⟨t, rfl⟩
   rw [mul_assoc, add_mul_mod_self_left]
 
+#print Nat.mod_mod /-
 @[simp]
 theorem mod_mod (a n : ℕ) : a % n % n = a % n :=
   (Nat.eq_zero_or_pos n).elim (fun n0 => by simp [n0]) fun npos => mod_eq_of_lt (mod_lt _ npos)
+-/
 
+#print Nat.mod_add_mod /-
 @[simp]
 theorem mod_add_mod (m n k : ℕ) : (m % n + k) % n = (m + k) % n := by
   have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;> rwa [add_right_comm, mod_add_div] at this
+-/
 
+#print Nat.add_mod_mod /-
 @[simp]
 theorem add_mod_mod (m n k : ℕ) : (m + n % k) % k = (m + n) % k := by rw [add_comm, mod_add_mod, add_comm]
+-/
 
+#print Nat.add_mod /-
 theorem add_mod (a b n : ℕ) : (a + b) % n = (a % n + b % n) % n := by rw [add_mod_mod, mod_add_mod]
+-/
 
 theorem add_mod_eq_add_mod_right {m n k : ℕ} (i : ℕ) (H : m % n = k % n) : (m + i) % n = (k + i) % n := by
   rw [← mod_add_mod, ← mod_add_mod k, H]
@@ -758,10 +725,12 @@ theorem add_mod_eq_add_mod_right {m n k : ℕ} (i : ℕ) (H : m % n = k % n) : (
 theorem add_mod_eq_add_mod_left {m n k : ℕ} (i : ℕ) (H : m % n = k % n) : (i + m) % n = (i + k) % n := by
   rw [add_comm, add_mod_eq_add_mod_right _ H, add_comm]
 
+#print Nat.mul_mod /-
 theorem mul_mod (a b n : ℕ) : a * b % n = a % n * (b % n) % n := by
   conv_lhs =>
     rw [← mod_add_div a n, ← mod_add_div' b n, right_distrib, left_distrib, left_distrib, mul_assoc, mul_assoc, ←
       left_distrib n _ _, add_mul_mod_self_left, ← mul_assoc, add_mul_mod_self_right]
+-/
 
 theorem mul_dvd_of_dvd_div {a b c : ℕ} (hab : c ∣ b) (h : a ∣ b / c) : c * a ∣ b :=
   have h1 : ∃ d, b / c = a * d := h
@@ -783,6 +752,7 @@ theorem div_le_div_left {a b c : ℕ} (h₁ : c ≤ b) (h₂ : 0 < c) : a / b �
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
   | m, n + 1, _ => lt_succ_iff
 
+#print Nat.mul_div_le /-
 theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m := by
   cases' Nat.eq_zero_or_pos n with n0 h
   · rw [n0, zero_mul]
@@ -790,6 +760,7 @@ theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m := by
     
   · rw [mul_comm, ← Nat.le_div_iff_mul_le' h]
     
+-/
 
 theorem lt_mul_div_succ (m : ℕ) {n : ℕ} (n0 : 0 < n) : m < n * (m / n + 1) := by
   rw [mul_comm, ← Nat.div_lt_iff_lt_mul' n0]
@@ -966,7 +937,7 @@ theorem bit_cases_on_bit1 {C : ℕ → Sort u} (H : ∀ b n, C (bit b n)) (n : �
 theorem bit_cases_on_injective {C : ℕ → Sort u} :
     Function.Injective fun H : ∀ b n, C (bit b n) => fun n => bitCasesOn n H := by
   intro H₁ H₂ h
-  ext b n
+  ext (b n)
   simpa only [bit_cases_on_bit] using congr_fun h (bit b n)
 
 @[simp]

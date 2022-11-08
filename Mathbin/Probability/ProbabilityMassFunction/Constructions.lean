@@ -118,13 +118,13 @@ instance : LawfulMonad Pmf where
 
 section OfFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 variable {f : α → ℝ≥0} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
@@ -261,10 +261,10 @@ theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=
 theorem support_bernoulli : (bernoulli p h).Support = { b | cond b (p ≠ 0) (p ≠ 1) } := by
   refine' Set.ext fun b => _
   induction b
-  · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_ff, Ne.def, tsub_eq_zero_iff_le, not_le]
+  · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_false, Ne.def, tsub_eq_zero_iff_le, not_le]
     exact ⟨ne_of_lt, lt_of_le_of_ne h⟩
     
-  · simp only [mem_support_iff, bernoulli_apply, Bool.cond_tt, Set.mem_set_of_eq]
+  · simp only [mem_support_iff, bernoulli_apply, Bool.cond_true, Set.mem_set_of_eq]
     
 
 theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).Support ↔ cond b (p ≠ 0) (p ≠ 1) := by simp

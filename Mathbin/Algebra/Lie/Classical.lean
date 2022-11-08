@@ -164,7 +164,7 @@ def pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
 variable [Fintype p] [Fintype q]
 
 theorem Pso_inv {i : R} (hi : i * i = -1) : pso p q R i * pso p q R (-i) = 1 := by
-  ext x y
+  ext (x y)
   rcases x with ⟨⟩ <;> rcases y with ⟨⟩
   · -- x y : p
       by_cases h:x = y <;>
@@ -187,7 +187,7 @@ def invertiblePso {i : R} (hi : i * i = -1) : Invertible (pso p q R i) :=
 
 theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
     (pso p q R i)ᵀ ⬝ indefiniteDiagonal p q R ⬝ pso p q R i = 1 := by
-  ext x y
+  ext (x y)
   rcases x with ⟨⟩ <;> rcases y with ⟨⟩
   · -- x y : p
       by_cases h:x = y <;>
@@ -333,7 +333,7 @@ theorem indefinite_diagonal_assoc :
     indefiniteDiagonal (Sum Unit l) l R =
       Matrix.reindexLieEquiv (Equiv.sumAssoc Unit l l).symm (Matrix.fromBlocks 1 0 0 (indefiniteDiagonal l l R)) :=
   by
-  ext i j
+  ext (i j)
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;>
     rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
       simp only [indefinite_diagonal, Matrix.diagonal, Equiv.sum_assoc_apply_inl_inl, Matrix.reindex_lie_equiv_apply,

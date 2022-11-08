@@ -26,10 +26,6 @@ is required to prove the generalized Borel-Cantelli.
   given a filtration `ℱ` and a sequence of sets `s` such that `s n ∈ ℱ n` for all `n`,
   `limsup at_top s` is almost everywhere equal to the set for which `∑ ℙ[s (n + 1)∣ℱ n] = ∞`.
 
-## TODO
-
-Prove the missing second Borel-Cantelli lemma using this generalized version.
-
 -/
 
 
@@ -115,7 +111,7 @@ theorem Submartingale.stoppedValueLeastGe [IsFiniteMeasure μ] (hf : Submartinga
 
 variable {r : ℝ} {R : ℝ≥0}
 
-theorem norm_stopped_value_least_ge_le (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R)
+theorem norm_stopped_value_least_ge_le (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R)
     (i : ℕ) : ∀ᵐ ω ∂μ, stoppedValue f (leastGe f r i) ω ≤ r + R := by
   filter_upwards [hbdd] with ω hbddω
   change f (least_ge f r i ω) ω ≤ r + R
@@ -131,7 +127,7 @@ theorem norm_stopped_value_least_ge_le (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : �
     
 
 theorem Submartingale.stopped_value_least_ge_snorm_le [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hr : 0 ≤ r)
-    (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) (i : ℕ) :
+    (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
     snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ 2 * μ Set.Univ * Ennreal.ofReal (r + R) := by
   refine'
     snorm_one_le_of_le' ((hf.stopped_value_least_ge r).Integrable _) _ (norm_stopped_value_least_ge_le hr hf0 hbdd i)
@@ -140,14 +136,14 @@ theorem Submartingale.stopped_value_least_ge_snorm_le [IsFiniteMeasure μ] (hf :
   simp_rw [stopped_value, least_ge, hitting_of_le le_rfl, hf0, integral_zero']
 
 theorem Submartingale.stopped_value_least_ge_snorm_le' [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hr : 0 ≤ r)
-    (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) (i : ℕ) :
+    (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
     snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ Ennreal.toNnreal (2 * μ Set.Univ * Ennreal.ofReal (r + R)) := by
   refine' (hf.stopped_value_least_ge_snorm_le hr hf0 hbdd i).trans _
   simp [Ennreal.coe_to_nnreal (measure_ne_top μ _), Ennreal.coe_to_nnreal]
 
 /-- This lemma is superceded by `submartingale.bdd_above_iff_exists_tendsto`. -/
 theorem Submartingale.exists_tendsto_of_abs_bdd_above_aux [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hf0 : f 0 = 0)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) :
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) → ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   have ht : ∀ᵐ ω ∂μ, ∀ i : ℕ, ∃ c, tendsto (fun n => stopped_value f (least_ge f i n) ω) at_top (𝓝 c) := by
     rw [ae_all_iff]
@@ -171,7 +167,7 @@ theorem Submartingale.exists_tendsto_of_abs_bdd_above_aux [IsFiniteMeasure μ] (
   simp only [← HEq, hω i]
 
 theorem Submartingale.bdd_above_iff_exists_tendsto_aux [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hf0 : f 0 = 0)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) :
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   filter_upwards [hf.exists_tendsto_of_abs_bdd_above_aux hf0
       hbdd] with ω hω using⟨hω, fun ⟨c, hc⟩ => hc.bdd_above_range⟩
@@ -179,19 +175,19 @@ theorem Submartingale.bdd_above_iff_exists_tendsto_aux [IsFiniteMeasure μ] (hf 
 /-- One sided martingale bound: If `f` is a submartingale which has uniformly bounded differences,
 then for almost every `ω`, `f n ω` is bounded above (in `n`) if and only if it converges. -/
 theorem Submartingale.bdd_above_iff_exists_tendsto [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) :
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   set g : ℕ → Ω → ℝ := fun n ω => f n ω - f 0 ω with hgdef
   have hg : submartingale g ℱ μ := hf.sub_martingale (martingale_const_fun _ _ (hf.adapted 0) (hf.integrable 0))
   have hg0 : g 0 = 0 := by
     ext ω
     simp only [hgdef, sub_self, Pi.zero_apply]
-  have hgbdd : ∀ᵐ ω ∂μ, ∀ i : ℕ, abs (g (i + 1) ω - g i ω) ≤ ↑R := by simpa only [sub_sub_sub_cancel_right]
+  have hgbdd : ∀ᵐ ω ∂μ, ∀ i : ℕ, |g (i + 1) ω - g i ω| ≤ ↑R := by simpa only [sub_sub_sub_cancel_right]
   filter_upwards [hg.bdd_above_iff_exists_tendsto_aux hg0 hgbdd] with ω hω
   convert hω using 1 <;> rw [eq_iff_iff]
   · simp only [hgdef]
     refine' ⟨fun h => _, fun h => _⟩ <;>
-      obtain ⟨b, hb⟩ := h <;> refine' ⟨b + abs (f 0 ω), fun y hy => _⟩ <;> obtain ⟨n, rfl⟩ := hy
+      obtain ⟨b, hb⟩ := h <;> refine' ⟨b + |f 0 ω|, fun y hy => _⟩ <;> obtain ⟨n, rfl⟩ := hy
     · simp_rw [sub_eq_add_neg]
       exact add_le_add (hb ⟨n, rfl⟩) (neg_le_abs_self _)
       
@@ -232,9 +228,9 @@ almost everywhere, the result follows.
 
 
 theorem Martingale.bdd_above_range_iff_bdd_below_range [IsFiniteMeasure μ] (hf : Martingale f ℱ μ)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) :
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) ↔ BddBelow (Set.Range fun n => f n ω) := by
-  have hbdd' : ∀ᵐ ω ∂μ, ∀ i, abs ((-f) (i + 1) ω - (-f) i ω) ≤ R := by
+  have hbdd' : ∀ᵐ ω ∂μ, ∀ i, |(-f) (i + 1) ω - (-f) i ω| ≤ R := by
     filter_upwards [hbdd] with ω hω i
     erw [← abs_neg, neg_sub, sub_neg_eq_add, neg_add_eq_sub]
     exact hω i
@@ -262,13 +258,13 @@ theorem Martingale.bdd_above_range_iff_bdd_below_range [IsFiniteMeasure μ] (hf 
     
 
 theorem Martingale.ae_not_tendsto_at_top_at_top [IsFiniteMeasure μ] (hf : Martingale f ℱ μ)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) : ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atTop := by
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) : ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atTop := by
   filter_upwards [hf.bdd_above_range_iff_bdd_below_range
       hbdd] with ω hω htop using unbounded_of_tendsto_at_top htop
       (hω.2 <| bdd_below_range_of_tendsto_at_top_at_top htop)
 
 theorem Martingale.ae_not_tendsto_at_top_at_bot [IsFiniteMeasure μ] (hf : Martingale f ℱ μ)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) : ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atBot := by
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) : ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atBot := by
   filter_upwards [hf.bdd_above_range_iff_bdd_below_range
       hbdd] with ω hω htop using unbounded_of_tendsto_at_bot htop
       (hω.1 <| bdd_above_range_of_tendsto_at_top_at_bot htop)
@@ -302,8 +298,7 @@ theorem predictable_part_process_ae_eq (ℱ : Filtration ℕ m0) (μ : Measure �
   simp_rw [martingale_part, process, Finset.sum_sub_distrib] at this
   exact sub_right_injective this
 
-theorem process_difference_le (s : ℕ → Set Ω) (ω : Ω) (n : ℕ) : abs (process s (n + 1) ω - process s n ω) ≤ (1 : ℝ≥0) :=
-  by
+theorem process_difference_le (s : ℕ → Set Ω) (ω : Ω) (n : ℕ) : |process s (n + 1) ω - process s n ω| ≤ (1 : ℝ≥0) := by
   rw [Nonneg.coe_one, process, process, Finset.sum_apply, Finset.sum_apply, Finset.sum_range_succ_sub_sum, ←
     Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
   refine' Set.indicator_le' (fun _ _ => _) (fun _ _ => zero_le_one) _
@@ -320,7 +315,7 @@ open BorelCantelli
 /-- An a.e. monotone adapted process `f` with uniformly bounded differences converges to `+∞` if
 and only if its predictable part also converges to `+∞`. -/
 theorem tendsto_sum_indicator_at_top_iff [IsFiniteMeasure μ] (hfmono : ∀ᵐ ω ∂μ, ∀ n, f n ω ≤ f (n + 1) ω)
-    (hf : Adapted ℱ f) (hint : ∀ n, Integrable (f n) μ) (hbdd : ∀ᵐ ω ∂μ, ∀ n, abs (f (n + 1) ω - f n ω) ≤ R) :
+    (hf : Adapted ℱ f) (hint : ∀ n, Integrable (f n) μ) (hbdd : ∀ᵐ ω ∂μ, ∀ n, |f (n + 1) ω - f n ω| ≤ R) :
     ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop atTop ↔ Tendsto (fun n => predictablePart f ℱ μ n ω) atTop atTop := by
   have h₁ := (martingale_martingale_part hf hint).ae_not_tendsto_at_top_at_top (martingale_part_bdd_difference ℱ hbdd)
   have h₂ := (martingale_martingale_part hf hint).ae_not_tendsto_at_top_at_bot (martingale_part_bdd_difference ℱ hbdd)
@@ -365,7 +360,8 @@ theorem tendsto_sum_indicator_at_top_iff' [IsFiniteMeasure μ] {s : ℕ → Set 
 /-- **Lévy's generalization of the Borel-Cantelli lemma**: given a sequence of sets `s` and a
 filtration `ℱ` such that for all `n`, `s n` is `ℱ n`-measurable, `at_top.limsup s` is almost
 everywhere equal to the set for which `∑ k, ℙ(s (k + 1) | ℱ k) = ∞`. -/
-theorem ae_mem_limsup_at_top_iff [IsFiniteMeasure μ] {s : ℕ → Set Ω} (hs : ∀ n, measurable_set[ℱ n] (s n)) :
+theorem ae_mem_limsup_at_top_iff (μ : Measure Ω) [IsFiniteMeasure μ] {s : ℕ → Set Ω}
+    (hs : ∀ n, measurable_set[ℱ n] (s n)) :
     ∀ᵐ ω ∂μ,
       ω ∈ limsup s atTop ↔
         Tendsto (fun n => ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|ℱ k]) ω) atTop atTop :=

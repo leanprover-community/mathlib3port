@@ -47,7 +47,7 @@ TODO: this is a variant of `compact_relation` in `coinductive_predicates.lean`, 
 unsafe def compact_relation : List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
   | [], ps => ([], ps)
   | b :: bs, ps =>
-    match ps.span fun ap : expr × expr => ¬expr.alpha_eqv ap.2 b with
+    match ps.span fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)

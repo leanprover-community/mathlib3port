@@ -644,7 +644,7 @@ private theorem abs_nonneg' (z : ℂ) : 0 ≤ abs z :=
 
 theorem abs_conj (z : ℂ) : (abs conj z) = abs z := by simp
 
-private theorem abs_re_le_abs (z : ℂ) : abs z.re ≤ abs z := by
+private theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z := by
   rw [mul_self_le_mul_self_iff (abs_nonneg z.re) (abs_nonneg' _), abs_mul_abs_self, mul_self_abs]
   apply re_sq_le_norm_sq
 
@@ -677,7 +677,7 @@ theorem abs_apply {z : ℂ} : abs z = (normSq z).sqrt :=
   rfl
 
 @[simp, norm_cast]
-theorem abs_of_real (r : ℝ) : abs r = abs r := by simp [abs, norm_sq_of_real, Real.sqrt_mul_self_eq_abs]
+theorem abs_of_real (r : ℝ) : abs r = |r| := by simp [abs, norm_sq_of_real, Real.sqrt_mul_self_eq_abs]
 
 theorem abs_of_nonneg {r : ℝ} (h : 0 ≤ r) : abs r = r :=
   (abs_of_real _).trans (abs_of_nonneg h)
@@ -731,12 +731,12 @@ theorem abs_pow (z : ℂ) (n : ℕ) : abs (z ^ n) = abs z ^ n :=
 theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
   map_zpow₀ abs z n
 
-theorem abs_re_le_abs (z : ℂ) : abs z.re ≤ abs z :=
+theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
   Real.abs_le_sqrt <| by
     rw [norm_sq_apply, ← sq]
     exact le_add_of_nonneg_right (mul_self_nonneg _)
 
-theorem abs_im_le_abs (z : ℂ) : abs z.im ≤ abs z :=
+theorem abs_im_le_abs (z : ℂ) : |z.im| ≤ abs z :=
   Real.abs_le_sqrt <| by
     rw [norm_sq_apply, ← sq, ← sq]
     exact le_add_of_nonneg_left (sq_nonneg _)
@@ -748,28 +748,28 @@ theorem im_le_abs (z : ℂ) : z.im ≤ abs z :=
   (abs_le.1 (abs_im_le_abs _)).2
 
 @[simp]
-theorem abs_re_lt_abs {z : ℂ} : abs z.re < abs z ↔ z.im ≠ 0 := by
+theorem abs_re_lt_abs {z : ℂ} : |z.re| < abs z ↔ z.im ≠ 0 := by
   rw [abs, AbsoluteValue.coe_mk, MulHom.coe_mk, Real.lt_sqrt (abs_nonneg _), norm_sq_apply, _root_.sq_abs, ← sq,
     lt_add_iff_pos_right, mul_self_pos]
 
 @[simp]
-theorem abs_im_lt_abs {z : ℂ} : abs z.im < abs z ↔ z.re ≠ 0 := by simpa using @abs_re_lt_abs (z * I)
+theorem abs_im_lt_abs {z : ℂ} : |z.im| < abs z ↔ z.re ≠ 0 := by simpa using @abs_re_lt_abs (z * I)
 
 @[simp]
-theorem abs_abs (z : ℂ) : abs (abs z) = abs z :=
+theorem abs_abs (z : ℂ) : |abs z| = abs z :=
   abs_of_nonneg (abs.Nonneg _)
 
-theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ abs z.re + abs z.im := by
+theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ |z.re| + |z.im| := by
   simpa [re_add_im] using abs.add_le z.re (z.im * I)
 
-theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (abs z.re) (abs z.im) := by
+theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|) (|z.im|) := by
   cases' z with x y
   simp only [abs, norm_sq_mk, ← sq]
-  wlog (discharger := tactic.skip) hle : abs x ≤ abs y := le_total (abs x) (abs y) using x y, y x
+  wlog (discharger := tactic.skip) hle : |x| ≤ |y| := le_total (|x|) (|y|) using x y, y x
   · simp only [AbsoluteValue.coe_mk, MulHom.coe_mk, norm_sq_mk, ← sq]
     calc
       Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) := Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)
-      _ = Real.sqrt 2 * max (abs x) (abs y) := by
+      _ = Real.sqrt 2 * max (|x|) (|y|) := by
         rw [max_eq_right hle, ← two_mul, Real.sqrt_mul two_pos.le, Real.sqrt_sq_eq_abs]
       
     
@@ -777,11 +777,11 @@ theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (abs z.r
     rwa [add_comm, max_comm]
     
 
-theorem abs_re_div_abs_le_one (z : ℂ) : abs (z.re / z.abs) ≤ 1 :=
+theorem abs_re_div_abs_le_one (z : ℂ) : |z.re / z.abs| ≤ 1 :=
   if hz : z = 0 then by simp [hz, zero_le_one]
   else by simp_rw [_root_.abs_div, abs_abs, div_le_iff (abs.pos hz), one_mul, abs_re_le_abs]
 
-theorem abs_im_div_abs_le_one (z : ℂ) : abs (z.im / z.abs) ≤ 1 :=
+theorem abs_im_div_abs_le_one (z : ℂ) : |z.im / z.abs| ≤ 1 :=
   if hz : z = 0 then by simp [hz, zero_le_one]
   else by simp_rw [_root_.abs_div, abs_abs, div_le_iff (abs.pos hz), one_mul, abs_im_le_abs]
 
@@ -789,7 +789,7 @@ theorem abs_im_div_abs_le_one (z : ℂ) : abs (z.im / z.abs) ≤ 1 :=
 theorem abs_cast_nat (n : ℕ) : abs (n : ℂ) = n := by rw [← of_real_nat_cast, abs_of_nonneg (Nat.cast_nonneg n)]
 
 @[simp, norm_cast]
-theorem int_cast_abs (n : ℤ) : ↑(abs n) = abs n := by rw [← of_real_int_cast, abs_of_real, Int.cast_abs]
+theorem int_cast_abs (n : ℤ) : ↑(|n|) = abs n := by rw [← of_real_int_cast, abs_of_real, Int.cast_abs]
 
 theorem norm_sq_eq_abs (x : ℂ) : normSq x = abs x ^ 2 := by simp [abs, sq, Real.mul_self_sqrt (norm_sq_nonneg _)]
 

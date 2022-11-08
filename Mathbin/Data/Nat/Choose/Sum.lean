@@ -145,14 +145,14 @@ theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
 
 namespace Finset
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),
     range «expr + »(x.card, 1),
-    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
     (∑ m in x.Powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),\n    range «expr + »(x.card, 1),\n    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),\n    range «expr + »(x.card, 1),\n    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · refine' (sum_fiberwise_of_maps_to _ _).symm
     intro y hy
     rw [mem_range, Nat.lt_succ_iff]

@@ -18,7 +18,7 @@ universe u v
 
 open Finset
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
 class FinEnum (α : Sort _) where
@@ -195,7 +195,7 @@ def pi {β : α → Type max u v} [DecidableEq α] : ∀ xs : List α, (∀ a, L
 theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (xs : List α) (f : ∀ a, a ∈ xs → β a) :
     f ∈ pi xs fun x => toList (β x) := by
   induction xs <;> simp [pi, -List.map_eq_map, monad_norm, functor_norm]
-  · ext a ⟨⟩
+  · ext (a⟨⟩)
     
   · exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))
     constructor
@@ -204,7 +204,7 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
     constructor
     · apply xs_ih
       
-    · ext x h
+    · ext (x h)
       simp [pi.cons]
       split_ifs
       subst x

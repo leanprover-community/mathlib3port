@@ -189,7 +189,7 @@ def isEmptyAlgEquiv [he : IsEmpty σ] : MvPolynomial σ R ≃ₐ[R] R :=
       ext
       simp [Algebra.of_id_apply, algebra_map_eq])
     (by
-      ext i m
+      ext (i m)
       exact IsEmpty.elim' he i)
 
 /-- The ring isomorphism between multivariable polynomials in no variables

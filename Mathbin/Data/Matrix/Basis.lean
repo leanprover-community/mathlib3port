@@ -155,13 +155,13 @@ theorem mul_right_apply_of_ne (a b : n) (hbj : b ≠ j) (M : Matrix n n α) : (M
 
 @[simp]
 theorem mul_same (k : n) (d : α) : stdBasisMatrix i j c ⬝ stdBasisMatrix j k d = stdBasisMatrix i k (c * d) := by
-  ext a b
+  ext (a b)
   simp only [mul_apply, std_basis_matrix, boole_mul]
   by_cases h₁:i = a <;> by_cases h₂:k = b <;> simp [h₁, h₂]
 
 @[simp]
 theorem mul_of_ne {k l : n} (h : j ≠ k) (d : α) : stdBasisMatrix i j c ⬝ stdBasisMatrix k l d = 0 := by
-  ext a b
+  ext (a b)
   simp only [mul_apply, boole_mul, std_basis_matrix]
   by_cases h₁:i = a <;> simp [h₁, h, h.symm]
 

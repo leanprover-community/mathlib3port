@@ -160,16 +160,16 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let e' ← to_expr (pquote.1 ((%%ₓv') * %%ₓe))
     mk_app `eq.refl [e']
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Given `e`, a term with rational division, produces a natural number `n` and a proof of `n*e = e'`,
 where `e'` has no division. Assumes "well-behaved" division.
 -/
 unsafe def derive (e : expr) : tactic (ℕ × expr) :=
   let (n, t) := find_cancel_factor e
   Prod.mk n <$> mk_prod_prf n t e <|>
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,

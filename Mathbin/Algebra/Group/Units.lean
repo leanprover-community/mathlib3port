@@ -32,6 +32,7 @@ universe u
 
 variable {α : Type u}
 
+#print Units /-
 /-- Units of a `monoid`, bundled version. Notation: `αˣ`.
 
 An element of a `monoid` is a unit if it has a two-sided inverse.
@@ -42,10 +43,12 @@ structure Units (α : Type u) [Monoid α] where
   inv : α
   val_inv : val * inv = 1
   inv_val : inv * val = 1
+-/
 
 -- mathport name: «expr ˣ»
 postfix:1024 "ˣ" => Units
 
+#print AddUnits /-
 -- We don't provide notation for the additive version, because its use is somewhat rare.
 /-- Units of an `add_monoid`, bundled version.
 
@@ -57,6 +60,7 @@ structure AddUnits (α : Type u) [AddMonoid α] where
   neg : α
   val_neg : val + neg = 0
   neg_val : neg + val = 0
+-/
 
 attribute [to_additive] Units
 

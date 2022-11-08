@@ -184,9 +184,9 @@ The following section contains code that can convert an a `poly` object into a `
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `n -/
 /-- This can convert a `poly` into a `pexpr` that would evaluate to a polynomial.
 To do so, it uses a list `m` of expressions, the atomic expressions that appear in the `poly`.
@@ -201,7 +201,7 @@ unsafe def poly.to_pexpr : List expr → Poly → tactic pexpr
   | _, poly.const z => return z.to_pexpr
   | m, poly.var n => do
     let some e ← return <| m.nth n |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     return (pquote.1 (%%ₓe))
   | m, poly.add p q => do
     let p_pexpr ← poly.to_pexpr m p
@@ -320,9 +320,9 @@ structure SageJsonFailure where
   errorValue : String
   deriving non_null_json_serializable, Inhabited
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Parse the json output from `scripts/polyrith.py` into either an error message, a list of `poly`
 objects, or `none` if only trace output was requested. -/
 unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
@@ -334,7 +334,7 @@ unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
           Sum.inl <$> of_json SageJsonSuccess j)
   match r with
     | Sum.inr f =>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     | Sum.inl s => do
       s trace
       pure s
@@ -414,9 +414,9 @@ The following section contains code that allows lean to communicate with a pytho
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- This tactic calls python from the command line with the args in `arg_list`.
 The output printed to the console is returned as a `string`.
 It assumes that `python3` is available on the path.
@@ -426,7 +426,7 @@ unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
   let s ← unsafe_run_io <| Io.cmd { cmd := "python3", args }
   let some j ← pure (json.parse s) |
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   pure j
 
 /-- Adds parentheses around additions and subtractions, for printing at
@@ -500,19 +500,19 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr 
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
   return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The second half of `tactic.polyrith` processes the output from Sage into
 a call to `linear_combination`.
 -/
 unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) : tactic format :=
   focus1 <| do
     let some coeffs_as_poly ← convert_sage_output sage_out |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
     let eq_names_pexpr := eq_names.map to_pexpr
     let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr (pquote.1 (%%ₓe : %%ₓR))
@@ -521,7 +521,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
     let expr_string ← components_to_lc_format components
     let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
     done <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/

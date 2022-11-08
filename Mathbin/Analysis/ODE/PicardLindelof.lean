@@ -266,14 +266,14 @@ theorem hasDerivWithinAtNext (t : IccCat v.tMin v.tMax) :
   rw [v.proj_of_mem ht']
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
-    (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * d) (t : IccCat v.tMin v.tMax) :
-    dist (next f₁ t) (next f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := by
+    (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * |t - v.t₀|) ^ n / n ! * d) (t : IccCat v.tMin v.tMax) :
+    dist (next f₁ t) (next f₂ t) ≤ (v.l * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := by
   simp only [dist_eq_norm, next_apply, add_sub_add_left_eq_sub, ←
     intervalIntegral.integral_sub (interval_integrable_v_comp _ _ _) (interval_integrable_v_comp _ _ _),
     norm_integral_eq_norm_integral_Ioc] at *
   calc
     ∥∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ∥ ≤
-        ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * abs (τ - v.t₀)) ^ n / n ! * d) :=
+        ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * |τ - v.t₀|) ^ n / n ! * d) :=
       by
       refine' norm_integral_le_of_norm_le (Continuous.integrableOnIntervalOc _) _
       · continuity
@@ -285,14 +285,14 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
         rw [v.proj_of_mem]
         exact interval_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
         
-    _ = (v.L * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := _
+    _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := _
     
   simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
     integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mul,
     Nat.cast_succ, mul_inv, mul_assoc]
 
 theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : IccCat v.tMin v.tMax) :
-    dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * dist f₁ f₂ := by
+    dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.l * |t - v.t₀|) ^ n / n ! * dist f₁ f₂ := by
   induction' n with n ihn generalizing t
   · rw [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one, one_mul]
     exact dist_apply_le_dist f₁ f₂ t
@@ -305,7 +305,7 @@ theorem dist_iterate_next_le (f₁ f₂ : FunSpace v) (n : ℕ) :
     dist ((next^[n]) f₁) ((next^[n]) f₂) ≤ (v.l * v.tDist) ^ n / n ! * dist f₁ f₂ := by
   refine' dist_le_of_forall fun t => (dist_iterate_next_apply_le _ _ _ _).trans _
   have : 0 ≤ dist f₁ f₂ := dist_nonneg
-  have : abs (t - v.t₀ : ℝ) ≤ v.t_dist := v.dist_t₀_le t
+  have : |(t - v.t₀ : ℝ)| ≤ v.t_dist := v.dist_t₀_le t
   mono* <;> simp only [Nat.cast_nonneg, mul_nonneg, Nnreal.coe_nonneg, abs_nonneg, *]
 
 end FunSpace

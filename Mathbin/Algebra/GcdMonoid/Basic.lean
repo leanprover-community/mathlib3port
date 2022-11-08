@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Jens Wagemaker
 -/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.GroupPower.Lemmas
+import Mathbin.Algebra.Ring.Regular
 
 /-!
 # Monoids with normalization functions, `gcd`, and `lcm`
@@ -445,8 +446,8 @@ theorem gcd_mul_dvd_mul_gcd [GcdMonoid α] (k m n : α) : gcd k (m * n) ∣ gcd 
     exact dvd_gcd hn'k hn'
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(gcd a b, gcd a «expr ^ »(b, k))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(gcd a b, gcd a «expr ^ »(b, k))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem gcd_pow_right_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd a (b ^ k) ∣ gcd a b ^ k := by
   by_cases hg:gcd a b = 0
   · rw [gcd_eq_zero_iff] at hg
@@ -459,7 +460,7 @@ theorem gcd_pow_right_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd a (b
       
     rw [pow_succ, pow_succ]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(gcd a b, gcd a «expr ^ »(b, k))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(gcd a b, gcd a «expr ^ »(b, k))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     apply gcd_mul_dvd_mul_gcd a b (b ^ k)
     exact (mul_dvd_mul_iff_left hg).mpr hk
     
@@ -471,14 +472,14 @@ theorem gcd_pow_left_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd (a ^ 
     _ ∣ gcd a b ^ k := pow_dvd_pow_of_dvd (gcd_comm' _ _).Dvd _
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »(gcd d₁ b, k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »(gcd d₁ b, k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem pow_dvd_of_mul_eq_pow [GcdMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 0) (hab : IsUnit (gcd a b)) {k : ℕ}
     (h : a * b = c ^ k) (hc : c = d₁ * d₂) (hd₁ : d₁ ∣ a) : d₁ ^ k ≠ 0 ∧ d₁ ^ k ∣ a := by
   have h1 : IsUnit (gcd (d₁ ^ k) b) := by
     apply is_unit_of_dvd_one
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »(gcd d₁ b, k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »(gcd d₁ b, k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · exact gcd_pow_left_dvd_pow_gcd
       
     · apply IsUnit.dvd
@@ -574,15 +575,15 @@ theorem is_unit_gcd_of_eq_mul_gcd {α : Type _} [CancelCommMonoidWithZero α] [G
   rw [← ex, ← ey, mul_one]
 
 theorem extract_gcd {α : Type _} [CancelCommMonoidWithZero α] [GcdMonoid α] (x y : α) :
-    ∃ x' y' d : α, x = d * x' ∧ y = d * y' ∧ IsUnit (gcd x' y') := by
-  cases' eq_or_ne (gcd x y) 0 with h h
+    ∃ x' y', x = gcd x y * x' ∧ y = gcd x y * y' ∧ IsUnit (gcd x' y') := by
+  by_cases h:gcd x y = 0
   · obtain ⟨rfl, rfl⟩ := (gcd_eq_zero_iff x y).1 h
     simp_rw [← associated_one_iff_is_unit]
-    exact ⟨1, 1, 0, (zero_mul 1).symm, (zero_mul 1).symm, gcd_one_left' 1⟩
+    exact ⟨1, 1, by rw [h, zero_mul], by rw [h, zero_mul], gcd_one_left' 1⟩
     
   obtain ⟨x', ex⟩ := gcd_dvd_left x y
   obtain ⟨y', ey⟩ := gcd_dvd_right x y
-  exact ⟨x', y', gcd x y, ex, ey, is_unit_gcd_of_eq_mul_gcd ex ey h⟩
+  exact ⟨x', y', ex, ey, is_unit_gcd_of_eq_mul_gcd ex ey h⟩
 
 end Gcd
 
@@ -729,16 +730,16 @@ end Lcm
 
 namespace GcdMonoid
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd «expr * »(x, b) «expr * »(a, b)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd «expr * »(x, b) «expr * »(a, b)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem primeOfIrreducible [GcdMonoid α] {x : α} (hi : Irreducible x) : Prime x :=
-  ⟨hi.ne_zero,
+  ⟨hi.NeZero,
     ⟨hi.1, fun a b h => by
       cases' gcd_dvd_left x a with y hy
       cases' hi.is_unit_or_is_unit hy with hu hu
       · right
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd «expr * »(x, b) «expr * »(a, b)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd «expr * »(x, b) «expr * »(a, b)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         apply dvd_gcd (dvd_mul_right x b) h
         rw [(gcd_mul_right' b x a).dvd_iff_dvd_left]
         exact (associated_unit_mul_left _ _ hu).Dvd
@@ -773,10 +774,10 @@ instance uniqueNormalizationMonoidOfUniqueUnits : Unique (NormalizationMonoid α
 instance subsingleton_gcd_monoid_of_unique_units : Subsingleton (GcdMonoid α) :=
   ⟨fun g₁ g₂ => by
     have hgcd : g₁.gcd = g₂.gcd := by
-      ext a b
+      ext (a b)
       refine' associated_iff_eq.mp (associated_of_dvd_dvd _ _) <;> apply dvd_gcd (gcd_dvd_left _ _) (gcd_dvd_right _ _)
     have hlcm : g₁.lcm = g₂.lcm := by
-      ext a b
+      ext (a b)
       refine' associated_iff_eq.mp (associated_of_dvd_dvd _ _) <;>
         apply lcm_dvd_iff.2 ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩
     cases g₁

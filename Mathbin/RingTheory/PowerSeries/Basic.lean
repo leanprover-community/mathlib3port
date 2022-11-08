@@ -2250,9 +2250,9 @@ instance algebraPowerSeries : Algebra (PowerSeries R) (PowerSeries A) :=
   (map (algebraMap R A)).toAlgebra
 
 -- see Note [lower instance priority]
-instance (priority := 100) algebraPolynomial' {A : Type _} [CommSemiring A] [Algebra R (Polynomial A)] :
+instance (priority := 100) algebraPolynomial' {A : Type _} [CommSemiring A] [Algebra R A[X]] :
     Algebra R (PowerSeries A) :=
-  RingHom.toAlgebra <| Polynomial.coeToPowerSeries.ringHom.comp (algebraMap R (Polynomial A))
+  RingHom.toAlgebra <| Polynomial.coeToPowerSeries.ringHom.comp (algebraMap R A[X])
 
 variable (A)
 

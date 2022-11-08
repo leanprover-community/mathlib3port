@@ -331,7 +331,7 @@ theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s
   not_iff_not.1 <|
     ne_bot_iff.symm.trans <| hl.ne_bot_iff.trans <| by simp only [not_exists, not_and, ← ne_empty_iff_nonempty]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem generate_ne_bot_iff {s : Set (Set α)} : NeBot (generate s) ↔ ∀ (t) (_ : t ⊆ s), t.Finite → (⋂₀ t).Nonempty :=
   (has_basis_generate s).ne_bot_iff.trans <| by simp only [← and_imp, and_comm']
 
@@ -570,7 +570,7 @@ theorem inf_principal_ne_bot_iff {s : Set α} : NeBot (l ⊓ 𝓟 s) ↔ ∀ U �
 theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f ⊓ 𝓟 (sᶜ) = ⊥ := by
   refine' not_iff_not.1 ((inf_principal_ne_bot_iff.trans _).symm.trans ne_bot_iff)
   exact
-    ⟨fun h hs => by simpa [empty_not_nonempty] using h s hs, fun hs t ht =>
+    ⟨fun h hs => by simpa [not_nonempty_empty] using h s hs, fun hs t ht =>
       inter_compl_nonempty_iff.2 fun hts => hs <| mem_of_superset ht hts⟩
 
 theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f ↔ NeBot (f ⊓ 𝓟 (sᶜ)) :=
@@ -813,7 +813,7 @@ namespace Filter
 
 variable {α β γ ι : Type _} {ι' : Sort _}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
 class IsCountablyGenerated (f : Filter α) : Prop where
   out : ∃ s : Set (Set α), s.Countable ∧ f = generate s

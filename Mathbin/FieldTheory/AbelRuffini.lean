@@ -87,13 +87,13 @@ theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).
     one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
   apply is_solvable_of_comm
   intro σ τ
-  ext a ha
+  ext (a ha)
   rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
   have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m := by
     intro σ
     obtain ⟨m, hm⟩ :=
       map_root_of_unity_eq_pow_self σ.to_alg_hom
-        ⟨IsUnit.unit (is_unit_of_pow_eq_one a n ha hn'), by
+        ⟨IsUnit.unit (is_unit_of_pow_eq_one a n ha hn), by
           ext
           rwa [Units.coe_pow, IsUnit.unit_spec, Subtype.coe_mk n hn']⟩
     use m
@@ -126,7 +126,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]
           (minpoly.dvd F c (by rwa [map_id, AlgHom.map_sub, sub_eq_zero, aeval_X_pow, aeval_one]))))
   apply is_solvable_of_comm
   intro σ τ
-  ext b hb
+  ext (b hb)
   rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb
   have hb' : b ≠ 0 := by
     intro hb'

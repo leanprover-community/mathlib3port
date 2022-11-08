@@ -88,12 +88,12 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
           (fun hwit => h_lt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj h), hwit⟩) fun hwit =>
           h_gt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
 
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLe : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
   ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
     is_false fun h' => (lt_irrefl _ (h.trans_le h')).elim
 
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLt : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) :=
   ltTrichotomyRec (fun f g h => isTrue h) (fun f g h => isFalse h.not_lt) fun f g h => isFalse h.asymm
 

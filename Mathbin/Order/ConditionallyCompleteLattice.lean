@@ -3,7 +3,7 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Order.Bounds
+import Mathbin.Order.Bounds.Basic
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Set.Lattice
@@ -11,21 +11,21 @@ import Mathbin.Data.Set.Lattice
 /-!
 # Theory of conditionally complete lattices.
 
-A conditionally complete lattice is a lattice in which every non-empty bounded subset s
-has a least upper bound and a greatest lower bound, denoted below by Sup s and Inf s.
-Typical examples are real, nat, int with their usual orders.
+A conditionally complete lattice is a lattice in which every non-empty bounded subset `s`
+has a least upper bound and a greatest lower bound, denoted below by `Sup s` and `Inf s`.
+Typical examples are `ℝ`, `ℕ`, and `ℤ` with their usual orders.
 
 The theory is very comparable to the theory of complete lattices, except that suitable
 boundedness and nonemptiness assumptions have to be added to most statements.
-We introduce two predicates bdd_above and bdd_below to express this boundedness, prove
-their basic properties, and then go on to prove most useful properties of Sup and Inf
+We introduce two predicates `bdd_above` and `bdd_below` to express this boundedness, prove
+their basic properties, and then go on to prove most useful properties of `Sup` and `Inf`
 in conditionally complete lattices.
 
 To differentiate the statements between complete lattices and conditionally complete
-lattices, we prefix Inf and Sup in the statements by c, giving cInf and cSup. For instance,
-Inf_le is a statement in complete lattices ensuring Inf s ≤ x, while cInf_le is the same
-statement in conditionally complete lattices with an additional assumption that s is
-bounded below.
+lattices, we prefix `Inf` and `Sup` in the statements by `c`, giving `cInf` and `cSup`.
+For instance, `Inf_le` is a statement in complete lattices ensuring `Inf s ≤ x`,
+while `cInf_le` is the same statement in conditionally complete lattices
+with an additional assumption that `s` is bounded below.
 -/
 
 
@@ -133,7 +133,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSup α, 
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
-/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -144,7 +144,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure"
+  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -311,7 +311,7 @@ def conditionallyCompleteLatticeOfLatticeOfSup (α : Type _) [H1 : Lattice α] [
       (fun a b => ⟨a ⊔ b, forall_insert_of_forall (forall_eq.mpr le_sup_right) le_sup_left⟩)
       (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩) is_lub_Sup with }
 
-/-- A version of `conditionally_complete_lattice_of_Inf` when we already know that `α` is a lattice. 
+/-- A version of `conditionally_complete_lattice_of_Inf` when we already know that `α` is a lattice.
 
 This should only be used when it is both hard and unnecessary to provide `Sup` explicitly. -/
 def conditionallyCompleteLatticeOfLatticeOfInf (α : Type _) [H1 : Lattice α] [H2 : HasInf α]

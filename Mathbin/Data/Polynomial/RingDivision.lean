@@ -157,9 +157,8 @@ theorem degree_le_of_dvd {p q : R[X]} (h1 : p ∣ q) (h2 : q ≠ 0) : degree p �
   exact degree_le_mul_left p h2.2
 
 /-- This lemma is useful for working with the `int_degree` of a rational function. -/
-theorem nat_degree_sub_eq_of_prod_eq {p₁ p₂ q₁ q₂ : Polynomial R} (hp₁ : p₁ ≠ 0) (hq₁ : q₁ ≠ 0) (hp₂ : p₂ ≠ 0)
-    (hq₂ : q₂ ≠ 0) (h_eq : p₁ * q₂ = p₂ * q₁) : (p₁.natDegree : ℤ) - q₁.natDegree = (p₂.natDegree : ℤ) - q₂.natDegree :=
-  by
+theorem nat_degree_sub_eq_of_prod_eq {p₁ p₂ q₁ q₂ : R[X]} (hp₁ : p₁ ≠ 0) (hq₁ : q₁ ≠ 0) (hp₂ : p₂ ≠ 0) (hq₂ : q₂ ≠ 0)
+    (h_eq : p₁ * q₂ = p₂ * q₁) : (p₁.natDegree : ℤ) - q₁.natDegree = (p₂.natDegree : ℤ) - q₂.natDegree := by
   rw [sub_eq_sub_iff_add_eq_add]
   norm_cast
   rw [← nat_degree_mul hp₁ hq₂, ← nat_degree_mul hp₂ hq₁, h_eq]
@@ -168,8 +167,7 @@ variable [CharZero R]
 
 @[simp]
 theorem degree_bit0_eq (p : R[X]) : degree (bit0 p) = degree p := by
-  rw [bit0_eq_two_mul, degree_mul, (by simp : (2 : Polynomial R) = C 2), @Polynomial.degree_C R _ _ two_ne_zero',
-    zero_add]
+  rw [bit0_eq_two_mul, degree_mul, (by simp : (2 : R[X]) = C 2), @Polynomial.degree_C R _ _ two_ne_zero', zero_add]
 
 @[simp]
 theorem nat_degree_bit0_eq (p : R[X]) : natDegree (bit0 p) = natDegree p :=
@@ -778,7 +776,7 @@ theorem prod_multiset_X_sub_C_dvd (p : R[X]) : (p.roots.map fun a => X - c a).Pr
   rw [prod_multiset_root_eq_finset_root, Polynomial.map_prod]
   refine' Finset.prod_dvd_of_coprime (fun a _ b _ h => _) fun a _ => _
   · simp_rw [Polynomial.map_pow, Polynomial.map_sub, map_C, map_X]
-    exact (pairwise_coprime_X_sub_C (IsFractionRing.injective R <| FractionRing R) _ _ h).pow
+    exact (pairwise_coprime_X_sub_C (IsFractionRing.injective R <| FractionRing R) h).pow
     
   · exact Polynomial.map_dvd _ (pow_root_multiplicity_dvd p a)
     

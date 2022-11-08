@@ -50,17 +50,17 @@ theorem same_ray_iff_arg_div_eq_zero : SameRay ℝ x y ↔ arg (x / y) = 0 := by
 theorem abs_add_eq_iff : (x + y).abs = x.abs + y.abs ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
   same_ray_iff_norm_add.symm.trans same_ray_iff
 
-theorem abs_sub_eq_iff : (x - y).abs = abs (x.abs - y.abs) ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
+theorem abs_sub_eq_iff : (x - y).abs = |x.abs - y.abs| ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
   same_ray_iff_norm_sub.symm.trans same_ray_iff
 
-theorem sameRayOfArgEq (h : x.arg = y.arg) : SameRay ℝ x y :=
+theorem same_ray_of_arg_eq (h : x.arg = y.arg) : SameRay ℝ x y :=
   same_ray_iff.mpr <| Or.inr <| Or.inr h
 
 theorem abs_add_eq (h : x.arg = y.arg) : (x + y).abs = x.abs + y.abs :=
-  (sameRayOfArgEq h).norm_add
+  (same_ray_of_arg_eq h).norm_add
 
 theorem abs_sub_eq (h : x.arg = y.arg) : (x - y).abs = ∥x.abs - y.abs∥ :=
-  (sameRayOfArgEq h).norm_sub
+  (same_ray_of_arg_eq h).norm_sub
 
 end Complex
 

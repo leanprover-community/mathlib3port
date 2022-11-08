@@ -114,7 +114,7 @@ end MvPolynomial
 -- this is here to avoid import cycle issues
 namespace Polynomial
 
-/-- The monomials form a basis on `polynomial R`. -/
+/-- The monomials form a basis on `R[X]`. -/
 noncomputable def basisMonomials : Basis ℕ R R[X] :=
   Basis.of_repr (toFinsuppIsoAlg R).toLinearEquiv
 

@@ -264,7 +264,8 @@ theorem infi_eq_of_tendsto {α} [TopologicalSpace α] [CompleteLinearOrder α] [
 
 theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorder ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atTop) : (⨆ i, f i) = ⨆ i, f (φ i) :=
-  le_antisymm (supr_mono' fun i => imp (fun j (hj : i ≤ φ j) => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
+  le_antisymm
+    (supr_mono' fun i => Exists.imp (fun j (hj : i ≤ φ j) => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
     (supr_mono' fun i => ⟨φ i, le_rfl⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorder ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]

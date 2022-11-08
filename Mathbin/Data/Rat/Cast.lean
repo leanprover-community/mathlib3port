@@ -313,7 +313,7 @@ theorem cast_max {a b : ℚ} : (↑(max a b) : K) = max a b :=
   (@cast_mono K _).map_max
 
 @[simp, norm_cast]
-theorem cast_abs {q : ℚ} : ((abs q : ℚ) : K) = abs q := by simp [abs_eq_max_neg]
+theorem cast_abs {q : ℚ} : ((|q| : ℚ) : K) = |q| := by simp [abs_eq_max_neg]
 
 open Set
 

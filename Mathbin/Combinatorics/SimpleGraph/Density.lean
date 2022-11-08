@@ -152,23 +152,18 @@ theorem mul_edge_density_le_edge_density (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t�
   refine' div_le_div_of_le (by exact_mod_cast (s₁.card * t₁.card).zero_le) _
   exact_mod_cast card_le_of_subset (interedges_mono hs ht)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem edge_density_sub_edge_density_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hs₂ : s₂.Nonempty)
     (ht₂ : t₂.Nonempty) : edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁ ≤ 1 - s₂.card / s₁.card * (t₂.card / t₁.card) := by
   refine' (sub_le_sub_left (mul_edge_density_le_edge_density r hs ht hs₂ ht₂) _).trans _
   refine' le_trans _ (mul_le_of_le_one_right _ (edge_density_le_one r s₂ t₂))
   · rw [sub_mul, one_mul]
     
-  refine'
-      sub_nonneg_of_le
-        (mul_le_one _
-          (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-          _) <;>
+  refine' sub_nonneg_of_le (mul_le_one _ (by positivity) _) <;>
     exact div_le_one_of_le (Nat.cast_le.2 (card_le_of_subset ‹_›)) (Nat.cast_nonneg _)
 
 theorem abs_edge_density_sub_edge_density_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hs₂ : s₂.Nonempty)
-    (ht₂ : t₂.Nonempty) :
-    abs (edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁) ≤ 1 - s₂.card / s₁.card * (t₂.card / t₁.card) := by
+    (ht₂ : t₂.Nonempty) : |edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁| ≤ 1 - s₂.card / s₁.card * (t₂.card / t₁.card) :=
+  by
   have habs : abs (edge_density r s₂ t₂ - edge_density r s₁ t₁) ≤ 1 := by
     rw [abs_sub_le_iff, ← sub_zero (1 : ℚ)]
     constructor <;> exact sub_le_sub (edge_density_le_one r _ _) (edge_density_nonneg r _ _)
@@ -179,10 +174,9 @@ theorem abs_edge_density_sub_edge_density_le_one_sub_mul (hs : s₂ ⊆ s₁) (h
     sub_sub_sub_cancel_left]
   exact edge_density_sub_edge_density_le_one_sub_mul _ hs ht hs₂ ht₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem abs_edge_density_sub_edge_density_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hδ₀ : 0 ≤ δ) (hδ₁ : δ < 1)
     (hs₂ : (1 - δ) * s₁.card ≤ s₂.card) (ht₂ : (1 - δ) * t₁.card ≤ t₂.card) :
-    abs (edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁) ≤ 2 * δ - δ ^ 2 := by
+    |edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁| ≤ 2 * δ - δ ^ 2 := by
   have hδ' : 0 ≤ 2 * δ - δ ^ 2 := by
     rw [sub_nonneg, sq]
     exact mul_le_mul_of_nonneg_right (hδ₁.le.trans (by norm_num)) hδ₀
@@ -203,14 +197,14 @@ theorem abs_edge_density_sub_edge_density_le_two_mul_sub_sq (hs : s₂ ⊆ s₁)
     
   · exact_mod_cast (ht₂'.mono ht).card_pos
     
-  · trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  · positivity
     
 
 /-- If `s₂ ⊆ s₁`, `t₂ ⊆ t₁` and they take up all but a `δ`-proportion, then the difference in edge
 densities is at most `2 * δ`. -/
 theorem abs_edge_density_sub_edge_density_le_two_mul (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hδ : 0 ≤ δ)
     (hscard : (1 - δ) * s₁.card ≤ s₂.card) (htcard : (1 - δ) * t₁.card ≤ t₂.card) :
-    abs (edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁) ≤ 2 * δ := by
+    |edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁| ≤ 2 * δ := by
   cases lt_or_le δ 1
   · exact
       (abs_edge_density_sub_edge_density_le_two_mul_sub_sq r hs ht hδ h hscard htcard).trans

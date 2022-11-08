@@ -410,7 +410,7 @@ variable {B B' f g}
 
 theorem is_adjoint_pair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.comp f = B.compl₂ g := by
   constructor <;> intro h
-  · ext x y
+  · ext (x y)
     rw [comp_apply, compl₂_apply]
     exact h x y
     
@@ -609,7 +609,7 @@ theorem separating_left_congr_iff :
     (e₁.arrowCongr (e₂.arrowCongr (LinearEquiv.refl R R)) B).SeparatingLeft ↔ B.SeparatingLeft :=
   ⟨fun h => by
     convert h.congr e₁.symm e₂.symm
-    ext x y
+    ext (x y)
     simp, SeparatingLeft.congr e₁ e₂⟩
 
 end Linear
@@ -708,7 +708,7 @@ theorem IsOrtho.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B : M
   obtain rfl | hij := eq_or_ne i j
   · exact ho
     
-  · exact h i j hij
+  · exact h hij
     
 
 /-- An orthogonal basis with respect to a right-separating bilinear form has no self-orthogonal
@@ -735,7 +735,7 @@ theorem IsOrtho.separatingLeftOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M �
     
   · intro j hj hij
     convert mul_zero _ using 2
-    exact hO j i hij
+    exact hO hij
     
   · intro hi
     convert zero_mul _ using 2

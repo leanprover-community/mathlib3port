@@ -29,8 +29,8 @@ theorem add_lsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by s
 theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by
   rw [List.foldr_reverse, flip] <;> rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(2, list.foldr (λ (x : bool) (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(2, list.foldr (λ (x : bool) (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
   suffices v.to_nat + 1 ≤ 2 ^ n by simpa
   rw [to_nat_eq_foldr_reverse]
@@ -45,7 +45,7 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
   · simp only [← h, pow_add, flip, List.length, List.foldr, pow_one]
     rw [add_lsb_eq_twice_add_one]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(2, list.foldr (λ (x : bool) (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(2, list.foldr (λ (x : bool) (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · ac_mono
       rw [two_mul]
       mono
@@ -66,7 +66,7 @@ theorem add_lsb_div_two {x b} : addLsb x b / 2 = x := by
 
 theorem to_bool_add_lsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
   cases b <;>
-    simp only [to_bool_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm, Bool.to_bool_false,
+    simp only [Bool.decide_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm, Bool.to_bool_false,
         Nat.mul_mod_right, zero_add, cond, zero_ne_one] <;>
       norm_num
 

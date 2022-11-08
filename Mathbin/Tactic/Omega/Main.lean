@@ -43,8 +43,8 @@ unsafe def form_domain : expr → tactic (Option Bool)
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@Eq (%%ₓdx) _ _) => type_domain dx
-  | quote.1 (@ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-  | quote.1 (@gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@GE.ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@GT.gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@Ne (%%ₓdx) _ _) => type_domain dx
   | quote.1 True => return none
   | quote.1 False => return none

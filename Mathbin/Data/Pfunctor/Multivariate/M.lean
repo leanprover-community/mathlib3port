@@ -162,12 +162,12 @@ theorem M.dest_corec' {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g�
     M.dest P (M.corec' P g₀ g₁ g₂ x) = ⟨g₀ x, splitFun (g₁ x) (M.corec' P g₀ g₁ g₂ ∘ g₂ x)⟩ :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.Append1 β)) (x : β) :
     M.dest P (M.corec P g x) = appendFun id (M.corec P g) <$$> g x := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   apply M.dest_corec'
   cases' g x with a f
   dsimp
@@ -206,7 +206,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     rw [e₁', e₂']
     exact ⟨_, _, _, rfl, rfl, fun b => ⟨_, _, h' b, rfl, rfl⟩⟩
   subst this
-  congr with i p
+  congr with (i p)
   induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;> try
     rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
     rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩

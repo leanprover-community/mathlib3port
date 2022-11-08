@@ -94,8 +94,6 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x
   Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
-    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
@@ -127,8 +125,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   cases' eq_or_ne (d x y) 0 with hd₀ hd₀
   · simp only [hd₀, zero_le]
     
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z z' : X),\n    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
+  rsuffices ⟨z, z', hxz, hzz', hz'y⟩ : ∃ z z' : X, d x z ≤ L.sum ∧ d z z' ≤ L.sum ∧ d z' y ≤ L.sum
   · exact (hd x z z' y).trans (mul_le_mul_left' (max_le hxz (max_le hzz' hz'y)) _)
     
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }

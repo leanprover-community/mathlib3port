@@ -181,7 +181,7 @@ theorem measurableMeasureProdMkLeftFinite [IsFiniteMeasure ν] {s : Set (α × �
   · intro f h1f h2f h3f
     simp_rw [preimage_Union]
     have : ∀ b, ν (⋃ i, Prod.mk b ⁻¹' f i) = ∑' i, ν (Prod.mk b ⁻¹' f i) := fun b =>
-      measure_Union (fun i j hij => Disjoint.preimage _ (h1f i j hij)) fun i => measurableProdMkLeft (h2f i)
+      measure_Union (fun i j hij => Disjoint.preimage _ (h1f hij)) fun i => measurableProdMkLeft (h2f i)
     simp_rw [this]
     apply Measurable.ennrealTsum h3f
     
@@ -266,13 +266,12 @@ section
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable.
   This version has `f` in curried form. -/
 theorem MeasureTheory.StronglyMeasurable.integralProdRight [SigmaFinite ν] ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂ν := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
+  borelize E
   haveI : separable_space (range (uncurry f) ∪ {0} : Set E) := hf.separable_space_range_union_singleton
   let s : ℕ → simple_func (α × β) E := simple_func.approx_on _ hf.measurable (range (uncurry f) ∪ {0}) 0 (by simp)
   let s' : ℕ → α → simple_func β E := fun n x => (s n).comp (Prod.mk x) measurableProdMkLeft

@@ -134,7 +134,7 @@ end
 
 open Submodule FiniteDimensional
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
   Basis.ofEquivFun
@@ -150,8 +150,8 @@ noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
 theorem coe_basis_one_I_repr (z : ℂ) : ⇑(basisOneI.repr z) = ![z.re, z.im] :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
 theorem coe_basis_one_I : ⇑basis_one_I = ![1, i] :=
   funext fun i =>
@@ -263,8 +263,8 @@ def conjAe : ℂ ≃ₐ[ℝ] ℂ :=
 theorem conj_ae_coe : ⇑conj_ae = conj :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 /-- The matrix representation of `conj_ae`. -/
@@ -273,7 +273,7 @@ theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
       «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
-  ext i j
+  ext (i j)
   simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
 

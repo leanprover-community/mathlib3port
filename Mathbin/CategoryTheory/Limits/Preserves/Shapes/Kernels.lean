@@ -83,8 +83,8 @@ kernel of `f`.
 def PreservesKernel.ofIsoComparison [i : IsIso (kernelComparison f G)] : PreservesLimit (parallelPair f 0) G := by
   apply preserves_limit_of_preserves_limit_cone (kernel_is_kernel f)
   apply (is_limit_map_cone_fork_equiv' G (kernel.condition f)).symm _
-  apply is_limit.of_point_iso (limit.is_limit (parallel_pair (G.map f) 0))
-  apply i
+  apply is_limit.of_point_iso (kernel_is_kernel (G.map f))
+  exact i
 
 variable [PreservesLimit (parallelPair f 0) G]
 
@@ -92,7 +92,7 @@ variable [PreservesLimit (parallelPair f 0) G]
 an isomorphism.
 -/
 def PreservesKernel.iso : G.obj (kernel f) ≅ kernel (G.map f) :=
-  IsLimit.conePointUniqueUpToIso (isLimitOfHasKernelOfPreservesLimit G f) (limit.isLimit _)
+  IsLimit.conePointUniqueUpToIso (isLimitOfHasKernelOfPreservesLimit G f) (kernelIsKernel _)
 
 @[simp]
 theorem PreservesKernel.iso_hom : (PreservesKernel.iso G f).Hom = kernelComparison f G :=
@@ -159,8 +159,8 @@ cokernel of `f`.
 def PreservesCokernel.ofIsoComparison [i : IsIso (cokernelComparison f G)] : PreservesColimit (parallelPair f 0) G := by
   apply preserves_colimit_of_preserves_colimit_cocone (cokernel_is_cokernel f)
   apply (is_colimit_map_cocone_cofork_equiv' G (cokernel.condition f)).symm _
-  apply is_colimit.of_point_iso (colimit.is_colimit (parallel_pair (G.map f) 0))
-  apply i
+  apply is_colimit.of_point_iso (cokernel_is_cokernel (G.map f))
+  exact i
 
 variable [PreservesColimit (parallelPair f 0) G]
 
@@ -168,7 +168,7 @@ variable [PreservesColimit (parallelPair f 0) G]
 an isomorphism.
 -/
 def PreservesCokernel.iso : G.obj (cokernel f) ≅ cokernel (G.map f) :=
-  IsColimit.coconePointUniqueUpToIso (isColimitOfHasCokernelOfPreservesColimit G f) (colimit.isColimit _)
+  IsColimit.coconePointUniqueUpToIso (isColimitOfHasCokernelOfPreservesColimit G f) (cokernelIsCokernel _)
 
 @[simp]
 theorem PreservesCokernel.iso_inv : (PreservesCokernel.iso G f).inv = cokernelComparison f G :=

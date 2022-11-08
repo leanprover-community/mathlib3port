@@ -80,11 +80,11 @@ unsafe def replacer_attr (ntac : Name) : user_attribute where
     some fun n _ _ => do
       let d ← get_decl n
       let base ← get_decl ntac
-      guardb ((valid_types base).any (expr.alpha_eqv · d)) <|> fail f! "incorrect type for @[{ntac}]"
+      guardb ((valid_types base).any (· == d)) <|> fail f! "incorrect type for @[{ntac}]"
 
 /-- Define a new replaceable tactic. -/
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
-  let nattr := mkStrName ntac "attr"
+  let nattr := .str ntac "attr"
   do
   add_meta_definition nattr [] (quote.1 user_attribute) (quote.1 (replacer_attr (%%ₓreflect ntac)))
   set_basic_attribute `user_attribute nattr tt

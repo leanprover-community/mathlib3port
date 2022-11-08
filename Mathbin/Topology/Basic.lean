@@ -73,8 +73,8 @@ structure TopologicalSpace (α : Type u) where
 
 attribute [class] TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (A «expr ⊆ » T) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (A B «expr ∈ » T) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (A «expr ⊆ » T) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (A B «expr ∈ » T) -/
 /-- A constructor for topologies by specifying the closed sets,
 and showing that they satisfy the appropriate conditions. -/
 def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ ∈ T)
@@ -239,7 +239,7 @@ theorem IsClosed.not : IsClosed { a | p a } → IsOpen { a | ¬p a } :=
 def Interior (s : Set α) : Set α :=
   ⋃₀{ t | IsOpen t ∧ t ⊆ s }
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem mem_interior {s : Set α} {x : α} : x ∈ Interior s ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
   simp only [Interior, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc', and_left_comm]
 
@@ -318,7 +318,7 @@ theorem interior_union_is_closed_of_interior_empty {s t : Set α} (h₁ : IsClos
       this ⟨hx₁, hx₂⟩
   Subset.antisymm (interior_maximal this is_open_interior) (interior_mono <| subset_union_left _ _)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem is_open_iff_forall_mem_open : IsOpen s ↔ ∀ x ∈ s, ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
   rw [← subset_interior_iff_is_open] <;> simp only [subset_def, mem_interior]
 
@@ -461,6 +461,10 @@ theorem mem_closure_iff {s : Set α} {a : α} : a ∈ Closure s ↔ ∀ o, IsOpe
     Classical.by_contradiction fun nc =>
       let ⟨x, hc, hs⟩ := H _ h₁.is_open_compl nc
       hc (h₂ hs)⟩
+
+theorem closure_inter_open_nonempty_iff {s t : Set α} (h : IsOpen t) : (Closure s ∩ t).Nonempty ↔ (s ∩ t).Nonempty :=
+  ⟨fun ⟨x, hxcs, hxt⟩ => inter_comm t s ▸ mem_closure_iff.1 hxcs t h hxt, fun h =>
+    h.mono <| inf_le_inf_right t subset_closure⟩
 
 theorem Filter.le_lift'_closure (l : Filter α) : l ≤ l.lift' Closure :=
   le_lift'.2 fun s hs => mem_of_superset hs subset_closure
@@ -710,7 +714,7 @@ the principal filter of some open set `s` containing `a`. -/
 theorem nhds_le_of_le {f a} {s : Set α} (h : a ∈ s) (o : IsOpen s) (sf : 𝓟 s ≤ f) : 𝓝 a ≤ f := by
   rw [nhds_def] <;> exact infi_le_of_le s (infi_le_of_le ⟨h, o⟩ sf)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem mem_nhds_iff {a : α} {s : Set α} : s ∈ 𝓝 a ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ a ∈ t :=
   (nhds_basis_opens a).mem_iff.trans
     ⟨fun ⟨t, ⟨hat, ht⟩, hts⟩ => ⟨t, hts, ht, hat⟩, fun ⟨t, hts, ht, hat⟩ => ⟨t, ⟨hat, ht⟩, hts⟩⟩
@@ -1151,7 +1155,7 @@ theorem mem_closure_of_tendsto {f : β → α} {b : Filter β} {a : α} {s : Set
     (h : ∀ᶠ x in b, f x ∈ s) : a ∈ Closure s :=
   mem_closure_of_frequently_of_tendsto h.Frequently hf
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /-- Suppose that `f` sends the complement to `s` to a single point `a`, and `l` is some filter.
 Then `f` tends to `a` along `l` restricted to `s` if and only if it tends to `a` along `l`. -/
 theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter β} {s : Set β} {a : α}

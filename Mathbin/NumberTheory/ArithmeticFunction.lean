@@ -117,13 +117,13 @@ end One
 
 end Zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance natCoe [AddMonoidWithOne R] : Coe (ArithmeticFunction ℕ) (ArithmeticFunction R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℕ), by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       rfl
       simp⟩⟩
 
@@ -135,13 +135,13 @@ theorem nat_coe_nat (f : ArithmeticFunction ℕ) : (↑f : ArithmeticFunction �
 theorem nat_coe_apply [AddMonoidWithOne R] {f : ArithmeticFunction ℕ} {x : ℕ} : (f : ArithmeticFunction R) x = f x :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance intCoe [AddGroupWithOne R] : Coe (ArithmeticFunction ℤ) (ArithmeticFunction R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℤ), by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr↑ »(f 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       rfl
       simp⟩⟩
 
@@ -386,13 +386,13 @@ theorem zeta_apply {x : ℕ} : ζ x = if x = 0 then 0 else 1 :=
 theorem zeta_apply_ne {x : ℕ} (h : x ≠ 0) : ζ x = 1 :=
   if_neg h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp]
 theorem coe_zeta_mul_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} : (↑ζ * f) x = ∑ i in divisors x, f i := by
   rw [mul_apply]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply sum_congr rfl
     intro i hi
     rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
@@ -425,13 +425,13 @@ theorem coe_zeta_mul_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} : (
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem coe_zeta_smul_apply {M : Type _} [CommRing R] [AddCommGroup M] [Module R M] {f : ArithmeticFunction M} {x : ℕ} :
     ((↑ζ : ArithmeticFunction R) • f) x = ∑ i in divisors x, f i := by
   rw [smul_apply]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((i), divisors_antidiagonal x, f i.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply sum_congr rfl
     intro i hi
     rcases mem_divisors_antidiagonal.1 hi with ⟨rfl, h⟩
@@ -591,14 +591,14 @@ theorem int_cast {f : ArithmeticFunction ℤ} [Ring R] (h : f.IsMultiplicative) 
     IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicative) (hg : g.IsMultiplicative) :
     IsMultiplicative (f * g) :=
   ⟨by simp [hf, hg], by
@@ -632,7 +632,7 @@ theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicati
       simp only [Prod.mk.inj_iff] at h
       ext <;> dsimp only
       · trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · rw [Nat.gcd_mul_left, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_one]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
@@ -640,7 +640,7 @@ theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicati
           
         
       · trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · rw [mul_comm, Nat.gcd_mul_left, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_one]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
@@ -649,7 +649,7 @@ theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicati
           
         
       · trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · rw [mul_comm, Nat.gcd_mul_right, cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mul]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
@@ -658,7 +658,7 @@ theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicati
           
         
       · trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · rw [Nat.gcd_mul_right, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mul]
           
         · rw [← hcd.1.1, ← hcd.2.1] at cop
@@ -1006,10 +1006,10 @@ theorem inv_zeta_unit : ((zeta_unit⁻¹ : (ArithmeticFunction R)ˣ) : Arithmeti
 
 end CommRing
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »(moebius(), g'), f')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »(moebius(), g'), f')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Möbius inversion for functions to an `add_comm_group`. -/
 theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
     (∀ n : ℕ, 0 < n → (∑ i in n.divisors, f i) = g n) ↔
@@ -1018,7 +1018,7 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
   let f' : arithmetic_function R := ⟨fun x => if x = 0 then 0 else f x, if_pos rfl⟩
   let g' : arithmetic_function R := ⟨fun x => if x = 0 then 0 else g x, if_pos rfl⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »((arithmetic_function.zeta() : arithmetic_function exprℤ()), f'), g')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rw [ext_iff]
     apply forall_congr'
     intro n
@@ -1031,7 +1031,7 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
     rw [if_neg (ne_of_gt (Nat.pos_of_mem_divisors hx))]
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »(moebius(), g'), f')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr • »(moebius(), g'), f')]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · constructor <;> intro h
     · rw [← h, ← mul_smul, moebius_mul_coe_zeta, one_smul]
       

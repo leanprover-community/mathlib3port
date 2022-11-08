@@ -51,34 +51,14 @@ namespace SemidirectProduct
 
 variable {N G} {φ : G →* MulAut N}
 
-private def one_aux : N ⋊[φ] G :=
-  ⟨1, 1⟩
-
-private def mul_aux (a b : N ⋊[φ] G) : N ⋊[φ] G :=
-  ⟨a.1 * φ a.2 b.1, a.right * b.right⟩
-
-private def inv_aux (a : N ⋊[φ] G) : N ⋊[φ] G :=
-  let i := a.2⁻¹
-  ⟨φ i a.1⁻¹, i⟩
-
-private theorem mul_assoc_aux (a b c : N ⋊[φ] G) : mulAux (mulAux a b) c = mulAux a (mulAux b c) := by
-  simp [mul_aux, mul_assoc, MulEquiv.map_mul]
-
-private theorem mul_one_aux (a : N ⋊[φ] G) : mulAux a oneAux = a := by cases a <;> simp [mul_aux, one_aux]
-
-private theorem one_mul_aux (a : N ⋊[φ] G) : mulAux oneAux a = a := by cases a <;> simp [mul_aux, one_aux]
-
-private theorem mul_left_inv_aux (a : N ⋊[φ] G) : mulAux (invAux a) a = one_aux := by
-  simp only [mul_aux, inv_aux, one_aux, ← MulEquiv.map_mul, mul_left_inv] <;> simp
-
 instance : Group (N ⋊[φ] G) where
-  one := oneAux
-  inv := invAux
-  mul := mulAux
-  mul_assoc := mul_assoc_aux
-  one_mul := one_mul_aux
-  mul_one := mul_one_aux
-  mul_left_inv := mul_left_inv_aux
+  one := ⟨1, 1⟩
+  mul a b := ⟨a.1 * φ a.2 b.1, a.2 * b.2⟩
+  inv x := ⟨φ x.2⁻¹ x.1⁻¹, x.2⁻¹⟩
+  mul_assoc a b c := by ext <;> simp [mul_assoc]
+  one_mul a := ext _ _ (by simp) (one_mul a.2)
+  mul_one a := ext _ _ (by simp) (mul_one _)
+  mul_left_inv := fun ⟨a, b⟩ => ext _ _ (show φ b⁻¹ a⁻¹ * φ b⁻¹ a = 1 by simp) (mul_left_inv b)
 
 instance : Inhabited (N ⋊[φ] G) :=
   ⟨1⟩

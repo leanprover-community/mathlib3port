@@ -409,7 +409,7 @@ theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Fin
       contrapose! hs
       simp [hs]
     congr
-    ext i j
+    ext (i j)
     rw [A_eq, this, zero_mul, add_zero]
     
   · intro i s hi ih B c hs k hk A_eq
@@ -452,13 +452,13 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   by
   refine' Fin.induction _ (fun k ih => _) k <;> intro c hc M N h0 hsucc
   · congr
-    ext i j
+    ext (i j)
     refine' Fin.cases (h0 j) (fun i => _) i
     rw [hsucc, hc i (Fin.succ_pos _), zero_mul, add_zero]
     
   set M' := update_row M k.succ (N k.succ) with hM'
   have hM : M = update_row M' k.succ (M' k.succ + c k • M k.cast_succ) := by
-    ext i j
+    ext (i j)
     by_cases hi:i = k.succ
     · simp [hi, hM', hsucc, update_row_self]
       
@@ -533,7 +533,7 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
     simp only [sign_prod_congr_left, Units.coe_prod, Int.cast_prod, block_diagonal_apply_eq, prod_congr_left_apply]
     
   · intro σ σ' _ _ eq
-    ext x hx k
+    ext (x hx k)
     simp only at eq
     have :
       ∀ k x,
@@ -716,7 +716,7 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin
   congr
   · rw [Equiv.Perm.inv_def, Fin.cycle_range_symm_zero]
     
-  · ext i' j'
+  · ext (i' j')
     rw [Equiv.Perm.inv_def, Fin.cycle_range_symm_succ]
     
 

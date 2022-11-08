@@ -783,6 +783,17 @@ theorem EqOnSource.trans' {e e' : LocalHomeomorph α β} {f f' : LocalHomeomorph
 theorem EqOnSource.restr {e e' : LocalHomeomorph α β} (he : e ≈ e') (s : Set α) : e.restr s ≈ e'.restr s :=
   LocalEquiv.EqOnSource.restr he _
 
+theorem Set.EqOn.restr_eq_on_source {e e' : LocalHomeomorph α β} (h : EqOn e e' (e.Source ∩ e'.Source)) :
+    e.restr e'.Source ≈ e'.restr e.Source := by
+  constructor
+  · rw [e'.restr_source' _ e.open_source]
+    rw [e.restr_source' _ e'.open_source]
+    exact Set.inter_comm _ _
+    
+  · rw [e.restr_source' _ e'.open_source]
+    refine' (eq_on.trans _ h).trans _ <;> simp only [mfld_simps]
+    
+
 /-- Composition of a local homeomorphism and its inverse is equivalent to the restriction of the
 identity to the source -/
 theorem trans_self_symm : e.trans e.symm ≈ LocalHomeomorph.ofSet e.Source e.open_source :=

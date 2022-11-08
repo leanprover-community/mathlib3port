@@ -50,11 +50,11 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
     @yoneda.is_iso _ _ _ _ ((Adjunction.unit h).app X)
       ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
           ⟨by
-            ext x f
+            ext (x f)
             dsimp
             apply L.map_injective
             simp, by
-            ext x f
+            ext (x f)
             dsimp
             simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
             rw [← h.unit_naturality]
@@ -70,11 +70,11 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
       @coyoneda.is_iso _ _ _ _ ((Adjunction.counit h).app X).op
         ⟨⟨{ app := fun Y f => R.preimage ((h.homEquiv (R.obj X) Y) f) },
             ⟨by
-              ext x f
+              ext (x f)
               dsimp
               apply R.map_injective
               simp, by
-              ext x f
+              ext (x f)
               dsimp
               simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
               rw [← h.counit_naturality]

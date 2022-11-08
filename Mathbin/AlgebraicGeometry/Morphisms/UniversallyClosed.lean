@@ -40,7 +40,7 @@ class UniversallyClosed (f : X ⟶ Y) : Prop where
   out : Universally (Topologically @IsClosedMap) f
 
 theorem universally_closed_eq : @UniversallyClosed = Universally (Topologically @IsClosedMap) := by
-  ext X Y f
+  ext (X Y f)
   rw [universally_closed_iff]
 
 theorem universally_closed_respects_iso : RespectsIso @UniversallyClosed :=

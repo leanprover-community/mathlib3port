@@ -141,7 +141,7 @@ def lastFun {α β : Typevec (n + 1)} (f : α ⟹ β) : Last α → Last β :=
 /-- arrow in the category of `0-length` vectors -/
 def nilFun {α : Typevec 0} {β : Typevec 0} : α ⟹ β := fun i => Fin2.elim0 i
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 theorem eq_of_drop_last_eq {α β : Typevec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
     (h₁ : lastFun f = lastFun g) : f = g := by replace h₀ := congr_fun h₀ <;> ext1 ⟨⟩ <;> apply_assumption
 
@@ -540,7 +540,7 @@ theorem diag_sub_val {n} {α : Typevec.{u} n} : subtypeVal (repeatEq α) ⊚ dia
 
 theorem prod_id : ∀ {n} {α β : Typevec.{u} n}, (id ⊗' id) = (id : α ⊗ β ⟹ _) := by
   intros
-  ext i a
+  ext (i a)
   induction i
   · cases a
     rfl
@@ -553,7 +553,7 @@ theorem prod_id : ∀ {n} {α β : Typevec.{u} n}, (id ⊗' id) = (id : α ⊗ �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_prod_append_fun {n} {α α' β β' : Typevec.{u} n} {φ φ' ψ ψ' : Type u} {f₀ : α ⟹ α'} {g₀ : β ⟹ β'}
     {f₁ : φ → φ'} {g₁ : ψ → ψ'} : (f₀ ⊗' g₀ ::: Prod.map f₁ g₁) = ((f₀ ::: f₁) ⊗' (g₀ ::: g₁)) := by
-  ext i a <;> cases i <;> [cases a, skip] <;> rfl
+  ext (i a) <;> cases i <;> [cases a, skip] <;> rfl
 
 end Liftp'
 
@@ -638,12 +638,12 @@ theorem subtype_val_diag_sub {α : Typevec n} : subtypeVal (repeatEq α) ⊚ dia
 
 @[simp]
 theorem to_subtype_of_subtype {α : Typevec n} (p : α ⟹ Repeat n Prop) : toSubtype p ⊚ ofSubtype p = id := by
-  ext i x <;> induction i <;> dsimp only [id, to_subtype, comp, of_subtype] at * <;> simp [*]
+  ext (i x) <;> induction i <;> dsimp only [id, to_subtype, comp, of_subtype] at * <;> simp [*]
 
 @[simp]
 theorem subtype_val_to_subtype {α : Typevec n} (p : α ⟹ Repeat n Prop) :
     subtypeVal p ⊚ toSubtype p = fun _ => Subtype.val := by
-  ext i x <;> induction i <;> dsimp only [to_subtype, comp, subtype_val] at * <;> simp [*]
+  ext (i x) <;> induction i <;> dsimp only [to_subtype, comp, subtype_val] at * <;> simp [*]
 
 @[simp]
 theorem to_subtype_of_subtype_assoc {α β : Typevec n} (p : α ⟹ Repeat n Prop) (f : β ⟹ Subtype_ p) :
@@ -651,11 +651,11 @@ theorem to_subtype_of_subtype_assoc {α β : Typevec n} (p : α ⟹ Repeat n Pro
 
 @[simp]
 theorem to_subtype'_of_subtype' {α : Typevec n} (r : α ⊗ α ⟹ Repeat n Prop) : toSubtype' r ⊚ ofSubtype' r = id := by
-  ext i x <;> induction i <;> dsimp only [id, to_subtype', comp, of_subtype'] at * <;> simp [Subtype.eta, *]
+  ext (i x) <;> induction i <;> dsimp only [id, to_subtype', comp, of_subtype'] at * <;> simp [Subtype.eta, *]
 
 theorem subtype_val_to_subtype' {α : Typevec n} (r : α ⊗ α ⟹ Repeat n Prop) :
     subtypeVal r ⊚ toSubtype' r = fun i x => Prod.mk i x.1.fst x.1.snd := by
-  ext i x <;> induction i <;> dsimp only [id, to_subtype', comp, subtype_val, Prod.mk] at * <;> simp [*]
+  ext (i x) <;> induction i <;> dsimp only [id, to_subtype', comp, subtype_val, Prod.mk] at * <;> simp [*]
 
 end Typevec
 

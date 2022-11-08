@@ -52,7 +52,7 @@ theorem Monic.is_primitive {p : R[X]} (hp : p.Monic) : p.IsPrimitive := by
 
 theorem IsPrimitive.ne_zero [Nontrivial R] {p : R[X]} (hp : p.IsPrimitive) : p ≠ 0 := by
   rintro rfl
-  exact (hp 0 (dvd_zero (C 0))).ne_zero rfl
+  exact (hp 0 (dvd_zero (C 0))).NeZero rfl
 
 end Primitive
 
@@ -244,7 +244,7 @@ theorem content_prim_part (p : R[X]) : p.primPart.content = 1 :=
   p.is_primitive_prim_part.content_eq_one
 
 theorem prim_part_ne_zero (p : R[X]) : p.primPart ≠ 0 :=
-  p.is_primitive_prim_part.ne_zero
+  p.is_primitive_prim_part.NeZero
 
 theorem nat_degree_prim_part (p : R[X]) : p.primPart.natDegree = p.natDegree := by
   by_cases h:C p.content = 0

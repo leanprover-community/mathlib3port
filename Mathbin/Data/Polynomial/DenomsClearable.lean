@@ -40,7 +40,7 @@ def DenomsClearable (a b : R) (N : ℕ) (f : R[X]) (i : R →+* K) : Prop :=
 theorem denomsClearableZero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClearable a b N 0 i :=
   ⟨0, bi, bu, by simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 theorem denomsClearableCMulXPow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R) (nN : n ≤ N) :
     DenomsClearable a b N (c r * X ^ n) i := by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
@@ -81,7 +81,7 @@ The assumption on `K` could be weakened to `linear_ordered_comm_ring` assuming t
 image of the denominator is invertible in `K`. -/
 theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ[X]} {a b : ℤ} (b0 : 0 < b)
     (fab : eval ((a : K) / b) (f.map (algebraMap ℤ K)) ≠ 0) :
-    (1 : K) ≤ b ^ f.natDegree * abs (eval ((a : K) / b) (f.map (algebraMap ℤ K))) := by
+    (1 : K) ≤ b ^ f.natDegree * |eval ((a : K) / b) (f.map (algebraMap ℤ K))| := by
   obtain ⟨ev, bi, bu, hF⟩ :=
     @denomsClearableNatDegree _ _ _ _ b _ (algebraMap ℤ K) f a
       (by

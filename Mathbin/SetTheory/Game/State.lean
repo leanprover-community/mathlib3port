@@ -178,15 +178,15 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : LeftMo
   · rfl
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The relabelling showing `move_left` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
 def relabellingMoveLeft (s : S) (t : LeftMoves (ofState s)) :
     Relabelling (moveLeft (ofState s) t) (ofState ((leftMovesOfState s).toFun t : S)) := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   apply relabelling_move_left_aux
   apply of_state_aux_relabelling
 
@@ -206,15 +206,15 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : Right
   · rfl
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The relabelling showing `move_right` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
 def relabellingMoveRight (s : S) (t : RightMoves (ofState s)) :
     Relabelling (moveRight (ofState s) t) (ofState ((rightMovesOfState s).toFun t : S)) := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   apply relabelling_move_right_aux
   apply of_state_aux_relabelling
 

@@ -35,12 +35,12 @@ variable {R A : Type _} {a b : A} {r : R}
 
 variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSmul R A]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(«expr - »(b, a), (0 : A))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(«expr - »(b, a), (0 : A))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h => by
   rw [Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one, ← sub_nonneg, ← sub_smul]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(«expr - »(b, a), (0 : A))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(«expr - »(b, a), (0 : A))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · simp
     
   · exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h)

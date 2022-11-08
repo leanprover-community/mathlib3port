@@ -586,7 +586,7 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency) (mode := 
                                 pure (e', prf)) <|
                               simp_bottom_up' fun e => norm_num.derive e <|> pow_lemma e)
                         e
-                  guard ¬expr.alpha_eqv new_e e
+                  guard ¬new_e == e
                   let a ← read_ref atoms
                   pure (a, new_e, some pr, ff))
                 (fun _ _ _ _ _ => failed) `eq e

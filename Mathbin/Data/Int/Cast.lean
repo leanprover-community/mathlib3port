@@ -3,10 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Int.Basic
+import Mathbin.Data.Int.Order
 import Mathbin.Data.Nat.Cast
-import Mathbin.Tactic.PiInstances
-import Mathbin.Data.Sum.Basic
 
 /-!
 # Cast of integers (additional theorems)
@@ -31,11 +29,20 @@ namespace Int
 def ofNatHom : ℕ →+* ℤ :=
   ⟨coe, rfl, Int.of_nat_mul, rfl, Int.of_nat_add⟩
 
+@[simp]
+theorem coe_nat_pos {n : ℕ} : (0 : ℤ) < n ↔ 0 < n :=
+  Nat.cast_pos
+
+theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
+  Int.coe_nat_pos.2 (succ_pos n)
+
 section cast
 
+#print Int.cast_mul /-
 @[simp, norm_cast]
 theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m =>
   Int.inductionOn' m 0 (by simp) (fun k _ ih n => by simp [add_mul, ih]) fun k _ ih n => by simp [sub_mul, ih]
+-/
 
 @[simp, norm_cast]
 theorem cast_ite [AddGroupWithOne α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
@@ -59,7 +66,7 @@ theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
 
 theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
   | (n : ℕ), x => by simpa using n.cast_commute x
-  | -[1 + n], x => by
+  | -[n+1], x => by
     simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using (n + 1).cast_commute (-x)
 
 theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
@@ -78,7 +85,7 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
 @[simp]
 theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) ≤ n ↔ 0 ≤ n
   | (n : ℕ) => by simp
-  | -[1 + n] => by
+  | -[n+1] => by
     have : -(n : α) < 1 := lt_of_le_of_lt (by simp) zero_lt_one
     simpa [(neg_succ_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
 
@@ -115,7 +122,7 @@ theorem cast_max : (↑(max a b) : α) = max a b :=
   Monotone.map_max cast_mono
 
 @[simp, norm_cast]
-theorem cast_abs : ((abs a : ℤ) : α) = abs a := by simp [abs_eq_max_neg]
+theorem cast_abs : ((|a| : ℤ) : α) = |a| := by simp [abs_eq_max_neg]
 
 theorem cast_one_le_of_pos (h : 0 < a) : (1 : α) ≤ a := by exact_mod_cast Int.add_one_le_of_lt h
 
@@ -136,7 +143,7 @@ theorem cast_le_neg_one_or_one_le_cast_of_ne_zero (hn : n ≠ 0) : (n : α) ≤ 
 
 variable {α} (n)
 
-theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : abs x ≤ 1) : (0 : α) ≤ n * x + n * n := by
+theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : |x| ≤ 1) : (0 : α) ≤ n * x + n * n := by
   have hnx : 0 < n → 0 ≤ x + n := fun hn => by
     convert add_le_add (neg_le_of_abs_le hx) (cast_one_le_of_pos hn)
     rw [add_left_neg]
@@ -152,7 +159,7 @@ theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : abs x ≤ 1) : (0 : α) ≤
   · exact Or.inl ⟨by exact_mod_cast h.le, hnx h⟩
     
 
-theorem cast_nat_abs : (n.natAbs : α) = abs n := by
+theorem cast_nat_abs : (n.natAbs : α) = |n| := by
   cases n
   · simp
     

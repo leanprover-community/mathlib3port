@@ -27,10 +27,12 @@ Most of the proofs come from the properties of `semiconj_by`.
 
 variable {G : Type _}
 
+#print Commute /-
 /-- Two elements commute if `a * b = b * a`. -/
 @[to_additive AddCommute "Two elements additively commute if `a + b = b + a`"]
 def Commute {S : Type _} [Mul S] (a b : S) : Prop :=
   SemiconjBy a b b
+-/
 
 namespace Commute
 
@@ -38,28 +40,38 @@ section Mul
 
 variable {S : Type _} [Mul S]
 
+#print Commute.eq /-
 /-- Equality behind `commute a b`; useful for rewriting. -/
 @[to_additive "Equality behind `add_commute a b`; useful for rewriting."]
 protected theorem eq {a b : S} (h : Commute a b) : a * b = b * a :=
   h
+-/
 
+#print Commute.refl /-
 /-- Any element commutes with itself. -/
 @[refl, simp, to_additive "Any element commutes with itself."]
 protected theorem refl (a : S) : Commute a a :=
   Eq.refl (a * a)
+-/
 
+#print Commute.symm /-
 /-- If `a` commutes with `b`, then `b` commutes with `a`. -/
 @[symm, to_additive "If `a` commutes with `b`, then `b` commutes with `a`."]
 protected theorem symm {a b : S} (h : Commute a b) : Commute b a :=
   Eq.symm h
+-/
 
+#print Commute.semiconj_by /-
 @[to_additive]
 protected theorem semiconj_by {a b : S} (h : Commute a b) : SemiconjBy a b b :=
   h
+-/
 
+#print Commute.symm_iff /-
 @[to_additive]
 protected theorem symm_iff {a b : S} : Commute a b ↔ Commute b a :=
   ⟨Commute.symm, Commute.symm⟩
+-/
 
 @[to_additive]
 instance : IsRefl S Commute :=
@@ -134,7 +146,7 @@ variable {M : Type _} [MulOneClass M]
 
 /- warning: commute.one_right -> Commute.one_right is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : MulOneClass.{u_2} M] (a : M), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M _inst_1) a (One.one.{u_2} M (MulOneClass.toHasOne.{u_2} M _inst_1))
+  forall {M : Type.{u_2}} [_inst_1 : MulOneClass.{u_2} M] (a : M), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M _inst_1) a (OfNat.ofNat.{u_2} M 1 (OfNat.mk.{u_2} M 1 (One.one.{u_2} M (MulOneClass.toHasOne.{u_2} M _inst_1))))
 but is expected to have type
   forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.280 : MulOneClass.{u_1} M] (a : M), Commute.{u_1} M (MulOneClass.toMul.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.280) a (OfNat.ofNat.{u_1} M 1 (One.toOfNat1.{u_1} M (MulOneClass.toOne.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.280)))
 Case conversion may be inaccurate. Consider using '#align commute.one_right Commute.one_rightₓ'. -/
@@ -144,7 +156,7 @@ theorem one_right (a : M) : Commute a 1 :=
 
 /- warning: commute.one_left -> Commute.one_left is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : MulOneClass.{u_2} M] (a : M), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M _inst_1) (One.one.{u_2} M (MulOneClass.toHasOne.{u_2} M _inst_1)) a
+  forall {M : Type.{u_2}} [_inst_1 : MulOneClass.{u_2} M] (a : M), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M _inst_1) (OfNat.ofNat.{u_2} M 1 (OfNat.mk.{u_2} M 1 (One.one.{u_2} M (MulOneClass.toHasOne.{u_2} M _inst_1)))) a
 but is expected to have type
   forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.292 : MulOneClass.{u_1} M] (a : M), Commute.{u_1} M (MulOneClass.toMul.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.292) (OfNat.ofNat.{u_1} M 1 (One.toOfNat1.{u_1} M (MulOneClass.toOne.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.292))) a
 Case conversion may be inaccurate. Consider using '#align commute.one_left Commute.one_leftₓ'. -/

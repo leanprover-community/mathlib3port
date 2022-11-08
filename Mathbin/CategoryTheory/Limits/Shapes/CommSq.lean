@@ -72,6 +72,22 @@ that we have `comm_sq f g h i`.
 def cocone (s : CommSq f g h i) : PushoutCocone f g :=
   PushoutCocone.mk _ _ s.w
 
+@[simp]
+theorem cone_fst (s : CommSq f g h i) : s.Cone.fst = f :=
+  rfl
+
+@[simp]
+theorem cone_snd (s : CommSq f g h i) : s.Cone.snd = g :=
+  rfl
+
+@[simp]
+theorem cocone_inl (s : CommSq f g h i) : s.Cocone.inl = h :=
+  rfl
+
+@[simp]
+theorem cocone_inr (s : CommSq f g h i) : s.Cocone.inr = i :=
+  rfl
+
 /-- The pushout cocone in the opposite category associated to the cone of
 a commutative square identifies to the cocone of the flipped commutative square in
 the opposite category -/
@@ -169,6 +185,14 @@ that we have a `is_pullback fst snd f g`.
 -/
 def cone (h : IsPullback fst snd f g) : PullbackCone f g :=
   h.to_comm_sq.Cone
+
+@[simp]
+theorem cone_fst (h : IsPullback fst snd f g) : h.Cone.fst = fst :=
+  rfl
+
+@[simp]
+theorem cone_snd (h : IsPullback fst snd f g) : h.Cone.snd = snd :=
+  rfl
 
 /-- The cone obtained from `is_pullback fst snd f g` is a limit cone.
 -/
@@ -271,6 +295,14 @@ that we have a `is_pushout f g inl inr`.
 def cocone (h : IsPushout f g inl inr) : PushoutCocone f g :=
   h.to_comm_sq.Cocone
 
+@[simp]
+theorem cocone_inl (h : IsPushout f g inl inr) : h.Cocone.inl = inl :=
+  rfl
+
+@[simp]
+theorem cocone_inr (h : IsPushout f g inl inr) : h.Cocone.inr = inr :=
+  rfl
+
 /-- The cocone obtained from `is_pushout f g inl inr` is a colimit cocone.
 -/
 noncomputable def isColimit (h : IsPushout f g inl inr) : IsColimit h.Cocone :=
@@ -362,6 +394,9 @@ variable {P X Y Z : C} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ 
 theorem flip (h : IsPullback fst snd f g) : IsPullback snd fst g f :=
   of_is_limit (@PullbackCone.flipIsLimit _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsLimit)
 
+theorem flip_iff : IsPullback fst snd f g ↔ IsPullback snd fst g f :=
+  ⟨flip, flip⟩
+
 section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
@@ -424,6 +459,16 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃} (s : IsPullback (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂))
     (p : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) (t : IsPullback h₁₂ v₁₂ v₁₃ h₂₂) : IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   (of_bot s.flip p.symm t.flip).flip
+
+theorem paste_vert_iff {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂} {h₃₁ : X₃₁ ⟶ X₃₂}
+    {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₂₁ : X₂₁ ⟶ X₃₁} {v₂₂ : X₂₂ ⟶ X₃₂} (s : IsPullback h₂₁ v₂₁ v₂₂ h₃₁)
+    (e : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) : IsPullback h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ ↔ IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
+  ⟨fun h => h.of_bot e s, fun h => h.paste_vert s⟩
+
+theorem paste_horiz_iff {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃} {h₂₁ : X₂₁ ⟶ X₂₂}
+    {h₂₂ : X₂₂ ⟶ X₂₃} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃} (s : IsPullback h₁₂ v₁₂ v₁₃ h₂₂)
+    (e : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) : IsPullback (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂) ↔ IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
+  ⟨fun h => h.of_right e s, fun h => h.paste_horiz s⟩
 
 section
 
@@ -519,6 +564,9 @@ variable {Z X Y P : C} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ 
 theorem flip (h : IsPushout f g inl inr) : IsPushout g f inr inl :=
   of_is_colimit (@PushoutCocone.flipIsColimit _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsColimit)
 
+theorem flip_iff : IsPushout f g inl inr ↔ IsPushout g f inr inl :=
+  ⟨flip, flip⟩
+
 section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
@@ -583,6 +631,16 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃} (s : IsPushout (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂))
     (p : h₁₂ ≫ v₁₃ = v₁₂ ≫ h₂₂) (t : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) : IsPushout h₁₂ v₁₂ v₁₃ h₂₂ :=
   (of_bot s.flip p.symm t.flip).flip
+
+theorem paste_vert_iff {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂} {h₃₁ : X₃₁ ⟶ X₃₂}
+    {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₂₁ : X₂₁ ⟶ X₃₁} {v₂₂ : X₂₂ ⟶ X₃₂} (s : IsPushout h₁₁ v₁₁ v₁₂ h₂₁)
+    (e : h₂₁ ≫ v₂₂ = v₂₁ ≫ h₃₁) : IsPushout h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ ↔ IsPushout h₂₁ v₂₁ v₂₂ h₃₁ :=
+  ⟨fun h => h.of_bot e s, s.paste_vert⟩
+
+theorem paste_horiz_iff {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃} {h₂₁ : X₂₁ ⟶ X₂₂}
+    {h₂₂ : X₂₂ ⟶ X₂₃} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃} (s : IsPushout h₁₁ v₁₁ v₁₂ h₂₁)
+    (e : h₁₂ ≫ v₁₃ = v₁₂ ≫ h₂₂) : IsPushout (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂) ↔ IsPushout h₁₂ v₁₂ v₁₃ h₂₂ :=
+  ⟨fun h => h.of_right e s, s.paste_horiz⟩
 
 section
 
@@ -744,13 +802,13 @@ theorem of_has_biproduct₂ [HasBinaryBiproduct X Y] : BicartesianSq (0 : 0 ⟶ 
 
 end BicartesianSq
 
-namespace Functor
+section Functor
 
 variable {D : Type u₂} [Category.{v₂} D]
 
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
-theorem map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i) :
+theorem Functor.map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i) :
     IsPullback (F.map f) (F.map g) (F.map h) (F.map i) := by
   -- This is made slightly awkward because `C` and `D` have different universes,
   -- and so the relevant `walking_cospan` diagrams live in different universes too!
@@ -762,14 +820,12 @@ theorem map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i)
     
   · dsimp
     simp
-    rfl
     
   · dsimp
     simp
-    rfl
     
 
-theorem map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
+theorem Functor.map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) := by
   refine'
     is_pushout.of_is_colimit' (F.map_comm_sq s.to_comm_sq)
@@ -779,18 +835,47 @@ theorem map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     
   · dsimp
     simp
-    rfl
     
   · dsimp
     simp
-    rfl
     
-
-end Functor
 
 alias functor.map_is_pullback ← is_pullback.map
 
 alias functor.map_is_pushout ← is_pushout.map
+
+theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
+    (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i := by
+  refine' ⟨⟨e⟩, ⟨is_limit_of_reflects F <| _⟩⟩
+  refine' (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)).symm H.is_limit
+  exacts[iso.refl _, (category.comp_id _).trans (category.id_comp _).symm,
+    (category.comp_id _).trans (category.id_comp _).symm]
+
+theorem IsPullback.of_map_of_faithful [ReflectsLimit (cospan h i) F] [Faithful F]
+    (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
+  H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
+
+theorem IsPullback.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesLimit (cospan h i) F]
+    [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i) :
+    IsPullback (F.map f) (F.map g) (F.map h) (F.map i) ↔ IsPullback f g h i :=
+  ⟨fun h => h.of_map F e, fun h => h.map F⟩
+
+theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
+    (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i := by
+  refine' ⟨⟨e⟩, ⟨is_colimit_of_reflects F <| _⟩⟩
+  refine' (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)).symm H.is_colimit
+  exacts[iso.refl _, (category.comp_id _).trans (category.id_comp _), (category.comp_id _).trans (category.id_comp _)]
+
+theorem IsPushout.of_map_of_faithful [ReflectsColimit (span f g) F] [Faithful F]
+    (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
+  H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
+
+theorem IsPushout.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesColimit (span f g) F]
+    [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i) :
+    IsPushout (F.map f) (F.map g) (F.map h) (F.map i) ↔ IsPushout f g h i :=
+  ⟨fun h => h.of_map F e, fun h => h.map F⟩
+
+end Functor
 
 end CategoryTheory
 

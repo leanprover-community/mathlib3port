@@ -71,7 +71,7 @@ theorem Submodule.is_internal_prime_power_torsion_of_pid [Module.Finite R M] (hM
   refine' ⟨P, inferInstance, dec, fun p => is_principal.generator (p : Ideal R), _, e, _⟩
   · rintro ⟨p, hp⟩
     haveI := Ideal.is_prime_of_prime (hP p hp)
-    exact (is_principal.prime_generator_of_is_prime p (hP p hp).ne_zero).Irreducible
+    exact (is_principal.prime_generator_of_is_prime p (hP p hp).NeZero).Irreducible
     
   · convert this
     ext p : 1

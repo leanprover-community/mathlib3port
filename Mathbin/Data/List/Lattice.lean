@@ -6,6 +6,7 @@ Scott Morrison
 -/
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Infix
+import Mathbin.Algebra.Order.Monoid.MinMax
 
 /-!
 # Lattice structure of lists
@@ -39,17 +40,25 @@ section Disjoint
 
 theorem Disjoint.symm (d : Disjoint l₁ l₂) : Disjoint l₂ l₁ := fun a i₂ i₁ => d i₁ i₂
 
+#print List.disjoint_comm /-
 theorem disjoint_comm : Disjoint l₁ l₂ ↔ Disjoint l₂ l₁ :=
   ⟨Disjoint.symm, Disjoint.symm⟩
+-/
 
+#print List.disjoint_left /-
 theorem disjoint_left : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉ l₂ :=
   Iff.rfl
+-/
 
+#print List.disjoint_right /-
 theorem disjoint_right : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
   disjoint_comm
+-/
 
+#print List.disjoint_iff_ne /-
 theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀ a ∈ l₁, ∀ b ∈ l₂, a ≠ b := by
   simp only [disjoint_left, imp_not_comm, forall_eq']
+-/
 
 /- warning: list.disjoint_of_subset_left -> List.disjoint_of_subset_left is a dubious translation:
 lean 3 declaration is
@@ -67,19 +76,27 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_subset_right List.disjoint_of_subset_rightₓ'. -/
 theorem disjoint_of_subset_right (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ => d m (ss m₁)
 
+#print List.disjoint_of_disjoint_cons_left /-
 theorem disjoint_of_disjoint_cons_left {l₁ l₂} : Disjoint (a :: l₁) l₂ → Disjoint l₁ l₂ :=
   disjoint_of_subset_left (List.subset_cons _ _)
+-/
 
+#print List.disjoint_of_disjoint_cons_right /-
 theorem disjoint_of_disjoint_cons_right {l₁ l₂} : Disjoint l₁ (a :: l₂) → Disjoint l₁ l₂ :=
   disjoint_of_subset_right (List.subset_cons _ _)
+-/
 
+#print List.disjoint_nil_left /-
 @[simp]
 theorem disjoint_nil_left (l : List α) : Disjoint [] l := fun a => (not_mem_nil a).elim
+-/
 
+#print List.disjoint_nil_right /-
 @[simp]
 theorem disjoint_nil_right (l : List α) : Disjoint l [] := by
   rw [disjoint_comm]
   exact disjoint_nil_left _
+-/
 
 /- warning: list.singleton_disjoint -> List.singleton_disjoint is a dubious translation:
 lean 3 declaration is
@@ -92,8 +109,10 @@ theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l := by
   simp only [Disjoint, mem_singleton, forall_eq]
   rfl
 
+#print List.disjoint_singleton /-
 @[simp]
 theorem disjoint_singleton : Disjoint l [a] ↔ a ∉ l := by rw [disjoint_comm, singleton_disjoint]
+-/
 
 /- warning: list.disjoint_append_left -> List.disjoint_append_left is a dubious translation:
 lean 3 declaration is
@@ -105,9 +124,11 @@ Case conversion may be inaccurate. Consider using '#align list.disjoint_append_l
 theorem disjoint_append_left : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧ Disjoint l₂ l := by
   simp only [Disjoint, mem_append, or_imp, forall_and]
 
+#print List.disjoint_append_right /-
 @[simp]
 theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ ∧ Disjoint l l₂ :=
   disjoint_comm.trans <| by simp only [disjoint_comm, disjoint_append_left]
+-/
 
 /- warning: list.disjoint_cons_left -> List.disjoint_cons_left is a dubious translation:
 lean 3 declaration is
@@ -147,11 +168,15 @@ Case conversion may be inaccurate. Consider using '#align list.disjoint_of_disjo
 theorem disjoint_of_disjoint_append_left_right (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₂ l :=
   (disjoint_append_left.1 d).2
 
+#print List.disjoint_of_disjoint_append_right_left /-
 theorem disjoint_of_disjoint_append_right_left (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₁ :=
   (disjoint_append_right.1 d).1
+-/
 
+#print List.disjoint_of_disjoint_append_right_right /-
 theorem disjoint_of_disjoint_append_right_right (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₂ :=
   (disjoint_append_right.1 d).2
+-/
 
 /- warning: list.disjoint_take_drop -> List.disjoint_take_drop is a dubious translation:
 lean 3 declaration is
@@ -185,9 +210,11 @@ variable [DecidableEq α]
 
 section Union
 
+#print List.nil_union /-
 @[simp]
 theorem nil_union (l : List α) : [] ∪ l = l :=
   rfl
+-/
 
 /- warning: list.cons_union -> List.cons_union is a dubious translation:
 lean 3 declaration is
@@ -332,33 +359,29 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter 
 theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
   | [], l₂ => by simp
   | l₁, [] => by simp
-  | h₁ :: l₁, h₂ :: l₂ => by
-    simp only [List.bagInter', List.mem_cons_iff]
-    by_cases p₁:h₂ = h₁ <;> by_cases p₂:h₁ = a
-    · simp only [p₁, p₂, count_bag_inter, min_succ_succ, erase_cons_head, if_true, mem_cons_iff, count_cons_self,
-        true_or_iff, eq_self_iff_true]
-      
-    · simp only [p₁, Ne.symm p₂, count_bag_inter, count_cons, erase_cons_head, if_true, mem_cons_iff, true_or_iff,
-        eq_self_iff_true, if_false]
-      
-    · rw [p₂] at p₁
-      by_cases p₃:a ∈ l₂
-      · simp only [p₁, Ne.symm p₁, p₂, p₃, erase_cons, count_bag_inter, Eq.symm (min_succ_succ _ _),
-          succ_pred_eq_of_pos (count_pos.2 p₃), if_true, mem_cons_iff, false_or_iff, count_cons_self, eq_self_iff_true,
-          if_false, Ne.def, not_false_iff, count_erase_self, List.count_cons_of_ne]
+  | b :: l₁, l₂ => by
+    by_cases hb:b ∈ l₂
+    · rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ← min_add_add_right]
+      by_cases ab:a = b
+      · rw [if_pos ab, tsub_add_cancel_of_le]
+        rwa [succ_le_iff, count_pos, ab]
         
-      · simp [Ne.symm p₁, p₂, p₃]
+      · rw [if_neg ab, tsub_zero, add_zero, add_zero]
         
       
-    · by_cases p₄:h₁ ∈ l₂ <;>
-        simp only [Ne.symm p₁, Ne.symm p₂, p₄, count_bag_inter, if_true, if_false, mem_cons_iff, false_or_iff,
-          eq_self_iff_true, Ne.def, not_false_iff, count_erase_of_ne, count_cons_of_ne]
+    · rw [cons_bag_inter_of_neg _ hb, count_bag_inter]
+      by_cases ab:a = b
+      · rw [← ab] at hb
+        rw [count_eq_zero.2 hb, min_zero, min_zero]
+        
+      · rw [count_cons_of_ne ab]
+        
       
 
 theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ l₁
-  | [], l₂ => by simp [nil_sublist]
+  | [], l₂ => by simp
   | b :: l₁, l₂ => by
-    by_cases b ∈ l₂ <;> simp [h]
+    by_cases b ∈ l₂ <;> simp only [h, cons_bag_inter_of_pos, cons_bag_inter_of_neg, not_false_iff]
     · exact (bag_inter_sublist_left _ _).cons_cons _
       
     · apply sublist_cons_of_sublist

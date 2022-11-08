@@ -200,7 +200,7 @@ theorem Sup_eq_eqv_gen (S : Set (Setoid α)) : sup S = EqvGen.setoid fun x y => 
     supremum of the set's image under the map to the underlying binary operation. -/
 theorem Sup_def {s : Set (Setoid α)} : sup s = EqvGen.setoid (sup (rel '' s)) := by
   rw [Sup_eq_eqv_gen, Sup_image]
-  congr with x y
+  congr with (x y)
   simp only [supr_apply, supr_Prop_eq, exists_prop]
 
 /-- The equivalence closure of an equivalence relation r is r. -/

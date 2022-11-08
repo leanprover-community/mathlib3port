@@ -29,7 +29,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 
 open Nnreal TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for
 all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius `2 * ε` is
 bounded by `C` times the measure of the concentric ball of radius `ε`.

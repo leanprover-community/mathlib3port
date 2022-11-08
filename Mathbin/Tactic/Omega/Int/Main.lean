@@ -162,8 +162,8 @@ unsafe def wff : expr → tactic Unit
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@Eq (%%ₓdx) _ _) => eq_int dx
-  | quote.1 (@ge (%%ₓdx) (%%ₓh) _ _) => eq_int dx
-  | quote.1 (@gt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+  | quote.1 (@GE.ge (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+  | quote.1 (@GT.gt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@Ne (%%ₓdx) _ _) => eq_int dx
   | quote.1 True => skip
   | quote.1 False => skip

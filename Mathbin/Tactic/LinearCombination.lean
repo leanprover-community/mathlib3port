@@ -128,12 +128,12 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
@@ -162,9 +162,9 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
         quote.1
         (@Eq (%%ₓeqtp) _ _)
       ← infer_type h_equality |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     is_def_eq eqtp expected_tp <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
   | some tactic_hcombo, h_equality::h_eqs_names, coeff::coeffs => do
     let hcombo

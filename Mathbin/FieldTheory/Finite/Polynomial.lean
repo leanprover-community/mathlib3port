@@ -86,8 +86,8 @@ theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ,
   rw [degrees_C, ← bot_eq_zero, sup_bot_eq]
   exact degrees_X' _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrictDegree σ K (Fintype.card K - 1) := by
   rw [mem_restrict_degree_iff_sup, indicator]
   intro n
@@ -95,7 +95,7 @@ theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrictD
   simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum, AddMonoidHom.map_nsmul,
     Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
     rw [Multiset.count_singleton, if_neg Ne.symm, mul_zero]
@@ -140,8 +140,8 @@ end
 
 variable [Field K] [Fintype K] [Finite σ]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ := by
   cases nonempty_fintype σ
   refine' top_unique (SetLike.le_def.2 fun e _ => mem_map.2 _)
@@ -152,7 +152,7 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
     simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply, LinearMap.map_smul]
     simp only [evalₗ_apply]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     refine' Finset.sum_eq_single n (fun b _ h => _) _
     · rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
       

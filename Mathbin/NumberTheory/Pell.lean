@@ -263,7 +263,7 @@ theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → is_pell b → b ≤ pel
                     (Zsqrtd.le_of_le_le (le_refl 0)
                       (let t := Int.coe_nat_le_coe_nat_of_le (Nat.succ_pos y)
                       add_le_add t t))
-                | -[1 + y], y0l, yl2 => y0l trivial
+                | -[y+1], y0l, yl2 => y0l trivial
 
 theorem eq_pell_zd (b : ℤ√d) (b1 : 1 ≤ b) (hp : is_pell b) : ∃ n, b = pell_zd n :=
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b
@@ -328,7 +328,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                       [(Tactic.rwSeq
                         "rw"
                         []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                         [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
                    (group
                     "|"
@@ -337,7 +337,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                       [(Tactic.rwSeq
                         "rw"
                         []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                         [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
              "<;>"
              (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h]))))])))
@@ -368,7 +368,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                      [(Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
                   (group
                    "|"
@@ -377,7 +377,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                      [(Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
             "<;>"
             (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h]))))])))
@@ -400,7 +400,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                  [(Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
               (group
                "|"
@@ -409,7 +409,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                  [(Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
         "<;>"
         (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h]))))
@@ -428,7 +428,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                 [(Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
              (group
               "|"
@@ -437,7 +437,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                 [(Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
        "<;>"
        (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h])))
@@ -469,7 +469,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                [(Tactic.rwSeq
                  "rw"
                  []
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
             (group
              "|"
@@ -478,7 +478,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
                [(Tactic.rwSeq
                  "rw"
                  []
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -491,7 +491,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
            [(Tactic.rwSeq
              "rw"
              []
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
         (group
          "|"
@@ -500,14 +500,14 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
            [(Tactic.rwSeq
              "rw"
              []
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
-       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -522,7 +522,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
       (Tactic.rwSeq
        "rw"
        []
-       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -597,7 +597,7 @@ theorem
                       [(Tactic.rwSeq
                         "rw"
                         []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                         [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
                    (group
                     "|"
@@ -606,7 +606,7 @@ theorem
                       [(Tactic.rwSeq
                         "rw"
                         []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                         [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
              "<;>"
              (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h]))))])))
@@ -637,7 +637,7 @@ theorem
                      [(Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
                   (group
                    "|"
@@ -646,7 +646,7 @@ theorem
                      [(Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
             "<;>"
             (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h]))))])))
@@ -669,7 +669,7 @@ theorem
                  [(Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
               (group
                "|"
@@ -678,7 +678,7 @@ theorem
                  [(Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
         "<;>"
         (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h]))))
@@ -697,7 +697,7 @@ theorem
                 [(Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
              (group
               "|"
@@ -706,7 +706,7 @@ theorem
                 [(Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
        "<;>"
        (Tactic.exact "exact" (Term.app `Int.coe_nat_inj [`h])))
@@ -738,7 +738,7 @@ theorem
                [(Tactic.rwSeq
                  "rw"
                  []
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
             (group
              "|"
@@ -747,7 +747,7 @@ theorem
                [(Tactic.rwSeq
                  "rw"
                  []
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -760,7 +760,7 @@ theorem
            [(Tactic.rwSeq
              "rw"
              []
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))
         (group
          "|"
@@ -769,14 +769,14 @@ theorem
            [(Tactic.rwSeq
              "rw"
              []
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
-       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_mul)] "]")
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_mul)] "]")
        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -791,7 +791,7 @@ theorem
       (Tactic.rwSeq
        "rw"
        []
-       (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Int.coe_nat_add)] "]")
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Int.coe_nat_add)] "]")
        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))

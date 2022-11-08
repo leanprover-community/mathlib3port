@@ -213,6 +213,8 @@ end OfEquiv
 
 section Polynomial
 
+open Polynomial
+
 variable (R : Type u) [CommSemiring R]
 
 instance FormallySmooth.mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynomial σ R) := by
@@ -225,7 +227,7 @@ instance FormallySmooth.mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynom
   rw [← hg, AlgHom.comp_apply, MvPolynomial.aeval_X]
   rfl
 
-instance FormallySmooth.polynomial : FormallySmooth R (Polynomial R) :=
+instance FormallySmooth.polynomial : FormallySmooth R R[X] :=
   @FormallySmooth.ofEquiv _ _ _ _ _ (FormallySmooth.mvPolynomial R PUnit) (MvPolynomial.punitAlgEquiv R)
 
 end Polynomial

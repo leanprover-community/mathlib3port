@@ -276,7 +276,7 @@ def flipHomAux [Algebra R₂ R] : BilinForm R M →ₗ[R₂] BilinForm R M where
 variable {R₂}
 
 theorem flip_flip_aux [Algebra R₂ R] (A : BilinForm R M) : (flipHomAux R₂) (flipHomAux R₂ A) = A := by
-  ext A x y
+  ext (A x y)
   simp [flip_hom_aux]
 
 variable (R₂)
@@ -294,7 +294,7 @@ theorem flip_apply [Algebra R₂ R] (A : BilinForm R M) (x y : M) : flipHom R₂
   rfl
 
 theorem flip_flip [Algebra R₂ R] : (flipHom R₂).trans (flipHom R₂) = LinearEquiv.refl R₂ (BilinForm R M) := by
-  ext A x y
+  ext (A x y)
   simp
 
 /-- The flip of a bilinear form over a ring, obtained by exchanging the left and right arguments,
@@ -574,7 +574,7 @@ theorem congr_apply (e : M₂ ≃ₗ[R₂] M₂') (B : BilinForm R₂ M₂) (x y
 
 @[simp]
 theorem congr_symm (e : M₂ ≃ₗ[R₂] M₂') : (congr e).symm = congr e.symm := by
-  ext B x y
+  ext (B x y)
   simp only [congr_apply, LinearEquiv.symm_symm]
   rfl
 
@@ -769,7 +769,7 @@ end IsSymm
 theorem is_symm_iff_flip' [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B := by
   constructor
   · intro h
-    ext x y
+    ext (x y)
     exact h y x
     
   · intro h x y
@@ -822,7 +822,7 @@ theorem IsAdjointPair.eq (h : IsAdjointPair B B' f g) : ∀ {x y}, B' (f x) y = 
 theorem is_adjoint_pair_iff_comp_left_eq_comp_right (f g : Module.EndCat R M) :
     IsAdjointPair B F f g ↔ F.compLeft f = B.compRight g := by
   constructor <;> intro h
-  · ext x y
+  · ext (x y)
     rw [comp_left_apply, comp_right_apply]
     apply h
     
@@ -1105,7 +1105,7 @@ theorem IsOrtho.not_is_ortho_basis_self_of_nondegenerate {n : Type w} [Nontrivia
   obtain rfl | hij := eq_or_ne i j
   · exact ho
     
-  · exact h i j hij
+  · exact h hij
     
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
@@ -1124,7 +1124,7 @@ theorem IsOrtho.nondegenerate_iff_not_is_ortho_basis_self {n : Type w} [Nontrivi
     
   · intro j hj hij
     convert mul_zero _ using 2
-    exact hO j i hij
+    exact hO hij
     
   · intro hi
     convert zero_mul _ using 2

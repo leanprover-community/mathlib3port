@@ -160,7 +160,7 @@ theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
   refine' ⟨fun hp i hi => is_coprime.prod_right_iff.mpr fun j hj => _, fun hp => _⟩
   · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
     obtain ⟨hj, ji⟩ := hj
-    exact hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_arg coe h).symm
+    exact @hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_arg coe h).symm
     
   · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
     apply is_coprime.prod_right_iff.mp (hp i hi)

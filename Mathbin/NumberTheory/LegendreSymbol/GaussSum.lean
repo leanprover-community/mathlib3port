@@ -191,7 +191,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     rw [hf, zero_pow (by norm_num : 0 < 2), eq_comm, mul_eq_zero] at hg
     exact
       not_is_unit_prime_of_dvd_card p
-        ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).ne_zero) hp
+        ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).NeZero) hp
   rw [← hg]
   apply mul_right_cancel₀ this
   rw [← hχ.gauss_sum_frob_iter p n hp ψ, ← pow_mul, mul_comm, ← pow_succ,

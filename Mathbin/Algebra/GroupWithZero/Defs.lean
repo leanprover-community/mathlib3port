@@ -27,12 +27,14 @@ variable {G₀ : Type u} {M₀ M₀' G₀' : Type _}
 
 section
 
+#print MulZeroClass /-
 /-- Typeclass for expressing that a type `M₀` with multiplication and a zero satisfies
 `0 * a = 0` and `a * 0 = 0` for all `a : M₀`. -/
 @[protect_proj]
 class MulZeroClass (M₀ : Type _) extends Mul M₀, Zero M₀ where
   zero_mul : ∀ a : M₀, 0 * a = 0
   mul_zero : ∀ a : M₀, a * 0 = 0
+-/
 
 section MulZeroClass
 
@@ -55,26 +57,34 @@ class NoZeroDivisors (M₀ : Type _) [Mul M₀] [Zero M₀] : Prop where
 
 export NoZeroDivisors (eq_zero_or_eq_zero_of_mul_eq_zero)
 
+#print SemigroupWithZero /-
 /-- A type `S₀` is a "semigroup with zero” if it is a semigroup with zero element, and `0` is left
 and right absorbing. -/
 @[protect_proj]
 class SemigroupWithZero (S₀ : Type _) extends Semigroup S₀, MulZeroClass S₀
+-/
 
+#print MulZeroOneClass /-
 /- By defining this _after_ `semigroup_with_zero`, we ensure that searches for `mul_zero_class` find
 this class first. -/
 /-- A typeclass for non-associative monoids with zero elements. -/
 @[protect_proj]
 class MulZeroOneClass (M₀ : Type _) extends MulOneClass M₀, MulZeroClass M₀
+-/
 
+#print MonoidWithZero /-
 /-- A type `M₀` is a “monoid with zero” if it is a monoid with zero element, and `0` is left
 and right absorbing. -/
 @[protect_proj]
 class MonoidWithZero (M₀ : Type _) extends Monoid M₀, MulZeroOneClass M₀
+-/
 
+#print MonoidWithZero.toSemigroupWithZero /-
 -- see Note [lower instance priority]
 instance (priority := 100) MonoidWithZero.toSemigroupWithZero (M₀ : Type _) [MonoidWithZero M₀] :
     SemigroupWithZero M₀ :=
   { ‹MonoidWithZero M₀› with }
+-/
 
 /-- A type `M` is a `cancel_monoid_with_zero` if it is a monoid with zero element, `0` is left
 and right absorbing, and left/right multiplication by a non-zero element is injective. -/
@@ -110,6 +120,7 @@ class CommMonoidWithZero (M₀ : Type _) extends CommMonoid M₀, MonoidWithZero
 @[protect_proj]
 class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀, CancelMonoidWithZero M₀
 
+#print GroupWithZero /-
 /-- A type `G₀` is a “group with zero” if it is a monoid with zero element (distinct from `1`)
 such that every nonzero element is invertible.
 The type is required to come with an “inverse” function, and the inverse of `0` must be `0`.
@@ -119,6 +130,7 @@ target of valuations in general valuation theory.-/
 class GroupWithZero (G₀ : Type u) extends MonoidWithZero G₀, DivInvMonoid G₀, Nontrivial G₀ where
   inv_zero : (0 : G₀)⁻¹ = 0
   mul_inv_cancel : ∀ a : G₀, a ≠ 0 → a * a⁻¹ = 1
+-/
 
 section GroupWithZero
 

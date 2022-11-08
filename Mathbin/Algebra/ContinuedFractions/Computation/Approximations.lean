@@ -463,14 +463,14 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
 
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (Bₙ * Bₙ₊₁)` -/
 theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
-    abs (v - (of v).convergents n) ≤ 1 / ((of v).denominators n * ((of v).denominators <| n + 1)) := by
+    |v - (of v).convergents n| ≤ 1 / ((of v).denominators n * ((of v).denominators <| n + 1)) := by
   -- shorthand notation
   let g := of v
   let nextConts := g.continuants_aux (n + 2)
   set conts := continuants_aux g (n + 1) with conts_eq
   set pred_conts := continuants_aux g n with pred_conts_eq
   -- change the goal to something more readable
-  change abs (v - convergents g n) ≤ 1 / (conts.b * nextConts.b)
+  change |v - convergents g n| ≤ 1 / (conts.b * nextConts.b)
   obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp
   exact option.ne_none_iff_exists'.elim_left not_terminated_at_n
   have gp_a_eq_one : gp.a = 1 := of_part_num_eq_one (part_num_eq_s_a s_nth_eq)
@@ -479,7 +479,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     simp [nextConts, continuants_aux_recurrence s_nth_eq pred_conts_eq conts_eq, gp_a_eq_one, pred_conts_eq.symm,
       conts_eq.symm, add_comm]
   let denom := conts.b * (pred_conts.b + gp.b * conts.b)
-  suffices abs (v - g.convergents n) ≤ 1 / denom by
+  suffices |v - g.convergents n| ≤ 1 / denom by
     rw [nextConts_b_eq]
     congr 1
   obtain ⟨ifp_succ_n, succ_nth_stream_eq, ifp_succ_n_b_eq_gp_b⟩ :
@@ -490,7 +490,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
   exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
   let denom' := conts.b * (pred_conts.b + ifp_n.fr⁻¹ * conts.b)
   -- now we can use `sub_convergents_eq` to simplify our goal
-  suffices abs (-1 ^ n / denom') ≤ 1 / denom by
+  suffices |-1 ^ n / denom'| ≤ 1 / denom by
     have : v - g.convergents n = -1 ^ n / denom' := by
       -- apply `sub_convergens_eq` and simplify the result
       have tmp := sub_convergents_eq stream_nth_eq
@@ -512,8 +512,8 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     lt_of_lt_of_le this conts_b_ineq
   -- `denom'` is positive, so we can remove `|⬝|` from our goal
   suffices 1 / denom' ≤ 1 / denom by
-    have : abs (-1 ^ n / denom') = 1 / denom' := by
-      suffices 1 / abs denom' = 1 / denom' by rwa [abs_div, abs_neg_one_pow n]
+    have : |-1 ^ n / denom'| = 1 / denom' := by
+      suffices 1 / |denom'| = 1 / denom' by rwa [abs_div, abs_neg_one_pow n]
       have : 0 < denom' := by
         have : 0 ≤ pred_conts.b :=
           haveI : (fib n : K) ≤ pred_conts.b :=
@@ -544,13 +544,13 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     mono
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (bₙ * Bₙ * Bₙ)`. This bound is worse than the one shown in
 `gcf.abs_sub_convergents_le`, but sometimes it is easier to apply and sufficient for one's use case.
  -/
 theorem abs_sub_convergents_le' {b : K} (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
-    abs (v - (of v).convergents n) ≤ 1 / (b * (of v).denominators n * (of v).denominators n) := by
+    |v - (of v).convergents n| ≤ 1 / (b * (of v).denominators n * (of v).denominators n) := by
   let g := of v
   let B := g.denominators n
   let nB := g.denominators (n + 1)
@@ -558,9 +558,9 @@ theorem abs_sub_convergents_le' {b : K} (nth_part_denom_eq : (of v).partialDenom
     haveI : g.partial_denominators.nth n ≠ none := by simp [nth_part_denom_eq]
     (not_congr terminated_at_iff_part_denom_none).elimRight this
   suffices 1 / (B * nB) ≤ (1 : K) / (b * B * B) by
-    have : abs (v - g.convergents n) ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
+    have : |v - g.convergents n| ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
     trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg" <;>
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
       assumption
   -- derive some inequalities needed to show the claim
   have zero_lt_B : 0 < B :=

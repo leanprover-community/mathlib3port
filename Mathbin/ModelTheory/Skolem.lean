@@ -56,12 +56,12 @@ theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) =
     exact infinite_iff.1 (Infinite.of_injective (fun n => ⟨n, ⊥⟩) fun x y xy => (Sigma.mk.inj xy).1)
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
   rw [card_functions_sum_skolem₁]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · exact ⟨⟨Sigma.map Nat.succ fun _ => id, nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
     
   · refine' trans bounded_formula.card_le (lift_le.1 _)

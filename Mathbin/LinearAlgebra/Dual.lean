@@ -250,7 +250,7 @@ theorem dual_basis_apply (i : ι) (m : M) : b.dualBasis i m = b.repr m i :=
 
 @[simp]
 theorem coe_dual_basis : ⇑b.dualBasis = b.Coord := by
-  ext i x
+  ext (i x)
   apply dual_basis_apply
 
 @[simp]
@@ -551,7 +551,7 @@ theorem dual_lift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualL
 
 @[simp]
 theorem dual_restrict_comp_dual_lift (W : Subspace K V) : W.dualRestrict.comp W.dualLift = 1 := by
-  ext φ x
+  ext (φ x)
   simp
 
 theorem dual_restrict_left_inverse (W : Subspace K V) : Function.LeftInverse W.dualRestrict W.dualLift := fun x =>
@@ -841,13 +841,13 @@ isomorphism `R ⊗ R ≃ R`.
 noncomputable def dualDistribEquivOfBasis (b : Basis ι R M) (c : Basis κ R N) :
     Dual R M ⊗[R] Dual R N ≃ₗ[R] Dual R (M ⊗[R] N) := by
   refine' LinearEquiv.ofLinear (dual_distrib R M N) (dual_distrib_inv_of_basis b c) _ _
-  · ext f m n
+  · ext (f m n)
     have h : ∀ r s : R, r • s = s • r := IsCommutative.comm
     simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, LinearMap.map_sum,
       map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ← f.map_smul, ← f.map_sum, ← smul_tmul_smul, ←
       tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.coord_apply, Basis.sum_repr]
     
-  · ext f g
+  · ext (f g)
     simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, dual_distrib_apply, ←
       smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.sum_dual_apply_smul_coord]
     

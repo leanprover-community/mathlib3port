@@ -356,7 +356,7 @@ instance :
     CompactSpace (Alexandroff X) where compact_univ := by
     have : tendsto (coe : X → Alexandroff X) (cocompact X) (𝓝 ∞) := by
       rw [nhds_infty_eq]
-      exact (tendsto_map.mono_left cocompact_le_coclosed_compact).monoRight le_sup_left
+      exact (tendsto_map.mono_left cocompact_le_coclosed_compact).mono_right le_sup_left
     convert ← this.is_compact_insert_range_of_cocompact continuous_coe
     exact insert_none_range_some X
 

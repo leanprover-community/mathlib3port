@@ -148,19 +148,19 @@ protected theorem coe_nat_gcd (m n : ℕ) : Int.gcd ↑m ↑n = Nat.gcd m n :=
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
 def gcdA : ℤ → ℤ → ℤ
   | of_nat m, n => m.gcdA n.natAbs
-  | -[1 + m], n => -m.succ.gcdA n.natAbs
+  | -[m+1], n => -m.succ.gcdA n.natAbs
 
 /-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
 def gcdB : ℤ → ℤ → ℤ
   | m, of_nat n => m.natAbs.gcdB n
-  | m, -[1 + n] => -m.natAbs.gcdB n.succ
+  | m, -[n+1] => -m.natAbs.gcdB n.succ
 
 /-- **Bézout's lemma** -/
 theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcd x y : ℤ) = x * gcdA x y + y * gcdB x y
   | (m : ℕ), (n : ℕ) => Nat.gcd_eq_gcd_ab _ _
-  | (m : ℕ), -[1 + n] => show (_ : ℤ) = _ + -(n + 1) * -_ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[1 + m], (n : ℕ) => show (_ : ℤ) = -(m + 1) * -_ + _ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[1 + m], -[1 + n] =>
+  | (m : ℕ), -[n+1] => show (_ : ℤ) = _ + -(n + 1) * -_ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
+  | -[m+1], (n : ℕ) => show (_ : ℤ) = -(m + 1) * -_ + _ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
+  | -[m+1], -[n+1] =>
     show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_ by
       rw [neg_mul_neg, neg_mul_neg]
       apply Nat.gcd_eq_gcd_ab
@@ -418,7 +418,7 @@ theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m =
   cases m
   · simp only [hn, Nat.gcd_zero_left]
     
-  obtain ⟨x, rfl⟩ : IsUnit x := by apply is_unit_of_pow_eq_one _ _ hm m.succ_pos
+  lift x to Mˣ using is_unit_of_pow_eq_one _ _ hm m.succ_ne_zero
   simp only [← Units.coe_pow] at *
   rw [← Units.coe_one, ← zpow_coe_nat, ← Units.ext_iff] at *
   simp only [Nat.gcd_eq_gcd_ab, zpow_add, zpow_mul, hm, hn, one_zpow, one_mul]

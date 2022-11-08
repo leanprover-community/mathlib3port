@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin, Patrick Massot
 -/
 import Mathbin.Algebra.Order.Group.TypeTags
+import Mathbin.Algebra.Order.Group.Units
 import Mathbin.Algebra.Order.Monoid.WithZero
 
 /-!
@@ -139,7 +140,7 @@ theorem div_le_div₀ (a b c d : α) (hb : b ≠ 0) (hd : d ≠ 0) : a * b⁻¹ 
 
 @[simp]
 theorem Units.zero_lt (u : αˣ) : (0 : α) < u :=
-  zero_lt_iff.2 <| u.ne_zero
+  zero_lt_iff.2 <| u.NeZero
 
 theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) : a * c < b * d :=
   have hd : d ≠ 0 := ne_zero_of_lt hcd

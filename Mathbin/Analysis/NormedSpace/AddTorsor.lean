@@ -154,7 +154,8 @@ theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
 
 include V W
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.vadd, ",", expr continuous.vsub, ",", expr continuous_const, ",", expr hfc.comp, ",", expr continuous_id, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :
@@ -164,6 +165,8 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
             ((AffineEquiv.vaddConst ℝ (f <| Classical.arbitrary P)).symm ∘
               f ∘ AffineEquiv.vaddConst ℝ (Classical.arbitrary P))
             (by simp) fun x y => by simp [h]).toRealLinearMap <|
-        by apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id]))
+        by
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.vadd, \",\", expr continuous.vsub, \",\", expr continuous_const, \",\", expr hfc.comp, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"))
     (Classical.arbitrary P) fun p => by simp
 

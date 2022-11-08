@@ -59,8 +59,6 @@ variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K 
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident x_eq, "⟩", ":", expr «expr∃ , »((c : ι → A),
-    «expr = »(algebra_map C L x, finset.sum_univ((i), «expr • »(c i, db i))))]] -/
 theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
     (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
@@ -70,8 +68,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
   rintro _ ⟨x, rfl⟩
   simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
   have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.isIntegral A L x).algebraMap
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident c, \",\", ident x_eq, \"⟩\", \":\", expr «expr∃ , »((c : ι → A),\n    «expr = »(algebra_map C L x, finset.sum_univ((i), «expr • »(c i, db i))))]]"
+  rsuffices ⟨c, x_eq⟩ : ∃ c : ι → A, algebraMap C L x = ∑ i, c i • db i
   · rw [x_eq]
     refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
     rw [Set.mem_range]
@@ -101,7 +98,7 @@ variable (A) (K)
 
 include K
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by

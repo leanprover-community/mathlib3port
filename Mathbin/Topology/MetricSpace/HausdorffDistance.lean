@@ -482,7 +482,7 @@ theorem ball_inf_dist_compl_subset : Ball x (infDist x (sᶜ)) ⊆ s :=
   ball_inf_dist_subset_compl.trans (compl_compl s).Subset
 
 theorem disjointClosedBallOfLtInfDist {r : ℝ} (h : r < infDist x s) : Disjoint (ClosedBall x r) s :=
-  disjointBallInfDist.monoLeft <| closed_ball_subset_ball h
+  disjointBallInfDist.mono_left <| closed_ball_subset_ball h
 
 theorem dist_le_inf_dist_add_diam (hs : Bounded s) (hy : y ∈ s) : dist x y ≤ infDist x s + diam s := by
   have A : inf_edist x s ≠ ∞ := inf_edist_ne_top ⟨y, hy⟩
@@ -1070,7 +1070,7 @@ theorem _root_.disjoint.exists_cthickenings (hst : Disjoint s t) (hs : IsCompact
 theorem _root_.is_compact.exists_cthickening_subset_open (hs : IsCompact s) (ht : IsOpen t) (hst : s ⊆ t) :
     ∃ δ, 0 < δ ∧ Cthickening δ s ⊆ t :=
   (hst.disjointComplRight.exists_cthickenings hs ht.isClosedCompl).imp fun δ h =>
-    ⟨h.1, disjoint_compl_right_iff_subset.1 <| h.2.monoRight <| self_subset_cthickening _⟩
+    ⟨h.1, disjoint_compl_right_iff_subset.1 <| h.2.mono_right <| self_subset_cthickening _⟩
 
 theorem _root_.is_compact.exists_thickening_subset_open (hs : IsCompact s) (ht : IsOpen t) (hst : s ⊆ t) :
     ∃ δ, 0 < δ ∧ Thickening δ s ⊆ t :=

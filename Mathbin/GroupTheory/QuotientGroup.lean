@@ -388,16 +388,16 @@ variable (f : A →* B) (g : B →* A) (e : A ≃* B) (d : B ≃* C) (n : ℤ)
 def homQuotientZpowOfHom : A ⧸ (zpowGroupHom n : A →* A).range →* B ⧸ (zpowGroupHom n : B →* B).range :=
   (lift _ ((mk' _).comp f)) fun g ⟨h, (hg : h ^ n = g)⟩ => (eq_one_iff _).mpr ⟨_, by simpa only [← hg, map_zpow] ⟩
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem hom_quotient_zpow_of_hom_id : homQuotientZpowOfHom (MonoidHom.id A) n = MonoidHom.id _ :=
   monoid_hom_ext _ rfl
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem hom_quotient_zpow_of_hom_comp :
     homQuotientZpowOfHom (f.comp g) n = (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) :=
   monoid_hom_ext _ rfl
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem hom_quotient_zpow_of_hom_comp_of_right_inverse (i : Function.RightInverse g f) :
     (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) = MonoidHom.id _ :=
   monoid_hom_ext _ <| MonoidHom.ext fun x => congr_arg coe <| i x
@@ -408,18 +408,18 @@ def equivQuotientZpowOfEquiv : A ⧸ (zpowGroupHom n : A →* A).range ≃* B �
   MonoidHom.toMulEquiv _ _ (hom_quotient_zpow_of_hom_comp_of_right_inverse e.symm e n e.left_inv)
     (hom_quotient_zpow_of_hom_comp_of_right_inverse e e.symm n e.right_inv)
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem equiv_quotient_zpow_of_equiv_refl :
     MulEquiv.refl (A ⧸ (zpowGroupHom n : A →* A).range) = equivQuotientZpowOfEquiv (MulEquiv.refl A) n := by
   ext x
   rw [← Quotient.out_eq' x]
   rfl
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem equiv_quotient_zpow_of_equiv_symm : (equivQuotientZpowOfEquiv e n).symm = equivQuotientZpowOfEquiv e.symm n :=
   rfl
 
-@[to_additive, simp]
+@[simp, to_additive]
 theorem equiv_quotient_zpow_of_equiv_trans :
     (equivQuotientZpowOfEquiv e n).trans (equivQuotientZpowOfEquiv d n) = equivQuotientZpowOfEquiv (e.trans d) n := by
   ext x

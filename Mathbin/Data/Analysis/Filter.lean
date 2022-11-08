@@ -261,6 +261,19 @@ protected def bind {f : Filter α} {m : α → Filter β} (F : f.Realizer) (G : 
                   let ⟨f', h'⟩ := Classical.axiom_of_choice fun i : F s => (G i).mem_sets.1 (f i (h i.2))
                   ⟨s, fun i h => f' ⟨i, h⟩, fun a ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, m⟩ => h' ⟨_, H⟩ m⟩⟩⟩
 
+/- warning: filter.realizer.Sup clashes with filter.realizer.sup -> Filter.Realizer.sup
+Case conversion may be inaccurate. Consider using '#align filter.realizer.Sup Filter.Realizer.supₓ'. -/
+#print Filter.Realizer.sup /-
+/-- Construct a realizer for indexed supremum -/
+protected def sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=
+  let F' : (⨆ i, f i).Realizer :=
+    (Realizer.bind Realizer.top F).of_eq <|
+      filter_eq <| Set.ext <| by simp [Filter.bind, eq_univ_iff_forall, supr_sets_eq]
+  F'.of_equiv <|
+    show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
+      ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by dsimp <;> congr <;> simp, fun f => rfl⟩
+-/
+
 /-- Construct a realizer for the product of filters -/
 protected def prod {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f.Prod g).Realizer :=
   (F.comap _).inf (G.comap _)

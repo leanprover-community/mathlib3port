@@ -563,7 +563,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.subobj
 def inf {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f := by
   fapply le_of_comm
   · refine'
@@ -616,7 +616,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.subobj
 def sup {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s := by
   fapply le_of_comm
   · dsimp [Sup]

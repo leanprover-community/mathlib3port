@@ -51,12 +51,12 @@ open Function Rat Real Set
 
 open Classical Pointwise
 
-/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
 @[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure",
+  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure",
   ConditionallyCompleteLinearOrder α
 
 -- see Note [lower instance priority]
@@ -144,7 +144,7 @@ theorem cut_map_add (a b : α) : CutMap β (a + b) = CutMap β a + CutMap β b :
   · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
     refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;> rwa [coe_mem_cut_map_iff]
-    exact_mod_cast sub_lt.mp hq₁q
+    exact_mod_cast sub_lt_comm.mp hq₁q
     
   · rintro _ ⟨_, _, ⟨qa, ha, rfl⟩, ⟨qb, hb, rfl⟩, rfl⟩
     refine' ⟨qa + qb, _, by norm_cast⟩
@@ -234,15 +234,15 @@ theorem induced_map_add (x y : α) : inducedMap α β (x + y) = inducedMap α β
 
 variable {α β}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »((q' : β), 2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »((q' : β), 2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Preparatory lemma for `induced_ring_hom`. -/
 theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈ CutMap β (a * a)) :
     b ≤ inducedMap α β a * inducedMap α β a := by
   obtain ⟨q, hb, rfl⟩ := hb
   obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_ne_zero hb (mul_self_pos.2 ha.ne')
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »((q' : β), 2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ^ »((q' : β), 2)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   exact_mod_cast hqq'.le
   rw [pow_two] at hqa⊢
   exact

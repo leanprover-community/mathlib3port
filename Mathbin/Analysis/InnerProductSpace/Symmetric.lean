@@ -98,13 +98,11 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
   rw [← sub_self x]
   exact hu.sub_const _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident r, ",", ident hr, "⟩", ":", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]] -/
 /-- For a symmetric operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
 @[simp]
 theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x : E) :
     (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident r, \",\", ident hr, \"⟩\", \":\", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]]"
+  rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ⟪T x, x⟫ = r
   · simp [hr, T.re_apply_inner_self_apply]
     
   rw [← eq_conj_iff_real]

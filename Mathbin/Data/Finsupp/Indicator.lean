@@ -52,7 +52,7 @@ theorem indicator_apply : indicator s f i = if hi : i ∈ s then f i hi else 0 :
 
 theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f := by
   intro a b h
-  ext i hi
+  ext (i hi)
   rw [← indicator_of_mem hi a, ← indicator_of_mem hi b]
   exact congr_fun h i
 

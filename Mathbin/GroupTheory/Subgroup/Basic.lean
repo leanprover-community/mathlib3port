@@ -137,7 +137,7 @@ theorem zpow_mem {x : M} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
   | (n : ℕ) => by
     rw [zpow_coe_nat]
     exact pow_mem hx n
-  | -[1 + n] => by
+  | -[n+1] => by
     rw [zpow_neg_succ_of_nat]
     exact inv_mem (pow_mem hx n.succ)
 
@@ -381,6 +381,10 @@ instance (K : Subgroup G) [d : DecidablePred (· ∈ K)] [Fintype G] : Fintype K
   show Fintype { g : G // g ∈ K } from inferInstance
 
 @[to_additive]
+instance (K : Subgroup G) [Finite G] : Finite K :=
+  Subtype.finite
+
+@[to_additive]
 theorem to_submonoid_injective : Function.Injective (toSubmonoid : Subgroup G → Submonoid G) := fun p q h =>
   SetLike.ext'_iff.2 (show _ from SetLike.ext'_iff.1 h)
 
@@ -552,7 +556,7 @@ protected theorem pow_mem {x : G} (hx : x ∈ K) : ∀ n : ℕ, x ^ n ∈ K :=
 protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
   zpow_mem hx
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
 def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x * y⁻¹ ∈ s) : Subgroup G :=
@@ -1628,7 +1632,7 @@ end Subgroup
 
 namespace AddSubgroup
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`conj_mem] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`conj_mem] [] -/
 /-- An add_subgroup is normal if whenever `n ∈ H`, then `g + n - g ∈ H` for every `g : G` -/
 structure Normal (H : AddSubgroup A) : Prop where
   conj_mem : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H

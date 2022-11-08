@@ -179,15 +179,15 @@ theorem coeff_mem_frange (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n 
   simp only [frange, exists_prop, mem_support_iff, Finset.mem_image, Ne.def]
   exact ⟨n, h, rfl⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (n.choose «expr + »(i, 1) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (n.choose «expr + »(i, 1) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
     (∑ i in range n, (x : R[X]) ^ i).comp (X + 1) =
       (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i :=
   by
   ext i
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (n.choose «expr + »(i, 1) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (n.choose «expr + »(i, 1) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   swap
   · simp only [finset_sum_coeff, ← C_eq_nat_cast, coeff_C_mul_X_pow]
     rw [Finset.sum_eq_single i, if_pos rfl]
@@ -213,12 +213,12 @@ theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : �
   refine' (hP.pow _).add_of_left _
   refine' lt_of_le_of_lt (degree_sum_le _ _) _
   rw [Finset.sup_lt_iff]
-  · simp only [Finset.mem_range, degree_eq_nat_degree (hP.pow _).ne_zero, WithBot.coe_lt_coe, hP.nat_degree_pow]
+  · simp only [Finset.mem_range, degree_eq_nat_degree (hP.pow _).NeZero, WithBot.coe_lt_coe, hP.nat_degree_pow]
     intro k
     exact nsmul_lt_nsmul hdeg
     
   · rw [bot_lt_iff_ne_bot, Ne.def, degree_eq_bot]
-    exact (hP.pow _).ne_zero
+    exact (hP.pow _).NeZero
     
 
 theorem Monic.geom_sum' {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.degree) {n : ℕ} (hn : n ≠ 0) :
@@ -469,7 +469,7 @@ theorem polynomial_mem_ideal_of_coeff_mem_ideal (I : Ideal R[X]) (p : R[X])
     (hp : ∀ n : ℕ, p.coeff n ∈ I.comap (c : R →+* R[X])) : p ∈ I :=
   sum_C_mul_X_eq p ▸ Submodule.sum_mem I fun n hn => I.mul_mem_right _ (hp n)
 
-/-- The push-forward of an ideal `I` of `R` to `polynomial R` via inclusion
+/-- The push-forward of an ideal `I` of `R` to `R[X]` via inclusion
  is exactly the set of polynomials whose coefficients are in `I` -/
 theorem mem_map_C_iff {I : Ideal R} {f : R[X]} :
     f ∈ (Ideal.map (c : R →+* R[X]) I : Ideal R[X]) ↔ ∀ n : ℕ, f.coeff n ∈ I := by
@@ -594,7 +594,7 @@ section Ring
 
 variable [Ring R]
 
-/-- `polynomial R` is never a field for any ring `R`. -/
+/-- `R[X]` is never a field for any ring `R`. -/
 theorem polynomial_not_is_field : ¬IsField R[X] := by
   nontriviality R
   intro hR
@@ -645,9 +645,9 @@ theorem eval₂_C_mk_eq_zero {I : Ideal R} :
     
 
 /-- If `I` is an ideal of `R`, then the ring polynomials over the quotient ring `I.quotient` is
-isomorphic to the quotient of `polynomial R` by the ideal `map C I`,
+isomorphic to the quotient of `R[X]` by the ideal `map C I`,
 where `map C I` contains exactly the polynomials whose coefficients all lie in `I` -/
-def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : Polynomial (R ⧸ I) ≃+* R[X] ⧸ (map c I : Ideal R[X]) where
+def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : (R ⧸ I)[X] ≃+* R[X] ⧸ (map c I : Ideal R[X]) where
   toFun :=
     eval₂RingHom (Quotient.lift I ((Quotient.mk (map c I : Ideal R[X])).comp c) quotient_map_C_eq_zero)
       (Quotient.mk (map c I : Ideal R[X]) x)
@@ -699,7 +699,7 @@ theorem isDomainMapCQuotient {P : Ideal R} (H : IsPrime P) : IsDomain (R[X] ⧸ 
 theorem is_prime_map_C_of_is_prime {P : Ideal R} (H : IsPrime P) : IsPrime (map (c : R →+* R[X]) P : Ideal R[X]) :=
   (Quotient.is_domain_iff_prime (map c P : Ideal R[X])).mp (isDomainMapCQuotient H)
 
-/-- Given any ring `R` and an ideal `I` of `polynomial R`, we get a map `R → R[x] → R[x]/I`.
+/-- Given any ring `R` and an ideal `I` of `R[X]`, we get a map `R → R[x] → R[x]/I`.
   If we let `R` be the image of `R` in `R[x]/I` then we also have a map `R[x] → R'[x]`.
   In particular we can map `I` across this map, to get `I'` and a new map `R' → R'[x] → R'[x]/I`.
   This theorem shows `I'` will not contain any non-zero constant polynomials
@@ -1221,7 +1221,7 @@ open UniqueFactorizationMonoid
 
 namespace Polynomial
 
-instance (priority := 100) uniqueFactorizationMonoid : UniqueFactorizationMonoid (Polynomial D) := by
+instance (priority := 100) uniqueFactorizationMonoid : UniqueFactorizationMonoid D[X] := by
   haveI := Inhabited.default (NormalizationMonoid D)
   haveI := to_normalized_gcd_monoid D
   exact ufmOfGcdOfWfDvdMonoid

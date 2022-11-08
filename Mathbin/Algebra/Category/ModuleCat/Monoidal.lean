@@ -116,7 +116,7 @@ def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
 
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f := by
-  ext x y
+  ext (x y)
   dsimp
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
@@ -128,7 +128,7 @@ def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
 
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f := by
-  ext x y
+  ext (x y)
   dsimp
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
@@ -310,11 +310,11 @@ def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
   toFun f := LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).Hom ≫ f)
   invFun f := (β_ M N).Hom ≫ TensorProduct.lift f
   left_inv f := by
-    ext m n
+    ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply, Function.comp_app, coe_comp,
       monoidal_category.braiding_hom_apply]
   right_inv f := by
-    ext m n
+    ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       symmetric_category.symmetry_assoc]
 

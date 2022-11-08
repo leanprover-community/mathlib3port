@@ -74,12 +74,10 @@ theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence} (h : (L.lh
   (p.mem_or_not_mem φ).resolve_right fun con =>
     ((models_iff_not_satisfiable _).1 h) (p.IsMaximal.1.mono (union_subset p.Subset (singleton_subset_iff.2 con)))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rintro #[["⟨", "@", "⟨", "_", ",", "_", ",", ident h, ",", "_", "⟩", "⟩"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈ p ↔ ¬φ ∈ p :=
   ⟨fun hf ht => by
     have h : ¬is_satisfiable ({φ, φ.not} : L[[α]].TheoryCat) := by
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rintro #[[\"⟨\", \"@\", \"⟨\", \"_\", \",\", \"_\", \",\", ident h, \",\", \"_\", \"⟩\", \"⟩\"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      rintro ⟨@⟨_, _, h, _⟩⟩
       simp only [model_iff, mem_insert_iff, mem_singleton_iff, forall_eq_or_imp, forall_eq] at h
       exact h.2 h.1
     refine' h (p.is_maximal.1.mono _)

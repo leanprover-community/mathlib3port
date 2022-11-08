@@ -65,7 +65,7 @@ protected unsafe def of_nat (α : expr) : ℕ → tactic expr :=
 The output is either a numeral or the negation of a numeral. -/
 protected unsafe def of_int (α : expr) : ℤ → tactic expr
   | (n : ℕ) => expr.of_nat α n
-  | -[1 + n] => do
+  | -[n+1] => do
     let e ← expr.of_nat α (n + 1)
     tactic.mk_app `` Neg.neg [e]
 
@@ -845,7 +845,7 @@ protected unsafe def of_nat (c : instance_cache) (n : ℕ) : tactic (instance_ca
 The output is either a numeral or the negation of a numeral. -/
 protected unsafe def of_int (c : instance_cache) : ℤ → tactic (instance_cache × expr)
   | (n : ℕ) => c.ofNat n
-  | -[1 + n] => do
+  | -[n+1] => do
     let (c, e) ← c.ofNat (n + 1)
     c `` Neg.neg [e]
 
@@ -2242,9 +2242,9 @@ unsafe def trace_macro (_ : parse <| tk "trace!") (s : String) : parser pexpr :=
   let e ← pformat_macro () s
   pure (pquote.1 ((%%ₓe : pformat) >>= trace))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- A hackish way to get the `src` directory of any project.
   Requires as argument any declaration name `n` in that project, and `k`, the number of characters
   in the path of the file where `n` is declared not part of the `src` directory.
@@ -2254,7 +2254,7 @@ unsafe def get_project_dir (n : Name) (k : ℕ) : tactic String := do
   let e ← get_env
   let s ←
     e.decl_olean n <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   return <| s k
 
 /-- A hackish way to get the `src` directory of mathlib. -/
@@ -2269,9 +2269,9 @@ unsafe def is_in_mathlib (n : Name) : tactic Bool := do
   let e ← get_env
   return <| e ml n
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Runs a tactic by name.
 If it is a `tactic string`, return whatever string it returns.
 If it is a `tactic unit`, return the name.
@@ -2281,12 +2281,11 @@ unsafe def name_to_tactic (n : Name) : tactic String := do
   let d ← get_decl n
   let e ← mk_const n
   let t := d.type
-  if expr.alpha_eqv t (quote.1 (tactic Unit)) then
-      eval_expr (tactic Unit) e >>= fun t => t >> Name.toString <$> strip_prefix n
+  if t == quote.1 (tactic Unit) then eval_expr (tactic Unit) e >>= fun t => t >> Name.toString <$> strip_prefix n
     else
-      if expr.alpha_eqv t (quote.1 (tactic String)) then eval_expr (tactic String) e >>= fun t => t
+      if t == quote.1 (tactic String) then eval_expr (tactic String) e >>= fun t => t
       else
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
 
 /-- auxiliary function for `apply_under_n_pis` -/
 private unsafe def apply_under_n_pis_aux (func arg : pexpr) : ℕ → ℕ → expr → pexpr
@@ -2408,9 +2407,9 @@ add_tactic_doc
   { Name := "mk_simp_attribute", category := DocCategory.cmd, declNames := [`tactic.mk_simp_attribute_cmd],
     tags := ["simplification"] }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Given a user attribute name `attr_name`, `get_user_attribute_name attr_name` returns
 the name of the declaration that defines this attribute.
 Fails if there is no user attribute with this name.
@@ -2423,21 +2422,21 @@ unsafe def get_user_attribute_name (attr_name : Name) : tactic Name := do
         let attr_nm ← eval_expr Name e
         guard <| attr_nm = attr_name
         return nm) <|>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- A tactic to set either a basic attribute or a user attribute.
   If the user attribute has a parameter, the default value will be used.
   This tactic raises an error if there is no `inhabited` instance for the parameter type. -/
 unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := true) (prio : Option Nat := none) :
     tactic Unit := do
   get_decl c_name <|>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   let s ← try_or_report_error (set_basic_attribute attr_name c_name persistent prio)
   let Sum.inr msg ← return s | skip
   if msg = (f! "set_basic_attribute tactic failed, '{attr_name}' is not a basic attribute").toString then do
@@ -2447,7 +2446,7 @@ unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := true)
         eval_pexpr (tactic Unit)
               (pquote.1
                 (user_attribute.set (%%ₓuser_attr_const) (%%ₓquote.1 c_name) default (%%ₓquote.1 persistent))) <|>
-            "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+            "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       tac
     else fail msg
 

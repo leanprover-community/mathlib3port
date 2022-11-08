@@ -698,7 +698,7 @@ theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral 
 section Abs
 
 theorem coe_fn_abs {β} [TopologicalSpace β] [Lattice β] [TopologicalLattice β] [AddGroup β] [TopologicalAddGroup β]
-    (f : α →ₘ[μ] β) : ⇑(abs f) =ᵐ[μ] fun x => abs (f x) := by
+    (f : α →ₘ[μ] β) : ⇑(|f|) =ᵐ[μ] fun x => |f x| := by
   simp_rw [abs_eq_sup_neg]
   filter_upwards [ae_eq_fun.coe_fn_sup f (-f), ae_eq_fun.coe_fn_neg f] with x hx_sup hx_neg
   rw [hx_sup, hx_neg, Pi.neg_apply]

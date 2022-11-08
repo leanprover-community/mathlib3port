@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Chris Hughes, Mario Carneiro, Yury Kudryashov
 -/
 import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.Order.Group.Prod
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.Equiv
 

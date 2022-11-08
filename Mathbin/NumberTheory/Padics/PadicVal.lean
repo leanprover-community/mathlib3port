@@ -394,7 +394,7 @@ protected theorem pow (n : ℕ) (ha : a ≠ 0) : padicValNat p (a ^ n) = n * pad
 
 @[simp]
 protected theorem prime_pow (n : ℕ) : padicValNat p (p ^ n) = n := by
-  rwa [padicValNat.pow _ (Fact.out p.prime).ne_zero, padic_val_nat_self, mul_one]
+  rwa [padicValNat.pow _ (Fact.out p.prime).NeZero, padic_val_nat_self, mul_one]
 
 protected theorem div_pow (dvd : p ^ a ∣ b) : padicValNat p (b / p ^ a) = padicValNat p b - a := by
   convert padicValNat.div_of_dvd dvd

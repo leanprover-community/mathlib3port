@@ -154,7 +154,7 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
     convert congr_fun s.condition x
   choose m m_spec m_uniq using fun x : s.X => Fsh U ((pi_opens_iso_sections_family F U).Hom (s.ι x)) (h_compatible x)
   refine' ⟨m, _, _⟩
-  · ext ⟨i⟩ x
+  · ext (⟨i⟩x)
     simp [res]
     exact m_spec x i
     
@@ -259,8 +259,8 @@ theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcove
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gl]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gl]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (supr U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t := by
@@ -271,7 +271,7 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (supr U)))
     rfl
   obtain ⟨gl, -, gl_uniq⟩ := F.exists_unique_gluing U sf sf_compatible
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gl]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gl]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply gl_uniq
     intro i
     rfl

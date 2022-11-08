@@ -255,7 +255,7 @@ def step : XgcdType :=
 
 /-- We will apply the above step recursively.  The following result
  is used to ensure that the process terminates. -/
-theorem step_wf (hr : u.R ≠ 0) : sizeOf u.step < sizeOf u := by
+theorem step_wf (hr : u.R ≠ 0) : SizeOf.sizeOf u.step < SizeOf.sizeOf u := by
   change u.r - 1 < u.bp
   have h₀ : u.r - 1 + 1 = u.r := Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hr)
   have h₁ : u.r < u.bp + 1 := Nat.mod_lt (u.ap + 1) u.bp.succ_pos
@@ -291,7 +291,7 @@ theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap := by
 def reduce : XgcdType → XgcdType
   | u =>
     dite (u.R = 0) (fun h => u.finish) fun h =>
-      have : sizeOf u.step < sizeOf u := u.step_wf h
+      have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       flip (reduce u.step)
 
 theorem reduce_a {u : XgcdType} (h : u.R = 0) : u.reduce = u.finish := by
@@ -311,7 +311,7 @@ theorem reduce_reduced : ∀ u : XgcdType, u.reduce.IsReduced
         rw [reduce_a h]
         exact u.finish_is_reduced)
       fun h => by
-      have : sizeOf u.step < sizeOf u := u.step_wf h
+      have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h, flip_is_reduced]
       apply reduce_reduced
 
@@ -325,7 +325,7 @@ theorem reduce_special : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
         rw [reduce_a h]
         exact u.finish_is_special hs)
       fun h hs => by
-      have : sizeOf u.step < sizeOf u := u.step_wf h
+      have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h]
       exact (flip_is_special _).mpr (reduce_special _ (u.step_is_special hs))
 
@@ -335,7 +335,7 @@ theorem reduce_special' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' 
 theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
   | u =>
     dite (u.R = 0) (fun h => by rw [reduce_a h, finish_v u h]) fun h => by
-      have : sizeOf u.step < sizeOf u := u.step_wf h
+      have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swap]
 
 end XgcdType

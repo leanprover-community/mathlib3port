@@ -94,7 +94,7 @@ theorem eval₂_C_X : eval₂ c x p = p :=
     rw [eval₂_monomial, monomial_eq_smul_X, C_mul']
 
 /-- `eval₂_add_monoid_hom (f : R →+* S) (x : S)` is the `add_monoid_hom` from
-`polynomial R` to `S` obtained by evaluating the pushforward of `p` along `f` at `x`. -/
+`R[X]` to `S` obtained by evaluating the pushforward of `p` along `f` at `x`. -/
 @[simps]
 def eval₂AddMonoidHom : R[X] →+ S where
   toFun := eval₂ f x
@@ -841,7 +841,7 @@ variable [CommSemiring R] {p q : R[X]} {x : R} [CommSemiring S] (f : R →+* S)
 theorem eval_mul : (p * q).eval x = p.eval x * q.eval x :=
   eval₂_mul _ _
 
-/-- `eval r`, regarded as a ring homomorphism from `polynomial R` to `R`. -/
+/-- `eval r`, regarded as a ring homomorphism from `R[X]` to `R`. -/
 def evalRingHom : R → R[X] →+* R :=
   eval₂RingHom (RingHom.id _)
 
@@ -863,7 +863,7 @@ theorem eval_comp : (p.comp q).eval x = p.eval (q.eval x) := by
     simp
     
 
-/-- `comp p`, regarded as a ring homomorphism from `polynomial R` to itself. -/
+/-- `comp p`, regarded as a ring homomorphism from `R[X]` to itself. -/
 def compRingHom : R[X] → R[X] →+* R[X] :=
   eval₂RingHom c
 

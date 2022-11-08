@@ -54,7 +54,7 @@ outer measure, Carathéodory-measurable, Carathéodory's criterion
 
 noncomputable section
 
-open Set Finset Function Filter
+open Set Function Filter
 
 open TopologicalSpace (SecondCountableTopology)
 
@@ -127,7 +127,7 @@ protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Fi
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   relSupAdd m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α) (s : Set α)
@@ -312,7 +312,7 @@ instance OuterMeasure.partialOrder : PartialOrder (OuterMeasure α) where
 instance OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
   { OuterMeasure.hasBot with bot_le := fun a s => by simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
 
-theorem univ_eq_zero_iff (m : OuterMeasure α) : m univ = 0 ↔ m = 0 :=
+theorem univ_eq_zero_iff (m : OuterMeasure α) : m Univ = 0 ↔ m = 0 :=
   ⟨fun h => bot_unique fun s => (m.mono' <| subset_univ s).trans_eq h, fun h => h.symm ▸ rfl⟩
 
 section Supremum
@@ -466,7 +466,7 @@ theorem restrict_mono {s t : Set α} (h : s ⊆ t) {m m' : OuterMeasure α} (hm 
   exact (hm _).trans (m'.mono <| inter_subset_inter_right _ h)
 
 @[simp]
-theorem restrict_univ (m : OuterMeasure α) : restrict univ m = m :=
+theorem restrict_univ (m : OuterMeasure α) : restrict Univ m = m :=
   ext fun s => by simp
 
 @[simp]
@@ -477,7 +477,7 @@ theorem restrict_empty (m : OuterMeasure α) : restrict ∅ m = 0 :=
 theorem restrict_supr {ι} (s : Set α) (m : ι → OuterMeasure α) : restrict s (⨆ i, m i) = ⨆ i, restrict s (m i) := by
   simp [restrict]
 
-theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (range f) m :=
+theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (Range f) m :=
   ext fun s => congr_arg m <| by simp only [image_preimage_eq_inter_range, Subtype.range_coe]
 
 theorem map_comap_le {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) ≤ m := fun s =>
@@ -488,7 +488,7 @@ theorem restrict_le_self (m : OuterMeasure α) (s : Set α) : restrict s m ≤ m
 
 @[simp]
 theorem map_le_restrict_range {β} {ma : OuterMeasure α} {mb : OuterMeasure β} {f : α → β} :
-    map f ma ≤ restrict (range f) mb ↔ map f ma ≤ mb :=
+    map f ma ≤ restrict (Range f) mb ↔ map f ma ≤ mb :=
   ⟨fun h => h.trans (restrict_le_self _ _), fun h s => by simpa using h (s ∩ range f)⟩
 
 theorem map_comap_of_surjective {β} {f : α → β} (hf : Surjective f) (m : OuterMeasure β) : map f (comap f m) = m :=
@@ -512,7 +512,7 @@ theorem top_apply' (s : Set α) : (⊤ : OuterMeasure α) s = ⨅ h : s = ∅, 0
 theorem comap_top (f : α → β) : comap f ⊤ = ⊤ :=
   ext_nonempty fun s hs => by rw [comap_apply, top_apply hs, top_apply (hs.image _)]
 
-theorem map_top (f : α → β) : map f ⊤ = restrict (range f) ⊤ :=
+theorem map_top (f : α → β) : map f ⊤ = restrict (Range f) ⊤ :=
   ext fun s => by
     rw [map_apply, restrict_apply, ← image_preimage_eq_inter_range, top_apply', top_apply', Set.image_eq_empty]
 
@@ -523,7 +523,7 @@ end Basic
 
 section OfFunction
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
@@ -588,7 +588,7 @@ theorem is_greatest_of_function :
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -690,7 +690,7 @@ variable {α : Type _} (m : Set α → ℝ≥0∞)
   satisfying `μ s ≤ m s` for all `s : set α`. This is the same as `outer_measure.of_function`,
   except that it doesn't require `m ∅ = 0`. -/
 def boundedBy : OuterMeasure α :=
-  OuterMeasure.ofFunction (fun s => ⨆ h : s.Nonempty, m s) (by simp [empty_not_nonempty])
+  OuterMeasure.ofFunction (fun s => ⨆ h : s.Nonempty, m s) (by simp [not_nonempty_empty])
 
 variable {m}
 
@@ -701,7 +701,7 @@ theorem bounded_by_eq_of_function (m_empty : m ∅ = 0) (s : Set α) :
     boundedBy m s = OuterMeasure.ofFunction m m_empty s := by
   have : (fun s : Set α => ⨆ h : s.Nonempty, m s) = m := by
     ext1 t
-    cases' t.eq_empty_or_nonempty with h h <;> simp [h, empty_not_nonempty, m_empty]
+    cases' t.eq_empty_or_nonempty with h h <;> simp [h, not_nonempty_empty, m_empty]
   simp [bounded_by, this]
 
 theorem bounded_by_apply (s : Set α) :
@@ -719,7 +719,7 @@ theorem bounded_by_eq_self (m : OuterMeasure α) : boundedBy m = m :=
 theorem le_bounded_by {μ : OuterMeasure α} : μ ≤ boundedBy m ↔ ∀ s, μ s ≤ m s := by
   rw [bounded_by, le_of_function, forall_congr']
   intro s
-  cases' s.eq_empty_or_nonempty with h h <;> simp [h, empty_not_nonempty]
+  cases' s.eq_empty_or_nonempty with h h <;> simp [h, not_nonempty_empty]
 
 theorem le_bounded_by' {μ : OuterMeasure α} : μ ≤ boundedBy m ↔ ∀ s : Set α, s.Nonempty → μ s ≤ m s := by
   rw [le_bounded_by, forall_congr']
@@ -815,7 +815,7 @@ theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s 
     rw [bUnion_lt_succ, Finset.sum_range_succ, Set.union_comm, is_caratheodory_sum, m.measure_inter_union _ (h n),
       add_comm]
     intro a
-    simpa using fun (h₁ : a ∈ s n) i (hi : i < n) h₂ => hd _ _ (ne_of_gt hi) ⟨h₁, h₂⟩
+    simpa using fun (h₁ : a ∈ s n) i (hi : i < n) h₂ => hd (ne_of_gt hi) ⟨h₁, h₂⟩
 
 theorem isCaratheodoryUnionNat {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
     is_caratheodory (⋃ i, s i) :=
@@ -890,7 +890,7 @@ theorem boundedByCaratheodory {m : Set α → ℝ≥0∞} {s : Set α} (hs : ∀
   apply of_function_caratheodory
   intro t
   cases' t.eq_empty_or_nonempty with h h
-  · simp [h, empty_not_nonempty]
+  · simp [h, not_nonempty_empty]
     
   · convert le_trans _ (hs t)
     · simp [h]
@@ -952,7 +952,7 @@ theorem supr_Inf_gen_nonempty {m : Set (OuterMeasure α)} (h : m.Nonempty) (t : 
     (⨆ h : t.Nonempty, infGen m t) = ⨅ (μ : OuterMeasure α) (h : μ ∈ m), μ t := by
   rcases t.eq_empty_or_nonempty with (rfl | ht)
   · rcases h with ⟨μ, hμ⟩
-    rw [eq_false empty_not_nonempty, supr_false, eq_comm]
+    rw [eq_false not_nonempty_empty, supr_false, eq_comm]
     simp_rw [empty']
     apply bot_unique
     refine' infi_le_of_le μ (infi_le _ hμ)
@@ -1017,7 +1017,7 @@ theorem comap_infi {ι β} (f : α → β) (m : ι → OuterMeasure β) : comap 
   exact infi_mono fun i => (m i).mono (image_preimage_subset _ _)
 
 theorem map_infi {ι β} {f : α → β} (hf : Injective f) (m : ι → OuterMeasure α) :
-    map f (⨅ i, m i) = restrict (range f) (⨅ i, map f (m i)) := by
+    map f (⨅ i, m i) = restrict (Range f) (⨅ i, map f (m i)) := by
   refine' Eq.trans _ (map_comap _ _)
   simp only [comap_infi, comap_map hf]
 
@@ -1042,7 +1042,7 @@ theorem map_binfi_comap {ι β} {I : Set ι} (hI : I.Nonempty) {f : α → β} (
 theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, restrict s (m i)) = restrict s (⨅ i, m i) :=
   calc
-    restrict s (⨅ i, restrict s (m i)) = restrict (range (coe : s → α)) (⨅ i, restrict s (m i)) := by
+    restrict s (⨅ i, restrict s (m i)) = restrict (Range (coe : s → α)) (⨅ i, restrict s (m i)) := by
       rw [Subtype.range_coe]
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
     _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_infi _ _).symm
@@ -1099,7 +1099,7 @@ theorem extend_eq_top {s : α} (h : ¬P s) : extend m s = ∞ := by simp [extend
 theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s := by
   simp only [extend, le_infi_iff]
   intro
-  rfl'
+  rfl
 
 -- TODO: why this is a bad `congr` lemma?
 theorem extend_congr {β : Type _} {Pb : β → Prop} {mb : ∀ s : β, Pb s → ℝ≥0∞} {sa : α} {sb : β} (hP : P sa ↔ Pb sb)

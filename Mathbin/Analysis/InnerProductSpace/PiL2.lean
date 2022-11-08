@@ -145,8 +145,8 @@ theorem EuclideanSpace.inner_eq_star_dot_product (x y : EuclideanSpace 𝕜 ι) 
     ⟪x, y⟫ = Matrix.dotProduct (star <| PiLp.equiv _ _ x) (PiLp.equiv _ _ y) :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⟪ , ⟫»(finset.sum_univ((i), (V i).subtypeₗᵢ (v i)), finset.sum_univ((i), (V i).subtypeₗᵢ (w i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⟪ , ⟫»(finset.sum_univ((i), (V i).subtypeₗᵢ (v i)), finset.sum_univ((i), (V i).subtypeₗᵢ (w i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- A finite, mutually orthogonal family of subspaces of `E`, which span `E`, induce an isometry
 from `E` to `pi_Lp 2` of the subspaces equipped with the `L2` inner product. -/
 def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι → Submodule 𝕜 E}
@@ -161,7 +161,7 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
       simp only [LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
   intro v w
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⟪ , ⟫»(finset.sum_univ((i), (V i).subtypeₗᵢ (v i)), finset.sum_univ((i), (V i).subtypeₗᵢ (w i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⟪ , ⟫»(finset.sum_univ((i), (V i).subtypeₗᵢ (v i)), finset.sum_univ((i), (V i).subtypeₗᵢ (w i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · simp only [sum_inner, hV'.inner_right_fintype, PiLp.inner_apply]
     
   · congr <;> simp
@@ -306,7 +306,7 @@ protected theorem coe_to_basis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis 
 @[simp]
 protected theorem coe_to_basis_repr (b : OrthonormalBasis ι 𝕜 E) : b.toBasis.equivFun = b.repr.toLinearEquiv := by
   change (Basis.ofEquivFun b.repr.to_linear_equiv).equivFun = b.repr.to_linear_equiv
-  ext x j
+  ext (x j)
   simp only [Basis.of_equiv_fun_repr_apply, LinearIsometryEquiv.coe_to_linear_equiv, Basis.equiv_fun_apply]
 
 @[simp]
@@ -467,8 +467,8 @@ protected theorem reindex_repr (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι')
 
 end OrthonormalBasis
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- `![1, I]` is an orthonormal basis for `ℂ` considered as a real inner product space. -/
 def Complex.orthonormalBasisOneI : OrthonormalBasis (Fin 2) ℝ ℂ :=
   Complex.basisOneI.toOrthonormalBasis
@@ -527,7 +527,7 @@ variable (a b : OrthonormalBasis ι 𝕜 E)
 /-- The change-of-basis matrix between two orthonormal bases `a`, `b` is a unitary matrix. -/
 theorem OrthonormalBasis.to_matrix_orthonormal_basis_mem_unitary : a.toBasis.toMatrix b ∈ Matrix.unitaryGroup ι 𝕜 := by
   rw [Matrix.mem_unitary_group_iff']
-  ext i j
+  ext (i j)
   convert a.repr.inner_map_map (b i) (b j)
   rw [orthonormal_iff_ite.mp b.orthonormal i j]
   rfl

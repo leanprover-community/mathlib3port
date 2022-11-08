@@ -88,7 +88,7 @@ theorem hom_equiv_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1
   apply coyoneda.map_injective
   swap
   infer_instance
-  ext f y
+  ext (f y)
   simpa [left_adjoint_uniq, left_adjoints_coyoneda_equiv]
 
 @[simp, reassoc]
@@ -112,7 +112,7 @@ theorem left_adjoint_uniq_hom_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F �
   apply coyoneda.map_injective
   swap
   infer_instance
-  ext y f
+  ext (y f)
   have :
     F.map (adj2.unit.app (G.obj x)) ≫ adj1.counit.app (F'.obj (G.obj x)) ≫ adj2.counit.app x ≫ f =
       adj1.counit.app x ≫ f :=

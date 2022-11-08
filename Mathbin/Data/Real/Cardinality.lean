@@ -5,7 +5,7 @@ Authors: Floris van Doorn
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Data.Rat.Denumerable
-import Mathbin.Data.Set.Intervals.ImagePreimage
+import Mathbin.Data.Set.Pointwise.Interval
 import Mathbin.SetTheory.Cardinal.Continuum
 
 /-!
@@ -171,14 +171,14 @@ theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injec
   cases fn : f n
   · apply ne_of_lt
     refine' increasing_cantor_function h1 h2 hn fn _
-    apply eq_tt_of_not_eq_ff
+    apply Bool.eq_true_of_not_eq_false
     rw [← fn]
     apply Ne.symm
     exact Nat.find_spec this
     
   · apply ne_of_gt
     refine' increasing_cantor_function h1 h2 (fun k hk => (hn k hk).symm) _ fn
-    apply eq_ff_of_not_eq_tt
+    apply Bool.eq_false_of_not_eq_true
     rw [← fn]
     apply Ne.symm
     exact Nat.find_spec this

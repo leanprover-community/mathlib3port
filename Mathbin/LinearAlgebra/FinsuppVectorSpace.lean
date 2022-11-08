@@ -117,7 +117,7 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
       ext ⟨j, y⟩
       by_cases h:i = j
       · cases h
-        simp only [basis_repr, single_eq_same, Basis.repr_self, Basis.Finsupp.single_apply_left sigma_mk_injective]
+        simp only [basis_repr, single_eq_same, Basis.repr_self, Finsupp.single_apply_left sigma_mk_injective]
         
       simp only [basis_repr, single_apply, h, false_and_iff, if_false, LinearEquiv.map_zero, zero_apply]
 

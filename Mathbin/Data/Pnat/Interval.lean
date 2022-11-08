@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Data.Nat.Interval
-import Mathbin.Data.Pnat.Basic
+import Mathbin.Data.Pnat.Defs
 
 /-!
 # Finite intervals of positive naturals

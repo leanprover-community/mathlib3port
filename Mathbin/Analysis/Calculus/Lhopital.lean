@@ -278,7 +278,7 @@ conditions holding eventually.
 
 namespace HasDerivAt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- L'Hôpital's rule for approaching a real from the right, `has_deriv_at` version -/
 theorem lhopital_zero_nhds_right (hff' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in 𝓝[>] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in 𝓝[>] a, g' x ≠ 0) (hfa : Tendsto f (𝓝[>] a) (𝓝 0))
@@ -295,7 +295,7 @@ theorem lhopital_zero_nhds_right (hff' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (f'
   refine' lhopital_zero_right_on_Ioo hau _ _ _ hfa hga hdiv <;>
     intro x hx <;> apply_assumption <;> first |exact (hu hx).1.1|exact (hu hx).1.2|exact (hu hx).2
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- L'Hôpital's rule for approaching a real from the left, `has_deriv_at` version -/
 theorem lhopital_zero_nhds_left (hff' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in 𝓝[<] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in 𝓝[<] a, g' x ≠ 0) (hfa : Tendsto f (𝓝[<] a) (𝓝 0))
@@ -330,7 +330,7 @@ theorem lhopital_zero_nhds (hff' : ∀ᶠ x in 𝓝 a, HasDerivAt f (f' x) x) (h
   apply @lhopital_zero_nhds' _ _ _ f' _ g' <;>
     first |apply eventually_nhds_within_of_eventually_nhds|apply tendsto_nhds_within_of_tendsto_nhds <;> assumption
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- L'Hôpital's rule for approaching +∞, `has_deriv_at` version -/
 theorem lhopital_zero_at_top (hff' : ∀ᶠ x in at_top, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in at_top, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in at_top, g' x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
@@ -348,7 +348,7 @@ theorem lhopital_zero_at_top (hff' : ∀ᶠ x in at_top, HasDerivAt f (f' x) x)
   refine' lhopital_zero_at_top_on_Ioi _ _ (fun x hx => hg' x <| (hl' hx).2) hftop hgtop hdiv <;>
     intro x hx <;> apply_assumption <;> first |exact (hl' hx).1.1|exact (hl' hx).1.2
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- L'Hôpital's rule for approaching -∞, `has_deriv_at` version -/
 theorem lhopital_zero_at_bot (hff' : ∀ᶠ x in at_bot, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in at_bot, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in at_bot, g' x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))

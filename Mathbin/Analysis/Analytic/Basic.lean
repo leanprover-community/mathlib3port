@@ -168,7 +168,7 @@ theorem is_o_of_lt_radius (h : ↑r < p.radius) : ∃ a ∈ IooCat (0 : ℝ) 1, 
   rw [← div_lt_one this] at rt
   refine' ⟨_, rt, C, Or.inr zero_lt_one, fun n => _⟩
   calc
-    abs (∥p n∥ * r ^ n) = ∥p n∥ * t ^ n * (r / t) ^ n := by field_simp [mul_right_comm, abs_mul, this.ne']
+    |∥p n∥ * r ^ n| = ∥p n∥ * t ^ n * (r / t) ^ n := by field_simp [mul_right_comm, abs_mul, this.ne']
     _ ≤ C * (r / t) ^ n := mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
     
 
@@ -483,7 +483,7 @@ theorem AnalyticOn.add {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
 theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn 𝕜 g s) : AnalyticOn 𝕜 (f - g) s :=
   fun z hz => (hf z hz).sub (hg z hz)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ≠ » 0) -/
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Fin 0 → E) : pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elim _ _
   have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r := by simp [hf.r_pos]
@@ -515,7 +515,9 @@ theorem _root_.continuous_linear_map.comp_analytic_on {s : Set E} (g : F →L[�
   rcases h x hx with ⟨p, r, hp⟩
   exact ⟨g.comp_formal_multilinear_series p, r, g.comp_has_fpower_series_on_ball hp⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr sub_pos.2, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr pow_nonneg, ",", expr hC.lt.le, ",", expr ha.1.le, ",", expr norm_nonneg, ",", expr nnreal.coe_nonneg, ",", expr ha.2, ",", expr (sub_le_sub_iff_left
+    _).2, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence.
 
@@ -540,8 +542,8 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0} (hf : Has
   have ya : a * (∥y∥ / ↑r') ≤ a := mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg)
   suffices ∥p.partial_sum n y - f (x + y)∥ ≤ C * (a * (∥y∥ / r')) ^ n / (1 - a * (∥y∥ / r')) by
     refine' this.trans _
-    apply_rules [div_le_div_of_le_left, sub_pos.2, div_nonneg, mul_nonneg, pow_nonneg, hC.lt.le, ha.1.le, norm_nonneg,
-        Nnreal.coe_nonneg, ha.2, (sub_le_sub_iff_left _).2] <;>
+    trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr sub_pos.2, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr pow_nonneg, \",\", expr hC.lt.le, \",\", expr ha.1.le, \",\", expr norm_nonneg, \",\", expr nnreal.coe_nonneg, \",\", expr ha.2, \",\", expr (sub_le_sub_iff_left\n    _).2, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error" <;>
       infer_instance
   apply norm_sub_le_of_geometric_bound_of_has_sum (ya.trans_lt ha.2) _ (hf.has_sum this)
   intro n
@@ -585,7 +587,8 @@ theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x
   simpa [mul_pow, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul, ",", expr hp, ",", expr pow_le_pow_of_le_left, ",", expr hy'.le, ",", expr norm_nonneg, ",", expr pow_nonneg, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr nat.cast_nonneg, ",", expr hC.le, ",", expr r'.coe_nonneg, ",", expr ha.1.le, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. This lemma formulates this property using `is_O` and
@@ -625,8 +628,8 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
           rw [pow_succ ∥y - (x, x)∥]
           ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ∥y - (x, x)∥ * ∥y.1 - y.2∥) := by
-          apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_of_le_left, hy'.le, norm_nonneg,
-            pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg, ha.1.le]
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul, \",\", expr hp, \",\", expr pow_le_pow_of_le_left, \",\", expr hy'.le, \",\", expr norm_nonneg, \",\", expr pow_nonneg, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr nat.cast_nonneg, \",\", expr hC.le, \",\", expr r'.coe_nonneg, \",\", expr ha.1.le, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
         _ = B n := by
           field_simp [B, pow_succ, hr'0.ne']
           simp only [mul_assoc, mul_comm, mul_left_comm]
@@ -644,7 +647,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
   simp_rw [L, mul_right_comm _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
@@ -847,7 +850,7 @@ theorem HasFpowerSeriesAt.apply_eq_zero {p : FormalMultilinearSeries 𝕜 E F} {
 /-- A one-dimensional formal multilinear series representing the zero function is zero. -/
 theorem HasFpowerSeriesAt.eq_zero {p : FormalMultilinearSeries 𝕜 𝕜 E} {x : 𝕜} (h : HasFpowerSeriesAt 0 p x) : p = 0 :=
   by
-  ext n x
+  ext (n x)
   rw [← mk_pi_field_apply_one_eq_self (p n)]
   simp [h.apply_eq_zero n 1]
 

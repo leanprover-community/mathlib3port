@@ -105,15 +105,13 @@ attribute [instance] representably_flat.cofiltered
 
 attribute [local instance] is_cofiltered.nonempty
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr Z.hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr Z.hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
   constructor
   intro X
   haveI : Nonempty (structured_arrow X (𝟭 C)) := ⟨structured_arrow.mk (𝟙 _)⟩
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]"
+  rsuffices : is_cofiltered_or_empty (structured_arrow X (𝟭 C))
   · constructor
     
   constructor
@@ -127,11 +125,10 @@ instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
     use structured_arrow.hom_mk Y.hom (by erw [functor.id_map, category.id_comp])
     ext
     trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr Z.hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg" <;>
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr Z.hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
       simp
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]] -/
 instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F] [RepresentablyFlat G] :
     RepresentablyFlat (F ⋙ G) := by
   constructor
@@ -140,8 +137,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     have f₁ : structured_arrow X G := Nonempty.some inferInstance
     have f₂ : structured_arrow f₁.right F := Nonempty.some inferInstance
     exact ⟨structured_arrow.mk (f₁.hom ≫ G.map f₂.hom)⟩
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]"
+  rsuffices : is_cofiltered_or_empty (structured_arrow X (F ⋙ G))
   · constructor
     
   constructor
@@ -330,7 +326,13 @@ attribute [local simp] eq_to_hom_map
                       "by"
                       (Tactic.tacticSeq
                        (Tactic.tacticSeq1Indented
-                        [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₁)] "]"] [])])))]))))
+                        [(Tactic.simp
+                          "simp"
+                          []
+                          []
+                          []
+                          ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₁)] "]"]
+                          [])])))]))))
                 ","
                 (Term.structInstField
                  (Term.structInstLVal `naturality' [])
@@ -384,7 +386,13 @@ attribute [local simp] eq_to_hom_map
                       "by"
                       (Tactic.tacticSeq
                        (Tactic.tacticSeq1Indented
-                        [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₂)] "]"] [])])))]))))
+                        [(Tactic.simp
+                          "simp"
+                          []
+                          []
+                          []
+                          ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₂)] "]"]
+                          [])])))]))))
                 ","
                 (Term.structInstField
                  (Term.structInstLVal `naturality' [])
@@ -676,7 +684,13 @@ attribute [local simp] eq_to_hom_map
                      "by"
                      (Tactic.tacticSeq
                       (Tactic.tacticSeq1Indented
-                       [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₁)] "]"] [])])))]))))
+                       [(Tactic.simp
+                         "simp"
+                         []
+                         []
+                         []
+                         ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₁)] "]"]
+                         [])])))]))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `naturality' [])
@@ -730,7 +744,13 @@ attribute [local simp] eq_to_hom_map
                      "by"
                      (Tactic.tacticSeq
                       (Tactic.tacticSeq1Indented
-                       [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₂)] "]"] [])])))]))))
+                       [(Tactic.simp
+                         "simp"
+                         []
+                         []
+                         []
+                         ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₂)] "]"]
+                         [])])))]))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `naturality' [])

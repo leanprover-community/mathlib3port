@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.Data.Bool.Set
+import Mathbin.Data.Nat.Set
 import Mathbin.Data.Ulift
-import Mathbin.Data.Nat.Basic
-import Mathbin.Order.Bounds
+import Mathbin.Order.Bounds.Basic
+import Mathbin.Order.Hom.Basic
 
 /-!
 # Theory of complete lattices
@@ -44,6 +45,22 @@ In lemma names,
 open Function OrderDual Set
 
 variable {α β β₂ γ : Type _} {ι ι' : Sort _} {κ : ι → Sort _} {κ' : ι' → Sort _}
+
+/- warning: has_Sup clashes with has_sup -> HasSup
+Case conversion may be inaccurate. Consider using '#align has_Sup HasSupₓ'. -/
+#print HasSup /-
+/-- class for the `Sup` operator -/
+class HasSup (α : Type _) where
+  sup : Set α → α
+-/
+
+/- warning: has_Inf clashes with has_inf -> HasInf
+Case conversion may be inaccurate. Consider using '#align has_Inf HasInfₓ'. -/
+#print HasInf /-
+/-- class for the `Inf` operator -/
+class HasInf (α : Type _) where
+  inf : Set α → α
+-/
 
 export HasSup (sup)
 
@@ -277,10 +294,10 @@ see the doc-string on `complete_lattice_of_Sup`.
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] : CompleteLattice α :=
   completeLatticeOfSup α fun s => is_lub_Sup s
 
-/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure"
+  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure"
 
 namespace OrderDual
 
@@ -1167,7 +1184,7 @@ theorem supr_bool_eq {f : Bool → α} : (⨆ b : Bool, f b) = f true ⊔ f fals
 theorem infi_bool_eq {f : Bool → α} : (⨅ b : Bool, f b) = f true ⊓ f false :=
   @supr_bool_eq αᵒᵈ _ _
 
-theorem sup_eq_supr (x y : α) : x ⊔ y = ⨆ b : Bool, cond b x y := by rw [supr_bool_eq, Bool.cond_tt, Bool.cond_ff]
+theorem sup_eq_supr (x y : α) : x ⊔ y = ⨆ b : Bool, cond b x y := by rw [supr_bool_eq, Bool.cond_true, Bool.cond_false]
 
 theorem inf_eq_infi (x y : α) : x ⊓ y = ⨅ b : Bool, cond b x y :=
   @sup_eq_supr αᵒᵈ _ _ _
@@ -1284,18 +1301,18 @@ theorem supr_infi_ge_nat_add (f : ℕ → α) (k : ℕ) : (⨆ n, ⨅ i ≥ n, f
 theorem infi_supr_ge_nat_add : ∀ (f : ℕ → α) (k : ℕ), (⨅ n, ⨆ i ≥ n, f (i + k)) = ⨅ n, ⨆ i ≥ n, f i :=
   @supr_infi_ge_nat_add αᵒᵈ _
 
-theorem sup_supr_nat_succ (u : ℕ → α) : (u 0 ⊔ ⨆ i, u (i + 1)) = ⨆ i, u i := by
-  refine' eq_of_forall_ge_iff fun c => _
-  simp only [sup_le_iff, supr_le_iff]
-  refine' ⟨fun h => _, fun h => ⟨h _, fun i => h _⟩⟩
-  rintro (_ | i)
-  exacts[h.1, h.2 i]
+theorem sup_supr_nat_succ (u : ℕ → α) : (u 0 ⊔ ⨆ i, u (i + 1)) = ⨆ i, u i :=
+  calc
+    (u 0 ⊔ ⨆ i, u (i + 1)) = ⨆ x ∈ {0} ∪ Range Nat.succ, u x := by rw [supr_union, supr_singleton, supr_range]
+    _ = ⨆ i, u i := by rw [Nat.zero_union_range_succ, supr_univ]
+    
 
 theorem inf_infi_nat_succ (u : ℕ → α) : (u 0 ⊓ ⨅ i, u (i + 1)) = ⨅ i, u i :=
   @sup_supr_nat_succ αᵒᵈ _ u
 
 theorem infi_nat_gt_zero_eq (f : ℕ → α) : (⨅ i > 0, f i) = ⨅ i, f (i + 1) := by
-  simpa only [(by simp : ∀ i : ℕ, i > 0 ↔ i ∈ range Nat.succ)] using infi_range
+  rw [← infi_range, Nat.range_succ]
+  simp only [mem_set_of]
 
 theorem supr_nat_gt_zero_eq (f : ℕ → α) : (⨆ i > 0, f i) = ⨆ i, f (i + 1) :=
   @infi_nat_gt_zero_eq αᵒᵈ _ f
@@ -1342,6 +1359,20 @@ theorem supr_Prop_eq {p : ι → Prop} : (⨆ i, p i) = ∃ i, p i :=
 @[simp]
 theorem infi_Prop_eq {p : ι → Prop} : (⨅ i, p i) = ∀ i, p i :=
   le_antisymm (fun h i => h _ ⟨i, rfl⟩) fun h p ⟨i, Eq⟩ => Eq ▸ h i
+
+/- warning: pi.has_Sup clashes with pi.has_sup -> Pi.hasSup
+Case conversion may be inaccurate. Consider using '#align pi.has_Sup Pi.hasSupₓ'. -/
+#print Pi.hasSup /-
+instance Pi.hasSup {α : Type _} {β : α → Type _} [∀ i, HasSup (β i)] : HasSup (∀ i, β i) :=
+  ⟨fun s i => ⨆ f : s, (f : ∀ i, β i) i⟩
+-/
+
+/- warning: pi.has_Inf clashes with pi.has_inf -> Pi.hasInf
+Case conversion may be inaccurate. Consider using '#align pi.has_Inf Pi.hasInfₓ'. -/
+#print Pi.hasInf /-
+instance Pi.hasInf {α : Type _} {β : α → Type _} [∀ i, HasInf (β i)] : HasInf (∀ i, β i) :=
+  ⟨fun s i => ⨅ f : s, (f : ∀ i, β i) i⟩
+-/
 
 instance Pi.completeLattice {α : Type _} {β : α → Type _} [∀ i, CompleteLattice (β i)] : CompleteLattice (∀ i, β i) :=
   { Pi.boundedOrder, Pi.lattice with sup := sup, inf := inf,

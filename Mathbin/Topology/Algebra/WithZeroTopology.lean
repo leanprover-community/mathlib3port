@@ -41,7 +41,7 @@ namespace LinearOrderedCommGroupWithZero
 
 variable {α Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] {γ γ₁ γ₂ : Γ₀} {l : Filter α} {f : α → Γ₀}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
 protected def topologicalSpace : TopologicalSpace Γ₀ :=
@@ -49,7 +49,7 @@ protected def topologicalSpace : TopologicalSpace Γ₀ :=
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (IioCat γ)) :=
   funext <| nhds_mk_of_nhds_single <| le_infi₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
 
@@ -58,7 +58,7 @@ theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (�
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (IioCat γ) := by rw [nhds_eq_update, update_same]
 
 /-- In a linearly ordered group with zero element adjoined, `U` is a neighbourhood of `0` if and
@@ -74,9 +74,9 @@ theorem Iio_mem_nhds_zero (hγ : γ ≠ 0) : IioCat γ ∈ 𝓝 (0 : Γ₀) :=
 /-- If `γ` is an invertible element of a linearly ordered group with zero element adjoined, then
 `Iio (γ : Γ₀)` is a neighbourhood of `0`. -/
 theorem nhds_zero_of_units (γ : Γ₀ˣ) : IioCat ↑γ ∈ 𝓝 (0 : Γ₀) :=
-  Iio_mem_nhds_zero γ.ne_zero
+  Iio_mem_nhds_zero γ.NeZero
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
 theorem tendsto_zero : Tendsto f l (𝓝 (0 : Γ₀)) ↔ ∀ (γ₀) (_ : γ₀ ≠ 0), ∀ᶠ x in l, f x < γ₀ := by simp [nhds_zero]
 
 /-!
@@ -92,7 +92,7 @@ theorem nhds_of_ne_zero {γ : Γ₀} (h₀ : γ ≠ 0) : 𝓝 γ = pure γ := by
 /-- The neighbourhood filter of an invertible element consists of all sets containing that
 element. -/
 theorem nhds_coe_units (γ : Γ₀ˣ) : 𝓝 (γ : Γ₀) = pure (γ : Γ₀) :=
-  nhds_of_ne_zero γ.ne_zero
+  nhds_of_ne_zero γ.NeZero
 
 /-- If `γ` is an invertible element of a linearly ordered group with zero element adjoined, then
 `{γ}` is a neighbourhood of `γ`. -/
@@ -107,13 +107,13 @@ theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : HasBasis (𝓝 x) 
   exact has_basis_pure _
 
 theorem has_basis_nhds_units (γ : Γ₀ˣ) : HasBasis (𝓝 (γ : Γ₀)) (fun i : Unit => True) fun i => {γ} :=
-  has_basis_nhds_of_ne_zero γ.ne_zero
+  has_basis_nhds_of_ne_zero γ.NeZero
 
 theorem tendsto_of_ne_zero {γ : Γ₀} (h : γ ≠ 0) : Tendsto f l (𝓝 γ) ↔ ∀ᶠ x in l, f x = γ := by
   rw [nhds_of_ne_zero h, tendsto_pure]
 
 theorem tendsto_units {γ₀ : Γ₀ˣ} : Tendsto f l (𝓝 (γ₀ : Γ₀)) ↔ ∀ᶠ x in l, f x = γ₀ :=
-  tendsto_of_ne_zero γ₀.ne_zero
+  tendsto_of_ne_zero γ₀.NeZero
 
 theorem Iio_mem_nhds (h : γ₁ < γ₂) : IioCat γ₂ ∈ 𝓝 γ₁ := by
   rcases eq_or_ne γ₁ 0 with (rfl | h₀) <;> simp [*, h.ne', Iio_mem_nhds_zero]
@@ -123,12 +123,12 @@ theorem Iio_mem_nhds (h : γ₁ < γ₂) : IioCat γ₂ ∈ 𝓝 γ₁ := by
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem is_open_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), IioCat γ ⊆ s := by
   rw [is_open_iff_mem_nhds, ← and_forall_ne (0 : Γ₀)]
   simp (config := { contextual := true }) [nhds_of_ne_zero, imp_iff_not_or, has_basis_nhds_zero.mem_iff]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem is_closed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ IciCat γ := by
   simp only [← is_open_compl_iff, is_open_iff, mem_compl_iff, not_not, ← compl_Ici, compl_subset_compl]
 

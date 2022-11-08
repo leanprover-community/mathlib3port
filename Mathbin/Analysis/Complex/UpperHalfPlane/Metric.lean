@@ -146,10 +146,12 @@ theorem center_im (z r) : (center z r).im = z.im * cosh r :=
 theorem center_zero (z : ℍ) : center z 0 = z :=
   Subtype.ext <| ext rfl <| by rw [coe_im, coe_im, center_im, Real.cosh_zero, mul_one]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
     dist (z : ℂ) (w.Center r) ^ 2 = 2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 := by
-  have H : 2 * z.im * w.im ≠ 0 := by apply_rules [mul_ne_zero, two_ne_zero, im_ne_zero]
+  have H : 2 * z.im * w.im ≠ 0 := by
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
   simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im, cosh_dist',
     mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ← sq]
   ring
@@ -158,14 +160,14 @@ theorem dist_coe_center (z w : ℍ) (r : ℝ) :
     dist (z : ℂ) (w.Center r) = sqrt (2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2) := by
   rw [← sqrt_sq dist_nonneg, dist_coe_center_sq]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ordering.gt]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ordering.gt]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
     cmp (dist z w) r = cmp (dist (z : ℂ) (w.Center r)) (w.im * sinh r) := by
   letI := metric_space_aux
   cases' lt_or_le r 0 with hr₀ hr₀
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ordering.gt]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ordering.gt]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     exacts[(hr₀.trans_le dist_nonneg).cmp_eq_gt,
       ((mul_neg_of_pos_of_neg w.im_pos (sinh_neg_iff.2 hr₀)).trans_le dist_nonneg).cmp_eq_gt.symm]
     
@@ -253,7 +255,8 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ
     _ ≤ dist (z : ℂ) w := sub_le_iff_le_add.2 <| dist_triangle _ _ _
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.div, ",", expr continuous.mul, ",", expr continuous_const, ",", expr continuous.arsinh, ",", expr continuous.dist, ",", expr continuous_coe.comp, ",", expr continuous_fst, ",", expr continuous_snd, ",", expr real.continuous_sqrt.comp, ",", expr continuous_im.comp, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- The hyperbolic metric on the upper half plane. We ensure that the projection to
 `topological_space` is definitionally equal to the subtype topology. -/
 instance : MetricSpace ℍ :=
@@ -262,9 +265,8 @@ instance : MetricSpace ℍ :=
     · refine' (@continuous_iff_continuous_dist _ _ metric_space_aux.to_pseudo_metric_space _ _).2 _
       have : ∀ x : ℍ × ℍ, 2 * Real.sqrt (x.1.im * x.2.im) ≠ 0 := fun x =>
         mul_ne_zero two_ne_zero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
-      -- `continuity` fails to apply `continuous.div`
-      apply_rules [Continuous.div, Continuous.mul, continuous_const, Continuous.arsinh, Continuous.dist,
-        continuous_coe.comp, continuous_fst, continuous_snd, real.continuous_sqrt.comp, continuous_im.comp]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
     · letI : MetricSpace ℍ := metric_space_aux
       refine' le_of_nhds_le_nhds fun z => _
@@ -282,7 +284,7 @@ theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (cent
     0 < z.im * (cosh r - sinh r) := mul_pos z.im_pos (sub_pos.2 <| sinh_lt_cosh _)
     _ = (z.Center r).im - z.im * sinh r := mul_sub _ _ _
     _ ≤ (z.Center r).im - dist (z.Center r : ℂ) w := sub_le_sub_left (by rwa [dist_comm]) _
-    _ ≤ w.im := sub_le.1 <| (le_abs_self _).trans (abs_im_le_abs <| z.Center r - w)
+    _ ≤ w.im := sub_le_comm.1 <| (le_abs_self _).trans (abs_im_le_abs <| z.Center r - w)
     
 
 theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :

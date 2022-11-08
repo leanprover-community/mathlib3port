@@ -307,15 +307,15 @@ theorem Group.rank_le [h : Group.Fg G] {S : Finset G} (hS : Subgroup.closure (S 
 
 variable {G} {G' : Type _} [Group G']
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (S.image f).card]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (S.image f).card]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[to_additive]
 theorem Group.rank_le_of_surjective [Group.Fg G] [Group.Fg G'] (f : G →* G') (hf : Function.Surjective f) :
     Group.rank G' ≤ Group.rank G := by
   classical
   obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (S.image f).card]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (S.image f).card]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply Group.rank_le
     rw [Finset.coe_image, ← MonoidHom.map_closure, hS2, Subgroup.map_top_of_surjective f hf]
     

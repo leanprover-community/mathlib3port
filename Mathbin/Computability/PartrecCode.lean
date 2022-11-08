@@ -140,8 +140,8 @@ def ofNatCode : ℕ → Code
     | tt, ff => prec (of_nat_code m.unpair.1) (of_nat_code m.unpair.2)
     | tt, tt => rfind' (of_nat_code m)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Proof that `nat.partrec.code.of_nat_code` is the inverse of `nat.partrec.code.encode_code`-/
 private theorem encode_of_nat_code : ∀ n, encodeCode (ofNatCode n) = n
   | 0 => by simp [of_nat_code, encode_code]
@@ -161,7 +161,7 @@ private theorem encode_of_nat_code : ∀ n, encodeCode (ofNatCode n) = n
     have IH1 := encode_of_nat_code m.unpair.1
     have IH2 := encode_of_nat_code m.unpair.2
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     swap
     rw [← Nat.bit_decomp n, ← Nat.bit_decomp n.div2]
     simp [encode_code, of_nat_code, -add_comm]
@@ -736,11 +736,9 @@ theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
         
       
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident h, "⟩", ":", expr «expr∃ , »((k), «expr ∈ »(x, evaln «expr + »(k, 1) c n))]] -/
 theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
   ⟨fun h => by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident k, \",\", ident h, \"⟩\", \":\", expr «expr∃ , »((k), «expr ∈ »(x, evaln «expr + »(k, 1) c n))]]"
+    rsuffices ⟨k, h⟩ : ∃ k, x ∈ evaln (k + 1) c n
     · exact ⟨k + 1, h⟩
       
     induction c generalizing n x <;> simp [eval, evaln, pure, Pfun.pure, (· <*> ·), (· >> ·)] at h⊢

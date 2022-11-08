@@ -94,7 +94,7 @@ def UliftHom.{w, u} (C : Type u) :=
   C
 
 instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
-  ⟨(default C : C)⟩
+  ⟨(Inhabited.default C : C)⟩
 
 /-- The obvious function `ulift_hom C → C`. -/
 def UliftHom.objDown {C} (A : UliftHom C) : C :=
@@ -184,7 +184,7 @@ def AsSmall.equiv : C ≌ AsSmall C where
       (by tidy)
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=
-  ⟨⟨default _⟩⟩
+  ⟨⟨Inhabited.default _⟩⟩
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (ULift.{u'} C) :=

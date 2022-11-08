@@ -872,10 +872,10 @@ theorem shiftl_to_nat (m n) : (shiftl m n : ℕ) = Nat.shiftl m n := by
   simp [PosNum.shiftl, Nat.shiftl_succ]
   rw [← IH]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, norm_cast]
 theorem shiftr_to_nat (m n) : (shiftr m n : ℕ) = Nat.shiftr m n := by
   cases' m with m <;> dsimp only [shiftr]
@@ -892,7 +892,7 @@ theorem shiftr_to_nat (m n) : (shiftr m n : ℕ) = Nat.shiftr m n := by
     exact @Nat.pow_lt_pow_of_lt_right 2 (by decide) 0 (n + 1) (Nat.succ_pos _)
     
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     apply IH
     change Nat.shiftr m n = Nat.shiftr (bit1 m) (n + 1)
     rw [add_comm n 1, Nat.shiftr_add]
@@ -902,7 +902,7 @@ theorem shiftr_to_nat (m n) : (shiftr m n : ℕ) = Nat.shiftr m n := by
     rw [Nat.div2_bit]
     
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     apply IH
     change Nat.shiftr m n = Nat.shiftr (bit0 m) (n + 1)
     rw [add_comm n 1, Nat.shiftr_add]
@@ -1135,8 +1135,8 @@ theorem pred_succ : ∀ n : Znum, n.pred.succ = n
 
 theorem succ_of_int' : ∀ n, Znum.ofInt' (n + 1) = Znum.ofInt' n + 1
   | (n : ℕ) => by erw [Znum.ofInt', Znum.ofInt', Num.of_nat'_succ, Num.add_one, to_znum_succ, Znum.add_one]
-  | -[1 + 0] => by erw [Znum.ofInt', Znum.ofInt', of_nat'_succ, of_nat'_zero] <;> rfl
-  | -[1 + (n + 1)] => by
+  | -[0+1] => by erw [Znum.ofInt', Znum.ofInt', of_nat'_succ, of_nat'_zero] <;> rfl
+  | -[n + 1+1] => by
     erw [Znum.ofInt', Znum.ofInt', @Num.of_nat'_succ (n + 1), Num.add_one, to_znum_neg_succ, @of_nat'_succ n,
       Num.add_one, Znum.add_one, pred_succ]
 
@@ -1210,7 +1210,7 @@ theorem cast_mul [Ring α] (m n) : ((m * n : Znum) : α) = m * n := by
   rw [← cast_to_int, mul_to_int, Int.cast_mul, cast_to_int, cast_to_int]
 
 theorem of_int'_neg : ∀ n : ℤ, ofInt' (-n) = -ofInt' n
-  | -[1 + n] => show ofInt' (n + 1 : ℕ) = _ by simp only [of_int', Num.zneg_to_znum_neg]
+  | -[n+1] => show ofInt' (n + 1 : ℕ) = _ by simp only [of_int', Num.zneg_to_znum_neg]
   | 0 => show Num.toZnum _ = -Num.toZnum _ by rw [Num.of_nat'_zero] <;> rfl
   | (n + 1 : ℕ) => show Num.toZnumNeg _ = -Num.toZnum _ by rw [Num.zneg_to_znum] <;> rfl
 
@@ -1399,12 +1399,12 @@ theorem cast_sub [Ring α] (m n) : ((m - n : Znum) : α) = m - n := by simp [sub
 theorem neg_of_int : ∀ n, ((-n : ℤ) : Znum) = -n
   | (n + 1 : ℕ) => rfl
   | 0 => by rw [Int.cast_neg, Int.cast_zero]
-  | -[1 + n] => (zneg_zneg _).symm
+  | -[n+1] => (zneg_zneg _).symm
 
 @[simp]
 theorem of_int'_eq : ∀ n : ℤ, Znum.ofInt' n = n
   | (n : ℕ) => rfl
-  | -[1 + n] => by
+  | -[n+1] => by
     show Num.toZnumNeg (n + 1 : ℕ) = -(n + 1 : ℕ)
     rw [← neg_inj, neg_neg, Nat.cast_succ, Num.add_one, Num.zneg_to_znum_neg, Num.to_znum_succ, Nat.cast_succ,
       Znum.add_one]
@@ -1602,7 +1602,7 @@ theorem div_to_int : ∀ n d, ((n / d : Znum) : ℤ) = n / d
   | neg n, Pos d =>
     show -_ = -_ / ↑d by
       rw [n.to_int_eq_succ_pred, d.to_int_eq_succ_pred, ← PosNum.to_nat_to_int, Num.succ'_to_nat, Num.div_to_nat]
-      change -[1 + n.pred' / ↑d] = -[1 + n.pred' / (d.pred' + 1)]
+      change -[n.pred' / ↑d+1] = -[n.pred' / (d.pred' + 1)+1]
       rw [d.to_nat_eq_succ_pred]
   | neg n, neg d =>
     show ↑(PosNum.pred' n / Num.pos d).succ' = -_ / -↑d by

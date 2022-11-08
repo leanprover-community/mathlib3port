@@ -483,24 +483,183 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀] [
   rw [is_equiv_iff_val_lt_one]
   exact (Equiv.subRight 1).Surjective.forall
 
-theorem is_equiv_tfae [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀)
-    (v' : Valuation K Γ'₀) :
-    [v.IsEquiv v', ∀ {x}, v x ≤ 1 ↔ v' x ≤ 1, ∀ {x}, v x = 1 ↔ v' x = 1, ∀ {x}, v x < 1 ↔ v' x < 1,
-        ∀ {x}, v (x - 1) < 1 ↔ v' (x - 1) < 1].Tfae :=
-  by
-  tfae_have 1 ↔ 2
-  · apply is_equiv_iff_val_le_one
-    
-  tfae_have 1 ↔ 3
-  · apply is_equiv_iff_val_eq_one
-    
-  tfae_have 1 ↔ 4
-  · apply is_equiv_iff_val_lt_one
-    
-  tfae_have 1 ↔ 5
-  · apply is_equiv_iff_val_sub_one_lt_one
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `is_equiv_tfae [])
+      (Command.declSig
+       [(Term.instBinder "[" [] (Term.app `LinearOrderedCommGroupWithZero [`Γ₀]) "]")
+        (Term.instBinder "[" [] (Term.app `LinearOrderedCommGroupWithZero [`Γ'₀]) "]")
+        (Term.explicitBinder "(" [`v] [":" (Term.app `Valuation [`K `Γ₀])] [] ")")
+        (Term.explicitBinder "(" [`v'] [":" (Term.app `Valuation [`K `Γ'₀])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.proj
+         («term[_]»
+          "["
+          [(Term.app (Term.proj `v "." `IsEquiv) [`v'])
+           ","
+           (Term.forall
+            "∀"
+            [(Term.implicitBinder "{" [`x] [] "}")]
+            []
+            ","
+            («term_↔_» («term_≤_» (Term.app `v [`x]) "≤" (num "1")) "↔" («term_≤_» (Term.app `v' [`x]) "≤" (num "1"))))
+           ","
+           (Term.forall
+            "∀"
+            [(Term.implicitBinder "{" [`x] [] "}")]
+            []
+            ","
+            («term_↔_» («term_=_» (Term.app `v [`x]) "=" (num "1")) "↔" («term_=_» (Term.app `v' [`x]) "=" (num "1"))))
+           ","
+           (Term.forall
+            "∀"
+            [(Term.implicitBinder "{" [`x] [] "}")]
+            []
+            ","
+            («term_↔_» («term_<_» (Term.app `v [`x]) "<" (num "1")) "↔" («term_<_» (Term.app `v' [`x]) "<" (num "1"))))
+           ","
+           (Term.forall
+            "∀"
+            [(Term.implicitBinder "{" [`x] [] "}")]
+            []
+            ","
+            («term_↔_»
+             («term_<_» (Term.app `v [(«term_-_» `x "-" (num "1"))]) "<" (num "1"))
+             "↔"
+             («term_<_» (Term.app `v' [(«term_-_» `x "-" (num "1"))]) "<" (num "1"))))]
+          "]")
+         "."
+         `Tfae)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.apply "apply" `is_equiv_iff_val_le_one) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.apply "apply" `is_equiv_iff_val_eq_one) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.apply "apply" `is_equiv_iff_val_lt_one) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.apply "apply" `is_equiv_iff_val_le_one) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.apply "apply" `is_equiv_iff_val_eq_one) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.apply "apply" `is_equiv_iff_val_lt_one) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `is_equiv_iff_val_sub_one_lt_one
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  is_equiv_tfae
+  [ LinearOrderedCommGroupWithZero Γ₀ ]
+      [ LinearOrderedCommGroupWithZero Γ'₀ ]
+      ( v : Valuation K Γ₀ )
+      ( v' : Valuation K Γ'₀ )
+    :
+      [
+          v . IsEquiv v'
+            ,
+            ∀ { x } , v x ≤ 1 ↔ v' x ≤ 1
+            ,
+            ∀ { x } , v x = 1 ↔ v' x = 1
+            ,
+            ∀ { x } , v x < 1 ↔ v' x < 1
+            ,
+            ∀ { x } , v x - 1 < 1 ↔ v' x - 1 < 1
+          ]
+        .
+        Tfae
+  :=
+    by
+      tfae_have 1 ↔ 2
+        · apply is_equiv_iff_val_le_one
+        tfae_have 1 ↔ 3
+        · apply is_equiv_iff_val_eq_one
+        tfae_have 1 ↔ 4
+        · apply is_equiv_iff_val_lt_one
+        tfae_have 1 ↔ 5
+        · apply is_equiv_iff_val_sub_one_lt_one
+        tfae_finish
 
 end
 
@@ -834,7 +993,7 @@ theorem val_eq (h : v₁.IsEquiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r = 
   h.val_eq
 
 theorem ne_top (h : v₁.IsEquiv v₂) {r : R} : v₁ r ≠ ⊤ ↔ v₂ r ≠ ⊤ :=
-  h.ne_zero
+  h.NeZero
 
 end IsEquiv
 

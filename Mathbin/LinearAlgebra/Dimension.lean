@@ -705,13 +705,13 @@ theorem maximal_linear_independent_eq_infinite_basis {ι : Type _} (b : Basis ι
     exact infinite_basis_le_maximal_linear_independent b v i m
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank R M := by
   haveI := nontrivial_of_invariant_basis_number R
   apply le_antisymm
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     swap
     apply le_csupr (Cardinal.bdd_above_range.{v, v} _)
     exact

@@ -152,9 +152,9 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.
 
@@ -217,7 +217,7 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
       traceSuccess := cfg.traceSuccess || is_trace_enabled_for `slim_check.success }
   let inst ←
     mk_app `` testable [tgt'] >>= mk_instance <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   let e ← mk_mapp `` testable.check [tgt, quote.1 cfg, tgt', inst]
   when_tracing `slim_check.decoration
       (← do

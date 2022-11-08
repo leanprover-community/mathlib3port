@@ -71,7 +71,7 @@ sending each section to its germs.
 def toSheafify : F ⟶ F.sheafify.1 where
   app U f := ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
   naturality' U U' f := by
-    ext x ⟨u, m⟩
+    ext (x⟨u, m⟩)
     exact germ_res_apply F f.unop ⟨u, m⟩ x
 
 /-- The natural morphism from the stalk of the sheafification to the original stalk.

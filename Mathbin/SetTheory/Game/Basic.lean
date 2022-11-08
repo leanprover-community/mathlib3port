@@ -299,6 +299,30 @@ theorem mul_move_right_inr {x y : Pgame} {i j} :
   cases y
   rfl
 
+@[simp]
+theorem neg_mk_mul_move_left_inl {xl xr yl yr} {xL xR yL yR} {i j} :
+    (-(mk xl xr xL xR * mk yl yr yL yR)).moveLeft (Sum.inl (i, j)) =
+      -(xL i * mk yl yr yL yR + mk xl xr xL xR * yR j - xL i * yR j) :=
+  rfl
+
+@[simp]
+theorem neg_mk_mul_move_left_inr {xl xr yl yr} {xL xR yL yR} {i j} :
+    (-(mk xl xr xL xR * mk yl yr yL yR)).moveLeft (Sum.inr (i, j)) =
+      -(xR i * mk yl yr yL yR + mk xl xr xL xR * yL j - xR i * yL j) :=
+  rfl
+
+@[simp]
+theorem neg_mk_mul_move_right_inl {xl xr yl yr} {xL xR yL yR} {i j} :
+    (-(mk xl xr xL xR * mk yl yr yL yR)).moveRight (Sum.inl (i, j)) =
+      -(xL i * mk yl yr yL yR + mk xl xr xL xR * yL j - xL i * yL j) :=
+  rfl
+
+@[simp]
+theorem neg_mk_mul_move_right_inr {xl xr yl yr} {xL xR yL yR} {i j} :
+    (-(mk xl xr xL xR * mk yl yr yL yR)).moveRight (Sum.inr (i, j)) =
+      -(xR i * mk yl yr yL yR + mk xl xr xL xR * yR j - xR i * yR j) :=
+  rfl
+
 theorem left_moves_mul_cases {x y : Pgame} (k) {P : (x * y).LeftMoves → Prop}
     (hl : ∀ ix iy, P <| toLeftMovesMul (Sum.inl ⟨ix, iy⟩)) (hr : ∀ jx jy, P <| toLeftMovesMul (Sum.inr ⟨jx, jy⟩)) :
     P k := by
@@ -319,14 +343,21 @@ theorem right_moves_mul_cases {x y : Pgame} (k) {P : (x * y).RightMoves → Prop
   · apply hr
     
 
-theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x * y⟧ = ⟦y * x⟧
-  | mk xl xr xL xR, mk yl yr yL yR => by
+/-- `x * y` and `y * x` have the same moves. -/
+def mulCommRelabelling : ∀ x y : Pgame.{u}, x * y ≡r y * x
+  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
     refine'
-      quot_eq_of_mk_quot_eq (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _))
-        ((Equiv.sumComm _ _).trans (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _))) _ _
-    all_goals rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp <;> rw [quot_mul_comm, quot_mul_comm (mk xl xr xL xR)]
-    any_goals rw [quot_mul_comm (xL i), add_comm]
-    any_goals rw [quot_mul_comm (xR i), add_comm]
+        ⟨Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _),
+          (Equiv.sumComm _ _).trans (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _)), _, _⟩ <;>
+      rintro (⟨i, j⟩ | ⟨i, j⟩) <;>
+        dsimp <;>
+          exact
+            ((add_comm_relabelling _ _).trans <|
+                  (mul_comm_relabelling _ _).addCongr (mul_comm_relabelling _ _)).subCongr
+              (mul_comm_relabelling _ _)
+
+theorem quot_mul_comm (x y : Pgame.{u}) : ⟦x * y⟧ = ⟦y * x⟧ :=
+  Quot.sound (mulCommRelabelling x y).Equiv
 
 /-- `x * y` is equivalent to `y * x`. -/
 theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
@@ -372,45 +403,27 @@ theorem zero_mul_equiv (x : Pgame) : 0 * x ≈ 0 :=
 theorem quot_zero_mul (x : Pgame) : ⟦0 * x⟧ = ⟦0⟧ :=
   @Quotient.sound _ _ (0 * x) _ x.zero_mul_equiv
 
-@[simp]
-theorem quot_neg_mul : ∀ x y : Pgame, ⟦-x * y⟧ = -⟦x * y⟧
-  | mk xl xr xL xR, mk yl yr yL yR => by
-    let x := mk xl xr xL xR
-    let y := mk yl yr yL yR
-    refine' quot_eq_of_mk_quot_eq _ _ _ _
-    · fconstructor <;>
-        rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim (config := { max_depth := 4 }) [Sum.inl, Sum.inr, Prod.mk]
-      
-    · fconstructor <;>
-        rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim (config := { max_depth := 4 }) [Sum.inl, Sum.inr, Prod.mk]
-      
-    · rintro (⟨i, j⟩ | ⟨i, j⟩)
-      · change ⟦-xR i * y + -x * yL j - -xR i * yL j⟧ = ⟦-(xR i * y + x * yL j - xR i * yL j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
-        simp
-        abel
-        
-      · change ⟦-xL i * y + -x * yR j - -xL i * yR j⟧ = ⟦-(xL i * y + x * yR j - xL i * yR j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
-        simp
-        abel
-        
-      
-    · rintro (⟨i, j⟩ | ⟨i, j⟩)
-      · change ⟦-xR i * y + -x * yR j - -xR i * yR j⟧ = ⟦-(xR i * y + x * yR j - xR i * yR j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
-        simp
-        abel
-        
-      · change ⟦-xL i * y + -x * yL j - -xL i * yL j⟧ = ⟦-(xL i * y + x * yL j - xL i * yL j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
-        simp
-        abel
-        
-      
+/-- `-x * y` and `-(x * y)` have the same moves. -/
+def negMulRelabelling : ∀ x y : Pgame.{u}, -x * y ≡r -(x * y)
+  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
+    refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;>
+      rintro (⟨i, j⟩ | ⟨i, j⟩) <;>
+        dsimp <;>
+          apply ((neg_add_relabelling _ _).trans _).symm <;>
+            apply ((neg_add_relabelling _ _).trans (relabelling.add_congr _ _)).subCongr <;>
+              exact (neg_mul_relabelling _ _).symm
 
 @[simp]
-theorem quot_mul_neg (x y : Pgame) : ⟦x * -y⟧ = -⟦x * y⟧ := by rw [quot_mul_comm, quot_neg_mul, quot_mul_comm]
+theorem quot_neg_mul (x y : Pgame) : ⟦-x * y⟧ = -⟦x * y⟧ :=
+  Quot.sound (negMulRelabelling x y).Equiv
+
+/-- `x * -y` and `-(x * y)` have the same moves. -/
+def mulNegRelabelling (x y : Pgame) : x * -y ≡r -(x * y) :=
+  (mulCommRelabelling x _).trans <| (negMulRelabelling _ x).trans (mulCommRelabelling y x).negCongr
+
+@[simp]
+theorem quot_mul_neg (x y : Pgame) : ⟦x * -y⟧ = -⟦x * y⟧ :=
+  Quot.sound (mulNegRelabelling x y).Equiv
 
 @[simp]
 theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ + ⟦x * z⟧
@@ -500,43 +513,39 @@ theorem quot_right_distrib_sub (x y z : Pgame) : ⟦(y - z) * x⟧ = ⟦y * x⟧
   change ⟦(y + -z) * x⟧ = ⟦y * x⟧ + -⟦z * x⟧
   rw [quot_right_distrib, quot_neg_mul]
 
+/-- `x * 1` has the same moves as `x`. -/
+def mulOneRelabelling : ∀ x : Pgame.{u}, x * 1 ≡r x
+  | ⟨xl, xr, xL, xR⟩ => by
+    unfold One.one
+    refine' ⟨(Equiv.sumEmpty _ _).trans (Equiv.prodPunit _), (Equiv.emptySum _ _).trans (Equiv.prodPunit _), _, _⟩ <;>
+      try rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩) <;>
+        try intro i <;>
+          dsimp <;>
+            apply (relabelling.sub_congr (relabelling.refl _) (mul_zero_relabelling _)).trans <;>
+              rw [sub_zero] <;>
+                exact
+                  (add_zero_relabelling _).trans
+                    (((mul_one_relabelling _).addCongr (mul_zero_relabelling _)).trans <| add_zero_relabelling _)
+
 @[simp]
-theorem quot_mul_one : ∀ x : Pgame, ⟦x * 1⟧ = ⟦x⟧
-  | mk xl xr xL xR => by
-    let x := mk xl xr xL xR
-    refine' quot_eq_of_mk_quot_eq _ _ _ _
-    any_goals
-    fconstructor
-    · rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩)
-      assumption
-      
-    · intro i
-      try exact Sum.inl (i, PUnit.unit)
-      try exact Sum.inr (i, PUnit.unit)
-      
-    · rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩)
-      rfl
-      
-    · exact fun i => rfl
-      
-    all_goals rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩)
-    · change ⟦xL i * 1 + x * 0 - xL i * 0⟧ = ⟦xL i⟧
-      simp [quot_mul_one]
-      
-    · change ⟦xR i * 1 + x * 0 - xR i * 0⟧ = ⟦xR i⟧
-      simp [quot_mul_one]
-      
+theorem quot_mul_one (x : Pgame) : ⟦x * 1⟧ = ⟦x⟧ :=
+  Quot.sound <| mulOneRelabelling x
 
 /-- `x * 1` is equivalent to `x`. -/
 theorem mul_one_equiv (x : Pgame) : x * 1 ≈ x :=
-  Quotient.exact <| quot_mul_one _
+  Quotient.exact <| quot_mul_one x
+
+/-- `1 * x` has the same moves as `x`. -/
+def oneMulRelabelling (x : Pgame) : 1 * x ≡r x :=
+  (mulCommRelabelling 1 x).trans <| mulOneRelabelling x
 
 @[simp]
-theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ := by rw [quot_mul_comm, quot_mul_one x]
+theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ :=
+  Quot.sound <| oneMulRelabelling x
 
 /-- `1 * x` is equivalent to `x`. -/
 theorem one_mul_equiv (x : Pgame) : 1 * x ≈ x :=
-  Quotient.exact <| quot_one_mul _
+  Quotient.exact <| quot_one_mul x
 
 theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => by

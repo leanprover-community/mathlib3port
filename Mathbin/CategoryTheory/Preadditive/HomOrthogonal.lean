@@ -86,7 +86,7 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
     biproduct.matrix fun j k =>
       if h : f j = g k then z (f j) ⟨k, by simp [h]⟩ ⟨j, by simp⟩ ≫ eqToHom (by simp [h]) else 0
   left_inv z := by
-    ext j k
+    ext (j k)
     simp only [category.assoc, biproduct.lift_π, biproduct.ι_matrix]
     split_ifs
     · simp
@@ -96,7 +96,7 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
       apply o.eq_zero h
       
   right_inv z := by
-    ext i ⟨j, w⟩ ⟨k, ⟨⟩⟩
+    ext (i⟨j, w⟩⟨k, ⟨⟩⟩)
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
     simp [w.symm]
     rfl
@@ -121,7 +121,7 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
 @[simp]
 theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
     o.matrixDecomposition (𝟙 (⨁ fun a => s (f a))) i = 1 := by
-  ext ⟨b, ⟨⟩⟩ ⟨a⟩
+  ext (⟨b, ⟨⟩⟩⟨a⟩)
   simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
   simp only [category.comp_id, category.id_comp, category.assoc, End.one_def, eq_to_hom_refl, Matrix.one_apply,
     hom_orthogonal.matrix_decomposition_apply, biproduct.components]
@@ -137,7 +137,7 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
     {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
     (w : (⨁ fun b => s (g b)) ⟶ ⨁ fun c => s (h c)) (i : ι) :
     o.matrixDecomposition (z ≫ w) i = o.matrixDecomposition w i ⬝ o.matrixDecomposition z i := by
-  ext ⟨c, ⟨⟩⟩ ⟨a⟩
+  ext (⟨c, ⟨⟩⟩⟨a⟩)
   simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
   simp only [Matrix.mul_apply, limits.biproduct.components, hom_orthogonal.matrix_decomposition_apply, category.comp_id,
     category.id_comp, category.assoc, End.mul_def, eq_to_hom_refl, eq_to_hom_trans_assoc, Finset.sum_congr]

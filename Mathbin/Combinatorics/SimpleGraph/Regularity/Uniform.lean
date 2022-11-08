@@ -53,7 +53,7 @@ def IsUniform (s t : Finset α) : Prop :=
       ∀ ⦃t'⦄,
         t' ⊆ t →
           (s.card : 𝕜) * ε ≤ s'.card →
-            (t.card : 𝕜) * ε ≤ t'.card → abs ((G.edgeDensity s' t' : 𝕜) - (G.edgeDensity s t : 𝕜)) < ε
+            (t.card : 𝕜) * ε ≤ t'.card → |(G.edgeDensity s' t' : 𝕜) - (G.edgeDensity s t : 𝕜)| < ε
 
 variable {G ε}
 
@@ -102,8 +102,7 @@ theorem not_is_uniform_iff :
       ∃ s',
         s' ⊆ s ∧
           ∃ t',
-            t' ⊆ t ∧
-              ↑s.card * ε ≤ s'.card ∧ ↑t.card * ε ≤ t'.card ∧ ε ≤ abs (G.edgeDensity s' t' - G.edgeDensity s t) :=
+            t' ⊆ t ∧ ↑s.card * ε ≤ s'.card ∧ ↑t.card * ε ≤ t'.card ∧ ε ≤ |G.edgeDensity s' t' - G.edgeDensity s t| :=
   by
   unfold is_uniform
   simp only [not_forall, not_lt, exists_prop]
@@ -137,7 +136,7 @@ theorem right_nonuniform_witnesses_card (h : ¬G.IsUniform ε s t) :
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.2.2.1
 
 theorem nonuniform_witnesses_spec (h : ¬G.IsUniform ε s t) :
-    ε ≤ abs (G.edgeDensity (G.nonuniformWitnesses ε s t).1 (G.nonuniformWitnesses ε s t).2 - G.edgeDensity s t) := by
+    ε ≤ |G.edgeDensity (G.nonuniformWitnesses ε s t).1 (G.nonuniformWitnesses ε s t).2 - G.edgeDensity s t| := by
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.2.2.2
 
@@ -164,7 +163,7 @@ theorem nonuniform_witness_card_le (h : ¬G.IsUniform ε s t) : (s.card : 𝕜) 
     
 
 theorem nonuniform_witness_spec (h₁ : s ≠ t) (h₂ : ¬G.IsUniform ε s t) :
-    ε ≤ abs (G.edgeDensity (G.nonuniformWitness ε s t) (G.nonuniformWitness ε t s) - G.edgeDensity s t) := by
+    ε ≤ |G.edgeDensity (G.nonuniformWitness ε s t) (G.nonuniformWitness ε t s) - G.edgeDensity s t| := by
   unfold nonuniform_witness
   rcases trichotomous_of WellOrderingRel s t with (lt | rfl | gt)
   · rw [if_pos lt, if_neg (asymm lt)]

@@ -89,7 +89,7 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
         mk (span {↑p ^ 2}) (∑ x : ℕ in Finset.range p, a ^ (x - 1) * (a ^ (p - 1 - x) * (↑p * (b * ↑x)))) +
           mk (span {↑p ^ 2}) (∑ x : ℕ in Finset.range p, a ^ (x + (p - 1 - x))) :=
       by
-      ring_exp
+      ring
       simp only [← pow_add, map_add, Finset.sum_add_distrib, ← map_sum]
     _ =
         mk (span {↑p ^ 2}) (∑ x : ℕ in Finset.range p, a ^ (x - 1) * (a ^ (p - 1 - x) * (↑p * (b * ↑x)))) +
@@ -116,14 +116,14 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
           rw [← Nat.add_sub_assoc (Nat.le_pred_of_lt (finset.mem_range.mp hx))]
           exact congr_arg Nat.pred (Nat.add_sub_cancel_left _ _)
         rw [this]
-        ring_exp_eq
+        ring1
         
     _ = mk (span {↑p ^ 2}) (↑p * a ^ (p - 1)) := by
       simp only [add_left_eq_self, ← Finset.mul_sum]
       norm_cast
       simp only [Finset.sum_range_id, Nat.cast_mul, _root_.map_mul,
         Nat.mul_div_assoc _ (even_iff_two_dvd.mp (Nat.Odd.sub_odd hp odd_one))]
-      ring_exp
+      ring
       simp only [← map_pow, mul_eq_zero_of_left, Ideal.Quotient.eq_zero_iff_mem, mem_span_singleton]
     
 
@@ -239,11 +239,11 @@ theorem pow_two_pow_sub_pow_two_pow [CommRing R] {x y : R} (n : ℕ) :
     
   · suffices x ^ 2 ^ d.succ - y ^ 2 ^ d.succ = (x ^ 2 ^ d + y ^ 2 ^ d) * (x ^ 2 ^ d - y ^ 2 ^ d) by
       rw [this, hd, Finset.prod_range_succ, ← mul_assoc, mul_comm (x ^ 2 ^ d + y ^ 2 ^ d)]
-    · ring_exp_eq
+    · ring1
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident hy]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[["using", ident hy]] -/
 theorem _root_.int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 := by
   intro hx
   -- Replace `x : ℤ` with `y : zmod 4`
@@ -276,7 +276,7 @@ theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hx
   · intro hxy'
     have : 2 * 2 ∣ 2 * x := by
       convert dvd_add hxy hxy'
-      ring_exp
+      ring
     have : 2 ∣ x := (mul_dvd_mul_iff_left (by norm_num)).mp this
     contradiction
     

@@ -883,29 +883,6 @@ theorem IsGlb.exists_between' (h : IsGlb s a) (h' : a ∉ s) (hb : a < b) : ∃ 
 end LinearOrder
 
 /-!
-### Least upper bound and the greatest lower bound in linear ordered additive commutative groups
--/
-
-
-section LinearOrderedAddCommGroup
-
-variable [LinearOrderedAddCommGroup α] {s : Set α} {a ε : α}
-
-theorem IsGlb.exists_between_self_add (h : IsGlb s a) (hε : 0 < ε) : ∃ b ∈ s, a ≤ b ∧ b < a + ε :=
-  h.exists_between <| lt_add_of_pos_right _ hε
-
-theorem IsGlb.exists_between_self_add' (h : IsGlb s a) (h₂ : a ∉ s) (hε : 0 < ε) : ∃ b ∈ s, a < b ∧ b < a + ε :=
-  h.exists_between' h₂ <| lt_add_of_pos_right _ hε
-
-theorem IsLub.exists_between_sub_self (h : IsLub s a) (hε : 0 < ε) : ∃ b ∈ s, a - ε < b ∧ b ≤ a :=
-  h.exists_between <| sub_lt_self _ hε
-
-theorem IsLub.exists_between_sub_self' (h : IsLub s a) (h₂ : a ∉ s) (hε : 0 < ε) : ∃ b ∈ s, a - ε < b ∧ b < a :=
-  h.exists_between' h₂ <| sub_lt_self _ hε
-
-end LinearOrderedAddCommGroup
-
-/-!
 ### Images of upper/lower bounds under monotone functions
 -/
 
@@ -1292,46 +1269,4 @@ theorem is_lub_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × 
 theorem is_glb_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × β) :
     IsGlb s p ↔ IsGlb (Prod.fst '' s) p.1 ∧ IsGlb (Prod.snd '' s) p.2 :=
   @is_lub_prod αᵒᵈ βᵒᵈ _ _ _ _
-
-namespace OrderIso
-
-variable [Preorder α] [Preorder β] (f : α ≃o β)
-
-theorem upper_bounds_image {s : Set α} : UpperBounds (f '' s) = f '' UpperBounds s :=
-  Subset.antisymm
-    (fun x hx => ⟨f.symm x, fun y hy => f.le_symm_apply.2 (hx <| mem_image_of_mem _ hy), f.apply_symm_apply x⟩)
-    f.Monotone.image_upper_bounds_subset_upper_bounds_image
-
-theorem lower_bounds_image {s : Set α} : LowerBounds (f '' s) = f '' LowerBounds s :=
-  @upper_bounds_image αᵒᵈ βᵒᵈ _ _ f.dual _
-
-@[simp]
-theorem is_lub_image {s : Set α} {x : β} : IsLub (f '' s) x ↔ IsLub s (f.symm x) :=
-  ⟨fun h => IsLub.of_image (fun _ _ => f.le_iff_le) ((f.apply_symm_apply x).symm ▸ h), fun h =>
-    (IsLub.of_image fun _ _ => f.symm.le_iff_le) <| (f.symm_image_image s).symm ▸ h⟩
-
-theorem is_lub_image' {s : Set α} {x : α} : IsLub (f '' s) (f x) ↔ IsLub s x := by rw [is_lub_image, f.symm_apply_apply]
-
-@[simp]
-theorem is_glb_image {s : Set α} {x : β} : IsGlb (f '' s) x ↔ IsGlb s (f.symm x) :=
-  f.dual.is_lub_image
-
-theorem is_glb_image' {s : Set α} {x : α} : IsGlb (f '' s) (f x) ↔ IsGlb s x :=
-  f.dual.is_lub_image'
-
-@[simp]
-theorem is_lub_preimage {s : Set β} {x : α} : IsLub (f ⁻¹' s) x ↔ IsLub s (f x) := by
-  rw [← f.symm_symm, ← image_eq_preimage, is_lub_image]
-
-theorem is_lub_preimage' {s : Set β} {x : β} : IsLub (f ⁻¹' s) (f.symm x) ↔ IsLub s x := by
-  rw [is_lub_preimage, f.apply_symm_apply]
-
-@[simp]
-theorem is_glb_preimage {s : Set β} {x : α} : IsGlb (f ⁻¹' s) x ↔ IsGlb s (f x) :=
-  f.dual.is_lub_preimage
-
-theorem is_glb_preimage' {s : Set β} {x : β} : IsGlb (f ⁻¹' s) (f.symm x) ↔ IsGlb s x :=
-  f.dual.is_lub_preimage'
-
-end OrderIso
 

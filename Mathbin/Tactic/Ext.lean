@@ -86,7 +86,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
                   cases e
               reflexivity
         instantiate_mvars pr
-  let decl_n := mkStrName n "ext"
+  let decl_n := .str n "ext"
   add_decl (declaration.thm decl_n d t pr)
   let bs ← bs.mmap infer_type
   let rhs := expr.mk_and_lst bs
@@ -118,7 +118,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
                   cases h
                   reflexivity
         instantiate_mvars pr
-  add_decl (declaration.thm (mkStrName n "ext_iff") d t pr)
+  add_decl (declaration.thm (.str n "ext_iff") d t pr)
   pure decl_n
 
 unsafe def get_ext_subject : expr → tactic Name

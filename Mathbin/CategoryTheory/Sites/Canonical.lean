@@ -48,8 +48,8 @@ variable {X Y : C} {S : Sieve X} {R : Presieve X}
 
 variable (J J₂ : GrothendieckTopology C)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr s «expr ≫ »(m, «expr ≫ »(l, «expr ≫ »(h, f))) this]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr s «expr ≫ »(m, «expr ≫ »(l, «expr ≫ »(h, f))) this]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- To show `P` is a sheaf for the binding of `U` with `B`, it suffices to show that `P` is a sheaf for
 `U`, that `P` is a sheaf for each sieve in `B`, and that it is separated for any pullback of any
 sieve in `B`.
@@ -82,7 +82,7 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
       have : bind U B _ := presieve.bind_comp f hf hm
       simpa using this
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr s «expr ≫ »(m, «expr ≫ »(l, «expr ≫ »(h, f))) this]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr s «expr ≫ »(m, «expr ≫ »(l, «expr ≫ »(h, f))) this]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · have := ht (U.downward_closed hf h) _ ((B _).downward_closed hl m)
       rw [op_comp, functor_to_types.map_comp_apply] at this
       rw [this]
@@ -132,7 +132,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
     
   · intro Y f hf
     have : sieve.pullback f (bind R fun T (k : T ⟶ X) (hf : R k) => pullback k S) = R.pullback f := by
-      ext Z g
+      ext (Z g)
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
         rw [pullback_apply, ← comm]

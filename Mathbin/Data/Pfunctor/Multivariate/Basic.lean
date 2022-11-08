@@ -92,7 +92,7 @@ theorem const.get_mk (x : A) : const.get (const.mk n x : (const n A).Obj α) = x
 theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := by
   cases x
   dsimp [const.get, const.mk]
-  congr with _⟨⟩
+  congr with (_⟨⟩)
 
 end Const
 

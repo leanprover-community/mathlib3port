@@ -227,11 +227,38 @@ to isomorphisms in `D`. -/
 def IsInvertedBy (P : MorphismProperty C) (F : C ⥤ D) : Prop :=
   ∀ ⦃X Y : C⦄ (f : X ⟶ Y) (hf : P f), IsIso (F.map f)
 
-theorem IsInvertedBy.of_comp {C₁ C₂ C₃ : Type _} [Category C₁] [Category C₂] [Category C₃] (W : MorphismProperty C₁)
-    (F : C₁ ⥤ C₂) (hF : W.IsInvertedBy F) (G : C₂ ⥤ C₃) : W.IsInvertedBy (F ⋙ G) := fun X Y f hf => by
+namespace IsInvertedBy
+
+theorem of_comp {C₁ C₂ C₃ : Type _} [Category C₁] [Category C₂] [Category C₃] (W : MorphismProperty C₁) (F : C₁ ⥤ C₂)
+    (hF : W.IsInvertedBy F) (G : C₂ ⥤ C₃) : W.IsInvertedBy (F ⋙ G) := fun X Y f hf => by
   haveI := hF f hf
   dsimp
   infer_instance
+
+theorem op {W : MorphismProperty C} {L : C ⥤ D} (h : W.IsInvertedBy L) : W.op.IsInvertedBy L.op := fun X Y f hf => by
+  haveI := h f.unop hf
+  dsimp
+  infer_instance
+
+theorem right_op {W : MorphismProperty C} {L : Cᵒᵖ ⥤ D} (h : W.op.IsInvertedBy L) : W.IsInvertedBy L.rightOp :=
+  fun X Y f hf => by
+  haveI := h f.op hf
+  dsimp
+  infer_instance
+
+theorem left_op {W : MorphismProperty C} {L : C ⥤ Dᵒᵖ} (h : W.IsInvertedBy L) : W.op.IsInvertedBy L.leftOp :=
+  fun X Y f hf => by
+  haveI := h f.unop hf
+  dsimp
+  infer_instance
+
+theorem unop {W : MorphismProperty C} {L : Cᵒᵖ ⥤ Dᵒᵖ} (h : W.op.IsInvertedBy L) : W.IsInvertedBy L.unop :=
+  fun X Y f hf => by
+  haveI := h f.op hf
+  dsimp
+  infer_instance
+
+end IsInvertedBy
 
 /-- Given `app : Π X, F₁.obj X ⟶ F₂.obj X` where `F₁` and `F₂` are two functors,
 this is the `morphism_property C` satisfied by the morphisms in `C` with respect
@@ -361,6 +388,19 @@ def FunctorsInverting.mk {W : MorphismProperty C} {D : Type _} [Category D] (F :
     W.FunctorsInverting D :=
   ⟨F, hF⟩
 
+theorem IsInvertedBy.iff_of_iso (W : MorphismProperty C) {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) :
+    W.IsInvertedBy F₁ ↔ W.IsInvertedBy F₂ := by
+  suffices ∀ (X Y : C) (f : X ⟶ Y), is_iso (F₁.map f) ↔ is_iso (F₂.map f) by
+    constructor
+    exact fun h X Y f hf => by
+      rw [← this]
+      exact h f hf
+    exact fun h X Y f hf => by
+      rw [this]
+      exact h f hf
+  intro X Y f
+  exact (respects_iso.isomorphisms D).arrow_mk_iso_iff (arrow.iso_mk (e.app X) (e.app Y) (by simp))
+
 section Diagonal
 
 variable [HasPullbacks C] {P : MorphismProperty C}
@@ -369,10 +409,10 @@ variable [HasPullbacks C] {P : MorphismProperty C}
 whenever `P` holds for `X ⟶ Y xₓ Y`. -/
 def Diagonal (P : MorphismProperty C) : MorphismProperty C := fun X Y f => P (pullback.diagonal f)
 
-theorem diagonal_iff {X Y : C} {f : X ⟶ Y} : P.Diagonal f ↔ P (pullback.diagonal f) :=
+theorem diagonal_iff {X Y : C} {f : X ⟶ Y} : P.diagonal f ↔ P (pullback.diagonal f) :=
   Iff.rfl
 
-theorem RespectsIso.diagonal (hP : P.RespectsIso) : P.Diagonal.RespectsIso := by
+theorem RespectsIso.diagonal (hP : P.RespectsIso) : P.diagonal.RespectsIso := by
   constructor
   · introv H
     rwa [diagonal_iff, pullback.diagonal_comp, hP.cancel_left_is_iso, hP.cancel_left_is_iso, ←
@@ -385,7 +425,7 @@ theorem RespectsIso.diagonal (hP : P.RespectsIso) : P.Diagonal.RespectsIso := by
     
 
 theorem StableUnderComposition.diagonal (hP : StableUnderComposition P) (hP' : RespectsIso P)
-    (hP'' : StableUnderBaseChange P) : P.Diagonal.StableUnderComposition := by
+    (hP'' : StableUnderBaseChange P) : P.diagonal.StableUnderComposition := by
   introv X h₁ h₂
   rw [diagonal_iff, pullback.diagonal_comp]
   apply hP
@@ -396,8 +436,8 @@ theorem StableUnderComposition.diagonal (hP : StableUnderComposition P) (hP' : R
   assumption
 
 theorem StableUnderBaseChange.diagonal (hP : StableUnderBaseChange P) (hP' : RespectsIso P) :
-    P.Diagonal.StableUnderBaseChange :=
-  StableUnderBaseChange.mk hP'.Diagonal
+    P.diagonal.StableUnderBaseChange :=
+  StableUnderBaseChange.mk hP'.diagonal
     (by
       introv h
       rw [diagonal_iff, diagonal_pullback_fst, hP'.cancel_left_is_iso, hP'.cancel_right_is_iso]

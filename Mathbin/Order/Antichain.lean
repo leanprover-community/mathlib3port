@@ -23,6 +23,8 @@ relation is `G.adj` for `G : simple_graph α`, this corresponds to independent s
 
 open Function Set
 
+section General
+
 variable {α β : Type _} {r r₁ r₂ : α → α → Prop} {r' : β → β → Prop} {s t : Set α} {a : α}
 
 protected theorem Symmetric.compl (h : Symmetric r) : Symmetric (rᶜ) := fun x y hr hr' => hr <| h hr'
@@ -191,7 +193,7 @@ end Preorder
 /-! ### Strong antichains -/
 
 
-/-- An strong (upward) antichain is a set such that no two distinct elements are related to a common
+/-- A strong (upward) antichain is a set such that no two distinct elements are related to a common
 element. -/
 def IsStrongAntichain (r : α → α → Prop) (s : Set α) : Prop :=
   s.Pairwise fun a b => ∀ c, ¬r a c ∨ ¬r b c
@@ -241,4 +243,47 @@ end IsStrongAntichain
 
 theorem Set.Subsingleton.is_strong_antichain (hs : s.Subsingleton) (r : α → α → Prop) : IsStrongAntichain r s :=
   hs.Pairwise _
+
+end General
+
+/-! ### Weak antichains -/
+
+
+section Pi
+
+variable {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s t : Set (∀ i, α i)} {a b c : ∀ i, α i}
+
+-- mathport name: «expr ≺ »
+local infixl:50 " ≺ " => StrongLt
+
+/-- A weak antichain in `Π i, α i` is a set such that no two distinct elements are strongly less
+than each other. -/
+def IsWeakAntichain (s : Set (∀ i, α i)) : Prop :=
+  IsAntichain (· ≺ ·) s
+
+namespace IsWeakAntichain
+
+protected theorem subset (hs : IsWeakAntichain s) : t ⊆ s → IsWeakAntichain t :=
+  hs.Subset
+
+protected theorem eq (hs : IsWeakAntichain s) : a ∈ s → b ∈ s → a ≺ b → a = b :=
+  hs.Eq
+
+protected theorem insert (hs : IsWeakAntichain s) :
+    (∀ ⦃b⦄, b ∈ s → a ≠ b → ¬b ≺ a) → (∀ ⦃b⦄, b ∈ s → a ≠ b → ¬a ≺ b) → IsWeakAntichain (insert a s) :=
+  hs.insert
+
+end IsWeakAntichain
+
+theorem is_weak_antichain_insert :
+    IsWeakAntichain (insert a s) ↔ IsWeakAntichain s ∧ ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬a ≺ b ∧ ¬b ≺ a :=
+  is_antichain_insert
+
+protected theorem IsAntichain.is_weak_antichain (hs : IsAntichain (· ≤ ·) s) : IsWeakAntichain s :=
+  hs.mono fun a b => le_of_strong_lt
+
+theorem Set.Subsingleton.is_weak_antichain (hs : s.Subsingleton) : IsWeakAntichain s :=
+  hs.IsAntichain _
+
+end Pi
 

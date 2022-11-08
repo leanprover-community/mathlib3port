@@ -30,7 +30,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   let w i := if h : w' i = 0 then (1 : Units ℂ) else Units.mk0 (w' i) h
   have hw' : ∀ i : ι, (w i : ℂ) ^ -(1 / 2 : ℂ) ≠ 0 := by
     intro i hi
-    exact (w i).ne_zero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
+    exact (w i).NeZero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
   convert
     (weighted_sum_squares ℂ w').isometryBasisRepr
       ((Pi.basisFun ℂ ι).units_smul fun i => (is_unit_iff_ne_zero.2 <| hw' i).Unit)
@@ -58,8 +58,8 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   suffices v j * v j = w j ^ -(1 / 2 : ℂ) * w j ^ -(1 / 2 : ℂ) * w j * v j * v j by
     rw [this]
     ring
-  rw [← Complex.cpow_add _ _ (w j).ne_zero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul], Complex.cpow_neg_one,
-    inv_mul_cancel (w j).ne_zero, one_mul]
+  rw [← Complex.cpow_add _ _ (w j).NeZero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul], Complex.cpow_neg_one,
+    inv_mul_cancel (w j).NeZero, one_mul]
 
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
@@ -67,7 +67,7 @@ noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ
     Isometry (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) := by
   have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by
     ext i : 1
-    exact dif_neg (w i).ne_zero
+    exact dif_neg (w i).NeZero
   have := isometry_sum_squares (coe ∘ w)
   rw [hw1] at this
   exact this

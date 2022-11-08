@@ -35,15 +35,15 @@ universe u
 
 variable {C : Type u} [SmallCategory C] [HasProducts.{u} C]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«expr ⟶ »(X, yp))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«expr ⟶ »(X, yp))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual
 notion of a preorder/thin category which says that each homset is subsingleton; we show the latter
 rather than providing a `preorder C` instance.
 -/
-instance {X Y : C} : Subsingleton (X ⟶ Y) :=
+instance (priority := 100) : Quiver.IsThin C := fun X Y =>
   ⟨fun r s => by
     classical
     by_contra r_ne_s
@@ -55,7 +55,7 @@ instance {X Y : C} : Subsingleton (X ⟶ Y) :=
     apply not_le_of_lt (Cardinal.cantor α)
     let yp : C := ∏ fun f : md => Y
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«expr ⟶ »(X, yp))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«expr ⟶ »(X, yp))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · apply le_trans (Cardinal.power_le_power_right z)
       rw [Cardinal.power_def]
       apply le_of_eq

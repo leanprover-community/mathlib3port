@@ -392,12 +392,12 @@ unsafe def prove_le_fin' : expr → expr → expr → expr × expr → expr × e
 then `prove_eq_fin' n a b a' b'` proves `a = b`. -/
 unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr
   | n, a, b, (a', pa), (b', pb) =>
-    if expr.alpha_eqv a' b' then do
+    if a' == b' then do
       pure ((quote.1 @NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
     else do
       let (a', pa) ← reduce_fin' false n a (a', pa)
       let (b', pb) ← reduce_fin' false n b (b', pb)
-      guard (expr.alpha_eqv a' b')
+      guard (a' == b')
       pure ((quote.1 @NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
 
 /-- Given a function with the type of `prove_eq_fin'`, evaluates it with the given `a` and `b`. -/

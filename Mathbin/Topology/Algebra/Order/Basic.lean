@@ -3,14 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 -/
-import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Data.Set.Intervals.Pi
+import Mathbin.Data.Set.Pointwise.Interval
 import Mathbin.Order.Filter.Interval
 import Mathbin.Topology.Algebra.Field
 import Mathbin.Topology.Algebra.Order.LeftRight
-import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.Tfae
-import Mathbin.Tactic.Positivity
 
 /-!
 # Theory of topology on ordered spaces
@@ -1324,46 +1321,715 @@ In an `order_topology`, such neighborhoods can be characterized as the sets cont
 intervals to the right or to the left of `a`. We give now these characterizations. -/
 
 
--- NB: If you extend the list, append to the end please to avoid breaking the API
-/-- The following statements are equivalent:
-
-0. `s` is a neighborhood of `a` within `(a, +∞)`
-1. `s` is a neighborhood of `a` within `(a, b]`
-2. `s` is a neighborhood of `a` within `(a, b)`
-3. `s` includes `(a, u)` for some `u ∈ (a, b]`
-4. `s` includes `(a, u)` for some `u > a` -/
-theorem tfae_mem_nhds_within_Ioi {a b : α} (hab : a < b) (s : Set α) :
-    Tfae
-      [s ∈ 𝓝[>] a,-- 0 : `s` is a neighborhood of `a` within `(a, +∞)`
-          s ∈
-          𝓝[IocCat a b] a,-- 1 : `s` is a neighborhood of `a` within `(a, b]`
-          s ∈
-          𝓝[IooCat a b] a,-- 2 : `s` is a neighborhood of `a` within `(a, b)`
-        ∃ u ∈ IocCat a b, IooCat a u ⊆ s,-- 3 : `s` includes `(a, u)` for some `u ∈ (a, b]`
-        ∃ u ∈ IoiCat a, IooCat a u ⊆ s] :=
-  by
-  -- 4 : `s` includes `(a, u)` for some `u > a`
-  tfae_have 1 ↔ 2
-  · rw [nhds_within_Ioc_eq_nhds_within_Ioi hab]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The following statements are equivalent:\n\n0. `s` is a neighborhood of `a` within `(a, +∞)`\n1. `s` is a neighborhood of `a` within `(a, b]`\n2. `s` is a neighborhood of `a` within `(a, b)`\n3. `s` includes `(a, u)` for some `u ∈ (a, b]`\n4. `s` includes `(a, u)` for some `u > a` -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `tfae_mem_nhds_within_Ioi [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`a `b] [":" `α] "}")
+        (Term.explicitBinder "(" [`hab] [":" («term_<_» `a "<" `b)] [] ")")
+        (Term.explicitBinder "(" [`s] [":" (Term.app `Set [`α])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(«term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within.gt "𝓝[>] " `a))
+            ","
+            («term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `IocCat [`a `b]) "] " `a))
+            ","
+            («term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `IooCat [`a `b]) "] " `a))
+            ","
+            (Std.ExtendedBinder.«term∃__,_»
+             "∃"
+             (Lean.binderIdent `u)
+             («binderTerm∈_» "∈" (Term.app `IocCat [`a `b]))
+             ","
+             («term_⊆_» (Term.app `IooCat [`a `u]) "⊆" `s))
+            ","
+            (Std.ExtendedBinder.«term∃__,_»
+             "∃"
+             (Lean.binderIdent `u)
+             («binderTerm∈_» "∈" (Term.app `IoiCat [`a]))
+             ","
+             («term_⊆_» (Term.app `IooCat [`a `u]) "⊆" `s))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Ioc_eq_nhds_within_Ioi [`hab]))] "]")
+               [])
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Ioo_eq_nhds_within_Ioi [`hab]))] "]")
+               [])
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [(Term.anonymousCtor "⟨" [`u "," `umem "," `hu] "⟩")]
+              []
+              "=>"
+              (Term.anonymousCtor "⟨" [`u "," (Term.proj `umem "." (fieldIdx "1")) "," `hu] "⟩"))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hau)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hu)])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.app
+                `mem_of_superset
+                [(Term.app `Ioo_mem_nhds_within_Ioi [(Term.anonymousCtor "⟨" [(Term.app `le_refl [`a]) "," `hau] "⟩")])
+                 `hu]))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`h]) [])
+             (group
+              (Std.Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget
+                 []
+                 (Term.app (Term.proj `mem_nhds_within_iff_exists_mem_nhds_inter "." (fieldIdx "1")) [`h]))]
+               ["with"
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `va)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv)])
+                      [])]
+                    "⟩")])
+                 [])])
+              [])
+             (group
+              (Std.Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] (Term.app `exists_Ico_subset_of_mem_nhds' [`va `hab]))]
+               ["with"
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `au)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hu)])
+                      [])]
+                    "⟩")])
+                 [])])
+              [])
+             (group
+              (Tactic.refine'
+               "refine'"
+               (Term.anonymousCtor
+                "⟨"
+                [`u "," `au "," (Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]
+                "⟩"))
+              [])
+             (group
+              (Tactic.refine'
+               "refine'"
+               (Term.app
+                `hv
+                [(Term.anonymousCtor
+                  "⟨"
+                  [(Term.app
+                    `hu
+                    [(Term.anonymousCtor
+                      "⟨"
+                      [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+                      "⟩")])
+                   ","
+                   (Term.hole "_")]
+                  "⟩")]))
+              [])
+             (group (Tactic.exact "exact" (Term.proj `hx "." (fieldIdx "1"))) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Ioc_eq_nhds_within_Ioi [`hab]))] "]")
+              [])
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Ioo_eq_nhds_within_Ioi [`hab]))] "]")
+              [])
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.anonymousCtor "⟨" [`u "," `umem "," `hu] "⟩")]
+             []
+             "=>"
+             (Term.anonymousCtor "⟨" [`u "," (Term.proj `umem "." (fieldIdx "1")) "," `hu] "⟩"))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hau)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hu)])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.app
+               `mem_of_superset
+               [(Term.app `Ioo_mem_nhds_within_Ioi [(Term.anonymousCtor "⟨" [(Term.app `le_refl [`a]) "," `hau] "⟩")])
+                `hu]))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`h]) [])
+            (group
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget
+                []
+                (Term.app (Term.proj `mem_nhds_within_iff_exists_mem_nhds_inter "." (fieldIdx "1")) [`h]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `va)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv)])
+                     [])]
+                   "⟩")])
+                [])])
+             [])
+            (group
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] (Term.app `exists_Ico_subset_of_mem_nhds' [`va `hab]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `au)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hu)])
+                     [])]
+                   "⟩")])
+                [])])
+             [])
+            (group
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor
+               "⟨"
+               [`u "," `au "," (Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]
+               "⟩"))
+             [])
+            (group
+             (Tactic.refine'
+              "refine'"
+              (Term.app
+               `hv
+               [(Term.anonymousCtor
+                 "⟨"
+                 [(Term.app
+                   `hu
+                   [(Term.anonymousCtor
+                     "⟨"
+                     [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+                     "⟩")])
+                  ","
+                  (Term.hole "_")]
+                 "⟩")]))
+             [])
+            (group (Tactic.exact "exact" (Term.proj `hx "." (fieldIdx "1"))) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.intro "intro" [`h]) [])
+        (group
+         (Std.Tactic.rcases
+          "rcases"
+          [(Tactic.casesTarget
+            []
+            (Term.app (Term.proj `mem_nhds_within_iff_exists_mem_nhds_inter "." (fieldIdx "1")) [`h]))]
+          ["with"
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed
+             [(Std.Tactic.RCases.rcasesPat.tuple
+               "⟨"
+               [(Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `va)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv)])
+                 [])]
+               "⟩")])
+            [])])
+         [])
+        (group
+         (Std.Tactic.rcases
+          "rcases"
+          [(Tactic.casesTarget [] (Term.app `exists_Ico_subset_of_mem_nhds' [`va `hab]))]
+          ["with"
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed
+             [(Std.Tactic.RCases.rcasesPat.tuple
+               "⟨"
+               [(Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `au)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hu)])
+                 [])]
+               "⟩")])
+            [])])
+         [])
+        (group
+         (Tactic.refine'
+          "refine'"
+          (Term.anonymousCtor
+           "⟨"
+           [`u "," `au "," (Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]
+           "⟩"))
+         [])
+        (group
+         (Tactic.refine'
+          "refine'"
+          (Term.app
+           `hv
+           [(Term.anonymousCtor
+             "⟨"
+             [(Term.app
+               `hu
+               [(Term.anonymousCtor
+                 "⟨"
+                 [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+                 "⟩")])
+              ","
+              (Term.hole "_")]
+             "⟩")]))
+         [])
+        (group (Tactic.exact "exact" (Term.proj `hx "." (fieldIdx "1"))) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.proj `hx "." (fieldIdx "1")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `hx "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.refine'
+       "refine'"
+       (Term.app
+        `hv
+        [(Term.anonymousCtor
+          "⟨"
+          [(Term.app
+            `hu
+            [(Term.anonymousCtor
+              "⟨"
+              [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+              "⟩")])
+           ","
+           (Term.hole "_")]
+          "⟩")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `hv
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.app
+           `hu
+           [(Term.anonymousCtor
+             "⟨"
+             [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+             "⟩")])
+          ","
+          (Term.hole "_")]
+         "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app
+         `hu
+         [(Term.anonymousCtor
+           "⟨"
+           [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+           "⟩")])
+        ","
+        (Term.hole "_")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `hu
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+         "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))]) "," (Term.proj `hx "." (fieldIdx "2"))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `hx "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `le_of_lt [(Term.proj `hx "." (fieldIdx "1"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `hx "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `le_of_lt
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hu
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.refine'
+       "refine'"
+       (Term.anonymousCtor "⟨" [`u "," `au "," (Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))] "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [`u "," `au "," (Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `au
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rcases
+       "rcases"
+       [(Tactic.casesTarget [] (Term.app `exists_Ico_subset_of_mem_nhds' [`va `hab]))]
+       ["with"
+        (Std.Tactic.RCases.rcasesPatLo
+         (Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)]) [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `au)]) [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hu)])
+              [])]
+            "⟩")])
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `exists_Ico_subset_of_mem_nhds' [`va `hab])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hab
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `va
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `exists_Ico_subset_of_mem_nhds'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rcases
+       "rcases"
+       [(Tactic.casesTarget
+         []
+         (Term.app (Term.proj `mem_nhds_within_iff_exists_mem_nhds_inter "." (fieldIdx "1")) [`h]))]
+       ["with"
+        (Std.Tactic.RCases.rcasesPatLo
+         (Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)]) [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `va)]) [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv)])
+              [])]
+            "⟩")])
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `mem_nhds_within_iff_exists_mem_nhds_inter "." (fieldIdx "1")) [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `mem_nhds_within_iff_exists_mem_nhds_inter "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `mem_nhds_within_iff_exists_mem_nhds_inter
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.intro "intro" [`h])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The following statements are equivalent:
     
-  tfae_have 1 ↔ 3
-  · rw [nhds_within_Ioo_eq_nhds_within_Ioi hab]
-    
-  tfae_have 4 → 5
-  exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
-  tfae_have 5 → 1
-  · rintro ⟨u, hau, hu⟩
-    exact mem_of_superset (Ioo_mem_nhds_within_Ioi ⟨le_refl a, hau⟩) hu
-    
-  tfae_have 1 → 4
-  · intro h
-    rcases mem_nhds_within_iff_exists_mem_nhds_inter.1 h with ⟨v, va, hv⟩
-    rcases exists_Ico_subset_of_mem_nhds' va hab with ⟨u, au, hu⟩
-    refine' ⟨u, au, fun x hx => _⟩
-    refine' hv ⟨hu ⟨le_of_lt hx.1, hx.2⟩, _⟩
-    exact hx.1
-    
-  tfae_finish
+    0. `s` is a neighborhood of `a` within `(a, +∞)`
+    1. `s` is a neighborhood of `a` within `(a, b]`
+    2. `s` is a neighborhood of `a` within `(a, b)`
+    3. `s` includes `(a, u)` for some `u ∈ (a, b]`
+    4. `s` includes `(a, u)` for some `u > a` -/
+  theorem
+    tfae_mem_nhds_within_Ioi
+    { a b : α } ( hab : a < b ) ( s : Set α )
+      :
+        Tfae
+          [
+            s ∈ 𝓝[>] a
+              ,
+              s ∈ 𝓝[ IocCat a b ] a
+              ,
+              s ∈ 𝓝[ IooCat a b ] a
+              ,
+              ∃ u ∈ IocCat a b , IooCat a u ⊆ s
+              ,
+              ∃ u ∈ IoiCat a , IooCat a u ⊆ s
+            ]
+    :=
+      by
+        tfae_have 1 ↔ 2
+          · rw [ nhds_within_Ioc_eq_nhds_within_Ioi hab ]
+          tfae_have 1 ↔ 3
+          · rw [ nhds_within_Ioo_eq_nhds_within_Ioi hab ]
+          tfae_have 4 → 5
+          exact fun ⟨ u , umem , hu ⟩ => ⟨ u , umem . 1 , hu ⟩
+          tfae_have 5 → 1
+          · rintro ⟨ u , hau , hu ⟩ exact mem_of_superset Ioo_mem_nhds_within_Ioi ⟨ le_refl a , hau ⟩ hu
+          tfae_have 1 → 4
+          ·
+            intro h
+              rcases mem_nhds_within_iff_exists_mem_nhds_inter . 1 h with ⟨ v , va , hv ⟩
+              rcases exists_Ico_subset_of_mem_nhds' va hab with ⟨ u , au , hu ⟩
+              refine' ⟨ u , au , fun x hx => _ ⟩
+              refine' hv ⟨ hu ⟨ le_of_lt hx . 1 , hx . 2 ⟩ , _ ⟩
+              exact hx . 1
+          tfae_finish
 
 theorem mem_nhds_within_Ioi_iff_exists_mem_Ioc_Ioo_subset {a u' : α} {s : Set α} (hu' : a < u') :
     s ∈ 𝓝[>] a ↔ ∃ u ∈ IocCat a u', IooCat a u ⊆ s :=
@@ -1440,39 +2106,495 @@ theorem mem_nhds_within_Iio_iff_exists_Ico_subset [NoMinOrder α] [DenselyOrdere
   have : of_dual ⁻¹' s ∈ 𝓝[>] to_dual a ↔ _ := mem_nhds_within_Ioi_iff_exists_Ioc_subset
   simpa only [OrderDual.exists, exists_prop, dual_Ioc] using this
 
-/-- The following statements are equivalent:
-
-0. `s` is a neighborhood of `a` within `[a, +∞)`
-1. `s` is a neighborhood of `a` within `[a, b]`
-2. `s` is a neighborhood of `a` within `[a, b)`
-3. `s` includes `[a, u)` for some `u ∈ (a, b]`
-4. `s` includes `[a, u)` for some `u > a` -/
-theorem tfae_mem_nhds_within_Ici {a b : α} (hab : a < b) (s : Set α) :
-    Tfae
-      [s ∈ 𝓝[≥] a,-- 0 : `s` is a neighborhood of `a` within `[a, +∞)`
-          s ∈
-          𝓝[IccCat a b] a,-- 1 : `s` is a neighborhood of `a` within `[a, b]`
-          s ∈
-          𝓝[IcoCat a b] a,-- 2 : `s` is a neighborhood of `a` within `[a, b)`
-        ∃ u ∈ IocCat a b, IcoCat a u ⊆ s,-- 3 : `s` includes `[a, u)` for some `u ∈ (a, b]`
-        ∃ u ∈ IoiCat a, IcoCat a u ⊆ s] :=
-  by
-  -- 4 : `s` includes `[a, u)` for some `u > a`
-  tfae_have 1 ↔ 2
-  · rw [nhds_within_Icc_eq_nhds_within_Ici hab]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The following statements are equivalent:\n\n0. `s` is a neighborhood of `a` within `[a, +∞)`\n1. `s` is a neighborhood of `a` within `[a, b]`\n2. `s` is a neighborhood of `a` within `[a, b)`\n3. `s` includes `[a, u)` for some `u ∈ (a, b]`\n4. `s` includes `[a, u)` for some `u > a` -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `tfae_mem_nhds_within_Ici [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`a `b] [":" `α] "}")
+        (Term.explicitBinder "(" [`hab] [":" («term_<_» `a "<" `b)] [] ")")
+        (Term.explicitBinder "(" [`s] [":" (Term.app `Set [`α])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(«term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within.ge "𝓝[≥] " `a))
+            ","
+            («term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `IccCat [`a `b]) "] " `a))
+            ","
+            («term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `IcoCat [`a `b]) "] " `a))
+            ","
+            (Std.ExtendedBinder.«term∃__,_»
+             "∃"
+             (Lean.binderIdent `u)
+             («binderTerm∈_» "∈" (Term.app `IocCat [`a `b]))
+             ","
+             («term_⊆_» (Term.app `IcoCat [`a `u]) "⊆" `s))
+            ","
+            (Std.ExtendedBinder.«term∃__,_»
+             "∃"
+             (Lean.binderIdent `u)
+             («binderTerm∈_» "∈" (Term.app `IoiCat [`a]))
+             ","
+             («term_⊆_» (Term.app `IcoCat [`a `u]) "⊆" `s))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Icc_eq_nhds_within_Ici [`hab]))] "]")
+               [])
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Ico_eq_nhds_within_Ici [`hab]))] "]")
+               [])
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.proj (Term.app `nhds_within_Ici_basis' [(Term.anonymousCtor "⟨" [`b "," `hab] "⟩")]) "." `mem_iff))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [(Term.anonymousCtor "⟨" [`u "," `umem "," `hu] "⟩")]
+              []
+              "=>"
+              (Term.anonymousCtor "⟨" [`u "," (Term.proj `umem "." (fieldIdx "1")) "," `hu] "⟩"))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hua)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hus)])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app `min [`u `b])
+                 ","
+                 (Term.anonymousCtor
+                  "⟨"
+                  [(Term.app `lt_min [`hua `hab]) "," (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])]
+                  "⟩")
+                 ","
+                 (Term.app
+                  (Term.proj
+                   («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+                   "."
+                   `trans)
+                  [`hus])]
+                "⟩"))
+              [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Icc_eq_nhds_within_Ici [`hab]))] "]")
+              [])
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `nhds_within_Ico_eq_nhds_within_Ici [`hab]))] "]")
+              [])
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.proj (Term.app `nhds_within_Ici_basis' [(Term.anonymousCtor "⟨" [`b "," `hab] "⟩")]) "." `mem_iff))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.anonymousCtor "⟨" [`u "," `umem "," `hu] "⟩")]
+             []
+             "=>"
+             (Term.anonymousCtor "⟨" [`u "," (Term.proj `umem "." (fieldIdx "1")) "," `hu] "⟩"))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hua)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hus)])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.app `min [`u `b])
+                ","
+                (Term.anonymousCtor
+                 "⟨"
+                 [(Term.app `lt_min [`hua `hab]) "," (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])]
+                 "⟩")
+                ","
+                (Term.app
+                 (Term.proj
+                  («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+                  "."
+                  `trans)
+                 [`hus])]
+               "⟩"))
+             [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group
+         (Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)]) [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hua)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hus)])
+               [])]
+             "⟩"))]
+          [])
+         [])
+        (group
+         (Tactic.exact
+          "exact"
+          (Term.anonymousCtor
+           "⟨"
+           [(Term.app `min [`u `b])
+            ","
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.app `lt_min [`hua `hab]) "," (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])]
+             "⟩")
+            ","
+            (Term.app
+             (Term.proj
+              («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+              "."
+              `trans)
+             [`hus])]
+           "⟩"))
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.app `min [`u `b])
+         ","
+         (Term.anonymousCtor
+          "⟨"
+          [(Term.app `lt_min [`hua `hab]) "," (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])]
+          "⟩")
+         ","
+         (Term.app
+          (Term.proj
+           («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+           "."
+           `trans)
+          [`hus])]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `min [`u `b])
+        ","
+        (Term.anonymousCtor
+         "⟨"
+         [(Term.app `lt_min [`hua `hab]) "," (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])]
+         "⟩")
+        ","
+        (Term.app
+         (Term.proj
+          («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+          "."
+          `trans)
+         [`hus])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+        "."
+        `trans)
+       [`hus])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hus
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+       "."
+       `trans)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      («term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `min_le_left
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `Ico_subset_Ico_right
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(«term_<|_» `Ico_subset_Ico_right "<|" (Term.app `min_le_left [(Term.hole "_") (Term.hole "_")])) []]
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `lt_min [`hua `hab]) "," (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `min_le_right [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `min_le_right
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `lt_min [`hua `hab])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hab
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hua
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `lt_min
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `min [`u `b])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `b
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `min
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rintro
+       "rintro"
+       [(Std.Tactic.RCases.rintroPat.one
+         (Std.Tactic.RCases.rcasesPat.tuple
+          "⟨"
+          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `u)]) [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hua)]) [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hus)]) [])]
+          "⟩"))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "4"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The following statements are equivalent:
     
-  tfae_have 1 ↔ 3
-  · rw [nhds_within_Ico_eq_nhds_within_Ici hab]
-    
-  tfae_have 1 ↔ 5
-  exact (nhds_within_Ici_basis' ⟨b, hab⟩).mem_iff
-  tfae_have 4 → 5
-  exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
-  tfae_have 5 → 4
-  · rintro ⟨u, hua, hus⟩
-    exact ⟨min u b, ⟨lt_min hua hab, min_le_right _ _⟩, (Ico_subset_Ico_right <| min_le_left _ _).trans hus⟩
-    
-  tfae_finish
+    0. `s` is a neighborhood of `a` within `[a, +∞)`
+    1. `s` is a neighborhood of `a` within `[a, b]`
+    2. `s` is a neighborhood of `a` within `[a, b)`
+    3. `s` includes `[a, u)` for some `u ∈ (a, b]`
+    4. `s` includes `[a, u)` for some `u > a` -/
+  theorem
+    tfae_mem_nhds_within_Ici
+    { a b : α } ( hab : a < b ) ( s : Set α )
+      :
+        Tfae
+          [
+            s ∈ 𝓝[≥] a
+              ,
+              s ∈ 𝓝[ IccCat a b ] a
+              ,
+              s ∈ 𝓝[ IcoCat a b ] a
+              ,
+              ∃ u ∈ IocCat a b , IcoCat a u ⊆ s
+              ,
+              ∃ u ∈ IoiCat a , IcoCat a u ⊆ s
+            ]
+    :=
+      by
+        tfae_have 1 ↔ 2
+          · rw [ nhds_within_Icc_eq_nhds_within_Ici hab ]
+          tfae_have 1 ↔ 3
+          · rw [ nhds_within_Ico_eq_nhds_within_Ici hab ]
+          tfae_have 1 ↔ 5
+          exact nhds_within_Ici_basis' ⟨ b , hab ⟩ . mem_iff
+          tfae_have 4 → 5
+          exact fun ⟨ u , umem , hu ⟩ => ⟨ u , umem . 1 , hu ⟩
+          tfae_have 5 → 4
+          ·
+            rintro ⟨ u , hua , hus ⟩
+              exact
+                ⟨
+                  min u b , ⟨ lt_min hua hab , min_le_right _ _ ⟩ , Ico_subset_Ico_right <| min_le_left _ _ . trans hus
+                  ⟩
+          tfae_finish
 
 theorem mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset {a u' : α} {s : Set α} (hu' : a < u') :
     s ∈ 𝓝[≥] a ↔ ∃ u ∈ IocCat a u', IcoCat a u ⊆ s :=
@@ -1563,9 +2685,9 @@ variable [TopologicalSpace α] [LinearOrderedAddCommGroup α] [OrderTopology α]
 
 variable {l : Filter β} {f g : β → α}
 
-theorem nhds_eq_infi_abs_sub (a : α) : 𝓝 a = ⨅ r > 0, 𝓟 { b | abs (a - b) < r } := by
+theorem nhds_eq_infi_abs_sub (a : α) : 𝓝 a = ⨅ r > 0, 𝓟 { b | |a - b| < r } := by
   simp only [le_antisymm_iff, nhds_eq_order, le_inf_iff, le_infi_iff, le_principal_iff, mem_Ioi, mem_Iio,
-    abs_sub_lt_iff, @sub_lt_iff_lt_add _ _ _ _ _ _ a, @sub_lt _ _ _ _ a, set_of_and]
+    abs_sub_lt_iff, @sub_lt_iff_lt_add _ _ _ _ _ _ a, @sub_lt_comm _ _ _ _ a, set_of_and]
   refine' ⟨_, _, _⟩
   · intro ε ε0
     exact
@@ -1580,7 +2702,7 @@ theorem nhds_eq_infi_abs_sub (a : α) : 𝓝 a = ⨅ r > 0, 𝓟 { b | abs (a - 
     
 
 theorem order_topology_of_nhds_abs {α : Type _} [TopologicalSpace α] [LinearOrderedAddCommGroup α]
-    (h_nhds : ∀ a : α, 𝓝 a = ⨅ r > 0, 𝓟 { b | abs (a - b) < r }) : OrderTopology α := by
+    (h_nhds : ∀ a : α, 𝓝 a = ⨅ r > 0, 𝓟 { b | |a - b| < r }) : OrderTopology α := by
   refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
   rw [h_nhds]
   letI := Preorder.topology α
@@ -1588,9 +2710,9 @@ theorem order_topology_of_nhds_abs {α : Type _} [TopologicalSpace α] [LinearOr
   exact (nhds_eq_infi_abs_sub a).symm
 
 theorem LinearOrderedAddCommGroup.tendsto_nhds {x : Filter β} {a : α} :
-    Tendsto f x (𝓝 a) ↔ ∀ ε > (0 : α), ∀ᶠ b in x, abs (f b - a) < ε := by simp [nhds_eq_infi_abs_sub, abs_sub_comm a]
+    Tendsto f x (𝓝 a) ↔ ∀ ε > (0 : α), ∀ᶠ b in x, |f b - a| < ε := by simp [nhds_eq_infi_abs_sub, abs_sub_comm a]
 
-theorem eventually_abs_sub_lt (a : α) {ε : α} (hε : 0 < ε) : ∀ᶠ x in 𝓝 a, abs (x - a) < ε :=
+theorem eventually_abs_sub_lt (a : α) {ε : α} (hε : 0 < ε) : ∀ᶠ x in 𝓝 a, |x - a| < ε :=
   (nhds_eq_infi_abs_sub a).symm ▸
     mem_infi_of_mem ε (mem_infi_of_mem hε <| by simp only [abs_sub_comm, mem_principal_self])
 
@@ -1603,20 +2725,20 @@ instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : Top
     rcases dense_or_discrete 0 ε with (⟨δ, δ0, δε⟩ | ⟨h₁, h₂⟩)
     · -- If there exists `δ ∈ (0, ε)`, then we choose `δ`-nhd of `a` and `(ε-δ)`-nhd of `b`
       filter_upwards [(eventually_abs_sub_lt a δ0).prod_nhds (eventually_abs_sub_lt b (sub_pos.2 δε))]
-      rintro ⟨x, y⟩ ⟨hx : abs (x - a) < δ, hy : abs (y - b) < ε - δ⟩
+      rintro ⟨x, y⟩ ⟨hx : |x - a| < δ, hy : |y - b| < ε - δ⟩
       rw [add_sub_add_comm]
       calc
-        abs (x - a + (y - b)) ≤ abs (x - a) + abs (y - b) := abs_add _ _
+        |x - a + (y - b)| ≤ |x - a| + |y - b| := abs_add _ _
         _ < δ + (ε - δ) := add_lt_add hx hy
         _ = ε := add_sub_cancel'_right _ _
         
       
     · -- Otherewise `ε`-nhd of each point `a` is `{a}`
-      have hε : ∀ {x y}, abs (x - y) < ε → x = y := by
+      have hε : ∀ {x y}, |x - y| < ε → x = y := by
         intro x y h
         simpa [sub_eq_zero] using h₂ _ h
       filter_upwards [(eventually_abs_sub_lt a ε0).prod_nhds (eventually_abs_sub_lt b ε0)]
-      rintro ⟨x, y⟩ ⟨hx : abs (x - a) < ε, hy : abs (y - b) < ε⟩
+      rintro ⟨x, y⟩ ⟨hx : |x - a| < ε, hy : |y - b| < ε⟩
       simpa [hε hx, hε hy]
       
   continuous_neg :=
@@ -1629,13 +2751,13 @@ theorem continuous_abs : Continuous (abs : α → α) :=
   continuous_id.max continuous_neg
 
 theorem Filter.Tendsto.abs {f : β → α} {a : α} {l : Filter β} (h : Tendsto f l (𝓝 a)) :
-    Tendsto (fun x => abs (f x)) l (𝓝 (abs a)) :=
+    Tendsto (fun x => |f x|) l (𝓝 (|a|)) :=
   (continuous_abs.Tendsto _).comp h
 
 theorem tendsto_zero_iff_abs_tendsto_zero (f : β → α) {l : Filter β} : Tendsto f l (𝓝 0) ↔ Tendsto (abs ∘ f) l (𝓝 0) :=
   by
-  refine' ⟨fun h => (abs_zero : abs (0 : α) = 0) ▸ h.abs, fun h => _⟩
-  have : tendsto (fun a => -abs (f a)) l (𝓝 0) := (neg_zero : -(0 : α) = 0) ▸ h.neg
+  refine' ⟨fun h => (abs_zero : |(0 : α)| = 0) ▸ h.abs, fun h => _⟩
+  have : tendsto (fun a => -|f a|) l (𝓝 0) := (neg_zero : -(0 : α) = 0) ▸ h.neg
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le this h (fun x => neg_abs_le_self <| f x) fun x => le_abs_self <| f x
 
 theorem nhds_basis_Ioo_pos [NoMinOrder α] [NoMaxOrder α] (a : α) :
@@ -1646,7 +2768,7 @@ theorem nhds_basis_Ioo_pos [NoMinOrder α] [NoMaxOrder α] (a : α) :
       refine' ⟨min (a - l) (u - a), by apply lt_min <;> rwa [sub_pos], _⟩
       rintro x ⟨hx, hx'⟩
       apply h'
-      rw [sub_lt, lt_min_iff, sub_lt_sub_iff_left] at hx
+      rw [sub_lt_comm, lt_min_iff, sub_lt_sub_iff_left] at hx
       rw [← sub_lt_iff_lt_add', lt_min_iff, sub_lt_sub_iff_right] at hx'
       exact ⟨hx.1, hx'.2⟩
       
@@ -1655,17 +2777,17 @@ theorem nhds_basis_Ioo_pos [NoMinOrder α] [NoMaxOrder α] (a : α) :
       ⟩
 
 theorem nhds_basis_abs_sub_lt [NoMinOrder α] [NoMaxOrder α] (a : α) :
-    (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | abs (b - a) < ε } := by
+    (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | |b - a| < ε } := by
   convert nhds_basis_Ioo_pos a
   · ext ε
-    change abs (x - a) < ε ↔ a - ε < x ∧ x < a + ε
+    change |x - a| < ε ↔ a - ε < x ∧ x < a + ε
     simp [abs_lt, sub_lt_iff_lt_add, add_comm ε a, add_comm x ε]
     
 
 variable (α)
 
 theorem nhds_basis_zero_abs_sub_lt [NoMinOrder α] [NoMaxOrder α] :
-    (𝓝 (0 : α)).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | abs b < ε } := by
+    (𝓝 (0 : α)).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | |b| < ε } := by
   simpa using nhds_basis_abs_sub_lt (0 : α)
 
 variable {α}
@@ -1687,16 +2809,16 @@ section
 
 variable [TopologicalSpace β] {b : β} {a : α} {s : Set β}
 
-theorem Continuous.abs (h : Continuous f) : Continuous fun x => abs (f x) :=
+theorem Continuous.abs (h : Continuous f) : Continuous fun x => |f x| :=
   continuous_abs.comp h
 
-theorem ContinuousAt.abs (h : ContinuousAt f b) : ContinuousAt (fun x => abs (f x)) b :=
+theorem ContinuousAt.abs (h : ContinuousAt f b) : ContinuousAt (fun x => |f x|) b :=
   h.abs
 
-theorem ContinuousWithinAt.abs (h : ContinuousWithinAt f s b) : ContinuousWithinAt (fun x => abs (f x)) s b :=
+theorem ContinuousWithinAt.abs (h : ContinuousWithinAt f s b) : ContinuousWithinAt (fun x => |f x|) s b :=
   h.abs
 
-theorem ContinuousOn.abs (h : ContinuousOn f s) : ContinuousOn (fun x => abs (f x)) s := fun x hx => (h x hx).abs
+theorem ContinuousOn.abs (h : ContinuousOn f s) : ContinuousOn (fun x => |f x|) s := fun x hx => (h x hx).abs
 
 theorem tendsto_abs_nhds_within_zero : Tendsto (abs : α → α) (𝓝[≠] 0) (𝓝[>] 0) :=
   (continuous_abs.tendsto' (0 : α) 0 abs_zero).inf <| tendsto_principal_principal.2 fun x => abs_pos.2
@@ -1742,20 +2864,18 @@ variable {l : Filter β} {f g : β → α}
 
 section continuous_mul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 := by
-  have hx : 0 < 2 * (1 + abs x) := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  have hx : 0 < 2 * (1 + |x|) := by positivity
   rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iff (nhds_basis_zero_abs_sub_lt α)]
-  refine' fun ε ε_pos => ⟨(ε / (2 * (1 + abs x)), 1), ⟨div_pos ε_pos hx, zero_lt_one⟩, _⟩
-  suffices ∀ a b : α, abs a < ε / (2 * (1 + abs x)) → abs (b - x) < 1 → abs a * abs b < ε by
+  refine' fun ε ε_pos => ⟨(ε / (2 * (1 + |x|)), 1), ⟨div_pos ε_pos hx, zero_lt_one⟩, _⟩
+  suffices ∀ a b : α, |a| < ε / (2 * (1 + |x|)) → |b - x| < 1 → |a| * |b| < ε by
     simpa only [and_imp, Prod.forall, mem_prod, ← abs_mul]
   intro a b h h'
   refine' lt_of_le_of_lt (mul_le_mul_of_nonneg_left _ (abs_nonneg a)) ((lt_div_iff hx).1 h)
   calc
-    abs b = abs (b - x + x) := by rw [sub_add_cancel b x]
-    _ ≤ abs (b - x) + abs x := abs_add (b - x) x
-    _ ≤ 2 * (1 + abs x) := by linarith
+    |b| = |b - x + x| := by rw [sub_add_cancel b x]
+    _ ≤ |b - x| + |x| := abs_add (b - x) x
+    _ ≤ 2 * (1 + |x|) := by linarith
     
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1766,34 +2886,30 @@ theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry ((· * ·) : α �
   obtain ⟨U, hU, V, hV, h⟩ := this
   exact ⟨V, hV, U, hU, fun y hy => (mul_comm y.2 y.1 ▸ h (⟨hy.2, hy.1⟩ : Prod.mk y.2 y.1 ∈ U ×ˢ V) : y.1 * y.2 ∈ s)⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1) := by
-  have hx₀' : 0 < abs x₀ := abs_pos.2 hx₀
+  have hx₀' : 0 < |x₀| := abs_pos.2 hx₀
   refine' Filter.ext fun t => _
   simp only [exists_prop, set_of_subset_set_of, (nhds_basis_abs_sub_lt x₀).mem_iff,
     (nhds_basis_abs_sub_lt (1 : α)).mem_iff, Filter.mem_map']
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨i, hi, hit⟩ := h
-    refine' ⟨i / abs x₀, div_pos hi (abs_pos.2 hx₀), fun x hx => hit _⟩
+    refine' ⟨i / |x₀|, div_pos hi (abs_pos.2 hx₀), fun x hx => hit _⟩
     calc
-      abs (x₀ * x - x₀) = abs (x₀ * (x - 1)) := congr_arg abs (by ring_nf)
-      _ = abs x₀ * abs (x - 1) := abs_mul x₀ (x - 1)
-      _ < abs x₀ * (i / abs x₀) :=
-        mul_lt_mul' le_rfl hx
-          (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-          (abs_pos.2 hx₀)
-      _ = abs x₀ * i / abs x₀ := by ring
+      |x₀ * x - x₀| = |x₀ * (x - 1)| := congr_arg abs (by ring_nf)
+      _ = |x₀| * |x - 1| := abs_mul x₀ (x - 1)
+      _ < |x₀| * (i / |x₀|) := mul_lt_mul' le_rfl hx (by positivity) (abs_pos.2 hx₀)
+      _ = |x₀| * i / |x₀| := by ring
       _ = i := mul_div_cancel_left i fun h => hx₀ (abs_eq_zero.1 h)
       
     
   · obtain ⟨i, hi, hit⟩ := h
-    refine' ⟨i * abs x₀, mul_pos hi (abs_pos.2 hx₀), fun x hx => _⟩
-    have : abs (x / x₀ - 1) < i
+    refine' ⟨i * |x₀|, mul_pos hi (abs_pos.2 hx₀), fun x hx => _⟩
+    have : |x / x₀ - 1| < i
     calc
-      abs (x / x₀ - 1) = abs (x / x₀ - x₀ / x₀) := by rw [div_self hx₀]
-      _ = abs ((x - x₀) / x₀) := congr_arg abs (sub_div x x₀ x₀).symm
-      _ = abs (x - x₀) / abs x₀ := abs_div (x - x₀) x₀
-      _ < i * abs x₀ / abs x₀ := div_lt_div_of_lt (abs_pos.2 hx₀) hx
+      |x / x₀ - 1| = |x / x₀ - x₀ / x₀| := by rw [div_self hx₀]
+      _ = |(x - x₀) / x₀| := congr_arg abs (sub_div x x₀ x₀).symm
+      _ = |x - x₀| / |x₀| := abs_div (x - x₀) x₀
+      _ < i * |x₀| / |x₀| := div_lt_div_of_lt (abs_pos.2 hx₀) hx
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
       
     specialize hit (x / x₀) this
@@ -1803,7 +2919,6 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
 theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1) := by
   simp_rw [mul_comm _ x₀, nhds_eq_map_mul_left_nhds_one hx₀]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 := by
   rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iff
       (nhds_basis_Ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
@@ -1818,9 +2933,7 @@ theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α 
   refine' ⟨lt_of_le_of_lt _ (mul_lt_mul'' ha hb hε' hε'), lt_of_lt_of_le (mul_lt_mul'' ha' hb' ha0 hb0) _⟩
   · calc
       1 - ε = 1 - ε / 2 - ε / 2 := by ring_nf
-      _ ≤ 1 - ε / 2 - ε / 2 + ε / 2 * (ε / 2) :=
-        le_add_of_nonneg_right
-          (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+      _ ≤ 1 - ε / 2 - ε / 2 + ε / 2 * (ε / 2) := le_add_of_nonneg_right (by positivity)
       _ = (1 - ε / 2) * (1 - ε / 2) := by ring_nf
       _ ≤ (1 - ε / 4) * (1 - ε / 4) := mul_le_mul (by linarith) (by linarith) (by linarith) hε'
       
@@ -1919,12 +3032,10 @@ theorem Filter.Tendsto.mul_at_bot {C : α} (hC : 0 < C) (hf : Tendsto f l (𝓝 
 theorem Filter.Tendsto.neg_mul_at_bot {C : α} (hC : C < 0) (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x * g x) l atTop := by simpa only [mul_comm] using hg.at_bot_mul_neg hC hf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- The function `x ↦ x⁻¹` tends to `+∞` on the right of `0`. -/
 theorem tendsto_inv_zero_at_top : Tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α)) atTop := by
   refine' (at_top_basis' 1).tendsto_right_iff.2 fun b hb => _
-  have hb' : 0 < b := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  have hb' : 0 < b := by positivity
   filter_upwards [Ioc_mem_nhds_within_Ioi ⟨le_rfl, inv_pos.2 hb'⟩] with x hx using(le_inv hx.1 hb').1 hx.2
 
 /-- The function `r ↦ r⁻¹` tends to `0` on the right as `r → +∞`. -/
@@ -2000,10 +3111,6 @@ theorem tendsto_const_mul_zpow_at_top_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 -- TODO: With a different proof, this could be possibly generalised to only require a
 -- `linear_ordered_semifield` instance, which would also remove the need for the
 -- `nnreal` instance of `has_continuous_inv₀`.
@@ -2021,27 +3128,17 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
     intro t ht
     rw [ContinuousAt, (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
-    refine'
-      ⟨min (t ^ 2 * ε / 2) (t / 2), by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]",
-        fun x h => _⟩
+    refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by
-      rw [Set.mem_Ioo, sub_lt, lt_min_iff] at h
+      rw [Set.mem_Ioo, sub_lt_comm, lt_min_iff] at h
       nlinarith
     have hx' : 0 < x := (half_pos ht).trans hx
-    have aux : 0 < 2 / t ^ 2 := by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
-    rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt, ← abs_sub_lt_iff] at h⊢
+    have aux : 0 < 2 / t ^ 2 := by positivity
+    rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm, ← abs_sub_lt_iff] at h⊢
     rw [inv_sub_inv ht.ne' hx'.ne', abs_div, div_eq_mul_inv]
-    suffices (abs (t * x))⁻¹ < 2 / t ^ 2 by
+    suffices (|t * x|)⁻¹ < 2 / t ^ 2 by
       rw [← abs_neg, neg_sub]
-      refine'
-        (mul_lt_mul'' h this
-              (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-              (by
-                trace
-                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")).trans_le
-          _
+      refine' (mul_lt_mul'' h this (by positivity) (by positivity)).trans_le _
       rw [mul_comm, mul_min_of_nonneg _ _ aux.le]
       apply min_le_of_left_le
       rw [← mul_div, ← mul_assoc, div_mul_cancel _ (sq_pos_of_pos ht).ne', mul_div_cancel' ε two_ne_zero]
@@ -2618,7 +3715,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.Ne⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Let `s` be a dense set in a nontrivial dense linear order `α`. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` does not contain bottom/top elements of `α`. -/

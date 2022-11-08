@@ -480,6 +480,11 @@ theorem mem_top (x : R) : x ∈ (⊤ : Subring R) :=
 theorem coe_top : ((⊤ : Subring R) : Set R) = Set.Univ :=
   rfl
 
+/-- The ring equiv between the top element of `subring R` and `R`. -/
+@[simps]
+def topEquiv : (⊤ : Subring R) ≃+* R :=
+  Subsemiring.topEquiv
+
 /-! ## comap -/
 
 
@@ -1072,10 +1077,6 @@ variable {s : Set R}
 
 attribute [local reducible] closure
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R),
-    «expr ∧ »(∀ x «expr ∈ » L,
-     «expr ∈ »(x, s),
-     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[elab_as_elim]
@@ -1093,8 +1094,8 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
     exact ha this (ih HL.2)
   replace HL := HL.1
   clear ih tl
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R),\n    «expr ∧ »(∀ x «expr ∈ » L,\n     «expr ∈ »(x, s),\n     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
+  rsuffices ⟨L, HL', HP | HP⟩ :
+    ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
   · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih

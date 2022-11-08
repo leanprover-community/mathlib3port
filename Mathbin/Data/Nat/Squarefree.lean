@@ -466,7 +466,7 @@ unsafe def prove_non_squarefree (e : expr) (n a : ℕ) : tactic expr := do
   let eb := reflect b
   let (c, eaa, pa) ← prove_mul_nat c ea ea
   let (c, e', pb) ← prove_mul_nat c eaa eb
-  guard (expr.alpha_eqv e' e)
+  guard (e' == e)
   return <| (quote.1 @not_squarefree_mul).mk_app [ea, eaa, eb, e, pa, pb, p₁]
 
 /-- Given `en`,`en1 := bit1 en`, `n1` the value of `en1`, `ek`,

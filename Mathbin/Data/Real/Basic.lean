@@ -298,7 +298,7 @@ instance : PartialOrder ℝ where
 
 instance : Preorder ℝ := by infer_instance
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
 theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y := by
   rw [mk_lt]
   exact const_lt
@@ -483,7 +483,7 @@ converging to the same number may be printed differently.
 -/
 unsafe instance : Repr ℝ where repr r := "real.of_cauchy " ++ repr r.cauchy
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f := by
   intro h
   induction' x using Real.indMk with x
@@ -502,12 +502,12 @@ theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j ≥ 
   rw [← neg_le_neg_iff, ← mk_neg]
   exact le_mk_of_forall_le ⟨i, fun j ij => by simp [H _ ij]⟩
 
-theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : ∃ i, ∀ j ≥ i, abs ((f j : ℝ) - x) ≤ ε) :
-    abs (mk f - x) ≤ ε :=
+theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : ∃ i, ∀ j ≥ i, |(f j : ℝ) - x| ≤ ε) :
+    |mk f - x| ≤ ε :=
   abs_sub_le_iff.2
     ⟨sub_le_iff_le_add'.2 <|
         mk_le_of_forall_le <| H.imp fun i h j ij => sub_le_iff_le_add'.1 (abs_sub_le_iff.1 <| h j ij).1,
-      sub_le.1 <| le_mk_of_forall_le <| H.imp fun i h j ij => sub_le.1 (abs_sub_le_iff.1 <| h j ij).2⟩
+      sub_le_comm.1 <| le_mk_of_forall_le <| H.imp fun i h j ij => sub_le_comm.1 (abs_sub_le_iff.1 <| h j ij).2⟩
 
 instance : Archimedean ℝ :=
   archimedean_iff_rat_le.2 fun x =>
@@ -524,7 +524,7 @@ theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs 
     (H _ δ0).imp fun i hi j ij => lt_trans (by simpa using (@Rat.cast_lt ℝ _ _ _).2 (hi _ ij)) δε,
     fun H ε ε0 => (H _ (Rat.cast_pos.2 ε0)).imp fun i hi j ij => (@Rat.cast_lt ℝ _ _ _).1 <| by simpa using hi _ ij⟩
 
-theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε > 0, ∃ i, ∀ j ≥ i, abs ((f j : ℝ) - x) < ε) : ∃ h', Real.mk ⟨f, h'⟩ = x :=
+theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε > 0, ∃ i, ∀ j ≥ i, |(f j : ℝ) - x| < ε) : ∃ h', Real.mk ⟨f, h'⟩ = x :=
   ⟨is_cau_seq_iff_lift.2 (ofNear _ (const abs x) h),
     sub_eq_zero.1 <|
       abs_eq_zero.1 <|
@@ -538,7 +538,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_lt hn⟩)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by
@@ -581,7 +581,7 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃
     replace hK := hK.le.trans (Nat.cast_le.2 nK)
     have n0 : 0 < n := Nat.cast_pos.1 ((inv_pos.2 xz).trans_le hK)
     refine' le_trans _ (hf₂ _ n0 _ xS).le
-    rwa [le_sub, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
+    rwa [le_sub_comm, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
     
   · exact
       mk_le_of_forall_le

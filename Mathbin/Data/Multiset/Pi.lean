@@ -20,9 +20,9 @@ open Function
 
 /- warning: multiset.pi.empty -> Multiset.Pi.empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (δ : α -> Type.{u_2}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))) -> (δ a)
+  forall {α : Type.{u_1}} (δ : α -> Type.{u_2}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
 but is expected to have type
-  forall {α : Type.{u_1}} (δ : α -> Type.{_aux_param_0}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))) -> (δ a)
+  forall {α : Type.{u_1}} (δ : α -> Type.{_aux_param_0}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
 Case conversion may be inaccurate. Consider using '#align multiset.pi.empty Multiset.Pi.emptyₓ'. -/
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/
@@ -120,7 +120,7 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
 @[simp]
 theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
     (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f := by
-  ext a' h'
+  ext (a' h')
   by_cases a' = a
   · subst h
     rw [pi.cons_same]

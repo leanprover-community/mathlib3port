@@ -6,7 +6,6 @@ Authors: Damiano Testa
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.Order.Monoid.Lemmas
 import Mathbin.Algebra.GroupWithZero.Basic
-import Mathbin.Logic.Embedding
 
 /-!
 # Regular elements
@@ -198,7 +197,7 @@ theorem IsRightRegular.ne_zero [Nontrivial R] (ra : IsRightRegular a) : a ≠ 0 
 
 /-- A regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
 theorem IsRegular.ne_zero [Nontrivial R] (la : IsRegular a) : a ≠ 0 :=
-  la.left.ne_zero
+  la.left.NeZero
 
 /-- In a non-trivial ring, the element `0` is not left-regular -- with typeclasses. -/
 theorem not_is_left_regular_zero [nR : Nontrivial R] : ¬IsLeftRegular (0 : R) :=
@@ -270,34 +269,6 @@ theorem IsUnit.is_regular (ua : IsUnit a) : IsRegular a := by
 
 end Monoid
 
-section LeftOrRightCancelSemigroup
-
-/-- The embedding of a left cancellative semigroup into itself
-by left multiplication by a fixed element.
- -/
-@[to_additive
-      "The embedding of a left cancellative additive semigroup into itself\n   by left translation by a fixed element.",
-  simps]
-def mulLeftEmbedding {G : Type _} [LeftCancelSemigroup G] (g : G) : G ↪ G where
-  toFun h := g * h
-  inj' := mul_right_injective g
-
-/-- The embedding of a right cancellative semigroup into itself
-by right multiplication by a fixed element.
- -/
-@[to_additive
-      "The embedding of a right cancellative additive semigroup into itself\n   by right translation by a fixed element.",
-  simps]
-def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G where
-  toFun h := h * g
-  inj' := mul_left_injective g
-
-@[to_additive]
-theorem mul_left_embedding_eq_mul_right_embedding {G : Type _} [CancelCommMonoid G] (g : G) :
-    mulLeftEmbedding g = mulRightEmbedding g := by
-  ext
-  exact mul_comm _ _
-
 /-- Elements of a left cancel semigroup are left regular. -/
 @[to_additive "Elements of an add left cancel semigroup are add-left-regular."]
 theorem is_left_regular_of_left_cancel_semigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
@@ -307,8 +278,6 @@ theorem is_left_regular_of_left_cancel_semigroup [LeftCancelSemigroup R] (g : R)
 @[to_additive "Elements of an add right cancel semigroup are add-right-regular"]
 theorem is_right_regular_of_right_cancel_semigroup [RightCancelSemigroup R] (g : R) : IsRightRegular g :=
   mul_left_injective g
-
-end LeftOrRightCancelSemigroup
 
 section CancelMonoid
 

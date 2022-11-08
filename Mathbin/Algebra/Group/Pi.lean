@@ -3,10 +3,10 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
+import Mathbin.Logic.Pairwise
 import Mathbin.Algebra.Hom.GroupInstances
 import Mathbin.Data.Pi.Algebra
 import Mathbin.Data.Set.Function
-import Mathbin.Data.Set.Pairwise
 import Mathbin.Tactic.PiInstances
 
 /-!
@@ -17,6 +17,8 @@ This file defines instances for group, monoid, semigroup and related structures 
 
 
 universe u v w
+
+variable {ι α : Type _}
 
 variable {I : Type u}
 
@@ -312,7 +314,7 @@ theorem Pi.mul_single_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i)
   obtain rfl | hij := Decidable.eq_or_ne i j
   · rfl
     
-  · exact Pi.mul_single_commute _ _ hij _ _
+  · exact Pi.mul_single_commute hij _ _
     
 
 @[to_additive update_eq_sub_add_single]
@@ -393,6 +395,16 @@ theorem update_div [∀ i, Div (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (
     update (f₁ / f₂) i (x₁ / x₂) = update f₁ i x₁ / update f₂ i x₂ :=
   funext fun j => (apply_update₂ (fun i => (· / ·)) f₁ f₂ i x₁ x₂ j).symm
 
+variable [One α] [Nonempty ι] {a : α}
+
+@[simp, to_additive]
+theorem const_eq_one : const ι a = 1 ↔ a = 1 :=
+  @const_inj _ _ _ _ 1
+
+@[to_additive]
+theorem const_ne_one : const ι a ≠ 1 ↔ a ≠ 1 :=
+  const_eq_one.Not
+
 end Function
 
 section Piecewise
@@ -416,7 +428,7 @@ end Piecewise
 
 section Extend
 
-variable {ι : Type u} {η : Type v} (R : Type w) (s : ι → η)
+variable {η : Type v} (R : Type w) (s : ι → η)
 
 /-- `function.extend s f 1` as a bundled hom. -/
 @[to_additive Function.ExtendByZero.hom "`function.extend s f 0` as a bundled hom.", simps]

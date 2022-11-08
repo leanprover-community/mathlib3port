@@ -623,10 +623,10 @@ theorem locally_const_basic_open (U : Opens (PrimeSpectrum.top R)) (s : (structu
   apply const_ext
   rw [mul_assoc f c g, hc]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
 A local representation of a section `s` as fractions `a i / h i` on finitely many basic opens
@@ -657,7 +657,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     rw [to_basic_open_mk', to_basic_open_mk']
     simp only [SetLike.coe_mk]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     convert congr_arg ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
     convert congr_arg ((structure_sheaf R).1.map iDi.op) (hs i) using 1
     swap

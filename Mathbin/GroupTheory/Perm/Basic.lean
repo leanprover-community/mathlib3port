@@ -214,7 +214,7 @@ def sigmaCongrRightHom {α : Type _} (β : α → Type _) : (∀ a, Perm (β a))
 
 theorem sigma_congr_right_hom_injective {α : Type _} {β : α → Type _} : Function.Injective (sigmaCongrRightHom β) := by
   intro x y h
-  ext a b
+  ext (a b)
   simpa using Equiv.congr_fun h ⟨a, b⟩
 
 /-- `equiv.perm.subtype_congr` as a `monoid_hom`. -/

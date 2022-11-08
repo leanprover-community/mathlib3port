@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
+import Mathbin.CategoryTheory.Monoidal.Linear
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+import Mathbin.CategoryTheory.Linear.LinearFunctor
 import Mathbin.CategoryTheory.Closed.Monoidal
 
 /-!
@@ -88,6 +91,26 @@ instance fullMonoidalSubcategory.full : Full (fullMonoidalSubcategoryInclusion P
 
 instance fullMonoidalSubcategory.faithful : Faithful (fullMonoidalSubcategoryInclusion P).toFunctor :=
   FullSubcategory.faithful P
+
+section
+
+variable [Preadditive C]
+
+instance full_monoidal_subcategory_inclusion_additive : (fullMonoidalSubcategoryInclusion P).toFunctor.Additive :=
+  Functor.full_subcategory_inclusion_additive _
+
+instance [MonoidalPreadditive C] : MonoidalPreadditive (FullSubcategory P) :=
+  monoidalPreadditiveOfFaithful (fullMonoidalSubcategoryInclusion P)
+
+variable (R : Type _) [Ring R] [Linear R C]
+
+instance full_monoidal_subcategory_inclusion_linear : (fullMonoidalSubcategoryInclusion P).toFunctor.Linear R :=
+  Functor.full_subcategory_inclusion_linear R _
+
+instance [MonoidalPreadditive C] [MonoidalLinear R C] : MonoidalLinear R (FullSubcategory P) :=
+  monoidalLinearOfFaithful R (fullMonoidalSubcategoryInclusion P)
+
+end
 
 variable {P} {P' : C → Prop} [MonoidalPredicate P']
 

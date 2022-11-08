@@ -69,11 +69,13 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr completion.continuous_dist, ",", expr continuous.fst, ",", expr continuous.snd, ",", expr continuous_id, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
   · refine' isClosedLe _ (Continuous.add _ _) <;>
-      apply_rules [completion.continuous_dist, Continuous.fst, Continuous.snd, continuous_id]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr completion.continuous_dist, \",\", expr continuous.fst, \",\", expr continuous.snd, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
   · intro a b c
     rw [completion.dist_eq, completion.dist_eq, completion.dist_eq]

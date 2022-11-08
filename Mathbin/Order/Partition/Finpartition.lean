@@ -242,8 +242,8 @@ section Inf
 variable [DecidableEq α] {a b c : α}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ⊓ »(P.parts.sup id, Q.parts.sup id)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ⊓ »(P.parts.sup id, Q.parts.sup id)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance : HasInf (Finpartition a) :=
   ⟨fun P Q =>
     ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1 ⊓ bc.2)
@@ -261,7 +261,7 @@ instance : HasInf (Finpartition a) :=
       (by
         rw [sup_image, comp.left_id, sup_product_left]
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ⊓ »(P.parts.sup id, Q.parts.sup id)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ⊓ »(P.parts.sup id, Q.parts.sup id)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · simp_rw [Finset.sup_inf_distrib_right, Finset.sup_inf_distrib_left]
           rfl
           
@@ -501,7 +501,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
 theorem mem_atomise :
     t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀ u ∈ F, u ∈ Q ↔ i ∈ u) = t := by
   simp only [atomise, of_erase, bot_eq_empty, mem_erase, mem_image, nonempty_iff_ne_empty, mem_singleton, and_comm',

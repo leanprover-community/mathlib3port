@@ -32,8 +32,10 @@ variable {α : Sort u₁} {β : Sort u₂} {γ : Sort v₁} {δ : Sort v₂}
 
 variable (R : α → β → Prop) (S : γ → δ → Prop)
 
+#print Relator.LiftFun /-
 def LiftFun (f : α → γ) (g : β → δ) : Prop :=
   ∀ ⦃a b⦄, R a b → S (f a) (g b)
+-/
 
 -- mathport name: «expr ⇒ »
 infixr:40 " ⇒ " => LiftFun
@@ -44,23 +46,35 @@ section
 
 variable {α : Type u₁} {β : Type u₂} (R : α → β → Prop)
 
+#print Relator.RightTotal /-
 def RightTotal : Prop :=
   ∀ b, ∃ a, R a b
+-/
 
+#print Relator.LeftTotal /-
 def LeftTotal : Prop :=
   ∀ a, ∃ b, R a b
+-/
 
+#print Relator.BiTotal /-
 def BiTotal : Prop :=
   LeftTotal R ∧ RightTotal R
+-/
 
+#print Relator.LeftUnique /-
 def LeftUnique : Prop :=
   ∀ ⦃a b c⦄, R a c → R b c → a = b
+-/
 
+#print Relator.RightUnique /-
 def RightUnique : Prop :=
   ∀ ⦃a b c⦄, R a b → R a c → b = c
+-/
 
+#print Relator.BiUnique /-
 def BiUnique : Prop :=
   LeftUnique R ∧ RightUnique R
+-/
 
 variable {R}
 
@@ -73,28 +87,42 @@ Case conversion may be inaccurate. Consider using '#align relator.right_total.re
 theorem RightTotal.rel_forall (h : RightTotal R) : ((R ⇒ Implies) ⇒ Implies) (fun p => ∀ i, p i) fun q => ∀ i, q i :=
   fun p q Hrel H b => Exists.elim (h b) fun a Rab => Hrel Rab (H _)
 
+#print Relator.LeftTotal.rel_exists /-
 theorem LeftTotal.rel_exists (h : LeftTotal R) : ((R ⇒ Implies) ⇒ Implies) (fun p => ∃ i, p i) fun q => ∃ i, q i :=
   fun p q Hrel ⟨a, pa⟩ => (h a).imp fun b Rab => Hrel Rab pa
+-/
 
+#print Relator.BiTotal.rel_forall /-
 theorem BiTotal.rel_forall (h : BiTotal R) : ((R ⇒ Iff) ⇒ Iff) (fun p => ∀ i, p i) fun q => ∀ i, q i := fun p q Hrel =>
   ⟨fun H b => Exists.elim (h.right b) fun a Rab => (Hrel Rab).mp (H _), fun H a =>
     Exists.elim (h.left a) fun b Rab => (Hrel Rab).mpr (H _)⟩
+-/
 
+#print Relator.BiTotal.rel_exists /-
 theorem BiTotal.rel_exists (h : BiTotal R) : ((R ⇒ Iff) ⇒ Iff) (fun p => ∃ i, p i) fun q => ∃ i, q i := fun p q Hrel =>
   ⟨fun ⟨a, pa⟩ => (h.left a).imp fun b Rab => (Hrel Rab).1 pa, fun ⟨b, qb⟩ =>
     (h.right b).imp fun a Rab => (Hrel Rab).2 qb⟩
+-/
 
+#print Relator.left_unique_of_rel_eq /-
 theorem left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R ⇒ R ⇒ Iff) Eq eq') : LeftUnique R :=
   fun a b c (ac : R a c) (bc : R b c) => (he ac bc).mpr ((he bc bc).mp rfl)
+-/
 
 end
 
+#print Relator.rel_imp /-
 theorem rel_imp : (Iff ⇒ Iff ⇒ Iff) Implies Implies := fun p q h r s l => imp_congr h l
+-/
 
+#print Relator.rel_not /-
 theorem rel_not : (Iff ⇒ Iff) Not Not := fun p q h => not_congr h
+-/
 
+#print Relator.bi_total_eq /-
 theorem bi_total_eq {α : Type u₁} : Relator.BiTotal (@Eq α) :=
   { left := fun a => ⟨a, rfl⟩, right := fun a => ⟨a, rfl⟩ }
+-/
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -108,11 +136,17 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align relator.left_unique.flip Relator.LeftUnique.flipₓ'. -/
 theorem LeftUnique.flip (h : LeftUnique r) : RightUnique (flip r) := fun a b c h₁ h₂ => h h₁ h₂
 
+#print Relator.rel_and /-
 theorem rel_and : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ∧ ·) (· ∧ ·) := fun a b h₁ c d h₂ => and_congr h₁ h₂
+-/
 
+#print Relator.rel_or /-
 theorem rel_or : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ∨ ·) (· ∨ ·) := fun a b h₁ c d h₂ => or_congr h₁ h₂
+-/
 
+#print Relator.rel_iff /-
 theorem rel_iff : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ↔ ·) (· ↔ ·) := fun a b h₁ c d h₂ => iff_congr h₁ h₂
+-/
 
 /- warning: relator.rel_eq -> Relator.rel_eq is a dubious translation:
 lean 3 declaration is

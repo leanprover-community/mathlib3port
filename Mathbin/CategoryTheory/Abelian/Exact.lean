@@ -111,15 +111,106 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
     simp [h.2]
     
 
-theorem exact_tfae :
-    Tfae [Exact f g, f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0, imageSubobject f = kernelSubobject g] := by
-  tfae_have 1 ↔ 2
-  · apply exact_iff
-    
-  tfae_have 1 ↔ 3
-  · apply exact_iff_image_eq_kernel
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `exact_tfae [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `Exact [`f `g])
+            ","
+            («term_∧_»
+             («term_=_» (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `f " ≫ " `g) "=" (num "0"))
+             "∧"
+             («term_=_»
+              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+               (Term.app `kernel.ι [`g])
+               " ≫ "
+               (Term.app `cokernel.π [`f]))
+              "="
+              (num "0")))
+            ","
+            («term_=_» (Term.app `imageSubobject [`f]) "=" (Term.app `kernelSubobject [`g]))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+           []
+           («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.apply "apply" `exact_iff) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+          []
+          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.apply "apply" `exact_iff) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `exact_iff_image_eq_kernel)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `exact_iff_image_eq_kernel
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  exact_tfae
+  : Tfae [ Exact f g , f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0 , imageSubobject f = kernelSubobject g ]
+  := by tfae_have 1 ↔ 2 · apply exact_iff tfae_have 1 ↔ 3 · apply exact_iff_image_eq_kernel tfae_finish
 
 theorem IsEquivalence.exact_iff {D : Type u₁} [Category.{v₁} D] [Abelian D] (F : C ⥤ D) [IsEquivalence F] :
     Exact (F.map f) (F.map g) ↔ Exact f g := by
@@ -232,39 +323,340 @@ section
 
 variable (Z)
 
-theorem tfae_mono : Tfae [Mono f, kernel.ι f = 0, Exact (0 : Z ⟶ X) f] := by
-  tfae_have 3 → 2
-  · exact kernel_ι_eq_zero_of_exact_zero_left Z
-    
-  tfae_have 1 → 3
-  · intros
-    exact exact_zero_left_of_mono Z
-    
-  tfae_have 2 → 1
-  · exact mono_of_kernel_ι_eq_zero _
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `tfae_mono [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `Mono [`f])
+            ","
+            («term_=_» (Term.app `kernel.ι [`f]) "=" (num "0"))
+            ","
+            (Term.app
+             `Exact
+             [(Term.paren
+               "("
+               [(num "0") [(Term.typeAscription ":" (Combinatorics.Quiver.Basic.«term_⟶_» `Z " ⟶ " `X))]]
+               ")")
+              `f])]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intros "intros" []) [])
+             (group (Tactic.exact "exact" (Term.app `exact_zero_left_of_mono [`Z])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intros "intros" []) [])
+            (group (Tactic.exact "exact" (Term.app `exact_zero_left_of_mono [`Z])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mono_of_kernel_ι_eq_zero
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  tfae_mono
+  : Tfae [ Mono f , kernel.ι f = 0 , Exact ( 0 : Z ⟶ X ) f ]
+  :=
+    by
+      tfae_have 3 → 2
+        · exact kernel_ι_eq_zero_of_exact_zero_left Z
+        tfae_have 1 → 3
+        · intros exact exact_zero_left_of_mono Z
+        tfae_have 2 → 1
+        · exact mono_of_kernel_ι_eq_zero _
+        tfae_finish
 
 -- Note we've already proved `mono_iff_exact_zero_left : mono f ↔ exact (0 : Z ⟶ X) f`
 -- in any preadditive category with kernels and images.
 theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
   (tfae_mono X f).out 0 1
 
-theorem tfae_epi : Tfae [Epi f, cokernel.π f = 0, Exact f (0 : Y ⟶ Z)] := by
-  tfae_have 3 → 2
-  · rw [exact_iff]
-    rintro ⟨-, h⟩
-    exact zero_of_epi_comp _ h
-    
-  tfae_have 1 → 3
-  · rw [exact_iff]
-    intro
-    exact ⟨by simp, by simp [cokernel.π_of_epi]⟩
-    
-  tfae_have 2 → 1
-  · exact epi_of_cokernel_π_eq_zero _
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `tfae_epi [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `Epi [`f])
+            ","
+            («term_=_» (Term.app `cokernel.π [`f]) "=" (num "0"))
+            ","
+            (Term.app
+             `Exact
+             [`f
+              (Term.paren
+               "("
+               [(num "0") [(Term.typeAscription ":" (Combinatorics.Quiver.Basic.«term_⟶_» `Y " ⟶ " `Z))]]
+               ")")])]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+             (group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.clear "-")])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group (Tactic.exact "exact" (Term.app `zero_of_epi_comp [(Term.hole "_") `h])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+             (group (Tactic.intro "intro" []) [])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+                 ","
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"] [])])))]
+                "⟩"))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+            (group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.clear "-")])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group (Tactic.exact "exact" (Term.app `zero_of_epi_comp [(Term.hole "_") `h])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+            (group (Tactic.intro "intro" []) [])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+                ","
+                (Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented
+                   [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"] [])])))]
+               "⟩"))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `epi_of_cokernel_π_eq_zero
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  tfae_epi
+  : Tfae [ Epi f , cokernel.π f = 0 , Exact f ( 0 : Y ⟶ Z ) ]
+  :=
+    by
+      tfae_have 3 → 2
+        · rw [ exact_iff ] rintro ⟨ - , h ⟩ exact zero_of_epi_comp _ h
+        tfae_have 1 → 3
+        · rw [ exact_iff ] intro exact ⟨ by simp , by simp [ cokernel.π_of_epi ] ⟩
+        tfae_have 2 → 1
+        · exact epi_of_cokernel_π_eq_zero _
+        tfae_finish
 
 -- Note we've already proved `epi_iff_exact_zero_right : epi f ↔ exact f (0 : Y ⟶ Z)`
 -- in any preadditive category with equalizers and images.

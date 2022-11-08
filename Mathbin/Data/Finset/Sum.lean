@@ -44,6 +44,17 @@ theorem disj_sum_empty : s.disjSum (∅ : Finset β) = s.map Embedding.inl :=
 theorem card_disj_sum : (s.disjSum t).card = s.card + t.card :=
   Multiset.card_disj_sum _ _
 
+/-- Note that this is not stated with `disjoint` so that it can be used with `finset.disj_union`. -/
+theorem disjoint_map_inl_map_inr {α β : Type _} (s : Finset α) (t : Finset β) (a : Sum α β) :
+    a ∈ (s.map Embedding.inl : Finset (Sum α β)) → a ∉ (t.map Embedding.inr : Finset (Sum α β)) := by
+  simp_rw [mem_map]
+  rintro ⟨a, _, rfl⟩ ⟨b, _, ⟨⟩⟩
+
+@[simp]
+theorem map_inl_disj_union_map_inr :
+    (s.map Embedding.inl).disjUnion (t.map Embedding.inr) (disjoint_map_inl_map_inr _ _) = s.disjSum t :=
+  rfl
+
 variable {s t} {s₁ s₂ : Finset α} {t₁ t₂ : Finset β} {a : α} {b : β} {x : Sum α β}
 
 theorem mem_disj_sum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ ∃ b, b ∈ t ∧ inr b = x :=

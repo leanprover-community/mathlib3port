@@ -670,7 +670,7 @@ open Classical
 variable [IsDomain S] [IsDedekindDomain S] [Algebra R S]
 
 theorem Factors.ne_bot (P : (factors (map (algebraMap R S) p)).toFinset) : (P : Ideal S) ≠ ⊥ :=
-  (primeOfFactor _ (Multiset.mem_to_finset.mp P.2)).ne_zero
+  (primeOfFactor _ (Multiset.mem_to_finset.mp P.2)).NeZero
 
 instance Factors.is_prime (P : (factors (map (algebraMap R S) p)).toFinset) : IsPrime (P : Ideal S) :=
   Ideal.is_prime_of_prime (primeOfFactor _ (Multiset.mem_to_finset.mp P.2))

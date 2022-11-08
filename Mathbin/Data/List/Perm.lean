@@ -30,6 +30,7 @@ namespace List
 
 variable {α : Type uu} {β : Type vv} {l₁ l₂ : List α}
 
+#print List.Perm /-
 /-- `perm l₁ l₂` or `l₁ ~ l₂` asserts that `l₁` and `l₂` are permutations
   of each other. This is defined by induction using pairwise swaps. -/
 inductive Perm : List α → List α → Prop
@@ -37,45 +38,56 @@ inductive Perm : List α → List α → Prop
   | cons : ∀ (x : α) {l₁ l₂ : List α}, perm l₁ l₂ → perm (x :: l₁) (x :: l₂)
   | swap : ∀ (x y : α) (l : List α), perm (y :: x :: l) (x :: y :: l)
   | trans : ∀ {l₁ l₂ l₃ : List α}, perm l₁ l₂ → perm l₂ l₃ → perm l₁ l₃
+-/
 
 open Perm (swap)
 
 -- mathport name: list.perm
 infixl:50 " ~ " => Perm
 
+#print List.Perm.refl /-
 @[refl]
 protected theorem Perm.refl : ∀ l : List α, l ~ l
   | [] => Perm.nil
   | x :: xs => (perm.refl xs).cons x
+-/
 
+#print List.Perm.symm /-
 @[symm]
 protected theorem Perm.symm {l₁ l₂ : List α} (p : l₁ ~ l₂) : l₂ ~ l₁ :=
   Perm.rec_on p Perm.nil (fun x l₁ l₂ p₁ r₁ => r₁.cons x) (fun x y l => swap y x l) fun l₁ l₂ l₃ p₁ p₂ r₁ r₂ =>
     r₂.trans r₁
+-/
 
 theorem perm_comm {l₁ l₂ : List α} : l₁ ~ l₂ ↔ l₂ ~ l₁ :=
   ⟨Perm.symm, Perm.symm⟩
 
+#print List.Perm.swap' /-
 theorem Perm.swap' (x y : α) {l₁ l₂ : List α} (p : l₁ ~ l₂) : y :: x :: l₁ ~ x :: y :: l₂ :=
   (swap _ _ _).trans ((p.cons _).cons _)
+-/
 
 attribute [trans] perm.trans
 
 theorem Perm.eqv (α) : Equivalence (@Perm α) :=
-  mk (@Perm α) (@Perm.refl α) (@Perm.symm α) (@Perm.trans α)
+  Equivalence.mk (@Perm α) (@Perm.refl α) (@Perm.symm α) (@Perm.trans α)
 
 instance isSetoid (α) : Setoid (List α) :=
   Setoid.mk (@Perm α) (Perm.eqv α)
 
+#print List.Perm.subset /-
 theorem Perm.subset {l₁ l₂ : List α} (p : l₁ ~ l₂) : l₁ ⊆ l₂ := fun a =>
   Perm.rec_on p (fun h => h) (fun x l₁ l₂ p₁ r₁ i => Or.elim i (fun ax => by simp [ax]) fun al₁ => Or.inr (r₁ al₁))
     (fun x y l ayxl =>
       Or.elim ayxl (fun ay => by simp [ay]) fun axl =>
         Or.elim axl (fun ax => by simp [ax]) fun al => Or.inr (Or.inr al))
     fun l₁ l₂ l₃ p₁ p₂ r₁ r₂ ainl₁ => r₂ (r₁ ainl₁)
+-/
 
+#print List.Perm.mem_iff /-
 theorem Perm.mem_iff {a : α} {l₁ l₂ : List α} (h : l₁ ~ l₂) : a ∈ l₁ ↔ a ∈ l₂ :=
   Iff.intro (fun m => h.Subset m) fun m => h.symm.Subset m
+-/
 
 theorem Perm.append_right {l₁ l₂ : List α} (t₁ : List α) (p : l₁ ~ l₂) : l₁ ++ t₁ ~ l₂ ++ t₁ :=
   Perm.rec_on p (Perm.refl ([] ++ t₁)) (fun x l₁ l₂ p₁ r₁ => r₁.cons x) (fun x y l => swap x y _)
@@ -91,10 +103,12 @@ theorem Perm.append {l₁ l₂ t₁ t₂ : List α} (p₁ : l₁ ~ l₂) (p₂ :
 theorem Perm.append_cons (a : α) {h₁ h₂ t₁ t₂ : List α} (p₁ : h₁ ~ h₂) (p₂ : t₁ ~ t₂) : h₁ ++ a :: t₁ ~ h₂ ++ a :: t₂ :=
   p₁.append (p₂.cons a)
 
+#print List.perm_middle /-
 @[simp]
 theorem perm_middle {a : α} : ∀ {l₁ l₂ : List α}, l₁ ++ a :: l₂ ~ a :: (l₁ ++ l₂)
   | [], l₂ => Perm.refl _
   | b :: l₁, l₂ => ((@perm_middle l₁ l₂).cons _).trans (swap a b _)
+-/
 
 @[simp]
 theorem perm_append_singleton (a : α) (l : List α) : l ++ [a] ~ a :: l :=
@@ -106,14 +120,20 @@ theorem perm_append_comm : ∀ {l₁ l₂ : List α}, l₁ ++ l₂ ~ l₂ ++ l�
 
 theorem concat_perm (l : List α) (a : α) : concat l a ~ a :: l := by simp
 
+#print List.Perm.length_eq /-
 theorem Perm.length_eq {l₁ l₂ : List α} (p : l₁ ~ l₂) : length l₁ = length l₂ :=
   Perm.rec_on p rfl (fun x l₁ l₂ p r => by simp [r]) (fun x y l => by simp) fun l₁ l₂ l₃ p₁ p₂ r₁ r₂ => Eq.trans r₁ r₂
+-/
 
+#print List.Perm.eq_nil /-
 theorem Perm.eq_nil {l : List α} (p : l ~ []) : l = [] :=
   eq_nil_of_length_eq_zero p.length_eq
+-/
 
+#print List.Perm.nil_eq /-
 theorem Perm.nil_eq {l : List α} (p : [] ~ l) : [] = l :=
   p.symm.eq_nil.symm
+-/
 
 @[simp]
 theorem perm_nil {l₁ : List α} : l₁ ~ [] ↔ l₁ = [] :=
@@ -228,7 +248,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (l₁' list.perm l₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (l₁' list.perm l₁) -/
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -335,7 +355,7 @@ end Rel
 
 section Subperm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (l list.perm l₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (l list.perm l₁) -/
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -497,6 +517,7 @@ theorem prod_reverse (l : List α) : prod l.reverse = prod l :=
 
 end CommMonoid
 
+#print List.perm_inv_core /-
 theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} : l₁ ++ a :: r₁ ~ l₂ ++ a :: r₂ → l₁ ++ r₁ ~ l₂ ++ r₂ := by
   generalize e₁ : l₁ ++ a :: r₁ = s₁
   generalize e₂ : l₂ ++ a :: r₂ = s₂
@@ -558,9 +579,12 @@ theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} : l₁ ++ a :: r�
     subst t₂
     exact (IH₁ rfl rfl).trans (IH₂ rfl rfl)
     
+-/
 
+#print List.Perm.cons_inv /-
 theorem Perm.cons_inv {a : α} {l₁ l₂ : List α} : a :: l₁ ~ a :: l₂ → l₁ ~ l₂ :=
   @perm_inv_core _ _ [] [] _ _
+-/
 
 @[simp]
 theorem perm_cons (a : α) {l₁ l₂ : List α} : a :: l₁ ~ a :: l₂ ↔ l₁ ~ l₂ :=
@@ -874,8 +898,8 @@ theorem perm_insert_swap (x y : α) (l : List α) : insert x (insert y l) ~ inse
   simp [not_mem_cons_of_ne_of_not_mem xy xl, not_mem_cons_of_ne_of_not_mem (Ne.symm xy) yl]
   constructor
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem perm_insert_nth {α} (x : α) (l : List α) {n} (h : n ≤ l.length) : insertNth n x l ~ x :: l := by
   induction l generalizing n
   · cases n
@@ -887,7 +911,7 @@ theorem perm_insert_nth {α} (x : α) (l : List α) {n} (h : n ≤ l.length) : i
     
   · simp only [insert_nth, modify_nth_tail]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · apply perm.cons
       apply l_ih
       apply Nat.le_of_succ_le_succ h
@@ -922,8 +946,8 @@ theorem Perm.inter_left (l : List α) {t₁ t₂ : List α} (p : t₁ ~ t₂) : 
 theorem Perm.inter {l₁ l₂ t₁ t₂ : List α} (p₁ : l₁ ~ l₂) (p₂ : t₁ ~ t₂) : l₁ ∩ t₁ ~ l₂ ∩ t₂ :=
   p₂.interLeft l₂ ▸ p₁.interRight t₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem Perm.inter_append {l t₁ t₂ : List α} (h : Disjoint t₁ t₂) : l ∩ (t₁ ++ t₂) ~ l ∩ t₁ ++ l ∩ t₂ := by
   induction l
   case nil => simp
@@ -935,7 +959,7 @@ theorem Perm.inter_append {l t₁ t₂ : List α} (h : Disjoint t₁ t₂) : l �
   by_cases h₂:x ∈ t₂
   · simp only [*, inter_cons_of_not_mem, false_or_iff, mem_append, inter_cons_of_mem, not_false_iff]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · apply perm.cons _ l_ih
       
     change [x] ++ xs ∩ t₁ ++ xs ∩ t₂ ~ xs ∩ t₁ ++ ([x] ++ xs ∩ t₂)
@@ -947,6 +971,7 @@ theorem Perm.inter_append {l t₁ t₂ : List α} (h : Disjoint t₁ t₂) : l �
 
 end
 
+#print List.Perm.pairwise_iff /-
 theorem Perm.pairwise_iff {R : α → α → Prop} (S : Symmetric R) :
     ∀ {l₁ l₂ : List α} (p : l₁ ~ l₂), Pairwise R l₁ ↔ Pairwise R l₂ :=
   suffices ∀ {l₁ l₂}, l₁ ~ l₂ → Pairwise R l₁ → Pairwise R l₂ from fun l₁ l₂ p => ⟨this p, this p.symm⟩
@@ -961,6 +986,7 @@ theorem Perm.pairwise_iff {R : α → α → Prop} (S : Symmetric R) :
     refine' (pairwise_middle S).2 (pairwise_cons.2 ⟨fun b m => _, IH _ p'⟩)
     exact h _ (p'.symm.subset m)
     
+-/
 
 theorem Pairwise.perm {R : α → α → Prop} {l l' : List α} (hR : l.Pairwise R) (hl : l ~ l') (hsymm : Symmetric R) :
     l'.Pairwise R :=
@@ -970,8 +996,10 @@ theorem Perm.pairwise {R : α → α → Prop} {l l' : List α} (hl : l ~ l') (h
     l'.Pairwise R :=
   hR.Perm hl hsymm
 
+#print List.Perm.nodup_iff /-
 theorem Perm.nodup_iff {l₁ l₂ : List α} : l₁ ~ l₂ → (Nodup l₁ ↔ Nodup l₂) :=
   perm.pairwise_iff <| @Ne.symm α
+-/
 
 theorem Perm.bind_right {l₁ l₂ : List α} (f : α → List β) (p : l₁ ~ l₂) : l₁.bind f ~ l₂.bind f := by
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂
@@ -1135,8 +1163,8 @@ theorem Perm.erasep (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α} (H
     exact fun a b h h₁ h₂ => h h₂ h₁
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem Perm.take_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : xs ~ ys) (h' : ys.Nodup) :
     xs.take n ~ ys.inter (xs.take n) := by
   simp only [List.inter] at *
@@ -1187,7 +1215,7 @@ theorem Perm.take_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
     
   case trans h_l₁ h_l₂ h_l₃ h₀ h₁ h_ih₀ h_ih₁ n =>
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply h_ih₀
     rwa [h₁.nodup_iff]
     
@@ -1262,12 +1290,12 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by simpa [permutations, perm_nil] using H
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (is' list.perm is) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (is' list.perm is) -/
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is := by
   refine' permutations_aux.rec (by simp) _

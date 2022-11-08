@@ -223,7 +223,7 @@ theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
 
 @[simp]
 theorem LieModule.to_endomorphism_module_End : LieModule.toEndomorphism R (Module.EndCat R M) M = LieHom.id := by
-  ext g m
+  ext (g m)
   simp [lie_eq_smul]
 
 theorem LieSubalgebra.to_endomorphism_eq (K : LieSubalgebra R L) {x : K} :
@@ -264,7 +264,7 @@ open LieAlgebra
 
 theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ring A] [Algebra R A] :
     (ad R A : A → Module.EndCat R A) = LinearMap.mulLeft R - LinearMap.mulRight R := by
-  ext a b
+  ext (a b)
   simp [LieRing.of_associative_ring_bracket]
 
 theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :

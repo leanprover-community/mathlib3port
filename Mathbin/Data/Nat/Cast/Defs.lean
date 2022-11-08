@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 -/
 import Mathbin.Algebra.Group.Basic
+import Mathbin.Algebra.NeZero
 
 /-!
 # Cast of natural numbers
@@ -34,6 +35,7 @@ protected def Nat.unaryCast {R : Type u} [One R] [Zero R] [Add R] : ℕ → R
 class HasNatCast (R : Type u) where
   natCast : ℕ → R
 
+#print AddMonoidWithOne /-
 /-- An `add_monoid_with_one` is an `add_monoid` with a `1`.
 It also contains data for the unique homomorphism `ℕ → R`.
 -/
@@ -46,6 +48,7 @@ class AddMonoidWithOne (R : Type u) extends HasNatCast R, AddMonoid R, One R whe
   nat_cast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by
     intros
     rfl
+-/
 
 /- warning: nat.cast -> Nat.cast is a dubious translation:
 lean 3 declaration is
@@ -101,7 +104,7 @@ instance (priority := 900) castCoe {R} [HasNatCast R] : CoeTC ℕ R :=
 
 /- warning: nat.cast_zero -> Nat.cast_zero is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u_1}} [_inst_1 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) (Zero.zero.{0} Nat Nat.hasZero)) (Zero.zero.{u_1} R (AddZeroClass.toHasZero.{u_1} R (AddMonoid.toAddZeroClass.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R _inst_1))))
+  forall {R : Type.{u_1}} [_inst_1 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (AddZeroClass.toHasZero.{u_1} R (AddMonoid.toAddZeroClass.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R _inst_1))))))
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.318 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.318 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (AddMonoid.toZero.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.318))))
 Case conversion may be inaccurate. Consider using '#align nat.cast_zero Nat.cast_zeroₓ'. -/
@@ -111,7 +114,7 @@ theorem cast_zero : ((0 : ℕ) : R) = 0 :=
 
 /- warning: nat.cast_succ -> Nat.cast_succ is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u_1}} [_inst_1 : AddMonoidWithOne.{u_1} R] (n : Nat), Eq.{succ u_1} R ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) (Nat.succ n)) (HAdd.hAdd.{u_1 u_1 u_1} R R R (instHAdd.{u_1} R (AddZeroClass.toHasAdd.{u_1} R (AddMonoid.toAddZeroClass.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R _inst_1)))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) n) (One.one.{u_1} R (AddMonoidWithOne.toHasOne.{u_1} R _inst_1)))
+  forall {R : Type.{u_1}} [_inst_1 : AddMonoidWithOne.{u_1} R] (n : Nat), Eq.{succ u_1} R ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) (Nat.succ n)) (HAdd.hAdd.{u_1 u_1 u_1} R R R (instHAdd.{u_1} R (AddZeroClass.toHasAdd.{u_1} R (AddMonoid.toAddZeroClass.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R _inst_1)))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) n) (OfNat.ofNat.{u_1} R 1 (OfNat.mk.{u_1} R 1 (One.one.{u_1} R (AddMonoidWithOne.toHasOne.{u_1} R _inst_1)))))
 but is expected to have type
   forall {R : Type.{u_1}} {n : Nat} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.361 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.361 (Nat.succ n)) (HAdd.hAdd.{u_1 u_1 u_1} R R R (instHAdd.{u_1} R (AddZeroClass.toAdd.{u_1} R (AddMonoid.toAddZeroClass.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.361)))) (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.361 n) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (AddMonoidWithOne.toOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.361))))
 Case conversion may be inaccurate. Consider using '#align nat.cast_succ Nat.cast_succₓ'. -/
@@ -139,7 +142,7 @@ variable {R : Type _}
 
 /- warning: nat.cast_one -> Nat.cast_one is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u_1}} [_inst_1 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) (One.one.{0} Nat Nat.hasOne)) (One.one.{u_1} R (AddMonoidWithOne.toHasOne.{u_1} R _inst_1))
+  forall {R : Type.{u_1}} [_inst_1 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u_1} Nat R (CoeTCₓ.coe.{1 succ u_1} Nat R (Nat.castCoe.{u_1} R (AddMonoidWithOne.toHasNatCast.{u_1} R _inst_1)))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{u_1} R 1 (OfNat.mk.{u_1} R 1 (One.one.{u_1} R (AddMonoidWithOne.toHasOne.{u_1} R _inst_1))))
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.395 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.395 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (AddMonoidWithOne.toOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.395)))
 Case conversion may be inaccurate. Consider using '#align nat.cast_one Nat.cast_oneₓ'. -/
@@ -202,4 +205,21 @@ protected def AddMonoidWithOne.binary {R : Type _} [AddMonoid R] [One R] : AddMo
       letI : AddMonoidWithOne R := AddMonoidWithOne.unary
       erw [Nat.bin_cast_eq, Nat.bin_cast_eq, Nat.cast_succ]
       rfl }
+
+namespace NeZero
+
+theorem ne' (n : ℕ) (R) [AddMonoidWithOne R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
+  h.out
+
+theorem of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] : NeZero n :=
+  ⟨by
+    cases h
+    rintro rfl
+    · simpa using h
+      ⟩
+
+theorem pos_of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [NeZero (n : R)] : 0 < n :=
+  Nat.pos_of_ne_zero (of_ne_zero_coe R).out
+
+end NeZero
 

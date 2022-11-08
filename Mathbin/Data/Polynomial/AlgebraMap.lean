@@ -9,7 +9,7 @@ import Mathbin.Data.Polynomial.Eval
 /-!
 # Theory of univariate polynomials
 
-We show that `polynomial A` is an R-algebra when `A` is an R-algebra.
+We show that `A[X]` is an R-algebra when `A` is an R-algebra.
 We promote `eval₂` to an algebra hom in `aeval`.
 -/
 
@@ -35,7 +35,7 @@ variable [CommSemiring R] {p q r : R[X]}
 variable [Semiring A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R R[X]`. -/
-instance algebraOfAlgebra : Algebra R (Polynomial A) where
+instance algebraOfAlgebra : Algebra R A[X] where
   smul_def' r p :=
     to_finsupp_injective <| by
       dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
@@ -48,16 +48,16 @@ instance algebraOfAlgebra : Algebra R (Polynomial A) where
       convert Algebra.commutes' r p.to_finsupp
   toRingHom := c.comp (algebraMap R A)
 
-theorem algebra_map_apply (r : R) : algebraMap R (Polynomial A) r = c (algebraMap R A r) :=
+theorem algebra_map_apply (r : R) : algebraMap R A[X] r = c (algebraMap R A r) :=
   rfl
 
 @[simp]
-theorem to_finsupp_algebra_map (r : R) : (algebraMap R (Polynomial A) r).toFinsupp = algebraMap R _ r :=
+theorem to_finsupp_algebra_map (r : R) : (algebraMap R A[X] r).toFinsupp = algebraMap R _ r :=
   show toFinsupp (c (algebraMap _ _ r)) = _ by
     rw [to_finsupp_C]
     rfl
 
-theorem of_finsupp_algebra_map (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R (Polynomial A) r :=
+theorem of_finsupp_algebra_map (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R A[X] r :=
   to_finsupp_injective (to_finsupp_algebra_map _).symm
 
 /-- When we have `[comm_semiring R]`, the function `C` is the same as `algebra_map R R[X]`.
@@ -70,17 +70,17 @@ theorem C_eq_algebra_map (r : R) : c r = algebraMap R R[X] r :=
 
 variable {R}
 
-/-- Extensionality lemma for algebra maps out of `polynomial A'` over a smaller base ring than `A'`
+/-- Extensionality lemma for algebra maps out of `A'[X]` over a smaller base ring than `A'`
 -/
 @[ext]
 theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
-    (h₁ : f.comp (IsScalarTower.toAlgHom R A' (Polynomial A')) = g.comp (IsScalarTower.toAlgHom R A' (Polynomial A')))
-    (h₂ : f x = g x) : f = g :=
+    (h₁ : f.comp (IsScalarTower.toAlgHom R A' A'[X]) = g.comp (IsScalarTower.toAlgHom R A' A'[X])) (h₂ : f x = g x) :
+    f = g :=
   AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
 
 variable (R)
 
-/-- Algebra isomorphism between `polynomial R` and `add_monoid_algebra R ℕ`. This is just an
+/-- Algebra isomorphism between `R[X]` and `add_monoid_algebra R ℕ`. This is just an
 implementation detail, but it can be useful to transfer results from `finsupp` to polynomials. -/
 @[simps]
 def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
@@ -91,7 +91,7 @@ def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
 
 variable {R}
 
-instance [Nontrivial A] : Nontrivial (Subalgebra R (Polynomial A)) :=
+instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
   ⟨⟨⊥, ⊤, by
       rw [Ne.def, SetLike.ext_iff, not_forall]
       refine' ⟨X, _⟩
@@ -286,7 +286,7 @@ section AevalTower
 
 variable [Algebra S R] [Algebra S A'] [Algebra S B']
 
-/-- Version of `aeval` for defining algebra homs out of `polynomial R` over a smaller base ring
+/-- Version of `aeval` for defining algebra homs out of `R[X]` over a smaller base ring
   than `R`. -/
 def aevalTower (f : R →ₐ[S] A') (x : A') : R[X] →ₐ[S] A' :=
   { eval₂RingHom (↑f) x with commutes' := fun r => by simp [algebra_map_apply] }
@@ -338,7 +338,7 @@ section CommRing
 
 variable [CommRing S] {f : R →+* S}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases hi:i ∈ f.support
@@ -354,7 +354,7 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     simp [hi]
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h

@@ -166,6 +166,12 @@ theorem mul_dvd_mul_left (a : α) {b c : α} (h : b ∣ c) : a * b ∣ a * c :=
 theorem mul_dvd_mul_right (h : a ∣ b) (c : α) : a * c ∣ b * c :=
   mul_dvd_mul h (dvd_refl c)
 
+theorem pow_dvd_pow_of_dvd {a b : α} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
+  | 0 => by rw [pow_zero, pow_zero]
+  | n + 1 => by
+    rw [pow_succ, pow_succ]
+    exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
+
 end CommMonoid
 
 section SemigroupWithZero
@@ -313,7 +319,7 @@ theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
 theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
   is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∣ » 1) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∣ » 1) -/
 theorem is_unit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 

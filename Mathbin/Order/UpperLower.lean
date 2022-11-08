@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Sara Rousta
 -/
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.Set.Intervals.OrdConnected
+import Mathbin.Data.Set.Intervals.OrderIso
 import Mathbin.Order.Hom.CompleteLattice
 
 /-!
@@ -163,7 +164,7 @@ end LE
 
 section Preorder
 
-variable [Preorder α] [Preorder β] {s : Set α} (a : α)
+variable [Preorder α] [Preorder β] {s : Set α} {p : α → Prop} (a : α)
 
 theorem is_upper_set_Ici : IsUpperSet (IciCat a) := fun _ _ => ge_trans
 
@@ -204,6 +205,22 @@ theorem IsLowerSet.image (hs : IsLowerSet s) (f : α ≃o β) : IsLowerSet (f ''
   change IsLowerSet ((f : α ≃ β) '' s)
   rw [Set.image_equiv_eq_preimage_symm]
   exact hs.preimage f.symm.monotone
+
+@[simp]
+theorem Set.monotone_mem : Monotone (· ∈ s) ↔ IsUpperSet s :=
+  Iff.rfl
+
+@[simp]
+theorem Set.antitone_mem : Antitone (· ∈ s) ↔ IsLowerSet s :=
+  forall_swap
+
+@[simp]
+theorem is_upper_set_set_of : IsUpperSet { a | p a } ↔ Monotone p :=
+  Iff.rfl
+
+@[simp]
+theorem is_lower_set_set_of : IsLowerSet { a | p a } ↔ Antitone p :=
+  forall_swap
 
 section OrderTop
 
@@ -1025,6 +1042,14 @@ theorem Ici_supr (f : ι → α) : ici (⨆ i, f i) = ⨆ i, ici (f i) :=
 @[simp]
 theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨆ (i) (j), ici (f i j) := by simp_rw [Ici_supr]
 
+/- warning: upper_set.Ici_Sup_hom clashes with upper_set.Ici_sup_hom -> UpperSet.iciSupHom
+Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup_hom UpperSet.iciSupHomₓ'. -/
+#print UpperSet.iciSupHom /-
+/-- `upper_set.Ici` as a `Sup_hom`. -/
+def iciSupHom : SupHom α (UpperSet α) :=
+  ⟨ici, fun s => (Ici_Sup s).trans Sup_image.symm⟩
+-/
+
 @[simp]
 theorem Ici_Sup_hom_apply (a : α) : iciSupHom a = toDual (ici a) :=
   rfl
@@ -1125,6 +1150,14 @@ theorem Iic_infi (f : ι → α) : iic (⨅ i, f i) = ⨅ i, iic (f i) :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Iic_infi₂ (f : ∀ i, κ i → α) : iic (⨅ (i) (j), f i j) = ⨅ (i) (j), iic (f i j) := by simp_rw [Iic_infi]
+
+/- warning: lower_set.Iic_Inf_hom clashes with lower_set.Iic_inf_hom -> LowerSet.iicInfHom
+Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf_hom LowerSet.iicInfHomₓ'. -/
+#print LowerSet.iicInfHom /-
+/-- `lower_set.Iic` as an `Inf_hom`. -/
+def iicInfHom : InfHom α (LowerSet α) :=
+  ⟨iic, fun s => (Iic_Inf s).trans Inf_image.symm⟩
+-/
 
 @[simp]
 theorem coe_Iic_Inf_hom : (iicInfHom : α → LowerSet α) = Iic :=

@@ -72,20 +72,25 @@ variable {M N : Type _} (μ : M → N → N) (r : N → N → Prop)
 
 variable (M N)
 
+#print Covariant /-
 /-- `covariant` is useful to formulate succintly statements about the interactions between an
 action of a Type on another one and a relation on the acted-upon Type.
 
 See the `covariant_class` doc-string for its meaning. -/
 def Covariant : Prop :=
   ∀ (m) {n₁ n₂}, r n₁ n₂ → r (μ m n₁) (μ m n₂)
+-/
 
+#print Contravariant /-
 /-- `contravariant` is useful to formulate succintly statements about the interactions between an
 action of a Type on another one and a relation on the acted-upon Type.
 
 See the `contravariant_class` doc-string for its meaning. -/
 def Contravariant : Prop :=
   ∀ (m) {n₁ n₂}, r (μ m n₁) (μ m n₂) → r n₁ n₂
+-/
 
+#print CovariantClass /-
 /-- Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
 `covariant_class` says that "the action `μ` preserves the relation `r`."
 
@@ -100,7 +105,9 @@ If `m : M` and `h : r n₁ n₂`, then `covariant_class.elim m h : r (μ m n₁)
 @[protect_proj]
 class CovariantClass : Prop where
   elim : Covariant M N μ r
+-/
 
+#print ContravariantClass /-
 /-- Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
 `contravariant_class` says that "if the result of the action `μ` on a pair satisfies the
 relation `r`, then the initial pair satisfied the relation `r`."
@@ -116,6 +123,7 @@ If `m : M` and `h : r (μ m n₁) (μ m n₂)`, then `contravariant_class.elim m
 @[protect_proj]
 class ContravariantClass : Prop where
   elim : Contravariant M N μ r
+-/
 
 /- warning: rel_iff_cov -> rel_iff_cov is a dubious translation:
 lean 3 declaration is
@@ -153,8 +161,10 @@ section Covariant
 
 variable {M N μ r} [CovariantClass M N μ r]
 
+#print act_rel_act_of_rel /-
 theorem act_rel_act_of_rel (m : M) {a b : N} (ab : r a b) : r (μ m a) (μ m b) :=
   CovariantClass.elim _ ab
+-/
 
 /- warning: group.covariant_iff_contravariant -> Group.covariant_iff_contravariant is a dubious translation:
 lean 3 declaration is
@@ -258,8 +268,10 @@ section Contravariant
 
 variable {M N μ r} [ContravariantClass M N μ r]
 
+#print rel_of_act_rel_act /-
 theorem rel_of_act_rel_act (m : M) {a b : N} (ab : r (μ m a) (μ m b)) : r a b :=
   ContravariantClass.elim _ ab
+-/
 
 section IsTrans
 
@@ -352,6 +364,7 @@ theorem Antitone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (s
 
 end Monotone
 
+#print covariant_le_of_covariant_lt /-
 theorem covariant_le_of_covariant_lt [PartialOrder N] : Covariant M N μ (· < ·) → Covariant M N μ (· ≤ ·) := by
   refine' fun h a b c bc => _
   rcases le_iff_eq_or_lt.mp bc with (rfl | bc)
@@ -359,20 +372,27 @@ theorem covariant_le_of_covariant_lt [PartialOrder N] : Covariant M N μ (· < �
     
   · exact (h _ bc).le
     
+-/
 
+#print contravariant_lt_of_contravariant_le /-
 theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
     Contravariant M N μ (· ≤ ·) → Contravariant M N μ (· < ·) := by
   refine' fun h a b c bc => lt_iff_le_and_ne.mpr ⟨h a bc.le, _⟩
   rintro rfl
   exact lt_irrefl _ bc
+-/
 
+#print covariant_le_iff_contravariant_lt /-
 theorem covariant_le_iff_contravariant_lt [LinearOrder N] : Covariant M N μ (· ≤ ·) ↔ Contravariant M N μ (· < ·) :=
   ⟨fun h a b c bc => not_le.mp fun k => not_le.mpr bc (h _ k), fun h a b c bc =>
     not_lt.mp fun k => not_lt.mpr bc (h _ k)⟩
+-/
 
+#print covariant_lt_iff_contravariant_le /-
 theorem covariant_lt_iff_contravariant_le [LinearOrder N] : Covariant M N μ (· < ·) ↔ Contravariant M N μ (· ≤ ·) :=
   ⟨fun h a b c bc => not_lt.mp fun k => not_lt.mpr bc (h _ k), fun h a b c bc =>
     not_le.mp fun k => not_le.mpr bc (h _ k)⟩
+-/
 
 /- warning: covariant_flip_mul_iff -> covariant_flip_mul_iff is a dubious translation:
 lean 3 declaration is
@@ -394,15 +414,19 @@ Case conversion may be inaccurate. Consider using '#align contravariant_flip_mul
 theorem contravariant_flip_mul_iff [CommSemigroup N] :
     Contravariant N N (flip (· * ·)) r ↔ Contravariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
 
+#print contravariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
 instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N] [CovariantClass N N (· * ·) (· ≤ ·)] :
     ContravariantClass N N (· * ·)
       (· < ·) where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
+-/
 
+#print covariant_mul_lt_of_contravariant_mul_le /-
 @[to_additive]
 instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N] [ContravariantClass N N (· * ·) (· ≤ ·)] :
     CovariantClass N N (· * ·)
       (· < ·) where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
+-/
 
 /- warning: covariant_swap_mul_le_of_covariant_mul_le -> covariant_swap_mul_le_of_covariant_mul_le is a dubious translation:
 lean 3 declaration is

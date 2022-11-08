@@ -98,10 +98,10 @@ theorem _root_.simple_graph.simple_graph_of_structure (G : SimpleGraph V) :
 @[simp]
 theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] :
     (simpleGraphOfStructure V).StructureCat = S := by
-  ext n f xs
+  ext (n f xs)
   · exact (is_relational.empty_functions n).elim f
     
-  · ext n r xs
+  · ext (n r xs)
     rw [iff_eq_eq]
     cases n
     · exact r.elim

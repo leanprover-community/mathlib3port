@@ -346,7 +346,7 @@ def toNormedAddCommGroup : NormedAddCommGroup F :=
         have h₃ : re ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ := by linarith
         have h₄ : re ⟪y, x⟫ ≤ ∥x∥ * ∥y∥ := by rwa [← inner_conj_sym, conj_re]
         have : ∥x + y∥ * ∥x + y∥ ≤ (∥x∥ + ∥y∥) * (∥x∥ + ∥y∥) := by
-          simp [← inner_self_eq_norm_mul_norm, inner_add_add_self, add_mul, mul_add, mul_comm]
+          simp only [← inner_self_eq_norm_mul_norm, inner_add_add_self, mul_add, mul_comm, map_add]
           linarith
         exact nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this,
       eq_zero_of_map_eq_zero' := fun x hx =>
@@ -511,7 +511,7 @@ theorem real_inner_self_nonneg {x : F} : 0 ≤ ⟪x, x⟫_ℝ :=
 theorem inner_self_eq_zero {x : E} : ⟪x, x⟫ = 0 ↔ x = 0 := by
   constructor
   · intro h
-    have h₁ : re ⟪x, x⟫ = 0 := by rw [IsROrC.ext_iff] at h <;> simp [h.1]
+    have h₁ : re ⟪x, x⟫ = 0 := by rw [IsROrC.ext_iff] at h <;> simp only [h.1, zero_re']
     rw [← norm_sq_eq_inner x] at h₁
     rw [← norm_eq_zero]
     exact pow_eq_zero h₁
@@ -591,7 +591,7 @@ theorem inner_add_add_self {x y : E} : ⟪x + y, x + y⟫ = ⟪x, x⟫ + ⟪x, y
 /-- Expand `⟪x + y, x + y⟫_ℝ` -/
 theorem real_inner_add_add_self {x y : F} : ⟪x + y, x + y⟫_ℝ = ⟪x, x⟫_ℝ + 2 * ⟪x, y⟫_ℝ + ⟪y, y⟫_ℝ := by
   have : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ := by rw [← inner_conj_sym] <;> rfl
-  simp [inner_add_add_self, this]
+  simp only [inner_add_add_self, this, add_left_inj]
   ring
 
 -- Expand `⟪x - y, x - y⟫`
@@ -601,7 +601,7 @@ theorem inner_sub_sub_self {x y : E} : ⟪x - y, x - y⟫ = ⟪x, x⟫ - ⟪x, y
 /-- Expand `⟪x - y, x - y⟫_ℝ` -/
 theorem real_inner_sub_sub_self {x y : F} : ⟪x - y, x - y⟫_ℝ = ⟪x, x⟫_ℝ - 2 * ⟪x, y⟫_ℝ + ⟪y, y⟫_ℝ := by
   have : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ := by rw [← inner_conj_sym] <;> rfl
-  simp [inner_sub_sub_self, this]
+  simp only [inner_sub_sub_self, this, add_left_inj]
   ring
 
 variable (𝕜)
@@ -890,8 +890,8 @@ theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ �
     (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) : Orthonormal 𝕜 (fun x => x : ⋃₀s → E) := by
   rw [Set.sUnion_eq_Union] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (w «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (u «expr ⊇ » w) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (w «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (u «expr ⊇ » w) -/
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
@@ -1479,7 +1479,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       exact h2'
       
     conv at h2 in ⟪r • x, t⟫ => rw [inner_smul_left, ht0, mul_zero]
-    symm'  at h2
+    symm at h2
     have h₁ : ⟪t, r • x⟫ = 0 := by
       rw [inner_smul_right, ← inner_conj_sym, ht0]
       simp

@@ -205,15 +205,11 @@ def prec (f g : Code) : Code :=
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident cg, ",", ident hg, "⟩", ":", expr «expr∃ , »((c : code),
-    ∀ v : vector exprℕ() m,
-    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]] -/
 theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
     ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFn fun i => g i v) >>= f) := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident cg, \",\", ident hg, \"⟩\", \":\", expr «expr∃ , »((c : code),\n    ∀ v : vector exprℕ() m,\n    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]"
+  rsuffices ⟨cg, hg⟩ : ∃ c : code, ∀ v : Vector ℕ m, c.eval v.1 = Subtype.val <$> Vector.mOfFn fun i => g i v
   · obtain ⟨cf, hf⟩ := hf
     exact
       ⟨cf.comp cg, fun v => by
@@ -532,7 +528,7 @@ def Cfg.then : Cfg → Cont → Cfg
   | cfg.halt v, k' => stepRet k' v
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:325:16: warning: unsupported simp config option: constructor_eq -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:324:16: warning: unsupported simp config option: constructor_eq -/
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
@@ -1360,7 +1356,7 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
   simp
   rw [if_neg (show o ≠ some Γ'.Cons by cases L <;> rintro ⟨⟩)]
   refine' (clear_ok (split_at_pred_eq _ _ _ none [] _ ⟨rfl, rfl⟩)).trans _
-  · exact fun x h => to_bool_ff (tr_list_ne_Cons _ _ h)
+  · exact fun x h => Bool.decide_false (tr_list_ne_Cons _ _ h)
     
   convert unrev_ok
   simp [List.reverse_core_eq]
@@ -1390,7 +1386,7 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
     refine'
       trans_gen.trans
         (clear_ok
-          (split_at_pred_eq _ _ (tr_list L₂) (some Γ'.Cons) L₃ (fun x h => to_bool_ff (tr_list_ne_Cons _ _ h))
+          (split_at_pred_eq _ _ (tr_list L₂) (some Γ'.Cons) L₃ (fun x h => Bool.decide_false (tr_list_ne_Cons _ _ h))
             ⟨rfl, by simp⟩))
         _
     convert unrev_ok
@@ -1561,7 +1557,7 @@ theorem tr_ret_respects (k v s) :
   · rfl
     
   pick_goal 4
-  · exact split_at_pred_eq _ _ _ (some Γ'.Cons) _ (fun x h => to_bool_ff (tr_list_ne_Cons _ _ h)) ⟨rfl, rfl⟩
+  · exact split_at_pred_eq _ _ _ (some Γ'.Cons) _ (fun x h => Bool.decide_false (tr_list_ne_Cons _ _ h)) ⟨rfl, rfl⟩
     
   refine' (move₂_ok (by decide) _ (split_at_pred_ff _)).trans _
   · rfl

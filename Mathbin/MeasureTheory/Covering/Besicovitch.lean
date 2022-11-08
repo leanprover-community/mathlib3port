@@ -130,7 +130,7 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   hlast : ∀ i < last N, r i ≤ dist (c i) (c (last N)) ∧ r (last N) ≤ τ * r i
   inter : ∀ i < last N, dist (c i) (c (last N)) ≤ r i + r (last N)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] [] -/
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
@@ -944,8 +944,8 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (U «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ⊇ » s') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (v «expr ⊇ » s') -/
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/

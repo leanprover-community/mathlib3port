@@ -541,7 +541,7 @@ def tmulEquiv : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) ≃ₗ[R] ⨂[R]
       -- Speed up the call to `simp`.
       simp only [tmul_symm_apply, tmul_apply, Sum.elim_comp_inl_inr])
     (by
-      ext x y
+      ext (x y)
       show tmul_symm (tmul (tprod R x ⊗ₜ[R] tprod R y)) = tprod R x ⊗ₜ[R] tprod R y
       simp only [tmul_apply, tmul_symm_apply, Sum.elim_inl, Sum.elim_inr])
 

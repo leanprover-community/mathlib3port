@@ -1423,7 +1423,7 @@ unsafe def normalize (transp : Transparency) (e : expr) : tactic (expr × expr) 
     ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed)
         (fun _ _ _ _ e => do
           let (e'', pf) ← run_ring_exp transp e <| eval_simple e
-          guard ¬expr.alpha_eqv e'' e
+          guard ¬e'' == e
           return ((), e'', some pf, ff))
         (fun _ _ _ _ _ => failed) `eq e
   pure (e', pf')

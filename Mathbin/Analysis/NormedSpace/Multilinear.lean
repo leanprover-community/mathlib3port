@@ -226,7 +226,8 @@ theorem norm_image_sub_le_of_bound {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ∥f m�
       ring
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr nat.cast_nonneg, ",", expr pow_le_pow_of_le_left, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- If a multilinear map satisfies an inequality `∥f m∥ ≤ C * ∏ i, ∥m i∥`, then it is
 continuous. -/
 theorem continuous_of_bound (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C * ∏ i, ∥m i∥) : Continuous f := by
@@ -248,8 +249,8 @@ theorem continuous_of_bound (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C * ∏ i, ∥m 
     ∥f m' - f m∥ ≤ D * Fintype.card ι * max ∥m'∥ ∥m∥ ^ (Fintype.card ι - 1) * ∥m' - m∥ :=
       f.norm_image_sub_le_of_bound D_pos H m' m
     _ ≤ D * Fintype.card ι * (∥m∥ + 1) ^ (Fintype.card ι - 1) * ∥m' - m∥ := by
-      apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg, Nat.cast_nonneg,
-        pow_le_pow_of_le_left]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr mul_nonneg, \",\", expr norm_nonneg, \",\", expr nat.cast_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
 
 /-- Constructing a continuous multilinear map from a multilinear map satisfying a boundedness
@@ -534,7 +535,10 @@ theorem norm_image_sub_le (m₁ m₂ : ∀ i, E i) :
     ∥f m₁ - f m₂∥ ≤ ∥f∥ * Fintype.card ι * max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1) * ∥m₁ - m₂∥ :=
   f.toMultilinearMap.norm_image_sub_le_of_bound (norm_nonneg _) f.le_op_norm _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul, ",", expr le_refl, ",", expr le_trans (norm_fst_le q)
+   A, ",", expr nat.cast_nonneg, ",", expr mul_nonneg, ",", expr pow_le_pow_of_le_left, ",", expr pow_nonneg, ",", expr norm_snd_le
+   «expr - »(q, p), ",", expr norm_nonneg, ",", expr norm_fst_le «expr - »(q, p), ",", expr prod_nonneg, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Applying a multilinear map to a vector is continuous in both coordinates. -/
 theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G × ∀ i, E i => p.1 p.2 := by
   apply continuous_iff_continuous_at.2 fun p => _
@@ -553,8 +557,8 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
     _ ≤ ∥q.1∥ * Fintype.card ι * max ∥q.2∥ ∥p.2∥ ^ (Fintype.card ι - 1) * ∥q.2 - p.2∥ + ∥q.1 - p.1∥ * ∏ i, ∥p.2 i∥ :=
       add_le_add (norm_image_sub_le _ _ _) ((q.1 - p.1).le_op_norm p.2)
     _ ≤ (∥p∥ + 1) * Fintype.card ι * (∥p∥ + 1) ^ (Fintype.card ι - 1) * ∥q - p∥ + ∥q - p∥ * ∏ i, ∥p.2 i∥ := by
-      apply_rules [add_le_add, mul_le_mul, le_refl, le_trans (norm_fst_le q) A, Nat.cast_nonneg, mul_nonneg,
-        pow_le_pow_of_le_left, pow_nonneg, norm_snd_le (q - p), norm_nonneg, norm_fst_le (q - p), prod_nonneg]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul, \",\", expr le_refl, \",\", expr le_trans (norm_fst_le q)\n   A, \",\", expr nat.cast_nonneg, \",\", expr mul_nonneg, \",\", expr pow_le_pow_of_le_left, \",\", expr pow_nonneg, \",\", expr norm_snd_le\n   «expr - »(q, p), \",\", expr norm_nonneg, \",\", expr norm_fst_le «expr - »(q, p), \",\", expr prod_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     _ = ((∥p∥ + 1) * Fintype.card ι * (∥p∥ + 1) ^ (Fintype.card ι - 1) + ∏ i, ∥p.2 i∥) * dist q p := by
       rw [dist_eq_norm]
       ring
@@ -892,10 +896,12 @@ def mkContinuousLinear (f : G →ₗ[𝕜] MultilinearMap 𝕜 E G') (C : ℝ) (
       { toFun := fun x => (f x).mkContinuous (C * ∥x∥) <| H x,
         map_add' := fun x y => by
           ext1
-          simp,
+          simp only [_root_.map_add]
+          rfl,
         map_smul' := fun c x => by
           ext1
-          simp }
+          simp only [SmulHomClass.map_smul]
+          rfl }
       (max C 0))
     fun x => ((f x).mk_continuous_norm_le' _).trans_eq <| by rw [max_mul_of_nonneg _ _ (norm_nonneg x), zero_mul]
 
@@ -1094,7 +1100,7 @@ theorem ContinuousMultilinearMap.curry_left_apply (f : ContinuousMultilinearMap 
 @[simp]
 theorem ContinuousLinearMap.curry_uncurry_left
     (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Fin n => Ei i.succ) G) : f.uncurryLeft.curryLeft = f := by
-  ext m x
+  ext (m x)
   simp only [tail_cons, ContinuousLinearMap.uncurry_left_apply, ContinuousMultilinearMap.curry_left_apply]
   rw [cons_zero]
 
@@ -1195,7 +1201,7 @@ theorem ContinuousMultilinearMap.curry_right_apply (f : ContinuousMultilinearMap
 theorem ContinuousMultilinearMap.curry_uncurry_right
     (f : ContinuousMultilinearMap 𝕜 (fun i : Fin n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) :
     f.uncurryRight.curryRight = f := by
-  ext m x
+  ext (m x)
   simp only [snoc_last, ContinuousMultilinearMap.curry_right_apply, ContinuousMultilinearMap.uncurry_right_apply]
   rw [init_snoc]
 
@@ -1485,7 +1491,7 @@ def currySumEquiv :
         ext m
         exact congr_arg f (Sum.elim_comp_inl_inr m),
       right_inv := fun f => by
-        ext m₁ m₂
+        ext (m₁ m₂)
         change f _ _ = f _ _
         rw [Sum.elim_comp_inl, Sum.elim_comp_inr] }
     (fun f => MultilinearMap.mk_continuous_multilinear_norm_le _ (norm_nonneg f) _) fun f =>

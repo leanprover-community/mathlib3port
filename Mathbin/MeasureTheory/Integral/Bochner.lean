@@ -1272,7 +1272,6 @@ theorem integral_smul_measure (f : α → E) (c : ℝ≥0∞) : (∫ x, f x ∂c
   rw [← set_to_fun_congr_smul_measure c hc hdfma hdfma_smul f]
   exact set_to_fun_congr_left' _ _ (fun s hs hμs => weighted_smul_smul_measure μ c) f
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 theorem integral_map_of_strongly_measurable {β} [MeasurableSpace β] {φ : α → β} (hφ : Measurable φ) {f : β → E}
     (hfm : StronglyMeasurable f) : (∫ y, f y ∂Measure.map φ μ) = ∫ x, f (φ x) ∂μ := by
   by_cases hfi:integrable f (measure.map φ μ)
@@ -1280,7 +1279,7 @@ theorem integral_map_of_strongly_measurable {β} [MeasurableSpace β] {φ : α �
   · rw [integral_undef hfi, integral_undef]
     rwa [← integrable_map_measure hfm.ae_strongly_measurable hφ.ae_measurable]
     
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
+  borelize E
   haveI : separable_space (range f ∪ {0} : Set E) := hfm.separable_space_range_union_singleton
   refine'
     tendsto_nhds_unique (tendsto_integral_approx_on_of_measurable_of_range_subset hfm.measurable hfi _ subset.rfl) _
@@ -1337,11 +1336,10 @@ theorem set_integral_eq_subtype {α} [MeasureSpace α] {s : Set α} (hs : Measur
   rw [← map_comap_subtype_coe hs]
   exact (MeasurableEmbedding.subtypeCoe hs).integral_map _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 @[simp]
 theorem integral_dirac' [MeasurableSpace α] (f : α → E) (a : α) (hfm : StronglyMeasurable f) :
     (∫ x, f x ∂Measure.dirac a) = f a := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
+  borelize E
   calc
     (∫ x, f x ∂measure.dirac a) = ∫ x, f a ∂measure.dirac a := integral_congr_ae <| ae_eq_dirac' hfm.measurable
     _ = f a := by simp [measure.dirac_apply_of_mem]
@@ -1507,10 +1505,9 @@ theorem integral_trim_simple_func (hm : m ≤ m0) (f : @SimpleFunc β m F) (hf_i
   congr
   exact (trim_measurable_set_eq hm (@simple_func.measurable_set_fiber β F m f x)).symm
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]] -/
 theorem integral_trim (hm : m ≤ m0) {f : β → F} (hf : strongly_measurable[m] f) : (∫ x, f x ∂μ) = ∫ x, f x ∂μ.trim hm :=
   by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]]"
+  borelize F
   by_cases hf_int:integrable f μ
   swap
   · have hf_int_m : ¬integrable f (μ.trim hm) := fun hf_int_m => hf_int (integrable_of_integrable_trim hm hf_int_m)

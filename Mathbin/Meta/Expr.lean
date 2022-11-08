@@ -321,7 +321,7 @@ unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr 
  -/
 unsafe def int.mk_numeral (type has_zero has_one has_add has_neg : expr) : ℤ → expr
   | Int.ofNat n => n.mk_numeral type Zero One Add
-  | -[1 + n] =>
+  | -[n+1] =>
     let ne := (n + 1).mk_numeral type Zero One Add
     quote.1 (@Neg.neg.{0} (%%ₓtype) (%%ₓNeg) (%%ₓNe))
 
@@ -765,7 +765,7 @@ unsafe def get_app_fn_args : expr → expr × List expr :=
 unsafe def drop_pis : List expr → expr → tactic expr
   | v :: vs, pi n bi d b => do
     let t ← infer_type v
-    guard (expr.alpha_eqv t d)
+    guard (t == d)
     drop_pis vs (b v)
   | [], e => return e
   | _, _ => failed

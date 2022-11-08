@@ -184,7 +184,7 @@ theorem classifierIsSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :=
       intro Z g hg
       apply congr_arg Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
     have MSNS : M ⊓ S = N ⊓ S := by
-      ext Z g
+      ext (Z g)
       rw [sieve.inter_apply, sieve.inter_apply, and_comm' (N g), and_comm']
       apply and_congr_right
       intro hg
@@ -290,7 +290,7 @@ def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
 -/
 theorem topology_of_closure_operator_self :
     (topologyOfClosureOperator J₁.ClosureOperator fun X Y => J₁.pullback_close) = J₁ := by
-  ext X S
+  ext (X S)
   apply grothendieck_topology.close_eq_top_iff_mem
 
 theorem topology_of_closure_operator_close (c : ∀ X : C, ClosureOperator (Sieve X))

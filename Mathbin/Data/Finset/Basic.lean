@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 -/
-import Mathbin.Data.Int.Basic
 import Mathbin.Data.Multiset.FinsetOps
+import Mathbin.Algebra.Hom.Embedding
 import Mathbin.Tactic.Apply
 import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.Tactic.NthRewrite.Default
@@ -136,11 +136,13 @@ universe u
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
+#print Finset /-
 /-- `finset α` is the type of finite sets of elements of `α`. It is implemented
   as a multiset (a list up to permutation) which has no duplicate elements. -/
 structure Finset (α : Type _) where
   val : Multiset α
   Nodup : Nodup val
+-/
 
 namespace Finset
 
@@ -166,8 +168,10 @@ instance hasDecidableEq [DecidableEq α] : DecidableEq (Finset α)
 instance : Membership α (Finset α) :=
   ⟨fun a s => a ∈ s.1⟩
 
+#print Finset.mem_def /-
 theorem mem_def {a : α} {s : Finset α} : a ∈ s ↔ a ∈ s.1 :=
   Iff.rfl
+-/
 
 @[simp]
 theorem mem_mk {a : α} {s nd} : a ∈ @Finset.mk α s nd ↔ a ∈ s :=
@@ -839,7 +843,7 @@ theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
 
 theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) := fun a h b _ => (insert_inj h).1
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by exact_mod_cast @Set.ssubset_iff_insert α s t
 
 theorem ssubset_insert (h : a ∉ s) : s ⊂ insert a s :=
@@ -1786,7 +1790,7 @@ end symmDiff
 def attach (s : Finset α) : Finset { x // x ∈ s } :=
   ⟨attach s.1, nodup_attach.2 s.2⟩
 
-theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Finset α} (hx : x ∈ s) : sizeOf x < sizeOf s := by
+theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Finset α} (hx : x ∈ s) : SizeOf.sizeOf x < SizeOf.sizeOf s := by
   cases s
   dsimp [SizeOf.sizeOf, SizeOf.sizeOf, Finset.sizeof]
   apply lt_add_left
@@ -1845,7 +1849,7 @@ theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i :=
 @[simp]
 theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g i := by simp [piecewise, hi]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i ∈ s, f i = f' i) (hg : ∀ (i) (_ : i ∉ s), g i = g' i) :
     s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
@@ -1914,7 +1918,7 @@ theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i} (Hf : h ≤ f) (Hg : h ≤ g) :
     h ≤ s.piecewise f g := fun x => piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i} (Hf : ∀ x ∈ s, f x ≤ f' x)
     (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) : s.piecewise f g ≤ s.piecewise f' g' := fun x => by
   by_cases hx:x ∈ s <;> simp [hx, *]
@@ -2130,10 +2134,13 @@ theorem filter_not [DecidablePred fun a => ¬p a] (s : Finset α) : (s.filter fu
 theorem sdiff_eq_filter (s₁ s₂ : Finset α) : s₁ \ s₂ = filter (· ∉ s₂) s₁ :=
   ext fun _ => by simp only [mem_sdiff, mem_filter]
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr «expr ∩ »(«expr \ »(s₁, s₂), s₂)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ s₂ ⊆ ∅ := by
   simp [subset.antisymm_iff]
   constructor <;> intro h
-  · trans' s₁ \ s₂ ∩ s₂
+  · trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr «expr ∩ »(«expr \\ »(s₁, s₂), s₂)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     mono
     simp
     
@@ -2143,12 +2150,6 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
       _ ⊇ s₁ := by simp [(· ⊇ ·)]
       
     
-
-theorem filter_union_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α) :
-    (s.filter p ∪ s.filter fun a => ¬p a) = s := by simp only [filter_not, union_sdiff_of_subset (filter_subset p s)]
-
-theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α) :
-    (s.filter p ∩ s.filter fun a => ¬p a) = ∅ := by simp only [filter_not, inter_sdiff_self]
 
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
@@ -2236,9 +2237,26 @@ theorem disjointFilterFilter {s t : Finset α} {p q : α → Prop} [DecidablePre
     Disjoint s t → Disjoint (s.filter p) (t.filter q) :=
   Disjoint.mono (filter_subset _ _) (filter_subset _ _)
 
-theorem disjointFilterFilterNeg (s : Finset α) (p : α → Prop) [DecidablePred p] :
-    Disjoint (s.filter p) (s.filter fun a => ¬p a) :=
-  (disjoint_filter.2 fun a _ => id).symm
+theorem disjointFilterFilter' (s t : Finset α) {p q : α → Prop} [DecidablePred p] [DecidablePred q] (h : Disjoint p q) :
+    Disjoint (s.filter p) (t.filter q) := by
+  simp_rw [disjoint_left, mem_filter]
+  rintro a ⟨hs, hp⟩ ⟨ht, hq⟩
+  exact h _ ⟨hp, hq⟩
+
+theorem disjointFilterFilterNeg (s t : Finset α) (p : α → Prop) [DecidablePred p] [DecidablePred fun a => ¬p a] :
+    Disjoint (s.filter p) (t.filter fun a => ¬p a) :=
+  disjointFilterFilter' s t disjointComplRight
+
+theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s t : Finset α) :
+    (s.filter p ∩ t.filter fun a => ¬p a) = ∅ :=
+  (disjointFilterFilterNeg s t p).eq_bot
+
+theorem filter_union_filter_of_codisjoint (s : Finset α) (h : Codisjoint p q) : s.filter p ∪ s.filter q = s :=
+  (filter_or _ _ _).symm.trans <| filter_true_of_mem fun x hx => h x trivial
+
+theorem filter_union_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α) :
+    (s.filter p ∪ s.filter fun a => ¬p a) = s :=
+  filter_union_filter_of_codisjoint _ _ _ codisjointHnotRight
 
 end Filter
 
@@ -3375,10 +3393,8 @@ section Pairwise
 variable {s : Finset α}
 
 theorem pairwise_subtype_iff_pairwise_finset' (r : β → β → Prop) (f : α → β) :
-    Pairwise (r on fun x : s => f x) ↔ (s : Set α).Pairwise (r on f) := by
-  refine' ⟨fun h x hx y hy hxy => h ⟨x, hx⟩ ⟨y, hy⟩ (by simpa only [Subtype.mk_eq_mk, Ne.def] ), _⟩
-  rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy
-  exact h hx hy (subtype.mk_eq_mk.not.mp hxy)
+    Pairwise (r on fun x : s => f x) ↔ (s : Set α).Pairwise (r on f) :=
+  pairwise_subtype_iff_pairwise_set (s : Set α) (r on f)
 
 theorem pairwise_subtype_iff_pairwise_finset (r : α → α → Prop) :
     Pairwise (r on fun x : s => x) ↔ (s : Set α).Pairwise r :=

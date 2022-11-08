@@ -44,7 +44,7 @@ theorem IsHermitian.eq {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ = A :=
 @[ext]
 theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) → A.IsHermitian := by
   intro h
-  ext i j
+  ext (i j)
   exact h i j
 
 theorem IsHermitian.apply {A : Matrix n n α} (h : A.IsHermitian) (i j : n) : star (A j i) = A i j := by
@@ -211,7 +211,7 @@ theorem is_hermitian_iff_is_symmetric [Fintype n] [DecidableEq n] {A : Matrix n 
     rw [h]
     
   · intro h
-    ext i j
+    ext (i j)
     simpa only [(Pi.single_star i 1).symm, ← star_mul_vec, mul_one, dot_product_single, single_vec_mul, star_one,
       one_mul] using
       h (@Pi.single _ _ _ (fun i => AddZeroClass.toHasZero α) i 1)

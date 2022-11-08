@@ -107,7 +107,7 @@ theorem coe_pos {x : ℝ} : 0 < (x : ℝ*) ↔ 0 < x :=
   coe_lt_coe
 
 @[simp, norm_cast]
-theorem coe_abs (x : ℝ) : ((abs x : ℝ) : ℝ*) = abs x :=
+theorem coe_abs (x : ℝ) : ((|x| : ℝ) : ℝ*) = |x| :=
   const_abs x
 
 @[simp, norm_cast]
@@ -327,7 +327,7 @@ theorem is_st_trans_real {r s t : ℝ} : IsSt r s → IsSt s t → IsSt r t := b
 theorem is_st_inj_real {r₁ r₂ s : ℝ} (h1 : IsSt r₁ s) (h2 : IsSt r₂ s) : r₁ = r₂ :=
   Eq.trans (eq_of_is_st_real h1) (eq_of_is_st_real h2).symm
 
-theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : IsSt x r ↔ ∀ δ : ℝ, 0 < δ → abs (x - r) < δ := by
+theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : IsSt x r ↔ ∀ δ : ℝ, 0 < δ → |x - r| < δ := by
   simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm', add_comm]
 
 theorem is_st_add {x y : ℝ*} {r s : ℝ} : IsSt x r → IsSt y s → IsSt (x + y) (r + s) := fun hxr hys d hd =>
@@ -448,10 +448,10 @@ theorem infinite_pos_iff_infinite_of_nonneg {x : ℝ*} (hp : 0 ≤ x) : Infinite
 theorem infinite_neg_iff_infinite_of_neg {x : ℝ*} (hn : x < 0) : InfiniteNeg x ↔ Infinite x := by
   rw [infinite_neg_iff_infinite_and_neg] <;> exact ⟨fun hI => hI.1, fun hI => ⟨hI, hn⟩⟩
 
-theorem infinite_pos_abs_iff_infinite_abs {x : ℝ*} : InfinitePos (abs x) ↔ Infinite (abs x) :=
+theorem infinite_pos_abs_iff_infinite_abs {x : ℝ*} : InfinitePos (|x|) ↔ Infinite (|x|) :=
   infinite_pos_iff_infinite_of_nonneg (abs_nonneg _)
 
-theorem infinite_iff_infinite_pos_abs {x : ℝ*} : Infinite x ↔ InfinitePos (abs x) :=
+theorem infinite_iff_infinite_pos_abs {x : ℝ*} : Infinite x ↔ InfinitePos (|x|) :=
   ⟨fun hi d =>
     Or.cases_on hi (fun hip => by rw [abs_of_pos (hip 0)] <;> exact hip d) fun hin => by
       rw [abs_of_neg (hin 0)] <;> exact lt_neg.mp (hin (-d)),
@@ -464,11 +464,11 @@ theorem infinite_iff_infinite_pos_abs {x : ℝ*} : Infinite x ↔ InfinitePos (a
     · exact Or.inl (by rwa [abs_of_pos h] at hipa)
       ⟩
 
-theorem infinite_iff_infinite_abs {x : ℝ*} : Infinite x ↔ Infinite (abs x) := by
+theorem infinite_iff_infinite_abs {x : ℝ*} : Infinite x ↔ Infinite (|x|) := by
   rw [← infinite_pos_iff_infinite_of_nonneg (abs_nonneg _), infinite_iff_infinite_pos_abs]
 
-theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (abs r : ℝ*) < abs x :=
-  ⟨fun hI r => coe_abs r ▸ infinite_iff_infinite_pos_abs.mp hI (abs r), fun hR =>
+theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (|r| : ℝ*) < |x| :=
+  ⟨fun hI r => coe_abs r ▸ infinite_iff_infinite_pos_abs.mp hI (|r|), fun hR =>
     Or.cases_on (max_choice x (-x)) (fun h => Or.inl fun r => lt_of_le_of_lt (le_abs_self _) (h ▸ hR r)) fun h =>
       Or.inr fun r => neg_lt_neg_iff.mp <| lt_of_le_of_lt (neg_le_abs_self _) (h ▸ hR r)⟩
 
@@ -558,20 +558,20 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
     (Exists.cases_on h') fun t ⟨hu, ht⟩ =>
       is_st_iff_abs_sub_lt_delta.mpr fun d hd =>
         calc
-          abs (x * y - r * s) = abs (x * (y - s) + (x - r) * s) := by rw [mul_sub, sub_mul, add_sub, sub_add_cancel]
-          _ ≤ abs (x * (y - s)) + abs ((x - r) * s) := abs_add _ _
-          _ ≤ abs x * abs (y - s) + abs (x - r) * abs s := by simp only [abs_mul]
-          _ ≤ abs x * (d / t / 2 : ℝ) + (d / abs s / 2 : ℝ) * abs s :=
+          |x * y - r * s| = |x * (y - s) + (x - r) * s| := by rw [mul_sub, sub_mul, add_sub, sub_add_cancel]
+          _ ≤ |x * (y - s)| + |(x - r) * s| := abs_add _ _
+          _ ≤ |x| * |y - s| + |x - r| * |s| := by simp only [abs_mul]
+          _ ≤ |x| * (d / t / 2 : ℝ) + (d / |s| / 2 : ℝ) * |s| :=
             add_le_add
               (mul_le_mul_of_nonneg_left
                   (le_of_lt <| hys' _ <| half_pos <| div_pos hd <| coe_pos.1 <| lt_of_le_of_lt (abs_nonneg x) ht) <|
                 abs_nonneg _)
               (mul_le_mul_of_nonneg_right (le_of_lt <| hxr' _ <| half_pos <| div_pos hd <| abs_pos.2 hs) <|
                 abs_nonneg _)
-          _ = (d / 2 * (abs x / t) + d / 2 : ℝ*) := by
+          _ = (d / 2 * (|x| / t) + d / 2 : ℝ*) := by
             push_cast [-Filter.Germ.const_div]
             -- TODO: Why wasn't `hyperreal.coe_div` used?
-            have : (abs s : ℝ*) ≠ 0 := by simpa
+            have : (|s| : ℝ*) ≠ 0 := by simpa
             have : (2 : ℝ*) ≠ 0 := two_ne_zero
             field_simp [*, add_mul, mul_add, mul_assoc, mul_comm, mul_left_comm]
           _ < (d / 2 * 1 + d / 2 : ℝ*) :=
@@ -642,8 +642,8 @@ theorem lt_neg_of_pos_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : 
 theorem gt_of_neg_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : ℝ, r < 0 → ↑r < x := fun hi r hr => by
   convert ((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_neg ↑r).symm
 
-theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : Infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → abs x < abs r :=
-  ⟨fun hi r hr => abs_lt.mpr (by rw [← coe_abs] <;> exact infinitesimal_def.mp hi (abs r) (abs_pos.2 hr)), fun hR =>
+theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : Infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → |x| < |r| :=
+  ⟨fun hi r hr => abs_lt.mpr (by rw [← coe_abs] <;> exact infinitesimal_def.mp hi (|r|) (abs_pos.2 hr)), fun hR =>
     infinitesimal_def.mpr fun r hr => abs_lt.mp <| (abs_of_pos <| coe_pos.2 hr) ▸ hR r <| ne_of_gt hr⟩
 
 theorem infinitesimal_zero : Infinitesimal 0 :=
@@ -695,7 +695,7 @@ theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} : InfinitePos x ↔ In
     (@Classical.by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
       lt_of_le_of_lt (coe_le_coe.2 (le_abs_self r))
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp
-          ((infinitesimal_def.mp hi) (abs r)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩
+          ((infinitesimal_def.mp hi) (|r|)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩
 
 theorem infinite_neg_iff_infinitesimal_inv_neg {x : ℝ*} : InfiniteNeg x ↔ Infinitesimal x⁻¹ ∧ x⁻¹ < 0 :=
   ⟨fun hin => by

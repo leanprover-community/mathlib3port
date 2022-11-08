@@ -466,10 +466,10 @@ end Groupoid
 /-! ### Charted spaces -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Atlas] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`chartAt] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`Atlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`chartAt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] [] -/
 /-- A charted space is a topological space endowed with an atlas, i.e., a set of local
 homeomorphisms taking value in a model space `H`, called charts, such that the domains of the charts
 cover the whole space. We express the covering property by chosing for each `x` a member
@@ -590,6 +590,15 @@ theorem ChartedSpace.locally_connected_space [LocallyConnectedSpace H] : Locally
   · rintro x s ⟨⟨-, -, hsconn⟩, hssubset⟩
     exact hsconn.is_preconnected.image _ ((E x).continuous_on_symm.mono hssubset)
     
+
+/-- If `M` is modelled on `H'` and `H'` is itself modelled on `H`, then we can consider `M` as being
+modelled on `H`. -/
+def ChartedSpace.comp (H : Type _) [TopologicalSpace H] (H' : Type _) [TopologicalSpace H'] (M : Type _)
+    [TopologicalSpace M] [ChartedSpace H H'] [ChartedSpace H' M] : ChartedSpace H M where
+  Atlas := Image2 LocalHomeomorph.trans (Atlas H' M) (Atlas H H')
+  chartAt := fun p : M => (chartAt H' p).trans (chartAt H (chartAt H' p p))
+  mem_chart_source p := by simp only [mfld_simps]
+  chart_mem_atlas p := ⟨chartAt H' p, chartAt H _, chart_mem_atlas H' p, chart_mem_atlas H _, rfl⟩
 
 end
 
@@ -784,7 +793,7 @@ section HasGroupoid
 
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`compatible] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`compatible] [] -/
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
@@ -879,6 +888,12 @@ variable (G)
 /-- In the model space, the identity is in any maximal atlas. -/
 theorem StructureGroupoid.id_mem_maximal_atlas : LocalHomeomorph.refl H ∈ G.MaximalAtlas H :=
   G.subset_maximal_atlas <| by simp
+
+/-- In the model space, any element of the groupoid is in the maximal atlas. -/
+theorem StructureGroupoid.mem_maximal_atlas_of_mem_groupoid {f : LocalHomeomorph H H} (hf : f ∈ G) :
+    f ∈ G.MaximalAtlas H := by
+  rintro e (rfl : e = LocalHomeomorph.refl H)
+  exact ⟨G.trans (G.symm hf) G.id_mem, G.trans (G.symm G.id_mem) hf⟩
 
 end MaximalAtlas
 

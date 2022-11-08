@@ -832,7 +832,7 @@ theorem hasIntegralMcShaneOfForallIsO (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 
     HasIntegral I mcShane f vol (g I) :=
   (hasIntegralOfBRiemannEqFfOfForallIsO rfl B hB0 g ∅ countable_empty (fun ⟨x, hx⟩ => hx.elim) fun c x hx =>
       hx.2.elim) <|
-    by simpa only [McShane, coe_sort_ff, false_imp_iff, true_imp_iff, diff_empty] using H
+    by simpa only [McShane, Bool.coe_sort_false, false_imp_iff, true_imp_iff, diff_empty] using H
 
 end BoxIntegral
 

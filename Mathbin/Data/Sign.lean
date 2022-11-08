@@ -5,6 +5,7 @@ Authors: Eric Rodriguez
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Int.Lemmas
 import Mathbin.Tactic.DeriveFintype
 
 /-!

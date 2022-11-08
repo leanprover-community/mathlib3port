@@ -89,8 +89,6 @@ theorem exists_pre_weight_space_zero_le_ker_of_is_noetherian [IsNoetherian R M] 
 
 variable {R} (L)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k),
-    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]] -/
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
 protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroup M₁]
     [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroup M₂] [Module R M₂] [LieRingModule L M₂]
@@ -125,15 +123,14 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   let f₁ : Module.EndCat R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
   let f₂ : Module.EndCat R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
   have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
-    ext m₁ m₂
+    ext (m₁ m₂)
     simp only [← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul, lie_tmul_right, tmul_smul,
       to_endomorphism_apply_apply, LieModuleHom.map_smul, LinearMap.one_apply, LieModuleHom.coe_to_linear_map,
       LinearMap.smul_apply, Function.comp_app, LinearMap.coe_comp, LinearMap.rtensor_tmul, LieModuleHom.map_add,
       LinearMap.add_apply, LieModuleHom.map_sub, LinearMap.sub_apply, LinearMap.ltensor_tmul,
       algebra_tensor_module.curry_apply, curry_apply, LinearMap.to_fun_eq_coe, LinearMap.coe_restrict_scalars_eq_coe]
     abel
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident k, \",\", ident hk, \"⟩\", \":\", expr «expr∃ , »((k),\n    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]"
+  rsuffices ⟨k, hk⟩ : ∃ k, ((f₁ + f₂) ^ k) (m₁ ⊗ₜ m₂) = 0
   · use k
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square, LinearMap.comp_apply, hk,
       LinearMap.map_zero]
@@ -147,7 +144,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   -- It's now just an application of the binomial theorem.
   use k₁ + k₂ - 1
   have hf_comm : Commute f₁ f₂ := by
-    ext m₁ m₂
+    ext (m₁ m₂)
     simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul, algebra_tensor_module.curry_apply,
       LinearMap.to_fun_eq_coe, LinearMap.ltensor_tmul, curry_apply, LinearMap.coe_restrict_scalars_eq_coe]
   rw [hf_comm.add_pow']

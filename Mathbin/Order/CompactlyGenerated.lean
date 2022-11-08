@@ -10,6 +10,7 @@ import Mathbin.Order.SupIndep
 import Mathbin.Order.Zorn
 import Mathbin.Data.Finset.Order
 import Mathbin.Data.Finite.Default
+import Mathbin.Data.Set.Intervals.OrderIso
 
 /-!
 # Compactness properties for complete lattices
@@ -55,7 +56,7 @@ namespace CompleteLattice
 
 variable (α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
@@ -266,23 +267,161 @@ theorem is_Sup_finite_compact_iff_all_elements_compact : IsSupFiniteCompact α �
     use t, hts, this
     
 
-theorem well_founded_characterisations :
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `well_founded_characterisations [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app
+             `WellFounded
+             [(Term.paren
+               "("
+               [(Term.paren "(" [(«term_>_» (Term.cdot "·") ">" (Term.cdot "·")) []] ")")
+                [(Term.typeAscription ":" (Term.arrow `α "→" (Term.arrow `α "→" (Term.prop "Prop"))))]]
+               ")")])
+            ","
+            (Term.app `IsSupFiniteCompact [`α])
+            ","
+            (Term.app `IsSupClosedCompact [`α])
+            ","
+            (Term.forall "∀" [`k] [(Term.typeSpec ":" `α)] "," (Term.app `IsCompactElement [`k]))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `well_founded.is_Sup_finite_compact [`α])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `is_Sup_finite_compact.is_sup_closed_compact [`α])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `is_sup_closed_compact.well_founded [`α])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `is_Sup_finite_compact_iff_all_elements_compact [`α])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `well_founded.is_Sup_finite_compact [`α])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `is_Sup_finite_compact.is_sup_closed_compact [`α])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `is_sup_closed_compact.well_founded [`α])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `is_Sup_finite_compact_iff_all_elements_compact [`α])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" (Term.app `is_Sup_finite_compact_iff_all_elements_compact [`α])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `is_Sup_finite_compact_iff_all_elements_compact [`α]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `is_Sup_finite_compact_iff_all_elements_compact [`α])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `is_Sup_finite_compact_iff_all_elements_compact
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "4"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  well_founded_characterisations
+  :
     Tfae
-      [WellFounded ((· > ·) : α → α → Prop), IsSupFiniteCompact α, IsSupClosedCompact α, ∀ k : α, IsCompactElement k] :=
-  by
-  tfae_have 1 → 2
-  · exact well_founded.is_Sup_finite_compact α
-    
-  tfae_have 2 → 3
-  · exact is_Sup_finite_compact.is_sup_closed_compact α
-    
-  tfae_have 3 → 1
-  · exact is_sup_closed_compact.well_founded α
-    
-  tfae_have 2 ↔ 4
-  · exact is_Sup_finite_compact_iff_all_elements_compact α
-    
-  tfae_finish
+      [
+        WellFounded ( ( · > · ) : α → α → Prop )
+          ,
+          IsSupFiniteCompact α
+          ,
+          IsSupClosedCompact α
+          ,
+          ∀ k : α , IsCompactElement k
+        ]
+  :=
+    by
+      tfae_have 1 → 2
+        · exact well_founded.is_Sup_finite_compact α
+        tfae_have 2 → 3
+        · exact is_Sup_finite_compact.is_sup_closed_compact α
+        tfae_have 3 → 1
+        · exact is_sup_closed_compact.well_founded α
+        tfae_have 2 ↔ 4
+        · exact is_Sup_finite_compact_iff_all_elements_compact α
+        tfae_finish
 
 theorem well_founded_iff_is_Sup_finite_compact : WellFounded ((· > ·) : α → α → Prop) ↔ IsSupFiniteCompact α :=
   (well_founded_characterisations α).out 0 1

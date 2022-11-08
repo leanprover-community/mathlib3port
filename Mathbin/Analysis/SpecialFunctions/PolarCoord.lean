@@ -67,7 +67,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
     constructor
     · conv_rhs => rw [← sqrt_sq (le_of_lt hr), ← one_mul (r ^ 2), ← sin_sq_add_cos_sq θ]
       congr 1
-      ring_exp
+      ring
       
     · convert Complex.arg_mul_cos_add_sin_mul_I hr ⟨hθ.1, hθ.2.le⟩
       simp only [Complex.equiv_real_prod_symm_apply, Complex.of_real_mul, Complex.of_real_cos, Complex.of_real_sin]
@@ -147,7 +147,7 @@ theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [Norm
     conv_rhs => rw [← one_mul p.1, ← cos_sq_add_sin_sq p.2]
     simp only [neg_mul, LinearMap.det_to_continuous_linear_map, LinearMap.det_to_lin, Matrix.det_fin_two_of,
       sub_neg_eq_add]
-    ring_exp
+    ring
   symm
   calc
     (∫ p, f p) = ∫ p in polar_coord.source, f p := by

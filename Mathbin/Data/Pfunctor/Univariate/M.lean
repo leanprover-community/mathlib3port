@@ -208,8 +208,8 @@ it contains -/
 def head (x : M F) :=
   head' (x.1 1)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr i]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr i]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- return all the subtrees of the root of a tree `x : M F` -/
 def children (x : M F) (i : F.B (head x)) : M F :=
   let H := fun n : ℕ => @head_succ' _ n 0 x.1 x.2
@@ -219,7 +219,7 @@ def children (x : M F) (i : F.B (head x)) : M F :=
       have P' := x.2 (succ n)
       apply agree_children _ _ _ P'
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr i]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr i]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       apply cast_heq
       symm
       apply cast_heq }

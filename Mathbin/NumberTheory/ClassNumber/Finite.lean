@@ -69,7 +69,7 @@ theorem norm_bound_pos : 0 < normBound abv bS := by
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
     apply (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp (Algebra.left_mul_matrix_injective bS)
-    ext j k
+    ext (j k)
     simp [h, Dmatrix.zero_apply]
   simp only [norm_bound, Algebra.smul_def, eq_nat_cast]
   refine' mul_pos (int.coe_nat_pos.mpr (Nat.factorial_pos _)) _

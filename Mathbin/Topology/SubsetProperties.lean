@@ -189,7 +189,7 @@ theorem IsCompact.elim_nhds_subcover (hs : IsCompact s) (U : α → Set α) (hU 
 neighborhood filter of each point of this set is disjoint with `l`. -/
 theorem IsCompact.disjoint_nhds_set_left {l : Filter α} (hs : IsCompact s) :
     Disjoint (𝓝ˢ s) l ↔ ∀ x ∈ s, Disjoint (𝓝 x) l := by
-  refine' ⟨fun h x hx => h.monoLeft <| nhds_le_nhds_set hx, fun H => _⟩
+  refine' ⟨fun h x hx => h.mono_left <| nhds_le_nhds_set hx, fun H => _⟩
   choose! U hxU hUl using fun x hx => (nhds_basis_opens x).disjoint_iff_left.1 (H x hx)
   choose hxU hUo using hxU
   rcases hs.elim_nhds_subcover U fun x hx => (hUo x hx).mem_nhds (hxU x hx) with ⟨t, hts, hst⟩
@@ -270,7 +270,7 @@ theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ �
   have hZc : ∀ i, IsCompact (Z i) := fun i => compact_of_is_closed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -431,7 +431,6 @@ theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪
 theorem IsCompact.insert (hs : IsCompact s) (a) : IsCompact (insert a s) :=
   is_compact_singleton.union hs
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, "⟩", ":", expr «expr∃ , »((i), «expr ⊆ »(V i, W))]] -/
 /-- If `V : ι → set α` is a decreasing family of closed compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. We assume each `V i` is compact *and* closed because `α` is
 not assumed to be Hausdorff. See `exists_subset_nhd_of_compact` for version assuming this. -/
@@ -439,8 +438,7 @@ theorem exists_subset_nhd_of_compact' {ι : Type _} [Nonempty ι] {V : ι → Se
     (hV_cpct : ∀ i, IsCompact (V i)) (hV_closed : ∀ i, IsClosed (V i)) {U : Set α} (hU : ∀ x ∈ ⋂ i, V i, U ∈ 𝓝 x) :
     ∃ i, V i ⊆ U := by
   obtain ⟨W, hsubW, W_op, hWU⟩ := exists_open_set_nhds hU
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident hi, \"⟩\", \":\", expr «expr∃ , »((i), «expr ⊆ »(V i, W))]]"
+  rsuffices ⟨i, hi⟩ : ∃ i, V i ⊆ W
   · exact ⟨i, hi.trans hWU⟩
     
   by_contra' H
@@ -697,7 +695,7 @@ theorem compact_space_of_finite_subfamily_closed
 theorem IsClosed.is_compact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsCompact s :=
   compact_of_is_closed_subset compact_univ h (subset_univ _)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (Univ : Set α)
@@ -1247,7 +1245,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
     (hne : ∀ i, (f i).Nonempty) : Encodable ι :=
   @Encodable.ofEquiv _ _ (hf.countable_univ hne).toEncodable (Equiv.Set.univ _).symm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
 the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/
@@ -1502,15 +1500,17 @@ theorem Set.Subsingleton.is_preirreducible {s : Set α} (hs : s.Subsingleton) : 
 theorem is_irreducible_singleton {x} : IsIrreducible ({x} : Set α) :=
   ⟨singleton_nonempty x, subsingleton_singleton.IsPreirreducible⟩
 
-theorem IsPreirreducible.closure {s : Set α} (H : IsPreirreducible s) : IsPreirreducible (Closure s) :=
-  fun u v hu hv ⟨y, hycs, hyu⟩ ⟨z, hzcs, hzv⟩ =>
-  let ⟨p, hpu, hps⟩ := mem_closure_iff.1 hycs u hu hyu
-  let ⟨q, hqv, hqs⟩ := mem_closure_iff.1 hzcs v hv hzv
-  let ⟨r, hrs, hruv⟩ := H u v hu hv ⟨p, hps, hpu⟩ ⟨q, hqs, hqv⟩
-  ⟨r, subset_closure hrs, hruv⟩
+theorem is_preirreducible_iff_closure {s : Set α} : IsPreirreducible (Closure s) ↔ IsPreirreducible s :=
+  forall₄_congr fun u v hu hv => by
+    iterate 3 rw [closure_inter_open_nonempty_iff]
+    exacts[hu.inter hv, hv, hu]
 
-theorem IsIrreducible.closure {s : Set α} (h : IsIrreducible s) : IsIrreducible (Closure s) :=
-  ⟨h.Nonempty.closure, h.IsPreirreducible.closure⟩
+theorem is_irreducible_iff_closure {s : Set α} : IsIrreducible (Closure s) ↔ IsIrreducible s :=
+  and_congr closure_nonempty_iff is_preirreducible_iff_closure
+
+alias is_preirreducible_iff_closure ↔ _ IsPreirreducible.closure
+
+alias is_irreducible_iff_closure ↔ _ IsIrreducible.closure
 
 theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
     ∃ t : Set α, IsPreirreducible t ∧ s ⊆ t ∧ ∀ u, IsPreirreducible u → t ⊆ u → u = t :=
@@ -1536,7 +1536,7 @@ theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
 def IrreducibleComponents (α : Type _) [TopologicalSpace α] : Set (Set α) :=
   Maximals (· ≤ ·) { s : Set α | IsIrreducible s }
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
 theorem isClosedOfMemIrreducibleComponents (s) (_ : s ∈ IrreducibleComponents α) : IsClosed s := by
   rw [← closure_eq_iff_is_closed, eq_comm]
   exact subset_closure.antisymm (H.2 H.1.closure subset_closure)
@@ -1580,12 +1580,12 @@ theorem irreducible_component_mem_irreducible_components (x : α) : IrreducibleC
 theorem isClosedIrreducibleComponent {x : α} : IsClosed (IrreducibleComponent x) :=
   isClosedOfMemIrreducibleComponents _ (irreducible_component_mem_irreducible_components x)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] [] -/
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   is_preirreducible_univ : IsPreirreducible (Univ : Set α)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where

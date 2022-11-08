@@ -63,7 +63,7 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (Ball c R₁)
   have hR₁ : 0 < R₁ := nonempty_ball.1 ⟨z, hz⟩
   suffices ∀ᶠ r in 𝓝[<] R₁, ∥dslope f c z∥ ≤ R₂ / r by
     refine' ge_of_tendsto _ this
-    exact (tendsto_const_nhds.div tendsto_id hR₁.ne').monoLeft nhds_within_le_nhds
+    exact (tendsto_const_nhds.div tendsto_id hR₁.ne').mono_left nhds_within_le_nhds
   rw [mem_ball] at hz
   filter_upwards [Ioo_mem_nhds_within_Iio ⟨hz, le_rfl⟩] with r hr
   have hr₀ : 0 < r := dist_nonneg.trans_lt hr.1

@@ -114,7 +114,7 @@ protected theorem injective [Nontrivial R] : Injective x :=
   hx.LinearIndependent.Injective
 
 theorem ne_zero [Nontrivial R] (i : ι) : x i ≠ 0 :=
-  hx.LinearIndependent.ne_zero i
+  hx.LinearIndependent.NeZero i
 
 theorem comp (f : ι' → ι) (hf : Function.Injective f) : AlgebraicIndependent R (x ∘ f) := fun p q => by
   simpa [aeval_rename, (rename_injective f hf).eq_iff] using @hx (rename f p) (rename f q)
@@ -259,7 +259,7 @@ theorem algebraic_independent_subtype {s : Set A} :
       ∀ p : MvPolynomial A R, p ∈ MvPolynomial.supported R s → aeval id p = 0 → p = 0 :=
   by apply @algebraic_independent_comp_subtype _ _ _ id
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem algebraicIndependentOfFinite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=

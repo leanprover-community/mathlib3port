@@ -87,13 +87,15 @@ theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.I
   rw [polynomial_functions_closure_eq_top _ _]
   simp
 
+open Polynomial
+
 /-- An alternative statement of Weierstrass' theorem,
 for those who like their epsilons.
 
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
 -/
 theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.IccCat a b, ℝ)) (ε : ℝ) (pos : 0 < ε) :
-    ∃ p : Polynomial ℝ, ∥p.toContinuousMapOn _ - f∥ < ε := by
+    ∃ p : ℝ[X], ∥p.toContinuousMapOn _ - f∥ < ε := by
   have w := mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
   obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos
@@ -107,7 +109,7 @@ Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`
 can be approximated to within any `ε > 0` on `[a,b]` by some polynomial.
 -/
 theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ) (c : ContinuousOn f (Set.IccCat a b)) (ε : ℝ)
-    (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀ x ∈ Set.IccCat a b, abs (p.eval x - f x) < ε := by
+    (pos : 0 < ε) : ∃ p : ℝ[X], ∀ x ∈ Set.IccCat a b, |p.eval x - f x| < ε := by
   let f' : C(Set.IccCat a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
   obtain ⟨p, b⟩ := exists_polynomial_near_continuous_map a b f' ε Pos
   use p

@@ -193,10 +193,10 @@ theorem continuous_stereo_inv_fun (hv : ∥v∥ = 1) : Continuous (stereoInvFun 
 
 variable [CompleteSpace E]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(«expr ^ »(«expr - »(1, a), 2),
     «expr * »(a,
-     «expr + »(«expr * »(«expr ^ »(2, 2), «expr ^ »(«expr∥ ∥»(y), 2)), «expr * »(4, «expr ^ »(«expr - »(1, a), 2)))))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+     «expr + »(«expr * »(«expr ^ »(2, 2), «expr ^ »(«expr∥ ∥»(y), 2)), «expr * »(4, «expr ^ »(«expr - »(1, a), 2)))))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) ≠ v) :
     stereoInvFun hv (stereoToFun v x) = x := by
   ext
@@ -234,7 +234,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
   have h₂ : (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 + 4)⁻¹ * (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 - 4) = a := by
     field_simp
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(«expr ^ »(«expr - »(1, a), 2),\n    «expr * »(a,\n     «expr + »(«expr * »(«expr ^ »(2, 2), «expr ^ »(«expr∥ ∥»(y), 2)), «expr * »(4, «expr ^ »(«expr - »(1, a), 2)))))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(«expr ^ »(«expr - »(1, a), 2),\n    «expr * »(a,\n     «expr + »(«expr * »(«expr ^ »(2, 2), «expr ^ »(«expr∥ ∥»(y), 2)), «expr * »(4, «expr ^ »(«expr - »(1, a), 2)))))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · congr
       simp only [Submodule.coe_norm] at *
       nlinarith

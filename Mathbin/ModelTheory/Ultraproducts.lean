@@ -88,10 +88,10 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
 
 variable [∀ a : α, Nonempty (M a)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,
    φ.realize (λ i : β, (x i : (u : filter α).product M))
-   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormula β n) (x : β → ∀ a, M a)
     (v : Fin n → ∀ a, M a) :
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
@@ -116,7 +116,7 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
     
   · simp only [bounded_formula.realize]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,\n   φ.realize (λ i : β, (x i : (u : filter α).product M))\n   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,\n   φ.realize (λ i : β, (x i : (u : filter α).product M))\n   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · exact forall_quotient_iff
       
     have h' :

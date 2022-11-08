@@ -96,7 +96,7 @@ theorem pi_lower_bound_start (n : ℕ) {a} (h : sqrtTwoAddSeries ((0 : ℕ) / (1
   refine' lt_of_le_of_lt _ (pi_gt_sqrt_two_add_series n)
   rw [mul_comm]
   refine' (div_le_iff (pow_pos (by norm_num) _ : (0 : ℝ) < _)).mp (le_sqrt_of_sq_le _)
-  rwa [le_sub, show (0 : ℝ) = (0 : ℕ) / (1 : ℕ) by rw [Nat.cast_zero, zero_div]]
+  rwa [le_sub_comm, show (0 : ℝ) = (0 : ℕ) / (1 : ℕ) by rw [Nat.cast_zero, zero_div]]
 
 theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sqrtTwoAddSeries (c / d) n ≤ z) (hb : 0 < b)
     (hd : 0 < d) (h : (2 * b + a) * d ^ 2 ≤ c ^ 2 * b) : sqrtTwoAddSeries (a / b) (n + 1) ≤ z := by
@@ -135,7 +135,7 @@ theorem pi_upper_bound_start (n : ℕ) {a}
     (h : 2 - ((a - 1 / 4 ^ n) / 2 ^ (n + 1)) ^ 2 ≤ sqrtTwoAddSeries ((0 : ℕ) / (1 : ℕ)) n) (h₂ : 1 / 4 ^ n ≤ a) :
     π < a := by
   refine' lt_of_lt_of_le (pi_lt_sqrt_two_add_series n) _
-  rw [← le_sub_iff_add_le, ← le_div_iff', sqrt_le_left, sub_le]
+  rw [← le_sub_iff_add_le, ← le_div_iff', sqrt_le_left, sub_le_comm]
   · rwa [Nat.cast_zero, zero_div] at h
     
   · exact div_nonneg (sub_nonneg.2 h₂) (pow_nonneg (le_of_lt zero_lt_two) _)

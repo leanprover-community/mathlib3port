@@ -395,7 +395,7 @@ theorem IsRotated.trans : ∀ {l l' l'' : List α}, l ~r l' → l' ~r l'' → l 
   | _, _, _, ⟨n, rfl⟩, ⟨m, rfl⟩ => ⟨n + m, by rw [rotate_rotate]⟩
 
 theorem IsRotated.eqv : Equivalence (@IsRotated α) :=
-  mk _ IsRotated.refl (fun _ _ => IsRotated.symm) fun _ _ _ => IsRotated.trans
+  Equivalence.mk _ IsRotated.refl (fun _ _ => IsRotated.symm) fun _ _ _ => IsRotated.trans
 
 /-- The relation `list.is_rotated l l'` forms a `setoid` of cycles. -/
 def IsRotated.setoid (α : Type _) : Setoid (List α) where

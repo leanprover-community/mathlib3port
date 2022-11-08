@@ -206,5 +206,13 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
   · exact False.elim (h h')
     
 
+open Classical
+
+theorem finrank_hom_simple_simple (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] :
+    finrank 𝕜 (X ⟶ Y) = if Nonempty (X ≅ Y) then 1 else 0 := by
+  split_ifs
+  exact (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y).2 h
+  exact (finrank_hom_simple_simple_eq_zero_iff 𝕜 X Y).2 (not_nonempty_iff.mp h)
+
 end CategoryTheory
 

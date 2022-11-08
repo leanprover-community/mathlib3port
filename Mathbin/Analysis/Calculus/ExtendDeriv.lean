@@ -172,7 +172,7 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Iic <| right_mem_Ioc.2 ba)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
 theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y)
@@ -199,7 +199,7 @@ theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y)
     exact (f_diff y (ne_of_lt hy)).deriv.symm
   simpa using B.union A
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
 theorem hasDerivAtOfHasDerivAtOfNe' {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y)

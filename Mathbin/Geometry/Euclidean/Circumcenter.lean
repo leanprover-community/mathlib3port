@@ -148,7 +148,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
         dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp0),
         orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h', dist_of_mem_subset_mk_sphere hp0 hcr,
         dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ← dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc,
-        mul_comm _ (abs t₃), ← mul_assoc, abs_mul_abs_self]
+        mul_comm _ (|t₃|), ← mul_assoc, abs_mul_abs_self]
       ring
     replace hcr₃ := dist_of_mem_subset_mk_sphere (Set.mem_insert _ _) hcr₃
     rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
@@ -331,8 +331,8 @@ theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Fin 1) : s.circumcenter
   rw [h]
   congr
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The circumcenter of a 1-simplex equals its centroid. -/
 theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset.univ.centroid ℝ s.points := by
   have hr :

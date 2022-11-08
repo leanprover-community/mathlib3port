@@ -85,7 +85,7 @@ def LeftCosetEquivalence (s : Set α) (a b : α) :=
 
 @[to_additive left_add_coset_equivalence_rel]
 theorem left_coset_equivalence_rel (s : Set α) : Equivalence (LeftCosetEquivalence s) :=
-  mk (LeftCosetEquivalence s) (fun a => rfl) (fun a b => Eq.symm) fun a b c => Eq.trans
+  Equivalence.mk (LeftCosetEquivalence s) (fun a => rfl) (fun a b => Eq.symm) fun a b c => Eq.trans
 
 /-- Equality of two right cosets `s * a` and `s * b`. -/
 @[to_additive RightAddCosetEquivalence "Equality of two right cosets `s + a` and `s + b`."]
@@ -94,7 +94,7 @@ def RightCosetEquivalence (s : Set α) (a b : α) :=
 
 @[to_additive right_add_coset_equivalence_rel]
 theorem right_coset_equivalence_rel (s : Set α) : Equivalence (RightCosetEquivalence s) :=
-  mk (RightCosetEquivalence s) (fun a => rfl) (fun a b => Eq.symm) fun a b c => Eq.trans
+  Equivalence.mk (RightCosetEquivalence s) (fun a => rfl) (fun a b => Eq.symm) fun a b c => Eq.trans
 
 end CosetMul
 

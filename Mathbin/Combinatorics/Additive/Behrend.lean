@@ -269,7 +269,7 @@ theorem log_two_mul_two_le_sqrt_log_eight : log 2 * 2 ≤ sqrt (log 8) := by
   all_goals norm_num1
 
 theorem two_div_one_sub_two_div_e_le_eight : 2 / (1 - 2 / exp 1) ≤ 8 := by
-  rw [div_le_iff, mul_sub, mul_one, mul_div_assoc', le_sub, div_le_iff (exp_pos _)]
+  rw [div_le_iff, mul_sub, mul_one, mul_div_assoc', le_sub_comm, div_le_iff (exp_pos _)]
   · linarith [exp_one_gt_d9]
     
   rw [sub_pos, div_lt_one] <;> exact exp_one_gt_d9.trans' (by norm_num)
@@ -329,8 +329,8 @@ theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (�
   have : 0 < 1 - 2 / exp 1 := by
     rw [sub_pos, div_lt_one (exp_pos _)]
     exact lt_of_le_of_lt (by norm_num) exp_one_gt_d9
-  rwa [le_sub, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ← div_eq_mul_one_div, mul_div_assoc',
-    one_le_div, ← div_le_iff this]
+  rwa [le_sub_comm, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ← div_eq_mul_one_div,
+    mul_div_assoc', one_le_div, ← div_le_iff this]
   · exact zero_lt_two
     
   · exact two_ne_zero

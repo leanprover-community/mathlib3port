@@ -62,7 +62,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:328:30: infer kinds are unsupported in Lean 4: nil {} -/
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
@@ -1164,7 +1164,7 @@ def disjoint : Ordnode α → Ordnode α → Bool
   | _, nil => true
   | node _ l x r, t =>
     let (lt, found, GT.gt) := split3 x t
-    found.isNone && Disjoint l lt && Disjoint r GT.gt
+    found.isNone && disjoint l lt && disjoint r GT.gt
 
 /-- O(m * log(|m ∪ n| + 1)), m ≤ n. The union of two sets, preferring members of
   `t₁` over those of `t₂` when equivalent elements are encountered.

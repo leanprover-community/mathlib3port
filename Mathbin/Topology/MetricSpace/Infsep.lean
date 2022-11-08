@@ -44,34 +44,34 @@ section HasEdist
 
 variable [HasEdist α] {x y : α} {s t : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep_iff {d} : d ≤ s.einfsep ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), d ≤ edist x y := by
   simp_rw [einfsep, le_infi_iff]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_zero :
     s.einfsep = 0 ↔ ∀ (C) (hC : 0 < C), ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), edist x y < C := by
   simp_rw [einfsep, ← bot_eq_zero, infi_eq_bot, infi_lt_iff]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_pos :
     0 < s.einfsep ↔ ∃ (C : _)(hC : 0 < C), ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y := by
   rw [pos_iff_ne_zero, Ne.def, einfsep_zero]
   simp only [not_forall, not_exists, not_lt]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_top : s.einfsep = ∞ ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), edist x y = ∞ := by
   simp_rw [einfsep, infi_eq_top]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_lt_top : s.einfsep < ∞ ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), edist x y < ∞ := by
   simp_rw [einfsep, infi_lt_iff]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_ne_top : s.einfsep ≠ ∞ ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), edist x y ≠ ∞ := by
   simp_rw [← lt_top_iff_ne_top, einfsep_lt_top]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem einfsep_lt_iff {d} : s.einfsep < d ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(h : x ≠ y), edist x y < d := by
   simp_rw [einfsep, infi_lt_iff]
 
@@ -86,7 +86,7 @@ theorem Subsingleton.einfsep (hs : s.Subsingleton) : s.einfsep = ∞ := by
   rw [einfsep_top]
   exact fun _ hx _ hy hxy => (hxy <| hs hx hy).elim
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep_image_iff {d} {f : β → α} {s : Set β} :
     d ≤ einfsep (f '' s) ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), f x ≠ f y → d ≤ edist (f x) (f y) := by
   simp_rw [le_einfsep_iff, ball_image_iff]
@@ -101,7 +101,7 @@ theorem einfsep_le_of_mem_of_edist_le {d x} (hx : x ∈ s) {y} (hy : y ∈ s) (h
     s.einfsep ≤ d :=
   le_trans (einfsep_le_edist_of_mem hx hy hxy) hxy'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep {d} (h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), d ≤ edist x y) : d ≤ s.einfsep :=
   le_einfsep_iff.2 h
 
@@ -154,7 +154,7 @@ theorem Finite.einfsep (hs : s.Finite) : s.einfsep = hs.OffDiag.toFinset.inf (un
 theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} : (s : Set α).einfsep = s.OffDiag.inf (uncurry edist) := by
   simp_rw [einfsep_of_fintype, ← Finset.coe_off_diag, Finset.to_finset_coe]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.einfsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
     ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.einfsep = edist x y := by
   classical
@@ -164,7 +164,7 @@ theorem Nontrivial.einfsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
   simp_rw [mem_to_finset] at hxy
   refine' ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Finite.einfsep_exists_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
     ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.einfsep = edist x y :=
   letI := hsf.fintype
@@ -235,7 +235,7 @@ theorem einfsep_lt_top_iff : s.einfsep < ∞ ↔ s.Nontrivial :=
 theorem einfsep_ne_top_iff : s.einfsep ≠ ∞ ↔ s.Nontrivial :=
   ⟨nontrivial_of_einfsep_ne_top, Nontrivial.einfsep_ne_top⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep_of_forall_dist_le {d} (h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), d ≤ dist x y) :
     Ennreal.ofReal d ≤ s.einfsep :=
   le_einfsep fun x hx y hy hxy => (edist_dist x y).symm ▸ Ennreal.of_real_le_of_real (h x hx y hy hxy)
@@ -256,7 +256,7 @@ theorem einfsep_pos_of_finite [Finite s] : 0 < s.einfsep := by
     exact hs.einfsep.symm ▸ WithTop.zero_lt_top
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem relatively_discrete_of_finite [Finite s] :
     ∃ (C : _)(hC : 0 < C), ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y := by
   rw [← einfsep_pos]
@@ -266,7 +266,7 @@ theorem Finite.einfsep_pos (hs : s.Finite) : 0 < s.einfsep :=
   letI := hs.fintype
   einfsep_pos_of_finite
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Finite.relatively_discrete (hs : s.Finite) :
     ∃ (C : _)(hC : 0 < C), ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y :=
   letI := hs.fintype
@@ -336,20 +336,20 @@ section PseudoMetricSpace
 
 variable [PseudoMetricSpace α] {x y z : α} {s t : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.le_infsep_iff {d} (hs : s.Nontrivial) :
     d ≤ s.infsep ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), d ≤ dist x y := by
   simp_rw [infsep, ← Ennreal.of_real_le_iff_le_to_real hs.einfsep_ne_top, le_einfsep_iff, edist_dist,
     Ennreal.of_real_le_of_real_iff dist_nonneg]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.infsep_lt_iff {d} (hs : s.Nontrivial) :
     s.infsep < d ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), dist x y < d := by
   rw [← not_iff_not]
   push_neg
   exact hs.le_infsep_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.le_infsep {d} (hs : s.Nontrivial) (h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), d ≤ dist x y) :
     d ≤ s.infsep :=
   hs.le_infsep_iff.2 h
@@ -451,7 +451,7 @@ theorem _root_.finset.coe_infsep_of_off_diag_empty [DecidableEq α] {s : Finset 
   rw [← Finset.not_nonempty_iff_eq_empty] at hs
   rw [Finset.coe_infsep, dif_neg hs]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.infsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
     ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.infsep = dist x y := by
   classical
@@ -461,7 +461,7 @@ theorem Nontrivial.infsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
   simp_rw [mem_to_finset] at hxy
   exact ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Finite.infsep_exists_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
     ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.infsep = dist x y :=
   letI := hsf.fintype

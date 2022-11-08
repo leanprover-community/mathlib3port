@@ -23,29 +23,42 @@ variable {α : Type _} {β : Type _}
 
 attribute [inline] Option.isSome Option.isNone
 
+#print Option.elim' /-
 /-- An elimination principle for `option`. It is a nondependent version of `option.rec`. -/
 @[simp]
 protected def elim' (b : β) (f : α → β) : Option α → β
   | some a => f a
   | none => b
+-/
 
 instance hasMem : Membership α (Option α) :=
   ⟨fun a b => b = some a⟩
 
+#print Option.mem_def /-
 @[simp]
 theorem mem_def {a : α} {b : Option α} : a ∈ b ↔ b = some a :=
   Iff.rfl
+-/
 
+#print Option.mem_iff /-
 theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
   Iff.rfl
+-/
 
+#print Option.is_none_iff_eq_none /-
 theorem is_none_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
   ⟨Option.eq_none_of_isNone, fun e => e.symm ▸ rfl⟩
+-/
 
+#print Option.some_inj /-
 theorem some_inj {a b : α} : some a = some b ↔ a = b := by simp
+-/
 
+#print Option.mem_some_iff /-
 theorem mem_some_iff {α : Type _} {a b : α} : a ∈ some b ↔ b = a := by simp
+-/
 
+#print Option.decidableEqNone /-
 /-- `o = none` is decidable even if the wrapped type does not have decidable equality.
 
 This is not an instance because it is not definitionally equal to `option.decidable_eq`.
@@ -54,10 +67,13 @@ Try to use `o.is_none` or `o.is_some` instead.
 @[inline]
 def decidableEqNone {o : Option α} : Decidable (o = none) :=
   decidable_of_decidable_of_iff (Bool.decidableEq _ _) is_none_iff_eq_none
+-/
 
+#print Option.decidableForallMem /-
 instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a ∈ o, p a)
   | none => isTrue (by simp [false_imp_iff])
   | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
+-/
 
 /- warning: option.decidable_exists_mem -> Option.decidableExistsMem is a dubious translation:
 lean 3 declaration is
@@ -69,19 +85,25 @@ instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
   | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 
+#print Option.iget /-
 /-- Inhabited `get` function. Returns `a` if the input is `some a`, otherwise returns `default`. -/
 @[reducible]
 def iget [Inhabited α] : Option α → α
   | some x => x
   | none => default
+-/
 
+#print Option.iget_some /-
 @[simp]
 theorem iget_some [Inhabited α] {a : α} : (some a).iget = a :=
   rfl
+-/
 
+#print Option.guard /-
 /-- `guard p a` returns `some a` if `p a` holds, otherwise `none`. -/
 def guard (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
   if p a then some a else none
+-/
 
 /- warning: option.filter -> Option.filter is a dubious translation:
 lean 3 declaration is
@@ -93,15 +115,20 @@ Case conversion may be inaccurate. Consider using '#align option.filter Option.f
 def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
   o.bind (guard p)
 
+#print Option.toList /-
 /-- Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
 `none`. -/
 def toList : Option α → List α
   | none => []
   | some a => [a]
+-/
 
+#print Option.mem_toList /-
 @[simp]
 theorem mem_toList {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by cases o <;> simp [to_list, eq_comm]
+-/
 
+#print Option.liftOrGet /-
 /-- Two arguments failsafe function. Returns `f a b` if the inputs are `some a` and `some b`, and
 "does nothing" otherwise. -/
 def liftOrGet (f : α → α → α) : Option α → Option α → Option α
@@ -114,23 +141,35 @@ def liftOrGet (f : α → α → α) : Option α → Option α → Option α
       some
       a,
     some b => some (f a b)
+-/
 
+#print Option.liftOrGet_isCommutative /-
 -- lift f
 instance liftOrGet_isCommutative (f : α → α → α) [h : IsCommutative α f] : IsCommutative (Option α) (liftOrGet f) :=
   ⟨fun a b => by cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
+-/
 
+#print Option.liftOrGet_isAssociative /-
 instance liftOrGet_isAssociative (f : α → α → α) [h : IsAssociative α f] : IsAssociative (Option α) (liftOrGet f) :=
   ⟨fun a b c => by cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
+-/
 
+#print Option.liftOrGet_isIdempotent /-
 instance liftOrGet_isIdempotent (f : α → α → α) [h : IsIdempotent α f] : IsIdempotent (Option α) (liftOrGet f) :=
   ⟨fun a => by cases a <;> simp [lift_or_get, h.idempotent]⟩
+-/
 
+#print Option.liftOrGet_isLeftId /-
 instance liftOrGet_isLeftId (f : α → α → α) : IsLeftId (Option α) (liftOrGet f) none :=
   ⟨fun a => by cases a <;> simp [lift_or_get]⟩
+-/
 
+#print Option.liftOrGet_isRightId /-
 instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (liftOrGet f) none :=
   ⟨fun a => by cases a <;> simp [lift_or_get]⟩
+-/
 
+#print Option.Rel /-
 /-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
 inductive Rel (r : α → β → Prop) : Option α → Option β → Prop
@@ -140,7 +179,9 @@ inductive Rel (r : α → β → Prop) : Option α → Option β → Prop
   |
   /-- `none ~ none` -/
   none : rel none none
+-/
 
+#print Option.pbind /-
 /-- Partial bind. If for some `x : option α`, `f : Π (a : α), a ∈ x → option β` is a
   partial function defined on `a : α` giving an `option β`, where `some a = x`,
   then `pbind x f h` is essentially the same as `bind x f`
@@ -149,7 +190,9 @@ inductive Rel (r : α → β → Prop) : Option α → Option β → Prop
 def pbind : ∀ x : Option α, (∀ a : α, a ∈ x → Option β) → Option β
   | none, _ => none
   | some a, f => f a rfl
+-/
 
+#print Option.pmap /-
 /-- Partial map. If `f : Π a, p a → β` is a partial function defined on `a : α` satisfying `p`,
 then `pmap f x h` is essentially the same as `map f x` but is defined only when all members of `x`
 satisfy `p`, using the proof to apply `f`. -/
@@ -157,16 +200,22 @@ satisfy `p`, using the proof to apply `f`. -/
 def pmap {p : α → Prop} (f : ∀ a : α, p a → β) : ∀ x : Option α, (∀ a ∈ x, p a) → Option β
   | none, _ => none
   | some a, H => some (f a (H a (mem_def.mpr rfl)))
+-/
 
+#print Option.join /-
 /-- Flatten an `option` of `option`, a specialization of `mjoin`. -/
 @[simp]
 def join : Option (Option α) → Option α := fun x => bind x id
+-/
 
+#print Option.traverse /-
 protected def traverse.{u, v} {F : Type u → Type v} [Applicative F] {α β : Type _} (f : α → F β) :
     Option α → F (Option β)
   | none => pure none
   | some x => some <$> f x
+-/
 
+#print Option.maybe /-
 -- By analogy with `monad.sequence` in `init/category/combinators.lean`.
 /-- If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
 there is a naturally associated way to always perform a computation in `m` which maybe produces a
@@ -174,6 +223,7 @@ result. -/
 def maybe.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α) → m (Option α)
   | none => return none
   | some fn => some <$> fn
+-/
 
 /- warning: option.mmap -> Option.mapM is a dubious translation:
 lean 3 declaration is

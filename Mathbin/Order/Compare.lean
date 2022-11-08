@@ -53,8 +53,10 @@ theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b �
 
 alias compares_swap ↔ compares.of_swap compares.swap
 
+#print Ordering.swap_inj /-
 @[simp]
 theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by cases o₁ <;> cases o₂ <;> decide
+-/
 
 theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by rw [← swap_inj, swap_swap]
 

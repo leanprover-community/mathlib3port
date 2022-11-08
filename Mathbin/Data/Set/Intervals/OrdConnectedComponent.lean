@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Data.Set.Intervals.OrdConnected
+import Mathbin.Tactic.Wlog
 
 /-!
 # Order connected components of a set
@@ -150,7 +151,7 @@ theorem ord_separating_set_comm (s t : Set α) : OrdSeparatingSet s t = OrdSepar
 
 theorem disjointLeftOrdSeparatingSet : Disjoint s (OrdSeparatingSet s t) :=
   Disjoint.interRight' _ <|
-    disjoint_Union₂_right.2 fun x hx => disjointComplRight.mono_right <| ord_connected_component_subset
+    disjoint_Union₂_right.2 fun x hx => disjointComplRight.monoRight <| ord_connected_component_subset
 
 theorem disjointRightOrdSeparatingSet : Disjoint t (OrdSeparatingSet s t) :=
   ord_separating_set_comm t s ▸ disjoint_left_ord_separating_set

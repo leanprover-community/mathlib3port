@@ -131,6 +131,10 @@ theorem Wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ 
     
   exact (h.2 h2 h3).elim
 
+/-- An `iff` version of `wcovby.eq_or_eq` and `wcovby_of_eq_or_eq`. -/
+theorem wcovby_iff_le_and_eq_or_eq : a ⩿ b ↔ a ≤ b ∧ ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b :=
+  ⟨fun h => ⟨h.le, fun c => h.eq_or_eq⟩, And.ndrec wcovby_of_eq_or_eq⟩
+
 theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c = b := by
   refine' ⟨fun h2 => h.eq_or_eq h2.1 h2.2, _⟩
   rintro (rfl | rfl)
@@ -146,6 +150,24 @@ theorem Wcovby.Ico_subset (h : a ⩿ b) : IcoCat a b ⊆ {a} := by
 theorem Wcovby.Ioc_subset (h : a ⩿ b) : IocCat a b ⊆ {b} := by rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
 
 end PartialOrder
+
+section SemilatticeSup
+
+variable [SemilatticeSup α] {a b c : α}
+
+theorem Wcovby.sup_eq (hac : a ⩿ c) (hbc : b ⩿ c) (hab : a ≠ b) : a ⊔ b = c :=
+  (sup_le hac.le hbc.le).eq_of_not_lt fun h => hab.lt_sup_or_lt_sup.elim (fun h' => hac.2 h' h) fun h' => hbc.2 h' h
+
+end SemilatticeSup
+
+section SemilatticeInf
+
+variable [SemilatticeInf α] {a b c : α}
+
+theorem Wcovby.inf_eq (hca : c ⩿ a) (hcb : c ⩿ b) (hab : a ≠ b) : a ⊓ b = c :=
+  (le_inf hca.le hcb.le).eq_of_not_gt fun h => hab.inf_lt_or_inf_lt.elim (hca.2 h) (hcb.2 h)
+
+end SemilatticeInf
 
 end WeaklyCovers
 
@@ -262,11 +284,14 @@ theorem Set.OrdConnected.apply_covby_apply_iff (f : α ↪o β) (h : (Range f).O
 theorem apply_covby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e a ⋖ e b ↔ a ⋖ b :=
   (ord_connected_range (e : α ≃o β)).apply_covby_apply_iff ((e : α ≃o β) : α ↪o β)
 
+theorem covby_of_eq_or_eq (hab : a < b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⋖ b :=
+  ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.Ne⟩
+
 end Preorder
 
 section PartialOrder
 
-variable [PartialOrder α] {a b : α}
+variable [PartialOrder α] {a b c : α}
 
 theorem Wcovby.covby_of_ne (h : a ⩿ b) (h2 : a ≠ b) : a ⋖ b :=
   ⟨h.le.lt_of_ne h2, h.2⟩
@@ -275,6 +300,13 @@ theorem covby_iff_wcovby_and_ne : a ⋖ b ↔ a ⩿ b ∧ a ≠ b :=
   ⟨fun h => ⟨h.Wcovby, h.Ne⟩, fun h => h.1.covby_of_ne h.2⟩
 
 theorem wcovby_iff_covby_or_eq : a ⩿ b ↔ a ⋖ b ∨ a = b := by rw [le_antisymm_iff, wcovby_iff_covby_or_le_and_le]
+
+theorem Covby.eq_or_eq (h : a ⋖ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
+  h.Wcovby.eq_or_eq h2 h3
+
+/-- An `iff` version of `covby.eq_or_eq` and `covby_of_eq_or_eq`. -/
+theorem covby_iff_lt_and_eq_or_eq : a ⋖ b ↔ a < b ∧ ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b :=
+  ⟨fun h => ⟨h.lt, fun c => h.eq_or_eq⟩, And.ndrec covby_of_eq_or_eq⟩
 
 theorem Covby.Ico_eq (h : a ⋖ b) : IcoCat a b = {a} := by rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
 

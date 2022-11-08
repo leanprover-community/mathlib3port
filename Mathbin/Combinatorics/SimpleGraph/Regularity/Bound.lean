@@ -35,10 +35,8 @@ theorem le_step_bound : id ≤ step_bound := fun n => Nat.le_mul_of_pos_right <|
 theorem step_bound_mono : Monotone stepBound := fun a b h =>
   Nat.mul_le_mul h <| Nat.pow_le_pow_of_le_right (by norm_num) h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem step_bound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
-  zero_lt_mul_right <| by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  zero_lt_mul_right <| by positivity
 
 alias step_bound_pos_iff ↔ _ step_bound_pos
 
@@ -69,12 +67,9 @@ theorem eps_pow_five_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε ^ 5
 theorem eps_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε :=
   pow_bit1_pos_iff.1 <| eps_pow_five_pos hPε
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem hundred_div_ε_pow_five_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 100 / ε ^ 5 ≤ m :=
-  (div_le_of_nonneg_of_le_mul (eps_pow_five_pos hPε).le
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-        hPε).trans
+  (div_le_of_nonneg_of_le_mul (eps_pow_five_pos hPε).le (by positivity) hPε).trans
     (by
       norm_cast
       rwa [Nat.le_div_iff_mul_le' (step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos), step_bound,
@@ -141,11 +136,8 @@ regularity lemma. -/
 noncomputable def bound : ℕ :=
   (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l) * 16 ^ (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem initial_bound_le_bound : initialBound ε l ≤ bound ε l :=
-  (id_le_iterate_of_id_le le_step_bound _ _).trans <|
-    Nat.le_mul_of_pos_right <| by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  (id_le_iterate_of_id_le le_step_bound _ _).trans <| Nat.le_mul_of_pos_right <| by positivity
 
 theorem le_bound : l ≤ bound ε l :=
   (le_initial_bound ε l).trans <| initial_bound_le_bound ε l
@@ -171,13 +163,9 @@ unsafe def positivity_szemeredi_regularity_bound : expr → tactic strictness
         format.bracket "The expression `"
           "` isn't of the form `szemeredi_regularity.initial_bound ε l` nor `szemeredi_regularity.bound ε l`"
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-example (ε : ℝ) (l : ℕ) : 0 < SzemerediRegularity.initialBound ε l := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+example (ε : ℝ) (l : ℕ) : 0 < SzemerediRegularity.initialBound ε l := by positivity
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-example (ε : ℝ) (l : ℕ) : 0 < SzemerediRegularity.bound ε l := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+example (ε : ℝ) (l : ℕ) : 0 < SzemerediRegularity.bound ε l := by positivity
 
 end Tactic
 

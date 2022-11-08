@@ -129,8 +129,7 @@ instance : SubNegMonoid (Completion α) :=
         rw_mod_cast [show Int.ofNat n.succ • a = a + Int.ofNat n • a from SubNegMonoid.zsmul_succ' n a],
     zsmul_neg' := fun n a =>
       Completion.inductionOn a (isClosedEq continuous_map <| Completion.continuous_map.comp continuous_map) fun a => by
-        rw [← coe_smul, ← coe_smul, ← coe_neg,
-          show -[1 + n] • a = -((n.succ : ℤ) • a) from SubNegMonoid.zsmul_neg' n a] }
+        rw [← coe_smul, ← coe_smul, ← coe_neg, show -[n+1] • a = -((n.succ : ℤ) • a) from SubNegMonoid.zsmul_neg' n a] }
 
 instance : AddGroup (Completion α) :=
   { Completion.subNegMonoid with

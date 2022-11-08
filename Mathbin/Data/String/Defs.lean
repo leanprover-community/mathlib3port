@@ -24,26 +24,34 @@ Case conversion may be inaccurate. Consider using '#align string.split_on String
 def splitOn (s : String) (c : Char) : List String :=
   split (· = c) s
 
+#print String.mapTokens /-
 /-- `string.map_tokens c f s` tokenizes `s : string` on `c : char`, maps `f` over each token, and
 then reassembles the string by intercalating the separator token `c` over the mapped tokens. -/
 def mapTokens (c : Char) (f : String → String) : String → String :=
   intercalate (singleton c) ∘ List.map f ∘ split (· = c)
+-/
 
+#print String.isPrefixOf /-
 /-- Tests whether the first string is a prefix of the second string. -/
 def isPrefixOf (x y : String) : Bool :=
   x.toList.isPrefixOf y.toList
+-/
 
 /-- Tests whether the first string is a suffix of the second string. -/
 def isSuffixOf (x y : String) : Bool :=
   x.toList.isSuffixOf y.toList
 
+#print String.startsWith /-
 /-- `x.starts_with y` is true if `y` is a prefix of `x`, and is false otherwise. -/
 abbrev startsWith (x y : String) : Bool :=
   y.isPrefixOf x
+-/
 
+#print String.endsWith /-
 /-- `x.ends_with y` is true if `y` is a suffix of `x`, and is false otherwise. -/
 abbrev endsWith (x y : String) : Bool :=
   y.isSuffixOf x
+-/
 
 /-- `get_rest s t` returns `some r` if `s = t ++ r`.
   If `t` is not a prefix of `s`, returns `none` -/
@@ -54,9 +62,11 @@ def getRest (s t : String) : Option String :=
 def popn (s : String) (n : Nat) : String :=
   (s.mkIterator.nextn n).nextToString
 
+#print String.isNat /-
 /-- `is_nat s` is true iff `s` is a nonempty sequence of digits. -/
 def isNat (s : String) : Bool :=
   ¬s.isEmpty ∧ s.toList.all fun c => decide c.IsDigit
+-/
 
 /-- Produce the head character from the string `s`, if `s` is not empty, otherwise 'A'. -/
 def head (s : String) : Char :=

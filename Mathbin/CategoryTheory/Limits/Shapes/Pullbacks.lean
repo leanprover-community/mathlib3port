@@ -2113,12 +2113,12 @@ noncomputable def pullbackAssoc :
     pullback (pullback.snd ≫ f₃ : pullback f₁ f₂ ⟶ _) f₄ ≅ pullback f₁ (pullback.fst ≫ f₂ : pullback f₃ f₄ ⟶ _) :=
   (pullbackPullbackLeftIsPullback f₁ f₂ f₃ f₄).conePointUniqueUpToIso (pullbackPullbackRightIsPullback f₁ f₂ f₃ f₄)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₁'(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₁'(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, reassoc]
 theorem pullback_assoc_inv_fst_fst : (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫ pullback.fst ≫ pullback.fst = pullback.fst := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₁'(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₁'(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   rw [← category.assoc]
   congr 1
   exact is_limit.cone_point_unique_up_to_iso_inv_comp _ _ walking_cospan.left
@@ -2128,24 +2128,24 @@ theorem pullback_assoc_inv_fst_fst : (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫
 theorem pullback_assoc_hom_fst : (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.fst = pullback.fst ≫ pullback.fst := by
   rw [← iso.eq_inv_comp, pullback_assoc_inv_fst_fst]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, reassoc]
 theorem pullback_assoc_hom_snd_fst :
     (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.fst)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   rw [← category.assoc]
   congr 1
   exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
   exact pullback.lift_fst _ _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, reassoc]
 theorem pullback_assoc_hom_snd_snd : (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.snd = pullback.snd := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprl₂(), pullback.snd)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   rw [← category.assoc]
   congr 1
   exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
@@ -2314,37 +2314,37 @@ noncomputable def pushoutAssoc :
     pushout (g₃ ≫ pushout.inr : _ ⟶ pushout g₁ g₂) g₄ ≅ pushout g₁ (g₂ ≫ pushout.inl : _ ⟶ pushout g₃ g₄) :=
   (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).coconePointUniqueUpToIso (pushoutPushoutRightIsPushout g₁ g₂ g₃ g₄)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₁(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₁(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, reassoc]
 theorem inl_inl_pushout_assoc_hom : pushout.inl ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₁(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₁(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr 1
     exact (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _ walking_cospan.left
     
   · exact pushout.inl_desc _ _ _
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₂(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₂(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, reassoc]
 theorem inr_inl_pushout_assoc_hom :
     pushout.inr ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl ≫ pushout.inr := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₂(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₂(), exprl₁())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr 1
     exact (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _ walking_cospan.left
     
   · exact pushout.inr_desc _ _ _
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₄(), exprl₂'())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₄(), exprl₂'())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp, reassoc]
 theorem inr_inr_pushout_assoc_inv : pushout.inr ≫ pushout.inr ≫ (pushoutAssoc g₁ g₂ g₃ g₄).inv = pushout.inr := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₄(), exprl₂'())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(exprf₄(), exprl₂'())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr 1
     exact
       (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_inv

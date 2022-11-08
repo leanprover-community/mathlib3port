@@ -60,7 +60,7 @@ theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) := by
 
 /-- A minimal polynomial is nonzero. -/
 theorem ne_zero [Nontrivial A] (hx : IsIntegral A x) : minpoly A x ≠ 0 :=
-  (monic hx).ne_zero
+  (monic hx).NeZero
 
 theorem eq_zero (hx : ¬IsIntegral A x) : minpoly A x = 0 :=
   dif_neg hx
@@ -374,9 +374,9 @@ theorem add_algebra_map {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : Is
     
   · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by simpa [aeval_comp] using hq
     have H := minpoly.min A x (qmo.comp_X_add_C _) this
-    rw [degree_eq_nat_degree qmo.ne_zero, degree_eq_nat_degree ((minpoly.monic hx).comp_X_sub_C _).ne_zero,
+    rw [degree_eq_nat_degree qmo.ne_zero, degree_eq_nat_degree ((minpoly.monic hx).comp_X_sub_C _).NeZero,
       WithBot.coe_le_coe, nat_degree_comp, nat_degree_X_sub_C, mul_one]
-    rwa [degree_eq_nat_degree (minpoly.ne_zero hx), degree_eq_nat_degree (qmo.comp_X_add_C _).ne_zero,
+    rwa [degree_eq_nat_degree (minpoly.ne_zero hx), degree_eq_nat_degree (qmo.comp_X_add_C _).NeZero,
       WithBot.coe_le_coe, nat_degree_comp, nat_degree_X_add_C, mul_one] at H
     
 

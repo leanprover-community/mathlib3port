@@ -25,7 +25,7 @@ open CategoryTheory.Limits
 
 universe v v₀ v₁ v₂ u u₀ u₁ u₂
 
-namespace CategoryTheory.Triangulated
+namespace CategoryTheory.Pretriangulated
 
 open CategoryTheory.Category
 
@@ -49,7 +49,7 @@ applying `rotate` gives a triangle of the form:
 -/
 @[simps]
 def Triangle.rotate (T : Triangle C) : Triangle C :=
-  Triangle.mk _ T.mor₂ T.mor₃ (-T.mor₁⟦1⟧')
+  Triangle.mk T.mor₂ T.mor₃ (-T.mor₁⟦1⟧')
 
 section
 
@@ -70,7 +70,7 @@ not necessarily equal to `Z`, but it is isomorphic, by the `counit_iso` of `shif
 -/
 @[simps]
 def Triangle.invRotate (T : Triangle C) : Triangle C :=
-  Triangle.mk _ (-(T.mor₃⟦(-1 : ℤ)⟧' ≫ (shiftShiftNeg _ _).Hom)) T.mor₁ (T.mor₂ ≫ (shiftNegShift _ _).inv)
+  Triangle.mk (-(T.mor₃⟦(-1 : ℤ)⟧' ≫ (shiftShiftNeg _ _).Hom)) T.mor₁ (T.mor₂ ≫ (shiftNegShift _ _).inv)
 
 end
 
@@ -346,5 +346,5 @@ instance : IsEquivalence (invRotate C) := by
   change is_equivalence (triangle_rotation C).inverse
   infer_instance
 
-end CategoryTheory.Triangulated
+end CategoryTheory.Pretriangulated
 

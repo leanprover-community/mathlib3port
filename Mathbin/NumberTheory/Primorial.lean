@@ -115,7 +115,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
             exact Nat.mul_le_mul_right _ r
           _ = choose (2 * m + 1) m * 4 ^ (m + 1) := by rw [choose_symm_half m]
           _ ≤ 4 ^ m * 4 ^ (m + 1) := Nat.mul_le_mul_right _ (choose_middle_le_pow m)
-          _ = 4 ^ (2 * m + 1) := by ring_exp
+          _ = 4 ^ (2 * m + 1) := by ring
           _ = 4 ^ (n + 2) := by rw [two_mul, ← twice_m]
           
     | Or.inr n_even => by

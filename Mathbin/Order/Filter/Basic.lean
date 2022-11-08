@@ -312,7 +312,7 @@ theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.gene
   Iff.intro (fun h u hu => h <| generate_sets.basic <| hu) fun h u hu =>
     hu.recOn h univ_mem (fun x y _ hxy hx => mem_of_superset hx hxy) fun x y _ _ hx hy => inter_mem hx hy
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
     U ∈ generate s ↔ ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ ⋂₀ t ⊆ U := by
   constructor <;> intro h
@@ -414,7 +414,7 @@ instance : CompleteLattice (Filter α) :=
     rfl-- inf
       Filter.hasInf.1
     (by
-      ext f g : 2
+      ext (f g) : 2
       exact
         le_antisymm (le_inf (fun s => mem_inf_of_left) fun s => mem_inf_of_right)
           (by
@@ -424,7 +424,7 @@ instance : CompleteLattice (Filter α) :=
       join ∘
       𝓟)
     (by
-      ext s x
+      ext (s x)
       exact mem_Inter₂.symm.trans (Set.ext_iff.1 (sInter_image _ _) x).symm)-- Inf
     _
     rfl
@@ -538,7 +538,7 @@ theorem mem_infi {ι} {s : ι → Filter α} {U : Set α} :
     exact mem_infi_of_Inter Ifin V_in subset.rfl
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem mem_infi' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔
       ∃ I : Set ι,
@@ -572,6 +572,9 @@ theorem mem_infi_of_finite {ι : Type _} [Finite ι] {α : Type _} {f : ι → F
 @[simp]
 theorem le_principal_iff {s : Set α} {f : Filter α} : f ≤ 𝓟 s ↔ s ∈ f :=
   show (∀ {t}, s ⊆ t → t ∈ f) ↔ s ∈ f from ⟨fun h => h (Subset.refl s), fun hs t ht => mem_of_superset hs ht⟩
+
+theorem Iic_principal (s : Set α) : IicCat (𝓟 s) = { l | s ∈ l } :=
+  Set.ext fun x => le_principal_iff
 
 theorem principal_mono {s t : Set α} : 𝓟 s ≤ 𝓟 t ↔ s ⊆ t := by simp only [le_principal_iff, iff_self_iff, mem_principal]
 
@@ -638,9 +641,9 @@ theorem _root_.pairwise.exists_mem_filter_of_disjoint {ι : Type _} [Finite ι] 
     (hd : Pairwise (Disjoint on l)) : ∃ s : ι → Set α, (∀ i, s i ∈ l i) ∧ Pairwise (Disjoint on s) := by
   simp only [Pairwise, Function.onFun, Filter.disjoint_iff, Subtype.exists'] at hd
   choose! s t hst using hd
-  refine' ⟨fun i => ⋂ j, s i j ∩ t j i, fun i => _, fun i j hij => _⟩
-  exacts[Inter_mem.2 fun j => inter_mem (s i j).2 (t j i).2,
-    (hst i j hij).mono ((Inter_subset _ j).trans (inter_subset_left _ _))
+  refine' ⟨fun i => ⋂ j, @s i j ∩ @t j i, fun i => _, fun i j hij => _⟩
+  exacts[Inter_mem.2 fun j => inter_mem (@s i j).2 (@t j i).2,
+    (hst hij).mono ((Inter_subset _ j).trans (inter_subset_left _ _))
       ((Inter_subset _ i).trans (inter_subset_right _ _))]
 
 theorem _root_.set.pairwise_disjoint.exists_mem_filter {ι : Type _} {l : ι → Filter α} {t : Set ι}
@@ -667,7 +670,7 @@ theorem eq_top_of_ne_bot [Subsingleton α] (l : Filter α) [NeBot l] : l = ⊤ :
   exact univ_mem
 
 theorem forall_mem_nonempty_iff_ne_bot {f : Filter α} : (∀ s : Set α, s ∈ f → s.Nonempty) ↔ NeBot f :=
-  ⟨fun h => ⟨fun hf => empty_not_nonempty (h ∅ <| hf.symm ▸ mem_bot)⟩, @nonempty_of_mem _ _⟩
+  ⟨fun h => ⟨fun hf => not_nonempty_empty (h ∅ <| hf.symm ▸ mem_bot)⟩, @nonempty_of_mem _ _⟩
 
 instance [Nonempty α] : Nontrivial (Filter α) :=
   ⟨⟨⊤, ⊥,
@@ -1815,7 +1818,7 @@ theorem comap_Sup {s : Set (Filter β)} {m : α → β} : comap m (sup s) = ⨆ 
   simp only [Sup_eq_supr, comap_supr, eq_self_iff_true]
 
 theorem comap_sup : comap m (g₁ ⊔ g₂) = comap m g₁ ⊔ comap m g₂ := by
-  rw [sup_eq_supr, comap_supr, supr_bool_eq, Bool.cond_tt, Bool.cond_ff]
+  rw [sup_eq_supr, comap_supr, supr_bool_eq, Bool.cond_true, Bool.cond_false]
 
 theorem map_comap (f : Filter β) (m : α → β) : (f.comap m).map m = f ⊓ 𝓟 (Range m) := by
   refine' le_antisymm (le_inf map_comap_le <| le_principal_iff.2 range_mem_map) _
@@ -2104,8 +2107,7 @@ instance pureNeBot {α : Type u} {a : α} : NeBot (pure a) :=
   ⟨mt empty_mem_iff_bot.2 <| not_mem_empty a⟩
 
 @[simp]
-theorem le_pure_iff {f : Filter α} {a : α} : f ≤ pure a ↔ {a} ∈ f :=
-  ⟨fun h => h singleton_mem_pure, fun h s hs => mem_of_superset h <| singleton_subset_iff.2 hs⟩
+theorem le_pure_iff {f : Filter α} {a : α} : f ≤ pure a ↔ {a} ∈ f := by rw [← principal_singleton, le_principal_iff]
 
 theorem mem_seq_def {f : Filter (α → β)} {g : Filter α} {s : Set β} :
     s ∈ f.seq g ↔ ∃ u ∈ f, ∃ t ∈ g, ∀ x ∈ u, ∀ y ∈ t, (x : α → β) y ∈ s :=
@@ -2454,7 +2456,7 @@ theorem tendsto_infi {f : α → β} {x : Filter α} {y : ι → Filter β} : Te
 
 theorem tendsto_infi' {f : α → β} {x : ι → Filter α} {y : Filter β} (i : ι) (hi : Tendsto f (x i) y) :
     Tendsto f (⨅ i, x i) y :=
-  hi.monoLeft <| infi_le _ _
+  hi.mono_left <| infi_le _ _
 
 @[simp]
 theorem tendsto_sup {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} :

@@ -320,16 +320,16 @@ theorem IsAffineOpen.map_restrict_basic_open {X : SchemeCat} (r : X.Presheaf.obj
     Scheme.basic_open_res _ _ (hom_of_le le_top).op]
   exact hU.basic_open_is_affine _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (opens.map X.iso_Spec.hom.1.base).obj
    ((Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))).basic_open
     (inv (X.iso_Spec.hom.1.c.app (op ((opens.map (inv X.iso_Spec.hom).val.base).obj «expr⊤»())))
-     (X.presheaf.map (eq_to_hom _) f)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+     (X.presheaf.map (eq_to_hom _) f)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem SchemeCat.map_prime_spectrum_basic_open_of_affine (X : SchemeCat) [IsAffine X] (f : SchemeCat.Γ.obj (op X)) :
     (Opens.map X.isoSpec.Hom.1.base).obj (PrimeSpectrum.basicOpen f) = X.basicOpen f := by
   rw [← basic_open_eq_of_affine]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (opens.map X.iso_Spec.hom.1.base).obj\n   ((Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))).basic_open\n    (inv (X.iso_Spec.hom.1.c.app (op ((opens.map (inv X.iso_Spec.hom).val.base).obj «expr⊤»())))\n     (X.presheaf.map (eq_to_hom _) f)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (opens.map X.iso_Spec.hom.1.base).obj\n   ((Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))).basic_open\n    (inv (X.iso_Spec.hom.1.c.app (op ((opens.map (inv X.iso_Spec.hom).val.base).obj «expr⊤»())))\n     (X.presheaf.map (eq_to_hom _) f)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   congr
   · rw [← is_iso.inv_eq_inv, is_iso.inv_inv, is_iso.iso.inv_inv, nat_iso.app_hom]
     erw [← Γ_Spec.adjunction_unit_app_app_top]
@@ -534,12 +534,12 @@ theorem IsAffineOpen.is_localization_stalk_aux {X : SchemeCat} (U : Opens X.Carr
   erw [Spec_Γ_identity.inv_hom_id_app_assoc]
   simp only [eq_to_hom_map, eq_to_hom_trans]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(_, (structure_sheaf «expr $ »(X.presheaf.obj, op U)).presheaf.germ ⟨_, _⟩)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(_, (structure_sheaf «expr $ »(X.presheaf.obj, op U)).presheaf.germ ⟨_, _⟩)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(LocallyRingedSpace.Γ.map
     «expr $ »(quiver.hom.op, Scheme.Spec.map (X.presheaf.map («expr𝟙»() (op U))).op),
-    _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+    _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem IsAffineOpen.isLocalizationStalk {X : SchemeCat} {U : Opens X.Carrier} (hU : IsAffineOpen U) (x : U) :
     IsLocalization.AtPrime (X.Presheaf.stalk x) (hU.primeIdealOf x).asIdeal := by
   haveI : is_affine _ := hU
@@ -568,7 +568,7 @@ theorem IsAffineOpen.isLocalizationStalk {X : SchemeCat} {U : Opens X.Carrier} (
   congr 1
   simp only [← category.assoc]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(_, (structure_sheaf «expr $ »(X.presheaf.obj, op U)).presheaf.germ ⟨_, _⟩)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(_, (structure_sheaf «expr $ »(X.presheaf.obj, op U)).presheaf.germ ⟨_, _⟩)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rfl
     
   convert (structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ_res (hom_of_le le_top) ⟨_, _⟩ using 2
@@ -578,7 +578,7 @@ theorem IsAffineOpen.isLocalizationStalk {X : SchemeCat} {U : Opens X.Carrier} (
   erw [← Scheme.Spec.map_comp]
   rw [← op_comp, ← X.presheaf.map_comp]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(LocallyRingedSpace.Γ.map\n    «expr $ »(quiver.hom.op, Scheme.Spec.map (X.presheaf.map («expr𝟙»() (op U))).op),\n    _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(LocallyRingedSpace.Γ.map\n    «expr $ »(quiver.hom.op, Scheme.Spec.map (X.presheaf.map («expr𝟙»() (op U))).op),\n    _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr
     
   simp only [CategoryTheory.Functor.map_id, op_id]
@@ -609,19 +609,19 @@ theorem IsAffineOpen.from_Spec_map_basic_open {X : SchemeCat} {U : Opens X.Carri
     (f : X.Presheaf.obj (op U)) : (Opens.map hU.fromSpec.val.base).obj (X.basicOpen f) = PrimeSpectrum.basicOpen f := by
   simp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr⋃ , »((i : s), (prime_spectrum.basic_open i.1).1), set.univ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr⋃ , »((i : s), (prime_spectrum.basic_open i.1).1), set.univ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr ⁻¹' »(hU.from_Spec.1.base,
      «expr⨆ , »((f : s), X.basic_open (f : «expr $ »(X.presheaf.obj, op U))).1),
-    «expr ⁻¹' »(hU.from_Spec.1.base, U.1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+    «expr ⁻¹' »(hU.from_Spec.1.base, U.1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem IsAffineOpen.basic_open_union_eq_self_iff {X : SchemeCat} {U : Opens X.Carrier} (hU : IsAffineOpen U)
     (s : Set (X.Presheaf.obj <| op U)) : (⨆ f : s, X.basicOpen (f : X.Presheaf.obj <| op U)) = U ↔ Ideal.span s = ⊤ :=
   by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr⋃ , »((i : s), (prime_spectrum.basic_open i.1).1), set.univ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr⋃ , »((i : s), (prime_spectrum.basic_open i.1).1), set.univ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr ⁻¹' »(hU.from_Spec.1.base,\n     «expr⨆ , »((f : s), X.basic_open (f : «expr $ »(X.presheaf.obj, op U))).1),\n    «expr ⁻¹' »(hU.from_Spec.1.base, U.1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr = »(«expr ⁻¹' »(hU.from_Spec.1.base,\n     «expr⨆ , »((f : s), X.basic_open (f : «expr $ »(X.presheaf.obj, op U))).1),\n    «expr ⁻¹' »(hU.from_Spec.1.base, U.1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · refine' ⟨fun h => by rw [h], _⟩
     intro h
     apply_fun Set.Image hU.from_Spec.1.base  at h

@@ -10,7 +10,7 @@ import Mathbin.RingTheory.Algebraic
 ### Cardinality of algebraic numbers
 
 In this file, we prove variants of the following result: the cardinality of algebraic numbers under
-an R-algebra is at most `# polynomial R * ℵ₀`.
+an R-algebra is at most `# R[X] * ℵ₀`.
 
 Although this can be used to prove that real or complex transcendental numbers exist, a more direct
 proof is given by `liouville.is_transcendental`.
@@ -21,7 +21,7 @@ universe u v
 
 open Cardinal Polynomial
 
-open Cardinal
+open Cardinal Polynomial
 
 namespace Algebraic
 
@@ -34,14 +34,12 @@ section lift
 
 variable (R : Type u) (A : Type v) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A] [NoZeroSmulDivisors R A]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr fintype «expr ⁻¹' »(g, {f})]] -/
 theorem cardinal_mk_lift_le_mul :
-    Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#Polynomial R) * ℵ₀ := by
+    Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#R[X]) * ℵ₀ := by
   rw [← mk_ulift, ← mk_ulift]
-  let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} (Polynomial R) := fun x => ULift.up (Classical.choose x.1.2)
+  let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} R[X] := fun x => ULift.up (Classical.choose x.1.2)
   apply Cardinal.mk_le_mk_mul_of_mk_preimage_le g fun f => _
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr fintype «expr ⁻¹' »(g, {f})]]"
+  rsuffices : Fintype (g ⁻¹' {f})
   · exact mk_le_aleph_0
     
   by_cases hf:f.1 = 0
@@ -90,8 +88,8 @@ section NonLift
 
 variable (R A : Type u) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A] [NoZeroSmulDivisors R A]
 
-theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#Polynomial R) * ℵ₀ := by
-  rw [← lift_id (#_), ← lift_id (#Polynomial R)]
+theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#R[X]) * ℵ₀ := by
+  rw [← lift_id (#_), ← lift_id (#R[X])]
   exact cardinal_mk_lift_le_mul R A
 
 theorem cardinal_mk_le_max : (#{ x : A // IsAlgebraic R x }) ≤ max (#R) ℵ₀ := by

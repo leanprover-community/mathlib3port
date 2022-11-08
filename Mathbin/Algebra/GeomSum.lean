@@ -375,7 +375,7 @@ theorem geom_sum_pos_and_lt_one [StrictOrderedRing α] (hx : x < 0) (hx' : 0 < x
     ⟨mul_lt_one_of_nonneg_of_lt_one_left (neg_nonneg.2 hx.le) (neg_lt_iff_pos_add'.2 hx') ihn.2.le,
       mul_neg_of_neg_of_pos hx ihn.1⟩
 
-theorem geomSumAlternatingOfLeNegOne [StrictOrderedRing α] (hx : x + 1 ≤ 0) (n : ℕ) :
+theorem geom_sum_alternating_of_le_neg_one [StrictOrderedRing α] (hx : x + 1 ≤ 0) (n : ℕ) :
     if Even n then (∑ i in range n, x ^ i) ≤ 0 else 1 ≤ ∑ i in range n, x ^ i := by
   have hx0 : x ≤ 0 := (le_add_of_nonneg_right zero_le_one).trans hx
   induction' n with n ih
@@ -391,7 +391,7 @@ theorem geomSumAlternatingOfLeNegOne [StrictOrderedRing α] (hx : x + 1 ≤ 0) (
     simpa only [mul_one] using mul_le_mul_of_nonpos_left ih hx0
     
 
-theorem geomSumAlternatingOfLtNegOne [StrictOrderedRing α] (hx : x + 1 < 0) (hn : 1 < n) :
+theorem geom_sum_alternating_of_lt_neg_one [StrictOrderedRing α] (hx : x + 1 < 0) (hn : 1 < n) :
     if Even n then (∑ i in range n, x ^ i) < 0 else 1 < ∑ i in range n, x ^ i := by
   have hx0 : x < 0 := ((le_add_iff_nonneg_right _).2 zero_le_one).trans_lt hx
   refine' Nat.le_induction _ _ n (show 2 ≤ n from hn)
@@ -436,7 +436,7 @@ theorem Odd.geom_sum_pos [LinearOrderedRing α] (h : Odd n) : 0 < ∑ i in range
     
   rw [Nat.odd_iff_not_even] at h
   rcases lt_trichotomy (x + 1) 0 with (hx | hx | hx)
-  · have := geomSumAlternatingOfLtNegOne hx k.one_lt_succ_succ
+  · have := geom_sum_alternating_of_lt_neg_one hx k.one_lt_succ_succ
     simp only [h, if_false] at this
     exact zero_lt_one.trans this
     
@@ -449,7 +449,7 @@ theorem geom_sum_pos_iff [LinearOrderedRing α] (hn : n ≠ 0) : (0 < ∑ i in r
   refine' ⟨fun h => _, _⟩
   · rw [or_iff_not_imp_left, ← not_le, ← Nat.even_iff_not_odd]
     refine' fun hn hx => h.not_le _
-    simpa [if_pos hn] using geomSumAlternatingOfLeNegOne hx n
+    simpa [if_pos hn] using geom_sum_alternating_of_le_neg_one hx n
     
   · rintro (hn | hx')
     · exact hn.geom_sum_pos
@@ -466,7 +466,7 @@ theorem geom_sum_ne_zero [LinearOrderedRing α] (hx : x ≠ -1) (hn : n ≠ 0) :
     
   rw [Ne.def, eq_neg_iff_add_eq_zero, ← Ne.def] at hx
   obtain h | h := hx.lt_or_lt
-  · have := geomSumAlternatingOfLtNegOne h n.one_lt_succ_succ
+  · have := geom_sum_alternating_of_lt_neg_one h n.one_lt_succ_succ
     split_ifs  at this
     · exact this.ne
       

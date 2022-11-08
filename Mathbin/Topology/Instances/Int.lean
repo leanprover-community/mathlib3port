@@ -22,7 +22,7 @@ namespace Int
 instance : HasDist ℤ :=
   ⟨fun x y => dist (x : ℝ) y⟩
 
-theorem dist_eq (x y : ℤ) : dist x y = abs (x - y) :=
+theorem dist_eq (x y : ℤ) : dist x y = |x - y| :=
   rfl
 
 @[norm_cast, simp]

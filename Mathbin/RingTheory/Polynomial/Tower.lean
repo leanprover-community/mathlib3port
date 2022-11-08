@@ -9,7 +9,7 @@ import Mathbin.Data.Polynomial.AlgebraMap
 /-!
 # Algebra towers for polynomial
 
-This file proves some basic results about the algebra tower structure for the type `polynomial R`.
+This file proves some basic results about the algebra tower structure for the type `R[X]`.
 
 This structure itself is provided elsewhere as `polynomial.is_scalar_tower`
 

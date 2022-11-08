@@ -417,6 +417,15 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
     exact f_eq ⟨p, hpc⟩ _ _ hxy.symm
     
 
+/- warning: linear_pmap.Sup clashes with linear_pmap.sup -> LinearPmap.sup
+Case conversion may be inaccurate. Consider using '#align linear_pmap.Sup LinearPmap.supₓ'. -/
+#print LinearPmap.sup /-
+/-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
+of these submodules. -/
+protected noncomputable def sup (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) : E →ₗ.[R] F :=
+  ⟨_, Classical.choose <| Sup_aux c hc⟩
+-/
+
 protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {f : E →ₗ.[R] F} (hf : f ∈ c) :
     f ≤ LinearPmap.sup c hc :=
   Classical.choose_spec (Sup_aux c hc) hf
@@ -696,11 +705,11 @@ theorem exists_unique_from_graph {g : Submodule R (E × F)}
 /-- Auxiliary definition to unfold the existential quantifier. -/
 noncomputable def valFromGraph {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
     {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) : F :=
-  (exists (exists_unique_from_graph hg ha)).some
+  (ExistsUnique.exists (exists_unique_from_graph hg ha)).some
 
 theorem val_from_graph_mem {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
     {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) : (a, valFromGraph hg ha) ∈ g :=
-  (exists (exists_unique_from_graph hg ha)).some_spec
+  (ExistsUnique.exists (exists_unique_from_graph hg ha)).some_spec
 
 /-- Define a `linear_pmap` from its graph. -/
 noncomputable def toLinearPmap (g : Submodule R (E × F))

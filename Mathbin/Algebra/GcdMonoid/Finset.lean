@@ -184,20 +184,20 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
     apply h b (mem_def.1 bs)
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ∪ »(s.filter (λ x, «expr = »(f x, 0)), s.filter (λ x, «expr ≠ »(f x, 0))).gcd f]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd_monoid.gcd (0 : α) _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ∪ »(s.filter (λ x, «expr = »(f x, 0)), s.filter (λ x, «expr ≠ »(f x, 0))).gcd f]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd_monoid.gcd (0 : α) _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd f = (s.filter fun x => f x ≠ 0).gcd f :=
   by
   classical
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ∪ »(s.filter (λ x, «expr = »(f x, 0)), s.filter (λ x, «expr ≠ »(f x, 0))).gcd f]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ∪ »(s.filter (λ x, «expr = »(f x, 0)), s.filter (λ x, «expr ≠ »(f x, 0))).gcd f]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rw [filter_union_filter_neg_eq]
     
   rw [gcd_union]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd_monoid.gcd (0 : α) _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr gcd_monoid.gcd (0 : α) _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · refine' congr (congr rfl _) rfl
     apply s.induction_on
     · simp
@@ -225,6 +225,26 @@ theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize 
   intro b t hbt h
   rw [gcd_insert, gcd_insert, h, ← gcd_mul_right]
   apply ((normalize_associated a).mul_left _).gcd_eq_right
+
+theorem extract_gcd' (f g : β → α) (hs : ∃ x, x ∈ s ∧ f x ≠ 0) (hg : ∀ b ∈ s, f b = s.gcd f * g b) : s.gcd g = 1 :=
+  ((@mul_right_eq_self₀ _ _ (s.gcd f) _).1 <| by
+        conv_lhs => rw [← normalize_gcd, ← gcd_mul_left, ← gcd_congr rfl hg]).resolve_right <|
+    by
+    contrapose! hs
+    exact gcd_eq_zero_iff.1 hs
+
+theorem extract_gcd (f : β → α) (hs : s.Nonempty) : ∃ g : β → α, (∀ b ∈ s, f b = s.gcd f * g b) ∧ s.gcd g = 1 := by
+  classical
+  by_cases h:∀ x ∈ s, f x = (0 : α)
+  · refine' ⟨fun b => 1, fun b hb => by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], _⟩
+    rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
+    
+  · choose g' hg using @gcd_dvd _ _ _ _ s f
+    have := fun b hb => _
+    push_neg  at h
+    refine' ⟨fun b => if hb : b ∈ s then g' hb else 0, this, extract_gcd' f _ h this⟩
+    rw [dif_pos hb, hg hb]
+    
 
 end Gcd
 

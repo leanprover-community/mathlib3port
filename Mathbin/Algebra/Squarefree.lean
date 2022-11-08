@@ -160,19 +160,59 @@ theorem squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible {r : R} (hr 
 
 end Irreducible
 
+section IsRadical
+
+variable [CancelCommMonoidWithZero R]
+
+theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefree x := by
+  rintro z ⟨w, rfl⟩
+  specialize h 2 (z * w) ⟨w, by simp_rw [pow_two, mul_left_comm, ← mul_assoc]⟩
+  rwa [← one_mul (z * w), mul_assoc, mul_dvd_mul_iff_right, ← is_unit_iff_dvd_one] at h
+  rw [mul_assoc, mul_ne_zero_iff] at h0
+  exact h0.2
+
+variable [GcdMonoid R]
+
+theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
+  (is_radical_iff_pow_one_lt 2 one_lt_two).2 fun y hy =>
+    And.right <|
+      (dvd_gcd_iff x x y).1
+        (by
+          by_cases gcd x y = 0
+          · rw [h]
+            apply dvd_zero
+            
+          replace hy := ((dvd_gcd_iff x x _).2 ⟨dvd_rfl, hy⟩).trans gcd_pow_right_dvd_pow_gcd
+          obtain ⟨z, hz⟩ := gcd_dvd_left x y
+          nth_rw 0 [hz]  at hy⊢
+          rw [pow_two, mul_dvd_mul_iff_left h] at hy
+          obtain ⟨w, hw⟩ := hy
+          exact (hx z ⟨w, by rwa [mul_right_comm, ← hw]⟩).mul_right_dvd.2 dvd_rfl)
+
+theorem is_radical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
+  ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
+    Or.ndrec Squarefree.is_radical <| by
+      rintro rfl
+      rw [zero_is_radical_iff]
+      infer_instance⟩
+
+theorem is_radical_iff_squarefree_of_ne_zero {x : R} (h : x ≠ 0) : IsRadical x ↔ Squarefree x :=
+  ⟨IsRadical.squarefree h, Squarefree.is_radical⟩
+
+end IsRadical
+
 namespace UniqueFactorizationMonoid
 
-variable [CancelCommMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid R]
+variable [CancelCommMonoidWithZero R] [UniqueFactorizationMonoid R]
 
-variable [NormalizationMonoid R]
-
-theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
+theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [DecidableEq R] {x : R} (x0 : x ≠ 0) :
     Squarefree x ↔ Multiset.Nodup (normalizedFactors x) := by
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
     classical
     infer_instance
   haveI := drel
   rw [multiplicity.squarefree_iff_multiplicity_le_one, Multiset.nodup_iff_count_le_one]
+  haveI := nontrivial_of_ne x 0 x0
   constructor <;> intro h a
   · by_cases hmem:a ∈ normalized_factors x
     · have ha := irreducible_of_normalized_factor _ hmem
@@ -202,16 +242,8 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
 
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) : x ∣ y ^ n ↔ x ∣ y := by
   classical
-  by_cases hx:x = 0
-  · simp [hx, pow_eq_zero_iff (Nat.pos_of_ne_zero h0)]
-    
-  by_cases hy:y = 0
-  · simp [hy, zero_pow (Nat.pos_of_ne_zero h0)]
-    
-  refine' ⟨fun h => _, fun h => h.pow h0⟩
-  rw [dvd_iff_normalized_factors_le_normalized_factors hx (pow_ne_zero n hy), normalized_factors_pow,
-    ((squarefree_iff_nodup_normalized_factors hx).1 hsq).le_nsmul_iff_le h0] at h
-  rwa [dvd_iff_normalized_factors_le_normalized_factors hx hy]
+  haveI := UniqueFactorizationMonoid.toGcdMonoid R
+  exact ⟨hsq.is_radical n y, fun h => h.pow h0⟩
 
 end UniqueFactorizationMonoid
 

@@ -552,7 +552,7 @@ on the left and positive indexes on the right. (Picture a number line.) -/
 def Tape.nth {Γ} [Inhabited Γ] (T : Tape Γ) : ℤ → Γ
   | 0 => T.head
   | (n + 1 : ℕ) => T.right.nth n
-  | -[1 + n] => T.left.nth n
+  | -[n+1] => T.left.nth n
 
 @[simp]
 theorem Tape.nth_zero {Γ} [Inhabited Γ] (T : Tape Γ) : T.nth 0 = T.1 :=
@@ -569,7 +569,7 @@ theorem Tape.mk'_nth_nat {Γ} [Inhabited Γ] (L R : ListBlank Γ) (n : ℕ) : (T
 
 @[simp]
 theorem Tape.move_left_nth {Γ} [Inhabited Γ] : ∀ (T : Tape Γ) (i : ℤ), (T.move Dir.left).nth i = T.nth (i - 1)
-  | ⟨a, L, R⟩, -[1 + n] => (ListBlank.nth_succ _ _).symm
+  | ⟨a, L, R⟩, -[n+1] => (ListBlank.nth_succ _ _).symm
   | ⟨a, L, R⟩, 0 => (ListBlank.nth_zero _).symm
   | ⟨a, L, R⟩, 1 => (ListBlank.nth_zero _).trans (ListBlank.head_cons _ _)
   | ⟨a, L, R⟩, (n + 1 : ℕ) + 1 => by
@@ -599,7 +599,7 @@ theorem Tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
     ∀ (T : Tape Γ) {i : ℤ}, (T.write b).nth i = if i = 0 then b else T.nth i
   | ⟨a, L, R⟩, 0 => rfl
   | ⟨a, L, R⟩, (n + 1 : ℕ) => rfl
-  | ⟨a, L, R⟩, -[1 + n] => rfl
+  | ⟨a, L, R⟩, -[n+1] => rfl
 
 @[simp]
 theorem Tape.write_mk' {Γ} [Inhabited Γ] (a b : Γ) (L R : ListBlank Γ) :
@@ -1174,8 +1174,11 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(branch p q₁ q₂) => insert Q (stmts₁ q₁ ∪ stmts₁ q₂)
   | Q => {Q}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-theorem stmts₁_self {q} : q ∈ stmts₁ q := by cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+theorem stmts₁_self {q} : q ∈ stmts₁ q := by
+  cases q <;>
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ := by
   intro h₁₂ q₀ h₀₁
@@ -1485,7 +1488,7 @@ theorem exists_enc_dec [Fintype Γ] :
   let n := Fintype.card Γ
   obtain ⟨F⟩ := Fintype.truncEquivFin Γ
   let G : Fin n ↪ Fin n → Bool :=
-    ⟨fun a b => a = b, fun a b h => of_to_bool_true <| (congr_fun h b).trans <| to_bool_tt rfl⟩
+    ⟨fun a b => a = b, fun a b h => Bool.of_decide_true <| (congr_fun h b).trans <| Bool.decide_true rfl⟩
   let H := (F.to_embedding.trans G).trans (Equiv.vectorEquivFin _ _).symm.toEmbedding
   classical
   let enc := H.set_value default (Vector.repeat ff n)
@@ -1663,8 +1666,8 @@ parameter (encdec : ∀ a, dec (enc a) = a)
 
 include encdec
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr step_aux (read_aux l₂.length (λ v, f «expr ::ᵥ »(a, v))) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr step_aux (read_aux l₂.length (λ v, f «expr ::ᵥ »(a, v))) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem step_aux_read (f v L R) : stepAux (read f) v (tr_tape' L R) = stepAux (f R.head) v (tr_tape' L R) := by
   suffices
     ∀ f,
@@ -1688,7 +1691,7 @@ theorem step_aux_read (f v L R) : stepAux (read f) v (tr_tape' L R) = stepAux (f
   · rfl
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr step_aux (read_aux l₂.length (λ v, f «expr ::ᵥ »(a, v))) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr step_aux (read_aux l₂.length (λ v, f «expr ::ᵥ »(a, v))) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · dsimp [read_aux, step_aux]
     simp
     cases a <;> rfl
@@ -2023,8 +2026,11 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(goto l) => {Q}
   | Q@halt => {Q}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-theorem stmts₁_self {q} : q ∈ stmts₁ q := by cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+theorem stmts₁_self {q} : q ∈ stmts₁ q := by
+  cases q <;>
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ := by
   intro h₁₂ q₀ h₀₁
@@ -2487,7 +2493,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :
     Reaches₀ (TM1Cat.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩
@@ -2541,8 +2547,6 @@ theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
 
 attribute [local simp] respects TM2.step TM2.step_aux tr_normal
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident b, ",", ident c, ",", ident r, "⟩", ":", expr «expr∃ , »((b),
-    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]] -/
 theorem tr_respects : Respects (TM2Cat.step M) (TM1Cat.step tr) tr_cfg := fun c₁ c₂ h => by
   cases' h with l v S L hT
   clear h
@@ -2550,8 +2554,7 @@ theorem tr_respects : Respects (TM2Cat.step M) (TM1Cat.step tr) tr_cfg := fun c�
   · constructor
     
   simp only [TM2.step, respects, Option.map_some']
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident b, \",\", ident c, \",\", ident r, \"⟩\", \":\", expr «expr∃ , »((b),\n    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]"
+  rsuffices ⟨b, c, r⟩ : ∃ b, _ ∧ reaches (TM1.step (tr M)) _ _
   · exact ⟨b, c, trans_gen.head' rfl r⟩
     
   rw [tr]

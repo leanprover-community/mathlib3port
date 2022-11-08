@@ -58,8 +58,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (u «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by

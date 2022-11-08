@@ -893,22 +893,10 @@ theorem ne_zero_of_coe_le_degree (hdeg : ↑n ≤ p.degree) : p ≠ 0 :=
 theorem le_nat_degree_of_coe_le_degree (hdeg : ↑n ≤ p.degree) : n ≤ p.natDegree :=
   WithBot.coe_le_coe.mp ((degree_eq_nat_degree <| ne_zero_of_coe_le_degree hdeg) ▸ hdeg)
 
-theorem degree_sum_fin_lt {n : ℕ} (f : Fin n → R) : degree (∑ i : Fin n, c (f i) * X ^ (i : ℕ)) < n := by
-  haveI : IsCommutative (WithBot ℕ) max := ⟨max_comm⟩
-  haveI : IsAssociative (WithBot ℕ) max := ⟨max_assoc⟩
-  calc
-    (∑ i, C (f i) * X ^ (i : ℕ)).degree ≤ finset.univ.fold (· ⊔ ·) ⊥ fun i => (C (f i) * X ^ (i : ℕ)).degree :=
-      degree_sum_le _ _
-    _ = finset.univ.fold max ⊥ fun i => (C (f i) * X ^ (i : ℕ)).degree := rfl
-    _ < n := (Finset.fold_max_lt (n : WithBot ℕ)).mpr ⟨WithBot.bot_lt_coe _, _⟩
-    
-  rintro ⟨i, hi⟩ -
-  calc
-    (C (f ⟨i, hi⟩) * X ^ i).degree ≤ (C _).degree + (X ^ i).degree := degree_mul_le _ _
-    _ ≤ 0 + i := add_le_add degree_C_le (degree_X_pow_le i)
-    _ = i := zero_add _
-    _ < n := with_bot.some_lt_some.mpr hi
-    
+theorem degree_sum_fin_lt {n : ℕ} (f : Fin n → R) : degree (∑ i : Fin n, c (f i) * X ^ (i : ℕ)) < n :=
+  (degree_sum_le _ _).trans_lt <|
+    (Finset.sup_lt_iff <| WithBot.bot_lt_coe n).2 fun k hk =>
+      (degree_C_mul_X_pow_le _ _).trans_lt <| WithBot.coe_lt_coe.2 k.is_lt
 
 theorem degree_linear_le : degree (c a * X + c b) ≤ 1 :=
   degree_add_le_of_degree_le (degree_C_mul_X_le _) <| le_trans degree_C_le Nat.WithBot.coe_nonneg

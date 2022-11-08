@@ -371,8 +371,8 @@ theorem pullback_fst_ι_to_V_snd (i j : 𝒰.J) : pullbackFstιToV 𝒰 f g i j 
   simp only [iso.trans_hom, pullback.congr_hom_hom, category.assoc, pullback.lift_snd, category.comp_id,
     pullback_right_pullback_fst_iso_hom_snd, pullback_symmetry_hom_comp_snd_assoc]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback_fst_ι_to_V 𝒰 f g i j, «expr ≫ »(fV 𝒰 f g j i, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback_fst_ι_to_V 𝒰 f g i j, «expr ≫ »(fV 𝒰 f g j i, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- We show that the map `W ×[X] Uᵢ ⟶ Uᵢ ×[Z] Y ⟶ W` is the first projection, where the
 first map is given by the lift of `W ×[X] Uᵢ ⟶ Uᵢ` and `W ×[X] Uᵢ ⟶ W ⟶ Y`.
 
@@ -387,7 +387,7 @@ theorem lift_comp_ι (i : 𝒰.J) :
   intro j
   dsimp only [open_cover.pullback_cover]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback_fst_ι_to_V 𝒰 f g i j, «expr ≫ »(fV 𝒰 f g j i, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback_fst_ι_to_V 𝒰 f g i j, «expr ≫ »(fV 𝒰 f g j i, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rw [← show _ = fV 𝒰 f g j i ≫ _ from (gluing 𝒰 f g).glue_condition j i]
     simp_rw [← category.assoc]
     congr 1
@@ -453,8 +453,8 @@ theorem pullback_p1_iso_inv_snd (i : 𝒰.J) : (pullbackP1Iso 𝒰 f g i).inv �
 theorem pullback_p1_iso_hom_ι (i : 𝒰.J) : (pullbackP1Iso 𝒰 f g i).Hom ≫ (gluing 𝒰 f g).ι i = pullback.fst := by
   rw [← pullback_p1_iso_inv_fst, iso.hom_inv_id_assoc]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback.snd, «expr ≫ »((pullback_p1_iso 𝒰 f g _).hom, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback.snd, «expr ≫ »((pullback_p1_iso 𝒰 f g _).hom, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The glued scheme (`(gluing 𝒰 f g).glued`) is indeed the pullback of `f` and `g`. -/
 def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
   apply pullback_cone.is_limit_aux'
@@ -472,7 +472,7 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
     iso.trans_hom, category.assoc, pullback.congr_hom_hom, pullback.lift_fst_assoc, category.comp_id,
     pullback_right_pullback_fst_iso_hom_fst_assoc, pullback.condition]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback.snd, «expr ≫ »((pullback_p1_iso 𝒰 f g _).hom, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(pullback.snd, «expr ≫ »((pullback_p1_iso 𝒰 f g _).hom, (gluing 𝒰 f g).ι _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr 1
     rw [← pullback_p1_iso_hom_ι]
     

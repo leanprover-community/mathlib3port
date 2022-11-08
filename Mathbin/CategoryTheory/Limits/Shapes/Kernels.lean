@@ -202,11 +202,11 @@ def kernelIsKernel : IsLimit (Fork.ofι (kernel.ι f) ((kernel.condition f).tran
 /-- Given any morphism `k : W ⟶ X` satisfying `k ≫ f = 0`, `k` factors through `kernel.ι f`
     via `kernel.lift : W ⟶ kernel f`. -/
 abbrev kernel.lift {W : C} (k : W ⟶ X) (h : k ≫ f = 0) : W ⟶ kernel f :=
-  limit.lift (parallelPair f 0) (KernelFork.ofι k h)
+  (kernelIsKernel f).lift (KernelFork.ofι k h)
 
 @[simp, reassoc]
 theorem kernel.lift_ι {W : C} (k : W ⟶ X) (h : k ≫ f = 0) : kernel.lift f k h ≫ kernel.ι f = k :=
-  limit.lift_π _ _
+  (kernelIsKernel f).fac (KernelFork.ofι k h) WalkingParallelPair.zero
 
 @[simp]
 theorem kernel.lift_zero {W : C} {h} : kernel.lift f (0 : W ⟶ X) h = 0 := by
@@ -568,11 +568,11 @@ def cokernelIsCokernel : IsColimit (Cofork.ofπ (cokernel.π f) ((cokernel.condi
 /-- Given any morphism `k : Y ⟶ W` such that `f ≫ k = 0`, `k` factors through `cokernel.π f`
     via `cokernel.desc : cokernel f ⟶ W`. -/
 abbrev cokernel.desc {W : C} (k : Y ⟶ W) (h : f ≫ k = 0) : cokernel f ⟶ W :=
-  colimit.desc (parallelPair f 0) (CokernelCofork.ofπ k h)
+  (cokernelIsCokernel f).desc (CokernelCofork.ofπ k h)
 
 @[simp, reassoc]
 theorem cokernel.π_desc {W : C} (k : Y ⟶ W) (h : f ≫ k = 0) : cokernel.π f ≫ cokernel.desc f k h = k :=
-  colimit.ι_desc _ _
+  (cokernelIsCokernel f).fac (CokernelCofork.ofπ k h) WalkingParallelPair.one
 
 @[simp]
 theorem cokernel.desc_zero {W : C} {h} : cokernel.desc f (0 : Y ⟶ W) h = 0 := by

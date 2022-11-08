@@ -234,7 +234,7 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
       run_tac
         tactic.field_simp.ne_zero) only [(zero_lt_one.trans (cone k)).ne',
       Ne.def, not_false_iff, (H n).ne', field_simps]
-    ring_exp
+    ring
   filter_upwards [(tendsto_order.1 B).2 a hk] with n hn
   exact (div_le_iff (H n)).1 hn.le
 
@@ -249,7 +249,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     swap
     · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero)
       
-    have : c ^ 3 = c ^ 2 * c := by ring_exp
+    have : c ^ 3 = c ^ 2 * c := by ring
     simp only [mul_sub, this, mul_one, inv_pow, sub_le_sub_iff_left]
     rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]
     simpa using pow_le_pow hc.le one_le_two

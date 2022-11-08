@@ -99,14 +99,14 @@ theorem nndist_of_im_eq {z w : ℂ} (h : z.im = w.im) : nndist z w = nndist z.re
 theorem edist_of_im_eq {z w : ℂ} (h : z.im = w.im) : edist z w = edist z.re w.re := by
   rw [edist_nndist, edist_nndist, nndist_of_im_eq h]
 
-theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * abs z.im := by
+theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * |z.im| := by
   rw [dist_of_re_eq (conj_re z), conj_im, dist_comm, Real.dist_eq, sub_neg_eq_add, ← two_mul, _root_.abs_mul,
     abs_of_pos (@two_pos ℝ _ _)]
 
 theorem nndist_conj_self (z : ℂ) : nndist (conj z) z = 2 * Real.nnabs z.im :=
   Nnreal.eq <| by rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
 
-theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by rw [dist_comm, dist_conj_self]
+theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * |z.im| := by rw [dist_comm, dist_conj_self]
 
 theorem nndist_self_conj (z : ℂ) : nndist z (conj z) = 2 * Real.nnabs z.im := by rw [nndist_comm, nndist_conj_self]
 
@@ -118,7 +118,7 @@ theorem norm_real (r : ℝ) : ∥(r : ℂ)∥ = ∥r∥ :=
   abs_of_real _
 
 @[simp]
-theorem norm_rat (r : ℚ) : ∥(r : ℂ)∥ = abs (r : ℝ) := by
+theorem norm_rat (r : ℚ) : ∥(r : ℂ)∥ = |(r : ℝ)| := by
   rw [← of_real_rat_cast]
   exact norm_real _
 
@@ -127,7 +127,7 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
   abs_of_nat _
 
 @[simp]
-theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by simp (config := { singlePass := true }) [← Rat.cast_coe_int]
+theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = |n| := by simp (config := { singlePass := true }) [← Rat.cast_coe_int]
 
 theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by simp [hn]
 
@@ -284,11 +284,7 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
 /-- The only continuous ring homomorphisms from `ℂ` to `ℂ` are the identity and the complex
 conjugation. -/
 theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) : f = RingHom.id ℂ ∨ f = conj := by
-  refine' (real_alg_hom_eq_id_or_conj <| (AlgHom.mk' f) fun x z => congr_fun _ x).imp (fun h => _) fun h => _
-  · refine' rat.dense_embedding_coe_real.dense.equalizer (by continuity) (by continuity) _
-    ext1
-    simp only [real_smul, Function.comp_app, map_rat_cast, of_real_rat_cast, map_mul]
-    
+  refine' (real_alg_hom_eq_id_or_conj <| AlgHom.mk' f <| map_real_smul f hf).imp (fun h => _) fun h => _
   all_goals
   convert congr_arg AlgHom.toRingHom h
   ext1
@@ -324,6 +320,12 @@ theorem isometryOfReal : Isometry (coe : ℝ → ℂ) :=
 @[continuity]
 theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
   ofRealLi.Continuous
+
+/-- The only continuous ring homomorphism from `ℝ` to `ℂ` is the identity. -/
+theorem ring_hom_eq_of_real_of_continuous {f : ℝ →+* ℂ} (h : Continuous f) : f = Complex.ofReal := by
+  convert congr_arg AlgHom.toRingHom (Subsingleton.elim (AlgHom.mk' f <| map_real_smul f h) <| Algebra.ofId ℝ ℂ)
+  ext1
+  rfl
 
 /-- Continuous linear map version of the canonical embedding of `ℝ` in `ℂ`. -/
 def ofRealClm : ℝ →L[ℝ] ℂ :=

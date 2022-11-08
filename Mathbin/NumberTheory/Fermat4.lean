@@ -30,8 +30,6 @@ theorem comm {a b c : ℤ} : Fermat42 a b c ↔ Fermat42 b a c := by
   rw [add_comm]
   tauto
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr ^ »(k, 4), H)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr f42.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a) (k * b) (k ^ 2 * c) := by
   delta Fermat42
   constructor
@@ -43,8 +41,7 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
     · exact mul_ne_zero hk0 f42.2.1
       
     · have H : a ^ 4 + b ^ 4 = c ^ 2 := f42.2.2
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr ^ »(k, 4), H)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      linear_combination k ^ 4 * H
       
     
   · intro f42
@@ -55,8 +52,7 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
     · exact right_ne_zero_of_mul f42.2.1
       
     apply (mul_right_inj' (pow_ne_zero 4 hk0)).mp
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr f42.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    linear_combination f42.2.2
     
 
 theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 := by
@@ -166,11 +162,6 @@ theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 
 
 namespace Fermat42
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr h.1.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr ht1], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr + »(«expr + »(«expr * »(«expr - »(«expr- »(b), «expr * »(2, b')), hb2'), ht2),
-    «expr * »(«expr * »(2, m), htt2))],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 -- If we have a solution to a ^ 4 + b ^ 4 = c ^ 2, we can construct a smaller one. This
 -- implies there can't be a smallest solution.
 theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 < c) : False := by
@@ -179,8 +170,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- first the formula:
   have ht : PythagoreanTriple (a ^ 2) (b ^ 2) c := by
     delta PythagoreanTriple
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr h.1.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    linear_combination h.1.2.2
   -- coprime requirement:
   have h2 : Int.gcd (a ^ 2) (b ^ 2) = 1 := int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal h).pow
   -- in order to reduce the possibilities we get from the classification of pythagorean triples
@@ -194,8 +184,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- formula:
   have htt : PythagoreanTriple a n m := by
     delta PythagoreanTriple
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr ht1], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    linear_combination ht1
   -- a and n are coprime, because a ^ 2 = m ^ 2 - n ^ 2 and m and n are coprime.
   have h3 : Int.gcd a n = 1 := by
     apply int.gcd_eq_one_iff_coprime.mpr
@@ -225,8 +214,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   cases' hb2 with b' hb2'
   have hs : b' ^ 2 = m * (r * s) := by
     apply (mul_right_inj' (by norm_num : (4 : ℤ) ≠ 0)).mp
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr + »(«expr + »(«expr * »(«expr - »(«expr- »(b), «expr * »(2, b')), hb2'), ht2),\n    «expr * »(«expr * »(2, m), htt2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    linear_combination(-b - 2 * b') * hb2' + ht2 + 2 * m * htt2
   have hrsz : r * s ≠ 0 := by
     -- because b ^ 2 is not zero and (b / 2) ^ 2 = m * (r * s)
     by_contra hrsz

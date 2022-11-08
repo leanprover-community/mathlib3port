@@ -351,7 +351,7 @@ theorem map_domain_mul {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β
   simp_rw [mul_def, map_domain_sum, map_domain_single, map_mul]
   rw [Finsupp.sum_map_domain_index]
   · congr
-    ext a b
+    ext (a b)
     rw [Finsupp.sum_map_domain_index]
     · simp
       
@@ -430,7 +430,7 @@ theorem lift_nc_smul [MulOneClass G] {R : Type _} [Semiring R] (f : k →+* R) (
   suffices :
     (lift_nc (↑f) g).comp (smulAddHom k (MonoidAlgebra k G) c) = (AddMonoidHom.mulLeft (f c)).comp (lift_nc (↑f) g)
   exact AddMonoidHom.congr_fun this φ
-  ext a b
+  ext (a b)
   simp [mul_assoc]
 
 end MiscTheorems
@@ -805,7 +805,7 @@ protected noncomputable def opRingEquiv [Monoid G] : (MonoidAlgebra k G)ᵐᵒ�
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
-      ext i₁ r₁ i₂ r₂ : 6
+      ext (i₁ r₁ i₂ r₂) : 6
       simp }
 
 @[simp]
@@ -1117,7 +1117,7 @@ theorem map_domain_mul {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β
   simp_rw [mul_def, map_domain_sum, map_domain_single, map_add]
   rw [Finsupp.sum_map_domain_index]
   · congr
-    ext a b
+    ext (a b)
     rw [Finsupp.sum_map_domain_index]
     · simp
       
@@ -1345,7 +1345,7 @@ protected noncomputable def opRingEquiv [AddCommMonoid G] : (AddMonoidAlgebra k 
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
-      ext i r i' r' : 6
+      ext (i r i' r') : 6
       dsimp
       simp only [map_range_single, single_mul_single, ← op_mul, add_comm] }
 

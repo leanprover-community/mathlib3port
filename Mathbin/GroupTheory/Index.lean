@@ -72,6 +72,11 @@ theorem index_comap_of_surjective {G' : Type _} [Group G'] {f : G' →* G} (hf :
 theorem index_comap {G' : Type _} [Group G'] (f : G' →* G) : (H.comap f).index = H.relindex f.range :=
   Eq.trans (congr_arg index (by rfl)) ((H.subgroupOf f.range).index_comap_of_surjective f.range_restrict_surjective)
 
+@[to_additive]
+theorem relindex_comap {G' : Type _} [Group G'] (f : G' →* G) (K : Subgroup G') :
+    relindex (comap f H) K = relindex H (map f K) := by
+  rw [relindex, subgroup_of, comap_comap, index_comap, ← f.map_range, K.subtype_range]
+
 variable {H K L}
 
 @[to_additive relindex_mul_index]
@@ -203,6 +208,16 @@ theorem relindex_bot_right : H.relindex ⊥ = 1 := by rw [relindex, subgroup_of_
 
 @[simp, to_additive]
 theorem relindex_self : H.relindex H = 1 := by rw [relindex, subgroup_of_self, index_top]
+
+@[to_additive]
+theorem index_ker {H} [Group H] (f : G →* H) : f.ker.index = Nat.card (Set.Range f) := by
+  rw [← MonoidHom.comap_bot, index_comap, relindex_bot_left]
+  rfl
+
+@[to_additive]
+theorem relindex_ker {H} [Group H] (f : G →* H) (K : Subgroup G) : f.ker.relindex K = Nat.card (f '' K) := by
+  rw [← MonoidHom.comap_bot, relindex_comap, relindex_bot_left]
+  rfl
 
 @[simp, to_additive card_mul_index]
 theorem card_mul_index : Nat.card H * H.index = Nat.card G := by

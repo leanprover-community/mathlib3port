@@ -145,7 +145,8 @@ noncomputable instance Sylow.inhabited : Inhabited (Sylow p G) :=
 
 theorem Sylow.exists_comap_eq_of_ker_is_p_group {H : Type _} [Group H] (P : Sylow p H) {f : H →* G}
     (hf : IsPGroup p f.ker) : ∃ Q : Sylow p G, (Q : Subgroup G).comap f = P :=
-  imp (fun Q hQ => P.3 (Q.2.comap_of_ker_is_p_group f hf) (map_le_iff_le_comap.mp hQ)) (P.2.map f).exists_le_sylow
+  Exists.imp (fun Q hQ => P.3 (Q.2.comap_of_ker_is_p_group f hf) (map_le_iff_le_comap.mp hQ))
+    (P.2.map f).exists_le_sylow
 
 theorem Sylow.exists_comap_eq_of_injective {H : Type _} [Group H] (P : Sylow p H) {f : H →* G}
     (hf : Function.Injective f) : ∃ Q : Sylow p G, (Q : Subgroup G).comap f = P :=

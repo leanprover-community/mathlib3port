@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Logic.Equiv.Nat
+import Mathbin.Data.Pnat.Basic
 import Mathbin.Order.Directed
 import Mathbin.Data.Countable.Defs
 import Mathbin.Order.RelIso
@@ -36,7 +37,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 
 open Option List Nat Function
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/

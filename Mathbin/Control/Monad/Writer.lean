@@ -13,9 +13,11 @@ universe u v w u₀ u₁ v₀ v₁
 structure WriterT (ω : Type u) (m : Type u → Type v) (α : Type u) : Type max u v where
   run : m (α × ω)
 
+#print Writer /-
 @[reducible]
 def Writer (ω : Type u) :=
   WriterT ω id
+-/
 
 attribute [pp_using_anonymous_constructor] WriterT
 
@@ -103,6 +105,7 @@ end
 
 end WriterT
 
+#print MonadWriter /-
 /-- An implementation of [MonadReader](
 https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader-Class.html#t:MonadReader).
 It does not contain `local` because this function cannot be lifted using `monad_lift`.
@@ -118,6 +121,7 @@ class MonadWriter (ω : outParam (Type u)) (m : Type u → Type v) where
   tell (w : ω) : m PUnit
   listen {α} : m α → m (α × ω)
   pass {α : Type u} : m (α × (ω → ω)) → m α
+-/
 
 export MonadWriter ()
 

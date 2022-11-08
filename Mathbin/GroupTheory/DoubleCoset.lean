@@ -73,7 +73,7 @@ theorem rel_iff {H K : Subgroup G} {x y : G} : (setoid ↑H ↑K).Rel x y ↔ �
   Iff.trans ⟨fun hxy => (congr_arg _ hxy).mpr (mem_doset_self H K y), fun hxy => (doset_eq_of_mem hxy).symm⟩ mem_doset
 
 theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid ↑(⊥ : Subgroup G) ↑H).Rel = (QuotientGroup.leftRel H).Rel := by
-  ext a b
+  ext (a b)
   rw [rel_iff, Setoid.Rel, QuotientGroup.left_rel_apply]
   constructor
   · rintro ⟨a, rfl : a = 1, b, hb, rfl⟩
@@ -86,7 +86,7 @@ theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid ↑(⊥ : Subgroup G) ↑
 
 theorem rel_bot_eq_right_group_rel (H : Subgroup G) :
     (setoid ↑H ↑(⊥ : Subgroup G)).Rel = (QuotientGroup.rightRel H).Rel := by
-  ext a b
+  ext (a b)
   rw [rel_iff, Setoid.Rel, QuotientGroup.right_rel_apply]
   constructor
   · rintro ⟨b, hb, a, rfl : a = 1, rfl⟩

@@ -346,8 +346,8 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
     rfl
   inv_hom_id' := by
     ext x : 2
-    simp only [colimit.ι_desc_apply, id_apply, lift_mk, mk'_apply, cofork.of_π_ι_app, comp_apply,
-      AddMonoidHom.comp_apply]
+    simp only [AddMonoidHom.coe_comp, Function.comp_app, comp_apply, lift_mk, cokernel.π_desc_apply, mk'_apply,
+      id_apply]
 
 end AddCommGroupCat
 

@@ -77,13 +77,11 @@ theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ :=
   apply h
   infer_instance
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in obtain #[["@", "⟨", "⟨", ident h₁, "⟩", ",", ident h₂, "⟩", ":=", expr id h]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- A simple Lie algebra is semisimple. -/
 instance (priority := 100) is_semisimple_of_is_simple [h : IsSimple R L] : IsSemisimple R L := by
   rw [is_semisimple_iff_no_abelian_ideals]
   intro I hI
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in obtain #[[\"@\", \"⟨\", \"⟨\", ident h₁, \"⟩\", \",\", ident h₂, \"⟩\", \":=\", expr id h]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  obtain @⟨⟨h₁⟩, h₂⟩ := id h
   by_contra contra
   rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI
   exact h₂ hI

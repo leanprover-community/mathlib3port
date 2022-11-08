@@ -10,6 +10,7 @@ import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.Star
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.GroupTheory.Archimedean
+import Mathbin.Algebra.Order.Group.Bounds
 import Mathbin.Algebra.Periodic
 import Mathbin.Order.Filter.Archimedean
 import Mathbin.Topology.Instances.Int
@@ -81,10 +82,10 @@ _
 
 lemma uniform_embedding_mul_rat {q : ℚ} (hq : q ≠ 0) : uniform_embedding ((*) q) :=
 _ -/
-theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀ ε > 0, ∃ y ∈ s, abs (y - x) < ε := by
+theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀ ε > 0, ∃ y ∈ s, |y - x| < ε := by
   simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 
-theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ abs x) :
+theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ |x|) :
     UniformContinuous fun p : s => p.1⁻¹ :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abs ε0 r0
@@ -97,8 +98,8 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (�
   rw [← abs_pos] at r0 <;>
     exact
       tendsto_of_uniform_continuous_subtype
-        (Real.uniform_continuous_inv { x | abs r / 2 < abs x } (half_pos r0) fun x h => le_of_lt h)
-        (IsOpen.mem_nhds ((is_open_lt' (abs r / 2)).Preimage continuous_abs) (half_lt_self r0))
+        (Real.uniform_continuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_lt h)
+        (IsOpen.mem_nhds ((is_open_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
 
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
   continuous_iff_continuous_at.mpr fun ⟨r, hr⟩ =>
@@ -112,7 +113,7 @@ theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f
 theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
   uniform_continuous_const_smul x
 
-theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H : ∀ x ∈ s, abs (x : ℝ × ℝ).1 < r₁ ∧ abs x.2 < r₂) :
+theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H : ∀ x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) :
     UniformContinuous fun p : s => p.1.1 * p.1.2 :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0
@@ -124,10 +125,10 @@ theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H 
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuous_at.2 fun ⟨a₁, a₂⟩ =>
     tendsto_of_uniform_continuous_subtype
-      (Real.uniform_continuous_mul ({ x | abs x < abs a₁ + 1 } ×ˢ { x | abs x < abs a₂ + 1 }) fun x => id)
+      (Real.uniform_continuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
       (IsOpen.mem_nhds
-        (((is_open_gt' (abs a₁ + 1)).Preimage continuous_abs).Prod ((is_open_gt' (abs a₂ + 1)).Preimage continuous_abs))
-        ⟨lt_add_one (abs a₁), lt_add_one (abs a₂)⟩)
+        (((is_open_gt' (|a₁| + 1)).Preimage continuous_abs).Prod ((is_open_gt' (|a₂| + 1)).Preimage continuous_abs))
+        ⟨lt_add_one (|a₁|), lt_add_one (|a₂|)⟩)
 
 instance : TopologicalRing ℝ :=
   { Real.topological_add_group with continuous_mul := Real.continuous_mul }
@@ -255,7 +256,7 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
   let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
   push_neg  at H'
   intro x
-  suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, abs (x - g) < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
+  suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, |x - g| < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos
   obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ := by
     cases' lt_or_gt_of_ne g₀_ne with Hg₀ Hg₀

@@ -39,7 +39,7 @@ theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
 theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) := by
   simp only [is_prime_pow_def, not_exists, not_and', and_imp]
   intro x n hn hx ht
-  exact ht.not_unit (is_unit_of_pow_eq_one x n hx hn)
+  exact ht.not_unit (is_unit_of_pow_eq_one x n hx hn.ne')
 
 theorem Prime.isPrimePow {p : R} (hp : Prime p) : IsPrimePow p :=
   ⟨p, 1, hp, zero_lt_one, by simp⟩

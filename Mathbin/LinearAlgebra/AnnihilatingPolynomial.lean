@@ -150,7 +150,7 @@ theorem ann_ideal_generator_eq_minpoly (a : A) : annIdealGenerator 𝕜 a = minp
     
   · exact
       minpoly.unique _ _ (monic_ann_ideal_generator _ _ h) (ann_ideal_generator_aeval_eq_zero _ _) fun q q_monic hq =>
-        degree_ann_ideal_generator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq) q_monic.ne_zero
+        degree_ann_ideal_generator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq) q_monic.NeZero
     
 
 /-- If a monic generates the annihilating ideal, it must match our choice

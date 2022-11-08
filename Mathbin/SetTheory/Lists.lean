@@ -330,19 +330,20 @@ section Decidable
 @[simp]
 def Equiv.decidableMeas :
     (PSum (Σ'l₁ : Lists α, Lists α) <| PSum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) → ℕ
-  | PSum.inl ⟨l₁, l₂⟩ => sizeOf l₁ + sizeOf l₂
-  | PSum.inr <| PSum.inl ⟨l₁, l₂⟩ => sizeOf l₁ + sizeOf l₂
-  | PSum.inr <| PSum.inr ⟨l₁, l₂⟩ => sizeOf l₁ + sizeOf l₂
+  | PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
+  | PSum.inr <| PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
+  | PSum.inr <| PSum.inr ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
 
 open WellFoundedTactics
 
-theorem sizeof_pos {b} (l : Lists' α b) : 0 < sizeOf l := by
+theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
   cases l <;>
     run_tac
       andthen unfold_sizeof trivial_nat_lt
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
-theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) : sizeOf (⟨b, a⟩ : Lists α) < sizeOf (Lists'.cons' a l) := by
+theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
+    SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
   run_tac
     unfold_sizeof
   apply sizeof_pos

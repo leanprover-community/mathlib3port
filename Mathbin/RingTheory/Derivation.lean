@@ -718,13 +718,13 @@ instance : IsScalarTower S (S ⊗[R] S) (Ω[S⁄R]) :=
 instance KaehlerDifferential.is_scalar_tower_of_tower {R₁ R₂ : Type _} [CommRing R₁] [CommRing R₂] [Algebra R₁ S]
     [Algebra R₂ S] [Algebra R₁ R₂] [IsScalarTower R₁ R₂ S] : IsScalarTower R₁ R₂ (Ω[S⁄R]) := by
   convert RestrictScalars.is_scalar_tower R₁ R₂ (Ω[S⁄R]) using 1
-  ext x m
+  ext (x m)
   show algebraMap R₁ S x • m = algebraMap R₂ S (algebraMap R₁ R₂ x) • m
   rw [← IsScalarTower.algebra_map_apply]
 
 instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R (S ⊗[R] S) (Ω[S⁄R]) := by
   convert RestrictScalars.is_scalar_tower R (S ⊗[R] S) (Ω[S⁄R]) using 1
-  ext x m
+  ext (x m)
   show algebraMap R S x • m = algebraMap R (S ⊗[R] S) x • m
   simp_rw [IsScalarTower.algebra_map_apply R S (S ⊗[R] S), IsScalarTower.algebra_map_smul]
 

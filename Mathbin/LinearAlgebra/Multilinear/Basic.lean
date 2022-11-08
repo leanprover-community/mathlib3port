@@ -1093,7 +1093,7 @@ theorem MultilinearMap.curry_left_apply (f : MultilinearMap R M M₂) (x : M 0) 
 @[simp]
 theorem LinearMap.curry_uncurry_left (f : M 0 →ₗ[R] MultilinearMap R (fun i : Fin n => M i.succ) M₂) :
     f.uncurryLeft.curryLeft = f := by
-  ext m x
+  ext (m x)
   simp only [tail_cons, LinearMap.uncurry_left_apply, MultilinearMap.curry_left_apply]
   rw [cons_zero]
 
@@ -1196,7 +1196,7 @@ theorem MultilinearMap.curry_right_apply (f : MultilinearMap R M M₂) (m : ∀ 
 @[simp]
 theorem MultilinearMap.curry_uncurry_right
     (f : MultilinearMap R (fun i : Fin n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) : f.uncurryRight.curryRight = f := by
-  ext m x
+  ext (m x)
   simp only [snoc_last, MultilinearMap.curry_right_apply, MultilinearMap.uncurry_right_apply]
   rw [init_snoc]
 

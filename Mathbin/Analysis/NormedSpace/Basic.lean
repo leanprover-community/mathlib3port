@@ -29,7 +29,7 @@ section SeminormedAddCommGroup
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option extends_priority -/
 set_option extends_priority 920
 
 -- Here, we set a rather high priority for the instance `[normed_space α β] : module α β`
@@ -72,7 +72,7 @@ theorem norm_zsmul (α) [NormedField α] [NormedSpace α β] (n : ℤ) (x : β) 
   rw [← norm_smul, ← Int.smul_one_eq_coe, smul_assoc, one_smul]
 
 @[simp]
-theorem abs_norm_eq_norm (z : β) : abs ∥z∥ = ∥z∥ :=
+theorem abs_norm_eq_norm (z : β) : |∥z∥| = ∥z∥ :=
   (abs_eq (norm_nonneg z)).mpr (Or.inl rfl)
 
 theorem inv_norm_smul_mem_closed_unit_ball [NormedSpace ℝ β] (x : β) : ∥x∥⁻¹ • x ∈ ClosedBall (0 : β) 1 := by
@@ -172,9 +172,6 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : Discr
       or_iff_left he]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- A (semi) normed real vector space is homeomorphic to the unit ball in the same space.
 This homeomorphism sends `x : E` to `(1 + ∥x∥²)^(- ½) • x`.
 
@@ -187,27 +184,22 @@ smoothness properties that hold when `E` is an inner-product space. -/
 def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
   toFun x :=
     ⟨(1 + ∥x∥ ^ 2).sqrt⁻¹ • x, by
-      have : 0 < 1 + ∥x∥ ^ 2 := by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+      have : 0 < 1 + ∥x∥ ^ 2 := by positivity
       rw [mem_ball_zero_iff, norm_smul, Real.norm_eq_abs, abs_inv, ← div_eq_inv_mul,
         div_lt_one (abs_pos.mpr <| real.sqrt_ne_zero'.mpr this), ← abs_norm_eq_norm x, ← sq_lt_sq, abs_norm_eq_norm,
         Real.sq_sqrt this.le]
       exact lt_one_add _⟩
   invFun y := (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹ • (y : E)
   left_inv x := by
-    have : 0 < 1 + ∥x∥ ^ 2 := by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
-    field_simp [norm_smul, smul_smul, this.ne', Real.sq_sqrt this.le, ← Real.sqrt_div this.le]
+    field_simp [norm_smul, smul_smul, (zero_lt_one_add_norm_sq x).ne', Real.sq_sqrt (zero_lt_one_add_norm_sq x).le, ←
+      Real.sqrt_div (zero_lt_one_add_norm_sq x).le]
   right_inv y := by
     have : 0 < 1 - ∥(y : E)∥ ^ 2 := by nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ∥(y : E)∥ < 1)]
     field_simp [norm_smul, smul_smul, this.ne', Real.sq_sqrt this.le, ← Real.sqrt_div this.le]
   continuous_to_fun := by
     suffices : Continuous fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹
     exact (this.smul continuous_id).subtype_mk _
-    refine'
-      Continuous.inv₀ _ fun x =>
-        real.sqrt_ne_zero'.mpr
-          (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+    refine' Continuous.inv₀ _ fun x => real.sqrt_ne_zero'.mpr (by positivity)
     continuity
   continuous_inv_fun := by
     suffices ∀ y : ball (0 : E) 1, (1 - ∥(y : E)∥ ^ 2).sqrt ≠ 0 by continuity

@@ -363,15 +363,13 @@ section NormedField
 
 variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {p q : Seminorm 𝕜 E} {x : E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- Auxiliary lemma to show that the infimum of seminorms is well-defined. -/
 theorem bdd_below_range_add : BddBelow (range fun u => p u + q (x - u)) :=
   ⟨0, by
     rintro _ ⟨x, rfl⟩
     dsimp
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"⟩
+    positivity⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 noncomputable instance :
     HasInf
       (Seminorm 𝕜
@@ -382,10 +380,8 @@ noncomputable instance :
         obtain rfl | ha := eq_or_ne a 0
         · rw [norm_zero, zero_mul, zero_smul]
           refine'
-            cinfi_eq_of_forall_ge_of_forall_gt_exists_lt
-              (fun i => by
-                trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-              fun x hx => ⟨0, by rwa [map_zero, sub_zero, map_zero, add_zero]⟩
+            cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => by positivity) fun x hx =>
+              ⟨0, by rwa [map_zero, sub_zero, map_zero, add_zero]⟩
           
         simp_rw [Real.mul_infi_of_nonneg (norm_nonneg a), mul_add, ← map_smul_eq_mul p, ← map_smul_eq_mul q, smul_sub]
         refine' Function.Surjective.infi_congr ((· • ·) a⁻¹ : E → E) (fun u => ⟨a • u, inv_smul_smul₀ ha u⟩) fun u => _
@@ -784,13 +780,11 @@ theorem ballZeroAbsorbsBallZero (p : Seminorm 𝕜 E) {r₁ r₂ : ℝ} (hr₁ :
   rw [div_le_iff hr] at ha
   exact hx.trans (lt_of_le_of_lt ha ((mul_lt_mul_left ha').mpr hr'))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- Seminorm-balls at the origin are absorbent. -/
 protected theorem absorbentBallZero (hr : 0 < r) : Absorbent 𝕜 (Ball p (0 : E) r) := by
   rw [absorbent_iff_nonneg_lt]
   rintro x
-  have hxr : 0 ≤ p x / r := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  have hxr : 0 ≤ p x / r := by positivity
   refine' ⟨p x / r, hxr, fun a ha => _⟩
   have ha₀ : 0 < ∥a∥ := hxr.trans_lt ha
   refine' ⟨a⁻¹ • x, _, smul_inv_smul₀ (norm_pos_iff.1 ha₀) x⟩
@@ -962,7 +956,7 @@ theorem coe_norm_seminorm : ⇑(normSeminorm 𝕜 E) = norm :=
 
 @[simp]
 theorem ball_norm_seminorm : (normSeminorm 𝕜 E).ball = Metric.Ball := by
-  ext x r y
+  ext (x r y)
   simp only [Seminorm.mem_ball, Metric.mem_ball, coe_norm_seminorm, dist_eq_norm]
 
 variable {𝕜 E} {x : E}

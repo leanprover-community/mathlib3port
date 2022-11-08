@@ -136,7 +136,7 @@ theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option default_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 -- see Note [default priority]
@@ -211,7 +211,7 @@ theorem prime_factors_unique [CancelCommMonoidWithZero α] :
       Multiset.Rel.cons hb
         (ih (fun q hq => hf _ (by simp [hq])) (fun q (hq : q ∈ g.erase b) => hg q (Multiset.mem_of_mem_erase hq))
           (Associated.of_mul_left (by rwa [← Multiset.prod_cons, ← Multiset.prod_cons, Multiset.cons_erase hbg]) hb
-            (hf p (by simp)).ne_zero))
+            (hf p (by simp)).NeZero))
 
 namespace UniqueFactorizationMonoid
 
@@ -256,8 +256,8 @@ variable (pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b ∈ f, Prime 
 
 include pf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(a, c)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(a, c)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem WfDvdMonoid.ofExistsPrimeFactors : WfDvdMonoid α :=
   ⟨by
     classical
@@ -295,7 +295,7 @@ theorem WfDvdMonoid.ofExistsPrimeFactors : WfDvdMonoid α :=
       
     · rw [Multiset.prod_add]
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(a, c)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(a, c)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       · apply Associated.mul_mul <;> apply (Classical.choose_spec (pf _ _)).2
         
       · rw [← b_eq]
@@ -358,7 +358,7 @@ theorem irreducible_iff_prime_of_exists_unique_irreducible_factors [CancelCommMo
     (p : α) : Irreducible p ↔ Prime p :=
   ⟨letI := Classical.decEq α
     fun hpi =>
-    ⟨hpi.ne_zero, hpi.1, fun a b ⟨x, hx⟩ =>
+    ⟨hpi.NeZero, hpi.1, fun a b ⟨x, hx⟩ =>
       if hab0 : a * b = 0 then
         (eq_zero_or_eq_zero_of_mul_eq_zero hab0).elim (fun ha0 => by simp [ha0]) fun hb0 => by simp [hb0]
       else by
@@ -605,6 +605,21 @@ theorem _root_.irreducible.normalized_factors_pow {p : α} (hp : Irreducible p) 
     normalizedFactors (p ^ k) = Multiset.repeat (normalize p) k := by
   rw [normalized_factors_pow, normalized_factors_irreducible hp, Multiset.nsmul_singleton]
 
+theorem normalized_factors_prod_eq (s : Multiset α) (hs : ∀ a ∈ s, Irreducible a) :
+    normalizedFactors s.Prod = s.map normalize := by
+  induction' s using Multiset.induction with a s ih
+  · rw [Multiset.prod_zero, normalized_factors_one, Multiset.map_zero]
+    
+  · have ia := hs a (Multiset.mem_cons_self a _)
+    have ib := fun b h => hs b (Multiset.mem_cons_of_mem h)
+    obtain rfl | ⟨b, hb⟩ := s.empty_or_exists_mem
+    · rw [Multiset.cons_zero, Multiset.prod_singleton, Multiset.map_singleton, normalized_factors_irreducible ia]
+      
+    haveI := nontrivial_of_ne b 0 (ib b hb).NeZero
+    rw [Multiset.prod_cons, Multiset.map_cons, normalized_factors_mul ia.ne_zero, normalized_factors_irreducible ia, ih]
+    exacts[rfl, ib, Multiset.prod_ne_zero fun h => (ib 0 h).NeZero rfl]
+    
+
 theorem dvd_iff_normalized_factors_le_normalized_factors {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
     x ∣ y ↔ normalizedFactors x ≤ normalizedFactors y := by
   constructor
@@ -741,7 +756,7 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
     (no_factors : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) : a ∣ b * c → a ∣ c := by
   simpa [mul_comm b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
 theorem exists_reduced_factors :

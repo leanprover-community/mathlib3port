@@ -159,7 +159,7 @@ theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finset ι} :
 
 theorem separable_prod {ι : Sort _} [Fintype ι] {f : ι → R[X]} (h1 : Pairwise (IsCoprime on f))
     (h2 : ∀ x, (f x).Separable) : (∏ x, f x).Separable :=
-  separable_prod' (fun x hx y hy hxy => h1 x y hxy) fun x hx => h2 x
+  separable_prod' (fun x hx y hy hxy => h1 hxy) fun x hx => h2 x
 
 theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finset ι}
     (hfs : (∏ i in s, X - c (f i)).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s) (hfxy : f x = f y) : x = y := by

@@ -124,8 +124,8 @@ theorem det_adjust_to_orientation :
     (e.adjustToOrientation x).toBasis.det = e.toBasis.det ∨ (e.adjustToOrientation x).toBasis.det = -e.toBasis.det := by
   simpa using e.to_basis.det_adjust_to_orientation x
 
-theorem abs_det_adjust_to_orientation (v : ι → E) :
-    abs ((e.adjustToOrientation x).toBasis.det v) = abs (e.toBasis.det v) := by simp [to_basis_adjust_to_orientation]
+theorem abs_det_adjust_to_orientation (v : ι → E) : |(e.adjustToOrientation x).toBasis.det v| = |e.toBasis.det v| := by
+  simp [to_basis_adjust_to_orientation]
 
 end AdjustToOrientation
 
@@ -229,8 +229,8 @@ theorem volume_form_neg_orientation : (-o).volumeForm = -o.volumeForm := by
     rw [e.to_basis.orientation_ne_iff_eq_neg, h₁]
   rw [o.volume_form_robust e h₁, (-o).volume_form_robust_neg e h₂]
 
-theorem volume_form_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → E) :
-    abs (o.volumeForm v) = abs (b.toBasis.det v) := by
+theorem volume_form_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → E) : |o.volumeForm v| = |b.toBasis.det v| :=
+  by
   cases n
   · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
     
@@ -238,11 +238,10 @@ theorem volume_form_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → 
       b.abs_det_adjust_to_orientation]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- Let `v` be an indexed family of `n` vectors in an oriented `n`-dimensional real inner
 product space `E`. The output of the volume form of `E` when evaluated on `v` is bounded in absolute
 value by the product of the norms of the vectors `v i`. -/
-theorem abs_volume_form_apply_le (v : Fin n → E) : abs (o.volumeForm v) ≤ ∏ i : Fin n, ∥v i∥ := by
+theorem abs_volume_form_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i : Fin n, ∥v i∥ := by
   cases n
   · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
     
@@ -253,7 +252,7 @@ theorem abs_volume_form_apply_le (v : Fin n → E) : abs (o.volumeForm v) ≤ �
   rw [o.volume_form_robust' b, hb, Finset.abs_prod]
   apply Finset.prod_le_prod
   · intro i hi
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    positivity
     
   intro i hi
   convert abs_real_inner_le_norm (b i) (v i)
@@ -262,12 +261,11 @@ theorem abs_volume_form_apply_le (v : Fin n → E) : abs (o.volumeForm v) ≤ �
 theorem volume_form_apply_le (v : Fin n → E) : o.volumeForm v ≤ ∏ i : Fin n, ∥v i∥ :=
   (le_abs_self _).trans (o.abs_volume_form_apply_le v)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- Let `v` be an indexed family of `n` orthogonal vectors in an oriented `n`-dimensional
 real inner product space `E`. The output of the volume form of `E` when evaluated on `v` is, up to
 sign, the product of the norms of the vectors `v i`. -/
 theorem abs_volume_form_apply_of_pairwise_orthogonal {v : Fin n → E} (hv : Pairwise fun i j => ⟪v i, v j⟫ = 0) :
-    abs (o.volumeForm v) = ∏ i : Fin n, ∥v i∥ := by
+    |o.volumeForm v| = ∏ i : Fin n, ∥v i∥ := by
   cases n
   · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
     
@@ -289,12 +287,12 @@ theorem abs_volume_form_apply_of_pairwise_orthogonal {v : Fin n → E} (hv : Pai
   · have : ∥v i∥ ≠ 0 := by simpa using h i
     field_simp
     
-  · trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  · positivity
     
 
 /-- The output of the volume form of an oriented real inner product space `E` when evaluated on an
 orthonormal basis is ±1. -/
-theorem abs_volume_form_apply_of_orthonormal (v : OrthonormalBasis (Fin n) ℝ E) : abs (o.volumeForm v) = 1 := by
+theorem abs_volume_form_apply_of_orthonormal (v : OrthonormalBasis (Fin n) ℝ E) : |o.volumeForm v| = 1 := by
   simpa [o.volume_form_robust' v v] using congr_arg abs v.to_basis.det_self
 
 theorem volume_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = n)] (φ : E ≃ₗᵢ[ℝ] F) (x : Fin n → F) :

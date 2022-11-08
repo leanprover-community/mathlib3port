@@ -345,15 +345,15 @@ theorem to_list_eq_self {xs : List α} : toList xs = xs := by
   conv_rhs => rw [← ih]
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr list.foldl f 0 ys]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr list.foldl f 0 ys]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem length_to_list {xs : t α} : length xs = List.length (toList xs) := by
   unfold length
   rw [foldl_to_list]
   generalize to_list xs = ys
   let f (n : ℕ) (a : α) := n + 1
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr list.foldl f 0 ys]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr list.foldl f 0 ys]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · generalize 0 = n
     induction' ys with _ _ ih generalizing n
     · simp only [List.foldl_nil]

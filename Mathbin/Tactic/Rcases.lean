@@ -366,7 +366,7 @@ mutual
       unify t ty
       let t ← instantiate_mvars t
       let ty ← instantiate_mvars ty
-      let e ← if expr.alpha_eqv t ty then pure e else change_core ty (some e) >> get_local e.local_pp_name
+      let e ← if t == ty then pure e else change_core ty (some e) >> get_local e.local_pp_name
       rcases_core p e
     | rcases_patt.alts [p], e => rcases_core p e
     | pat, e => do

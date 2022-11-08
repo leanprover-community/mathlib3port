@@ -97,12 +97,12 @@ theorem QuasiCompact.affine_property_to_property {X Y : SchemeCat} (f : X ⟶ Y)
   delta affine_target_morphism_property.to_property quasi_compact.affine_property
   simp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem quasi_compact_iff_affine_property : QuasiCompact f ↔ TargetAffineLocally QuasiCompact.affineProperty f := by
   rw [quasi_compact_iff_forall_affine]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · exact ⟨fun h U => h U U.Prop, fun h U hU => h ⟨U, hU⟩⟩
     
   apply forall_congr'

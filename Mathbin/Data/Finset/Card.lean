@@ -429,7 +429,7 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
 theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
   cases s <;> simp only [Multiset.card_eq_one, Finset.card, ← val_inj, singleton_val]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
   constructor
@@ -548,7 +548,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {p : (Finset.{u_1} α) -> Sort.{_aux_param_0}}, (forall (s : Finset.{u_1} α), (forall (t : Finset.{u_1} α), (HasSSubset.SSubset.{u_1} (Finset.{u_1} α) (Finset.hasSsubset.{u_1} α) t s) -> (p t)) -> (p s)) -> (forall (s : Finset.{u_1} α), p s)
 Case conversion may be inaccurate. Consider using '#align finset.strong_induction Finset.strongInductionₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
@@ -558,23 +558,23 @@ def strongInduction {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s
       have : t.card < s.card := card_lt_card h
       strong_induction t
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) (s : Finset α) :
     strongInduction H s = H s fun t h => strongInduction H t := by rw [strong_induction]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_elim]
 def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) → p s := fun H =>
   strongInduction H s
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
   dsimp only [strong_induction_on]
   rw [strong_induction]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 @[elab_as_elim]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
     (h₁ : ∀ a s, a ∉ s → (∀ (t) (_ : t ⊆ s), p t) → p (insert a s)) : p s :=

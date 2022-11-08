@@ -55,6 +55,7 @@ theorem IsNilpotent.map [MonoidWithZero R] [MonoidWithZero S] {r : R} {F : Type 
   rw [← map_pow, hr.some_spec, map_zero]
 
 /-- A structure that has zero and pow is reduced if it has no nonzero nilpotent elements. -/
+@[mk_iff]
 class IsReduced (R : Type _) [Zero R] [Pow R ℕ] : Prop where
   eq_zero : ∀ x : R, IsNilpotent x → x = 0
 
@@ -78,6 +79,35 @@ theorem is_reduced_of_injective [MonoidWithZero R] [MonoidWithZero S] {F : Type 
   apply hf
   rw [map_zero]
   exact (hx.map f).eq_zero
+
+theorem RingHom.ker_is_radical_iff_reduced_of_surjective {S F} [CommSemiring R] [CommRing S] [RingHomClass F R S]
+    {f : F} (hf : Function.Surjective f) : (RingHom.ker f).IsRadical ↔ IsReduced S := by
+  simp_rw [is_reduced_iff, hf.forall, IsNilpotent, ← map_pow, ← RingHom.mem_ker] <;> rfl
+
+theorem Ideal.is_radical_iff_quotient_reduced [CommRing R] (I : Ideal R) : I.IsRadical ↔ IsReduced (R ⧸ I) := by
+  conv_lhs => rw [← @Ideal.mk_ker R _ I]
+  exact RingHom.ker_is_radical_iff_reduced_of_surjective (@Ideal.Quotient.mk_surjective R _ I)
+
+/-- An element `y` in a monoid is radical if for any element `x`, `y` divides `x` whenever it
+  divides a power of `x`. -/
+def IsRadical [Dvd R] [Pow R ℕ] (y : R) : Prop :=
+  ∀ (n : ℕ) (x), y ∣ x ^ n → y ∣ x
+
+theorem zero_is_radical_iff [MonoidWithZero R] : IsRadical (0 : R) ↔ IsReduced R := by
+  simp_rw [is_reduced_iff, IsNilpotent, exists_imp, ← zero_dvd_iff]
+  exact forall_swap
+
+theorem is_radical_iff_span_singleton [CommSemiring R] : IsRadical y ↔ (Ideal.span ({y} : Set R)).IsRadical := by
+  simp_rw [IsRadical, ← Ideal.mem_span_singleton]
+  exact forall_swap.trans (forall_congr' fun r => exists_imp_distrib.symm)
+
+theorem is_radical_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) : IsRadical y ↔ ∀ x, y ∣ x ^ k → y ∣ x :=
+  ⟨fun h x => h k x, fun h =>
+    k.cauchy_induction_mul (fun n h x hd => h x <| (pow_succ' x n).symm ▸ hd.mul_right x) 0 hk
+      (fun x hd => pow_one x ▸ hd) fun n _ hn x hd => h x <| hn _ <| (pow_mul x k n).subst hd⟩
+
+theorem is_reduced_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) : IsReduced R ↔ ∀ x : R, x ^ k = 0 → x = 0 :=
+  by simp_rw [← zero_is_radical_iff, is_radical_iff_pow_one_lt k hk, zero_dvd_iff]
 
 namespace Commute
 

@@ -89,7 +89,7 @@ theorem diagram_nat_trans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (�
 
 @[simp]
 theorem diagram_nat_trans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) : J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by
-  ext j x
+  ext (j x)
   dsimp
   rw [zero_comp, multiequalizer.lift_ι, comp_zero]
 
@@ -245,7 +245,7 @@ variable {D}
 /-- `(P ⟶ P⁺)⁺ = P⁺ ⟶ P⁺⁺` -/
 @[simp]
 theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
-  ext X S
+  ext (X S)
   dsimp [to_plus, plus_obj, plus_map]
   delta cover.to_multiequalizer
   simp only [ι_colim_map]
@@ -274,23 +274,17 @@ theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
     rfl
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr ∀ X, is_iso ((J.to_plus P).app X)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr ∀ (S T : «expr ᵒᵖ»(J.cover X.unop)) (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)]] -/
 theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P) := by
   rw [presheaf.is_sheaf_iff_multiequalizer] at hP
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr ∀ X, is_iso ((J.to_plus P).app X)]]"
+  rsuffices : ∀ X, is_iso ((J.to_plus P).app X)
   · apply nat_iso.is_iso_of_is_iso_app
     
   intro X
   dsimp
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))]]"
+  rsuffices : is_iso (colimit.ι (J.diagram P X.unop) (op ⊤))
   · apply is_iso.comp_is_iso
     
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr ∀ (S T : «expr ᵒᵖ»(J.cover X.unop)) (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)]]"
+  rsuffices : ∀ (S T : (J.cover X.unop)ᵒᵖ) (f : S ⟶ T), is_iso ((J.diagram P X.unop).map f)
   · apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
     
   intro S T e

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
   Johannes Hölzl, Yury Kudryashov
 -/
+import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Data.FunLike.Basic
@@ -91,6 +92,19 @@ class ZeroHomClass (F : Type _) (M N : outParam <| Type _) [Zero M] [Zero N] ext
 
 -- Instances and lemmas are defined below through `@[to_additive]`.
 end Zero
+
+namespace NeZero
+
+theorem of_map {R M} [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) {r : R} [NeZero (f r)] : NeZero r :=
+  ⟨fun h => ne (f r) <| by convert ZeroHomClass.map_zero f⟩
+
+theorem of_injective {R M} [Zero R] {r : R} [NeZero r] [Zero M] [ZeroHomClass F R M] {f : F}
+    (hf : Function.Injective f) : NeZero (f r) :=
+  ⟨by
+    rw [← ZeroHomClass.map_zero f]
+    exact hf.ne (Ne r)⟩
+
+end NeZero
 
 section Add
 
@@ -333,7 +347,7 @@ attribute [to_additive_reorder 8, to_additive] map_pow
 theorem map_zpow' [DivInvMonoid G] [DivInvMonoid H] [MonoidHomClass F G H] (f : F) (hf : ∀ x : G, f x⁻¹ = (f x)⁻¹)
     (a : G) : ∀ n : ℤ, f (a ^ n) = f a ^ n
   | (n : ℕ) => by rw [zpow_coe_nat, map_pow, zpow_coe_nat]
-  | -[1 + n] => by rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
+  | -[n+1] => by rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
 
 -- to_additive puts the arguments in the wrong order, so generate an auxiliary lemma, then
 -- swap its arguments.
@@ -616,12 +630,12 @@ theorem OneHom.ext_iff [One M] [One N] {f g : OneHom M N} : f = g ↔ ∀ x, f x
   FunLike.ext_iff
 
 /-- Deprecated: use `fun_like.ext_iff` instead. -/
-@[to_additive]
+@[to_additive "Deprecated: use `fun_like.ext_iff` instead."]
 theorem MulHom.ext_iff [Mul M] [Mul N] {f g : M →ₙ* N} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
 /-- Deprecated: use `fun_like.ext_iff` instead. -/
-@[to_additive]
+@[to_additive "Deprecated: use `fun_like.ext_iff` instead."]
 theorem MonoidHom.ext_iff [MulOneClass M] [MulOneClass N] {f g : M →* N} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
@@ -865,7 +879,7 @@ theorem MonoidWithZeroHom.comp_apply [MulZeroOneClass M] [MulZeroOneClass N] [Mu
   rfl
 
 /-- Composition of monoid homomorphisms is associative. -/
-@[to_additive]
+@[to_additive "Composition of additive monoid homomorphisms is associative."]
 theorem OneHom.comp_assoc {Q : Type _} [One M] [One N] [One P] [One Q] (f : OneHom M N) (g : OneHom N P)
     (h : OneHom P Q) : (h.comp g).comp f = h.comp (g.comp f) :=
   rfl

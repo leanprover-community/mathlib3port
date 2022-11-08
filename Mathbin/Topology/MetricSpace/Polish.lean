@@ -55,7 +55,7 @@ variable {α : Type _} {β : Type _}
 /-! ### Basic properties of Polish spaces -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the
@@ -304,7 +304,7 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
   continuous_inv_fun := by
     apply continuous_iff_continuous_at.2 fun x => _
     suffices H :
-      tendsto (fun b : s => dist b.1 x.1 + abs (1 / inf_dist b.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ))) (𝓝 x)
+      tendsto (fun b : s => dist b.1 x.1 + |1 / inf_dist b.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ)|) (𝓝 x)
         (𝓝 (dist x.1 x.1 + abs (1 / inf_dist x.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ))))
     · rw [ContinuousAt, tendsto_iff_dist_tendsto_zero]
       simpa only [sub_self, abs_zero, add_zero, dist_self] using H

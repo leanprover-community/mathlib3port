@@ -203,7 +203,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
         congr
         clear y
-        ext i y
+        ext (i y)
         exact this i y
       suffices
         ∀ (i j) (y : L i) (x : L j),
@@ -215,7 +215,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
         congr
         clear x
-        ext j x
+        ext (j x)
         exact this j i x y
       intro i j y x
       simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_to_linear_map, to_add_monoid_of,

@@ -81,10 +81,10 @@ theorem abs_tendsto_at_top (hdeg : 0 < P.degree) : Tendsto (fun x => abs <| eval
   · exact tendsto_abs_at_bot_at_top.comp (P.tendsto_at_bot_of_leading_coeff_nonpos hdeg hP)
     
 
-theorem abs_is_bounded_under_iff : (IsBoundedUnder (· ≤ ·) atTop fun x => abs (eval x P)) ↔ P.degree ≤ 0 := by
+theorem abs_is_bounded_under_iff : (IsBoundedUnder (· ≤ ·) atTop fun x => |eval x P|) ↔ P.degree ≤ 0 := by
   refine'
     ⟨fun h => _, fun h =>
-      ⟨abs (P.coeff 0),
+      ⟨|P.coeff 0|,
         eventually_map.mpr
           (eventually_of_forall
             (forall_imp (fun _ => le_of_eq) fun x =>
@@ -210,7 +210,7 @@ theorem div_tendsto_at_bot_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠
   div_tendsto_at_bot_of_degree_gt' P Q hdeg ratio_neg
 
 theorem abs_div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠ 0) :
-    Tendsto (fun x => abs (eval x P / eval x Q)) atTop atTop := by
+    Tendsto (fun x => |eval x P / eval x Q|) atTop atTop := by
   by_cases h:0 ≤ P.leading_coeff / Q.leading_coeff
   · exact tendsto_abs_at_top_at_top.comp (P.div_tendsto_at_top_of_degree_gt Q hdeg hQ h)
     

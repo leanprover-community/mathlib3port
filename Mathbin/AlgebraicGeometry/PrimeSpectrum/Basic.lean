@@ -272,6 +272,10 @@ theorem zero_locus_empty_iff_eq_top {I : Ideal R} : ZeroLocus (I : Set R) = ∅ 
 theorem zero_locus_univ : ZeroLocus (Set.Univ : Set R) = ∅ :=
   zero_locus_empty_of_one_mem (Set.mem_univ 1)
 
+theorem vanishing_ideal_eq_top_iff {s : Set (PrimeSpectrum R)} : vanishingIdeal s = ⊤ ↔ s = ∅ := by
+  rw [← top_le_iff, ← subset_zero_locus_iff_le_vanishing_ideal, Submodule.top_coe, zero_locus_univ,
+    Set.subset_empty_iff]
+
 theorem zero_locus_sup (I J : Ideal R) : ZeroLocus ((I ⊔ J : Ideal R) : Set R) = ZeroLocus I ∩ ZeroLocus J :=
   (gc R).l_sup
 
@@ -338,9 +342,8 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
     (by
       intro Zs h
       rw [Set.sInter_eq_Inter]
-      let f : Zs → Set R := fun i => Classical.choose (h i.2)
-      have hf : ∀ i : Zs, ↑i = zero_locus (f i) := fun i => (Classical.choose_spec (h i.2)).symm
-      simp only [hf]
+      choose f hf using fun i : Zs => h i.Prop
+      simp only [← hf]
       exact ⟨_, zero_locus_Union _⟩)
     (by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩
@@ -352,14 +355,13 @@ theorem is_open_iff (U : Set (PrimeSpectrum R)) : IsOpen U ↔ ∃ s, Uᶜ = Zer
 theorem is_closed_iff_zero_locus (Z : Set (PrimeSpectrum R)) : IsClosed Z ↔ ∃ s, Z = ZeroLocus s := by
   rw [← is_open_compl_iff, is_open_iff, compl_compl]
 
-theorem is_closed_iff_zero_locus_ideal (Z : Set (PrimeSpectrum R)) : IsClosed Z ↔ ∃ s : Ideal R, Z = ZeroLocus s :=
-  (is_closed_iff_zero_locus _).trans
-    ⟨fun x => ⟨_, x.some_spec.trans (zero_locus_span _).symm⟩, fun x => ⟨_, x.some_spec⟩⟩
+theorem is_closed_iff_zero_locus_ideal (Z : Set (PrimeSpectrum R)) : IsClosed Z ↔ ∃ I : Ideal R, Z = ZeroLocus I :=
+  (is_closed_iff_zero_locus _).trans ⟨fun ⟨s, hs⟩ => ⟨_, (zero_locus_span s).substr hs⟩, fun ⟨I, hI⟩ => ⟨I, hI⟩⟩
 
 theorem is_closed_iff_zero_locus_radical_ideal (Z : Set (PrimeSpectrum R)) :
-    IsClosed Z ↔ ∃ s : Ideal R, s.radical = s ∧ Z = ZeroLocus s :=
+    IsClosed Z ↔ ∃ I : Ideal R, I.IsRadical ∧ Z = ZeroLocus I :=
   (is_closed_iff_zero_locus_ideal _).trans
-    ⟨fun x => ⟨_, Ideal.radical_idem _, x.some_spec.trans (zero_locus_radical _).symm⟩, fun x => ⟨_, x.some_spec.2⟩⟩
+    ⟨fun ⟨I, hI⟩ => ⟨_, I.radical_is_radical, (zero_locus_radical I).substr hI⟩, fun ⟨I, _, hI⟩ => ⟨I, hI⟩⟩
 
 theorem isClosedZeroLocus (s : Set R) : IsClosed (ZeroLocus s) := by
   rw [is_closed_iff_zero_locus]
@@ -397,6 +399,13 @@ theorem zero_locus_vanishing_ideal_eq_closure (t : Set (PrimeSpectrum R)) :
 theorem vanishing_ideal_closure (t : Set (PrimeSpectrum R)) : vanishingIdeal (Closure t) = vanishingIdeal t :=
   zero_locus_vanishing_ideal_eq_closure t ▸ (gc R).u_l_u_eq_u t
 
+theorem closure_singleton (x) : Closure ({x} : Set (PrimeSpectrum R)) = ZeroLocus x.asIdeal := by
+  rw [← zero_locus_vanishing_ideal_eq_closure, vanishing_ideal_singleton]
+
+theorem is_radical_vanishing_ideal (s : Set (PrimeSpectrum R)) : (vanishingIdeal s).IsRadical := by
+  rw [← vanishing_ideal_closure, ← zero_locus_vanishing_ideal_eq_closure, vanishing_ideal_zero_locus_eq_radical]
+  apply Ideal.radical_is_radical
+
 theorem vanishing_ideal_anti_mono_iff {s t : Set (PrimeSpectrum R)} (ht : IsClosed t) :
     s ⊆ t ↔ vanishingIdeal t ≤ vanishingIdeal s :=
   ⟨vanishing_ideal_anti_mono, fun h => by
@@ -432,19 +441,19 @@ theorem t1_space_iff_is_field [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsFie
 -- mathport name: «exprZ( )»
 local notation "Z(" a ")" => ZeroLocus (a : Set R)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ x y : ideal R,
    «expr ⊆ »(«exprZ( )»(I),
     «expr ∪ »(«exprZ( )»(x),
-     «exprZ( )»(y))) → «expr ∨ »(«expr ⊆ »(«exprZ( )»(I), «exprZ( )»(x)), «expr ⊆ »(«exprZ( )»(I), «exprZ( )»(y)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.radical = I) :
+     «exprZ( )»(y))) → «expr ∨ »(«expr ⊆ »(«exprZ( )»(I), «exprZ( )»(x)), «expr ⊆ »(«exprZ( )»(I), «exprZ( )»(y)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.IsRadical) :
     IsIrreducible (ZeroLocus (I : Set R)) ↔ I.IsPrime := by
   rw [Ideal.is_prime_iff, IsIrreducible]
   apply and_congr
   · rw [← Set.ne_empty_iff_nonempty, Ne.def, zero_locus_empty_iff_eq_top]
     
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ x y : ideal R,\n   «expr ⊆ »(«exprZ( )»(I),\n    «expr ∪ »(«exprZ( )»(x),\n     «exprZ( )»(y))) → «expr ∨ »(«expr ⊆ »(«exprZ( )»(I), «exprZ( )»(x)), «expr ⊆ »(«exprZ( )»(I), «exprZ( )»(y)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ x y : ideal R,\n   «expr ⊆ »(«exprZ( )»(I),\n    «expr ∪ »(«exprZ( )»(x),\n     «exprZ( )»(y))) → «expr ∨ »(«expr ⊆ »(«exprZ( )»(I), «exprZ( )»(x)), «expr ⊆ »(«exprZ( )»(I), «exprZ( )»(y)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · simp_rw [is_preirreducible_iff_closed_union_closed, is_closed_iff_zero_locus_ideal]
       constructor
       · rintro h x y
@@ -454,14 +463,14 @@ theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.radical =
         exact h x y
         
       
-    · simp_rw [← zero_locus_inf, subset_zero_locus_iff_le_vanishing_ideal, vanishing_ideal_zero_locus_eq_radical, hI]
+    · simp_rw [← zero_locus_inf, subset_zero_locus_iff_le_vanishing_ideal, vanishing_ideal_zero_locus_eq_radical,
+        hI.radical]
       constructor
-      · intro h x y h'
-        simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← Ideal.span_le]
-        apply h
-        rw [← hI, ← Ideal.radical_le_radical_iff, Ideal.radical_inf, ← Ideal.radical_mul, Ideal.radical_le_radical_iff,
-          hI, Ideal.span_mul_span]
-        simpa [Ideal.span_le] using h'
+      · simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← Ideal.span_le, ←
+          Ideal.span_singleton_mul_span_singleton]
+        refine' fun h x y h' => h _ _ _
+        rw [← hI.radical_le_iff] at h'⊢
+        simpa only [Ideal.radical_inf, Ideal.radical_mul] using h'
         
       · simp_rw [or_iff_not_imp_left, SetLike.not_le_iff_exists]
         rintro h s t h' ⟨x, hx, hx'⟩ y hy
@@ -471,23 +480,21 @@ theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.radical =
     
 
 theorem is_irreducible_zero_locus_iff (I : Ideal R) : IsIrreducible (ZeroLocus (I : Set R)) ↔ I.radical.IsPrime :=
-  zero_locus_radical I ▸ is_irreducible_zero_locus_iff_of_radical _ I.radical_idem
+  zero_locus_radical I ▸ is_irreducible_zero_locus_iff_of_radical _ I.radical_is_radical
+
+theorem is_irreducible_iff_vanishing_ideal_is_prime {s : Set (PrimeSpectrum R)} :
+    IsIrreducible s ↔ (vanishingIdeal s).IsPrime := by
+  rw [← is_irreducible_iff_closure, ← zero_locus_vanishing_ideal_eq_closure,
+    is_irreducible_zero_locus_iff_of_radical _ (is_radical_vanishing_ideal s)]
 
 instance [IsDomain R] : IrreducibleSpace (PrimeSpectrum R) := by
   rw [irreducible_space_def, Set.top_eq_univ, ← zero_locus_bot, is_irreducible_zero_locus_iff]
   simpa using Ideal.bot_prime
 
-instance : QuasiSober (PrimeSpectrum R) := by
-  constructor
-  intro S h₁ h₂
-  rw [← h₂.closure_eq, ← zero_locus_vanishing_ideal_eq_closure, is_irreducible_zero_locus_iff] at h₁
-  use ⟨_, h₁⟩
-  obtain ⟨s, hs, rfl⟩ := (is_closed_iff_zero_locus_radical_ideal _).mp h₂
-  rw [is_generic_point_iff_forall_closed h₂]
-  intro Z hZ hxZ
-  obtain ⟨t, rfl⟩ := (is_closed_iff_zero_locus_ideal _).mp hZ
-  exact zero_locus_anti_mono (by simpa [hs] using hxZ)
-  simp [hs]
+instance : QuasiSober (PrimeSpectrum R) :=
+  ⟨fun S h₁ h₂ =>
+    ⟨⟨_, is_irreducible_iff_vanishing_ideal_is_prime.1 h₁⟩, by
+      rw [IsGenericPoint, closure_singleton, zero_locus_vanishing_ideal_eq_closure, h₂.closure_eq]⟩⟩
 
 section Comap
 

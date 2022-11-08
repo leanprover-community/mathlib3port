@@ -108,8 +108,8 @@ variable (F) [Algebra F E]
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr euclidean_domain.gcd (_ : polynomial(E)) (_ : polynomial(E))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr euclidean_domain.gcd (_ : polynomial(E)) (_ : polynomial(E))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -182,7 +182,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     ring
   rw [← eq_X_sub_C_of_separable_of_root_eq h_sep h_root h_splits h_roots]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr euclidean_domain.gcd (_ : polynomial(E)) (_ : polynomial(E))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr euclidean_domain.gcd (_ : polynomial(E)) (_ : polynomial(E))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · dsimp only [p]
     convert (gcd_map (algebraMap F⟮⟯ E)).symm
     

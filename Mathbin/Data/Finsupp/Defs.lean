@@ -199,7 +199,7 @@ instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) := fun f g
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
   f.fun_support_eq.symm ▸ f.Support.finite_to_set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.Support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 := by
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
 
@@ -254,6 +254,9 @@ def single (a : α) (b : M) : α →₀ M :=
       ⟩
 
 theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by convert rfl
+
+theorem single_apply_left {f : α → β} (hf : Function.Injective f) (x z : α) (y : M) :
+    single (f x) y (f z) = single x y z := by simp only [single_apply, hf.eq_iff]
 
 theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
   ext
@@ -383,7 +386,7 @@ theorem support_eq_singleton {f : α →₀ M} {a : α} : f.Support = {a} ↔ f 
   ⟨fun h => ⟨mem_support_iff.1 <| h.symm ▸ Finset.mem_singleton_self a, eq_single_iff.2 ⟨subset_of_eq h, rfl⟩⟩, fun h =>
     h.2.symm ▸ support_single_ne_zero _ h.1⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.Support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
     let h := support_eq_singleton.1 h
@@ -393,7 +396,7 @@ theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.Support = {a} ↔ �
 theorem card_support_eq_one {f : α →₀ M} : card f.Support = 1 ↔ ∃ a, f a ≠ 0 ∧ f = single a (f a) := by
   simp only [card_eq_one, support_eq_singleton]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem card_support_eq_one' {f : α →₀ M} : card f.Support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']
 

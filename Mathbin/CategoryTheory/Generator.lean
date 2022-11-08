@@ -196,17 +196,17 @@ end Mono
 
 section Empty
 
-theorem thin_of_is_separating_empty (h : IsSeparating (∅ : Set C)) (X Y : C) : Subsingleton (X ⟶ Y) :=
+theorem thin_of_is_separating_empty (h : IsSeparating (∅ : Set C)) : Quiver.IsThin C := fun _ _ =>
   ⟨fun f g => (h _ _) fun G => False.elim⟩
 
-theorem is_separating_empty_of_thin [∀ X Y : C, Subsingleton (X ⟶ Y)] : IsSeparating (∅ : Set C) := fun X Y f g hfg =>
+theorem is_separating_empty_of_thin [Quiver.IsThin C] : IsSeparating (∅ : Set C) := fun X Y f g hfg =>
   Subsingleton.elim _ _
 
-theorem thin_of_is_coseparating_empty (h : IsCoseparating (∅ : Set C)) (X Y : C) : Subsingleton (X ⟶ Y) :=
+theorem thin_of_is_coseparating_empty (h : IsCoseparating (∅ : Set C)) : Quiver.IsThin C := fun _ _ =>
   ⟨fun f g => (h _ _) fun G => False.elim⟩
 
-theorem is_coseparating_empty_of_thin [∀ X Y : C, Subsingleton (X ⟶ Y)] : IsCoseparating (∅ : Set C) :=
-  fun X Y f g hfg => Subsingleton.elim _ _
+theorem is_coseparating_empty_of_thin [Quiver.IsThin C] : IsCoseparating (∅ : Set C) := fun X Y f g hfg =>
+  Subsingleton.elim _ _
 
 theorem groupoid_of_is_detecting_empty (h : IsDetecting (∅ : Set C)) {X Y : C} (f : X ⟶ Y) : IsIso f :=
   (h _) fun G => False.elim

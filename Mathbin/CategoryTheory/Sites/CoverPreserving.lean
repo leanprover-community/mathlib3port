@@ -229,7 +229,10 @@ open Limits.WalkingCospan
                 (Tactic.tacticSeq1Indented
                  [(Tactic.tacticErw__
                    "erw"
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`left]) "." `w))] "]")
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.proj (Term.app `c'.π.app [`left]) "." `w))]
+                    "]")
                    [])
                   []
                   (Tactic.dsimp "dsimp" [] [] [] [] [])
@@ -264,7 +267,12 @@ open Limits.WalkingCospan
                 (Tactic.tacticSeq1Indented
                  [(Tactic.tacticErw__
                    "erw"
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`right]) "." `w))] "]")
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule
+                      [(patternIgnore (token.«← » "←"))]
+                      (Term.proj (Term.app `c'.π.app [`right]) "." `w))]
+                    "]")
                    [])
                   []
                   (Tactic.dsimp "dsimp" [] [] [] [] [])
@@ -411,7 +419,10 @@ open Limits.WalkingCospan
                (Tactic.tacticSeq1Indented
                 [(Tactic.tacticErw__
                   "erw"
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`left]) "." `w))] "]")
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.proj (Term.app `c'.π.app [`left]) "." `w))]
+                   "]")
                   [])
                  []
                  (Tactic.dsimp "dsimp" [] [] [] [] [])
@@ -446,7 +457,10 @@ open Limits.WalkingCospan
                (Tactic.tacticSeq1Indented
                 [(Tactic.tacticErw__
                   "erw"
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`right]) "." `w))] "]")
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.proj (Term.app `c'.π.app [`right]) "." `w))]
+                   "]")
                   [])
                  []
                  (Tactic.dsimp "dsimp" [] [] [] [] [])

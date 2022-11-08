@@ -421,6 +421,16 @@ theorem mem_top (x : R) : x ∈ (⊤ : Subsemiring R) :=
 theorem coe_top : ((⊤ : Subsemiring R) : Set R) = Set.Univ :=
   rfl
 
+/-- The ring equiv between the top element of `subsemiring R` and `R`. -/
+@[simps]
+def topEquiv : (⊤ : Subsemiring R) ≃+* R where
+  toFun r := r
+  invFun r := ⟨r, Subsemiring.mem_top r⟩
+  left_inv r := SetLike.eta r _
+  right_inv r := SetLike.coe_mk r _
+  map_mul' := (⊤ : Subsemiring R).coe_mul
+  map_add' := (⊤ : Subsemiring R).coe_add
+
 /-- The preimage of a subsemiring along a ring homomorphism is a subsemiring. -/
 def comap (f : R →+* S) (s : Subsemiring S) : Subsemiring R :=
   { s.toSubmonoid.comap (f : R →* S), s.toAddSubmonoid.comap (f : R →+ S) with Carrier := f ⁻¹' s }

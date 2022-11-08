@@ -34,7 +34,7 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
 namespace MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (g «expr ≠ » (0 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (g «expr ≠ » (0 : G)) -/
 /-- A measurable set `s` is a *fundamental domain* for an additive action of an additive group `G`
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
@@ -45,7 +45,7 @@ structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [HasVadd G 
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
   AeDisjoint : ∀ (g) (_ : g ≠ (0 : G)), AeDisjoint μ (g +ᵥ s) s
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/
@@ -116,7 +116,7 @@ theorem preimageOfEquiv (h : IsFundamentalDomain G s μ) {f : α → α} (hf : Q
     AeDisjoint := fun g hg => by
       lift e to G ≃ G using he
       have : (e.symm g⁻¹)⁻¹ ≠ (e.symm 1)⁻¹ := by simp [hg]
-      convert (h.pairwise_ae_disjoint _ _ this).Preimage hf using 1
+      convert (h.pairwise_ae_disjoint this).Preimage hf using 1
       · simp only [← preimage_smul_inv, preimage_preimage, ← hef _ _, e.apply_symm_apply, inv_inv]
         
       · ext1 x
@@ -294,6 +294,34 @@ protected theorem set_integral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFund
   · rw [integral_undef hfs, integral_undef]
     rwa [hs.integrable_on_iff ht hf] at hfs
     
+
+/-- If the action of a countable group `G` admits an invariant measure `μ` with a fundamental domain
+`s`, then every null-measurable set `t` such that the sets `g • t ∩ s` are pairwise a.e.-disjoint
+has measure at most `μ s`. -/
+@[to_additive
+      "If the additive action of a countable group `G` admits an invariant measure `μ` with\na fundamental domain `s`, then every null-measurable set `t` such that the sets `g +ᵥ t ∩ s` are\npairwise a.e.-disjoint has measure at most `μ s`."]
+theorem measure_le_of_pairwise_disjoint (hs : IsFundamentalDomain G s μ) (ht : NullMeasurableSet t μ)
+    (hd : Pairwise (AeDisjoint μ on fun g : G => g • t ∩ s)) : μ t ≤ μ s :=
+  calc
+    μ t = ∑' g : G, μ (g • t ∩ s) := hs.measure_eq_tsum t
+    _ = μ (⋃ g : G, g • t ∩ s) := Eq.symm <| (measure_Union₀ hd) fun g => (ht.smul _).inter hs.NullMeasurableSet
+    _ ≤ μ s := measure_mono (Union_subset fun g => inter_subset_right _ _)
+    
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/-- If the action of a countable group `G` admits an invariant measure `μ` with a fundamental domain
+`s`, then every null-measurable set `t` of measure strictly greater than `μ s` contains two
+points `x y` such that `g • x = y` for some `g ≠ 1`. -/
+@[to_additive
+      "If the additive action of a countable group `G` admits an invariant measure `μ` with\na fundamental domain `s`, then every null-measurable set `t` of measure strictly greater than `μ s`\ncontains two points `x y` such that `g +ᵥ x = y` for some `g ≠ 0`."]
+theorem exists_ne_one_smul_eq (hs : IsFundamentalDomain G s μ) (htm : NullMeasurableSet t μ) (ht : μ s < μ t) :
+    ∃ (x y : _)(_ : x ∈ t)(_ : y ∈ t)(g : _)(_ : g ≠ (1 : G)), g • x = y := by
+  contrapose! ht
+  refine' hs.measure_le_of_pairwise_disjoint htm (Pairwise.ae_disjoint fun g₁ g₂ hne => _)
+  rintro _ ⟨⟨⟨x, hx, rfl⟩, -⟩, ⟨y, hy, hxy⟩, -⟩
+  refine' ht x hx y hy (g₂⁻¹ * g₁) (mt inv_mul_eq_one.1 hne.symm) _
+  rw [mul_smul, ← hxy, inv_smul_smul]
 
 /-- If `f` is invariant under the action of a countable group `G`, and `μ` is a `G`-invariant
   measure with a fundamental domain `s`, then the `ess_sup` of `f` restricted to `s` is the same as

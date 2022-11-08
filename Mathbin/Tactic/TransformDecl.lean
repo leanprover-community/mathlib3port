@@ -7,16 +7,16 @@ import Mathbin.Tactic.Core
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `copy_attribute' attr_name src tgt p d_name` copy (user) attribute `attr_name` from
    `src` to `tgt` if it is defined for `src`; unlike `copy_attribute` the primed version also copies
    the parameter of the user attribute, in the user attribute case. Make it persistent if `p` is
    `tt`; if `p` is `none`, the copied attribute is made persistent iff it is persistent on `src`  -/
 unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Option Bool := none) : tactic Unit := do
   get_decl tgt <|>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   -- if the source doesn't have the attribute we do not error and simply return
         mwhen
         (succeeds (has_attribute attr_name src)) <|
@@ -71,23 +71,22 @@ unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore
     Bool :=
   if replace_all then true else additive_test_aux f ignore false e
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- transform the declaration `src` and all declarations `pre._proof_i` occurring in `src`
 using the dictionary `f`.
 `replace_all`, `trace`, `ignore` and `reorder` are configuration options.
 `pre` is the declaration that got the `@[to_additive]` attribute and `tgt_pre` is the target of this
 declaration. -/
 unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replace_all trace : Bool)
-    (relevant : name_map ℕ) (ignore reorder : name_map <| List ℕ) (pre tgt_pre : Name) : Name → Tactic Unit :=
-  fun src => do
+    (relevant : name_map ℕ) (ignore reorder : name_map <| List ℕ) (pre tgt_pre : Name) : Name → Tactic := fun src => do
   let-- if this declaration is not `pre` or an internal declaration, we do nothing.
     tt
     ← return (src = pre ∨ src.is_internal : Bool) |
     if (f src).isSome then skip
       else
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   let env ← get_env
   let-- we find the additive name of `src`
   tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none
@@ -131,7 +130,7 @@ replacing fragments of the names of identifiers in the type and the body using t
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic Unit := do
+    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic := do
   -- In order to ensure that attributes are copied correctly we must transform declarations and
       -- attributes in the right order:
       -- first generate the transformed main declaration
@@ -161,7 +160,7 @@ the body using the dictionary `dict`.
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_dict (dict : name_map Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic Unit :=
+    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic :=
   transform_decl_with_prefix_fun dict.find replace_all trace relevant ignore reorder src tgt attrs
 
 end Tactic

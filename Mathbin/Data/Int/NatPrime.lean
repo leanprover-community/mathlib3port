@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Bryan Gin-ge Chen
 -/
 import Mathbin.Data.Nat.Prime
-import Mathbin.Data.Int.Basic
 
 /-!
 # Lemmas about nat.prime using `int`s

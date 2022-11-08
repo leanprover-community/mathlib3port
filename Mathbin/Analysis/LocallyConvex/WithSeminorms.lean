@@ -18,8 +18,10 @@ bounded by a finite number of seminorms in `E`.
 
 ## Main statements
 
-* `seminorm_family.to_locally_convex_space`: A space equipped with a family of seminorms is locally
+* `with_seminorms.to_locally_convex_space`: A space equipped with a family of seminorms is locally
 convex.
+* `with_seminorms.first_countable`: A space is first countable if it's topology is induced by a
+countable family of seminorms.
 
 ## Continuity of semilinear maps
 
@@ -435,7 +437,6 @@ theorem continuous_iff_continuous_comp [NormedAlgebra ℝ 𝕜] [Module ℝ F] [
     Continuous f ↔ ∀ i, Continuous ((q i).comp f) :=
   ⟨fun h i => Continuous.comp (hq.continuous_seminorm i) h, continuous_of_continuous_comp hq f⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem continuous_from_bounded {p : SeminormFamily 𝕜 E ι} {q : SeminormFamily 𝕜 F ι'} [TopologicalSpace E]
     [TopologicalAddGroup E] (hp : WithSeminorms p) [TopologicalSpace F] [TopologicalAddGroup F] (hq : WithSeminorms q)
     (f : E →ₗ[𝕜] F) (hf : Seminorm.IsBounded p q f) : Continuous f := by
@@ -445,11 +446,7 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕜 E ι} {q : SeminormFami
   rcases hf i with ⟨s₁, C, hC, hf⟩
   have hC' : 0 < C := hC.bot_lt
   rw [hp.has_basis.eventually_iff]
-  refine'
-    ⟨(s₁.sup p).ball 0 (r / C),
-      p.basis_sets_mem _
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"),
-      _⟩
+  refine' ⟨(s₁.sup p).ball 0 (r / C), p.basis_sets_mem _ (by positivity), _⟩
   simp_rw [← Metric.mem_ball, ← mem_preimage, ← ball_zero_eq_preimage_ball]
   refine' subset.trans _ (ball_antitone hf)
   rw [ball_smul (s₁.sup p) hC']

@@ -6,6 +6,7 @@ Authors: Johan Commelin
 import Mathbin.Data.Multiset.Sort
 import Mathbin.Data.Pnat.Interval
 import Mathbin.Data.Rat.Order
+import Mathbin.Data.Pnat.Basic
 import Mathbin.Tactic.NormNum
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.IntervalCases

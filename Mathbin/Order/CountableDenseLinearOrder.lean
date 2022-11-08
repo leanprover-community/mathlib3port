@@ -64,7 +64,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α
 
 variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (p q «expr ∈ » f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (p q «expr ∈ » f) -/
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/

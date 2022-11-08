@@ -130,13 +130,13 @@ def lsum [Semiring S] [Module S N] [SmulCommClass R S N] : (∀ i, M i →ₗ[R]
            }
   invFun F i := F.comp (lsingle i)
   left_inv F := by
-    ext x y
+    ext (x y)
     simp
   right_inv F := by
-    ext x y
+    ext (x y)
     simp
   map_add' F G := by
-    ext x y
+    ext (x y)
     simp
   map_smul' c F := by
     ext

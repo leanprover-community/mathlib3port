@@ -3,8 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
+import Mathbin.Analysis.Normed.Order.Lattice
 import Mathbin.MeasureTheory.Function.LpSpace
-import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
 
 /-!
 # Order related properties of Lp spaces
@@ -63,7 +63,7 @@ theorem _root_.measure_theory.mem_ℒp.sup {f g : α → E} (hf : Memℒp f p μ
 theorem _root_.measure_theory.mem_ℒp.inf {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : Memℒp (f ⊓ g) p μ :=
   Memℒp.mono' (hf.norm.add hg.norm) (hf.1.inf hg.1) (Filter.eventually_of_forall fun x => norm_inf_le_add (f x) (g x))
 
-theorem _root_.measure_theory.mem_ℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (abs f) p μ :=
+theorem _root_.measure_theory.mem_ℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (|f|) p μ :=
   hf.sup hf.neg
 
 instance : Lattice (lp E p μ) :=
@@ -81,7 +81,7 @@ theorem coe_fn_sup (f g : lp E p μ) : ⇑(f ⊔ g) =ᵐ[μ] ⇑f ⊔ ⇑g :=
 theorem coe_fn_inf (f g : lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
   AeEqFun.coe_fn_inf _ _
 
-theorem coe_fn_abs (f : lp E p μ) : ⇑(abs f) =ᵐ[μ] fun x => abs (f x) :=
+theorem coe_fn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
   AeEqFun.coe_fn_abs _
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=

@@ -51,7 +51,7 @@ theorem is_clique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
   rw [is_clique_iff]
   constructor
   · intro h
-    ext ⟨v, hv⟩ ⟨w, hw⟩
+    ext (⟨v, hv⟩⟨w, hw⟩)
     simp only [comap_adj, Subtype.coe_mk, top_adj, Ne.def, Subtype.mk_eq_mk]
     exact ⟨adj.ne, h hv hw⟩
     
@@ -152,7 +152,7 @@ theorem not_clique_free_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Fin 
   simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall, not_not]
   use finset.univ.map f.to_embedding
   simp only [card_map, Finset.card_fin, eq_self_iff_true, and_true_iff]
-  ext ⟨v, hv⟩ ⟨w, hw⟩
+  ext (⟨v, hv⟩⟨w, hw⟩)
   simp only [coe_map, RelEmbedding.coe_fn_to_embedding, Set.mem_image, coe_univ, Set.mem_univ, true_and_iff] at hv hw
   obtain ⟨v', rfl⟩ := hv
   obtain ⟨w', rfl⟩ := hw

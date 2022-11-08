@@ -86,7 +86,7 @@ theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
     
 
 theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
-  (is_primitive_root_exp n n.ne_zero).card_roots_of_unity
+  (is_primitive_root_exp n n.NeZero).card_roots_of_unity
 
 theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := by
   by_cases h:k = 0
@@ -175,7 +175,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr <| by exact_mod_cast h.le)
       (div_nonneg (by simp [real.pi_pos.le]) <| by simp)
   rw [← mul_rotate', mul_div_assoc, neg_lt, ← mul_neg, mul_lt_iff_lt_one_right Real.pi_pos, ← neg_div, ← neg_mul,
-    neg_sub, div_lt_iff, one_mul, sub_mul, sub_lt, ← mul_sub_one]
+    neg_sub, div_lt_iff, one_mul, sub_mul, sub_lt_comm, ← mul_sub_one]
   norm_num
   exact_mod_cast not_le.mp h₂
   · exact nat.cast_pos.mpr hn.bot_lt

@@ -22,12 +22,12 @@ variable {R A : Type _} [CommRing R] [IsDomain R] [GcdMonoid R] [CommRing A] [Al
 theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A] (z : A) :
     ∃ a b : R, IsUnit (gcd a b) ∧ z * algebraMap R A b = algebraMap R A a := by
   obtain ⟨x, ⟨y, hy⟩, rfl⟩ := IsLocalization.mk'_surjective M z
-  obtain ⟨x', y', d, rfl, rfl, hu⟩ := extract_gcd x y
+  obtain ⟨x', y', hx', hy', hu⟩ := extract_gcd x y
   use x', y', hu
   rw [mul_comm, IsLocalization.mul_mk'_eq_mk'_of_mul]
   convert IsLocalization.mk'_mul_cancel_left _ _ using 2
-  · rw [← mul_assoc, mul_comm y']
-    rfl
+  · rw [Subtype.coe_mk, hy', ← mul_comm y', mul_assoc]
+    conv_lhs => rw [hx']
     
   · infer_instance
     

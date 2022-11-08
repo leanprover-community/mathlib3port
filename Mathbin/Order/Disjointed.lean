@@ -125,10 +125,10 @@ theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d)) 
     
   rintro m hm
   induction' m with m ih
-  · exact hdisj _ _ (Nat.succ_ne_zero _).symm
+  · exact hdisj (Nat.succ_ne_zero _).symm
     
   rw [partial_sups_succ, disjoint_iff, inf_sup_right, sup_eq_bot_iff, ← disjoint_iff, ← disjoint_iff]
-  exact ⟨ih (Nat.le_of_succ_le hm), hdisj _ _ (Nat.lt_succ_of_le hm).Ne⟩
+  exact ⟨ih (Nat.le_of_succ_le hm), hdisj (Nat.lt_succ_of_le hm).Ne⟩
 
 end GeneralizedBooleanAlgebra
 

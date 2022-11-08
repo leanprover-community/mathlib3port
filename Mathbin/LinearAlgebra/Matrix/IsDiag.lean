@@ -123,7 +123,7 @@ theorem IsDiag.kronecker [MulZeroClass α] {A : Matrix m m α} {B : Matrix n n �
     
 
 theorem IsDiag.is_symm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm := by
-  ext i j
+  ext (i j)
   by_cases g:i = j
   · rw [g]
     

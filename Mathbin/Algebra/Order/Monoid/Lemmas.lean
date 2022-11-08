@@ -40,15 +40,19 @@ section LE
 
 variable [LE α]
 
+#print mul_le_mul_left' /-
 /- The prime on this lemma is present only on the multiplicative version.  The unprimed version
 is taken by the analogous lemma for semiring, with an extra non-negativity assumption. -/
 @[to_additive add_le_add_left]
 theorem mul_le_mul_left' [CovariantClass α α (· * ·) (· ≤ ·)] {b c : α} (bc : b ≤ c) (a : α) : a * b ≤ a * c :=
   CovariantClass.elim _ bc
+-/
 
+#print le_of_mul_le_mul_left' /-
 @[to_additive le_of_add_le_add_left]
 theorem le_of_mul_le_mul_left' [ContravariantClass α α (· * ·) (· ≤ ·)] {a b c : α} (bc : a * b ≤ a * c) : b ≤ c :=
   ContravariantClass.elim _ bc
+-/
 
 /- The prime on this lemma is present only on the multiplicative version.  The unprimed version
 is taken by the analogous lemma for semiring, with an extra non-negativity assumption. -/
@@ -61,15 +65,19 @@ theorem le_of_mul_le_mul_right' [ContravariantClass α α (swap (· * ·)) (· �
     b ≤ c :=
   ContravariantClass.elim a bc
 
+#print mul_le_mul_iff_left /-
 @[simp, to_additive]
 theorem mul_le_mul_iff_left [CovariantClass α α (· * ·) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α)
     {b c : α} : a * b ≤ a * c ↔ b ≤ c :=
   rel_iff_cov α α (· * ·) (· ≤ ·) a
+-/
 
+#print mul_le_mul_iff_right /-
 @[simp, to_additive]
 theorem mul_le_mul_iff_right [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [ContravariantClass α α (swap (· * ·)) (· ≤ ·)]
     (a : α) {b c : α} : b * a ≤ c * a ↔ b ≤ c :=
   rel_iff_cov α α (swap (· * ·)) (· ≤ ·) a
+-/
 
 end LE
 
@@ -77,23 +85,31 @@ section LT
 
 variable [LT α]
 
+#print mul_lt_mul_iff_left /-
 @[simp, to_additive]
 theorem mul_lt_mul_iff_left [CovariantClass α α (· * ·) (· < ·)] [ContravariantClass α α (· * ·) (· < ·)] (a : α)
     {b c : α} : a * b < a * c ↔ b < c :=
   rel_iff_cov α α (· * ·) (· < ·) a
+-/
 
+#print mul_lt_mul_iff_right /-
 @[simp, to_additive]
 theorem mul_lt_mul_iff_right [CovariantClass α α (swap (· * ·)) (· < ·)] [ContravariantClass α α (swap (· * ·)) (· < ·)]
     (a : α) {b c : α} : b * a < c * a ↔ b < c :=
   rel_iff_cov α α (swap (· * ·)) (· < ·) a
+-/
 
+#print mul_lt_mul_left' /-
 @[to_additive add_lt_add_left]
 theorem mul_lt_mul_left' [CovariantClass α α (· * ·) (· < ·)] {b c : α} (bc : b < c) (a : α) : a * b < a * c :=
   CovariantClass.elim _ bc
+-/
 
+#print lt_of_mul_lt_mul_left' /-
 @[to_additive lt_of_add_lt_add_left]
 theorem lt_of_mul_lt_mul_left' [ContravariantClass α α (· * ·) (· < ·)] {a b c : α} (bc : a * b < a * c) : b < c :=
   ContravariantClass.elim _ bc
+-/
 
 @[to_additive add_lt_add_right]
 theorem mul_lt_mul_right' [CovariantClass α α (swap (· * ·)) (· < ·)] {b c : α} (bc : b < c) (a : α) : b * a < c * a :=
@@ -247,6 +263,22 @@ theorem mul_le_of_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ = a := one_mul a
     
 
+@[to_additive]
+theorem one_le_of_le_mul_right [ContravariantClass α α (· * ·) (· ≤ ·)] {a b : α} (h : a ≤ a * b) : 1 ≤ b :=
+  le_of_mul_le_mul_left' <| by simpa only [mul_one]
+
+@[to_additive]
+theorem le_one_of_mul_le_right [ContravariantClass α α (· * ·) (· ≤ ·)] {a b : α} (h : a * b ≤ a) : b ≤ 1 :=
+  le_of_mul_le_mul_left' <| by simpa only [mul_one]
+
+@[to_additive]
+theorem one_le_of_le_mul_left [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α} (h : b ≤ a * b) : 1 ≤ a :=
+  le_of_mul_le_mul_right' <| by simpa only [one_mul]
+
+@[to_additive]
+theorem le_one_of_mul_le_left [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α} (h : a * b ≤ b) : a ≤ 1 :=
+  le_of_mul_le_mul_right' <| by simpa only [one_mul]
+
 @[simp, to_additive le_add_iff_nonneg_right]
 theorem le_mul_iff_one_le_right' [CovariantClass α α (· * ·) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α)
     {b : α} : a ≤ a * b ↔ 1 ≤ b :=
@@ -300,6 +332,22 @@ theorem mul_lt_of_lt_one_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
     b * a < 1 * a := mul_lt_mul_right' h a
     _ = a := one_mul a
     
+
+@[to_additive]
+theorem one_lt_of_lt_mul_right [ContravariantClass α α (· * ·) (· < ·)] {a b : α} (h : a < a * b) : 1 < b :=
+  lt_of_mul_lt_mul_left' <| by simpa only [mul_one]
+
+@[to_additive]
+theorem lt_one_of_mul_lt_right [ContravariantClass α α (· * ·) (· < ·)] {a b : α} (h : a * b < a) : b < 1 :=
+  lt_of_mul_lt_mul_left' <| by simpa only [mul_one]
+
+@[to_additive]
+theorem one_lt_of_lt_mul_left [ContravariantClass α α (swap (· * ·)) (· < ·)] {a b : α} (h : b < a * b) : 1 < a :=
+  lt_of_mul_lt_mul_right' <| by simpa only [one_mul]
+
+@[to_additive]
+theorem lt_one_of_mul_lt_left [ContravariantClass α α (swap (· * ·)) (· < ·)] {a b : α} (h : a * b < b) : a < 1 :=
+  lt_of_mul_lt_mul_right' <| by simpa only [one_mul]
 
 @[simp, to_additive lt_add_iff_pos_right]
 theorem lt_mul_iff_one_lt_right' [CovariantClass α α (· * ·) (· < ·)] [ContravariantClass α α (· * ·) (· < ·)] (a : α)

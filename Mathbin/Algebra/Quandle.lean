@@ -226,8 +226,8 @@ theorem self_inv_act_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y := by
   have h := @self_act_inv_act_eq _ _ (op x) (op y)
   simpa using h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr rack.inv_act(shelf.act(x, x), shelf.act(x, x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr rack.inv_act(shelf.act(x, x), shelf.act(x, x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y := by
   constructor
   swap
@@ -235,7 +235,7 @@ theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y := by
   rfl
   intro h
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr rack.inv_act(shelf.act(x, x), shelf.act(x, x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr rack.inv_act(shelf.act(x, x), shelf.act(x, x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   rw [← left_cancel (x ◃ x), right_inv, self_act_act_eq]
   rw [h, ← left_cancel (y ◃ y), right_inv, self_act_act_eq]
 

@@ -36,12 +36,14 @@ universe u v
 
 namespace SlimCheck
 
+#print SlimCheck.Gen /-
 /-- Monad to generate random examples to test properties with.
 It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/
 @[reducible]
 def Gen (α : Type u) :=
   ReaderT (ULift ℕ) Rand α deriving Monad, LawfulMonad
+-/
 
 variable (α : Type u)
 
@@ -57,15 +59,19 @@ namespace Gen
 
 section Rand
 
+#print SlimCheck.Gen.chooseAny /-
 /-- Lift `random.random` to the `gen` monad. -/
 def chooseAny [Random α] : Gen α :=
   ⟨fun _ => Rand.random α⟩
+-/
 
 variable {α} [Preorder α]
 
+#print SlimCheck.Gen.choose /-
 /-- Lift `random.random_r` to the `gen` monad. -/
 def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
   ⟨fun _ => Rand.randomR x y p⟩
+-/
 
 end Rand
 
@@ -99,9 +105,11 @@ continuation passing style. -/
 def sized (cmd : ℕ → Gen α) : Gen α :=
   ⟨fun ⟨sz⟩ => ReaderT.run (cmd sz) ⟨sz⟩⟩
 
+#print SlimCheck.Gen.resize /-
 /-- Apply a function to the size parameter. -/
 def resize (f : ℕ → ℕ) (cmd : Gen α) : Gen α :=
   ⟨fun ⟨sz⟩ => ReaderT.run cmd ⟨f sz⟩⟩
+-/
 
 /-- Create `n` examples using `cmd`. -/
 def vectorOf : ∀ (n : ℕ) (cmd : Gen α), Gen (Vector α n)
@@ -127,7 +135,7 @@ open ULift
 
 /- warning: slim_check.gen.one_of -> SlimCheck.Gen.oneOf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} (xs : List.{u} (SlimCheck.Gen.{u} α)), (LT.lt.{0} Nat Nat.hasLt (Zero.zero.{0} Nat Nat.hasZero) (List.length.{u} (SlimCheck.Gen.{u} α) xs)) -> (SlimCheck.Gen.{u} α)
+  forall {α : Type.{u}} (xs : List.{u} (SlimCheck.Gen.{u} α)), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.length.{u} (SlimCheck.Gen.{u} α) xs)) -> (SlimCheck.Gen.{u} α)
 but is expected to have type
   forall {α : Type} (xs : Array.{0} (SlimCheck.Gen.{0} α)), (autoParam.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Array.size.{0} (SlimCheck.Gen.{0} α) xs)) _auto._@.Mathlib.Testing.SlimCheck.Gen._hyg.559) -> (SlimCheck.Gen.{0} α)
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.one_of SlimCheck.Gen.oneOfₓ'. -/
@@ -138,7 +146,7 @@ def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
 
 /- warning: slim_check.gen.elements -> SlimCheck.Gen.elements is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} (xs : List.{u} α), (LT.lt.{0} Nat Nat.hasLt (Zero.zero.{0} Nat Nat.hasZero) (List.length.{u} α xs)) -> (SlimCheck.Gen.{u} α)
+  forall {α : Type.{u}} (xs : List.{u} α), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.length.{u} α xs)) -> (SlimCheck.Gen.{u} α)
 but is expected to have type
   forall {α : Type} (xs : List.{0} α), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (List.length.{0} α xs)) -> (SlimCheck.Gen.{0} α)
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.elements SlimCheck.Gen.elementsₓ'. -/

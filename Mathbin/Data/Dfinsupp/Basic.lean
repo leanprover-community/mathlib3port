@@ -182,6 +182,25 @@ theorem zip_with_apply (f : ∀ i, β₁ i → β₂ i → β i) (hf : ∀ i, f 
     (i : ι) : zipWith f hf g₁ g₂ i = f i (g₁ i) (g₂ i) :=
   rfl
 
+section Piecewise
+
+variable (x y : Π₀ i, β i) (s : Set ι) [∀ i, Decidable (i ∈ s)]
+
+/-- `x.piecewise y s` is the finitely supported function equal to `x` on the set `s`,
+  and to `y` on its complement. -/
+def piecewise : Π₀ i, β i :=
+  zipWith (fun i x y => if i ∈ s then x else y) (fun _ => if_t_t _ 0) x y
+
+theorem piecewise_apply (i : ι) : x.piecewise y s i = if i ∈ s then x i else y i :=
+  zip_with_apply _ _ x y i
+
+@[simp, norm_cast]
+theorem coe_piecewise : ⇑(x.piecewise y s) = s.piecewise x y := by
+  ext
+  apply piecewise_apply
+
+end Piecewise
+
 end Basic
 
 section Algebra
@@ -621,6 +640,15 @@ theorem erase_same {i : ι} {f : Π₀ i, β i} : (f.erase i) i = 0 := by simp
 
 theorem erase_ne {i i' : ι} {f : Π₀ i, β i} (h : i' ≠ i) : (f.erase i) i' = f i' := by simp [h]
 
+theorem piecewise_single_erase (x : Π₀ i, β i) (i : ι) : (single i (x i)).piecewise (x.erase i) {i} = x := by
+  ext j
+  rw [piecewise_apply]
+  split_ifs
+  · rw [(id h : j = i), single_eq_same]
+    
+  · exact erase_ne h
+    
+
 theorem erase_eq_sub_single {β : ι → Type _} [∀ i, AddGroup (β i)] (f : Π₀ i, β i) (i : ι) :
     f.erase i = f - single i (f i) := by
   ext j
@@ -966,7 +994,7 @@ theorem support_eq_empty {f : Π₀ i, β i} : f.support = ∅ ↔ f = 0 :=
 instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
   decidable_of_iff _ <| support_eq_empty.trans eq_comm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} : ↑f.support ⊆ s ↔ ∀ (i) (_ : i ∉ s), f i = 0 := by
   simp [Set.subset_def] <;> exact forall_congr' fun i => not_imp_comm
 
@@ -1267,21 +1295,21 @@ theorem sigma_curry_apply [∀ i j, Zero (δ i j)] (f : Π₀ i : Σi, _, δ i.1
 
 @[simp]
 theorem sigma_curry_zero [∀ i j, Zero (δ i j)] : sigmaCurry (0 : Π₀ i : Σi, _, δ i.1 i.2) = 0 := by
-  ext i j
+  ext (i j)
   rw [sigma_curry_apply]
   rfl
 
 @[simp]
 theorem sigma_curry_add [∀ i j, AddZeroClass (δ i j)] (f g : Π₀ i : Σi, α i, δ i.1 i.2) :
     @sigmaCurry _ _ δ _ (f + g) = @sigmaCurry _ _ δ _ f + @sigmaCurry ι α δ _ g := by
-  ext i j
+  ext (i j)
   rw [@add_apply _ (fun i => Π₀ j, δ i j) _ (sigma_curry _), add_apply, sigma_curry_apply, sigma_curry_apply,
     sigma_curry_apply, add_apply]
 
 @[simp]
 theorem sigma_curry_smul [Monoid γ] [∀ i j, AddMonoid (δ i j)] [∀ i j, DistribMulAction γ (δ i j)] (r : γ)
     (f : Π₀ i : Σi, α i, δ i.1 i.2) : @sigmaCurry _ _ δ _ (r • f) = r • @sigmaCurry _ _ δ _ f := by
-  ext i j
+  ext (i j)
   rw [@smul_apply _ _ (fun i => Π₀ j, δ i j) _ _ _ _ (sigma_curry _), smul_apply, sigma_curry_apply, sigma_curry_apply,
     smul_apply]
 
@@ -1289,7 +1317,7 @@ theorem sigma_curry_smul [Monoid γ] [∀ i j, AddMonoid (δ i j)] [∀ i j, Dis
 theorem sigma_curry_single [∀ i j, Zero (δ i j)] (ij : Σi, α i) (x : δ ij.1 ij.2) :
     @sigmaCurry _ _ _ _ (single ij x) = single ij.1 (single ij.2 x : Π₀ j, δ ij.1 j) := by
   obtain ⟨i, j⟩ := ij
-  ext i' j'
+  ext (i' j')
   dsimp only
   rw [sigma_curry_apply]
   obtain rfl | hi := eq_or_ne i i'
@@ -1379,7 +1407,7 @@ noncomputable def sigmaCurryEquiv [∀ i j, Zero (δ i j)] : (Π₀ i : Σi, _, 
     ext ⟨i, j⟩
     rw [sigma_uncurry_apply, sigma_curry_apply]
   right_inv f := by
-    ext i j
+    ext (i j)
     rw [sigma_curry_apply, sigma_uncurry_apply]
 
 end Curry

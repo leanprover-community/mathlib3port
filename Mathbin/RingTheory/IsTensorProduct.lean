@@ -209,7 +209,7 @@ omit h f
 theorem TensorProduct.isBaseChange : IsBaseChange S (TensorProduct.mk R S M 1) := by
   delta IsBaseChange
   convert TensorProduct.isTensorProduct R S M using 1
-  ext s x
+  ext (s x)
   change s • 1 ⊗ₜ x = s ⊗ₜ x
   rw [TensorProduct.smul_tmul']
   congr 1
@@ -309,7 +309,7 @@ theorem IsBaseChange.ofEquiv (e : M ≃ₗ[R] N) : IsBaseChange R e.toLinearMap 
   apply IsBaseChange.ofLiftUnique
   intro Q I₁ I₂ I₃ I₄ g
   have : I₂ = I₃ := by
-    ext r q
+    ext (r q)
     rw [← one_smul R q, smul_smul, ← smul_assoc, smul_eq_mul, mul_one]
   cases this
   refine'

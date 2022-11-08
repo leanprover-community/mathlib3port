@@ -284,8 +284,8 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
       zero_mul, zero_sub]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra.adjoin F ((roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial(K))).to_finset : set K)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra.adjoin F ((roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial(K))).to_finset : set K)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X) where
   Splits := by
     have h : (X ^ q - X : K[X]).natDegree = q := X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
@@ -294,7 +294,7 @@ instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X)
   adjoin_roots := by
     classical
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra.adjoin F ((roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial(K))).to_finset : set K)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra.adjoin F ((roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial(K))).to_finset : set K)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
       
     · rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
@@ -329,7 +329,7 @@ namespace Zmod
 
 open FiniteField Polynomial
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p, a ^ 2 + b ^ 2 = x := by
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p

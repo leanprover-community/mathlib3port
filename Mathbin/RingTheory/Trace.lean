@@ -399,14 +399,14 @@ theorem trace_matrix_def (b : κ → B) : traceMatrix A b = of fun i j => traceF
 
 theorem trace_matrix_reindex {κ' : Type _} (b : Basis κ A B) (f : κ ≃ κ') :
     traceMatrix A (b.reindex f) = reindex f f (traceMatrix A b) := by
-  ext x y
+  ext (x y)
   simp
 
 variable {A}
 
 theorem trace_matrix_of_matrix_vec_mul [Fintype κ] (b : κ → B) (P : Matrix κ κ A) :
     traceMatrix A ((P.map (algebraMap A B)).vecMul b) = Pᵀ ⬝ traceMatrix A b ⬝ P := by
-  ext α β
+  ext (α β)
   rw [trace_matrix, vec_mul, dot_product, vec_mul, dot_product, Matrix.mul_apply, BilinForm.sum_left,
     Fintype.sum_congr _ _ fun i : κ =>
       @BilinForm.sum_right _ _ _ _ _ _ _ _ (b i * P.map (algebraMap A B) i α) fun y : κ =>
@@ -432,7 +432,7 @@ theorem trace_matrix_of_matrix_mul_vec [Fintype κ] (b : κ → B) (P : Matrix �
 
 theorem trace_matrix_of_basis [Fintype κ] [DecidableEq κ] (b : Basis κ A B) :
     traceMatrix A b = BilinForm.toMatrix b (traceForm A B) := by
-  ext i j
+  ext (i j)
   rw [trace_matrix, trace_form_apply, trace_form_to_matrix]
 
 theorem trace_matrix_of_basis_mul_vec (b : Basis ι A B) (z : B) :
@@ -478,7 +478,7 @@ variable {A}
 
 theorem embeddings_matrix_reindex_eq_vandermonde (pb : PowerBasis A B) (e : Fin pb.dim ≃ (B →ₐ[A] C)) :
     embeddingsMatrixReindex A C pb.Basis e = (vandermonde fun i => e i pb.gen)ᵀ := by
-  ext i j
+  ext (i j)
   simp [embeddings_matrix_reindex, embeddings_matrix]
 
 section Field
@@ -493,7 +493,7 @@ variable (b : κ → L) (pb : PowerBasis K L)
 
 theorem trace_matrix_eq_embeddings_matrix_mul_trans :
     (traceMatrix K b).map (algebraMap K E) = embeddingsMatrix K E b ⬝ (embeddingsMatrix K E b)ᵀ := by
-  ext i j
+  ext (i j)
   simp [trace_eq_sum_embeddings, embeddings_matrix, Matrix.mul_apply]
 
 theorem trace_matrix_eq_embeddings_matrix_reindex_mul_trans [Fintype κ] (e : κ ≃ (L →ₐ[K] E)) :
@@ -534,7 +534,7 @@ theorem det_trace_form_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι 
   swap
   · apply Basis.to_matrix_mul_to_matrix_flip
     
-  refine' mul_ne_zero (is_unit_of_mul_eq_one _ ((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det _).ne_zero _
+  refine' mul_ne_zero (is_unit_of_mul_eq_one _ ((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det _).NeZero _
   · calc
       (pb.basis.to_matrix b ⬝ (pb.basis.to_matrix b)ᵀ).det * ((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det =
           (pb.basis.to_matrix b ⬝ (b.to_matrix pb.basis ⬝ pb.basis.to_matrix b)ᵀ ⬝ b.to_matrix pb.basis).det :=

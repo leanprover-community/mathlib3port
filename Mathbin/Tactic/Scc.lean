@@ -153,16 +153,16 @@ unsafe def merge (cl : closure) (p : expr) : tactic Unit := do
 unsafe def assign_preorder (cl : closure) (e : expr) : tactic Unit :=
   (modify_ref cl) fun m => m.insert e (Sum.inl m.size)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `prove_eqv cl e₀ e₁` constructs a proof of equivalence of `e₀` and `e₁` if
 they are equivalent. -/
 unsafe def prove_eqv (cl : closure) (e₀ e₁ : expr) : tactic expr := do
   let (_, r, p₀) ← root cl e₀
   let (_, r', p₁) ← root cl e₁
   guard (r = r') <|>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   let p₁ ← mk_app `` Iff.symm [p₁]
   mk_app `` Iff.trans [p₀, p₁]
 

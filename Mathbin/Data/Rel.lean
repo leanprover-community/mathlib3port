@@ -47,7 +47,7 @@ theorem inv_def (x : α) (y : β) : r.inv y x ↔ r x y :=
   Iff.rfl
 
 theorem inv_inv : Inv (Inv r) = r := by
-  ext x y
+  ext (x y)
   rfl
 
 /-- Domain of a relation -/
@@ -61,11 +61,11 @@ def Codom :=
   { y | ∃ x, r x y }
 
 theorem codom_inv : r.inv.Codom = r.Dom := by
-  ext x y
+  ext (x y)
   rfl
 
 theorem dom_inv : r.inv.Dom = r.Codom := by
-  ext x y
+  ext (x y)
   rfl
 
 /-- Composition of relation; note that it follows the `category_theory/` order of arguments. -/
@@ -76,7 +76,7 @@ local infixr:0 " ∘ " => Rel.Comp
 
 theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) ∘ t) = (r ∘ s ∘ t) := by
   unfold comp
-  ext x w
+  ext (x w)
   constructor
   · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩
     exact ⟨y, rxy, z, syz, tzw⟩
@@ -97,11 +97,11 @@ theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r := by
   simp
 
 theorem inv_id : Inv (@Eq α) = @Eq α := by
-  ext x y
+  ext (x y)
   constructor <;> apply Eq.symm
 
 theorem inv_comp (r : Rel α β) (s : Rel β γ) : Inv (r ∘ s) = (Inv s ∘ Inv r) := by
-  ext x z
+  ext (x z)
   simp [comp, inv, flip, and_comm]
 
 /-- Image of a set under a relation -/

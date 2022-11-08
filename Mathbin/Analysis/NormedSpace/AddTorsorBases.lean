@@ -61,16 +61,11 @@ theorem interior_convex_hull_aff_basis {ι E : Type _} [Finite ι] [NormedAddCom
     (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
-    suffices range b.points = univ by simp [this]
-    refine' AffineSubspace.eq_univ_of_subsingleton_span_eq_top _ b.tot
-    rw [← image_univ]
-    exact subsingleton.image subsingleton_of_subsingleton b.points
+    have : range b.points = univ := AffineSubspace.eq_univ_of_subsingleton_span_eq_top (subsingleton_range _) b.tot
+    simp [this]
     
   · -- The positive-dimensional case.
-    have : FiniteDimensional ℝ E := by
-      classical
-      obtain ⟨i⟩ := (inferInstance : Nonempty ι)
-      exact FiniteDimensional.ofFintypeBasis (b.basis_of i)
+    haveI : FiniteDimensional ℝ E := b.finite_dimensional
     have : convexHull ℝ (range b.points) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
       rw [convex_hull_affine_basis_eq_nonneg_barycentric b]
       ext
@@ -88,7 +83,7 @@ include V
 
 open AffineMap
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ∉ » s) -/
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)

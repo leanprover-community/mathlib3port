@@ -568,7 +568,7 @@ theorem Integrable.sup {β} [NormedLatticeAddCommGroup β] {f g : α → β} (hf
   exact hf.sup hg
 
 theorem Integrable.abs {β} [NormedLatticeAddCommGroup β] {f : α → β} (hf : Integrable f μ) :
-    Integrable (fun a => abs (f a)) μ := by
+    Integrable (fun a => |f a|) μ := by
   rw [← mem_ℒp_one_iff_integrable] at hf⊢
   exact hf.abs
 

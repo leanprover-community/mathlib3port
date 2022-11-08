@@ -16,6 +16,7 @@ variable {α : Type u}
 
 open Function
 
+#print OrderedCancelAddCommMonoid /-
 /-- An ordered cancellative additive commutative monoid
 is an additive commutative monoid with a partial order,
 in which addition is cancellative and monotone. -/
@@ -23,7 +24,9 @@ in which addition is cancellative and monotone. -/
 class OrderedCancelAddCommMonoid (α : Type u) extends AddCommMonoid α, PartialOrder α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
   le_of_add_le_add_left : ∀ a b c : α, a + b ≤ a + c → b ≤ c
+-/
 
+#print OrderedCancelCommMonoid /-
 /-- An ordered cancellative commutative monoid
 is a commutative monoid with a partial order,
 in which multiplication is cancellative and monotone. -/
@@ -31,6 +34,7 @@ in which multiplication is cancellative and monotone. -/
 class OrderedCancelCommMonoid (α : Type u) extends CommMonoid α, PartialOrder α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
   le_of_mul_le_mul_left : ∀ a b c : α, a * b ≤ a * c → b ≤ c
+-/
 
 section OrderedCancelCommMonoid
 
@@ -60,10 +64,12 @@ instance OrderedCancelCommMonoid.to_contravariant_class_right (M : Type _) [Orde
     ContravariantClass M M (swap (· * ·)) (· < ·) :=
   contravariant_swap_mul_lt_of_contravariant_mul_lt M
 
+#print OrderedCancelCommMonoid.toOrderedCommMonoid /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderedCancelCommMonoid.toOrderedCommMonoid : OrderedCommMonoid α :=
   { ‹OrderedCancelCommMonoid α› with }
+-/
 
 -- see Note [lower instance priority]
 @[to_additive]

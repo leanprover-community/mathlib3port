@@ -18,10 +18,12 @@ open List Subtype Nat
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
+#print Multiset /-
 /-- `multiset α` is the quotient of `list α` by list permutation. The result
   is a type of finite sets with duplicates allowed.  -/
 def Multiset.{u} (α : Type u) : Type u :=
   Quotient (List.isSetoid α)
+-/
 
 namespace Multiset
 
@@ -49,7 +51,7 @@ instance hasDecidableEq [DecidableEq α] : DecidableEq (Multiset α)
 
 /-- defines a size for a multiset by referring to the size of the underlying list -/
 protected def sizeof [SizeOf α] (s : Multiset α) : ℕ :=
-  (Quot.liftOn s sizeOf) fun l₁ l₂ => Perm.sizeof_eq_sizeof
+  (Quot.liftOn s SizeOf.sizeOf) fun l₁ l₂ => Perm.sizeof_eq_sizeof
 
 instance hasSizeof [SizeOf α] : SizeOf (Multiset α) :=
   ⟨Multiset.sizeof⟩
@@ -169,9 +171,11 @@ end Rec
 
 section Mem
 
+#print Multiset.Mem /-
 /-- `a ∈ s` means that `a` has nonzero multiplicity in `s`. -/
 def Mem (a : α) (s : Multiset α) : Prop :=
   Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ (e : l₁ ~ l₂) => propext <| e.mem_iff
+-/
 
 instance : Membership α (Multiset α) :=
   ⟨Mem⟩
@@ -1203,7 +1207,8 @@ def attach (s : Multiset α) : Multiset { x // x ∈ s } :=
 theorem coe_attach (l : List α) : @Eq (Multiset { x // x ∈ l }) (@attach α l) l.attach :=
   rfl
 
-theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Multiset α} (hx : x ∈ s) : sizeOf x < sizeOf s := by
+theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Multiset α} (hx : x ∈ s) : SizeOf.sizeOf x < SizeOf.sizeOf s :=
+  by
   induction' s with l a b
   exact List.sizeof_lt_sizeof_of_mem hx
   rfl
@@ -2039,7 +2044,7 @@ theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableE
     count b (map f s) = (s.filter fun a => b = f a).card :=
   countp_map _ _ _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∈ » s) -/
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/
 theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Set.InjOn f { x : α | x ∈ s }) (x)
@@ -2477,7 +2482,7 @@ variable (p : α → Prop) [DecidablePred p] (l : Multiset α)
 /-- Given a proof `hp` that there exists a unique `a ∈ l` such that `p a`, `choose_x p l hp` returns
 that `a` together with proofs of `a ∈ l` and `p a`. -/
 def chooseX : ∀ hp : ∃! a, a ∈ l ∧ p a, { a // a ∈ l ∧ p a } :=
-  Quotient.recOn l (fun l' ex_unique => List.chooseX p l' (exists ex_unique))
+  Quotient.recOn l (fun l' ex_unique => List.chooseX p l' (ExistsUnique.exists ex_unique))
     (by
       intros
       funext hp

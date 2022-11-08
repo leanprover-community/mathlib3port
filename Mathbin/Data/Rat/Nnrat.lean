@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Order.Nonneg
+import Mathbin.Algebra.Order.Nonneg.Field
 
 /-!
 # Nonnegative rationals
@@ -120,7 +120,7 @@ theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
 
 @[simp, norm_cast]
 theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
-  max_eq_left <| le_sub.2 <| by simp [show (q : ℚ) ≤ p from h]
+  max_eq_left <| le_sub_comm.2 <| by simp [show (q : ℚ) ≤ p from h]
 
 @[simp]
 theorem coe_eq_zero : (q : ℚ) = 0 ↔ q = 0 := by norm_cast
@@ -255,7 +255,7 @@ theorem sub_def (p q : ℚ≥0) : p - q = toNnrat (p - q) :=
   rfl
 
 @[simp]
-theorem abs_coe (q : ℚ≥0) : abs (q : ℚ) = q :=
+theorem abs_coe (q : ℚ≥0) : |(q : ℚ)| = q :=
   abs_of_nonneg q.2
 
 end Nnrat

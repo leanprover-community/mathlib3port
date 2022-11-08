@@ -67,7 +67,7 @@ theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans lift_rel_const_iff
 
 theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by
-  ext ⟨f⟩ ⟨g⟩
+  ext (⟨f⟩⟨g⟩)
   exact coe_lt
 
 instance [HasSup β] : HasSup β* :=
@@ -195,7 +195,7 @@ theorem min_def [K : LinearOrder β] (x y : β*) : min x y = map₂ min x y :=
       exact h.mono fun i hi => (min_eq_right hi).symm
       
 
-theorem abs_def [LinearOrderedAddCommGroup β] (x : β*) : abs x = map abs x :=
+theorem abs_def [LinearOrderedAddCommGroup β] (x : β*) : |x| = map abs x :=
   (induction_on x) fun a => rfl
 
 @[simp]
@@ -205,7 +205,7 @@ theorem const_max [LinearOrder β] (x y : β) : (↑(max x y : β) : β*) = max 
 theorem const_min [LinearOrder β] (x y : β) : (↑(min x y : β) : β*) = min ↑x ↑y := by rw [min_def, map₂_const]
 
 @[simp]
-theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑(abs x) : β*) = abs ↑x := by rw [abs_def, map_const]
+theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑(|x|) : β*) = |↑x| := by rw [abs_def, map_const]
 
 end Germ
 

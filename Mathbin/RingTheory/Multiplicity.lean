@@ -540,7 +540,7 @@ theorem multiplicity_pow_self {p : α} (h0 : p ≠ 0) (hu : ¬IsUnit p) (n : ℕ
   apply Nat.not_succ_le_self
 
 theorem multiplicity_pow_self_of_prime {p : α} (hp : Prime p) (n : ℕ) : multiplicity p (p ^ n) = n :=
-  multiplicity_pow_self hp.ne_zero hp.not_unit n
+  multiplicity_pow_self hp.NeZero hp.not_unit n
 
 end CancelCommMonoidWithZero
 

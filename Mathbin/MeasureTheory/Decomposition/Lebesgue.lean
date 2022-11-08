@@ -711,7 +711,7 @@ instance (priority := 100) haveLebesgueDecompositionOfSigmaFinite (μ ν : Measu
               rw [hμn, ← nonpos_iff_eq_zero]
               refine' le_trans ((singular_part_le _ _) _ ((S.set_mem i).inter (hA₁ i))) (le_of_eq _)
               rw [restrict_apply ((S.set_mem i).inter (hA₁ i)), inter_comm, ← inter_assoc]
-              have : Disjoint (S.set j) (S.set i) := h₂ j i hij
+              have : Disjoint (S.set j) (S.set i) := h₂ hij
               rw [disjoint_iff_inter_eq_empty] at this
               rw [this, empty_inter, measure_empty]
               
@@ -735,7 +735,7 @@ instance (priority := 100) haveLebesgueDecompositionOfSigmaFinite (μ ν : Measu
             obtain ⟨⟨i, hi₁, hi₂⟩, ⟨j, hj₁, hj₂⟩⟩ := hx₁, hx₂
             have : i = j := by
               by_contra hij
-              exact h₂ i j hij ⟨hi₁, hj₁⟩
+              exact h₂ hij ⟨hi₁, hj₁⟩
             exact hj₂ (this ▸ hi₂)
             
           · intro x hx
@@ -776,8 +776,7 @@ instance (priority := 100) haveLebesgueDecompositionOfSigmaFinite (μ ν : Measu
         ext1 s hs
         rw [sum_apply _ hs, tsum_eq_single n, hνn, h₁, restrict_restrict (T.set_mem n), inter_self]
         · intro m hm
-          rw [hνn, h₁, restrict_restrict (T.set_mem n), disjoint_iff_inter_eq_empty.1 (h₃ n m hm.symm), restrict_empty,
-            coe_zero, Pi.zero_apply]
+          rw [hνn, h₁, restrict_restrict (T.set_mem n), (h₃ hm.symm).inter_eq, restrict_empty, coe_zero, Pi.zero_apply]
           
         · infer_instance
           
@@ -989,7 +988,7 @@ theorem to_jordan_decomposition_eq_of_eq_add_with_density {f : α → ℝ} (hf :
   haveI := is_finite_measure_with_density_of_real hfi.neg.2
   refine' to_jordan_decomposition_eq _
   simp_rw [jordan_decomposition.to_signed_measure, hadd]
-  ext i hi
+  ext (i hi)
   rw [vector_measure.sub_apply, to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi, add_apply,
       add_apply, Ennreal.to_real_add, Ennreal.to_real_add, add_sub_add_comm, ← to_signed_measure_apply_measurable hi, ←
       to_signed_measure_apply_measurable hi, ← vector_measure.sub_apply, ← jordan_decomposition.to_signed_measure,
@@ -1205,7 +1204,7 @@ theorem integrableRnDeriv (c : ComplexMeasure α) (μ : Measure α) : Integrable
 theorem singular_part_add_with_density_rn_deriv_eq [c.HaveLebesgueDecomposition μ] :
     c.singularPart μ + μ.withDensityᵥ (c.rnDeriv μ) = c := by
   conv_rhs => rw [← c.to_complex_measure_to_signed_measure]
-  ext i hi : 1
+  ext (i hi) : 1
   rw [vector_measure.add_apply, signed_measure.to_complex_measure_apply]
   ext
   · rw [Complex.add_re, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← IsROrC.re_eq_complex_re, ←

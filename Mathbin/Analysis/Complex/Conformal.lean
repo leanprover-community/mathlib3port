@@ -100,7 +100,7 @@ theorem is_conformal_map_iff_is_complex_or_conj_linear :
         g ≠ 0 :=
   by
   constructor
-  · exact fun h => ⟨h.is_complex_or_conj_linear, h.ne_zero⟩
+  · exact fun h => ⟨h.is_complex_or_conj_linear, h.NeZero⟩
     
   · rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
     · refine' isConformalMapComplexLinear _

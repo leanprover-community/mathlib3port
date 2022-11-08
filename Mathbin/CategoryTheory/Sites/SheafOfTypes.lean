@@ -198,7 +198,7 @@ theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X
 /-- The restriction of an extension is the original. -/
 @[simp]
 theorem restrict_extend {x : FamilyOfElements P R} (t : x.Compatible) : x.sieveExtend.restrict (le_generate R) = x := by
-  ext Y f hf
+  ext (Y f hf)
   exact extend_agrees t hf
 
 /-- If the arrow set for a family of elements is actually a sieve (i.e. it is downward closed) then the
@@ -232,7 +232,7 @@ to `R` and then extended back up to `S`, the resulting extension equals `x`.
 theorem extend_restrict {x : FamilyOfElements P (generate R)} (t : x.Compatible) :
     (x.restrict (le_generate R)).sieveExtend = x := by
   rw [compatible_iff_sieve_compatible] at t
-  ext _ _ h
+  ext (_ _ h)
   apply (t _ _ _).symm.trans
   congr
   exact h.some_spec.some_spec.some_spec.2
@@ -441,7 +441,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
         ext ⟨f, hf⟩
         apply t.2.to_sieve_compatible _ }
   left_inv α := by
-    ext X ⟨_, _⟩
+    ext (X⟨_, _⟩)
     rfl
   right_inv := by
     rintro ⟨x, hx⟩
@@ -459,7 +459,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
     
   -- See note [dsimp, simp].
   · intro h
-    ext Y ⟨f, hf⟩
+    ext (Y⟨f, hf⟩)
     have : _ = x.app Y _ := h f hf
     rw [yoneda_equiv_naturality] at this
     rw [← this]
@@ -728,10 +728,10 @@ def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P where
   Hom t Y f hf := Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
   hom_inv_id' := by
-    ext ⟨Y, f, hf⟩ p
+    ext (⟨Y, f, hf⟩p)
     simpa
   inv_hom_id' := by
-    ext x Y f hf
+    ext (x Y f hf)
     apply limits.types.limit.lift_π_apply'
 
 instance : Inhabited (FirstObj P (⊥ : Presieve X)) :=
@@ -802,7 +802,7 @@ theorem equalizer_sheaf_condition : Presieve.IsSheafFor P S ↔ Nonempty (IsLimi
   rw [Equiv.eq_symm_apply]
   constructor
   · intro q
-    ext Y f hf
+    ext (Y f hf)
     simpa [first_obj_eq_family, fork_map] using q _ _
     
   · intro q Y f hf
@@ -877,7 +877,7 @@ theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P
   rw [Equiv.eq_symm_apply]
   constructor
   · intro q
-    ext Y f hf
+    ext (Y f hf)
     simpa [fork_map] using q _ _
     
   · intro q Y f hf

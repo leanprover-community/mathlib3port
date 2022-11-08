@@ -19,9 +19,11 @@ namespace List
 
 attribute [simp] join
 
+#print List.join_nil /-
 @[simp]
 theorem join_nil : [([] : List α)].join = [] :=
   rfl
+-/
 
 @[simp]
 theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l ∈ L, l = []

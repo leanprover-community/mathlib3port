@@ -61,7 +61,7 @@ theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmat
     Dmatrix.sub_apply]
 
 theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
-  ext k i j
+  ext (k i j)
   simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases h:i = j
   · subst h
@@ -75,7 +75,7 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
     charmatrix (reindex e e M) = reindex e e (charmatrix M) := by
-  ext i j x
+  ext (i j x)
   by_cases h:i = j
   all_goals simp [h]
 

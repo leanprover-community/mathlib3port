@@ -103,7 +103,7 @@ variable [Sampleable α] [Sampleable β]
 
 /-- Redefine `sizeof` to follow the structure of `sampleable` instances. -/
 def Total.sizeof : TotalFunction α β → ℕ
-  | ⟨m, x⟩ => 1 + @sizeOf _ Sampleable.wf m + sizeOf x
+  | ⟨m, x⟩ => 1 + @SizeOf.sizeOf _ Sampleable.wf m + SizeOf.sizeOf x
 
 instance (priority := 2000) : SizeOf (TotalFunction α β) :=
   ⟨Total.sizeof⟩
@@ -300,7 +300,7 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:551:6: unsupported: specialize @hyp -/
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) (x : α) :
     List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
   simp only [list.apply_id]
@@ -429,7 +429,7 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] : ShrinkFn (Σ
               unfold_wf <;> simp only [perm.slice] <;> unfold_wf <;> apply List.sizeof_slice_lt _ _ n.2 _ this⟩
 
 instance [SizeOf α] : SizeOf (InjectiveFunction α) :=
-  ⟨fun ⟨xs, _, _⟩ => sizeOf (xs.map Sigma.fst)⟩
+  ⟨fun ⟨xs, _, _⟩ => SizeOf.sizeOf (xs.map Sigma.fst)⟩
 
 /-- Shrink an injective function slicing a segment in the middle of the domain and removing
 the corresponding elements in the codomain, hence maintaining the property that

@@ -71,6 +71,9 @@ def map (f : α → β) (s : Stream α) : Stream β := fun n => f (nth s n)
 `stream.nth n (stream.zip f s₁ s₂) = f (stream.nth s₁) (stream.nth s₂)`. -/
 def zip (f : α → β → δ) (s₁ : Stream α) (s₂ : Stream β) : Stream δ := fun n => f (nth s₁ n) (nth s₂ n)
 
+/-- Enumerate a stream by tagging each element with its index. -/
+def enum (s : Stream α) : Stream (ℕ × α) := fun n => (n, s.nth n)
+
 /-- The constant stream: `stream.nth n (stream.const a) = a`. -/
 def const (a : α) : Stream α := fun n => a
 

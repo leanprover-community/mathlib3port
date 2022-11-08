@@ -458,10 +458,12 @@ of typeclass inference for inferring the `setoid` argument. This is useful when 
 several different quotient relations on a type, for example quotient groups, rings and modules. -/
 
 
+#print Quotient.mk' /-
 /-- A version of `quotient.mk` taking `{s : setoid α}` as an implicit argument instead of an
 instance argument. -/
 protected def mk' (a : α) : Quotient s₁ :=
   Quot.mk s₁.1 a
+-/
 
 /-- `quotient.mk'` is a surjective function. -/
 theorem surjective_quotient_mk' : Function.Surjective (Quotient.mk' : α → Quotient s₁) :=

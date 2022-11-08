@@ -5,6 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Logic.Function.Conjugate
+import Mathbin.Order.Bounds.OrderIso
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Order.OrdContinuous
 

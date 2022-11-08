@@ -658,7 +658,7 @@ theorem map_id : map (LinearMap.id : M →ₗ[R] M) p = p :=
 
 theorem map_comp [RingHomSurjective σ₂₃] [RingHomSurjective σ₁₃] (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] M₃)
     (p : Submodule R M) : map (g.comp f : M →ₛₗ[σ₁₃] M₃) p = map g (map f p) :=
-  SetLike.coe_injective <| by simp [map_coe] <;> rw [← image_comp]
+  SetLike.coe_injective <| by simp only [← image_comp, map_coe, LinearMap.coe_comp, comp_app]
 
 include sc
 
@@ -693,11 +693,11 @@ noncomputable def equivMapOfInjective (f : F) (i : Injective f) (p : Submodule R
   { Equiv.Set.image f p i with
     map_add' := by
       intros
-      simp
+      simp only [coe_add, map_add, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
       rfl,
     map_smul' := by
       intros
-      simp
+      simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
       rfl }
 
 @[simp]
@@ -1324,13 +1324,13 @@ include sc
 
 theorem sub_mem_ker_iff {x y} : x - y ∈ ker f ↔ f x = f y := by rw [mem_ker, map_sub, sub_eq_zero]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » p) -/
 theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ (x y) (_ : x ∈ p) (_ : y ∈ p), f x = f y → x = y :=
   disjoint_ker.trans
     ⟨fun H x hx y hy h => eq_of_sub_eq_zero <| H _ (sub_mem hx hy) (by simp [h]), fun H x h₁ h₂ =>
       H x h₁ 0 (zero_mem _) (by simpa using h₂)⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
     ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
 
@@ -1402,7 +1402,7 @@ namespace IsLinearMap
 theorem is_linear_map_add [Semiring R] [AddCommMonoid M] [Module R M] : IsLinearMap R fun x : M × M => x.1 + x.2 := by
   apply IsLinearMap.mk
   · intro x y
-    simp
+    simp only [Prod.fst_add, Prod.snd_add]
     cc
     
   · intro x y
@@ -2120,6 +2120,9 @@ theorem conj_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M) :
     e.conj f = ((↑e : M →ₗ[R] M₂).comp f).comp (e.symm : M₂ →ₗ[R] M) :=
   rfl
 
+theorem conj_apply_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M) (x : M₂) : e.conj f x = e (f (e.symm x)) :=
+  rfl
+
 theorem symm_conj_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M₂) :
     e.symm.conj f = ((↑e.symm : M₂ →ₗ[R] M).comp f).comp (e : M →ₗ[R] M₂) :=
   rfl
@@ -2128,7 +2131,7 @@ theorem conj_comp (e : M ≃ₗ[R] M₂) (f g : Module.EndCat R M) : e.conj (g.c
   arrow_congr_comp e e e f g
 
 theorem conj_trans (e₁ : M ≃ₗ[R] M₂) (e₂ : M₂ ≃ₗ[R] M₃) : e₁.conj.trans e₂.conj = (e₁.trans e₂).conj := by
-  ext f x
+  ext (f x)
   rfl
 
 @[simp]

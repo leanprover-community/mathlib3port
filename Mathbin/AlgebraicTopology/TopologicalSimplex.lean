@@ -70,12 +70,12 @@ def toTop : SimplexCategory ⥤ TopCat where
   map x y f := ⟨toTopMap f⟩
   map_id' := by
     intro x
-    ext f i : 3
+    ext (f i) : 3
     change (finset.univ.filter fun k => k = i).Sum _ = _
     simp [Finset.sum_filter]
   map_comp' := by
     intro x y z f g
-    ext h i : 3
+    ext (h i) : 3
     dsimp
     erw [← Finset.sum_bUnion]
     apply Finset.sum_congr

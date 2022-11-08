@@ -74,6 +74,14 @@ theorem IsO.trans_is_Theta {f : α → E} {g : α → F'} {k : α → G} (h₁ :
 theorem IsTheta.trans_is_O {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =O[l] k) : f =O[l] k :=
   h₁.1.trans h₂
 
+/- warning: asymptotics.is_o.trans_is_Theta clashes with asymptotics.is_O.trans_is_Theta -> Asymptotics.IsO.trans_is_Theta
+Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_is_Thetaₓ'. -/
+#print Asymptotics.IsO.trans_is_Theta /-
+@[trans]
+theorem IsO.trans_is_Theta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g) (h₂ : g =Θ[l] k) : f =o[l] k :=
+  h₁.trans_is_O h₂.1
+-/
+
 @[trans]
 theorem IsTheta.trans_is_o {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =o[l] k) : f =o[l] k :=
   h₁.1.trans_is_o h₂

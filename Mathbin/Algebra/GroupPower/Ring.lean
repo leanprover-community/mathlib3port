@@ -72,6 +72,9 @@ theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 :
 theorem pow_ne_zero [NoZeroDivisors M] {a : M} (n : ℕ) (h : a ≠ 0) : a ^ n ≠ 0 :=
   mt pow_eq_zero h
 
+instance NeZero.pow [NoZeroDivisors M] {x : M} [NeZero x] {n : ℕ} : NeZero (x ^ n) :=
+  ⟨pow_ne_zero n NeZero.out⟩
+
 theorem sq_eq_zero_iff [NoZeroDivisors M] {a : M} : a ^ 2 = 0 ↔ a = 0 :=
   pow_eq_zero_iff two_pos
 

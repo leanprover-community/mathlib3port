@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.Algebra.GroupPower.Lemmas
+import Mathbin.Data.Int.Bitwise
 
 /-!
 # Powers of elements of groups with an adjoined zero element
@@ -56,7 +57,7 @@ theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
   | (n : ℕ), h => by
     rw [zpow_coe_nat, zero_pow']
     simpa using h
-  | -[1 + n], h => by simp
+  | -[n+1], h => by simp
 
 theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
@@ -67,8 +68,8 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ']
-  | -[1 + 0] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
-  | -[1 + (n + 1)] => by
+  | -[0+1] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
+  | -[n + 1+1] => by
     rw [Int.neg_succ_of_nat_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.coe_nat_succ, zpow_coe_nat,
       zpow_coe_nat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_one]
 
@@ -105,7 +106,7 @@ theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a
 
 theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by simp [h.pow_right n]
-  | -[1 + n] => by simp [(h.pow_right (n + 1)).inv_right₀]
+  | -[n+1] => by simp [(h.pow_right (n + 1)).inv_right₀]
 
 theorem Commute.zpow_right₀ {a b : G₀} (h : Commute a b) : ∀ m : ℤ, Commute a (b ^ m) :=
   h.zpow_right₀
@@ -135,7 +136,7 @@ theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z �
   | (n : ℕ) => by
     rw [zpow_coe_nat]
     exact pow_ne_zero _ ha
-  | -[1 + n] => by
+  | -[n+1] => by
     rw [zpow_neg_succ_of_nat]
     exact inv_ne_zero (pow_ne_zero _ ha)
 

@@ -42,36 +42,52 @@ theorem coe_def : (coe : α → Option α) = some :=
 theorem some_eq_coe (a : α) : some a = a :=
   rfl
 
+#print Option.some_ne_none /-
 theorem some_ne_none (x : α) : some x ≠ none := fun h => Option.noConfusion h
+-/
 
 @[simp]
 theorem coe_ne_none (a : α) : (a : Option α) ≠ none :=
   fun.
 
+#print Option.forall /-
 protected theorem forall {p : Option α → Prop} : (∀ x, p x) ↔ p none ∧ ∀ x, p (some x) :=
   ⟨fun h => ⟨h _, fun x => h _⟩, fun h x => Option.casesOn x h.1 h.2⟩
+-/
 
+#print Option.exists /-
 protected theorem exists {p : Option α → Prop} : (∃ x, p x) ↔ p none ∨ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx⟩ => ((Option.casesOn x Or.inl) fun x hx => Or.inr ⟨x, hx⟩) hx, fun h =>
     h.elim (fun h => ⟨_, h⟩) fun ⟨x, hx⟩ => ⟨_, hx⟩⟩
+-/
 
+#print Option.get_mem /-
 @[simp]
 theorem get_mem : ∀ {o : Option α} (h : isSome o), Option.get h ∈ o
   | some a, _ => rfl
+-/
 
+#print Option.get_of_mem /-
 theorem get_of_mem {a : α} : ∀ {o : Option α} (h : isSome o), a ∈ o → Option.get h = a
   | _, _, rfl => rfl
+-/
 
+#print Option.not_mem_none /-
 @[simp]
 theorem not_mem_none (a : α) : a ∉ (none : Option α) := fun h => Option.noConfusion h
+-/
 
+#print Option.some_get /-
 @[simp]
 theorem some_get : ∀ {x : Option α} (h : isSome x), some (Option.get h) = x
   | some x, hx => rfl
+-/
 
+#print Option.get_some /-
 @[simp]
 theorem get_some (x : α) (h : isSome (some x)) : Option.get h = x :=
   rfl
+-/
 
 @[simp]
 theorem get_or_else_some (x y : α) : Option.getOrElse (some x) y = x :=
@@ -92,15 +108,19 @@ theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some
 theorem coe_get {o : Option α} (h : o.isSome) : ((Option.get h : α) : Option α) = o :=
   Option.some_get h
 
+#print Option.mem_unique /-
 theorem mem_unique {o : Option α} {a b : α} (ha : a ∈ o) (hb : b ∈ o) : a = b :=
   Option.some.inj <| ha.symm.trans hb
+-/
 
 theorem eq_of_mem_of_mem {a : α} {o1 o2 : Option α} (h1 : a ∈ o1) (h2 : a ∈ o2) : o1 = o2 :=
   h1.trans h2.symm
 
 theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Option α → Prop) := fun a o b => mem_unique
 
+#print Option.some_injective /-
 theorem some_injective (α : Type _) : Function.Injective (@some α) := fun _ _ => some_inj.mp
+-/
 
 /- warning: option.map_injective -> Option.map_injective is a dubious translation:
 lean 3 declaration is
@@ -117,14 +137,18 @@ theorem map_injective {f : α → β} (Hf : Function.Injective f) : Function.Inj
 theorem map_comp_some (f : α → β) : Option.map f ∘ some = some ∘ f :=
   rfl
 
+#print Option.ext /-
 @[ext]
 theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) → o₁ = o₂
   | none, none, H => rfl
   | some a, o, H => ((H _).1 rfl).symm
   | o, some b, H => (H _).2 rfl
+-/
 
+#print Option.eq_none_iff_forall_not_mem /-
 theorem eq_none_iff_forall_not_mem {o : Option α} : o = none ↔ ∀ a, a ∉ o :=
   ⟨fun e a h => by rw [e] at h <;> cases h, fun h => ext <| by simpa⟩
+-/
 
 /- warning: option.none_bind -> Option.none_bind is a dubious translation:
 lean 3 declaration is
@@ -222,12 +246,18 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.join_eq_some Option.join_eq_someₓ'. -/
 theorem join_eq_some {x : Option (Option α)} {a : α} : x.join = some a ↔ x = some (some a) := by simp
 
+#print Option.join_ne_none /-
 theorem join_ne_none {x : Option (Option α)} : x.join ≠ none ↔ ∃ z, x = some (some z) := by simp
+-/
 
+#print Option.join_ne_none' /-
 theorem join_ne_none' {x : Option (Option α)} : ¬x.join = none ↔ ∃ z, x = some (some z) := by simp
+-/
 
+#print Option.join_eq_none /-
 theorem join_eq_none {o : Option (Option α)} : o.join = none ↔ o = none ∨ o = some none := by
   rcases o with (_ | _ | _) <;> simp
+-/
 
 /- warning: option.bind_id_eq_join -> Option.bind_id_eq_join is a dubious translation:
 lean 3 declaration is
@@ -425,11 +455,15 @@ Case conversion may be inaccurate. Consider using '#align option.join_map_eq_map
 theorem join_map_eq_map_join {f : α → β} {x : Option (Option α)} : (x.map (Option.map f)).join = x.join.map f := by
   rcases x with (_ | _ | x) <;> simp
 
+#print Option.join_join /-
 theorem join_join {x : Option (Option (Option α))} : x.join.join = (x.map join).join := by
   rcases x with (_ | _ | _ | x) <;> simp
+-/
 
+#print Option.mem_of_mem_join /-
 theorem mem_of_mem_join {a : α} {x : Option (Option α)} (h : a ∈ x.join) : some a ∈ x :=
   mem_def.mpr ((mem_def.mp h).symm ▸ join_eq_some.mp h)
+-/
 
 section Pmap
 
@@ -587,25 +621,35 @@ theorem is_none_some {a : α} : isNone (some a) = ff :=
 @[simp]
 theorem not_is_some {a : Option α} : isSome a = ff ↔ a.isNone = tt := by cases a <;> simp
 
+#print Option.eq_some_iff_get_eq /-
 theorem eq_some_iff_get_eq {o : Option α} {a : α} : o = some a ↔ ∃ h : o.isSome, Option.get h = a := by cases o <;> simp
+-/
 
 theorem not_is_some_iff_eq_none {o : Option α} : ¬o.isSome ↔ o = none := by cases o <;> simp
 
 theorem ne_none_iff_is_some {o : Option α} : o ≠ none ↔ o.isSome := by cases o <;> simp
 
+#print Option.ne_none_iff_exists /-
 theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x = o := by cases o <;> simp
+-/
 
+#print Option.ne_none_iff_exists' /-
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
+-/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+#print Option.bex_ne_none /-
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_is_some.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
+-/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+#print Option.ball_ne_none /-
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
     simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
+-/
 
 theorem iget_mem [Inhabited α] : ∀ {o : Option α}, isSome o → o.iget ∈ o
   | some a, _ => rfl
@@ -637,15 +681,21 @@ theorem lift_or_get_choice {f : α → α → α} (h : ∀ a b, f a b = a ∨ f 
   | none, some b => Or.inr rfl
   | some a, some b => by simpa [lift_or_get] using h a b
 
+#print Option.lift_or_get_none_left /-
 @[simp]
 theorem lift_or_get_none_left {f} {b : Option α} : liftOrGet f none b = b := by cases b <;> rfl
+-/
 
+#print Option.lift_or_get_none_right /-
 @[simp]
 theorem lift_or_get_none_right {f} {a : Option α} : liftOrGet f a none = a := by cases a <;> rfl
+-/
 
+#print Option.lift_or_get_some_some /-
 @[simp]
 theorem lift_or_get_some_some {f} {a b : α} : liftOrGet f (some a) (some b) = f a b :=
   rfl
+-/
 
 /-- Given an element of `a : option α`, a default element `b : β` and a function `α → β`, apply this
 function to `a` if it comes from `α`, and return `b` otherwise. -/
@@ -698,14 +748,18 @@ section
 
 open Classical
 
+#print Option.choice /-
 /-- An arbitrary `some a` with `a : α` if `α` is nonempty, and otherwise `none`. -/
 noncomputable def choice (α : Type _) : Option α :=
   if h : Nonempty α then some h.some else none
+-/
 
+#print Option.choice_eq /-
 theorem choice_eq {α : Type _} [Subsingleton α] (a : α) : choice α = some a := by
   dsimp [choice]
   rw [dif_pos (⟨a⟩ : Nonempty α)]
   congr
+-/
 
 theorem choice_eq_none (α : Type _) [IsEmpty α] : choice α = none :=
   dif_neg (not_nonempty_iff_imp_false.mpr isEmptyElim)
@@ -723,13 +777,17 @@ theorem choice_is_some_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonem
 
 end
 
+#print Option.to_list_some /-
 @[simp]
 theorem to_list_some (a : α) : (a : Option α).toList = [a] :=
   rfl
+-/
 
+#print Option.to_list_none /-
 @[simp]
 theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
+-/
 
 @[simp]
 theorem elim_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=

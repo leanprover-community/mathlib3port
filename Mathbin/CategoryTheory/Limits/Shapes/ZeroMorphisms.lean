@@ -3,6 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
+import Mathbin.Data.Pi.Algebra
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.IsomorphismClasses
@@ -81,7 +82,7 @@ private theorem ext_aux (I J : HasZeroMorphisms C)
   cases I
   cases J
   congr
-  · ext X Y
+  · ext (X Y)
     exact w X Y
     
   · apply proof_irrel_heq

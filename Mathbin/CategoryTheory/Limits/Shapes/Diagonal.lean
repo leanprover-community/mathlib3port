@@ -60,8 +60,8 @@ instance [Mono f] : IsIso (diagonal f) := by
   infer_instance
 
 /-- The two projections `Δ_{X/Y} ⟶ X` form a kernel pair for `f : X ⟶ Y`. -/
-def diagonalIsKernelPair : IsKernelPair f (pullback.fst : diagonalObj f ⟶ _) pullback.snd :=
-  ⟨pullback.condition, pullbackIsPullback _ _⟩
+theorem diagonal_is_kernel_pair : IsKernelPair f (pullback.fst : diagonalObj f ⟶ _) pullback.snd :=
+  IsPullback.of_has_pullback f f
 
 end Diagonal
 

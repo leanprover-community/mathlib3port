@@ -226,16 +226,16 @@ def fourierSeries : HilbertBasis ℤ ℂ (lp ℂ 2 haarCircle) :=
 theorem coe_fourier_series : ⇑fourierSeries = fourierLp 2 :=
   HilbertBasis.coe_mk _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∫ , ∂ »((t : circle),
     «expr * »(star_ring_end() ((fourier_Lp 2 i : circle → exprℂ()) t), f t),
-    haar_circle)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+    haar_circle)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Under the isometric isomorphism `fourier_series` from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`, the
 `i`-th coefficient is the integral over the circle of `λ t, t ^ (-i) * f t`. -/
 theorem fourier_series_repr (f : lp ℂ 2 haarCircle) (i : ℤ) :
     fourierSeries.repr f i = ∫ t : circle, t ^ -i * f t ∂haarCircle := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∫ , ∂ »((t : circle),\n    «expr * »(star_ring_end() ((fourier_Lp 2 i : circle → exprℂ()) t), f t),\n    haar_circle)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr∫ , ∂ »((t : circle),\n    «expr * »(star_ring_end() ((fourier_Lp 2 i : circle → exprℂ()) t), f t),\n    haar_circle)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · simp [fourier_series.repr_apply_apply f i, MeasureTheory.L2Cat.inner_def]
     
   apply integral_congr_ae

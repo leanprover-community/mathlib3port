@@ -175,7 +175,7 @@ theorem TendstoUniformlyOnFilter.mono_right {p'' : Filter α} (h : TendstoUnifor
 theorem TendstoUniformlyOn.mono {s' : Set α} (h : TendstoUniformlyOn F f p s) (h' : s' ⊆ s) :
     TendstoUniformlyOn F f p s' :=
   tendsto_uniformly_on_iff_tendsto_uniformly_on_filter.mpr
-    (h.TendstoUniformlyOnFilter.monoRight (le_principal_iff.mpr <| mem_principal.mpr h'))
+    (h.TendstoUniformlyOnFilter.mono_right (le_principal_iff.mpr <| mem_principal.mpr h'))
 
 theorem TendstoUniformlyOnFilter.congr {F' : ι → α → β} (hf : TendstoUniformlyOnFilter F f p p')
     (hff' : ∀ᶠ n : ι × α in p ×ᶠ p', F n.fst n.snd = F' n.fst n.snd) : TendstoUniformlyOnFilter F' f p p' := by

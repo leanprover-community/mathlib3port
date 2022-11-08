@@ -122,7 +122,7 @@ theorem pow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : �
 
 theorem zpow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : ℤ, (f ^ n) x = x
   | (n : ℕ) => pow_apply_eq_self_of_apply_eq_self hfx n
-  | -[1 + n] => by rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
+  | -[n+1] => by rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
 
 theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ n : ℕ, (f ^ n) x = x ∨ (f ^ n) x = f x
   | 0 => Or.inl rfl
@@ -132,7 +132,7 @@ theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ 
 
 theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ i : ℤ, (f ^ i) x = x ∨ (f ^ i) x = f x
   | (n : ℕ) => pow_apply_eq_of_apply_apply_eq_self hffx n
-  | -[1 + n] => by
+  | -[n+1] => by
     rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, ← f.injective.eq_iff, ← mul_apply, ← pow_succ, eq_comm, inv_eq_iff_eq, ←
       mul_apply, ← pow_succ', @eq_comm _ x, or_comm]
     exact pow_apply_eq_of_apply_apply_eq_self hffx _

@@ -59,7 +59,6 @@ abbrev homologyCToK : homologyC f g w ⟶ homologyK f g w :=
 
 attribute [local instance] pseudoelement.hom_to_fun pseudoelement.has_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident rfl, "⟩", ":", expr «expr∃ , »((c), «expr = »(kernel.lift g f w c, a))]] -/
 instance : Mono (homologyCToK f g w) := by
   apply pseudoelement.mono_of_zero_of_map_zero
   intro a ha
@@ -68,8 +67,7 @@ instance : Mono (homologyCToK f g w) := by
   simp only [← pseudoelement.comp_apply, cokernel.π_desc, kernel.lift_ι, pseudoelement.apply_zero] at ha
   simp only [pseudoelement.comp_apply] at ha
   obtain ⟨b, hb⟩ : ∃ b, f b = _ := (pseudoelement.pseudo_exact_of_exact (exact_cokernel f)).2 _ ha
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident c, \",\", ident rfl, \"⟩\", \":\", expr «expr∃ , »((c), «expr = »(kernel.lift g f w c, a))]]"
+  rsuffices ⟨c, rfl⟩ : ∃ c, kernel.lift g f w c = a
   · simp [← pseudoelement.comp_apply]
     
   use b

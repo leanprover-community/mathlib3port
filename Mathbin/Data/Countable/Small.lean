@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Data.Countable.Basic
-import Mathbin.Logic.Small
+import Mathbin.Logic.Small.Basic
 
 /-!
 # All countable types are small.

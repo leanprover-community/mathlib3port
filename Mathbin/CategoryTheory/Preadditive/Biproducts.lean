@@ -240,7 +240,7 @@ def biproduct.reindex {β γ : Type} [Fintype β] [DecidableEq β] [DecidableEq 
   hom := biproduct.desc fun b => biproduct.ι f (ε b)
   inv := biproduct.lift fun b => biproduct.π f (ε b)
   hom_inv_id' := by
-    ext b b'
+    ext (b b')
     by_cases h:b = b'
     · subst h
       simp
@@ -248,7 +248,7 @@ def biproduct.reindex {β γ : Type} [Fintype β] [DecidableEq β] [DecidableEq 
     · simp [h]
       
   inv_hom_id' := by
-    ext g g'
+    ext (g g')
     by_cases h:g = g' <;>
       simp [preadditive.sum_comp, preadditive.comp_sum, biproduct.ι_π, biproduct.ι_π_assoc, comp_dite,
         Equiv.apply_eq_iff_eq_symm_apply, Finset.sum_dite_eq' Finset.univ (ε.symm g') _, h]
@@ -544,7 +544,7 @@ attribute [local ext] preadditive
 instance subsingleton_preadditive_of_has_binary_biproducts {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
     [HasBinaryBiproducts C] : Subsingleton (Preadditive C) :=
   Subsingleton.intro fun a b => by
-    ext X Y f g
+    ext (X Y f g)
     have h₁ := @biprod.add_eq_lift_id_desc _ _ a _ _ f g (by convert (inferInstance : has_binary_biproduct X X))
     have h₂ := @biprod.add_eq_lift_id_desc _ _ b _ _ f g (by convert (inferInstance : has_binary_biproduct X X))
     refine' h₁.trans (Eq.trans _ h₂.symm)

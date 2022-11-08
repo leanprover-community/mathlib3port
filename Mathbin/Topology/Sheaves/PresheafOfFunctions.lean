@@ -45,7 +45,7 @@ def presheafToTypes (T : X → Type v) : X.Presheaf (Type v) where
   obj U := ∀ x : unop U, T x
   map U V i g := fun x : unop V => g (i.unop x)
   map_id' U := by
-    ext g ⟨x, hx⟩
+    ext (g⟨x, hx⟩)
     rfl
   map_comp' U V W i j := rfl
 
@@ -71,7 +71,7 @@ def presheafToType (T : Type v) : X.Presheaf (Type v) where
   obj U := unop U → T
   map U V i g := g ∘ i.unop
   map_id' U := by
-    ext g ⟨x, hx⟩
+    ext (g⟨x, hx⟩)
     rfl
   map_comp' U V W i j := rfl
 

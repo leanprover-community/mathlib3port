@@ -240,7 +240,6 @@ theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : �
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident x, ",", ident hx, "⟩", ":", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))]] -/
 theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α → β} (hf : 0 ≤ᵐ[μ.restrict s] f)
     (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) : essSup (s.indicator f) μ = essSup f (μ.restrict s) := by
   refine'
@@ -264,8 +263,7 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
   rw [eventually_map] at h_restrict_le⊢
   rw [ae_restrict_iff' hs] at h_restrict_le
   have hc : 0 ≤ c := by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident x, \",\", ident hx, \"⟩\", \":\", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))]]"
+    rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c
     exact hx.1.trans hx.2
     refine' frequently.exists _
     · exact μ.ae

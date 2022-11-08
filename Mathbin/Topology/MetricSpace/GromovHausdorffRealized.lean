@@ -69,12 +69,14 @@ private def Cb : Type _ :=
 private def max_var : ℝ≥0 :=
   2 * ⟨diam (Univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (Univ : Set Y), diam_nonneg⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr diam_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by simp
     _ ≤ 2 * diam (Univ : Set X) + 1 + 2 * diam (Univ : Set Y) := by
-      apply_rules [add_le_add, mul_le_mul_of_nonneg_left, diam_nonneg] <;> norm_num
+      trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr diam_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error" <;>
+        norm_num
     
 
 /-- The set of functions on `X ⊕ Y` that are candidates distances to realize the
@@ -102,12 +104,12 @@ variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 attribute [local instance] inhabited_of_nonempty'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_right, ",", expr diam_nonneg, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (Univ : Set (Sum X Y)) := dist_le_diam_of_mem boundedOfCompactSpace (mem_univ _) (mem_univ _)
     _ = diam (inl '' (Univ : Set X) ∪ inr '' (Univ : Set Y)) := by
-      apply congr_arg <;> ext x y z <;> cases x <;> simp [mem_univ, mem_range_self]
+      apply congr_arg <;> ext (x y z) <;> cases x <;> simp [mem_univ, mem_range_self]
     _ ≤ diam (inl '' (Univ : Set X)) + dist (inl default) (inr default) + diam (inr '' (Univ : Set Y)) :=
       diam_union (mem_image_of_mem _ (mem_univ _)) (mem_image_of_mem _ (mem_univ _))
     _ = diam (Univ : Set X) + (dist default default + 1 + dist default default) + diam (Univ : Set Y) := by
@@ -115,7 +117,8 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
       rfl
     _ = 1 * diam (Univ : Set X) + 1 + 1 * diam (Univ : Set Y) := by simp
     _ ≤ 2 * diam (Univ : Set X) + 1 + 2 * diam (Univ : Set Y) := by
-      apply_rules [add_le_add, mul_le_mul_of_nonneg_right, diam_nonneg, le_refl]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_right, \",\", expr diam_nonneg, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       norm_num
       norm_num
     

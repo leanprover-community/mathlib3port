@@ -5,6 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 -/
 import Mathbin.Algebra.GroupPower.Basic
+import Mathbin.Algebra.Ring.Basic
 
 /-!
 # Instances on spaces of monoid and group morphisms

@@ -111,7 +111,7 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ) {c : Cocone ((c
 theorem restrict_yoneda_hom_equiv_natural (P : Cᵒᵖ ⥤ Type u₁) (E₁ E₂ : ℰ) (g : E₁ ⟶ E₂) {c : Cocone _} (t : IsColimit c)
     (k : c.x ⟶ E₁) :
     restrictYonedaHomEquiv A P E₂ t (k ≫ g) = restrictYonedaHomEquiv A P E₁ t k ≫ (restrictedYoneda A).map g := by
-  ext _ X p
+  ext (_ X p)
   apply (assoc _ _ _).symm
 
 variable [HasColimits ℰ]
@@ -186,10 +186,10 @@ def isExtensionAlongYoneda : (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ⋙ extendAl
 instance : PreservesColimits (extendAlongYoneda A) :=
   (yonedaAdjunction A).leftAdjointPreservesColimits
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre «expr ⋙ »((category_of_elements.π X).left_op, A) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre (Lan.diagram (yoneda : «expr ⥤ »(C, «expr ⥤ »(_, Type u₁))) A X) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre «expr ⋙ »((category_of_elements.π X).left_op, A) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre (Lan.diagram (yoneda : «expr ⥤ »(C, «expr ⥤ »(_, Type u₁))) A X) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Show that the images of `X` after `extend_along_yoneda` and `Lan yoneda` are indeed isomorphic.
 This follows from `category_theory.category_of_elements.costructured_arrow_yoneda_equivalence`.
 -/
@@ -201,7 +201,7 @@ def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoned
     hom_inv_id' := by
       erw [colimit.pre_pre ((category_of_elements.π X).leftOp ⋙ A) eq.inverse]
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre «expr ⋙ »((category_of_elements.π X).left_op, A) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre «expr ⋙ »((category_of_elements.π X).left_op, A) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       congr
       · exact congr_arg functor.op (category_of_elements.from_to_costructured_arrow_eq X)
         
@@ -213,7 +213,7 @@ def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoned
     inv_hom_id' := by
       erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) eq.functor]
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre (Lan.diagram (yoneda : «expr ⥤ »(C, «expr ⥤ »(_, Type u₁))) A X) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colimit.pre (Lan.diagram (yoneda : «expr ⥤ »(C, «expr ⥤ »(_, Type u₁))) A X) («expr𝟭»() _)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       congr
       · exact category_of_elements.to_from_costructured_arrow_eq X
         
@@ -290,7 +290,7 @@ theorem cocone_of_representable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.Elemen
 theorem cocone_of_representable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α : P₁ ⟶ P₂) (j : P₁.Elementsᵒᵖ) :
     (coconeOfRepresentable P₁).ι.app j ≫ α = (coconeOfRepresentable P₂).ι.app ((categoryOfElements.map α).op.obj j) :=
   by
-  ext T f
+  ext (T f)
   simpa [cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _
 
 /-- The cocone with point `P` given by `the_cocone` is a colimit: that is, we have exhibited an

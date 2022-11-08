@@ -33,6 +33,22 @@ export HasExistsMulOfLe (exists_mul_of_le)
 
 export HasExistsAddOfLe (exists_add_of_le)
 
+-- See note [lower instance priority]
+@[to_additive]
+instance (priority := 100) Group.has_exists_mul_of_le (α : Type u) [Group α] [LE α] : HasExistsMulOfLe α :=
+  ⟨fun a b hab => ⟨a⁻¹ * b, (mul_inv_cancel_left _ _).symm⟩⟩
+
+section MulOneClass
+
+variable [MulOneClass α] [Preorder α] [ContravariantClass α α (· * ·) (· < ·)] [HasExistsMulOfLe α] {a b : α}
+
+@[to_additive]
+theorem exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b := by
+  obtain ⟨c, rfl⟩ := exists_mul_of_le h.le
+  exact ⟨c, one_lt_of_lt_mul_right h, rfl⟩
+
+end MulOneClass
+
 section HasExistsMulOfLe
 
 variable [LinearOrder α] [DenselyOrdered α] [Monoid α] [HasExistsMulOfLe α] [CovariantClass α α (· * ·) (· < ·)]
@@ -209,6 +225,25 @@ theorem pos_of_gt {M : Type _} [CanonicallyOrderedAddMonoid M] {n m : M} (h : n 
 instance (priority := 100) CanonicallyOrderedAddMonoid.zeroLeOneClass {M : Type _} [CanonicallyOrderedAddMonoid M]
     [One M] : ZeroLeOneClass M :=
   ⟨zero_le 1⟩
+
+namespace NeZero
+
+theorem pos {M} (a : M) [CanonicallyOrderedAddMonoid M] [NeZero a] : 0 < a :=
+  (zero_le a).lt_of_ne <| NeZero.out.symm
+
+theorem of_gt {M} [CanonicallyOrderedAddMonoid M] {x y : M} (h : x < y) : NeZero y :=
+  of_pos <| pos_of_gt h
+
+-- 1 < p is still an often-used `fact`, due to `nat.prime` implying it, and it implying `nontrivial`
+-- on `zmod`'s ring structure. We cannot just set this to be any `x < y`, else that becomes a
+-- metavariable and it will hugely slow down typeclass inference.
+instance (priority := 10) of_gt' {M} [CanonicallyOrderedAddMonoid M] [One M] {y : M} [Fact (1 < y)] : NeZero y :=
+  of_gt <| Fact.out <| 1 < y
+
+instance bit0 {M} [CanonicallyOrderedAddMonoid M] {x : M} [NeZero x] : NeZero (bit0 x) :=
+  of_pos <| bit0_pos <| NeZero.pos x
+
+end NeZero
 
 /-- A canonically linear-ordered additive monoid is a canonically ordered additive monoid
     whose ordering is a linear order. -/

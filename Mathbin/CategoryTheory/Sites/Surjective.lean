@@ -54,7 +54,7 @@ theorem image_sieve_whisker_forget {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (
   rfl
 
 theorem image_sieve_app {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : F.obj (op U)) : imageSieve f (f.app _ s) = ⊤ := by
-  ext V i
+  ext (V i)
   simp only [sieve.top_apply, iff_true_iff, image_sieve_apply]
   have := elementwise_of (f.naturality i.op)
   exact ⟨F.map i.op s, this s⟩

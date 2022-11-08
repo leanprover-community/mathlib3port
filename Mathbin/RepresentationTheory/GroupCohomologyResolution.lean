@@ -354,7 +354,7 @@ def xIso (n : ℕ) : (GroupCohomology.resolution k G).x n ≅ RepCat.ofMulAction
 /-- Simpler expression for the differential in the standard resolution of `k` as a
 `G`-representation. It sends `(g₀, ..., gₙ₊₁) ↦ ∑ (-1)ⁱ • (g₀, ..., ĝᵢ, ..., gₙ₊₁)`. -/
 theorem d_eq (n : ℕ) : ((GroupCohomology.resolution k G).d (n + 1) n).Hom = d k G (n + 1) := by
-  ext x y
+  ext (x y)
   dsimp [GroupCohomology.resolution]
   simpa [← @int_cast_smul k, simplicial_object.δ]
 
@@ -396,8 +396,8 @@ def ε : RepCat.ofMulAction k G (Fin 1 → G) ⟶ RepCat.of Representation.trivi
         Finsupp.total _ _ _ _ (Finsupp.single _ _)
     simp only [Finsupp.map_domain_single, Finsupp.total_single]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finsupp.total _ _ _ (λ f, (1 : k))).comp ((Module.free k).map (terminal.from _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finsupp.total _ _ _ (λ f, (1 : k))).comp ((Module.free k).map (terminal.from _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The homotopy equivalence of complexes of `k`-modules between the standard resolution of `k` as
 a trivial `G`-representation, and the complex which is `k` at 0 and 0 everywhere else, acts as
 `∑ nᵢgᵢ ↦ ∑ nᵢ : k[G¹] → k` at 0. -/
@@ -410,7 +410,7 @@ theorem forget₂_to_Module_homotopy_equiv_f_0_eq :
     simp only [iso.symm_hom, eq_to_iso.inv, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl]
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finsupp.total _ _ _ (λ f, (1 : k))).comp ((Module.free k).map (terminal.from _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finsupp.total _ _ _ (λ f, (1 : k))).comp ((Module.free k).map (terminal.from _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · dsimp
     rw [@Finsupp.lmap_domain_total (Fin 1 → G) k k _ _ _ (⊤_ Type u) k _ _ (fun i => (1 : k)) (fun i => (1 : k))
         (terminal.from ((classifyingSpaceUniversalCover G).obj (Opposite.op (SimplexCategory.mk 0))).V) LinearMap.id

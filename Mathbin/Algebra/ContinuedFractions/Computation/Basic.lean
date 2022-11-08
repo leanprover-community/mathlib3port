@@ -5,7 +5,7 @@ Authors: Kevin Kappelmann
 -/
 import Mathbin.Algebra.Order.Floor
 import Mathbin.Algebra.ContinuedFractions.Basic
-import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Field.Basic
 
 /-!
 # Computable Continued Fractions

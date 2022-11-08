@@ -499,19 +499,19 @@ instance : BooleanRing Bool where
   add := xor
   add_assoc := bxor_assoc
   zero := false
-  zero_add := ff_bxor
-  add_zero := bxor_ff
+  zero_add := Bool.false_xor
+  add_zero := Bool.xor_false
   neg := id
   sub := xor
   sub_eq_add_neg _ _ := rfl
-  add_left_neg := bxor_self
+  add_left_neg := Bool.xor_self
   add_comm := bxor_comm
   one := true
   mul := and
   mul_assoc := band_assoc
-  one_mul := tt_band
-  mul_one := band_tt
+  one_mul := Bool.true_and
+  mul_one := Bool.and_true
   left_distrib := band_bxor_distrib_left
   right_distrib := band_bxor_distrib_right
-  mul_self := band_self
+  mul_self := Bool.and_self
 

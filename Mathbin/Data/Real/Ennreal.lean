@@ -227,11 +227,11 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
     | some r => h₁ _
     | none => h₂⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0, p r :=
   Option.ball_ne_none
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
 
@@ -406,14 +406,14 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
 theorem cinfi_ne_top [HasInf α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0, f x :=
   Eq.symm <| (neTopEquivNnreal.symm.Surjective.infi_congr _) fun x => rfl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0, f x := by
   rw [infi_subtype', cinfi_ne_top]
 
 theorem csupr_ne_top [HasSup α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠ ∞ }, f x) = ⨆ x : ℝ≥0, f x :=
   @cinfi_ne_top αᵒᵈ _ _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0, f x :=
   @infi_ne_top αᵒᵈ _ _
 
@@ -1030,6 +1030,10 @@ theorem sub_eq_top_iff : a - b = ∞ ↔ a = ∞ ∧ b ≠ ∞ := by cases a <;>
 theorem sub_ne_top (ha : a ≠ ∞) : a - b ≠ ∞ :=
   mt sub_eq_top_iff.mp <| mt And.left ha
 
+@[simp, norm_cast]
+theorem nat_cast_sub (m n : ℕ) : ↑(m - n) = (m - n : ℝ≥0∞) := by
+  rw [← coe_nat, Nat.cast_tsub, coe_sub, coe_nat, coe_nat]
+
 protected theorem sub_eq_of_eq_add (hb : b ≠ ∞) : a = c + b → a - b = c :=
   (cancel_of_ne hb).tsub_eq_of_eq_add
 
@@ -1356,6 +1360,10 @@ theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : a ≠ ∞ 
     mul_inv_rev, mul_comm]
   simp [h'a, h'b]
 
+protected theorem sub_div (h : 0 < b → b < a → c ≠ 0) : (a - b) / c = a / c - b / c := by
+  simp_rw [div_eq_mul_inv]
+  exact Ennreal.sub_mul (by simpa using h)
+
 @[simp]
 theorem inv_pos : 0 < a⁻¹ ↔ a ≠ ∞ :=
   pos_iff_ne_zero.trans inv_ne_zero
@@ -1500,6 +1508,12 @@ theorem le_inv_iff_mul_le : a ≤ b⁻¹ ↔ a * b ≤ 1 := by
 
 theorem div_le_div {a b c d : ℝ≥0∞} (hab : a ≤ b) (hdc : d ≤ c) : a / c ≤ b / d :=
   div_eq_mul_inv b d ▸ div_eq_mul_inv a c ▸ Ennreal.mul_le_mul hab (Ennreal.inv_le_inv.mpr hdc)
+
+protected theorem div_le_div_left (h : a ≤ b) (c : ℝ≥0∞) : c / b ≤ c / a :=
+  Ennreal.div_le_div le_rfl h
+
+protected theorem div_le_div_right (h : a ≤ b) (c : ℝ≥0∞) : a / c ≤ b / c :=
+  Ennreal.div_le_div h le_rfl
 
 theorem eq_inv_of_mul_eq_one_left (h : a * b = 1) : a = b⁻¹ := by
   have hb : b ≠ ∞ := by
@@ -2202,6 +2216,19 @@ unsafe def positivity_coe_nnreal_ennreal : expr → tactic strictness
         positive <$>
         mk_app `` nnreal_coe_pos [p]
   | e => pp e >>= fail ∘ format.bracket "The expression " " is not of the form `(r : ℝ≥0∞)` for `r : ℝ≥0`"
+
+private theorem ennreal_of_real_pos {r : ℝ} : 0 < r → 0 < Ennreal.ofReal r :=
+  Ennreal.of_real_pos.2
+
+/-- Extension for the `positivity` tactic: `ennreal.of_real` is positive if its input is. -/
+@[positivity]
+unsafe def positivity_ennreal_of_real : expr → tactic strictness
+  | quote.1 (Ennreal.ofReal (%%ₓr)) => do
+    let positive p ← core r
+    positive <$> mk_app `` ennreal_of_real_pos [p]
+  |-- This case is handled by `tactic.positivity_canon`
+    e =>
+    pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `ennreal.of_real r`"
 
 end Tactic
 

@@ -47,6 +47,8 @@ namespace ContinuousMap
 
 variable {X : Type _} [TopologicalSpace X] [CompactSpace X]
 
+open Polynomial
+
 /-- Turn a function `f : C(X, ℝ)` into a continuous map into `set.Icc (-∥f∥) (∥f∥)`,
 thereby explicitly attaching bounds.
 -/
@@ -57,7 +59,7 @@ def attachBound (f : C(X, ℝ)) :
 theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : ℝ) = f x :=
   rfl
 
-theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : Polynomial ℝ) :
+theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
     (g.toContinuousMapOn (Set.IccCat (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
   simp only [ContinuousMap.coe_comp, Function.comp_app, ContinuousMap.attach_bound_apply_coe,
@@ -72,7 +74,7 @@ we take `f`, and think of it as a function into the restricted target `set.Icc (
 and then postcompose with a polynomial function on that interval.
 This is in fact the same situation as above, and so also gives a function in `A`.
 -/
-theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : Polynomial ℝ) :
+theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
     (g.toContinuousMapOn (Set.IccCat (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound ∈ A := by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
@@ -100,7 +102,7 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
 theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
   let M := ∥f∥
   let f' := attach_bound (f : C(X, ℝ))
-  let abs : C(Set.IccCat (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.IccCat (-∥f∥) ∥f∥ => abs (x : ℝ) }
+  let abs : C(Set.IccCat (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.IccCat (-∥f∥) ∥f∥ => |(x : ℝ)| }
   change abs.comp f' ∈ A.topological_closure
   apply comp_attach_bound_mem_closure
 
@@ -146,8 +148,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)

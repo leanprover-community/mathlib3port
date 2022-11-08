@@ -141,7 +141,6 @@ theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1
       obtain ⟨z, hz⟩ := card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
       exact le_trans (norm_nonneg _) (h3 z hz))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 : p.Monic) (h2 : Splits f p)
     (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : ∥(map f p).coeff i∥ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
   obtain hB | hB := lt_or_le B 0
@@ -151,7 +150,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   rw [← h1.nat_degree_map f]
   obtain hi | hi := lt_or_le (map f p).natDegree i
   · rw [coeff_eq_zero_of_nat_degree_lt hi, norm_zero]
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    positivity
     
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff, one_mul, norm_mul,
     norm_pow, norm_neg, norm_one, one_pow, one_mul]
@@ -169,7 +168,6 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx
   exact h3 z (mem_of_le hs.1 hz)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- The coefficients of the monic polynomials of bounded degree with bounded roots are
 uniformely bounded. -/
 theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1 : p.Monic) (h2 : Splits f p)
@@ -185,7 +183,7 @@ theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1
       _ ≤ max B 1 ^ d * d.choose (d / 2) :=
         mul_le_mul_of_nonneg_left (nat.cast_le.mpr ((i.choose_mono h3).trans (i.choose_le_middle d))) _
       
-    all_goals trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    all_goals positivity
     
   · rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
     refine' trans _ (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_right B 1) d) _)

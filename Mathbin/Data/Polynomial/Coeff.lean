@@ -60,7 +60,7 @@ theorem support_smul [Monoid S] [DistribMulAction S R] (r : S) (p : R[X]) : supp
 /-- `polynomial.sum` as a linear map. -/
 @[simps]
 def lsum {R A M : Type _} [Semiring R] [Semiring A] [AddCommMonoid M] [Module R A] [Module R M] (f : ℕ → A →ₗ[R] M) :
-    Polynomial A →ₗ[R] M where
+    A[X] →ₗ[R] M where
   toFun p := p.Sum fun n r => f n r
   map_add' p q := sum_add_index p q _ (fun n => (f n).map_zero) fun n _ _ => (f n).map_add _ _
   map_smul' c p := by

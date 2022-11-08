@@ -210,6 +210,12 @@ instance [HasFiniteProducts V] :
         G) where out J _ :=
     adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
+instance [HasFiniteLimits V] :
+    HasFiniteLimits
+      (ActionCat V
+        G) where out J _ _ :=
+    adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
+
 instance [HasLimits V] : HasLimits (ActionCat V G) :=
   Adjunction.has_limits_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
@@ -261,9 +267,25 @@ section HasZeroMorphisms
 
 variable [HasZeroMorphisms V]
 
-instance : HasZeroMorphisms (ActionCat V G) where HasZero X Y := ⟨⟨0, by tidy⟩⟩
+instance : HasZeroMorphisms (ActionCat V G) where
+  HasZero X Y :=
+    ⟨⟨0, by
+        intro g
+        simp⟩⟩
+  comp_zero' P Q f R := by
+    ext1
+    simp
+  zero_comp' P Q R f := by
+    ext1
+    simp
 
-instance : Functor.PreservesZeroMorphisms (functorCategoryEquivalence V G).Functor where
+instance forget_preserves_zero_morphisms : Functor.PreservesZeroMorphisms (forget V G) where
+
+instance forget₂_preserves_zero_morphisms [ConcreteCategory V] :
+    Functor.PreservesZeroMorphisms (forget₂ (ActionCat V G) V) where
+
+instance functor_category_equivalence_preserves_zero_morphisms :
+    Functor.PreservesZeroMorphisms (functorCategoryEquivalence V G).Functor where
 
 end HasZeroMorphisms
 
@@ -304,9 +326,11 @@ instance : Preadditive (ActionCat V G) where
     ext
     exact preadditive.comp_add _ _ _ _ _ _
 
-instance : Functor.Additive (functorCategoryEquivalence V G).Functor where
+instance forget_additive : Functor.Additive (forget V G) where
 
-instance forget_additive : Functor.additive (forget V G) where
+instance forget₂_additive [ConcreteCategory V] : Functor.Additive (forget₂ (ActionCat V G) V) where
+
+instance functor_category_equivalence_additive : Functor.Additive (functorCategoryEquivalence V G).Functor where
 
 @[simp]
 theorem zero_hom {X Y : ActionCat V G} : (0 : X ⟶ Y).Hom = 0 :=
@@ -367,7 +391,11 @@ instance : Linear R (ActionCat V G) where
     ext
     exact linear.comp_smul _ _ _ _ _ _
 
-instance : Functor.Linear R (functorCategoryEquivalence V G).Functor where
+instance forget_linear : Functor.Linear R (forget V G) where
+
+instance forget₂_linear [ConcreteCategory V] : Functor.Linear R (forget₂ (ActionCat V G) V) where
+
+instance functor_category_equivalence_linear : Functor.Linear R (functorCategoryEquivalence V G).Functor where
 
 @[simp]
 theorem smul_hom {X Y : ActionCat V G} (r : R) (f : X ⟶ Y) : (r • f).Hom = r • f.Hom :=
@@ -483,9 +511,9 @@ instance [SymmetricCategory V] : SymmetricCategory (ActionCat V G) :=
 
 section
 
-attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
-
 variable [Preadditive V] [MonoidalPreadditive V]
+
+attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
 
 instance : MonoidalPreadditive (ActionCat V G) where
 
@@ -636,7 +664,7 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
     { lift := fun s =>
         { Hom := fun x i => (s.π.app ⟨i⟩).Hom x,
           comm' := fun g => by
-            ext x j
+            ext (x j)
             dsimp
             exact congr_fun ((s.π.app ⟨j⟩).comm g) x },
       fac' := fun s j => by
@@ -645,7 +673,7 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
         congr
         rw [discrete.mk_as],
       uniq' := fun s f h => by
-        ext x j
+        ext (x j)
         dsimp at *
         rw [← h ⟨j⟩]
         congr }

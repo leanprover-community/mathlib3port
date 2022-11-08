@@ -39,7 +39,7 @@ class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
     ∀ (U : Y.AffineOpens) (V : X.AffineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1), (f.appLe e).FiniteType
 
 theorem locally_of_finite_type_eq : @LocallyOfFiniteType = AffineLocally @RingHom.FiniteType := by
-  ext X Y f
+  ext (X Y f)
   rw [locally_of_finite_type_iff, affine_locally_iff_affine_opens_le]
   exact RingHom.finiteTypeRespectsIso
 

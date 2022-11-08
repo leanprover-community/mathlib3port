@@ -18,7 +18,7 @@ This file defines a function field and the ring of integers corresponding to it.
  - `function_field Fq F` states that `F` is a function field over the (finite) field `Fq`,
    i.e. it is a finite extension of the field of rational functions in one variable over `Fq`.
  - `function_field.ring_of_integers` defines the ring of integers corresponding to a function field
-    as the integral closure of `polynomial Fq` in the function field.
+    as the integral closure of `Fq[X]` in the function field.
  - `function_field.infty_valuation` : The place at infinity on `Fq(t)` is the nonarchimedean
     valuation on `Fq(t)` with uniformizer `1/t`.
  -  `function_field.Fqt_infty` : The completion `Fq((t⁻¹))`  of `Fq(t)` with respect to the
@@ -222,9 +222,9 @@ theorem inftyValuation.X : inftyValuationDef Fq Ratfunc.x = Multiplicative.ofAdd
   rw [infty_valuation_def, if_neg Ratfunc.X_ne_zero, Ratfunc.int_degree_X]
 
 @[simp]
-theorem inftyValuation.polynomial {p : Polynomial Fq} (hp : p ≠ 0) :
-    inftyValuationDef Fq (algebraMap (Polynomial Fq) (Ratfunc Fq) p) = Multiplicative.ofAdd (p.natDegree : ℤ) := by
-  have hp' : algebraMap (Polynomial Fq) (Ratfunc Fq) p ≠ 0 := by
+theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
+    inftyValuationDef Fq (algebraMap Fq[X] (Ratfunc Fq) p) = Multiplicative.ofAdd (p.natDegree : ℤ) := by
+  have hp' : algebraMap Fq[X] (Ratfunc Fq) p ≠ 0 := by
     rw [Ne.def, Ratfunc.algebra_map_eq_zero_iff]
     exact hp
   rw [infty_valuation_def, if_neg hp', Ratfunc.int_degree_polynomial]

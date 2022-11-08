@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
+import Mathbin.Algebra.Order.Group.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.GroupTheory.Subsemigroup.Operations

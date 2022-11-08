@@ -129,11 +129,11 @@ def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) where
   invFun f i := f.comp of
   left_inv := by
     intro fi
-    ext i x
+    ext (i x)
     rw [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of]
   right_inv := by
     intro f
-    ext i x
+    ext (i x)
     simp only [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of]
 
 @[simp]
@@ -517,13 +517,10 @@ def toWord {i j} (w : Neword M i j) : Word M where
       exact w_hne
       
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident j, ",", ident w, ",", ident h, "⟩", ":", expr «expr∃ , »((i j) (w' : neword M i j),
-    «expr = »(w'.to_word.to_list, w.to_list))]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
 theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : Neword M i j), w'.toWord = w := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident j, \",\", ident w, \",\", ident h, \"⟩\", \":\", expr «expr∃ , »((i j) (w' : neword M i j),\n    «expr = »(w'.to_word.to_list, w.to_list))]]"
+  rsuffices ⟨i, j, w, h⟩ : ∃ (i j : _)(w' : neword M i j), w'.to_word.to_list = w.to_list
   · refine' ⟨i, j, w, _⟩
     ext
     rw [h]
@@ -670,7 +667,7 @@ include hpp
 theorem lift_word_ping_pong {i j k} (w : Neword H i j) (hk : j ≠ k) : lift f w.Prod • X k ⊆ X i := by
   rename' i => i', j => j', k => m, hk => hm
   induction' w with i x hne_one i j k l w₁ hne w₂ hIw₁ hIw₂ generalizing m <;> clear i' j'
-  · simpa using hpp _ _ hm _ hne_one
+  · simpa using hpp hm _ hne_one
     
   · calc
       lift f (neword.append w₁ hne w₂).Prod • X m = lift f w₁.prod • lift f w₂.prod • X m := by
@@ -687,7 +684,7 @@ theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : Neword H i j) (hhead :
   intro heq1
   have : X k ⊆ X i := by simpa [heq1] using lift_word_ping_pong f X hpp w hlast.symm
   obtain ⟨x, hx⟩ := hXnonempty k
-  exact hXdisj k i hhead ⟨hx, this hx⟩
+  exact hXdisj hhead ⟨hx, this hx⟩
 
 include hnontriv
 
@@ -755,7 +752,7 @@ theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = wor
 
 Given a group action of `G` on `X` so that the `H i` acts in a specific way on disjoint subsets
 `X i` we can prove that `lift f` is injective, and thus the image of `lift f` is isomorphic to the
-direct product of the `H i`.
+free product of the `H i`.
 
 Often the Ping-Pong-Lemma is stated with regard to subgroups `H i` that generate the whole group;
 we generalize to arbitrary group homomorphisms `f i : H i →* G` and do not require the group to be
@@ -807,7 +804,7 @@ def _root_.free_group_equiv_free_product {ι : Type u_1} : FreeGroup ι ≃* Fre
   · ext i
     rfl
     
-  · ext i a
+  · ext (i a)
     cases a
     rfl
     
@@ -883,13 +880,13 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
   · intro i j hij
     simp only [X']
     apply Disjoint.unionLeft <;> apply Disjoint.unionRight
-    · exact hXdisj i j hij
+    · exact hXdisj hij
       
     · exact hXYdisj i j
       
     · exact (hXYdisj j i).symm
       
-    · exact hYdisj i j hij
+    · exact hYdisj hij
       
     
   show Pairwise fun i j => ∀ h : H i, h ≠ 1 → f i h • X' j ⊆ X' i
@@ -910,8 +907,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
     cases' (lt_or_gt_of_ne hnne0).swap with hlt hgt
     · have h1n : 1 ≤ n := hlt
       calc
-        a i ^ n • X' j ⊆ a i ^ n • Y iᶜ :=
-          smul_set_mono ((hXYdisj j i).unionLeft <| hYdisj j i hij.symm).subset_compl_right
+        a i ^ n • X' j ⊆ a i ^ n • Y iᶜ := smul_set_mono ((hXYdisj j i).unionLeft <| hYdisj hij.symm).subset_compl_right
         _ ⊆ X i := by
           refine' Int.le_induction _ _ _ h1n
           · rw [zpow_one]
@@ -934,7 +930,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
         simpa using hgt
       calc
         a i ^ n • X' j ⊆ a i ^ n • X iᶜ :=
-          smul_set_mono ((hXdisj j i hij.symm).unionLeft (hXYdisj i j).symm).subset_compl_right
+          smul_set_mono ((hXdisj hij.symm).unionLeft (hXYdisj i j).symm).subset_compl_right
         _ ⊆ Y i := by
           refine' Int.le_induction_down _ _ _ h1n
           · rw [zpow_neg, zpow_one]

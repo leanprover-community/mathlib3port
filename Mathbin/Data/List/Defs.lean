@@ -28,6 +28,7 @@ variable {α β γ δ ε ζ : Type _}
 instance [DecidableEq α] : Sdiff (List α) :=
   ⟨List.diff'⟩
 
+#print List.splitAt /-
 /-- Split a list at an index.
 
      split_at 2 [a, b, c] = ([a, b], [c]) -/
@@ -37,6 +38,7 @@ def splitAt : ℕ → List α → List α × List α
   | succ n, x :: xs =>
     let (l, r) := split_at n xs
     (x :: l, r)
+-/
 
 /-- An auxiliary function for `split_on_p`. -/
 def splitOnPAux {α : Type u} (P : α → Prop) [DecidablePred P] : List α → (List α → List α) → List (List α)
@@ -65,6 +67,7 @@ Case conversion may be inaccurate. Consider using '#align list.split_on List.spl
 def splitOn {α : Type u} [DecidableEq α] (a : α) (as : List α) : List (List α) :=
   as.splitOnP (· = a)
 
+#print List.concat /-
 /-- Concatenate an element at the end of a list.
 
      concat [a, b] c = [a, b, c] -/
@@ -72,6 +75,7 @@ def splitOn {α : Type u} [DecidableEq α] (a : α) (as : List α) : List (List 
 def concat : List α → α → List α
   | [], a => [a]
   | b :: l, a => b :: concat l a
+-/
 
 /- warning: list.head' clashes with list.head -> List.head'
 warning: list.head' -> List.head' is a dubious translation:
@@ -108,6 +112,7 @@ def nthd (d : α) : ∀ (l : List α) (n : ℕ), α
 def inth [h : Inhabited α] (l : List α) (n : Nat) : α :=
   nthd default l n
 
+#print List.modifyNthTail /-
 /-- Apply a function to the nth tail of `l`. Returns the input without
   using `f` if the index is larger than the length of the list.
 
@@ -117,28 +122,37 @@ def modifyNthTail (f : List α → List α) : ℕ → List α → List α
   | 0, l => f l
   | n + 1, [] => []
   | n + 1, a :: l => a :: modify_nth_tail n l
+-/
 
+#print List.modifyHead /-
 /-- Apply `f` to the head of the list, if it exists. -/
 @[simp]
 def modifyHead (f : α → α) : List α → List α
   | [] => []
   | a :: l => f a :: l
+-/
 
+#print List.modifyNth /-
 /-- Apply `f` to the nth element of the list, if it exists. -/
 def modifyNth (f : α → α) : ℕ → List α → List α :=
   modifyNthTail (modifyHead f)
+-/
 
+#print List.modifyLast /-
 /-- Apply `f` to the last element of `l`, if it exists. -/
 @[simp]
 def modifyLast (f : α → α) : List α → List α
   | [] => []
   | [x] => [f x]
   | x :: xs => x :: modify_last xs
+-/
 
+#print List.insertNth /-
 /-- `insert_nth n a l` inserts `a` into the list `l` after the first `n` elements of `l`
  `insert_nth 2 1 [1, 2, 3, 4] = [1, 2, 1, 3, 4]`-/
 def insertNth (n : ℕ) (a : α) : List α → List α :=
   modifyNthTail (List.cons a) n
+-/
 
 section Take'
 
@@ -165,6 +179,7 @@ def takeWhile (p : α → Prop) [DecidablePred p] : List α → List α
   | [] => []
   | a :: l => if p a then a :: take_while l else []
 
+#print List.scanl /-
 /-- Fold a function `f` over the list from the left, returning the list
   of partial results.
 
@@ -172,6 +187,7 @@ def takeWhile (p : α → Prop) [DecidablePred p] : List α → List α
 def scanl (f : α → β → α) : α → List β → List α
   | a, [] => [a]
   | a, b :: l => a :: scanl (f a b) l
+-/
 
 /-- Auxiliary definition used to define `scanr`. If `scanr_aux f b l = (b', l')`
 then `scanr f b l = b' :: l'` -/
@@ -181,6 +197,7 @@ def scanrAux (f : α → β → β) (b : β) : List α → β × List β
     let (b', l') := scanr_aux l
     (f a b', b' :: l')
 
+#print List.scanr /-
 /-- Fold a function `f` over the list from the right, returning the list
   of partial results.
 
@@ -188,6 +205,7 @@ def scanrAux (f : α → β → β) (b : β) : List α → β × List β
 def scanr (f : α → β → β) (b : β) (l : List α) : List β :=
   let (b', l') := scanrAux f b l
   b' :: l'
+-/
 
 /-- Product of a list.
 
@@ -215,6 +233,7 @@ def alternatingProd {G : Type _} [One G] [Mul G] [Inv G] : List G → G
   | g :: [] => g
   | g :: h :: t => g * h⁻¹ * alternating_prod t
 
+#print List.partitionMap /-
 /-- Given a function `f : α → β ⊕ γ`, `partition_map f l` maps the list by `f`
   whilst partitioning the result it into a pair of lists, `list β × list γ`,
   partitioning the `sum.inl _` into the left list, and the `sum.inr _` into the right list.
@@ -225,6 +244,7 @@ def partitionMap (f : α → Sum β γ) : List α → List β × List γ
     match f x with
     | Sum.inr r => Prod.map id (cons r) <| partition_map xs
     | Sum.inl l => Prod.map (cons l) id <| partition_map xs
+-/
 
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
   element exists. -/
@@ -392,6 +412,7 @@ def mmapWithIndex' {α} (f : ℕ → α → m PUnit) (as : List α) : m PUnit :=
 
 end MmapWithIndex
 
+#print List.lookmap /-
 /-- `lookmap` is a combination of `lookup` and `filter_map`.
   `lookmap f l` will apply `f : α → option α` to each element of the list,
   replacing `a → b` at the first value `a` in the list such that `f a = some b`. -/
@@ -401,6 +422,7 @@ def lookmap (f : α → Option α) : List α → List α
     match f a with
     | some b => b :: l
     | none => a :: lookmap l
+-/
 
 /- warning: list.countp -> List.countp is a dubious translation:
 lean 3 declaration is
@@ -447,6 +469,7 @@ infixl:50 " <:+ " => IsSuffix
 -- mathport name: «expr <:+: »
 infixl:50 " <:+: " => IsInfix
 
+#print List.inits /-
 /-- `inits l` is the list of initial segments of `l`.
 
      inits [1, 2, 3] = [[], [1], [1, 2], [1, 2, 3]] -/
@@ -454,7 +477,9 @@ infixl:50 " <:+: " => IsInfix
 def inits : List α → List (List α)
   | [] => [[]]
   | a :: l => [] :: map (fun t => a :: t) (inits l)
+-/
 
+#print List.tails /-
 /-- `tails l` is the list of terminal segments of `l`.
 
      tails [1, 2, 3] = [[1, 2, 3], [2, 3], [3], []] -/
@@ -462,11 +487,13 @@ def inits : List α → List (List α)
 def tails : List α → List (List α)
   | [] => [[]]
   | a :: l => (a :: l) :: tails l
+-/
 
 def sublists'Aux : List α → (List α → List β) → List (List β) → List (List β)
   | [], f, r => f [] :: r
   | a :: l, f, r => sublists'_aux l f (sublists'_aux l (f ∘ cons a) r)
 
+#print List.sublists' /-
 /-- `sublists' l` is the list of all (non-contiguous) sublists of `l`.
   It differs from `sublists` only in the order of appearance of the sublists;
   `sublists'` uses the first element of the list as the MSB,
@@ -475,17 +502,20 @@ def sublists'Aux : List α → (List α → List β) → List (List β) → List
      sublists' [1, 2, 3] = [[], [3], [2], [2, 3], [1], [1, 3], [1, 2], [1, 2, 3]] -/
 def sublists' (l : List α) : List (List α) :=
   sublists'Aux l id []
+-/
 
 def sublistsAux : List α → (List α → List β → List β) → List β
   | [], f => []
   | a :: l, f => f [a] (sublists_aux l fun ys r => f ys (f (a :: ys) r))
 
+#print List.sublists /-
 /-- `sublists l` is the list of all (non-contiguous) sublists of `l`; cf. `sublists'`
   for a different ordering.
 
      sublists [1, 2, 3] = [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] -/
 def sublists (l : List α) : List (List α) :=
   [] :: sublistsAux l cons
+-/
 
 def sublistsAux₁ : List α → (List α → List β) → List β
   | [], f => []
@@ -495,12 +525,14 @@ section Forall₂
 
 variable {r : α → β → Prop} {p : γ → δ → Prop}
 
+#print List.Forall₂ /-
 /-- `forall₂ R l₁ l₂` means that `l₁` and `l₂` have the same length,
   and whenever `a` is the nth element of `l₁`, and `b` is the nth element of `l₂`,
   then `R a b` is satisfied. -/
 inductive Forall₂ (R : α → β → Prop) : List α → List β → Prop
   | nil : forall₂ [] []
   | cons {a b l₁ l₂} : R a b → forall₂ l₁ l₂ → forall₂ (a :: l₁) (b :: l₂)
+-/
 
 attribute [simp] forall₂.nil
 
@@ -524,19 +556,23 @@ def transposeAux : List α → List (List α) → List (List α)
   | a :: i, [] => [a] :: transpose_aux i []
   | a :: i, l :: ls => (a :: l) :: transpose_aux i ls
 
+#print List.transpose /-
 /-- transpose of a list of lists, treated as a matrix.
 
      transpose [[1, 2], [3, 4], [5, 6]] = [[1, 3, 5], [2, 4, 6]] -/
 def transpose : List (List α) → List (List α)
   | [] => []
   | l :: ls => transposeAux l (transpose ls)
+-/
 
+#print List.sections /-
 /-- List of all sections through a list of lists. A section
   of `[L₁, L₂, ..., Lₙ]` is a list whose first element comes from
   `L₁`, whose second element comes from `L₂`, and so on. -/
 def sections : List (List α) → List (List α)
   | [] => [[]]
   | l :: L => (bind (sections L)) fun s => map (fun a => a :: s) l
+-/
 
 section Permutations
 
@@ -639,6 +675,7 @@ def extractp (p : α → Prop) [DecidablePred p] : List α → Option α × List
       let (a', l') := extractp l
       (a', a :: l')
 
+#print List.revzip /-
 /-- `revzip l` returns a list of pairs of the elements of `l` paired
   with the elements of `l` in reverse order.
 
@@ -646,23 +683,28 @@ def extractp (p : α → Prop) [DecidablePred p] : List α → Option α × List
  -/
 def revzip (l : List α) : List (α × α) :=
   zip l l.reverse
+-/
 
+#print List.product /-
 /-- `product l₁ l₂` is the list of pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂`.
 
      product [1, 2] [5, 6] = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
   l₁.bind fun a => l₂.map <| Prod.mk a
+-/
 
 -- mathport name: list.product
 infixr:82
   " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
   List.product
 
+#print List.sigma /-
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σa, σ a) :=
   l₁.bind fun a => (l₂ a).map <| Sigma.mk a
+-/
 
 /-- Auxliary definition used to define `of_fn`.
 
@@ -672,23 +714,30 @@ def ofFnAux {n} (f : Fin n → α) : ∀ m, m ≤ n → List α → List α
   | 0, h, l => l
   | succ m, h, l => of_fn_aux m (le_of_lt h) (f ⟨m, h⟩ :: l)
 
+#print List.ofFn /-
 /-- `of_fn f` with `f : fin n → α` returns the list whose ith element is `f i`
   `of_fun f = [f 0, f 1, ... , f(n - 1)]` -/
 def ofFn {n} (f : Fin n → α) : List α :=
   ofFnAux f n (le_refl _) []
+-/
 
+#print List.ofFnNthVal /-
 /-- `of_fn_nth_val f i` returns `some (f i)` if `i < n` and `none` otherwise. -/
 def ofFnNthVal {n} (f : Fin n → α) (i : ℕ) : Option α :=
   if h : i < n then some (f ⟨i, h⟩) else none
+-/
 
+#print List.Disjoint /-
 /-- `disjoint l₁ l₂` means that `l₁` and `l₂` have no elements in common. -/
 def Disjoint (l₁ l₂ : List α) : Prop :=
   ∀ ⦃a⦄, a ∈ l₁ → a ∈ l₂ → False
+-/
 
 section Pairwise
 
 variable (R : α → α → Prop)
 
+#print List.Pairwise /-
 /-- `pairwise R l` means that all the elements with earlier indexes are
   `R`-related to all the elements with later indexes.
 
@@ -699,6 +748,7 @@ variable (R : α → α → Prop)
 inductive Pairwise : List α → Prop
   | nil : pairwise []
   | cons : ∀ {a : α} {l : List α}, (∀ a' ∈ l, R a a') → pairwise l → pairwise (a :: l)
+-/
 
 variable {R}
 
@@ -713,6 +763,7 @@ instance decidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwise 
 
 end Pairwise
 
+#print List.pwFilter /-
 /-- `pw_filter R l` is a maximal sublist of `l` which is `pairwise R`.
   `pw_filter (≠)` is the erase duplicates function (cf. `dedup`), and `pw_filter (<)` finds
   a maximal increasing subsequence in `l`. For example,
@@ -723,30 +774,37 @@ def pwFilter (R : α → α → Prop) [DecidableRel R] : List α → List α
   | x :: xs =>
     let IH := pw_filter xs
     if ∀ y ∈ IH, R x y then x :: IH else IH
+-/
 
 section Chain
 
 variable (R : α → α → Prop)
 
+#print List.Chain /-
 /-- `chain R a l` means that `R` holds between adjacent elements of `a::l`.
 
      chain R a [b, c, d] ↔ R a b ∧ R b c ∧ R c d -/
 inductive Chain : α → List α → Prop
   | nil {a : α} : chain a []
   | cons : ∀ {a b : α} {l : List α}, R a b → chain b l → chain a (b :: l)
+-/
 
+#print List.Chain' /-
 /-- `chain' R l` means that `R` holds between adjacent elements of `l`.
 
      chain' R [a, b, c, d] ↔ R a b ∧ R b c ∧ R c d -/
 def Chain' : List α → Prop
   | [] => True
   | a :: l => Chain R a l
+-/
 
 variable {R}
 
+#print List.chain_cons /-
 @[simp]
 theorem chain_cons {a b : α} {l : List α} : Chain R a (b :: l) ↔ R a b ∧ Chain R b l :=
   ⟨fun p => by cases' p with _ a b l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
+-/
 
 attribute [simp] chain.nil
 
@@ -758,13 +816,17 @@ instance decidableChain' [DecidableRel R] (l : List α) : Decidable (Chain' R l)
 
 end Chain
 
+#print List.Nodup /-
 /-- `nodup l` means that `l` has no duplicates, that is, any element appears at most
   once in the list. It is defined as `pairwise (≠)`. -/
 def Nodup : List α → Prop :=
   Pairwise (· ≠ ·)
+-/
 
+#print List.nodupDecidable /-
 instance nodupDecidable [DecidableEq α] : ∀ l : List α, Decidable (Nodup l) :=
   List.decidablePairwise
+-/
 
 /-- `dedup l` removes duplicates from `l` (taking only the last occurrence).
   Defined as `pw_filter (≠)`.
@@ -787,24 +849,31 @@ def destutter (R : α → α → Prop) [DecidableRel R] : List α → List α
   | h :: l => destutter' R h l
   | [] => []
 
+#print List.range' /-
 /-- `range' s n` is the list of numbers `[s, s+1, ..., s+n-1]`.
   It is intended mainly for proving properties of `range` and `iota`. -/
 @[simp]
 def range' : ℕ → ℕ → List ℕ
   | s, 0 => []
   | s, n + 1 => s :: range' (s + 1) n
+-/
 
+#print List.reduceOption /-
 /-- Drop `none`s from a list, and replace each remaining `some a` with `a`. -/
 def reduceOption {α} : List (Option α) → List α :=
   List.filterMap id
+-/
 
+#print List.ilast' /-
 /-- `ilast' x xs` returns the last element of `xs` if `xs` is non-empty;
 it returns `x` otherwise -/
 @[simp]
 def ilast' {α} : α → List α → α
   | a, [] => a
   | a, b :: l => ilast' b l
+-/
 
+#print List.last' /-
 /-- `last' xs` returns the last element of `xs` if `xs` is non-empty;
 it returns `none` otherwise -/
 @[simp]
@@ -812,19 +881,24 @@ def last' {α} : List α → Option α
   | [] => none
   | [a] => some a
   | b :: l => last' l
+-/
 
+#print List.rotate /-
 /-- `rotate l n` rotates the elements of `l` to the left by `n`
 
      rotate [0, 1, 2, 3, 4, 5] 2 = [2, 3, 4, 5, 0, 1] -/
 def rotate (l : List α) (n : ℕ) : List α :=
   let (l₁, l₂) := List.splitAt (n % l.length) l
   l₂ ++ l₁
+-/
 
+#print List.rotate' /-
 /-- rotate' is the same as `rotate`, but slower. Used for proofs about `rotate`-/
 def rotate' : List α → ℕ → List α
   | [], n => []
   | l, 0 => l
   | a :: l, n + 1 => rotate' (l ++ [a]) n
+-/
 
 section Choose
 
@@ -914,12 +988,14 @@ protected def traverse {F : Type u → Type v} [Applicative F] {α β : Type _} 
   | [] => pure []
   | x :: xs => List.cons <$> f x <*> traverse xs
 
+#print List.getRest /-
 /-- `get_rest l l₁` returns `some l₂` if `l = l₁ ++ l₂`.
   If `l₁` is not a prefix of `l`, returns `none` -/
 def getRest [DecidableEq α] : List α → List α → Option (List α)
   | l, [] => some l
   | [], _ => none
   | x :: l, y :: l₁ => if x = y then get_rest l l₁ else none
+-/
 
 /-- `list.slice n m xs` removes a slice of length `m` at index `n` in list `xs`.
 -/
@@ -961,6 +1037,7 @@ map₂_right' prod.mk [1, 2] ['a'] = ([(some 1, 'a')], [2])
 def map₂Right' (f : Option α → β → γ) (as : List α) (bs : List β) : List γ × List α :=
   map₂Left' (flip f) bs as
 
+#print List.zipLeft' /-
 /-- Left-biased version of `list.zip`. `zip_left' as bs` returns the list of
 pairs `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `bs` is shorter than `as`, the
 remaining `aᵢ` are paired with `none`. Also returns the remaining `bs`.
@@ -976,7 +1053,9 @@ zip_left' = map₂_left' prod.mk
 -/
 def zipLeft' : List α → List β → List (α × Option β) × List β :=
   map₂Left' Prod.mk
+-/
 
+#print List.zipRight' /-
 /-- Right-biased version of `list.zip`. `zip_right' as bs` returns the list of
 pairs `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `as` is shorter than `bs`, the
 remaining `bᵢ` are paired with `none`. Also returns the remaining `as`.
@@ -991,6 +1070,7 @@ zip_right' = map₂_right' prod.mk
 -/
 def zipRight' : List α → List β → List (Option α × β) × List α :=
   map₂Right' Prod.mk
+-/
 
 /-- Left-biased version of `list.map₂`. `map₂_left f as bs` applies `f` to each pair
 `aᵢ ∈ as` and `bᵢ ‌∈ bs`. If `bs` is shorter than `as`, `f` is applied to `none`
@@ -1025,6 +1105,7 @@ map₂_right f as bs = (map₂_right' f as bs).fst
 def map₂Right (f : Option α → β → γ) (as : List α) (bs : List β) : List γ :=
   map₂Left (flip f) bs as
 
+#print List.zipLeft /-
 /-- Left-biased version of `list.zip`. `zip_left as bs` returns the list of pairs
 `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `bs` is shorter than `as`, the
 remaining `aᵢ` are paired with `none`.
@@ -1039,7 +1120,9 @@ zip_left = map₂_left prod.mk
 -/
 def zipLeft : List α → List β → List (α × Option β) :=
   map₂Left Prod.mk
+-/
 
+#print List.zipRight /-
 /-- Right-biased version of `list.zip`. `zip_right as bs` returns the list of pairs
 `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `as` is shorter than `bs`, the
 remaining `bᵢ` are paired with `none`.
@@ -1054,7 +1137,9 @@ zip_right = map₂_right prod.mk
 -/
 def zipRight : List α → List β → List (Option α × β) :=
   map₂Right Prod.mk
+-/
 
+#print List.allSome /-
 /-- If all elements of `xs` are `some xᵢ`, `all_some xs` returns the `xᵢ`. Otherwise
 it returns `none`.
 
@@ -1067,7 +1152,9 @@ def allSome : List (Option α) → Option (List α)
   | [] => some []
   | some a :: as => cons a <$> all_some as
   | none :: as => none
+-/
 
+#print List.fillNones /-
 /-- `fill_nones xs ys` replaces the `none`s in `xs` with elements of `ys`. If there
 are not enough `ys` to replace all the `none`s, the remaining `none`s are
 dropped from `xs`.
@@ -1081,7 +1168,9 @@ def fillNones {α} : List (Option α) → List α → List α
   | some a :: as, as' => a :: fill_nones as as'
   | none :: as, [] => as.reduceOption
   | none :: as, a :: as' => a :: fill_nones as as'
+-/
 
+#print List.takeList /-
 /-- `take_list as ns` extracts successive sublists from `as`. For `ns = n₁ ... nₘ`,
 it first takes the `n₁` initial elements from `as`, then the next `n₂` ones,
 etc. It returns the sublists of `as` -- one for each `nᵢ` -- and the remaining
@@ -1099,6 +1188,7 @@ def takeList {α} : List α → List ℕ → List (List α) × List α
     let ⟨xs₁, xs₂⟩ := xs.splitAt n
     let ⟨xss, rest⟩ := take_list xs₂ ns
     (xs₁ :: xss, rest)
+-/
 
 /-- `to_rbmap as` is the map that associates each index `i` of `as` with the
 corresponding element of `as`.
@@ -1110,6 +1200,7 @@ to_rbmap ['a', 'b', 'c'] = rbmap_of [(0, 'a'), (1, 'b'), (2, 'c')]
 def toRbmap {α : Type _} : List α → Rbmap ℕ α :=
   foldlWithIndex (fun i mapp a => mapp.insert i a) (mkRbmap ℕ α)
 
+#print List.toChunksAux /-
 /-- Auxliary definition used to define `to_chunks`.
 
   `to_chunks_aux n xs i` returns `(xs.take i, (xs.drop i).to_chunks (n+1))`,
@@ -1123,7 +1214,9 @@ def toChunksAux {α} (n : ℕ) : List α → ℕ → List α × List (List α)
   | x :: xs, i + 1 =>
     let (l, L) := to_chunks_aux xs i
     (x :: l, L)
+-/
 
+#print List.toChunks /-
 /-- `xs.to_chunks n` splits the list into sublists of size at most `n`,
 such that `(xs.to_chunks n).join = xs`.
 
@@ -1140,6 +1233,7 @@ def toChunks {α} : ℕ → List α → List (List α)
   | n + 1, x :: xs =>
     let (l, L) := toChunksAux n xs n
     (x :: l) :: L
+-/
 
 /-- Asynchronous version of `list.map`.
 -/
@@ -1180,11 +1274,14 @@ def replaceIf : List α → List Bool → List α → List α
   | l, [], _ => l
   | n :: ns, tf :: bs, e@(c :: cs) => if tf then c :: ns.replaceIf bs cs else n :: ns.replaceIf bs e
 
+#print List.mapWithPrefixSuffixAux /-
 /-- An auxiliary function for `list.map_with_prefix_suffix`. -/
 def mapWithPrefixSuffixAux {α β} (f : List α → α → List α → β) : List α → List α → List β
   | prev, [] => []
   | prev, h :: t => f prev h t :: map_with_prefix_suffix_aux (prev.concat h) t
+-/
 
+#print List.mapWithPrefixSuffix /-
 /-- `list.map_with_prefix_suffix f l` maps `f` across a list `l`.
 For each `a ∈ l` with `l = pref ++ [a] ++ suff`, `a` is mapped to `f pref a suff`.
 
@@ -1194,7 +1291,9 @@ Example: if `f : list ℕ → ℕ → list ℕ → β`,
 -/
 def mapWithPrefixSuffix {α β} (f : List α → α → List α → β) (l : List α) : List β :=
   mapWithPrefixSuffixAux f [] l
+-/
 
+#print List.mapWithComplement /-
 /-- `list.map_with_complement f l` is a variant of `list.map_with_prefix_suffix`
 that maps `f` across a list `l`.
 For each `a ∈ l` with `l = pref ++ [a] ++ suff`, `a` is mapped to `f a (pref ++ suff)`,
@@ -1205,6 +1304,7 @@ Example: if `f : ℕ → list ℕ → β`, `list.map_with_complement f [1, 2, 3]
 -/
 def mapWithComplement {α β} (f : α → List α → β) : List α → List β :=
   map_with_prefix_suffix fun pref a suff => f a (pref ++ suff)
+-/
 
 end List
 

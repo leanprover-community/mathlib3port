@@ -75,7 +75,7 @@ theorem Ioo_eq_range' : ioo a b = ⟨List.range' (a + 1) (b - a - 1), List.nodup
   rfl
 
 theorem Iio_eq_range : Iio = range := by
-  ext b x
+  ext (b x)
   rw [mem_Iio, mem_range]
 
 @[simp]

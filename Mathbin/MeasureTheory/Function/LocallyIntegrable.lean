@@ -151,9 +151,8 @@ section Monotone
 variable [BorelSpace X] [MetrizableSpace X] [ConditionallyCompleteLinearOrder X] [ConditionallyCompleteLinearOrder E]
   [OrderTopology X] [OrderTopology E] [SecondCountableTopology E] [IsLocallyFiniteMeasure μ] {s : Set X}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 theorem MonotoneOn.integrableOnCompact (hs : IsCompact s) (hmono : MonotoneOn f s) : IntegrableOn f s μ := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
+  borelize E
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact integrable_on_empty
     

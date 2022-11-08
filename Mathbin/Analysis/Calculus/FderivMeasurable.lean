@@ -107,7 +107,7 @@ variable {f : E → F} (K : Set (E →L[𝕜] F))
 
 namespace FderivMeasurableAux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » ball[metric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » ball[metric.ball] x r') -/
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/
@@ -215,7 +215,7 @@ theorem differentiable_set_subset_D : { x | DifferentiableAt 𝕜 f x ∧ fderiv
       exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
       
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete K) :
     D f K ⊆ { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } := by
@@ -269,7 +269,9 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
         abel
       _ ≤ ∥L e p q - L e p r∥ + ∥L e p r - L e' p' r∥ + ∥L e' p' r - L e' p' q'∥ :=
         le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
-      _ ≤ 4 * ∥c∥ * (1 / 2) ^ e + 4 * ∥c∥ * (1 / 2) ^ e + 4 * ∥c∥ * (1 / 2) ^ e := by apply_rules [add_le_add]
+      _ ≤ 4 * ∥c∥ * (1 / 2) ^ e + 4 * ∥c∥ * (1 / 2) ^ e + 4 * ∥c∥ * (1 / 2) ^ e := by
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       _ = 12 * ∥c∥ * (1 / 2) ^ e := by ring
       
   /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this
@@ -344,7 +346,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
         ∥f (x + y) - f x - L e (n e) m y∥ ≤ (1 / 2) ^ e * (1 / 2) ^ m := by simpa only [add_sub_cancel'] using J1
         _ = 4 * (1 / 2) ^ e * (1 / 2) ^ (m + 2) := by
           field_simp
-          ring_exp
+          ring
         _ ≤ 4 * (1 / 2) ^ e * ∥y∥ := mul_le_mul_of_nonneg_left (le_of_lt hk) (mul_nonneg (by norm_num) (le_of_lt P))
         
     -- use the previous estimates to see that `f (x + y) - f x - f' y` is small.
@@ -412,10 +414,9 @@ variable {𝕜}
 theorem measurableDeriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F] [BorelSpace F] (f : 𝕜 → F) :
     Measurable (deriv f) := by simpa only [fderiv_deriv] using measurableFderivApplyConst 𝕜 f 1
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]] -/
 theorem stronglyMeasurableDeriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [SecondCountableTopology F] (f : 𝕜 → F) :
     StronglyMeasurable (deriv f) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]]"
+  borelize F
   exact (measurableDeriv f).StronglyMeasurable
 
 theorem aeMeasurableDeriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F] [BorelSpace F] (f : 𝕜 → F)
@@ -436,7 +437,7 @@ variable {f : ℝ → F} (K : Set F)
 
 namespace RightDerivMeasurableAux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » Icc[set.Icc] x «expr + »(x, r')) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » Icc[set.Icc] x «expr + »(x, r')) -/
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `h ↦ h • L`, up to an error `ε`. We tweak the definition to
 make sure that this is open on the right. -/
@@ -557,7 +558,7 @@ theorem differentiable_set_subset_D :
       exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
       
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     D f K ⊆ { x | DifferentiableWithinAt ℝ f (IciCat x) x ∧ derivWithin f (IciCat x) x ∈ K } := by
@@ -608,7 +609,9 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
         abel
       _ ≤ ∥L e p q - L e p r∥ + ∥L e p r - L e' p' r∥ + ∥L e' p' r - L e' p' q'∥ :=
         le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
-      _ ≤ 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e := by apply_rules [add_le_add]
+      _ ≤ 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e := by
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       _ = 12 * (1 / 2) ^ e := by ring
       
   /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this
@@ -681,7 +684,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
             
         _ = 4 * (1 / 2) ^ e * (1 / 2) ^ (m + 2) := by
           field_simp
-          ring_exp
+          ring
         _ ≤ 4 * (1 / 2) ^ e * (y - x) := mul_le_mul_of_nonneg_left (le_of_lt hk) (mul_nonneg (by norm_num) (le_of_lt P))
         _ = 4 * (1 / 2) ^ e * ∥y - x∥ := by rw [Real.norm_of_nonneg yzero.le]
         
@@ -739,10 +742,9 @@ theorem measurableDerivWithinIci [MeasurableSpace F] [BorelSpace F] : Measurable
     (measurableSetOfDifferentiableWithinAtIciOfIsComplete _ hs.is_complete).union
       ((measurableSetOfDifferentiableWithinAtIci _).compl.inter (MeasurableSet.const _))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]] -/
 theorem stronglyMeasurableDerivWithinIci [SecondCountableTopology F] :
     StronglyMeasurable fun x => derivWithin f (IciCat x) x := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]]"
+  borelize F
   exact (measurableDerivWithinIci f).StronglyMeasurable
 
 theorem aeMeasurableDerivWithinIci [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
@@ -762,10 +764,9 @@ theorem measurableSetOfDifferentiableWithinAtIoi : MeasurableSet { x | Different
 theorem measurableDerivWithinIoi [MeasurableSpace F] [BorelSpace F] : Measurable fun x => derivWithin f (IoiCat x) x :=
   by simpa [deriv_within_Ioi_eq_Ici] using measurableDerivWithinIci f
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]] -/
 theorem stronglyMeasurableDerivWithinIoi [SecondCountableTopology F] :
     StronglyMeasurable fun x => derivWithin f (IoiCat x) x := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr F]]"
+  borelize F
   exact (measurableDerivWithinIoi f).StronglyMeasurable
 
 theorem aeMeasurableDerivWithinIoi [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :

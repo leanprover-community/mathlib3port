@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Mathbin.Analysis.Convex.Extreme
 import Mathbin.Analysis.Convex.Function
-import Mathbin.Analysis.NormedSpace.Ordered
+import Mathbin.Analysis.Normed.Order.Basic
 
 /-!
 # Exposed sets
@@ -130,7 +130,7 @@ theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExpo
   refine' Finset.induction _ _
   · rintro h
     exfalso
-    exact empty_not_nonempty h
+    exact not_nonempty_empty h
     
   rintro C F _ hF _ hCF
   rw [Finset.coe_insert, sInter_insert]

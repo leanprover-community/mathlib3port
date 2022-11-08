@@ -404,7 +404,7 @@ theorem sin_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂
     sin_angle_add_of_inner_eq_zero h h0]
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides. -/
-theorem tan_angle_eq_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2) :
+theorem tan_angle_of_angle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π / 2) :
     Real.tan (∠ p₂ p₃ p₁) = dist p₁ p₂ / dist p₃ p₂ := by
   rw [angle, ← inner_eq_zero_iff_angle_eq_pi_div_two, real_inner_comm, ← neg_eq_zero, ← inner_neg_left,
     neg_vsub_eq_vsub_rev] at h

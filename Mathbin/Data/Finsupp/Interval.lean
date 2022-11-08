@@ -57,7 +57,7 @@ section RangeIcc
 variable [Zero α] [PartialOrder α] [LocallyFiniteOrder α] {f g : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.Icc` bundled as a `finsupp`. -/
-@[simps]
+@[simps toFun]
 def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
   toFun i := icc (f i) (g i)
   Support := f.Support ∪ g.Support
@@ -65,33 +65,54 @@ def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
     rw [mem_union, ← not_iff_not, not_or, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
     exact Icc_eq_singleton_iff.symm
 
+@[simp]
+theorem range_Icc_support [DecidableEq ι] (f g : ι →₀ α) : (rangeIcc f g).Support = f.Support ∪ g.Support := by
+  convert rfl
+
 theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
 
 end RangeIcc
 
+section PartialOrder
+
 variable [PartialOrder α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α)
 
 instance : LocallyFiniteOrder (ι →₀ α) :=
   LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.Support ∪ g.Support).Finsupp <| f.rangeIcc g) fun f g x => by
-    refine' (mem_finsupp_iff_of_support_subset <| subset.rfl).trans _
+    refine' (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| range_Icc_support _ _).trans _
     simp_rw [mem_range_Icc_apply_iff]
     exact forall_and
 
-theorem Icc_eq : icc f g = (f.Support ∪ g.Support).Finsupp (f.rangeIcc g) :=
-  rfl
+theorem Icc_eq [DecidableEq ι] : icc f g = (f.Support ∪ g.Support).Finsupp (f.rangeIcc g) := by convert rfl
 
-theorem card_Icc : (icc f g).card = ∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card :=
-  card_finsupp _ _
+theorem card_Icc [DecidableEq ι] : (icc f g).card = ∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card := by
+  simp_rw [Icc_eq, card_finsupp, range_Icc_to_fun]
 
-theorem card_Ico : (ico f g).card = (∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card) - 1 := by
+theorem card_Ico [DecidableEq ι] : (ico f g).card = (∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 
-theorem card_Ioc : (ioc f g).card = (∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card) - 1 := by
+theorem card_Ioc [DecidableEq ι] : (ioc f g).card = (∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 
-theorem card_Ioo : (ioo f g).card = (∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card) - 2 := by
+theorem card_Ioo [DecidableEq ι] : (ioo f g).card = (∏ i in f.Support ∪ g.Support, (icc (f i) (g i)).card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
+
+end PartialOrder
+
+section CanonicallyOrdered
+
+variable [CanonicallyOrderedAddMonoid α] [LocallyFiniteOrder α]
+
+variable (f : ι →₀ α)
+
+theorem card_Iic : (iic f).card = ∏ i in f.Support, (iic (f i)).card := by
+  simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union, zero_apply, bot_eq_zero]
+
+theorem card_Iio : (iio f).card = (∏ i in f.Support, (iic (f i)).card) - 1 := by
+  rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
+
+end CanonicallyOrdered
 
 end Finsupp
 

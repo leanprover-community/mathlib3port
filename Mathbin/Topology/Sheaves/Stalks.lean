@@ -115,14 +115,14 @@ theorem stalk_functor_map_germ {F G : X.Presheaf C} (U : Opens X) (x : U) (f : F
 
 variable (C)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- For a presheaf `F` on a space `X`, a continuous map `f : X ⟶ Y` induces a morphisms between the
 stalk of `f _ * F` at `f x` and the stalk of `F` at `x`.
 -/
 def stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) (x : X) : (f _* F).stalk (f x) ⟶ F.stalk x := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   swap
   exact colimit.pre _ (open_nhds.map f x).op
   exact colim.map (whisker_right (nat_trans.op (open_nhds.inclusion_map_iso f x).inv) F)
@@ -259,7 +259,7 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) �
     simpa
   inv_hom_id' := by
     delta stalk_pullback_hom stalk_pullback_inv stalk_functor presheaf.pullback stalk_pushforward
-    ext U j
+    ext (U j)
     induction U using Opposite.rec
     cases U
     cases j

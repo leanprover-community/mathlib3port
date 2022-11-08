@@ -203,13 +203,13 @@ theorem nat_degree_minpoly (pb : PowerBasis A S) : (minpoly A pb.gen).natDegree 
   refine' le_antisymm _ (dim_le_nat_degree_of_root pb (minpoly.ne_zero pb.is_integral_gen) (minpoly.aeval _ _))
   rw [← nat_degree_minpoly_gen]
   apply nat_degree_le_of_degree_le
-  rw [← degree_eq_nat_degree (minpoly_gen_monic pb).ne_zero]
+  rw [← degree_eq_nat_degree (minpoly_gen_monic pb).NeZero]
   exact minpoly.min _ _ (minpoly_gen_monic pb) (aeval_minpoly_gen pb)
 
 @[simp]
 theorem minpoly_gen_eq [Algebra K S] (pb : PowerBasis K S) : pb.minpolyGen = minpoly K pb.gen :=
   minpoly.unique K pb.gen pb.minpoly_gen_monic pb.aeval_minpoly_gen fun p p_monic p_root =>
-    pb.degree_minpoly_gen.symm ▸ pb.dim_le_degree_of_root p_monic.ne_zero p_root
+    pb.degree_minpoly_gen.symm ▸ pb.dim_le_degree_of_root p_monic.NeZero p_root
 
 end minpoly
 

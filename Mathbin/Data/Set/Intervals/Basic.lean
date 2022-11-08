@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
 -/
-import Mathbin.Algebra.Order.Group.Basic
+import Mathbin.Order.MinMax
 import Mathbin.Order.RelIso
 
 /-!
@@ -667,7 +667,7 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : IioCat a ⊆ s) (hc :
     s ∈ ({IicCat a, IioCat a} : Set (Set α)) :=
   @mem_Ici_Ioi_of_subset_of_subset αᵒᵈ _ a s ho hc
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr subset_diff_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : IooCat a b ⊆ s) (hc : s ⊆ IccCat a b) :
     s ∈ ({IccCat a b, IcoCat a b, IocCat a b, IooCat a b} : Set (Set α)) := by
   classical
@@ -692,7 +692,8 @@ theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : IooCat a b �
     
   · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
     rw [← Ico_diff_left, ← Icc_diff_right]
-    apply_rules [subset_diff_singleton]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr subset_diff_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
 
 theorem eq_left_or_mem_Ioo_of_mem_Ico {x : α} (hmem : x ∈ IcoCat a b) : x = a ∨ x ∈ IooCat a b :=
@@ -799,6 +800,14 @@ theorem not_mem_Ioi : c ∉ IoiCat a ↔ c ≤ a :=
 
 theorem not_mem_Iio : c ∉ IioCat b ↔ b ≤ c :=
   not_lt
+
+@[simp]
+theorem not_mem_Ioi_self : a ∉ IoiCat a :=
+  lt_irrefl _
+
+@[simp]
+theorem not_mem_Iio_self : b ∉ IioCat b :=
+  lt_irrefl _
 
 theorem not_mem_Ioc_of_le (ha : c ≤ a) : c ∉ IocCat a b :=
   not_mem_subset Ioc_subset_Ioi_self <| not_mem_Ioi.mpr ha
@@ -1556,212 +1565,7 @@ theorem Icc_prod_eq (a b : α × β) : IccCat a b = IccCat a.1 b.1 ×ˢ IccCat a
 
 end Prod
 
-/-! ### Lemmas about membership of arithmetic operations -/
-
-
-section OrderedCommGroup
-
-variable [OrderedCommGroup α] {a b c d : α}
-
-/-! `inv_mem_Ixx_iff`, `sub_mem_Ixx_iff` -/
-
-
-@[to_additive]
-theorem inv_mem_Icc_iff : a⁻¹ ∈ Set.IccCat c d ↔ a ∈ Set.IccCat d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_le' le_inv'
-
-@[to_additive]
-theorem inv_mem_Ico_iff : a⁻¹ ∈ Set.IcoCat c d ↔ a ∈ Set.IocCat d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_lt' le_inv'
-
-@[to_additive]
-theorem inv_mem_Ioc_iff : a⁻¹ ∈ Set.IocCat c d ↔ a ∈ Set.IcoCat d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_le' lt_inv'
-
-@[to_additive]
-theorem inv_mem_Ioo_iff : a⁻¹ ∈ Set.IooCat c d ↔ a ∈ Set.IooCat d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans <| and_congr inv_lt' lt_inv'
-
-end OrderedCommGroup
-
-section OrderedAddCommGroup
-
-variable [OrderedAddCommGroup α] {a b c d : α}
-
-/-! `add_mem_Ixx_iff_left` -/
-
-
-theorem add_mem_Icc_iff_left : a + b ∈ Set.IccCat c d ↔ a ∈ Set.IccCat (c - b) (d - b) :=
-  (and_congr sub_le_iff_le_add le_sub_iff_add_le).symm
-
-theorem add_mem_Ico_iff_left : a + b ∈ Set.IcoCat c d ↔ a ∈ Set.IcoCat (c - b) (d - b) :=
-  (and_congr sub_le_iff_le_add lt_sub_iff_add_lt).symm
-
-theorem add_mem_Ioc_iff_left : a + b ∈ Set.IocCat c d ↔ a ∈ Set.IocCat (c - b) (d - b) :=
-  (and_congr sub_lt_iff_lt_add le_sub_iff_add_le).symm
-
-theorem add_mem_Ioo_iff_left : a + b ∈ Set.IooCat c d ↔ a ∈ Set.IooCat (c - b) (d - b) :=
-  (and_congr sub_lt_iff_lt_add lt_sub_iff_add_lt).symm
-
-/-! `add_mem_Ixx_iff_right` -/
-
-
-theorem add_mem_Icc_iff_right : a + b ∈ Set.IccCat c d ↔ b ∈ Set.IccCat (c - a) (d - a) :=
-  (and_congr sub_le_iff_le_add' le_sub_iff_add_le').symm
-
-theorem add_mem_Ico_iff_right : a + b ∈ Set.IcoCat c d ↔ b ∈ Set.IcoCat (c - a) (d - a) :=
-  (and_congr sub_le_iff_le_add' lt_sub_iff_add_lt').symm
-
-theorem add_mem_Ioc_iff_right : a + b ∈ Set.IocCat c d ↔ b ∈ Set.IocCat (c - a) (d - a) :=
-  (and_congr sub_lt_iff_lt_add' le_sub_iff_add_le').symm
-
-theorem add_mem_Ioo_iff_right : a + b ∈ Set.IooCat c d ↔ b ∈ Set.IooCat (c - a) (d - a) :=
-  (and_congr sub_lt_iff_lt_add' lt_sub_iff_add_lt').symm
-
-/-! `sub_mem_Ixx_iff_left` -/
-
-
-theorem sub_mem_Icc_iff_left : a - b ∈ Set.IccCat c d ↔ a ∈ Set.IccCat (c + b) (d + b) :=
-  and_congr le_sub_iff_add_le sub_le_iff_le_add
-
-theorem sub_mem_Ico_iff_left : a - b ∈ Set.IcoCat c d ↔ a ∈ Set.IcoCat (c + b) (d + b) :=
-  and_congr le_sub_iff_add_le sub_lt_iff_lt_add
-
-theorem sub_mem_Ioc_iff_left : a - b ∈ Set.IocCat c d ↔ a ∈ Set.IocCat (c + b) (d + b) :=
-  and_congr lt_sub_iff_add_lt sub_le_iff_le_add
-
-theorem sub_mem_Ioo_iff_left : a - b ∈ Set.IooCat c d ↔ a ∈ Set.IooCat (c + b) (d + b) :=
-  and_congr lt_sub_iff_add_lt sub_lt_iff_lt_add
-
-/-! `sub_mem_Ixx_iff_right` -/
-
-
-theorem sub_mem_Icc_iff_right : a - b ∈ Set.IccCat c d ↔ b ∈ Set.IccCat (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_le le_sub
-
-theorem sub_mem_Ico_iff_right : a - b ∈ Set.IcoCat c d ↔ b ∈ Set.IocCat (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_lt le_sub
-
-theorem sub_mem_Ioc_iff_right : a - b ∈ Set.IocCat c d ↔ b ∈ Set.IcoCat (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_le lt_sub
-
-theorem sub_mem_Ioo_iff_right : a - b ∈ Set.IooCat c d ↔ b ∈ Set.IooCat (a - d) (a - c) :=
-  (and_comm' _ _).trans <| and_congr sub_lt lt_sub
-
--- I think that symmetric intervals deserve attention and API: they arise all the time,
--- for instance when considering metric balls in `ℝ`.
-theorem mem_Icc_iff_abs_le {R : Type _} [LinearOrderedAddCommGroup R] {x y z : R} :
-    abs (x - y) ≤ z ↔ y ∈ IccCat (x - z) (x + z) :=
-  abs_le.trans <| (and_comm' _ _).trans <| and_congr sub_le neg_le_sub_iff_le_add
-
-end OrderedAddCommGroup
-
-section LinearOrderedAddCommGroup
-
-variable [LinearOrderedAddCommGroup α]
-
-/-- If we remove a smaller interval from a larger, the result is nonempty -/
-theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
-    Nonempty ↥(IcoCat x (x + dx) \ IcoCat y (y + dy)) := by
-  cases' lt_or_le x y with h' h'
-  · use x
-    simp [*, not_le.2 h']
-    
-  · use max x (x + dy)
-    simp [*, le_refl]
-    
-
-end LinearOrderedAddCommGroup
-
 end Set
-
-open Set
-
-namespace OrderIso
-
-section Preorder
-
-variable [Preorder α] [Preorder β]
-
-@[simp]
-theorem preimage_Iic (e : α ≃o β) (b : β) : e ⁻¹' IicCat b = IicCat (e.symm b) := by
-  ext x
-  simp [← e.le_iff_le]
-
-@[simp]
-theorem preimage_Ici (e : α ≃o β) (b : β) : e ⁻¹' IciCat b = IciCat (e.symm b) := by
-  ext x
-  simp [← e.le_iff_le]
-
-@[simp]
-theorem preimage_Iio (e : α ≃o β) (b : β) : e ⁻¹' IioCat b = IioCat (e.symm b) := by
-  ext x
-  simp [← e.lt_iff_lt]
-
-@[simp]
-theorem preimage_Ioi (e : α ≃o β) (b : β) : e ⁻¹' IoiCat b = IoiCat (e.symm b) := by
-  ext x
-  simp [← e.lt_iff_lt]
-
-@[simp]
-theorem preimage_Icc (e : α ≃o β) (a b : β) : e ⁻¹' IccCat a b = IccCat (e.symm a) (e.symm b) := by
-  simp [← Ici_inter_Iic]
-
-@[simp]
-theorem preimage_Ico (e : α ≃o β) (a b : β) : e ⁻¹' IcoCat a b = IcoCat (e.symm a) (e.symm b) := by
-  simp [← Ici_inter_Iio]
-
-@[simp]
-theorem preimage_Ioc (e : α ≃o β) (a b : β) : e ⁻¹' IocCat a b = IocCat (e.symm a) (e.symm b) := by
-  simp [← Ioi_inter_Iic]
-
-@[simp]
-theorem preimage_Ioo (e : α ≃o β) (a b : β) : e ⁻¹' IooCat a b = IooCat (e.symm a) (e.symm b) := by
-  simp [← Ioi_inter_Iio]
-
-@[simp]
-theorem image_Iic (e : α ≃o β) (a : α) : e '' IicCat a = IicCat (e a) := by
-  rw [e.image_eq_preimage, e.symm.preimage_Iic, e.symm_symm]
-
-@[simp]
-theorem image_Ici (e : α ≃o β) (a : α) : e '' IciCat a = IciCat (e a) :=
-  e.dual.image_Iic a
-
-@[simp]
-theorem image_Iio (e : α ≃o β) (a : α) : e '' IioCat a = IioCat (e a) := by
-  rw [e.image_eq_preimage, e.symm.preimage_Iio, e.symm_symm]
-
-@[simp]
-theorem image_Ioi (e : α ≃o β) (a : α) : e '' IoiCat a = IoiCat (e a) :=
-  e.dual.image_Iio a
-
-@[simp]
-theorem image_Ioo (e : α ≃o β) (a b : α) : e '' IooCat a b = IooCat (e a) (e b) := by
-  rw [e.image_eq_preimage, e.symm.preimage_Ioo, e.symm_symm]
-
-@[simp]
-theorem image_Ioc (e : α ≃o β) (a b : α) : e '' IocCat a b = IocCat (e a) (e b) := by
-  rw [e.image_eq_preimage, e.symm.preimage_Ioc, e.symm_symm]
-
-@[simp]
-theorem image_Ico (e : α ≃o β) (a b : α) : e '' IcoCat a b = IcoCat (e a) (e b) := by
-  rw [e.image_eq_preimage, e.symm.preimage_Ico, e.symm_symm]
-
-@[simp]
-theorem image_Icc (e : α ≃o β) (a b : α) : e '' IccCat a b = IccCat (e a) (e b) := by
-  rw [e.image_eq_preimage, e.symm.preimage_Icc, e.symm_symm]
-
-end Preorder
-
-/-- Order isomorphism between `Iic (⊤ : α)` and `α` when `α` has a top element -/
-def iicTop [Preorder α] [OrderTop α] : Set.IicCat (⊤ : α) ≃o α :=
-  { @Equiv.subtypeUnivEquiv α (Set.IicCat (⊤ : α)) fun x => le_top with map_rel_iff' := fun x y => by rfl }
-
-/-- Order isomorphism between `Ici (⊥ : α)` and `α` when `α` has a bottom element -/
-def iciBot [Preorder α] [OrderBot α] : Set.IciCat (⊥ : α) ≃o α :=
-  { @Equiv.subtypeUnivEquiv α (Set.IciCat (⊥ : α)) fun x => bot_le with map_rel_iff' := fun x y => by rfl }
-
-end OrderIso
 
 /-! ### Lemmas about intervals in dense orders -/
 

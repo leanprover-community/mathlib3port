@@ -6,6 +6,7 @@ Authors: Robert Y. Lewis, Keeley Hoek
 import Mathbin.Algebra.NeZero
 import Mathbin.Data.Nat.Cast
 import Mathbin.Order.RelIso
+import Mathbin.Data.Nat.Order
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Tactic.Localized
 
@@ -126,15 +127,21 @@ section coe
 -/
 
 
+#print Fin.eta /-
 @[simp]
 protected theorem eta (a : Fin n) (h : (a : ℕ) < n) : (⟨(a : ℕ), h⟩ : Fin n) = a := by cases a <;> rfl
+-/
 
+#print Fin.ext /-
 @[ext]
 theorem ext {a b : Fin n} (h : (a : ℕ) = b) : a = b :=
   eq_of_veq h
+-/
 
+#print Fin.ext_iff /-
 theorem ext_iff {a b : Fin n} : a = b ↔ (a : ℕ) = b :=
   Iff.intro (congr_arg _) Fin.eq_of_veq
+-/
 
 theorem coe_injective {n : ℕ} : Injective (coe : Fin n → ℕ) :=
   Fin.val_injective
@@ -490,7 +497,7 @@ def ofNat' [NeZero n] (i : ℕ) : Fin n :=
 
 /- warning: fin.one_val -> Fin.one_val is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat}, Eq.{1} Nat (Fin.val (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) (One.one.{0} (Fin (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Fin.hasOne n))) (HMod.hMod.{0 0 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (One.one.{0} Nat Nat.hasOne) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)))
+  forall {n : Nat}, Eq.{1} Nat (Fin.val (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 1 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 1 (One.one.{0} (Fin (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Fin.hasOne n))))) (HMod.hMod.{0 0 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
   forall {n : Nat}, Eq.{1} Nat (Fin.val (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) 1 (Fin.instOfNatFinHAddNatInstHAddInstAddNatOfNat (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 1))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
 Case conversion may be inaccurate. Consider using '#align fin.one_val Fin.one_valₓ'. -/

@@ -796,9 +796,6 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.B
       exact fun h => H ⟨h, hp'⟩
       
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident d, ",", ident hdcb, ",", ident hd, "⟩", ":", expr «expr∃ , »((d «expr ∈ » Ioc c b)
-    (e : trivialization F proj),
-    «expr ⊆ »(Icc a d, e.base_set))]] -/
 /-- If `h` is a topological fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
 theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
@@ -841,8 +838,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
   cases' hc.2.eq_or_lt with heq hlt
   · exact ⟨ec, HEq ▸ hec⟩
     
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident d, \",\", ident hdcb, \",\", ident hd, \"⟩\", \":\", expr «expr∃ , »((d «expr ∈ » Ioc c b)\n    (e : trivialization F proj),\n    «expr ⊆ »(Icc a d, e.base_set))]]"
+  rsuffices ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, ∃ e : trivialization F proj, Icc a d ⊆ e.BaseSet
   · exact ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim
     
   /- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some
@@ -1261,7 +1257,7 @@ variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z �
 
 open TopologicalFiberBundle
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
 topology in such a way that there is a fiber bundle structure for which the local equivalences

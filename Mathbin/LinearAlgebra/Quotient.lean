@@ -197,6 +197,44 @@ theorem nontrivial_of_lt_top (h : p < ⊤) : Nontrivial (M ⧸ p) := by
 
 end Quotient
 
+instance QuotientBot.infinite [Infinite M] : Infinite (M ⧸ (⊥ : Submodule R M)) :=
+  (Infinite.of_injective Submodule.Quotient.mk) fun x y h => sub_eq_zero.mp <| (Submodule.Quotient.eq ⊥).mp h
+
+instance QuotientTop.unique : Unique (M ⧸ (⊤ : Submodule R M)) where
+  default := 0
+  uniq x := (Quotient.induction_on' x) fun x => (Submodule.Quotient.eq ⊤).mpr Submodule.mem_top
+
+instance QuotientTop.fintype : Fintype (M ⧸ (⊤ : Submodule R M)) :=
+  Fintype.ofSubsingleton 0
+
+variable {p}
+
+theorem subsingleton_quotient_iff_eq_top : Subsingleton (M ⧸ p) ↔ p = ⊤ := by
+  constructor
+  · rintro h
+    refine' eq_top_iff.mpr fun x _ => _
+    have : x - 0 ∈ p := (Submodule.Quotient.eq p).mp (Subsingleton.elim _ _)
+    rwa [sub_zero] at this
+    
+  · rintro rfl
+    infer_instance
+    
+
+theorem unique_quotient_iff_eq_top : Nonempty (Unique (M ⧸ p)) ↔ p = ⊤ :=
+  ⟨fun ⟨h⟩ => subsingleton_quotient_iff_eq_top.mp (@Unique.subsingleton h), by
+    rintro rfl
+    exact ⟨quotient_top.unique⟩⟩
+
+variable (p)
+
+noncomputable instance Quotient.fintype [Fintype M] (S : Submodule R M) : Fintype (M ⧸ S) :=
+  @Quotient.fintype _ _ fun _ _ => Classical.dec _
+
+theorem card_eq_card_quotient_mul_card [Fintype M] (S : Submodule R M) [DecidablePred (· ∈ S)] :
+    Fintype.card M = Fintype.card S * Fintype.card (M ⧸ S) := by
+  rw [mul_comm, ← Fintype.card_prod]
+  exact Fintype.card_congr AddSubgroup.addGroupEquivQuotientTimesAddSubgroup
+
 section
 
 variable {M₂ : Type _} [AddCommGroup M₂] [Module R M₂]

@@ -59,7 +59,6 @@ noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | 0 => ↑a⁻¹
   | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], ["with"], { normalize := ff[bool.ff] }]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.
 -/
 def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
@@ -73,8 +72,7 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
         A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) +
           nth_remainder p n (truncate_fun (n + 1) A) fun i : Fin (n + 1) => inverse_coeff a A i
       have H := Units.mul_inv (a ^ p ^ (n + 1))
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], [\"with\"], { normalize := ff[bool.ff] }]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      linear_combination (config := { normalize := false })-H_coeff * H
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by exact_mod_cast inv_pow _ _
       simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe, one_coeff_eq_of_pos,

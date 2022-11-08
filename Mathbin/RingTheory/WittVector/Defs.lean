@@ -38,7 +38,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Command.lean:374:34: infer kinds are unsupported in Lean 4: mk [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:34: infer kinds are unsupported in Lean 4: mk [] -/
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -316,7 +316,7 @@ variable {p R}
 
 omit hp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
 theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Fin 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
   fin_cases i <;> simp

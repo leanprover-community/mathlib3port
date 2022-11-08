@@ -180,13 +180,13 @@ theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : Tendsto (fun x => x * lo
 
 open BigOperators
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr div_le_div, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr pow_le_pow_of_le_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- A crude lemma estimating the difference between `log (1-x)` and its Taylor series at `0`,
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
-theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
-    abs ((∑ i in Range n, x ^ (i + 1) / (i + 1)) + log (1 - x)) ≤ abs x ^ (n + 1) / (1 - abs x) := by
+theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
+    |(∑ i in Range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) := by
   /- For the proof, we show that the derivative of the function to be estimated is small,
     and then apply the mean value inequality. -/
   let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
@@ -200,21 +200,22 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
       sub_ne_zero_of_ne (ne_of_lt hy.2)]
     ring
   -- second step: show that the derivative of `F` is small
-  have B : ∀ y ∈ Icc (-abs x) (abs x), abs (deriv F y) ≤ abs x ^ n / (1 - abs x) := by
+  have B : ∀ y ∈ Icc (-|x|) (|x|), |deriv F y| ≤ |x| ^ n / (1 - |x|) := by
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_le (neg_lt_neg h) hy.1, lt_of_le_of_lt hy.2 h⟩
     calc
-      abs (deriv F y) = abs (-(y ^ n) / (1 - y)) := by rw [A y this]
-      _ ≤ abs x ^ n / (1 - abs x) := by
-        have : abs y ≤ abs x := abs_le.2 hy
-        have : 0 < 1 - abs x := by linarith
-        have : 1 - abs x ≤ abs (1 - y) := le_trans (by linarith [hy.2]) (le_abs_self _)
+      |deriv F y| = |-(y ^ n) / (1 - y)| := by rw [A y this]
+      _ ≤ |x| ^ n / (1 - |x|) := by
+        have : |y| ≤ |x| := abs_le.2 hy
+        have : 0 < 1 - |x| := by linarith
+        have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
-        apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr div_le_div, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
   -- third step: apply the mean value inequality
-  have C : ∥F x - F 0∥ ≤ abs x ^ n / (1 - abs x) * ∥x - 0∥ := by
-    have : ∀ y ∈ Icc (-abs x) (abs x), DifferentiableAt ℝ F y := by
+  have C : ∥F x - F 0∥ ≤ |x| ^ n / (1 - |x|) * ∥x - 0∥ := by
+    have : ∀ y ∈ Icc (-|x|) (|x|), DifferentiableAt ℝ F y := by
       intro y hy
       have : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gt (lt_of_le_of_lt hy.2 h))
       simp [F, this]
@@ -226,16 +227,17 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
   -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'] using C
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr add_le_add_right, ",", expr i.cast_nonneg, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Power series expansion of the logarithm around `1`. -/
-theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
+theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) := by
   rw [Summable.has_sum_iff_tendsto_nat]
   show tendsto (fun n : ℕ => ∑ i : ℕ in range n, x ^ (i + 1) / (i + 1)) at_top (𝓝 (-log (1 - x)))
   · rw [tendsto_iff_norm_tendsto_zero]
     simp only [norm_eq_abs, sub_neg_eq_add]
     refine' squeeze_zero (fun n => abs_nonneg _) (abs_log_sub_add_sum_range_le h) _
-    suffices tendsto (fun t : ℕ => abs x ^ (t + 1) / (1 - abs x)) at_top (𝓝 (abs x * 0 / (1 - abs x))) by simpa
+    suffices tendsto (fun t : ℕ => |x| ^ (t + 1) / (1 - |x|)) at_top (𝓝 (|x| * 0 / (1 - |x|))) by simpa
     simp only [pow_succ]
     refine' (tendsto_const_nhds.mul _).div_const
     exact tendsto_pow_at_top_nhds_0_of_lt_1 (abs_nonneg _) h
@@ -243,18 +245,19 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
   show Summable fun n : ℕ => x ^ (n + 1) / (n + 1)
   · refine' summable_of_norm_bounded _ (summable_geometric_of_lt_1 (abs_nonneg _) h) fun i => _
     calc
-      ∥x ^ (i + 1) / (i + 1)∥ = abs x ^ (i + 1) / (i + 1) := by
+      ∥x ^ (i + 1) / (i + 1)∥ = |x| ^ (i + 1) / (i + 1) := by
         have : (0 : ℝ) ≤ i + 1 := le_of_lt (Nat.cast_add_one_pos i)
         rw [norm_eq_abs, abs_div, ← pow_abs, abs_of_nonneg this]
-      _ ≤ abs x ^ (i + 1) / (0 + 1) := by
-        apply_rules [div_le_div_of_le_left, pow_nonneg, abs_nonneg, add_le_add_right, i.cast_nonneg]
+      _ ≤ |x| ^ (i + 1) / (0 + 1) := by
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr add_le_add_right, \",\", expr i.cast_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
         norm_num
-      _ ≤ abs x ^ i := by simpa [pow_succ'] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)
+      _ ≤ |x| ^ i := by simpa [pow_succ'] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)
       
     
 
 /-- Power series expansion of `log(1 + x) - log(1 - x)` for `|x| < 1`. -/
-theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
+theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     HasSum (fun k : ℕ => (2 : ℝ) * (1 / (2 * k + 1)) * x ^ (2 * k + 1)) (log (1 + x) - log (1 - x)) := by
   let term := fun n : ℕ => -1 * (-x ^ (n + 1) / ((n : ℝ) + 1)) + x ^ (n + 1) / (n + 1)
   have h_term_eq_goal : term ∘ (· * ·) 2 = fun k : ℕ => 2 * (1 / (2 * k + 1)) * x ^ (2 * k + 1) := by
@@ -277,7 +280,7 @@ theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
 /-- Expansion of `log (1 + a⁻¹)` as a series in powers of `1 / (2 * a + 1)`. -/
 theorem has_sum_log_one_add_inv {a : ℝ} (h : 0 < a) :
     HasSum (fun k : ℕ => (2 : ℝ) * (1 / (2 * k + 1)) * (1 / (2 * a + 1)) ^ (2 * k + 1)) (log (1 + a⁻¹)) := by
-  have h₁ : abs (1 / (2 * a + 1)) < 1 := by
+  have h₁ : |1 / (2 * a + 1)| < 1 := by
     rw [abs_of_pos, div_lt_one]
     · linarith
       

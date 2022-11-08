@@ -61,8 +61,8 @@ include h𝓕
 
 variable [Countable Γ] [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr μ «expr ⁻¹' »(has_mul.mul g, «expr ∩ »(π_preA, «expr ⁻¹' »(has_mul.mul «expr ⁻¹»(g), 𝓕)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr μ «expr ⁻¹' »(has_mul.mul g, «expr ∩ »(π_preA, «expr ⁻¹' »(has_mul.mul «expr ⁻¹»(g), 𝓕)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The pushforward to the coset space `G ⧸ Γ` of the restriction of a both left- and right-
   invariant measure on `G` to a fundamental domain `𝓕` is a `G`-invariant measure on `G ⧸ Γ`. -/
 @[to_additive
@@ -84,7 +84,7 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap [μ.IsMulLeftI
       rw [this]
       have : μ (Mul.mul g ⁻¹' π_preA ∩ 𝓕) = μ (π_preA ∩ Mul.mul g⁻¹ ⁻¹' 𝓕) := by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr μ «expr ⁻¹' »(has_mul.mul g, «expr ∩ »(π_preA, «expr ⁻¹' »(has_mul.mul «expr ⁻¹»(g), 𝓕)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr μ «expr ⁻¹' »(has_mul.mul g, «expr ∩ »(π_preA, «expr ⁻¹' »(has_mul.mul «expr ⁻¹»(g), 𝓕)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · rw [preimage_inter]
           congr
           rw [← preimage_comp, comp_mul_left, mul_left_inv]

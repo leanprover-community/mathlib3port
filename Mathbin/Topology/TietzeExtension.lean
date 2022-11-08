@@ -75,20 +75,20 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
     have hfx : -∥f∥ ≤ f x ∧ f x ≤ ∥f∥ := by simpa only [Real.norm_eq_abs, abs_le] using f.norm_coe_le_norm x
     cases' le_total (f x) (-∥f∥ / 3) with hle₁ hle₁
     · calc
-        abs (g (e x) - f x) = -∥f∥ / 3 - f x := by rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]
+        |g (e x) - f x| = -∥f∥ / 3 - f x := by rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]
         _ ≤ 2 / 3 * ∥f∥ := by linarith
         
       
     · cases' le_total (f x) (∥f∥ / 3) with hle₂ hle₂
       · simp only [neg_div] at *
         calc
-          dist (g (e x)) (f x) ≤ abs (g (e x)) + abs (f x) := dist_le_norm_add_norm _ _
+          dist (g (e x)) (f x) ≤ |g (e x)| + |f x| := dist_le_norm_add_norm _ _
           _ ≤ ∥f∥ / 3 + ∥f∥ / 3 := add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩)
           _ = 2 / 3 * ∥f∥ := by linarith
           
         
       · calc
-          abs (g (e x) - f x) = f x - ∥f∥ / 3 := by
+          |g (e x) - f x| = f x - ∥f∥ / 3 := by
             rw [hg₂ (mem_image_of_mem _ hle₂), abs_sub_comm, abs_of_nonneg (sub_nonneg.2 hle₂)]
           _ ≤ 2 / 3 * ∥f∥ := by linarith
           

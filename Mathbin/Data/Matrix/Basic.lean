@@ -353,7 +353,7 @@ theorem diagonal_zero [Zero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 := b
 
 @[simp]
 theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal v := by
-  ext i j
+  ext (i j)
   by_cases h:i = j
   · simp [h, transpose]
     
@@ -362,11 +362,11 @@ theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal
 
 @[simp]
 theorem diagonal_add [AddZeroClass α] (d₁ d₂ : n → α) : diagonal d₁ + diagonal d₂ = diagonal fun i => d₁ i + d₂ i := by
-  ext i j <;> by_cases h:i = j <;> simp [h]
+  ext (i j) <;> by_cases h:i = j <;> simp [h]
 
 @[simp]
 theorem diagonal_smul [Monoid R] [AddMonoid α] [DistribMulAction R α] (r : R) (d : n → α) :
-    diagonal (r • d) = r • diagonal d := by ext i j <;> by_cases h:i = j <;> simp [h]
+    diagonal (r • d) = r • diagonal d := by ext (i j) <;> by_cases h:i = j <;> simp [h]
 
 variable (n α)
 
@@ -592,31 +592,31 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem diagonal_dot_product (i : m) : diagonal v i ⬝ᵥ w = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), diagonal v i j * w j = 0 := fun j hij => by simp [diagonal_apply_ne' _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), v j * diagonal w i j = 0 := fun j hij => by simp [diagonal_apply_ne' _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), v j * diagonal w j i = 0 := fun j hij => by simp [diagonal_apply_ne _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
   have : ∀ (j) (_ : j ≠ i), Pi.single i x j * v j = 0 := fun j hij => by simp [Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
   have : ∀ (j) (_ : j ≠ i), v j * Pi.single i x j = 0 := fun j hij => by simp [Pi.single_eq_of_ne hij]
@@ -741,20 +741,20 @@ variable [NonUnitalNonAssocSemiring α]
 
 @[simp]
 protected theorem mul_zero [Fintype n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 := by
-  ext i j
+  ext (i j)
   apply dot_product_zero
 
 @[simp]
 protected theorem zero_mul [Fintype m] (M : Matrix m n α) : (0 : Matrix l m α) ⬝ M = 0 := by
-  ext i j
+  ext (i j)
   apply zero_dot_product
 
 protected theorem mul_add [Fintype n] (L : Matrix m n α) (M N : Matrix n o α) : L ⬝ (M + N) = L ⬝ M + L ⬝ N := by
-  ext i j
+  ext (i j)
   apply dot_product_add
 
 protected theorem add_mul [Fintype m] (L M : Matrix l m α) (N : Matrix m n α) : (L + M) ⬝ N = L ⬝ N + M ⬝ N := by
-  ext i j
+  ext (i j)
   apply add_dot_product
 
 instance [Fintype n] : NonUnitalNonAssocSemiring (Matrix n n α) :=
@@ -774,7 +774,7 @@ theorem mul_diagonal [Fintype n] [DecidableEq n] (d : n → α) (M : Matrix m n 
 
 @[simp]
 theorem diagonal_mul_diagonal [Fintype n] [DecidableEq n] (d₁ d₂ : n → α) :
-    diagonal d₁ ⬝ diagonal d₂ = diagonal fun i => d₁ i * d₂ i := by ext i j <;> by_cases i = j <;> simp [h]
+    diagonal d₁ ⬝ diagonal d₂ = diagonal fun i => d₁ i * d₂ i := by ext (i j) <;> by_cases i = j <;> simp [h]
 
 theorem diagonal_mul_diagonal' [Fintype n] [DecidableEq n] (d₁ d₂ : n → α) :
     diagonal d₁ * diagonal d₂ = diagonal fun i => d₁ i * d₂ i :=
@@ -830,11 +830,11 @@ variable [NonAssocSemiring α]
 
 @[simp]
 protected theorem one_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) : (1 : Matrix m m α) ⬝ M = M := by
-  ext i j <;> rw [← diagonal_one, diagonal_mul, one_mul]
+  ext (i j) <;> rw [← diagonal_one, diagonal_mul, one_mul]
 
 @[simp]
 protected theorem mul_one [Fintype n] [DecidableEq n] (M : Matrix m n α) : M ⬝ (1 : Matrix n n α) = M := by
-  ext i j <;> rw [← diagonal_one, mul_diagonal, mul_one]
+  ext (i j) <;> rw [← diagonal_one, mul_diagonal, mul_one]
 
 instance [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix n n α) :=
   { Matrix.nonUnitalNonAssocSemiring with one := 1, one_mul := Matrix.one_mul, mul_one := Matrix.mul_one,
@@ -1282,7 +1282,7 @@ def vecMulVec [Mul α] (w : m → α) (v : n → α) : Matrix m n α
   | x, y => w x * v y
 
 theorem vec_mul_vec_eq [Mul α] [AddCommMonoid α] (w : m → α) (v : n → α) : vecMulVec w v = col w ⬝ row v := by
-  ext i j
+  ext (i j)
   simp only [vec_mul_vec, mul_apply, Fintype.univ_punit, Finset.sum_singleton]
   rfl
 
@@ -1538,11 +1538,11 @@ theorem transpose_apply (M : Matrix m n α) (i j) : M.transpose j i = M i j :=
 theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by ext <;> rfl
 
 @[simp]
-theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext i j <;> rfl
+theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext (i j) <;> rfl
 
 @[simp]
 theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)ᵀ = 1 := by
-  ext i j
+  ext (i j)
   unfold One.one transpose
   by_cases i = j
   · simp only [h, diagonal_apply_eq]
@@ -1552,27 +1552,27 @@ theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)�
 
 @[simp]
 theorem transpose_add [Add α] (M : Matrix m n α) (N : Matrix m n α) : (M + N)ᵀ = Mᵀ + Nᵀ := by
-  ext i j
+  ext (i j)
   simp
 
 @[simp]
 theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)ᵀ = Mᵀ - Nᵀ := by
-  ext i j
+  ext (i j)
   simp
 
 @[simp]
 theorem transpose_mul [AddCommMonoid α] [CommSemigroup α] [Fintype n] (M : Matrix m n α) (N : Matrix n l α) :
     (M ⬝ N)ᵀ = Nᵀ ⬝ Mᵀ := by
-  ext i j
+  ext (i j)
   apply dot_product_comm
 
 @[simp]
 theorem transpose_smul {R : Type _} [HasSmul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ := by
-  ext i j
+  ext (i j)
   rfl
 
 @[simp]
-theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by ext i j <;> rfl
+theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by ext (i j) <;> rfl
 
 theorem transpose_map {f : α → β} {M : Matrix m n α} : Mᵀ.map f = (M.map f)ᵀ := by
   ext
@@ -2189,33 +2189,33 @@ theorem update_column_apply [DecidableEq n] {j' : n} : updateColumn M j c i j' =
 @[simp]
 theorem update_column_subsingleton [Subsingleton n] (A : Matrix m n R) (i : n) (b : m → R) :
     A.updateColumn i b = (col b).submatrix id (Function.const n ()) := by
-  ext x y
+  ext (x y)
   simp [update_column_apply, Subsingleton.elim i y]
 
 @[simp]
 theorem update_row_subsingleton [Subsingleton m] (A : Matrix m n R) (i : m) (b : n → R) :
     A.updateRow i b = (row b).submatrix (Function.const m ()) id := by
-  ext x y
+  ext (x y)
   simp [update_column_apply, Subsingleton.elim i x]
 
 theorem map_update_row [DecidableEq m] (f : α → β) : map (updateRow M i b) f = updateRow (M.map f) i (f ∘ b) := by
-  ext i' j'
+  ext (i' j')
   rw [update_row_apply, map_apply, map_apply, update_row_apply]
   exact apply_ite f _ _ _
 
 theorem map_update_column [DecidableEq n] (f : α → β) : map (updateColumn M j c) f = updateColumn (M.map f) j (f ∘ c) :=
   by
-  ext i' j'
+  ext (i' j')
   rw [update_column_apply, map_apply, map_apply, update_column_apply]
   exact apply_ite f _ _ _
 
 theorem update_row_transpose [DecidableEq n] : updateRow Mᵀ j c = (updateColumn M j c)ᵀ := by
-  ext i' j
+  ext (i' j)
   rw [transpose_apply, update_row_apply, update_column_apply]
   rfl
 
 theorem update_column_transpose [DecidableEq m] : updateColumn Mᵀ i b = (updateRow M i b)ᵀ := by
-  ext i' j
+  ext (i' j)
   rw [transpose_apply, update_row_apply, update_column_apply]
   rfl
 
@@ -2237,7 +2237,7 @@ theorem update_column_eq_self [DecidableEq n] (A : Matrix m n α) (i : n) : (A.u
 
 theorem diagonal_update_column_single [DecidableEq n] [Zero α] (v : n → α) (i : n) (x : α) :
     (diagonal v).updateColumn i (Pi.single i x) = diagonal (Function.update v i x) := by
-  ext j k
+  ext (j k)
   obtain rfl | hjk := eq_or_ne j k
   · rw [diagonal_apply_eq]
     obtain rfl | hji := eq_or_ne j i

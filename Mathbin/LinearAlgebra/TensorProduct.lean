@@ -530,20 +530,20 @@ theorem curry_apply (f : M ⊗ N →ₗ[R] P) (m : M) (n : N) : curry f m n = f 
 theorem curry_injective : Function.Injective (curry : (M ⊗[R] N →ₗ[R] P) → M →ₗ[R] N →ₗ[R] P) := fun g h H => ext H
 
 theorem ext_threefold {g h : (M ⊗[R] N) ⊗[R] P →ₗ[R] Q} (H : ∀ x y z, g (x ⊗ₜ y ⊗ₜ z) = h (x ⊗ₜ y ⊗ₜ z)) : g = h := by
-  ext x y z
+  ext (x y z)
   exact H x y z
 
 -- We'll need this one for checking the pentagon identity!
 theorem ext_fourfold {g h : ((M ⊗[R] N) ⊗[R] P) ⊗[R] Q →ₗ[R] S}
     (H : ∀ w x y z, g (w ⊗ₜ x ⊗ₜ y ⊗ₜ z) = h (w ⊗ₜ x ⊗ₜ y ⊗ₜ z)) : g = h := by
-  ext w x y z
+  ext (w x y z)
   exact H w x y z
 
 /-- Two linear maps (M ⊗ N) ⊗ (P ⊗ Q) → S which agree on all elements of the
 form (m ⊗ₜ n) ⊗ₜ (p ⊗ₜ q) are equal. -/
 theorem ext_fourfold' {φ ψ : (M ⊗[R] N) ⊗[R] P ⊗[R] Q →ₗ[R] S}
     (H : ∀ w x y z, φ (w ⊗ₜ x ⊗ₜ (y ⊗ₜ z)) = ψ (w ⊗ₜ x ⊗ₜ (y ⊗ₜ z))) : φ = ψ := by
-  ext m n p q
+  ext (m n p q)
   exact H m n p q
 
 end UMP
@@ -881,22 +881,22 @@ attribute [local ext] TensorProduct.ext
 def ltensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P where
   toFun := ltensor M
   map_add' f g := by
-    ext x y
+    ext (x y)
     simp only [compr₂_apply, mk_apply, add_apply, ltensor_tmul, tmul_add]
   map_smul' r f := by
     dsimp
-    ext x y
+    ext (x y)
     simp only [compr₂_apply, mk_apply, tmul_smul, smul_apply, ltensor_tmul]
 
 /-- `rtensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
 def rtensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M where
   toFun f := f.rtensor M
   map_add' f g := by
-    ext x y
+    ext (x y)
     simp only [compr₂_apply, mk_apply, add_apply, rtensor_tmul, add_tmul]
   map_smul' r f := by
     dsimp
-    ext x y
+    ext (x y)
     simp only [compr₂_apply, mk_apply, smul_tmul, tmul_smul, smul_apply, rtensor_tmul]
 
 @[simp]
@@ -932,14 +932,14 @@ theorem rtensor_smul (r : R) (f : N →ₗ[R] P) : (r • f).rtensor M = r • f
   (rtensorHom M).map_smul r f
 
 theorem ltensor_comp : (g.comp f).ltensor M = (g.ltensor M).comp (f.ltensor M) := by
-  ext m n
+  ext (m n)
   simp only [compr₂_apply, mk_apply, comp_apply, ltensor_tmul]
 
 theorem ltensor_comp_apply (x : M ⊗[R] N) : (g.comp f).ltensor M x = (g.ltensor M) ((f.ltensor M) x) := by
   rw [ltensor_comp, coe_comp]
 
 theorem rtensor_comp : (g.comp f).rtensor M = (g.rtensor M).comp (f.rtensor M) := by
-  ext m n
+  ext (m n)
   simp only [compr₂_apply, mk_apply, comp_apply, rtensor_tmul]
 
 theorem rtensor_comp_apply (x : N ⊗[R] M) : (g.comp f).rtensor M x = (g.rtensor M) ((f.rtensor M) x) := by

@@ -620,6 +620,29 @@ theorem symm_diff_symm_diff_right' : a ∆ (b ∆ c) = a ⊓ b ⊓ c ⊔ a ⊓ b
         
     
 
+variable {a b c}
+
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr \ »(c, «expr ⊓ »(a, b))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+theorem Disjoint.le_symm_diff_sup_symm_diff_left (h : Disjoint a b) : c ≤ a ∆ c ⊔ b ∆ c := by
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr \\ »(c, «expr ⊓ »(a, b))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  · rw [h.eq_bot, sdiff_bot]
+    
+  · rw [sdiff_inf]
+    exact sup_le_sup le_sup_right le_sup_right
+    
+
+theorem Disjoint.le_symm_diff_sup_symm_diff_right (h : Disjoint b c) : a ≤ a ∆ b ⊔ a ∆ c := by
+  simp_rw [symm_diff_comm a]
+  exact h.le_symm_diff_sup_symm_diff_left
+
+theorem Codisjoint.bihimp_inf_bihimp_le_left (h : Codisjoint a b) : a ⇔ c ⊓ b ⇔ c ≤ c :=
+  h.dual.le_symm_diff_sup_symm_diff_left
+
+theorem Codisjoint.bihimp_inf_bihimp_le_right (h : Codisjoint b c) : a ⇔ b ⊓ a ⇔ c ≤ a :=
+  h.dual.le_symm_diff_sup_symm_diff_right
+
 end BooleanAlgebra
 
 /-! ### Prod -/

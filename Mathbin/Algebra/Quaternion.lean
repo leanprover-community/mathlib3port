@@ -47,7 +47,7 @@ quaternion
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:374:34: infer kinds are unsupported in Lean 4: mk {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:34: infer kinds are unsupported in Lean 4: mk {} -/
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
 @[nolint unused_arguments, ext]
@@ -180,7 +180,7 @@ instance : AddCommGroup ℍ[R,c₁,c₂] := by
       { add := (· + ·), neg := Neg.neg, sub := Sub.sub, zero := (0 : ℍ[R,c₁,c₂]),
         zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩,
         nsmul := @nsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ } <;>
-    intros <;> try rfl <;> ext <;> simp <;> ring_exp
+    intros <;> try rfl <;> ext <;> simp <;> ring
 
 instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
   { QuaternionAlgebra.addCommGroup with natCast := fun n => ((n : R) : ℍ[R,c₁,c₂]), nat_cast_zero := by simp,
@@ -192,7 +192,7 @@ instance : Ring ℍ[R,c₁,c₂] := by
   refine_struct
       { QuaternionAlgebra.addGroupWithOne, QuaternionAlgebra.addCommGroup with add := (· + ·), mul := (· * ·), one := 1,
         npow := @npowRec _ ⟨(1 : ℍ[R,c₁,c₂])⟩ ⟨(· * ·)⟩ } <;>
-    intros <;> try rfl <;> ext <;> simp <;> ring_exp
+    intros <;> try rfl <;> ext <;> simp <;> ring
 
 instance : Algebra R ℍ[R,c₁,c₂] where
   smul r a := ⟨r * a.1, r * a.2, r * a.3, r * a.4⟩
@@ -322,7 +322,7 @@ theorem conj_add : (a + b).conj = a.conj + b.conj :=
   conj.map_add a b
 
 @[simp]
-theorem conj_mul : (a * b).conj = b.conj * a.conj := by ext <;> simp <;> ring_exp
+theorem conj_mul : (a * b).conj = b.conj * a.conj := by ext <;> simp <;> ring
 
 theorem conj_conj_mul : (a.conj * b).conj = b.conj * a := by rw [conj_mul, conj_conj]
 
@@ -341,7 +341,7 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
 
 theorem commute_conj_self : Commute a.conj a := by
   rw [a.conj_eq_two_re_sub]
-  exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
+  exact (coe_commute (2 * a.re) a).subLeft (Commute.refl a)
 
 theorem commute_self_conj : Commute a a.conj :=
   a.commute_conj_self.symm
@@ -373,7 +373,7 @@ theorem conj_fixed {R : Type _} [CommRing R] [NoZeroDivisors R] [CharZero R] {c�
     conj a = a ↔ a = a.re := by simp [ext_iff, neg_eq_iff_add_eq_zero, add_self_eq_zero]
 
 -- Can't use `rw ← conj_fixed` in the proof without additional assumptions
-theorem conj_mul_eq_coe : conj a * a = (conj a * a).re := by ext <;> simp <;> ring_exp
+theorem conj_mul_eq_coe : conj a * a = (conj a * a).re := by ext <;> simp <;> ring
 
 theorem mul_conj_eq_coe : a * conj a = (a * conj a).re := by
   rw [a.commute_self_conj.eq]
@@ -782,22 +782,25 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 @[simp]
 theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
   rw [norm_sq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
   exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
-  all_goals apply_rules [sq_nonneg, add_nonneg]
+  all_goals
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 theorem norm_sq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
   not_congr norm_sq_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 @[simp]
 theorem norm_sq_nonneg : 0 ≤ normSq a := by
   rw [norm_sq_def']
-  apply_rules [sq_nonneg, add_nonneg]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 @[simp]
 theorem norm_sq_le_zero : normSq a ≤ 0 ↔ a = 0 := by

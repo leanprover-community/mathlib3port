@@ -12,12 +12,12 @@ import Mathbin.Data.Matrix.Dmatrix
 # Algebra isomorphism between matrices of polynomials and polynomials of matrices
 
 Given `[comm_ring R] [ring A] [algebra R A]`
-we show `polynomial A ≃ₐ[R] (A ⊗[R] R[X])`.
+we show `A[X] ≃ₐ[R] (A ⊗[R] R[X])`.
 Combining this with the isomorphism `matrix n n A ≃ₐ[R] (A ⊗[R] matrix n n R)` proved earlier
 in `ring_theory.matrix_algebra`, we obtain the algebra isomorphism
 ```
 def mat_poly_equiv :
-  matrix n n R[X] ≃ₐ[R] polynomial (matrix n n R)
+  matrix n n R[X] ≃ₐ[R] (matrix n n R)[X]
 ```
 which is characterized by
 ```
@@ -49,12 +49,12 @@ variable [Semiring A] [Algebra R A]
 namespace polyEquivTensor
 
 /-- (Implementation detail).
-The function underlying `A ⊗[R] R[X] →ₐ[R] polynomial A`,
+The function underlying `A ⊗[R] R[X] →ₐ[R] A[X]`,
 as a bilinear function of two arguments.
 -/
 @[simps apply_apply]
 def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
-  LinearMap.toSpanSingleton A _ (aeval (Polynomial.x : Polynomial A)).toLinearMap
+  LinearMap.toSpanSingleton A _ (aeval (Polynomial.x : A[X])).toLinearMap
 
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
     toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) := by
@@ -65,10 +65,10 @@ theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
     smul_monomial]
 
 /-- (Implementation detail).
-The function underlying `A ⊗[R] R[X] →ₐ[R] polynomial A`,
+The function underlying `A ⊗[R] R[X] →ₐ[R] A[X]`,
 as a linear map.
 -/
-def toFunLinear : A ⊗[R] R[X] →ₗ[R] Polynomial A :=
+def toFunLinear : A ⊗[R] R[X] →ₗ[R] A[X] :=
   TensorProduct.lift (toFunBilinear R A)
 
 @[simp]
@@ -106,14 +106,14 @@ theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
   simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
 
 theorem to_fun_linear_algebra_map_tmul_one (r : R) :
-    (toFunLinear R A) ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R (Polynomial A)) r := by
+    (toFunLinear R A) ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R A[X]) r := by
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_apply, Polynomial.aeval_one, algebra_map_smul,
     Algebra.algebra_map_eq_smul_one]
 
 /-- (Implementation detail).
-The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] polynomial A`.
+The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] A[X]`.
 -/
-def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] Polynomial A :=
+def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] A[X] :=
   algHomOfLinearMapTensorProduct (toFunLinear R A) (to_fun_linear_mul_tmul_mul R A)
     (to_fun_linear_algebra_map_tmul_one R A)
 
@@ -125,7 +125,7 @@ theorem to_fun_alg_hom_apply_tmul (a : A) (p : R[X]) :
 
 /-- (Implementation detail.)
 
-The bare function `polynomial A → A ⊗[R] R[X]`.
+The bare function `A[X] → A ⊗[R] R[X]`.
 (We don't need to show that it's an algebra map, thankfully --- just that it's an inverse.)
 -/
 def invFun (p : A[X]) : A ⊗[R] R[X] :=
@@ -169,9 +169,9 @@ theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
 
 /-- (Implementation detail)
 
-The equivalence, ignoring the algebra structure, `(A ⊗[R] R[X]) ≃ polynomial A`.
+The equivalence, ignoring the algebra structure, `(A ⊗[R] R[X]) ≃ A[X]`.
 -/
-def equiv : A ⊗[R] R[X] ≃ Polynomial A where
+def equiv : A ⊗[R] R[X] ≃ A[X] where
   toFun := toFunAlgHom R A
   invFun := invFun R A
   left_inv := left_inv R A
@@ -181,7 +181,7 @@ end polyEquivTensor
 
 open polyEquivTensor
 
-/-- The `R`-algebra isomorphism `polynomial A ≃ₐ[R] (A ⊗[R] R[X])`.
+/-- The `R`-algebra isomorphism `A[X] ≃ₐ[R] (A ⊗[R] R[X])`.
 -/
 def polyEquivTensor : A[X] ≃ₐ[R] A ⊗[R] R[X] :=
   AlgEquiv.symm { PolyEquivTensor.toFunAlgHom R A, PolyEquivTensor.equiv R A with }
@@ -210,7 +210,7 @@ variable {n : Type w} [DecidableEq n] [Fintype n]
 it's an algebra equivalence, and characterised extensionally by the lemma
 `mat_poly_equiv_coeff_apply` below.)
 -/
-noncomputable def matPolyEquiv : Matrix n n R[X] ≃ₐ[R] Polynomial (Matrix n n R) :=
+noncomputable def matPolyEquiv : Matrix n n R[X] ≃ₐ[R] (Matrix n n R)[X] :=
   ((matrixEquivTensor R R[X] n).trans (Algebra.TensorProduct.comm R _ _)).trans (polyEquivTensor R (Matrix n n R)).symm
 
 open Finset
@@ -226,7 +226,7 @@ theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
   simp only [Algebra.TensorProduct.tmul_mul_tmul, one_pow, one_mul, Matrix.mul_one, Algebra.TensorProduct.tmul_pow,
     Algebra.TensorProduct.include_left_apply, mul_eq_mul]
   rw [monomial_eq_smul_X, ← TensorProduct.smul_tmul]
-  congr with i' j' <;> simp
+  congr with (i' j') <;> simp
 
 theorem mat_poly_equiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
     coeff (matPolyEquiv (stdBasisMatrix i j p)) k = stdBasisMatrix i j (coeff p k) := by
@@ -271,7 +271,7 @@ theorem mat_poly_equiv_symm_apply_coeff (p : (Matrix n n R)[X]) (i j : n) (k : �
   simp only [mat_poly_equiv_coeff_apply]
 
 theorem mat_poly_equiv_smul_one (p : R[X]) : matPolyEquiv (p • 1) = p.map (algebraMap R (Matrix n n R)) := by
-  ext m i j
+  ext (m i j)
   simp only [coeff_map, one_apply, algebra_map_matrix_apply, mul_boole, Pi.smul_apply, mat_poly_equiv_coeff_apply]
   split_ifs <;> simp
 

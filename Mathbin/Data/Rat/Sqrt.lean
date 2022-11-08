@@ -23,7 +23,7 @@ numerator and the square root (on natural numbers) of the denominator. -/
 def sqrt (q : ℚ) : ℚ :=
   Rat.mk (Int.sqrt q.num) (Nat.sqrt q.denom)
 
-theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = abs q := by
+theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = |q| := by
   rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 
 theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt x = x :=

@@ -162,13 +162,13 @@ theorem span_gram_schmidt (f : ι → E) : span 𝕜 (Range (gramSchmidt 𝕜 f)
   span_eq_span (range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| gram_schmidt_mem_span _ _ le_rfl) <|
     range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| mem_span_gram_schmidt _ _ le_rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr - »(f i, 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr - »(f i, 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem gram_schmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f i, f j⟫ = 0) : gramSchmidt 𝕜 f = f := by
   ext i
   rw [gram_schmidt_def]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr - »(f i, 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr - »(f i, 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr
     apply Finset.sum_eq_zero
     intro j hj
@@ -222,7 +222,7 @@ theorem gram_schmidt_triangular {i j : ι} (hij : i < j) (b : Basis ι 𝕜 E) :
   have : gramSchmidt 𝕜 b i ∈ span 𝕜 (b '' Set.IioCat j) := by rwa [← span_gram_schmidt_Iio 𝕜 b j]
   have : ↑(b.repr (gramSchmidt 𝕜 b i)).Support ⊆ Set.IioCat j :=
     Basis.repr_support_subset_of_mem_span b (Set.IioCat j) this
-  exact (Finsupp.mem_supported' _ _).1 ((Finsupp.mem_supported 𝕜 _).2 this) j (not_mem_Iio.2 (le_refl j))
+  exact (Finsupp.mem_supported' _ _).1 ((Finsupp.mem_supported 𝕜 _).2 this) j Set.not_mem_Iio_self
 
 /-- `gram_schmidt` produces linearly independent vectors when given linearly independent vectors. -/
 theorem gram_schmidt_linear_independent {f : ι → E} (h₀ : LinearIndependent 𝕜 f) :

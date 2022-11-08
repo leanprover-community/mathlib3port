@@ -37,9 +37,9 @@ to `log |x|` for `x < 0`, and to `0` for `0`. We use this unconventional extensi
 the derivative of `log` is `1/x` away from `0`. -/
 @[pp_nodot]
 noncomputable def log (x : ℝ) : ℝ :=
-  if hx : x = 0 then 0 else expOrderIso.symm ⟨abs x, abs_pos.2 hx⟩
+  if hx : x = 0 then 0 else expOrderIso.symm ⟨|x|, abs_pos.2 hx⟩
 
-theorem log_of_ne_zero (hx : x ≠ 0) : log x = expOrderIso.symm ⟨abs x, abs_pos.2 hx⟩ :=
+theorem log_of_ne_zero (hx : x ≠ 0) : log x = expOrderIso.symm ⟨|x|, abs_pos.2 hx⟩ :=
   dif_neg hx
 
 theorem log_of_pos (hx : 0 < x) : log x = expOrderIso.symm ⟨x, hx⟩ := by
@@ -47,7 +47,7 @@ theorem log_of_pos (hx : 0 < x) : log x = expOrderIso.symm ⟨x, hx⟩ := by
   congr
   exact abs_of_pos hx
 
-theorem exp_log_eq_abs (hx : x ≠ 0) : exp (log x) = abs x := by
+theorem exp_log_eq_abs (hx : x ≠ 0) : exp (log x) = |x| := by
   rw [log_of_ne_zero hx, ← coe_exp_order_iso_apply, OrderIso.apply_symm_apply, Subtype.coe_mk]
 
 theorem exp_log (hx : 0 < x) : exp (log x) = x := by
@@ -88,7 +88,7 @@ theorem log_one : log 1 = 0 :=
   exp_injective <| by rw [exp_log zero_lt_one, exp_zero]
 
 @[simp]
-theorem log_abs (x : ℝ) : log (abs x) = log x := by
+theorem log_abs (x : ℝ) : log (|x|) = log x := by
   by_cases h:x = 0
   · simp [h]
     
@@ -225,7 +225,7 @@ theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 := by
   rw [exp_log hx]
 
 /-- Bound for `|log x * x|` in the interval `(0, 1]`. -/
-theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : abs (log x * x) < 1 := by
+theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| < 1 := by
   have : 0 < 1 / x := by simpa only [one_div, inv_pos] using h1
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by linarith
@@ -290,7 +290,7 @@ theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun
   · simp_rw [Nat.cast_pow, log_pow]
     
   · norm_cast
-    exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).ne_zero
+    exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).NeZero
     
 
 theorem tendsto_pow_log_div_mul_add_at_top (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :

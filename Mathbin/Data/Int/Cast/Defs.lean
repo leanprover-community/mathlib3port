@@ -29,13 +29,14 @@ attribute [simp] Int.of_nat_eq_coe
 /-- Default value for `add_group_with_one.int_cast`. -/
 protected def Int.castDef {R : Type u} [HasNatCast R] [Neg R] : ℤ → R
   | (n : ℕ) => n
-  | -[1 + n] => -(n + 1 : ℕ)
+  | -[n+1] => -(n + 1 : ℕ)
 
 /-- Type class for the canonical homomorphism `ℤ → R`.
 -/
 class HasIntCast (R : Type u) where
   intCast : ℤ → R
 
+#print AddGroupWithOne /-
 /-- An `add_group_with_one` is an `add_group` with a `1`.
 It also contains data for the unique homomorphisms `ℕ → R` and `ℤ → R`.
 -/
@@ -48,6 +49,7 @@ class AddGroupWithOne (R : Type u) extends HasIntCast R, AddGroup R, AddMonoidWi
   int_cast_neg_succ_of_nat : ∀ n : ℕ, int_cast (-(n + 1 : ℕ)) = -((n + 1 : ℕ) : R) := by
     intros
     rfl
+-/
 
 /-- An `add_comm_group_with_one` is an `add_group_with_one` satisfying `a + b = b + a`. -/
 @[protect_proj]
@@ -99,17 +101,17 @@ theorem cast_of_nat (n : ℕ) : (ofNat n : R) = n :=
 
 /- warning: int.cast_neg_succ_of_nat -> Int.cast_negSucc is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R] (n : Nat), Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTCₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (Int.negSucc n)) (Neg.neg.{u} R (SubNegMonoid.toHasNeg.{u} R (AddGroup.toSubNegMonoid.{u} R (AddGroupWithOne.toAddGroup.{u} R _inst_1))) ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u} Nat R (CoeTCₓ.coe.{1 succ u} Nat R (Nat.castCoe.{u} R (AddMonoidWithOne.toHasNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1))))) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))))
+  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R] (n : Nat), Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTCₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (Int.negSucc n)) (Neg.neg.{u} R (SubNegMonoid.toHasNeg.{u} R (AddGroup.toSubNegMonoid.{u} R (AddGroupWithOne.toAddGroup.{u} R _inst_1))) ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u} Nat R (CoeTCₓ.coe.{1 succ u} Nat R (Nat.castCoe.{u} R (AddMonoidWithOne.toHasNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1))))) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
 but is expected to have type
   forall {R : Type.{u_1}} {n : Nat} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811 : AddGroupWithOne.{u_1} R], Eq.{succ u_1} R (Int.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811 (Int.negSucc n)) (Neg.neg.{u_1} R (AddGroupWithOne.toNeg.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811) (Nat.cast.{u_1} R (AddGroupWithOne.toAddMonoidWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
 Case conversion may be inaccurate. Consider using '#align int.cast_neg_succ_of_nat Int.cast_negSuccₓ'. -/
 @[simp]
-theorem cast_negSucc (n : ℕ) : (-[1 + n] : R) = -(n + 1 : ℕ) :=
+theorem cast_negSucc (n : ℕ) : (-[n+1] : R) = -(n + 1 : ℕ) :=
   AddGroupWithOne.int_cast_neg_succ_of_nat n
 
 /- warning: int.cast_zero -> Int.cast_zero is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTCₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (Zero.zero.{0} Int Int.hasZero)) (Zero.zero.{u} R (AddZeroClass.toHasZero.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))))
+  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTCₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (AddZeroClass.toHasZero.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))))))
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.848 : AddGroupWithOne.{u_1} R], Eq.{succ u_1} R (Int.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.848 (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (AddRightCancelMonoid.toZero.{u_1} R (AddCancelMonoid.toAddRightCancelMonoid.{u_1} R (AddGroup.toAddCancelMonoid.{u_1} R (AddGroupWithOne.toAddGroup.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.848))))))
 Case conversion may be inaccurate. Consider using '#align int.cast_zero Int.cast_zeroₓ'. -/
@@ -129,7 +131,7 @@ theorem cast_ofNat (n : ℕ) : ((n : ℤ) : R) = n :=
 
 /- warning: int.cast_one -> Int.cast_one is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTCₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (One.one.{0} Int Int.hasOne)) (One.one.{u} R (AddMonoidWithOne.toHasOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))
+  forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1 succ u} a b] => self.0) Int R (HasLiftT.mk.{1 succ u} Int R (CoeTCₓ.coe.{1 succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (OfNat.ofNat.{u} R 1 (OfNat.mk.{u} R 1 (One.one.{u} R (AddMonoidWithOne.toHasOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))))
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.908 : AddGroupWithOne.{u_1} R], Eq.{succ u_1} R (Int.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.908 (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (AddMonoidWithOne.toOne.{u_1} R (AddGroupWithOne.toAddMonoidWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.908))))
 Case conversion may be inaccurate. Consider using '#align int.cast_one Int.cast_oneₓ'. -/
@@ -147,7 +149,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_neg Int.cast_
 theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
   | (0 : ℕ) => by erw [cast_zero, neg_zero]
   | (n + 1 : ℕ) => by erw [cast_of_nat, cast_neg_succ_of_nat] <;> rfl
-  | -[1 + n] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
+  | -[n+1] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
 
 /- warning: int.cast_sub_nat_nat -> Int.cast_subNatNat is a dubious translation:
 lean 3 declaration is
@@ -180,12 +182,12 @@ Case conversion may be inaccurate. Consider using '#align int.cast_add Int.cast_
 @[simp, norm_cast]
 theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
   | (m : ℕ), (n : ℕ) => by simp [← Int.coe_nat_add]
-  | (m : ℕ), -[1 + n] => by erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
-  | -[1 + m], (n : ℕ) => by
+  | (m : ℕ), -[n+1] => by erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
+  | -[m+1], (n : ℕ) => by
     erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_iff_eq_add, add_assoc, eq_neg_add_iff_add_eq, ←
       Nat.cast_add, ← Nat.cast_add, Nat.add_comm]
-  | -[1 + m], -[1 + n] =>
-    show (-[1 + (m + n + 1)] : R) = _ by
+  | -[m+1], -[n+1] =>
+    show (-[m + n + 1+1] : R) = _ by
       rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ← Nat.cast_add,
         Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
 

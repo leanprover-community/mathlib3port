@@ -81,14 +81,14 @@ theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ �
   refine' forall_congr' fun p => forall_congr' fun hp => forall_congr' fun q => forall_congr' fun hq => _
   rw [mem_bot, commutator_element_eq_one_iff_mul_comm, eq_comm]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(x, z),
          «expr ⁻¹»(«expr⁅ , ⁆»(y, «expr⁅ , ⁆»(«expr ⁻¹»(z), «expr ⁻¹»(x))))),
         «expr ⁻¹»(z)),
        y),
       «expr ⁻¹»(«expr⁅ , ⁆»(«expr ⁻¹»(x), «expr⁅ , ⁆»(«expr ⁻¹»(y), z)))),
      «expr ⁻¹»(y)),
-    «expr ⁻¹»(x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+    «expr ⁻¹»(x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- **The Three Subgroups Lemma** (via the Hall-Witt identity) -/
 theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁⁆ = ⊥) (h2 : ⁅⁅H₃, H₁⁆, H₂⁆ = ⊥) :
     ⁅⁅H₁, H₂⁆, H₃⁆ = ⊥ := by
@@ -96,7 +96,7 @@ theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁�
     commutator_element_def] at h1 h2⊢
   intro x hx y hy z hz
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(x, z),\n         «expr ⁻¹»(«expr⁅ , ⁆»(y, «expr⁅ , ⁆»(«expr ⁻¹»(z), «expr ⁻¹»(x))))),\n        «expr ⁻¹»(z)),\n       y),\n      «expr ⁻¹»(«expr⁅ , ⁆»(«expr ⁻¹»(x), «expr⁅ , ⁆»(«expr ⁻¹»(y), z)))),\n     «expr ⁻¹»(y)),\n    «expr ⁻¹»(x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(x, z),\n         «expr ⁻¹»(«expr⁅ , ⁆»(y, «expr⁅ , ⁆»(«expr ⁻¹»(z), «expr ⁻¹»(x))))),\n        «expr ⁻¹»(z)),\n       y),\n      «expr ⁻¹»(«expr⁅ , ⁆»(«expr ⁻¹»(x), «expr⁅ , ⁆»(«expr ⁻¹»(y), z)))),\n     «expr ⁻¹»(y)),\n    «expr ⁻¹»(x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · group
     
   · rw [h1 _ (H₂.inv_mem hy) _ hz _ (H₁.inv_mem hx), h2 _ (H₃.inv_mem hz) _ (H₁.inv_mem hx) _ hy]
@@ -218,4 +218,27 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
     
 
 end Subgroup
+
+variable (G)
+
+/-- The set of commutator elements `⁅g₁, g₂⁆` in `G`. -/
+def CommutatorSet : Set G :=
+  { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g }
+
+theorem commutator_set_def : CommutatorSet G = { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g } :=
+  rfl
+
+theorem one_mem_commutator_set : (1 : G) ∈ CommutatorSet G :=
+  ⟨1, 1, commutator_element_self 1⟩
+
+instance : Nonempty (CommutatorSet G) :=
+  ⟨⟨1, one_mem_commutator_set G⟩⟩
+
+variable {G g}
+
+theorem mem_commutator_set_iff : g ∈ CommutatorSet G ↔ ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g :=
+  Iff.rfl
+
+theorem commutator_mem_commutator_set : ⁅g₁, g₂⁆ ∈ CommutatorSet G :=
+  ⟨g₁, g₂, rfl⟩
 

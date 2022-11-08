@@ -1169,6 +1169,9 @@ theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < fin
   rw [← @finrank_top K V] at lt
   exact lt_of_le_of_finrank_lt_finrank le_top lt
 
+theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V} (h : finrank K S = finrank K V) : S = ⊤ :=
+  FiniteDimensional.eq_of_le_of_finrank_eq le_top (by simp [h, finrank_top])
+
 theorem finrank_mono [FiniteDimensional K V] : Monotone fun s : Submodule K V => finrank K s := fun s t hst =>
   calc
     finrank K s = finrank K (comap t.Subtype s) := LinearEquiv.finrank_eq (comapSubtypeEquivOfLe hst).symm
@@ -1640,22 +1643,44 @@ theorem Subalgebra.eq_bot_of_dim_one {S : Subalgebra F E} (h : Module.rank F S =
   exact Subalgebra.eq_bot_of_finrank_one h
 
 @[simp]
-theorem Subalgebra.bot_eq_top_of_dim_eq_one (h : Module.rank F E = 1) : (⊥ : Subalgebra F E) = ⊤ := by
-  rw [← dim_top, ← subalgebra_top_dim_eq_submodule_top_dim] at h
-  exact Eq.symm (Subalgebra.eq_bot_of_dim_one h)
-
-@[simp]
-theorem Subalgebra.bot_eq_top_of_finrank_eq_one (h : finrank F E = 1) : (⊥ : Subalgebra F E) = ⊤ := by
-  rw [← finrank_top, ← subalgebra_top_finrank_eq_submodule_top_finrank] at h
-  exact Eq.symm (Subalgebra.eq_bot_of_finrank_one h)
-
-@[simp]
 theorem Subalgebra.dim_eq_one_iff {S : Subalgebra F E} : Module.rank F S = 1 ↔ S = ⊥ :=
   ⟨Subalgebra.eq_bot_of_dim_one, Subalgebra.dim_eq_one_of_eq_bot⟩
 
 @[simp]
 theorem Subalgebra.finrank_eq_one_iff {S : Subalgebra F E} : finrank F S = 1 ↔ S = ⊥ :=
   ⟨Subalgebra.eq_bot_of_finrank_one, Subalgebra.finrank_eq_one_of_eq_bot⟩
+
+theorem Subalgebra.bot_eq_top_iff_dim_eq_one : (⊥ : Subalgebra F E) = ⊤ ↔ Module.rank F E = 1 := by
+  rw [← dim_top, ← subalgebra_top_dim_eq_submodule_top_dim, Subalgebra.dim_eq_one_iff, eq_comm]
+
+theorem Subalgebra.bot_eq_top_iff_finrank_eq_one : (⊥ : Subalgebra F E) = ⊤ ↔ finrank F E = 1 := by
+  rw [← finrank_top, ← subalgebra_top_finrank_eq_submodule_top_finrank, Subalgebra.finrank_eq_one_iff, eq_comm]
+
+@[simp]
+theorem Subalgebra.bot_eq_top_of_finrank_eq_one (h : finrank F E = 1) : (⊥ : Subalgebra F E) = ⊤ :=
+  Subalgebra.bot_eq_top_iff_finrank_eq_one.2 h
+
+@[simp]
+theorem Subalgebra.bot_eq_top_of_dim_eq_one (h : Module.rank F E = 1) : (⊥ : Subalgebra F E) = ⊤ :=
+  Subalgebra.bot_eq_top_iff_dim_eq_one.2 h
+
+theorem Subalgebra.is_simple_order_of_finrank (hr : finrank F E = 2) : IsSimpleOrder (Subalgebra F E) :=
+  { to_nontrivial := ⟨⟨⊥, ⊤, fun h => by cases hr.symm.trans (Subalgebra.bot_eq_top_iff_finrank_eq_one.1 h)⟩⟩,
+    eq_bot_or_eq_top := by
+      intro S
+      haveI : FiniteDimensional F E := finite_dimensional_of_finrank_eq_succ hr
+      haveI : FiniteDimensional F S := FiniteDimensional.finiteDimensionalSubmodule S.to_submodule
+      have : finrank F S ≤ 2 := hr ▸ S.to_submodule.finrank_le
+      have : 0 < finrank F S := finrank_pos_iff.mpr inferInstance
+      interval_cases finrank F S
+      · left
+        exact Subalgebra.eq_bot_of_finrank_one h
+        
+      · right
+        rw [← hr] at h
+        rw [← Algebra.to_submodule_eq_top]
+        exact Submodule.eq_top_of_finrank_eq h
+         }
 
 end SubalgebraDim
 

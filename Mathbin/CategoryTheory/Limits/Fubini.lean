@@ -240,8 +240,8 @@ variable [HasLimit G]
 
 variable [HasLimit (curry.obj G ⋙ lim)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr limit (uncurry.obj ((@curry J _ K _ C _).obj G))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr limit (uncurry.obj ((@curry J _ K _ C _).obj G))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The Fubini theorem for a functor `G : J × K ⥤ C`,
 showing that the limit of `G` can be computed as
 the limit of the limits of the functors `G.obj (j, _)`.
@@ -250,7 +250,7 @@ noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙
   have i : G ≅ uncurry.obj ((@curry J _ K _ C _).obj G) := currying.symm.unit_iso.app G
   haveI : limits.has_limit (uncurry.obj ((@curry J _ K _ C _).obj G)) := has_limit_of_iso i
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr limit (uncurry.obj ((@curry J _ K _ C _).obj G))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr limit (uncurry.obj ((@curry J _ K _ C _).obj G))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   apply has_limit.iso_of_nat_iso i
   exact limit_uncurry_iso_limit_comp_lim ((@curry J _ K _ C _).obj G)
 

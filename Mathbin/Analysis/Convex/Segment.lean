@@ -225,12 +225,12 @@ theorem open_segment_translate_image (a b c : E) :
 
 end OrderedRing
 
-theorem sameRayOfMemSegment [StrictOrderedCommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] {x y z : E} (h : x ∈ [y -[𝕜] z]) :
-    SameRay 𝕜 (x - y) (z - x) := by
+theorem same_ray_of_mem_segment [StrictOrderedCommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] {x y z : E}
+    (h : x ∈ [y -[𝕜] z]) : SameRay 𝕜 (x - y) (z - x) := by
   rw [segment_eq_image'] at h
   rcases h with ⟨θ, ⟨hθ₀, hθ₁⟩, rfl⟩
   simpa only [add_sub_cancel', ← sub_sub, sub_smul, one_smul] using
-    (sameRayNonnegSmulLeft (z - y) hθ₀).nonnegSmulRight (sub_nonneg.2 hθ₁)
+    (same_ray_nonneg_smul_left (z - y) hθ₀).nonneg_smul_right (sub_nonneg.2 hθ₁)
 
 section LinearOrderedRing
 
@@ -282,9 +282,6 @@ theorem mem_segment_iff_div :
     rw [← add_div, div_self hab.ne']
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem mem_open_segment_iff_div :
     x ∈ OpenSegment 𝕜 y z ↔ ∃ a b : 𝕜, 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
   constructor
@@ -293,12 +290,8 @@ theorem mem_open_segment_iff_div :
     rw [hab, div_one, div_one]
     
   · rintro ⟨a, b, ha, hb, rfl⟩
-    have hab : 0 < a + b := by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
-    refine'
-      ⟨a / (a + b), b / (a + b), by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", _, rfl⟩
+    have hab : 0 < a + b := by positivity
+    refine' ⟨a / (a + b), b / (a + b), by positivity, by positivity, _, rfl⟩
     rw [← add_div, div_self hab.ne']
     
 
@@ -309,7 +302,7 @@ section LinearOrderedField
 variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {x y z : E}
 
 theorem mem_segment_iff_same_ray : x ∈ [y -[𝕜] z] ↔ SameRay 𝕜 (x - y) (z - x) := by
-  refine' ⟨sameRayOfMemSegment, fun h => _⟩
+  refine' ⟨same_ray_of_mem_segment, fun h => _⟩
   rcases h.exists_eq_smul_add with ⟨a, b, ha, hb, hab, hxy, hzx⟩
   rw [add_comm, sub_add_sub_cancel] at hxy hzx
   rw [← mem_segment_translate _ (-x), neg_add_self]

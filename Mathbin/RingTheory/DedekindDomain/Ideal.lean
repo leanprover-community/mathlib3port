@@ -183,7 +183,7 @@ noncomputable instance : InvOneClass (FractionalIdeal R₁⁰ K) :=
 
 end FractionalIdeal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
@@ -198,7 +198,7 @@ open FractionalIdeal
 
 variable {R A K}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), I * I⁻¹ = 1 := by
   let h := FractionalIdeal.mapEquiv (FractionRing.algEquiv A K)
@@ -467,7 +467,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
     simp only [mul_assoc, mul_comm b] at hx⊢
     intro y hy
     exact hx _ (FractionalIdeal.mul_mem_mul hy hb)
-  -- It turns out the subalgebra consisting of all `p(x)` for `p : polynomial A` works.
+  -- It turns out the subalgebra consisting of all `p(x)` for `p : A[X]` works.
   refine'
     ⟨AlgHom.range (Polynomial.aeval x : A[X] →ₐ[A] K),
       is_noetherian_submodule.mp (FractionalIdeal.is_noetherian I⁻¹) _ fun y hy => _,
@@ -617,7 +617,7 @@ instance Ideal.uniqueFactorizationMonoid : UniqueFactorizationMonoid (Ideal A) :
   { Ideal.wfDvdMonoid with
     irreducible_iff_prime := fun P =>
       ⟨fun hirr =>
-        ⟨hirr.ne_zero, hirr.not_unit, fun I J => by
+        ⟨hirr.NeZero, hirr.not_unit, fun I J => by
           have : P.is_maximal := by
             refine' ⟨⟨mt ideal.is_unit_iff.mpr hirr.not_unit, _⟩⟩
             intro J hJ
@@ -729,6 +729,69 @@ theorem Ideal.exist_integer_multiples_not_mem {J : Ideal A} (hJ : J ≠ ⊤) {ι
     -- And multiplying by `I⁻¹` is indeed strictly monotone.
     exact strict_mono_of_le_iff_le (fun _ _ => (coe_ideal_le_coe_ideal K).symm) (lt_top_iff_ne_top.mpr hJ)
     
+
+section Gcd
+
+namespace Ideal
+
+/-! ### GCD and LCM of ideals in a Dedekind domain
+
+We show that the gcd of two ideals in a Dedekind domain is just their supremum,
+and the lcm is their infimum, and use this to instantiate `normalized_gcd_monoid (ideal A)`.
+-/
+
+
+@[simp]
+theorem sup_mul_inf (I J : Ideal A) : (I ⊔ J) * (I ⊓ J) = I * J := by
+  letI := Classical.decEq (Ideal A)
+  letI := Classical.decEq (Associates (Ideal A))
+  letI := UniqueFactorizationMonoid.toNormalizedGcdMonoid (Ideal A)
+  have hgcd : gcd I J = I ⊔ J := by
+    rw [gcd_eq_normalize _ _, normalize_eq]
+    · rw [dvd_iff_le, sup_le_iff, ← dvd_iff_le, ← dvd_iff_le]
+      exact ⟨gcd_dvd_left _ _, gcd_dvd_right _ _⟩
+      
+    · rw [dvd_gcd_iff, dvd_iff_le, dvd_iff_le]
+      simp
+      
+  have hlcm : lcm I J = I ⊓ J := by
+    rw [lcm_eq_normalize _ _, normalize_eq]
+    · rw [lcm_dvd_iff, dvd_iff_le, dvd_iff_le]
+      simp
+      
+    · rw [dvd_iff_le, le_inf_iff, ← dvd_iff_le, ← dvd_iff_le]
+      exact ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩
+      
+  rw [← hgcd, ← hlcm, associated_iff_eq.mp (gcd_mul_lcm _ _)]
+  infer_instance
+
+/-- Ideals in a Dedekind domain have gcd and lcm operators that (trivially) are compatible with
+the normalization operator. -/
+instance : NormalizedGcdMonoid (Ideal A) :=
+  { Ideal.normalizationMonoid with gcd := (· ⊔ ·),
+    gcd_dvd_left := fun _ _ => by simpa only [dvd_iff_le] using le_sup_left,
+    gcd_dvd_right := fun _ _ => by simpa only [dvd_iff_le] using le_sup_right,
+    dvd_gcd := fun _ _ _ => by simpa only [dvd_iff_le] using sup_le, lcm := (· ⊓ ·),
+    lcm_zero_left := fun _ => by simp only [zero_eq_bot, bot_inf_eq],
+    lcm_zero_right := fun _ => by simp only [zero_eq_bot, inf_bot_eq],
+    gcd_mul_lcm := fun _ _ => by rw [associated_iff_eq, sup_mul_inf], normalize_gcd := fun _ _ => normalize_eq _,
+    normalize_lcm := fun _ _ => normalize_eq _ }
+
+-- In fact, any lawful gcd and lcm would equal sup and inf respectively.
+@[simp]
+theorem gcd_eq_sup (I J : Ideal A) : gcd I J = I ⊔ J :=
+  rfl
+
+@[simp]
+theorem lcm_eq_inf (I J : Ideal A) : lcm I J = I ⊓ J :=
+  rfl
+
+theorem inf_eq_mul_of_coprime {I J : Ideal A} (coprime : I ⊔ J = ⊤) : I ⊓ J = I * J := by
+  rw [← associated_iff_eq.mp (gcd_mul_lcm I J), lcm_eq_inf I J, gcd_eq_sup, coprime, top_mul]
+
+end Ideal
+
+end Gcd
 
 end IsDedekindDomain
 
@@ -1094,7 +1157,7 @@ theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {
   simp only [← Ideal.dvd_iff_le]
   exact ((Ideal.prime_iff_is_prime hP0).mpr hP).dvd_finset_prod_iff _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 /-- The intersection of distinct prime powers in a Dedekind domain is the product of these
 prime powers. -/
 theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f : ι → Ideal R) (e : ι → ℕ)
@@ -1123,9 +1186,9 @@ theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f 
   · rintro rfl
     contradiction
     
-  · exact (Prime a (Finset.mem_insert_self a s)).ne_zero
+  · exact (Prime a (Finset.mem_insert_self a s)).NeZero
     
-  · exact (Prime b (Finset.mem_insert_of_mem hb)).ne_zero
+  · exact (Prime b (Finset.mem_insert_of_mem hb)).NeZero
     
 
 /-- **Chinese remainder theorem** for a Dedekind domain: if the ideal `I` factors as
@@ -1146,9 +1209,9 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintyp
           haveI := Ideal.is_prime_of_prime (Prime j)
           exact
             coprime i j hij
-              (((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime i).ne_zero).mp
+              (((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime i).NeZero).mp
                     (Ideal.le_of_pow_le_prime hPi)).trans
-                ((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime j).ne_zero).mp
+                ((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime j).NeZero).mp
                     (Ideal.le_of_pow_le_prime hPj)).symm))
 
 open Classical
@@ -1205,9 +1268,9 @@ theorem singleton_span_mem_normalized_factors_of_mem_normalized_factors [Normali
         exact hb (span_singleton_eq_bot.mp h)
         
     rw [prime_iff_is_prime]
-    exact (span_singleton_prime (prime_of_normalized_factor a ha).ne_zero).mpr (prime_of_normalized_factor a ha)
+    exact (span_singleton_prime (prime_of_normalized_factor a ha).NeZero).mpr (prime_of_normalized_factor a ha)
     by_contra
-    exact (prime_of_normalized_factor a ha).ne_zero (span_singleton_eq_bot.mp h)
+    exact (prime_of_normalized_factor a ha).NeZero (span_singleton_eq_bot.mp h)
     
 
 theorem multiplicity_eq_multiplicity_span [DecidableRel ((· ∣ ·) : R → R → Prop)]
@@ -1251,7 +1314,7 @@ noncomputable def normalizedFactorsEquivSpanNormalizedFactors {r : R} (hr : r �
         letI : i.is_prime := is_prime_of_prime (prime_of_normalized_factor i hi)
         obtain ⟨a, ha, ha'⟩ :=
           exists_mem_normalized_factors_of_dvd hr
-            (Submodule.IsPrincipal.primeGeneratorOfIsPrime i (prime_of_normalized_factor i hi).ne_zero).Irreducible _
+            (Submodule.IsPrincipal.primeGeneratorOfIsPrime i (prime_of_normalized_factor i hi).NeZero).Irreducible _
         · use ⟨a, ha⟩
           simp only [Subtype.coe_mk, Subtype.mk_eq_mk, ← span_singleton_eq_span_singleton.mpr ha',
             Ideal.span_singleton_generator]

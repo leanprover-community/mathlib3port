@@ -3,9 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Field.Basic
 import Mathbin.Data.Finset.Preimage
 import Mathbin.Data.Set.Intervals.Disjoint
+import Mathbin.Data.Set.Intervals.OrderIso
 import Mathbin.Order.Filter.Bases
 
 /-!
@@ -1402,16 +1403,13 @@ theorem HasAntitoneBasis.compStrictMono {l : Filter α} {s : ℕ → Set α} (hs
     (hφ : StrictMono φ) : l.HasAntitoneBasis (s ∘ φ) :=
   hs.comp_mono hφ.Monotone hφ.tendsto_at_top
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident φ, ",", ident hφ, ",", ident hrφ, "⟩", ":", expr «expr∃ , »((φ : exprℕ() → exprℕ()),
-    «expr ∧ »(strict_mono φ, ∀ m n, «expr < »(m, n) → r (φ m) (φ n)))]] -/
 /-- Given an antitone basis `s : ℕ → set α` of a filter, extract an antitone subbasis `s ∘ φ`,
 `φ : ℕ → ℕ`, such that `m < n` implies `r (φ m) (φ n)`. This lemma can be used to extract an
 antitone basis with basis sets decreasing "sufficiently fast". -/
 theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α} (hs : f.HasAntitoneBasis s) {r : ℕ → ℕ → Prop}
     (hr : ∀ m, ∀ᶠ n in at_top, r m n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ (∀ ⦃m n⦄, m < n → r (φ m) (φ n)) ∧ f.HasAntitoneBasis (s ∘ φ) := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident φ, \",\", ident hφ, \",\", ident hrφ, \"⟩\", \":\", expr «expr∃ , »((φ : exprℕ() → exprℕ()),\n    «expr ∧ »(strict_mono φ, ∀ m n, «expr < »(m, n) → r (φ m) (φ n)))]]"
+  rsuffices ⟨φ, hφ, hrφ⟩ : ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ m n, m < n → r (φ m) (φ n)
   · exact ⟨φ, hφ, hrφ, hs.comp_strict_mono hφ⟩
     
   have : ∀ t : Set ℕ, t.Finite → ∀ᶠ n in at_top, ∀ m ∈ t, m < n ∧ r m n := fun t ht =>
@@ -1551,7 +1549,7 @@ theorem exists_le_mul_self (a : R) : ∃ x ≥ 0, a ≤ x * x :=
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.

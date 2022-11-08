@@ -91,8 +91,6 @@ namespace TopologicalVectorBundle
 
 variable {F₁ E₁ F₂ E₂} (e₁ e₁' : Trivialization 𝕜₁ F₁ E₁) (e₂ e₂' : Trivialization 𝕜₂ F₂ E₂)
 
-variable [RingHomIsometric σ]
-
 namespace Pretrivialization
 
 /-- Assume `eᵢ` and `eᵢ'` are trivializations of the bundles `Eᵢ` over base `B` with fiber `Fᵢ`
@@ -100,7 +98,7 @@ namespace Pretrivialization
 function between the two induced (pre)trivializations
 `pretrivialization.continuous_linear_map σ e₁ e₂` and
 `pretrivialization.continuous_linear_map σ e₁' e₂'` of `bundle.continuous_linear_map`. -/
-def continuousLinearMapCoordChange (b : B) : (F₁ →SL[σ] F₂) →L[𝕜₂] F₁ →SL[σ] F₂ :=
+def continuousLinearMapCoordChange [RingHomIsometric σ] (b : B) : (F₁ →SL[σ] F₂) →L[𝕜₂] F₁ →SL[σ] F₂ :=
   ((e₁'.coordChange e₁ b).symm.arrowCongrSL (e₂.coordChange e₂' b) : (F₁ →SL[σ] F₂) ≃L[𝕜₂] F₁ →SL[σ] F₂)
 
 variable {σ e₁ e₁' e₂ e₂'}
@@ -109,7 +107,7 @@ variable [∀ x : B, TopologicalSpace (E₁ x)] [TopologicalVectorBundle 𝕜₁
 
 variable [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle 𝕜₂ F₂ E₂]
 
-theorem continuous_on_continuous_linear_map_coord_change (he₁ : e₁ ∈ TrivializationAtlas 𝕜₁ F₁ E₁)
+theorem continuous_on_continuous_linear_map_coord_change [RingHomIsometric σ] (he₁ : e₁ ∈ TrivializationAtlas 𝕜₁ F₁ E₁)
     (he₁' : e₁' ∈ TrivializationAtlas 𝕜₁ F₁ E₁) (he₂ : e₂ ∈ TrivializationAtlas 𝕜₂ F₂ E₂)
     (he₂' : e₂' ∈ TrivializationAtlas 𝕜₂ F₂ E₂) :
     ContinuousOn (continuousLinearMapCoordChange σ e₁ e₁' e₂ e₂')
@@ -125,7 +123,7 @@ theorem continuous_on_continuous_linear_map_coord_change (he₁ : e₁ ∈ Trivi
   · mfld_set_tac
     
   · intro b hb
-    ext L v
+    ext (L v)
     simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
       ContinuousLinearEquiv.arrow_congrSL_apply, comp_apply, Function.comp, compSL_apply, flip_apply,
       ContinuousLinearEquiv.symm_symm]
@@ -181,7 +179,7 @@ theorem continuous_linear_map_symm_apply' {b : B} (hb : b ∈ e₁.BaseSet ∩ e
   rfl
   exact hb
 
-theorem continuous_linear_map_coord_change_apply (b : B)
+theorem continuous_linear_map_coord_change_apply [RingHomIsometric σ] (b : B)
     (hb : b ∈ e₁.BaseSet ∩ e₂.BaseSet ∩ (e₁'.BaseSet ∩ e₂'.BaseSet)) (L : F₁ →SL[σ] F₂) :
     continuousLinearMapCoordChange σ e₁ e₁' e₂ e₂' b L =
       (continuousLinearMap σ e₁' e₂' (totalSpaceMk b ((continuousLinearMap σ e₁ e₂).symm b L))).2 :=
@@ -200,7 +198,7 @@ end Pretrivialization
 
 open Pretrivialization
 
-variable (F₁ E₁ F₂ E₂)
+variable (F₁ E₁ F₂ E₂) [RingHomIsometric σ]
 
 variable [∀ x : B, TopologicalSpace (E₁ x)] [TopologicalVectorBundle 𝕜₁ F₁ E₁]
 

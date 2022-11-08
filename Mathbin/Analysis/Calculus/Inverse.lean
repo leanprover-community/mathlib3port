@@ -293,14 +293,14 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
           add_le_add (mul_le_mul_of_nonneg_left IH.1 (Nnreal.coe_nonneg _)) IH.2
         _ = f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n.succ) / (1 - c * f'symm.nnnorm) * dist (f b) y := by
           field_simp [Jcf']
-          ring_exp
+          ring
         
     refine' ⟨_, Ign⟩
     calc
       dist (f (g (u n))) y ≤ c * f'symm.nnnorm * dist (f (u n)) y := B _ (C n _ IH.2) (C n.succ _ Ign)
       _ ≤ c * f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
         mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))
-      _ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y := by ring_exp
+      _ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y := by ring
       
   -- Deduce from the inductive bound that `uₙ` is a Cauchy sequence, therefore converging.
   have : CauchySeq u :=
@@ -344,7 +344,7 @@ theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRi
   refine' ⟨(f'symm.nnnorm⁻¹ - c) * ε, mul_pos (sub_pos.2 hc) ε0, _⟩
   exact (hf.surj_on_closed_ball_of_nonlinear_right_inverse f'symm (le_of_lt ε0) hε).mono hε (subset.refl _)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem image_mem_nhds (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse) {x : E} (hs : s ∈ 𝓝 x)
     (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : f '' s ∈ 𝓝 (f x) := by
   obtain ⟨t, hts, ht, xt⟩ : ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := _root_.mem_nhds_iff.1 hs
@@ -422,7 +422,7 @@ theorem inverse_continuous_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F)
   refine' ((hf.antilipschitz hc).toRightInvOn' _ (hf.to_local_equiv hc).right_inv').Continuous
   exact fun x hx => (hf.to_local_equiv hc).map_target hx
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_left, ",", expr nnreal.coe_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- The inverse function is approximated linearly on `f '' s` by `f'.symm`. -/
 theorem toInv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     ApproximatesLinearOn (hf.toLocalEquiv hc).symm (f'.symm : F →L[𝕜] E) (f '' s) (N * (N⁻¹ - c)⁻¹ * c) := by
@@ -441,7 +441,8 @@ theorem toInv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subs
       abel
     _ ≤ N * (c * ∥y' - x'∥) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (Nnreal.coe_nonneg _)
     _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0) * ∥A y' - A x'∥)) := by
-      apply_rules [mul_le_mul_of_nonneg_left, Nnreal.coe_nonneg]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_left, \",\", expr nnreal.coe_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       rw [← dist_eq_norm, ← dist_eq_norm]
       exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
     _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ∥A x' - A y'∥ := by

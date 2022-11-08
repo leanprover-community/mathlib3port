@@ -302,9 +302,6 @@ theorem taylor_mean_remainder_cauchy {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} 
   field_simp [n.factorial_ne_zero]
   ring
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- **Taylor's theorem** with a polynomial bound on the remainder
 
 We assume that `f` is `n+1`-times continuously differentiable on the closed set `Icc a b`.
@@ -324,19 +321,16 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
   -- We can uniformly bound the derivative of the Taylor polynomial
   have h' :
     ∀ (y : ℝ) (hy : y ∈ Ico a x),
-      ∥((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) y∥ ≤ (n ! : ℝ)⁻¹ * abs (x - a) ^ n * C :=
+      ∥((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) y∥ ≤ (n ! : ℝ)⁻¹ * |x - a| ^ n * C :=
     by
     rintro y ⟨hay, hyx⟩
     rw [norm_smul, Real.norm_eq_abs]
     -- Estimate the iterated derivative by `C`
-    refine'
-      mul_le_mul _ (hC y ⟨hay, hyx.le.trans hx.2⟩)
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+    refine' mul_le_mul _ (hC y ⟨hay, hyx.le.trans hx.2⟩) (by positivity) (by positivity)
     -- The rest is a trivial calculation
     rw [abs_mul, abs_pow, abs_inv, Nat.abs_cast]
     mono* with 0 ≤ (n ! : ℝ)⁻¹
-    any_goals trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    any_goals positivity
     linarith [hx.1, hyx]
   -- Apply the mean value theorem for vector valued functions:
   have A :
@@ -352,7 +346,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
   refine' this.trans_eq _
   -- The rest is a trivial calculation
   rw [abs_of_nonneg (sub_nonneg.mpr hx.1)]
-  ring_exp
+  ring
 
 /-- **Taylor's theorem** with a polynomial bound on the remainder
 

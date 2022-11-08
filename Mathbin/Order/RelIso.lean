@@ -302,7 +302,7 @@ def preimage (f : α ↪ β) (s : β → β → Prop) : f ⁻¹'o s ↪r s :=
   ⟨f, fun a b => Iff.rfl⟩
 
 theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s := by
-  ext a b
+  ext (a b)
   exact f.map_rel_iff.symm
 
 protected theorem is_irrefl (f : r ↪r s) [IsIrrefl β s] : IsIrrefl α r :=

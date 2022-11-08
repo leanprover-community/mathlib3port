@@ -27,7 +27,7 @@ the bulk of the proof below.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem sq_ne_two_fin_zmod_four (z : Zmod 4) : z * z ≠ 2 := by
   change Fin 4 at z
   fin_cases z <;> norm_num [Fin.ext_iff, Fin.coe_bit0, Fin.coe_bit1]
@@ -403,8 +403,8 @@ private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcd m n = 
   rw [sub_eq_iff_eq_add] at hm2 hn2
   subst m
   subst n
-  have h1 : (m0 * 2 + 1) ^ 2 + (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 + n0 ^ 2 + m0 + n0) + 1) := by ring_exp
-  have h2 : (m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 - n0 ^ 2 + m0 - n0)) := by ring_exp
+  have h1 : (m0 * 2 + 1) ^ 2 + (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 + n0 ^ 2 + m0 + n0) + 1) := by ring
+  have h2 : (m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 - n0 ^ 2 + m0 - n0)) := by ring
   have h3 : ((m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2) / 2 % 2 = 0 := by
     rw [h2, Int.mul_div_cancel_left, Int.mul_mod_right]
     exact by decide
@@ -419,11 +419,11 @@ private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcd m n = 
   apply Nat.dvd_gcd
   · apply Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp
     convert dvd_add hp1 hp2
-    ring_exp
+    ring
     
   · apply Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp
     convert dvd_sub hp2 hp1
-    ring_exp
+    ring
     
 
 namespace PythagoreanTriple
@@ -449,7 +449,7 @@ theorem is_primitive_classified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : �
   rw [← Rat.coe_int_inj _ _, ← div_left_inj' ((mt (Rat.coe_int_inj z 0).mp) hz), hv2, h2.right]
   norm_cast
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) (hyo : y % 2 = 1) (hzpos : 0 < z) :
     h.IsPrimitiveClassified := by
   by_cases h0:x = 0

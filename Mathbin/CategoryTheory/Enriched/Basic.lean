@@ -40,7 +40,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:366:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
@@ -154,7 +154,6 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : Enr
     ext ⟨f, g, h⟩
     simp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr 𝒞, "with", "@", "⟨", "@", "⟨", "⟨", "⟩", "⟩", "⟩"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- We verify that an enriched category in `Type u` is just the same thing as an honest category.
 -/
 def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v) C ≃ Category.{v} C where
@@ -164,15 +163,14 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
     cases 𝒞
     dsimp [enriched_category_Type_of_category]
     congr
-    · ext X ⟨⟩
+    · ext (X⟨⟩)
       rfl
       
-    · ext X Y Z ⟨f, g⟩
+    · ext (X Y Z⟨f, g⟩)
       rfl
       
   right_inv 𝒞 := by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr 𝒞, \"with\", \"@\", \"⟨\", \"@\", \"⟨\", \"⟨\", \"⟩\", \"⟩\", \"⟩\"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩
     dsimp
     congr
 
@@ -194,7 +192,7 @@ which always exists, does not necessarily coincide with
 "the forgetful functor" from `V` to `Type`, if such exists.
 When `V` is any of `Type`, `Top`, `AddCommGroup`, or `Module R`,
 `coyoneda_tensor_unit` is just the usual forgetful functor, however.
-For `V = Algebra R`, the usual forgetful functor is coyoneda of `polynomial R`, not of `R`.
+For `V = Algebra R`, the usual forgetful functor is coyoneda of `R[X]`, not of `R`.
 (Perhaps we should have a typeclass for this situation: `concrete_monoidal`?)
 -/
 @[nolint has_nonempty_instance unused_arguments]

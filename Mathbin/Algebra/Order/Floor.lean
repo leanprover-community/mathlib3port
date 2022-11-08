@@ -3,6 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Kappelmann
 -/
+import Mathbin.Data.Int.Lemmas
+import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Tactic.Abel
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.Positivity
@@ -612,7 +614,7 @@ theorem floor_sub_int (a : α) (z : ℤ) : ⌊a - z⌋ = ⌊a⌋ - z :=
 theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n := by rw [← Int.cast_ofNat, floor_sub_int]
 
 theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α] [FloorRing α] {a b : α}
-    (h : ⌊a⌋ = ⌊b⌋) : abs (a - b) < 1 := by
+    (h : ⌊a⌋ = ⌊b⌋) : |a - b| < 1 := by
   have : a < ⌊a⌋ + 1 := lt_floor_add_one a
   have : b < ⌊b⌋ + 1 := lt_floor_add_one b
   have : (⌊a⌋ : α) = ⌊b⌋ := Int.cast_inj.2 h
@@ -690,7 +692,7 @@ theorem fract_nonneg (a : α) : 0 ≤ fract a :=
   sub_nonneg.2 <| floor_le _
 
 theorem fract_lt_one (a : α) : fract a < 1 :=
-  sub_lt.1 <| sub_one_lt_floor _
+  sub_lt_comm.1 <| sub_one_lt_floor _
 
 @[simp]
 theorem fract_zero : fract (0 : α) = 0 := by rw [fract, floor_zero, cast_zero, sub_self]
@@ -698,11 +700,11 @@ theorem fract_zero : fract (0 : α) = 0 := by rw [fract, floor_zero, cast_zero, 
 @[simp]
 theorem fract_one : fract (1 : α) = 0 := by simp [fract]
 
-theorem abs_fract : abs (Int.fract a) = Int.fract a :=
+theorem abs_fract : |Int.fract a| = Int.fract a :=
   abs_eq_self.mpr <| fract_nonneg a
 
 @[simp]
-theorem abs_one_sub_fract : abs (1 - fract a) = 1 - fract a :=
+theorem abs_one_sub_fract : |1 - fract a| = 1 - fract a :=
   abs_eq_self.mpr <| sub_nonneg.mpr (fract_lt_one a).le
 
 @[simp]
@@ -1058,7 +1060,7 @@ theorem round_int_add (x : α) (y : ℤ) : round ((y : α) + x) = y + round x :=
 @[simp]
 theorem round_nat_add (x : α) (y : ℕ) : round ((y : α) + x) = y + round x := by rw [add_comm, round_add_nat, add_comm]
 
-theorem abs_sub_round_eq_min (x : α) : abs (x - round x) = min (fract x) (1 - fract x) := by
+theorem abs_sub_round_eq_min (x : α) : |x - round x| = min (fract x) (1 - fract x) := by
   simp_rw [round, min_def', two_mul, ← lt_tsub_iff_left]
   cases' lt_or_ge (fract x) (1 - fract x) with hx hx
   · rw [if_pos hx, if_pos hx, self_sub_floor, abs_fract]
@@ -1069,7 +1071,7 @@ theorem abs_sub_round_eq_min (x : α) : abs (x - round x) = min (fract x) (1 - f
     rw [if_neg (not_lt.mpr hx), if_neg (not_lt.mpr hx), abs_sub_comm, ceil_sub_self_eq this.ne.symm, abs_one_sub_fract]
     
 
-theorem round_le (x : α) (z : ℤ) : abs (x - round x) ≤ abs (x - z) := by
+theorem round_le (x : α) (z : ℤ) : |x - round x| ≤ |x - z| := by
   rw [abs_sub_round_eq_min, min_le_iff]
   rcases le_or_lt (z : α) x with (hx | hx) <;> [left, right]
   · conv_rhs => rw [abs_eq_self.mpr (sub_nonneg.mpr hx), ← fract_add_floor x, add_sub_assoc]
@@ -1077,7 +1079,7 @@ theorem round_le (x : α) (z : ℤ) : abs (x - round x) ≤ abs (x - z) := by
     
   · rw [abs_eq_neg_self.mpr (sub_neg.mpr hx).le]
     conv_rhs => rw [← fract_add_floor x]
-    rw [add_sub_assoc, add_comm, neg_add, neg_sub, le_add_neg_iff_add_le, sub_add_cancel, le_sub]
+    rw [add_sub_assoc, add_comm, neg_add, neg_sub, le_add_neg_iff_add_le, sub_add_cancel, le_sub_comm]
     norm_cast
     exact floor_le_sub_one_iff.mpr hx
     
@@ -1114,7 +1116,7 @@ theorem round_eq_zero_iff {x : α} : round x = 0 ↔ x ∈ IcoCat (-(1 / 2)) ((1
   rw [round_eq, floor_eq_zero_iff, add_mem_Ico_iff_left]
   norm_num
 
-theorem abs_sub_round (x : α) : abs (x - round x) ≤ 1 / 2 := by
+theorem abs_sub_round (x : α) : |x - round x| ≤ 1 / 2 := by
   rw [round_eq, abs_sub_le_iff]
   have := floor_le (x + 1 / 2)
   have := lt_floor_add_one (x + 1 / 2)

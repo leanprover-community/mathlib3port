@@ -3,6 +3,7 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
+import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Analysis.Convex.Segment
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathbin.Tactic.FieldSimp
@@ -370,7 +371,7 @@ include V
 
 variable {R}
 
-theorem Wbtw.sameRayVsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ y) := by
+theorem Wbtw.same_ray_vsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ y) := by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
   simp_rw [line_map_apply]
   rcases ht0.lt_or_eq with (ht0' | rfl)
@@ -385,13 +386,13 @@ theorem Wbtw.sameRayVsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (
   simp [vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul]
   ring_nf
 
-theorem Wbtw.sameRayVsubLeft {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ x) := by
+theorem Wbtw.same_ray_vsub_left {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ x) := by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
-  simpa [line_map_apply] using sameRayNonnegSmulLeft (z -ᵥ x) ht0
+  simpa [line_map_apply] using same_ray_nonneg_smul_left (z -ᵥ x) ht0
 
-theorem Wbtw.sameRayVsubRight {x y z : P} (h : Wbtw R x y z) : SameRay R (z -ᵥ x) (z -ᵥ y) := by
+theorem Wbtw.same_ray_vsub_right {x y z : P} (h : Wbtw R x y z) : SameRay R (z -ᵥ x) (z -ᵥ y) := by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
-  simpa [line_map_apply, vsub_vadd_eq_vsub_sub, sub_smul] using sameRayNonnegSmulRight (z -ᵥ x) (sub_nonneg.2 ht1)
+  simpa [line_map_apply, vsub_vadd_eq_vsub_sub, sub_smul] using same_ray_nonneg_smul_right (z -ᵥ x) (sub_nonneg.2 ht1)
 
 end StrictOrderedCommRing
 
@@ -527,7 +528,7 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
     
 
 theorem wbtw_iff_same_ray_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x) (z -ᵥ y) := by
-  refine' ⟨Wbtw.sameRayVsub, fun h => _⟩
+  refine' ⟨Wbtw.same_ray_vsub, fun h => _⟩
   rcases h with (h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩)
   · rw [vsub_eq_zero_iff_eq] at h
     simp [h]

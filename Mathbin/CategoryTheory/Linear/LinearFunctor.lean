@@ -68,6 +68,9 @@ instance induced_functor_linear : Functor.Linear R (inducedFunctor F) where
 
 end InducedCategory
 
+instance full_subcategory_inclusion_linear {C : Type _} [Category C] [Preadditive C] [CategoryTheory.Linear R C]
+    (Z : C → Prop) : (fullSubcategoryInclusion Z).Linear R where
+
 section
 
 variable {R} {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) [Additive F]

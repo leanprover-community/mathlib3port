@@ -65,7 +65,7 @@ theorem of_is_O_im_re_rpow (hre : Tendsto re l atTop) (r : ℝ) (hr : im =O[l] f
 theorem of_is_O_im_re_pow (hre : Tendsto re l atTop) (n : ℕ) (hr : im =O[l] fun z => z.re ^ n) : IsExpCmpFilter l :=
   of_is_O_im_re_rpow hre n <| by simpa only [Real.rpow_nat_cast]
 
-theorem of_bounded_under_abs_im (hre : Tendsto re l atTop) (him : IsBoundedUnder (· ≤ ·) l fun z => abs z.im) :
+theorem of_bounded_under_abs_im (hre : Tendsto re l atTop) (him : IsBoundedUnder (· ≤ ·) l fun z => |z.im|) :
     IsExpCmpFilter l :=
   of_is_O_im_re_pow hre 0 <| by simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
 
@@ -81,7 +81,7 @@ theorem of_bounded_under_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder 
 theorem eventually_ne (hl : IsExpCmpFilter l) : ∀ᶠ w : ℂ in l, w ≠ 0 :=
   hl.tendsto_re.eventually_ne_at_top' _
 
-theorem tendsto_abs_re (hl : IsExpCmpFilter l) : Tendsto (fun z : ℂ => abs z.re) l atTop :=
+theorem tendsto_abs_re (hl : IsExpCmpFilter l) : Tendsto (fun z : ℂ => |z.re|) l atTop :=
   tendsto_abs_at_top_at_top.comp hl.tendsto_re
 
 theorem tendsto_abs (hl : IsExpCmpFilter l) : Tendsto abs l atTop :=
@@ -101,21 +101,20 @@ theorem is_o_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) : (fun z : ℂ => z
       
 
 theorem abs_im_pow_eventually_le_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
-    (fun z : ℂ => abs z.im ^ n) ≤ᶠ[l] fun z => Real.exp z.re := by
-  simpa using (hl.is_o_im_pow_exp_re n).bound zero_lt_one
+    (fun z : ℂ => |z.im| ^ n) ≤ᶠ[l] fun z => Real.exp z.re := by simpa using (hl.is_o_im_pow_exp_re n).bound zero_lt_one
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then $\log |z| =o(ℜ z)$ along `l`.
 This is the main lemma in the proof of `complex.is_exp_cmp_filter.is_o_cpow_exp` below.
 -/
 theorem is_o_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o[l] re :=
   calc
-    (fun z => Real.log (abs z)) =O[l] fun z => Real.log (Real.sqrt 2) + Real.log (max z.re (abs z.im)) :=
+    (fun z => Real.log (abs z)) =O[l] fun z => Real.log (Real.sqrt 2) + Real.log (max z.re (|z.im|)) :=
       IsO.of_bound 1 <|
         (hl.tendsto_re.eventually_ge_at_top 1).mono fun z hz => by
           have h2 : 0 < Real.sqrt 2 := by simp
           have hz' : 1 ≤ abs z := hz.trans (re_le_abs z)
           have hz₀ : 0 < abs z := one_pos.trans_le hz'
-          have hm₀ : 0 < max z.re (abs z.im) := lt_max_iff.2 (Or.inl <| one_pos.trans_le hz)
+          have hm₀ : 0 < max z.re (|z.im|) := lt_max_iff.2 (Or.inl <| one_pos.trans_le hz)
           rw [one_mul, Real.norm_eq_abs, _root_.abs_of_nonneg (Real.log_nonneg hz')]
           refine' le_trans _ (le_abs_self _)
           rw [← Real.log_mul, Real.log_le_log, ← _root_.abs_of_nonneg (le_trans zero_le_one hz)]
@@ -125,10 +124,10 @@ theorem is_o_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o
         is_o_iff_nat_mul_le.2 fun n => by
           filter_upwards [is_o_iff_nat_mul_le.1 hl.is_o_log_re_re n, hl.abs_im_pow_eventually_le_exp_re n,
             hl.tendsto_re.eventually_gt_at_top 1] with z hre him h₁
-          cases' le_total (abs z.im) z.re with hle hle
+          cases' le_total (|z.im|) z.re with hle hle
           · rwa [max_eq_left hle]
             
-          · have H : 1 < abs z.im := h₁.trans_le hle
+          · have H : 1 < |z.im| := h₁.trans_le hle
             rwa [max_eq_right hle, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos (Real.log_pos H), ← Real.log_pow,
               Real.log_le_iff_le_exp (pow_pos (one_pos.trans H) _), abs_of_pos (one_pos.trans h₁)]
             

@@ -360,7 +360,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- A measure on a finite product space equals the product measure if they are equal on rectangles
   with as sides sets that generate the corresponding σ-algebras. -/
 theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))} (hC : ∀ i, generateFrom (C i) = by apply_assumption)

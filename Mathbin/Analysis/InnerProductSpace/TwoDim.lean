@@ -104,7 +104,7 @@ theorem area_form_apply_self (x : E) : ω x x = 0 := by
   · norm_num
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem area_form_swap (x y : E) : ω x y = -ω y x := by
   simp only [area_form_to_volume_form]
   convert o.volume_form.map_swap ![y, x] (_ : (0 : Fin 2) ≠ 1)
@@ -116,7 +116,7 @@ theorem area_form_swap (x y : E) : ω x y = -ω y x := by
 
 @[simp]
 theorem area_form_neg_orientation : (-o).areaForm = -o.areaForm := by
-  ext x y
+  ext (x y)
   simp [area_form_to_volume_form]
 
 /-- Continuous linear map version of `orientation.area_form`, useful for calculus. -/
@@ -127,15 +127,15 @@ def areaForm' : E →L[ℝ] E →L[ℝ] ℝ :=
 theorem area_form'_apply (x : E) : o.areaForm' x = (o.areaForm x).toContinuousLinearMap :=
   rfl
 
-theorem abs_area_form_le (x y : E) : abs (ω x y) ≤ ∥x∥ * ∥y∥ := by
+theorem abs_area_form_le (x y : E) : |ω x y| ≤ ∥x∥ * ∥y∥ := by
   simpa [area_form_to_volume_form, Fin.prod_univ_succ] using o.abs_volume_form_apply_le ![x, y]
 
 theorem area_form_le (x y : E) : ω x y ≤ ∥x∥ * ∥y∥ := by
   simpa [area_form_to_volume_form, Fin.prod_univ_succ] using o.volume_form_apply_le ![x, y]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-theorem abs_area_form_of_orthogonal {x y : E} (h : ⟪x, y⟫ = 0) : abs (ω x y) = ∥x∥ * ∥y∥ := by
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+theorem abs_area_form_of_orthogonal {x y : E} (h : ⟪x, y⟫ = 0) : |ω x y| = ∥x∥ * ∥y∥ := by
   rw [o.area_form_to_volume_form, o.abs_volume_form_apply_of_pairwise_orthogonal]
   · simp [Fin.prod_univ_succ]
     
@@ -150,7 +150,7 @@ theorem abs_area_form_of_orthogonal {x y : E} (h : ⟪x, y⟫ = 0) : abs (ω x y
   · simpa
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem area_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) (x y : F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).areaForm x y = o.areaForm (φ.symm x) (φ.symm y) := by
   have : φ.symm ∘ ![x, y] = ![φ.symm x, φ.symm y] := by
@@ -187,7 +187,6 @@ theorem inner_right_angle_rotation_aux₁_right (x y : E) : ⟪x, o.rightAngleRo
   rw [real_inner_comm]
   simp [o.area_form_swap y x]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- Auxiliary construction for `orientation.right_angle_rotation`, rotation by 90 degrees in an
 oriented real inner product space of dimension 2. -/
 def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
@@ -198,7 +197,7 @@ def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
       refine' le_antisymm _ _
       · cases' eq_or_lt_of_le (norm_nonneg (o.right_angle_rotation_aux₁ x)) with h h
         · rw [← h]
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+          positivity
           
         refine' le_of_mul_le_mul_right _ h
         rw [← real_inner_self_eq_norm_mul_norm, o.inner_right_angle_rotation_aux₁_left]
@@ -300,10 +299,10 @@ theorem right_angle_rotation_trans_neg_orientation :
     (-o).rightAngleRotation = o.rightAngleRotation.trans (LinearIsometryEquiv.neg ℝ) :=
   LinearIsometryEquiv.ext <| o.right_angle_rotation_neg_orientation
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(exprJ() (φ.symm x), φ.symm y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(φ (exprJ() (φ.symm x)), φ (φ.symm y))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(exprJ() (φ.symm x), φ.symm y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(φ (exprJ() (φ.symm x)), φ (φ.symm y))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem right_angle_rotation_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F)
     (x : F) : (Orientation.map (Fin 2) φ.toLinearEquiv o).rightAngleRotation x = φ (o.rightAngleRotation (φ.symm x)) :=
   by
@@ -311,11 +310,11 @@ theorem right_angle_rotation_map {F : Type _} [InnerProductSpace ℝ F] [Fact (f
   intro y
   rw [inner_right_angle_rotation_left]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(exprJ() (φ.symm x), φ.symm y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(exprJ() (φ.symm x), φ.symm y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · simp [o.area_form_map]
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(φ (exprJ() (φ.symm x)), φ (φ.symm y))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(φ (exprJ() (φ.symm x)), φ (φ.symm y))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rw [φ.inner_map_map]
     
   · simp
@@ -341,9 +340,9 @@ theorem linear_isometry_equiv_comp_right_angle_rotation' (φ : E ≃ₗᵢ[ℝ] 
     LinearIsometryEquiv.trans J φ = φ.trans J :=
   LinearIsometryEquiv.ext <| o.linear_isometry_equiv_comp_right_angle_rotation φ hφ
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For a nonzero vector `x` in an oriented two-dimensional real inner product space `E`,
 `![x, J x]` forms an (orthogonal) basis for `E`. -/
 def basisRightAngleRotation (x : E) (hx : x ≠ 0) : Basis (Fin 2) ℝ E :=
@@ -366,7 +365,7 @@ def basisRightAngleRotation (x : E) (hx : x ≠ 0) : Basis (Fin 2) ℝ E :=
 theorem coe_basis_right_angle_rotation (x : E) (hx : x ≠ 0) : ⇑(o.basisRightAngleRotation x hx) = ![x, J x] :=
   coe_basis_of_linear_independent_of_card_eq_finrank _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ∥a∥ ^ 2 * ⟪x, y⟫`. (See
 `orientation.inner_mul_inner_add_area_form_mul_area_form` for the "applied" form.)-/
 theorem inner_mul_inner_add_area_form_mul_area_form' (a x : E) :
@@ -396,7 +395,7 @@ theorem inner_mul_inner_add_area_form_mul_area_form (a x y : E) : ⟪a, x⟫ * �
 theorem inner_sq_add_area_form_sq (a b : E) : ⟪a, b⟫ ^ 2 + ω a b ^ 2 = ∥a∥ ^ 2 * ∥b∥ ^ 2 := by
   simpa [sq, real_inner_self_eq_norm_sq] using o.inner_mul_inner_add_area_form_mul_area_form a b b
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ∥a∥ ^ 2 * ω x y`. (See
 `orientation.inner_mul_area_form_sub` for the "applied" form.) -/
 theorem inner_mul_area_form_sub' (a x : E) : ⟪a, x⟫ • ω a - ω a x • @innerₛₗ ℝ _ _ _ a = ∥a∥ ^ 2 • ω x := by
@@ -421,8 +420,6 @@ theorem inner_mul_area_form_sub' (a x : E) : ⟪a, x⟫ • ω a - ω a x • @i
 theorem inner_mul_area_form_sub (a x y : E) : ⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ∥a∥ ^ 2 * ω x y :=
   congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_area_form_sub' a x)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem nonneg_inner_and_area_form_eq_zero_iff_same_ray (x y : E) : 0 ≤ ⟪x, y⟫ ∧ ω x y = 0 ↔ SameRay ℝ x y := by
   by_cases hx:x = 0
   · simp [hx]
@@ -443,17 +440,15 @@ theorem nonneg_inner_and_area_form_eq_zero_iff_same_ray (x y : E) : 0 ≤ ⟪x, 
       exact this
     rintro ⟨ha, hb⟩
     have hx' : 0 < ∥x∥ := by simpa using hx
-    have ha' : 0 ≤ a :=
-      nonneg_of_mul_nonneg_left ha
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+    have ha' : 0 ≤ a := nonneg_of_mul_nonneg_left ha (by positivity)
     have hb' : b = 0 := eq_zero_of_ne_zero_of_mul_right_eq_zero (pow_ne_zero 2 hx'.ne') hb
-    simpa [hb'] using sameRayNonnegSmulRight x ha'
+    simpa [hb'] using same_ray_nonneg_smul_right x ha'
     
   · intro h
     obtain ⟨r, hr, rfl⟩ := h.exists_nonneg_left hx
     simp only [inner_smul_right, real_inner_self_eq_norm_sq, LinearMap.map_smulₛₗ, area_form_apply_self,
       Algebra.id.smul_eq_mul, mul_zero, eq_self_iff_true, and_true_iff]
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    positivity
     
 
 /-- A complex-valued real-bilinear map on an oriented real inner product space of dimension 2. Its
@@ -475,51 +470,41 @@ theorem kahler_swap (x y : E) : o.kahler x y = conj (o.kahler y x) := by
 @[simp]
 theorem kahler_apply_self (x : E) : o.kahler x x = ∥x∥ ^ 2 := by simp [kahler_apply_apply, real_inner_self_eq_norm_sq]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(exprω() x y, complex.I_sq)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 @[simp]
 theorem kahler_right_angle_rotation_left (x y : E) : o.kahler (J x) y = -Complex.i * o.kahler x y := by
   simp only [o.area_form_right_angle_rotation_left, o.inner_right_angle_rotation_left, o.kahler_apply_apply,
     Complex.of_real_neg, Complex.real_smul]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(exprω() x y, complex.I_sq)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  linear_combination ω x y * Complex.I_sq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(exprω() x y), complex.I_sq)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 @[simp]
 theorem kahler_right_angle_rotation_right (x y : E) : o.kahler x (J y) = Complex.i * o.kahler x y := by
   simp only [o.area_form_right_angle_rotation_right, o.inner_right_angle_rotation_right, o.kahler_apply_apply,
     Complex.of_real_neg, Complex.real_smul]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(exprω() x y), complex.I_sq)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  linear_combination-ω x y * Complex.I_sq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(o.kahler x y), complex.I_sq)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 @[simp]
 theorem kahler_comp_right_angle_rotation (x y : E) : o.kahler (J x) (J y) = o.kahler x y := by
   simp only [kahler_right_angle_rotation_left, kahler_right_angle_rotation_right]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr- »(o.kahler x y), complex.I_sq)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  linear_combination-o.kahler x y * Complex.I_sq
 
 @[simp]
 theorem kahler_neg_orientation (x y : E) : (-o).kahler x y = conj (o.kahler x y) := by simp [kahler_apply_apply]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »((«expr↑ »(«expr ^ »(«expr∥ ∥»(a), 2)) : exprℂ()), o.kahler x y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr o.inner_mul_inner_add_area_form_mul_area_form a x y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr o.inner_mul_area_form_sub a x y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »((«expr↑ »(«expr ^ »(«expr∥ ∥»(a), 2)) : exprℂ()), o.kahler x y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem kahler_mul (a x y : E) : o.kahler x a * o.kahler a y = ∥a∥ ^ 2 * o.kahler x y := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »((«expr↑ »(«expr ^ »(«expr∥ ∥»(a), 2)) : exprℂ()), o.kahler x y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »((«expr↑ »(«expr ^ »(«expr∥ ∥»(a), 2)) : exprℂ()), o.kahler x y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · ext
     · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.I_im, Complex.I_re, Complex.mul_im,
         Complex.mul_re, Complex.of_real_im, Complex.of_real_re, Complex.real_smul]
       rw [real_inner_comm a x, o.area_form_swap x a]
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr o.inner_mul_inner_add_area_form_mul_area_form a x y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      linear_combination o.inner_mul_inner_add_area_form_mul_area_form a x y
       
     · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.I_im, Complex.I_re, Complex.mul_im,
         Complex.mul_re, Complex.of_real_im, Complex.of_real_re, Complex.real_smul]
       rw [real_inner_comm a x, o.area_form_swap x a]
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr o.inner_mul_area_form_sub a x y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      linear_combination o.inner_mul_area_form_sub a x y
       
     
   · norm_cast
@@ -528,17 +513,13 @@ theorem kahler_mul (a x y : E) : o.kahler x a * o.kahler a y = ∥a∥ ^ 2 * o.k
 theorem norm_sq_kahler (x y : E) : Complex.normSq (o.kahler x y) = ∥x∥ ^ 2 * ∥y∥ ^ 2 := by
   simpa [kahler_apply_apply, Complex.normSq, sq] using o.inner_sq_add_area_form_sq x y
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr o.norm_sq_kahler x y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem abs_kahler (x y : E) : Complex.abs (o.kahler x y) = ∥x∥ * ∥y∥ := by
   rw [← sq_eq_sq, Complex.sq_abs]
-  · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr o.norm_sq_kahler x y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · linear_combination o.norm_sq_kahler x y
     
-  · trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  · positivity
     
-  · trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  · positivity
     
 
 theorem norm_kahler (x y : E) : ∥o.kahler x y∥ = ∥x∥ * ∥y∥ := by simpa using o.abs_kahler x y

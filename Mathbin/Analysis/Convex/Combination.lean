@@ -72,8 +72,7 @@ deals with two different index types. -/
 theorem Finset.center_mass_segment' (s : Finset ι) (t : Finset ι') (ws : ι → R) (zs : ι → E) (wt : ι' → R) (zt : ι' → E)
     (hws : (∑ i in s, ws i) = 1) (hwt : (∑ i in t, wt i) = 1) (a b : R) (hab : a + b = 1) :
     a • s.centerMass ws zs + b • t.centerMass wt zt =
-      (s.map Embedding.inl ∪ t.map Embedding.inr).centerMass (Sum.elim (fun i => a * ws i) fun j => b * wt j)
-        (Sum.elim zs zt) :=
+      (s.disjSum t).centerMass (Sum.elim (fun i => a * ws i) fun j => b * wt j) (Sum.elim zs zt) :=
   by
   rw [s.center_mass_eq_of_sum_1 _ hws, t.center_mass_eq_of_sum_1 _ hwt, smul_sum, smul_sum, ← Finset.sum_sum_elim,
     Finset.center_mass_eq_of_sum_1]
@@ -90,12 +89,12 @@ theorem Finset.center_mass_segment (s : Finset ι) (w₁ w₂ : ι → R) (z : �
   have hw : (∑ i in s, a * w₁ i + b * w₂ i) = 1 := by simp only [mul_sum.symm, sum_add_distrib, mul_one, *]
   simp only [Finset.center_mass_eq_of_sum_1, smul_sum, sum_add_distrib, add_smul, mul_smul, *]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((j), t, if «expr = »(i, j) then z i else 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((j), t, if «expr = »(i, j) then z i else 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem Finset.center_mass_ite_eq (hi : i ∈ t) : t.centerMass (fun j => if i = j then (1 : R) else 0) z = z i := by
   rw [Finset.center_mass_eq_of_sum_1]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((j), t, if «expr = »(i, j) then z i else 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((j), t, if «expr = »(i, j) then z i else 0)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · congr with i
     split_ifs
     exacts[h ▸ one_smul _ _, zero_smul _ _]
@@ -278,8 +277,8 @@ theorem convex_hull_range_eq_exists_affine_combination (v : ι → E) :
     exact affine_combination_mem_convex_hull hw₀ hw₁
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr hzx, ",", expr hzy, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Convex hull of `s` is equal to the set of all centers of masses of `finset`s `t`, `z '' t ⊆ s`.
 This version allows finsets in any type in any universe. -/
 theorem convex_hull_eq (s : Set E) :
@@ -297,22 +296,26 @@ theorem convex_hull_eq (s : Set E) :
     rw [Finset.center_mass_segment' _ _ _ _ _ _ hwx₁ hwy₁ _ _ hab]
     refine' ⟨_, _, _, _, _, _, _, rfl⟩
     · rintro i hi
-      rw [Finset.mem_union, Finset.mem_map, Finset.mem_map] at hi
+      rw [Finset.mem_disj_sum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;>
-        simp only [Sum.elim_inl, Sum.elim_inr] <;> apply_rules [mul_nonneg, hwx₀, hwy₀]
+        simp only [Sum.elim_inl, Sum.elim_inr] <;>
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
     · simp [Finset.sum_sum_elim, finset.mul_sum.symm, *]
       
     · intro i hi
-      rw [Finset.mem_union, Finset.mem_map, Finset.mem_map] at hi
-      rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;> apply_rules [hzx, hzy]
+      rw [Finset.mem_disj_sum] at hi
+      rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;>
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr hzx, \",\", expr hzy, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
     
   · rintro _ ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩
     exact t.center_mass_mem_convex_hull hw₀ (hw₁.symm ▸ zero_lt_one) hz
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem Finset.convex_hull_eq (s : Finset E) :
     convexHull R ↑s =
       { x : E | ∃ (w : E → R)(hw₀ : ∀ y ∈ s, 0 ≤ w y)(hw₁ : (∑ y in s, w y) = 1), s.centerMass w id = x } :=
@@ -332,7 +335,8 @@ theorem Finset.convex_hull_eq (s : Finset E) :
     rw [Finset.center_mass_segment _ _ _ _ hwx₁ hwy₁ _ _ hab]
     refine' ⟨_, _, _, rfl⟩
     · rintro i hi
-      apply_rules [add_nonneg, mul_nonneg, hwx₀, hwy₀]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       
     · simp only [Finset.sum_add_distrib, finset.mul_sum.symm, mul_one, *]
       

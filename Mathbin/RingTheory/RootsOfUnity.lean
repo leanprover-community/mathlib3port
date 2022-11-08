@@ -130,7 +130,7 @@ def restrictRootsOfUnity [RingHomClass F R S] (σ : F) (n : ℕ+) : rootsOfUnity
     change σ (ξ : Rˣ) ^ (n : ℕ) = 1
     rw [← map_pow, ← Units.coe_pow, show (ξ : Rˣ) ^ (n : ℕ) = 1 from ξ.2, Units.coe_one, map_one σ]
   { toFun := fun ξ =>
-      ⟨@unitOfInvertible _ _ _ (invertibleOfPowEqOne _ _ (h ξ) n.2), by
+      ⟨@unitOfInvertible _ _ _ (invertibleOfPowEqOne _ _ (h ξ) n.NeZero), by
         ext
         rw [Units.coe_pow]
         exact h ξ⟩,
@@ -379,7 +379,7 @@ theorem pow_of_prime (h : IsPrimitiveRoot ζ k) {p : ℕ} (hprime : Nat.Prime p)
     IsPrimitiveRoot (ζ ^ p) k :=
   h.pow_of_coprime p (hprime.coprime_iff_not_dvd.2 hdiv)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPrimitiveRoot (ζ ^ i) k ↔ i.Coprime k := by
   refine' ⟨_, h.pow_of_coprime i⟩
   intro hi
@@ -712,9 +712,9 @@ theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRo
 
 theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (hξ : ξ ^ k = 1) (h0 : 0 < k) :
     ∃ i < k, ζ ^ i = ξ := by
-  obtain ⟨ζ, rfl⟩ := h.is_unit h0
-  obtain ⟨ξ, rfl⟩ := is_unit_of_pow_eq_one ξ k hξ h0
-  obtain ⟨k, rfl⟩ : ∃ k' : ℕ+, k = k' := ⟨⟨k, h0⟩, rfl⟩
+  lift ζ to Rˣ using h.is_unit h0
+  lift ξ to Rˣ using is_unit_of_pow_eq_one ξ k hξ h0.ne'
+  lift k to ℕ+ using h0
   simp only [← Units.coe_pow, ← Units.ext_iff]
   rw [coe_units_iff] at h
   apply h.eq_pow_of_mem_roots_of_unity
@@ -830,7 +830,7 @@ theorem card_primitive_roots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) : (pr
     exact ⟨i, ⟨hin, hi.symm⟩, H⟩
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr h, ",", expr nat.dvd_antisymm, ",", expr Hzk, ",", expr Hzl, ",", expr hzk, ",", expr hzl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- The sets `primitive_roots k R` are pairwise disjoint. -/
 theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) := by
   by_cases hk:k = 0
@@ -843,7 +843,8 @@ theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (prim
   simp only [Finset.inf_eq_inter, Finset.mem_inter, mem_primitive_roots, Nat.pos_of_ne_zero hk, Nat.pos_of_ne_zero hl,
     iff_def]
   rintro ⟨⟨hzk, Hzk⟩, ⟨hzl, Hzl⟩⟩
-  apply_rules [h, Nat.dvd_antisymm, Hzk, Hzl, hzk, hzl]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr h, \",\", expr nat.dvd_antisymm, \",\", expr Hzk, \",\", expr Hzl, \",\", expr hzk, \",\", expr hzl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`.
@@ -919,7 +920,7 @@ theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 := by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · simp
     
-  apply minpoly.gcd_domain_dvd (IsIntegral h hpos) (monic_X_pow_sub_C 1 hpos.ne').ne_zero
+  apply minpoly.gcd_domain_dvd (IsIntegral h hpos) (monic_X_pow_sub_C 1 hpos.ne').NeZero
   simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, eq_int_cast, Int.cast_one, aeval_one,
     AlgHom.map_sub, sub_self]
 
@@ -971,7 +972,7 @@ theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n)
 `μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q` modulo `p`. -/
 theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
     map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) :=
-  (UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree (squarefree_minpoly_mod h hdiv) hprime.1.ne_zero).1
+  (UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree (squarefree_minpoly_mod h hdiv) hprime.1.NeZero).1
     (minpoly_dvd_pow_mod h hdiv)
 
 /-- If `p` is a prime that does not divide `n`,
@@ -1051,7 +1052,7 @@ theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ 
     haveI := Fact.mk hprime
     rw [minpoly_eq_pow (h.pow_of_coprime a (Nat.Coprime.coprime_mul_left hcop)) hdiv]
     congr 1
-    ring_exp
+    ring
     
 
 /-- If `m : ℕ` is coprime with `n`,
@@ -1098,7 +1099,7 @@ section Automorphisms
 
 variable {S} [CommRing S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitiveRoot μ n) (R) [CommRing R] [Algebra R S]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 /-- The `monoid_hom` that takes an automorphism to the power of μ that μ gets mapped to under it. -/
 noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
   let μ' := hμ.toRootsOfUnity

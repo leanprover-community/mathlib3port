@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.Algebra.Order.AbsoluteValue
+import Mathbin.Algebra.Order.Ring.WithTop
 import Mathbin.Algebra.BigOperators.Basic
 
 /-!
@@ -176,7 +177,7 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
 
 variable {ι' : Type _} [DecidableEq ι']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ∉ » t) -/
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
@@ -187,7 +188,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ∉ » t) -/
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ (y) (_ : y ∉ t), (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
@@ -197,18 +198,17 @@ theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι �
 end OrderedCommMonoid
 
 theorem abs_sum_le_sum_abs {G : Type _} [LinearOrderedAddCommGroup G] (f : ι → G) (s : Finset ι) :
-    abs (∑ i in s, f i) ≤ ∑ i in s, abs (f i) :=
+    |∑ i in s, f i| ≤ ∑ i in s, |f i| :=
   le_sum_of_subadditive _ abs_zero abs_add s f
 
 theorem abs_sum_of_nonneg {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι}
-    (hf : ∀ i ∈ s, 0 ≤ f i) : abs (∑ i : ι in s, f i) = ∑ i : ι in s, f i := by
-  rw [abs_of_nonneg (Finset.sum_nonneg hf)]
+    (hf : ∀ i ∈ s, 0 ≤ f i) : |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by rw [abs_of_nonneg (Finset.sum_nonneg hf)]
 
 theorem abs_sum_of_nonneg' {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι} (hf : ∀ i, 0 ≤ f i) :
-    abs (∑ i : ι in s, f i) = ∑ i : ι in s, f i := by rw [abs_of_nonneg (Finset.sum_nonneg' hf)]
+    |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by rw [abs_of_nonneg (Finset.sum_nonneg' hf)]
 
 theorem abs_prod {R : Type _} [LinearOrderedCommRing R] {f : ι → R} {s : Finset ι} :
-    abs (∏ x in s, f x) = ∏ x in s, abs (f x) :=
+    |∏ x in s, f x| = ∏ x in s, |f x| :=
   (absHom.toMonoidHom : R →* R).map_prod _ _
 
 section Pigeonhole
@@ -474,7 +474,7 @@ theorem prod_le_one (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ 1) 
   convert ← prod_le_prod h0 h1
   exact Finset.prod_const_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `ordered_comm_semiring`. -/
 theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i + h i ≤ f i) (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j)
@@ -522,7 +522,7 @@ theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `canonically_ordered_comm_semiring`.
 -/

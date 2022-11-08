@@ -211,7 +211,7 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     cases X_right
     simp only [functor.id_obj, functor.right_op_obj, to_costructured_arrow_obj, functor.comp_obj, costructured_arrow.mk]
     congr
-    ext x f
+    ext (x f)
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
     simp only [Quiver.Hom.unop_op, yoneda_obj_map]
     erw [category.comp_id]
@@ -223,12 +223,12 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   simp [costructured_arrow.hom_mk]
   delta costructured_arrow.mk
   congr
-  · ext x f
+  · ext (x f)
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
     
-  · ext x f
+  · ext (x f)
     convert congr_fun (Y_hom.naturality f.op).symm (𝟙 Y_left)
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
@@ -250,7 +250,7 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
   · intro X
     simp only [costructured_arrow.map_mk, to_costructured_arrow_obj, functor.op_obj, functor.comp_obj]
     congr
-    ext x f
+    ext (x f)
     simpa using congr_fun (α.naturality f.op).symm (unop X).snd
     
   · intro X Y f

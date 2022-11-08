@@ -43,7 +43,7 @@ namespace IsUnit
 
 theorem ne_zero [Nontrivial M₀] {a : M₀} (ha : IsUnit a) : a ≠ 0 :=
   let ⟨u, hu⟩ := ha
-  hu ▸ u.ne_zero
+  hu ▸ u.NeZero
 
 theorem mul_right_eq_zero {a b : M₀} (ha : IsUnit a) : a * b = 0 ↔ b = 0 :=
   let ⟨u, hu⟩ := ha
@@ -188,11 +188,11 @@ theorem mk0_coe (u : G₀ˣ) (h : (u : G₀) ≠ 0) : mk0 (u : G₀) h = u :=
 
 @[simp]
 theorem mul_inv' (u : G₀ˣ) : (u : G₀) * u⁻¹ = 1 :=
-  mul_inv_cancel u.ne_zero
+  mul_inv_cancel u.NeZero
 
 @[simp]
 theorem inv_mul' (u : G₀ˣ) : (u⁻¹ : G₀) * u = 1 :=
-  inv_mul_cancel u.ne_zero
+  inv_mul_cancel u.NeZero
 
 @[simp]
 theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Units.mk0 b hb ↔ a = b :=
@@ -200,11 +200,11 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
 
 /-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
 theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
-  ⟨fun ⟨g, pg⟩ => ⟨g, g.ne_zero, (g.mk0_coe g.ne_zero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
+  ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_coe g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
 
 /-- An alternative version of `units.exists0`. This one is useful if Lean cannot
 figure out `p` when using `units.exists0` from right to left. -/
-theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.ne_zero :=
+theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
   Iff.trans (by simp_rw [coe_mk0]) exists0.symm
 
 @[simp]
@@ -244,7 +244,7 @@ instance (priority := 10) GroupWithZero.no_zero_divisors : NoZeroDivisors G₀ :
   { (‹_› : GroupWithZero G₀) with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h => by
       contrapose! h
-      exact (Units.mk0 a h.1 * Units.mk0 b h.2).ne_zero }
+      exact (Units.mk0 a h.1 * Units.mk0 b h.2).NeZero }
 
 -- see Note [lower instance priority]
 instance (priority := 10) GroupWithZero.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
@@ -467,10 +467,22 @@ end SemiconjBy
 
 namespace Commute
 
+/- warning: commute.zero_right -> Commute.zero_right is a dubious translation:
+lean 3 declaration is
+  forall {G₀ : Type.{u_3}} [_inst_2 : MulZeroClass.{u_3} G₀] (a : G₀), Commute.{u_3} G₀ (MulZeroClass.toHasMul.{u_3} G₀ _inst_2) a (OfNat.ofNat.{u_3} G₀ 0 (OfNat.mk.{u_3} G₀ 0 (Zero.zero.{u_3} G₀ (MulZeroClass.toHasZero.{u_3} G₀ _inst_2))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.186 : Semiring.{u_1} R] (a : R), Commute.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.186))) a (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MonoidWithZero.toZero.{u_1} R (Semiring.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.186))))
+Case conversion may be inaccurate. Consider using '#align commute.zero_right Commute.zero_rightₓ'. -/
 @[simp]
 theorem zero_right [MulZeroClass G₀] (a : G₀) : Commute a 0 :=
   SemiconjBy.zero_right a
 
+/- warning: commute.zero_left -> Commute.zero_left is a dubious translation:
+lean 3 declaration is
+  forall {G₀ : Type.{u_3}} [_inst_2 : MulZeroClass.{u_3} G₀] (a : G₀), Commute.{u_3} G₀ (MulZeroClass.toHasMul.{u_3} G₀ _inst_2) (OfNat.ofNat.{u_3} G₀ 0 (OfNat.mk.{u_3} G₀ 0 (Zero.zero.{u_3} G₀ (MulZeroClass.toHasZero.{u_3} G₀ _inst_2)))) a
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.211 : Semiring.{u_1} R] (a : R), Commute.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.211))) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MonoidWithZero.toZero.{u_1} R (Semiring.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.211)))) a
+Case conversion may be inaccurate. Consider using '#align commute.zero_left Commute.zero_leftₓ'. -/
 @[simp]
 theorem zero_left [MulZeroClass G₀] (a : G₀) : Commute 0 a :=
   SemiconjBy.zero_left a a
@@ -510,7 +522,7 @@ variable [GroupWithZero G₀] [Nontrivial M₀] [MonoidWithZero M₀'] [MonoidWi
 include M₀
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).ne_zero⟩
+  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).NeZero⟩
 
 @[simp]
 theorem map_eq_zero : f a = 0 ↔ a = 0 :=

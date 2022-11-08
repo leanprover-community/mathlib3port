@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Yury Kudryashov
 -/
 import Mathbin.Analysis.Convex.Strict
 import Mathbin.Analysis.Convex.Topology
-import Mathbin.Analysis.NormedSpace.Ordered
+import Mathbin.Analysis.Normed.Order.Basic
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 
@@ -198,7 +198,7 @@ theorem lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x∥ - ∥y∥ 
   nth_rw 0 [← sub_add_cancel x y]  at h⊢
   exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_same_ray fun H' => h <| H'.add_left SameRay.rfl)
 
-theorem abs_lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : abs (∥x∥ - ∥y∥) < ∥x - y∥ := by
+theorem abs_lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : |∥x∥ - ∥y∥| < ∥x - y∥ := by
   refine' abs_sub_lt_iff.2 ⟨lt_norm_sub_of_not_same_ray h, _⟩
   rw [norm_sub_rev]
   exact lt_norm_sub_of_not_same_ray (mt SameRay.symm h)
@@ -218,10 +218,10 @@ triangle inequality for `x` and `y` is strict. -/
 theorem not_same_ray_iff_norm_add_lt : ¬SameRay ℝ x y ↔ ∥x + y∥ < ∥x∥ + ∥y∥ :=
   same_ray_iff_norm_add.Not.trans (norm_add_le _ _).lt_iff_ne.symm
 
-theorem same_ray_iff_norm_sub : SameRay ℝ x y ↔ ∥x - y∥ = abs (∥x∥ - ∥y∥) :=
+theorem same_ray_iff_norm_sub : SameRay ℝ x y ↔ ∥x - y∥ = |∥x∥ - ∥y∥| :=
   ⟨SameRay.norm_sub, fun h => not_not.1 fun h' => (abs_lt_norm_sub_of_not_same_ray h').ne' h⟩
 
-theorem not_same_ray_iff_abs_lt_norm_sub : ¬SameRay ℝ x y ↔ abs (∥x∥ - ∥y∥) < ∥x - y∥ :=
+theorem not_same_ray_iff_abs_lt_norm_sub : ¬SameRay ℝ x y ↔ |∥x∥ - ∥y∥| < ∥x - y∥ :=
   same_ray_iff_norm_sub.Not.trans <| ne_comm.trans (abs_norm_sub_norm_le _ _).lt_iff_ne.symm
 
 /-- In a strictly convex space, the triangle inequality turns into an equality if and only if the

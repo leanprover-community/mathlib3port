@@ -174,7 +174,7 @@ variable {M}
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.Support ⊆ s :=
   Iff.rfl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
   haveI := Classical.decPred fun x : α => x ∈ s <;> simp [mem_supported, Set.subset_def, not_imp_comm]
 
@@ -218,7 +218,7 @@ theorem restrict_dom_apply (s : Set α) (l : α →₀ M) :
 end
 
 theorem restrict_dom_comp_subtype (s : Set α) : (restrictDom M R s).comp (Submodule.subtype _) = LinearMap.id := by
-  ext l a
+  ext (l a)
   by_cases a ∈ s <;> simp [h]
   exact ((mem_supported' R l.1).1 l.2 a h).symm
 
@@ -299,16 +299,16 @@ def lsum : (α → M →ₗ[R] N) ≃ₗ[S] (α →₀ M) →ₗ[R] N where
       map_smul' := fun c f => by simp [sum_smul_index', smul_sum] }
   invFun F x := F.comp (lsingle x)
   left_inv F := by
-    ext x y
+    ext (x y)
     simp
   right_inv F := by
-    ext x y
+    ext (x y)
     simp
   map_add' F G := by
-    ext x y
+    ext (x y)
     simp
   map_smul' F G := by
-    ext x y
+    ext (x y)
     simp
 
 @[simp]
@@ -392,7 +392,7 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
     exact Function.inv_fun_on_eq (by simpa using hl hc)
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem lmapDomainDisjointKer (f : α → α') {s : Set α} (H : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker := by
   rintro l ⟨h₁, h₂⟩
@@ -710,19 +710,8 @@ theorem lcongr_symm_single {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[
 
 @[simp]
 theorem lcongr_symm {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[R] N) : (lcongr e₁ e₂).symm = lcongr e₁.symm e₂.symm := by
-  ext f i
-  simp only [Equiv.symm_symm, Finsupp.lcongr_apply_apply]
-  apply Finsupp.induction_linear f
-  · simp
-    
-  · intro f g hf hg
-    simp [map_add, hf, hg]
-    
-  · intro k m
-    simp only [Finsupp.lcongr_symm_single]
-    simp only [Finsupp.single, Equiv.symm_apply_eq, Finsupp.coe_mk]
-    split_ifs <;> simp
-    
+  ext
+  rfl
 
 section Sum
 
@@ -964,7 +953,7 @@ def splittingOfFinsuppSurjective (f : M →ₗ[R] α →₀ R) (s : Surjective f
 
 theorem splitting_of_finsupp_surjective_splits (f : M →ₗ[R] α →₀ R) (s : Surjective f) :
     f.comp (splittingOfFinsuppSurjective f s) = LinearMap.id := by
-  ext x y
+  ext (x y)
   dsimp [splitting_of_finsupp_surjective]
   congr
   rw [sum_single_index, one_smul]
@@ -988,7 +977,7 @@ def splittingOfFunOnFintypeSurjective [Fintype α] (f : M →ₗ[R] α → R) (s
 
 theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) :
     f.comp (splittingOfFunOnFintypeSurjective f s) = LinearMap.id := by
-  ext x y
+  ext (x y)
   dsimp [splitting_of_fun_on_fintype_surjective]
   rw [linear_equiv_fun_on_fintype_symm_single, Finsupp.sum_single_index, one_smul, (s (Finsupp.single x 1)).some_spec,
     Finsupp.single_eq_pi_single]

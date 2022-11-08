@@ -157,7 +157,7 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
             | (_, _) => do
               guard <| a' ∧ a' = b'
               let (a'', pa') ← add_symm_proof r a'
-              guard <| expr.alpha_eqv a'' b'
+              guard <| a'' == b'
               pure pa'
         let p' ← mk_eq_trans pa p
         add_edge r a' b' p'

@@ -460,7 +460,7 @@ instance [LocallyCompactSpace α] [TopologicalSpace R] [HasSmul R M] [HasContinu
       continuous_eval'.comp (continuous_snd.prod_map continuous_id)
     exact (continuous_fst.comp continuous_fst).smul h⟩
 
-@[simp, to_additive, norm_cast]
+@[simp, norm_cast, to_additive]
 theorem coe_smul [HasSmul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) : ⇑(c • f) = c • f :=
   rfl
 
@@ -747,10 +747,10 @@ variable {R : Type _} [LinearOrderedField R]
 -- except that it is tedious to prove without tactics.
 -- Rather than stranding it at some intermediate location,
 -- it's here, immediately prior to the point of use.
-theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - abs (x - y)) := by
+theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - |x - y|) := by
   cases' le_total x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
-theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + abs (x - y)) := by
+theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + |x - y|) := by
   cases' le_total x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
 end
@@ -763,11 +763,11 @@ variable {α : Type _} [TopologicalSpace α]
 
 variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β] [TopologicalRing β]
 
-theorem inf_eq (f g : C(α, β)) : f ⊓ g = (2⁻¹ : β) • (f + g - abs (f - g)) :=
+theorem inf_eq (f g : C(α, β)) : f ⊓ g = (2⁻¹ : β) • (f + g - |f - g|) :=
   ext fun x => by simpa using min_eq_half_add_sub_abs_sub
 
 -- Not sure why this is grosser than `inf_eq`:
-theorem sup_eq (f g : C(α, β)) : f ⊔ g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
+theorem sup_eq (f g : C(α, β)) : f ⊔ g = (2⁻¹ : β) • (f + g + |f - g|) :=
   ext fun x => by simpa [mul_add] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 
 end Lattice

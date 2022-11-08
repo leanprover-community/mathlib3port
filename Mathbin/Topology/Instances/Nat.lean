@@ -21,7 +21,7 @@ namespace Nat
 noncomputable instance : HasDist ℕ :=
   ⟨fun x y => dist (x : ℝ) y⟩
 
-theorem dist_eq (x y : ℕ) : dist x y = abs (x - y) :=
+theorem dist_eq (x y : ℕ) : dist x y = |x - y| :=
   rfl
 
 theorem dist_coe_int (x y : ℕ) : dist (x : ℤ) (y : ℤ) = dist x y :=

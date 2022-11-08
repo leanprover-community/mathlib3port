@@ -40,7 +40,7 @@ theorem sin_arg (x : ℂ) : Real.sin (arg x) = x.im / x.abs := by
 
 theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs := by
   have habs : 0 < abs x := abs.pos hx
-  have him : abs (im x / abs x) ≤ 1 := by
+  have him : |im x / abs x| ≤ 1 := by
     rw [_root_.abs_div, abs_abs]
     exact div_le_one_of_le x.abs_im_le_abs (abs.nonneg x)
   rw [abs_le] at him
@@ -144,7 +144,7 @@ theorem arg_le_pi (x : ℂ) : arg x ≤ π :=
 theorem neg_pi_lt_arg (x : ℂ) : -π < arg x :=
   (arg_mem_Ioc x).1
 
-theorem abs_arg_le_pi (z : ℂ) : abs (arg z) ≤ π :=
+theorem abs_arg_le_pi (z : ℂ) : |arg z| ≤ π :=
   abs_le.2 ⟨(neg_pi_lt_arg z).le, arg_le_pi z⟩
 
 @[simp]
@@ -345,7 +345,7 @@ theorem neg_pi_div_two_le_arg_iff {z : ℂ} : -(π / 2) ≤ arg z ↔ 0 ≤ re z
     
 
 @[simp]
-theorem abs_arg_le_pi_div_two_iff {z : ℂ} : abs (arg z) ≤ π / 2 ↔ 0 ≤ re z := by
+theorem abs_arg_le_pi_div_two_iff {z : ℂ} : |arg z| ≤ π / 2 ↔ 0 ≤ re z := by
   rw [abs_le, arg_le_pi_div_two_iff, neg_pi_div_two_le_arg_iff, ← or_and_left, ← not_le, and_not_self_iff, or_false_iff]
 
 @[simp]

@@ -67,6 +67,10 @@ def terminalLimitCone : Limits.LimitCone (Functor.empty (Type u)) where
 noncomputable def terminalIso : ⊤_ Type u ≅ PUnit :=
   limit.isoLimitCone terminalLimitCone
 
+/-- The terminal object in `Type u` is `punit`. -/
+noncomputable def isTerminalPunit : IsTerminal (PUnit : Type u) :=
+  terminalIsTerminal.of_iso terminalIso
+
 /-- The category of types has `pempty` as an initial object. -/
 def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u)) where
   Cocone := { x := PEmpty, ι := by tidy }
@@ -75,6 +79,10 @@ def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u)) where
 /-- The initial object in `Type u` is `pempty`. -/
 noncomputable def initialIso : ⊥_ Type u ≅ PEmpty :=
   colimit.isoColimitCocone initialColimitCocone
+
+/-- The initial object in `Type u` is `pempty`. -/
+noncomputable def isInitialPunit : IsInitial (PEmpty : Type u) :=
+  initialIsInitial.of_iso initialIso
 
 open CategoryTheory.Limits.WalkingPair
 
@@ -194,6 +202,65 @@ theorem binary_coproduct_iso_inl_comp_inv (X Y : Type u) :
 theorem binary_coproduct_iso_inr_comp_inv (X Y : Type u) :
     ↾(Sum.inr : Y ⟶ Sum X Y) ≫ (binaryCoproductIso X Y).inv = limits.coprod.inr :=
   colimit.iso_colimit_cocone_ι_inv (binaryCoproductColimitCocone X Y) ⟨WalkingPair.right⟩
+
+open Function (Injective)
+
+theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
+    Nonempty (IsColimit c) ↔ Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.Range c.inl) (Set.Range c.inr) := by
+  classical
+  constructor
+  · rintro ⟨h⟩
+    rw [←
+      show _ = c.inl from h.comp_cocone_point_unique_up_to_iso_inv (binary_coproduct_colimit X Y) ⟨walking_pair.left⟩, ←
+      show _ = c.inr from h.comp_cocone_point_unique_up_to_iso_inv (binary_coproduct_colimit X Y) ⟨walking_pair.right⟩]
+    dsimp [binary_coproduct_cocone]
+    refine'
+      ⟨(h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Injective.comp Sum.inl_injective,
+        (h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Injective.comp Sum.inr_injective,
+        _⟩
+    erw [Set.range_comp, ← eq_compl_iff_is_compl, Set.range_comp _ Sum.inr, ←
+      Set.image_compl_eq (h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Bijective]
+    congr 1
+    exact set.compl_range_inr.symm
+    
+  · rintro ⟨h₁, h₂, h₃⟩
+    have : ∀ x, x ∈ Set.Range c.inl ∨ x ∈ Set.Range c.inr := by
+      rw [eq_compl_iff_is_compl.mpr h₃.symm]
+      exact fun _ => or_not
+    refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
+    · intro T f g x
+      exact
+        if h : x ∈ Set.Range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
+        else g ((Equiv.ofInjective _ h₂).symm ⟨x, (this x).resolve_left h⟩)
+      
+    · intro T f g
+      ext x
+      dsimp
+      simp [h₁.eq_iff]
+      
+    · intro T f g
+      ext x
+      dsimp
+      simp only [forall_exists_index, Equiv.of_injective_symm_apply, dif_ctx_congr, dite_eq_right_iff]
+      intro y e
+      have : c.inr x ∈ Set.Range c.inl ⊓ Set.Range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
+      rw [disjoint_iff.mp h₃.1] at this
+      exact this.elim
+      
+    · rintro T _ _ m rfl rfl
+      ext x
+      dsimp
+      split_ifs <;> exact congr_arg _ (Equiv.apply_of_injective_symm _ ⟨_, _⟩).symm
+      
+    
+
+/-- Any monomorphism in `Type` is an coproduct injection. -/
+noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
+    IsColimit (BinaryCofan.mk f (Subtype.val : Set.Range fᶜ → Y)) :=
+  Nonempty.some <|
+    (binary_cofan_is_colimit_iff _).mpr
+      ⟨(mono_iff_injective f).mp inferInstance, Subtype.val_injective,
+        (eq_compl_iff_is_compl.mp <| Subtype.range_val).symm⟩
 
 /-- The category of types has `Π j, f j` as the product of a type family `f : J → Type`.
 -/

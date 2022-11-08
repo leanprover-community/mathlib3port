@@ -313,7 +313,7 @@ theorem commute_sub_nat (n : ℕ) : Function.Commute f fun x => x - n := by
 
 theorem commute_add_int : ∀ n : ℤ, Function.Commute f fun x => x + n
   | (n : ℕ) => f.commute_add_nat n
-  | -[1 + n] => by simpa [sub_eq_add_neg] using f.commute_sub_nat (n + 1)
+  | -[n+1] => by simpa [sub_eq_add_neg] using f.commute_sub_nat (n + 1)
 
 theorem commute_int_add (n : ℤ) : Function.Commute f ((· + ·) n) := by
   simpa only [add_comm _ (n : ℝ)] using f.commute_add_int n
@@ -649,7 +649,7 @@ theorem translation_number_pow : ∀ n : ℕ, τ (f ^ n) = n * τ f
 @[simp]
 theorem translation_number_zpow (f : CircleDeg1Liftˣ) : ∀ n : ℤ, τ (f ^ n : Units _) = n * τ f
   | (n : ℕ) => by simp [translation_number_pow f n]
-  | -[1 + n] => by
+  | -[n+1] => by
     simp
     ring
 

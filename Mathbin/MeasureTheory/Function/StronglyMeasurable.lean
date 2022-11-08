@@ -273,9 +273,7 @@ theorem _root_.strongly_measurable_bot_iff [Nonempty β] [T2Space β] : strongly
 
 end BasicPropertiesInAnyTopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » t) -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n), ∀ m, «expr ≤ »(n, m) → «expr ∈ »(x, S m))]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n), «expr ∈ »(x, S n))]] -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » t) -/
 theorem finStronglyMeasurableOfSetSigmaFinite [TopologicalSpace β] [Zero β] {m : MeasurableSpace α} {μ : Measure α}
     (hf_meas : StronglyMeasurable f) {t : Set α} (ht : MeasurableSet t) (hft_zero : ∀ x ∈ tᶜ, f x = 0)
     (htμ : SigmaFinite (μ.restrict t)) : FinStronglyMeasurable f μ := by
@@ -310,12 +308,10 @@ theorem finStronglyMeasurableOfSetSigmaFinite [TopologicalSpace β] [Zero β] {m
     have h : tendsto (fun n => (f_approx n) x) at_top (𝓝 (f x)) := hf_meas.tendsto_approx x
     obtain ⟨n₁, hn₁⟩ : ∃ n, ∀ m, n ≤ m → fs m x = f_approx m x := by
       obtain ⟨n, hn⟩ : ∃ n, ∀ m, n ≤ m → x ∈ S m ∩ t := by
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n), ∀ m, «expr ≤ »(n, m) → «expr ∈ »(x, S m))]]"
+        rsuffices ⟨n, hn⟩ : ∃ n, ∀ m, n ≤ m → x ∈ S m
         · exact ⟨n, fun m hnm => Set.mem_inter (hn m hnm) hxt⟩
           
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n), «expr ∈ »(x, S n))]]"
+        rsuffices ⟨n, hn⟩ : ∃ n, x ∈ S n
         · exact ⟨n, fun m hnm => monotone_spanning_sets (μ.restrict t) hnm hn⟩
           
         rw [← Set.mem_Union, Union_spanning_sets (μ.restrict t)]
@@ -350,11 +346,10 @@ theorem _root_.continuous.comp_strongly_measurable {m : MeasurableSpace α} [Top
     {g : β → γ} {f : α → β} (hg : Continuous g) (hf : StronglyMeasurable f) : StronglyMeasurable fun x => g (f x) :=
   ⟨fun n => SimpleFunc.map g (hf.approx n), fun x => (hg.Tendsto _).comp (hf.tendsto_approx x)⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 @[to_additive]
 theorem measurableSetMulSupport {m : MeasurableSpace α} [One β] [TopologicalSpace β] [MetrizableSpace β]
     (hf : StronglyMeasurable f) : MeasurableSet (MulSupport f) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   exact measurableSetMulSupport hf.measurable
 
 protected theorem mono {m m' : MeasurableSpace α} [TopologicalSpace β] (hf : strongly_measurable[m'] f)
@@ -528,7 +523,7 @@ end CommMonoid
 /-- The range of a strongly measurable function is separable. -/
 theorem is_separable_range {m : MeasurableSpace α} [TopologicalSpace β] (hf : StronglyMeasurable f) :
     TopologicalSpace.IsSeparable (Range f) := by
-  have : IsSeparable (Closure (⋃ n, range (hf.approx n))) :=
+  have : is_separable (Closure (⋃ n, range (hf.approx n))) :=
     (is_separable_Union fun n => (simple_func.finite_range (hf.approx n)).IsSeparable).closure
   apply this.mono
   rintro _ ⟨x, rfl⟩
@@ -597,13 +592,12 @@ theorem _root_.strongly_measurable_iff_measurable_separable {m : MeasurableSpace
   rw [fg]
   exact continuous_subtype_coe.comp_strongly_measurable g_smeas
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 /-- A continuous function is strongly measurable when either the source space or the target space
 is second-countable. -/
 theorem _root_.continuous.strongly_measurable [MeasurableSpace α] [TopologicalSpace α] [OpensMeasurableSpace α]
     {β : Type _} [TopologicalSpace β] [PseudoMetrizableSpace β] [h : SecondCountableTopologyEither α β] {f : α → β}
     (hf : Continuous f) : StronglyMeasurable f := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   cases h.out
   · rw [strongly_measurable_iff_measurable_separable]
     refine' ⟨hf.measurable, _⟩
@@ -613,14 +607,12 @@ theorem _root_.continuous.strongly_measurable [MeasurableSpace α] [TopologicalS
   · exact hf.measurable.strongly_measurable
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[["[", expr β, ",", expr γ, "]"]] -/
 /-- If `g` is a topological embedding, then `f` is strongly measurable iff `g ∘ f` is. -/
 theorem _root_.embedding.comp_strongly_measurable_iff {m : MeasurableSpace α} [TopologicalSpace β]
     [PseudoMetrizableSpace β] [TopologicalSpace γ] [PseudoMetrizableSpace γ] {g : β → γ} {f : α → β}
     (hg : Embedding g) : (StronglyMeasurable fun x => g (f x)) ↔ StronglyMeasurable f := by
   letI := pseudo_metrizable_space_pseudo_metric γ
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[\"[\", expr β, \",\", expr γ, \"]\"]]"
+  borelize β γ
   refine'
     ⟨fun H => strongly_measurable_iff_measurable_separable.2 ⟨_, _⟩, fun H => hg.continuous.comp_strongly_measurable H⟩
   · let G : β → range g := cod_restrict g (range g) mem_range_self
@@ -634,23 +626,22 @@ theorem _root_.embedding.comp_strongly_measurable_iff {m : MeasurableSpace α} [
     have : Measurable (G ∘ f) := Measurable.subtypeMk H.measurable
     exact hG.measurable_embedding.measurable_comp_iff.1 this
     
-  · have : IsSeparable (g ⁻¹' range (g ∘ f)) := hg.is_separable_preimage H.is_separable_range
+  · have : is_separable (g ⁻¹' range (g ∘ f)) := hg.is_separable_preimage H.is_separable_range
     convert this
     ext x
     simp [hg.inj.eq_iff]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 /-- A sequential limit of strongly measurable functions is strongly measurable. -/
 theorem _root_.strongly_measurable_of_tendsto {ι : Type _} {m : MeasurableSpace α} [TopologicalSpace β]
     [PseudoMetrizableSpace β] (u : Filter ι) [NeBot u] [IsCountablyGenerated u] {f : ι → α → β} {g : α → β}
     (hf : ∀ i, StronglyMeasurable (f i)) (lim : Tendsto f u (𝓝 g)) : StronglyMeasurable g := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   refine' strongly_measurable_iff_measurable_separable.2 ⟨_, _⟩
   · exact measurableOfTendstoMetrizable' u (fun i => (hf i).Measurable) lim
     
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
-    have : IsSeparable (Closure (⋃ i, range (f (v i)))) :=
+    have : is_separable (Closure (⋃ i, range (f (v i)))) :=
       (is_separable_Union fun i => (hf (v i)).is_separable_range).closure
     apply this.mono
     rintro _ ⟨x, rfl⟩
@@ -781,32 +772,26 @@ protected theorem inner {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProduct
     StronglyMeasurable fun t => @inner 𝕜 _ _ (f t) (g t) :=
   Continuous.compStronglyMeasurable continuous_inner (hf.prod_mk hg)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr «expr × »(E, E)]] -/
 theorem measurableSetEqFun {m : MeasurableSpace α} {E} [TopologicalSpace E] [MetrizableSpace E] {f g : α → E}
     (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) : MeasurableSet { x | f x = g x } := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr «expr × »(E, E)]]"
+  borelize (E × E)
   exact (hf.prod_mk hg).Measurable is_closed_diagonal.measurable_set
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr «expr × »(β, β)]] -/
 theorem measurableSetLt {m : MeasurableSpace α} [TopologicalSpace β] [LinearOrder β] [OrderClosedTopology β]
     [PseudoMetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     MeasurableSet { a | f a < g a } := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr «expr × »(β, β)]]"
+  borelize (β × β)
   exact (hf.prod_mk hg).Measurable is_open_lt_prod.measurable_set
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr «expr × »(β, β)]] -/
 theorem measurableSetLe {m : MeasurableSpace α} [TopologicalSpace β] [Preorder β] [OrderClosedTopology β]
     [PseudoMetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     MeasurableSet { a | f a ≤ g a } := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr «expr × »(β, β)]]"
+  borelize (β × β)
   exact (hf.prod_mk hg).Measurable is_closed_le_prod.measurable_set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem strongly_measurable_in_set {m : MeasurableSpace α} [TopologicalSpace β] [Zero β] {s : Set α} {f : α → β}
     (hs : MeasurableSet s) (hf : StronglyMeasurable f) (hf_zero : ∀ (x) (_ : x ∉ s), f x = 0) :
     ∃ fs : ℕ → α →ₛ β, (∀ x, Tendsto (fun n => fs n x) atTop (𝓝 (f x))) ∧ ∀ (x) (_ : x ∉ s) (n), fs n x = 0 := by
@@ -826,7 +811,7 @@ theorem strongly_measurable_in_set {m : MeasurableSpace α} [TopologicalSpace β
     exact tendsto_const_nhds
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /-- If the restriction to a set `s` of a σ-algebra `m` is included in the restriction to `s` of
 another σ-algebra `m₂` (hypothesis `hs`), the set `s` is `m` measurable and a function `f` supported
 on `s` is `m`-strongly-measurable, then `f` is also `m₂`-strongly-measurable. -/
@@ -1398,12 +1383,10 @@ theorem _root_.measurable_embedding.ae_strongly_measurable_map_iff {γ : Type _}
   rcases hf.exists_strongly_measurable_extend hgm₁ fun x => ⟨g x⟩ with ⟨g₂, hgm₂, rfl⟩
   exact ⟨g₂, hgm₂, hf.ae_map_iff.2 HEq⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[["[", expr β, ",", expr γ, "]"]] -/
 theorem _root_.embedding.ae_strongly_measurable_comp_iff [PseudoMetrizableSpace β] [PseudoMetrizableSpace γ] {g : β → γ}
     {f : α → β} (hg : Embedding g) : AeStronglyMeasurable (fun x => g (f x)) μ ↔ AeStronglyMeasurable f μ := by
   letI := pseudo_metrizable_space_pseudo_metric γ
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[\"[\", expr β, \",\", expr γ, \"]\"]]"
+  borelize β γ
   refine'
     ⟨fun H => ae_strongly_measurable_iff_ae_measurable_separable.2 ⟨_, _⟩, fun H =>
       hg.continuous.comp_ae_strongly_measurable H⟩
@@ -1427,18 +1410,17 @@ theorem _root_.measure_theory.measure_preserving.ae_strongly_measurable_comp_iff
     (h₂ : MeasurableEmbedding f) {g : β → γ} : AeStronglyMeasurable (g ∘ f) μa ↔ AeStronglyMeasurable g μb := by
   rw [← hf.map_eq, h₂.ae_strongly_measurable_map_iff]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 /-- An almost everywhere sequential limit of almost everywhere strongly measurable functions is
 almost everywhere strongly measurable. -/
 theorem _root_.ae_strongly_measurable_of_tendsto_ae {ι : Type _} [PseudoMetrizableSpace β] (u : Filter ι) [NeBot u]
     [IsCountablyGenerated u] {f : ι → α → β} {g : α → β} (hf : ∀ i, AeStronglyMeasurable (f i) μ)
     (lim : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) u (𝓝 (g x))) : AeStronglyMeasurable g μ := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   refine' ae_strongly_measurable_iff_ae_measurable_separable.2 ⟨_, _⟩
   · exact aeMeasurableOfTendstoMetrizableAe _ (fun n => (hf n).AeMeasurable) lim
     
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
-    have : ∀ n : ℕ, ∃ t : Set β, IsSeparable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
+    have : ∀ n : ℕ, ∃ t : Set β, is_separable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
       (ae_strongly_measurable_iff_ae_measurable_separable.1 (hf (v n))).2
     choose t t_sep ht using this
     refine' ⟨Closure (⋃ i, t i), (is_separable_Union fun i => t_sep i).closure, _⟩
@@ -1449,14 +1431,13 @@ theorem _root_.ae_strongly_measurable_of_tendsto_ae {ι : Type _} [PseudoMetriza
     exact hx n
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 /-- If a sequence of almost everywhere strongly measurable functions converges almost everywhere,
 one can select a strongly measurable function as the almost everywhere limit. -/
 theorem _root_.exists_strongly_measurable_limit_of_tendsto_ae [PseudoMetrizableSpace β] {f : ℕ → α → β}
     (hf : ∀ n, AeStronglyMeasurable (f n) μ) (h_ae_tendsto : ∀ᵐ x ∂μ, ∃ l : β, Tendsto (fun n => f n x) atTop (𝓝 l)) :
     ∃ (f_lim : α → β)(hf_lim_meas : StronglyMeasurable f_lim), ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (f_lim x)) :=
   by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   obtain ⟨g, g_meas, hg⟩ : ∃ (g : α → β)(g_meas : Measurable g), ∀ᵐ x ∂μ, tendsto (fun n => f n x) at_top (𝓝 (g x)) :=
     measurable_limit_of_tendsto_metrizable_ae (fun n => (hf n).AeMeasurable) h_ae_tendsto
   have Hg : ae_strongly_measurable g μ := aeStronglyMeasurableOfTendstoAe _ hf hg
@@ -1464,12 +1445,11 @@ theorem _root_.exists_strongly_measurable_limit_of_tendsto_ae [PseudoMetrizableS
   filter_upwards [hg, Hg.ae_eq_mk] with x hx h'x
   rwa [h'x] at hx
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 theorem sumMeasure [PseudoMetrizableSpace β] {m : MeasurableSpace α} {μ : ι → Measure α}
     (h : ∀ i, AeStronglyMeasurable f (μ i)) : AeStronglyMeasurable f (Measure.sum μ) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   refine' ae_strongly_measurable_iff_ae_measurable_separable.2 ⟨AeMeasurable.sumMeasure fun i => (h i).AeMeasurable, _⟩
-  have A : ∀ i : ι, ∃ t : Set β, IsSeparable t ∧ f ⁻¹' t ∈ (μ i).ae := fun i =>
+  have A : ∀ i : ι, ∃ t : Set β, is_separable t ∧ f ⁻¹' t ∈ (μ i).ae := fun i =>
     (ae_strongly_measurable_iff_ae_measurable_separable.1 (h i)).2
   choose t t_sep ht using A
   refine' ⟨⋃ i, t i, is_separable_Union t_sep, _⟩
@@ -1742,12 +1722,11 @@ theorem measurableUncurryOfContinuousOfMeasurable {α β ι : Type _} [Topologic
   refine' h_meas.comp (Measurable.prodMk _ measurableSnd)
   exact ((t_sf n).Measurable.comp measurableFst).subtype_mk
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 theorem stronglyMeasurableUncurryOfContinuousOfStronglyMeasurable {α β ι : Type _} [TopologicalSpace ι]
     [MetrizableSpace ι] [MeasurableSpace ι] [SecondCountableTopology ι] [OpensMeasurableSpace ι] [TopologicalSpace β]
     [PseudoMetrizableSpace β] [MeasurableSpace α] {u : ι → α → β} (hu_cont : ∀ x, Continuous fun i => u i x)
     (h : ∀ i, StronglyMeasurable (u i)) : StronglyMeasurable (Function.uncurry u) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   obtain ⟨t_sf, ht_sf⟩ : ∃ t : ℕ → simple_func ι ι, ∀ j x, tendsto (fun n => u (t n j) x) at_top (𝓝 <| u j x) := by
     have h_str_meas : strongly_measurable (id : ι → ι) := stronglyMeasurableId
     refine' ⟨h_str_meas.approx, fun j x => _⟩
@@ -1766,7 +1745,7 @@ theorem stronglyMeasurableUncurryOfContinuousOfStronglyMeasurable {α β ι : Ty
       rw [this, measurable_swap_iff]
       exact measurableFromProdCountable fun j => (h j).Measurable
       
-    · have : IsSeparable (⋃ i : (t_sf n).range, range (u i)) := is_separable_Union fun i => (h i).is_separable_range
+    · have : is_separable (⋃ i : (t_sf n).range, range (u i)) := is_separable_Union fun i => (h i).is_separable_range
       apply this.mono
       rintro _ ⟨⟨i, x⟩, rfl⟩
       simp only [mem_Union, mem_range]

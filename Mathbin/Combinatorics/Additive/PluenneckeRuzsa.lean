@@ -72,7 +72,7 @@ theorem card_mul_mul_le_card_mul_mul_card_div (A B C : Finset α) :
   rw [← div_inv_eq_mul, div_eq_mul_inv B]
   exact card_div_mul_le_card_mul_mul_card_mul _ _ _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 @[to_additive]
 theorem mul_pluennecke_petridis (C : Finset α)
     (hA : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card) :
@@ -102,7 +102,7 @@ theorem mul_pluennecke_petridis (C : Finset α)
 /-! ### Sum triangle inequality -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 -- Auxiliary lemma for Ruzsa's triangle sum inequality, and the Plünnecke-Ruzsa inequality.
 @[to_additive]
 private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
@@ -157,7 +157,7 @@ theorem card_div_mul_le_card_div_mul_card_mul (A B C : Finset α) :
   rw [← div_inv_eq_mul, div_eq_mul_inv]
   exact card_mul_mul_le_card_div_mul_card_div _ _ _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B : Finset α}
     (hAB : ∀ (A') (_ : A' ⊆ A), (A + B).card * A'.card ≤ (A' + B).card * A.card) (n : ℕ) :
     ((A + n • B).card : ℚ≥0) ≤ ((A + B).card / A.card) ^ n * A.card := by
@@ -174,7 +174,7 @@ theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B 
   rw [cast_mul]
   exact mul_le_mul_of_nonneg_left ih (zero_le _)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 @[to_additive]
 theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card) (n : ℕ) :
     ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card := by

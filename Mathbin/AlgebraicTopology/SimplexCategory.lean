@@ -35,7 +35,7 @@ universe v
 
 open CategoryTheory CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:287:31: unsupported: @[derive, irreducible] def -/
+/- ./././Mathport/Syntax/Translate/Command.lean:293:31: unsupported: @[derive, irreducible] def -/
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`
 * morphisms from `n` to `m` are monotone functions `fin (n+1) → fin (m+1)`

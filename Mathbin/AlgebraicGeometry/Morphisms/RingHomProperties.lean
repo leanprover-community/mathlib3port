@@ -234,7 +234,7 @@ theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsI
     exact (Set.preimage_image_eq _ Subtype.coe_injective).symm
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
 theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P) (h₂ : RingHom.LocalizationPreserves @P)
     (h₃ : RingHom.OfLocalizationSpan @P) : (sourceAffineLocally @P).IsLocal := by
   constructor
@@ -384,82 +384,1337 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
     rwa [← Scheme.Γ.map_comp, ← op_comp, is_open_immersion.iso_of_range_eq_inv, is_open_immersion.lift_fac_assoc] at H
     
 
-theorem affine_open_cover_tfae {X Y : SchemeCat.{u}} [IsAffine Y] (f : X ⟶ Y) :
-    Tfae
-      [sourceAffineLocally (@P) f,
-        ∃ (𝒰 : SchemeCat.OpenCover.{u} X)(_ : ∀ i, IsAffine (𝒰.obj i)), ∀ i : 𝒰.J, P (SchemeCat.Γ.map (𝒰.map i ≫ f).op),
-        ∀ (𝒰 : SchemeCat.OpenCover.{u} X) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J), P (SchemeCat.Γ.map (𝒰.map i ≫ f).op),
-        ∀ {U : SchemeCat} (g : U ⟶ X) [IsAffine U] [IsOpenImmersion g], P (SchemeCat.Γ.map (g ≫ f).op)] :=
-  by
-  tfae_have 1 → 4
-  · intro H U g _ hg
-    skip
-    specialize H ⟨⟨_, hg.base_open.open_range⟩, range_is_affine_open_of_open_immersion g⟩
-    rw [←
-      hP.respects_iso.cancel_right_is_iso _
-        (Scheme.Γ.map
-          (is_open_immersion.iso_of_range_eq g (X.of_restrict (opens.open_embedding ⟨_, hg.base_open.open_range⟩))
-                subtype.range_coe.symm).Hom.op),
-      ← Scheme.Γ.map_comp, ← op_comp, is_open_immersion.iso_of_range_eq_hom] at H
-    erw [is_open_immersion.lift_fac_assoc] at H
-    exact H
-    
-  tfae_have 4 → 3
-  · intro H 𝒰 _ i
-    skip
-    apply H
-    
-  tfae_have 3 → 2
-  · intro H
-    refine' ⟨X.affine_cover, inferInstance, H _⟩
-    
-  tfae_have 2 → 1
-  · rintro ⟨𝒰, _, h𝒰⟩
-    exact hP.source_affine_locally_of_source_open_cover f 𝒰 h𝒰
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `affine_open_cover_tfae [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`X `Y] [":" (Term.explicitUniv `SchemeCat ".{" [`u] "}")] "}")
+        (Term.instBinder "[" [] (Term.app `IsAffine [`Y]) "]")
+        (Term.explicitBinder "(" [`f] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `sourceAffineLocally [(Term.explicit "@" `P) `f])
+            ","
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders
+              [(Lean.bracketedExplicitBinders
+                "("
+                [(Lean.binderIdent `𝒰)]
+                ":"
+                (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])
+                ")")
+               (Lean.bracketedExplicitBinders
+                "("
+                [(Lean.binderIdent (Term.hole "_"))]
+                ":"
+                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+                ")")])
+             ","
+             (Term.forall
+              "∀"
+              [`i]
+              [(Term.typeSpec ":" (Term.proj `𝒰 "." `J))]
+              ","
+              (Term.app
+               `P
+               [(Term.app
+                 (Term.proj `SchemeCat.Γ "." `map)
+                 [(Term.proj
+                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                    (Term.app (Term.proj `𝒰 "." `map) [`i])
+                    " ≫ "
+                    `f)
+                   "."
+                   `op)])])))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder
+               "("
+               [`𝒰]
+               [":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])]
+               []
+               ")")
+              (Term.instBinder
+               "["
+               []
+               (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+               "]")
+              (Term.explicitBinder "(" [`i] [":" (Term.proj `𝒰 "." `J)] [] ")")]
+             []
+             ","
+             (Term.app
+              `P
+              [(Term.app
+                (Term.proj `SchemeCat.Γ "." `map)
+                [(Term.proj
+                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                   (Term.app (Term.proj `𝒰 "." `map) [`i])
+                   " ≫ "
+                   `f)
+                  "."
+                  `op)])]))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.implicitBinder "{" [`U] [":" `SchemeCat] "}")
+              (Term.explicitBinder "(" [`g] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `X)] [] ")")
+              (Term.instBinder "[" [] (Term.app `IsAffine [`U]) "]")
+              (Term.instBinder "[" [] (Term.app `IsOpenImmersion [`g]) "]")]
+             []
+             ","
+             (Term.app
+              `P
+              [(Term.app
+                (Term.proj `SchemeCat.Γ "." `map)
+                [(Term.proj (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g " ≫ " `f) "." `op)])]))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg]) [])
+             (group (Tactic.skip "skip") [])
+             (group
+              (Tactic.specialize
+               "specialize"
+               (Term.app
+                `H
+                [(Term.anonymousCtor
+                  "⟨"
+                  [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `hg.base_open.open_range] "⟩")
+                   ","
+                   (Term.app `range_is_affine_open_of_open_immersion [`g])]
+                  "⟩")]))
+              [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule
+                  [(patternIgnore (token.«← » "←"))]
+                  (Term.app
+                   `hP.respects_iso.cancel_right_is_iso
+                   [(Term.hole "_")
+                    (Term.app
+                     `Scheme.Γ.map
+                     [(Term.proj
+                       (Term.proj
+                        (Term.app
+                         `is_open_immersion.iso_of_range_eq
+                         [`g
+                          (Term.app
+                           `X.of_restrict
+                           [(Term.app
+                             `opens.open_embedding
+                             [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `hg.base_open.open_range] "⟩")])])
+                          `subtype.range_coe.symm])
+                        "."
+                        `Hom)
+                       "."
+                       `op)])]))
+                 ","
+                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Scheme.Γ.map_comp)
+                 ","
+                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `op_comp)
+                 ","
+                 (Tactic.rwRule [] `is_open_immersion.iso_of_range_eq_hom)]
+                "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+              [])
+             (group
+              (Tactic.tacticErw__
+               "erw"
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_open_immersion.lift_fac_assoc)] "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+              [])
+             (group (Tactic.exact "exact" `H) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
+             (group (Tactic.skip "skip") [])
+             (group (Tactic.apply "apply" `H) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H]) [])
+             (group
+              (Tactic.refine'
+               "refine'"
+               (Term.anonymousCtor "⟨" [`X.affine_cover "," `inferInstance "," (Term.app `H [(Term.hole "_")])] "⟩"))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group (Tactic.exact "exact" (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg]) [])
+            (group (Tactic.skip "skip") [])
+            (group
+             (Tactic.specialize
+              "specialize"
+              (Term.app
+               `H
+               [(Term.anonymousCtor
+                 "⟨"
+                 [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `hg.base_open.open_range] "⟩")
+                  ","
+                  (Term.app `range_is_affine_open_of_open_immersion [`g])]
+                 "⟩")]))
+             [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule
+                 [(patternIgnore (token.«← » "←"))]
+                 (Term.app
+                  `hP.respects_iso.cancel_right_is_iso
+                  [(Term.hole "_")
+                   (Term.app
+                    `Scheme.Γ.map
+                    [(Term.proj
+                      (Term.proj
+                       (Term.app
+                        `is_open_immersion.iso_of_range_eq
+                        [`g
+                         (Term.app
+                          `X.of_restrict
+                          [(Term.app
+                            `opens.open_embedding
+                            [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `hg.base_open.open_range] "⟩")])])
+                         `subtype.range_coe.symm])
+                       "."
+                       `Hom)
+                      "."
+                      `op)])]))
+                ","
+                (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Scheme.Γ.map_comp)
+                ","
+                (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `op_comp)
+                ","
+                (Tactic.rwRule [] `is_open_immersion.iso_of_range_eq_hom)]
+               "]")
+              [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+             [])
+            (group
+             (Tactic.tacticErw__
+              "erw"
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_open_immersion.lift_fac_assoc)] "]")
+              [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+             [])
+            (group (Tactic.exact "exact" `H) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
+            (group (Tactic.skip "skip") [])
+            (group (Tactic.apply "apply" `H) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H]) [])
+            (group
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor "⟨" [`X.affine_cover "," `inferInstance "," (Term.app `H [(Term.hole "_")])] "⟩"))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group (Tactic.exact "exact" (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group
+         (Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)]) [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+               [])]
+             "⟩"))]
+          [])
+         [])
+        (group (Tactic.exact "exact" (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h𝒰
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `𝒰
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hP.source_affine_locally_of_source_open_cover
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rintro
+       "rintro"
+       [(Std.Tactic.RCases.rintroPat.one
+         (Std.Tactic.RCases.rcasesPat.tuple
+          "⟨"
+          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)]) [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+            [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)]) [])]
+          "⟩"))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  affine_open_cover_tfae
+  { X Y : SchemeCat .{ u } } [ IsAffine Y ] ( f : X ⟶ Y )
+    :
+      Tfae
+        [
+          sourceAffineLocally @ P f
+            ,
+            ∃
+              ( 𝒰 : SchemeCat.OpenCover .{ u } X ) ( _ : ∀ i , IsAffine 𝒰 . obj i )
+              ,
+              ∀ i : 𝒰 . J , P SchemeCat.Γ . map 𝒰 . map i ≫ f . op
+            ,
+            ∀
+              ( 𝒰 : SchemeCat.OpenCover .{ u } X ) [ ∀ i , IsAffine 𝒰 . obj i ] ( i : 𝒰 . J )
+              ,
+              P SchemeCat.Γ . map 𝒰 . map i ≫ f . op
+            ,
+            ∀ { U : SchemeCat } ( g : U ⟶ X ) [ IsAffine U ] [ IsOpenImmersion g ] , P SchemeCat.Γ . map g ≫ f . op
+          ]
+  :=
+    by
+      tfae_have 1 → 4
+        ·
+          intro H U g _ hg
+            skip
+            specialize H ⟨ ⟨ _ , hg.base_open.open_range ⟩ , range_is_affine_open_of_open_immersion g ⟩
+            rw
+              [
+                ←
+                    hP.respects_iso.cancel_right_is_iso
+                      _
+                        Scheme.Γ.map
+                          is_open_immersion.iso_of_range_eq
+                                g
+                                  X.of_restrict opens.open_embedding ⟨ _ , hg.base_open.open_range ⟩
+                                  subtype.range_coe.symm
+                              .
+                              Hom
+                            .
+                            op
+                  ,
+                  ← Scheme.Γ.map_comp
+                  ,
+                  ← op_comp
+                  ,
+                  is_open_immersion.iso_of_range_eq_hom
+                ]
+              at H
+            erw [ is_open_immersion.lift_fac_assoc ] at H
+            exact H
+        tfae_have 4 → 3
+        · intro H 𝒰 _ i skip apply H
+        tfae_have 3 → 2
+        · intro H refine' ⟨ X.affine_cover , inferInstance , H _ ⟩
+        tfae_have 2 → 1
+        · rintro ⟨ 𝒰 , _ , h𝒰 ⟩ exact hP.source_affine_locally_of_source_open_cover f 𝒰 h𝒰
+        tfae_finish
 
-theorem open_cover_tfae {X Y : SchemeCat.{u}} [IsAffine Y] (f : X ⟶ Y) :
-    Tfae
-      [sourceAffineLocally (@P) f, ∃ 𝒰 : SchemeCat.OpenCover.{u} X, ∀ i : 𝒰.J, sourceAffineLocally (@P) (𝒰.map i ≫ f),
-        ∀ (𝒰 : SchemeCat.OpenCover.{u} X) (i : 𝒰.J), sourceAffineLocally (@P) (𝒰.map i ≫ f),
-        ∀ {U : SchemeCat} (g : U ⟶ X) [IsOpenImmersion g], sourceAffineLocally (@P) (g ≫ f)] :=
-  by
-  tfae_have 1 → 4
-  · intro H U g hg V
-    skip
-    rw [(hP.affine_open_cover_tfae f).out 0 3] at H
-    haveI : is_affine _ := V.2
-    rw [← category.assoc]
-    apply H
-    
-  tfae_have 4 → 3
-  · intro H 𝒰 _ i
-    skip
-    apply H
-    
-  tfae_have 3 → 2
-  · intro H
-    refine' ⟨X.affine_cover, H _⟩
-    
-  tfae_have 2 → 1
-  · rintro ⟨𝒰, h𝒰⟩
-    rw [(hP.affine_open_cover_tfae f).out 0 1]
-    refine' ⟨𝒰.bind fun _ => Scheme.affine_cover _, _, _⟩
-    · intro i
-      dsimp
-      infer_instance
-      
-    · intro i
-      specialize h𝒰 i.1
-      rw [(hP.affine_open_cover_tfae (𝒰.map i.fst ≫ f)).out 0 3] at h𝒰
-      erw [category.assoc]
-      apply @h𝒰 _ (show _ from _)
-      dsimp
-      infer_instance
-      
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `open_cover_tfae [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`X `Y] [":" (Term.explicitUniv `SchemeCat ".{" [`u] "}")] "}")
+        (Term.instBinder "[" [] (Term.app `IsAffine [`Y]) "]")
+        (Term.explicitBinder "(" [`f] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `sourceAffineLocally [(Term.explicit "@" `P) `f])
+            ","
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders
+               [(Lean.binderIdent `𝒰)]
+               [":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])]))
+             ","
+             (Term.forall
+              "∀"
+              [`i]
+              [(Term.typeSpec ":" (Term.proj `𝒰 "." `J))]
+              ","
+              (Term.app
+               `sourceAffineLocally
+               [(Term.explicit "@" `P)
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (Term.app (Term.proj `𝒰 "." `map) [`i])
+                 " ≫ "
+                 `f)])))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder
+               "("
+               [`𝒰]
+               [":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])]
+               []
+               ")")
+              (Term.explicitBinder "(" [`i] [":" (Term.proj `𝒰 "." `J)] [] ")")]
+             []
+             ","
+             (Term.app
+              `sourceAffineLocally
+              [(Term.explicit "@" `P)
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (Term.app (Term.proj `𝒰 "." `map) [`i])
+                " ≫ "
+                `f)]))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.implicitBinder "{" [`U] [":" `SchemeCat] "}")
+              (Term.explicitBinder "(" [`g] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `X)] [] ")")
+              (Term.instBinder "[" [] (Term.app `IsOpenImmersion [`g]) "]")]
+             []
+             ","
+             (Term.app
+              `sourceAffineLocally
+              [(Term.explicit "@" `P) (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g " ≫ " `f)]))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H `U `g `hg `V]) [])
+             (group (Tactic.skip "skip") [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule
+                  []
+                  (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "3")]))]
+                "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+              [])
+             (group
+              (Std.Tactic.tacticHaveI_
+               "haveI"
+               (Term.haveDecl
+                (Term.haveIdDecl
+                 []
+                 [(Term.typeSpec ":" (Term.app `is_affine [(Term.hole "_")]))]
+                 ":="
+                 (Term.proj `V "." (fieldIdx "2")))))
+              [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)] "]")
+               [])
+              [])
+             (group (Tactic.apply "apply" `H) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
+             (group (Tactic.skip "skip") [])
+             (group (Tactic.apply "apply" `H) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H]) [])
+             (group
+              (Tactic.refine'
+               "refine'"
+               (Term.anonymousCtor "⟨" [`X.affine_cover "," (Term.app `H [(Term.hole "_")])] "⟩"))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule
+                  []
+                  (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "1")]))]
+                "]")
+               [])
+              [])
+             (group
+              (Tactic.refine'
+               "refine'"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app
+                  `𝒰.bind
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+                 ","
+                 (Term.hole "_")
+                 ","
+                 (Term.hole "_")]
+                "⟩"))
+              [])
+             (group
+              («tactic___;_»
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(group (Tactic.intro "intro" [`i]) [])
+                (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+                (group (Tactic.tacticInfer_instance "infer_instance") [])])
+              [])
+             (group
+              («tactic___;_»
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(group (Tactic.intro "intro" [`i]) [])
+                (group (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))])) [])
+                (group
+                 (Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule
+                     []
+                     (Term.app
+                      (Term.proj
+                       (Term.app
+                        `hP.affine_open_cover_tfae
+                        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+                       "."
+                       `out)
+                      [(num "0") (num "3")]))]
+                   "]")
+                  [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+                 [])
+                (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]") []) [])
+                (group
+                 (Tactic.apply
+                  "apply"
+                  (Term.app
+                   (Term.explicit "@" `h𝒰)
+                   [(Term.hole "_") (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+                 [])
+                (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+                (group (Tactic.tacticInfer_instance "infer_instance") [])])
+              [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H `U `g `hg `V]) [])
+            (group (Tactic.skip "skip") [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule
+                 []
+                 (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "3")]))]
+               "]")
+              [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+             [])
+            (group
+             (Std.Tactic.tacticHaveI_
+              "haveI"
+              (Term.haveDecl
+               (Term.haveIdDecl
+                []
+                [(Term.typeSpec ":" (Term.app `is_affine [(Term.hole "_")]))]
+                ":="
+                (Term.proj `V "." (fieldIdx "2")))))
+             [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)] "]")
+              [])
+             [])
+            (group (Tactic.apply "apply" `H) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
+            (group (Tactic.skip "skip") [])
+            (group (Tactic.apply "apply" `H) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H]) [])
+            (group
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor "⟨" [`X.affine_cover "," (Term.app `H [(Term.hole "_")])] "⟩"))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule
+                 []
+                 (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "1")]))]
+               "]")
+              [])
+             [])
+            (group
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.app
+                 `𝒰.bind
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+                ","
+                (Term.hole "_")
+                ","
+                (Term.hole "_")]
+               "⟩"))
+             [])
+            (group
+             («tactic___;_»
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(group (Tactic.intro "intro" [`i]) [])
+               (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+               (group (Tactic.tacticInfer_instance "infer_instance") [])])
+             [])
+            (group
+             («tactic___;_»
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(group (Tactic.intro "intro" [`i]) [])
+               (group (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))])) [])
+               (group
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule
+                    []
+                    (Term.app
+                     (Term.proj
+                      (Term.app
+                       `hP.affine_open_cover_tfae
+                       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+                      "."
+                      `out)
+                     [(num "0") (num "3")]))]
+                  "]")
+                 [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+                [])
+               (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]") []) [])
+               (group
+                (Tactic.apply
+                 "apply"
+                 (Term.app
+                  (Term.explicit "@" `h𝒰)
+                  [(Term.hole "_") (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+                [])
+               (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+               (group (Tactic.tacticInfer_instance "infer_instance") [])])
+             [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group
+         (Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)]) [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+               [])]
+             "⟩"))]
+          [])
+         [])
+        (group
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule
+             []
+             (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "1")]))]
+           "]")
+          [])
+         [])
+        (group
+         (Tactic.refine'
+          "refine'"
+          (Term.anonymousCtor
+           "⟨"
+           [(Term.app
+             `𝒰.bind
+             [(Term.fun
+               "fun"
+               (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+            ","
+            (Term.hole "_")
+            ","
+            (Term.hole "_")]
+           "⟩"))
+         [])
+        (group
+         («tactic___;_»
+          (cdotTk (patternIgnore (token.«·» "·")))
+          [(group (Tactic.intro "intro" [`i]) [])
+           (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+           (group (Tactic.tacticInfer_instance "infer_instance") [])])
+         [])
+        (group
+         («tactic___;_»
+          (cdotTk (patternIgnore (token.«·» "·")))
+          [(group (Tactic.intro "intro" [`i]) [])
+           (group (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))])) [])
+           (group
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule
+                []
+                (Term.app
+                 (Term.proj
+                  (Term.app
+                   `hP.affine_open_cover_tfae
+                   [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+                  "."
+                  `out)
+                 [(num "0") (num "3")]))]
+              "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+            [])
+           (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]") []) [])
+           (group
+            (Tactic.apply
+             "apply"
+             (Term.app
+              (Term.explicit "@" `h𝒰)
+              [(Term.hole "_") (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+            [])
+           (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+           (group (Tactic.tacticInfer_instance "infer_instance") [])])
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.intro "intro" [`i]) [])
+        (group (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))])) [])
+        (group
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule
+             []
+             (Term.app
+              (Term.proj
+               (Term.app
+                `hP.affine_open_cover_tfae
+                [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+               "."
+               `out)
+              [(num "0") (num "3")]))]
+           "]")
+          [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+         [])
+        (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]") []) [])
+        (group
+         (Tactic.apply
+          "apply"
+          (Term.app
+           (Term.explicit "@" `h𝒰)
+           [(Term.hole "_") (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+         [])
+        (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+        (group (Tactic.tacticInfer_instance "infer_instance") [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticInfer_instance "infer_instance")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+      (Tactic.dsimp "dsimp" [] [] [] [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.apply
+       "apply"
+       (Term.app
+        (Term.explicit "@" `h𝒰)
+        [(Term.hole "_") (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.explicit "@" `h𝒰)
+       [(Term.hole "_") (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_"))) []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.explicit "@" `h𝒰)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h𝒰
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (some 1024, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule
+          []
+          (Term.app
+           (Term.proj
+            (Term.app
+             `hP.affine_open_cover_tfae
+             [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+            "."
+            `out)
+           [(num "0") (num "3")]))]
+        "]")
+       [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h𝒰
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.app
+         `hP.affine_open_cover_tfae
+         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+        "."
+        `out)
+       [(num "0") (num "3")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "3")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.app
+        `hP.affine_open_cover_tfae
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+       "."
+       `out)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app
+       `hP.affine_open_cover_tfae
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (Term.app `𝒰.map [`i.fst])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i.fst
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `𝒰.map
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 81 >? 1022, (some 1023, term) <=? (some 80, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 80, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f) []]
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hP.affine_open_cover_tfae
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.app
+       `hP.affine_open_cover_tfae
+       [(Term.paren
+         "("
+         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f) []]
+         ")")])
+      []]
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `i "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `h𝒰
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.intro "intro" [`i])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.intro "intro" [`i]) [])
+        (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
+        (group (Tactic.tacticInfer_instance "infer_instance") [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticInfer_instance "infer_instance")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+      (Tactic.dsimp "dsimp" [] [] [] [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.intro "intro" [`i])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.refine'
+       "refine'"
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.app
+          `𝒰.bind
+          [(Term.fun
+            "fun"
+            (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+         ","
+         (Term.hole "_")
+         ","
+         (Term.hole "_")]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app
+         `𝒰.bind
+         [(Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+        ","
+        (Term.hole "_")
+        ","
+        (Term.hole "_")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `𝒰.bind
+       [(Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Scheme.affine_cover [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Scheme.affine_cover
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `𝒰.bind
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule
+          []
+          (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "1")]))]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out) [(num "0") (num "1")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "1")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `hP.affine_open_cover_tfae [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hP.affine_open_cover_tfae
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `hP.affine_open_cover_tfae [`f]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rintro
+       "rintro"
+       [(Std.Tactic.RCases.rintroPat.one
+         (Std.Tactic.RCases.rcasesPat.tuple
+          "⟨"
+          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)]) [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)]) [])]
+          "⟩"))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  open_cover_tfae
+  { X Y : SchemeCat .{ u } } [ IsAffine Y ] ( f : X ⟶ Y )
+    :
+      Tfae
+        [
+          sourceAffineLocally @ P f
+            ,
+            ∃ 𝒰 : SchemeCat.OpenCover .{ u } X , ∀ i : 𝒰 . J , sourceAffineLocally @ P 𝒰 . map i ≫ f
+            ,
+            ∀ ( 𝒰 : SchemeCat.OpenCover .{ u } X ) ( i : 𝒰 . J ) , sourceAffineLocally @ P 𝒰 . map i ≫ f
+            ,
+            ∀ { U : SchemeCat } ( g : U ⟶ X ) [ IsOpenImmersion g ] , sourceAffineLocally @ P g ≫ f
+          ]
+  :=
+    by
+      tfae_have 1 → 4
+        ·
+          intro H U g hg V
+            skip
+            rw [ hP.affine_open_cover_tfae f . out 0 3 ] at H
+            haveI : is_affine _ := V . 2
+            rw [ ← category.assoc ]
+            apply H
+        tfae_have 4 → 3
+        · intro H 𝒰 _ i skip apply H
+        tfae_have 3 → 2
+        · intro H refine' ⟨ X.affine_cover , H _ ⟩
+        tfae_have 2 → 1
+        ·
+          rintro ⟨ 𝒰 , h𝒰 ⟩
+            rw [ hP.affine_open_cover_tfae f . out 0 1 ]
+            refine' ⟨ 𝒰.bind fun _ => Scheme.affine_cover _ , _ , _ ⟩
+            · intro i dsimp infer_instance
+            ·
+              intro i
+                specialize h𝒰 i . 1
+                rw [ hP.affine_open_cover_tfae 𝒰.map i.fst ≫ f . out 0 3 ] at h𝒰
+                erw [ category.assoc ]
+                apply @ h𝒰 _ show _ from _
+                dsimp
+                infer_instance
+        tfae_finish
 
 theorem sourceAffineLocallyCompOfIsOpenImmersion {X Y Z : SchemeCat.{u}} [IsAffine Z] (f : X ⟶ Y) (g : Y ⟶ Z)
     [IsOpenImmersion f] (H : sourceAffineLocally (@P) g) : sourceAffineLocally (@P) (f ≫ g) := by

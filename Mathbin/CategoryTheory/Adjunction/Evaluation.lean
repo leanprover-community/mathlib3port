@@ -55,7 +55,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
         simp }
   map_id' := by
     intros
-    ext x ⟨j⟩
+    ext (x⟨j⟩)
     dsimp
     simp
   map_comp' := by
@@ -79,7 +79,7 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
                 simp },
           left_inv := by
             intro f
-            ext x ⟨g⟩
+            ext (x⟨g⟩)
             dsimp
             simp only [colimit.ι_desc, limits.cofan.mk_ι_app, category.assoc, ← f.naturality,
               evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
@@ -144,7 +144,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
         simp }
   map_id' := by
     intros
-    ext x ⟨j⟩
+    ext (x⟨j⟩)
     dsimp
     simp
   map_comp' := by
@@ -171,7 +171,7 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
             simp,
           right_inv := by
             intro f
-            ext x ⟨g⟩
+            ext (x⟨g⟩)
             dsimp
             simp only [limit.lift_π, evaluation_right_adjoint_obj_map, nat_trans.naturality_assoc, fan.mk_π_app]
             congr

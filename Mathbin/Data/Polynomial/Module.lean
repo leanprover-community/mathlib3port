@@ -27,7 +27,7 @@ variable (R M : Type _) [CommRing R] [AddCommGroup M] [Module R M] (I : Ideal R)
 include R
 
 /-- The `R[X]`-module `M[X]` for an `R`-module `M`.
-This is isomorphic (as an `R`-module) to `polynomial M` when `M` is a ring.
+This is isomorphic (as an `R`-module) to `M[X]` when `M` is a ring.
 
 We require all the module instances `module S (polynomial_module R M)` to factor through `R` except
 `module R[X] (polynomial_module R M)`.
@@ -174,7 +174,7 @@ theorem smul_apply (f : R[X]) (g : PolynomialModule R M) (n : ℕ) :
     simp [Nat.lt_succ_iff]
     
 
-/-- `polynomial R R` is isomorphic to `R[X]` as an `R[X]` module. -/
+/-- `polynomial_module R R` is isomorphic to `R[X]` as an `R[X]` module. -/
 noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :=
   { (Polynomial.toFinsuppIso R).symm with
     map_smul' := fun r x => by
@@ -188,7 +188,7 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
         simp
          }
 
-/-- `polynomial R S` is isomorphic to `S[X]` as an `R` module. -/
+/-- `polynomial_module R S` is isomorphic to `S[X]` as an `R` module. -/
 noncomputable def equivPolynomial {S : Type _} [CommRing S] [Algebra R S] : PolynomialModule R S ≃ₗ[R] S[X] :=
   { (Polynomial.toFinsuppIso S).symm with map_smul' := fun r x => rfl }
 

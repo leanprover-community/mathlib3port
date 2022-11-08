@@ -39,7 +39,7 @@ instance : NormedAddCommGroup (AddCircle p) :=
   AddSubgroup.normedAddCommGroupQuotient _
 
 @[simp]
-theorem norm_coe_mul (x : ℝ) (t : ℝ) : ∥(↑(t * x) : AddCircle (t * p))∥ = abs t * ∥(x : AddCircle p)∥ := by
+theorem norm_coe_mul (x : ℝ) (t : ℝ) : ∥(↑(t * x) : AddCircle (t * p))∥ = |t| * ∥(x : AddCircle p)∥ := by
   have aux : ∀ {a b c : ℝ}, a ∈ zmultiples b → c * a ∈ zmultiples (c * b) := fun a b c h => by
     simp only [mem_zmultiples_iff] at h⊢
     obtain ⟨n, rfl⟩ := h
@@ -47,14 +47,14 @@ theorem norm_coe_mul (x : ℝ) (t : ℝ) : ∥(↑(t * x) : AddCircle (t * p))�
   rcases eq_or_ne t 0 with (rfl | ht)
   · simp
     
-  have ht' : abs t ≠ 0 := (not_congr abs_eq_zero).mpr ht
+  have ht' : |t| ≠ 0 := (not_congr abs_eq_zero).mpr ht
   simp only [quotient_norm_eq, Real.norm_eq_abs]
   conv_rhs => rw [← smul_eq_mul, ← Real.Inf_smul_of_nonneg (abs_nonneg t)]
   simp only [QuotientAddGroup.mk'_apply, QuotientAddGroup.eq_iff_sub_mem]
   congr 1
   ext z
   rw [mem_smul_set_iff_inv_smul_mem₀ ht']
-  show (∃ y, y - t * x ∈ zmultiples (t * p) ∧ abs y = z) ↔ ∃ w, w - x ∈ zmultiples p ∧ abs w = (abs t)⁻¹ * z
+  show (∃ y, y - t * x ∈ zmultiples (t * p) ∧ |y| = z) ↔ ∃ w, w - x ∈ zmultiples p ∧ |w| = (|t|)⁻¹ * z
   constructor
   · rintro ⟨y, hy, rfl⟩
     refine' ⟨t⁻¹ * y, _, by rw [abs_mul, abs_inv]⟩
@@ -74,14 +74,14 @@ theorem norm_neg_period (x : ℝ) : ∥(x : AddCircle (-p))∥ = ∥(x : AddCirc
   simp only [norm_coe_mul, abs_neg, abs_one, one_mul]
 
 @[simp]
-theorem norm_eq_of_zero {x : ℝ} : ∥(x : AddCircle (0 : ℝ))∥ = abs x := by
+theorem norm_eq_of_zero {x : ℝ} : ∥(x : AddCircle (0 : ℝ))∥ = |x| := by
   suffices { y : ℝ | (y : AddCircle (0 : ℝ)) = (x : AddCircle (0 : ℝ)) } = {x} by
     rw [quotient_norm_eq, this, image_singleton, Real.norm_eq_abs, cInf_singleton]
   ext y
   simp [QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff, sub_eq_zero]
 
-theorem norm_eq {x : ℝ} : ∥(x : AddCircle p)∥ = abs (x - round (p⁻¹ * x) * p) := by
-  suffices ∀ x : ℝ, ∥(x : AddCircle (1 : ℝ))∥ = abs (x - round x) by
+theorem norm_eq {x : ℝ} : ∥(x : AddCircle p)∥ = |x - round (p⁻¹ * x) * p| := by
+  suffices ∀ x : ℝ, ∥(x : AddCircle (1 : ℝ))∥ = |x - round x| by
     rcases eq_or_ne p 0 with (rfl | hp)
     · simp
       
@@ -93,7 +93,7 @@ theorem norm_eq {x : ℝ} : ∥(x : AddCircle p)∥ = abs (x - round (p⁻¹ * x
   intros
   rw [quotient_norm_eq, abs_sub_round_eq_min]
   have h₁ : BddBelow (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }) := ⟨0, by simp [mem_lower_bounds]⟩
-  have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨abs x, ⟨x, rfl, rfl⟩⟩
+  have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨|x|, ⟨x, rfl, rfl⟩⟩
   apply le_antisymm
   · simp only [le_min_iff, Real.norm_eq_abs, cInf_le_iff h₁ h₂]
     intro b h
@@ -119,24 +119,24 @@ theorem norm_eq {x : ℝ} : ∥(x : AddCircle p)∥ = abs (x - round (p⁻¹ * x
     simp
     
 
-theorem norm_le_half_period {x : AddCircle p} (hp : p ≠ 0) : ∥x∥ ≤ abs p / 2 := by
+theorem norm_le_half_period {x : AddCircle p} (hp : p ≠ 0) : ∥x∥ ≤ |p| / 2 := by
   obtain ⟨x⟩ := x
-  change ∥(x : AddCircle p)∥ ≤ abs p / 2
+  change ∥(x : AddCircle p)∥ ≤ |p| / 2
   rw [norm_eq, ← mul_le_mul_left (abs_pos.mpr (inv_ne_zero hp)), ← abs_mul, mul_sub, mul_left_comm, ← mul_div_assoc, ←
     abs_mul, inv_mul_cancel hp, mul_one, abs_one]
   exact abs_sub_round (p⁻¹ * x)
 
 @[simp]
-theorem norm_half_period_eq : ∥(↑(p / 2) : AddCircle p)∥ = abs p / 2 := by
+theorem norm_half_period_eq : ∥(↑(p / 2) : AddCircle p)∥ = |p| / 2 := by
   rcases eq_or_ne p 0 with (rfl | hp)
   · simp
     
   rw [norm_eq, ← mul_div_assoc, inv_mul_cancel hp, one_div, round_two_inv, algebraMap.coe_one, one_mul,
     (by linarith : p / 2 - p = -(p / 2)), abs_neg, abs_div, abs_two]
 
-theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ∥(x : AddCircle p)∥ = abs x ↔ abs x ≤ abs p / 2 := by
+theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ∥(x : AddCircle p)∥ = |x| ↔ |x| ≤ |p| / 2 := by
   refine' ⟨fun hx => hx ▸ norm_le_half_period p hp, fun hx => _⟩
-  suffices ∀ p : ℝ, 0 < p → abs x ≤ p / 2 → ∥(x : AddCircle p)∥ = abs x by
+  suffices ∀ p : ℝ, 0 < p → |x| ≤ p / 2 → ∥(x : AddCircle p)∥ = |x| by
     rcases lt_trichotomy 0 p with (hp | rfl | hp)
     · rw [abs_eq_self.mpr hp.le] at hx
       exact this p hp hx
@@ -164,7 +164,7 @@ theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ∥(x : AddCircle p)∥ =
 
 open Metric
 
-theorem closed_ball_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {ε : ℝ} (hε : abs p / 2 ≤ ε) :
+theorem closed_ball_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {ε : ℝ} (hε : |p| / 2 ≤ ε) :
     ClosedBall x ε = univ :=
   eq_univ_iff_forall.mpr fun x => by
     simpa only [mem_closed_ball, dist_eq_norm] using (norm_le_half_period p hp).trans hε
@@ -188,9 +188,9 @@ theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
     hn⊢
   exact (round_le (p⁻¹ * (y - x)) n).trans hn
 
-theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : s ⊆ ClosedBall x (abs p / 2)) :
-    coe ⁻¹' ClosedBall (x : AddCircle p) ε ∩ s = if ε < abs p / 2 then ClosedBall x ε ∩ s else s := by
-  cases' le_or_lt (abs p / 2) ε with hε hε
+theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : s ⊆ ClosedBall x (|p| / 2)) :
+    coe ⁻¹' ClosedBall (x : AddCircle p) ε ∩ s = if ε < |p| / 2 then ClosedBall x ε ∩ s else s := by
+  cases' le_or_lt (|p| / 2) ε with hε hε
   · rcases eq_or_ne p 0 with (rfl | hp)
     · simp only [abs_zero, zero_div] at hε
       simp only [not_lt.mpr hε, coe_real_preimage_closed_ball_period_zero, abs_zero, zero_div, if_false,
@@ -225,7 +225,7 @@ end AddCircle
 
 namespace UnitAddCircle
 
-theorem norm_eq {x : ℝ} : ∥(x : UnitAddCircle)∥ = abs (x - round x) := by simp [AddCircle.norm_eq]
+theorem norm_eq {x : ℝ} : ∥(x : UnitAddCircle)∥ = |x - round x| := by simp [AddCircle.norm_eq]
 
 end UnitAddCircle
 

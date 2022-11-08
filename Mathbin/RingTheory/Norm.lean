@@ -91,7 +91,7 @@ theorem norm_algebra_map_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
   haveI := Classical.decEq ι
   rw [norm_apply, ← det_to_matrix b, lmul_algebra_map]
   convert @det_diagonal _ _ _ _ _ fun i : ι => x
-  · ext i j
+  · ext (i j)
     rw [to_matrix_lsmul, Matrix.diagonal]
     
   · rw [Finset.prod_const, Finset.card_univ]

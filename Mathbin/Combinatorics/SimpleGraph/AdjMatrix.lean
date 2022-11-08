@@ -119,7 +119,7 @@ theorem compl [Zero α] [One α] (h : IsAdjMatrix A) : IsAdjMatrix A.compl :=
   is_adj_matrix_compl A h.symm
 
 theorem to_graph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) : h.compl.toGraph = h.toGraphᶜ := by
-  ext v w
+  ext (v w)
   cases' h.zero_or_one v w with h h <;> by_cases hvw:v = w <;> simp [Matrix.compl, h, hvw]
 
 end IsAdjMatrix
@@ -222,8 +222,8 @@ theorem adj_matrix_mul_vec_const_apply [Semiring α] {a : α} {v : V} :
 theorem adj_matrix_mul_vec_const_apply_of_regular [Semiring α] {d : ℕ} {a : α} (hd : G.IsRegularOfDegree d) {v : V} :
     (G.adjMatrix α).mulVec (Function.const _ a) v = d * a := by simp [hd v]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:240:2: unsupported tactic unify_equations -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: unify_equations ... #[[ident hqp, ident hrp]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:243:2: unsupported tactic unify_equations -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: unify_equations ... #[[ident hqp, ident hrp]] -/
 theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ) (u v : V) :
     (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
   rw [card_set_walk_length_eq]
@@ -246,7 +246,7 @@ theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ
             Function.Embedding.coe_fn_mk, exists_prop] at hp <;>
           try simpa using hp
       obtain ⟨⟨qx, hql, hqp⟩, ⟨rx, hrl, hrp⟩⟩ := hp
-      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:240:2: unsupported tactic unify_equations»
+      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:243:2: unsupported tactic unify_equations»
       exact absurd rfl hxy
       
     
@@ -262,7 +262,7 @@ variable {A : Matrix V V α} (h : IsAdjMatrix A)
 /-- If `A` is qualified as an adjacency matrix,
     then the adjacency matrix of the graph induced by `A` is itself. -/
 theorem adj_matrix_to_graph_eq [DecidableEq α] : h.toGraph.adjMatrix α = A := by
-  ext i j
+  ext (i j)
   obtain h' | h' := h.zero_or_one i j <;> simp [h']
 
 end Matrix.IsAdjMatrix

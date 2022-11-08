@@ -78,7 +78,7 @@ theorem _root_.measure_theory.ae_strongly_measurable.truncation (hf : AeStrongly
   apply ae_strongly_measurable.comp_ae_measurable _ hf.ae_measurable
   exact (strongly_measurable_id.indicator measurableSetIoc).AeStronglyMeasurable
 
-theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : abs (truncation f A x) ≤ abs A := by
+theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : |truncation f A x| ≤ |A| := by
   simp only [truncation, Set.indicator, Set.mem_Icc, id.def, Function.comp_app]
   split_ifs
   · exact abs_le_abs h.2 (neg_le.2 h.1.le)
@@ -89,7 +89,7 @@ theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : abs (trunc
 @[simp]
 theorem truncation_zero (f : α → ℝ) : truncation f 0 = 0 := by simp [truncation]
 
-theorem abs_truncation_le_abs_self (f : α → ℝ) (A : ℝ) (x : α) : abs (truncation f A x) ≤ abs (f x) := by
+theorem abs_truncation_le_abs_self (f : α → ℝ) (A : ℝ) (x : α) : |truncation f A x| ≤ |f x| := by
   simp only [truncation, indicator, Set.mem_Icc, id.def, Function.comp_app]
   split_ifs
   · exact le_rfl
@@ -97,7 +97,7 @@ theorem abs_truncation_le_abs_self (f : α → ℝ) (A : ℝ) (x : α) : abs (tr
   · simp [abs_nonneg]
     
 
-theorem truncation_eq_self {f : α → ℝ} {A : ℝ} {x : α} (h : abs (f x) < A) : truncation f A x = f x := by
+theorem truncation_eq_self {f : α → ℝ} {A : ℝ} {x : α} (h : |f x| < A) : truncation f A x = f x := by
   simp only [truncation, indicator, Set.mem_Icc, id.def, Function.comp_app, ite_eq_left_iff]
   intro H
   apply H.elim
@@ -123,7 +123,7 @@ theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 
 
 theorem _root_.measure_theory.ae_strongly_measurable.mem_ℒp_truncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
-  Memℒp.ofBound hf.truncation (abs A) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
+  Memℒp.ofBound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
 
 theorem _root_.measure_theory.ae_strongly_measurable.integrable_truncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ := by
@@ -184,8 +184,8 @@ theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 
   · exact truncation_nonneg _ (h'f x)
     
   · calc
-      truncation f A x ≤ abs (truncation f A x) := le_abs_self _
-      _ ≤ abs (f x) := abs_truncation_le_abs_self _ _ _
+      truncation f A x ≤ |truncation f A x| := le_abs_self _
+      _ ≤ |f x| := abs_truncation_le_abs_self _ _ _
       _ = f x := abs_of_nonneg (h'f x)
       
     
@@ -403,7 +403,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
         exact continuous_const.mul continuous_id'
         
       · calc
-          2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by ring_exp
+          2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by ring
           _ ≤ 1 * (2 * x) :=
             mul_le_mul_of_nonneg_right
               (by
@@ -446,8 +446,7 @@ This follows from a variance control. -/
 theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
     ∀ᵐ ω,
       ∀ᶠ n : ℕ in at_top,
-        abs ((∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) - 𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]) <
-          ε * ⌊c ^ n⌋₊ :=
+        |(∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) - 𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]| < ε * ⌊c ^ n⌋₊ :=
   by
   /- Let `S n = ∑ i in range n, Y i` where `Y i = truncation (X i) i`. We should show that
     `|S k - 𝔼[S k]| / k ≤ ε` along the sequence of powers of `c`. For this, we apply Borel-Cantelli:
@@ -491,7 +490,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
           exact (hident j).aeStronglyMeasurableFst.memℒpTruncation
           
         · intro k hk l hl hkl
-          exact (hindep k l hkl).comp (A k).Measurable (A l).Measurable
+          exact (hindep hkl).comp (A k).Measurable (A l).Measurable
           
       _ = ∑ j in range (u (N - 1)), (∑ i in (range N).filter fun i => j < u i, ((u i : ℝ) ^ 2)⁻¹) * Var[Y j] := by
         simp_rw [mul_sum, sum_mul, sum_sigma']
@@ -534,11 +533,11 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         apply mul_nonneg (pow_nonneg c_pos.le _)
         exact pow_nonneg (inv_nonneg.2 (sub_nonneg.2 c_one.le)) _
       
-  have I3 :
-    ∀ N, (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ abs (S (u i) ω - 𝔼[S (u i)]) }) ≤ Ennreal.ofReal (ε⁻¹ ^ 2 * C) := by
+  have I3 : ∀ N, (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]| }) ≤ Ennreal.ofReal (ε⁻¹ ^ 2 * C) :=
+    by
     intro N
     calc
-      (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ abs (S (u i) ω - 𝔼[S (u i)]) }) ≤
+      (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]| }) ≤
           ∑ i in range N, Ennreal.ofReal (Var[S (u i)] / (u i * ε) ^ 2) :=
         by
         refine' sum_le_sum fun i hi => _
@@ -561,7 +560,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         simp_rw [inv_pow]
         exact I2 N
       
-  have I4 : (∑' i, ℙ { ω | (u i * ε : ℝ) ≤ abs (S (u i) ω - 𝔼[S (u i)]) }) < ∞ :=
+  have I4 : (∑' i, ℙ { ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]| }) < ∞ :=
     (le_of_tendsto_of_tendsto' (Ennreal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt Ennreal.of_real_lt_top
   filter_upwards [ae_eventually_not_mem I4.ne] with ω hω
   simp_rw [not_le, mul_comm, S, sum_apply] at hω
@@ -707,10 +706,10 @@ theorem strong_law_ae (X : ℕ → Ω → ℝ) (hint : Integrable (X 0)) (hindep
   have posm : Measurable Pos := measurable_id'.max measurableConst
   have negm : Measurable neg := measurable_id'.neg.max measurableConst
   have A : ∀ᵐ ω, tendsto (fun n : ℕ => (∑ i in range n, (Pos ∘ X i) ω) / n) at_top (𝓝 𝔼[Pos ∘ X 0]) :=
-    strong_law_aux7 _ hint.pos_part (fun i j hij => (hindep i j hij).comp posm posm) (fun i => (hident i).comp posm)
+    strong_law_aux7 _ hint.pos_part (fun i j hij => (hindep hij).comp posm posm) (fun i => (hident i).comp posm)
       fun i ω => le_max_right _ _
   have B : ∀ᵐ ω, tendsto (fun n : ℕ => (∑ i in range n, (neg ∘ X i) ω) / n) at_top (𝓝 𝔼[neg ∘ X 0]) :=
-    strong_law_aux7 _ hint.neg_part (fun i j hij => (hindep i j hij).comp negm negm) (fun i => (hident i).comp negm)
+    strong_law_aux7 _ hint.neg_part (fun i j hij => (hindep hij).comp negm negm) (fun i => (hident i).comp negm)
       fun i ω => le_max_right _ _
   filter_upwards [A, B] with ω hωpos hωneg
   convert hωpos.sub hωneg
@@ -743,7 +742,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
   rw [(_ : (fun n ω => (∑ i in range n, X i ω) / ↑n) = fun n => (∑ i in range n, X i) / ↑n)]
   · exact (uniform_integrable_average hp <| mem_ℒp.uniform_integrable_of_ident_distrib hp hp' hℒp hident).2.1
     
-  · ext n ω
+  · ext (n ω)
     simp only [Pi.coe_nat, Pi.div_apply, sum_apply]
     
 

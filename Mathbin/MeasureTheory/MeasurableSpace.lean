@@ -182,6 +182,8 @@ theorem measurable_iff_comap_le {m₁ : MeasurableSpace α} {m₂ : MeasurableSp
 
 alias measurable_iff_comap_le ↔ Measurable.comap_le Measurable.ofComapLe
 
+theorem comapMeasurable {m : MeasurableSpace β} (f : α → β) : measurable[m.comap f] f := fun s hs => ⟨s, hs, rfl⟩
+
 theorem Measurable.mono {ma ma' : MeasurableSpace α} {mb mb' : MeasurableSpace β} {f : α → β}
     (hf : @Measurable α β ma mb f) (ha : ma ≤ ma') (hb : mb' ≤ mb) : @Measurable α β ma' mb' f := fun t ht =>
   ha _ <| hf <| hb _ ht
@@ -229,6 +231,9 @@ theorem measurableConst' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable 
 
 theorem measurableOfFinite [Finite α] [MeasurableSingletonClass α] (f : α → β) : Measurable f := fun s hs =>
   (f ⁻¹' s).to_finite.MeasurableSet
+
+theorem measurableOfCountable [Countable α] [MeasurableSingletonClass α] (f : α → β) : Measurable f := fun s hs =>
+  (f ⁻¹' s).to_countable.MeasurableSet
 
 end TypeclassMeasurableSpace
 
@@ -359,13 +364,16 @@ theorem measurableFindGreatest' {p : α → ℕ → Prop} [∀ x, DecidablePred 
     (hN : ∀ k ≤ N, MeasurableSet { x | Nat.findGreatest (p x) N = k }) : Measurable fun x => Nat.findGreatest (p x) N :=
   measurableToNat fun x => hN _ N.find_greatest_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr measurable_set.inter, ",", expr measurable_set.const, ",", expr measurable_set.Inter, ",", expr measurable_set.compl, ",", expr hN, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem measurableFindGreatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
     (hN : ∀ k ≤ N, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N := by
   refine' measurableFindGreatest' fun k hk => _
   simp only [Nat.find_greatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
-    apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.inter, MeasurableSet.compl, hN] <;> try intros
+    trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr measurable_set.inter, \",\", expr measurable_set.const, \",\", expr measurable_set.Inter, \",\", expr measurable_set.compl, \",\", expr hN, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error" <;>
+      try intros
 
 theorem measurableFind {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] (hp : ∀ x, ∃ N, p x N)
     (hm : ∀ k, MeasurableSet { x | p x k }) : Measurable fun x => Nat.find (hp x) := by
@@ -651,7 +659,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
     simpa only [B', mem_union, mem_Inter, or_false_iff, compl_Union, mem_compl_iff] using B
   congr
   by_contra h
-  exact t_disj n (Nat.find (P x)) (Ne.symm h) ⟨hx, this⟩
+  exact t_disj (Ne.symm h) ⟨hx, this⟩
 
 end Prod
 

@@ -124,7 +124,7 @@ theorem to_direct_sum_mul [DecidableEq ι] [AddMonoid ι] [Semiring M] (f g : Ad
   show to_hom (f * g) = to_hom f * to_hom g
   revert f g
   rw [AddMonoidHom.map_mul_iff]
-  ext xi xv yi yv : 4
+  ext (xi xv yi yv) : 4
   dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.compl₂_apply, AddMonoidHom.compr₂_apply, AddMonoidHom.mul_apply,
     AddEquiv.coe_to_add_monoid_hom, Finsupp.single_add_hom_apply]
   simp only [AddMonoidAlgebra.single_mul_single, to_hom, AddMonoidHom.coe_mk, AddMonoidAlgebra.to_direct_sum_single,

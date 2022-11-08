@@ -94,9 +94,11 @@ instance : EquivLike (α ≃ β) α β where
 instance : CoeFun (α ≃ β) fun _ => α → β :=
   ⟨toFun⟩
 
+#print Equiv.coe_fn_mk /-
 @[simp]
 theorem coe_fn_mk (f : α → β) (g l r) : (Equiv.mk f g l r : α → β) = f :=
   rfl
+-/
 
 /-- The map `coe_fn : (r ≃ s) → (r → s)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (α ≃ β) (α → β) coeFn :=
@@ -131,18 +133,22 @@ protected theorem Perm.congr_fun {f g : Equiv.Perm α} (h : f = g) (x : α) : f 
 theorem Perm.ext_iff {σ τ : Equiv.Perm α} : σ = τ ↔ ∀ x, σ x = τ x :=
   ext_iff
 
+#print Equiv.refl /-
 /-- Any type is equivalent to itself. -/
 @[refl]
 protected def refl (α : Sort _) : α ≃ α :=
   ⟨id, id, fun x => rfl, fun x => rfl⟩
+-/
 
 instance inhabited' : Inhabited (α ≃ α) :=
   ⟨Equiv.refl α⟩
 
+#print Equiv.symm /-
 /-- Inverse of an equivalence `e : α ≃ β`. -/
 @[symm]
 protected def symm (e : α ≃ β) : β ≃ α :=
   ⟨e.invFun, e.toFun, e.right_inv, e.left_inv⟩
+-/
 
 /-- See Note [custom simps projection] -/
 def Simps.symmApply (e : α ≃ β) : β → α :=
@@ -150,18 +156,22 @@ def Simps.symmApply (e : α ≃ β) : β → α :=
 
 initialize_simps_projections Equiv (toFun → apply, invFun → symmApply)
 
+#print Equiv.trans /-
 /-- Composition of equivalences `e₁ : α ≃ β` and `e₂ : β ≃ γ`. -/
 @[trans]
 protected def trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : α ≃ γ :=
   ⟨e₂ ∘ e₁, e₁.symm ∘ e₂.symm, e₂.left_inv.comp e₁.left_inv, e₂.right_inv.comp e₁.right_inv⟩
+-/
 
 @[simp]
 theorem to_fun_as_coe (e : α ≃ β) : e.toFun = e :=
   rfl
 
+#print Equiv.inv_fun_as_coe /-
 @[simp]
 theorem inv_fun_as_coe (e : α ≃ β) : e.invFun = e.symm :=
   rfl
+-/
 
 protected theorem injective (e : α ≃ β) : Injective e :=
   EquivLike.injective e
@@ -182,10 +192,10 @@ theorem subsingleton_congr (e : α ≃ β) : Subsingleton α ↔ Subsingleton β
   ⟨fun h => e.symm.subsingleton, fun h => e.subsingleton⟩
 
 instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
-  ⟨fun f g => Equiv.ext fun x => Subsingleton.elim _ _⟩
+  FunLike.subsingleton_cod
 
 instance equiv_subsingleton_dom [Subsingleton α] : Subsingleton (α ≃ β) :=
-  ⟨fun f g => Equiv.ext fun x => @Subsingleton.elim _ (Equiv.subsingleton.symm f) _ _⟩
+  EquivLike.subsingleton_dom
 
 instance permUnique [Subsingleton α] : Unique (Perm α) :=
   uniqueOfSubsingleton (Equiv.refl α)
@@ -242,21 +252,29 @@ theorem coe_trans (f : α ≃ β) (g : β ≃ γ) : ⇑(f.trans g) = g ∘ f :=
 theorem trans_apply (f : α ≃ β) (g : β ≃ γ) (a : α) : (f.trans g) a = g (f a) :=
   rfl
 
+#print Equiv.apply_symm_apply /-
 @[simp]
 theorem apply_symm_apply (e : α ≃ β) (x : β) : e (e.symm x) = x :=
   e.right_inv x
+-/
 
+#print Equiv.symm_apply_apply /-
 @[simp]
 theorem symm_apply_apply (e : α ≃ β) (x : α) : e.symm (e x) = x :=
   e.left_inv x
+-/
 
+#print Equiv.symm_comp_self /-
 @[simp]
 theorem symm_comp_self (e : α ≃ β) : e.symm ∘ e = id :=
   funext e.symm_apply_apply
+-/
 
+#print Equiv.self_comp_symm /-
 @[simp]
 theorem self_comp_symm (e : α ≃ β) : e ∘ e.symm = id :=
   funext e.apply_symm_apply
+-/
 
 @[simp]
 theorem symm_trans_apply (f : α ≃ β) (g : β ≃ γ) (a : γ) : (f.trans g).symm a = f.symm (g.symm a) :=

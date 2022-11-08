@@ -500,45 +500,67 @@ theorem card_Ioo_eq_card_Icc_sub_two (a b : α) : (ioo a b).card = (icc a b).car
   rw [card_Ioo_eq_card_Ico_sub_one, card_Ico_eq_card_Icc_sub_one]
   rfl
 
+end PartialOrder
+
+section BoundedPartialOrder
+
+variable [PartialOrder α]
+
 section OrderTop
 
-variable [OrderTop α]
+variable [LocallyFiniteOrderTop α]
 
 @[simp]
-theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a :=
-  Icc_erase_left _ _
+theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a := by
+  ext
+  simp_rw [Finset.mem_erase, mem_Ici, mem_Ioi, lt_iff_le_and_ne, and_comm', ne_comm]
 
 @[simp]
-theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a :=
-  Ioc_insert_left le_top
+theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a := by
+  ext
+  simp_rw [Finset.mem_insert, mem_Ici, mem_Ioi, le_iff_lt_or_eq, or_comm', eq_comm]
+
+@[simp]
+theorem not_mem_Ioi_self {b : α} : b ∉ ioi b := fun h => lt_irrefl _ (mem_Ioi.1 h)
 
 -- Purposefully written the other way around
-theorem Ici_eq_cons_Ioi (a : α) : ici a = (ioi a).cons a left_not_mem_Ioc := by
+theorem Ici_eq_cons_Ioi (a : α) : ici a = (ioi a).cons a not_mem_Ioi_self := by
   classical
   rw [cons_eq_insert, Ioi_insert]
+
+theorem card_Ioi_eq_card_Ici_sub_one (a : α) : (ioi a).card = (ici a).card - 1 := by
+  rw [Ici_eq_cons_Ioi, card_cons, add_tsub_cancel_right]
 
 end OrderTop
 
 section OrderBot
 
-variable [OrderBot α]
+variable [LocallyFiniteOrderBot α]
 
 @[simp]
-theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b :=
-  Icc_erase_right _ _
+theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b := by
+  ext
+  simp_rw [Finset.mem_erase, mem_Iic, mem_Iio, lt_iff_le_and_ne, and_comm']
 
 @[simp]
-theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b :=
-  Ico_insert_right bot_le
+theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b := by
+  ext
+  simp_rw [Finset.mem_insert, mem_Iic, mem_Iio, le_iff_lt_or_eq, or_comm']
+
+@[simp]
+theorem not_mem_Iio_self {b : α} : b ∉ iio b := fun h => lt_irrefl _ (mem_Iio.1 h)
 
 -- Purposefully written the other way around
-theorem Iic_eq_cons_Iio (b : α) : iic b = (iio b).cons b right_not_mem_Ico := by
+theorem Iic_eq_cons_Iio (b : α) : iic b = (iio b).cons b not_mem_Iio_self := by
   classical
   rw [cons_eq_insert, Iio_insert]
 
+theorem card_Iio_eq_card_Iic_sub_one (a : α) : (iio a).card = (iic a).card - 1 := by
+  rw [Iic_eq_cons_Iio, card_cons, add_tsub_cancel_right]
+
 end OrderBot
 
-end PartialOrder
+end BoundedPartialOrder
 
 section LinearOrder
 

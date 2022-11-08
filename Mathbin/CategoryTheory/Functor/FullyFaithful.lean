@@ -48,7 +48,7 @@ restate_axiom full.witness'
 
 attribute [simp] full.witness
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`map_injective'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`map_injective'] [] -/
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
@@ -188,6 +188,24 @@ theorem nat_iso_of_comp_fully_faithful_inv (i : F ⋙ H ≅ G ⋙ H) :
   dsimp
   simp
 
+/-- Horizontal composition with a fully faithful functor induces a bijection on
+natural transformations. -/
+@[simps]
+def NatTrans.equivOfCompFullyFaithful : (F ⟶ G) ≃ (F ⋙ H ⟶ G ⋙ H) where
+  toFun α := α ◫ 𝟙 H
+  invFun := natTransOfCompFullyFaithful H
+  left_inv := by tidy
+  right_inv := by tidy
+
+/-- Horizontal composition with a fully faithful functor induces a bijection on
+natural isomorphisms. -/
+@[simps]
+def NatIso.equivOfCompFullyFaithful : (F ≅ G) ≃ (F ⋙ H ≅ G ⋙ H) where
+  toFun e := NatIso.hcomp e (Iso.refl H)
+  invFun := natIsoOfCompFullyFaithful H
+  left_inv := by tidy
+  right_inv := by tidy
+
 end
 
 end CategoryTheory
@@ -241,10 +259,10 @@ alias faithful.of_comp_eq ← _root_.eq.faithful_of_comp
 
 variable (F G)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map («expr𝟙»() X)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map «expr ≫ »(f, g)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map («expr𝟙»() X)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map «expr ≫ »(f, g)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- “Divide” a functor by a faithful functor. -/
 protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C → D) (h_obj : ∀ X, G.obj (obj X) = F.obj X)
     (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y)) (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : C ⥤ D :=
@@ -254,7 +272,7 @@ protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C →
       apply G.map_injective
       apply eq_of_heq
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map («expr𝟙»() X)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map («expr𝟙»() X)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       exact h_map
       rw [F.map_id, G.map_id, h_obj X],
     map_comp' := by
@@ -262,7 +280,7 @@ protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C →
       apply G.map_injective
       apply eq_of_heq
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map «expr ≫ »(f, g)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr F.map «expr ≫ »(f, g)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       exact h_map
       rw [F.map_comp, G.map_comp]
       congr 1 <;> try exact (h_obj _).symm <;> exact h_map.symm }

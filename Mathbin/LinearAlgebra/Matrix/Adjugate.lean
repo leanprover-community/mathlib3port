@@ -121,7 +121,7 @@ theorem cramer_row_self (i : n) (h : ∀ j, b j = A j i) : A.cramer b = Pi.singl
 
 @[simp]
 theorem cramer_one : cramer (1 : Matrix n n α) = 1 := by
-  ext i j
+  ext (i j)
   convert congr_fun (cramer_row_self (1 : Matrix n n α) (Pi.single i 1) i _) j
   · simp
     
@@ -137,7 +137,7 @@ theorem cramer_subsingleton_apply [Subsingleton n] (A : Matrix n n α) (b : n �
   rw [cramer_apply, det_eq_elem_of_subsingleton _ i, update_column_self]
 
 theorem cramer_zero [Nontrivial n] : cramer (0 : Matrix n n α) = 0 := by
-  ext i j
+  ext (i j)
   obtain ⟨j', hj'⟩ : ∃ j', j' ≠ j := exists_ne j
   apply det_eq_zero_of_column_eq_zero j'
   intro j''
@@ -189,7 +189,7 @@ theorem adjugate_apply (A : Matrix n n α) (i j : n) : adjugate A i j = (A.updat
   rw [cramer_apply, update_column_transpose, det_transpose]
 
 theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ := by
-  ext i j
+  ext (i j)
   rw [transpose_apply, adjugate_apply, adjugate_apply, update_row_transpose, det_transpose]
   rw [det_apply', det_apply']
   apply Finset.sum_congr rfl
@@ -234,7 +234,7 @@ theorem mul_adjugate_apply (A : Matrix n n α) (i j k) : A i k * adjugate A k j 
   erw [← smul_eq_mul, ← Pi.smul_apply, ← LinearMap.map_smul, ← Pi.single_smul', smul_eq_mul, mul_one]
 
 theorem mul_adjugate (A : Matrix n n α) : A ⬝ adjugate A = A.det • 1 := by
-  ext i j
+  ext (i j)
   rw [mul_apply, Pi.smul_apply, Pi.smul_apply, one_apply, smul_eq_mul, mul_boole]
   simp [mul_adjugate_apply, sum_cramer_apply, cramer_transpose_row_self, Pi.single_apply, eq_comm]
 
@@ -256,7 +256,7 @@ theorem mul_vec_cramer (A : Matrix n n α) (b : n → α) : A.mulVec (cramer A b
   rw [cramer_eq_adjugate_mul_vec, mul_vec_mul_vec, mul_adjugate, smul_mul_vec_assoc, one_mul_vec]
 
 theorem adjugate_subsingleton [Subsingleton n] (A : Matrix n n α) : adjugate A = 1 := by
-  ext i j
+  ext (i j)
   simp [Subsingleton.elim i j, adjugate_apply, det_eq_elem_of_subsingleton _ i]
 
 theorem adjugate_eq_one_of_card_eq_one {A : Matrix n n α} (h : Fintype.card n = 1) : adjugate A = 1 :=
@@ -265,7 +265,7 @@ theorem adjugate_eq_one_of_card_eq_one {A : Matrix n n α} (h : Fintype.card n =
 
 @[simp]
 theorem adjugate_zero [Nontrivial n] : adjugate (0 : Matrix n n α) = 0 := by
-  ext i j
+  ext (i j)
   obtain ⟨j', hj'⟩ : ∃ j', j' ≠ j := exists_ne j
   apply det_eq_zero_of_column_eq_zero j'
   intro j''
@@ -295,7 +295,7 @@ theorem adjugate_diagonal (v : n → α) : adjugate (diagonal v) = diagonal fun 
 
 theorem _root_.ring_hom.map_adjugate {R S : Type _} [CommRing R] [CommRing S] (f : R →+* S) (M : Matrix n n R) :
     f.mapMatrix M.adjugate = Matrix.adjugate (f.mapMatrix M) := by
-  ext i k
+  ext (i k)
   have : Pi.single i (1 : S) = f ∘ Pi.single i 1 := by
     rw [← f.map_one]
     exact Pi.single_op (fun i => f) (fun i => f.map_zero) i (1 : R)
@@ -334,15 +334,15 @@ theorem adjugate_fin_zero (A : Matrix (Fin 0) (Fin 0) α) : adjugate A = 0 :=
 theorem adjugate_fin_one (A : Matrix (Fin 1) (Fin 1) α) : adjugate A = 1 :=
   adjugate_subsingleton A
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     adjugate A =
       «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
-  ext i j
+  ext (i j)
   rw [adjugate_apply, det_fin_two]
   fin_cases i <;>
     fin_cases j <;>

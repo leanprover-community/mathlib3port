@@ -29,6 +29,8 @@ variable (b : ι → M) (hb : Submodule.span R (Set.Range b) = ⊤)
 
 open BigOperators
 
+open Polynomial
+
 /-- The composition of a matrix (as an endomporphism of `ι → R`) with the projection
 `(ι → R) →ₗ[R] M`.  -/
 def PiToModule.fromMatrix [DecidableEq ι] : Matrix ι ι R →ₗ[R] (ι → R) →ₗ[R] M :=
@@ -197,7 +199,7 @@ This is the version found in Eisenbud 4.3, which is slightly weaker than Matsumu
 -/
 theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul [Module.Finite R M]
     (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
-    ∃ p : Polynomial R, p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
+    ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
   classical
   cases subsingleton_or_nontrivial R
   · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
@@ -219,7 +221,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
     
 
 theorem LinearMap.exists_monic_and_aeval_eq_zero [Module.Finite R M] (f : Module.EndCat R M) :
-    ∃ p : Polynomial R, p.Monic ∧ Polynomial.aeval f p = 0 :=
+    ∃ p : R[X], p.Monic ∧ Polynomial.aeval f p = 0 :=
   (LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul R f ⊤ (by simp)).imp fun p h =>
     h.imp_right And.right
 

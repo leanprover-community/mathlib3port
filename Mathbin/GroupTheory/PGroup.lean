@@ -36,8 +36,8 @@ namespace IsPGroup
 
 theorem iff_order_of [hp : Fact p.Prime] : IsPGroup p G ↔ ∀ g : G, ∃ k : ℕ, orderOf g = p ^ k :=
   forall_congr' fun g =>
-    ⟨fun ⟨k, hk⟩ => imp (fun j => Exists.snd) ((Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hk)),
-      imp fun k hk => by rw [← hk, pow_order_of_eq_one]⟩
+    ⟨fun ⟨k, hk⟩ => Exists.imp (fun j => Exists.snd) ((Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hk)),
+      Exists.imp fun k hk => by rw [← hk, pow_order_of_eq_one]⟩
 
 theorem of_card [Fintype G] {n : ℕ} (hG : card G = p ^ n) : IsPGroup p G := fun g => ⟨n, by rw [← hG, pow_card_eq_one]⟩
 
@@ -68,7 +68,7 @@ theorem of_injective {H : Type _} [Group H] (ϕ : H →* G) (hϕ : Function.Inje
   exact fun h => hG (ϕ h)
 
 theorem to_subgroup (H : Subgroup G) : IsPGroup p H :=
-  hG.ofInjective H.Subtype Subtype.coe_injective
+  hG.of_injective H.Subtype Subtype.coe_injective
 
 theorem of_surjective {H : Type _} [Group H] (ϕ : G →* H) (hϕ : Function.Surjective ϕ) : IsPGroup p H := by
   refine' fun h => Exists.elim (hϕ h) fun g hg => Exists.imp (fun k hk => _) (hG g)
@@ -80,9 +80,37 @@ theorem to_quotient (H : Subgroup G) [H.Normal] : IsPGroup p (G ⧸ H) :=
 theorem of_equiv {H : Type _} [Group H] (ϕ : G ≃* H) : IsPGroup p H :=
   hG.ofSurjective ϕ.toMonoidHom ϕ.Surjective
 
+theorem order_of_coprime {n : ℕ} (hn : p.Coprime n) (g : G) : (orderOf g).Coprime n :=
+  let ⟨k, hk⟩ := hG g
+  (hn.pow_left k).coprime_dvd_left (order_of_dvd_of_pow_eq_one hk)
+
+/-- If `gcd(p,n) = 1`, then the `n`th power map is a bijection. -/
+noncomputable def powEquiv {n : ℕ} (hn : p.Coprime n) : G ≃ G :=
+  let h : ∀ g : G, (Nat.card (Subgroup.zpowers g)).Coprime n := fun g =>
+    order_eq_card_zpowers' g ▸ hG.order_of_coprime hn g
+  { toFun := (· ^ n), invFun := fun g => (powCoprime (h g)).symm ⟨g, Subgroup.mem_zpowers g⟩,
+    left_inv := fun g =>
+      Subtype.ext_iff.1 <|
+        (powCoprime (h (g ^ n))).left_inv
+          ⟨g, _, Subtype.ext_iff.1 <| (powCoprime (h g)).left_inv ⟨g, Subgroup.mem_zpowers g⟩⟩,
+    right_inv := fun g => Subtype.ext_iff.1 <| (powCoprime (h g)).right_inv ⟨g, Subgroup.mem_zpowers g⟩ }
+
+@[simp]
+theorem pow_equiv_apply {n : ℕ} (hn : p.Coprime n) (g : G) : hG.powEquiv hn g = g ^ n :=
+  rfl
+
+@[simp]
+theorem pow_equiv_symm_apply {n : ℕ} (hn : p.Coprime n) (g : G) : (hG.powEquiv hn).symm g = g ^ (orderOf g).gcdB n := by
+  rw [order_eq_card_zpowers'] <;> rfl
+
 variable [hp : Fact p.Prime]
 
 include hp
+
+/-- If `p ∤ n`, then the `n`th power map is a bijection. -/
+@[reducible]
+noncomputable def powEquiv' {n : ℕ} (hn : ¬p ∣ n) : G ≃ G :=
+  powEquiv hG (hp.out.coprime_iff_not_dvd.mpr hn)
 
 theorem index (H : Subgroup G) [Finite (G ⧸ H)] : ∃ n : ℕ, H.index = p ^ n := by
   cases nonempty_fintype (G ⧸ H)
@@ -91,6 +119,20 @@ theorem index (H : Subgroup G) [Finite (G ⧸ H)] : ∃ n : ℕ, H.index = p ^ n
     (Nat.dvd_prime_pow hp.out).mp
       ((congr_arg _ (H.normal_core.index_eq_card.trans hn)).mp (Subgroup.index_dvd_of_le H.normal_core_le))
   exact ⟨k, hk2⟩
+
+theorem card_eq_or_dvd : Nat.card G = 1 ∨ p ∣ Nat.card G := by
+  cases fintypeOrInfinite G
+  · obtain ⟨n, hn⟩ := iff_card.mp hG
+    rw [Nat.card_eq_fintype_card, hn]
+    cases n
+    · exact Or.inl rfl
+      
+    · exact Or.inr ⟨p ^ n, rfl⟩
+      
+    
+  · rw [Nat.card_eq_zero_of_infinite]
+    exact Or.inr ⟨0, rfl⟩
+    
 
 theorem nontrivial_iff_card [Fintype G] : Nontrivial G ↔ ∃ n > 0, card G = p ^ n :=
   ⟨fun hGnt =>
@@ -185,7 +227,7 @@ theorem bot_lt_center [Nontrivial G] [Finite G] : ⊥ < Subgroup.center G := by
 end GIsPGroup
 
 theorem to_le {H K : Subgroup G} (hK : IsPGroup p K) (hHK : H ≤ K) : IsPGroup p H :=
-  hK.ofInjective (Subgroup.inclusion hHK) fun a b h => Subtype.ext (show _ from Subtype.ext_iff.mp h)
+  hK.of_injective (Subgroup.inclusion hHK) fun a b h => Subtype.ext (show _ from Subtype.ext_iff.mp h)
 
 theorem to_inf_left {H K : Subgroup G} (hH : IsPGroup p H) : IsPGroup p (H ⊓ K : Subgroup G) :=
   hH.to_le inf_le_left

@@ -143,8 +143,6 @@ open Opposite MonoidalCategory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   tensorObj X Y := op (unop X ⊗ unop Y)
   tensorHom X₁ Y₁ X₂ Y₂ f g := (f.unop ⊗ g.unop).op
@@ -167,11 +165,11 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   triangle' := by
     intros
     apply Quiver.Hom.unop_inj
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+    coherence
   pentagon' := by
     intros
     apply Quiver.Hom.unop_inj
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+    coherence
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -183,8 +181,6 @@ theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   tensorObj X Y := mop (unmop Y ⊗ unmop X)
   tensorHom X₁ Y₁ X₂ Y₂ f g := (g.unmop ⊗ f.unmop).mop
@@ -207,11 +203,11 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   triangle' := by
     intros
     apply unmop_inj
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+    coherence
   pentagon' := by
     intros
     apply unmop_inj
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+    coherence
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

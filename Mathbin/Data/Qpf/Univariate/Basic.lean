@@ -491,8 +491,8 @@ variable {F₁ : Type u → Type u} [Functor F₁] [q₁ : Qpf F₁]
 
 include q₂ q₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- composition of qpfs gives another qpf  -/
 def comp : Qpf (Functor.Comp F₂ F₁) where
   p := Pfunctor.comp q₂.p q₁.p
@@ -528,7 +528,7 @@ def comp : Qpf (Functor.Comp F₂ F₁) where
     dsimp
     symm
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     symm
     apply abs_map
     congr

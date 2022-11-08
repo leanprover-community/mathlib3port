@@ -471,7 +471,7 @@ theorem is_basis_iff_det {v : ι → M} : LinearIndependent R v ∧ span R (Set.
     set v' := Basis.mk hli hspan.ge with v'_eq
     rw [e.det_apply]
     convert LinearEquiv.is_unit_det (LinearEquiv.refl _ _) v' e using 2
-    ext i j
+    ext (i j)
     simp
     
   · intro h

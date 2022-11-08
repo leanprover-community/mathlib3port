@@ -393,6 +393,11 @@ theorem mem_top (x : K) : x ∈ (⊤ : Subfield K) :=
 theorem coe_top : ((⊤ : Subfield K) : Set K) = Set.Univ :=
   rfl
 
+/-- The ring equiv between the top element of `subfield K` and `K`. -/
+@[simps]
+def topEquiv : (⊤ : Subfield K) ≃+* K :=
+  Subsemiring.topEquiv
+
 /-! # comap -/
 
 

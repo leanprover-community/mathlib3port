@@ -3,7 +3,8 @@ Copyright (c) 2022 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Data.Multiset.Basic
+import Mathbin.Data.Finsupp.Lex
+import Mathbin.Data.Finsupp.Multiset
 import Mathbin.Order.GameAdd
 
 /-!
@@ -34,7 +35,7 @@ namespace Relation
 
 open Multiset Prod
 
-variable {α β : Type _}
+variable {α : Type _}
 
 /-- The relation that specifies valid moves in our hydra game. `cut_expand r s' s`
   means that `s'` is obtained by removing one head `a ∈ s` and adding back an arbitrary
@@ -54,6 +55,23 @@ def CutExpand (r : α → α → Prop) (s' s : Multiset α) : Prop :=
   ∃ (t : Multiset α)(a : α), (∀ a' ∈ t, r a' a) ∧ s' + {a} = s + t
 
 variable {r : α → α → Prop}
+
+theorem cut_expand_le_inv_image_lex [hi : IsIrrefl α r] :
+    CutExpand r ≤ InvImage (Finsupp.Lex (rᶜ ⊓ (· ≠ ·)) (· < ·)) toFinsupp := fun s t ⟨u, a, hr, he⟩ => by
+  classical
+  refine' ⟨a, fun b h => _, _⟩ <;> simp_rw [to_finsupp_apply]
+  · apply_fun count b  at he
+    simp_rw [count_add] at he
+    convert he <;> convert (add_zero _).symm <;> rw [count_eq_zero] <;> intro hb
+    exacts[h.2 (mem_singleton.1 hb), h.1 (hr b hb)]
+    
+  · apply_fun count a  at he
+    simp_rw [count_add, count_singleton_self] at he
+    apply Nat.lt_of_succ_le
+    convert he.le
+    convert (add_zero _).symm
+    exact count_eq_zero.2 fun ha => hi.irrefl a <| hr a ha
+    
 
 theorem cut_expand_singleton {s x} (h : ∀ x' ∈ s, r x' x) : CutExpand r s {x} :=
   ⟨s, x, h, add_comm s _⟩

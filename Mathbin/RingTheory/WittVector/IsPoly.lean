@@ -145,7 +145,7 @@ unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
       | _ => get_unused_name `R
   iterate_exactly 2 apply_instance
   unfreezingI (tactic.clear' tt [R])
-  introsI <| [nm, mkStrName nm "_inst"] ++ ids'
+  introsI <| [nm, .str nm "_inst"] ++ ids'
   skip
 
 end Interactive
@@ -287,7 +287,7 @@ class IsPoly₂ (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R → �
 
 variable {p}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The composition of polynomial functions is polynomial. -/
 theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
     IsPoly₂ p fun R _Rcr x y => h (f x) (g y) := by
@@ -316,7 +316,7 @@ theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ 
   intros
   simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
 theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
   obtain ⟨φ, hf⟩ := hf
@@ -351,7 +351,7 @@ unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic
     to_expr (pquote.1 fun f [hf : IsPoly (%%ₓp) f] => IsPoly.comp (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := mkStrName n "comp_i"
+  let nm := .str n "comp_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
@@ -359,7 +359,7 @@ unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := mkStrName n "comp₂_i"
+  let nm := .str n "comp₂_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 
@@ -375,7 +375,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := mkStrName n "comp₂_i"
+  let nm := .str n "comp₂_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
@@ -384,7 +384,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := mkStrName n "comp_diag"
+  let nm := .str n "comp_diag"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 
@@ -439,7 +439,7 @@ Users are expected to use the non-instance versions manually.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
 theorem negIsPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
@@ -553,7 +553,7 @@ theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fu
 
 include hp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     (h :
       ∀ (R : Type u) [_Rcr : CommRing R] (x y : 𝕎 R) (n : ℕ), ghost_component n (f x y) = ghost_component n (g x y)) :
@@ -582,7 +582,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   ext ⟨b, _⟩
   fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x y) = f (map g x) (map g y) := by
   -- this could be turned into a tactic “macro” (taking `hf` as parameter)

@@ -379,7 +379,7 @@ theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.natAbs) (m : ℕ) : log (pow x 
 theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (f : F) (m : M) :
     (powers m).map f = powers (f m) := by simp only [powers_eq_closure, map_mclosure f, Set.image_singleton]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive "If all the elements of a set `s` commute, then `closure s` forms an additive\ncommutative monoid."]
 def closureCommMonoidOfComm {s : Set M} (hcomm : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a * b = b * a) :

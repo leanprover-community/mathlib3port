@@ -176,7 +176,7 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
   rw [compression, card_disjoint_union (compress_disjoint _ _), image_filter, card_image_of_inj_on, ←
     card_disjoint_union, filter_union_filter_neg_eq]
   · rw [disjoint_iff_inter_eq_empty]
-    exact filter_inter_filter_neg_eq _ _
+    exact filter_inter_filter_neg_eq _ _ _
     
   intro a ha b hb hab
   dsimp at hab

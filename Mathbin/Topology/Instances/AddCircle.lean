@@ -173,7 +173,7 @@ private theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
 
 attribute [local instance] fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:291:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:297:31: unsupported: @[derive] abbrev -/
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=
   AddCircle (1 : ℝ)

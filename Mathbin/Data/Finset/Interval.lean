@@ -105,5 +105,12 @@ theorem card_Ioc_finset (h : s ⊆ t) : (ioc s t).card = 2 ^ (t.card - s.card) -
 theorem card_Ioo_finset (h : s ⊆ t) : (ioo s t).card = 2 ^ (t.card - s.card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc_finset h]
 
+/-- Cardinality of an `Iic` of finsets. -/
+theorem card_Iic_finset : (iic s).card = 2 ^ s.card := by rw [Iic_eq_powerset, card_powerset]
+
+/-- Cardinality of an `Iio` of finsets. -/
+theorem card_Iio_finset : (iio s).card = 2 ^ s.card - 1 := by
+  rw [Iio_eq_ssubsets, ssubsets, card_erase_of_mem (mem_powerset_self _), card_powerset]
+
 end Finset
 

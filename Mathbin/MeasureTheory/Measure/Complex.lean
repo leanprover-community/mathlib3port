@@ -68,16 +68,16 @@ theorem _root_.measure_theory.signed_measure.to_complex_measure_apply {s t : Sig
   rfl
 
 theorem to_complex_measure_to_signed_measure (c : ComplexMeasure α) : c.re.toComplexMeasure c.im = c := by
-  ext i hi <;> rfl
+  ext (i hi) <;> rfl
 
 theorem _root_.measure_theory.signed_measure.re_to_complex_measure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).re = s := by
-  ext i hi
+  ext (i hi)
   rfl
 
 theorem _root_.measure_theory.signed_measure.im_to_complex_measure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).im = t := by
-  ext i hi
+  ext (i hi)
   rfl
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
@@ -97,14 +97,14 @@ variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
-  { equivSignedMeasure with map_add' := fun c d => by ext i hi <;> rfl,
+  { equivSignedMeasure with map_add' := fun c d => by ext (i hi) <;> rfl,
     map_smul' := by
       intro r c
-      ext i hi
+      ext (i hi)
       · change (r • c i).re = r • (c i).re
         simp [Complex.smul_re]
         
-      · ext i hi
+      · ext (i hi)
         change (r • c i).im = r • (c i).im
         simp [Complex.smul_im]
          }

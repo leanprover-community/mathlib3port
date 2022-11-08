@@ -573,7 +573,7 @@ instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l
     decidable_of_decidable_of_iff (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂))
       infix_cons_iff.symm
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:551:6: unsupported: specialize @hyp -/
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L.take m <+: L.take n ↔ m ≤ n := by
   simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n
@@ -848,9 +848,11 @@ theorem sublist_insert (a : α) (l : List α) : l <+ l.insert a :=
 theorem subset_insert (a : α) (l : List α) : l ⊆ l.insert a :=
   (sublist_insert a l).Subset
 
+#print List.mem_insert_self /-
 @[simp]
 theorem mem_insert_self (a : α) (l : List α) : a ∈ l.insert a :=
   mem_insert_iff.2 <| Or.inl rfl
+-/
 
 /- warning: list.mem_insert_of_mem -> List.mem_insert_of_mem is a dubious translation:
 lean 3 declaration is
@@ -882,7 +884,7 @@ theorem length_insert_of_mem (h : a ∈ l) : (insert a l).length = l.length :=
 
 /- warning: list.length_insert_of_not_mem -> List.length_insert_of_not_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u_1} α l) (One.one.{0} Nat Nat.hasOne)))
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α} [_inst_1 : DecidableEq.{succ u_1} α], (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u_1} α l) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.17951 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{1} Nat (List.length.{u_1} α (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.17951 a b) a l)) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u_1} α l) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align list.length_insert_of_not_mem List.length_insert_of_not_memₓ'. -/

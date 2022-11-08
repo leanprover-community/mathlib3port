@@ -154,7 +154,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     simpa using h10.tendsto 0
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s «expr ⊆ » U) -/
 /-- The *open mapping theorem* for holomorphic functions, global version: if a function `g : E → ℂ`
 is analytic on a connected set `U`, then either it is constant on `U`, or it is open on `U` (in the
 sense that it maps any open set contained in `U` to an open set in `ℂ`). -/

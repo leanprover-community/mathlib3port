@@ -112,7 +112,7 @@ protected unsafe def expr.of_rat (α : expr) : ℚ → tactic expr
       else do
         let e₂ ← expr.of_nat α d
         tactic.mk_app `` Div.div [e₁, e₂]
-  | ⟨-[1 + n], d, h, c⟩ => do
+  | ⟨-[n+1], d, h, c⟩ => do
     let e₁ ← expr.of_nat α (n + 1)
     let e ←
       if d = 1 then return e₁
@@ -136,7 +136,7 @@ protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cach
       let (c, e₁) ← c.ofNat n
       let (c, e₂) ← c.ofNat d
       c `` Div.div [e₁, e₂]
-  | ⟨-[1 + n], d, _, _⟩ => do
+  | ⟨-[n+1], d, _, _⟩ => do
     let (c, e) ←
       if d = 1 then c.ofNat (n + 1)
         else do

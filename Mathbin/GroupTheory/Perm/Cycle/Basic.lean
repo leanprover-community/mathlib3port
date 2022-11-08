@@ -201,7 +201,7 @@ theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
     ∀ (n : ℤ) {b x : α} {f : Perm α} (hb : (swap x (f x) * f) b ≠ b) (h : (f ^ n) (f x) = b),
       ∃ i : ℤ, ((swap x (f x) * f) ^ i) (f x) = b
   | (n : ℕ) => fun b x f => is_cycle_swap_mul_aux₁ n
-  | -[1 + n] => fun b x f hb h =>
+  | -[n+1] => fun b x f hb h =>
     if hfbx' : f x = b then ⟨0, hfbx'⟩
     else
       have : f b ≠ b ∧ b ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hb
@@ -617,7 +617,7 @@ theorem cycle_of_pow_apply_self [Fintype α] (f : Perm α) (x : α) : ∀ n : �
 @[simp]
 theorem cycle_of_zpow_apply_self [Fintype α] (f : Perm α) (x : α) : ∀ n : ℤ, (cycleOf f x ^ n) x = (f ^ n) x
   | (n : ℕ) => cycle_of_pow_apply_self f x n
-  | -[1 + n] => by
+  | -[n+1] => by
     rw [zpow_neg_succ_of_nat, ← inv_pow, cycle_of_inv, zpow_neg_succ_of_nat, ← inv_pow, cycle_of_pow_apply_self]
 
 theorem SameCycle.cycle_of_apply [Fintype α] {f : Perm α} {x y : α} (h : SameCycle f x y) : cycleOf f x y = f y := by

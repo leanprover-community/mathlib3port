@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Field.Basic
 import Mathbin.RingTheory.Polynomial.Bernstein
 import Mathbin.Topology.ContinuousFunction.Polynomial
 
@@ -169,7 +169,7 @@ def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Fin (n
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
 theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)} (m : k ∈ s f ε h n x) :
-    abs (f k/ₙ - f x) < ε / 2 := by
+    |f k/ₙ - f x| < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
 
@@ -219,14 +219,14 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
   -- `S`, where `x - k/n < δ`, and its complement.
   let S := S f ε h n x
   calc
-    abs ((bernsteinApproximation n f - f) x) = abs (bernsteinApproximation n f x - f x) := rfl
-    _ = abs (bernsteinApproximation n f x - f x * 1) := by rw [mul_one]
-    _ = abs (bernsteinApproximation n f x - f x * ∑ k : Fin (n + 1), bernstein n k x) := by rw [bernstein.probability]
-    _ = abs (∑ k : Fin (n + 1), (f k/ₙ - f x) * bernstein n k x) := by
+    |(bernsteinApproximation n f - f) x| = |bernsteinApproximation n f x - f x| := rfl
+    _ = |bernsteinApproximation n f x - f x * 1| := by rw [mul_one]
+    _ = |bernsteinApproximation n f x - f x * ∑ k : Fin (n + 1), bernstein n k x| := by rw [bernstein.probability]
+    _ = |∑ k : Fin (n + 1), (f k/ₙ - f x) * bernstein n k x| := by
       simp [bernsteinApproximation, Finset.mul_sum, sub_mul]
-    _ ≤ ∑ k : Fin (n + 1), abs ((f k/ₙ - f x) * bernstein n k x) := Finset.abs_sum_le_sum_abs _ _
-    _ = ∑ k : Fin (n + 1), abs (f k/ₙ - f x) * bernstein n k x := by simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
-    _ = (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) + ∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x :=
+    _ ≤ ∑ k : Fin (n + 1), |(f k/ₙ - f x) * bernstein n k x| := Finset.abs_sum_le_sum_abs _ _
+    _ = ∑ k : Fin (n + 1), |f k/ₙ - f x| * bernstein n k x := by simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
+    _ = (∑ k in S, |f k/ₙ - f x| * bernstein n k x) + ∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x :=
       (S.sum_add_sum_compl _).symm
     -- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
         _ <
@@ -237,7 +237,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
   · -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
     -- quickly give us a bound.
     calc
-      (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
+      (∑ k in S, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
         Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_S m)) bernstein_nonneg
       _ = ε / 2 * ∑ k in S, bernstein n k x := by rw [Finset.mul_sum]
       -- In this step we increase the sum over `S` back to a sum over all of `fin (n+1)`,
@@ -252,7 +252,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
     -- and then insert a `δ^(-2) * (x - k/n)^2` factor
     -- (which is at least one because we are not in `S`).
     calc
-      (∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
+      (∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
         Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg
       _ = 2 * ∥f∥ * ∑ k in Sᶜ, bernstein n k x := by rw [Finset.mul_sum]
       _ ≤ 2 * ∥f∥ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=

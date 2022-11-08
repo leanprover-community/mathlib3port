@@ -548,22 +548,15 @@ theorem map_domain_apply' (S : Set α) {f : α → β} (x : α →₀ M) (hS : (
     {a : α} (ha : a ∈ S) : mapDomain f x (f a) = x a := by
   rw [map_domain, sum_apply, Sum]
   simp_rw [single_apply]
-  have : ∀ (b : α) (ha1 : b ∈ x.support), (if f b = f a then x b else 0) = if f b = f a then x a else 0 := by
-    intro b hb
-    refine' if_ctx_congr Iff.rfl (fun hh => _) fun _ => rfl
-    rw [hf (hS hb) ha hh]
-  conv in ite _ _ _ => rw [this _ H]
-  by_cases ha:a ∈ x.support
-  · rw [← Finset.add_sum_erase _ _ ha, if_pos rfl]
+  by_cases hax:a ∈ x.support
+  · rw [← Finset.add_sum_erase _ _ hax, if_pos rfl]
     convert add_zero _
-    have : ∀ i ∈ x.support.erase a, f i ≠ f a := by
-      intro i hi
-      exact Finset.ne_of_mem_erase hi ∘ hf (hS <| Finset.mem_of_mem_erase hi) (hS ha)
-    conv in ite _ _ _ => rw [if_neg (this x H)]
-    exact Finset.sum_const_zero
+    refine' Finset.sum_eq_zero fun i hi => if_neg _
+    exact (hf.mono hS).Ne (Finset.mem_of_mem_erase hi) hax (Finset.ne_of_mem_erase hi)
     
-  · rw [mem_support_iff, not_not] at ha
-    simp [ha]
+  · rw [not_mem_support_iff.1 hax]
+    refine' Finset.sum_eq_zero fun i hi => if_neg _
+    exact hf.ne (hS hi) ha (ne_of_mem_of_not_mem hi hax)
     
 
 theorem map_domain_support_of_inj_on [DecidableEq β] {f : α → β} (s : α →₀ M) (hf : Set.InjOn f s.Support) :
@@ -1105,16 +1098,16 @@ theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f 
     rw [this (x, y), if_pos rfl, not_mem_support_iff.mp hxy]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg₀ : ∀ a b, g a b 0 = 0)
     (hg₁ : ∀ a b c₀ c₁, g a b (c₀ + c₁) = g a b c₀ + g a b c₁) :
     (f.curry.Sum fun a f => f.Sum (g a)) = f.Sum fun p c => g p.1 p.2 c := by
   rw [Finsupp.curry]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · exact
       sum_sum_index (fun a => sum_zero_index) fun a b₀ b₁ =>
         sum_add_index' (fun a => hg₀ _ _) fun c d₀ d₁ => hg₁ _ _ _ _
@@ -1122,7 +1115,7 @@ theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg�
   congr
   funext p c
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · exact sum_single_index sum_zero_index
     
   exact sum_single_index (hg₀ _ _)

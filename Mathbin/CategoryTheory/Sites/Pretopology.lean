@@ -182,7 +182,7 @@ def trivial : Pretopology C where
     · skip
       infer_instance
       
-    ext W k
+    ext (W k)
     constructor
     · rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩
       rw [hTi] at hh

@@ -275,15 +275,6 @@ instance : NormedAddCommGroup PUnit where
 theorem PUnit.norm_eq_zero (r : PUnit) : ∥r∥ = 0 :=
   rfl
 
-instance : HasNorm ℝ where norm x := abs x
-
-@[simp]
-theorem Real.norm_eq_abs (r : ℝ) : ∥r∥ = abs r :=
-  rfl
-
-instance : NormedAddCommGroup ℝ :=
-  ⟨fun x y => rfl⟩
-
 section SeminormedGroup
 
 variable [SeminormedGroup E] [SeminormedGroup F] [SeminormedGroup G] {s : Set E} {a a₁ a₂ b b₁ b₂ : E} {r r₁ r₂ : ℝ}
@@ -385,6 +376,9 @@ theorem norm_of_subsingleton' [Subsingleton E] (a : E) : ∥a∥ = 0 := by rw [S
 
 attribute [nontriviality] norm_of_subsingleton
 
+@[to_additive zero_lt_one_add_norm_sq]
+theorem zero_lt_one_add_norm_sq' (x : E) : 0 < 1 + ∥x∥ ^ 2 := by positivity
+
 @[to_additive]
 theorem norm_div_le (a b : E) : ∥a / b∥ ≤ ∥a∥ + ∥b∥ := by simpa [dist_eq_norm_div] using dist_triangle a 1 b
 
@@ -398,7 +392,7 @@ theorem dist_le_norm_mul_norm (a b : E) : dist a b ≤ ∥a∥ + ∥b∥ := by
   apply norm_div_le
 
 @[to_additive abs_norm_sub_norm_le]
-theorem abs_norm_sub_norm_le' (a b : E) : abs (∥a∥ - ∥b∥) ≤ ∥a / b∥ := by
+theorem abs_norm_sub_norm_le' (a b : E) : |∥a∥ - ∥b∥| ≤ ∥a / b∥ := by
   simpa [dist_eq_norm_div] using abs_dist_sub_le a b 1
 
 @[to_additive norm_sub_norm_le]
@@ -476,6 +470,17 @@ theorem norm_div_sub_norm_div_le_norm_div (u v w : E) : ∥u / w∥ - ∥v / w�
 @[to_additive bounded_iff_forall_norm_le]
 theorem bounded_iff_forall_norm_le' : Bounded s ↔ ∃ C, ∀ x ∈ s, ∥x∥ ≤ C := by
   simpa only [Set.subset_def, mem_closed_ball_one_iff] using bounded_iff_subset_ball (1 : E)
+
+alias bounded_iff_forall_norm_le' ↔ Metric.Bounded.exists_norm_le' _
+
+alias bounded_iff_forall_norm_le ↔ Metric.Bounded.exists_norm_le _
+
+attribute [to_additive Metric.Bounded.exists_norm_le] Metric.Bounded.exists_norm_le'
+
+@[to_additive Metric.Bounded.exists_pos_norm_le]
+theorem Metric.Bounded.exists_pos_norm_le' (hs : Metric.Bounded s) : ∃ R > 0, ∀ x ∈ s, ∥x∥ ≤ R :=
+  let ⟨R₀, hR₀⟩ := hs.exists_norm_le'
+  ⟨max R₀ 1, by positivity, fun x hx => (hR₀ x hx).trans <| le_max_left _ _⟩
 
 @[simp, to_additive mem_sphere_iff_norm]
 theorem mem_sphere_iff_norm' : b ∈ Sphere a r ↔ ∥b / a∥ = r := by simp [dist_eq_norm_div]
@@ -810,6 +815,14 @@ theorem uniform_continuous_norm' : UniformContinuous (norm : E → ℝ) :=
 theorem uniform_continuous_nnnorm' : UniformContinuous fun a : E => ∥a∥₊ :=
   uniform_continuous_norm'.subtype_mk _
 
+@[to_additive]
+theorem mem_closure_one_iff_norm {x : E} : x ∈ Closure ({1} : Set E) ↔ ∥x∥ = 0 := by
+  rw [← closed_ball_zero', mem_closed_ball_one_iff, (norm_nonneg' x).le_iff_eq]
+
+@[to_additive]
+theorem closure_one_eq : Closure ({1} : Set E) = { x | ∥x∥ = 0 } :=
+  Set.ext fun x => mem_closure_one_iff_norm
+
 /-- A helper lemma used to prove that the (scalar or usual) product of a function that tends to one
 and a bounded function tends to one. This lemma is formulated for any binary operation
 `op : E → F → G` with an estimate `∥op x y∥ ≤ A * ∥x∥ * ∥y∥` for some constant A instead of
@@ -1051,7 +1064,7 @@ theorem dist_div_div_le_of_le (h₁ : dist a₁ b₁ ≤ r₁) (h₂ : dist a₂
   (dist_div_div_le a₁ a₂ b₁ b₂).trans <| add_le_add h₁ h₂
 
 @[to_additive]
-theorem abs_dist_sub_le_dist_mul_mul (a₁ a₂ b₁ b₂ : E) : abs (dist a₁ b₁ - dist a₂ b₂) ≤ dist (a₁ * a₂) (b₁ * b₂) := by
+theorem abs_dist_sub_le_dist_mul_mul (a₁ a₂ b₁ b₂ : E) : |dist a₁ b₁ - dist a₂ b₂| ≤ dist (a₁ * a₂) (b₁ * b₂) := by
   simpa only [dist_mul_left, dist_mul_right, dist_comm b₂] using abs_dist_sub_le (a₁ * a₂) (b₁ * b₂) (b₁ * a₂)
 
 theorem norm_multiset_sum_le {E} [SeminormedAddCommGroup E] (m : Multiset E) : ∥m.Sum∥ ≤ (m.map fun x => ∥x∥).Sum :=
@@ -1250,10 +1263,62 @@ theorem nnnorm_prod_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ≥0}
     ∥∏ b in s, f b∥₊ ≤ ∑ b in s, n b :=
   (norm_prod_le_of_le s h).trans_eq Nnreal.coe_sum.symm
 
-theorem Real.to_nnreal_eq_nnnorm_of_nonneg {r : ℝ} (hr : 0 ≤ r) : r.toNnreal = ∥r∥₊ := by
+namespace Real
+
+instance : HasNorm ℝ where norm r := |r|
+
+@[simp]
+theorem norm_eq_abs (r : ℝ) : ∥r∥ = |r| :=
+  rfl
+
+instance : NormedAddCommGroup ℝ :=
+  ⟨fun r y => rfl⟩
+
+theorem norm_of_nonneg (hr : 0 ≤ r) : ∥r∥ = r :=
+  abs_of_nonneg hr
+
+theorem norm_of_nonpos (hr : r ≤ 0) : ∥r∥ = -r :=
+  abs_of_nonpos hr
+
+theorem le_norm_self (r : ℝ) : r ≤ ∥r∥ :=
+  le_abs_self r
+
+@[simp]
+theorem norm_coe_nat (n : ℕ) : ∥(n : ℝ)∥ = n :=
+  abs_of_nonneg n.cast_nonneg
+
+@[simp]
+theorem nnnorm_coe_nat (n : ℕ) : ∥(n : ℝ)∥₊ = n :=
+  Nnreal.eq <| norm_coe_nat _
+
+@[simp]
+theorem norm_two : ∥(2 : ℝ)∥ = 2 :=
+  abs_of_pos (@zero_lt_two ℝ _ _)
+
+@[simp]
+theorem nnnorm_two : ∥(2 : ℝ)∥₊ = 2 :=
+  Nnreal.eq <| by simp
+
+theorem nnnorm_of_nonneg (hr : 0 ≤ r) : ∥r∥₊ = ⟨r, hr⟩ :=
+  Nnreal.eq <| norm_of_nonneg hr
+
+theorem ennnorm_eq_of_real (hr : 0 ≤ r) : (∥r∥₊ : ℝ≥0∞) = Ennreal.ofReal r := by
+  rw [← of_real_norm_eq_coe_nnnorm, norm_of_nonneg hr]
+
+theorem to_nnreal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNnreal = ∥r∥₊ := by
   rw [Real.to_nnreal_of_nonneg hr]
   congr
   rw [Real.norm_eq_abs, abs_of_nonneg hr]
+
+theorem of_real_le_ennnorm (r : ℝ) : Ennreal.ofReal r ≤ ∥r∥₊ := by
+  obtain hr | hr := le_total 0 r
+  · exact (Real.ennnorm_eq_of_real hr).ge
+    
+  · rw [Ennreal.of_real_eq_zero.2 hr]
+    exact bot_le
+    
+
+end Real
 
 namespace LipschitzWith
 

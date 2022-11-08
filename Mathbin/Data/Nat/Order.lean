@@ -3,7 +3,8 @@ Copyright (c) 2014 Floris van Doorn (c) 2016 Microsoft Corporation. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Algebra.Order.Ring
+import Mathbin.Algebra.Ring.Divisibility
+import Mathbin.Algebra.Order.Ring.Canonical
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Data.Nat.Basic
 
@@ -21,6 +22,21 @@ universe u v
 
 /-! ### instances -/
 
+
+instance Nat.orderBot : OrderBot ℕ where
+  bot := 0
+  bot_le := Nat.zero_le
+
+instance Nat.Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s where
+  bot := ⟨Nat.find (nonempty_subtype.1 h), Nat.find_spec (nonempty_subtype.1 h)⟩
+  bot_le x := Nat.find_min' _ x.2
+
+instance Nat.Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
+  { Subtype.linearOrder s, LinearOrder.toLattice with }
+
+theorem Nat.Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
+    ((⊥ : s) : ℕ) = Nat.find (nonempty_subtype.1 h) :=
+  rfl
 
 instance : LinearOrderedCommSemiring ℕ :=
   { Nat.commSemiring, Nat.linearOrder with lt := Nat.lt, add_le_add_left := @Nat.add_le_add_left,
@@ -80,9 +96,11 @@ theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n �
 protected theorem mul_ne_zero {n m : ℕ} (n0 : n ≠ 0) (m0 : m ≠ 0) : n * m ≠ 0
   | nm => (eq_zero_of_mul_eq_zero nm).elim n0 m0
 
+#print Nat.mul_eq_zero /-
 @[simp]
 protected theorem mul_eq_zero {a b : ℕ} : a * b = 0 ↔ a = 0 ∨ b = 0 :=
   Iff.intro eq_zero_of_mul_eq_zero (by simp (config := { contextual := true }) [or_imp])
+-/
 
 @[simp]
 protected theorem zero_eq_mul {a b : ℕ} : 0 = a * b ↔ a = 0 ∨ b = 0 := by rw [eq_comm, Nat.mul_eq_zero]
@@ -633,7 +651,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
   · rintro (rfl | rfl) <;> simp
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
   by_cases n0:n = 0
   · rw [n0, Nat.div_zero, Nat.div_zero]

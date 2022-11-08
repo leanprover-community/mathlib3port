@@ -692,7 +692,7 @@ theorem one_of'_eq_done {cs : List Char} :
     
 
 theorem str_eq_char_buf (s : String) : str s = charBuf s.toList.toBuffer := by
-  ext cb n
+  ext (cb n)
   rw [str, char_buf]
   congr
   · simp [Buffer.toString, String.as_string_inv_to_list]
@@ -2591,7 +2591,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     exact hl h
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:552:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:551:6: unsupported: specialize @hyp -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)

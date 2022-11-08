@@ -1,0 +1,38 @@
+/-
+Copyright (c) 2022 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
+import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Filter
+
+/-!
+# Topology on filters of a space with order topology
+
+In this file we prove that `𝓝 (f x)` tends to `𝓝 filter.at_top` provided that `f` tends to
+`filter.at_top`, and similarly for `filter.at_bot`.
+-/
+
+
+open TopologicalSpace
+
+namespace Filter
+
+variable {α X : Type _} [TopologicalSpace X] [PartialOrder X] [OrderTopology X]
+
+protected theorem tendsto_nhds_at_top [NoMaxOrder X] : Tendsto 𝓝 (atTop : Filter X) (𝓝 atTop) :=
+  Filter.tendsto_nhds_at_top_iff.2 fun x => (eventually_gt_at_top x).mono fun y => le_mem_nhds
+
+protected theorem tendsto_nhds_at_bot [NoMinOrder X] : Tendsto 𝓝 (atBot : Filter X) (𝓝 atBot) :=
+  @Filter.tendsto_nhds_at_top Xᵒᵈ _ _ _ _
+
+theorem Tendsto.nhds_at_top [NoMaxOrder X] {f : α → X} {l : Filter α} (h : Tendsto f l atTop) :
+    Tendsto (𝓝 ∘ f) l (𝓝 atTop) :=
+  Filter.tendsto_nhds_at_top.comp h
+
+theorem Tendsto.nhds_at_bot [NoMinOrder X] {f : α → X} {l : Filter α} (h : Tendsto f l atBot) :
+    Tendsto (𝓝 ∘ f) l (𝓝 atBot) :=
+  @Tendsto.nhds_at_top α Xᵒᵈ _ _ _ _ _ _ h
+
+end Filter
+

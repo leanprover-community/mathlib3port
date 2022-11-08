@@ -138,8 +138,8 @@ instance : Faithful (toKaroubi C) where
 
 variable {C}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_left_neg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 @[simps]
 instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q) where
   add f g :=
@@ -157,11 +157,13 @@ instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q) where
   add_assoc f g h' := by simp only [add_assoc]
   add_comm f g := by
     ext
-    apply_rules [add_comm]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
   neg f := ⟨-f.f, by simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
   add_left_neg f := by
     ext
-    apply_rules [add_left_neg]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_left_neg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 namespace Karoubi
 

@@ -248,11 +248,11 @@ theorem young_inequality_of_nonneg {a b p q : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
       (rpow_nonneg_of_nonneg hb q) hpq.inv_add_inv_conj
 
 /-- Young's inequality, a version for arbitrary real numbers. -/
-theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.IsConjugateExponent q) : a * b ≤ abs a ^ p / p + abs b ^ q / q :=
+theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.IsConjugateExponent q) : a * b ≤ |a| ^ p / p + |b| ^ q / q :=
   calc
-    a * b ≤ abs (a * b) := le_abs_self (a * b)
-    _ = abs a * abs b := abs_mul a b
-    _ ≤ abs a ^ p / p + abs b ^ q / q := Real.young_inequality_of_nonneg (abs_nonneg a) (abs_nonneg b) hpq
+    a * b ≤ |a * b| := le_abs_self (a * b)
+    _ = |a| * |b| := abs_mul a b
+    _ ≤ |a| ^ p / p + |b| ^ q / q := Real.young_inequality_of_nonneg (abs_nonneg a) (abs_nonneg b) hpq
     
 
 end Real
@@ -535,7 +535,7 @@ variable (f g : ι → ℝ) {p q : ℝ}
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued functions. -/
 theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
-    (∑ i in s, f i * g i) ≤ (∑ i in s, abs (f i) ^ p) ^ (1 / p) * (∑ i in s, abs (g i) ^ q) ^ (1 / q) := by
+    (∑ i in s, f i * g i) ≤ (∑ i in s, |f i| ^ p) ^ (1 / p) * (∑ i in s, |g i| ^ q) ^ (1 / q) := by
   have :=
     Nnreal.coe_le_coe.2
       (Nnreal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hpq)
@@ -545,8 +545,8 @@ theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
 
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ`-valued functions. -/
-theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
-    (∑ i in s, abs (f i)) ^ p ≤ card s ^ (p - 1) * ∑ i in s, abs (f i) ^ p := by
+theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) : (∑ i in s, |f i|) ^ p ≤ card s ^ (p - 1) * ∑ i in s, |f i| ^ p :=
+  by
   have := Nnreal.coe_le_coe.2 (Nnreal.rpow_sum_le_const_mul_sum_rpow s (fun i => ⟨_, abs_nonneg (f i)⟩) hp)
   push_cast at this
   exact this
@@ -555,9 +555,7 @@ theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `real`-valued functions. -/
 theorem Lp_add_le (hp : 1 ≤ p) :
-    (∑ i in s, abs (f i + g i) ^ p) ^ (1 / p) ≤
-      (∑ i in s, abs (f i) ^ p) ^ (1 / p) + (∑ i in s, abs (g i) ^ p) ^ (1 / p) :=
-  by
+    (∑ i in s, |f i + g i| ^ p) ^ (1 / p) ≤ (∑ i in s, |f i| ^ p) ^ (1 / p) + (∑ i in s, |g i| ^ p) ^ (1 / p) := by
   have := Nnreal.coe_le_coe.2 (Nnreal.Lp_add_le s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hp)
   push_cast at this
   refine' le_trans (rpow_le_rpow _ (sum_le_sum fun i hi => _) _) this <;>

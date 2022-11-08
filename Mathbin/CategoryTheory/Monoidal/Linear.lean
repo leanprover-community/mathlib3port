@@ -42,7 +42,7 @@ restate_axiom monoidal_linear.smul_tensor'
 
 attribute [simp] monoidal_linear.tensor_smul monoidal_linear.smul_tensor
 
-variable [MonoidalLinear R C]
+variable {C} [MonoidalLinear R C]
 
 instance tensor_left_linear (X : C) : (tensorLeft X).Linear R where
 
@@ -51,6 +51,24 @@ instance tensor_right_linear (X : C) : (tensorRight X).Linear R where
 instance tensoring_left_linear (X : C) : ((tensoringLeft C).obj X).Linear R where
 
 instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R where
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- A faithful linear monoidal functor to a linear monoidal category
+ensures that the domain is linear monoidal. -/
+def monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Linear R D] [MonoidalCategory D]
+    [MonoidalPreadditive D] (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive]
+    [F.toFunctor.Linear R] : MonoidalLinear R D where
+  tensor_smul' := by
+    intros
+    apply F.to_functor.map_injective
+    simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r g, F.map_tensor, monoidal_linear.tensor_smul,
+      linear.smul_comp, linear.comp_smul]
+  smul_tensor' := by
+    intros
+    apply F.to_functor.map_injective
+    simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor, monoidal_linear.smul_tensor,
+      linear.smul_comp, linear.comp_smul]
 
 end CategoryTheory
 

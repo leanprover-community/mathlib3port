@@ -525,9 +525,9 @@ end Completion
 
 end Padic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr max («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) q)
-   («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) r)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+   («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) r)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The rational-valued `p`-adic norm on `ℚ_[p]` is lifted from the norm on Cauchy sequences. The
 canonical form of this function is the normed space instance, with notation `∥ ∥`. -/
 def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ where
@@ -537,7 +537,7 @@ def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ where
   eq_zero' q := Quotient.induction_on q <| by simpa only [Padic.zero_def, Quotient.eq] using PadicSeq.norm_zero_iff
   add_le' q r := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr max («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) q)\n   («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) r)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr max («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) q)\n   («expr $ »(quotient.lift padic_seq.norm, @padic_seq.norm_equiv _ _) r)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     exact Quotient.induction_on₂ q r <| PadicSeq.norm_nonarchimedean
     refine' max_le_add_of_nonneg (Quotient.induction_on q <| PadicSeq.norm_nonneg) _
     exact Quotient.induction_on r <| PadicSeq.norm_nonneg
@@ -602,7 +602,7 @@ open PadicSeq Padic
 
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotient.induction_on q) fun q' =>
     have : ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -792,7 +792,7 @@ theorem eq_padic_norm (q : ℚ) : ∥(q : ℚ_[p])∥ = padicNorm p q := by
 
 @[simp]
 theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ := by
-  have p₀ : p ≠ 0 := hp.1.ne_zero
+  have p₀ : p ≠ 0 := hp.1.NeZero
   have p₁ : p ≠ 1 := hp.1.ne_one
   rw [← @Rat.cast_coe_nat ℝ _ p]
   rw [← @Rat.cast_coe_nat ℚ_[p] _ p]
@@ -917,7 +917,7 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 include hp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 instance complete : CauSeq.IsComplete ℚ_[p] norm := by
@@ -938,7 +938,7 @@ instance complete : CauSeq.IsComplete ℚ_[p] norm := by
   intro i hi
   let h := hN i hi
   unfold norm
-  rw_mod_cast [CauSeq.sub_apply, padic_norm_e.map_sub]
+  rw_mod_cast [padic_norm_e.map_sub]
   refine' lt_trans _ hε'.2
   exact_mod_cast hN i hi
 
@@ -1010,7 +1010,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = p ^ -x.Valuation :
 theorem valuation_p : valuation (p : ℚ_[p]) = 1 := by
   have h : (1 : ℝ) < p := by exact_mod_cast (Fact.out p.prime).one_lt
   refine' neg_injective ((zpow_strict_mono h).Injective <| (norm_eq_pow_val _).symm.trans _)
-  · exact_mod_cast (Fact.out p.prime).ne_zero
+  · exact_mod_cast (Fact.out p.prime).NeZero
     
   · simp
     

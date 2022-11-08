@@ -164,13 +164,8 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
         simp [h_1]
         
     
-  · rw [disjoint_iff]
-    change _ ∩ _ = ∅
-    ext ⟨a, b⟩
-    rw [mem_inter]
-    simp only [and_imp, mem_filter, not_and, not_not, Function.comp_app, iff_false_iff, mem_product, not_mem_empty]
-    intros
-    assumption
+  · apply Finset.disjointFilterFilter'
+    exact (disjoint_compl_right.inf_left _).infRight _
     
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -323,7 +318,7 @@ theorem diag_union_off_diag : s.diag ∪ s.OffDiag = s ×ˢ s :=
 
 @[simp]
 theorem disjointDiagOffDiag : Disjoint s.diag s.OffDiag :=
-  disjointFilterFilterNeg _ _
+  disjointFilterFilterNeg _ _ _
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_sdiff_diag : s ×ˢ s \ s.diag = s.OffDiag := by

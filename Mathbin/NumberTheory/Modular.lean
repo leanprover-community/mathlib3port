@@ -118,7 +118,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 attribute [local simp] coe_smul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The function `(c,d) → |cz+d|^2` is proper, that is, preimages of bounded-above sets are finite.
 -/
 theorem tendsto_norm_sq_coprime_pair :
@@ -197,8 +197,8 @@ def lcRow0Extend {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
       rw [neg_sq]
       exact hcd.sq_add_sq_ne_zero, LinearEquiv.refl ℝ (Fin 2 → ℝ)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The map `lc_row0` is proper, that is, preimages of cocompact sets are finite in
 `[[* , *], [c, d]]`.-/
 theorem tendsto_lc_row0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
@@ -219,7 +219,7 @@ theorem tendsto_lc_row0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
   have hf₂ : ClosedEmbedding (lc_row0_extend hcd) :=
     (lc_row0_extend hcd).toContinuousLinearEquiv.toHomeomorph.ClosedEmbedding
   convert hf₂.tendsto_cocompact.comp (hf₁.comp subtype.coe_injective.tendsto_cofinite) using 1
-  ext ⟨g, rfl⟩ i j : 3
+  ext (⟨g, rfl⟩i j) : 3
   fin_cases i <;> [fin_cases j, skip]
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
   · simp only [mB, mul_vec, dot_product, Fin.sum_univ_two, _root_.coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom,
@@ -256,7 +256,7 @@ theorem smul_eq_lc_row0_add {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (hg
   ring
 
 theorem tendsto_abs_re_smul {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
-    Tendsto (fun g : { g : SL(2, ℤ) // ↑ₘg 1 = p } => abs ((g : SL(2, ℤ)) • z).re) cofinite atTop := by
+    Tendsto (fun g : { g : SL(2, ℤ) // ↑ₘg 1 = p } => |((g : SL(2, ℤ)) • z).re|) cofinite atTop := by
   suffices tendsto (fun g : (fun g : SL(2, ℤ) => ↑ₘg 1) ⁻¹' {p} => ((g : SL(2, ℤ)) • z).re) cofinite (cocompact ℝ) by
     exact tendsto_norm_cocompact_at_top.comp this
   have : ((p 0 : ℝ) ^ 2 + p 1 ^ 2)⁻¹ ≠ 0 := by
@@ -299,7 +299,7 @@ theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im �
 /-- Given `z : ℍ` and a bottom row `(c,d)`, among the `g : SL(2,ℤ)` with this bottom row, minimize
   `|(g•z).re|`.  -/
 theorem exists_row_one_eq_and_min_re {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
-    ∃ g : SL(2, ℤ), ↑ₘg 1 = cd ∧ ∀ g' : SL(2, ℤ), ↑ₘg 1 = ↑ₘg' 1 → abs (g • z).re ≤ abs (g' • z).re := by
+    ∃ g : SL(2, ℤ), ↑ₘg 1 = cd ∧ ∀ g' : SL(2, ℤ), ↑ₘg 1 = ↑ₘg' 1 → |(g • z).re| ≤ |(g' • z).re| := by
   haveI : Nonempty { g : SL(2, ℤ) // ↑ₘg 1 = cd } :=
     let ⟨x, hx⟩ := bottom_row_surj hcd
     ⟨⟨x, hx.2⟩⟩
@@ -394,10 +394,10 @@ theorem im_T_inv_smul : (T⁻¹ • z).im = z.im := by simpa using im_T_zpow_smu
 
 variable {z}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 -- If instead we had `g` and `T` of type `PSL(2, ℤ)`, then we could simply state `g = T^n`.
 theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ z : ℍ, g • z = T ^ n • z := by
   have had := g.det_coe
@@ -410,14 +410,14 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
     suffices g = T ^ ↑ₘg 0 1 by
       intro z
       conv_lhs => rw [this]
-    ext i j
+    ext (i j)
     fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
     
   · use -↑ₘg 0 1
     suffices g = -(T ^ -↑ₘg 0 1) by
       intro z
       conv_lhs => rw [this, SL_neg_smul]
-    ext i j
+    ext (i j)
     fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
     
 
@@ -453,11 +453,11 @@ theorem im_lt_im_S_smul (h : normSq z < 1) : z.im < (S • z).im := by
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
 def Fd : Set ℍ :=
-  { z | 1 ≤ (z : ℂ).normSq ∧ abs z.re ≤ (1 : ℝ) / 2 }
+  { z | 1 ≤ (z : ℂ).normSq ∧ |z.re| ≤ (1 : ℝ) / 2 }
 
 /-- The standard open fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
 def Fdo : Set ℍ :=
-  { z | 1 < (z : ℂ).normSq ∧ abs z.re < (1 : ℝ) / 2 }
+  { z | 1 < (z : ℂ).normSq ∧ |z.re| < (1 : ℝ) / 2 }
 
 -- mathport name: modular_group.fd
 localized [Modular] notation "𝒟" => ModularGroup.Fd
@@ -465,7 +465,7 @@ localized [Modular] notation "𝒟" => ModularGroup.Fd
 -- mathport name: modular_group.fdo
 localized [Modular] notation "𝒟ᵒ" => ModularGroup.Fdo
 
-theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : abs (2 * z.re) < 1 := by
+theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : |2 * z.re| < 1 := by
   rw [abs_mul, abs_two, ← lt_div_iff' (@two_pos ℝ _ _)]
   exact h.2
 
@@ -482,12 +482,12 @@ theorem one_lt_norm_sq_T_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (
   simpa [coe_T_zpow, norm_sq]
 
 theorem eq_zero_of_mem_fdo_of_T_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg : T ^ n • z ∈ 𝒟ᵒ) : n = 0 := by
-  suffices abs (n : ℝ) < 1 by rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at this
+  suffices |(n : ℝ)| < 1 by rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at this
   have h₁ := hz.2
   have h₂ := hg.2
   rw [re_T_zpow_smul] at h₂
   calc
-    abs (n : ℝ) ≤ abs z.re + abs (z.re + (n : ℝ)) := abs_add' (n : ℝ) z.re
+    |(n : ℝ)| ≤ |z.re| + |z.re + (n : ℝ)| := abs_add' (n : ℝ) z.re
     _ < 1 / 2 + 1 / 2 := add_lt_add h₁ h₂
     _ = 1 := add_halves 1
     
@@ -512,7 +512,7 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := b
     rw [mul_smul]
     exact im_lt_im_S_smul hg₀'
     
-  · show abs (g • z).re ≤ 1 / 2
+  · show |(g • z).re| ≤ 1 / 2
     -- if not, then either `T` or `T'` decrease |Re|.
     rw [abs_le]
     constructor
@@ -533,7 +533,7 @@ section UniqueRepresentative
 variable {z}
 
 /-- An auxiliary result en route to `modular_group.c_eq_zero`. -/
-theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : abs (↑ₘg 1 0) ≤ 1 := by
+theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |↑ₘg 1 0| ≤ 1 := by
   let c' : ℤ := ↑ₘg 1 0
   let c : ℝ := (c' : ℝ)
   suffices 3 * c ^ 2 < 4 by

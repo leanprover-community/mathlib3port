@@ -116,8 +116,8 @@ instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [Topol
   total_space_mk_inducing x :=
     inducing_of_inducing_compose (Pullback.continuous_total_space_mk 𝕜 F E) (Pullback.continuous_lift E f)
       (total_space_mk_inducing 𝕜 F E (f x))
-  TrivializationAtlas := (fun e : Trivialization 𝕜 F E => e.Pullback f) '' TrivializationAtlas 𝕜 F E
-  trivializationAt x := (trivializationAt 𝕜 F E (f x)).Pullback f
+  TrivializationAtlas := (fun e : Trivialization 𝕜 F E => e.pullback f) '' TrivializationAtlas 𝕜 F E
+  trivializationAt x := (trivializationAt 𝕜 F E (f x)).pullback f
   mem_base_set_trivialization_at x := mem_base_set_trivialization_at 𝕜 F E (f x)
   trivialization_mem_atlas x := mem_image_of_mem _ (trivialization_mem_atlas 𝕜 F E (f x))
   continuous_on_coord_change := by

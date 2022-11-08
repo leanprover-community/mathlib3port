@@ -222,7 +222,7 @@ def normalizeEquiv (a b : B) : Hom a b ≌ Discrete (Path.{v + 1} a b) :=
     (Discrete.natIso fun f => eqToIso (by induction f <;> induction f <;> tidy))
 
 /-- The coherence theorem for bicategories. -/
-instance locally_thin {a b : FreeBicategory B} (f g : a ⟶ b) : Subsingleton (f ⟶ g) :=
+instance locally_thin {a b : FreeBicategory B} : Quiver.IsThin (a ⟶ b) := fun _ _ =>
   ⟨fun η θ => (normalizeEquiv a b).Functor.map_injective (Subsingleton.elim _ _)⟩
 
 /- warning: category_theory.free_bicategory.inclusion_map_comp_aux -> CategoryTheory.FreeBicategory.inclusionMapCompAux is a dubious translation:

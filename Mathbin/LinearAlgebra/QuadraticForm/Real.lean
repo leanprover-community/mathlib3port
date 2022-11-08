@@ -76,7 +76,7 @@ theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M
     (Q : QuadraticForm ℝ M) (hQ : (associated Q).Nondegenerate) :
     ∃ w : Fin (FiniteDimensional.finrank ℝ M) → ℝ, (∀ i, w i = -1 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
-  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).ne_zero,
+  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).NeZero,
     ⟨hw₁.trans (isometrySignWeightedSumSquares (coe ∘ w))⟩⟩
 
 /-- **Sylvester's law of inertia**: A real quadratic form is equivalent to a weighted

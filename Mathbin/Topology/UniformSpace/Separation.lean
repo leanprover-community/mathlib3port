@@ -72,7 +72,7 @@ open Classical TopologicalSpace uniformity Filter
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 universe u v w
@@ -216,7 +216,7 @@ theorem isClosedRangeOfSpacedOut {ι} [SeparatedSpace α] {V₀ : Set (α × α)
     (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (Range f) :=
   isClosedOfSpacedOut V₀_in <| by
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h
-    exact hf x y (ne_of_apply_ne f h)
+    exact hf (ne_of_apply_ne f h)
 
 /-!
 ### Separation quotient

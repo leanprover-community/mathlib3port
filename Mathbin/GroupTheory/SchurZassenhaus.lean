@@ -98,7 +98,7 @@ theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Nat.card H) H.index) (α : H.Qu
 theorem exists_smul_eq (hH : Nat.Coprime (Nat.card H) H.index) (α β : H.QuotientDiff) : ∃ h : H, h • α = β :=
   Quotient.induction_on' α
     (Quotient.induction_on' β fun β α =>
-      imp (fun n => Quotient.sound')
+      Exists.imp (fun n => Quotient.sound')
         ⟨(powCoprime hH).symm (diff (MonoidHom.id H) β α),
           (diff_inv _ _ _).symm.trans
             (inv_eq_one.mpr

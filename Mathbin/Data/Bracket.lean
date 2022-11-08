@@ -26,6 +26,7 @@ these are the Unicode "square with quill" brackets rather than the usual square 
 -/
 
 
+#print Bracket /-
 /-- The has_bracket class has three intended uses:
 
   1. for certain binary operations on structures, like the product `⁅x, y⁆` of two elements
@@ -39,6 +40,7 @@ these are the Unicode "square with quill" brackets rather than the usual square 
      `K` of a group. -/
 class Bracket (L M : Type _) where
   bracket : L → M → M
+-/
 
 -- mathport name: «expr⁅ , ⁆»
 notation "⁅" x ", " y "⁆" => Bracket.bracket x y

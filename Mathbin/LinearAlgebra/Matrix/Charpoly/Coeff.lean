@@ -151,16 +151,16 @@ theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
   rw [Fintype.card, prod_X_sub_C_coeff_card_pred univ (fun i : n => M i i) Fintype.card_pos, neg_neg, trace]
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr polynomial.sum (mat_poly_equiv M)
-   (λ (e : exprℕ()) (a : matrix n n R), «expr * »(a, «expr ^ »(scalar n r, e)) i j)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+   (λ (e : exprℕ()) (a : matrix n n R), «expr * »(a, «expr ^ »(scalar n r, e)) i j)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 -- I feel like this should use polynomial.alg_hom_eval₂_algebra_map
 theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     (matPolyEquiv M).eval ((scalar n) r) i j = (M i j).eval r := by
   unfold Polynomial.eval
   unfold eval₂
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr polynomial.sum (mat_poly_equiv M)\n   (λ (e : exprℕ()) (a : matrix n n R), «expr * »(a, «expr ^ »(scalar n r, e)) i j)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr polynomial.sum (mat_poly_equiv M)\n   (λ (e : exprℕ()) (a : matrix n n R), «expr * »(a, «expr ^ »(scalar n r, e)) i j)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · unfold Polynomial.sum
     rw [sum_apply]
     dsimp

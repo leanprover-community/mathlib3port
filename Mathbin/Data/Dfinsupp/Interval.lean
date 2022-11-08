@@ -31,7 +31,7 @@ def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i)
   (s.pi t).map
     ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
       refine' (mk_injective _).comp fun f g h => _
-      ext i hi
+      ext (i hi)
       convert congr_fun h ⟨i, hi⟩⟩
 
 @[simp]
@@ -180,6 +180,22 @@ theorem card_Ioo : (ioo f g).card = (∏ i in f.support ∪ g.support, (icc (f i
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 
 end LocallyFinite
+
+section CanonicallyOrdered
+
+variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
+
+variable [∀ i, CanonicallyOrderedAddMonoid (α i)] [∀ i, LocallyFiniteOrder (α i)]
+
+variable (f : Π₀ i, α i)
+
+theorem card_Iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
+  simp_rw [Iic_eq_Icc, card_Icc, Dfinsupp.bot_eq_zero, support_zero, empty_union, zero_apply, bot_eq_zero]
+
+theorem card_Iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by
+  rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
+
+end CanonicallyOrdered
 
 end Dfinsupp
 

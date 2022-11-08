@@ -149,7 +149,7 @@ theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) �
   · intro x
     simp only [Equiv.to_fun_as_coe, Equiv.apply_symm_apply]
     
-  apply prod_on_sum
+  apply Fintype.prod_sum_type
 
 @[to_additive]
 theorem prod_trunc {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M) (hf : ∀ j : Fin b, f (natAdd a j) = 1) :

@@ -58,7 +58,7 @@ open MeasurableSpace Set
 
 open Classical MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s t «expr ∈ » C) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s t «expr ∈ » C) -/
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
@@ -370,7 +370,7 @@ theorem pi_Union_Inter_singleton_left (s : ι → Set α) (S : Set ι) :
   refine' ⟨fun h => _, fun ⟨t, htS, h_eq⟩ => ⟨t, htS, s, fun _ _ => rfl, h_eq⟩⟩
   obtain ⟨t, htS, f, hft_eq, rfl⟩ := h
   refine' ⟨t, htS, _⟩
-  congr with i x
+  congr with (i x)
   simp_rw [Set.mem_Inter]
   exact
     ⟨fun h hit => by
@@ -629,7 +629,7 @@ def restrictOn {s : Set α} (h : d.Has s) : DynkinSystem α where
   hasUnionNat f hd hf := by
     rw [inter_comm, inter_Union]
     apply d.has_Union_nat
-    · exact fun i j h x ⟨⟨_, h₁⟩, _, h₂⟩ => hd i j h ⟨h₁, h₂⟩
+    · exact fun i j h x ⟨⟨_, h₁⟩, _, h₂⟩ => hd h ⟨h₁, h₂⟩
       
     · simpa [inter_comm] using hf
       

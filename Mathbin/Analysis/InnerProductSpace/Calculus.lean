@@ -281,11 +281,9 @@ open Metric hiding mem_nhds_iff
 
 variable {n : ℕ∞} {E : Type _} [InnerProductSpace ℝ E]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem contDiffHomeomorphUnitBall : (ContDiff ℝ n) fun x : E => (homeomorphUnitBall x : E) := by
   suffices ContDiff ℝ n fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹ by exact this.smul contDiffId
-  have h : ∀ x : E, 0 < 1 + ∥x∥ ^ 2 := fun x => by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  have h : ∀ x : E, 0 < 1 + ∥x∥ ^ 2 := fun x => by positivity
   refine' ContDiff.inv _ fun x => real.sqrt_ne_zero'.mpr (h x)
   exact (cont_diff_const.add contDiffNormSq).sqrt fun x => (h x).Ne.symm
 

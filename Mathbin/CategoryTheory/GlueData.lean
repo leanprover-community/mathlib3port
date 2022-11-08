@@ -105,13 +105,13 @@ instance t_is_iso (i j : D.J) : IsIso (D.t i j) :=
 instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
   ⟨⟨D.t' j k i ≫ D.t' k i j, D.cocycle _ _ _, by simpa using D.cocycle _ _ _⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inv (D.t' i j k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inv (D.t' i j k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[reassoc]
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     D.t' j k i ≫ D.t' k i j = (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inv (D.t' i j k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inv (D.t' i j k)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
     
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]

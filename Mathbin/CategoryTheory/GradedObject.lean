@@ -3,7 +3,6 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Int.Basic
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.CategoryTheory.Pi.Basic
 import Mathbin.CategoryTheory.Shift
@@ -73,7 +72,7 @@ pulling back along two propositionally equal functions.
 -/
 @[simps]
 def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g where
-  hom :=
+  Hom :=
     { app := fun X b =>
         eqToHom
           (by
@@ -90,7 +89,7 @@ theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) : comapEq C
 
 theorem comap_eq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
     comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l := by
-  ext X b
+  ext (X b)
   simp
 
 @[simp]

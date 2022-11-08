@@ -52,6 +52,8 @@ open Classical TopologicalSpace
 
 open Polynomial Real Filter Set Function
 
+open Polynomial
+
 /-- `exp_neg_inv_glue` is the real function given by `x ↦ exp (-1/x)` for `x > 0` and `0`
 for `x ≤ 0`. It is a basic building block to construct smooth partitions of unity. Its main property
 is that it vanishes for `x ≤ 0`, it is positive for `x > 0`, and the junction between the two
@@ -65,7 +67,7 @@ namespace expNegInvGlue
 /-- Our goal is to prove that `exp_neg_inv_glue` is `C^∞`. For this, we compute its successive
 derivatives for `x > 0`. The `n`-th derivative is of the form `P_aux n (x) exp(-1/x) / x^(2 n)`,
 where `P_aux n` is computed inductively. -/
-noncomputable def pAux : ℕ → Polynomial ℝ
+noncomputable def pAux : ℕ → ℝ[X]
   | 0 => 1
   | n + 1 => X ^ 2 * (P_aux n).derivative + (1 - c ↑(2 * n) * X) * P_aux n
 
@@ -82,7 +84,7 @@ theorem f_aux_zero_eq : fAux 0 = expNegInvGlue := by
   · simp [h, expNegInvGlue, f_aux, ne_of_gt (not_le.1 h), P_aux]
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr pow_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 (given in this statement in unfolded form) is the `n+1`-th auxiliary function, since
 the polynomial `P_aux (n+1)` was chosen precisely to ensure this. -/
@@ -103,10 +105,12 @@ theorem fAuxDeriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
       ring
       
     · rw [(id rfl : 2 * n.succ - 1 = 2 * n + 1)]
-      ring_exp
+      ring
       
     
-  all_goals apply_rules [pow_ne_zero]
+  all_goals
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr pow_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 is the `n+1`-th auxiliary function. -/

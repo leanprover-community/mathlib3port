@@ -149,7 +149,7 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
       rw [mul_one]
       congr
       conv_rhs => rw [← one_mul (p.1 ^ 2), ← sin_sq_add_cos_sq p.2]
-      ring_exp
+      ring
     _ = π / b := by
       have : 0 ≤ π + π := by linarith [Real.pi_pos]
       simp only [integral_const, measure.restrict_apply', measurableSetIoo, univ_inter, this, sub_neg_eq_add,

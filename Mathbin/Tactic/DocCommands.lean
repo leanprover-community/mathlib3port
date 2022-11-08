@@ -92,7 +92,7 @@ unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] 
 attribute.
 -/
 unsafe def tactic.add_library_note (note_name note : String) : tactic Unit := do
-  let decl_name := mkStrName `library_note note_name
+  let decl_name := .str `library_note note_name
   add_decl <| mk_reflected_definition decl_name ()
   add_doc_string decl_name note
   library_note_attr decl_name () tt none
@@ -187,7 +187,7 @@ unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option String) : 
               fail
                 "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
         doc_string inh_id <|> fail (toString inh_id ++ " has no doc string")
-  let decl_name := mkStrName (mkStrName `tactic_doc tde.category.toString) tde.Name
+  let decl_name := .str (.str `tactic_doc tde.category.toString) tde.Name
   add_decl <| mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
   add_doc_string decl_name desc
   tactic_doc_entry_attr decl_name () tt none

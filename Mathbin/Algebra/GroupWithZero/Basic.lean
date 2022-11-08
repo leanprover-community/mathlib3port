@@ -114,6 +114,13 @@ theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
 
 end Mul
 
+namespace NeZero
+
+instance mul [Zero M₀] [Mul M₀] [NoZeroDivisors M₀] {x y : M₀} [NeZero x] [NeZero y] : NeZero (x * y) :=
+  ⟨mul_ne_zero out out⟩
+
+end NeZero
+
 section
 
 variable [MulZeroClass M₀] [NoZeroDivisors M₀] {a b : M₀}
@@ -223,6 +230,9 @@ theorem zero_ne_one : 0 ≠ (1 : M₀) := by
 @[simp]
 theorem one_ne_zero : (1 : M₀) ≠ 0 :=
   zero_ne_one.symm
+
+instance NeZero.one (R) [MulZeroOneClass R] [Nontrivial R] : NeZero (1 : R) :=
+  ⟨one_ne_zero⟩
 
 theorem ne_zero_of_eq_one {a : M₀} (h : a = 1) : a ≠ 0 :=
   calc

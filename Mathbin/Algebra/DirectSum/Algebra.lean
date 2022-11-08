@@ -68,14 +68,14 @@ instance : Algebra R (⨁ i, A i) where
   commutes' r x := by
     change AddMonoidHom.mul (DirectSum.of _ _ _) x = add_monoid_hom.mul.flip (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
-    ext i xi : 2
+    ext (i xi) : 2
     dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.mul_apply, AddMonoidHom.flip_apply]
     rw [of_mul_of, of_mul_of]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.commutes r ⟨i, xi⟩)
   smul_def' r x := by
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
-    ext i xi : 2
+    ext (i xi) : 2
     dsimp only [AddMonoidHom.comp_apply, DistribMulAction.to_add_monoid_hom_apply, AddMonoidHom.mul_apply]
     rw [DirectSum.of_mul_of, ← of_smul]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)

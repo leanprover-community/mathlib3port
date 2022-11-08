@@ -247,7 +247,7 @@ equal to `μ s` times the absolute value of the inverse of the determinant of `f
 theorem add_haar_preimage_linear_equiv {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] (f : E ≃ₗ[ℝ] E) (s : Set E) :
     μ (f ⁻¹' s) = Ennreal.ofReal (abs (f.symm : E →ₗ[ℝ] E).det) * μ s := by
-  have A : (f : E →ₗ[ℝ] E).det ≠ 0 := (LinearEquiv.is_unit_det' f).ne_zero
+  have A : (f : E →ₗ[ℝ] E).det ≠ 0 := (LinearEquiv.is_unit_det' f).NeZero
   convert add_haar_preimage_linear_map μ A s
   simp only [LinearEquiv.det_coe_symm]
 
@@ -428,6 +428,13 @@ theorem add_haar_closed_ball (x : E) {r : ℝ} (hr : 0 ≤ r) :
     μ (ClosedBall x r) = Ennreal.ofReal (r ^ finrank ℝ E) * μ (Ball 0 1) := by
   rw [add_haar_closed_ball' μ x hr, add_haar_closed_unit_ball_eq_add_haar_unit_ball]
 
+theorem add_haar_closed_ball_eq_add_haar_ball [Nontrivial E] (x : E) (r : ℝ) : μ (ClosedBall x r) = μ (Ball x r) := by
+  by_cases h:r < 0
+  · rw [metric.closed_ball_eq_empty.mpr h, metric.ball_eq_empty.mpr h.le]
+    
+  push_neg  at h
+  rw [add_haar_closed_ball μ x h, add_haar_ball μ x h]
+
 theorem add_haar_sphere_of_ne_zero (x : E) {r : ℝ} (hr : r ≠ 0) : μ (Sphere x r) = 0 := by
   rcases hr.lt_or_lt with (h | h)
   · simp only [empty_diff, measure_empty, ← closed_ball_diff_ball, closed_ball_eq_empty.2 h]
@@ -448,9 +455,9 @@ theorem add_haar_singleton_add_smul_div_singleton_add_smul {r : ℝ} (hr : r ≠
     μ ({x} + r • s) / μ ({y} + r • t) = μ s / μ t :=
   calc
     μ ({x} + r • s) / μ ({y} + r • t) =
-        Ennreal.ofReal (abs r ^ finrank ℝ E) * μ s * (Ennreal.ofReal (abs r ^ finrank ℝ E) * μ t)⁻¹ :=
+        Ennreal.ofReal (|r| ^ finrank ℝ E) * μ s * (Ennreal.ofReal (|r| ^ finrank ℝ E) * μ t)⁻¹ :=
       by simp only [div_eq_mul_inv, add_haar_smul, image_add_left, measure_preimage_add, abs_pow, singleton_add]
-    _ = Ennreal.ofReal (abs r ^ finrank ℝ E) * (Ennreal.ofReal (abs r ^ finrank ℝ E))⁻¹ * (μ s * (μ t)⁻¹) := by
+    _ = Ennreal.ofReal (|r| ^ finrank ℝ E) * (Ennreal.ofReal (|r| ^ finrank ℝ E))⁻¹ * (μ s * (μ t)⁻¹) := by
       rw [Ennreal.mul_inv]
       · ring
         
@@ -560,7 +567,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E
       
   have B : tendsto (fun r : ℝ => R * r) (𝓝[>] 0) (𝓝[>] (R * 0)) := by
     apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
-    · exact (tendsto_const_nhds.mul tendsto_id).monoLeft nhds_within_le_nhds
+    · exact (tendsto_const_nhds.mul tendsto_id).mono_left nhds_within_le_nhds
       
     · filter_upwards [self_mem_nhds_within]
       intro r rpos

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
 import Mathbin.Data.List.BigOperators
+import Mathbin.Algebra.Order.Group.MinMax
 
 /-!
 # zip & unzip

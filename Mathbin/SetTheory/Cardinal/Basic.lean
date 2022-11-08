@@ -7,7 +7,7 @@ import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Set.Countable
-import Mathbin.Logic.Small
+import Mathbin.Logic.Small.Basic
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.SetTheory.Cardinal.SchroederBernstein
@@ -236,11 +236,11 @@ theorem mk_subtype_le {α : Type u} (p : α → Prop) : (#Subtype p) ≤ (#α) :
 theorem mk_set_le (s : Set α) : (#s) ≤ (#α) :=
   mk_subtype_le s
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.out) := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr _]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   rw [← Quotient.out_eq c, ← Quotient.out_eq c']
   rfl
 
@@ -1065,6 +1065,10 @@ theorem aleph_0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
     le_of_not_lt fun hn => by
       rcases lt_aleph_0.1 hn with ⟨n, rfl⟩
       exact (Nat.lt_succ_self _).not_le (nat_cast_le.1 (h (n + 1)))⟩
+
+@[simp]
+theorem range_nat_cast : Range (coe : ℕ → Cardinal) = IioCat ℵ₀ :=
+  ext fun x => by simp only [mem_Iio, mem_range, eq_comm, lt_aleph_0]
 
 theorem mk_eq_nat_iff {α : Type u} {n : ℕ} : (#α) = n ↔ Nonempty (α ≃ Fin n) := by
   rw [← lift_mk_fin, ← lift_uzero (#α), lift_mk_eq']

@@ -408,9 +408,9 @@ theorem sq_le_mul {d x y z w : ℕ} :
   we are interested in the case `c = 1` but this is more symmetric -/
 def Nonnegg (c d : ℕ) : ℤ → ℤ → Prop
   | (a : ℕ), (b : ℕ) => True
-  | (a : ℕ), -[1 + b] => SqLe (b + 1) c a d
-  | -[1 + a], (b : ℕ) => SqLe (a + 1) d b c
-  | -[1 + a], -[1 + b] => False
+  | (a : ℕ), -[b+1] => SqLe (b + 1) c a d
+  | -[a+1], (b : ℕ) => SqLe (a + 1) d b c
+  | -[a+1], -[b+1] => False
 
 theorem nonnegg_comm {c d : ℕ} {x y : ℤ} : Nonnegg c d x y = Nonnegg d c y x := by induction x <;> induction y <;> rfl
 
@@ -423,7 +423,7 @@ theorem nonnegg_pos_neg {c d} {a b : ℕ} : Nonnegg c d a (-b) ↔ SqLe b c a d 
 
 theorem nonnegg_cases_right {c d} {a : ℕ} : ∀ {b : ℤ}, (∀ x : ℕ, b = -x → SqLe x c a d) → Nonnegg c d a b
   | (b : Nat), h => trivial
-  | -[1 + b], h => h (b + 1) rfl
+  | -[b+1], h => h (b + 1) rfl
 
 theorem nonnegg_cases_left {c d} {b : ℕ} {a : ℤ} (h : ∀ x : ℕ, a = -x → SqLe x d b c) : Nonnegg c d a b :=
   cast nonnegg_comm (nonnegg_cases_right h)
@@ -554,9 +554,9 @@ instance decidableLe : @DecidableRel (ℤ√d) (· ≤ ·) := fun _ _ => decidab
 
 theorem nonneg_cases : ∀ {a : ℤ√d}, nonneg a → ∃ x y : ℕ, a = ⟨x, y⟩ ∨ a = ⟨x, -y⟩ ∨ a = ⟨-x, y⟩
   | ⟨(x : ℕ), (y : ℕ)⟩, h => ⟨x, y, Or.inl rfl⟩
-  | ⟨(x : ℕ), -[1 + y]⟩, h => ⟨x, y + 1, Or.inr <| Or.inl rfl⟩
-  | ⟨-[1 + x], (y : ℕ)⟩, h => ⟨x + 1, y, Or.inr <| Or.inr rfl⟩
-  | ⟨-[1 + x], -[1 + y]⟩, h => False.elim h
+  | ⟨(x : ℕ), -[y+1]⟩, h => ⟨x, y + 1, Or.inr <| Or.inl rfl⟩
+  | ⟨-[x+1], (y : ℕ)⟩, h => ⟨x + 1, y, Or.inr <| Or.inr rfl⟩
+  | ⟨-[x+1], -[y+1]⟩, h => False.elim h
 
 theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg ⟨-z, w⟩) : nonneg (⟨x, -y⟩ + ⟨-z, w⟩) :=
   have : nonneg ⟨Int.subNatNat x z, Int.subNatNat w y⟩ :=
@@ -565,7 +565,7 @@ theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg �
         Int.sub_nat_nat_elim w y (fun m n i => SqLe n d (k + j) 1 → SqLe k 1 m d → nonneg ⟨Int.ofNat j, i⟩)
           (fun m n xy zw => trivial) fun m n xy zw => sq_le_cancel zw xy)
       (fun j k =>
-        Int.sub_nat_nat_elim w y (fun m n i => SqLe n d k 1 → SqLe (k + j + 1) 1 m d → nonneg ⟨-[1 + j], i⟩)
+        Int.sub_nat_nat_elim w y (fun m n i => SqLe n d k 1 → SqLe (k + j + 1) 1 m d → nonneg ⟨-[j+1], i⟩)
           (fun m n xy zw => sq_le_cancel xy zw) fun m n xy zw =>
           let t := Nat.le_trans zw (sq_le_of_le (Nat.le_add_right n (m + 1)) le_rfl xy)
           have : k + j + 1 ≤ k := Nat.mul_self_le_mul_self_iff.2 (by repeat' rw [one_mul] at t <;> exact t)
@@ -622,11 +622,11 @@ theorem le_of_le_le {x y z w : ℤ} (xz : x ≤ z) (yw : y ≤ w) : (⟨x, y⟩ 
 
 protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
   | ⟨(x : ℕ), (y : ℕ)⟩ => Or.inl trivial
-  | ⟨-[1 + x], -[1 + y]⟩ => Or.inr trivial
-  | ⟨0, -[1 + y]⟩ => Or.inr trivial
-  | ⟨-[1 + x], 0⟩ => Or.inr trivial
-  | ⟨(x + 1 : ℕ), -[1 + y]⟩ => Nat.le_total
-  | ⟨-[1 + x], (y + 1 : ℕ)⟩ => Nat.le_total
+  | ⟨-[x+1], -[y+1]⟩ => Or.inr trivial
+  | ⟨0, -[y+1]⟩ => Or.inr trivial
+  | ⟨-[x+1], 0⟩ => Or.inr trivial
+  | ⟨(x + 1 : ℕ), -[y+1]⟩ => Nat.le_total
+  | ⟨-[x+1], (y + 1 : ℕ)⟩ => Nat.le_total
 
 protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a := by
   have t := (b - a).nonneg_total
@@ -644,9 +644,9 @@ theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n := by
     show ∃ x y : ℕ, nonneg (⟨x, y⟩ + -a) from
       match -a with
       | ⟨Int.ofNat x, Int.ofNat y⟩ => ⟨0, 0, trivial⟩
-      | ⟨Int.ofNat x, -[1 + y]⟩ => ⟨0, y + 1, by simp [Int.neg_succ_of_nat_coe, add_assoc]⟩
-      | ⟨-[1 + x], Int.ofNat y⟩ => ⟨x + 1, 0, by simp [Int.neg_succ_of_nat_coe, add_assoc]⟩
-      | ⟨-[1 + x], -[1 + y]⟩ => ⟨x + 1, y + 1, by simp [Int.neg_succ_of_nat_coe, add_assoc]⟩
+      | ⟨Int.ofNat x, -[y+1]⟩ => ⟨0, y + 1, by simp [Int.neg_succ_of_nat_coe, add_assoc]⟩
+      | ⟨-[x+1], Int.ofNat y⟩ => ⟨x + 1, 0, by simp [Int.neg_succ_of_nat_coe, add_assoc]⟩
+      | ⟨-[x+1], -[y+1]⟩ => ⟨x + 1, y + 1, by simp [Int.neg_succ_of_nat_coe, add_assoc]⟩
   refine' ⟨x + d * y, h.trans _⟩
   change nonneg ⟨↑x + d * y - ↑x, 0 - ↑y⟩
   cases' y with y
@@ -731,7 +731,7 @@ protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a *
 theorem not_sq_le_succ (c d y) (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
   not_le_of_gt <| mul_pos (mul_pos h <| Nat.succ_pos _) <| Nat.succ_pos _
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
@@ -772,16 +772,16 @@ theorem not_divides_sq (x y) : (x + 1) * (x + 1) ≠ d * (y + 1) * (y + 1) := fu
 
 theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
   | ⟨0, 0⟩, xy, yx => rfl
-  | ⟨-[1 + x], -[1 + y]⟩, xy, yx => False.elim xy
+  | ⟨-[x+1], -[y+1]⟩, xy, yx => False.elim xy
   | ⟨(x + 1 : Nat), (y + 1 : Nat)⟩, xy, yx => False.elim yx
-  | ⟨-[1 + x], 0⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ (by decide))
+  | ⟨-[x+1], 0⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ (by decide))
   | ⟨(x + 1 : Nat), 0⟩, xy, yx => absurd yx (not_sq_le_succ _ _ _ (by decide))
-  | ⟨0, -[1 + y]⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ d_pos)
+  | ⟨0, -[y+1]⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ d_pos)
   | ⟨0, (y + 1 : Nat)⟩, _, yx => absurd yx (not_sq_le_succ _ _ _ d_pos)
-  | ⟨(x + 1 : Nat), -[1 + y]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
+  | ⟨(x + 1 : Nat), -[y+1]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
     let t := le_antisymm yx xy
     rw [one_mul] at t <;> exact absurd t (not_divides_sq _ _)
-  | ⟨-[1 + x], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
+  | ⟨-[x+1], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
     let t := le_antisymm xy yx
     rw [one_mul] at t <;> exact absurd t (not_divides_sq _ _)
 

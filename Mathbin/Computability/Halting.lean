@@ -130,7 +130,7 @@ theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ 
     (cond (sum_cases hf (const true).to₂ (const false).to₂)
           (sum_cases_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
           (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
-      fun a => by cases f a <;> simp only [Bool.cond_tt, Bool.cond_ff]
+      fun a => by cases f a <;> simp only [Bool.cond_true, Bool.cond_false]
 
 end Partrec
 
@@ -164,7 +164,7 @@ open Nat.Partrec (code)
 open Nat.Partrec.Code Computable
 
 theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
-  ⟨fun ⟨D, h⟩ => ⟨_, h, funext fun a => propext (to_bool_iff _).symm⟩, by
+  ⟨fun ⟨D, h⟩ => ⟨_, h, funext fun a => propext (Bool.decide_iff _).symm⟩, by
     rintro ⟨f, h, rfl⟩ <;> exact ⟨by infer_instance, by simpa using h⟩⟩
 
 protected theorem not {p : α → Prop} (hp : ComputablePred p) : ComputablePred fun a => ¬p a := by

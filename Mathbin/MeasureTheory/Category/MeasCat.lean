@@ -91,7 +91,7 @@ def giry : CategoryTheory.Monad MeasCat where
   left_unit' α := Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
   right_unit' α := Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
 def integral : giry.Algebra where
@@ -102,7 +102,9 @@ def integral : giry.Algebra where
     Subtype.eq <|
       funext fun μ : Measure (Measure ℝ≥0∞) =>
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
-          rw [measure.lintegral_join, lintegral_map] <;> apply_rules [measurableId, measure.measurable_lintegral]
+          rw [measure.lintegral_join, lintegral_map] <;>
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 end MeasCat
 

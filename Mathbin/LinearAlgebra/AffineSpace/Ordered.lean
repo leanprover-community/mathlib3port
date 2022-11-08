@@ -222,7 +222,7 @@ theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
   intro h
   simp_rw [line_map_apply, slope, vsub_eq_sub, vadd_eq_add, smul_eq_mul]
   rw [sub_add_eq_sub_sub_swap, sub_self, zero_sub, neg_mul_eq_mul_neg, neg_sub, le_inv_smul_iff h, smul_smul,
-    mul_inv_cancel_right₀, le_sub, ← neg_sub (f b), smul_neg, neg_add_eq_sub]
+    mul_inv_cancel_right₀, le_sub_comm, ← neg_sub (f b), smul_neg, neg_add_eq_sub]
   · exact right_ne_zero_of_mul h.ne'
     
   · infer_instance

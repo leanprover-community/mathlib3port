@@ -504,7 +504,7 @@ attribute [local semireducible] Int.NonNeg
 @[simp]
 theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} (h : 0 ≤ z), (z.toNat : Zmod p) = z
   | (n : ℕ), h => by simp only [Int.cast_ofNat, Int.to_nat_coe_nat]
-  | -[1 + n], h => False.elim h
+  | -[n+1], h => False.elim h
 
 theorem val_injective (n : ℕ) [NeZero n] : Function.Injective (Zmod.val : Zmod n → ℕ) := by
   cases n
@@ -719,7 +719,7 @@ theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : Zmod n} (ha :
 theorem neg_one_ne_one {n : ℕ} [Fact (2 < n)] : (-1 : Zmod n) ≠ 1 :=
   CharP.neg_one_ne_one (Zmod n) n
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem neg_eq_self_mod_two (a : Zmod 2) : -a = a := by
   fin_cases a <;> ext <;> simp [Fin.coe_neg, Int.natMod] <;> norm_num
 

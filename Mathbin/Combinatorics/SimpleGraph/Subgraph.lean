@@ -290,7 +290,7 @@ instance : Lattice (Subgraph G) where
     intro x y hxy hyx
     ext1 v
     exact Set.Subset.antisymm hxy.1 hyx.1
-    ext v w
+    ext (v w)
     exact Iff.intro (fun h => hxy.2 h) fun h => hyx.2 h
   sup_le x y z hxy hyz := ⟨Set.union_subset hxy.1 hyz.1, fun v w h => h.casesOn (fun h => hxy.2 h) fun h => hyz.2 h⟩
   le_sup_left x y := ⟨Set.subset_union_left x.Verts y.Verts, fun v w h => Or.inl h⟩
@@ -763,7 +763,7 @@ theorem delete_edges_spanning_coe_eq : G'.spanningCoe.deleteEdges s = (G'.delete
 
 theorem delete_edges_coe_eq (s : Set (Sym2 G'.Verts)) :
     G'.coe.deleteEdges s = (G'.deleteEdges (Sym2.map coe '' s)).coe := by
-  ext ⟨v, hv⟩ ⟨w, hw⟩
+  ext (⟨v, hv⟩⟨w, hw⟩)
   simp only [SimpleGraph.delete_edges_adj, coe_adj, Subtype.coe_mk, delete_edges_adj, Set.mem_image, not_exists,
     not_and, and_congr_right_iff]
   intro h
@@ -780,7 +780,7 @@ theorem delete_edges_coe_eq (s : Set (Sym2 G'.Verts)) :
     
 
 theorem coe_delete_edges_eq (s : Set (Sym2 V)) : (G'.deleteEdges s).coe = G'.coe.deleteEdges (Sym2.map coe ⁻¹' s) := by
-  ext ⟨v, hv⟩ ⟨w, hw⟩
+  ext (⟨v, hv⟩⟨w, hw⟩)
   simp
 
 theorem delete_edges_le : G'.deleteEdges s ≤ G' := by constructor <;> simp (config := { contextual := true })
@@ -828,7 +828,7 @@ def induce (G' : G.Subgraph) (s : Set V) : G.Subgraph where
     exact h
 
 theorem _root_.simple_graph.induce_eq_coe_induce_top (s : Set V) : G.induce s = ((⊤ : G.Subgraph).induce s).coe := by
-  ext v w
+  ext (v w)
   simp
 
 section Induce

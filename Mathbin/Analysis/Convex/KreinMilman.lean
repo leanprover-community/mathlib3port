@@ -57,14 +57,10 @@ open Classical
 variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Space E] [TopologicalAddGroup E]
   [HasContinuousSmul ℝ E] [LocallyConvexSpace ℝ E] {s : Set E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident t, ",", "⟨", "⟨", ident x, ",", ident hxt, "⟩", ",", ident htclos, ",", ident hst, "⟩", ",", ident hBmin, "⟩", ":", expr «expr∃ , »((t «expr ∈ » S),
-    ∀ u «expr ∈ » S,
-    «expr ⊆ »(u, t) → «expr = »(u, t))]] -/
 /-- **Krein-Milman lemma**: In a LCTVS, any nonempty compact set has an extreme point. -/
 theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) : (s.ExtremePoints ℝ).Nonempty := by
   let S : Set (Set E) := { t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t }
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident t, \",\", \"⟨\", \"⟨\", ident x, \",\", ident hxt, \"⟩\", \",\", ident htclos, \",\", ident hst, \"⟩\", \",\", ident hBmin, \"⟩\", \":\", expr «expr∃ , »((t «expr ∈ » S),\n    ∀ u «expr ∈ » S,\n    «expr ⊆ »(u, t) → «expr = »(u, t))]]"
+  rsuffices ⟨t, ⟨⟨x, hxt⟩, htclos, hst⟩, hBmin⟩ : ∃ t ∈ S, ∀ u ∈ S, u ⊆ t → u = t
   · refine' ⟨x, mem_extreme_points_iff_extreme_singleton.2 _⟩
     rwa [← eq_singleton_iff_unique_mem.2 ⟨hxt, fun y hyB => _⟩]
     by_contra hyx

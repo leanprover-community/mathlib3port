@@ -308,7 +308,7 @@ theorem sum_measure_le_measure_univ {s : Finset ι} {t : ι → Set α} (h : ∀
 theorem tsum_measure_le_measure_univ {s : ι → Set α} (hs : ∀ i, MeasurableSet (s i)) (H : Pairwise (Disjoint on s)) :
     (∑' i, μ (s i)) ≤ μ (Univ : Set α) := by
   rw [Ennreal.tsum_eq_supr_sum]
-  exact supr_le fun s => sum_measure_le_measure_univ (fun i hi => hs i) fun i hi j hj hij => H i j hij
+  exact supr_le fun s => sum_measure_le_measure_univ (fun i hi => hs i) fun i hi j hj hij => H hij
 
 /-- Pigeonhole principle for measure spaces: if `∑' i, μ (s i) > μ univ`, then
 one of the intersections `s i ∩ s j` is not empty. -/
@@ -389,7 +389,7 @@ theorem measure_bUnion_eq_supr {s : ι → Set α} {t : Set ι} (ht : t.Countabl
   haveI := ht.to_encodable
   rw [bUnion_eq_Union, measure_Union_eq_supr hd.directed_coe, ← supr_subtype'']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s k) -/
 /-- Continuity from above: the measure of the intersection of a decreasing sequence of measurable
 sets is the infimum of the measures. -/
 theorem measure_Inter_eq_infi [Countable ι] {s : ι → Set α} (h : ∀ i, MeasurableSet (s i)) (hd : Directed (· ⊇ ·) s)
@@ -1409,7 +1409,7 @@ theorem restrict_eq_self_of_ae_mem {m0 : MeasurableSpace α} ⦃s : Set α⦄ �
     _ = μ := restrict_univ
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem restrict_congr_meas (hs : MeasurableSet s) :
     μ.restrict s = ν.restrict s ↔ ∀ (t) (_ : t ⊆ s), MeasurableSet t → μ t = ν t :=
   ⟨fun H t hts ht => by rw [← inter_eq_self_of_subset_left hts, ← restrict_apply ht, H, restrict_apply ht], fun H =>
@@ -1734,12 +1734,19 @@ theorem count_apply (hs : MeasurableSet s) : count s = ∑' i : s, 1 := by
 theorem count_empty : count (∅ : Set α) = 0 := by rw [count_apply MeasurableSet.empty, tsum_empty]
 
 @[simp]
-theorem count_apply_finset [MeasurableSingletonClass α] (s : Finset α) : count (↑s : Set α) = s.card :=
+theorem count_apply_finset' {s : Finset α} (s_mble : MeasurableSet (s : Set α)) : count (↑s : Set α) = s.card :=
   calc
-    count (↑s : Set α) = ∑' i : (↑s : Set α), 1 := count_apply s.MeasurableSet
+    count (↑s : Set α) = ∑' i : (↑s : Set α), 1 := count_apply s_mble
     _ = ∑ i in s, 1 := s.tsum_subtype 1
     _ = s.card := by simp
     
+
+@[simp]
+theorem count_apply_finset [MeasurableSingletonClass α] (s : Finset α) : count (↑s : Set α) = s.card :=
+  count_apply_finset' s.MeasurableSet
+
+theorem count_apply_finite' {s : Set α} (s_fin : s.Finite) (s_mble : MeasurableSet s) : count s = s_fin.toFinset.card :=
+  by simp [← @count_apply_finset' _ _ s_fin.to_finset (by simpa only [finite.coe_to_finset] using s_mble)]
 
 theorem count_apply_finite [MeasurableSingletonClass α] (s : Set α) (hs : s.Finite) : count s = hs.toFinset.card := by
   rw [← count_apply_finset, finite.coe_to_finset]
@@ -1755,50 +1762,92 @@ theorem count_apply_infinite (hs : s.Infinite) : count s = ∞ := by
     _ ≤ count s := measure_mono ht
     
 
-variable [MeasurableSingletonClass α]
-
 @[simp]
-theorem count_apply_eq_top : count s = ∞ ↔ s.Infinite := by
+theorem count_apply_eq_top' (s_mble : MeasurableSet s) : count s = ∞ ↔ s.Infinite := by
   by_cases hs:s.finite
-  · simp [Set.Infinite, hs, count_apply_finite]
+  · simp [Set.Infinite, hs, count_apply_finite' hs s_mble]
     
   · change s.infinite at hs
     simp [hs, count_apply_infinite]
     
 
 @[simp]
-theorem count_apply_lt_top : count s < ∞ ↔ s.Finite :=
+theorem count_apply_eq_top [MeasurableSingletonClass α] : count s = ∞ ↔ s.Infinite := by
+  by_cases hs:s.finite
+  · exact count_apply_eq_top' hs.measurable_set
+    
+  · change s.infinite at hs
+    simp [hs, count_apply_infinite]
+    
+
+@[simp]
+theorem count_apply_lt_top' (s_mble : MeasurableSet s) : count s < ∞ ↔ s.Finite :=
+  calc
+    count s < ∞ ↔ count s ≠ ∞ := lt_top_iff_ne_top
+    _ ↔ ¬s.Infinite := not_congr (count_apply_eq_top' s_mble)
+    _ ↔ s.Finite := not_not
+    
+
+@[simp]
+theorem count_apply_lt_top [MeasurableSingletonClass α] : count s < ∞ ↔ s.Finite :=
   calc
     count s < ∞ ↔ count s ≠ ∞ := lt_top_iff_ne_top
     _ ↔ ¬s.Infinite := not_congr count_apply_eq_top
     _ ↔ s.Finite := not_not
     
 
-theorem empty_of_count_eq_zero (hsc : count s = 0) : s = ∅ := by
+theorem empty_of_count_eq_zero' (s_mble : MeasurableSet s) (hsc : count s = 0) : s = ∅ := by
+  have hs : s.finite := by
+    rw [← count_apply_lt_top' s_mble, hsc]
+    exact WithTop.zero_lt_top
+  simpa [count_apply_finite' hs s_mble] using hsc
+
+theorem empty_of_count_eq_zero [MeasurableSingletonClass α] (hsc : count s = 0) : s = ∅ := by
   have hs : s.finite := by
     rw [← count_apply_lt_top, hsc]
     exact WithTop.zero_lt_top
-  rw [count_apply_finite _ hs] at hsc
-  simpa using hsc
+  simpa [count_apply_finite _ hs] using hsc
 
 @[simp]
-theorem count_eq_zero_iff : count s = 0 ↔ s = ∅ :=
+theorem count_eq_zero_iff' (s_mble : MeasurableSet s) : count s = 0 ↔ s = ∅ :=
+  ⟨empty_of_count_eq_zero' s_mble, fun h => h.symm ▸ count_empty⟩
+
+@[simp]
+theorem count_eq_zero_iff [MeasurableSingletonClass α] : count s = 0 ↔ s = ∅ :=
   ⟨empty_of_count_eq_zero, fun h => h.symm ▸ count_empty⟩
 
-theorem count_ne_zero (hs' : s.Nonempty) : count s ≠ 0 := by
+theorem count_ne_zero' (hs' : s.Nonempty) (s_mble : MeasurableSet s) : count s ≠ 0 := by
+  rw [Ne.def, count_eq_zero_iff' s_mble]
+  exact hs'.ne_empty
+
+theorem count_ne_zero [MeasurableSingletonClass α] (hs' : s.Nonempty) : count s ≠ 0 := by
   rw [Ne.def, count_eq_zero_iff]
   exact hs'.ne_empty
 
 @[simp]
-theorem count_singleton (a : α) : count ({a} : Set α) = 1 := by
-  rw [count_apply_finite ({a} : Set α) (Set.finite_singleton _), Set.Finite.toFinset]
+theorem count_singleton' {a : α} (ha : MeasurableSet ({a} : Set α)) : count ({a} : Set α) = 1 := by
+  rw [count_apply_finite' (Set.finite_singleton a) ha, Set.Finite.toFinset]
   simp
 
-theorem count_injective_image [MeasurableSingletonClass β] {f : β → α} (hf : Function.Injective f) (s : Set β) :
-    count (f '' s) = count s := by
+@[simp]
+theorem count_singleton [MeasurableSingletonClass α] (a : α) : count ({a} : Set α) = 1 :=
+  count_singleton' (measurableSetSingleton a)
+
+theorem count_injective_image' {f : β → α} (hf : Function.Injective f) {s : Set β} (s_mble : MeasurableSet s)
+    (fs_mble : MeasurableSet (f '' s)) : count (f '' s) = count s := by
   by_cases hs:s.finite
   · lift s to Finset β using hs
-    rw [← Finset.coe_image, count_apply_finset, count_apply_finset, s.card_image_of_injective hf]
+    rw [← Finset.coe_image, count_apply_finset' _, count_apply_finset' s_mble, s.card_image_of_injective hf]
+    simpa only [Finset.coe_image] using fs_mble
+    
+  rw [count_apply_infinite hs]
+  rw [← finite_image_iff <| hf.inj_on _] at hs
+  rw [count_apply_infinite hs]
+
+theorem count_injective_image [MeasurableSingletonClass α] [MeasurableSingletonClass β] {f : β → α}
+    (hf : Function.Injective f) (s : Set β) : count (f '' s) = count s := by
+  by_cases hs:s.finite
+  · exact count_injective_image' hf hs.measurable_set (finite.image f hs).MeasurableSet
     
   rw [count_apply_infinite hs]
   rw [← finite_image_iff <| hf.inj_on _] at hs
@@ -1900,7 +1949,7 @@ theorem monoRight (h : QuasiMeasurePreserving f μa μb) (ha : μb ≪ μb') : Q
 
 @[mono]
 theorem mono (ha : μa' ≪ μa) (hb : μb ≪ μb') (h : QuasiMeasurePreserving f μa μb) : QuasiMeasurePreserving f μa' μb' :=
-  (h.monoLeft ha).monoRight hb
+  (h.mono_left ha).mono_right hb
 
 protected theorem comp {g : β → γ} {f : α → β} (hg : QuasiMeasurePreserving g μb μc)
     (hf : QuasiMeasurePreserving f μa μb) : QuasiMeasurePreserving (g ∘ f) μa μc :=
@@ -1919,7 +1968,7 @@ theorem ae_map_le (h : QuasiMeasurePreserving f μa μb) : (μa.map f).ae ≤ μ
   h.2.ae_le
 
 theorem tendsto_ae (h : QuasiMeasurePreserving f μa μb) : Tendsto f μa.ae μb.ae :=
-  (tendsto_ae_map h.AeMeasurable).monoRight h.ae_map_le
+  (tendsto_ae_map h.AeMeasurable).mono_right h.ae_map_le
 
 theorem ae (h : QuasiMeasurePreserving f μa μb) {p : β → Prop} (hg : ∀ᵐ x ∂μb, p x) : ∀ᵐ x ∂μa, p (f x) :=
   h.tendsto_ae hg
@@ -2004,7 +2053,7 @@ theorem NullMeasurableSet.preimage {ν : Measure β} {f : α → β} {t : Set β
   ⟨f ⁻¹' ToMeasurable ν t, hf.Measurable (measurableSetToMeasurable _ _), hf.ae_eq ht.to_measurable_ae_eq.symm⟩
 
 theorem NullMeasurableSet.monoAc (h : NullMeasurableSet s μ) (hle : ν ≪ μ) : NullMeasurableSet s ν :=
-  h.Preimage <| (QuasiMeasurePreserving.id μ).monoLeft hle
+  h.Preimage <| (QuasiMeasurePreserving.id μ).mono_left hle
 
 theorem NullMeasurableSet.mono (h : NullMeasurableSet s μ) (hle : ν ≤ μ) : NullMeasurableSet s ν :=
   h.monoAc hle.AbsolutelyContinuous
@@ -2168,7 +2217,7 @@ theorem ae_add_measure_iff {p : α → Prop} {ν} : (∀ᵐ x ∂μ + ν, p x) �
 
 theorem ae_eq_comp' {ν : Measure β} {f : α → β} {g g' : β → δ} (hf : AeMeasurable f μ) (h : g =ᵐ[ν] g')
     (h2 : μ.map f ≪ ν) : g ∘ f =ᵐ[μ] g' ∘ f :=
-  (tendsto_ae_map hf).monoRight h2.ae_le h
+  (tendsto_ae_map hf).mono_right h2.ae_le h
 
 theorem Measure.QuasiMeasurePreserving.ae_eq_comp {ν : Measure β} {f : α → β} {g g' : β → δ}
     (hf : QuasiMeasurePreserving f μ ν) (h : g =ᵐ[ν] g') : g ∘ f =ᵐ[μ] g' ∘ f :=
@@ -2703,7 +2752,7 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
   refine' ⟨s ∩ spanning_sets μ n, hs.inter (measurable_spanning_sets _ _), inter_subset_left _ _, hn, _⟩
   exact (measure_mono (inter_subset_right _ _)).trans_lt (measure_spanning_sets_lt_top _ _)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
 This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
@@ -3360,7 +3409,7 @@ namespace IsCompact
 
 variable [TopologicalSpace α] [MeasurableSpace α] {μ : Measure α} {s : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 /-- If `s` is a compact set and `μ` is finite at `𝓝 x` for every `x ∈ s`, then `s` admits an open
 superset of finite measure. -/
 theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀ x ∈ s, μ.FiniteAtFilter (𝓝 x)) :
@@ -3382,7 +3431,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀ x ∈ 
     exact ⟨U, nhds_within_le_nhds (hUo.mem_nhds hx), U, subset.rfl, hUo, hU⟩
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/
 theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measure α) [IsLocallyFiniteMeasure μ] :

@@ -462,7 +462,7 @@ private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tacti
   ext_simplify_core a cfg simp_lemmas.mk (fun _ => failed)
     (fun a _ _ _ e => do
       let (new_a, new_e, pr) ← pre a e
-      guard ¬expr.alpha_eqv new_e e
+      guard ¬new_e == e
       return (new_a, new_e, some pr, ff))
     (fun _ _ _ _ _ => failed) `eq e
 
@@ -492,7 +492,7 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
     ← simplify_top_down' () (fun _ e => Prod.mk () <$> coe_to_numeral e) e3 cfg
   trace_norm_cast "after coe_to_numeral: " e4
   let new_e := e4
-  guard ¬expr.alpha_eqv new_e e
+  guard ¬new_e == e
   let pr ← mk_eq_trans pr1 pr2
   let pr ← mk_eq_trans pr pr3
   let pr ← mk_eq_trans pr pr4

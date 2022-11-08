@@ -3,12 +3,11 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Basic
-import Mathbin.Data.Nat.Cast.Defs
-import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Order.Ring
-import Mathbin.Tactic.PiInstances
-import Mathbin.Data.Sum.Basic
+import Mathbin.Data.Nat.Order
+import Mathbin.Algebra.Order.Group.Abs
+import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.Hom.Ring
+import Mathbin.Algebra.Order.Monoid.WithTop
 
 /-!
 # Cast of natural numbers (additional theorems)
@@ -41,7 +40,7 @@ theorem coe_cast_add_monoid_hom [AddMonoidWithOne α] : (castAddMonoidHom α : �
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : NonAssocSemiring.{u_1} α] (m : Nat) (n : Nat), Eq.{succ u_1} α ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (Distrib.toHasMul.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α _inst_1)))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) m) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) n))
 but is expected to have type
-  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.188 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188))) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188)))) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188))) m) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.188))) n))
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.308 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.308))) (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.308)))) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.308))) m) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.308))) n))
 Case conversion may be inaccurate. Consider using '#align nat.cast_mul Nat.cast_mulₓ'. -/
 @[simp, norm_cast]
 theorem cast_mul [NonAssocSemiring α] (m n : ℕ) : ((m * n : ℕ) : α) = m * n := by
@@ -55,6 +54,12 @@ def castRingHom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
 theorem coe_cast_ring_hom [NonAssocSemiring α] : (castRingHom α : ℕ → α) = coe :=
   rfl
 
+/- warning: nat.cast_commute -> Nat.cast_commute is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : NonAssocSemiring.{u_1} α] (n : Nat) (x : α), Commute.{u_1} α (Distrib.toHasMul.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α _inst_1))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1 succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1 succ u_1} Nat α (CoeTCₓ.coe.{1 succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toHasNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) n) x
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.424 : Semiring.{u_1} α] (n : Nat) (x : α), Commute.{u_1} α (NonUnitalNonAssocSemiring.toMul.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.424))) (Nat.cast.{u_1} α (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.424))) n) x
+Case conversion may be inaccurate. Consider using '#align nat.cast_commute Nat.cast_commuteₓ'. -/
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
   (Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x)) fun n ihn => by
     rw [cast_succ] <;> exact ihn.add_left (Commute.one_left x)
@@ -86,6 +91,19 @@ theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
 theorem cast_pos {n : ℕ} : (0 : α) < n ↔ 0 < n := by cases n <;> simp [cast_add_one_pos]
 
 end OrderedSemiring
+
+/-- A version of `nat.cast_sub` that works for `ℝ≥0` and `ℚ≥0`. Note that this proof doesn't work
+for `ℕ∞` and `ℝ≥0∞`, so we use type-specific lemmas for these types. -/
+@[simp, norm_cast]
+theorem cast_tsub [CanonicallyOrderedCommSemiring α] [Sub α] [HasOrderedSub α] [ContravariantClass α α (· + ·) (· ≤ ·)]
+    (m n : ℕ) : ↑(m - n) = (m - n : α) := by
+  cases' le_total m n with h h
+  · rw [tsub_eq_zero_of_le h, cast_zero, tsub_eq_zero_of_le]
+    exact mono_cast h
+    
+  · rcases le_iff_exists_add'.mp h with ⟨m, rfl⟩
+    rw [add_tsub_cancel_right, cast_add, add_tsub_cancel_right]
+    
 
 section StrictOrderedSemiring
 
@@ -122,7 +140,7 @@ theorem cast_max [LinearOrderedSemiring α] {a b : ℕ} : (↑(max a b) : α) = 
   (@mono_cast α _).map_max
 
 @[simp, norm_cast]
-theorem abs_cast [LinearOrderedRing α] (a : ℕ) : abs (a : α) = a :=
+theorem abs_cast [LinearOrderedRing α] (a : ℕ) : |(a : α)| = a :=
   abs_of_nonneg (cast_nonneg a)
 
 theorem coe_nat_dvd [Semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
@@ -209,6 +227,15 @@ theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :
 
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
   ext_nat' f g <| by simp only [map_one]
+
+theorem NeZero.nat_of_injective {n : ℕ} [h : NeZero (n : R)] [RingHomClass F R S] {f : F} (hf : Function.Injective f) :
+    NeZero (n : S) :=
+  ⟨fun h => NeZero.ne' n R <| hf <| by simpa only [map_nat_cast, map_zero] ⟩
+
+theorem NeZero.nat_of_ne_zero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F) {n : ℕ}
+    [hn : NeZero (n : S)] : NeZero (n : R) := by
+  apply NeZero.of_map f
+  simp only [map_nat_cast, hn]
 
 end RingHomClass
 

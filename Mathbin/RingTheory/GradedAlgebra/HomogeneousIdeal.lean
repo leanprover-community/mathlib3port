@@ -272,6 +272,22 @@ theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal 
     (⨅ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
 
+/- warning: ideal.is_homogeneous.Sup clashes with ideal.is_homogeneous.sup -> Ideal.IsHomogeneous.sup
+Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.supₓ'. -/
+#print Ideal.IsHomogeneous.sup /-
+theorem sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 := by
+  rw [Sup_eq_supr]
+  exact supr₂ h
+-/
+
+/- warning: ideal.is_homogeneous.Inf clashes with ideal.is_homogeneous.inf -> Ideal.IsHomogeneous.inf
+Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.infₓ'. -/
+#print Ideal.IsHomogeneous.inf /-
+theorem inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (inf ℐ).IsHomogeneous 𝒜 := by
+  rw [Inf_eq_infi]
+  exact infi₂ h
+-/
+
 end Ideal.IsHomogeneous
 
 variable {𝒜}

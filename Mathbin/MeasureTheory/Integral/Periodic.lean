@@ -80,7 +80,7 @@ protected theorem measurePreservingMk (t : ℝ) :
 
 theorem volume_closed_ball {x : AddCircle T} (ε : ℝ) :
     volume (Metric.ClosedBall x ε) = Ennreal.ofReal (min T (2 * ε)) := by
-  have hT' : abs T = T := abs_eq_self.mpr hT.out.le
+  have hT' : |T| = T := abs_eq_self.mpr hT.out.le
   let I := Ioc (-(T / 2)) (T / 2)
   have h₁ : ε < T / 2 → Metric.ClosedBall (0 : ℝ) ε ∩ I = Metric.ClosedBall (0 : ℝ) ε := by
     intro hε

@@ -124,8 +124,8 @@ theorem ofExistsRoot (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p.e
       have : Irreducible (q * c (leadingCoeff q)⁻¹) := by
         rw [← coe_norm_unit_of_ne_zero hq.ne_zero]
         exact (associated_normalize _).Irreducible hq
-      let ⟨x, hx⟩ := H (q * c (leadingCoeff q)⁻¹) (monic_mul_leading_coeff_inv hq.ne_zero) this
-      degree_mul_leading_coeff_inv q hq.ne_zero ▸ degree_eq_one_of_irreducible_of_root this hx⟩
+      let ⟨x, hx⟩ := H (q * c (leadingCoeff q)⁻¹) (monic_mul_leading_coeff_inv hq.NeZero) this
+      degree_mul_leading_coeff_inv q hq.NeZero ▸ degree_eq_one_of_irreducible_of_root this hx⟩
 
 theorem degree_eq_one_of_irreducible [IsAlgClosed k] {p : k[X]} (hp : Irreducible p) : p.degree = 1 :=
   degree_eq_one_of_irreducible_of_splits hp (IsAlgClosed.splitsCodomain _)

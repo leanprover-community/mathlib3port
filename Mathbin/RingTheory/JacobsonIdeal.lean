@@ -144,7 +144,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ∉ » I) -/
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ (x) (_ : x ∉ I), ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
@@ -224,8 +224,8 @@ variable [CommRing R] [CommRing S] {I : Ideal R}
 theorem radical_le_jacobson : radical I ≤ jacobson I :=
   le_Inf fun J hJ => (radical_eq_Inf I).symm ▸ Inf_le ⟨hJ.left, IsMaximal.is_prime hJ.right⟩
 
-theorem eq_radical_of_eq_jacobson : jacobson I = I → radical I = I := fun h =>
-  le_antisymm (le_trans radical_le_jacobson (le_of_eq h)) le_radical
+theorem is_radical_of_eq_jacobson (h : jacobson I = I) : I.IsRadical :=
+  radical_le_jacobson.trans h.le
 
 theorem is_unit_of_sub_one_mem_jacobson_bot (r : R) (h : r - 1 ∈ jacobson (⊥ : Ideal R)) : IsUnit r := by
   cases' exists_mul_sub_mem_of_sub_one_mem_jacobson r h with s hs

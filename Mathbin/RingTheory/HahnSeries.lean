@@ -10,6 +10,7 @@ import Mathbin.Algebra.Module.Pi
 import Mathbin.RingTheory.PowerSeries.Basic
 import Mathbin.Data.Finsupp.Pwo
 import Mathbin.Data.Finset.MulAntidiagonal
+import Mathbin.Algebra.Order.Group.WithTop
 
 /-!
 # Hahn Series
@@ -613,8 +614,8 @@ instance [NonUnitalNonAssocSemiring R] : Distrib (HahnSeries Γ R) :=
         rw [h.1, h.2, add_zero]
          }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(b, a)}, «expr * »((single b r).coeff ij.fst, x.coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(b, a)}, «expr * »((single b r).coeff ij.fst, x.coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem single_mul_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeries Γ R} {a : Γ} {b : Γ} :
     (single b r * x).coeff (a + b) = r * x.coeff a := by
   by_cases hr:r = 0
@@ -633,7 +634,7 @@ theorem single_mul_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
     exact h2 hx
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(b, a)}, «expr * »((single b r).coeff ij.fst, x.coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(b, a)}, «expr * »((single b r).coeff ij.fst, x.coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply sum_congr _ fun _ _ => rfl
     ext ⟨a1, a2⟩
     simp only [Set.mem_singleton_iff, Prod.mk.inj_iff, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
@@ -649,8 +650,8 @@ theorem single_mul_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
   · simp
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(a, b)}, «expr * »(x.coeff ij.fst, (single b r).coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(a, b)}, «expr * »(x.coeff ij.fst, (single b r).coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem mul_single_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeries Γ R} {a : Γ} {b : Γ} :
     (x * single b r).coeff (a + b) = x.coeff a * r := by
   by_cases hr:r = 0
@@ -668,7 +669,7 @@ theorem mul_single_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
     exact h2 hx
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(a, b)}, «expr * »(x.coeff ij.fst, (single b r).coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij : «expr × »(Γ, Γ)), {(a, b)}, «expr * »(x.coeff ij.fst, (single b r).coeff ij.snd))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply sum_congr _ fun _ _ => rfl
     ext ⟨a1, a2⟩
     simp only [Set.mem_singleton_iff, Prod.mk.inj_iff, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
@@ -917,11 +918,11 @@ section Domain
 
 variable {Γ' : Type _} [OrderedCancelAddCommMonoid Γ']
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij),
     (add_antidiagonal x.is_pwo_support y.is_pwo_support g).map
     (function.embedding.prod_map f.to_embedding f.to_embedding),
-    «expr * »((emb_domain f x).coeff ij.1, (emb_domain f y).coeff ij.2))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+    «expr * »((emb_domain f x).coeff ij.1, (emb_domain f y).coeff ij.2))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀ x y, f (x + y) = f x + f y)
     (x y : HahnSeries Γ R) : embDomain f (x * y) = embDomain f x * embDomain f y := by
   ext g
@@ -929,7 +930,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀
   · obtain ⟨g, rfl⟩ := hg
     simp only [mul_coeff, emb_domain_coeff]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij),\n    (add_antidiagonal x.is_pwo_support y.is_pwo_support g).map\n    (function.embedding.prod_map f.to_embedding f.to_embedding),\n    «expr * »((emb_domain f x).coeff ij.1, (emb_domain f y).coeff ij.2))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((ij),\n    (add_antidiagonal x.is_pwo_support y.is_pwo_support g).map\n    (function.embedding.prod_map f.to_embedding f.to_embedding),\n    «expr * »((emb_domain f x).coeff ij.1, (emb_domain f y).coeff ij.2))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · simp
       
     apply sum_subset

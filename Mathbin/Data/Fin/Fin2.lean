@@ -30,6 +30,7 @@ open Nat
 
 universe u
 
+#print Fin2 /-
 /-- An alternate definition of `fin n` defined as an inductive type instead of a subtype of `ℕ`. -/
 inductive Fin2 : ℕ → Type
   |
@@ -38,41 +39,55 @@ inductive Fin2 : ℕ → Type
   |
   /-- `n` as a member of `fin (succ n)` -/
   fs {n} : Fin2 n → Fin2 (succ n)
+-/
 
 namespace Fin2
 
+#print Fin2.cases' /-
 /-- Define a dependent function on `fin2 (succ n)` by giving its value at
 zero (`H1`) and by giving a dependent function on the rest (`H2`). -/
 @[elab_as_elim]
 protected def cases' {n} {C : Fin2 (succ n) → Sort u} (H1 : C fz) (H2 : ∀ n, C (fs n)) : ∀ i : Fin2 (succ n), C i
   | fz => H1
   | fs n => H2 n
+-/
 
+#print Fin2.elim0 /-
 /-- Ex falso. The dependent eliminator for the empty `fin2 0` type. -/
 def elim0 {C : Fin2 0 → Sort u} : ∀ i : Fin2 0, C i :=
   fun.
+-/
 
+#print Fin2.toNat /-
 /-- Converts a `fin2` into a natural. -/
 def toNat : ∀ {n}, Fin2 n → ℕ
   | _, @fz n => 0
   | _, @fs n i => succ (to_nat i)
+-/
 
+#print Fin2.optOfNat /-
 /-- Converts a natural into a `fin2` if it is in range -/
 def optOfNat : ∀ {n} (k : ℕ), Option (Fin2 n)
   | 0, _ => none
   | succ n, 0 => some fz
   | succ n, succ k => fs <$> @opt_of_nat n k
+-/
 
+#print Fin2.add /-
 /-- `i + k : fin2 (n + k)` when `i : fin2 n` and `k : ℕ` -/
 def add {n} (i : Fin2 n) : ∀ k, Fin2 (n + k)
   | 0 => i
   | succ k => fs (add k)
+-/
 
+#print Fin2.left /-
 /-- `left k` is the embedding `fin2 n → fin2 (k + n)` -/
 def left (k) : ∀ {n}, Fin2 n → Fin2 (k + n)
   | _, @fz n => fz
   | _, @fs n i => fs (left i)
+-/
 
+#print Fin2.insertPerm /-
 /-- `insert_perm a` is a permutation of `fin2 n` with the following properties:
   * `insert_perm a i = i+1` if `i < a`
   * `insert_perm a a = 0`
@@ -85,7 +100,9 @@ def insertPerm : ∀ {n}, Fin2 n → Fin2 n → Fin2 n
     match insert_perm i j with
     | fz => fz
     | fs k => fs (fs k)
+-/
 
+#print Fin2.remapLeft /-
 /-- `remap_left f k : fin2 (m + k) → fin2 (n + k)` applies the function
   `f : fin2 m → fin2 n` to inputs less than `m`, and leaves the right part
   on the right (that is, `remap_left f k (m + i) = n + i`). -/
@@ -93,24 +110,33 @@ def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + 
   | 0, i => f i
   | succ k, @fz _ => fz
   | succ k, @fs _ i => fs (remap_left _ i)
+-/
 
+#print Fin2.IsLt /-
 /-- This is a simple type class inference prover for proof obligations
   of the form `m < n` where `m n : ℕ`. -/
 class IsLt (m n : ℕ) where
   h : m < n
+-/
 
+#print Fin2.IsLt.zero /-
 instance IsLt.zero (n) : IsLt 0 (succ n) :=
   ⟨succ_pos _⟩
+-/
 
+#print Fin2.IsLt.succ /-
 instance IsLt.succ (m n) [l : IsLt m n] : IsLt (succ m) (succ n) :=
   ⟨succ_lt_succ l.h⟩
+-/
 
+#print Fin2.ofNat' /-
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
 def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
   | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zero _)
   | succ n, 0, ⟨h⟩ => fz
   | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
+-/
 
 -- mathport name: «expr& »
 local prefix:arg "&" => ofNat'

@@ -336,7 +336,7 @@ the two submodules are complementary. Over a `ring R`, this is true as an iff, a
 `direct_sum.is_internal_iff_is_compl`. --/
 theorem IsInternal.isCompl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.Univ : Set ι) = {i, j})
     (hi : IsInternal A) : IsCompl (A i) (A j) :=
-  ⟨hi.submoduleIndependent.PairwiseDisjoint _ _ hij,
+  ⟨hi.submoduleIndependent.PairwiseDisjoint hij,
     Eq.le <|
       hi.submodule_supr_eq_top.symm.trans <| by
         rw [← Sup_pair, supr, ← Set.image_univ, h, Set.image_insert_eq, Set.image_singleton]⟩

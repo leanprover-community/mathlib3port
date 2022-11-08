@@ -377,8 +377,7 @@ theorem Submartingale.sumSubUpcrossingStratMul [IsFiniteMeasure μ] (hf : Submar
   refine'
     hf.sum_mul_sub (fun n => (adapted_const ℱ 1 n).sub (hf.adapted.upcrossing_strat_adapted n))
       (_ : ∀ n ω, (1 - upcrossing_strat a b f N n) ω ≤ 1) _
-  · refine' fun n ω => sub_le.1 _
-    simp [upcrossing_strat_nonneg]
+  · exact fun n ω => sub_le_self _ upcrossing_strat_nonneg
     
   · intro n ω
     simp [upcrossing_strat_le_one]

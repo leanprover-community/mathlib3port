@@ -315,7 +315,7 @@ theorem interval_integrable_norm_iff {f : ℝ → E} {μ : Measure ℝ} {a b : �
   simp_rw [interval_integrable_iff, integrable_on]
   exact integrable_norm_iff hf
 
-theorem abs {f : ℝ → ℝ} (h : IntervalIntegrable f μ a b) : IntervalIntegrable (fun x => abs (f x)) μ a b :=
+theorem abs {f : ℝ → ℝ} (h : IntervalIntegrable f μ a b) : IntervalIntegrable (fun x => |f x|) μ a b :=
   h.norm
 
 theorem mono (hf : IntervalIntegrable f ν a b) (h1 : [c, d] ⊆ [a, b]) (h2 : μ ≤ ν) : IntervalIntegrable f μ c d :=
@@ -398,7 +398,7 @@ theorem compMulLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   have A : MeasurableEmbedding fun x => x * c⁻¹ :=
     (Homeomorph.mulRight₀ _ (inv_ne_zero hc)).ClosedEmbedding.MeasurableEmbedding
   rw [← Real.smul_map_volume_mul_right (inv_ne_zero hc), integrable_on, measure.restrict_smul,
-    integrable_smul_measure (by simpa : Ennreal.ofReal (abs c⁻¹) ≠ 0) Ennreal.of_real_ne_top, ← integrable_on,
+    integrable_smul_measure (by simpa : Ennreal.ofReal (|c⁻¹|) ≠ 0) Ennreal.of_real_ne_top, ← integrable_on,
     MeasurableEmbedding.integrable_on_map_iff A]
   convert hf using 1
   · ext
@@ -550,7 +550,7 @@ theorem norm_interval_integral_eq (f : ℝ → E) (a b : ℝ) (μ : Measure ℝ)
   split_ifs <;> simp only [norm_neg, norm_one, one_mul]
 
 theorem abs_interval_integral_eq (f : ℝ → ℝ) (a b : ℝ) (μ : Measure ℝ) :
-    abs (∫ x in a..b, f x ∂μ) = abs (∫ x in Ι a b, f x ∂μ) :=
+    |∫ x in a..b, f x ∂μ| = |∫ x in Ι a b, f x ∂μ| :=
   norm_interval_integral_eq f a b μ
 
 theorem integral_cases (f : ℝ → E) (a b) :
@@ -582,7 +582,7 @@ theorem norm_integral_min_max (f : ℝ → E) : ∥∫ x in min a b..max a b, f 
 theorem norm_integral_eq_norm_integral_Ioc (f : ℝ → E) : ∥∫ x in a..b, f x ∂μ∥ = ∥∫ x in Ι a b, f x ∂μ∥ := by
   rw [← norm_integral_min_max, integral_of_le min_le_max, interval_oc]
 
-theorem abs_integral_eq_abs_integral_interval_oc (f : ℝ → ℝ) : abs (∫ x in a..b, f x ∂μ) = abs (∫ x in Ι a b, f x ∂μ) :=
+theorem abs_integral_eq_abs_integral_interval_oc (f : ℝ → ℝ) : |∫ x in a..b, f x ∂μ| = |∫ x in Ι a b, f x ∂μ| :=
   norm_integral_eq_norm_integral_Ioc f
 
 theorem norm_integral_le_integral_norm_Ioc : ∥∫ x in a..b, f x ∂μ∥ ≤ ∫ x in Ι a b, ∥f x∥ ∂μ :=
@@ -591,7 +591,7 @@ theorem norm_integral_le_integral_norm_Ioc : ∥∫ x in a..b, f x ∂μ∥ ≤ 
     _ ≤ ∫ x in Ι a b, ∥f x∥ ∂μ := norm_integral_le_integral_norm f
     
 
-theorem norm_integral_le_abs_integral_norm : ∥∫ x in a..b, f x ∂μ∥ ≤ abs (∫ x in a..b, ∥f x∥ ∂μ) := by
+theorem norm_integral_le_abs_integral_norm : ∥∫ x in a..b, f x ∂μ∥ ≤ |∫ x in a..b, ∥f x∥ ∂μ| := by
   simp only [← Real.norm_eq_abs, norm_integral_eq_norm_integral_Ioc]
   exact le_trans (norm_integral_le_integral_norm _) (le_abs_self _)
 
@@ -599,13 +599,13 @@ theorem norm_integral_le_integral_norm (h : a ≤ b) : ∥∫ x in a..b, f x ∂
   norm_integral_le_integral_norm_Ioc.trans_eq <| by rw [interval_oc_of_le h, integral_of_le h]
 
 theorem norm_integral_le_of_norm_le {g : ℝ → ℝ} (h : ∀ᵐ t ∂μ.restrict <| Ι a b, ∥f t∥ ≤ g t)
-    (hbound : IntervalIntegrable g μ a b) : ∥∫ t in a..b, f t ∂μ∥ ≤ abs (∫ t in a..b, g t ∂μ) := by
+    (hbound : IntervalIntegrable g μ a b) : ∥∫ t in a..b, f t ∂μ∥ ≤ |∫ t in a..b, g t ∂μ| := by
   simp_rw [norm_interval_integral_eq, abs_interval_integral_eq,
     abs_eq_self.mpr (integral_nonneg_of_ae <| h.mono fun t ht => (norm_nonneg _).trans ht),
     norm_integral_le_of_norm_le hbound.def h]
 
 theorem norm_integral_le_of_norm_le_const_ae {a b C : ℝ} {f : ℝ → E} (h : ∀ᵐ x, x ∈ Ι a b → ∥f x∥ ≤ C) :
-    ∥∫ x in a..b, f x∥ ≤ C * abs (b - a) := by
+    ∥∫ x in a..b, f x∥ ≤ C * |b - a| := by
   rw [norm_integral_eq_norm_integral_Ioc]
   convert norm_set_integral_le_of_norm_le_const_ae'' _ measurableSetIoc h
   · rw [Real.volume_Ioc, max_sub_min_eq_abs, Ennreal.to_real_of_real (abs_nonneg _)]
@@ -614,7 +614,7 @@ theorem norm_integral_le_of_norm_le_const_ae {a b C : ℝ} {f : ℝ → E} (h : 
     
 
 theorem norm_integral_le_of_norm_le_const {a b C : ℝ} {f : ℝ → E} (h : ∀ x ∈ Ι a b, ∥f x∥ ≤ C) :
-    ∥∫ x in a..b, f x∥ ≤ C * abs (b - a) :=
+    ∥∫ x in a..b, f x∥ ≤ C * |b - a| :=
   norm_integral_le_of_norm_le_const_ae <| eventually_of_forall h
 
 @[simp]
@@ -1248,7 +1248,7 @@ theorem integral_nonneg_of_forall (hab : a ≤ b) (hf : ∀ u, 0 ≤ f u) : 0 �
 theorem integral_nonneg (hab : a ≤ b) (hf : ∀ u, u ∈ IccCat a b → 0 ≤ f u) : 0 ≤ ∫ u in a..b, f u ∂μ :=
   integral_nonneg_of_ae_restrict hab <| (ae_restrict_iff' measurableSetIcc).mpr <| ae_of_all μ hf
 
-theorem abs_integral_le_integral_abs (hab : a ≤ b) : abs (∫ x in a..b, f x ∂μ) ≤ ∫ x in a..b, abs (f x) ∂μ := by
+theorem abs_integral_le_integral_abs (hab : a ≤ b) : |∫ x in a..b, f x ∂μ| ≤ ∫ x in a..b, |f x| ∂μ := by
   simpa only [← Real.norm_eq_abs] using norm_integral_le_integral_norm hab
 
 section Mono
@@ -1280,14 +1280,14 @@ theorem integral_mono_interval {c d} (hca : c ≤ a) (hab : a ≤ b) (hbd : b �
   exact set_integral_mono_set hfi.1 hf (Ioc_subset_Ioc hca hbd).EventuallyLe
 
 theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[μ.restrict (Ι c d)] f)
-    (hfi : IntervalIntegrable f μ c d) : abs (∫ x in a..b, f x ∂μ) ≤ abs (∫ x in c..d, f x ∂μ) :=
+    (hfi : IntervalIntegrable f μ c d) : |∫ x in a..b, f x ∂μ| ≤ |∫ x in c..d, f x ∂μ| :=
   have hf' : 0 ≤ᵐ[μ.restrict (Ι a b)] f := ae_mono (Measure.restrict_mono h le_rfl) hf
   calc
-    abs (∫ x in a..b, f x ∂μ) = abs (∫ x in Ι a b, f x ∂μ) := abs_integral_eq_abs_integral_interval_oc f
+    |∫ x in a..b, f x ∂μ| = |∫ x in Ι a b, f x ∂μ| := abs_integral_eq_abs_integral_interval_oc f
     _ = ∫ x in Ι a b, f x ∂μ := abs_of_nonneg (MeasureTheory.integral_nonneg_of_ae hf')
     _ ≤ ∫ x in Ι c d, f x ∂μ := set_integral_mono_set hfi.def hf h.EventuallyLe
-    _ ≤ abs (∫ x in Ι c d, f x ∂μ) := le_abs_self _
-    _ = abs (∫ x in c..d, f x ∂μ) := (abs_integral_eq_abs_integral_interval_oc f).symm
+    _ ≤ |∫ x in Ι c d, f x ∂μ| := le_abs_self _
+    _ = |∫ x in c..d, f x ∂μ| := (abs_integral_eq_abs_integral_interval_oc f).symm
     
 
 end Mono

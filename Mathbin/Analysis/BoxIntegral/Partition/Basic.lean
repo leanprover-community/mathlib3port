@@ -532,7 +532,7 @@ theorem Union_filter_not (π : Prepartition I) (p : Box ι → Prop) :
     (π.filter fun J => ¬p J).UnionCat = π.UnionCat \ (π.filter p).UnionCat := by
   simp only [prepartition.Union]
   convert (@Set.bUnion_diff_bUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
-  · ext J x
+  · ext (J x)
     simp (config := { contextual := true })
     
   · convert π.pairwise_disjoint
@@ -626,7 +626,7 @@ theorem Union_eq (h : π.IsPartition) : π.UnionCat = I :=
 theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.UnionCat ⊆ π.UnionCat :=
   h.Union_eq.symm ▸ π₁.Union_subset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (J «expr ∈ » π) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (J «expr ∈ » π) -/
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J := by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro₂ J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx

@@ -144,18 +144,24 @@ open Nat
 
 open Nat.Upto OmegaCompletePartialOrder
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr approx f i.succ x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
   apply le_antisymm
   · intro x
     cases' exists_fix_le_approx f x with i hx
-    trans' approx f i.succ x
-    · trans'
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr approx f i.succ x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    · trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       apply hx
       apply approx_mono' f
       
-    apply' le_ωSup_of_le i.succ
+    apply le_ωSup_of_le i.succ
     dsimp [approx]
-    rfl'
+    rfl
     
   · apply ωSup_le _ _ _
     simp only [fix.approx_chain, OrderHom.coe_fun_mk]
@@ -163,6 +169,8 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
     apply approx_le_fix f
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr f X]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := by
   rw [fix_eq_ωSup f]
   apply ωSup_le _ _ _
@@ -170,8 +178,9 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := 
   intro i
   induction i
   dsimp [fix.approx]
-  apply' bot_le
-  trans' f X
+  apply bot_le
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr f X]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   apply f.monotone i_ih
   apply hX
 
@@ -192,7 +201,7 @@ theorem fix_eq : Part.fix f = f (Part.fix f) := by
   · apply ωSup_le_ωSup_of_le _
     intro i
     exists i.succ
-    rfl'
+    rfl
     
 
 end Part
@@ -247,13 +256,13 @@ variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 open OmegaCompletePartialOrder.Chain
 
 theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c => by
-  ext x y
+  ext (x y)
   dsimp [curry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
 theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c => by
-  ext x y
+  ext (x y)
   dsimp [uncurry, ωSup]
   rw [map_comp, map_comp]
   rfl

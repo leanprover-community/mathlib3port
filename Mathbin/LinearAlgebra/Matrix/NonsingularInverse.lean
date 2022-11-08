@@ -199,10 +199,10 @@ theorem is_unit_det_of_right_inverse (h : A ⬝ B = 1) : IsUnit A.det :=
   @is_unit_of_invertible _ _ _ (detInvertibleOfRightInverse _ _ h)
 
 theorem det_ne_zero_of_left_inverse [Nontrivial α] (h : B ⬝ A = 1) : A.det ≠ 0 :=
-  (is_unit_det_of_left_inverse h).ne_zero
+  (is_unit_det_of_left_inverse h).NeZero
 
 theorem det_ne_zero_of_right_inverse [Nontrivial α] (h : A ⬝ B = 1) : A.det ≠ 0 :=
-  (is_unit_det_of_right_inverse h).ne_zero
+  (is_unit_det_of_right_inverse h).NeZero
 
 end Invertible
 
@@ -570,7 +570,7 @@ of the Schur complement. -/
 theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α) (D : Matrix n n α) [Invertible D] :
     (Matrix.fromBlocks A B C D).det = det D * det (A - B ⬝ ⅟ D ⬝ C) := by
   have : from_blocks A B C D = (from_blocks D C B A).submatrix (sum_comm _ _) (sum_comm _ _) := by
-    ext i j
+    ext (i j)
     cases i <;> cases j <;> rfl
   rw [this, det_submatrix_equiv_self, det_from_blocks₁₁]
 

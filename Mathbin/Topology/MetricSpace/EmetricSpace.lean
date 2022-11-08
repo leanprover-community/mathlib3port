@@ -258,7 +258,7 @@ namespace Emetric
 instance (priority := 900) : IsCountablyGenerated (𝓤 α) :=
   is_countably_generated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infi⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection {a b «expr ∈ » s} -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection {a b «expr ∈ » s} -/
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniform_continuous_on_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -297,7 +297,7 @@ theorem controlled_of_uniform_embedding [PseudoEmetricSpace β] {f : α → β} 
   intro h
   exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 /-- ε-δ characterization of Cauchy sequences on pseudoemetric spaces -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ f ≠ ⊥ ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), edist x y < ε := by
@@ -671,7 +671,7 @@ theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α
 theorem inseparable_iff : Inseparable x y ↔ edist x y = 0 := by
   simp [inseparable_iff_mem_closure, mem_closure_iff, edist_comm, forall_lt_iff_le']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudoemetric space, Cauchy sequences are characterized by the fact that, eventually,
 the pseudoedistance between its elements is arbitrarily small -/
@@ -697,7 +697,7 @@ theorem totally_bounded_iff {s : Set α} : TotallyBounded s ↔ ∀ ε > 0, ∃ 
     let ⟨t, ft, h⟩ := H ε ε0
     ⟨t, ft, h.trans <| Union₂_mono fun y yt z => hε⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totally_bounded_iff' {s : Set α} :
     TotallyBounded s ↔ ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
   ⟨fun H ε ε0 => (totally_bounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
@@ -707,7 +707,7 @@ theorem totally_bounded_iff' {s : Set α} :
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- For a set `s` in a pseudo emetric space, if for every `ε > 0` there exists a countable
 set that is `ε`-dense in `s`, then there exists a countable subset `t ⊆ s` that is dense in `s`. -/
 theorem subset_countable_closure_of_almost_dense_set (s : Set α)
@@ -744,7 +744,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     _ < ε := Ennreal.mul_lt_of_lt_div hn
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a
 countable set.  -/
 theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
@@ -1038,7 +1038,7 @@ end Pi
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in an emetric space is separable, i.e., it is the closure of a countable set. -/
 theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
     ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s = Closure t := by

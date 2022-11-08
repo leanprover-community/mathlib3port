@@ -104,7 +104,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
             rintro ⟨obj, map⟩
             dsimp only [Prefunctor.comp]
             congr
-            ext X Y f
+            ext (X Y f)
             exact category.id_comp _ },
       hom_equiv_naturality_left_symm' := fun V W C f g => by
         change (show paths V ⥤ _ from _) = _

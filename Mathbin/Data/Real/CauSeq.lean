@@ -31,6 +31,8 @@ open BigOperators
 
 open IsAbsoluteValue
 
+variable {G α β : Type _}
+
 theorem exists_forall_ge_and {α} [LinearOrder α] {P Q : α → Prop} :
     (∃ i, ∀ j ≥ i, P j) → (∃ i, ∀ j ≥ i, Q j) → ∃ i, ∀ j ≥ i, P j ∧ Q j
   | ⟨a, h₁⟩, ⟨b, h₂⟩ =>
@@ -39,7 +41,7 @@ theorem exists_forall_ge_and {α} [LinearOrder α] {P Q : α → Prop} :
 
 section
 
-variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ring β] (abv : β → α) [IsAbsoluteValue abv]
+variable [LinearOrderedField α] [Ring β] (abv : β → α) [IsAbsoluteValue abv]
 
 theorem rat_add_continuous_lemma {ε : α} (ε0 : 0 < ε) :
     ∃ δ > 0, ∀ {a₁ a₂ b₁ b₂ : β}, abv (a₁ - b₁) < δ → abv (a₂ - b₂) < δ → abv (a₁ + a₂ - (b₁ + b₂)) < ε :=
@@ -82,9 +84,9 @@ def IsCauSeq {α : Type _} [LinearOrderedField α] {β : Type _} [Ring β] (abv 
 
 namespace IsCauSeq
 
-variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ring β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
+variable [LinearOrderedField α] [Ring β] {abv : β → α} [IsAbsoluteValue abv] {f g : ℕ → β}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j k «expr ≥ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j k «expr ≥ » i) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) :
@@ -99,6 +101,13 @@ theorem cauchy₃ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j 
   let ⟨i, H⟩ := hf.cauchy₂ ε0
   ⟨i, fun j ij k jk => H _ (le_trans ij jk) _ ij⟩
 
+theorem add (hf : IsCauSeq abv f) (hg : IsCauSeq abv g) : IsCauSeq abv (f + g) := fun ε ε0 =>
+  let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abv ε0
+  let ⟨i, H⟩ := exists_forall_ge_and (hf.cauchy₃ δ0) (hg.cauchy₃ δ0)
+  ⟨i, fun j ij =>
+    let ⟨H₁, H₂⟩ := H _ le_rfl
+    Hδ (H₁ _ ij) (H₂ _ ij)⟩
+
 end IsCauSeq
 
 /-- `cau_seq β abv` is the type of `β`-valued Cauchy sequences, with respect to the absolute value
@@ -108,11 +117,11 @@ def CauSeq {α : Type _} [LinearOrderedField α] (β : Type _) [Ring β] (abv : 
 
 namespace CauSeq
 
-variable {α : Type _} [LinearOrderedField α]
+variable [LinearOrderedField α]
 
 section Ring
 
-variable {β : Type _} [Ring β] {abv : β → α}
+variable [Ring β] {abv : β → α}
 
 instance : CoeFun (CauSeq β abv) fun _ => ℕ → β :=
   ⟨Subtype.val⟩
@@ -137,7 +146,7 @@ def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β
 
 variable [IsAbsoluteValue abv]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j k «expr ≥ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j k «expr ≥ » i) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ (j k) (_ : j ≥ i) (_ : k ≥ i), abv (f j - f k) < ε :=
@@ -172,15 +181,13 @@ theorem bounded' (f : CauSeq β abv) (x : α) : ∃ r > x, ∀ i, abv (f i) < r 
   ⟨max r (x + 1), lt_of_lt_of_le (lt_add_one _) (le_max_right _ _), fun i => lt_of_lt_of_le (h i) (le_max_left _ _)⟩
 
 instance : Add (CauSeq β abv) :=
-  ⟨fun f g =>
-    ⟨fun i => (f i + g i : β), fun ε ε0 =>
-      let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abv ε0
-      let ⟨i, H⟩ := exists_forall_ge_and (f.cauchy₃ δ0) (g.cauchy₃ δ0)
-      ⟨i, fun j ij =>
-        let ⟨H₁, H₂⟩ := H _ le_rfl
-        Hδ (H₁ _ ij) (H₂ _ ij)⟩⟩⟩
+  ⟨fun f g => ⟨f + g, f.2.add g.2⟩⟩
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_add (f g : CauSeq β abv) : ⇑(f + g) = f + g :=
+  rfl
+
+@[simp, norm_cast]
 theorem add_apply (f g : CauSeq β abv) (i : ℕ) : (f + g) i = f i + g i :=
   rfl
 
@@ -195,7 +202,11 @@ variable {abv}
 -- mathport name: exprconst
 local notation "const" => const abv
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_const (x : β) : ⇑(const x) = Function.const _ x :=
+  rfl
+
+@[simp, norm_cast]
 theorem const_apply (x : β) (i : ℕ) : (const x : ℕ → β) i = x :=
   rfl
 
@@ -211,11 +222,19 @@ instance : One (CauSeq β abv) :=
 instance : Inhabited (CauSeq β abv) :=
   ⟨0⟩
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_zero : ⇑(0 : CauSeq β abv) = 0 :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_one : ⇑(1 : CauSeq β abv) = 1 :=
+  rfl
+
+@[simp, norm_cast]
 theorem zero_apply (i) : (0 : CauSeq β abv) i = 0 :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem one_apply (i) : (1 : CauSeq β abv) i = 1 :=
   rfl
 
@@ -223,12 +242,16 @@ theorem one_apply (i) : (1 : CauSeq β abv) i = 1 :=
 theorem const_zero : const 0 = 0 :=
   rfl
 
+@[simp]
+theorem const_one : const 1 = 1 :=
+  rfl
+
 theorem const_add (x y : β) : const (x + y) = const x + const y :=
   rfl
 
 instance : Mul (CauSeq β abv) :=
   ⟨fun f g =>
-    ⟨fun i => (f i * g i : β), fun ε ε0 =>
+    ⟨f * g, fun ε ε0 =>
       let ⟨F, F0, hF⟩ := f.bounded' 0
       let ⟨G, G0, hG⟩ := g.bounded' 0
       let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abv ε0
@@ -237,38 +260,70 @@ instance : Mul (CauSeq β abv) :=
         let ⟨H₁, H₂⟩ := H _ le_rfl
         Hδ (hF j) (hG i) (H₁ _ ij) (H₂ _ ij)⟩⟩⟩
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_mul (f g : CauSeq β abv) : ⇑(f * g) = f * g :=
+  rfl
+
+@[simp, norm_cast]
 theorem mul_apply (f g : CauSeq β abv) (i : ℕ) : (f * g) i = f i * g i :=
   rfl
 
 theorem const_mul (x y : β) : const (x * y) = const x * const y :=
-  ext fun i => rfl
+  rfl
 
 instance : Neg (CauSeq β abv) :=
   ⟨fun f => ofEq (const (-1) * f) (fun x => -f x) fun i => by simp⟩
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_neg (f : CauSeq β abv) : ⇑(-f) = -f :=
+  rfl
+
+@[simp, norm_cast]
 theorem neg_apply (f : CauSeq β abv) (i) : (-f) i = -f i :=
   rfl
 
 theorem const_neg (x : β) : const (-x) = -const x :=
-  ext fun i => rfl
+  rfl
 
 instance : Sub (CauSeq β abv) :=
   ⟨fun f g => ofEq (f + -g) (fun x => f x - g x) fun i => by simp [sub_eq_add_neg]⟩
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_sub (f g : CauSeq β abv) : ⇑(f - g) = f - g :=
+  rfl
+
+@[simp, norm_cast]
 theorem sub_apply (f g : CauSeq β abv) (i : ℕ) : (f - g) i = f i - g i :=
   rfl
 
 theorem const_sub (x y : β) : const (x - y) = const x - const y :=
-  ext fun i => rfl
+  rfl
+
+section HasSmul
+
+variable [HasSmul G β] [IsScalarTower G β β]
+
+instance : HasSmul G (CauSeq β abv) :=
+  ⟨fun a f => (ofEq (const (a • 1) * f) (a • f)) fun i => smul_one_mul _ _⟩
+
+@[simp, norm_cast]
+theorem coe_smul (a : G) (f : CauSeq β abv) : ⇑(a • f) = a • f :=
+  rfl
+
+@[simp, norm_cast]
+theorem smul_apply (a : G) (f : CauSeq β abv) (i : ℕ) : (a • f) i = a • f i :=
+  rfl
+
+theorem const_smul (a : G) (x : β) : const (a • x) = a • const x :=
+  rfl
+
+end HasSmul
 
 instance : AddGroup (CauSeq β abv) := by
   refine_struct
-      { add := (· + ·), neg := Neg.neg, zero := (0 : CauSeq β abv), sub := Sub.sub,
-        zsmul := @zsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩, nsmul := @nsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩ } <;>
-    intros <;> try rfl <;> apply ext <;> simp [add_comm, add_left_comm, sub_eq_add_neg]
+      { add := (· + ·), neg := Neg.neg, zero := (0 : CauSeq β abv), sub := Sub.sub, zsmul := (· • ·),
+        nsmul := (· • ·) } <;>
+    intros <;> try rfl <;> apply ext <;> simp [add_comm, add_left_comm, sub_eq_add_neg, add_mul]
 
 instance : AddGroupWithOne (CauSeq β abv) :=
   { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_arg const Nat.cast_zero,
@@ -276,11 +331,26 @@ instance : AddGroupWithOne (CauSeq β abv) :=
     int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n),
     int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_negSucc n) }
 
+instance : Pow (CauSeq β abv) ℕ :=
+  ⟨fun f n => (ofEq (npowRec n f) fun i => f i ^ n) <| by induction n <;> simp [*, npowRec, pow_succ]⟩
+
+@[simp, norm_cast]
+theorem coe_pow (f : CauSeq β abv) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
+  rfl
+
+@[simp, norm_cast]
+theorem pow_apply (f : CauSeq β abv) (n i : ℕ) : (f ^ n) i = f i ^ n :=
+  rfl
+
+theorem const_pow (x : β) (n : ℕ) : const (x ^ n) = const x ^ n :=
+  rfl
+
 instance : Ring (CauSeq β abv) := by
   refine_struct
       { CauSeq.addGroupWithOne with add := (· + ·), zero := (0 : CauSeq β abv), mul := (· * ·), one := 1,
-        npow := @npowRec (CauSeq β abv) ⟨1⟩ ⟨(· * ·)⟩ } <;>
-    intros <;> try rfl <;> apply ext <;> simp [mul_add, mul_assoc, add_mul, add_comm, add_left_comm, sub_eq_add_neg]
+        npow := fun n f => f ^ n } <;>
+    intros <;>
+      try rfl <;> apply ext <;> simp [mul_add, mul_assoc, add_mul, add_comm, add_left_comm, sub_eq_add_neg, pow_succ]
 
 instance {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv] : CommRing (CauSeq β abv) :=
   { CauSeq.ring with mul_comm := by intros <;> apply ext <;> simp [mul_left_comm, mul_comm] }
@@ -409,7 +479,7 @@ end Ring
 
 section CommRing
 
-variable {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv]
+variable [CommRing β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem mul_equiv_zero' (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : f * g ≈ 0 := by
   rw [mul_comm] <;> apply mul_equiv_zero _ hf
@@ -422,7 +492,7 @@ end CommRing
 
 section IsDomain
 
-variable {β : Type _} [Ring β] [IsDomain β] (abv : β → α) [IsAbsoluteValue abv]
+variable [Ring β] [IsDomain β] (abv : β → α) [IsAbsoluteValue abv]
 
 theorem one_not_equiv_zero : ¬const abv 1 ≈ const abv 0 := fun h =>
   have : ∀ ε > 0, ∃ i, ∀ k, i ≤ k → abv (1 - 0) < ε := h
@@ -438,7 +508,7 @@ end IsDomain
 
 section Field
 
-variable {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv]
+variable [Field β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem inv_aux {f : CauSeq β abv} (hf : ¬LimZero f) : ∀ ε > 0, ∃ i, ∀ j ≥ i, abv ((f j)⁻¹ - (f i)⁻¹) < ε
   | ε, ε0 =>
@@ -454,7 +524,11 @@ the inverses of the values of `f`. -/
 def inv (f : CauSeq β abv) (hf : ¬LimZero f) : CauSeq β abv :=
   ⟨_, inv_aux hf⟩
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_inv {f : CauSeq β abv} (hf) : ⇑(inv f hf) = f⁻¹ :=
+  rfl
+
+@[simp, norm_cast]
 theorem inv_apply {f : CauSeq β abv} (hf i) : inv f hf i = (f i)⁻¹ :=
   rfl
 
@@ -463,7 +537,7 @@ theorem inv_mul_cancel {f : CauSeq β abv} (hf) : inv f hf * f ≈ 1 := fun ε �
   ⟨i, fun j ij => by simpa [(abv_pos abv).1 (lt_of_lt_of_le K0 (H _ ij)), abv_zero abv] using ε0⟩
 
 theorem const_inv {x : β} (hx : x ≠ 0) : const abv x⁻¹ = inv (const abv x) (by rwa [const_lim_zero]) :=
-  ext fun n => by simp [inv_apply, const_apply]
+  rfl
 
 end Field
 

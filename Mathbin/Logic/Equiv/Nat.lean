@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Nat.Pairing
-import Mathbin.Data.Pnat.Basic
+import Mathbin.Data.Pnat.Defs
 
 /-!
 # Equivalences involving `ℕ`

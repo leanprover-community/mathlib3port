@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
 import Mathbin.Algebra.Associated
+import Mathbin.Algebra.Field.Power
+import Mathbin.Algebra.Order.Field.Power
 
 /-!  # Squares, even and odd elements
 
@@ -176,7 +178,7 @@ theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow,
 
 end DivisionMonoid
 
-theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (abs a) ↔ Even a := by
+theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (|a|) ↔ Even a := by
   cases abs_choice a <;> simp only [h, even_neg]
 
 @[to_additive]
@@ -404,12 +406,12 @@ theorem Even.pow_pos_iff (hn : Even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=
     rw [ha, zero_pow h₀] at h
     exact lt_irrefl 0 h, hn.pow_pos⟩
 
-theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : abs a ^ p = a ^ p := by
+theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : |a| ^ p = a ^ p := by
   rw [← abs_pow, abs_eq_self]
   exact hp.pow_nonneg _
 
 @[simp]
-theorem pow_bit0_abs (a : R) (p : ℕ) : abs a ^ bit0 p = a ^ bit0 p :=
+theorem pow_bit0_abs (a : R) (p : ℕ) : |a| ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 
 theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
@@ -464,19 +466,19 @@ theorem Odd.zpow_nonpos (hn : Odd n) (ha : a ≤ 0) : a ^ n ≤ 0 := by
 theorem Odd.zpow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_neg_iff.mpr ha
 
-theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : abs a ^ p = a ^ p := by
+theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : |a| ^ p = a ^ p := by
   cases' abs_choice a with h h <;> simp only [h, hp.neg_zpow _]
 
 @[simp]
-theorem zpow_bit0_abs (a : K) (p : ℤ) : abs a ^ bit0 p = a ^ bit0 p :=
+theorem zpow_bit0_abs (a : K) (p : ℤ) : |a| ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).zpow_abs _
 
-theorem Even.abs_zpow {p : ℤ} (hp : Even p) (a : K) : abs (a ^ p) = a ^ p := by
+theorem Even.abs_zpow {p : ℤ} (hp : Even p) (a : K) : |a ^ p| = a ^ p := by
   rw [abs_eq_self]
   exact hp.zpow_nonneg _
 
 @[simp]
-theorem abs_zpow_bit0 (a : K) (p : ℤ) : abs (a ^ bit0 p) = a ^ bit0 p :=
+theorem abs_zpow_bit0 (a : K) (p : ℤ) : |a ^ bit0 p| = a ^ bit0 p :=
   (even_bit0 _).abs_zpow _
 
 end FieldPower

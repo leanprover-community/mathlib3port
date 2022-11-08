@@ -7,6 +7,7 @@ import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Analysis.Asymptotics.Asymptotics
 import Mathbin.Analysis.NormedSpace.LinearIsometry
 import Mathbin.Analysis.NormedSpace.RieszLemma
+import Mathbin.Topology.Algebra.Module.StrongTopology
 
 /-!
 # Operator norm on the space of continuous linear maps
@@ -380,10 +381,93 @@ theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' 
     exact mul_le_mul_of_nonneg_left (le_op_norm _ _) (norm_nonneg _)
 
 /-- Continuous linear maps themselves form a seminormed space with respect to
-    the operator norm. -/
-instance toSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F) :=
+the operator norm. This is only a temporary definition because we want to replace the topology
+with `continuous_linear_map.topological_space` to avoid diamond issues.
+See Note [forgetful inheritance] -/
+protected def tmpSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F) :=
   AddGroupSeminorm.toSeminormedAddCommGroup
     { toFun := norm, map_zero' := op_norm_zero, add_le' := op_norm_add_le, neg' := op_norm_neg }
+
+/-- The `pseudo_metric_space` structure on `E →SL[σ₁₂] F` coming from
+`continuous_linear_map.tmp_seminormed_add_comm_group`.
+See Note [forgetful inheritance] -/
+protected def tmpPseudoMetricSpace : PseudoMetricSpace (E →SL[σ₁₂] F) :=
+  ContinuousLinearMap.tmpSeminormedAddCommGroup.toPseudoMetricSpace
+
+/-- The `uniform_space` structure on `E →SL[σ₁₂] F` coming from
+`continuous_linear_map.tmp_seminormed_add_comm_group`.
+See Note [forgetful inheritance] -/
+protected def tmpUniformSpace : UniformSpace (E →SL[σ₁₂] F) :=
+  ContinuousLinearMap.tmpPseudoMetricSpace.toUniformSpace
+
+/-- The `topological_space` structure on `E →SL[σ₁₂] F` coming from
+`continuous_linear_map.tmp_seminormed_add_comm_group`.
+See Note [forgetful inheritance] -/
+protected def tmpTopologicalSpace : TopologicalSpace (E →SL[σ₁₂] F) :=
+  ContinuousLinearMap.tmpUniformSpace.toTopologicalSpace
+
+section Tmp
+
+attribute [-instance] ContinuousLinearMap.topologicalSpace
+
+attribute [-instance] ContinuousLinearMap.uniformSpace
+
+attribute [local instance] ContinuousLinearMap.tmpSeminormedAddCommGroup
+
+protected theorem tmp_topological_add_group : TopologicalAddGroup (E →SL[σ₁₂] F) :=
+  inferInstance
+
+protected theorem tmp_closed_ball_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
+    ClosedBall (0 : E →SL[σ₁₂] F) (a / b) ⊆ { f | ∀ x ∈ ClosedBall (0 : E) b, f x ∈ ClosedBall (0 : F) a } := by
+  intro f hf x hx
+  rw [mem_closed_ball_zero_iff] at hf hx⊢
+  calc
+    ∥f x∥ ≤ ∥f∥ * ∥x∥ := le_op_norm _ _
+    _ ≤ a / b * b := mul_le_mul hf hx (norm_nonneg _) (div_pos ha hb).le
+    _ = a := div_mul_cancel a hb.ne.symm
+    
+
+end Tmp
+
+protected theorem tmp_topology_eq :
+    (ContinuousLinearMap.tmpTopologicalSpace : TopologicalSpace (E →SL[σ₁₂] F)) =
+      ContinuousLinearMap.topologicalSpace :=
+  by
+  refine'
+    continuous_linear_map.tmp_topological_add_group.ext inferInstance
+      ((@Metric.nhds_basis_closed_ball _ ContinuousLinearMap.tmpPseudoMetricSpace 0).ext
+        (ContinuousLinearMap.has_basis_nhds_zero_of_basis Metric.nhds_basis_closed_ball) _ _)
+  · rcases NormedField.exists_norm_lt_one 𝕜 with ⟨c, hc₀, hc₁⟩
+    refine' fun ε hε => ⟨⟨closed_ball 0 (1 / ∥c∥), ε⟩, ⟨NormedSpace.isVonNBoundedClosedBall _ _ _, hε⟩, fun f hf => _⟩
+    change ∀ x, _ at hf
+    simp_rw [mem_closed_ball_zero_iff] at hf
+    rw [@mem_closed_ball_zero_iff _ SeminormedAddCommGroup.toSeminormedAddGroup]
+    refine' op_norm_le_of_shell' (div_pos one_pos hc₀) hε.le hc₁ fun x hx₁ hxc => _
+    rw [div_mul_cancel 1 hc₀.ne.symm] at hx₁
+    exact (hf x hxc.le).trans (le_mul_of_one_le_right hε.le hx₁)
+    
+  · rintro ⟨S, ε⟩ ⟨hS, hε⟩
+    rw [NormedSpace.is_vonN_bounded_iff, ← bounded_iff_is_bounded] at hS
+    rcases hS.subset_ball_lt 0 0 with ⟨δ, hδ, hSδ⟩
+    exact
+      ⟨ε / δ, div_pos hε hδ,
+        (ContinuousLinearMap.tmp_closed_ball_div_subset hε hδ).trans fun f hf x hx => hf x <| hSδ hx⟩
+    
+
+protected theorem tmp_uniform_space_eq :
+    (ContinuousLinearMap.tmpUniformSpace : UniformSpace (E →SL[σ₁₂] F)) = ContinuousLinearMap.uniformSpace := by
+  rw [← @UniformAddGroup.to_uniform_space_eq _ ContinuousLinearMap.tmpUniformSpace, ←
+    @UniformAddGroup.to_uniform_space_eq _ ContinuousLinearMap.uniformSpace]
+  congr 1
+  exact ContinuousLinearMap.tmp_topology_eq
+
+instance toPseudoMetricSpace : PseudoMetricSpace (E →SL[σ₁₂] F) :=
+  ContinuousLinearMap.tmpPseudoMetricSpace.replaceUniformity (congr_arg _ ContinuousLinearMap.tmp_uniform_space_eq.symm)
+
+/-- Continuous linear maps themselves form a seminormed space with respect to
+    the operator norm. -/
+instance toSeminormedAddCommGroup :
+    SeminormedAddCommGroup (E →SL[σ₁₂] F) where dist_eq := ContinuousLinearMap.tmpSeminormedAddCommGroup.dist_eq
 
 theorem nnnorm_def (f : E →SL[σ₁₂] F) : ∥f∥₊ = inf { c | ∀ x, ∥f x∥₊ ≤ c * ∥x∥₊ } := by
   ext
@@ -1313,9 +1397,7 @@ instance norm_one_class [Nontrivial E] : NormOneClass (E →L[𝕜] E) :=
 /-- Continuous linear maps themselves form a normed space with respect to
     the operator norm. -/
 instance toNormedAddCommGroup [RingHomIsometric σ₁₂] : NormedAddCommGroup (E →SL[σ₁₂] F) :=
-  AddGroupNorm.toNormedAddCommGroup
-    { toFun := norm, map_zero' := op_norm_zero, neg' := op_norm_neg, add_le' := op_norm_add_le,
-      eq_zero_of_map_eq_zero' := fun f => (op_norm_zero_iff f).1 }
+  NormedAddCommGroup.ofSeparation fun f => (op_norm_zero_iff f).mp
 
 /-- Continuous linear maps form a normed ring with respect to the operator norm. -/
 instance toNormedRing : NormedRing (E →L[𝕜] E) :=

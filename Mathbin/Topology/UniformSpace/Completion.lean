@@ -73,17 +73,17 @@ def Gen (s : Set (α × α)) : Set (CauchyCat α × CauchyCat α) :=
   { p | s ∈ p.1.val ×ᶠ p.2.val }
 
 theorem monotone_gen : Monotone gen :=
-  monotone_set_of fun p => @monotone_mem (α × α) (p.1.val ×ᶠ p.2.val)
+  monotone_set_of fun p => @Filter.monotone_mem _ (p.1.val ×ᶠ p.2.val)
 
 private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lift' gen :=
   calc
     map Prod.swap ((𝓤 α).lift' gen) = (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } := by
       delta gen
-      simp [map_lift'_eq, monotone_set_of, monotone_mem, Function.comp, image_swap_eq_preimage_swap,
+      simp [map_lift'_eq, monotone_set_of, Filter.monotone_mem, Function.comp, image_swap_eq_preimage_swap,
         -Subtype.val_eq_coe]
     _ ≤ (𝓤 α).lift' gen :=
       uniformity_lift_le_swap
-        (monotone_principal.comp (monotone_set_of fun p => @monotone_mem (α × α) (p.2.val ×ᶠ p.1.val)))
+        (monotone_principal.comp (monotone_set_of fun p => @Filter.monotone_mem _ (p.2.val ×ᶠ p.1.val)))
         (by
           have h := fun p : CauchyCat α × CauchyCat α => @Filter.prod_comm _ _ p.2.val p.1.val
           simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
@@ -185,7 +185,7 @@ theorem nonempty_Cauchy_iff : Nonempty (CauchyCat α) ↔ Nonempty α := by
 
 section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

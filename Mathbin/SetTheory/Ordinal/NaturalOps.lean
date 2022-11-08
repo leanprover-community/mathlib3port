@@ -203,7 +203,7 @@ variable (a b)
 theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
   | a, b => by
     rw [nadd_def, nadd_def, max_comm]
-    congr <;> ext c hc <;> apply nadd_comm
+    congr <;> ext (c hc) <;> apply nadd_comm
 
 theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
     blsub _ f =
@@ -225,7 +225,7 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i
 theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
   | a, b, c => by
     rw [nadd_def a (b ♯ c), nadd_def, blsub_nadd_of_mono, blsub_nadd_of_mono, max_assoc]
-    · congr <;> ext d hd <;> apply nadd_assoc
+    · congr <;> ext (d hd) <;> apply nadd_assoc
       
     · exact fun i j _ _ h => nadd_le_nadd_left h a
       
@@ -237,7 +237,7 @@ theorem nadd_zero : a ♯ 0 = a := by
   induction' a using Ordinal.induction with a IH
   rw [nadd_def, blsub_zero, max_zero_right]
   convert blsub_id a
-  ext b hb
+  ext (b hb)
   exact IH _ hb
 
 @[simp]

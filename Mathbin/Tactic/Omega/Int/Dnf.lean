@@ -218,7 +218,7 @@ theorem exists_clause_holds {v : Nat → Int} :
     · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [val_canonize, preterm.val, term.val_sub]
-      rw [le_sub, sub_zero]
+      rw [le_sub_comm, sub_zero]
       assumption
       
     

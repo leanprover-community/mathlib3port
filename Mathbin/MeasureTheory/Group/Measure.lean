@@ -105,28 +105,28 @@ theorem MeasurePreserving.mulRight (μ : Measure G) [IsMulRightInvariant μ] (g 
     {μ' : Measure X} {f : X → G} (hf : MeasurePreserving f μ' μ) : MeasurePreserving (fun x => f x * g) μ' μ :=
   (measurePreservingMulRight μ g).comp hf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map (((«expr * »)) g) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map (((«expr * »)) g) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- An alternative way to prove that `μ` is left invariant under multiplication. -/
 @[to_additive " An alternative way to prove that `μ` is left invariant under addition. "]
 theorem forall_measure_preimage_mul_iff (μ : Measure G) :
     (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map (((«expr * »)) g) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map (((«expr * »)) g) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · simp_rw [measure.ext_iff]
     refine' forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => _
     rw [map_apply (measurable_const_mul g) hA]
     
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map ((«expr * » g)) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map ((«expr * » g)) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- An alternative way to prove that `μ` is right invariant under multiplication. -/
 @[to_additive " An alternative way to prove that `μ` is right invariant under addition. "]
 theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
     (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map ((«expr * » g)) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ g, «expr = »(map ((«expr * » g)) μ, μ)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · simp_rw [measure.ext_iff]
     refine' forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => _
     rw [map_apply (measurable_mul_const g) hA]

@@ -52,13 +52,13 @@ theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id := by
 
 variable {σ R}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr aeval x (aeval (λ i, g (X i)) (f (X i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr aeval x (aeval (λ i, g (X i)) (f (X i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R)
     (x : υ → R) : comap (g.comp f) x = comap f (comap g x) := by
   funext i
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr aeval x (aeval (λ i, g (X i)) (f (X i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr aeval x (aeval (λ i, g (X i)) (f (X i)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply eval₂_hom_congr rfl rfl
     rw [AlgHom.comp_apply]
     suffices g = aeval fun i => g (X i) by rw [← this]

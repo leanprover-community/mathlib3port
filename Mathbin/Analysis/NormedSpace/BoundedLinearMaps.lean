@@ -206,7 +206,7 @@ theorem isBoundedLinearMapProdMultilinear {E : ι → Type _} [∀ i, NormedAddC
               (mul_le_mul_of_nonneg_right (norm_snd_le p) (Finset.prod_nonneg fun i hi => norm_nonneg _))
           ⟩ }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_nonneg, ",", expr pow_nonneg, ",", expr norm_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Given a fixed continuous linear map `g`, associating to a continuous multilinear map `f` the
 continuous multilinear map `f (g m₁, ..., g mₙ)` is a bounded linear operation. -/
 theorem isBoundedLinearMapContinuousMultilinearMapCompLinear (g : G →L[𝕜] E) :
@@ -222,7 +222,8 @@ theorem isBoundedLinearMapContinuousMultilinearMapCompLinear (g : G →L[𝕜] E
         rfl⟩
       (∥g∥ ^ Fintype.card ι) fun f => _
   apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
-  · apply_rules [mul_nonneg, pow_nonneg, norm_nonneg]
+  · trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr pow_nonneg, \",\", expr norm_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
   calc
     ∥f (g ∘ m)∥ ≤ ∥f∥ * ∏ i, ∥g (m i)∥ := f.le_op_norm _
@@ -256,7 +257,7 @@ variable {𝕜₂ 𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NontriviallyN
 
 variable {M : Type _} [TopologicalSpace M]
 
-variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+variable {σ₁₂ : 𝕜 →+* 𝕜₂}
 
 variable {G' : Type _} [NormedAddCommGroup G'] [NormedSpace 𝕜₂ G'] [NormedSpace 𝕜' G']
 
@@ -307,14 +308,16 @@ variable {𝕜}
 
 variable {f : E × F → G}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr le_max_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem ContinuousLinearMap.isBoundedBilinearMap (f : E →L[𝕜] F →L[𝕜] G) :
     IsBoundedBilinearMap 𝕜 fun x : E × F => f x.1 x.2 :=
   { add_left := f.map_add₂, smul_left := f.map_smul₂, add_right := fun x => (f x).map_add,
     smul_right := fun c x => (f x).map_smul c,
     bound :=
       ⟨max ∥f∥ 1, zero_lt_one.trans_le (le_max_right _ _), fun x y =>
-        (f.le_op_norm₂ x y).trans <| by apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, le_max_left]⟩ }
+        (f.le_op_norm₂ x y).trans <| by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr norm_nonneg, \",\", expr le_max_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"⟩ }
 
 protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) : f =O[⊤] fun p : E × F => ∥p.1∥ * ∥p.2∥ :=
   let ⟨C, Cpos, hC⟩ := h.bound
@@ -389,7 +392,7 @@ theorem IsBoundedBilinearMap.continuous_right (h : IsBoundedBilinearMap 𝕜 f) 
 theorem ContinuousLinearMap.continuous₂ (f : E →L[𝕜] F →L[𝕜] G) : Continuous (Function.uncurry fun x y => f x y) :=
   f.IsBoundedBilinearMap.Continuous
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt C_pos, ",", expr mul_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem IsBoundedBilinearMap.isBoundedLinearMapLeft (h : IsBoundedBilinearMap 𝕜 f) (y : F) :
     IsBoundedLinearMap 𝕜 fun x => f (x, y) :=
   { map_add := fun x x' => h.add_left _ _ _, map_smul := fun c x => h.smul_left _ _ _,
@@ -399,11 +402,15 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapLeft (h : IsBoundedBilinearMap �
       have : ∥y∥ ≤ ∥y∥ + 1 := by simp [zero_le_one]
       calc
         ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y
-        _ ≤ C * ∥x∥ * (∥y∥ + 1) := by apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_lt C_pos, mul_nonneg]
+        _ ≤ C * ∥x∥ * (∥y∥ + 1) := by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr norm_nonneg, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr le_of_lt C_pos, \",\", expr mul_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
         _ = C * (∥y∥ + 1) * ∥x∥ := by ring
          }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt
+   C_pos, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem IsBoundedBilinearMap.isBoundedLinearMapRight (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
     IsBoundedLinearMap 𝕜 fun y => f (x, y) :=
   { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smul_right _ _ _,
@@ -414,7 +421,8 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapRight (h : IsBoundedBilinearMap �
       calc
         ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y
         _ ≤ C * (∥x∥ + 1) * ∥y∥ := by
-          apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, mul_le_mul_of_nonneg_left, le_of_lt C_pos]
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr norm_nonneg, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr le_of_lt\n   C_pos, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
          }
 
 theorem isBoundedBilinearMapSmul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _} [NormedAddCommGroup E]
@@ -500,22 +508,29 @@ theorem ContinuousLinearMap.mulLeftRightIsBoundedBilinear (𝕜' : Type _) [Norm
 
 variable {𝕜}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul, ",", expr norm_nonneg, ",", expr Cpos.le, ",", expr le_refl, ",", expr le_max_left, ",", expr le_max_right, ",", expr mul_nonneg, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- Given a bounded bilinear map `f`, the map associating to a point `p` the derivative of `f` at
 `p` is itself a bounded linear map. -/
 theorem IsBoundedBilinearMap.isBoundedLinearMapDeriv (h : IsBoundedBilinearMap 𝕜 f) :
     IsBoundedLinearMap 𝕜 fun p : E × F => h.deriv p := by
   rcases h.bound with ⟨C, Cpos : 0 < C, hC⟩
   refine' IsLinearMap.withBound ⟨fun p₁ p₂ => _, fun c p => _⟩ (C + C) fun p => _
-  · ext <;> simp [h.add_left, h.add_right] <;> abel
+  · ext <;>
+      simp only [h.add_left, h.add_right, coe_comp', Function.comp_app, inl_apply, is_bounded_bilinear_map_deriv_coe,
+          Prod.fst_add, Prod.snd_add, add_apply] <;>
+        abel
     
-  · ext <;> simp [h.smul_left, h.smul_right, smul_add]
+  · ext <;>
+      simp only [h.smul_left, h.smul_right, smul_add, coe_comp', Function.comp_app, is_bounded_bilinear_map_deriv_coe,
+        Prod.smul_fst, Prod.smul_snd, coe_smul', Pi.smul_apply]
     
   · refine' ContinuousLinearMap.op_norm_le_bound _ (mul_nonneg (add_nonneg Cpos.le Cpos.le) (norm_nonneg _)) fun q => _
     calc
       ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ := norm_add_le_of_le (hC _ _) (hC _ _)
       _ ≤ C * ∥p∥ * ∥q∥ + C * ∥q∥ * ∥p∥ := by
-        apply_rules [add_le_add, mul_le_mul, norm_nonneg, Cpos.le, le_refl, le_max_left, le_max_right, mul_nonneg]
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul, \",\", expr norm_nonneg, \",\", expr Cpos.le, \",\", expr le_refl, \",\", expr le_max_left, \",\", expr le_max_right, \",\", expr mul_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
       _ = (C + C) * ∥p∥ * ∥q∥ := by ring
       
     
@@ -547,7 +562,7 @@ protected theorem is_open [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜]
   refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
   let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f
   have h_O : Continuous O := is_bounded_bilinear_map_comp.continuous_right
-  convert units.is_open.preimage h_O using 1
+  convert show IsOpen (O ⁻¹' { x | IsUnit x }) from units.is_open.preimage h_O using 1
   ext f'
   constructor
   · rintro ⟨e', rfl⟩

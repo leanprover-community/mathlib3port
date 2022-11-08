@@ -23,10 +23,10 @@ open BigOperators
 
 variable {𝕜 E ι : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(«expr * »(az, av), bu), «expr + »(«expr * »(«expr * »(bz, au), bv), «expr * »(au, av)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(«expr * »(az, av), bu), «expr + »(«expr * »(«expr * »(bz, au), bv), «expr * »(au, av)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
 `z ∈ [x, y]`. -/
@@ -71,7 +71,7 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
       
   have hw : (∑ i, w i) = az * av + bz * au := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(«expr * »(az, av), bu), «expr + »(«expr * »(«expr * »(bz, au), bv), «expr * »(au, av)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(«expr * »(az, av), bu), «expr + »(«expr * »(«expr * »(bz, au), bv), «expr * »(au, av)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
       
     rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add, mul_assoc, ← mul_add,

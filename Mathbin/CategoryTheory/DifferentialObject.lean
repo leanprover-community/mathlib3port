@@ -28,7 +28,7 @@ namespace CategoryTheory
 
 variable (C : Type u) [Category.{v} C]
 
--- TODO: generaize to `has_shift C A` for an arbitrary `[add_monoid A]` `[has_one A]`.
+-- TODO: generalize to `has_shift C A` for an arbitrary `[add_monoid A]` `[has_one A]`.
 variable [HasZeroMorphisms C] [HasShift C ℤ]
 
 /-- A differential object in a category with zero morphisms and a shift is
@@ -73,7 +73,7 @@ def comp {X Y Z : DifferentialObject C} (f : Hom X Y) (g : Hom Y Z) : Hom X Z wh
 end Hom
 
 instance categoryOfDifferentialObjects : Category (DifferentialObject C) where
-  hom := Hom
+  Hom := Hom
   id := Hom.id
   comp X Y Z f g := Hom.comp f g
 
@@ -112,7 +112,7 @@ theorem zero_f (P Q : DifferentialObject C) : (0 : P ⟶ Q).f = 0 :=
 -/
 @[simps]
 def isoApp {X Y : DifferentialObject C} (f : X ≅ Y) : X.x ≅ Y.x :=
-  ⟨f.hom.f, f.inv.f, by
+  ⟨f.Hom.f, f.inv.f, by
     dsimp
     rw [← comp_f, iso.hom_inv_id, id_f], by
     dsimp
@@ -133,8 +133,8 @@ theorem iso_app_trans {X Y Z : DifferentialObject C} (f : X ≅ Y) (g : Y ≅ Z)
 /-- An isomorphism of differential objects can be constructed
 from an isomorphism of the underlying objects that commutes with the differentials. -/
 @[simps]
-def mkIso {X Y : DifferentialObject C} (f : X.x ≅ Y.x) (hf : X.d ≫ f.hom⟦1⟧' = f.hom ≫ Y.d) : X ≅ Y where
-  hom := ⟨f.hom, hf⟩
+def mkIso {X Y : DifferentialObject C} (f : X.x ≅ Y.x) (hf : X.d ≫ f.Hom⟦1⟧' = f.Hom ≫ Y.d) : X ≅ Y where
+  Hom := ⟨f.Hom, hf⟩
   inv :=
     ⟨f.inv, by
       dsimp
@@ -233,7 +233,7 @@ noncomputable section
 @[simps]
 def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C where
   obj X :=
-    { x := X.x⟦n⟧, d := X.d⟦n⟧' ≫ (shiftComm _ _ _).hom,
+    { x := X.x⟦n⟧, d := X.d⟦n⟧' ≫ (shiftComm _ _ _).Hom,
       d_squared' := by
         rw [functor.map_comp, category.assoc, shift_comm_hom_comp_assoc, ← functor.map_comp_assoc, X.d_squared,
           functor.map_zero, zero_comp] }

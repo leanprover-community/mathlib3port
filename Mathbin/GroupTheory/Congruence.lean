@@ -459,7 +459,7 @@ theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con
       "The supremum of a set of additive congruence relations is the same as the smallest\nadditive congruence relation containing the supremum of the set's image under the map to the\nunderlying binary relation."]
 theorem Sup_def {S : Set (Con M)} : sup S = conGen (sup (@Set.Image (Con M) (M → M → Prop) coeFn S)) := by
   rw [Sup_eq_con_gen, Sup_image]
-  congr with x y
+  congr with (x y)
   simp only [Sup_image, supr_apply, supr_Prop_eq, exists_prop, rel_eq_coe]
 
 variable (M)
@@ -907,7 +907,7 @@ protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := 
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
   | Int.ofNat n, w, x, h => by simpa only [zpow_of_nat] using c.pow _ h
-  | -[1 + n], w, x, h => by simpa only [zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
+  | -[n+1], w, x, h => by simpa only [zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
 
 /-- The inversion induced on the quotient by a congruence relation on a type with a
     inversion. -/

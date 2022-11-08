@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Scott Morrison
 -/
 import Mathbin.Combinatorics.Quiver.Basic
-import Mathbin.Data.List.Basic
+import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Lemmas
 
 /-!
@@ -101,13 +101,13 @@ theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length
     
   simp only [comp_cons] at h
   obtain rfl := h.1
-  obtain ⟨rfl, rfl⟩ := ih (Nat.succ_injective hq) h.2.1.Eq
+  obtain ⟨rfl, rfl⟩ := ih (Nat.succ.inj hq) h.2.1.Eq
   rw [h.2.2.Eq]
   exact ⟨rfl, rfl⟩
 
 theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
-  ⟨fun h_eq => (comp_inj <| add_left_injective p₁.length <| by simpa [h] using congr_arg length h_eq).1 h_eq, by
+  ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq, by
     rintro ⟨rfl, rfl⟩
     rfl⟩
 
@@ -146,8 +146,8 @@ variable [∀ a b : V, Subsingleton (a ⟶ b)]
 
 theorem to_list_injective (a : V) : ∀ b, Injective (toList : Path a b → List V)
   | b, nil, nil, h => rfl
-  | b, nil, @cons _ _ _ c _ p f, h => (List.cons_ne_nil _ _ h.symm).elim
-  | b, @cons _ _ _ c _ p f, nil, h => (List.cons_ne_nil _ _ h).elim
+  | b, nil, @cons _ _ _ c _ p f, h => by cases h
+  | b, @cons _ _ _ c _ p f, nil, h => by cases h
   | b, @cons _ _ _ c _ p f, @cons _ _ s t u C D, h => by
     simp only [to_list] at h
     obtain ⟨rfl, hAC⟩ := h

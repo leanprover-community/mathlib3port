@@ -403,7 +403,7 @@ theorem valuation_p_pow_mul (n : ℕ) (c : ℤ_[p]) (hc : c ≠ 0) : (↑p ^ n *
     contrapose! hc
     rw [mul_eq_zero] at hc
     cases hc
-    · refine' (hp.1.ne_zero _).elim
+    · refine' (hp.1.NeZero _).elim
       exact_mod_cast pow_eq_zero hc
       
     · exact hc
@@ -413,7 +413,7 @@ theorem valuation_p_pow_mul (n : ℕ) (c : ℤ_[p]) (hc : c ≠ 0) : (↑p ^ n *
     
   · exact_mod_cast hp.1.ne_one
     
-  · exact_mod_cast hp.1.ne_zero
+  · exact_mod_cast hp.1.NeZero
     
 
 section Units
@@ -487,7 +487,7 @@ theorem unit_coeff_spec {x : ℤ_[p]} (hx : x ≠ 0) : x = (unitCoeff hx : ℤ_[
     rw [unit_coeff_coe, mul_assoc, ← zpow_add₀]
     · simp
       
-    · exact_mod_cast hp.1.ne_zero
+    · exact_mod_cast hp.1.NeZero
       
   convert repr using 2
   rw [← zpow_coe_nat, Int.nat_abs_of_nonneg (valuation_nonneg x)]
@@ -511,7 +511,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) : �
   rw [← this]
   norm_cast
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) ↔ ↑n ≤ x.Valuation := by
   rw [Ideal.mem_span_singleton]
@@ -586,7 +586,7 @@ theorem primeP : Prime (p : ℤ_[p]) := by
   rw [← Ideal.span_singleton_prime, ← maximal_ideal_eq_span_p]
   · infer_instance
     
-  · exact_mod_cast hp.1.ne_zero
+  · exact_mod_cast hp.1.NeZero
     
 
 theorem irreducible_p : Irreducible (p : ℤ_[p]) :=

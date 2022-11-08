@@ -10,7 +10,7 @@ universe u v w
 def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × β) : Prop :=
   lt a.1 b.1
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt -/

@@ -274,7 +274,7 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
       @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
   by
   obtain ⟨i, a⟩ := a
-  ext j b
+  ext (j b)
   by_cases h:i = j
   · subst h
     simp [split_apply, Finsupp.single_apply]

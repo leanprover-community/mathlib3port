@@ -218,6 +218,16 @@ theorem mem_right_transversals_iff_bijective :
     (Function.bijective_iff_exists_unique (S.restrict Quotient.mk')).symm
 
 @[to_additive]
+theorem card_left_transversal (h : S ∈ LeftTransversals (H : Set G)) : Nat.card S = H.index :=
+  Nat.card_congr <| Equiv.ofBijective _ <| mem_left_transversals_iff_bijective.mp h
+
+@[to_additive]
+theorem card_right_transversal (h : S ∈ RightTransversals (H : Set G)) : Nat.card S = H.index :=
+  Nat.card_congr <|
+    (Equiv.ofBijective _ <| mem_right_transversals_iff_bijective.mp h).trans <|
+      QuotientGroup.quotientRightRelEquivQuotientLeftRel H
+
+@[to_additive]
 theorem range_mem_left_transversals {f : G ⧸ H → G} (hf : ∀ q, ↑(f q) = q) :
     Set.Range f ∈ LeftTransversals (H : Set G) :=
   mem_left_transversals_iff_bijective.mpr
@@ -354,7 +364,7 @@ instance : MulAction F (LeftTransversals (H : Set G)) where
 theorem smul_to_fun (f : F) (T : LeftTransversals (H : Set G)) (g : G) :
     (f • toFun T.2 g : G) = toFun (f • T).2 (f • g) :=
   Subtype.ext_iff.mp <|
-    @unique (↥(f • T)) (fun s => (↑s)⁻¹ * f • g ∈ H)
+    @ExistsUnique.unique (↥(f • T)) (fun s => (↑s)⁻¹ * f • g ∈ H)
       (mem_left_transversals_iff_exists_unique_inv_mul_mem.mp (f • T).2 (f • g))
       ⟨f • toFun T.2 g, Set.smul_mem_smul_set (Subtype.coe_prop _)⟩ (toFun (f • T).2 (f • g))
       (QuotientAction.inv_mul_mem f (inv_to_fun_mul_mem T.2 g)) (inv_to_fun_mul_mem (f • T).2 (f • g))
@@ -388,11 +398,14 @@ theorem IsComplement'.isCompl (h : IsComplement' H K) : IsCompl H K := by
   obtain ⟨⟨h, k⟩, rfl⟩ := h.2 g
   exact Subgroup.mul_mem_sup h.2 k.2
 
-theorem IsComplement'.sup_eq_top (h : Subgroup.IsComplement' H K) : H ⊔ K = ⊤ :=
+theorem IsComplement'.sup_eq_top (h : IsComplement' H K) : H ⊔ K = ⊤ :=
   h.IsCompl.sup_eq_top
 
 theorem IsComplement'.disjoint (h : IsComplement' H K) : Disjoint H K :=
   h.IsCompl.Disjoint
+
+theorem IsComplement'.index_eq_card (h : IsComplement' H K) : K.index = Nat.card H :=
+  (card_left_transversal h).symm
 
 theorem IsComplement.card_mul [Fintype G] [Fintype S] [Fintype T] (h : IsComplement S T) :
     Fintype.card S * Fintype.card T = Fintype.card G :=

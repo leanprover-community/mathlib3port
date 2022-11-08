@@ -20,7 +20,7 @@ open Emetric Set
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (r «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (r «expr ≠ » 0) -/
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -75,7 +75,7 @@ theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t)
 
 @[simp]
 theorem union_left_iff {s'} : IsMetricSeparated (s ∪ s') t ↔ IsMetricSeparated s t ∧ IsMetricSeparated s' t :=
-  ⟨fun h => ⟨h.monoLeft (subset_union_left _ _), h.monoLeft (subset_union_right _ _)⟩, fun h => h.1.unionLeft h.2⟩
+  ⟨fun h => ⟨h.mono_left (subset_union_left _ _), h.mono_left (subset_union_right _ _)⟩, fun h => h.1.unionLeft h.2⟩
 
 theorem unionRight {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t') : IsMetricSeparated s (t ∪ t') :=
   (h.symm.unionLeft h'.symm).symm

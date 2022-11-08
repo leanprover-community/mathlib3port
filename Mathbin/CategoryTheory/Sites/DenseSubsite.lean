@@ -260,7 +260,7 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     coyoneda ⋙ (whiskeringLeft Dᵒᵖ A (Type _)).obj ℱ ⟶ coyoneda ⋙ (whiskeringLeft Dᵒᵖ A (Type _)).obj ℱ'.val where
   app X := presheafHom H (homOver α (unop X))
   naturality' X Y f := by
-    ext U x
+    ext (U x)
     change app_hom H (hom_over α (unop Y)) (unop U) (f.unop ≫ x) = f.unop ≫ app_hom H (hom_over α (unop X)) (unop U) x
     symm
     apply sheaf_eq_amalgamation
@@ -285,7 +285,7 @@ noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ
     refine' { app := fun X => (α.app X).app U, naturality' := fun X Y f => by simpa using congr_app (α.naturality f) U }
     
   · intro U V i
-    ext X x
+    ext (X x)
     exact congr_fun ((α.app X).naturality i) x
     
 

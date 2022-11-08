@@ -290,7 +290,7 @@ theorem is_O_exp_comp_exp_comp {f g : α → ℝ} :
 
 @[simp]
 theorem is_Theta_exp_comp_exp_comp {f g : α → ℝ} :
-    ((fun x => exp (f x)) =Θ[l] fun x => exp (g x)) ↔ IsBoundedUnder (· ≤ ·) l fun x => abs (f x - g x) := by
+    ((fun x => exp (f x)) =Θ[l] fun x => exp (g x)) ↔ IsBoundedUnder (· ≤ ·) l fun x => |f x - g x| := by
   simp only [is_bounded_under_le_abs, ← is_bounded_under_le_neg, neg_sub, is_Theta, is_O_exp_comp_exp_comp, Pi.sub_def]
 
 @[simp]
@@ -318,7 +318,7 @@ theorem is_O_exp_comp_one {f : α → ℝ} : (fun x => exp (f x)) =O[l] (fun x =
 `|f x|` is bounded from above along this filter. -/
 @[simp]
 theorem is_Theta_exp_comp_one {f : α → ℝ} :
-    (fun x => exp (f x)) =Θ[l] (fun x => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l fun x => abs (f x) := by
+    (fun x => exp (f x)) =Θ[l] (fun x => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l fun x => |f x| := by
   simp only [← exp_zero, is_Theta_exp_comp_exp_comp, sub_zero]
 
 end Real

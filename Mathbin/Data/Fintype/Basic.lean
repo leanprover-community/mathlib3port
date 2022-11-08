@@ -10,6 +10,7 @@ import Mathbin.Data.Finset.Pi
 import Mathbin.Data.Finset.Powerset
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Finset.Sigma
+import Mathbin.Data.Finset.Sum
 import Mathbin.Data.Finite.Defs
 import Mathbin.Data.List.NodupEquivFin
 import Mathbin.Data.Sym.Basic
@@ -78,7 +79,8 @@ universe u v
 
 variable {α β γ : Type _}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
+#print Fintype /-
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
@@ -86,19 +88,24 @@ variable {α β γ : Type _}
 class Fintype (α : Type _) where
   elems : Finset α
   complete : ∀ x : α, x ∈ elems
+-/
 
 namespace Finset
 
 variable [Fintype α] {s : Finset α}
 
+#print Finset.univ /-
 /-- `univ` is the universal finite set of type `finset α` implied from
   the assumption `fintype α`. -/
 def univ : Finset α :=
   Fintype.elems α
+-/
 
+#print Finset.mem_univ /-
 @[simp]
 theorem mem_univ (x : α) : x ∈ (univ : Finset α) :=
   Fintype.complete x
+-/
 
 @[simp]
 theorem mem_univ_val : ∀ x, x ∈ (univ : Finset α).1 :=
@@ -139,9 +146,8 @@ theorem univ_unique [Unique α] : (univ : Finset α) = {default} :=
 @[simp]
 theorem subset_univ (s : Finset α) : s ⊆ univ := fun a _ => mem_univ a
 
-instance : OrderTop (Finset α) where
-  top := univ
-  le_top := subset_univ
+instance : BoundedOrder (Finset α) :=
+  { Finset.orderBot with top := univ, le_top := subset_univ }
 
 @[simp]
 theorem top_eq_univ : (⊤ : Finset α) = univ :=
@@ -1061,17 +1067,14 @@ instance (α : Type _) [Fintype α] : Fintype (Lex α) :=
 theorem Fintype.card_lex (α : Type _) [Fintype α] : Fintype.card (Lex α) = Fintype.card α :=
   rfl
 
-theorem univ_sum_type {α β : Type _} [Fintype α] [Fintype β] [Fintype (Sum α β)] [DecidableEq (Sum α β)] :
-    (univ : Finset (Sum α β)) = map Function.Embedding.inl univ ∪ map Function.Embedding.inr univ := by
-  rw [eq_comm, eq_univ_iff_forall]
-  simp only [mem_union, mem_map, exists_prop, mem_univ, true_and_iff]
-  rintro (x | y)
-  exacts[Or.inl ⟨x, rfl⟩, Or.inr ⟨y, rfl⟩]
+instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α β) where
+  elems := univ.disjSum univ
+  complete := by rintro (_ | _) <;> simp
 
-instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α β) :=
-  @Fintype.ofEquiv _ _
-    (@Sigma.fintype _ (fun b => cond b (ULift α) (ULift.{max u v, v} β)) _ fun b => by cases b <;> apply ULift.fintype)
-    ((Equiv.sumEquivSigmaBool _ _).symm.trans (Equiv.sumCongr Equiv.ulift Equiv.ulift))
+@[simp]
+theorem Finset.univ_disj_sum_univ {α β : Type _} [Fintype α] [Fintype β] :
+    univ.disjSum univ = (univ : Finset (Sum α β)) :=
+  rfl
 
 /-- Given that `α ⊕ β` is a fintype, `α` is also a fintype. This is non-computable as it uses
 that `sum.inl` is an injection, but there's no clear inverse if `α` is empty. -/
@@ -1083,23 +1086,9 @@ that `sum.inr` is an injection, but there's no clear inverse if `β` is empty. -
 noncomputable def Fintype.sumRight {α β} [Fintype (Sum α β)] : Fintype β :=
   Fintype.ofInjective (Sum.inr : β → Sum α β) Sum.inr_injective
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", "⟨", ident a, ",", ident rfl, "⟩", ",", "⟨", ident b, ",", ident hb, "⟩", "⟩", ":", expr «expr ∧ »(«expr∃ , »((a :
-      α),
-     «expr = »(sum.inl a, x)),
-    «expr∃ , »((b : β), «expr = »(sum.inr b, x)))]] -/
 @[simp]
-theorem Fintype.card_sum [Fintype α] [Fintype β] : Fintype.card (Sum α β) = Fintype.card α + Fintype.card β := by
-  classical
-  rw [← Finset.card_univ, univ_sum_type, Finset.card_union_eq]
-  · simp [Finset.card_univ]
-    
-  · intro x hx
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", \"⟨\", ident a, \",\", ident rfl, \"⟩\", \",\", \"⟨\", ident b, \",\", ident hb, \"⟩\", \"⟩\", \":\", expr «expr ∧ »(«expr∃ , »((a :\n      α),\n     «expr = »(sum.inl a, x)),\n    «expr∃ , »((b : β), «expr = »(sum.inr b, x)))]]"
-    · simpa using hb
-      
-    simpa using hx
-    
+theorem Fintype.card_sum [Fintype α] [Fintype β] : Fintype.card (Sum α β) = Fintype.card α + Fintype.card β :=
+  card_disj_sum _ _
 
 /-- If the subtype of all-but-one elements is a `fintype` then the type itself is a `fintype`. -/
 def fintypeOfFintypeNe (a : α) (h : Fintype { b // b ≠ a }) : Fintype α :=
@@ -1492,7 +1481,7 @@ def _root_.units_equiv_prod_subtype [Monoid α] : αˣ ≃ { p : α × α // p.1
 elements. -/
 @[simps]
 def _root_.units_equiv_ne_zero [GroupWithZero α] : αˣ ≃ { a : α // a ≠ 0 } :=
-  ⟨fun a => ⟨a, a.ne_zero⟩, fun a => Units.mk0 _ a.Prop, fun _ => Units.ext rfl, fun _ => Subtype.ext rfl⟩
+  ⟨fun a => ⟨a, a.NeZero⟩, fun a => Units.mk0 _ a.Prop, fun _ => Units.ext rfl, fun _ => Subtype.ext rfl⟩
 
 end
 
@@ -2149,6 +2138,22 @@ namespace Infinite
 theorem of_not_fintype (h : Fintype α → False) : Infinite α :=
   is_empty_fintype.mp ⟨h⟩
 
+/-- If `s : set α` is a proper subset of `α` and `f : α → s` is injective, then `α` is infinite. -/
+theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.Univ) {f : α → s} (hf : Injective f) : Infinite α :=
+  of_not_fintype fun h => by
+    skip
+    classical
+    refine' lt_irrefl (Fintype.card α) _
+    calc
+      Fintype.card α ≤ Fintype.card s := Fintype.card_le_of_injective f hf
+      _ = s.to_finset.card := s.to_finset_card.symm
+      _ < Fintype.card α := Finset.card_lt_card <| by rwa [Set.to_finset_ssubset_univ, Set.ssubset_univ_iff]
+      
+
+/-- If `s : set α` is a proper subset of `α` and `f : s → α` is surjective, then `α` is infinite. -/
+theorem of_surjective_from_set {s : Set α} (hs : s ≠ Set.Univ) {f : s → α} (hf : Surjective f) : Infinite α :=
+  of_injective_to_set hs (injective_surj_inv hf)
+
 theorem exists_not_mem_finset [Infinite α] (s : Finset α) : ∃ x, x ∉ s :=
   not_forall.1 fun h => Fintype.false ⟨s, h⟩
 
@@ -2282,8 +2287,8 @@ noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Fin
   rw [c] at w
   exact Nat.not_succ_le_self n w
 
-theorem not_injective_infinite_finite [Infinite α] [Finite β] (f : α → β) : ¬Injective f := fun hf =>
-  (Finite.of_injective f hf).not_infinite ‹_›
+theorem not_injective_infinite_finite {α β} [Infinite α] [Finite β] (f : α → β) : ¬Injective f := fun hf =>
+  (Finite.of_injective f hf).False
 
 /-- The pigeonhole principle for infinitely many pigeons in finitely many pigeonholes. If there are
 infinitely many pigeons in finitely many pigeonholes, then there are at least two pigeons in the
@@ -2291,18 +2296,11 @@ same pigeonhole.
 
 See also: `fintype.exists_ne_map_eq_of_card_lt`, `finite.exists_infinite_fiber`.
 -/
-theorem Finite.exists_ne_map_eq_of_infinite [Infinite α] [Finite β] (f : α → β) : ∃ x y : α, x ≠ y ∧ f x = f y := by
-  classical
-  by_contra' hf
-  apply not_injective_infinite_finite f
-  intro x y
-  contrapose
-  apply hf
+theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f : α → β) : ∃ x y : α, x ≠ y ∧ f x = f y :=
+  by simpa only [injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
 
 instance Function.Embedding.is_empty {α β} [Infinite α] [Finite β] : IsEmpty (α ↪ β) :=
-  ⟨fun f =>
-    let ⟨x, y, Ne, feq⟩ := Finite.exists_ne_map_eq_of_infinite f
-    Ne <| f.Injective feq⟩
+  ⟨fun f => not_injective_infinite_finite f f.2⟩
 
 /-- The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in

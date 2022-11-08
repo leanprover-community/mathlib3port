@@ -35,8 +35,7 @@ theorem set_of_liouville_with_subset_aux :
       ⋃ m : ℤ,
         (fun x : ℝ => x + m) ⁻¹'
           ⋃ n > (0 : ℕ),
-            { x : ℝ |
-              ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, abs (x - (a : ℤ) / b) < 1 / b ^ (2 + 1 / n : ℝ) } :=
+            { x : ℝ | ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
   by
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
@@ -45,7 +44,7 @@ theorem set_of_liouville_with_subset_aux :
     ∀ y : ℝ,
       LiouvilleWith p y →
         y ∈ Ico (0 : ℝ) 1 →
-          ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, abs (y - a / b) < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
+          ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
     by
     simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
@@ -61,7 +60,7 @@ theorem set_of_liouville_with_subset_aux :
   replace hb : (1 : ℝ) ≤ b
   exact Nat.one_le_cast.2 hb
   have hb0 : (0 : ℝ) < b := zero_lt_one.trans_le hb
-  replace hlt : abs (x - a / b) < 1 / b
+  replace hlt : |x - a / b| < 1 / b
   · refine' hlt.trans_le (one_div_le_one_div_of_le hb0 _)
     calc
       (b : ℝ) = b ^ (1 : ℝ) := (rpow_one _).symm

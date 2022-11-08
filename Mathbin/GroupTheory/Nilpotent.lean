@@ -153,7 +153,7 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
     x ∈ upperCentralSeries G (n + 1) ↔ ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ upperCentralSeries G n :=
   Iff.rfl
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 class Group.IsNilpotent (G : Type _) [Group G] : Prop where
@@ -832,33 +832,299 @@ theorem is_nilpotent_of_product_of_sylow_group
     exact P.is_p_group'.is_nilpotent
   exact nilpotent_of_mul_equiv e
 
-/-- A finite group is nilpotent iff the normalizer condition holds, and iff all maximal groups are
-normal and iff all sylow groups are normal and iff the group is the direct product of its sylow
-groups. -/
-theorem is_nilpotent_of_finite_tfae :
-    Tfae
-      [IsNilpotent G, NormalizerCondition G, ∀ H : Subgroup G, IsCoatom H → H.Normal,
-        ∀ (p : ℕ) (hp : Fact p.Prime) (P : Sylow p G), (↑P : Subgroup G).Normal,
-        Nonempty ((∀ p : (card G).factorization.Support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G)] :=
-  by
-  tfae_have 1 → 2
-  · exact @normalizer_condition_of_is_nilpotent _ _
-    
-  tfae_have 2 → 3
-  · exact fun h H => normalizer_condition.normal_of_coatom H h
-    
-  tfae_have 3 → 4
-  · intro h p _ P
-    exact Sylow.normal_of_all_max_subgroups_normal h _
-    
-  tfae_have 4 → 5
-  · exact fun h => Nonempty.intro (Sylow.directProductOfNormal h)
-    
-  tfae_have 5 → 1
-  · rintro ⟨e⟩
-    exact is_nilpotent_of_product_of_sylow_group e
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A finite group is nilpotent iff the normalizer condition holds, and iff all maximal groups are\nnormal and iff all sylow groups are normal and iff the group is the direct product of its sylow\ngroups. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `is_nilpotent_of_finite_tfae [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `IsNilpotent [`G])
+            ","
+            (Term.app `NormalizerCondition [`G])
+            ","
+            (Term.forall
+             "∀"
+             [`H]
+             [(Term.typeSpec ":" (Term.app `Subgroup [`G]))]
+             ","
+             (Term.arrow (Term.app `IsCoatom [`H]) "→" (Term.proj `H "." `Normal)))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder "(" [`p] [":" (termℕ "ℕ")] [] ")")
+              (Term.explicitBinder "(" [`hp] [":" (Term.app `Fact [(Term.proj `p "." `Prime)])] [] ")")
+              (Term.explicitBinder "(" [`P] [":" (Term.app `Sylow [`p `G])] [] ")")]
+             []
+             ","
+             (Term.proj
+              (Term.paren "(" [(coeNotation "↑" `P) [(Term.typeAscription ":" (Term.app `Subgroup [`G]))]] ")")
+              "."
+              `Normal))
+            ","
+            (Term.app
+             `Nonempty
+             [(Algebra.Hom.Equiv.«term_≃*_»
+               (Term.forall
+                "∀"
+                [`p]
+                [(Term.typeSpec ":" (Term.proj (Term.proj (Term.app `card [`G]) "." `factorization) "." `Support))]
+                ","
+                (Term.forall
+                 "∀"
+                 [`P]
+                 [(Term.typeSpec ":" (Term.app `Sylow [`p `G]))]
+                 ","
+                 (Term.paren "(" [(coeNotation "↑" `P) [(Term.typeAscription ":" (Term.app `Subgroup [`G]))]] ")")))
+               " ≃* "
+               `G)])]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.exact
+               "exact"
+               (Term.app (Term.explicit "@" `normalizer_condition_of_is_nilpotent) [(Term.hole "_") (Term.hole "_")]))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.exact
+               "exact"
+               (Term.fun
+                "fun"
+                (Term.basicFun [`h `H] [] "=>" (Term.app `normalizer_condition.normal_of_coatom [`H `h]))))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`h `p (Term.hole "_") `P]) [])
+             (group
+              (Tactic.exact "exact" (Term.app `Sylow.normal_of_all_max_subgroups_normal [`h (Term.hole "_")]))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.exact
+               "exact"
+               (Term.fun
+                "fun"
+                (Term.basicFun [`h] [] "=>" (Term.app `Nonempty.intro [(Term.app `Sylow.directProductOfNormal [`h])]))))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `e)])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group (Tactic.exact "exact" (Term.app `is_nilpotent_of_product_of_sylow_group [`e])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.exact
+              "exact"
+              (Term.app (Term.explicit "@" `normalizer_condition_of_is_nilpotent) [(Term.hole "_") (Term.hole "_")]))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.exact
+              "exact"
+              (Term.fun
+               "fun"
+               (Term.basicFun [`h `H] [] "=>" (Term.app `normalizer_condition.normal_of_coatom [`H `h]))))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`h `p (Term.hole "_") `P]) [])
+            (group
+             (Tactic.exact "exact" (Term.app `Sylow.normal_of_all_max_subgroups_normal [`h (Term.hole "_")]))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.exact
+              "exact"
+              (Term.fun
+               "fun"
+               (Term.basicFun [`h] [] "=>" (Term.app `Nonempty.intro [(Term.app `Sylow.directProductOfNormal [`h])]))))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `e)])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group (Tactic.exact "exact" (Term.app `is_nilpotent_of_product_of_sylow_group [`e])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group
+         (Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `e)])
+               [])]
+             "⟩"))]
+          [])
+         [])
+        (group (Tactic.exact "exact" (Term.app `is_nilpotent_of_product_of_sylow_group [`e])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `is_nilpotent_of_product_of_sylow_group [`e]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `is_nilpotent_of_product_of_sylow_group [`e])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `e
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `is_nilpotent_of_product_of_sylow_group
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rintro
+       "rintro"
+       [(Std.Tactic.RCases.rintroPat.one
+         (Std.Tactic.RCases.rcasesPat.tuple
+          "⟨"
+          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `e)]) [])]
+          "⟩"))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A finite group is nilpotent iff the normalizer condition holds, and iff all maximal groups are
+    normal and iff all sylow groups are normal and iff the group is the direct product of its sylow
+    groups. -/
+  theorem
+    is_nilpotent_of_finite_tfae
+    :
+      Tfae
+        [
+          IsNilpotent G
+            ,
+            NormalizerCondition G
+            ,
+            ∀ H : Subgroup G , IsCoatom H → H . Normal
+            ,
+            ∀ ( p : ℕ ) ( hp : Fact p . Prime ) ( P : Sylow p G ) , ( ↑ P : Subgroup G ) . Normal
+            ,
+            Nonempty ∀ p : card G . factorization . Support , ∀ P : Sylow p G , ( ↑ P : Subgroup G ) ≃* G
+          ]
+    :=
+      by
+        tfae_have 1 → 2
+          · exact @ normalizer_condition_of_is_nilpotent _ _
+          tfae_have 2 → 3
+          · exact fun h H => normalizer_condition.normal_of_coatom H h
+          tfae_have 3 → 4
+          · intro h p _ P exact Sylow.normal_of_all_max_subgroups_normal h _
+          tfae_have 4 → 5
+          · exact fun h => Nonempty.intro Sylow.directProductOfNormal h
+          tfae_have 5 → 1
+          · rintro ⟨ e ⟩ exact is_nilpotent_of_product_of_sylow_group e
+          tfae_finish
 
 end WithFiniteGroup
 

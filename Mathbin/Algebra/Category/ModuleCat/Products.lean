@@ -34,7 +34,7 @@ def productConeIsLimit : IsLimit (productCone Z) where
     cases j
     tidy
   uniq' s m w := by
-    ext x i
+    ext (x i)
     exact LinearMap.congr_fun (w ⟨i⟩) x
 
 -- While we could use this to construct a `has_products (Module R)` instance,

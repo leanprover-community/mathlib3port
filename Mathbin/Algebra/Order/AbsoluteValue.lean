@@ -3,7 +3,7 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 -/
-import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Field.Basic
 import Mathbin.Algebra.Order.Hom.Basic
 
 /-!
@@ -135,7 +135,7 @@ variable [IsDomain S] [Nontrivial R]
 
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
-  abv.map_one_of_is_regular (is_regular_of_ne_zero <| abv.ne_zero one_ne_zero).left
+  abv.map_one_of_is_regular (is_regular_of_ne_zero <| abv.NeZero one_ne_zero).left
 
 instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
   { AbsoluteValue.mulHomClass with map_zero := fun f => f.map_zero, map_one := fun f => f.map_one }
@@ -222,10 +222,10 @@ end LinearOrderedCommRing
 
 end AbsoluteValue
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`abv_add] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`abv_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`abv_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`abv_mul] [] -/
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 
@@ -359,7 +359,7 @@ variable {R : Type _} [Semiring R] [Nontrivial R] (abv : R → S) [IsAbsoluteVal
 
 theorem abv_one' : abv 1 = 1 :=
   (toAbsoluteValue abv).map_one_of_is_regular <|
-    (is_regular_of_ne_zero <| (toAbsoluteValue abv).ne_zero one_ne_zero).left
+    (is_regular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_ne_zero).left
 
 /-- An absolute value as a monoid with zero homomorphism, assuming the target is a semifield. -/
 def abvHom' : R →*₀ S :=

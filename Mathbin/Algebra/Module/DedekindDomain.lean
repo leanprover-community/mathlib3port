@@ -62,7 +62,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
       
     · rw [← Ideal.zero_eq_bot]
       apply pow_ne_zero
-      exact (prime_of_mem q hq).ne_zero
+      exact (prime_of_mem q hq).NeZero
       
     · exact (prime_of_mem p hp).Irreducible
       

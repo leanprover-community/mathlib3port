@@ -31,17 +31,21 @@ universe u v
 
 variable {G : Type _}
 
+#print SemiconjBy /-
 /-- `x` is semiconjugate to `y` by `a`, if `a * x = y * a`. -/
 @[to_additive AddSemiconjBy "`x` is additive semiconjugate to `y` by `a` if `a + x = y + a`"]
 def SemiconjBy {M : Type u} [Mul M] (a x y : M) : Prop :=
   a * x = y * a
+-/
 
 namespace SemiconjBy
 
+#print SemiconjBy.eq /-
 /-- Equality behind `semiconj_by a x y`; useful for rewriting. -/
 @[to_additive "Equality behind `add_semiconj_by a x y`; useful for rewriting."]
 protected theorem eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : a * x = y * a :=
   h
+-/
 
 section Semigroup
 
@@ -85,7 +89,7 @@ variable {M : Type u} [MulOneClass M]
 
 /- warning: semiconj_by.one_right -> SemiconjBy.one_right is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u}} [_inst_1 : MulOneClass.{u} M] (a : M), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M _inst_1) a (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1)) (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1))
+  forall {M : Type.{u}} [_inst_1 : MulOneClass.{u} M] (a : M), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M _inst_1) a (OfNat.ofNat.{u} M 1 (OfNat.mk.{u} M 1 (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1)))) (OfNat.ofNat.{u} M 1 (OfNat.mk.{u} M 1 (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1))))
 but is expected to have type
   forall {M : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222 : MulOneClass.{u} M] (a : M), SemiconjBy.{u} M (MulOneClass.toMul.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222) a (OfNat.ofNat.{u} M 1 (One.toOfNat1.{u} M (MulOneClass.toOne.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222))) (OfNat.ofNat.{u} M 1 (One.toOfNat1.{u} M (MulOneClass.toOne.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.222)))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.one_right SemiconjBy.one_rightₓ'. -/
@@ -95,7 +99,7 @@ theorem one_right (a : M) : SemiconjBy a 1 1 := by rw [SemiconjBy, mul_one, one_
 
 /- warning: semiconj_by.one_left -> SemiconjBy.one_left is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u}} [_inst_1 : MulOneClass.{u} M] (x : M), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M _inst_1) (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1)) x x
+  forall {M : Type.{u}} [_inst_1 : MulOneClass.{u} M] (x : M), SemiconjBy.{u} M (MulOneClass.toHasMul.{u} M _inst_1) (OfNat.ofNat.{u} M 1 (OfNat.mk.{u} M 1 (One.one.{u} M (MulOneClass.toHasOne.{u} M _inst_1)))) x x
 but is expected to have type
   forall {M : Type.{u}} [inst._@.Mathlib.Algebra.Group.Semiconj._hyg.264 : MulOneClass.{u} M] (x : M), SemiconjBy.{u} M (MulOneClass.toMul.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.264) (OfNat.ofNat.{u} M 1 (One.toOfNat1.{u} M (MulOneClass.toOne.{u} M inst._@.Mathlib.Algebra.Group.Semiconj._hyg.264))) x x
 Case conversion may be inaccurate. Consider using '#align semiconj_by.one_left SemiconjBy.one_leftₓ'. -/

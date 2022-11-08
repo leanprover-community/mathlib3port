@@ -471,8 +471,8 @@ def includeLeft : A →ₐ[R] A ⊗[R] B :=
 theorem include_left_apply (a : A) : (includeLeft : A →ₐ[R] A ⊗[R] B) a = a ⊗ₜ 1 :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : A), R, (1 : B)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : A), R, (1 : B)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The algebra morphism `B →ₐ[R] A ⊗[R] B` sending `b` to `1 ⊗ₜ b`. -/
 def includeRight : B →ₐ[R] A ⊗[R] B where
   toFun b := 1 ⊗ₜ b
@@ -483,7 +483,7 @@ def includeRight : B →ₐ[R] A ⊗[R] B where
   commutes' r := by
     simp only [algebra_map_apply]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : A), R, (1 : B)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : A), R, (1 : B)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · rw [← tmul_smul, Algebra.smul_def]
       simp
       
@@ -710,14 +710,14 @@ section
 
 variable (R A B)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : B), R, (1 : A)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : B), R, (1 : A)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The tensor product of R-algebras is commutative, up to algebra isomorphism.
 -/
 protected def comm : A ⊗[R] B ≃ₐ[R] B ⊗[R] A :=
   algEquivOfLinearEquivTensorProduct (TensorProduct.comm R A B) (by simp) fun r => by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : B), R, (1 : A)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr • »(r, «expr ⊗ₜ[ ] »((1 : B), R, (1 : A)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · rw [← tmul_smul, Algebra.smul_def]
       simp
       
@@ -957,7 +957,7 @@ def endTensorEndAlgHom : EndCat R M ⊗[R] EndCat R N →ₐ[R] EndCat R (M ⊗[
     
   · intro r
     simp only [hom_tensor_hom_map_apply]
-    ext m n
+    ext (m n)
     simp [smul_tmul]
     
 

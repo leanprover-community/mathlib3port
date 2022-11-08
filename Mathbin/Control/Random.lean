@@ -6,7 +6,6 @@ Authors: Simon Hudon
 import Mathbin.Control.Monad.Basic
 import Mathbin.Control.Uliftable
 import Mathbin.Data.Bitvec.Basic
-import Mathbin.Data.Int.Basic
 import Mathbin.Data.Stream.Defs
 import Mathbin.Tactic.NormNum
 
@@ -46,15 +45,19 @@ open List Io Applicative
 
 universe u v w
 
+#print RandG /-
 /-- A monad to generate random objects using the generator type `g` -/
 @[reducible]
 def RandG (g : Type) (α : Type u) : Type u :=
   State (ULift.{u} g) α
+-/
 
+#print Rand /-
 /-- A monad to generate random objects using the generator type `std_gen` -/
 @[reducible]
 def Rand :=
   RandG StdGen
+-/
 
 instance (g : Type) : Uliftable (RandG.{u} g) (RandG.{v} g) :=
   @StateT.uliftable' _ _ _ _ _ (Equiv.ulift.trans Equiv.ulift.symm)
@@ -70,14 +73,18 @@ local infixl:41 " .. " => Set.IccCat
 
 open Stream
 
+#print BoundedRandom /-
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
 class BoundedRandom (α : Type u) [Preorder α] where
   randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandG g (x .. y)
+-/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
+#print Random /-
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Random (α : Type u) where
   Random : ∀ (g : Type) [RandomGen g], RandG g α
+-/
 
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it
@@ -92,9 +99,11 @@ variable (α : Type u)
 
 variable (g : Type) [RandomGen g]
 
+#print Rand.split /-
 /-- create a new random number generator distinct from the one stored in the state -/
 def split : RandG g g :=
   ⟨Prod.map id up ∘ RandomGen.split ∘ down⟩
+-/
 
 variable {g}
 

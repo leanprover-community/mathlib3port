@@ -123,7 +123,7 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
       ∀ (a b : V) (e : a ⟶ b),
         F.map e.toPath = eqToHom (congr_fun h_obj a) ≫ G.map e.toPath ≫ eqToHom (congr_fun h_obj.symm b)) :
     F = G := by
-  ext X Y f
+  ext (X Y f)
   · induction' f with Y' Z' g e ih
     · erw [F.map_id, G.map_id, category.id_comp, eq_to_hom_trans, eq_to_hom_refl]
       

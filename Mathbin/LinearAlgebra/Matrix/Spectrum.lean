@@ -73,7 +73,7 @@ theorem eigenvector_matrix_inv_apply (i j : n) : hA.eigenvectorMatrixInv i j = s
   simp only [one_mul, conj_transpose_apply, IsROrC.star_def]
 
 theorem conj_transpose_eigenvector_matrix_inv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix := by
-  ext i j
+  ext (i j)
   rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
 
 theorem conj_transpose_eigenvector_matrix : hA.eigenvectorMatrixᴴ = hA.eigenvectorMatrixInv := by
@@ -85,7 +85,7 @@ diagonalized by a change of basis.
 For the spectral theorem on linear maps, see `diagonalization_basis_apply_self_apply`. -/
 theorem spectral_theorem : hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv := by
   rw [eigenvector_matrix_inv, basis_to_matrix_basis_fun_mul]
-  ext i j
+  ext (i j)
   convert
     @LinearMap.IsSymmetric.diagonalization_basis_apply_self_apply 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.to_lin'
       (is_hermitian_iff_is_symmetric.1 hA) _ (Fintype.card n) finrank_euclidean_space (EuclideanSpace.single j 1)

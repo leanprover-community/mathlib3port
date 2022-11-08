@@ -176,8 +176,8 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι}

@@ -478,7 +478,7 @@ instance [Semiring α] : Semiring (WithZero α) :=
 
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
 def unitsWithZeroEquiv [Group α] : (WithZero α)ˣ ≃* α where
-  toFun a := unzero a.ne_zero
+  toFun a := unzero a.NeZero
   invFun a := Units.mk0 a coe_ne_zero
   left_inv _ := Units.ext <| by simpa only [coe_unzero]
   right_inv _ := rfl

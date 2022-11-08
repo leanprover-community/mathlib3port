@@ -416,34 +416,324 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
   refine' LinearEquiv.finrank_eq _
   rfl
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Equivalent characterizations of a Galois extension of finite degree-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `tfae [])
+      (Command.declSig
+       [(Term.instBinder "[" [] (Term.app `FiniteDimensional [`F `E]) "]")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `IsGalois [`F `E])
+            ","
+            («term_=_»
+             (Term.app
+              `IntermediateField.fixedField
+              [(Term.paren
+                "("
+                [(Order.BoundedOrder.«term⊤» "⊤")
+                 [(Term.typeAscription
+                   ":"
+                   (Term.app `Subgroup [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)]))]]
+                ")")])
+             "="
+             (Order.BoundedOrder.«term⊥» "⊥"))
+            ","
+            («term_=_»
+             (Term.app `Fintype.card [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])
+             "="
+             (Term.app `finrank [`F `E]))
+            ","
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders
+               [(Lean.binderIdent `p)]
+               [":" (Polynomial.Data.Polynomial.Basic.polynomial `F "[X]")]))
+             ","
+             («term_∧_» (Term.proj `p "." `Separable) "∧" (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Tactic.exact
+               "exact"
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`h]
+                 []
+                 "=>"
+                 (Term.app
+                  `OrderIso.map_bot
+                  [(Term.proj
+                    (Term.app
+                     (Term.explicit "@" `intermediate_field_equiv_subgroup)
+                     [`F (Term.hole "_") `E (Term.hole "_") (Term.hole "_") (Term.hole "_") `h])
+                    "."
+                    `symm)]))))
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" []) [])
+             (group (Tactic.exact "exact" (Term.app `card_aut_eq_finrank [`F `E])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" []) [])
+             (group (Tactic.exact "exact" (Term.app `is_separable_splitting_field [`F `E])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `of_fixed_field_eq_bot [`F `E])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `of_card_aut_eq_finrank [`F `E])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+                    [])]
+                  "⟩"))]
+               [])
+              [])
+             (group (Tactic.exact "exact" (Term.app `of_separable_splitting_field [`hp1])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Tactic.exact
+              "exact"
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`h]
+                []
+                "=>"
+                (Term.app
+                 `OrderIso.map_bot
+                 [(Term.proj
+                   (Term.app
+                    (Term.explicit "@" `intermediate_field_equiv_subgroup)
+                    [`F (Term.hole "_") `E (Term.hole "_") (Term.hole "_") (Term.hole "_") `h])
+                   "."
+                   `symm)]))))
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" []) [])
+            (group (Tactic.exact "exact" (Term.app `card_aut_eq_finrank [`F `E])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" []) [])
+            (group (Tactic.exact "exact" (Term.app `is_separable_splitting_field [`F `E])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `of_fixed_field_eq_bot [`F `E])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `of_card_aut_eq_finrank [`F `E])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+                   [])]
+                 "⟩"))]
+              [])
+             [])
+            (group (Tactic.exact "exact" (Term.app `of_separable_splitting_field [`hp1])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group
+         (Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)]) [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+               [])]
+             "⟩"))]
+          [])
+         [])
+        (group (Tactic.exact "exact" (Term.app `of_separable_splitting_field [`hp1])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `of_separable_splitting_field [`hp1]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `of_separable_splitting_field [`hp1])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hp1
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `of_separable_splitting_field
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Std.Tactic.rintro
+       "rintro"
+       [(Std.Tactic.RCases.rintroPat.one
+         (Std.Tactic.RCases.rcasesPat.tuple
+          "⟨"
+          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)]) [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)]) [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+            [])]
+          "⟩"))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Equivalent characterizations of a Galois extension of finite degree-/
-theorem tfae [FiniteDimensional F E] :
-    Tfae
-      [IsGalois F E, IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥,
-        Fintype.card (E ≃ₐ[F] E) = finrank F E, ∃ p : F[X], p.Separable ∧ p.IsSplittingField F E] :=
-  by
-  tfae_have 1 → 2
-  · exact fun h => OrderIso.map_bot (@intermediate_field_equiv_subgroup F _ E _ _ _ h).symm
-    
-  tfae_have 1 → 3
-  · intro
-    exact card_aut_eq_finrank F E
-    
-  tfae_have 1 → 4
-  · intro
-    exact is_separable_splitting_field F E
-    
-  tfae_have 2 → 1
-  · exact of_fixed_field_eq_bot F E
-    
-  tfae_have 3 → 1
-  · exact of_card_aut_eq_finrank F E
-    
-  tfae_have 4 → 1
-  · rintro ⟨h, hp1, _⟩
-    exact of_separable_splitting_field hp1
-    
-  tfae_finish
+  theorem
+    tfae
+    [ FiniteDimensional F E ]
+      :
+        Tfae
+          [
+            IsGalois F E
+              ,
+              IntermediateField.fixedField ( ⊤ : Subgroup E ≃ₐ[ F ] E ) = ⊥
+              ,
+              Fintype.card E ≃ₐ[ F ] E = finrank F E
+              ,
+              ∃ p : F [X] , p . Separable ∧ p . IsSplittingField F E
+            ]
+    :=
+      by
+        tfae_have 1 → 2
+          · exact fun h => OrderIso.map_bot @ intermediate_field_equiv_subgroup F _ E _ _ _ h . symm
+          tfae_have 1 → 3
+          · intro exact card_aut_eq_finrank F E
+          tfae_have 1 → 4
+          · intro exact is_separable_splitting_field F E
+          tfae_have 2 → 1
+          · exact of_fixed_field_eq_bot F E
+          tfae_have 3 → 1
+          · exact of_card_aut_eq_finrank F E
+          tfae_have 4 → 1
+          · rintro ⟨ h , hp1 , _ ⟩ exact of_separable_splitting_field hp1
+          tfae_finish
 
 end IsGalois
 

@@ -230,7 +230,7 @@ theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := b
   · rw [AlgHom.map_add, Polynomial.map_add, ha, hb, add_pow_char]
     
   · rw [expand_monomial, map_monomial, monomial_eq_C_mul_X, monomial_eq_C_mul_X, mul_pow, ← C.map_pow, frobenius_def]
-    ring_exp
+    ring
     
 
 theorem map_expand_pow_char (f : R[X]) (n : ℕ) : map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n := by

@@ -88,7 +88,7 @@ end IsAntisymm
 
 theorem maximals_eq_minimals [IsSymm α r] : Maximals r s = Minimals r s := by
   congr
-  ext a b
+  ext (a b)
   exact comm
 
 variable {r r₁ r₂ s t a}

@@ -106,7 +106,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
       0 <
       m :=
     zero_lt_one.trans m1
-  have mi : abs (1 / m) < 1 := (le_of_eq (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
+  have mi : |1 / m| < 1 := (le_of_eq (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
   calc
     (∑' i, 1 / m ^ (i + (n + 1))!) <
         ∑' i, 1 / m ^ (i + (n + 1)!) :=-- to show the strict inequality between these series, we prove that:
@@ -136,14 +136,12 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
         (Or.inl (tsum_geometric_of_abs_lt_1 mi))
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
   calc
     (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 2 * (1 / m ^ (n + 1)!) :=-- the second factors coincide (and are non-negative),
         -- the first factors, satisfy the inequality `sub_one_div_inv_le_two`
         mul_le_mul_of_nonneg_right
-        (sub_one_div_inv_le_two hm)
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+        (sub_one_div_inv_le_two hm) (by positivity)
     _ = 2 / m ^ (n + 1)! := mul_one_div 2 _
     _ = 2 / m ^ (n ! * (n + 1)) := congr_arg ((· / ·) 2) (congr_arg (pow m) (mul_comm _ _))
     _ ≤ 1 / m ^ (n ! * n) := by

@@ -200,22 +200,24 @@ end PartialOrder
 
 section OrderTop
 
-variable [PartialOrder α] [Preorder β] [OrderTop α] [OrderTop β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
+variable [PartialOrder α] [Preorder β] [OrderTop α]
 
-include gc
+theorem u_eq_top {l : α → β} {u : β → α} (gc : GaloisConnection l u) {x} : u x = ⊤ ↔ l ⊤ ≤ x :=
+  top_le_iff.symm.trans gc.le_iff_le.symm
 
-theorem u_top : u ⊤ = ⊤ :=
-  top_unique <| gc.le_u le_top
+theorem u_top [OrderTop β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) : u ⊤ = ⊤ :=
+  gc.u_eq_top.2 le_top
 
 end OrderTop
 
 section OrderBot
 
-variable [Preorder α] [PartialOrder β] [OrderBot α] [OrderBot β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
+variable [Preorder α] [PartialOrder β] [OrderBot β]
 
-include gc
+theorem l_eq_bot {l : α → β} {u : β → α} (gc : GaloisConnection l u) {x} : l x = ⊥ ↔ x ≤ u ⊥ :=
+  gc.dual.u_eq_top
 
-theorem l_bot : l ⊥ = ⊥ :=
+theorem l_bot [OrderBot α] {l : α → β} {u : β → α} (gc : GaloisConnection l u) : l ⊥ = ⊥ :=
   gc.dual.u_top
 
 end OrderBot

@@ -81,7 +81,7 @@ theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) 
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
@@ -286,7 +286,7 @@ instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorner
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff, update_same,
       max_eq_left hz₀, mfld_simps] at hz₁ hz₂
-    rw [lt_sub] at hz₁
+    rw [lt_sub_comm] at hz₁
     ext i
     rw [Subsingleton.elim i 0]
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply, PiLp.neg_apply,

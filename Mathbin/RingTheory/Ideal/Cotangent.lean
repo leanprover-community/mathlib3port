@@ -124,11 +124,11 @@ theorem cotangent_ideal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ := by
     exact add_mem hx hy
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (I.cotangent_to_quotient_square.comp I.to_cotangent).range]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (I.cotangent_to_quotient_square.comp I.to_cotangent).range]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem to_quotient_square_range : I.cotangentToQuotientSquare.range = I.cotangentIdeal.restrictScalars R := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (I.cotangent_to_quotient_square.comp I.to_cotangent).range]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (I.cotangent_to_quotient_square.comp I.to_cotangent).range]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rw [LinearMap.range_comp, I.to_cotangent_range, Submodule.map_top]
     
   · rw [to_quotient_square_comp_to_cotangent, LinearMap.range_comp, I.range_subtype]

@@ -125,7 +125,7 @@ theorem inner_content_empty : μ.innerContent ∅ = 0 := by
     ext1
     rw [subset_empty_iff.mp hK, compacts.coe_bot]
   rw [this]
-  rfl'
+  rfl
 
 /-- This is "unbundled", because that it required for the API of `induced_outer_measure`. -/
 theorem inner_content_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
@@ -179,7 +179,7 @@ theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
   intro i hi
   refine' le_trans _ (le_supr _ (L i))
   refine' le_trans _ (le_supr _ (h2K' i))
-  rfl'
+  rfl
 
 /-- The inner content of a union of sets is at most the sum of the individual inner contents.
   This is the "unbundled" version of `inner_content_Sup_nat`.

@@ -60,7 +60,7 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
   uniquePath b :=
     ⟨Classical.inhabitedOfNonempty
         (by
-          rcases show ∃ n, height b < n from ⟨_, lt_add_one _⟩ with ⟨n, hn⟩
+          rcases show ∃ n, height b < n from ⟨_, Nat.lt.base _⟩ with ⟨n, hn⟩
           induction' n with n ih generalizing b
           · exact False.elim (Nat.not_lt_zero _ hn)
             

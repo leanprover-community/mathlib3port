@@ -236,6 +236,12 @@ def leftOpRightOpIso (F : C ⥤ Dᵒᵖ) : F.leftOp.rightOp ≅ F :=
 def rightOpLeftOpIso (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 
+/-- Whenever possible, it is advisable to use the isomorphism `right_op_left_op_iso`
+instead of this equality of functors. -/
+theorem right_op_left_op_eq (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp = F := by
+  cases F
+  rfl
+
 end
 
 end Functor

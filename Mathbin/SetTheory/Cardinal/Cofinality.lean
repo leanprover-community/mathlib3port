@@ -547,13 +547,9 @@ theorem trans {a o o' : Ordinal.{u}} {f : ∀ b < o, Ordinal.{u}} (hf : IsFundam
 
 end IsFundamentalSequence
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident o, ",", ident f, ",", ident hf, "⟩", ":", expr «expr∃ , »((o f), is_fundamental_sequence a o f)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident i', ",", ident hi', ",", ident hfg, "⟩", ":", expr «expr∃ , »((i' hi'),
-    «expr ≤ »(f i, bfamily_of_family' r' (λ i, f i) i' hi'))]] -/
 /-- Every ordinal has a fundamental sequence. -/
 theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequence a a.cof.ord f := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident o, \",\", ident f, \",\", ident hf, \"⟩\", \":\", expr «expr∃ , »((o f), is_fundamental_sequence a o f)]]"
+  rsuffices ⟨o, f, hf⟩ : ∃ o f, is_fundamental_sequence a o f
   · exact ⟨_, hf.ord_cof⟩
     
   rcases exists_lsub_cof a with ⟨ι, f, hf, hι⟩
@@ -572,8 +568,7 @@ theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequ
     
   · rw [← hf, lsub_le_iff]
     intro i
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident i', \",\", ident hi', \",\", ident hfg, \"⟩\", \":\", expr «expr∃ , »((i' hi'),\n    «expr ≤ »(f i, bfamily_of_family' r' (λ i, f i) i' hi'))]]"
+    rsuffices ⟨i', hi', hfg⟩ : ∃ i' hi', f i ≤ bfamily_of_family' r' (fun i => f i) i' hi'
     · exact hfg.trans_lt (lt_blsub _ _ _)
       
     by_cases h:∀ j, r j i → f j < f i

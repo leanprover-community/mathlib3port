@@ -3,7 +3,7 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 -/
-import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
+import Mathbin.Analysis.Normed.Order.Lattice
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Data.Real.Sqrt
@@ -438,8 +438,8 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
@@ -504,7 +504,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
 theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
@@ -529,8 +529,8 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     exact ⟨g, hf, rfl⟩
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
@@ -556,7 +556,7 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
         _ = ε := by rw [add_halves, add_halves]
         
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /- To apply the previous theorems, one needs to check the equicontinuity. An important
 instance is when the source space is a metric space, and there is a fixed modulus of continuity
 for all the functions in the set A -/
@@ -574,7 +574,7 @@ theorem equicontinuous_of_continuity_modulus {α : Type u} [PseudoMetricSpace α
       
   calc
     dist (f y) (f z) ≤ b (dist y z) := H y z f hf
-    _ ≤ abs (b (dist y z)) := le_abs_self _
+    _ ≤ |b (dist y z)| := le_abs_self _
     _ = dist (b (dist y z)) 0 := by simp [Real.dist_eq]
     _ < ε := hδ (by simpa [Real.dist_eq] using this)
     
@@ -903,7 +903,7 @@ theorem mk_of_compact_sub [CompactSpace α] (f g : C(α, β)) : mkOfCompact (f -
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[1 + n] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
 
 instance hasIntScalar :
     HasSmul ℤ
@@ -1442,7 +1442,7 @@ theorem coe_fn_sup (f g : α →ᵇ β) : ⇑(f ⊔ g) = f ⊔ g :=
   rfl
 
 @[simp]
-theorem coe_fn_abs (f : α →ᵇ β) : ⇑(abs f) = abs f :=
+theorem coe_fn_abs (f : α →ᵇ β) : ⇑(|f|) = |f| :=
   rfl
 
 instance : NormedLatticeAddCommGroup (α →ᵇ β) :=

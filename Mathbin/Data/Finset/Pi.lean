@@ -102,7 +102,7 @@ theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun 
   · simp
     
   intro a ha
-  ext i hi
+  ext (i hi)
   rw [mem_pi] at ha
   simpa using ha i hi
 

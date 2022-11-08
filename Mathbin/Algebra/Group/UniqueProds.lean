@@ -62,7 +62,7 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
   rcases h hy.1 hy.2.1 hy.2.2 with ⟨rfl, rfl⟩
   rfl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
@@ -74,7 +74,7 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
         rcases prod.mk.inj_iff.mp (J (a0, b0) (Finset.mk_mem_product aA bB) rfl) with ⟨rfl, rfl⟩
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem exists_iff_exists_exists_unique :

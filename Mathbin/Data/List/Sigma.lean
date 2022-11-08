@@ -112,15 +112,15 @@ theorem nodupkeys_join {L : List (List (Sigma β))} :
   rw [nodupkeys_iff_pairwise, pairwise_join, pairwise_map]
   refine' and_congr (ball_congr fun l h => by simp [nodupkeys_iff_pairwise]) _
   apply iff_of_eq
-  congr with l₁ l₂
+  congr with (l₁ l₂)
   simp [keys, disjoint_iff_ne]
 
 theorem nodup_enum_map_fst (l : List α) : (l.enum.map Prod.fst).Nodup := by simp [List.nodup_range]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(x, «expr :: »(y, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(y, «expr :: »(x, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(x, «expr :: »(y, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(y, «expr :: »(x, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁.Nodup) (h : ∀ x, x ∈ l₀ ↔ x ∈ l₁) : l₀ ~ l₁ := by
   induction' l₀ with x xs generalizing l₁ <;> cases' l₁ with y ys
   · constructor
@@ -143,7 +143,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁
       
     
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(x, «expr :: »(y, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(x, «expr :: »(y, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · constructor
       refine' l₀_ih nd₀.2 ((nd₁.2.erase _).cons fun h => nd₁.1 <| mem_of_mem_erase h) fun a => _
       · specialize h a
@@ -158,7 +158,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁
         
       
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(y, «expr :: »(x, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr :: »(y, «expr :: »(x, ys.erase x))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · constructor
       
     · constructor
@@ -530,7 +530,7 @@ theorem kerase_comm (a₁ a₂) (l : List (Sigma β)) : kerase a₂ (kerase a₁
     else by simp [ha₁, mt mem_keys_of_mem_keys_kerase ha₁]
 
 theorem sizeof_kerase {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (x : α) (xs : List (Sigma β)) :
-    sizeOf (List.kerase x xs) ≤ sizeOf xs := by
+    SizeOf.sizeOf (List.kerase x xs) ≤ SizeOf.sizeOf xs := by
   unfold_wf
   induction' xs with y ys
   · simp
@@ -633,17 +633,17 @@ theorem lookup_dedupkeys (a : α) (l : List (Sigma β)) : lookup a (dedupkeys l)
     exact h
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem sizeof_dedupkeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (xs : List (Sigma β)) :
-    sizeOf (List.dedupkeys xs) ≤ sizeOf xs := by
+    SizeOf.sizeOf (List.dedupkeys xs) ≤ SizeOf.sizeOf xs := by
   unfold_wf
   induction' xs with x xs
   · simp [List.dedupkeys]
     
   · simp only [dedupkeys_cons, List.sizeof, kinsert_def, add_le_add_iff_left, Sigma.eta]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     apply sizeof_kerase
     assumption
     

@@ -136,7 +136,6 @@ instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensorObj (X Y : Center C) : Center C :=
@@ -158,7 +157,8 @@ def tensorObj (X Y : Center C) : Center C :=
         slice_rhs 7 7 => rw [associator_inv_conjugation]
         slice_rhs 6 6 => rw [associator_conjugation]
         slice_rhs 3 3 => rw [associator_conjugation]
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]",
+        -- Finish with an application of the coherence theorem.
+        coherence,
       naturality' := fun U U' f => by
         dsimp
         rw [category.assoc, category.assoc, category.assoc, category.assoc, id_tensor_associator_naturality_assoc, ←
@@ -188,14 +188,13 @@ def tensorUnit : Center C :=
         dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
   isoMk
     ⟨(α_ X.1 Y.1 Z.1).Hom, fun U => by
       dsimp
       simp only [comp_tensor_id, id_tensor_comp, ← tensor_id, associator_conjugation]
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"⟩
+      coherence⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=

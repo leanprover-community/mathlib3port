@@ -67,6 +67,12 @@ variable [Ring k] [Module k V] (b : AffineBasis ι k P)
 instance : Inhabited (AffineBasis PUnit k PUnit) :=
   ⟨{ points := id, ind := affine_independent_of_subsingleton k id, tot := by simp }⟩
 
+include b
+
+protected theorem nonempty : Nonempty ι :=
+  not_is_empty_iff.mp fun hι => by
+    simpa only [@range_eq_empty _ _ hι, AffineSubspace.span_empty, bot_ne_top] using b.tot
+
 /-- Given an affine basis for an affine space `P`, if we single out one member of the family, we
 obtain a linear basis for the model space `V`.
 
@@ -218,7 +224,7 @@ theorem to_matrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) : b.to
 
 @[simp]
 theorem to_matrix_self [DecidableEq ι] : b.toMatrix b.points = (1 : Matrix ι ι k) := by
-  ext i j
+  ext (i j)
   rw [to_matrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
 
 variable {ι' : Type _} [Fintype ι'] [Fintype ι] (b₂ : AffineBasis ι k P)
@@ -281,7 +287,7 @@ theorem to_matrix_vec_mul_coords (x : P) : (b.toMatrix b₂.points).vecMul (b₂
 variable [DecidableEq ι]
 
 theorem to_matrix_mul_to_matrix : b.toMatrix b₂.points ⬝ b₂.toMatrix b.points = 1 := by
-  ext l m
+  ext (l m)
   change (b₂.to_matrix b.points).vecMul (b.coords (b₂.points l)) m = _
   rw [to_matrix_vec_mul_coords, coords_apply, ← to_matrix_apply, to_matrix_self]
 
@@ -335,6 +341,10 @@ section DivisionRing
 variable [DivisionRing k] [Module k V]
 
 include V
+
+protected theorem finiteDimensional [Finite ι] (b : AffineBasis ι k P) : FiniteDimensional k V :=
+  let ⟨i⟩ := b.Nonempty
+  FiniteDimensional.ofFintypeBasis (b.basisOf i)
 
 variable (k V P)
 

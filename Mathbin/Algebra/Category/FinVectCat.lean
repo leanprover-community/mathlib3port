@@ -13,9 +13,17 @@ import Mathbin.Algebra.Category.ModuleCat.Monoidal
 # The category of finite dimensional vector spaces
 
 This introduces `FinVect K`, the category of finite dimensional vector spaces over a field `K`.
-It is implemented as a full subcategory on a subtype of `Module K`, which inherits monoidal and
-symmetric structure as `finite_dimensional K` is a monoidal predicate.
-We also provide a right rigid monoidal category instance.
+It is implemented as a full subcategory on a subtype of `Module K`.
+
+We first create the instance as a `K`-linear category,
+then as a `K`-linear monoidal category and then as a right-rigid monoidal category.
+
+## Future work
+
+* Show that `FinVect K` is a symmetric monoidal category (it is already monoidal).
+* Show that `FinVect K` is abelian.
+* Show that `FinVect K` is rigid (it is already right rigid).
+
 -/
 
 
@@ -38,10 +46,16 @@ instance closedPredicateFiniteDimensional :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K =>
       FiniteDimensional K V where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
 
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler linear[category_theory.linear] K -/
+/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler monoidal_linear[category_theory.monoidal_linear] K -/
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
 def FinVectCat :=
   FullSubcategory fun V : ModuleCat.{u} K => FiniteDimensional K V deriving LargeCategory, ConcreteCategory,
-  MonoidalCategory, SymmetricCategory, MonoidalClosed
+  Preadditive,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler linear[category_theory.linear] K»,
+  MonoidalCategory, SymmetricCategory, MonoidalPreadditive,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler monoidal_linear[category_theory.monoidal_linear] K»,
+  MonoidalClosed
 
 namespace FinVectCat
 
@@ -57,11 +71,30 @@ def of (V : Type u) [AddCommGroup V] [Module K V] [FiniteDimensional K V] : FinV
     change FiniteDimensional K V
     infer_instance⟩
 
+instance (V W : FinVectCat K) : FiniteDimensional K (V ⟶ W) :=
+  (by infer_instance : FiniteDimensional K (V.obj →ₗ[K] W.obj))
+
 instance : HasForget₂ (FinVectCat.{u} K) (ModuleCat.{u} K) := by
   dsimp [FinVectCat]
   infer_instance
 
 instance : Full (forget₂ (FinVectCat K) (ModuleCat.{u} K)) where preimage X Y f := f
+
+/-- The forgetful functor `FinVect K ⥤ Module K` as a monoidal functor. -/
+def forget₂Monoidal : MonoidalFunctor (FinVectCat K) (ModuleCat.{u} K) :=
+  MonoidalCategory.fullMonoidalSubcategoryInclusion _
+
+instance forget₂_monoidal_faithful : Faithful (forget₂Monoidal K).toFunctor := by
+  dsimp [forget₂_monoidal]
+  infer_instance
+
+instance forget₂_monoidal_additive : (forget₂Monoidal K).toFunctor.Additive := by
+  dsimp [forget₂_monoidal]
+  infer_instance
+
+instance forget₂_monoidal_linear : (forget₂Monoidal K).toFunctor.Linear K := by
+  dsimp [forget₂_monoidal]
+  infer_instance
 
 variable (V W : FinVectCat K)
 

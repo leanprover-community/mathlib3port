@@ -202,7 +202,7 @@ theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
     · intro q hq
       have hpq := Multiset.eq_of_mem_repeat hq
       rw [hpq]
-      refine' ⟨spec.1.ne_zero, spec.1.not_unit, _⟩
+      refine' ⟨spec.1.NeZero, spec.1.not_unit, _⟩
       intro a b h
       by_cases ha:a = 0
       · rw [ha]

@@ -183,12 +183,13 @@ run_cmd to_additive.map_namespace `quotient_group `quotient_add_group
 Later uses of `to_additive` on declarations in the `quotient_group` namespace will be created
 in the `quotient_add_group` namespaces.
 -/
-unsafe def map_namespace (src tgt : Name) : Tactic Unit := do
+unsafe def map_namespace (src tgt : Name) : Tactic := do
   let n := src.mk_string "_to_additive"
   let decl := declaration.thm n [] (quote.1 Unit) (pure (reflect ()))
   add_decl decl
   aux_attr n tgt tt
 
+#print ToAdditive.ValueType /-
 /-- `value_type` is the type of the arguments that can be provided to `to_additive`.
 `to_additive.parser` parses the provided arguments:
 * `replace_all`: replace all multiplicative declarations, do not use the heuristic.
@@ -205,6 +206,7 @@ structure ValueType : Type where
   doc : Option String
   allowAutoName : Bool
   deriving has_reflect, Inhabited
+-/
 
 /-- `add_comm_prefix x s` returns `"comm_" ++ s` if `x = tt` and `s` otherwise. -/
 unsafe def add_comm_prefix : Bool → String → String
@@ -298,7 +300,7 @@ unsafe def parser : lean.parser ValueType := do
       | none => pure none
   return ⟨bang, ques, tgt Name.anonymous, doc, ff⟩
 
-private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name → tactic (List String)) : Tactic Unit := do
+private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name → tactic (List String)) : Tactic := do
   let src_fields ← f src
   let tgt_fields ← f tgt
   guard (src_fields = tgt_fields) <|> fail ("Failed to map fields of " ++ src)
@@ -306,7 +308,7 @@ private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name �
 
 /-- Add the `aux_attr` attribute to the structure fields of `src`
 so that future uses of `to_additive` will map them to the corresponding `tgt` fields. -/
-unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : Tactic Unit :=
+unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : Tactic :=
   let aux := proceed_fields_aux src tgt prio
   do
   ((aux fun n => pure <| List.map Name.toString <| (env n).getOrElse []) >>

@@ -5,8 +5,8 @@ Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 -/
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.Convex.Hull
-import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
-import Mathbin.Analysis.NormedSpace.Ordered
+import Mathbin.Analysis.Normed.Order.Lattice
+import Mathbin.Analysis.Normed.Order.Basic
 
 /-!
 # Local convexity

@@ -49,7 +49,7 @@ theorem logb_zero : logb b 0 = 0 := by simp [logb]
 theorem logb_one : logb b 1 = 0 := by simp [logb]
 
 @[simp]
-theorem logb_abs (x : ℝ) : logb b (abs x) = logb b x := by rw [logb, logb, log_abs]
+theorem logb_abs (x : ℝ) : logb b (|x|) = logb b x := by rw [logb, logb, log_abs]
 
 @[simp]
 theorem logb_neg_eq_logb (x : ℝ) : logb b (-x) = logb b x := by rw [← logb_abs x, ← logb_abs (-x), abs_neg]
@@ -83,7 +83,7 @@ theorem logb_rpow : logb b (b ^ x) = x := by
   rw [logb, div_eq_iff, log_rpow b_pos]
   exact log_b_ne_zero b_pos b_ne_one
 
-theorem rpow_logb_eq_abs (hx : x ≠ 0) : b ^ logb b x = abs x := by
+theorem rpow_logb_eq_abs (hx : x ≠ 0) : b ^ logb b x = |x| := by
   apply log_inj_on_pos
   simp only [Set.mem_Ioi]
   apply rpow_pos_of_pos b_pos

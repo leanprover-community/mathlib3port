@@ -7,9 +7,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.RingTheory.TensorProduct
 import Mathbin.Algebra.Category.RingCat.Limits
 import Mathbin.Algebra.Category.RingCat.Colimits
+import Mathbin.Algebra.Category.RingCat.Instances
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.RingTheory.Subring.Basic
-import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.CategoryTheory.Limits.Preserves.Limits
 
 /-!
@@ -37,8 +37,8 @@ section Pushout
 
 variable {R A B : CommRingCat.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra_map R tensor_product(A, R, B) r]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra_map R tensor_product(A, R, B) r]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The explicit cocone with tensor products as the fibered product in `CommRing`. -/
 def pushoutCocone : Limits.PushoutCocone f g := by
   letI := RingHom.toAlgebra f
@@ -52,7 +52,7 @@ def pushoutCocone : Limits.PushoutCocone f g := by
   exact algebra.tensor_product.include_right.to_ring_hom
   ext r
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra_map R tensor_product(A, R, B) r]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra_map R tensor_product(A, R, B) r]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · exact algebra.tensor_product.include_left.commutes r
     
   · exact (algebra.tensor_product.include_right.commutes r).symm

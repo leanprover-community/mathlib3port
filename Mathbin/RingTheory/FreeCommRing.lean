@@ -373,7 +373,7 @@ def freeCommRingPemptyEquivInt : FreeCommRing PEmpty.{u + 1} ≃+* ℤ :=
   RingEquiv.trans (freeCommRingEquivMvPolynomialInt _) (MvPolynomial.isEmptyRingEquiv _ PEmpty)
 
 /-- The free commutative ring on a type with one term is isomorphic to `ℤ[X]`. -/
-def freeCommRingPunitEquivPolynomialInt : FreeCommRing PUnit.{u + 1} ≃+* Polynomial ℤ :=
+def freeCommRingPunitEquivPolynomialInt : FreeCommRing PUnit.{u + 1} ≃+* ℤ[X] :=
   (freeCommRingEquivMvPolynomialInt _).trans (MvPolynomial.punitAlgEquiv ℤ).toRingEquiv
 
 open FreeRing
@@ -383,6 +383,6 @@ def freeRingPemptyEquivInt : FreeRing PEmpty.{u + 1} ≃+* ℤ :=
   RingEquiv.trans (subsingletonEquivFreeCommRing _) freeCommRingPemptyEquivInt
 
 /-- The free ring on a type with one term is isomorphic to `ℤ[X]`. -/
-def freeRingPunitEquivPolynomialInt : FreeRing PUnit.{u + 1} ≃+* Polynomial ℤ :=
+def freeRingPunitEquivPolynomialInt : FreeRing PUnit.{u + 1} ≃+* ℤ[X] :=
   RingEquiv.trans (subsingletonEquivFreeCommRing _) freeCommRingPunitEquivPolynomialInt
 

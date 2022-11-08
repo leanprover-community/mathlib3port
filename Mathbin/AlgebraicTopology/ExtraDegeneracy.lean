@@ -187,8 +187,8 @@ def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
           simpa only [shift_fun_succ] using f.to_order_hom.monotone (fin.succ_le_succ_iff.mp hi)
            }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The obvious extra degeneracy on the standard simplex. -/
 @[protected]
 def extraDegeneracy (Δ : SimplexCategory) : SimplicialObject.Augmented.ExtraDegeneracy (standardSimplex.obj Δ) where
@@ -198,15 +198,15 @@ def extraDegeneracy (Δ : SimplexCategory) : SimplicialObject.Augmented.ExtraDeg
     ext1 j
     fin_cases j
   s₀_comp_δ₁' := by
-    ext x j
+    ext (x j)
     fin_cases j
     rfl
   s_comp_δ₀' n := by
-    ext φ i : 4
+    ext (φ i) : 4
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     simp only [shift_fun_succ]
   s_comp_δ' n i := by
-    ext φ j : 4
+    ext (φ j) : 4
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     by_cases j = 0
     · subst h
@@ -217,7 +217,7 @@ def extraDegeneracy (Δ : SimplexCategory) : SimplicialObject.Augmented.ExtraDeg
       simp only [Fin.succ_succ_above_succ, shift_fun_succ]
       
   s_comp_σ' n i := by
-    ext φ j : 4
+    ext (φ j) : 4
     dsimp [simplicial_object.σ, SimplexCategory.σ, SSet.standardSimplex]
     by_cases j = 0
     · subst h
@@ -287,7 +287,7 @@ theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
 theorem ExtraDegeneracy.s_comp_base (n : ℕ) : ExtraDegeneracy.s f S n ≫ widePullback.base _ = widePullback.base _ := by
   apply wide_pullback.lift_base
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The augmented Čech nerve associated to a split epimorphism has an extra degeneracy. -/
 noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f.augmentedCechNerve where
   s' := S.section_ ≫ widePullback.lift f.Hom (fun i => 𝟙 _) fun i => by rw [id_comp]

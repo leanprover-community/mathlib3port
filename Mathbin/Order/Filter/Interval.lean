@@ -81,7 +81,7 @@ theorem Tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass IooCat l₁ l₂] {
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => IooCat (u₁ x) (u₂ x)) lb l₂.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), Ixx x y ⊆ t :=
   Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ <| by

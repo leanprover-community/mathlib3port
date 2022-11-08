@@ -122,7 +122,7 @@ theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 := by
 @[simp, norm_cast]
 theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by simp
-  | -[1 + n] => by
+  | -[n+1] => by
     rw [zpow_neg_succ_of_nat] <;>
       simp only [Int.neg_succ_of_nat_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_ofNat, cpow_nat_cast]
 
@@ -367,11 +367,11 @@ theorem zero_rpow_nonneg (x : ℝ) : 0 ≤ (0 : ℝ) ^ x := by by_cases h:x = 0 
 theorem rpow_nonneg_of_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : 0 ≤ x ^ y := by
   rw [rpow_def_of_nonneg hx] <;> split_ifs <;> simp only [zero_le_one, le_refl, le_of_lt (exp_pos _)]
 
-theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : abs (x ^ y) = abs x ^ y := by
+theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : |x ^ y| = |x| ^ y := by
   have h_rpow_nonneg : 0 ≤ x ^ y := Real.rpow_nonneg_of_nonneg hx_nonneg _
   rw [abs_eq_self.mpr hx_nonneg, abs_eq_self.mpr h_rpow_nonneg]
 
-theorem abs_rpow_le_abs_rpow (x y : ℝ) : abs (x ^ y) ≤ abs x ^ y := by
+theorem abs_rpow_le_abs_rpow (x y : ℝ) : |x ^ y| ≤ |x| ^ y := by
   cases' le_or_lt 0 x with hx hx
   · rw [abs_rpow_of_nonneg hx]
     
@@ -380,7 +380,7 @@ theorem abs_rpow_le_abs_rpow (x y : ℝ) : abs (x ^ y) ≤ abs x ^ y := by
     exact mul_le_of_le_one_right (exp_pos _).le (abs_cos_le_one _)
     
 
-theorem abs_rpow_le_exp_log_mul (x y : ℝ) : abs (x ^ y) ≤ exp (log x * y) := by
+theorem abs_rpow_le_exp_log_mul (x y : ℝ) : |x ^ y| ≤ exp (log x * y) := by
   refine' (abs_rpow_le_abs_rpow x y).trans _
   by_cases hx:x = 0
   · by_cases hy:y = 0 <;> simp [hx, hy, zero_le_one]
@@ -435,7 +435,7 @@ variable {α : Type _} {l : Filter α} {f g : α → ℂ}
 
 open Asymptotics
 
-theorem is_Theta_exp_arg_mul_im (hl : IsBoundedUnder (· ≤ ·) l fun x => abs (g x).im) :
+theorem is_Theta_exp_arg_mul_im (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|) :
     (fun x => Real.exp (arg (f x) * im (g x))) =Θ[l] fun x => (1 : ℝ) := by
   rcases hl with ⟨b, hb⟩
   refine' Real.is_Theta_exp_comp_one.2 ⟨π * b, _⟩
@@ -444,7 +444,7 @@ theorem is_Theta_exp_arg_mul_im (hl : IsBoundedUnder (· ≤ ·) l fun x => abs 
   erw [abs_mul]
   exact mul_le_mul (abs_arg_le_pi _) hx (abs_nonneg _) real.pi_pos.le
 
-theorem is_O_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => abs (g x).im) :
+theorem is_O_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|) :
     (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re :=
   calc
     (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
@@ -453,7 +453,7 @@ theorem is_O_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => abs (g x).im)
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
     
 
-theorem is_Theta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => abs (g x).im)
+theorem is_Theta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|)
     (hl : ∀ᶠ x in l, f x = 0 → re (g x) = 0 → g x = 0) : (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re :=
   calc
     (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
@@ -809,7 +809,7 @@ theorem rpow_le_one_iff_of_pos (hx : 0 < x) : x ^ y ≤ 1 ↔ 1 ≤ x ∧ y ≤ 
   rw [rpow_def_of_pos hx, exp_le_one_iff, mul_nonpos_iff, log_nonneg_iff hx, log_nonpos_iff hx]
 
 /-- Bound for `|log x * x ^ t|` in the interval `(0, 1]`, for positive real `t`. -/
-theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0 < t) : abs (log x * x ^ t) < 1 / t := by
+theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0 < t) : |log x * x ^ t| < 1 / t := by
   rw [lt_div_iff ht]
   have := abs_log_mul_self_lt (x ^ t) (rpow_pos_of_pos h1 t) (rpow_le_one h1.le h2 ht.le)
   rwa [log_rpow h1, mul_assoc, abs_mul, abs_of_pos ht, mul_comm] at this
@@ -1045,13 +1045,13 @@ theorem tendsto_exp_mul_div_rpow_at_top (s : ℝ) (b : ℝ) (hb : 0 < b) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], ["with", ident x],
   ["using", expr by simp [] [] [] ["[", expr exp_neg, ",", expr inv_div, ",", expr div_eq_mul_inv _
-    (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+    (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- The function `x ^ s * exp (-b * x)` tends to `0` at `+∞`, for any real `s` and `b > 0`. -/
 theorem tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 < b) :
     Tendsto (fun x : ℝ => x ^ s * exp (-b * x)) atTop (𝓝 0) := by
   refine' (tendsto_exp_mul_div_rpow_at_top s b hb).inv_tendsto_at_top.congr' _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 namespace Asymptotics
 
@@ -1062,9 +1062,9 @@ theorem IsOWith.rpow (h : IsOWith c l f g) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0
   apply is_O_with.of_bound
   filter_upwards [hg, h.bound] with x hgx hx
   calc
-    abs (f x ^ r) ≤ abs (f x) ^ r := abs_rpow_le_abs_rpow _ _
-    _ ≤ (c * abs (g x)) ^ r := rpow_le_rpow (abs_nonneg _) hx hr
-    _ = c ^ r * abs (g x ^ r) := by rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
+    |f x ^ r| ≤ |f x| ^ r := abs_rpow_le_abs_rpow _ _
+    _ ≤ (c * |g x|) ^ r := rpow_le_rpow (abs_nonneg _) hx hr
+    _ = c ^ r * |g x ^ r| := by rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
     
 
 theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) : (fun x => f x ^ r) =O[l] fun x => g x ^ r :=
@@ -1074,9 +1074,9 @@ theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) : (fun x =>
 /- warning: asymptotics.is_o.rpow clashes with asymptotics.is_O.rpow -> Asymptotics.IsO.rpow
 warning: asymptotics.is_o.rpow -> Asymptotics.IsO.rpow is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {r : Real} {l : Filter.{u_1} α} {f : α -> Real} {g : α -> Real}, (LT.lt.{0} Real Real.hasLt (Zero.zero.{0} Real Real.hasZero) r) -> (Filter.EventuallyLe.{u_1 0} α Real Real.hasLe l (Zero.zero.{u_1} (α -> Real) (Pi.hasZero.{u_1 0} α (fun (ᾰ : α) => Real) (fun (i : α) => Real.hasZero))) g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l f g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (f x) r) (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (g x) r))
+  forall {α : Type.{u_1}} {r : Real} {l : Filter.{u_1} α} {f : α -> Real} {g : α -> Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Filter.EventuallyLe.{u_1 0} α Real Real.hasLe l (OfNat.ofNat.{u_1} (α -> Real) 0 (OfNat.mk.{u_1} (α -> Real) 0 (Zero.zero.{u_1} (α -> Real) (Pi.hasZero.{u_1 0} α (fun (ᾰ : α) => Real) (fun (i : α) => Real.hasZero))))) g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l f g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (f x) r) (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (g x) r))
 but is expected to have type
-  forall {α : Type.{u_1}} {r : Real} {l : Filter.{u_1} α} {f : α -> Real} {g : α -> Real}, (LE.le.{0} Real Real.hasLe (Zero.zero.{0} Real Real.hasZero) r) -> (Filter.EventuallyLe.{u_1 0} α Real Real.hasLe l (Zero.zero.{u_1} (α -> Real) (Pi.hasZero.{u_1 0} α (fun (ᾰ : α) => Real) (fun (i : α) => Real.hasZero))) g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l f g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (f x) r) (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (g x) r))
+  forall {α : Type.{u_1}} {r : Real} {l : Filter.{u_1} α} {f : α -> Real} {g : α -> Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Filter.EventuallyLe.{u_1 0} α Real Real.hasLe l (OfNat.ofNat.{u_1} (α -> Real) 0 (OfNat.mk.{u_1} (α -> Real) 0 (Zero.zero.{u_1} (α -> Real) (Pi.hasZero.{u_1 0} α (fun (ᾰ : α) => Real) (fun (i : α) => Real.hasZero))))) g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l f g) -> (Asymptotics.IsO.{u_1 0 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (f x) r) (fun (x : α) => HPow.hPow.{0 0 0} Real Real Real (instHPow.{0 0} Real Real Real.hasPow) (g x) r))
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.rpow Asymptotics.IsO.rpowₓ'. -/
 theorem IsO.rpow (hr : 0 < r) (hg : 0 ≤ᶠ[l] g) (h : f =o[l] g) : (fun x => f x ^ r) =o[l] fun x => g x ^ r :=
   is_o.of_is_O_with fun c hc =>
@@ -1132,7 +1132,7 @@ theorem is_o_log_rpow_rpow_at_top {s : ℝ} (r : ℝ) (hs : 0 < s) : (fun x => l
     
 
 theorem is_o_abs_log_rpow_rpow_nhds_zero {s : ℝ} (r : ℝ) (hs : s < 0) :
-    (fun x => abs (log x) ^ r) =o[𝓝[>] 0] fun x => x ^ s :=
+    (fun x => |log x| ^ r) =o[𝓝[>] 0] fun x => x ^ s :=
   ((is_o_log_rpow_rpow_at_top r (neg_pos.2 hs)).comp_tendsto tendsto_inv_zero_at_top).congr'
     ((mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos)) fun x hx => by
       simp [abs_of_nonpos, log_nonpos hx.1 hx.2])
@@ -1168,7 +1168,7 @@ theorem continuous_at_cpow_zero_of_re_pos {z : ℂ} (hz : 0 < z.re) : Continuous
       simp [hz, Real.zero_rpow hz.ne']
     
   · simp only [(· ∘ ·), Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    rcases exists_gt (abs (im z)) with ⟨C, hC⟩
+    rcases exists_gt (|im z|) with ⟨C, hC⟩
     refine' ⟨Real.exp (π * C), eventually_map.2 _⟩
     refine'
       (((continuous_im.comp continuous_snd).abs.Tendsto (_, z)).Eventually (gt_mem_nhds hC)).mono fun z hz =>
@@ -1975,7 +1975,6 @@ theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0∞
   rw [coe_rpow_of_nonneg _ hy.le]
   exact_mod_cast hc a (by exact_mod_cast ha)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem eventually_pow_one_div_le {x : ℝ≥0∞} (hx : x ≠ ∞) {y : ℝ≥0∞} (hy : 1 < y) :
     ∀ᶠ n : ℕ in at_top, x ^ (1 / n : ℝ) ≤ y := by
   lift x to ℝ≥0 using hx
@@ -1985,10 +1984,7 @@ theorem eventually_pow_one_div_le {x : ℝ≥0∞} (hx : x ≠ ∞) {y : ℝ≥0
   · lift y to ℝ≥0 using h
     have := Nnreal.eventually_pow_one_div_le x (by exact_mod_cast hy : 1 < y)
     refine' this.congr (eventually_of_forall fun n => _)
-    rw [coe_rpow_of_nonneg x
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]" :
-          0 ≤ (1 / n : ℝ)),
-      coe_le_coe]
+    rw [coe_rpow_of_nonneg x (by positivity : 0 ≤ (1 / n : ℝ)), coe_le_coe]
     
 
 private theorem continuous_at_rpow_const_of_pos {x : ℝ≥0∞} {y : ℝ} (h : 0 < y) :

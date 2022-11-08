@@ -388,7 +388,7 @@ theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
 
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
   | (n : ℕ) => of_pow n
-  | -[1 + n] => fun h => by
+  | -[n+1] => fun h => by
     rw [zpow_neg_succ_of_nat] at h
     exact h.of_inv.of_pow _
 
@@ -398,7 +398,9 @@ section Polynomial
 
 open Polynomial
 
-variable (x : ℝ) (p : Polynomial ℤ)
+open Polynomial
+
+variable (x : ℝ) (p : ℤ[X])
 
 theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p ≠ 0) (x_is_root : aeval x p = 0) :
     1 < p.natDegree := by
@@ -487,7 +489,7 @@ theorem irrational_inv_iff : Irrational x⁻¹ ↔ Irrational x :=
 
 @[simp]
 theorem irrational_rat_mul_iff : Irrational (q * x) ↔ q ≠ 0 ∧ Irrational x :=
-  ⟨fun h => ⟨Rat.cast_ne_zero.1 <| left_ne_zero_of_mul h.ne_zero, h.of_rat_mul q⟩, fun h => h.2.rat_mul h.1⟩
+  ⟨fun h => ⟨Rat.cast_ne_zero.1 <| left_ne_zero_of_mul h.NeZero, h.of_rat_mul q⟩, fun h => h.2.rat_mul h.1⟩
 
 @[simp]
 theorem irrational_mul_rat_iff : Irrational (x * q) ↔ q ≠ 0 ∧ Irrational x := by rw [mul_comm, irrational_rat_mul_iff]

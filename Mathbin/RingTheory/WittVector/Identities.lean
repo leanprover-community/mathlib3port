@@ -175,7 +175,7 @@ theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) : ((frobenius^[i]) x).c
   · simp
     
   · rw [iterate_succ_apply', coeff_frobenius_char_p, ih]
-    ring_exp
+    ring
     
 
 /-- This is a slightly specialized form of [Hazewinkel, *Witt Vectors*][Haze09] 6.2 equation 5. -/

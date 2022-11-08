@@ -5,6 +5,7 @@ Authors: Simon Hudon, Mario Carneiro
 -/
 import Mathbin.Data.Rat.Cast
 import Mathbin.Data.Rat.MetaDefs
+import Mathbin.Data.Int.Lemmas
 
 /-!
 # `norm_num`
@@ -1343,7 +1344,7 @@ theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
         b :
           ℤ) =
         c) :
-    -[1 + a] = -c := by rw [← h₂, ← h₁] <;> rfl
+    -[a+1] = -c := by rw [← h₂, ← h₁] <;> rfl
 
 /-- Evaluates `nat.succ`, `int.to_nat`, `int.nat_abs`, `int.neg_succ_of_nat`. -/
 unsafe def eval_nat_int : expr → tactic (expr × expr)
@@ -1487,7 +1488,7 @@ unsafe def derive' (step : expr → tactic (expr × expr)) : expr → tactic (ex
       ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed) (fun _ _ _ _ _ => failed)
           (fun _ _ _ _ e => do
             let (new_e, pr) ← step e
-            guard ¬expr.alpha_eqv new_e e
+            guard ¬new_e == e
             pure ((), new_e, some pr, tt))
           `eq e
     pure (e', pr)

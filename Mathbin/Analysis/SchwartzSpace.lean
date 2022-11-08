@@ -85,13 +85,10 @@ instance funLike : FunLike 𝓢(E, F) E fun _ => F where
 instance : CoeFun 𝓢(E, F) fun _ => E → F :=
   ⟨fun p => p.toFun⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- All derivatives of a Schwartz function are rapidly decaying. -/
 theorem decay (f : 𝓢(E, F)) (k n : ℕ) : ∃ (C : ℝ)(hC : 0 < C), ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ C := by
   rcases f.decay' k n with ⟨C, hC⟩
-  exact
-    ⟨max C 1, by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]",
-      fun x => (hC x).trans (le_max_left _ _)⟩
+  exact ⟨max C 1, by positivity, fun x => (hC x).trans (le_max_left _ _)⟩
 
 /-- Every Schwartz function is smooth. -/
 theorem smooth (f : 𝓢(E, F)) (n : ℕ∞) : ContDiff ℝ n f :=
@@ -117,15 +114,12 @@ theorem bounds_bdd_below (k n : ℕ) (f : 𝓢(E, F)) :
     BddBelow { c | 0 ≤ c ∧ ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ c } :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
     ∥x∥ ^ k * ∥iteratedFderiv ℝ n (f + g) x∥ ≤
       ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ + ∥x∥ ^ k * ∥iteratedFderiv ℝ n g x∥ :=
   by
   rw [← mul_add]
-  refine'
-    mul_le_mul_of_nonneg_left _
-      (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+  refine' mul_le_mul_of_nonneg_left _ (by positivity)
   convert norm_add_le _ _
   exact iterated_fderiv_add_apply (f.smooth _) (g.smooth _)
 
@@ -171,14 +165,12 @@ section Smul
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F] [NormedField 𝕜'] [NormedSpace 𝕜' F]
   [SmulCommClass ℝ 𝕜' F]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 instance : HasSmul 𝕜 𝓢(E, F) :=
   ⟨fun c f =>
     { toFun := c • f, smooth' := (f.smooth _).const_smul c,
       decay' := fun k n => by
         refine' ⟨f.seminorm_aux k n * (∥c∥ + 1), fun x => _⟩
-        have hc : 0 ≤ ∥c∥ := by
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+        have hc : 0 ≤ ∥c∥ := by positivity
         refine' le_trans _ ((mul_le_mul_of_nonneg_right (f.le_seminorm_aux k n x) hc).trans _)
         · apply Eq.le
           rw [mul_comm _ ∥c∥, ← mul_assoc]

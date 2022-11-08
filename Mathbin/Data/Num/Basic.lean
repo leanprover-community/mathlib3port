@@ -151,11 +151,11 @@ open Ordering
   -/
 def cmp : PosNum → PosNum → Ordering
   | 1, 1 => Eq
-  | _, 1 => gt
+  | _, 1 => GT.gt
   | 1, _ => lt
   | bit0 a, bit0 b => cmp a b
-  | bit0 a, bit1 b => Ordering.casesOn (cmp a b) lt lt gt
-  | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt gt gt
+  | bit0 a, bit1 b => Ordering.casesOn (cmp a b) lt lt GT.gt
+  | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt GT.gt GT.gt
   | bit1 a, bit1 b => cmp a b
 
 instance : LT PosNum :=
@@ -275,7 +275,7 @@ open Ordering
   -/
 def cmp : Num → Num → Ordering
   | 0, 0 => Eq
-  | _, 0 => gt
+  | _, 0 => GT.gt
   | 0, _ => lt
   | Pos a, Pos b => PosNum.cmp a b
 
@@ -370,7 +370,7 @@ protected def bitm1 : Znum → Znum
   -/
 def ofInt' : ℤ → Znum
   | (n : ℕ) => Num.toZnum (Num.ofNat' n)
-  | -[1 + n] => Num.toZnumNeg (Num.ofNat' (n + 1))
+  | -[n+1] => Num.toZnumNeg (Num.ofNat' (n + 1))
 
 end Znum
 
@@ -509,10 +509,10 @@ def cmp : Znum → Znum → Ordering
   | 0, 0 => Eq
   | Pos a, Pos b => PosNum.cmp a b
   | neg a, neg b => PosNum.cmp b a
-  | Pos _, _ => gt
+  | Pos _, _ => GT.gt
   | neg _, _ => lt
   | _, Pos _ => lt
-  | _, neg _ => gt
+  | _, neg _ => GT.gt
 
 instance : LT Znum :=
   ⟨fun a b => cmp a b = Ordering.lt⟩

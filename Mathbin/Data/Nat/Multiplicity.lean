@@ -85,10 +85,10 @@ theorem multiplicity_pow {p m n : ℕ} (hp : p.Prime) : multiplicity p (m ^ n) =
   multiplicity.pow <| prime_iff.mp hp
 
 theorem multiplicity_self {p : ℕ} (hp : p.Prime) : multiplicity p p = 1 :=
-  multiplicity_self (prime_iff.mp hp).not_unit hp.ne_zero
+  multiplicity_self (prime_iff.mp hp).not_unit hp.NeZero
 
 theorem multiplicity_pow_self {p n : ℕ} (hp : p.Prime) : multiplicity p (p ^ n) = n :=
-  multiplicity_pow_self hp.ne_zero (prime_iff.mp hp).not_unit n
+  multiplicity_pow_self hp.NeZero (prime_iff.mp hp).not_unit n
 
 /-- **Legendre's Theorem**
 

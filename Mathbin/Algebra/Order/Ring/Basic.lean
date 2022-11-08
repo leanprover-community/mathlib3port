@@ -3,12 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Algebra.CharZero.Defs
-import Mathbin.Algebra.Ring.Divisibility
-import Mathbin.Algebra.Hom.Ring
+import Mathbin.Order.MinMax
 import Mathbin.Algebra.Order.Group.Basic
-import Mathbin.Algebra.Order.Sub.Canonical
-import Mathbin.Algebra.Order.RingLemmas
+import Mathbin.Algebra.Order.Ring.Lemmas
 
 /-!
 # Ordered rings and semirings
@@ -93,19 +90,9 @@ immediate predecessors and what conditions are added to each of them.
   - `linear_ordered_ring` & commutativity of multiplication
   - `linear_ordered_comm_semiring` & additive inverses
   - `is_domain` & linear order structure
-* `canonically_ordered_comm_semiring`
-  - `canonically_ordered_add_monoid` & multiplication & `*` respects `≤` & no zero divisors
-  - `comm_semiring` & `a ≤ b ↔ ∃ c, b = a + c` & no zero divisors
 
-## TODO
-
-We're still missing some typeclasses, like
-* `canonically_ordered_semiring`
-They have yet to come up in practice.
 -/
 
-
-open Function
 
 open Function
 
@@ -124,6 +111,7 @@ theorem add_one_le_two_mul [LE α] [Semiring α] [CovariantClass α α (· + ·)
     _ = 2 * a := (two_mul _).symm
     
 
+#print OrderedSemiring /-
 /-- An `ordered_semiring` is a semiring with a partial order such that addition is monotone and
 multiplication by a nonnegative number is monotone. -/
 @[protect_proj]
@@ -131,24 +119,32 @@ class OrderedSemiring (α : Type u) extends Semiring α, OrderedAddCommMonoid α
   zero_le_one : (0 : α) ≤ 1
   mul_le_mul_of_nonneg_left : ∀ a b c : α, a ≤ b → 0 ≤ c → c * a ≤ c * b
   mul_le_mul_of_nonneg_right : ∀ a b c : α, a ≤ b → 0 ≤ c → a * c ≤ b * c
+-/
 
+#print OrderedCommSemiring /-
 /-- An `ordered_comm_semiring` is a commutative semiring with a partial order such that addition is
 monotone and multiplication by a nonnegative number is monotone. -/
 @[protect_proj]
 class OrderedCommSemiring (α : Type u) extends OrderedSemiring α, CommSemiring α
+-/
 
+#print OrderedRing /-
 /-- An `ordered_ring` is a ring with a partial order such that addition is monotone and
 multiplication by a nonnegative number is monotone. -/
 @[protect_proj]
 class OrderedRing (α : Type u) extends Ring α, OrderedAddCommGroup α where
   zero_le_one : 0 ≤ (1 : α)
   mul_nonneg : ∀ a b : α, 0 ≤ a → 0 ≤ b → 0 ≤ a * b
+-/
 
+#print OrderedCommRing /-
 /-- An `ordered_comm_ring` is a commutative ring with a partial order such that addition is monotone
 and multiplication by a nonnegative number is monotone. -/
 @[protect_proj]
 class OrderedCommRing (α : Type u) extends OrderedRing α, CommRing α
+-/
 
+#print StrictOrderedSemiring /-
 /-- A `strict_ordered_semiring` is a semiring with a partial order such that addition is strictly
 monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
@@ -156,24 +152,32 @@ class StrictOrderedSemiring (α : Type u) extends Semiring α, OrderedCancelAddC
   zero_le_one : (0 : α) ≤ 1
   mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → c * a < c * b
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → a * c < b * c
+-/
 
+#print StrictOrderedCommSemiring /-
 /-- A `strict_ordered_comm_semiring` is a commutative semiring with a partial order such that
 addition is strictly monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class StrictOrderedCommSemiring (α : Type u) extends StrictOrderedSemiring α, CommSemiring α
+-/
 
+#print StrictOrderedRing /-
 /-- A `strict_ordered_ring` is a ring with a partial order such that addition is strictly monotone
 and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class StrictOrderedRing (α : Type u) extends Ring α, OrderedAddCommGroup α where
   zero_le_one : 0 ≤ (1 : α)
   mul_pos : ∀ a b : α, 0 < a → 0 < b → 0 < a * b
+-/
 
+#print StrictOrderedCommRing /-
 /-- A `strict_ordered_comm_ring` is a commutative ring with a partial order such that addition is
 strictly monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class StrictOrderedCommRing (α : Type _) extends StrictOrderedRing α, CommRing α
+-/
 
+#print LinearOrderedSemiring /-
 /- It's not entirely clear we should assume `nontrivial` at this point; it would be reasonable to
 explore changing this, but be warned that the instances involving `domain` may cause typeclass
 search loops. -/
@@ -181,28 +185,28 @@ search loops. -/
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class LinearOrderedSemiring (α : Type u) extends StrictOrderedSemiring α, LinearOrderedAddCommMonoid α, Nontrivial α
+-/
 
+#print LinearOrderedCommSemiring /-
 /-- A `linear_ordered_comm_semiring` is a nontrivial commutative semiring with a linear order such
 that addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class LinearOrderedCommSemiring (α : Type _) extends StrictOrderedCommSemiring α, LinearOrderedSemiring α
+-/
 
+#print LinearOrderedRing /-
 /-- A `linear_ordered_ring` is a ring with a linear order such that addition is monotone and
 multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class LinearOrderedRing (α : Type u) extends StrictOrderedRing α, LinearOrder α, Nontrivial α
+-/
 
+#print LinearOrderedCommRing /-
 /-- A `linear_ordered_comm_ring` is a commutative ring with a linear order such that addition is
 monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class LinearOrderedCommRing (α : Type u) extends LinearOrderedRing α, CommMonoid α
-
-/-- A canonically ordered commutative semiring is an ordered, commutative semiring in which `a ≤ b`
-iff there exists `c` with `b = a + c`. This is satisfied by the natural numbers, for example, but
-not the integers or other ordered groups. -/
-@[protect_proj]
-class CanonicallyOrderedCommSemiring (α : Type _) extends CanonicallyOrderedAddMonoid α, CommSemiring α where
-  eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : α, a * b = 0 → a = 0 ∨ b = 0
+-/
 
 section OrderedSemiring
 
@@ -589,48 +593,20 @@ theorem lt_two_mul_self (ha : 0 < a) : a < 2 * a :=
   lt_mul_of_one_lt_left ha one_lt_two
 
 theorem Nat.strict_mono_cast : StrictMono (coe : ℕ → α) :=
-  strict_mono_nat_of_lt_succ fun n => by rw [Nat.cast_succ] <;> apply lt_add_one
+  strict_mono_nat_of_lt_succ fun n => by
+    rw [Nat.cast_succ]
+    apply lt_add_one
+
+/-- `coe : ℕ → α` as an `order_embedding` -/
+@[simps (config := { fullyApplied := false })]
+def Nat.castOrderEmbedding : ℕ ↪o α :=
+  OrderEmbedding.ofStrictMono coe Nat.strict_mono_cast
 
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedSemiring.to_no_max_order : NoMaxOrder α :=
   ⟨fun a => ⟨a + 1, lt_add_of_pos_right _ one_pos⟩⟩
 
-/-- Note this is not an instance as `char_zero` implies `nontrivial`, and this would risk forming a
-loop. -/
-theorem StrictOrderedSemiring.to_char_zero : CharZero α :=
-  ⟨Nat.strict_mono_cast.Injective⟩
-
 end Nontrivial
-
-section HasExistsAddOfLe
-
-variable [HasExistsAddOfLe α]
-
-/-- Binary **rearrangement inequality**. -/
-theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b * c ≤ a * c + b * d := by
-  obtain ⟨b, rfl⟩ := exists_add_of_le hab
-  obtain ⟨d, rfl⟩ := exists_add_of_le hcd
-  rw [mul_add, add_right_comm, mul_add, ← add_assoc]
-  exact add_le_add_left (mul_le_mul_of_nonneg_right hab <| (le_add_iff_nonneg_right _).1 hcd) _
-
-/-- Binary **rearrangement inequality**. -/
-theorem mul_add_mul_le_mul_add_mul' (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d := by
-  rw [add_comm (a • d), add_comm (a • c)]
-  exact mul_add_mul_le_mul_add_mul hba hdc
-
-/-- Binary strict **rearrangement inequality**. -/
-theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c < a * c + b * d := by
-  obtain ⟨b, rfl⟩ := exists_add_of_le hab.le
-  obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
-  rw [mul_add, add_right_comm, mul_add, ← add_assoc]
-  exact add_lt_add_left (mul_lt_mul_of_pos_right hab <| (lt_add_iff_pos_right _).1 hcd) _
-
-/-- Binary **rearrangement inequality**. -/
-theorem mul_add_mul_lt_mul_add_mul' (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d := by
-  rw [add_comm (a • d), add_comm (a • c)]
-  exact mul_add_mul_lt_mul_add_mul hba hdc
-
-end HasExistsAddOfLe
 
 end StrictOrderedSemiring
 
@@ -882,10 +858,6 @@ theorem Units.inv_neg {u : αˣ} : ↑u⁻¹ < (0 : α) ↔ ↑u < (0 : α) :=
     neg_of_mul_pos_right (u.mul_inv.symm ▸ zero_lt_one) h.le
   ⟨this, this⟩
 
--- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedSemiring.to_char_zero : CharZero α :=
-  StrictOrderedSemiring.to_char_zero
-
 theorem cmp_mul_pos_left (ha : 0 < a) (b c : α) : cmp (a * b) (a * c) = cmp b c :=
   (strict_mono_mul_left_of_pos ha).cmp_map_eq b c
 
@@ -951,31 +923,6 @@ instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
       exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne, (mul_neg_of_pos_of_neg ha hb).Ne,
         (mul_pos ha hb).Ne.symm] }
 
-@[simp]
-theorem abs_one : abs (1 : α) = 1 :=
-  abs_of_pos zero_lt_one
-
-@[simp]
-theorem abs_two : abs (2 : α) = 2 :=
-  abs_of_pos zero_lt_two
-
-theorem abs_mul (a b : α) : abs (a * b) = abs a * abs b := by
-  rw [abs_eq (mul_nonneg (abs_nonneg a) (abs_nonneg b))]
-  cases' le_total a 0 with ha ha <;>
-    cases' le_total b 0 with hb hb <;>
-      simp only [abs_of_nonpos, abs_of_nonneg, true_or_iff, or_true_iff, eq_self_iff_true, neg_mul, mul_neg, neg_neg, *]
-
-/-- `abs` as a `monoid_with_zero_hom`. -/
-def absHom : α →*₀ α :=
-  ⟨abs, abs_zero, abs_one, abs_mul⟩
-
-@[simp]
-theorem abs_mul_abs_self (a : α) : abs a * abs a = a * a :=
-  abs_by_cases (fun x => x * x = a * a) rfl (neg_mul_neg a a)
-
-@[simp]
-theorem abs_mul_self (a : α) : abs (a * a) = a * a := by rw [abs_mul, abs_mul_abs_self]
-
 theorem mul_pos_iff : 0 < a * b ↔ 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 :=
   ⟨pos_and_pos_or_neg_and_neg_of_mul_pos, fun h => h.elim (and_imp.2 mul_pos) (and_imp.2 mul_pos_of_neg_of_neg)⟩
 
@@ -994,7 +941,7 @@ theorem mul_nonpos_iff : a * b ≤ 0 ↔ 0 ≤ a ∧ b ≤ 0 ∨ a ≤ 0 ∧ 0 �
   rw [← neg_nonneg, neg_mul_eq_mul_neg, mul_nonneg_iff, neg_nonneg, neg_nonpos]
 
 theorem mul_self_nonneg (a : α) : 0 ≤ a * a :=
-  abs_mul_self a ▸ abs_nonneg _
+  (le_total 0 a).elim (fun h => mul_nonneg h h) fun h => mul_nonneg_of_nonpos_of_nonpos h h
 
 @[simp]
 theorem neg_le_self_iff : -a ≤ a ↔ 0 ≤ a := by
@@ -1019,30 +966,6 @@ theorem lt_neg_self_iff : a < -a ↔ a < 0 :=
     _ ↔ 0 < -a := neg_lt_self_iff
     _ ↔ a < 0 := neg_pos
     
-
-@[simp]
-theorem abs_eq_self : abs a = a ↔ 0 ≤ a := by simp [abs_eq_max_neg]
-
-@[simp]
-theorem abs_eq_neg_self : abs a = -a ↔ a ≤ 0 := by simp [abs_eq_max_neg]
-
-/-- For an element `a` of a linear ordered ring, either `abs a = a` and `0 ≤ a`,
-    or `abs a = -a` and `a < 0`.
-    Use cases on this lemma to automate linarith in inequalities -/
-theorem abs_cases (a : α) : abs a = a ∧ 0 ≤ a ∨ abs a = -a ∧ a < 0 := by
-  by_cases 0 ≤ a
-  · left
-    exact ⟨abs_eq_self.mpr h, h⟩
-    
-  · right
-    push_neg  at h
-    exact ⟨abs_eq_neg_self.mpr (le_of_lt h), h⟩
-    
-
-@[simp]
-theorem max_zero_add_max_neg_zero_eq_abs_self (a : α) : max a 0 + max (-a) 0 = abs a := by
-  symm
-  rcases le_total 0 a with (ha | ha) <;> simp [ha]
 
 theorem neg_one_lt_zero : -1 < (0 : α) :=
   neg_lt_zero.2 zero_lt_one
@@ -1090,9 +1013,9 @@ theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 := by
     exacts[mul_pos_of_neg_of_neg h h, mul_pos h h]
     
 
-theorem mul_self_le_mul_self_of_le_of_neg_le {x y : α} (h₁ : x ≤ y) (h₂ : -x ≤ y) : x * x ≤ y * y := by
-  rw [← abs_mul_abs_self x]
-  exact mul_self_le_mul_self (abs_nonneg x) (abs_le.2 ⟨neg_le.2 h₂, h₁⟩)
+theorem mul_self_le_mul_self_of_le_of_neg_le {x y : α} (h₁ : x ≤ y) (h₂ : -x ≤ y) : x * x ≤ y * y :=
+  (le_total 0 x).elim (fun h => mul_le_mul h₁ h₁ h (h.trans h₁)) fun h =>
+    le_of_eq_of_le (neg_mul_neg x x).symm (mul_le_mul h₂ h₂ (neg_nonneg.mpr h) ((neg_nonneg.mpr h).trans h₂))
 
 theorem nonneg_of_mul_nonpos_left {a b : α} (h : a * b ≤ 0) (hb : b < 0) : 0 ≤ a :=
   le_of_not_gt fun ha => absurd h (mul_pos_of_neg_of_neg ha hb).not_le
@@ -1119,21 +1042,6 @@ theorem mul_self_add_mul_self_eq_zero {x y : α} : x * x + y * y = 0 ↔ x = 0 �
 theorem eq_zero_of_mul_self_add_mul_self_eq_zero (h : a * a + b * b = 0) : a = 0 :=
   (mul_self_add_mul_self_eq_zero.mp h).left
 
-theorem abs_eq_iff_mul_self_eq : abs a = abs b ↔ a * a = b * b := by
-  rw [← abs_mul_abs_self, ← abs_mul_abs_self b]
-  exact (mul_self_inj (abs_nonneg a) (abs_nonneg b)).symm
-
-theorem abs_lt_iff_mul_self_lt : abs a < abs b ↔ a * a < b * b := by
-  rw [← abs_mul_abs_self, ← abs_mul_abs_self b]
-  exact mul_self_lt_mul_self_iff (abs_nonneg a) (abs_nonneg b)
-
-theorem abs_le_iff_mul_self_le : abs a ≤ abs b ↔ a * a ≤ b * b := by
-  rw [← abs_mul_abs_self, ← abs_mul_abs_self b]
-  exact mul_self_le_mul_self_iff (abs_nonneg a) (abs_nonneg b)
-
-theorem abs_le_one_iff_mul_self_le_one : abs a ≤ 1 ↔ a * a ≤ 1 := by
-  simpa only [abs_one, one_mul] using @abs_le_iff_mul_self_le α _ a 1
-
 end LinearOrderedRing
 
 -- see Note [lower instance priority]
@@ -1157,32 +1065,7 @@ theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : ma
     mul_le_mul (le_max_right a c) (le_max_right b d) hd (le_trans ha (le_max_left a c))
   max_le (by simpa [mul_comm, max_comm] using ba) (by simpa [mul_comm, max_comm] using cd)
 
-theorem abs_sub_sq (a b : α) : abs (a - b) * abs (a - b) = a * a + b * b - (1 + 1) * a * b := by
-  rw [abs_mul_abs_self]
-  simp only [mul_add, add_comm, add_left_comm, mul_comm, sub_eq_add_neg, mul_one, mul_neg, neg_add_rev, neg_neg]
-
 end LinearOrderedCommRing
-
-section
-
-variable [Ring α] [LinearOrder α] {a b : α}
-
-@[simp]
-theorem abs_dvd (a b : α) : abs a ∣ b ↔ a ∣ b := by cases' abs_choice a with h h <;> simp only [h, neg_dvd]
-
-theorem abs_dvd_self (a : α) : abs a ∣ a :=
-  (abs_dvd a a).mpr (dvd_refl a)
-
-@[simp]
-theorem dvd_abs (a b : α) : a ∣ abs b ↔ a ∣ b := by cases' abs_choice b with h h <;> simp only [h, dvd_neg]
-
-theorem self_dvd_abs (a : α) : a ∣ abs a :=
-  (dvd_abs a a).mpr (dvd_refl a)
-
-theorem abs_dvd_abs (a b : α) : abs a ∣ abs b ↔ a ∣ b :=
-  (abs_dvd _ _).trans (dvd_abs _ _)
-
-end
 
 namespace Function.Injective
 
@@ -1418,352 +1301,4 @@ def mkOfPositiveCone {α : Type _} [Ring α] (C : TotalPositiveCone α) : Linear
         simpa using one_pos⟩ }
 
 end LinearOrderedRing
-
-namespace CanonicallyOrderedCommSemiring
-
-variable [CanonicallyOrderedCommSemiring α] {a b : α}
-
--- see Note [lower instance priority]
-instance (priority := 100) to_no_zero_divisors : NoZeroDivisors α :=
-  ⟨CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero⟩
-
--- see Note [lower instance priority]
-instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) (· ≤ ·) := by
-  refine' ⟨fun a b c h => _⟩
-  rcases exists_add_of_le h with ⟨c, rfl⟩
-  rw [mul_add]
-  apply self_le_add_right
-
--- see Note [lower instance priority]
-instance (priority := 100) toOrderedCommSemiring : OrderedCommSemiring α :=
-  { ‹CanonicallyOrderedCommSemiring α› with zero_le_one := zero_le _,
-    mul_le_mul_of_nonneg_left := fun a b c h _ => mul_le_mul_left' h _,
-    mul_le_mul_of_nonneg_right := fun a b c h _ => mul_le_mul_right' h _ }
-
-@[simp]
-theorem mul_pos : 0 < a * b ↔ 0 < a ∧ 0 < b := by simp only [pos_iff_ne_zero, Ne.def, mul_eq_zero, not_or]
-
-end CanonicallyOrderedCommSemiring
-
-section Sub
-
-variable [CanonicallyOrderedCommSemiring α] {a b c : α}
-
-variable [Sub α] [HasOrderedSub α]
-
-variable [IsTotal α (· ≤ ·)]
-
-namespace AddLeCancellable
-
-protected theorem mul_tsub (h : AddLeCancellable (a * c)) : a * (b - c) = a * b - a * c := by
-  cases' total_of (· ≤ ·) b c with hbc hcb
-  · rw [tsub_eq_zero_iff_le.2 hbc, mul_zero, tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
-    
-  · apply h.eq_tsub_of_add_eq
-    rw [← mul_add, tsub_add_cancel_of_le hcb]
-    
-
-protected theorem tsub_mul (h : AddLeCancellable (b * c)) : (a - b) * c = a * c - b * c := by
-  simp only [mul_comm _ c] at *
-  exact h.mul_tsub
-
-end AddLeCancellable
-
-variable [ContravariantClass α α (· + ·) (· ≤ ·)]
-
-theorem mul_tsub (a b c : α) : a * (b - c) = a * b - a * c :=
-  Contravariant.add_le_cancellable.mul_tsub
-
-theorem tsub_mul (a b c : α) : (a - b) * c = a * c - b * c :=
-  Contravariant.add_le_cancellable.tsub_mul
-
-end Sub
-
-/-! ### Structures involving `*` and `0` on `with_top` and `with_bot`
-
-The main results of this section are `with_top.canonically_ordered_comm_semiring` and
-`with_bot.comm_monoid_with_zero`.
--/
-
-
-namespace WithTop
-
-instance [Nonempty α] : Nontrivial (WithTop α) :=
-  Option.nontrivial
-
-variable [DecidableEq α]
-
-section Mul
-
-variable [Zero α] [Mul α]
-
-instance : MulZeroClass (WithTop α) where
-  zero := 0
-  mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind fun b => ↑(a * b)
-  zero_mul a := if_pos <| Or.inl rfl
-  mul_zero a := if_pos <| Or.inr rfl
-
-theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
-  rfl
-
-@[simp]
-theorem mul_top {a : WithTop α} (h : a ≠ 0) : a * ⊤ = ⊤ := by cases a <;> simp [mul_def, h] <;> rfl
-
-@[simp]
-theorem top_mul {a : WithTop α} (h : a ≠ 0) : ⊤ * a = ⊤ := by cases a <;> simp [mul_def, h] <;> rfl
-
-@[simp]
-theorem top_mul_top : (⊤ * ⊤ : WithTop α) = ⊤ :=
-  top_mul top_ne_zero
-
-end Mul
-
-section MulZeroClass
-
-variable [MulZeroClass α]
-
-@[norm_cast]
-theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb => by
-      simp [*, mul_def]
-      rfl
-
-theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind fun a : α => ↑(a * b)
-  | none => show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by simp [hb]
-  | some a => show ↑a * ↑b = ↑(a * b) from coe_mul.symm
-
-@[simp]
-theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 := by
-  cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
-  · simp [← coe_mul]
-    
-  · by_cases hb:b = 0 <;> simp [hb]
-    
-  · by_cases ha:a = 0 <;> simp [ha]
-    
-  · simp [← coe_mul]
-    
-
-theorem mul_lt_top [Preorder α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ := by
-  lift a to α using ha
-  lift b to α using hb
-  simp only [← coe_mul, coe_lt_top]
-
-@[simp]
-theorem untop'_zero_mul (a b : WithTop α) : (a * b).untop' 0 = a.untop' 0 * b.untop' 0 := by
-  by_cases ha:a = 0
-  · rw [ha, zero_mul, ← coe_zero, untop'_coe, zero_mul]
-    
-  by_cases hb:b = 0
-  · rw [hb, mul_zero, ← coe_zero, untop'_coe, mul_zero]
-    
-  induction a using WithTop.recTopCoe
-  · rw [top_mul hb, untop'_top, zero_mul]
-    
-  induction b using WithTop.recTopCoe
-  · rw [mul_top ha, untop'_top, mul_zero]
-    
-  rw [← coe_mul, untop'_coe, untop'_coe, untop'_coe]
-
-end MulZeroClass
-
-/-- `nontrivial α` is needed here as otherwise we have `1 * ⊤ = ⊤` but also `0 * ⊤ = 0`. -/
-instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
-  { WithTop.mulZeroClass with mul := (· * ·), one := 1, zero := 0,
-    one_mul := fun a =>
-      match a with
-      | ⊤ => mul_top (mt coe_eq_coe.1 one_ne_zero)
-      | (a : α) => by rw [← coe_one, ← coe_mul, one_mul],
-    mul_one := fun a =>
-      match a with
-      | ⊤ => top_mul (mt coe_eq_coe.1 one_ne_zero)
-      | (a : α) => by rw [← coe_one, ← coe_mul, mul_one] }
-
-/-- A version of `with_top.map` for `monoid_with_zero_hom`s. -/
-@[simps (config := { fullyApplied := false })]
-protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOneClass R] [DecidableEq R] [Nontrivial R]
-    [MulZeroOneClass S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S) (hf : Function.Injective f) :
-    WithTop R →*₀ WithTop S :=
-  { f.toZeroHom.with_top_map, f.toMonoidHom.toOneHom.with_top_map with toFun := WithTop.map f,
-    map_mul' := fun x y => by
-      have : ∀ z, map f z = 0 ↔ z = 0 := fun z => (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
-      rcases eq_or_ne x 0 with (rfl | hx)
-      · simp
-        
-      rcases eq_or_ne y 0 with (rfl | hy)
-      · simp
-        
-      induction x using WithTop.recTopCoe
-      · simp [hy, this]
-        
-      induction y using WithTop.recTopCoe
-      · have : (f x : WithTop S) ≠ 0 := by simpa [hf.eq_iff' (map_zero f)] using hx
-        simp [hx, this]
-        
-      simp [← coe_mul] }
-
-instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
-  ⟨fun a b => by
-    cases a <;> cases b <;> dsimp [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
-
-instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
-  { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
-    mul_assoc := fun a b c => by
-      rcases eq_or_ne a 0 with (rfl | ha)
-      · simp only [zero_mul]
-        
-      rcases eq_or_ne b 0 with (rfl | hb)
-      · simp only [zero_mul, mul_zero]
-        
-      rcases eq_or_ne c 0 with (rfl | hc)
-      · simp only [mul_zero]
-        
-      induction a using WithTop.recTopCoe
-      · simp [hb, hc]
-        
-      induction b using WithTop.recTopCoe
-      · simp [ha, hc]
-        
-      induction c using WithTop.recTopCoe
-      · simp [ha, hb]
-        
-      simp only [← coe_mul, mul_assoc] }
-
-instance [MonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZero (WithTop α) :=
-  { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with }
-
-instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithTop α) :=
-  { WithTop.monoidWithZero with mul := (· * ·), zero := 0,
-    mul_comm := fun a b => by simp only [or_comm', mul_def, Option.bind_comm a b, mul_comm] }
-
-variable [CanonicallyOrderedCommSemiring α]
-
-private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
-  induction c using WithTop.recTopCoe
-  · by_cases ha:a = 0 <;> simp [ha]
-    
-  · by_cases hc:c = 0
-    · simp [hc]
-      
-    simp [mul_coe hc]
-    cases a <;> cases b
-    repeat' first |rfl|exact congr_arg some (add_mul _ _ _)
-    
-
-/-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class
-that derives from both `non_assoc_non_unital_semiring` and `canonically_ordered_add_monoid`, both
-of which are required for distributivity. -/
-instance [Nontrivial α] : CommSemiring (WithTop α) :=
-  { WithTop.addCommMonoidWithOne, WithTop.commMonoidWithZero with right_distrib := distrib',
-    left_distrib := fun a b c => by
-      rw [mul_comm, distrib', mul_comm b, mul_comm c]
-      rfl }
-
-instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
-  { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.no_zero_divisors with }
-
-/-- A version of `with_top.map` for `ring_hom`s. -/
-@[simps (config := { fullyApplied := false })]
-protected def _root_.ring_hom.with_top_map {R S : Type _} [CanonicallyOrderedCommSemiring R] [DecidableEq R]
-    [Nontrivial R] [CanonicallyOrderedCommSemiring S] [DecidableEq S] [Nontrivial S] (f : R →+* S)
-    (hf : Function.Injective f) : WithTop R →+* WithTop S :=
-  { f.toMonoidWithZeroHom.with_top_map hf, f.toAddMonoidHom.with_top_map with toFun := WithTop.map f }
-
-end WithTop
-
-namespace WithBot
-
-instance [Nonempty α] : Nontrivial (WithBot α) :=
-  Option.nontrivial
-
-variable [DecidableEq α]
-
-section Mul
-
-variable [Zero α] [Mul α]
-
-instance : MulZeroClass (WithBot α) :=
-  WithTop.mulZeroClass
-
-theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
-  rfl
-
-@[simp]
-theorem mul_bot {a : WithBot α} (h : a ≠ 0) : a * ⊥ = ⊥ :=
-  WithTop.mul_top h
-
-@[simp]
-theorem bot_mul {a : WithBot α} (h : a ≠ 0) : ⊥ * a = ⊥ :=
-  WithTop.top_mul h
-
-@[simp]
-theorem bot_mul_bot : (⊥ * ⊥ : WithBot α) = ⊥ :=
-  WithTop.top_mul_top
-
-end Mul
-
-section MulZeroClass
-
-variable [MulZeroClass α]
-
-@[norm_cast]
-theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb => by
-      simp [*, mul_def]
-      rfl
-
-theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : a * b = a.bind fun a : α => ↑(a * b) :=
-  WithTop.mul_coe hb
-
-@[simp]
-theorem mul_eq_bot_iff {a b : WithBot α} : a * b = ⊥ ↔ a ≠ 0 ∧ b = ⊥ ∨ a = ⊥ ∧ b ≠ 0 :=
-  WithTop.mul_eq_top_iff
-
-theorem bot_lt_mul [Preorder α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b := by
-  lift a to α using ne_bot_of_gt ha
-  lift b to α using ne_bot_of_gt hb
-  simp only [← coe_mul, bot_lt_coe]
-
-end MulZeroClass
-
-/-- `nontrivial α` is needed here as otherwise we have `1 * ⊥ = ⊥` but also `= 0 * ⊥ = 0`. -/
-instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithBot α) :=
-  WithTop.mulZeroOneClass
-
-instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithBot α) :=
-  WithTop.no_zero_divisors
-
-instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithBot α) :=
-  WithTop.semigroupWithZero
-
-instance [MonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZero (WithBot α) :=
-  WithTop.monoidWithZero
-
-instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithBot α) :=
-  WithTop.commMonoidWithZero
-
-instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiring (WithBot α) :=
-  WithTop.commSemiring
-
-instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : PosMulMono (WithBot α) :=
-  pos_mul_mono_iff_covariant_pos.2
-    ⟨by
-      rintro ⟨x, x0⟩ a b h
-      simp only [Subtype.coe_mk]
-      lift x to α using x0.ne_bot
-      induction a using WithBot.recBotCoe
-      · simp_rw [mul_bot x0.ne.symm, bot_le]
-        
-      induction b using WithBot.recBotCoe
-      · exact absurd h (bot_lt_coe a).not_le
-        
-      simp only [← coe_mul, coe_le_coe] at *
-      exact mul_le_mul_left' h x⟩
-
-instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : MulPosMono (WithBot α) :=
-  pos_mul_mono_iff_mul_pos_mono.mp inferInstance
-
-end WithBot
 

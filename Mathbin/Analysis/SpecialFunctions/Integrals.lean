@@ -305,28 +305,26 @@ theorem integral_pow : (∫ x in a..b, x ^ n) = (b ^ (n + 1) - a ^ (n + 1)) / (n
 
 /-- Integral of `|x - a| ^ n` over `Ι a b`. This integral appears in the proof of the
 Picard-Lindelöf/Cauchy-Lipschitz theorem. -/
-theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, abs (x - a) ^ n) = abs (b - a) ^ (n + 1) / (n + 1) := by
+theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (n + 1) / (n + 1) := by
   cases' le_or_lt a b with hab hab
   · calc
-      (∫ x in Ι a b, abs (x - a) ^ n) = ∫ x in a..b, abs (x - a) ^ n := by
-        rw [interval_oc_of_le hab, ← integral_of_le hab]
+      (∫ x in Ι a b, |x - a| ^ n) = ∫ x in a..b, |x - a| ^ n := by rw [interval_oc_of_le hab, ← integral_of_le hab]
       _ = ∫ x in 0 ..b - a, x ^ n := by
-        simp only [integral_comp_sub_right fun x => abs x ^ n, sub_self]
+        simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
         refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonneg <| _) rfl
         rw [interval_of_le (sub_nonneg.2 hab)] at hx
         exact hx.1
-      _ = abs (b - a) ^ (n + 1) / (n + 1) := by simp [abs_of_nonneg (sub_nonneg.2 hab)]
+      _ = |b - a| ^ (n + 1) / (n + 1) := by simp [abs_of_nonneg (sub_nonneg.2 hab)]
       
     
   · calc
-      (∫ x in Ι a b, abs (x - a) ^ n) = ∫ x in b..a, abs (x - a) ^ n := by
-        rw [interval_oc_of_lt hab, ← integral_of_le hab.le]
+      (∫ x in Ι a b, |x - a| ^ n) = ∫ x in b..a, |x - a| ^ n := by rw [interval_oc_of_lt hab, ← integral_of_le hab.le]
       _ = ∫ x in b - a..0, -x ^ n := by
-        simp only [integral_comp_sub_right fun x => abs x ^ n, sub_self]
+        simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
         refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonpos <| _) rfl
         rw [interval_of_le (sub_nonpos.2 hab.le)] at hx
         exact hx.2
-      _ = abs (b - a) ^ (n + 1) / (n + 1) := by simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
+      _ = |b - a| ^ (n + 1) / (n + 1) := by simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
       
     
 

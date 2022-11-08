@@ -3,7 +3,7 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Field.Defs
 import Mathbin.Data.Rat.Basic
 
 /-!
@@ -208,7 +208,7 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
 
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by simp [Rat.lt_def]
 
-theorem abs_def (q : ℚ) : abs q = q.num.natAbs /. q.denom := by
+theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom := by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one, zero_mul] at hq

@@ -202,9 +202,11 @@ variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x} {a b : α} {s t
 instance : Inhabited (Set α) :=
   ⟨∅⟩
 
+#print Set.ext /-
 @[ext]
 theorem ext {a b : Set α} (h : ∀ x, x ∈ a ↔ x ∈ b) : a = b :=
   funext fun x => propext (h x)
+-/
 
 theorem ext_iff {s t : Set α} : s = t ↔ ∀ x, x ∈ s ↔ x ∈ t :=
   ⟨fun h x => by rw [h], ext⟩
@@ -370,12 +372,6 @@ theorem nonempty_of_mem {x} (h : x ∈ s) : s.Nonempty :=
 theorem Nonempty.not_subset_empty : s.Nonempty → ¬s ⊆ ∅
   | ⟨x, hx⟩, hs => hs hx
 
-theorem Nonempty.ne_empty : ∀ {s : Set α}, s.Nonempty → s ≠ ∅
-  | _, ⟨x, hx⟩, rfl => hx
-
-@[simp]
-theorem not_nonempty_empty : ¬(∅ : Set α).Nonempty := fun h => h.ne_empty rfl
-
 /-- Extract a witness from `s.nonempty`. This function might be used instead of case analysis
 on the argument. Note that it makes a proof depend on the `classical.choice` axiom. -/
 protected noncomputable def Nonempty.some (h : s.Nonempty) : α :=
@@ -478,13 +474,18 @@ instance uniqueEmpty [IsEmpty α] : Unique (Set α) where
   default := ∅
   uniq := eq_empty_of_is_empty
 
+/-- See also `set.ne_empty_iff_nonempty`. -/
 theorem not_nonempty_iff_eq_empty {s : Set α} : ¬s.Nonempty ↔ s = ∅ := by
   simp only [Set.Nonempty, eq_empty_iff_forall_not_mem, not_exists]
 
-theorem empty_not_nonempty : ¬(∅ : Set α).Nonempty := fun h => h.ne_empty rfl
-
+/-- See also `set.not_nonempty_iff_eq_empty`. -/
 theorem ne_empty_iff_nonempty : s ≠ ∅ ↔ s.Nonempty :=
   not_iff_comm.1 not_nonempty_iff_eq_empty
+
+alias ne_empty_iff_nonempty ↔ _ nonempty.ne_empty
+
+@[simp]
+theorem not_nonempty_empty : ¬(∅ : Set α).Nonempty := fun ⟨x, hx⟩ => hx
 
 @[simp]
 theorem is_empty_coe_sort {s : Set α} : IsEmpty ↥s ↔ s = ∅ :=
@@ -898,7 +899,7 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
   rcases h (subset_insert _ _ hx) with (rfl | hxt)
   exacts[(ha hx).elim, hxt]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   simp only [insert_subset, exists_and_right, ssubset_def, not_subset]
   simp only [exists_prop, and_comm']
@@ -1536,14 +1537,31 @@ theorem union_eq_diff_union_diff_union_inter (s t : Set α) : s ∪ t = s \ t �
 theorem mem_symm_diff : a ∈ s ∆ t ↔ a ∈ s ∧ a ∉ t ∨ a ∈ t ∧ a ∉ s :=
   Iff.rfl
 
+protected theorem symm_diff_def (s t : Set α) : s ∆ t = s \ t ∪ t \ s :=
+  rfl
+
 theorem symm_diff_subset_union : s ∆ t ⊆ s ∪ t :=
   @symm_diff_le_sup (Set α) _ _ _
+
+@[simp]
+theorem symm_diff_eq_empty : s ∆ t = ∅ ↔ s = t :=
+  symm_diff_eq_bot
+
+@[simp]
+theorem symm_diff_nonempty : (s ∆ t).Nonempty ↔ s ≠ t :=
+  ne_empty_iff_nonempty.symm.trans symm_diff_eq_empty.Not
 
 theorem inter_symm_diff_distrib_left (s t u : Set α) : s ∩ t ∆ u = (s ∩ t) ∆ (s ∩ u) :=
   inf_symm_diff_distrib_left _ _ _
 
 theorem inter_symm_diff_distrib_right (s t u : Set α) : s ∆ t ∩ u = (s ∩ u) ∆ (t ∩ u) :=
   inf_symm_diff_distrib_right _ _ _
+
+theorem subset_symm_diff_union_symm_diff_left (h : Disjoint s t) : u ⊆ s ∆ u ∪ t ∆ u :=
+  h.le_symm_diff_sup_symm_diff_left
+
+theorem subset_symm_diff_union_symm_diff_right (h : Disjoint t u) : s ⊆ s ∆ t ∪ s ∆ u :=
+  h.le_symm_diff_sup_symm_diff_right
 
 /-! ### Powerset -/
 
@@ -1692,7 +1710,7 @@ theorem preimage_empty : f ⁻¹' ∅ = ∅ :=
 theorem mem_preimage {s : Set β} {a : α} : a ∈ f ⁻¹' s ↔ f a ∈ s :=
   Iff.rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 theorem preimage_congr {f g : α → β} {s : Set β} (h : ∀ x : α, f x = g x) : f ⁻¹' s = g ⁻¹' s := by
   congr with x
   apply_assumption
@@ -1797,6 +1815,8 @@ end Preimage
 
 
 section Image
+
+variable {f : α → β}
 
 /-- The image of `s : set α` by `f : α → β`, written `f '' s`,
   is the set of `y : β` such that `f x = y` for some `x ∈ s`. -/
@@ -1963,9 +1983,15 @@ theorem subset_image_diff (f : α → β) (s t : Set α) : f '' s \ f '' t ⊆ f
   rw [diff_subset_iff, ← image_union, union_diff_self]
   exact image_subset f (subset_union_right t s)
 
+theorem subset_image_symm_diff : (f '' s) ∆ (f '' t) ⊆ f '' s ∆ t :=
+  (union_subset_union (subset_image_diff _ _ _) <| subset_image_diff _ _ _).trans (image_union _ _ _).Superset
+
 theorem image_diff {f : α → β} (hf : Injective f) (s t : Set α) : f '' (s \ t) = f '' s \ f '' t :=
   Subset.antisymm (Subset.trans (image_inter_subset _ _ _) <| inter_subset_inter_right _ <| image_compl_subset hf)
     (subset_image_diff f s t)
+
+theorem image_symm_diff (hf : Injective f) (s t : Set α) : f '' s ∆ t = (f '' s) ∆ (f '' t) := by
+  simp_rw [Set.symm_diff_def, image_union, image_diff hf]
 
 theorem Nonempty.image (f : α → β) {s : Set α} : s.Nonempty → (f '' s).Nonempty
   | ⟨x, hx⟩ => ⟨f x, mem_image_of_mem f hx⟩
@@ -2194,7 +2220,7 @@ theorem subsingleton_of_preimage {α β : Type _} {f : α → β} (hf : Function
 /-! ### Nontrivial -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- A set `s` is `nontrivial` if it has at least two distinct elements. -/
 protected def Nontrivial (s : Set α) : Prop :=
   ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x ≠ y
@@ -2252,17 +2278,17 @@ theorem nontrivial_iff_exists_ne {x} (hx : x ∈ s) : s.Nontrivial ↔ ∃ y ∈
 theorem nontrivial_of_lt [Preorder α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x < y) : s.Nontrivial :=
   ⟨x, hx, y, hy, ne_of_lt hxy⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y) : s.Nontrivial :=
   let ⟨x, hx, y, hy, hxy⟩ := H
   nontrivial_of_lt hx hy hxy
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) : ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y :=
   let ⟨x, hx, y, hy, hxy⟩ := hs
   Or.elim (lt_or_gt_of_ne hxy) (fun H => ⟨x, hx, y, hy, H⟩) fun H => ⟨y, hy, x, hx, H⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem nontrivial_iff_exists_lt [LinearOrder α] : s.Nontrivial ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y :=
   ⟨Nontrivial.exists_lt, nontrivial_of_exists_lt⟩
 
@@ -2429,6 +2455,9 @@ theorem forall_subtype_range_iff {p : Range f → Prop} : (∀ a : Range f, p a)
     subst hi
     apply H⟩
 
+theorem subsingleton_range {α : Sort _} [Subsingleton α] (f : α → β) : (Range f).Subsingleton :=
+  forall_range_iff.2 fun x => forall_range_iff.2 fun y => congr_arg f (Subsingleton.elim x y)
+
 theorem exists_range_iff {p : α → Prop} : (∃ a ∈ Range f, p a) ↔ ∃ i, p (f i) := by simp
 
 theorem exists_range_iff' {p : α → Prop} : (∃ a, a ∈ Range f ∧ p a) ↔ ∃ i, p (f i) := by
@@ -2454,6 +2483,11 @@ theorem image_subset_range (f : α → β) (s) : f '' s ⊆ Range f := by
 
 theorem mem_range_of_mem_image (f : α → β) (s) {x : β} (h : x ∈ f '' s) : x ∈ Range f :=
   image_subset_range f s h
+
+theorem Nat.mem_range_succ (i : ℕ) : i ∈ Range Nat.succ ↔ 0 < i :=
+  ⟨by
+    rintro ⟨n, rfl⟩
+    exact Nat.succ_pos n, fun h => ⟨_, Nat.succ_pred_eq_of_pos h⟩⟩
 
 theorem Nonempty.preimage' {s : Set β} (hs : s.Nonempty) {f : α → β} (hf : s ⊆ Set.Range f) : (f ⁻¹' s).Nonempty :=
   let ⟨y, hy⟩ := hs
@@ -2532,6 +2566,15 @@ theorem image_preimage_eq_iff {f : α → β} {s : Set β} : f '' (f ⁻¹' s) =
 
 theorem subset_range_iff_exists_image_eq {f : α → β} {s : Set β} : s ⊆ Range f ↔ ∃ t, f '' t = s :=
   ⟨fun h => ⟨_, image_preimage_eq_iff.2 h⟩, fun ⟨t, ht⟩ => ht ▸ image_subset_range _ _⟩
+
+@[simp]
+theorem exists_subset_range_and_iff {f : α → β} {p : Set β → Prop} : (∃ s, s ⊆ Range f ∧ p s) ↔ ∃ s, p (f '' s) :=
+  ⟨fun ⟨s, hsf, hps⟩ => ⟨f ⁻¹' s, (image_preimage_eq_of_subset hsf).symm ▸ hps⟩, fun ⟨s, hs⟩ =>
+    ⟨f '' s, image_subset_range _ _, hs⟩⟩
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s «expr ⊆ » range[set.range] f) -/
+theorem exists_subset_range_iff {f : α → β} {p : Set β → Prop} : (∃ (s : _)(_ : s ⊆ Range f), p s) ↔ ∃ s, p (f '' s) :=
+  by simp only [exists_prop, exists_subset_range_and_iff]
 
 theorem range_image (f : α → β) : Range (Image f) = 𝒫 Range f :=
   ext fun s => subset_range_iff_exists_image_eq.symm

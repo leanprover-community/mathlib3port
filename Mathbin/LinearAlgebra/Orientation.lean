@@ -167,7 +167,7 @@ variable {ι : Type _} [DecidableEq ι]
 
 namespace Orientation
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- A module `M` over a linearly ordered commutative ring has precisely two "orientations" with
 respect to an empty index type. (Note that these are only orientations of `M` of in the conventional
 mathematical sense if `M` is zero-dimensional.) -/
@@ -198,7 +198,7 @@ theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.Orientation
   calc
     e₁.Orientation = e₂.Orientation ↔ SameRay R e₁.det e₂.det := ray_eq_iff _ _
     _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by rw [← e₁.det.eq_smul_basis_det e₂]
-    _ ↔ 0 < e₁.det e₂ := same_ray_smul_left_iff_of_ne e₂.det_ne_zero (e₁.is_unit_det e₂).ne_zero
+    _ ↔ 0 < e₁.det e₂ := same_ray_smul_left_iff_of_ne e₂.det_ne_zero (e₁.is_unit_det e₂).NeZero
     
 
 /-- Given a basis, any orientation equals the orientation given by that basis or its negation. -/
@@ -278,7 +278,7 @@ theorem det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M
 
 @[simp]
 theorem abs_det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι)
-    (v : ι → M) : abs ((e.adjustToOrientation x).det v) = abs (e.det v) := by
+    (v : ι → M) : |(e.adjustToOrientation x).det v| = |e.det v| := by
   cases' e.det_adjust_to_orientation x with h h <;> simp [h]
 
 end Basis

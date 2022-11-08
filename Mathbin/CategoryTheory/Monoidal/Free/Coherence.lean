@@ -322,7 +322,7 @@ def fullNormalizeIso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
 end
 
 /-- The monoidal coherence theorem. -/
-instance subsingleton_hom {X Y : F C} : Subsingleton (X ⟶ Y) :=
+instance subsingleton_hom : Quiver.IsThin (F C) := fun _ _ =>
   ⟨fun f g => by
     have : (fullNormalize C).map f = (fullNormalize C).map g := Subsingleton.elim _ _
     rw [← functor.id_map f, ← functor.id_map g]

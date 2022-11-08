@@ -102,7 +102,7 @@ protected theorem Intersecting.is_upper_set (hs : s.Intersecting) (h : ∀ t : S
   rw [h (insert b s) _ (subset_insert _ _)]
   · exact mem_insert _ _
     
-  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.monoLeft hab
+  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecting)
@@ -113,7 +113,7 @@ theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecti
   · exact mem_insert_self _ _
     
   rw [coe_insert]
-  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.monoLeft hab
+  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 
 end SemilatticeInf
 
@@ -133,18 +133,23 @@ theorem Intersecting.not_compl_mem {s : Set α} (hs : s.Intersecting) {a : α} (
 theorem Intersecting.not_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : aᶜ ∈ s) : a ∉ s := fun h =>
   hs ha h disjointComplLeft
 
-variable [Fintype α] {s : Finset α}
+theorem Intersecting.disjointMapCompl [DecidableEq α] {s : Finset α} (hs : (s : Set α).Intersecting) :
+    Disjoint s (s.map ⟨compl, compl_injective⟩) := by
+  rw [Finset.disjoint_left]
+  rintro x hx hxc
+  obtain ⟨x, hx', rfl⟩ := mem_map.mp hxc
+  exact hs.not_compl_mem hx' hx
 
-theorem Intersecting.card_le (hs : (s : Set α).Intersecting) : 2 * s.card ≤ Fintype.card α := by
+theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Intersecting) : 2 * s.card ≤ Fintype.card α :=
+  by
   classical
-  refine' (s ∪ s.map ⟨compl, compl_injective⟩).card_le_univ.trans_eq' _
-  rw [two_mul, card_union_eq, card_map]
-  rintro x hx
-  rw [Finset.inf_eq_inter, Finset.mem_inter, mem_map] at hx
-  obtain ⟨x, hx', rfl⟩ := hx.2
-  exact hs.not_compl_mem hx' hx.1
+  refine'
+    (s.disj_union (s.map ⟨compl, compl_injective⟩)
+            (finset.disjoint_left.mp hs.disjoint_map_compl)).card_le_univ.trans_eq'
+      _
+  rw [two_mul, card_disj_union, card_map]
 
-variable [Nontrivial α]
+variable [Nontrivial α] [Fintype α] {s : Finset α}
 
 -- Note, this lemma is false when `α` has exactly one element and boring when `α` is empty.
 theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
@@ -153,13 +158,9 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
   refine'
     ⟨fun h => _, fun h t ht hst =>
       Finset.eq_of_subset_of_card_le hst <| le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) two_pos⟩
-  suffices s ∪ s.map ⟨compl, compl_injective⟩ = Finset.univ by
-    rw [Fintype.card, ← this, two_mul, card_union_eq, card_map]
-    rintro x hx
-    rw [Finset.inf_eq_inter, Finset.mem_inter, mem_map] at hx
-    obtain ⟨x, hx', rfl⟩ := hx.2
-    exact hs.not_compl_mem hx' hx.1
-  rw [← coe_eq_univ, coe_union, coe_map, Function.Embedding.coe_fn_mk,
+  suffices s.disj_union (s.map ⟨compl, compl_injective⟩) (finset.disjoint_left.mp hs.disjoint_map_compl) = Finset.univ
+    by rw [Fintype.card, ← this, two_mul, card_disj_union, card_map]
+  rw [← coe_eq_univ, disj_union_eq_union, coe_union, coe_map, Function.Embedding.coe_fn_mk,
     image_eq_preimage_of_inverse compl_compl compl_compl]
   refine' eq_univ_of_forall fun a => _
   simp_rw [mem_union, mem_preimage]

@@ -157,7 +157,7 @@ def imageFactorisation {X Y : C} (f : X ⟶ Y) [IsIso (Abelian.coimageImageCompa
       lift_fac' := fun F => by
         simp only [image_mono_factorisation_m, is_iso.inv_comp_eq, category.assoc, abelian.coimage_image_comparison]
         ext
-        rw [limits.coequalizer.π_desc_assoc, limits.coequalizer.π_desc_assoc, F.fac, kernel.lift_ι] }
+        simp only [cokernel.π_desc_assoc, mono_factorisation.fac, image.fac] }
 
 instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Mono f] [IsIso (Abelian.coimageImageComparison f)] :
     IsIso (imageMonoFactorisation f).e := by

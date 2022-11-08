@@ -24,7 +24,7 @@ namespace Rat
 instance : MetricSpace ℚ :=
   MetricSpace.induced coe Rat.cast_injective Real.metricSpace
 
-theorem dist_eq (x y : ℚ) : dist x y = abs (x - y) :=
+theorem dist_eq (x y : ℚ) : dist x y = |x - y| :=
   rfl
 
 @[norm_cast, simp]

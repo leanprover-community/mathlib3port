@@ -59,17 +59,15 @@ theorem stirling_seq_zero : stirlingSeq 0 = 0 := by
 theorem stirling_seq_one : stirlingSeq 1 = exp 1 / sqrt 2 := by
   rw [stirling_seq, pow_one, factorial_one, cast_one, mul_one, mul_one_div, one_div_div]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- We have the expression
 `log (stirling_seq (n + 1)) = log(n + 1)! - 1 / 2 * log(2 * n) - n * log ((n + 1) / e)`.
 -/
 theorem log_stirling_seq_formula (n : ℕ) :
     log (stirlingSeq n.succ) = log n.succ ! - 1 / 2 * log (2 * n.succ) - n.succ * log (n.succ / exp 1) := by
   rw [stirling_seq, log_div, log_mul, sqrt_eq_rpow, log_rpow, Real.log_pow, tsub_tsub] <;>
-    try apply ne_of_gt <;>
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    try apply ne_of_gt <;> positivity
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr succ_ne_zero, ",", expr factorial_ne_zero, ",", expr exp_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 -- TODO: Make `positivity` handle `≠ 0` goals
 /-- The sequence `log (stirling_seq (m + 1)) - log (stirling_seq (m + 2))` has the series expansion
    `∑ 1 / (2 * (k + 1) + 1) * (1 / 2 * (m + 1) + 1)^(2 * (k + 1))`
@@ -98,21 +96,16 @@ theorem log_stirling_seq_diff_has_sum (m : ℕ) :
       rw [_root_.add_div, div_self hx, inv_eq_one_div]
     simp (disch :=
     norm_cast
-    apply_rules [mul_ne_zero, succ_ne_zero, factorial_ne_zero, exp_ne_zero]) only [log_stirling_seq_formula, log_div,
-    log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one, sum_singleton, h]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error") only [log_stirling_seq_formula,
+    log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one, sum_singleton, h]
     ring
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- The sequence `log ∘ stirling_seq ∘ succ` is monotone decreasing -/
 theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirling_seq ∘ succ) :=
-  antitone_nat_of_succ_le fun n =>
-    sub_nonneg.mp <|
-      (log_stirling_seq_diff_has_sum n).Nonneg fun m => by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  antitone_nat_of_succ_le fun n => sub_nonneg.mp <| (log_stirling_seq_diff_has_sum n).Nonneg fun m => by positivity
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- We have a bound for successive elements in the sequence `log (stirling_seq k)`.
 -/
 theorem log_stirling_seq_diff_le_geo_sum (n : ℕ) :
@@ -126,34 +119,22 @@ theorem log_stirling_seq_diff_le_geo_sum (n : ℕ) :
     by
     refine' (has_sum_geometric_of_lt_1 h_nonneg _).mul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
     rw [one_div, inv_pow]
-    exact
-      inv_lt_one
-        (one_lt_pow
-          ((lt_add_iff_pos_left 1).mpr <| by
-            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-          two_ne_zero)
+    exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_ne_zero)
   have hab :
     ∀ k : ℕ,
       1 / (2 * (k.succ : ℝ) + 1) * ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ ≤ ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ :=
     by
     refine' fun k => mul_le_of_le_one_left (pow_nonneg h_nonneg k.succ) _
     rw [one_div]
-    exact
-      inv_le_one
-        (le_add_of_nonneg_left <| by
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+    exact inv_le_one (le_add_of_nonneg_left <| by positivity)
   exact has_sum_le hab (log_stirling_seq_diff_has_sum n) g
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- We have the bound  `log (stirling_seq n) - log (stirling_seq (n+1))` ≤ 1/(4 n^2)
 -/
 theorem log_stirling_seq_sub_log_stirling_seq_succ (n : ℕ) :
     log (stirlingSeq n.succ) - log (stirlingSeq n.succ.succ) ≤ 1 / (4 * n.succ ^ 2) := by
-  have h₁ : 0 < 4 * ((n : ℝ) + 1) ^ 2 := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
-  have h₃ : 0 < (2 * ((n : ℝ) + 1) + 1) ^ 2 := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  have h₁ : 0 < 4 * ((n : ℝ) + 1) ^ 2 := by positivity
+  have h₃ : 0 < (2 * ((n : ℝ) + 1) + 1) ^ 2 := by positivity
   have h₂ : 0 < 1 - (1 / (2 * ((n : ℝ) + 1) + 1)) ^ 2 := by
     rw [← mul_lt_mul_right h₃]
     have H : 0 < (2 * ((n : ℝ) + 1) + 1) ^ 2 - 1 := by nlinarith [@cast_nonneg ℝ _ n]
@@ -167,8 +148,6 @@ theorem log_stirling_seq_sub_log_stirling_seq_succ (n : ℕ) :
   norm_cast
   linarith
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- For any `n`, we have `log_stirling_seq 1 - log_stirling_seq n ≤ 1/4 * ∑' 1/k^2`  -/
 theorem log_stirling_seq_bounded_aux : ∃ c : ℝ, ∀ n : ℕ, log (stirlingSeq 1) - log (stirlingSeq n.succ) ≤ c := by
   let d := ∑' k : ℕ, (1 : ℝ) / k.succ ^ 2
@@ -180,30 +159,25 @@ theorem log_stirling_seq_bounded_aux : ∃ c : ℝ, ∀ n : ℕ, log (stirlingSe
     convert log_stirling_seq_sub_log_stirling_seq_succ k using 1
     field_simp
   have h₂ : (∑ k : ℕ in range n, (1 : ℝ) / k.succ ^ 2) ≤ d :=
-    sum_le_tsum (range n)
-      (fun k _ => by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+    sum_le_tsum (range n) (fun k _ => by positivity)
       ((summable_nat_add_iff 1).mpr <| real.summable_one_div_nat_pow.mpr one_lt_two)
   calc
     log (stirling_seq 1) - log (stirling_seq n.succ) = log_stirling_seq' 0 - log_stirling_seq' n := rfl
     _ = ∑ k in range n, log_stirling_seq' k - log_stirling_seq' (k + 1) := by rw [← sum_range_sub' log_stirling_seq' n]
     _ ≤ ∑ k in range n, 1 / 4 * (1 / k.succ ^ 2) := sum_le_sum fun k _ => h₁ k
     _ = 1 / 4 * ∑ k in range n, 1 / k.succ ^ 2 := by rw [mul_sum]
-    _ ≤ 1 / 4 * d :=
-      mul_le_mul_of_nonneg_left h₂ <| by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    _ ≤ 1 / 4 * d := mul_le_mul_of_nonneg_left h₂ <| by positivity
     
 
 /-- The sequence `log_stirling_seq` is bounded below for `n ≥ 1`. -/
 theorem log_stirling_seq_bounded_by_constant : ∃ c, ∀ n : ℕ, c ≤ log (stirlingSeq n.succ) := by
   obtain ⟨d, h⟩ := log_stirling_seq_bounded_aux
-  exact ⟨log (stirling_seq 1) - d, fun n => sub_le.mp (h n)⟩
+  exact ⟨log (stirling_seq 1) - d, fun n => sub_le_comm.mp (h n)⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- The sequence `stirling_seq` is positive for `n > 0`  -/
 theorem stirling_seq'_pos (n : ℕ) : 0 < stirlingSeq n.succ := by
   unfold stirling_seq
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  positivity
 
 /-- The sequence `stirling_seq` has a positive lower bound.
 -/
@@ -235,7 +209,6 @@ theorem stirling_seq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSe
 noncomputable def w (n : ℕ) : ℝ :=
   2 ^ (4 * n) * n ! ^ 4 / ((2 * n)! ^ 2 * (2 * n + 1))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- The sequence `w n` converges to `π/2` -/
 theorem tendsto_w_at_top : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) := by
   convert tendsto_prod_pi_div_two
@@ -246,10 +219,7 @@ theorem tendsto_w_at_top : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) :=
     
   rw [w, prod_range_succ, ← ih, w, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
   refine' (div_eq_div_iff _ _).mpr _
-  any_goals
-    exact
-      ne_of_gt
-        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+  any_goals exact ne_of_gt (by positivity)
   simp_rw [Nat.mul_succ, factorial_succ, pow_succ]
   push_cast
   ring_nf
@@ -266,7 +236,6 @@ theorem tendsto_self_div_two_mul_self_add_one : Tendsto (fun n : ℕ => (n : ℝ
       (eventually_at_top.mpr ⟨1, fun n hn => _⟩)
   rw [add_div' (1 : ℝ) (2 : ℝ) (n : ℝ) (cast_ne_zero.mpr (one_le_iff_ne_zero.mp hn)), inv_div]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- For any `n ≠ 0`, we have the identity
 `(stirling_seq n)^4/(stirling_seq (2*n))^2 * (n / (2 * n + 1)) = w n`. -/
 theorem stirling_seq_pow_four_div_stirling_seq_pow_two_eq (n : ℕ) (hn : n ≠ 0) :
@@ -274,7 +243,7 @@ theorem stirling_seq_pow_four_div_stirling_seq_pow_two_eq (n : ℕ) (hn : n ≠ 
   rw [bit0_eq_two_mul, stirling_seq, pow_mul, stirling_seq, w]
   simp_rw [div_pow, mul_pow]
   rw [sq_sqrt, sq_sqrt]
-  any_goals trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  any_goals positivity
   have : (n : ℝ) ≠ 0 := cast_ne_zero.mpr hn
   have : exp 1 ≠ 0 := exp_ne_zero 1
   have : ((2 * n)! : ℝ) ≠ 0 := cast_ne_zero.mpr (factorial_ne_zero (2 * n))

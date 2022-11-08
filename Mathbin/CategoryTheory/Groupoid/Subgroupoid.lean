@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli, Junyan Xu
 -/
 import Mathbin.CategoryTheory.Groupoid.VertexGroup
+import Mathbin.CategoryTheory.Groupoid.Basic
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.Hom.Group
@@ -18,7 +19,7 @@ import Mathbin.Order.GaloisConnection
 
 This file defines subgroupoids as `structure`s containing the subsets of arrows and their
 stability under composition and inversion.
-Also defined are
+Also defined are:
 
 * containment of subgroupoids is a complete lattice;
 * images and preimages of subgroupoids under a functor;
@@ -48,6 +49,7 @@ and `combinatorics.simple_graph.subgraph`.
 
 * Equivalent inductive characterization of generated (normal) subgroupoids.
 * Characterization of normal subgroupoids as kernels.
+* Prove that `full` and `disconnect` preserve intersections (and `disconnect` also unions)
 
 ## Tags
 
@@ -183,7 +185,7 @@ def vertexSubgroup {c : C} (hc : c ∈ S.Objs) : Subgroup (c ⟶ c) where
 instance : SetLike (Subgroupoid C) (Σc d : C, c ⟶ d) where
   coe S := { F | F.2.2 ∈ S.Arrows F.1 F.2.1 }
   coe_injective' := fun ⟨S, _, _⟩ ⟨T, _, _⟩ h => by
-    ext c d f
+    ext (c d f)
     apply Set.ext_iff.1 h ⟨c, d, f⟩
 
 theorem mem_iff (S : Subgroupoid C) (F : Σc d, c ⟶ d) : F ∈ S ↔ F.2.2 ∈ S.Arrows F.1 F.2.1 :=
@@ -587,6 +589,110 @@ theorem is_normal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤)
          }
 
 end Hom
+
+section Thin
+
+/-- A subgroupoid `is_thin` if it has at most one arrow between any two vertices. -/
+abbrev IsThin :=
+  Quiver.IsThin S.Objs
+
+theorem is_thin_iff : S.IsThin ↔ ∀ c : S.Objs, Subsingleton (S.Arrows c c) := by apply is_thin_iff
+
+end Thin
+
+section Disconnected
+
+/-- A subgroupoid `is_totally_disconnected` if it has only isotropy arrows. -/
+abbrev IsTotallyDisconnected :=
+  IsTotallyDisconnected S.Objs
+
+theorem is_totally_disconnected_iff : S.IsTotallyDisconnected ↔ ∀ c d, (S.Arrows c d).Nonempty → c = d := by
+  constructor
+  · rintro h c d ⟨f, fS⟩
+    rw [← @Subtype.mk_eq_mk _ _ c (mem_objs_of_src S fS) d (mem_objs_of_tgt S fS)]
+    exact h ⟨c, mem_objs_of_src S fS⟩ ⟨d, mem_objs_of_tgt S fS⟩ ⟨f, fS⟩
+    
+  · rintro h ⟨c, hc⟩ ⟨d, hd⟩ ⟨f, fS⟩
+    simp only [Subtype.mk_eq_mk]
+    exact h c d ⟨f, fS⟩
+    
+
+/-- The isotropy subgroupoid of `S` -/
+def disconnect : Subgroupoid C where
+  Arrows c d f := c = d ∧ f ∈ S.Arrows c d
+  inv := by
+    rintro _ _ _ ⟨rfl, h⟩
+    exact ⟨rfl, S.inv h⟩
+  mul := by
+    rintro _ _ _ _ ⟨rfl, h⟩ _ ⟨rfl, h'⟩
+    exact ⟨rfl, S.mul h h'⟩
+
+theorem disconnect_le : S.disconnect ≤ S := by
+  rw [le_iff]
+  rintro _ _ _ ⟨⟩
+  assumption
+
+theorem disconnect_normal (Sn : S.IsNormal) : S.disconnect.IsNormal :=
+  { wide := fun c => ⟨rfl, Sn.wide c⟩, conj := fun c d p γ ⟨_, h'⟩ => ⟨rfl, Sn.conj _ h'⟩ }
+
+@[simp]
+theorem mem_disconnect_objs_iff {c : C} : c ∈ S.disconnect.Objs ↔ c ∈ S.Objs :=
+  ⟨fun ⟨γ, h, γS⟩ => ⟨γ, γS⟩, fun ⟨γ, γS⟩ => ⟨γ, rfl, γS⟩⟩
+
+theorem disconnect_objs : S.disconnect.Objs = S.Objs := by
+  apply Set.ext
+  apply mem_disconnect_objs_iff
+
+theorem disconnect_is_totally_disconnected : S.disconnect.IsTotallyDisconnected := by
+  rw [is_totally_disconnected_iff]
+  exact fun c d ⟨f, h, fS⟩ => h
+
+end Disconnected
+
+section Full
+
+variable (D : Set C)
+
+/-- The full subgroupoid on a set `D : set C` -/
+def full : Subgroupoid C where
+  Arrows c d _ := c ∈ D ∧ d ∈ D
+  inv := by
+    rintro _ _ _ ⟨⟩
+    constructor <;> assumption
+  mul := by
+    rintro _ _ _ _ ⟨⟩ _ ⟨⟩
+    constructor <;> assumption
+
+theorem full_objs : (full D).Objs = D :=
+  Set.ext fun _ => ⟨fun ⟨f, h, _⟩ => h, fun h => ⟨𝟙 _, h, h⟩⟩
+
+@[simp]
+theorem mem_full_iff {c d : C} {f : c ⟶ d} : f ∈ (full D).Arrows c d ↔ c ∈ D ∧ d ∈ D :=
+  Iff.rfl
+
+@[simp]
+theorem mem_full_objs_iff {c : C} : c ∈ (full D).Objs ↔ c ∈ D := by rw [full_objs]
+
+@[simp]
+theorem full_empty : full ∅ = (⊥ : Subgroupoid C) := by
+  ext
+  simp only [HasBot.bot, mem_full_iff, mem_empty_iff_false, and_self_iff]
+
+@[simp]
+theorem full_univ : full Set.Univ = (⊤ : Subgroupoid C) := by
+  ext
+  simp only [mem_full_iff, mem_univ, and_self_iff, true_iff_iff]
+
+theorem full_mono {D E : Set C} (h : D ≤ E) : full D ≤ full E := by
+  rw [le_iff]
+  rintro c d f
+  simp only [mem_full_iff]
+  exact fun ⟨hc, hd⟩ => ⟨h hc, h hd⟩
+
+theorem full_arrow_eq_iff {c d : (full D).Objs} {f g : c ⟶ d} : f = g ↔ (↑f : c.val ⟶ d.val) = ↑g := by
+  apply Subtype.ext_iff
+
+end Full
 
 end Subgroupoid
 

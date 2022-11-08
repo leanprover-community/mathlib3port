@@ -256,7 +256,7 @@ theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topologica
   simp only [nhdsWithin, nhds_pi, Filter.pi, comap_inf, comap_infi, pi_def, comap_principal, ← infi_principal_finite hI,
     ← infi_inf_eq]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i)) ⊓ ⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
@@ -354,6 +354,11 @@ theorem eventually_nhds_within_of_forall {s : Set α} {a : α} {p : α → Prop}
 theorem tendsto_nhds_within_of_tendsto_nhds_of_eventually_within {a : α} {l : Filter β} {s : Set α} (f : β → α)
     (h1 : Tendsto f l (𝓝 a)) (h2 : ∀ᶠ x in l, f x ∈ s) : Tendsto f l (𝓝[s] a) :=
   tendsto_inf.2 ⟨h1, tendsto_principal.2 h2⟩
+
+theorem tendsto_nhds_within_iff {a : α} {l : Filter β} {s : Set α} {f : β → α} :
+    Tendsto f l (𝓝[s] a) ↔ Tendsto f l (𝓝 a) ∧ ∀ᶠ n in l, f n ∈ s :=
+  ⟨fun h => ⟨tendsto_nhds_of_tendsto_nhds_within h, eventually_mem_of_tendsto_nhds_within h⟩, fun h =>
+    tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ h.1 h.2⟩
 
 @[simp]
 theorem tendsto_nhds_within_range {a : α} {l : Filter β} {f : β → α} : Tendsto f l (𝓝[Range f] a) ↔ Tendsto f l (𝓝 a) :=

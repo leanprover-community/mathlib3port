@@ -106,6 +106,17 @@ theorem span_coe (W : Subspace K V) : span ↑W = W :=
 instance hasInf : HasInf (Subspace K V) :=
   ⟨fun A B => ⟨A ⊓ B, fun v w hv hw hvw h1 h2 => ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
 
+/- warning: projectivization.subspace.has_Inf clashes with projectivization.subspace.has_inf -> Projectivization.Subspace.hasInf
+Case conversion may be inaccurate. Consider using '#align projectivization.subspace.has_Inf Projectivization.Subspace.hasInfₓ'. -/
+#print Projectivization.Subspace.hasInf /-
+/-- Infimums of arbitrary collections of subspaces exist. -/
+instance hasInf : HasInf (Subspace K V) :=
+  ⟨fun A =>
+    ⟨inf (coe '' A), fun v w hv hw hvw h1 h2 t => by
+      rintro ⟨s, hs, rfl⟩
+      exact s.mem_add v w hv hw _ (h1 s ⟨s, hs, rfl⟩) (h2 s ⟨s, hs, rfl⟩)⟩⟩
+-/
+
 /-- The subspaces of a projective space form a complete lattice. -/
 instance : CompleteLattice (Subspace K V) :=
   { (inferInstance : HasInf _),

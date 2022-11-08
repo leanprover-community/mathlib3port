@@ -26,7 +26,7 @@ def AeDisjoint (s t : Set α) :=
 
 variable {μ} {s t u v : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
 theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
@@ -35,7 +35,7 @@ theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (h
     ⟨fun i => to_measurable μ (s i ∩ ⋃ j ∈ ({i}ᶜ : Set ι), s j), fun i => measurable_set_to_measurable _ _, fun i => _,
       _⟩
   · simp only [measure_to_measurable, inter_Union]
-    exact (measure_bUnion_null_iff <| to_countable _).2 fun j hj => hd _ _ (Ne.symm hj)
+    exact (measure_bUnion_null_iff <| to_countable _).2 fun j hj => hd (Ne.symm hj)
     
   · simp only [Pairwise, disjoint_left, on_fun, mem_diff, not_and, and_imp, not_not]
     intro i j hne x hi hU hj
@@ -112,7 +112,7 @@ theorem measure_diff_right (h : AeDisjoint μ s t) : μ (t \ s) = μ t :=
 set `u`. -/
 theorem exists_disjoint_diff (h : AeDisjoint μ s t) : ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
   ⟨ToMeasurable μ (s ∩ t), measurableSetToMeasurable _ _, (measure_to_measurable _).trans h,
-    disjointDiff.symm.monoLeft fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
+    disjointDiff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 
 theorem ofNullRight (h : μ t = 0) : AeDisjoint μ s t :=
   measure_mono_null (inter_subset_right _ _) h

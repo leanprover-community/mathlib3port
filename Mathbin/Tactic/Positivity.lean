@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, Yaël Dillies
 -/
 import Mathbin.Tactic.NormNum
+import Mathbin.Algebra.Order.Field.Power
 
 /-! # `positivity` tactic
-αᵒᵈ βᵒᵈ
+
 The `positivity` tactic in this file solves goals of the form `0 ≤ x`, `0 < x` and `x ≠ 0`.  The
 tactic works recursively according to the syntax of the expression `x`.  For example, a goal of the
 form `0 ≤ 3 * a ^ 2 + b * c` can be solved either
@@ -349,7 +350,7 @@ add_tactic_doc
 
 end Interactive
 
-variable {α R : Type _}
+variable {ι α R : Type _}
 
 /-! ### `positivity` extensions for particular arithmetic operations -/
 
@@ -603,14 +604,14 @@ unsafe def positivity_pow : expr → tactic strictness
                   | nonzero p => nonzero <$> to_expr (pquote.1 (zpow_ne_zero (%%ₓn) (%%ₓp)))
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a ^ n`"
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:86:10: unsupported modifiers in user command -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:87:10: unsupported modifiers in user command -/
 alias abs_pos ↔ _ abs_pos_of_ne_zero
 
 /-- Extension for the `positivity` tactic: an absolute value is nonnegative, and is strictly
 positive if its input is nonzero. -/
 @[positivity]
 unsafe def positivity_abs : expr → tactic strictness
-  | quote.1 (abs (%%ₓa)) => do
+  | quote.1 (|%%ₓa|) => do
     (-- if can prove `0 < a` or `a ≠ 0`, report positivity
         do
           let strict_a ← core a

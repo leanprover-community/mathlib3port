@@ -240,7 +240,7 @@ theorem IsPreconnected.Iio_cSup_subset {s : Set α} (hs : IsPreconnected s) (hb 
     IioCat (sup s) ⊆ s :=
   @IsPreconnected.Ioi_cInf_subset αᵒᵈ _ _ _ s hs ha hb
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr or.inr, ",", expr mem_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- A preconnected set in a conditionally complete linear order is either one of the intervals
 `[Inf s, Sup s]`, `[Inf s, Sup s)`, `(Inf s, Sup s]`, `(Inf s, Sup s)`, `[Inf s, +∞)`,
 `(Inf s, +∞)`, `(-∞, Sup s]`, `(-∞, Sup s)`, `(-∞, +∞)`, or `∅`. The converse statement requires
@@ -252,7 +252,8 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
         Set (Set α)) :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · apply_rules [Or.inr, mem_singleton]
+  · trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr or.inr, \",\", expr mem_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
   have hs' : IsConnected s := ⟨hne, hs⟩
   by_cases hb:BddBelow s <;> by_cases ha:BddAbove s

@@ -7,7 +7,7 @@ import Mathbin.CategoryTheory.ConcreteCategory.Bundled
 import Mathbin.Data.Fin.Tuple.Basic
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Logic.Encodable.Basic
-import Mathbin.Logic.Small
+import Mathbin.Logic.Small.List
 import Mathbin.SetTheory.Cardinal.Basic
 
 /-!
@@ -752,7 +752,7 @@ instance emptyStructure : Language.empty.StructureCat M :=
 
 instance : Unique (Language.empty.StructureCat M) :=
   ⟨⟨Language.emptyStructure⟩, fun a => by
-    ext n f
+    ext (n f)
     · exact Empty.elim f
       
     · exact Subsingleton.elim _ _

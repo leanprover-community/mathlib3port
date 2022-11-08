@@ -278,16 +278,12 @@ open UniformSpace Prod
 
 variable [UniformSpace X] {s : Set X}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n),
-    ∀ x «expr ∈ » s,
-    «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]] -/
 theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] {c : ι → Set X} (hs : IsSeqCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 X, SymmetricRel V ∧ ∀ x ∈ s, ∃ i, Ball x V ⊆ c i := by
   classical
   obtain ⟨V, hV, Vsymm⟩ : ∃ V : ℕ → Set (X × X), (𝓤 X).HasAntitoneBasis V ∧ ∀ n, swap ⁻¹' V n = V n
   exact UniformSpace.has_seq_basis X
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n),\n    ∀ x «expr ∈ » s,\n    «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]"
+  rsuffices ⟨n, hn⟩ : ∃ n, ∀ x ∈ s, ∃ i, ball x (V n) ⊆ c i
   · exact ⟨V n, hV.to_has_basis.mem_of_mem trivial, Vsymm n, hn⟩
     
   by_contra H
@@ -355,8 +351,8 @@ theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := 
   specialize hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N)
   exact hu hN
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⋃ , »((y «expr ∈ » t), ball y V)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⋃ , »((y «expr ∈ » t), ball y V)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs : IsSeqCompact s) : IsCompact s := by
   classical
   rw [is_compact_iff_finite_subcover]
@@ -370,7 +366,7 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs
   haveI : Fintype t := tfin.fintype
   use Finset.image i Finset.univ
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⋃ , »((y «expr ∈ » t), ball y V)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⋃ , »((y «expr ∈ » t), ball y V)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · intro x x_in
     specialize ht x_in
     rw [mem_Union₂] at *

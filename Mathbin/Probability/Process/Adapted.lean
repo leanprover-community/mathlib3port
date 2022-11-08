@@ -137,7 +137,7 @@ protected theorem finsetProd' {γ} [CommMonoid β] [HasContinuousMul β] {U : γ
 protected theorem finsetProd {γ} [CommMonoid β] [HasContinuousMul β] {U : γ → ι → Ω → β} {s : Finset γ}
     (h : ∀ c ∈ s, ProgMeasurable f (U c)) : ProgMeasurable f fun i a => ∏ c in s, U c i a := by
   convert prog_measurable.finset_prod' h
-  ext i a
+  ext (i a)
   simp only [Finset.prod_apply]
 
 @[to_additive]

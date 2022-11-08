@@ -73,7 +73,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     Integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos
   have nneg : ∀ x, 0 ≤ ∥x - x₀∥⁻¹ := fun x => inv_nonneg.mpr (norm_nonneg _)
-  set b : α → ℝ := fun a => abs (bound a)
+  set b : α → ℝ := fun a => |bound a|
   have b_int : integrable b μ := bound_integrable.norm
   have b_nonneg : ∀ a, 0 ≤ b a := fun a => abs_nonneg _
   replace h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ∥F x a - F x₀ a∥ ≤ b a * ∥x - x₀∥
@@ -163,7 +163,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' 
   obtain ⟨δ, δ_pos, hδ⟩ : ∃ δ > 0, ∀ x ∈ ball x₀ δ, ae_strongly_measurable (F x) μ ∧ x ∈ ball x₀ ε
   exact eventually_nhds_iff_ball.mp (hF_meas.and (ball_mem_nhds x₀ ε_pos))
   choose hδ_meas hδε using hδ
-  replace h_lip : ∀ᵐ a : α ∂μ, ∀ x ∈ ball x₀ δ, ∥F x a - F x₀ a∥ ≤ abs (bound a) * ∥x - x₀∥
+  replace h_lip : ∀ᵐ a : α ∂μ, ∀ x ∈ ball x₀ δ, ∥F x a - F x₀ a∥ ≤ |bound a| * ∥x - x₀∥
   exact h_lip.mono fun a lip x hx => lip.norm_sub_le (hδε x hx) (mem_ball_self ε_pos)
   replace bound_integrable := bound_integrable.norm
   apply has_fderiv_at_integral_of_dominated_loc_of_lip' δ_pos <;> assumption

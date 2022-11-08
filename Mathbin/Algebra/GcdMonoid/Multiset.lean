@@ -153,6 +153,17 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
     simp [h a (mem_cons_self a s), sgcd fun x hx => h x (mem_cons_of_mem hx)]
     
 
+theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = normalize a * s.gcd := by
+  refine' s.induction_on _ fun b s ih => _
+  · simp_rw [map_zero, gcd_zero, mul_zero]
+    
+  · simp_rw [map_cons, gcd_cons, ← gcd_mul_left]
+    rw [ih]
+    apply ((normalize_associated a).mul_right _).gcd_eq_right
+    
+
+section
+
 variable [DecidableEq α]
 
 @[simp]
@@ -177,6 +188,31 @@ theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GcdMonoid.gc
 theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid.gcd a s.gcd := by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]
   simp
+
+end
+
+theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α)) (ht : s = t.map ((· * ·) s.gcd)) : t.gcd = 1 :=
+  ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <| by
+    contrapose! hs
+    exact s.gcd_eq_zero_iff.1 hs
+
+theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) : ∃ t : Multiset α, s = t.map ((· * ·) s.gcd) ∧ t.gcd = 1 := by
+  classical
+  by_cases h:∀ x ∈ s, x = (0 : α)
+  · use repeat 1 s.card
+    rw [map_repeat, eq_repeat, mul_one, s.gcd_eq_zero_iff.2 h, ← nsmul_singleton, ← gcd_dedup]
+    rw [dedup_nsmul (card_pos.2 hs).ne', dedup_singleton, gcd_singleton]
+    exact ⟨⟨rfl, h⟩, normalize_one⟩
+    
+  · choose f hf using @gcd_dvd _ _ _ s
+    have := _
+    push_neg  at h
+    refine' ⟨s.pmap @f fun _ => id, this, extract_gcd' s _ h this⟩
+    rw [map_pmap]
+    conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ => id]
+    congr with (x hx)
+    rw [id, ← hf hx]
+    
 
 end Gcd
 

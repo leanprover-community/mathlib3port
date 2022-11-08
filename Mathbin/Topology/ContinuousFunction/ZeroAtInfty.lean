@@ -232,7 +232,7 @@ theorem sub_apply : (f - g) x = f x - g x :=
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[1 + n] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
 
 instance hasIntScalar : HasSmul ℤ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa using zero_at_infty (zsmulRec n f)⟩⟩

@@ -41,10 +41,13 @@ namespace Sum
 
 deriving instance DecidableEq for Sum
 
+#print Sum.forall /-
 @[simp]
 theorem forall {p : Sum α β → Prop} : (∀ x, p x) ↔ (∀ a, p (inl a)) ∧ ∀ b, p (inr b) :=
   ⟨fun h => ⟨fun a => h _, fun b => h _⟩, fun ⟨h₁, h₂⟩ => Sum.rec h₁ h₂⟩
+-/
 
+#print Sum.exists /-
 @[simp]
 theorem exists {p : Sum α β → Prop} : (∃ x, p x) ↔ (∃ a, p (inl a)) ∨ ∃ b, p (inr b) :=
   ⟨fun h =>
@@ -55,44 +58,61 @@ theorem exists {p : Sum α β → Prop} : (∃ x, p x) ↔ (∃ a, p (inl a)) �
     match h with
     | Or.inl ⟨a, h⟩ => ⟨inl a, h⟩
     | Or.inr ⟨b, h⟩ => ⟨inr b, h⟩⟩
+-/
 
+#print Sum.inl_injective /-
 theorem inl_injective : Function.Injective (inl : α → Sum α β) := fun x y => inl.inj
+-/
 
+#print Sum.inr_injective /-
 theorem inr_injective : Function.Injective (inr : β → Sum α β) := fun x y => inr.inj
+-/
 
 section get
 
+#print Sum.getLeft /-
 /-- Check if a sum is `inl` and if so, retrieve its contents. -/
 @[simp]
 def getLeft : Sum α β → Option α
   | inl a => some a
   | inr _ => none
+-/
 
+#print Sum.getRight /-
 /-- Check if a sum is `inr` and if so, retrieve its contents. -/
 @[simp]
 def getRight : Sum α β → Option β
   | inr b => some b
   | inl _ => none
+-/
 
+#print Sum.isLeft /-
 /-- Check if a sum is `inl`. -/
 @[simp]
 def isLeft : Sum α β → Bool
   | inl _ => true
   | inr _ => false
+-/
 
+#print Sum.isRight /-
 /-- Check if a sum is `inr`. -/
 @[simp]
 def isRight : Sum α β → Bool
   | inl _ => false
   | inr _ => true
+-/
 
 variable {x y : Sum α β}
 
+#print Sum.getLeft_eq_none_iff /-
 theorem getLeft_eq_none_iff : x.getLeft = none ↔ x.isRight := by
-  cases x <;> simp only [get_left, is_right, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
+  cases x <;> simp only [get_left, is_right, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
+-/
 
+#print Sum.getRight_eq_none_iff /-
 theorem getRight_eq_none_iff : x.getRight = none ↔ x.isLeft := by
-  cases x <;> simp only [get_right, is_left, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
+  cases x <;> simp only [get_right, is_left, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
+-/
 
 @[simp]
 theorem bnot_is_left (x : Sum α β) : not x.isLeft = x.isRight := by cases x <;> rfl
@@ -116,20 +136,30 @@ theorem is_right_iff : x.isRight ↔ ∃ y, x = Sum.inr y := by cases x <;> simp
 
 end get
 
+#print Sum.inl.inj_iff /-
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
   ⟨inl.inj, congr_arg _⟩
+-/
 
+#print Sum.inr.inj_iff /-
 theorem inr.inj_iff {a b} : (inr a : Sum α β) = inr b ↔ a = b :=
   ⟨inr.inj, congr_arg _⟩
+-/
 
+#print Sum.inl_ne_inr /-
 theorem inl_ne_inr {a : α} {b : β} : inl a ≠ inr b :=
   fun.
+-/
 
+#print Sum.inr_ne_inl /-
 theorem inr_ne_inl {a : α} {b : β} : inr b ≠ inl a :=
   fun.
+-/
 
+#print Sum.elim /-
 /-- Define a function on `α ⊕ β` by giving separate definitions on `α` and `β`. -/
 protected def elim {α β γ : Sort _} (f : α → γ) (g : β → γ) : Sum α β → γ := fun x => Sum.recOn x f g
+-/
 
 /- warning: sum.elim_inl -> Sum.elim_inl is a dubious translation:
 lean 3 declaration is
@@ -201,17 +231,23 @@ Case conversion may be inaccurate. Consider using '#align sum.elim_comp_inl_inr 
 theorem elim_comp_inl_inr {α β γ : Sort _} (f : Sum α β → γ) : Sum.elim (f ∘ inl) (f ∘ inr) = f :=
   funext fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
 
+#print Sum.map /-
 /-- Map `α ⊕ β` to `α' ⊕ β'` sending `α` to `α'` and `β` to `β'`. -/
 protected def map (f : α → α') (g : β → β') : Sum α β → Sum α' β' :=
   Sum.elim (inl ∘ f) (inr ∘ g)
+-/
 
+#print Sum.map_inl /-
 @[simp]
 theorem map_inl (f : α → α') (g : β → β') (x : α) : (inl x).map f g = inl (f x) :=
   rfl
+-/
 
+#print Sum.map_inr /-
 @[simp]
 theorem map_inr (f : α → α') (g : β → β') (x : β) : (inr x).map f g = inr (g x) :=
   rfl
+-/
 
 /- warning: sum.map_map -> Sum.map_map is a dubious translation:
 lean 3 declaration is
@@ -274,7 +310,7 @@ open Function (update update_eq_iff update_comp_eq_of_injective update_comp_eq_o
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ u} α] [_inst_2 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : α -> γ} {g : β -> γ} {i : α} {x : γ}, Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_2 a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inl.{u v} α β i) x) (Sum.elim.{u v succ u_1} α β γ (Function.update.{succ u succ u_1} α (fun (ᾰ : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) f i x) g)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1752 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.1755 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : α -> γ} {g : β -> γ} {i : α} {x : γ}, Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1755 a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inl.{u v} α β i) x) (Sum.elim.{u v succ u_1} α β γ (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.1752 a b) f i x) g)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1686 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.1689 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : α -> γ} {g : β -> γ} {i : α} {x : γ}, Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1689 a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inl.{u v} α β i) x) (Sum.elim.{u v succ u_1} α β γ (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.1686 a b) f i x) g)
 Case conversion may be inaccurate. Consider using '#align sum.update_elim_inl Sum.update_elim_inlₓ'. -/
 @[simp]
 theorem update_elim_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : α → γ} {g : β → γ} {i : α} {x : γ} :
@@ -285,7 +321,7 @@ theorem update_elim_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : α → �
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ v} β] [_inst_2 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : α -> γ} {g : β -> γ} {i : β} {x : γ}, Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_2 a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inr.{u v} α β i) x) (Sum.elim.{u v succ u_1} α β γ f (Function.update.{succ v succ u_1} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_1 a b) g i x))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1830 : DecidableEq.{succ v} β] [inst._@.Mathlib.Data.Sum.Basic._hyg.1833 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : α -> γ} {g : β -> γ} {i : β} {x : γ}, Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1833 a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inr.{u v} α β i) x) (Sum.elim.{u v succ u_1} α β γ f (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Data.Sum.Basic._hyg.996 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1830 a b) g i x))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1764 : DecidableEq.{succ v} β] [inst._@.Mathlib.Data.Sum.Basic._hyg.1767 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : α -> γ} {g : β -> γ} {i : β} {x : γ}, Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1767 a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inr.{u v} α β i) x) (Sum.elim.{u v succ u_1} α β γ f (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Data.Sum.Basic._hyg.996 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1764 a b) g i x))
 Case conversion may be inaccurate. Consider using '#align sum.update_elim_inr Sum.update_elim_inrₓ'. -/
 @[simp]
 theorem update_elim_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : α → γ} {g : β → γ} {i : β} {x : γ} :
@@ -296,7 +332,7 @@ theorem update_elim_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : α → �
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ u} α] [_inst_2 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {x : γ}, Eq.{(max (succ u) (succ u_1))} (α -> γ) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_2 a b) f (Sum.inl.{u v} α β i) x) (Sum.inl.{u v} α β)) (Function.update.{succ u succ u_1} α (fun (ᾰ : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β)) i x)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1908 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.1911 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {x : γ}, Eq.{(max (succ u) (succ u_1))} (α -> γ) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1911 a b) f (Sum.inl.{u v} α β i) x) (Sum.inl.{u v} α β)) (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.1908 a b) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β)) i x)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1842 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.1845 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {x : γ}, Eq.{(max (succ u) (succ u_1))} (α -> γ) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1845 a b) f (Sum.inl.{u v} α β i) x) (Sum.inl.{u v} α β)) (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.1842 a b) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β)) i x)
 Case conversion may be inaccurate. Consider using '#align sum.update_inl_comp_inl Sum.update_inl_comp_inlₓ'. -/
 @[simp]
 theorem update_inl_comp_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
@@ -307,7 +343,7 @@ theorem update_inl_comp_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ u} α] [_inst_2 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : α} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_2 a b) f (Sum.inl.{u v} α β i) x (Sum.inl.{u v} α β j)) (Function.update.{succ u succ u_1} α (fun (ᾰ : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β)) i x j)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1962 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.1965 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : α} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1965 a b) f (Sum.inl.{u v} α β i) x (Sum.inl.{u v} α β j)) (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.1962 a b) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β)) i x j)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1896 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.1899 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : α} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1899 a b) f (Sum.inl.{u v} α β i) x (Sum.inl.{u v} α β j)) (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.1896 a b) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β)) i x j)
 Case conversion may be inaccurate. Consider using '#align sum.update_inl_apply_inl Sum.update_inl_apply_inlₓ'. -/
 @[simp]
 theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : α} {x : γ} :
@@ -317,7 +353,7 @@ theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {x : γ}, Eq.{(max (succ v) (succ u_1))} (β -> γ) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_1 a b) f (Sum.inl.{u v} α β i) x) (Sum.inr.{u v} α β)) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2042 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {x : γ}, Eq.{(max (succ v) (succ u_1))} (β -> γ) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2042 a b) f (Sum.inl.{u v} α β i) x) (Sum.inr.{u v} α β)) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.1976 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {x : γ}, Eq.{(max (succ v) (succ u_1))} (β -> γ) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.1976 a b) f (Sum.inl.{u v} α β i) x) (Sum.inr.{u v} α β)) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β))
 Case conversion may be inaccurate. Consider using '#align sum.update_inl_comp_inr Sum.update_inl_comp_inrₓ'. -/
 @[simp]
 theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
@@ -328,7 +364,7 @@ theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_1 a b) f (Sum.inl.{u v} α β i) x (Sum.inr.{u v} α β j)) (f (Sum.inr.{u v} α β j))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2095 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2095 a b) f (Sum.inl.{u v} α β i) x (Sum.inr.{u v} α β j)) (f (Sum.inr.{u v} α β j))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2029 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2029 a b) f (Sum.inl.{u v} α β i) x (Sum.inr.{u v} α β j)) (f (Sum.inr.{u v} α β j))
 Case conversion may be inaccurate. Consider using '#align sum.update_inl_apply_inr Sum.update_inl_apply_inrₓ'. -/
 @[simp]
 theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -339,7 +375,7 @@ theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {x : γ}, Eq.{(max (succ u) (succ u_1))} (α -> γ) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_1 a b) f (Sum.inr.{u v} α β i) x) (Sum.inl.{u v} α β)) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2140 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {x : γ}, Eq.{(max (succ u) (succ u_1))} (α -> γ) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2140 a b) f (Sum.inr.{u v} α β i) x) (Sum.inl.{u v} α β)) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2074 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {x : γ}, Eq.{(max (succ u) (succ u_1))} (α -> γ) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2074 a b) f (Sum.inr.{u v} α β i) x) (Sum.inl.{u v} α β)) (Function.comp.{succ u (max (succ u) (succ v)) succ u_1} α (Sum.{u v} α β) γ f (Sum.inl.{u v} α β))
 Case conversion may be inaccurate. Consider using '#align sum.update_inr_comp_inl Sum.update_inr_comp_inlₓ'. -/
 @[simp]
 theorem update_inr_comp_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
@@ -350,7 +386,7 @@ theorem update_inr_comp_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_1 a b) f (Sum.inr.{u v} α β j) x (Sum.inl.{u v} α β i)) (f (Sum.inl.{u v} α β i))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2193 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2193 a b) f (Sum.inr.{u v} α β j) x (Sum.inl.{u v} α β i)) (f (Sum.inl.{u v} α β i))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2127 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : α} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2127 a b) f (Sum.inr.{u v} α β j) x (Sum.inl.{u v} α β i)) (f (Sum.inl.{u v} α β i))
 Case conversion may be inaccurate. Consider using '#align sum.update_inr_apply_inl Sum.update_inr_apply_inlₓ'. -/
 @[simp]
 theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -361,7 +397,7 @@ theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ v} β] [_inst_2 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {x : γ}, Eq.{(max (succ v) (succ u_1))} (β -> γ) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_2 a b) f (Sum.inr.{u v} α β i) x) (Sum.inr.{u v} α β)) (Function.update.{succ v succ u_1} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_1 a b) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β)) i x)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2238 : DecidableEq.{succ v} β] [inst._@.Mathlib.Data.Sum.Basic._hyg.2241 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {x : γ}, Eq.{(max (succ v) (succ u_1))} (β -> γ) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2241 a b) f (Sum.inr.{u v} α β i) x) (Sum.inr.{u v} α β)) (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2238 a b) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β)) i x)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2172 : DecidableEq.{succ v} β] [inst._@.Mathlib.Data.Sum.Basic._hyg.2175 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {x : γ}, Eq.{(max (succ v) (succ u_1))} (β -> γ) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2175 a b) f (Sum.inr.{u v} α β i) x) (Sum.inr.{u v} α β)) (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2172 a b) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β)) i x)
 Case conversion may be inaccurate. Consider using '#align sum.update_inr_comp_inr Sum.update_inr_comp_inrₓ'. -/
 @[simp]
 theorem update_inr_comp_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
@@ -372,38 +408,52 @@ theorem update_inr_comp_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ v} β] [_inst_2 : DecidableEq.{(max (succ u) (succ v))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => _inst_2 a b) f (Sum.inr.{u v} α β i) x (Sum.inr.{u v} α β j)) (Function.update.{succ v succ u_1} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_1 a b) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β)) i x j)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2292 : DecidableEq.{succ v} β] [inst._@.Mathlib.Data.Sum.Basic._hyg.2295 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2295 a b) f (Sum.inr.{u v} α β i) x (Sum.inr.{u v} α β j)) (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2292 a b) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β)) i x j)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.2226 : DecidableEq.{succ v} β] [inst._@.Mathlib.Data.Sum.Basic._hyg.2229 : DecidableEq.{(max (succ v) (succ u))} (Sum.{u v} α β)] {f : (Sum.{u v} α β) -> γ} {i : β} {j : β} {x : γ}, Eq.{succ u_1} γ (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (a : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2229 a b) f (Sum.inr.{u v} α β i) x (Sum.inr.{u v} α β j)) (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.2226 a b) (Function.comp.{succ v (max (succ u) (succ v)) succ u_1} β (Sum.{u v} α β) γ f (Sum.inr.{u v} α β)) i x j)
 Case conversion may be inaccurate. Consider using '#align sum.update_inr_apply_inr Sum.update_inr_apply_inrₓ'. -/
 @[simp]
 theorem update_inr_apply_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : β} {x : γ} :
     update f (inr i) x (inr j) = update (f ∘ inr) i x j := by rw [← update_inr_comp_inr]
 
+#print Sum.swap /-
 /-- Swap the factors of a sum type -/
 def swap : Sum α β → Sum β α :=
   Sum.elim inr inl
+-/
 
+#print Sum.swap_inl /-
 @[simp]
 theorem swap_inl (x : α) : swap (inl x : Sum α β) = inr x :=
   rfl
+-/
 
+#print Sum.swap_inr /-
 @[simp]
 theorem swap_inr (x : β) : swap (inr x : Sum α β) = inl x :=
   rfl
+-/
 
+#print Sum.swap_swap /-
 @[simp]
 theorem swap_swap (x : Sum α β) : swap (swap x) = x := by cases x <;> rfl
+-/
 
+#print Sum.swap_swap_eq /-
 @[simp]
 theorem swap_swap_eq : swap ∘ swap = @id (Sum α β) :=
   funext <| swap_swap
+-/
 
+#print Sum.swap_left_inverse /-
 @[simp]
 theorem swap_left_inverse : Function.LeftInverse (@swap α β) swap :=
   swap_swap
+-/
 
+#print Sum.swap_right_inverse /-
 @[simp]
 theorem swap_right_inverse : Function.RightInverse (@swap α β) swap :=
   swap_swap
+-/
 
 @[simp]
 theorem is_left_swap (x : Sum α β) : x.swap.isLeft = x.isRight := by cases x <;> rfl
@@ -419,11 +469,13 @@ theorem get_right_swap (x : Sum α β) : x.swap.getRight = x.getLeft := by cases
 
 section LiftRel
 
+#print Sum.LiftRel /-
 /-- Lifts pointwise two relations between `α` and `γ` and between `β` and `δ` to a relation between
 `α ⊕ β` and `γ ⊕ δ`. -/
 inductive LiftRel (r : α → γ → Prop) (s : β → δ → Prop) : Sum α β → Sum γ δ → Prop
   | inl {a c} : r a c → lift_rel (inl a) (inl c)
   | inr {b d} : s b d → lift_rel (inr b) (inr d)
+-/
 
 attribute [protected] lift_rel.inl lift_rel.inr
 
@@ -535,12 +587,14 @@ end LiftRel
 
 section Lex
 
+#print Sum.Lex /-
 /-- Lexicographic order for sum. Sort all the `inl a` before the `inr b`, otherwise use the
 respective order on `α` or `β`. -/
 inductive Lex (r : α → α → Prop) (s : β → β → Prop) : Sum α β → Sum α β → Prop
   | inl {a₁ a₂} (h : r a₁ a₂) : lex (inl a₁) (inl a₂)
   | inr {b₁ b₂} (h : s b₁ b₂) : lex (inr b₁) (inr b₂)
   | sep (a b) : lex (inl a) (inr b)
+-/
 
 attribute [protected] Sum.Lex.inl Sum.Lex.inr
 
@@ -548,21 +602,27 @@ attribute [simp] lex.sep
 
 variable {r r₁ r₂ : α → α → Prop} {s s₁ s₂ : β → β → Prop} {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : Sum α β}
 
+#print Sum.lex_inl_inl /-
 @[simp]
 theorem lex_inl_inl : Lex r s (inl a₁) (inl a₂) ↔ r a₁ a₂ :=
   ⟨fun h => by
     cases h
     assumption, Lex.inl⟩
+-/
 
+#print Sum.lex_inr_inr /-
 @[simp]
 theorem lex_inr_inr : Lex r s (inr b₁) (inr b₂) ↔ s b₁ b₂ :=
   ⟨fun h => by
     cases h
     assumption, Lex.inr⟩
+-/
 
+#print Sum.lex_inr_inl /-
 @[simp]
 theorem lex_inr_inl : ¬Lex r s (inr b) (inl a) :=
   fun.
+-/
 
 instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
   | inl a, inl c => decidable_of_iff' _ lex_inl_inl
@@ -570,29 +630,42 @@ instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
   | inr b, inl c => Decidable.isFalse lex_inr_inl
   | inr b, inr d => decidable_of_iff' _ lex_inr_inr
 
+#print Sum.LiftRel.lex /-
 protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by
   cases h
   exacts[lex.inl ‹_›, lex.inr ‹_›]
+-/
 
+#print Sum.liftRel_subrelation_lex /-
 theorem liftRel_subrelation_lex : Subrelation (LiftRel r s) (Lex r s) := fun a b => LiftRel.lex
+-/
 
+#print Sum.Lex.mono /-
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) : Lex r₂ s₂ x y := by
   cases h
   exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
+-/
 
+#print Sum.Lex.mono_left /-
 theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : Lex r₁ s x y) : Lex r₂ s x y :=
   (h.mono hr) fun _ _ => id
+-/
 
+#print Sum.Lex.mono_right /-
 theorem Lex.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r s₁ x y) : Lex r s₂ x y :=
   h.mono (fun _ _ => id) hs
+-/
 
+#print Sum.lex_acc_inl /-
 theorem lex_acc_inl {a} (aca : Acc r a) : Acc (Lex r s) (inl a) := by
   induction' aca with a H IH
   constructor
   intro y h
   cases' h with a' _ h'
   exact IH _ h'
+-/
 
+#print Sum.lex_acc_inr /-
 theorem lex_acc_inr (aca : ∀ a, Acc (Lex r s) (inl a)) {b} (acb : Acc s b) : Acc (Lex r s) (inr b) := by
   induction' acb with b H IH
   constructor
@@ -602,10 +675,13 @@ theorem lex_acc_inr (aca : ∀ a, Acc (Lex r s) (inl a)) {b} (acb : Acc s b) : A
     
   · exact aca _
     
+-/
 
+#print Sum.lex_wf /-
 theorem lex_wf (ha : WellFounded r) (hb : WellFounded s) : WellFounded (Lex r s) :=
   have aca : ∀ a, Acc (Lex r s) (inl a) := fun a => lex_acc_inl (ha.apply a)
   ⟨fun x => Sum.recOn x aca fun b => lex_acc_inr aca (hb.apply b)⟩
+-/
 
 end Lex
 
@@ -628,10 +704,13 @@ theorem Injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (h
   | inr x, inl y, h => (hfg y x h.symm).elim
   | inr x, inr y, h => congr_arg inr <| hg h
 
+#print Function.Injective.sum_map /-
 theorem Injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
   | inl x, inl y, h => congr_arg inl <| hf <| inl.inj h
   | inr x, inr y, h => congr_arg inr <| hg <| inr.inj h
+-/
 
+#print Function.Surjective.sum_map /-
 theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
   | inl y =>
     let ⟨x, hx⟩ := hf y
@@ -639,6 +718,7 @@ theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f)
   | inr y =>
     let ⟨x, hx⟩ := hg y
     ⟨inr x, congr_arg inr hx⟩
+-/
 
 end Function
 
@@ -660,7 +740,7 @@ theorem elim_const_const (c : γ) : Sum.elim (const _ c : α → γ) (const _ c 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ (fun (_x : α) => c) (fun (_x : β) => c)) (fun (_x : Sum.{u v} α β) => c)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ (fun (x._@.Mathlib.Data.Sum.Basic._hyg.5759 : α) => c) (fun (x._@.Mathlib.Data.Sum.Basic._hyg.5766 : β) => c)) (fun (x._@.Mathlib.Data.Sum.Basic._hyg.5772 : Sum.{u v} α β) => c)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ (fun (x._@.Mathlib.Data.Sum.Basic._hyg.5640 : α) => c) (fun (x._@.Mathlib.Data.Sum.Basic._hyg.5647 : β) => c)) (fun (x._@.Mathlib.Data.Sum.Basic._hyg.5653 : Sum.{u v} α β) => c)
 Case conversion may be inaccurate. Consider using '#align sum.elim_lam_const_lam_const Sum.elim_lam_const_lam_constₓ'. -/
 @[simp]
 theorem elim_lam_const_lam_const (c : γ) : (Sum.elim (fun _ : α => c) fun _ : β => c) = fun _ => c :=
@@ -670,7 +750,7 @@ theorem elim_lam_const_lam_const (c : γ) : (Sum.elim (fun _ : α => c) fun _ : 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ u} α] [_inst_2 : DecidableEq.{succ v} β] (f : α -> γ) (g : β -> γ) (i : α) (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ (Function.update.{succ u succ u_1} α (fun (ᾰ : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) f i c) g) (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => Sum.decidableEq.{u v} α (fun (a : α) (b : α) => _inst_1 a b) β (fun (a : β) (b : β) => _inst_2 a b) a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inl.{u v} α β i) c)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.5784 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.5787 : DecidableEq.{succ v} β] (f : α -> γ) (g : β -> γ) (i : α) (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.5784 a b) f i c) g) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => Sum.instDecidableEqSum.{u v} α β (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.5784 a b) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.5787 a b) a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inl.{u v} α β i) c)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.5665 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.5668 : DecidableEq.{succ v} β] (f : α -> γ) (g : β -> γ) (i : α) (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ (Function.update.{succ u succ u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : α) => γ) (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.5665 a b) f i c) g) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => Sum.instDecidableEqSum.{u v} α β (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.5665 a b) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.5668 a b) a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inl.{u v} α β i) c)
 Case conversion may be inaccurate. Consider using '#align sum.elim_update_left Sum.elim_update_leftₓ'. -/
 theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : β → γ) (i : α) (c : γ) :
     Sum.elim (Function.update f i c) g = Function.update (Sum.elim f g) (inl i) c := by
@@ -690,7 +770,7 @@ theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [_inst_1 : DecidableEq.{succ u} α] [_inst_2 : DecidableEq.{succ v} β] (f : α -> γ) (g : β -> γ) (i : β) (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ f (Function.update.{succ v succ u_1} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_2 a b) g i c)) (Function.update.{(max (succ u) (succ v)) succ u_1} (Sum.{u v} α β) (fun (ᾰ : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => Sum.decidableEq.{u v} α (fun (a : α) (b : α) => _inst_1 a b) β (fun (a : β) (b : β) => _inst_2 a b) a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inr.{u v} α β i) c)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.5934 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.5937 : DecidableEq.{succ v} β] (f : α -> γ) (g : β -> γ) (i : β) (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ f (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Data.Sum.Basic._hyg.996 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.5937 a b) g i c)) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.4776 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => Sum.instDecidableEqSum.{u v} α β (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.5934 a b) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.5937 a b) a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inr.{u v} α β i) c)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{u_1}} [inst._@.Mathlib.Data.Sum.Basic._hyg.5762 : DecidableEq.{succ u} α] [inst._@.Mathlib.Data.Sum.Basic._hyg.5765 : DecidableEq.{succ v} β] (f : α -> γ) (g : β -> γ) (i : β) (c : γ), Eq.{(max (max (succ u) (succ v)) (succ u_1))} ((Sum.{u v} α β) -> γ) (Sum.elim.{u v succ u_1} α β γ f (Function.update.{succ v succ u_1} β (fun (a._@.Mathlib.Data.Sum.Basic._hyg.996 : β) => γ) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.5765 a b) g i c)) (Function.update.{(max (succ v) (succ u)) succ u_1} (Sum.{u v} α β) (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5059 : Sum.{u v} α β) => γ) (fun (a : Sum.{u v} α β) (b : Sum.{u v} α β) => Sum.instDecidableEqSum.{u v} α β (fun (a : α) (b : α) => inst._@.Mathlib.Data.Sum.Basic._hyg.5762 a b) (fun (a : β) (b : β) => inst._@.Mathlib.Data.Sum.Basic._hyg.5765 a b) a b) (Sum.elim.{u v succ u_1} α β γ f g) (Sum.inr.{u v} α β i) c)
 Case conversion may be inaccurate. Consider using '#align sum.elim_update_right Sum.elim_update_rightₓ'. -/
 theorem elim_update_right [DecidableEq α] [DecidableEq β] (f : α → γ) (g : β → γ) (i : β) (c : γ) :
     Sum.elim f (Function.update g i c) = Function.update (Sum.elim f g) (inr i) c := by
@@ -717,20 +797,26 @@ Abbreviations for the maps from the summands to `α ⊕ β ⊕ γ`. This is usef
 
 namespace Sum3
 
+#print Sum3.in₀ /-
 /-- The map from the first summand into a ternary sum. -/
 @[match_pattern, simp, reducible]
 def in₀ (a) : Sum α (Sum β γ) :=
   inl a
+-/
 
+#print Sum3.in₁ /-
 /-- The map from the second summand into a ternary sum. -/
 @[match_pattern, simp, reducible]
 def in₁ (b) : Sum α (Sum β γ) :=
   inr <| inl b
+-/
 
+#print Sum3.in₂ /-
 /-- The map from the third summand into a ternary sum. -/
 @[match_pattern, simp, reducible]
 def in₂ (c) : Sum α (Sum β γ) :=
   inr <| inr c
+-/
 
 end Sum3
 

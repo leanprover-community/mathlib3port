@@ -118,10 +118,6 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
     | _, _, ⟨L1, h1, rfl⟩, ⟨L2, h2, rfl⟩ =>
       ⟨L1 ++ L2, List.forall_mem_append.2 ⟨h1, h2⟩, by rw [List.map_append, List.sum_append]⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R),
-    «expr ∧ »(∀ x «expr ∈ » L,
-     «expr ∈ »(x, s),
-     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[elab_as_elim]
@@ -139,8 +135,8 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     exact ha this (ih HL.2)
   replace HL := HL.1
   clear ih tl
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R),\n    «expr ∧ »(∀ x «expr ∈ » L,\n     «expr ∈ »(x, s),\n     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
+  rsuffices ⟨L, HL', HP | HP⟩ :
+    ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
   · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih

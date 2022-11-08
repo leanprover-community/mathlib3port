@@ -162,7 +162,7 @@ theorem to_complex_div_im (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).im = round (
   rw [div_def, ← @Rat.round_cast ℝ _ _, ← @Rat.round_cast ℝ _ _] <;>
     simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_add, add_mul]
 
-theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : abs x.re ≤ abs y.re) (him : abs x.im ≤ abs y.im) :
+theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|) (him : |x.im| ≤ |y.im|) :
     x.normSq ≤ y.normSq := by
   rw [norm_sq_apply, norm_sq_apply, ← _root_.abs_mul_self, _root_.abs_mul, ← _root_.abs_mul_self y.re,
       _root_.abs_mul y.re, ← _root_.abs_mul_self x.im, _root_.abs_mul x.im, ← _root_.abs_mul_self y.im,
@@ -175,7 +175,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
         ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I : ℂ).normSq :=
       congr_arg _ <| by apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
-      have : abs (2⁻¹ : ℝ) = 2⁻¹ := abs_of_nonneg (by norm_num)
+      have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
       norm_sq_le_norm_sq_of_re_le_of_im_le
         (by rw [to_complex_div_re] <;> simp [norm_sq, this] <;> simpa using abs_sub_round (x / y : ℂ).re)
         (by rw [to_complex_div_im] <;> simp [norm_sq, this] <;> simpa using abs_sub_round (x / y : ℂ).im)

@@ -23,6 +23,8 @@ Binet's formula.
 
 noncomputable section
 
+open Polynomial
+
 /-- The golden ratio `φ := (1 + √5)/2`. -/
 @[reducible]
 def goldenRatio :=
@@ -78,13 +80,13 @@ theorem gold_sub_gold_conj : φ - ψ = Real.sqrt 5 := by
 @[simp]
 theorem gold_sq : φ ^ 2 = φ + 1 := by
   rw [goldenRatio, ← sub_eq_zero]
-  ring_exp
+  ring
   rw [Real.sq_sqrt] <;> norm_num
 
 @[simp]
 theorem gold_conj_sq : ψ ^ 2 = ψ + 1 := by
   rw [goldenConj, ← sub_eq_zero]
-  ring_exp
+  ring
   rw [Real.sq_sqrt] <;> norm_num
 
 theorem gold_pos : 0 < φ :=
@@ -146,7 +148,7 @@ section Poly
 open Polynomial
 
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
-theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] : fibRec.charPoly = X ^ 2 - (X + (1 : Polynomial β)) := by
+theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] : fibRec.charPoly = X ^ 2 - (X + (1 : β[X])) := by
   rw [fibRec, LinearRecurrence.charPoly]
   simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', monomial_eq_smul_X]
 
@@ -172,7 +174,7 @@ theorem geom_gold_conj_is_sol_fib_rec : fibRec.IsSolution (pow ψ) := by
 
 end Fibrec
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- Binet's formula as a function equality. -/
 theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 := by
   rw [fib_rec.sol_eq_of_eq_init]
@@ -181,7 +183,7 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
     · simp
       
     · simp only [goldenRatio, goldenConj]
-      ring_exp
+      ring
       rw [mul_inv_cancel] <;> norm_num
       
     

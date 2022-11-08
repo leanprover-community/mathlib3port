@@ -3,9 +3,9 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Algebra.Order.Archimedean
-import Mathbin.Order.LatticeIntervals
+import Mathbin.Algebra.Order.Ring.Basic
 import Mathbin.Order.CompleteLatticeIntervals
+import Mathbin.Order.LatticeIntervals
 
 /-!
 # The type of nonnegative elements
@@ -20,7 +20,6 @@ When `α` is `ℝ`, this will give us some properties about `ℝ≥0`.
 ## Main declarations
 
 * `{x : α // 0 ≤ x}` is a `canonically_linear_ordered_add_monoid` if `α` is a `linear_ordered_ring`.
-* `{x : α // 0 ≤ x}` is a `linear_ordered_comm_group_with_zero` if `α` is a `linear_ordered_field`.
 
 ## Implementation Notes
 
@@ -151,11 +150,6 @@ def coeAddMonoidHom [OrderedAddCommMonoid α] : { x : α // 0 ≤ x } →+ α :=
 theorem nsmul_coe [OrderedAddCommMonoid α] (n : ℕ) (r : { x : α // 0 ≤ x }) : ↑(n • r) = n • (r : α) :=
   Nonneg.coeAddMonoidHom.map_nsmul _ _
 
-instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { x : α // 0 ≤ x } :=
-  ⟨fun x y pos_y =>
-    let ⟨n, hr⟩ := Archimedean.arch (x : α) (pos_y : (0 : α) < y)
-    ⟨n, show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
-
 instance hasOne [OrderedSemiring α] : One { x : α // 0 ≤ x } where one := ⟨1, zero_le_one⟩
 
 @[simp, norm_cast]
@@ -181,11 +175,18 @@ instance addMonoidWithOne [OrderedSemiring α] : AddMonoidWithOne { x : α // 0 
   { Nonneg.hasOne, Nonneg.orderedAddCommMonoid with natCast := fun n => ⟨n, Nat.cast_nonneg n⟩,
     nat_cast_zero := by simp [Nat.cast], nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl }
 
+@[simp, norm_cast]
+protected theorem coe_nat_cast [OrderedSemiring α] (n : ℕ) : ((↑n : { x : α // 0 ≤ x }) : α) = n :=
+  rfl
+
+@[simp]
+theorem mk_nat_cast [OrderedSemiring α] (n : ℕ) : (⟨n, n.cast_nonneg⟩ : { x : α // 0 ≤ x }) = n :=
+  rfl
+
 instance hasPow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ where pow x n := ⟨x ^ n, pow_nonneg x.2 n⟩
 
 @[simp, norm_cast]
-protected theorem coe_pow [OrderedSemiring α] (a : { x : α // 0 ≤ x }) (n : ℕ) :
-    ((a ^ n : { x : α // 0 ≤ x }) : α) = a ^ n :=
+protected theorem coe_pow [OrderedSemiring α] (a : { x : α // 0 ≤ x }) (n : ℕ) : (↑(a ^ n) : α) = a ^ n :=
   rfl
 
 @[simp]
@@ -237,10 +238,6 @@ instance linearOrderedCommMonoidWithZero [LinearOrderedCommRing α] :
 def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
   ⟨coe, Nonneg.coe_one, Nonneg.coe_mul, Nonneg.coe_zero, Nonneg.coe_add⟩
 
-@[simp, norm_cast]
-protected theorem coe_nat_cast [OrderedSemiring α] (n : ℕ) : ((↑n : { x : α // 0 ≤ x }) : α) = n :=
-  map_nat_cast (coeRingHom : { x : α // 0 ≤ x } →+* α) n
-
 instance canonicallyOrderedAddMonoid [OrderedRing α] : CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with le_self_add := fun a b => le_add_of_nonneg_right b.2,
     exists_add_of_le := fun a b h => ⟨⟨b - a, sub_nonneg_of_le h⟩, Subtype.ext (add_sub_cancel'_right _ _).symm⟩ }
@@ -255,85 +252,6 @@ instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α]
 instance canonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
     CanonicallyLinearOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Subtype.linearOrder _, Nonneg.canonicallyOrderedAddMonoid with }
-
-section LinearOrderedSemifield
-
-variable [LinearOrderedSemifield α] {x y : α}
-
-instance hasInv : Inv { x : α // 0 ≤ x } :=
-  ⟨fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩⟩
-
-@[simp, norm_cast]
-protected theorem coe_inv (a : { x : α // 0 ≤ x }) : ((a⁻¹ : { x : α // 0 ≤ x }) : α) = a⁻¹ :=
-  rfl
-
-@[simp]
-theorem inv_mk (hx : 0 ≤ x) : (⟨x, hx⟩ : { x : α // 0 ≤ x })⁻¹ = ⟨x⁻¹, inv_nonneg.mpr hx⟩ :=
-  rfl
-
-instance hasDiv : Div { x : α // 0 ≤ x } :=
-  ⟨fun x y => ⟨x / y, div_nonneg x.2 y.2⟩⟩
-
-@[simp, norm_cast]
-protected theorem coe_div (a b : { x : α // 0 ≤ x }) : ((a / b : { x : α // 0 ≤ x }) : α) = a / b :=
-  rfl
-
-@[simp]
-theorem mk_div_mk (hx : 0 ≤ x) (hy : 0 ≤ y) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ :=
-  rfl
-
-instance hasZpow : Pow { x : α // 0 ≤ x } ℤ :=
-  ⟨fun a n => ⟨a ^ n, zpow_nonneg a.2 _⟩⟩
-
-@[simp, norm_cast]
-protected theorem coe_zpow (a : { x : α // 0 ≤ x }) (n : ℤ) : ((a ^ n : { x : α // 0 ≤ x }) : α) = a ^ n :=
-  rfl
-
-@[simp]
-theorem mk_zpow (hx : 0 ≤ x) (n : ℤ) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) ^ n = ⟨x ^ n, zpow_nonneg hx n⟩ :=
-  rfl
-
-instance linearOrderedSemifield : LinearOrderedSemifield { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedSemifield _ Nonneg.coe_zero Nonneg.coe_one Nonneg.coe_add Nonneg.coe_mul
-    Nonneg.coe_inv Nonneg.coe_div (fun _ _ => rfl) Nonneg.coe_pow Nonneg.coe_zpow Nonneg.coe_nat_cast (fun _ _ => rfl)
-    fun _ _ => rfl
-
-end LinearOrderedSemifield
-
-instance linearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
-  { Nonneg.nontrivial, Nonneg.hasInv, Nonneg.linearOrderedCommMonoidWithZero with
-    inv_zero := by
-      ext
-      exact inv_zero,
-    mul_inv_cancel := by
-      intro a ha
-      ext
-      refine' mul_inv_cancel (mt (fun h => _) ha)
-      ext
-      exact h }
-
-instance canonicallyLinearOrderedSemifield [LinearOrderedField α] :
-    CanonicallyLinearOrderedSemifield { x : α // 0 ≤ x } :=
-  { Nonneg.linearOrderedSemifield, Nonneg.canonicallyOrderedCommSemiring with }
-
-instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring { r : α // 0 ≤ r } where
-  floor a := ⌊(a : α)⌋₊
-  ceil a := ⌈(a : α)⌉₊
-  floor_of_neg a ha := FloorSemiring.floor_of_neg ha
-  gc_floor a n ha := by
-    refine' (FloorSemiring.gc_floor (show 0 ≤ (a : α) from ha)).trans _
-    rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
-  gc_ceil a n := by
-    refine' (FloorSemiring.gc_ceil (a : α) n).trans _
-    rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
-
-@[norm_cast]
-theorem nat_floor_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) : ⌊(a : α)⌋₊ = ⌊a⌋₊ :=
-  rfl
-
-@[norm_cast]
-theorem nat_ceil_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) : ⌈(a : α)⌉₊ = ⌈a⌉₊ :=
-  rfl
 
 section LinearOrder
 

@@ -3,13 +3,8 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Abs
 import Mathbin.Algebra.Order.Sub.Basic
-import Mathbin.Algebra.Order.Monoid.MinMax
-import Mathbin.Algebra.Order.Monoid.Prod
-import Mathbin.Algebra.Order.Monoid.Units
 import Mathbin.Algebra.Order.Monoid.OrderDual
-import Mathbin.Algebra.Order.Monoid.WithTop
 
 /-!
 # Ordered groups
@@ -30,17 +25,21 @@ universe u
 
 variable {α : Type u}
 
+#print OrderedAddCommGroup /-
 /-- An ordered additive commutative group is an additive commutative group
 with a partial order in which addition is strictly monotone. -/
 @[protect_proj]
 class OrderedAddCommGroup (α : Type u) extends AddCommGroup α, PartialOrder α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
+-/
 
+#print OrderedCommGroup /-
 /-- An ordered commutative group is an commutative group
 with a partial order in which multiplication is strictly monotone. -/
 @[protect_proj]
 class OrderedCommGroup (α : Type u) extends CommGroup α, PartialOrder α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
+-/
 
 attribute [to_additive] OrderedCommGroup
 
@@ -57,22 +56,13 @@ instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommG
 example (α : Type u) [OrderedAddCommGroup α] : CovariantClass α α (swap (· + ·)) (· < ·) :=
   AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le α
 
-/-- The units of an ordered commutative monoid form an ordered commutative group. -/
-@[to_additive "The units of an ordered commutative additive monoid form an ordered commutative\nadditive group."]
-instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :=
-  { Units.partialOrder, Units.commGroup with
-    mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
-
+#print OrderedCommGroup.toOrderedCancelCommMonoid /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type u) [s : OrderedCommGroup α] :
     OrderedCancelCommMonoid α :=
   { s with le_of_mul_le_mul_left := fun a b c => (mul_le_mul_iff_left a).mp }
-
--- See note [lower instance priority]
-@[to_additive]
-instance (priority := 100) Group.has_exists_mul_of_le (α : Type u) [Group α] [LE α] : HasExistsMulOfLe α :=
-  ⟨fun a b hab => ⟨a⁻¹ * b, (mul_inv_cancel_left _ _).symm⟩⟩
+-/
 
 @[to_additive]
 instance [OrderedCommGroup α] : OrderedCommGroup αᵒᵈ :=
@@ -129,7 +119,7 @@ variable [LT α] [CovariantClass α α (· * ·) (· < ·)] {a b c : α}
 
 /- warning: left.one_lt_inv_iff -> Left.one_lt_inv_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Group.{u} α] [_inst_2 : LT.{u} α] [_inst_3 : CovariantClass.{u u} α α (HMul.hMul.{u u u} α α α (instHMul.{u} α (MulOneClass.toHasMul.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1)))))) (LT.lt.{u} α _inst_2)] {a : α}, Iff (LT.lt.{u} α _inst_2 (One.one.{u} α (MulOneClass.toHasOne.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))) (Inv.inv.{u} α (DivInvMonoid.toHasInv.{u} α (Group.toDivInvMonoid.{u} α _inst_1)) a)) (LT.lt.{u} α _inst_2 a (One.one.{u} α (MulOneClass.toHasOne.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))))
+  forall {α : Type.{u}} [_inst_1 : Group.{u} α] [_inst_2 : LT.{u} α] [_inst_3 : CovariantClass.{u u} α α (HMul.hMul.{u u u} α α α (instHMul.{u} α (MulOneClass.toHasMul.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1)))))) (LT.lt.{u} α _inst_2)] {a : α}, Iff (LT.lt.{u} α _inst_2 (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α (MulOneClass.toHasOne.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))))) (Inv.inv.{u} α (DivInvMonoid.toHasInv.{u} α (Group.toDivInvMonoid.{u} α _inst_1)) a)) (LT.lt.{u} α _inst_2 a (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α (MulOneClass.toHasOne.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))))))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Order.Group._hyg.235 : Group.{u_1} α] [inst._@.Mathlib.Algebra.Order.Group._hyg.238 : LT.{u_1} α] [inst._@.Mathlib.Algebra.Order.Group._hyg.241 : CovariantClass.{u_1 u_1} α α (fun (x._@.Mathlib.Algebra.Order.Group._hyg.248 : α) (x._@.Mathlib.Algebra.Order.Group._hyg.250 : α) => HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (MulOneClass.toMul.{u_1} α (Monoid.toMulOneClass.{u_1} α (DivInvMonoid.toMonoid.{u_1} α (Group.toDivInvMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.235))))) x._@.Mathlib.Algebra.Order.Group._hyg.248 x._@.Mathlib.Algebra.Order.Group._hyg.250) (fun (x._@.Mathlib.Algebra.Order.Group._hyg.263 : α) (x._@.Mathlib.Algebra.Order.Group._hyg.265 : α) => LT.lt.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.238 x._@.Mathlib.Algebra.Order.Group._hyg.263 x._@.Mathlib.Algebra.Order.Group._hyg.265)] {a : α}, Iff (LT.lt.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.238 (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (InvOneClass.toOne.{u_1} α (DivInvOneMonoid.toInvOneClass.{u_1} α (DivisionMonoid.toDivInvOneMonoid.{u_1} α (Group.toDivisionMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.235)))))) (Inv.inv.{u_1} α (InvOneClass.toInv.{u_1} α (DivInvOneMonoid.toInvOneClass.{u_1} α (DivisionMonoid.toDivInvOneMonoid.{u_1} α (Group.toDivisionMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.235)))) a)) (LT.lt.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.238 a (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (InvOneClass.toOne.{u_1} α (DivInvOneMonoid.toInvOneClass.{u_1} α (DivisionMonoid.toDivInvOneMonoid.{u_1} α (Group.toDivisionMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.235)))))))
 Case conversion may be inaccurate. Consider using '#align left.one_lt_inv_iff Left.one_lt_inv_iffₓ'. -/
@@ -659,12 +649,12 @@ theorem inv_le_div_iff_le_mul : b⁻¹ ≤ a / c ↔ c ≤ a * b :=
 @[to_additive]
 theorem inv_le_div_iff_le_mul' : a⁻¹ ≤ b / c ↔ c ≤ a * b := by rw [inv_le_div_iff_le_mul, mul_comm]
 
-@[to_additive sub_le]
-theorem div_le'' : a / b ≤ c ↔ a / c ≤ b :=
+@[to_additive]
+theorem div_le_comm : a / b ≤ c ↔ a / c ≤ b :=
   div_le_iff_le_mul'.trans div_le_iff_le_mul.symm
 
-@[to_additive le_sub]
-theorem le_div'' : a ≤ b / c ↔ c ≤ b / a :=
+@[to_additive]
+theorem le_div_comm : a ≤ b / c ↔ c ≤ b / a :=
   le_div_iff_mul_le'.trans le_div_iff_mul_le.symm
 
 end LE
@@ -702,7 +692,7 @@ theorem div_lt_div_right' (h : a < b) (c : α) : a / c < b / c :=
 
 /- warning: one_lt_div' -> one_lt_div' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Group.{u} α] [_inst_2 : LT.{u} α] [_inst_3 : CovariantClass.{u u} α α (Function.swap.{succ u succ u succ u} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u u u} α α α (instHMul.{u} α (MulOneClass.toHasMul.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))))) (LT.lt.{u} α _inst_2)] {a : α} {b : α}, Iff (LT.lt.{u} α _inst_2 (One.one.{u} α (MulOneClass.toHasOne.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))) (HDiv.hDiv.{u u u} α α α (instHDiv.{u} α (DivInvMonoid.toHasDiv.{u} α (Group.toDivInvMonoid.{u} α _inst_1))) a b)) (LT.lt.{u} α _inst_2 b a)
+  forall {α : Type.{u}} [_inst_1 : Group.{u} α] [_inst_2 : LT.{u} α] [_inst_3 : CovariantClass.{u u} α α (Function.swap.{succ u succ u succ u} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u u u} α α α (instHMul.{u} α (MulOneClass.toHasMul.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))))) (LT.lt.{u} α _inst_2)] {a : α} {b : α}, Iff (LT.lt.{u} α _inst_2 (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α (MulOneClass.toHasOne.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α _inst_1))))))) (HDiv.hDiv.{u u u} α α α (instHDiv.{u} α (DivInvMonoid.toHasDiv.{u} α (Group.toDivInvMonoid.{u} α _inst_1))) a b)) (LT.lt.{u} α _inst_2 b a)
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Order.Group._hyg.389 : Group.{u_1} α] [inst._@.Mathlib.Algebra.Order.Group._hyg.392 : LT.{u_1} α] [inst._@.Mathlib.Algebra.Order.Group._hyg.395 : CovariantClass.{u_1 u_1} α α (Function.swap.{succ u_1 succ u_1 succ u_1} α α (fun (a._@.Mathlib.Algebra.CovariantAndContravariant._hyg.110 : α) (a._@.Mathlib.Algebra.CovariantAndContravariant._hyg.108 : α) => α) (fun (x._@.Mathlib.Algebra.Order.Group._hyg.405 : α) (x._@.Mathlib.Algebra.Order.Group._hyg.407 : α) => HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (MulOneClass.toMul.{u_1} α (Monoid.toMulOneClass.{u_1} α (DivInvMonoid.toMonoid.{u_1} α (Group.toDivInvMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.389))))) x._@.Mathlib.Algebra.Order.Group._hyg.405 x._@.Mathlib.Algebra.Order.Group._hyg.407)) (fun (x._@.Mathlib.Algebra.Order.Group._hyg.420 : α) (x._@.Mathlib.Algebra.Order.Group._hyg.422 : α) => LT.lt.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.392 x._@.Mathlib.Algebra.Order.Group._hyg.420 x._@.Mathlib.Algebra.Order.Group._hyg.422)] {a : α} {b : α}, Iff (LT.lt.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.392 (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (InvOneClass.toOne.{u_1} α (DivInvOneMonoid.toInvOneClass.{u_1} α (DivisionMonoid.toDivInvOneMonoid.{u_1} α (Group.toDivisionMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.389)))))) (HDiv.hDiv.{u_1 u_1 u_1} α α α (instHDiv.{u_1} α (DivInvMonoid.toDiv.{u_1} α (Group.toDivInvMonoid.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.389))) a b)) (LT.lt.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.392 b a)
 Case conversion may be inaccurate. Consider using '#align one_lt_div' one_lt_div'ₓ'. -/
@@ -780,12 +770,12 @@ alias sub_lt_iff_lt_add' ↔ lt_add_of_sub_left_lt sub_left_lt_of_lt_add
 theorem inv_lt_div_iff_lt_mul' : b⁻¹ < a / c ↔ c < a * b :=
   lt_div_iff_mul_lt.trans inv_mul_lt_iff_lt_mul'
 
-@[to_additive sub_lt]
-theorem div_lt'' : a / b < c ↔ a / c < b :=
+@[to_additive]
+theorem div_lt_comm : a / b < c ↔ a / c < b :=
   div_lt_iff_lt_mul'.trans div_lt_iff_lt_mul.symm
 
-@[to_additive lt_sub]
-theorem lt_div'' : a < b / c ↔ c < b / a :=
+@[to_additive]
+theorem lt_div_comm : a < b / c ↔ c < b / a :=
   lt_div_iff_mul_lt'.trans lt_div_iff_mul_lt.symm
 
 end LT
@@ -839,35 +829,7 @@ theorem div_le_div_flip {α : Type _} [CommGroup α] [LinearOrder α] [Covariant
   rw [div_eq_mul_inv b, mul_comm]
   exact div_le_inv_mul_iff
 
-@[simp, to_additive]
-theorem max_one_div_max_inv_one_eq_self (a : α) : max a 1 / max a⁻¹ 1 = a := by
-  rcases le_total a 1 with (h | h) <;> simp [h]
-
-alias max_zero_sub_max_neg_zero_eq_self ← max_zero_sub_eq_self
-
 end VariableNames
-
-section DenselyOrdered
-
-variable [DenselyOrdered α] {a b c : α}
-
-@[to_additive]
-theorem le_of_forall_lt_one_mul_le (h : ∀ ε < 1, a * ε ≤ b) : a ≤ b :=
-  @le_of_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _ _ _ h
-
-@[to_additive]
-theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : a ≤ b :=
-  le_of_forall_lt_one_mul_le fun ε ε1 => by simpa only [div_eq_mul_inv, inv_inv] using h ε⁻¹ (Left.one_lt_inv_iff.2 ε1)
-
-@[to_additive]
-theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b * ε :=
-  ⟨fun h ε ε_pos => le_mul_of_le_of_one_le h ε_pos.le, le_of_forall_one_lt_le_mul⟩
-
-@[to_additive]
-theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀ ε < 1, a * ε ≤ b :=
-  @le_iff_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _
-
-end DenselyOrdered
 
 end LinearOrder
 
@@ -876,11 +838,13 @@ end LinearOrder
 -/
 
 
+#print LinearOrderedAddCommGroup /-
 /-- A linearly ordered additive commutative group is an
 additive commutative group with a linear order in which
 addition is monotone. -/
 @[protect_proj]
 class LinearOrderedAddCommGroup (α : Type u) extends OrderedAddCommGroup α, LinearOrder α
+-/
 
 /-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/
@@ -925,30 +889,6 @@ def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [I
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
   mul_lt_mul_left' h c
 
-@[to_additive min_neg_neg]
-theorem min_inv_inv' (a b : α) : min a⁻¹ b⁻¹ = (max a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_max α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
-
-@[to_additive max_neg_neg]
-theorem max_inv_inv' (a b : α) : max a⁻¹ b⁻¹ = (min a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_min α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
-
-@[to_additive min_sub_sub_right]
-theorem min_div_div_right' (a b c : α) : min (a / c) (b / c) = min a b / c := by
-  simpa only [div_eq_mul_inv] using min_mul_mul_right a b c⁻¹
-
-@[to_additive max_sub_sub_right]
-theorem max_div_div_right' (a b c : α) : max (a / c) (b / c) = max a b / c := by
-  simpa only [div_eq_mul_inv] using max_mul_mul_right a b c⁻¹
-
-@[to_additive min_sub_sub_left]
-theorem min_div_div_left' (a b c : α) : min (a / b) (a / c) = a / max b c := by
-  simp only [div_eq_mul_inv, min_mul_mul_left, min_inv_inv']
-
-@[to_additive max_sub_sub_left]
-theorem max_div_div_left' (a b c : α) : max (a / b) (a / c) = a / min b c := by
-  simp only [div_eq_mul_inv, max_mul_mul_left, max_inv_inv']
-
 @[to_additive eq_zero_of_neg_eq]
 theorem eq_one_of_inv_eq' (h : a⁻¹ = a) : a = 1 :=
   match lt_trichotomy a 1 with
@@ -984,332 +924,6 @@ instance (priority := 100) LinearOrderedCommGroup.to_no_min_order [Nontrivial α
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
 
 end LinearOrderedCommGroup
-
-section CovariantAddLe
-
-section Neg
-
--- see Note [lower instance priority]
-/-- `abs a` is the absolute value of `a`. -/
-@[to_additive "`abs a` is the absolute value of `a`"]
-instance (priority := 100) Inv.toHasAbs [Inv α] [HasSup α] : Abs α :=
-  ⟨fun a => a ⊔ a⁻¹⟩
-
-@[to_additive]
-theorem abs_eq_sup_inv [Inv α] [HasSup α] (a : α) : abs a = a ⊔ a⁻¹ :=
-  rfl
-
-variable [Neg α] [LinearOrder α] {a b : α}
-
-theorem abs_eq_max_neg : abs a = max a (-a) :=
-  rfl
-
-theorem abs_choice (x : α) : abs x = x ∨ abs x = -x :=
-  max_choice _ _
-
-theorem abs_le' : abs a ≤ b ↔ a ≤ b ∧ -a ≤ b :=
-  max_le_iff
-
-theorem le_abs : a ≤ abs b ↔ a ≤ b ∨ a ≤ -b :=
-  le_max_iff
-
-theorem le_abs_self (a : α) : a ≤ abs a :=
-  le_max_left _ _
-
-theorem neg_le_abs_self (a : α) : -a ≤ abs a :=
-  le_max_right _ _
-
-theorem lt_abs : a < abs b ↔ a < b ∨ a < -b :=
-  lt_max_iff
-
-theorem abs_le_abs (h₀ : a ≤ b) (h₁ : -a ≤ b) : abs a ≤ abs b :=
-  (abs_le'.2 ⟨h₀, h₁⟩).trans (le_abs_self b)
-
-theorem abs_by_cases (P : α → Prop) {a : α} (h1 : P a) (h2 : P (-a)) : P (abs a) :=
-  sup_ind _ _ h1 h2
-
-end Neg
-
-section AddGroup
-
-variable [AddGroup α] [LinearOrder α]
-
-@[simp]
-theorem abs_neg (a : α) : abs (-a) = abs a := by rw [abs_eq_max_neg, max_comm, neg_neg, abs_eq_max_neg]
-
-theorem eq_or_eq_neg_of_abs_eq {a b : α} (h : abs a = b) : a = b ∨ a = -b := by
-  simpa only [← h, eq_comm, eq_neg_iff_eq_neg] using abs_choice a
-
-theorem abs_eq_abs {a b : α} : abs a = abs b ↔ a = b ∨ a = -b := by
-  refine' ⟨fun h => _, fun h => _⟩
-  · obtain rfl | rfl := eq_or_eq_neg_of_abs_eq h <;>
-      simpa only [neg_eq_iff_neg_eq, neg_inj, or_comm, @eq_comm _ (-b)] using abs_choice b
-    
-  · cases h <;> simp only [h, abs_neg]
-    
-
-theorem abs_sub_comm (a b : α) : abs (a - b) = abs (b - a) :=
-  calc
-    abs (a - b) = abs (-(b - a)) := congr_arg _ (neg_sub b a).symm
-    _ = abs (b - a) := abs_neg (b - a)
-    
-
-variable [CovariantClass α α (· + ·) (· ≤ ·)] {a b c : α}
-
-theorem abs_of_nonneg (h : 0 ≤ a) : abs a = a :=
-  max_eq_left <| (neg_nonpos.2 h).trans h
-
-theorem abs_of_pos (h : 0 < a) : abs a = a :=
-  abs_of_nonneg h.le
-
-theorem abs_of_nonpos (h : a ≤ 0) : abs a = -a :=
-  max_eq_right <| h.trans (neg_nonneg.2 h)
-
-theorem abs_of_neg (h : a < 0) : abs a = -a :=
-  abs_of_nonpos h.le
-
-theorem abs_le_abs_of_nonneg (ha : 0 ≤ a) (hab : a ≤ b) : abs a ≤ abs b := by
-  rwa [abs_of_nonneg ha, abs_of_nonneg (ha.trans hab)]
-
-@[simp]
-theorem abs_zero : abs 0 = (0 : α) :=
-  abs_of_nonneg le_rfl
-
-@[simp]
-theorem abs_pos : 0 < abs a ↔ a ≠ 0 := by
-  rcases lt_trichotomy a 0 with (ha | rfl | ha)
-  · simp [abs_of_neg ha, neg_pos, ha.ne, ha]
-    
-  · simp
-    
-  · simp [abs_of_pos ha, ha, ha.ne.symm]
-    
-
-theorem abs_pos_of_pos (h : 0 < a) : 0 < abs a :=
-  abs_pos.2 h.Ne.symm
-
-theorem abs_pos_of_neg (h : a < 0) : 0 < abs a :=
-  abs_pos.2 h.Ne
-
-theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
-  cases' le_total 0 a with h h
-  · calc
-      -abs a = -a := congr_arg Neg.neg (abs_of_nonneg h)
-      _ ≤ 0 := neg_nonpos.mpr h
-      _ ≤ a := h
-      
-    
-  · calc
-      -abs a = - -a := congr_arg Neg.neg (abs_of_nonpos h)
-      _ ≤ a := (neg_neg a).le
-      
-    
-
-theorem add_abs_nonneg (a : α) : 0 ≤ a + abs a := by
-  rw [← add_right_neg a]
-  apply add_le_add_left
-  exact neg_le_abs_self a
-
-theorem neg_abs_le_neg (a : α) : -abs a ≤ -a := by simpa using neg_abs_le_self (-a)
-
-@[simp]
-theorem abs_nonneg (a : α) : 0 ≤ abs a :=
-  (le_total 0 a).elim (fun h => h.trans (le_abs_self a)) fun h => (neg_nonneg.2 h).trans <| neg_le_abs_self a
-
-@[simp]
-theorem abs_abs (a : α) : abs (abs a) = abs a :=
-  abs_of_nonneg <| abs_nonneg a
-
-@[simp]
-theorem abs_eq_zero : abs a = 0 ↔ a = 0 :=
-  Decidable.not_iff_not.1 <| ne_comm.trans <| (abs_nonneg a).lt_iff_ne.symm.trans abs_pos
-
-@[simp]
-theorem abs_nonpos_iff {a : α} : abs a ≤ 0 ↔ a = 0 :=
-  (abs_nonneg a).le_iff_eq.trans abs_eq_zero
-
-variable [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
-
-theorem abs_le_abs_of_nonpos (ha : a ≤ 0) (hab : b ≤ a) : abs a ≤ abs b := by
-  rw [abs_of_nonpos ha, abs_of_nonpos (hab.trans ha)]
-  exact neg_le_neg_iff.mpr hab
-
-theorem abs_lt : abs a < b ↔ -b < a ∧ a < b :=
-  max_lt_iff.trans <| and_comm.trans <| by rw [neg_lt]
-
-theorem neg_lt_of_abs_lt (h : abs a < b) : -b < a :=
-  (abs_lt.mp h).1
-
-theorem lt_of_abs_lt (h : abs a < b) : a < b :=
-  (abs_lt.mp h).2
-
-theorem max_sub_min_eq_abs' (a b : α) : max a b - min a b = abs (a - b) := by
-  cases' le_total a b with ab ba
-  · rw [max_eq_right ab, min_eq_left ab, abs_of_nonpos, neg_sub]
-    rwa [sub_nonpos]
-    
-  · rw [max_eq_left ba, min_eq_right ba, abs_of_nonneg]
-    rwa [sub_nonneg]
-    
-
-theorem max_sub_min_eq_abs (a b : α) : max a b - min a b = abs (b - a) := by
-  rw [abs_sub_comm]
-  exact max_sub_min_eq_abs' _ _
-
-end AddGroup
-
-end CovariantAddLe
-
-section LinearOrderedAddCommGroup
-
-variable [LinearOrderedAddCommGroup α] {a b c d : α}
-
-theorem abs_le : abs a ≤ b ↔ -b ≤ a ∧ a ≤ b := by rw [abs_le', and_comm, neg_le]
-
-theorem le_abs' : a ≤ abs b ↔ b ≤ -a ∨ a ≤ b := by rw [le_abs, or_comm, le_neg]
-
-theorem neg_le_of_abs_le (h : abs a ≤ b) : -b ≤ a :=
-  (abs_le.mp h).1
-
-theorem le_of_abs_le (h : abs a ≤ b) : a ≤ b :=
-  (abs_le.mp h).2
-
-@[to_additive]
-theorem apply_abs_le_mul_of_one_le' {β : Type _} [MulOneClass β] [Preorder β] [CovariantClass β β (· * ·) (· ≤ ·)]
-    [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {f : α → β} {a : α} (h₁ : 1 ≤ f a) (h₂ : 1 ≤ f (-a)) :
-    f (abs a) ≤ f a * f (-a) :=
-  (le_total a 0).byCases (fun ha => (abs_of_nonpos ha).symm ▸ le_mul_of_one_le_left' h₁) fun ha =>
-    (abs_of_nonneg ha).symm ▸ le_mul_of_one_le_right' h₂
-
-@[to_additive]
-theorem apply_abs_le_mul_of_one_le {β : Type _} [MulOneClass β] [Preorder β] [CovariantClass β β (· * ·) (· ≤ ·)]
-    [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {f : α → β} (h : ∀ x, 1 ≤ f x) (a : α) : f (abs a) ≤ f a * f (-a) :=
-  apply_abs_le_mul_of_one_le' (h _) (h _)
-
-/-- The **triangle inequality** in `linear_ordered_add_comm_group`s.
--/
-theorem abs_add (a b : α) : abs (a + b) ≤ abs a + abs b :=
-  abs_le.2
-    ⟨(neg_add (abs a) (abs b)).symm ▸ add_le_add (neg_le.2 <| neg_le_abs_self _) (neg_le.2 <| neg_le_abs_self _),
-      add_le_add (le_abs_self _) (le_abs_self _)⟩
-
-theorem abs_add' (a b : α) : abs a ≤ abs b + abs (b + a) := by simpa using abs_add (-b) (b + a)
-
-theorem abs_sub (a b : α) : abs (a - b) ≤ abs a + abs b := by
-  rw [sub_eq_add_neg, ← abs_neg b]
-  exact abs_add a _
-
-theorem abs_sub_le_iff : abs (a - b) ≤ c ↔ a - b ≤ c ∧ b - a ≤ c := by
-  rw [abs_le, neg_le_sub_iff_le_add, sub_le_iff_le_add', and_comm', sub_le_iff_le_add']
-
-theorem abs_sub_lt_iff : abs (a - b) < c ↔ a - b < c ∧ b - a < c := by
-  rw [abs_lt, neg_lt_sub_iff_lt_add', sub_lt_iff_lt_add', and_comm', sub_lt_iff_lt_add']
-
-theorem sub_le_of_abs_sub_le_left (h : abs (a - b) ≤ c) : b - c ≤ a :=
-  sub_le.1 <| (abs_sub_le_iff.1 h).2
-
-theorem sub_le_of_abs_sub_le_right (h : abs (a - b) ≤ c) : a - c ≤ b :=
-  sub_le_of_abs_sub_le_left (abs_sub_comm a b ▸ h)
-
-theorem sub_lt_of_abs_sub_lt_left (h : abs (a - b) < c) : b - c < a :=
-  sub_lt.1 <| (abs_sub_lt_iff.1 h).2
-
-theorem sub_lt_of_abs_sub_lt_right (h : abs (a - b) < c) : a - c < b :=
-  sub_lt_of_abs_sub_lt_left (abs_sub_comm a b ▸ h)
-
-theorem abs_sub_abs_le_abs_sub (a b : α) : abs a - abs b ≤ abs (a - b) :=
-  sub_le_iff_le_add.2 <|
-    calc
-      abs a = abs (a - b + b) := by rw [sub_add_cancel]
-      _ ≤ abs (a - b) + abs b := abs_add _ _
-      
-
-theorem abs_abs_sub_abs_le_abs_sub (a b : α) : abs (abs a - abs b) ≤ abs (a - b) :=
-  abs_sub_le_iff.2 ⟨abs_sub_abs_le_abs_sub _ _, by rw [abs_sub_comm] <;> apply abs_sub_abs_le_abs_sub⟩
-
-theorem abs_eq (hb : 0 ≤ b) : abs a = b ↔ a = b ∨ a = -b := by
-  refine' ⟨eq_or_eq_neg_of_abs_eq, _⟩
-  rintro (rfl | rfl) <;> simp only [abs_neg, abs_of_nonneg hb]
-
-theorem abs_le_max_abs_abs (hab : a ≤ b) (hbc : b ≤ c) : abs b ≤ max (abs a) (abs c) :=
-  abs_le'.2 ⟨by simp [hbc.trans (le_abs_self c)], by simp [(neg_le_neg_iff.mpr hab).trans (neg_le_abs_self a)]⟩
-
-theorem min_abs_abs_le_abs_max : min (abs a) (abs b) ≤ abs (max a b) :=
-  (le_total a b).elim (fun h => (min_le_right _ _).trans_eq <| congr_arg _ (max_eq_right h).symm) fun h =>
-    (min_le_left _ _).trans_eq <| congr_arg _ (max_eq_left h).symm
-
-theorem min_abs_abs_le_abs_min : min (abs a) (abs b) ≤ abs (min a b) :=
-  (le_total a b).elim (fun h => (min_le_left _ _).trans_eq <| congr_arg _ (min_eq_left h).symm) fun h =>
-    (min_le_right _ _).trans_eq <| congr_arg _ (min_eq_right h).symm
-
-theorem abs_max_le_max_abs_abs : abs (max a b) ≤ max (abs a) (abs b) :=
-  (le_total a b).elim (fun h => (congr_arg _ <| max_eq_right h).trans_le <| le_max_right _ _) fun h =>
-    (congr_arg _ <| max_eq_left h).trans_le <| le_max_left _ _
-
-theorem abs_min_le_max_abs_abs : abs (min a b) ≤ max (abs a) (abs b) :=
-  (le_total a b).elim (fun h => (congr_arg _ <| min_eq_left h).trans_le <| le_max_left _ _) fun h =>
-    (congr_arg _ <| min_eq_right h).trans_le <| le_max_right _ _
-
-theorem eq_of_abs_sub_eq_zero {a b : α} (h : abs (a - b) = 0) : a = b :=
-  sub_eq_zero.1 <| abs_eq_zero.1 h
-
-theorem abs_sub_le (a b c : α) : abs (a - c) ≤ abs (a - b) + abs (b - c) :=
-  calc
-    abs (a - c) = abs (a - b + (b - c)) := by rw [sub_add_sub_cancel]
-    _ ≤ abs (a - b) + abs (b - c) := abs_add _ _
-    
-
-theorem abs_add_three (a b c : α) : abs (a + b + c) ≤ abs a + abs b + abs c :=
-  (abs_add _ _).trans (add_le_add_right (abs_add _ _) _)
-
-theorem dist_bdd_within_interval {a b lb ub : α} (hal : lb ≤ a) (hau : a ≤ ub) (hbl : lb ≤ b) (hbu : b ≤ ub) :
-    abs (a - b) ≤ ub - lb :=
-  abs_sub_le_iff.2 ⟨sub_le_sub hau hbl, sub_le_sub hbu hal⟩
-
-theorem eq_of_abs_sub_nonpos (h : abs (a - b) ≤ 0) : a = b :=
-  eq_of_abs_sub_eq_zero (le_antisymm h (abs_nonneg (a - b)))
-
-theorem max_sub_max_le_max (a b c d : α) : max a b - max c d ≤ max (a - c) (b - d) := by
-  simp only [sub_le_iff_le_add, max_le_iff]
-  constructor
-  calc
-    a = a - c + c := (sub_add_cancel a c).symm
-    _ ≤ max (a - c) (b - d) + max c d := add_le_add (le_max_left _ _) (le_max_left _ _)
-    
-  calc
-    b = b - d + d := (sub_add_cancel b d).symm
-    _ ≤ max (a - c) (b - d) + max c d := add_le_add (le_max_right _ _) (le_max_right _ _)
-    
-
-theorem abs_max_sub_max_le_max (a b c d : α) : abs (max a b - max c d) ≤ max (abs (a - c)) (abs (b - d)) := by
-  refine' abs_sub_le_iff.2 ⟨_, _⟩
-  · exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
-    
-  · rw [abs_sub_comm a c, abs_sub_comm b d]
-    exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
-    
-
-theorem abs_min_sub_min_le_max (a b c d : α) : abs (min a b - min c d) ≤ max (abs (a - c)) (abs (b - d)) := by
-  simpa only [max_neg_neg, neg_sub_neg, abs_sub_comm] using abs_max_sub_max_le_max (-a) (-b) (-c) (-d)
-
-theorem abs_max_sub_max_le_abs (a b c : α) : abs (max a c - max b c) ≤ abs (a - b) := by
-  simpa only [sub_self, abs_zero, max_eq_left (abs_nonneg _)] using abs_max_sub_max_le_max a c b c
-
-instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWithTop (WithTop α) :=
-  { WithTop.linearOrderedAddCommMonoidWithTop, Option.nontrivial with neg := Option.map fun a : α => -a,
-    neg_top := @Option.map_none _ _ fun a : α => -a,
-    add_neg_cancel := by
-      rintro (a | a) ha
-      · exact (ha rfl).elim
-        
-      · exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_self a))
-         }
-
-@[simp, norm_cast]
-theorem WithTop.coe_neg (a : α) : ((-a : α) : WithTop α) = -a :=
-  rfl
-
-end LinearOrderedAddCommGroup
 
 namespace AddCommGroup
 
@@ -1373,16 +987,6 @@ def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : TotalPositiveCone α) 
     decidableLe := fun a b => C.nonnegDecidable _ }
 
 end LinearOrderedAddCommGroup
-
-namespace Prod
-
-variable {G H : Type _}
-
-@[to_additive]
-instance [OrderedCommGroup G] [OrderedCommGroup H] : OrderedCommGroup (G × H) :=
-  { Prod.commGroup, Prod.partialOrder G H, Prod.orderedCancelCommMonoid with }
-
-end Prod
 
 section NormNumLemmas
 

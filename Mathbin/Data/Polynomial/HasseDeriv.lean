@@ -130,7 +130,7 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivativ
   induction' k with k ih
   · rw [hasse_deriv_zero, factorial_zero, iterate_zero, one_smul, LinearMap.id_coe]
     
-  ext f n : 2
+  ext (f n) : 2
   rw [iterate_succ_apply', ← ih]
   simp only [LinearMap.smul_apply, coeff_smul, LinearMap.map_smul_of_tower, coeff_derivative, hasse_deriv_coeff, ←
     @choose_symm_add _ k]
@@ -152,7 +152,7 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivativ
   simp only [factorial_succ, succ_eq_add_one]
   ring
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr H, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) = (k + l).choose k • hasseDeriv (k + l) :=
   by
   ext i : 2
@@ -182,7 +182,9 @@ theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) =
   rw [eq_div_iff_mul_eq, eq_comm, div_mul_eq_mul_div, eq_div_iff_mul_eq, ← tsub_add_eq_tsub_tsub, add_comm l k]
   · ring
     
-  all_goals apply_rules [mul_ne_zero, H]
+  all_goals
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr H, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n := by
   classical
@@ -233,7 +235,7 @@ theorem hasse_deriv_mul (f g : R[X]) :
   simp only [← finset_sum_apply]
   congr 2
   clear f g
-  ext m r n s : 4
+  ext (m r n s) : 4
   simp only [finset_sum_apply, coe_mul_left, coe_comp, flip_apply, comp_app, hasse_deriv_monomial,
     LinearMap.to_add_monoid_hom_coe, comp_hom_apply_apply, coe_mul, monomial_mul_monomial]
   have aux :

@@ -23,14 +23,14 @@ section
 variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 
 /-- The pointwise absolute value of a continuous function as a continuous function. -/
-def abs (f : C(α, β)) : C(α, β) where toFun x := abs (f x)
+def abs (f : C(α, β)) : C(α, β) where toFun x := |f x|
 
 -- see Note [lower instance priority]
 instance (priority := 100) : Abs C(α, β) :=
   ⟨fun f => abs f⟩
 
 @[simp]
-theorem abs_apply (f : C(α, β)) (x : α) : (abs f) x = abs (f x) :=
+theorem abs_apply (f : C(α, β)) (x : α) : (|f|) x = |f x| :=
   rfl
 
 end

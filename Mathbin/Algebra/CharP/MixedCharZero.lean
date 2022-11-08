@@ -200,10 +200,10 @@ theorem EqualCharZero.pnat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ �
   change ((EqualCharZero.pnat_coe_is_unit R n).Unit : R) = ↑n
   simp only [IsUnit.unit_spec]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr * »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr + »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr * »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr + »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Equal characteristic implies `ℚ`-algebra.
 -/
 noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) : Algebra ℚ R :=
@@ -216,7 +216,7 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
         field_simp
         repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr * »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr * »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnat_denom]
           ring
           
@@ -227,7 +227,7 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
         field_simp
         repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr + »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr↑ »(«expr * »(«expr * »(«expr + »(a, b).num, a.denom), b.denom)) : R)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnat_denom]
           ring
           

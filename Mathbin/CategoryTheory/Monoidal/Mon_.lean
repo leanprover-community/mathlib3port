@@ -61,8 +61,6 @@ attribute [simp, reassoc] Mon_.mul_assoc
 
 namespace Mon_
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- The trivial monoid object. We later show this is initial in `Mon_ C`.
 -/
 @[simps]
@@ -70,8 +68,8 @@ def trivial : Mon_ C where
   x := 𝟙_ C
   one := 𝟙 _
   mul := (λ_ _).Hom
-  mul_assoc' := by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
-  mul_one' := by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  mul_assoc' := by coherence
+  mul_one' := by coherence
 
 instance : Inhabited (Mon_ C) :=
   ⟨trivial C⟩

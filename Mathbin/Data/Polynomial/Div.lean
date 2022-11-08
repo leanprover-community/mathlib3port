@@ -387,6 +387,12 @@ theorem sub_dvd_eval_sub (a b : R) (p : R[X]) : a - b ∣ p.eval a - p.eval b :=
     simpa only [coe_eval_ring_hom, eval_sub, eval_X, eval_C] using (eval_ring_hom a).map_dvd this
   simp [dvd_iff_is_root]
 
+theorem mul_div_mod_by_monic_cancel_left (p : R[X]) {q : R[X]} (hmo : q.Monic) : q * p /ₘ q = p := by
+  nontriviality R
+  refine' (div_mod_by_monic_unique _ 0 hmo ⟨by rw [zero_add], _⟩).1
+  rw [degree_zero]
+  exact Ne.bot_lt fun h => hmo.ne_zero (degree_eq_bot.1 h)
+
 variable (R)
 
 theorem not_is_field : ¬IsField R[X] := by

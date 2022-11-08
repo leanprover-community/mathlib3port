@@ -36,78 +36,110 @@ def Simps.coe (x : Subtype p) : α :=
 
 initialize_simps_projections Subtype (val → coe)
 
+#print Subtype.prop /-
 /-- A version of `x.property` or `x.2` where `p` is syntactically applied to the coercion of `x`
   instead of `x.1`. A similar result is `subtype.mem` in `data.set.basic`. -/
 theorem prop (x : Subtype p) : p x :=
   x.2
+-/
 
 @[simp]
 theorem val_eq_coe {x : Subtype p} : x.1 = ↑x :=
   rfl
 
+#print Subtype.forall /-
 @[simp]
 protected theorem forall {q : { a // p a } → Prop} : (∀ x, q x) ↔ ∀ a b, q ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
+-/
 
+#print Subtype.forall' /-
 /-- An alternative version of `subtype.forall`. This one is useful if Lean cannot figure out `q`
   when using `subtype.forall` from right to left. -/
 protected theorem forall' {q : ∀ x, p x → Prop} : (∀ x h, q x h) ↔ ∀ x : { a // p a }, q x x.2 :=
   (@Subtype.forall _ _ fun x => q x.1 x.2).symm
+-/
 
+#print Subtype.exists /-
 @[simp]
 protected theorem exists {q : { a // p a } → Prop} : (∃ x, q x) ↔ ∃ a b, q ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
+-/
 
 /-- An alternative version of `subtype.exists`. This one is useful if Lean cannot figure out `q`
   when using `subtype.exists` from right to left. -/
 protected theorem exists' {q : ∀ x, p x → Prop} : (∃ x h, q x h) ↔ ∃ x : { a // p a }, q x x.2 :=
   (@Subtype.exists _ _ fun x => q x.1 x.2).symm
 
+#print Subtype.ext /-
 @[ext]
 protected theorem ext : ∀ {a1 a2 : { x // p x }}, (a1 : α) = (a2 : α) → a1 = a2
   | ⟨x, h1⟩, ⟨x, h2⟩, rfl => rfl
+-/
 
+#print Subtype.ext_iff /-
 theorem ext_iff {a1 a2 : { x // p x }} : a1 = a2 ↔ (a1 : α) = (a2 : α) :=
   ⟨congr_arg _, Subtype.ext⟩
+-/
 
+#print Subtype.heq_iff_coe_eq /-
 theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} : HEq a1 a2 ↔ (a1 : α) = (a2 : α) :=
   Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext fun x => propext (h x)) a2
+-/
 
+#print Subtype.heq_iff_coe_heq /-
 theorem heq_iff_coe_heq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }} {b : { y // q y }} (h : α = β)
     (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) := by
   subst h
   subst h'
   rw [heq_iff_eq, heq_iff_eq, ext_iff]
+-/
 
+#print Subtype.ext_val /-
 theorem ext_val {a1 a2 : { x // p x }} : a1.1 = a2.1 → a1 = a2 :=
   Subtype.ext
+-/
 
+#print Subtype.ext_iff_val /-
 theorem ext_iff_val {a1 a2 : { x // p x }} : a1 = a2 ↔ a1.1 = a2.1 :=
   ext_iff
+-/
 
+#print Subtype.coe_eta /-
 @[simp]
 theorem coe_eta (a : { a // p a }) (h : p a) : mk (↑a) h = a :=
   Subtype.ext rfl
+-/
 
+#print Subtype.coe_mk /-
 @[simp]
 theorem coe_mk (a h) : (@mk α p a h : α) = a :=
   rfl
+-/
 
+#print Subtype.mk_eq_mk /-
 -- built-in reduction doesn't always work
 @[simp, nolint simp_nf]
 theorem mk_eq_mk {a h a' h'} : @mk α p a h = @mk α p a' h' ↔ a = a' :=
   ext_iff
+-/
 
 theorem coe_eq_of_eq_mk {a : { a // p a }} {b : α} (h : ↑a = b) : a = ⟨b, h ▸ a.2⟩ :=
   Subtype.ext h
 
+#print Subtype.coe_eq_iff /-
 theorem coe_eq_iff {a : { a // p a }} {b : α} : ↑a = b ↔ ∃ h, a = ⟨b, h⟩ :=
   ⟨fun h => h ▸ ⟨a.2, (coe_eta _ _).symm⟩, fun ⟨hb, ha⟩ => ha.symm ▸ rfl⟩
+-/
 
+#print Subtype.coe_injective /-
 theorem coe_injective : Injective (coe : Subtype p → α) := fun a b => Subtype.ext
+-/
 
+#print Subtype.val_injective /-
 theorem val_injective : Injective (@val _ p) :=
   coe_injective
+-/
 
 theorem coe_inj {a b : Subtype p} : (a : α) = b ↔ a = b :=
   coe_injective.eq_iff
@@ -166,9 +198,11 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
   rintro ⟨x, hx⟩
   exact dif_pos hx
 
+#print Subtype.coind /-
 /-- Defining a map into a subtype, this can be seen as an "coinduction principle" of `subtype`-/
 @[simps]
 def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α → Subtype p := fun a => ⟨f a, h a⟩
+-/
 
 /- warning: subtype.coind_injective -> Subtype.coind_injective is a dubious translation:
 lean 3 declaration is
@@ -200,10 +234,12 @@ theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p 
     Bijective (coind f h) :=
   ⟨coind_injective h hf.1, coind_surjective h hf.2⟩
 
+#print Subtype.map /-
 /-- Restriction of a function to a function on subtypes. -/
 @[simps]
 def map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ a, p a → q (f a)) : Subtype p → Subtype q := fun x =>
   ⟨f x, h x x.prop⟩
+-/
 
 /- warning: subtype.map_comp -> Subtype.map_comp is a dubious translation:
 lean 3 declaration is
@@ -215,8 +251,10 @@ theorem map_comp {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subt
     (g : β → γ) (l : ∀ a, q a → r (g a)) : map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) <| h a ha) x :=
   rfl
 
+#print Subtype.map_id /-
 theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h = id :=
   funext fun ⟨v, h⟩ => rfl
+-/
 
 /- warning: subtype.map_injective -> Subtype.map_injective is a dubious translation:
 lean 3 declaration is
@@ -228,8 +266,10 @@ theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : �
     Injective (map f h) :=
   coind_injective _ <| hf.comp coe_injective
 
+#print Subtype.map_involutive /-
 theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : Involutive f) : Involutive (map f h) :=
   fun x => Subtype.ext (hf x)
+-/
 
 instance [HasEquiv α] (p : α → Prop) : HasEquiv (Subtype p) :=
   ⟨fun s t => (s : α) ≈ (t : α)⟩
@@ -245,17 +285,25 @@ theorem equiv_iff [HasEquiv α] {p : α → Prop} {s t : Subtype p} : s ≈ t �
 
 variable [Setoid α]
 
+#print Subtype.refl /-
 protected theorem refl (s : Subtype p) : s ≈ s :=
   Setoid.refl ↑s
+-/
 
+#print Subtype.symm /-
 protected theorem symm {s t : Subtype p} (h : s ≈ t) : t ≈ s :=
   Setoid.symm h
+-/
 
+#print Subtype.trans /-
 protected theorem trans {s t u : Subtype p} (h₁ : s ≈ t) (h₂ : t ≈ u) : s ≈ u :=
   Setoid.trans h₁ h₂
+-/
 
+#print Subtype.equivalence /-
 theorem equivalence (p : α → Prop) : Equivalence (@HasEquiv.Equiv (Subtype p) _) :=
-  mk _ Subtype.refl (@Subtype.symm _ p _) (@Subtype.trans _ p _)
+  Equivalence.mk _ Subtype.refl (@Subtype.symm _ p _) (@Subtype.trans _ p _)
+-/
 
 instance (p : α → Prop) : Setoid (Subtype p) :=
   Setoid.mk (· ≈ ·) (equivalence p)
@@ -273,8 +321,10 @@ variable {α β γ : Type _} {p : α → Prop}
 theorem coe_prop {S : Set α} (a : { a // a ∈ S }) : ↑a ∈ S :=
   a.prop
 
+#print Subtype.val_prop /-
 theorem val_prop {S : Set α} (a : { a // a ∈ S }) : a.val ∈ S :=
   a.property
+-/
 
 end Subtype
 

@@ -240,7 +240,7 @@ def PresieveOfCovering {ι : Type v} (U : ι → Opens X) : Presieve (supr U) :=
 @[simp]
 theorem covering_presieve_eq_self {Y : Opens X} (R : Presieve Y) :
     PresieveOfCoveringAux (coveringOfPresieve Y R) Y = R := by
-  ext Z f
+  ext (Z f)
   exact ⟨fun ⟨⟨_, _, h⟩, rfl⟩ => by convert h, fun h => ⟨⟨Z, f, h⟩, rfl⟩⟩
 
 namespace PresieveOfCovering

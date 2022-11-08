@@ -59,7 +59,7 @@ theorem dvd_of_dvd_pow (hp : Prime p) {a : α} {n : ℕ} (h : p ∣ a ^ n) : p �
 end Prime
 
 @[simp]
-theorem not_prime_zero : ¬Prime (0 : α) := fun h => h.ne_zero rfl
+theorem not_prime_zero : ¬Prime (0 : α) := fun h => h.NeZero rfl
 
 @[simp]
 theorem not_prime_one : ¬Prime (1 : α) := fun h => h.not_unit is_unit_one
@@ -180,7 +180,7 @@ theorem of_irreducible_pow {α} [Monoid α] {x : α} {n : ℕ} (hn : n ≠ 1) : 
   intro h
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hn
   rw [pow_succ, add_comm] at h
-  exact (or_iff_left_of_imp (is_unit_pos_pow_iff (Nat.succ_pos _)).mp).mp (of_irreducible_mul h)
+  exact (or_iff_left_of_imp is_unit_pow_succ_iff.mp).mp (of_irreducible_mul h)
 
 theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
     Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ a * b = x := by
@@ -216,7 +216,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul [CancelCommMonoidWithZero α] {
   fun ⟨x, hx⟩ ⟨y, hy⟩ ⟨z, hz⟩ =>
   have h : p ^ (k + l) * (x * y) = p ^ (k + l) * (p * z) := by
     simpa [mul_comm, pow_add, hx, hy, mul_assoc, mul_left_comm] using hz
-  have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.ne_zero
+  have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.NeZero
   have hpd : p ∣ x * y := ⟨z, by rwa [mul_right_inj' hp0] at h⟩
   (hp.dvd_or_dvd hpd).elim (fun ⟨d, hd⟩ => Or.inl ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩)
     fun ⟨d, hd⟩ => Or.inr ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩
@@ -463,7 +463,7 @@ theorem Associated.ne_zero_iff [MonoidWithZero α] {a b : α} (h : a ~ᵤ b) : a
   not_congr h.eq_zero_iff
 
 protected theorem Associated.prime [CommMonoidWithZero α] {p q : α} (h : p ~ᵤ q) (hp : Prime p) : Prime q :=
-  ⟨h.ne_zero_iff.1 hp.ne_zero,
+  ⟨h.ne_zero_iff.1 hp.NeZero,
     let ⟨u, hu⟩ := h
     ⟨fun ⟨v, hv⟩ => hp.not_unit ⟨v * u⁻¹, by simp [hv, hu.symm]⟩,
       hu ▸ by
@@ -793,12 +793,12 @@ instance [DecidableRel ((· ∣ ·) : α → α → Prop)] : DecidableRel ((· �
 theorem Prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} (h : p ≤ a * b) : p ≤ a ∨ p ≤ b :=
   hp.2.2 a b h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by
   rw [Prime, _root_.prime, forall_associated]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · apply and_congr
     rfl
     apply and_congr
@@ -953,7 +953,7 @@ theorem dvdNotUnitOfDvdNotUnitAssociated [CommMonoidWithZero α] [Nontrivial α]
     (h' : Associated q r) : DvdNotUnit p r := by
   obtain ⟨u, rfl⟩ := Associated.symm h'
   obtain ⟨hp, x, hx⟩ := h
-  refine' ⟨hp, x * ↑u⁻¹, DvdNotUnit.not_unit ⟨u⁻¹.ne_zero, x, hx.left, mul_comm _ _⟩, _⟩
+  refine' ⟨hp, x * ↑u⁻¹, DvdNotUnit.not_unit ⟨u⁻¹.NeZero, x, hx.left, mul_comm _ _⟩, _⟩
   rw [← mul_assoc, ← hx.right, mul_assoc, Units.mul_inv, mul_one]
 
 end CommMonoidWithZero

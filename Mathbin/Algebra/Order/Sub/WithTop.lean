@@ -11,7 +11,7 @@ import Mathbin.Algebra.Order.Monoid.WithTop
 -/
 
 
-variable {α : Type _}
+variable {α β : Type _}
 
 namespace WithTop
 
@@ -38,6 +38,12 @@ theorem top_sub_coe {a : α} : (⊤ : WithTop α) - a = ⊤ :=
 
 @[simp]
 theorem sub_top {a : WithTop α} : a - ⊤ = 0 := by cases a <;> rfl
+
+theorem map_sub [Sub β] [Zero β] {f : α → β} (h : ∀ x y, f (x - y) = f x - f y) (h₀ : f 0 = 0) :
+    ∀ x y : WithTop α, (x - y).map f = x.map f - y.map f
+  | _, ⊤ => by simp only [h₀, sub_top, WithTop.map_zero, coe_zero, map_top]
+  | ⊤, (x : α) => rfl
+  | (x : α), (y : α) => by simp only [← coe_sub, map_coe, h]
 
 end
 

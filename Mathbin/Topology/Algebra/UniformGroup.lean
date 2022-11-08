@@ -111,7 +111,7 @@ theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : Uni
   | (n : ℕ) => by
     simp_rw [zpow_coe_nat]
     exact hf.pow_const _
-  | -[1 + n] => by
+  | -[n+1] => by
     simp_rw [zpow_neg_succ_of_nat]
     exact (hf.pow_const _).inv
 
@@ -140,7 +140,7 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
         Filter.map_mono (uniform_continuous_id.mul uniform_continuous_const)
       )
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 @[to_additive]
 theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α => x * a :=
   { comap_uniformity := by
@@ -519,7 +519,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_iff {ι α : Type _} [Topolog
     @TendstoLocallyUniformly α G ι (TopologicalGroup.toUniformSpace G) _ F f p ↔
       ∀ u ∈ 𝓝 (1 : G), ∀ (x : α), ∃ t ∈ 𝓝 x, ∀ᶠ i in p, ∀ a ∈ t, F i a / f a ∈ u :=
   ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
-    imp (fun a => Exists.imp fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) (h u hu x)⟩
+    Exists.imp (fun a => Exists.imp fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) (h u hu x)⟩
 
 @[to_additive]
 theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [TopologicalSpace α] (F : ι → α → G)
@@ -527,7 +527,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [Topo
     @TendstoLocallyUniformlyOn α G ι (TopologicalGroup.toUniformSpace G) _ F f p s ↔
       ∀ u ∈ 𝓝 (1 : G), ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, ∀ᶠ i in p, ∀ a ∈ t, F i a / f a ∈ u :=
   ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
-    (imp fun a => Exists.imp fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘ h u hu x⟩
+    (Exists.imp fun a => Exists.imp fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘ h u hu x⟩
 
 end TopologicalGroup
 
@@ -668,7 +668,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -685,10 +685,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   simp_rw [ball_mem_comm]
   exact lim W' W'_nhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀),

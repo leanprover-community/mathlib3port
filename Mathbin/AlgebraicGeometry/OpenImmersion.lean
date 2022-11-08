@@ -133,8 +133,8 @@ noncomputable def isoRestrict : X ≅ Y.restrict H.base_open :=
         congr
         )
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(f.c.app x, X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(f.c.app x, X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 @[simp]
 theorem iso_restrict_hom_of_restrict : H.isoRestrict.Hom ≫ Y.ofRestrict _ = f := by
   ext
@@ -142,7 +142,7 @@ theorem iso_restrict_hom_of_restrict : H.isoRestrict.Hom ≫ Y.ofRestrict _ = f 
       category.assoc, whisker_right_id']
     erw [category.comp_id, f.c.naturality_assoc, ← X.presheaf.map_comp]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(f.c.app x, X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(f.c.app x, X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · congr
       
     · erw [X.presheaf.map_id, category.comp_id]
@@ -423,8 +423,8 @@ theorem pullback_cone_of_left_lift_fst : pullbackConeOfLeftLift f g s ≫ (pullb
     simp
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(s.snd.c.app x, s.X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(s.snd.c.app x, s.X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 -- this lemma is not a `simp` lemma, because it is an implementation detail
 theorem pullback_cone_of_left_lift_snd : pullbackConeOfLeftLift f g s ≫ (pullbackConeOfLeft f g).snd = s.snd := by
   ext x
@@ -433,7 +433,7 @@ theorem pullback_cone_of_left_lift_snd : pullbackConeOfLeftLift f g s ≫ (pullb
     erw [s.snd.c.naturality_assoc]
     erw [← s.X.presheaf.map_comp, ← s.X.presheaf.map_comp]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(s.snd.c.app x, s.X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr ≫ »(s.snd.c.app x, s.X.presheaf.map («expr𝟙»() _))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · congr
       
     · rw [s.X.presheaf.map_id]
@@ -821,12 +821,6 @@ theorem image_preimage_is_empty (j : Discrete ι) (h : i ≠ j) (U : Opens (F.ob
     has_colimit.iso_of_nat_iso_ι_hom_assoc, TopCat.sigma_iso_sigma_hom_ι.{v}, TopCat.sigma_iso_sigma_hom_ι.{v}] at eq
   exact h (congr_arg discrete.mk (congr_arg Sigma.fst Eq))
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_iso
-   (limit.π
-    (PresheafedSpace.componentwise_diagram «expr ⋙ »(F, SheafedSpace.forget_to_PresheafedSpace)
-     ((opens.map (preserves_colimit_iso SheafedSpace.forget_to_PresheafedSpace F).inv.base).obj
-      «expr $ »(unop, «expr $ »(op, H.is_open_map.functor.obj U))))
-    (op i))]] -/
 instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpaceCat.IsOpenImmersion (colimit.ι F i) where
   base_open := sigma_ι_open_embedding F i
   c_iso U := by
@@ -843,8 +837,13 @@ instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpaceC
           (op (H.is_open_map.functor.obj U)))
       by convert this
     rw [PresheafedSpace.comp_c_app, ← PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_iso\n   (limit.π\n    (PresheafedSpace.componentwise_diagram «expr ⋙ »(F, SheafedSpace.forget_to_PresheafedSpace)\n     ((opens.map (preserves_colimit_iso SheafedSpace.forget_to_PresheafedSpace F).inv.base).obj\n      «expr $ »(unop, «expr $ »(op, H.is_open_map.functor.obj U))))\n    (op i))]]"
+    rsuffices :
+      is_iso
+        (limit.π
+          (PresheafedSpace.componentwise_diagram (F ⋙ SheafedSpace.forget_to_PresheafedSpace)
+            ((opens.map (preserves_colimit_iso SheafedSpace.forget_to_PresheafedSpace F).inv.base).obj
+              (unop <| op <| H.is_open_map.functor.obj U)))
+          (op i))
     · infer_instance
       
     apply limit_π_is_iso_of_is_strict_terminal

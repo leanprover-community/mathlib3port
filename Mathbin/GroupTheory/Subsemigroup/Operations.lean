@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 -/
 import Mathbin.GroupTheory.Subsemigroup.Basic
+import Mathbin.Algebra.Group.Prod
 
 /-!
 # Operations on `subsemigroup`s

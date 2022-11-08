@@ -177,7 +177,7 @@ theorem col_empty (v : Fin 0 → α) : col v = vec_empty :=
 
 @[simp]
 theorem col_cons (x : α) (u : Fin m → α) : col (vecCons x u) = vecCons (fun _ => x) (col u) := by
-  ext i j
+  ext (i j)
   refine' Fin.cases _ _ i <;> simp [vec_head, vec_tail]
 
 @[simp]
@@ -205,7 +205,7 @@ theorem transpose_empty_cols (A : Matrix (Fin 0) m' α) : Aᵀ = of fun i => ![]
 @[simp]
 theorem cons_transpose (v : n' → α) (A : Matrix (Fin m) n' α) :
     (of (vecCons v A))ᵀ = of fun i => vecCons (v i) (Aᵀ i) := by
-  ext i j
+  ext (i j)
   refine' Fin.cases _ _ j <;> simp
 
 @[simp]
@@ -214,7 +214,7 @@ theorem head_transpose (A : Matrix m' (Fin n.succ) α) : vecHead (of.symm Aᵀ) 
 
 @[simp]
 theorem tail_transpose (A : Matrix m' (Fin n.succ) α) : vecTail (of.symm Aᵀ) = (vec_tail ∘ A)ᵀ := by
-  ext i j
+  ext (i j)
   rfl
 
 end Transpose
@@ -242,7 +242,7 @@ theorem mul_val_succ [Fintype n'] (A : Matrix (Fin m.succ) n' α) (B : Matrix n'
 @[simp]
 theorem cons_mul [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (B : Matrix n' o' α) :
     of (vecCons v A) ⬝ B = of (vecCons (vecMul v B) (of.symm (of A ⬝ B))) := by
-  ext i j
+  ext (i j)
   refine' Fin.cases _ _ i
   · rfl
     
@@ -327,7 +327,7 @@ theorem cons_vec_mul_vec (x : α) (v : Fin m → α) (w : n' → α) :
 @[simp]
 theorem vec_mul_vec_cons (v : m' → α) (x : α) (w : Fin n → α) :
     vecMulVec v (vecCons x w) = fun i => v i • vecCons x w := by
-  ext i j
+  ext (i j)
   rw [vec_mul_vec, Pi.smul_apply, smul_eq_mul]
 
 end VecMulVec
@@ -356,7 +356,7 @@ theorem submatrix_empty (A : Matrix m' n' α) (row : Fin 0 → m') (col : o' →
 @[simp]
 theorem submatrix_cons_row (A : Matrix m' n' α) (i : m') (row : Fin m → m') (col : o' → n') :
     submatrix A (vecCons i row) col = vecCons (fun j => A i (col j)) (submatrix A row col) := by
-  ext i j
+  ext (i j)
   refine' Fin.cases _ _ i <;> simp [submatrix]
 
 end Submatrix
@@ -367,50 +367,50 @@ section One
 
 variable [Zero α] [One α]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem one_fin_two :
     (1 : Matrix (Fin 2) (Fin 2) α) =
       «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
-  ext i j
+  ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem one_fin_three :
     (1 : Matrix (Fin 3) (Fin 3) α) =
       «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
-  ext i j
+  ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 
 end One
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     A = «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" := by
-  ext i j
+  ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
     A = «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" := by
-  ext i j
+  ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -422,11 +422,11 @@ theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂
         «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
       «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
-  ext i j
+  ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -439,7 +439,7 @@ theorem mul_fin_three [AddCommMonoid α] [Mul α]
         «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
       «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
-  ext i j
+  ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]
 
 theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by subst_vars

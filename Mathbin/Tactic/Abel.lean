@@ -76,11 +76,15 @@ Will use the `add_comm_{monoid,group}` instance that has been cached in the cont
 unsafe def context.iapp (c : context) (n : Name) : List expr → expr :=
   c.app (if c.is_group then add_g n else n) c.inst
 
+#print Tactic.Abel.term /-
 def term {α} [AddCommMonoid α] (n : ℕ) (x a : α) : α :=
   n • x + a
+-/
 
+#print Tactic.Abel.termg /-
 def termg {α} [AddCommGroup α] (n : ℤ) (x a : α) : α :=
   n • x + a
+-/
 
 /-- Evaluate a term with coefficient `n`, atom `x` and successor terms `a`. -/
 unsafe def context.mk_term (c : context) (n x a : expr) : expr :=
@@ -134,27 +138,67 @@ unsafe def normal_expr.refl_conv (e : normal_expr) : tactic (normal_expr × expr
   let p ← mk_eq_refl e
   return (e, p)
 
+/- warning: tactic.abel.const_add_term -> Tactic.Abel.const_add_term is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommMonoid.{u_1} α] (k : α) (n : Nat) (x : α) (a : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))) k a) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))) k (Tactic.Abel.term.{u_1} α _inst_1 n x a)) (Tactic.Abel.term.{u_1} α _inst_1 n x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.950 : AddCommMonoid.{u_1} α] (k : α) (n : Nat) (x : α) (a : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.950)))) k a) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.950)))) k (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.950 n x a)) (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.950 n x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.const_add_term Tactic.Abel.const_add_termₓ'. -/
 theorem const_add_term {α} [AddCommMonoid α] (k n x a a') (h : k + a = a') : k + @term α _ n x a = term n x a' := by
   simp [h.symm, term] <;> ac_rfl
 
+/- warning: tactic.abel.const_add_termg -> Tactic.Abel.const_add_termg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommGroup.{u_1} α] (k : α) (n : Int) (x : α) (a : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))) k a) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))) k (Tactic.Abel.termg.{u_1} α _inst_1 n x a)) (Tactic.Abel.termg.{u_1} α _inst_1 n x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.986 : AddCommGroup.{u_1} α] (k : α) (n : Int) (x : α) (a : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.986)))))) k a) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.986)))))) k (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.986 n x a)) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.986 n x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.const_add_termg Tactic.Abel.const_add_termgₓ'. -/
 theorem const_add_termg {α} [AddCommGroup α] (k n x a a') (h : k + a = a') : k + @termg α _ n x a = termg n x a' := by
   simp [h.symm, termg] <;> ac_rfl
 
+/- warning: tactic.abel.term_add_const -> Tactic.Abel.term_add_const is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommMonoid.{u_1} α] (n : Nat) (x : α) (a : α) (k : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))) a k) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))) (Tactic.Abel.term.{u_1} α _inst_1 n x a) k) (Tactic.Abel.term.{u_1} α _inst_1 n x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.1022 : AddCommMonoid.{u_1} α] (n : Nat) (x : α) (a : α) (k : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1022)))) a k) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1022)))) (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1022 n x a) k) (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1022 n x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_add_const Tactic.Abel.term_add_constₓ'. -/
 theorem term_add_const {α} [AddCommMonoid α] (n x a k a') (h : a + k = a') : @term α _ n x a + k = term n x a' := by
   simp [h.symm, term, add_assoc]
 
+/- warning: tactic.abel.term_add_constg -> Tactic.Abel.term_add_constg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommGroup.{u_1} α] (n : Int) (x : α) (a : α) (k : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))) a k) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))) (Tactic.Abel.termg.{u_1} α _inst_1 n x a) k) (Tactic.Abel.termg.{u_1} α _inst_1 n x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.1058 : AddCommGroup.{u_1} α] (n : Int) (x : α) (a : α) (k : α) (a' : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1058)))))) a k) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1058)))))) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1058 n x a) k) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1058 n x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_add_constg Tactic.Abel.term_add_constgₓ'. -/
 theorem term_add_constg {α} [AddCommGroup α] (n x a k a') (h : a + k = a') : @termg α _ n x a + k = termg n x a' := by
   simp [h.symm, termg, add_assoc]
 
+/- warning: tactic.abel.term_add_term -> Tactic.Abel.term_add_term is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommMonoid.{u_1} α] (n₁ : Nat) (x : α) (a₁ : α) (n₂ : Nat) (a₂ : α) (n' : Nat) (a' : α), (Eq.{1} Nat (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n₁ n₂) n') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))) a₁ a₂) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))) (Tactic.Abel.term.{u_1} α _inst_1 n₁ x a₁) (Tactic.Abel.term.{u_1} α _inst_1 n₂ x a₂)) (Tactic.Abel.term.{u_1} α _inst_1 n' x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.1094 : AddCommMonoid.{u_1} α] (n₁ : Nat) (x : α) (a₁ : α) (n₂ : Nat) (a₂ : α) (n' : Nat) (a' : α), (Eq.{1} Nat (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n₁ n₂) n') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1094)))) a₁ a₂) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1094)))) (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1094 n₁ x a₁) (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1094 n₂ x a₂)) (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1094 n' x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_add_term Tactic.Abel.term_add_termₓ'. -/
 theorem term_add_term {α} [AddCommMonoid α] (n₁ x a₁ n₂ a₂ n' a') (h₁ : n₁ + n₂ = n') (h₂ : a₁ + a₂ = a') :
     @term α _ n₁ x a₁ + @term α _ n₂ x a₂ = term n' x a' := by simp [h₁.symm, h₂.symm, term, add_nsmul] <;> ac_rfl
 
+/- warning: tactic.abel.term_add_termg -> Tactic.Abel.term_add_termg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommGroup.{u_1} α] (n₁ : Int) (x : α) (a₁ : α) (n₂ : Int) (a₂ : α) (n' : Int) (a' : α), (Eq.{1} Int (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n₁ n₂) n') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))) a₁ a₂) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))) (Tactic.Abel.termg.{u_1} α _inst_1 n₁ x a₁) (Tactic.Abel.termg.{u_1} α _inst_1 n₂ x a₂)) (Tactic.Abel.termg.{u_1} α _inst_1 n' x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.1144 : AddCommGroup.{u_1} α] (n₁ : Int) (x : α) (a₁ : α) (n₂ : Int) (a₂ : α) (n' : Int) (a' : α), (Eq.{1} Int (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n₁ n₂) n') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1144)))))) a₁ a₂) a') -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1144)))))) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1144 n₁ x a₁) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1144 n₂ x a₂)) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1144 n' x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_add_termg Tactic.Abel.term_add_termgₓ'. -/
 theorem term_add_termg {α} [AddCommGroup α] (n₁ x a₁ n₂ a₂ n' a') (h₁ : n₁ + n₂ = n') (h₂ : a₁ + a₂ = a') :
     @termg α _ n₁ x a₁ + @termg α _ n₂ x a₂ = termg n' x a' := by simp [h₁.symm, h₂.symm, termg, add_zsmul] <;> ac_rfl
 
+#print Tactic.Abel.zero_term /-
 theorem zero_term {α} [AddCommMonoid α] (x a) : @term α _ 0 x a = a := by simp [term, zero_nsmul, one_nsmul]
+-/
 
+#print Tactic.Abel.zero_termg /-
 theorem zero_termg {α} [AddCommGroup α] (x a) : @termg α _ 0 x a = a := by simp [termg]
+-/
 
 unsafe def eval_add (c : context) : normal_expr → normal_expr → tactic (normal_expr × expr)
   | zero _, e₂ => do
@@ -181,6 +225,12 @@ unsafe def eval_add (c : context) : normal_expr → normal_expr → tactic (norm
         let (a', h) ← eval_add he₁ a₂
         return (term' c n₂ x₂ a', c `` const_add_term [e₁, n₂.1, x₂, a₂, a', h])
 
+/- warning: tactic.abel.term_neg -> Tactic.Abel.term_neg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommGroup.{u_1} α] (n : Int) (x : α) (a : α) (n' : Int) (a' : α), (Eq.{1} Int (Neg.neg.{0} Int Int.hasNeg n) n') -> (Eq.{succ u_1} α (Neg.neg.{u_1} α (SubNegMonoid.toHasNeg.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1))) a) a') -> (Eq.{succ u_1} α (Neg.neg.{u_1} α (SubNegMonoid.toHasNeg.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1))) (Tactic.Abel.termg.{u_1} α _inst_1 n x a)) (Tactic.Abel.termg.{u_1} α _inst_1 n' x a'))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.1923 : AddCommGroup.{u_1} α] (n : Int) (x : α) (a : α) (n' : Int) (a' : α), (Eq.{1} Int (Neg.neg.{0} Int Int.instNegInt n) n') -> (Eq.{succ u_1} α (Neg.neg.{u_1} α (NegZeroClass.toNeg.{u_1} α (SubNegZeroMonoid.toNegZeroClass.{u_1} α (SubtractionMonoid.toSubNegZeroMonoid.{u_1} α (AddGroup.toSubtractionMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1923))))) a) a') -> (Eq.{succ u_1} α (Neg.neg.{u_1} α (NegZeroClass.toNeg.{u_1} α (SubNegZeroMonoid.toNegZeroClass.{u_1} α (SubtractionMonoid.toSubNegZeroMonoid.{u_1} α (AddGroup.toSubtractionMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1923))))) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1923 n x a)) (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.1923 n' x a'))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_neg Tactic.Abel.term_negₓ'. -/
 theorem term_neg {α} [AddCommGroup α] (n x a n' a') (h₁ : -n = n') (h₂ : -a = a') : -@termg α _ n x a = termg n' x a' :=
   by simp [h₂.symm, h₁.symm, termg] <;> ac_rfl
 
@@ -193,21 +243,41 @@ unsafe def eval_neg (c : context) : normal_expr → tactic (normal_expr × expr)
     let (a', h₂) ← eval_neg a
     return (term' c (n', -n.2) x a', c `` term_neg c [n.1, x, a, n', a', h₁, h₂])
 
+#print Tactic.Abel.smul /-
 def smul {α} [AddCommMonoid α] (n : ℕ) (x : α) : α :=
   n • x
+-/
 
+#print Tactic.Abel.smulg /-
 def smulg {α} [AddCommGroup α] (n : ℤ) (x : α) : α :=
   n • x
+-/
 
+/- warning: tactic.abel.zero_smul -> Tactic.Abel.zero_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommMonoid.{u_1} α] (c : Nat), Eq.{succ u_1} α (Tactic.Abel.smul.{u_1} α _inst_1 c (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1))))))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1))))))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.2289 : AddCommMonoid.{u_1} α] (c : Nat), Eq.{succ u_1} α (Tactic.Abel.smul.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2289 c (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (AddMonoid.toZero.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2289))))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (AddMonoid.toZero.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2289))))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.zero_smul Tactic.Abel.zero_smulₓ'. -/
 theorem zero_smul {α} [AddCommMonoid α] (c) : smul c (0 : α) = 0 := by simp [smul, nsmul_zero]
 
+/- warning: tactic.abel.zero_smulg -> Tactic.Abel.zero_smulg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommGroup.{u_1} α] (c : Int), Eq.{succ u_1} α (Tactic.Abel.smulg.{u_1} α _inst_1 c (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1))))))))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1))))))))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.2309 : AddCommGroup.{u_1} α] (c : Int), Eq.{succ u_1} α (Tactic.Abel.smulg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2309 c (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (NegZeroClass.toZero.{u_1} α (SubNegZeroMonoid.toNegZeroClass.{u_1} α (SubtractionMonoid.toSubNegZeroMonoid.{u_1} α (AddGroup.toSubtractionMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2309)))))))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (NegZeroClass.toZero.{u_1} α (SubNegZeroMonoid.toNegZeroClass.{u_1} α (SubtractionMonoid.toSubNegZeroMonoid.{u_1} α (AddGroup.toSubtractionMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2309)))))))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.zero_smulg Tactic.Abel.zero_smulgₓ'. -/
 theorem zero_smulg {α} [AddCommGroup α] (c) : smulg c (0 : α) = 0 := by simp [smulg, zsmul_zero]
 
+#print Tactic.Abel.term_smul /-
 theorem term_smul {α} [AddCommMonoid α] (c n x a n' a') (h₁ : c * n = n') (h₂ : smul c a = a') :
     smul c (@term α _ n x a) = term n' x a' := by simp [h₂.symm, h₁.symm, term, smul, nsmul_add, mul_nsmul]
+-/
 
+#print Tactic.Abel.term_smulg /-
 theorem term_smulg {α} [AddCommGroup α] (c n x a n' a') (h₁ : c * n = n') (h₂ : smulg c a = a') :
     smulg c (@termg α _ n x a) = termg n' x a' := by simp [h₂.symm, h₁.symm, termg, smulg, zsmul_add, mul_zsmul]
+-/
 
 unsafe def eval_smul (c : context) (k : expr × ℤ) : normal_expr → tactic (normal_expr × expr)
   | zero _ => return (zero' c, c.iapp `` zero_smul [k.1])
@@ -216,33 +286,67 @@ unsafe def eval_smul (c : context) (k : expr × ℤ) : normal_expr → tactic (n
     let (a', h₂) ← eval_smul a
     return (term' c (n', k.2 * n.2) x a', c `` term_smul [k.1, n.1, x, a, n', a', h₁, h₂])
 
+/- warning: tactic.abel.term_atom -> Tactic.Abel.term_atom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommMonoid.{u_1} α] (x : α), Eq.{succ u_1} α x (Tactic.Abel.term.{u_1} α _inst_1 (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) x (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)))))))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.2723 : AddCommMonoid.{u_1} α] (x : α), Eq.{succ u_1} α x (Tactic.Abel.term.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2723 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) x (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (AddMonoid.toZero.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2723)))))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_atom Tactic.Abel.term_atomₓ'. -/
 theorem term_atom {α} [AddCommMonoid α] (x : α) : x = term 1 x 0 := by simp [term]
 
+/- warning: tactic.abel.term_atomg -> Tactic.Abel.term_atomg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommGroup.{u_1} α] (x : α), Eq.{succ u_1} α x (Tactic.Abel.termg.{u_1} α _inst_1 (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))) x (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α _inst_1)))))))))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.2741 : AddCommGroup.{u_1} α] (x : α), Eq.{succ u_1} α x (Tactic.Abel.termg.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2741 (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)) x (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (NegZeroClass.toZero.{u_1} α (SubNegZeroMonoid.toNegZeroClass.{u_1} α (SubtractionMonoid.toSubNegZeroMonoid.{u_1} α (AddGroup.toSubtractionMonoid.{u_1} α (AddCommGroup.toAddGroup.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2741))))))))
+Case conversion may be inaccurate. Consider using '#align tactic.abel.term_atomg Tactic.Abel.term_atomgₓ'. -/
 theorem term_atomg {α} [AddCommGroup α] (x : α) : x = termg 1 x 0 := by simp [termg]
 
 unsafe def eval_atom (c : context) (e : expr) : tactic (normal_expr × expr) := do
   let n1 ← c.int_to_expr 1
   return (term' c (n1, 1) e (zero' c), c `` term_atom [e])
 
+/- warning: tactic.abel.unfold_sub -> Tactic.Abel.unfold_sub is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : SubtractionMonoid.{u_1} α] (a : α) (b : α) (c : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toHasAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (SubtractionMonoid.toSubNegMonoid.{u_1} α _inst_1))))) a (Neg.neg.{u_1} α (SubNegMonoid.toHasNeg.{u_1} α (SubtractionMonoid.toSubNegMonoid.{u_1} α _inst_1)) b)) c) -> (Eq.{succ u_1} α (HSub.hSub.{u_1 u_1 u_1} α α α (instHSub.{u_1} α (SubNegMonoid.toHasSub.{u_1} α (SubtractionMonoid.toSubNegMonoid.{u_1} α _inst_1))) a b) c)
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.2834 : SubtractionMonoid.{u_1} α] (a : α) (b : α) (c : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (SubtractionMonoid.toSubNegMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2834))))) a (Neg.neg.{u_1} α (NegZeroClass.toNeg.{u_1} α (SubNegZeroMonoid.toNegZeroClass.{u_1} α (SubtractionMonoid.toSubNegZeroMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2834))) b)) c) -> (Eq.{succ u_1} α (HSub.hSub.{u_1 u_1 u_1} α α α (instHSub.{u_1} α (SubNegMonoid.toSub.{u_1} α (SubtractionMonoid.toSubNegMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2834))) a b) c)
+Case conversion may be inaccurate. Consider using '#align tactic.abel.unfold_sub Tactic.Abel.unfold_subₓ'. -/
 theorem unfold_sub {α} [SubtractionMonoid α] (a b c : α) (h : a + -b = c) : a - b = c := by rw [sub_eq_add_neg, h]
 
+/- warning: tactic.abel.unfold_smul -> Tactic.Abel.unfold_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : AddCommMonoid.{u_1} α] (n : Nat) (x : α) (y : α), (Eq.{succ u_1} α (Tactic.Abel.smul.{u_1} α _inst_1 n x) y) -> (Eq.{succ u_1} α (HasSmul.smul.{0 u_1} Nat α (AddMonoid.hasSmulNat.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α _inst_1)) n x) y)
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Abel._hyg.2887 : AddCommMonoid.{u_1} α] (n : Nat) (x : α) (y : α), (Eq.{succ u_1} α (Tactic.Abel.smul.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2887 n x) y) -> (Eq.{succ u_1} α (HasSmul.smul.{0 u_1} Nat α (AddMonoid.HasSmul.{u_1} α (AddCommMonoid.toAddMonoid.{u_1} α inst._@.Mathlib.Tactic.Abel._hyg.2887)) n x) y)
+Case conversion may be inaccurate. Consider using '#align tactic.abel.unfold_smul Tactic.Abel.unfold_smulₓ'. -/
 theorem unfold_smul {α} [AddCommMonoid α] (n) (x y : α) (h : smul n x = y) : n • x = y :=
   h
 
+#print Tactic.Abel.unfold_smulg /-
 theorem unfold_smulg {α} [AddCommGroup α] (n : ℕ) (x y : α) (h : smulg (Int.ofNat n) x = y) : (n : ℤ) • x = y :=
   h
+-/
 
+#print Tactic.Abel.unfold_zsmul /-
 theorem unfold_zsmul {α} [AddCommGroup α] (n : ℤ) (x y : α) (h : smulg n x = y) : n • x = y :=
   h
+-/
 
+#print Tactic.Abel.subst_into_smul /-
 theorem subst_into_smul {α} [AddCommMonoid α] (l r tl tr t) (prl : l = tl) (prr : r = tr) (prt : @smul α _ tl tr = t) :
     smul l r = t := by simp [prl, prr, prt]
+-/
 
+#print Tactic.Abel.subst_into_smulg /-
 theorem subst_into_smulg {α} [AddCommGroup α] (l r tl tr t) (prl : l = tl) (prr : r = tr) (prt : @smulg α _ tl tr = t) :
     smulg l r = t := by simp [prl, prr, prt]
+-/
 
+#print Tactic.Abel.subst_into_smul_upcast /-
 theorem subst_into_smul_upcast {α} [AddCommGroup α] (l r tl zl tr t) (prl₁ : l = tl) (prl₂ : ↑tl = zl) (prr : r = tr)
     (prt : @smulg α _ zl tr = t) : smul l r = t := by simp [← prt, prl₁, ← prl₂, prr, smul, smulg]
+-/
 
 /-- Normalize a term `orig` of the form `smul e₁ e₂` or `smulg e₁ e₂`.
   Normalized terms use `smul` for monoids and `smulg` for groups,
@@ -338,7 +442,7 @@ unsafe def normalize (red : Transparency) (mode := NormalizeMode.term) (e : expr
                     let (e', prf, _) ← simplify lemmas [] e
                     return (e', prf))
                 e
-          guard ¬expr.alpha_eqv new_e e
+          guard ¬new_e == e
           return ((), new_e, some pr, ff))
         (fun _ _ _ _ _ => failed) `eq e
   return (e', pr)

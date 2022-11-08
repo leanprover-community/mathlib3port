@@ -3,7 +3,7 @@ Copyright (c) 2015 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 -/
-import Mathbin.Algebra.Order.Ring
+import Mathbin.Algebra.Order.Ring.Abs
 import Mathbin.Algebra.GroupPower.Ring
 import Mathbin.Data.Set.Intervals.Basic
 
@@ -421,10 +421,10 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing R]
 
-theorem pow_abs (a : R) (n : ℕ) : abs a ^ n = abs (a ^ n) :=
+theorem pow_abs (a : R) (n : ℕ) : |a| ^ n = |a ^ n| :=
   ((absHom.toMonoidHom : R →* R).map_pow a n).symm
 
-theorem abs_neg_one_pow (n : ℕ) : abs ((-1 : R) ^ n) = 1 := by rw [← pow_abs, abs_neg, abs_one, one_pow]
+theorem abs_neg_one_pow (n : ℕ) : |(-1 : R) ^ n| = 1 := by rw [← pow_abs, abs_neg, abs_one, one_pow]
 
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by
   rw [pow_bit0]
@@ -454,48 +454,48 @@ theorem sq_pos_iff (a : R) : 0 < a ^ 2 ↔ a ≠ 0 :=
 
 variable {x y : R}
 
-theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by simpa only [sq] using abs_mul_abs_self x
+theorem sq_abs (x : R) : |x| ^ 2 = x ^ 2 := by simpa only [sq] using abs_mul_abs_self x
 
-theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by simpa only [sq] using abs_mul_self x
+theorem abs_sq (x : R) : |x ^ 2| = x ^ 2 := by simpa only [sq] using abs_mul_self x
 
-theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ abs x < abs y := by
+theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ |x| < |y| := by
   simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
 
 theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
   sq_lt_sq.2 (lt_of_lt_of_le (abs_lt.2 ⟨h1, h2⟩) (le_abs_self _))
 
-theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ abs x ≤ abs y := by
+theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ |x| ≤ |y| := by
   simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
 
 theorem sq_le_sq' (h1 : -y ≤ x) (h2 : x ≤ y) : x ^ 2 ≤ y ^ 2 :=
   sq_le_sq.2 (le_trans (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
 
-theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : abs x < y := by rwa [← abs_of_nonneg hy, ← sq_lt_sq]
+theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : |x| < y := by rwa [← abs_of_nonneg hy, ← sq_lt_sq]
 
 theorem abs_lt_of_sq_lt_sq' (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : -y < x ∧ x < y :=
   abs_lt.mp <| abs_lt_of_sq_lt_sq h hy
 
-theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : abs x ≤ y := by rwa [← abs_of_nonneg hy, ← sq_le_sq]
+theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : |x| ≤ y := by rwa [← abs_of_nonneg hy, ← sq_le_sq]
 
 theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ x ≤ y :=
   abs_le.mp <| abs_le_of_sq_le_sq h hy
 
-theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y := by simp only [le_antisymm_iff, sq_le_sq]
+theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ |x| = |y| := by simp only [le_antisymm_iff, sq_le_sq]
 
 @[simp]
-theorem sq_le_one_iff_abs_le_one (x : R) : x ^ 2 ≤ 1 ↔ abs x ≤ 1 := by
+theorem sq_le_one_iff_abs_le_one (x : R) : x ^ 2 ≤ 1 ↔ |x| ≤ 1 := by
   simpa only [one_pow, abs_one] using @sq_le_sq _ _ x 1
 
 @[simp]
-theorem sq_lt_one_iff_abs_lt_one (x : R) : x ^ 2 < 1 ↔ abs x < 1 := by
+theorem sq_lt_one_iff_abs_lt_one (x : R) : x ^ 2 < 1 ↔ |x| < 1 := by
   simpa only [one_pow, abs_one] using @sq_lt_sq _ _ x 1
 
 @[simp]
-theorem one_le_sq_iff_one_le_abs (x : R) : 1 ≤ x ^ 2 ↔ 1 ≤ abs x := by
+theorem one_le_sq_iff_one_le_abs (x : R) : 1 ≤ x ^ 2 ↔ 1 ≤ |x| := by
   simpa only [one_pow, abs_one] using @sq_le_sq _ _ 1 x
 
 @[simp]
-theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < abs x := by
+theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < |x| := by
   simpa only [one_pow, abs_one] using @sq_lt_sq _ _ 1 x
 
 theorem pow_four_le_pow_two_of_pow_two_le {x y : R} (h : x ^ 2 ≤ y) : x ^ 4 ≤ y ^ 2 :=

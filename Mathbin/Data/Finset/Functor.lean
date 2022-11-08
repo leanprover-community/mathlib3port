@@ -132,15 +132,15 @@ instance : LawfulApplicative Finset :=
          }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr [finset.product/multiset.product/set.prod/list.product](s, t)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr [finset.product/multiset.product/set.prod/list.product](s, t)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance : IsCommApplicative Finset :=
   { Finset.is_lawful_applicative with
     commutative_prod := fun α β s t => by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
       change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
       trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr [finset.product/multiset.product/set.prod/list.product](s, t)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg" <;>
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr [finset.product/multiset.product/set.prod/list.product](s, t)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
           [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;>
         congr <;> ext <;> simp_rw [mem_image] }
 

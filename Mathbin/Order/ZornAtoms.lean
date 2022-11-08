@@ -17,7 +17,7 @@ statement.
 
 open Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » «expr⊤»()) -/
 /-- **Zorn's lemma**: A partial order is coatomic if every nonempty chain `c`, `⊤ ∉ c`, has an upper
 bound not equal to `⊤`. -/
 theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop α]
@@ -33,7 +33,7 @@ theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop
     exact ⟨z, ⟨le_trans (hxc hy).1 (hcz hy), hz.lt_top⟩, hcz⟩
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » «expr⊥»()) -/
 /-- **Zorn's lemma**: A partial order is atomic if every nonempty chain `c`, `⊥ ∉ c`, has an lower
 bound not equal to `⊥`. -/
 theorem IsAtomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderBot α]

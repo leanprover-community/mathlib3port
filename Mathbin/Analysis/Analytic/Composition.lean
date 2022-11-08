@@ -9,7 +9,7 @@ import Mathbin.Combinatorics.Composition
 /-!
 # Composition of analytic functions
 
-in this file we prove that the composition of analytic functions is analytic.
+In this file we prove that the composition of analytic functions is analytic.
 
 The argument is the following. Assume `g z = ∑' qₙ (z, ..., z)` and `f y = ∑' pₖ (y, ..., y)`. Then
 
@@ -128,7 +128,7 @@ theorem apply_composition_single (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ
 @[simp]
 theorem remove_zero_apply_composition (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (c : Composition n) :
     p.removeZero.applyComposition c = p.applyComposition c := by
-  ext v i
+  ext (v i)
   simp [apply_composition, zero_lt_one.trans_le (c.one_le_blocks_fun i), remove_zero_of_pos]
 
 /-- Technical lemma stating how `p.apply_composition` commutes with updating variables. This
@@ -225,7 +225,7 @@ theorem comp_along_composition_apply {n : ℕ} (q : FormalMultilinearSeries 𝕜
 /-- Formal composition of two formal multilinear series. The `n`-th coefficient in the composition
 is defined to be the sum of `q.comp_along_composition p c` over all compositions of
 `n`. In other words, this term (as a multilinear function applied to `v_0, ..., v_{n-1}`) is
-`∑'_{k} ∑'_{i₁ + ... + iₖ = n} pₖ (q_{i_1} (...), ..., q_{i_k} (...))`, where one puts all variables
+`∑'_{k} ∑'_{i₁ + ... + iₖ = n} qₖ (p_{i_1} (...), ..., p_{i_k} (...))`, where one puts all variables
 `v_0, ..., v_{n-1}` in increasing order in the dots.
 
 In general, the composition `q ∘ p` only makes sense when the constant coefficient of `p` vanishes.
@@ -270,6 +270,7 @@ theorem comp_coeff_one (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultili
   simp only [apply_composition_ones]
   exact p.congr rfl fun j hj1 hj2 => by congr
 
+/-- Only `0`-th coefficient of `q.comp p` depends on `q 0`. -/
 theorem remove_zero_comp_of_pos (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ}
     (hn : 0 < n) : q.removeZero.comp p n = q.comp p n := by
   ext v
@@ -1110,7 +1111,7 @@ open Composition
 
 theorem comp_assoc (r : FormalMultilinearSeries 𝕜 G H) (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) : (r.comp q).comp p = r.comp (q.comp p) := by
-  ext n v
+  ext (n v)
   /- First, rewrite the two compositions appearing in the theorem as two sums over complicated
     sigma types, as in the description of the proof above. -/
   let f : (Σa : Composition n, Composition a.length) → H := fun c =>

@@ -499,15 +499,15 @@ theorem insert_nth_zero (x : α 0) (p : ∀ j : Fin n, α (succAbove 0 j)) :
 theorem insert_nth_zero' (x : β) (p : Fin n → β) : @insertNth _ (fun _ => β) 0 x p = cons x p := by
   simp [insert_nth_zero]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr snoc (λ j, _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr snoc (λ j, _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem insert_nth_last (x : α (last n)) (p : ∀ j : Fin n, α ((last n).succAbove j)) :
     insertNth (last n) x p = snoc (fun j => cast (congr_arg α (succ_above_last_apply j)) (p j)) x := by
   refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
   ext j
   apply eq_of_heq
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr snoc (λ j, _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr snoc (λ j, _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · rw [snoc_cast_succ]
     exact (cast_heq _ _).symm
     

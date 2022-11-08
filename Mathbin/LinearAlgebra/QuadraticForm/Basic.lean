@@ -757,7 +757,7 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 def Anisotropic (Q : QuadraticForm R M) : Prop :=
   ∀ x, Q x = 0 → x = 0
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
   simp only [anisotropic, not_forall, exists_prop, and_comm']
 
@@ -788,7 +788,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoid M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
   ∀ (x) (_ : x ≠ 0), 0 < Q₂ x
@@ -856,7 +856,7 @@ theorem QuadraticForm.to_matrix'_smul (a : R₁) (Q : QuadraticForm R₁ (n → 
   by simp only [to_matrix', LinearEquiv.map_smul, LinearMap.map_smul]
 
 theorem QuadraticForm.is_symm_to_matrix' (Q : QuadraticForm R₁ (n → R₁)) : Q.toMatrix'.IsSymm := by
-  ext i j
+  ext (i j)
   rw [to_matrix', BilinForm.to_matrix'_apply, BilinForm.to_matrix'_apply, associated_is_symm]
 
 end
@@ -976,7 +976,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
       
     · exact (v' i).Prop _ (Submodule.mem_span_singleton_self x)
       
-    · exact hv₁ _ _ (ne_of_apply_ne _ hij)
+    · exact hv₁ (ne_of_apply_ne _ hij)
       
     
 
@@ -1032,7 +1032,7 @@ theorem basis_repr_eq_of_is_Ortho {R₁ M} [CommRing R₁] [AddCommGroup M] [Mod
     ring
     
   · intro i _ hij
-    rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ j i hij.symm, mul_zero, mul_zero]
+    rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ hij.symm, mul_zero, mul_zero]
     
 
 end QuadraticForm

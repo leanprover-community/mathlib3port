@@ -6,7 +6,6 @@ Authors: Yury Kudryashov, Sébastien Gouëzel
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.SpecialFunctions.PowDeriv
 import Mathbin.Analysis.SpecialFunctions.Sqrt
-import Mathbin.Data.Int.Basic
 
 /-!
 # Collection of convex functions
@@ -167,7 +166,7 @@ theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (IoiCat 0) fun x : ℝ => x ^ m 
     exact_mod_cast int_prod_range_nonneg _ _ (even_bit0 1)
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` except `0` and `1`. -/
 theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) : StrictConvexOn ℝ (IoiCat 0) fun x : ℝ => x ^ m := by
   apply strict_convex_on_of_deriv2_pos' (convex_Ioi 0)

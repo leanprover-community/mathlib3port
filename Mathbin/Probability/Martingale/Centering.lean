@@ -165,19 +165,19 @@ theorem predictable_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ →
 section Difference
 
 theorem predictable_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (ℱ : Filtration ℕ m0)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) :
-    ∀ᵐ ω ∂μ, ∀ i, abs (predictablePart f ℱ μ (i + 1) ω - predictablePart f ℱ μ i ω) ≤ R := by
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
+    ∀ᵐ ω ∂μ, ∀ i, |predictablePart f ℱ μ (i + 1) ω - predictablePart f ℱ μ i ω| ≤ R := by
   simp_rw [predictable_part, Finset.sum_apply, Finset.sum_range_succ_sub_sum]
   exact ae_all_iff.2 fun i => ae_bdd_condexp_of_ae_bdd <| ae_all_iff.1 hbdd i
 
 theorem martingale_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (ℱ : Filtration ℕ m0)
-    (hbdd : ∀ᵐ ω ∂μ, ∀ i, abs (f (i + 1) ω - f i ω) ≤ R) :
-    ∀ᵐ ω ∂μ, ∀ i, abs (martingalePart f ℱ μ (i + 1) ω - martingalePart f ℱ μ i ω) ≤ ↑(2 * R) := by
+    (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
+    ∀ᵐ ω ∂μ, ∀ i, |martingalePart f ℱ μ (i + 1) ω - martingalePart f ℱ μ i ω| ≤ ↑(2 * R) := by
   filter_upwards [hbdd, predictable_part_bdd_difference ℱ hbdd] with ω hω₁ hω₂ i
   simp only [two_mul, martingale_part, Pi.sub_apply]
   have :
-    abs (f (i + 1) ω - predictable_part f ℱ μ (i + 1) ω - (f i ω - predictable_part f ℱ μ i ω)) =
-      abs (f (i + 1) ω - f i ω - (predictable_part f ℱ μ (i + 1) ω - predictable_part f ℱ μ i ω)) :=
+    |f (i + 1) ω - predictable_part f ℱ μ (i + 1) ω - (f i ω - predictable_part f ℱ μ i ω)| =
+      |f (i + 1) ω - f i ω - (predictable_part f ℱ μ (i + 1) ω - predictable_part f ℱ μ i ω)| :=
     by ring_nf
   -- `ring` suggests `ring_nf` despite proving the goal
   rw [this]

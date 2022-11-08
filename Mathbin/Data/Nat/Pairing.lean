@@ -5,6 +5,8 @@ Authors: Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Data.Nat.Sqrt
 import Mathbin.Data.Set.Lattice
+import Mathbin.Algebra.Order.Monoid.Prod
+import Mathbin.Algebra.Order.Group.MinMax
 
 /-!
 #  Naturals pairing function

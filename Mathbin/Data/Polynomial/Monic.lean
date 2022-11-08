@@ -265,14 +265,14 @@ section Semiring
 variable [Semiring R]
 
 @[simp]
-theorem Monic.nat_degree_map [Semiring S] [Nontrivial S] {P : Polynomial R} (hmo : P.Monic) (f : R →+* S) :
+theorem Monic.nat_degree_map [Semiring S] [Nontrivial S] {P : R[X]} (hmo : P.Monic) (f : R →+* S) :
     (P.map f).natDegree = P.natDegree := by
   refine' le_antisymm (nat_degree_map_le _ _) (le_nat_degree_of_ne_zero _)
   rw [coeff_map, monic.coeff_nat_degree hmo, RingHom.map_one]
   exact one_ne_zero
 
 @[simp]
-theorem Monic.degree_map [Semiring S] [Nontrivial S] {P : Polynomial R} (hmo : P.Monic) (f : R →+* S) :
+theorem Monic.degree_map [Semiring S] [Nontrivial S] {P : R[X]} (hmo : P.Monic) (f : R →+* S) :
     (P.map f).degree = P.degree := by
   by_cases hP:P = 0
   · simp [hP]

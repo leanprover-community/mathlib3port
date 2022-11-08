@@ -68,7 +68,7 @@ theorem std_basis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j =
   Pi.single_eq_of_ne h b
 
 theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
-  ext x j
+  ext (x j)
   convert (update_apply 0 x i j _).symm
   rfl
 
@@ -213,9 +213,7 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
     simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same, LinearEquiv.Pi_congr_right_apply,
       Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
     symm
-    exact
-      Basis.Finsupp.single_apply_left (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_heq (Sigma.mk.inj h).2) _ _
-        _
+    exact Finsupp.single_apply_left (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_heq (Sigma.mk.inj h).2) _ _ _
     
   simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
     LinearEquiv.Pi_congr_right_apply]
@@ -270,7 +268,7 @@ variable {n m}
 
 theorem std_basis_eq_std_basis_matrix (i : n) (j : m) [DecidableEq n] [DecidableEq m] :
     stdBasis R n m (i, j) = stdBasisMatrix i j (1 : R) := by
-  ext a b
+  ext (a b)
   by_cases hi:i = a <;> by_cases hj:j = b
   · simp [std_basis, hi, hj]
     

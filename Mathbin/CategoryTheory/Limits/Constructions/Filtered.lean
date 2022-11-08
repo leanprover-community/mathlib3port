@@ -57,7 +57,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
     { desc := fun s =>
         colimit.desc (liftToFinset F) { x := s.x, ι := { app := fun t => Sigma.desc fun x => s.ι.app x } },
       uniq' := fun s m h => by
-        ext t ⟨⟨j, hj⟩⟩
+        ext (t⟨⟨j, hj⟩⟩)
         convert h j using 1
         · simp [← colimit.w (lift_to_finset F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]
           rfl

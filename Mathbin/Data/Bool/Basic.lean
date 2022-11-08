@@ -5,6 +5,10 @@ Authors: Leonardo de Moura, Jeremy Avigad
 -/
 
 /-!
+THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+https://github.com/leanprover-community/mathlib4/pull/534
+Any changes to this file require a corresponding PR to mathlib4.
+
 # booleans
 
 This file proves various trivial lemmas about booleans and their
@@ -26,11 +30,11 @@ namespace Bool
 
 -- TODO: duplicate of a lemma in core
 theorem coe_sort_tt : coeSort.{1, 1} true = True :=
-  coe_sort_tt
+  Bool.coe_sort_true
 
 -- TODO: duplicate of a lemma in core
 theorem coe_sort_ff : coeSort.{1, 1} false = False :=
-  coe_sort_ff
+  Bool.coe_sort_false
 
 -- TODO: duplicate of a lemma in core
 theorem to_bool_true {h} : @decide True h = tt :=
@@ -45,11 +49,11 @@ theorem to_bool_coe (b : Bool) {h} : @decide b h = b :=
   show _ = decide b by congr.trans (by cases b <;> rfl)
 
 theorem coe_to_bool (p : Prop) [Decidable p] : decide p ↔ p :=
-  to_bool_iff _
+  Bool.decide_iff _
 
 @[simp]
 theorem of_to_bool_iff {p : Prop} [Decidable p] : decide p ↔ p :=
-  ⟨of_to_bool_true, to_bool_true⟩
+  ⟨Bool.of_decide_true, Bool.decide_true⟩
 
 @[simp]
 theorem tt_eq_to_bool_iff {p : Prop} [Decidable p] : tt = decide p ↔ p :=
@@ -57,7 +61,7 @@ theorem tt_eq_to_bool_iff {p : Prop} [Decidable p] : tt = decide p ↔ p :=
 
 @[simp]
 theorem ff_eq_to_bool_iff {p : Prop} [Decidable p] : ff = decide p ↔ ¬p :=
-  eq_comm.trans (to_bool_ff_iff _)
+  eq_comm.trans (Bool.decide_false_iff _)
 
 @[simp]
 theorem to_bool_not (p : Prop) [Decidable p] : (decide ¬p) = !decide p := by by_cases p <;> simp [*]
@@ -72,7 +76,7 @@ theorem to_bool_or (p q : Prop) [Decidable p] [Decidable q] : decide (p ∨ q) =
 
 @[simp]
 theorem to_bool_eq {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q ↔ (p ↔ q) :=
-  ⟨fun h => (coe_to_bool p).symm.trans <| by simp [h], to_bool_congr⟩
+  ⟨fun h => (coe_to_bool p).symm.trans <| by simp [h], Bool.decide_congr⟩
 
 theorem not_ff : ¬ff :=
   ff_ne_tt
@@ -99,13 +103,17 @@ instance decidableForallBool {p : Bool → Prop} [∀ b, Decidable (p b)] : Deci
 instance decidableExistsBool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∃ b, p b) :=
   decidable_of_decidable_of_iff Or.decidable exists_bool.symm
 
+#print Bool.cond_false /-
 @[simp]
-theorem cond_ff {α} (t e : α) : cond false t e = e :=
+theorem cond_false {α} (t e : α) : cond false t e = e :=
   rfl
+-/
 
+#print Bool.cond_true /-
 @[simp]
-theorem cond_tt {α} (t e : α) : cond true t e = t :=
+theorem cond_true {α} (t e : α) : cond true t e = t :=
   rfl
+-/
 
 theorem cond_eq_ite {α} (b : Bool) (t e : α) : cond b t e = if b then t else e := by cases b <;> simp
 

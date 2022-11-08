@@ -89,7 +89,7 @@ The converse is given in `is_connected.of_any_functor_const_on_obj`.
 theorem any_functor_const_on_obj [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j j' : J) :
     F.obj j = F.obj j' := by
   ext
-  exact ((iso_constant F j').hom.app j).down.1
+  exact ((iso_constant F j').Hom.app j).down.1
 
 /-- If any functor to a discrete category is constant on objects, J is connected.
 The converse of `any_functor_const_on_obj`.
@@ -214,7 +214,7 @@ instance is_preconnected_op [IsPreconnected J] :
             (Discrete.ext _ _
               (Discrete.eq_of_hom
                 ((Nonempty.some (IsPreconnected.iso_constant (F.rightOp ⋙ (Discrete.opposite α).Functor) (unop X))).app
-                    (unop Y)).hom)))
+                    (unop Y)).Hom)))
         fun Y Z f => Subsingleton.elim _ _⟩
 
 /-- If `J` is connected, then `Jᵒᵖ` is connected as well. -/
@@ -245,7 +245,7 @@ theorem zigzag_symmetric : Symmetric (@Zigzag J _) :=
   Relation.ReflTransGen.symmetric zag_symmetric
 
 theorem zigzag_equivalence : Equivalence (@Zigzag J _) :=
-  mk _ Relation.reflexive_refl_trans_gen zigzag_symmetric Relation.transitive_refl_trans_gen
+  Equivalence.mk _ Relation.reflexive_refl_trans_gen zigzag_symmetric Relation.transitive_refl_trans_gen
 
 /-- The setoid given by the equivalence relation `zigzag`. A quotient for this
 setoid is a connected component of the category.

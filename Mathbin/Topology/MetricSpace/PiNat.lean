@@ -350,7 +350,6 @@ protected def metricSpace : MetricSpace (∀ n, E n) :=
   MetricSpace.ofMetrizable dist PiNat.dist_self PiNat.dist_comm PiNat.dist_triangle is_open_iff_dist
     PiNat.eq_of_dist_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 /-- Metric space structure on `Π (n : ℕ), E n` when the spaces `E n` have the discrete uniformity,
 where the distance is given by `dist x y = (1/2)^n`, where `n` is the smallest index where `x` and
 `y` differ. Not registered as a global instance by default. -/
@@ -381,9 +380,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
       · simp only [le_infi_iff, le_principal_iff]
         intro n
         refine' mem_infi_of_mem ((1 / 2) ^ n) _
-        refine'
-          mem_infi_of_mem
-            (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]") _
+        refine' mem_infi_of_mem (by positivity) _
         simp only [mem_principal, set_of_subset_set_of, Prod.forall]
         intro x y hxy
         exact apply_eq_of_dist_lt hxy le_rfl
@@ -698,7 +695,7 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
       dist (g x) (g y) ≤ dist (g x) (u (x.1 n)) + dist (g y) (u (x.1 n)) := dist_triangle_right _ _ _
       _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by rw [← B]
       _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A x n) (A y n)
-      _ = 4 * (1 / 2) ^ (n + 1) := by ring_exp
+      _ = 4 * (1 / 2) ^ (n + 1) := by ring
       
   have g_surj : surjective g := by
     intro y

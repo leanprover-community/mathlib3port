@@ -130,7 +130,7 @@ def BilinForm.toMatrix' : BilinForm R₂ (n → R₂) ≃ₗ[R₂] Matrix n n R�
   { BilinForm.toMatrixAux fun j => stdBasis R₂ (fun _ => R₂) j 1 with invFun := Matrix.toBilin'Aux,
     left_inv := by convert to_bilin'_aux_to_matrix_aux,
     right_inv := fun M => by
-      ext i j
+      ext (i j)
       simp only [to_fun_eq_coe, BilinForm.to_matrix_aux_apply, Matrix.to_bilin'_aux_std_basis] }
 
 @[simp]
@@ -188,7 +188,7 @@ theorem BilinForm.to_matrix'_apply (B : BilinForm R₂ (n → R₂)) (i j : n) :
 @[simp]
 theorem BilinForm.to_matrix'_comp (B : BilinForm R₂ (n → R₂)) (l r : (o → R₂) →ₗ[R₂] n → R₂) :
     (B.comp l r).toMatrix' = l.toMatrix'ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' := by
-  ext i j
+  ext (i j)
   simp only [BilinForm.to_matrix'_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
     LinearEquiv.coe_mk, sum_mul]
   rw [sum_comm]
@@ -305,7 +305,7 @@ variable [DecidableEq o]
 -- Cannot be a `simp` lemma because `b` must be inferred.
 theorem BilinForm.to_matrix_comp (B : BilinForm R₂ M₂) (l r : M₂' →ₗ[R₂] M₂) :
     BilinForm.toMatrix c (B.comp l r) = (toMatrix c b l)ᵀ ⬝ BilinForm.toMatrix b B ⬝ toMatrix c b r := by
-  ext i j
+  ext (i j)
   simp only [BilinForm.to_matrix_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
     LinearEquiv.coe_mk, sum_mul]
   rw [sum_comm]

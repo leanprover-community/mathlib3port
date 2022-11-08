@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Logic.Small
+import Mathbin.Logic.Small.Basic
 import Mathbin.CategoryTheory.Category.Ulift
 import Mathbin.CategoryTheory.Skeletal
 
@@ -142,7 +142,7 @@ variable (C) [LocallySmall.{w} C]
 
 @[simps]
 noncomputable instance : Category.{w} (ShrinkHoms C) where
-  hom X Y := Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
+  Hom X Y := Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
   id X := equivShrink _ (𝟙 (fromShrinkHoms X))
   comp X Y Z f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
@@ -198,12 +198,12 @@ theorem essentially_small_iff (C : Type u) [Category.{v} C] :
 
 /-- Any thin category is locally small.
 -/
-instance (priority := 100) locally_small_of_thin {C : Type u} [Category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
+instance (priority := 100) locally_small_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
     LocallySmall.{w} C where
 
 /-- A thin category is essentially small if and only if the underlying type of its skeleton is small.
 -/
-theorem essentially_small_iff_of_thin {C : Type u} [Category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
+theorem essentially_small_iff_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) := by
   simp [essentially_small_iff, CategoryTheory.locally_small_of_thin]
 

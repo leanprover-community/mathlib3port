@@ -61,7 +61,7 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
   MvPolynomial.aeval fun f =>
     if hf : f ∈ s then
       rootOfSplits _
-        (((splits_prod_iff _) fun (j : MonicIrreducible k) _ => j.2.2.ne_zero).1 (SplittingField.splits _) f hf)
+        (((splits_prod_iff _) fun (j : MonicIrreducible k) _ => j.2.2.NeZero).1 (SplittingField.splits _) f hf)
         (mt is_unit_iff_degree_eq_zero.2 f.2.2.not_unit)
     else 37
 

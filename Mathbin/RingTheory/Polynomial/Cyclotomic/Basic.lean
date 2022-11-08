@@ -33,7 +33,7 @@ comes from a polynomial with integer coefficients.
 * `deg_of_cyclotomic` : The degree of `cyclotomic n` is `totient n`.
 * `prod_cyclotomic_eq_X_pow_sub_one` : `X ^ n - 1 = ∏ (cyclotomic i)`, where `i` divides `n`.
 * `cyclotomic_eq_prod_X_pow_sub_one_pow_moebius` : The Möbius inversion formula for
-  `cyclotomic n R` over an abstract fraction field for `polynomial R`.
+  `cyclotomic n R` over an abstract fraction field for `R[X]`.
 * `cyclotomic.irreducible` : `cyclotomic n ℤ` is irreducible.
 
 ## Implementation details
@@ -44,7 +44,7 @@ not the standard one unless there is a primitive `n`th root of unity in `R`. For
 `cyclotomic' 3 ℤ = 1`, since there are no primitive cube roots of unity in `ℤ`. The main example is
 `R = ℂ`, we decided to work in general since the difficulties are essentially the same.
 To get the standard cyclotomic polynomials, we use `int_coeff_of_cycl`, with `R = ℂ`, to get a
-polynomial with integer coefficients and then we map it to `polynomial R`, for any ring `R`.
+polynomial with integer coefficients and then we map it to `R[X]`, for any ring `R`.
 To prove `cyclotomic.irreducible`, the irreducibility of `cyclotomic n ℤ`, we show in
 `cyclotomic_eq_minpoly` that `cyclotomic n ℤ` is the minimal polynomial of any `n`-th primitive root
 of unity `μ : K`, where `K` is a field of characteristic `0`.
@@ -102,7 +102,7 @@ theorem cyclotomic'.monic (n : ℕ) (R : Type _) [CommRing R] [IsDomain R] : (cy
 
 /-- `cyclotomic' n R` is different from `0`. -/
 theorem cyclotomic'_ne_zero (n : ℕ) (R : Type _) [CommRing R] [IsDomain R] : cyclotomic' n R ≠ 0 :=
-  (cyclotomic'.monic n R).ne_zero
+  (cyclotomic'.monic n R).NeZero
 
 /-- The natural degree of `cyclotomic' n R` is `totient n` if there is a primitive root of
 unity in `R`. -/
@@ -323,7 +323,7 @@ theorem cyclotomic.is_primitive (n : ℕ) (R : Type _) [CommRing R] : (cyclotomi
 
 /-- `cyclotomic n R` is different from `0`. -/
 theorem cyclotomic_ne_zero (n : ℕ) (R : Type _) [Ring R] [Nontrivial R] : cyclotomic n R ≠ 0 :=
-  (cyclotomic.monic n R).ne_zero
+  (cyclotomic.monic n R).NeZero
 
 /-- The degree of `cyclotomic n` is `totient n`. -/
 theorem degree_cyclotomic (n : ℕ) (R : Type _) [Ring R] [Nontrivial R] : (cyclotomic n R).degree = Nat.totient n := by
@@ -450,7 +450,7 @@ open Nat.ArithmeticFunction
 
 open ArithmeticFunction
 
-/-- `cyclotomic n R` can be expressed as a product in a fraction field of `polynomial R`
+/-- `cyclotomic n R` can be expressed as a product in a fraction field of `R[X]`
   using Möbius inversion. -/
 theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius {n : ℕ} (R : Type _) [CommRing R] [IsDomain R] :
     algebraMap _ (Ratfunc R) (cyclotomic n R) =
@@ -873,7 +873,7 @@ theorem cyclotomic_expand_eq_cyclotomic {p n : ℕ} (hp : Nat.Prime p) (hdiv : p
   · have hpos := Nat.mul_pos hzero hp.pos
     have hprim := Complex.is_primitive_root_exp _ hpos.ne.symm
     rw [cyclotomic_eq_minpoly hprim hpos]
-    refine' minpoly.gcd_domain_dvd (hprim.is_integral hpos) ((cyclotomic.monic n ℤ).expand hp.pos).ne_zero _
+    refine' minpoly.gcd_domain_dvd (hprim.is_integral hpos) ((cyclotomic.monic n ℤ).expand hp.pos).NeZero _
     rw [aeval_def, ← eval_map, map_expand, map_cyclotomic, expand_eval, ← is_root.def, is_root_cyclotomic_iff]
     · convert IsPrimitiveRoot.pow_of_dvd hprim hp.ne_zero (dvd_mul_left p n)
       rw [Nat.mul_div_cancel _ hp.pos]

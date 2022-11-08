@@ -31,13 +31,13 @@ section
 
 variable {α : Type _} {β : Type _} [Ring β] [LinearOrderedField α] [Archimedean α] {abv : β → α} [IsAbsoluteValue abv]
 
-theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, abs (f n) ≤ a)
+theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
     (hnm : ∀ n ≥ m, f n.succ ≤ f n) : IsCauSeq abs f := fun ε ε0 => by
   let ⟨k, hk⟩ := Archimedean.arch a ε0
   have h : ∃ l, ∀ n ≥ m, a - l • ε < f n :=
     ⟨k + k + 1, fun n hnm =>
       lt_of_lt_of_le
-        (show a - (k + (k + 1)) • ε < -abs (f n) from
+        (show a - (k + (k + 1)) • ε < -|f n| from
           lt_neg.1 <|
             lt_of_le_of_lt (ham n hnm)
               (by
@@ -63,7 +63,7 @@ theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ 
     _ < f j + ε := add_lt_add_right (hl j (le_trans hi.1 hj)) _
     
 
-theorem isCauOfMonoBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, abs (f n) ≤ a) (hnm : ∀ n ≥ m, f n ≤ f n.succ) :
+theorem isCauOfMonoBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a) (hnm : ∀ n ≥ m, f n ≤ f n.succ) :
     IsCauSeq abs f := by
   refine'
     @Eq.recOn (ℕ → α) _ (IsCauSeq abs) _ _
@@ -141,7 +141,7 @@ theorem isCauGeoSeries {β : Type _} [Ring β] [Nontrivial β] {abv : β → α}
         exact mul_le_mul_of_nonneg_right (le_of_lt hx1) (pow_nonneg (abv_nonneg _ _) _)
         )
 
-theorem isCauGeoSeriesConst (a : α) {x : α} (hx1 : abs x < 1) : IsCauSeq abs fun m => ∑ n in range m, a * x ^ n := by
+theorem isCauGeoSeriesConst (a : α) {x : α} (hx1 : |x| < 1) : IsCauSeq abs fun m => ∑ n in range m, a * x ^ n := by
   have : IsCauSeq abs fun m => a * ∑ n in range m, x ^ n := (CauSeq.const abs a * ⟨_, isCauGeoSeries x hx1⟩).2
   simpa only [mul_sum]
 
@@ -149,7 +149,7 @@ variable {β : Type _} [Ring β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem seriesRatioTest {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
     (h : ∀ m, n ≤ m → abv (f m.succ) ≤ r * abv (f m)) : IsCauSeq abv fun m => ∑ n in range m, f n := by
-  have har1 : abs r < 1 := by rwa [abs_of_nonneg hr0]
+  have har1 : |r| < 1 := by rwa [abs_of_nonneg hr0]
   refine' isCauSeriesOfAbvLeCau n.succ _ (isCauGeoSeriesConst (abv (f n.succ) * r⁻¹ ^ n.succ) har1)
   intro m hmn
   cases' Classical.em (r = 0) with r_zero r_ne_zero
@@ -273,7 +273,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
           (abv_nonneg abv _)
     have hsumltP : (∑ n in range (max N M + 1), abv (a n)) < P :=
       calc
-        (∑ n in range (max N M + 1), abv (a n)) = abs (∑ n in range (max N M + 1), abv (a n)) :=
+        (∑ n in range (max N M + 1), abv (a n)) = |∑ n in range (max N M + 1), abv (a n)| :=
           Eq.symm (abs_of_nonneg (sum_nonneg fun x h => abv_nonneg abv (a x)))
         _ < P := hP (max N M + 1)
         
@@ -967,7 +967,7 @@ theorem cos_zero : cos 0 = 1 := by simp [cos]
 theorem cos_neg : cos (-x) = cos x := by simp [cos, exp_neg]
 
 @[simp]
-theorem cos_abs : cos (abs x) = cos x := by
+theorem cos_abs : cos (|x|) = cos x := by
   cases le_total x 0 <;> simp only [*, _root_.abs_of_nonneg, abs_of_nonpos, cos_neg]
 
 theorem cos_add : cos (x + y) = cos x * cos y - sin x * sin y := by rw [← of_real_inj] <;> simp [cos, cos_add]
@@ -1016,10 +1016,10 @@ theorem sin_sq_le_one : sin x ^ 2 ≤ 1 := by rw [← sin_sq_add_cos_sq x] <;> e
 
 theorem cos_sq_le_one : cos x ^ 2 ≤ 1 := by rw [← sin_sq_add_cos_sq x] <;> exact le_add_of_nonneg_left (sq_nonneg _)
 
-theorem abs_sin_le_one : abs (sin x) ≤ 1 :=
+theorem abs_sin_le_one : |sin x| ≤ 1 :=
   abs_le_one_iff_mul_self_le_one.2 <| by simp only [← sq, sin_sq_le_one]
 
-theorem abs_cos_le_one : abs (cos x) ≤ 1 :=
+theorem abs_cos_le_one : |cos x| ≤ 1 :=
   abs_le_one_iff_mul_self_le_one.2 <| by simp only [← sq, cos_sq_le_one]
 
 theorem sin_le_one : sin x ≤ 1 :=
@@ -1048,9 +1048,9 @@ theorem cos_sq' : cos x ^ 2 = 1 - sin x ^ 2 := by rw [← sin_sq_add_cos_sq x, a
 theorem sin_sq : sin x ^ 2 = 1 - cos x ^ 2 :=
   eq_sub_iff_add_eq.2 <| sin_sq_add_cos_sq _
 
-theorem abs_sin_eq_sqrt_one_sub_cos_sq (x : ℝ) : abs (sin x) = sqrt (1 - cos x ^ 2) := by rw [← sin_sq, sqrt_sq_eq_abs]
+theorem abs_sin_eq_sqrt_one_sub_cos_sq (x : ℝ) : |sin x| = sqrt (1 - cos x ^ 2) := by rw [← sin_sq, sqrt_sq_eq_abs]
 
-theorem abs_cos_eq_sqrt_one_sub_sin_sq (x : ℝ) : abs (cos x) = sqrt (1 - sin x ^ 2) := by rw [← cos_sq', sqrt_sq_eq_abs]
+theorem abs_cos_eq_sqrt_one_sub_sin_sq (x : ℝ) : |cos x| = sqrt (1 - sin x ^ 2) := by rw [← cos_sq', sqrt_sq_eq_abs]
 
 theorem inv_one_add_tan_sq {x : ℝ} (hx : cos x ≠ 0) : (1 + tan x ^ 2)⁻¹ = cos x ^ 2 :=
   have : Complex.cos x ≠ 0 := mt (congr_arg re) hx
@@ -1097,7 +1097,7 @@ theorem cosh_neg : cosh (-x) = cosh x :=
   of_real_inj.1 <| by simp
 
 @[simp]
-theorem cosh_abs : cosh (abs x) = cosh x := by cases le_total x 0 <;> simp [*, _root_.abs_of_nonneg, abs_of_nonpos]
+theorem cosh_abs : cosh (|x|) = cosh x := by cases le_total x 0 <;> simp [*, _root_.abs_of_nonneg, abs_of_nonpos]
 
 theorem cosh_add : cosh (x + y) = cosh x * cosh y + sinh x * sinh y := by rw [← of_real_inj] <;> simp [cosh_add]
 
@@ -1184,7 +1184,7 @@ theorem exp_pos (x : ℝ) : 0 < exp x :=
     rw [← neg_neg x, Real.exp_neg] <;> exact inv_pos.2 (lt_of_lt_of_le zero_lt_one (one_le_exp (neg_nonneg.2 h)))
 
 @[simp]
-theorem abs_exp (x : ℝ) : abs (exp x) = exp x :=
+theorem abs_exp (x : ℝ) : |exp x| = exp x :=
   abs_of_pos (exp_pos _)
 
 @[mono]
@@ -1315,8 +1315,8 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
       mul_le_mul_of_nonneg_left (sum_div_factorial_le _ _ hn) (pow_nonneg (abs.nonneg _) _)
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr- »(1) : exprℝ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr- »(1) : exprℝ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     abs (exp x - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n / n ! * 2 := by
   rw [← lim_const (∑ m in range n, _), exp, sub_eq_add_neg, ← lim_neg, lim_add, ← lim_abs]
@@ -1348,7 +1348,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     · simp_rw [← div_pow]
       rw [geom_sum_eq, div_le_iff_of_neg]
       · trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr- »(1) : exprℝ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr («expr- »(1) : exprℝ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         · linarith
           
         · simp only [neg_le_sub_iff_le_add, div_pow, Nat.cast_succ, le_add_iff_nonneg_left]
@@ -1386,26 +1386,26 @@ namespace Real
 
 open Complex Finset
 
-theorem exp_bound {x : ℝ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
-    abs (exp x - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n * (n.succ / (n ! * n)) := by
+theorem exp_bound {x : ℝ} (hx : |x| ≤ 1) {n : ℕ} (hn : 0 < n) :
+    |exp x - ∑ m in range n, x ^ m / m !| ≤ |x| ^ n * (n.succ / (n ! * n)) := by
   have hxc : Complex.abs x ≤ 1 := by exact_mod_cast hx
   convert exp_bound hxc hn <;> norm_cast
 
 theorem exp_bound' {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) {n : ℕ} (hn : 0 < n) :
     Real.exp x ≤ (∑ m in Finset.range n, x ^ m / m !) + x ^ n * (n + 1) / (n ! * n) := by
-  have h3 : abs x = x := by simpa
-  have h4 : abs x ≤ 1 := by rwa [h3]
+  have h3 : |x| = x := by simpa
+  have h4 : |x| ≤ 1 := by rwa [h3]
   have h' := Real.exp_bound h4 hn
   rw [h3] at h'
   have h'' := (abs_sub_le_iff.1 h').1
   have t := sub_le_iff_le_add'.1 h''
   simpa [mul_div_assoc] using t
 
-theorem abs_exp_sub_one_le {x : ℝ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2 * abs x := by
+theorem abs_exp_sub_one_le {x : ℝ} (hx : |x| ≤ 1) : |exp x - 1| ≤ 2 * |x| := by
   have : Complex.abs x ≤ 1 := by exact_mod_cast hx
   exact_mod_cast Complex.abs_exp_sub_one_le this
 
-theorem abs_exp_sub_one_sub_id_le {x : ℝ} (hx : abs x ≤ 1) : abs (exp x - 1 - x) ≤ x ^ 2 := by
+theorem abs_exp_sub_one_sub_id_le {x : ℝ} (hx : |x| ≤ 1) : |exp x - 1 - x| ≤ x ^ 2 := by
   rw [← _root_.sq_abs]
   have : Complex.abs x ≤ 1 := by exact_mod_cast hx
   exact_mod_cast Complex.abs_exp_sub_one_sub_id_le this
@@ -1427,16 +1427,16 @@ theorem exp_near_succ (n x r) : expNear (n + 1) x r = expNear n x (1 + x / (n + 
 theorem exp_near_sub (n x r₁ r₂) : expNear n x r₁ - expNear n x r₂ = x ^ n / n ! * (r₁ - r₂) := by
   simp [exp_near, mul_sub]
 
-theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : abs x ≤ 1) :
-    abs (exp x - expNear m x 0) ≤ abs x ^ m / m ! * ((m + 1) / m) := by
+theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : |x| ≤ 1) :
+    |exp x - expNear m x 0| ≤ |x| ^ m / m ! * ((m + 1) / m) := by
   simp [exp_near]
   convert exp_bound h _ using 1
   field_simp [mul_comm]
   linarith
 
 theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a₂ b₂ : ℝ)
-    (e : abs (1 + x / m * a₂ - a₁) ≤ b₁ - abs x / m * b₂) (h : abs (exp x - expNear m x a₂) ≤ abs x ^ m / m ! * b₂) :
-    abs (exp x - expNear n x a₁) ≤ abs x ^ n / n ! * b₁ := by
+    (e : |1 + x / m * a₂ - a₁| ≤ b₁ - |x| / m * b₂) (h : |exp x - expNear m x a₂| ≤ |x| ^ m / m ! * b₂) :
+    |exp x - expNear n x a₁| ≤ |x| ^ n / n ! * b₁ := by
   refine' (_root_.abs_sub_le _ _ _).trans ((add_le_add_right h _).trans _)
   subst e₁
   rw [exp_near_succ, exp_near_sub, _root_.abs_mul]
@@ -1447,23 +1447,23 @@ theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a�
   · simp [_root_.div_nonneg, _root_.abs_nonneg]
     
 
-theorem exp_approx_end' {n} {x a b : ℝ} (m : ℕ) (e₁ : n + 1 = m) (rm : ℝ) (er : ↑m = rm) (h : abs x ≤ 1)
-    (e : abs (1 - a) ≤ b - abs x / rm * ((rm + 1) / rm)) : abs (exp x - expNear n x a) ≤ abs x ^ n / n ! * b := by
+theorem exp_approx_end' {n} {x a b : ℝ} (m : ℕ) (e₁ : n + 1 = m) (rm : ℝ) (er : ↑m = rm) (h : |x| ≤ 1)
+    (e : |1 - a| ≤ b - |x| / rm * ((rm + 1) / rm)) : |exp x - expNear n x a| ≤ |x| ^ n / n ! * b := by
   subst er <;> exact exp_approx_succ _ e₁ _ _ (by simpa using e) (exp_approx_end _ _ _ e₁ h)
 
 theorem exp_1_approx_succ_eq {n} {a₁ b₁ : ℝ} {m : ℕ} (en : n + 1 = m) {rm : ℝ} (er : ↑m = rm)
-    (h : abs (exp 1 - expNear m 1 ((a₁ - 1) * rm)) ≤ abs 1 ^ m / m ! * (b₁ * rm)) :
-    abs (exp 1 - expNear n 1 a₁) ≤ abs 1 ^ n / n ! * b₁ := by
+    (h : |exp 1 - expNear m 1 ((a₁ - 1) * rm)| ≤ |1| ^ m / m ! * (b₁ * rm)) :
+    |exp 1 - expNear n 1 a₁| ≤ |1| ^ n / n ! * b₁ := by
   subst er
   refine' exp_approx_succ _ en _ _ _ h
   field_simp [show (m : ℝ) ≠ 0 by norm_cast <;> linarith]
 
-theorem exp_approx_start (x a b : ℝ) (h : abs (exp x - expNear 0 x a) ≤ abs x ^ 0 / 0! * b) : abs (exp x - a) ≤ b := by
+theorem exp_approx_start (x a b : ℝ) (h : |exp x - expNear 0 x a| ≤ |x| ^ 0 / 0! * b) : |exp x - a| ≤ b := by
   simpa using h
 
-theorem cos_bound {x : ℝ} (hx : abs x ≤ 1) : abs (cos x - (1 - x ^ 2 / 2)) ≤ abs x ^ 4 * (5 / 96) :=
+theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x| ^ 4 * (5 / 96) :=
   calc
-    abs (cos x - (1 - x ^ 2 / 2)) = abs (Complex.cos x - (1 - x ^ 2 / 2)) := by
+    |cos x - (1 - x ^ 2 / 2)| = abs (Complex.cos x - (1 - x ^ 2 / 2)) := by
       rw [← abs_of_real] <;> simp [of_real_bit0, of_real_one, of_real_inv]
     _ = abs ((Complex.exp (x * I) + Complex.exp (-x * I) - (2 - x ^ 2)) / 2) := by
       simp [Complex.cos, sub_div, add_div, neg_div, div_self (@two_ne_zero' ℂ _ _)]
@@ -1491,12 +1491,12 @@ theorem cos_bound {x : ℝ} (hx : abs x ≤ 1) : abs (cos x - (1 - x ^ 2 / 2)) �
           Complex.abs (-x * I) ^ 4 * (Nat.succ 4 * (4! * (4 : ℕ))⁻¹) / 2 :=
       add_le_add ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
         ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
-    _ ≤ abs x ^ 4 * (5 / 96) := by norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
+    _ ≤ |x| ^ 4 * (5 / 96) := by norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
     
 
-theorem sin_bound {x : ℝ} (hx : abs x ≤ 1) : abs (sin x - (x - x ^ 3 / 6)) ≤ abs x ^ 4 * (5 / 96) :=
+theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x| ^ 4 * (5 / 96) :=
   calc
-    abs (sin x - (x - x ^ 3 / 6)) = abs (Complex.sin x - (x - x ^ 3 / 6)) := by
+    |sin x - (x - x ^ 3 / 6)| = abs (Complex.sin x - (x - x ^ 3 / 6)) := by
       rw [← abs_of_real] <;> simp [of_real_bit0, of_real_one, of_real_inv]
     _ = abs (((Complex.exp (-x * I) - Complex.exp (x * I)) * I - (2 * x - x ^ 3 / 3)) / 2) := by
       simp [Complex.sin, sub_div, add_div, neg_div, mul_div_cancel_left _ (@two_ne_zero' ℂ _ _), div_div,
@@ -1526,35 +1526,35 @@ theorem sin_bound {x : ℝ} (hx : abs x ≤ 1) : abs (sin x - (x - x ^ 3 / 6)) �
           Complex.abs (-x * I) ^ 4 * (Nat.succ 4 * (4! * (4 : ℕ))⁻¹) / 2 :=
       add_le_add ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
         ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
-    _ ≤ abs x ^ 4 * (5 / 96) := by norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
+    _ ≤ |x| ^ 4 * (5 / 96) := by norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
     
 
-theorem cos_pos_of_le_one {x : ℝ} (hx : abs x ≤ 1) : 0 < cos x :=
+theorem cos_pos_of_le_one {x : ℝ} (hx : |x| ≤ 1) : 0 < cos x :=
   calc
-    0 < 1 - x ^ 2 / 2 - abs x ^ 4 * (5 / 96) :=
+    0 < 1 - x ^ 2 / 2 - |x| ^ 4 * (5 / 96) :=
       sub_pos.2 <|
         lt_sub_iff_add_lt.2
           (calc
-            abs x ^ 4 * (5 / 96) + x ^ 2 / 2 ≤ 1 * (5 / 96) + 1 / 2 :=
+            |x| ^ 4 * (5 / 96) + x ^ 2 / 2 ≤ 1 * (5 / 96) + 1 / 2 :=
               add_le_add (mul_le_mul_of_nonneg_right (pow_le_one _ (abs_nonneg _) hx) (by norm_num))
                 ((div_le_div_right (by norm_num)).2
                   (by rw [sq, ← abs_mul_self, _root_.abs_mul] <;> exact mul_le_one hx (abs_nonneg _) hx))
             _ < 1 := by norm_num
             )
-    _ ≤ cos x := sub_le.1 (abs_sub_le_iff.1 (cos_bound hx)).2
+    _ ≤ cos x := sub_le_comm.1 (abs_sub_le_iff.1 (cos_bound hx)).2
     
 
 theorem sin_pos_of_pos_of_le_one {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 1) : 0 < sin x :=
   calc
-    0 < x - x ^ 3 / 6 - abs x ^ 4 * (5 / 96) :=
+    0 < x - x ^ 3 / 6 - |x| ^ 4 * (5 / 96) :=
       sub_pos.2 <|
         lt_sub_iff_add_lt.2
           (calc
-            abs x ^ 4 * (5 / 96) + x ^ 3 / 6 ≤ x * (5 / 96) + x / 6 :=
+            |x| ^ 4 * (5 / 96) + x ^ 3 / 6 ≤ x * (5 / 96) + x / 6 :=
               add_le_add
                 (mul_le_mul_of_nonneg_right
                   (calc
-                    abs x ^ 4 ≤ abs x ^ 1 :=
+                    |x| ^ 4 ≤ |x| ^ 1 :=
                       pow_le_pow_of_le_one (abs_nonneg _) (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]) (by decide)
                     _ = x := by simp [_root_.abs_of_nonneg (le_of_lt hx0)]
                     )
@@ -1566,7 +1566,7 @@ theorem sin_pos_of_pos_of_le_one {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 1) : 0 < si
                     ))
             _ < x := by linarith
             )
-    _ ≤ sin x := sub_le.1 (abs_sub_le_iff.1 (sin_bound (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]))).2
+    _ ≤ sin x := sub_le_comm.1 (abs_sub_le_iff.1 (sin_bound (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]))).2
     
 
 theorem sin_pos_of_pos_of_le_two {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 2) : 0 < sin x :=
@@ -1580,8 +1580,7 @@ theorem sin_pos_of_pos_of_le_two {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 2) : 0 < si
 
 theorem cos_one_le : cos 1 ≤ 2 / 3 :=
   calc
-    cos 1 ≤ abs (1 : ℝ) ^ 4 * (5 / 96) + (1 - 1 ^ 2 / 2) :=
-      sub_le_iff_le_add.1 (abs_sub_le_iff.1 (cos_bound (by simp))).1
+    cos 1 ≤ |(1 : ℝ)| ^ 4 * (5 / 96) + (1 - 1 ^ 2 / 2) := sub_le_iff_le_add.1 (abs_sub_le_iff.1 (cos_bound (by simp))).1
     _ ≤ 2 / 3 := by norm_num
     
 

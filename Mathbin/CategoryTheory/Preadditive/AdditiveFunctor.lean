@@ -96,6 +96,9 @@ instance induced_functor_additive : Functor.Additive (inducedFunctor F) where
 
 end InducedCategory
 
+instance full_subcategory_inclusion_additive {C : Type _} [Category C] [Preadditive C] (Z : C → Prop) :
+    (fullSubcategoryInclusion Z).Additive where
+
 section
 
 -- To talk about preservation of biproducts we need to specify universes explicitly.
@@ -157,7 +160,7 @@ def AdditiveFunctorCat :=
 infixr:26 " ⥤+ " => AdditiveFunctorCat
 
 instance : Preadditive (C ⥤+ D) :=
-  Preadditive.InducedCategory.category _
+  Preadditive.inducedCategory _
 
 /-- An additive functor is in particular a functor. -/
 def AdditiveFunctorCat.forget : (C ⥤+ D) ⥤ C ⥤ D :=

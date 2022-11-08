@@ -1118,7 +1118,7 @@ theorem finite_range_find_greatest {P : α → ℕ → Prop} [∀ x, DecidablePr
 theorem Finite.exists_maximal_wrt [PartialOrder β] (f : α → β) (s : Set α) (h : Set.Finite s) :
     s.Nonempty → ∃ a ∈ s, ∀ a' ∈ s, f a ≤ f a' → f a = f a' := by
   refine' h.induction_on _ _
-  · exact fun h => absurd h empty_not_nonempty
+  · exact fun h => absurd h not_nonempty_empty
     
   intro a s his _ ih _
   cases' s.eq_empty_or_nonempty with h h

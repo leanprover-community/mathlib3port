@@ -44,8 +44,6 @@ def discrim [Ring R] (a b c : R) : R :=
 
 variable [CommRing R] [IsDomain R] {a b c : R}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr * »(«expr- »(4), a), h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr- »(h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- A quadratic has roots if and only if its discriminant equals some square.
 -/
 theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (x : R) :
@@ -53,14 +51,12 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) 
   dsimp [discrim] at *
   constructor
   · intro h
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr * »(«expr- »(4), a), h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    linear_combination-4 * a * h
     
   · intro h
     have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha
     apply mul_left_cancel₀ ha
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr- »(h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    linear_combination-h
     
 
 /-- A quadratic has no root if its discriminant has no square root. -/
@@ -76,8 +72,6 @@ section Field
 
 variable {K : Type _} [Field K] [Invertible (2 : K)] {a b c x : K}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr- »(h')], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr h'], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- Roots of a quadratic -/
 theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s) (x : K) :
     a * x * x + b * x + c = 0 ↔ x = (-b + s) / (2 * a) ∨ x = (-b - s) / (2 * a) := by
@@ -86,15 +80,9 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   have ne : 2 * a ≠ 0 := mul_ne_zero h2 ha
   field_simp
   apply or_congr
-  · constructor <;>
-      intro h' <;>
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr- »(h')], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · constructor <;> intro h' <;> linear_combination-h'
     
-  · constructor <;>
-      intro h' <;>
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr h'], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · constructor <;> intro h' <;> linear_combination h'
     
 
 /-- A quadratic has roots if its discriminant has square roots -/

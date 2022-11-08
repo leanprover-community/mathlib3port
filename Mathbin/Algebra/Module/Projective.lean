@@ -143,7 +143,7 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
   letI : Module R (Π₀ i : ι, A i →₀ R) := @Dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
   let f i := lmap_domain R R (Dfinsupp.single i : A i → Π₀ i, A i)
   use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
-  ext i x j
+  ext (i x j)
   simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain R _ Dfinsupp.single_injective, coe_comp, coe_lsum,
     id_coe, LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_app,
     Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single, lmap_domain_apply,

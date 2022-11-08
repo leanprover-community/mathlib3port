@@ -60,9 +60,9 @@ unsafe def allowed_head_symbols : expr → List Name
       quote.1
       (@LE.le ℕ _ (Nat.succ _) _) =>
     [`has_le.le, `has_lt.lt]
-  | quote.1 (@ge ℕ _ _ (Nat.succ _)) => [`has_le.le, `has_lt.lt]
+  | quote.1 (@GE.ge ℕ _ _ (Nat.succ _)) => [`has_le.le, `has_lt.lt]
   | quote.1 (@LE.le ℕ _ 1 _) => [`has_le.le, `has_lt.lt]
-  | quote.1 (@ge ℕ _ _ 1) => [`has_le.le, `has_lt.lt]
+  | quote.1 (@GE.ge ℕ _ _ 1) => [`has_le.le, `has_lt.lt]
   |-- These allow `library_search` to search for lemmas of type `¬ a = b` when proving `a ≠ b`
       --   and vice-versa.
       quote.1

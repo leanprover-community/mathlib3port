@@ -159,13 +159,13 @@ theorem dist_eq_add_dist_iff_angle_eq_pi {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2) (hp3
 
 /-- If ∠ABC = 0, then (dist A C) = abs ((dist A B) - (dist B C)). -/
 theorem dist_eq_abs_sub_dist_of_angle_eq_zero {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = 0) :
-    dist p1 p3 = abs (dist p1 p2 - dist p3 p2) := by
+    dist p1 p3 = |dist p1 p2 - dist p3 p2| := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
   exact norm_sub_eq_abs_sub_norm_of_angle_eq_zero h
 
 /-- If A ≠ B and C ≠ B then ∠ABC = 0 if and only if (dist A C) = abs ((dist A B) - (dist B C)). -/
 theorem dist_eq_abs_sub_dist_iff_angle_eq_zero {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2) (hp3p2 : p3 ≠ p2) :
-    dist p1 p3 = abs (dist p1 p2 - dist p3 p2) ↔ ∠ p1 p2 p3 = 0 := by
+    dist p1 p3 = |dist p1 p2 - dist p3 p2| ↔ ∠ p1 p2 p3 = 0 := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, ← vsub_sub_vsub_cancel_right]
   exact
     norm_sub_eq_abs_sub_norm_iff_angle_eq_zero (fun he => hp1p2 (vsub_eq_zero_iff_eq.1 he)) fun he =>

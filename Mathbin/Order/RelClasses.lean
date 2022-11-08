@@ -749,10 +749,10 @@ theorem transitive_le [Preorder α] : Transitive (@LE.le α _) :=
 theorem transitive_lt [Preorder α] : Transitive (@LT.lt α _) :=
   transitive_of_trans _
 
-theorem transitive_ge [Preorder α] : Transitive (@ge α _) :=
+theorem transitive_ge [Preorder α] : Transitive (@GE.ge α _) :=
   transitive_of_trans _
 
-theorem transitive_gt [Preorder α] : Transitive (@gt α _) :=
+theorem transitive_gt [Preorder α] : Transitive (@GT.gt α _) :=
   transitive_of_trans _
 
 instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒᵈ (· ≤ ·) :=

@@ -10,9 +10,9 @@ import Mathbin.RingTheory.AdjoinRoot
 # Splitting fields
 
 This file introduces the notion of a splitting field of a polynomial and provides an embedding from
-a splitting field to any field that splits the polynomial. A polynomial `f : polynomial K` splits
+a splitting field to any field that splits the polynomial. A polynomial `f : K[X]` splits
 over a field extension `L` of `K` if it is zero or all of its irreducible factors over `L` have
-degree `1`. A field extension of `K` of a polynomial `f : polynomial K` is called a splitting field
+degree `1`. A field extension of `K` of a polynomial `f : K[X]` is called a splitting field
 if it is the smallest field extension of `K` such that `f` splits.
 
 ## Main definitions
@@ -726,8 +726,8 @@ end SplittingField
 
 variable (K L) [Algebra K L]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Splits] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`Splits] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] [] -/
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
   Splits : Splits (algebraMap K L) f
@@ -858,7 +858,7 @@ namespace IntermediateField
 
 open Polynomial
 
-variable [Field K] [Field L] [Algebra K L] {p : Polynomial K}
+variable [Field K] [Field L] [Algebra K L] {p : K[X]}
 
 theorem splitsOfSplits {F : IntermediateField K L} (h : p.Splits (algebraMap K L)) (hF : ∀ x ∈ p.RootSet L, x ∈ F) :
     p.Splits (algebraMap K F) := by

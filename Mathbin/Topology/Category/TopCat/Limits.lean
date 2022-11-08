@@ -162,7 +162,7 @@ def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan �
   lift S := { toFun := fun s i => S.π.app ⟨i⟩ s }
   uniq' := by
     intro S m h
-    ext x i
+    ext (x i)
     simp [← h ⟨i⟩]
   fac' s j := by
     cases j
@@ -675,7 +675,139 @@ theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) 
 
 end Pullback
 
---TODO: Add analogous constructions for `coprod` and `pushout`.
+/-- The terminal object of `Top` is `punit`. -/
+def isTerminalPunit : IsTerminal (TopCat.of PUnit.{u + 1}) :=
+  haveI : ∀ X, Unique (X ⟶ TopCat.of PUnit.{u + 1}) := fun X =>
+    ⟨⟨⟨fun x => PUnit.unit, by continuity⟩⟩, fun f => by ext⟩
+  limits.is_terminal.of_unique _
+
+/-- The terminal object of `Top` is `punit`. -/
+def terminalIsoPunit : ⊤_ TopCat.{u} ≅ TopCat.of PUnit :=
+  terminalIsTerminal.uniqueUpToIso isTerminalPunit
+
+/-- The initial object of `Top` is `pempty`. -/
+def isInitialPempty : IsInitial (TopCat.of PEmpty.{u + 1}) :=
+  haveI : ∀ X, Unique (TopCat.of PEmpty.{u + 1} ⟶ X) := fun X =>
+    ⟨⟨⟨fun x => x.elim, by continuity⟩⟩, fun f => by ext ⟨⟩⟩
+  limits.is_initial.of_unique _
+
+/-- The initial object of `Top` is `pempty`. -/
+def initialIsoPempty : ⊥_ TopCat.{u} ≅ TopCat.of PEmpty :=
+  initialIsInitial.uniqueUpToIso isInitialPempty
+
+/-- The binary coproduct cofan in `Top`. -/
+protected def binaryCofan (X Y : TopCat.{u}) : BinaryCofan X Y :=
+  BinaryCofan.mk (⟨Sum.inl⟩ : X ⟶ TopCat.of (Sum X Y)) ⟨Sum.inr⟩
+
+/-- The constructed binary coproduct cofan in `Top` is the coproduct. -/
+def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y) := by
+  refine' limits.binary_cofan.is_colimit_mk (fun s => ⟨Sum.elim s.inl s.inr⟩) _ _ _
+  · intro s
+    ext
+    rfl
+    
+  · intro s
+    ext
+    rfl
+    
+  · intro s m h₁ h₂
+    ext (x | x)
+    exacts[(concrete_category.congr_hom h₁ x : _), (concrete_category.congr_hom h₂ x : _)]
+    
+
+theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
+    Nonempty (IsColimit c) ↔ OpenEmbedding c.inl ∧ OpenEmbedding c.inr ∧ IsCompl (Set.Range c.inl) (Set.Range c.inr) :=
+  by
+  classical
+  constructor
+  · rintro ⟨h⟩
+    rw [←
+      show _ = c.inl from h.comp_cocone_point_unique_up_to_iso_inv (binary_cofan_is_colimit X Y) ⟨walking_pair.left⟩, ←
+      show _ = c.inr from h.comp_cocone_point_unique_up_to_iso_inv (binary_cofan_is_colimit X Y) ⟨walking_pair.right⟩]
+    dsimp
+    refine'
+      ⟨(homeo_of_iso <| h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
+          open_embedding_inl,
+        (homeo_of_iso <| h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
+          open_embedding_inr,
+        _⟩
+    erw [Set.range_comp, ← eq_compl_iff_is_compl, Set.range_comp _ Sum.inr, ←
+      Set.image_compl_eq (homeo_of_iso <| h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.Bijective]
+    congr 1
+    exact set.compl_range_inr.symm
+    
+  · rintro ⟨h₁, h₂, h₃⟩
+    have : ∀ x, x ∈ Set.Range c.inl ∨ x ∈ Set.Range c.inr := by
+      rw [eq_compl_iff_is_compl.mpr h₃.symm]
+      exact fun _ => or_not
+    refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
+    · intro T f g
+      refine' ContinuousMap.mk _ _
+      · exact fun x =>
+          if h : x ∈ Set.Range c.inl then f ((Equiv.ofInjective _ h₁.inj).symm ⟨x, h⟩)
+          else g ((Equiv.ofInjective _ h₂.inj).symm ⟨x, (this x).resolve_left h⟩)
+        
+      rw [continuous_iff_continuous_at]
+      intro x
+      by_cases x ∈ Set.Range c.inl
+      · revert h x
+        apply (IsOpen.continuous_on_iff _).mp
+        · rw [continuous_on_iff_continuous_restrict]
+          convert_to Continuous (f ∘ (Homeomorph.ofEmbedding _ h₁.to_embedding).symm)
+          · ext ⟨x, hx⟩
+            exact dif_pos hx
+            
+          continuity
+          
+        · exact h₁.open_range
+          
+        
+      · revert h x
+        apply (IsOpen.continuous_on_iff _).mp
+        · rw [continuous_on_iff_continuous_restrict]
+          have : ∀ a, a ∉ Set.Range c.inl → a ∈ Set.Range c.inr := by
+            rintro a (h : a ∈ Set.Range c.inlᶜ)
+            rwa [eq_compl_iff_is_compl.mpr h₃.symm]
+          convert_to Continuous (g ∘ (Homeomorph.ofEmbedding _ h₂.to_embedding).symm ∘ Subtype.map _ this)
+          · ext ⟨x, hx⟩
+            exact dif_neg hx
+            
+          continuity
+          rw [embedding_subtype_coe.to_inducing.continuous_iff]
+          exact continuous_subtype_coe
+          
+        · change IsOpen (Set.Range c.inlᶜ)
+          rw [← eq_compl_iff_is_compl.mpr h₃.symm]
+          exact h₂.open_range
+          
+        
+      
+    · intro T f g
+      ext x
+      refine' (dif_pos _).trans _
+      · exact ⟨x, rfl⟩
+        
+      · rw [Equiv.of_injective_symm_apply]
+        
+      
+    · intro T f g
+      ext x
+      refine' (dif_neg _).trans _
+      · rintro ⟨y, e⟩
+        have : c.inr x ∈ Set.Range c.inl ⊓ Set.Range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
+        rwa [disjoint_iff.mp h₃.1] at this
+        
+      · exact congr_arg g (Equiv.of_injective_symm_apply _ _)
+        
+      
+    · rintro T _ _ m rfl rfl
+      ext x
+      change m x = dite _ _ _
+      split_ifs <;> exact congr_arg _ (Equiv.apply_of_injective_symm _ ⟨_, _⟩).symm
+      
+    
+
+--TODO: Add analogous constructions for `pushout`.
 theorem coinduced_of_is_colimit {F : J ⥤ TopCat.{max v u}} (c : Cocone F) (hc : IsColimit c) :
     c.x.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) := by
   let homeo := homeo_of_iso (hc.cocone_point_unique_up_to_iso (colimit_cocone_is_colimit F))

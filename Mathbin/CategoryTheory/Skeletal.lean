@@ -51,14 +51,13 @@ attribute [local instance] is_isomorphic_setoid
 variable {C D}
 
 /-- If `C` is thin and skeletal, then any naturally isomorphic functors to `C` are equal. -/
-theorem Functor.eq_of_iso {F₁ F₂ : D ⥤ C} [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : Skeletal C) (hF : F₁ ≅ F₂) :
-    F₁ = F₂ :=
+theorem Functor.eq_of_iso {F₁ F₂ : D ⥤ C} [Quiver.IsThin C] (hC : Skeletal C) (hF : F₁ ≅ F₂) : F₁ = F₂ :=
   Functor.ext (fun X => hC ⟨hF.app X⟩) fun _ _ _ => Subsingleton.elim _ _
 
 /-- If `C` is thin and skeletal, `D ⥤ C` is skeletal.
 `category_theory.functor_thin` shows it is thin also.
 -/
-theorem functor_skeletal [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : Skeletal C) : Skeletal (D ⥤ C) := fun F₁ F₂ h =>
+theorem functor_skeletal [Quiver.IsThin C] (hC : Skeletal C) : Skeletal (D ⥤ C) := fun F₁ F₂ h =>
   h.elim (Functor.eq_of_iso hC)
 
 variable (C D)
@@ -145,7 +144,7 @@ some of the statements can be shown without this assumption.
 namespace ThinSkeleton
 
 /-- The thin skeleton is thin. -/
-instance thin {X Y : ThinSkeleton C} : Subsingleton (X ⟶ Y) :=
+instance thin : Quiver.IsThin (ThinSkeleton C) := fun _ _ =>
   ⟨by
     rintro ⟨⟨f₁⟩⟩ ⟨⟨f₂⟩⟩
     rfl⟩
@@ -185,7 +184,7 @@ variable (C)
 
 section
 
-variable [∀ X Y : C, Subsingleton (X ⟶ Y)]
+variable [Quiver.IsThin C]
 
 instance to_thin_skeleton_faithful : Faithful (toThinSkeleton C) where
 
@@ -274,8 +273,7 @@ variable {C} {α : Type _} [PartialOrder α]
 /-- When `e : C ≌ α` is a categorical equivalence from a thin category `C` to some partial order `α`,
 the `thin_skeleton C` is order isomorphic to `α`.
 -/
-noncomputable def Equivalence.thinSkeletonOrderIso [∀ X Y : C, Subsingleton (X ⟶ Y)] (e : C ≌ α) :
-    ThinSkeleton C ≃o α :=
+noncomputable def Equivalence.thinSkeletonOrderIso [Quiver.IsThin C] (e : C ≌ α) : ThinSkeleton C ≃o α :=
   ((ThinSkeleton.equivalence C).trans e).toOrderIso
 
 end

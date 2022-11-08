@@ -266,7 +266,7 @@ theorem HasFtaylorSeriesUpToOn.hasFderivWithinAt (h : HasFtaylorSeriesUpToOn n f
   rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff']
   have : ((0 : ℕ) : ℕ∞) < n := lt_of_lt_of_le (WithTop.coe_lt_coe.2 Nat.zero_lt_one) hn
   convert h.fderiv_within _ this x hx
-  ext y v
+  ext (y v)
   change (p x 1) (snoc 0 y) = (p x 1) (cons y v)
   unfold_coes
   congr with i
@@ -356,7 +356,7 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
           (p x m.succ.succ).curryRight.curryLeft s x
       rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff']
       convert H.fderiv_within _ A x hx
-      ext y v
+      ext (y v)
       change (p x m.succ.succ) (snoc (cons y (init v)) (v (last _))) = (p x (Nat.succ (Nat.succ m))) (cons y v)
       rw [← cons_snoc_eq_snoc_cons, snoc_init_self]
       
@@ -386,7 +386,7 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
           Htaylor.fderiv_within _ A x hx
         rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff'] at this
         convert this
-        ext y v
+        ext (y v)
         change (p x (Nat.succ (Nat.succ m))) (cons y v) = (p x m.succ.succ) (snoc (cons y (init v)) (v (last _)))
         rw [← cons_snoc_eq_snoc_cons, snoc_init_self]
         
@@ -563,11 +563,11 @@ theorem cont_diff_within_at_succ_iff_has_fderiv_within_at {n : ℕ} :
         congr
         
       · convert (Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
-        · ext x y
+        · ext (x y)
           change p' x 0 (init (@snoc 0 (fun i : Fin 1 => E) 0 y)) y = p' x 0 0 y
           rw [init_snoc]
           
-        · ext x k v y
+        · ext (x k v y)
           change
             p' x k (init (@snoc k (fun i : Fin k.succ => E) v y)) (@snoc k (fun i : Fin k.succ => E) v y (last k)) =
               p' x k v y
@@ -737,6 +737,9 @@ theorem iterated_fderiv_within_zero_eq_comp :
     iteratedFderivWithin 𝕜 0 f s = (continuousMultilinearCurryFin0 𝕜 E F).symm ∘ f :=
   rfl
 
+theorem norm_iterated_fderiv_within_zero : ∥iteratedFderivWithin 𝕜 0 f s x∥ = ∥f x∥ := by
+  rw [iterated_fderiv_within_zero_eq_comp, LinearIsometryEquiv.norm_map]
+
 theorem iterated_fderiv_within_succ_apply_left {n : ℕ} (m : Fin (n + 1) → E) :
     (iteratedFderivWithin 𝕜 (n + 1) f s x : (Fin (n + 1) → E) → F) m =
       (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s x : E → E[×n]→L[𝕜] F) (m 0) (tail m) :=
@@ -749,6 +752,10 @@ theorem iterated_fderiv_within_succ_eq_comp_left {n : ℕ} :
       continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E) F ∘
         fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s :=
   rfl
+
+theorem norm_fderiv_within_iterated_fderiv_within {n : ℕ} :
+    ∥fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s x∥ = ∥iteratedFderivWithin 𝕜 (n + 1) f s x∥ := by
+  rw [iterated_fderiv_within_succ_eq_comp_left, LinearIsometryEquiv.norm_map]
 
 theorem iterated_fderiv_within_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) (m : Fin (n + 1) → E) :
     (iteratedFderivWithin 𝕜 (n + 1) f s x : (Fin (n + 1) → E) → F) m =
@@ -801,6 +808,10 @@ theorem iterated_fderiv_within_succ_eq_comp_right {n : ℕ} (hs : UniqueDiffOn �
   ext m
   rw [iterated_fderiv_within_succ_apply_right hs hx]
   rfl
+
+theorem norm_iterated_fderiv_within_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
+    ∥iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s x∥ = ∥iteratedFderivWithin 𝕜 (n + 1) f s x∥ := by
+  rw [iterated_fderiv_within_succ_eq_comp_right hs hx, LinearIsometryEquiv.norm_map]
 
 @[simp]
 theorem iterated_fderiv_within_one_apply (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) (m : Fin 1 → E) :
@@ -1380,8 +1391,11 @@ theorem iterated_fderiv_zero_eq_comp : iteratedFderiv 𝕜 0 f = (continuousMult
   rfl
 
 theorem norm_iterated_fderiv_zero : ∥iteratedFderiv 𝕜 0 f x∥ = ∥f x∥ := by
-  rw [← ContinuousMultilinearMap.fin0_apply_norm, iterated_fderiv_zero_apply]
-  exact Fin.elim0'
+  rw [iterated_fderiv_zero_eq_comp, LinearIsometryEquiv.norm_map]
+
+theorem iterated_fderiv_with_zero_eq : iteratedFderivWithin 𝕜 0 f s = iteratedFderiv 𝕜 0 f := by
+  ext
+  rfl
 
 theorem iterated_fderiv_succ_apply_left {n : ℕ} (m : Fin (n + 1) → E) :
     (iteratedFderiv 𝕜 (n + 1) f x : (Fin (n + 1) → E) → F) m =
@@ -1395,12 +1409,15 @@ theorem iterated_fderiv_succ_eq_comp_left {n : ℕ} :
       continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E) F ∘ fderiv 𝕜 (iteratedFderiv 𝕜 n f) :=
   rfl
 
+theorem norm_fderiv_iterated_fderiv {n : ℕ} : ∥fderiv 𝕜 (iteratedFderiv 𝕜 n f) x∥ = ∥iteratedFderiv 𝕜 (n + 1) f x∥ := by
+  rw [iterated_fderiv_succ_eq_comp_left, LinearIsometryEquiv.norm_map]
+
 theorem iterated_fderiv_within_univ {n : ℕ} : iteratedFderivWithin 𝕜 n f Univ = iteratedFderiv 𝕜 n f := by
   induction' n with n IH
   · ext x
     simp
     
-  · ext x m
+  · ext (x m)
     rw [iterated_fderiv_succ_apply_left, iterated_fderiv_within_succ_apply_left, IH, fderiv_within_univ]
     
 
@@ -1445,6 +1462,9 @@ theorem iterated_fderiv_succ_eq_comp_right {n : ℕ} :
   ext m
   rw [iterated_fderiv_succ_apply_right]
   rfl
+
+theorem norm_iterated_fderiv_fderiv {n : ℕ} : ∥iteratedFderiv 𝕜 n (fderiv 𝕜 f) x∥ = ∥iteratedFderiv 𝕜 (n + 1) f x∥ := by
+  rw [iterated_fderiv_succ_eq_comp_right, LinearIsometryEquiv.norm_map]
 
 @[simp]
 theorem iterated_fderiv_one_apply (m : Fin 1 → E) :
@@ -1498,7 +1518,7 @@ theorem cont_diff_one_iff_fderiv : ContDiff 𝕜 1 f ↔ Differentiable 𝕜 f �
 /-- A function is `C^∞` if and only if it is differentiable,
 and its derivative (formulated in terms of `fderiv`) is `C^∞`. -/
 theorem cont_diff_top_iff_fderiv : ContDiff 𝕜 ∞ f ↔ Differentiable 𝕜 f ∧ ContDiff 𝕜 ∞ fun y => fderiv 𝕜 f y := by
-  simp [cont_diff_on_univ.symm, differentiable_on_univ.symm, fderiv_within_univ.symm, -fderiv_within_univ]
+  simp only [← cont_diff_on_univ, ← differentiable_on_univ, ← fderiv_within_univ]
   rw [cont_diff_on_top_iff_fderiv_within uniqueDiffOnUniv]
 
 theorem ContDiff.continuous_fderiv (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) : Continuous fun x => fderiv 𝕜 f x :=
@@ -1507,12 +1527,11 @@ theorem ContDiff.continuous_fderiv (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) : Cont
 /-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
 continuous. -/
 theorem ContDiff.continuous_fderiv_apply (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) :
-    Continuous fun p : E × E => (fderiv 𝕜 f p.1 : E → F) p.2 := by
-  have A : Continuous fun q : (E →L[𝕜] F) × E => q.1 q.2 := is_bounded_bilinear_map_apply.continuous
-  have B : Continuous fun p : E × E => (fderiv 𝕜 f p.1, p.2) := by
-    apply Continuous.prod_mk _ continuous_snd
-    exact Continuous.comp (h.continuous_fderiv hn) continuous_fst
-  exact A.comp B
+    Continuous fun p : E × E => (fderiv 𝕜 f p.1 : E → F) p.2 :=
+  have A : Continuous fun q : (E →L[𝕜] F) × E => q.1 q.2 := isBoundedBilinearMapApply.Continuous
+  have B : Continuous fun p : E × E => (fderiv 𝕜 f p.1, p.2) :=
+    ((h.continuous_fderiv hn).comp continuous_fst).prod_mk continuous_snd
+  A.comp B
 
 /-! ### Constants -/
 
@@ -1523,7 +1542,7 @@ theorem iterated_fderiv_zero_fun {n : ℕ} : (iteratedFderiv 𝕜 n fun x : E =>
   · ext m
     simp
     
-  · ext x m
+  · ext (x m)
     rw [iterated_fderiv_succ_apply_left, IH]
     change (fderiv 𝕜 (fun x : E => (0 : E[×n]→L[𝕜] F)) x : E → E[×n]→L[𝕜] F) (m 0) (tail m) = _
     rw [fderiv_const]
@@ -1533,7 +1552,7 @@ theorem iterated_fderiv_zero_fun {n : ℕ} : (iteratedFderiv 𝕜 n fun x : E =>
 theorem contDiffZeroFun : ContDiff 𝕜 n fun x : E => (0 : F) := by
   apply contDiffOfDifferentiableIteratedFderiv fun m hm => _
   rw [iterated_fderiv_zero_fun]
-  apply differentiableConst (0 : E[×m]→L[𝕜] F)
+  exact differentiableConst (0 : E[×m]→L[𝕜] F)
 
 /-- Constants are `C^∞`.
 -/
@@ -1703,7 +1722,7 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
     convert
       (hA m).HasFderivAt.compHasFderivWithinAt x
         ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))
-    ext y v
+    ext (y v)
     change p (g x) (Nat.succ m) (g ∘ cons y v) = p (g x) m.succ (cons (g y) (g ∘ v))
     rw [comp_cons]
     
@@ -2138,20 +2157,13 @@ theorem contDiffProdAssocSymm : ContDiff 𝕜 ⊤ <| (Equiv.prodAssoc E F G).sym
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem contDiffOnFderivWithinApply {m n : WithTop ℕ} {s : Set E} {f : E → F} (hf : ContDiffOn 𝕜 n f s)
     (hs : UniqueDiffOn 𝕜 s) (hmn : m + 1 ≤ n) :
-    ContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E →L[𝕜] F) p.2) (s ×ˢ univ) := by
-  have A : ContDiff 𝕜 m fun p : (E →L[𝕜] F) × E => p.1 p.2 := by
-    apply IsBoundedBilinearMap.contDiff
-    exact isBoundedBilinearMapApply
-  have B : ContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.fst, p.snd)) (s ×ˢ univ) := by
-    apply ContDiffOn.prod _ _
-    · have I : ContDiffOn 𝕜 m (fun x : E => fderivWithin 𝕜 f s x) s := hf.fderiv_within hs hmn
-      have J : ContDiffOn 𝕜 m (fun x : E × E => x.1) (s ×ˢ univ) := cont_diff_fst.cont_diff_on
-      exact ContDiffOn.comp I J (prod_subset_preimage_fst _ _)
-      
-    · apply ContDiff.contDiffOn _
-      apply is_bounded_linear_map.snd.cont_diff
-      
-  exact A.comp_cont_diff_on B
+    ContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E →L[𝕜] F) p.2) (s ×ˢ univ) :=
+  have I : ContDiffOn 𝕜 m (fun x : E => fderivWithin 𝕜 f s x) s := hf.fderivWithin hs hmn
+  have J : ContDiffOn 𝕜 m (fun x : E × E => x.1) (s ×ˢ univ) := contDiffFst.ContDiffOn
+  have A : ContDiff 𝕜 m fun p : (E →L[𝕜] F) × E => p.1 p.2 := isBoundedBilinearMapApply.ContDiff
+  have B : ContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.fst, p.snd)) (s ×ˢ univ) :=
+    (I.comp J (prod_subset_preimage_fst _ _)).Prod IsBoundedLinearMap.snd.ContDiff.ContDiffOn
+  A.compContDiffOn B
 
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem ContDiff.contDiffFderivApply {f : E → F} (hf : ContDiff 𝕜 n f) (hmn : m + 1 ≤ n) :
@@ -2396,7 +2408,7 @@ theorem ContDiffOn.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {t : S
   ContDiffWithinAt.sum fun i hi => h i hi x hx
 
 theorem ContDiff.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} (h : ∀ i ∈ s, ContDiff 𝕜 n fun x => f i x) :
-    ContDiff 𝕜 n fun x => ∑ i in s, f i x := by simp [← cont_diff_on_univ] at * <;> exact ContDiffOn.sum h
+    ContDiff 𝕜 n fun x => ∑ i in s, f i x := by simp only [← cont_diff_on_univ] at * <;> exact ContDiffOn.sum h
 
 /-! ### Product of two functions -/
 
@@ -3069,9 +3081,7 @@ theorem cont_diff_on_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
   rw [cont_diff_on_succ_iff_deriv_within hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
-  apply cont_diff_on_congr
-  intro x hx
-  exact deriv_within_of_open hs hx
+  exact cont_diff_on_congr fun _ => deriv_within_of_open hs
 
 /-- A function is `C^∞` on a domain with unique derivatives if and only if it is differentiable
 there, and its derivative (formulated with `deriv_within`) is `C^∞`. -/
@@ -3098,9 +3108,7 @@ theorem cont_diff_on_top_iff_deriv_of_open (hs : IsOpen s₂) :
   rw [cont_diff_on_top_iff_deriv_within hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
-  apply cont_diff_on_congr
-  intro x hx
-  exact deriv_within_of_open hs hx
+  exact cont_diff_on_congr fun _ => deriv_within_of_open hs
 
 theorem ContDiffOn.derivWithin (hf : ContDiffOn 𝕜 n f₂ s₂) (hs : UniqueDiffOn 𝕜 s₂) (hmn : m + 1 ≤ n) :
     ContDiffOn 𝕜 m (derivWithin f₂ s₂) s₂ := by
@@ -3137,7 +3145,7 @@ theorem cont_diff_one_iff_deriv : ContDiff 𝕜 1 f₂ ↔ Differentiable 𝕜 f
 /-- A function is `C^∞` if and only if it is differentiable,
 and its derivative (formulated in terms of `deriv`) is `C^∞`. -/
 theorem cont_diff_top_iff_deriv : ContDiff 𝕜 ∞ f₂ ↔ Differentiable 𝕜 f₂ ∧ ContDiff 𝕜 ∞ (deriv f₂) := by
-  simp [cont_diff_on_univ.symm, differentiable_on_univ.symm, deriv_within_univ.symm, -deriv_within_univ]
+  simp only [← cont_diff_on_univ, ← differentiable_on_univ, ← deriv_within_univ]
   rw [cont_diff_on_top_iff_deriv_within uniqueDiffOnUniv]
 
 theorem ContDiff.continuous_deriv (h : ContDiff 𝕜 n f₂) (hn : 1 ≤ n) : Continuous (deriv f₂) :=

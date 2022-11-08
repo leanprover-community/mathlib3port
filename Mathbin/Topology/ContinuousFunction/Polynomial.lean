@@ -73,7 +73,7 @@ noncomputable section
 
 variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
-/-- The algebra map from `polynomial R` to continuous functions `C(R, R)`.
+/-- The algebra map from `R[X]` to continuous functions `C(R, R)`.
 -/
 @[simps]
 def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R) where
@@ -97,7 +97,7 @@ def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R) where
     ext
     simp [Algebra.algebra_map_eq_smul_one]
 
-/-- The algebra map from `polynomial R` to continuous functions `C(X, R)`, for any subset `X` of `R`.
+/-- The algebra map from `R[X]` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
 @[simps]
 def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R) where

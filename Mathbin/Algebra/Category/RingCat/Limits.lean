@@ -88,7 +88,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v} SemiRingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -195,7 +195,7 @@ def limitCone (F : J ⥤ CommSemiRingCat.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommSemiRingCat.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommSemiRingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -279,7 +279,7 @@ def limitCone (F : J ⥤ RingCat.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ RingCat.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -388,7 +388,7 @@ def limitCone (F : J ⥤ CommRingCat.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommRingCat.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
-/- ./././Mathport/Syntax/Translate/Command.lean:286:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
 /-- The category of commutative rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>

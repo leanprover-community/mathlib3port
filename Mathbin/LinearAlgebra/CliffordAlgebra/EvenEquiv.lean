@@ -235,7 +235,7 @@ theorem even_to_neg_ι (Q' : QuadraticForm R M) (h : Q' = -Q) (m₁ m₂ : M) :
 
 theorem even_to_neg_comp_even_to_neg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' : Q = -Q') :
     (evenToNeg Q' Q h').comp (evenToNeg Q Q' h) = AlgHom.id R _ := by
-  ext m₁ m₂ : 4
+  ext (m₁ m₂) : 4
   dsimp only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
     AlgHom.id_apply]
   rw [even_to_neg_ι, map_neg, even_to_neg_ι, neg_neg]

@@ -53,8 +53,8 @@ theorem embedding_of_subset_dist_le (a b : α) : dist (embeddingOfSubset x a) (e
   convert abs_dist_sub_le a b (x n) using 2
   ring
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
 theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
   refine' Isometry.ofDistEq fun a b => _
@@ -70,14 +70,17 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
       _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) := by
         simp [dist_comm]
         ring
-      _ ≤ 2 * dist a (x n) + abs (dist b (x n) - dist a (x n)) := by apply_rules [add_le_add_left, le_abs_self]
-      _ ≤ 2 * (e / 2) + abs (embedding_of_subset x b n - embedding_of_subset x a n) := by
+      _ ≤ 2 * dist a (x n) + |dist b (x n) - dist a (x n)| := by
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add_left, \",\", expr le_abs_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+      _ ≤ 2 * (e / 2) + |embedding_of_subset x b n - embedding_of_subset x a n| := by
         rw [C]
-        apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_refl]
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr hn.le, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
         norm_num
       _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) := by
         have :
-          abs (embedding_of_subset x b n - embedding_of_subset x a n) ≤
+          |embedding_of_subset x b n - embedding_of_subset x a n| ≤
             dist (embedding_of_subset x b) (embedding_of_subset x a) :=
           by
           simpa [dist_eq_norm] using

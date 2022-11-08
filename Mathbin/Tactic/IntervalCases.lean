@@ -7,6 +7,7 @@ import Mathbin.Tactic.FinCases
 import Mathbin.Data.Fin.Interval
 import Mathbin.Data.Int.Interval
 import Mathbin.Data.Pnat.Interval
+import Mathbin.Data.Pnat.Basic
 
 /-!
 # Case bash on variables in finite intervals

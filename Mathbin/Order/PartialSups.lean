@@ -128,10 +128,10 @@ submodules. -/
 theorem partialSupsDisjointOfDisjoint [DistribLattice α] [OrderBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f))
     {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) := by
   induction' m with m ih
-  · exact h 0 n hmn.ne
+  · exact h hmn.ne
     
   · rw [partial_sups_succ, disjoint_sup_left]
-    exact ⟨ih (Nat.lt_of_succ_lt hmn), h (m + 1) n hmn.ne⟩
+    exact ⟨ih (Nat.lt_of_succ_lt hmn), h hmn.ne⟩
     
 
 section CompleteLattice

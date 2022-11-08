@@ -106,7 +106,7 @@ instance hasNoAtomsVolume : HasNoAtoms (volume : Measure ℝ) :=
   ⟨fun x => volume_singleton⟩
 
 @[simp]
-theorem volume_interval {a b : ℝ} : volume (Interval a b) = ofReal (abs (b - a)) := by
+theorem volume_interval {a b : ℝ} : volume (Interval a b) = ofReal (|b - a|) := by
   rw [interval, volume_Icc, max_sub_min_eq_abs]
 
 @[simp]
@@ -235,8 +235,8 @@ instance isAddLeftInvariantRealVolume : IsAddLeftInvariant (volume : Measure ℝ
       Real.measure_ext_Ioo_rat fun p q => by
         simp [measure.map_apply (measurable_const_add a) measurableSetIoo, sub_sub_sub_cancel_right]⟩
 
-theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
-    Ennreal.ofReal (abs a) • Measure.map ((· * ·) a) volume = volume := by
+theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal (|a|) • Measure.map ((· * ·) a) volume = volume :=
+  by
   refine' (Real.measure_ext_Ioo_rat fun p q => _).symm
   cases' lt_or_gt_of_ne h with h h
   · simp only [Real.volume_Ioo, measure.smul_apply, ← Ennreal.of_real_mul (le_of_lt <| neg_pos.2 h),
@@ -248,8 +248,7 @@ theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
       mul_div_cancel' _ (ne_of_gt h), smul_eq_mul]
     
 
-theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) : Measure.map ((· * ·) a) volume = Ennreal.ofReal (abs a⁻¹) • volume :=
-  by
+theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) : Measure.map ((· * ·) a) volume = Ennreal.ofReal (|a⁻¹|) • volume := by
   conv_rhs =>
     rw [← Real.smul_map_volume_mul_left h, smul_smul, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel h,
       abs_one, Ennreal.of_real_one, one_smul]
@@ -265,10 +264,10 @@ theorem volume_preimage_mul_left {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
       rfl
     
 
-theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal (abs a) • Measure.map (· * a) volume = volume :=
-  by simpa only [mul_comm] using Real.smul_map_volume_mul_left h
+theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Ennreal.ofReal (|a|) • Measure.map (· * a) volume = volume := by
+  simpa only [mul_comm] using Real.smul_map_volume_mul_left h
 
-theorem map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Measure.map (· * a) volume = Ennreal.ofReal (abs a⁻¹) • volume := by
+theorem map_volume_mul_right {a : ℝ} (h : a ≠ 0) : Measure.map (· * a) volume = Ennreal.ofReal (|a⁻¹|) • volume := by
   simpa only [mul_comm] using Real.map_volume_mul_left h
 
 @[simp]
@@ -337,7 +336,7 @@ theorem volumePreservingTransvectionStruct [DecidableEq ι] (t : TransvectionStr
   let e : (ι → ℝ) ≃ᵐ (α → ℝ) × (β → ℝ) := MeasurableEquiv.piEquivPiSubtypeProd (fun i : ι => ℝ) p
   have : (t.to_matrix.to_lin' : (ι → ℝ) → ι → ℝ) = e.symm ∘ F ∘ e := by
     cases t
-    ext f k
+    ext (f k)
     simp only [LinearEquiv.map_smul, dite_eq_ite, LinearMap.id_coe, p, ite_not, Algebra.id.smul_eq_mul, one_mul,
       dot_product, std_basis_matrix, MeasurableEquiv.pi_equiv_pi_subtype_prod_symm_apply, id.def, transvection,
       Pi.add_apply, zero_mul, LinearMap.smul_apply, Function.comp_app, MeasurableEquiv.pi_equiv_pi_subtype_prod_apply,

@@ -47,7 +47,7 @@ theorem _root_.irreducible_iff_nat_prime (a : ℕ) : Irreducible a ↔ Nat.Prime
   Iff.rfl
 
 theorem not_prime_zero : ¬Prime 0
-  | h => h.ne_zero rfl
+  | h => h.NeZero rfl
 
 theorem not_prime_one : ¬Prime 1
   | h => h.ne_one rfl
@@ -56,7 +56,7 @@ theorem Prime.ne_zero {n : ℕ} (h : Prime n) : n ≠ 0 :=
   Irreducible.ne_zero h
 
 theorem Prime.pos {p : ℕ} (pp : Prime p) : 0 < p :=
-  Nat.pos_of_ne_zero pp.ne_zero
+  Nat.pos_of_ne_zero pp.NeZero
 
 theorem Prime.two_le : ∀ {p : ℕ}, Prime p → 2 ≤ p
   | 0, h => (not_prime_zero h).elim
@@ -80,7 +80,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   rintro rfl
   rw [hn, mul_one]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (m «expr ∣ » p) -/
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1
@@ -585,7 +585,7 @@ theorem Prime.not_dvd_mul {p m n : ℕ} (pp : Prime p) (Hm : ¬p ∣ m) (Hn : ¬
   mt pp.dvd_mul.1 <| by simp [Hm, Hn]
 
 theorem prime_iff {p : ℕ} : p.Prime ↔ Prime p :=
-  ⟨fun h => ⟨h.ne_zero, h.not_unit, fun a b => h.dvd_mul.mp⟩, Prime.irreducible⟩
+  ⟨fun h => ⟨h.NeZero, h.not_unit, fun a b => h.dvd_mul.mp⟩, Prime.irreducible⟩
 
 theorem irreducible_iff_prime {p : ℕ} : Irreducible p ↔ Prime p := by rw [← prime_iff, Prime]
 
@@ -944,7 +944,7 @@ unsafe def prove_non_prime (e : expr) (n d₁ : ℕ) : tactic expr := do
   let d₂ := n / d₁
   let e₂ := reflect d₂
   let (c, e', p) ← prove_mul_nat c e₁ e₂
-  guard (expr.alpha_eqv e' e)
+  guard (e' == e)
   let (c, p₂) ← prove_lt_nat c (quote.1 1) e₂
   return <| (quote.1 @Nat.not_prime_mul').mk_app [e₁, e₂, e, p, p₁, p₂]
 

@@ -77,7 +77,7 @@ variable [Archimedean K]
 
 open Nat
 
-theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, abs (v - (of v).convergents n) < ε := by
+theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convergents n| < ε := by
   intro ε ε_pos
   -- use the archimedean property to obtian a suitable N
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
@@ -94,7 +94,7 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, abs
     
   · let B := g.denominators n
     let nB := g.denominators (n + 1)
-    have abs_v_sub_conv_le : abs (v - g.convergents n) ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
+    have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
     suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_lt abs_v_sub_conv_le this
     -- show that `0 < (B * nB)` and then multiply by `B * nB` to get rid of the division

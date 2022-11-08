@@ -7,7 +7,7 @@ import Mathbin.Algebra.Group.Semiconj
 import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Finite.Basic
 
 /-!
 # Conjugacy of group elements
@@ -190,6 +190,9 @@ theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.
 instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
   Quotient.fintype (IsConj.setoid α)
 
+instance [Finite α] : Finite (ConjClasses α) :=
+  Quotient.finite _
+
 library_note "slow-failing instance priority"/--
 Certain instances trigger further searches when they are considered as candidate instances;
 these instances should be assigned a priority lower than the default of 1000 (for example, 900).
@@ -204,7 +207,7 @@ If those conditions hold, the instance `instT` should be assigned lower priority
 For example, suppose the search for an instance of `decidable_eq (multiset α)` tries the
 candidate instance `con.quotient.decidable_eq (c : con M) : decidable_eq c.quotient`.
 Since `multiset` and `con.quotient` are both quotient types, unification will check
-that the relations `list.perm` and `c.to_setoid.r` unify. However, `c.to_setoid` depends on 
+that the relations `list.perm` and `c.to_setoid.r` unify. However, `c.to_setoid` depends on
 a `has_mul M` instance, so this unification triggers a search for `has_mul (list α)`;
 this will traverse all subclasses of `has_mul` before failing.
 On the other hand, the search for an instance of `decidable_eq (con.quotient c)` for `c : con M`

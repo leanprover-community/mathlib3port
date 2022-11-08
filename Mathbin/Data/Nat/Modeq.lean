@@ -195,7 +195,7 @@ theorem gcd_eq_of_modeq {a b m : ℕ} (h : a ≡ b [MOD m]) : gcd a m = gcd b m 
     dvd_antisymm (dvd_gcd ((dvd_iff_of_modeq_of_dvd h h1).mp (gcd_dvd_left a m)) h1)
       (dvd_gcd ((dvd_iff_of_modeq_of_dvd h h2).mpr (gcd_dvd_left b m)) h2)
 
-theorem eq_of_modeq_of_abs_lt {a b m : ℕ} (h : a ≡ b [MOD m]) (h2 : abs ((b : ℤ) - a) < m) : a = b := by
+theorem eq_of_modeq_of_abs_lt {a b m : ℕ} (h : a ≡ b [MOD m]) (h2 : |(b : ℤ) - a| < m) : a = b := by
   apply Int.coe_nat_inj
   rw [eq_comm, ← sub_eq_zero]
   exact Int.eq_zero_of_abs_lt_dvd (modeq_iff_dvd.mp h) h2

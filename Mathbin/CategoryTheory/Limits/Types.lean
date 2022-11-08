@@ -44,7 +44,7 @@ def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F) where
   lift s v := ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
   uniq' := by
     intros
-    ext x j
+    ext (x j)
     exact congr_fun (w j) x
 
 /-- The category of types has all limits.
@@ -375,7 +375,7 @@ protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
         ⟩⟩
 
 protected theorem rel_eq_eqv_gen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) := by
-  ext ⟨j, x⟩ ⟨j', y⟩
+  ext (⟨j, x⟩⟨j', y⟩)
   constructor
   · apply eqv_gen_quot_rel_of_rel
     

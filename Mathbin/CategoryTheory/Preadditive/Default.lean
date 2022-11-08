@@ -93,12 +93,17 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
-instance InducedCategory.category : Preadditive.{v} (InducedCategory C F) where
+instance inducedCategory : Preadditive.{v} (InducedCategory C F) where
   homGroup P Q := @Preadditive.homGroup C _ _ (F P) (F Q)
   add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
   comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
 
 end InducedCategory
+
+instance fullSubcategory (Z : C → Prop) : Preadditive.{v} (FullSubcategory Z) where
+  homGroup P Q := @Preadditive.homGroup C _ _ P.obj Q.obj
+  add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
+  comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
 
 instance (X : C) : AddCommGroup (EndCat X) := by
   dsimp [End]

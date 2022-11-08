@@ -330,7 +330,6 @@ theorem ContinuousOn.aeMeasurable [TopologicalSpace α] [OpensMeasurableSpace α
   rw [piecewise_preimage, Set.Ite, hu]
   exact (u_open.measurable_set.inter hs).union ((measurableConst ht.measurable_set).diff hs)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 /-- A function which is continuous on a separable set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
 theorem ContinuousOn.aeStronglyMeasurableOfIsSeparable [TopologicalSpace α] [PseudoMetrizableSpace α]
@@ -338,25 +337,24 @@ theorem ContinuousOn.aeStronglyMeasurableOfIsSeparable [TopologicalSpace α] [Ps
     (hf : ContinuousOn f s) (hs : MeasurableSet s) (h's : TopologicalSpace.IsSeparable s) :
     AeStronglyMeasurable f (μ.restrict s) := by
   letI := pseudo_metrizable_space_pseudo_metric α
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   rw [ae_strongly_measurable_iff_ae_measurable_separable]
   refine' ⟨hf.ae_measurable hs, f '' s, hf.is_separable_image h's, _⟩
   exact mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]] -/
 /-- A function which is continuous on a set `s` is almost everywhere strongly measurable with
 respect to `μ.restrict s` when either the source space or the target space is second-countable. -/
 theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpace β]
     [h : SecondCountableTopologyEither α β] [OpensMeasurableSpace α] [PseudoMetrizableSpace β] {f : α → β} {s : Set α}
     {μ : Measure α} (hf : ContinuousOn f s) (hs : MeasurableSet s) : AeStronglyMeasurable f (μ.restrict s) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr β]]"
+  borelize β
   refine'
     ae_strongly_measurable_iff_ae_measurable_separable.2
       ⟨hf.ae_measurable hs, f '' s, _, mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩
   cases h.out
   · let f' : s → β := s.restrict f
     have A : Continuous f' := continuous_on_iff_continuous_restrict.1 hf
-    have B : IsSeparable (univ : Set s) := is_separable_of_separable_space _
+    have B : is_separable (univ : Set s) := is_separable_of_separable_space _
     convert is_separable.image B A using 1
     ext x
     simp

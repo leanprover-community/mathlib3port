@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 -/
 import Mathbin.Analysis.Asymptotics.Asymptotics
-import Mathbin.Analysis.NormedSpace.Ordered
+import Mathbin.Analysis.Normed.Order.Basic
 import Mathbin.Data.Polynomial.Eval
 import Mathbin.Topology.Algebra.Order.LiminfLimsup
 
@@ -26,7 +26,7 @@ These further equivalences are not proven in mathlib but would be good future pr
 
 The definition of superpolynomial decay for `f : α → β` is relative to a parameter `k : α → β`.
 Super-polynomial decay then means `f x` decays faster than `(k x) ^ c` for all integers `c`.
-Equivalently `f x` decays faster than `p.eval (k x)` for all polynomials `p : polynomial β`.
+Equivalently `f x` decays faster than `p.eval (k x)` for all polynomials `p : β[X]`.
 The definition is also relative to a filter `l : filter α` where the decay rate is compared.
 
 When the map `k` is given by `n ↦ ↑n : ℕ → ℝ` this defines negligible functions:
@@ -47,7 +47,7 @@ https://ncatlab.org/nlab/show/rapidly+decreasing+function
 
 namespace Asymptotics
 
-open TopologicalSpace
+open TopologicalSpace Polynomial
 
 open Filter
 
@@ -109,12 +109,12 @@ theorem SuperpolynomialDecay.mul_param_pow (hf : SuperpolynomialDecay l k f) (n 
   (hf.param_pow_mul n).congr fun _ => mul_comm _ _
 
 theorem SuperpolynomialDecay.polynomial_mul [HasContinuousAdd β] [HasContinuousMul β] (hf : SuperpolynomialDecay l k f)
-    (p : Polynomial β) : SuperpolynomialDecay l k fun x => (p.eval <| k x) * f x :=
+    (p : β[X]) : SuperpolynomialDecay l k fun x => (p.eval <| k x) * f x :=
   Polynomial.induction_on' p (fun p q hp hq => by simpa [add_mul] using hp.add hq) fun n c => by
     simpa [mul_assoc] using (hf.param_pow_mul n).const_mul c
 
 theorem SuperpolynomialDecay.mul_polynomial [HasContinuousAdd β] [HasContinuousMul β] (hf : SuperpolynomialDecay l k f)
-    (p : Polynomial β) : SuperpolynomialDecay l k fun x => f x * (p.eval <| k x) :=
+    (p : β[X]) : SuperpolynomialDecay l k fun x => f x * (p.eval <| k x) :=
   (hf.polynomial_mul p).congr fun _ => mul_comm _ _
 
 end CommSemiring
@@ -138,11 +138,11 @@ variable [TopologicalSpace β] [LinearOrderedCommRing β] [OrderTopology β]
 variable (l k f)
 
 theorem superpolynomial_decay_iff_abs_tendsto_zero :
-    SuperpolynomialDecay l k f ↔ ∀ n : ℕ, Tendsto (fun a : α => abs (k a ^ n * f a)) l (𝓝 0) :=
+    SuperpolynomialDecay l k f ↔ ∀ n : ℕ, Tendsto (fun a : α => |k a ^ n * f a|) l (𝓝 0) :=
   ⟨fun h z => (tendsto_zero_iff_abs_tendsto_zero _).1 (h z), fun h z => (tendsto_zero_iff_abs_tendsto_zero _).2 (h z)⟩
 
 theorem superpolynomial_decay_iff_superpolynomial_decay_abs :
-    SuperpolynomialDecay l k f ↔ SuperpolynomialDecay l (fun a => abs (k a)) fun a => abs (f a) :=
+    SuperpolynomialDecay l k f ↔ SuperpolynomialDecay l (fun a => |k a|) fun a => |f a| :=
   (superpolynomial_decay_iff_abs_tendsto_zero l k f).trans (by simp_rw [superpolynomial_decay, abs_mul, abs_pow])
 
 variable {l k f}
@@ -154,12 +154,12 @@ theorem SuperpolynomialDecay.trans_eventually_abs_le (hf : SuperpolynomialDecay 
     tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hf z) (eventually_of_forall fun x => abs_nonneg _)
       (hfg.mono fun x hx => _)
   calc
-    abs (k x ^ z * g x) = abs (k x ^ z) * abs (g x) := abs_mul (k x ^ z) (g x)
-    _ ≤ abs (k x ^ z) * abs (f x) := mul_le_mul le_rfl hx (abs_nonneg _) (abs_nonneg _)
-    _ = abs (k x ^ z * f x) := (abs_mul (k x ^ z) (f x)).symm
+    |k x ^ z * g x| = |k x ^ z| * |g x| := abs_mul (k x ^ z) (g x)
+    _ ≤ |k x ^ z| * |f x| := mul_le_mul le_rfl hx (abs_nonneg _) (abs_nonneg _)
+    _ = |k x ^ z * f x| := (abs_mul (k x ^ z) (f x)).symm
     
 
-theorem SuperpolynomialDecay.trans_abs_le (hf : SuperpolynomialDecay l k f) (hfg : ∀ x, abs (g x) ≤ abs (f x)) :
+theorem SuperpolynomialDecay.trans_abs_le (hf : SuperpolynomialDecay l k f) (hfg : ∀ x, |g x| ≤ |f x|) :
     SuperpolynomialDecay l k g :=
   hf.trans_eventually_abs_le (eventually_of_forall hfg)
 
@@ -188,13 +188,13 @@ variable [TopologicalSpace β] [LinearOrderedField β] [OrderTopology β]
 variable (f)
 
 theorem superpolynomial_decay_iff_abs_is_bounded_under (hk : Tendsto k l atTop) :
-    SuperpolynomialDecay l k f ↔ ∀ z : ℕ, IsBoundedUnder (· ≤ ·) l fun a : α => abs (k a ^ z * f a) := by
+    SuperpolynomialDecay l k f ↔ ∀ z : ℕ, IsBoundedUnder (· ≤ ·) l fun a : α => |k a ^ z * f a| := by
   refine'
     ⟨fun h z => tendsto.is_bounded_under_le (tendsto.abs (h z)), fun h =>
       (superpolynomial_decay_iff_abs_tendsto_zero l k f).2 fun z => _⟩
   obtain ⟨m, hm⟩ := h (z + 1)
   have h1 : tendsto (fun a : α => (0 : β)) l (𝓝 0) := tendsto_const_nhds
-  have h2 : tendsto (fun a : α => abs (k a)⁻¹ * m) l (𝓝 0) :=
+  have h2 : tendsto (fun a : α => |(k a)⁻¹| * m) l (𝓝 0) :=
     zero_mul m ▸ tendsto.mul_const m ((tendsto_zero_iff_abs_tendsto_zero _).1 hk.inv_tendsto_at_top)
   refine'
     tendsto_of_tendsto_of_tendsto_of_le_of_le' h1 h2 (eventually_of_forall fun x => abs_nonneg _)

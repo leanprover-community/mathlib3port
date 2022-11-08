@@ -13,7 +13,7 @@ import Mathbin.Data.Rat.Floor
 
 def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
   | Int.ofNat e => (a.shiftl e, b)
-  | -[1 + e] => (a, b.shiftl e.succ)
+  | -[e+1] => (a, b.shiftl e.succ)
 
 namespace Fp
 
@@ -109,7 +109,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fp.div_nat_lt_two_pow Fp.divNatLtTwoPowₓ'. -/
 def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
-  | -[1 + e] => n.shiftl e.succ < d
+  | -[e+1] => n.shiftl e.succ < d
 
 -- TODO(Mario): Prove these and drop 'meta'
 unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
@@ -151,7 +151,7 @@ unsafe def of_rat_up : ℚ → Float
   | ⟨Nat.succ n, d, h, _⟩ =>
     let (f, exact) := of_pos_rat_dn n.succPnat ⟨d, h⟩
     if exact then f else next_up f
-  | ⟨-[1 + n], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
+  | ⟨-[n+1], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
 
 unsafe def of_rat_dn (r : ℚ) : Float :=
   float.neg <| of_rat_up (-r)

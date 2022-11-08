@@ -43,7 +43,7 @@ def nerveFunctor : Cat ⥤ SSet where
   obj C := nerve C
   map C C' F := { app := fun Δ x => x ⋙ F }
   map_id' C := by
-    ext Δ x
+    ext (Δ x)
     apply functor.comp_id
 
 end CategoryTheory

@@ -106,7 +106,7 @@ open BigOperators
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option extends_priority -/
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 
@@ -265,8 +265,6 @@ which we set to priority 0 shortly. See `smul_def` below for the public version.
 private theorem smul_def'' (r : R) (x : A) : r • x = algebraMap R A r * x :=
   Algebra.smul_def' r x
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr P, "with", "@", "⟨", "⟨", ident P, "⟩", "⟩"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr Q, "with", "@", "⟨", "⟨", ident Q, "⟩", "⟩"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 -- We'll later use this to show `algebra ℤ M` is a subsingleton.
 /-- To prove two algebra structures on a fixed `[comm_semiring R] [semiring A]` agree,
 it suffices to check the `algebra_map`s agree.
@@ -280,10 +278,8 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
           haveI := Q
           algebraMap R A r) :
     P = Q := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr P, \"with\", \"@\", \"⟨\", \"⟨\", ident P, \"⟩\", \"⟩\"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rcases #[[expr Q, \"with\", \"@\", \"⟨\", \"⟨\", ident Q, \"⟩\", \"⟩\"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  rcases P with @⟨⟨P⟩⟩
+  rcases Q with @⟨⟨Q⟩⟩
   congr
   · funext r a
     replace w := congr_arg (fun s => s * a) (w r)
@@ -1833,6 +1829,10 @@ instance algebra {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebr
     smul_def' := fun a f => by
       ext
       simp [Algebra.smul_def] }
+
+theorem algebra_map_def {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] (a : R) :
+    algebraMap R (∀ i, f i) a = fun i => algebraMap R (f i) a :=
+  rfl
 
 @[simp]
 theorem algebra_map_apply {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] (a : R) (i : I) :

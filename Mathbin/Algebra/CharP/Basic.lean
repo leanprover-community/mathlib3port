@@ -20,7 +20,7 @@ universe u v
 
 variable (R : Type u)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -391,7 +391,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (d «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (d «expr ∣ » p) -/
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
   fun (d : ℕ) (hdvd : ∃ e, p = d * e) =>

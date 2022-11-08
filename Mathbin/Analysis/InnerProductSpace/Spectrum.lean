@@ -189,7 +189,7 @@ theorem has_eigenvector_eigenvector_basis (i : Fin n) :
   have key : has_eigenvector T μ v := by
     have H₁ : v ∈ eigenspace T μ :=
       hT.direct_sum_is_internal.subordinate_orthonormal_basis_subordinate hn i hT.orthogonal_family_eigenspaces'
-    have H₂ : v ≠ 0 := by simpa using (hT.eigenvector_basis hn).toBasis.ne_zero i
+    have H₂ : v ≠ 0 := by simpa using (hT.eigenvector_basis hn).toBasis.NeZero i
     exact ⟨H₁, H₂⟩
   have re_μ : ↑(IsROrC.re μ) = μ := by
     rw [← IsROrC.eq_conj_iff_re]

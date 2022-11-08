@@ -177,7 +177,6 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(witt_vector.frobenius_ring_hom(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroup V]
@@ -214,8 +213,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
     standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
   simp only [← mul_smul]
   congr 1
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(witt_vector.frobenius_ring_hom(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  linear_combination φ(p, k) c * hmb
 
 end WittVector
 

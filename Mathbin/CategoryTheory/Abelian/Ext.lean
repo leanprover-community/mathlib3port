@@ -36,7 +36,7 @@ variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C
 /-- `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
 -/
-@[simps]
+@[simps obj map]
 def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   Functor.flip
     { obj := fun Y => (((linearYoneda R C).obj Y).rightOp.leftDerived n).leftOp,

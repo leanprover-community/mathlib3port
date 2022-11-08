@@ -42,6 +42,24 @@ open Function OrderDual Set
 
 variable {F α β γ δ : Type _} {ι : Sort _} {κ : ι → Sort _}
 
+/- warning: Sup_hom clashes with sup_hom -> SupHom
+Case conversion may be inaccurate. Consider using '#align Sup_hom SupHomₓ'. -/
+#print SupHom /-
+/-- The type of `⨆`-preserving functions from `α` to `β`. -/
+structure SupHom (α β : Type _) [HasSup α] [HasSup β] where
+  toFun : α → β
+  map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
+-/
+
+/- warning: Inf_hom clashes with inf_hom -> InfHom
+Case conversion may be inaccurate. Consider using '#align Inf_hom InfHomₓ'. -/
+#print InfHom /-
+/-- The type of `⨅`-preserving functions from `α` to `β`. -/
+structure InfHom (α β : Type _) [HasInf α] [HasInf β] where
+  toFun : α → β
+  map_Inf' (s : Set α) : to_fun (inf s) = inf (to_fun '' s)
+-/
+
 /-- The type of frame homomorphisms from `α` to `β`. They preserve finite meets and arbitrary joins.
 -/
 structure FrameHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends InfTopHom α β where
@@ -52,6 +70,26 @@ structure CompleteLatticeHom (α β : Type _) [CompleteLattice α] [CompleteLatt
   map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
 
 section
+
+/- warning: Sup_hom_class clashes with sup_hom_class -> SupHomClass
+Case conversion may be inaccurate. Consider using '#align Sup_hom_class SupHomClassₓ'. -/
+#print SupHomClass /-
+/-- `Sup_hom_class F α β` states that `F` is a type of `⨆`-preserving morphisms.
+
+You should extend this class when you extend `Sup_hom`. -/
+class SupHomClass (F : Type _) (α β : outParam <| Type _) [HasSup α] [HasSup β] extends FunLike F α fun _ => β where
+  map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
+-/
+
+/- warning: Inf_hom_class clashes with inf_hom_class -> InfHomClass
+Case conversion may be inaccurate. Consider using '#align Inf_hom_class InfHomClassₓ'. -/
+#print InfHomClass /-
+/-- `Inf_hom_class F α β` states that `F` is a type of `⨅`-preserving morphisms.
+
+You should extend this class when you extend `Inf_hom`. -/
+class InfHomClass (F : Type _) (α β : outParam <| Type _) [HasInf α] [HasInf β] extends FunLike F α fun _ => β where
+  map_Inf (f : F) (s : Set α) : f (inf s) = inf (f '' s)
+-/
 
 /-- `frame_hom_class F α β` states that `F` is a type of frame morphisms. They preserve `⊓` and `⨆`.
 
@@ -123,8 +161,26 @@ instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [Com
     [CompleteLatticeHomClass F α β] : BoundedLatticeHomClass F α β :=
   { SupHomClass.toSupBotHomClass, InfHomClass.toInfTopHomClass with }
 
+/- warning: order_iso_class.to_Sup_hom_class clashes with order_iso_class.to_sup_hom_class -> OrderIsoClass.toSupHomClass
+Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Sup_hom_class OrderIsoClass.toSupHomClassₓ'. -/
+#print OrderIsoClass.toSupHomClass /-
 -- See note [lower instance priority]
+instance (priority := 100) OrderIsoClass.toSupHomClass [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
+    SupHomClass F α β :=
+  { show OrderHomClass F α β from inferInstance with
+    map_Sup := fun f s => eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff] }
+-/
+
+/- warning: order_iso_class.to_Inf_hom_class clashes with order_iso_class.to_inf_hom_class -> OrderIsoClass.toInfHomClass
+Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Inf_hom_class OrderIsoClass.toInfHomClassₓ'. -/
+#print OrderIsoClass.toInfHomClass /-
 -- See note [lower instance priority]
+instance (priority := 100) OrderIsoClass.toInfHomClass [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
+    InfHomClass F α β :=
+  { show OrderHomClass F α β from inferInstance with
+    map_Inf := fun f s => eq_of_forall_le_iff fun c => by simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff] }
+-/
+
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [OrderIsoClass F α β] : CompleteLatticeHomClass F α β :=
@@ -163,12 +219,125 @@ directly. -/
 instance : CoeFun (SupHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
+/- warning: Sup_hom.to_fun_eq_coe clashes with sup_hom.to_fun_eq_coe -> SupHom.to_fun_eq_coe
+Case conversion may be inaccurate. Consider using '#align Sup_hom.to_fun_eq_coe SupHom.to_fun_eq_coeₓ'. -/
+#print SupHom.to_fun_eq_coe /-
+@[simp]
+theorem to_fun_eq_coe {f : SupHom α β} : f.toFun = (f : α → β) :=
+  rfl
+-/
+
+/- warning: Sup_hom.ext clashes with sup_hom.ext -> SupHom.ext
+Case conversion may be inaccurate. Consider using '#align Sup_hom.ext SupHom.extₓ'. -/
+#print SupHom.ext /-
+@[ext]
+theorem ext {f g : SupHom α β} (h : ∀ a, f a = g a) : f = g :=
+  FunLike.ext f g h
+-/
+
+/- warning: Sup_hom.copy clashes with sup_hom.copy -> SupHom.copy
+Case conversion may be inaccurate. Consider using '#align Sup_hom.copy SupHom.copyₓ'. -/
+#print SupHom.copy /-
+/-- Copy of a `Sup_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
+equalities. -/
+protected def copy (f : SupHom α β) (f' : α → β) (h : f' = f) : SupHom α β where
+  toFun := f'
+  map_Sup' := h.symm ▸ f.map_Sup'
+-/
+
 variable (α)
+
+/- warning: Sup_hom.id clashes with sup_hom.id -> SupHom.id
+Case conversion may be inaccurate. Consider using '#align Sup_hom.id SupHom.idₓ'. -/
+#print SupHom.id /-
+/-- `id` as a `Sup_hom`. -/
+protected def id : SupHom α α :=
+  ⟨id, fun s => by rw [id, Set.image_id]⟩
+-/
 
 instance : Inhabited (SupHom α α) :=
   ⟨SupHom.id α⟩
 
+/- warning: Sup_hom.coe_id clashes with sup_hom.coe_id -> SupHom.coe_id
+Case conversion may be inaccurate. Consider using '#align Sup_hom.coe_id SupHom.coe_idₓ'. -/
+#print SupHom.coe_id /-
+@[simp]
+theorem coe_id : ⇑(SupHom.id α) = id :=
+  rfl
+-/
+
 variable {α}
+
+/- warning: Sup_hom.id_apply clashes with sup_hom.id_apply -> SupHom.id_apply
+Case conversion may be inaccurate. Consider using '#align Sup_hom.id_apply SupHom.id_applyₓ'. -/
+#print SupHom.id_apply /-
+@[simp]
+theorem id_apply (a : α) : SupHom.id α a = a :=
+  rfl
+-/
+
+/- warning: Sup_hom.comp clashes with sup_hom.comp -> SupHom.comp
+Case conversion may be inaccurate. Consider using '#align Sup_hom.comp SupHom.compₓ'. -/
+#print SupHom.comp /-
+/-- Composition of `Sup_hom`s as a `Sup_hom`. -/
+def comp (f : SupHom β γ) (g : SupHom α β) : SupHom α γ where
+  toFun := f ∘ g
+  map_Sup' s := by rw [comp_apply, map_Sup, map_Sup, Set.image_image]
+-/
+
+/- warning: Sup_hom.coe_comp clashes with sup_hom.coe_comp -> SupHom.coe_comp
+Case conversion may be inaccurate. Consider using '#align Sup_hom.coe_comp SupHom.coe_compₓ'. -/
+#print SupHom.coe_comp /-
+@[simp]
+theorem coe_comp (f : SupHom β γ) (g : SupHom α β) : ⇑(f.comp g) = f ∘ g :=
+  rfl
+-/
+
+/- warning: Sup_hom.comp_apply clashes with sup_hom.comp_apply -> SupHom.comp_apply
+Case conversion may be inaccurate. Consider using '#align Sup_hom.comp_apply SupHom.comp_applyₓ'. -/
+#print SupHom.comp_apply /-
+@[simp]
+theorem comp_apply (f : SupHom β γ) (g : SupHom α β) (a : α) : (f.comp g) a = f (g a) :=
+  rfl
+-/
+
+/- warning: Sup_hom.comp_assoc clashes with sup_hom.comp_assoc -> SupHom.comp_assoc
+Case conversion may be inaccurate. Consider using '#align Sup_hom.comp_assoc SupHom.comp_assocₓ'. -/
+#print SupHom.comp_assoc /-
+@[simp]
+theorem comp_assoc (f : SupHom γ δ) (g : SupHom β γ) (h : SupHom α β) : (f.comp g).comp h = f.comp (g.comp h) :=
+  rfl
+-/
+
+/- warning: Sup_hom.comp_id clashes with sup_hom.comp_id -> SupHom.comp_id
+Case conversion may be inaccurate. Consider using '#align Sup_hom.comp_id SupHom.comp_idₓ'. -/
+#print SupHom.comp_id /-
+@[simp]
+theorem comp_id (f : SupHom α β) : f.comp (SupHom.id α) = f :=
+  ext fun a => rfl
+-/
+
+/- warning: Sup_hom.id_comp clashes with sup_hom.id_comp -> SupHom.id_comp
+Case conversion may be inaccurate. Consider using '#align Sup_hom.id_comp SupHom.id_compₓ'. -/
+#print SupHom.id_comp /-
+@[simp]
+theorem id_comp (f : SupHom α β) : (SupHom.id β).comp f = f :=
+  ext fun a => rfl
+-/
+
+/- warning: Sup_hom.cancel_right clashes with sup_hom.cancel_right -> SupHom.cancel_right
+Case conversion may be inaccurate. Consider using '#align Sup_hom.cancel_right SupHom.cancel_rightₓ'. -/
+#print SupHom.cancel_right /-
+theorem cancel_right {g₁ g₂ : SupHom β γ} {f : SupHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+-/
+
+/- warning: Sup_hom.cancel_left clashes with sup_hom.cancel_left -> SupHom.cancel_left
+Case conversion may be inaccurate. Consider using '#align Sup_hom.cancel_left SupHom.cancel_leftₓ'. -/
+#print SupHom.cancel_left /-
+theorem cancel_left {g : SupHom β γ} {f₁ f₂ : SupHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+-/
 
 end HasSup
 
@@ -187,6 +356,22 @@ instance : HasBot (SupHom α β) :=
 
 instance : OrderBot (SupHom α β) :=
   ⟨⊥, fun f a => bot_le⟩
+
+/- warning: Sup_hom.coe_bot clashes with sup_hom.coe_bot -> SupHom.coe_bot
+Case conversion may be inaccurate. Consider using '#align Sup_hom.coe_bot SupHom.coe_botₓ'. -/
+#print SupHom.coe_bot /-
+@[simp]
+theorem coe_bot : ⇑(⊥ : SupHom α β) = ⊥ :=
+  rfl
+-/
+
+/- warning: Sup_hom.bot_apply clashes with sup_hom.bot_apply -> SupHom.bot_apply
+Case conversion may be inaccurate. Consider using '#align Sup_hom.bot_apply SupHom.bot_applyₓ'. -/
+#print SupHom.bot_apply /-
+@[simp]
+theorem bot_apply (a : α) : (⊥ : SupHom α β) a = ⊥ :=
+  rfl
+-/
 
 end SupHom
 
@@ -211,12 +396,125 @@ directly. -/
 instance : CoeFun (InfHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
+/- warning: Inf_hom.to_fun_eq_coe clashes with inf_hom.to_fun_eq_coe -> InfHom.to_fun_eq_coe
+Case conversion may be inaccurate. Consider using '#align Inf_hom.to_fun_eq_coe InfHom.to_fun_eq_coeₓ'. -/
+#print InfHom.to_fun_eq_coe /-
+@[simp]
+theorem to_fun_eq_coe {f : InfHom α β} : f.toFun = (f : α → β) :=
+  rfl
+-/
+
+/- warning: Inf_hom.ext clashes with inf_hom.ext -> InfHom.ext
+Case conversion may be inaccurate. Consider using '#align Inf_hom.ext InfHom.extₓ'. -/
+#print InfHom.ext /-
+@[ext]
+theorem ext {f g : InfHom α β} (h : ∀ a, f a = g a) : f = g :=
+  FunLike.ext f g h
+-/
+
+/- warning: Inf_hom.copy clashes with inf_hom.copy -> InfHom.copy
+Case conversion may be inaccurate. Consider using '#align Inf_hom.copy InfHom.copyₓ'. -/
+#print InfHom.copy /-
+/-- Copy of a `Inf_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
+equalities. -/
+protected def copy (f : InfHom α β) (f' : α → β) (h : f' = f) : InfHom α β where
+  toFun := f'
+  map_Inf' := h.symm ▸ f.map_Inf'
+-/
+
 variable (α)
+
+/- warning: Inf_hom.id clashes with inf_hom.id -> InfHom.id
+Case conversion may be inaccurate. Consider using '#align Inf_hom.id InfHom.idₓ'. -/
+#print InfHom.id /-
+/-- `id` as an `Inf_hom`. -/
+protected def id : InfHom α α :=
+  ⟨id, fun s => by rw [id, Set.image_id]⟩
+-/
 
 instance : Inhabited (InfHom α α) :=
   ⟨InfHom.id α⟩
 
+/- warning: Inf_hom.coe_id clashes with inf_hom.coe_id -> InfHom.coe_id
+Case conversion may be inaccurate. Consider using '#align Inf_hom.coe_id InfHom.coe_idₓ'. -/
+#print InfHom.coe_id /-
+@[simp]
+theorem coe_id : ⇑(InfHom.id α) = id :=
+  rfl
+-/
+
 variable {α}
+
+/- warning: Inf_hom.id_apply clashes with inf_hom.id_apply -> InfHom.id_apply
+Case conversion may be inaccurate. Consider using '#align Inf_hom.id_apply InfHom.id_applyₓ'. -/
+#print InfHom.id_apply /-
+@[simp]
+theorem id_apply (a : α) : InfHom.id α a = a :=
+  rfl
+-/
+
+/- warning: Inf_hom.comp clashes with inf_hom.comp -> InfHom.comp
+Case conversion may be inaccurate. Consider using '#align Inf_hom.comp InfHom.compₓ'. -/
+#print InfHom.comp /-
+/-- Composition of `Inf_hom`s as a `Inf_hom`. -/
+def comp (f : InfHom β γ) (g : InfHom α β) : InfHom α γ where
+  toFun := f ∘ g
+  map_Inf' s := by rw [comp_apply, map_Inf, map_Inf, Set.image_image]
+-/
+
+/- warning: Inf_hom.coe_comp clashes with inf_hom.coe_comp -> InfHom.coe_comp
+Case conversion may be inaccurate. Consider using '#align Inf_hom.coe_comp InfHom.coe_compₓ'. -/
+#print InfHom.coe_comp /-
+@[simp]
+theorem coe_comp (f : InfHom β γ) (g : InfHom α β) : ⇑(f.comp g) = f ∘ g :=
+  rfl
+-/
+
+/- warning: Inf_hom.comp_apply clashes with inf_hom.comp_apply -> InfHom.comp_apply
+Case conversion may be inaccurate. Consider using '#align Inf_hom.comp_apply InfHom.comp_applyₓ'. -/
+#print InfHom.comp_apply /-
+@[simp]
+theorem comp_apply (f : InfHom β γ) (g : InfHom α β) (a : α) : (f.comp g) a = f (g a) :=
+  rfl
+-/
+
+/- warning: Inf_hom.comp_assoc clashes with inf_hom.comp_assoc -> InfHom.comp_assoc
+Case conversion may be inaccurate. Consider using '#align Inf_hom.comp_assoc InfHom.comp_assocₓ'. -/
+#print InfHom.comp_assoc /-
+@[simp]
+theorem comp_assoc (f : InfHom γ δ) (g : InfHom β γ) (h : InfHom α β) : (f.comp g).comp h = f.comp (g.comp h) :=
+  rfl
+-/
+
+/- warning: Inf_hom.comp_id clashes with inf_hom.comp_id -> InfHom.comp_id
+Case conversion may be inaccurate. Consider using '#align Inf_hom.comp_id InfHom.comp_idₓ'. -/
+#print InfHom.comp_id /-
+@[simp]
+theorem comp_id (f : InfHom α β) : f.comp (InfHom.id α) = f :=
+  ext fun a => rfl
+-/
+
+/- warning: Inf_hom.id_comp clashes with inf_hom.id_comp -> InfHom.id_comp
+Case conversion may be inaccurate. Consider using '#align Inf_hom.id_comp InfHom.id_compₓ'. -/
+#print InfHom.id_comp /-
+@[simp]
+theorem id_comp (f : InfHom α β) : (InfHom.id β).comp f = f :=
+  ext fun a => rfl
+-/
+
+/- warning: Inf_hom.cancel_right clashes with inf_hom.cancel_right -> InfHom.cancel_right
+Case conversion may be inaccurate. Consider using '#align Inf_hom.cancel_right InfHom.cancel_rightₓ'. -/
+#print InfHom.cancel_right /-
+theorem cancel_right {g₁ g₂ : InfHom β γ} {f : InfHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+-/
+
+/- warning: Inf_hom.cancel_left clashes with inf_hom.cancel_left -> InfHom.cancel_left
+Case conversion may be inaccurate. Consider using '#align Inf_hom.cancel_left InfHom.cancel_leftₓ'. -/
+#print InfHom.cancel_left /-
+theorem cancel_left {g : InfHom β γ} {f₁ f₂ : InfHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+-/
 
 end HasInf
 
@@ -235,6 +533,22 @@ instance : HasTop (InfHom α β) :=
 
 instance : OrderTop (InfHom α β) :=
   ⟨⊤, fun f a => le_top⟩
+
+/- warning: Inf_hom.coe_top clashes with inf_hom.coe_top -> InfHom.coe_top
+Case conversion may be inaccurate. Consider using '#align Inf_hom.coe_top InfHom.coe_topₓ'. -/
+#print InfHom.coe_top /-
+@[simp]
+theorem coe_top : ⇑(⊤ : InfHom α β) = ⊤ :=
+  rfl
+-/
+
+/- warning: Inf_hom.top_apply clashes with inf_hom.top_apply -> InfHom.top_apply
+Case conversion may be inaccurate. Consider using '#align Inf_hom.top_apply InfHom.top_applyₓ'. -/
+#print InfHom.top_apply /-
+@[simp]
+theorem top_apply (a : α) : (⊤ : InfHom α β) a = ⊤ :=
+  rfl
+-/
 
 end InfHom
 
@@ -431,6 +745,18 @@ namespace SupHom
 
 variable [HasSup α] [HasSup β] [HasSup γ]
 
+/- warning: Sup_hom.dual clashes with sup_hom.dual -> SupHom.dual
+Case conversion may be inaccurate. Consider using '#align Sup_hom.dual SupHom.dualₓ'. -/
+#print SupHom.dual /-
+/-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
+@[simps]
+protected def dual : SupHom α β ≃ InfHom αᵒᵈ βᵒᵈ where
+  toFun f := ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
+  invFun f := ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
+  left_inv f := SupHom.ext fun a => rfl
+  right_inv f := InfHom.ext fun a => rfl
+-/
+
 /- warning: Sup_hom.dual_id clashes with sup_hom.dual_id -> SupHom.dual_id
 warning: Sup_hom.dual_id -> SupHom.dual_id is a dubious translation:
 lean 3 declaration is
@@ -481,6 +807,18 @@ end SupHom
 namespace InfHom
 
 variable [HasInf α] [HasInf β] [HasInf γ]
+
+/- warning: Inf_hom.dual clashes with inf_hom.dual -> InfHom.dual
+Case conversion may be inaccurate. Consider using '#align Inf_hom.dual InfHom.dualₓ'. -/
+#print InfHom.dual /-
+/-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
+@[simps]
+protected def dual : InfHom α β ≃ SupHom αᵒᵈ βᵒᵈ where
+  toFun f := { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_arg toDual (map_Inf f _) }
+  invFun f := { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_arg ofDual (map_Sup f _) }
+  left_inv f := InfHom.ext fun a => rfl
+  right_inv f := SupHom.ext fun a => rfl
+-/
 
 /- warning: Inf_hom.dual_id clashes with inf_hom.dual_id -> InfHom.dual_id
 warning: Inf_hom.dual_id -> InfHom.dual_id is a dubious translation:

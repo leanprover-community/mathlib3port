@@ -42,7 +42,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
 open nonZeroDivisors Polynomial
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ring.DimensionLeOne : Prop :=
   ∀ (p) (_ : p ≠ (⊥ : Ideal R)), p.IsPrime → p.IsMaximal

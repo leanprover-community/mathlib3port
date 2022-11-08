@@ -85,7 +85,7 @@ def μ (α β : Type u) : (free R).obj α ⊗ (free R).obj β ≅ (free R).obj (
 theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
     ((free R).map f ⊗ (free R).map g) ≫ (μ R Y Y').Hom = (μ R X X').Hom ≫ (free R).map (f ⊗ g) := by
   intros
-  ext x x' ⟨y, y'⟩
+  ext (x x'⟨y, y'⟩)
   dsimp [μ]
   simp_rw [Finsupp.map_domain_single, finsupp_tensor_finsupp'_single_tmul_single, mul_one, Finsupp.map_domain_single,
     CategoryTheory.tensor_apply]
@@ -143,7 +143,7 @@ instance : IsIso (LaxMonoidal.ε (free R).obj) :=
       ⟨by
         ext
         simp, by
-        ext ⟨⟩ ⟨⟩
+        ext (⟨⟩⟨⟩)
         simp⟩⟩⟩
 
 end Free
@@ -220,7 +220,7 @@ instance : Preadditive (FreeCat R C) where
     dsimp
     rw [← Finsupp.sum_add]
     congr
-    ext r h
+    ext (r h)
     rw [Finsupp.sum_add_index] <;>
       · simp [mul_add]
         
@@ -234,7 +234,7 @@ instance : Linear R (FreeCat R C) where
     dsimp
     simp_rw [Finsupp.smul_sum]
     congr
-    ext h s
+    ext (h s)
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_left_comm]
 
 theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :

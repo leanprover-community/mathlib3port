@@ -166,12 +166,12 @@ theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) : Liftp' 
   by
   dsimp only [liftp, liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
-  · ext i ⟨x, _⟩
+  · ext (i⟨x, _⟩)
     cases i <;> rfl
     
   · intros
     rw [Mvfunctor.map_map, (· ⊚ ·)]
-    congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
+    congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
     
 
 open Function
@@ -198,12 +198,12 @@ private def g :
 theorem liftr_last_rel_iff (x y : F (α ::: β)) : Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
-  · ext i ⟨x, _⟩ : 2
+  · ext (i⟨x, _⟩) : 2
     cases i <;> rfl
     
   · intros
     rw [Mvfunctor.map_map, Mvfunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
-    congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
+    congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
     
 
 end LiftpLastPredIff

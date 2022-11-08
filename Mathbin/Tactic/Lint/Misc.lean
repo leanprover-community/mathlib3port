@@ -36,7 +36,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.
@@ -377,7 +377,7 @@ with rfl when elaboration results in a different term than the user intended.
 unsafe def syn_taut (d : declaration) : tactic (Option String) :=
   (do
       let (el, er) ← d.type.pi_codomain.is_eq
-      guardb (expr.alpha_eqv el er)
+      guardb (el == er)
       return <| some "LHS equals RHS syntactically") <|>
     return none
 

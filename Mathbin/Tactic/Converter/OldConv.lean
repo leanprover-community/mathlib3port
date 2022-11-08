@@ -140,7 +140,7 @@ unsafe def repeat : old_conv Unit → old_conv Unit
   | c, r, lhs =>
     (do
         let ⟨_, rhs₁, pr₁⟩ ← c r lhs
-        guard ¬expr.alpha_eqv lhs rhs₁
+        guard ¬lhs == rhs₁
         let ⟨_, rhs₂, pr₂⟩ ← repeat c r rhs₁
         let pr ← join_proofs r pr₁ pr₂
         return ⟨(), rhs₂, pr⟩) <|>

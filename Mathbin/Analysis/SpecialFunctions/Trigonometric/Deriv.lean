@@ -568,8 +568,7 @@ theorem sinh_neg_iff : sinh x < 0 ↔ x < 0 := by simpa only [sinh_zero] using @
 @[simp]
 theorem sinh_nonneg_iff : 0 ≤ sinh x ↔ 0 ≤ x := by simpa only [sinh_zero] using @sinh_le_sinh 0 x
 
-theorem abs_sinh (x : ℝ) : abs (sinh x) = sinh (abs x) := by
-  cases le_total x 0 <;> simp [abs_of_nonneg, abs_of_nonpos, *]
+theorem abs_sinh (x : ℝ) : |sinh x| = sinh (|x|) := by cases le_total x 0 <;> simp [abs_of_nonneg, abs_of_nonpos, *]
 
 theorem cosh_strict_mono_on : StrictMonoOn cosh (IciCat 0) :=
   ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx => by
@@ -577,11 +576,11 @@ theorem cosh_strict_mono_on : StrictMonoOn cosh (IciCat 0) :=
     rwa [deriv_cosh, sinh_pos_iff]
 
 @[simp]
-theorem cosh_le_cosh : cosh x ≤ cosh y ↔ abs x ≤ abs y :=
+theorem cosh_le_cosh : cosh x ≤ cosh y ↔ |x| ≤ |y| :=
   cosh_abs x ▸ cosh_abs y ▸ cosh_strict_mono_on.le_iff_le (abs_nonneg x) (abs_nonneg y)
 
 @[simp]
-theorem cosh_lt_cosh : cosh x < cosh y ↔ abs x < abs y :=
+theorem cosh_lt_cosh : cosh x < cosh y ↔ |x| < |y| :=
   lt_iff_lt_of_le_iff_le cosh_le_cosh
 
 @[simp]

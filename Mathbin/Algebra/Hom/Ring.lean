@@ -7,6 +7,7 @@ import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Divisibility
 import Mathbin.Data.Pi.Algebra
 import Mathbin.Algebra.Hom.Units
+import Mathbin.Data.Set.Basic
 
 /-!
 # Homomorphisms of semirings and rings

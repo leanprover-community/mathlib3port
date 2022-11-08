@@ -1012,11 +1012,11 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     exact Classical.choose_spec this
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk({t : set «expr ⊕ »(ulift[ulift].{u} exprℕ(), α) // «expr ≤ »(cardinal.mk(t), c)})]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk({t : set «expr ⊕ »(ulift[ulift].{u} exprℕ(), α) // «expr ≤ »(cardinal.mk(t), c)})]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem mk_bounded_set_le (α : Type u) (c : Cardinal) : (#{ t : Set α // (#t) ≤ c }) ≤ max (#α) ℵ₀ ^ c := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk({t : set «expr ⊕ »(ulift[ulift].{u} exprℕ(), α) // «expr ≤ »(cardinal.mk(t), c)})]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk({t : set «expr ⊕ »(ulift[ulift].{u} exprℕ(), α) // «expr ≤ »(cardinal.mk(t), c)})]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · refine' ⟨embedding.subtype_map _ _⟩
     apply embedding.image
     use Sum.inr

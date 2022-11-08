@@ -138,7 +138,7 @@ theorem le_map_add_map_div' : f x ≤ f y + f (y / x) := by
   simpa only [add_comm, map_div_rev, div_mul_cancel'] using map_mul_le_add f (x / y) y
 
 @[to_additive]
-theorem abs_sub_map_le_div : abs (f x - f y) ≤ f (x / y) := by
+theorem abs_sub_map_le_div : |f x - f y| ≤ f (x / y) := by
   rw [abs_sub_le_iff, sub_le_iff_le_add', sub_le_iff_le_add']
   exact ⟨le_map_add_map_div _ _ _, le_map_add_map_div' _ _ _⟩
 
@@ -337,24 +337,20 @@ variable [CommGroup E] [CommGroup F] (p q : GroupSeminorm E) (x y : E)
 @[to_additive]
 theorem comp_mul_le (f g : F →* E) : p.comp (f * g) ≤ p.comp f + p.comp g := fun _ => map_mul_le_add p _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 @[to_additive]
 theorem mul_bdd_below_range_add {p q : GroupSeminorm E} {x : E} : BddBelow (range fun y => p y + q (x / y)) :=
   ⟨0, by
     rintro _ ⟨x, rfl⟩
     dsimp
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"⟩
+    positivity⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 @[to_additive]
 noncomputable instance : HasInf (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := fun x => ⨅ y, p y + q (x / y),
       map_one' :=
-        cinfi_eq_of_forall_ge_of_forall_gt_exists_lt
-          (fun x => by
-            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
-          fun r hr => ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zero]⟩,
+        cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => by positivity) fun r hr =>
+          ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zero]⟩,
       mul_le' := fun x y =>
         le_cinfi_add_cinfi fun u v => by
           refine' cinfi_le_of_le mul_bdd_below_range_add (u * v) _

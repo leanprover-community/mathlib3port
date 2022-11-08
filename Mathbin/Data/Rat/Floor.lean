@@ -26,9 +26,11 @@ namespace Rat
 
 variable {α : Type _} [LinearOrderedField α] [FloorRing α]
 
+#print Rat.floor /-
 /-- `floor q` is the largest integer `z` such that `z ≤ q` -/
 protected def floor : ℚ → ℤ
   | ⟨n, d, h, c⟩ => n / d
+-/
 
 protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
   | ⟨n, d, h, c⟩ => by

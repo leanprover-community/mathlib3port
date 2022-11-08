@@ -23,10 +23,12 @@ variable {α : Type _} {β : Type _}
 
 open Classical
 
+#print Nontrivial /-
 /-- Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
 this is equivalent to `0 ≠ 1`. In vector spaces, this is equivalent to positive dimension. -/
 class Nontrivial (α : Type _) : Prop where
   exists_pair_ne : ∃ x y : α, x ≠ y
+-/
 
 theorem nontrivial_iff : Nontrivial α ↔ ∃ x y : α, x ≠ y :=
   ⟨fun h => h.exists_pair_ne, fun h => ⟨h⟩⟩
@@ -311,7 +313,7 @@ end Tactic.Interactive
 namespace Bool
 
 instance : Nontrivial Bool :=
-  ⟨⟨true, false, tt_eq_ff_eq_false⟩⟩
+  ⟨⟨true, false, Bool.true_eq_false_eq_False⟩⟩
 
 end Bool
 

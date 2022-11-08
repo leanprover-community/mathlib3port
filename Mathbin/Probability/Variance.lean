@@ -262,7 +262,7 @@ theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ
 
 /-- *Chebyshev's inequality* for `ℝ≥0∞`-valued variance. -/
 theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable X ℙ) {c : ℝ≥0} (hc : c ≠ 0) :
-    ℙ { ω | ↑c ≤ abs (X ω - 𝔼[X]) } ≤ eVar[X] / c ^ 2 := by
+    ℙ { ω | ↑c ≤ |X ω - 𝔼[X]| } ≤ eVar[X] / c ^ 2 := by
   have A : (c : ℝ≥0∞) ≠ 0 := by rwa [Ne.def, Ennreal.coe_eq_zero]
   have B : ae_strongly_measurable (fun ω : Ω => 𝔼[X]) ℙ := ae_strongly_measurable_const
   convert meas_ge_le_mul_pow_snorm ℙ Ennreal.two_ne_zero Ennreal.two_ne_top (hX.sub B) A
@@ -281,7 +281,7 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable 
 /-- *Chebyshev's inequality* : one can control the deviation probability of a real random variable
 from its expectation in terms of the variance. -/
 theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) {c : ℝ} (hc : 0 < c) :
-    ℙ { ω | c ≤ abs (X ω - 𝔼[X]) } ≤ Ennreal.ofReal (Var[X] / c ^ 2) := by
+    ℙ { ω | c ≤ |X ω - 𝔼[X]| } ≤ Ennreal.ofReal (Var[X] / c ^ 2) := by
   rw [Ennreal.of_real_div_of_pos (sq_pos_of_ne_zero _ hc.ne.symm), hX.of_real_variance_eq]
   convert @meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
   · simp only [Real.coe_to_nnreal', max_le_iff, abs_nonneg, and_true_iff]

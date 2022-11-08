@@ -35,7 +35,7 @@ theorem pi_univ_Iic : (Pi Univ fun i => IicCat (x i)) = IicCat x :=
 theorem pi_univ_Icc : (Pi Univ fun i => IccCat (x i) (y i)) = IccCat x y :=
   ext fun y => by simp [Pi.le_def, forall_and]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
     (h₁ : ∀ i ∈ s, f₁ i ∈ IccCat (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ IccCat (g₁ i) (g₂ i)) :
     s.piecewise f₁ f₂ ∈ IccCat g₁ g₂ :=

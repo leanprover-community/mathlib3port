@@ -238,7 +238,7 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable (hfm : St
   let s := { x | f x ≤ b }
   have hs : MeasurableSet s := hfm.measurable_set_le strongly_measurable_const
   have mus : μ s < ∞ := by
-    let c : ℝ≥0 := ⟨abs b, abs_nonneg _⟩
+    let c : ℝ≥0 := ⟨|b|, abs_nonneg _⟩
     have c_pos : (c : ℝ≥0∞) ≠ 0 := by simpa using hb_neg.ne
     calc
       μ s ≤ μ { x | (c : ℝ≥0∞) ≤ ∥f x∥₊ } := by

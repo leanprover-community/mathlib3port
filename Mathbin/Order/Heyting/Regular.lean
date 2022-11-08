@@ -51,15 +51,15 @@ section HeytingAlgebra
 
 variable [HeytingAlgebra α] {a b : α}
 
-theorem is_regular_bot : IsRegular (⊥ : α) := by rw [IsRegular, compl_bot, compl_top]
+theorem is_regular_bot : IsRegular (⊥ : α) := by rw [is_regular, compl_bot, compl_top]
 
-theorem is_regular_top : IsRegular (⊤ : α) := by rw [IsRegular, compl_top, compl_bot]
+theorem is_regular_top : IsRegular (⊤ : α) := by rw [is_regular, compl_top, compl_bot]
 
 theorem IsRegular.inf (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⊓ b) := by
-  rw [IsRegular, compl_compl_inf_distrib, ha.eq, hb.eq]
+  rw [is_regular, compl_compl_inf_distrib, ha.eq, hb.eq]
 
 theorem IsRegular.himp (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⇨ b) := by
-  rw [IsRegular, compl_compl_himp_distrib, ha.eq, hb.eq]
+  rw [is_regular, compl_compl_himp_distrib, ha.eq, hb.eq]
 
 theorem is_regular_compl (a : α) : IsRegular (aᶜ) :=
   compl_compl_compl _

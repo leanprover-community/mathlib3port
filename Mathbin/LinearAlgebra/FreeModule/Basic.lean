@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
 import Mathbin.LinearAlgebra.DirectSum.Finsupp
-import Mathbin.Logic.Small
+import Mathbin.Logic.Small.Basic
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
@@ -34,7 +34,7 @@ section Basic
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
   exists_basis : Nonempty (ΣI : Type v, Basis I R M)

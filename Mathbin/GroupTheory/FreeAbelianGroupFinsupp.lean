@@ -50,7 +50,7 @@ theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
 @[simp]
 theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
     toFinsupp.comp toFreeAbelianGroup = AddMonoidHom.id (X →₀ ℤ) := by
-  ext x y
+  ext (x y)
   simp only [AddMonoidHom.id_comp]
   rw [AddMonoidHom.comp_assoc, Finsupp.to_free_abelian_group_comp_single_add_hom]
   simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_app, one_smul, lift.of,

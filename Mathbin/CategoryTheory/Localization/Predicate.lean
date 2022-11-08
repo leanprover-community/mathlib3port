@@ -234,7 +234,7 @@ theorem nat_trans_ext {F₁ F₂ : D ⥤ E} (τ τ' : F₁ ⟶ F₂) (h : ∀ X 
   ext Y
   rw [← cancel_epi (F₁.map (L.obj_obj_preimage_iso Y).Hom), τ.naturality, τ'.naturality, h]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
 /-- When `L : C ⥤ D` is a localization functor for `W : morphism_property C` and
 `F : C ⥤ E` is a functor, we shall say that `F' : D ⥤ E` lifts `F` if the obvious diagram
 is commutative up to an isomorphism. -/
@@ -318,6 +318,38 @@ def ofIsos {F₁ F₂ : C ⥤ E} {F₁' F₂' : D ⥤ E} (e : F₁ ≅ F₂) (e'
 end Lifting
 
 end Localization
+
+namespace Functor
+
+namespace IsLocalization
+
+open Localization
+
+theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W] : L₂.IsLocalization W := by
+  have h := localization.inverts L₁ W
+  rw [morphism_property.is_inverted_by.iff_of_iso W e] at h
+  let F₁ := localization.construction.lift L₁ (localization.inverts L₁ W)
+  let F₂ := localization.construction.lift L₂ h
+  exact
+    { inverts := h,
+      nonempty_is_equivalence :=
+        Nonempty.intro (is_equivalence.of_iso (lift_nat_iso W.Q W L₁ L₂ F₁ F₂ e) inferInstance) }
+
+/-- If `L : C ⥤ D` is a localization for `W : morphism_property C`, then it is also
+the case of a functor obtained by post-composing `L` with an equivalence of categories. -/
+theorem of_equivalence_target {E : Type _} [Category E] (L' : C ⥤ E) (eq : D ≌ E) [L.IsLocalization W]
+    (e : L ⋙ Eq.Functor ≅ L') : L'.IsLocalization W := by
+  have h : W.is_inverted_by L' := by
+    rw [← morphism_property.is_inverted_by.iff_of_iso W e]
+    exact morphism_property.is_inverted_by.of_comp W L (localization.inverts L W) eq.functor
+  let F₁ := localization.construction.lift L (localization.inverts L W)
+  let F₂ := localization.construction.lift L' h
+  let e' : F₁ ⋙ eq.functor ≅ F₂ := lift_nat_iso W.Q W (L ⋙ eq.functor) L' _ _ e
+  exact { inverts := h, nonempty_is_equivalence := Nonempty.intro (is_equivalence.of_iso e' inferInstance) }
+
+end IsLocalization
+
+end Functor
 
 end CategoryTheory
 

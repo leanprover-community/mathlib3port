@@ -34,7 +34,7 @@ theorem Monotonicity.false (p : Prop) : Implies False p :=
 @[monotonicity]
 theorem Monotonicity.exists {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) :
     Implies (∃ a, p a) (∃ a, q a) :=
-  imp h
+  Exists.imp h
 
 @[monotonicity]
 theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∧ q) (p' ∧ q') :=
@@ -232,7 +232,7 @@ hence `a_i = b_j`. We need to take care when there are `p_i` and `p_j` with `p_i
 unsafe def compact_relation : List expr → List (expr × expr) → List expr × List (expr × expr)
   | [], ps => ([], ps)
   | List.cons b bs, ps =>
-    match ps.span fun ap : expr × expr => ¬expr.alpha_eqv ap.2 b with
+    match ps.span fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)
@@ -241,7 +241,7 @@ unsafe def compact_relation : List expr → List (expr × expr) → List expr ×
       compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
 
 unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) (preds : List <| expr × List expr) :
-    Tactic Unit := do
+    Tactic := do
   let params_names := params.map local_pp_name
   let u_params := u_names.map param
   let pre_info ←

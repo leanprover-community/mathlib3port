@@ -347,21 +347,46 @@ class StarOrderedRing (R : Type u) [NonUnitalSemiring R] [PartialOrder R] extend
 
 namespace StarOrderedRing
 
-variable [Ring R] [PartialOrder R] [StarOrderedRing R]
-
 -- see note [lower instance priority]
-instance (priority := 100) : OrderedAddCommGroup R :=
-  { show Ring R by infer_instance, show PartialOrder R by infer_instance,
+instance (priority := 100) [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R] : OrderedAddCommGroup R :=
+  { show NonUnitalRing R by infer_instance, show PartialOrder R by infer_instance,
     show StarOrderedRing R by infer_instance with }
 
 end StarOrderedRing
 
-theorem star_mul_self_nonneg [NonUnitalSemiring R] [PartialOrder R] [StarOrderedRing R] {r : R} : 0 ≤ star r * r :=
+section NonUnitalSemiring
+
+variable [NonUnitalSemiring R] [PartialOrder R] [StarOrderedRing R]
+
+theorem star_mul_self_nonneg {r : R} : 0 ≤ star r * r :=
   (StarOrderedRing.nonneg_iff _).mpr ⟨r, rfl⟩
 
-theorem star_mul_self_nonneg' [NonUnitalSemiring R] [PartialOrder R] [StarOrderedRing R] {r : R} : 0 ≤ r * star r := by
+theorem star_mul_self_nonneg' {r : R} : 0 ≤ r * star r := by
   nth_rw_rhs 0 [← star_star r]
   exact star_mul_self_nonneg
+
+theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c := by
+  obtain ⟨x, rfl⟩ := (StarOrderedRing.nonneg_iff _).1 ha
+  exact (StarOrderedRing.nonneg_iff _).2 ⟨x * c, by rw [star_mul, ← mul_assoc, mul_assoc _ _ c]⟩
+
+theorem conjugate_nonneg' {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ c * a * star c := by
+  simpa only [star_star] using conjugate_nonneg ha (star c)
+
+end NonUnitalSemiring
+
+section NonUnitalRing
+
+variable [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R]
+
+theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c := by
+  rw [← sub_nonneg] at hab⊢
+  convert conjugate_nonneg hab c
+  simp only [mul_sub, sub_mul]
+
+theorem conjugate_le_conjugate' {a b : R} (hab : a ≤ b) (c : R) : c * a * star c ≤ c * b * star c := by
+  simpa only [star_star] using conjugate_le_conjugate hab (star c)
+
+end NonUnitalRing
 
 /-- A star module `A` over a star ring `R` is a module which is a star add monoid,
 and the two star structures are compatible in the sense

@@ -384,7 +384,7 @@ def dGammaIntegrand (s : ℂ) (x : ℝ) : ℂ :=
 
 /-- Integrand for the absolute value of the derivative of the `Γ` function -/
 def dGammaIntegrandReal (s x : ℝ) : ℝ :=
-  abs (exp (-x) * log x * x ^ (s - 1))
+  |exp (-x) * log x * x ^ (s - 1)|
 
 theorem dGamma_integrand_is_o_at_top (s : ℝ) :
     (fun x : ℝ => exp (-x) * log x * x ^ (s - 1)) =o[at_top] fun x => exp (-(1 / 2) * x) := by
@@ -588,7 +588,7 @@ theorem differentiableAtGamma (s : ℂ) (hs : ∀ m : ℕ, s + m ≠ 0) : Differ
     have : S = re ⁻¹' Ioi (1 - n : ℝ) := by
       ext
       rw [preimage, Ioi, mem_set_of_eq, mem_set_of_eq, mem_set_of_eq]
-      exact sub_lt
+      exact sub_lt_comm
     rw [this]
     refine' Continuous.is_open_preimage continuous_re _ is_open_Ioi
   apply eventually_eq_of_mem this

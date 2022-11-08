@@ -282,10 +282,10 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
           rintro ⟨f, c⟩
           exact ⟨f, c⟩,
         hom_inv_id' := by
-          ext ⟨f, p⟩ x
+          ext (⟨f, p⟩x)
           rfl,
         inv_hom_id' := by
-          ext ⟨f, p⟩ x
+          ext (⟨f, p⟩x)
           rfl })
     (by tidy)
 

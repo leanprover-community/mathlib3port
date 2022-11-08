@@ -262,7 +262,7 @@ theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.
       · exact Dfinsupp.sum_map_range_index.linear_map
         
       · congr
-        ext μ v
+        ext (μ v)
         simp only [g, eq_self_iff_true, Function.comp_app, id.def, LinearMap.coe_comp, LinearMap.id_coe,
           LinearMap.smul_apply, LinearMap.sub_apply, Module.algebra_map_End_apply, sub_left_inj, sub_smul,
           Submodule.coe_smul_of_tower, Submodule.coe_sub, Submodule.subtype_apply, mem_eigenspace_iff.1 v.prop]

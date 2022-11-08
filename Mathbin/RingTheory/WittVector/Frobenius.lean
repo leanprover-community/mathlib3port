@@ -212,10 +212,10 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
     have aux : ∀ k : ℕ, (p ^ k : ℚ) ≠ 0 := by
       intro
       apply pow_ne_zero
-      exact_mod_cast hp.1.ne_zero
+      exact_mod_cast hp.1.NeZero
     simpa [aux, -one_div, field_simps] using this.symm
   rw [mul_comm _ (p : ℚ), mul_assoc, mul_assoc, ← pow_add, map_frobenius_poly.key₂ p hi hj]
-  ring_exp
+  ring
 
 theorem frobenius_poly_zmod (n : ℕ) : MvPolynomial.map (Int.castRingHom (Zmod p)) (frobeniusPoly p n) = x n ^ p := by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
@@ -316,7 +316,7 @@ theorem coeff_frobenius_char_p (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = 
     
 
 theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (frobenius R p) := by
-  ext x n
+  ext (x n)
   simp only [coeff_frobenius_char_p, map_coeff, frobenius_def]
 
 @[simp]

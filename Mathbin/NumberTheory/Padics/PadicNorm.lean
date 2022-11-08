@@ -86,7 +86,7 @@ theorem padic_norm_p_of_prime [Fact p.Prime] : padicNorm p p = p⁻¹ :=
 theorem padic_norm_of_prime_of_ne {q : ℕ} [p_prime : Fact p.Prime] [q_prime : Fact q.Prime] (neq : p ≠ q) :
     padicNorm p q = 1 := by
   have p : padicValRat p q = 0 := by exact_mod_cast @padic_val_nat_primes p q p_prime q_prime neq
-  simp [padicNorm, p, q_prime.1.1, q_prime.1.ne_zero]
+  simp [padicNorm, p, q_prime.1.1, q_prime.1.NeZero]
 
 /-- The `p`-adic norm of `p` is less than `1` if `1 < p`.
 
@@ -128,7 +128,7 @@ theorem zero_of_padic_norm_eq_zero {q : ℚ} (h : padicNorm p q = 0) : q = 0 := 
   rw [if_neg hq] at h
   apply absurd h
   apply zpow_ne_zero_of_ne_zero
-  exact_mod_cast hp.1.ne_zero
+  exact_mod_cast hp.1.NeZero
 
 /-- The `p`-adic norm is multiplicative. -/
 @[simp]
@@ -138,7 +138,7 @@ protected theorem mul (q r : ℚ) : padicNorm p (q * r) = padicNorm p q * padicN
     if hr : r = 0 then by simp [hr]
     else by
       have : q * r ≠ 0 := mul_ne_zero hq hr
-      have : (p : ℚ) ≠ 0 := by simp [hp.1.ne_zero]
+      have : (p : ℚ) ≠ 0 := by simp [hp.1.NeZero]
       simp [padicNorm, *, padicValRat.mul, zpow_add₀ this, mul_comm]
 
 /-- The `p`-adic norm respects division. -/

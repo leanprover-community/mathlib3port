@@ -965,7 +965,7 @@ theorem snorm'_lt_top_of_snorm'_lt_top_of_exponent_le {p q : ℝ} [IsFiniteMeasu
     _ < ∞ := by
       rw [Ennreal.mul_lt_top_iff]
       refine' Or.inl ⟨hfq_lt_top, Ennreal.rpow_lt_top_of_nonneg _ (measure_ne_top μ Set.Univ)⟩
-      rwa [le_sub, sub_zero, one_div, one_div, inv_le_inv hq_pos hp_pos]
+      rwa [le_sub_comm, sub_zero, one_div, one_div, inv_le_inv hq_pos hp_pos]
     
 
 variable (μ)
@@ -1871,10 +1871,9 @@ theorem indicator_const_empty : indicatorConstLp p MeasurableSet.empty (by simp 
   convert indicator_const_Lp_coe_fn
   simp [Set.indicator_empty']
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]] -/
 theorem mem_ℒp_add_of_disjoint {f g : α → E} (h : Disjoint (Support f) (Support g)) (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : Memℒp (f + g) p μ ↔ Memℒp f p μ ∧ Memℒp g p μ := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
+  borelize E
   refine' ⟨fun hfg => ⟨_, _⟩, fun h => h.1.add h.2⟩
   · rw [← indicator_add_eq_left h]
     exact hfg.indicator (measurableSetSupport hf.measurable)
@@ -2320,9 +2319,6 @@ theorem cauchy_seq_Lp_iff_cauchy_seq_ℒp {ι} [Nonempty ι] [SemilatticeSup ι]
   rw [snorm_congr_ae (Lp.coe_fn_sub _ _).symm]
   exact snorm_ne_top _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident f_lim, ",", ident hf_lim_meas, ",", ident h_tendsto, "⟩", ":", expr «expr∃ , »((f_lim : α → E)
-    (hf_lim_meas : mem_ℒp f_lim p μ),
-    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (nhds() 0))]] -/
 theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
     (H :
       ∀ (f : ℕ → α → E) (hf : ∀ n, Memℒp (f n) p μ) (B : ℕ → ℝ≥0∞) (hB : (∑' i, B i) < ∞)
@@ -2332,8 +2328,8 @@ theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
   let B := fun n : ℕ => ((1 : ℝ) / 2) ^ n
   have hB_pos : ∀ n, 0 < B n := fun n => pow_pos (div_pos zero_lt_one zero_lt_two) n
   refine' Metric.complete_of_convergent_controlled_sequences B hB_pos fun f hf => _
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident f_lim, \",\", ident hf_lim_meas, \",\", ident h_tendsto, \"⟩\", \":\", expr «expr∃ , »((f_lim : α → E)\n    (hf_lim_meas : mem_ℒp f_lim p μ),\n    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (nhds() 0))]]"
+  rsuffices ⟨f_lim, hf_lim_meas, h_tendsto⟩ :
+    ∃ (f_lim : α → E)(hf_lim_meas : mem_ℒp f_lim p μ), at_top.tendsto (fun n => snorm (f n - f_lim) p μ) (𝓝 0)
   · exact ⟨hf_lim_meas.to_Lp f_lim, tendsto_Lp_of_tendsto_ℒp f_lim hf_lim_meas h_tendsto⟩
     
   have hB : Summable B := summable_geometric_two

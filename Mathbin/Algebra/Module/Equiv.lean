@@ -614,6 +614,23 @@ instance apply_smul_comm_class' : SmulCommClass (M ≃ₗ[R] M) R M where smul_c
 
 end Automorphisms
 
+section OfSubsingleton
+
+variable (M M₂) [Module R M] [Module R M₂] [Subsingleton M] [Subsingleton M₂]
+
+/-- Any two modules that are subsingletons are isomorphic. -/
+@[simps]
+def ofSubsingleton : M ≃ₗ[R] M₂ :=
+  { (0 : M →ₗ[R] M₂) with toFun := fun _ => 0, invFun := fun _ => 0, left_inv := fun x => Subsingleton.elim _ _,
+    right_inv := fun x => Subsingleton.elim _ _ }
+
+@[simp]
+theorem of_subsingleton_self : ofSubsingleton M M = refl R M := by
+  ext
+  simp
+
+end OfSubsingleton
+
 end AddCommMonoid
 
 end LinearEquiv

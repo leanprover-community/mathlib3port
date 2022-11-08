@@ -44,7 +44,7 @@ class Quiver (V : Type u) where
 -- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
@@ -128,6 +128,11 @@ instance emptyQuiver (V : Type u) : Quiver.{u} (Empty V) :=
 @[simp]
 theorem empty_arrow {V : Type u} (a b : Empty V) : (a ⟶ b) = PEmpty :=
   rfl
+
+/-- A quiver is thin if it has no parallel arrows. -/
+@[reducible]
+def IsThin (V : Type u) [Quiver V] :=
+  ∀ a b : V, Subsingleton (a ⟶ b)
 
 end Quiver
 

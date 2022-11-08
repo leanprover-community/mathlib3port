@@ -79,7 +79,7 @@ theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁
   by
   rw [Finset.weighted_vsub_apply, Finset.weighted_vsub_apply, inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
   simp_rw [vsub_sub_vsub_cancel_right]
-  rcongr i₁ i₂ <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
+  rcongr (i₁ i₂) <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
 
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that
@@ -147,10 +147,10 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -469,7 +469,7 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
     _ = ∥p1 -ᵥ p2∥ * ∥p1 -ᵥ p2∥ + ∥(r1 - r2) • v∥ * ∥(r1 - r2) • v∥ :=
       norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2) (Submodule.smul_mem _ _ hv))
-    _ = ∥(p1 -ᵥ p2 : V)∥ * ∥(p1 -ᵥ p2 : V)∥ + abs (r1 - r2) * abs (r1 - r2) * ∥v∥ * ∥v∥ := by
+    _ = ∥(p1 -ᵥ p2 : V)∥ * ∥(p1 -ᵥ p2 : V)∥ + |r1 - r2| * |r1 - r2| * ∥v∥ * ∥v∥ := by
       rw [norm_smul, Real.norm_eq_abs]
       ring
     _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (∥v∥ * ∥v∥) := by

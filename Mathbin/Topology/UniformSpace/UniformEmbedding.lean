@@ -171,7 +171,7 @@ theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)}
     _ ≤ 𝓟 IdRel := principal_mono.2 _
     
   rintro ⟨x, y⟩
-  simpa [not_imp_not] using hf x y
+  simpa [not_imp_not] using @hf x y
 
 /-- If a map `f : α → β` sends any two distinct points to point that are **not** related by a fixed
 `s ∈ 𝓤 β`, then `f` is a uniform embedding with respect to the discrete uniformity on `α`. -/

@@ -134,7 +134,7 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
           (tactic.congr' none >>
             (done <|> do
               let s ← target
-              guard <| ¬expr.alpha_eqv s t)) |
+              guard <| ¬s == t)) |
       skip
     done <|> rcongr (qs ps)
 

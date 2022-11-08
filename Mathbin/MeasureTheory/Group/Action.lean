@@ -26,14 +26,14 @@ namespace MeasureTheory
 
 variable {G M α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
 class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_vadd : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
@@ -67,49 +67,464 @@ end SmulInvariantMeasure
 variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpace G] [HasMeasurableSmul G α] (c : G)
   (μ : Measure α)
 
-/-- Equivalent definitions of a measure invariant under a multiplicative action of a group.
-
-- 0: `smul_invariant_measure G α μ`;
-
-- 1: for every `c : G` and a measurable set `s`, the measure of the preimage of `s` under scalar
-     multiplication by `c` is equal to the measure of `s`;
-
-- 2: for every `c : G` and a measurable set `s`, the measure of the image `c • s` of `s` under
-     scalar multiplication by `c` is equal to the measure of `s`;
-
-- 3, 4: properties 2, 3 for any set, including non-measurable ones;
-
-- 5: for any `c : G`, scalar multiplication by `c` maps `μ` to `μ`;
-
-- 6: for any `c : G`, scalar multiplication by `c` is a measure preserving map. -/
-@[to_additive]
-theorem smul_invariant_measure_tfae :
-    Tfae
-      [SmulInvariantMeasure G α μ, ∀ (c : G) (s), MeasurableSet s → μ ((· • ·) c ⁻¹' s) = μ s,
-        ∀ (c : G) (s), MeasurableSet s → μ (c • s) = μ s, ∀ (c : G) (s), μ ((· • ·) c ⁻¹' s) = μ s,
-        ∀ (c : G) (s), μ (c • s) = μ s, ∀ c : G, Measure.map ((· • ·) c) μ = μ,
-        ∀ c : G, MeasurePreserving ((· • ·) c) μ μ] :=
-  by
-  tfae_have 1 ↔ 2
-  exact ⟨fun h => h.1, fun h => ⟨h⟩⟩
-  tfae_have 2 → 6
-  exact fun H c => ext fun s hs => by rw [map_apply (measurable_const_smul c) hs, H _ _ hs]
-  tfae_have 6 → 7
-  exact fun H c => ⟨measurable_const_smul c, H c⟩
-  tfae_have 7 → 4
-  exact fun H c => (H c).measure_preimage_emb (measurableEmbeddingConstSmul c)
-  tfae_have 4 → 5
-  exact fun H c s => by
-    rw [← preimage_smul_inv]
-    apply H
-  tfae_have 5 → 3
-  exact fun H c s hs => H c s
-  tfae_have 3 → 2
-  · intro H c s hs
-    rw [preimage_smul]
-    exact H c⁻¹ s hs
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Equivalent definitions of a measure invariant under a multiplicative action of a group.\n\n- 0: `smul_invariant_measure G α μ`;\n\n- 1: for every `c : G` and a measurable set `s`, the measure of the preimage of `s` under scalar\n     multiplication by `c` is equal to the measure of `s`;\n\n- 2: for every `c : G` and a measurable set `s`, the measure of the image `c • s` of `s` under\n     scalar multiplication by `c` is equal to the measure of `s`;\n\n- 3, 4: properties 2, 3 for any set, including non-measurable ones;\n\n- 5: for any `c : G`, scalar multiplication by `c` maps `μ` to `μ`;\n\n- 6: for any `c : G`, scalar multiplication by `c` is a measure preserving map. -/")]
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `smul_invariant_measure_tfae [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `SmulInvariantMeasure [`G `α `μ])
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             []
+             ","
+             (Term.arrow
+              (Term.app `MeasurableSet [`s])
+              "→"
+              («term_=_»
+               (Term.app
+                `μ
+                [(Set.Data.Set.Basic.«term_⁻¹'_»
+                  (Term.app
+                   (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                   [`c])
+                  " ⁻¹' "
+                  `s)])
+               "="
+               (Term.app `μ [`s]))))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             []
+             ","
+             (Term.arrow
+              (Term.app `MeasurableSet [`s])
+              "→"
+              («term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) "=" (Term.app `μ [`s]))))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             []
+             ","
+             («term_=_»
+              (Term.app
+               `μ
+               [(Set.Data.Set.Basic.«term_⁻¹'_»
+                 (Term.app
+                  (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                  [`c])
+                 " ⁻¹' "
+                 `s)])
+              "="
+              (Term.app `μ [`s])))
+            ","
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             []
+             ","
+             («term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) "=" (Term.app `μ [`s])))
+            ","
+            (Term.forall
+             "∀"
+             [`c]
+             [(Term.typeSpec ":" `G)]
+             ","
+             («term_=_»
+              (Term.app
+               `Measure.map
+               [(Term.app
+                 (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                 [`c])
+                `μ])
+              "="
+              `μ))
+            ","
+            (Term.forall
+             "∀"
+             [`c]
+             [(Term.typeSpec ":" `G)]
+             ","
+             (Term.app
+              `MeasurePreserving
+              [(Term.app
+                (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                [`c])
+               `μ
+               `μ]))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.fun "fun" (Term.basicFun [`h] [] "=>" (Term.proj `h "." (fieldIdx "1"))))
+              ","
+              (Term.fun "fun" (Term.basicFun [`h] [] "=>" (Term.anonymousCtor "⟨" [`h] "⟩")))]
+             "⟩"))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "6"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`H `c]
+              []
+              "=>"
+              (Term.app
+               `ext
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`s `hs]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.rwSeq
+                       "rw"
+                       []
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] (Term.app `map_apply [(Term.app `measurable_const_smul [`c]) `hs]))
+                         ","
+                         (Tactic.rwRule [] (Term.app `H [(Term.hole "_") (Term.hole "_") `hs]))]
+                        "]")
+                       [])])))))]))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "7"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`H `c]
+              []
+              "=>"
+              (Term.anonymousCtor "⟨" [(Term.app `measurable_const_smul [`c]) "," (Term.app `H [`c])] "⟩"))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "4"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`H `c]
+              []
+              "=>"
+              (Term.app
+               (Term.proj (Term.app `H [`c]) "." `measure_preimage_emb)
+               [(Term.app `measurableEmbeddingConstSmul [`c])]))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`H `c `s]
+              []
+              "=>"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `preimage_smul_inv)] "]")
+                   [])
+                  []
+                  (Tactic.apply "apply" `H)]))))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "3"))
+           []
+           (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `c `s `hs] [] "=>" (Term.app `H [`c `s]))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
+             (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
+             (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.fun "fun" (Term.basicFun [`h] [] "=>" (Term.proj `h "." (fieldIdx "1"))))
+             ","
+             (Term.fun "fun" (Term.basicFun [`h] [] "=>" (Term.anonymousCtor "⟨" [`h] "⟩")))]
+            "⟩"))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "6"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`H `c]
+             []
+             "=>"
+             (Term.app
+              `ext
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`s `hs]
+                 []
+                 "=>"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] (Term.app `map_apply [(Term.app `measurable_const_smul [`c]) `hs]))
+                        ","
+                        (Tactic.rwRule [] (Term.app `H [(Term.hole "_") (Term.hole "_") `hs]))]
+                       "]")
+                      [])])))))]))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "7"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`H `c]
+             []
+             "=>"
+             (Term.anonymousCtor "⟨" [(Term.app `measurable_const_smul [`c]) "," (Term.app `H [`c])] "⟩"))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "4"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`H `c]
+             []
+             "=>"
+             (Term.app
+              (Term.proj (Term.app `H [`c]) "." `measure_preimage_emb)
+              [(Term.app `measurableEmbeddingConstSmul [`c])]))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`H `c `s]
+             []
+             "=>"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `preimage_smul_inv)] "]")
+                  [])
+                 []
+                 (Tactic.apply "apply" `H)]))))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "3"))
+          []
+          (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `c `s `hs] [] "=>" (Term.app `H [`c `s]))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
+            (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
+            (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
+        (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
+        (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hs
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      («term_⁻¹_1» `c "⁻¹")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `preimage_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+      (Tactic.intro "intro" [`H `c `s `hs])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hs
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«→»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      Equivalent definitions of a measure invariant under a multiplicative action of a group.
+      
+      - 0: `smul_invariant_measure G α μ`;
+      
+      - 1: for every `c : G` and a measurable set `s`, the measure of the preimage of `s` under scalar
+           multiplication by `c` is equal to the measure of `s`;
+      
+      - 2: for every `c : G` and a measurable set `s`, the measure of the image `c • s` of `s` under
+           scalar multiplication by `c` is equal to the measure of `s`;
+      
+      - 3, 4: properties 2, 3 for any set, including non-measurable ones;
+      
+      - 5: for any `c : G`, scalar multiplication by `c` maps `μ` to `μ`;
+      
+      - 6: for any `c : G`, scalar multiplication by `c` is a measure preserving map. -/
+    @[ to_additive ]
+  theorem
+    smul_invariant_measure_tfae
+    :
+      Tfae
+        [
+          SmulInvariantMeasure G α μ
+            ,
+            ∀ ( c : G ) ( s ) , MeasurableSet s → μ ( · • · ) c ⁻¹' s = μ s
+            ,
+            ∀ ( c : G ) ( s ) , MeasurableSet s → μ c • s = μ s
+            ,
+            ∀ ( c : G ) ( s ) , μ ( · • · ) c ⁻¹' s = μ s
+            ,
+            ∀ ( c : G ) ( s ) , μ c • s = μ s
+            ,
+            ∀ c : G , Measure.map ( · • · ) c μ = μ
+            ,
+            ∀ c : G , MeasurePreserving ( · • · ) c μ μ
+          ]
+    :=
+      by
+        tfae_have 1 ↔ 2
+          exact ⟨ fun h => h . 1 , fun h => ⟨ h ⟩ ⟩
+          tfae_have 2 → 6
+          exact fun H c => ext fun s hs => by rw [ map_apply measurable_const_smul c hs , H _ _ hs ]
+          tfae_have 6 → 7
+          exact fun H c => ⟨ measurable_const_smul c , H c ⟩
+          tfae_have 7 → 4
+          exact fun H c => H c . measure_preimage_emb measurableEmbeddingConstSmul c
+          tfae_have 4 → 5
+          exact fun H c s => by rw [ ← preimage_smul_inv ] apply H
+          tfae_have 5 → 3
+          exact fun H c s hs => H c s
+          tfae_have 3 → 2
+          · intro H c s hs rw [ preimage_smul ] exact H c ⁻¹ s hs
+          tfae_finish
 
 /-- Equivalent definitions of a measure invariant under an additive action of a group.
 

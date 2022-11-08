@@ -664,17 +664,33 @@ theorem coe_add (f g : M₁ →SL[σ₁₂] M₂) : (↑(f + g) : M₁ →ₛₗ
 theorem coe_add' (f g : M₁ →SL[σ₁₂] M₂) : ⇑(f + g) = f + g :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 instance : AddCommMonoid (M₁ →SL[σ₁₂] M₂) where
   zero := (0 : M₁ →SL[σ₁₂] M₂)
   add := (· + ·)
-  zero_add := by intros <;> ext <;> apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm]
-  add_zero := by intros <;> ext <;> apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm]
-  add_comm := by intros <;> ext <;> apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm]
-  add_assoc := by intros <;> ext <;> apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm]
+  zero_add := by
+    intros <;>
+      ext <;>
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+  add_zero := by
+    intros <;>
+      ext <;>
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+  add_comm := by
+    intros <;>
+      ext <;>
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+  add_assoc := by
+    intros <;>
+      ext <;>
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
   nsmul := (· • ·)
   nsmul_zero' f := by
     ext
@@ -1174,7 +1190,8 @@ theorem coe_neg' (f : M →SL[σ₁₂] M₂) : ⇑(-f) = -f :=
 instance : Sub (M →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f - g, f.2.sub g.2⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, ",", expr sub_eq_add_neg, "]"],
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
   refine'
       { ContinuousLinearMap.addCommMonoid with zero := 0, add := (· + ·), neg := Neg.neg, sub := Sub.sub,
@@ -1188,7 +1205,10 @@ instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
         zsmul_neg' := fun n f => by
           ext
           simp [Nat.succ_eq_add_one, add_smul].. } <;>
-    intros <;> ext <;> apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm, sub_eq_add_neg]
+    intros <;>
+      ext <;>
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \",\", expr sub_eq_add_neg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
 
 theorem sub_apply (f g : M →SL[σ₁₂] M₂) (x : M) : (f - g) x = f x - g x :=
   rfl
@@ -1740,13 +1760,13 @@ theorem coe_prod [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M
 
 include σ₂₁
 
-theorem bijective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Bijective e :=
+protected theorem bijective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Bijective e :=
   e.toLinearEquiv.toEquiv.Bijective
 
-theorem injective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Injective e :=
+protected theorem injective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Injective e :=
   e.toLinearEquiv.toEquiv.Injective
 
-theorem surjective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Surjective e :=
+protected theorem surjective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Surjective e :=
   e.toLinearEquiv.toEquiv.Surjective
 
 include σ₃₂ σ₃₁ σ₁₃

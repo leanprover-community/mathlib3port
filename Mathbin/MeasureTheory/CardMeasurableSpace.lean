@@ -49,10 +49,11 @@ def GenerateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
     let S := ⋃ j : IioCat i, generate_measurable_rec j.1
     s ∪ {∅} ∪ compl '' S ∪ Set.Range fun f : ℕ → S => ⋃ n, (f n).1
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : s ⊆ GenerateMeasurableRec s i := by
   unfold generate_measurable_rec
-  apply_rules [subset_union_of_subset_left]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr subset_union_of_subset_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
   exact subset_rfl
 
 theorem empty_mem_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : ∅ ∈ GenerateMeasurableRec s i := by
@@ -84,7 +85,7 @@ theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i �
     exact (Union_const x).symm
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr (mk_union_le _ _).trans, ",", expr add_le_of_le C, ",", expr mk_image_le.trans, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 /-- At each step of the inductive construction, the cardinality bound `≤ (max (#s) 2) ^ ℵ₀` holds.
 -/
 theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
@@ -101,7 +102,8 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
     rw [mul_eq_max A C]
     exact max_le B le_rfl
   rw [generate_measurable_rec]
-  apply_rules [(mk_union_le _ _).trans, add_le_of_le C, mk_image_le.trans]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr (mk_union_le _ _).trans, \",\", expr add_le_of_le C, \",\", expr mk_image_le.trans, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
   · exact (le_max_left _ _).trans (self_le_power _ one_lt_aleph_0.le)
     
   · rw [mk_singleton]

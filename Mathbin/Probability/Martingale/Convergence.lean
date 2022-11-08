@@ -142,7 +142,7 @@ We use the spelling `< ∞` instead of the standard `≠ ∞` in the assumptions
 to change `<` to `≠` under binders. -/
 theorem tendsto_of_uncrossing_lt_top (hf₁ : liminf (fun n => (∥f n ω∥₊ : ℝ≥0∞)) atTop < ∞)
     (hf₂ : ∀ a b : ℚ, a < b → upcrossings a b f ω < ∞) : ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
-  by_cases h:is_bounded_under (· ≤ ·) at_top fun n => abs (f n ω)
+  by_cases h:is_bounded_under (· ≤ ·) at_top fun n => |f n ω|
   · rw [is_bounded_under_le_abs] at h
     refine' tendsto_of_no_upcrossings Rat.dense_range_cast _ h.1 h.2
     · intro a ha b hb hab

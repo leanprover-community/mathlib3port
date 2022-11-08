@@ -123,7 +123,7 @@ theorem linear_independent_iff' :
       fun hf l hl =>
       Finsupp.ext fun i => Classical.by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem linear_independent_iff'' :
     LinearIndependent R v ↔
       ∀ (s : Finset ι) (g : ι → R) (hg : ∀ (i) (_ : i ∉ s), g i = 0), (∑ i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
@@ -368,7 +368,7 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
   simp only [linear_independent_subtype_disjoint]
   exact Disjoint.monoLeft (Finsupp.supported_mono h)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem linear_independent_of_finite (s : Set M)
     (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
     LinearIndependent R (fun x => x : s → M) :=
@@ -658,7 +658,7 @@ theorem linear_independent_Union_finite {η : Type _} {ιs : η → Type _} {f :
         simp only at hxy
         rw [hxy]
         exact subset_span (mem_range_self y₂)
-      exact False.elim ((hindep x₁).ne_zero _ h0)
+      exact False.elim ((hindep x₁).NeZero _ h0)
       
     
   rw [range_sigma_eq_Union_range]
@@ -794,7 +794,7 @@ theorem exists_maximal_independent' (s : ι → M) :
       (fun c hc => ⟨⟨⋃ I ∈ c, (I : Set ι), key c hc⟩, fun I => Set.subset_bUnion_of_mem⟩) trans
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι,
       (LinearIndependent R fun x : I => s x) ∧ ∀ (i) (_ : i ∉ I), ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
@@ -1129,7 +1129,7 @@ theorem linear_independent_fin2 {f : Fin 2 → V} : LinearIndependent K f ↔ f 
   rw [linear_independent_fin_succ, linear_independent_unique_iff, range_unique, mem_span_singleton, not_exists,
     show Fin.tail f default = f 1 by rw [← Fin.succ_zero_eq_one] <;> rfl]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) := by
   rcases zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coe : b → V) } _ _ ⟨hst, hs⟩ with ⟨b, ⟨bt, bi⟩, sb, h⟩
@@ -1150,7 +1150,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s �
 
 variable (K t)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) := by
   obtain ⟨b, hb₁, -, hb₂, hb₃⟩ :=
     exists_linear_independent_extension (linear_independent_empty K V) (Set.empty_subset t)

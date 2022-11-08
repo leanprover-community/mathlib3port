@@ -225,11 +225,11 @@ end OrderedGroup
 We consider the actual implementation to be a "black box", so it is irreducible.
 -/
 irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃o IooCat (-1 : k) 1 := by
-  refine' StrictMono.orderIsoOfRightInverse _ _ (fun x => x / (1 - abs x)) _
-  · refine' cod_restrict (fun x => x / (1 + abs x)) _ fun x => abs_lt.1 _
-    have H : 0 < 1 + abs x := (abs_nonneg x).trans_lt (lt_one_add _)
+  refine' StrictMono.orderIsoOfRightInverse _ _ (fun x => x / (1 - |x|)) _
+  · refine' cod_restrict (fun x => x / (1 + |x|)) _ fun x => abs_lt.1 _
+    have H : 0 < 1 + |x| := (abs_nonneg x).trans_lt (lt_one_add _)
     calc
-      abs (x / (1 + abs x)) = abs x / (1 + abs x) := by rw [abs_div, abs_of_pos H]
+      |x / (1 + |x|)| = |x| / (1 + |x|) := by rw [abs_div, abs_of_pos H]
       _ < 1 := (div_lt_one H).2 (lt_one_add _)
       
     
@@ -243,7 +243,7 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
       
     
   · refine' fun x => Subtype.ext _
-    have : 0 < 1 - abs (x : k) := sub_pos.2 (abs_lt.2 x.2)
+    have : 0 < 1 - |(x : k)| := sub_pos.2 (abs_lt.2 x.2)
     field_simp [abs_div, this.ne', abs_of_pos this]
     
 

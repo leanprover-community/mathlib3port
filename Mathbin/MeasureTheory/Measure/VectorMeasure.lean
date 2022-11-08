@@ -448,13 +448,13 @@ theorem to_signed_measure_eq_to_signed_measure_iff {μ ν : Measure α} [IsFinit
 
 @[simp]
 theorem to_signed_measure_zero : (0 : Measure α).toSignedMeasure = 0 := by
-  ext i hi
+  ext (i hi)
   simp
 
 @[simp]
 theorem to_signed_measure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     (μ + ν).toSignedMeasure = μ.toSignedMeasure + ν.toSignedMeasure := by
-  ext i hi
+  ext (i hi)
   rw [to_signed_measure_apply_measurable hi, add_apply,
     Ennreal.to_real_add (ne_of_lt (measure_lt_top _ _)) (ne_of_lt (measure_lt_top _ _)), vector_measure.add_apply,
     to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi]
@@ -463,7 +463,7 @@ theorem to_signed_measure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFinit
 @[simp]
 theorem to_signed_measure_smul (μ : Measure α) [IsFiniteMeasure μ] (r : ℝ≥0) :
     (r • μ).toSignedMeasure = r • μ.toSignedMeasure := by
-  ext i hi
+  ext (i hi)
   rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply, to_signed_measure_apply_measurable hi, coe_smul,
     Pi.smul_apply, Ennreal.to_real_smul]
 
@@ -485,7 +485,7 @@ theorem to_ennreal_vector_measure_apply_measurable {μ : Measure α} {i : Set α
 
 @[simp]
 theorem to_ennreal_vector_measure_zero : (0 : Measure α).toEnnrealVectorMeasure = 0 := by
-  ext i hi
+  ext (i hi)
   simp
 
 @[simp]
@@ -543,7 +543,7 @@ def map (v : VectorMeasure α M) (f : α → β) : VectorMeasure β M :=
       not_measurable' := fun i hi => if_neg hi,
       m_Union' := by
         intro g hg₁ hg₂
-        convert v.m_Union (fun i => hf (hg₁ i)) fun i j hij x hx => hg₂ i j hij hx
+        convert v.m_Union (fun i => hf (hg₁ i)) fun i j hij x hx => hg₂ hij hx
         · ext i
           rw [if_pos (hg₁ i)]
           
@@ -565,7 +565,7 @@ theorem map_id : v.map id = v :=
 @[simp]
 theorem map_zero (f : α → β) : (0 : VectorMeasure α M).map f = 0 := by
   by_cases hf:Measurable f
-  · ext i hi
+  · ext (i hi)
     rw [map_apply _ hf hi, zero_apply, zero_apply]
     
   · exact dif_neg hf
@@ -673,7 +673,7 @@ theorem restrict_univ : v.restrict Univ = v :=
 @[simp]
 theorem restrict_zero {i : Set α} : (0 : VectorMeasure α M).restrict i = 0 := by
   by_cases hi:MeasurableSet i
-  · ext j hj
+  · ext (j hj)
     rw [restrict_apply 0 hi hj]
     rfl
     
@@ -686,7 +686,7 @@ variable [HasContinuousAdd M]
 
 theorem map_add (v w : VectorMeasure α M) (f : α → β) : (v + w).map f = v.map f + w.map f := by
   by_cases hf:Measurable f
-  · ext i hi
+  · ext (i hi)
     simp [map_apply _ hf hi]
     
   · simp [map, dif_neg hf]
@@ -701,7 +701,7 @@ def mapGm (f : α → β) : VectorMeasure α M →+ VectorMeasure β M where
 
 theorem restrict_add (v w : VectorMeasure α M) (i : Set α) : (v + w).restrict i = v.restrict i + w.restrict i := by
   by_cases hi:MeasurableSet i
-  · ext j hj
+  · ext (j hj)
     simp [restrict_apply _ hi hj]
     
   · simp [restrict_not_measurable _ hi]
@@ -731,24 +731,24 @@ include m
 @[simp]
 theorem map_smul {v : VectorMeasure α M} {f : α → β} (c : R) : (c • v).map f = c • v.map f := by
   by_cases hf:Measurable f
-  · ext i hi
+  · ext (i hi)
     simp [map_apply _ hf hi]
     
   · simp only [map, dif_neg hf]
     -- `smul_zero` does not work since we do not require `has_continuous_add`
-    ext i hi
+    ext (i hi)
     simp
     
 
 @[simp]
 theorem restrict_smul {v : VectorMeasure α M} {i : Set α} (c : R) : (c • v).restrict i = c • v.restrict i := by
   by_cases hi:MeasurableSet i
-  · ext j hj
+  · ext (j hj)
     simp [restrict_apply _ hi hj]
     
   · simp only [restrict_not_measurable _ hi]
     -- `smul_zero` does not work since we do not require `has_continuous_add`
-    ext j hj
+    ext (j hj)
     simp
     
 
@@ -1110,8 +1110,8 @@ theorem ennreal_to_measure {μ : VectorMeasure α ℝ≥0∞} : (∀ ⦃s : Set 
 
 end AbsolutelyContinuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
 /-- Two vector measures `v` and `w` are said to be mutually singular if there exists a measurable
 set `s`, such that for all `t ⊆ s`, `v t = 0` and for all `t ⊆ sᶜ`, `w t = 0`.
 
@@ -1129,8 +1129,8 @@ namespace MutuallySingular
 
 variable {v v₁ v₂ : VectorMeasure α M} {w w₁ w₂ : VectorMeasure α N}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ (t) (_ : t ⊆ s), MeasurableSet t → v t = 0)
     (h₂ : ∀ (t) (_ : t ⊆ sᶜ), MeasurableSet t → w t = 0) : v ⊥ᵥ w := by
   refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> by_cases ht:MeasurableSet t
@@ -1252,7 +1252,7 @@ theorem trim_measurable_set_eq (hle : m ≤ n) {i : Set α} (hi : measurable_set
 
 theorem restrict_trim (hle : m ≤ n) {i : Set α} (hi : measurable_set[m] i) :
     @VectorMeasure.restrict α m M _ _ (v.trim hle) i = (v.restrict i).trim hle := by
-  ext j hj
+  ext (j hj)
   rw [restrict_apply, trim_measurable_set_eq hle hj, restrict_apply, trim_measurable_set_eq]
   all_goals measurability
 
@@ -1286,7 +1286,7 @@ def toMeasureOfZeroLe (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet
       have h₁ : ∀ n, MeasurableSet (i ∩ f n) := fun n => hi₁.inter (hf₁ n)
       have h₂ : Pairwise (Disjoint on fun n : ℕ => i ∩ f n) := by
         rintro n m hnm x ⟨⟨_, hx₁⟩, _, hx₂⟩
-        exact hf₂ n m hnm ⟨hx₁, hx₂⟩
+        exact hf₂ hnm ⟨hx₁, hx₂⟩
       simp only [to_measure_of_zero_le', s.restrict_apply hi₁ (MeasurableSet.union hf₁), Set.inter_comm,
         Set.inter_Union, s.of_disjoint_Union_nat h₁ h₂, Ennreal.some_eq_coe, id.def]
       have h : ∀ n, 0 ≤ s (i ∩ f n) := fun n =>
@@ -1342,12 +1342,12 @@ instance toMeasureOfLeZeroFinite (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) :
 
 theorem to_measure_of_zero_le_to_signed_measure (hs : 0 ≤[univ] s) :
     (s.toMeasureOfZeroLe Univ MeasurableSet.univ hs).toSignedMeasure = s := by
-  ext i hi
+  ext (i hi)
   simp [measure.to_signed_measure_apply_measurable hi, to_measure_of_zero_le_apply _ _ _ hi]
 
 theorem to_measure_of_le_zero_to_signed_measure (hs : s ≤[univ] 0) :
     (s.toMeasureOfLeZero Univ MeasurableSet.univ hs).toSignedMeasure = -s := by
-  ext i hi
+  ext (i hi)
   simp [measure.to_signed_measure_apply_measurable hi, to_measure_of_le_zero_apply _ _ _ hi]
 
 end SignedMeasure

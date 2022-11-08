@@ -118,7 +118,6 @@ theorem not_step_nil : ¬Step [] L := by
   contradiction
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rintro #[["@", "⟨", "_", "|", "⟨", ident p, ",", ident s', "⟩", ",", ident e, ",", ident a', ",", ident b', "⟩"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -126,8 +125,7 @@ theorem Step.cons_left_iff {a : α} {b : Bool} :
     Step ((a, b)::L₁) L₂ ↔ (∃ L, Step L₁ L ∧ L₂ = (a, b)::L) ∨ L₁ = (a, not b)::L₂ := by
   constructor
   · generalize hL : ((a, b)::L₁ : List _) = L
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in rintro #[[\"@\", \"⟨\", \"_\", \"|\", \"⟨\", ident p, \",\", ident s', \"⟩\", \",\", ident e, \",\", ident a', \",\", ident b', \"⟩\"]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    rintro @⟨_ | ⟨p, s'⟩, e, a', b'⟩
     · simp at hL
       simp [*]
       
@@ -839,8 +837,8 @@ theorem reduce.cons (x) :
     reduce (x::L) = List.casesOn (reduce L) [x] fun hd tl => if x.1 = hd.1 ∧ x.2 = not hd.2 then tl else x::hd::tl :=
   rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The first theorem that characterises the function
 `reduce`: a word reduces to its maximal reduction. -/
 theorem reduce.red : Red L (reduce L) := by
@@ -858,7 +856,7 @@ theorem reduce.red : Red L (reduce L) := by
   by_cases h:hd1.fst = hd2.fst ∧ hd1.snd = not hd2.snd
   · rw [if_pos h]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · exact red.cons_cons ih
       
     · cases hd1
@@ -950,8 +948,8 @@ theorem reduce.red : Red L (reduce L) := by
                []
                (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] [])
                []
-               («tactic·.__;_»
-                "·"
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
                 [(group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
                  (group (Tactic.intro "intro" [`h]) [])
                  (group
@@ -994,8 +992,8 @@ theorem reduce.red : Red L (reduce L) := by
                  "<;>"
                  (Tactic.intro "intro" [`H])))
                []
-               («tactic·.__;_»
-                "·"
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
                 [(group
                   (Tactic.rwSeq
                    "rw"
@@ -1042,15 +1040,15 @@ theorem reduce.red : Red L (reduce L) := by
                      ")")])
                   [])])
                []
-               («tactic·.__;_»
-                "·"
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
                 [(group (Tactic.injections "injections" []) [])
                  (group (Tactic.substVars "subst_vars") [])
                  (group (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]) [])
                  (group (Tactic.cc "cc") [])])
                []
-               («tactic·.__;_»
-                "·"
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
                 [(group
                   (Tactic.refine'
                    "refine'"
@@ -1076,8 +1074,8 @@ theorem reduce.red : Red L (reduce L) := by
           []
           (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] [])
           []
-          («tactic·.__;_»
-           "·"
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
             (group (Tactic.intro "intro" [`h]) [])
             (group
@@ -1119,8 +1117,8 @@ theorem reduce.red : Red L (reduce L) := by
             "<;>"
             (Tactic.intro "intro" [`H])))
           []
-          («tactic·.__;_»
-           "·"
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
            [(group
              (Tactic.rwSeq
               "rw"
@@ -1167,15 +1165,15 @@ theorem reduce.red : Red L (reduce L) := by
                 ")")])
              [])])
           []
-          («tactic·.__;_»
-           "·"
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.injections "injections" []) [])
             (group (Tactic.substVars "subst_vars") [])
             (group (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]) [])
             (group (Tactic.cc "cc") [])])
           []
-          («tactic·.__;_»
-           "·"
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
            [(group
              (Tactic.refine' "refine'" (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
              [])
@@ -1186,8 +1184,8 @@ theorem reduce.red : Red L (reduce L) := by
             (group (Tactic.tacticRfl "rfl") [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic·.__;_»
-       "·"
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
        [(group
          (Tactic.refine' "refine'" (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
          [])

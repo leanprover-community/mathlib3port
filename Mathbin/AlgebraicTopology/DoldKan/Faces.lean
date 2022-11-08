@@ -151,7 +151,7 @@ conv_lhs =>
     simp only [Fin.coe_mk, Fin.cast_le_mk, Fin.cast_succ_mk, Fin.succ_mk, assoc, Fin.cast_mk, ← δ_comp_σ_of_le X hia,
       add_eq_zero_iff_eq_neg, ← neg_zsmul]
     congr
-    ring_exp
+    ring
     
 
 theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) (hqn : n < q) :

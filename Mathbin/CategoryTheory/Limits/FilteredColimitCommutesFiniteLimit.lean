@@ -292,8 +292,8 @@ instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) : IsIs
     infer_instance
   apply cones.cone_iso_of_hom_iso
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colim.map_cone (limit.cone F)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colim.map_cone (limit.cone F)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 noncomputable instance filteredColimPreservesFiniteLimitsOfTypes : PreservesFiniteLimits (colim : (K ⥤ Type v) ⥤ _) :=
   by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{v}
@@ -306,7 +306,7 @@ noncomputable instance filteredColimPreservesFiniteLimitsOfTypes : PreservesFini
   apply is_limit.of_iso_limit (limit.is_limit _)
   symm
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colim.map_cone (limit.cone F)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr colim.map_cone (limit.cone F)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   exact functor.map_iso _ (hc.unique_up_to_iso (limit.is_limit F))
   exact as_iso (colimitLimitToLimitColimitCone.{v, v + 1} F)
 

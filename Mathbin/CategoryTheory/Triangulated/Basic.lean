@@ -24,7 +24,7 @@ open CategoryTheory.Limits
 
 universe v v₀ v₁ v₂ u u₀ u₁ u₂
 
-namespace CategoryTheory.Triangulated
+namespace CategoryTheory.Pretriangulated
 
 open CategoryTheory.Category
 
@@ -44,6 +44,8 @@ structure Triangle where mk' ::
   mor₁ : obj₁ ⟶ obj₂
   mor₂ : obj₂ ⟶ obj₃
   mor₃ : obj₃ ⟶ obj₁⟦(1 : ℤ)⟧
+
+variable {C}
 
 /-- A triangle `(X,Y,Z,f,g,h)` in `C` is defined by the morphisms `f : X ⟶ Y`, `g : Y ⟶ Z`
 and `h : Z ⟶ X⟦1⟧`.
@@ -70,11 +72,9 @@ instance : Inhabited (Triangle C) :=
 -/
 @[simps]
 def contractibleTriangle (X : C) : Triangle C :=
-  Triangle.mk C (𝟙 X) (0 : X ⟶ 0) 0
+  Triangle.mk (𝟙 X) (0 : X ⟶ 0) 0
 
 end
-
-variable {C}
 
 /-- A morphism of triangles `(X,Y,Z,f,g,h) ⟶ (X',Y',Z',f',g',h')` in `C` is a triple of morphisms
 `a : X ⟶ X'`, `b : Y ⟶ Y'`, `c : Z ⟶ Z'` such that
@@ -133,9 +133,9 @@ def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism
 -/
 @[simps]
 instance triangleCategory : Category (Triangle C) where
-  hom A B := TriangleMorphism A B
+  Hom A B := TriangleMorphism A B
   id A := triangleMorphismId A
   comp A B C f g := f.comp g
 
-end CategoryTheory.Triangulated
+end CategoryTheory.Pretriangulated
 

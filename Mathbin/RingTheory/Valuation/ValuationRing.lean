@@ -35,7 +35,7 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 
 universe u v w
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRing A] [IsDomain A] : Prop where
@@ -49,7 +49,7 @@ variable (A : Type u) [CommRing A]
 
 variable (K : Type v) [Field K] [Algebra A K]
 
-/-- The value group of the valuation ring `A`. -/
+/-- The value group of the valuation ring `A`. Note: this is actually a group with zero. -/
 def ValueGroup : Type v :=
   Quotient (MulAction.orbitRel Aˣ K)
 
@@ -465,24 +465,157 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
   right
   all_goals exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (is_unit_of_mul_is_unit_right h') _) _
 
-protected theorem tfae (R : Type u) [CommRing R] [IsDomain R] :
-    Tfae
-      [ValuationRing R, ∀ x : FractionRing R, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹,
-        IsTotal R (· ∣ ·), IsTotal (Ideal R) (· ≤ ·), LocalRing R ∧ IsBezout R] :=
-  by
-  tfae_have 1 ↔ 2
-  · exact iff_is_integer_or_is_integer R _
-    
-  tfae_have 1 ↔ 3
-  · exact iff_dvd_total
-    
-  tfae_have 1 ↔ 4
-  · exact iff_ideal_total
-    
-  tfae_have 1 ↔ 5
-  · exact iff_local_bezout_domain
-    
-  tfae_finish
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `tfae [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`R] [":" (Term.type "Type" [`u])] [] ")")
+        (Term.instBinder "[" [] (Term.app `CommRing [`R]) "]")
+        (Term.instBinder "[" [] (Term.app `IsDomain [`R]) "]")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Tfae
+         [(«term[_]»
+           "["
+           [(Term.app `ValuationRing [`R])
+            ","
+            (Term.forall
+             "∀"
+             [`x]
+             [(Term.typeSpec ":" (Term.app `FractionRing [`R]))]
+             ","
+             («term_∨_»
+              (Term.app `IsLocalization.IsInteger [`R `x])
+              "∨"
+              (Term.app `IsLocalization.IsInteger [`R («term_⁻¹_1» `x "⁻¹")])))
+            ","
+            (Term.app `IsTotal [`R (Term.paren "(" [(«term_∣_» (Term.cdot "·") "∣" (Term.cdot "·")) []] ")")])
+            ","
+            (Term.app
+             `IsTotal
+             [(Term.app `Ideal [`R]) (Term.paren "(" [(«term_≤_» (Term.cdot "·") "≤" (Term.cdot "·")) []] ")")])
+            ","
+            («term_∧_» (Term.app `LocalRing [`R]) "∧" (Term.app `IsBezout [`R]))]
+           "]")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" (Term.app `iff_is_integer_or_is_integer [`R (Term.hole "_")])) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+           []
+           («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `iff_dvd_total) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
+           []
+           («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `iff_ideal_total) [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+           []
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.exact "exact" `iff_local_bezout_domain) [])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" (Term.app `iff_is_integer_or_is_integer [`R (Term.hole "_")])) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
+          []
+          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `iff_dvd_total) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
+          []
+          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `iff_ideal_total) [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+          []
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" `iff_local_bezout_domain) [])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" `iff_local_bezout_domain) [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `iff_local_bezout_domain)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `iff_local_bezout_domain
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« → »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ↔ »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«↔»', expected 'token.« ← »'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    tfae
+    ( R : Type u ) [ CommRing R ] [ IsDomain R ]
+      :
+        Tfae
+          [
+            ValuationRing R
+              ,
+              ∀ x : FractionRing R , IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x ⁻¹
+              ,
+              IsTotal R ( · ∣ · )
+              ,
+              IsTotal Ideal R ( · ≤ · )
+              ,
+              LocalRing R ∧ IsBezout R
+            ]
+    :=
+      by
+        tfae_have 1 ↔ 2
+          · exact iff_is_integer_or_is_integer R _
+          tfae_have 1 ↔ 3
+          · exact iff_dvd_total
+          tfae_have 1 ↔ 4
+          · exact iff_ideal_total
+          tfae_have 1 ↔ 5
+          · exact iff_local_bezout_domain
+          tfae_finish
 
 end
 

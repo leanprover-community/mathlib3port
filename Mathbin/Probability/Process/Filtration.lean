@@ -219,6 +219,27 @@ theorem Integrable.uniformIntegrableCondexpFiltration [Preorder ι] {μ : Measur
     {f : Filtration ι m} {g : Ω → ℝ} (hg : Integrable g μ) : UniformIntegrable (fun i => μ[g|f i]) 1 μ :=
   hg.uniformIntegrableCondexp f.le
 
+section OfSet
+
+variable [Preorder ι]
+
+/-- Given a sequence of measurable sets `(sₙ)`, `filtration_of_set` is the smallest filtration
+such that `sₙ` is measurable with respect to the `n`-the sub-σ-algebra in `filtration_of_set`. -/
+def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) : Filtration ι m where
+  seq i := MeasurableSpace.generateFrom { t | ∃ j ≤ i, s j = t }
+  mono' n m hnm := MeasurableSpace.generate_from_mono fun t ⟨k, hk₁, hk₂⟩ => ⟨k, hk₁.trans hnm, hk₂⟩
+  le' n := MeasurableSpace.generate_from_le fun t ⟨k, hk₁, hk₂⟩ => hk₂ ▸ hsm k
+
+theorem measurableSetFiltrationOfSet {s : ι → Set Ω} (hsm : ∀ i, measurable_set[m] (s i)) (i : ι) {j : ι} (hj : j ≤ i) :
+    measurable_set[filtrationOfSet hsm i] (s j) :=
+  MeasurableSpace.measurableSetGenerateFrom ⟨j, hj, rfl⟩
+
+theorem measurableSetFiltrationOfSet' {s : ι → Set Ω} (hsm : ∀ n, measurable_set[m] (s n)) (i : ι) :
+    measurable_set[filtrationOfSet hsm i] (s i) :=
+  measurableSetFiltrationOfSet hsm i le_rfl
+
+end OfSet
+
 namespace Filtration
 
 variable [TopologicalSpace β] [MetrizableSpace β] [mβ : MeasurableSpace β] [BorelSpace β] [Preorder ι]
@@ -235,6 +256,45 @@ def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) : Fil
     refine' supr₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
     exact (hum j).Measurable ht
+
+section
+
+open MeasurableSpace
+
+theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι → Set Ω}
+    (hsm : ∀ i, measurable_set[m] (s i)) :
+    filtrationOfSet hsm =
+      natural (fun i => (s i).indicator (fun ω => 1 : Ω → β)) fun i => stronglyMeasurableOne.indicator (hsm i) :=
+  by
+  simp only [natural, filtration_of_set, measurable_space_supr_eq]
+  ext1 i
+  refine' le_antisymm (generate_from_le _) (generate_from_le _)
+  · rintro _ ⟨j, hij, rfl⟩
+    refine' measurable_set_generate_from ⟨j, measurable_set_generate_from ⟨hij, _⟩⟩
+    rw [comap_eq_generate_from]
+    refine' measurable_set_generate_from ⟨{1}, measurable_set_singleton 1, _⟩
+    ext x
+    simp [Set.indicator_const_preimage_eq_union]
+    
+  · rintro t ⟨n, ht⟩
+    suffices
+      MeasurableSpace.generateFrom
+          { t | ∃ H : n ≤ i, measurable_set[MeasurableSpace.comap ((s n).indicator (fun ω => 1 : Ω → β)) mβ] t } ≤
+        generate_from { t | ∃ (j : ι)(H : j ≤ i), s j = t }
+      by exact this _ ht
+    refine' generate_from_le _
+    rintro t ⟨hn, u, hu, hu'⟩
+    obtain heq | heq | heq | heq := Set.indicator_const_preimage (s n) u (1 : β)
+    pick_goal 4
+    rw [Set.mem_singleton_iff] at heq
+    all_goals
+    rw [HEq] at hu'
+    rw [← hu']
+    exacts[measurable_set_empty _, MeasurableSet.univ, measurable_set_generate_from ⟨n, hn, rfl⟩,
+      MeasurableSet.compl (measurable_set_generate_from ⟨n, hn, rfl⟩)]
+    
+
+end
 
 section Limit
 

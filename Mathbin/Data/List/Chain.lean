@@ -33,12 +33,16 @@ theorem rel_of_chain_cons {a b : α} {l : List α} (p : Chain R a (b :: l)) : R 
 theorem chain_of_chain_cons {a b : α} {l : List α} (p : Chain R a (b :: l)) : Chain R b l :=
   (chain_cons.1 p).2
 
+#print List.Chain.imp' /-
 theorem Chain.imp' {S : α → α → Prop} (HRS : ∀ ⦃a b⦄, R a b → S a b) {a b : α} (Hab : ∀ ⦃c⦄, R a c → S b c) {l : List α}
     (p : Chain R a l) : Chain S b l := by
   induction' p with _ a c l r p IH generalizing b <;> constructor <;> [exact Hab r, exact IH (@HRS _)]
+-/
 
+#print List.Chain.imp /-
 theorem Chain.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {a : α} {l : List α} (p : Chain R a l) : Chain S a l :=
   p.imp' H (H a)
+-/
 
 theorem Chain.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {a : α} {l : List α} : Chain R a l ↔ Chain S a l :=
   ⟨Chain.imp fun a b => (H a b).1, Chain.imp fun a b => (H a b).2⟩

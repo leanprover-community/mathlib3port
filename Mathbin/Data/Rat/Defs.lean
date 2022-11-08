@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Int.Cast
+import Mathbin.Data.Int.Div
 import Mathbin.Data.Nat.Gcd.Basic
-import Mathbin.Data.Pnat.Basic
+import Mathbin.Data.Pnat.Defs
 import Mathbin.Tactic.NthRewrite.Default
 
 /-!
@@ -38,6 +39,7 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom
 -/
 
 
+#print Rat /-
 /-- `rat`, or `ℚ`, is the type of rational numbers. It is defined
   as the set of pairs ⟨n, d⟩ of integers such that `d` is positive and `n` and
   `d` are coprime. This representation is preferred to the quotient
@@ -48,6 +50,7 @@ structure Rat where mk' ::
   denom : ℕ
   Pos : 0 < denom
   cop : num.natAbs.Coprime denom
+-/
 
 -- mathport name: exprℚ
 notation "ℚ" => Rat
@@ -68,9 +71,11 @@ instance : ToString ℚ :=
 unsafe instance : has_to_format ℚ :=
   ⟨coe ∘ Rat.repr⟩
 
+#print Rat.ofInt /-
 /-- Embed an integer as a rational number -/
 def ofInt (n : ℤ) : ℚ :=
   ⟨n, 1, Nat.one_pos, Nat.coprime_one_right _⟩
+-/
 
 instance : Zero ℚ :=
   ⟨ofInt 0⟩
@@ -125,7 +130,7 @@ Case conversion may be inaccurate. Consider using '#align rat.mk Rat.mkₓ'. -/
 /-- Form the quotient `n / d` where `n d : ℤ`. -/
 def mk : ℤ → ℤ → ℚ
   | n, (d : ℕ) => mkNat n d
-  | n, -[1 + d] => mkPnat (-n) d.succPnat
+  | n, -[d+1] => mkPnat (-n) d.succPnat
 
 -- mathport name: rat.mk
 localized [Rat] infixl:70 " /. " => Rat.mk
@@ -273,7 +278,7 @@ theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
 
 /- warning: rat.num_denom_cases_on -> Rat.numDenomCasesOn is a dubious translation:
 lean 3 declaration is
-  forall {C : Rat -> Sort.{u}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (Zero.zero.{0} Nat Nat.hasZero) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Int (HasLiftT.mk.{1 1} Nat Int (CoeTCₓ.coe.{1 1} Nat Int (CoeTCₓ.mk.{1 1} Nat Int Int.ofNat))) d)))) -> (C a)
+  forall {C : Rat -> Sort.{u}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Int (HasLiftT.mk.{1 1} Nat Int (CoeTCₓ.coe.{1 1} Nat Int (CoeTCₓ.mk.{1 1} Nat Int Int.ofNat))) d)))) -> (C a)
 but is expected to have type
   PUnit.{(imax (succ u) 1 (imax 1 1 u) u)}
 Case conversion may be inaccurate. Consider using '#align rat.num_denom_cases_on Rat.numDenomCasesOnₓ'. -/
@@ -307,9 +312,11 @@ theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b := by
   rw [← Int.nat_abs_mul, ← Int.coe_nat_dvd, Int.dvd_nat_abs, ← e]
   simp
 
+#print Rat.add /-
 /-- Addition of rational numbers. Use `(+)` instead. -/
 protected def add : ℚ → ℚ → ℚ
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => mkPnat (n₁ * d₂ + n₂ * d₁) ⟨d₁ * d₂, mul_pos h₁ h₂⟩
+-/
 
 instance : Add ℚ :=
   ⟨Rat.add⟩
@@ -345,9 +352,11 @@ theorem add_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b + c /. d 
     _ = (a * d + c * b) * (d₁ * d₂) := by simp [mul_add, mul_comm, mul_left_comm]
     
 
+#print Rat.neg /-
 /-- Negation of rational numbers. Use `-r` instead. -/
 protected def neg (r : ℚ) : ℚ :=
   ⟨-r.num, r.denom, r.Pos, by simp [r.cop]⟩
+-/
 
 instance : Neg ℚ :=
   ⟨Rat.neg⟩
@@ -372,9 +381,11 @@ theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b := by
 @[simp]
 theorem mk_neg_denom (n d : ℤ) : n /. -d = -n /. d := by by_cases hd:d = 0 <;> simp [Rat.mk_eq, hd]
 
+#print Rat.mul /-
 /-- Multiplication of rational numbers. Use `(*)` instead. -/
 protected def mul : ℚ → ℚ → ℚ
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => mkPnat (n₁ * n₂) ⟨d₁ * d₂, mul_pos h₁ h₂⟩
+-/
 
 instance : Mul ℚ :=
   ⟨Rat.mul⟩
@@ -388,11 +399,13 @@ theorem mul_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b * (c /. d
     
   cc
 
+#print Rat.inv /-
 /-- Inverse rational number. Use `r⁻¹` instead. -/
 protected def inv : ℚ → ℚ
   | ⟨(n + 1 : ℕ), d, h, c⟩ => ⟨d, n + 1, n.succ_pos, c.symm⟩
   | ⟨0, d, h, c⟩ => 0
-  | ⟨-[1 + n], d, h, c⟩ => ⟨-d, n + 1, n.succ_pos, Nat.Coprime.symm <| by simp <;> exact c⟩
+  | ⟨-[n+1], d, h, c⟩ => ⟨-d, n + 1, n.succ_pos, Nat.Coprime.symm <| by simp <;> exact c⟩
+-/
 
 instance : Inv ℚ :=
   ⟨Rat.inv⟩
@@ -749,7 +762,7 @@ protected theorem add_mk (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
 
 theorem coe_int_eq_mk : ∀ z : ℤ, ↑z = z /. 1
   | (n : ℕ) => of_int_eq_mk _
-  | -[1 + n] => show -ofInt _ = _ by simp [of_int_eq_mk, neg_def, Int.neg_succ_of_nat_coe]
+  | -[n+1] => show -ofInt _ = _ by simp [of_int_eq_mk, neg_def, Int.neg_succ_of_nat_coe]
 
 theorem mk_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d := by
   by_cases d0:d = 0

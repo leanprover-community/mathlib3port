@@ -80,3 +80,10 @@ theorem cast_ne_one {n : ℕ} : (n : R) ≠ 1 ↔ n ≠ 1 :=
 
 end Nat
 
+namespace NeZero
+
+instance char_zero {M} {n : ℕ} [NeZero n] [AddMonoidWithOne M] [CharZero M] : NeZero (n : M) :=
+  ⟨Nat.cast_ne_zero.mpr out⟩
+
+end NeZero
+

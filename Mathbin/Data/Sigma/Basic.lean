@@ -99,15 +99,19 @@ theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq
   cases x₁
   exact Sigma.mk.inj_iff
 
+#print Sigma.subtype_ext /-
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Type _} {p : α → β → Prop} :
     ∀ {x₀ x₁ : Σa, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
+-/
 
+#print Sigma.subtype_ext_iff /-
 theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σa, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
+-/
 
 /- warning: sigma.forall -> Sigma.forall is a dubious translation:
 lean 3 declaration is
@@ -129,14 +133,18 @@ Case conversion may be inaccurate. Consider using '#align sigma.exists Sigma.exi
 theorem exists {p : (Σa, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
+#print Sigma.map /-
 /-- Map the left and right components of a sigma -/
 def map (f₁ : α₁ → α₂) (f₂ : ∀ a, β₁ a → β₂ (f₁ a)) (x : Sigma β₁) : Sigma β₂ :=
   ⟨f₁ x.1, f₂ x.1 x.2⟩
+-/
 
 end Sigma
 
+#print sigma_mk_injective /-
 theorem sigma_mk_injective {i : α} : Function.Injective (@Sigma.mk α β i)
   | _, _, rfl => rfl
+-/
 
 /- warning: function.injective.sigma_map -> Function.Injective.sigma_map is a dubious translation:
 lean 3 declaration is
@@ -184,17 +192,21 @@ theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β
   simp only [Function.Surjective, Sigma.forall, h₁.forall]
   exact fun i => (h₂ _).forall.2 fun x => ⟨⟨i, x⟩, rfl⟩
 
+#print Sigma.curry /-
 /-- Interpret a function on `Σ x : α, β x` as a dependent function with two arguments.
 
 This also exists as an `equiv` as `equiv.Pi_curry γ`. -/
 def Sigma.curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2) (x : α) (y : β x) : γ x y :=
   f ⟨x, y⟩
+-/
 
+#print Sigma.uncurry /-
 /-- Interpret a dependent function with two arguments as a function on `Σ x : α, β x`.
 
 This also exists as an `equiv` as `(equiv.Pi_curry γ).symm`. -/
 def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x), γ x y) (x : Sigma β) : γ x.1 x.2 :=
   f x.1 x.2
+-/
 
 /- warning: sigma.uncurry_curry -> Sigma.uncurry_curry is a dubious translation:
 lean 3 declaration is
@@ -217,9 +229,11 @@ Case conversion may be inaccurate. Consider using '#align sigma.curry_uncurry Si
 theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x), γ x y) : Sigma.curry (Sigma.uncurry f) = f :=
   rfl
 
+#print Prod.toSigma /-
 /-- Convert a product type to a Σ-type. -/
 def Prod.toSigma {α β} (p : α × β) : Σ_ : α, β :=
   ⟨p.1, p.2⟩
+-/
 
 /- warning: prod.fst_comp_to_sigma -> Prod.fst_comp_to_sigma is a dubious translation:
 lean 3 declaration is
@@ -279,9 +293,11 @@ variable {α : Sort _} {β : α → Sort _}
 
 namespace PSigma
 
+#print PSigma.elim /-
 /-- Nondependent eliminator for `psigma`. -/
 def elim {γ} (f : ∀ a, β a → γ) (a : PSigma β) : γ :=
   PSigma.casesOn a f
+-/
 
 /- warning: psigma.elim_val -> PSigma.elim_val is a dubious translation:
 lean 3 declaration is
@@ -362,21 +378,27 @@ Case conversion may be inaccurate. Consider using '#align psigma.exists PSigma.e
 theorem exists {p : (Σ'a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
+#print PSigma.subtype_ext /-
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Sort _} {p : α → β → Prop} :
     ∀ {x₀ x₁ : Σ'a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
+-/
 
+#print PSigma.subtype_ext_iff /-
 theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ'a, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
+-/
 
 variable {α₁ : Sort _} {α₂ : Sort _} {β₁ : α₁ → Sort _} {β₂ : α₂ → Sort _}
 
+#print PSigma.map /-
 /-- Map the left and right components of a sigma -/
 def map (f₁ : α₁ → α₂) (f₂ : ∀ a, β₁ a → β₂ (f₁ a)) : PSigma β₁ → PSigma β₂
   | ⟨a, b⟩ => ⟨f₁ a, f₂ a b⟩
+-/
 
 end PSigma
 

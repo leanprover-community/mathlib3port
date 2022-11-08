@@ -221,10 +221,12 @@ protected theorem Nodup.map {f : α → β} (hf : Injective f) : Nodup l → Nod
 theorem nodup_map_iff {f : α → β} {l : List α} (hf : Injective f) : Nodup (map f l) ↔ Nodup l :=
   ⟨Nodup.of_map _, Nodup.map hf⟩
 
+#print List.nodup_attach /-
 @[simp]
 theorem nodup_attach {l : List α} : Nodup (attach l) ↔ Nodup l :=
   ⟨fun h => attach_map_val l ▸ h.map fun a b => Subtype.eq, fun h =>
     Nodup.of_map Subtype.val ((attach_map_val l).symm ▸ h)⟩
+-/
 
 alias nodup_attach ↔ nodup.of_attach nodup.attach
 

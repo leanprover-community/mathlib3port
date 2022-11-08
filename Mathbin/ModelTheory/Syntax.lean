@@ -68,8 +68,8 @@ open FirstOrder
 
 open StructureCat Fin
 
-/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: var {} -/
-/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: func {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:328:30: infer kinds are unsupported in Lean 4: var {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:328:30: infer kinds are unsupported in Lean 4: func {} -/
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
@@ -335,7 +335,7 @@ def LequivCat.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α where
 
 variable (L) (α)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:321:30: infer kinds are unsupported in Lean 4: falsum {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:328:30: infer kinds are unsupported in Lean 4: falsum {} -/
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
@@ -538,9 +538,9 @@ def exs : ∀ {n}, L.BoundedFormula α n → L.Formula α
 
 /- warning: first_order.language.bounded_formula.map_term_rel -> FirstOrder.Language.BoundedFormula.mapTermRel is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u v u'} L (Sum.{u' 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1 u_2 v'} L' (Sum.{v' 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u v} L n) -> (FirstOrder.Language.Relations.{u_1 u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)))) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (One.one.{0} Nat Nat.hasOne)))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g n)))
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u v u'} L (Sum.{u' 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1 u_2 v'} L' (Sum.{v' 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u v} L n) -> (FirstOrder.Language.Relations.{u_1 u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g n)))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u v u'} L (Sum.{u' 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1 u_2 v'} L' (Sum.{v' 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u v} L n) -> (FirstOrder.Language.Relations.{u_1 u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)))) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (One.one.{0} Nat Nat.hasOne)))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g n)))
+  forall {L : FirstOrder.Language.{u v}} {L' : FirstOrder.Language.{u_1 u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u v u'} L (Sum.{u' 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1 u_2 v'} L' (Sum.{v' 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u v} L n) -> (FirstOrder.Language.Relations.{u_1 u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u v u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1 u_2 v'} L' β (g n)))
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.map_term_rel FirstOrder.Language.BoundedFormula.mapTermRelₓ'. -/
 /-- Maps bounded formulas along a map of terms and a map of relations. -/
 def mapTermRel {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (g n))))

@@ -109,7 +109,7 @@ theorem kronecker_map_smul_right [HasSmul R β] [HasSmul R γ] (f : α → β �
 theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [DecidableEq m] [DecidableEq n] (f : α → β → γ)
     (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
     kroneckerMap f (diagonal a) (diagonal b) = diagonal fun mn => f (a mn.1) (b mn.2) := by
-  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
+  ext (⟨i₁, i₂⟩⟨j₁, j₂⟩)
   simp [diagonal, apply_ite f, ite_and, ite_apply, apply_ite (f (a i₁)), hf₁, hf₂]
 
 @[simp]
@@ -123,7 +123,7 @@ theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃
     kroneckerMap f (reindex el em M) (reindex en ep N) =
       reindex (el.prodCongr en) (em.prodCongr ep) (kroneckerMap f M N) :=
   by
-  ext ⟨i, i'⟩ ⟨j, j'⟩
+  ext (⟨i, i'⟩⟨j, j'⟩)
   rfl
 
 theorem kronecker_map_reindex_left (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (M : Matrix l m α) (N : Matrix n n' β) :
@@ -167,7 +167,7 @@ theorem kronecker_map_bilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m']
     (f : α →ₗ[R] β →ₗ[R] γ) (h_comm : ∀ a b a' b', f (a * b) (a' * b') = f a a' * f b b') (A : Matrix l m α)
     (B : Matrix m n α) (A' : Matrix l' m' β) (B' : Matrix m' n' β) :
     kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') = kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' := by
-  ext ⟨i, i'⟩ ⟨j, j'⟩
+  ext (⟨i, i'⟩⟨j, j'⟩)
   simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ, Finset.sum_product,
     kronecker_map]
   simp_rw [f.map_sum, LinearMap.sum_apply, LinearMap.map_sum, h_comm]

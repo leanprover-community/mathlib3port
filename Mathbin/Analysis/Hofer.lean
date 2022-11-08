@@ -31,7 +31,6 @@ theorem pos_div_pow_pos {α : Type _} [LinearOrderedSemifield α] {a b : α} (ha
     0 < a / b ^ k :=
   div_pos ha (pow_pos hb k)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε) {ϕ : X → ℝ}
     (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
     ∃ ε' > 0, ∃ x' : X, ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' := by
@@ -39,7 +38,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   have reformulation : ∀ (x') (k : ℕ), ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x' := by
     intro x' k
     rw [div_mul_eq_mul_div, le_div_iff, mul_assoc, mul_le_mul_left ε_pos, mul_comm]
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    positivity
   -- Now let's specialize to `ε/2^k`
   replace H : ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'

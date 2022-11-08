@@ -210,13 +210,13 @@ theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Mo
     have hf3 : f = minpoly G F x :=
       Polynomial.eq_of_monic_of_associated hf (monic G F x)
         (associated_of_dvd_dvd hf2 <| @of_eval₂ G _ F _ _ _ x f this)
-    rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).ne_zero] at hfg
+    rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).NeZero] at hfg
     
   · left
     have hg3 : g = minpoly G F x :=
       Polynomial.eq_of_monic_of_associated hg (monic G F x)
         (associated_of_dvd_dvd hg2 <| @of_eval₂ G _ F _ _ _ x g this)
-    rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).ne_zero] at hfg
+    rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).NeZero] at hfg
     
 
 theorem irreducible : Irreducible (minpoly G F x) :=

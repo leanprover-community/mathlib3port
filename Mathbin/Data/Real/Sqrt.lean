@@ -202,10 +202,9 @@ theorem sqrt_sq (h : 0 ≤ x) : sqrt (x ^ 2) = x := by rw [sq, sqrt_mul_self h]
 theorem sqrt_eq_iff_sq_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y ^ 2 = x := by
   rw [sq, sqrt_eq_iff_mul_self_eq hx hy]
 
-theorem sqrt_mul_self_eq_abs (x : ℝ) : sqrt (x * x) = abs x := by
-  rw [← abs_mul_abs_self x, sqrt_mul_self (abs_nonneg _)]
+theorem sqrt_mul_self_eq_abs (x : ℝ) : sqrt (x * x) = |x| := by rw [← abs_mul_abs_self x, sqrt_mul_self (abs_nonneg _)]
 
-theorem sqrt_sq_eq_abs (x : ℝ) : sqrt (x ^ 2) = abs x := by rw [sq, sqrt_mul_self_eq_abs]
+theorem sqrt_sq_eq_abs (x : ℝ) : sqrt (x ^ 2) = |x| := by rw [sq, sqrt_mul_self_eq_abs]
 
 @[simp]
 theorem sqrt_zero : sqrt 0 = 0 := by simp [sqrt]
@@ -252,7 +251,7 @@ theorem le_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
 theorem le_sqrt' (hx : 0 < x) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
   le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt' hx
 
-theorem abs_le_sqrt (h : x ^ 2 ≤ y) : abs x ≤ sqrt y := by rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
+theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
 
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y := by
   constructor

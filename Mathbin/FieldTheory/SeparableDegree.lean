@@ -99,7 +99,7 @@ theorem _root_.irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q
   cases hF
   · exact ⟨f, irred.separable, ⟨0, by rw [pow_zero, expand_one]⟩⟩
     
-  · rcases exists_separable_of_irreducible q irred ‹q.prime›.ne_zero with ⟨n, g, hgs, hge⟩
+  · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
     
 

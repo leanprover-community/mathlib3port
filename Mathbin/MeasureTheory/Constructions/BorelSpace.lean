@@ -472,11 +472,10 @@ theorem Set.OrdConnected.measurableSet (h : OrdConnected s) : MeasurableSet s :=
 theorem IsPreconnected.measurableSet (h : IsPreconnected s) : MeasurableSet s :=
   h.OrdConnected.MeasurableSet
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr α]] -/
 theorem generate_from_Ico_mem_le_borel {α : Type _} [TopologicalSpace α] [LinearOrder α] [OrderClosedTopology α]
     (s t : Set α) : MeasurableSpace.generateFrom { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, IcoCat l u = S } ≤ borel α := by
   apply generate_from_le
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr α]]"
+  borelize α
   rintro _ ⟨a, -, b, -, -, rfl⟩
   exact measurableSetIco
 
@@ -1508,7 +1507,7 @@ def finiteSpanningSetsInIooRat (μ : Measure ℝ) [IsLocallyFiniteMeasure μ] :
   Finite n := measure_Ioo_lt_top
   spanning :=
     Union_eq_univ_iff.2 fun x =>
-      ⟨⌊abs x⌋₊, neg_lt.1 ((neg_le_abs_self x).trans_lt (Nat.lt_floor_add_one _)),
+      ⟨⌊|x|⌋₊, neg_lt.1 ((neg_le_abs_self x).trans_lt (Nat.lt_floor_add_one _)),
         (le_abs_self x).trans_lt (Nat.lt_floor_add_one _)⟩
 
 theorem measure_ext_Ioo_rat {μ ν : Measure ℝ} [IsLocallyFiniteMeasure μ]

@@ -62,12 +62,12 @@ variable {E : Type _} [NormedAddCommGroup E]
 /-- An auxiliary lemma that combines two double exponential estimates into a similar estimate
 on the difference of the functions. -/
 theorem is_O_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ → ℝ}
-    (hBf : ∃ c < a, ∃ B, f =O[l] fun z => expR (B * expR (c * abs (u z))))
-    (hBg : ∃ c < a, ∃ B, g =O[l] fun z => expR (B * expR (c * abs (u z)))) :
-    ∃ c < a, ∃ B, (f - g) =O[l] fun z => expR (B * expR (c * abs (u z))) := by
+    (hBf : ∃ c < a, ∃ B, f =O[l] fun z => expR (B * expR (c * |u z|)))
+    (hBg : ∃ c < a, ∃ B, g =O[l] fun z => expR (B * expR (c * |u z|))) :
+    ∃ c < a, ∃ B, (f - g) =O[l] fun z => expR (B * expR (c * |u z|)) := by
   have :
     ∀ {c₁ c₂ B₁ B₂},
-      c₁ ≤ c₂ → 0 ≤ B₂ → B₁ ≤ B₂ → ∀ z, ∥expR (B₁ * expR (c₁ * abs (u z)))∥ ≤ ∥expR (B₂ * expR (c₂ * abs (u z)))∥ :=
+      c₁ ≤ c₂ → 0 ≤ B₂ → B₁ ≤ B₂ → ∀ z, ∥expR (B₁ * expR (c₁ * |u z|))∥ ≤ ∥expR (B₂ * expR (c₂ * |u z|))∥ :=
     by
     intro c₁ c₂ B₁ B₂ hc hB₀ hB z
     rw [Real.norm_eq_abs, Real.norm_eq_abs, Real.abs_exp, Real.abs_exp, Real.exp_le_exp]
@@ -126,7 +126,7 @@ only for sufficiently large values of `|re z|`.
 theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' IooCat a b))
     (hB :
       ∃ c < π / (b - a),
-        ∃ B, f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.re)))
+        ∃ B, f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.re|)))
     (hle_a : ∀ z : ℂ, im z = a → ∥f z∥ ≤ C) (hle_b : ∀ z, im z = b → ∥f z∥ ≤ C) (hza : a ≤ im z) (hzb : im z ≤ b) :
     ∥f z∥ ≤ C := by
   -- If `im z = a` or `im z = b`, then we apply `hle_a` or `hle_b`, otherwise `im z ∈ Ioo a b`.
@@ -171,12 +171,12 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' IooCat a b))
   change ε < 0 at ε₀
   -- An upper estimate on `∥g ε w∥` that will be used in two branches of the proof.
   obtain ⟨δ, δ₀, hδ⟩ :
-    ∃ δ : ℝ, δ < 0 ∧ ∀ ⦃w⦄, im w ∈ Icc (a - b) (a + b) → abs (g ε w) ≤ expR (δ * expR (d * abs (re w))) := by
+    ∃ δ : ℝ, δ < 0 ∧ ∀ ⦃w⦄, im w ∈ Icc (a - b) (a + b) → abs (g ε w) ≤ expR (δ * expR (d * |re w|)) := by
     refine'
       ⟨ε * Real.cos (d * b),
         mul_neg_of_neg_of_pos ε₀ (Real.cos_pos_of_mem_Ioo <| abs_lt.1 <| (abs_of_pos (mul_pos hd₀ hb)).symm ▸ hb'),
         fun w hw => _⟩
-    replace hw : abs (im (aff w)) ≤ d * b
+    replace hw : |im (aff w)| ≤ d * b
     · rw [← Real.closed_ball_eq_Icc] at hw
       rwa [of_real_mul_im, sub_im, mul_I_im, of_real_re, _root_.abs_mul, abs_of_pos hd₀, mul_le_mul_left hd₀]
       
@@ -189,8 +189,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' IooCat a b))
       mul_nonpos_of_nonpos_of_nonneg δ₀.le (Real.exp_pos _).le]
   /- Our apriori estimate on `f` implies that `g ε w • f w → 0` as `|w.re| → ∞` along the strip. In
     particular, its norm is less than or equal to `C` for sufficiently large `|w.re|`. -/
-  obtain ⟨R, hzR, hR⟩ : ∃ R : ℝ, abs z.re < R ∧ ∀ w, abs (re w) = R → im w ∈ Ioo (a - b) (a + b) → ∥g ε w • f w∥ ≤ C :=
-    by
+  obtain ⟨R, hzR, hR⟩ : ∃ R : ℝ, |z.re| < R ∧ ∀ w, |re w| = R → im w ∈ Ioo (a - b) (a + b) → ∥g ε w • f w∥ ≤ C := by
     refine' ((eventually_gt_at_top _).And _).exists
     rcases hO.exists_pos with ⟨A, hA₀, hA⟩
     simp only [is_O_with_iff, eventually_inf_principal, eventually_comap, mem_Ioo, ← abs_lt, mem_preimage, (· ∘ ·),
@@ -256,7 +255,7 @@ Then `f` is equal to zero on the closed strip `{z : ℂ | a ≤ im z ≤ b}`.
 theorem eq_zero_on_horizontal_strip (hd : DiffContOnCl ℂ f (im ⁻¹' IooCat a b))
     (hB :
       ∃ c < π / (b - a),
-        ∃ B, f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.re)))
+        ∃ B, f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.re|)))
     (ha : ∀ z : ℂ, z.im = a → f z = 0) (hb : ∀ z : ℂ, z.im = b → f z = 0) : EqOn f 0 (im ⁻¹' IccCat a b) := fun z hz =>
   norm_le_zero_iff.1 <|
     horizontal_strip hd hB (fun z hz => (ha z hz).symm ▸ norm_zero.le) (fun z hz => (hb z hz).symm ▸ norm_zero.le) hz.1
@@ -275,11 +274,11 @@ Then `f` is equal to `g` on the closed strip `{z : ℂ | a ≤ im z ≤ b}`.
 theorem eq_on_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻¹' IooCat a b))
     (hBf :
       ∃ c < π / (b - a),
-        ∃ B, f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.re)))
+        ∃ B, f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.re|)))
     (hdg : DiffContOnCl ℂ g (im ⁻¹' IooCat a b))
     (hBg :
       ∃ c < π / (b - a),
-        ∃ B, g =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.re)))
+        ∃ B, g =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.re|)))
     (ha : ∀ z : ℂ, z.im = a → f z = g z) (hb : ∀ z : ℂ, z.im = b → f z = g z) : EqOn f g (im ⁻¹' IccCat a b) :=
   fun z hz =>
   sub_eq_zero.1
@@ -305,7 +304,7 @@ only for sufficiently large values of `|im z|`.
 theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' IooCat a b))
     (hB :
       ∃ c < π / (b - a),
-        ∃ B, f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.im)))
+        ∃ B, f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.im|)))
     (hle_a : ∀ z : ℂ, re z = a → ∥f z∥ ≤ C) (hle_b : ∀ z, re z = b → ∥f z∥ ≤ C) (hza : a ≤ re z) (hzb : re z ≤ b) :
     ∥f z∥ ≤ C := by
   suffices ∥(fun z => f (z * -I)) (z * I)∥ ≤ C by simpa [mul_assoc] using this
@@ -338,7 +337,7 @@ Then `f` is equal to zero on the closed strip `{z : ℂ | a ≤ re z ≤ b}`.
 theorem eq_zero_on_vertical_strip (hd : DiffContOnCl ℂ f (re ⁻¹' IooCat a b))
     (hB :
       ∃ c < π / (b - a),
-        ∃ B, f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.im)))
+        ∃ B, f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.im|)))
     (ha : ∀ z : ℂ, re z = a → f z = 0) (hb : ∀ z : ℂ, re z = b → f z = 0) : EqOn f 0 (re ⁻¹' IccCat a b) := fun z hz =>
   norm_le_zero_iff.1 <|
     vertical_strip hd hB (fun z hz => (ha z hz).symm ▸ norm_zero.le) (fun z hz => (hb z hz).symm ▸ norm_zero.le) hz.1
@@ -357,11 +356,11 @@ Then `f` is equal to `g` on the closed strip `{z : ℂ | a ≤ re z ≤ b}`.
 theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹' IooCat a b))
     (hBf :
       ∃ c < π / (b - a),
-        ∃ B, f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.im)))
+        ∃ B, f =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.im|)))
     (hdg : DiffContOnCl ℂ g (re ⁻¹' IooCat a b))
     (hBg :
       ∃ c < π / (b - a),
-        ∃ B, g =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * abs z.im)))
+        ∃ B, g =O[comap (Abs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' IooCat a b)] fun z => expR (B * expR (c * |z.im|)))
     (ha : ∀ z : ℂ, re z = a → f z = g z) (hb : ∀ z : ℂ, re z = b → f z = g z) : EqOn f g (re ⁻¹' IccCat a b) :=
   fun z hz =>
   sub_eq_zero.1
@@ -740,8 +739,8 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       contrapose! hz
       calc
         x₀ ≤ x₀ - z.re := (le_sub_self_iff _).2 hz
-        _ ≤ abs (x₀ - z.re) := le_abs_self _
-        _ = abs (z - x₀).re := by rw [sub_re, of_real_re, _root_.abs_sub_comm]
+        _ ≤ |x₀ - z.re| := le_abs_self _
+        _ = |(z - x₀).re| := by rw [sub_re, of_real_re, _root_.abs_sub_comm]
         _ ≤ abs (z - x₀) := abs_re_le_abs _
         
     -- Thus we have `C < ∥f x₀∥ = ∥f 0∥ ≤ C`. Contradiction completes the proof.

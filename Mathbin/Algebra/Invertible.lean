@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Algebra.Group.Units
-import Mathbin.Algebra.NeZero
+import Mathbin.Algebra.GroupWithZero.Units
 import Mathbin.Algebra.Ring.Basic
 
 /-!
@@ -303,13 +303,14 @@ theorem map_inv_of {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [Monoi
   letI := Invertible.map f r
   convert rfl
 
-/-- A monoid hom with a left-inverse that is also a monoid hom is invertible.
+/-- If a function `f : R → S` has a left-inverse that is a monoid hom,
+  then `r : R` is invertible if `f r` is.
 
 The inverse is computed as `g (⅟(f r))` -/
 @[simps (config := { attrs := [] })]
-def Invertible.ofLeftInverse {R : Type _} {S : Type _} {F G : Type _} [MulOneClass R] [MulOneClass S]
-    [MonoidHomClass F R S] [MonoidHomClass G S R] (f : F) (g : G) (r : R) (h : Function.LeftInverse g f)
-    [Invertible (f r)] : Invertible r :=
+def Invertible.ofLeftInverse {R : Type _} {S : Type _} {G : Type _} [MulOneClass R] [MulOneClass S]
+    [MonoidHomClass G S R] (f : R → S) (g : G) (r : R) (h : Function.LeftInverse g f) [Invertible (f r)] :
+    Invertible r :=
   (Invertible.map g (f r)).copy _ (h r).symm
 
 /-- Invertibility on either side of a monoid hom with a left-inverse is equivalent. -/

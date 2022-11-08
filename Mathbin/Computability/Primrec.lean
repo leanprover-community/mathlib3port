@@ -121,7 +121,7 @@ end Primrec
 
 end Nat
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
 /-- A `primcodable` type is an `encodable` type for which
   the encode/decode functions are primitive recursive. -/
 class Primcodable (α : Type _) extends Encodable α where
@@ -412,11 +412,11 @@ end Comp
 
 theorem PrimrecPred.of_eq {α} [Primcodable α] {p q : α → Prop} [DecidablePred p] [DecidablePred q] (hp : PrimrecPred p)
     (H : ∀ a, p a ↔ q a) : PrimrecPred q :=
-  Primrec.of_eq hp fun a => to_bool_congr (H a)
+  Primrec.of_eq hp fun a => Bool.decide_congr (H a)
 
 theorem PrimrecRel.of_eq {α β} [Primcodable α] [Primcodable β] {r s : α → β → Prop} [∀ a b, Decidable (r a b)]
     [∀ a b, Decidable (s a b)] (hr : PrimrecRel r) (H : ∀ a b, r a b ↔ s a b) : PrimrecRel s :=
-  Primrec₂.of_eq hr fun a b => to_bool_congr (H a b)
+  Primrec₂.of_eq hr fun a b => Bool.decide_congr (H a b)
 
 namespace Primrec₂
 
@@ -1178,7 +1178,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
-/- ./././Mathport/Syntax/Translate/Command.lean:643:6: unsupported: hide command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:657:6: unsupported: hide command -/
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f := by
   induction pf
   case zero => exact const 0

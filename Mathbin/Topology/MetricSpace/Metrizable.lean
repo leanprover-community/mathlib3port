@@ -118,8 +118,6 @@ instance metrizableSpacePi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (�
 variable (X) [T3Space X] [SecondCountableTopology X]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident f, ",", ident hf, "⟩", ":", expr «expr∃ , »((f : X → bounded_continuous_function(s, exprℝ())),
-    embedding f)]] -/
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := by
@@ -134,8 +132,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   -- with the discrete topology and deal with `s →ᵇ ℝ` instead.
   letI : TopologicalSpace s := ⊥
   haveI : DiscreteTopology s := ⟨rfl⟩
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident f, \",\", ident hf, \"⟩\", \":\", expr «expr∃ , »((f : X → bounded_continuous_function(s, exprℝ())),\n    embedding f)]]"
+  rsuffices ⟨f, hf⟩ : ∃ f : X → s →ᵇ ℝ, Embedding f
   · exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
         (BoundedContinuousFunction.isometryExtend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp hf⟩

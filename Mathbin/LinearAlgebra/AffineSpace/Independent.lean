@@ -499,7 +499,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P} (h : Aff
 
 variable (k V)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_affine_independent (s : Set P) :
     ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
@@ -530,7 +530,7 @@ theorem exists_affine_independent (s : Set P) :
 
 variable (k) {V P}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- Two different points are affinely independent. -/
 theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) : AffineIndependent k ![p₁, p₂] := by
   rw [affine_independent_iff_linear_independent_vsub k ![p₁, p₂] 0]
@@ -596,8 +596,8 @@ theorem AffineIndependent.affine_independent_of_not_mem_span {p : ι → P} {i :
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- If distinct points `p₁` and `p₂` lie in `s` but `p₃` does not, the three points are affinely
 independent. -/
 theorem affine_independent_of_ne_of_mem_of_mem_of_not_mem {s : AffineSubspace k P} {p₁ p₂ p₃ : P} (hp₁p₂ : p₁ ≠ p₂)
@@ -614,7 +614,7 @@ theorem affine_independent_of_ne_of_mem_of_mem_of_not_mem {s : AffineSubspace k 
   intro x
   fin_cases x <;> simp [hp₁, hp₂]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- If distinct points `p₁` and `p₃` lie in `s` but `p₂` does not, the three points are affinely
 independent. -/
 theorem affine_independent_of_ne_of_mem_of_not_mem_of_mem {s : AffineSubspace k P} {p₁ p₂ p₃ : P} (hp₁p₃ : p₁ ≠ p₃)
@@ -624,7 +624,7 @@ theorem affine_independent_of_ne_of_mem_of_not_mem_of_mem {s : AffineSubspace k 
   ext x
   fin_cases x <;> rfl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- If distinct points `p₂` and `p₃` lie in `s` but `p₁` does not, the three points are affinely
 independent. -/
 theorem affine_independent_of_ne_of_not_mem_of_mem_of_mem {s : AffineSubspace k P} {p₁ p₂ p₃ : P} (hp₂p₃ : p₂ ≠ p₃)

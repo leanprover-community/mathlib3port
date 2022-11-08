@@ -69,13 +69,13 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (s.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (sᶜ.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => g a a.2 :=
@@ -818,39 +818,15 @@ on `f '' s`. For a computable version, see `function.injective.inv_of_mem_range`
 noncomputable def invFunOn (f : α → β) (s : Set α) (b : β) : α :=
   if h : ∃ a, a ∈ s ∧ f a = b then Classical.choose h else Classical.choice ‹Nonempty α›
 
-/- warning: function.inv_fun_on_pos -> Function.inv_fun_on_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b))) -> (And (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) (Function.invFunOn.{u v} α β _inst_1 f s b) s) (Eq.{succ v} β (f (Function.invFunOn.{u v} α β _inst_1 f s b)) b))
-but is expected to have type
-  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b))) -> (And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) (Function.inv_fun_on.{u v} α n β f s b) s) (Eq.{v} β (f (Function.inv_fun_on.{u v} α n β f s b)) b))
-Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_pos Function.inv_fun_on_posₓ'. -/
 theorem inv_fun_on_pos (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s ∧ f (invFunOn f s b) = b := by
   rw [bex_def] at h <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.choose_spec h
 
-/- warning: function.inv_fun_on_mem -> Function.inv_fun_on_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b))) -> (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) (Function.invFunOn.{u v} α β _inst_1 f s b) s)
-but is expected to have type
-  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b))) -> (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) (Function.inv_fun_on.{u v} α n β f s b) s)
-Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_mem Function.inv_fun_on_memₓ'. -/
 theorem inv_fun_on_mem (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s :=
   (inv_fun_on_pos h).left
 
-/- warning: function.inv_fun_on_eq -> Function.inv_fun_on_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b))) -> (Eq.{succ v} β (f (Function.invFunOn.{u v} α β _inst_1 f s b)) b)
-but is expected to have type
-  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b))) -> (Eq.{v} β (f (Function.inv_fun_on.{u v} α n β f s b)) b)
-Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_eq Function.inv_fun_on_eqₓ'. -/
 theorem inv_fun_on_eq (h : ∃ a ∈ s, f a = b) : f (invFunOn f s b) = b :=
   (inv_fun_on_pos h).right
 
-/- warning: function.inv_fun_on_neg -> Function.inv_fun_on_neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Nonempty.{succ u} α] {s : Set.{u} α} {f : α -> β} {b : β}, (Not (Exists.{succ u} α (fun (a : α) => Exists.{0} (Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) (fun (H : Membership.Mem.{u u} α (Set.{u} α) (Set.hasMem.{u} α) a s) => Eq.{succ v} β (f a) b)))) -> (Eq.{succ u} α (Function.invFunOn.{u v} α β _inst_1 f s b) (Classical.choice.{succ u} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u}} [n : Nonempty.{succ u} α] {β : Sort.{v}} {f : α -> β} {s : Set.{u} α} {b : β}, (Not (Exists.{succ u} α (fun (a : α) => And (Membership.mem.{u u} α (Set.{u} α) (Set.instMembershipSet.{u} α) a s) (Eq.{v} β (f a) b)))) -> (Eq.{succ u} α (Function.inv_fun_on.{u v} α n β f s b) (Classical.choice.{succ u} α n))
-Case conversion may be inaccurate. Consider using '#align function.inv_fun_on_neg Function.inv_fun_on_negₓ'. -/
 theorem inv_fun_on_neg (h : ¬∃ a ∈ s, f a = b) : invFunOn f s b = Classical.choice ‹Nonempty α› := by
   rw [bex_def] at h <;> rw [inv_fun_on, dif_neg h]
 
@@ -888,7 +864,7 @@ theorem SurjOn.bij_on_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunO
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
 theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
@@ -1000,17 +976,17 @@ theorem piecewise_eq_on (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ 
 
 theorem piecewise_eq_on_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀ i ∈ s, f₁ i ≤ g i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by simp [*] else by simp [*]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀ i ∈ s, g i ≤ f₁ i) (h₂ : ∀ (i) (_ : i ∉ s), g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i ∈ s, f₁ i ≤ g₁ i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by apply piecewise_le <;> intros <;> simp [*]
@@ -1082,7 +1058,7 @@ theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ∉ » s) -/
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjointComplRight _ _ s),

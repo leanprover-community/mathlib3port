@@ -331,6 +331,17 @@ theorem is_atom_pure : IsAtom (pure a : Filter α) :=
 protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure a :=
   ⟨Ultrafilter.unique (pure a), le_of_eq⟩
 
+@[simp]
+theorem lt_pure_iff : f < pure a ↔ f = ⊥ :=
+  is_atom_pure.lt_iff
+
+theorem le_pure_iff' : f ≤ pure a ↔ f = ⊥ ∨ f = pure a :=
+  is_atom_pure.le_iff
+
+@[simp]
+theorem Iic_pure (a : α) : IicCat (pure a : Filter α) = {⊥, pure a} :=
+  is_atom_pure.Iic_eq
+
 theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
   set g : Filter ↥(sᶜ) := comap coe f

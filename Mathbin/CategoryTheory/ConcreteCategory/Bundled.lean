@@ -22,27 +22,34 @@ namespace CategoryTheory
 
 variable {c d : Type u → Type v} {α : Type u}
 
+#print CategoryTheory.Bundled /-
 /-- `bundled` is a type bundled with a type class instance for that type. Only
 the type class is exposed as a parameter. -/
 @[nolint has_nonempty_instance]
 structure Bundled (c : Type u → Type v) : Type max (u + 1) v where
   α : Type u
   str : c α := by infer_instance
+-/
 
 namespace Bundled
 
+#print CategoryTheory.Bundled.of /-
 -- Usually explicit instances will provide their own version of this, e.g. `Mon.of` and `Top.of`.
 /-- A generic function for lifting a type equipped with an instance to a bundled object. -/
 def of {c : Type u → Type v} (α : Type u) [str : c α] : Bundled c :=
   ⟨α, str⟩
+-/
 
 instance : CoeSort (Bundled c) (Type u) :=
   ⟨Bundled.α⟩
 
+#print CategoryTheory.Bundled.coe_mk /-
 @[simp]
 theorem coe_mk (α) (str) : (@Bundled.mk c α str : Type u) = α :=
   rfl
+-/
 
+#print CategoryTheory.Bundled.map /-
 /-
 `bundled.map` is reducible so that, if we define a category
 
@@ -56,6 +63,7 @@ a (semi)ring homomorphism from R.α to S.α, and not merely from
 @[reducible]
 def map (f : ∀ {α}, c α → d α) (b : Bundled c) : Bundled d :=
   ⟨b, f b.str⟩
+-/
 
 end Bundled
 

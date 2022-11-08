@@ -267,7 +267,7 @@ theorem Cofix.bisim {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
   rw [← split_drop_fun_last_fun f₀, ← split_drop_fun_last_fun f₁]
   rw [append_fun_comp_split_fun, append_fun_comp_split_fun]
   rw [id_comp, id_comp]
-  congr 2 with i j
+  congr 2 with (i j)
   cases' i with _ i <;> dsimp
   · apply Quot.sound
     apply h' _ j
@@ -385,7 +385,7 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
       simp only [prod_map_id, drop_fun_prod, drop_fun_append_fun, drop_fun_diag, id_comp, drop_fun_to_subtype]
       erw [to_subtype_of_subtype_assoc, id_comp]
       clear * -
-      ext i x : 2
+      ext (i x) : 2
       induction i
       rfl
       apply i_ih

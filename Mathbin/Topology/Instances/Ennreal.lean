@@ -143,7 +143,7 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
   refine' (Homeomorph.setCongr <| Set.ext fun x => _).trans ne_top_homeomorph_nnreal <;>
     simp only [mem_set_of_eq, lt_top_iff_ne_top]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (IoiCat a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 
@@ -174,7 +174,7 @@ theorem tendsto_coe_nhds_top {f : α → ℝ≥0} {l : Filter α} :
     Tendsto (fun x => (f x : ℝ≥0∞)) l (𝓝 ∞) ↔ Tendsto f l atTop := by
   rw [tendsto_nhds_top_iff_nnreal, at_top_basis_Ioi.tendsto_right_iff] <;> [simp, infer_instance, infer_instance]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (IioCat a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]
 
@@ -678,7 +678,7 @@ theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x 
   filter_upwards [h (-r)] with i hi using(le_neg.1 hi).trans (neg_le_abs_self _)
 
 theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x : ι → ℝ}
-    (hf : liminf (fun i => (∥x i∥₊ : ℝ≥0∞)) l ≠ ∞) (hbdd : ¬IsBoundedUnder (· ≤ ·) l fun i => abs (x i)) :
+    (hf : liminf (fun i => (∥x i∥₊ : ℝ≥0∞)) l ≠ ∞) (hbdd : ¬IsBoundedUnder (· ≤ ·) l fun i => |x i|) :
     ∃ a b : ℚ, a < b ∧ (∃ᶠ i in l, x i < a) ∧ ∃ᶠ i in l, ↑b < x i := by
   rw [is_bounded_under_le_abs, not_and_or] at hbdd
   obtain hbdd | hbdd := hbdd
@@ -948,6 +948,20 @@ theorem tsum_Union_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι
   have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
   rw [tsum_congr_subtype f this]
   exact tsum_bUnion_le _ _ _
+
+theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) (hf0 : f 0 ≠ ∞) : (∑' n, f (n + 1)) = ∞ := by
+  rw [← tsum_eq_tsum_of_has_sum_iff_has_sum fun _ => (notMemRangeEquiv 1).has_sum_iff]
+  swap
+  · infer_instance
+    
+  have h₁ : ((∑' b : { n // n ∈ Finset.range 1 }, f b) + ∑' b : { n // n ∉ Finset.range 1 }, f b) = ∑' b, f b :=
+    tsum_add_tsum_compl Ennreal.summable Ennreal.summable
+  rw [Finset.tsum_subtype, Finset.sum_range_one, hf, Ennreal.add_eq_top] at h₁
+  rw [← h₁.resolve_left hf0]
+  apply tsum_congr
+  rintro ⟨i, hi⟩
+  simp only [Multiset.mem_range, not_lt] at hi
+  simp only [tsub_add_cancel_of_le hi, coe_not_mem_range_equiv, Function.comp_app, Subtype.coe_mk]
 
 end tsum
 

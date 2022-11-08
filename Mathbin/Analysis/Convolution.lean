@@ -921,7 +921,7 @@ variable [SecondCountableTopology G] [SigmaCompactSpace G]
 
 theorem convolution_precompR_apply {g : G → E'' →L[𝕜] E'} (hf : LocallyIntegrable f μ) (hcg : HasCompactSupport g)
     (hg : Continuous g) (x₀ : G) (x : E'') : (f ⋆[L.precompR E'', μ] g) x₀ x = (f ⋆[L, μ] fun a => g a x) x₀ := by
-  have := hcg.convolution_exists_right (L.precompR E'') hf hg x₀
+  have := hcg.convolution_exists_right (L.precompR E'' : _) hf hg x₀
   simp_rw [convolution_def, ContinuousLinearMap.integral_apply this]
   rfl
 

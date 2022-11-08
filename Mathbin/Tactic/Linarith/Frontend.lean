@@ -133,13 +133,13 @@ unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
   | quote.1 (@LE.le (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
   | quote.1 (@Eq (%%ₓtp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
   | quote.1 (@Ne (%%ₓtp) _ _) => return (`not.intro, tp)
-  | quote.1 (@ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
-  | quote.1 (@gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
+  | quote.1 (@GE.ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
+  | quote.1 (@GT.gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
   | quote.1 ¬@LT.lt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | quote.1 ¬@LE.le (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | quote.1 ¬@Eq (%%ₓtp) _ _ => return (`` Not.intro, tp)
-  | quote.1 ¬@ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-  | quote.1 ¬@gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@GE.ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@GT.gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | _ => none
 
 /-- `apply_contr_lemma` inspects the target to see if it can be moved to a hypothesis by negation.

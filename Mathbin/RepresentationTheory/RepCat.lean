@@ -31,7 +31,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:291:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:297:31: unsupported: @[derive] abbrev -/
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev RepCat (k G : Type u) [Ring k] [Monoid G] :=
   ActionCat (ModuleCat.{u} k) (MonCat.of G)

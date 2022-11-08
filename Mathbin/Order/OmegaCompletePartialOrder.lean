@@ -153,7 +153,7 @@ open OmegaCompletePartialOrder
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option extends_priority -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option extends_priority -/
 set_option extends_priority 50
 
 /-- An omega-complete partial order is a partial order with a supremum
@@ -199,12 +199,12 @@ theorem ωSup_total {c : Chain α} {x : α} (h : ∀ i, c i ≤ x ∨ x ≤ c i)
 theorem ωSup_le_ωSup_of_le {c₀ c₁ : Chain α} (h : c₀ ≤ c₁) : ωSup c₀ ≤ ωSup c₁ :=
   (ωSup_le _ _) fun i => (Exists.rec_on (h i)) fun j h => le_trans h (le_ωSup _ _)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ωSup c]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ωSup c]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ x := by
   constructor <;> intros
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ωSup c]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ωSup c]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     exact le_ωSup _ _
     assumption
     
@@ -675,8 +675,8 @@ def toMono : (α →𝒄 β) →o α →o β where
   toFun f := f
   monotone' x y h := h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr c₀ i (c₁ (max i j))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr c₀ i (c₁ (max i j))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- When proving that a chain of applications is below a bound `z`, it suffices to consider the
 functions and values being selected from the same index in the chains.
 
@@ -690,7 +690,7 @@ theorem forall_forall_merge (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) (z 
     
   · apply le_trans _ (h (max i j))
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr c₀ i (c₁ (max i j))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr c₀ i (c₁ (max i j))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     · apply (c₀ i).Monotone
       apply c₁.monotone
       apply le_max_right
@@ -723,8 +723,8 @@ instance : OmegaCompletePartialOrder (α →𝒄 β) :=
 
 namespace Prod
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y.fst x.snd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y.fst x.snd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The application of continuous functions as a continuous function.  -/
 @[simps]
 def apply : (α →𝒄 β) × α →𝒄 β where
@@ -732,7 +732,7 @@ def apply : (α →𝒄 β) × α →𝒄 β where
   monotone' x y h := by
     dsimp
     trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y.fst x.snd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg" <;>
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y.fst x.snd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
       [apply h.1, apply y.1.Monotone h.2]
   cont := by
     intro c

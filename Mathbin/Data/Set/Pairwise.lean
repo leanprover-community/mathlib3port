@@ -3,18 +3,21 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Set.Lattice
 import Mathbin.Logic.Relation
+import Mathbin.Logic.Pairwise
+import Mathbin.Data.Set.Lattice
 
 /-!
 # Relations holding pairwise
 
-This file defines pairwise relations and pairwise disjoint indexed sets.
+This file defines pairwise relations on sets and pairwise disjoint indexed sets.
+
+We also prove many basic facts about `pairwise`. It is possible that an intermediate file,
+with more imports than `logic.pairwise` but not importing `data.set.lattice` would be appropriate
+to hold many of these basic facts.
 
 ## Main declarations
 
-* `pairwise`: `pairwise r` states that `r i j` for all `i ≠ j`.
-* `set.pairwise`: `s.pairwise r` states that `r i j` for all `i ≠ j` with `i, j ∈ s`.
 * `set.pairwise_disjoint`: `s.pairwise_disjoint f` states that images under `f` of distinct elements
   of `s` are either equal or `disjoint`.
 
@@ -33,15 +36,6 @@ section Pairwise
 
 variable {f g : ι → α} {s t u : Set α} {a b : α}
 
-/-- A relation `r` holds pairwise if `r i j` for all `i ≠ j`. -/
-def Pairwise (r : α → α → Prop) :=
-  ∀ i j, i ≠ j → r i j
-
-theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h <| hr i j hij
-
-protected theorem Pairwise.eq (h : Pairwise r) : ¬r a b → a = b :=
-  not_imp_comm.1 <| h _ _
-
 theorem pairwise_on_bool (hr : Symmetric r) {a b : α} : Pairwise (r on fun c => cond c a b) ↔ r a b := by
   simpa [Pairwise, Function.onFun] using @hr a b
 
@@ -50,48 +44,25 @@ theorem pairwise_disjoint_on_bool [SemilatticeInf α] [OrderBot α] {a b : α} :
   pairwise_on_bool Disjoint.symm
 
 theorem Symmetric.pairwise_on [LinearOrder ι] (hr : Symmetric r) (f : ι → α) :
-    Pairwise (r on f) ↔ ∀ m n, m < n → r (f m) (f n) :=
-  ⟨fun h m n hmn => h m n hmn.Ne, fun h m n hmn => by
-    obtain hmn' | hmn' := hmn.lt_or_lt
-    · exact h _ _ hmn'
-      
-    · exact hr (h _ _ hmn')
-      ⟩
+    Pairwise (r on f) ↔ ∀ ⦃m n⦄, m < n → r (f m) (f n) :=
+  ⟨fun h m n hmn => h hmn.Ne, fun h m n hmn => hmn.lt_or_lt.elim (@h _ _) fun h' => hr (h h')⟩
 
 theorem pairwise_disjoint_on [SemilatticeInf α] [OrderBot α] [LinearOrder ι] (f : ι → α) :
-    Pairwise (Disjoint on f) ↔ ∀ m n, m < n → Disjoint (f m) (f n) :=
+    Pairwise (Disjoint on f) ↔ ∀ ⦃m n⦄, m < n → Disjoint (f m) (f n) :=
   Symmetric.pairwise_on Disjoint.symm f
 
 theorem PairwiseDisjoint.mono [SemilatticeInf α] [OrderBot α] (hs : Pairwise (Disjoint on f)) (h : g ≤ f) :
     Pairwise (Disjoint on g) :=
   hs.mono fun i j hij => Disjoint.mono (h i) (h j) hij
 
-theorem Function.injective_iff_pairwise_ne : Injective f ↔ Pairwise ((· ≠ ·) on f) :=
-  forall₂_congr fun i j => not_imp_not.symm
-
 alias Function.injective_iff_pairwise_ne ↔ Function.Injective.pairwise_ne _
 
 namespace Set
-
-/-- The relation `r` holds pairwise on the set `s` if `r x y` for all *distinct* `x y ∈ s`. -/
-protected def Pairwise (s : Set α) (r : α → α → Prop) :=
-  ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → x ≠ y → r x y
-
-theorem pairwise_of_forall (s : Set α) (r : α → α → Prop) (h : ∀ a b, r a b) : s.Pairwise r := fun a _ b _ _ => h a b
-
-theorem Pairwise.imp_on (h : s.Pairwise r) (hrp : s.Pairwise fun ⦃a b : α⦄ => r a b → p a b) : s.Pairwise p :=
-  fun a ha b hb hab => hrp ha hb hab <| h ha hb hab
-
-theorem Pairwise.imp (h : s.Pairwise r) (hpq : ∀ ⦃a b : α⦄, r a b → p a b) : s.Pairwise p :=
-  h.imp_on <| pairwise_of_forall s _ hpq
 
 theorem Pairwise.mono (h : t ⊆ s) (hs : s.Pairwise r) : t.Pairwise r := fun x xt y yt => hs (h xt) (h yt)
 
 theorem Pairwise.mono' (H : r ≤ p) (hr : s.Pairwise r) : s.Pairwise p :=
   hr.imp H
-
-protected theorem Pairwise.eq (hs : s.Pairwise r) (ha : a ∈ s) (hb : b ∈ s) (h : ¬r a b) : a = b :=
-  of_not_not fun hab => h <| hs ha hb hab
 
 theorem pairwise_top (s : Set α) : s.Pairwise ⊤ :=
   pairwise_of_forall s _ fun a b => trivial
@@ -111,9 +82,6 @@ theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈
   forall₄_congr fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp of_eq
 
 alias pairwise_iff_of_refl ↔ pairwise.of_refl _
-
-theorem _root_.reflexive.set_pairwise_iff (hr : Reflexive r) : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
-  forall₄_congr fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp <| Eq.ndrec <| hr a
 
 theorem Nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.Nonempty) :
     s.Pairwise (r on f) ↔ ∃ z, ∀ x ∈ s, r (f x) z := by
@@ -193,9 +161,6 @@ theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α
 
 alias pairwise_bot_iff ↔ pairwise.subsingleton _
 
-theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
-    Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)
-
 theorem InjOn.pairwise_image {s : Set ι} (h : s.InjOn f) : (f '' s).Pairwise r ↔ s.Pairwise (r on f) := by
   simp (config := { contextual := true }) [h.eq_iff, Set.Pairwise]
 
@@ -218,20 +183,11 @@ theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : Directe
 
 end Set
 
-theorem Pairwise.set_pairwise (h : Pairwise r) (s : Set α) : s.Pairwise r := fun x hx y hy => h x y
-
 end Pairwise
 
-theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α → α → Prop) :
+theorem pairwise_subtype_iff_pairwise_set (s : Set α) (r : α → α → Prop) :
     (Pairwise fun (x : s) (y : s) => r x y) ↔ s.Pairwise r := by
-  constructor
-  · intro h x hx y hy hxy
-    exact h ⟨x, hx⟩ ⟨y, hy⟩ (by simpa only [Subtype.mk_eq_mk, Ne.def] )
-    
-  · rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy
-    simp only [Subtype.mk_eq_mk, Ne.def] at hxy
-    exact h hx hy hxy
-    
+  simp only [Pairwise, Set.Pairwise, SetCoe.forall, Ne.def, Subtype.ext_iff, Subtype.coe_mk]
 
 alias pairwise_subtype_iff_pairwise_set ↔ Pairwise.set_of_subtype Set.Pairwise.subtype
 

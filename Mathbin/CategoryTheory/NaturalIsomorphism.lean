@@ -194,6 +194,7 @@ theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIs
   ⟨(IsIso.of_iso (ofComponents (fun X => asIso (α.app X)) (by tidy))).1⟩
 
 /-- Horizontal composition of natural isomorphisms. -/
+@[simps]
 def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ H ≅ G ⋙ I := by
   refine' ⟨α.hom ◫ β.hom, α.inv ◫ β.inv, _, _⟩
   · ext
@@ -205,6 +206,17 @@ def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ 
   rw [← nat_trans.exchange]
   simp
   rfl
+
+theorem is_iso_map_iff {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) {X Y : C} (f : X ⟶ Y) : IsIso (F₁.map f) ↔ IsIso (F₂.map f) := by
+  revert F₁ F₂
+  suffices ∀ {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) (hf : is_iso (F₁.map f)), is_iso (F₂.map f) by
+    exact fun F₁ F₂ e => ⟨this e, this e.symm⟩
+  intro F₁ F₂ e hf
+  refine' is_iso.mk ⟨e.inv.app Y ≫ inv (F₁.map f) ≫ e.hom.app X, _, _⟩
+  · simp only [nat_trans.naturality_assoc, is_iso.hom_inv_id_assoc, iso.inv_hom_id_app]
+    
+  · simp only [assoc, ← e.hom.naturality, is_iso.inv_hom_id_assoc, iso.inv_hom_id_app]
+    
 
 end NatIso
 

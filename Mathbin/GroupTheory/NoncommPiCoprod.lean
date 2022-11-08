@@ -70,7 +70,7 @@ namespace MonoidHom
 @[to_additive
       "The canonical homomorphism from a family of additive monoids.\n\nSee also `linear_map.lsum` for a linear version without the commutativity assumption."]
 def noncommPiCoprod : (∀ i : ι, N i) →* M where
-  toFun f := (Finset.univ.noncommProd fun i => ϕ i (f i)) fun i _ j _ h => hcomm _ _ h _ _
+  toFun f := (Finset.univ.noncommProd fun i => ϕ i (f i)) fun i _ j _ h => hcomm h _ _
   map_one' := by
     apply (Finset.noncomm_prod_eq_pow_card _ _ _ _ _).trans (one_pow _)
     simp
@@ -81,7 +81,7 @@ def noncommPiCoprod : (∀ i : ι, N i) →* M where
       exact map_mul (ϕ i) (f i) (g i)
       
     · rintro i - j - h
-      exact hcomm _ _ h _ _
+      exact hcomm h _ _
       
 
 variable {hcomm}
@@ -110,8 +110,7 @@ omit hcomm
 def noncommPiCoprodEquiv :
     { ϕ : ∀ i, N i →* M // Pairwise fun i j => ∀ x y, Commute (ϕ i x) (ϕ j y) } ≃ ((∀ i, N i) →* M) where
   toFun ϕ := noncommPiCoprod ϕ.1 ϕ.2
-  invFun f :=
-    ⟨fun i => f.comp (MonoidHom.single N i), fun i j hij x y => Commute.map (Pi.mul_single_commute i j hij x y) f⟩
+  invFun f := ⟨fun i => f.comp (MonoidHom.single N i), fun i j hij x y => Commute.map (Pi.mul_single_commute hij x y) f⟩
   left_inv ϕ := by
     ext
     simp

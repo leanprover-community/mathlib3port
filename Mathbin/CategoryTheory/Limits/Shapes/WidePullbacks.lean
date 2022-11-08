@@ -67,8 +67,7 @@ instance Hom.inhabited : Inhabited (Hom none none) :=
 
 attribute [local tidy] tactic.case_bash
 
-instance subsingleton_hom (j j' : WidePullbackShape J) : Subsingleton (j ⟶ j') :=
-  ⟨by tidy⟩
+instance subsingleton_hom : Quiver.IsThin (WidePullbackShape J) := fun _ _ => ⟨by tidy⟩
 
 instance category : SmallCategory (WidePullbackShape J) :=
   thin_category
@@ -156,8 +155,7 @@ instance Hom.inhabited : Inhabited (Hom none none) :=
 
 attribute [local tidy] tactic.case_bash
 
-instance subsingleton_hom (j j' : WidePushoutShape J) : Subsingleton (j ⟶ j') :=
-  ⟨by tidy⟩
+instance subsingleton_hom : Quiver.IsThin (WidePushoutShape J) := fun _ _ => ⟨by tidy⟩
 
 instance category : SmallCategory (WidePushoutShape J) :=
   thin_category

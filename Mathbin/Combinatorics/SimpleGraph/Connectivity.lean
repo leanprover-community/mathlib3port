@@ -56,8 +56,15 @@ counterparts in [Chou1994].
 * `simple_graph.connected_component` is the type of connected components of
   a given graph.
 
+* `simple_graph.is_bridge` for whether an edge is a bridge edge
+
+## Main statements
+
+* `simple_graph.is_bridge_iff_mem_and_forall_cycle_not_mem` characterizes bridge edges in terms of
+  there being no cycle containing them.
+
 ## Tags
-walks, trails, paths, circuits, cycles
+walks, trails, paths, circuits, cycles, bridge edges
 
 -/
 
@@ -448,6 +455,9 @@ It is written in this form (rather than using `⊆`) to avoid unsightly coercion
 theorem edges_subset_edge_set : ∀ {u v : V} (p : G.Walk u v) ⦃e : Sym2 V⦄ (h : e ∈ p.edges), e ∈ G.EdgeSet
   | _, _, cons h' p', e, h => by rcases h with ⟨rfl, h⟩ <;> solve_by_elim
 
+theorem adj_of_mem_edges {u v x y : V} (p : G.Walk u v) (h : ⟦(x, y)⟧ ∈ p.edges) : G.Adj x y :=
+  edges_subset_edge_set p h
+
 @[simp]
 theorem darts_nil {u : V} : (nil : G.Walk u u).darts = [] :=
   rfl
@@ -564,24 +574,24 @@ theorem edges_nodup_of_support_nodup {u v : V} {p : G.Walk u v} (h : p.Support.N
 structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
   edges_nodup : p.edges.Nodup
 
-/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.Nodup
 
-/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure" : Prop where
   ne_nil : p ≠ nil
 
-/- ./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Command.lean:367:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.tail.Nodup
 
 theorem is_trail_def {u v : V} (p : G.Walk u v) : p.IsTrail ↔ p.edges.Nodup :=
@@ -687,6 +697,13 @@ theorem IsPath.of_append_right {u v w : V} {p : G.Walk u v} {q : G.Walk v w} (h 
 
 @[simp]
 theorem IsCycle.not_of_nil {u : V} : ¬(nil : G.Walk u u).IsCycle := fun h => h.ne_nil rfl
+
+theorem cons_is_cycle_iff {u v : V} (p : G.Walk v u) (h : G.Adj u v) :
+    (Walk.cons h p).IsCycle ↔ p.IsPath ∧ ¬⟦(u, v)⟧ ∈ p.edges := by
+  simp only [walk.is_cycle_def, walk.is_path_def, walk.is_trail_def, edges_cons, List.nodup_cons, support_cons,
+    List.tail_cons]
+  have : p.support.nodup → p.edges.nodup := edges_nodup_of_support_nodup
+  tauto
 
 /-! ### Walk decompositions -/
 
@@ -1008,8 +1025,8 @@ theorem bypass_is_path {u v : V} (p : G.Walk u v) : p.bypass.IsPath := by
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.length := by
   induction p
   · rfl
@@ -1017,7 +1034,7 @@ theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.leng
   · simp only [bypass]
     split_ifs
     · trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
       apply length_drop_until_le
       rw [length_cons]
       exact le_add_right p_ih
@@ -1210,6 +1227,88 @@ theorem map_embedding_injective (f : G ↪g G') (u v : V) :
 
 end Path
 
+/-! ### Transferring between graphs -/
+
+
+namespace Walk
+
+variable {G}
+
+/-- The walk `p` transferred to lie in `H`, given that `H` contains its edges. -/
+@[protected, simp]
+def transfer : ∀ {u v : V} (p : G.Walk u v) (H : SimpleGraph V) (h : ∀ e, e ∈ p.edges → e ∈ H.EdgeSet), H.Walk u v
+  | _, _, walk.nil, H, h => Walk.nil
+  | _, _, walk.cons' u v w a p, H, h =>
+    Walk.cons (h (⟦(u, v)⟧ : Sym2 V) (by simp)) (p.transfer H fun e he => h e (by simp [he]))
+
+variable {u v w : V} (p : G.Walk u v) (q : G.Walk v w) {H : SimpleGraph V} (hp : ∀ e, e ∈ p.edges → e ∈ H.EdgeSet)
+  (hq : ∀ e, e ∈ q.edges → e ∈ H.EdgeSet)
+
+theorem transfer_self : p.transfer G p.edges_subset_edge_set = p := by
+  induction p <;> simp only [*, transfer, eq_self_iff_true, heq_iff_eq, and_self_iff]
+
+theorem transfer_eq_map_of_le (GH : G ≤ H) : p.transfer H hp = p.map (SimpleGraph.Hom.mapSpanningSubgraphs GH) := by
+  induction p <;>
+    simp only [*, transfer, map_cons, hom.map_spanning_subgraphs_apply, eq_self_iff_true, heq_iff_eq, and_self_iff,
+      map_nil]
+
+@[simp]
+theorem edges_transfer : (p.transfer H hp).edges = p.edges := by
+  induction p <;> simp only [*, transfer, edges_nil, edges_cons, eq_self_iff_true, and_self_iff]
+
+@[simp]
+theorem support_transfer : (p.transfer H hp).Support = p.Support := by
+  induction p <;> simp only [*, transfer, eq_self_iff_true, and_self_iff, support_nil, support_cons]
+
+theorem transfer_is_path (pp : p.IsPath) : (p.transfer H hp).IsPath := by
+  induction p <;> simp only [transfer, is_path.nil, cons_is_path_iff, support_transfer] at pp⊢
+  · tauto
+    
+
+theorem transfer_is_cycle (p : G.Walk u u) (hp) (pc : p.IsCycle) : (p.transfer H hp).IsCycle := by
+  cases p <;> simp only [transfer, is_cycle.not_of_nil, cons_is_cycle_iff, transfer, edges_transfer] at pc⊢
+  · exact pc
+    
+  · exact ⟨transfer_is_path _ _ pc.left, pc.right⟩
+    
+
+@[simp]
+theorem transfer_transfer {K : SimpleGraph V} (hp' : ∀ e, e ∈ p.edges → e ∈ K.EdgeSet) :
+    (p.transfer H hp).transfer K
+        (by
+          rw [p.edges_transfer hp]
+          exact hp') =
+      p.transfer K hp' :=
+  by
+  induction p <;> simp only [transfer, eq_self_iff_true, heq_iff_eq, true_and_iff]
+  apply p_ih
+
+@[simp]
+theorem transfer_append (hpq) :
+    (p.append q).transfer H hpq =
+      (p.transfer H fun e he => by
+            apply hpq
+            simp [he]).append
+        (q.transfer H fun e he => by
+          apply hpq
+          simp [he]) :=
+  by
+  induction p <;> simp only [transfer, nil_append, cons_append, eq_self_iff_true, heq_iff_eq, true_and_iff]
+  apply p_ih
+
+@[simp]
+theorem reverse_transfer :
+    (p.transfer H hp).reverse =
+      p.reverse.transfer H
+        (by
+          simp only [edges_reverse, List.mem_reverse]
+          exact hp) :=
+  by
+  induction p <;> simp only [*, transfer_append, transfer, reverse_nil, reverse_cons]
+  rfl
+
+end Walk
+
 /-! ## Deleting edges -/
 
 
@@ -1219,12 +1318,13 @@ variable {G}
 
 /-- Given a walk that avoids a set of edges, produce a walk in the graph
 with those edges deleted. -/
-@[simp]
-def toDeleteEdges (s : Set (Sym2 V)) :
-    ∀ {v w : V} (p : G.Walk v w) (hp : ∀ e, e ∈ p.edges → ¬e ∈ s), (G.deleteEdges s).Walk v w
-  | _, _, nil, _ => nil
-  | _, _, cons' u v w huv p, hp =>
-    cons ((G.delete_edges_adj _ _ _).mpr ⟨huv, hp ⟦(u, v)⟧ (by simp)⟩) (p.toDeleteEdges fun e he => hp e (by simp [he]))
+@[simp, reducible]
+def toDeleteEdges (s : Set (Sym2 V)) {v w : V} (p : G.Walk v w) (hp : ∀ e, e ∈ p.edges → ¬e ∈ s) :
+    (G.deleteEdges s).Walk v w :=
+  p.transfer _
+    (by
+      simp only [edge_set_delete_edges, Set.mem_diff]
+      exact fun e ep => ⟨edges_subset_edge_set p ep, hp e ep⟩)
 
 /-- Given a walk that avoids an edge, create a walk in the subgraph with that edge deleted.
 This is an abbreviation for `simple_graph.walk.to_delete_edges`. -/
@@ -1235,7 +1335,8 @@ abbrev toDeleteEdge {v w : V} (e : Sym2 V) (p : G.Walk v w) (hp : e ∉ p.edges)
 
 @[simp]
 theorem map_to_delete_edges_eq (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (hp) :
-    Walk.map (Hom.mapSpanningSubgraphs (G.delete_edges_le s)) (p.toDeleteEdges s hp) = p := by induction p <;> simp [*]
+    Walk.map (Hom.mapSpanningSubgraphs (G.delete_edges_le s)) (p.toDeleteEdges s hp) = p := by
+  rw [← transfer_eq_map_of_le, transfer_transfer, transfer_self]
 
 theorem IsPath.to_delete_edges (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (h : p.IsPath) (hp) :
     (p.toDeleteEdges s hp).IsPath := by
@@ -1295,6 +1396,9 @@ protected theorem Reachable.rfl {u : V} : G.Reachable u u :=
 protected theorem Reachable.symm {u v : V} (huv : G.Reachable u v) : G.Reachable v u :=
   huv.elim fun p => ⟨p.reverse⟩
 
+theorem reachable_comm {u v : V} : G.Reachable u v ↔ G.Reachable v u :=
+  ⟨Reachable.symm, Reachable.symm⟩
+
 @[trans]
 protected theorem Reachable.trans {u v w : V} (huv : G.Reachable u v) (hvw : G.Reachable v w) : G.Reachable u w :=
   huv.elim fun puv => hvw.elim fun pvw => ⟨puv.append pvw⟩
@@ -1323,7 +1427,7 @@ protected theorem Reachable.map {G : SimpleGraph V} {G' : SimpleGraph V'} (f : G
 variable (G)
 
 theorem reachable_is_equivalence : Equivalence G.Reachable :=
-  mk _ (@Reachable.refl _ G) (@Reachable.symm _ G) (@Reachable.trans _ G)
+  Equivalence.mk _ (@Reachable.refl _ G) (@Reachable.symm _ G) (@Reachable.trans _ G)
 
 /-- The equivalence relation on vertices given by `simple_graph.reachable`. -/
 def reachableSetoid : Setoid V :=
@@ -1548,6 +1652,115 @@ theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
   (Fintype.card_of_subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 
 end WalkCounting
+
+section BridgeEdges
+
+/-! ### Bridge edges -/
+
+
+/-- An edge of a graph is a *bridge* if, after removing it, its incident vertices
+are no longer reachable from one another. -/
+def IsBridge (G : SimpleGraph V) (e : Sym2 V) : Prop :=
+  e ∈ G.EdgeSet ∧ Sym2.lift ⟨fun v w => ¬(G.deleteEdges {e}).Reachable v w, by simp [reachable_comm]⟩ e
+
+theorem is_bridge_iff {u v : V} : G.IsBridge ⟦(u, v)⟧ ↔ G.Adj u v ∧ ¬(G.deleteEdges {⟦(u, v)⟧}).Reachable u v :=
+  Iff.rfl
+
+theorem reachable_delete_edges_iff_exists_walk {v w : V} :
+    (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ p : G.Walk v w, ¬⟦(v, w)⟧ ∈ p.edges := by
+  constructor
+  · rintro ⟨p⟩
+    use p.map (hom.map_spanning_subgraphs (G.delete_edges_le _))
+    simp_rw [walk.edges_map, List.mem_map, hom.map_spanning_subgraphs_apply, Sym2.map_id', id.def]
+    rintro ⟨e, h, rfl⟩
+    simpa using p.edges_subset_edge_set h
+    
+  · rintro ⟨p, h⟩
+    exact ⟨p.to_delete_edge _ h⟩
+    
+
+theorem is_bridge_iff_adj_and_forall_walk_mem_edges {v w : V} :
+    G.IsBridge ⟦(v, w)⟧ ↔ G.Adj v w ∧ ∀ p : G.Walk v w, ⟦(v, w)⟧ ∈ p.edges := by
+  rw [is_bridge_iff, and_congr_right']
+  rw [reachable_delete_edges_iff_exists_walk, not_exists_not]
+
+theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V} (hb : ∀ p : G.Walk v w, ⟦(v, w)⟧ ∈ p.edges)
+    (c : G.Walk u u) (hc : c.IsTrail) (he : ⟦(v, w)⟧ ∈ c.edges)
+    (hw : w ∈ (c.takeUntil v (c.fst_mem_support_of_mem_edges he)).Support) : False := by
+  have hv := c.fst_mem_support_of_mem_edges he
+  -- decompose c into
+  --      puw     pwv     pvu
+  --   u ----> w ----> v ----> u
+  let puw := (c.take_until v hv).takeUntil w hw
+  let pwv := (c.take_until v hv).dropUntil w hw
+  let pvu := c.drop_until v hv
+  have : c = (puw.append pwv).append pvu := by simp
+  -- We have two walks from v to w
+  --      pvu     puw
+  --   v ----> u ----> w
+  --   |               ^
+  --    `-------------'
+  --      pwv.reverse
+  -- so they both contain the edge ⟦(v, w)⟧, but that's a contradiction since c is a trail.
+  have hbq := hb (pvu.append puw)
+  have hpq' := hb pwv.reverse
+  rw [walk.edges_reverse, List.mem_reverse] at hpq'
+  rw [walk.is_trail_def, this, walk.edges_append, walk.edges_append, List.nodup_append_comm, ← List.append_assoc, ←
+    walk.edges_append] at hc
+  exact List.disjoint_of_nodup_append hc hbq hpq'
+
+theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
+    G.Adj v w ∧ (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ (u : V)(p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
+  by
+  classical
+  rw [reachable_delete_edges_iff_exists_walk]
+  constructor
+  · rintro ⟨h, p, hp⟩
+    refine' ⟨w, walk.cons h.symm p.to_path, _, _⟩
+    · apply path.cons_is_cycle
+      rw [Sym2.eq_swap]
+      intro h
+      exact absurd (walk.edges_to_path_subset p h) hp
+      
+    simp only [Sym2.eq_swap, walk.edges_cons, List.mem_cons_iff, eq_self_iff_true, true_or_iff]
+    
+  · rintro ⟨u, c, hc, he⟩
+    have hvc : v ∈ c.support := walk.fst_mem_support_of_mem_edges c he
+    have hwc : w ∈ c.support := walk.snd_mem_support_of_mem_edges c he
+    let puv := c.take_until v hvc
+    let pvu := c.drop_until v hvc
+    obtain hw | hw' : w ∈ puv.support ∨ w ∈ pvu.support := by rwa [← walk.mem_support_append_iff, walk.take_spec]
+    · by_contra' h
+      specialize h (c.adj_of_mem_edges he)
+      exact reachable_delete_edges_iff_exists_cycle.aux h c hc.to_trail he hw
+      
+    · by_contra' hb
+      specialize hb (c.adj_of_mem_edges he)
+      have hb' : ∀ p : G.walk w v, ⟦(w, v)⟧ ∈ p.edges := by
+        intro p
+        simpa [Sym2.eq_swap] using hb p.reverse
+      apply
+        reachable_delete_edges_iff_exists_cycle.aux hb' (pvu.append puv) (hc.to_trail.rotate hvc) _
+          (walk.start_mem_support _)
+      rwa [walk.edges_append, List.mem_append, or_comm', ← List.mem_append, ← walk.edges_append, walk.take_spec,
+        Sym2.eq_swap]
+      
+    
+
+theorem is_bridge_iff_adj_and_forall_cycle_not_mem {v w : V} :
+    G.IsBridge ⟦(v, w)⟧ ↔ G.Adj v w ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → ⟦(v, w)⟧ ∉ p.edges := by
+  rw [is_bridge_iff, and_congr_right_iff]
+  intro h
+  rw [← not_iff_not]
+  push_neg
+  rw [← adj_and_reachable_delete_edges_iff_exists_cycle]
+  simp only [h, true_and_iff]
+
+theorem is_bridge_iff_mem_and_forall_cycle_not_mem {e : Sym2 V} :
+    G.IsBridge e ↔ e ∈ G.EdgeSet ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → e ∉ p.edges :=
+  Sym2.ind (fun v w => is_bridge_iff_adj_and_forall_cycle_not_mem) e
+
+end BridgeEdges
 
 end SimpleGraph
 

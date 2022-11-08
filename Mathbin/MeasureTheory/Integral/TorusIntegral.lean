@@ -148,7 +148,7 @@ theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
     IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
       (IccCat (0 : ℝⁿ) fun _ => 2 * π) volume :=
   by
-  refine' (hf.norm.const_mul (∏ i, abs (R i))).mono' _ _
+  refine' (hf.norm.const_mul (∏ i, |R i|)).mono' _ _
   · refine' (Continuous.aeStronglyMeasurable _).smul hf.1
     exact
       continuous_finset_prod Finset.univ fun i hi =>
@@ -195,18 +195,17 @@ theorem torus_integral_const_mul (a : ℂ) (f : ℂⁿ → ℂ) (c : ℂⁿ) (R 
 /-- If for all `θ : ℝⁿ`, `∥f (torus_map c R θ)∥` is less than or equal to a constant `C : ℝ`, then
 `∥∯ x in T(c, R), f x∥` is less than or equal to `(2 * π)^n * (∏ i, |R i|) * C`-/
 theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ∥f (torusMap c R θ)∥ ≤ C) :
-    ∥∯ x in T(c, R), f x∥ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, abs (R i)) * C :=
+    ∥∯ x in T(c, R), f x∥ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
-    ∥∯ x in T(c, R), f x∥ ≤ (∏ i, abs (R i)) * C * (volume (IccCat (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
+    ∥∯ x in T(c, R), f x∥ ≤ (∏ i, |R i|) * C * (volume (IccCat (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
       (norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSetIcc) fun θ hθ =>
         calc
           ∥(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)∥ =
-              (∏ i : Fin n, abs (R i)) * ∥f (torusMap c R θ)∥ :=
+              (∏ i : Fin n, |R i|) * ∥f (torusMap c R θ)∥ :=
             by simp [norm_smul]
-          _ ≤ (∏ i : Fin n, abs (R i)) * C :=
-            mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg fun _ _ => abs_nonneg _)
+          _ ≤ (∏ i : Fin n, |R i|) * C := mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg fun _ _ => abs_nonneg _)
           
-    _ = ((2 * π) ^ (n : ℕ) * ∏ i, abs (R i)) * C := by
+    _ = ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C := by
       simp only [Pi.zero_def, Real.volume_Icc_pi_to_real fun _ => real.two_pi_pos.le, sub_zero, Fin.prod_const,
         mul_assoc, mul_comm ((2 * π) ^ (n : ℕ))]
     

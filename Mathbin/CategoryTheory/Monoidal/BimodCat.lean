@@ -233,7 +233,6 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorLeft X)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Left action for the tensor product of two bimodules. -/
 noncomputable def actLeft : R.x ⊗ x P Q ⟶ x P Q :=
@@ -246,7 +245,7 @@ noncomputable def actLeft : R.x ⊗ x P Q ⟶ x P Q :=
           slice_lhs 1 2 => rw [associator_inv_naturality]
           slice_rhs 3 4 => rw [associator_inv_naturality]
           slice_rhs 4 5 => rw [← tensor_comp, middle_assoc, tensor_comp, comp_tensor_id]
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]")
+          coherence)
         (by
           dsimp
           slice_lhs 1 1 => rw [id_tensor_comp]
@@ -262,7 +261,6 @@ theorem id_tensor_π_act_left :
   erw [map_π_preserves_coequalizer_inv_colim_map (tensor_left _)]
   simp only [category.assoc]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem one_act_left' : (R.one ⊗ 𝟙 _) ≫ actLeft P Q = (λ_ _).Hom := by
   refine' (cancel_epi ((tensor_left _).map (coequalizer.π _ _))).1 _
@@ -272,9 +270,8 @@ theorem one_act_left' : (R.one ⊗ 𝟙 _) ≫ actLeft P Q = (λ_ _).Hom := by
   slice_lhs 1 2 => rw [← monoidal_category.tensor_id, associator_inv_naturality]
   slice_lhs 2 3 => rw [← comp_tensor_id, one_act_left]
   slice_rhs 1 2 => rw [left_unitor_naturality]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem left_assoc' : (R.mul ⊗ 𝟙 _) ≫ actLeft P Q = (α_ R.x R.x _).Hom ≫ (𝟙 R.x ⊗ actLeft P Q) ≫ actLeft P Q := by
@@ -288,7 +285,7 @@ theorem left_assoc' : (R.mul ⊗ 𝟙 _) ≫ actLeft P Q = (α_ R.x R.x _).Hom �
   slice_rhs 2 3 => rw [← id_tensor_comp, id_tensor_π_act_left, id_tensor_comp, id_tensor_comp]
   slice_rhs 4 5 => rw [id_tensor_π_act_left]
   slice_rhs 3 4 => rw [associator_inv_naturality]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 end
 
@@ -299,7 +296,6 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Right action for the tensor product of two bimodules. -/
 noncomputable def actRight : x P Q ⊗ T.x ⟶ x P Q :=
@@ -321,7 +317,7 @@ noncomputable def actRight : x P Q ⊗ T.x ⟶ x P Q :=
           slice_lhs 3 4 => rw [← id_tensor_comp, middle_assoc, id_tensor_comp]
           slice_rhs 4 6 => rw [iso.inv_hom_id_assoc]
           slice_rhs 3 4 => rw [← id_tensor_comp]
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"))
+          coherence))
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -330,7 +326,6 @@ theorem π_tensor_id_act_right :
   erw [map_π_preserves_coequalizer_inv_colim_map (tensor_right _)]
   simp only [category.assoc]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem act_right_one' : (𝟙 _ ⊗ T.one) ≫ actRight P Q = (ρ_ _).Hom := by
   refine' (cancel_epi ((tensor_right _).map (coequalizer.π _ _))).1 _
@@ -340,9 +335,8 @@ theorem act_right_one' : (𝟙 _ ⊗ T.one) ≫ actRight P Q = (ρ_ _).Hom := by
   slice_lhs 1 2 => rw [← monoidal_category.tensor_id, associator_naturality]
   slice_lhs 2 3 => rw [← id_tensor_comp, act_right_one]
   slice_rhs 1 2 => rw [right_unitor_naturality]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem right_assoc' : (𝟙 _ ⊗ T.mul) ≫ actRight P Q = (α_ _ T.x T.x).inv ≫ (actRight P Q ⊗ 𝟙 T.x) ≫ actRight P Q := by
@@ -356,7 +350,7 @@ theorem right_assoc' : (𝟙 _ ⊗ T.mul) ≫ actRight P Q = (α_ _ T.x T.x).inv
   slice_rhs 2 3 => rw [← comp_tensor_id, π_tensor_id_act_right, comp_tensor_id, comp_tensor_id]
   slice_rhs 4 5 => rw [π_tensor_id_act_right]
   slice_rhs 3 4 => rw [associator_naturality]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 end
 
@@ -366,7 +360,6 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorLeft X)]
 
 variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem middle_assoc' :
@@ -382,7 +375,7 @@ theorem middle_assoc' :
   slice_rhs 4 5 => rw [id_tensor_π_act_left]
   slice_rhs 3 4 => rw [associator_inv_naturality]
   slice_rhs 4 5 => rw [monoidal_category.tensor_id, id_tensor_comp_tensor_id]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 end
 
@@ -467,7 +460,6 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 variable {R S T U : Mon_ C} (P : BimodCat R S) (Q : BimodCat S T) (L : BimodCat T U)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An auxiliary morphism for the definition of the underlying morphism of the forward component of
 the associator isomorphism. -/
@@ -485,9 +477,8 @@ noncomputable def homAux : (P.tensorBimod Q).x ⊗ L.x ⟶ (P.tensorBimod (Q.ten
         slice_rhs 1 1 => rw [comp_tensor_id]
         slice_rhs 2 3 => rw [associator_naturality]
         slice_rhs 3 4 => rw [← id_tensor_comp]
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]")
+        coherence)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- The underlying morphism of the forward component of the associator isomorphism. -/
 noncomputable def hom : ((P.tensorBimod Q).tensorBimod L).x ⟶ (P.tensorBimod (Q.tensorBimod L)).x :=
   coequalizer.desc (homAux P Q L)
@@ -503,9 +494,8 @@ noncomputable def hom : ((P.tensorBimod Q).tensorBimod L).x ⟶ (P.tensorBimod (
       slice_rhs 2 3 => rw [monoidal_category.tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
       slice_rhs 3 5 => rw [π_tensor_id_preserves_coequalizer_inv_desc]
       slice_rhs 2 3 => rw [← monoidal_category.tensor_id, associator_naturality]
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]")
+      coherence)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_left_act_hom' :
     ((P.tensorBimod Q).tensorBimod L).actLeft ≫ hom P Q L =
@@ -531,9 +521,8 @@ theorem hom_left_act_hom' :
   slice_rhs 3 4 => erw [tensor_Bimod.id_tensor_π_act_left P (Q.tensor_Bimod L)]
   slice_rhs 2 3 => erw [associator_inv_naturality]
   slice_rhs 3 4 => erw [monoidal_category.tensor_id, id_tensor_comp_tensor_id]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_right_act_hom' :
     ((P.tensorBimod Q).tensorBimod L).actRight ≫ hom P Q L =
@@ -559,11 +548,10 @@ theorem hom_right_act_hom' :
   slice_rhs 2 3 => erw [associator_naturality]
   dsimp
   slice_rhs 3 4 => rw [← id_tensor_comp, tensor_Bimod.π_tensor_id_act_right, id_tensor_comp, id_tensor_comp]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An auxiliary morphism for the definition of the underlying morphism of the inverse component of
 the associator isomorphism. -/
@@ -582,9 +570,8 @@ noncomputable def invAux : P.x ⊗ (Q.tensorBimod L).x ⟶ ((P.tensorBimod Q).te
         slice_rhs 1 2 => rw [id_tensor_comp]
         slice_rhs 2 3 => rw [associator_inv_naturality]
         slice_rhs 3 4 => rw [monoidal_category.tensor_id, id_tensor_comp_tensor_id]
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]")
+        coherence)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 /-- The underlying morphism of the inverse component of the associator isomorphism. -/
 noncomputable def inv : (P.tensorBimod (Q.tensorBimod L)).x ⟶ ((P.tensorBimod Q).tensorBimod L).x :=
   coequalizer.desc (invAux P Q L)
@@ -600,7 +587,7 @@ noncomputable def inv : (P.tensorBimod (Q.tensorBimod L)).x ⟶ ((P.tensorBimod 
       slice_rhs 2 3 => rw [← id_tensor_comp, tensor_Bimod.id_tensor_π_act_left, id_tensor_comp, id_tensor_comp]
       slice_rhs 4 6 => rw [id_tensor_π_preserves_coequalizer_inv_desc]
       slice_rhs 3 4 => rw [associator_inv_naturality]
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]")
+      coherence)
 
 theorem hom_inv_id : hom P Q L ≫ inv P Q L = 𝟙 _ := by
   dsimp [hom, hom_aux, inv, inv_aux]
@@ -649,7 +636,6 @@ noncomputable def inv : P.x ⟶ TensorBimod.x (regular R) P :=
   (λ_ P.x).inv ≫ (R.one ⊗ 𝟙 _) ≫ coequalizer.π _ _
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ := by
   dsimp only [hom, inv, tensor_Bimod.X]
   ext
@@ -662,7 +648,7 @@ theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ := by
   slice_lhs 2 3 => rw [← monoidal_category.tensor_id, associator_inv_naturality]
   slice_lhs 3 4 => rw [← comp_tensor_id, Mon_.one_mul]
   slice_rhs 1 2 => rw [category.comp_id]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 theorem inv_hom_id : inv P ≫ hom P = 𝟙 _ := by
   dsimp [hom, inv]
@@ -713,7 +699,6 @@ noncomputable def hom : TensorBimod.x P (regular S) ⟶ P.x :=
 noncomputable def inv : P.x ⟶ TensorBimod.x P (regular S) :=
   (ρ_ P.x).inv ≫ (𝟙 _ ⊗ S.one) ≫ coequalizer.π _ _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ := by
   dsimp only [hom, inv, tensor_Bimod.X]
   ext
@@ -725,7 +710,7 @@ theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ := by
   slice_lhs 2 3 => rw [← monoidal_category.tensor_id, associator_naturality]
   slice_lhs 3 4 => rw [← id_tensor_comp, Mon_.mul_one]
   slice_rhs 1 2 => rw [category.comp_id]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 theorem inv_hom_id : inv P ≫ hom P = 𝟙 _ := by
   dsimp [hom, inv]
@@ -792,7 +777,6 @@ theorem whisker_left_comp_Bimod {X Y Z : Mon_ C} (M : BimodCat X Y) {N P Q : Bim
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[] -/
 theorem id_whisker_left_Bimod {X Y : Mon_ C} {M N : BimodCat X Y} (f : M ⟶ N) :
     tensorHom (𝟙 (regular X)) f = (leftUnitorBimod M).Hom ≫ f ≫ (leftUnitorBimod N).inv := by
   dsimp [tensor_hom, regular, left_unitor_Bimod]
@@ -809,8 +793,7 @@ theorem id_whisker_left_Bimod {X Y : Mon_ C} {M N : BimodCat X Y} (f : M ⟶ N) 
   slice_rhs 5 7 => rw [← category.assoc, ← coequalizer.condition]
   slice_rhs 3 4 => rw [← monoidal_category.tensor_id, associator_inv_naturality]
   slice_rhs 4 5 => rw [← comp_tensor_id, Mon_.one_mul]
-  have : (λ_ (X.X ⊗ N.X)).inv ≫ (α_ (𝟙_ C) X.X N.X).inv ≫ ((λ_ X.X).Hom ⊗ 𝟙 N.X) = 𝟙 _ := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
+  have : (λ_ (X.X ⊗ N.X)).inv ≫ (α_ (𝟙_ C) X.X N.X).inv ≫ ((λ_ X.X).Hom ⊗ 𝟙 N.X) = 𝟙 _ := by pure_coherence
   slice_rhs 2 4 => rw [this]
   slice_rhs 1 2 => rw [category.comp_id]
 
@@ -846,7 +829,6 @@ theorem comp_whisker_right_Bimod {X Y Z : Mon_ C} {M N P : BimodCat X Y} (f : M 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[] -/
 theorem whisker_right_id_Bimod {X Y : Mon_ C} {M N : BimodCat X Y} (f : M ⟶ N) :
     tensorHom f (𝟙 (regular Y)) = (rightUnitorBimod M).Hom ≫ f ≫ (rightUnitorBimod N).inv := by
   dsimp [tensor_hom, regular, right_unitor_Bimod]
@@ -862,8 +844,7 @@ theorem whisker_right_id_Bimod {X Y : Mon_ C} {M N : BimodCat X Y} (f : M ⟶ N)
   slice_rhs 4 5 => rw [coequalizer.condition]
   slice_rhs 3 4 => rw [← monoidal_category.tensor_id, associator_naturality]
   slice_rhs 4 5 => rw [← id_tensor_comp, Mon_.mul_one]
-  have : (ρ_ (N.X ⊗ Y.X)).inv ≫ (α_ N.X Y.X (𝟙_ C)).Hom ≫ (𝟙 N.X ⊗ (ρ_ Y.X).Hom) = 𝟙 _ := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
+  have : (ρ_ (N.X ⊗ Y.X)).inv ≫ (α_ N.X Y.X (𝟙_ C)).Hom ≫ (𝟙 N.X ⊗ (ρ_ Y.X).Hom) = 𝟙 _ := by pure_coherence
   slice_rhs 2 4 => rw [this]
   slice_rhs 1 2 => rw [category.comp_id]
 
@@ -933,7 +914,6 @@ theorem whisker_exchange_Bimod {X Y Z : Mon_ C} {M N : BimodCat X Y} {P Q : Bimo
   slice_rhs 2 3 => rw [ι_colim_map, parallel_pair_hom_app_one]
   slice_rhs 1 2 => rw [tensor_id_comp_id_tensor]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[] -/
 theorem pentagon_Bimod {V W X Y Z : Mon_ C} (M : BimodCat V W) (N : BimodCat W X) (P : BimodCat X Y)
     (Q : BimodCat Y Z) :
     tensorHom (associatorBimod M N P).Hom (𝟙 Q) ≫
@@ -966,7 +946,7 @@ theorem pentagon_Bimod {V W X Y Z : Mon_ C} (M : BimodCat V W) (N : BimodCat W X
   slice_rhs 2 3 => rw [monoidal_category.tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
   slice_rhs 3 5 => rw [π_tensor_id_preserves_coequalizer_inv_desc]
   slice_rhs 2 3 => rw [← monoidal_category.tensor_id, associator_naturality]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  coherence
 
 theorem triangle_Bimod {X Y Z : Mon_ C} (M : BimodCat X Y) (N : BimodCat Y Z) :
     (associatorBimod M (regular Y) N).Hom ≫ tensorHom (𝟙 M) (leftUnitorBimod N).Hom =

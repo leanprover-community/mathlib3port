@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Julian Kuelshammer
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
+import Mathbin.Data.Int.Units
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.Index
@@ -244,6 +245,14 @@ variable (a) (n)
 theorem order_of_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcd (orderOf x) n := by
   convert minimal_period_iterate_eq_div_gcd' h
   simp only [orderOf, mul_left_iterate]
+
+@[to_additive add_order_of_nsmul_coprime]
+theorem order_of_pow_coprime (h : (orderOf y).Coprime m) : orderOf (y ^ m) = orderOf y := by
+  by_cases hg:orderOf y = 0
+  · rw [m.coprime_zero_left.mp (hg ▸ h), pow_one]
+    
+  · rw [order_of_pow'' y m (hg.imp_symm order_of_eq_zero), h.gcd_eq_one, Nat.div_one]
+    
 
 @[to_additive]
 theorem Commute.order_of_mul_dvd_lcm {x y : G} (h : Commute x y) : orderOf (x * y) ∣ Nat.lcm (orderOf x) (orderOf y) :=
@@ -733,10 +742,10 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing G]
 
-theorem order_of_abs_ne_one (h : abs x ≠ 1) : orderOf x = 0 := by
+theorem order_of_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 := by
   rw [order_of_eq_zero_iff']
   intro n hn hx
-  replace hx : abs x ^ n = 1 := by simpa only [abs_one, abs_pow] using congr_arg abs hx
+  replace hx : |x| ^ n = 1 := by simpa only [abs_one, abs_pow] using congr_arg abs hx
   cases' h.lt_or_lt with h h
   · exact ((pow_lt_one (abs_nonneg x) h hn.ne').Ne hx).elim
     
@@ -744,7 +753,7 @@ theorem order_of_abs_ne_one (h : abs x ≠ 1) : orderOf x = 0 := by
     
 
 theorem LinearOrderedRing.order_of_le_two : orderOf x ≤ 2 := by
-  cases' ne_or_eq (abs x) 1 with h h
+  cases' ne_or_eq (|x|) 1 with h h
   · simp [order_of_abs_ne_one h]
     
   rcases eq_or_eq_neg_of_abs_eq h with (rfl | rfl)

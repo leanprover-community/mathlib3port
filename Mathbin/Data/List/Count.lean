@@ -129,7 +129,7 @@ theorem count_cons' (a b : α) (l : List α) : count a (b :: l) = count a l + if
   split_ifs <;> rfl
 
 @[simp]
-theorem count_cons_self (a : α) (l : List α) : count a (a :: l) = succ (count a l) :=
+theorem count_cons_self (a : α) (l : List α) : count a (a :: l) = count a l + 1 :=
   if_pos rfl
 
 @[simp]
@@ -222,32 +222,31 @@ theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : �
   rw [count, count, countp_map]
   exact countp_mono_left fun y hyl => congr_arg f
 
-@[simp]
-theorem count_erase_self (a : α) : ∀ s : List α, count a (List.erase' s a) = pred (count a s)
+theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a l - ite (a = b) 1 0
   | [] => by simp
-  | h :: t => by
+  | c :: l => by
     rw [erase_cons]
-    by_cases p:h = a
-    · rw [if_pos p, count_cons', if_pos p.symm]
-      simp
+    by_cases hc:c = b
+    · rw [if_pos hc, hc, count_cons', Nat.add_sub_cancel]
       
-    · rw [if_neg p, count_cons', count_cons', if_neg fun x : a = h => p x.symm, count_erase_self]
-      simp
+    · rw [if_neg hc, count_cons', count_cons', count_erase]
+      by_cases ha:a = b
+      · rw [← ha, eq_comm] at hc
+        rw [if_pos ha, if_neg hc, add_zero, add_zero]
+        
+      · rw [if_neg ha, tsub_zero, tsub_zero]
+        
       
 
 @[simp]
-theorem count_erase_of_ne {a b : α} (ab : a ≠ b) : ∀ s : List α, count a (List.erase' s b) = count a s
-  | [] => by simp
-  | x :: xs => by
-    rw [erase_cons]
-    split_ifs with h
-    · rw [count_cons', h, if_neg ab]
-      simp
-      
-    · rw [count_cons', count_cons', count_erase_of_ne]
-      
+theorem count_erase_self (a : α) (l : List α) : count a (List.erase' l a) = count a l - 1 := by
+  rw [count_erase, if_pos rfl]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+@[simp]
+theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.erase b) = count a l := by
+  rw [count_erase, if_neg ab, tsub_zero]
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
     (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a := by
@@ -263,7 +262,7 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
       
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) :
     l.Prod = a ^ l.count a :=

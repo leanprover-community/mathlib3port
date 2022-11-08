@@ -60,6 +60,9 @@ theorem Finite.card_pos [Finite α] [h : Nonempty α] : 0 < Nat.card α :=
 
 namespace Finite
 
+theorem cast_card_eq_mk {α : Type _} [Finite α] : ↑(Nat.card α) = Cardinal.mk α :=
+  Cardinal.cast_to_nat_of_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite α)
+
 theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) := by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofFinite β
@@ -142,13 +145,33 @@ theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + 
   haveI := Fintype.ofFinite β
   simp
 
-end Finite
+theorem card_image_le {s : Set α} [Finite s] (f : α → β) : Nat.card (f '' s) ≤ Nat.card s :=
+  card_le_of_surjective _ Set.surjective_onto_image
 
-theorem Finite.card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α := by
+theorem card_range_le [Finite α] (f : α → β) : Nat.card (Set.Range f) ≤ Nat.card α :=
+  card_le_of_surjective _ Set.surjective_onto_range
+
+theorem card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α := by
   haveI := Fintype.ofFinite α
   simpa using Fintype.card_subtype_le p
 
-theorem Finite.card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) : Nat.card { x // p x } < Nat.card α := by
+theorem card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) : Nat.card { x // p x } < Nat.card α := by
   haveI := Fintype.ofFinite α
   simpa using Fintype.card_subtype_lt hx
+
+end Finite
+
+namespace Set
+
+theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Nat.card t := by
+  cases' _root_.finite_or_infinite ↥(s ∪ t) with h h
+  · rw [finite_coe_iff, finite_union, ← finite_coe_iff, ← finite_coe_iff] at h
+    cases h
+    rw [← Cardinal.nat_cast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk]
+    exact Cardinal.mk_union_le s t
+    
+  · exact nat.card_eq_zero_of_infinite.trans_le (zero_le _)
+    
+
+end Set
 

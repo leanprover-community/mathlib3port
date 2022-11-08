@@ -206,7 +206,7 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
   have hsin := sin_angle_add_angle_sub_add_angle_sub_eq_zero hx hy
   rw [Real.sin_eq_zero_iff] at hsin
   cases' hsin with n hn
-  symm'  at hn
+  symm at hn
   have h0 : 0 ≤ angle x y + angle x (x - y) + angle y (y - x) :=
     add_nonneg (add_nonneg (angle_nonneg _ _) (angle_nonneg _ _)) (angle_nonneg _ _)
   have h3 : angle x y + angle x (x - y) + angle y (y - x) ≤ π + π + π :=

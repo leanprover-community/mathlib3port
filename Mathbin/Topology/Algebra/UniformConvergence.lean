@@ -79,7 +79,7 @@ protected theorem UniformConvergence.has_basis_nhds_one_of_basis {p : ι → Pro
   have := h.comap fun p : G × G => p.2 / p.1
   rw [← uniformity_eq_comap_nhds_one] at this
   convert UniformConvergence.has_basis_nhds_of_basis α _ 1 this
-  ext i f
+  ext (i f)
   simp [UniformConvergence.Gen]
 
 @[to_additive]
@@ -114,7 +114,7 @@ protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set <
   have := h.comap fun p : G × G => p.1 / p.2
   rw [← uniformity_eq_comap_nhds_one_swapped] at this
   convert UniformConvergenceOn.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
-  ext i f
+  ext (i f)
   simp [UniformConvergenceOn.Gen]
 
 @[to_additive]

@@ -372,7 +372,7 @@ section Zpow
 @[continuity, to_additive]
 theorem continuous_zpow : ∀ z : ℤ, Continuous fun a : G => a ^ z
   | Int.ofNat n => by simpa using continuous_pow n
-  | -[1 + n] => by simpa using (continuous_pow (n + 1)).inv
+  | -[n+1] => by simpa using (continuous_pow (n + 1)).inv
 
 instance AddGroup.has_continuous_const_smul_int {A} [AddGroup A] [TopologicalSpace A] [TopologicalAddGroup A] :
     HasContinuousConstSmul ℤ A :=
@@ -975,7 +975,7 @@ theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : Closure s / t = s / t 
 
 end TopologicalGroup
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 

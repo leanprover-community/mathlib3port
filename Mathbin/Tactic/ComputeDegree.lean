@@ -73,12 +73,12 @@ unsafe def guess_degree : expr → tactic expr
     let pe ← to_expr (pquote.1 (@natDegree (%%ₓR) (%%ₓinst))) true false
     pure <| expr.mk_app pe [e]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:64:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `resolve_sum_step` assumes that the current goal is of the form `f.nat_degree ≤ d`, failing
 otherwise.  It tries to make progress on the goal by progressing into `f` if `f` is
 * a sum, difference, opposite, product, or a power;
@@ -94,7 +94,7 @@ If `d` is less than `guess_degree f`, this tactic will create unsolvable goals.
 unsafe def resolve_sum_step : tactic Unit := do
   let t ← target >>= instantiate_mvars
   let quote.1 (natDegree (%%ₓtl) ≤ %%ₓtr) ← whnf t reducible |
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   match tl with
     | quote.1 ((%%ₓtl1) + %%ₓtl2) => refine (pquote.1 ((nat_degree_add_le_iff_left _ _ _).mpr _))
     | quote.1 ((%%ₓtl1) - %%ₓtl2) => refine (pquote.1 ((nat_degree_sub_le_iff_left _).mpr _))
@@ -120,7 +120,7 @@ unsafe def resolve_sum_step : tactic Unit := do
       let lem2 ← to_expr (pquote.1 (Nat.div_self (Nat.pos_of_ne_zero (%%ₓn0)))) tt ff
       focus1 (refine (pquote.1 ((%%ₓn0) rfl).elim) <|> rewrite_target lem1 <|> rewrite_target lem2) <|> skip
     | e =>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `norm_assum` simply tries `norm_num` and `assumption`.

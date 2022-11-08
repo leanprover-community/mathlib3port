@@ -221,7 +221,7 @@ instance : BooleanAlgebra (SimpleGraph V) :=
     sdiff := (· \ ·), top := completeGraph V, bot := emptyGraph V, le_top := fun x v w h => x.ne_of_adj h,
     bot_le := fun x v w h => h.elim, sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h,
     sdiff_eq := fun x y => by
-      ext v w
+      ext (v w)
       refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
       rintro rfl
       exact x.irrefl h.1,
@@ -687,7 +687,7 @@ theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) : G.deleteEdges s = G.
   simp (config := { contextual := true }) [imp_false]
 
 theorem delete_edges_sdiff_eq_of_le {H : SimpleGraph V} (h : H ≤ G) : G.deleteEdges (G.EdgeSet \ H.EdgeSet) = H := by
-  ext v w
+  ext (v w)
   constructor <;> simp (config := { contextual := true }) [@h v w]
 
 theorem edge_set_delete_edges (s : Set (Sym2 V)) : (G.deleteEdges s).EdgeSet = G.EdgeSet \ s := by

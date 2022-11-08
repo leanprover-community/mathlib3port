@@ -523,6 +523,21 @@ protected theorem map_div [Group G] [DivisionMonoid H] (h : G ≃* H) (x y : G) 
 
 end MulEquiv
 
+/-- Given a pair of multiplicative homomorphisms `f`, `g` such that `g.comp f = id` and
+`f.comp g = id`, returns an multiplicative equivalence with `to_fun = f` and `inv_fun = g`. This
+constructor is useful if the underlying type(s) have specialized `ext` lemmas for multiplicative
+homomorphisms. -/
+@[to_additive
+      "Given a pair of additive homomorphisms `f`, `g` such that `g.comp f = id` and\n`f.comp g = id`, returns an additive equivalence with `to_fun = f` and `inv_fun = g`.  This\nconstructor is useful if the underlying type(s) have specialized `ext` lemmas for additive\nhomomorphisms.",
+  simps (config := { fullyApplied := false })]
+def MulHom.toMulEquiv [Mul M] [Mul N] (f : M →ₙ* N) (g : N →ₙ* M) (h₁ : g.comp f = MulHom.id _)
+    (h₂ : f.comp g = MulHom.id _) : M ≃* N where
+  toFun := f
+  invFun := g
+  left_inv := MulHom.congr_fun h₁
+  right_inv := MulHom.congr_fun h₂
+  map_mul' := f.map_mul
+
 /-- Given a pair of monoid homomorphisms `f`, `g` such that `g.comp f = id` and `f.comp g = id`,
 returns an multiplicative equivalence with `to_fun = f` and `inv_fun = g`.  This constructor is
 useful if the underlying type(s) have specialized `ext` lemmas for monoid homomorphisms. -/

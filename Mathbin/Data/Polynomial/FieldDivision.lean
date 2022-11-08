@@ -111,7 +111,7 @@ theorem Monic.normalize_eq_self {p : R[X]} (hp : p.Monic) : normalize p = p := b
     polynomial.C.map_one, mul_one]
 
 theorem roots_normalize {p : R[X]} : (normalize p).roots = p.roots := by
-  rw [normalize_apply, mul_comm, coe_norm_unit, roots_C_mul _ (norm_unit (leading_coeff p)).ne_zero]
+  rw [normalize_apply, mul_comm, coe_norm_unit, roots_C_mul _ (norm_unit (leading_coeff p)).NeZero]
 
 end NormalizationMonoid
 

@@ -162,7 +162,7 @@ theorem empty_to_list_eq_ff (v : Vector α (n + 1)) : v.toList.Empty = ff :=
   | ⟨a :: as, _⟩ => rfl
 
 theorem not_empty_to_list (v : Vector α (n + 1)) : ¬v.toList.Empty := by
-  simp only [empty_to_list_eq_ff, coe_sort_ff, not_false_iff]
+  simp only [empty_to_list_eq_ff, Bool.coe_sort_false, not_false_iff]
 
 /-- Mapping under `id` does not change a vector. -/
 @[simp]

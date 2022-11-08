@@ -30,7 +30,7 @@ theorem norm_add (h : SameRay ℝ x y) : ∥x + y∥ = ∥x∥ + ∥y∥ := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   rw [← add_smul, norm_smul_of_nonneg (add_nonneg ha hb), norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, add_mul]
 
-theorem norm_sub (h : SameRay ℝ x y) : ∥x - y∥ = abs (∥x∥ - ∥y∥) := by
+theorem norm_sub (h : SameRay ℝ x y) : ∥x - y∥ = |∥x∥ - ∥y∥| := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   wlog (discharger := tactic.skip) hab : b ≤ a := le_total b a using a b, b a
   · rw [← sub_nonneg] at hab
@@ -76,10 +76,10 @@ alias same_ray_iff_inv_norm_smul_eq_of_ne ↔ SameRay.inv_norm_smul_eq _
 the unit vectors `∥x∥⁻¹ • x` and `∥y∥⁻¹ • y` are equal. -/
 theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ ∥x∥⁻¹ • x = ∥y∥⁻¹ • y := by
   rcases eq_or_ne x 0 with (rfl | hx)
-  · simp [SameRay.zeroLeft]
+  · simp [SameRay.zero_left]
     
   rcases eq_or_ne y 0 with (rfl | hy)
-  · simp [SameRay.zeroRight]
+  · simp [SameRay.zero_right]
     
   simp only [same_ray_iff_inv_norm_smul_eq_of_ne hx hy, *, false_or_iff]
 
@@ -87,7 +87,7 @@ theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ 
 theorem same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : SameRay ℝ x y ↔ x = y := by
   obtain rfl | hy := eq_or_ne y 0
   · rw [norm_zero, norm_eq_zero] at h
-    exact iff_of_true (SameRay.zeroRight _) h
+    exact iff_of_true (SameRay.zero_right _) h
     
   · exact ⟨fun hxy => norm_inj_on_ray_right hy hxy SameRay.rfl h, fun hxy => hxy ▸ SameRay.rfl⟩
     

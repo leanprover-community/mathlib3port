@@ -96,7 +96,7 @@ private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x 
 variable [Nonempty Z]
 
 private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
-    (H : ∀ p q, abs (dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)) ≤ 2 * ε) :
+    (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) :
     ∀ x y z, glueDist Φ Ψ ε x z ≤ glueDist Φ Ψ ε x y + glueDist Φ Ψ ε y z
   | inl x, inl y, inl z => dist_triangle _ _ _
   | inr x, inr y, inr z => dist_triangle _ _ _
@@ -236,7 +236,7 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
 glue the two spaces `X` and `Y` along the images of `Φ` and `Ψ`, so that `Φ p` and `Ψ p` are
 at distance `ε`. -/
 def glueMetricApprox (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
-    (H : ∀ p q, abs (dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)) ≤ 2 * ε) : MetricSpace (Sum X Y) where
+    (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) : MetricSpace (Sum X Y) where
   dist := glueDist Φ Ψ ε
   dist_self := glue_dist_self Φ Ψ ε
   dist_comm := glue_dist_comm Φ Ψ ε
@@ -422,10 +422,10 @@ theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
   contrapose! h
   apply one_le_dist_of_ne h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_nonneg, ",", expr zero_le_one, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr zero_le_one, ",", expr dist_nonneg, ",", expr le_rfl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z := by
   rcases x with ⟨i, x⟩
   rcases y with ⟨j, y⟩
@@ -438,7 +438,9 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
       calc
         dist x z ≤ dist x (Nonempty.some ⟨x⟩) + 0 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
           simpa only [zero_add, add_zero] using dist_triangle _ _ _
-        _ ≤ _ := by apply_rules [add_le_add, le_rfl, dist_nonneg, zero_le_one]
+        _ ≤ _ := by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_nonneg, \",\", expr zero_le_one, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
         
       
     
@@ -447,7 +449,9 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
       calc
         dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
             dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z :=
-          by apply_rules [add_le_add, le_rfl, dist_triangle]
+          by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
         _ = _ := by abel
         
       
@@ -456,7 +460,9 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
         calc
           dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
               dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) :=
-            by apply_rules [add_le_add, le_rfl, dist_triangle]
+            by
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
           _ = _ := by abel
           
         
@@ -465,7 +471,9 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z =
               dist x (Nonempty.some ⟨x⟩) + 1 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) :=
             by simp only [add_zero, zero_add]
-          _ ≤ _ := by apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rfl]
+          _ ≤ _ := by
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr zero_le_one, \",\", expr dist_nonneg, \",\", expr le_rfl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
           
         
       

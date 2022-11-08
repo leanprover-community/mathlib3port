@@ -274,7 +274,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     simp only [exists_prop, Set.mem_Union, Set.mem_inter_iff, Set.inf_eq_inter] at hx
     exact
       let ⟨⟨_, hx₁⟩, _, hx₂⟩ := hx
-      restrict_nonpos_seq_disjoint a b hab ⟨hx₁, hx₂⟩
+      restrict_nonpos_seq_disjoint hab ⟨hx₁, hx₂⟩
     
   · apply Set.Union_subset
     intro a x

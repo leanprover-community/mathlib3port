@@ -148,10 +148,10 @@ theorem coeff_is_unit (hp : p.IsUnitTrinomial) {k : ℕ} (hk : k ∈ p.Support) 
     
 
 theorem leading_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.leadingCoeff :=
-  hp.coeff_is_unit (nat_degree_mem_support_of_nonzero hp.ne_zero)
+  hp.coeff_is_unit (nat_degree_mem_support_of_nonzero hp.NeZero)
 
 theorem trailing_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.trailingCoeff :=
-  hp.coeff_is_unit (nat_trailing_degree_mem_support_of_nonzero hp.ne_zero)
+  hp.coeff_is_unit (nat_trailing_degree_mem_support_of_nonzero hp.NeZero)
 
 end IsUnitTrinomial
 
@@ -185,7 +185,7 @@ theorem is_unit_trinomial_iff' :
   · have key : ∀ k ∈ p.support, p.coeff k ^ 2 = 1 := fun k hk =>
       Int.sq_eq_one_of_sq_le_three ((single_le_sum (fun k hk => sq_nonneg (p.coeff k)) hk).trans hp.le)
         (mem_support_iff.mp hk)
-    refine' is_unit_trinomial_iff.mpr ⟨_, fun k hk => is_unit_of_pow_eq_one _ 2 (key k hk) zero_lt_two⟩
+    refine' is_unit_trinomial_iff.mpr ⟨_, fun k hk => is_unit_of_pow_eq_one _ 2 (key k hk) two_ne_zero⟩
     rw [sum_def, sum_congr rfl key, sum_const, Nat.smul_one_eq_coe] at hp
     exact Nat.cast_injective hp
     

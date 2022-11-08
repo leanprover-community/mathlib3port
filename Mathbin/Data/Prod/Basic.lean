@@ -214,7 +214,9 @@ theorem id_prod : (fun p : α × β => (p.1, p.2)) = id :=
 theorem map_id : Prod.map (@id α) (@id β) = id :=
   id_prod
 
+#print Prod.fst_surjective /-
 theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
+-/
 
 /- warning: prod.snd_surjective -> Prod.snd_surjective is a dubious translation:
 lean 3 declaration is
@@ -224,18 +226,22 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prod.snd_surjective Prod.snd_surjectiveₓ'. -/
 theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
+#print Prod.fst_injective /-
 theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => ext h (Subsingleton.elim _ _)
+-/
 
 /- warning: prod.snd_injective -> Prod.snd_injective is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Data.Prod._hyg.1274 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Data.Prod._hyg.1141 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.snd_injective Prod.snd_injectiveₓ'. -/
 theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => ext (Subsingleton.elim _ _) h
 
+#print Prod.swap /-
 /-- Swap the factors of a product. `swap (a, b) = (b, a)` -/
 def swap : α × β → β × α := fun p => (p.2, p.1)
+-/
 
 /- warning: prod.swap_swap -> Prod.swap_swap is a dubious translation:
 lean 3 declaration is
@@ -372,8 +378,10 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
     | (a, b), (c, d), Or.inl h => Lex.left _ _ h
     | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact lex.right _ h⟩
 
+#print Prod.Lex.decidable /-
 instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β → Prop) [DecidableRel r] [DecidableRel s] :
     DecidableRel (Prod.Lex r s) := fun p q => decidable_of_decidable_of_iff (by infer_instance) (lex_def r s).symm
+-/
 
 @[refl]
 theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x

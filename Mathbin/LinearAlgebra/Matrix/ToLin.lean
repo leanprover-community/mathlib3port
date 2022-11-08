@@ -109,7 +109,7 @@ def LinearMap.toMatrixRight' : ((m → R) →ₗ[R] n → R) ≃ₗ[Rᵐᵒᵖ] 
   toFun f i j := f (stdBasis R (fun _ => R) i 1) j
   invFun := Matrix.vecMulLinear
   right_inv M := by
-    ext i j
+    ext (i j)
     simp only [Matrix.vec_mul_std_basis, Matrix.vec_mul_linear_apply]
   left_inv f := by
     apply (Pi.basisFun R m).ext
@@ -117,10 +117,10 @@ def LinearMap.toMatrixRight' : ((m → R) →ₗ[R] n → R) ≃ₗ[Rᵐᵒᵖ] 
     ext i
     simp only [Pi.basis_fun_apply, Matrix.vec_mul_std_basis, Matrix.vec_mul_linear_apply]
   map_add' f g := by
-    ext i j
+    ext (i j)
     simp only [Pi.add_apply, LinearMap.add_apply]
   map_smul' c f := by
-    ext i j
+    ext (i j)
     simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply]
 
 /-- A `matrix m n R` is linearly equivalent over `Rᵐᵒᵖ` to a linear map `(m → R) →ₗ[R] (n → R)`,
@@ -193,7 +193,7 @@ def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R w
   toFun f := of fun i j => f (stdBasis R (fun _ => R) j 1) i
   invFun := Matrix.mulVecLin
   right_inv M := by
-    ext i j
+    ext (i j)
     simp only [Matrix.mul_vec_std_basis, Matrix.mul_vec_lin_apply, of_apply]
   left_inv f := by
     apply (Pi.basisFun R n).ext
@@ -201,10 +201,10 @@ def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R w
     ext i
     simp only [Pi.basis_fun_apply, Matrix.mul_vec_std_basis, Matrix.mul_vec_lin_apply, of_apply]
   map_add' f g := by
-    ext i j
+    ext (i j)
     simp only [Pi.add_apply, LinearMap.add_apply, of_apply]
   map_smul' c f := by
-    ext i j
+    ext (i j)
     simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply, of_apply]
 
 /-- A `matrix m n R` is linearly equivalent to a linear map `(n → R) →ₗ[R] (m → R)`. -/
@@ -446,7 +446,7 @@ theorem Matrix.to_lin_self (M : Matrix m n R) (i : n) : Matrix.toLin v₁ v₂ M
 
 /-- This will be a special case of `linear_map.to_matrix_id_eq_basis_to_matrix`. -/
 theorem LinearMap.to_matrix_id : LinearMap.toMatrix v₁ v₁ id = 1 := by
-  ext i j
+  ext (i j)
   simp [LinearMap.to_matrix_apply, Matrix.one_apply, Finsupp.single, eq_comm]
 
 theorem LinearMap.to_matrix_one : LinearMap.toMatrix v₁ v₁ 1 = 1 :=
@@ -600,6 +600,13 @@ theorem Matrix.to_lin_fin_two_prod (a b c d : R) :
       (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
 
+@[simp]
+theorem to_matrix_distrib_mul_action_to_linear_map (x : R) :
+    LinearMap.toMatrix v₁ v₁ (DistribMulAction.toLinearMap R M₁ x) = Matrix.diagonal fun _ => x := by
+  ext
+  rw [LinearMap.to_matrix_apply, DistribMulAction.to_linear_map_apply, LinearEquiv.map_smul, Basis.repr_self,
+    Finsupp.smul_single_one, Finsupp.single_eq_pi_single, Matrix.diagonal, Pi.single_apply]
+
 end ToMatrix
 
 namespace Algebra
@@ -620,10 +627,8 @@ theorem to_matrix_lmul' (x : S) (i j) : LinearMap.toMatrix b b (lmul R S x) i j 
   simp only [LinearMap.to_matrix_apply', coe_lmul_eq_mul, LinearMap.mul_apply']
 
 @[simp]
-theorem to_matrix_lsmul (x : R) (i j) : LinearMap.toMatrix b b (Algebra.lsmul R S x) i j = if i = j then x else 0 := by
-  rw [LinearMap.to_matrix_apply', Algebra.lsmul_coe, LinearEquiv.map_smul, Finsupp.smul_apply, b.repr_self_apply,
-    smul_eq_mul, mul_boole]
-  congr 1 <;> simp only [eq_comm]
+theorem to_matrix_lsmul (x : R) : LinearMap.toMatrix b b (Algebra.lsmul R S x) = Matrix.diagonal fun _ => x :=
+  to_matrix_distrib_mul_action_to_linear_map b x
 
 /-- `left_mul_matrix b x` is the matrix corresponding to the linear map `λ y, x * y`.
 
@@ -640,7 +645,7 @@ noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R where
   map_mul' x y := by rw [AlgHom.map_mul, LinearMap.to_matrix_mul, Matrix.mul_eq_mul]
   commutes' r := by
     ext
-    rw [lmul_algebra_map, to_matrix_lsmul, algebra_map_matrix_apply, id.map_eq_self]
+    rw [lmul_algebra_map, to_matrix_lsmul, algebra_map_eq_diagonal, Pi.algebra_map_def, Algebra.id.map_eq_self]
 
 theorem left_mul_matrix_apply (x : S) : leftMulMatrix b x = LinearMap.toMatrix b b (lmul R S x) :=
   rfl
@@ -673,7 +678,7 @@ theorem smul_left_mul_matrix (x) (ik jk) :
 
 theorem smul_left_mul_matrix_algebra_map (x : S) :
     leftMulMatrix (b.smul c) (algebraMap _ _ x) = blockDiagonal fun k => leftMulMatrix b x := by
-  ext ⟨i, k⟩ ⟨j, k'⟩
+  ext (⟨i, k⟩⟨j, k'⟩)
   rw [smul_left_mul_matrix, AlgHom.commutes, block_diagonal_apply, algebra_map_matrix_apply]
   split_ifs with h <;> simp [h]
 

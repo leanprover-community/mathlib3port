@@ -1676,7 +1676,7 @@ theorem IsNormal.eq_iff_zero_and_succ {f g : Ordinal.{u} → Ordinal.{u}} (hf : 
       intro o ho H
       rw [← IsNormal.bsup_eq.{u, u} hf ho, ← IsNormal.bsup_eq.{u, u} hg ho]
       congr
-      ext b hb
+      ext (b hb)
       exact H b hb⟩
 
 /-! ### Minimum excluded ordinals -/
@@ -2538,4 +2538,56 @@ unsafe def positivity_opow : expr → tactic strictness
     failed
 
 end Tactic
+
+namespace Acc
+
+variable {a b : α}
+
+/-- The rank of an element `a` accessible under a relation `r` is defined inductively as the
+smallest ordinal greater than the ranks of all elements below it (i.e. elements `b` such that
+`r b a`). -/
+noncomputable def rank (h : Acc r a) : Ordinal :=
+  (Acc.recOn h) fun a h ih => Ordinal.sup fun b : { b // r b a } => Order.succ <| ih b b.2
+
+theorem rank_eq (h : Acc r a) : h.rank = Ordinal.sup fun b : { b // r b a } => Order.succ (h.inv b.2).rank := by
+  change ((Acc.intro a) fun _ => h.inv).rank = _
+  rfl
+
+/-- if `r a b` then the rank of `a` is less than the rank of `b`. -/
+theorem rank_lt_of_rel (hb : Acc r b) (h : r a b) : (hb.inv h).rank < hb.rank :=
+  (Order.lt_succ _).trans_le <| by
+    rw [hb.rank_eq]
+    refine' le_trans _ (Ordinal.le_sup _ ⟨a, h⟩)
+    rfl
+
+end Acc
+
+namespace WellFounded
+
+variable (hwf : WellFounded r) {a b : α}
+
+include hwf
+
+/-- The rank of an element `a` under a well-founded relation `r` is defined inductively as the
+smallest ordinal greater than the ranks of all elements below it (i.e. elements `b` such that
+`r b a`). -/
+noncomputable def rank (a : α) : Ordinal :=
+  (hwf.apply a).rank
+
+theorem rank_eq : hwf.rank a = Ordinal.sup fun b : { b // r b a } => Order.succ <| hwf.rank b := by
+  rw [rank, Acc.rank_eq]
+  rfl
+
+theorem rank_lt_of_rel (h : r a b) : hwf.rank a < hwf.rank b :=
+  Acc.rank_lt_of_rel _ h
+
+omit hwf
+
+theorem rank_strict_mono [Preorder α] [WellFoundedLt α] : StrictMono (rank <| @IsWellFounded.wf α (· < ·) _) :=
+  fun _ _ => rank_lt_of_rel _
+
+theorem rank_strict_anti [Preorder α] [WellFoundedGt α] : StrictAnti (rank <| @IsWellFounded.wf α (· > ·) _) :=
+  fun _ _ => rank_lt_of_rel <| @IsWellFounded.wf α (· > ·) _
+
+end WellFounded
 

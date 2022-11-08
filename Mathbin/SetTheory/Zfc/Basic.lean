@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Set.Lattice
-import Mathbin.Logic.Small
+import Mathbin.Logic.Small.Basic
 import Mathbin.Order.WellFounded
 
 /-!

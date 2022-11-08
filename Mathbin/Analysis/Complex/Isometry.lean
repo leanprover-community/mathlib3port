@@ -108,7 +108,7 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   intro z
   apply LinearIsometry.im_apply_eq_im h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) : f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conj_lie :=
   by
   have h0 : f I = I ∨ f I = -I := by
@@ -139,15 +139,15 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f
   · exact eq_mul_of_inv_mul_eq h₂
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The matrix representation of `rotation a` is equal to the conformal matrix
 `!![re a, -im a; im a, re a]`. -/
 theorem to_matrix_rotation (a : circle) :
     LinearMap.toMatrix basisOneI basisOneI (rotation a).toLinearEquiv =
       Matrix.planeConformalMatrix (re a) (im a) (by simp [pow_two, ← norm_sq_apply]) :=
   by
-  ext i j
+  ext (i j)
   simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
 

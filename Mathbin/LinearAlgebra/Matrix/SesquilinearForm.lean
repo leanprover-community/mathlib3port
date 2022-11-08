@@ -126,7 +126,7 @@ theorem Matrix.to_matrix₂_aux_to_linear_map₂'_aux (f : Matrix n m R) :
         (f.toLinearMap₂'Aux σ₁ σ₂) =
       f :=
   by
-  ext i j
+  ext (i j)
   simp_rw [LinearMap.to_matrix₂_aux_apply, Matrix.to_linear_map₂'_aux_std_basis]
 
 end CommRing
@@ -247,7 +247,7 @@ variable [DecidableEq n'] [DecidableEq m']
 @[simp]
 theorem LinearMap.to_matrix₂'_compl₁₂ (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (l : (n' → R) →ₗ[R] n → R)
     (r : (m' → R) →ₗ[R] m → R) : (B.compl₁₂ l r).toMatrix₂' = l.toMatrix'ᵀ ⬝ B.toMatrix₂' ⬝ r.toMatrix' := by
-  ext i j
+  ext (i j)
   simp only [LinearMap.to_matrix₂'_apply, LinearMap.compl₁₂_apply, transpose_apply, Matrix.mul_apply,
     LinearMap.toMatrix', LinearEquiv.coe_mk, sum_mul]
   rw [sum_comm]
@@ -387,7 +387,7 @@ theorem LinearMap.to_matrix₂_compl₁₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R)
     LinearMap.toMatrix₂ b₁' b₂' (B.compl₁₂ l r) =
       (toMatrix b₁' b₁ l)ᵀ ⬝ LinearMap.toMatrix₂ b₁ b₂ B ⬝ toMatrix b₂' b₂ r :=
   by
-  ext i j
+  ext (i j)
   simp only [LinearMap.to_matrix₂_apply, compl₁₂_apply, transpose_apply, Matrix.mul_apply, LinearMap.to_matrix_apply,
     LinearEquiv.coe_mk, sum_mul]
   rw [sum_comm]

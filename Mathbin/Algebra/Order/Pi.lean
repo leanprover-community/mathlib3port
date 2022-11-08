@@ -3,8 +3,9 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Ring
+import Mathbin.Algebra.Order.Ring.Basic
 import Mathbin.Algebra.Ring.Pi
+import Mathbin.Tactic.Positivity
 
 /-!
 # Pi instances for ordered groups and monoids
@@ -14,6 +15,8 @@ This file defines instances for ordered group, monoid, and related structures on
 
 
 universe u v w
+
+variable {ι α β : Type _}
 
 variable {I : Type u}
 
@@ -71,4 +74,67 @@ instance [∀ i, OrderedCommRing (f i)] : OrderedCommRing (∀ i, f i) :=
   { Pi.commRing, Pi.orderedRing with }
 
 end Pi
+
+namespace Function
+
+variable (β) [One α] [Preorder α] {a : α}
+
+@[to_additive const_nonneg_of_nonneg]
+theorem one_le_const_of_one_le (ha : 1 ≤ a) : 1 ≤ const β a := fun _ => ha
+
+@[to_additive]
+theorem const_le_one_of_le_one (ha : a ≤ 1) : const β a ≤ 1 := fun _ => ha
+
+variable {β} [Nonempty β]
+
+@[simp, to_additive const_nonneg]
+theorem one_le_const : 1 ≤ const β a ↔ 1 ≤ a :=
+  @const_le_const _ _ _ _ 1 _
+
+@[simp, to_additive const_pos]
+theorem one_lt_const : 1 < const β a ↔ 1 < a :=
+  @const_lt_const _ _ _ _ 1 a
+
+@[simp, to_additive]
+theorem const_le_one : const β a ≤ 1 ↔ a ≤ 1 :=
+  @const_le_const _ _ _ _ _ 1
+
+@[simp, to_additive]
+theorem const_lt_one : const β a < 1 ↔ a < 1 :=
+  @const_lt_const _ _ _ _ _ 1
+
+end Function
+
+namespace Tactic
+
+open Function Positivity
+
+variable (ι) [Zero α] {a : α}
+
+private theorem function_const_nonneg_of_pos [Preorder α] (ha : 0 < a) : 0 ≤ const ι a :=
+  const_nonneg_of_nonneg _ ha.le
+
+variable [Nonempty ι]
+
+private theorem function_const_ne_zero : a ≠ 0 → const ι a ≠ 0 :=
+  const_ne_zero.2
+
+private theorem function_const_pos [Preorder α] : 0 < a → 0 < const ι a :=
+  const_pos.2
+
+/-- Extension for the `positivity` tactic: `function.const` is positive/nonnegative/nonzero if its
+input is. -/
+@[positivity]
+unsafe def positivity_const : expr → tactic strictness
+  | quote.1 (Function.const (%%ₓι) (%%ₓa)) => do
+    let strict_a ← core a
+    match strict_a with
+      | positive p =>
+        positive <$> to_expr (pquote.1 (function_const_pos (%%ₓι) (%%ₓp))) <|>
+          nonnegative <$> to_expr (pquote.1 (function_const_nonneg_of_pos (%%ₓι) (%%ₓp)))
+      | nonnegative p => nonnegative <$> to_expr (pquote.1 (const_nonneg_of_nonneg (%%ₓι) (%%ₓp)))
+      | nonzero p => nonzero <$> to_expr (pquote.1 (function_const_ne_zero (%%ₓι) (%%ₓp)))
+  | e => pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `function.const ι a`"
+
+end Tactic
 

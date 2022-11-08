@@ -59,6 +59,11 @@ def cons (a : α) (s : Seq α) : Seq α :=
     · exact s.2 h
       ⟩
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem val_cons (s : Seq α) (x : α) : (cons x s).val = some x::s.val :=
+  rfl
+
 /-- Get the nth element of a sequence (if it exists) -/
 def nth : Seq α → ℕ → Option α :=
   Subtype.val
@@ -214,10 +219,10 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
             "<;>"
             (Tactic.intro "intro" [`h]))
            []
-           («tactic·.__;_» "·" [(group (Tactic.contradiction "contradiction") [])])
+           («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.contradiction "contradiction") [])])
            []
-           («tactic·.__;_»
-            "·"
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
             [(group
               (Tactic.cases'
                "cases'"
@@ -226,7 +231,13 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
                ["with" [(Lean.binderIdent `f) (Lean.binderIdent `al)]])
               [])
              (group (Tactic.injections "injections" ["_" `h1 `h2]) [])
-             (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `h2)] "]") []) [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]")
+               [])
+              [])
              (group (Tactic.apply "apply" `Subtype.eq) [])
              (group
               (Tactic.dsimp
@@ -244,7 +255,13 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1)] "]")
                [(Tactic.location "at" (Tactic.locationHyp [`f0] []))])
               [])
-             (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `f0)] "]") []) [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]")
+               [])
+              [])
              (group (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm)) [])])])))
        [])
       []
@@ -268,10 +285,10 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
            "<;>"
            (Tactic.intro "intro" [`h]))
           []
-          («tactic·.__;_» "·" [(group (Tactic.contradiction "contradiction") [])])
+          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.contradiction "contradiction") [])])
           []
-          («tactic·.__;_»
-           "·"
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
            [(group
              (Tactic.cases'
               "cases'"
@@ -280,7 +297,13 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
               ["with" [(Lean.binderIdent `f) (Lean.binderIdent `al)]])
              [])
             (group (Tactic.injections "injections" ["_" `h1 `h2]) [])
-            (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `h2)] "]") []) [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]")
+              [])
+             [])
             (group (Tactic.apply "apply" `Subtype.eq) [])
             (group
              (Tactic.dsimp
@@ -298,12 +321,18 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1)] "]")
               [(Tactic.location "at" (Tactic.locationHyp [`f0] []))])
              [])
-            (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `f0)] "]") []) [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]")
+              [])
+             [])
             (group (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm)) [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic·.__;_»
-       "·"
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
        [(group
          (Tactic.cases'
           "cases'"
@@ -312,7 +341,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
           ["with" [(Lean.binderIdent `f) (Lean.binderIdent `al)]])
          [])
         (group (Tactic.injections "injections" ["_" `h1 `h2]) [])
-        (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `h2)] "]") []) [])
+        (group
+         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]") [])
+         [])
         (group (Tactic.apply "apply" `Subtype.eq) [])
         (group
          (Tactic.dsimp
@@ -330,7 +361,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1)] "]")
           [(Tactic.location "at" (Tactic.locationHyp [`f0] []))])
          [])
-        (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `f0)] "]") []) [])
+        (group
+         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]") [])
+         [])
         (group (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm)) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm))
@@ -351,7 +384,7 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `f0)] "]") [])
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f0
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -388,7 +421,7 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `h2)] "]") [])
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h2
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -785,15 +818,42 @@ theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β →
   cases' s with st
   cases st_nth_eq : st n <;> simp only [zip_with, Seq.nth, *]
 
+theorem nth_zip_with (f : α → β → γ) (s : Seq α) (t : Seq β) (n : ℕ) :
+    nth (zipWith f s t) n = Option.bind (nth s n) fun x => Option.map (f x) (nth t n) := by
+  cases' hx : nth s n with x
+  · rw [zip_with_nth_none hx, Option.none_bind']
+    
+  cases' hy : nth t n with y
+  · rw [zip_with_nth_none' hy, Option.some_bind', Option.map_none']
+    
+  · rw [zip_with_nth_some hx hy, Option.some_bind', Option.map_some']
+    
+
 end ZipWith
 
 /-- Pair two sequences into a sequence of pairs -/
 def zip : Seq α → Seq β → Seq (α × β) :=
   zipWith Prod.mk
 
+theorem nth_zip (s : Seq α) (t : Seq β) (n : ℕ) :
+    nth (zip s t) n = Option.bind (nth s n) fun x => Option.map (Prod.mk x) (nth t n) :=
+  nth_zip_with _ _ _ _
+
 /-- Separate a sequence of pairs into two sequences -/
 def unzip (s : Seq (α × β)) : Seq α × Seq β :=
   (map Prod.fst s, map Prod.snd s)
+
+/-- Enumerate a sequence by tagging each element with its index. -/
+def enum (s : Seq α) : Seq (ℕ × α) :=
+  Seq.zip nats s
+
+@[simp]
+theorem nth_enum (s : Seq α) (n : ℕ) : nth (enum s) n = Option.map (Prod.mk n) (nth s n) :=
+  nth_zip _ _ _
+
+@[simp]
+theorem enum_nil : enum (nil : Seq α) = nil :=
+  rfl
 
 /-- Convert a sequence which is known to terminate into a list -/
 def toList (s : Seq α) (h : s.Terminates) : List α :=
@@ -1063,6 +1123,15 @@ theorem of_mem_append {s₁ s₂ : Seq α} {a : α} (h : a ∈ append s₁ s₂)
 
 theorem mem_append_left {s₁ s₂ : Seq α} {a : α} (h : a ∈ s₁) : a ∈ append s₁ s₂ := by
   apply mem_rec_on h <;> intros <;> simp [*]
+
+@[simp]
+theorem enum_cons (s : Seq α) (x : α) : enum (cons x s) = cons (0, x) (map (Prod.map Nat.succ id) (enum s)) := by
+  ext ⟨n⟩ : 1
+  · simp
+    
+  · simp only [nth_enum, nth_cons_succ, map_nth, Option.map_map]
+    congr
+    
 
 end Seq
 

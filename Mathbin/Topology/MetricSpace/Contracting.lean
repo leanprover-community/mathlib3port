@@ -132,22 +132,22 @@ theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edis
     edist x (efixedPoint f hf x hx) < ∞ :=
   (hf.edist_efixed_point_le hx).trans_lt (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) {y : α}
     (hy : edist y (f y) ≠ ∞) (h : edist x y ≠ ∞) : efixedPoint f hf x hx = efixedPoint f hf y hy := by
   refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
     try apply efixed_point_is_fixed_pt
   change edist_lt_top_setoid.rel _ _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · symm
     exact hf.edist_efixed_point_lt_top hx
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
 
 omit cs
@@ -214,10 +214,10 @@ theorem edist_efixed_point_lt_top' {s : Set α} (hsc : IsComplete s) (hsf : Maps
   (hf.edist_efixed_point_le' hsc hsf hxs hx).trans_lt
     (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- If a globally contracting map `f` has two complete forward-invariant sets `s`, `t`,
 and `x ∈ s` is at a finite distance from `y ∈ t`, then the `efixed_point'` constructed by `x`
 is the same as the `efixed_point'` constructed by `y`.
@@ -233,12 +233,12 @@ theorem efixed_point_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α}
     try apply efixed_point_is_fixed_pt'
   change edist_lt_top_setoid.rel _ _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   · symm
     apply edist_efixed_point_lt_top'
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr y]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   exact lt_top_iff_ne_top.2 hxy
   apply edist_efixed_point_lt_top'
 

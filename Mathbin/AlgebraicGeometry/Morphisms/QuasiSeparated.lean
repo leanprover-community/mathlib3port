@@ -76,7 +76,7 @@ theorem quasi_separated_space_iff_affine (X : SchemeCat) :
     
 
 theorem quasi_compact_affine_property_iff_quasi_separated_space {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) :
-    QuasiCompact.affineProperty.Diagonal f ↔ QuasiSeparatedSpace X.Carrier := by
+    QuasiCompact.affineProperty.diagonal f ↔ QuasiSeparatedSpace X.Carrier := by
   delta affine_target_morphism_property.diagonal
   rw [quasi_separated_space_iff_affine]
   constructor
@@ -111,13 +111,13 @@ theorem quasi_separated_eq_diagonal_is_quasi_compact : @QuasiSeparated = Morphis
   exact quasi_separated_iff _
 
 theorem quasi_compact_affine_property_diagonal_eq :
-    QuasiCompact.affineProperty.Diagonal = quasi_separated.affine_property := by
+    QuasiCompact.affineProperty.diagonal = quasi_separated.affine_property := by
   ext
   rw [quasi_compact_affine_property_iff_quasi_separated_space]
   rfl
 
 theorem quasi_separated_eq_affine_property_diagonal :
-    @QuasiSeparated = TargetAffineLocally QuasiCompact.affineProperty.Diagonal := by
+    @QuasiSeparated = TargetAffineLocally QuasiCompact.affineProperty.diagonal := by
   rw [quasi_separated_eq_diagonal_is_quasi_compact, quasi_compact_eq_affine_property]
   exact diagonal_target_affine_locally_eq_target_affine_locally _ quasi_compact.affine_property_is_local
 
@@ -125,25 +125,25 @@ theorem quasi_separated_eq_affine_property : @QuasiSeparated = TargetAffineLocal
   rw [quasi_separated_eq_affine_property_diagonal, quasi_compact_affine_property_diagonal_eq]
 
 theorem QuasiSeparated.affinePropertyIsLocal : QuasiSeparated.affineProperty.IsLocal :=
-  quasi_compact_affine_property_diagonal_eq ▸ QuasiCompact.affinePropertyIsLocal.Diagonal
+  quasi_compact_affine_property_diagonal_eq ▸ QuasiCompact.affinePropertyIsLocal.diagonal
 
 instance (priority := 900) quasiSeparatedOfMono {X Y : SchemeCat} (f : X ⟶ Y) [Mono f] : QuasiSeparated f :=
   ⟨inferInstance⟩
 
 theorem quasi_separated_stable_under_composition : MorphismProperty.StableUnderComposition @QuasiSeparated :=
   quasi_separated_eq_diagonal_is_quasi_compact.symm ▸
-    quasi_compact_stable_under_composition.Diagonal quasi_compact_respects_iso quasi_compact_stable_under_base_change
+    quasi_compact_stable_under_composition.diagonal quasi_compact_respects_iso quasi_compact_stable_under_base_change
 
 theorem quasi_separated_stable_under_base_change : MorphismProperty.StableUnderBaseChange @QuasiSeparated :=
   quasi_separated_eq_diagonal_is_quasi_compact.symm ▸
-    quasi_compact_stable_under_base_change.Diagonal quasi_compact_respects_iso
+    quasi_compact_stable_under_base_change.diagonal quasi_compact_respects_iso
 
 instance quasiSeparatedComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated f] [QuasiSeparated g] :
     QuasiSeparated (f ≫ g) :=
   quasi_separated_stable_under_composition f g inferInstance inferInstance
 
 theorem quasi_separated_respects_iso : MorphismProperty.RespectsIso @QuasiSeparated :=
-  quasi_separated_eq_diagonal_is_quasi_compact.symm ▸ quasi_compact_respects_iso.Diagonal
+  quasi_separated_eq_diagonal_is_quasi_compact.symm ▸ quasi_compact_respects_iso.diagonal
 
 theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
@@ -164,7 +164,7 @@ theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y
 
 theorem QuasiSeparated.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiSeparated :=
   quasi_separated_eq_affine_property_diagonal.symm ▸
-    QuasiCompact.affinePropertyIsLocal.Diagonal.targetAffineLocallyIsLocal
+    QuasiCompact.affinePropertyIsLocal.diagonal.targetAffineLocallyIsLocal
 
 theorem QuasiSeparated.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae

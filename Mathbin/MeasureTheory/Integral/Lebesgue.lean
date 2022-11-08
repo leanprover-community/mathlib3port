@@ -958,7 +958,7 @@ protected def FinMeasSupp {m : MeasurableSpace α} (f : α →ₛ β) (μ : Meas
 theorem fin_meas_supp_iff_support : f.FinMeasSupp μ ↔ μ (Support f) < ∞ :=
   Iff.rfl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem fin_meas_supp_iff : f.FinMeasSupp μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ := by
   constructor
   · refine' fun h y hy => lt_of_le_of_lt (measure_mono _) h
@@ -1307,7 +1307,7 @@ theorem lintegral_nnnorm_eq_of_nonneg {f : α → ℝ} (h_nonneg : 0 ≤ f) :
     (∫⁻ x, ∥f x∥₊ ∂μ) = ∫⁻ x, Ennreal.ofReal (f x) ∂μ :=
   lintegral_nnnorm_eq_of_ae_nonneg (Filter.eventually_of_forall h_nonneg)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence.
 
 See `lintegral_supr_directed` for a more general form. -/

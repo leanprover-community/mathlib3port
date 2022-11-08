@@ -5,6 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.List.Cycle
+import Mathbin.Data.Pnat.Basic
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Dynamics.FixedPoints.Basic

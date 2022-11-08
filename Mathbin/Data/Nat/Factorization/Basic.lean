@@ -789,7 +789,7 @@ we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n`
 theorem multiplicative_factorization {β : Type _} [CommMonoid β] (f : ℕ → β)
     (h_mult : ∀ x y : ℕ, Coprime x y → f (x * y) = f x * f y) (hf : f 1 = 1) :
     ∀ {n : ℕ}, n ≠ 0 → f n = n.factorization.Prod fun p k => f (p ^ k) := by
-  apply' Nat.recOnPosPrimePosCoprime
+  apply Nat.recOnPosPrimePosCoprime
   · intro p k hp hk hpk
     simp [prime.factorization_pow hp, Finsupp.prod_single_index _, hf]
     
@@ -810,7 +810,7 @@ we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n`
 theorem multiplicative_factorization' {β : Type _} [CommMonoid β] (f : ℕ → β)
     (h_mult : ∀ x y : ℕ, Coprime x y → f (x * y) = f x * f y) (hf0 : f 0 = 1) (hf1 : f 1 = 1) :
     ∀ {n : ℕ}, f n = n.factorization.Prod fun p k => f (p ^ k) := by
-  apply' Nat.recOnPosPrimePosCoprime
+  apply Nat.recOnPosPrimePosCoprime
   · intro p k hp hk
     simp only [hp.factorization_pow]
     rw [prod_single_index _]

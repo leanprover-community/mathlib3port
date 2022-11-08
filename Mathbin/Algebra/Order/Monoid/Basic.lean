@@ -28,19 +28,23 @@ universe u
 
 variable {α : Type u} {β : Type _}
 
+#print OrderedCommMonoid /-
 /-- An ordered commutative monoid is a commutative monoid
 with a partial order such that `a ≤ b → c * a ≤ c * b` (multiplication is monotone)
 -/
 @[protect_proj]
 class OrderedCommMonoid (α : Type _) extends CommMonoid α, PartialOrder α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
+-/
 
+#print OrderedAddCommMonoid /-
 /-- An ordered (additive) commutative monoid is a commutative monoid
   with a partial order such that `a ≤ b → c + a ≤ c + b` (addition is monotone)
 -/
 @[protect_proj]
 class OrderedAddCommMonoid (α : Type _) extends AddCommMonoid α, PartialOrder α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
+-/
 
 attribute [to_additive] OrderedCommMonoid
 
@@ -69,6 +73,7 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   covariant_swap_mul_le_of_covariant_mul_le M
 
+#print Mul.to_covariant_class_left /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)` implies
 `covariant_class M M (*) (<)`, see `left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le`. -/
@@ -76,7 +81,9 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
 theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrder M] [CovariantClass M M (· * ·) (· < ·)] :
     CovariantClass M M (· * ·) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
+-/
 
+#print Mul.to_covariant_class_right /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `right_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (swap (*)) (<)`
 implies `covariant_class M M (swap (*)) (≤)`, see
@@ -85,19 +92,24 @@ implies `covariant_class M M (swap (*)) (≤)`, see
 theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [PartialOrder M] [CovariantClass M M (swap (· * ·)) (· < ·)] :
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
+-/
 
 end OrderedInstances
 
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
   add_pos' h h
 
+#print LinearOrderedAddCommMonoid /-
 /-- A linearly ordered additive commutative monoid. -/
 @[protect_proj]
 class LinearOrderedAddCommMonoid (α : Type _) extends LinearOrder α, OrderedAddCommMonoid α
+-/
 
+#print LinearOrderedCommMonoid /-
 /-- A linearly ordered commutative monoid. -/
 @[protect_proj, to_additive]
 class LinearOrderedCommMonoid (α : Type _) extends LinearOrder α, OrderedCommMonoid α
+-/
 
 /-- A linearly ordered commutative monoid with a zero element. -/
 class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMonoid α, CommMonoidWithZero α where

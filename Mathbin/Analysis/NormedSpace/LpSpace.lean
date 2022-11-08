@@ -158,7 +158,7 @@ theorem neg {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (-f) p := by
 theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
   ⟨fun h => neg_neg f ▸ h.neg, Memℓp.neg⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
 theorem ofExponentGe {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
   rcases Ennreal.trichotomy₂ hpq with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
@@ -196,7 +196,7 @@ theorem ofExponentGe {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hp
         simpa using eventually_lt_of_tendsto_lt (by norm_num : (0 : ℝ) < 1) hf'.tendsto_cofinite_zero
       exact H.subset fun i hi => Real.one_le_rpow hi hq.le
       
-    · show ∀ i, ¬abs (∥f i∥ ^ p.to_real) ≤ ∥f i∥ ^ q.to_real → 1 ≤ ∥f i∥
+    · show ∀ i, ¬|∥f i∥ ^ p.to_real| ≤ ∥f i∥ ^ q.to_real → 1 ≤ ∥f i∥
       intro i hi
       have : 0 ≤ ∥f i∥ ^ p.to_real := Real.rpow_nonneg_of_nonneg (norm_nonneg _) p.to_real
       simp only [abs_of_nonneg, this] at hi
@@ -927,7 +927,7 @@ protected theorem single_smul (p) (i : α) (a : E i) (c : 𝕜) : lp.single p i 
   · simp [lp.single_apply_ne p i _ hi]
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ∥∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' (has_sum_norm hp (∑ i in s, lp.single p i (f i))).unique _
@@ -944,7 +944,7 @@ protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) : �
   refine' Real.rpow_left_inj_on hp.ne' (norm_nonneg' _) (norm_nonneg _) _
   simpa using lp.norm_sum_single hp f {i}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∉ » s) -/
 protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f∥ ^ p.toReal - ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' ((has_sum_norm hp f).sub (has_sum_norm hp (f - ∑ i in s, lp.single p i (f i)))).unique _
@@ -986,7 +986,7 @@ protected theorem has_sum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) 
       _root_.norm_neg] using lp.norm_compl_sum_single hp' (-f) s
   rw [← H] at hs
   have :
-    abs (∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real) =
+    |∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real| =
       ∥(∑ i in s, lp.single p i (f i : E i)) - f∥ ^ p.to_real :=
     by simp only [Real.abs_rpow_of_nonneg (norm_nonneg _), abs_norm_eq_norm]
   linarith

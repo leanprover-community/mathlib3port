@@ -3,6 +3,7 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 -/
+import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.Normed.Group.Pointwise
 import Mathbin.Analysis.NormedSpace.Basic
 
@@ -45,8 +46,7 @@ theorem smul_closed_ball' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Cl
 
 theorem Metric.Bounded.smul {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c • s) := by
   obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀ x ∈ s, ∥x∥ ≤ R := hs.exists_norm_le
-  refine' bounded_iff_exists_norm_le.2 ⟨∥c∥ * R, _⟩
-  intro z hz
+  refine' bounded_iff_forall_norm_le.2 ⟨∥c∥ * R, fun z hz => _⟩
   obtain ⟨y, ys, rfl⟩ : ∃ y : E, y ∈ s ∧ c • y = z := mem_smul_set.1 hz
   calc
     ∥c • y∥ = ∥c∥ * ∥y∥ := norm_smul _ _

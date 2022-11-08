@@ -5,7 +5,8 @@ Authors: Frédéric Dupuis
 -/
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.Module.Prod
-import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Monoid.Prod
+import Mathbin.Algebra.Order.Field.Basic
 import Mathbin.Algebra.Order.Pi
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Tactic.Positivity

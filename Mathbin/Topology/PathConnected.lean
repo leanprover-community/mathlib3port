@@ -487,7 +487,7 @@ theorem pi_coe_fn (γ : ∀ i, Path (as i) (bs i)) : coeFn (Path.pi γ) = fun t 
 /-- Path composition commutes with products -/
 theorem trans_pi_eq_pi_trans (γ₀ : ∀ i, Path (as i) (bs i)) (γ₁ : ∀ i, Path (bs i) (cs i)) :
     (Path.pi γ₀).trans (Path.pi γ₁) = Path.pi fun i => (γ₀ i).trans (γ₁ i) := by
-  ext t i
+  ext (t i)
   unfold Path.trans
   simp only [Path.coe_mk, Function.comp_app, pi_coe_fn]
   split_ifs <;> rfl
@@ -680,7 +680,7 @@ variable (X)
 /-- The setoid corresponding the equivalence relation of being joined by a continuous path. -/
 def pathSetoid : Setoid X where
   R := Joined
-  iseqv := mk _ Joined.refl (fun x y => Joined.symm) fun x y z => Joined.trans
+  iseqv := Equivalence.mk _ Joined.refl (fun x y => Joined.symm) fun x y z => Joined.trans
 
 /-- The quotient type of points of a topological space modulo being joined by a continuous path. -/
 def ZerothHomotopy :=
@@ -818,13 +818,13 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, PathCompon
     rwa [← h] at y_in
     
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 theorem is_path_connected_iff : IsPathConnected F ↔ F.Nonempty ∧ ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   ⟨fun h =>
     ⟨let ⟨b, b_in, hb⟩ := h

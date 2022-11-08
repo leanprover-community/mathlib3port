@@ -613,51 +613,11 @@ noncomputable instance :
 
 namespace Real
 
-theorem norm_of_nonneg {x : ℝ} (hx : 0 ≤ x) : ∥x∥ = x :=
-  abs_of_nonneg hx
+theorem to_nnreal_mul_nnnorm {x : ℝ} (y : ℝ) (hx : 0 ≤ x) : x.toNnreal * ∥y∥₊ = ∥x * y∥₊ := by
+  simp [Real.to_nnreal_of_nonneg, nnnorm, norm_of_nonneg, hx]
 
-theorem norm_of_nonpos {x : ℝ} (hx : x ≤ 0) : ∥x∥ = -x :=
-  abs_of_nonpos hx
-
-theorem le_norm_self (r : ℝ) : r ≤ ∥r∥ :=
-  le_abs_self r
-
-@[simp]
-theorem norm_coe_nat (n : ℕ) : ∥(n : ℝ)∥ = n :=
-  abs_of_nonneg n.cast_nonneg
-
-@[simp]
-theorem nnnorm_coe_nat (n : ℕ) : ∥(n : ℝ)∥₊ = n :=
-  Nnreal.eq <| by simp
-
-@[simp]
-theorem norm_two : ∥(2 : ℝ)∥ = 2 :=
-  abs_of_pos (@zero_lt_two ℝ _ _)
-
-@[simp]
-theorem nnnorm_two : ∥(2 : ℝ)∥₊ = 2 :=
-  Nnreal.eq <| by simp
-
-theorem nnnorm_of_nonneg {x : ℝ} (hx : 0 ≤ x) : ∥x∥₊ = ⟨x, hx⟩ :=
-  Nnreal.eq <| norm_of_nonneg hx
-
-theorem ennnorm_eq_of_real {x : ℝ} (hx : 0 ≤ x) : (∥x∥₊ : ℝ≥0∞) = Ennreal.ofReal x := by
-  rw [← of_real_norm_eq_coe_nnnorm, norm_of_nonneg hx]
-
-theorem of_real_le_ennnorm (x : ℝ) : Ennreal.ofReal x ≤ ∥x∥₊ := by
-  by_cases hx:0 ≤ x
-  · rw [Real.ennnorm_eq_of_real hx]
-    rfl'
-    
-  · rw [Ennreal.of_real_eq_zero.2 (le_of_lt (not_le.1 hx))]
-    exact bot_le
-    
-
-theorem to_nnreal_mul_nnnorm {x : ℝ} (y : ℝ) (hr : 0 ≤ x) : x.toNnreal * ∥y∥₊ = ∥x * y∥₊ := by
-  rw [Real.to_nnreal_of_nonneg hr]
-  simp only [nnnorm_mul, mul_eq_mul_right_iff]
-  refine' Or.inl (Nnreal.eq _)
-  simp only [Subtype.coe_mk, coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg hr]
+theorem nnnorm_mul_to_nnreal (x : ℝ) {y : ℝ} (hy : 0 ≤ y) : ∥x∥₊ * y.toNnreal = ∥x * y∥₊ := by
+  simp [Real.to_nnreal_of_nonneg, nnnorm, norm_of_nonneg, hy]
 
 /-- If `E` is a nontrivial topological module over `ℝ`, then `E` has no isolated points.
 This is a particular case of `module.punctured_nhds_ne_bot`. -/
@@ -711,18 +671,18 @@ instance : NormedCommRing ℤ where
 theorem Int.norm_cast_real (m : ℤ) : ∥(m : ℝ)∥ = ∥m∥ :=
   rfl
 
-theorem Int.norm_eq_abs (n : ℤ) : ∥n∥ = abs n :=
+theorem Int.norm_eq_abs (n : ℤ) : ∥n∥ = |n| :=
   rfl
 
 theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0) = ∥n∥₊ :=
   Nnreal.eq <|
     calc
       ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_ofNat, Nnreal.coe_nat_cast]
-      _ = abs n := by simp only [← Int.abs_eq_nat_abs, Int.cast_abs]
+      _ = |n| := by simp only [← Int.abs_eq_nat_abs, Int.cast_abs]
       _ = ∥n∥ := rfl
       
 
-theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : abs z ≤ ⌊c⌋₊ ↔ ∥z∥₊ ≤ c := by
+theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊ ↔ ∥z∥₊ ≤ c := by
   rw [Int.abs_eq_nat_abs, Int.coe_nat_le, Nat.le_floor_iff (zero_le c)]
   congr
   exact Nnreal.coe_nat_abs z

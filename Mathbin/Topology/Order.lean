@@ -275,7 +275,7 @@ theorem TopologicalSpace.is_open_top_iff {α} (U : Set α) : (⊤ : TopologicalS
     rintro (rfl | rfl)
     exacts[@is_open_empty _ ⊤, @is_open_univ _ ⊤]⟩
 
-/- ./././Mathport/Syntax/Translate/Command.lean:340:30: infer kinds are unsupported in Lean 4: #[`eq_bot] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`eq_bot] [] -/
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
@@ -480,7 +480,7 @@ theorem coinduced_compose [tα : TopologicalSpace α] {f : α → β} {g : β �
 
 theorem Equiv.induced_symm {α β : Type _} (e : α ≃ β) :
     TopologicalSpace.induced e.symm = TopologicalSpace.coinduced e := by
-  ext t U
+  ext (t U)
   constructor
   · rintro ⟨V, hV, rfl⟩
     change t.is_open (e ⁻¹' _)
@@ -619,7 +619,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   rw [is_open_singleton_iff_nhds_eq_pure]
   exact nhds_adjoint_nhds_of_ne a f hb
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
   rw [le_iff_nhds]

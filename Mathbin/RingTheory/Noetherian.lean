@@ -327,7 +327,7 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
       
     
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 theorem fg_induction (R M : Type _) [Semiring R] [AddCommMonoid M] [Module R M] (P : Submodule R M → Prop)
     (h₁ : ∀ x, P (Submodule.span R {x})) (h₂ : ∀ M₁ M₂, P M₁ → P M₂ → P (M₁ ⊔ M₂)) (N : Submodule R M) (hN : N.Fg) :
     P N := by

@@ -98,7 +98,7 @@ instance mono (f : MonoOver X) : Mono f.arrow :=
 
 /-- The category of monomorphisms over X is a thin category,
 which makes defining its skeleton easy. -/
-instance is_thin {X : C} (f g : MonoOver X) : Subsingleton (f ⟶ g) :=
+instance is_thin {X : C} : Quiver.IsThin (MonoOver X) := fun f g =>
   ⟨by
     intro h₁ h₂
     ext1

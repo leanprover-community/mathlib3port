@@ -139,9 +139,8 @@ variable (G)
 
 /-- If `G` has `n` commutators `[g₁, g₂]`, then `|G'| ∣ [G : Z(G)] ^ ([G : Z(G)] * n + 1)`,
 where `G'` denotes the commutator of `G`. -/
-theorem card_commutator_dvd_index_center_pow [Finite { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g }] :
-    Nat.card (commutator G) ∣ (center G).index ^ ((center G).index * Nat.card { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g } + 1) :=
-  by
+theorem card_commutator_dvd_index_center_pow [Finite (CommutatorSet G)] :
+    Nat.card (commutator G) ∣ (center G).index ^ ((center G).index * Nat.card (CommutatorSet G) + 1) := by
   -- First handle the case when `Z(G)` has infinite index and `[G : Z(G)]` is defined to be `0`
   by_cases hG:(center G).index = 0
   · simp_rw [hG, zero_mul, zero_add, pow_one, dvd_zero]

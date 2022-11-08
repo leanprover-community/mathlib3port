@@ -1240,7 +1240,7 @@ theorem mem_affine_span_insert_iff {s : AffineSubspace k P} {p1 : P} (hp1 : p1 �
     rw [Submodule.mem_span_singleton] at hv1
     rcases hv1 with ⟨r, rfl⟩
     use r, v2 +ᵥ p1, vadd_mem_of_mem_direction hv2 hp1
-    symm'  at hp
+    symm at hp
     rw [← sub_eq_zero, ← vsub_vadd_eq_vsub_sub, vsub_eq_zero_iff_eq] at hp
     rw [hp, vadd_vadd]
     

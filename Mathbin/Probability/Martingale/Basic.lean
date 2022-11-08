@@ -326,7 +326,7 @@ theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermar
 theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermartingale f ℱ μ) : Submartingale (c • f) ℱ μ := by
   rw [← neg_neg c,
     (by
-      ext i x
+      ext (i x)
       simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 
@@ -343,14 +343,14 @@ variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [Complet
 theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) : Submartingale (c • f) ℱ μ := by
   rw [← neg_neg c,
     (by
-      ext i x
+      ext (i x)
       simp : - -c • f = -(c • -f))]
   exact supermartingale.neg (hf.neg.smul_nonneg hc)
 
 theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submartingale f ℱ μ) : Supermartingale (c • f) ℱ μ := by
   rw [← neg_neg c,
     (by
-      ext i x
+      ext (i x)
       simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 
@@ -486,8 +486,7 @@ end Submartingale
 theorem Submartingale.sumMulSub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → Ω → ℝ} (hf : Submartingale f 𝒢 μ)
     (hξ : Adapted 𝒢 ξ) (hbdd : ∀ n ω, ξ n ω ≤ R) (hnonneg : ∀ n ω, 0 ≤ ξ n ω) :
     Submartingale (fun n => ∑ k in Finset.range n, ξ k * (f (k + 1) - f k)) 𝒢 μ := by
-  have hξbdd : ∀ i, ∃ C, ∀ ω, abs (ξ i ω) ≤ C := fun i =>
-    ⟨R, fun ω => (abs_of_nonneg (hnonneg i ω)).trans_le (hbdd i ω)⟩
+  have hξbdd : ∀ i, ∃ C, ∀ ω, |ξ i ω| ≤ C := fun i => ⟨R, fun ω => (abs_of_nonneg (hnonneg i ω)).trans_le (hbdd i ω)⟩
   have hint : ∀ m, integrable (∑ k in Finset.range m, ξ k * (f (k + 1) - f k)) μ := fun m =>
     integrable_finset_sum' _ fun i hi =>
       integrable.bdd_mul ((hf.integrable _).sub (hf.integrable _)) hξ.strongly_measurable.ae_strongly_measurable

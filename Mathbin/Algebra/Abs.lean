@@ -34,22 +34,28 @@ absolute
 -/
 
 
+#print Abs /-
 /-- Absolute value is a unary operator with properties similar to the absolute value of a real number.
 -/
 class Abs (α : Type _) where
   abs : α → α
+-/
 
 export Abs (abs)
 
+#print PosPart /-
 /-- The positive part of an element admiting a decomposition into positive and negative parts.
 -/
 class PosPart (α : Type _) where
   Pos : α → α
+-/
 
+#print NegPart /-
 /-- The negative part of an element admiting a decomposition into positive and negative parts.
 -/
 class NegPart (α : Type _) where
   neg : α → α
+-/
 
 -- mathport name: «expr ⁺»
 postfix:1000 "⁺" => PosPart.pos

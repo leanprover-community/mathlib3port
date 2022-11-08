@@ -360,15 +360,10 @@ section StrictOrderedCommSemiring
 
 variable [StrictOrderedCommSemiring 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem convex_open_segment (a b : E) : Convex 𝕜 (OpenSegment 𝕜 a b) := by
   rw [convex_iff_open_segment_subset]
   rintro p ⟨ap, bp, hap, hbp, habp, rfl⟩ q ⟨aq, bq, haq, hbq, habq, rfl⟩ z ⟨a, b, ha, hb, hab, rfl⟩
-  refine'
-    ⟨a * ap + b * aq, a * bp + b * bq, by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", _, _⟩
+  refine' ⟨a * ap + b * aq, a * bp + b * bq, by positivity, by positivity, _, _⟩
   · rw [add_add_add_comm, ← mul_add, ← mul_add, habp, habq, mul_one, mul_one, hab]
     
   · simp_rw [add_smul, mul_smul, smul_add, add_add_add_comm]
@@ -445,7 +440,6 @@ theorem Convex.mem_smul_of_zero_mem (h : Convex 𝕜 s) {x : E} (zero_mem : (0 :
   rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans_le ht).ne']
   exact h.smul_mem_of_zero_mem zero_mem hx ⟨inv_nonneg.2 (zero_le_one.trans ht), inv_le_one ht⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[] -/
 theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq : 0 ≤ q) : (p + q) • s = p • s + q • s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · simp_rw [smul_set_empty, add_empty]
@@ -467,7 +461,7 @@ theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq
         mem_smul_set.2
           ⟨_, h_conv h₁₂ h₂₂ _ _ (by rw [← div_self hpq.ne', add_div] : p / (p + q) + q / (p + q) = 1), by
             simp only [← mul_smul, smul_add, mul_div_cancel' _ hpq.ne']⟩ <;>
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+      positivity
     
 
 end AddCommGroup
@@ -535,10 +529,11 @@ theorem std_simplex_eq_inter : StdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) �
   ext f
   simp only [StdSimplex, Set.mem_inter_iff, Set.mem_Inter, Set.mem_set_of_eq]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:61:9: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hf.1, ",", expr hg.1, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
 theorem convex_std_simplex : Convex 𝕜 (StdSimplex 𝕜 ι) := by
   refine' fun f hf g hg a b ha hb hab => ⟨fun x => _, _⟩
-  · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]
+  · trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hf.1, \",\", expr hg.1, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
     
   · erw [Finset.sum_add_distrib, ← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul, smul_eq_mul, mul_one,
       mul_one]

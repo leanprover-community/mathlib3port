@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Chris Hughes, Mantas Bakšys
 -/
 import Mathbin.Data.List.Basic
+import Mathbin.Algebra.Order.Monoid.WithTop
 
 /-!
 # Minimum and maximum of lists
