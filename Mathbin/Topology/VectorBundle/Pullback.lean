@@ -17,7 +17,7 @@ noncomputable section
 
 open Bundle Set TopologicalSpace TopologicalVectorBundle
 
-open Classical
+open Classical Bundle
 
 variable (R 𝕜 : Type _) {B : Type _} (F : Type _) (E E' : B → Type _)
 
@@ -68,8 +68,7 @@ variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A vector bundle trivialization can be pulled back to a trivialization on the pullback bundle. -/
-def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E) (f : K) :
-    Trivialization 𝕜 F ((f : B' → B) *ᵖ E) where
+def Trivialization.pullback (e : Trivialization F (π E)) (f : K) : Trivialization F (π ((f : B' → B) *ᵖ E)) where
   toFun z := (z.proj, (e (Pullback.lift f z)).2)
   invFun y := @totalSpaceMk _ (f *ᵖ E) y.1 (e.symm (f y.1) y.2)
   Source := Pullback.lift f ⁻¹' e.Source
@@ -109,23 +108,30 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
     rfl
   target_eq := rfl
   proj_to_fun y h := rfl
-  linear' x h := e.linear h
+
+instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.is_linear 𝕜] (f : K) :
+    (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).is_linear 𝕜 where linear x h := e.linear 𝕜 h
 
 instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] (f : K) :
     TopologicalVectorBundle 𝕜 F ((f : B' → B) *ᵖ E) where
   total_space_mk_inducing x :=
     inducing_of_inducing_compose (Pullback.continuous_total_space_mk 𝕜 F E) (Pullback.continuous_lift E f)
       (total_space_mk_inducing 𝕜 F E (f x))
-  TrivializationAtlas := (fun e : Trivialization 𝕜 F E => e.pullback f) '' TrivializationAtlas 𝕜 F E
+  TrivializationAtlas := { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas 𝕜 e), ef = e.pullback f }
+  trivialization_linear' := by
+    rintro _ ⟨e, he, rfl⟩
+    skip
+    infer_instance
   trivializationAt x := (trivializationAt 𝕜 F E (f x)).pullback f
   mem_base_set_trivialization_at x := mem_base_set_trivialization_at 𝕜 F E (f x)
-  trivialization_mem_atlas x := mem_image_of_mem _ (trivialization_mem_atlas 𝕜 F E (f x))
-  continuous_on_coord_change := by
-    rintro _ ⟨e, he, rfl⟩ _ ⟨e', he', rfl⟩
-    refine' ((continuous_on_coord_change e he e' he').comp (map_continuous f).ContinuousOn fun b hb => hb).congr _
+  trivialization_mem_atlas x := ⟨trivializationAt 𝕜 F E (f x), by infer_instance, rfl⟩
+  continuous_on_coord_change' := by
+    rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
+    skip
+    refine' ((continuous_on_coord_change 𝕜 e e').comp (map_continuous f).ContinuousOn fun b hb => hb).congr _
     rintro b (hb : f b ∈ e.base_set ∩ e'.base_set)
     ext v
-    show ((e.pullback f).coordChange (e'.pullback f) b) v = (e.coord_change e' (f b)) v
-    rw [e.coord_change_apply e' hb, (e.pullback f).coord_change_apply' _]
+    show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v
+    rw [e.coord_changeL_apply e' hb, (e.pullback f).coord_changeL_apply' _]
     exacts[rfl, hb]
 

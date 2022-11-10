@@ -355,7 +355,7 @@ theorem Bornology.relativelyCompact.is_bounded_iff [T1Space α] {s : Set α} :
   constructor
   · rintro ⟨t, ht₁, ht₂, hst⟩
     rw [compl_subset_compl] at hst
-    exact compact_of_is_closed_subset ht₂ isClosedClosure (closure_minimal hst ht₁)
+    exact is_compact_of_is_closed_subset ht₂ isClosedClosure (closure_minimal hst ht₁)
     
   · intro h
     exact ⟨Closure s, isClosedClosure, h, compl_subset_compl.mpr subset_closure⟩
@@ -1706,8 +1706,8 @@ theorem Function.LeftInverse.closedEmbedding [T2Space α] {f : α → β} {g : �
     (hf : Continuous f) (hg : Continuous g) : ClosedEmbedding g :=
   ⟨h.Embedding hf hg, h.closedRange hf hg⟩
 
-theorem compact_compact_separated [T2Space α] {s t : Set α} (hs : IsCompact s) (ht : IsCompact t) (hst : Disjoint s t) :
-    SeparatedNhds s t := by
+theorem is_compact_is_compact_separated [T2Space α] {s t : Set α} (hs : IsCompact s) (ht : IsCompact t)
+    (hst : Disjoint s t) : SeparatedNhds s t := by
   simp only [SeparatedNhds, prod_subset_compl_diagonal_iff_disjoint.symm] at hst⊢ <;>
     exact generalized_tube_lemma hs ht is_closed_diagonal.is_open_compl hst
 
@@ -1716,7 +1716,7 @@ theorem IsCompact.isClosed [T2Space α] {s : Set α} (hs : IsCompact s) : IsClos
   is_open_compl_iff.1 <|
     is_open_iff_forall_mem_open.mpr fun x hx =>
       let ⟨u, v, uo, vo, su, xv, uv⟩ :=
-        compact_compact_separated hs is_compact_singleton (disjoint_singleton_right.2 hx)
+        is_compact_is_compact_separated hs is_compact_singleton (disjoint_singleton_right.2 hx)
       ⟨v, (uv.mono_left <| show s ≤ u from su).subset_compl_left, vo, by simpa using xv⟩
 
 @[simp]
@@ -1732,9 +1732,9 @@ theorem Bornology.relatively_compact_eq_in_compact [T2Space α] :
 `⋂ i, V i` contains some `V i`. This is a version of `exists_subset_nhd_of_compact'` where we
 don't need to assume each `V i` closed because it follows from compactness since `α` is
 assumed to be Hausdorff. -/
-theorem exists_subset_nhd_of_compact [T2Space α] {ι : Type _} [Nonempty ι] {V : ι → Set α} (hV : Directed (· ⊇ ·) V)
+theorem exists_subset_nhds_of_is_compact [T2Space α] {ι : Type _} [Nonempty ι] {V : ι → Set α} (hV : Directed (· ⊇ ·) V)
     (hV_cpct : ∀ i, IsCompact (V i)) {U : Set α} (hU : ∀ x ∈ ⋂ i, V i, U ∈ 𝓝 x) : ∃ i, V i ⊆ U :=
-  exists_subset_nhd_of_compact' hV hV_cpct (fun i => (hV_cpct i).IsClosed) hU
+  exists_subset_nhds_of_is_compact' hV hV_cpct (fun i => (hV_cpct i).IsClosed) hU
 
 theorem CompactExhaustion.isClosed [T2Space α] (K : CompactExhaustion α) (n : ℕ) : IsClosed (K n) :=
   (K.IsCompact n).IsClosed
@@ -1742,15 +1742,15 @@ theorem CompactExhaustion.isClosed [T2Space α] (K : CompactExhaustion α) (n : 
 theorem IsCompact.inter [T2Space α] {s t : Set α} (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∩ t) :=
   hs.interRight <| ht.IsClosed
 
-theorem compact_closure_of_subset_compact [T2Space α] {s t : Set α} (ht : IsCompact t) (h : s ⊆ t) :
+theorem is_compact_closure_of_subset_compact [T2Space α] {s t : Set α} (ht : IsCompact t) (h : s ⊆ t) :
     IsCompact (Closure s) :=
-  compact_of_is_closed_subset ht isClosedClosure (closure_minimal h ht.IsClosed)
+  is_compact_of_is_closed_subset ht isClosedClosure (closure_minimal h ht.IsClosed)
 
 @[simp]
 theorem exists_compact_superset_iff [T2Space α] {s : Set α} : (∃ K, IsCompact K ∧ s ⊆ K) ↔ IsCompact (Closure s) :=
-  ⟨fun ⟨K, hK, hsK⟩ => compact_closure_of_subset_compact hK hsK, fun h => ⟨Closure s, h, subset_closure⟩⟩
+  ⟨fun ⟨K, hK, hsK⟩ => is_compact_closure_of_subset_compact hK hsK, fun h => ⟨Closure s, h, subset_closure⟩⟩
 
-theorem image_closure_of_compact [T2Space β] {s : Set α} (hs : IsCompact (Closure s)) {f : α → β}
+theorem image_closure_of_is_compact [T2Space β] {s : Set α} (hs : IsCompact (Closure s)) {f : α → β}
     (hf : ContinuousOn f (Closure s)) : f '' Closure s = Closure (f '' s) :=
   Subset.antisymm hf.image_closure <|
     closure_minimal (image_subset f subset_closure) (hs.image_of_continuous_on hf).IsClosed
@@ -1759,7 +1759,7 @@ theorem image_closure_of_compact [T2Space β] {s : Set α} (hs : IsCompact (Clos
 theorem IsCompact.binary_compact_cover [T2Space α] {K U V : Set α} (hK : IsCompact K) (hU : IsOpen U) (hV : IsOpen V)
     (h2K : K ⊆ U ∪ V) : ∃ K₁ K₂ : Set α, IsCompact K₁ ∧ IsCompact K₂ ∧ K₁ ⊆ U ∧ K₂ ⊆ V ∧ K = K₁ ∪ K₂ := by
   obtain ⟨O₁, O₂, h1O₁, h1O₂, h2O₁, h2O₂, hO⟩ :=
-    compact_compact_separated (hK.diff hU) (hK.diff hV)
+    is_compact_is_compact_separated (hK.diff hU) (hK.diff hV)
       (by rwa [disjoint_iff_inter_eq_empty, diff_inter_diff, diff_eq_empty])
   exact
     ⟨_, _, hK.diff h1O₁, hK.diff h1O₂, by rwa [diff_subset_comm], by rwa [diff_subset_comm], by
@@ -1821,27 +1821,27 @@ theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s �
     -- we may find open sets V, W separating x from K \ U.
     -- Then K \ W is a compact neighborhood of x contained in U.
     let ⟨v, w, vo, wo, xv, kuw, vw⟩ :=
-      compact_compact_separated is_compact_singleton (kc.diff uo) (disjoint_singleton_left.2 fun h => h.2 xu)
+      is_compact_is_compact_separated is_compact_singleton (kc.diff uo) (disjoint_singleton_left.2 fun h => h.2 xu)
     have wn : wᶜ ∈ 𝓝 x := mem_nhds_iff.mpr ⟨v, vw.subset_compl_right, vo, singleton_subset_iff.mp xv⟩
     ⟨k \ w, Filter.inter_mem kx wn, Subset.trans (diff_subset_comm.mp kuw) un, kc.diff wo⟩⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) locally_compact_of_compact [T2Space α] [CompactSpace α] : LocallyCompactSpace α :=
-  locally_compact_of_compact_nhds fun x => ⟨Univ, is_open_univ.mem_nhds trivial, compact_univ⟩
+  locally_compact_of_compact_nhds fun x => ⟨Univ, is_open_univ.mem_nhds trivial, is_compact_univ⟩
 
 /-- In a locally compact T₂ space, every point has an open neighborhood with compact closure -/
 theorem exists_open_with_compact_closure [LocallyCompactSpace α] [T2Space α] (x : α) :
     ∃ U : Set α, IsOpen U ∧ x ∈ U ∧ IsCompact (Closure U) := by
   rcases exists_compact_mem_nhds x with ⟨K, hKc, hxK⟩
   rcases mem_nhds_iff.1 hxK with ⟨t, h1t, h2t, h3t⟩
-  exact ⟨t, h2t, h3t, compact_closure_of_subset_compact hKc h1t⟩
+  exact ⟨t, h2t, h3t, is_compact_closure_of_subset_compact hKc h1t⟩
 
 /-- In a locally compact T₂ space, every compact set has an open neighborhood with compact closure.
 -/
 theorem exists_open_superset_and_is_compact_closure [LocallyCompactSpace α] [T2Space α] {K : Set α} (hK : IsCompact K) :
     ∃ V, IsOpen V ∧ K ⊆ V ∧ IsCompact (Closure V) := by
   rcases exists_compact_superset hK with ⟨K', hK', hKK'⟩
-  refine' ⟨Interior K', is_open_interior, hKK', compact_closure_of_subset_compact hK' interior_subset⟩
+  refine' ⟨Interior K', is_open_interior, hKK', is_compact_closure_of_subset_compact hK' interior_subset⟩
 
 /-- In a locally compact T₂ space, given a compact set `K` inside an open set `U`, we can find a
 open set `V` between these sets with compact closure: `K ⊆ V` and the closure of `V` is inside `U`.
@@ -1851,7 +1851,7 @@ theorem exists_open_between_and_is_compact_closure [LocallyCompactSpace α] [T2S
   rcases exists_compact_between hK hU hKU with ⟨V, hV, hKV, hVU⟩
   exact
     ⟨Interior V, is_open_interior, hKV, (closure_minimal interior_subset hV.is_closed).trans hVU,
-      compact_closure_of_subset_compact hV interior_subset⟩
+      is_compact_closure_of_subset_compact hV interior_subset⟩
 
 theorem is_preirreducible_iff_subsingleton [T2Space α] {S : Set α} : IsPreirreducible S ↔ S.Subsingleton := by
   refine' ⟨fun h x hx y hy => _, Set.Subsingleton.is_preirreducible⟩
@@ -2971,7 +2971,7 @@ instance (priority := 100) NormalSpace.t3Space [NormalSpace α] :
 
 -- We can't make this an instance because it could cause an instance loop.
 theorem normalOfCompactT2 [CompactSpace α] [T2Space α] : NormalSpace α :=
-  ⟨fun s t hs ht => compact_compact_separated hs.IsCompact ht.IsCompact⟩
+  ⟨fun s t hs ht => is_compact_is_compact_separated hs.IsCompact ht.IsCompact⟩
 
 protected theorem ClosedEmbedding.normalSpace [TopologicalSpace β] [NormalSpace β] {f : α → β}
     (hf : ClosedEmbedding f) : NormalSpace α :=
@@ -3233,7 +3233,7 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
         intro y y_in
         erw [this, mem_singleton_iff] at y_in
         rwa [y_in]
-      exact exists_subset_nhd_of_compact_space hdir hNcl h_nhd
+      exact exists_subset_nhds_of_compact_space hdir hNcl h_nhd
       
     · rintro ⟨V, ⟨hxV, V_op, -⟩, hUV : V ⊆ U⟩
       rw [mem_nhds_iff]

@@ -31,7 +31,7 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Category CategoryTheory.Functor
 
-variable (C : Type u) [Category.{v} C] [HasProducts.{v} C]
+variable (C : Type u) [Category.{v} C]
 
 attribute [local tidy] tactic.op_induction'
 
@@ -141,13 +141,7 @@ open TopCat.Presheaf
 -/
 def restrict {U : TopCat} (X : SheafedSpaceCat C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) :
     SheafedSpaceCat C :=
-  { X.toPresheafedSpace.restrict h with
-    IsSheaf :=
-      (is_sheaf_iff_is_sheaf_equalizer_products _).mpr fun ι 𝒰 =>
-        ⟨IsLimit.ofIsoLimit
-            ((IsLimit.postcomposeInvEquiv _ _).invFun
-              ((is_sheaf_iff_is_sheaf_equalizer_products _).mp X.IsSheaf _).some)
-            (SheafConditionEqualizerProducts.fork.isoOfOpenEmbedding h 𝒰).symm⟩ }
+  { X.toPresheafedSpace.restrict h with IsSheaf := is_sheaf_of_open_embedding h X.IsSheaf }
 
 /-- The restriction of a sheafed space `X` to the top subspace is isomorphic to `X` itself.
 -/

@@ -495,7 +495,7 @@ theorem totally_bounded_iff_ultrafilter {s : Set α} :
   intro f hf hfs
   exact ⟨Ultrafilter.of f, Ultrafilter.of_le f, H _ ((Ultrafilter.of_le f).trans hfs)⟩
 
-theorem compact_iff_totally_bounded_complete {s : Set α} : IsCompact s ↔ TotallyBounded s ∧ IsComplete s :=
+theorem is_compact_iff_totally_bounded_is_complete {s : Set α} : IsCompact s ↔ TotallyBounded s ∧ IsComplete s :=
   ⟨fun hs =>
     ⟨totally_bounded_iff_ultrafilter.2 fun f hf =>
         let ⟨x, xs, fx⟩ := is_compact_iff_ultrafilter_le_nhds.1 hs f hf
@@ -507,18 +507,18 @@ theorem compact_iff_totally_bounded_complete {s : Set α} : IsCompact s ↔ Tota
     is_compact_iff_ultrafilter_le_nhds.2 fun f hf => hc _ (totally_bounded_iff_ultrafilter.1 ht f hf) hf⟩
 
 protected theorem IsCompact.totally_bounded {s : Set α} (h : IsCompact s) : TotallyBounded s :=
-  (compact_iff_totally_bounded_complete.1 h).1
+  (is_compact_iff_totally_bounded_is_complete.1 h).1
 
 protected theorem IsCompact.is_complete {s : Set α} (h : IsCompact s) : IsComplete s :=
-  (compact_iff_totally_bounded_complete.1 h).2
+  (is_compact_iff_totally_bounded_is_complete.1 h).2
 
 -- see Note [lower instance priority]
 instance (priority := 100) complete_of_compact {α : Type u} [UniformSpace α] [CompactSpace α] : CompleteSpace α :=
-  ⟨fun f hf => by simpa using (compact_iff_totally_bounded_complete.1 compact_univ).2 f hf⟩
+  ⟨fun f hf => by simpa using (is_compact_iff_totally_bounded_is_complete.1 is_compact_univ).2 f hf⟩
 
-theorem compact_of_totally_bounded_is_closed [CompleteSpace α] {s : Set α} (ht : TotallyBounded s) (hc : IsClosed s) :
-    IsCompact s :=
-  (@compact_iff_totally_bounded_complete α _ s).2 ⟨ht, hc.IsComplete⟩
+theorem is_compact_of_totally_bounded_is_closed [CompleteSpace α] {s : Set α} (ht : TotallyBounded s)
+    (hc : IsClosed s) : IsCompact s :=
+  (@is_compact_iff_totally_bounded_is_complete α _ s).2 ⟨ht, hc.IsComplete⟩
 
 /-- Every Cauchy sequence over `ℕ` is totally bounded. -/
 theorem CauchySeq.totally_bounded_range {s : ℕ → α} (hs : CauchySeq s) : TotallyBounded (Range s) := by

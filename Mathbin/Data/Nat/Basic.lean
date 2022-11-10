@@ -112,6 +112,21 @@ variable {m n k : ℕ}
 
 namespace Nat
 
+/-!
+### Recursion and `forall`/`exists`
+-/
+
+
+@[simp]
+theorem and_forall_succ {p : ℕ → Prop} : (p 0 ∧ ∀ n, p (n + 1)) ↔ ∀ n, p n :=
+  ⟨fun h n => Nat.casesOn n h.1 h.2, fun h => ⟨h _, fun n => h _⟩⟩
+
+@[simp]
+theorem or_exists_succ {p : ℕ → Prop} : (p 0 ∨ ∃ n, p (n + 1)) ↔ ∃ n, p n :=
+  ⟨fun h => h.elim (fun h0 => ⟨0, h0⟩) fun ⟨n, hn⟩ => ⟨n + 1, hn⟩, by
+    rintro ⟨_ | n, hn⟩
+    exacts[Or.inl hn, Or.inr ⟨n, hn⟩]⟩
+
 /-! ### The units of the natural numbers as a `monoid` and `add_monoid` -/
 
 
@@ -237,16 +252,10 @@ theorem two_lt_of_ne : ∀ {n}, n ≠ 0 → n ≠ 1 → n ≠ 2 → 2 < n
   | 2, _, _, h => (h rfl).elim
   | n + 3, _, _, _ => by decide
 
-theorem forall_lt_succ {P : ℕ → Prop} {n : ℕ} : (∀ m < n.succ, P m) ↔ (∀ m < n, P m) ∧ P n :=
-  ⟨fun H => ⟨fun m hm => H m (lt_succ_iff.2 hm.le), H n (lt_succ_self n)⟩, by
-    rintro ⟨H, hn⟩ m hm
-    rcases eq_or_lt_of_le (lt_succ_iff.1 hm) with (rfl | hmn)
-    · exact hn
-      
-    · exact H m hmn
-      ⟩
+theorem forall_lt_succ {P : ℕ → Prop} {n : ℕ} : (∀ m < n + 1, P m) ↔ (∀ m < n, P m) ∧ P n := by
+  simp only [lt_succ_iff, Decidable.le_iff_eq_or_lt, forall_eq_or_imp, and_comm]
 
-theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n.succ, P m) ↔ (∃ m < n, P m) ∨ P n := by
+theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n + 1, P m) ↔ (∃ m < n, P m) ∨ P n := by
   rw [← not_iff_not]
   push_neg
   exact forall_lt_succ
@@ -322,27 +331,15 @@ theorem pred_one_add (n : ℕ) : pred (1 + n) = n := by rw [add_comm, add_one, p
 theorem two_mul_ne_two_mul_add_one {n m} : 2 * n ≠ 2 * m + 1 :=
   mt (congr_arg (· % 2)) (by rw [add_comm, add_mul_mod_self_left, mul_mod_right, mod_eq_of_lt] <;> simp)
 
-protected theorem mul_left_inj {a b c : ℕ} (ha : 0 < a) : b * a = c * a ↔ b = c :=
-  ⟨Nat.eq_of_mul_eq_mul_right ha, fun e => e ▸ rfl⟩
-
-protected theorem mul_right_inj {a b c : ℕ} (ha : 0 < a) : a * b = a * c ↔ b = c :=
-  ⟨Nat.eq_of_mul_eq_mul_left ha, fun e => e ▸ rfl⟩
-
-theorem mul_left_injective {a : ℕ} (ha : 0 < a) : Function.Injective fun x => x * a := fun _ _ =>
-  eq_of_mul_eq_mul_right ha
-
-theorem mul_right_injective {a : ℕ} (ha : 0 < a) : Function.Injective fun x => a * x := fun _ _ =>
-  Nat.eq_of_mul_eq_mul_left ha
-
 theorem mul_ne_mul_left {a b c : ℕ} (ha : 0 < a) : b * a ≠ c * a ↔ b ≠ c :=
-  (mul_left_injective ha).ne_iff
+  (mul_left_injective₀ ha.ne').ne_iff
 
 theorem mul_ne_mul_right {a b c : ℕ} (ha : 0 < a) : a * b ≠ a * c ↔ b ≠ c :=
-  (mul_right_injective ha).ne_iff
+  (mul_right_injective₀ ha.ne').ne_iff
 
 theorem mul_right_eq_self_iff {a b : ℕ} (ha : 0 < a) : a * b = a ↔ b = 1 :=
   suffices a * b = a * 1 ↔ b = 1 by rwa [mul_one] at this
-  Nat.mul_right_inj ha
+  mul_right_inj' ha.ne'
 
 theorem mul_left_eq_self_iff {a b : ℕ} (hb : 0 < b) : a * b = b ↔ a = 1 := by
   rw [mul_comm, Nat.mul_right_eq_self_iff hb]
@@ -685,10 +682,10 @@ protected theorem dvd_add_right {k m n : ℕ} (h : k ∣ m) : k ∣ m + n ↔ k 
   (Nat.dvd_add_iff_right h).symm
 
 protected theorem mul_dvd_mul_iff_left {a b c : ℕ} (ha : 0 < a) : a * b ∣ a * c ↔ b ∣ c :=
-  exists_congr fun d => by rw [mul_assoc, Nat.mul_right_inj ha]
+  exists_congr fun d => by rw [mul_assoc, mul_right_inj' ha.ne']
 
 protected theorem mul_dvd_mul_iff_right {a b c : ℕ} (hc : 0 < c) : a * c ∣ b * c ↔ a ∣ b :=
-  exists_congr fun d => by rw [mul_right_comm, Nat.mul_left_inj hc]
+  exists_congr fun d => by rw [mul_right_comm, mul_left_inj' hc.ne']
 
 @[simp]
 theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m := by

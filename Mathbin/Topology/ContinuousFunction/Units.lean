@@ -91,8 +91,8 @@ theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x �
 
 theorem spectrum_eq_range (f : C(X, 𝕜)) : Spectrum 𝕜 f = Set.Range f := by
   ext
-  simp only [Spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply, algebra_map_apply,
-    Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
+  simp only [Spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, ContinuousMap.coe_sub, Pi.sub_apply,
+    algebra_map_apply, Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
 
 end NormedField
 

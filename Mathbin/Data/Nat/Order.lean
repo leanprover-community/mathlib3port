@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Algebra.Ring.Divisibility
+import Mathbin.Algebra.GroupWithZero.Divisibility
 import Mathbin.Algebra.Order.Ring.Canonical
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Data.Nat.Basic
@@ -396,7 +397,7 @@ protected theorem div_lt_of_lt_mul {m n k : ℕ} (h : m < n * k) : m / n < k :=
 
 protected theorem div_eq_zero_iff {a b : ℕ} (hb : 0 < b) : a / b = 0 ↔ a < b :=
   ⟨fun h => by rw [← mod_add_div a b, h, mul_zero, add_zero] <;> exact mod_lt _ hb, fun h => by
-    rw [← Nat.mul_right_inj hb, ← @add_left_cancel_iff _ _ (a % b), mod_add_div, mod_eq_of_lt h, mul_zero, add_zero]⟩
+    rw [← mul_right_inj' hb.ne', ← @add_left_cancel_iff _ _ (a % b), mod_add_div, mod_eq_of_lt h, mul_zero, add_zero]⟩
 
 protected theorem div_eq_zero {a b : ℕ} (hb : a < b) : a / b = 0 :=
   (Nat.div_eq_zero_iff <| (zero_le a).trans_lt hb).mpr hb
@@ -455,12 +456,10 @@ theorem two_mul_odd_div_two {n : ℕ} (hn : n % 2 = 1) : 2 * (n / 2) = n - 1 := 
 theorem div_dvd_of_dvd {a b : ℕ} (h : b ∣ a) : a / b ∣ a :=
   ⟨b, (Nat.div_mul_cancel h).symm⟩
 
-protected theorem div_div_self : ∀ {a b : ℕ}, b ∣ a → 0 < a → a / (a / b) = b
-  | a, 0, h₁, h₂ => by rw [eq_zero_of_zero_dvd h₁, Nat.div_zero, Nat.div_zero]
-  | 0, b, h₁, h₂ => absurd h₂ (by decide)
-  | a + 1, b + 1, h₁, h₂ =>
-    (Nat.mul_left_inj (Nat.div_pos (le_of_dvd (succ_pos a) h₁) (succ_pos b))).1 <| by
-      rw [Nat.div_mul_cancel (div_dvd_of_dvd h₁), Nat.mul_div_cancel' h₁]
+protected theorem div_div_self {a b : ℕ} (h : b ∣ a) (ha : a ≠ 0) : a / (a / b) = b := by
+  rcases h with ⟨a, rfl⟩
+  rw [mul_ne_zero_iff] at ha
+  rw [Nat.mul_div_right _ (Nat.pos_of_ne_zero ha.1), Nat.mul_div_left _ (Nat.pos_of_ne_zero ha.2)]
 
 theorem mod_mul_right_div_self (a b c : ℕ) : a % (b * c) / b = a / b % c := by
   rcases Nat.eq_zero_or_pos b with (rfl | hb)

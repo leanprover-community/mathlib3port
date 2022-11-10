@@ -78,7 +78,7 @@ class PresheafedSpaceCat.IsOpenImmersion {X Y : PresheafedSpaceCat.{v} C} (f : X
 /-- A morphism of SheafedSpaces is an open immersion if it is an open immersion as a morphism
 of PresheafedSpaces
 -/
-abbrev SheafedSpaceCat.IsOpenImmersion [HasProducts.{v} C] {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) : Prop :=
+abbrev SheafedSpaceCat.IsOpenImmersion {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) : Prop :=
   PresheafedSpaceCat.IsOpenImmersion f
 
 /-- A morphism of LocallyRingedSpaces is an open immersion if it is an open immersion as a morphism
@@ -548,7 +548,7 @@ open CategoryTheory.Limits.WalkingCospan
 
 section ToSheafedSpace
 
-variable [HasProducts.{v} C] {X : PresheafedSpaceCat.{v} C} (Y : SheafedSpaceCat C)
+variable {X : PresheafedSpaceCat.{v} C} (Y : SheafedSpaceCat C)
 
 variable (f : X ⟶ Y.toPresheafedSpace) [H : is_open_immersion f]
 
@@ -647,8 +647,6 @@ theorem is_iso_of_subset {X Y : PresheafedSpaceCat.{v} C} (f : X ⟶ Y) [H : Pre
 end PresheafedSpaceCat.IsOpenImmersion
 
 namespace SheafedSpaceCat.IsOpenImmersion
-
-variable [HasProducts.{v} C]
 
 instance (priority := 100) of_is_iso {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) [IsIso f] :
     SheafedSpaceCat.IsOpenImmersion f :=
@@ -1585,18 +1583,56 @@ def isoOfRangeEq [IsOpenImmersion g] (e : Set.Range f.1.base = Set.Range g.1.bas
     rw [← cancel_mono g]
     simp
 
+/-- The functor `opens X ⥤ opens Y` associated with an open immersion `f : X ⟶ Y`. -/
+abbrev _root_.algebraic_geometry.Scheme.hom.opens_functor {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f] :
+    Opens X.Carrier ⥤ Opens Y.Carrier :=
+  H.openFunctor
+
+/-- The isomorphism `Γ(X, U) ⟶ Γ(Y, f(U))` induced by an open immersion `f : X ⟶ Y`. -/
+def _root_.algebraic_geometry.Scheme.hom.inv_app {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f] (U) :
+    X.Presheaf.obj (op U) ⟶ Y.Presheaf.obj (op (f.opensFunctor.obj U)) :=
+  H.invApp U
+
+theorem app_eq_inv_app_app_of_comp_eq_aux {X Y U : SchemeCat} (f : Y ⟶ U) (g : U ⟶ X) (fg : Y ⟶ X) (H : fg = f ≫ g)
+    [h : IsOpenImmersion g] (V : Opens U.Carrier) :
+    (Opens.map f.1.base).obj V = (Opens.map fg.1.base).obj (g.opensFunctor.obj V) := by
+  subst H
+  rw [Scheme.comp_val_base, opens.map_comp_obj]
+  congr 1
+  ext1
+  exact (Set.preimage_image_eq _ h.base_open.inj).symm
+
+/-- The `fg` argument is to avoid nasty stuff about dependent types. -/
+theorem app_eq_inv_app_app_of_comp_eq {X Y U : SchemeCat} (f : Y ⟶ U) (g : U ⟶ X) (fg : Y ⟶ X) (H : fg = f ≫ g)
+    [h : IsOpenImmersion g] (V : Opens U.Carrier) :
+    f.1.c.app (op V) =
+      g.invApp _ ≫
+        fg.1.c.app _ ≫ Y.Presheaf.map (eq_to_hom <| IsOpenImmersion.app_eq_inv_app_app_of_comp_eq_aux f g fg H V).op :=
+  by
+  subst H
+  rw [Scheme.comp_val_c_app, category.assoc, Scheme.hom.inv_app, PresheafedSpace.is_open_immersion.inv_app_app_assoc,
+    f.val.c.naturality_assoc, TopCat.Presheaf.pushforward_obj_map, ← functor.map_comp]
+  convert (category.comp_id _).symm
+  convert Y.presheaf.map_id _
+
+theorem lift_app {X Y U : SchemeCat} (f : U ⟶ Y) (g : X ⟶ Y) [h : IsOpenImmersion f] (H) (V : Opens U.Carrier) :
+    (IsOpenImmersion.lift f g H).1.c.app (op V) =
+      f.invApp _ ≫
+        g.1.c.app _ ≫
+          X.Presheaf.map
+            (eq_to_hom <|
+                IsOpenImmersion.app_eq_inv_app_app_of_comp_eq_aux _ _ _ (IsOpenImmersion.lift_fac f g H).symm V).op :=
+  IsOpenImmersion.app_eq_inv_app_app_of_comp_eq _ _ _ _ _
+
 end IsOpenImmersion
 
 namespace SchemeCat
 
-/-- The functor `opens X ⥤ opens Y` associated with an open immersion `f : X ⟶ Y`. -/
-abbrev Hom.opensFunctor {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f] : Opens X.Carrier ⥤ Opens Y.Carrier :=
-  H.openFunctor
-
 theorem image_basic_open {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f] {U : Opens X.Carrier}
-    (r : X.Presheaf.obj (op U)) : H.base_open.IsOpenMap.Functor.obj (X.basicOpen r) = Y.basicOpen (H.invApp U r) := by
-  have e := Scheme.preimage_basic_open f (H.inv_app U r)
-  rw [PresheafedSpace.is_open_immersion.inv_app_app_apply, Scheme.basic_open_res, inf_eq_right.mpr _] at e
+    (r : X.Presheaf.obj (op U)) : f.opensFunctor.obj (X.basicOpen r) = Y.basicOpen (f.invApp U r) := by
+  have e := Scheme.preimage_basic_open f (f.inv_app U r)
+  rw [Scheme.hom.inv_app, PresheafedSpace.is_open_immersion.inv_app_app_apply, Scheme.basic_open_res,
+    inf_eq_right.mpr _] at e
   rw [← e]
   ext1
   refine' set.image_preimage_eq_inter_range.trans _
@@ -1682,7 +1718,7 @@ theorem SchemeCat.OpenCover.compact_space {X : SchemeCat} (𝒰 : X.OpenCover) [
     [H : ∀ i, CompactSpace (𝒰.obj i).Carrier] : CompactSpace X.Carrier := by
   cases nonempty_fintype 𝒰.J
   rw [← is_compact_univ_iff, ← 𝒰.Union_range]
-  apply compact_Union
+  apply is_compact_Union
   intro i
   rw [is_compact_iff_compact_space]
   exact

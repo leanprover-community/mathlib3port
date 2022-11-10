@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Algebra.CharZero.Defs
-import Mathbin.Algebra.Order.Ring.Basic
+import Mathbin.Algebra.Order.Ring.Defs
 
 /-!
 # Nontrivial strict ordered semirings (and hence linear ordered semirings) are characteristic zero.

@@ -388,7 +388,7 @@ theorem equiv_map_domain_single (f : α ≃ β) (a : α) (b : M) : equivMapDomai
 
 @[simp]
 theorem equiv_map_domain_zero {f : α ≃ β} : equivMapDomain f (0 : α →₀ M) = (0 : β →₀ M) := by
-  ext x <;> simp only [equiv_map_domain_apply, coe_zero, Pi.zero_apply]
+  ext x <;> simp only [equiv_map_domain_apply, Finsupp.coe_zero, Pi.zero_apply]
 
 /-- Given `f : α ≃ β`, the finitely supported function spaces are also in bijection:
 `(α →₀ M) ≃ (β →₀ M)`.
@@ -731,7 +731,7 @@ theorem comap_domain_add (v₁ v₂ : β →₀ M) (hv₁ : Set.InjOn f (f ⁻¹
     (hv₂ : Set.InjOn f (f ⁻¹' ↑v₂.Support)) (hv₁₂ : Set.InjOn f (f ⁻¹' ↑(v₁ + v₂).Support)) :
     comapDomain f (v₁ + v₂) hv₁₂ = comapDomain f v₁ hv₁ + comapDomain f v₂ hv₂ := by
   ext
-  simp only [comap_domain_apply, coe_add, Pi.add_apply]
+  simp only [comap_domain_apply, Finsupp.coe_add, Pi.add_apply]
 
 /-- A version of `finsupp.comap_domain_add` that's easier to use. -/
 theorem comap_domain_add_of_injective (hf : Function.Injective f) (v₁ v₂ : β →₀ M) :
@@ -1318,7 +1318,7 @@ Throughout this section, some `monoid` and `semiring` arguments are specified wi
 
 
 @[simp]
-theorem coe_smul [AddMonoid M] [DistribSmul R M] (b : R) (v : α →₀ M) : ⇑(b • v) = b • v :=
+protected theorem coe_smul [AddMonoid M] [DistribSmul R M] (b : R) (v : α →₀ M) : ⇑(b • v) = b • v :=
   rfl
 
 theorem smul_apply [AddMonoid M] [DistribSmul R M] (b : R) (v : α →₀ M) (a : α) : (b • v) a = b • v a :=
@@ -1631,6 +1631,19 @@ theorem sigma_finsupp_add_equiv_pi_finsupp_apply {α : Type _} {ιs : η → Typ
   rfl
 
 end Sigma
+
+/-! ### Meta declarations -/
+
+
+/-- Stringify a `finsupp` as a sequence of `finsupp.single` terms.
+
+Note this is `meta` as it has to choose some order for the terms. -/
+unsafe instance (ι α : Type _) [Zero α] [Repr ι] [Repr α] :
+    Repr
+      (ι →₀
+        α) where repr f :=
+    if f.Support.card = 0 then "0"
+    else " + ".intercalate <| f.Support.val.unquot.map fun i => "finsupp.single " ++ repr i ++ " " ++ repr (f i)
 
 end Finsupp
 

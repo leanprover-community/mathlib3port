@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 -/
 import Mathbin.Algebra.NeZero
-import Mathbin.Algebra.Group.Commute
+import Mathbin.Algebra.Group.Basic
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Data.FunLike.Basic
 
@@ -27,6 +27,15 @@ building blocks for other homomorphisms:
 * `add_hom`
 * `mul_hom`
 * `monoid_with_zero_hom`
+
+Finally, we define classes that state the coercion operator `↑` (a.k.a. `coe`) is a homomorphism:
+ * `coe_is_one_hom`/`coe_is_zero_hom`
+ * `coe_is_mul_hom`/`coe_is_add_monoid_hom`
+ * `coe_is_monoid_hom`/`coe_is_add_monoid_hom`
+ * `coe_is_monoid_with_zero_hom`
+These come with a selection of `simp` lemmas stating that `↑` preserves the corresponding operation:
+`coe_add`, `coe_mul`, `coe_zero`, `coe_one`, `coe_pow`, `coe_nsmul`, `coe_zpow`, `coe_zsmul`,
+`coe_bit0`, `coe_bit1`, `coe_sub`, `coe_neg`, ..., etc.
 
 ## Notations
 
@@ -364,10 +373,6 @@ theorem map_zsmul [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass F G H] (
 attribute [to_additive_reorder 8, to_additive] map_zpow
 
 end mul_one
-
-@[to_additive]
-theorem Group.is_unit [Group G] (g : G) : IsUnit g :=
-  ⟨⟨g, g⁻¹, mul_inv_self g, inv_mul_self g⟩, rfl⟩
 
 section MulZeroOne
 
@@ -1207,21 +1212,6 @@ theorem comp_mul [MulOneClass M] [CommMonoid N] [CommMonoid P] (g : N →* P) (f
   ext
   simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
 
-/-- If two homomorphisms from a division monoid to a monoid are equal at a unit `x`, then they are
-equal at `x⁻¹`. -/
-@[to_additive
-      "If two homomorphisms from a subtraction monoid to an additive monoid are equal at an\nadditive unit `x`, then they are equal at `-x`."]
-theorem _root_.is_unit.eq_on_inv {G N} [DivisionMonoid G] [Monoid N] [MonoidHomClass F G N] {x : G} (hx : IsUnit x)
-    (f g : F) (h : f x = g x) : f x⁻¹ = g x⁻¹ :=
-  left_inv_eq_right_inv (map_mul_eq_one f hx.inv_mul_cancel) <| h.symm ▸ map_mul_eq_one g <| hx.mul_inv_cancel
-
-/-- If two homomorphism from a group to a monoid are equal at `x`, then they are equal at `x⁻¹`. -/
-@[to_additive
-      "If two homomorphism from an additive group to an additive monoid are equal at `x`,\nthen they are equal at `-x`."]
-theorem _root_.eq_on_inv {G} [Group G] [Monoid M] [MonoidHomClass F G M] (f g : F) {x : G} (h : f x = g x) :
-    f x⁻¹ = g x⁻¹ :=
-  (Group.is_unit x).eq_on_inv f g h
-
 /-- Group homomorphisms preserve inverse. -/
 @[to_additive "Additive group homomorphisms preserve negation."]
 protected theorem map_inv [Group α] [DivisionMonoid β] (f : α →* β) (a : α) : f a⁻¹ = (f a)⁻¹ :=
@@ -1347,17 +1337,143 @@ with zero morphism sending `x` to `f x * g x`. -/
 instance {M N} {hM : MulZeroOneClass M} [CommMonoidWithZero N] : Mul (M →*₀ N) :=
   ⟨fun f g => { (f * g : M →* N) with toFun := fun a => f a * g a, map_zero' := by rw [map_zero, zero_mul] }⟩
 
-section Commute
+section coe
 
-variable [Mul M] [Mul N] {a x y : M}
+/-! ### Coercions as bundled morphisms
 
-@[simp, to_additive]
-protected theorem SemiconjBy.map [MulHomClass F M N] (h : SemiconjBy a x y) (f : F) : SemiconjBy (f a) (f x) (f y) := by
-  simpa only [SemiconjBy, map_mul] using congr_arg f h
+The classes `coe_is_mul_hom`, `coe_is_monoid_hom`, etc. state that the coercion map `↑`
+(a.k.a. `coe`) is a homomorphism.
 
-@[simp, to_additive]
-protected theorem Commute.map [MulHomClass F M N] (h : Commute x y) (f : F) : Commute (f x) (f y) :=
-  h.map f
+These classes are unbundled (they take an instance of `has_lift_t R S` as a parameter, rather than
+extending `has_lift_t` or one of its subclasses) for two reasons:
+ * We wouldn't have to introduce new classes that handle transitivity (and probably cause diamonds)
+ * It doesn't matter whether a coercion is written with `has_coe` or `has_lift`, you can give it
+   a homomorphism structure in exactly the same way.
+-/
 
-end Commute
+
+variable (M N) [HasLiftT M N]
+
+/-- `coe_is_zero_hom M N` is a class stating that the coercion map `↑ : M → N` (a.k.a. `coe`)
+is an zero-preserving homomorphism.
+-/
+class CoeIsZeroHom [Zero M] [Zero N] : Prop where
+  coe_zero : (↑(0 : M) : N) = 0
+
+export CoeIsZeroHom (coe_zero)
+
+attribute [simp, norm_cast] coe_zero
+
+/-- `coe_is_one_hom M N` is a class stating that the coercion map `↑ : M → N` (a.k.a. `coe`)
+is a one-preserving homomorphism.
+-/
+@[to_additive]
+class CoeIsOneHom [One M] [One N] : Prop where
+  coe_one : (↑(1 : M) : N) = 1
+
+export CoeIsOneHom (coe_one)
+
+attribute [simp, norm_cast] coe_one
+
+/-- `one_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a one-preserving homomorphism. -/
+@[to_additive "`zero_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),\nbundled as a zero-preserving homomorphism.",
+  simps (config := { fullyApplied := false })]
+protected def OneHom.coe [One M] [One N] [CoeIsOneHom M N] : OneHom M N where
+  toFun := coe
+  map_one' := coe_one
+
+/-- `coe_is_add_hom M N` is a class stating that the coercion map `↑ : M → N` (a.k.a. `coe`)
+is an additive homomorphism.
+-/
+class CoeIsAddHom [Add M] [Add N] : Prop where
+  coe_add : ∀ x y : M, (↑(x + y) : N) = ↑x + ↑y
+
+export CoeIsAddHom (coe_add)
+
+attribute [simp, norm_cast] coe_add
+
+/-- `coe_is_mul_hom M N` is a class stating that the coercion map `↑ : M → N` (a.k.a. `coe`)
+is a multiplicative homomorphism.
+-/
+@[to_additive]
+class CoeIsMulHom [Mul M] [Mul N] : Prop where
+  coe_mul : ∀ x y : M, (↑(x * y) : N) = ↑x * ↑y
+
+export CoeIsMulHom (coe_mul)
+
+attribute [simp, norm_cast] coe_mul
+
+/-- `mul_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a multiplicative homomorphism. -/
+@[to_additive "`add_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),\nbundled as an additive homomorphism.",
+  simps (config := { fullyApplied := false })]
+protected def MulHom.coe [Mul M] [Mul N] [CoeIsMulHom M N] : MulHom M N where
+  toFun := coe
+  map_mul' := coe_mul
+
+@[simp, norm_cast]
+theorem coe_bit0 [Add M] [Add N] [CoeIsAddHom M N] (x : M) : ↑(bit0 x) = bit0 (↑x : N) :=
+  coe_add _ _
+
+@[simp, norm_cast]
+theorem coe_bit1 [One M] [Add M] [One N] [Add N] [CoeIsOneHom M N] [CoeIsAddHom M N] (x : M) :
+    ↑(bit1 x) = bit1 (↑x : N) := by simp [bit1]
+
+/-- `coe_is_add_monoid_hom M N` is a class stating that the coercion map `↑ : M → N` (a.k.a. `coe`)
+is an additive monoid homomorphism.
+-/
+class CoeIsAddMonoidHom [AddZeroClass M] [AddZeroClass N] extends CoeIsZeroHom M N, CoeIsAddHom M N
+
+/-- `coe_is_monoid_hom M N` is a class stating that the coercion map `↑ : M → N` (a.k.a. `coe`)
+is a monoid homomorphism.
+-/
+@[to_additive]
+class CoeIsMonoidHom [MulOneClass M] [MulOneClass N] extends CoeIsOneHom M N, CoeIsMulHom M N
+
+-- `to_additive` doesn't seem to map these correctly...
+attribute [to_additive CoeIsAddMonoidHom.to_coe_is_zero_hom] CoeIsMonoidHom.to_coe_is_one_hom
+
+attribute [to_additive CoeIsAddMonoidHom.to_coe_is_add_hom] CoeIsMonoidHom.to_coe_is_mul_hom
+
+/-- `monoid_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a monoid homomorphism. -/
+@[to_additive
+      "`add_monoid_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),\nbundled as an additive monoid homomorphism.",
+  simps (config := { fullyApplied := false })]
+protected def MonoidHom.coe [MulOneClass M] [MulOneClass N] [CoeIsMonoidHom M N] : M →* N :=
+  { OneHom.coe M N, MulHom.coe M N with toFun := coe }
+
+variable {M N}
+
+@[simp, norm_cast, to_additive]
+theorem coe_pow [Monoid M] [Monoid N] [CoeIsMonoidHom M N] (a : M) (n : ℕ) : ↑(a ^ n) = (↑a : N) ^ n :=
+  map_pow (MonoidHom.coe M N) a n
+
+@[simp, norm_cast, to_additive]
+theorem coe_zpow [Group M] [Group N] [CoeIsMonoidHom M N] (a : M) (n : ℤ) : ↑(a ^ n) = (↑a : N) ^ n :=
+  map_zpow (MonoidHom.coe M N) a n
+
+@[simp, norm_cast, to_additive]
+theorem coe_inv [Group G] [DivisionMonoid H] [HasLiftT G H] [CoeIsMonoidHom G H] (a : G) : ↑a⁻¹ = (↑a : H)⁻¹ :=
+  map_inv (MonoidHom.coe G H) a
+
+@[simp, norm_cast, to_additive]
+theorem coe_div [Group G] [DivisionMonoid H] [HasLiftT G H] [CoeIsMonoidHom G H] (a b : G) : ↑(a / b) = (↑a : H) / ↑b :=
+  map_div (MonoidHom.coe G H) a b
+
+variable (M N)
+
+/-- `coe_monoid_with-zero_hom M N` is a class stating that the coercion map `↑ : M → N`
+(a.k.a. `coe`) is a monoid with zero homomorphism.
+-/
+class CoeIsMonoidWithZeroHom [MonoidWithZero M] [MonoidWithZero N] extends CoeIsMonoidHom M N, CoeIsZeroHom M N
+
+/-- `monoid_with_zero_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a monoid with zero homomorphism. -/
+@[simps (config := { fullyApplied := false })]
+protected def MonoidWithZeroHom.coe [MonoidWithZero M] [MonoidWithZero N] [CoeIsMonoidWithZeroHom M N] : M →*₀ N :=
+  { MonoidHom.coe M N, ZeroHom.coe M N with toFun := coe }
+
+end coe
 

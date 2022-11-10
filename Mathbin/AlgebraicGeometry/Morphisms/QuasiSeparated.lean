@@ -222,9 +222,9 @@ instance quasi_separated_space_of_is_affine (X : SchemeCat) [IsAffine X] : Quasi
   obtain ⟨s', hs', e'⟩ := (is_compact_open_iff_eq_basic_open_union _).mp ⟨hV', hV⟩
   rw [e, e', Set.Union₂_inter]
   simp_rw [Set.inter_Union₂]
-  apply hs.compact_bUnion
+  apply hs.is_compact_bUnion
   · intro i hi
-    apply hs'.compact_bUnion
+    apply hs'.is_compact_bUnion
     intro i' hi'
     change IsCompact (X.basic_open i ⊓ X.basic_open i').1
     rw [← Scheme.basic_open_mul]

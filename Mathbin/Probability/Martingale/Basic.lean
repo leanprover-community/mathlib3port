@@ -462,7 +462,7 @@ theorem Supermartingale.le_zero_of_predictable [Preorder E] [SigmaFiniteFiltrati
     
 
 /-- A predictable martingale is a.e. equal to its initial state. -/
-theorem Martingale.eq_zero_of_predicatable [SigmaFiniteFiltration μ 𝒢] {f : ℕ → Ω → E} (hfmgle : Martingale f 𝒢 μ)
+theorem Martingale.eq_zero_of_predictable [SigmaFiniteFiltration μ 𝒢] {f : ℕ → Ω → E} (hfmgle : Martingale f 𝒢 μ)
     (hfadp : Adapted 𝒢 fun n => f (n + 1)) (n : ℕ) : f n =ᵐ[μ] f 0 := by
   induction' n with k ih
   · rfl

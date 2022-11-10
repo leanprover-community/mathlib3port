@@ -30,11 +30,9 @@ noncomputable section
 
 open Bundle Set
 
-open Classical
+open Classical Bundle
 
 variable (R 𝕜 : Type _) {B : Type _} (F : Type _) (E : B → Type _)
-
-namespace TopologicalVectorBundle
 
 section Defs
 
@@ -44,29 +42,29 @@ variable [TopologicalSpace (TotalSpace E₁)] [TopologicalSpace (TotalSpace E₂
 
 /-- Equip the total space of the fibrewise product of two topological vector bundles `E₁`, `E₂` with
 the induced topology from the diagonal embedding into `total_space E₁ × total_space E₂`. -/
-instance Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ ×ᵇ E₂)) :=
+instance TopologicalVectorBundle.Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ ×ᵇ E₂)) :=
   TopologicalSpace.induced (fun p => ((⟨p.1, p.2.1⟩ : TotalSpace E₁), (⟨p.1, p.2.2⟩ : TotalSpace E₂)))
     (by infer_instance : TopologicalSpace (TotalSpace E₁ × TotalSpace E₂))
 
 /-- The diagonal map from the total space of the fibrewise product of two topological vector bundles
 `E₁`, `E₂` into `total_space E₁ × total_space E₂` is `inducing`. -/
-theorem Prod.inducing_diag :
+theorem TopologicalVectorBundle.Prod.inducing_diag :
     Inducing (fun p => (⟨p.1, p.2.1⟩, ⟨p.1, p.2.2⟩) : TotalSpace (E₁ ×ᵇ E₂) → TotalSpace E₁ × TotalSpace E₂) :=
   ⟨rfl⟩
 
 end Defs
 
+open TopologicalVectorBundle
+
 variable [NontriviallyNormedField R] [TopologicalSpace B]
 
 variable (F₁ : Type _) [NormedAddCommGroup F₁] [NormedSpace R F₁] (E₁ : B → Type _) [TopologicalSpace (TotalSpace E₁)]
-  [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module R (E₁ x)]
 
 variable (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace R F₂] (E₂ : B → Type _) [TopologicalSpace (TotalSpace E₂)]
-  [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module R (E₂ x)]
 
 namespace Trivialization
 
-variable (e₁ : Trivialization R F₁ E₁) (e₂ : Trivialization R F₂ E₂)
+variable (e₁ : Trivialization F₁ (π E₁)) (e₂ : Trivialization F₂ (π E₂))
 
 include e₁ e₂
 
@@ -100,7 +98,7 @@ theorem Prod.continuous_to_fun :
   rw [e₁.source_eq, mem_preimage]
   exact hb₁
 
-variable (e₁ e₂)
+variable (e₁ e₂) [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module R (E₁ x)] [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module R (E₂ x)]
 
 /-- Given trivializations `e₁`, `e₂` for vector bundles `E₁`, `E₂` over a base `B`, the inverse
 function for the construction `topological_vector_bundle.trivialization.prod`, the induced
@@ -132,17 +130,19 @@ theorem Prod.continuous_inv_fun : ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.B
   refine' (e₁.continuous_on_symm.prod_map e₂.continuous_on_symm).comp H₁.continuous_on _
   exact fun x h => ⟨⟨h.1.1, mem_univ _⟩, ⟨h.1.2, mem_univ _⟩⟩
 
-variable (e₁ e₂)
+variable (e₁ e₂ R)
 
 variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle R F₁ E₁]
   [TopologicalVectorBundle R F₂ E₂]
+
+include R
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given trivializations `e₁`, `e₂` for vector bundles `E₁`, `E₂` over a base `B`, the induced
 trivialization for the direct sum of `E₁` and `E₂`, whose base set is `e₁.base_set ∩ e₂.base_set`.
 -/
 @[nolint unused_arguments]
-def prod : Trivialization R (F₁ × F₂) (E₁ ×ᵇ E₂) where
+def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂)) where
   toFun := Prod.toFun' e₁ e₂
   invFun := Prod.invFun' e₁ e₂
   Source := @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)
@@ -163,49 +163,64 @@ def prod : Trivialization R (F₁ × F₂) (E₁ ×ᵇ E₂) where
   source_eq := rfl
   target_eq := rfl
   proj_to_fun x h := rfl
-  linear' := fun x ⟨h₁, h₂⟩ => (((e₁.linear h₁).mk' _).prod_map ((e₂.linear h₂).mk' _)).is_linear
+
+omit R
+
+instance prod.is_linear [e₁.is_linear R] [e₂.is_linear R] :
+    (e₁.Prod R e₂).is_linear
+      R where linear := fun x ⟨h₁, h₂⟩ => (((e₁.linear R h₁).mk' _).prod_map ((e₂.linear R h₂).mk' _)).is_linear
 
 @[simp]
-theorem base_set_prod : (prod e₁ e₂).BaseSet = e₁.BaseSet ∩ e₂.BaseSet :=
+theorem base_set_prod : (prod R e₁ e₂).BaseSet = e₁.BaseSet ∩ e₂.BaseSet :=
   rfl
 
 variable {e₁ e₂}
 
-theorem prod_apply {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ e₂.BaseSet) (v₁ : E₁ x) (v₂ : E₂ x) :
-    prod e₁ e₂ ⟨x, (v₁, v₂)⟩ = ⟨x, e₁.continuousLinearEquivAt x hx₁ v₁, e₂.continuousLinearEquivAt x hx₂ v₂⟩ :=
+variable (R)
+
+theorem prod_apply [e₁.is_linear R] [e₂.is_linear R] {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ e₂.BaseSet) (v₁ : E₁ x)
+    (v₂ : E₂ x) :
+    prod R e₁ e₂ ⟨x, (v₁, v₂)⟩ = ⟨x, e₁.continuousLinearEquivAt R x hx₁ v₁, e₂.continuousLinearEquivAt R x hx₂ v₂⟩ :=
   rfl
 
+variable {R}
+
 theorem prod_symm_apply (x : B) (w₁ : F₁) (w₂ : F₂) :
-    (prod e₁ e₂).toLocalEquiv.symm (x, w₁, w₂) = ⟨x, e₁.symm x w₁, e₂.symm x w₂⟩ :=
+    (prod R e₁ e₂).toLocalEquiv.symm (x, w₁, w₂) = ⟨x, e₁.symm x w₁, e₂.symm x w₂⟩ :=
   rfl
 
 end Trivialization
 
 open Trivialization
 
+variable [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module R (E₁ x)] [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module R (E₂ x)]
+
 variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle R F₁ E₁]
   [TopologicalVectorBundle R F₂ E₂]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two vector bundles is a vector bundle. -/
 instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle R (F₁ × F₂) (E₁ ×ᵇ E₂) where
   total_space_mk_inducing b := by
     rw [(prod.inducing_diag E₁ E₂).inducing_iff]
     exact (total_space_mk_inducing R F₁ E₁ b).prod_mk (total_space_mk_inducing R F₂ E₂ b)
   TrivializationAtlas :=
-    (fun p : Trivialization R F₁ E₁ × Trivialization R F₂ E₂ => p.1.Prod p.2) ''
-      TrivializationAtlas R F₁ E₁ ×ˢ TrivializationAtlas R F₂ E₂
-  trivializationAt b := (trivializationAt R F₁ E₁ b).Prod (trivializationAt R F₂ E₂ b)
+    { e |
+      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ : MemTrivializationAtlas R e₁)(_ :
+        MemTrivializationAtlas R e₂), e = Trivialization.prod R e₁ e₂ }
+  trivialization_linear' := by
+    rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩
+    skip
+    infer_instance
+  trivializationAt b := (trivializationAt R F₁ E₁ b).Prod R (trivializationAt R F₂ E₂ b)
   mem_base_set_trivialization_at b :=
     ⟨mem_base_set_trivialization_at R F₁ E₁ b, mem_base_set_trivialization_at R F₂ E₂ b⟩
-  trivialization_mem_atlas b := ⟨(_, _), ⟨trivialization_mem_atlas R F₁ E₁ b, trivialization_mem_atlas R F₂ E₂ b⟩, rfl⟩
-  continuous_on_coord_change := by
-    rintro _ ⟨⟨e₁, e₂⟩, ⟨he₁, he₂⟩, rfl⟩ _ ⟨⟨e₁', e₂'⟩, ⟨he₁', he₂'⟩, rfl⟩
-    have := continuous_on_coord_change e₁ he₁ e₁' he₁'
-    have := continuous_on_coord_change e₂ he₂ e₂' he₂'
+  trivialization_mem_atlas b :=
+    ⟨trivializationAt R F₁ E₁ b, trivializationAt R F₂ E₂ b, by infer_instance, by infer_instance, rfl⟩
+  continuous_on_coord_change' := by
+    rintro _ _ ⟨e₁, e₂, he₁, he₂, rfl⟩ ⟨e₁', e₂', he₁', he₂', rfl⟩
+    skip
     refine'
-        (((continuous_on_coord_change e₁ he₁ e₁' he₁').mono _).prodMapL R
-              ((continuous_on_coord_change e₂ he₂ e₂' he₂').mono _)).congr
+        (((continuous_on_coord_change R e₁ e₁').mono _).prodMapL R ((continuous_on_coord_change R e₂ e₂').mono _)).congr
           _ <;>
       dsimp only [base_set_prod, mfld_simps]
     · mfld_set_tac
@@ -215,24 +230,30 @@ instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle 
     · rintro b hb
       rw [ContinuousLinearMap.ext_iff]
       rintro ⟨v₁, v₂⟩
-      show (e₁.prod e₂).coordChange (e₁'.prod e₂') b (v₁, v₂) = (e₁.coord_change e₁' b v₁, e₂.coord_change e₂' b v₂)
-      rw [e₁.coord_change_apply e₁', e₂.coord_change_apply e₂', (e₁.prod e₂).coord_change_apply']
+      show
+        (e₁.prod R e₂).coordChangeL R (e₁'.prod R e₂') b (v₁, v₂) =
+          (e₁.coord_changeL R e₁' b v₁, e₂.coord_changeL R e₂' b v₂)
+      rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod R e₂).coord_changeL_apply']
       exacts[rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
       
+
+instance _root_.bundle.prod.mem_trivialization_atlas {e₁ : Trivialization F₁ (π E₁)} {e₂ : Trivialization F₂ (π E₂)}
+    [MemTrivializationAtlas R e₁] [MemTrivializationAtlas R e₂] :
+    MemTrivializationAtlas R
+      (e₁.Prod R e₂ :
+        Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂))) where out := ⟨e₁, e₂, by infer_instance, by infer_instance, rfl⟩
 
 variable {R F₁ E₁ F₂ E₂}
 
 @[simp]
-theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization R F₁ E₁} {e₂ : Trivialization R F₂ E₂}
-    {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ e₂.BaseSet) :
-    (e₁.Prod e₂).continuousLinearEquivAt x ⟨hx₁, hx₂⟩ =
-      (e₁.continuousLinearEquivAt x hx₁).Prod (e₂.continuousLinearEquivAt x hx₂) :=
+theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization F₁ (π E₁)} {e₂ : Trivialization F₂ (π E₂)}
+    [e₁.is_linear R] [e₂.is_linear R] {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ e₂.BaseSet) :
+    (e₁.Prod R e₂).continuousLinearEquivAt R x ⟨hx₁, hx₂⟩ =
+      (e₁.continuousLinearEquivAt R x hx₁).Prod (e₂.continuousLinearEquivAt R x hx₂) :=
   by
   ext1
   funext v
   obtain ⟨v₁, v₂⟩ := v
-  rw [(e₁.prod e₂).continuous_linear_equiv_at_apply, trivialization.prod]
-  exact (congr_arg Prod.snd (prod_apply hx₁ hx₂ v₁ v₂) : _)
-
-end TopologicalVectorBundle
+  rw [(e₁.prod R e₂).continuous_linear_equiv_at_apply R, Trivialization.prod]
+  exact (congr_arg Prod.snd (prod_apply R hx₁ hx₂ v₁ v₂) : _)
 

@@ -38,7 +38,7 @@ open NormedField Set
 
 open BigOperators Nnreal Pointwise TopologicalSpace
 
-variable {R R' 𝕜 E F G ι : Type _}
+variable {R R' 𝕜 𝕜₂ 𝕜₃ E E₂ E₃ F G ι : Type _}
 
 /-- A seminorm on a module over a normed ring is a function to the reals that is positive
 semidefinite, positive homogeneous, and subadditive. -/
@@ -241,22 +241,32 @@ end AddGroup
 
 section Module
 
-variable [AddCommGroup E] [AddCommGroup F] [AddCommGroup G]
+variable [SemiNormedRing 𝕜₂] [SemiNormedRing 𝕜₃]
 
-variable [Module 𝕜 E] [Module 𝕜 F] [Module 𝕜 G]
+variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+
+variable {σ₂₃ : 𝕜₂ →+* 𝕜₃} [RingHomIsometric σ₂₃]
+
+variable {σ₁₃ : 𝕜 →+* 𝕜₃} [RingHomIsometric σ₁₃]
+
+variable [AddCommGroup E] [AddCommGroup E₂] [AddCommGroup E₃]
+
+variable [AddCommGroup F] [AddCommGroup G]
+
+variable [Module 𝕜 E] [Module 𝕜₂ E₂] [Module 𝕜₃ E₃] [Module 𝕜 F] [Module 𝕜 G]
 
 variable [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
 
 /-- Composition of a seminorm with a linear map is a seminorm. -/
-def comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Seminorm 𝕜 E :=
+def comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) : Seminorm 𝕜 E :=
   { p.toAddGroupSeminorm.comp f.toAddMonoidHom with toFun := fun x => p (f x),
-    smul' := fun _ _ => (congr_arg p (f.map_smul _ _)).trans (map_smul_eq_mul p _ _) }
+    smul' := fun _ _ => by rw [map_smulₛₗ, map_smul_eq_mul, RingHomIsometric.is_iso] }
 
-theorem coe_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : ⇑(p.comp f) = p ∘ f :=
+theorem coe_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) : ⇑(p.comp f) = p ∘ f :=
   rfl
 
 @[simp]
-theorem comp_apply (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) : (p.comp f) x = p (f x) :=
+theorem comp_apply (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (x : E) : (p.comp f) x = p (f x) :=
   rfl
 
 @[simp]
@@ -264,31 +274,31 @@ theorem comp_id (p : Seminorm 𝕜 E) : p.comp LinearMap.id = p :=
   ext fun _ => rfl
 
 @[simp]
-theorem comp_zero (p : Seminorm 𝕜 F) : p.comp (0 : E →ₗ[𝕜] F) = 0 :=
+theorem comp_zero (p : Seminorm 𝕜₂ E₂) : p.comp (0 : E →ₛₗ[σ₁₂] E₂) = 0 :=
   ext fun _ => map_zero p
 
 @[simp]
-theorem zero_comp (f : E →ₗ[𝕜] F) : (0 : Seminorm 𝕜 F).comp f = 0 :=
+theorem zero_comp (f : E →ₛₗ[σ₁₂] E₂) : (0 : Seminorm 𝕜₂ E₂).comp f = 0 :=
   ext fun _ => rfl
 
-theorem comp_comp (p : Seminorm 𝕜 G) (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) : p.comp (g.comp f) = (p.comp g).comp f :=
+theorem comp_comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] (p : Seminorm 𝕜₃ E₃) (g : E₂ →ₛₗ[σ₂₃] E₃) (f : E →ₛₗ[σ₁₂] E₂) :
+    p.comp (g.comp f) = (p.comp g).comp f :=
   ext fun _ => rfl
 
-theorem add_comp (p q : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : (p + q).comp f = p.comp f + q.comp f :=
+theorem add_comp (p q : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) : (p + q).comp f = p.comp f + q.comp f :=
   ext fun _ => rfl
 
-theorem comp_add_le (p : Seminorm 𝕜 F) (f g : E →ₗ[𝕜] F) : p.comp (f + g) ≤ p.comp f + p.comp g := fun _ =>
+theorem comp_add_le (p : Seminorm 𝕜₂ E₂) (f g : E →ₛₗ[σ₁₂] E₂) : p.comp (f + g) ≤ p.comp f + p.comp g := fun _ =>
   map_add_le_add p _ _
 
-theorem smul_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : R) : (c • p).comp f = c • p.comp f :=
+theorem smul_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (c : R) : (c • p).comp f = c • p.comp f :=
   ext fun _ => rfl
 
-theorem comp_mono {p : Seminorm 𝕜 F} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) (hp : p ≤ q) : p.comp f ≤ q.comp f := fun _ =>
-  hp _
+theorem comp_mono {p q : Seminorm 𝕜₂ E₂} (f : E →ₛₗ[σ₁₂] E₂) (hp : p ≤ q) : p.comp f ≤ q.comp f := fun _ => hp _
 
 /-- The composition as an `add_monoid_hom`. -/
 @[simps]
-def pullback (f : E →ₗ[𝕜] F) : Seminorm 𝕜 F →+ Seminorm 𝕜 E :=
+def pullback (f : E →ₛₗ[σ₁₂] E₂) : Seminorm 𝕜₂ E₂ →+ Seminorm 𝕜 E :=
   ⟨fun p => p.comp f, zero_comp f, fun p q => add_comp p q f⟩
 
 instance : OrderBot (Seminorm 𝕜 E) :=
@@ -347,14 +357,18 @@ end SemiNormedRing
 
 section SemiNormedCommRing
 
-variable [SemiNormedCommRing 𝕜] [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F]
+variable [SemiNormedRing 𝕜] [SemiNormedCommRing 𝕜₂]
 
-theorem comp_smul (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : 𝕜) : p.comp (c • f) = ∥c∥₊ • p.comp f :=
+variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+
+variable [AddCommGroup E] [AddCommGroup E₂] [Module 𝕜 E] [Module 𝕜₂ E₂]
+
+theorem comp_smul (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (c : 𝕜₂) : p.comp (c • f) = ∥c∥₊ • p.comp f :=
   ext fun _ => by
     rw [comp_apply, smul_apply, LinearMap.smul_apply, map_smul_eq_mul, Nnreal.smul_def, coe_nnnorm, smul_eq_mul,
       comp_apply]
 
-theorem comp_smul_apply (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : 𝕜) (x : E) : p.comp (c • f) x = ∥c∥ * p (f x) :=
+theorem comp_smul_apply (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (c : 𝕜₂) (x : E) : p.comp (c • f) x = ∥c∥ * p (f x) :=
   map_smul_eq_mul p _ _
 
 end SemiNormedCommRing
@@ -632,13 +646,16 @@ section Module
 
 variable [Module 𝕜 E]
 
-variable [AddCommGroup F] [Module 𝕜 F]
+variable [SemiNormedRing 𝕜₂] [AddCommGroup E₂] [Module 𝕜₂ E₂]
 
-theorem ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ) : (p.comp f).ball x r = f ⁻¹' p.ball (f x) r := by
+variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+
+theorem ball_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (x : E) (r : ℝ) :
+    (p.comp f).ball x r = f ⁻¹' p.ball (f x) r := by
   ext
   simp_rw [ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]
 
-theorem closed_ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ) :
+theorem closed_ball_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (x : E) (r : ℝ) :
     (p.comp f).ClosedBall x r = f ⁻¹' p.ClosedBall (f x) r := by
   ext
   simp_rw [closed_ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]

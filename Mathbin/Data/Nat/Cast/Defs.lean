@@ -3,7 +3,7 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 -/
-import Mathbin.Algebra.Group.Basic
+import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.NeZero
 
 /-!
@@ -108,7 +108,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.318 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.318 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (AddMonoid.toZero.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.318))))
 Case conversion may be inaccurate. Consider using '#align nat.cast_zero Nat.cast_zeroₓ'. -/
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_zero : ((0 : ℕ) : R) = 0 :=
   AddMonoidWithOne.nat_cast_zero
 
@@ -146,8 +146,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.395 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.395 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (AddMonoidWithOne.toOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.395)))
 Case conversion may be inaccurate. Consider using '#align nat.cast_one Nat.cast_oneₓ'. -/
-@[simp, norm_cast]
-theorem cast_one [AddMonoidWithOne R] : ((1 : ℕ) : R) = 1 := by rw [cast_succ, cast_zero, zero_add]
+@[norm_cast]
+theorem cast_one [AddMonoidWithOne R] : ((1 : ℕ) : R) = 1 := by rw [cast_succ, Nat.cast_zero, zero_add]
 
 /- warning: nat.cast_add -> Nat.cast_add is a dubious translation:
 lean 3 declaration is
@@ -155,9 +155,9 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u_1}} {m : Nat} {n : Nat} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.463 : AddMonoidWithOne.{u_1} R], Eq.{succ u_1} R (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.463 (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n)) (HAdd.hAdd.{u_1 u_1 u_1} R R R (instHAdd.{u_1} R (AddZeroClass.toAdd.{u_1} R (AddMonoid.toAddZeroClass.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.463)))) (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.463 m) (Nat.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.463 n))
 Case conversion may be inaccurate. Consider using '#align nat.cast_add Nat.cast_addₓ'. -/
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_add [AddMonoidWithOne R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n := by
-  induction n <;> simp [add_succ, add_assoc, Nat.add_zero, *]
+  induction n <;> simp [add_succ, add_assoc, Nat.add_zero, Nat.cast_one, Nat.cast_zero, *]
 
 /-- Computationally friendlier cast than `nat.unary_cast`, using binary representation. -/
 protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
@@ -167,25 +167,25 @@ protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
 theorem bin_cast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : ℕ) : R) := by
   rw [Nat.binCast]
   apply binary_rec _ _ n
-  · rw [binary_rec_zero, cast_zero]
+  · rw [binary_rec_zero, Nat.cast_zero]
     
   · intro b k h
     rw [binary_rec_eq, h]
-    · cases b <;> simp [bit, bit0, bit1]
+    · cases b <;> simp [bit, bit0, bit1, Nat.cast_add, Nat.cast_zero]
       
     · simp
       
     
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_bit0 [AddMonoidWithOne R] (n : ℕ) : ((bit0 n : ℕ) : R) = bit0 n :=
-  cast_add _ _
+  Nat.cast_add _ _
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_bit1 [AddMonoidWithOne R] (n : ℕ) : ((bit1 n : ℕ) : R) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 
-theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, cast_one, bit0]
+theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, Nat.cast_one, bit0]
 
 attribute [simp, norm_cast] Int.nat_abs_of_nat
 
@@ -215,7 +215,7 @@ theorem of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] :
   ⟨by
     cases h
     rintro rfl
-    · simpa using h
+    · simpa [Nat.cast_zero] using h
       ⟩
 
 theorem pos_of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [NeZero (n : R)] : 0 < n :=

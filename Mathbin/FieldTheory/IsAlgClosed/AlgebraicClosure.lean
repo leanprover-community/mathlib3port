@@ -5,6 +5,7 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.DirectLimit
 import Mathbin.FieldTheory.IsAlgClosed.Basic
+import Mathbin.FieldTheory.SplittingField
 
 /-!
 # Algebraic Closure

@@ -31,13 +31,19 @@ theorem continuous_one [TopologicalSpace M] [One M] : Continuous (1 : X → M) :
 
 /-- Basic hypothesis to talk about a topological additive monoid or a topological additive
 semigroup. A topological additive monoid over `M`, for example, is obtained by requiring both the
-instances `add_monoid M` and `has_continuous_add M`. -/
+instances `add_monoid M` and `has_continuous_add M`.
+
+Continuity in only the left/right argument can be stated using
+`has_continuous_const_vadd α α`/`has_continuous_const_vadd αᵐᵒᵖ α`. -/
 class HasContinuousAdd (M : Type u) [TopologicalSpace M] [Add M] : Prop where
   continuous_add : Continuous fun p : M × M => p.1 + p.2
 
 /-- Basic hypothesis to talk about a topological monoid or a topological semigroup.
 A topological monoid over `M`, for example, is obtained by requiring both the instances `monoid M`
-and `has_continuous_mul M`. -/
+and `has_continuous_mul M`.
+
+Continuity in only the left/right argument can be stated using
+`has_continuous_const_smul α α`/`has_continuous_const_smul αᵐᵒᵖ α`. -/
 @[to_additive]
 class HasContinuousMul (M : Type u) [TopologicalSpace M] [Mul M] : Prop where
   continuous_mul : Continuous fun p : M × M => p.1 * p.2
@@ -51,8 +57,13 @@ theorem continuous_mul : Continuous fun p : M × M => p.1 * p.2 :=
   HasContinuousMul.continuous_mul
 
 @[to_additive]
-instance HasContinuousMul.has_continuous_smul : HasContinuousSmul M M :=
+instance HasContinuousMul.to_has_continuous_smul : HasContinuousSmul M M :=
   ⟨continuous_mul⟩
+
+@[to_additive]
+instance HasContinuousMul.to_has_continuous_smul_op : HasContinuousSmul Mᵐᵒᵖ M :=
+  ⟨show Continuous ((fun p : M × M => p.1 * p.2) ∘ Prod.swap ∘ Prod.map MulOpposite.unop id) from
+      continuous_mul.comp <| continuous_swap.comp <| Continuous.prod_map MulOpposite.continuous_unop continuous_id⟩
 
 @[continuity, to_additive]
 theorem Continuous.mul {f g : X → M} (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x * g x :=

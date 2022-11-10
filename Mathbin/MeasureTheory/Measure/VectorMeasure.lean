@@ -255,7 +255,7 @@ instance : HasSmul R (VectorMeasure α M) :=
   ⟨smul⟩
 
 @[simp]
-theorem coe_smul (r : R) (v : VectorMeasure α M) : ⇑(r • v) = r • v :=
+protected theorem coe_smul (r : R) (v : VectorMeasure α M) : ⇑(r • v) = r • v :=
   rfl
 
 theorem smul_apply (r : R) (v : VectorMeasure α M) (i : Set α) : (r • v) i = r • v i :=
@@ -276,7 +276,7 @@ instance : Inhabited (VectorMeasure α M) :=
   ⟨0⟩
 
 @[simp]
-theorem coe_zero : ⇑(0 : VectorMeasure α M) = 0 :=
+protected theorem coe_zero : ⇑(0 : VectorMeasure α M) = 0 :=
   rfl
 
 theorem zero_apply (i : Set α) : (0 : VectorMeasure α M) i = 0 :=
@@ -295,21 +295,22 @@ instance : Add (VectorMeasure α M) :=
   ⟨add⟩
 
 @[simp]
-theorem coe_add (v w : VectorMeasure α M) : ⇑(v + w) = v + w :=
+protected theorem coe_add (v w : VectorMeasure α M) : ⇑(v + w) = v + w :=
   rfl
 
 theorem add_apply (v w : VectorMeasure α M) (i : Set α) : (v + w) i = v i + w i :=
   rfl
 
 instance : AddCommMonoid (VectorMeasure α M) :=
-  Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add fun _ _ => coe_smul _ _
+  Function.Injective.addCommMonoid _ coe_injective VectorMeasure.coe_zero VectorMeasure.coe_add fun _ _ =>
+    VectorMeasure.coe_smul _ _
 
 /-- `coe_fn` is an `add_monoid_hom`. -/
 @[simps]
 def coeFnAddMonoidHom : VectorMeasure α M →+ Set α → M where
   toFun := coeFn
-  map_zero' := coe_zero
-  map_add' := coe_add
+  map_zero' := VectorMeasure.coe_zero
+  map_add' := VectorMeasure.coe_add
 
 end AddCommMonoid
 
@@ -330,7 +331,7 @@ instance : Neg (VectorMeasure α M) :=
   ⟨neg⟩
 
 @[simp]
-theorem coe_neg (v : VectorMeasure α M) : ⇑(-v) = -v :=
+protected theorem coe_neg (v : VectorMeasure α M) : ⇑(-v) = -v :=
   rfl
 
 theorem neg_apply (v : VectorMeasure α M) (i : Set α) : (-v) i = -v i :=
@@ -354,8 +355,8 @@ theorem sub_apply (v w : VectorMeasure α M) (i : Set α) : (v - w) i = v i - w 
   rfl
 
 instance : AddCommGroup (VectorMeasure α M) :=
-  Function.Injective.addCommGroup _ coe_injective coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
-    coe_smul _ _
+  Function.Injective.addCommGroup _ coe_injective VectorMeasure.coe_zero VectorMeasure.coe_add VectorMeasure.coe_neg
+    VectorMeasure.coe_sub (fun _ _ => VectorMeasure.coe_smul _ _) fun _ _ => VectorMeasure.coe_smul _ _
 
 end AddCommGroup
 
@@ -368,7 +369,7 @@ variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmu
 include m
 
 instance [HasContinuousAdd M] : DistribMulAction R (VectorMeasure α M) :=
-  Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
+  Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective VectorMeasure.coe_smul
 
 end DistribMulAction
 
@@ -381,7 +382,7 @@ variable {R : Type _} [Semiring R] [Module R M] [HasContinuousConstSmul R M]
 include m
 
 instance [HasContinuousAdd M] : Module R (VectorMeasure α M) :=
-  Function.Injective.module R coeFnAddMonoidHom coe_injective coe_smul
+  Function.Injective.module R coeFnAddMonoidHom coe_injective VectorMeasure.coe_smul
 
 end Module
 
@@ -1188,7 +1189,7 @@ theorem addRight [T2Space M] [HasContinuousAdd N] (h₁ : v ⊥ᵥ w₁) (h₂ :
 theorem smulRight {R : Type _} [Semiring R] [DistribMulAction R N] [HasContinuousConstSmul R N] (r : R) (h : v ⊥ᵥ w) :
     v ⊥ᵥ r • w :=
   let ⟨s, hmeas, hs₁, hs₂⟩ := h
-  ⟨s, hmeas, hs₁, fun t ht => by simp only [coe_smul, Pi.smul_apply, hs₂ t ht, smul_zero]⟩
+  ⟨s, hmeas, hs₁, fun t ht => by simp only [vector_measure.coe_smul, Pi.smul_apply, hs₂ t ht, smul_zero]⟩
 
 theorem smulLeft {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmul R M] (r : R) (h : v ⊥ᵥ w) :
     r • v ⊥ᵥ w :=

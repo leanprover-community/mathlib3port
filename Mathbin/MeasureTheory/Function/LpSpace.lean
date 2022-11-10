@@ -669,7 +669,7 @@ theorem snorm'_add_le {f g : α → E} (hf : AeStronglyMeasurable f μ) (hg : Ae
       by
       refine' Ennreal.rpow_le_rpow _ (by simp [le_trans zero_le_one hq1] : 0 ≤ 1 / q)
       refine' lintegral_mono fun a => Ennreal.rpow_le_rpow _ (le_trans zero_le_one hq1)
-      simp [← Ennreal.coe_add, nnnorm_add_le]
+      simp [← Ennreal.coe_add, -coe_add, nnnorm_add_le]
     _ ≤ snorm' f q μ + snorm' g q μ := Ennreal.lintegral_Lp_add_le hf.ennnorm hg.ennnorm hq1
     
 
@@ -720,7 +720,7 @@ theorem snorm'_add_lt_top_of_le_one {f g : α → E} (hf : AeStronglyMeasurable 
       by
       refine' Ennreal.rpow_le_rpow _ (by simp [hq_pos.le] : 0 ≤ 1 / q)
       refine' lintegral_mono fun a => Ennreal.rpow_le_rpow _ hq_pos.le
-      simp [← Ennreal.coe_add, nnnorm_add_le]
+      simp [← Ennreal.coe_add, -coe_add, nnnorm_add_le]
     _ ≤ (∫⁻ a, (∥f a∥₊ : ℝ≥0∞) ^ q + (∥g a∥₊ : ℝ≥0∞) ^ q ∂μ) ^ (1 / q) := by
       refine' Ennreal.rpow_le_rpow (lintegral_mono fun a => _) (by simp [hq_pos.le] : 0 ≤ 1 / q)
       exact Ennreal.rpow_add_le_add_rpow _ _ hq_pos.le hq1

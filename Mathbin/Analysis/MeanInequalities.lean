@@ -286,10 +286,10 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExpo
     
   push_neg  at h
   -- if a ≠ ⊤ and b ≠ ⊤, use the nnreal version: nnreal.young_inequality_real
-  rw [← coe_to_nnreal h.left, ← coe_to_nnreal h.right, ← coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
+  rw [← coe_to_nnreal h.left, ← coe_to_nnreal h.right, ← Ennreal.coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
     coe_rpow_of_nonneg _ hpq.symm.nonneg, Ennreal.ofReal, Ennreal.ofReal, ←
-    @coe_div (Real.toNnreal p) _ (by simp [hpq.pos]), ← @coe_div (Real.toNnreal q) _ (by simp [hpq.symm.pos]), ←
-    coe_add, coe_le_coe]
+    @Ennreal.coe_div (Real.toNnreal p) _ (by simp [hpq.pos]), ←
+    @Ennreal.coe_div (Real.toNnreal q) _ (by simp [hpq.symm.pos]), ← Ennreal.coe_add, coe_le_coe]
   exact Nnreal.young_inequality_real a.to_nnreal b.to_nnreal hpq
 
 end Ennreal

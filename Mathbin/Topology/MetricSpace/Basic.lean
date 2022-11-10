@@ -585,6 +585,13 @@ theorem closed_ball_subset_closed_ball' (h : ε₁ + dist x y ≤ ε₂) : Close
 theorem closed_ball_subset_ball (h : ε₁ < ε₂) : ClosedBall x ε₁ ⊆ Ball x ε₂ := fun y (yh : dist y x ≤ ε₁) =>
   lt_of_le_of_lt yh h
 
+theorem closed_ball_subset_ball' (h : ε₁ + dist x y < ε₂) : ClosedBall x ε₁ ⊆ Ball y ε₂ := fun z hz =>
+  calc
+    dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
+    _ ≤ ε₁ + dist x y := add_le_add_right hz _
+    _ < ε₂ := h
+    
+
 theorem dist_le_add_of_nonempty_closed_ball_inter_closed_ball (h : (ClosedBall x ε₁ ∩ ClosedBall y ε₂).Nonempty) :
     dist x y ≤ ε₁ + ε₂ :=
   let ⟨z, hz⟩ := h
@@ -1911,7 +1918,7 @@ export ProperSpace (is_compact_closed_ball)
 
 /-- In a proper pseudometric space, all spheres are compact. -/
 theorem is_compact_sphere {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) : IsCompact (Sphere x r) :=
-  compact_of_is_closed_subset (is_compact_closed_ball x r) isClosedSphere sphere_subset_closed_ball
+  is_compact_of_is_closed_subset (is_compact_closed_ball x r) isClosedSphere sphere_subset_closed_ball
 
 /-- In a proper pseudometric space, any sphere is a `compact_space` when considered as a subtype. -/
 instance {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) : CompactSpace (Sphere x r) :=
@@ -1975,7 +1982,8 @@ instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace �
       (Metric.cauchy_iff.1 hf).2 1 zero_lt_one
     rcases hf.1.nonempty_of_mem t_fset with ⟨x, xt⟩
     have : closed_ball x 1 ∈ f := mem_of_superset t_fset fun y yt => (ht y yt x xt).le
-    rcases(compact_iff_totally_bounded_complete.1 (is_compact_closed_ball x 1)).2 f hf (le_principal_iff.2 this) with
+    rcases(is_compact_iff_totally_bounded_is_complete.1 (is_compact_closed_ball x 1)).2 f hf
+        (le_principal_iff.2 this) with
       ⟨y, -, hy⟩
     exact ⟨y, hy⟩⟩
 
@@ -1997,7 +2005,7 @@ theorem exists_pos_lt_subset_ball (hr : 0 < r) (hs : IsClosed s) (h : s ⊆ Ball
   · exact ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩, empty_subset _⟩
     
   have : IsCompact s :=
-    compact_of_is_closed_subset (is_compact_closed_ball x r) hs (subset.trans h ball_subset_closed_ball)
+    is_compact_of_is_closed_subset (is_compact_closed_ball x r) hs (subset.trans h ball_subset_closed_ball)
   obtain ⟨y, hys, hy⟩ : ∃ y ∈ s, s ⊆ closed_ball x (dist y x)
   exact this.exists_forall_ge hne (continuous_id.dist continuous_const).ContinuousOn
   have hyr : dist y x < r := h hys
@@ -2215,11 +2223,48 @@ theorem boundedRangeOfTendstoCofinite {f : β → α} {a : α} (hf : Tendsto f c
 
 /-- In a compact space, all sets are bounded -/
 theorem boundedOfCompactSpace [CompactSpace α] : Bounded s :=
-  compact_univ.Bounded.mono (subset_univ _)
+  is_compact_univ.Bounded.mono (subset_univ _)
 
-theorem boundedRangeOfTendsto {α : Type _} [PseudoMetricSpace α] (u : ℕ → α) {x : α} (hu : Tendsto u atTop (𝓝 x)) :
-    Bounded (Range u) :=
+theorem boundedRangeOfTendsto (u : ℕ → α) {x : α} (hu : Tendsto u atTop (𝓝 x)) : Bounded (Range u) :=
   hu.CauchySeq.boundedRange
+
+/-- If a function is continuous at every point of a compact set `k`, then it is bounded on
+some open neighborhood of `k`. -/
+theorem exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at [TopologicalSpace β] {k : Set β} {f : β → α}
+    (hk : IsCompact k) (hf : ∀ x ∈ k, ContinuousAt f x) : ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) := by
+  apply hk.induction_on
+  · refine' ⟨∅, subset.refl _, is_open_empty, by simp only [image_empty, bounded_empty]⟩
+    
+  · rintro s s' hss' ⟨t, s't, t_open, t_bounded⟩
+    exact ⟨t, hss'.trans s't, t_open, t_bounded⟩
+    
+  · rintro s s' ⟨t, st, t_open, t_bounded⟩ ⟨t', s't', t'_open, t'_bounded⟩
+    refine' ⟨t ∪ t', union_subset_union st s't', t_open.union t'_open, _⟩
+    rw [image_union]
+    exact t_bounded.union t'_bounded
+    
+  · intro x hx
+    have A : ball (f x) 1 ∈ 𝓝 (f x) := ball_mem_nhds _ zero_lt_one
+    have B : f ⁻¹' ball (f x) 1 ∈ 𝓝 x := hf x hx A
+    obtain ⟨u, uf, u_open, xu⟩ : ∃ (u : Set β)(H : u ⊆ f ⁻¹' ball (f x) 1), IsOpen u ∧ x ∈ u
+    exact _root_.mem_nhds_iff.1 B
+    refine' ⟨u, _, u, subset.refl _, u_open, _⟩
+    · apply nhds_within_le_nhds
+      exact u_open.mem_nhds xu
+      
+    · apply bounded.mono (image_subset _ uf)
+      exact bounded_ball.mono (image_preimage_subset _ _)
+      
+    
+
+/-- If a function is continuous on a neighborhood of a compact set `k`, then it is bounded on
+some open neighborhood of `k`. -/
+theorem exists_is_open_bounded_image_of_is_compact_of_continuous_on [TopologicalSpace β] {k s : Set β} {f : β → α}
+    (hk : IsCompact k) (hs : IsOpen s) (hks : k ⊆ s) (hf : ContinuousOn f s) :
+    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) := by
+  apply
+    exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at hk fun x hx =>
+      hf.continuous_at (hs.mem_nhds (hks hx))
 
 /-- The **Heine–Borel theorem**: In a proper space, a closed bounded set is compact. -/
 theorem is_compact_of_is_closed_bounded [ProperSpace α] (hc : IsClosed s) (hb : Bounded s) : IsCompact s := by
@@ -2227,7 +2272,7 @@ theorem is_compact_of_is_closed_bounded [ProperSpace α] (hc : IsClosed s) (hb :
   · exact is_compact_empty
     
   · rcases hb.subset_ball x with ⟨r, hr⟩
-    exact compact_of_is_closed_subset (is_compact_closed_ball x r) hc hr
+    exact is_compact_of_is_closed_subset (is_compact_closed_ball x r) hc hr
     
 
 /-- The **Heine–Borel theorem**: In a proper space, the closure of a bounded set is compact. -/
@@ -2236,7 +2281,7 @@ theorem Bounded.is_compact_closure [ProperSpace α] (h : Bounded s) : IsCompact 
 
 /-- The **Heine–Borel theorem**:
 In a proper Hausdorff space, a set is compact if and only if it is closed and bounded. -/
-theorem compact_iff_closed_bounded [T2Space α] [ProperSpace α] : IsCompact s ↔ IsClosed s ∧ Bounded s :=
+theorem is_compact_iff_is_closed_bounded [T2Space α] [ProperSpace α] : IsCompact s ↔ IsClosed s ∧ Bounded s :=
   ⟨fun h => ⟨h.IsClosed, h.Bounded⟩, fun h => is_compact_of_is_closed_bounded h.1 h.2⟩
 
 theorem compact_space_iff_bounded_univ [ProperSpace α] : CompactSpace α ↔ Bounded (Univ : Set α) :=

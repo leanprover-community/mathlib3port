@@ -70,21 +70,20 @@ instance finiteDimensionalDirectionAffineSpanImageOfFinite [Finite ι] (p : ι �
   finiteDimensionalDirectionAffineSpanOfFinite k (Set.to_finite _)
 
 /-- An affine-independent family of points in a finite-dimensional affine space is finite. -/
-noncomputable def fintypeOfFinDimAffineIndependent [FiniteDimensional k V] {p : ι → P} (hi : AffineIndependent k p) :
-    Fintype ι := by
-  classical <;>
-    exact
-      if hι : IsEmpty ι then @Fintype.ofIsEmpty _ hι
-      else by
-        let q := (not_is_empty_iff.mp hι).some
-        rw [affine_independent_iff_linear_independent_vsub k p q] at hi
-        letI : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
-        exact fintypeOfFintypeNe _ (@Fintype.ofFinite _ hi.finite_of_is_noetherian)
+theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {p : ι → P} (hi : AffineIndependent k p) :
+    Finite ι := by
+  nontriviality ι
+  inhabit ι
+  rw [affine_independent_iff_linear_independent_vsub k p default] at hi
+  letI : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
+  exact (Set.finite_singleton default).finite_of_compl (Set.finite_coe_iff.1 hi.finite_of_is_noetherian)
 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/
-theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
-    (hi : AffineIndependent k (coe : s → P)) : s.Finite :=
-  ⟨fintypeOfFinDimAffineIndependent k hi⟩
+theorem finite_set_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set ι} {f : s → P}
+    (hi : AffineIndependent k f) : s.Finite :=
+  @Set.to_finite _ s (finite_of_fin_dim_affine_independent k hi)
+
+open Classical
 
 variable {k}
 
@@ -572,6 +571,16 @@ theorem Collinear.coplanarInsert {s : Set P} (h : Collinear k s) (p : P) : Copla
   haveI := h.finite_dimensional_vector_span
   rw [coplanar_iff_finrank_le_two]
   exact (finrank_vector_span_insert_le_set k s p).trans (add_le_add_right h.finrank_le_one _)
+
+/-- A set of points in a two-dimensional space is coplanar. -/
+theorem coplanarOfFinrankEqTwo (s : Set P) (h : finrank k V = 2) : Coplanar k s := by
+  haveI := finite_dimensional_of_finrank_eq_succ h
+  rw [coplanar_iff_finrank_le_two, ← h]
+  exact Submodule.finrank_le _
+
+/-- A set of points in a two-dimensional space is coplanar. -/
+theorem coplanarOfFactFinrankEqTwo (s : Set P) [h : Fact (finrank k V = 2)] : Coplanar k s :=
+  coplanarOfFinrankEqTwo s h.out
 
 variable (k)
 

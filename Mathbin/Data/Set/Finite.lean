@@ -520,6 +520,10 @@ theorem Finite.union {s t : Set α} (hs : s.Finite) (ht : t.Finite) : (s ∪ t).
   cases ht
   apply to_finite
 
+theorem Finite.finite_of_compl {s : Set α} (hs : s.Finite) (hsc : sᶜ.Finite) : Finite α := by
+  rw [← finite_univ_iff, ← union_compl_self s]
+  exact hs.union hsc
+
 theorem Finite.sup {s t : Set α} : s.Finite → t.Finite → (s ⊔ t).Finite :=
   finite.union
 

@@ -3,7 +3,7 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.CastField
+import Mathbin.Data.Nat.Cast.Field
 import Mathbin.Data.Fintype.Basic
 
 /-!
@@ -65,7 +65,7 @@ end
 
 section
 
-variable {R : Type _} [NonAssocSemiring R] [NoZeroDivisors R] [CharZero R]
+variable {R : Type _} [NonAssocSemiring R] [NoZeroDivisors R] [CharZero R] {a : R}
 
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
@@ -79,6 +79,12 @@ theorem bit0_eq_zero {a : R} : bit0 a = 0 ↔ a = 0 :=
 theorem zero_eq_bit0 {a : R} : 0 = bit0 a ↔ a = 0 := by
   rw [eq_comm]
   exact bit0_eq_zero
+
+theorem bit0_ne_zero : bit0 a ≠ 0 ↔ a ≠ 0 :=
+  bit0_eq_zero.Not
+
+theorem zero_ne_bit0 : 0 ≠ bit0 a ↔ a ≠ 0 :=
+  zero_eq_bit0.Not
 
 end
 

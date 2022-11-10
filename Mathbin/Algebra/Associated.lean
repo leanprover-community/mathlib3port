@@ -3,9 +3,10 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 -/
-import Mathbin.Algebra.Divisibility
+import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Invertible
+import Mathbin.Algebra.Parity
 import Mathbin.Order.Atoms
 
 /-!
@@ -191,36 +192,6 @@ theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
   simp [not_or] at o
   exact H _ o.1 _ o.2 h.symm
 
-protected theorem Prime.irreducible [CancelCommMonoidWithZero α] {p : α} (hp : Prime p) : Irreducible p :=
-  ⟨hp.not_unit, fun a b hab =>
-    (show a * b ∣ a ∨ a * b ∣ b from hab ▸ hp.dvd_or_dvd (hab ▸ dvd_rfl)).elim
-      (fun ⟨x, hx⟩ =>
-        Or.inr
-          (is_unit_iff_dvd_one.2
-            ⟨x,
-              mul_right_cancel₀ (show a ≠ 0 from fun h => by simp_all [Prime]) <| by
-                conv =>
-                  lhs
-                  rw [hx] <;> simp [mul_comm, mul_assoc, mul_left_comm]⟩))
-      fun ⟨x, hx⟩ =>
-      Or.inl
-        (is_unit_iff_dvd_one.2
-          ⟨x,
-            mul_right_cancel₀ (show b ≠ 0 from fun h => by simp_all [Prime]) <| by
-              conv =>
-                lhs
-                rw [hx] <;> simp [mul_comm, mul_assoc, mul_left_comm]⟩)⟩
-
-theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul [CancelCommMonoidWithZero α] {p : α} (hp : Prime p) {a b : α}
-    {k l : ℕ} : p ^ k ∣ a → p ^ l ∣ b → p ^ (k + l + 1) ∣ a * b → p ^ (k + 1) ∣ a ∨ p ^ (l + 1) ∣ b :=
-  fun ⟨x, hx⟩ ⟨y, hy⟩ ⟨z, hz⟩ =>
-  have h : p ^ (k + l) * (x * y) = p ^ (k + l) * (p * z) := by
-    simpa [mul_comm, pow_add, hx, hy, mul_assoc, mul_left_comm] using hz
-  have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.NeZero
-  have hpd : p ∣ x * y := ⟨z, by rwa [mul_right_inj' hp0] at h⟩
-  (hp.dvd_or_dvd hpd).elim (fun ⟨d, hd⟩ => Or.inl ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩)
-    fun ⟨d, hd⟩ => Or.inr ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩
-
 /-- If `p` and `q` are irreducible, then `p ∣ q` implies `q ∣ p`. -/
 theorem Irreducible.dvd_symm [Monoid α] {p q : α} (hp : Irreducible p) (hq : Irreducible q) : p ∣ q → q ∣ p := by
   rintro ⟨q', rfl⟩
@@ -282,8 +253,62 @@ theorem irreducible_mul_iff {a b : α} : Irreducible (a * b) ↔ Irreducible a �
 
 end
 
-theorem pow_not_prime [CancelCommMonoidWithZero α] {x : α} {n : ℕ} (hn : n ≠ 1) : ¬Prime (x ^ n) := fun hp =>
+section CommMonoid
+
+variable [CommMonoid α] {a : α}
+
+theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by
+  rintro ⟨b, rfl⟩
+  simp only [irreducible_mul_iff, or_self_iff] at ha
+  exact ha.1.not_unit ha.2
+
+theorem IsSquare.not_irreducible (ha : IsSquare a) : ¬Irreducible a := fun h => h.not_square ha
+
+end CommMonoid
+
+section CancelCommMonoidWithZero
+
+variable [CancelCommMonoidWithZero α] {a p : α}
+
+protected theorem Prime.irreducible (hp : Prime p) : Irreducible p :=
+  ⟨hp.not_unit, fun a b hab =>
+    (show a * b ∣ a ∨ a * b ∣ b from hab ▸ hp.dvd_or_dvd (hab ▸ dvd_rfl)).elim
+      (fun ⟨x, hx⟩ =>
+        Or.inr
+          (is_unit_iff_dvd_one.2
+            ⟨x,
+              mul_right_cancel₀ (show a ≠ 0 from fun h => by simp_all [Prime]) <| by
+                conv =>
+                  lhs
+                  rw [hx] <;> simp [mul_comm, mul_assoc, mul_left_comm]⟩))
+      fun ⟨x, hx⟩ =>
+      Or.inl
+        (is_unit_iff_dvd_one.2
+          ⟨x,
+            mul_right_cancel₀ (show b ≠ 0 from fun h => by simp_all [Prime]) <| by
+              conv =>
+                lhs
+                rw [hx] <;> simp [mul_comm, mul_assoc, mul_left_comm]⟩)⟩
+
+theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul (hp : Prime p) {a b : α} {k l : ℕ} :
+    p ^ k ∣ a → p ^ l ∣ b → p ^ (k + l + 1) ∣ a * b → p ^ (k + 1) ∣ a ∨ p ^ (l + 1) ∣ b :=
+  fun ⟨x, hx⟩ ⟨y, hy⟩ ⟨z, hz⟩ =>
+  have h : p ^ (k + l) * (x * y) = p ^ (k + l) * (p * z) := by
+    simpa [mul_comm, pow_add, hx, hy, mul_assoc, mul_left_comm] using hz
+  have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.NeZero
+  have hpd : p ∣ x * y := ⟨z, by rwa [mul_right_inj' hp0] at h⟩
+  (hp.dvd_or_dvd hpd).elim (fun ⟨d, hd⟩ => Or.inl ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩)
+    fun ⟨d, hd⟩ => Or.inr ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩
+
+theorem Prime.not_square (hp : Prime p) : ¬IsSquare p :=
+  hp.Irreducible.not_square
+
+theorem IsSquare.not_prime (ha : IsSquare a) : ¬Prime a := fun h => h.not_square ha
+
+theorem pow_not_prime {n : ℕ} (hn : n ≠ 1) : ¬Prime (a ^ n) := fun hp =>
   hp.not_unit <| IsUnit.pow _ <| of_irreducible_pow hn <| hp.Irreducible
+
+end CancelCommMonoidWithZero
 
 /-- Two elements of a `monoid` are `associated` if one of them is another one
 multiplied by a unit on the right. -/

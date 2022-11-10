@@ -1237,6 +1237,12 @@ theorem IsDedekindDomain.quotient_equiv_pi_factors_mk {I : Ideal R} (hI : I ≠ 
     IsDedekindDomain.quotientEquivPiFactors hI (Ideal.Quotient.mk I x) = fun P => Ideal.Quotient.mk _ x :=
   rfl
 
+/-- **Chinese remainder theorem**, specialized to two ideals. -/
+noncomputable def Ideal.quotientMulEquivQuotientProd (I J : Ideal R) (coprime : I ⊔ J = ⊤) :
+    R ⧸ I * J ≃+* (R ⧸ I) × R ⧸ J :=
+  RingEquiv.trans (Ideal.quotEquivOfEq (inf_eq_mul_of_coprime coprime).symm)
+    (Ideal.quotientInfEquivQuotientProd I J coprime)
+
 end DedekindDomain
 
 end ChineseRemainder

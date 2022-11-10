@@ -2456,7 +2456,7 @@ theorem tendsto_infi {f : α → β} {x : Filter α} {y : ι → Filter β} : Te
 
 theorem tendsto_infi' {f : α → β} {x : ι → Filter α} {y : Filter β} (i : ι) (hi : Tendsto f (x i) y) :
     Tendsto f (⨅ i, x i) y :=
-  hi.mono_left <| infi_le _ _
+  hi.monoLeft <| infi_le _ _
 
 @[simp]
 theorem tendsto_sup {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} :

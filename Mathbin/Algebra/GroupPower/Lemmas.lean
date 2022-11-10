@@ -6,7 +6,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 import Mathbin.Algebra.Invertible
 import Mathbin.Algebra.GroupPower.Ring
 import Mathbin.Data.Nat.Pow
-import Mathbin.Data.Int.Cast
+import Mathbin.Data.Int.Cast.Lemmas
 
 /-!
 # Lemmas about power operations on monoids and groups
@@ -412,7 +412,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.367 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.367))) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) m n)) (HPow.hPow.{u_1 0 u_1} R Nat R (instHPow.{u_1 0} R Nat (Monoid.Pow.{u_1} R (MonoidWithZero.toMonoid.{u_1} R (Semiring.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.367)))) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.367))) m) n)
 Case conversion may be inaccurate. Consider using '#align nat.cast_pow Nat.cast_powₓ'. -/
-@[simp, norm_cast]
+@[norm_cast]
 theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := by
   induction' m with m ih
   · rw [pow_zero, pow_zero]
@@ -421,7 +421,7 @@ theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := b
   · rw [pow_succ', pow_succ', Nat.cast_mul, ih]
     
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
   induction' m with m ih <;> [exact Int.coe_nat_one, rw [pow_succ', pow_succ', Int.coe_nat_mul, ih]]
 
@@ -477,7 +477,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10 : Ring.{u_1} R] (n : Int) (m : Nat), Eq.{succ u_1} R (Int.cast.{u_1} R (Ring.toAddGroupWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10) (HPow.hPow.{0 0 0} Int Nat Int Int.instHPowIntNat n m)) (HPow.hPow.{u_1 0 u_1} R Nat R (instHPow.{u_1 0} R Nat (Monoid.Pow.{u_1} R (MonoidWithZero.toMonoid.{u_1} R (Semiring.toMonoidWithZero.{u_1} R (Ring.toSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10))))) (Int.cast.{u_1} R (Ring.toAddGroupWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10) n) m)
 Case conversion may be inaccurate. Consider using '#align int.cast_pow Int.cast_powₓ'. -/
-@[simp, norm_cast]
+@[norm_cast]
 theorem Int.cast_pow [Ring R] (n : ℤ) (m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := by
   induction' m with m ih
   · rw [pow_zero, pow_zero, Int.cast_one]

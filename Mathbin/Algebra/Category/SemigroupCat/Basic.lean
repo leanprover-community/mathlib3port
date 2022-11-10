@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Mathbin.Algebra.PemptyInstances
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.Elementwise

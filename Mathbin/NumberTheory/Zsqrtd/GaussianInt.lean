@@ -148,12 +148,12 @@ theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs
 
 instance : Div ℤ[i] :=
   ⟨fun x y =>
-    let n := (Rat.ofInt (norm y))⁻¹
+    let n := (norm y : ℚ)⁻¹
     let c := y.conj
-    ⟨round (Rat.ofInt (x * c).re * n : ℚ), round (Rat.ofInt (x * c).im * n : ℚ)⟩⟩
+    ⟨round ((x * c).re * n : ℚ), round ((x * c).im * n : ℚ)⟩⟩
 
 theorem div_def (x y : ℤ[i]) : x / y = ⟨round ((x * conj y).re / norm y : ℚ), round ((x * conj y).im / norm y : ℚ)⟩ :=
-  show Zsqrtd.mk _ _ = _ by simp [Rat.of_int_eq_mk, Rat.mk_eq_div, div_eq_mul_inv]
+  show Zsqrtd.mk _ _ = _ by simp [div_eq_mul_inv]
 
 theorem to_complex_div_re (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).re = round (x / y : ℂ).re := by
   rw [div_def, ← @Rat.round_cast ℝ _ _] <;> simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_add, add_mul]

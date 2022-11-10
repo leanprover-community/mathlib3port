@@ -3,78 +3,23 @@ Copyright (c) 2018 Louis Carlin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 -/
-import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.EuclideanDomain.Defs
+import Mathbin.Algebra.Ring.Divisibility
+import Mathbin.Algebra.Ring.Regular
+import Mathbin.Algebra.Field.Defs
+import Mathbin.Algebra.GroupWithZero.Divisibility
 
 /-!
-# Euclidean domains
-
-This file introduces Euclidean domains and provides the extended Euclidean algorithm. To be precise,
-a slightly more general version is provided which is sometimes called a transfinite Euclidean domain
-and differs in the fact that the degree function need not take values in `ℕ` but can take values in
-any well-ordered set. Transfinite Euclidean domains were introduced by Motzkin and examples which
-don't satisfy the classical notion were provided independently by Hiblot and Nagata.
-
-## Main definitions
-
-* `euclidean_domain`: Defines Euclidean domain with functions `quotient` and `remainder`. Instances
-  of `has_div` and `has_mod` are provided, so that one can write `a = b * (a / b) + a % b`.
-* `gcd`: defines the greatest common divisors of two elements of a Euclidean domain.
-* `xgcd`: given two elements `a b : R`, `xgcd a b` defines the pair `(x, y)` such that
-  `x * a + y * b = gcd a b`.
-* `lcm`: defines the lowest common multiple of two elements `a` and `b` of a Euclidean domain as
-  `a * b / (gcd a b)`
+# Lemmas about Euclidean domains
 
 ## Main statements
 
 * `gcd_eq_gcd_ab`: states Bézout's lemma for Euclidean domains.
-* `int.euclidean_domain`: shows that `ℤ` is a Euclidean domain.
-* `field.to_euclidean_domain`: shows that any field is a Euclidean domain.
 
-## Notation
-
-`≺` denotes the well founded relation on the Euclidean domain, e.g. in the example of the polynomial
-ring over a field, `p ≺ q` for polynomials `p` and `q` if and only if the degree of `p` is less than
-the degree of `q`.
-
-## Implementation details
-
-Instead of working with a valuation, `euclidean_domain` is implemented with the existence of a well
-founded relation `r` on the integral domain `R`, which in the example of `ℤ` would correspond to
-setting `i ≺ j` for integers `i` and `j` if the absolute value of `i` is smaller than the absolute
-value of `j`.
-
-## References
-
-* [Th. Motzkin, *The Euclidean algorithm*][MR32592]
-* [J.-J. Hiblot, *Des anneaux euclidiens dont le plus petit algorithme n'est pas à valeurs finies*]
-  [MR399081]
-* [M. Nagata, *On Euclid algorithm*][MR541021]
-
-
-## Tags
-
-Euclidean domain, transfinite Euclidean domain, Bézout's lemma
 -/
 
 
 universe u
-
-/-- A `euclidean_domain` is an non-trivial commutative ring with a division and a remainder,
-  satisfying `b * (a / b) + a % b = a`.
-  The definition of a euclidean domain usually includes a valuation function `R → ℕ`.
-  This definition is slightly generalised to include a well founded relation
-  `r` with the property that `r (a % b) b`, instead of a valuation.  -/
-@[protect_proj without mul_left_not_lt r_well_founded]
-class EuclideanDomain (R : Type u) extends CommRing R, Nontrivial R where
-  Quotient : R → R → R
-  quotient_zero : ∀ a, Quotient a 0 = 0
-  remainder : R → R → R
-  quotient_mul_add_remainder_eq : ∀ a b, b * Quotient a b + remainder a b = a
-  R : R → R → Prop
-  r_well_founded : WellFounded r
-  remainderLt : ∀ (a) {b}, b ≠ 0 → r (remainder a b) b
-  mul_left_not_lt : ∀ (a) {b}, b ≠ 0 → ¬r (a * b) a
 
 namespace EuclideanDomain
 
@@ -84,41 +29,6 @@ variable [EuclideanDomain R]
 
 -- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => EuclideanDomain.R
-
--- see Note [lower instance priority]
-instance (priority := 70) : Div R :=
-  ⟨EuclideanDomain.quotient⟩
-
--- see Note [lower instance priority]
-instance (priority := 70) : Mod R :=
-  ⟨EuclideanDomain.remainder⟩
-
-theorem div_add_mod (a b : R) : b * (a / b) + a % b = a :=
-  EuclideanDomain.quotient_mul_add_remainder_eq _ _
-
-theorem mod_add_div (a b : R) : a % b + b * (a / b) = a :=
-  (add_comm _ _).trans (div_add_mod _ _)
-
-theorem mod_add_div' (m k : R) : m % k + m / k * k = m := by
-  rw [mul_comm]
-  exact mod_add_div _ _
-
-theorem div_add_mod' (m k : R) : m / k * k + m % k = m := by
-  rw [mul_comm]
-  exact div_add_mod _ _
-
-theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = a - b * (a / b) :=
-  calc
-    a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel' _ _).symm
-    _ = a - b * (a / b) := by rw [div_add_mod]
-    
-
-theorem modLt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
-  EuclideanDomain.remainderLt
-
-theorem mul_right_not_lt {a : R} (b) (h : a ≠ 0) : ¬a * b ≺ b := by
-  rw [mul_comm]
-  exact mul_left_not_lt b h
 
 theorem mul_div_cancel_left {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
   Eq.symm <|
@@ -131,9 +41,6 @@ theorem mul_div_cancel_left {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
 theorem mul_div_cancel (a) {b : R} (b0 : b ≠ 0) : a * b / b = a := by
   rw [mul_comm]
   exact mul_div_cancel_left a b0
-
-@[simp]
-theorem mod_zero (a : R) : a % 0 = a := by simpa only [zero_mul, zero_add] using div_add_mod a 0
 
 @[simp]
 theorem mod_eq_zero {a b : R} : a % b = 0 ↔ b ∣ a :=
@@ -155,19 +62,6 @@ theorem mod_self (a : R) : a % a = 0 :=
 theorem dvd_mod_iff {a b c : R} (h : c ∣ b) : c ∣ a % b ↔ c ∣ a := by
   rw [dvd_add_iff_right (h.mul_right _), div_add_mod]
 
-theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 :=
-  haveI := Classical.dec
-  not_imp_not.1 fun h => by simpa only [one_mul] using mul_left_not_lt 1 h
-
-theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
-  | _, b, ⟨d, rfl⟩, ha =>
-    mul_left_not_lt b
-      (mt
-        (by
-          rintro rfl
-          exact mul_zero _)
-        ha)
-
 @[simp]
 theorem mod_one (a : R) : a % 1 = 0 :=
   mod_eq_zero.2 (one_dvd _)
@@ -175,10 +69,6 @@ theorem mod_one (a : R) : a % 1 = 0 :=
 @[simp]
 theorem zero_mod (b : R) : 0 % b = 0 :=
   mod_eq_zero.2 (dvd_zero _)
-
-@[simp]
-theorem div_zero (a : R) : a / 0 = 0 :=
-  EuclideanDomain.quotient_zero a
 
 @[simp]
 theorem zero_div {a : R} : 0 / a = 0 :=
@@ -224,37 +114,9 @@ theorem dvd_div_of_mul_dvd {a b c : R} (h : a * b ∣ c) : b ∣ c / a := by
   refine' ⟨d, _⟩
   rw [mul_assoc, mul_div_cancel_left _ ha]
 
-section
-
-open Classical
-
-@[elab_as_elim]
-theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
-  | a => fun b H0 H1 =>
-    if a0 : a = 0 then a0.symm ▸ H0 _
-    else
-      have h := modLt b a0
-      H1 _ _ a0 (gcd.induction (b % a) a H0 H1)
-
-end
-
 section Gcd
 
 variable [DecidableEq R]
-
-/-- `gcd a b` is a (non-unique) element such that `gcd a b ∣ a` `gcd a b ∣ b`, and for
-  any element `c` such that `c ∣ a` and `c ∣ b`, then `c ∣ gcd a b` -/
-def gcd : R → R → R
-  | a => fun b =>
-    if a0 : a = 0 then b
-    else
-      have h := modLt b a0
-      gcd (b % a) a
-
-@[simp]
-theorem gcd_zero_left (a : R) : gcd 0 a = a := by
-  rw [gcd]
-  exact if_pos rfl
 
 @[simp]
 theorem gcd_zero_right (a : R) : gcd a 0 = a := by
@@ -303,58 +165,6 @@ theorem gcd_one_left (a : R) : gcd 1 a = 1 :=
 theorem gcd_self (a : R) : gcd a a = a :=
   gcd_eq_left.2 dvd_rfl
 
-/-- An implementation of the extended GCD algorithm.
-At each step we are computing a triple `(r, s, t)`, where `r` is the next value of the GCD
-algorithm, to compute the greatest common divisor of the input (say `x` and `y`), and `s` and `t`
-are the coefficients in front of `x` and `y` to obtain `r` (i.e. `r = s * x + t * y`).
-The function `xgcd_aux` takes in two triples, and from these recursively computes the next triple:
-```
-xgcd_aux (r, s, t) (r', s', t') = xgcd_aux (r' % r, s' - (r' / r) * s, t' - (r' / r) * t) (r, s, t)
-```
--/
-def xgcdAux : R → R → R → R → R → R → R × R × R
-  | r => fun s t r' s' t' =>
-    if hr : r = 0 then (r', s', t')
-    else
-      have : r' % r ≺ r := modLt _ hr
-      let q := r' / r
-      xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
-
-@[simp]
-theorem xgcd_zero_left {s t r' s' t' : R} : xgcdAux 0 s t r' s' t' = (r', s', t') := by
-  unfold xgcd_aux
-  exact if_pos rfl
-
-theorem xgcd_aux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
-    xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
-  conv =>
-  lhs
-  rw [xgcd_aux]
-  exact if_neg h
-
-/-- Use the extended GCD algorithm to generate the `a` and `b` values
-  satisfying `gcd x y = x * a + y * b`. -/
-def xgcd (x y : R) : R × R :=
-  (xgcdAux x 1 0 y 0 1).2
-
-/-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
-def gcdA (x y : R) : R :=
-  (xgcd x y).1
-
-/-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
-def gcdB (x y : R) : R :=
-  (xgcd x y).2
-
-@[simp]
-theorem gcd_a_zero_left {s : R} : gcdA 0 s = 0 := by
-  unfold gcd_a
-  rw [xgcd, xgcd_zero_left]
-
-@[simp]
-theorem gcd_b_zero_left {s : R} : gcdB 0 s = 1 := by
-  unfold gcd_b
-  rw [xgcd, xgcd_zero_left]
-
 @[simp]
 theorem xgcd_aux_fst (x y : R) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd x y :=
   Gcd.induction x y
@@ -367,9 +177,6 @@ theorem xgcd_aux_fst (x y : R) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd 
 
 theorem xgcd_aux_val (x y : R) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
   rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1, Prod.mk.eta]
-
-theorem xgcd_val (x y : R) : xgcd x y = (gcdA x y, gcdB x y) :=
-  Prod.mk.eta.symm
 
 private def P (a b : R) : R × R × R → Prop
   | (r, s, t) => (r : R) = a * s + b * t
@@ -405,11 +212,6 @@ end Gcd
 section Lcm
 
 variable [DecidableEq R]
-
-/-- `lcm a b` is a (non-unique) element such that `a ∣ lcm a b` `b ∣ lcm a b`, and for
-  any element `c` such that `a ∣ c` and `b ∣ c`, then `lcm a b ∣ c` -/
-def lcm (x y : R) : R :=
-  x * y / gcd x y
 
 theorem dvd_lcm_left (x y : R) : x ∣ lcm x y :=
   Classical.by_cases
@@ -527,31 +329,4 @@ theorem mul_div_mul_comm_of_dvd_dvd {a b c d : R} (hac : c ∣ a) (hbd : d ∣ b
 end Div
 
 end EuclideanDomain
-
-instance Int.euclideanDomain : EuclideanDomain ℤ :=
-  { Int.commRing, Int.nontrivial with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg,
-    Quotient := (· / ·), quotient_zero := Int.div_zero, remainder := (· % ·),
-    quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.natAbs < b.natAbs,
-    r_well_founded := measure_wf fun a => Int.natAbs a,
-    remainderLt := fun a b b0 =>
-      Int.coe_nat_lt.1 <| by
-        rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
-        exact Int.mod_lt _ b0,
-    mul_left_not_lt := fun a b b0 =>
-      not_lt_of_ge <| by
-        rw [← mul_one a.nat_abs, Int.nat_abs_mul]
-        exact mul_le_mul_of_nonneg_left (Int.nat_abs_pos_of_ne_zero b0) (Nat.zero_le _) }
-
--- see Note [lower instance priority]
-instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : EuclideanDomain K :=
-  { ‹Field K› with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg, Quotient := (· / ·),
-    remainder := fun a b => a - a * b / b, quotient_zero := div_zero,
-    quotient_mul_add_remainder_eq := fun a b => by
-      classical
-      by_cases b = 0 <;> simp [h, mul_div_cancel'],
-    R := fun a b => a = 0 ∧ b ≠ 0,
-    r_well_founded :=
-      WellFounded.intro fun a => (Acc.intro _) fun b ⟨hb, hna⟩ => (Acc.intro _) fun c ⟨hc, hnb⟩ => False.elim <| hnb hb,
-    remainderLt := fun a b hnb => by simp [hnb],
-    mul_left_not_lt := fun a b hnb ⟨hab, hna⟩ => Or.cases_on (mul_eq_zero.1 hab) hna hnb }
 

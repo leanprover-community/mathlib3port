@@ -1,0 +1,91 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
+import Mathbin.Data.Polynomial.Splits
+import Mathbin.RingTheory.Adjoin.Basic
+import Mathbin.RingTheory.AdjoinRoot
+
+/-!
+# Adjoining elements to a field
+
+Some lemmas on the ring generating by adjoining an element to a field.
+
+## Main statements
+
+* `lift_of_splits`: If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
+the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`.
+
+-/
+
+
+noncomputable section
+
+open BigOperators Polynomial
+
+section Embeddings
+
+variable (F : Type _) [Field F]
+
+/-- If `p` is the minimal polynomial of `a` over `F` then `F[a] ≃ₐ[F] F[x]/(p)` -/
+def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Algebra F R] (x : R) :
+    Algebra.adjoin F ({x} : Set R) ≃ₐ[F] AdjoinRoot (minpoly F x) :=
+  AlgEquiv.symm <|
+    AlgEquiv.ofBijective
+      (AlgHom.codRestrict (AdjoinRoot.liftHom _ x <| minpoly.aeval F x) _ fun p =>
+        (AdjoinRoot.induction_on _ p) fun p =>
+          (Algebra.adjoin_singleton_eq_range_aeval F x).symm ▸ (Polynomial.aeval _).mem_range.mpr ⟨p, rfl⟩)
+      ⟨(AlgHom.injective_cod_restrict _ _ _).2 <|
+          (injective_iff_map_eq_zero _).2 fun p =>
+            (AdjoinRoot.induction_on _ p) fun p hp =>
+              Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 <| minpoly.dvd F x hp,
+        fun y =>
+        let ⟨p, hp⟩ := (SetLike.ext_iff.1 (Algebra.adjoin_singleton_eq_range_aeval F x) (y : R)).1 y.2
+        ⟨AdjoinRoot.mk _ p, Subtype.eq hp⟩⟩
+
+open Finset
+
+/-- If a `subalgebra` is finite_dimensional as a submodule then it is `finite_dimensional`. -/
+theorem FiniteDimensional.ofSubalgebraToSubmodule {K V : Type _} [Field K] [Ring V] [Algebra K V] {s : Subalgebra K V}
+    (h : FiniteDimensional K s.toSubmodule) : FiniteDimensional K s :=
+  h
+
+/-- If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
+the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`. -/
+theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L] (s : Finset K) :
+    (∀ x ∈ s, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
+      Nonempty (Algebra.adjoin F (↑s : Set K) →ₐ[F] L) :=
+  by
+  classical
+  refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
+  · rw [coe_empty, Algebra.adjoin_empty]
+    exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
+    
+  rw [forall_mem_insert] at H
+  rcases H with ⟨⟨H1, H2⟩, H3⟩
+  cases' ih H3 with f
+  choose H3 H4 using H3
+  rw [coe_insert, Set.insert_eq, Set.union_comm, Algebra.adjoin_union_eq_adjoin_adjoin]
+  letI := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
+  haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
+    ((Submodule.fg_iff_finite_dimensional _).1 (fg_adjoin_of_finite s.finite_to_set H3)).ofSubalgebraToSubmodule
+  letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
+  have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := isIntegralOfIsScalarTower H1
+  have H6 : (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits (algebraMap (Algebra.adjoin F (↑s : Set K)) L) := by
+    refine'
+      Polynomial.splitsOfSplitsOfDvd _
+        (Polynomial.map_ne_zero <| minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
+        ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
+    · rw [← IsScalarTower.algebra_map_eq]
+      exact H2
+      
+    · rw [Polynomial.aeval_map_algebra_map, minpoly.aeval]
+      
+  obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (ne_of_lt (minpoly.degree_pos H5)).symm
+  refine' ⟨Subalgebra.ofRestrictScalars _ _ _⟩
+  refine' (AdjoinRoot.liftHom (minpoly (Algebra.adjoin F (↑s : Set K)) a) y hy).comp _
+  exact AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly (Algebra.adjoin F (↑s : Set K)) a
+
+end Embeddings
+

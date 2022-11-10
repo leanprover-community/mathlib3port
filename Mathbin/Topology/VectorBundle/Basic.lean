@@ -46,139 +46,87 @@ noncomputable section
 
 open Bundle Set
 
-open Classical
+open Classical Bundle
 
 variable (R 𝕜 : Type _) {B : Type _} (F : Type _) (E : B → Type _)
 
 section TopologicalVectorSpace
 
-variable [Semiring R] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoid F]
-  [Module R F] [TopologicalSpace B]
+variable {B F E} [Semiring R] [TopologicalSpace F] [TopologicalSpace B]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
-/-- A pretrivialization for a (yet to be defined) topological vector bundle `total_space E` is a
-local equiv between sets of the form `proj ⁻¹' base_set` and `base_set × F` which respects the
-first coordinate, and is linear in each fiber. -/
-@[ext, nolint has_nonempty_instance]
-structure TopologicalVectorBundle.Pretrivialization extends
-  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure" where
-  linear' : ∀ x ∈ base_set, IsLinearMap R fun y : E x => (to_fun (totalSpaceMk x y)).2
+/-- A mixin class for `pretrivialization`, stating that a pretrivialization is fibrewise linear with
+respect to given module structures on its fibres and the model fibre. -/
+protected class Pretrivialization.IsLinear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)]
+  [∀ x, Module R (E x)] (e : Pretrivialization F (π E)) : Prop where
+  linear : ∀ b ∈ e.BaseSet, IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2
 
-instance : CoeFun (TopologicalVectorBundle.Pretrivialization R F E) _ :=
-  ⟨fun e => e.toFun⟩
+namespace Pretrivialization
 
-instance :
-    Coe (TopologicalVectorBundle.Pretrivialization R F E)
-      (TopologicalFiberBundle.Pretrivialization F (@TotalSpace.proj B E)) :=
-  ⟨TopologicalVectorBundle.Pretrivialization.toFiberBundlePretrivialization⟩
+variable {F E} (e : Pretrivialization F (π E)) {x : TotalSpace E} {b : B} {y : E b}
 
-namespace TopologicalVectorBundle.Pretrivialization
-
-open TopologicalVectorBundle
-
-variable {R F E} (e : Pretrivialization R F E) {x : TotalSpace E} {b : B} {y : E b}
-
-protected theorem linear (hb : b ∈ e.BaseSet) : IsLinearMap R fun y : E b => (e (totalSpaceMk b y)).2 :=
-  e.linear' b hb
-
-@[simp, mfld_simps]
-theorem coe_coe : ⇑e.toLocalEquiv = e :=
-  rfl
-
-@[simp, mfld_simps]
-theorem coe_fst (ex : x ∈ e.Source) : (e x).1 = x.proj :=
-  e.proj_to_fun x ex
-
-theorem mem_source : x ∈ e.Source ↔ x.proj ∈ e.BaseSet := by rw [e.source_eq, mem_preimage]
+theorem linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [e.is_linear R] {b : B}
+    (hb : b ∈ e.BaseSet) : IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2 :=
+  Pretrivialization.IsLinear.linear b hb
 
 theorem coe_mem_source : ↑y ∈ e.Source ↔ b ∈ e.BaseSet :=
   e.mem_source
-
-theorem coe_fst' (ex : x.proj ∈ e.BaseSet) : (e x).1 = x.proj :=
-  e.coe_fst (e.mem_source.2 ex)
-
-protected theorem eq_on : EqOn (Prod.fst ∘ e) TotalSpace.proj e.Source := fun x hx => e.coe_fst hx
-
-theorem mk_proj_snd (ex : x ∈ e.Source) : (x.proj, (e x).2) = e x :=
-  Prod.ext (e.coe_fst ex).symm rfl
 
 @[simp, mfld_simps]
 theorem coe_coe_fst (hb : b ∈ e.BaseSet) : (e y).1 = b :=
   e.coe_fst (e.mem_source.2 hb)
 
-theorem mk_proj_snd' (ex : x.proj ∈ e.BaseSet) : (x.proj, (e x).2) = e x :=
-  Prod.ext (e.coe_fst' ex).symm rfl
-
-theorem mem_target {x : B × F} : x ∈ e.Target ↔ x.1 ∈ e.BaseSet :=
-  e.toFiberBundlePretrivialization.mem_target
-
 theorem mk_mem_target {x : B} {y : F} : (x, y) ∈ e.Target ↔ x ∈ e.BaseSet :=
   e.mem_target
 
-theorem proj_symm_apply {x : B × F} (hx : x ∈ e.Target) : (e.toLocalEquiv.symm x).proj = x.1 :=
-  e.toFiberBundlePretrivialization.proj_symm_apply hx
-
-theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : (e.toLocalEquiv.symm (b, x)).proj = b :=
-  e.proj_symm_apply (e.mem_target.2 hx)
-
-theorem apply_symm_apply {x : B × F} (hx : x ∈ e.Target) : e (e.toLocalEquiv.symm x) = x :=
-  e.toLocalEquiv.right_inv hx
-
-theorem symm_apply_apply {x : TotalSpace E} (hx : x ∈ e.Source) : e.toLocalEquiv.symm (e x) = x :=
-  e.toLocalEquiv.left_inv hx
-
-theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : e (e.toLocalEquiv.symm (b, x)) = (b, x) :=
-  e.apply_symm_apply (e.mem_target.2 hx)
-
-@[simp, mfld_simps]
-theorem symm_apply_mk_proj (ex : x ∈ e.Source) : e.toLocalEquiv.symm (x.proj, (e x).2) = x := by
-  rw [← e.coe_fst ex, Prod.mk.eta, ← e.coe_coe, e.to_local_equiv.left_inv ex]
-
-@[simp, mfld_simps]
-theorem preimage_symm_proj_base_set : e.toLocalEquiv.symm ⁻¹' (total_space.proj ⁻¹' e.BaseSet) ∩ e.Target = e.Target :=
-  e.toFiberBundlePretrivialization.preimage_symm_proj_base_set
-
-theorem symm_coe_proj {x : B} {y : F} (e : Pretrivialization R F E) (h : x ∈ e.BaseSet) :
+theorem symm_coe_proj {x : B} {y : F} (e : Pretrivialization F (π E)) (h : x ∈ e.BaseSet) :
     (e.toLocalEquiv.symm (x, y)).1 = x :=
   e.proj_symm_apply' h
 
+section Zero
+
+variable [∀ x, Zero (E x)]
+
 /-- A fiberwise inverse to `e`. This is the function `F → E b` that induces a local inverse
 `B × F → total_space E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
-protected def symm (e : Pretrivialization R F E) (b : B) (y : F) : E b :=
+protected def symm (e : Pretrivialization F (π E)) (b : B) (y : F) : E b :=
   if hb : b ∈ e.BaseSet then cast (congr_arg E (e.proj_symm_apply' hb)) (e.toLocalEquiv.symm (b, y)).2 else 0
 
-theorem symm_apply (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+theorem symm_apply (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
     e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalEquiv.symm (b, y)).2 :=
   dif_pos hb
 
-theorem symm_apply_of_not_mem (e : Pretrivialization R F E) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
+theorem symm_apply_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
   dif_neg hb
 
-theorem coe_symm_of_not_mem (e : Pretrivialization R F E) {b : B} (hb : b ∉ e.BaseSet) : (e.symm b : F → E b) = 0 :=
+theorem coe_symm_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.BaseSet) : (e.symm b : F → E b) = 0 :=
   funext fun y => dif_neg hb
 
-theorem mk_symm (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+theorem mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
     totalSpaceMk b (e.symm b y) = e.toLocalEquiv.symm (b, y) := by
   rw [e.symm_apply hb, total_space.mk_cast, total_space.eta]
 
-theorem symm_proj_apply (e : Pretrivialization R F E) (z : TotalSpace E) (hz : z.proj ∈ e.BaseSet) :
+theorem symm_proj_apply (e : Pretrivialization F (π E)) (z : TotalSpace E) (hz : z.proj ∈ e.BaseSet) :
     e.symm z.proj (e z).2 = z.2 := by
   rw [e.symm_apply hz, cast_eq_iff_heq, e.mk_proj_snd' hz, e.symm_apply_apply (e.mem_source.mpr hz)]
 
-theorem symm_apply_apply_mk (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
+theorem symm_apply_apply_mk (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
     e.symm b (e (totalSpaceMk b y)).2 = y :=
   e.symm_proj_apply (totalSpaceMk b y) hb
 
-theorem apply_mk_symm (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+theorem apply_mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
     e (totalSpaceMk b (e.symm b y)) = (b, y) := by rw [e.mk_symm hb, e.apply_symm_apply (e.mk_mem_target.mpr hb)]
+
+end Zero
+
+variable [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
 
 /-- A fiberwise linear inverse to `e`. -/
 @[simps]
-protected def symmₗ (e : Pretrivialization R F E) (b : B) : F →ₗ[R] E b := by
+protected def symmₗ (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) : F →ₗ[R] E b := by
   refine' IsLinearMap.mk' (e.symm b) _
   by_cases hb:b ∈ e.base_set
   · exact
-      (((e.linear hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
+      (((e.linear R hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
           congr_arg Prod.snd <| e.apply_mk_symm hb v).is_linear
     
   · rw [e.coe_symm_of_not_mem hb]
@@ -188,115 +136,80 @@ protected def symmₗ (e : Pretrivialization R F E) (b : B) : F →ₗ[R] E b :=
 /-- A pretrivialization for a topological vector bundle defines linear equivalences between the
 fibers and the model space. -/
 @[simps (config := { fullyApplied := false })]
-def linearEquivAt (e : Pretrivialization R F E) (b : B) (hb : b ∈ e.BaseSet) : E b ≃ₗ[R] F where
+def linearEquivAt (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) (hb : b ∈ e.BaseSet) : E b ≃ₗ[R] F where
   toFun y := (e (totalSpaceMk b y)).2
   invFun := e.symm b
   left_inv := e.symm_apply_apply_mk hb
   right_inv v := by simp_rw [e.apply_mk_symm hb v]
-  map_add' v w := (e.linear hb).map_add v w
-  map_smul' c v := (e.linear hb).map_smul c v
+  map_add' v w := (e.linear R hb).map_add v w
+  map_smul' c v := (e.linear R hb).map_smul c v
 
 /-- A fiberwise linear map equal to `e` on `e.base_set`. -/
-protected def linearMapAt (e : Pretrivialization R F E) (b : B) : E b →ₗ[R] F :=
-  if hb : b ∈ e.BaseSet then e.linearEquivAt b hb else 0
+protected def linearMapAt (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) : E b →ₗ[R] F :=
+  if hb : b ∈ e.BaseSet then e.linearEquivAt R b hb else 0
 
-theorem coe_linear_map_at (e : Pretrivialization R F E) (b : B) :
-    ⇑(e.linearMapAt b) = fun y => if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 := by
-  rw [pretrivialization.linear_map_at]
+variable {R}
+
+theorem coe_linear_map_at (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) :
+    ⇑(e.linearMapAt R b) = fun y => if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 := by
+  rw [Pretrivialization.linearMapAt]
   split_ifs <;> rfl
 
-theorem coe_linear_map_at_of_mem (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) :
-    ⇑(e.linearMapAt b) = fun y => (e (totalSpaceMk b y)).2 := by simp_rw [coe_linear_map_at, if_pos hb]
+theorem coe_linear_map_at_of_mem (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) :
+    ⇑(e.linearMapAt R b) = fun y => (e (totalSpaceMk b y)).2 := by simp_rw [coe_linear_map_at, if_pos hb]
 
-theorem linear_map_at_apply (e : Pretrivialization R F E) {b : B} (y : E b) :
-    e.linearMapAt b y = if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 := by rw [coe_linear_map_at]
+theorem linear_map_at_apply (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (y : E b) :
+    e.linearMapAt R b y = if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 := by rw [coe_linear_map_at]
 
-theorem linear_map_at_def_of_mem (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) :
-    e.linearMapAt b = e.linearEquivAt b hb :=
+theorem linear_map_at_def_of_mem (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) :
+    e.linearMapAt R b = e.linearEquivAt R b hb :=
   dif_pos hb
 
-theorem linear_map_at_def_of_not_mem (e : Pretrivialization R F E) {b : B} (hb : b ∉ e.BaseSet) : e.linearMapAt b = 0 :=
+theorem linear_map_at_def_of_not_mem (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∉ e.BaseSet) :
+    e.linearMapAt R b = 0 :=
   dif_neg hb
 
-theorem linear_map_at_eq_zero (e : Pretrivialization R F E) {b : B} (hb : b ∉ e.BaseSet) : e.linearMapAt b = 0 :=
+theorem linear_map_at_eq_zero (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∉ e.BaseSet) :
+    e.linearMapAt R b = 0 :=
   dif_neg hb
 
-theorem symmₗ_linear_map_at (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
-    e.symmₗ b (e.linearMapAt b y) = y := by
+theorem symmₗ_linear_map_at (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
+    e.symmₗ R b (e.linearMapAt R b y) = y := by
   rw [e.linear_map_at_def_of_mem hb]
-  exact (e.linear_equiv_at b hb).left_inv y
+  exact (e.linear_equiv_at R b hb).left_inv y
 
-theorem linear_map_at_symmₗ (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.linearMapAt b (e.symmₗ b y) = y := by
+theorem linear_map_at_symmₗ (e : Pretrivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+    e.linearMapAt R b (e.symmₗ R b y) = y := by
   rw [e.linear_map_at_def_of_mem hb]
-  exact (e.linear_equiv_at b hb).right_inv y
+  exact (e.linear_equiv_at R b hb).right_inv y
 
-end TopologicalVectorBundle.Pretrivialization
+end Pretrivialization
 
-variable [TopologicalSpace (TotalSpace E)]
+variable (R) [TopologicalSpace (TotalSpace E)]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure -/
-/-- A structure extending local homeomorphisms, defining a local trivialization of the projection
-`proj : total_space E → B` with fiber `F`, as a local homeomorphism between `total_space E`
-and `B × F` defined between two sets of the form `proj ⁻¹' base_set` and `base_set × F`,
-acting trivially on the first coordinate and linear in the fibers.
--/
-@[ext, nolint has_nonempty_instance]
-structure TopologicalVectorBundle.Trivialization extends
-  "./././Mathport/Syntax/Translate/Command.lean:381:11: unsupported: advanced extends in structure" where
-  linear' : ∀ x ∈ base_set, IsLinearMap R fun y : E x => (to_fun (totalSpaceMk x y)).2
+/-- A mixin class for `trivialization`, stating that a trivialization is fibrewise linear with
+respect to given module structures on its fibres and the model fibre. -/
+protected class Trivialization.IsLinear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
+  (e : Trivialization F (π E)) : Prop where
+  linear : ∀ b ∈ e.BaseSet, IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2
 
-open TopologicalVectorBundle
+namespace Trivialization
 
-instance : CoeFun (Trivialization R F E) fun _ => TotalSpace E → B × F :=
-  ⟨fun e => e.toFun⟩
+variable (e : Trivialization F (π E)) {x : TotalSpace E} {b : B} {y : E b}
 
-instance : Coe (Trivialization R F E) (TopologicalFiberBundle.Trivialization F (@TotalSpace.proj B E)) :=
-  ⟨TopologicalVectorBundle.Trivialization.toFiberBundleTrivialization⟩
+protected theorem linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [e.is_linear R]
+    {b : B} (hb : b ∈ e.BaseSet) : IsLinearMap R fun y : E b => (e (totalSpaceMk b y)).2 :=
+  Trivialization.IsLinear.linear b hb
 
-namespace TopologicalVectorBundle.Trivialization
-
-variable {R F E} (e : Trivialization R F E) {x : TotalSpace E} {b : B} {y : E b}
-
-/-- Natural identification as `topological_vector_bundle.pretrivialization`. -/
-def toPretrivialization (e : Trivialization R F E) : TopologicalVectorBundle.Pretrivialization R F E :=
-  { e with }
-
-protected theorem linear (hb : b ∈ e.BaseSet) : IsLinearMap R fun y : E b => (e (totalSpaceMk b y)).2 :=
-  e.linear' b hb
+instance toPretrivialization.is_linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
+    [e.is_linear R] : e.toPretrivialization.is_linear R :=
+  { (‹_› : e.is_linear R) with }
 
 protected theorem continuous_on : ContinuousOn e e.Source :=
   e.continuous_to_fun
 
-theorem to_pretrivialization_injective : Function.Injective fun e : Trivialization R F E => e.toPretrivialization := by
-  intro e e'
-  rw [pretrivialization.ext_iff, trivialization.ext_iff, ←
-    topological_fiber_bundle.trivialization.to_pretrivialization_injective.eq_iff]
-  exact id
-
-@[simp, mfld_simps]
-theorem coe_coe : ⇑e.toLocalHomeomorph = e :=
-  rfl
-
-@[simp, mfld_simps]
-theorem coe_fst (ex : x ∈ e.Source) : (e x).1 = x.proj :=
-  e.proj_to_fun x ex
-
-theorem mem_source : x ∈ e.Source ↔ x.proj ∈ e.BaseSet := by rw [e.source_eq, mem_preimage]
-
 theorem coe_mem_source : ↑y ∈ e.Source ↔ b ∈ e.BaseSet :=
   e.mem_source
-
-theorem coe_fst' (ex : x.proj ∈ e.BaseSet) : (e x).1 = x.proj :=
-  e.coe_fst (e.mem_source.2 ex)
-
-protected theorem eq_on : EqOn (Prod.fst ∘ e) TotalSpace.proj e.Source := fun x hx => e.coe_fst hx
-
-theorem mk_proj_snd (ex : x ∈ e.Source) : (x.proj, (e x).2) = e x :=
-  Prod.ext (e.coe_fst ex).symm rfl
-
-theorem mk_proj_snd' (ex : x.proj ∈ e.BaseSet) : (x.proj, (e x).2) = e x :=
-  Prod.ext (e.coe_fst' ex).symm rfl
 
 theorem open_target : IsOpen e.Target := by
   rw [e.target_eq]
@@ -306,69 +219,52 @@ theorem open_target : IsOpen e.Target := by
 theorem coe_coe_fst (hb : b ∈ e.BaseSet) : (e y).1 = b :=
   e.coe_fst (e.mem_source.2 hb)
 
-theorem source_inter_preimage_target_inter (s : Set (B × F)) : e.Source ∩ e ⁻¹' (e.Target ∩ s) = e.Source ∩ e ⁻¹' s :=
-  e.toLocalHomeomorph.source_inter_preimage_target_inter s
-
-theorem mem_target {x : B × F} : x ∈ e.Target ↔ x.1 ∈ e.BaseSet :=
-  e.toPretrivialization.mem_target
-
 theorem mk_mem_target {y : F} : (b, y) ∈ e.Target ↔ b ∈ e.BaseSet :=
   e.toPretrivialization.mem_target
-
-theorem map_target {x : B × F} (hx : x ∈ e.Target) : e.toLocalHomeomorph.symm x ∈ e.Source :=
-  e.toLocalHomeomorph.map_target hx
-
-theorem proj_symm_apply {x : B × F} (hx : x ∈ e.Target) : (e.toLocalHomeomorph.symm x).proj = x.1 :=
-  e.toPretrivialization.proj_symm_apply hx
-
-theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : (e.toLocalHomeomorph.symm (b, x)).proj = b :=
-  e.toPretrivialization.proj_symm_apply' hx
-
-theorem apply_symm_apply {x : B × F} (hx : x ∈ e.Target) : e (e.toLocalHomeomorph.symm x) = x :=
-  e.toLocalHomeomorph.right_inv hx
-
-theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : e (e.toLocalHomeomorph.symm (b, x)) = (b, x) :=
-  e.toPretrivialization.apply_symm_apply' hx
 
 theorem symm_apply_apply {x : TotalSpace E} (hx : x ∈ e.Source) : e.toLocalHomeomorph.symm (e x) = x :=
   e.toLocalEquiv.left_inv hx
 
 @[simp, mfld_simps]
-theorem symm_coe_proj {x : B} {y : F} (e : Trivialization R F E) (h : x ∈ e.BaseSet) :
+theorem symm_coe_proj {x : B} {y : F} (e : Trivialization F (π E)) (h : x ∈ e.BaseSet) :
     (e.toLocalHomeomorph.symm (x, y)).1 = x :=
   e.proj_symm_apply' h
 
+section Zero
+
+variable [∀ x, Zero (E x)]
+
 /-- A fiberwise inverse to `e`. The function `F → E x` that induces a local inverse
   `B × F → total_space E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
-protected def symm (e : Trivialization R F E) (b : B) (y : F) : E b :=
+protected def symm (e : Trivialization F (π E)) (b : B) (y : F) : E b :=
   e.toPretrivialization.symm b y
 
-theorem symm_apply (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+theorem symm_apply (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
     e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalHomeomorph.symm (b, y)).2 :=
   dif_pos hb
 
-theorem symm_apply_of_not_mem (e : Trivialization R F E) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
+theorem symm_apply_of_not_mem (e : Trivialization F (π E)) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
   dif_neg hb
 
-theorem mk_symm (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+theorem mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
     totalSpaceMk b (e.symm b y) = e.toLocalHomeomorph.symm (b, y) :=
   e.toPretrivialization.mk_symm hb y
 
-theorem symm_proj_apply (e : Trivialization R F E) (z : TotalSpace E) (hz : z.proj ∈ e.BaseSet) :
+theorem symm_proj_apply (e : Trivialization F (π E)) (z : TotalSpace E) (hz : z.proj ∈ e.BaseSet) :
     e.symm z.proj (e z).2 = z.2 :=
   e.toPretrivialization.symm_proj_apply z hz
 
-theorem symm_apply_apply_mk (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
+theorem symm_apply_apply_mk (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
     e.symm b (e (totalSpaceMk b y)).2 = y :=
   e.symm_proj_apply (totalSpaceMk b y) hb
 
-theorem apply_mk_symm (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+theorem apply_mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
     e (totalSpaceMk b (e.symm b y)) = (b, y) :=
   e.toPretrivialization.apply_mk_symm hb y
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem continuous_on_symm (e : Trivialization R F E) :
+theorem continuous_on_symm (e : Trivialization F (π E)) :
     ContinuousOn (fun z : B × F => totalSpaceMk z.1 (e.symm z.1 z.2)) (e.BaseSet ×ˢ univ) := by
   have :
     ∀ (z : B × F) (hz : z ∈ e.base_set ×ˢ (univ : Set F)),
@@ -380,61 +276,78 @@ theorem continuous_on_symm (e : Trivialization R F E) :
   rw [← e.target_eq]
   exact e.to_local_homeomorph.continuous_on_symm
 
+end Zero
+
+variable [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
+
 /-- A trivialization for a topological vector bundle defines linear equivalences between the
 fibers and the model space. -/
-def linearEquivAt (e : Trivialization R F E) (b : B) (hb : b ∈ e.BaseSet) : E b ≃ₗ[R] F :=
-  e.toPretrivialization.linearEquivAt b hb
+def linearEquivAt (e : Trivialization F (π E)) [e.is_linear R] (b : B) (hb : b ∈ e.BaseSet) : E b ≃ₗ[R] F :=
+  e.toPretrivialization.linearEquivAt R b hb
+
+variable {R}
 
 @[simp]
-theorem linear_equiv_at_apply (e : Trivialization R F E) (b : B) (hb : b ∈ e.BaseSet) (v : E b) :
-    e.linearEquivAt b hb v = (e (totalSpaceMk b v)).2 :=
+theorem linear_equiv_at_apply (e : Trivialization F (π E)) [e.is_linear R] (b : B) (hb : b ∈ e.BaseSet) (v : E b) :
+    e.linearEquivAt R b hb v = (e (totalSpaceMk b v)).2 :=
   rfl
 
 @[simp]
-theorem linear_equiv_at_symm_apply (e : Trivialization R F E) (b : B) (hb : b ∈ e.BaseSet) (v : F) :
-    (e.linearEquivAt b hb).symm v = e.symm b v :=
+theorem linear_equiv_at_symm_apply (e : Trivialization F (π E)) [e.is_linear R] (b : B) (hb : b ∈ e.BaseSet) (v : F) :
+    (e.linearEquivAt R b hb).symm v = e.symm b v :=
   rfl
+
+variable (R)
 
 /-- A fiberwise linear inverse to `e`. -/
-protected def symmₗ (e : Trivialization R F E) (b : B) : F →ₗ[R] E b :=
-  e.toPretrivialization.symmₗ b
+protected def symmₗ (e : Trivialization F (π E)) [e.is_linear R] (b : B) : F →ₗ[R] E b :=
+  e.toPretrivialization.symmₗ R b
 
-theorem coe_symmₗ (e : Trivialization R F E) (b : B) : ⇑(e.symmₗ b) = e.symm b :=
+variable {R}
+
+theorem coe_symmₗ (e : Trivialization F (π E)) [e.is_linear R] (b : B) : ⇑(e.symmₗ R b) = e.symm b :=
   rfl
 
-/-- A fiberwise linear map equal to `e` on `e.base_set`. -/
-protected def linearMapAt (e : Trivialization R F E) (b : B) : E b →ₗ[R] F :=
-  e.toPretrivialization.linearMapAt b
+variable (R)
 
-theorem coe_linear_map_at (e : Trivialization R F E) (b : B) :
-    ⇑(e.linearMapAt b) = fun y => if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 :=
+/-- A fiberwise linear map equal to `e` on `e.base_set`. -/
+protected def linearMapAt (e : Trivialization F (π E)) [e.is_linear R] (b : B) : E b →ₗ[R] F :=
+  e.toPretrivialization.linearMapAt R b
+
+variable {R}
+
+theorem coe_linear_map_at (e : Trivialization F (π E)) [e.is_linear R] (b : B) :
+    ⇑(e.linearMapAt R b) = fun y => if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 :=
   e.toPretrivialization.coe_linear_map_at b
 
-theorem coe_linear_map_at_of_mem (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) :
-    ⇑(e.linearMapAt b) = fun y => (e (totalSpaceMk b y)).2 := by simp_rw [coe_linear_map_at, if_pos hb]
+theorem coe_linear_map_at_of_mem (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) :
+    ⇑(e.linearMapAt R b) = fun y => (e (totalSpaceMk b y)).2 := by simp_rw [coe_linear_map_at, if_pos hb]
 
-theorem linear_map_at_apply (e : Trivialization R F E) {b : B} (y : E b) :
-    e.linearMapAt b y = if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 := by rw [coe_linear_map_at]
+theorem linear_map_at_apply (e : Trivialization F (π E)) [e.is_linear R] {b : B} (y : E b) :
+    e.linearMapAt R b y = if b ∈ e.BaseSet then (e (totalSpaceMk b y)).2 else 0 := by rw [coe_linear_map_at]
 
-theorem linear_map_at_def_of_mem (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) :
-    e.linearMapAt b = e.linearEquivAt b hb :=
+theorem linear_map_at_def_of_mem (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) :
+    e.linearMapAt R b = e.linearEquivAt R b hb :=
   dif_pos hb
 
-theorem linear_map_at_def_of_not_mem (e : Trivialization R F E) {b : B} (hb : b ∉ e.BaseSet) : e.linearMapAt b = 0 :=
+theorem linear_map_at_def_of_not_mem (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∉ e.BaseSet) :
+    e.linearMapAt R b = 0 :=
   dif_neg hb
 
-theorem symmₗ_linear_map_at (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
-    e.symmₗ b (e.linearMapAt b y) = y :=
+theorem symmₗ_linear_map_at (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
+    e.symmₗ R b (e.linearMapAt R b y) = y :=
   e.toPretrivialization.symmₗ_linear_map_at hb y
 
-theorem linear_map_at_symmₗ (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.linearMapAt b (e.symmₗ b y) = y :=
+theorem linear_map_at_symmₗ (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) (y : F) :
+    e.linearMapAt R b (e.symmₗ R b y) = y :=
   e.toPretrivialization.linear_map_at_symmₗ hb y
+
+variable (R)
 
 /-- A coordinate change function between two trivializations, as a continuous linear equivalence.
   Defined to be the identity when `b` does not lie in the base set of both trivializations. -/
-def coordChange (e e' : Trivialization R F E) (b : B) : F ≃L[R] F :=
-  { if hb : b ∈ e.BaseSet ∩ e'.BaseSet then (e.linearEquivAt b (hb.1 : _)).symm.trans (e'.linearEquivAt b hb.2)
+def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R] (b : B) : F ≃L[R] F :=
+  { if hb : b ∈ e.BaseSet ∩ e'.BaseSet then (e.linearEquivAt R b (hb.1 : _)).symm.trans (e'.linearEquivAt R b hb.2)
     else LinearEquiv.refl R F with
     continuous_to_fun := by
       by_cases hb:b ∈ e.base_set ∩ e'.base_set
@@ -457,115 +370,122 @@ def coordChange (e e' : Trivialization R F E) (b : B) : F ≃L[R] F :=
         exact continuous_id
          }
 
-theorem coe_coord_change (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
-    ⇑(coordChange e e' b) = (e.linearEquivAt b hb.1).symm.trans (e'.linearEquivAt b hb.2) :=
+variable {R}
+
+theorem coe_coord_changeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R] {b : B}
+    (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
+    ⇑(coordChangeL R e e' b) = (e.linearEquivAt R b hb.1).symm.trans (e'.linearEquivAt R b hb.2) :=
   congr_arg LinearEquiv.toFun (dif_pos hb)
 
-theorem coord_change_apply (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) :
-    coordChange e e' b y = (e' (totalSpaceMk b (e.symm b y))).2 :=
+theorem coord_changeL_apply (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R] {b : B}
+    (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) : coordChangeL R e e' b y = (e' (totalSpaceMk b (e.symm b y))).2 :=
   congr_arg (fun f => LinearEquiv.toFun f y) (dif_pos hb)
 
-theorem mk_coord_change (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) :
-    (b, coordChange e e' b y) = e' (totalSpaceMk b (e.symm b y)) := by
+theorem mk_coord_changeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R] {b : B}
+    (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) : (b, coordChangeL R e e' b y) = e' (totalSpaceMk b (e.symm b y)) := by
   ext
   · rw [e.mk_symm hb.1 y, e'.coe_fst', e.proj_symm_apply' hb.1]
     rw [e.proj_symm_apply' hb.1]
     exact hb.2
     
-  · exact e.coord_change_apply e' hb y
+  · exact e.coord_changeL_apply e' hb y
     
 
 /-- A version of `coord_change_apply` that fully unfolds `coord_change`. The right-hand side is
 ugly, but has good definitional properties for specifically defined trivializations. -/
-theorem coord_change_apply' (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) :
-    coordChange e e' b y = (e' (e.toLocalHomeomorph.symm (b, y))).2 := by
-  rw [e.coord_change_apply e' hb, e.mk_symm hb.1]
+theorem coord_changeL_apply' (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R] {b : B}
+    (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) : coordChangeL R e e' b y = (e' (e.toLocalHomeomorph.symm (b, y))).2 := by
+  rw [e.coord_changeL_apply e' hb, e.mk_symm hb.1]
 
-theorem coord_change_symm_apply (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
-    ⇑(coordChange e e' b).symm = (e'.linearEquivAt b hb.2).symm.trans (e.linearEquivAt b hb.1) :=
+theorem coord_changeL_symm_apply (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R] {b : B}
+    (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
+    ⇑(coordChangeL R e e' b).symm = (e'.linearEquivAt R b hb.2).symm.trans (e.linearEquivAt R b hb.1) :=
   congr_arg LinearEquiv.invFun (dif_pos hb)
 
-end TopologicalVectorBundle.Trivialization
+end Trivialization
 
 end TopologicalVectorSpace
 
 section
 
-open TopologicalVectorBundle
-
-variable (B)
-
 variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [NormedAddCommGroup F]
   [NormedSpace R F] [TopologicalSpace B] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- The valid transition functions for a topological vector bundle over `B` modelled on
-a normed space `F`: a transition function must be a local homeomorphism of `B × F` with source and
-target both `s ×ˢ univ`, which on this set is of the form `λ (b, v), (b, ε b v)` for some continuous
-map `ε` from `s` to `F ≃L[R] F`. Here continuity is with respect to the operator norm on
-`F →L[R] F`. -/
-def ContinuousTransitions (e : LocalEquiv (B × F) (B × F)) : Prop :=
-  ∃ s : Set B,
-    e.Source = s ×ˢ univ ∧
-      e.Target = s ×ˢ univ ∧
-        ∃ ε : B → F ≃L[R] F, ContinuousOn (fun b => (ε b : F →L[R] F)) s ∧ ∀ b ∈ s, ∀ v : F, e (b, v) = (b, ε b v)
-
-variable {B}
 
 /- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`total_space_mk_inducing] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`TrivializationAtlas] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`trivializationAt] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`mem_base_set_trivialization_at] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`trivialization_mem_atlas] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change] [] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (e e' «expr ∈ » trivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change'] [] -/
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `topological_vector_bundle R F E`) if around every point there is a fiber bundle trivialization
 which is linear in the fibers. -/
 class TopologicalVectorBundle where
   total_space_mk_inducing : ∀ b : B, Inducing (@totalSpaceMk B E b)
-  TrivializationAtlas : Set (Trivialization R F E)
-  trivializationAt : B → Trivialization R F E
+  TrivializationAtlas : Set (Trivialization F (π E))
+  trivialization_linear' : ∀ (e : Trivialization F (π E)) (he : e ∈ trivialization_atlas), e.is_linear R
+  trivializationAt : B → Trivialization F (π E)
   mem_base_set_trivialization_at : ∀ b : B, b ∈ (trivialization_at b).BaseSet
   trivialization_mem_atlas : ∀ b : B, trivialization_at b ∈ trivialization_atlas
-  continuous_on_coord_change :
-    ∀ (e e') (_ : e ∈ trivialization_atlas) (_ : e' ∈ trivialization_atlas),
-      ContinuousOn (fun b => Trivialization.coordChange e e' b : B → F →L[R] F) (e.BaseSet ∩ e'.BaseSet)
+  continuous_on_coord_change' :
+    ∀ (e e' : Trivialization F (π E)) (he : e ∈ trivialization_atlas) (he' : e' ∈ trivialization_atlas),
+      have := trivialization_linear' e he
+      have := trivialization_linear' e' he'
+      ContinuousOn (fun b => Trivialization.coordChangeL R e e' b : B → F →L[R] F) (e.BaseSet ∩ e'.BaseSet)
 
 export
-  TopologicalVectorBundle (TrivializationAtlas trivializationAt mem_base_set_trivialization_at trivialization_mem_atlas continuous_on_coord_change)
+  TopologicalVectorBundle (TrivializationAtlas trivializationAt mem_base_set_trivialization_at trivialization_mem_atlas)
 
-variable {R F E} [TopologicalVectorBundle R F E]
+variable {F E} [TopologicalVectorBundle R F E]
 
-namespace TopologicalVectorBundle
+/-- Given a type `E` equipped with a topological vector bundle structure, this is a `Prop` typeclass
+for trivializations of `E`, expressing that a trivialization is in the designated atlas for the
+bundle.  This is needed because lemmas about the linearity of trivializations or the continuity (as
+functions to `F →L[R] F`, where `F` is the model fibre) of the transition functions are only
+expected to hold for trivializations in the designated atlas. -/
+@[mk_iff]
+class MemTrivializationAtlas (e : Trivialization F (π E)) : Prop where
+  out : e ∈ TrivializationAtlas R F E
+
+instance (b : B) :
+    MemTrivializationAtlas R
+      (trivializationAt R F E b) where out := TopologicalVectorBundle.trivialization_mem_atlas R F E b
+
+instance (priority := 100) trivialization_linear (e : Trivialization F (π E)) [he : MemTrivializationAtlas R e] :
+    e.is_linear R :=
+  TopologicalVectorBundle.trivialization_linear' e he.out
+
+theorem continuous_on_coord_change (e e' : Trivialization F (π E)) [he : MemTrivializationAtlas R e]
+    [he' : MemTrivializationAtlas R e'] :
+    ContinuousOn (fun b => Trivialization.coordChangeL R e e' b : B → F →L[R] F) (e.BaseSet ∩ e'.BaseSet) :=
+  TopologicalVectorBundle.continuous_on_coord_change' e e' he.out he'.out
 
 namespace Trivialization
 
 /-- Forward map of `continuous_linear_equiv_at` (only propositionally equal),
   defined everywhere (`0` outside domain). -/
 @[simps (config := { fullyApplied := false }) apply]
-def continuousLinearMapAt (e : Trivialization R F E) (b : B) : E b →L[R] F :=
+def continuousLinearMapAt (e : Trivialization F (π E)) [e.is_linear R] (b : B) : E b →L[R] F :=
   { -- given explicitly to help `simps`
         e.linearMapAt
-      b with
-    toFun := e.linearMapAt b,
+      R b with
+    toFun := e.linearMapAt R b,
     cont := by
       dsimp
       rw [e.coe_linear_map_at b]
       refine' continuous_if_const _ (fun hb => _) fun _ => continuous_zero
       exact
         continuous_snd.comp
-          (e.to_local_homeomorph.continuous_on.comp_continuous (total_space_mk_inducing R F E b).Continuous fun x =>
-            e.mem_source.mpr hb) }
+          (e.to_local_homeomorph.continuous_on.comp_continuous
+            (TopologicalVectorBundle.total_space_mk_inducing R F E b).Continuous fun x => e.mem_source.mpr hb) }
 
 /-- Backwards map of `continuous_linear_equiv_at`, defined everywhere. -/
 @[simps (config := { fullyApplied := false }) apply]
-def symmL (e : Trivialization R F E) (b : B) : F →L[R] E b :=
+def symmL (e : Trivialization F (π E)) [e.is_linear R] (b : B) : F →L[R] E b :=
   { -- given explicitly to help `simps`
         e.symmₗ
-      b with
+      R b with
     toFun := e.symm b,
     cont := by
       by_cases hb:b ∈ e.base_set
@@ -577,45 +497,53 @@ def symmL (e : Trivialization R F E) (b : B) : F →L[R] E b :=
       · refine' continuous_zero.congr fun x => (e.symm_apply_of_not_mem hb x).symm
          }
 
-theorem symmL_continuous_linear_map_at (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
-    e.symmL b (e.continuousLinearMapAt b y) = y :=
+variable {R}
+
+theorem symmL_continuous_linear_map_at (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet)
+    (y : E b) : e.symmL R b (e.continuousLinearMapAt R b y) = y :=
   e.symmₗ_linear_map_at hb y
 
-theorem continuous_linear_map_at_symmL (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.continuousLinearMapAt b (e.symmL b y) = y :=
+theorem continuous_linear_map_at_symmL (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet)
+    (y : F) : e.continuousLinearMapAt R b (e.symmL R b y) = y :=
   e.linear_map_at_symmₗ hb y
+
+variable (R)
 
 /-- In a topological vector bundle, a trivialization in the fiber (which is a priori only linear)
 is in fact a continuous linear equiv between the fibers and the model fiber. -/
 @[simps (config := { fullyApplied := false }) apply symmApply]
-def continuousLinearEquivAt (e : Trivialization R F E) (b : B) (hb : b ∈ e.BaseSet) : E b ≃L[R] F :=
+def continuousLinearEquivAt (e : Trivialization F (π E)) [e.is_linear R] (b : B) (hb : b ∈ e.BaseSet) : E b ≃L[R] F :=
   { -- given explicitly to help `simps`
           -- given explicitly to help `simps`
           e.toPretrivialization.linearEquivAt
-      b hb with
+      R b hb with
     toFun := fun y => (e (totalSpaceMk b y)).2, invFun := e.symm b,
     continuous_to_fun :=
       continuous_snd.comp
-        (e.toLocalHomeomorph.ContinuousOn.comp_continuous (total_space_mk_inducing R F E b).Continuous fun x =>
-          e.mem_source.mpr hb),
-    continuous_inv_fun := (e.symmL b).Continuous }
+        (e.toLocalHomeomorph.ContinuousOn.comp_continuous
+          (TopologicalVectorBundle.total_space_mk_inducing R F E b).Continuous fun x => e.mem_source.mpr hb),
+    continuous_inv_fun := (e.symmL R b).Continuous }
 
-theorem coe_continuous_linear_equiv_at_eq (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) :
-    (e.continuousLinearEquivAt b hb : E b → F) = e.continuousLinearMapAt b :=
+variable {R}
+
+theorem coe_continuous_linear_equiv_at_eq (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) :
+    (e.continuousLinearEquivAt R b hb : E b → F) = e.continuousLinearMapAt R b :=
   (e.coe_linear_map_at_of_mem hb).symm
 
-theorem symm_continuous_linear_equiv_at_eq (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) :
-    ((e.continuousLinearEquivAt b hb).symm : F → E b) = e.symmL b :=
+theorem symm_continuous_linear_equiv_at_eq (e : Trivialization F (π E)) [e.is_linear R] {b : B} (hb : b ∈ e.BaseSet) :
+    ((e.continuousLinearEquivAt R b hb).symm : F → E b) = e.symmL R b :=
   rfl
 
 @[simp]
-theorem continuous_linear_equiv_at_apply' (e : Trivialization R F E) (x : TotalSpace E) (hx : x ∈ e.Source) :
-    e.continuousLinearEquivAt x.proj (e.mem_source.1 hx) x.2 = (e x).2 := by
+theorem continuous_linear_equiv_at_apply' (e : Trivialization F (π E)) [e.is_linear R] (x : TotalSpace E)
+    (hx : x ∈ e.Source) : e.continuousLinearEquivAt R x.proj (e.mem_source.1 hx) x.2 = (e x).2 := by
   cases x
   rfl
 
-theorem apply_eq_prod_continuous_linear_equiv_at (e : Trivialization R F E) (b : B) (hb : b ∈ e.BaseSet) (z : E b) :
-    e.toLocalHomeomorph ⟨b, z⟩ = (b, e.continuousLinearEquivAt b hb z) := by
+variable (R)
+
+theorem apply_eq_prod_continuous_linear_equiv_at (e : Trivialization F (π E)) [e.is_linear R] (b : B)
+    (hb : b ∈ e.BaseSet) (z : E b) : e.toLocalHomeomorph ⟨b, z⟩ = (b, e.continuousLinearEquivAt R b hb z) := by
   ext
   · refine' e.coe_fst _
     rw [e.source_eq]
@@ -624,45 +552,35 @@ theorem apply_eq_prod_continuous_linear_equiv_at (e : Trivialization R F E) (b :
   · simp only [coe_coe, continuous_linear_equiv_at_apply]
     
 
-theorem symm_apply_eq_mk_continuous_linear_equiv_at_symm (e : Trivialization R F E) (b : B) (hb : b ∈ e.BaseSet)
-    (z : F) : e.toLocalHomeomorph.symm ⟨b, z⟩ = totalSpaceMk b ((e.continuousLinearEquivAt b hb).symm z) := by
+variable {R}
+
+theorem symm_apply_eq_mk_continuous_linear_equiv_at_symm (e : Trivialization F (π E)) [e.is_linear R] (b : B)
+    (hb : b ∈ e.BaseSet) (z : F) :
+    e.toLocalHomeomorph.symm ⟨b, z⟩ = totalSpaceMk b ((e.continuousLinearEquivAt R b hb).symm z) := by
   have h : (b, z) ∈ e.to_local_homeomorph.target := by
     rw [e.target_eq]
     exact ⟨hb, mem_univ _⟩
   apply e.to_local_homeomorph.inj_on (e.to_local_homeomorph.map_target h)
   · simp only [e.source_eq, hb, mem_preimage]
     
-  simp_rw [e.apply_eq_prod_continuous_linear_equiv_at b hb, e.to_local_homeomorph.right_inv h,
+  simp_rw [e.apply_eq_prod_continuous_linear_equiv_at R b hb, e.to_local_homeomorph.right_inv h,
     ContinuousLinearEquiv.apply_symm_apply]
 
-theorem comp_continuous_linear_equiv_at_eq_coord_change (e e' : Trivialization R F E) {b : B}
-    (hb : b ∈ e.1.BaseSet ∩ e'.1.BaseSet) :
-    (e.continuousLinearEquivAt b hb.1).symm.trans (e'.continuousLinearEquivAt b hb.2) = coordChange e e' b := by
+theorem comp_continuous_linear_equiv_at_eq_coord_change (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear R]
+    {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
+    (e.continuousLinearEquivAt R b hb.1).symm.trans (e'.continuousLinearEquivAt R b hb.2) = coordChangeL R e e' b := by
   ext v
-  rw [coord_change_apply e e' hb]
+  rw [coord_changeL_apply e e' hb]
   rfl
 
 end Trivialization
-
-section
-
-instance {B : Type _} {F : Type _} [AddCommMonoid F] (b : B) : AddCommMonoid (Bundle.Trivial B F b) :=
-  ‹AddCommMonoid F›
-
-instance {B : Type _} {F : Type _} [AddCommGroup F] (b : B) : AddCommGroup (Bundle.Trivial B F b) :=
-  ‹AddCommGroup F›
-
-instance {B : Type _} {F : Type _} [AddCommMonoid F] [Module R F] (b : B) : Module R (Bundle.Trivial B F b) :=
-  ‹Module R F›
-
-end
 
 namespace TrivialTopologicalVectorBundle
 
 variable (R B F)
 
 /-- Local trivialization for trivial bundle. -/
-def trivialization : Trivialization R F (Bundle.Trivial B F) where
+def trivialization : Trivialization F (π (Bundle.Trivial B F)) where
   toFun x := (x.fst, x.snd)
   invFun y := ⟨y.fst, y.snd⟩
   Source := Univ
@@ -686,25 +604,34 @@ def trivialization : Trivialization R F (Bundle.Trivial B F) where
   source_eq := rfl
   target_eq := by simp only [univ_prod_univ]
   proj_to_fun y hy := rfl
-  linear' x hx := ⟨fun y z => rfl, fun c y => rfl⟩
 
-theorem trivialization.coord_change (b : B) :
-    (trivialization R B F).coordChange (trivialization R B F) b = ContinuousLinearEquiv.refl R F := by
+instance trivialization.is_linear :
+    (trivialization B F).is_linear R where linear x hx := ⟨fun y z => rfl, fun c y => rfl⟩
+
+variable {R}
+
+theorem trivialization.coord_changeL (b : B) :
+    (trivialization B F).coordChangeL R (trivialization B F) b = ContinuousLinearEquiv.refl R F := by
   ext v
-  rw [trivialization.coord_change_apply']
+  rw [Trivialization.coord_changeL_apply']
   exacts[rfl, ⟨mem_univ _, mem_univ _⟩]
 
 @[simp]
-theorem trivialization_source : (trivialization R B F).Source = univ :=
+theorem trivialization_source : (trivialization B F).Source = univ :=
   rfl
 
 @[simp]
-theorem trivialization_target : (trivialization R B F).Target = univ :=
+theorem trivialization_target : (trivialization B F).Target = univ :=
   rfl
 
 instance topologicalVectorBundle : TopologicalVectorBundle R F (Bundle.Trivial B F) where
-  TrivializationAtlas := {TrivialTopologicalVectorBundle.trivialization R B F}
-  trivializationAt x := TrivialTopologicalVectorBundle.trivialization R B F
+  TrivializationAtlas := {TrivialTopologicalVectorBundle.trivialization B F}
+  trivialization_linear' := by
+    intro e he
+    rw [mem_singleton_iff] at he
+    subst he
+    infer_instance
+  trivializationAt x := TrivialTopologicalVectorBundle.trivialization B F
   mem_base_set_trivialization_at := mem_univ
   trivialization_mem_atlas x := mem_singleton _
   total_space_mk_inducing b :=
@@ -714,19 +641,23 @@ instance topologicalVectorBundle : TopologicalVectorBundle R F (Bundle.Trivial B
         rfl
       simp only [total_space.topological_space, induced_inf, induced_compose, Function.comp, total_space.proj,
         induced_const, top_inf_eq, trivial.proj_snd, id.def, trivial.topological_space, this, induced_id]⟩
-  continuous_on_coord_change := by
-    intro e he e' he'
-    rw [mem_singleton_iff.mp he, mem_singleton_iff.mp he']
-    simp_rw [trivial_topological_vector_bundle.trivialization.coord_change]
+  continuous_on_coord_change' := by
+    intro e e' he he'
+    rw [mem_singleton_iff] at he he'
+    subst he
+    subst he'
+    simp_rw [Trivialization.coordChangeL]
     exact continuous_const.continuous_on
 
 end TrivialTopologicalVectorBundle
 
 -- Not registered as an instance because of a metavariable.
 theorem is_topological_vector_bundle_is_topological_fiber_bundle : IsTopologicalFiberBundle F (@TotalSpace.proj B E) :=
-  fun x => ⟨(trivializationAt R F E x).toFiberBundleTrivialization, mem_base_set_trivialization_at R F E x⟩
+  fun x => ⟨trivializationAt R F E x, mem_base_set_trivialization_at R F E x⟩
 
 include R F
+
+namespace TopologicalVectorBundle
 
 theorem continuous_total_space_mk (x : B) : Continuous (@totalSpaceMk B E x) :=
   (TopologicalVectorBundle.total_space_mk_inducing R F E x).Continuous
@@ -813,19 +744,20 @@ def Base :=
 /-- The fiber of a topological vector bundle core, as a convenience function for dot notation and
 typeclass inference -/
 @[nolint unused_arguments has_nonempty_instance]
-def Fiber (x : B) :=
-  F
+def Fiber : B → Type _ :=
+  Z.toTopologicalFiberBundleCore.Fiber
 
 instance topologicalSpaceFiber (x : B) : TopologicalSpace (Z.Fiber x) := by
   delta_instance topological_vector_bundle_core.fiber
 
 instance addCommMonoidFiber : ∀ x : B, AddCommMonoid (Z.Fiber x) := by
-  delta_instance topological_vector_bundle_core.fiber
+  dsimp [TopologicalVectorBundleCore.Fiber] <;> delta_instance topological_fiber_bundle_core.fiber
 
-instance moduleFiber : ∀ x : B, Module R (Z.Fiber x) := by delta_instance topological_vector_bundle_core.fiber
+instance moduleFiber : ∀ x : B, Module R (Z.Fiber x) := by
+  dsimp [TopologicalVectorBundleCore.Fiber] <;> delta_instance topological_fiber_bundle_core.fiber
 
 instance addCommGroupFiber [AddCommGroup F] : ∀ x : B, AddCommGroup (Z.Fiber x) := by
-  delta_instance topological_vector_bundle_core.fiber
+  dsimp [TopologicalVectorBundleCore.Fiber] <;> delta_instance topological_fiber_bundle_core.fiber
 
 /-- The projection from the total space of a topological fiber bundle core, on its base. -/
 @[reducible, simp, mfld_simps]
@@ -858,22 +790,29 @@ instance toTopologicalSpace : TopologicalSpace Z.TotalSpace :=
 variable {ι} (b : B) (a : F)
 
 @[simp, mfld_simps]
-theorem coe_coord_change (i j : ι) : TopologicalFiberBundleCore.coordChange (↑Z) i j b = Z.coordChange i j b :=
+theorem coe_coord_change (i j : ι) : Z.toTopologicalFiberBundleCore.coordChange i j b = Z.coordChange i j b :=
   rfl
 
-/-- Extended version of the local trivialization of a fiber bundle constructed from core,
-registering additionally in its type that it is a local bundle trivialization. -/
-def localTriv (i : ι) : TopologicalVectorBundle.Trivialization R F Z.Fiber :=
-  { TopologicalFiberBundleCore.localTriv (↑Z) i with
-    linear' := fun x hx =>
-      { map_add := fun v w => by simp only [ContinuousLinearMap.map_add, mfld_simps],
-        map_smul := fun r v => by simp only [ContinuousLinearMap.map_smul, mfld_simps] } }
+/-- One of the standard local trivializations of a vector bundle constructed from core, taken by
+considering this in particular as a fiber bundle constructed from core. -/
+def localTriv (i : ι) : Trivialization F (π Z.Fiber) := by
+  dsimp [TopologicalVectorBundleCore.TotalSpace, TopologicalVectorBundleCore.Fiber] <;>
+    exact Z.to_topological_fiber_bundle_core.local_triv i
+
+/-- The standard local trivializations of a vector bundle constructed from core are linear. -/
+instance localTriv.is_linear (i : ι) :
+    (Z.localTriv i).is_linear
+      R where linear x hx := by
+    dsimp [TopologicalVectorBundleCore.localTriv] <;>
+      exact
+        { map_add := fun v w => by simp only [ContinuousLinearMap.map_add, mfld_simps],
+          map_smul := fun r v => by simp only [ContinuousLinearMap.map_smul, mfld_simps] }
 
 variable (i j : ι)
 
 @[simp, mfld_simps]
-theorem mem_local_triv_source (p : Z.TotalSpace) : p ∈ (Z.localTriv i).Source ↔ p.1 ∈ Z.BaseSet i :=
-  Iff.rfl
+theorem mem_local_triv_source (p : Z.TotalSpace) : p ∈ (Z.localTriv i).Source ↔ p.1 ∈ Z.BaseSet i := by
+  dsimp [TopologicalVectorBundleCore.Fiber] <;> exact Iff.rfl
 
 @[simp, mfld_simps]
 theorem base_set_at : Z.BaseSet i = (Z.localTriv i).BaseSet :=
@@ -885,7 +824,7 @@ theorem local_triv_apply (p : Z.TotalSpace) : (Z.localTriv i) p = ⟨p.1, Z.coor
 
 @[simp, mfld_simps]
 theorem mem_local_triv_target (p : B × F) : p ∈ (Z.localTriv i).Target ↔ p.1 ∈ (Z.localTriv i).BaseSet :=
-  TopologicalFiberBundleCore.mem_local_triv_target Z i p
+  Z.toTopologicalFiberBundleCore.mem_local_triv_target i p
 
 @[simp, mfld_simps]
 theorem local_triv_symm_fst (p : B × F) :
@@ -898,13 +837,13 @@ theorem local_triv_symm_apply {b : B} (hb : b ∈ Z.BaseSet i) (v : F) :
 
 @[simp, mfld_simps]
 theorem local_triv_coord_change_eq {b : B} (hb : b ∈ Z.BaseSet i ∩ Z.BaseSet j) (v : F) :
-    (Z.localTriv i).coordChange (Z.localTriv j) b v = Z.coordChange i j b v := by
-  rw [trivialization.coord_change_apply', local_triv_symm_fst, local_triv_apply, coord_change_comp]
+    (Z.localTriv i).coordChangeL R (Z.localTriv j) b v = Z.coordChange i j b v := by
+  rw [Trivialization.coord_changeL_apply', local_triv_symm_fst, local_triv_apply, coord_change_comp]
   exacts[⟨⟨hb.1, Z.mem_base_set_at b⟩, hb.2⟩, hb]
 
 /-- Preferred local trivialization of a vector bundle constructed from core, at a given point, as
 a bundle trivialization -/
-def localTrivAt (b : B) : TopologicalVectorBundle.Trivialization R F Z.Fiber :=
+def localTrivAt (b : B) : Trivialization F (π Z.Fiber) :=
   Z.localTriv (Z.indexAt b)
 
 @[simp, mfld_simps]
@@ -934,7 +873,7 @@ instance : TopologicalVectorBundle R F Z.Fiber where
     ⟨by
       refine' le_antisymm _ fun s h => _
       · rw [← continuous_iff_le_induced]
-        exact TopologicalFiberBundleCore.continuous_total_space_mk (↑Z) b
+        exact TopologicalFiberBundleCore.continuous_total_space_mk Z b
         
       · refine'
           is_open_induced_iff.mpr
@@ -953,11 +892,14 @@ instance : TopologicalVectorBundle R F Z.Fiber where
           
         ⟩
   TrivializationAtlas := Set.Range Z.localTriv
+  trivialization_linear' := by
+    rintro _ ⟨i, rfl⟩
+    infer_instance
   trivializationAt := Z.localTrivAt
   mem_base_set_trivialization_at := Z.mem_base_set_at
   trivialization_mem_atlas b := ⟨Z.indexAt b, rfl⟩
-  continuous_on_coord_change := by
-    rintro _ ⟨i, rfl⟩ _ ⟨i', rfl⟩
+  continuous_on_coord_change' := by
+    rintro _ _ ⟨i, rfl⟩ ⟨i', rfl⟩
     refine' (Z.coord_change_continuous i i').congr fun b hb => _
     ext v
     simp_rw [ContinuousLinearEquiv.coe_coe, Z.local_triv_coord_change_eq i i' hb]
@@ -1000,8 +942,9 @@ This makes it inconvenient to explicitly define a `coord_change` function when c
 `topological_vector_prebundle`. -/
 @[nolint has_nonempty_instance]
 structure TopologicalVectorPrebundle where
-  PretrivializationAtlas : Set (Pretrivialization R F E)
-  pretrivializationAt : B → Pretrivialization R F E
+  PretrivializationAtlas : Set (Pretrivialization F (π E))
+  pretrivialization_linear' : ∀ (e : Pretrivialization F (π E)) (he : e ∈ pretrivialization_atlas), e.is_linear R
+  pretrivializationAt : B → Pretrivialization F (π E)
   mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet
   pretrivialization_mem_atlas : ∀ x : B, pretrivialization_at x ∈ pretrivialization_atlas
   exists_coord_change :
@@ -1016,21 +959,21 @@ variable {R E F}
 
 /-- A randomly chosen coordinate change on a `topological_vector_prebundle`, given by
   the field `exists_coord_change`. -/
-def coordChange (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
+def coordChange (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) (b : B) : F →L[R] F :=
   Classical.choose (a.exists_coord_change e he e' he') b
 
-theorem continuous_on_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
+theorem continuous_on_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) :
     ContinuousOn (a.coordChange he he') (e.BaseSet ∩ e'.BaseSet) :=
   (Classical.choose_spec (a.exists_coord_change e he e' he')).1
 
-theorem coord_change_apply (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
+theorem coord_change_apply (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet)
     (v : F) : a.coordChange he he' b v = (e' (totalSpaceMk b (e.symm b v))).2 :=
   (Classical.choose_spec (a.exists_coord_change e he e' he')).2 b hb v
 
-theorem mk_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
+theorem mk_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet)
     (v : F) : (b, a.coordChange he he' b v) = e' (totalSpaceMk b (e.symm b v)) := by
   ext
@@ -1045,18 +988,15 @@ theorem mk_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivia
 /-- Natural identification of `topological_vector_prebundle` as a `topological_fiber_prebundle`. -/
 def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) :
     TopologicalFiberPrebundle F (@TotalSpace.proj B E) :=
-  { a with PretrivializationAtlas := pretrivialization.to_fiber_bundle_pretrivialization '' a.PretrivializationAtlas,
-    pretrivializationAt := fun x => (a.pretrivializationAt x).toFiberBundlePretrivialization,
-    pretrivialization_mem_atlas := fun x => ⟨_, a.pretrivialization_mem_atlas x, rfl⟩,
+  { a with PretrivializationAtlas := a.PretrivializationAtlas, pretrivializationAt := a.pretrivializationAt,
+    pretrivialization_mem_atlas := a.pretrivialization_mem_atlas,
     continuous_triv_change := by
-      rintro _ ⟨e, he, rfl⟩ _ ⟨e', he', rfl⟩
+      intro e he e' he'
       have :=
         is_bounded_bilinear_map_apply.continuous.comp_continuous_on
           ((a.continuous_on_coord_change he' he).prod_map continuous_on_id)
       have H :
-        e'.to_fiber_bundle_pretrivialization.to_local_equiv.target ∩
-            e'.to_fiber_bundle_pretrivialization.to_local_equiv.symm ⁻¹'
-              e.to_fiber_bundle_pretrivialization.to_local_equiv.source =
+        e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.to_local_equiv.source =
           (e'.base_set ∩ e.base_set) ×ˢ univ :=
         by
         rw [e'.target_eq, e.source_eq]
@@ -1074,14 +1014,17 @@ def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) :
 def totalSpaceTopology (a : TopologicalVectorPrebundle R F E) : TopologicalSpace (TotalSpace E) :=
   a.toTopologicalFiberPrebundle.totalSpaceTopology
 
-/-- Promotion from a `topologial_vector_prebundle.trivialization` to a
-  `topological_vector_bundle.trivialization`. -/
-def trivializationOfMemPretrivializationAtlas (a : TopologicalVectorPrebundle R F E)
-    {e : TopologicalVectorBundle.Pretrivialization R F E} (he : e ∈ a.PretrivializationAtlas) :
-    @TopologicalVectorBundle.Trivialization R _ F E _ _ _ _ _ _ _ a.totalSpaceTopology :=
-  letI := a.total_space_topology
-  { a.to_topological_fiber_prebundle.trivialization_of_mem_pretrivialization_atlas ⟨e, he, rfl⟩ with
-    linear' := fun b => e.linear }
+/-- Promotion from a `trivialization` in the `pretrivialization_atlas` of a
+`topological_vector_prebundle` to a `trivialization`. -/
+def trivializationOfMemPretrivializationAtlas (a : TopologicalVectorPrebundle R F E) {e : Pretrivialization F (π E)}
+    (he : e ∈ a.PretrivializationAtlas) : @Trivialization B F _ _ _ a.totalSpaceTopology (π E) :=
+  a.toTopologicalFiberPrebundle.trivializationOfMemPretrivializationAtlas he
+
+theorem linear_of_mem_pretrivialization_atlas (a : TopologicalVectorPrebundle R F E) {e : Pretrivialization F (π E)}
+    (he : e ∈ a.PretrivializationAtlas) :
+    @Trivialization.IsLinear R B F _ _ _ _ a.totalSpaceTopology _ _ _ _
+      (trivializationOfMemPretrivializationAtlas a he) :=
+  { linear := (a.pretrivialization_linear' e he).linear }
 
 variable (a : TopologicalVectorPrebundle R F E)
 
@@ -1124,15 +1067,18 @@ def toTopologicalVectorBundle : @TopologicalVectorBundle R _ F E _ _ _ _ _ _ a.t
   total_space_mk_inducing := a.inducing_total_space_mk
   TrivializationAtlas :=
     { e | ∃ (e₀ : _)(he₀ : e₀ ∈ a.PretrivializationAtlas), e = a.trivializationOfMemPretrivializationAtlas he₀ }
+  trivialization_linear' := by
+    rintro _ ⟨e, he, rfl⟩
+    apply linear_of_mem_pretrivialization_atlas
   trivializationAt x := a.trivializationOfMemPretrivializationAtlas (a.pretrivialization_mem_atlas x)
   mem_base_set_trivialization_at := a.mem_base_pretrivialization_at
   trivialization_mem_atlas x := ⟨_, a.pretrivialization_mem_atlas x, rfl⟩
-  continuous_on_coord_change := by
-    rintro _ ⟨e, he, rfl⟩ _ ⟨e', he', rfl⟩
+  continuous_on_coord_change' := by
+    rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
     refine' (a.continuous_on_coord_change he he').congr _
     intro b hb
     ext v
-    rw [a.coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe, trivialization.coord_change_apply]
+    rw [a.coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe, Trivialization.coord_changeL_apply]
     exacts[rfl, hb]
 
 end TopologicalVectorPrebundle

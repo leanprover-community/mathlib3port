@@ -140,7 +140,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     replace h4 : ↑∥z - z₀∥ ∈ ball (0 : ℂ) r := by
       simpa only [mem_ball_zero_iff, norm_eq_abs, abs_of_real, abs_norm_eq_norm]
     simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right, Function.comp_app,
-      coe_smul] using h3 (↑∥z - z₀∥) h4
+      Complex.coe_smul] using h3 (↑∥z - z₀∥) h4
     
   · right
     -- Otherwise, it is open along at least one direction and that implies the result

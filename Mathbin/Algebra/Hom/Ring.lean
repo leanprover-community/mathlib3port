@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Jireh Loreaux
 -/
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Algebra.Divisibility
+import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Data.Pi.Algebra
 import Mathbin.Algebra.Hom.Units
 import Mathbin.Data.Set.Basic
@@ -660,4 +660,44 @@ theorem coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero (h h_two h_one
   rfl
 
 end AddMonoidHom
+
+section coe
+
+variable (R S : Type _) [HasLiftT R S]
+
+/-- `coe_is_non_unital_ring_hom R S` is a class stating that the coercion map `↑ : R → S`
+(a.k.a. `coe`) is a non-unital ring homomorphism.
+-/
+class CoeIsNonUnitalRingHom [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S] extends CoeIsMulHom R S,
+  CoeIsAddMonoidHom R S
+
+/-- `non_unital_ring_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a non-unital ring homomorphism. -/
+@[simps (config := { fullyApplied := false })]
+protected def NonUnitalRingHom.coe [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
+    [CoeIsNonUnitalRingHom R S] : R →ₙ+* S :=
+  { MulHom.coe R S, AddMonoidHom.coe R S with toFun := coe }
+
+/-- `coe_is_ring_hom R S` is a class stating that the coercion map `↑ : R → S` (a.k.a. `coe`)
+is a ring homomorphism.
+-/
+class CoeIsRingHom [NonAssocSemiring R] [NonAssocSemiring S] extends CoeIsMonoidHom R S, CoeIsAddMonoidHom R S
+
+-- See note [lower instance priority]
+instance (priority := 100) CoeIsRingHom.toCoeIsNonUnitalRingHom [NonAssocSemiring R] [NonAssocSemiring S]
+    [inst : CoeIsRingHom R S] : CoeIsNonUnitalRingHom R S :=
+  { inst with }
+
+-- See note [lower instance priority]
+instance (priority := 100) CoeIsRingHom.toCoeIsMonoidWithZeroHom [Semiring R] [Semiring S] [inst : CoeIsRingHom R S] :
+    CoeIsMonoidWithZeroHom R S :=
+  { inst with }
+
+/-- `ring_hom.coe M N` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a ring homomorphism. -/
+@[simps (config := { fullyApplied := false })]
+protected def RingHom.coe [NonAssocSemiring R] [NonAssocSemiring S] [CoeIsRingHom R S] : R →+* S :=
+  { MonoidHom.coe R S, AddMonoidHom.coe R S with toFun := coe }
+
+end coe
 

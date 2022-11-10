@@ -943,6 +943,9 @@ theorem cthickening_of_nonpos {δ : ℝ} (hδ : δ ≤ 0) (E : Set α) : Cthicke
 theorem cthickening_zero (E : Set α) : Cthickening 0 E = Closure E :=
   cthickening_of_nonpos le_rfl E
 
+theorem cthickening_max_zero (δ : ℝ) (E : Set α) : Cthickening (max 0 δ) E = Cthickening δ E := by
+  cases le_total δ 0 <;> simp [cthickening_of_nonpos, *]
+
 /-- The closed thickening `cthickening δ E` of a fixed subset `E` is an increasing function of
 the thickening radius `δ`. -/
 theorem cthickening_mono {δ₁ δ₂ : ℝ} (hle : δ₁ ≤ δ₂) (E : Set α) : Cthickening δ₁ E ⊆ Cthickening δ₂ E :=
@@ -1125,6 +1128,11 @@ theorem cthickening_eq_Inter_thickening {δ : ℝ} (δ_nn : 0 ≤ δ) (E : Set �
   apply cthickening_eq_Inter_thickening' δ_nn (Ioi δ) rfl.subset
   simp_rw [inter_eq_right_iff_subset.mpr Ioc_subset_Ioi_self]
   exact fun _ hε => nonempty_Ioc.mpr hε
+
+theorem cthickening_eq_Inter_thickening'' (δ : ℝ) (E : Set α) :
+    Cthickening δ E = ⋂ (ε : ℝ) (h : max 0 δ < ε), Thickening ε E := by
+  rw [← cthickening_max_zero, cthickening_eq_Inter_thickening]
+  exact le_max_left _ _
 
 /-- The closure of a set equals the intersection of its closed thickenings of positive radii
 accumulating at zero. -/

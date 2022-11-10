@@ -3,6 +3,7 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
+import Mathbin.Order.Monotone
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -246,7 +247,7 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
   · have : ∀ n : ℕ, p (-n) := by
       intro n
       induction n
-      · simp [hz]
+      · simp [hz, Nat.cast_zero]
         
       · convert hn _ n_ih using 1
         simp [sub_eq_neg_add]
@@ -338,15 +339,15 @@ theorem neg_succ_of_nat_div (m : ℕ) {b : ℤ} (H : 0 < b) : -[m+1] / b = -(m /
 -- Will be generalized to Euclidean domains.
 @[local simp]
 protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
-  | (n : ℕ) => show ofNat _ = _ by simp
-  | -[n+1] => show -ofNat _ = _ by simp
+  | (n : ℕ) => show ofNat _ = _ by simp [Nat.cast_zero]
+  | -[n+1] => show -ofNat _ = _ by simp [Nat.cast_zero]
 -/
 
 #print Int.div_zero /-
 -- Will be generalized to Euclidean domains.
 @[local simp]
 protected theorem div_zero : ∀ a : ℤ, a / 0 = 0
-  | (n : ℕ) => show ofNat _ = _ by simp
+  | (n : ℕ) => show ofNat _ = _ by simp [Nat.cast_zero]
   | -[n+1] => rfl
 -/
 
@@ -687,7 +688,7 @@ theorem eq_one_or_neg_one_of_mul_eq_one' {z w : ℤ} (h : z * w = 1) : z = 1 ∧
   rcases eq_one_or_neg_one_of_mul_eq_one h with (rfl | rfl) <;>
     rcases eq_one_or_neg_one_of_mul_eq_one h' with (rfl | rfl) <;> tauto
 
-theorem is_unit_iff_nat_abs_eq {n : ℤ} : IsUnit n ↔ n.natAbs = 1 := by simp [nat_abs_eq_iff, is_unit_iff]
+theorem is_unit_iff_nat_abs_eq {n : ℤ} : IsUnit n ↔ n.natAbs = 1 := by simp [nat_abs_eq_iff, is_unit_iff, Nat.cast_zero]
 
 alias is_unit_iff_nat_abs_eq ↔ is_unit.nat_abs_eq _
 

@@ -1618,6 +1618,20 @@ theorem mem_dite_univ_left (p : Prop) [Decidable p] (t : ¬p → Set α) (x : α
 theorem mem_ite_univ_left (p : Prop) [Decidable p] (t : Set α) (x : α) : x ∈ ite p Set.Univ t ↔ ¬p → x ∈ t :=
   mem_dite_univ_left p (fun _ => t) x
 
+theorem mem_dite_empty_right (p : Prop) [Decidable p] (t : p → Set α) (x : α) :
+    (x ∈ if h : p then t h else ∅) ↔ ∃ h : p, x ∈ t h := by split_ifs <;> simp [h]
+
+@[simp]
+theorem mem_ite_empty_right (p : Prop) [Decidable p] (t : Set α) (x : α) : x ∈ ite p t ∅ ↔ p ∧ x ∈ t := by
+  split_ifs <;> simp [h]
+
+theorem mem_dite_empty_left (p : Prop) [Decidable p] (t : ¬p → Set α) (x : α) :
+    (x ∈ if h : p then ∅ else t h) ↔ ∃ h : ¬p, x ∈ t h := by split_ifs <;> simp [h]
+
+@[simp]
+theorem mem_ite_empty_left (p : Prop) [Decidable p] (t : Set α) (x : α) : x ∈ ite p ∅ t ↔ ¬p ∧ x ∈ t := by
+  split_ifs <;> simp [h]
+
 /-! ### If-then-else for sets -/
 
 
@@ -2484,7 +2498,7 @@ theorem image_subset_range (f : α → β) (s) : f '' s ⊆ Range f := by
 theorem mem_range_of_mem_image (f : α → β) (s) {x : β} (h : x ∈ f '' s) : x ∈ Range f :=
   image_subset_range f s h
 
-theorem Nat.mem_range_succ (i : ℕ) : i ∈ Range Nat.succ ↔ 0 < i :=
+theorem _root_.nat.mem_range_succ (i : ℕ) : i ∈ Range Nat.succ ↔ 0 < i :=
   ⟨by
     rintro ⟨n, rfl⟩
     exact Nat.succ_pos n, fun h => ⟨_, Nat.succ_pred_eq_of_pos h⟩⟩

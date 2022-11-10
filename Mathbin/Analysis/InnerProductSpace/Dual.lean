@@ -103,7 +103,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
       by_cases htriv:Y = ⊤
       · have hℓ : ℓ = 0 := by
           have h' := linear_map.ker_eq_top.mp htriv
-          rw [← coe_zero] at h'
+          rw [← ContinuousLinearMap.coe_zero] at h'
           apply coe_injective
           exact h'
         exact ⟨0, by simp [hℓ]⟩

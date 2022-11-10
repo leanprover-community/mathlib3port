@@ -561,5 +561,14 @@ theorem sbtw_point_reflection_of_ne {x y : P} (h : x ≠ y) : Sbtw R y x (pointR
   nth_rw 0 [← point_reflection_self R x]
   exact (point_reflection_involutive R x).Injective.Ne h
 
+theorem wbtw_midpoint (x y : P) : Wbtw R x (midpoint R x y) y := by
+  convert wbtw_point_reflection R (midpoint R x y) x
+  simp
+
+theorem sbtw_midpoint_of_ne {x y : P} (h : x ≠ y) : Sbtw R x (midpoint R x y) y := by
+  have h : midpoint R x y ≠ x := by simp [h]
+  convert sbtw_point_reflection_of_ne R h
+  simp
+
 end LinearOrderedField
 

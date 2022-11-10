@@ -248,7 +248,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
         · by_cases∥a∥₊ = 0
           · simp only [h, zero_mul, zero_le', pow_succ]
             
-          · rw [← coe_inv h, coe_lt_coe, Nnreal.lt_inv_iff_mul_lt h] at hr
+          · rw [← Ennreal.coe_inv h, coe_lt_coe, Nnreal.lt_inv_iff_mul_lt h] at hr
             simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
             
           
@@ -260,7 +260,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
         · simp only [nnnorm_eq_zero.mp h, norm_zero, zero_lt_one, smul_zero]
           
         · have nnnorm_lt : ∥y∥₊ < ∥a∥₊⁻¹ := by
-            simpa only [← coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nnreal] using hy
+            simpa only [← Ennreal.coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nnreal] using hy
           rwa [← coe_nnnorm, ← Real.lt_to_nnreal_iff_coe_lt, Real.to_nnreal_one, nnnorm_smul, ←
             Nnreal.lt_inv_iff_mul_lt h]
           
@@ -280,7 +280,7 @@ theorem is_unit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑∥z∥
       
     · rw [Units.smul_def, ← Algebra.algebra_map_eq_smul_one, ← mem_resolvent_set_iff]
       refine' mem_resolvent_set_of_spectral_radius_lt _
-      rwa [Units.coe_inv, nnnorm_inv, coe_inv (nnnorm_ne_zero_iff.mpr (Units.coe_mk0 hz ▸ hz : (u : 𝕜) ≠ 0)),
+      rwa [Units.coe_inv, nnnorm_inv, Ennreal.coe_inv (nnnorm_ne_zero_iff.mpr (Units.coe_mk0 hz ▸ hz : (u : 𝕜) ≠ 0)),
         lt_inv_iff_lt_inv]
       
     

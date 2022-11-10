@@ -6,8 +6,8 @@ Authors: Robert Y. Lewis
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Inductions
+import Mathbin.Data.Polynomial.Splits
 import Mathbin.RingTheory.Polynomial.Vieta
-import Mathbin.FieldTheory.SplittingField
 
 /-!
 # Polynomials and limits

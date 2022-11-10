@@ -47,11 +47,11 @@ noncomputable def eigenvectorBasis : OrthonormalBasis n 𝕜 (EuclideanSpace �
 
 /-- A matrix whose columns are an orthonormal basis of eigenvectors of a hermitian matrix. -/
 noncomputable def eigenvectorMatrix : Matrix n n 𝕜 :=
-  (Pi.basisFun 𝕜 n).toMatrix (eigenvectorBasis hA).toBasis
+  (PiLp.basisFun _ 𝕜 n).toMatrix (eigenvectorBasis hA).toBasis
 
 /-- The inverse of `eigenvector_matrix` -/
 noncomputable def eigenvectorMatrixInv : Matrix n n 𝕜 :=
-  (eigenvectorBasis hA).toBasis.toMatrix (Pi.basisFun 𝕜 n)
+  (eigenvectorBasis hA).toBasis.toMatrix (PiLp.basisFun _ 𝕜 n)
 
 theorem eigenvector_matrix_mul_inv : hA.eigenvectorMatrix ⬝ hA.eigenvectorMatrixInv = 1 := by
   apply Basis.to_matrix_mul_to_matrix_flip
@@ -63,14 +63,12 @@ noncomputable instance : Invertible hA.eigenvectorMatrix :=
   invertibleOfRightInverse _ _ hA.eigenvector_matrix_mul_inv
 
 theorem eigenvector_matrix_apply (i j : n) : hA.eigenvectorMatrix i j = hA.eigenvectorBasis j i := by
-  simp only [eigenvector_matrix, Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis, Pi.basis_fun_repr]
+  simp_rw [eigenvector_matrix, Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis, PiLp.basis_fun_repr]
 
 theorem eigenvector_matrix_inv_apply (i j : n) : hA.eigenvectorMatrixInv i j = star (hA.eigenvectorBasis i j) := by
-  rw [eigenvector_matrix_inv, Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis_repr_apply, Pi.basis_fun_apply,
-    LinearMap.coe_std_basis, OrthonormalBasis.repr_apply_apply]
-  change inner (hA.eigenvector_basis i) (EuclideanSpace.single j 1) = _
-  rw [EuclideanSpace.inner_single_right]
-  simp only [one_mul, conj_transpose_apply, IsROrC.star_def]
+  rw [eigenvector_matrix_inv, Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis_repr_apply,
+    OrthonormalBasis.repr_apply_apply, PiLp.basis_fun_apply, PiLp.equiv_symm_single, EuclideanSpace.inner_single_right,
+    one_mul, IsROrC.star_def]
 
 theorem conj_transpose_eigenvector_matrix_inv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix := by
   ext (i j)
@@ -84,21 +82,23 @@ diagonalized by a change of basis.
 
 For the spectral theorem on linear maps, see `diagonalization_basis_apply_self_apply`. -/
 theorem spectral_theorem : hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv := by
-  rw [eigenvector_matrix_inv, basis_to_matrix_basis_fun_mul]
+  rw [eigenvector_matrix_inv, PiLp.basis_to_matrix_basis_fun_mul]
   ext (i j)
+  have : LinearMap.IsSymmetric _ := is_hermitian_iff_is_symmetric.1 hA
   convert
-    @LinearMap.IsSymmetric.diagonalization_basis_apply_self_apply 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.to_lin'
-      (is_hermitian_iff_is_symmetric.1 hA) _ (Fintype.card n) finrank_euclidean_space (EuclideanSpace.single j 1)
+    this.diagonalization_basis_apply_self_apply finrank_euclidean_space (EuclideanSpace.single j 1)
       ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)
-  · rw [eigenvector_basis, to_lin'_apply]
+  · dsimp only [LinearEquiv.conj_apply_apply, PiLp.linear_equiv_apply, PiLp.linear_equiv_symm_apply, PiLp.equiv_single,
+      LinearMap.stdBasis, LinearMap.coe_single, PiLp.equiv_symm_single, LinearEquiv.symm_symm, eigenvector_basis,
+      to_lin'_apply]
     simp only [Basis.toMatrix, Basis.coe_to_orthonormal_basis_repr, Basis.equiv_fun_apply]
-    simp_rw [OrthonormalBasis.coe_to_basis_repr_apply, OrthonormalBasis.reindex_repr, EuclideanSpace.single,
-      PiLp.equiv_symm_apply', mul_vec_single, mul_one]
+    simp_rw [OrthonormalBasis.coe_to_basis_repr_apply, OrthonormalBasis.reindex_repr, LinearEquiv.symm_symm,
+      PiLp.linear_equiv_apply, PiLp.equiv_single, mul_vec_single, mul_one]
     rfl
     
   · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]
-    rw [Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis_repr_apply, OrthonormalBasis.reindex_repr,
-      Pi.basis_fun_apply, eigenvalues₀, LinearMap.coe_std_basis, EuclideanSpace.single, PiLp.equiv_symm_apply']
+    rw [Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis_repr_apply, OrthonormalBasis.reindex_repr, eigenvalues₀,
+      PiLp.basis_fun_apply, PiLp.equiv_symm_single]
     
 
 theorem eigenvalues_eq (i : n) :

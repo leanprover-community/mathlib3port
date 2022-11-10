@@ -899,33 +899,63 @@ with continuous addition/multiplication. See also `submonoid.top_closure_mul_sel
 -/
 
 
-section HasContinuousMul
+section HasContinuousConstSmul
 
-variable [TopologicalSpace α] [Group α] [HasContinuousMul α] {s t : Set α}
+variable [TopologicalSpace β] [Group α] [MulAction α β] [HasContinuousConstSmul α β] {s : Set α} {t : Set β}
 
 @[to_additive]
-theorem IsOpen.mul_left (ht : IsOpen t) : IsOpen (s * t) := by
-  rw [← Union_mul_left_image]
-  exact is_open_bUnion fun a ha => is_open_map_mul_left a t ht
+theorem IsOpen.smul_left (ht : IsOpen t) : IsOpen (s • t) := by
+  rw [← bUnion_smul_set]
+  exact is_open_bUnion fun a _ => ht.smul _
+
+@[to_additive]
+theorem subset_interior_smul_right : s • Interior t ⊆ Interior (s • t) :=
+  interior_maximal (Set.smul_subset_smul_left interior_subset) is_open_interior.smul_left
+
+variable [TopologicalSpace α]
+
+@[to_additive]
+theorem subset_interior_smul : Interior s • Interior t ⊆ Interior (s • t) :=
+  (Set.smul_subset_smul_right interior_subset).trans subset_interior_smul_right
+
+end HasContinuousConstSmul
+
+section HasContinuousConstSmul
+
+variable [TopologicalSpace α] [Group α] [HasContinuousConstSmul α α] {s t : Set α}
+
+@[to_additive]
+theorem IsOpen.mul_left : IsOpen t → IsOpen (s * t) :=
+  IsOpen.smul_left
+
+@[to_additive]
+theorem subset_interior_mul_right : s * Interior t ⊆ Interior (s * t) :=
+  subset_interior_smul_right
+
+@[to_additive]
+theorem subset_interior_mul : Interior s * Interior t ⊆ Interior (s * t) :=
+  subset_interior_smul
+
+end HasContinuousConstSmul
+
+section HasContinuousConstSmulOp
+
+variable [TopologicalSpace α] [Group α] [HasContinuousConstSmul αᵐᵒᵖ α] {s t : Set α}
 
 @[to_additive]
 theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) := by
-  rw [← Union_mul_right_image]
-  exact is_open_bUnion fun a ha => is_open_map_mul_right a s hs
+  rw [← bUnion_op_smul_set]
+  exact is_open_bUnion fun a _ => hs.smul _
 
 @[to_additive]
 theorem subset_interior_mul_left : Interior s * t ⊆ Interior (s * t) :=
   interior_maximal (Set.mul_subset_mul_right interior_subset) is_open_interior.mul_right
 
 @[to_additive]
-theorem subset_interior_mul_right : s * Interior t ⊆ Interior (s * t) :=
-  interior_maximal (Set.mul_subset_mul_left interior_subset) is_open_interior.mul_left
-
-@[to_additive]
-theorem subset_interior_mul : Interior s * Interior t ⊆ Interior (s * t) :=
+theorem subset_interior_mul' : Interior s * Interior t ⊆ Interior (s * t) :=
   (Set.mul_subset_mul_left interior_subset).trans subset_interior_mul_left
 
-end HasContinuousMul
+end HasContinuousConstSmulOp
 
 section TopologicalGroup
 
@@ -1140,7 +1170,7 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigma_compact_space [Sep
   obtain ⟨L, hLc, hL1⟩ := exists_compact_mem_nhds (1 : G)
   refine' ⟨⟨fun n => (fun x => x * dense_seq G n) ⁻¹' L, _, _⟩⟩
   · intro n
-    exact (Homeomorph.mulRight _).compact_preimage.mpr hLc
+    exact (Homeomorph.mulRight _).is_compact_preimage.mpr hLc
     
   · refine' Union_eq_univ_iff.2 fun x => _
     obtain ⟨_, ⟨n, rfl⟩, hn⟩ : (range (dense_seq G) ∩ (fun y => x * y) ⁻¹' L).Nonempty := by
@@ -1151,7 +1181,8 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigma_compact_space [Sep
 
 /-- Every separated topological group in which there exists a compact set with nonempty interior
 is locally compact. -/
-@[to_additive]
+@[to_additive
+      "Every separated topological group in which there exists a compact set with nonempty\ninterior is locally compact."]
 theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Space G] (K : PositiveCompacts G) :
     LocallyCompactSpace G := by
   refine' locally_compact_of_compact_nhds fun x => _

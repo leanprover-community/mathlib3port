@@ -326,6 +326,30 @@ theorem cos_sq_add_sin_sq (θ : Real.Angle) : cos θ ^ 2 + sin θ ^ 2 = 1 := by
   induction θ using Real.Angle.induction_on
   exact Real.cos_sq_add_sin_sq θ
 
+theorem sin_add_pi_div_two (θ : Angle) : sin (θ + ↑(π / 2)) = cos θ := by
+  induction θ using Real.Angle.induction_on
+  exact sin_add_pi_div_two _
+
+theorem sin_sub_pi_div_two (θ : Angle) : sin (θ - ↑(π / 2)) = -cos θ := by
+  induction θ using Real.Angle.induction_on
+  exact sin_sub_pi_div_two _
+
+theorem sin_pi_div_two_sub (θ : Angle) : sin (↑(π / 2) - θ) = cos θ := by
+  induction θ using Real.Angle.induction_on
+  exact sin_pi_div_two_sub _
+
+theorem cos_add_pi_div_two (θ : Angle) : cos (θ + ↑(π / 2)) = -sin θ := by
+  induction θ using Real.Angle.induction_on
+  exact cos_add_pi_div_two _
+
+theorem cos_sub_pi_div_two (θ : Angle) : cos (θ - ↑(π / 2)) = sin θ := by
+  induction θ using Real.Angle.induction_on
+  exact cos_sub_pi_div_two _
+
+theorem cos_pi_div_two_sub (θ : Angle) : cos (↑(π / 2) - θ) = sin θ := by
+  induction θ using Real.Angle.induction_on
+  exact cos_pi_div_two_sub _
+
 @[simp]
 theorem coe_to_Ico_mod (θ ψ : ℝ) : ↑(toIcoMod ψ two_pi_pos θ) = (θ : Angle) := by
   rw [angle_eq_iff_two_pi_dvd_sub]

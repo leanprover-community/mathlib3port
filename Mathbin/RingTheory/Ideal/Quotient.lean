@@ -3,8 +3,10 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 -/
+import Mathbin.Algebra.Ring.Fin
 import Mathbin.LinearAlgebra.Quotient
 import Mathbin.RingTheory.Ideal.Basic
+import Mathbin.Tactic.FinCases
 
 /-!
 # Ideal quotients
@@ -429,6 +431,39 @@ noncomputable def quotientInfRingEquivPiQuotient [Finite ι] (f : ι → Ideal R
   { Equiv.ofBijective _ (quotient_inf_to_pi_quotient_bijective hf), quotientInfToPiQuotient f with }
 
 end ChineseRemainder
+
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
+/-- **Chinese remainder theorem**, specialized to two ideals. -/
+noncomputable def quotientInfEquivQuotientProd (I J : Ideal R) (coprime : I ⊔ J = ⊤) : R ⧸ I ⊓ J ≃+* (R ⧸ I) × R ⧸ J :=
+  let f : Fin 2 → Ideal R := ![I, J]
+  have hf : ∀ i j : Fin 2, i ≠ j → f i ⊔ f j = ⊤ := by
+    intro i j h
+    fin_cases i <;> fin_cases j <;> try contradiction <;> simpa [f, sup_comm] using coprime
+  (Ideal.quotEquivOfEq (by simp [infi, inf_comm])).trans <|
+    (Ideal.quotientInfRingEquivPiQuotient f hf).trans <| RingEquiv.piFinTwo fun i => R ⧸ f i
+
+@[simp]
+theorem quotient_inf_equiv_quotient_prod_fst (I J : Ideal R) (coprime : I ⊔ J = ⊤) (x : R ⧸ I ⊓ J) :
+    (quotientInfEquivQuotientProd I J coprime x).fst = Ideal.Quotient.factor (I ⊓ J) I inf_le_left x :=
+  Quot.induction_on x fun x => rfl
+
+@[simp]
+theorem quotient_inf_equiv_quotient_prod_snd (I J : Ideal R) (coprime : I ⊔ J = ⊤) (x : R ⧸ I ⊓ J) :
+    (quotientInfEquivQuotientProd I J coprime x).snd = Ideal.Quotient.factor (I ⊓ J) J inf_le_right x :=
+  Quot.induction_on x fun x => rfl
+
+@[simp]
+theorem fst_comp_quotient_inf_equiv_quotient_prod (I J : Ideal R) (coprime : I ⊔ J = ⊤) :
+    (RingHom.fst _ _).comp (quotientInfEquivQuotientProd I J coprime : R ⧸ I ⊓ J →+* (R ⧸ I) × R ⧸ J) =
+      Ideal.Quotient.factor (I ⊓ J) I inf_le_left :=
+  by ext <;> rfl
+
+@[simp]
+theorem snd_comp_quotient_inf_equiv_quotient_prod (I J : Ideal R) (coprime : I ⊔ J = ⊤) :
+    (RingHom.snd _ _).comp (quotientInfEquivQuotientProd I J coprime : R ⧸ I ⊓ J →+* (R ⧸ I) × R ⧸ J) =
+      Ideal.Quotient.factor (I ⊓ J) J inf_le_right :=
+  by ext <;> rfl
 
 end Ideal
 

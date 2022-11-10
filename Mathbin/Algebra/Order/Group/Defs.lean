@@ -3,7 +3,9 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.Sub.Basic
+import Mathbin.Order.Hom.Basic
+import Mathbin.Algebra.Hom.Equiv.Units
+import Mathbin.Algebra.Order.Sub.Defs
 import Mathbin.Algebra.Order.Monoid.OrderDual
 
 /-!
@@ -19,6 +21,8 @@ The reason is that we did not want to change existing names in the library.
 -/
 
 
+-- I would prefer not to be importing this here. (@semorrison)
+-- I would prefer not to be importing this here. (@semorrison)
 open Function
 
 universe u
@@ -519,16 +523,6 @@ alias lt_of_mul_lt_mul_left' ← OrderedCommGroup.lt_of_mul_lt_mul_left
 
 attribute [to_additive OrderedAddCommGroup.lt_of_add_lt_add_left] OrderedCommGroup.lt_of_mul_lt_mul_left
 
-/-- Pullback an `ordered_comm_group` under an injective map.
-See note [reducible non-instances]. -/
-@[reducible,
-  to_additive Function.Injective.orderedAddCommGroup "Pullback an `ordered_add_comm_group` under an injective map."]
-def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ]
-    [Pow β ℤ] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : OrderedCommGroup β :=
-  { PartialOrder.lift f hf, hf.OrderedCommMonoid f one mul npow, hf.CommGroup f one mul inv div npow zpow with }
-
 --  Most of the lemmas that are primed in this section appear in ordered_field. 
 --  I (DT) did not try to minimise the assumptions.
 section Group
@@ -872,18 +866,6 @@ variable [LinearOrderedCommGroup α] {a b c : α}
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid : LinearOrderedCancelCommMonoid α :=
   { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left' }
-
-/-- Pullback a `linear_ordered_comm_group` under an injective map.
-See note [reducible non-instances]. -/
-@[reducible,
-  to_additive Function.Injective.linearOrderedAddCommGroup
-      "Pullback a `linear_ordered_add_comm_group` under an injective map."]
-def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ] [Pow β ℤ]
-    [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCommGroup β :=
-  { LinearOrder.lift f hf hsup hinf, hf.OrderedCommGroup f one mul inv div npow zpow with }
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=

@@ -355,12 +355,12 @@ theorem coe_T_zpow (n : ℤ) :
   induction' n using Int.induction_on with n h n h
   · rw [zpow_zero, coe_one, Matrix.one_fin_two]
     
-  · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
+  · simp_rw [zpow_add, zpow_one, special_linear_group.coe_mul, h, coe_T, Matrix.mul_fin_two]
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
     rw [mul_one, mul_one, add_comm]
     
-  · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
+  · simp_rw [zpow_sub, zpow_one, special_linear_group.coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
     trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
       ring
@@ -432,7 +432,7 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ 
   refine' Subtype.ext _
   conv_lhs => rw [Matrix.eta_fin_two ↑ₘg]
   rw [hc, hg]
-  simp only [coe_mul, coe_T_zpow, coe_S, mul_fin_two]
+  simp only [special_linear_group.coe_mul, coe_T_zpow, coe_S, mul_fin_two]
   trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
     ring

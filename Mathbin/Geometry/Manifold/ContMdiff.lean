@@ -101,7 +101,7 @@ theorem cont_diff_within_at_prop_self_target {f : H → E'} {s : Set H} {x : H} 
 it will lift nicely to manifolds. -/
 theorem cont_diff_within_at_local_invariant_prop (n : ℕ∞) :
     (contDiffGroupoid ∞ I).LocalInvariantProp (contDiffGroupoid ∞ I') (ContDiffWithinAtProp I I' n) :=
-  { IsLocal := by
+  { is_local := by
       intro s x u f u_open xu
       have : I.symm ⁻¹' (s ∩ u) ∩ range I = I.symm ⁻¹' s ∩ range I ∩ I.symm ⁻¹' u := by
         simp only [inter_right_comm, preimage_inter]

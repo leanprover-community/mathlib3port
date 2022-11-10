@@ -138,22 +138,22 @@ theorem test_bit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n 
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.918271365.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.122863315.bitwise_tac -/
 theorem bitwise_or : bitwise or = lor := by
   run_tac
     bitwise_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.918271365.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.122863315.bitwise_tac -/
 theorem bitwise_and : bitwise and = land := by
   run_tac
     bitwise_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.918271365.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.122863315.bitwise_tac -/
 theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
   run_tac
     bitwise_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.918271365.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.122863315.bitwise_tac -/
 theorem bitwise_xor : bitwise xor = lxor := by
   run_tac
     bitwise_tac

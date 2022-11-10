@@ -5,6 +5,7 @@ Authors: Kenny Lau, Johan Commelin, Patrick Massot
 -/
 import Mathbin.Algebra.Order.Group.TypeTags
 import Mathbin.Algebra.Order.Group.Units
+import Mathbin.Algebra.Order.Monoid.Basic
 import Mathbin.Algebra.Order.Monoid.WithZero
 
 /-!

@@ -921,10 +921,10 @@ theorem one_apply (x : M) : (1 : Module.EndCat R M) x = x :=
 theorem mul_apply (f g : Module.EndCat R M) (x : M) : (f * g) x = f (g x) :=
   rfl
 
-theorem coe_one : ⇑(1 : Module.EndCat R M) = _root_.id :=
+protected theorem coe_one : ⇑(1 : Module.EndCat R M) = _root_.id :=
   rfl
 
-theorem coe_mul (f g : Module.EndCat R M) : ⇑(f * g) = f ∘ g :=
+protected theorem coe_mul (f g : Module.EndCat R M) : ⇑(f * g) = f ∘ g :=
   rfl
 
 instance _root_.module.End.monoid : Monoid (Module.EndCat R M) where
@@ -1073,4 +1073,48 @@ theorem EndCat.int_cast_def (z : ℤ) [AddCommGroup N₁] [Module R N₁] :
   rfl
 
 end Module
+
+section coe
+
+variable {R S} [Semiring R] [Semiring S] (σ : R →+* S)
+
+/-- `coe_is_semilinear_map σ M N` is a class stating that the coercion map `↑ : M → N`
+(a.k.a. `coe`) is a `σ`-semilinear map.
+
+Note that there isn't one class directly corresponding to semilinear maps: we pass instances of
+`coe_is_semilinear_map` and `coe_is_add_monoid_hom` in separate parameters.
+This is because `coe_is_semilinear_map` has a different set of parameters from
+`coe_is_add_monoid_hom`, so extending both classes at once wouldn't work.
+Compare the situation for `coe_is_smul_hom` where there is no single class corresponding to
+distributive multiplicative homomorphisms.
+-/
+class CoeIsSemilinearMap (M N : Type _) [HasLiftT M N] [HasSmul R M] [HasSmul S N] where
+  coe_smulₛₗ' : ∀ (c : R) (x : M), ↑(c • x) = σ c • (↑x : N)
+
+/-- `simp` can't infer `σ` so this can't be a `@[simp]` lemma -/
+theorem coe_smulₛₗ {M N : Type _} [HasLiftT M N] [HasSmul R M] [HasSmul S N] [CoeIsSemilinearMap σ M N] (c : R)
+    (x : M) : ↑(c • x) = σ c • (↑x : N) :=
+  CoeIsSemilinearMap.coe_smulₛₗ' c x
+
+/-- `coe_is_linear_map R M N` is a class stating that the coercion map `↑ : M → N`
+(a.k.a. `coe`) is an R-linear map.
+
+This is essentially the same as `coe_is_smul_hom R M N` except it's compatible with
+`linear_map.coe`.
+-/
+@[reducible]
+def CoeIsLinearMap (R M N : Type _) [Semiring R] [HasLiftT M N] [HasSmul R M] [HasSmul R N] :=
+  CoeIsSemilinearMap (RingHom.id R) M N
+
+-- See note [lower instance priority]
+instance (priority := 100) CoeIsLinearMap.toCoeIsSmulHom (M N : Type _) [HasLiftT M N] [HasSmul R M] [HasSmul R N]
+    [CoeIsLinearMap R M N] : CoeIsSmulHom R M N where coe_smul := coe_smulₛₗ (RingHom.id R)
+
+/-- `linear_map.coe σ M N` is the map `↑ : M → N` (a.k.a. `coe`), bundled as a (semi)linear map. -/
+@[simps (config := { fullyApplied := false })]
+protected def LinearMap.coe (M N : Type _) [HasLiftT M N] [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module S N]
+    [CoeIsAddMonoidHom M N] [CoeIsSemilinearMap σ M N] : M →ₛₗ[σ] N :=
+  { AddMonoidHom.coe M N with toFun := coe, map_smul' := coe_smulₛₗ σ }
+
+end coe
 

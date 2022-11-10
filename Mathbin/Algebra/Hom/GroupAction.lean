@@ -451,3 +451,48 @@ theorem IsInvariantSubring.coe_subtype_hom' : (IsInvariantSubring.subtypeHom M U
 
 end
 
+section coe
+
+variable (M' X Y)
+
+/-- `coe_is_smul_hom M X Y` is a class stating that the coercion map `↑ : X → Y`
+(a.k.a. `coe`) preserves scalar multiplication by `M`.
+
+Note that there is no class corresponding to `mul_action`, `distrib_mul_action` or
+`mul_semiring_action`: instead we assume `coe_is_smul_hom` and `coe_is_add_monoid_hom` or
+`coe_is_ring_hom` in separate parameters.
+This is because `coe_is_smul_hom` has a different set of parameters from those other classes,
+so extending both classes at once wouldn't work.
+-/
+class CoeIsSmulHom [HasLiftT X Y] where
+  coe_smul : ∀ (c : M') (x : X), ↑(c • x) = c • (↑x : Y)
+
+export CoeIsSmulHom (coe_smul)
+
+attribute [simp, norm_cast] coe_smul
+
+/-- `mul_action_hom.coe X Y` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as a scalar-multiplication preserving map. -/
+@[simps (config := { fullyApplied := false })]
+protected def MulActionHom.coe [HasLiftT X Y] [CoeIsSmulHom M' X Y] : X →[M'] Y where
+  toFun := coe
+  map_smul' := coe_smul
+
+variable (M A B)
+
+/-- `distrib_mul_action_hom.coe X Y` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as an equivariant additive monoid homomorphism. -/
+@[simps (config := { fullyApplied := false })]
+protected def DistribMulActionHom.coe [HasLiftT A B] [CoeIsAddMonoidHom A B] [CoeIsSmulHom M A B] : A →+[M] B :=
+  { MulActionHom.coe M A B, AddMonoidHom.coe A B with toFun := coe }
+
+variable (M X Y)
+
+/-- `mul_semiring_action_hom.coe X Y` is the map `↑ : M → N` (a.k.a. `coe`),
+bundled as an equivariant semiring homomorphism. -/
+@[simps (config := { fullyApplied := false })]
+protected def MulSemiringActionHom.coe [HasLiftT R S] [CoeIsRingHom R S] [CoeIsSmulHom M R S] : R →+*[M] S :=
+  { DistribMulActionHom.coe M R S, RingHom.coe R S with toFun := coe }
+
+end coe
+

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Order.Monoid.Cancel
-import Mathbin.Algebra.Order.Monoid.Canonical
+import Mathbin.Algebra.Order.Monoid.Cancel.Defs
+import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 
 /-! # Products of ordered monoids -/
 

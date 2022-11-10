@@ -8,6 +8,7 @@ import Mathbin.GroupTheory.Submonoid.Membership
 import Mathbin.GroupTheory.Submonoid.Centralizer
 import Mathbin.Algebra.Group.Conj
 import Mathbin.Algebra.Module.Basic
+import Mathbin.Algebra.Order.Group.InjSurj
 import Mathbin.Order.Atoms
 import Mathbin.Order.SupIndep
 
@@ -254,7 +255,7 @@ include hSG
 /-- The natural group hom from a subgroup of group `G` to `G`. -/
 @[to_additive "The natural group hom from an additive subgroup of `add_group` `G` to `G`."]
 def subtype : H →* G :=
-  ⟨coe, rfl, fun _ _ => rfl⟩
+  MonoidHom.coe H G
 
 @[simp, to_additive]
 theorem coe_subtype : (subtype H : H → G) = coe :=
@@ -262,11 +263,11 @@ theorem coe_subtype : (subtype H : H → G) = coe :=
 
 variable {H}
 
-@[simp, norm_cast, to_additive coe_smul]
+@[norm_cast, to_additive coe_smul]
 theorem coe_pow (x : H) (n : ℕ) : ((x ^ n : H) : G) = x ^ n :=
   (subtype H : H →* G).map_pow _ _
 
-@[simp, norm_cast, to_additive]
+@[norm_cast, to_additive]
 theorem coe_zpow (x : H) (n : ℤ) : ((x ^ n : H) : G) = x ^ n :=
   (subtype H : H →* G).map_zpow _ _
 
@@ -625,11 +626,11 @@ theorem coe_div (x y : H) : (↑(x / y) : G) = ↑x / ↑y :=
 theorem coe_mk (x : G) (hx : x ∈ H) : ((⟨x, hx⟩ : H) : G) = x :=
   rfl
 
-@[simp, norm_cast, to_additive]
+@[norm_cast, to_additive]
 theorem coe_pow (x : H) (n : ℕ) : ((x ^ n : H) : G) = x ^ n :=
   rfl
 
-@[simp, norm_cast, to_additive]
+@[norm_cast, to_additive]
 theorem coe_zpow (x : H) (n : ℤ) : ((x ^ n : H) : G) = x ^ n :=
   rfl
 

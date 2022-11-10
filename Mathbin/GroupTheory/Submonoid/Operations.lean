@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
-import Mathbin.Algebra.Order.Group.Basic
+import Mathbin.Algebra.Order.Monoid.Cancel.Basic
+import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.GroupTheory.Subsemigroup.Operations
@@ -387,8 +388,13 @@ include hA
 instance hasOne : One S' :=
   ⟨⟨1, OneMemClass.one_mem S'⟩⟩
 
-@[simp, norm_cast, to_additive]
-theorem coe_one : ((1 : S') : M₁) = 1 :=
+@[to_additive]
+instance : CoeIsOneHom S' M₁ where coe_one := rfl
+
+-- even though there is a generic `coe_one`, this can still be useful as a `dsimp` lemma,
+-- so keep it `@[simp]`
+@[simp, nolint simp_nf, to_additive]
+protected theorem coe_one : ((1 : S') : M₁) = 1 :=
   rfl
 
 variable {S'}
@@ -420,7 +426,7 @@ instance hasPow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] (
 
 attribute [to_additive] SubmonoidClass.hasPow
 
-@[simp, norm_cast, to_additive]
+@[norm_cast, to_additive]
 theorem coe_pow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} (x : S) (n : ℕ) :
     (↑(x ^ n) : M) = ↑x ^ n :=
   rfl
@@ -485,10 +491,14 @@ instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCanc
 
 include hA
 
+@[to_additive]
+instance : CoeIsMonoidHom S' M :=
+  { MulMemClass.coe_is_mul_hom S', OneMemClass.coe_is_one_hom S' with }
+
 /-- The natural monoid hom from a submonoid of monoid `M` to `M`. -/
 @[to_additive "The natural monoid hom from an `add_submonoid` of `add_monoid` `M` to `M`."]
 def subtype : S' →* M :=
-  ⟨coe, rfl, fun _ _ => rfl⟩
+  MonoidHom.coe S' M
 
 @[simp, to_additive]
 theorem coe_subtype : (SubmonoidClass.subtype S' : S' → M) = coe :=
@@ -508,12 +518,12 @@ instance hasMul : Mul S :=
 instance hasOne : One S :=
   ⟨⟨_, S.one_mem⟩⟩
 
-@[simp, norm_cast, to_additive]
-theorem coe_mul (x y : S) : (↑(x * y) : M) = ↑x * ↑y :=
+@[to_additive]
+protected theorem coe_mul (x y : S) : (↑(x * y) : M) = ↑x * ↑y :=
   rfl
 
-@[simp, norm_cast, to_additive]
-theorem coe_one : ((1 : S) : M) = 1 :=
+@[to_additive]
+protected theorem coe_one : ((1 : S) : M) = 1 :=
   rfl
 
 @[simp, to_additive]
@@ -537,7 +547,7 @@ instance toMulOneClass {M : Type _} [MulOneClass M] (S : Submonoid M) : MulOneCl
 protected theorem pow_mem {M : Type _} [Monoid M] (S : Submonoid M) {x : M} (hx : x ∈ S) (n : ℕ) : x ^ n ∈ S :=
   pow_mem hx n
 
-@[simp, norm_cast, to_additive]
+@[norm_cast, to_additive]
 theorem coe_pow {M : Type _} [Monoid M] {S : Submonoid M} (x : S) (n : ℕ) : ↑(x ^ n) = (x ^ n : M) :=
   rfl
 

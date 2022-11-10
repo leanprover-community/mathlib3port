@@ -109,11 +109,15 @@ theorem coeff_expand_mul {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) : (expand R
 theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) : (expand R p f).coeff (p * n) = f.coeff n := by
   rw [mul_comm, coeff_expand_mul hp]
 
-theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : R[X]} : expand R p f = expand R p g ↔ f = g :=
-  ⟨fun H => ext fun n => by rw [← coeff_expand_mul hp, H, coeff_expand_mul hp], congr_arg _⟩
+/-- Expansion is injective. -/
+theorem expand_injective {n : ℕ} (hn : 0 < n) : Function.Injective (expand R n) := fun g g' H =>
+  ext fun k => by rw [← coeff_expand_mul hn, H, coeff_expand_mul hn]
 
-theorem expand_eq_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f = 0 ↔ f = 0 := by
-  rw [← (expand R p).map_zero, expand_inj hp, AlgHom.map_zero]
+theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : R[X]} : expand R p f = expand R p g ↔ f = g :=
+  (expand_injective hp).eq_iff
+
+theorem expand_eq_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f = 0 ↔ f = 0 :=
+  (expand_injective hp).eq_iff' (map_zero _)
 
 theorem expand_ne_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f ≠ 0 ↔ f ≠ 0 :=
   (expand_eq_zero hp).Not
@@ -157,17 +161,6 @@ theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) =
   ext
   rw [coeff_map, coeff_expand (Nat.pos_of_ne_zero hp), coeff_expand (Nat.pos_of_ne_zero hp)]
   split_ifs <;> simp
-
-/-- Expansion is injective. -/
-theorem expand_injective {n : ℕ} (hn : 0 < n) : Function.Injective (expand R n) := fun g g' h => by
-  ext
-  have h' : (expand R n g).coeff (n * n_1) = (expand R n g').coeff (n * n_1) := by
-    apply Polynomial.ext_iff.1
-    exact h
-  rw [Polynomial.coeff_expand hn g (n * n_1), Polynomial.coeff_expand hn g' (n * n_1)] at h'
-  simp only [if_true, dvd_mul_right] at h'
-  rw [Nat.mul_div_right n_1 hn] at h'
-  exact h'
 
 @[simp]
 theorem expand_eval (p : ℕ) (P : R[X]) (r : R) : eval r (expand R p P) = eval (r ^ p) P := by

@@ -145,7 +145,7 @@ instance : Zero (α →₀ M) :=
   ⟨⟨∅, 0, fun _ => ⟨False.elim, fun H => H rfl⟩⟩⟩
 
 @[simp]
-theorem coe_zero : ⇑(0 : α →₀ M) = 0 :=
+protected theorem coe_zero : ⇑(0 : α →₀ M) = 0 :=
   rfl
 
 theorem zero_apply {a : α} : (0 : α →₀ M) a = 0 :=
@@ -170,7 +170,7 @@ theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.Support ↔ f a = 0 
   not_iff_comm.1 mem_support_iff.symm
 
 @[simp, norm_cast]
-theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by rw [← coe_zero, coe_fn_inj]
+theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by rw [← Finsupp.coe_zero, coe_fn_inj]
 
 theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.Support = g.Support ∧ ∀ x ∈ f.Support, f x = g x :=
   ⟨fun h => h ▸ ⟨rfl, fun _ _ => rfl⟩, fun ⟨h₁, h₂⟩ =>
@@ -779,7 +779,7 @@ instance : Add (α →₀ M) :=
   ⟨zipWith (· + ·) (add_zero 0)⟩
 
 @[simp]
-theorem coe_add (f g : α →₀ M) : ⇑(f + g) = f + g :=
+protected theorem coe_add (f g : α →₀ M) : ⇑(f + g) = f + g :=
   rfl
 
 theorem add_apply (g₁ g₂ : α →₀ M) (a : α) : (g₁ + g₂) a = g₁ a + g₂ a :=
@@ -809,7 +809,7 @@ theorem single_add (a : α) (b₁ b₂ : M) : single a (b₁ + b₂) = single a 
       
 
 instance : AddZeroClass (α →₀ M) :=
-  FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
+  FunLike.coe_injective.AddZeroClass _ Finsupp.coe_zero Finsupp.coe_add
 
 /-- `finsupp.single` as an `add_monoid_hom`.
 
@@ -829,8 +829,8 @@ def applyAddHom (a : α) : (α →₀ M) →+ M :=
 @[simps]
 noncomputable def coeFnAddHom : (α →₀ M) →+ α → M where
   toFun := coeFn
-  map_zero' := coe_zero
-  map_add' := coe_add
+  map_zero' := Finsupp.coe_zero
+  map_add' := Finsupp.coe_add
 
 theorem update_eq_single_add_erase (f : α →₀ M) (a : α) (b : M) : f.update a b = single a b + f.erase a := by
   ext j
@@ -975,18 +975,18 @@ instance hasNatScalar : HasSmul ℕ (α →₀ M) :=
   ⟨fun n v => v.map_range ((· • ·) n) (nsmul_zero _)⟩
 
 instance : AddMonoid (α →₀ M) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => rfl
+  FunLike.coe_injective.AddMonoid _ Finsupp.coe_zero Finsupp.coe_add fun _ _ => rfl
 
 end AddMonoid
 
 instance [AddCommMonoid M] : AddCommMonoid (α →₀ M) :=
-  FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
+  FunLike.coe_injective.AddCommMonoid _ Finsupp.coe_zero Finsupp.coe_add fun _ _ => rfl
 
 instance [AddGroup G] : Neg (α →₀ G) :=
   ⟨mapRange Neg.neg neg_zero⟩
 
 @[simp]
-theorem coe_neg [AddGroup G] (g : α →₀ G) : ⇑(-g) = -g :=
+protected theorem coe_neg [AddGroup G] (g : α →₀ G) : ⇑(-g) = -g :=
   rfl
 
 theorem neg_apply [AddGroup G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
@@ -996,7 +996,7 @@ instance [AddGroup G] : Sub (α →₀ G) :=
   ⟨zipWith Sub.sub (sub_zero _)⟩
 
 @[simp]
-theorem coe_sub [AddGroup G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
+protected theorem coe_sub [AddGroup G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
   rfl
 
 theorem sub_apply [AddGroup G] (g₁ g₂ : α →₀ G) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
@@ -1008,16 +1008,18 @@ instance hasIntScalar [AddGroup G] : HasSmul ℤ (α →₀ G) :=
   ⟨fun n v => v.map_range ((· • ·) n) (zsmul_zero _)⟩
 
 instance [AddGroup G] : AddGroup (α →₀ G) :=
-  FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.AddGroup _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_neg Finsupp.coe_sub (fun _ _ => rfl)
+    fun _ _ => rfl
 
 instance [AddCommGroup G] : AddCommGroup (α →₀ G) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.AddCommGroup _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_neg Finsupp.coe_sub (fun _ _ => rfl)
+    fun _ _ => rfl
 
 theorem single_add_single_eq_single_add_single [AddCommMonoid M] {k l m n : α} {u v : M} (hu : u ≠ 0) (hv : v ≠ 0) :
     single k u + single l v = single m u + single n v ↔
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u + v = 0 ∧ k = l ∧ m = n :=
   by
-  simp_rw [FunLike.ext_iff, coe_add, single_eq_pi_single, ← funext_iff]
+  simp_rw [FunLike.ext_iff, Finsupp.coe_add, single_eq_pi_single, ← funext_iff]
   exact Pi.single_add_single_eq_single_add_single hu hv
 
 @[simp]

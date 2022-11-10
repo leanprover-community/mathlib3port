@@ -164,7 +164,7 @@ theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (
 theorem dist_lt_of_nonempty_compact [Nonempty α] [CompactSpace α] (w : ∀ x : α, dist (f x) (g x) < C) : dist f g < C :=
   by
   have c : Continuous fun x => dist (f x) (g x) := by continuity
-  obtain ⟨x, -, le⟩ := IsCompact.exists_forall_ge compact_univ Set.univ_nonempty (Continuous.continuous_on c)
+  obtain ⟨x, -, le⟩ := IsCompact.exists_forall_ge is_compact_univ Set.univ_nonempty (Continuous.continuous_on c)
   exact lt_of_le_of_lt (dist_le_iff_of_nonempty.mpr fun y => le y trivial) (w x)
 
 theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C := by
@@ -448,7 +448,7 @@ and several useful variations around it. -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (H : ∀ (x : α), ∀ ε > 0, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
-  refine' compact_of_totally_bounded_is_closed _ closed
+  refine' is_compact_of_totally_bounded_is_closed _ closed
   refine' totally_bounded_of_finite_discretization fun ε ε0 => _
   rcases exists_between ε0 with ⟨ε₁, ε₁0, εε₁⟩
   let ε₂ := ε₁ / 2 / 2
@@ -469,11 +469,11 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
   /- For all x, the set hU x is an open set containing x on which the elements of A
     fluctuate by at most ε₂.
     We extract finitely many of these sets that cover the whole space, by compactness -/
-  rcases compact_univ.elim_finite_subcover_image (fun x _ => (hU x).2.1) fun x hx =>
+  rcases is_compact_univ.elim_finite_subcover_image (fun x _ => (hU x).2.1) fun x hx =>
       mem_bUnion (mem_univ _) (hU x).1 with
     ⟨tα, _, ⟨_⟩, htα⟩
   -- tα : set α, htα : univ ⊆ ⋃x ∈ tα, U x
-  rcases@finite_cover_balls_of_compact β _ _ compact_univ _ ε₂0 with ⟨tβ, _, ⟨_⟩, htβ⟩
+  rcases@finite_cover_balls_of_compact β _ _ is_compact_univ _ ε₂0 with ⟨tβ, _, ⟨_⟩, htβ⟩
   skip
   -- tβ : set β, htβ : univ ⊆ ⋃y ∈ tβ, ball y ε₂ 
   -- Associate to every point `y` in the space a nearby point `F y` in tβ
@@ -514,7 +514,7 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   using compactness there and then lifting everything to the original space. -/
   have M : LipschitzWith 1 coe := LipschitzWith.subtypeCoe s
   let F : (α →ᵇ s) → α →ᵇ β := comp coe M
-  refine' compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).Image (continuous_comp M)) closed fun f hf => _
+  refine' is_compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).Image (continuous_comp M)) closed fun f hf => _
   · haveI : CompactSpace s := is_compact_iff_compact_space.1 hs
     refine'
       arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) fun x ε ε0 =>
@@ -590,7 +590,7 @@ instance : One (α →ᵇ β) :=
   ⟨const α 1⟩
 
 @[simp, to_additive]
-theorem coe_one : ((1 : α →ᵇ β) : α → β) = 1 :=
+protected theorem coe_one : ((1 : α →ᵇ β) : α → β) = 1 :=
   rfl
 
 @[simp, to_additive]
@@ -642,7 +642,7 @@ instance :
         exact Classical.choose_spec g.bounded x y)
 
 @[simp]
-theorem coe_add : ⇑(f + g) = f + g :=
+protected theorem coe_add : ⇑(f + g) = f + g :=
   rfl
 
 theorem add_apply : (f + g) x = f x + g x :=
@@ -658,8 +658,8 @@ theorem add_comp_continuous [TopologicalSpace γ] (h : C(γ, α)) :
 
 @[simp]
 theorem coe_nsmul_rec : ∀ n, ⇑(nsmulRec n f) = n • f
-  | 0 => by rw [nsmulRec, zero_smul, coe_zero]
-  | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
+  | 0 => by rw [nsmulRec, zero_smul, BoundedContinuousFunction.coe_zero]
+  | n + 1 => by rw [nsmulRec, succ_nsmul, BoundedContinuousFunction.coe_add, coe_nsmul_rec]
 
 instance hasNatScalar :
     HasSmul ℕ
@@ -669,7 +669,7 @@ instance hasNatScalar :
       map_bounded' := by simpa [coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
 
 @[simp]
-theorem coe_nsmul (r : ℕ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
+protected theorem coe_nsmul (r : ℕ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
   rfl
 
 @[simp]
@@ -677,7 +677,8 @@ theorem nsmul_apply (r : ℕ) (f : α →ᵇ β) (v : α) : (r • f) v = r • 
   rfl
 
 instance : AddMonoid (α →ᵇ β) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
+  FunLike.coe_injective.AddMonoid _ BoundedContinuousFunction.coe_zero BoundedContinuousFunction.coe_add fun _ _ =>
+    BoundedContinuousFunction.coe_nsmul _ _
 
 instance :
     HasLipschitzAdd (α →ᵇ β) where lipschitz_add :=
@@ -696,8 +697,8 @@ instance :
 @[simps]
 def coeFnAddHom : (α →ᵇ β) →+ α → β where
   toFun := coeFn
-  map_zero' := coe_zero
-  map_add' := coe_add
+  map_zero' := BoundedContinuousFunction.coe_zero
+  map_add' := BoundedContinuousFunction.coe_add
 
 variable (α β)
 
@@ -857,12 +858,14 @@ theorem bdd_above_range_norm_comp : BddAbove <| Set.Range <| norm ∘ f :=
   (Real.bounded_iff_bdd_below_bdd_above.mp <| @boundedRange _ _ _ _ f.normComp).2
 
 theorem norm_eq_supr_norm : ∥f∥ = ⨆ x : α, ∥f x∥ := by
-  simp_rw [norm_def, dist_eq_supr, coe_zero, Pi.zero_apply, dist_zero_right]
+  simp_rw [norm_def, dist_eq_supr, BoundedContinuousFunction.coe_zero, Pi.zero_apply, dist_zero_right]
 
 /-- If `∥(1 : β)∥ = 1`, then `∥(1 : α →ᵇ β)∥ = 1` if `α` is nonempty. -/
 instance [Nonempty α] [One β] [NormOneClass β] :
     NormOneClass
-      (α →ᵇ β) where norm_one := by simp only [norm_eq_supr_norm, coe_one, Pi.one_apply, norm_one, csupr_const]
+      (α →ᵇ
+        β) where norm_one := by
+    simp only [norm_eq_supr_norm, BoundedContinuousFunction.coe_one, Pi.one_apply, norm_one, csupr_const]
 
 /-- The pointwise opposite of a bounded continuous function is again bounded continuous. -/
 instance : Neg (α →ᵇ β) :=
@@ -879,14 +882,14 @@ instance : Sub (α →ᵇ β) :=
           (add_le_add (f.norm_coe_le_norm x) <| trans_rel_right _ (norm_neg _) (g.norm_coe_le_norm x))⟩
 
 @[simp]
-theorem coe_neg : ⇑(-f) = -f :=
+protected theorem coe_neg : ⇑(-f) = -f :=
   rfl
 
 theorem neg_apply : (-f) x = -f x :=
   rfl
 
 @[simp]
-theorem coe_sub : ⇑(f - g) = f - g :=
+protected theorem coe_sub : ⇑(f - g) = f - g :=
   rfl
 
 theorem sub_apply : (f - g) x = f x - g x :=
@@ -903,7 +906,7 @@ theorem mk_of_compact_sub [CompactSpace α] (f g : C(α, β)) : mkOfCompact (f -
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, BoundedContinuousFunction.coe_neg, coe_nsmul_rec]
 
 instance hasIntScalar :
     HasSmul ℤ
@@ -912,7 +915,7 @@ instance hasIntScalar :
     { toContinuousMap := n • f.toContinuousMap, map_bounded' := by simpa using (zsmulRec n f).map_bounded' }
 
 @[simp]
-theorem coe_zsmul (r : ℤ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
+protected theorem coe_zsmul (r : ℤ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
   rfl
 
 @[simp]
@@ -920,8 +923,9 @@ theorem zsmul_apply (r : ℤ) (f : α →ᵇ β) (v : α) : (r • f) v = r • 
   rfl
 
 instance : AddCommGroup (α →ᵇ β) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ =>
-    coe_zsmul _ _
+  FunLike.coe_injective.AddCommGroup _ BoundedContinuousFunction.coe_zero BoundedContinuousFunction.coe_add
+    BoundedContinuousFunction.coe_neg BoundedContinuousFunction.coe_sub
+    (fun _ _ => BoundedContinuousFunction.coe_nsmul _ _) fun _ _ => BoundedContinuousFunction.coe_zsmul _ _
 
 instance : SeminormedAddCommGroup (α →ᵇ β) where dist_eq f g := by simp only [norm_eq, dist_eq, dist_eq_norm, sub_apply]
 
@@ -1033,7 +1037,7 @@ variable [MonoidWithZero 𝕜] [AddMonoid β] [DistribMulAction 𝕜 β] [HasBou
 variable [HasLipschitzAdd β]
 
 instance : DistribMulAction 𝕜 (α →ᵇ β) :=
-  Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
+  Function.Injective.distribMulAction coeFnAddHom FunLike.coe_injective coe_smul
 
 end DistribMulAction
 
@@ -1046,7 +1050,7 @@ variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 variable [HasLipschitzAdd β]
 
 instance : Module 𝕜 (α →ᵇ β) :=
-  Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
+  Function.Injective.module _ coeFnAddHom FunLike.coe_injective coe_smul
 
 variable (𝕜)
 
@@ -1147,15 +1151,16 @@ instance :
         mul_le_mul (f.norm_coe_le_norm x) (g.norm_coe_le_norm x) (norm_nonneg _) (norm_nonneg _)
 
 @[simp]
-theorem coe_mul (f g : α →ᵇ R) : ⇑(f * g) = f * g :=
+protected theorem coe_mul (f g : α →ᵇ R) : ⇑(f * g) = f * g :=
   rfl
 
 theorem mul_apply (f g : α →ᵇ R) (x : α) : (f * g) x = f x * g x :=
   rfl
 
 instance : NonUnitalRing (α →ᵇ R) :=
-  FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ =>
-    coe_zsmul _ _
+  FunLike.coe_injective.NonUnitalRing _ BoundedContinuousFunction.coe_zero BoundedContinuousFunction.coe_add
+    BoundedContinuousFunction.coe_mul BoundedContinuousFunction.coe_neg BoundedContinuousFunction.coe_sub
+    (fun _ _ => BoundedContinuousFunction.coe_nsmul _ _) fun _ _ => BoundedContinuousFunction.coe_zsmul _ _
 
 instance : NonUnitalSemiNormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.seminormedAddCommGroup with
@@ -1174,8 +1179,8 @@ variable [SemiNormedRing R]
 
 @[simp]
 theorem coe_npow_rec (f : α →ᵇ R) : ∀ n, ⇑(npowRec n f) = f ^ n
-  | 0 => by rw [npowRec, pow_zero, coe_one]
-  | n + 1 => by rw [npowRec, pow_succ, coe_mul, coe_npow_rec]
+  | 0 => by rw [npowRec, pow_zero, BoundedContinuousFunction.coe_one]
+  | n + 1 => by rw [npowRec, pow_succ, BoundedContinuousFunction.coe_mul, coe_npow_rec]
 
 instance hasNatPow :
     Pow (α →ᵇ R)
@@ -1184,7 +1189,7 @@ instance hasNatPow :
       map_bounded' := by simpa [coe_npow_rec] using (npowRec n f).map_bounded' }
 
 @[simp]
-theorem coe_pow (n : ℕ) (f : α →ᵇ R) : ⇑(f ^ n) = f ^ n :=
+protected theorem coe_pow (n : ℕ) (f : α →ᵇ R) : ⇑(f ^ n) = f ^ n :=
   rfl
 
 @[simp]
@@ -1206,8 +1211,11 @@ theorem coe_int_cast (n : ℤ) : ((n : α →ᵇ R) : α → R) = n :=
   rfl
 
 instance : Ring (α →ᵇ R) :=
-  FunLike.coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
-    (fun _ _ => coe_zsmul _ _) (fun _ _ => coe_pow _ _) coe_nat_cast coe_int_cast
+  FunLike.coe_injective.Ring _ BoundedContinuousFunction.coe_zero BoundedContinuousFunction.coe_one
+    BoundedContinuousFunction.coe_add BoundedContinuousFunction.coe_mul BoundedContinuousFunction.coe_neg
+    BoundedContinuousFunction.coe_sub (fun _ _ => BoundedContinuousFunction.coe_nsmul _ _)
+    (fun _ _ => BoundedContinuousFunction.coe_zsmul _ _) (fun _ _ => BoundedContinuousFunction.coe_pow _ _) coe_nat_cast
+    coe_int_cast
 
 instance : SemiNormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.nonUnitalSemiNormedRing with }
@@ -1313,7 +1321,7 @@ end NormedAlgebra
 
 theorem Nnreal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ ℝ≥0) (x : α) : f x ≤ nndist f 0 := by
   have key : nndist (f x) ((0 : α →ᵇ ℝ≥0) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
-  simp only [coe_zero, Pi.zero_apply] at key
+  simp only [BoundedContinuousFunction.coe_zero, Pi.zero_apply] at key
   rwa [Nnreal.nndist_zero_eq_val' (f x)] at key
 
 /-!
@@ -1449,7 +1457,8 @@ instance : NormedLatticeAddCommGroup (α →ᵇ β) :=
   { BoundedContinuousFunction.lattice, BoundedContinuousFunction.seminormedAddCommGroup with
     add_le_add_left := by
       intro f g h₁ h t
-      simp only [coe_to_continuous_fun, Pi.add_apply, add_le_add_iff_left, coe_add, ContinuousMap.to_fun_eq_coe]
+      simp only [coe_to_continuous_fun, Pi.add_apply, add_le_add_iff_left, BoundedContinuousFunction.coe_add,
+        ContinuousMap.to_fun_eq_coe]
       exact h₁ _,
     solid := by
       intro f g h

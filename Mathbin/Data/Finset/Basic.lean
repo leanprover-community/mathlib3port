@@ -2429,6 +2429,13 @@ theorem to_finset_eq_empty {m : Multiset α} : m.toFinset = ∅ ↔ m = 0 :=
 theorem to_finset_subset (s t : Multiset α) : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
   simp only [Finset.subset_iff, Multiset.subset_iff, Multiset.mem_to_finset]
 
+@[simp]
+theorem to_finset_dedup (m : Multiset α) : m.dedup.toFinset = m.toFinset := by simp_rw [to_finset, dedup_idempotent]
+
+@[simp]
+theorem to_finset_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset β) :
+    (m.dedup.bind f).toFinset = (m.bind f).toFinset := by simp_rw [to_finset, dedup_bind_dedup]
+
 end Multiset
 
 namespace Finset

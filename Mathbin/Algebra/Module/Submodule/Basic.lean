@@ -236,22 +236,27 @@ protected theorem nonempty : (p : Set M).Nonempty :=
 theorem mk_eq_zero {x} (h : x ∈ p) : (⟨x, h⟩ : p) = 0 ↔ x = 0 :=
   Subtype.ext_iff_val
 
+instance : CoeIsLinearMap R p M where coe_smulₛₗ' _ _ := rfl
+
 variable {p}
 
 @[simp, norm_cast]
 theorem coe_eq_zero {x : p} : (x : M) = 0 ↔ x = 0 :=
   (SetLike.coe_eq_coe : (x : M) = (0 : p) ↔ x = 0)
 
+-- The following lemmas can be proven by `simp` lemmas for `coe_is_add_monoid_hom` or
+-- `coe_is_linear_map` but are worthwile to keep since they are eligible for `dsimp`.
 @[simp, norm_cast]
-theorem coe_add (x y : p) : (↑(x + y) : M) = ↑x + ↑y :=
+protected theorem coe_add (x y : p) : (↑(x + y) : M) = ↑x + ↑y :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_zero : ((0 : p) : M) = 0 :=
+protected theorem coe_zero : ((0 : p) : M) = 0 :=
   rfl
 
+-- Not `simp` since it is subsumed by `coe_smul_of_tower`
 @[norm_cast]
-theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
+protected theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
   rfl
 
 @[simp, norm_cast]
@@ -288,7 +293,8 @@ instance no_zero_smul_divisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def subtype : p →ₗ[R] M := by refine' { toFun := coe.. } <;> simp [coe_smul]
+protected def subtype : p →ₗ[R] M :=
+  LinearMap.coe _ _ _
 
 theorem subtype_apply (x : p) : p.Subtype x = x :=
   rfl

@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 -/
 import Mathbin.Tactic.Ring
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.GroupTheory.GroupAction.Units
 
 /-!

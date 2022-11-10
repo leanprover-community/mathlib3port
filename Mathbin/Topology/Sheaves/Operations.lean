@@ -9,7 +9,6 @@ import Mathbin.Algebra.Category.RingCat.FilteredColimits
 import Mathbin.Algebra.Category.GroupCat.Limits
 import Mathbin.RingTheory.Localization.Basic
 import Mathbin.Topology.Sheaves.Sheafify
-import Mathbin.Topology.Sheaves.SheafCondition.Sites
 
 /-!
 

@@ -82,9 +82,12 @@ instance no_zero_divisors [NoZeroDivisors R] :
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h) (fun h => Or.inl <| Subtype.eq h) fun h =>
       Or.inr <| Subtype.eq h
 
+instance : CoeIsRingHom s R :=
+  { SubmonoidClass.coeIsMonoidHom s, AddSubmonoidClass.coeIsAddMonoidHom s with }
+
 /-- The natural ring hom from a subsemiring of semiring `R` to `R`. -/
 def subtype : s →+* R :=
-  { SubmonoidClass.subtype s, AddSubmonoidClass.subtype s with toFun := coe }
+  RingHom.coe s R
 
 @[simp]
 theorem coe_subtype : (subtype s : s → R) = coe :=
@@ -98,14 +101,10 @@ instance (priority := 75) toSemiring {R} [Semiring R] [SetLike S R] [Subsemiring
   Subtype.coe_injective.Semiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ => rfl
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem coe_pow {R} [Semiring R] [SetLike S R] [SubsemiringClass S R] (x : s) (n : ℕ) :
-    ((x ^ n : s) : R) = (x ^ n : R) := by
-  induction' n with n ih
-  · simp
-    
-  · simp [pow_succ, ih]
-    
+    ((x ^ n : s) : R) = (x ^ n : R) :=
+  coe_pow _ _
 
 /-- A subsemiring of a `comm_semiring` is a `comm_semiring`. -/
 instance toCommSemiring {R} [CommSemiring R] [SetLike S R] [SubsemiringClass S R] : CommSemiring s :=
@@ -338,13 +337,9 @@ instance no_zero_divisors [NoZeroDivisors R] :
 instance toSemiring {R} [Semiring R] (s : Subsemiring R) : Semiring s :=
   { s.toNonAssocSemiring, s.toSubmonoid.toMonoid with }
 
-@[simp, norm_cast]
-theorem coe_pow {R} [Semiring R] (s : Subsemiring R) (x : s) (n : ℕ) : ((x ^ n : s) : R) = (x ^ n : R) := by
-  induction' n with n ih
-  · simp
-    
-  · simp [pow_succ, ih]
-    
+@[norm_cast]
+theorem coe_pow {R} [Semiring R] (s : Subsemiring R) (x : s) (n : ℕ) : ((x ^ n : s) : R) = (x ^ n : R) :=
+  coe_pow x n
 
 /-- A subsemiring of a `comm_semiring` is a `comm_semiring`. -/
 instance toCommSemiring {R} [CommSemiring R] (s : Subsemiring R) : CommSemiring s :=

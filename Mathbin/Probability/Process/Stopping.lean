@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 -/
 import Mathbin.Probability.Process.Adapted
-import Mathbin.Topology.Instances.Discrete
 
 /-!
 # Stopping times, stopped processes and stopped values
@@ -918,6 +917,54 @@ theorem stopped_value_eq' [Preorder ι] [LocallyFiniteOrderBot ι] [AddCommMonoi
     stoppedValue u τ = ∑ i in Finset.iic N, Set.indicator { ω | τ ω = i } (u i) :=
   stopped_value_eq_of_mem_finset fun ω => Finset.mem_Iic.mpr (hbdd ω)
 
+theorem stopped_process_eq_of_mem_finset [LinearOrder ι] [AddCommMonoid E] {s : Finset ι} (n : ι)
+    (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) :
+    stoppedProcess u τ n =
+      Set.indicator { a | n ≤ τ a } (u n) + ∑ i in s.filter (· < n), Set.indicator { ω | τ ω = i } (u i) :=
+  by
+  ext ω
+  rw [Pi.add_apply, Finset.sum_apply]
+  cases le_or_lt n (τ ω)
+  · rw [stopped_process_eq_of_le h, Set.indicator_of_mem, Finset.sum_eq_zero, add_zero]
+    · intro m hm
+      refine' Set.indicator_of_not_mem _ _
+      rw [Finset.mem_filter] at hm
+      exact (hm.2.trans_le h).ne'
+      
+    · exact h
+      
+    
+  · rw [stopped_process_eq_of_ge (le_of_lt h), Finset.sum_eq_single_of_mem (τ ω)]
+    · rw [Set.indicator_of_not_mem, zero_add, Set.indicator_of_mem]
+      · exact rfl
+        
+      -- refl does not work
+      · exact not_le.2 h
+        
+      
+    · rw [Finset.mem_filter]
+      exact ⟨hbdd ω h, h⟩
+      
+    · intro b hb hneq
+      rw [Set.indicator_of_not_mem]
+      exact hneq.symm
+      
+    
+
+theorem stopped_process_eq'' [LinearOrder ι] [LocallyFiniteOrderBot ι] [AddCommMonoid E] (n : ι) :
+    stoppedProcess u τ n =
+      Set.indicator { a | n ≤ τ a } (u n) + ∑ i in Finset.iio n, Set.indicator { ω | τ ω = i } (u i) :=
+  by
+  have h_mem : ∀ ω, τ ω < n → τ ω ∈ Finset.iio n := fun ω h => finset.mem_Iio.mpr h
+  rw [stopped_process_eq_of_mem_finset n h_mem]
+  swap
+  · infer_instance
+    
+  congr with i
+  simp only [Finset.Iio_filter_lt, min_eq_right]
+
+section StoppedValue
+
 variable [PartialOrder ι] {ℱ : Filtration ι m} [NormedAddCommGroup E]
 
 theorem memℒpStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ) {s : Finset ι}
@@ -946,7 +993,73 @@ theorem integrableStoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime 
     {N : ι} (hbdd : ∀ ω, τ ω ≤ N) : Integrable (stoppedValue u τ) μ :=
   integrableStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
 
+end StoppedValue
+
+section StoppedProcess
+
+variable [LinearOrder ι] [TopologicalSpace ι] [OrderTopology ι] [FirstCountableTopology ι] {ℱ : Filtration ι m}
+  [NormedAddCommGroup E]
+
+theorem memℒpStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ) (n : ι) {s : Finset ι}
+    (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) : Memℒp (stoppedProcess u τ n) p μ := by
+  rw [stopped_process_eq_of_mem_finset n hbdd]
+  swap
+  · infer_instance
+    
+  refine' mem_ℒp.add _ _
+  · exact mem_ℒp.indicator (ℱ.le n { a : Ω | n ≤ τ a } (hτ.measurable_set_ge n)) (hu n)
+    
+  · suffices mem_ℒp (fun ω => ∑ i in s.filter (· < n), { a : Ω | τ a = i }.indicator (u i) ω) p μ by
+      convert this
+      ext1 ω
+      simp only [Finset.sum_apply]
+    refine' mem_ℒp_finset_sum _ fun i hi => mem_ℒp.indicator _ (hu i)
+    exact ℱ.le i { a : Ω | τ a = i } (hτ.measurable_set_eq i)
+    
+
+theorem memℒpStoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ) (n : ι) :
+    Memℒp (stoppedProcess u τ n) p μ :=
+  memℒpStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_Iio.mpr h
+
+theorem integrableStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Integrable (u n) μ) (n : ι)
+    {s : Finset ι} (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) : Integrable (stoppedProcess u τ n) μ := by
+  simp_rw [← mem_ℒp_one_iff_integrable] at hu⊢
+  exact mem_ℒp_stopped_process_of_mem_finset hτ hu n hbdd
+
+theorem integrableStoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Integrable (u n) μ)
+    (n : ι) : Integrable (stoppedProcess u τ n) μ :=
+  integrableStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_Iio.mpr h
+
+end StoppedProcess
+
 end StoppedValueOfMemFinset
+
+section AdaptedStoppedProcess
+
+variable [TopologicalSpace β] [PseudoMetrizableSpace β] [LinearOrder ι] [TopologicalSpace ι] [SecondCountableTopology ι]
+  [OrderTopology ι] [MeasurableSpace ι] [BorelSpace ι] {f : Filtration ι m} {u : ι → Ω → β} {τ : Ω → ι}
+
+/-- The stopped process of an adapted process with continuous paths is adapted. -/
+theorem Adapted.stoppedProcess [MetrizableSpace ι] (hu : Adapted f u) (hu_cont : ∀ ω, Continuous fun i => u i ω)
+    (hτ : IsStoppingTime f τ) : Adapted f (stoppedProcess u τ) :=
+  ((hu.progMeasurableOfContinuous hu_cont).stoppedProcess hτ).Adapted
+
+/-- If the indexing order has the discrete topology, then the stopped process of an adapted process
+is adapted. -/
+theorem Adapted.stoppedProcessOfDiscrete [DiscreteTopology ι] (hu : Adapted f u) (hτ : IsStoppingTime f τ) :
+    Adapted f (stoppedProcess u τ) :=
+  (hu.progMeasurableOfDiscrete.stoppedProcess hτ).Adapted
+
+theorem Adapted.stronglyMeasurableStoppedProcess [MetrizableSpace ι] (hu : Adapted f u)
+    (hu_cont : ∀ ω, Continuous fun i => u i ω) (hτ : IsStoppingTime f τ) (n : ι) :
+    StronglyMeasurable (stoppedProcess u τ n) :=
+  (hu.progMeasurableOfContinuous hu_cont).stronglyMeasurableStoppedProcess hτ n
+
+theorem Adapted.stronglyMeasurableStoppedProcessOfDiscrete [DiscreteTopology ι] (hu : Adapted f u)
+    (hτ : IsStoppingTime f τ) (n : ι) : StronglyMeasurable (stoppedProcess u τ n) :=
+  hu.progMeasurableOfDiscrete.stronglyMeasurableStoppedProcess hτ n
+
+end AdaptedStoppedProcess
 
 section Nat
 
@@ -979,16 +1092,6 @@ section AddCommMonoid
 
 variable [AddCommMonoid β]
 
-/-- For filtrations indexed by `ℕ`, the stopped process obtained from an adapted process is
-adapted. -/
-theorem Adapted.stoppedProcessOfNat [TopologicalSpace β] [HasContinuousAdd β] (hu : Adapted f u)
-    (hτ : IsStoppingTime f τ) : Adapted f (stoppedProcess u τ) :=
-  (hu.progMeasurableOfNat.stoppedProcess hτ).Adapted
-
-theorem Adapted.stronglyMeasurableStoppedProcessOfNat [TopologicalSpace β] [HasContinuousAdd β]
-    (hτ : IsStoppingTime f τ) (hu : Adapted f u) (n : ℕ) : StronglyMeasurable (stoppedProcess u τ n) :=
-  hu.progMeasurableOfNat.stronglyMeasurableStoppedProcess hτ n
-
 theorem stopped_value_eq {N : ℕ} (hbdd : ∀ ω, τ ω ≤ N) :
     stoppedValue u τ = fun x => (∑ i in Finset.range (N + 1), Set.indicator { ω | τ ω = i } (u i)) x :=
   stopped_value_eq_of_mem_finset fun ω => Finset.mem_range_succ_iff.mpr (hbdd ω)
@@ -997,32 +1100,12 @@ theorem stopped_process_eq (n : ℕ) :
     stoppedProcess u τ n =
       Set.indicator { a | n ≤ τ a } (u n) + ∑ i in Finset.range n, Set.indicator { ω | τ ω = i } (u i) :=
   by
-  ext ω
-  rw [Pi.add_apply, Finset.sum_apply]
-  cases le_or_lt n (τ ω)
-  · rw [stopped_process_eq_of_le h, Set.indicator_of_mem, Finset.sum_eq_zero, add_zero]
-    · intro m hm
-      rw [Finset.mem_range] at hm
-      exact Set.indicator_of_not_mem (lt_of_lt_of_le hm h).Ne.symm _
-      
-    · exact h
-      
+  rw [stopped_process_eq'' n]
+  swap
+  · infer_instance
     
-  · rw [stopped_process_eq_of_ge (le_of_lt h), Finset.sum_eq_single_of_mem (τ ω)]
-    · rw [Set.indicator_of_not_mem, zero_add, Set.indicator_of_mem]
-      · exact rfl
-        
-      -- refl does not work
-      · exact not_le.2 h
-        
-      
-    · rwa [Finset.mem_range]
-      
-    · intro b hb hneq
-      rw [Set.indicator_of_not_mem]
-      exact hneq.symm
-      
-    
+  congr with i
+  rw [Finset.mem_Iio, Finset.mem_range]
 
 theorem stopped_process_eq' (n : ℕ) :
     stoppedProcess u τ n =
@@ -1040,31 +1123,6 @@ theorem stopped_process_eq' (n : ℕ) :
   rw [stopped_process_eq, this, Finset.sum_range_succ_comm, ← add_assoc]
 
 end AddCommMonoid
-
-section NormedAddCommGroup
-
-variable [NormedAddCommGroup β] {p : ℝ≥0∞} {μ : Measure Ω}
-
-theorem memℒpStoppedProcess (hτ : IsStoppingTime f τ) (hu : ∀ n, Memℒp (u n) p μ) (n : ℕ) :
-    Memℒp (stoppedProcess u τ n) p μ := by
-  rw [stopped_process_eq]
-  refine' mem_ℒp.add _ _
-  · exact mem_ℒp.indicator (f.le n { a : Ω | n ≤ τ a } (hτ.measurable_set_ge n)) (hu n)
-    
-  · suffices mem_ℒp (fun ω => ∑ i : ℕ in Finset.range n, { a : Ω | τ a = i }.indicator (u i) ω) p μ by
-      convert this
-      ext1 ω
-      simp only [Finset.sum_apply]
-    refine' mem_ℒp_finset_sum _ fun i hi => mem_ℒp.indicator _ (hu i)
-    exact f.le i { a : Ω | τ a = i } (hτ.measurable_set_eq i)
-    
-
-theorem integrableStoppedProcess (hτ : IsStoppingTime f τ) (hu : ∀ n, Integrable (u n) μ) (n : ℕ) :
-    Integrable (stoppedProcess u τ n) μ := by
-  simp_rw [← mem_ℒp_one_iff_integrable] at hu⊢
-  exact mem_ℒp_stopped_process hτ hu n
-
-end NormedAddCommGroup
 
 end Nat
 

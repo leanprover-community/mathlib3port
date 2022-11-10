@@ -3,7 +3,7 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
-import Mathbin.Algebra.Order.Ring.Basic
+import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Tactic.Positivity
 

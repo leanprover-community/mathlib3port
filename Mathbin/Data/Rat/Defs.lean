@@ -3,97 +3,63 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Int.Cast
+import Mathbin.Data.Rat.Init
+import Mathbin.Data.Int.Cast.Defs
 import Mathbin.Data.Int.Div
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Pnat.Defs
-import Mathbin.Tactic.NthRewrite.Default
 
 /-!
 # Basics for the Rational Numbers
 
 ## Summary
 
-We define a rational number `q` as a structure `{ num, denom, pos, cop }`, where
-- `num` is the numerator of `q`,
-- `denom` is the denominator of `q`,
-- `pos` is a proof that `denom > 0`, and
-- `cop` is a proof `num` and `denom` are coprime.
-
-We then define the integral domain structure on `ℚ` and prove basic lemmas about it.
+We define the integral domain structure on `ℚ` and prove basic lemmas about it.
 The definition of the field structure on `ℚ` will be done in `data.rat.basic` once the
 `field` class has been defined.
 
 ## Main Definitions
 
-- `rat` is the structure encoding `ℚ`.
 - `rat.mk n d` constructs a rational number `q = n / d` from `n d : ℤ`.
 
 ## Notations
 
 - `/.` is infix notation for `rat.mk`.
 
-## Tags
-
-rat, rationals, field, ℚ, numerator, denominator, num, denom
 -/
 
-
-#print Rat /-
-/-- `rat`, or `ℚ`, is the type of rational numbers. It is defined
-  as the set of pairs ⟨n, d⟩ of integers such that `d` is positive and `n` and
-  `d` are coprime. This representation is preferred to the quotient
-  because without periodic reduction, the numerator and denominator can grow
-  exponentially (for example, adding 1/2 to itself repeatedly). -/
-structure Rat where mk' ::
-  num : ℤ
-  denom : ℕ
-  Pos : 0 < denom
-  cop : num.natAbs.Coprime denom
--/
-
--- mathport name: exprℚ
-notation "ℚ" => Rat
 
 namespace Rat
 
-/-- String representation of a rational numbers, used in `has_repr`, `has_to_string`, and
-`has_to_format` instances. -/
-protected def repr : ℚ → String
-  | ⟨n, d, _, _⟩ => if d = 1 then repr n else repr n ++ "/" ++ repr d
-
-instance : Repr ℚ :=
-  ⟨Rat.repr⟩
-
-instance : ToString ℚ :=
-  ⟨Rat.repr⟩
-
-unsafe instance : has_to_format ℚ :=
-  ⟨coe ∘ Rat.repr⟩
-
 #print Rat.ofInt /-
-/-- Embed an integer as a rational number -/
+/-- Embed an integer as a rational number. You should use the coercion `coe : ℤ → ℚ` instead. -/
 def ofInt (n : ℤ) : ℚ :=
   ⟨n, 1, Nat.one_pos, Nat.coprime_one_right _⟩
 -/
 
+instance : HasIntCast ℚ :=
+  ⟨ofInt⟩
+
+@[simp]
+theorem of_int_eq_cast (n : ℤ) : ofInt n = n :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_int_num (n : ℤ) : (n : ℚ).num = n :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_int_denom (n : ℤ) : (n : ℚ).denom = 1 :=
+  rfl
+
 instance : Zero ℚ :=
-  ⟨ofInt 0⟩
+  ⟨(0 : ℤ)⟩
 
 instance : One ℚ :=
-  ⟨ofInt 1⟩
+  ⟨(1 : ℤ)⟩
 
 instance : Inhabited ℚ :=
   ⟨0⟩
-
-theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.denom = q.denom := by
-  cases p
-  cases q
-  simp
-
-@[ext]
-theorem ext {p q : ℚ} (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
-  Rat.ext_iff.mpr ⟨hn, hd⟩
 
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ+` (not necessarily coprime) -/
 def mkPnat (n : ℤ) : ℕ+ → ℚ
@@ -273,7 +239,7 @@ theorem num_denom : ∀ {a : ℚ}, a.num /. a.denom = a
 theorem num_denom' {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
   num_denom.symm
 
-theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
+theorem coe_int_eq_mk (z : ℤ) : (z : ℚ) = z /. 1 :=
   num_denom'
 
 /- warning: rat.num_denom_cases_on -> Rat.numDenomCasesOn is a dubious translation:
@@ -293,24 +259,6 @@ numbers of the form `n /. d` with `d ≠ 0`. -/
 @[elab_as_elim]
 def numDenomCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ (n : ℤ) (d : ℕ), d ≠ 0 → C (n /. d)) : C a :=
   (numDenomCasesOn a) fun n d h c => H n d h.ne'
-
-theorem num_dvd (a) {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
-  cases' e : a /. b with n d h c
-  rw [Rat.num_denom', Rat.mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
-  refine' Int.nat_abs_dvd.1 <| Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.dvd_of_dvd_mul_right _
-  have := congr_arg Int.natAbs e
-  simp only [Int.nat_abs_mul, Int.nat_abs_of_nat] at this
-  simp [this]
-
-theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b := by
-  by_cases b0:b = 0
-  · simp [b0]
-    
-  cases' e : a /. b with n d h c
-  rw [num_denom', mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
-  refine' Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.symm.dvd_of_dvd_mul_left _
-  rw [← Int.nat_abs_mul, ← Int.coe_nat_dvd, Int.dvd_nat_abs, ← e]
-  simp
 
 #print Rat.add /-
 /-- Addition of rational numbers. Use `(+)` instead. -/
@@ -565,10 +513,14 @@ instance : CommRing ℚ where
   mul_assoc := Rat.mul_assoc
   left_distrib := Rat.mul_add
   right_distrib := Rat.add_mul
-  natCast n := Rat.ofInt n
+  intCast := coe
+  /- Important: We do not set `nat_cast := λ n, ((n : ℤ) : ℚ)` (even though it's defeq) as that
+    makes `int.cast_coe_nat` and `coe_coe` loop in `simp`. -/
+  natCast n := ofInt n
   nat_cast_zero := rfl
-  nat_cast_succ n :=
-    show ofInt _ = ofInt _ + 1 by simp only [of_int_eq_mk, add_def one_ne_zero one_ne_zero, ← mk_one_one] <;> simp
+  nat_cast_succ n := by
+    simp only [of_int_eq_cast, coe_int_eq_mk, add_def one_ne_zero one_ne_zero, ← mk_one_one, Nat.cast_add, Nat.cast_one,
+      mul_one]
 
 instance : CommGroupWithZero ℚ :=
   { Rat.commRing with zero := 0, one := 1, mul := (· * ·), inv := Inv.inv, div := (· / ·),
@@ -611,6 +563,18 @@ instance : CommSemigroup ℚ := by infer_instance
 
 instance : Semigroup ℚ := by infer_instance
 
+theorem denom_ne_zero (q : ℚ) : q.denom ≠ 0 :=
+  ne_of_gt q.Pos
+
+theorem eq_iff_mul_eq_mul {p q : ℚ} : p = q ↔ p.num * q.denom = q.num * p.denom := by
+  conv =>
+  lhs
+  rw [← @num_denom p, ← @num_denom q]
+  apply Rat.mk_eq <;>
+    · rw [← Nat.cast_zero, Ne, Int.coe_nat_eq_coe_nat_iff]
+      apply denom_ne_zero
+      
+
 theorem sub_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b - c /. d = (a * d - c * b) /. (b * d) := by
   simp [b0, d0, sub_eq_add_neg]
 
@@ -647,15 +611,6 @@ theorem num_one : (1 : ℚ).num = 1 :=
 theorem denom_one : (1 : ℚ).denom = 1 :=
   rfl
 
-theorem denom_ne_zero (q : ℚ) : q.denom ≠ 0 :=
-  ne_of_gt q.Pos
-
-theorem eq_iff_mul_eq_mul {p q : ℚ} : p = q ↔ p.num * q.denom = q.num * p.denom := by
-  conv =>
-  lhs
-  rw [← @num_denom p, ← @num_denom q]
-  apply Rat.mk_eq <;> rw [← Nat.cast_zero, Ne, Int.coe_nat_eq_coe_nat_iff] <;> apply denom_ne_zero
-
 theorem mk_num_ne_zero_of_ne_zero {q : ℚ} {n d : ℤ} (hq : q ≠ 0) (hqnd : q = n /. d) : n ≠ 0 := fun this : n = 0 =>
   hq <| by simpa [this] using hqnd
 
@@ -683,75 +638,6 @@ theorem div_num_denom (q r : ℚ) : q / r = q.num * r.denom /. (q.denom * r.num)
       _ = q.num * r.denom /. (q.denom * r.num) := mul_def (by simpa using denom_ne_zero q) hr
       
 
-theorem num_denom_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) : ∃ c : ℤ, n = c * q.num ∧ d = c * q.denom := by
-  obtain rfl | hn := eq_or_ne n 0
-  · simp [qdf]
-    
-  have : q.num * d = n * ↑q.denom := by
-    refine' (Rat.mk_eq _ hd).mp _
-    · exact int.coe_nat_ne_zero.mpr (Rat.denom_ne_zero _)
-      
-    · rwa [num_denom]
-      
-  have hqdn : q.num ∣ n := by
-    rw [qdf]
-    exact Rat.num_dvd _ hd
-  refine' ⟨n / q.num, _, _⟩
-  · rw [Int.div_mul_cancel hqdn]
-    
-  · refine' Int.eq_mul_div_of_mul_eq_mul_of_dvd_left _ hqdn this
-    rw [qdf]
-    exact Rat.num_ne_zero_of_ne_zero ((mk_ne_zero hd).mpr hn)
-    
-
-theorem mk_pnat_num (n : ℤ) (d : ℕ+) : (mkPnat n d).num = n / Nat.gcd n.natAbs d := by cases d <;> rfl
-
-theorem mk_pnat_denom (n : ℤ) (d : ℕ+) : (mkPnat n d).denom = d / Nat.gcd n.natAbs d := by cases d <;> rfl
-
-theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
-  rcases d with ((_ | _) | _) <;>
-    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPnat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.coe_nat_succ, Int.zero_div]
-
-theorem denom_mk (n d : ℤ) : (n /. d).denom = if d = 0 then 1 else d.natAbs / n.gcd d := by
-  rcases d with ((_ | _) | _) <;>
-    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPnat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.coe_nat_succ]
-
-theorem mk_pnat_denom_dvd (n : ℤ) (d : ℕ+) : (mkPnat n d).denom ∣ d.1 := by
-  rw [mk_pnat_denom]
-  apply Nat.div_dvd_of_dvd
-  apply Nat.gcd_dvd_right
-
-theorem add_denom_dvd (q₁ q₂ : ℚ) : (q₁ + q₂).denom ∣ q₁.denom * q₂.denom := by
-  cases q₁
-  cases q₂
-  apply mk_pnat_denom_dvd
-
-theorem mul_denom_dvd (q₁ q₂ : ℚ) : (q₁ * q₂).denom ∣ q₁.denom * q₂.denom := by
-  cases q₁
-  cases q₂
-  apply mk_pnat_denom_dvd
-
-theorem mul_num (q₁ q₂ : ℚ) :
-    (q₁ * q₂).num = q₁.num * q₂.num / Nat.gcd (q₁.num * q₂.num).natAbs (q₁.denom * q₂.denom) := by
-  cases q₁ <;> cases q₂ <;> rfl
-
-theorem mul_denom (q₁ q₂ : ℚ) :
-    (q₁ * q₂).denom = q₁.denom * q₂.denom / Nat.gcd (q₁.num * q₂.num).natAbs (q₁.denom * q₂.denom) := by
-  cases q₁ <;> cases q₂ <;> rfl
-
-theorem mul_self_num (q : ℚ) : (q * q).num = q.num * q.num := by
-  rw [mul_num, Int.nat_abs_mul, Nat.Coprime.gcd_eq_one, Int.coe_nat_one, Int.div_one] <;>
-    exact (q.cop.mul_right q.cop).mul (q.cop.mul_right q.cop)
-
-theorem mul_self_denom (q : ℚ) : (q * q).denom = q.denom * q.denom := by
-  rw [Rat.mul_denom, Int.nat_abs_mul, Nat.Coprime.gcd_eq_one, Nat.div_one] <;>
-    exact (q.cop.mul_right q.cop).mul (q.cop.mul_right q.cop)
-
-theorem add_num_denom (q r : ℚ) : q + r = (q.num * r.denom + q.denom * r.num : ℤ) /. (↑q.denom * ↑r.denom : ℤ) := by
-  have hqd : (q.denom : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 q.3
-  have hrd : (r.denom : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 r.3
-  conv_lhs => rw [← @num_denom q, ← @num_denom r, Rat.add_def hqd hrd] <;> simp [mul_comm]
-
 section Casts
 
 protected theorem add_mk (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
@@ -760,13 +646,9 @@ protected theorem add_mk (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
     rw [add_def h h, mk_eq h (mul_ne_zero h h)]
     simp [add_mul, mul_assoc]
 
-theorem coe_int_eq_mk : ∀ z : ℤ, ↑z = z /. 1
-  | (n : ℕ) => of_int_eq_mk _
-  | -[n+1] => show -ofInt _ = _ by simp [of_int_eq_mk, neg_def, Int.neg_succ_of_nat_coe]
-
 theorem mk_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d := by
   by_cases d0:d = 0
-  · simp [d0, div_zero]
+  · simp [d0, div_zero, Int.cast_zero]
     
   simp [division_def, coe_int_eq_mk, mul_def one_ne_zero d0]
 
@@ -790,62 +672,6 @@ theorem coe_int_div_eq_mk {n d : ℤ} : (n : ℚ) / ↑d = n /. d := by
 @[simp]
 theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r := by rw [← Int.cast_ofNat, ← mk_eq_div, num_denom]
 
-theorem exists_eq_mul_div_num_and_eq_mul_div_denom (n : ℤ) {d : ℤ} (d_ne_zero : d ≠ 0) :
-    ∃ c : ℤ, n = c * ((n : ℚ) / d).num ∧ (d : ℤ) = c * ((n : ℚ) / d).denom :=
-  haveI : (n : ℚ) / d = Rat.mk n d := by rw [← Rat.mk_eq_div]
-  Rat.num_denom_mk d_ne_zero this
-
-theorem mul_num_denom' (q r : ℚ) : (q * r).num * q.denom * r.denom = q.num * r.num * (q * r).denom := by
-  let s := q.num * r.num /. (q.denom * r.denom : ℤ)
-  have hs : (q.denom * r.denom : ℤ) ≠ 0 := int.coe_nat_ne_zero_iff_pos.mpr (mul_pos q.pos r.pos)
-  obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ := exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.num) hs
-  rw [c_mul_num, mul_assoc, mul_comm]
-  nth_rw 0 [c_mul_denom]
-  repeat' rw [mul_assoc]
-  apply mul_eq_mul_left_iff.2
-  rw [or_iff_not_imp_right]
-  intro c_pos
-  have h : _ = s :=
-    @mul_def q.num q.denom r.num r.denom (int.coe_nat_ne_zero_iff_pos.mpr q.pos) (int.coe_nat_ne_zero_iff_pos.mpr r.pos)
-  rw [num_denom, num_denom] at h
-  rw [h]
-  rw [mul_comm]
-  apply rat.eq_iff_mul_eq_mul.mp
-  rw [← mk_eq_div]
-
-theorem add_num_denom' (q r : ℚ) :
-    (q + r).num * q.denom * r.denom = (q.num * r.denom + r.num * q.denom) * (q + r).denom := by
-  let s := mk (q.num * r.denom + r.num * q.denom) (q.denom * r.denom : ℤ)
-  have hs : (q.denom * r.denom : ℤ) ≠ 0 := int.coe_nat_ne_zero_iff_pos.mpr (mul_pos q.pos r.pos)
-  obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ :=
-    exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.denom + r.num * q.denom) hs
-  rw [c_mul_num, mul_assoc, mul_comm]
-  nth_rw 0 [c_mul_denom]
-  repeat' rw [mul_assoc]
-  apply mul_eq_mul_left_iff.2
-  rw [or_iff_not_imp_right]
-  intro c_pos
-  have h : _ = s :=
-    @add_def q.num q.denom r.num r.denom (int.coe_nat_ne_zero_iff_pos.mpr q.pos) (int.coe_nat_ne_zero_iff_pos.mpr r.pos)
-  rw [num_denom, num_denom] at h
-  rw [h]
-  rw [mul_comm]
-  apply rat.eq_iff_mul_eq_mul.mp
-  rw [← mk_eq_div]
-
-theorem substr_num_denom' (q r : ℚ) :
-    (q - r).num * q.denom * r.denom = (q.num * r.denom - r.num * q.denom) * (q - r).denom := by
-  rw [sub_eq_add_neg, sub_eq_add_neg, ← neg_mul, ← num_neg_eq_neg_num, ← denom_neg_eq_denom r, add_num_denom' q (-r)]
-
-theorem coe_int_eq_of_int (z : ℤ) : ↑z = ofInt z :=
-  (coe_int_eq_mk z).trans (of_int_eq_mk z).symm
-
-@[simp, norm_cast]
-theorem coe_int_num (n : ℤ) : (n : ℚ).num = n := by rw [coe_int_eq_of_int] <;> rfl
-
-@[simp, norm_cast]
-theorem coe_int_denom (n : ℤ) : (n : ℚ).denom = 1 := by rw [coe_int_eq_of_int] <;> rfl
-
 theorem coe_int_num_of_denom_eq_one {q : ℚ} (hq : q.denom = 1) : ↑q.num = q := by
   conv_rhs => rw [← @num_denom q, hq]
   rw [coe_int_eq_mk]
@@ -868,157 +694,9 @@ theorem coe_nat_denom (n : ℕ) : (n : ℚ).denom = 1 := by rw [← Int.cast_ofN
 -- Will be subsumed by `int.coe_inj` after we have defined
 -- `linear_ordered_field ℚ` (which implies characteristic zero).
 theorem coe_int_inj (m n : ℤ) : (m : ℚ) = n ↔ m = n :=
-  ⟨fun h => by simpa using congr_arg num h, congr_arg _⟩
+  ⟨congr_arg num, congr_arg _⟩
 
 end Casts
-
-theorem inv_def' {q : ℚ} : q⁻¹ = (q.denom : ℚ) / q.num := by
-  conv_lhs => rw [← @num_denom q]
-  cases q
-  simp [div_num_denom]
-
-protected theorem inv_neg (q : ℚ) : (-q)⁻¹ = -q⁻¹ := by
-  simp only [inv_def']
-  cases' eq_or_ne (q.num : ℚ) 0 with hq hq <;> simp [div_eq_iff, hq]
-
-@[simp]
-theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
-  suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1 by
-    conv => pattern (occs := 1)q <;> (rw [← @num_denom q])
-    rwa [coe_int_eq_mk, coe_nat_eq_mk]
-  have : (q.denom : ℤ) ≠ 0 := ne_of_gt (by exact_mod_cast q.pos)
-  rw [Rat.mul_def this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
-
-theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).denom = 1 ↔ n ∣ m := by
-  replace hn : (n : ℚ) ≠ 0
-  · rwa [Ne.def, ← Int.cast_zero, coe_int_inj]
-    
-  constructor
-  · intro h
-    lift (m : ℚ) / n to ℤ using h with k hk
-    use k
-    rwa [eq_div_iff_mul_eq hn, ← Int.cast_mul, mul_comm, eq_comm, coe_int_inj] at hk
-    
-  · rintro ⟨d, rfl⟩
-    rw [Int.cast_mul, mul_comm, mul_div_cancel _ hn, Rat.coe_int_denom]
-    
-
-theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.Coprime a.natAbs b.natAbs) : (a / b : ℚ).num = a := by
-  lift b to ℕ using le_of_lt hb0
-  norm_cast  at hb0 h
-  rw [← Rat.mk_eq_div, ← Rat.mk_pnat_eq a b hb0, Rat.mk_pnat_num, Pnat.mk_coe, h.gcd_eq_one, Int.coe_nat_one,
-    Int.div_one]
-
-theorem denom_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.Coprime a.natAbs b.natAbs) :
-    ((a / b : ℚ).denom : ℤ) = b := by
-  lift b to ℕ using le_of_lt hb0
-  norm_cast  at hb0 h
-  rw [← Rat.mk_eq_div, ← Rat.mk_pnat_eq a b hb0, Rat.mk_pnat_denom, Pnat.mk_coe, h.gcd_eq_one, Nat.div_one]
-
-theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprime a.natAbs b.natAbs)
-    (h2 : Nat.Coprime c.natAbs d.natAbs) (h : (a : ℚ) / b = (c : ℚ) / d) : a = c ∧ b = d := by
-  apply And.intro
-  · rw [← num_div_eq_of_coprime hb0 h1, h, num_div_eq_of_coprime hd0 h2]
-    
-  · rw [← denom_div_eq_of_coprime hb0 h1, h, denom_div_eq_of_coprime hd0 h2]
-    
-
-@[norm_cast]
-theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n := by
-  by_cases hn:n = 0
-  · subst hn
-    simp only [Int.cast_zero, Int.zero_div, zero_div]
-    
-  · have : (n : ℚ) ≠ 0 := by rwa [← coe_int_inj] at hn
-    simp only [Int.div_self hn, Int.cast_one, Ne.def, not_false_iff, div_self this]
-    
-
-@[norm_cast]
-theorem coe_nat_div_self (n : ℕ) : ((n / n : ℕ) : ℚ) = n / n :=
-  coe_int_div_self n
-
-theorem coe_int_div (a b : ℤ) (h : b ∣ a) : ((a / b : ℤ) : ℚ) = a / b := by
-  rcases h with ⟨c, rfl⟩
-  simp only [mul_comm b, Int.mul_div_assoc c (dvd_refl b), Int.cast_mul, mul_div_assoc, coe_int_div_self]
-
-theorem coe_nat_div (a b : ℕ) (h : b ∣ a) : ((a / b : ℕ) : ℚ) = a / b := by
-  rcases h with ⟨c, rfl⟩
-  simp only [mul_comm b, Nat.mul_div_assoc c (dvd_refl b), Nat.cast_mul, mul_div_assoc, coe_nat_div_self]
-
-theorem inv_coe_int_num_of_pos {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 := by
-  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_one, ← Int.cast_one]
-  apply num_div_eq_of_coprime ha0
-  rw [Int.nat_abs_one]
-  exact Nat.coprime_one_left _
-
-theorem inv_coe_nat_num_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 :=
-  inv_coe_int_num_of_pos (by exact_mod_cast ha0 : 0 < (a : ℤ))
-
-theorem inv_coe_int_denom_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.denom : ℤ) = a := by
-  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_one, ← Int.cast_one]
-  apply denom_div_eq_of_coprime ha0
-  rw [Int.nat_abs_one]
-  exact Nat.coprime_one_left _
-
-theorem inv_coe_nat_denom_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.denom = a := by
-  rw [← Int.coe_nat_eq_coe_nat_iff, ← Int.cast_ofNat a, inv_coe_int_denom_of_pos]
-  rwa [← Nat.cast_zero, Nat.cast_lt]
-
-@[simp]
-theorem inv_coe_int_num (a : ℤ) : (a : ℚ)⁻¹.num = Int.sign a := by
-  induction a using Int.induction_on <;>
-    simp [← Int.neg_succ_of_nat_coe', Int.neg_succ_of_nat_coe, -neg_add_rev, Rat.inv_neg, Int.coe_nat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_num_of_pos, -Int.cast_negSucc, @eq_comm ℤ 1, Int.sign_eq_one_of_pos]
-
-@[simp]
-theorem inv_coe_nat_num (a : ℕ) : (a : ℚ)⁻¹.num = Int.sign a :=
-  inv_coe_int_num a
-
-@[simp]
-theorem inv_coe_int_denom (a : ℤ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a.natAbs := by
-  induction a using Int.induction_on <;>
-    simp [← Int.neg_succ_of_nat_coe', Int.neg_succ_of_nat_coe, -neg_add_rev, Rat.inv_neg, Int.coe_nat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_denom_of_pos, -Int.cast_negSucc]
-
-@[simp]
-theorem inv_coe_nat_denom (a : ℕ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a := by simpa using inv_coe_int_denom a
-
-protected theorem forall {p : ℚ → Prop} : (∀ r, p r) ↔ ∀ a b : ℤ, p (a / b) :=
-  ⟨fun h _ _ => h _, fun h q => show q = q.num / q.denom by simp [Rat.div_num_denom].symm ▸ h q.1 q.2⟩
-
-protected theorem exists {p : ℚ → Prop} : (∃ r, p r) ↔ ∃ a b : ℤ, p (a / b) :=
-  ⟨fun ⟨r, hr⟩ => ⟨r.num, r.denom, by rwa [← mk_eq_div, num_denom]⟩, fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
-
-/-!
-### Denominator as `ℕ+`
--/
-
-
-section PnatDenom
-
-/-- Denominator as `ℕ+`. -/
-def pnatDenom (x : ℚ) : ℕ+ :=
-  ⟨x.denom, x.Pos⟩
-
-@[simp]
-theorem coe_pnat_denom (x : ℚ) : (x.pnatDenom : ℕ) = x.denom :=
-  rfl
-
-@[simp]
-theorem mk_pnat_pnat_denom_eq (x : ℚ) : mkPnat x.num x.pnatDenom = x := by rw [pnat_denom, mk_pnat_eq, num_denom]
-
-theorem pnat_denom_eq_iff_denom_eq {x : ℚ} {n : ℕ+} : x.pnatDenom = n ↔ x.denom = ↑n :=
-  Subtype.ext_iff
-
-@[simp]
-theorem pnat_denom_one : (1 : ℚ).pnatDenom = 1 :=
-  rfl
-
-@[simp]
-theorem pnat_denom_zero : (0 : ℚ).pnatDenom = 1 :=
-  rfl
-
-end PnatDenom
 
 end Rat
 

@@ -76,9 +76,12 @@ localized [Pointwise] attribute [instance] Finset.hasOne Finset.hasZero
 theorem mem_one : a ∈ (1 : Finset α) ↔ a = 1 :=
   mem_singleton
 
-@[simp, norm_cast, to_additive]
-theorem coe_one : ↑(1 : Finset α) = (1 : Set α) :=
-  coe_singleton 1
+@[to_additive]
+instance : CoeIsOneHom (Finset α) (Set α) where coe_one := coe_singleton 1
+
+@[norm_cast, to_additive]
+protected theorem coe_one : ↑(1 : Finset α) = (1 : Set α) :=
+  coe_one
 
 @[simp, to_additive]
 theorem one_subset : (1 : Finset α) ⊆ s ↔ (1 : α) ∈ s :=

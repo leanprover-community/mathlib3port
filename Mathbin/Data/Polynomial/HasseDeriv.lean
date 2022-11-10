@@ -237,7 +237,7 @@ theorem hasse_deriv_mul (f g : R[X]) :
   clear f g
   ext (m r n s) : 4
   simp only [finset_sum_apply, coe_mul_left, coe_comp, flip_apply, comp_app, hasse_deriv_monomial,
-    LinearMap.to_add_monoid_hom_coe, comp_hom_apply_apply, coe_mul, monomial_mul_monomial]
+    LinearMap.to_add_monoid_hom_coe, comp_hom_apply_apply, AddMonoidHom.coe_mul, monomial_mul_monomial]
   have aux :
     ∀ x : ℕ × ℕ,
       x ∈ antidiagonal k →

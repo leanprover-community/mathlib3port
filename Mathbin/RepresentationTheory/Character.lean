@@ -5,7 +5,6 @@ Authors: Antoine Labelle
 -/
 import Mathbin.RepresentationTheory.FdRep
 import Mathbin.LinearAlgebra.Trace
-import Mathbin.RepresentationTheory.Basic
 import Mathbin.RepresentationTheory.Invariants
 
 /-!
@@ -24,17 +23,17 @@ noncomputable section
 
 universe u
 
-open LinearMap CategoryTheory.MonoidalCategory Representation FiniteDimensional
+open CategoryTheory LinearMap CategoryTheory.MonoidalCategory Representation FiniteDimensional
 
 open BigOperators
 
-variable {k G : Type u} [Field k]
+variable {k : Type u} [Field k]
 
 namespace FdRep
 
 section Monoid
 
-variable [Monoid G]
+variable {G : Type u} [Monoid G]
 
 /-- The character of a representation `V : fdRep k G` is the function associating to `g : G` the
 trace of the linear map `V.ρ g`.-/
@@ -65,7 +64,7 @@ end Monoid
 
 section Group
 
-variable [Group G]
+variable {G : Type u} [Group G]
 
 /-- The character of a representation is constant on conjugacy classes. -/
 @[simp]
@@ -78,9 +77,7 @@ theorem char_dual (V : FdRep k G) (g : G) : (of (dual V.ρ)).character g = V.cha
 
 @[simp]
 theorem char_lin_hom (V W : FdRep k G) (g : G) : (of (linHom V.ρ W.ρ)).character g = V.character g⁻¹ * W.character g :=
-  by
-  rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
-  rfl
+  by rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 
@@ -90,6 +87,35 @@ theorem average_char_eq_finrank_invariants (V : FdRep k G) :
   simp [character, GroupAlgebra.average, _root_.map_sum]
 
 end Group
+
+section Orthogonality
+
+variable {G : GroupCat.{u}} [IsAlgClosed k]
+
+open Classical
+
+variable [Fintype G] [Invertible (Fintype.card G : k)]
+
+/-- Orthogonality of characters for irreducible representations of finite group over an
+algebraically closed field whose characteristic doesn't divide the order of the group. -/
+theorem char_orthonormal (V W : FdRep k G) [Simple V] [Simple W] :
+    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g * W.character g⁻¹) = if Nonempty (V ≅ W) then ↑1 else ↑0 := by
+  -- First, we can rewrite the summand `V.character g * W.character g⁻¹` as the character
+  -- of the representation `V ⊗ W* ≅ Hom(W, V)` applied to `g`.
+  conv in V.character _ * W.character _ =>
+    rw [mul_comm, ← char_dual, ← Pi.mul_apply, ← char_tensor]
+    rw [char_iso (FdRep.dualTensorIsoLinHom W.ρ V)]
+  -- The average over the group of the character of a representation equals the dimension of the
+  -- space of invariants.
+  rw [average_char_eq_finrank_invariants]
+  rw [show (of (lin_hom W.ρ V.ρ)).ρ = lin_hom W.ρ V.ρ from FdRep.of_ρ (lin_hom W.ρ V.ρ)]
+  -- The space of invariants of `Hom(W, V)` is the subspace of `G`-equivariant linear maps,
+  -- `Hom_G(W, V)`.
+  rw [(lin_hom.invariants_equiv_fdRep_hom W V).finrank_eq]
+  -- By Schur's Lemma, the dimension of `Hom_G(W, V)` is `1` is `V ≅ W` and `0` otherwise.
+  rw_mod_cast [finrank_hom_simple_simple W V, iso.nonempty_iso_symm]
+
+end Orthogonality
 
 end FdRep
 

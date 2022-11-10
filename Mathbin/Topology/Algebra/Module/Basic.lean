@@ -1758,6 +1758,10 @@ theorem coe_prod [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M
     (e.Prod e' : M₁ × M₃ →L[R₁] M₂ × M₄) = (e : M₁ →L[R₁] M₂).prod_map (e' : M₃ →L[R₁] M₄) :=
   rfl
 
+theorem prod_symm [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L[R₁] M₂) (e' : M₃ ≃L[R₁] M₄) :
+    (e.Prod e').symm = e.symm.Prod e'.symm :=
+  rfl
+
 include σ₂₁
 
 protected theorem bijective (e : M₁ ≃SL[σ₁₂] M₂) : Function.Bijective e :=
@@ -1926,6 +1930,11 @@ instance automorphismGroup : Group (M₁ ≃L[R₁] M₁) where
 variable {M₁} {R₄ : Type _} [Semiring R₄] [Module R₄ M₄] {σ₃₄ : R₃ →+* R₄} {σ₄₃ : R₄ →+* R₃} [RingHomInvPair σ₃₄ σ₄₃]
   [RingHomInvPair σ₄₃ σ₃₄] {σ₂₄ : R₂ →+* R₄} {σ₁₄ : R₁ →+* R₄} [RingHomCompTriple σ₂₁ σ₁₄ σ₂₄]
   [RingHomCompTriple σ₂₄ σ₄₃ σ₂₃] [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄]
+
+/-- The continuous linear equivalence between `ulift M₁` and `M₁`. -/
+def ulift : ULift M₁ ≃L[R₁] M₁ :=
+  { Equiv.ulift with map_add' := fun x y => rfl, map_smul' := fun c x => rfl,
+    continuous_to_fun := continuous_ulift_down, continuous_inv_fun := continuous_ulift_up }
 
 include σ₂₁ σ₃₄ σ₂₃ σ₂₄ σ₁₃
 

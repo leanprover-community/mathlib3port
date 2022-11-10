@@ -53,7 +53,7 @@ instance hasMul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
   ⟨fun f g => ⟨f * g, continuous_mul.comp (f.Continuous.prod_mk g.Continuous : _)⟩⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) : ⇑(f * g) = f * g :=
+protected theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) : ⇑(f * g) = f * g :=
   rfl
 
 @[simp, to_additive]
@@ -66,7 +66,7 @@ instance [One β] : One C(α, β) :=
   ⟨const α 1⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_one [One β] : ⇑(1 : C(α, β)) = 1 :=
+protected theorem coe_one [One β] : ⇑(1 : C(α, β)) = 1 :=
   rfl
 
 @[simp, to_additive]
@@ -77,14 +77,14 @@ instance [HasNatCast β] : HasNatCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
 
 @[simp, norm_cast]
-theorem coe_nat_cast [HasNatCast β] (n : ℕ) : ((n : C(α, β)) : α → β) = n :=
+protected theorem coe_nat_cast [HasNatCast β] (n : ℕ) : ((n : C(α, β)) : α → β) = n :=
   rfl
 
 instance [HasIntCast β] : HasIntCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
 
 @[simp, norm_cast]
-theorem coe_int_cast [HasIntCast β] (n : ℤ) : ((n : C(α, β)) : α → β) = n :=
+protected theorem coe_int_cast [HasIntCast β] (n : ℤ) : ((n : C(α, β)) : α → β) = n :=
   rfl
 
 instance hasNsmul [AddMonoid β] [HasContinuousAdd β] : HasSmul ℕ C(α, β) :=
@@ -95,7 +95,7 @@ instance hasPow [Monoid β] [HasContinuousMul β] : Pow C(α, β) ℕ :=
   ⟨fun f n => ⟨f ^ n, f.Continuous.pow n⟩⟩
 
 @[norm_cast, to_additive]
-theorem coe_pow [Monoid β] [HasContinuousMul β] (f : C(α, β)) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
+protected theorem coe_pow [Monoid β] [HasContinuousMul β] (f : C(α, β)) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
   rfl
 
 -- don't make `coe_nsmul` simp as the linter complains it's redundant WRT `coe_smul`
@@ -112,7 +112,7 @@ attribute [simp] pow_comp
 instance [Group β] [TopologicalGroup β] : Inv C(α, β) where inv f := ⟨f⁻¹, f.Continuous.inv⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_inv [Group β] [TopologicalGroup β] (f : C(α, β)) : ⇑f⁻¹ = f⁻¹ :=
+protected theorem coe_inv [Group β] [TopologicalGroup β] (f : C(α, β)) : ⇑f⁻¹ = f⁻¹ :=
   rfl
 
 @[simp, to_additive]
@@ -123,7 +123,7 @@ theorem inv_comp [Group γ] [TopologicalGroup γ] (f : C(β, γ)) (g : C(α, β)
 instance [Div β] [HasContinuousDiv β] : Div C(α, β) where div f g := ⟨f / g, f.Continuous.div' g.Continuous⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_div [Div β] [HasContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = f / g :=
+protected theorem coe_div [Div β] [HasContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = f / g :=
   rfl
 
 @[simp, to_additive]
@@ -137,7 +137,7 @@ instance hasZsmul [AddGroup β] [TopologicalAddGroup β] :
 instance hasZpow [Group β] [TopologicalGroup β] : Pow C(α, β) ℤ where pow f z := ⟨f ^ z, f.Continuous.zpow z⟩
 
 @[norm_cast, to_additive]
-theorem coe_zpow [Group β] [TopologicalGroup β] (f : C(α, β)) (z : ℤ) : ⇑(f ^ z) = f ^ z :=
+protected theorem coe_zpow [Group β] [TopologicalGroup β] (f : C(α, β)) (z : ℤ) : ⇑(f ^ z) = f ^ z :=
   rfl
 
 -- don't make `coe_zsmul` simp as the linter complains it's redundant WRT `coe_smul`
@@ -185,43 +185,45 @@ namespace ContinuousMap
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Semigroup β] [HasContinuousMul β] :
     Semigroup C(α, β) :=
-  coe_injective.Semigroup _ coe_mul
+  coe_injective.Semigroup _ ContinuousMap.coe_mul
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommSemigroup β] [HasContinuousMul β] :
     CommSemigroup C(α, β) :=
-  coe_injective.CommSemigroup _ coe_mul
+  coe_injective.CommSemigroup _ ContinuousMap.coe_mul
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [MulOneClass β] [HasContinuousMul β] :
     MulOneClass C(α, β) :=
-  coe_injective.MulOneClass _ coe_one coe_mul
+  coe_injective.MulOneClass _ ContinuousMap.coe_one ContinuousMap.coe_mul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [MulZeroClass β] [HasContinuousMul β] :
     MulZeroClass C(α, β) :=
-  coe_injective.MulZeroClass _ coe_zero coe_mul
+  coe_injective.MulZeroClass _ ContinuousMap.coe_zero ContinuousMap.coe_mul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [SemigroupWithZero β]
     [HasContinuousMul β] : SemigroupWithZero C(α, β) :=
-  coe_injective.SemigroupWithZero _ coe_zero coe_mul
+  coe_injective.SemigroupWithZero _ ContinuousMap.coe_zero ContinuousMap.coe_mul
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoid β] [HasContinuousMul β] :
     Monoid C(α, β) :=
-  coe_injective.Monoid _ coe_one coe_mul coe_pow
+  coe_injective.Monoid _ ContinuousMap.coe_one ContinuousMap.coe_mul ContinuousMap.coe_pow
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [MonoidWithZero β] [HasContinuousMul β] :
     MonoidWithZero C(α, β) :=
-  coe_injective.MonoidWithZero _ coe_zero coe_one coe_mul coe_pow
+  coe_injective.MonoidWithZero _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_mul
+    ContinuousMap.coe_pow
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommMonoid β] [HasContinuousMul β] :
     CommMonoid C(α, β) :=
-  coe_injective.CommMonoid _ coe_one coe_mul coe_pow
+  coe_injective.CommMonoid _ ContinuousMap.coe_one ContinuousMap.coe_mul ContinuousMap.coe_pow
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommMonoidWithZero β]
     [HasContinuousMul β] : CommMonoidWithZero C(α, β) :=
-  coe_injective.CommMonoidWithZero _ coe_zero coe_one coe_mul coe_pow
+  coe_injective.CommMonoidWithZero _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_mul
+    ContinuousMap.coe_pow
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [LocallyCompactSpace α] [TopologicalSpace β] [Mul β]
@@ -239,8 +241,8 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [LocallyCompactSpace 
 def coeFnMonoidHom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoid β] [HasContinuousMul β] :
     C(α, β) →* α → β where
   toFun := coeFn
-  map_one' := coe_one
-  map_mul' := coe_mul
+  map_one' := ContinuousMap.coe_one
+  map_mul' := ContinuousMap.coe_mul
 
 /-- Composition on the left by a (continuous) homomorphism of topological monoids, as a
 `monoid_hom`. Similar to `monoid_hom.comp_left`. -/
@@ -277,12 +279,14 @@ theorem prod_apply {α : Type _} {β : Type _} [CommMonoid β] [TopologicalSpace
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Group β] [TopologicalGroup β] :
     Group C(α, β) :=
-  coe_injective.Group _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
+  coe_injective.Group _ ContinuousMap.coe_one ContinuousMap.coe_mul ContinuousMap.coe_inv ContinuousMap.coe_div
+    ContinuousMap.coe_pow ContinuousMap.coe_zpow
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommGroup β] [TopologicalGroup β] :
     CommGroup C(α, β) :=
-  coe_injective.CommGroup _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
+  coe_injective.CommGroup _ ContinuousMap.coe_one ContinuousMap.coe_mul ContinuousMap.coe_inv ContinuousMap.coe_div
+    ContinuousMap.coe_pow ContinuousMap.coe_zpow
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommGroup β] [TopologicalGroup β] :
@@ -339,58 +343,71 @@ namespace ContinuousMap
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonUnitalNonAssocSemiring β]
     [TopologicalSemiring β] : NonUnitalNonAssocSemiring C(α, β) :=
-  coe_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul coe_nsmul
+  coe_injective.NonUnitalNonAssocSemiring _ ContinuousMap.coe_zero ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_nsmul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonUnitalSemiring β]
     [TopologicalSemiring β] : NonUnitalSemiring C(α, β) :=
-  coe_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul coe_nsmul
+  coe_injective.NonUnitalSemiring _ ContinuousMap.coe_zero ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_nsmul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [AddMonoidWithOne β] [HasContinuousAdd β] :
     AddMonoidWithOne C(α, β) :=
-  coe_injective.AddMonoidWithOne _ coe_zero coe_one coe_add coe_nsmul coe_nat_cast
+  coe_injective.AddMonoidWithOne _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add
+    ContinuousMap.coe_nsmul ContinuousMap.coe_nat_cast
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonAssocSemiring β]
     [TopologicalSemiring β] : NonAssocSemiring C(α, β) :=
-  coe_injective.NonAssocSemiring _ coe_zero coe_one coe_add coe_mul coe_nsmul coe_nat_cast
+  coe_injective.NonAssocSemiring _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add
+    ContinuousMap.coe_mul ContinuousMap.coe_nsmul ContinuousMap.coe_nat_cast
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Semiring β] [TopologicalSemiring β] :
     Semiring C(α, β) :=
-  coe_injective.Semiring _ coe_zero coe_one coe_add coe_mul coe_nsmul coe_pow coe_nat_cast
+  coe_injective.Semiring _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_nsmul ContinuousMap.coe_pow ContinuousMap.coe_nat_cast
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonUnitalNonAssocRing β]
     [TopologicalRing β] : NonUnitalNonAssocRing C(α, β) :=
-  coe_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub coe_nsmul coe_zsmul
+  coe_injective.NonUnitalNonAssocRing _ ContinuousMap.coe_zero ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_neg ContinuousMap.coe_sub ContinuousMap.coe_nsmul ContinuousMap.coe_zsmul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonUnitalRing β] [TopologicalRing β] :
     NonUnitalRing C(α, β) :=
-  coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub coe_nsmul coe_zsmul
+  coe_injective.NonUnitalRing _ ContinuousMap.coe_zero ContinuousMap.coe_add ContinuousMap.coe_mul ContinuousMap.coe_neg
+    ContinuousMap.coe_sub ContinuousMap.coe_nsmul ContinuousMap.coe_zsmul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonAssocRing β] [TopologicalRing β] :
     NonAssocRing C(α, β) :=
-  coe_injective.NonAssocRing _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub coe_nsmul coe_zsmul coe_nat_cast
-    coe_int_cast
+  coe_injective.NonAssocRing _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_neg ContinuousMap.coe_sub ContinuousMap.coe_nsmul ContinuousMap.coe_zsmul
+    ContinuousMap.coe_nat_cast ContinuousMap.coe_int_cast
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Ring β] [TopologicalRing β] :
     Ring C(α, β) :=
-  coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub coe_nsmul coe_zsmul coe_pow coe_nat_cast
-    coe_int_cast
+  coe_injective.Ring _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_neg ContinuousMap.coe_sub ContinuousMap.coe_nsmul ContinuousMap.coe_zsmul ContinuousMap.coe_pow
+    ContinuousMap.coe_nat_cast ContinuousMap.coe_int_cast
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonUnitalCommSemiring β]
     [TopologicalSemiring β] : NonUnitalCommSemiring C(α, β) :=
-  coe_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul coe_nsmul
+  ContinuousMap.coe_injective.NonUnitalCommSemiring _ ContinuousMap.coe_zero ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_nsmul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommSemiring β] [TopologicalSemiring β] :
     CommSemiring C(α, β) :=
-  coe_injective.CommSemiring _ coe_zero coe_one coe_add coe_mul coe_nsmul coe_pow coe_nat_cast
+  coe_injective.CommSemiring _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_nsmul ContinuousMap.coe_pow ContinuousMap.coe_nat_cast
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [NonUnitalCommRing β] [TopologicalRing β] :
     NonUnitalCommRing C(α, β) :=
-  coe_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub coe_nsmul coe_zsmul
+  coe_injective.NonUnitalCommRing _ ContinuousMap.coe_zero ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_neg ContinuousMap.coe_sub ContinuousMap.coe_nsmul ContinuousMap.coe_zsmul
 
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommRing β] [TopologicalRing β] :
     CommRing C(α, β) :=
-  coe_injective.CommRing _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub coe_nsmul coe_zsmul coe_pow coe_nat_cast
-    coe_int_cast
+  coe_injective.CommRing _ ContinuousMap.coe_zero ContinuousMap.coe_one ContinuousMap.coe_add ContinuousMap.coe_mul
+    ContinuousMap.coe_neg ContinuousMap.coe_sub ContinuousMap.coe_nsmul ContinuousMap.coe_zsmul ContinuousMap.coe_pow
+    ContinuousMap.coe_nat_cast ContinuousMap.coe_int_cast
 
 /-- Composition on the left by a (continuous) homomorphism of topological semirings, as a
 `ring_hom`.  Similar to `ring_hom.comp_left`. -/

@@ -113,7 +113,7 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
 instance (priority := 100) paracompact_of_compact [CompactSpace X] : ParacompactSpace X := by
   -- the proof is trivial: we choose a finite subcover using compactness, and use it
   refine' ⟨fun ι s ho hu => _⟩
-  rcases compact_univ.elim_finite_subcover _ ho hu.ge with ⟨T, hT⟩
+  rcases is_compact_univ.elim_finite_subcover _ ho hu.ge with ⟨T, hT⟩
   have := hT
   simp only [subset_def, mem_Union] at this
   choose i hiT hi using fun x => this x (mem_univ x)

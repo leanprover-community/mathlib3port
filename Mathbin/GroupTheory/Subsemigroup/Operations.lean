@@ -383,9 +383,13 @@ include hA
 instance (priority := 900) hasMul : Mul S' :=
   ⟨fun a b => ⟨a.1 * b.1, mul_mem a.2 b.2⟩⟩
 
--- lower priority so later simp lemmas are used first; to appease simp_nf
-@[simp, norm_cast, to_additive]
-theorem coe_mul (x y : S') : (↑(x * y) : M) = ↑x * ↑y :=
+@[to_additive]
+instance : CoeIsMulHom S' M where coe_mul _ _ := rfl
+
+-- even though there is a generic `coe_mul`, this can still be useful as a `dsimp` lemma,
+-- so keep it `@[simp]`
+@[simp, nolint simp_nf, to_additive]
+protected theorem coe_mul (x y : S') : (↑(x * y) : M) = ↑x * ↑y :=
   rfl
 
 -- lower priority so later simp lemmas are used first; to appease simp_nf

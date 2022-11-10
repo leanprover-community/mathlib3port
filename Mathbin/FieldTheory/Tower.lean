@@ -123,7 +123,7 @@ instance linearMap' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :
     finrank K (V →ₗ[F] K) = finrank F V :=
-  (Nat.mul_right_inj <| show 0 < finrank F K from finrank_pos).1 <|
+  mul_right_injective₀ finrank_pos.ne' <|
     calc
       finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
       _ = finrank F V * finrank F K := finrank_linear_map F V K

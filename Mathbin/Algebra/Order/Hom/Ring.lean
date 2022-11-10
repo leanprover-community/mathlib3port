@@ -5,7 +5,7 @@ Authors: Alex J. Best, Yaël Dillies
 -/
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Order.Hom.Monoid
-import Mathbin.Algebra.Order.Ring.Basic
+import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Ring.Equiv
 
 /-!

@@ -5,6 +5,7 @@ Authors: Thomas Browning, Patrick Lutz
 -/
 import Mathbin.FieldTheory.IntermediateField
 import Mathbin.FieldTheory.Separable
+import Mathbin.FieldTheory.SplittingField
 import Mathbin.RingTheory.TensorProduct
 
 /-!

@@ -2008,7 +2008,7 @@ section
 open Encodable
 
 /-- Monotone convergence for a supremum over a directed family and indexed by a countable type -/
-theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, Measurable (f b))
+theorem lintegral_supr_directed_of_measurable [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, Measurable (f b))
     (h_directed : Directed (· ≤ ·) f) : (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ := by
   cases nonempty_encodable β
   cases is_empty_or_nonempty β
@@ -2030,22 +2030,61 @@ theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (h
         
     
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr hz₁, ",", expr hz₂, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/-- Monotone convergence for a supremum over a directed family and indexed by a countable type. -/
+theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, AeMeasurable (f b) μ)
+    (h_directed : Directed (· ≤ ·) f) : (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ := by
+  simp_rw [← supr_apply]
+  let p : α → (β → Ennreal) → Prop := fun x f' => Directed LE.le f'
+  have hp : ∀ᵐ x ∂μ, p x fun i => f i x := by
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+    obtain ⟨z, hz₁, hz₂⟩ := h_directed i j
+    exact ⟨z, hz₁ x, hz₂ x⟩
+  have h_ae_seq_directed : Directed LE.le (aeSeq hf p) := by
+    intro b₁ b₂
+    obtain ⟨z, hz₁, hz₂⟩ := h_directed b₁ b₂
+    refine' ⟨z, _, _⟩ <;>
+      · intro x
+        by_cases hx:x ∈ AeSeqSet hf p
+        · repeat' rw [aeSeq.ae_seq_eq_fun_of_mem_ae_seq_set hf hx]
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr hz₁, \",\", expr hz₂, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+          
+        · simp only [aeSeq, hx, if_false]
+          exact le_rfl
+          
+        
+  convert lintegral_supr_directed_of_measurable (aeSeq.measurable hf p) h_ae_seq_directed using 1
+  · simp_rw [← supr_apply]
+    rw [lintegral_congr_ae (aeSeq.supr hf hp).symm]
+    
+  · congr 1
+    ext1 b
+    rw [lintegral_congr_ae]
+    symm
+    refine' aeSeq.ae_seq_n_eq_fun_n_ae hf hp _
+    
+
 end
 
-theorem lintegral_tsum [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ i, Measurable (f i)) :
+theorem lintegral_tsum [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ i, AeMeasurable (f i) μ) :
     (∫⁻ a, ∑' i, f i a ∂μ) = ∑' i, ∫⁻ a, f i a ∂μ := by
   simp only [Ennreal.tsum_eq_supr_sum]
   rw [lintegral_supr_directed]
-  · simp [lintegral_finset_sum _ fun i _ => hf i]
+  · simp [lintegral_finset_sum' _ fun i _ => hf i]
     
   · intro b
-    exact Finset.measurableSum _ fun i _ => hf i
+    exact Finset.aeMeasurableSum _ fun i _ => hf i
     
   · intro s t
     use s ∪ t
     constructor
-    exact fun a => Finset.sum_le_sum_of_subset (Finset.subset_union_left _ _)
-    exact fun a => Finset.sum_le_sum_of_subset (Finset.subset_union_right _ _)
+    · exact fun a => Finset.sum_le_sum_of_subset (Finset.subset_union_left _ _)
+      
+    · exact fun a => Finset.sum_le_sum_of_subset (Finset.subset_union_right _ _)
+      
     
 
 open Measure
@@ -2358,7 +2397,7 @@ theorem with_density_tsum {f : ℕ → α → ℝ≥0∞} (h : ∀ i, Measurable
   ext1 s hs
   simp_rw [sum_apply _ hs, with_density_apply _ hs]
   change (∫⁻ x in s, (∑' n, f n) x ∂μ) = ∑' i : ℕ, ∫⁻ x, f i x ∂μ.restrict s
-  rw [← lintegral_tsum h]
+  rw [← lintegral_tsum fun i => (h i).AeMeasurable]
   refine' lintegral_congr fun x => tsum_apply (Pi.summable.2 fun _ => Ennreal.summable)
 
 theorem with_density_indicator {s : Set α} (hs : MeasurableSet s) (f : α → ℝ≥0∞) :

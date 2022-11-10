@@ -347,7 +347,7 @@ def linHom : Representation k G (V →ₗ[k] W) where
   map_one' := LinearMap.ext fun x => by simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
   map_mul' g h :=
     LinearMap.ext fun x => by
-      simp_rw [coe_mul, coe_mk, Function.comp_apply, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
+      simp_rw [LinearMap.coe_mul, coe_mk, Function.comp_apply, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
 
 @[simp]
 theorem lin_hom_apply (g : G) (f : V →ₗ[k] W) : (linHom ρV ρW) g f = ρW g ∘ₗ f ∘ₗ ρV g⁻¹ :=

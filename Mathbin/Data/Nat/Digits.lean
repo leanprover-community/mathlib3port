@@ -245,7 +245,7 @@ theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : ofDig
     rcases m with ⟨rfl⟩
     · apply Nat.eq_zero_of_add_eq_zero_right w
       
-    · exact ih ((Nat.mul_right_inj h).mp (Nat.eq_zero_of_add_eq_zero_left w)) _ m
+    · exact ih (mul_right_injective₀ (pos_iff_ne_zero.1 h) (Nat.eq_zero_of_add_eq_zero_left w)) _ m
       
     
 

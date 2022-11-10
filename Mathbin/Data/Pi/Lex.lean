@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.Order.WellFounded
 import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Order.Group.Basic
+import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Order.MinMax
 
 /-!

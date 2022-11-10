@@ -137,7 +137,7 @@ variable (α) [∀ i, CanonicallyOrderedAddMonoid (α i)]
 
 instance : OrderBot (Π₀ i, α i) where
   bot := 0
-  bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
+  bot_le := by simp only [le_def, Dfinsupp.coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
 
 variable {α}
 

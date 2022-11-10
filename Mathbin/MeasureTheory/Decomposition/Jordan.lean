@@ -253,7 +253,7 @@ theorem subset_negative_null_set (hu : MeasurableSet u) (hv : MeasurableSet v) (
     (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) : s v = 0 := by
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   have := subset_positive_null_set hu hv hw hsu
-  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this
+  simp only [Pi.neg_apply, neg_eq_zero, vector_measure.coe_neg] at this
   exact this hw₁ hw₂ hwt
 
 /-- If the symmetric difference of two positive sets is a null-set, then so are the differences
@@ -275,7 +275,7 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
   have := of_diff_eq_zero_of_symm_diff_eq_zero_positive hu hv hsu hsv
-  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this
+  simp only [Pi.neg_apply, neg_eq_zero, vector_measure.coe_neg] at this
   exact this hs
 
 theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
@@ -297,7 +297,7 @@ theorem of_inter_eq_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : M
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
   have := of_inter_eq_of_symm_diff_eq_zero_positive hu hv hw hsu hsv
-  simp only [Pi.neg_apply, neg_inj, neg_eq_zero, coe_neg] at this
+  simp only [Pi.neg_apply, neg_inj, neg_eq_zero, vector_measure.coe_neg] at this
   exact this hs
 
 end

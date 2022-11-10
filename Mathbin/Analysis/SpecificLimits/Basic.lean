@@ -440,7 +440,7 @@ theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {
   have : ∀ i, 0 < max 1 (w i) := fun i => zero_lt_one.trans_le (le_max_left _ _)
   refine' ⟨fun i => δ' i / max 1 (w i), fun i => Nnreal.div_pos (Hpos _) (this i), _⟩
   refine' lt_of_le_of_lt (Ennreal.tsum_le_tsum fun i => _) Hsum
-  rw [coe_div (this i).ne']
+  rw [Ennreal.coe_div (this i).ne']
   refine' mul_le_of_le_div' (Ennreal.mul_le_mul le_rfl <| Ennreal.inv_le_inv.2 _)
   exact coe_le_coe.2 (le_max_right _ _)
 

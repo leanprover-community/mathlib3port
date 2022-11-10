@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Mathbin.Order.Bounds.OrderIso
+import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Order.Field.Defs
+import Mathbin.Algebra.Order.Ring.InjSurj
 
 /-!
 # Linear ordered (semi)fields

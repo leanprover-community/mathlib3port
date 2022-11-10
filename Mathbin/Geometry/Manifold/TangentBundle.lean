@@ -600,7 +600,6 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
     simp only [chart_at, BasicSmoothVectorBundleCore.chart, tangentBundleCore,
       BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, A, Prod.mk.inj_iff, ContinuousLinearMap.coe_id',
       mfld_simps]
-    exact (tangentBundleCore I H).coord_change_self _ _ trivial x_snd
     
   show ∀ x, (chart_at (ModelProd H E) p).toLocalEquiv.symm x = (Equiv.sigmaEquivProd H E).symm x
   · rintro ⟨x_fst, x_snd⟩

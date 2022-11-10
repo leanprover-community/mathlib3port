@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Group.Opposite
+import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!

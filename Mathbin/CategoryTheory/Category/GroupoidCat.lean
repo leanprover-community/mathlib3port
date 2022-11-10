@@ -74,7 +74,7 @@ def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u} where
   obj C := CatCat.of C
   map C D := id
 
-instance forgetToCatFull : Full forgetToCat where Preimage C D := id
+instance forgetToCatFull : Full forgetToCat where preimage C D := id
 
 instance forget_to_Cat_faithful : Faithful forgetToCat where
 

@@ -173,12 +173,14 @@ theorem of_real_eq_coe_nnreal {x : ℝ} (h : 0 ≤ x) : Ennreal.ofReal x = @coe 
 theorem of_real_coe_nnreal : Ennreal.ofReal p = p :=
   (coe_nnreal_eq p).symm
 
+-- These lemmas can be proved using `simp` lemmas for `coe_is_zero_hom`/`coe_is_one_hom` instances,
+-- but we keep them around because they are eligible for `dsimp`.
 @[simp, norm_cast]
-theorem coe_zero : ↑(0 : ℝ≥0) = (0 : ℝ≥0∞) :=
+protected theorem coe_zero : ↑(0 : ℝ≥0) = (0 : ℝ≥0∞) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_one : ↑(1 : ℝ≥0) = (1 : ℝ≥0∞) :=
+protected theorem coe_one : ↑(1 : ℝ≥0) = (1 : ℝ≥0∞) :=
   rfl
 
 @[simp]
@@ -333,20 +335,27 @@ theorem coe_pos : 0 < (↑r : ℝ≥0∞) ↔ 0 < r :=
 theorem coe_ne_zero : (r : ℝ≥0∞) ≠ 0 ↔ r ≠ 0 :=
   not_congr coe_eq_coe
 
-@[simp, norm_cast]
-theorem coe_add : ↑(r + p) = (r + p : ℝ≥0∞) :=
+@[norm_cast]
+protected theorem coe_add : ↑(r + p) = (r + p : ℝ≥0∞) :=
   WithTop.coe_add
 
-@[simp, norm_cast]
-theorem coe_mul : ↑(r * p) = (r * p : ℝ≥0∞) :=
+@[norm_cast]
+protected theorem coe_mul : ↑(r * p) = (r * p : ℝ≥0∞) :=
   WithTop.coe_mul
 
-@[simp, norm_cast]
-theorem coe_bit0 : (↑(bit0 r) : ℝ≥0∞) = bit0 r :=
-  coe_add
+instance : CoeIsRingHom ℝ≥0 ℝ≥0∞ where
+  coe_add _ _ := Ennreal.coe_add
+  coe_zero := Ennreal.coe_zero
+  coe_mul _ _ := Ennreal.coe_mul
+  coe_one := Ennreal.coe_one
 
-@[simp, norm_cast]
-theorem coe_bit1 : (↑(bit1 r) : ℝ≥0∞) = bit1 r := by simp [bit1]
+@[norm_cast]
+protected theorem coe_bit0 : (↑(bit0 r) : ℝ≥0∞) = bit0 r :=
+  coe_bit0 _ _ _
+
+@[norm_cast]
+protected theorem coe_bit1 : (↑(bit1 r) : ℝ≥0∞) = bit1 r :=
+  coe_bit1 _ _ _
 
 theorem coe_two : ((2 : ℝ≥0) : ℝ≥0∞) = 2 := by norm_cast
 
@@ -372,11 +381,11 @@ protected theorem zero_lt_one : 0 < (1 : ℝ≥0∞) :=
 
 @[simp]
 theorem one_lt_two : (1 : ℝ≥0∞) < 2 :=
-  coe_one ▸ coe_two ▸ by exact_mod_cast @one_lt_two ℕ _ _
+  Ennreal.coe_one ▸ coe_two ▸ by exact_mod_cast @one_lt_two ℕ _ _
 
 @[simp]
 theorem zero_lt_two : (0 : ℝ≥0∞) < 2 :=
-  lt_trans zero_lt_one one_lt_two
+  lt_trans Ennreal.zero_lt_one one_lt_two
 
 theorem two_ne_zero : (2 : ℝ≥0∞) ≠ 0 :=
   (ne_of_lt zero_lt_two).symm
@@ -434,7 +443,10 @@ theorem top_add : ∞ + a = ∞ :=
 
 /-- Coercion `ℝ≥0 → ℝ≥0∞` as a `ring_hom`. -/
 def ofNnrealHom : ℝ≥0 →+* ℝ≥0∞ :=
-  ⟨coe, coe_one, fun _ _ => coe_mul, coe_zero, fun _ _ => coe_add⟩
+  { -- Explicitly specify `coe` here to make it computable.
+      RingHom.coe
+      ℝ≥0 ℝ≥0∞ with
+    toFun := coe }
 
 @[simp]
 theorem coe_of_nnreal_hom : ⇑of_nnreal_hom = coe :=
@@ -491,8 +503,8 @@ theorem coe_indicator {α} (s : Set α) (f : α → ℝ≥0) (a : α) :
     ((s.indicator f a : ℝ≥0) : ℝ≥0∞) = s.indicator (fun x => f x) a :=
   (ofNnrealHom : ℝ≥0 →+ ℝ≥0∞).map_indicator _ _ _
 
-@[simp, norm_cast]
-theorem coe_pow (n : ℕ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n :=
+@[norm_cast]
+protected theorem coe_pow (n : ℕ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n :=
   ofNnrealHom.map_pow r n
 
 @[simp]
@@ -754,7 +766,7 @@ theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε : ℝ≥0, 0 <
     have : ∞ ≤ ↑a + ↑(1 : ℝ≥0) := h 1 zero_lt_one coe_lt_top
     rw [← coe_add] at this <;> exact (not_top_le_coe this).elim
   | some a, some b, h => by
-    simp only [none_eq_top, some_eq_coe, coe_add.symm, coe_le_coe, coe_lt_top, true_imp_iff] at * <;>
+    simp only [none_eq_top, some_eq_coe, ← coe_add, coe_le_coe, coe_lt_top, true_imp_iff] at * <;>
       exact Nnreal.le_of_forall_pos_le_add h
 
 theorem lt_iff_exists_rat_btwn : a < b ↔ ∃ q : ℚ, 0 ≤ q ∧ a < Real.toNnreal q ∧ (Real.toNnreal q : ℝ≥0∞) < b :=
@@ -918,7 +930,7 @@ theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d := by
   norm_cast  at *
   calc
     ↑(a * b) < ↑(a' * b') := coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))
-    _ = ↑a' * ↑b' := coe_mul
+    _ = ↑a' * ↑b' := coe_mul _ _
     _ ≤ c * d := mul_le_mul a'c.le b'd.le
     
 
@@ -945,8 +957,8 @@ theorem mul_eq_mul_left : a ≠ 0 → a ≠ ∞ → (a * b = a * c ↔ b = c) :=
   cases a <;>
     cases b <;>
       cases c <;>
-        simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, -coe_mul, coe_mul.symm,
-          Nnreal.mul_eq_mul_left]
+        simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, ← Ennreal.coe_mul,
+          -coe_mul, Nnreal.mul_eq_mul_left]
 
 theorem mul_eq_mul_right : c ≠ 0 → c ≠ ∞ → (a * c = b * c ↔ a = b) :=
   mul_comm c a ▸ mul_comm c b ▸ mul_eq_mul_left
@@ -955,7 +967,8 @@ theorem mul_le_mul_left : a ≠ 0 → a ≠ ∞ → (a * b ≤ a * c ↔ b ≤ c
   cases a <;>
     cases b <;>
       cases c <;>
-        simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, -coe_mul, coe_mul.symm]
+        simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, ← Ennreal.coe_mul,
+          -coe_mul]
   intro h
   exact mul_le_mul_left (pos_iff_ne_zero.2 h)
 
@@ -1275,22 +1288,24 @@ theorem coe_inv_le : (↑r⁻¹ : ℝ≥0∞) ≤ (↑r)⁻¹ :=
     coe_le_iff.2 <| by
       rintro b rfl
       apply Nnreal.inv_le_of_le_mul
-      rwa [← coe_mul, ← coe_one, coe_le_coe] at hb
+      rwa [← coe_mul, ← @coe_one ℝ≥0, coe_le_coe] at hb
 
 @[simp, norm_cast]
-theorem coe_inv (hr : r ≠ 0) : (↑r⁻¹ : ℝ≥0∞) = (↑r)⁻¹ :=
+protected theorem coe_inv (hr : r ≠ 0) : (↑r⁻¹ : ℝ≥0∞) = (↑r)⁻¹ :=
   coe_inv_le.antisymm <| Inf_le <| le_of_eq <| by rw [← coe_mul, mul_inv_cancel hr, coe_one]
 
 @[norm_cast]
-theorem coe_inv_two : ((2⁻¹ : ℝ≥0) : ℝ≥0∞) = 2⁻¹ := by rw [coe_inv _root_.two_ne_zero, coe_two]
+theorem coe_inv_two : ((2⁻¹ : ℝ≥0) : ℝ≥0∞) = 2⁻¹ := by rw [Ennreal.coe_inv _root_.two_ne_zero, coe_two]
 
 @[simp, norm_cast]
-theorem coe_div (hr : r ≠ 0) : (↑(p / r) : ℝ≥0∞) = p / r := by rw [div_eq_mul_inv, div_eq_mul_inv, coe_mul, coe_inv hr]
+protected theorem coe_div (hr : r ≠ 0) : (↑(p / r) : ℝ≥0∞) = p / r := by
+  rw [div_eq_mul_inv, div_eq_mul_inv, coe_mul, Ennreal.coe_inv hr]
 
 theorem div_zero (h : a ≠ 0) : a / 0 = ∞ := by simp [div_eq_mul_inv, h]
 
 instance : DivInvOneMonoid ℝ≥0∞ :=
-  { Ennreal.divInvMonoid with inv_one := by simpa only [coe_inv one_ne_zero, coe_one] using coe_eq_coe.2 inv_one }
+  { Ennreal.divInvMonoid with
+    inv_one := by simpa only [Ennreal.coe_inv one_ne_zero, coe_one] using coe_eq_coe.2 inv_one }
 
 protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n := by
   cases n
@@ -1302,7 +1317,7 @@ protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp [top_pow, zero_pow, n.succ_pos]
     
-  rw [← coe_inv ha, ← coe_pow, ← coe_inv (pow_ne_zero _ ha), ← inv_pow, coe_pow]
+  rw [← Ennreal.coe_inv ha, ← coe_pow, ← Ennreal.coe_inv (pow_ne_zero _ ha), ← inv_pow, coe_pow]
 
 theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : a * a⁻¹ = 1 := by
   lift a to ℝ≥0 using ht
@@ -1319,7 +1334,7 @@ theorem mul_div_cancel' (h0 : a ≠ 0) (hI : a ≠ ∞) : a * (b / a) = b := by 
 
 instance : HasInvolutiveInv ℝ≥0∞ where
   inv := Inv.inv
-  inv_inv a := by by_cases a = 0 <;> cases a <;> simp_all [none_eq_top, some_eq_coe, -coe_inv, (coe_inv _).symm]
+  inv_inv a := by by_cases a = 0 <;> cases a <;> simp_all [none_eq_top, some_eq_coe, ← Ennreal.coe_inv]
 
 @[simp]
 theorem inv_eq_top : a⁻¹ = ∞ ↔ a = 0 :=
@@ -1378,7 +1393,7 @@ theorem inv_strict_anti : StrictAnti (Inv.inv : ℝ≥0∞ → ℝ≥0∞) := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp [h]
     
-  rw [← coe_inv h.ne_bot, ← coe_inv ha, coe_lt_coe]
+  rw [← Ennreal.coe_inv h.ne_bot, ← Ennreal.coe_inv ha, coe_lt_coe]
   exact Nnreal.inv_lt_inv ha h
 
 @[simp]
@@ -1583,7 +1598,7 @@ theorem one_half_lt_one : (2⁻¹ : ℝ≥0∞) < 1 :=
 theorem half_lt_self {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < a := by
   lift a to ℝ≥0 using ht
   rw [coe_ne_zero] at hz
-  rw [← coe_two, ← coe_div, coe_lt_coe]
+  rw [← coe_two, ← Ennreal.coe_div, coe_lt_coe]
   exacts[Nnreal.half_lt_self hz, two_ne_zero']
 
 theorem half_le_self : a / 2 ≤ a :=
@@ -1675,7 +1690,7 @@ theorem coe_zpow (hr : r ≠ 0) (n : ℤ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n :=
   · simp only [Int.of_nat_eq_coe, coe_pow, zpow_coe_nat]
     
   · have : r ^ n.succ ≠ 0 := pow_ne_zero (n + 1) hr
-    simp only [zpow_neg_succ_of_nat, coe_inv this, coe_pow]
+    simp only [zpow_neg_succ_of_nat, Ennreal.coe_inv this, coe_pow]
     
 
 theorem zpow_pos (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : 0 < a ^ n := by
@@ -1926,7 +1941,8 @@ theorem of_real_pow {p : ℝ} (hp : 0 ≤ p) (n : ℕ) : Ennreal.ofReal (p ^ n) 
   rw [of_real_eq_coe_nnreal hp, ← coe_pow, ← of_real_coe_nnreal, Nnreal.coe_pow, Nnreal.coe_mk]
 
 theorem of_real_inv_of_pos {x : ℝ} (hx : 0 < x) : (Ennreal.ofReal x)⁻¹ = Ennreal.ofReal x⁻¹ := by
-  rw [Ennreal.ofReal, Ennreal.ofReal, ← @coe_inv (Real.toNnreal x) (by simp [hx]), coe_eq_coe, real.to_nnreal_inv.symm]
+  rw [Ennreal.ofReal, Ennreal.ofReal, ← @Ennreal.coe_inv (Real.toNnreal x) (by simp [hx]), coe_eq_coe,
+    real.to_nnreal_inv.symm]
 
 theorem of_real_div_of_pos {x y : ℝ} (hy : 0 < y) : Ennreal.ofReal (x / y) = Ennreal.ofReal x / Ennreal.ofReal y := by
   rw [div_eq_mul_inv, div_eq_mul_inv, of_real_mul' (inv_nonneg.2 hy.le), of_real_inv_of_pos hy]
@@ -2031,7 +2047,7 @@ theorem to_nnreal_inv (a : ℝ≥0∞) : a⁻¹.toNnreal = a.toNnreal⁻¹ := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp
     
-  rw [← coe_inv ha, to_nnreal_coe, to_nnreal_coe]
+  rw [← Ennreal.coe_inv ha, to_nnreal_coe, to_nnreal_coe]
 
 theorem to_nnreal_div (a b : ℝ≥0∞) : (a / b).toNnreal = a.toNnreal / b.toNnreal := by
   rw [div_eq_mul_inv, to_nnreal_mul, to_nnreal_inv, div_eq_mul_inv]

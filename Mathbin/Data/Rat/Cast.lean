@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Rat.Order
+import Mathbin.Data.Rat.Lemmas
 import Mathbin.Data.Int.CharZero
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.BigOperators.Basic
@@ -38,23 +39,20 @@ section WithDivRing
 
 variable [DivisionRing α]
 
-@[simp]
-theorem cast_of_int (n : ℤ) : (ofInt n : α) = n :=
-  (cast_def _).trans <| show (n / (1 : ℕ) : α) = n by rw [Nat.cast_one, div_one]
-
 @[simp, norm_cast]
-theorem cast_coe_int (n : ℤ) : ((n : ℚ) : α) = n := by rw [coe_int_eq_of_int, cast_of_int]
+theorem cast_coe_int (n : ℤ) : ((n : ℚ) : α) = n :=
+  (cast_def _).trans <| show (n / (1 : ℕ) : α) = n by rw [Nat.cast_one, div_one]
 
 @[simp, norm_cast]
 theorem cast_coe_nat (n : ℕ) : ((n : ℚ) : α) = n := by rw [← Int.cast_ofNat, cast_coe_int, Int.cast_ofNat]
 
 @[simp, norm_cast]
 theorem cast_zero : ((0 : ℚ) : α) = 0 :=
-  (cast_of_int _).trans Int.cast_zero
+  (cast_coe_int _).trans Int.cast_zero
 
 @[simp, norm_cast]
 theorem cast_one : ((1 : ℚ) : α) = 1 :=
-  (cast_of_int _).trans Int.cast_one
+  (cast_coe_int _).trans Int.cast_one
 
 theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a := by
   simpa only [cast_def] using (r.1.cast_commute a).div_left (r.2.cast_commute a)
@@ -180,31 +178,37 @@ theorem cast_eq_zero [CharZero α] {n : ℚ} : (n : α) = 0 ↔ n = 0 := by rw [
 theorem cast_ne_zero [CharZero α] {n : ℚ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_add [CharZero α] (m n) : ((m + n : ℚ) : α) = m + n :=
   cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_sub [CharZero α] (m n) : ((m - n : ℚ) : α) = m - n :=
   cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_mul [CharZero α] (m n) : ((m * n : ℚ) : α) = m * n :=
   cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_bit0 [CharZero α] (n : ℚ) : ((bit0 n : ℚ) : α) = bit0 n :=
   cast_add _ _
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_bit1 [CharZero α] (n : ℚ) : ((bit1 n : ℚ) : α) = bit1 n := by
   rw [bit1, cast_add, cast_one, cast_bit0] <;> rfl
 
 variable (α) [CharZero α]
 
+instance : CoeIsRingHom ℚ α where
+  coe_one := cast_one
+  coe_mul := cast_mul
+  coe_zero := cast_zero
+  coe_add := cast_add
+
 /-- Coercion `ℚ → α` as a `ring_hom`. -/
 def castHom : ℚ →+* α :=
-  ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
+  RingHom.coe ℚ α
 
 variable {α}
 
@@ -212,22 +216,22 @@ variable {α}
 theorem coe_cast_hom : ⇑(castHom α) = coe :=
   rfl
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_inv (n) : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
   map_inv₀ (castHom α) _
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_div (m n) : ((m / n : ℚ) : α) = m / n :=
   map_div₀ (castHom α) _ _
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_zpow (q : ℚ) (n : ℤ) : ((q ^ n : ℚ) : α) = q ^ n :=
   map_zpow₀ (castHom α) q n
 
 @[norm_cast]
 theorem cast_mk (a b : ℤ) : (a /. b : α) = a / b := by simp only [mk_eq_div, cast_div, cast_coe_int]
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem cast_pow (q) (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
   (castHom α).map_pow q k
 

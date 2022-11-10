@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Function.Basic
-import Mathbin.Data.Int.Cast.Defs
+import Mathbin.Data.Int.Cast.Basic
 
 /-!
 # Lifting algebraic data classes along injective/surjective maps

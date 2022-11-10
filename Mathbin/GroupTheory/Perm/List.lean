@@ -225,7 +225,7 @@ theorem form_perm_apply_lt (xs : List α) (h : Nodup xs) (n : ℕ) (hn : n + 1 <
     · specialize IH (y::l) h.of_cons _
       · simpa [Nat.succ_lt_succ_iff] using hn
         
-      simp only [swap_apply_eq_iff, coe_mul, form_perm_cons_cons, nth_le]
+      simp only [swap_apply_eq_iff, Equiv.Perm.coe_mul, form_perm_cons_cons, nth_le]
       generalize_proofs  at IH
       rw [IH, swap_apply_of_ne_of_ne, nth_le] <;>
         · rintro rfl

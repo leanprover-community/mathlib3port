@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Abs
-import Mathbin.Algebra.Order.Group.Basic
-import Mathbin.Algebra.Order.Monoid.Canonical
+import Mathbin.Algebra.Order.Group.Defs
+import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 
 /-!
 # Absolute values in ordered groups.

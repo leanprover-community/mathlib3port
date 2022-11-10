@@ -32,7 +32,7 @@ complex, real part, imaginary part, closure, interior, frontier
 -/
 
 
-open TopologicalFiberBundle Set
+open Set
 
 noncomputable section
 

@@ -68,6 +68,19 @@ theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodup s :=
 
 alias dedup_eq_self ↔ _ nodup.dedup
 
+theorem count_dedup (m : Multiset α) (a : α) : m.dedup.count a = if a ∈ m then 1 else 0 :=
+  (Quot.induction_on m) fun l => count_dedup _ _
+
+@[simp]
+theorem dedup_idempotent {m : Multiset α} : m.dedup.dedup = m.dedup :=
+  (Quot.induction_on m) fun l => @congr_arg _ _ _ _ coe dedup_idempotent
+
+@[simp]
+theorem dedup_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset β) :
+    (m.dedup.bind f).dedup = (m.bind f).dedup := by
+  ext x
+  simp_rw [count_dedup, mem_bind, mem_dedup]
+
 theorem dedup_eq_zero {s : Multiset α} : dedup s = 0 ↔ s = 0 :=
   ⟨fun h => eq_zero_of_subset_zero <| h ▸ subset_dedup _, fun h => h.symm ▸ dedup_zero⟩
 

@@ -1534,7 +1534,7 @@ theorem is_compact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →
     IsCompact (Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
   have : ∀ x, IsCompact (Closure (apply' F σ₁₂ x '' s)) := fun x =>
     ((apply' F σ₁₂ x).lipschitz.boundedImage hb).is_compact_closure
-  compact_closure_of_subset_compact (is_compact_pi_infinite this)
+  is_compact_closure_of_subset_compact (is_compact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
 
 /-- Let `s` be a bounded set in the space of continuous (semi)linear maps `E →SL[σ] F` taking values
@@ -1630,6 +1630,10 @@ def extend : Fₗ →SL[σ₁₂] F :=
         exact ContinuousLinearMap.map_smulₛₗ _ _ _
         ,
     cont }
+
+@[simp]
+theorem extend_eq (x : E) : extend f e h_dense h_e (e x) = f x :=
+  DenseInducing.extend_eq _ f.cont _
 
 theorem extend_unique (g : Fₗ →SL[σ₁₂] F) (H : g.comp e = f) : extend f e h_dense h_e = g :=
   ContinuousLinearMap.coe_fn_injective <|

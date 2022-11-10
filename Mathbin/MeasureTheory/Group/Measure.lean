@@ -507,7 +507,7 @@ theorem isHaarMeasureMap [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group
     lt_top_of_is_compact := by
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]
-      exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).compact_preimage hK),
+      exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).is_compact_preimage hK),
     toIsOpenPosMeasure := hf.isOpenPosMeasureMap h_surj }
 
 /-- A convenience wrapper for `measure_theory.measure.is_haar_measure_map`. -/

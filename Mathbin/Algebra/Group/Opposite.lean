@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Algebra.Group.Commute
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Algebra.Opposites
 import Mathbin.Data.Int.Cast.Defs
 
@@ -45,7 +45,7 @@ instance [AddMonoid α] : AddMonoid αᵐᵒᵖ :=
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne αᵐᵒᵖ :=
   { MulOpposite.addMonoid α, MulOpposite.hasOne α with natCast := fun n => op n,
-    nat_cast_zero := show op ((0 : ℕ) : α) = 0 by simp,
+    nat_cast_zero := show op ((0 : ℕ) : α) = 0 by simp [Nat.cast_zero],
     nat_cast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp }
 
 instance [AddCommMonoid α] : AddCommMonoid αᵐᵒᵖ :=

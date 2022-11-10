@@ -24,7 +24,9 @@ directions uniformly continuous. We denote uniform isomorphisms with the notatio
 
 open Set Filter
 
-variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
+universe u v
+
+variable {α : Type u} {β : Type _} {γ : Type _} {δ : Type _}
 
 -- not all spaces are homeomorphic to each other
 /-- Uniform isomorphism between `α` and `β` -/
@@ -261,6 +263,14 @@ def punitProd : PUnit × α ≃ᵤ α :=
 theorem coe_punit_prod : ⇑(punitProd α) = Prod.snd :=
   rfl
 
+/-- Uniform equivalence between `ulift α` and `α`. -/
+def ulift : ULift.{v, u} α ≃ᵤ α :=
+  { Equiv.ulift with uniform_continuous_to_fun := uniform_continuous_comap,
+    uniform_continuous_inv_fun := by
+      have hf : UniformInducing (@Equiv.ulift.{v, u} α).toFun := ⟨rfl⟩
+      simp_rw [hf.uniform_continuous_iff]
+      exact uniform_continuous_id }
+
 end
 
 /-- If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
@@ -272,7 +282,7 @@ def funUnique (ι α : Type _) [Unique ι] [UniformSpace α] : (ι → α) ≃�
 
 /-- Uniform isomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/
 @[simps (config := { fullyApplied := false })]
-def piFinTwo.{u} (α : Fin 2 → Type u) [∀ i, UniformSpace (α i)] : (∀ i, α i) ≃ᵤ α 0 × α 1 where
+def piFinTwo (α : Fin 2 → Type u) [∀ i, UniformSpace (α i)] : (∀ i, α i) ≃ᵤ α 0 × α 1 where
   toEquiv := piFinTwoEquiv α
   uniform_continuous_to_fun := (PiCat.uniform_continuous_proj _ 0).prod_mk (PiCat.uniform_continuous_proj _ 1)
   uniform_continuous_inv_fun :=

@@ -3,12 +3,13 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 -/
-import Mathbin.Tactic.ApplyFun
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Data.Zmod.Algebra
+import Mathbin.FieldTheory.Separable
+import Mathbin.FieldTheory.SplittingField
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.IntegralDomain
-import Mathbin.FieldTheory.Separable
+import Mathbin.Tactic.ApplyFun
 
 /-!
 # Finite fields

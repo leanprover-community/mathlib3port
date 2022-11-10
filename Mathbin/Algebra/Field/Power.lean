@@ -3,8 +3,9 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.Field.Basic
+import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.GroupWithZero.Power
+import Mathbin.Algebra.Parity
 
 /-!
 # Results about powers in fields or division rings.
@@ -19,11 +20,17 @@ variable {α : Type _}
 
 section DivisionRing
 
-variable [DivisionRing α]
+variable [DivisionRing α] {n : ℤ}
 
 @[simp]
-theorem zpow_bit1_neg (x : α) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
+theorem zpow_bit1_neg (a : α) (n : ℤ) : -a ^ bit1 n = -(a ^ bit1 n) := by
   rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
+
+theorem Odd.neg_zpow (h : Odd n) (a : α) : -a ^ n = -(a ^ n) := by
+  obtain ⟨k, rfl⟩ := h.exists_bit1
+  exact zpow_bit1_neg _ _
+
+theorem Odd.neg_one_zpow (h : Odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_zpow, one_zpow]
 
 end DivisionRing
 

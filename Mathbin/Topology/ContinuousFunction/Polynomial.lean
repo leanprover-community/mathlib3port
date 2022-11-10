@@ -62,7 +62,7 @@ theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) : ((Polyno
     simp [hp, hq]
     
   · intro n a
-    simp [Pi.pow_apply]
+    simp [Pi.pow_apply, ContinuousMap.coe_pow]
     
 
 end

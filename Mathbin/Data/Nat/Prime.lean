@@ -88,7 +88,7 @@ theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p)
   simp only [Nat.is_unit_iff]
   apply Or.imp_right _ (h.2 a _)
   · rintro rfl
-    rw [← Nat.mul_right_inj (pos_of_gt h1), ← hab, mul_one]
+    rw [← mul_right_inj' (pos_of_gt h1).ne', ← hab, mul_one]
     
   · rw [hab]
     exact dvd_mul_right _ _
@@ -637,13 +637,13 @@ theorem Prime.mul_eq_prime_sq_iff {x y p : ℕ} (hp : p.Prime) (hx : x ≠ 1) (h
     have pdvdxy : p ∣ x * y := by rw [h] <;> simp [sq]
     wlog := hp.dvd_mul.1 pdvdxy using x y
     cases' case with a ha
-    have hap : a ∣ p := ⟨y, by rwa [ha, sq, mul_assoc, Nat.mul_right_inj hp.pos, eq_comm] at h⟩
+    have hap : a ∣ p := ⟨y, by rwa [ha, sq, mul_assoc, mul_right_inj' hp.ne_zero, eq_comm] at h⟩
     exact
       ((Nat.dvd_prime hp).1 hap).elim
-        (fun _ => by clear_aux_decl <;> simp_all (config := { contextual := true }) [sq, Nat.mul_right_inj hp.pos])
+        (fun _ => by clear_aux_decl <;> simp_all (config := { contextual := true }) [sq, mul_right_inj' hp.ne_zero])
         fun _ => by
         clear_aux_decl <;>
-          simp_all (config := { contextual := true }) [sq, mul_comm, mul_assoc, Nat.mul_right_inj hp.pos,
+          simp_all (config := { contextual := true }) [sq, mul_comm, mul_assoc, mul_right_inj' hp.ne_zero,
             Nat.mul_right_eq_self_iff hp.pos],
     fun ⟨h₁, h₂⟩ => h₁.symm ▸ h₂.symm ▸ (sq _).symm⟩
 

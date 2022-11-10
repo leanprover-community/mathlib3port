@@ -3013,7 +3013,7 @@ protected theorem IsFiniteMeasureOnCompacts.smul [TopologicalSpace α] (μ : Mea
 `is_finite_measure_on_compacts_of_is_locally_finite_measure`. -/
 theorem CompactSpace.isFiniteMeasure [TopologicalSpace α] [CompactSpace α] [IsFiniteMeasureOnCompacts μ] :
     IsFiniteMeasure μ :=
-  ⟨IsFiniteMeasureOnCompacts.lt_top_of_is_compact compact_univ⟩
+  ⟨IsFiniteMeasureOnCompacts.lt_top_of_is_compact is_compact_univ⟩
 
 omit m0
 

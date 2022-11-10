@@ -30,8 +30,8 @@ open BigOperators Classical Pointwise
 
 universe u u'
 
-variable {R E F ι ι' : Type _} [LinearOrderedField R] [AddCommGroup E] [AddCommGroup F] [Module R E] [Module R F]
-  {s : Set E}
+variable {R E F ι ι' α : Type _} [LinearOrderedField R] [AddCommGroup E] [AddCommGroup F] [LinearOrderedAddCommGroup α]
+  [Module R E] [Module R F] [Module R α] [OrderedSmul R α] {s : Set E}
 
 /-- Center of mass of a finite collection of points with prescribed weights.
 Note that we require neither `0 ≤ w i` nor `∑ w = 1`. -/
@@ -116,6 +116,31 @@ theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀ i �
 theorem Finset.center_mass_filter_ne_zero : (t.filter fun i => w i ≠ 0).centerMass w z = t.centerMass w z :=
   (Finset.center_mass_subset z (filter_subset _ _)) fun i hit hit' => by
     simpa only [hit, mem_filter, true_and_iff, Ne.def, not_not] using hit'
+
+namespace Finset
+
+theorem center_mass_le_sup {s : Finset ι} {f : ι → α} {w : ι → R} (hw₀ : ∀ i ∈ s, 0 ≤ w i) (hw₁ : 0 < ∑ i in s, w i) :
+    s.centerMass w f ≤
+      s.sup'
+        (nonempty_of_ne_empty <| by
+          rintro rfl
+          simpa using hw₁)
+        f :=
+  by
+  rw [center_mass, inv_smul_le_iff hw₁, sum_smul]
+  exact sum_le_sum fun i hi => smul_le_smul_of_nonneg (le_sup' _ hi) <| hw₀ i hi
+  infer_instance
+
+theorem inf_le_center_mass {s : Finset ι} {f : ι → α} {w : ι → R} (hw₀ : ∀ i ∈ s, 0 ≤ w i) (hw₁ : 0 < ∑ i in s, w i) :
+    s.inf'
+        (nonempty_of_ne_empty <| by
+          rintro rfl
+          simpa using hw₁)
+        f ≤
+      s.centerMass w f :=
+  @center_mass_le_sup R _ αᵒᵈ _ _ _ _ _ _ _ hw₀ hw₁
+
+end Finset
 
 variable {z}
 
@@ -344,6 +369,11 @@ theorem Finset.convex_hull_eq (s : Finset E) :
   · rintro _ ⟨w, hw₀, hw₁, rfl⟩
     exact s.center_mass_mem_convex_hull (fun x hx => hw₀ _ hx) (hw₁.symm ▸ zero_lt_one) fun x hx => hx
     
+
+theorem Finset.mem_convex_hull {s : Finset E} {x : E} :
+    x ∈ convexHull R (s : Set E) ↔
+      ∃ (w : E → R)(hw₀ : ∀ y ∈ s, 0 ≤ w y)(hw₁ : (∑ y in s, w y) = 1), s.centerMass w id = x :=
+  by rw [Finset.convex_hull_eq, Set.mem_set_of_eq]
 
 theorem Set.Finite.convex_hull_eq {s : Set E} (hs : s.Finite) :
     convexHull R s =

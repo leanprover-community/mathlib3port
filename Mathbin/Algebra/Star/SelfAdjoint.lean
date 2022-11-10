@@ -221,7 +221,9 @@ instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
 
 instance : HasNatCast (selfAdjoint R) :=
   ⟨fun n =>
-    ⟨n, Nat.recOn n (by simp [zero_mem]) fun k hk => (@Nat.cast_succ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
+    ⟨n,
+      Nat.recOn n (by simpa using zero_mem (selfAdjoint R)) fun k hk =>
+        (@Nat.cast_succ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
 
 instance : HasIntCast (selfAdjoint R) :=
   ⟨fun n =>
@@ -257,7 +259,7 @@ variable [CommRing R] [StarRing R]
 
 instance : CommRing (selfAdjoint R) :=
   Function.Injective.commRing _ Subtype.coe_injective (selfAdjoint R).coe_zero coe_one (selfAdjoint R).coe_add coe_mul
-    (selfAdjoint R).coeNeg (selfAdjoint R).coe_sub (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul coe_pow
+    (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul coe_pow
     (fun _ => rfl) fun _ => rfl
 
 end CommRing
@@ -303,7 +305,7 @@ theorem coe_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R
 
 instance : Field (selfAdjoint R) :=
   Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).coe_zero coe_one (selfAdjoint R).coe_add coe_mul
-    (selfAdjoint R).coeNeg (selfAdjoint R).coe_sub coe_inv coe_div (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul
+    (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub coe_inv coe_div (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul
     coe_rat_smul coe_pow coe_zpow (fun _ => rfl) (fun _ => rfl) coe_rat_cast
 
 end Field

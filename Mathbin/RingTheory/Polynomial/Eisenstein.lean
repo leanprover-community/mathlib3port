@@ -267,7 +267,7 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] : ((cyclotomic p
     obtain ⟨k, hk⟩ := Int.coe_nat_dvd.1 h
     rw [← mul_assoc, mul_one, mul_assoc] at hk
     nth_rw 0 [← Nat.mul_one p]  at hk
-    rw [Nat.mul_right_inj hp.out.pos] at hk
+    rw [mul_right_inj' hp.out.ne_zero] at hk
     exact Nat.Prime.not_dvd_one hp.out (Dvd.intro k hk.symm)
     
 
@@ -315,7 +315,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
     obtain ⟨k, hk⟩ := Int.coe_nat_dvd.1 h
     rw [← mul_assoc, mul_one, mul_assoc] at hk
     nth_rw 0 [← Nat.mul_one p]  at hk
-    rw [Nat.mul_right_inj hp.out.pos] at hk
+    rw [mul_right_inj' hp.out.ne_zero] at hk
     exact Nat.Prime.not_dvd_one hp.out (Dvd.intro k hk.symm)
     
 

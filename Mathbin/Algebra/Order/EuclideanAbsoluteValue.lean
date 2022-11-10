@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Algebra.Order.AbsoluteValue
-import Mathbin.Algebra.EuclideanDomain
+import Mathbin.Algebra.EuclideanDomain.Instances
 
 /-!
 # Euclidean absolute values

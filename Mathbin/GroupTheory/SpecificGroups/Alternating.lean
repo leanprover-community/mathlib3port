@@ -95,7 +95,7 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
   cases' Int.units_eq_one_or (sign π) with h h
   · rw [is_conj_iff]
     refine' ⟨⟨π, mem_alternating_group.mp h⟩, Subtype.val_injective _⟩
-    simpa only [Subtype.val_eq_coe, Subgroup.coe_mul, coe_inv, coe_mk] using hπ
+    simpa only [Subtype.val_eq_coe, Subgroup.coe_mul, Subgroup.coe_inv, coe_mk] using hπ
     
   · have h2 : 2 ≤ σ.supportᶜ.card := by
       rw [Finset.card_compl, le_tsub_iff_left σ.support.card_le_univ]
@@ -108,7 +108,7 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
       have hd : Disjoint (swap a b) σ := by
         rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left, Finset.disjoint_singleton_left]
         exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
-      rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
+      rw [mul_assoc π _ σ, hd.commute.eq, Subgroup.coe_inv, coe_mk]
       simp [mul_assoc]
       
     

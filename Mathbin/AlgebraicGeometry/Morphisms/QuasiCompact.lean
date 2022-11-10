@@ -89,7 +89,7 @@ theorem quasi_compact_iff_forall_affine :
   intro H U hU hU'
   obtain ⟨S, hS, rfl⟩ := (is_compact_open_iff_eq_finset_affine_union U).mp ⟨hU', hU⟩
   simp only [Set.preimage_Union, Subtype.val_eq_coe]
-  exact hS.compact_bUnion fun i _ => H i i.Prop
+  exact hS.is_compact_bUnion fun i _ => H i i.Prop
 
 @[simp]
 theorem QuasiCompact.affine_property_to_property {X Y : SchemeCat} (f : X ⟶ Y) :
@@ -165,7 +165,7 @@ theorem QuasiCompact.affinePropertyIsLocal : (QuasiCompact.affineProperty : _).I
     rw [← hS]
     dsimp [opens.map]
     simp only [opens.coe_supr, Set.preimage_Union, Subtype.val_eq_coe]
-    exacts[compact_Union fun i => is_compact_iff_compact_space.mpr (hS' i), top_is_affine_open _]
+    exacts[is_compact_Union fun i => is_compact_iff_compact_space.mpr (hS' i), top_is_affine_open _]
     
 
 theorem QuasiCompact.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :

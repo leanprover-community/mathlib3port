@@ -465,8 +465,8 @@ theorem cont_mdiff_at_iff_target {f : N → Z.toTopologicalVectorBundleCore.Tota
   rw [cont_mdiff_at_iff_target, and_congr_left_iff]
   refine' fun hf => ⟨fun h => Z'.continuous_proj.continuous_at.comp h, fun h => _⟩
   exact
-    (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).toFiberBundleTrivialization.continuous_at_of_comp_left h
-      (mem_chart_source _ _) (h.prod hf.continuous_at.snd)
+    (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).continuous_at_of_comp_left h (mem_chart_source _ _)
+      (h.prod hf.continuous_at.snd)
 
 theorem smooth_iff_target {f : N → Z.toTopologicalVectorBundleCore.TotalSpace} :
     Smooth J (I.Prod 𝓘(𝕜, E')) f ↔
@@ -538,12 +538,10 @@ theorem smoothConstSection (v : E')
       simp only [chart, hy, chart_at, Prod.mk.inj_iff, to_topological_vector_bundle_core, mfld_simps]
       apply h
       simp only [hy, Subtype.val_eq_coe, mfld_simps]
-      exact mem_chart_source H ((chart_at H x).symm ((ModelWithCorners.symm I) y))
       
     · simp only [chart, chart_at, Prod.mk.inj_iff, to_topological_vector_bundle_core, mfld_simps]
       apply h
       simp only [Subtype.val_eq_coe, mfld_simps]
-      exact mem_chart_source H x
       
     
 
@@ -639,21 +637,12 @@ theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
   congr 2
   apply fderiv_within_congr _ fun y hy => _
   · simp only [Prod.mk.inj_iff, mfld_simps]
-    exact
-      ((tangentBundleCore I M).toTopologicalVectorBundleCore.coordChange
-          ((tangentBundleCore I M).toTopologicalVectorBundleCore.indexAt
-            ((chart_at H x).symm (I.symm (I ((chart_at H x) x)))))
-          ⟨chart_at H x, _⟩ ((chart_at H x).symm (I.symm (I ((chart_at H x) x))))).map_zero
     
   · apply UniqueDiffWithinAt.inter (I.unique_diff _ _) N
     simp only [mfld_simps]
     
   · simp only [mfld_simps] at hy
     simp only [hy, Prod.mk.inj_iff, mfld_simps]
-    exact
-      ((tangentBundleCore I M).toTopologicalVectorBundleCore.coordChange
-          ((tangentBundleCore I M).toTopologicalVectorBundleCore.indexAt ((chart_at H x).symm (I.symm y)))
-          ⟨chart_at H x, _⟩ ((chart_at H x).symm (I.symm y))).map_zero
     
 
 end TangentBundle

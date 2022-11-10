@@ -198,7 +198,7 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace
 
 theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F) (hf : f.ker = ⊥) :
     ∃ K > 0, AntilipschitzWith K f := by
-  cases subsingleton_or_nontrivial E <;> skip
+  cases subsingleton_or_nontrivial E
   · exact ⟨1, zero_lt_one, AntilipschitzWith.ofSubsingleton⟩
     
   · rw [LinearMap.ker_eq_bot] at hf
@@ -590,7 +590,7 @@ theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [Norme
   · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'
     rcases hx' with ⟨r, hr₀, hrK⟩
     have : FiniteDimensional ℝ E :=
-      finiteDimensionalOfIsCompactClosedBall ℝ hr₀ (compact_of_is_closed_subset hK Metric.isClosedBall hrK)
+      finiteDimensionalOfIsCompactClosedBall ℝ hr₀ (is_compact_of_is_closed_subset hK Metric.isClosedBall hrK)
     exact exists_mem_frontier_inf_dist_compl_eq_dist hx hK.ne_univ
     
   · refine' ⟨x, hx', _⟩

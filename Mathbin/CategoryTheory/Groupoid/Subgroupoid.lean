@@ -8,7 +8,7 @@ import Mathbin.CategoryTheory.Groupoid.Basic
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Data.Set.Lattice
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.GroupTheory.Subgroup.Basic

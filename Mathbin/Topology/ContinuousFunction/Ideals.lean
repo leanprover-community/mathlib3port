@@ -84,7 +84,7 @@ variable (R)
 which vanish on the complement of `s`. -/
 def idealOfSet (s : Set X) : Ideal C(X, R) where
   Carrier := { f : C(X, R) | ∀ x ∈ sᶜ, f x = 0 }
-  add_mem' f g hf hg x hx := by simp only [hf x hx, hg x hx, coe_add, Pi.add_apply, add_zero]
+  add_mem' f g hf hg x hx := by simp only [hf x hx, hg x hx, ContinuousMap.coe_add, Pi.add_apply, add_zero]
   zero_mem' _ _ := rfl
   smul_mem' c f hf x hx := mul_zero (c x) ▸ congr_arg (fun y => c x * y) (hf x hx)
 
@@ -197,7 +197,7 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
     refine' ⟨f * (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g, I.mul_mem_left f hgI, _⟩
     rw [nndist_eq_nnnorm]
     refine' (nnnorm_lt_iff _ hε).2 fun x => _
-    simp only [coe_sub, coe_mul, Pi.sub_apply, Pi.mul_apply]
+    simp only [ContinuousMap.coe_sub, ContinuousMap.coe_mul, Pi.sub_apply, Pi.mul_apply]
     by_cases hx:x ∈ t
     · simpa only [hgt hx, comp_apply, Pi.one_apply, ContinuousMap.coe_coe, algebra_map_clm_apply, map_one, mul_one,
         sub_self, nnnorm_zero] using hε
@@ -206,8 +206,8 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
       have :=
         calc
           ∥((1 - (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x : 𝕜)∥₊ = ∥1 - algebraMap ℝ≥0 𝕜 (g x)∥₊ := by
-            simp only [coe_sub, coe_one, coe_comp, ContinuousMap.coe_coe, Pi.sub_apply, Pi.one_apply, Function.comp_app,
-              algebra_map_clm_apply]
+            simp only [ContinuousMap.coe_sub, ContinuousMap.coe_one, coe_comp, ContinuousMap.coe_coe, Pi.sub_apply,
+              Pi.one_apply, Function.comp_app, algebra_map_clm_apply]
           _ = ∥algebraMap ℝ≥0 𝕜 (1 - g x)∥₊ := by
             simp only [Algebra.algebra_map_eq_smul_one, Nnreal.smul_def, Nnreal.coe_sub (hg x), sub_smul,
               Nonneg.coe_one, one_smul]
@@ -216,7 +216,7 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
       calc
         ∥f x - f x * (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g x∥₊ =
             ∥f x * (1 - (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x∥₊ :=
-          by simp only [mul_sub, coe_sub, coe_one, Pi.sub_apply, Pi.one_apply, mul_one]
+          by simp only [mul_sub, ContinuousMap.coe_sub, ContinuousMap.coe_one, Pi.sub_apply, Pi.one_apply, mul_one]
         _ ≤ ε / 2 * ∥(1 - (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x∥₊ :=
           (nnnorm_mul_le _ _).trans (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ∥f x∥₊ from hx).le _)
         _ ≤ ε / 2 := by simpa only [mul_one] using mul_le_mul_left' this _
@@ -235,7 +235,8 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
     · refine' ⟨0, _, fun x hx => False.elim hx⟩
       convert I.zero_mem
       ext
-      simp only [coe_zero, Pi.zero_apply, ContinuousMap.coe_coe, ContinuousMap.coe_comp, map_zero, Pi.comp_zero]
+      simp only [ContinuousMap.coe_zero, Pi.zero_apply, ContinuousMap.coe_coe, ContinuousMap.coe_comp, map_zero,
+        Pi.comp_zero]
       
     · rintro s₁ s₂ hs ⟨g, hI, hgt⟩
       exact ⟨g, hI, fun x hx => hgt x (hs hx)⟩
@@ -244,7 +245,7 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
       refine' ⟨g₁ + g₂, _, fun x hx => _⟩
       · convert I.add_mem hI₁ hI₂
         ext y
-        simp only [coe_add, Pi.add_apply, map_add, coe_comp, Function.comp_app, ContinuousMap.coe_coe]
+        simp only [ContinuousMap.coe_add, Pi.add_apply, map_add, coe_comp, Function.comp_app, ContinuousMap.coe_coe]
         
       · rcases hx with (hx | hx)
         simpa only [zero_add] using add_lt_add_of_lt_of_le (hgt₁ x hx) zero_le'
@@ -261,8 +262,8 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
           ⟨⟨fun x => ∥g x∥₊ ^ 2, (map_continuous g).nnnorm.pow 2⟩, _, fun x hx => pow_pos (norm_pos_iff.mpr hx.1) 2⟩⟩
       convert I.mul_mem_left (star g) hI
       ext
-      simp only [comp_apply, coe_mk, algebra_map_clm_coe, map_pow, coe_mul, coe_star, Pi.mul_apply, Pi.star_apply,
-        star_def, ContinuousMap.coe_coe]
+      simp only [comp_apply, coe_mk, algebra_map_clm_coe, map_pow, ContinuousMap.coe_mul, coe_star, Pi.mul_apply,
+        Pi.star_apply, star_def, ContinuousMap.coe_coe]
       simpa only [norm_sq_eq_def', conj_mul_eq_norm_sq_left, of_real_pow]
       
   /- Get the function `g'` which is guaranteed to exist above. By the extreme value theorem and
@@ -277,7 +278,7 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) : idealOfSet �
   refine' ⟨g * g', _, hg, hgc.mono hgc'⟩
   convert I.mul_mem_left ((algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) hI'
   ext
-  simp only [algebra_map_clm_coe, ContinuousMap.coe_coe, comp_apply, coe_mul, Pi.mul_apply, map_mul]
+  simp only [algebra_map_clm_coe, ContinuousMap.coe_coe, comp_apply, ContinuousMap.coe_mul, Pi.mul_apply, map_mul]
 
 theorem ideal_of_set_of_ideal_is_closed {I : Ideal C(X, 𝕜)} (hI : IsClosed (I : Set C(X, 𝕜))) :
     idealOfSet 𝕜 (SetOfIdeal I) = I :=

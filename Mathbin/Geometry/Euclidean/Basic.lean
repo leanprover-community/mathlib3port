@@ -682,6 +682,9 @@ theorem Sphere.center_ne_iff_ne_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p
 theorem dist_center_eq_dist_center_of_mem_sphere {p₁ p₂ : P} {s : Sphere P} (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) :
     dist p₁ s.Center = dist p₂ s.Center := by rw [mem_sphere.1 hp₁, mem_sphere.1 hp₂]
 
+theorem dist_center_eq_dist_center_of_mem_sphere' {p₁ p₂ : P} {s : Sphere P} (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) :
+    dist s.Center p₁ = dist s.Center p₂ := by rw [mem_sphere'.1 hp₁, mem_sphere'.1 hp₂]
+
 /-- A set of points is cospherical if they are equidistant from some
 point.  In two dimensions, this is the same thing as being
 concyclic. -/

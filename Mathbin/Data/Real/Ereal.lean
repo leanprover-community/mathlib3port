@@ -204,36 +204,47 @@ theorem zero_ne_top : (0 : Ereal) ≠ ⊤ :=
 theorem top_ne_zero : (⊤ : Ereal) ≠ 0 :=
   (coe_ne_top 0).symm
 
+-- The following lemmas follow from the `simp` lemmas for `coe_is_monoid_with_zero_hom` and
+-- `coe_is_add_monoid_hom` but we keep them because they're eligible for `dsimp`.
 @[simp, norm_cast]
-theorem coe_zero : ((0 : ℝ) : Ereal) = 0 :=
+protected theorem coe_zero : ((0 : ℝ) : Ereal) = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_one : ((1 : ℝ) : Ereal) = 1 :=
+protected theorem coe_one : ((1 : ℝ) : Ereal) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add (x y : ℝ) : (↑(x + y) : Ereal) = x + y :=
+protected theorem coe_add (x y : ℝ) : (↑(x + y) : Ereal) = x + y :=
   rfl
-
-@[simp, norm_cast]
-theorem coe_mul (x y : ℝ) : (↑(x * y) : Ereal) = x * y :=
-  (WithTop.coe_eq_coe.2 WithBot.coe_mul).trans WithTop.coe_mul
 
 @[norm_cast]
-theorem coe_nsmul (n : ℕ) (x : ℝ) : (↑(n • x) : Ereal) = n • x :=
-  map_nsmul (⟨coe, coe_zero, coe_add⟩ : ℝ →+ Ereal) _ _
+protected theorem coe_mul (x y : ℝ) : (↑(x * y) : Ereal) = x * y :=
+  (WithTop.coe_eq_coe.2 WithBot.coe_mul).trans WithTop.coe_mul
 
-@[simp, norm_cast]
-theorem coe_pow (x : ℝ) (n : ℕ) : (↑(x ^ n) : Ereal) = x ^ n :=
-  map_pow (⟨coe, coe_one, coe_mul⟩ : ℝ →* Ereal) _ _
+instance : CoeIsMonoidWithZeroHom ℝ Ereal where
+  coe_one := Ereal.coe_one
+  coe_mul := Ereal.coe_mul
+  coe_zero := Ereal.coe_zero
 
-@[simp, norm_cast]
-theorem coe_bit0 (x : ℝ) : (↑(bit0 x) : Ereal) = bit0 x :=
+instance : CoeIsAddMonoidHom ℝ Ereal where
+  coe_zero := Ereal.coe_zero
+  coe_add := Ereal.coe_add
+
+@[norm_cast]
+protected theorem coe_nsmul (n : ℕ) (x : ℝ) : (↑(n • x) : Ereal) = n • x :=
+  coe_nsmul _ _
+
+@[norm_cast]
+protected theorem coe_pow (x : ℝ) (n : ℕ) : (↑(x ^ n) : Ereal) = x ^ n :=
+  coe_pow _ _
+
+@[norm_cast]
+protected theorem coe_bit0 (x : ℝ) : (↑(bit0 x) : Ereal) = bit0 x :=
   rfl
 
-@[simp, norm_cast]
-theorem coe_bit1 (x : ℝ) : (↑(bit1 x) : Ereal) = bit1 x :=
+@[norm_cast]
+protected theorem coe_bit1 (x : ℝ) : (↑(bit1 x) : Ereal) = bit1 x :=
   rfl
 
 @[simp, norm_cast]
@@ -422,7 +433,7 @@ theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : Ereal) =
   | x, ⊤ => by
     rw [Ennreal.mul_top]
     split_ifs <;> simp [h]
-  | some x, some y => by simp [← Ennreal.coe_mul, coe_nnreal_eq_coe_real]
+  | some x, some y => by simp [← Ennreal.coe_mul, Ereal.coe_mul, -coe_mul, coe_nnreal_eq_coe_real]
 
 @[norm_cast]
 theorem coe_ennreal_nsmul (n : ℕ) (x : ℝ≥0∞) : (↑(n • x) : Ereal) = n • x :=
@@ -507,7 +518,7 @@ theorem to_real_add :
   | ⊤, y, hx, h'x, hy, h'y => (hx rfl).elim
   | x, ⊤, hx, h'x, hy, h'y => (hy rfl).elim
   | x, ⊥, hx, h'x, hy, h'y => (h'y rfl).elim
-  | (x : ℝ), (y : ℝ), hx, h'x, hy, h'y => by simp [← Ereal.coe_add]
+  | (x : ℝ), (y : ℝ), hx, h'x, hy, h'y => by simp [← Ereal.coe_add, -coe_add]
 
 theorem add_lt_add_right_coe {x y : Ereal} (h : x < y) (z : ℝ) : x + z < y + z := by
   induction x using Ereal.rec <;> induction y using Ereal.rec
@@ -561,7 +572,7 @@ theorem add_lt_add {x y z t : Ereal} (h1 : x < y) (h2 : z < t) : x + z < y + t :
 
 @[simp]
 theorem add_eq_top_iff {x y : Ereal} : x + y = ⊤ ↔ x = ⊤ ∨ y = ⊤ := by
-  induction x using Ereal.rec <;> induction y using Ereal.rec <;> simp [← Ereal.coe_add]
+  induction x using Ereal.rec <;> induction y using Ereal.rec <;> simp [← Ereal.coe_add, -coe_add]
 
 @[simp]
 theorem add_lt_top_iff {x y : Ereal} : x + y < ⊤ ↔ x < ⊤ ∧ y < ⊤ := by simp [lt_top_iff_ne_top, not_or]
@@ -770,7 +781,7 @@ theorem to_real_one : toReal 1 = 1 :=
 theorem to_real_mul : ∀ {x y : Ereal}, toReal (x * y) = toReal x * toReal y
   | ⊤, y => by by_cases hy:y = 0 <;> simp [hy]
   | x, ⊤ => by by_cases hx:x = 0 <;> simp [hx]
-  | (x : ℝ), (y : ℝ) => by simp [← Ereal.coe_mul]
+  | (x : ℝ), (y : ℝ) => by simp [← Ereal.coe_mul, -coe_mul]
   | ⊥, (y : ℝ) => by by_cases hy:y = 0 <;> simp [hy]
   | (x : ℝ), ⊥ => by by_cases hx:x = 0 <;> simp [hx]
   | ⊥, ⊥ => by simp

@@ -37,7 +37,7 @@ variable [MulZeroClass β]
 instance : Mul (α →₀ β) :=
   ⟨zipWith (· * ·) (mul_zero 0)⟩
 
-theorem coe_mul (g₁ g₂ : α →₀ β) : ⇑(g₁ * g₂) = g₁ * g₂ :=
+protected theorem coe_mul (g₁ g₂ : α →₀ β) : ⇑(g₁ * g₂) = g₁ * g₂ :=
   rfl
 
 @[simp]
@@ -57,31 +57,33 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).
       
 
 instance : MulZeroClass (α →₀ β) :=
-  Finsupp.coe_fn_injective.MulZeroClass _ coe_zero coe_mul
+  Finsupp.coe_fn_injective.MulZeroClass _ Finsupp.coe_zero Finsupp.coe_mul
 
 end
 
 instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
-  Finsupp.coe_fn_injective.SemigroupWithZero _ coe_zero coe_mul
+  Finsupp.coe_fn_injective.SemigroupWithZero _ Finsupp.coe_zero Finsupp.coe_mul
 
 instance [NonUnitalNonAssocSemiring β] : NonUnitalNonAssocSemiring (α →₀ β) :=
-  Finsupp.coe_fn_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  Finsupp.coe_fn_injective.NonUnitalNonAssocSemiring _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_mul fun _ _ => rfl
 
 instance [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
-  Finsupp.coe_fn_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  Finsupp.coe_fn_injective.NonUnitalSemiring _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_mul fun _ _ => rfl
 
 instance [NonUnitalCommSemiring β] : NonUnitalCommSemiring (α →₀ β) :=
-  Finsupp.coe_fn_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  Finsupp.coe_fn_injective.NonUnitalCommSemiring _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_mul fun _ _ => rfl
 
 instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
-  Finsupp.coe_fn_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
-    rfl
+  Finsupp.coe_fn_injective.NonUnitalNonAssocRing _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_mul Finsupp.coe_neg
+    Finsupp.coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalRing β] : NonUnitalRing (α →₀ β) :=
-  Finsupp.coe_fn_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  Finsupp.coe_fn_injective.NonUnitalRing _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_mul Finsupp.coe_neg
+    Finsupp.coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
-  Finsupp.coe_fn_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  Finsupp.coe_fn_injective.NonUnitalCommRing _ Finsupp.coe_zero Finsupp.coe_add Finsupp.coe_mul Finsupp.coe_neg
+    Finsupp.coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 -- TODO can this be generalized in the direction of `pi.has_smul'`
 -- (i.e. dependent functions and finsupps)

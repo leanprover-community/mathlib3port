@@ -502,15 +502,14 @@ theorem Differentiable.differentiableAt (h : Differentiable 𝕜 f) : Differenti
   h x
 
 theorem DifferentiableAt.fderiv_within (h : DifferentiableAt 𝕜 f x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
-    fderivWithin 𝕜 f s x = fderiv 𝕜 f x := by
-  apply HasFderivWithinAt.fderiv_within _ hxs
-  exact h.has_fderiv_at.has_fderiv_within_at
+    fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
+  h.HasFderivAt.HasFderivWithinAt.fderivWithin hxs
 
 theorem DifferentiableOn.mono (h : DifferentiableOn 𝕜 f t) (st : s ⊆ t) : DifferentiableOn 𝕜 f s := fun x hx =>
   (h x (st hx)).mono st
 
 theorem differentiable_on_univ : DifferentiableOn 𝕜 f Univ ↔ Differentiable 𝕜 f := by
-  simp [DifferentiableOn, differentiable_within_at_univ]
+  simp only [DifferentiableOn, differentiable_within_at_univ, mem_univ, forall_true_left]
   rfl
 
 theorem Differentiable.differentiableOn (h : Differentiable 𝕜 f) : DifferentiableOn 𝕜 f s :=
@@ -607,7 +606,7 @@ theorem HasFderivAtFilter.tendsto_nhds (hL : L ≤ 𝓝 x) (h : HasFderivAtFilte
     exact tendsto_id.sub tendsto_const_nhds
   have := tendsto.add this tendsto_const_nhds
   rw [zero_add (f x)] at this
-  exact this.congr (by simp)
+  exact this.congr (by simp only [sub_add_cancel, eq_self_iff_true, forall_const])
 
 theorem HasFderivWithinAt.continuous_within_at (h : HasFderivWithinAt f f' s x) : ContinuousWithinAt f s x :=
   HasFderivAtFilter.tendsto_nhds inf_le_left h
@@ -1401,11 +1400,15 @@ section Add
 
 theorem HasStrictFderivAt.add (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) :
     HasStrictFderivAt (fun y => f y + g y) (f' + g') x :=
-  (hf.add hg).congr_left fun y => by simp <;> abel
+  (hf.add hg).congr_left fun y => by
+    simp only [LinearMap.sub_apply, LinearMap.add_apply, map_sub, map_add, add_apply]
+    abel
 
 theorem HasFderivAtFilter.add (hf : HasFderivAtFilter f f' x L) (hg : HasFderivAtFilter g g' x L) :
     HasFderivAtFilter (fun y => f y + g y) (f' + g') x L :=
-  (hf.add hg).congr_left fun _ => by simp <;> abel
+  (hf.add hg).congr_left fun _ => by
+    simp only [LinearMap.sub_apply, LinearMap.add_apply, map_sub, map_add, add_apply]
+    abel
 
 theorem HasFderivWithinAt.add (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) :
     HasFderivWithinAt (fun y => f y + g y) (f' + g') s x :=

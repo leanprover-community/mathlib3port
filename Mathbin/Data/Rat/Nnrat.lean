@@ -86,40 +86,46 @@ open _Root_.Rat (toNnrat)
 theorem coe_nonneg (q : ℚ≥0) : (0 : ℚ) ≤ q :=
   q.2
 
+instance : CoeIsRingHom ℚ≥0 ℚ where
+  coe_one := rfl
+  coe_zero := rfl
+  coe_add _ _ := rfl
+  coe_mul _ _ := rfl
+
 @[simp, norm_cast]
-theorem coe_zero : ((0 : ℚ≥0) : ℚ) = 0 :=
+protected theorem coe_zero : ((0 : ℚ≥0) : ℚ) = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_one : ((1 : ℚ≥0) : ℚ) = 1 :=
+protected theorem coe_one : ((1 : ℚ≥0) : ℚ) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add (p q : ℚ≥0) : ((p + q : ℚ≥0) : ℚ) = p + q :=
+protected theorem coe_add (p q : ℚ≥0) : ((p + q : ℚ≥0) : ℚ) = p + q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_mul (p q : ℚ≥0) : ((p * q : ℚ≥0) : ℚ) = p * q :=
+protected theorem coe_mul (p q : ℚ≥0) : ((p * q : ℚ≥0) : ℚ) = p * q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inv (q : ℚ≥0) : ((q⁻¹ : ℚ≥0) : ℚ) = q⁻¹ :=
+protected theorem coe_inv (q : ℚ≥0) : ((q⁻¹ : ℚ≥0) : ℚ) = q⁻¹ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_div (p q : ℚ≥0) : ((p / q : ℚ≥0) : ℚ) = p / q :=
+protected theorem coe_div (p q : ℚ≥0) : ((p / q : ℚ≥0) : ℚ) = p / q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_bit0 (q : ℚ≥0) : ((bit0 q : ℚ≥0) : ℚ) = bit0 q :=
+protected theorem coe_bit0 (q : ℚ≥0) : ((bit0 q : ℚ≥0) : ℚ) = bit0 q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
+protected theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
+protected theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
   max_eq_left <| le_sub_comm.2 <| by simp [show (q : ℚ) ≤ p from h]
 
 @[simp]
@@ -338,7 +344,7 @@ theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ := by
   · rw [to_nnrat_eq_zero.mpr hq, inv_zero, to_nnrat_eq_zero.mpr (inv_nonpos.mpr hq)]
     
   · nth_rw 0 [← Rat.coe_to_nnrat q hq]
-    rw [← coe_inv, to_nnrat_coe]
+    rw [← coe_inv₀, to_nnrat_coe]
     
 
 theorem to_nnrat_div (hp : 0 ≤ p) : toNnrat (p / q) = toNnrat p / toNnrat q := by
@@ -395,7 +401,7 @@ theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
 @[simp]
 theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q := by
   ext1
-  rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
+  rw [coe_div₀, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
     Int.nat_abs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
   exact Rat.num_div_denom q
 

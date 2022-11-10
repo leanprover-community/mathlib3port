@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Eric Rodriguez
 -/
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Data.Nat.Cast
 import Mathbin.Data.Nat.Choose.Basic
 
 /-!

@@ -5,7 +5,7 @@ Authors: Jeremy Avigad
 -/
 import Mathbin.Data.Int.Order
 import Mathbin.Data.Int.Bitwise
-import Mathbin.Data.Nat.Cast
+import Mathbin.Data.Nat.Cast.Basic
 
 /-!
 # Miscellaneous lemmas about the integers

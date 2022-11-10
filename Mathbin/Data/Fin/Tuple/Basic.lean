@@ -482,7 +482,7 @@ theorem eq_insert_nth_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbo
   eq_comm.trans insert_nth_eq_iff
 
 theorem insert_nth_apply_below {i j : Fin (n + 1)} (h : j < i) (x : α i) (p : ∀ k, α (i.succAbove k)) :
-    i.insertNth x p j = Eq.recOn (succ_above_cast_lt h) (p <| j.cast_lt _) := by
+    i.insertNth x p j = Eq.recOn (succ_above_cast_lt h) (p <| j.castLt _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
 
 theorem insert_nth_apply_above {i j : Fin (n + 1)} (h : i < j) (x : α i) (p : ∀ k, α (i.succAbove k)) :
@@ -586,8 +586,8 @@ def find : ∀ {n : ℕ} (p : Fin n → Prop) [DecidablePred p], Option (Fin n)
   | n + 1, p, _ => by
     skip <;>
       exact
-        Option.casesOn (@find n (fun i => p (i.cast_lt (Nat.lt_succ_of_lt i.2))) _)
-          (if h : p (Fin.last n) then some (Fin.last n) else none) fun i => some (i.cast_lt (Nat.lt_succ_of_lt i.2))
+        Option.casesOn (@find n (fun i => p (i.castLt (Nat.lt_succ_of_lt i.2))) _)
+          (if h : p (Fin.last n) then some (Fin.last n) else none) fun i => some (i.castLt (Nat.lt_succ_of_lt i.2))
 
 /-- If `find p = some i`, then `p i` holds -/
 theorem find_spec : ∀ {n : ℕ} (p : Fin n → Prop) [DecidablePred p] {i : Fin n} (hi : i ∈ Fin.find p), p i
@@ -595,7 +595,7 @@ theorem find_spec : ∀ {n : ℕ} (p : Fin n → Prop) [DecidablePred p] {i : Fi
   | n + 1, p, I, i, hi => by
     dsimp [find] at hi
     skip
-    cases' h : find fun i : Fin n => p (i.cast_lt (Nat.lt_succ_of_lt i.2)) with j
+    cases' h : find fun i : Fin n => p (i.castLt (Nat.lt_succ_of_lt i.2)) with j
     · rw [h] at hi
       dsimp at hi
       split_ifs  at hi with hl hl
@@ -619,12 +619,12 @@ theorem is_some_find_iff : ∀ {n : ℕ} {p : Fin n → Prop} [DecidablePred p],
       exact ⟨i, find_spec _ hi⟩, fun ⟨⟨i, hin⟩, hi⟩ => by
       skip
       dsimp [find]
-      cases' h : find fun i : Fin n => p (i.cast_lt (Nat.lt_succ_of_lt i.2)) with j
+      cases' h : find fun i : Fin n => p (i.castLt (Nat.lt_succ_of_lt i.2)) with j
       · split_ifs with hl hl
         · exact Option.is_some_some
           
         · have :=
-            (@is_some_find_iff n (fun x => p (x.cast_lt (Nat.lt_succ_of_lt x.2))) _).2
+            (@is_some_find_iff n (fun x => p (x.castLt (Nat.lt_succ_of_lt x.2))) _).2
               ⟨⟨i, lt_of_le_of_ne (Nat.le_of_lt_succ hin) fun h => by clear_aux_decl <;> cases h <;> exact hl hi⟩, hi⟩
           rw [h] at this
           exact this
@@ -645,7 +645,7 @@ theorem find_min :
   | n + 1, p, _, i, hi, ⟨j, hjn⟩, hj, hpj => by
     skip
     dsimp [find] at hi
-    cases' h : find fun i : Fin n => p (i.cast_lt (Nat.lt_succ_of_lt i.2)) with k
+    cases' h : find fun i : Fin n => p (i.castLt (Nat.lt_succ_of_lt i.2)) with k
     · rw [h] at hi
       split_ifs  at hi with hl hl
       · subst hi

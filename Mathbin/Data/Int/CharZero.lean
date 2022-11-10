@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Algebra.CharZero
-import Mathbin.Data.Int.CastField
+import Mathbin.Data.Int.Cast.Field
 
 /-!
 # Injectivity of `int.cast` into characteristic zero rings and fields.

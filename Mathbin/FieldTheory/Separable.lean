@@ -5,9 +5,10 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Algebra.Squarefree
-import Mathbin.FieldTheory.Minpoly
-import Mathbin.FieldTheory.SplittingField
 import Mathbin.Data.Polynomial.Expand
+import Mathbin.Data.Polynomial.Splits
+import Mathbin.FieldTheory.Minpoly
+import Mathbin.RingTheory.PowerBasis
 
 /-!
 

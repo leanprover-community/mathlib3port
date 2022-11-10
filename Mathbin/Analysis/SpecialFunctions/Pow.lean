@@ -1585,7 +1585,7 @@ theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x := by
 
 @[simp]
 theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 := by
-  rw [← coe_one, coe_rpow_of_ne_zero one_ne_zero]
+  rw [← @coe_one ℝ≥0, coe_rpow_of_ne_zero one_ne_zero]
   simp
 
 @[simp]
@@ -1647,7 +1647,7 @@ theorem rpow_neg (x : ℝ≥0∞) (y : ℝ) : x ^ -y = (x ^ y)⁻¹ := by
     · rcases lt_trichotomy y 0 with (H | H | H) <;> simp [h, zero_rpow_of_pos, zero_rpow_of_neg, H, neg_pos.mpr]
       
     · have A : x ^ y ≠ 0 := by simp [h]
-      simp [coe_rpow_of_ne_zero h, ← coe_inv A, Nnreal.rpow_neg]
+      simp [coe_rpow_of_ne_zero h, ← Ennreal.coe_inv A, Nnreal.rpow_neg]
       
     
 

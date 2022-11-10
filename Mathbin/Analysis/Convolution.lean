@@ -277,7 +277,7 @@ variable [TopologicalSpace G] [TopologicalAddGroup G] [BorelSpace G] [SecondCoun
 
 theorem HasCompactSupport.convolutionExistsAt {x₀ : G} (h : HasCompactSupport fun t => L (f t) (g (x₀ - t)))
     (hf : LocallyIntegrable f μ) (hg : Continuous g) : ConvolutionExistsAt f g x₀ L μ :=
-  ((((Homeomorph.neg G).trans <| Homeomorph.addRight x₀).compact_preimage.mpr h).bdd_above_image
+  ((((Homeomorph.neg G).trans <| Homeomorph.addRight x₀).is_compact_preimage.mpr h).bdd_above_image
         hg.norm.ContinuousOn).convolutionExistsAt'
     L isClosedClosure.MeasurableSet subset_closure (hf h) hf.AeStronglyMeasurable hg.AeStronglyMeasurable
 
@@ -465,7 +465,7 @@ variable [TopologicalAddGroup G]
 
 theorem HasCompactSupport.convolution [T2Space G] (hcf : HasCompactSupport f) (hcg : HasCompactSupport g) :
     HasCompactSupport (f ⋆[L, μ] g) :=
-  compact_of_is_closed_subset (hcg.IsCompact.add hcf) isClosedClosure <|
+  is_compact_of_is_closed_subset (hcg.IsCompact.add hcf) isClosedClosure <|
     closure_minimal ((support_convolution_subset_swap L).trans <| add_subset_add subset_closure subset_closure)
       (hcg.IsCompact.add hcf).IsClosed
 

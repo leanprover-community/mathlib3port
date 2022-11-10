@@ -83,7 +83,7 @@ def join (m : Measure (Measure α)) : Measure α :=
       simp_rw [measure_Union h hf]
       apply lintegral_tsum
       intro i
-      exact measurable_coe (hf i))
+      exact (measurable_coe (hf i)).AeMeasurable)
 
 @[simp]
 theorem join_apply {m : Measure (Measure α)} {s : Set α} (hs : MeasurableSet s) : join m s = ∫⁻ μ, μ s ∂m :=

@@ -24,8 +24,6 @@ This file defines covering maps.
 
 variable {E X : Type _} [TopologicalSpace E] [TopologicalSpace X] (f : E → X) (s : Set X)
 
-open TopologicalFiberBundle
-
 /-- A point `x : X` is evenly covered by `f : E → X` if `x` has an evenly covered neighborhood. -/
 def IsEvenlyCovered (x : X) (I : Type _) [TopologicalSpace I] :=
   DiscreteTopology I ∧ ∃ t : Trivialization I f, x ∈ t.BaseSet

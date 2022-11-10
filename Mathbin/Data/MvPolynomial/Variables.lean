@@ -465,7 +465,7 @@ theorem degree_of_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) : de
   congr
   ext
   simp only [single, Nat.one_ne_zero, add_right_eq_self, add_right_embedding_apply, coe_mk, Pi.add_apply, comp_app,
-    ite_eq_right_iff, coe_add]
+    ite_eq_right_iff, Finsupp.coe_add]
   cc
 
 -- TODO in the following we have equality iff f ≠ 0

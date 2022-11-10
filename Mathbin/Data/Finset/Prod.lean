@@ -252,21 +252,25 @@ for `a, b ∈ s`. -/
 def offDiag :=
   (s ×ˢ s).filter fun a : α × α => a.fst ≠ a.snd
 
+variable {s} {x : α × α}
+
 @[simp]
-theorem mem_diag (x : α × α) : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 := by
+theorem mem_diag : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 := by
   simp only [diag, mem_filter, mem_product]
   constructor <;> intro h <;> simp only [h, and_true_iff, eq_self_iff_true, and_self_iff]
   rw [← h.2]
   exact h.1
 
 @[simp]
-theorem mem_off_diag (x : α × α) : x ∈ s.OffDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
+theorem mem_off_diag : x ∈ s.OffDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
   simp only [off_diag, mem_filter, mem_product]
   constructor <;> intro h <;> simp only [h, Ne.def, not_false_iff, and_self_iff]
 
+variable (s)
+
 @[simp, norm_cast]
 theorem coe_off_diag : (s.OffDiag : Set (α × α)) = (s : Set α).OffDiag :=
-  Set.ext <| mem_off_diag _
+  Set.ext fun _ => mem_off_diag
 
 @[simp]
 theorem diag_card : (diag s).card = s.card := by
@@ -297,11 +301,11 @@ theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
 
 @[mono]
 theorem diag_mono : Monotone (diag : Finset α → Finset (α × α)) := fun s t h x hx =>
-  (mem_diag _ _).2 <| And.imp_left (@h _) <| (mem_diag _ _).1 hx
+  mem_diag.2 <| And.imp_left (@h _) <| mem_diag.1 hx
 
 @[mono]
 theorem off_diag_mono : Monotone (offDiag : Finset α → Finset (α × α)) := fun s t h x hx =>
-  (mem_off_diag _ _).2 <| And.imp (@h _) (And.imp_left <| @h _) <| (mem_off_diag _ _).1 hx
+  mem_off_diag.2 <| And.imp (@h _) (And.imp_left <| @h _) <| mem_off_diag.1 hx
 
 @[simp]
 theorem diag_empty : (∅ : Finset α).diag = ∅ :=

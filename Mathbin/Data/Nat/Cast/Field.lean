@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Patrick Stevens
 -/
 import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Data.Nat.Cast
 
 /-!
 # Cast of naturals into fields

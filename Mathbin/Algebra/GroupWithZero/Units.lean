@@ -560,6 +560,14 @@ theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
 theorem map_div₀ : f (a / b) = f a / f b :=
   map_div' f (map_inv₀ f) a b
 
+@[simp]
+theorem coe_inv₀ [HasLiftT G₀ G₀'] [CoeIsMonoidWithZeroHom G₀ G₀'] (a : G₀) : ↑a⁻¹ = (↑a : G₀')⁻¹ :=
+  map_inv₀ (MonoidWithZeroHom.coe G₀ G₀') a
+
+@[simp]
+theorem coe_div₀ [HasLiftT G₀ G₀'] [CoeIsMonoidWithZeroHom G₀ G₀'] (a b : G₀) : ↑(a / b) = (↑a : G₀') / ↑b :=
+  map_div₀ (MonoidWithZeroHom.coe G₀ G₀') a b
+
 end GroupWithZero
 
 /-- We define the inverse as a `monoid_with_zero_hom` by extending the inverse map by zero

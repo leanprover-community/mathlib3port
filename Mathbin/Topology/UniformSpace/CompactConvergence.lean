@@ -384,13 +384,13 @@ theorem has_basis_compact_convergence_uniformity_of_compact :
     HasBasis (𝓤 C(α, β)) (fun V : Set (β × β) => V ∈ 𝓤 β) fun V =>
       { fg : C(α, β) × C(α, β) | ∀ x, (fg.1 x, fg.2 x) ∈ V } :=
   has_basis_compact_convergence_uniformity.to_has_basis (fun p hp => ⟨p.2, hp.2, fun fg hfg x hx => hfg x⟩) fun V hV =>
-    ⟨⟨Univ, V⟩, ⟨compact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩
+    ⟨⟨Univ, V⟩, ⟨is_compact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩
 
 /-- Convergence in the compact-open topology is the same as uniform convergence for sequences of
 continuous functions on a compact space. -/
 theorem tendsto_iff_tendsto_uniformly : Tendsto F p (𝓝 f) ↔ TendstoUniformly (fun i a => F i a) f p := by
   rw [tendsto_iff_forall_compact_tendsto_uniformly_on, ← tendsto_uniformly_on_univ]
-  exact ⟨fun h => h univ compact_univ, fun h K hK => h.mono (subset_univ K)⟩
+  exact ⟨fun h => h univ is_compact_univ, fun h K hK => h.mono (subset_univ K)⟩
 
 end CompactDomain
 

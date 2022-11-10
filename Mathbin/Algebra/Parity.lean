@@ -3,9 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.Associated
-import Mathbin.Algebra.Field.Power
-import Mathbin.Algebra.Order.Field.Power
+import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!  # Squares, even and odd elements
 
@@ -40,7 +38,7 @@ section Mul
 
 variable [Mul α]
 
-/-- An element `a` of a type `α` with multiplication satisfies `square a` if `a = r * r`,
+/-- An element `a` of a type `α` with multiplication satisfies `is_square a` if `a = r * r`,
 for some `r : α`. -/
 @[to_additive "An element `a` of a type `α` with addition satisfies `even a` if `a = r + r`,\nfor some `r : α`."]
 def IsSquare (a : α) : Prop :=
@@ -53,10 +51,6 @@ theorem is_square_mul_self (m : α) : IsSquare (m * m) :=
 @[to_additive]
 theorem is_square_op_iff (a : α) : IsSquare (op a) ↔ IsSquare a :=
   ⟨fun ⟨c, hc⟩ => ⟨unop c, by rw [← unop_mul, ← hc, unop_op]⟩, fun ⟨c, hc⟩ => by simp [hc]⟩
-
-/-- Create a decidability instance for `is_square` on `fintype`s. -/
-instance isSquareDecidable [Fintype α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
-  Fintype.decidableExistsFintype
 
 end Mul
 
@@ -114,19 +108,6 @@ theorem IsSquare.mul [CommSemigroup α] {a b : α} : IsSquare a → IsSquare b �
   rintro ⟨a, rfl⟩ ⟨b, rfl⟩
   exact ⟨a * b, mul_mul_mul_comm _ _ _ _⟩
 
-section CommMonoid
-
-variable [CommMonoid α] {a : α}
-
-theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by
-  rintro ⟨b, rfl⟩
-  simp only [irreducible_mul_iff, or_self_iff] at ha
-  exact ha.1.not_unit ha.2
-
-theorem IsSquare.not_irreducible (ha : IsSquare a) : ¬Irreducible a := fun h => h.not_square ha
-
-end CommMonoid
-
 variable (α)
 
 @[simp]
@@ -134,17 +115,6 @@ theorem is_square_zero [MulZeroClass α] : IsSquare (0 : α) :=
   ⟨0, (mul_zero _).symm⟩
 
 variable {α}
-
-section CancelCommMonoidWithZero
-
-variable [CancelCommMonoidWithZero α] {a : α}
-
-theorem Prime.not_square (ha : Prime a) : ¬IsSquare a :=
-  ha.Irreducible.not_square
-
-theorem IsSquare.not_prime (ha : IsSquare a) : ¬Prime a := fun h => h.not_square ha
-
-end CancelCommMonoidWithZero
 
 section DivisionMonoid
 
@@ -418,68 +388,4 @@ theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using strict_mono_pow_bit1 _
 
 end Powers
-
-/-- The cardinality of `fin (bit0 k)` is even, `fact` version.
-This `fact` is needed as an instance by `matrix.special_linear_group.has_neg`. -/
-theorem Fintype.card_fin_even {k : ℕ} : Fact (Even (Fintype.card (Fin (bit0 k)))) :=
-  ⟨by
-    rw [Fintype.card_fin]
-    exact even_bit0 k⟩
-
-section FieldPower
-
-variable {K : Type _}
-
-section DivisionRing
-
-variable [DivisionRing K] {n : ℤ}
-
-theorem Odd.neg_zpow (h : Odd n) (a : K) : -a ^ n = -(a ^ n) := by
-  obtain ⟨k, rfl⟩ := h.exists_bit1
-  exact zpow_bit1_neg _ _
-
-theorem Odd.neg_one_zpow (h : Odd n) : (-1 : K) ^ n = -1 := by rw [h.neg_zpow, one_zpow]
-
-end DivisionRing
-
-variable [LinearOrderedField K] {n : ℤ} {a : K}
-
-protected theorem Even.zpow_nonneg (hn : Even n) (a : K) : 0 ≤ a ^ n := by
-  cases' le_or_lt 0 a with h h
-  · exact zpow_nonneg h _
-    
-  · exact (hn.neg_zpow a).subst (zpow_nonneg (neg_nonneg_of_nonpos h.le) _)
-    
-
-theorem Even.zpow_pos (hn : Even n) (ha : a ≠ 0) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit0_pos ha k
-
-protected theorem Odd.zpow_nonneg (hn : Odd n) (ha : 0 ≤ a) : 0 ≤ a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonneg_iff.mpr ha
-
-theorem Odd.zpow_pos (hn : Odd n) (ha : 0 < a) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_pos_iff.mpr ha
-
-theorem Odd.zpow_nonpos (hn : Odd n) (ha : a ≤ 0) : a ^ n ≤ 0 := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonpos_iff.mpr ha
-
-theorem Odd.zpow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_neg_iff.mpr ha
-
-theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : |a| ^ p = a ^ p := by
-  cases' abs_choice a with h h <;> simp only [h, hp.neg_zpow _]
-
-@[simp]
-theorem zpow_bit0_abs (a : K) (p : ℤ) : |a| ^ bit0 p = a ^ bit0 p :=
-  (even_bit0 _).zpow_abs _
-
-theorem Even.abs_zpow {p : ℤ} (hp : Even p) (a : K) : |a ^ p| = a ^ p := by
-  rw [abs_eq_self]
-  exact hp.zpow_nonneg _
-
-@[simp]
-theorem abs_zpow_bit0 (a : K) (p : ℤ) : |a ^ bit0 p| = a ^ bit0 p :=
-  (even_bit0 _).abs_zpow _
-
-end FieldPower
 

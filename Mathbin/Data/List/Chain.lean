@@ -265,26 +265,41 @@ theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀ y ∈ l.head',
 theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀ y ∈ head' l, R x y) ∧ Chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 
-theorem Chain'.drop : ∀ (n) {l} (h : Chain' R l), Chain' R (drop n l)
-  | 0, _, h => h
-  | _, [], _ => by
-    rw [drop_nil]
-    exact chain'_nil
-  | n + 1, [a], _ => by
-    unfold drop
-    rw [drop_nil]
-    exact chain'_nil
-  | n + 1, a :: b :: l, h => chain'.drop n (chain'_cons'.mp h).right
+theorem chain'_append :
+    ∀ {l₁ l₂ : List α}, Chain' R (l₁ ++ l₂) ↔ Chain' R l₁ ∧ Chain' R l₂ ∧ ∀ x ∈ l₁.last', ∀ y ∈ l₂.head', R x y
+  | [], l => by simp
+  | [a], l => by simp [chain'_cons', and_comm']
+  | a :: b :: l₁, l₂ => by
+    rw [cons_append, cons_append, chain'_cons, chain'_cons, ← cons_append, chain'_append, last', and_assoc]
 
-theorem Chain'.append :
-    ∀ {l₁ l₂ : List α} (h₁ : Chain' R l₁) (h₂ : Chain' R l₂) (h : ∀ x ∈ l₁.last', ∀ y ∈ l₂.head', R x y),
-      Chain' R (l₁ ++ l₂)
-  | [], l₂, h₁, h₂, h => h₂
-  | [a], l₂, h₁, h₂, h => h₂.cons' <| h _ rfl
-  | a :: b :: l, l₂, h₁, h₂, h => by
-    simp only [last'] at h
-    have : chain' R (b :: l) := h₁.tail
-    exact (this.append h₂ h).cons h₁.rel_head
+theorem Chain'.append (h₁ : Chain' R l₁) (h₂ : Chain' R l₂) (h : ∀ x ∈ l₁.last', ∀ y ∈ l₂.head', R x y) :
+    Chain' R (l₁ ++ l₂) :=
+  chain'_append.2 ⟨h₁, h₂, h⟩
+
+theorem Chain'.left_of_append (h : Chain' R (l₁ ++ l₂)) : Chain' R l₁ :=
+  (chain'_append.1 h).1
+
+theorem Chain'.right_of_append (h : Chain' R (l₁ ++ l₂)) : Chain' R l₂ :=
+  (chain'_append.1 h).2.1
+
+theorem Chain'.infix (h : Chain' R l) (h' : l₁ <:+: l) : Chain' R l₁ := by
+  rcases h' with ⟨l₂, l₃, rfl⟩
+  exact h.left_of_append.right_of_append
+
+theorem Chain'.suffix (h : Chain' R l) (h' : l₁ <:+ l) : Chain' R l₁ :=
+  h.infix h'.IsInfix
+
+theorem Chain'.prefix (h : Chain' R l) (h' : l₁ <+: l) : Chain' R l₁ :=
+  h.infix h'.IsInfix
+
+theorem Chain'.drop (h : Chain' R l) (n : ℕ) : Chain' R (drop n l) :=
+  h.suffix (drop_suffix _ _)
+
+theorem Chain'.init (h : Chain' R l) : Chain' R l.init :=
+  h.prefix l.init_prefix
+
+theorem Chain'.take (h : Chain' R l) (n : ℕ) : Chain' R (take n l) :=
+  h.prefix (take_prefix _ _)
 
 theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by simp only [chain'_singleton, chain'_cons, and_true_iff]
 
@@ -304,43 +319,16 @@ theorem chain'_iff_nth_le {R} :
   | [] => by simp
   | [a] => by simp
   | a :: b :: t => by
-    rw [chain'_cons, chain'_iff_nth_le]
-    constructor
-    · rintro ⟨R, h⟩ i w
-      cases i
-      · exact R
-        
-      · convert h i _ using 1
-        simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w
-        simpa using w
-        
-      
-    · rintro h
-      constructor
-      · apply h 0
-        simp
-        
-      · intro i w
-        convert h (i + 1) _ using 1
-        simp only [add_zero, length, add_succ_sub_one] at w
-        simpa using w
-        
-      
+    rw [← and_forall_succ, chain'_cons, chain'_iff_nth_le]
+    simp only [length, nth_le, add_tsub_cancel_right, add_lt_add_iff_right, tsub_pos_iff_lt, one_lt_succ_succ,
+      true_imp_iff]
+    rfl
 
 /-- If `l₁ l₂` and `l₃` are lists and `l₁ ++ l₂` and `l₂ ++ l₃` both satisfy
   `chain' R`, then so does `l₁ ++ l₂ ++ l₃` provided `l₂ ≠ []` -/
-theorem Chain'.append_overlap :
-    ∀ {l₁ l₂ l₃ : List α} (h₁ : Chain' R (l₁ ++ l₂)) (h₂ : Chain' R (l₂ ++ l₃)) (hn : l₂ ≠ []),
-      Chain' R (l₁ ++ l₂ ++ l₃)
-  | [], l₂, l₃, h₁, h₂, hn => h₂
-  | l₁, [], l₃, h₁, h₂, hn => (hn rfl).elim
-  | [a], b :: l₂, l₃, h₁, h₂, hn => by
-    simp at *
-    tauto
-  | a :: b :: l₁, c :: l₂, l₃, h₁, h₂, hn => by
-    simp only [cons_append, chain'_cons] at h₁ h₂⊢
-    simp only [← cons_append] at h₁ h₂⊢
-    exact ⟨h₁.1, chain'.append_overlap h₁.2 h₂ (cons_ne_nil _ _)⟩
+theorem Chain'.append_overlap {l₁ l₂ l₃ : List α} (h₁ : Chain' R (l₁ ++ l₂)) (h₂ : Chain' R (l₂ ++ l₃)) (hn : l₂ ≠ []) :
+    Chain' R (l₁ ++ l₂ ++ l₃) :=
+  h₁.append h₂.right_of_append <| by simpa only [last'_append_of_ne_nil _ hn] using (chain'_append.1 h₂).2.2
 
 /-- If `a` and `b` are related by the reflexive transitive closure of `r`, then there is a `r`-chain
 starting from `a` and ending on `b`.

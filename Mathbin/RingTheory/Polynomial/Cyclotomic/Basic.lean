@@ -3,15 +3,15 @@ Copyright (c) 2020 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
+import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Analysis.Complex.RootsOfUnity
 import Mathbin.Data.Polynomial.Lifts
+import Mathbin.Data.Polynomial.Splits
+import Mathbin.FieldTheory.Ratfunc
 import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.SplittingField
 import Mathbin.NumberTheory.ArithmeticFunction
 import Mathbin.RingTheory.RootsOfUnity
-import Mathbin.FieldTheory.Ratfunc
-import Mathbin.Algebra.NeZero
 
 /-!
 # Cyclotomic polynomials.

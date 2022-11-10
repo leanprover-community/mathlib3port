@@ -213,7 +213,7 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
     {U : Set α} (hxU : U ∈ 𝓝 x) (h : ContinuousOn (↿f) (U ×ˢ univ)) : TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
   have : UniformContinuousOn (↿f) (K ×ˢ univ) :=
-    IsCompact.uniform_continuous_on_of_continuous (hK.prod compact_univ) (h.mono <| prod_mono hKU subset.rfl)
+    IsCompact.uniform_continuous_on_of_continuous (hK.prod is_compact_univ) (h.mono <| prod_mono hKU subset.rfl)
   exact this.tendsto_uniformly hxK
 
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is

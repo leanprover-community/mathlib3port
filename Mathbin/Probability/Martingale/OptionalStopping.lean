@@ -107,7 +107,7 @@ theorem Submartingale.stoppedProcess [IsFiniteMeasure μ] (h : Submartingale f �
       h.expected_stopped_value_mono (hσ.min hτ) (hπ.min hτ) (fun ω => min_le_min (hσ_le_π ω) le_rfl) fun ω =>
         (min_le_left _ _).trans (hπ_le_n ω)
     
-  · exact adapted.stopped_process_of_nat h.adapted hτ
+  · exact adapted.stopped_process_of_discrete h.adapted hτ
     
   · exact fun i => h.integrable_stopped_value ((is_stopping_time_const _ i).min hτ) fun ω => min_le_left _ _
     

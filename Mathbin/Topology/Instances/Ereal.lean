@@ -320,7 +320,7 @@ theorem continuous_at_add_bot_coe (a : ℝ) : ContinuousAt (fun p : Ereal × Ere
   rw [eventually_prod_iff]
   refine'
     ⟨fun z => z < ((r - (a + 1) : ℝ) : Ereal), Iio_mem_nhds (bot_lt_coe _), fun z => z < ((a + 1 : ℝ) : Ereal),
-      Iio_mem_nhds (by simp [-coe_add, zero_lt_one]), fun x hx y hy => _⟩
+      Iio_mem_nhds (by simp [-coe_add, -Ereal.coe_add, zero_lt_one]), fun x hx y hy => _⟩
   convert add_lt_add hx hy
   rw [sub_add_cancel]
 

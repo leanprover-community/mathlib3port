@@ -3,7 +3,6 @@ Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 -/
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.Equiv
 
 /-!

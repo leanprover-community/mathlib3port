@@ -489,7 +489,7 @@ unsafe def eval (norm_atom : expr → tactic (expr × expr)) : expr → ring_m (
       | _, _ => eval_norm_atom norm_atom e
   | e =>
     match e.toNat with
-    | some n => (const e (Rat.ofInt n)).refl_conv
+    | some n => (const e n).refl_conv
     | none => eval_norm_atom norm_atom e
 
 /-- Evaluate a ring expression `e` recursively to normal form, together with a proof of

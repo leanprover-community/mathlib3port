@@ -30,11 +30,11 @@ namespace Finset
 variable {α : Type _} [DecidableEq α] {s t : Finset α} {a b : α}
 
 theorem is_diag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
-  (Sym2.is_diag_iff_proj_eq _).2 ((mem_diag _ _).1 h).2
+  (Sym2.is_diag_iff_proj_eq _).2 (mem_diag.1 h).2
 
 theorem not_is_diag_mk_of_mem_off_diag {a : α × α} (h : a ∈ s.OffDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
   rw [Sym2.is_diag_iff_proj_eq]
-  exact ((mem_off_diag _ _).1 h).2.2
+  exact (mem_off_diag.1 h).2.2
 
 section Sym2
 

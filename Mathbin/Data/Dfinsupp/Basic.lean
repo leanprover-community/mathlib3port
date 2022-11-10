@@ -113,7 +113,7 @@ theorem coe_mk' (f : ∀ i, β i) (s) : ⇑(⟨f, s⟩ : Π₀ i, β i) = f :=
   rfl
 
 @[simp]
-theorem coe_zero : ⇑(0 : Π₀ i, β i) = 0 :=
+protected theorem coe_zero : ⇑(0 : Π₀ i, β i) = 0 :=
   rfl
 
 theorem zero_apply (i : ι) : (0 : Π₀ i, β i) i = 0 :=
@@ -153,7 +153,7 @@ theorem map_range_comp (f : ∀ i, β₁ i → β₂ i) (f₂ : ∀ i, β i → 
 @[simp]
 theorem map_range_zero (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) : mapRange f hf (0 : Π₀ i, β₁ i) = 0 := by
   ext
-  simp only [map_range_apply, coe_zero, Pi.zero_apply, hf]
+  simp only [map_range_apply, Dfinsupp.coe_zero, Pi.zero_apply, hf]
 
 /-- Let `f i` be a binary operation `β₁ i → β₂ i → β i` such that `f i 0 0 = 0`.
 Then `zip_with f hf` is a binary operation `Π₀ i, β₁ i → Π₀ i, β₂ i → Π₀ i, β i`. -/
@@ -212,11 +212,11 @@ theorem add_apply [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀ i, β i) (i : 
   rfl
 
 @[simp]
-theorem coe_add [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g₁ + g₂) = g₁ + g₂ :=
+protected theorem coe_add [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g₁ + g₂) = g₁ + g₂ :=
   rfl
 
 instance [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀ i, β i) :=
-  FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
+  FunLike.coe_injective.AddZeroClass _ Dfinsupp.coe_zero Dfinsupp.coe_add
 
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℕ` is not distributive
 unless `β i`'s addition is commutative. -/
@@ -227,17 +227,17 @@ theorem nsmul_apply [∀ i, AddMonoid (β i)] (b : ℕ) (v : Π₀ i, β i) (i :
   rfl
 
 @[simp]
-theorem coe_nsmul [∀ i, AddMonoid (β i)] (b : ℕ) (v : Π₀ i, β i) : ⇑(b • v) = b • v :=
+protected theorem coe_nsmul [∀ i, AddMonoid (β i)] (b : ℕ) (v : Π₀ i, β i) : ⇑(b • v) = b • v :=
   rfl
 
 instance [∀ i, AddMonoid (β i)] : AddMonoid (Π₀ i, β i) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
+  FunLike.coe_injective.AddMonoid _ Dfinsupp.coe_zero Dfinsupp.coe_add fun _ _ => Dfinsupp.coe_nsmul _ _
 
 /-- Coercion from a `dfinsupp` to a pi type is an `add_monoid_hom`. -/
 def coeFnAddMonoidHom [∀ i, AddZeroClass (β i)] : (Π₀ i, β i) →+ ∀ i, β i where
   toFun := coeFn
-  map_zero' := coe_zero
-  map_add' := coe_add
+  map_zero' := Dfinsupp.coe_zero
+  map_add' := Dfinsupp.coe_add
 
 /-- Evaluation at a point is an `add_monoid_hom`. This is the finitely-supported version of
 `pi.eval_add_monoid_hom`. -/
@@ -245,7 +245,7 @@ def evalAddMonoidHom [∀ i, AddZeroClass (β i)] (i : ι) : (Π₀ i, β i) →
   (Pi.evalAddMonoidHom β i).comp coeFnAddMonoidHom
 
 instance [∀ i, AddCommMonoid (β i)] : AddCommMonoid (Π₀ i, β i) :=
-  FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
+  FunLike.coe_injective.AddCommMonoid _ Dfinsupp.coe_zero Dfinsupp.coe_add fun _ _ => Dfinsupp.coe_nsmul _ _
 
 @[simp]
 theorem coe_finset_sum {α} [∀ i, AddCommMonoid (β i)] (s : Finset α) (g : α → Π₀ i, β i) :
@@ -264,7 +264,7 @@ theorem neg_apply [∀ i, AddGroup (β i)] (g : Π₀ i, β i) (i : ι) : (-g) i
   rfl
 
 @[simp]
-theorem coe_neg [∀ i, AddGroup (β i)] (g : Π₀ i, β i) : ⇑(-g) = -g :=
+protected theorem coe_neg [∀ i, AddGroup (β i)] (g : Π₀ i, β i) : ⇑(-g) = -g :=
   rfl
 
 instance [∀ i, AddGroup (β i)] : Sub (Π₀ i, β i) :=
@@ -274,7 +274,7 @@ theorem sub_apply [∀ i, AddGroup (β i)] (g₁ g₂ : Π₀ i, β i) (i : ι) 
   rfl
 
 @[simp]
-theorem coe_sub [∀ i, AddGroup (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g₁ - g₂) = g₁ - g₂ :=
+protected theorem coe_sub [∀ i, AddGroup (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g₁ - g₂) = g₁ - g₂ :=
   rfl
 
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
@@ -286,15 +286,16 @@ theorem zsmul_apply [∀ i, AddGroup (β i)] (b : ℤ) (v : Π₀ i, β i) (i : 
   rfl
 
 @[simp]
-theorem coe_zsmul [∀ i, AddGroup (β i)] (b : ℤ) (v : Π₀ i, β i) : ⇑(b • v) = b • v :=
+protected theorem coe_zsmul [∀ i, AddGroup (β i)] (b : ℤ) (v : Π₀ i, β i) : ⇑(b • v) = b • v :=
   rfl
 
 instance [∀ i, AddGroup (β i)] : AddGroup (Π₀ i, β i) :=
-  FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ => coe_zsmul _ _
+  FunLike.coe_injective.AddGroup _ Dfinsupp.coe_zero Dfinsupp.coe_add Dfinsupp.coe_neg Dfinsupp.coe_sub
+    (fun _ _ => Dfinsupp.coe_nsmul _ _) fun _ _ => Dfinsupp.coe_zsmul _ _
 
 instance [∀ i, AddCommGroup (β i)] : AddCommGroup (Π₀ i, β i) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ =>
-    coe_zsmul _ _
+  FunLike.coe_injective.AddCommGroup _ Dfinsupp.coe_zero Dfinsupp.coe_add Dfinsupp.coe_neg Dfinsupp.coe_sub
+    (fun _ _ => Dfinsupp.coe_nsmul _ _) fun _ _ => Dfinsupp.coe_zsmul _ _
 
 /-- Dependent functions with finite support inherit a semiring action from an action on each
 coordinate. -/
@@ -306,7 +307,7 @@ theorem smul_apply [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulActio
   rfl
 
 @[simp]
-theorem coe_smul [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] (b : γ) (v : Π₀ i, β i) :
+protected theorem coe_smul [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] (b : γ) (v : Π₀ i, β i) :
     ⇑(b • v) = b • v :=
   rfl
 
@@ -326,7 +327,7 @@ instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i
 /-- Dependent functions with finite support inherit a `distrib_mul_action` structure from such a
 structure on each coordinate. -/
 instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] : DistribMulAction γ (Π₀ i, β i) :=
-  Function.Injective.distribMulAction coeFnAddMonoidHom FunLike.coe_injective coe_smul
+  Function.Injective.distribMulAction coeFnAddMonoidHom FunLike.coe_injective Dfinsupp.coe_smul
 
 /-- Dependent functions with finite support inherit a module structure from such a structure on
 each coordinate. -/
@@ -1650,7 +1651,7 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
   map_add' := by
     rintro ⟨f, sf, hf⟩ ⟨g, sg, hg⟩
     change (∑ i in _, _) = (∑ i in _, _) + ∑ i in _, _
-    simp only [coe_add, coe_mk', Subtype.coe_mk, Pi.add_apply, map_add, Finset.sum_add_distrib]
+    simp only [Dfinsupp.coe_add, coe_mk', Subtype.coe_mk, Pi.add_apply, map_add, Finset.sum_add_distrib]
     congr 1
     · refine' (Finset.sum_subset _ _).symm
       · intro i
@@ -1890,7 +1891,7 @@ variable [∀ i, AddZeroClass (β i)] [∀ i, AddZeroClass (β₁ i)] [∀ i, Ad
 theorem map_range_add (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) (hf' : ∀ i x y, f i (x + y) = f i x + f i y)
     (g₁ g₂ : Π₀ i, β₁ i) : mapRange f hf (g₁ + g₂) = mapRange f hf g₁ + mapRange f hf g₂ := by
   ext
-  simp only [map_range_apply f, coe_add, Pi.add_apply, hf']
+  simp only [map_range_apply f, Dfinsupp.coe_add, Pi.add_apply, hf']
 
 /-- `dfinsupp.map_range` as an `add_monoid_hom`. -/
 @[simps apply]

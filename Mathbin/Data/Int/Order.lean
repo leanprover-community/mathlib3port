@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
 import Mathbin.Data.Int.Basic
+import Mathbin.Algebra.GroupWithZero.Divisibility
 import Mathbin.Algebra.Order.Ring.Abs
 import Mathbin.Algebra.Order.Ring.Nontrivial
 import Mathbin.Algebra.CharZero.Defs

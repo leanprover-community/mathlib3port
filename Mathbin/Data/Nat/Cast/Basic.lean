@@ -26,11 +26,15 @@ variable {α β : Type _}
 
 namespace Nat
 
+instance (α : Type _) [AddMonoidWithOne α] : CoeIsOneHom ℕ α where coe_one := cast_one
+
+instance (α : Type _) [AddMonoidWithOne α] : CoeIsAddMonoidHom ℕ α where
+  coe_add := cast_add
+  coe_zero := cast_zero
+
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
-def castAddMonoidHom (α : Type _) [AddMonoidWithOne α] : ℕ →+ α where
-  toFun := coe
-  map_add' := cast_add
-  map_zero' := cast_zero
+def castAddMonoidHom (α : Type _) [AddMonoidWithOne α] : ℕ →+ α :=
+  AddMonoidHom.coe ℕ α
 
 @[simp]
 theorem coe_cast_add_monoid_hom [AddMonoidWithOne α] : (castAddMonoidHom α : ℕ → α) = coe :=
@@ -46,9 +50,12 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_mul Nat.cast_
 theorem cast_mul [NonAssocSemiring α] (m n : ℕ) : ((m * n : ℕ) : α) = m * n := by
   induction n <;> simp [mul_succ, mul_add, *]
 
+instance (α : Type _) [NonAssocSemiring α] : CoeIsRingHom ℕ α :=
+  { Nat.coeIsAddMonoidHom α with coe_mul := cast_mul, coe_one := cast_one }
+
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def castRingHom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
-  { castAddMonoidHom α with toFun := coe, map_one' := cast_one, map_mul' := cast_mul }
+  RingHom.coe ℕ α
 
 @[simp]
 theorem coe_cast_ring_hom [NonAssocSemiring α] : (castRingHom α : ℕ → α) = coe :=

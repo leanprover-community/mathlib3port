@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Field.Defs
 import Mathbin.Data.Rat.Basic
+import Mathbin.Data.Int.Cast.Lemmas
 
 /-!
 # Order for Rational Numbers

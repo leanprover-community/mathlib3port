@@ -3,7 +3,8 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Algebra.Order.Ring.Basic
+import Mathbin.Algebra.Order.Ring.Defs
+import Mathbin.Algebra.Order.Ring.InjSurj
 import Mathbin.Order.CompleteLatticeIntervals
 import Mathbin.Order.LatticeIntervals
 

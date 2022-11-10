@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Int.Order
-import Mathbin.Data.Nat.Cast
+import Mathbin.Data.Nat.Cast.Basic
 
 /-!
 # Cast of integers (additional theorems)
 
 This file proves additional properties about the *canonical* homomorphism from
-the integers into an additive group with a one (`int.cast`).
+the integers into an additive group with a one (`int.cast`),
+particularly results involving algebraic homomorphisms or the order structure on `ℤ`
+which were not available in the import dependencies of `data.int.cast.basic`.
 
 ## Main declarations
 
@@ -39,26 +41,35 @@ theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
 section cast
 
 #print Int.cast_mul /-
-@[simp, norm_cast]
 theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m =>
-  Int.inductionOn' m 0 (by simp) (fun k _ ih n => by simp [add_mul, ih]) fun k _ ih n => by simp [sub_mul, ih]
+  Int.inductionOn' m 0 (by simp [cast_zero]) (fun k _ ih n => by simp [add_mul, ih, cast_add, cast_one]) fun k _ ih n =>
+    by simp [sub_mul, ih, cast_sub, cast_one]
 -/
 
 @[simp, norm_cast]
 theorem cast_ite [AddGroupWithOne α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
   apply_ite _ _ _ _
 
+instance (α : Type _) [AddGroupWithOne α] : CoeIsAddMonoidHom ℤ α where
+  coe_zero := cast_zero
+  coe_add := cast_add
+
+instance (α : Type _) [AddGroupWithOne α] : CoeIsOneHom ℤ α where coe_one := cast_one
+
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
 def castAddHom (α : Type _) [AddGroupWithOne α] : ℤ →+ α :=
-  ⟨coe, cast_zero, cast_add⟩
+  AddMonoidHom.coe ℤ α
 
 @[simp]
 theorem coe_cast_add_hom [AddGroupWithOne α] : ⇑(castAddHom α) = coe :=
   rfl
 
+instance (α : Type _) [NonAssocRing α] : CoeIsRingHom ℤ α :=
+  { Int.coe_is_one_hom α, Int.coeIsAddMonoidHom α with coe_mul := cast_mul }
+
 /-- `coe : ℤ → α` as a `ring_hom`. -/
 def castRingHom (α : Type _) [NonAssocRing α] : ℤ →+* α :=
-  ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
+  RingHom.coe ℤ α
 
 @[simp]
 theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=

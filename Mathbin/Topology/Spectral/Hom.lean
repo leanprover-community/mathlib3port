@@ -34,10 +34,10 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : 
 /-- A function between topological spaces is spectral if it is continuous and the preimage of every
 compact open set is compact open. -/
 structure IsSpectralMap (f : α → β) extends Continuous f : Prop where
-  compact_preimage_of_open ⦃s : Set β⦄ : IsOpen s → IsCompact s → IsCompact (f ⁻¹' s)
+  is_compact_preimage_of_is_open ⦃s : Set β⦄ : IsOpen s → IsCompact s → IsCompact (f ⁻¹' s)
 
-theorem IsCompact.preimage_of_open (hf : IsSpectralMap f) (h₀ : IsCompact s) (h₁ : IsOpen s) : IsCompact (f ⁻¹' s) :=
-  hf.compact_preimage_of_open h₁ h₀
+theorem IsCompact.preimage_of_is_open (hf : IsSpectralMap f) (h₀ : IsCompact s) (h₁ : IsOpen s) : IsCompact (f ⁻¹' s) :=
+  hf.is_compact_preimage_of_is_open h₁ h₀
 
 theorem IsSpectralMap.continuous {f : α → β} (hf : IsSpectralMap f) : Continuous f :=
   hf.to_continuous
@@ -48,7 +48,7 @@ theorem is_spectral_map_id : IsSpectralMap (@id α) :=
 theorem IsSpectralMap.comp {f : β → γ} {g : α → β} (hf : IsSpectralMap f) (hg : IsSpectralMap g) :
     IsSpectralMap (f ∘ g) :=
   ⟨hf.Continuous.comp hg.Continuous, fun s hs₀ hs₁ =>
-    (hs₁.preimage_of_open hf hs₀).preimage_of_open hg (hs₀.Preimage hf.Continuous)⟩
+    (hs₁.preimage_of_is_open hf hs₀).preimage_of_is_open hg (hs₀.Preimage hf.Continuous)⟩
 
 end Unbundled
 

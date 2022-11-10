@@ -3,8 +3,9 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.Order.Ring.Basic
+import Mathbin.Algebra.Field.Defs
+import Mathbin.Algebra.Order.Ring.Canonical
+import Mathbin.Algebra.Order.WithZero
 
 /-!
 # Linear ordered (semi)fields

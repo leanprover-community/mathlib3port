@@ -705,6 +705,17 @@ theorem cons_is_cycle_iff {u v : V} (p : G.Walk v u) (h : G.Adj u v) :
   have : p.support.nodup → p.edges.nodup := edges_nodup_of_support_nodup
   tauto
 
+/-! ### About paths -/
+
+
+instance [DecidableEq V] {u v : V} (p : G.Walk u v) : Decidable p.IsPath := by
+  rw [is_path_def]
+  infer_instance
+
+theorem IsPath.length_lt [Fintype V] {u v : V} {p : G.Walk u v} (hp : p.IsPath) : p.length < Fintype.card V := by
+  rw [Nat.lt_iff_add_one_le, ← length_support]
+  exact hp.support_nodup.length_le_card
+
 /-! ### Walk decompositions -/
 
 
@@ -1132,6 +1143,9 @@ theorem map_eq_of_eq {f : G →g G'} (f' : G →g G') (h : f = f') : p.map f = (
   rfl
 
 @[simp]
+theorem map_eq_nil_iff {p : G.Walk u u} : p.map f = nil ↔ p = nil := by cases p <;> simp
+
+@[simp]
 theorem length_map : (p.map f).length = p.length := by induction p <;> simp [*]
 
 theorem map_append {u v w : V} (p : G.Walk u v) (q : G.Walk v w) : (p.append q).map f = (p.map f).append (q.map f) := by
@@ -1177,6 +1191,25 @@ protected theorem IsPath.of_map {f : G →g G'} (hp : (p.map f).IsPath) : p.IsPa
 theorem map_is_path_iff_of_injective (hinj : Function.Injective f) : (p.map f).IsPath ↔ p.IsPath :=
   ⟨IsPath.of_map, map_is_path_of_injective hinj⟩
 
+theorem map_is_trail_iff_of_injective (hinj : Function.Injective f) : (p.map f).IsTrail ↔ p.IsTrail := by
+  induction' p with w u v w huv hvw ih
+  · simp
+    
+  · rw [map_cons, cons_is_trail_iff, cons_is_trail_iff, edges_map]
+    change _ ∧ Sym2.map f ⟦(u, v)⟧ ∉ _ ↔ _
+    rw [List.mem_map_of_injective (Sym2.map.injective hinj)]
+    exact and_congr_left' ih
+    
+
+alias map_is_trail_iff_of_injective ↔ _ map_is_trail_of_injective
+
+theorem map_is_cycle_iff_of_injective {p : G.Walk u u} (hinj : Function.Injective f) : (p.map f).IsCycle ↔ p.IsCycle :=
+  by
+  rw [is_cycle_def, is_cycle_def, map_is_trail_iff_of_injective hinj, Ne.def, map_eq_nil_iff, support_map, ←
+    List.map_tail, List.nodup_map_iff hinj]
+
+alias map_is_cycle_iff_of_injective ↔ _ map_is_cycle_of_injective
+
 variable (p f)
 
 theorem map_injective_of_injective {f : G →g G'} (hinj : Function.Injective f) (u v : V) :
@@ -1198,6 +1231,31 @@ theorem map_injective_of_injective {f : G →g G'} (hinj : Function.Injective f)
       simpa using h.2
       
     
+
+/-- The specialization of `simple_graph.walk.map` for mapping walks to supergraphs. -/
+@[reducible]
+def mapLe {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} (p : G.Walk u v) : G'.Walk u v :=
+  p.map (Hom.mapSpanningSubgraphs h)
+
+@[simp]
+theorem map_le_is_trail {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.Walk u v} :
+    (p.mapLe h).IsTrail ↔ p.IsTrail :=
+  map_is_trail_iff_of_injective Function.injective_id
+
+alias map_le_is_trail ↔ is_trail.of_map_le is_trail.map_le
+
+@[simp]
+theorem map_le_is_path {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.Walk u v} : (p.mapLe h).IsPath ↔ p.IsPath :=
+  map_is_path_iff_of_injective Function.injective_id
+
+alias map_le_is_path ↔ is_path.of_map_le is_path.map_le
+
+@[simp]
+theorem map_le_is_cycle {G G' : SimpleGraph V} (h : G ≤ G') {u : V} {p : G.Walk u u} :
+    (p.mapLe h).IsCycle ↔ p.IsCycle :=
+  map_is_cycle_iff_of_injective Function.injective_id
+
+alias map_le_is_cycle ↔ is_cycle.of_map_le is_cycle.map_le
 
 end Walk
 
@@ -1596,7 +1654,11 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
       
     
 
-variable (G) [Fintype V] [DecidableRel G.Adj] [DecidableEq V]
+variable (G) [DecidableEq V]
+
+section LocallyFinite
+
+variable [LocallyFinite G]
 
 /-- The `finset` of length-`n` walks from `u` to `v`.
 This is used to give `{p : G.walk u v | p.length = n}` a `fintype` instance, and it
@@ -1611,8 +1673,8 @@ def finsetWalkLength : ∀ (n : ℕ) (u v : V), Finset (G.Walk u v)
       exact {walk.nil}
     else ∅
   | n + 1, u, v =>
-    Finset.univ.bUnion fun w : V =>
-      if h : G.Adj u w then (finset_walk_length n w v).map ⟨fun p => Walk.cons h p, fun p q => by simp⟩ else ∅
+    Finset.univ.bUnion fun w : G.NeighborSet u =>
+      (finset_walk_length n w v).map ⟨fun p => Walk.cons w.property p, fun p q => by simp⟩
 
 theorem coe_finset_walk_length_eq (n : ℕ) (u v : V) :
     (G.finsetWalkLength n u v : Set (G.Walk u v)) = { p : G.Walk u v | p.length = n } := by
@@ -1622,23 +1684,27 @@ theorem coe_finset_walk_length_eq (n : ℕ) (u v : V) :
   · simp only [finset_walk_length, set_walk_length_succ_eq, Finset.coe_bUnion, Finset.mem_coe, Finset.mem_univ,
       Set.Union_true]
     ext p
-    simp only [Set.mem_Union, Finset.mem_coe, Set.mem_image, Set.mem_set_of_eq]
-    congr 2
-    ext w
-    simp only [Set.ext_iff, Finset.mem_coe, Set.mem_set_of_eq] at ih
-    split_ifs with huw <;> simp [huw, ih]
+    simp only [mem_neighbor_set, Finset.coe_map, embedding.coe_fn_mk, Set.Union_coe_set, Set.mem_Union, Set.mem_image,
+      Finset.mem_coe, Set.mem_set_of_eq]
+    congr with w
+    congr with h
+    congr with q
+    have := set.ext_iff.mp (ih w v) q
+    simp only [Finset.mem_coe, Set.mem_set_of_eq] at this
+    rw [← this]
+    rfl
     
 
 variable {G}
 
-theorem Walk.length_eq_of_mem_finset_walk_length {n : ℕ} {u v : V} (p : G.Walk u v) :
-    p ∈ G.finsetWalkLength n u v → p.length = n :=
-  (Set.ext_iff.mp (G.coe_finset_walk_length_eq n u v) p).mp
+theorem Walk.mem_finset_walk_length_iff_length_eq {n : ℕ} {u v : V} (p : G.Walk u v) :
+    p ∈ G.finsetWalkLength n u v ↔ p.length = n :=
+  Set.ext_iff.mp (G.coe_finset_walk_length_eq n u v) p
 
 variable (G)
 
 instance fintypeSetWalkLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.length = n } :=
-  (Fintype.subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+  (Fintype.ofFinset (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 
 theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
     { p : G.Walk u v | p.length = n }.toFinset = G.finsetWalkLength n u v := by
@@ -1649,7 +1715,45 @@ theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
 power of the adjacency matrix. -/
 theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
     Fintype.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
-  (Fintype.card_of_subtype (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+  (Fintype.card_of_finset (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+
+instance fintypeSetPathLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.IsPath ∧ p.length = n } :=
+  Fintype.ofFinset ((G.finsetWalkLength n u v).filter Walk.IsPath) <| by
+    simp [walk.mem_finset_walk_length_iff_length_eq, and_comm']
+
+end LocallyFinite
+
+section Finite
+
+variable [Fintype V] [DecidableRel G.Adj]
+
+theorem reachable_iff_exists_finset_walk_length_nonempty (u v : V) :
+    G.Reachable u v ↔ ∃ n : Fin (Fintype.card V), (G.finsetWalkLength n u v).Nonempty := by
+  constructor
+  · intro r
+    refine' r.elim_path fun p => _
+    refine' ⟨⟨_, p.is_path.length_lt⟩, p, _⟩
+    simp [walk.mem_finset_walk_length_iff_length_eq]
+    
+  · rintro ⟨_, p, _⟩
+    use p
+    
+
+instance : DecidableRel G.Reachable := fun u v =>
+  decidable_of_iff' _ (reachable_iff_exists_finset_walk_length_nonempty G u v)
+
+instance : Fintype G.ConnectedComponent :=
+  @Quotient.fintype _ _ G.reachableSetoid (inferInstance : DecidableRel G.Reachable)
+
+instance : Decidable G.Preconnected := by
+  unfold preconnected
+  infer_instance
+
+instance : Decidable G.Connected := by
+  rw [connected_iff, ← Finset.univ_nonempty_iff]
+  exact And.decidable
+
+end Finite
 
 end WalkCounting
 

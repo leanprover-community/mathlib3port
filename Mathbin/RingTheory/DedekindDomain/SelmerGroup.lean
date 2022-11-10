@@ -3,6 +3,7 @@ Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 -/
+import Mathbin.Algebra.Hom.Equiv.TypeTags
 import Mathbin.Data.Zmod.Quotient
 import Mathbin.RingTheory.DedekindDomain.AdicValuation
 

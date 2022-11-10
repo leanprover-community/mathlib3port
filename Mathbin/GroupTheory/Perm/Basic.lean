@@ -71,11 +71,11 @@ theorem inv_def (f : Perm α) : f⁻¹ = f.symm :=
   rfl
 
 @[simp]
-theorem coe_mul (f g : Perm α) : ⇑(f * g) = f ∘ g :=
+protected theorem coe_mul (f g : Perm α) : ⇑(f * g) = f ∘ g :=
   rfl
 
 @[simp]
-theorem coe_one : ⇑(1 : Perm α) = id :=
+protected theorem coe_one : ⇑(1 : Perm α) = id :=
   rfl
 
 theorem eq_inv_iff_eq {f : Perm α} {x y : α} : x = f⁻¹ y ↔ f x = y :=

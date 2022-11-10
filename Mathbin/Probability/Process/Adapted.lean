@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 -/
 import Mathbin.Probability.Process.Filtration
+import Mathbin.Topology.Instances.Discrete
 
 /-!
 # Adapted and progressively measurable processes
@@ -152,7 +153,7 @@ end Arithmetic
 
 end ProgMeasurable
 
-theorem progMeasurableOfTendsto' {γ} [MeasurableSpace ι] [MetrizableSpace β] (fltr : Filter γ) [fltr.ne_bot]
+theorem progMeasurableOfTendsto' {γ} [MeasurableSpace ι] [PseudoMetrizableSpace β] (fltr : Filter γ) [fltr.ne_bot]
     [fltr.IsCountablyGenerated] {U : γ → ι → Ω → β} (h : ∀ l, ProgMeasurable f (U l))
     (h_tendsto : Tendsto U fltr (𝓝 u)) : ProgMeasurable f u := by
   intro i
@@ -164,42 +165,23 @@ theorem progMeasurableOfTendsto' {γ} [MeasurableSpace ι] [MetrizableSpace β] 
   rw [tendsto_nhds] at h_tendsto⊢
   exact fun s hs h_mem => h_tendsto { g | g x.snd ∈ s } (hs.Preimage (continuous_apply x.snd)) h_mem
 
-theorem progMeasurableOfTendsto [MeasurableSpace ι] [MetrizableSpace β] {U : ℕ → ι → Ω → β}
+theorem progMeasurableOfTendsto [MeasurableSpace ι] [PseudoMetrizableSpace β] {U : ℕ → ι → Ω → β}
     (h : ∀ l, ProgMeasurable f (U l)) (h_tendsto : Tendsto U atTop (𝓝 u)) : ProgMeasurable f u :=
   progMeasurableOfTendsto' atTop h h_tendsto
 
 /-- A continuous and adapted process is progressively measurable. -/
-theorem Adapted.progMeasurableOfContinuous [TopologicalSpace ι] [MetrizableSpace ι] [MeasurableSpace ι]
-    [SecondCountableTopology ι] [OpensMeasurableSpace ι] [MetrizableSpace β] (h : Adapted f u)
+theorem Adapted.progMeasurableOfContinuous [TopologicalSpace ι] [MetrizableSpace ι] [SecondCountableTopology ι]
+    [MeasurableSpace ι] [OpensMeasurableSpace ι] [PseudoMetrizableSpace β] (h : Adapted f u)
     (hu_cont : ∀ ω, Continuous fun i => u i ω) : ProgMeasurable f u := fun i =>
   @stronglyMeasurableUncurryOfContinuousOfStronglyMeasurable _ _ (Set.IicCat i) _ _ _ _ _ _ _ (f i) _
     (fun ω => (hu_cont ω).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.Prop)
 
-/-- For filtrations indexed by `ℕ`, `adapted` and `prog_measurable` are equivalent. This lemma
-provides `adapted f u → prog_measurable f u`. See `prog_measurable.adapted` for the reverse
-direction, which is true more generally. -/
-theorem Adapted.progMeasurableOfNat {f : Filtration ℕ m} {u : ℕ → Ω → β} [AddCommMonoid β] [HasContinuousAdd β]
-    (h : Adapted f u) : ProgMeasurable f u := by
-  intro i
-  have :
-    (fun p : ↥(Set.IicCat i) × Ω => u (↑p.fst) p.snd) = fun p : ↥(Set.IicCat i) × Ω =>
-      ∑ j in Finset.range (i + 1), if ↑p.fst = j then u j p.snd else 0 :=
-    by
-    ext1 p
-    rw [Finset.sum_ite_eq]
-    have hp_mem : (p.fst : ℕ) ∈ Finset.range (i + 1) := finset.mem_range_succ_iff.mpr p.fst.prop
-    simp only [hp_mem, if_true]
-  rw [this]
-  refine' Finset.stronglyMeasurableSum _ fun j hj => strongly_measurable.ite _ _ _
-  · suffices h_meas : measurable[MeasurableSpace.prod _ (f i)] fun a : ↥(Set.IicCat i) × Ω => (a.fst : ℕ)
-    exact h_meas (measurable_set_singleton j)
-    exact measurable_fst.subtype_coe
-    
-  · have h_le : j ≤ i := finset.mem_range_succ_iff.mp hj
-    exact (strongly_measurable.mono (h j) (f.mono h_le)).compMeasurable measurableSnd
-    
-  · exact strongly_measurable_const
-    
+/-- For filtrations indexed by a discrete order, `adapted` and `prog_measurable` are equivalent.
+This lemma provides `adapted f u → prog_measurable f u`.
+See `prog_measurable.adapted` for the reverse direction, which is true more generally. -/
+theorem Adapted.progMeasurableOfDiscrete [TopologicalSpace ι] [DiscreteTopology ι] [SecondCountableTopology ι]
+    [MeasurableSpace ι] [OpensMeasurableSpace ι] [PseudoMetrizableSpace β] (h : Adapted f u) : ProgMeasurable f u :=
+  h.progMeasurableOfContinuous fun _ => continuous_of_discrete_topology
 
 -- this dot notation will make more sense once we have a more general definition for predictable
 theorem Predictable.adapted {f : Filtration ℕ m} {u : ℕ → Ω → β} (hu : Adapted f fun n => u (n + 1))

@@ -433,7 +433,9 @@ theorem int_coe_snd (n : ℤ) : (n : X q).snd = (0 : Zmod q) :=
   rfl
 
 @[norm_cast]
-theorem coe_mul (n m : ℤ) : ((n * m : ℤ) : X q) = (n : X q) * (m : X q) := by ext <;> simp <;> ring
+protected theorem coe_mul (n m : ℤ) : ((n * m : ℤ) : X q) = (n : X q) * (m : X q) := by ext <;> simp <;> ring
+
+instance : CoeIsMulHom ℤ (X q) where coe_mul := LucasLehmer.X.coe_mul
 
 @[norm_cast]
 theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by ext <;> simp

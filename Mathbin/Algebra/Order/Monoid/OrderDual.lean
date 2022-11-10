@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Group.OrderSynonym
-import Mathbin.Algebra.Order.Monoid.Cancel
+import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 
 /-! # Ordered monoid structures on the order dual. -/
 

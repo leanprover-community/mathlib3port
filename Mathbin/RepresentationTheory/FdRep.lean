@@ -89,6 +89,10 @@ def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (ρ : 
 instance :
     HasForget₂ (FdRep k G) (RepCat k G) where forget₂ := (forget₂ (FinVectCat k) (ModuleCat k)).mapAction (MonCat.of G)
 
+theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (RepCat k G)).obj V).ρ = V.ρ := by
+  ext (g v)
+  rfl
+
 -- Verify that the monoidal structure is available.
 example : MonoidalCategory (FdRep k G) := by infer_instance
 
@@ -100,10 +104,28 @@ open FiniteDimensional
 
 open Classical
 
+-- We need to provide this instance explicitely as otherwise `finrank_hom_simple_simple` gives a
+-- deterministic timeout.
+instance : HasKernels (FdRep k G) := by infer_instance
+
 -- Verify that Schur's lemma applies out of the box.
 theorem finrank_hom_simple_simple [IsAlgClosed k] (V W : FdRep k G) [Simple V] [Simple W] :
     finrank k (V ⟶ W) = if Nonempty (V ≅ W) then 1 else 0 :=
   CategoryTheory.finrank_hom_simple_simple k V W
+
+/-- The forgetful functor to `Rep k G` preserves hom-sets and their vector space structure -/
+def forget₂HomLinearEquiv (X Y : FdRep k G) :
+    ((forget₂ (FdRep k G) (RepCat k G)).obj X ⟶ (forget₂ (FdRep k G) (RepCat k G)).obj Y) ≃ₗ[k] X ⟶ Y where
+  toFun f := ⟨f.hom, f.comm⟩
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+  invFun f := ⟨(forget₂ (FinVectCat k) (ModuleCat k)).map f.hom, f.comm⟩
+  left_inv _ := by
+    ext
+    rfl
+  right_inv _ := by
+    ext
+    rfl
 
 end FdRep
 
@@ -120,30 +142,35 @@ end FdRep
 
 namespace FdRep
 
+-- The variables in this section are slightly weird, living half in `representation` and half in
+-- `fdRep`. When we have a better API for general monoidal closed and rigid categories and these
+-- structures on `fdRep`, we should remove the dependancy of statements about `fdRep` on
+-- `representation.lin_hom` and `representation.dual`. The isomorphism `dual_tensor_iso_lin_hom`
+-- below should then just be obtained from general results about rigid categories.
 open Representation
 
-variable {k G V W : Type u} [Field k] [Group G]
+variable {k G V : Type u} [Field k] [Group G]
 
-variable [AddCommGroup V] [Module k V] [AddCommGroup W] [Module k W]
+variable [AddCommGroup V] [Module k V]
 
-variable [FiniteDimensional k V] [FiniteDimensional k W]
+variable [FiniteDimensional k V]
 
-variable (ρV : Representation k G V) (ρW : Representation k G W)
+variable (ρV : Representation k G V) (W : FdRep k G)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
-noncomputable def dualTensorIsoLinHomAux : (FdRep.of ρV.dual ⊗ FdRep.of ρW).V ≅ (FdRep.of (linHom ρV ρW)).V :=
+noncomputable def dualTensorIsoLinHomAux : (FdRep.of ρV.dual ⊗ W).V ≅ (FdRep.of (linHom ρV W.ρ)).V :=
   (dualTensorHomEquiv k V W).toFinVectIso
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- When `V` and `W` are finite dimensional representations of a group `G`, the isomorphism
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
-noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ FdRep.of ρW ≅ FdRep.of (linHom ρV ρW) := by
-  apply ActionCat.mkIso (dual_tensor_iso_lin_hom_aux ρV ρW)
-  convert dual_tensor_hom_comm ρV ρW
+noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (linHom ρV W.ρ) := by
+  apply ActionCat.mkIso (dual_tensor_iso_lin_hom_aux ρV W)
+  convert dual_tensor_hom_comm ρV W.ρ
 
 @[simp]
-theorem dual_tensor_iso_lin_hom_hom_hom : (dualTensorIsoLinHom ρV ρW).hom.hom = dualTensorHom k V W :=
+theorem dual_tensor_iso_lin_hom_hom_hom : (dualTensorIsoLinHom ρV W).hom.hom = dualTensorHom k V W :=
   rfl
 
 end FdRep

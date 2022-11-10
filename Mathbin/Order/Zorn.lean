@@ -130,6 +130,13 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
       
     
 
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
+theorem zorn_nonempty_Ici₀ (a : α)
+    (ih : ∀ (c) (_ : c ⊆ IciCat a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub) (x : α) (hax : a ≤ x) :
+    ∃ m, x ≤ m ∧ ∀ z, m ≤ z → z ≤ m :=
+  let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (IciCat a) (by simpa using ih) x hax
+  ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
+
 end Preorder
 
 section PartialOrder

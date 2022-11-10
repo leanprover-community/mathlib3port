@@ -260,7 +260,7 @@ theorem IsCompact.tendsto_subseq {s : Set X} {x : ℕ → X} (hs : IsCompact s) 
 
 -- see Note [lower instance priority]
 instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [CompactSpace X] : SeqCompactSpace X :=
-  ⟨compact_univ.IsSeqCompact⟩
+  ⟨is_compact_univ.IsSeqCompact⟩
 
 theorem CompactSpace.tendsto_subseq [CompactSpace X] (x : ℕ → X) :
     ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
@@ -379,12 +379,13 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs
 
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
 (e.g., in a metric space), a set is compact if and only if it is sequentially compact. -/
-protected theorem UniformSpace.compact_iff_seq_compact [is_countably_generated <| 𝓤 X] : IsCompact s ↔ IsSeqCompact s :=
+protected theorem UniformSpace.is_compact_iff_is_seq_compact [is_countably_generated <| 𝓤 X] :
+    IsCompact s ↔ IsSeqCompact s :=
   ⟨fun H => H.IsSeqCompact, fun H => H.IsCompact⟩
 
 theorem UniformSpace.compact_space_iff_seq_compact_space [is_countably_generated <| 𝓤 X] :
     CompactSpace X ↔ SeqCompactSpace X :=
-  have key : IsCompact (Univ : Set X) ↔ IsSeqCompact Univ := UniformSpace.compact_iff_seq_compact
+  have key : IsCompact (Univ : Set X) ↔ IsSeqCompact Univ := UniformSpace.is_compact_iff_is_seq_compact
   ⟨fun ⟨h⟩ => ⟨key.mp h⟩, fun ⟨h⟩ => ⟨key.mpr h⟩⟩
 
 end UniformSpaceSeqCompact

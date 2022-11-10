@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Data.Int.Cast.Defs
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
+import Mathbin.Algebra.GroupWithZero.Basic
 
 /-!
 # `ulift` instances for groups and monoids

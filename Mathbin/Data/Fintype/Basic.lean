@@ -3,6 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
+import Mathbin.Algebra.Parity
 import Mathbin.Data.Array.Lemmas
 import Mathbin.Data.Finset.Fin
 import Mathbin.Data.Finset.Option
@@ -370,6 +371,9 @@ instance decidableRightInverseFintype [DecidableEq α] [Fintype α] (f : α → 
 instance decidableLeftInverseFintype [DecidableEq β] [Fintype β] (f : α → β) (g : β → α) :
     Decidable (Function.LeftInverse f g) :=
   show Decidable (∀ x, f (g x) = x) by infer_instance
+
+instance IsSquare.decidablePred [Mul α] [Fintype α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
+  Fintype.decidableExistsFintype
 
 /-- Construct a proof of `fintype α` from a universal multiset -/
 def ofMultiset [DecidableEq α] (s : Multiset α) (H : ∀ x : α, x ∈ s) : Fintype α :=
@@ -850,6 +854,13 @@ theorem Fintype.card_fin (n : ℕ) : Fintype.card (Fin n) = n :=
 theorem Finset.card_fin (n : ℕ) : Finset.card (Finset.univ : Finset (Fin n)) = n := by
   rw [Finset.card_univ, Fintype.card_fin]
 
+/-- The cardinality of `fin (bit0 n)` is even, `fact` version.
+This `fact` is needed as an instance by `matrix.special_linear_group.has_neg`. -/
+theorem Fintype.card_fin_even {n : ℕ} : Fact (Even (Fintype.card (Fin (bit0 n)))) :=
+  ⟨by
+    rw [Fintype.card_fin]
+    exact even_bit0 _⟩
+
 /-- `fin` as a map from `ℕ` to `Type` is injective. Note that since this is a statement about
 equality of types, using it should be avoided if possible. -/
 theorem fin_injective : Function.Injective Fin := fun m n h =>
@@ -1163,6 +1174,10 @@ theorem Finite.exists_univ_list (α) [Finite α] : ∃ l : List α, l.Nodup ∧ 
   obtain ⟨l, e⟩ := Quotient.exists_rep (@univ α _).1
   have := And.intro univ.2 mem_univ_val
   exact ⟨_, by rwa [← e] at this⟩
+
+theorem List.Nodup.length_le_card {α : Type _} [Fintype α] {l : List α} (h : l.Nodup) : l.length ≤ Fintype.card α := by
+  classical
+  exact List.to_finset_card_of_nodup h ▸ l.to_finset.card_le_univ
 
 namespace Fintype
 

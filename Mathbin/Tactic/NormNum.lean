@@ -381,7 +381,7 @@ unsafe def prove_clear_denom' (prove_ne_zero : instance_cache → expr → ℚ �
   else do
     let [_, _, a, b] ← return a.get_app_args
     let (c, b') ← c.ofNat (nd / na.denom)
-    let (c, p₀) ← prove_ne_zero c b (Rat.ofInt na.denom)
+    let (c, p₀) ← prove_ne_zero c b na.denom
     let (c, _, p₁) ← prove_mul_nat c b b'
     let (c, r, p₂) ← prove_mul_nat c a b'
     let (c, p) ← c.mk_app `` clear_denom_div [a, b, b', r, d, p₀, p₁, p₂]
@@ -861,7 +861,7 @@ unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc :
   else do
     let nd := na.denom.lcm nb.denom
     let (ic, d) ← ic.ofNat nd
-    let (ic, p₀) ← prove_ne_zero ic d (Rat.ofInt nd)
+    let (ic, p₀) ← prove_ne_zero ic d nd
     let (ic, a', pa) ← prove_clear_denom ic a d na nd
     let (ic, b', pb) ← prove_clear_denom ic b d nb nd
     let (ic, c', pc) ← prove_clear_denom ic c d nc nd
@@ -928,7 +928,7 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
     return (c, d, a, p)
   else do
     let [α, _, a, b] ← return a.get_app_args
-    let (c, p₀) ← prove_ne_zero c b (Rat.ofInt na.denom)
+    let (c, p₀) ← prove_ne_zero c b na.denom
     let (c, p) ← c.mk_app `` clear_denom_simple_div [a, b, p₀]
     return (c, b, a, p)
 
@@ -1767,8 +1767,11 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
       let nm := nq * nr
       let (ic, q) ← ic.ofInt nq
       let (ic, r) ← ic.ofInt nr
-      let (ic, m, pm) ← prove_mul_rat ic q b (Rat.ofInt nq) (Rat.ofInt nb)
-      let (ic, p) ← prove_add_rat ic r m a (Rat.ofInt nr) (Rat.ofInt nm) (Rat.ofInt na)
+      let (ic, m, pm) ← prove_mul_rat ic q b nq nb
+      let (ic, a') ← ic.of_rat na
+      let-- ensure `a` is in normal form
+        (ic, p)
+        ← prove_add_rat ic r m a' nr nm na
       let (ic, p') ← prove_lt_nat ic r b
       if ic = quote.1 Nat then
           if mod then return (ic, r, (quote.1 nat_mod).mk_app [a, b, q, r, m, pm, p, p'])

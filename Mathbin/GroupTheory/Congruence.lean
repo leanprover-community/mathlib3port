@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
 import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Data.Setoid.Basic
 import Mathbin.GroupTheory.Submonoid.Operations
 

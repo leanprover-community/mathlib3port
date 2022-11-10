@@ -73,6 +73,12 @@ protected theorem nonempty : Nonempty ι :=
   not_is_empty_iff.mp fun hι => by
     simpa only [@range_eq_empty _ _ hι, AffineSubspace.span_empty, bot_ne_top] using b.tot
 
+/-- Composition of an affine basis and an equivalence of index types. -/
+def compEquiv {ι'} (e : ι' ≃ ι) : AffineBasis ι' k P :=
+  ⟨b.points ∘ e, b.ind.comp_embedding e.toEmbedding, by
+    rw [e.surjective.range_comp]
+    exact b.3⟩
+
 /-- Given an affine basis for an affine space `P`, if we single out one member of the family, we
 obtain a linear basis for the model space `V`.
 
@@ -346,26 +352,44 @@ protected theorem finiteDimensional [Finite ι] (b : AffineBasis ι k P) : Finit
   let ⟨i⟩ := b.Nonempty
   FiniteDimensional.ofFintypeBasis (b.basisOf i)
 
+protected theorem finite [FiniteDimensional k V] (b : AffineBasis ι k P) : Finite ι :=
+  finite_of_fin_dim_affine_independent k b.ind
+
+protected theorem finite_set [FiniteDimensional k V] {s : Set ι} (b : AffineBasis s k P) : s.Finite :=
+  finite_set_of_fin_dim_affine_independent k b.ind
+
+@[simp]
+theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset ι} {i : ι} (hi : i ∈ s) :
+    b.Coord i (s.centroid k b.points) = (s.card : k)⁻¹ := by
+  rw [Finset.centroid, b.coord_apply_combination_of_mem hi (s.sum_centroid_weights_eq_one_of_nonempty _ ⟨i, hi⟩),
+    Finset.centroidWeights]
+
+theorem card_eq_finrank_add_one [Fintype ι] (b : AffineBasis ι k P) :
+    Fintype.card ι = FiniteDimensional.finrank k V + 1 :=
+  haveI := b.finite_dimensional
+  b.ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp b.tot
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
+    ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe := by
+  obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affine_independent k V t
+  refine' ⟨s, hst, ⟨coe, h_ind, _⟩, rfl⟩
+  rw [Subtype.range_coe, h_tot, ht]
+
 variable (k V P)
 
-theorem exists_affine_basis : ∃ s : Set P, Nonempty (AffineBasis (↥s) k P) := by
-  obtain ⟨s, -, h_tot, h_ind⟩ := exists_affine_independent k V (Set.Univ : Set P)
-  refine' ⟨s, ⟨⟨(coe : s → P), h_ind, _⟩⟩⟩
-  rw [Subtype.range_coe, h_tot, AffineSubspace.span_univ]
+theorem exists_affine_basis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), b.points = coe :=
+  let ⟨s, _, hs⟩ := exists_affine_subbasis (AffineSubspace.span_univ k V P)
+  ⟨s, hs⟩
 
 variable {k V P}
 
-theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintype ι] [FiniteDimensional k V]
+theorem exists_affine_basis_of_finite_dimensional [Fintype ι] [FiniteDimensional k V]
     (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) := by
-  obtain ⟨s, ⟨⟨incl, h_ind, h_tot⟩⟩⟩ := AffineBasis.exists_affine_basis k V P
-  haveI : Fintype s := fintypeOfFinDimAffineIndependent k h_ind
-  have hs : Fintype.card ι = Fintype.card s := by
-    rw [h]
-    exact (h_ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp h_tot).symm
-  rw [← affine_independent_equiv (Fintype.equivOfCardEq hs)] at h_ind
-  refine' ⟨⟨_, h_ind, _⟩⟩
-  rw [range_comp]
-  simp [h_tot]
+  obtain ⟨s, b, hb⟩ := AffineBasis.exists_affine_basis k V P
+  lift s to Finset P using b.finite_set
+  refine' ⟨b.comp_equiv <| Fintype.equivOfCardEq _⟩
+  rw [h, ← b.card_eq_finrank_add_one]
 
 end DivisionRing
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
+import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Limits.Unit
 import Mathbin.CategoryTheory.Sites.Sheaf
@@ -50,8 +50,6 @@ variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 namespace Presheaf
 
-open SheafConditionEqualizerProducts
-
 /-- The sheaf condition has several different equivalent formulations.
 The official definition chosen here is in terms of grothendieck topologies so that the results on
 sites could be applied here easily, and this condition does not require additional constraints on
@@ -69,11 +67,13 @@ The equivalent formulations of the sheaf condition on `presheaf C X` are as foll
   See `Top.presheaf.is_sheaf_iff_is_sheaf_equalizer_products`.
 
 3. `Top.presheaf.is_sheaf_opens_le_cover`:
-  Each `F(U)` is the (inverse) limit of all `F(V)` with `V ⊆ U`.
+  For each open cover `{ Uᵢ }` of `U`, `F(U)` is the limit of the diagram consisting of arrows
+  `F(V₁) ⟶ F(V₂)` for every pair of open sets `V₁ ⊇ V₂` that are contained in some `Uᵢ`.
   See `Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover`.
 
 4. `Top.presheaf.is_sheaf_pairwise_intersections`:
-  For each open cover `{ Uᵢ }` of `U`, `F(U)` is the limit of all `F(Uᵢ)` and all `F(Uᵢ ∩ Uⱼ)`.
+  For each open cover `{ Uᵢ }` of `U`, `F(U)` is the limit of the diagram consisting of arrows
+  from `F(Uᵢ)` and `F(Uⱼ)` to `F(Uᵢ ∩ Uⱼ)` for each pair `(i, j)`.
   See `Top.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections`.
 
 The following requires `C` to be concrete and complete, and `forget C` to reflect isomorphisms and

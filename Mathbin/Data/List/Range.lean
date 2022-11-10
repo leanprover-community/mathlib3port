@@ -131,6 +131,9 @@ theorem range_eq_nil {n : ℕ} : range n = [] ↔ n = 0 := by rw [← length_eq_
 
 theorem pairwise_lt_range (n : ℕ) : Pairwise (· < ·) (range n) := by simp only [range_eq_range', pairwise_lt_range']
 
+theorem pairwise_le_range (n : ℕ) : Pairwise (· ≤ ·) (range n) :=
+  Pairwise.imp (@le_of_lt ℕ _) (pairwise_lt_range _)
+
 #print List.nodup_range /-
 theorem nodup_range (n : ℕ) : Nodup (range n) := by simp only [range_eq_range', nodup_range']
 -/

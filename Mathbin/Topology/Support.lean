@@ -140,7 +140,7 @@ theorem has_compact_mul_support_iff_eventually_eq : HasCompactMulSupport f ↔ f
       ⟨MulTsupport f, isClosedMulTsupport _, h, fun x => not_imp_comm.mpr fun hx => subset_mul_tsupport f hx⟩,
     fun h =>
     let ⟨C, hC⟩ := mem_coclosed_compact'.mp h
-    compact_of_is_closed_subset hC.2.1 (isClosedMulTsupport _) (closure_minimal hC.2.2 hC.1)⟩
+    is_compact_of_is_closed_subset hC.2.1 (isClosedMulTsupport _) (closure_minimal hC.2.2 hC.1)⟩
 
 @[to_additive]
 theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasCompactMulSupport f) (hf : Continuous f) :
@@ -151,7 +151,7 @@ theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasComp
 @[to_additive]
 theorem HasCompactMulSupport.mono' {f' : α → γ} (hf : HasCompactMulSupport f) (hff' : MulSupport f' ⊆ MulTsupport f) :
     HasCompactMulSupport f' :=
-  compact_of_is_closed_subset hf isClosedClosure <| closure_minimal hff' isClosedClosure
+  is_compact_of_is_closed_subset hf isClosedClosure <| closure_minimal hff' isClosedClosure
 
 @[to_additive]
 theorem HasCompactMulSupport.mono {f' : α → γ} (hf : HasCompactMulSupport f) (hff' : MulSupport f' ⊆ MulSupport f) :
@@ -171,7 +171,7 @@ theorem has_compact_mul_support_comp_left (hg : ∀ {x}, g x = 1 ↔ x = 1) :
 theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f) {g : α' → α} (hg : ClosedEmbedding g) :
     HasCompactMulSupport (f ∘ g) := by
   rw [has_compact_mul_support_def, Function.mul_support_comp_eq_preimage]
-  refine' compact_of_is_closed_subset (hg.is_compact_preimage hf) isClosedClosure _
+  refine' is_compact_of_is_closed_subset (hg.is_compact_preimage hf) isClosedClosure _
   rw [hg.to_embedding.closure_eq_preimage_closure_image]
   exact preimage_mono (closure_mono <| image_preimage_subset _ _)
 

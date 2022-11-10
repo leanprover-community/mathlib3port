@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Data.Nat.Modeq
+import Mathbin.Algebra.EuclideanDomain.Basic
 import Mathbin.Tactic.Ring
 
 /-!

@@ -283,6 +283,10 @@ theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : Simplex ℝ P n) (i : F
     dist (s.points i) s.circumcenter = s.circumradius :=
   dist_of_mem_subset_sphere (Set.mem_range_self _) s.circumsphere_unique_dist_eq.1.2
 
+/-- All points lie in the circumsphere. -/
+theorem mem_circumsphere {n : ℕ} (s : Simplex ℝ P n) (i : Fin (n + 1)) : s.points i ∈ s.circumsphere :=
+  s.dist_circumcenter_eq_circumradius i
+
 /-- All points have distance to the circumcenter equal to the
 circumradius. -/
 @[simp]

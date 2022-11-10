@@ -171,7 +171,7 @@ private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ := by
   obtain ⟨H, hH⟩ := h2 K h5 h6
   replace hH : Fintype.card (H.map K.subtype) = N.index :=
     ((Set.card_image_of_injective _ Subtype.coe_injective).trans
-          (Nat.mul_left_injective Fintype.card_pos
+          (mul_left_injective₀ Fintype.card_ne_zero
             (hH.symm.card_mul.trans (N.comap K.subtype).index_mul_card.symm))).trans
       h4
   have h7 : Fintype.card N * Fintype.card (H.map K.subtype) = Fintype.card G := by rw [hH, ← N.index_mul_card, mul_comm]

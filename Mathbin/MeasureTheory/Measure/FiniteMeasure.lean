@@ -261,7 +261,7 @@ theorem test_against_nn_zero (μ : FiniteMeasure Ω) : μ.testAgainstNn 0 = 0 :=
 
 @[simp]
 theorem test_against_nn_one (μ : FiniteMeasure Ω) : μ.testAgainstNn 1 = μ.mass := by
-  simp only [test_against_nn, coe_one, Pi.one_apply, Ennreal.coe_one, lintegral_one]
+  simp only [test_against_nn, BoundedContinuousFunction.coe_one, Pi.one_apply, Ennreal.coe_one, lintegral_one]
   rfl
 
 @[simp]

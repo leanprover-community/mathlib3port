@@ -193,7 +193,7 @@ theorem fin_succ_equiv'_last_apply {n : ℕ} {i : Fin (n + 1)} (h : i ≠ Fin.la
 
 theorem fin_succ_equiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) (hj : j ≠ i) :
     finSuccEquiv' i j =
-      (i.cast_lt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 hi) : ↑i < n)).predAbove j :=
+      (i.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 hi) : ↑i < n)).predAbove j :=
   by
   rw [Fin.predAbove]
   have hi' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 hi)
@@ -231,7 +231,7 @@ theorem fin_succ_above_equiv_symm_apply_last (x : { x : Fin (n + 1) // x ≠ Fin
 theorem fin_succ_above_equiv_symm_apply_ne_last {p : Fin (n + 1)} (h : p ≠ Fin.last n)
     (x : { x : Fin (n + 1) // x ≠ p }) :
     (finSuccAboveEquiv p).symm x =
-      (p.cast_lt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 h))).predAbove x :=
+      (p.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 h))).predAbove x :=
   by
   rw [← Option.some_inj, ← Option.coe_def]
   simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_ne_last_apply h x.property

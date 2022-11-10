@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 -/
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Algebra.Divisibility
+import Mathbin.Algebra.Divisibility.Basic
 
 /-!
 # Lemmas about divisibility in rings

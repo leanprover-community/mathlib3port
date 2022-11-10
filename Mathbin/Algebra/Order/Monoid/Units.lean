@@ -3,8 +3,10 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.Monoid.Basic
+import Mathbin.Order.Hom.Basic
 import Mathbin.Order.MinMax
+import Mathbin.Algebra.Group.Units
+import Mathbin.Algebra.Order.Monoid.Defs
 
 /-!
 # Units in ordered monoids

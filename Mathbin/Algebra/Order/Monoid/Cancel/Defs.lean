@@ -3,7 +3,7 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.Monoid.Basic
+import Mathbin.Algebra.Order.Monoid.Defs
 
 /-!
 # Ordered cancellative monoids
@@ -77,18 +77,6 @@ instance (priority := 100) OrderedCancelCommMonoid.toCancelCommMonoid : CancelCo
   { ‹OrderedCancelCommMonoid α› with
     mul_left_cancel := fun a b c h => (le_of_mul_le_mul_left' h.le).antisymm <| le_of_mul_le_mul_left' h.ge }
 
-/-- Pullback an `ordered_cancel_comm_monoid` under an injective map.
-See note [reducible non-instances]. -/
-@[reducible,
-  to_additive Function.Injective.orderedCancelAddCommMonoid
-      "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : OrderedCancelCommMonoid β :=
-  { hf.OrderedCommMonoid f one mul npow with
-    le_of_mul_le_mul_left := fun a b c (bc : f (a * b) ≤ f (a * c)) =>
-      (mul_le_mul_iff_left (f a)).mp (by rwa [← mul, ← mul]) }
-
 end OrderedCancelCommMonoid
 
 /-- A linearly ordered cancellative additive commutative monoid
@@ -102,21 +90,4 @@ is a commutative monoid with a linear order
 in which multiplication is cancellative and monotone. -/
 @[protect_proj, to_additive]
 class LinearOrderedCancelCommMonoid (α : Type u) extends OrderedCancelCommMonoid α, LinearOrderedCommMonoid α
-
-section LinearOrderedCancelCommMonoid
-
-variable [LinearOrderedCancelCommMonoid α]
-
-/-- Pullback a `linear_ordered_cancel_comm_monoid` under an injective map.
-See note [reducible non-instances]. -/
-@[reducible,
-  to_additive Function.Injective.linearOrderedCancelAddCommMonoid
-      "Pullback a `linear_ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] [HasSup β] [HasInf β]
-    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCancelCommMonoid β :=
-  { hf.LinearOrderedCommMonoid f one mul npow hsup hinf, hf.OrderedCancelCommMonoid f one mul npow with }
-
-end LinearOrderedCancelCommMonoid
 

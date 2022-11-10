@@ -335,13 +335,13 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) : IsCyc
   rw [card_eq_card_quotient_mul_card_subgroup (center G), mul_comm, hk] at hG
   have hk2 := (Nat.pow_dvd_pow_iff_le_right (Fact.out p.prime).one_lt).1 ⟨_, hG.symm⟩
   interval_cases k
-  · rw [sq, pow_one, Nat.mul_right_inj (Fact.out p.prime).Pos] at hG
+  · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).NeZero] at hG
     exact is_cyclic_of_prime_card hG
     
   · exact
       @is_cyclic_of_subsingleton _ _
         ⟨Fintype.card_le_one_iff.1
-            ((Nat.mul_right_inj (pow_pos (Fact.out p.prime).Pos 2)).1 (hG.trans (mul_one (p ^ 2)).symm)).le⟩
+            (mul_right_injective₀ (pow_ne_zero 2 (NeZero.ne p)) (hG.trans (mul_one (p ^ 2)).symm)).le⟩
     
 
 /-- A group of order `p ^ 2` is commutative. See also `is_p_group.commutative_of_card_eq_prime_sq`

@@ -4,9 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.Hom.Equiv
-import Mathbin.Algebra.Ring.Opposite
 
 /-!
 # (Semi)ring equivs

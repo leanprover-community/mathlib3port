@@ -149,7 +149,7 @@ theorem martingale_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → 
       ((martingale_martingale_part (hf.adapted.add <| predictable.adapted hg <| hg0.symm ▸ strongly_measurable_zero))
         fun n => (hf.integrable n).add <| hgint n)
   refine' (eventually_eq_iff_sub.2 _).symm
-  filter_upwards [hhmgle.eq_zero_of_predicatable hhpred n] with ω hω
+  filter_upwards [hhmgle.eq_zero_of_predictable hhpred n] with ω hω
   rw [hhdef, Pi.sub_apply] at hω
   rw [hω, Pi.sub_apply, martingale_part]
   simp [hg0]

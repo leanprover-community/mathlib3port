@@ -74,7 +74,7 @@ instance [T2Space α] : HasInf (Compacts α) :=
   ⟨fun s t => ⟨s ∩ t, s.IsCompact.inter t.IsCompact⟩⟩
 
 instance [CompactSpace α] : HasTop (Compacts α) :=
-  ⟨⟨Univ, compact_univ⟩⟩
+  ⟨⟨Univ, is_compact_univ⟩⟩
 
 instance : HasBot (Compacts α) :=
   ⟨⟨∅, is_compact_empty⟩⟩

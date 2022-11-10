@@ -1162,6 +1162,10 @@ theorem to_topological_space_inf {u v : UniformSpace α} :
     (u ⊓ v).toTopologicalSpace = u.toTopologicalSpace ⊓ v.toTopologicalSpace :=
   rfl
 
+/-- Uniform space structure on `ulift α`. -/
+instance ULift.uniformSpace [UniformSpace α] : UniformSpace (ULift α) :=
+  UniformSpace.comap ULift.down ‹_›
+
 section UniformContinuousInfi
 
 theorem uniform_continuous_inf_rng {f : α → β} {u₁ : UniformSpace α} {u₂ u₃ : UniformSpace β}

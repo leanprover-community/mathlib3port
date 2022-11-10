@@ -184,9 +184,10 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
         i.e., for all ε>0, there is a finite set which is ε-dense.
         start from a set `s` which is ε-dense in α. Then the subsets of `s`
         are finitely many, and ε-dense for the Hausdorff distance. -/
-    refine' compact_of_totally_bounded_is_closed (Emetric.totally_bounded_iff.2 fun ε εpos => _) isClosedUniv
+    refine' is_compact_of_totally_bounded_is_closed (Emetric.totally_bounded_iff.2 fun ε εpos => _) isClosedUniv
     rcases exists_between εpos with ⟨δ, δpos, δlt⟩
-    rcases Emetric.totally_bounded_iff.1 (compact_iff_totally_bounded_complete.1 (@compact_univ α _ _)).1 δ δpos with
+    rcases Emetric.totally_bounded_iff.1 (is_compact_iff_totally_bounded_is_complete.1 (@is_compact_univ α _ _)).1 δ
+        δpos with
       ⟨s, fs, hs⟩
     -- s : set α,  fs : s.finite,  hs : univ ⊆ ⋃ (y : α) (H : y ∈ s), eball y δ
     -- we first show that any set is well approximated by a subset of `s`.
@@ -259,13 +260,13 @@ theorem NonemptyCompacts.isClosedInCloseds [CompleteSpace α] : IsClosed (range 
     -- since `t` is nonempty, so is `s`
     exact nonempty_of_Hausdorff_edist_ne_top ht.1 (ne_of_lt Dst)
     
-  · refine' compact_iff_totally_bounded_complete.2 ⟨_, s.closed.is_complete⟩
+  · refine' is_compact_iff_totally_bounded_is_complete.2 ⟨_, s.closed.is_complete⟩
     refine' totally_bounded_iff.2 fun ε (εpos : 0 < ε) => _
     -- we have to show that s is covered by finitely many eballs of radius ε
     -- pick a nonempty compact set t at distance at most ε/2 of s
     rcases mem_closure_iff.1 hs (ε / 2) (Ennreal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
     -- cover this space with finitely many balls of radius ε/2
-    rcases totally_bounded_iff.1 (compact_iff_totally_bounded_complete.1 ht.2).1 (ε / 2)
+    rcases totally_bounded_iff.1 (is_compact_iff_totally_bounded_is_complete.1 ht.2).1 (ε / 2)
         (Ennreal.half_pos εpos.ne') with
       ⟨u, fu, ut⟩
     refine' ⟨u, ⟨fu, fun x hx => _⟩⟩

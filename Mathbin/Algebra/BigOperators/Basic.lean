@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Algebra.Ring.Opposite
 import Mathbin.Data.Finset.Fold
 import Mathbin.Data.Fintype.Basic

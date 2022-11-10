@@ -215,7 +215,7 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
     ∃ u ∈ f, Closure (Image2 ϕ u s) ⊆ n := by
   rcases hc₂ with ⟨v, hv₁, hv₂⟩
   let k := Closure (image2 ϕ v s)
-  have hk : IsCompact (k \ n) := IsCompact.diff (compact_of_is_closed_subset hc₁ isClosedClosure hv₂) hn₁
+  have hk : IsCompact (k \ n) := IsCompact.diff (is_compact_of_is_closed_subset hc₁ isClosedClosure hv₂) hn₁
   let j u := Closure (image2 ϕ (u ∩ v) s)ᶜ
   have hj₁ : ∀ u ∈ f, IsOpen (j u) := fun _ _ => is_open_compl_iff.mpr isClosedClosure
   have hj₂ : k \ n ⊆ ⋃ u ∈ f, j u := by
@@ -266,7 +266,7 @@ theorem eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_sub
 
 theorem eventually_closure_subset_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β} (hv₁ : IsOpen v)
     (hv₂ : ω f ϕ s ⊆ v) : ∃ u ∈ f, Closure (Image2 ϕ u s) ⊆ v :=
-  eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' _ _ _ compact_univ
+  eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' _ _ _ is_compact_univ
     ⟨Univ, univ_mem, subset_univ _⟩ hv₁ hv₂
 
 theorem eventually_maps_to_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β} (hv₁ : IsOpen v)
@@ -291,7 +291,7 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
     exact hn.mono subset_closure
     
   · intro
-    apply compact_of_is_closed_subset hc₁ isClosedClosure
+    apply is_compact_of_is_closed_subset hc₁ isClosedClosure
     calc
       _ ⊆ Closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
       _ ⊆ c := hv₂
@@ -301,7 +301,7 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
     
 
 theorem nonempty_omega_limit [CompactSpace β] [NeBot f] (hs : s.Nonempty) : (ω f ϕ s).Nonempty :=
-  nonempty_omega_limit_of_is_compact_absorbing _ _ _ compact_univ ⟨Univ, univ_mem, subset_univ _⟩ hs
+  nonempty_omega_limit_of_is_compact_absorbing _ _ _ is_compact_univ ⟨Univ, univ_mem, subset_univ _⟩ hs
 
 end OmegaLimit
 

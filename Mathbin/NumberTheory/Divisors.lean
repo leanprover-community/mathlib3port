@@ -146,12 +146,8 @@ theorem proper_divisors_zero : properDivisors 0 = ∅ := by
   ext
   simp
 
-theorem proper_divisors_subset_divisors : properDivisors n ⊆ divisors n := by
-  cases n
-  · simp
-    
-  rw [divisors_eq_proper_divisors_insert_self_of_pos (Nat.succ_pos _)]
-  apply subset_insert
+theorem proper_divisors_subset_divisors : properDivisors n ⊆ divisors n :=
+  filter_subset_filter _ <| Ico_subset_Ico_right n.le_succ
 
 @[simp]
 theorem divisors_one : divisors 1 = {1} := by
@@ -159,10 +155,7 @@ theorem divisors_one : divisors 1 = {1} := by
   simp
 
 @[simp]
-theorem proper_divisors_one : properDivisors 1 = ∅ := by
-  ext
-  simp only [Finset.not_mem_empty, Nat.dvd_one, not_and, not_lt, mem_proper_divisors, iff_false_iff]
-  apply ge_of_eq
+theorem proper_divisors_one : properDivisors 1 = ∅ := by rw [proper_divisors, Ico_self, filter_empty]
 
 theorem pos_of_mem_divisors {m : ℕ} (h : m ∈ n.divisors) : 0 < m := by
   cases m
@@ -416,7 +409,7 @@ theorem image_div_divisors_eq_divisors (n : ℕ) : image (fun x : ℕ => n / x) 
     
   · rw [mem_divisors, mem_image]
     rintro ⟨h1, -⟩
-    exact ⟨n / a, mem_divisors.mpr ⟨div_dvd_of_dvd h1, hn⟩, Nat.div_div_self h1 (pos_iff_ne_zero.mpr hn)⟩
+    exact ⟨n / a, mem_divisors.mpr ⟨div_dvd_of_dvd h1, hn⟩, Nat.div_div_self h1 hn⟩
     
 
 @[simp, to_additive sum_div_divisors]

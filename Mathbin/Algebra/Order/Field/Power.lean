@@ -3,8 +3,9 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Algebra.Order.Field.Basic
+import Mathbin.Algebra.CharZero
 import Mathbin.Algebra.GroupWithZero.Power
+import Mathbin.Algebra.Order.Field.Basic
 
 /-!
 # Lemmas about powers in ordered fields.
@@ -116,6 +117,13 @@ theorem zpow_two_pos_of_ne_zero (h : a ≠ 0) : 0 < a ^ (2 : ℤ) :=
   zpow_bit0_pos h _
 
 @[simp]
+theorem zpow_bit0_pos_iff (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
+  ⟨by
+    rintro h rfl
+    refine' (zero_zpow _ _).not_gt h
+    rwa [bit0_ne_zero], fun h => zpow_bit0_pos h _⟩
+
+@[simp]
 theorem zpow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
   ⟨fun h => not_le.1 fun h' => not_le.2 h <| zpow_nonneg h' _, fun h => by
     rw [bit1, zpow_add_one₀ h.ne] <;> exact mul_neg_of_pos_of_neg (zpow_bit0_pos h.ne _) h⟩
@@ -131,6 +139,37 @@ theorem zpow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
 @[simp]
 theorem zpow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le zpow_bit1_nonpos_iff
+
+protected theorem Even.zpow_nonneg (hn : Even n) (a : α) : 0 ≤ a ^ n := by
+  obtain ⟨k, rfl⟩ := hn <;> exact zpow_bit0_nonneg _ _
+
+theorem Even.zpow_pos_iff (hn : Even n) (h : n ≠ 0) : 0 < a ^ n ↔ a ≠ 0 := by
+  obtain ⟨k, rfl⟩ := hn <;> exact zpow_bit0_pos_iff (by rintro rfl <;> simpa using h)
+
+theorem Odd.zpow_neg_iff (hn : Odd n) : a ^ n < 0 ↔ a < 0 := by
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_neg_iff
+
+protected theorem Odd.zpow_nonneg_iff (hn : Odd n) : 0 ≤ a ^ n ↔ 0 ≤ a := by
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonneg_iff
+
+theorem Odd.zpow_nonpos_iff (hn : Odd n) : a ^ n ≤ 0 ↔ a ≤ 0 := by
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonpos_iff
+
+theorem Odd.zpow_pos_iff (hn : Odd n) : 0 < a ^ n ↔ 0 < a := by
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_pos_iff
+
+alias Even.zpow_pos_iff ↔ _ Even.zpow_pos
+
+alias Odd.zpow_neg_iff ↔ _ Odd.zpow_neg
+
+alias Odd.zpow_nonpos_iff ↔ _ Odd.zpow_nonpos
+
+theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : α) : |a| ^ p = a ^ p := by
+  cases' abs_choice a with h h <;> simp only [h, hp.neg_zpow _]
+
+@[simp]
+theorem zpow_bit0_abs (a : α) (p : ℤ) : |a| ^ bit0 p = a ^ bit0 p :=
+  (even_bit0 _).zpow_abs _
 
 /-! ### Miscellaneous lemmmas -/
 

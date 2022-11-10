@@ -101,7 +101,7 @@ theorem support_eq_inter_preimage : Support f = (chartAt H c).Source ∩ extChar
     (extChartAt I c).symm_image_target_inter_eq', ← (extChartAt I c).symm_image_target_inter_eq',
     f.to_cont_diff_bump.support_eq]
 
-theorem open_support : IsOpen (Support f) := by
+theorem is_open_support : IsOpen (Support f) := by
   rw [support_eq_inter_preimage]
   exact ext_chart_preimage_open_of_open I c is_open_ball
 
@@ -194,7 +194,8 @@ theorem nhds_within_range_basis :
   · exact fun f _ => inter_mem (mem_nhds_within_of_mem_nhds <| closed_ball_mem_nhds f.R_pos) self_mem_nhds_within
     
 
-theorem closedImageOfClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ Support f) : IsClosed (extChartAt I c '' s) := by
+theorem isClosedImageOfIsClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ Support f) : IsClosed (extChartAt I c '' s) :=
+  by
   rw [f.image_eq_inter_preimage_of_subset_support hs]
   refine' ContinuousOn.preimageClosedOfClosed ((ext_chart_continuous_on_symm _ _).mono f.closed_ball_subset) _ hsc
   exact IsClosed.inter is_closed_closed_ball I.closed_range
@@ -205,7 +206,7 @@ radius `r`. Formally, `s ⊆ e.source ∩ e ⁻¹' (ball (e c) r)`, where `e = e
 theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ Support f) :
     ∃ (r : _)(hr : r ∈ IooCat 0 f.r), s ⊆ (chartAt H c).Source ∩ extChartAt I c ⁻¹' Ball (extChartAt I c c) r := by
   set e := extChartAt I c
-  have : IsClosed (e '' s) := f.closed_image_of_closed hsc hs
+  have : IsClosed (e '' s) := f.is_closed_image_of_is_closed hsc hs
   rw [support_eq_inter_preimage, subset_inter_iff, ← image_subset_iff] at hs
   rcases Euclidean.exists_pos_lt_subset_ball f.R_pos this hs.2 with ⟨r, hrR, hr⟩
   exact ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩
@@ -231,7 +232,8 @@ instance : Inhabited (SmoothBumpFunction I c) :=
 
 variable [T2Space M]
 
-theorem closedSymmImageClosedBall : IsClosed ((extChartAt I c).symm '' (ClosedBall (extChartAt I c c) f.r ∩ Range I)) :=
+theorem isClosedSymmImageClosedBall :
+    IsClosed ((extChartAt I c).symm '' (ClosedBall (extChartAt I c c) f.r ∩ Range I)) :=
   f.compact_symm_image_closed_ball.IsClosed
 
 theorem tsupport_subset_symm_image_closed_ball :
@@ -239,7 +241,7 @@ theorem tsupport_subset_symm_image_closed_ball :
   rw [Tsupport, support_eq_symm_image]
   exact
     closure_minimal (image_subset _ <| inter_subset_inter_left _ ball_subset_closed_ball)
-      f.closed_symm_image_closed_ball
+      f.is_closed_symm_image_closed_ball
 
 theorem tsupport_subset_ext_chart_at_source : Tsupport f ⊆ (extChartAt I c).Source :=
   calc
@@ -253,7 +255,8 @@ theorem tsupport_subset_chart_at_source : Tsupport f ⊆ (chartAt H c).Source :=
   simpa only [ext_chart_at_source] using f.tsupport_subset_ext_chart_at_source
 
 protected theorem has_compact_support : HasCompactSupport f :=
-  compact_of_is_closed_subset f.compact_symm_image_closed_ball isClosedClosure f.tsupport_subset_symm_image_closed_ball
+  is_compact_of_is_closed_subset f.compact_symm_image_closed_ball isClosedClosure
+    f.tsupport_subset_symm_image_closed_ball
 
 variable (I c)
 

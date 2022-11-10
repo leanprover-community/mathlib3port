@@ -1212,7 +1212,7 @@ protected theorem IsFiniteMeasureOnCompacts.map {α : Type _} {m0 : MeasurableSp
     intro K hK
     rw [measure.map_apply f.measurable hK.measurable_set]
     apply IsCompact.measure_lt_top
-    rwa [f.compact_preimage]⟩
+    rwa [f.is_compact_preimage]⟩
 
 end BorelSpace
 

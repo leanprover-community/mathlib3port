@@ -192,7 +192,7 @@ protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : 
   let K := f ⁻¹' closed_ball x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont
   have B : bounded K := hK.bounded_preimage bounded_closed_ball
-  have : IsCompact K := compact_iff_closed_bounded.2 ⟨A, B⟩
+  have : IsCompact K := is_compact_iff_is_closed_bounded.2 ⟨A, B⟩
   convert this.image f_cont
   exact (hf.image_preimage _).symm
 

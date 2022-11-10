@@ -447,7 +447,7 @@ instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (MonoidAlg
     ext m
     classical
     simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc, sum_smul_index', zero_mul, if_t_t, imp_true_iff,
-      eq_self_iff_true, sum_zero, coe_smul, smul_eq_mul, Pi.smul_apply, smul_zero]⟩
+      eq_self_iff_true, sum_zero, Finsupp.coe_smul, smul_eq_mul, Pi.smul_apply, smul_zero]⟩
 
 /-- Note that if `k` is a `comm_semiring` then we have `smul_comm_class k k k` and so we can take
 `R = k` in the below. In other words, if the coefficients are commutative amongst themselves, they
@@ -456,7 +456,7 @@ instance smul_comm_class_self [SmulCommClass R k k] : SmulCommClass R (MonoidAlg
   ⟨fun t a b => by
     ext m
     simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index', imp_true_iff,
-      eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply, mul_zero, smul_zero]⟩
+      eq_self_iff_true, Finsupp.coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply, mul_zero, smul_zero]⟩
 
 instance smul_comm_class_symm_self [SmulCommClass k R k] : SmulCommClass (MonoidAlgebra k G) R (MonoidAlgebra k G) :=
   ⟨fun t a b => by

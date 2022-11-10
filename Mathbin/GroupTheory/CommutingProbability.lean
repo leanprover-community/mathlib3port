@@ -28,27 +28,31 @@ open BigOperators
 
 open Fintype
 
-variable (M : Type _) [Fintype M] [Mul M]
+variable (M : Type _) [Mul M]
 
 /-- The commuting probability of a finite type with a multiplication operation -/
 def commProb : ℚ :=
-  card { p : M × M // p.1 * p.2 = p.2 * p.1 } / card M ^ 2
+  Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2
 
-theorem comm_prob_def : commProb M = card { p : M × M // p.1 * p.2 = p.2 * p.1 } / card M ^ 2 :=
+theorem comm_prob_def : commProb M = Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2 :=
   rfl
 
+variable [Finite M]
+
 theorem comm_prob_pos [h : Nonempty M] : 0 < commProb M :=
-  h.elim fun x => div_pos (Nat.cast_pos.mpr (card_pos_iff.mpr ⟨⟨(x, x), rfl⟩⟩)) (pow_pos (Nat.cast_pos.mpr card_pos) 2)
+  h.elim fun x =>
+    div_pos (Nat.cast_pos.mpr (Finite.card_pos_iff.mpr ⟨⟨(x, x), rfl⟩⟩)) (pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2)
 
 theorem comm_prob_le_one : commProb M ≤ 1 := by
-  refine' div_le_one_of_le _ (sq_nonneg (card M))
-  rw [← Nat.cast_pow, Nat.cast_le, sq, ← card_prod]
-  apply set_fintype_card_le_univ
+  refine' div_le_one_of_le _ (sq_nonneg (Nat.card M))
+  rw [← Nat.cast_pow, Nat.cast_le, sq, ← Nat.card_prod]
+  apply Finite.card_subtype_le
 
 variable {M}
 
 theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) := by
-  change (card { p : M × M | p.1 * p.2 = p.2 * p.1 } : ℚ) / _ = 1 ↔ _
+  haveI := Fintype.ofFinite M
+  rw [commProb, ← Set.coe_set_of, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod, set_fintype_card_eq_univ_iff,
     Set.eq_univ_iff_forall]
   · exact ⟨fun h x y => h (x, y), fun h x => h x.1 x.2⟩
@@ -56,10 +60,12 @@ theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative (
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
     
 
-variable (G : Type _) [Group G] [Fintype G]
+variable (G : Type _) [Group G] [Finite G]
 
-theorem card_comm_eq_card_conj_classes_mul_card [h : Fintype (ConjClasses G)] :
-    card { p : G × G // p.1 * p.2 = p.2 * p.1 } = @card (ConjClasses G) h * card G := by
+theorem card_comm_eq_card_conj_classes_mul_card :
+    Nat.card { p : G × G // p.1 * p.2 = p.2 * p.1 } = Nat.card (ConjClasses G) * Nat.card G := by
+  haveI := Fintype.ofFinite G
+  simp only [Nat.card_eq_fintype_card]
   convert
     calc
       card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σg, { h // g * h = h * g }) :=
@@ -76,44 +82,43 @@ theorem card_comm_eq_card_conj_classes_mul_card [h : Fintype (ConjClasses G)] :
         cc
       
 
-theorem comm_prob_def' : commProb G = card (ConjClasses G) / card G := by
+theorem comm_prob_def' : commProb G = Nat.card (ConjClasses G) / Nat.card G := by
   rw [commProb, card_comm_eq_card_conj_classes_mul_card, Nat.cast_mul, sq]
-  exact mul_div_mul_right (card (ConjClasses G)) (card G) (nat.cast_ne_zero.mpr card_ne_zero)
+  exact mul_div_mul_right _ _ (nat.cast_ne_zero.mpr finite.card_pos.ne')
 
 variable {G} (H : Subgroup G)
 
 theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 := by
   /- After rewriting with `comm_prob_def`, we reduce to showing that `G` has at least as many
       commuting pairs as `H`. -/
-  rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_pow, ← Nat.cast_mul, H.index_mul_card, div_mul_cancel,
-    Nat.cast_le]
-  · apply card_le_of_injective _ _
-    exact fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩
+  rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_pow, ← Nat.cast_mul, mul_comm H.index,
+    H.card_mul_index, div_mul_cancel, Nat.cast_le]
+  · refine' Finite.card_le_of_injective (fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩) _
     exact fun p q h => by simpa only [Subtype.ext_iff, Prod.ext_iff] using h
     
-  · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
+  · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr finite.card_pos.ne')
     
-  · exact pow_pos (nat.cast_pos.mpr card_pos) 2
+  · exact pow_pos (nat.cast_pos.mpr Finite.card_pos) 2
     
 
-theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * card H := by
+theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * Nat.card H := by
   /- After rewriting with `comm_prob_def'`, we reduce to showing that `G` has at least as many
       conjugacy classes as `G ⧸ H`. -/
-  rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mul, mul_comm (card H), ←
-    Subgroup.card_eq_card_quotient_mul_card_subgroup, div_mul_cancel, Nat.cast_le]
-  · apply card_le_of_surjective
+  rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mul, ← Subgroup.index, H.card_mul_index,
+    div_mul_cancel, Nat.cast_le]
+  · apply Finite.card_le_of_surjective
     show Function.Surjective (ConjClasses.map (QuotientGroup.mk' H))
     exact ConjClasses.map_surjective Quotient.surjective_quotient_mk'
     
-  · exact nat.cast_ne_zero.mpr card_ne_zero
+  · exact nat.cast_ne_zero.mpr finite.card_pos.ne'
     
-  · exact nat.cast_pos.mpr card_pos
+  · exact nat.cast_pos.mpr Finite.card_pos
     
 
 variable (G)
 
-theorem inv_card_commutator_le_comm_prob : (↑(card (commutator G)))⁻¹ ≤ commProb G :=
-  (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr card_pos)).mpr
+theorem inv_card_commutator_le_comm_prob : (↑(Nat.card (commutator G)))⁻¹ ≤ commProb G :=
+  (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr Finite.card_pos)).mpr
     (le_trans (ge_of_eq (comm_prob_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
       (commutator G).comm_prob_quotient_le)
 

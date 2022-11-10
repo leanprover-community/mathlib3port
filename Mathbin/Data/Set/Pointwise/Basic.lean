@@ -1281,6 +1281,10 @@ end HasSmulSet
 
 variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {a : α} {b : β}
 
+@[simp, to_additive]
+theorem bUnion_op_smul_set [Mul α] (s t : Set α) : (⋃ a ∈ t, MulOpposite.op a • s) = s * t :=
+  Union_image_right _
+
 @[to_additive]
 theorem smul_set_inter [Group α] [MulAction α β] {s t : Set β} : a • (s ∩ t) = a • s ∩ a • t :=
   (image_inter <| MulAction.injective a).symm

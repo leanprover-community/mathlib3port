@@ -37,25 +37,33 @@ instance : IsWellOrder ℕ∞ (· < ·) where
 
 variable {m n : ℕ∞}
 
+-- The following lemmas can be proven by `simp` lemmas for `coe_is_ring_hom`
+-- but are worth keeping since they are eligible for `dsimp`.
 @[simp, norm_cast]
-theorem coe_zero : ((0 : ℕ) : ℕ∞) = 0 :=
+protected theorem coe_zero : ((0 : ℕ) : ℕ∞) = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_one : ((1 : ℕ) : ℕ∞) = 1 :=
+protected theorem coe_one : ((1 : ℕ) : ℕ∞) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add (m n : ℕ) : ↑(m + n) = (m + n : ℕ∞) :=
+protected theorem coe_add (m n : ℕ) : ↑(m + n) = (m + n : ℕ∞) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sub (m n : ℕ) : ↑(m - n) = (m - n : ℕ∞) :=
+protected theorem coe_sub (m n : ℕ) : ↑(m - n) = (m - n : ℕ∞) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) :=
+protected theorem coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) :=
   WithTop.coe_mul
+
+instance : CoeIsRingHom ℕ ℕ∞ where
+  coe_one := rfl
+  coe_zero := rfl
+  coe_add _ _ := rfl
+  coe_mul _ _ := WithTop.coe_mul
 
 instance canLift : CanLift ℕ∞ ℕ coe fun n => n ≠ ⊤ :=
   WithTop.canLift
@@ -94,7 +102,7 @@ theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = 
   induction m using WithTop.recTopCoe
   · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
     
-  · rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
+  · rw [← Enat.coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
     
 
 theorem to_nat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : m.toNat = n ↔ m = n := by

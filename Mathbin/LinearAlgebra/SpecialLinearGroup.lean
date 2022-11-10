@@ -114,23 +114,27 @@ theorem coe_mk (A : Matrix n n R) (h : det A = 1) : ↑(⟨A, h⟩ : SpecialLine
   rfl
 
 @[simp]
-theorem coe_inv : ↑ₘA⁻¹ = adjugate A :=
+protected theorem coe_inv : ↑ₘA⁻¹ = adjugate A :=
   rfl
 
 @[simp]
-theorem coe_mul : ↑ₘ(A * B) = ↑ₘA ⬝ ↑ₘB :=
+protected theorem coe_mul : ↑ₘ(A * B) = ↑ₘA ⬝ ↑ₘB :=
   rfl
 
+instance : CoeIsMulHom (SpecialLinearGroup n R) (Matrix n n R) where coe_mul := SpecialLinearGroup.coe_mul
+
 @[simp]
-theorem coe_one : ↑ₘ(1 : SpecialLinearGroup n R) = (1 : Matrix n n R) :=
+protected theorem coe_one : ↑ₘ(1 : SpecialLinearGroup n R) = (1 : Matrix n n R) :=
   rfl
+
+instance : CoeIsOneHom (SpecialLinearGroup n R) (Matrix n n R) where coe_one := SpecialLinearGroup.coe_one
 
 @[simp]
 theorem det_coe : det ↑ₘA = 1 :=
   A.2
 
 @[simp]
-theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
+protected theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
   rfl
 
 theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg ≠ 0 := by
@@ -143,7 +147,7 @@ theorem row_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) (i : n) : ↑ₘ
 end CoeLemmas
 
 instance : Monoid (SpecialLinearGroup n R) :=
-  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul coe_pow
+  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul SpecialLinearGroup.coe_pow
 
 instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
@@ -155,8 +159,8 @@ instance : Group (SpecialLinearGroup n R) :=
 def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
   toFun A :=
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
-      (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
-      (by rw [← to_lin'_mul, ← coe_mul, mul_left_inv, coe_one, to_lin'_one])
+      (by rw [← to_lin'_mul, ← special_linear_group.coe_mul, mul_right_inv, coe_one, to_lin'_one])
+      (by rw [← to_lin'_mul, ← special_linear_group.coe_mul, mul_left_inv, coe_one, to_lin'_one])
   map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
   map_mul' A B := LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
 
@@ -244,7 +248,7 @@ theorem SL2_inv_expl (A : SL(2, R)) : A⁻¹ = ⟨![![A.1 1 1, -A.1 0 1], ![-A.1
   ext
   have := Matrix.adjugate_fin_two A.1
   simp only [Subtype.val_eq_coe] at this
-  rw [coe_inv, this]
+  rw [special_linear_group.coe_inv, this]
   rfl
 
 end SpecialCases

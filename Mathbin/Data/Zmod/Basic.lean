@@ -134,6 +134,11 @@ def cast : ∀ {n : ℕ}, Zmod n → R
 instance (priority := 900) (n : ℕ) : CoeTC (Zmod n) R :=
   ⟨cast⟩
 
+/-- The cast from `zmod n` to `R` is a morphism if the characteristic of `R` divides `n`,
+so in the case `n = 0` it is always a homomorphism -/
+instance : CoeIsAddMonoidHom (Zmod 0) R :=
+  Int.coeIsAddMonoidHom _
+
 @[simp]
 theorem cast_zero : ((0 : Zmod n) : R) = 0 := by cases n <;> simp
 

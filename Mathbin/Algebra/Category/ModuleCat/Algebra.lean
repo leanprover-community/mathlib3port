@@ -1,0 +1,61 @@
+/-
+Copyright (c) 2022 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
+import Mathbin.Algebra.Category.ModuleCat.Monoidal
+import Mathbin.Algebra.Algebra.RestrictScalars
+import Mathbin.CategoryTheory.Linear.Default
+
+/-!
+# Additional typeclass for modules over an algebra
+
+For an object in `M : Module A`, where `A` is a `k`-algebra,
+we provide additional typeclasses on the underlying type `M`,
+namely `module k M` and `is_scalar_tower k A M`.
+These are not made into instances by default.
+
+We provide the `linear k (Module A)` instance.
+
+## Note
+
+If you begin with a `[module k M] [module A M] [is_scalar_tower k A M]`,
+and build a bundled module via `Module.of A M`,
+these instances will not necessarily agree with the original ones.
+
+It seems without making a parallel version `Module' k A`, for modules over a `k`-algebra `A`,
+that carries these typeclasses, this seems hard to achieve.
+(An alternative would be to always require these typeclasses,
+requiring users to write `Module' ℤ A` when `A` is merely a ring.)
+-/
+
+
+universe v u
+
+open CategoryTheory
+
+namespace ModuleCat
+
+variable {k : Type u} [Field k]
+
+variable {A : Type u} [Ring A] [Algebra k A]
+
+/-- Type synonym for considering a module over a `k`-algebra as a `k`-module.
+-/
+def moduleOfAlgebraModule (M : ModuleCat.{v} A) : Module k M :=
+  RestrictScalars.module k A M
+
+localized [ModuleCat] attribute [instance] ModuleCat.moduleOfAlgebraModule
+
+theorem is_scalar_tower_of_algebra_Module (M : ModuleCat.{v} A) : IsScalarTower k A M :=
+  RestrictScalars.is_scalar_tower k A M
+
+localized [ModuleCat] attribute [instance] ModuleCat.is_scalar_tower_of_algebra_Module
+
+-- We verify that the morphism spaces become `k`-modules.
+example (M N : ModuleCat.{v} A) : Module k (M ⟶ N) := by infer_instance
+
+instance linearOverField : Linear k (ModuleCat.{v} A) where homModule M N := by infer_instance
+
+end ModuleCat
+

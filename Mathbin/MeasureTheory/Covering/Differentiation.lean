@@ -403,7 +403,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
     _ < q * μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
       apply (Ennreal.mul_lt_mul_right h _).2 (Ennreal.coe_lt_coe.2 hpq)
       suffices H : (ρ + μ) (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) ≠ ∞
-      · simp only [not_or, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at H
+      · simp only [not_or, Ennreal.add_eq_top, Pi.add_apply, Ne.def, measure.coe_add] at H
         exact H.2
         
       apply (lt_of_le_of_lt (measure_mono (inter_subset_left _ _)) _).Ne
@@ -704,7 +704,7 @@ theorem ae_tendsto_rn_deriv : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.
   convert Ax.add Cx
   · ext1 a
     conv_lhs => rw [eq_add]
-    simp only [Pi.add_apply, coe_add, Ennreal.add_div]
+    simp only [Pi.add_apply, measure.coe_add, Ennreal.add_div]
     
   · simp only [Bx, zero_add]
     

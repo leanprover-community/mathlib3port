@@ -358,7 +358,7 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
     
 
 noncomputable instance [CompactSpace X] : Fintype S := by
-  have cond : IsCompact (⊤ : Set X) := compact_univ
+  have cond : IsCompact (⊤ : Set X) := is_compact_univ
   rw [is_compact_iff_finite_subcover] at cond
   have h :=
     @cond S (fun s => S.proj ⁻¹' {s}) (fun s => fiber_open _ _) fun x hx =>

@@ -636,7 +636,7 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
           apply H
           rw [← hij, hi]
           ext
-          rw [coe_add, coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
+          rw [Finsupp.coe_add, Finsupp.coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
           
         · exact zero_mul _
           
@@ -2147,22 +2147,22 @@ theorem coe_monomial (n : ℕ) (a : R) : (monomial n a : PowerSeries R) = PowerS
   ext
   simp [coeff_coe, PowerSeries.coeff_monomial, Polynomial.coeff_monomial, eq_comm]
 
-@[simp, norm_cast]
-theorem coe_zero : ((0 : R[X]) : PowerSeries R) = 0 :=
+@[norm_cast]
+protected theorem coe_zero : ((0 : R[X]) : PowerSeries R) = 0 :=
   rfl
 
-@[simp, norm_cast]
-theorem coe_one : ((1 : R[X]) : PowerSeries R) = 1 := by
+@[norm_cast]
+protected theorem coe_one : ((1 : R[X]) : PowerSeries R) = 1 := by
   have := coe_monomial 0 (1 : R)
   rwa [PowerSeries.monomial_zero_eq_C_apply] at this
 
-@[simp, norm_cast]
-theorem coe_add : ((φ + ψ : R[X]) : PowerSeries R) = φ + ψ := by
+@[norm_cast]
+protected theorem coe_add : ((φ + ψ : R[X]) : PowerSeries R) = φ + ψ := by
   ext
   simp
 
-@[simp, norm_cast]
-theorem coe_mul : ((φ * ψ : R[X]) : PowerSeries R) = φ * ψ :=
+@[norm_cast]
+protected theorem coe_mul : ((φ * ψ : R[X]) : PowerSeries R) = φ * ψ :=
   PowerSeries.ext fun n => by simp only [coeff_coe, PowerSeries.coeff_mul, coeff_mul]
 
 @[simp, norm_cast]
@@ -2170,13 +2170,19 @@ theorem coe_C (a : R) : ((c a : R[X]) : PowerSeries R) = PowerSeries.c R a := by
   have := coe_monomial 0 a
   rwa [PowerSeries.monomial_zero_eq_C_apply] at this
 
-@[simp, norm_cast]
-theorem coe_bit0 : ((bit0 φ : R[X]) : PowerSeries R) = bit0 (φ : PowerSeries R) :=
-  coe_add φ φ
+instance _root_.power_series.coe_is_ring_hom : CoeIsRingHom R[X] (PowerSeries R) where
+  coe_zero := Polynomial.coe_zero
+  coe_add := Polynomial.coe_add
+  coe_one := Polynomial.coe_one
+  coe_mul := Polynomial.coe_mul
 
-@[simp, norm_cast]
-theorem coe_bit1 : ((bit1 φ : R[X]) : PowerSeries R) = bit1 (φ : PowerSeries R) := by
-  rw [bit1, bit1, coe_add, coe_one, coe_bit0]
+@[norm_cast]
+protected theorem coe_bit0 : ((bit0 φ : R[X]) : PowerSeries R) = bit0 (φ : PowerSeries R) :=
+  coe_bit0 _ _ φ
+
+@[norm_cast]
+protected theorem coe_bit1 : ((bit1 φ : R[X]) : PowerSeries R) = bit1 (φ : PowerSeries R) :=
+  coe_bit1 _ _ φ
 
 @[simp, norm_cast]
 theorem coe_X : ((x : R[X]) : PowerSeries R) = PowerSeries.x :=
@@ -2199,30 +2205,26 @@ theorem coe_inj : (φ : PowerSeries R) = ψ ↔ φ = ψ :=
   (coe_injective R).eq_iff
 
 @[simp]
-theorem coe_eq_zero_iff : (φ : PowerSeries R) = 0 ↔ φ = 0 := by rw [← coe_zero, coe_inj]
+theorem coe_eq_zero_iff : (φ : PowerSeries R) = 0 ↔ φ = 0 := by rw [← @coe_zero R[X], coe_inj]
 
 @[simp]
-theorem coe_eq_one_iff : (φ : PowerSeries R) = 1 ↔ φ = 1 := by rw [← coe_one, coe_inj]
+theorem coe_eq_one_iff : (φ : PowerSeries R) = 1 ↔ φ = 1 := by rw [← @coe_one R[X], coe_inj]
 
 variable (φ ψ)
 
 /-- The coercion from polynomials to power series
 as a ring homomorphism.
 -/
-def coeToPowerSeries.ringHom : R[X] →+* PowerSeries R where
-  toFun := (coe : R[X] → PowerSeries R)
-  map_zero' := coe_zero
-  map_one' := coe_one
-  map_add' := coe_add
-  map_mul' := coe_mul
+def coeToPowerSeries.ringHom : R[X] →+* PowerSeries R :=
+  RingHom.coe _ _
 
 @[simp]
 theorem coeToPowerSeries.ring_hom_apply : coeToPowerSeries.ringHom φ = φ :=
   rfl
 
-@[simp, norm_cast]
-theorem coe_pow (n : ℕ) : ((φ ^ n : R[X]) : PowerSeries R) = (φ : PowerSeries R) ^ n :=
-  coeToPowerSeries.ringHom.map_pow _ _
+@[norm_cast]
+protected theorem coe_pow (n : ℕ) : ((φ ^ n : R[X]) : PowerSeries R) = (φ : PowerSeries R) ^ n :=
+  coe_pow _ _
 
 variable (A : Type _) [Semiring A] [Algebra R A]
 

@@ -303,7 +303,7 @@ theorem to_list_pow_apply_eq_rotate (p : Perm α) (x : α) (k : ℕ) : p.toList 
 theorem SameCycle.to_list_is_rotated {f : Perm α} {x y : α} (h : SameCycle f x y) : toList f x ~r toList f y := by
   by_cases hx:x ∈ f.support
   · obtain ⟨_ | k, hk, hy⟩ := h.nat_of_mem_support _ hx
-    · simp only [coe_one, id.def, pow_zero] at hy
+    · simp only [perm.coe_one, id.def, pow_zero] at hy
       simp [hy]
       
     use k.succ

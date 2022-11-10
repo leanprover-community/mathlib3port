@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
 import Mathbin.Data.Int.Order
-import Mathbin.Data.Nat.Cast
+import Mathbin.Data.Nat.Cast.Basic
 import Mathbin.Data.Nat.Pow
 
 /-!

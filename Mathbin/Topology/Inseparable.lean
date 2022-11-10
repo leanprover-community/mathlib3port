@@ -974,5 +974,100 @@ theorem preimage_mk_frontier : mk ⁻¹' Frontier t = Frontier (mk ⁻¹' t) :=
 theorem image_mk_closure : mk '' Closure s = Closure (mk '' s) :=
   (image_closure_subset_closure_image continuous_mk).antisymm <| is_closed_map_mk.closure_image_subset _
 
+theorem map_prod_map_mk_nhds (x : X) (y : Y) : map (Prod.map mk mk) (𝓝 (x, y)) = 𝓝 (mk x, mk y) := by
+  rw [nhds_prod_eq, ← prod_map_map_eq', map_mk_nhds, map_mk_nhds, nhds_prod_eq]
+
+theorem map_mk_nhds_within_preimage (s : Set (SeparationQuotient X)) (x : X) : map mk (𝓝[mk ⁻¹' s] x) = 𝓝[s] mk x := by
+  rw [nhdsWithin, ← comap_principal, Filter.push_pull, nhdsWithin, map_mk_nhds]
+
+/-- Lift a map `f : X → α` such that `inseparable x y → f x = f y` to a map
+`separation_quotient X → α`. -/
+def lift (f : X → α) (hf : ∀ x y, (x ~ y) → f x = f y) : SeparationQuotient X → α := fun x => Quotient.liftOn' x f hf
+
+@[simp]
+theorem lift_mk {f : X → α} (hf : ∀ x y, (x ~ y) → f x = f y) (x : X) : lift f hf (mk x) = f x :=
+  rfl
+
+@[simp]
+theorem lift_comp_mk {f : X → α} (hf : ∀ x y, (x ~ y) → f x = f y) : lift f hf ∘ mk = f :=
+  rfl
+
+@[simp]
+theorem tendsto_lift_nhds_mk {f : X → α} {hf : ∀ x y, (x ~ y) → f x = f y} {x : X} {l : Filter α} :
+    Tendsto (lift f hf) (𝓝 <| mk x) l ↔ Tendsto f (𝓝 x) l := by
+  simp only [← map_mk_nhds, tendsto_map'_iff, lift_comp_mk]
+
+@[simp]
+theorem tendsto_lift_nhds_within_mk {f : X → α} {hf : ∀ x y, (x ~ y) → f x = f y} {x : X}
+    {s : Set (SeparationQuotient X)} {l : Filter α} : Tendsto (lift f hf) (𝓝[s] mk x) l ↔ Tendsto f (𝓝[mk ⁻¹' s] x) l :=
+  by simp only [← map_mk_nhds_within_preimage, tendsto_map'_iff, lift_comp_mk]
+
+@[simp]
+theorem continuous_at_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} {x : X} :
+    ContinuousAt (lift f hf) (mk x) ↔ ContinuousAt f x :=
+  tendsto_lift_nhds_mk
+
+@[simp]
+theorem continuous_within_at_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} {s : Set (SeparationQuotient X)}
+    {x : X} : ContinuousWithinAt (lift f hf) s (mk x) ↔ ContinuousWithinAt f (mk ⁻¹' s) x :=
+  tendsto_lift_nhds_within_mk
+
+@[simp]
+theorem continuous_on_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} {s : Set (SeparationQuotient X)} :
+    ContinuousOn (lift f hf) s ↔ ContinuousOn f (mk ⁻¹' s) := by
+  simp only [ContinuousOn, surjective_mk.forall, continuous_within_at_lift, mem_preimage]
+
+@[simp]
+theorem continuous_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} : Continuous (lift f hf) ↔ Continuous f := by
+  simp only [continuous_iff_continuous_on_univ, continuous_on_lift, preimage_univ]
+
+/-- Lift a map `f : X → Y → α` such that `inseparable a b → inseparable c d → f a c = f b d` to a
+map `separation_quotient X → separation_quotient Y → α`. -/
+def lift₂ (f : X → Y → α) (hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d) :
+    SeparationQuotient X → SeparationQuotient Y → α := fun x y => Quotient.liftOn₂' x y f hf
+
+@[simp]
+theorem lift₂_mk {f : X → Y → α} (hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d) (x : X) (y : Y) :
+    lift₂ f hf (mk x) (mk y) = f x y :=
+  rfl
+
+@[simp]
+theorem tendsto_lift₂_nhds {f : X → Y → α} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} {x : X} {y : Y}
+    {l : Filter α} : Tendsto (uncurry <| lift₂ f hf) (𝓝 (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝 (x, y)) l := by
+  rw [← map_prod_map_mk_nhds, tendsto_map'_iff]
+  rfl
+
+@[simp]
+theorem tendsto_lift₂_nhds_within {f : X → Y → α} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} {x : X} {y : Y}
+    {s : Set (SeparationQuotient X × SeparationQuotient Y)} {l : Filter α} :
+    Tendsto (uncurry <| lift₂ f hf) (𝓝[s] (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝[Prod.map mk mk ⁻¹' s] (x, y)) l := by
+  rw [nhdsWithin, ← map_prod_map_mk_nhds, ← Filter.push_pull, comap_principal]
+  rfl
+
+@[simp]
+theorem continuous_at_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} {x : X} {y : Y} :
+    ContinuousAt (uncurry <| lift₂ f hf) (mk x, mk y) ↔ ContinuousAt (uncurry f) (x, y) :=
+  tendsto_lift₂_nhds
+
+@[simp]
+theorem continuous_within_at_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d}
+    {s : Set (SeparationQuotient X × SeparationQuotient Y)} {x : X} {y : Y} :
+    ContinuousWithinAt (uncurry <| lift₂ f hf) s (mk x, mk y) ↔
+      ContinuousWithinAt (uncurry f) (Prod.map mk mk ⁻¹' s) (x, y) :=
+  tendsto_lift₂_nhds_within
+
+@[simp]
+theorem continuous_on_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d}
+    {s : Set (SeparationQuotient X × SeparationQuotient Y)} :
+    ContinuousOn (uncurry <| lift₂ f hf) s ↔ ContinuousOn (uncurry f) (Prod.map mk mk ⁻¹' s) := by
+  simp_rw [ContinuousOn, (surjective_mk.prod_map surjective_mk).forall, Prod.forall, Prod.map,
+    continuous_within_at_lift₂]
+  rfl
+
+@[simp]
+theorem continuous_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} :
+    Continuous (uncurry <| lift₂ f hf) ↔ Continuous (uncurry f) := by
+  simp only [continuous_iff_continuous_on_univ, continuous_on_lift₂, preimage_univ]
+
 end SeparationQuotient
 

@@ -341,7 +341,7 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
 
 theorem commute_conj_self : Commute a.conj a := by
   rw [a.conj_eq_two_re_sub]
-  exact (coe_commute (2 * a.re) a).subLeft (Commute.refl a)
+  exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
 
 theorem commute_self_conj : Commute a a.conj :=
   a.commute_conj_self.symm

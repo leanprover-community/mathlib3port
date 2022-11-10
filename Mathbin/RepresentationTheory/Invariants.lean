@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
 import Mathbin.RepresentationTheory.Basic
-import Mathbin.RepresentationTheory.RepCat
+import Mathbin.RepresentationTheory.FdRep
 
 /-!
 # Subspace of invariants a group representation
@@ -113,6 +113,8 @@ universe u
 
 open CategoryTheory ActionCat
 
+section RepCat
+
 variable {k : Type u} [CommRing k] {G : GroupCat.{u}}
 
 theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : G) :
@@ -136,6 +138,20 @@ def invariantsEquivRepHom (X Y : RepCat k G) : (linHom X.ρ Y.ρ).invariants ≃
   right_inv _ := by
     ext
     rfl
+
+end RepCat
+
+section FdRep
+
+variable {k : Type u} [Field k] {G : GroupCat.{u}}
+
+/-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
+homomorphisms from `X` to `Y` -/
+def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y := by
+  rw [← FdRep.forget₂_ρ, ← FdRep.forget₂_ρ]
+  exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
+
+end FdRep
 
 end LinHom
 

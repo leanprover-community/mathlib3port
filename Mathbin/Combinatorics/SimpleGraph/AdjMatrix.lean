@@ -222,8 +222,6 @@ theorem adj_matrix_mul_vec_const_apply [Semiring α] {a : α} {v : V} :
 theorem adj_matrix_mul_vec_const_apply_of_regular [Semiring α] {d : ℕ} {a : α} (hd : G.IsRegularOfDegree d) {v : V} :
     (G.adjMatrix α).mulVec (Function.const _ a) v = d * a := by simp [hd v]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:243:2: unsupported tactic unify_equations -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: unify_equations ... #[[ident hqp, ident hrp]] -/
 theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ) (u v : V) :
     (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
   rw [card_set_walk_length_eq]
@@ -234,20 +232,15 @@ theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ
     simp only [pow_add, pow_one, finset_walk_length, ih, mul_eq_mul, adj_matrix_mul_apply]
     rw [Finset.card_bUnion]
     · norm_cast
-      rw [Set.sum_indicator_subset _ (subset_univ (G.neighbor_finset u))]
-      congr 2
-      ext x
-      split_ifs with hux <;> simp [hux]
+      simp only [Nat.cast_sum, card_map, neighbor_finset_def]
+      apply Finset.sum_to_finset_eq_subtype
       
     -- Disjointness for card_bUnion
-    · intro x hx y hy hxy p hp
-      split_ifs  at hp with hx hy <;>
-        simp only [inf_eq_inter, empty_inter, inter_empty, not_mem_empty, mem_inter, mem_map,
-            Function.Embedding.coe_fn_mk, exists_prop] at hp <;>
-          try simpa using hp
-      obtain ⟨⟨qx, hql, hqp⟩, ⟨rx, hrl, hrp⟩⟩ := hp
-      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:243:2: unsupported tactic unify_equations»
-      exact absurd rfl hxy
+    · rintro ⟨x, hx⟩ - ⟨y, hy⟩ - hxy p hp
+      simp only [inf_eq_inter, mem_inter, mem_map, Function.Embedding.coe_fn_mk, exists_prop] at hp
+      obtain ⟨⟨px, hpx, rfl⟩, ⟨py, hpy, hp⟩⟩ := hp
+      cases hp
+      simpa using hxy
       
     
 

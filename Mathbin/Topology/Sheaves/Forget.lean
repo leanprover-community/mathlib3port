@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.Topology.Sheaves.SheafCondition.Sites
+import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
 
 /-!
 # Checking the sheaf condition on the underlying presheaf of types.
@@ -60,7 +60,7 @@ attribute [local reducible] diagram left_res right_res
 /-- When `G` preserves limits, the sheaf condition diagram for `F` composed with `G` is
 naturally isomorphic to the sheaf condition diagram for `F ⋙ G`.
 -/
-def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram (F ⋙ G) U := by
+def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U := by
   fapply nat_iso.of_components
   rintro ⟨j⟩
   exact preserves_product.iso _ _
@@ -97,7 +97,7 @@ is the sheaf condition fork for `F ⋙ G`,
 postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves_limits`.
 -/
 def mapConeFork :
-    G.mapCone (fork F U) ≅ (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
+    G.mapCone (fork.{v} F U) ≅ (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
   Cones.ext (Iso.refl _) fun j => by
     dsimp
     simp [diagram_comp_preserves_limits]
@@ -190,7 +190,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       -- image under `G` of the equalizer cone for the sheaf condition diagram.
       let c := fork (F ⋙ G) U
       obtain ⟨hc⟩ := S U
-      let d := G.map_cone (equalizer.fork (left_res F U) (right_res F U))
+      let d := G.map_cone (equalizer.fork (leftRes.{v} F U) (right_res F U))
       letI := preserves_smallest_limits_of_preserves_limits G
       have hd : is_limit d := preserves_limit.preserves (limit.is_limit _)
       -- Since both of these are limit cones

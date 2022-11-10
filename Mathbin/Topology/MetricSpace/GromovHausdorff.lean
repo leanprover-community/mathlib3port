@@ -668,7 +668,7 @@ instance : SecondCountableTopology GHSpace := by
   let ε := 2 / 5 * δ
   have εpos : 0 < ε := mul_pos (by norm_num) δpos
   have : ∀ p : GH_space, ∃ s : Set p.rep, s.Finite ∧ univ ⊆ ⋃ x ∈ s, ball x ε := fun p => by
-    simpa only [subset_univ, exists_true_left] using finite_cover_balls_of_compact compact_univ εpos
+    simpa only [subset_univ, exists_true_left] using finite_cover_balls_of_compact is_compact_univ εpos
   -- for each `p`, `s p` is a finite `ε`-dense subset of `p` (or rather the metric space
   -- `p.rep` representing `p`)
   choose s hs using this
@@ -912,7 +912,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
             refine' min_eq_right (Nat.floor_mono _)
             refine' mul_le_mul_of_nonneg_left (le_trans _ (le_max_left _ _)) (inv_pos.2 εpos).le
             change dist (x : p.rep) y ≤ C
-            refine' le_trans (dist_le_diam_of_mem compact_univ.bounded (mem_univ _) (mem_univ _)) _
+            refine' le_trans (dist_le_diam_of_mem is_compact_univ.bounded (mem_univ _) (mem_univ _)) _
             exact hdiam p pt
           
       -- Express `dist (Φ x) (Φ y)` in terms of `F q`
@@ -925,7 +925,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
             refine' min_eq_right (Nat.floor_mono _)
             refine' mul_le_mul_of_nonneg_left (le_trans _ (le_max_left _ _)) (inv_pos.2 εpos).le
             change dist (Ψ x : q.rep) (Ψ y) ≤ C
-            refine' le_trans (dist_le_diam_of_mem compact_univ.bounded (mem_univ _) (mem_univ _)) _
+            refine' le_trans (dist_le_diam_of_mem is_compact_univ.bounded (mem_univ _) (mem_univ _)) _
             exact hdiam q qt
           
       -- use the equality between `F p` and `F q` to deduce that the distances have equal

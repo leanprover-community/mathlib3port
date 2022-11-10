@@ -616,7 +616,7 @@ theorem tendsto_locally_uniformly_iff_tendsto_uniformly_of_compact_space [Compac
     TendstoLocallyUniformly F f p ↔ TendstoUniformly F f p := by
   refine' ⟨fun h V hV => _, TendstoUniformly.tendsto_locally_uniformly⟩
   choose U hU using h V hV
-  obtain ⟨t, ht⟩ := compact_univ.elim_nhds_subcover' (fun k hk => U k) fun k hk => (hU k).1
+  obtain ⟨t, ht⟩ := is_compact_univ.elim_nhds_subcover' (fun k hk => U k) fun k hk => (hU k).1
   replace hU := fun x : t => (hU x).2
   rw [← eventually_all] at hU
   refine' hU.mono fun i hi x => _

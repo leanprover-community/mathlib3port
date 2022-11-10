@@ -86,7 +86,7 @@ theorem is_compact_operator_iff_exists_mem_nhds_is_compact_closure_image [T2Spac
     IsCompactOperator f ↔ ∃ V ∈ (𝓝 0 : Filter M₁), IsCompact (Closure <| f '' V) := by
   rw [is_compact_operator_iff_exists_mem_nhds_image_subset_compact]
   exact
-    ⟨fun ⟨V, hV, K, hK, hKV⟩ => ⟨V, hV, compact_closure_of_subset_compact hK hKV⟩, fun ⟨V, hV, hVc⟩ =>
+    ⟨fun ⟨V, hV, K, hK, hKV⟩ => ⟨V, hV, is_compact_closure_of_subset_compact hK hKV⟩, fun ⟨V, hV, hVc⟩ =>
       ⟨V, hV, Closure (f '' V), hVc, subset_closure⟩⟩
 
 end
@@ -109,7 +109,7 @@ theorem IsCompactOperator.image_subset_compact_of_vonN_bounded {f : M₁ →ₛ�
 theorem IsCompactOperator.is_compact_closure_image_of_vonN_bounded [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) {S : Set M₁} (hS : IsVonNBounded 𝕜₁ S) : IsCompact (Closure <| f '' S) :=
   let ⟨K, hK, hKf⟩ := hf.image_subset_compact_of_vonN_bounded hS
-  compact_closure_of_subset_compact hK hKf
+  is_compact_closure_of_subset_compact hK hKf
 
 end Bounded
 
@@ -348,7 +348,7 @@ theorem isClosedSetOfIsCompactOperator {𝕜₁ 𝕜₂ : Type _} [NontriviallyN
   suffices TotallyBounded (u '' Metric.ClosedBall 0 1) by
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)
     rw [is_compact_operator_iff_is_compact_closure_image_closed_ball (u : M₁ →ₛₗ[σ₁₂] M₂) zero_lt_one]
-    exact compact_of_totally_bounded_is_closed this.closure isClosedClosure
+    exact is_compact_of_totally_bounded_is_closed this.closure isClosedClosure
   rw [Metric.totally_bounded_iff]
   intro ε hε
   rcases hu (ε / 2) (by linarith) with ⟨v, hv, huv⟩

@@ -49,6 +49,10 @@ total space to the base space. -/
 def TotalSpace.proj : TotalSpace E → B :=
   Sigma.fst
 
+-- mathport name: exprπ
+-- this notation won't be used in the pretty-printer
+localized [Bundle] notation "π" => @Bundle.TotalSpace.proj _
+
 /-- Constructor for the total space of a bundle. -/
 @[simp, reducible]
 def totalSpaceMk (b : B) (a : E b) : Bundle.TotalSpace E :=

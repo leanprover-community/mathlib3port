@@ -7,7 +7,7 @@ import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.PathCategory
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Combinatorics.Quiver.Path
 
 /-!

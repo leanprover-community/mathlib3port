@@ -379,7 +379,7 @@ theorem IsAffineOpen.exists_basic_open_le {X : SchemeCat} {U : Opens X.Carrier} 
     refine' (Scheme.image_basic_open (X.of_restrict U.open_embedding) r).trans _
     erw [← Scheme.basic_open_res_eq _ _ (eq_to_hom U.open_embedding_obj_top).op]
     rw [← comp_apply, ← CategoryTheory.Functor.map_comp, ← op_comp, eq_to_hom_trans, eq_to_hom_refl, op_id,
-      CategoryTheory.Functor.map_id]
+      CategoryTheory.Functor.map_id, Scheme.hom.inv_app]
     erw [PresheafedSpace.is_open_immersion.of_restrict_inv_app]
     congr
   use X.presheaf.map (eq_to_hom U.open_embedding_obj_top.symm).op r

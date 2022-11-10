@@ -72,8 +72,8 @@ theorem isClosedStdSimplex : IsClosed (StdSimplex ℝ ι) :=
       (isClosedEq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
 
 /-- `std_simplex ℝ ι` is compact. -/
-theorem compact_std_simplex : IsCompact (StdSimplex ℝ ι) :=
-  Metric.compact_iff_closed_bounded.2 ⟨isClosedStdSimplex ι, boundedStdSimplex ι⟩
+theorem is_compact_std_simplex : IsCompact (StdSimplex ℝ ι) :=
+  Metric.is_compact_iff_is_closed_bounded.2 ⟨isClosedStdSimplex ι, boundedStdSimplex ι⟩
 
 end StdSimplex
 
@@ -198,7 +198,7 @@ variable [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGro
 /-- Convex hull of a finite set is compact. -/
 theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (convexHull ℝ s) := by
   rw [hs.convex_hull_eq_image]
-  apply (compact_std_simplex _).Image
+  apply (is_compact_std_simplex _).Image
   haveI := hs.fintype
   apply LinearMap.continuous_on_pi
 

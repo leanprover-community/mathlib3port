@@ -103,7 +103,7 @@ theorem Submartingale.stoppedValueLeastGe [IsFiniteMeasure μ] (hf : Submartinga
       
     
   · exact fun i =>
-      strongly_measurable_stopped_value_of_le hf.adapted.prog_measurable_of_nat
+      strongly_measurable_stopped_value_of_le hf.adapted.prog_measurable_of_discrete
         (hf.adapted.is_stopping_time_least_ge _ _) least_ge_le
     
   · exact fun i => integrable_stopped_value _ (hf.adapted.is_stopping_time_least_ge _ _) hf.integrable least_ge_le

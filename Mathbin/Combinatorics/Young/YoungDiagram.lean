@@ -324,5 +324,38 @@ theorem col_len_anti (μ : YoungDiagram) (j1 j2 : ℕ) (hj : j1 ≤ j2) : μ.col
 
 end Columns
 
+section RowLens
+
+/-! ### The list of row lengths of a Young diagram
+
+This section defines `μ.row_lens : list ℕ`, the list of row lengths of a Young diagram `μ`.
+  1. `young_diagram.row_lens_sorted` : It is weakly decreasing (`list.sorted (≥)`).
+  2. `young_diagram.row_lens_pos` : It is strictly positive.
+
+-/
+
+
+/-- List of row lengths of a Young diagram -/
+def rowLens (μ : YoungDiagram) : List ℕ :=
+  (List.range <| μ.colLen 0).map μ.rowLen
+
+@[simp]
+theorem nth_le_row_lens {μ : YoungDiagram} {i : ℕ} {hi : i < μ.rowLens.length} : μ.rowLens.nthLe i hi = μ.rowLen i := by
+  simp only [row_lens, List.nth_le_range, List.nth_le_map']
+
+@[simp]
+theorem length_row_lens {μ : YoungDiagram} : μ.rowLens.length = μ.colLen 0 := by
+  simp only [row_lens, List.length_map, List.length_range]
+
+theorem row_lens_sorted (μ : YoungDiagram) : μ.rowLens.Sorted (· ≥ ·) :=
+  (List.pairwise_le_range _).map _ μ.row_len_anti
+
+theorem pos_of_mem_row_lens (μ : YoungDiagram) (x : ℕ) (hx : x ∈ μ.rowLens) : 0 < x := by
+  rw [row_lens, List.mem_map] at hx
+  obtain ⟨i, hi, rfl : μ.row_len i = x⟩ := hx
+  rwa [List.mem_range, ← mem_iff_lt_col_len, mem_iff_lt_row_len] at hi
+
+end RowLens
+
 end YoungDiagram
 

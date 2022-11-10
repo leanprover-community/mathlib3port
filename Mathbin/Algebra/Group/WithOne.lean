@@ -3,10 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 -/
-import Mathbin.Algebra.Hom.Equiv
-import Mathbin.Algebra.Ring.Basic
-import Mathbin.Logic.Equiv.Defs
-import Mathbin.Logic.Equiv.Option
+import Mathbin.Order.BoundedOrder
+import Mathbin.Algebra.Hom.Equiv.Basic
+import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.Ring.Defs
 
 /-!
 # Adjoining a zero/one to semigroups and related algebraic structures

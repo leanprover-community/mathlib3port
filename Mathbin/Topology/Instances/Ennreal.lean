@@ -340,7 +340,7 @@ protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a �
     simp [*, nhds_swap (a : ℝ≥0∞) ⊤, none_eq_top, some_eq_coe, top_mul, tendsto_map'_iff, (· ∘ ·), mul_comm]
     
   simp [some_eq_coe, nhds_coe_coe, tendsto_map'_iff, (· ∘ ·)]
-  simp only [coe_mul.symm, tendsto_coe, tendsto_mul]
+  simp only [← coe_mul, tendsto_coe, tendsto_mul]
 
 protected theorem Tendsto.mul {f : Filter α} {ma : α → ℝ≥0∞} {mb : α → ℝ≥0∞} {a b : ℝ≥0∞} (hma : Tendsto ma f (𝓝 a))
     (ha : a ≠ 0 ∨ b ≠ ⊤) (hmb : Tendsto mb f (𝓝 b)) (hb : b ≠ 0 ∨ a ≠ ⊤) :
@@ -884,7 +884,7 @@ theorem summable_to_nnreal_of_tsum_ne_top {α : Type _} {f : α → ℝ≥0∞} 
 theorem tendsto_cofinite_zero_of_tsum_ne_top {α} {f : α → ℝ≥0∞} (hf : (∑' x, f x) ≠ ∞) : Tendsto f cofinite (𝓝 0) := by
   have f_ne_top : ∀ n, f n ≠ ∞ := Ennreal.ne_top_of_tsum_ne_top hf
   have h_f_coe : f = fun n => ((f n).toNnreal : Ennreal) := funext fun n => (coe_to_nnreal (f_ne_top n)).symm
-  rw [h_f_coe, ← @coe_zero, tendsto_coe]
+  rw [h_f_coe, ← @coe_zero ℝ≥0, tendsto_coe]
   exact Nnreal.tendsto_cofinite_zero_of_summable (summable_to_nnreal_of_tsum_ne_top hf)
 
 theorem tendsto_at_top_zero_of_tsum_ne_top {f : ℕ → ℝ≥0∞} (hf : (∑' x, f x) ≠ ∞) : Tendsto f atTop (𝓝 0) := by

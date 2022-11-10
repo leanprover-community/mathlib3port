@@ -22,7 +22,7 @@ section
 
 variable {α : Type _} {β : Type _} {γ : Type _} [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 
-universe u
+universe u v
 
 /-- A map `f : α → β` between uniform spaces is called *uniform inducing* if the uniformity filter
 on `α` is the pullback of the uniformity filter on `β` under `prod.map f f`. If `α` is a separated
@@ -298,6 +298,11 @@ theorem complete_space_coe_iff_is_complete {s : Set α} : CompleteSpace s ↔ Is
 
 theorem IsClosed.complete_space_coe [CompleteSpace α] {s : Set α} (hs : IsClosed s) : CompleteSpace s :=
   hs.IsComplete.complete_space_coe
+
+/-- The lift of a complete space to another universe is still complete. -/
+instance ULift.complete_space [h : CompleteSpace α] : CompleteSpace (ULift α) :=
+  haveI : UniformEmbedding (@Equiv.ulift α) := ⟨⟨rfl⟩, ULift.down_injective⟩
+  (complete_space_congr this).2 h
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

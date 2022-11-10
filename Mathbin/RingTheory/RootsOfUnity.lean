@@ -354,7 +354,7 @@ theorem one_right_iff : IsPrimitiveRoot ζ 1 ↔ ζ = 1 := by
 
 @[simp]
 theorem coe_submonoid_class_iff {M B : Type _} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] {N : B} {ζ : N} :
-    IsPrimitiveRoot (ζ : M) k ↔ IsPrimitiveRoot ζ k := by simp [iff_def, ← SubmonoidClass.coe_pow]
+    IsPrimitiveRoot (ζ : M) k ↔ IsPrimitiveRoot ζ k := by simp [iff_def, ← SubmonoidClass.coe_pow, -_root_.coe_pow]
 
 @[simp]
 theorem coe_units_iff {ζ : Mˣ} : IsPrimitiveRoot (ζ : M) k ↔ IsPrimitiveRoot ζ k := by
@@ -385,7 +385,7 @@ theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPr
   intro hi
   obtain ⟨a, ha⟩ := i.gcd_dvd_left k
   obtain ⟨b, hb⟩ := i.gcd_dvd_right k
-  suffices b = k by rwa [this, ← one_mul k, Nat.mul_left_inj h0, eq_comm] at hb
+  suffices b = k by rwa [this, ← one_mul k, mul_left_inj' h0.ne', eq_comm] at hb
   rw [ha] at hi
   rw [mul_comm] at hb
   apply Nat.dvd_antisymm ⟨i.gcd k, hb⟩ (hi.dvd_of_pow_eq_one b _)

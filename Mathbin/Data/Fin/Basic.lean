@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
 -/
 import Mathbin.Algebra.NeZero
-import Mathbin.Data.Nat.Cast
 import Mathbin.Order.RelIso
 import Mathbin.Data.Nat.Order
 import Mathbin.Tactic.ApplyFun
@@ -1692,7 +1691,7 @@ theorem succ_above_pos (p : Fin (n + 2)) (i : Fin (n + 1)) (h : 0 < i) : 0 < p.s
 
 @[simp]
 theorem succ_above_cast_lt {x y : Fin (n + 1)} (h : x < y) (hx : x.1 < n := lt_of_lt_of_le h y.le_last) :
-    y.succAbove (x.cast_lt hx) = x := by
+    y.succAbove (x.castLt hx) = x := by
   rw [succ_above_below, cast_succ_cast_lt]
   exact h
 
@@ -1704,7 +1703,7 @@ theorem succ_above_pred {x y : Fin (n + 1)} (h : x < y) (hy : y ≠ 0 := (x.zero
 
 theorem cast_lt_succ_above {x : Fin n} {y : Fin (n + 1)} (h : castSucc x < y)
     (h' : (y.succAbove x).1 < n := lt_of_lt_of_le ((succ_above_lt_iff _ _).2 h) (le_last y)) :
-    (y.succAbove x).cast_lt h' = x := by simp only [succ_above_below _ _ h, cast_lt_cast_succ]
+    (y.succAbove x).castLt h' = x := by simp only [succ_above_below _ _ h, cast_lt_cast_succ]
 
 theorem pred_succ_above {x : Fin n} {y : Fin (n + 1)} (h : y ≤ castSucc x)
     (h' : y.succAbove x ≠ 0 := (y.zero_le.trans_lt <| (lt_succ_above_iff _ _).2 h).ne') : (y.succAbove x).pred h' = x :=
@@ -1795,7 +1794,7 @@ section PredAbove
 /-- `pred_above p i` embeds `i : fin (n+1)` into `fin n` by subtracting one if `p < i`. -/
 def predAbove (p : Fin n) (i : Fin (n + 1)) : Fin n :=
   if h : p.cast_succ < i then i.pred (ne_of_lt (lt_of_le_of_lt (zero_le p.cast_succ) h)).symm
-  else i.cast_lt (lt_of_le_of_lt (le_of_not_lt h) p.2)
+  else i.castLt (lt_of_le_of_lt (le_of_not_lt h) p.2)
 
 theorem pred_above_right_monotone (p : Fin n) : Monotone p.predAbove := fun a b H => by
   dsimp [pred_above]

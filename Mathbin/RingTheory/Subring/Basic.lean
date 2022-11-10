@@ -142,7 +142,7 @@ include hSR
 
 /-- The natural ring hom from a subring of ring `R` to `R`. -/
 def subtype (s : S) : s →+* R :=
-  { SubmonoidClass.subtype s, AddSubgroupClass.subtype s with toFun := coe }
+  RingHom.coe s R
 
 @[simp]
 theorem coe_subtype : (subtype s : s → R) = coe :=
@@ -383,7 +383,7 @@ theorem coe_zero : ((0 : s) : R) = 0 :=
 theorem coe_one : ((1 : s) : R) = 1 :=
   rfl
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem coe_pow (x : s) (n : ℕ) : (↑(x ^ n) : R) = x ^ n :=
   SubmonoidClass.coe_pow x n
 

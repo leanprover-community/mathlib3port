@@ -355,7 +355,7 @@ theorem NoetherianSpace.Union {ι : Type _} (f : ι → Set α) [Finite ι] [hf 
   simp_rw [noetherian_space_set_iff] at hf⊢
   intro t ht
   rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_Union]
-  exact compact_Union fun i => hf i _ (Set.inter_subset_right _ _)
+  exact is_compact_Union fun i => hf i _ (Set.inter_subset_right _ _)
 
 -- This is not an instance since it makes a loop with `t2_space_discrete`.
 theorem NoetherianSpace.discrete [NoetherianSpace α] [T2Space α] : DiscreteTopology α :=

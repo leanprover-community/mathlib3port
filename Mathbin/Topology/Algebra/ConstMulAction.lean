@@ -47,14 +47,18 @@ attribute [local instance] MulAction.orbitRel
 /-- Class `has_continuous_const_smul Γ T` says that the scalar multiplication `(•) : Γ → T → T`
 is continuous in the second argument. We use the same class for all kinds of multiplicative
 actions, including (semi)modules and algebras.
--/
+
+Note that both `has_continuous_const_smul α α` and `has_continuous_const_smul αᵐᵒᵖ α` are
+weaker versions of `has_continuous_mul α`. -/
 class HasContinuousConstSmul (Γ : Type _) (T : Type _) [TopologicalSpace T] [HasSmul Γ T] : Prop where
   continuous_const_smul : ∀ γ : Γ, Continuous fun x : T => γ • x
 
 /-- Class `has_continuous_const_vadd Γ T` says that the additive action `(+ᵥ) : Γ → T → T`
 is continuous in the second argument. We use the same class for all kinds of additive actions,
 including (semi)modules and algebras.
--/
+
+Note that both `has_continuous_const_vadd α α` and `has_continuous_const_vadd αᵐᵒᵖ α` are
+weaker versions of `has_continuous_add α`. -/
 class HasContinuousConstVadd (Γ : Type _) (T : Type _) [TopologicalSpace T] [HasVadd Γ T] : Prop where
   continuous_const_vadd : ∀ γ : Γ, Continuous fun x : T => γ +ᵥ x
 

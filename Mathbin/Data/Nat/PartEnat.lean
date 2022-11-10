@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Order.WellFounded
-import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Data.Part
 import Mathbin.Data.Enat.Basic
 import Mathbin.Tactic.NormNum
@@ -489,7 +489,7 @@ open Classical
 
 @[simp]
 theorem to_with_top_add {x y : PartEnat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
-  apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [← Nat.cast_add, ← Enat.coe_add]
+  apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [-coe_add, ← Nat.cast_add, ← Enat.coe_add]
 
 /-- `equiv` between `part_enat` and `ℕ∞` (for the order isomorphism see
 `with_top_order_iso`). -/

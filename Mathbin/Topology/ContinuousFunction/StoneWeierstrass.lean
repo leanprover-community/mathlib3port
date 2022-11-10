@@ -345,7 +345,8 @@ theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)}
   have hFA : F ∈ A := by
     refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ <| A.smul_mem A.one_mem <| f x₂)
     ext1
-    simp only [coe_smul, coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_one, const_apply]
+    simp only [ContinuousMap.coe_smul, ContinuousMap.coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul,
+      mul_one, const_apply]
   -- Consider now the function `λ x, |f x - f x₂| ^ 2`
   refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values
@@ -357,8 +358,8 @@ theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)}
     
   · -- And it also separates the points `x₁`, `x₂`
     have : f x₁ - f x₂ ≠ 0 := sub_ne_zero.mpr hf
-    simpa only [comp_apply, coe_sub, coe_const, Pi.sub_apply, coe_mk, sub_self, map_zero, Ne.def, norm_sq_eq_zero] using
-      this
+    simpa only [comp_apply, ContinuousMap.coe_sub, coe_const, Pi.sub_apply, coe_mk, sub_self, map_zero, Ne.def,
+      norm_sq_eq_zero] using this
     
 
 variable [CompactSpace X]

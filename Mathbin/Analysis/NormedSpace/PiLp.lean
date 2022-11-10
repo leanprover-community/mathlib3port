@@ -65,40 +65,36 @@ open BigOperators uniformity TopologicalSpace Nnreal Ennreal
 
 noncomputable section
 
-variable {ι : Type _}
-
 /-- A copy of a Pi type, on which we will put the `L^p` distance. Since the Pi type itself is
 already endowed with the `L^∞` distance, we need the type synonym to avoid confusing typeclass
 resolution. Also, we let it depend on `p`, to get a whole family of type on which we can put
 different distances. -/
 @[nolint unused_arguments]
-def PiLp {ι : Type _} (p : ℝ≥0∞) (α : ι → Type _) : Type _ :=
+def PiLp (p : ℝ≥0∞) {ι : Type _} (α : ι → Type _) : Type _ :=
   ∀ i : ι, α i
 
-instance {ι : Type _} (p : ℝ≥0∞) (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
+instance (p : ℝ≥0∞) {ι : Type _} (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
   ⟨fun i => default⟩
 
 namespace PiLp
 
-variable (p : ℝ≥0∞) (𝕜 : Type _) (α : ι → Type _) (β : ι → Type _)
+variable (p : ℝ≥0∞) (𝕜 : Type _) {ι : Type _} (α : ι → Type _) (β : ι → Type _)
 
 /-- Canonical bijection between `pi_Lp p α` and the original Pi type. We introduce it to be able
 to compare the `L^p` and `L^∞` distances through it. -/
 protected def equiv : PiLp p α ≃ ∀ i : ι, α i :=
   Equiv.refl _
 
+/-! Note that the unapplied versions of these lemmas are deliberately omitted, as they break
+the use of the type synonym. -/
+
+
+@[simp]
 theorem equiv_apply (x : PiLp p α) (i : ι) : PiLp.equiv p α x i = x i :=
   rfl
 
+@[simp]
 theorem equiv_symm_apply (x : ∀ i, α i) (i : ι) : (PiLp.equiv p α).symm x i = x i :=
-  rfl
-
-@[simp]
-theorem equiv_apply' (x : PiLp p α) : PiLp.equiv p α x = x :=
-  rfl
-
-@[simp]
-theorem equiv_symm_apply' (x : ∀ i, α i) : (PiLp.equiv p α).symm x = x :=
   rfl
 
 section DistNorm
@@ -364,7 +360,7 @@ attribute [local instance] PiLp.pseudoMetricAux
 theorem lipschitzWithEquivAux : LipschitzWith 1 (PiLp.equiv p β) := by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simpa only [equiv_apply', Ennreal.coe_one, one_mul, edist_eq_supr, edist, Finset.sup_le_iff, Finset.mem_univ,
+  · simpa only [Ennreal.coe_one, one_mul, edist_eq_supr, edist, Finset.sup_le_iff, Finset.mem_univ,
       forall_true_left] using le_supr fun i => edist (x i) (y i)
     
   · have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le h).ne'
@@ -383,15 +379,15 @@ theorem lipschitzWithEquivAux : LipschitzWith 1 (PiLp.equiv p β) := by
 theorem antilipschitzWithEquivAux : AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (PiLp.equiv p β) := by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, Ennreal.coe_one, equiv_apply',
-      one_mul, supr_le_iff]
+  · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, Ennreal.coe_one, one_mul,
+      supr_le_iff]
     exact fun i => Finset.le_sup (Finset.mem_univ i)
     
   · have pos : 0 < p.to_real := zero_lt_one.trans_le h
     have nonneg : 0 ≤ 1 / p.to_real := one_div_nonneg.2 (le_of_lt Pos)
     have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (ne_of_gt Pos)
     rw [edist_eq_sum Pos, Ennreal.to_real_div 1 p]
-    simp only [edist, equiv_apply', ← one_div, Ennreal.one_to_real]
+    simp only [edist, ← one_div, Ennreal.one_to_real]
     calc
       (∑ i, edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) ≤
           (∑ i, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p.to_real) ^ (1 / p.to_real) :=
@@ -713,7 +709,7 @@ for `p ≠ ∞`. -/
 theorem nnnorm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥₊ = Fintype.card ι ^ (1 / p).toReal * ∥b∥₊ := by
   rcases em <| p = ∞ with (rfl | hp)
-  · simp only [equiv_symm_apply', Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, one_mul, nnnorm_eq_csupr,
+  · simp only [equiv_symm_apply, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, one_mul, nnnorm_eq_csupr,
       Function.const_apply, csupr_const]
     
   · exact nnnorm_equiv_symm_const hp b
@@ -749,6 +745,42 @@ variable (𝕜 p)
 @[simps (config := { fullyApplied := false })]
 protected def linearEquiv : PiLp p β ≃ₗ[𝕜] ∀ i, β i :=
   { LinearEquiv.refl _ _ with toFun := PiLp.equiv _ _, invFun := (PiLp.equiv _ _).symm }
+
+section Basis
+
+variable (ι)
+
+/-- A version of `pi.basis_fun` for `pi_Lp`. -/
+def basisFun : Basis ι 𝕜 (PiLp p fun _ => 𝕜) :=
+  Basis.ofEquivFun (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜)
+
+@[simp]
+theorem basis_fun_apply [DecidableEq ι] (i) : basisFun p 𝕜 ι i = (PiLp.equiv p _).symm (Pi.single i 1) := by
+  simp_rw [basis_fun, Basis.coe_of_equiv_fun, PiLp.linear_equiv_symm_apply, Pi.single]
+  congr
+
+-- Get rid of a `decidable_eq` mismatch.
+@[simp]
+theorem basis_fun_repr (x : PiLp p fun i : ι => 𝕜) (i : ι) : (basisFun p 𝕜 ι).repr x i = x i :=
+  rfl
+
+theorem basis_fun_eq_pi_basis_fun : basisFun p 𝕜 ι = (Pi.basisFun 𝕜 ι).map (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜).symm :=
+  rfl
+
+@[simp]
+theorem basis_fun_map : (basisFun p 𝕜 ι).map (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜) = Pi.basisFun 𝕜 ι :=
+  rfl
+
+open Matrix
+
+theorem basis_to_matrix_basis_fun_mul (b : Basis ι 𝕜 (PiLp p fun i : ι => 𝕜)) (A : Matrix ι ι 𝕜) :
+    b.toMatrix (PiLp.basisFun _ _ _) ⬝ A = Matrix.of fun i j => b.repr ((PiLp.equiv _ _).symm (Aᵀ j)) i := by
+  have := basis_to_matrix_basis_fun_mul (b.map (PiLp.linearEquiv _ 𝕜 _)) A
+  simp_rw [← PiLp.basis_fun_map p, Basis.map_repr, LinearEquiv.trans_apply, PiLp.linear_equiv_symm_apply,
+    Basis.to_matrix_map, Function.comp, Basis.map_apply, LinearEquiv.symm_apply_apply] at this
+  exact this
+
+end Basis
 
 end PiLp
 

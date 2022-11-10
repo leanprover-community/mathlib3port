@@ -400,7 +400,7 @@ instance frobeniusNormedStarGroup [StarAddMonoid α] [NormedStarGroup α] : Norm
 @[simp]
 theorem frobenius_norm_row (v : m → α) : ∥row v∥ = ∥(PiLp.equiv 2 _).symm v∥ := by
   rw [frobenius_norm_def, Fintype.sum_unique, PiLp.norm_eq_of_L2, Real.sqrt_eq_rpow]
-  simp only [row_apply, Real.rpow_two, PiLp.equiv_symm_apply']
+  simp only [row_apply, Real.rpow_two, PiLp.equiv_symm_apply]
 
 @[simp]
 theorem frobenius_nnnorm_row (v : m → α) : ∥row v∥₊ = ∥(PiLp.equiv 2 _).symm v∥₊ :=
@@ -409,7 +409,7 @@ theorem frobenius_nnnorm_row (v : m → α) : ∥row v∥₊ = ∥(PiLp.equiv 2 
 @[simp]
 theorem frobenius_norm_col (v : n → α) : ∥col v∥ = ∥(PiLp.equiv 2 _).symm v∥ := by
   simp_rw [frobenius_norm_def, Fintype.sum_unique, PiLp.norm_eq_of_L2, Real.sqrt_eq_rpow]
-  simp only [col_apply, Real.rpow_two, PiLp.equiv_symm_apply']
+  simp only [col_apply, Real.rpow_two, PiLp.equiv_symm_apply]
 
 @[simp]
 theorem frobenius_nnnorm_col (v : n → α) : ∥col v∥₊ = ∥(PiLp.equiv 2 _).symm v∥₊ :=

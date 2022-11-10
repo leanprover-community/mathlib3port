@@ -93,7 +93,7 @@ theorem sum_range_choose (n : ℕ) : (∑ m in range (n + 1), choose n m) = 2 ^ 
 theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 * m + 1) i) = 4 ^ m :=
   have : (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) = ∑ i in range (m + 1), choose (2 * m + 1) i :=
     (sum_congr rfl) fun i hi => choose_symm <| by linarith [mem_range.1 hi]
-  (Nat.mul_right_inj zero_lt_two).1 <|
+  mul_right_injective₀ two_ne_zero <|
     calc
       (2 * ∑ i in range (m + 1), choose (2 * m + 1) i) =
           (∑ i in range (m + 1), choose (2 * m + 1) i) + ∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i) :=

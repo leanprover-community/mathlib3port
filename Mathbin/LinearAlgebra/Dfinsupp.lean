@@ -167,7 +167,7 @@ variable [∀ i, Module R (β i)] [∀ i, Module R (β₁ i)] [∀ i, Module R (
 theorem map_range_smul (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) (r : R) (hf' : ∀ i x, f i (r • x) = r • f i x)
     (g : Π₀ i, β₁ i) : mapRange f hf (r • g) = r • mapRange f hf g := by
   ext
-  simp only [map_range_apply f, coe_smul, Pi.smul_apply, hf']
+  simp only [map_range_apply f, Dfinsupp.coe_smul, Pi.smul_apply, hf']
 
 /-- `dfinsupp.map_range` as an `linear_map`. -/
 @[simps apply]

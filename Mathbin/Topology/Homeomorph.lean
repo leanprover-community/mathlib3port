@@ -209,26 +209,26 @@ protected theorem second_countable_topology [TopologicalSpace.SecondCountableTop
     TopologicalSpace.SecondCountableTopology α :=
   h.Inducing.SecondCountableTopology
 
-theorem compact_image {s : Set α} (h : α ≃ₜ β) : IsCompact (h '' s) ↔ IsCompact s :=
+theorem is_compact_image {s : Set α} (h : α ≃ₜ β) : IsCompact (h '' s) ↔ IsCompact s :=
   h.Embedding.is_compact_iff_is_compact_image.symm
 
-theorem compact_preimage {s : Set β} (h : α ≃ₜ β) : IsCompact (h ⁻¹' s) ↔ IsCompact s := by
-  rw [← image_symm] <;> exact h.symm.compact_image
+theorem is_compact_preimage {s : Set β} (h : α ≃ₜ β) : IsCompact (h ⁻¹' s) ↔ IsCompact s := by
+  rw [← image_symm] <;> exact h.symm.is_compact_image
 
 @[simp]
 theorem comap_cocompact (h : α ≃ₜ β) : comap h (cocompact β) = cocompact α :=
   (comap_cocompact_le h.Continuous).antisymm <|
     (has_basis_cocompact.le_basis_iff (has_basis_cocompact.comap h)).2 fun K hK =>
-      ⟨h ⁻¹' K, h.compact_preimage.2 hK, Subset.rfl⟩
+      ⟨h ⁻¹' K, h.is_compact_preimage.2 hK, Subset.rfl⟩
 
 @[simp]
 theorem map_cocompact (h : α ≃ₜ β) : map h (cocompact α) = cocompact β := by
   rw [← h.comap_cocompact, map_comap_of_surjective h.surjective]
 
 protected theorem compact_space [CompactSpace α] (h : α ≃ₜ β) : CompactSpace β :=
-  { compact_univ := by
-      rw [← image_univ_of_surjective h.surjective, h.compact_image]
-      apply CompactSpace.compact_univ }
+  { is_compact_univ := by
+      rw [← image_univ_of_surjective h.surjective, h.is_compact_image]
+      apply CompactSpace.is_compact_univ }
 
 protected theorem t0_space [T0Space α] (h : α ≃ₜ β) : T0Space β :=
   h.symm.Embedding.T0Space

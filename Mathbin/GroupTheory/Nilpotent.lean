@@ -879,7 +879,7 @@ theorem is_nilpotent_of_product_of_sylow_group
             ","
             (Term.app
              `Nonempty
-             [(Algebra.Hom.Equiv.«term_≃*_»
+             [(Algebra.Hom.Equiv.Basic.«term_≃*_»
                (Term.forall
                 "∀"
                 [`p]

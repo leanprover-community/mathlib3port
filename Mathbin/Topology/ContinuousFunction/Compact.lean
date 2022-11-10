@@ -60,7 +60,7 @@ theorem uniform_inducing_equiv_bounded_of_compact : UniformInducing (equivBounde
           ⟨{ p | ∀ x, (p.1 x, p.2 x) ∈ b }, ⟨ε, hε, fun _ h x => hb ((dist_le hε.le).mp h x)⟩, fun f g h =>
             hs fun x hx => h x⟩,
           fun ⟨t, ⟨ε, hε, ht⟩, hs⟩ =>
-          ⟨⟨Set.Univ, { p | dist p.1 p.2 ≤ ε }⟩, ⟨compact_univ, ⟨ε, hε, fun _ h => h⟩⟩, fun ⟨f, g⟩ h =>
+          ⟨⟨Set.Univ, { p | dist p.1 p.2 ≤ ε }⟩, ⟨is_compact_univ, ⟨ε, hε, fun _ h => h⟩⟩, fun ⟨f, g⟩ h =>
             hs _ _ (ht ((dist_le hε.le).mpr fun x => h x (mem_univ x)))⟩⟩)
 
 theorem uniform_embedding_equiv_bounded_of_compact : UniformEmbedding (equivBoundedOfCompact α β) :=

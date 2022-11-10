@@ -796,7 +796,9 @@ theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ := by
   have p₁ : p ≠ 1 := hp.1.ne_one
   rw [← @Rat.cast_coe_nat ℝ _ p]
   rw [← @Rat.cast_coe_nat ℚ_[p] _ p]
-  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Rat.cast_coe_nat]
+  -- Rewrite `padic_norm_e` before rewriting `(↑(p : ℕ) : ℚ)`
+  simp only [norm, padicNormE.eq_padic_norm']
+  simp [p₀, p₁, padicValInt, zpow_neg]
 
 theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
   rw [norm_p]

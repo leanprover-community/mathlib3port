@@ -181,7 +181,7 @@ def toCat : MonCat ⥤ Cat where
   map x y f := SingleObj.mapHom x y f
 
 instance toCatFull : Full toCat where
-  Preimage x y := (SingleObj.mapHom x y).invFun
+  preimage x y := (SingleObj.mapHom x y).invFun
   witness' x y := by apply Equiv.right_inv
 
 instance to_Cat_faithful : Faithful toCat where map_injective' x y := by apply Equiv.injective

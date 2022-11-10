@@ -3,7 +3,7 @@ Copyright (c) 2020 Hanting Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 -/
-import Mathbin.FieldTheory.SplittingField
+import Mathbin.Data.Polynomial.Splits
 import Mathbin.RingTheory.MvPolynomial.Symmetric
 
 /-!
