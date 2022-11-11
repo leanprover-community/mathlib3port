@@ -86,6 +86,10 @@ variable [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] [NonUnitalNonAs
 instance (priority := 100) {F : Type _} [NonUnitalAlgHomClass F R A B] : LinearMapClass F R A B :=
   { ‹NonUnitalAlgHomClass F R A B› with map_smulₛₗ := DistribMulActionHomClass.map_smul }
 
+instance {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
+    [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [NonUnitalAlgHomClass F R A B] :
+    CoeTC F (A →ₙₐ[R] B) where coe f := { (f : A →ₙ+* B) with toFun := f, map_smul' := map_smul f }
+
 end NonUnitalAlgHomClass
 
 namespace NonUnitalAlgHom
@@ -107,6 +111,10 @@ theorem to_fun_eq_coe (f : A →ₙₐ[R] B) : f.toFun = ⇑f :=
   rfl
 
 initialize_simps_projections NonUnitalAlgHom (toFun → apply)
+
+@[simp, protected]
+theorem coe_coe {F : Type _} [NonUnitalAlgHomClass F R A B] (f : F) : ⇑(f : A →ₙₐ[R] B) = f :=
+  rfl
 
 theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn := by rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
 

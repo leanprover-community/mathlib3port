@@ -163,6 +163,18 @@ instance [IsMulRightInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : Me
     infer_instance
     
 
+@[to_additive]
+theorem isMulLeftInvariantMap {H : Type _} [MeasurableSpace H] [Mul H] [HasMeasurableMul H] [IsMulLeftInvariant μ]
+    (f : G →ₙ* H) (hf : Measurable f) (h_surj : Surjective f) : IsMulLeftInvariant (Measure.map f μ) := by
+  refine' ⟨fun h => _⟩
+  rw [map_map (measurable_const_mul _) hf]
+  obtain ⟨g, rfl⟩ := h_surj h
+  conv_rhs => rw [← map_mul_left_eq_self μ g]
+  rw [map_map hf (measurable_const_mul _)]
+  congr 2
+  ext y
+  simp only [comp_app, map_mul]
+
 end HasMeasurableMul
 
 end Mul
@@ -212,6 +224,24 @@ theorem map_mul_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Fil
 @[to_additive]
 theorem map_div_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun t => t / x) μ.ae = μ.ae :=
   ((MeasurableEquiv.divRight x).map_ae μ).trans <| congr_arg ae <| map_div_right_eq_self μ x
+
+@[to_additive]
+theorem eventually_mul_left_iff (μ : Measure G) [IsMulLeftInvariant μ] (t : G) {p : G → Prop} :
+    (∀ᵐ x ∂μ, p (t * x)) ↔ ∀ᵐ x ∂μ, p x := by
+  conv_rhs => rw [Filter.Eventually, ← map_mul_left_ae μ t]
+  rfl
+
+@[to_additive]
+theorem eventually_mul_right_iff (μ : Measure G) [IsMulRightInvariant μ] (t : G) {p : G → Prop} :
+    (∀ᵐ x ∂μ, p (x * t)) ↔ ∀ᵐ x ∂μ, p x := by
+  conv_rhs => rw [Filter.Eventually, ← map_mul_right_ae μ t]
+  rfl
+
+@[to_additive]
+theorem eventually_div_right_iff (μ : Measure G) [IsMulRightInvariant μ] (t : G) {p : G → Prop} :
+    (∀ᵐ x ∂μ, p (x / t)) ↔ ∀ᵐ x ∂μ, p x := by
+  conv_rhs => rw [Filter.Eventually, ← map_div_right_ae μ t]
+  rfl
 
 end Group
 
@@ -494,16 +524,7 @@ a Haar measure. See also `mul_equiv.is_haar_measure_map`. -/
 theorem isHaarMeasureMap [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group H] [TopologicalSpace H]
     [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H] (f : G →* H) (hf : Continuous f)
     (h_surj : Surjective f) (h_prop : Tendsto f (cocompact G) (cocompact H)) : IsHaarMeasure (Measure.map f μ) :=
-  { toIsMulLeftInvariant := by
-      constructor
-      intro h
-      rw [map_map (continuous_mul_left h).Measurable hf.measurable]
-      obtain ⟨g, rfl⟩ := h_surj h
-      conv_rhs => rw [← map_mul_left_eq_self μ g]
-      rw [map_map hf.measurable (continuous_mul_left _).Measurable]
-      congr 2
-      ext y
-      simp only [comp_app, map_mul],
+  { toIsMulLeftInvariant := isMulLeftInvariantMap f.toMulHom hf.Measurable h_surj,
     lt_top_of_is_compact := by
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]

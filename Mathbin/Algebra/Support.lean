@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Order.ConditionallyCompleteLattice
-import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Module.Pi
@@ -62,6 +61,21 @@ theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s 
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=
   forall_congr' fun x => not_imp_comm
+
+@[to_additive]
+theorem mul_support_eq_iff {f : α → M} {s : Set α} : MulSupport f = s ↔ (∀ x, x ∈ s → f x ≠ 1) ∧ ∀ x, x ∉ s → f x = 1 :=
+  by
+  constructor
+  · rintro rfl
+    simp
+    
+  · rintro ⟨hs, hsc⟩
+    refine' subset.antisymm _ hs
+    simp only [mul_support_subset_iff, Ne.def]
+    intro x hx
+    contrapose! hx
+    exact hsc x hx
+    
 
 @[to_additive]
 theorem mul_support_disjoint_iff {f : α → M} {s : Set α} : Disjoint (MulSupport f) s ↔ EqOn f 1 s := by

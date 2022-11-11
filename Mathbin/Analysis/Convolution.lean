@@ -397,10 +397,12 @@ theorem convolution_smul [SmulCommClass ℝ 𝕜 F] {y : 𝕜} : f ⋆[L, μ] y 
   ext
   simp only [Pi.smul_apply, convolution_def, ← integral_smul, (L _).map_smul]
 
+@[simp]
 theorem zero_convolution : 0 ⋆[L, μ] g = 0 := by
   ext
   simp_rw [convolution_def, Pi.zero_apply, L.map_zero₂, integral_zero]
 
+@[simp]
 theorem convolution_zero : f ⋆[L, μ] 0 = 0 := by
   ext
   simp_rw [convolution_def, Pi.zero_apply, (L _).map_zero, integral_zero]
@@ -556,6 +558,19 @@ theorem convolution_lsmul_swap {f : G → 𝕜} {g : G → F} : (f ⋆[lsmul �
 theorem convolution_mul_swap [NormedSpace ℝ 𝕜] [CompleteSpace 𝕜] {f : G → 𝕜} {g : G → 𝕜} :
     (f ⋆[mul 𝕜 𝕜, μ] g) x = ∫ t, f (x - t) * g t ∂μ :=
   convolution_eq_swap _
+
+/-- The convolution of two even functions is also even. -/
+theorem convolution_neg_of_neg_eq (h1 : ∀ᵐ x ∂μ, f (-x) = f x) (h2 : ∀ᵐ x ∂μ, g (-x) = g x) :
+    (f ⋆[L, μ] g) (-x) = (f ⋆[L, μ] g) x :=
+  calc
+    (∫ t : G, (L (f t)) (g (-x - t)) ∂μ) = ∫ t : G, (L (f (-t))) (g (x + t)) ∂μ := by
+      apply integral_congr_ae
+      filter_upwards [h1, (eventually_add_left_iff μ x).2 h2] with t ht h't
+      simp_rw [ht, ← h't, neg_add']
+    _ = ∫ t : G, (L (f t)) (g (x - t)) ∂μ := by
+      rw [← integral_neg_eq_self]
+      simp only [neg_neg, ← sub_eq_add_neg]
+    
 
 end Measurable
 
@@ -915,25 +930,33 @@ theorem convolution_assoc (hL : ∀ (x : E) (y : E') (z : E''), L₂ (L x y) z =
 
 end Assoc
 
-variable [NormedAddCommGroup G] [BorelSpace G]
-
-variable [SecondCountableTopology G] [SigmaCompactSpace G]
+variable [NormedAddCommGroup G] [BorelSpace G] [NormedSpace 𝕜 G]
 
 theorem convolution_precompR_apply {g : G → E'' →L[𝕜] E'} (hf : LocallyIntegrable f μ) (hcg : HasCompactSupport g)
     (hg : Continuous g) (x₀ : G) (x : E'') : (f ⋆[L.precompR E'', μ] g) x₀ x = (f ⋆[L, μ] fun a => g a x) x₀ := by
+  rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg with (rfl | fin_dim)
+  · simp only [convolution, Pi.zero_apply, integral_const, smul_zero, zero_apply, _root_.map_zero]
+    
+  skip
+  have : ProperSpace G := FiniteDimensional.properIsROrC 𝕜 G
   have := hcg.convolution_exists_right (L.precompR E'' : _) hf hg x₀
   simp_rw [convolution_def, ContinuousLinearMap.integral_apply this]
   rfl
 
 variable [SigmaFinite μ] [IsAddLeftInvariant μ]
 
-variable [NormedSpace 𝕜 G] [ProperSpace G]
-
 /-- Compute the total derivative of `f ⋆ g` if `g` is `C^1` with compact support and `f` is locally
 integrable. To write down the total derivative as a convolution, we use
 `continuous_linear_map.precompR`. -/
 theorem HasCompactSupport.hasFderivAtConvolutionRight (hcg : HasCompactSupport g) (hf : LocallyIntegrable f μ)
     (hg : ContDiff 𝕜 1 g) (x₀ : G) : HasFderivAt (f ⋆[L, μ] g) ((f ⋆[L.precompR G, μ] fderiv 𝕜 g) x₀) x₀ := by
+  rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg.continuous with (rfl | fin_dim)
+  · have : fderiv 𝕜 (0 : G → E') = 0 := fderiv_const (0 : E')
+    simp only [this, convolution_zero, Pi.zero_apply]
+    exact hasFderivAtConst (0 : F) x₀
+    
+  skip
+  have : ProperSpace G := FiniteDimensional.properIsROrC 𝕜 G
   set L' := L.precompR G
   have h1 : ∀ᶠ x in 𝓝 x₀, ae_strongly_measurable (fun t => L (f t) (g (x - t))) μ :=
     eventually_of_forall (hf.ae_strongly_measurable.convolution_integrand_snd L hg.continuous.ae_strongly_measurable)
@@ -965,8 +988,14 @@ theorem HasCompactSupport.hasFderivAtConvolutionLeft [IsNegInvariant μ] (hcf : 
   simp (config := { singlePass := true }) only [← convolution_flip]
   exact hcf.has_fderiv_at_convolution_right L.flip hg hf x₀
 
-theorem HasCompactSupport.contDiffConvolutionRight [FiniteDimensional 𝕜 G] (hcg : HasCompactSupport g)
-    (hf : LocallyIntegrable f μ) (hg : ContDiff 𝕜 n g) : ContDiff 𝕜 n (f ⋆[L, μ] g) := by
+theorem HasCompactSupport.contDiffConvolutionRight (hcg : HasCompactSupport g) (hf : LocallyIntegrable f μ)
+    (hg : ContDiff 𝕜 n g) : ContDiff 𝕜 n (f ⋆[L, μ] g) := by
+  rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg.continuous with (rfl | fin_dim)
+  · simp only [convolution_zero]
+    exact contDiffZeroFun
+    
+  skip
+  have : ProperSpace G := FiniteDimensional.properIsROrC 𝕜 G
   induction' n using Enat.nat_induction with n ih ih generalizing g
   · rw [cont_diff_zero] at hg⊢
     exact hcg.continuous_convolution_right L hf hg
@@ -994,8 +1023,8 @@ theorem HasCompactSupport.contDiffConvolutionRight [FiniteDimensional 𝕜 G] (h
     exact fun n => ih n hcg (hg n)
     
 
-theorem HasCompactSupport.contDiffConvolutionLeft [FiniteDimensional 𝕜 G] [IsNegInvariant μ] (hcf : HasCompactSupport f)
-    (hf : ContDiff 𝕜 n f) (hg : LocallyIntegrable g μ) : ContDiff 𝕜 n (f ⋆[L, μ] g) := by
+theorem HasCompactSupport.contDiffConvolutionLeft [IsNegInvariant μ] (hcf : HasCompactSupport f) (hf : ContDiff 𝕜 n f)
+    (hg : LocallyIntegrable g μ) : ContDiff 𝕜 n (f ⋆[L, μ] g) := by
   rw [← convolution_flip]
   exact hcf.cont_diff_convolution_right L.flip hg hf
 

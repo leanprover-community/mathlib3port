@@ -7,7 +7,13 @@ import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Data.Nat.Order
 
 /-!
-# Definitions and properties of `gcd`, `lcm`, and `coprime`
+# Definitions and properties of `nat.gcd`, `nat.lcm`, and `nat.coprime`
+
+Generalizations of these are provided in a later file as `gcd_monoid.gcd` and
+`gcd_monoid.lcm`.
+
+Note that the global `is_coprime` is not a straightforward generalization of `nat.coprime`, see
+`nat.is_coprime_iff_coprime` for the connection between the two.
 
 -/
 
@@ -612,7 +618,10 @@ theorem Coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.Coprime n) (hmn : m * n = 0
   (Nat.eq_zero_of_mul_eq_zero hmn).imp (fun hm => ⟨hm, n.coprime_zero_left.mp <| hm ▸ h⟩) fun hn =>
     ⟨m.coprime_zero_left.mp <| hn ▸ h.symm, hn⟩
 
-/-- Represent a divisor of `m * n` as a product of a divisor of `m` and a divisor of `n`. -/
+/-- Represent a divisor of `m * n` as a product of a divisor of `m` and a divisor of `n`.
+
+See `exists_dvd_and_dvd_of_dvd_mul` for the more general but less constructive version for other
+`gcd_monoid`s. -/
 def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) : { d : { m' // m' ∣ m } × { n' // n' ∣ n } // k = d.1 * d.2 } :=
   by
   cases h0 : gcd k m
@@ -627,6 +636,16 @@ def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) : { d : { m' // m' �
   apply dvd_of_mul_dvd_mul_left hpos
   rw [hd, ← gcd_mul_right]
   exact dvd_gcd (dvd_mul_right _ _) H
+
+theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧ y * z = x := by
+  constructor
+  · intro h
+    obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prod_dvd_and_dvd_of_dvd_prod h
+    exact ⟨y, z, hy, hz, rfl⟩
+    
+  · rintro ⟨y, z, hy, hz, rfl⟩
+    exact mul_dvd_mul hy hz
+    
 
 #print Nat.gcd_mul_dvd_mul_gcd /-
 theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n := by

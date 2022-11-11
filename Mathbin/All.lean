@@ -1577,6 +1577,7 @@ import Mathbin.Data.Set.Pairwise
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.Data.Set.Pointwise.Interval
+import Mathbin.Data.Set.Pointwise.Support
 import Mathbin.Data.Set.Prod
 import Mathbin.Data.Set.Semiring
 import Mathbin.Data.Set.Sigma
@@ -2543,6 +2544,7 @@ import Mathbin.Tactic.Monotonicity.Basic
 import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.Tactic.Monotonicity.Interactive
 import Mathbin.Tactic.Monotonicity.Lemmas
+import Mathbin.Tactic.MoveAdd
 import Mathbin.Tactic.NoncommRing
 import Mathbin.Tactic.NormCast
 import Mathbin.Tactic.NormFin
@@ -2734,7 +2736,8 @@ import Mathbin.Topology.Covering
 import Mathbin.Topology.DenseEmbedding
 import Mathbin.Topology.DiscreteQuotient
 import Mathbin.Topology.ExtendFrom
-import Mathbin.Topology.FiberBundle
+import Mathbin.Topology.FiberBundle.Basic
+import Mathbin.Topology.FiberBundle.Trivialization
 import Mathbin.Topology.Filter
 import Mathbin.Topology.Gluing
 import Mathbin.Topology.Hom.Open

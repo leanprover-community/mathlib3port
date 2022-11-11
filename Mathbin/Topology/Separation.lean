@@ -307,6 +307,11 @@ theorem is_open_compl_singleton [T1Space α] {x : α} : IsOpen ({x}ᶜ : Set α)
 theorem is_open_ne [T1Space α] {x : α} : IsOpen { y | y ≠ x } :=
   is_open_compl_singleton
 
+@[to_additive]
+theorem Continuous.is_open_mul_support [T1Space α] [One α] [TopologicalSpace β] {f : β → α} (hf : Continuous f) :
+    IsOpen (MulSupport f) :=
+  is_open_ne.Preimage hf
+
 theorem Ne.nhds_within_compl_singleton [T1Space α] {x y : α} (h : x ≠ y) : 𝓝[{y}ᶜ] x = 𝓝 x :=
   is_open_ne.nhds_within_eq h
 

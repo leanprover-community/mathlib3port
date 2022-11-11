@@ -255,12 +255,12 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
       ⟩
 
 /-- If advancing one step from `a` leads to `b : β`, then `f.fix a = b` -/
-theorem fix_stop {f : α →. Sum β α} (a : α) {b : β} (hb : Sum.inl b ∈ f a) : b ∈ f.fix a := by
+theorem fix_stop {f : α →. Sum β α} {b : β} {a : α} (hb : Sum.inl b ∈ f a) : b ∈ f.fix a := by
   rw [Pfun.mem_fix_iff]
   exact Or.inl hb
 
 /-- If advancing one step from `a` on `f` leads to `a' : α`, then `f.fix a = f.fix a'` -/
-theorem fix_fwd {f : α →. Sum β α} (a a' : α) (ha' : Sum.inr a' ∈ f a) : f.fix a = f.fix a' := by
+theorem fix_fwd_eq {f : α →. Sum β α} {a a' : α} (ha' : Sum.inr a' ∈ f a) : f.fix a = f.fix a' := by
   ext b
   constructor
   · intro h
@@ -274,37 +274,59 @@ theorem fix_fwd {f : α →. Sum β α} (a a' : α) (ha' : Sum.inr a' ∈ f a) :
     exact ⟨ha', h⟩
     
 
+theorem fix_fwd {f : α →. Sum β α} {b : β} {a a' : α} (hb : b ∈ f.fix a) (ha' : Sum.inr a' ∈ f a) : b ∈ f.fix a' := by
+  rwa [← fix_fwd_eq ha']
+
 /-- A recursion principle for `pfun.fix`. -/
 @[elab_as_elim]
-def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
+def fixInduction {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
     (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') : C a := by
-  replace h := Part.mem_assert_iff.1 h
-  have := h.snd
-  revert this
-  induction' h.fst with a ha IH
-  intro h₂
-  have fb : b ∈ f.fix a := Part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩
-  refine' H a fb fun a'' fa'' => _
-  have ha'' : b ∈ f.fix a'' := by rwa [fix_fwd _ _ fa''] at fb
-  have := (Part.mem_assert_iff.1 ha'').snd
-  exact IH _ fa'' ⟨ha _ fa'', this⟩ this
+  have h₂ := (Part.mem_assert_iff.1 h).snd
+  generalize_proofs h₁  at h₂
+  clear h
+  induction' h₁ with a ha IH
+  have h : b ∈ f.fix a := Part.mem_assert_iff.2 ⟨⟨a, ha⟩, h₂⟩
+  exact H a h fun a' fa' => IH a' fa' (Part.mem_assert_iff.1 (fix_fwd h fa')).snd
+
+theorem fix_induction_spec {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
+    (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') :
+    @fixInduction _ _ C _ _ _ h H = H a h fun a' h' => fixInduction (fix_fwd h h') H := by
+  unfold fix_induction
+  generalize_proofs ha
+  induction ha
+  rfl
 
 /-- Another induction lemma for `b ∈ f.fix a` which allows one to prove a predicate `P` holds for
 `a` given that `f a` inherits `P` from `a` and `P` holds for preimages of `b`.
 -/
 @[elab_as_elim]
-def fixInduction' (f : α →. Sum β α) (b : β) {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
+def fixInduction' {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
     (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) : C a := by
   refine' fix_induction h fun a' h ih => _
   cases' e : (f a').get (dom_of_mem_fix h) with b' a'' <;> replace e : _ ∈ f a' := ⟨_, e⟩
   · apply hbase
     convert e
-    exact Part.mem_unique h (fix_stop _ e)
+    exact Part.mem_unique h (fix_stop e)
     
-  · refine' hind _ _ _ e (ih _ e)
-    rwa [fix_fwd _ _ e] at h
+  · exact hind _ _ (fix_fwd h e) e (ih _ e)
     
+
+theorem fix_induction'_stop {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a) (fa : Sum.inl b ∈ f a)
+    (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
+    (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) :
+    @fixInduction' _ _ C _ _ _ h hbase hind = hbase a fa := by
+  unfold fix_induction'
+  rw [fix_induction_spec]
+  simp [Part.get_eq_of_mem fa]
+
+theorem fix_induction'_fwd {C : α → Sort _} {f : α →. Sum β α} {b : β} {a a' : α} (h : b ∈ f.fix a) (h' : b ∈ f.fix a')
+    (fa : Sum.inr a' ∈ f a) (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
+    (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) :
+    @fixInduction' _ _ C _ _ _ h hbase hind = hind a a' h' fa (fixInduction' h' hbase hind) := by
+  unfold fix_induction'
+  rw [fix_induction_spec]
+  simpa [Part.get_eq_of_mem fa]
 
 variable (f : α →. β)
 

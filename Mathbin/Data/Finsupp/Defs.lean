@@ -242,18 +242,19 @@ variable [Zero M] {a a' : α} {b : M}
 
 /-- `single a b` is the finitely supported function with value `b` at `a` and zero otherwise. -/
 def single (a : α) (b : M) : α →₀ M :=
-  ⟨if b = 0 then ∅ else {a}, fun a' => if a = a' then b else 0, fun a' => by
-    by_cases hb:b = 0 <;> by_cases a = a' <;> simp only [hb, h, if_pos, if_false, mem_singleton]
-    · exact ⟨False.elim, fun H => H rfl⟩
+  ⟨if b = 0 then ∅ else {a}, Pi.single a b, fun a' => by
+    obtain rfl | hb := eq_or_ne b 0
+    · simp
       
-    · exact ⟨False.elim, fun H => H rfl⟩
+    rw [if_neg hb, mem_singleton]
+    obtain rfl | ha := eq_or_ne a' a
+    · simp [hb]
       
-    · exact ⟨fun _ => hb, fun _ => rfl⟩
-      
-    · exact ⟨fun H _ => h H.symm, fun H => (H rfl).elim⟩
-      ⟩
+    simp [Pi.single_eq_of_ne', ha]⟩
 
-theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by convert rfl
+theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by
+  simp_rw [@eq_comm _ a a']
+  convert Pi.single_apply _ _ _
 
 theorem single_apply_left {f : α → β} (hf : Function.Injective f) (x z : α) (y : M) :
     single (f x) y (f z) = single x y z := by simp only [single_apply, hf.eq_iff]
@@ -264,11 +265,11 @@ theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := 
 
 @[simp]
 theorem single_eq_same : (single a b : α →₀ M) a = b :=
-  if_pos rfl
+  Pi.single_eq_same a b
 
 @[simp]
 theorem single_eq_of_ne (h : a ≠ a') : (single a b : α →₀ M) a' = 0 :=
-  if_neg h
+  Pi.single_eq_of_ne' h _
 
 theorem single_eq_update [DecidableEq α] (a : α) (b : M) : ⇑(single a b) = Function.update 0 a b := by
   rw [single_eq_indicator, ← Set.piecewise_eq_indicator, Set.piecewise_singleton]
@@ -623,7 +624,7 @@ theorem support_map_range {f : M → N} {hf : f 0 = 0} {g : α →₀ M} : (mapR
 
 @[simp]
 theorem map_range_single {f : M → N} {hf : f 0 = 0} {a : α} {b : M} : mapRange f hf (single a b) = single a (f b) :=
-  ext fun a' => show f (ite _ _ _) = ite _ _ _ by split_ifs <;> [rfl, exact hf]
+  ext fun a' => by simpa only [single_eq_pi_single] using Pi.apply_single _ (fun _ => hf) a _ a'
 
 theorem support_map_range_of_injective {e : M → N} (he0 : e 0 = 0) (f : ι →₀ M) (he : Function.Injective e) :
     (Finsupp.mapRange e he0 f).Support = f.Support := by

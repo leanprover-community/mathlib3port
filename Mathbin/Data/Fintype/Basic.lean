@@ -668,7 +668,7 @@ variable {s t : Set α}
 
 /-- Construct a finset enumerating a set `s`, given a `fintype` instance.  -/
 def toFinset (s : Set α) [Fintype s] : Finset α :=
-  ⟨(@Finset.univ s _).1.map Subtype.val, Finset.univ.Nodup.map fun a b => Subtype.eq⟩
+  (@Finset.univ s _).map <| Function.Embedding.subtype _
 
 @[congr]
 theorem to_finset_congr {s t : Set α} [Fintype s] [Fintype t] (h : s = t) : toFinset s = toFinset t := by cc

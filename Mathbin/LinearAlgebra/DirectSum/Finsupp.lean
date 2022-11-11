@@ -62,7 +62,7 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
       
     · intro k' n
       simp only [finsupp_tensor_finsupp_single]
-      simp only [Finsupp.single, Finsupp.coe_mk]
+      simp only [Finsupp.single_apply]
       -- split_ifs; finish can close the goal from here
       by_cases h1:(i', k') = (i, k)
       · simp only [Prod.mk.inj_iff] at h1
@@ -96,7 +96,7 @@ theorem finsupp_tensor_finsupp'_apply_apply (f : α →₀ S) (g : β →₀ S) 
 theorem finsupp_tensor_finsupp'_single_tmul_single (a : α) (b : β) (r₁ r₂ : S) :
     finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) = Finsupp.single (a, b) (r₁ * r₂) := by
   ext ⟨a', b'⟩
-  simp [Finsupp.single, ite_and]
+  simp [Finsupp.single_apply, ite_and]
 
 end TensorProduct
 

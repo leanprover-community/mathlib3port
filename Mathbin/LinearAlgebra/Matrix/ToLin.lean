@@ -447,7 +447,7 @@ theorem Matrix.to_lin_self (M : Matrix m n R) (i : n) : Matrix.toLin v₁ v₂ M
 /-- This will be a special case of `linear_map.to_matrix_id_eq_basis_to_matrix`. -/
 theorem LinearMap.to_matrix_id : LinearMap.toMatrix v₁ v₁ id = 1 := by
   ext (i j)
-  simp [LinearMap.to_matrix_apply, Matrix.one_apply, Finsupp.single, eq_comm]
+  simp [LinearMap.to_matrix_apply, Matrix.one_apply, Finsupp.single_apply, eq_comm]
 
 theorem LinearMap.to_matrix_one : LinearMap.toMatrix v₁ v₁ 1 = 1 :=
   LinearMap.to_matrix_id v₁

@@ -142,7 +142,7 @@ theorem tendsto_norm_sq_coprime_pair :
     rw [of_real_int_cast, of_real_int_cast]
   rw [this]
   have hf : f.ker = ⊥ := by
-    let g : ℂ →ₗ[ℝ] Fin 2 → ℝ := LinearMap.pi ![im_lm, im_lm.comp ((z : ℂ) • (conj_ae : ℂ →ₗ[ℝ] ℂ))]
+    let g : ℂ →ₗ[ℝ] Fin 2 → ℝ := LinearMap.pi ![im_lm, im_lm.comp ((z : ℂ) • ((conj_ae : ℂ →ₐ[ℝ] ℂ) : ℂ →ₗ[ℝ] ℂ))]
     suffices ((z : ℂ).im⁻¹ • g).comp f = LinearMap.id by exact LinearMap.ker_eq_bot_of_inverse this
     apply LinearMap.ext
     intro c

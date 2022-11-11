@@ -475,6 +475,28 @@ theorem finiteDimensionalOfIsCompactClosedBall {r : ℝ} (rpos : 0 < r) {c : E} 
   have : Continuous fun x => -c + x := continuous_const.add continuous_id
   simpa using h.image this
 
+/-- If a function has compact multiplicative support, then either the function is trivial or the
+space if finite-dimensional. -/
+@[to_additive
+      "If a function has compact support, then either the function is trivial or the\nspace if finite-dimensional."]
+theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [TopologicalSpace X] [One X] [T2Space X]
+    {f : E → X} (hf : HasCompactMulSupport f) (h'f : Continuous f) : f = 1 ∨ FiniteDimensional 𝕜 E := by
+  by_cases h:∀ x, f x = 1
+  · apply Or.inl
+    ext x
+    exact h x
+    
+  apply Or.inr
+  push_neg  at h
+  obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1
+  exact h
+  have : Function.MulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
+  obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.ClosedBall x r ⊆ Function.MulSupport f
+  exact metric.nhds_basis_closed_ball.mem_iff.1 this
+  have : IsCompact (Metric.ClosedBall x r) :=
+    is_compact_of_is_closed_subset hf Metric.isClosedBall (hr.trans (subset_mul_tsupport _))
+  exact finiteDimensionalOfIsCompactClosedBall 𝕜 rpos this
+
 end Riesz
 
 /-- An injective linear map with finite-dimensional domain is a closed embedding. -/

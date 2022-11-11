@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Patrick Massot, Floris van Doorn
 -/
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.Topology.FiberBundle
+import Mathbin.Topology.FiberBundle.Basic
 
 /-!
 # Topological vector bundles
@@ -67,56 +67,6 @@ variable {F E} (e : Pretrivialization F (π E)) {x : TotalSpace E} {b : B} {y : 
 theorem linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)] [e.is_linear R] {b : B}
     (hb : b ∈ e.BaseSet) : IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2 :=
   Pretrivialization.IsLinear.linear b hb
-
-theorem coe_mem_source : ↑y ∈ e.Source ↔ b ∈ e.BaseSet :=
-  e.mem_source
-
-@[simp, mfld_simps]
-theorem coe_coe_fst (hb : b ∈ e.BaseSet) : (e y).1 = b :=
-  e.coe_fst (e.mem_source.2 hb)
-
-theorem mk_mem_target {x : B} {y : F} : (x, y) ∈ e.Target ↔ x ∈ e.BaseSet :=
-  e.mem_target
-
-theorem symm_coe_proj {x : B} {y : F} (e : Pretrivialization F (π E)) (h : x ∈ e.BaseSet) :
-    (e.toLocalEquiv.symm (x, y)).1 = x :=
-  e.proj_symm_apply' h
-
-section Zero
-
-variable [∀ x, Zero (E x)]
-
-/-- A fiberwise inverse to `e`. This is the function `F → E b` that induces a local inverse
-`B × F → total_space E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
-protected def symm (e : Pretrivialization F (π E)) (b : B) (y : F) : E b :=
-  if hb : b ∈ e.BaseSet then cast (congr_arg E (e.proj_symm_apply' hb)) (e.toLocalEquiv.symm (b, y)).2 else 0
-
-theorem symm_apply (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalEquiv.symm (b, y)).2 :=
-  dif_pos hb
-
-theorem symm_apply_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
-  dif_neg hb
-
-theorem coe_symm_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.BaseSet) : (e.symm b : F → E b) = 0 :=
-  funext fun y => dif_neg hb
-
-theorem mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    totalSpaceMk b (e.symm b y) = e.toLocalEquiv.symm (b, y) := by
-  rw [e.symm_apply hb, total_space.mk_cast, total_space.eta]
-
-theorem symm_proj_apply (e : Pretrivialization F (π E)) (z : TotalSpace E) (hz : z.proj ∈ e.BaseSet) :
-    e.symm z.proj (e z).2 = z.2 := by
-  rw [e.symm_apply hz, cast_eq_iff_heq, e.mk_proj_snd' hz, e.symm_apply_apply (e.mem_source.mpr hz)]
-
-theorem symm_apply_apply_mk (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
-    e.symm b (e (totalSpaceMk b y)).2 = y :=
-  e.symm_proj_apply (totalSpaceMk b y) hb
-
-theorem apply_mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e (totalSpaceMk b (e.symm b y)) = (b, y) := by rw [e.mk_symm hb, e.apply_symm_apply (e.mk_mem_target.mpr hb)]
-
-end Zero
 
 variable [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
 
@@ -204,79 +154,6 @@ protected theorem linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E
 instance toPretrivialization.is_linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
     [e.is_linear R] : e.toPretrivialization.is_linear R :=
   { (‹_› : e.is_linear R) with }
-
-protected theorem continuous_on : ContinuousOn e e.Source :=
-  e.continuous_to_fun
-
-theorem coe_mem_source : ↑y ∈ e.Source ↔ b ∈ e.BaseSet :=
-  e.mem_source
-
-theorem open_target : IsOpen e.Target := by
-  rw [e.target_eq]
-  exact e.open_base_set.prod is_open_univ
-
-@[simp, mfld_simps]
-theorem coe_coe_fst (hb : b ∈ e.BaseSet) : (e y).1 = b :=
-  e.coe_fst (e.mem_source.2 hb)
-
-theorem mk_mem_target {y : F} : (b, y) ∈ e.Target ↔ b ∈ e.BaseSet :=
-  e.toPretrivialization.mem_target
-
-theorem symm_apply_apply {x : TotalSpace E} (hx : x ∈ e.Source) : e.toLocalHomeomorph.symm (e x) = x :=
-  e.toLocalEquiv.left_inv hx
-
-@[simp, mfld_simps]
-theorem symm_coe_proj {x : B} {y : F} (e : Trivialization F (π E)) (h : x ∈ e.BaseSet) :
-    (e.toLocalHomeomorph.symm (x, y)).1 = x :=
-  e.proj_symm_apply' h
-
-section Zero
-
-variable [∀ x, Zero (E x)]
-
-/-- A fiberwise inverse to `e`. The function `F → E x` that induces a local inverse
-  `B × F → total_space E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
-protected def symm (e : Trivialization F (π E)) (b : B) (y : F) : E b :=
-  e.toPretrivialization.symm b y
-
-theorem symm_apply (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalHomeomorph.symm (b, y)).2 :=
-  dif_pos hb
-
-theorem symm_apply_of_not_mem (e : Trivialization F (π E)) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
-  dif_neg hb
-
-theorem mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    totalSpaceMk b (e.symm b y) = e.toLocalHomeomorph.symm (b, y) :=
-  e.toPretrivialization.mk_symm hb y
-
-theorem symm_proj_apply (e : Trivialization F (π E)) (z : TotalSpace E) (hz : z.proj ∈ e.BaseSet) :
-    e.symm z.proj (e z).2 = z.2 :=
-  e.toPretrivialization.symm_proj_apply z hz
-
-theorem symm_apply_apply_mk (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : E b) :
-    e.symm b (e (totalSpaceMk b y)).2 = y :=
-  e.symm_proj_apply (totalSpaceMk b y) hb
-
-theorem apply_mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e (totalSpaceMk b (e.symm b y)) = (b, y) :=
-  e.toPretrivialization.apply_mk_symm hb y
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem continuous_on_symm (e : Trivialization F (π E)) :
-    ContinuousOn (fun z : B × F => totalSpaceMk z.1 (e.symm z.1 z.2)) (e.BaseSet ×ˢ univ) := by
-  have :
-    ∀ (z : B × F) (hz : z ∈ e.base_set ×ˢ (univ : Set F)),
-      total_space_mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
-    by
-    rintro x ⟨hx : x.1 ∈ e.base_set, _⟩
-    simp_rw [e.mk_symm hx, Prod.mk.eta]
-  refine' ContinuousOn.congr _ this
-  rw [← e.target_eq]
-  exact e.to_local_homeomorph.continuous_on_symm
-
-end Zero
 
 variable [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
 

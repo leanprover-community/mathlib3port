@@ -209,6 +209,42 @@ theorem map_swap_divisors_antidiagonal :
     simp [h]
     
 
+@[simp]
+theorem image_fst_divisors_antidiagonal : (divisorsAntidiagonal n).Image Prod.fst = divisors n := by
+  ext
+  simp [Dvd.Dvd, @eq_comm _ n (_ * _)]
+
+@[simp]
+theorem image_snd_divisors_antidiagonal : (divisorsAntidiagonal n).Image Prod.snd = divisors n := by
+  rw [← map_swap_divisors_antidiagonal, map_eq_image, image_image]
+  exact image_fst_divisors_antidiagonal
+
+theorem map_div_right_divisors :
+    n.divisors.map ⟨fun d => (d, n / d), fun p₁ p₂ => congr_arg Prod.fst⟩ = n.divisorsAntidiagonal := by
+  obtain rfl | hn := Decidable.eq_or_ne n 0
+  · simp
+    
+  ext ⟨d, nd⟩
+  simp only [and_true_iff, Finset.mem_map, exists_eq_left, Ne.def, hn, not_false_iff, mem_divisors_antidiagonal,
+    Function.Embedding.coe_fn_mk, mem_divisors]
+  constructor
+  · rintro ⟨a, ⟨k, rfl⟩, h⟩
+    obtain ⟨rfl, rfl⟩ := Prod.mk.inj_iff.1 h
+    have := (mul_ne_zero_iff.1 hn).1
+    rw [Nat.mul_div_cancel_left _ (zero_lt_iff.mpr this)]
+    
+  · rintro rfl
+    refine' ⟨d, dvd_mul_right _ _, _⟩
+    have := (mul_ne_zero_iff.1 hn).1
+    rw [Nat.mul_div_cancel_left _ (zero_lt_iff.mpr this)]
+    
+
+theorem map_div_left_divisors :
+    n.divisors.map ⟨fun d => (n / d, d), fun p₁ p₂ => congr_arg Prod.snd⟩ = n.divisorsAntidiagonal := by
+  apply Finset.map_injective ⟨Prod.swap, prod.swap_right_inverse.injective⟩
+  rw [map_swap_divisors_antidiagonal, ← map_div_right_divisors, Finset.map_map]
+  rfl
+
 theorem sum_divisors_eq_sum_proper_divisors_add_self : (∑ i in divisors n, i) = (∑ i in properDivisors n, i) + n := by
   cases n
   · simp
@@ -355,28 +391,8 @@ theorem prod_divisors_prime_pow {α : Type _} [CommMonoid α] {k p : ℕ} {f : �
 @[to_additive]
 theorem prod_divisors_antidiagonal {M : Type _} [CommMonoid M] (f : ℕ → ℕ → M) {n : ℕ} :
     (∏ i in n.divisorsAntidiagonal, f i.1 i.2) = ∏ i in n.divisors, f i (n / i) := by
-  refine' prod_bij (fun i _ => i.1) _ _ _ _
-  · intro i
-    apply fst_mem_divisors_of_mem_antidiagonal
-    
-  · rintro ⟨i, j⟩ hij
-    simp only [mem_divisors_antidiagonal, Ne.def] at hij
-    rw [← hij.1, Nat.mul_div_cancel_left]
-    apply Nat.pos_of_ne_zero
-    rintro rfl
-    simp only [zero_mul] at hij
-    apply hij.2 hij.1.symm
-    
-  · simp only [and_imp, Prod.forall, mem_divisors_antidiagonal, Ne.def]
-    rintro i₁ j₁ ⟨i₂, j₂⟩ h - (rfl : i₂ * j₂ = _) h₁ (rfl : _ = i₂)
-    simp only [Nat.mul_eq_zero, not_or, ← Ne.def] at h₁
-    rw [mul_right_inj' h₁.1] at h
-    simp [h]
-    
-  simp only [and_imp, exists_prop, mem_divisors_antidiagonal, exists_and_right, Ne.def, exists_eq_right', mem_divisors,
-    Prod.exists]
-  rintro _ ⟨k, rfl⟩ hn
-  exact ⟨⟨k, rfl⟩, hn⟩
+  rw [← map_div_right_divisors, Finset.prod_map]
+  rfl
 
 @[to_additive]
 theorem prod_divisors_antidiagonal' {M : Type _} [CommMonoid M] (f : ℕ → ℕ → M) {n : ℕ} :

@@ -7,6 +7,7 @@ import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.SpecialFunctions.Exponential
 import Mathbin.Analysis.Complex.Liouville
+import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.Analysis.Analytic.RadiusLiminf
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 
@@ -43,7 +44,7 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 -/
 
 
-open Ennreal
+open Ennreal Nnreal
 
 /-- The *spectral radius* is the supremum of the `nnnorm` (`∥⬝∥₊`) of elements in the spectrum,
     coerced into an element of `ℝ≥0∞`. Note that it is possible for `spectrum 𝕜 a = ∅`. In this
@@ -124,6 +125,18 @@ protected theorem is_compact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
 theorem spectral_radius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ∥a∥₊ := by
   refine' supr₂_le fun k hk => _
   exact_mod_cast norm_le_norm_of_mem hk
+
+theorem exists_nnnorm_eq_spectral_radius_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty) :
+    ∃ k ∈ σ a, (∥k∥₊ : ℝ≥0∞) = spectralRadius 𝕜 a := by
+  obtain ⟨k, hk, h⟩ := (Spectrum.is_compact a).exists_forall_ge ha continuous_nnnorm.continuous_on
+  exact ⟨k, hk, le_antisymm (le_supr₂ k hk) (supr₂_le <| by exact_mod_cast h)⟩
+
+theorem spectral_radius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty) {r : ℝ≥0}
+    (hr : ∀ k ∈ σ a, ∥k∥₊ < r) : spectralRadius 𝕜 a < r :=
+  Sup_image.symm.trans_lt <|
+    ((Spectrum.is_compact a).Sup_lt_iff_of_continuous ha (Ennreal.continuous_coe.comp continuous_nnnorm).ContinuousOn
+          (r : ℝ≥0∞)).mpr
+      (by exact_mod_cast hr)
 
 open Ennreal Polynomial
 
@@ -346,9 +359,12 @@ theorem pow_norm_pow_one_div_tendsto_nhds_spectral_radius (a : A) :
 
 end GelfandFormula
 
+section NonemptySpectrum
+
+variable [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [Nontrivial A] (a : A)
+
 /-- In a (nontrivial) complex Banach algebra, every element has nonempty spectrum. -/
-theorem nonempty {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [Nontrivial A] (a : A) :
-    (Spectrum ℂ a).Nonempty := by
+protected theorem nonempty : (Spectrum ℂ a).Nonempty := by
   /- Suppose `σ a = ∅`, then resolvent set is `ℂ`, any `(z • 1 - a)` is a unit, and `resolvent`
     is differentiable on `ℂ`. -/
   rw [← Set.ne_empty_iff_nonempty]
@@ -379,6 +395,31 @@ theorem nonempty {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpac
     simpa only [H₃ R] using (zero_add ε).symm.subst (hR R (by exact_mod_cast (Real.norm_of_nonneg R_pos.lt.le).symm.le))
   -- `not_is_unit_zero` is where we need `nontrivial A`, it is unavoidable.
   exact not_is_unit_zero (H₅.subst (is_unit_resolvent.mp (mem_resolvent_set_iff.mp (H₀.symm ▸ Set.mem_univ 0))))
+
+/-- In a complex Banach algebra, the spectral radius is always attained by some element of the
+spectrum. -/
+theorem exists_nnnorm_eq_spectral_radius : ∃ z ∈ Spectrum ℂ a, (∥z∥₊ : ℝ≥0∞) = spectralRadius ℂ a :=
+  exists_nnnorm_eq_spectral_radius_of_nonempty (Spectrum.nonempty a)
+
+/-- In a complex Banach algebra, if every element of the spectrum has norm strictly less than
+`r : ℝ≥0`, then the spectral radius is also strictly less than `r`. -/
+theorem spectral_radius_lt_of_forall_lt {r : ℝ≥0} (hr : ∀ z ∈ Spectrum ℂ a, ∥z∥₊ < r) : spectralRadius ℂ a < r :=
+  spectral_radius_lt_of_forall_lt_of_nonempty (Spectrum.nonempty a) hr
+
+open Polynomial
+
+open Polynomial
+
+/-- The **spectral mapping theorem** for polynomials in a Banach algebra over `ℂ`. -/
+theorem map_polynomial_aeval (p : ℂ[X]) : Spectrum ℂ (aeval a p) = (fun k => eval k p) '' Spectrum ℂ a :=
+  map_polynomial_aeval_of_nonempty a p (Spectrum.nonempty a)
+
+/-- A specialization of the spectral mapping theorem for polynomials in a Banach algebra over `ℂ`
+to monic monomials. -/
+protected theorem map_pow (n : ℕ) : Spectrum ℂ (a ^ n) = (fun x => x ^ n) '' Spectrum ℂ a := by
+  simpa only [aeval_X_pow, eval_pow, eval_X] using map_polynomial_aeval a (X ^ n)
+
+end NonemptySpectrum
 
 section GelfandMazurIsomorphism
 
@@ -451,14 +492,14 @@ namespace AlgHom
 
 section NormedField
 
-variable [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
+variable {F : Type _} [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is
-automatically bounded). -/
-instance : ContinuousLinearMapClass (A →ₐ[𝕜] 𝕜) 𝕜 A 𝕜 :=
+automatically bounded). See note [lower instance priority] -/
+instance (priority := 100) [AlgHomClass F 𝕜 A 𝕜] : ContinuousLinearMapClass F 𝕜 A 𝕜 :=
   { AlgHomClass.linearMapClass with
     map_continuous := fun φ =>
       (AddMonoidHomClass.continuous_of_bound φ ∥(1 : A)∥) fun a =>
@@ -472,6 +513,12 @@ def toContinuousLinearMap (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
 @[simp]
 theorem coe_to_continuous_linear_map (φ : A →ₐ[𝕜] 𝕜) : ⇑φ.toContinuousLinearMap = φ :=
   rfl
+
+theorem norm_apply_le_self_mul_norm_one [AlgHomClass F 𝕜 A 𝕜] (f : F) (a : A) : ∥f a∥ ≤ ∥a∥ * ∥(1 : A)∥ :=
+  Spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum f _)
+
+theorem norm_apply_le_self [NormOneClass A] [AlgHomClass F 𝕜 A 𝕜] (f : F) (a : A) : ∥f a∥ ≤ ∥a∥ :=
+  Spectrum.norm_le_norm_of_mem (apply_mem_spectrum f _)
 
 end NormedField
 

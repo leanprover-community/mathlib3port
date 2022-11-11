@@ -667,11 +667,19 @@ def constantCoeff : MvPolynomial σ R →+* R where
 theorem constant_coeff_eq : (constantCoeff : MvPolynomial σ R → R) = coeff 0 :=
   rfl
 
+variable (σ)
+
 @[simp]
 theorem constant_coeff_C (r : R) : constantCoeff (c r : MvPolynomial σ R) = r := by simp [constant_coeff_eq]
 
+variable {σ}
+
+variable (R)
+
 @[simp]
 theorem constant_coeff_X (i : σ) : constantCoeff (x i : MvPolynomial σ R) = 0 := by simp [constant_coeff_eq]
+
+variable {R}
 
 theorem constant_coeff_monomial [DecidableEq σ] (d : σ →₀ ℕ) (r : R) :
     constantCoeff (monomial d r) = if d = 0 then r else 0 := by rw [constant_coeff_eq, coeff_monomial]
@@ -680,8 +688,8 @@ variable (σ R)
 
 @[simp]
 theorem constant_coeff_comp_C : constantCoeff.comp (c : R →+* MvPolynomial σ R) = RingHom.id R := by
-  ext
-  apply constant_coeff_C
+  ext x
+  exact constant_coeff_C σ x
 
 @[simp]
 theorem constant_coeff_comp_algebra_map : constantCoeff.comp (algebraMap R (MvPolynomial σ R)) = RingHom.id R :=

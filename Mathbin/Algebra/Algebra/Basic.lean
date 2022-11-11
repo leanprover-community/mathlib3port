@@ -673,6 +673,9 @@ instance (priority := 100) {F : Type _} [AlgHomClass F R A B] : LinearMapClass F
   { ‹AlgHomClass F R A B› with
     map_smulₛₗ := fun f r x => by simp only [Algebra.smul_def, map_mul, commutes, RingHom.id_apply] }
 
+instance {F : Type _} [AlgHomClass F R A B] :
+    CoeTC F (A →ₐ[R] B) where coe f := { (f : A →+* B) with toFun := f, commutes' := AlgHomClass.commutes f }
+
 end AlgHomClass
 
 namespace AlgHom
@@ -689,6 +692,10 @@ instance : CoeFun (A →ₐ[R] B) fun _ => A → B :=
   ⟨AlgHom.toFun⟩
 
 initialize_simps_projections AlgHom (toFun → apply)
+
+@[simp, protected]
+theorem coe_coe {F : Type _} [AlgHomClass F R A B] (f : F) : ⇑(f : A →ₐ[R] B) = f :=
+  rfl
 
 @[simp]
 theorem to_fun_eq_coe (f : A →ₐ[R] B) : f.toFun = f :=
@@ -1054,6 +1061,13 @@ instance (priority := 100) toLinearEquivClass (F R A B : Type _) [CommSemiring R
     [Algebra R A] [Algebra R B] [h : AlgEquivClass F R A B] : LinearEquivClass F R A B :=
   { h with map_smulₛₗ := fun f => map_smulₛₗ f }
 
+instance (F R A B : Type _) [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
+    [h : AlgEquivClass F R A B] :
+    CoeTC F
+      (A ≃ₐ[R]
+        B) where coe f :=
+    { (f : A ≃+* B) with toFun := f, invFun := EquivLike.inv f, commutes' := AlgHomClass.commutes f }
+
 end AlgEquivClass
 
 namespace AlgEquiv
@@ -1085,6 +1099,10 @@ instance : AlgEquivClass (A₁ ≃ₐ[R] A₂) R A₁ A₂ where
 `fun_like.has_coe_to_fun` directly. -/
 instance : CoeFun (A₁ ≃ₐ[R] A₂) fun _ => A₁ → A₂ :=
   ⟨AlgEquiv.toFun⟩
+
+@[simp, protected]
+theorem coe_coe {F : Type _} [AlgEquivClass F R A₁ A₂] (f : F) : ⇑(f : A₁ ≃ₐ[R] A₂) = f :=
+  rfl
 
 @[ext]
 theorem ext {f g : A₁ ≃ₐ[R] A₂} (h : ∀ a, f a = g a) : f = g :=
@@ -1165,12 +1183,9 @@ theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α)
 /-- Interpret an algebra equivalence as an algebra homomorphism.
 
 This definition is included for symmetry with the other `to_*_hom` projections.
-The `simp` normal form is to use the coercion of the `has_coe_to_alg_hom` instance. -/
+The `simp` normal form is to use the coercion of the `alg_hom_class.has_coe_t` instance. -/
 def toAlgHom : A₁ →ₐ[R] A₂ :=
   { e with map_one' := e.map_one, map_zero' := e.map_zero }
-
-instance hasCoeToAlgHom : Coe (A₁ ≃ₐ[R] A₂) (A₁ →ₐ[R] A₂) :=
-  ⟨toAlgHom⟩
 
 @[simp]
 theorem to_alg_hom_eq_coe : e.toAlgHom = e :=
@@ -1230,6 +1245,16 @@ def Simps.symmApply (e : A₁ ≃ₐ[R] A₂) : A₂ → A₁ :=
   e.symm
 
 initialize_simps_projections AlgEquiv (toFun → apply, invFun → symmApply)
+
+@[simp]
+theorem coe_apply_coe_coe_symm_apply {F : Type _} [AlgEquivClass F R A₁ A₂] (f : F) (x : A₂) :
+    f ((f : A₁ ≃ₐ[R] A₂).symm x) = x :=
+  EquivLike.right_inv f x
+
+@[simp]
+theorem coe_coe_symm_apply_coe_apply {F : Type _} [AlgEquivClass F R A₁ A₂] (f : F) (x : A₁) :
+    (f : A₁ ≃ₐ[R] A₂).symm (f x) = x :=
+  EquivLike.left_inv f x
 
 @[simp]
 theorem inv_fun_eq_symm {e : A₁ ≃ₐ[R] A₂} : e.invFun = e.symm :=

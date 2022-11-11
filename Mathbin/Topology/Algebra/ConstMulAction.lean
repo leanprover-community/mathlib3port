@@ -8,6 +8,7 @@ import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Homeomorph
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.Topology.Bases
+import Mathbin.Topology.Support
 
 /-!
 # Monoid actions continuous in the second variable
@@ -295,6 +296,16 @@ theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMono
 theorem IsClosed.smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoid M] [TopologicalSpace M] [T1Space M] [Module 𝕜 M]
     [HasContinuousConstSmul 𝕜 M] (c : 𝕜) {s : Set M} (hs : IsClosed s) : IsClosed (c • s) :=
   is_closed_map_smul₀ c s hs
+
+theorem HasCompactMulSupport.comp_smul {β : Type _} [One β] {f : α → β} (h : HasCompactMulSupport f) {c : G₀}
+    (hc : c ≠ 0) : HasCompactMulSupport fun x => f (c • x) :=
+  h.comp_homeomorph (Homeomorph.smulOfNeZero c hc)
+
+theorem HasCompactSupport.comp_smul {β : Type _} [Zero β] {f : α → β} (h : HasCompactSupport f) {c : G₀} (hc : c ≠ 0) :
+    HasCompactSupport fun x => f (c • x) :=
+  h.comp_homeomorph (Homeomorph.smulOfNeZero c hc)
+
+attribute [to_additive HasCompactSupport.comp_smul] HasCompactMulSupport.comp_smul
 
 end GroupWithZero
 

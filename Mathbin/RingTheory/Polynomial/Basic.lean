@@ -774,14 +774,14 @@ private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (c r : MvPolynomial 
     
 
 theorem prime_C_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
-  ⟨comapPrime c constantCoeff constant_coeff_C, fun hr =>
+  ⟨comapPrime c constantCoeff (constant_coeff_C _), fun hr =>
     ⟨fun h =>
       hr.1 <| by
         rw [← C_inj, h]
         simp,
       fun h =>
       hr.2.1 <| by
-        rw [← constant_coeff_C r]
+        rw [← constant_coeff_C _ r]
         exact h.map _,
       fun a b hd => by
       obtain ⟨s, a', b', rfl, rfl⟩ := exists_finset_rename₂ a b

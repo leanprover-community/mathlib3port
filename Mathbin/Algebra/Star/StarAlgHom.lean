@@ -69,6 +69,19 @@ class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outPara
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] NonUnitalStarAlgHomClass.toStarHomClass
 
+namespace NonUnitalStarAlgHomClass
+
+variable {F R A B : Type _} [Monoid R]
+
+variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [HasStar A]
+
+variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B]
+
+instance [NonUnitalStarAlgHomClass F R A B] :
+    CoeTC F (A →⋆ₙₐ[R] B) where coe f := { (f : A →ₙₐ[R] B) with toFun := f, map_star' := map_star f }
+
+end NonUnitalStarAlgHomClass
+
 namespace NonUnitalStarAlgHom
 
 section Basic
@@ -98,6 +111,10 @@ instance : CoeFun (A →⋆ₙₐ[R] B) fun _ => A → B :=
   FunLike.hasCoeToFun
 
 initialize_simps_projections NonUnitalStarAlgHom (toFun → apply)
+
+@[simp, protected]
+theorem coe_coe {F : Type _} [NonUnitalStarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆ₙₐ[R] B) = f :=
+  rfl
 
 @[simp]
 theorem coe_to_non_unital_alg_hom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgHom : A → B) = f :=
@@ -245,11 +262,21 @@ class StarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgHomClass.toStarHomClass
 
+namespace StarAlgHomClass
+
+variable (F R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A]
+
+variable [Semiring B] [Algebra R B] [HasStar B] [hF : StarAlgHomClass F R A B]
+
+include hF
+
 -- See note [lower instance priority]
-instance (priority := 100) StarAlgHomClass.toNonUnitalStarAlgHomClass (F R A B : Type _) [CommSemiring R] [Semiring A]
-    [Algebra R A] [HasStar A] [Semiring B] [Algebra R B] [HasStar B] [StarAlgHomClass F R A B] :
-    NonUnitalStarAlgHomClass F R A B :=
+instance (priority := 100) toNonUnitalStarAlgHomClass : NonUnitalStarAlgHomClass F R A B :=
   { StarAlgHomClass.toAlgHomClass F R A B, StarAlgHomClass.toStarHomClass F R A B with map_smul := map_smul }
+
+instance : CoeTC F (A →⋆ₐ[R] B) where coe f := { (f : A →ₐ[R] B) with toFun := f, map_star' := map_star f }
+
+end StarAlgHomClass
 
 namespace StarAlgHom
 
@@ -270,6 +297,10 @@ instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B where
 directly. -/
 instance : CoeFun (A →⋆ₐ[R] B) fun _ => A → B :=
   FunLike.hasCoeToFun
+
+@[simp, protected]
+theorem coe_coe {F : Type} [StarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆ₐ[R] B) = f :=
+  rfl
 
 initialize_simps_projections StarAlgHom (toFun → apply)
 

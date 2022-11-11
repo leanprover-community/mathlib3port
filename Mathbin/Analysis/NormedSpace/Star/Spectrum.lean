@@ -176,7 +176,16 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ where
 /-- This is not an instance to avoid type class inference loops. See
 `weak_dual.complex.star_hom_class`. -/
 noncomputable def _root_.alg_hom_class.star_alg_hom_class : StarAlgHomClass F ℂ A ℂ :=
-  { hF, WeakDual.Complex.starHomClass with }
+  { WeakDual.Complex.starHomClass, hF with coe := fun f => f }
+
+omit hF
+
+namespace CharacterSpace
+
+noncomputable instance : StarAlgHomClass (CharacterSpace ℂ A) ℂ A ℂ :=
+  { AlgHomClass.starAlgHomClass with coe := fun f => f }
+
+end CharacterSpace
 
 end WeakDual
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
 import Mathbin.Topology.IsLocallyHomeomorph
-import Mathbin.Topology.FiberBundle
+import Mathbin.Topology.FiberBundle.Basic
 
 /-!
 # Covering Maps
